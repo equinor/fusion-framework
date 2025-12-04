@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework-cookbook-app-react-context",
-  "version": "4.1.81",
+  "version": "4.1.82-next.0",
   "description": "React application using framework context",
   "private": true,
   "type": "module",
@@ -19,10 +19,10 @@
     "@equinor/fusion-framework-react-app": "workspace:^",
     "@equinor/fusion-framework-react-module-context": "workspace:^",
     "@equinor/fusion-observable": "workspace:^",
-    "@types/react": "^18.2.50",
-    "@types/react-dom": "^18.0.8",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3",
+    "react": "^19.2.1",
+    "react-dom": "^19.2.1"
   },
   "devDependencies": {
     "odata-query": "^8.0.4",

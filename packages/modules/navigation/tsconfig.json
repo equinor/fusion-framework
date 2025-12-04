@@ -8,8 +8,17 @@
   "references": [
     {
       "path": "../module"
+    },
+    {
+      "path": "../telemetry"
+    },
+    {
+      "path": "../event"
+    },
+    {
+      "path": "../../utils/observable"
     }
   ],
   "include": ["src/**/*"],
-  "exclude": ["node_modules", "lib"]
+  "exclude": ["node_modules", "lib", "src/__tests__/**/*"]
 }

@@ -1,5 +1,47 @@
 # Change Log
 
+## 7.2.0-next.0
+
+### Minor Changes
+
+- [#3820](https://github.com/equinor/fusion-framework/pull/3820) [`d252b0d`](https://github.com/equinor/fusion-framework/commit/d252b0d442b7c8c1b50bf2768cf9ecbbb55a76f8) Thanks [@odinr](https://github.com/odinr)! - Add route schema support to app manifests for documentation and API schema generation.
+
+  **New Features:**
+  - **module-app**: Added `RouteSchemaEntry` type and `routes` field to `AppManifest` interface
+  - **cli**: Added `RouteSchemaEntry` and `AppManifestWithRoutes` type exports for app manifest generation
+
+  Route schemas allow applications to document their routes in app manifests, enabling automatic API documentation and schema generation. The `RouteSchemaEntry` type represents a route with its path, description, and optional parameter/search schemas.
+
+  ```typescript
+  import type {
+    RouteSchemaEntry,
+    AppManifest,
+  } from "@equinor/fusion-framework-module-app";
+  import type { AppManifestWithRoutes } from "@equinor/fusion-framework-cli/app";
+
+  const manifest: AppManifest = {
+    appKey: "my-app",
+    displayName: "My App",
+    description: "My app description",
+    type: "standalone",
+    routes: [
+      ["/", "Home page"],
+      ["/products", "Products listing page"],
+      ["/products/:id", "Product detail page", { id: "Product ID" }],
+    ],
+  };
+  ```
+
+  The CLI package also exports `AppManifestWithRoutes` which allows RouteNode objects (from the router package) to be used in manifest definitions, which are then serialized to RouteSchemaEntry arrays.
+
+### Patch Changes
+
+- [#3820](https://github.com/equinor/fusion-framework/pull/3820) [`265bb76`](https://github.com/equinor/fusion-framework/commit/265bb767249989eeb1971e83f3fba94879e0813b) Thanks [@odinr](https://github.com/odinr)! - relase next
+
+- Updated dependencies [[`265bb76`](https://github.com/equinor/fusion-framework/commit/265bb767249989eeb1971e83f3fba94879e0813b), [`d252b0d`](https://github.com/equinor/fusion-framework/commit/d252b0d442b7c8c1b50bf2768cf9ecbbb55a76f8), [`9f7597e`](https://github.com/equinor/fusion-framework/commit/9f7597ee237ef069dc24cbe39c73b5b26db157dd), [`75c068f`](https://github.com/equinor/fusion-framework/commit/75c068fea13c32435ac26bd9043cc156482bfaf1)]:
+  - @equinor/fusion-observable@9.0.0-next.0
+  - @equinor/fusion-query@7.0.0-next.0
+
 ## 7.1.1
 
 ### Patch Changes
@@ -21,20 +63,17 @@
   ## New Features
 
   ### App Tag/Version Support
-
   - **App Client**: Added `getAppBuild` method to fetch build manifests by app key and tag
   - **App Module Provider**: Enhanced `getAppManifest` to accept optional tag parameter
   - **App Loading**: Modified `setCurrentApp` to support `AppReference` objects with tag specification
   - **URL Integration**: Added `getAppTagFromUrl` utility to extract app tags from URL parameters
 
   ### Enhanced Type System
-
   - Added `AppReference` type for specifying app key and optional tag
   - Extended `AppBundleState` to include optional `tag` property
   - Updated `AppBuildManifest` type definition for build-specific metadata
 
   ### API Improvements
-
   - **AppClient**: Updated interface to support tag-based manifest and build fetching
   - **App Class**: Added `tag` getter property for accessing current app tag
   - **Action System**: Enhanced `fetchManifest` action to handle tag parameters
@@ -42,7 +81,6 @@
   ## Changes by Package
 
   ### `@equinor/fusion-framework-module-app`
-
   - **AppClient.ts**: Added `getAppBuild` method with tag support and updated `getAppManifest` signature
   - **AppModuleProvider.ts**: Enhanced `setCurrentApp` method to handle `AppReference` objects with tags
   - **App.ts**: Added `tag` getter and improved error handling in initialization
@@ -51,7 +89,6 @@
   - **flows.ts**: Modified manifest fetching flow to handle tag-based requests
 
   ### `@equinor/fusion-framework-dev-portal`
-
   - **AppLoader.tsx**: Added `getAppTagFromUrl` utility function and integrated tag-based app loading
 
   ## Usage Examples
@@ -84,17 +121,14 @@
   ## Migration Guide
 
   ### For App Consumers
-
   - No breaking changes - existing code continues to work
   - Optionally use new tag-based loading for version-specific deployments
 
   ### For App Developers
-
   - Consider adding `&tag` URL parameter support for testing different versions
   - Use new `AppReference` type when programmatically setting current apps with tags
 
   ## Technical Details
-
   - **Backward Compatibility**: All changes are backward compatible
   - **Caching**: Tag-based manifests and builds are cached separately
   - **Error Handling**: Enhanced error handling for build and manifest loading failures
@@ -128,7 +162,6 @@
 ### Patch Changes
 
 - [#3428](https://github.com/equinor/fusion-framework/pull/3428) [`1700ca8`](https://github.com/equinor/fusion-framework/commit/1700ca8851fa108e55e9729fd24f595272766e63) Thanks [@dependabot](https://github.com/apps/dependabot)! - Update zod from 4.1.9 to 4.1.11
-
   - **v4.1.10**: Fixed shape caching issue (#5263) improving validation performance for complex schemas
   - **v4.1.11**: Maintenance release with general improvements
 
@@ -147,7 +180,6 @@
   Updated source code to migrate from zod v3 to v4. Updated zod dependency from v3.25.76 to v4.1.8 and modified schema definitions in the app module to use explicit key and value types for records and updated error message format from `description` to `message` for zod v4 compatibility.
 
   Key changes in source code:
-
   - Fixed record schema definitions to use explicit key and value types (`z.record(z.string(), z.any())`)
   - Updated error message options format (replaced `description` with `message`)
   - Enhanced `ApiAppConfigSchema` with proper record type definitions for environment and endpoints
@@ -156,7 +188,6 @@
   Breaking changes: Record schemas must specify both key and value types explicitly. Error message format has changed from zod v3 to v4 format. Function schema definitions now require explicit typing.
 
   Links:
-
   - [Zod v4 Migration Guide](https://github.com/colinhacks/zod/releases/tag/v4.0.0)
   - [Zod v4.1.8 Release Notes](https://github.com/colinhacks/zod/releases/tag/v4.1.8)
 
@@ -169,19 +200,16 @@
 - [#3395](https://github.com/equinor/fusion-framework/pull/3395) [`29f6710`](https://github.com/equinor/fusion-framework/commit/29f6710238baf9b29f42394b30cb8b97f25462c3) Thanks [@odinr](https://github.com/odinr)! - Updated immer from 9.0.16 to 10.1.3 across all packages.
 
   ### Breaking Changes
-
   - Immer 10.x introduces stricter TypeScript types for draft functions
   - `ValidRecipeReturnType` type constraints have changed
   - Promise return types in draft functions are no longer automatically handled
 
   ### Fixes Applied
-
   - Updated BookmarkProvider to handle new immer type constraints
   - Fixed ObservableInput type assignments in mergeScan operations
   - Removed async/await from immer draft functions to comply with new type requirements
 
   ### Links
-
   - [Immer 10.0.0 Release Notes](https://github.com/immerjs/immer/releases/tag/v10.0.0)
   - [Immer Migration Guide](https://github.com/immerjs/immer/blob/main/MIGRATION.md)
 
@@ -192,18 +220,15 @@
 - [#3347](https://github.com/equinor/fusion-framework/pull/3347) [`11143fa`](https://github.com/equinor/fusion-framework/commit/11143fa3002fb8a6c095052a04c7e596c56bafa8) Thanks [@dependabot](https://github.com/apps/dependabot)! - chore: bump uuid from 11.0.3 to 13.0.0
 
   ### Breaking Changes
-
   - v13.0.0: Make browser exports the default
   - v12.0.0: Update to TypeScript 5.2, remove CommonJS support, drop Node 16 support
 
   ### New Features
-
   - Improved v4() performance
   - Added Node 24 to CI matrix
   - Restored node: prefix support
 
   ### Links
-
   - [GitHub releases](https://github.com/uuidjs/uuid/releases/tag/v13.0.0)
   - [npm changelog](https://www.npmjs.com/package/uuid?activeTab=versions)
 
@@ -216,7 +241,6 @@
 ### Patch Changes
 
 - [#3315](https://github.com/equinor/fusion-framework/pull/3315) [`2ea9fb6`](https://github.com/equinor/fusion-framework/commit/2ea9fb63bdf967e0d010ddae2af9f6fb32077240) Thanks [@Noggling](https://github.com/Noggling)! - Improve error handling in AppClient
-
   - Add support for HTTP 410 (Gone) status code handling across all error types
   - Import and use `HttpJsonResponseError` for more specific error handling in `getAppManifest`
   - Add 'deleted' error type to handle when application resources have been deleted
@@ -234,7 +258,6 @@
 ### Patch Changes
 
 - [#3088](https://github.com/equinor/fusion-framework/pull/3088) [`7441b13`](https://github.com/equinor/fusion-framework/commit/7441b13aa50dd7362d1629086a27b6b4e571575d) Thanks [@eikeland](https://github.com/eikeland)! - chore: update package typesVersions
-
   - Updated package.json typesVersions.
   - Ensures backward compatibility with older node versions.
   - Ensured consistency with workspace and repository configuration.
@@ -347,7 +370,6 @@
 ### Patch Changes
 
 - [#2519](https://github.com/equinor/fusion-framework/pull/2519) [`83a7ee9`](https://github.com/equinor/fusion-framework/commit/83a7ee971785343bccedc2d72cc02486193615af) Thanks [@eikeland](https://github.com/eikeland)! - ### Changes:
-
   - Updated `AppClient` class to improve the query for fetching app manifests:
     - Adjusted the query path manifests method to include `$expand=category,admins,owners,keywords` when `filterByCurrentUser` is not specified.
     - Minor formatting changes for better readability.
@@ -359,11 +381,9 @@
 - [#2685](https://github.com/equinor/fusion-framework/pull/2685) [`add2e98`](https://github.com/equinor/fusion-framework/commit/add2e98d23e683a801729e9af543cfa15c574e27) Thanks [@eikeland](https://github.com/eikeland)! - Added versioning support to `AppModuleProvider`.
 
   **Modified files:**
-
   - `packages/modules/app/src/AppModuleProvider.ts`
 
   **Changes:**
-
   - Imported `SemanticVersion` from `@equinor/fusion-framework-module`.
   - Imported `version` from `./version`.
   - Added a `version` getter to `AppModuleProvider` that returns a `SemanticVersion` instance.
@@ -378,11 +398,9 @@
 - [#2654](https://github.com/equinor/fusion-framework/pull/2654) [`59ab642`](https://github.com/equinor/fusion-framework/commit/59ab6424f3ce80649f42ddb6804b46f6789607ba) Thanks [@eikeland](https://github.com/eikeland)! - Reverting update to the `manifests` call `selector` function in `AppClient` to use `jsonSelector` and parse the response with `ApplicationSchema`.
 
   **Modified files:**
-
   - `packages/modules/app/src/AppClient.ts`
 
   **Changes:**
-
   - Replaced `res.json()` with `jsonSelector(res)`
   - Parsed the response using `ApplicationSchema.array().parse(response.value)`
 
@@ -417,7 +435,6 @@
   ```
 
 - [#2577](https://github.com/equinor/fusion-framework/pull/2577) [`c3ba9f1`](https://github.com/equinor/fusion-framework/commit/c3ba9f109d9f96d6dc6ee2f0ddac00c8b3090982) Thanks [@eikeland](https://github.com/eikeland)! - #### Changes:
-
   1. **AppClient.ts**
      - Added `updateAppSettings` method to set app settings by appKey.
   2. **AppModuleProvider.ts**
@@ -478,12 +495,10 @@
   > This will introduce breaking changes to the configuration of `AppConfigurator.client`.
 
   **Added**
-
   - Introduced `AppClient` class to handle application manifest and configuration queries.
   - Added `zod` to validate the application manifest.
 
   **Changed**
-
   - Updated `AppModuleProvider` to use `AppClient` for fetching application manifests and configurations.
   - Modified `AppConfigurator` to utilize `AppClient` for client configuration.
   - Updated `useApps` hook with new input parameter for `filterByCurrentUser` in `fusion-framework-react`.
@@ -562,7 +577,6 @@
 - [#2320](https://github.com/equinor/fusion-framework/pull/2320) [`1dd85f3`](https://github.com/equinor/fusion-framework/commit/1dd85f3a408a73df556d1812a5f280945cc100ee) Thanks [@odinr](https://github.com/odinr)! - Removed the `removeComments` option from the `tsconfig.base.json` file.
 
   Removing the `removeComments` option allows TypeScript to preserve comments in the compiled JavaScript output. This can be beneficial for several reasons:
-
   1. Improved debugging: Preserved comments can help developers understand the code better during debugging sessions.
   2. Documentation: JSDoc comments and other important code documentation will be retained in the compiled output.
   3. Source map accuracy: Keeping comments can lead to more accurate source maps, which is crucial for debugging and error tracking.
@@ -611,7 +625,6 @@
 ### Patch Changes
 
 - [#2235](https://github.com/equinor/fusion-framework/pull/2235) [`97e41a5`](https://github.com/equinor/fusion-framework/commit/97e41a55d05644b6684c6cb165b65b115bd416eb) Thanks [@odinr](https://github.com/odinr)! - - **Refactored**: The `actionBaseType` function has been renamed to `getBaseType` and its implementation has been updated.
-
   - **Added**: New utility types and functions for handling action types and payloads in a more type-safe manner.
 
 - [#2248](https://github.com/equinor/fusion-framework/pull/2248) [`da9dd83`](https://github.com/equinor/fusion-framework/commit/da9dd83c9352def5365b6c962dc8443589ac9526) Thanks [@asbjornhaland](https://github.com/asbjornhaland)! - #2235 renamed a method and changed type. This PR forgot to change to the correct param when using this method. Fixes typo - update to use actions `type` in the reducer.
@@ -687,7 +700,6 @@
 ### Patch Changes
 
 - [#1763](https://github.com/equinor/fusion-framework/pull/1763) [`1ca8264`](https://github.com/equinor/fusion-framework/commit/1ca826489a0d1dd755324344a12bbf6659a3be12) Thanks [@odinr](https://github.com/odinr)! - improve type of current application
-
   - result will be `undefined` if current application has never been set
   - result will be `IApplication` if current application is set
   - result will be `null` if current application is cleared
@@ -804,7 +816,6 @@
 ### Minor Changes
 
 - [#927](https://github.com/equinor/fusion-framework/pull/927) [`8bc4c5d6`](https://github.com/equinor/fusion-framework/commit/8bc4c5d6ed900e424efcab5572047c106d7ec04a) Thanks [@odinr](https://github.com/odinr)! - Create and expose interface for App
-
   - deprecate [AppModuleProvider.createApp](https://github.com/equinor/fusion-framework/blob/cf08d5ae3cef473e5025fd973a2a7a45a3b22dee/packages/modules/app/src/AppModuleProvider.ts#L171)
 
   this should not create any breaking changes since apps was only created from provider.
@@ -815,7 +826,6 @@
   ```
 
 - [#927](https://github.com/equinor/fusion-framework/pull/927) [`8bc4c5d6`](https://github.com/equinor/fusion-framework/commit/8bc4c5d6ed900e424efcab5572047c106d7ec04a) Thanks [@odinr](https://github.com/odinr)! - Allow updating manifest of application
-
   - add meta data for `setManifest` action to flag if `merge` or `replace`
   - add method on `App` to update manifest, _default flag `merge`_
   - check in state reducer if `setManifest` action is `update` or `merge`
@@ -826,7 +836,6 @@
 ### Patch Changes
 
 - [#905](https://github.com/equinor/fusion-framework/pull/905) [`a7858a1c`](https://github.com/equinor/fusion-framework/commit/a7858a1c01542e2dc94370709f122b4b99c3219c) Thanks [@odinr](https://github.com/odinr)! - **🚧 Chore: dedupe packages**
-
   - align all versions of typescript
   - update types to build
     - a couple of typecasts did not [satisfies](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-0.html#satisfies-support-in-jsdoc) and was recasted as `unknwon`, marked with `TODO`, should be fixed in future

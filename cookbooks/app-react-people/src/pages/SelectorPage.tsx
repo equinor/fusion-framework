@@ -59,7 +59,7 @@ const reducer = createReducer(initial, (builder) => {
   builder.addCase(actions.clear, () => {});
 });
 
-export const SelectorPage = () => {
+const SelectorPage = () => {
   /** Init reducer */
   const [selected, dispatch] = useReducer(reducer, reducer.getInitialState());
 
@@ -122,3 +122,5 @@ export const SelectorPage = () => {
     </>
   );
 };
+
+export default SelectorPage;

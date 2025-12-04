@@ -5,6 +5,8 @@ import { pathToFileURL } from 'node:url';
 import { processAccessError } from './error.js';
 
 import { readPackageUp } from 'read-package-up';
+import { importMetaResolvePlugin } from './import-meta-resolve-plugin.js';
+import { rawMarkdownPlugin } from './markdown-plugin.js';
 
 /**
  * Represents a Node.js module with an optional default export.
@@ -79,6 +81,9 @@ export const importScript = async <M extends EsmModule>(
         outfile,
         platform: 'node',
         write: true,
+        plugins: [importMetaResolvePlugin(), rawMarkdownPlugin()],
+        // Enable metafile so the plugin can find output files when write: true
+        metafile: true,
       },
       options, // provided options
       {
@@ -88,6 +93,9 @@ export const importScript = async <M extends EsmModule>(
         bundle: true,
         packages: 'external',
         format: 'esm',
+        // Override plugins to ensure import-meta-resolve is included
+        // Ensure metafile is enabled for the plugin to work with write: true
+        metafile: options?.metafile ?? true,
       },
     ) as BuildOptions;
 
