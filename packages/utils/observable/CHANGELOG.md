@@ -1,5 +1,43 @@
 # Change Log
 
+## 9.0.0-next.0
+
+### Major Changes
+
+- [#3820](https://github.com/equinor/fusion-framework/pull/3820) [`9f7597e`](https://github.com/equinor/fusion-framework/commit/9f7597ee237ef069dc24cbe39c73b5b26db157dd) Thanks [@odinr](https://github.com/odinr)! - Require React 18+ as peer dependency. React 17 is no longer supported.
+
+  **Migration:** Update your application to React 18+ to continue using these packages.
+
+  Closes https://github.com/equinor/fusion-framework/issues/3504
+
+- [#3820](https://github.com/equinor/fusion-framework/pull/3820) [`75c068f`](https://github.com/equinor/fusion-framework/commit/75c068fea13c32435ac26bd9043cc156482bfaf1) Thanks [@odinr](https://github.com/odinr)! - Upgrade to React 19 and remove support for React versions lower than 18.
+
+  **Breaking changes:**
+  - Peer dependencies now require React 18 or 19 (`^18.0.0 || ^19.0.0`)
+  - React 16 and 17 are no longer supported
+  - Dev dependencies upgraded to React 19.2.1 and @types/react 19.2.7
+
+  **Migration:**
+  - Update your React version to 18.0.0 or higher before upgrading these packages
+  - If using React 16 or 17, upgrade to React 18 or 19 first
+
+### Minor Changes
+
+- [#3820](https://github.com/equinor/fusion-framework/pull/3820) [`d252b0d`](https://github.com/equinor/fusion-framework/commit/d252b0d442b7c8c1b50bf2768cf9ecbbb55a76f8) Thanks [@odinr](https://github.com/odinr)! - Add `actions` export path to observable package for better tree-shaking.
+
+  The `actions` types and utilities are now available via a dedicated export path:
+
+  ```typescript
+  // New export path
+  import type { Action, ActionTypes } from "@equinor/fusion-observable/actions";
+  ```
+
+  This provides better tree-shaking support when only action types are needed.
+
+### Patch Changes
+
+- [#3820](https://github.com/equinor/fusion-framework/pull/3820) [`265bb76`](https://github.com/equinor/fusion-framework/commit/265bb767249989eeb1971e83f3fba94879e0813b) Thanks [@odinr](https://github.com/odinr)! - relase next
+
 ## 8.5.7
 
 ### Patch Changes
@@ -19,14 +57,12 @@
 - [#3515](https://github.com/equinor/fusion-framework/pull/3515) [`6cb288b`](https://github.com/equinor/fusion-framework/commit/6cb288b9e1ec4fae68ae6899735c176837bb4275) Thanks [@odinr](https://github.com/odinr)! - ## Global Biome Configuration Modernization
 
   **Workspace-wide changes:**
-
   - Remove 19 rule overrides from `biome.json` to use Biome's strict "error" defaults
   - Enable `correctness/useUniqueElementIds` accessibility rule globally
   - Reduce configuration size by 40% (60+ → ~35 lines)
   - Eliminate all custom linting rule customizations
 
   **Package-specific changes:**
-
   - Replace static IDs with React `useId()` hooks in bookmark and dev-portal components
   - Fix `suspicious/noAssignInExpressions` violations in context, legacy-interopt, and observable packages
   - Update 11 React components for accessibility compliance
@@ -49,19 +85,16 @@
 - [#3395](https://github.com/equinor/fusion-framework/pull/3395) [`29f6710`](https://github.com/equinor/fusion-framework/commit/29f6710238baf9b29f42394b30cb8b97f25462c3) Thanks [@odinr](https://github.com/odinr)! - Updated immer from 9.0.16 to 10.1.3 across all packages.
 
   ### Breaking Changes
-
   - Immer 10.x introduces stricter TypeScript types for draft functions
   - `ValidRecipeReturnType` type constraints have changed
   - Promise return types in draft functions are no longer automatically handled
 
   ### Fixes Applied
-
   - Updated BookmarkProvider to handle new immer type constraints
   - Fixed ObservableInput type assignments in mergeScan operations
   - Removed async/await from immer draft functions to comply with new type requirements
 
   ### Links
-
   - [Immer 10.0.0 Release Notes](https://github.com/immerjs/immer/releases/tag/v10.0.0)
   - [Immer Migration Guide](https://github.com/immerjs/immer/blob/main/MIGRATION.md)
 
@@ -70,32 +103,27 @@
   Updated TypeScript type definitions for UUID operations across multiple packages. This major version update provides improved type safety and compatibility with the latest UUID library features.
 
   ### Affected Packages
-
   - @equinor/fusion-framework-module-bookmark: @types/uuid ^9.0.8 → ^11.0.0
   - @equinor/fusion-framework-module-feature-flag: @types/uuid ^10.0.0 → ^11.0.0
   - @equinor/fusion-observable: @types/uuid ^10.0.0 → ^11.0.0
   - @equinor/fusion-query: @types/uuid ^10.0.0 → ^11.0.0
 
   ### Links
-
   - [@types/uuid on npm](https://www.npmjs.com/package/@types/uuid)
   - [DefinitelyTyped @types/uuid](https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/uuid)
 
 - [#3347](https://github.com/equinor/fusion-framework/pull/3347) [`11143fa`](https://github.com/equinor/fusion-framework/commit/11143fa3002fb8a6c095052a04c7e596c56bafa8) Thanks [@dependabot](https://github.com/apps/dependabot)! - chore: bump uuid from 11.0.3 to 13.0.0
 
   ### Breaking Changes
-
   - v13.0.0: Make browser exports the default
   - v12.0.0: Update to TypeScript 5.2, remove CommonJS support, drop Node 16 support
 
   ### New Features
-
   - Improved v4() performance
   - Added Node 24 to CI matrix
   - Restored node: prefix support
 
   ### Links
-
   - [GitHub releases](https://github.com/uuidjs/uuid/releases/tag/v13.0.0)
   - [npm changelog](https://www.npmjs.com/package/uuid?activeTab=versions)
 
@@ -106,7 +134,6 @@
 - [#2910](https://github.com/equinor/fusion-framework/pull/2910) [`07cc985`](https://github.com/equinor/fusion-framework/commit/07cc9857e1427b574e011cc319518e701dba784d) Thanks [@dependabot](https://github.com/apps/dependabot)! - Updated vitest from 2.1.9 to 3.2.4 across all packages.
 
   ## Breaking Changes
-
   - **Node.js Requirements**: Requires Node.js 18+ (already satisfied)
   - **Vite Compatibility**: Updated to work with Vite 7.x (already using Vite 7.1.5)
   - **Snapshot Format**: Snapshots now use backtick quotes (\`) instead of single quotes
@@ -114,18 +141,15 @@
   - **TypeScript Support**: Enhanced TypeScript integration and type definitions
 
   ## Security Updates
-
   - CVE-2025-24963: Browser mode serves arbitrary files (fixed in 2.1.9)
   - CVE-2025-24964: Remote Code Execution vulnerability (fixed in 2.1.9)
 
   ## Migration Notes
-
   - Test snapshots may need regeneration due to quote format changes
   - Some test configurations might need updates for new TypeScript support
   - Peer dependency warnings for @vitest/coverage-v8 are expected and safe to ignore
 
   ## Links
-
   - [Vitest 3.0 Migration Guide](https://vitest.dev/guide/migration)
   - [Vitest 3.2.4 Release Notes](https://github.com/vitest-dev/vitest/releases/tag/v3.2.4)
 
@@ -144,7 +168,6 @@
   These utilities let you accept and process values in many forms—plain values, functions, promises, or streams (observables)—and always handle them in a consistent, observable-based way. This is especially helpful when you want to let users or other code supply input as a direct value, a callback (sync or async), or even a stream, and you want to process the result the same way regardless of the input type. While this is most commonly useful for runtime configuration, feature toggles, or similar scenarios, it can be applied to any case where input flexibility is needed.
 
   **Why use this?**
-
   - Accept config, data, or handlers in any form: value, function, promise, or observable.
   - Write code that is agnostic to how the input is provided—no need for manual type checks or branching logic.
   - Great for plugin systems, runtime config, feature toggles, or APIs that want to be flexible and future-proof.
@@ -194,7 +217,6 @@
 - [#2899](https://github.com/equinor/fusion-framework/pull/2899) [`d20db24`](https://github.com/equinor/fusion-framework/commit/d20db24c73690e90a5860fe5160909c77efa41cb) Thanks [@odinr](https://github.com/odinr)! - fixed `noBannedTypes` Biome rules
 
 - [#2892](https://github.com/equinor/fusion-framework/pull/2892) [`e695290`](https://github.com/equinor/fusion-framework/commit/e69529086e90b1d0d8aaf6d4b1de0e1167ce9424) Thanks [@odinr](https://github.com/odinr)! - Added comprehensive unit tests for the `createReducer` function to ensure its correct functionality. The tests cover the following scenarios:
-
   - Creating a reducer function.
   - Creating a reducer with a default value from a function.
   - Handling actions and updating state correctly.
@@ -205,12 +227,10 @@
   These tests improve the reliability and maintainability of the `createReducer` function by verifying its behavior in various use cases.
 
 - [#2892](https://github.com/equinor/fusion-framework/pull/2892) [`e695290`](https://github.com/equinor/fusion-framework/commit/e69529086e90b1d0d8aaf6d4b1de0e1167ce9424) Thanks [@odinr](https://github.com/odinr)! - Refactor:
-
   - Fix issue where the default case reducer could be undefined.
   - Improve type definitions for `ActionReducerMapBuilder` to ensure better type safety and compatibility.
 
 - [#2892](https://github.com/equinor/fusion-framework/pull/2892) [`e695290`](https://github.com/equinor/fusion-framework/commit/e69529086e90b1d0d8aaf6d4b1de0e1167ce9424) Thanks [@odinr](https://github.com/odinr)! - refactor: adhere to use default parameters last
-
   - Fixed the `createReducer` function in `create-reducer.ts` to properly handle the initial state when it is undefined.
 
 ## 8.4.5
@@ -270,7 +290,7 @@
       builder.addCase("decrement", (state) => {
         state.count -= 1;
       });
-    }
+    },
   );
   const subject = new FlowSubject(reducerWithInitial);
   ```
@@ -295,11 +315,11 @@
       /** selector function */
       (state) => state.count,
       /** comparator function, optional, will use equal by default */
-      (prev, next) => prev === next
+      (prev, next) => prev === next,
     )
     .subscribe(
       /** subscriber function */
-      (count) => console.log(count)
+      (count) => console.log(count),
     );
 
   flowSubject.next({ type: "increment" }); // logs 1
@@ -329,7 +349,6 @@
 - [#2320](https://github.com/equinor/fusion-framework/pull/2320) [`1dd85f3`](https://github.com/equinor/fusion-framework/commit/1dd85f3a408a73df556d1812a5f280945cc100ee) Thanks [@odinr](https://github.com/odinr)! - Removed the `removeComments` option from the `tsconfig.base.json` file.
 
   Removing the `removeComments` option allows TypeScript to preserve comments in the compiled JavaScript output. This can be beneficial for several reasons:
-
   1. Improved debugging: Preserved comments can help developers understand the code better during debugging sessions.
   2. Documentation: JSDoc comments and other important code documentation will be retained in the compiled output.
   3. Source map accuracy: Keeping comments can lead to more accurate source maps, which is crucial for debugging and error tracking.
@@ -387,7 +406,6 @@
   The `@testing-library/react` library is used internally for unit testing React components. Updating to the latest version ensures we have the latest testing utilities and improvements.
 
   Highlights from the `@testing-library/react` v15.0.0 changelog:
-
   - Minimum supported Node.js version is 18.0
   - New version of `@testing-library/dom` changes various roles. Check out the [changed types](https://github.com/testing-library/dom-testing-library/releases/tag/v10.0.0) if you are using `ByRole` queries.
 
@@ -448,7 +466,6 @@
 ### Minor Changes
 
 - [#1099](https://github.com/equinor/fusion-framework/pull/1099) [`8e7ae77c`](https://github.com/equinor/fusion-framework/commit/8e7ae77cfcadddc4b59e6bb57e620b84e5e1c647) Thanks [@odinr](https://github.com/odinr)! - Use initial state from observable if observable has value property
-
   - update typing og arguments
   - update initial state to fallback to `observable.value`
     - _`opt.initial` will supersede `observable.value`_
@@ -467,7 +484,7 @@
   const { value } = useObservableState(source$ as Observable<{ foo: string }>);
   /** value: {foo:string}  */
   const { value } = useObservableState(
-    source$ as BehaviorSubject<{ foo: string }>
+    source$ as BehaviorSubject<{ foo: string }>,
   );
 
   /* override initial value  */
@@ -475,7 +492,7 @@
     source$ as BehaviorSubject<{ foo: string }>,
     {
       initial: "bar",
-    }
+    },
   );
   ```
 
@@ -499,7 +516,7 @@
   // existing
   useObservableSelector(
     source$,
-    useCallback((source) => source.foo.bar, [])
+    useCallback((source) => source.foo.bar, []),
   );
   ```
 
@@ -530,7 +547,6 @@
 - [#1077](https://github.com/equinor/fusion-framework/pull/1077) [`b16e93e2`](https://github.com/equinor/fusion-framework/commit/b16e93e23e456ab065a414f4bdc44445b6e9ad9f) Thanks [@odinr](https://github.com/odinr)! - observer is now optional in subscription hooks
 
 - [#1077](https://github.com/equinor/fusion-framework/pull/1077) [`b16e93e2`](https://github.com/equinor/fusion-framework/commit/b16e93e23e456ab065a414f4bdc44445b6e9ad9f) Thanks [@odinr](https://github.com/odinr)! - renamed `useObservableEpic` to `useObservableFlow`
-
   - rename source file
   - mark `useObservableEpic` as **deprecated**
   - update index source file

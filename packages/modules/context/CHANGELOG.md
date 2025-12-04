@@ -1,5 +1,15 @@
 # Change Log
 
+## 7.0.3-next.0
+
+### Patch Changes
+
+- [#3820](https://github.com/equinor/fusion-framework/pull/3820) [`265bb76`](https://github.com/equinor/fusion-framework/commit/265bb767249989eeb1971e83f3fba94879e0813b) Thanks [@odinr](https://github.com/odinr)! - relase next
+
+- Updated dependencies [[`265bb76`](https://github.com/equinor/fusion-framework/commit/265bb767249989eeb1971e83f3fba94879e0813b), [`75c068f`](https://github.com/equinor/fusion-framework/commit/75c068fea13c32435ac26bd9043cc156482bfaf1)]:
+  - @equinor/fusion-query@7.0.0-next.0
+  - @equinor/fusion-framework-module@5.0.6-next.0
+
 ## 7.0.2
 
 ### Patch Changes
@@ -18,14 +28,12 @@
 - [#3515](https://github.com/equinor/fusion-framework/pull/3515) [`6cb288b`](https://github.com/equinor/fusion-framework/commit/6cb288b9e1ec4fae68ae6899735c176837bb4275) Thanks [@odinr](https://github.com/odinr)! - ## Global Biome Configuration Modernization
 
   **Workspace-wide changes:**
-
   - Remove 19 rule overrides from `biome.json` to use Biome's strict "error" defaults
   - Enable `correctness/useUniqueElementIds` accessibility rule globally
   - Reduce configuration size by 40% (60+ → ~35 lines)
   - Eliminate all custom linting rule customizations
 
   **Package-specific changes:**
-
   - Replace static IDs with React `useId()` hooks in bookmark and dev-portal components
   - Fix `suspicious/noAssignInExpressions` violations in context, legacy-interopt, and observable packages
   - Update 11 React components for accessibility compliance
@@ -125,18 +133,15 @@
 ### Minor Changes
 
 - [#2930](https://github.com/equinor/fusion-framework/pull/2930) [`5da6b2d`](https://github.com/equinor/fusion-framework/commit/5da6b2d4cb7fb93ff3784753a0052d3362ab828d) Thanks [@odinr](https://github.com/odinr)! - **@equinor/fusion-framework-react:**
-
   - Enhanced `useAppContextNavigation` to support custom context path extraction and generation. This allows for more flexible navigation handling based on application-specific requirements.
 
   **@equinor/fusion-framework-module-context:**
-
   - Added support for custom context path extraction and generation in `ContextConfigBuilder`, `ContextProvider`, and `ContextModuleConfigurator`.
   - Introduced `setContextPathExtractor` and `setContextPathGenerator` methods in `ContextConfigBuilder` to allow developers to define custom logic for extracting and generating context paths.
   - Updated `ContextProvider` to utilize `extractContextIdFromPath` and `generatePathFromContext` from the configuration, enabling dynamic path handling.
   - Enhanced `ContextModuleConfigurator` to include `extractContextIdFromPath` and `generatePathFromContext` in the module configuration.
 
   If you are using `@equinor/fusion-framework-module-context` and need custom logic for context path handling:
-
   1. Use `setContextPathExtractor` to define how to extract context IDs from paths.
   2. Use `setContextPathGenerator` to define how to generate paths based on context items.
 
@@ -163,11 +168,11 @@
         // Custom logic to generate path from context
         const path = contextProvider.generatePathFromContext?.(
           context,
-          location.pathname
+          location.pathname,
         );
         return path ?? fallbackPathGenerator(context, location.pathname);
       }),
-      filter(Boolean)
+      filter(Boolean),
     )
     .subscribe((path) => history.push(path));
   ```
@@ -267,7 +272,6 @@
 - [#2320](https://github.com/equinor/fusion-framework/pull/2320) [`1dd85f3`](https://github.com/equinor/fusion-framework/commit/1dd85f3a408a73df556d1812a5f280945cc100ee) Thanks [@odinr](https://github.com/odinr)! - Removed the `removeComments` option from the `tsconfig.base.json` file.
 
   Removing the `removeComments` option allows TypeScript to preserve comments in the compiled JavaScript output. This can be beneficial for several reasons:
-
   1. Improved debugging: Preserved comments can help developers understand the code better during debugging sessions.
   2. Documentation: JSDoc comments and other important code documentation will be retained in the compiled output.
   3. Source map accuracy: Keeping comments can lead to more accurate source maps, which is crucial for debugging and error tracking.
@@ -396,7 +400,6 @@
 ### Minor Changes
 
 - [#1760](https://github.com/equinor/fusion-framework/pull/1760) [`6e6ee6b`](https://github.com/equinor/fusion-framework/commit/6e6ee6b7ce280820111e8b98ac8377efb15808ef) Thanks [@asbjornhaland](https://github.com/asbjornhaland)! - - Add FusionContextSearchError.
-
   - Potential _BREAKING_:
     - Error in `ContextProvider.ts` are now unwrapped if the thrown error is
       `QueryClientError`.
@@ -530,7 +533,6 @@
 ### Patch Changes
 
 - [#905](https://github.com/equinor/fusion-framework/pull/905) [`a7858a1c`](https://github.com/equinor/fusion-framework/commit/a7858a1c01542e2dc94370709f122b4b99c3219c) Thanks [@odinr](https://github.com/odinr)! - **🚧 Chore: dedupe packages**
-
   - align all versions of typescript
   - update types to build
     - a couple of typecasts did not [satisfies](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-0.html#satisfies-support-in-jsdoc) and was recasted as `unknwon`, marked with `TODO`, should be fixed in future
@@ -540,7 +542,6 @@
 ### Patch Changes
 
 - [#898](https://github.com/equinor/fusion-framework/pull/898) [`4551142e`](https://github.com/equinor/fusion-framework/commit/4551142ededdb2f1bf74eae552da26d28cd23057) Thanks [@odinr](https://github.com/odinr)! - feat(module-context): add config option for connection to parent context
-
   - add attribute to config interface
   - add setter on config builder
   - add check for connecting to parent when creating provider

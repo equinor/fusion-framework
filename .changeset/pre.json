@@ -66,5 +66,33 @@
     "@equinor/fusion-framework-widget": "1.1.46",
     "@equinor/fusion-framework-docs": "0.4.11"
   },
-  "changesets": []
+  "changesets": [
+    "cli_add-raw-imports-support",
+    "cli_add-serve-command",
+    "cookbook-app-react-bookmark-advanced_migrate-react-router",
+    "cookbook-app-react-charts_migrate-react-router",
+    "cookbook-app-react-people_migrate-react-router",
+    "cookbook-app-react-styling_add-new-cookbook",
+    "dev-portal_react-19-preview-deps",
+    "dev-portal_react-router-v7",
+    "every-weeks-thank",
+    "feature-flag_navigation-path-type",
+    "fusion-framework-docs_add-react-router-module",
+    "fusion-framework-docs_react-router-readme",
+    "imports_add-markdown-plugin",
+    "imports_add-resolve-plugin",
+    "navigation_deprecate-createrouter",
+    "navigation_refactor-architecture",
+    "observable_add-actions-export",
+    "react-app_add-fusion-type-export",
+    "react-app_add-tests",
+    "react-app_deprecate-react-17",
+    "react-module_add-type-exports",
+    "react-packages_require-react-18",
+    "react-packages_upgrade-react-19",
+    "react-router_add-dsl-api",
+    "route-schema-support",
+    "telemetry_add-scope-export",
+    "vite-plugin-raw-imports_add-new-plugin"
+  ]
 }

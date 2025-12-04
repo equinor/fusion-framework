@@ -1,5 +1,28 @@
 # Change Log
 
+## 7.0.0-next.0
+
+### Major Changes
+
+- [#3820](https://github.com/equinor/fusion-framework/pull/3820) [`75c068f`](https://github.com/equinor/fusion-framework/commit/75c068fea13c32435ac26bd9043cc156482bfaf1) Thanks [@odinr](https://github.com/odinr)! - Upgrade to React 19 and remove support for React versions lower than 18.
+
+  **Breaking changes:**
+  - Peer dependencies now require React 18 or 19 (`^18.0.0 || ^19.0.0`)
+  - React 16 and 17 are no longer supported
+  - Dev dependencies upgraded to React 19.2.1 and @types/react 19.2.7
+
+  **Migration:**
+  - Update your React version to 18.0.0 or higher before upgrading these packages
+  - If using React 16 or 17, upgrade to React 18 or 19 first
+
+### Patch Changes
+
+- [#3820](https://github.com/equinor/fusion-framework/pull/3820) [`265bb76`](https://github.com/equinor/fusion-framework/commit/265bb767249989eeb1971e83f3fba94879e0813b) Thanks [@odinr](https://github.com/odinr)! - relase next
+
+- Updated dependencies [[`265bb76`](https://github.com/equinor/fusion-framework/commit/265bb767249989eeb1971e83f3fba94879e0813b), [`d252b0d`](https://github.com/equinor/fusion-framework/commit/d252b0d442b7c8c1b50bf2768cf9ecbbb55a76f8), [`9f7597e`](https://github.com/equinor/fusion-framework/commit/9f7597ee237ef069dc24cbe39c73b5b26db157dd), [`75c068f`](https://github.com/equinor/fusion-framework/commit/75c068fea13c32435ac26bd9043cc156482bfaf1)]:
+  - @equinor/fusion-observable@9.0.0-next.0
+  - @equinor/fusion-log@1.1.8-next.0
+
 ## 6.0.2
 
 ### Patch Changes
@@ -23,7 +46,6 @@
 ### Major Changes
 
 - [#3537](https://github.com/equinor/fusion-framework/pull/3537) [`d3bcafe`](https://github.com/equinor/fusion-framework/commit/d3bcafed8b8c5a02ebe68693588cb376ed5e1b0e) Thanks [@odinr](https://github.com/odinr)! - Added comprehensive event system for enhanced observability and telemetry integration.
-
   - Introduced base event interfaces and types for query lifecycle tracking
   - Added QueryCache events for monitoring cache operations (insertions, mutations, invalidations, etc.)
   - Added QueryClient events for tracking job execution stages
@@ -55,19 +77,16 @@
 - [#3395](https://github.com/equinor/fusion-framework/pull/3395) [`29f6710`](https://github.com/equinor/fusion-framework/commit/29f6710238baf9b29f42394b30cb8b97f25462c3) Thanks [@odinr](https://github.com/odinr)! - Updated immer from 9.0.16 to 10.1.3 across all packages.
 
   ### Breaking Changes
-
   - Immer 10.x introduces stricter TypeScript types for draft functions
   - `ValidRecipeReturnType` type constraints have changed
   - Promise return types in draft functions are no longer automatically handled
 
   ### Fixes Applied
-
   - Updated BookmarkProvider to handle new immer type constraints
   - Fixed ObservableInput type assignments in mergeScan operations
   - Removed async/await from immer draft functions to comply with new type requirements
 
   ### Links
-
   - [Immer 10.0.0 Release Notes](https://github.com/immerjs/immer/releases/tag/v10.0.0)
   - [Immer Migration Guide](https://github.com/immerjs/immer/blob/main/MIGRATION.md)
 
@@ -76,32 +95,27 @@
   Updated TypeScript type definitions for UUID operations across multiple packages. This major version update provides improved type safety and compatibility with the latest UUID library features.
 
   ### Affected Packages
-
   - @equinor/fusion-framework-module-bookmark: @types/uuid ^9.0.8 → ^11.0.0
   - @equinor/fusion-framework-module-feature-flag: @types/uuid ^10.0.0 → ^11.0.0
   - @equinor/fusion-observable: @types/uuid ^10.0.0 → ^11.0.0
   - @equinor/fusion-query: @types/uuid ^10.0.0 → ^11.0.0
 
   ### Links
-
   - [@types/uuid on npm](https://www.npmjs.com/package/@types/uuid)
   - [DefinitelyTyped @types/uuid](https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/uuid)
 
 - [#3347](https://github.com/equinor/fusion-framework/pull/3347) [`11143fa`](https://github.com/equinor/fusion-framework/commit/11143fa3002fb8a6c095052a04c7e596c56bafa8) Thanks [@dependabot](https://github.com/apps/dependabot)! - chore: bump uuid from 11.0.3 to 13.0.0
 
   ### Breaking Changes
-
   - v13.0.0: Make browser exports the default
   - v12.0.0: Update to TypeScript 5.2, remove CommonJS support, drop Node 16 support
 
   ### New Features
-
   - Improved v4() performance
   - Added Node 24 to CI matrix
   - Restored node: prefix support
 
   ### Links
-
   - [GitHub releases](https://github.com/uuidjs/uuid/releases/tag/v13.0.0)
   - [npm changelog](https://www.npmjs.com/package/uuid?activeTab=versions)
 
@@ -115,7 +129,6 @@
 - [#2910](https://github.com/equinor/fusion-framework/pull/2910) [`07cc985`](https://github.com/equinor/fusion-framework/commit/07cc9857e1427b574e011cc319518e701dba784d) Thanks [@dependabot](https://github.com/apps/dependabot)! - Updated vitest from 2.1.9 to 3.2.4 across all packages.
 
   ## Breaking Changes
-
   - **Node.js Requirements**: Requires Node.js 18+ (already satisfied)
   - **Vite Compatibility**: Updated to work with Vite 7.x (already using Vite 7.1.5)
   - **Snapshot Format**: Snapshots now use backtick quotes (\`) instead of single quotes
@@ -123,18 +136,15 @@
   - **TypeScript Support**: Enhanced TypeScript integration and type definitions
 
   ## Security Updates
-
   - CVE-2025-24963: Browser mode serves arbitrary files (fixed in 2.1.9)
   - CVE-2025-24964: Remote Code Execution vulnerability (fixed in 2.1.9)
 
   ## Migration Notes
-
   - Test snapshots may need regeneration due to quote format changes
   - Some test configurations might need updates for new TypeScript support
   - Peer dependency warnings for @vitest/coverage-v8 are expected and safe to ignore
 
   ## Links
-
   - [Vitest 3.0 Migration Guide](https://vitest.dev/guide/migration)
   - [Vitest 3.2.4 Release Notes](https://github.com/vitest-dev/vitest/releases/tag/v3.2.4)
 
@@ -147,7 +157,6 @@
 ### Patch Changes
 
 - [#3088](https://github.com/equinor/fusion-framework/pull/3088) [`7441b13`](https://github.com/equinor/fusion-framework/commit/7441b13aa50dd7362d1629086a27b6b4e571575d) Thanks [@eikeland](https://github.com/eikeland)! - chore: update package typesVersions
-
   - Updated package.json typesVersions.
   - Ensures backward compatibility with older node versions.
   - Ensured consistency with workspace and repository configuration.
@@ -383,7 +392,6 @@
 - [#2320](https://github.com/equinor/fusion-framework/pull/2320) [`1dd85f3`](https://github.com/equinor/fusion-framework/commit/1dd85f3a408a73df556d1812a5f280945cc100ee) Thanks [@odinr](https://github.com/odinr)! - Removed the `removeComments` option from the `tsconfig.base.json` file.
 
   Removing the `removeComments` option allows TypeScript to preserve comments in the compiled JavaScript output. This can be beneficial for several reasons:
-
   1. Improved debugging: Preserved comments can help developers understand the code better during debugging sessions.
   2. Documentation: JSDoc comments and other important code documentation will be retained in the compiled output.
   3. Source map accuracy: Keeping comments can lead to more accurate source maps, which is crucial for debugging and error tracking.
@@ -517,7 +525,6 @@
   ### Improved Action Suffix Resolution
 
   We have improved the way action suffixes are resolved in the observable package. This change includes the following updates:
-
   - **Enhanced `actionBaseType` function**: Now supports extracting the base action type from both action objects and action type strings.
   - **New `isActionWithSuffix` function**: A utility function to check if an action has a specific suffix.
   - **Updated `isRequestAction`, `isSuccessAction`, `isFailureAction`, and `isCompleteAction` functions**: These functions now utilize `isActionWithSuffix` for better type safety and readability.
@@ -569,7 +576,6 @@
   ### Updated Logger Dependency
 
   Replaced the internal logger implementation with the `@equinor/fusion-log` package. This change affects the following files:
-
   - `package.json`: Removed `chalk` dependency and added `@equinor/fusion-log`.
   - `src/Query.ts`: Updated import statements to use `@equinor/fusion-log`.
   - `src/QueryTask.ts`: Updated import statements to use `@equinor/fusion-log`.
@@ -599,7 +605,6 @@
 ### Patch Changes
 
 - [#2107](https://github.com/equinor/fusion-framework/pull/2107) [`491c2e0`](https://github.com/equinor/fusion-framework/commit/491c2e05a2383dc7aa310f11ba6f7325a69e7197) Thanks [@odinr](https://github.com/odinr)! - Fixed issue with missing process env `FUSION_LOG_LEVEL`
-
   - added default resolve value when generating base vite configuration
   - moved default query log level resolve outside class
 
@@ -653,12 +658,10 @@
   > 2. Request was not canceled when client request had no observers.
 
   The updated query utility introduces an improved system for automatically cancelling tasks when there are no active observers or subscribers. This means if you start a task to fetch data and then, for some reason, all interested parties (components, services, etc.) unsubscribe or stop listening for the result, the utility will automatically cancel the task to save resources.
-
   1. **Observation Mechanism**: Each query task now keeps track of its subscribers (observers). When a task is initiated, it's "observed" by whoever needs its result (e.g., a component waiting for data to display).
   2. **Cancellation Triggers**: The task continuously checks if it still has any observers. If, at any point, the task finds that all its observers have unsubscribed or there were no observers to start with, it triggers a cancellation process.
   3. **Executing Cancellation**: Upon triggering cancellation, the task sends a signal to halt the data fetching operation. This could mean aborting an HTTP request, stopping a database query, or any other data retrieval operation that's in progress. The exact mechanism depends on the type of operation but typically involves using features like `AbortController` with fetch API in web environments.
   4. **Resource Management**: This automatic cancellation helps in managing resources more efficiently. It ensures that the application's bandwidth, memory, and processing power are not wasted on tasks that are no longer needed. This is particularly important in scenarios where data fetching operations are costly or when the application is running in resource-constrained environments.
-
   - **`chalk` Library**: We've included a new library called `chalk` that allows us to add colors and styles to the text we print out in the console. This makes our log messages much easier to read and helps distinguish between different types of messages, like errors or general information.
   - **`@types/node` for Development**: To make our code smarter about what functions and features are available in Node.js, we've added type definitions specifically for Node.js. This is only used during development to help with things like code completion and checking for mistakes.
   - **Improved Error Handling with Custom Errors**: We've created a custom error class to handle different types of errors more effectively. This means we can provide more specific and helpful error messages, making it easier to understand what went wrong.
@@ -727,7 +730,7 @@
   userProfileQuery.onInvalidate((event) => {
     if (event.detail.item) {
       console.log(
-        `Cache entry invalidated for user: ${event.detail.item.value.id}`
+        `Cache entry invalidated for user: ${event.detail.item.value.id}`,
       );
     } else {
       console.log("Cache invalidated for all users");
@@ -924,7 +927,7 @@
     /** after 100ms emits 'foo' */
     interval(100).map(() => "foo"),
     /** after 50ms emits 'bar' */
-    queryClient.query("bar")
+    queryClient.query("bar"),
   ).subscribe(console.log);
   ```
 
@@ -995,7 +998,7 @@
           setTimeout(() => {
             call++;
             resolve(value);
-          }, 100)
+          }, 100),
         );
         value;
       },
@@ -1005,22 +1008,22 @@
   setTimeout(
     // calls = 1
     () => query.queryAsync("foo").then(() => console.log(calls)),
-    0
+    0,
   );
   setTimeout(
     // calls = 1, since sharing first request
     () => query.queryAsync("foo").then(() => console.log(calls)),
-    50
+    50,
   );
   setTimeout(
     // calls = 2
     () => query.queryAsync("bar").then(() => console.log(calls)),
-    100
+    100,
   );
   setTimeout(
     // calls = 3
     () => query.queryAsync("foo").then(() => console.log(calls)),
-    150
+    150,
   );
   ```
 

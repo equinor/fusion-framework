@@ -1,5 +1,14 @@
 # Change Log
 
+## 7.1.6-next.0
+
+### Patch Changes
+
+- [#3820](https://github.com/equinor/fusion-framework/pull/3820) [`265bb76`](https://github.com/equinor/fusion-framework/commit/265bb767249989eeb1971e83f3fba94879e0813b) Thanks [@odinr](https://github.com/odinr)! - relase next
+
+- Updated dependencies [[`265bb76`](https://github.com/equinor/fusion-framework/commit/265bb767249989eeb1971e83f3fba94879e0813b)]:
+  - @equinor/fusion-framework-module@5.0.6-next.0
+
 ## 7.1.5
 
 ### Patch Changes
@@ -22,7 +31,6 @@
 ### Patch Changes
 
 - [#3607](https://github.com/equinor/fusion-framework/pull/3607) [`6dfb29e`](https://github.com/equinor/fusion-framework/commit/6dfb29eef67548228c05668b44ad02a34c83b050) Thanks [@dependabot](https://github.com/apps/dependabot)! - chore: bump @faker-js/faker from 9.9.0 to 10.1.0
-
   - Updated devDependency @faker-js/faker to v10.1.0
   - ESM-only distribution aligns with project architecture
   - All existing faker APIs remain stable and compatible
@@ -51,7 +59,6 @@
 - [#3442](https://github.com/equinor/fusion-framework/pull/3442) [`3b614f8`](https://github.com/equinor/fusion-framework/commit/3b614f87138f5a52f8ccc50ca8c6598ef3db37d6) Thanks [@asbjornhaland](https://github.com/asbjornhaland)! - Update biome to latest version
 
 - [#3428](https://github.com/equinor/fusion-framework/pull/3428) [`1700ca8`](https://github.com/equinor/fusion-framework/commit/1700ca8851fa108e55e9729fd24f595272766e63) Thanks [@dependabot](https://github.com/apps/dependabot)! - Update zod from 4.1.9 to 4.1.11
-
   - **v4.1.10**: Fixed shape caching issue (#5263) improving validation performance for complex schemas
   - **v4.1.11**: Maintenance release with general improvements
 
@@ -65,7 +72,6 @@
 ### Minor Changes
 
 - [#3394](https://github.com/equinor/fusion-framework/pull/3394) [`c222c67`](https://github.com/equinor/fusion-framework/commit/c222c673bc7cdefff6eb0cd9436bfa3d1f185295) Thanks [@odinr](https://github.com/odinr)! - Updated Zod dependency from v3 to v4 with necessary schema adjustments.
-
   - Updated `zod` dependency from `^3.25.76` to `^4.1.8`
   - Fixed `z.record()` usage to explicitly specify key type as `z.string()`
   - Simplified `schemaSelector` function type parameters to align with Zod v4 API
@@ -80,12 +86,10 @@
 - [#3393](https://github.com/equinor/fusion-framework/pull/3393) [`3ce5a18`](https://github.com/equinor/fusion-framework/commit/3ce5a1887c8fb90f24c3367f8926db69cc9a1914) Thanks [@dependabot](https://github.com/apps/dependabot)! - Updated odata-query dependency from 8.0.4 to 8.0.5
 
   ### Changes
-
   - Updated odata-query to fix transform operations order issue
   - This is a patch update with no breaking changes
 
   ### Links
-
   - [GitHub releases](https://github.com/techniq/odata-query/releases/tag/v8.0.5)
   - [Changelog](https://github.com/techniq/odata-query/blob/main/CHANGELOG.md#805)
 
@@ -96,7 +100,6 @@
 - [#2910](https://github.com/equinor/fusion-framework/pull/2910) [`07cc985`](https://github.com/equinor/fusion-framework/commit/07cc9857e1427b574e011cc319518e701dba784d) Thanks [@dependabot](https://github.com/apps/dependabot)! - Updated vitest from 2.1.9 to 3.2.4 across all packages.
 
   ## Breaking Changes
-
   - **Node.js Requirements**: Requires Node.js 18+ (already satisfied)
   - **Vite Compatibility**: Updated to work with Vite 7.x (already using Vite 7.1.5)
   - **Snapshot Format**: Snapshots now use backtick quotes (\`) instead of single quotes
@@ -104,18 +107,15 @@
   - **TypeScript Support**: Enhanced TypeScript integration and type definitions
 
   ## Security Updates
-
   - CVE-2025-24963: Browser mode serves arbitrary files (fixed in 2.1.9)
   - CVE-2025-24964: Remote Code Execution vulnerability (fixed in 2.1.9)
 
   ## Migration Notes
-
   - Test snapshots may need regeneration due to quote format changes
   - Some test configurations might need updates for new TypeScript support
   - Peer dependency warnings for @vitest/coverage-v8 are expected and safe to ignore
 
   ## Links
-
   - [Vitest 3.0 Migration Guide](https://vitest.dev/guide/migration)
   - [Vitest 3.2.4 Release Notes](https://github.com/vitest-dev/vitest/releases/tag/v3.2.4)
 
@@ -142,7 +142,6 @@
 ### Patch Changes
 
 - [#3088](https://github.com/equinor/fusion-framework/pull/3088) [`7441b13`](https://github.com/equinor/fusion-framework/commit/7441b13aa50dd7362d1629086a27b6b4e571575d) Thanks [@eikeland](https://github.com/eikeland)! - chore: update package typesVersions
-
   - Updated package.json typesVersions.
   - Ensures backward compatibility with older node versions.
   - Ensured consistency with workspace and repository configuration.
@@ -234,7 +233,6 @@
   > This module is meant for internal use only, and should not be used directly by applications, so the breaking changes should not affect any applications. Ancestor modules should be updated to reflect the changes in this module.
 
   **BREAKING CHANGES:**
-
   - api client has been updated to reflect the new api endpoints and request/response types
   - models have been replaced with infered `zod` schemas
   - request and responses are now parsed and validated using `zod` schemas
@@ -276,7 +274,6 @@
 - [#2320](https://github.com/equinor/fusion-framework/pull/2320) [`1dd85f3`](https://github.com/equinor/fusion-framework/commit/1dd85f3a408a73df556d1812a5f280945cc100ee) Thanks [@odinr](https://github.com/odinr)! - Removed the `removeComments` option from the `tsconfig.base.json` file.
 
   Removing the `removeComments` option allows TypeScript to preserve comments in the compiled JavaScript output. This can be beneficial for several reasons:
-
   1. Improved debugging: Preserved comments can help developers understand the code better during debugging sessions.
   2. Documentation: JSDoc comments and other important code documentation will be retained in the compiled output.
   3. Source map accuracy: Keeping comments can lead to more accurate source maps, which is crucial for debugging and error tracking.
@@ -328,7 +325,6 @@
   Updated the `PeopleApiClient.photo` method to properly type the response as `PersonPhotoApiResponse<TVersion>` instead of `Blob`. This allows for more accurate type checking when using the method.
 
   To update your code:
-
   - If you are using the `PeopleApiClient.photo` method directly, no changes are needed. The method will now properly type the response.
   - If you have custom type assertions or checks around the response from `PeopleApiClient.photo`, you may need to update them to handle `PersonPhotoApiResponse<TVersion>` instead of `Blob`.
 
@@ -415,7 +411,6 @@
 - [#1243](https://github.com/equinor/fusion-framework/pull/1243) [`f277c7fc`](https://github.com/equinor/fusion-framework/commit/f277c7fc54ca2ebe75ba1dda94a0d72eb7c8e15b) Thanks [@odinr](https://github.com/odinr)! - Added person services
 
   > **for internal usage only!**
-
   - add function for fetching person details
   - add function for querying persons
   - add function for downloading person photo
@@ -1512,7 +1507,6 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
   ``
 
 - [#1254](https://github.com/equinor/fusion-framework/pull/1254) [`a2d2dee9`](https://github.com/equinor/fusion-framework/commit/a2d2dee987673171ad91daec98cb530649da5849) Thanks [@odinr](https://github.com/odinr)! - Update people client to reflect Fusion API
-
   - added models for v2 and v4
   - added expand logic for person detail `roles` `positions` `contracts` `manager` `companies`
   - changed api client to now include args and init (previously args where extracted from call parameters) to correctly type response models
