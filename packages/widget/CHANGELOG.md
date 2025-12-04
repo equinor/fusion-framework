@@ -1,5 +1,19 @@
 # Change Log
 
+## 1.1.47-next.0
+
+### Patch Changes
+
+- [#3820](https://github.com/equinor/fusion-framework/pull/3820) [`265bb76`](https://github.com/equinor/fusion-framework/commit/265bb767249989eeb1971e83f3fba94879e0813b) Thanks [@odinr](https://github.com/odinr)! - relase next
+
+- Updated dependencies [[`265bb76`](https://github.com/equinor/fusion-framework/commit/265bb767249989eeb1971e83f3fba94879e0813b)]:
+  - @equinor/fusion-framework@7.4.3-next.0
+  - @equinor/fusion-framework-module-event@4.4.1-next.0
+  - @equinor/fusion-framework-module-http@7.0.6-next.0
+  - @equinor/fusion-framework-module@5.0.6-next.0
+  - @equinor/fusion-framework-module-msal@7.0.0-next.0
+  - @equinor/fusion-framework-module-widget@12.0.4-next.0
+
 ## 1.1.46
 
 ### Patch Changes
@@ -14,7 +28,6 @@
 ### Patch Changes
 
 - [#3490](https://github.com/equinor/fusion-framework/pull/3490) [`45954e5`](https://github.com/equinor/fusion-framework/commit/45954e5db471a2faa24e88e41fc6d6c18817d6d1) Thanks [@odinr](https://github.com/odinr)! - Remove explicit logger initialization from configurator constructors in favor of telemetry.
-
   - Removed `this.logger = new ModuleConsoleLogger(...)` from FrameworkConfigurator, AppConfigurator, and WidgetConfigurator constructors
   - Logger functionality will be handled through telemetry module with console logging adapter
 
@@ -348,7 +361,6 @@
 - [#2320](https://github.com/equinor/fusion-framework/pull/2320) [`1dd85f3`](https://github.com/equinor/fusion-framework/commit/1dd85f3a408a73df556d1812a5f280945cc100ee) Thanks [@odinr](https://github.com/odinr)! - Removed the `removeComments` option from the `tsconfig.base.json` file.
 
   Removing the `removeComments` option allows TypeScript to preserve comments in the compiled JavaScript output. This can be beneficial for several reasons:
-
   1. Improved debugging: Preserved comments can help developers understand the code better during debugging sessions.
   2. Documentation: JSDoc comments and other important code documentation will be retained in the compiled output.
   3. Source map accuracy: Keeping comments can lead to more accurate source maps, which is crucial for debugging and error tracking.
