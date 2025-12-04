@@ -1,0 +1,20 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "jsx": "react-jsx"
+  },
+  "references": [
+    {
+      "path": "../../packages/cli"
+    },
+    {
+      "path": "../../packages/modules/analytics"
+    },
+    {
+      "path": "../../packages/react/app"
+    }
+  ],
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "lib"]
+}

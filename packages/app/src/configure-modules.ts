@@ -9,9 +9,9 @@ import { AppConfigurator } from './AppConfigurator';
 import type { AppModulesInstance, AppModuleInitiator, AppEnv } from './types';
 
 /**
- * 
+ *
  * Creates a callback for initializing configuration of application modules
- * 
+ *
  * @example
  ```ts
     const initialize =  configureModules((configurator, args) => {
@@ -22,9 +22,9 @@ import type { AppModulesInstance, AppModuleInitiator, AppEnv } from './types';
  * @template TModules Addition modules
  * @template TRef usually undefined, optional references
  * @template TEnv environment object for configuring modules
- * 
+ *
  * @param cb configuration callback
- * 
+ *
  * @returns initialize function, executes configurator
  */
 export const configureModules =
@@ -85,8 +85,9 @@ export const configureModules =
     // Dispatch app modules loaded event for app lifecycle tracking
     // TODO - remove check after fusion-cli is updated (app module is not enabled in fusion-cli)
     if (args.env.manifest?.appKey) {
+      console.log('odin was here', args.env.manifest);
       modules.event.dispatchEvent('onAppModulesLoaded', {
-        detail: { appKey: args.env.manifest.appKey, modules },
+        detail: { appKey: args.env.manifest.appKey, manifest: args.env.manifest, modules },
       });
     }
     return modules;

@@ -1,0 +1,14 @@
+1. Create a react hook `useTrackAnalyticsEvent = (eventName: string, body: any[], metadata?: any[]) => void`
+2. In `fusion-help` use the hook
+  - `const trackAnalyticsEvent = useTrackAnalyticsEvent()`
+    `trackAnalyticsEvent("help-opened", { page: activeHelpPage });`
+
+Event will use the Portal's FusionAdapter to send the events to BackEnd's service ingest.
+
+## Portal
+
+Should enable the analytics module and configure FusionAdapter.
+The portal should also enable reporters that should be enabled: AppLoadedReporter, AppSelectedReporter, ContextSelectedReporter.
+
+To send one-off event for app-teams - for instance help-opened - we should use the hook mentioned above.
+

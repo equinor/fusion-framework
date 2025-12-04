@@ -34,6 +34,8 @@ declare module '@equinor/fusion-framework-module-event' {
     /** fired when the application has initiated its modules */
     onAppModulesLoaded: AppEvent<{
       /** initiated modules for application */
+      appKey: string;
+      manifest: AppManifest;
       modules: AppModulesInstance;
     }>;
 
