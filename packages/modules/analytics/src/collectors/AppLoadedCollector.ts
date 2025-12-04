@@ -7,7 +7,7 @@ import {
 } from './utils/extractContextMetadata.js';
 import type { IAnalyticsCollector } from './AnalyticsCollector.interface.js';
 
-import type { AppModulesInstance, AppManifest } from '@equinor/fusion-framework-module-app';
+import type { AppModulesInstance, AppManifest, AppModuleProvider } from '@equinor/fusion-framework-module-app';
 import type { IEventModuleProvider } from '@equinor/fusion-framework-module-event';
 
 import { type ObservableInput, Subject } from 'rxjs';
@@ -30,10 +30,12 @@ export class AppLoadedCollector
   implements IAnalyticsCollector
 {
   #eventProvider: IEventModuleProvider;
+  #appProvider: AppModuleProvider;
 
-  constructor(eventProvider: IEventModuleProvider) {
+  constructor(eventProvider: IEventModuleProvider, appProvider: AppModuleProvider) {
     super('app-loaded', eventSchema);
     this.#eventProvider = eventProvider;
+    this.#appProvider = appProvider;
   }
 
   _initialize(): ObservableInput<{
@@ -45,26 +47,15 @@ export class AppLoadedCollector
       attributes: { context?: ContextItemType };
     }>();
     this.#eventProvider.addEventListener(EVENT_NAME, (event) => {
-      const manifest = event.detail.manifest as AppManifest;
+      // Fallback to appProvider for manifest if app is not updated with latest
+      // payload for onAppModulesLoaded (missing manifest).
+      const manifest = event.detail.manifest as AppManifest ?? this.#appProvider.current?.manifest;
       const modules = event.detail.modules as AppModulesInstance<[ContextModule]>;
-
-			console.log('111111', manifest);
-
-      // console.log(11, modules.context.resolveContext(modules.context.currentContext));
-      // console.log(12, modules.context.validateContext(modules.context.currentContext));
-      // console.log(13, modules.context.currentContext);
-
-      const context =
-        modules.context.currentContext &&
-        modules.context.validateContext(modules.context.currentContext) &&
-        modules.context.resolveContext(modules.context.currentContext)
-          ? extractContextMetadata(modules.context.currentContext)
-          : undefined;
 
       const data = {
         value: manifest && extractAppMetadata(manifest),
         attributes: {
-          context,
+          context: modules.context?.currentContext && extractContextMetadata(modules.context.currentContext),
         },
       };
 

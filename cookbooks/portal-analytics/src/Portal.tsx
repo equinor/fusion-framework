@@ -41,6 +41,11 @@ export const Portal = () => {
             Reviews with Castberg context
           </Link>
         </li>
+        <li>
+          <Link to={'apps/pro-org'}>
+            Pro org
+          </Link>
+        </li>
       </ul>
 
       <div style={{ marginTop: '20px', padding: '10px', backgroundColor: '#f0f0f0' }}>

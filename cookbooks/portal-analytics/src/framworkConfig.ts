@@ -67,7 +67,8 @@ export const frameworkConfig: PortalModuleInitiator = (configurator) => {
 
     builder.setCollector('app-loaded', async (args) => {
       const eventProvider = await args.requireInstance('event');
-      return new AppLoadedCollector(eventProvider);
+      const appProvider = await args.requireInstance('app');
+      return new AppLoadedCollector(eventProvider, appProvider);
     });
 
     builder.setCollector('click-test', async () => {
