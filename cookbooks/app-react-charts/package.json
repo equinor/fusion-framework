@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework-cookbook-app-react-charts",
-  "version": "1.2.2",
+  "version": "1.2.3-next.0",
   "description": "",
   "private": true,
   "type": "module",

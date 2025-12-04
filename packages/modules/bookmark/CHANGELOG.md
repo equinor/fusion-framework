@@ -1,5 +1,17 @@
 # Change Log
 
+## 3.0.5-next.0
+
+### Patch Changes
+
+- [#3820](https://github.com/equinor/fusion-framework/pull/3820) [`265bb76`](https://github.com/equinor/fusion-framework/commit/265bb767249989eeb1971e83f3fba94879e0813b) Thanks [@odinr](https://github.com/odinr)! - relase next
+
+- Updated dependencies [[`265bb76`](https://github.com/equinor/fusion-framework/commit/265bb767249989eeb1971e83f3fba94879e0813b), [`d252b0d`](https://github.com/equinor/fusion-framework/commit/d252b0d442b7c8c1b50bf2768cf9ecbbb55a76f8), [`9f7597e`](https://github.com/equinor/fusion-framework/commit/9f7597ee237ef069dc24cbe39c73b5b26db157dd), [`75c068f`](https://github.com/equinor/fusion-framework/commit/75c068fea13c32435ac26bd9043cc156482bfaf1)]:
+  - @equinor/fusion-observable@9.0.0-next.0
+  - @equinor/fusion-query@7.0.0-next.0
+  - @equinor/fusion-framework-module@5.0.6-next.0
+  - @equinor/fusion-log@1.1.8-next.0
+
 ## 3.0.4
 
 ### Patch Changes
@@ -37,7 +49,6 @@
 ### Patch Changes
 
 - [#3428](https://github.com/equinor/fusion-framework/pull/3428) [`1700ca8`](https://github.com/equinor/fusion-framework/commit/1700ca8851fa108e55e9729fd24f595272766e63) Thanks [@dependabot](https://github.com/apps/dependabot)! - Update zod from 4.1.9 to 4.1.11
-
   - **v4.1.10**: Fixed shape caching issue (#5263) improving validation performance for complex schemas
   - **v4.1.11**: Maintenance release with general improvements
 
@@ -57,7 +68,6 @@
   Updated source code to migrate from zod v3 to v4. Updated zod dependency from v3.25.76 to v4.1.8 and modified schema definitions in the bookmark module to use explicit key and value types for records, simplified function schema definitions, and replaced zod-inferred types with explicit TypeScript interfaces.
 
   Key changes in source code:
-
   - Fixed record schema definitions to use explicit key and value types (`z.record(z.string(), z.unknown())`)
   - Simplified function schema definitions by removing complex chaining (`.args()` and `.returns()`)
   - Replaced zod-inferred types with explicit TypeScript interfaces for better performance
@@ -67,7 +77,6 @@
   Breaking changes: Record schemas must specify both key and value types explicitly. Function schema definitions now require explicit typing.
 
   Links:
-
   - [Zod v4 Migration Guide](https://github.com/colinhacks/zod/releases/tag/v4.0.0)
   - [Zod v4.1.8 Release Notes](https://github.com/colinhacks/zod/releases/tag/v4.1.8)
 
@@ -78,19 +87,16 @@
 - [#3395](https://github.com/equinor/fusion-framework/pull/3395) [`29f6710`](https://github.com/equinor/fusion-framework/commit/29f6710238baf9b29f42394b30cb8b97f25462c3) Thanks [@odinr](https://github.com/odinr)! - Updated immer from 9.0.16 to 10.1.3 across all packages.
 
   ### Breaking Changes
-
   - Immer 10.x introduces stricter TypeScript types for draft functions
   - `ValidRecipeReturnType` type constraints have changed
   - Promise return types in draft functions are no longer automatically handled
 
   ### Fixes Applied
-
   - Updated BookmarkProvider to handle new immer type constraints
   - Fixed ObservableInput type assignments in mergeScan operations
   - Removed async/await from immer draft functions to comply with new type requirements
 
   ### Links
-
   - [Immer 10.0.0 Release Notes](https://github.com/immerjs/immer/releases/tag/v10.0.0)
   - [Immer Migration Guide](https://github.com/immerjs/immer/blob/main/MIGRATION.md)
 
@@ -99,32 +105,27 @@
   Updated TypeScript type definitions for UUID operations across multiple packages. This major version update provides improved type safety and compatibility with the latest UUID library features.
 
   ### Affected Packages
-
   - @equinor/fusion-framework-module-bookmark: @types/uuid ^9.0.8 → ^11.0.0
   - @equinor/fusion-framework-module-feature-flag: @types/uuid ^10.0.0 → ^11.0.0
   - @equinor/fusion-observable: @types/uuid ^10.0.0 → ^11.0.0
   - @equinor/fusion-query: @types/uuid ^10.0.0 → ^11.0.0
 
   ### Links
-
   - [@types/uuid on npm](https://www.npmjs.com/package/@types/uuid)
   - [DefinitelyTyped @types/uuid](https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/uuid)
 
 - [#3347](https://github.com/equinor/fusion-framework/pull/3347) [`11143fa`](https://github.com/equinor/fusion-framework/commit/11143fa3002fb8a6c095052a04c7e596c56bafa8) Thanks [@dependabot](https://github.com/apps/dependabot)! - chore: bump uuid from 11.0.3 to 13.0.0
 
   ### Breaking Changes
-
   - v13.0.0: Make browser exports the default
   - v12.0.0: Update to TypeScript 5.2, remove CommonJS support, drop Node 16 support
 
   ### New Features
-
   - Improved v4() performance
   - Added Node 24 to CI matrix
   - Restored node: prefix support
 
   ### Links
-
   - [GitHub releases](https://github.com/uuidjs/uuid/releases/tag/v13.0.0)
   - [npm changelog](https://www.npmjs.com/package/uuid?activeTab=versions)
 
@@ -139,14 +140,12 @@
 - [#3075](https://github.com/equinor/fusion-framework/pull/3075) [`8fffbfb`](https://github.com/equinor/fusion-framework/commit/8fffbfb12daa9748bf5290e5084cd4d409aed253) Thanks [@odinr](https://github.com/odinr)! - Refactored the `Bookmark` type to be an intersection of `BookmarkWithoutData` and an optional `payload` property, improving type safety and flexibility. Updated `useBookmarkNavigate` to use proper TypeScript typing for bookmark events.
 
   **Module Bookmark Changes:**
-
   - Refactored `Bookmark` type in `packages/modules/bookmark/src/types.ts`
   - Added export for `BookmarkProviderEvents` type in `packages/modules/bookmark/src/index.ts`
   - Updated JSDoc comment from `@note` to `@remarks` in `packages/modules/bookmark/src/BookmarkClient.ts`
   - Reordered tsconfig references (event before services)
 
   **React Changes:**
-
   - Updated `packages/react/modules/bookmark/src/portal/useBookmarkNavigate.ts` to use proper TypeScript typing for bookmark provider events
   - Removed React paths configuration from `packages/react/app/tsconfig.json`
 
@@ -181,7 +180,6 @@
 ### Patch Changes
 
 - [#3088](https://github.com/equinor/fusion-framework/pull/3088) [`7441b13`](https://github.com/equinor/fusion-framework/commit/7441b13aa50dd7362d1629086a27b6b4e571575d) Thanks [@eikeland](https://github.com/eikeland)! - chore: update package typesVersions
-
   - Updated package.json typesVersions.
   - Ensures backward compatibility with older node versions.
   - Ensured consistency with workspace and repository configuration.
@@ -335,7 +333,6 @@
   The new implementation has better state management and error handling, and should be easier to work with than the v1 implementation.
 
   **Highlights:**
-
   - has validation of configuration of the module.
   - uses the `BaseConfigBuilder` pattern for configuration.
   - has validation of requests and responses using zod schemas.
@@ -347,12 +344,10 @@
   - has better logging.
 
   **Migration:**
-
   - update config for enabling the module
   - check all direct access to provider interface if they are still valid
 
   **Breaking changes:**
-
   - The provider interface has changed
   - The client interface has changed
   - The configuration interface has changed
@@ -406,7 +401,6 @@
 - [#2320](https://github.com/equinor/fusion-framework/pull/2320) [`1dd85f3`](https://github.com/equinor/fusion-framework/commit/1dd85f3a408a73df556d1812a5f280945cc100ee) Thanks [@odinr](https://github.com/odinr)! - Removed the `removeComments` option from the `tsconfig.base.json` file.
 
   Removing the `removeComments` option allows TypeScript to preserve comments in the compiled JavaScript output. This can be beneficial for several reasons:
-
   1. Improved debugging: Preserved comments can help developers understand the code better during debugging sessions.
   2. Documentation: JSDoc comments and other important code documentation will be retained in the compiled output.
   3. Source map accuracy: Keeping comments can lead to more accurate source maps, which is crucial for debugging and error tracking.
