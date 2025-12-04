@@ -23,7 +23,6 @@
     "@equinor/fusion-framework-cli": "workspace:^",
     "@equinor/fusion-framework-module-navigation": "workspace:^",
     "@equinor/fusion-framework-react-ag-charts": "workspace:^",
-<<<<<<< HEAD
     "@equinor/fusion-framework-react-app": "workspace:^",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
@@ -38,20 +37,6 @@
     "@equinor/fusion-framework-react-router": "workspace:^",
     "ag-charts-community": "^13.1.0",
     "ag-charts-react": "^13.1.0",
-=======
-    "@types/react": "^18.2.50",
-    "@types/react-dom": "^18.2.7",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-router-dom": "^7.9.5",
-    "styled-components": "^6.1.19",
-    "typescript": "^5.9.3"
-  },
-  "dependencies": {
-    "@equinor/fusion-framework-react-router": "workspace:^",
-    "ag-charts-community": "^12.2.0",
-    "ag-charts-react": "^12.2.0",
->>>>>>> 410d3740f (feat(react-router): add router module and React 19 baseline (#3765))
     "chart.js": "^4.5.1",
     "react-chartjs-2": "^5.3.1"
   }
