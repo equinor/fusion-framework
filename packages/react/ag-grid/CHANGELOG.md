@@ -1,5 +1,29 @@
 # @equinor/fusion-framework-react-ag-grid
 
+## 34.4.0
+
+### Minor Changes
+
+- [#3816](https://github.com/equinor/fusion-framework/pull/3816) [`7c57951`](https://github.com/equinor/fusion-framework/commit/7c57951c57763f567a1284e81f903dd892a023ed) Thanks [@odinr](https://github.com/odinr)! - Add new `./charts` export path for AG Charts React components and enterprise module.
+
+  The package now exports `AgCharts` and `AgChartsEnterpriseModule` from a dedicated `./charts` export path. This provides a cleaner separation from the enterprise exports.
+
+  ```typescript
+  import {
+    AgCharts,
+    AgChartsEnterpriseModule,
+  } from "@equinor/fusion-framework-react-ag-grid/charts";
+  ```
+
+  Note: Charts exports are still available from `./enterprise` for backward compatibility but will be removed in a future minor release.
+
+  Fixes: https://github.com/equinor/fusion-framework/issues/747
+
+### Patch Changes
+
+- Updated dependencies [[`7c57951`](https://github.com/equinor/fusion-framework/commit/7c57951c57763f567a1284e81f903dd892a023ed)]:
+  - @equinor/fusion-framework-module-ag-grid@34.4.0
+
 ## 34.3.0
 
 ### Minor Changes
