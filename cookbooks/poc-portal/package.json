@@ -23,13 +23,13 @@
     "@equinor/fusion-framework-react-app": "workspace:*",
     "@vitejs/plugin-react": "^5.0.2",
     "is-mergeable-object": "^1.1.1",
-    "react": "^18.2.0",
+    "react": "^19.2.1",
     "react-dom": "^18.2.0",
     "vite": "^7.1.12",
     "vite-plugin-environment": "^1.1.3"
   },
   "devDependencies": {
-    "@types/react": "^18.2.50",
+    "@types/react": "^19.2.7",
     "@types/react-dom": "^18.3.0"
   }
 }
