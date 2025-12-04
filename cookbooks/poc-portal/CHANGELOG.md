@@ -1,5 +1,22 @@
 # poc-portal
 
+## 1.1.27-next.0
+
+### Patch Changes
+
+- [#3820](https://github.com/equinor/fusion-framework/pull/3820) [`265bb76`](https://github.com/equinor/fusion-framework/commit/265bb767249989eeb1971e83f3fba94879e0813b) Thanks [@odinr](https://github.com/odinr)! - relase next
+
+- Updated dependencies [[`d252b0d`](https://github.com/equinor/fusion-framework/commit/d252b0d442b7c8c1b50bf2768cf9ecbbb55a76f8), [`d252b0d`](https://github.com/equinor/fusion-framework/commit/d252b0d442b7c8c1b50bf2768cf9ecbbb55a76f8), [`265bb76`](https://github.com/equinor/fusion-framework/commit/265bb767249989eeb1971e83f3fba94879e0813b), [`d252b0d`](https://github.com/equinor/fusion-framework/commit/d252b0d442b7c8c1b50bf2768cf9ecbbb55a76f8), [`9f7597e`](https://github.com/equinor/fusion-framework/commit/9f7597ee237ef069dc24cbe39c73b5b26db157dd), [`9f7597e`](https://github.com/equinor/fusion-framework/commit/9f7597ee237ef069dc24cbe39c73b5b26db157dd), [`9f7597e`](https://github.com/equinor/fusion-framework/commit/9f7597ee237ef069dc24cbe39c73b5b26db157dd), [`75c068f`](https://github.com/equinor/fusion-framework/commit/75c068fea13c32435ac26bd9043cc156482bfaf1), [`d252b0d`](https://github.com/equinor/fusion-framework/commit/d252b0d442b7c8c1b50bf2768cf9ecbbb55a76f8)]:
+  - @equinor/fusion-framework-cli@12.5.0-next.0
+  - @equinor/fusion-framework-react@8.0.0-next.0
+  - @equinor/fusion-framework-module-app@7.2.0-next.0
+  - @equinor/fusion-framework-react-app@9.0.0-next.0
+  - @equinor/fusion-framework@7.4.3-next.0
+  - @equinor/fusion-framework-module-http@7.0.6-next.0
+  - @equinor/fusion-framework-module@5.0.6-next.0
+  - @equinor/fusion-framework-module-msal@7.0.0-next.0
+  - @equinor/fusion-framework-module-service-discovery@9.0.5-next.0
+
 ## 1.1.26
 
 ### Patch Changes
@@ -103,20 +120,17 @@
   This update addresses a security vulnerability in Vite's development server and includes bug fixes for improved compatibility. The update ensures secure development environments and better plugin ecosystem compatibility.
 
   **Changes:**
-
   - Updated Vite from v7.1.10 to v7.1.12
   - Includes security fix for development server file system checks
   - Includes compatibility fix for CommonJS plugin
   - No breaking changes or API modifications
 
   **Security Fix (v7.1.11):**
-
   - **dev**: trim trailing slash before `server.fs.deny` check ([#20968](https://github.com/vitejs/vite/issues/20968))
     - Prevents potential path traversal vulnerability in development server
     - Only affects development environment, not production builds
 
   **Bug Fix (v7.1.12):**
-
   - **deps**: downgrade commonjs plugin to 28.0.6 to avoid rollup/plugins issues ([#20990](https://github.com/vitejs/vite/issues/20990))
     - Improves compatibility with Rollup plugin ecosystem
     - Prevents potential build issues
@@ -260,7 +274,6 @@
 - [#3349](https://github.com/equinor/fusion-framework/pull/3349) [`c511123`](https://github.com/equinor/fusion-framework/commit/c511123c835e24e9ddefcc4c47c2455f5df12087) Thanks [@dependabot](https://github.com/apps/dependabot)! - chore: bump vite from 6.x to 7.1.5
 
   Major version update of Vite build tool across all packages. This update includes:
-
   - Enhanced build performance and caching
   - Better error reporting with code frames
   - Improved TypeScript integration
@@ -268,7 +281,6 @@
   - New development server features
 
   ### Links
-
   - [Vite 7.1.5 Release Notes](https://github.com/vitejs/vite/releases/tag/v7.1.5)
   - [Vite 7.x Migration Guide](https://vitejs.dev/guide/migration)
 

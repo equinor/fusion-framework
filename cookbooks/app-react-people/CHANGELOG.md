@@ -1,5 +1,25 @@
 # Change Log
 
+## 4.5.18-next.0
+
+### Patch Changes
+
+- [#3820](https://github.com/equinor/fusion-framework/pull/3820) [`d252b0d`](https://github.com/equinor/fusion-framework/commit/d252b0d442b7c8c1b50bf2768cf9ecbbb55a76f8) Thanks [@odinr](https://github.com/odinr)! - Migrate cookbook from legacy router pattern to `@equinor/fusion-framework-react-router`.
+
+  Updated the people cookbook to use the new React Router DSL API:
+  - Removed `@remix-run/router` dependency
+  - Replaced `useRouter()` hook with `Router` component from `@equinor/fusion-framework-react-router`
+  - Migrated route definitions to use DSL functions (`layout`, `index`, `route`) from `@equinor/fusion-framework-react-router/routes`
+  - Updated page components to work with the new routing pattern
+
+  This cookbook now serves as an example of the recommended routing pattern for Fusion Framework applications.
+
+- [#3820](https://github.com/equinor/fusion-framework/pull/3820) [`265bb76`](https://github.com/equinor/fusion-framework/commit/265bb767249989eeb1971e83f3fba94879e0813b) Thanks [@odinr](https://github.com/odinr)! - relase next
+
+- Updated dependencies [[`265bb76`](https://github.com/equinor/fusion-framework/commit/265bb767249989eeb1971e83f3fba94879e0813b), [`d252b0d`](https://github.com/equinor/fusion-framework/commit/d252b0d442b7c8c1b50bf2768cf9ecbbb55a76f8), [`d252b0d`](https://github.com/equinor/fusion-framework/commit/d252b0d442b7c8c1b50bf2768cf9ecbbb55a76f8), [`75c068f`](https://github.com/equinor/fusion-framework/commit/75c068fea13c32435ac26bd9043cc156482bfaf1), [`d252b0d`](https://github.com/equinor/fusion-framework/commit/d252b0d442b7c8c1b50bf2768cf9ecbbb55a76f8)]:
+  - @equinor/fusion-framework-module-navigation@7.0.0-next.1
+  - @equinor/fusion-framework-react-router@1.0.0-next.0
+
 ## 4.5.17
 
 ### Patch Changes
@@ -7,7 +27,6 @@
 - [#3714](https://github.com/equinor/fusion-framework/pull/3714) [`11fe961`](https://github.com/equinor/fusion-framework/commit/11fe961794e4960ccb987bc320268cc9b263f1f8) Thanks [@odinr](https://github.com/odinr)! - Improved all cookbook README documentation for better developer experience.
 
   All cookbook README files now feature:
-
   - Code examples matching actual implementations
   - Inline comments explaining patterns and concepts
   - Developer-friendly language for those new to Fusion Framework
@@ -22,7 +41,6 @@
 ### Patch Changes
 
 - [#3542](https://github.com/equinor/fusion-framework/pull/3542) [`2d4fd18`](https://github.com/equinor/fusion-framework/commit/2d4fd18394e8545b4616140a93a369d5ae77ccbc) Thanks [@eikeland](https://github.com/eikeland)! - Updated person component dependencies for improved functionality and bug fixes.
-
   - Updated `@equinor/fusion-react-person` from `^0.10.3` to `^0.10.10` in app-react-people cookbook
   - Updated `@equinor/fusion-wc-person` from `^3.1.8` to `^3.2.4` in dev-portal and people-resolver packages
 
@@ -33,7 +51,6 @@
 - [#3400](https://github.com/equinor/fusion-framework/pull/3400) [`aed6c53`](https://github.com/equinor/fusion-framework/commit/aed6c5385df496a86d06dc0af9dacafc255ea605) Thanks [@dependabot](https://github.com/apps/dependabot)! - chore: bump @equinor/eds-core-react from 0.45.1 to 0.49.0
 
   ### New Features
-
   - ✨ Always show "add new option" in Autocomplete when onAddNewOption is provided
   - ✨ Tabs call onChange with provided value if present
   - ✨ Add disabled prop to Tooltip
@@ -41,7 +58,6 @@
   - ✨ Add support for adding new options in Autocomplete
 
   ### Bug Fixes
-
   - 🐛 Autocomplete - Don't call onOptionsChange when clicking "Add new"
   - 🐛 Table - Fix Firefox table header wrapping issue
   - 🐛 Tabs documentation type mismatch - update onChange parameter from number to number | string
@@ -53,28 +69,24 @@
   - 🐛 Menu: Ensure onClose is called when a MenuItem without onClick is clicked
 
   ### Links
-
   - [GitHub releases](https://github.com/equinor/design-system/releases/tag/eds-core-react%400.49.0)
   - [npm changelog](https://www.npmjs.com/package/@equinor/eds-core-react?activeTab=versions)
 
 - [#3366](https://github.com/equinor/fusion-framework/pull/3366) [`daa362e`](https://github.com/equinor/fusion-framework/commit/daa362e7d92ad362e46d666c434d0f09687abad5) Thanks [@dependabot](https://github.com/apps/dependabot)! - Update @equinor/eds-core-react from 0.48.0 to 0.49.0
 
   ### Changes
-
   - Updated @equinor/eds-core-react dependency to latest version across all packages
   - Fixed peerDependencies version mismatch in bookmark package
   - Includes bug fixes for Autocomplete and Table components
   - Adds new Autocomplete features for "add new option" functionality
 
   ### Affected Packages
-
   - packages/dev-portal
   - packages/react/components/bookmark
   - cookbooks/app-react-feature-flag
   - cookbooks/app-react-people
 
   ### Links
-
   - [GitHub releases](https://github.com/equinor/design-system/releases)
   - [Full Changelog](https://github.com/equinor/design-system/compare/eds-core-react@0.48.0...eds-core-react@0.49.0)
 
@@ -139,7 +151,6 @@
 - [#2885](https://github.com/equinor/fusion-framework/pull/2885) [`abb3560`](https://github.com/equinor/fusion-framework/commit/abb3560a22ad8830df19904272035458433f4237) Thanks [@dependabot](https://github.com/apps/dependabot)! - Update he `Typescript` version `^5.7.3` to `^5.8.2`
 
 - [#2890](https://github.com/equinor/fusion-framework/pull/2890) [`1ad39f5`](https://github.com/equinor/fusion-framework/commit/1ad39f509a33627f2ad877a4125386a80ab8f510) Thanks [@odinr](https://github.com/odinr)! - refactor: adhere to self-closing tags for components
-
   - Updated `SelectorPage.tsx` to use self-closing tags for `PersonSelect` components.
   - Updated `Header.Actions.tsx` to use self-closing tags for `fwc-person-avatar` component.
   - Updated `FeatureSheetContent.tsx` to use self-closing tags for `Icon` and `Divider` components.
@@ -238,7 +249,6 @@
 ### Minor Changes
 
 - [#2197](https://github.com/equinor/fusion-framework/pull/2197) [`5426b23`](https://github.com/equinor/fusion-framework/commit/5426b232656ce7a87517fae61e50bb43743e6372) Thanks [@odinr](https://github.com/odinr)! - - Added documentation and examples for using components from the `@equinor/fusion-react-person` package.
-
   - Implemented a `useSearchPersons` hook to search for persons using the People API.
   - Added a `searchPerson` function to perform person searches with an HTTP client.
   - Created new types for the person search API response and error handling.

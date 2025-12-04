@@ -1,5 +1,16 @@
 # Change Log
 
+## 1.0.6-next.0
+
+### Patch Changes
+
+- [#3820](https://github.com/equinor/fusion-framework/pull/3820) [`265bb76`](https://github.com/equinor/fusion-framework/commit/265bb767249989eeb1971e83f3fba94879e0813b) Thanks [@odinr](https://github.com/odinr)! - relase next
+
+- Updated dependencies [[`d252b0d`](https://github.com/equinor/fusion-framework/commit/d252b0d442b7c8c1b50bf2768cf9ecbbb55a76f8), [`d252b0d`](https://github.com/equinor/fusion-framework/commit/d252b0d442b7c8c1b50bf2768cf9ecbbb55a76f8), [`265bb76`](https://github.com/equinor/fusion-framework/commit/265bb767249989eeb1971e83f3fba94879e0813b), [`d252b0d`](https://github.com/equinor/fusion-framework/commit/d252b0d442b7c8c1b50bf2768cf9ecbbb55a76f8), [`9f7597e`](https://github.com/equinor/fusion-framework/commit/9f7597ee237ef069dc24cbe39c73b5b26db157dd), [`9f7597e`](https://github.com/equinor/fusion-framework/commit/9f7597ee237ef069dc24cbe39c73b5b26db157dd), [`75c068f`](https://github.com/equinor/fusion-framework/commit/75c068fea13c32435ac26bd9043cc156482bfaf1), [`d252b0d`](https://github.com/equinor/fusion-framework/commit/d252b0d442b7c8c1b50bf2768cf9ecbbb55a76f8)]:
+  - @equinor/fusion-framework-cli@12.5.0-next.0
+  - @equinor/fusion-framework-react-app@9.0.0-next.0
+  - @equinor/fusion-framework-react-ag-grid@35.0.0-next.0
+
 ## 1.0.5
 
 ### Patch Changes
@@ -26,7 +37,6 @@
 - [#3714](https://github.com/equinor/fusion-framework/pull/3714) [`11fe961`](https://github.com/equinor/fusion-framework/commit/11fe961794e4960ccb987bc320268cc9b263f1f8) Thanks [@odinr](https://github.com/odinr)! - Improved all cookbook README documentation for better developer experience.
 
   All cookbook README files now feature:
-
   - Code examples matching actual implementations
   - Inline comments explaining patterns and concepts
   - Developer-friendly language for those new to Fusion Framework
@@ -45,7 +55,6 @@
 ### Patch Changes
 
 - [`7fadb5e`](https://github.com/equinor/fusion-framework/commit/7fadb5ec87b6b6099eb6051078c6bddd7bebd8a0) Thanks [@odinr](https://github.com/odinr)! - Downgrade dependencies to supported versions: React 18 and EDS v0.49.0.
-
   - Downgraded React from ^19.2.0 to ^18.2.0
   - Downgraded React DOM from ^19.2.0 to ^18.2.0
   - Downgraded @types/react from ^19.2.2 to ^18.2.50
@@ -69,7 +78,6 @@
 - [#3556](https://github.com/equinor/fusion-framework/pull/3556) [`3522425`](https://github.com/equinor/fusion-framework/commit/3522425790e5ce25e28ba40f3636c4a7168afe5b) Thanks [@AndrejNikolicEq](https://github.com/AndrejNikolicEq)! - Add React 19 support and AgChartsEnterpriseModule demonstration
 
   ## React 19 Compatibility
-
   - **Updated peerDependencies**: AG Grid React package now supports React 17, 18, and 19
   - **Version Range**: Extended React support from `^17.0.0 || ^18.0.0` to `^17.0.0 || ^18.0.0 || ^19.0.0`
   - **Forward Compatibility**: Ensures compatibility with latest React features and improvements
@@ -79,7 +87,6 @@
   Enhanced the AG Grid cookbook with comprehensive charts functionality demonstration:
 
   ### New Features
-
   - **Charts Enterprise Tab**: Added dedicated tab showcasing AgChartsEnterpriseModule integration
   - **Interactive Demo**: Real-world sales data with chart creation instructions
   - **Business Scenarios**: Multiple chart examples including:
@@ -88,13 +95,11 @@
     - Quarterly Sales Chart (multi-series column chart)
 
   ### Components Added
-
   - **ChartsExample**: New component demonstrating enterprise charting capabilities
   - **Regional Sales Data**: 7 unique regions with comprehensive sales metrics
   - **Interactive Buttons**: One-click chart generation for different business scenarios
 
   ### Configuration Updates
-
   - **AgChartsEnterpriseModule**: Added to module configuration alongside existing enterprise modules
   - **Chart-Optimized Data**: Structured data for effective chart demonstrations
   - **Enhanced Grid Props**: Simplified configuration focusing on charting capabilities
@@ -102,7 +107,6 @@
   ## Usage
 
   The cookbook now provides a complete reference for integrating AG Charts Enterprise features:
-
   - Interactive chart creation via context menu and buttons
   - Multiple chart types (bar, column, pie) demonstration
   - Data filtering and aggregation examples
@@ -445,7 +449,6 @@
 ### Patch Changes
 
 - [#2802](https://github.com/equinor/fusion-framework/pull/2802) [`6277eef`](https://github.com/equinor/fusion-framework/commit/6277eefe89444fee150f01c11b1d01348e024ca3) Thanks [@odinr](https://github.com/odinr)! - Updated the package to use `@equinor/fusion-framework-react-ag-grid` instead of `@equinor/fusion-framework-module-ag-grid`.
-
   - Replaced `@equinor/fusion-framework-module-ag-grid` with `@equinor/fusion-framework-react-ag-grid` in `package.json`.
   - Updated imports in `App.tsx` and `config.ts` to use `@equinor/fusion-framework-react-ag-grid`.
   - Modified `tsconfig.json` to use `react-jsx` instead of `react-jsxdev`.
@@ -544,7 +547,6 @@
   AG Grid 32 introduces several new features and improvements for React applications, along with some breaking changes that developers need to be aware of when upgrading.
 
   ## Key Breaking Changes
-
   1. **Removal of deprecated APIs**
      - Several deprecated APIs have been removed, including some related to row models, column definitions, and grid options.
   2. **Changes to default behavior**
@@ -584,7 +586,6 @@
 - [#2207](https://github.com/equinor/fusion-framework/pull/2207) [`cc6b519`](https://github.com/equinor/fusion-framework/commit/cc6b519df0903c570e7ed2f4af9b8e5cf8d1fc7d) Thanks [@odinr](https://github.com/odinr)! - **@equinor/fusion-framework-module-ag-grid**
 
   Updated ag-grid dependencies to latest minor versions:
-
   - `@ag-grid-community/client-side-row-model` from `~31.2.0` to `~31.3.2`
   - `@ag-grid-community/core` from `~31.2.0` to `~31.3.2`
   - `@ag-grid-community/react` from `~31.2.0` to `~31.3.2`

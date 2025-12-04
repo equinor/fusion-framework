@@ -1,5 +1,16 @@
 # Change Log
 
+## 9.0.5-next.0
+
+### Patch Changes
+
+- [#3820](https://github.com/equinor/fusion-framework/pull/3820) [`265bb76`](https://github.com/equinor/fusion-framework/commit/265bb767249989eeb1971e83f3fba94879e0813b) Thanks [@odinr](https://github.com/odinr)! - relase next
+
+- Updated dependencies [[`265bb76`](https://github.com/equinor/fusion-framework/commit/265bb767249989eeb1971e83f3fba94879e0813b), [`75c068f`](https://github.com/equinor/fusion-framework/commit/75c068fea13c32435ac26bd9043cc156482bfaf1)]:
+  - @equinor/fusion-query@7.0.0-next.0
+  - @equinor/fusion-framework-module-http@7.0.6-next.0
+  - @equinor/fusion-framework-module@5.0.6-next.0
+
 ## 9.0.4
 
 ### Patch Changes
@@ -35,7 +46,6 @@
 ### Patch Changes
 
 - [#3428](https://github.com/equinor/fusion-framework/pull/3428) [`1700ca8`](https://github.com/equinor/fusion-framework/commit/1700ca8851fa108e55e9729fd24f595272766e63) Thanks [@dependabot](https://github.com/apps/dependabot)! - Update zod from 4.1.9 to 4.1.11
-
   - **v4.1.10**: Fixed shape caching issue (#5263) improving validation performance for complex schemas
   - **v4.1.11**: Maintenance release with general improvements
 
@@ -55,7 +65,6 @@
   Updated source code to migrate from zod v3 to v4. Updated zod dependency from v3.25.76 to v4.1.8 and modified schema definitions in the service discovery module to be compatible with zod v4's stricter type checking and updated API.
 
   Key changes in source code:
-
   - Updated `ApiService` and `ApiServices` schemas for zod v4 compatibility
   - Enhanced service object validation with proper type definitions
   - Updated service response selector to use zod v4 parsing
@@ -64,7 +73,6 @@
   Breaking changes: Schema validation behavior may differ due to zod v4's stricter type checking. Error message format has changed from zod v3 to v4 format. Function schema definitions now require explicit typing.
 
   Links:
-
   - [Zod v4 Migration Guide](https://github.com/colinhacks/zod/releases/tag/v4.0.0)
   - [Zod v4.1.8 Release Notes](https://github.com/colinhacks/zod/releases/tag/v4.1.8)
 
@@ -232,12 +240,10 @@
   > This module can still be configured to resolve custom services, as long as the client implements the `IServiceDiscoveryClient` interface.
 
   **Documentation Updates**
-
   - The README file has been updated to reflect the new configuration options and usage patterns for the Service Discovery module.
   - Added sections for simple and advanced configurations, including examples of how to override the default HTTP client key and set a custom service discovery client.
 
   **Code Changes:**
-
   - 🔨 package.json: Added `zod` as a new dependency for schema validation.
   - 💫 api-schema.ts: Added schema for the expected response from the `ServiceProviderClient`
   - 💫 client.ts: Created `serviceResponseSelector` for parsing and validating client respons.
@@ -248,7 +254,6 @@
   - 🔨 configurator.ts: Added error handling and validation for required configurations.
 
   **BREAKING CHANGES:**
-
   - The type `Service` has deprecated the `defaultScopes` property in favor of `scopes`.
   - The `IServiceDiscoveryClient` interface has been updated, which may require changes in implementations that use this interface.
   - The `ServiceDiscoveryConfigurator` now extends `BaseConfigBuilder`, which will affect existing configurations.
@@ -267,9 +272,8 @@
 
   ```typescript
   // Before
-  const { services } = await serviceDiscoveryProvider.resolveServices(
-    "my-service"
-  );
+  const { services } =
+    await serviceDiscoveryProvider.resolveServices("my-service");
   // After
   const services = await serviceDiscoveryProvider.resolveServices("my-service");
   ```
@@ -327,7 +331,6 @@
 - [#2320](https://github.com/equinor/fusion-framework/pull/2320) [`1dd85f3`](https://github.com/equinor/fusion-framework/commit/1dd85f3a408a73df556d1812a5f280945cc100ee) Thanks [@odinr](https://github.com/odinr)! - Removed the `removeComments` option from the `tsconfig.base.json` file.
 
   Removing the `removeComments` option allows TypeScript to preserve comments in the compiled JavaScript output. This can be beneficial for several reasons:
-
   1. Improved debugging: Preserved comments can help developers understand the code better during debugging sessions.
   2. Documentation: JSDoc comments and other important code documentation will be retained in the compiled output.
   3. Source map accuracy: Keeping comments can lead to more accurate source maps, which is crucial for debugging and error tracking.
@@ -592,7 +595,6 @@
 ### Patch Changes
 
 - [#905](https://github.com/equinor/fusion-framework/pull/905) [`a7858a1c`](https://github.com/equinor/fusion-framework/commit/a7858a1c01542e2dc94370709f122b4b99c3219c) Thanks [@odinr](https://github.com/odinr)! - **🚧 Chore: dedupe packages**
-
   - align all versions of typescript
   - update types to build
     - a couple of typecasts did not [satisfies](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-0.html#satisfies-support-in-jsdoc) and was recasted as `unknwon`, marked with `TODO`, should be fixed in future
