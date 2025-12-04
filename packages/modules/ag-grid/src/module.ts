@@ -10,7 +10,7 @@ import { type IAgGridProvider, AgGridProvider } from './AgGridProvider';
 
 import type { IAgGridConfigurator } from './AgGridConfigurator.interface';
 
-import { fusionTheme, createThemeFromTheme } from './themes';
+import { createThemeFromTheme, fusionTheme } from './themes';
 
 export type AgGridModule = Module<'agGrid', IAgGridProvider, IAgGridConfigurator>;
 
@@ -21,7 +21,7 @@ export const module: AgGridModule = {
   configure: (ref?: ModulesInstanceType<[AgGridModule]>) => {
     const licenseKey = ref?.agGrid?.licenseKey;
 
-    const theme = ref?.agGrid?.theme ? createThemeFromTheme(ref.agGrid.theme) : fusionTheme;
+    const theme = () => (ref?.agGrid?.theme ? createThemeFromTheme(ref.agGrid.theme) : fusionTheme);
     return new AgGridConfigurator({
       licenseKey,
       theme,

@@ -2,7 +2,7 @@ import type { Theme, Module } from 'ag-grid-community';
 
 export interface AgGridConfig {
   licenseKey?: string;
-  theme?: Theme;
+  theme?: () => Theme;
   modules?: Array<Module>;
 }
 
