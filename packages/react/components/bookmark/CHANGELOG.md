@@ -1,11 +1,40 @@
 # Change Log
 
+## 2.0.0-next.0
+
+### Major Changes
+
+- [#3820](https://github.com/equinor/fusion-framework/pull/3820) [`9f7597e`](https://github.com/equinor/fusion-framework/commit/9f7597ee237ef069dc24cbe39c73b5b26db157dd) Thanks [@odinr](https://github.com/odinr)! - Require React 18+ as peer dependency. React 17 is no longer supported.
+
+  **Migration:** Update your application to React 18+ to continue using these packages.
+
+  Closes https://github.com/equinor/fusion-framework/issues/3504
+
+- [#3820](https://github.com/equinor/fusion-framework/pull/3820) [`75c068f`](https://github.com/equinor/fusion-framework/commit/75c068fea13c32435ac26bd9043cc156482bfaf1) Thanks [@odinr](https://github.com/odinr)! - Upgrade to React 19 and remove support for React versions lower than 18.
+
+  **Breaking changes:**
+  - Peer dependencies now require React 18 or 19 (`^18.0.0 || ^19.0.0`)
+  - React 16 and 17 are no longer supported
+  - Dev dependencies upgraded to React 19.2.1 and @types/react 19.2.7
+
+  **Migration:**
+  - Update your React version to 18.0.0 or higher before upgrading these packages
+  - If using React 16 or 17, upgrade to React 18 or 19 first
+
+### Patch Changes
+
+- [#3820](https://github.com/equinor/fusion-framework/pull/3820) [`265bb76`](https://github.com/equinor/fusion-framework/commit/265bb767249989eeb1971e83f3fba94879e0813b) Thanks [@odinr](https://github.com/odinr)! - relase next
+
+- Updated dependencies [[`265bb76`](https://github.com/equinor/fusion-framework/commit/265bb767249989eeb1971e83f3fba94879e0813b), [`d252b0d`](https://github.com/equinor/fusion-framework/commit/d252b0d442b7c8c1b50bf2768cf9ecbbb55a76f8), [`9f7597e`](https://github.com/equinor/fusion-framework/commit/9f7597ee237ef069dc24cbe39c73b5b26db157dd), [`75c068f`](https://github.com/equinor/fusion-framework/commit/75c068fea13c32435ac26bd9043cc156482bfaf1)]:
+  - @equinor/fusion-framework-react-module-bookmark@6.0.0-next.0
+  - @equinor/fusion-observable@9.0.0-next.0
+  - @equinor/fusion-framework-react@8.0.0-next.0
+
 ## 1.1.2
 
 ### Patch Changes
 
 - [#3714](https://github.com/equinor/fusion-framework/pull/3714) [`11fe961`](https://github.com/equinor/fusion-framework/commit/11fe961794e4960ccb987bc320268cc9b263f1f8) Thanks [@odinr](https://github.com/odinr)! - Fix MSAL v4 compatibility in bookmark SharedIcon component.
-
   - Replace deprecated defaultAccount with account property
   - Ensure proper account information access for bookmark sharing logic
 
@@ -21,14 +50,12 @@
 - [#3515](https://github.com/equinor/fusion-framework/pull/3515) [`6cb288b`](https://github.com/equinor/fusion-framework/commit/6cb288b9e1ec4fae68ae6899735c176837bb4275) Thanks [@odinr](https://github.com/odinr)! - ## Global Biome Configuration Modernization
 
   **Workspace-wide changes:**
-
   - Remove 19 rule overrides from `biome.json` to use Biome's strict "error" defaults
   - Enable `correctness/useUniqueElementIds` accessibility rule globally
   - Reduce configuration size by 40% (60+ → ~35 lines)
   - Eliminate all custom linting rule customizations
 
   **Package-specific changes:**
-
   - Replace static IDs with React `useId()` hooks in bookmark and dev-portal components
   - Fix `suspicious/noAssignInExpressions` violations in context, legacy-interopt, and observable packages
   - Update 11 React components for accessibility compliance
@@ -48,12 +75,10 @@
 - [#3363](https://github.com/equinor/fusion-framework/pull/3363) [`adb5176`](https://github.com/equinor/fusion-framework/commit/adb5176d2e4d14fb4c055ecd43d4c21c751a9a1d) Thanks [@dependabot](https://github.com/apps/dependabot)! - Updated @equinor/eds-utils from 0.8.5 to 0.9.0
 
   ### Changes
-
   - Updated @equinor/eds-utils dependency to latest version
   - Added Firefox detection utility support
 
   ### Links
-
   - [GitHub releases](https://github.com/equinor/design-system/releases)
   - [Changelog](https://github.com/equinor/design-system/blob/develop/packages/eds-utils/CHANGELOG.md)
 
@@ -62,7 +87,6 @@
 - [#3400](https://github.com/equinor/fusion-framework/pull/3400) [`aed6c53`](https://github.com/equinor/fusion-framework/commit/aed6c5385df496a86d06dc0af9dacafc255ea605) Thanks [@dependabot](https://github.com/apps/dependabot)! - chore: bump @equinor/eds-core-react from 0.45.1 to 0.49.0
 
   ### New Features
-
   - ✨ Always show "add new option" in Autocomplete when onAddNewOption is provided
   - ✨ Tabs call onChange with provided value if present
   - ✨ Add disabled prop to Tooltip
@@ -70,7 +94,6 @@
   - ✨ Add support for adding new options in Autocomplete
 
   ### Bug Fixes
-
   - 🐛 Autocomplete - Don't call onOptionsChange when clicking "Add new"
   - 🐛 Table - Fix Firefox table header wrapping issue
   - 🐛 Tabs documentation type mismatch - update onChange parameter from number to number | string
@@ -82,28 +105,24 @@
   - 🐛 Menu: Ensure onClose is called when a MenuItem without onClick is clicked
 
   ### Links
-
   - [GitHub releases](https://github.com/equinor/design-system/releases/tag/eds-core-react%400.49.0)
   - [npm changelog](https://www.npmjs.com/package/@equinor/eds-core-react?activeTab=versions)
 
 - [#3366](https://github.com/equinor/fusion-framework/pull/3366) [`daa362e`](https://github.com/equinor/fusion-framework/commit/daa362e7d92ad362e46d666c434d0f09687abad5) Thanks [@dependabot](https://github.com/apps/dependabot)! - Update @equinor/eds-core-react from 0.48.0 to 0.49.0
 
   ### Changes
-
   - Updated @equinor/eds-core-react dependency to latest version across all packages
   - Fixed peerDependencies version mismatch in bookmark package
   - Includes bug fixes for Autocomplete and Table components
   - Adds new Autocomplete features for "add new option" functionality
 
   ### Affected Packages
-
   - packages/dev-portal
   - packages/react/components/bookmark
   - cookbooks/app-react-feature-flag
   - cookbooks/app-react-people
 
   ### Links
-
   - [GitHub releases](https://github.com/equinor/design-system/releases)
   - [Full Changelog](https://github.com/equinor/design-system/compare/eds-core-react@0.48.0...eds-core-react@0.49.0)
 
@@ -380,7 +399,6 @@
 - [#2410](https://github.com/equinor/fusion-framework/pull/2410) [`9d1cb90`](https://github.com/equinor/fusion-framework/commit/9d1cb9003fa10e7ccaa95c20ef86f0a618034641) Thanks [@odinr](https://github.com/odinr)! - **@equinor/fusion-framework-react-module-bookmark:**
 
   Updated the `Bookmark` component to use the `useBookmarkComponentContext` hook for accessing the bookmark provider and state.
-
   - Replaced the `useBookmark` hook with `useBookmarkComponentContext` in the `Bookmark` component.
   - Updated the `BookmarkProvider` component to use `createContext` and `useContext` for managing the bookmark provider state.
   - Modified the `CreateBookmarkModal` and `EditBookmarkModal` components to use the `useBookmarkComponentContext` hook.
@@ -411,12 +429,10 @@
   > This will introduce breaking changes to the configuration of `AppConfigurator.client`.
 
   **Added**
-
   - Introduced `AppClient` class to handle application manifest and configuration queries.
   - Added `zod` to validate the application manifest.
 
   **Changed**
-
   - Updated `AppModuleProvider` to use `AppClient` for fetching application manifests and configurations.
   - Modified `AppConfigurator` to utilize `AppClient` for client configuration.
   - Updated `useApps` hook with new input parameter for `filterByCurrentUser` in `fusion-framework-react`.
@@ -534,7 +550,6 @@
 - [#2320](https://github.com/equinor/fusion-framework/pull/2320) [`1dd85f3`](https://github.com/equinor/fusion-framework/commit/1dd85f3a408a73df556d1812a5f280945cc100ee) Thanks [@odinr](https://github.com/odinr)! - Removed the `removeComments` option from the `tsconfig.base.json` file.
 
   Removing the `removeComments` option allows TypeScript to preserve comments in the compiled JavaScript output. This can be beneficial for several reasons:
-
   1. Improved debugging: Preserved comments can help developers understand the code better during debugging sessions.
   2. Documentation: JSDoc comments and other important code documentation will be retained in the compiled output.
   3. Source map accuracy: Keeping comments can lead to more accurate source maps, which is crucial for debugging and error tracking.
@@ -811,7 +826,6 @@
 ### Patch Changes
 
 - [#1348](https://github.com/equinor/fusion-framework/pull/1348) [`0acc8827`](https://github.com/equinor/fusion-framework/commit/0acc8827e5e2df8b5b2aeac5e1a2cd29c4384e78) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps): bump @equinor/eds-core-react from 0.32.4 to 0.33.0
-
   - support for [styled-components@6](https://styled-components.com/releases#v6.0.0)
 
 ## 0.2.9
@@ -905,7 +919,6 @@
 - [#1129](https://github.com/equinor/fusion-framework/pull/1129) [`f672d0bb`](https://github.com/equinor/fusion-framework/commit/f672d0bba71a7ea6cd08135778fda67ff38f3ac3) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps): bump @equinor/eds-core-react from 0.30.0 to 0.32.4
 
 - [#1122](https://github.com/equinor/fusion-framework/pull/1122) [`1a055b21`](https://github.com/equinor/fusion-framework/commit/1a055b21e07f84bc5d35cc891586aa9aa0bdf661) Thanks [@dependabot](https://github.com/apps/dependabot)! - Update styled-components to [^6.0.7](https://github.com/styled-components/styled-components/releases/tag/v6.0.7)
-
   - upgraded dev deps of `@equinor/fusion-framework-react-components-bookmark` to react 18, see style-components [changelog](https://github.com/styled-components/styled-components/releases/tag/v6.0.0)
   - removed `@types/style-components` from `@equinor/fusion-framework-react-components-bookmark`
 
@@ -944,7 +957,6 @@
 ### Patch Changes
 
 - [#905](https://github.com/equinor/fusion-framework/pull/905) [`a7858a1c`](https://github.com/equinor/fusion-framework/commit/a7858a1c01542e2dc94370709f122b4b99c3219c) Thanks [@odinr](https://github.com/odinr)! - **🚧 Chore: dedupe packages**
-
   - align all versions of typescript
   - update types to build
     - a couple of typecasts did not [satisfies](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-0.html#satisfies-support-in-jsdoc) and was recasted as `unknwon`, marked with `TODO`, should be fixed in future
@@ -961,7 +973,6 @@
   the bookmark module might not been enable, which makes the application crash.
 
   **TODO:**
-
   - [ ] create a simpler hook for using bookmark
   - [ ] create a hook for exposing the module
   - [ ] create better documentation

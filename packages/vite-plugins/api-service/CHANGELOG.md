@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-vite-plugin-api-service
 
+## 1.2.5-next.0
+
+### Patch Changes
+
+- [#3820](https://github.com/equinor/fusion-framework/pull/3820) [`265bb76`](https://github.com/equinor/fusion-framework/commit/265bb767249989eeb1971e83f3fba94879e0813b) Thanks [@odinr](https://github.com/odinr)! - relase next
+
 ## 1.2.4
 
 ### Patch Changes
@@ -15,20 +21,17 @@
   This update addresses a security vulnerability in Vite's development server and includes bug fixes for improved compatibility. The update ensures secure development environments and better plugin ecosystem compatibility.
 
   **Changes:**
-
   - Updated Vite from v7.1.10 to v7.1.12
   - Includes security fix for development server file system checks
   - Includes compatibility fix for CommonJS plugin
   - No breaking changes or API modifications
 
   **Security Fix (v7.1.11):**
-
   - **dev**: trim trailing slash before `server.fs.deny` check ([#20968](https://github.com/vitejs/vite/issues/20968))
     - Prevents potential path traversal vulnerability in development server
     - Only affects development environment, not production builds
 
   **Bug Fix (v7.1.12):**
-
   - **deps**: downgrade commonjs plugin to 28.0.6 to avoid rollup/plugins issues ([#20990](https://github.com/vitejs/vite/issues/20990))
     - Improves compatibility with Rollup plugin ecosystem
     - Prevents potential build issues
@@ -58,7 +61,6 @@
 - [#3349](https://github.com/equinor/fusion-framework/pull/3349) [`c511123`](https://github.com/equinor/fusion-framework/commit/c511123c835e24e9ddefcc4c47c2455f5df12087) Thanks [@dependabot](https://github.com/apps/dependabot)! - chore: bump vite from 6.x to 7.1.5
 
   Major version update of Vite build tool across all packages. This update includes:
-
   - Enhanced build performance and caching
   - Better error reporting with code frames
   - Improved TypeScript integration
@@ -66,7 +68,6 @@
   - New development server features
 
   ### Links
-
   - [Vite 7.1.5 Release Notes](https://github.com/vitejs/vite/releases/tag/v7.1.5)
   - [Vite 7.x Migration Guide](https://vitejs.dev/guide/migration)
 
@@ -77,7 +78,6 @@
 - [#2910](https://github.com/equinor/fusion-framework/pull/2910) [`07cc985`](https://github.com/equinor/fusion-framework/commit/07cc9857e1427b574e011cc319518e701dba784d) Thanks [@dependabot](https://github.com/apps/dependabot)! - Updated vitest from 2.1.9 to 3.2.4 across all packages.
 
   ## Breaking Changes
-
   - **Node.js Requirements**: Requires Node.js 18+ (already satisfied)
   - **Vite Compatibility**: Updated to work with Vite 7.x (already using Vite 7.1.5)
   - **Snapshot Format**: Snapshots now use backtick quotes (\`) instead of single quotes
@@ -85,18 +85,15 @@
   - **TypeScript Support**: Enhanced TypeScript integration and type definitions
 
   ## Security Updates
-
   - CVE-2025-24963: Browser mode serves arbitrary files (fixed in 2.1.9)
   - CVE-2025-24964: Remote Code Execution vulnerability (fixed in 2.1.9)
 
   ## Migration Notes
-
   - Test snapshots may need regeneration due to quote format changes
   - Some test configurations might need updates for new TypeScript support
   - Peer dependency warnings for @vitest/coverage-v8 are expected and safe to ignore
 
   ## Links
-
   - [Vitest 3.0 Migration Guide](https://vitest.dev/guide/migration)
   - [Vitest 3.2.4 Release Notes](https://github.com/vitest-dev/vitest/releases/tag/v3.2.4)
 
@@ -123,7 +120,6 @@
 - [#3075](https://github.com/equinor/fusion-framework/pull/3075) [`8fffbfb`](https://github.com/equinor/fusion-framework/commit/8fffbfb12daa9748bf5290e5084cd4d409aed253) Thanks [@odinr](https://github.com/odinr)! - Introducing a new Vite plugin for Fusion Framework applications that simplifies API development workflows through service discovery integration and API mocking.
 
   Key capabilities:
-
   - Proxy requests to backend services with automatic route generation
   - Mock API responses for testing and development
   - Intercept and transform API requests and responses
@@ -158,14 +154,12 @@
 - [#3074](https://github.com/equinor/fusion-framework/pull/3074) [`6b034e5`](https://github.com/equinor/fusion-framework/commit/6b034e5459094cea0c0f2490335eef3092390a13) Thanks [@odinr](https://github.com/odinr)! - Added a new Vite plugin, `API Service Vite Plugin`, designed for development purposes to proxy or mock `Service Discovery` APIs.
 
   ### Features:
-
   - **Proxy or Mock APIs:** Simplifies handling and intercepting API calls during development.
   - **Custom Route Handling:** Supports middleware or proxy-based route management.
   - **Advanced Proxy Capabilities:** Includes response processing and dynamic route generation.
   - **Utility Functions:** Provides helper functions like `createResponseInterceptor` and `createRouteMatcher` for response manipulation and route matching.
 
   ### Usage:
-
   - Integrate the plugin into your Vite project by adding it to `vite.config.ts`.
   - Configure with `proxyHandler` for advanced proxying and `routes` for custom route definitions.
 

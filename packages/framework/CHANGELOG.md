@@ -1,5 +1,21 @@
 # Change Log
 
+## 7.4.3-next.0
+
+### Patch Changes
+
+- [#3820](https://github.com/equinor/fusion-framework/pull/3820) [`265bb76`](https://github.com/equinor/fusion-framework/commit/265bb767249989eeb1971e83f3fba94879e0813b) Thanks [@odinr](https://github.com/odinr)! - relase next
+
+- Updated dependencies [[`265bb76`](https://github.com/equinor/fusion-framework/commit/265bb767249989eeb1971e83f3fba94879e0813b), [`d252b0d`](https://github.com/equinor/fusion-framework/commit/d252b0d442b7c8c1b50bf2768cf9ecbbb55a76f8)]:
+  - @equinor/fusion-framework-module-telemetry@5.0.0-next.0
+  - @equinor/fusion-framework-module-context@7.0.3-next.0
+  - @equinor/fusion-framework-module-event@4.4.1-next.0
+  - @equinor/fusion-framework-module-http@7.0.6-next.0
+  - @equinor/fusion-framework-module@5.0.6-next.0
+  - @equinor/fusion-framework-module-msal@7.0.0-next.0
+  - @equinor/fusion-framework-module-service-discovery@9.0.5-next.0
+  - @equinor/fusion-framework-module-services@7.1.6-next.0
+
 ## 7.4.2
 
 ### Patch Changes
@@ -34,7 +50,6 @@
 ### Minor Changes
 
 - [#3492](https://github.com/equinor/fusion-framework/pull/3492) [`7ba4713`](https://github.com/equinor/fusion-framework/commit/7ba47139a8d7cfbb757bd4626425c611e22c2126) Thanks [@odinr](https://github.com/odinr)! - Integrate telemetry module into framework core.
-
   - Add TelemetryModule to FusionModules type definition
   - Enable telemetry in FrameworkConfigurator with default configuration
   - Add event$ observable with framework-specific event prefixing
@@ -45,7 +60,6 @@
 ### Patch Changes
 
 - [#3490](https://github.com/equinor/fusion-framework/pull/3490) [`45954e5`](https://github.com/equinor/fusion-framework/commit/45954e5db471a2faa24e88e41fc6d6c18817d6d1) Thanks [@odinr](https://github.com/odinr)! - Remove explicit logger initialization from configurator constructors in favor of telemetry.
-
   - Removed `this.logger = new ModuleConsoleLogger(...)` from FrameworkConfigurator, AppConfigurator, and WidgetConfigurator constructors
   - Logger functionality will be handled through telemetry module with console logging adapter
 
@@ -88,20 +102,17 @@
   Major version update of Vitest testing framework and coverage package.
 
   ### Breaking Changes
-
   - Updated from Vitest v2 to v3
   - Coverage reporting may have configuration changes
   - Test runner behavior improvements
 
   ### New Features
-
   - Enhanced coverage reporting capabilities
   - Improved test performance
   - Better error handling and reporting
   - Updated Vite integration (v6.3.5)
 
   ### Links
-
   - [Vitest v3.2.4 Release Notes](https://github.com/vitest-dev/vitest/releases/tag/v3.2.4)
   - [Vitest v3 Migration Guide](https://vitest.dev/guide/migration.html)
   - [Coverage v8 Documentation](https://vitest.dev/guide/coverage.html)
@@ -299,7 +310,6 @@
   **@equinor/fusion-framework:**
 
   Enhanced the `FrameworkConfigurator` class to improve the configuration of MSAL authentication.
-
   - Updated the `configureMsal` method to accept a callback function (`AuthConfigFn`) and an optional `requiresAuth` parameter.
   - The `configureMsal` method now adds a configuration object that sets the `requiresAuth` property and invokes the provided callback function with the builder.
 
@@ -325,7 +335,7 @@
       clientId: "...",
       redirectUri: "...",
     },
-    true
+    true,
   );
   ```
 
@@ -482,7 +492,6 @@
 - [#2320](https://github.com/equinor/fusion-framework/pull/2320) [`1dd85f3`](https://github.com/equinor/fusion-framework/commit/1dd85f3a408a73df556d1812a5f280945cc100ee) Thanks [@odinr](https://github.com/odinr)! - Removed the `removeComments` option from the `tsconfig.base.json` file.
 
   Removing the `removeComments` option allows TypeScript to preserve comments in the compiled JavaScript output. This can be beneficial for several reasons:
-
   1. Improved debugging: Preserved comments can help developers understand the code better during debugging sessions.
   2. Documentation: JSDoc comments and other important code documentation will be retained in the compiled output.
   3. Source map accuracy: Keeping comments can lead to more accurate source maps, which is crucial for debugging and error tracking.
@@ -871,7 +880,6 @@
 ### Patch Changes
 
 - [#905](https://github.com/equinor/fusion-framework/pull/905) [`a7858a1c`](https://github.com/equinor/fusion-framework/commit/a7858a1c01542e2dc94370709f122b4b99c3219c) Thanks [@odinr](https://github.com/odinr)! - **🚧 Chore: dedupe packages**
-
   - align all versions of typescript
   - update types to build
     - a couple of typecasts did not [satisfies](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-0.html#satisfies-support-in-jsdoc) and was recasted as `unknwon`, marked with `TODO`, should be fixed in future
