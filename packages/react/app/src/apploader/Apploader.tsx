@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, type ReactElement } from 'react';
 import { useApploader } from './useApploader';
 
 export type ApploaderProps = {
@@ -13,12 +13,12 @@ export type ApploaderProps = {
  *
  * @param { ApploaderProps } props - The props for the component.
  * @param { string } props.appKey - The key of the Fusion app to load and mount.
- * @returns { JSX.Element } The rendered component, which displays loading, error, or the embedded app.
+ * @returns { ReactElement } The rendered component, which displays loading, error, or the embedded app.
  *
  * @example
  * <Apploader appKey="my-app" />
  */
-export const Apploader = ({ appKey }: ApploaderProps): JSX.Element => {
+export const Apploader = ({ appKey }: ApploaderProps): ReactElement => {
   const refWrapp = useRef<HTMLDivElement | null>(null);
   const { loading, error, appRef } = useApploader({ appKey });
 

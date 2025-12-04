@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useId, useMemo } from 'react';
+import { useCallback, useEffect, useId, useMemo, type ReactElement } from 'react';
 import {
   ContextProvider,
   ContextSearch,
@@ -11,9 +11,9 @@ import { useContextResolver } from './useContextResolver';
 /**
  * See fusion-react-component storybook for available attributes
  * @link https://equinor.github.io/fusion-react-components/?path=/docs/data-contextselector--component
- * @returns JSX element
+ * @returns React element
  */
-export const ContextSelector = (props: ContextSearchProps): JSX.Element | null => {
+export const ContextSelector = (props: ContextSearchProps): ReactElement | null => {
   const contextSelectorId = useId();
   const {
     resolver,
