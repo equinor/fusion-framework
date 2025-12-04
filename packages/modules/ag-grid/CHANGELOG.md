@@ -1,5 +1,26 @@
 # Change Log
 
+## 34.4.0
+
+### Minor Changes
+
+- [#3816](https://github.com/equinor/fusion-framework/pull/3816) [`7c57951`](https://github.com/equinor/fusion-framework/commit/7c57951c57763f567a1284e81f903dd892a023ed) Thanks [@odinr](https://github.com/odinr)! - Internal: `theme` config property now expects a function `() => Theme` for lazy evaluation, but consumer APIs remain backward compatible.
+
+  Most consumers using `builder.setTheme()` do not need to migrate; it still accepts both `Theme` objects and functions. Only direct construction of `AgGridConfig` requires the function wrapper.
+
+  ```typescript
+  // Internal API change (rare, direct config construction)
+  const config: AgGridConfig = {
+    theme: () => myTheme
+  };
+
+  // Builder API remains backward compatible
+  builder.setTheme(myTheme); // still works
+  builder.setTheme((theme) => theme.withParams({...})); // also works
+  ```
+
+  Fixes: https://github.com/equinor/fusion-framework/issues/747
+
 ## 34.3.0
 
 ### Minor Changes

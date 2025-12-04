@@ -1,5 +1,16 @@
 # Change Log
 
+## 1.0.5
+
+### Patch Changes
+
+- [#3816](https://github.com/equinor/fusion-framework/pull/3816) [`7c57951`](https://github.com/equinor/fusion-framework/commit/7c57951c57763f567a1284e81f903dd892a023ed) Thanks [@odinr](https://github.com/odinr)! - Add test theme override example in cookbook configuration.
+
+  Demonstrates how to use the theme function API with custom theme parameters.
+
+- Updated dependencies [[`7c57951`](https://github.com/equinor/fusion-framework/commit/7c57951c57763f567a1284e81f903dd892a023ed)]:
+  - @equinor/fusion-framework-react-ag-grid@34.4.0
+
 ## 1.0.4
 
 ### Patch Changes

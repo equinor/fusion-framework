@@ -1,5 +1,13 @@
 # Change Log
 
+## 1.2.2
+
+### Patch Changes
+
+- [#3816](https://github.com/equinor/fusion-framework/pull/3816) [`7c57951`](https://github.com/equinor/fusion-framework/commit/7c57951c57763f567a1284e81f903dd892a023ed) Thanks [@odinr](https://github.com/odinr)! - Update AG Charts imports to use new `@equinor/fusion-framework-react-ag-grid/charts` export path.
+
+  Migrate from direct `ag-charts-react` imports to the framework's unified charts export.
+
 ## 1.2.1
 
 ### Patch Changes
