@@ -5,6 +5,11 @@
 ### Patch Changes
 
 - [#4157](https://github.com/equinor/fusion-framework/pull/4157) [`6aa8e1f`](https://github.com/equinor/fusion-framework/commit/6aa8e1f5c9d852b25e97aa7d98a63008c64d4581) Thanks [@Noggling](https://github.com/Noggling)! - Internal: patch release to align TypeScript types across packages for consistent type compatibility.
+## 0.1.2-next.0
+
+### Patch Changes
+
+- [#3820](https://github.com/equinor/fusion-framework/pull/3820) [`265bb76`](https://github.com/equinor/fusion-framework/commit/265bb767249989eeb1971e83f3fba94879e0813b) Thanks [@odinr](https://github.com/odinr)! - relase next
 
 ## 0.1.1
 
@@ -13,7 +18,6 @@
 - [#3714](https://github.com/equinor/fusion-framework/pull/3714) [`11fe961`](https://github.com/equinor/fusion-framework/commit/11fe961794e4960ccb987bc320268cc9b263f1f8) Thanks [@odinr](https://github.com/odinr)! - Improved all cookbook README documentation for better developer experience.
 
   All cookbook README files now feature:
-
   - Code examples matching actual implementations
   - Inline comments explaining patterns and concepts
   - Developer-friendly language for those new to Fusion Framework
@@ -70,7 +74,6 @@
   `appKey (string)`: The key of the Fusion app to load and mount.
 
   ### Returns
-
   - **loading** `(boolean)`: true while the app is loading.
   - **error** `(Error | undefined)`: Error object if loading fails, otherwise undefined.
   - **appRef** `(React.RefObject<HTMLDivElement | null>)`: Ref to the DOM element where the child app is mounted.
@@ -104,7 +107,6 @@
   ```
 
   ### Notes
-
   - The hook is designed to be used in a parent Fusion app context.
   - The returned appRef should be appended to a container element in your component.
   - Handles subscription and cleanup automatically.
