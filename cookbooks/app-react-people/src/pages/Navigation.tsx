@@ -14,6 +14,7 @@ export const Navigation = () => {
           <Button onClick={() => navigate('card')}>PersonCard</Button>
           <Button onClick={() => navigate('list-item')}>PersonListItem</Button>
           <Button onClick={() => navigate('selector')}>PersonSelect</Button>
+          <Button onClick={() => navigate('people-concepts')}>PeopleConcepts</Button>
         </FlexGrid>
       </div>
       <Outlet />

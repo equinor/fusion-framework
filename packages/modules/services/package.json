@@ -54,6 +54,14 @@
       "import": "./dist/esm/people/query/index.js",
       "types": "./dist/types/people/query/index.d.ts"
     },
+    "./people/suggest": {
+      "import": "./dist/esm/people/suggest/index.js",
+      "types": "./dist/types/people/suggest/index.d.ts"
+    },
+    "./people/resolve": {
+      "import": "./dist/esm/people/resolve/index.js",
+      "types": "./dist/types/people/resolve/index.d.ts"
+    },
     "./people/photo": {
       "import": "./dist/esm/people/person-photo/index.js",
       "types": "./dist/types/people/person-photo/index.d.ts"
