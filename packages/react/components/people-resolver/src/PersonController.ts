@@ -5,6 +5,7 @@ import type { ApiPerson, PeopleApiClient } from '@equinor/fusion-framework-modul
 import { isApiPerson } from '@equinor/fusion-framework-module-services/people/utils';
 import type { ApiResponse as GetPersonApiResponse } from '@equinor/fusion-framework-module-services/people/get';
 import type { ApiResponse as QueryPersonApiResponse } from '@equinor/fusion-framework-module-services/people/query';
+import type { ApiResponse as SuggestPersonApiResponse } from '@equinor/fusion-framework-module-services/people/suggest';
 import { Query } from '@equinor/fusion-query';
 import { queryValue } from '@equinor/fusion-query/operators';
 
@@ -25,26 +26,27 @@ type ResolverArgs<T> = T extends object
 
 const personMatcher =
   (args: MatcherArgs) =>
-  <T extends { azureUniqueId?: string; upn?: string }>(value: T): value is T => {
-    const { azureId, upn } = args;
-    if (azureId && upn) {
-      return (
-        value.upn?.toLocaleLowerCase() === upn.toLocaleLowerCase() &&
-        value.azureUniqueId === azureId
-      );
-    } else if (azureId) {
-      return value.azureUniqueId === azureId;
-    } else if (upn) {
-      return value.upn?.toLocaleLowerCase() === upn.toLocaleLowerCase();
-    }
-    return false;
-  };
+    <T extends { azureUniqueId?: string; upn?: string }>(value: T): value is T => {
+      const { azureId, upn } = args;
+      if (azureId && upn) {
+        return (
+          value.upn?.toLocaleLowerCase() === upn.toLocaleLowerCase() &&
+          value.azureUniqueId === azureId
+        );
+      } else if (azureId) {
+        return value.azureUniqueId === azureId;
+      } else if (upn) {
+        return value.upn?.toLocaleLowerCase() === upn.toLocaleLowerCase();
+      }
+      return false;
+    };
 
 export interface IPersonController {
   getPerson(args: ResolverArgs<MatcherArgs>): Observable<GetPersonResult>;
   getPersonInfo(args: ResolverArgs<MatcherArgs>): Observable<ApiPerson<'v2'>>;
   getPhoto(args: ResolverArgs<MatcherArgs>): Observable<string>;
   search(args: ResolverArgs<{ search: string }>): Observable<PersonSearchResult>;
+  suggest(args: ResolverArgs<{ search: string }>): Observable<SuggestPersonApiResponse>;
 }
 
 export type PersonControllerOptions = {
@@ -55,6 +57,7 @@ export class PersonController implements IPersonController {
   #personQuery: Query<GetPersonResult, ResolverArgs<{ azureId: string }>>;
   #personSearchQuery: Query<PersonSearchResult, ResolverArgs<{ search: string }>>;
   #personPhotoQuery: Query<Blob, ResolverArgs<{ azureId: string }>>;
+  #personSuggestQuery: Query<SuggestPersonApiResponse, ResolverArgs<{ search: string }>>;
 
   constructor(client: PeopleApiClient, options?: PersonControllerOptions) {
     const expire = 3 * 60 * 1000;
@@ -112,9 +115,25 @@ export class PersonController implements IPersonController {
         },
       },
     });
+    this.#personSuggestQuery = new Query({
+      expire,
+      queueOperator: 'merge',
+      key: ({ search }) => search,
+      client: {
+        fn: ({ search }, signal) => {
+          return client.suggest('json$', { method: 'POST', body: JSON.stringify({ queryString: search }), signal });
+        },
+      },
+    });
+  }
+
+  public suggest(args: ResolverArgs<{ search: string }>): Observable<SuggestPersonApiResponse> {
+    const { search, signal } = args;
+    return this.#personSuggestQuery.query({ search }, { signal }).pipe(queryValue);
   }
 
   public search(args: { search: string; signal?: AbortSignal }): Observable<PersonSearchResult> {
+
     const { search, signal } = args;
     return this.#personSearchQuery.query({ search }, { signal }).pipe(queryValue);
   }

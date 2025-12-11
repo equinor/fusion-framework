@@ -27,6 +27,12 @@ import {
   type ApiRequestArgs as PersonPhotoApiRequestArgs,
 } from './person-photo';
 
+import {
+  client as personSuggestClient,
+  type ApiResponse as PersonSuggestApiResponse,
+  type ApiResult as PersonSuggestResult,
+} from './suggest';
+
 export class PeopleApiClient<
   // TMethod extends keyof ClientMethod<unknown> = keyof ClientMethod<unknown>,
   TClient extends IHttpClient = IHttpClient,
@@ -35,7 +41,7 @@ export class PeopleApiClient<
     return ApiVersion;
   }
 
-  constructor(protected _client: TClient) {}
+  constructor(protected _client: TClient) { }
 
   /**
    * Fetch person by id
@@ -89,6 +95,20 @@ export class PeopleApiClient<
   ): PersonPhotoResult<TMethod> {
     const fn = personPhotoClient<TVersion, TMethod, TClient>(this._client, version, method);
     return fn<TResult>(args, init);
+  }
+
+  /**
+  * Suggest person service
+  */
+  public suggest<
+    TResult = PersonSuggestApiResponse,
+    TMethod extends keyof ClientMethod<TResult> = keyof ClientMethod<TResult>,
+  >(
+    method: TMethod,
+    init?: ClientRequestInit<TClient, TResult>,
+  ): PersonSuggestResult<TMethod, TResult> {
+    const fn = personSuggestClient<TMethod, TClient>(this._client, method);
+    return fn<TResult>(init);
   }
 }
 

@@ -42,6 +42,11 @@ export const createResolver = (controller: IPersonController): PersonResolver =>
       ),
     );
   },
+  suggest(args) {
+    return firstValueFrom(
+      controller.suggest(args)
+    );
+  },
 });
 
 export default createResolver;

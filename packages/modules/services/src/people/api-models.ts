@@ -48,5 +48,41 @@ export type ApiPersonMap = {
 export type ApiPerson<T extends keyof typeof ApiVersion | ApiVersion> = T extends ApiVersion
   ? ApiPersonMap[T]
   : T extends keyof typeof ApiVersion
-    ? ApiPersonMap[(typeof ApiVersion)[T]]
-    : unknown;
+  ? ApiPersonMap[(typeof ApiVersion)[T]]
+  : unknown;
+
+
+export type ApiSuggestionPerson = {
+  accountType?: 'Employee' | 'Consultant' | 'Enterprise' | 'EnterpriseExternal' | 'External' | 'Local' | 'TemporaryEmployee' | 'Unknown';
+  jobTitle?: string;
+  department?: string;
+  fullDepartment?: string;
+  employeeNumber?: string;
+  managerAzureUniqueId?: string;
+  upn?: string;
+  mobilePhone?: string;
+}
+
+export type ApiSuggestionApplication = {
+  applicationId: string;
+  applicationName?: string;
+  servicePrincipalType: 'Application' | 'ManagedIdentity' | 'ServicePrincipal';
+};
+
+export type ApiSuggestionValue = {
+  azureUniqueId: string;
+  name?: string;
+  accountType: 'Person' | 'SystemAccount' | 'Unknown';
+  person?: ApiSuggestionPerson;
+  application?: ApiSuggestionApplication;
+  avatarColor: string;
+  avatarUrl: string;
+  isExpired: boolean;
+};
+
+export type ApiSuggestions = {
+  totalCount: number;
+  count: number;
+  '@nextPage': string | null;
+  value: Array<ApiSuggestionValue>;
+};
