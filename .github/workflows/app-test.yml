@@ -33,7 +33,7 @@ jobs:
         run: pnpm app:pack
 
       - name: Upload packed app as artifact
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: app-bundle.zip
           path: ./cookbooks/app-react/app-bundle.zip
