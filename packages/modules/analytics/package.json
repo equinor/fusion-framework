@@ -1,0 +1,73 @@
+{
+  "name": "@equinor/fusion-framework-module-analytics",
+  "version": "0.0.0",
+  "description": "Fusion module for collecting and exporting application analytics using OpenTelemetry standards",
+  "main": "dist/esm/index.js",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "types": "./dist/types/index.d.ts"
+    },
+    "./adapters": {
+      "import": "./dist/esm/adapters/index.js",
+      "types": "./dist/types/adapters/index.d.ts"
+    },
+    "./collectors": {
+      "import": "./dist/esm/collectors/index.js",
+      "types": "./dist/types/collectors/index.d.ts"
+    },
+    "./logExporters": {
+      "import": "./dist/esm/logExporters/index.js",
+      "types": "./dist/types/logExporters/index.d.ts"
+    }
+  },
+  "types": "dist/types/index.d.ts",
+  "scripts": {
+    "build": "tsc -b",
+    "prepack": "pnpm build",
+    "test": "vitest"
+  },
+  "keywords": [
+    "analytics",
+    "fusion",
+    "utility"
+  ],
+  "author": "",
+  "license": "ISC",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/equinor/fusion-framework.git",
+    "directory": "packages/modules/analytics"
+  },
+  "dependencies": {
+    "@equinor/fusion-framework-module": "workspace:^",
+    "@equinor/fusion-framework-module-app": "workspace:^",
+    "@equinor/fusion-framework-module-context": "workspace:^",
+    "@equinor/fusion-framework-module-event": "workspace:^",
+    "@equinor/fusion-framework-react": "workspace:^",
+    "@opentelemetry/api-logs": "^0.207.0",
+    "@opentelemetry/exporter-logs-otlp-http": "^0.207.0",
+    "@opentelemetry/otlp-exporter-base": "^0.207.0",
+    "@opentelemetry/otlp-transformer": "^0.208.0",
+    "@opentelemetry/resources": "^2.2.0",
+    "@opentelemetry/sdk-logs": "^0.207.0",
+    "deepmerge": "^4.3.1",
+    "rxjs": "^7.8.1",
+    "uuid": "^13.0.0",
+    "zod": "^4.1.11"
+  },
+  "devDependencies": {
+    "@equinor/fusion-observable": "workspace:^",
+    "typescript": "^5.8.2",
+    "vitest": "^3.2.4"
+  },
+  "peerDependencies": {
+    "@equinor/fusion-framework-module": "workspace:^",
+    "@equinor/fusion-framework-module-event": "workspace:^",
+    "@equinor/fusion-observable": "workspace:^"
+  }
+}
