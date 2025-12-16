@@ -21,7 +21,6 @@ export const Portal = () => {
 
       <p>Click to emit a analytic event to the OpenTelemetry Collector</p>
 
-      {/* biome-ignore lint/correctness/useUniqueElementIds: we need the static id */}
       <button type="button" id="button-trigger">
         Trigger click event
       </button>

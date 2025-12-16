@@ -1,1 +1,1 @@
-export { useAnalytics } from './useAnalytics';
+export { useTrackFeature } from './useTrackFeature';

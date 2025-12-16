@@ -1,17 +1,11 @@
 ## Analytics
 
-### useAnalytics
+### useTrackFeature
 
-A hook to send analytic events.
+A hook to send feature used.
 
 ```typescript
-const { trackAnalytic } = useAnalytics();
+const trackFeature = useTrackFeature();
 
-trackAnalytic({
-  name: 'foo',
-  value: 'bar',
-  attributes: {
-    extra: 'data',
-  }
-});
+trackFeature('foo');
 ```

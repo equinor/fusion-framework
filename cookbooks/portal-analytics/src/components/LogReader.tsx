@@ -6,19 +6,16 @@ import { SideSheet } from '@equinor/fusion-react-side-sheet';
 import { Button, Icon } from '@equinor/eds-core-react';
 import { info_circle } from '@equinor/eds-icons';
 import { DateRange } from '@equinor/fusion-react-date';
-import { useAnalytics } from '@equinor/fusion-framework-react-app/analytics';
+import { useTrackFeature } from '@equinor/fusion-framework-react-app/analytics';
 
 export const LogReader = () => {
   const [activeLogEntry, setActiveLogEntry] = useState<LogEntry | null>(null);
   const [entries, setEntries] = useState<LogEntry[]>([]);
   const [error, setError] = useState<string | null>(null);
-  const analytics = useAnalytics();
+  const trackFeature = useTrackFeature();
 
   const fetchLogs = useCallback(async () => {
-    analytics?.trackAnalytic({
-      name: 'cookbook:portal-analytics:logs:fetch',
-      value: undefined,
-    });
+    trackFeature('cookbook:portal-analytics:logs:fetch');
 
     try {
       const response = await fetch('/@fusion-api/logs');
@@ -34,16 +31,13 @@ export const LogReader = () => {
     } catch (err) {
       setError(`Failed to fetch logs. ${err}`);
     }
-  }, [analytics]);
+  }, [trackFeature]);
 
   const clearLogs = useCallback(async () => {
-    analytics?.trackAnalytic({
-      name: 'cookbook:portal-analytics:logs:clear',
-      value: undefined,
-    });
+    trackFeature('cookbook:portal-analytics:logs:clear');
     await fetch('/@fusion-api/api/clearlogs');
     fetchLogs();
-  }, [fetchLogs, analytics]);
+  }, [fetchLogs, trackFeature]);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: only run on mount
   useEffect(() => {
