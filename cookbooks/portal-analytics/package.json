@@ -10,8 +10,7 @@
     "build": "fusion-framework-cli portal build",
     "schema": "fusion-framework-cli portal schema",
     "pack:portals": "fusion-framework-cli portal pack",
-    "publish:portals": "fusion-framework-cli portal publish",
-    "postinstall": "node postinstall.js"
+    "publish:portals": "fusion-framework-cli portal publish"
   },
   "keywords": [],
   "author": "",

@@ -28,7 +28,7 @@ export default defineDevServerConfig(() => {
             middleware: async (req, res) => {
               const body = await readBody(req);
               try {
-                appendFileContents(LOG_FILE, body);
+                await appendFileContents(LOG_FILE, body);
               } catch (err) {
                 res.statusCode = 500;
                 res.end(err);

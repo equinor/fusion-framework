@@ -3,11 +3,15 @@ import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 import type { IncomingMessage } from 'node:http';
 
+const createLogFile = async (filePath: string): Promise<void> => {
+  await writeFile(filePath, '', { encoding: 'utf8' });
+};
+
 export const readFileContents = async (filePath: string): Promise<string> => {
   const absolutePath = resolve(filePath);
   try {
     if (!existsSync(absolutePath)) {
-      throw new Error(`File does not exist: ${absolutePath}`);
+      await createLogFile(absolutePath);
     }
     const data = await readFile(absolutePath, 'utf-8');
     return data;
@@ -38,7 +42,7 @@ export const appendFileContents = async (filePath: string, content: string): Pro
 
   try {
     if (!existsSync(absolutePath)) {
-      throw new Error(`File does not exist: ${absolutePath}`);
+      await createLogFile(absolutePath);
     }
     await appendFile(absolutePath, `${content}\n`, 'utf8');
   } catch (error) {
@@ -54,7 +58,7 @@ export const clearFileContents = async (filePath: string): Promise<void> => {
 
   try {
     if (!existsSync(absolutePath)) {
-      throw new Error(`File does not exist: ${absolutePath}`);
+      await createLogFile(absolutePath);
     }
     await writeFile(absolutePath, '', { encoding: 'utf8' });
   } catch (error) {
