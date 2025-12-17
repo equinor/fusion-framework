@@ -13,6 +13,9 @@ const Styled = {
   `,
 };
 
+/**
+ * Component to show the Equinor logo while loading content
+ */
 export const EquinorLoader = ({
   children,
   text,

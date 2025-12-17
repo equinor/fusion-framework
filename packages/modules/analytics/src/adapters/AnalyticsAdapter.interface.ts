@@ -1,5 +1,10 @@
 import type { AnalyticsEvent } from '../types.js';
 
+/**
+ * Interface representing an analytics adapter responsible for handling analytics events.
+ *
+ * @template T - The type of analytics event handled by the adapter. Defaults to `AnalyticsEvent`.
+ */
 export interface IAnalyticsAdapter<T extends AnalyticsEvent = AnalyticsEvent> extends Disposable {
   /**
    * Initializes the analytics adapter for setup and configuration.

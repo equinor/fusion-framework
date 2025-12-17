@@ -8,16 +8,30 @@ import { info_circle } from '@equinor/eds-icons';
 import { DateRange } from '@equinor/fusion-react-date';
 import { useTrackFeature } from '@equinor/fusion-framework-react-app/analytics';
 
+/**
+ * Component to view the entries of the log file in a table.
+ *
+ * Will fetch the content from `/@fusion-api/logs`, parse it and display in
+ * table.
+ */
 export const LogReader = () => {
   const [activeLogEntry, setActiveLogEntry] = useState<LogEntry | null>(null);
   const [entries, setEntries] = useState<LogEntry[]>([]);
   const [error, setError] = useState<string | null>(null);
   const trackFeature = useTrackFeature();
 
+  /**
+   * Will fetch, parse and store the log file entries in entries state
+   */
   const fetchLogs = useCallback(async () => {
     trackFeature('cookbook:portal-analytics:logs:fetch');
 
     try {
+      /**
+       * Fetches the logs from a custom endpoint defined in `dev-server.config.ts`
+       * Will provide the contents of the log file.
+       * See README.md for more details.
+       */
       const response = await fetch('/@fusion-api/logs');
       const text = await response.text();
       const lines = text
@@ -33,8 +47,16 @@ export const LogReader = () => {
     }
   }, [trackFeature]);
 
+  /**
+   * Will clear the log entries if you want to clear the log file
+   */
   const clearLogs = useCallback(async () => {
     trackFeature('cookbook:portal-analytics:logs:clear');
+    /**
+     * Requests a custom endpoint defined in `dev-server.config.ts`
+     * Will clear the contents of the log file.
+     * See README.md for more details.
+     */
     await fetch('/@fusion-api/api/clearlogs');
     fetchLogs();
   }, [fetchLogs, trackFeature]);

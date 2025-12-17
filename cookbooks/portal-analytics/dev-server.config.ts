@@ -8,6 +8,14 @@ import {
 
 const LOG_FILE = './log.txt';
 
+/**
+ * Defines 3 custom endpoints:
+ * - `/logs` - reading the contents of the log file.
+ * - `/api/logs` - appending the request body to the log file.
+ * - `/api/clearlogs` - clearing the contents of the log file.
+ *
+ * See README.md for more details
+ */
 export default defineDevServerConfig(() => {
   return {
     api: {

@@ -34,7 +34,9 @@ export class ContextSelectedCollector
     attributes: { previous?: ContextItemType };
   }> {
     const contextSelected$ = this.#contextProvider.currentContext$.pipe(
+      // Only emit when an actual change has happened.
       distinctUntilChanged((prev, curr) => prev?.id === curr?.id),
+      // Provide both the old and the new value.
       pairwise(),
     );
 

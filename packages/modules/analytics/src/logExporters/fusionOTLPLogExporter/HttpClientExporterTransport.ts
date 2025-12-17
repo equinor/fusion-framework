@@ -3,10 +3,16 @@ import type { IExporterTransport, ExportResponse } from '@opentelemetry/otlp-exp
 import type { IHttpClient } from '@equinor/fusion-framework-react/http';
 
 function isExportRetryable(statusCode: number): boolean {
+  // Status codes of when we should consider retrying.
+  // 429 Too Many Requests
+  // 502 Bad Gateway
+  // 503 Service Unavailable
+  // 504 Gateway Timeout
   const retryCodes = [429, 502, 503, 504];
   return retryCodes.includes(statusCode);
 }
 
+// Parse the `Retry-After` header and return when the service will allow a retry.
 function parseRetryAfterToMills(retryAfter?: string | undefined | null): number | undefined {
   if (retryAfter == null) {
     return undefined;
@@ -25,12 +31,20 @@ function parseRetryAfterToMills(retryAfter?: string | undefined | null): number 
   return 0;
 }
 
+/**
+ * A Exporter Transport to POST events to provided path using the provided httpClient
+ */
 export class HttpClientExporterTransport implements IExporterTransport {
   constructor(
     private httpClient: IHttpClient,
     private path: string = '/v1/logs',
   ) {}
 
+  // Will send data with the httpClient.
+  // If the service responds with a non 2** statusCode, we check if it is
+  // retryable.
+  // The timeoutMillis determines when to abort if the service has not yet
+  // responded.
   async send(data: Uint8Array, timeoutMillis: number): Promise<ExportResponse> {
     const abortController = new AbortController();
     const timeout = setTimeout(() => abortController.abort(), timeoutMillis);
@@ -42,7 +56,7 @@ export class HttpClientExporterTransport implements IExporterTransport {
         signal: abortController.signal,
       });
 
-      if (response.status >= 200 && response.status <= 299) {
+      if (response.ok) {
         return { status: 'success' };
       } else if (isExportRetryable(response.status)) {
         const retryAfter = response.headers.get('Retry-After');

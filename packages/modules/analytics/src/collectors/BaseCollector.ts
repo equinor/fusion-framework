@@ -22,6 +22,10 @@ export type CollectorSchema<TValue = AnyValue, TAttr = AnyValueMap> = ReturnType
   typeof createSchema<TValue, TAttr>
 >;
 
+/**
+ * A base collector to help with parsing the events with provided schema before
+ * emitting.
+ */
 export abstract class BaseCollector<
   TValue extends AnyValue,
   TAttr extends AnyValueMap = AnyValueMap,

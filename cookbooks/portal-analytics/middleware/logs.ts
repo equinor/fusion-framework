@@ -3,10 +3,16 @@ import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 import type { IncomingMessage } from 'node:http';
 
+/**
+ * Creates an empty file filePath
+ */
 const createLogFile = async (filePath: string): Promise<void> => {
   await writeFile(filePath, '', { encoding: 'utf8' });
 };
 
+/**
+ * Provides a promise of the file contents of filePath
+ */
 export const readFileContents = async (filePath: string): Promise<string> => {
   const absolutePath = resolve(filePath);
   try {
@@ -23,6 +29,9 @@ export const readFileContents = async (filePath: string): Promise<string> => {
   }
 };
 
+/**
+ * Provides a promise of the body part of a request req
+ */
 export const readBody = async (req: IncomingMessage): Promise<string> => {
   return new Promise((resolve, reject) => {
     if (req.method !== 'POST' || !req.headers['content-type']?.includes('application/json')) {
@@ -37,6 +46,9 @@ export const readBody = async (req: IncomingMessage): Promise<string> => {
   });
 };
 
+/**
+ * Provides a promise to appends content to filePath
+ */
 export const appendFileContents = async (filePath: string, content: string): Promise<void> => {
   const absolutePath = resolve(filePath);
 
@@ -53,6 +65,9 @@ export const appendFileContents = async (filePath: string, content: string): Pro
   }
 };
 
+/**
+ * Provides a promise to clear the file contents on filePath
+ */
 export const clearFileContents = async (filePath: string): Promise<void> => {
   const absolutePath = resolve(filePath);
 

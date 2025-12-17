@@ -15,6 +15,8 @@ export const useTrackFeature = () => {
   /**
    * Tracks a analytics event.
    *
+   * Can be used both in useCallback or useEffects - see README.md for examples.
+   *
    * @param name - The feature to track
    */
   const trackFeature = useCallback(

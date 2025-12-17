@@ -1,6 +1,11 @@
 import type { Subscribable } from 'rxjs';
 import type { AnalyticsEvent } from '../types.js';
 
+/**
+ * Interface representing an analytics collector responsible for sending analytics events.
+ *
+ * @template T - The type of analytics event handled by the adapter. Defaults to `AnalyticsEvent`.
+ */
 export interface IAnalyticsCollector<T extends AnalyticsEvent = AnalyticsEvent>
   extends Subscribable<T> {
   /**

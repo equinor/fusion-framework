@@ -1,6 +1,8 @@
 import { z } from 'zod';
 import type { ContextItem } from '@equinor/fusion-framework-module-context';
 
+// Schema representing an object with data points of a Fusion context.
+// Used to parse an object with context data.
 export const contextSchema = z
   .object({
     id: z.string(),

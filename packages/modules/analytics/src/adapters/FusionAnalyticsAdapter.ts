@@ -17,6 +17,12 @@ import { resourceFromAttributes } from '@opentelemetry/resources';
 import { version } from '../version.js';
 import { v7 as uuid } from 'uuid';
 
+/**
+ * An analytics adapter for sending events to the log exporter for handling.
+ *
+ * The exporter is a Open Telemetry exporter.
+ * @see OTLPExporterBase
+ */
 export class FusionAnalyticsAdapter<T extends AnalyticsEvent = AnalyticsEvent>
   implements IAnalyticsAdapter
 {

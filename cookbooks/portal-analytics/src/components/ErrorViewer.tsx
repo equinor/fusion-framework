@@ -11,6 +11,9 @@ const Styled = {
   `,
 };
 
+/**
+ * Component to display the error error
+ */
 export const ErrorViewer = ({ error }: { readonly error: Error }) => {
   return (
     <>

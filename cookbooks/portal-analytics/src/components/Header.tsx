@@ -19,6 +19,10 @@ const Styled = {
   `,
 };
 
+/**
+ * Component for the header part of the cookbook portal.
+ * Shows the title and the context selector
+ */
 export const Header = () => {
   const topBarId = useId();
 

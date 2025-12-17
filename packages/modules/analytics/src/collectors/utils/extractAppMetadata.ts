@@ -1,6 +1,8 @@
 import { z } from 'zod';
 import type { AppManifest, CurrentApp } from '@equinor/fusion-framework-module-app';
 
+// Schema representing an object with key appKey and a string value.
+// Used to parse an object containing appKey.
 export const appKeySchema = z
   .object({
     appKey: z.string().optional(),
@@ -8,6 +10,8 @@ export const appKeySchema = z
   .optional()
   .nullable();
 
+// Schema representing an object with data points of an app.
+// Used to parse an object with app data.
 export const appSchema = z
   .object({
     appKey: z.string(),
