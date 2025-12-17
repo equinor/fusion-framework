@@ -46,6 +46,7 @@ Our React cookbooks demonstrate how to build applications using the Fusion Frame
 
 - **[Vanilla JavaScript](app-vanilla.md)** - Framework usage without React
 - **[Portal](app-portal.md)** - Portal framework demonstration
+- **[Portal analytics](portal-analytics.md)** - Portal framework with analytics module demonstration
 
 ## Getting Started
 

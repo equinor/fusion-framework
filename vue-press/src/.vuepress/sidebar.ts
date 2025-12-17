@@ -130,6 +130,10 @@ export default sidebar({
               text: 'Portal',
               link: 'app-portal.md',
             },
+            {
+              text: 'Portal Analytics',
+              link: 'portal-analytics.md',
+            },
           ],
         },
       ],
@@ -307,6 +311,10 @@ export default sidebar({
     {
       text: 'Telemetry',
       link: 'telemetry/',
+    },
+    {
+      text: 'Analytics',
+      link: 'analytics/',
     },
     {
       text: 'Services',
