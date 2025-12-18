@@ -10,6 +10,9 @@ runs:
     - name: Setup node and install deps
       uses: ./.github/actions/node-setup
 
+    - name: Configure git user
+      uses: ./.github/actions/config-git-user
+
     - name: Generate version
       shell: bash
       run: pnpm changeset version
