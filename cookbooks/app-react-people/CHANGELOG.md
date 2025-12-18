@@ -1,5 +1,14 @@
 # Change Log
 
+## 4.5.18-cli-search-index.1
+
+### Patch Changes
+
+- [#3757](https://github.com/equinor/fusion-framework/pull/3757) [`6bc3057`](https://github.com/equinor/fusion-framework/commit/6bc305794fdd0db1ceeb22cb14642e9d26b57b34) Thanks [@odinr](https://github.com/odinr)! - preview before pr
+
+- Updated dependencies [[`6bc3057`](https://github.com/equinor/fusion-framework/commit/6bc305794fdd0db1ceeb22cb14642e9d26b57b34)]:
+  - @equinor/fusion-framework-module-navigation@6.0.1-cli-search-index.1
+
 ## 4.5.17
 
 ### Patch Changes

@@ -1,5 +1,16 @@
 # Change Log
 
+## 9.0.5-cli-search-index.1
+
+### Patch Changes
+
+- [#3757](https://github.com/equinor/fusion-framework/pull/3757) [`6bc3057`](https://github.com/equinor/fusion-framework/commit/6bc305794fdd0db1ceeb22cb14642e9d26b57b34) Thanks [@odinr](https://github.com/odinr)! - preview before pr
+
+- Updated dependencies [[`6bc3057`](https://github.com/equinor/fusion-framework/commit/6bc305794fdd0db1ceeb22cb14642e9d26b57b34)]:
+  - @equinor/fusion-framework-module@5.0.6-cli-search-index.1
+  - @equinor/fusion-framework-module-http@7.0.6-cli-search-index.1
+  - @equinor/fusion-query@6.0.3-cli-search-index.0
+
 ## 9.0.4
 
 ### Patch Changes

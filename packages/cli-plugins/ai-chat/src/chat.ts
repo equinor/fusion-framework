@@ -301,10 +301,10 @@ Summary:`;
         // Ensure we don't remove more messages than available (keeping summary if it exists)
         const maxRemovable = hasSummary ? history.length - 2 : history.length - 1;
         const actualRemoval = Math.min(messagesToRemove, Math.max(0, maxRemovable));
-        
+
         if (actualRemoval > 0) {
           history.splice(startIndex, actualRemoval);
-          
+
           if (options.verbose) {
             console.log(
               `🗑️  Removed ${actualRemoval} messages. History now has ${history.length} messages.`,

@@ -5,7 +5,7 @@
  * This package provides shared utilities and configuration for AI-related CLI plugins.
  * It is an internal base package and should not be used standalone. Consuming plugins
  * should import from this package as a dependency.
- * 
+ *
  * @packageDocumentation
  */
 

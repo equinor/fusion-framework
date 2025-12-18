@@ -1,5 +1,79 @@
 # Change Log
 
+## 13.0.0-cli-search-index.0
+
+### Major Changes
+
+- [#3757](https://github.com/equinor/fusion-framework/pull/3757) [`6bc3057`](https://github.com/equinor/fusion-framework/commit/6bc305794fdd0db1ceeb22cb14642e9d26b57b34) Thanks [@odinr](https://github.com/odinr)! - Add plugin system for extensible CLI architecture and new framework configuration utilities.
+
+  **Plugin System:**
+
+  - Support for optional plugins via `fusion-cli.config.ts` configuration file
+  - Automatic plugin discovery and loading from project root or CLI package directory
+  - Plugin registration via package name or direct function imports
+  - Support for `.ts`, `.js`, and `.json` config file formats
+  - Multiple plugin resolution strategies for different installation methods
+
+  **New Exports:**
+
+  - `configureFramework` - Separated framework configuration from initialization for advanced use cases
+  - `defineFusionCli` - Type-safe utility for defining CLI plugin configurations
+
+  **Enhancements:**
+
+  - Non-interactive mode support for `create app` command with `--git-protocol`, `--cleanup`/`--no-cleanup`, and `--no-open` options
+  - Automatic `.env` file loading via dotenv for environment variable support
+  - Improved error handling and plugin resolution strategies
+
+  **Documentation:**
+
+  - Added comprehensive AI commands documentation (internal use only)
+  - Updated README with plugin system usage instructions
+
+  **Quick Usage:**
+
+  1. Install a plugin package:
+
+  ```sh
+  pnpm add -D @equinor/fusion-framework-cli-plugin-ai-chat
+  ```
+
+  2. Create `fusion-cli.config.ts` in your project root:
+
+  ```typescript
+  import { defineFusionCli } from "@equinor/fusion-framework-cli";
+
+  export default defineFusionCli(() => ({
+    plugins: [
+      "@equinor/fusion-framework-cli-plugin-ai-chat",
+      // Or use direct imports:
+      // import aiChatPlugin from '@equinor/fusion-framework-cli-plugin-ai-chat';
+      // plugins: [aiChatPlugin],
+    ],
+  }));
+  ```
+
+  3. Plugins are automatically loaded when CLI starts:
+
+  ```sh
+  # Plugin commands are now available
+  ffc ai chat
+  ```
+
+  Plugins can be registered by package name (string) or direct function imports. The config file supports `.ts`, `.js`, or `.json` formats. If no config file exists, the CLI works normally without plugins.
+
+### Patch Changes
+
+- [#3757](https://github.com/equinor/fusion-framework/pull/3757) [`6bc3057`](https://github.com/equinor/fusion-framework/commit/6bc305794fdd0db1ceeb22cb14642e9d26b57b34) Thanks [@odinr](https://github.com/odinr)! - preview before pr
+
+- [`41f8e9b`](https://github.com/equinor/fusion-framework/commit/41f8e9b7a9b2680553e089d04095a9db7821567e) Thanks [@odinr](https://github.com/odinr)! - Internal: upgrade build tooling dependency `esbuild` to 0.27.0 in `@equinor/fusion-imports`. No public API changes and no runtime impact to consumers.
+
+- Updated dependencies [[`6bc3057`](https://github.com/equinor/fusion-framework/commit/6bc305794fdd0db1ceeb22cb14642e9d26b57b34), [`41f8e9b`](https://github.com/equinor/fusion-framework/commit/41f8e9b7a9b2680553e089d04095a9db7821567e)]:
+  - @equinor/fusion-framework-module-msal-node@2.0.2-cli-search-index.0
+  - @equinor/fusion-imports@1.1.8-cli-search-index.0
+  - @equinor/fusion-framework-dev-portal@1.2.7-cli-search-index.0
+  - @equinor/fusion-framework-dev-server@1.1.18-cli-search-index.0
+
 ## 12.4.5
 
 ### Patch Changes
