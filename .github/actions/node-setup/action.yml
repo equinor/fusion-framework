@@ -28,6 +28,7 @@ runs:
         path: |
           .turbo
           **/.turbo
+          !vue-press/**
         key: ${{ runner.os }}-turbo-${{ steps.pnpm-lock-hash.outputs.hash }}
         restore-keys: |
           ${{ runner.os }}-turbo-
