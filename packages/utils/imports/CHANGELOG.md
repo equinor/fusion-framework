@@ -1,5 +1,13 @@
 # @equinor/fusion-imports
 
+## 1.1.8-cli-search-index.0
+
+### Patch Changes
+
+- [#3757](https://github.com/equinor/fusion-framework/pull/3757) [`6bc3057`](https://github.com/equinor/fusion-framework/commit/6bc305794fdd0db1ceeb22cb14642e9d26b57b34) Thanks [@odinr](https://github.com/odinr)! - preview before pr
+
+- [`41f8e9b`](https://github.com/equinor/fusion-framework/commit/41f8e9b7a9b2680553e089d04095a9db7821567e) Thanks [@odinr](https://github.com/odinr)! - Internal: upgrade build tooling dependency `esbuild` to 0.27.0 in `@equinor/fusion-imports`. No public API changes and no runtime impact to consumers.
+
 ## 1.1.7
 
 ### Patch Changes
