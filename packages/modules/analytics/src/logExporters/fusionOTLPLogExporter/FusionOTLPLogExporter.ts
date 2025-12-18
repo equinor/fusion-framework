@@ -8,7 +8,7 @@ import {
   type OtlpSharedConfiguration,
 } from '@opentelemetry/otlp-exporter-base';
 
-import type { IHttpClient } from '@equinor/fusion-framework-react/http';
+import type { IHttpClient } from '@equinor/fusion-framework-module-http';
 import { HttpClientExporterTransport } from './HttpClientExporterTransport.js';
 
 // The shared default configuration needed for the OTLPNetworkExportDelegate

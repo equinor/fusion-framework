@@ -1134,9 +1134,9 @@ importers:
       '@equinor/fusion-framework-module-event':
         specifier: workspace:^
         version: link:../event
-      '@equinor/fusion-framework-react':
+      '@equinor/fusion-framework-module-http':
         specifier: workspace:^
-        version: link:../../react/framework
+        version: link:../http
       '@opentelemetry/api-logs':
         specifier: ^0.207.0
         version: 0.207.0

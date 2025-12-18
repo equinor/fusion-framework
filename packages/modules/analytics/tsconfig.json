@@ -13,6 +13,15 @@
     },
     {
       "path": "../event"
+    },
+    {
+      "path": "../app"
+    },
+    {
+      "path": "../context"
+    },
+    {
+      "path": "../http"
     }
   ],
   "include": ["src/**/*"],

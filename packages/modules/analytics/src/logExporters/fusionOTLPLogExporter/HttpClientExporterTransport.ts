@@ -1,6 +1,6 @@
 import type { IExporterTransport, ExportResponse } from '@opentelemetry/otlp-exporter-base';
 
-import type { IHttpClient } from '@equinor/fusion-framework-react/http';
+import type { IHttpClient } from '@equinor/fusion-framework-module-http';
 
 function isExportRetryable(statusCode: number): boolean {
   // Status codes of when we should consider retrying.
