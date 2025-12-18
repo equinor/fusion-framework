@@ -1,5 +1,14 @@
 # Change Log
 
+## 12.5.1
+
+### Patch Changes
+
+- [#3845](https://github.com/equinor/fusion-framework/pull/3845) [`5114ac4`](https://github.com/equinor/fusion-framework/commit/5114ac4f71a60935d0194b9b2766f95adff0ba1e) Thanks [@asbjornhaland](https://github.com/asbjornhaland)! - Fix tsconfig references
+
+- Updated dependencies []:
+  - @equinor/fusion-framework-dev-portal@1.2.6
+
 ## 12.5.0
 
 ### Minor Changes
