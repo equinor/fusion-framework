@@ -33,6 +33,12 @@ import {
   type ApiResult as PersonSuggestResult,
 } from './suggest';
 
+import {
+  client as personResolveClient,
+  type ApiResponse as PersonResolveApiResponse,
+  type ApiResult as PersonResolveResult,
+} from './resolve';
+
 export class PeopleApiClient<
   // TMethod extends keyof ClientMethod<unknown> = keyof ClientMethod<unknown>,
   TClient extends IHttpClient = IHttpClient,
@@ -110,16 +116,20 @@ export class PeopleApiClient<
     const fn = personSuggestClient<TMethod, TClient>(this._client, method);
     return fn<TResult>(init);
   }
-}
 
-// const oo = new PeopleApiClient(null).get('v4', 'fetch', { azureId: '123' });
-// const o2 = await new PeopleApiClient(null).get('v4', 'fetch', {
-//     azureId: '123',
-//     expand: ['roles'],
-// });
-// const o3 = await new PeopleApiClient(null).get('v4', 'fetch', {
-//     azureId: '123',
-//     expand: ['companies', 'roles'],
-// });
+  /**
+  * Resolve person service
+  */
+  public resolve<
+    TResult = PersonResolveApiResponse,
+    TMethod extends keyof ClientMethod<TResult> = keyof ClientMethod<TResult>,
+  >(
+    method: TMethod,
+    init?: ClientRequestInit<TClient, TResult>,
+  ): PersonResolveResult<TMethod, TResult> {
+    const fn = personResolveClient<TMethod, TClient>(this._client, method);
+    return fn<TResult>(init);
+  }
+}
 
 export default PeopleApiClient;

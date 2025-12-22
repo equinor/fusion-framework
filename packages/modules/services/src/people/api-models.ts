@@ -86,3 +86,13 @@ export type ApiSuggestions = {
   '@nextPage': string | null;
   value: Array<ApiSuggestionValue>;
 };
+
+export type ApiResolveItem = {
+  success: boolean;
+  statusCode: number;
+  errorMessage: string | null;
+  indentifier: string;
+  account: ApiSuggestionValue | null;
+};
+
+export type ApiResolved = Array<ApiResolveItem>;

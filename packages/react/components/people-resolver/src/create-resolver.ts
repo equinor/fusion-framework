@@ -32,10 +32,6 @@ export const createResolver = (controller: IPersonController): PersonResolver =>
               ({
                 ...x,
                 azureId: x.azureUniqueId,
-                // TODO
-                // @asbjornhaland
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                // @ts-ignore https://github.com/equinor/fusion-web-components/issues/804
               }) as unknown as PersonInfo,
           ),
         ),
@@ -43,9 +39,10 @@ export const createResolver = (controller: IPersonController): PersonResolver =>
     );
   },
   suggest(args) {
-    return firstValueFrom(
-      controller.suggest(args)
-    );
+    return firstValueFrom(controller.suggest(args));
+  },
+  resolve(args) {
+    return firstValueFrom(controller.resolve(args));
   },
 });
 
