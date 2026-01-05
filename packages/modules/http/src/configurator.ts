@@ -64,9 +64,8 @@ export interface HttpClientOptions<TClient extends IHttpClient = IHttpClient> {
  * @template T - The type of the `IHttpClient` implementation.
  * @returns The request init type for the `IHttpClient` implementation.
  */
-export type HttpClientRequestInitType<T extends IHttpClient> = T extends IHttpClient<infer U>
-  ? U
-  : never;
+export type HttpClientRequestInitType<T extends IHttpClient> =
+  T extends IHttpClient<infer U> ? U : never;
 
 /**
  * Instance for configuring http client
