@@ -136,13 +136,14 @@ export type AnyModule = Module<any, any, any, any>;
  * @typeParam T1 - The first module type or array of modules.
  * @typeParam T2 - The second module type or array of modules.
  */
-export type CombinedModules<T1, T2> = T1 extends Array<AnyModule>
-  ? T2 extends Array<AnyModule>
-    ? [...T1, ...T2]
-    : T1
-  : T2 extends Array<AnyModule>
-    ? T2
-    : never;
+export type CombinedModules<T1, T2> =
+  T1 extends Array<AnyModule>
+    ? T2 extends Array<AnyModule>
+      ? [...T1, ...T2]
+      : T1
+    : T2 extends Array<AnyModule>
+      ? T2
+      : never;
 
 /**
  * Represents an object whose properties are strings mapped to `AnyModule` instances.
@@ -227,14 +228,15 @@ export interface Modules {
  * @returns An object type where each key is the unique identifier (`T`) of a module,
  * and each value is the corresponding module instance from the array.
  */
-export type ModulesType<M extends Array<AnyModule>> = M extends Array<AnyModule>
-  ? {
-      [K in keyof M as M[K] extends Module<infer T, any, any, any> ? T : never]: M[Extract<
-        K,
-        string
-      >];
-    }
-  : never;
+export type ModulesType<M extends Array<AnyModule>> =
+  M extends Array<AnyModule>
+    ? {
+        [K in keyof M as M[K] extends Module<infer T, any, any, any> ? T : never]: M[Extract<
+          K,
+          string
+        >];
+      }
+    : never;
 
 /**
  * Infers the configuration object type for a given set of modules.

@@ -77,16 +77,17 @@ export type ActionInstance<T> = T extends ActionCreator
  *
  * @template T - The input type, which can be a record of action creators, or any other type.
  */
-export type ActionInstanceMap<T> = T extends Record<string, ActionCreator>
-  ? {
-      [K in keyof T]: T[K] extends AsyncActionCreator
-        ? AsyncActionTypes<T[K]>
-        : ActionInstance<T[K]>;
-      //   [K in keyof T]: ActionInstance<T[K]>;
-    }
-  : {
-      [K in keyof T]: ActionInstanceMap<T[K]>;
-    };
+export type ActionInstanceMap<T> =
+  T extends Record<string, ActionCreator>
+    ? {
+        [K in keyof T]: T[K] extends AsyncActionCreator
+          ? AsyncActionTypes<T[K]>
+          : ActionInstance<T[K]>;
+        //   [K in keyof T]: ActionInstance<T[K]>;
+      }
+    : {
+        [K in keyof T]: ActionInstanceMap<T[K]>;
+      };
 
 /**
  * Utility type that recursively extracts the `ActionTypes` from a given object type `T`.
@@ -96,15 +97,16 @@ export type ActionInstanceMap<T> = T extends Record<string, ActionCreator>
  * @param T - The object type to extract `ActionTypes` from.
  * @returns The union of all `ActionTypes` from the given object type `T`.
  */
-export type ActionTypes<T> = T extends Record<string, ActionCreator>
-  ? ActionTypes<ActionInstanceMap<T>>
-  : T extends Record<string, Action>
-    ? T[keyof T]
-    : T extends Record<string, unknown>
-      ? {
-          [K in keyof T]: ActionTypes<T[K]>;
-        }[keyof T]
-      : never;
+export type ActionTypes<T> =
+  T extends Record<string, ActionCreator>
+    ? ActionTypes<ActionInstanceMap<T>>
+    : T extends Record<string, Action>
+      ? T[keyof T]
+      : T extends Record<string, unknown>
+        ? {
+            [K in keyof T]: ActionTypes<T[K]>;
+          }[keyof T]
+        : never;
 
 /**
  * An action with a string type and an associated payload. This is the
