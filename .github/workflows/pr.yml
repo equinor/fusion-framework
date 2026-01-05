@@ -122,6 +122,6 @@ jobs:
 
       - name: Publish test coverage
         if: ${{ steps.test-coverage.conclusion == 'success' }}
-        uses: davelosert/vitest-coverage-report-action@v2.8.3
+        uses: davelosert/vitest-coverage-report-action@v2.9.0
 
   
