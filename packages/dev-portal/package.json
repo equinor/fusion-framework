@@ -23,9 +23,9 @@
     "access": "public"
   },
   "devDependencies": {
-    "@equinor/eds-core-react": "^0.49.0",
-    "@equinor/eds-icons": "^0.22.0",
-    "@equinor/eds-tokens": "^0.10.0",
+    "@equinor/eds-core-react": "^2.2.0",
+    "@equinor/eds-icons": "^1.1.0",
+    "@equinor/eds-tokens": "^2.1.1",
     "@equinor/fusion-framework": "workspace:*",
     "@equinor/fusion-framework-app": "workspace:*",
     "@equinor/fusion-framework-dev-server": "workspace:*",
@@ -50,7 +50,6 @@
     "@equinor/fusion-react-styles": "2.0.0",
     "@equinor/fusion-wc-chip": "^1.2.2",
     "@equinor/fusion-wc-person": "^3.4.0",
-    "@material-ui/styles": "^4.11.5",
     "@types/dotenv": "^8.2.3",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
