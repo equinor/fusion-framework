@@ -3,7 +3,7 @@ import { type ChangeEvent, useCallback, useEffect, useId, useState } from 'react
 import type { BookmarkCreateArgs } from '@equinor/fusion-framework-module-bookmark';
 import { useBookmarkComponentContext } from '../BookmarkProvider';
 
-import { Button, Checkbox, Dialog, Input, Label, TextField } from '@equinor/eds-core-react';
+import { Button, Checkbox, Dialog, Input, Label, Textarea } from '@equinor/eds-core-react';
 import styled from 'styled-components';
 import { from } from 'rxjs';
 
@@ -77,13 +77,12 @@ export const CreateBookmarkModal = ({
           />
         </div>
         <div>
-          <TextField
+          <Textarea
             id={descriptionId}
             label="Description"
-            multiline
             rows={3}
             rowsMax={10}
-            onChange={(event: ChangeEvent<HTMLInputElement>) => {
+            onChange={(event: ChangeEvent<HTMLTextAreaElement>) => {
               setState((s) => ({ ...s, description: event.target.value }));
             }}
           />
