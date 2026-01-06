@@ -1,5 +1,22 @@
 # poc-portal
 
+## 1.1.29-cli-search-index.0
+
+### Patch Changes
+
+- [#3757](https://github.com/equinor/fusion-framework/pull/3757) [`fd26636`](https://github.com/equinor/fusion-framework/commit/fd266363fc6d0445733b16a9e25b303ec6fe4a50) Thanks [@odinr](https://github.com/odinr)! - preview before pr
+
+- Updated dependencies [[`fd26636`](https://github.com/equinor/fusion-framework/commit/fd266363fc6d0445733b16a9e25b303ec6fe4a50), [`fd26636`](https://github.com/equinor/fusion-framework/commit/fd266363fc6d0445733b16a9e25b303ec6fe4a50)]:
+  - @equinor/fusion-framework-module-service-discovery@9.0.5-cli-search-index.1
+  - @equinor/fusion-framework-react@7.4.20-cli-search-index.1
+  - @equinor/fusion-framework-module@5.0.6-cli-search-index.1
+  - @equinor/fusion-framework-module-http@7.0.6-cli-search-index.1
+  - @equinor/fusion-framework-module-msal@6.0.5-cli-search-index.0
+  - @equinor/fusion-framework-module-app@7.2.2-cli-search-index.0
+  - @equinor/fusion-framework@7.4.3-cli-search-index.1
+  - @equinor/fusion-framework-react-app@8.0.1-cli-search-index.1
+  - @equinor/fusion-framework-cli@13.0.0-cli-search-index.0
+
 ## 1.1.28
 
 ### Patch Changes

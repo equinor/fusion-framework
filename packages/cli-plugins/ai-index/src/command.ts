@@ -57,9 +57,7 @@ const _command = createCommand('embeddings')
       false,
     ),
   )
-  .addOption(
-    createOption('--config <config>', 'Path to a config file').default('fusion-ai.config'),
-  )
+  .addOption(createOption('--config <config>', 'Path to a config file').default('fusion-ai.config'))
   .addOption(createOption('--diff', 'Process only changed files (workflow mode)').default(false))
   .addOption(createOption('--base-ref <ref>', 'Git reference to compare against').default('HEAD~1'))
   .addOption(

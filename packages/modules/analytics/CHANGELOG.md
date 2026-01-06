@@ -1,5 +1,17 @@
 # @equinor/fusion-framework-module-analytics
 
+## 0.1.2-cli-search-index.0
+
+### Patch Changes
+
+- Updated dependencies [[`fd26636`](https://github.com/equinor/fusion-framework/commit/fd266363fc6d0445733b16a9e25b303ec6fe4a50)]:
+  - @equinor/fusion-observable@8.5.8-cli-search-index.0
+  - @equinor/fusion-framework-module-context@7.0.3-cli-search-index.1
+  - @equinor/fusion-framework-module@5.0.6-cli-search-index.1
+  - @equinor/fusion-framework-module-event@4.4.1-cli-search-index.1
+  - @equinor/fusion-framework-module-http@7.0.6-cli-search-index.1
+  - @equinor/fusion-framework-module-app@7.2.2-cli-search-index.0
+
 ## 0.1.1
 
 ### Patch Changes
