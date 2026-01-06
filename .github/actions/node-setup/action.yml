@@ -2,7 +2,7 @@ name: Setup Node
 Description: General setup of node
 inputs:
   node-version:
-    default: 22
+    default: 24
   turbo-cache:
     default: true
 
@@ -10,27 +10,28 @@ runs:
   using: composite
   steps:
 
-    - name: Get pnpm lockfile hash
-      if: ${{ inputs.turbo-cache == 'true' }}
-      id: pnpm-lock-hash
-      shell: bash
-      run: |
-        if [ -f pnpm-lock.yaml ]; then
-          echo "hash=$(sha256sum pnpm-lock.yaml | cut -d' ' -f1)" >> $GITHUB_OUTPUT
-        else
-          echo "hash=no-lockfile" >> $GITHUB_OUTPUT
-        fi
+    # - name: Get pnpm lockfile hash
+    #   if: ${{ inputs.turbo-cache == 'true' }}
+    #   id: pnpm-lock-hash
+    #   shell: bash
+    #   run: |
+    #     if [ -f pnpm-lock.yaml ]; then
+    #       echo "hash=$(sha256sum pnpm-lock.yaml | cut -d' ' -f1)" >> $GITHUB_OUTPUT
+    #     else
+    #       echo "hash=no-lockfile" >> $GITHUB_OUTPUT
+    #     fi
 
-    - name: Cache turbo build setup
-      if: ${{ inputs.turbo-cache == 'true' }}
-      uses: actions/cache@v4
-      with:
-        path: |
-          .turbo
-          !vue-press/**
-        key: ${{ runner.os }}-turbo-${{ steps.pnpm-lock-hash.outputs.hash }}
-        restore-keys: |
-          ${{ runner.os }}-turbo-
+    # - name: Cache turbo build setup
+    #   if: ${{ inputs.turbo-cache == 'true' }}
+    #   uses: actions/cache@v4
+    #   with:
+    #     path: |
+    #       .turbo
+    #       **/.turbo
+    #       !vue-press/**
+    #     key: ${{ runner.os }}-turbo-${{ steps.pnpm-lock-hash.outputs.hash }}
+    #     restore-keys: |
+    #       ${{ runner.os }}-turbo-
 
     - name: Setup pnpm
       uses: pnpm/action-setup@v4
