@@ -1,5 +1,21 @@
 # Change Log
 
+## 7.4.3-cli-search-index.1
+
+### Patch Changes
+
+- [#3757](https://github.com/equinor/fusion-framework/pull/3757) [`fd26636`](https://github.com/equinor/fusion-framework/commit/fd266363fc6d0445733b16a9e25b303ec6fe4a50) Thanks [@odinr](https://github.com/odinr)! - preview before pr
+
+- Updated dependencies [[`fd26636`](https://github.com/equinor/fusion-framework/commit/fd266363fc6d0445733b16a9e25b303ec6fe4a50)]:
+  - @equinor/fusion-framework-module-service-discovery@9.0.5-cli-search-index.1
+  - @equinor/fusion-framework-module-telemetry@4.6.1-cli-search-index.0
+  - @equinor/fusion-framework-module-services@7.1.6-cli-search-index.0
+  - @equinor/fusion-framework-module-context@7.0.3-cli-search-index.1
+  - @equinor/fusion-framework-module@5.0.6-cli-search-index.1
+  - @equinor/fusion-framework-module-event@4.4.1-cli-search-index.1
+  - @equinor/fusion-framework-module-http@7.0.6-cli-search-index.1
+  - @equinor/fusion-framework-module-msal@6.0.5-cli-search-index.0
+
 ## 7.4.2
 
 ### Patch Changes

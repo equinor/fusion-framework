@@ -63,17 +63,24 @@
     "@equinor/fusion-framework-vite-plugin-api-service": "1.2.4",
     "@equinor/fusion-framework-vite-plugin-spa": "3.0.0",
     "@equinor/fusion-framework-widget": "1.1.46",
-    "@equinor/fusion-framework-docs": "0.4.10"
+    "@equinor/fusion-framework-docs": "0.4.10",
+    "portal-analytics": "0.2.1",
+    "@equinor/fusion-framework-cli-plugin-ai-base": "0.0.0",
+    "@equinor/fusion-framework-cli-plugin-ai-chat": "0.0.0",
+    "@equinor/fusion-framework-cli-plugin-ai-index": "0.0.0",
+    "@equinor/fusion-framework-cli-plugin-ai-mcp": "0.0.0",
+    "@equinor/fusion-framework-cli-plugin-ai-search": "0.0.0",
+    "@equinor/fusion-framework-module-analytics": "0.1.1"
   },
   "changesets": [
-    "cli_ai-commands",
-    "cli_ai-config-export",
-    "cli_ai-setup-refactor",
-    "cli_embeddings-clean-option",
-    "cli_embeddings-pipeline-refactor",
-    "cli_search-command",
-    "flexible-portal-tags",
-    "fuzzy-years-shine",
+    "_preview",
+    "cli-plugin-ai-base_new-package",
+    "cli-plugin-ai-chat_new-package",
+    "cli-plugin-ai-index_new-package",
+    "cli-plugin-ai-mcp_new-package",
+    "cli-plugin-ai-search_new-package",
+    "cli_plugin-system",
+    "fusion-framework-module-msal-node_bump-msal-node",
     "module-ai_new-package"
   ]
 }

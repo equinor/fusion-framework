@@ -18,22 +18,24 @@ export const inputSchema = z.object({
     .number()
     .optional()
     .default(5)
-    .describe('Maximum number of results to return. Recommended range: 3–8 (default: 5). Lower values help prevent context window overflow.'),
+    .describe(
+      'Maximum number of results to return. Recommended range: 3–8 (default: 5). Lower values help prevent context window overflow.',
+    ),
   category: z
     // .enum(['api', 'cookbook', 'markdown', 'eds', 'all'])
     .enum(['all'])
     .optional()
-    .default('all')
-    // .describe(
-    //   [
-    //     'Optional filter to narrow search scope:',
-    //     '• api      → TypeScript API reference (classes, methods, interfaces)',
-    //     '• cookbook → Code examples, tutorials, and practical recipes',
-    //     '• markdown → Guides, architecture docs, migration guides',
-    //     '• eds      → EDS components (Storybook stories, props, tokens, accessibility)',
-    //     '• all      → Search all sources (default)',
-    //   ].join('\n'),
-    // ),
+    .default('all'),
+  // .describe(
+  //   [
+  //     'Optional filter to narrow search scope:',
+  //     '• api      → TypeScript API reference (classes, methods, interfaces)',
+  //     '• cookbook → Code examples, tutorials, and practical recipes',
+  //     '• markdown → Guides, architecture docs, migration guides',
+  //     '• eds      → EDS components (Storybook stories, props, tokens, accessibility)',
+  //     '• all      → Search all sources (default)',
+  //   ].join('\n'),
+  // ),
 });
 
 /**
