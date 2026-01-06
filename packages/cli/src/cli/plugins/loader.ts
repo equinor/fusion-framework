@@ -68,8 +68,8 @@ export async function loadPlugins(program: Command): Promise<void> {
   );
 
   // Load configs from found files (deduplicate by path)
-  const uniqueConfigFiles = Array.from(
-    new Set(configFiles.filter((f): f is string => f !== undefined && f !== null)),
+  const uniqueConfigFiles: string[] = Array.from(
+    new Set(configFiles.filter((f: string | undefined): f is string => f !== undefined && f !== null)),
   );
   for (const configFile of uniqueConfigFiles) {
     const plugins = await loadConfigFromFile(configFile);

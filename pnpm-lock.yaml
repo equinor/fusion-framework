@@ -813,9 +813,15 @@ importers:
       deepmerge:
         specifier: ^4.3.1
         version: 4.3.1
+      dotenv:
+        specifier: ^17.2.3
+        version: 17.2.3
       execa:
         specifier: ^9.6.0
         version: 9.6.0
+      find-up:
+        specifier: ^8.0.0
+        version: 8.0.0
       inquirer:
         specifier: ^13.0.1
         version: 13.0.1(@types/node@24.9.2)
@@ -18185,7 +18191,7 @@ snapshots:
       isstream: 0.1.2
       jsonwebtoken: 9.0.2
       mime-types: 2.1.35
-      retry-axios: 2.6.0(axios@1.13.2(debug@4.4.3))
+      retry-axios: 2.6.0(axios@1.13.2)
       tough-cookie: 4.1.4
     transitivePeerDependencies:
       - supports-color
@@ -20045,7 +20051,7 @@ snapshots:
       onetime: 7.0.0
       signal-exit: 4.1.0
 
-  retry-axios@2.6.0(axios@1.13.2(debug@4.4.3)):
+  retry-axios@2.6.0(axios@1.13.2):
     dependencies:
       axios: 1.13.2(debug@4.4.3)
 
