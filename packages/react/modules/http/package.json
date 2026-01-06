@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework-react-module-http",
-  "version": "10.0.1-cli-search-index.0",
+  "version": "10.0.0",
   "description": "",
   "main": "dist/esm/index.js",
   "exports": {
