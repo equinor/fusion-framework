@@ -1,32 +1,15 @@
 import { createCommand, createOption } from 'commander';
-import { Server } from '@modelcontextprotocol/sdk/server/index.js';
+import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
-import {
-  CallToolRequestSchema,
-  ListToolsRequestSchema,
-  type CallToolRequest,
-} from '@modelcontextprotocol/sdk/types.js';
 import { setupFramework } from '@equinor/fusion-framework-cli-plugin-ai-base';
 import {
   type AiOptions,
   withOptions as withAiOptions,
 } from '@equinor/fusion-framework-cli-plugin-ai-base/command-options';
 import {
-  toolDefinition as markdownTool,
-  handleTool as handleMarkdownTool,
-} from './tools/fusion-search-markdown.js';
-import {
-  toolDefinition as apiTool,
-  handleTool as handleApiTool,
-} from './tools/fusion-search-api.js';
-import {
-  toolDefinition as cookbookTool,
-  handleTool as handleCookbookTool,
-} from './tools/fusion-search-cookbook.js';
-import {
-  toolDefinition as edsTool,
-  handleTool as handleEdsTool,
-} from './tools/fusion-search-eds.js';
+  handleTool as handleSearchTool,
+  toolConfig as searchToolConfig,
+} from './tools/fusion-search.tool.js';
 
 /**
  * CLI command: `ai mcp`
@@ -36,10 +19,7 @@ import {
  *
  * The MCP server exposes:
  * - Tools for querying and searching the Fusion Framework codebase:
- *   - fusion_search_markdown: Search markdown documentation
- *   - fusion_search_api: Search API reference (TypeScript/TSDoc)
- *   - fusion_search_cookbook: Search cookbook examples and tutorials
- *   - fusion_search_eds: Search EDS components from Storybook
+ *   - fusion_search: Unified search across all documentation types (API, cookbooks, markdown, EDS)
  * - Resources for accessing framework documentation and context
  * - Capabilities for AI assistants to understand and work with Fusion Framework
  *
@@ -93,71 +73,24 @@ const _command = createCommand('mcp')
     }
 
     // Create MCP server instance
-    const server = new Server(
+    const server = new McpServer(
       {
         name: 'fusion-framework-mcp',
         version: '1.0.0',
-      },
-      {
-        capabilities: {
-          tools: {},
-        },
+        title: 'Fusion Framework MCP Server',
       },
     );
 
-    // Register tool handlers
-    server.setRequestHandler(ListToolsRequestSchema, async () => {
-      const tools = [];
-
-      // Add search tools if vector store is configured
+    // Register search tool (will return error if not configured)
+    server.registerTool('fusion_search', searchToolConfig, handleSearchTool(framework, options));
+    
+    if (options.verbose) {
       if (options.azureSearchIndexName && framework.ai) {
-        tools.push(markdownTool);
-        tools.push(apiTool);
-        tools.push(cookbookTool);
-        tools.push(edsTool);
+        console.error('✅ Registered tool: fusion_search');
+      } else {
+        console.error('⚠️  Registered tool: fusion_search (configuration missing - will return error when called)');
       }
-
-      return {
-        tools,
-      };
-    });
-
-    server.setRequestHandler(CallToolRequestSchema, async (request: CallToolRequest) => {
-      const { name, arguments: args } = request.params;
-
-      try {
-        switch (name) {
-          case 'fusion_search_markdown':
-            return await handleMarkdownTool(args || {}, framework, options);
-
-          case 'fusion_search_api':
-            return await handleApiTool(args || {}, framework, options);
-
-          case 'fusion_search_cookbook':
-            return await handleCookbookTool(args || {}, framework, options);
-
-          case 'fusion_search_eds':
-            return await handleEdsTool(args || {}, framework, options);
-
-          default:
-            throw new Error(`Unknown tool: ${name}`);
-        }
-      } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : String(error);
-        if (options.verbose) {
-          console.error(`❌ Error executing tool ${name}:`, errorMessage);
-        }
-        return {
-          content: [
-            {
-              type: 'text',
-              text: `Error: ${errorMessage}`,
-            },
-          ],
-          isError: true,
-        };
-      }
-    });
+    }
 
     // Start the server using stdio transport (standard for MCP)
     const transport = new StdioServerTransport();
