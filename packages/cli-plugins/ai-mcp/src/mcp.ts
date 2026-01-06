@@ -73,22 +73,22 @@ const _command = createCommand('mcp')
     }
 
     // Create MCP server instance
-    const server = new McpServer(
-      {
-        name: 'fusion-framework-mcp',
-        version: '1.0.0',
-        title: 'Fusion Framework MCP Server',
-      },
-    );
+    const server = new McpServer({
+      name: 'fusion-framework-mcp',
+      version: '1.0.0',
+      title: 'Fusion Framework MCP Server',
+    });
 
     // Register search tool (will return error if not configured)
     server.registerTool('fusion_search', searchToolConfig, handleSearchTool(framework, options));
-    
+
     if (options.verbose) {
       if (options.azureSearchIndexName && framework.ai) {
         console.error('✅ Registered tool: fusion_search');
       } else {
-        console.error('⚠️  Registered tool: fusion_search (configuration missing - will return error when called)');
+        console.error(
+          '⚠️  Registered tool: fusion_search (configuration missing - will return error when called)',
+        );
       }
     }
 
