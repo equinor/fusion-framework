@@ -28,6 +28,12 @@ const SomeComponent = () => {
   // Triggers when the component is loaded.
   useEffect(() => {
     trackFeature('SomeComponent loaded');
+
+    // Send additional data
+    trackFeature('some feature happened', {
+      extra: 'data',
+      foo: 'bar',
+    });
   }, [trackFeature]);
 
   return <button onClick={handleOnClick}>Click me</button>;

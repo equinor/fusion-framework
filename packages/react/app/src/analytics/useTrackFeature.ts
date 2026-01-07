@@ -1,6 +1,6 @@
 import { useFrameworkModule } from '@equinor/fusion-framework-react';
 import type { AppModule } from '@equinor/fusion-framework-module-app';
-import type { AnalyticsModule } from '@equinor/fusion-framework-module-analytics';
+import type { AnalyticsModule, AnyValueMap } from '@equinor/fusion-framework-module-analytics';
 import { useCallback } from 'react';
 
 /**
@@ -18,9 +18,10 @@ export const useTrackFeature = () => {
    * Can be used both in useCallback or useEffects - see README.md for examples.
    *
    * @param name - The feature to track
+   * @param data - Optional map of additional key-value pairs to include with the analytics event
    */
   const trackFeature = useCallback(
-    (name: string) => {
+    (name: string, data?: AnyValueMap) => {
       if (!analyticsProvider) {
         telemetryProvider?.trackException({
           name: 'AnalyticsProviderNotFound',
@@ -32,6 +33,7 @@ export const useTrackFeature = () => {
         name: 'app-feature',
         value: {
           feature: name,
+          data,
         },
         attributes: {
           appKey: appProvider?.current?.appKey,

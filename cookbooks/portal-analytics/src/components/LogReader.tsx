@@ -24,7 +24,9 @@ export const LogReader = () => {
    * Will fetch, parse and store the log file entries in entries state
    */
   const fetchLogs = useCallback(async () => {
-    trackFeature('cookbook:portal-analytics:logs:fetch');
+    trackFeature('cookbook:portal-analytics:logs:fetch', {
+      foo: 'bar',
+    });
 
     try {
       /**

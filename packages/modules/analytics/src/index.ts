@@ -1,6 +1,6 @@
 export { module as analyticsModule, AnalyticsModule } from './module.js';
 
-export { AnalyticsEvent } from './types.js';
+export { AnalyticsEvent, AnyValue, AnyValueMap } from './types.js';
 
 export { AnalyticsProvider } from './AnalyticsProvider.js';
 export { IAnalyticsProvider } from './AnalyticsProvider.interface.js';
