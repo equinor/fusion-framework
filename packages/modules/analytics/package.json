@@ -54,7 +54,7 @@
     "@opentelemetry/otlp-exporter-base": "^0.207.0",
     "@opentelemetry/otlp-transformer": "^0.208.0",
     "@opentelemetry/resources": "^2.2.0",
-    "@opentelemetry/sdk-logs": "^0.207.0",
+    "@opentelemetry/sdk-logs": "^0.208.0",
     "deepmerge": "^4.3.1",
     "rxjs": "^7.8.1",
     "uuid": "^13.0.0",
