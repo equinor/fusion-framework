@@ -79,9 +79,9 @@ const framework = new Framework({
 ### Using the AI Provider
 
 ```typescript
-async function useAIProvider() {
-  const framework = await framework.initialize();
-  const aiProvider = framework.modules.ai;
+async function useAIProvider(framework: Framework) {
+  const frameworkInstance = await framework.initialize();
+  const aiProvider = frameworkInstance.modules.ai;
 
   // Get configured services
   const chatService = aiProvider.getService('chat', 'gpt-4') as IModel;
