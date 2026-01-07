@@ -1,5 +1,13 @@
 # @equinor/fusion-framework-module-msal-node
 
+## 2.0.2
+
+### Patch Changes
+
+- [#3828](https://github.com/equinor/fusion-framework/pull/3828) [`24403fc`](https://github.com/equinor/fusion-framework/commit/24403fc96d24d942f0c9632ed900b1a0f4065c1e) Thanks [@dependabot](https://github.com/apps/dependabot)! - Update `@azure/msal-node` dependency from 3.8.3 to 3.8.4.
+
+  This patch release includes security fixes for React and Next.js CVEs and updates `@azure/msal-common` to v15.13.3.
+
 ## 2.0.1
 
 ### Patch Changes
