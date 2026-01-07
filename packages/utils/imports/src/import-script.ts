@@ -60,8 +60,11 @@ export const importScript = async <M extends EsmModule>(
     throw processAccessError(error, sourceFile);
   }
 
-  const packageLocalPath = await readPackageUp().then((pkg) =>
-    pkg ? path.dirname(pkg?.path) : process.cwd(),
+  // Start searching for package.json from the entry point's directory
+  // This ensures we find the correct workspace root, not a parent directory
+  const entryDir = path.dirname(sourceFile);
+  const packageLocalPath = await readPackageUp({ cwd: entryDir }).then((pkg) =>
+    pkg ? path.dirname(pkg?.path) : entryDir,
   );
 
   const outfile =
