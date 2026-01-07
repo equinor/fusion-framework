@@ -1,5 +1,12 @@
 # portal-analytics
 
+## 0.2.2
+
+### Patch Changes
+
+- Updated dependencies [[`e2d2a76`](https://github.com/equinor/fusion-framework/commit/e2d2a76d08b86c3a9d8783fed1606551df9d5633)]:
+  - @equinor/fusion-framework-cli@13.0.0
+
 ## 0.2.1
 
 ### Patch Changes
