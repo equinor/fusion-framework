@@ -1,5 +1,18 @@
 # @equinor/fusion-framework-vite-plugin-spa
 
+## 3.0.7-next.1
+
+### Patch Changes
+
+- [#3820](https://github.com/equinor/fusion-framework/pull/3820) [`8303e3e`](https://github.com/equinor/fusion-framework/commit/8303e3e31cf658db09b1448312446d4805646dd8) Thanks [@odinr](https://github.com/odinr)! - relase next
+
+- Updated dependencies [[`8303e3e`](https://github.com/equinor/fusion-framework/commit/8303e3e31cf658db09b1448312446d4805646dd8)]:
+  - @equinor/fusion-framework-module-telemetry@5.0.0-next.1
+  - @equinor/fusion-framework-module-http@7.0.6-next.1
+  - @equinor/fusion-framework-module@5.0.6-next.1
+  - @equinor/fusion-framework-module-msal@7.0.0-next.1
+  - @equinor/fusion-framework-module-service-discovery@9.0.5-next.1
+
 ## 3.0.7-next.0
 
 ### Patch Changes

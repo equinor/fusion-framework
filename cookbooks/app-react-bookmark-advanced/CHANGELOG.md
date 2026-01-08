@@ -1,5 +1,14 @@
 # Change Log
 
+## 4.1.8-next.1
+
+### Patch Changes
+
+- [#3820](https://github.com/equinor/fusion-framework/pull/3820) [`8303e3e`](https://github.com/equinor/fusion-framework/commit/8303e3e31cf658db09b1448312446d4805646dd8) Thanks [@odinr](https://github.com/odinr)! - relase next
+
+- Updated dependencies [[`8303e3e`](https://github.com/equinor/fusion-framework/commit/8303e3e31cf658db09b1448312446d4805646dd8)]:
+  - @equinor/fusion-framework-react-router@1.0.0-next.1
+
 ## 4.1.8-next.0
 
 ### Patch Changes
