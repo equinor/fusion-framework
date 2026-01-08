@@ -1,5 +1,27 @@
 # @equinor/fusion-framework-module-analytics
 
+## 0.2.0
+
+### Minor Changes
+
+- [#3849](https://github.com/equinor/fusion-framework/pull/3849) [`7caca57`](https://github.com/equinor/fusion-framework/commit/7caca573584ae4daedfb17e287d0329c2633771a) Thanks [@asbjornhaland](https://github.com/asbjornhaland)! - `trackFeature` now has an extra optional argument for passing additional analytics
+  data.
+
+  Example
+
+  ```typescript
+  const trackFeature = useTrackFeature();
+
+  // Without extra data
+  trackFeature("SomeComponent:loaded");
+
+  // Send additional data
+  trackFeature("some:feature:happened", {
+    extra: "data",
+    foo: "bar",
+  });
+  ```
+
 ## 0.1.1
 
 ### Patch Changes

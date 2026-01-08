@@ -1,5 +1,12 @@
 # poc-portal
 
+## 1.1.30
+
+### Patch Changes
+
+- Updated dependencies [[`7caca57`](https://github.com/equinor/fusion-framework/commit/7caca573584ae4daedfb17e287d0329c2633771a)]:
+  - @equinor/fusion-framework-react-app@8.2.0
+
 ## 1.1.29
 
 ### Patch Changes
