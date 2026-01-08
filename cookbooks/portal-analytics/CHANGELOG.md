@@ -1,5 +1,15 @@
 # portal-analytics
 
+## 0.2.3
+
+### Patch Changes
+
+- [#3849](https://github.com/equinor/fusion-framework/pull/3849) [`7caca57`](https://github.com/equinor/fusion-framework/commit/7caca573584ae4daedfb17e287d0329c2633771a) Thanks [@asbjornhaland](https://github.com/asbjornhaland)! - Add example usage of `trackFeature` hook with optional `data`
+
+- Updated dependencies [[`7caca57`](https://github.com/equinor/fusion-framework/commit/7caca573584ae4daedfb17e287d0329c2633771a)]:
+  - @equinor/fusion-framework-module-analytics@0.2.0
+  - @equinor/fusion-framework-react-app@8.2.0
+
 ## 0.2.2
 
 ### Patch Changes
