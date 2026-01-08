@@ -1,5 +1,17 @@
 # @equinor/fusion-framework-dev-portal
 
+## 2.0.0-next.1
+
+### Minor Changes
+
+- [#3820](https://github.com/equinor/fusion-framework/pull/3820) [`897944c`](https://github.com/equinor/fusion-framework/commit/897944c20ab1bc6152f034750a518a80e945402f) Thanks [@odinr](https://github.com/odinr)! - Update EDS (Equinor Design System) packages to latest versions: `@equinor/eds-core-react` to ^2.2.0, `@equinor/eds-icons` to ^1.1.0, `@equinor/eds-tokens` to ^2.1.1, and `@equinor/eds-utils` to ^2.0.0.
+
+  These are major version updates from the 0.x series. Consumers should verify compatibility with their applications, particularly if using `@equinor/fusion-react-side-sheet` which may require updates to support the new EDS versions.
+
+### Patch Changes
+
+- [#3820](https://github.com/equinor/fusion-framework/pull/3820) [`8303e3e`](https://github.com/equinor/fusion-framework/commit/8303e3e31cf658db09b1448312446d4805646dd8) Thanks [@odinr](https://github.com/odinr)! - relase next
+
 ## 2.0.0-next.0
 
 ### Major Changes

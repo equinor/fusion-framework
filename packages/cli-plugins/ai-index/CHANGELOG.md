@@ -1,5 +1,15 @@
 # @equinor/fusion-framework-cli-plugin-ai-index
 
+## 1.0.1-next.0
+
+### Patch Changes
+
+- Updated dependencies [[`8303e3e`](https://github.com/equinor/fusion-framework/commit/8303e3e31cf658db09b1448312446d4805646dd8)]:
+  - @equinor/fusion-imports@1.2.0-next.1
+  - @equinor/fusion-framework-cli@13.0.1-next.0
+  - @equinor/fusion-framework-module@5.0.6-next.1
+  - @equinor/fusion-framework-cli-plugin-ai-base@1.0.1-next.0
+
 ## 1.0.0
 
 ### Major Changes
@@ -9,7 +19,6 @@
   This plugin extends the Fusion Framework CLI with comprehensive document embedding and indexing capabilities for building searchable vector stores from code and documentation.
 
   **Features:**
-
   - Document chunking and embedding generation
   - Git metadata extraction for context-aware embeddings
   - Markdown/MDX and TypeScript/TSX documentation parsing
@@ -20,7 +29,6 @@
   - Dry-run mode for testing
 
   **Quick Usage:**
-
   1. Install the plugin:
 
   ```sh
