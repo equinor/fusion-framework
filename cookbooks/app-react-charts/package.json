@@ -32,6 +32,7 @@
     "typescript": "^5.8.2"
   },
   "dependencies": {
+    "@equinor/fusion-framework-react-ag-grid": "workspace:^",
     "@equinor/fusion-framework-react-router": "workspace:^",
     "ag-charts-community": "^12.2.0",
     "ag-charts-react": "^12.2.0",
