@@ -232,6 +232,9 @@ importers:
 
   cookbooks/app-react-charts:
     dependencies:
+      '@equinor/fusion-framework-react-ag-grid':
+        specifier: workspace:^
+        version: link:../../packages/react/ag-grid
       '@equinor/fusion-framework-react-router':
         specifier: workspace:^
         version: link:../../packages/react/router
@@ -18844,7 +18847,7 @@ snapshots:
       isstream: 0.1.2
       jsonwebtoken: 9.0.2
       mime-types: 2.1.35
-      retry-axios: 2.6.0(axios@1.13.2)
+      retry-axios: 2.6.0(axios@1.13.2(debug@4.4.3))
       tough-cookie: 4.1.4
     transitivePeerDependencies:
       - supports-color
@@ -20512,7 +20515,7 @@ snapshots:
       onetime: 7.0.0
       signal-exit: 4.1.0
 
-  retry-axios@2.6.0(axios@1.13.2):
+  retry-axios@2.6.0(axios@1.13.2(debug@4.4.3)):
     dependencies:
       axios: 1.13.2(debug@4.4.3)
 
