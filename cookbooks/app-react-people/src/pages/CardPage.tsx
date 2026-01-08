@@ -8,7 +8,7 @@ import { FlexGrid } from '../Styled';
  *
  * In this example the `PersonCard` will request the profile photo from the `PersonProvider` by either the `azureId` or `upn`.
  */
-export const CardPage = () => {
+const CardPage = () => {
   return (
     <>
       <h2>Card</h2>
@@ -19,3 +19,5 @@ export const CardPage = () => {
     </>
   );
 };
+
+export default CardPage;

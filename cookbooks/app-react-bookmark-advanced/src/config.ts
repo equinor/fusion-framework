@@ -2,6 +2,7 @@ import type { AppModuleInitiator } from '@equinor/fusion-framework-react-app';
 
 import { enableContext } from '@equinor/fusion-framework-module-context';
 import { enableNavigation } from '@equinor/fusion-framework-module-navigation';
+import { enableBookmark } from '@equinor/fusion-framework-react-app/bookmark';
 
 export const configure: AppModuleInitiator = (configurator, args) => {
   const { basename } = args.env;
@@ -10,7 +11,8 @@ export const configure: AppModuleInitiator = (configurator, args) => {
   enableContext(configurator, async (builder) => {
     builder.setContextType(['projectMaster']); // set contextType to match against
   });
-  configurator.logger.level = 0;
+
+  enableBookmark(configurator);
 
   /** callback when configurations is created */
   configurator.onConfigured((config) => {

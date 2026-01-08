@@ -16,11 +16,11 @@
   "license": "ISC",
   "dependencies": {
     "@equinor/fusion-framework-cli": "workspace:*",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react": "^19.2.1",
+    "react-dom": "^19.2.1"
   },
   "devDependencies": {
-    "@types/react": "^18.2.0",
-    "@types/react-dom": "^18.2.0"
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3"
   }
 }
