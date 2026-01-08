@@ -256,6 +256,9 @@ importers:
 
   cookbooks/app-react-charts:
     dependencies:
+      '@equinor/fusion-framework-react-ag-grid':
+        specifier: workspace:^
+        version: link:../../packages/react/ag-grid
       '@equinor/fusion-framework-react-router':
         specifier: workspace:^
         version: link:../../packages/react/router
