@@ -1,31 +1,35 @@
 <!--
-Please replace or remove the HTML comment sections below with your actual content.
-These comments are just guidance - do not include them in your final PR description.
+Remove all HTML comments before submitting. Replace placeholders with actual content.
 -->
 
-## Why
-
-<!-- Describe the type and scope of this change -->
-
 **Why is this change needed?**
-<!-- Explain the problem this solves or the reason for this change -->
+<!-- Problem this solves or reason for change. Be specific. -->
 
 **What is the current behavior?**
-<!-- Describe how things work currently, including any issues -->
+<!-- How things work currently, including any issues. -->
 
 **What is the new behavior?**
-<!-- Describe what will change after this PR is merged -->
+<!-- What will change after this PR is merged. -->
 
-**Does this PR introduce a breaking change?** 
-<!-- describe what breaks and how to migrate -->
+**Does this PR introduce a breaking change?**
+<!-- Yes/No. If yes, describe what breaks and how to migrate. -->
+
+**Impact assessment:**
+<!-- 
+- Breaking changes: Will this break existing code? (Yes/No)
+- Version bump: Patch/Minor/Major (based on changeset)
+- Consumer impact: What do consumers need to know?
+- Downstream impact: Does this affect other packages in the monorepo?
+-->
+
+**Review guidance:**
+<!-- Special considerations, areas of concern, specific things to verify, or focus areas for review. -->
 
 **Additional context**
-<!-- Any other information, rationale, or testing notes -->
+<!-- Implementation details, known limitations, edge cases, related docs. -->
 
-<!-- Remove this "Related issues" section if there are no related issues for this PR -->
 **Related issues**
-closes: <!-- Link to issues this PR closes, e.g., #123 -->
-ref: <!-- Link to related issues/PRs this PR references, e.g., #456 -->
+<!-- Remove if none. Use `closes: #123` or `ref: #456` / `ref: [AB#12345](url)`. -->
 
 ### Checklist
 

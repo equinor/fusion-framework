@@ -64,41 +64,52 @@ Your commits should adhere to [our guidelines](contributing/conventional-commits
 
 ### Pull Request
 
-__Before open a new PR:__
+> [!IMPORTANT]
+> The PR description is a critical part of our maintainer documentation. A well-written description allows anyone — now or years later — to quickly understand **why** a change was made, **what** the impact is, and **how** to verify it, without needing to read every line of code in the diff.
 
-- all affected packages has matching [changesets](./contributing/changeset.md)
-- make sure the the code build `pnpm build`
-- make sure the code lints `pnpm lint`
-- make sure tests passes `pnpm test run`
+> [!TIP]
+> The PR template (`.github/PULL_REQUEST_TEMPLATE.md`) contains inline guidance and examples. **Always use the template without adding a free-form summary at the top** — either keep the headers and fill them in, or replace the template with a clear narrative that still covers all required aspects.
+
+__Before opening a new PR:__
+
+- All affected packages have matching [changesets](./contributing/changeset.md)
+- Make sure the code builds: `pnpm build`
+- Make sure the code lints: `pnpm lint`
+- Make sure tests pass: `pnpm test run`
 
 When you're finished with the changes, create a pull request.
+
 > [!WARNING]
-> All PR should be created as __draft__
-- Select a matching pull request template.
-- Don't forget to [link PR to issue](https://docs.github.com/en/issues/tracking-your-work-with-issues/linking-a-pull-request-to-an-issue) if you are solving one.
-- Enable the checkbox to [allow maintainer edits](https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/allowing-changes-to-a-pull-request-branch-created-from-a-fork) so the branch can be updated for a merge.
+> All PRs should be created as **draft** initially.
 
-> __when all checks are green, publish the PR__
+- Select the matching pull request template.
+- **Fill out every section of the template completely** (remove HTML comments, answer all questions):
+  - Especially the **Why** section (motivation, current behavior, new behavior, breaking changes, context, related issues)
+  - Include clear guidance on **How to review/test** (files to focus on, commands to run, scenarios to try)
+  - Describe the **Impact** (who benefits, performance/security implications, migration needs, scope/risks)
+- Don't forget to [link the PR to the issue](https://docs.github.com/en/issues/tracking-your-work-with-issues/linking-a-pull-request-to-an-issue) if you are solving one.
+- Enable the checkbox to [allow maintainer edits](https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/allowing-changes-to-a-pull-request-branch-created-from-a-fork) so the branch can be updated for merge.
 
-_pull request that trigger `ready_for_review` will post to our Teams channel_
+> __When all checks are green and the description is complete, mark the PR as "Ready for review"__
+
+_Pull requests that trigger `ready_for_review` will post to our Teams channel._
 
 Once you submit your PR, a Fusion Core team member will review your proposal. We may ask questions or request additional information.
 
 - We may ask for changes to be made before a PR can be merged, either using [suggested changes](https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/incorporating-feedback-in-your-pull-request) or pull request comments. You can apply suggested changes directly through the UI. You can make any other changes in your fork, then commit them to your branch.
 - As you update your PR and apply changes, mark each conversation as [resolved](https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/commenting-on-a-pull-request#resolving-conversations).
-- If you run into any merge issues, checkout this [git tutorial](https://github.com/skills/resolve-merge-conflicts) to help you resolve merge conflicts and other issues.
+- If you run into any merge issues, check out this [git tutorial](https://github.com/skills/resolve-merge-conflicts) to help you resolve merge conflicts and other issues.
 
 > [!WARNING]
-> when a pull request review requests changes, the pull request is moved back to __draft__
+> When a pull request review requests changes, the pull request is moved back to **draft**.
 >
-> _When a pull request is moved back to draft, it is __the creator__ responsibility to request a re-review_
+> _When a pull request is moved back to draft, it is **the creator's** responsibility to request a re-review once updates are made._
 
 > [!CAUTION]
-> when a pull request review is accepted, the creator is normally responsible for merging in the code.
+> When a pull request review is approved, the creator is normally responsible for merging the code.
 
 > [!TIP]
-> Set your PR to "auto-merge"
-
+> Enable "auto-merge" on approved PRs to speed things up.
 
 ### Your PR is merged!
 
