@@ -25,9 +25,9 @@
     "@equinor/fusion-framework-react-app": "workspace:^",
     "@equinor/fusion-framework-react-ag-grid": "workspace:^",
     "@types/react": "^18.2.50",
-    "@types/react-dom": "^18.2.7",
+    "@types/react-dom": "^19.2.3",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0",
+    "react-dom": "^19.2.3",
     "react-router-dom": "^7.6.0",
     "styled-components": "^6.1.19",
     "typescript": "^5.8.2"
