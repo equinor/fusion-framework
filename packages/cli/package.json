@@ -119,7 +119,7 @@
     "read-package-up": "^11.0.0",
     "simple-git": "^3.28.0",
     "vite": "^7.1.12",
-    "vite-tsconfig-paths": "^5.1.4",
+    "vite-tsconfig-paths": "^6.0.3",
     "zod": "^4.1.8"
   },
   "devDependencies": {
