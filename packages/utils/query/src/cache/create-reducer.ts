@@ -41,7 +41,7 @@ export default function <TType, TArgs>(
             record.updated = Date.now();
             record.updates ??= 0;
             record.updates++;
-            record.value = castDraft(entry.value);
+            record.value = entry.value as typeof record.value;
             record.transaction = entry.transaction;
             // reset the mutated timestamp
             record.mutated = undefined;
@@ -76,7 +76,7 @@ export default function <TType, TArgs>(
           const record = state[key];
           if (record) {
             // Update the record with the new value and metadata.
-            record.value = castDraft(value);
+            record.value = value as typeof record.value;
             record.updated = updated;
             record.mutated = Date.now();
             record.updates ??= 0;
