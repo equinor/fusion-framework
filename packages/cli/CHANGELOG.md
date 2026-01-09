@@ -1,5 +1,14 @@
 # Change Log
 
+## 13.0.1
+
+### Patch Changes
+
+- [#3880](https://github.com/equinor/fusion-framework/pull/3880) [`528c7d7`](https://github.com/equinor/fusion-framework/commit/528c7d7f4fd93a72878e38843a2efb011a976ae6) Thanks [@dependabot](https://github.com/apps/dependabot)! - Internal: bump inquirer from 13.0.1 to 13.1.0. This update includes improved TypeScript type inference for `select` prompts and adds support for `default` option in `rawlist` prompts.
+
+- Updated dependencies []:
+  - @equinor/fusion-framework-dev-portal@1.2.6
+
 ## 13.0.0
 
 ### Major Changes
