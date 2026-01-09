@@ -18,6 +18,11 @@ updates:
         applies-to: version-updates
         patterns:
           - "@opentelemetry/*"
+      langchain:
+        applies-to: version-updates
+        patterns:
+          - "@langchain/*"
+          - "langchain"
       vuepress:
         applies-to: version-updates
         patterns:
