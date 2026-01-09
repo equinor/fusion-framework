@@ -14,6 +14,10 @@ updates:
           - "ag-grid-enterprise"
           - "ag-grid-community"
           - "ag-grid-react"
+      opentelemetry:
+        applies-to: version-updates
+        patterns:
+          - "@opentelemetry/*"
       vuepress:
         applies-to: version-updates
         patterns:
