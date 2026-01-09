@@ -1001,7 +1001,7 @@ importers:
         version: link:../../utils/imports
       '@langchain/textsplitters':
         specifier: ^1.0.0
-        version: 1.0.0(@langchain/core@1.0.5(@opentelemetry/api@1.9.0)(@opentelemetry/sdk-trace-base@2.2.0(@opentelemetry/api@1.9.0))(openai@6.9.0(ws@8.19.0)(zod@3.25.76)))
+        version: 1.0.1(@langchain/core@1.0.5(@opentelemetry/api@1.9.0)(@opentelemetry/sdk-trace-base@2.2.0(@opentelemetry/api@1.9.0))(openai@6.9.0(ws@8.19.0)(zod@3.25.76)))
       commander:
         specifier: ^14.0.1
         version: 14.0.2
@@ -4190,8 +4190,8 @@ packages:
     peerDependencies:
       '@langchain/core': '>=0.2.21 <0.4.0'
 
-  '@langchain/textsplitters@1.0.0':
-    resolution: {integrity: sha512-L1gOwOJXeM+6MKzrj9shSsDyH32j898jgqvVArOjdge2zLyY+Mv4aOuyAAxbPyaFdQXlxKfa9xjqIUyv8TzrqA==}
+  '@langchain/textsplitters@1.0.1':
+    resolution: {integrity: sha512-rheJlB01iVtrOUzttscutRgLybPH9qR79EyzBEbf1u97ljWyuxQfCwIWK+SjoQTM9O8M7GGLLRBSYE26Jmcoww==}
     engines: {node: '>=20'}
     peerDependencies:
       '@langchain/core': ^1.0.0
@@ -12660,7 +12660,7 @@ snapshots:
       '@langchain/core': 1.0.5(@opentelemetry/api@1.9.0)(@opentelemetry/sdk-trace-base@2.2.0(@opentelemetry/api@1.9.0))(openai@6.9.0(ws@8.19.0)(zod@4.1.12))
       js-tiktoken: 1.0.21
 
-  '@langchain/textsplitters@1.0.0(@langchain/core@1.0.5(@opentelemetry/api@1.9.0)(@opentelemetry/sdk-trace-base@2.2.0(@opentelemetry/api@1.9.0))(openai@6.9.0(ws@8.19.0)(zod@3.25.76)))':
+  '@langchain/textsplitters@1.0.1(@langchain/core@1.0.5(@opentelemetry/api@1.9.0)(@opentelemetry/sdk-trace-base@2.2.0(@opentelemetry/api@1.9.0))(openai@6.9.0(ws@8.19.0)(zod@3.25.76)))':
     dependencies:
       '@langchain/core': 1.0.5(@opentelemetry/api@1.9.0)(@opentelemetry/sdk-trace-base@2.2.0(@opentelemetry/api@1.9.0))(openai@6.9.0(ws@8.19.0)(zod@3.25.76))
       js-tiktoken: 1.0.21
