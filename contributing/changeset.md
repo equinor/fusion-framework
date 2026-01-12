@@ -72,7 +72,8 @@ Changeset summaries become the release notes that consumers read. Structure each
 
 **Guidelines:**
 - Be specific and consumer-focused - write as if consumers will read this directly
-- Keep under 3-4 lines for readability
+- Prioritize clarity and completeness over strict length limits; a clear, informative single sentence is preferable to an artificially split summary
+- Aim for concise summaries, but longer explanations are acceptable when needed to fully explain the change and its impact
 - Include code examples only for complex new features
 - Reference issues: `Fixes https://github.com/equinor/fusion-framework/issues/123`, `Closes https://github.com/equinor/fusion-framework/issues/123`
 - Credit contributors: `Thanks @username for the report`
