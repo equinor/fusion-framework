@@ -850,6 +850,18 @@ importers:
         specifier: ^4.1.8
         version: 4.1.12
     devDependencies:
+      '@equinor/fusion-framework-cli-plugin-ai-chat':
+        specifier: workspace:*
+        version: link:../cli-plugins/ai-chat
+      '@equinor/fusion-framework-cli-plugin-ai-index':
+        specifier: workspace:*
+        version: link:../cli-plugins/ai-index
+      '@equinor/fusion-framework-cli-plugin-ai-mcp':
+        specifier: workspace:*
+        version: link:../cli-plugins/ai-mcp
+      '@equinor/fusion-framework-cli-plugin-ai-search':
+        specifier: workspace:*
+        version: link:../cli-plugins/ai-search
       '@equinor/fusion-framework-module':
         specifier: workspace:*
         version: link:../modules/module
@@ -16747,7 +16759,7 @@ snapshots:
 
   '@types/node-fetch@2.6.13':
     dependencies:
-      '@types/node': 18.19.130
+      '@types/node': 24.9.2
       form-data: 4.0.5
 
   '@types/node@12.20.55': {}
@@ -19028,7 +19040,7 @@ snapshots:
       isstream: 0.1.2
       jsonwebtoken: 9.0.3
       mime-types: 2.1.35
-      retry-axios: 2.6.0(axios@1.13.2(debug@4.4.3))
+      retry-axios: 2.6.0(axios@1.13.2)
       tough-cookie: 4.1.4
     transitivePeerDependencies:
       - supports-color
@@ -20894,7 +20906,7 @@ snapshots:
       onetime: 7.0.0
       signal-exit: 4.1.0
 
-  retry-axios@2.6.0(axios@1.13.2(debug@4.4.3)):
+  retry-axios@2.6.0(axios@1.13.2):
     dependencies:
       axios: 1.13.2(debug@4.4.3)
 
