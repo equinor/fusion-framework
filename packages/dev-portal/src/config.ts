@@ -1,6 +1,8 @@
 import { enableAppModule } from '@equinor/fusion-framework-module-app';
 import { enableBookmark } from '@equinor/fusion-framework-react-module-bookmark';
 import type { FrameworkConfigurator } from '@equinor/fusion-framework';
+import { enableAnalytics } from '@equinor/fusion-framework-module-analytics';
+import { ConsoleAnalyticsAdapter } from '@equinor/fusion-framework-module-analytics/adapters';
 import { enableNavigation } from '@equinor/fusion-framework-module-navigation';
 import { enableServices } from '@equinor/fusion-framework-module-services';
 import { enableFeatureFlagging } from '@equinor/fusion-framework-module-feature-flag';
@@ -52,6 +54,17 @@ export const configure = async (config: FrameworkConfigurator) => {
 
   enableServices(config);
 
+  enableAnalytics(config, (builder) => {
+    builder.setAdapter('console', async (args) => {
+      if (args.hasModule('featureFlag')) {
+        const featureFlagProvider = await args.requireInstance('featureFlag');
+        if (featureFlagProvider.getFeature('fusionLogAnalytics')?.enabled) {
+          return new ConsoleAnalyticsAdapter();
+        }
+      }
+    });
+  });
+
   // Configure bookmark functionality with CLI as the source system
   enableBookmark(config, (builder) => {
     // Identify bookmarks created in dev portal as coming from CLI system
@@ -71,6 +84,11 @@ export const configure = async (config: FrameworkConfigurator) => {
           key: 'fusionDebug',
           title: 'Fusion debug log',
           description: 'Show Fusion debug log in console',
+        },
+        {
+          key: 'fusionLogAnalytics',
+          title: 'Log Fusion Analytics',
+          description: 'Show Analytics events in console',
         },
         {
           key: 'pinkBg',

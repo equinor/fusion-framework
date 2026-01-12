@@ -24,6 +24,9 @@
       "path": "../modules/app"
     },
     {
+      "path": "../modules/analytics"
+    },
+    {
       "path": "../modules/context"
     },
     {
