@@ -45,6 +45,7 @@
     "directory": "packages/cli-plugins/ai-index"
   },
   "dependencies": {
+    "@azure/search-documents": "^12.2.0",
     "@equinor/fusion-framework-cli-plugin-ai-base": "workspace:*",
     "@equinor/fusion-framework-module": "workspace:*",
     "@equinor/fusion-framework-module-ai": "workspace:*",
