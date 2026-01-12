@@ -1,4 +1,4 @@
-ARG NODE_VERSION=22
+ARG NODE_VERSION=24
 
 FROM myoung34/github-runner:ubuntu-noble AS base
 

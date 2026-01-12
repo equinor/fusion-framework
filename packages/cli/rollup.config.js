@@ -15,7 +15,7 @@ const plugins = [
   replace({
     preventAssignment: true,
     'process.env.MINIMUM_NODE_VERSION': '20',
-    'process.env.RECOMMENDED_NODE_LTS': '22',
+    'process.env.RECOMMENDED_NODE_LTS': '24',
   }),
 ];
 const output = {

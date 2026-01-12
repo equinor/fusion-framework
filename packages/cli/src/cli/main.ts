@@ -12,7 +12,7 @@ import registerCommands from './commands/index.js';
 
 loadDotEnv();
 
-// Check Node.js version and recommend LTS (22.x)
+// Check Node.js version and recommend LTS (24.x)
 const MINIMUM_NODE_VERSION = process.env.MINIMUM_NODE_VERSION || '20';
 const [major] = process.versions.node.split('.').map(Number);
 if (major < Number(MINIMUM_NODE_VERSION)) {
@@ -23,7 +23,7 @@ if (major < Number(MINIMUM_NODE_VERSION)) {
   process.exit(1);
 }
 
-const RECOMMENDED_NODE_LTS = process.env.RECOMMENDED_NODE_LTS || '22';
+const RECOMMENDED_NODE_LTS = process.env.RECOMMENDED_NODE_LTS || '24';
 if (major !== Number(RECOMMENDED_NODE_LTS)) {
   console.warn(
     chalk.yellow('[WARNING]'),
