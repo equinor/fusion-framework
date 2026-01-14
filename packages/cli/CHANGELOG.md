@@ -1,5 +1,16 @@
 # Change Log
 
+## 13.0.1
+
+### Patch Changes
+
+- [#3898](https://github.com/equinor/fusion-framework/pull/3898) [`037e2e2`](https://github.com/equinor/fusion-framework/commit/037e2e29b6696e8925f054f5a1656ece24e55878) Thanks [@odinr](https://github.com/odinr)! - Internal: Add CLI plugin packages as dev dependencies for local development. These packages are used in `fusion-cli.config.ts` for building and running the CLI from source, but do not affect the published package.
+
+- [#3880](https://github.com/equinor/fusion-framework/pull/3880) [`528c7d7`](https://github.com/equinor/fusion-framework/commit/528c7d7f4fd93a72878e38843a2efb011a976ae6) Thanks [@dependabot](https://github.com/apps/dependabot)! - Internal: bump inquirer from 13.0.1 to 13.1.0. This update includes improved TypeScript type inference for `select` prompts and adds support for `default` option in `rawlist` prompts.
+
+- Updated dependencies [[`d7a9d12`](https://github.com/equinor/fusion-framework/commit/d7a9d127db9daff7d645d55eb08f37d1c36fa825)]:
+  - @equinor/fusion-framework-dev-portal@1.3.0
+
 ## 13.0.0
 
 ### Major Changes

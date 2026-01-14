@@ -1,5 +1,18 @@
 # @equinor/fusion-framework-dev-portal
 
+## 1.3.0
+
+### Minor Changes
+
+- [#3900](https://github.com/equinor/fusion-framework/pull/3900) [`d7a9d12`](https://github.com/equinor/fusion-framework/commit/d7a9d127db9daff7d645d55eb08f37d1c36fa825) Thanks [@asbjornhaland](https://github.com/asbjornhaland)! - Add feature flag `fusionLogAnalytics` to dev-portal in CLI.
+
+  Add `ConsoleAnalyticsAdapter` Adapter to analytics module if the feature flag is
+  enabled.
+
+  By enabling this feature flag, analytics events will be logged out in the
+  console. This is useful when you want to test events created by app teams (e.g.
+  using `trackFeature` hook).
+
 ## 1.2.6
 
 ### Patch Changes
