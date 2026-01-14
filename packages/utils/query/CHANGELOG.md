@@ -1,5 +1,11 @@
 # Change Log
 
+## 6.0.3
+
+### Patch Changes
+
+- [#3882](https://github.com/equinor/fusion-framework/pull/3882) [`8667a2d`](https://github.com/equinor/fusion-framework/commit/8667a2db65539b2f04ab99ccc58e255d31618c8f) Thanks [@dependabot](https://github.com/apps/dependabot)! - Internal: fix TypeScript type errors with immer 11.1.3 recursive Draft types by using type assertions instead of castDraft for value assignments in cache reducer.
+
 ## 6.0.2
 
 ### Patch Changes

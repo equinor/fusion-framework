@@ -1,5 +1,15 @@
 # @equinor/fusion-framework-cli-plugin-ai-index
 
+## 1.0.1
+
+### Patch Changes
+
+- [#3898](https://github.com/equinor/fusion-framework/pull/3898) [`037e2e2`](https://github.com/equinor/fusion-framework/commit/037e2e29b6696e8925f054f5a1656ece24e55878) Thanks [@odinr](https://github.com/odinr)! - Add `@azure/search-documents` as a dependency to ensure it's automatically installed when users install the plugin. Previously, users had to manually install this peer dependency required by the AI module.
+
+- Updated dependencies [[`037e2e2`](https://github.com/equinor/fusion-framework/commit/037e2e29b6696e8925f054f5a1656ece24e55878), [`528c7d7`](https://github.com/equinor/fusion-framework/commit/528c7d7f4fd93a72878e38843a2efb011a976ae6)]:
+  - @equinor/fusion-framework-cli@13.0.1
+  - @equinor/fusion-framework-cli-plugin-ai-base@1.0.1
+
 ## 1.0.0
 
 ### Major Changes
