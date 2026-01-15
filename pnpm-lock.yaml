@@ -1658,7 +1658,7 @@ importers:
     dependencies:
       '@azure/msal-node':
         specifier: ^3.8.3
-        version: 3.8.4
+        version: 3.8.5
       '@azure/msal-node-extensions':
         specifier: ^1.5.25
         version: 1.5.25
@@ -2640,8 +2640,8 @@ packages:
     resolution: {integrity: sha512-cNwUoCk3FF8VQ7Ln/MdcJVIv3sF73/OT86cRH81ECsydh7F4CNfIo2OAx6Cegtg8Yv75x4506wN4q+Emo6erOA==}
     engines: {node: '>=0.8.0'}
 
-  '@azure/msal-common@15.13.3':
-    resolution: {integrity: sha512-shSDU7Ioecya+Aob5xliW9IGq1Ui8y4EVSdWGyI1Gbm4Vg61WpP95LuzcY214/wEjSn6w4PZYD4/iVldErHayQ==}
+  '@azure/msal-common@15.14.0':
+    resolution: {integrity: sha512-aNuorSQxzsJQ6IUjJtN+rCInLfLOo3VpNYiXaHBK9XL8Ieg1y4F5ZFjI19GErbVvwqvwGNyJ9AZ/sAxOWhoSUw==}
     engines: {node: '>=0.8.0'}
 
   '@azure/msal-node-extensions@1.5.25':
@@ -2651,8 +2651,8 @@ packages:
   '@azure/msal-node-runtime@0.20.1':
     resolution: {integrity: sha512-WVbMedbJHjt9M+qeZMH/6U1UmjXsKaMB6fN8OZUtGY7UVNYofrowZNx4nVvWN/ajPKBQCEW4Rr/MwcRuA8HGcQ==}
 
-  '@azure/msal-node@3.8.4':
-    resolution: {integrity: sha512-lvuAwsDpPDE/jSuVQOBMpLbXuVuLsPNRwWCyK3/6bPlBk0fGWegqoZ0qjZclMWyQ2JNvIY3vHY7hoFmFmFQcOw==}
+  '@azure/msal-node@3.8.5':
+    resolution: {integrity: sha512-xRSAfH27bIp3vtjtTFyyhdm18lq2pzdoNG7DA2IH1fXzJ30mymryv0wK/Gph+x4y0Rx+5mMLU5JTPiCeQ75Aug==}
     engines: {node: '>=16'}
 
   '@azure/search-documents@12.2.0':
@@ -11685,7 +11685,7 @@ snapshots:
 
   '@azure/msal-common@15.13.2': {}
 
-  '@azure/msal-common@15.13.3': {}
+  '@azure/msal-common@15.14.0': {}
 
   '@azure/msal-node-extensions@1.5.25':
     dependencies:
@@ -11695,9 +11695,9 @@ snapshots:
 
   '@azure/msal-node-runtime@0.20.1': {}
 
-  '@azure/msal-node@3.8.4':
+  '@azure/msal-node@3.8.5':
     dependencies:
-      '@azure/msal-common': 15.13.3
+      '@azure/msal-common': 15.14.0
       jsonwebtoken: 9.0.3
       uuid: 8.3.2
 
@@ -19055,7 +19055,7 @@ snapshots:
       isstream: 0.1.2
       jsonwebtoken: 9.0.3
       mime-types: 2.1.35
-      retry-axios: 2.6.0(axios@1.13.2(debug@4.4.3))
+      retry-axios: 2.6.0(axios@1.13.2)
       tough-cookie: 4.1.4
     transitivePeerDependencies:
       - supports-color
@@ -20921,7 +20921,7 @@ snapshots:
       onetime: 7.0.0
       signal-exit: 4.1.0
 
-  retry-axios@2.6.0(axios@1.13.2(debug@4.4.3)):
+  retry-axios@2.6.0(axios@1.13.2):
     dependencies:
       axios: 1.13.2(debug@4.4.3)
 
