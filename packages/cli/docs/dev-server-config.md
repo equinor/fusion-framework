@@ -293,6 +293,16 @@ export default defineDevServerConfig(() => ({
 - `3`: Error (shows only errors and critical messages)
 - `4`: Critical (shows only critical messages - least verbose)
 
+### AG Grid License Key
+
+Eliminate AG Grid Enterprise license warnings during local development by setting the license key in your `.env` file:
+
+```bash
+FUSION_SPA_AG_GRID_KEY=your-license-key-here
+```
+
+The dev-portal automatically picks this up and configures AG Grid - no additional setup required.
+
 ### Portal Proxy Configuration
 
 **When you need it**: You want to control how portal assets are loaded during development - either from the Fusion portal service or from locally installed portal packages.
