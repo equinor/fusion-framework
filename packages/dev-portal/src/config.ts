@@ -10,9 +10,20 @@ import {
   createLocalStoragePlugin,
   createUrlPlugin,
 } from '@equinor/fusion-framework-module-feature-flag/plugins';
+import { enableAgGrid } from '@equinor/fusion-framework-module-ag-grid';
 
 import { enableTelemetry } from '@equinor/fusion-framework-module-telemetry';
 import { version } from './version';
+
+declare global {
+  interface Window {
+    /**
+     * AG Grid license key for enabling enterprise features
+     * @remarks This is typically set via environment variables during build time
+     */
+    FUSION_AG_GRID_KEY?: string;
+  }
+}
 
 /**
  * Configures the Fusion Dev Portal with all required modules and features
@@ -53,6 +64,11 @@ export const configure = async (config: FrameworkConfigurator) => {
   enableNavigation(config);
 
   enableServices(config);
+
+  // Configure AG Grid with license key from environment if provided
+  enableAgGrid(config, (builder) => {
+    builder.setLicenseKey(window.FUSION_AG_GRID_KEY);
+  });
 
   enableAnalytics(config, (builder) => {
     builder.setAdapter('console', async (args) => {

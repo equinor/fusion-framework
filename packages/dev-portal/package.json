@@ -29,6 +29,7 @@
     "@equinor/fusion-framework": "workspace:*",
     "@equinor/fusion-framework-app": "workspace:*",
     "@equinor/fusion-framework-dev-server": "workspace:*",
+    "@equinor/fusion-framework-module-ag-grid": "workspace:^",
     "@equinor/fusion-framework-module-app": "workspace:*",
     "@equinor/fusion-framework-module-analytics": "workspace:*",
     "@equinor/fusion-framework-module-bookmark": "workspace:*",

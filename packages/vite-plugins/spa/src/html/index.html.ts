@@ -27,6 +27,9 @@ export const html = `
       <link rel="stylesheet" href="https://cdn.eds.equinor.com/font/equinor-font.css" />
       <script type="module" src="%FUSION_SPA_BOOTSTRAP%"></script>
       <script>
+        // Set AG Grid license key globally if provided
+        window.FUSION_AG_GRID_KEY = '%FUSION_SPA_AG_GRID_KEY%';
+        
         // suppress console error for custom elements already defined. 
         // WebComponents should be added by the portal, but not removed from application
         const _customElementsDefine = window.customElements.define;

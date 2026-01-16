@@ -81,7 +81,17 @@ export const plugin = <TEnv extends TemplateEnv = TemplateEnv>(
       // define environment variables
       config.define ??= {};
       for (const [key, value] of Object.entries(env)) {
-        config.define[`import.meta.env.${key}`] = value;
+        // All values must be valid JavaScript expressions for Vite's config.define
+        // Try to parse as JSON first (handles booleans, numbers, objects, arrays)
+        // If that fails, stringify the raw value as a string literal
+        try {
+          const parsed = JSON.parse(String(value));
+          // Re-stringify to ensure it's a valid JS expression
+          config.define[`import.meta.env.${key}`] = JSON.stringify(parsed);
+        } catch {
+          // If JSON.parse fails, it's a plain string - wrap it as a JSON string for Vite
+          config.define[`import.meta.env.${key}`] = JSON.stringify(String(value));
+        }
       }
 
       config.server ??= {};
