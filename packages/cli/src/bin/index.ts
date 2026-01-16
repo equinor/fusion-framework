@@ -6,7 +6,7 @@ export { startAppDevServer } from './app-dev.js';
 export { checkApp } from './app-check.js';
 export { loadAppManifest } from './app-manifest.js';
 export { uploadApplication } from './app-upload.js';
-export { tagApplication, AllowedTags as AllowedAppTags } from './app-tag.js';
+export { tagApplication } from './app-tag.js';
 
 export { startPortalDevServer } from './portal-dev.js';
 export { buildPortal } from './portal-build.js';

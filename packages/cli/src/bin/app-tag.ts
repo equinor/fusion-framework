@@ -6,21 +6,6 @@ import type { FusionFramework } from '@equinor/fusion-framework-cli/bin';
 import { type ConsoleLogger, formatPath, chalk, defaultHeaders } from './utils/index.js';
 
 /**
- * Allowed tags for application versions in the app service.
- *
- * - `latest`: Marks the most recent stable version of the application.
- * - `preview`: Marks a pre-release or preview version for testing or review.
- *
- * Used by {@link tagApplication} to validate and apply version tags.
- *
- * @public
- */
-export enum AllowedTags {
-  Latest = 'latest',
-  Preview = 'preview',
-}
-
-/**
  * Options for tagging an application version in the app service.
  *
  * This interface defines the required and optional parameters for the
@@ -36,7 +21,7 @@ export enum AllowedTags {
  * @public
  */
 export type TagApplicationOptions = {
-  tag: AllowedTags;
+  tag: string;
   appKey: string;
   version: string;
   framework: FusionFramework;
@@ -44,7 +29,8 @@ export type TagApplicationOptions = {
 };
 
 /**
- * Tags an application version in the app service with a specified tag (e.g., 'latest' or 'preview').
+ * Tags an application version in the app service with a specified tag (e.g., 'latest', 'preview'
+ * or pr-1234).
  *
  * This function validates input, creates a client for the app service, and sends a tag request.
  * It provides detailed logging and error handling for common failure scenarios.
@@ -57,11 +43,18 @@ export type TagApplicationOptions = {
 export const tagApplication = async (options: TagApplicationOptions) => {
   const { tag, appKey, version, framework, log } = options;
 
-  // Validate tag value
-  if (!['latest', 'preview'].includes(tag)) {
-    log?.fail('🤪', 'Invalid tag. Use "latest" or "preview".');
+  // Validate tag value - ensure it's a non-empty string
+  if (!tag || typeof tag !== 'string' || tag.trim().length === 0) {
+    log?.fail('🤪', 'Tag must be a non-empty string.');
     process.exit(1);
   }
+
+  // Validate tag value - ensure only a-z, A-Z, 0-9, "." and "-"
+  if (!/^[a-zA-Z0-9.-]+$/.test(tag)) {
+    log?.fail('🤪', 'Invalid tag. Use "latest", "preview" or string [a-z, A-Z, 0-9, ".", "-"].');
+    process.exit(1);
+  }
+
   // Validate app key
   if (!appKey) {
     log?.fail('🤪', 'Application key is required.');

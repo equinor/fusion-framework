@@ -8,7 +8,6 @@ import {
   ConsoleLogger,
   uploadApplication,
   tagApplication,
-  AllowedAppTags,
   checkApp,
 } from '@equinor/fusion-framework-cli/bin';
 
@@ -36,7 +35,7 @@ import { createEnvOption } from '../../options/env.js';
  *   -d, --debug          Enable debug mode for verbose logging (default: false)
  *   -e, --env <env>      Target environment
  *   -m, --manifest       Manifest file to use for bundling (e.g., app.manifest.ts)
- *   -t, --tag            Tag to apply to the published app (latest | preview)
+ *   -t, --tag            Tag to apply to the published app (e.g. latest | preview | pr-1234)
  *
  * Example:
  *   $ ffc app publish
@@ -80,8 +79,8 @@ export const command = withAuthOptions(
     .option('-m, --manifest [string]', 'Manifest file to use for bundling (e.g., app.manifest.ts)')
     .option(
       '-t, --tag [string]',
-      `Tag to apply to the published app (${Object.values(AllowedAppTags).join(' | ')})`,
-      AllowedAppTags.Latest,
+      'Tag to apply to the published app (e.g. latest | preview | next | pr-1234). Alphanumeric, dots and dashes allowed.',
+      'latest',
     )
     .argument('[bundle]', 'Path to the app bundle to upload')
     .action(async (bundle, options) => {
