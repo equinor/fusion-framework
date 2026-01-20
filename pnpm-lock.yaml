@@ -938,7 +938,7 @@ importers:
   packages/cli-plugins/ai-base:
     dependencies:
       '@equinor/fusion-framework-cli':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../../cli
       '@equinor/fusion-framework-module':
         specifier: workspace:*
@@ -966,7 +966,7 @@ importers:
   packages/cli-plugins/ai-chat:
     dependencies:
       '@equinor/fusion-framework-cli':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../../cli
       '@equinor/fusion-framework-cli-plugin-ai-base':
         specifier: workspace:*
@@ -1000,7 +1000,7 @@ importers:
         specifier: ^12.2.0
         version: 12.2.0
       '@equinor/fusion-framework-cli':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../../cli
       '@equinor/fusion-framework-cli-plugin-ai-base':
         specifier: workspace:*
@@ -1064,7 +1064,7 @@ importers:
   packages/cli-plugins/ai-mcp:
     dependencies:
       '@equinor/fusion-framework-cli':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../../cli
       '@equinor/fusion-framework-cli-plugin-ai-base':
         specifier: workspace:*
@@ -1095,7 +1095,7 @@ importers:
   packages/cli-plugins/ai-search:
     dependencies:
       '@equinor/fusion-framework-cli':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../../cli
       '@equinor/fusion-framework-cli-plugin-ai-base':
         specifier: workspace:*
@@ -18303,7 +18303,7 @@ snapshots:
       isstream: 0.1.2
       jsonwebtoken: 9.0.3
       mime-types: 2.1.35
-      retry-axios: 2.6.0(axios@1.13.2)
+      retry-axios: 2.6.0(axios@1.13.2(debug@4.4.3))
       tough-cookie: 4.1.4
     transitivePeerDependencies:
       - supports-color
@@ -20206,7 +20206,7 @@ snapshots:
       onetime: 7.0.0
       signal-exit: 4.1.0
 
-  retry-axios@2.6.0(axios@1.13.2):
+  retry-axios@2.6.0(axios@1.13.2(debug@4.4.3)):
     dependencies:
       axios: 1.13.2(debug@4.4.3)
 
