@@ -1731,7 +1731,7 @@ importers:
         version: link:../service-discovery
       '@faker-js/faker':
         specifier: ^10.1.0
-        version: 10.1.0
+        version: 10.2.0
       msw:
         specifier: ^2.7.3
         version: 2.12.3(@types/node@24.10.1)(typescript@5.9.3)
@@ -3442,8 +3442,8 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@faker-js/faker@10.1.0':
-    resolution: {integrity: sha512-C3mrr3b5dRVlKPJdfrAXS8+dq+rq8Qm5SNRazca0JKgw1HQERFmrVb0towvMmw5uu8hHKNiQasMaR/tydf3Zsg==}
+  '@faker-js/faker@10.2.0':
+    resolution: {integrity: sha512-rTXwAsIxpCqzUnZvrxVh3L0QA0NzToqWBLAhV+zDV3MIIwiQhAZHMdPCIaj5n/yADu/tyk12wIPgL6YHGXJP+g==}
     engines: {node: ^20.19.0 || ^22.13.0 || ^23.5.0 || >=24.0.0, npm: '>=10'}
 
   '@fastify/busboy@2.1.1':
@@ -12251,7 +12251,7 @@ snapshots:
   '@esbuild/win32-x64@0.27.0':
     optional: true
 
-  '@faker-js/faker@10.1.0': {}
+  '@faker-js/faker@10.2.0': {}
 
   '@fastify/busboy@2.1.1': {}
 
@@ -16114,7 +16114,7 @@ snapshots:
 
   '@types/node-fetch@2.6.13':
     dependencies:
-      '@types/node': 24.10.1
+      '@types/node': 18.19.130
       form-data: 4.0.5
 
   '@types/node@12.20.55': {}
@@ -18328,7 +18328,7 @@ snapshots:
       isstream: 0.1.2
       jsonwebtoken: 9.0.3
       mime-types: 2.1.35
-      retry-axios: 2.6.0(axios@1.13.2(debug@4.4.3))
+      retry-axios: 2.6.0(axios@1.13.2)
       tough-cookie: 4.1.4
     transitivePeerDependencies:
       - supports-color
@@ -20235,7 +20235,7 @@ snapshots:
       onetime: 7.0.0
       signal-exit: 4.1.0
 
-  retry-axios@2.6.0(axios@1.13.2(debug@4.4.3)):
+  retry-axios@2.6.0(axios@1.13.2):
     dependencies:
       axios: 1.13.2(debug@4.4.3)
 
