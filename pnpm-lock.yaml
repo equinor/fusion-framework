@@ -1428,7 +1428,7 @@ importers:
         version: 3.1.3
       immer:
         specifier: ^11.0.0
-        version: 11.0.0
+        version: 11.1.3
       rxjs:
         specifier: ^7.8.1
         version: 7.8.2
@@ -1477,7 +1477,7 @@ importers:
         version: 3.1.3
       immer:
         specifier: ^11.0.0
-        version: 11.0.0
+        version: 11.1.3
       rxjs:
         specifier: ^7.8.1
         version: 7.8.2
@@ -1567,7 +1567,7 @@ importers:
         version: link:../../utils/observable
       immer:
         specifier: ^11.0.0
-        version: 11.0.0
+        version: 11.1.3
       rxjs:
         specifier: ^7.8.1
         version: 7.8.2
@@ -1805,7 +1805,7 @@ importers:
         version: link:../../utils/query
       immer:
         specifier: ^11.0.0
-        version: 11.0.0
+        version: 11.1.3
       rxjs:
         specifier: ^7.8.1
         version: 7.8.2
@@ -1845,13 +1845,13 @@ importers:
         version: 34.3.1
       ag-grid-react:
         specifier: ~34.3.1
-        version: 34.3.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        version: 34.3.1(react-dom@19.2.0(react@18.3.1))(react@18.3.1)
       react:
         specifier: ^18.0.0 || ^19.0.0
         version: 18.3.1
       react-dom:
         specifier: ^18.0.0 || ^19.0.0
-        version: 18.3.1(react@18.3.1)
+        version: 19.2.0(react@18.3.1)
     devDependencies:
       '@equinor/fusion-framework-react-module':
         specifier: workspace:^
@@ -2081,7 +2081,7 @@ importers:
         version: link:../../utils/observable
       immer:
         specifier: ^11.0.0
-        version: 11.0.0
+        version: 11.1.3
     devDependencies:
       '@equinor/fusion':
         specifier: ^3.4.15
@@ -2366,7 +2366,7 @@ importers:
     dependencies:
       immer:
         specifier: ^11.0.0
-        version: 11.0.0
+        version: 11.1.3
       rxjs:
         specifier: ^7.8.1
         version: 7.8.2
@@ -2409,7 +2409,7 @@ importers:
         version: link:../observable
       immer:
         specifier: ^11.0.0
-        version: 11.0.0
+        version: 11.1.3
       rxjs:
         specifier: ^7.8.1
         version: 7.8.2
@@ -8155,8 +8155,8 @@ packages:
     resolution: {integrity: sha512-Hs59xBNfUIunMFgWAbGX5cq6893IbWg4KnrjbYwX3tx0ztorVgTDA6B2sxf8ejHJ4wz8BqGUMYlnzNBer5NvGg==}
     engines: {node: '>= 4'}
 
-  immer@11.0.0:
-    resolution: {integrity: sha512-XtRG4SINt4dpqlnJvs70O2j6hH7H0X8fUzFsjMn1rwnETaxwp83HLNimXBjZ78MrKl3/d3/pkzDH0o0Lkxm37Q==}
+  immer@11.1.3:
+    resolution: {integrity: sha512-6jQTc5z0KJFtr1UgFpIL3N9XSC3saRaI9PwWtzM2pSqkNGtiNkYY2OSwkOGDK2XcTRcLb1pi/aNkKZz0nxVH4Q==}
 
   immer@9.0.21:
     resolution: {integrity: sha512-bc4NBHqOqSfRW7POMkHd51LvClaeMXpm8dx0e8oE2GORbq5aRK7Bxl4FyzVLdGtLmvLKL7BTDBG5ACQm4HWjTA==}
@@ -16039,7 +16039,7 @@ snapshots:
 
   '@types/node-fetch@2.6.13':
     dependencies:
-      '@types/node': 24.10.1
+      '@types/node': 18.19.130
       form-data: 4.0.5
 
   '@types/node@12.20.55': {}
@@ -16814,12 +16814,12 @@ snapshots:
       ag-charts-community: 12.3.1
       ag-charts-enterprise: 12.3.1
 
-  ag-grid-react@34.3.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+  ag-grid-react@34.3.1(react-dom@19.2.0(react@18.3.1))(react@18.3.1):
     dependencies:
       ag-grid-community: 34.3.1
       prop-types: 15.8.1
       react: 18.3.1
-      react-dom: 18.3.1(react@18.3.1)
+      react-dom: 19.2.0(react@18.3.1)
 
   agent-base@7.1.4: {}
 
@@ -18262,7 +18262,7 @@ snapshots:
 
   ignore@7.0.5: {}
 
-  immer@11.0.0: {}
+  immer@11.1.3: {}
 
   immer@9.0.21: {}
 
