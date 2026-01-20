@@ -53,7 +53,7 @@
     "zod": "^3.23.8"
   },
   "peerDependencies": {
-    "@equinor/fusion-framework-cli": "workspace:*"
+    "@equinor/fusion-framework-cli": "workspace:^"
   },
   "devDependencies": {
     "typescript": "^5.8.2",

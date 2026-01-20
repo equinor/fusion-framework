@@ -52,7 +52,7 @@
     "rxjs": "^7.8.1"
   },
   "peerDependencies": {
-    "@equinor/fusion-framework-cli": "workspace:*"
+    "@equinor/fusion-framework-cli": "workspace:^"
   },
   "devDependencies": {
     "typescript": "^5.8.2",
