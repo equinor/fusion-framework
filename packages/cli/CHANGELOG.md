@@ -1,5 +1,46 @@
 # Change Log
 
+## 13.1.0
+
+### Minor Changes
+
+- [#3923](https://github.com/equinor/fusion-framework/pull/3923) [`f382399`](https://github.com/equinor/fusion-framework/commit/f38239914070dce4f5701c09f6c28336ad5ed73a) Thanks [@asbjornhaland](https://github.com/asbjornhaland)! - Add support for custom tags when publishing apps and portals, expanding beyond
+  the previous `latest` and `preview` options.
+
+  Tags can now use any combination of alphanumeric characters, dots, and hyphens
+  (`a–z`, `A–Z`, `0–9`, `.`, `-`), for example `latest`, `preview` or `pr-1234`.
+
+### Patch Changes
+
+- [#3904](https://github.com/equinor/fusion-framework/pull/3904) [`4eae807`](https://github.com/equinor/fusion-framework/commit/4eae8070c1ad48eaa7d83a9aecfe5588c6aec41c) Thanks [@dependabot](https://github.com/apps/dependabot)! - Internal: bump inquirer from 13.1.0 to 13.2.0; adds new optional features for search default option and rawlist description support, no public API changes.
+
+- [#3766](https://github.com/equinor/fusion-framework/pull/3766) [`19ee28f`](https://github.com/equinor/fusion-framework/commit/19ee28fc0f6108fc59f0098b449a511221d2d860) Thanks [@dependabot](https://github.com/apps/dependabot)! - Internal: upgrade `open` from 10.2.0 to 11.0.0 (requires Node.js ≥20). New features include improved WSL/PowerShell support, better error handling with AggregateError, and Linux chromium fallback.
+
+- [#3902](https://github.com/equinor/fusion-framework/pull/3902) [`8796e99`](https://github.com/equinor/fusion-framework/commit/8796e994173ff1757b557d096a7a95915785dcc1) Thanks [@dependabot](https://github.com/apps/dependabot)! - Internal: bump vite-tsconfig-paths from 5.1.4 to 6.0.4 for improved TypeScript path resolution and Windows compatibility.
+
+- [#3744](https://github.com/equinor/fusion-framework/pull/3744) [`b8ab0b7`](https://github.com/equinor/fusion-framework/commit/b8ab0b72d422996d38fae3e6d82cecfa77686487) Thanks [@dependabot](https://github.com/apps/dependabot)! - Internal: bump read-package-up to 12.0.0 to align with upstream Node 20 requirement.
+
+- [#3899](https://github.com/equinor/fusion-framework/pull/3899) [`9fff06a`](https://github.com/equinor/fusion-framework/commit/9fff06a2327fe569a62418eb2b65a0ec9e2e69f5) Thanks [@odinr](https://github.com/odinr)! - Update recommended Node.js version from 22.x to 24.x (LTS).
+
+  The CLI now recommends Node.js 24.x as the LTS version for best compatibility. This change updates the version check warning, build configuration, Dockerfile, and documentation examples to reflect Node.js 24 as the recommended version.
+
+- [#3932](https://github.com/equinor/fusion-framework/pull/3932) [`15aaa87`](https://github.com/equinor/fusion-framework/commit/15aaa87e6a8b391c0672db0dcdca4c1cac3b50a7) Thanks [@dependabot](https://github.com/apps/dependabot)! - Internal: update rollup build dependency from 4.52.5 to 4.55.2.
+
+  This update includes:
+
+  - Improved circular dependency handling for manual chunks
+  - Enhanced tree-shaking for Symbol properties
+  - Performance improvements via variable name caching
+  - Multiple bug fixes for build edge cases
+
+  No changes to CLI or plugin functionality or public APIs.
+
+- Updated dependencies [[`19ee28f`](https://github.com/equinor/fusion-framework/commit/19ee28fc0f6108fc59f0098b449a511221d2d860), [`b8ab0b7`](https://github.com/equinor/fusion-framework/commit/b8ab0b72d422996d38fae3e6d82cecfa77686487)]:
+  - @equinor/fusion-framework-module-msal-node@2.0.3
+  - @equinor/fusion-imports@1.1.9
+  - @equinor/fusion-framework-dev-portal@1.3.0
+  - @equinor/fusion-framework-dev-server@1.1.19
+
 ## 13.0.1
 
 ### Patch Changes

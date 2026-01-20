@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-module-msal-node
 
+## 2.0.3
+
+### Patch Changes
+
+- [#3766](https://github.com/equinor/fusion-framework/pull/3766) [`19ee28f`](https://github.com/equinor/fusion-framework/commit/19ee28fc0f6108fc59f0098b449a511221d2d860) Thanks [@dependabot](https://github.com/apps/dependabot)! - Internal: upgrade `open` from 10.2.0 to 11.0.0 (requires Node.js ≥20). New features include improved WSL/PowerShell support, better error handling with AggregateError, and Linux chromium fallback.
+
 ## 2.0.2
 
 ### Patch Changes

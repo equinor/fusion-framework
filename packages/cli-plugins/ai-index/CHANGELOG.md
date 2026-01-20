@@ -1,5 +1,16 @@
 # @equinor/fusion-framework-cli-plugin-ai-index
 
+## 1.0.2
+
+### Patch Changes
+
+- [#3856](https://github.com/equinor/fusion-framework/pull/3856) [`29ea9fb`](https://github.com/equinor/fusion-framework/commit/29ea9fb4a9c13d0e92e21c6556d565594e231ae5) Thanks [@dependabot](https://github.com/apps/dependabot)! - Internal: bump globby from 15.0.0 to 16.1.0 to benefit from improved .gitignore handling and fixes to negation patterns.
+
+- Updated dependencies [[`4eae807`](https://github.com/equinor/fusion-framework/commit/4eae8070c1ad48eaa7d83a9aecfe5588c6aec41c), [`19ee28f`](https://github.com/equinor/fusion-framework/commit/19ee28fc0f6108fc59f0098b449a511221d2d860), [`8796e99`](https://github.com/equinor/fusion-framework/commit/8796e994173ff1757b557d096a7a95915785dcc1), [`b8ab0b7`](https://github.com/equinor/fusion-framework/commit/b8ab0b72d422996d38fae3e6d82cecfa77686487), [`9fff06a`](https://github.com/equinor/fusion-framework/commit/9fff06a2327fe569a62418eb2b65a0ec9e2e69f5), [`b8ab0b7`](https://github.com/equinor/fusion-framework/commit/b8ab0b72d422996d38fae3e6d82cecfa77686487), [`f382399`](https://github.com/equinor/fusion-framework/commit/f38239914070dce4f5701c09f6c28336ad5ed73a), [`15aaa87`](https://github.com/equinor/fusion-framework/commit/15aaa87e6a8b391c0672db0dcdca4c1cac3b50a7)]:
+  - @equinor/fusion-framework-cli@13.1.0
+  - @equinor/fusion-imports@1.1.9
+  - @equinor/fusion-framework-cli-plugin-ai-base@1.0.2
+
 ## 1.0.1
 
 ### Patch Changes

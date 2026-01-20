@@ -1,5 +1,11 @@
 # @equinor/fusion-imports
 
+## 1.1.9
+
+### Patch Changes
+
+- [#3744](https://github.com/equinor/fusion-framework/pull/3744) [`b8ab0b7`](https://github.com/equinor/fusion-framework/commit/b8ab0b72d422996d38fae3e6d82cecfa77686487) Thanks [@dependabot](https://github.com/apps/dependabot)! - Internal: bump read-package-up to 12.0.0 to align with upstream Node 20 requirement.
+
 ## 1.1.8
 
 ### Patch Changes

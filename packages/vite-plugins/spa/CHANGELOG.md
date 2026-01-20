@@ -1,5 +1,20 @@
 # @equinor/fusion-framework-vite-plugin-spa
 
+## 3.0.7
+
+### Patch Changes
+
+- [#3932](https://github.com/equinor/fusion-framework/pull/3932) [`15aaa87`](https://github.com/equinor/fusion-framework/commit/15aaa87e6a8b391c0672db0dcdca4c1cac3b50a7) Thanks [@dependabot](https://github.com/apps/dependabot)! - Internal: update rollup build dependency from 4.52.5 to 4.55.2.
+
+  This update includes:
+
+  - Improved circular dependency handling for manual chunks
+  - Enhanced tree-shaking for Symbol properties
+  - Performance improvements via variable name caching
+  - Multiple bug fixes for build edge cases
+
+  No changes to CLI or plugin functionality or public APIs.
+
 ## 3.0.6
 
 ### Patch Changes
