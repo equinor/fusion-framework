@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework-cli-plugin-ai-mcp",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "MCP server plugin for Fusion Framework CLI providing Model Context Protocol server capabilities",
   "main": "dist/esm/index.js",
   "type": "module",

@@ -1,5 +1,13 @@
 # Change Log
 
+## 7.1.6
+
+### Patch Changes
+
+- [#3805](https://github.com/equinor/fusion-framework/pull/3805) [`fe6b89f`](https://github.com/equinor/fusion-framework/commit/fe6b89f5a616a05e98956c0ed7f8e2a454070e98) Thanks [@dependabot](https://github.com/apps/dependabot)! - Internal: Update odata-query dependency from 8.0.6 to 8.0.7.
+
+  This patch update includes a bug fix for the logical operator "not" inside nested properties. No API changes or consumer action required.
+
 ## 7.1.5
 
 ### Patch Changes
