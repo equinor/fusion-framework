@@ -9,7 +9,6 @@ import {
   ConsoleLogger,
   loadAppManifest,
   tagApplication,
-  AllowedAppTags,
 } from '@equinor/fusion-framework-cli/bin';
 
 import { createEnvOption } from '../../options/env.js';
@@ -63,7 +62,7 @@ async function parseAppInfo(
  *   $ fusion tag <tag> [options]
  *
  * Arguments:
- *   <tag>                           Tag to apply (latest | preview)
+ *   <tag>                           Tag to apply (e.g. latest | preview | pr-1234)
  *
  * Options:
  *   -p, --package [package@version] Package to tag in format name@version (e.g., my-app@1.0.0). If not provided, loaded from manifest
@@ -76,6 +75,7 @@ async function parseAppInfo(
  *   $ ffc app tag latest
  *   $ ffc app tag preview --env prod --manifest app.manifest.prod.ts
  *   $ ffc app tag latest --package my-app@1.2.3
+ *   $ ffc app tag pr-1234 --package my-app@1.2.3
  *
  * @see tagApplication for implementation details
  */
@@ -93,6 +93,7 @@ export const command = withAuthOptions(
         '  $ ffc app tag preview --env prod --manifest app.manifest.prod.ts',
         '  $ ffc app tag stable --package my-app@1.2.3',
         '  $ ffc app tag latest --manifest app.manifest.custom.ts',
+        '  $ ffc app tag pr-1234 --package my-app@1.2.3',
       ].join('\n'),
     )
     .addOption(createEnvOption({ allowDev: false }))
@@ -106,7 +107,10 @@ export const command = withAuthOptions(
     )
     .option('--debug', 'Enable debug mode for verbose logging')
     .option('--silent', 'Silent mode, suppresses output except errors')
-    .argument('<tag>', `Tag to apply (${Object.values(AllowedAppTags).join(' | ')})`)
+    .argument(
+      '<tag>',
+      'Tag to apply (e.g. latest | preview | next | pr-1234). Alphanumeric, dots and dashes allowed.',
+    )
     .action(async (tag, options) => {
       const log = options.silent ? null : new ConsoleLogger('app:tag', { debug: options.debug });
 

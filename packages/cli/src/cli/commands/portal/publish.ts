@@ -30,12 +30,13 @@ import {
  *   -d, --debug          Enable debug mode for verbose logging
  *   -e, --env <env>      Target environment
  *   -m, --manifest       Manifest file to use for bundling
- *   -t, --tag            Tag to apply to the published portal (any string value)
+ *   -t, --tag            Tag to apply to the published portal (e.g latest | preview | pr-1234)
  *
  * Example:
  *   $ ffc portal publish
  *   $ ffc portal publish --env prod --manifest portal.manifest.prod.ts
  *   $ ffc portal publish --tag preview
+ *   $ ffc portal publish --tag pr-1234
  *
  * @see uploadPortalBundle, tagPortal for implementation details
  */
@@ -56,6 +57,7 @@ export const command = withAuthOptions(
         '  $ ffc portal publish --env prod --manifest portal.manifest.prod.ts',
         '  $ ffc portal publish --tag preview',
         '  $ ffc portal publish --tag next',
+        '  $ ffc portal publish --tag pr-1234',
       ].join('\n'),
     )
     .option('-d, --debug', 'Enable debug mode for verbose logging', false)
@@ -67,7 +69,7 @@ export const command = withAuthOptions(
     .option('--schema [string]', 'Schema file to use for validation')
     .option(
       '-t, --tag [string]',
-      'Tag to apply to the published portal (e.g., latest, preview, next, or any string value)',
+      'Tag to apply to the published portal (e.g. latest | preview | next | pr-1234). Alphanumeric, dots and dashes allowed.',
       'latest',
     )
     .action(async (options) => {

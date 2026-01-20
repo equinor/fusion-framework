@@ -47,6 +47,13 @@ export const tagPortal = async (options: TagPortalOptions) => {
     log?.fail('🤪', 'Tag must be a non-empty string.');
     process.exit(1);
   }
+
+  // Validate tag value - ensure only a-z, A-Z, 0-9, "." and "-"
+  if (!/^[a-zA-Z0-9.-]+$/.test(tag)) {
+    log?.fail('🤪', 'Invalid tag. Use "latest", "preview" or string [a-z, A-Z, 0-9, ".", "-"].');
+    process.exit(1);
+  }
+
   // Validate portal name
   if (!name) {
     log?.fail('🤪', 'Portal name is required.');
