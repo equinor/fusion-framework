@@ -116,7 +116,7 @@
     "is-mergeable-object": "^1.1.1",
     "is-path-inside": "^4.0.0",
     "ora": "^9.0.0",
-    "read-package-up": "^11.0.0",
+    "read-package-up": "^12.0.0",
     "simple-git": "^3.28.0",
     "vite": "^7.1.12",
     "vite-tsconfig-paths": "^6.0.4",
