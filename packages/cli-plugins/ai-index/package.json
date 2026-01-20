@@ -53,7 +53,7 @@
     "@langchain/textsplitters": "^1.0.0",
     "commander": "^14.0.1",
     "find-up": "^8.0.0",
-    "globby": "^15.0.0",
+    "globby": "^16.1.0",
     "gray-matter": "^4.0.3",
     "multimatch": "^7.0.0",
     "read-package-up": "^11.0.0",
