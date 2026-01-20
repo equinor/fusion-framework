@@ -93,6 +93,7 @@ Whenever a user asks to handle a Dependabot PR without providing a specific PR n
    - Check resolved versions and detect inconsistencies
    - Determine blast radius (low/medium/high risk based on workspace count)
    - Verify dependency type (dev vs production)
+   - Apply the **Quick Decision Tree** below to assess merge readiness
 5. **Use `npm-research` skill** (`.github/skills/npm-research/SKILL.md`) to:
    - Research changelog (GitHub releases, CHANGELOG files, npm registry)
    - Check security advisories (npm audit, GitHub advisories, Snyk)
@@ -101,6 +102,80 @@ Whenever a user asks to handle a Dependabot PR without providing a specific PR n
    - Analyze peer dependency changes and new dependencies
 6. Analyze codebase compatibility
 7. Identify if code changes needed (document only; don't modify)
+
+### Quick Decision Tree (Dependabot Triage)
+
+**Step 4.1: Identify the package**
+```bash
+# From PR title like "build(deps): bump lodash from 4.x to 5.x"
+PACKAGE="lodash"
+pnpm why "$PACKAGE" --recursive --depth=0
+```
+
+**Step 4.2: Assess spread**
+- **1–2 workspaces**: Low risk, check one changelog
+- **3–5 workspaces**: Medium risk, test carefully
+- **6+ workspaces**: High risk, core shared dep — review thoroughly
+
+**Step 4.3: Determine dependency type**
+```bash
+pnpm why "$PACKAGE" --recursive --json | jq -r '.[] | "\(.workspace): \(.dependencyType)"'
+```
+- **devDependencies only** → usually safer (unless it's eslint, typescript, vite, vitest, jest, rollup, playwright, storybook)
+- **dependencies** → production impact — more caution needed
+- **Both** → requires full testing
+
+**Step 4.4: Check version consistency**
+```bash
+pnpm why "$PACKAGE" --recursive --json | jq -r '.[] | "\(.workspace)\t→ \(.version)"'
+```
+- **All same version** → good, consistent
+- **Multiple versions** → check if workspace:* controls it or if overrides are needed
+- **Very different** (e.g., v4 vs v5) → potential bugs, test before merge
+
+### Merge Decision Checklist
+
+Before approving Dependabot PRs:
+
+- [ ] Run `pnpm why <PACKAGE> --recursive --depth=0` to see spread
+- [ ] Check if marked `workspace:*` (almost always safe) or has mixed versions (riskier)
+- [ ] For high-spread packages (6+), skim the package's CHANGELOG for breaking changes
+- [ ] For tooling (eslint, vite, etc.), verify lint/build still works
+- [ ] For major version bumps in production deps, request test results or run locally
+
+#### Safe to merge immediately (low friction)
+
+✅ One or two workspaces affected  
+✅ Uses `workspace:*` or workspace protocol  
+✅ Only appears in `devDependencies`  
+✅ Patch or minor version bump  
+
+#### Requires careful review (plan ahead)
+
+⚠️ 5+ workspaces affected  
+⚠️ Appears in production (`dependencies`)  
+⚠️ Major version bump  
+⚠️ Touches core tools (eslint, typescript, vite, vitest)  
+
+#### Escalate to team (discuss before merge)
+
+🚫 Package used as shared library (everyone depends on it)  
+🚫 Multiple conflicting versions after upgrade  
+🚫 Breaking changes with no migration path  
+🚫 Touches build or CI infrastructure  
+
+### Risk / Blast Radius Reference
+
+| Indicator | Risk Level | Action |
+|-----------|-----------|--------|
+| 1–2 workspaces only | Low | Usually safe to merge |
+| ≥ 6–8 workspaces | High | Review changelog + test carefully |
+| Only in `devDependencies` | Lower | Safe unless eslint, typescript, vite, vitest, jest, rollup, playwright, storybook |
+| Uses `workspace:*` or `workspace:^x.y.z` | Very Low | Almost always safe (controlled at workspace root) |
+| Many different resolved versions | Medium | Consider `pnpm.overrides` or `.npmrc` resolutions before merging |
+| Hub node (many packages → it) | High | Core shared dep — high breakage risk |
+| Deep/long chains in `pnpm why` | Medium–High | Transitive breakage possible |
+| Appears in multiple config files (eslint, vite, etc.) | Medium | Tooling change — lint/format/build risk |
 
 ## Step 5: Post Research Comment
 

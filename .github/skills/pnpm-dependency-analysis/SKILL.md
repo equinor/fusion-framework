@@ -101,18 +101,18 @@ find . -type f \( -name 'eslint.*' -o -name 'vite.*' -o -name 'vitest.*' \
 
 Produces a clean summary of where the package appears across the monorepo.
 
-## 4. Risk / Blast Radius Cheat Sheet
+## 4. Risk / Blast Radius Reference Table
 
-| Indicator | Risk Level | Action |
-|-----------|-----------|--------|
-| 1–2 workspaces only | Low | Usually safe to merge |
-| ≥ 6–8 workspaces | High | Review changelog + test carefully |
-| Only in `devDependencies` | Lower | Safe unless eslint, typescript, vite, vitest, jest, rollup, playwright, storybook |
-| Uses `workspace:*` or `workspace:^x.y.z` | Very Low | Almost always safe (controlled at workspace root) |
-| Many different resolved versions | Medium | Consider `pnpm.overrides` or `.npmrc` resolutions before merging |
-| Hub node (many packages → it) | High | Core shared dep — high breakage risk |
-| Deep/long chains in `pnpm why` | Medium–High | Transitive breakage possible |
-| Appears in multiple config files (eslint, vite, etc.) | Medium | Tooling change — lint/format/build risk |
+| Indicator | Risk Level | Notes |
+|-----------|-----------|-------|
+| 1–2 workspaces only | Low | Limited scope |
+| ≥ 6–8 workspaces | High | Widespread impact |
+| Only in `devDependencies` | Lower | Unless tooling: eslint, typescript, vite, vitest, jest, rollup, playwright, storybook |
+| Uses `workspace:*` or `workspace:^x.y.z` | Very Low | Controlled at workspace root |
+| Many different resolved versions | Medium | May need `pnpm.overrides` or `.npmrc` resolutions |
+| Hub node (many packages → it) | High | Core shared dependency |
+| Deep/long chains in `pnpm why` | Medium–High | Transitive dependency risks |
+| Appears in multiple config files | Medium | Tooling change affects lint/format/build |
 
 ## 5. Narrowing search with `--filter`
 
