@@ -29,8 +29,8 @@ Default to **Full** mode unless the user explicitly chooses Audit-only or Valida
 | Template | Path | When | Mode | File |
 |----------|------|------|------|------|
 | **Available PRs List** | `templates/available-prs-list.template.md` | Step 1 | All: If interactive PR selection | Display to user |
-| **Research** | `templates/research-comment.template.md` | Step 5 | Full: Required; Other: Optional | `gh-comment-research.md` |
-| **Results** | `templates/results-comment.template.md` | Step 13 | Full: Required; Other: Optional | `gh-comment-results.md` |
+| **Research** | `templates/research-comment.template.md` | Step 5 | Full: Required; Other: Optional | `.tmp/gh-comment-research.md` |
+| **Results** | `templates/results-comment.template.md` | Step 13 | Full: Required; Other: Optional | `.tmp/gh-comment-results.md` |
 
 ## Guardrails
 
@@ -181,9 +181,9 @@ Before approving Dependabot PRs:
 
 (Full: Required; Other: Optional)
 
-1. Format using template → Create `gh-comment-research.md`
+1. Format using template → Create `.tmp/gh-comment-research.md`
 2. Show to user → Ask: "Post research comment?"
-3. If yes: `gh pr comment <PR> -F gh-comment-research.md` → Clean up
+3. If yes: `gh pr comment <PR> -F .tmp/gh-comment-research.md` → Clean up
 
 ## Step 6: Install Dependencies
 
@@ -247,9 +247,9 @@ Before approving Dependabot PRs:
 
 (Full: Required; Other: Optional)
 
-1. Format using template → Create `gh-comment-results.md`
+1. Format using template → Create `.tmp/gh-comment-results.md`
 2. Show to user → Ask: "Post validation results?"
-3. If yes: `gh pr comment <PR> -F gh-comment-results.md` → Clean up
+3. If yes: `gh pr comment <PR> -F .tmp/gh-comment-results.md` → Clean up
 
 ## Step 14: Merge PR
 
