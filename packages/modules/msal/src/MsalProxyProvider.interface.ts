@@ -15,6 +15,7 @@ import type { IMsalProvider as IMsalProvider_v2 } from './v2/MsalProvider.interf
 type ProxyProviderMap = {
   [MsalModuleVersion.V2]: IMsalProvider_v2;
   [MsalModuleVersion.V4]: IMsalProvider;
+  [MsalModuleVersion.V5]: IMsalProvider;
 };
 
 /**

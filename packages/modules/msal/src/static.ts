@@ -9,20 +9,19 @@ export const ModuleName = 'msal' as const;
  * Enumeration of supported MSAL module versions.
  *
  * This enum defines the available MSAL versions and provides type-safe access to version identifiers.
- * The `Latest` value is automatically set to the current module version at build time.
  *
  * @remarks
  * - `V2`: MSAL v2 compatibility (legacy support)
- * - `V4`: MSAL v4 (current major version)
- * - `Latest`: Always points to the current module version (5.1.0)
+ * - `V4`: MSAL v4 compatibility (supports @azure/msal-browser 4.x)
+ * - `V5`: MSAL v5 compatibility (supports @azure/msal-browser 5.x)
  *
  * @example
  * ```typescript
  * import { MsalModuleVersion } from '@equinor/fusion-framework-module-msal';
  *
  * // Check version
- * if (version === MsalModuleVersion.Latest) {
- *   console.log('Using latest MSAL version');
+ * if (version === MsalModuleVersion.V5) {
+ *   console.log('Using MSAL v5 compatible version');
  * }
  *
  * // Create version-specific proxy
@@ -30,8 +29,10 @@ export const ModuleName = 'msal' as const;
  * ```
  */
 export enum MsalModuleVersion {
-  /** MSAL v2 compatibility version */
+  /** MSAL v2 compatibility version (legacy support) */
   V2 = 'v2',
-  /** MSAL v4 (current major version) */
+  /** MSAL v4 compatibility version (supports @azure/msal-browser 4.x) */
   V4 = 'v4',
+  /** MSAL v5 compatibility version (supports @azure/msal-browser 5.x) */
+  V5 = 'v5',
 }
