@@ -1180,8 +1180,8 @@ importers:
         specifier: workspace:*
         version: link:../utils/query
       '@equinor/fusion-react-context-selector':
-        specifier: ^1.0.6
-        version: 1.0.6(@types/react@18.3.24)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: ^2.0.1
+        version: 2.0.1(react@18.3.1)
       '@equinor/fusion-react-progress-indicator':
         specifier: ^0.3.0
         version: 0.3.0(react@18.3.1)
@@ -2959,8 +2959,10 @@ packages:
     resolution: {integrity: sha512-5IDy1sBgTS3l/SE2wCuKeY6a5/0sarx5iB6hDVGP5X5P5PNW5w+c9JFvwvmw0ISeaO2qNsTT/SFu9i5GYIuW8w==}
     deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
 
-  '@equinor/fusion-react-context-selector@1.0.6':
-    resolution: {integrity: sha512-j+cgxQYslrUaZlJyBtyJTqk7Box6RkWXRSV3TqJ/eGKXAbCws86XVt05dheuEaBin5jGT/7prQideDr6IcVM8Q==}
+  '@equinor/fusion-react-context-selector@2.0.1':
+    resolution: {integrity: sha512-5HhOPHBsywnn2plBMFqrqz1H3IzaiFVwaDvuO7Gf51sRFQ8a2oLhRDLbgDE9rtZJlmSgoeMXhZLnUMTStuvkKg==}
+    peerDependencies:
+      react: ^18 || ^19
 
   '@equinor/fusion-react-context-selector@2.0.1':
     resolution: {integrity: sha512-5HhOPHBsywnn2plBMFqrqz1H3IzaiFVwaDvuO7Gf51sRFQ8a2oLhRDLbgDE9rtZJlmSgoeMXhZLnUMTStuvkKg==}
@@ -2989,8 +2991,10 @@ packages:
     resolution: {integrity: sha512-NNVkTq0gRJYqobHEBPpWG7bFw3JhLlRhsd8AmCFfvQwdRCRnrf5cStql2bb+apetmRalJvH0U1+1swtT3vhFVg==}
     deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
 
-  '@equinor/fusion-react-searchable-dropdown@1.0.6':
-    resolution: {integrity: sha512-sZCNWtfy/BwRLblNnyruCMA8ORc/OfwYi00KLjdlKjyO9wYgfaKWLHulNSCwgQFFyTXudRRr5JdvRCtAATTE8A==}
+  '@equinor/fusion-react-searchable-dropdown@2.0.0':
+    resolution: {integrity: sha512-72WMuN2jBv9jCSapf5Ev+DQFT55zqCvOHiG+LJqSxDC7vuzjO3uA9lVDJ4qF8uFaeycbB7m5OaWqU4S6YL92LA==}
+    peerDependencies:
+      react: ^18 || ^19
 
   '@equinor/fusion-react-searchable-dropdown@2.0.0':
     resolution: {integrity: sha512-72WMuN2jBv9jCSapf5Ev+DQFT55zqCvOHiG+LJqSxDC7vuzjO3uA9lVDJ4qF8uFaeycbB7m5OaWqU4S6YL92LA==}
@@ -11716,17 +11720,14 @@ snapshots:
     transitivePeerDependencies:
       - react
 
-  '@equinor/fusion-react-context-selector@1.0.6(@types/react@18.3.24)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+  '@equinor/fusion-react-context-selector@2.0.1(react@18.3.1)':
     dependencies:
-      '@equinor/fusion-react-searchable-dropdown': 1.0.6(react@18.3.1)
-      '@equinor/fusion-react-styles': 0.6.5(@types/react@18.3.24)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@equinor/fusion-react-utils': 2.2.3(react@18.3.1)
+      '@equinor/fusion-react-searchable-dropdown': 2.0.0(react@18.3.1)
+      '@equinor/fusion-react-styles': 2.0.0(react@18.3.1)
+      '@equinor/fusion-react-utils': 3.0.0(react@18.3.1)
       '@equinor/fusion-wc-icon': 2.3.1
       '@equinor/fusion-wc-searchable-dropdown': 4.0.5
-    transitivePeerDependencies:
-      - '@types/react'
-      - react
-      - react-dom
+      react: 18.3.1
 
   '@equinor/fusion-react-context-selector@2.0.1(react@18.3.1)':
     dependencies:
@@ -11771,13 +11772,12 @@ snapshots:
     transitivePeerDependencies:
       - react
 
-  '@equinor/fusion-react-searchable-dropdown@1.0.6(react@18.3.1)':
+  '@equinor/fusion-react-searchable-dropdown@2.0.0(react@18.3.1)':
     dependencies:
-      '@equinor/fusion-react-utils': 2.2.3(react@18.3.1)
+      '@equinor/fusion-react-utils': 3.0.0(react@18.3.1)
       '@equinor/fusion-wc-icon': 2.3.1
       '@equinor/fusion-wc-searchable-dropdown': 4.0.5
-    transitivePeerDependencies:
-      - react
+      react: 18.3.1
 
   '@equinor/fusion-react-searchable-dropdown@2.0.0(react@18.3.1)':
     dependencies:
