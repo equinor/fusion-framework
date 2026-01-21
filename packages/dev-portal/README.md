@@ -21,6 +21,24 @@ The following environment variables must be set in `.env` or in the environment 
 - FUSION_MSAL_TENANT_ID: The tenant ID for MSAL authentication.
 - FUSION_SERVICE_DISCOVERY_URL: The URL for service discovery.
 - FUSION_SERVICE_SCOPE: The scopes for the service.
+- FUSION_SPA_AG_GRID_KEY: (Optional) AG Grid Enterprise license key for local development. When provided, this eliminates AG Grid license console warnings when running the portal locally with AG Grid-enabled features.
+
+### Local AG Grid Configuration
+
+To use AG Grid Enterprise features without console warnings during local development:
+
+1. Obtain an AG Grid Enterprise license key from your organization
+2. Add the key to your `.env` file:
+   ```sh
+   FUSION_SPA_AG_GRID_KEY=your-license-key-here
+   ```
+3. Start the dev portal:
+   ```sh
+   pnpm start
+   ```
+4. Verify the configuration by opening the portal and checking the browser console - there should be no AG Grid license warnings
+
+**Note**: The license key is only used for local development and is never committed to the repository or deployed to production.
 
 ## Development
 
