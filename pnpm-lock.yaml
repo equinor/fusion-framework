@@ -1666,8 +1666,8 @@ importers:
   packages/modules/msal-node:
     dependencies:
       '@azure/msal-node':
-        specifier: ^3.8.3
-        version: 3.8.6
+        specifier: ^5.0.2
+        version: 5.0.2
       '@azure/msal-node-extensions':
         specifier: ^5.0.2
         version: 5.0.2
@@ -2642,10 +2642,6 @@ packages:
     resolution: {integrity: sha512-n278DdCXKeiWhLwhEL7/u9HRMyzhUXLefeajiknf6AmEedoiOiv2r5aRJ7LXdT3NGPyubkdIbthaJlVtmuEqvA==}
     engines: {node: '>=0.8.0'}
 
-  '@azure/msal-common@15.14.1':
-    resolution: {integrity: sha512-IkzF7Pywt6QKTS0kwdCv/XV8x8JXknZDvSjj/IccooxnP373T5jaadO3FnOrbWo3S0UqkfIDyZNTaQ/oAgRdXw==}
-    engines: {node: '>=0.8.0'}
-
   '@azure/msal-common@16.0.2':
     resolution: {integrity: sha512-ZJ/UR7lyqIntURrIJCyvScwJFanM9QhJYcJCheB21jZofGKpP9QxWgvADANo7UkresHKzV+6YwoeZYP7P7HvUg==}
     engines: {node: '>=0.8.0'}
@@ -2657,9 +2653,9 @@ packages:
   '@azure/msal-node-runtime@0.20.1':
     resolution: {integrity: sha512-WVbMedbJHjt9M+qeZMH/6U1UmjXsKaMB6fN8OZUtGY7UVNYofrowZNx4nVvWN/ajPKBQCEW4Rr/MwcRuA8HGcQ==}
 
-  '@azure/msal-node@3.8.6':
-    resolution: {integrity: sha512-XTmhdItcBckcVVTy65Xp+42xG4LX5GK+9AqAsXPXk4IqUNv+LyQo5TMwNjuFYBfAB2GTG9iSQGk+QLc03vhf3w==}
-    engines: {node: '>=16'}
+  '@azure/msal-node@5.0.2':
+    resolution: {integrity: sha512-3tHeJghckgpTX98TowJoXOjKGuds0L+FKfeHJtoZFl2xvwE6RF65shZJzMQ5EQZWXzh3sE1i9gE+m3aRMachjA==}
+    engines: {node: '>=20'}
 
   '@azure/search-documents@12.2.0':
     resolution: {integrity: sha512-4+Qw+qaGqnkdUCq/vEFzk/bkROogTvdbPb1fmI8poxNfDDN1q2WHxBmhI7CYwesrBj1yXC4i5E0aISBxZqZi0g==}
@@ -11102,8 +11098,6 @@ snapshots:
 
   '@azure/msal-common@13.3.3': {}
 
-  '@azure/msal-common@15.14.1': {}
-
   '@azure/msal-common@16.0.2': {}
 
   '@azure/msal-node-extensions@5.0.2':
@@ -11114,9 +11108,9 @@ snapshots:
 
   '@azure/msal-node-runtime@0.20.1': {}
 
-  '@azure/msal-node@3.8.6':
+  '@azure/msal-node@5.0.2':
     dependencies:
-      '@azure/msal-common': 15.14.1
+      '@azure/msal-common': 16.0.2
       jsonwebtoken: 9.0.3
       uuid: 8.3.2
 
@@ -18289,7 +18283,7 @@ snapshots:
       isstream: 0.1.2
       jsonwebtoken: 9.0.3
       mime-types: 2.1.35
-      retry-axios: 2.6.0(axios@1.13.3)
+      retry-axios: 2.6.0(axios@1.13.3(debug@4.4.3))
       tough-cookie: 4.1.4
     transitivePeerDependencies:
       - supports-color
@@ -20146,7 +20140,7 @@ snapshots:
       onetime: 7.0.0
       signal-exit: 4.1.0
 
-  retry-axios@2.6.0(axios@1.13.3):
+  retry-axios@2.6.0(axios@1.13.3(debug@4.4.3)):
     dependencies:
       axios: 1.13.3(debug@4.4.3)
 
