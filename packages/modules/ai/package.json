@@ -54,7 +54,7 @@
     "directory": "packages/modules/ai"
   },
   "dependencies": {
-    "@langchain/community": "^0.3.57",
+    "@langchain/community": "^1.1.5",
     "@langchain/core": "^1.0.1",
     "langchain": "^1.0.1"
   },
