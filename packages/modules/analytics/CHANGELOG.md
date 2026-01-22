@@ -1,5 +1,21 @@
 # @equinor/fusion-framework-module-analytics
 
+## 0.2.1-next.0
+
+### Patch Changes
+
+- [#3866](https://github.com/equinor/fusion-framework/pull/3866) [`f70d66f`](https://github.com/equinor/fusion-framework/commit/f70d66f1bc826e614140adb2c6ee052f98e3b3da) Thanks [@dependabot](https://github.com/apps/dependabot)! - Internal: Dedupe zod dependency to 4.3.5
+
+  Deduplicated zod dependency to version 4.3.5 across all packages using `pnpm dedupe`. This aligns all packages (AI plugins upgraded from v3.25.76, other packages consolidated from v4.1.8/v4.1.11) to use the same latest stable version, improving consistency and reducing bundle size. All builds, tests, and linting pass successfully.
+
+- Updated dependencies [[`771b936`](https://github.com/equinor/fusion-framework/commit/771b9364efc42fa36afe8491d001604cb4943f76), [`f70d66f`](https://github.com/equinor/fusion-framework/commit/f70d66f1bc826e614140adb2c6ee052f98e3b3da)]:
+  - @equinor/fusion-observable@9.0.0-next.1
+  - @equinor/fusion-framework-module-app@7.2.2-next.0
+  - @equinor/fusion-framework-module-context@7.0.3-next.1
+  - @equinor/fusion-framework-module-event@4.4.1-next.1
+  - @equinor/fusion-framework-module-http@7.0.6-next.1
+  - @equinor/fusion-framework-module@5.0.6-next.1
+
 ## 0.2.0
 
 ### Minor Changes

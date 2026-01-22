@@ -1,5 +1,20 @@
 # Change Log
 
+## 8.0.0-next.1
+
+### Patch Changes
+
+- [#3820](https://github.com/equinor/fusion-framework/pull/3820) [`771b936`](https://github.com/equinor/fusion-framework/commit/771b9364efc42fa36afe8491d001604cb4943f76) Thanks [@odinr](https://github.com/odinr)! - relase next
+
+- Updated dependencies [[`771b936`](https://github.com/equinor/fusion-framework/commit/771b9364efc42fa36afe8491d001604cb4943f76)]:
+  - @equinor/fusion-framework-react-module-signalr@4.0.0-next.1
+  - @equinor/fusion-framework-module-feature-flag@2.0.0-next.1
+  - @equinor/fusion-framework-react-module@4.0.0-next.1
+  - @equinor/fusion-framework-react-module-http@11.0.0-next.1
+  - @equinor/fusion-observable@9.0.0-next.1
+  - @equinor/fusion-framework@7.4.3-next.1
+  - @equinor/fusion-framework-module@5.0.6-next.1
+
 ## 8.0.0-next.0
 
 ### Major Changes
