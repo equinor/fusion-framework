@@ -1,5 +1,14 @@
 # Change Log
 
+## 4.0.0-next.1
+
+### Patch Changes
+
+- [#3820](https://github.com/equinor/fusion-framework/pull/3820) [`771b936`](https://github.com/equinor/fusion-framework/commit/771b9364efc42fa36afe8491d001604cb4943f76) Thanks [@odinr](https://github.com/odinr)! - relase next
+
+- Updated dependencies [[`771b936`](https://github.com/equinor/fusion-framework/commit/771b9364efc42fa36afe8491d001604cb4943f76)]:
+  - @equinor/fusion-framework-module@5.0.6-next.1
+
 ## 4.0.0-next.0
 
 ### Major Changes

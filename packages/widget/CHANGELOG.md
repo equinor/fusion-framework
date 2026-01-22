@@ -1,5 +1,19 @@
 # Change Log
 
+## 1.1.47-next.1
+
+### Patch Changes
+
+- [#3820](https://github.com/equinor/fusion-framework/pull/3820) [`771b936`](https://github.com/equinor/fusion-framework/commit/771b9364efc42fa36afe8491d001604cb4943f76) Thanks [@odinr](https://github.com/odinr)! - relase next
+
+- Updated dependencies [[`771b936`](https://github.com/equinor/fusion-framework/commit/771b9364efc42fa36afe8491d001604cb4943f76), [`f70d66f`](https://github.com/equinor/fusion-framework/commit/f70d66f1bc826e614140adb2c6ee052f98e3b3da)]:
+  - @equinor/fusion-framework@7.4.3-next.1
+  - @equinor/fusion-framework-module-event@4.4.1-next.1
+  - @equinor/fusion-framework-module-http@7.0.6-next.1
+  - @equinor/fusion-framework-module@5.0.6-next.1
+  - @equinor/fusion-framework-module-msal@7.0.0-next.1
+  - @equinor/fusion-framework-module-widget@12.0.4-next.1
+
 ## 1.1.47-next.0
 
 ### Patch Changes

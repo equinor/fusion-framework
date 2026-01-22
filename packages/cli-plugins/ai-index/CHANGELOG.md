@@ -1,5 +1,21 @@
 # @equinor/fusion-framework-cli-plugin-ai-index
 
+## 1.0.3-next.0
+
+### Patch Changes
+
+- [#3939](https://github.com/equinor/fusion-framework/pull/3939) [`d98b8f7`](https://github.com/equinor/fusion-framework/commit/d98b8f75e8e35e39f2263878f9aff7a534327b2e) Thanks [@dependabot](https://github.com/apps/dependabot)! - Internal: update `read-package-up` dependency from 11.0.0 to 12.0.0; no functional changes.
+
+- [#3866](https://github.com/equinor/fusion-framework/pull/3866) [`f70d66f`](https://github.com/equinor/fusion-framework/commit/f70d66f1bc826e614140adb2c6ee052f98e3b3da) Thanks [@dependabot](https://github.com/apps/dependabot)! - Internal: Dedupe zod dependency to 4.3.5
+
+  Deduplicated zod dependency to version 4.3.5 across all packages using `pnpm dedupe`. This aligns all packages (AI plugins upgraded from v3.25.76, other packages consolidated from v4.1.8/v4.1.11) to use the same latest stable version, improving consistency and reducing bundle size. All builds, tests, and linting pass successfully.
+
+- Updated dependencies [[`771b936`](https://github.com/equinor/fusion-framework/commit/771b9364efc42fa36afe8491d001604cb4943f76), [`d34ebd8`](https://github.com/equinor/fusion-framework/commit/d34ebd82c93acabc88f88e44a725f084af3af5ec), [`5a25a5e`](https://github.com/equinor/fusion-framework/commit/5a25a5e6fefc660131b77f58e667b1a05dca0d6b), [`f70d66f`](https://github.com/equinor/fusion-framework/commit/f70d66f1bc826e614140adb2c6ee052f98e3b3da)]:
+  - @equinor/fusion-imports@1.1.10-next.0
+  - @equinor/fusion-framework-cli@13.1.1-next.0
+  - @equinor/fusion-framework-module@5.0.6-next.1
+  - @equinor/fusion-framework-cli-plugin-ai-base@1.0.3-next.0
+
 ## 1.0.2
 
 ### Patch Changes
@@ -30,7 +46,6 @@
   This plugin extends the Fusion Framework CLI with comprehensive document embedding and indexing capabilities for building searchable vector stores from code and documentation.
 
   **Features:**
-
   - Document chunking and embedding generation
   - Git metadata extraction for context-aware embeddings
   - Markdown/MDX and TypeScript/TSX documentation parsing
@@ -41,7 +56,6 @@
   - Dry-run mode for testing
 
   **Quick Usage:**
-
   1. Install the plugin:
 
   ```sh
