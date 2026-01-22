@@ -81,6 +81,21 @@ export class AppConfigurator<
 
   constructor(public readonly env: TEnv) {
     super([event, http, auth]);
+
+    this.configureHttpClientsFromAppConfig();
+  }
+
+  /**
+   * Reads app config's endpoints and configure the endpoints as httpClients
+   */
+  protected configureHttpClientsFromAppConfig() {
+    const endpoints = this.env.config ? this.env.config.getEndpoints() : {};
+    for (const [key, { url, scopes }] of Object.entries(endpoints)) {
+      this.configureHttpClient(key, {
+        baseUri: url,
+        defaultScopes: scopes,
+      });
+    }
   }
 
   public configureHttp(...args: Parameters<typeof configureHttp>) {
@@ -102,6 +117,16 @@ export class AppConfigurator<
         const service = await ref?.serviceDiscovery.resolveService(serviceName);
         if (!service) {
           throw Error(`failed to configure service [${serviceName}]`);
+        }
+
+        // Check if serviceName is already configured
+        if (config.hasClient(serviceName)) {
+          console.warn(
+            `${serviceName} is already configured, possibly by app.config.[ENV].ts.
+             Overriding configurations may lead to unintended behaviour and should
+             be reviewed carefully.`,
+          );
+          return;
         }
         config.configureClient(serviceName, {
           ...options,
