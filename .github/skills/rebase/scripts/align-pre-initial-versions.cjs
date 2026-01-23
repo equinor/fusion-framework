@@ -22,7 +22,13 @@ function writeJson(file, data) {
 }
 
 function isIgnoredDir(name) {
-  return name === 'node_modules' || name === '.git' || name === 'dist' || name === 'build' || name === '.turbo';
+  return (
+    name === 'node_modules' ||
+    name === '.git' ||
+    name === 'dist' ||
+    name === 'build' ||
+    name === '.turbo'
+  );
 }
 
 function findPackages(rootDir) {
@@ -63,7 +69,12 @@ function main() {
   }
 
   const pre = readJson(prePath);
-  if (!pre || pre.mode !== 'pre' || !pre.initialVersions || typeof pre.initialVersions !== 'object') {
+  if (
+    !pre ||
+    pre.mode !== 'pre' ||
+    !pre.initialVersions ||
+    typeof pre.initialVersions !== 'object'
+  ) {
     console.error('Invalid pre.json: expected { mode: "pre", initialVersions: { ... } }');
     process.exit(1);
   }

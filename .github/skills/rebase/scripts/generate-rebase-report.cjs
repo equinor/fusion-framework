@@ -19,7 +19,11 @@ const path = require('path');
 const cp = require('child_process');
 
 function run(cmd, args, opts = {}) {
-  const res = cp.spawnSync(cmd, args, { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'], ...opts });
+  const res = cp.spawnSync(cmd, args, {
+    encoding: 'utf8',
+    stdio: ['ignore', 'pipe', 'pipe'],
+    ...opts,
+  });
   if (res.status !== 0) {
     const msg = `${cmd} ${args.join(' ')} failed: ${res.stderr || res.stdout}`.trim();
     throw new Error(msg);
@@ -59,10 +63,13 @@ function listChangedFiles(remoteRef) {
 function listNameStatus(remoteRef) {
   const out = safeRun('git', ['diff', '--name-status', `${remoteRef}..HEAD`]) || '';
   // Format: "M\tpath" or "A\tpath" or "D\tpath"
-  return out.split('\n').filter(Boolean).map((line) => {
-    const [status, ...rest] = line.split('\t');
-    return { status, file: rest.join('\t') };
-  });
+  return out
+    .split('\n')
+    .filter(Boolean)
+    .map((line) => {
+      const [status, ...rest] = line.split('\t');
+      return { status, file: rest.join('\t') };
+    });
 }
 
 function diffShortStat(remoteRef) {
@@ -91,10 +98,13 @@ function numstat(remoteRef, filterPath) {
   const args = ['diff', '--numstat', `${remoteRef}..HEAD`];
   if (filterPath) args.push(filterPath);
   const out = safeRun('git', args) || '';
-  const rows = out.split('\n').filter(Boolean).map((line) => {
-    const [added, removed, file] = line.split('\t');
-    return { added: Number(added || 0), removed: Number(removed || 0), file };
-  });
+  const rows = out
+    .split('\n')
+    .filter(Boolean)
+    .map((line) => {
+      const [added, removed, file] = line.split('\t');
+      return { added: Number(added || 0), removed: Number(removed || 0), file };
+    });
   return rows;
 }
 
@@ -156,12 +166,25 @@ function compareDeps(oldObj = {}, newObj = {}) {
     else if (o != null && n != null && o !== n) {
       const oM = semverMajor(o);
       const nM = semverMajor(n);
-      const type = oM != null && nM != null ? (nM > oM ? 'major+' : nM < oM ? 'major-' : 'minor/patch') : 'range-change';
+      const type =
+        oM != null && nM != null
+          ? nM > oM
+            ? 'major+'
+            : nM < oM
+              ? 'major-'
+              : 'minor/patch'
+          : 'range-change';
       changed.push({ name: k, from: o, to: n, type });
     }
   }
   // Sort changed: majors first
-  changed.sort((a, b) => (a.type === 'major+' || a.type === 'major-') === (b.type === 'major+' || b.type === 'major-') ? a.name.localeCompare(b.name) : (a.type.startsWith('major') ? -1 : 1));
+  changed.sort((a, b) =>
+    (a.type === 'major+' || a.type === 'major-') === (b.type === 'major+' || b.type === 'major-')
+      ? a.name.localeCompare(b.name)
+      : a.type.startsWith('major')
+        ? -1
+        : 1,
+  );
   return { added, removed, changed };
 }
 
@@ -170,8 +193,16 @@ function analyzePackageJsonDiff(remoteRef, filePath) {
   const localRaw = safeRun('cat', [filePath]);
   if (!remoteRaw || !localRaw) return null;
   let oldPkg, newPkg;
-  try { oldPkg = JSON.parse(remoteRaw); } catch { return null; }
-  try { newPkg = JSON.parse(localRaw); } catch { return null; }
+  try {
+    oldPkg = JSON.parse(remoteRaw);
+  } catch {
+    return null;
+  }
+  try {
+    newPkg = JSON.parse(localRaw);
+  } catch {
+    return null;
+  }
   const sections = ['dependencies', 'devDependencies', 'peerDependencies', 'optionalDependencies'];
   const bySection = {};
   for (const sec of sections) {
@@ -249,13 +280,23 @@ function main() {
 
   // Highlight: config changes
   const configTargets = [
-    'pnpm-workspace.yaml', 'turbo.json', 'biome.json', 'vitest.config.ts',
-    'tsconfig.json', 'tsconfig.base.json', 'package.json', '.npmrc', '.gitignore', 'pnpm-lock.yaml'
+    'pnpm-workspace.yaml',
+    'turbo.json',
+    'biome.json',
+    'vitest.config.ts',
+    'tsconfig.json',
+    'tsconfig.base.json',
+    'package.json',
+    '.npmrc',
+    '.gitignore',
+    'pnpm-lock.yaml',
   ];
   const configChanged = files.filter((f) => configTargets.includes(f));
 
   // Highlight: package.json dependency bumps
-  const pkgJsonChanged = nameStatus.filter((n) => n.file.endsWith('package.json') && n.status !== 'D').map((n) => n.file);
+  const pkgJsonChanged = nameStatus
+    .filter((n) => n.file.endsWith('package.json') && n.status !== 'D')
+    .map((n) => n.file);
   const pkgAnalyses = [];
   for (const pj of pkgJsonChanged) {
     const a = analyzePackageJsonDiff(remoteRef, pj);
@@ -263,22 +304,41 @@ function main() {
   }
   const depSummary = [];
   for (const a of pkgAnalyses) {
-    let majors = 0, adds = 0, removes = 0;
+    let majors = 0,
+      adds = 0,
+      removes = 0;
     for (const sec of Object.values(a.bySection)) {
       majors += sec.changed.filter((c) => c.type.startsWith('major')).length;
       adds += sec.added.length;
       removes += sec.removed.length;
     }
-    if (majors || adds || removes) depSummary.push({ file: a.filePath, name: a.name, majors, adds, removes, analysis: a });
+    if (majors || adds || removes)
+      depSummary.push({ file: a.filePath, name: a.name, majors, adds, removes, analysis: a });
   }
   depSummary.sort((a, b) => b.majors - a.majors || b.adds - a.adds || a.file.localeCompare(b.file));
 
   // Highlight: unusual top-level changes (outside common dirs)
-  const allowedTop = new Set(['packages', 'cookbooks', '.changeset', 'vue-press', 'patches', '.github', 'contributing']);
-  const unusual = uniq(files.map((f) => f.split('/')[0]).filter((t) => t && !allowedTop.has(t) && !configTargets.includes(t) && t !== 'pnpm-lock.yaml'));
+  const allowedTop = new Set([
+    'packages',
+    'cookbooks',
+    '.changeset',
+    'vue-press',
+    'patches',
+    '.github',
+    'contributing',
+  ]);
+  const unusual = uniq(
+    files
+      .map((f) => f.split('/')[0])
+      .filter(
+        (t) => t && !allowedTop.has(t) && !configTargets.includes(t) && t !== 'pnpm-lock.yaml',
+      ),
+  );
 
   // Parse shortStat to extract filesChanged, insertions, deletions
-  const shortStatMatch = shortStat.match(/(\d+) files? changed(?:, (\d+) insertions?\(\+\))?(?:, (\d+) deletions?\(-\))?/);
+  const shortStatMatch = shortStat.match(
+    /(\d+) files? changed(?:, (\d+) insertions?\(\+\))?(?:, (\d+) deletions?\(-\))?/,
+  );
   const filesChanged = shortStatMatch ? Number(shortStatMatch[1]) : 0;
   const insertions = shortStatMatch ? Number(shortStatMatch[2] || 0) : 0;
   const deletions = shortStatMatch ? Number(shortStatMatch[3] || 0) : 0;
@@ -295,7 +355,8 @@ function main() {
   out.push('');
   if (largest.length) {
     out.push('**Largest file diffs (top 10):**');
-    for (const r of largest) out.push(`- ${r.file}: +${r.added} / -${r.removed} (total ${r.total})`);
+    for (const r of largest)
+      out.push(`- ${r.file}: +${r.added} / -${r.removed} (total ${r.total})`);
   }
   if (configChanged.length) {
     out.push('');
