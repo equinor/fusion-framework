@@ -1,20 +1,18 @@
-import { coerce, valid } from 'semver';
+import { coerce } from 'semver';
 
 /**
- * Generates a snapshot version from a base semantic version.
+ * Generates a snapshot version from a semantic version, coercing pre-release suffixes when present.
  *
- * This function takes a valid release version (without pre-release suffix) and generates
- * a snapshot version by appending a timestamp-based suffix. The snapshot version format is:
+ * This function accepts standard semantic versions and versions with pre-release suffixes (e.g.,
+ * `1.2.3-beta.1`). It uses {@link coerce} to normalize the input to the base `major.minor.patch`
+ * version before appending a timestamp-based snapshot suffix. Snapshot version formats:
  * - With no identifier: {version}-snapshot.{unix_timestamp}
  * - With identifier: {version}-{identifier}.{unix_timestamp}
  *
- * The function automatically validates the input version and will throw an error if it
- * already contains a pre-release suffix.
- *
- * @param version - The base semantic version (must not contain pre-release suffix)
- * @param options - Optional configuration for snapshot generation
+ * @param version - The semantic version to convert (pre-release suffixes are accepted and stripped)
+ * @param identifier - Optional snapshot identifier; if omitted or boolean, defaults to `snapshot`
  * @returns The generated snapshot version string
- * @throws {Error} If the version is not valid or already contains a pre-release suffix
+ * @throws {Error} If the version cannot be coerced into a valid semantic version
  *
  * @example
  * ```typescript
@@ -22,7 +20,7 @@ import { coerce, valid } from 'semver';
  * generateSnapshotVersion('1.2.3'); // Returns: "1.2.3-snapshot.1737545600"
  *
  * // With custom identifier
- * generateSnapshotVersion('1.2.3', { identifier: 'pr-123' }); // Returns: "1.2.3-pr-123.1737545600"
+ * generateSnapshotVersion('1.2.3', 'pr-123'); // Returns: "1.2.3-pr-123.1737545600"
  * ```
  *
  * @public
