@@ -9,7 +9,8 @@ import type { ConsoleLogger } from './utils/ConsoleLogger.js';
  * Options for bundling the application into an archive.
  *
  * This type defines the shape of the options object accepted by
- * {@link bundleApp}. It allows for optional logging, manifest path, and archive name.
+ * {@link bundleApp}. It allows for optional logging, manifest path, archive name,
+ * and an optional snapshot version to override the package.json version.
  *
  * @public
  */
@@ -26,21 +27,28 @@ export type BundleAppOptions = {
    * Name or path of the output archive file (optional).
    */
   archive?: string;
+  /**
+   * Optional snapshot version to use instead of package.json version.
+   * If provided, this version will be used in the manifest build metadata
+   * without modifying package.json.
+   */
+  snapshot?: boolean | string;
 };
 
 /**
  * Bundles the application into an archive for distribution or deployment.
  *
  * This function builds the application, validates the manifest, and creates an archive containing
- * the app manifest and metadata. Handles errors and logs progress for maintainability and debugging.
+ * the app manifest and metadata. If a snapshot version is provided, it will be used in the bundle
+ * metadata without modifying package.json. Handles errors and logs progress for maintainability and debugging.
  *
- * @param options - Options for logger, manifest path, and archive name.
+ * @param options - Options for logger, manifest path, archive name, and optional snapshot version.
  * @returns An object containing the archive path and the application manifest.
  * @throws If the manifest build config is missing or packaging fails.
  * @public
  */
 export const bundleApp = async (options: BundleAppOptions) => {
-  const { log, manifest } = options;
+  const { log, manifest, snapshot } = options;
 
   // Setup a default runtime environment for the build
   const env: RuntimeEnv = {
@@ -51,7 +59,12 @@ export const bundleApp = async (options: BundleAppOptions) => {
   };
 
   // Build the application and retrieve the manifest and package info
-  const { pkg, manifest: appManifest } = await buildApplication({ env, log, manifest });
+  const { pkg, manifest: appManifest } = await buildApplication({
+    env,
+    log,
+    manifest,
+    snapshot,
+  });
 
   // Ensure the manifest contains build configuration
   if (!appManifest.build) {

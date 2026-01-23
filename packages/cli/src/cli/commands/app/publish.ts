@@ -24,9 +24,12 @@ import { createEnvOption } from '../../options/env.js';
  * - Builds the app first if no bundle is provided.
  * - Supports specifying environment, manifest file, and tag.
  * - Debug mode and authentication options are supported.
+ * - Supports `--snapshot` flag to publish with a snapshot version without modifying package.json.
  *
  * Usage:
  *   $ ffc app publish [bundle] [options]
+ *   $ ffc app publish --snapshot
+ *   $ ffc app publish --snapshot pr-123
  *
  * Arguments:
  *   [bundle]             Path to the app bundle to upload
@@ -36,11 +39,14 @@ import { createEnvOption } from '../../options/env.js';
  *   -e, --env <env>      Target environment
  *   -m, --manifest       Manifest file to use for bundling (e.g., app.manifest.ts)
  *   -t, --tag            Tag to apply to the published app (e.g. latest | preview | pr-1234)
+ *   -s, --snapshot       Build with snapshot version (optionally with custom identifier)
  *
  * Example:
  *   $ ffc app publish
  *   $ ffc app publish --env prod --manifest app.manifest.prod.ts
  *   $ ffc app publish --tag latest app.bundle.zip
+ *   $ ffc app publish --snapshot
+ *   $ ffc app publish --snapshot pr-456
  *
  * @see uploadApplication, tagApplication for implementation details
  */
@@ -63,6 +69,11 @@ export const command = withAuthOptions(
         '',
         'NOTE: app manifest is not required, a default manifest will be generated if not provided',
         '',
+        'SNAPSHOT VERSIONS:',
+        '  Use --snapshot to publish with snapshot versions without modifying package.json:',
+        '  - `ffc app publish --snapshot` → version-snapshot.{unix_timestamp}',
+        '  - `ffc app publish --snapshot pr-123` → version-pr-123.{unix_timestamp}',
+        '',
         'FIRST TIME PUBLISHING:',
         '  - Ensure your app is registered in Fusion App Admin',
         '  - Use `ffc app check` first to verify registration status',
@@ -72,6 +83,8 @@ export const command = withAuthOptions(
         '  $ ffc app publish',
         '  $ ffc app publish --env prod --manifest app.manifest.prod.ts',
         '  $ ffc app publish --tag latest app.bundle.zip',
+        '  $ ffc app publish --snapshot',
+        '  $ ffc app publish --snapshot pr-456',
       ].join('\n'),
     )
     .option('-d, --debug', 'Enable debug mode for verbose logging', false)
@@ -81,6 +94,10 @@ export const command = withAuthOptions(
       '-t, --tag [string]',
       'Tag to apply to the published app (e.g. latest | preview | next | pr-1234). Alphanumeric, dots and dashes allowed.',
       'latest',
+    )
+    .option(
+      '-s, --snapshot [identifier]',
+      'Build with a snapshot version (optionally with custom identifier). The identifier defaults to "snapshot" if not provided.',
     )
     .argument('[bundle]', 'Path to the app bundle to upload')
     .action(async (bundle, options) => {
@@ -108,6 +125,7 @@ export const command = withAuthOptions(
           const buildResult = await bundleApp({
             log,
             manifest: options.manifest,
+            snapshot: options.snapshot,
           });
           archive = buildResult.archive;
           log.succeed('📦 Bundle completed');
