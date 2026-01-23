@@ -14,10 +14,11 @@ import {
   type AnyModule,
 } from '@equinor/fusion-framework-module';
 
-import moduleContext from './context';
+import moduleContext from './context.js';
 
 type ModuleProviderCreator = <
   TModules extends Array<AnyModule> = Array<AnyModule>,
+  // biome-ignore lint/suspicious/noExplicitAny: Default type parameter for module instance reference
   TRef extends ModulesInstanceType<[AnyModule]> = any,
 >(
   configurator: ModulesConfigurator<TModules>,
@@ -58,6 +59,7 @@ type ModuleProviderCreator = <
  */
 export const createModuleProvider: ModuleProviderCreator = async <
   TModules extends Array<AnyModule>,
+  // biome-ignore lint/suspicious/noExplicitAny: Default type parameter for module instance reference
   TRef extends ModulesInstanceType<[AnyModule]> = any,
 >(
   configurator: ModulesConfigurator<TModules>,

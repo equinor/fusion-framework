@@ -1,5 +1,11 @@
 # Change Log
 
+## 5.0.6-next.0
+
+### Patch Changes
+
+- [#3820](https://github.com/equinor/fusion-framework/pull/3820) [`265bb76`](https://github.com/equinor/fusion-framework/commit/265bb767249989eeb1971e83f3fba94879e0813b) Thanks [@odinr](https://github.com/odinr)! - relase next
+
 ## 5.0.5
 
 ### Patch Changes
@@ -19,7 +25,6 @@
 ### Patch Changes
 
 - [#3490](https://github.com/equinor/fusion-framework/pull/3490) [`45954e5`](https://github.com/equinor/fusion-framework/commit/45954e5db471a2faa24e88e41fc6d6c18817d6d1) Thanks [@odinr](https://github.com/odinr)! - Add event system to module configurator for lifecycle tracking.
-
   - Add `ModuleEvent` and `ModuleEventLevel` types for structured event emission
   - Enhance module configurator with event emission capabilities
   - Support event levels: Error, Warning, Information, Debug
@@ -38,7 +43,6 @@
 ### Patch Changes
 
 - [#3384](https://github.com/equinor/fusion-framework/pull/3384) [`3049232`](https://github.com/equinor/fusion-framework/commit/30492326336bea0d1af683b89e62a18eceec4402) Thanks [@odinr](https://github.com/odinr)! - Fixed missing type definitions in compiled declaration files.
-
   - Removed @internal JSDoc tags from ModulesObjectInstanceType and ModulesObjectConfigType
   - These utility types are now properly included in the public API since they are referenced by public types
   - Resolves TypeScript compilation errors when consuming the module
@@ -52,7 +56,6 @@
 - [#3075](https://github.com/equinor/fusion-framework/pull/3075) [`8fffbfb`](https://github.com/equinor/fusion-framework/commit/8fffbfb12daa9748bf5290e5084cd4d409aed253) Thanks [@odinr](https://github.com/odinr)! - Major: explicit ESM module type and .js extensions for all internal imports
 
   This release makes `@equinor/fusion-framework-module` an explicit ESM package by setting `type: "module"` in `package.json` and updating all internal TypeScript imports to use explicit `.js` extensions. This ensures compatibility with NodeNext module resolution and ESM environments, and aligns the runtime and published output with ESM standards.
-
   - All internal imports now use `.js` extensions (e.g., `import { X } from './foo.js'`)
   - `package.json` now explicitly sets `"type": "module"`
   - `tsconfig.json` updated to use `module` and `moduleResolution` set to `NodeNext`
@@ -97,7 +100,6 @@
 ### Patch Changes
 
 - [`e49f916`](https://github.com/equinor/fusion-framework/commit/e49f9161557202df57248d02ade4d2ef50231bdc) Thanks [@odinr](https://github.com/odinr)! - Fix: Improve error handling and logging in module initialization and post-initialization.
-
   - Improved error logging when `_initialize` fails
   - Ensure that error is piped to subscribe of `_initialize` when errors occurs
 
@@ -108,7 +110,6 @@
 ### Minor Changes
 
 - [#3040](https://github.com/equinor/fusion-framework/pull/3040) [`efd70a3`](https://github.com/equinor/fusion-framework/commit/efd70a34f734e0c155d3440e35ce4fa11a7abc42) Thanks [@odinr](https://github.com/odinr)! - ### Enhance DotPath Utility and Config Builder Flexibility
-
   - Improved the `DotPath` utility to support deeper type resolution, including arrays and nominal class types.
   - Updated `BaseConfigBuilder` to use the new `DotPathUnion` and `DotPathType` types for better type safety and flexibility.
   - Enhanced `_set` in `BaseConfigBuilder` to accept both direct values and callbacks, improving usability.
@@ -150,7 +151,6 @@
 - [#2434](https://github.com/equinor/fusion-framework/pull/2434) [`75d676d`](https://github.com/equinor/fusion-framework/commit/75d676d2c7919f30e036b5ae97c4d814c569aa87) Thanks [@odinr](https://github.com/odinr)! - **@equinor/fusion-framework-module:**
 
   Updated the `_buildConfig` method in `BaseConfigBuilder` to improve error handling and configuration merging.
-
   - Enhanced `_buildConfig` to log errors when a configuration callback fails, providing more detailed error messages.
   - Improved the merging process of configuration callbacks by filtering out undefined values and mapping them to target-value pairs.
   - Updated the `_buildConfig` method to initialize the accumulator with the initial configuration or an empty object.
@@ -229,7 +229,6 @@
 - [#2320](https://github.com/equinor/fusion-framework/pull/2320) [`1dd85f3`](https://github.com/equinor/fusion-framework/commit/1dd85f3a408a73df556d1812a5f280945cc100ee) Thanks [@odinr](https://github.com/odinr)! - Removed the `removeComments` option from the `tsconfig.base.json` file.
 
   Removing the `removeComments` option allows TypeScript to preserve comments in the compiled JavaScript output. This can be beneficial for several reasons:
-
   1. Improved debugging: Preserved comments can help developers understand the code better during debugging sessions.
   2. Documentation: JSDoc comments and other important code documentation will be retained in the compiled output.
   3. Source map accuracy: Keeping comments can lead to more accurate source maps, which is crucial for debugging and error tracking.
@@ -310,7 +309,6 @@
   The `BaseConfigBuilder` class is an abstract class that provides a flexible and extensible way to build and configure modules. It allows you to define configuration callbacks for different parts of your module's configuration, and then combine and process these callbacks to generate the final configuration object.
 
   The documentation has been expanded to include:
-
   1. A detailed explanation of how the `BaseConfigBuilder` class is designed to be used, including an example of creating a configuration builder for a hypothetical `MyModule` module.
   2. Descriptions of the key methods and properties provided by the `BaseConfigBuilder` class, such as `createConfig`, `createConfigAsync`, `_set`, `_buildConfig`, and `_processConfig`.
   3. Guidance on how to override the `_processConfig` method to add additional logic or validation to the configuration object before it is returned.
@@ -325,7 +323,6 @@
   #### Added `_get` and `_has` methods
 
   Two new protected methods have been added to the `BaseConfigBuilder` class:
-
   1. `_get<TTarget extends DotPath<TConfig>>(target: TTarget)`: This method retrieves the configuration callback for the specified target path in the configuration. It returns the callback or `undefined` if no callback is registered for the given target.
   2. `_has<TTarget extends DotPath<TConfig>>(target: TTarget)`: This method checks if the given target path exists in the configuration callbacks. It returns `true` if the target path exists, `false` otherwise.
 
@@ -340,7 +337,7 @@
     // override the _buildConfig method
     async _createConfig(
       init: ConfigBuilderCallbackArgs,
-      initial?: Partial<TConfig>
+      initial?: Partial<TConfig>,
     ): ObservableInput<TConfig> {
       // Check if a callback is registered for the'my.custom.config' target
       if (this._has("my.custom.config")) {
@@ -469,13 +466,12 @@
     // do some code
   } else {
     throw Error(
-      "this feature requires ContextModule of 7.2 or higher, please update depencies"
+      "this feature requires ContextModule of 7.2 or higher, please update depencies",
     );
   }
   ```
 
   Usage:
-
   - log telemetry about module usage and outdated application
   - debug code runtime by knowing version of implementation
   - write inter-opt when breaking changes accour
@@ -483,7 +479,6 @@
 ### Patch Changes
 
 - [#907](https://github.com/equinor/fusion-framework/pull/907) [`7500ec2c`](https://github.com/equinor/fusion-framework/commit/7500ec2c9ca9b926a19539fc97c61c67f76fc8d9) Thanks [@odinr](https://github.com/odinr)! - export `lib` assets:
-
   - SemanticVersion
   - ModuleProvider
 
@@ -491,7 +486,6 @@
 
   because of weird limitations of JavaScript, private fields are not accessible until all constructors are initialized (from ancestor to current child).
   This causes the `abstract` init function could not access private members when overridden.
-
   - **removed** `init` from `BaseModuleProvider`
     - _this is a breaking change, but not yet published, yet the `patch` version_
     - https://github.com/equinor/fusion-framework/blob/43854d9538ade189483c43e04b52eff7e1aa3b0c/packages/modules/module/src/lib/provider/BaseModuleProvider.ts#L31
@@ -504,7 +498,6 @@
 - [#924](https://github.com/equinor/fusion-framework/pull/924) [`060818eb`](https://github.com/equinor/fusion-framework/commit/060818eb04ebb9ed6deaed1f0b4530201b1181cf) Thanks [@asbjornhaland](https://github.com/asbjornhaland)! - fix(module): add config builder callback args to process config method so that
 
 - [#905](https://github.com/equinor/fusion-framework/pull/905) [`a7858a1c`](https://github.com/equinor/fusion-framework/commit/a7858a1c01542e2dc94370709f122b4b99c3219c) Thanks [@odinr](https://github.com/odinr)! - **🚧 Chore: dedupe packages**
-
   - align all versions of typescript
   - update types to build
     - a couple of typecasts did not [satisfies](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-0.html#satisfies-support-in-jsdoc) and was recasted as `unknwon`, marked with `TODO`, should be fixed in future

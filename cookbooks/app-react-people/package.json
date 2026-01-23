@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework-cookbook-app-react-people",
-  "version": "4.5.17",
+  "version": "4.5.18-next.0",
   "description": "",
   "private": true,
   "type": "module",
@@ -18,19 +18,19 @@
     "@equinor/fusion-framework-react-app": "workspace:^",
     "@equinor/fusion-observable": "workspace:^",
     "@equinor/fusion-query": "workspace:^",
-    "@types/react": "^18.2.50",
-    "@types/react-dom": "^18.2.7",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3",
+    "react": "^19.2.1",
+    "react-dom": "^19.2.1",
     "typescript": "^5.8.2"
   },
   "dependencies": {
-    "@equinor/eds-core-react": "^0.49.0",
-    "@equinor/eds-icons": "^0.22.0",
+    "@equinor/eds-core-react": "^2.2.0",
+    "@equinor/eds-icons": "^1.1.0",
     "@equinor/fusion-framework-module-navigation": "workspace:^",
+    "@equinor/fusion-framework-react-router": "workspace:^",
     "@equinor/fusion-react-person": "^0.10.10",
-    "@remix-run/router": "^1.8.0",
-    "react-router-dom": "^6.16.0",
+    "react-router-dom": "^7.9.5",
     "styled-components": "^6.0.7"
   }
 }

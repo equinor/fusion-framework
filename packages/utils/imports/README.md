@@ -79,3 +79,38 @@ our implementation does not use any plugins, but working with mono-repos you mos
 ### importJSON
 
 Method for loading json from disk. Will read content and parse.
+
+### Plugins
+
+The `importScript` function includes built-in plugins to handle common import scenarios:
+
+#### createMarkdownRawPlugin
+
+Creates an esbuild plugin that handles `?raw` imports for markdown files. This plugin is automatically included when using `importScript`, but can also be used independently.
+
+```ts
+import { importScript, createMarkdownRawPlugin } from '@equinor/fusion-imports';
+
+// The plugin is automatically included, but you can also add it explicitly
+const module = await importScript('./my-script.ts', {
+  plugins: [createMarkdownRawPlugin()],
+});
+```
+
+**Usage in imported files:**
+
+```ts
+// my-script.ts
+import readmeContent from '../../README.md?raw';
+
+export default readmeContent; // Returns the raw markdown content as a string
+```
+
+The plugin:
+- Intercepts imports ending with `?raw`
+- Resolves paths relative to the importing file (handles `../` correctly)
+- Reads the file content and exports it as a default string export
+
+#### createImportMetaResolvePlugin
+
+Creates an esbuild plugin that handles `import.meta.resolve()` calls. This plugin is automatically included when using `importScript`.
