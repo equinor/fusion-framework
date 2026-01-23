@@ -24,10 +24,13 @@ export const resolveAppManifest = async (
   options?: {
     log?: ConsoleLogger | null;
     manifestPath?: string;
+    snapshot?: boolean | string;
   },
 ) => {
   // Generate a base manifest from the package.json as a fallback/default.
-  const baseManifest = createAppManifestFromPackage(env, pkg.packageJson);
+  const baseManifest = createAppManifestFromPackage(env, pkg.packageJson, {
+    snapshot: options?.snapshot,
+  });
 
   try {
     // Attempt to load the manifest file, if provided.

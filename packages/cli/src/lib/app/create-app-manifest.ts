@@ -10,6 +10,7 @@ import { resolveAnnotations } from '../utils/resolve-annotations.js';
 import { ASSET_EXTENSIONS } from '../static.js';
 
 import type { RuntimeEnv } from '../types.js';
+import { generateSnapshotVersion } from '../utils/snapshot.js';
 
 /**
  * Resolves the entry point for the application based on the environment and package.json.
@@ -45,6 +46,7 @@ const resolveAppEntryPoint = (env: RuntimeEnv, packageJson: PackageJson): string
 export const createAppManifestFromPackage = (
   env: RuntimeEnv,
   packageJson: PackageJson,
+  options?: { snapshot?: boolean | string },
 ): AppManifest => {
   // Validate input objects
   assertObject(packageJson, 'expected packageJson');
@@ -57,7 +59,9 @@ export const createAppManifestFromPackage = (
   // Extract appKey from package name by removing the scope and leading @
   // This ensures a normalized, unique key for the app
   const appKey = packageJson.name.replace(/^@|\w.*\//gm, '');
-  const version = packageJson.version;
+  const version = options?.snapshot
+    ? generateSnapshotVersion(packageJson.version, options.snapshot)
+    : packageJson.version;
   const assetPath = env.command === 'build' ? undefined : `/bundles/apps/${appKey}@${version}`;
 
   // Try to resolve the GitHub repo from package or git config

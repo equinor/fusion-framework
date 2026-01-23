@@ -30,6 +30,10 @@ export type BuildApplicationOptions = {
    * Logger instance for build output. If null, disables logging.
    */
   log?: ConsoleLogger | null;
+  /**
+   * Optional snapshot version used in the build.
+   */
+  snapshot?: boolean | string;
 };
 
 /**
@@ -56,7 +60,7 @@ type ApplicationBuildOutput = {
  *
  * Loads the application manifest, applies Vite configuration, and runs the Vite build process.
  *
- * @param opt - Build options including environment, manifest path, and logger.
+ * @param opt - Build options including environment, manifest path, logger, and optional snapshot version.
  * @returns Output containing package info, manifest, and output directory.
  * @throws Will throw if the build process fails.
  * @public
@@ -64,12 +68,12 @@ type ApplicationBuildOutput = {
 export const buildApplication = async (
   opt?: BuildApplicationOptions,
 ): Promise<ApplicationBuildOutput> => {
-  const { log } = opt ?? {};
+  const { log, snapshot } = opt ?? {};
 
   log?.log(chalk.bold('Starting to build application'));
 
   // Load application manifest, package info, and environment variables
-  const { manifest, pkg, env } = await loadAppManifest({ log, manifest: opt?.manifest });
+  const { manifest, pkg, env } = await loadAppManifest({ log, manifest: opt?.manifest, snapshot });
 
   log?.start('loading vite config...');
   // Load local Vite configuration for the build

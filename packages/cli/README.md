@@ -84,6 +84,31 @@ pnpm fusion-framework-cli auth login
 pnpm fusion-framework-cli publish --env <environment>
 ```
 
+**Build or publish snapshot artifacts**
+
+> [!CAUTION]
+> Snapshot versions are designed for **preview and testing purposes only** (e.g., pull requests, CI/CD test deployments). The snapshot version **only affects the manifest build metadata** — your `package.json` and source files remain unchanged.
+
+- Use `--snapshot` to emit timestamped snapshot versions
+- Default: `--snapshot` → `{version}-snapshot.{unix_timestamp}`
+- Optional identifier: `--snapshot pr-123` → `{version}-pr-123.{unix_timestamp}`
+- Semver coercion strips any pre-release suffix first, e.g. `1.2.3-beta.1` → `1.2.3-snapshot.{unix_timestamp}`
+
+**Common use cases:**
+- Pull request previews: `--snapshot pr-456`
+- Nightly builds: `--snapshot nightly`
+- Feature branch testing: `--snapshot feature-xyz`
+
+```sh
+# Package an app with a snapshot version
+pnpm fusion-framework-cli app pack --snapshot
+pnpm fusion-framework-cli app pack --snapshot pr-123
+
+# Publish with a snapshot version
+pnpm fusion-framework-cli app publish --snapshot
+pnpm fusion-framework-cli app publish --snapshot nightly
+```
+
 **Upload configuration**
 
 ```sh

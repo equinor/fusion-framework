@@ -10,7 +10,8 @@ import { resolveProjectPackage } from './helpers/resolve-project-package.js';
  *
  * This type defines the shape of the options object accepted by
  * {@link loadAppManifest}. It allows for optional logging, environment overrides,
- * and a custom manifest file path.
+ * a custom manifest file path, and an optional snapshot version to override the
+ * package.json version.
  *
  * @public
  */
@@ -27,12 +28,20 @@ export type ResolveAppManifestOptions = {
    * Partial runtime environment overrides (optional).
    */
   env?: Partial<RuntimeEnv>;
+  /**
+   * Optional snapshot version to use instead of package.json version.
+   * If provided, this version will be used in the manifest build metadata
+   * without modifying package.json.
+   */
+  snapshot?: boolean | string;
 };
 
 /**
  * Loads and resolves the application manifest based on the provided options.
  *
  * This function resolves the app package, sets up the runtime environment, and loads the manifest.
+ * If a snapshot version is provided, it will be used in the manifest build metadata instead of
+ * the package.json version, without modifying package.json.
  * Logging is supported for debugging and progress tracking. Returns the manifest, package, and environment.
  *
  * @param options - The options for resolving the application manifest.
@@ -61,6 +70,7 @@ export const loadAppManifest = async (options: ResolveAppManifestOptions) => {
   const manifest = await resolveAppManifest(env, pkg, {
     log,
     manifestPath: options?.manifest,
+    snapshot: options?.snapshot,
   });
 
   log?.debug('manifest:', manifest);
