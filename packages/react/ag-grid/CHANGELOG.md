@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-react-ag-grid
 
+## 34.4.1
+
+### Patch Changes
+
+- [#3922](https://github.com/equinor/fusion-framework/pull/3922) [`d34ebd8`](https://github.com/equinor/fusion-framework/commit/d34ebd82c93acabc88f88e44a725f084af3af5ec) Thanks [@odinr](https://github.com/odinr)! - Narrow React peer dependency support to React 18 to align with the framework’s supported runtime and avoid React 19 being pulled inadvertently.
+
 ## 34.4.0
 
 ### Minor Changes

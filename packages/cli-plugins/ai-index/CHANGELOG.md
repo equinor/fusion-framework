@@ -1,5 +1,20 @@
 # @equinor/fusion-framework-cli-plugin-ai-index
 
+## 1.0.3
+
+### Patch Changes
+
+- [#3939](https://github.com/equinor/fusion-framework/pull/3939) [`d98b8f7`](https://github.com/equinor/fusion-framework/commit/d98b8f75e8e35e39f2263878f9aff7a534327b2e) Thanks [@dependabot](https://github.com/apps/dependabot)! - Internal: update `read-package-up` dependency from 11.0.0 to 12.0.0; no functional changes.
+
+- [#3866](https://github.com/equinor/fusion-framework/pull/3866) [`f70d66f`](https://github.com/equinor/fusion-framework/commit/f70d66f1bc826e614140adb2c6ee052f98e3b3da) Thanks [@dependabot](https://github.com/apps/dependabot)! - Internal: Dedupe zod dependency to 4.3.5
+
+  Deduplicated zod dependency to version 4.3.5 across all packages using `pnpm dedupe`. This aligns all packages (AI plugins upgraded from v3.25.76, other packages consolidated from v4.1.8/v4.1.11) to use the same latest stable version, improving consistency and reducing bundle size. All builds, tests, and linting pass successfully.
+
+- Updated dependencies [[`d34ebd8`](https://github.com/equinor/fusion-framework/commit/d34ebd82c93acabc88f88e44a725f084af3af5ec), [`37f63d5`](https://github.com/equinor/fusion-framework/commit/37f63d5b9646d0b19c98041e0897d6e1abf69dcf), [`5a25a5e`](https://github.com/equinor/fusion-framework/commit/5a25a5e6fefc660131b77f58e667b1a05dca0d6b), [`f70d66f`](https://github.com/equinor/fusion-framework/commit/f70d66f1bc826e614140adb2c6ee052f98e3b3da)]:
+  - @equinor/fusion-framework-cli@13.1.1
+  - @equinor/fusion-imports@1.1.10
+  - @equinor/fusion-framework-cli-plugin-ai-base@1.0.3
+
 ## 1.0.2
 
 ### Patch Changes
