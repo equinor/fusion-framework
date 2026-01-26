@@ -38,10 +38,10 @@ pnpm init
 ```
 
 > **Build Output Configuration:**
-> The CLI uses the `main` field (or `module` field) in your `package.json` to determine where to output the built application bundle. If neither field is specified, it defaults to `./dist/bundle.js`. 
-> 
+> The CLI uses the `main` field (or `module` field) in your `package.json` to determine where to output the built application bundle. If neither field is specified, it defaults to `./dist/bundle.js`.
+>
 > **Why this approach?** Using the `main`/`module` fields ensures your package works correctly when served directly or when developing portals with internal references. This follows Node.js package conventions and enables proper module resolution.
-> 
+>
 > **Important:** The output directory cannot be the project root, the `src` directory, or the current working directory. Always specify a dedicated build directory like `dist/`, `build/`, or similar.
 >
 > **Examples:**
@@ -87,13 +87,13 @@ pnpm fusion-framework-cli dev
 
 ### Log in to Fusion Framework (if needed)
 
-> [!NOTE] 
-> __All HTTP requests to Fusion services require an authorized user.__  
+> [!NOTE]
+> __All HTTP requests to Fusion services require an authorized user.__
 > For example, before running `fusion-framework-cli app publish`, make sure you are authenticated using `fusion-framework-cli auth login`.
 
 > [!WARNING]
-> The `fusion-framework-cli auth login` command is only available in interactive environments (such as your local terminal). For CI/CD pipelines or automated deployments, you must provide a valid authentication token using the `FUSION_TOKEN` environment variable.  
->  
+> The `fusion-framework-cli auth login` command is only available in interactive environments (such as your local terminal). For CI/CD pipelines or automated deployments, you must provide a valid authentication token using the `FUSION_TOKEN` environment variable.
+>
 > See [Authentication](auth.md#setting-the-fusion-token-in-github) for details on setting up tokens for CI/CD.
 
 ```sh
@@ -202,6 +202,30 @@ export default defineAppConfig((env, args) => {
 });
 ```
 
+> [!TIP]
+> In `endpoints` you can also override Service Discovery urls. This might be useful when you are
+> testing in a PR-environment.
+>
+> i.e `app.config.pr.ts`:
+>
+> ```typescript
+> export default defineAppConfig(() => ({
+>   endpoints: {
+>     admin: {
+>       url: "MY_OVERRIDDEN_URL", // e.g. an url to a PR-environment for admin endpoint
+>       scopes: [],
+>     },
+>   },
+> }));
+> ```
+>
+> **By overriding a key that is defined in Service Discovery, it will not check Service
+> Discovery. Use with caution. Intended use is for PR-environments.**
+
+> [!NOTE]
+> If the key of an endpoint is defined, it will not check Service Discovery for that key.
+> Service Discovery is the fallback.
+
 > [!NOTE]
 > The CLI will only include the first matching config file for the environment (e.g., `app.config.dev.ts`). It will not merge `app.config.ts` and `app.config.dev.ts` automatically. If you want to combine base and environment-specific settings, you must implement the merging logic yourself in your configuration code. The CLI provides utilities such as `mergeAppManifests` to assist with merging configuration objects.
 
@@ -217,10 +241,10 @@ A recommended approach for CI/CD with Fusion Framework apps is to build your app
 
 **Workflow Overview:**
 
-1. **Build Stage:**  
+1. **Build Stage:**
   Build and bundle your application a single time. Upload the resulting artifact (e.g., `app-bundle.zip`) as a pipeline artifact.
 
-2. **Deploy Stage (Matrix):**  
+2. **Deploy Stage (Matrix):**
   Use a matrix strategy to deploy the same artifact to multiple environments (such as `ci`, `fqa`, `fprd`). For each environment, generate and upload the appropriate configuration using environment-specific variables or secrets.
 
 This pattern minimizes discrepancies between environments and leverages CI/CD efficiency by separating build and deploy concerns.
@@ -419,7 +443,7 @@ pnpm fusion-framework-cli publish --tag latest app-bundle.zip
 > **Building Behavior**: The publish command behaves differently based on whether you provide a bundle:
 > - **With bundle**: Uploads and tags the provided bundle (no building)
 > - **Without bundle**: Builds, uploads, and tags your app
-> 
+>
 > **Additional Notes**:
 > - The `--tag` option lets you mark the published version (e.g., as `latest` or `preview`) for easier deployment targeting.
 > - Authentication options (`--token`, `--tenantId`, `--clientId`) can be set via CLI flags or environment variables.
@@ -554,7 +578,7 @@ pnpm fusion-framework-cli app upload --debug
 
 > [!NOTE]
 > The `upload` command uploads a distributable application bundle to the Fusion app registry. You can specify the application key directly or let the command resolve it from the manifest file. Supports environment selection and debug mode. If no bundle is provided, the CLI will use the default archive name (`app-bundle.zip`).
-> 
+>
 > If the upload fails, an error will be logged and the process will exit with a non-zero code.
 
 ### Tag
@@ -655,12 +679,12 @@ pnpm fusion-framework-cli app check --env prod --debug
 > [!IMPORTANT]
 > **Deprecated Command Aliases:**
 > The Fusion Framework CLI previously supported several `build-*` commands for app lifecycle tasks. These commands are now deprecated in favor of more consistent and future-proof command names (`pack`, `upload`, `manifest`, `publish`).
-> 
+>
 > **Why the change?**
 > - The new command names are shorter, clearer, and better reflect their purpose.
 > - This change aligns with industry standards and prepares for future CLI enhancements.
 > - Deprecated commands will be removed in future versions—update your scripts and workflows now to avoid breaking changes.
-> 
+>
 > For a full migration guide, see [Migration v10 to v11](migration-v10-to-v11.md).
 
 The CLI will warn you and redirect to the new command when you use a deprecated alias, applying any necessary options automatically. See the table below for mappings:
