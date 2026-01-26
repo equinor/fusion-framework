@@ -1,5 +1,19 @@
 # portal-analytics
 
+## 0.2.7-msal-v5.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @equinor/fusion-framework-app@10.2.2-msal-v5.0
+  - @equinor/fusion-framework@7.4.3-msal-v5.0
+  - @equinor/fusion-framework-module-app@7.2.2
+  - @equinor/fusion-framework-react-app@9.0.0-msal-v5.0
+  - @equinor/fusion-framework-react@7.4.20-msal-v5.0
+  - @equinor/fusion-framework-cli@13.1.2-msal-v5.0
+  - @equinor/fusion-framework-module-analytics@0.2.2-msal-v5.0
+  - @equinor/fusion-framework-module-service-discovery@9.0.6-msal-v5.0
+
 ## 0.2.6
 
 ### Patch Changes

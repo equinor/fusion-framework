@@ -1,5 +1,15 @@
 # Change Log
 
+## 7.4.20-msal-v5.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @equinor/fusion-framework@7.4.3-msal-v5.0
+  - @equinor/fusion-framework-module-feature-flag@1.1.27
+  - @equinor/fusion-framework-react-module-http@10.0.1-msal-v5.0
+  - @equinor/fusion-framework-react-module-signalr@3.0.36-msal-v5.0
+
 ## 7.4.19
 
 ### Patch Changes

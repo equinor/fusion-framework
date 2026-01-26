@@ -1,5 +1,12 @@
 # @equinor/fusion-framework-module-ai
 
+## 2.0.1-msal-v5.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @equinor/fusion-framework-module-http@7.0.7-msal-v5.0
+
 ## 2.0.0
 
 ### Major Changes

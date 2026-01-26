@@ -1,5 +1,13 @@
 # @equinor/fusion-framework-module-analytics
 
+## 0.2.2-msal-v5.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @equinor/fusion-framework-module-app@7.2.2
+  - @equinor/fusion-framework-module-http@7.0.7-msal-v5.0
+
 ## 0.2.1
 
 ### Patch Changes

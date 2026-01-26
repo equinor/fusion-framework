@@ -1,5 +1,13 @@
 # Change Log
 
+## 5.0.2-msal-v5.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @equinor/fusion-framework-react@7.4.20-msal-v5.0
+  - @equinor/fusion-framework-module-bookmark@3.0.5
+
 ## 5.0.1
 
 ### Patch Changes
