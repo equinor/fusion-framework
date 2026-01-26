@@ -1,5 +1,31 @@
 # Change Log
 
+## 13.1.1
+
+### Patch Changes
+
+- [#3922](https://github.com/equinor/fusion-framework/pull/3922) [`d34ebd8`](https://github.com/equinor/fusion-framework/commit/d34ebd82c93acabc88f88e44a725f084af3af5ec) Thanks [@odinr](https://github.com/odinr)! - Enable AG Grid Enterprise license injection for the dev-portal by setting a global window key produced from the SPA template environment. The portal reads `window.FUSION_AG_GRID_KEY` to configure the AG Grid module and silence license warnings when a valid key is present. CLI docs now mention the license key setup.
+
+  **Usage:**
+
+  - In your SPA environment file, set `FUSION_SPA_AG_GRID_KEY=your-license-key-here`.
+  - The SPA HTML template injects `window.FUSION_AG_GRID_KEY` before bootstrap runs, and the dev-portal picks it up automatically.
+
+  Closes: https://github.com/equinor/fusion-core-tasks/issues/93
+  Resolves: https://github.com/equinor/fusion-core-tasks/issues/92
+  Solves: https://github.com/equinor/fusion/issues/732
+
+- [#3953](https://github.com/equinor/fusion-framework/pull/3953) [`37f63d5`](https://github.com/equinor/fusion-framework/commit/37f63d5b9646d0b19c98041e0897d6e1abf69dcf) Thanks [@odinr](https://github.com/odinr)! - Use semver coercion when generating snapshot versions so pre-release package versions are stripped to their base release before appending the snapshot suffix.
+
+- [#3866](https://github.com/equinor/fusion-framework/pull/3866) [`f70d66f`](https://github.com/equinor/fusion-framework/commit/f70d66f1bc826e614140adb2c6ee052f98e3b3da) Thanks [@dependabot](https://github.com/apps/dependabot)! - Internal: Dedupe zod dependency to 4.3.5
+
+  Deduplicated zod dependency to version 4.3.5 across all packages using `pnpm dedupe`. This aligns all packages (AI plugins upgraded from v3.25.76, other packages consolidated from v4.1.8/v4.1.11) to use the same latest stable version, improving consistency and reducing bundle size. All builds, tests, and linting pass successfully.
+
+- Updated dependencies [[`d34ebd8`](https://github.com/equinor/fusion-framework/commit/d34ebd82c93acabc88f88e44a725f084af3af5ec), [`5a25a5e`](https://github.com/equinor/fusion-framework/commit/5a25a5e6fefc660131b77f58e667b1a05dca0d6b)]:
+  - @equinor/fusion-framework-dev-portal@1.4.0
+  - @equinor/fusion-imports@1.1.10
+  - @equinor/fusion-framework-dev-server@1.1.20
+
 ## 13.1.0
 
 ### Minor Changes

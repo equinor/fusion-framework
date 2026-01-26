@@ -1,5 +1,19 @@
 # @equinor/fusion-imports
 
+## 1.1.10
+
+### Patch Changes
+
+- [#3867](https://github.com/equinor/fusion-framework/pull/3867) [`5a25a5e`](https://github.com/equinor/fusion-framework/commit/5a25a5e6fefc660131b77f58e667b1a05dca0d6b) Thanks [@dependabot](https://github.com/apps/dependabot)! - Internal: Update esbuild dependency from 0.27.0 to 0.27.2
+
+  Includes bug fixes and enhancements:
+
+  - Fix bundler bug with `var` nested inside `if`
+  - Fix minifier bugs with edge cases
+  - Improved switch statement minification
+  - Auto-add `-webkit-mask` CSS prefix
+  - Support for `#/` import path specifiers
+
 ## 1.1.9
 
 ### Patch Changes
