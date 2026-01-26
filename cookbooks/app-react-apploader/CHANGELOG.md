@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.1.2-msal-v5.0
+
+### Patch Changes
+
+- [#3944](https://github.com/equinor/fusion-framework/pull/3944) [`312755f`](https://github.com/equinor/fusion-framework/commit/312755f01c7592329aec847ee4956fe9bf58458f) Thanks [@dependabot](https://github.com/apps/dependabot)! - pre-release msal v5
+
 ## 0.1.1
 
 ### Patch Changes

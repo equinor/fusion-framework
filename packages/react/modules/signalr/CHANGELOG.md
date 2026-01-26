@@ -1,5 +1,15 @@
 # Change Log
 
+## 3.0.36-msal-v5.1
+
+### Patch Changes
+
+- [#3944](https://github.com/equinor/fusion-framework/pull/3944) [`312755f`](https://github.com/equinor/fusion-framework/commit/312755f01c7592329aec847ee4956fe9bf58458f) Thanks [@dependabot](https://github.com/apps/dependabot)! - pre-release msal v5
+
+- Updated dependencies [[`312755f`](https://github.com/equinor/fusion-framework/commit/312755f01c7592329aec847ee4956fe9bf58458f)]:
+  - @equinor/fusion-framework-module-signalr@10.0.0-msal-v5.1
+  - @equinor/fusion-framework-react-module@3.1.14-msal-v5.0
+
 ## 3.0.36-msal-v5.0
 
 ### Patch Changes

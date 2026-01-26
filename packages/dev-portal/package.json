@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework-dev-portal",
-  "version": "1.4.0",
+  "version": "1.4.1-msal-v5.0",
   "description": "",
   "type": "module",
   "module": "./dist/main.js",

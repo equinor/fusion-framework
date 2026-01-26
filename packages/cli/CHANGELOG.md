@@ -1,5 +1,17 @@
 # Change Log
 
+## 13.1.2-msal-v5.1
+
+### Patch Changes
+
+- [#3944](https://github.com/equinor/fusion-framework/pull/3944) [`312755f`](https://github.com/equinor/fusion-framework/commit/312755f01c7592329aec847ee4956fe9bf58458f) Thanks [@dependabot](https://github.com/apps/dependabot)! - pre-release msal v5
+
+- Updated dependencies [[`312755f`](https://github.com/equinor/fusion-framework/commit/312755f01c7592329aec847ee4956fe9bf58458f)]:
+  - @equinor/fusion-framework-dev-portal@1.4.1-msal-v5.0
+  - @equinor/fusion-framework-dev-server@1.1.21-msal-v5.1
+  - @equinor/fusion-framework-module-msal-node@2.0.4-msal-v5.0
+  - @equinor/fusion-imports@1.1.11-msal-v5.0
+
 ## 13.1.2-msal-v5.0
 
 ### Patch Changes
