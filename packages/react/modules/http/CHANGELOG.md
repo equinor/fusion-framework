@@ -1,5 +1,12 @@
 # Change Log
 
+## 10.0.1-msal-v5.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @equinor/fusion-framework-module-http@7.0.7-msal-v5.0
+
 ## 10.0.0
 
 ### Patch Changes

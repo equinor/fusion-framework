@@ -1,5 +1,13 @@
 # @equinor/fusion-framework-react-components-people-provider
 
+## 1.5.26-msal-v5.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @equinor/fusion-framework-react@7.4.20-msal-v5.0
+  - @equinor/fusion-framework-module-services@7.1.7
+
 ## 1.5.25
 
 ### Patch Changes

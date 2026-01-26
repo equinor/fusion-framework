@@ -1,5 +1,13 @@
 # Change Log
 
+## 13.1.2-msal-v5.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @equinor/fusion-framework-dev-portal@1.4.0
+  - @equinor/fusion-framework-dev-server@1.1.21-msal-v5.0
+
 ## 13.1.1
 
 ### Patch Changes

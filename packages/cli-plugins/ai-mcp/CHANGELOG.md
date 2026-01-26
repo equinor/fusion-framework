@@ -1,5 +1,14 @@
 # @equinor/fusion-framework-cli-plugin-ai-mcp
 
+## 1.0.4-msal-v5.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @equinor/fusion-framework-cli@13.1.2-msal-v5.0
+  - @equinor/fusion-framework-module-ai@2.0.1-msal-v5.0
+  - @equinor/fusion-framework-cli-plugin-ai-base@1.0.4-msal-v5.0
+
 ## 1.0.3
 
 ### Patch Changes

@@ -1,5 +1,15 @@
 # @equinor/fusion-framework-cookbook-app-react-feature-flag
 
+## 1.3.64-msal-v5.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @equinor/fusion-framework-module-http@7.0.7-msal-v5.0
+  - @equinor/fusion-framework-react-app@9.0.0-msal-v5.0
+  - @equinor/fusion-framework-cli@13.1.2-msal-v5.0
+  - @equinor/fusion-framework-module-feature-flag@1.1.27
+
 ## 1.3.63
 
 ### Patch Changes

@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework-react-components-people-provider",
-  "version": "1.5.25",
+  "version": "1.5.26-msal-v5.0",
   "description": "",
   "main": "dist/esm/index.js",
   "exports": {

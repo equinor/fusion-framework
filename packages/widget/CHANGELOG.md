@@ -1,5 +1,15 @@
 # Change Log
 
+## 1.1.47-msal-v5.0
+
+### Patch Changes
+
+- Updated dependencies [[`f373ec5`](https://github.com/equinor/fusion-framework/commit/f373ec5573d70a1b23e2b6261c831d3b23a8cf98)]:
+  - @equinor/fusion-framework-module-msal@7.0.0-msal-v5.0
+  - @equinor/fusion-framework@7.4.3-msal-v5.0
+  - @equinor/fusion-framework-module-http@7.0.7-msal-v5.0
+  - @equinor/fusion-framework-module-widget@12.0.4-msal-v5.0
+
 ## 1.1.46
 
 ### Patch Changes

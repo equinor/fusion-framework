@@ -1,5 +1,12 @@
 # portal
 
+## 0.1.23-msal-v5.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @equinor/fusion-framework-cli@13.1.2-msal-v5.0
+
 ## 0.1.22
 
 ### Patch Changes

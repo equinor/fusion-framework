@@ -1,5 +1,12 @@
 # @equinor/fusion-framework-dev-server
 
+## 1.1.21-msal-v5.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @equinor/fusion-framework-vite-plugin-spa@3.1.1-msal-v5.0
+
 ## 1.1.20
 
 ### Patch Changes
