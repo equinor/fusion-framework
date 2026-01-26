@@ -72,5 +72,5 @@
     "@equinor/fusion-framework-widget": "1.1.46",
     "@equinor/fusion-framework-docs": "0.4.11"
   },
-  "changesets": ["msal-v5-upgrade"]
+  "changesets": ["msal-v5-upgrade", "red-places-itch"]
 }

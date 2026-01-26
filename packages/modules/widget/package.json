@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework-module-widget",
-  "version": "12.0.4-msal-v5.0",
+  "version": "12.0.4-msal-v5.1",
   "description": "",
   "main": "dist/esm/index.js",
   "types": "dist/types/index.d.ts",

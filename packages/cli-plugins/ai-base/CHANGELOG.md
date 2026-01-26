@@ -1,5 +1,17 @@
 # @equinor/fusion-framework-cli-plugin-ai-base
 
+## 1.0.4-msal-v5.1
+
+### Patch Changes
+
+- [#3944](https://github.com/equinor/fusion-framework/pull/3944) [`312755f`](https://github.com/equinor/fusion-framework/commit/312755f01c7592329aec847ee4956fe9bf58458f) Thanks [@dependabot](https://github.com/apps/dependabot)! - pre-release msal v5
+
+- Updated dependencies [[`312755f`](https://github.com/equinor/fusion-framework/commit/312755f01c7592329aec847ee4956fe9bf58458f)]:
+  - @equinor/fusion-framework-cli@13.1.2-msal-v5.1
+  - @equinor/fusion-framework-module-ai@2.0.1-msal-v5.1
+  - @equinor/fusion-framework-module@5.0.6-msal-v5.0
+  - @equinor/fusion-imports@1.1.11-msal-v5.0
+
 ## 1.0.4-msal-v5.0
 
 ### Patch Changes
