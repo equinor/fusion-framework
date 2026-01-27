@@ -417,7 +417,7 @@ pnpm fusion-framework-cli dev --manifest ./app.manifest.local.ts --config ./app.
 
 Publish your application to the Fusion app store (registry) for deployment.
 
-This command uploads and tags your app for deployment. If no bundle is provided, it will build your app first before uploading and tagging. When a bundle is provided, the command validates app registration using metadata extracted from the bundle (`metadata.json` and `app-manifest.json`) instead of requiring local `package.json` and manifest files, enabling artifact-based publishing from any directory.
+This command uploads and tags your app for deployment. If no bundle is provided, it will build your app first before uploading and tagging. When a bundle is provided, the command validates app registration using metadata extracted from the bundle (`metadata.json`) instead of requiring local `package.json` and manifest files, enabling artifact-based publishing from any directory.
 
 | Option/Argument    | Description                                                                                         | Default / Example |
 | ------------------ | --------------------------------------------------------------------------------------------------- | ----------------- |
@@ -448,7 +448,7 @@ pnpm fusion-framework-cli publish --tag latest app-bundle.zip
 > - **Without bundle**: Uses local files for app validation, builds the app, then uploads and tags it
 >
 > **Additional Notes**:
-> - **Artifact-based publishing**: When providing a bundle, the command extracts app metadata from `metadata.json` and `app-manifest.json` files within the bundle, enabling publishing from any directory without requiring local project files.
+> - **Artifact-based publishing**: When providing a bundle, the command extracts app metadata from `metadata.json` within the bundle, enabling publishing from any directory without requiring local project files.
 > - The `--tag` option lets you mark the published version (e.g., as `latest` or `preview`) for easier deployment targeting.
 > - Authentication options (`--token`, `--tenantId`, `--clientId`) can be set via CLI flags or environment variables.
 > - If any step fails (build, upload, or tagging), an error will be logged and the process will exit with a non-zero code.

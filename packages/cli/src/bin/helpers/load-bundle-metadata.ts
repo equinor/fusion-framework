@@ -6,6 +6,7 @@ import type AdmZip from 'adm-zip';
  * The shape of the metadata loaded from the bundle zip file.
  */
 export type BundleMetadata = {
+  appKey: string;
   name: string;
   version: string;
 };

@@ -172,7 +172,7 @@ export const command = withAuthOptions(
       log.start('🏷️ Tagging application...');
       const tagResult = await tagApplication({
         tag: options.tag,
-        appKey: uploadResult.name,
+        appKey: uploadResult.appKey,
         version: uploadResult.version,
         log,
         framework,

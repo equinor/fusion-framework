@@ -84,7 +84,7 @@ type UploadApplicationOptions = {
 export const uploadApplication = async (
   opt: UploadApplicationOptions,
 ): Promise<{
-  name: string;
+  appKey: string;
   version: string;
 }> => {
   const { log, framework } = opt;
@@ -94,14 +94,14 @@ export const uploadApplication = async (
     typeof opt.fileOrBundle === 'string' ? new AdmZip(opt.fileOrBundle) : opt.fileOrBundle;
 
   // Resolve the application key from argument or bundle metadata
-  const { name } = opt.appKey
-    ? { name: opt.appKey }
+  const { appKey } = opt.appKey
+    ? { appKey: opt.appKey }
     : await loadMetadata(bundle).catch((error) => {
         log?.error('Failed to resolve manifest:', error);
         process.exit(1);
       });
 
-  log?.info('📦', `Uploading application bundle for ${chalk.bold(name)}`);
+  log?.info('📦', `Uploading application bundle for ${chalk.bold(appKey)}`);
   log?.debug(
     'Bundle contents:',
     (await bundle.getEntries()).map((entry) => entry.entryName),
@@ -123,7 +123,7 @@ export const uploadApplication = async (
     });
 
     // Upload the bundle as a zip file to the app service
-    const response = await appClient.fetch(`/bundles/apps/${name}`, {
+    const response = await appClient.fetch(`/bundles/apps/${appKey}`, {
       method: 'POST',
       body: new Blob([content as Uint8Array<ArrayBuffer>], {
         type: 'application/zip',
@@ -151,7 +151,7 @@ export const uploadApplication = async (
       }
 
       // Handle specific HTTP status codes for user-friendly error messages
-      processUploadError(response, name);
+      processUploadError(response, appKey);
     }
 
     // Log and return the successful response
@@ -160,7 +160,7 @@ export const uploadApplication = async (
     try {
       const result = await (response.json() as Promise<{ version: string }>);
       return {
-        name,
+        appKey,
         version: result.version,
       };
     } catch (error) {
