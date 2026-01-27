@@ -37,8 +37,8 @@
     "directory": "packages/modules/msal-node"
   },
   "dependencies": {
-    "@azure/msal-node": "^3.8.3",
-    "@azure/msal-node-extensions": "^1.5.25",
+    "@azure/msal-node": "^5.0.2",
+    "@azure/msal-node-extensions": "^5.0.2",
     "@equinor/fusion-framework-module": "workspace:^",
     "open": "^11.0.0"
   },

@@ -1,12 +1,35 @@
-import {
-  CryptoProvider,
-  type AuthenticationResult,
-  type PublicClientApplication,
-} from '@azure/msal-node';
+import type { AuthenticationResult, PublicClientApplication } from '@azure/msal-node';
+
+import { createHash, randomBytes } from 'node:crypto';
 
 import openBrowser from 'open';
 import { createAuthServer } from './create-auth-server.js';
 import { AuthProvider } from './AuthProvider.js';
+
+/**
+ * Encodes a byte buffer to Base64 URL encoding (RFC 4648 §5) without padding.
+ *
+ * Used for PKCE code verifier/challenge values (RFC 7636).
+ *
+ * @param buffer - Bytes to encode.
+ * @returns Base64url-encoded string without trailing `=` padding.
+ */
+const base64UrlEncode = (buffer: Buffer): string =>
+  buffer.toString('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '');
+
+/**
+ * Generates PKCE verifier and challenge for the authorization code flow.
+ *
+ * Uses a 32-octet cryptographically random verifier (recommended by RFC 7636)
+ * and derives the S256 challenge as `BASE64URL-ENCODE(SHA256(ASCII(verifier)))`.
+ *
+ * @returns PKCE verifier and S256 challenge.
+ */
+const generatePkceCodes = (): { verifier: string; challenge: string } => {
+  const verifier = base64UrlEncode(randomBytes(32));
+  const challenge = base64UrlEncode(createHash('sha256').update(verifier).digest());
+  return { verifier, challenge };
+};
 
 /**
  * Options for configuring the interactive authentication provider.
@@ -68,8 +91,7 @@ export class AuthProviderInteractive extends AuthProvider {
     // Generate a new PKCE code verifier and challenge
     // This is used to enhance security in the authorization code flow
     // by preventing authorization code interception attacks.
-    const cryptoProvider = new CryptoProvider();
-    const { verifier, challenge } = await cryptoProvider.generatePkceCodes();
+    const { verifier, challenge } = generatePkceCodes();
     const authCodeUrl = await this._client.getAuthCodeUrl({
       scopes,
       redirectUri: `http://localhost:${port}`,
