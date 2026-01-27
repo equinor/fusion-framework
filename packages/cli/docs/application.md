@@ -277,7 +277,7 @@ jobs:
       - name: Download Artifact
       - name: Set Fusion token
       - name: Publish application
-        run: pnpm exec fusion-framework-cli app publish --env ${{ matrix.env }} app-bundle.zip
+        run: pnpm exec fusion-framework-cli app upload --env ${{ matrix.env }} app-bundle.zip
       - step: Upload configuration
         run: pnpm exec fusion-framework-cli app config --publish --env ${{ matrix.env }}
 ```
