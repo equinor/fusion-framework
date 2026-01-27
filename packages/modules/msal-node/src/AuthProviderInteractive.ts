@@ -1,4 +1,4 @@
-import { type AuthenticationResult, type PublicClientApplication } from '@azure/msal-node';
+import type { AuthenticationResult, PublicClientApplication } from '@azure/msal-node';
 
 import { createHash, randomBytes } from 'node:crypto';
 
@@ -15,11 +15,7 @@ import { AuthProvider } from './AuthProvider.js';
  * @returns Base64url-encoded string without trailing `=` padding.
  */
 const base64UrlEncode = (buffer: Buffer): string =>
-  buffer
-    .toString('base64')
-    .replace(/\+/g, '-')
-    .replace(/\//g, '_')
-    .replace(/=+$/g, '');
+  buffer.toString('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '');
 
 /**
  * Generates PKCE verifier and challenge for the authorization code flow.
