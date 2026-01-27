@@ -82,4 +82,13 @@ export class AppConfig<TEnvironment extends ConfigEnvironment = ConfigEnvironmen
   getEndpoint(key: string): ConfigEndPoint | undefined {
     return this.#endpoints[key];
   }
+
+  /**
+   * Retrieve all configuration endpoints associated with the app.
+   *
+   * @returns The configuration endpoints found.
+   */
+  getEndpoints(): Record<string, ConfigEndPoint> {
+    return this.#endpoints;
+  }
 }
