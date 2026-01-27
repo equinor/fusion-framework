@@ -47,14 +47,12 @@
     "@equinor/fusion-framework-module-http": "workspace:*",
     "@equinor/fusion-framework-module-msal": "workspace:*",
     "@equinor/fusion-framework-module-service-discovery": "workspace:*",
-    "@equinor/fusion-framework-module-telemetry": "workspace:*",
-    "lodash.mergewith": "^4.6.2"
+    "@equinor/fusion-framework-module-telemetry": "workspace:*"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^29.0.0",
     "@rollup/plugin-node-resolve": "^16.0.1",
     "@rollup/plugin-typescript": "^12.1.2",
-    "@types/lodash.mergewith": "^4.6.2",
     "rollup": "^4.39.0",
     "typescript": "^5.8.2",
     "vite": "^7.1.12"

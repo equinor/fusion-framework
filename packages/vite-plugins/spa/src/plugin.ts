@@ -2,8 +2,6 @@ import { normalizePath, type Plugin } from 'vite';
 
 import { fileURLToPath } from 'node:url';
 
-import mergeWith from 'lodash.mergewith';
-
 import defaultTemplate from './html/index.html.js';
 
 import { objectToEnv } from './util/object-to-env.js';
@@ -74,7 +72,7 @@ export const plugin = <TEnv extends TemplateEnv = TemplateEnv>(
 
       log?.debug('plugin loaded environment\n', pluginEnv);
 
-      const env = mergeWith(pluginEnv, loadedEnv);
+      const env = { ...pluginEnv, ...loadedEnv };
 
       log?.debug('plugin environment\n', env);
 

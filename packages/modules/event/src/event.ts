@@ -1,8 +1,6 @@
 import type { ModuleInstance } from '@equinor/fusion-framework-module';
 import type { IEventModuleProvider } from './provider';
 
-import cloneDeep from 'lodash.clonedeep';
-
 export declare interface FrameworkEventMap {
   onModulesLoaded: FrameworkEvent<FrameworkEventInit<ModuleInstance, IEventModuleProvider>>;
 }
@@ -159,7 +157,7 @@ export class FrameworkEvent<
     args: TInit,
   ) {
     this.#detail = args.detail;
-    this.#originalDetail = cloneDeep(args.detail);
+    this.#originalDetail = structuredClone(args.detail);
     this.#mutableDetails = !!args.mutableDetails;
     this.#source = args.source;
     this.#cancelable = !!args.cancelable;
