@@ -1,25 +1,6 @@
 import type { ModuleInstance } from '@equinor/fusion-framework-module';
 import type { IEventModuleProvider } from './provider';
 
-const cloneEventDetail = <T>(value: T): T => {
-  if (typeof globalThis.structuredClone !== 'function') {
-    throw new Error(
-      'Failed to clone event detail: structuredClone is not available in this runtime. ' +
-        'Provide cloneable event details or use a runtime/polyfill that supports structuredClone.',
-    );
-  }
-
-  try {
-    return globalThis.structuredClone(value);
-  } catch (error) {
-    const message = error instanceof Error ? error.message : String(error);
-    throw new Error(
-      `Failed to clone event detail: ${message}. ` +
-        'Provide cloneable event details (no functions, DOM nodes, or unsupported class instances).',
-    );
-  }
-};
-
 export declare interface FrameworkEventMap {
   onModulesLoaded: FrameworkEvent<FrameworkEventInit<ModuleInstance, IEventModuleProvider>>;
 }
@@ -176,7 +157,7 @@ export class FrameworkEvent<
     args: TInit,
   ) {
     this.#detail = args.detail;
-    this.#originalDetail = cloneEventDetail(args.detail);
+    this.#originalDetail = structuredClone(args.detail);
     this.#mutableDetails = !!args.mutableDetails;
     this.#source = args.source;
     this.#cancelable = !!args.cancelable;
