@@ -13,21 +13,34 @@ import { version as latestVersionString } from '../version';
  * @param version - The version string or SemVer object to map
  * @returns The corresponding MsalModuleVersion enum value
  *
+ * @remarks
+ * Version mapping logic:
+ * - Versions <4.0.0 (including 2.x) → MsalModuleVersion.V2
+ * - Versions 4.x → MsalModuleVersion.V4
+ * - Versions 5.x → MsalModuleVersion.V5
+ * - Versions >=6.0.0 → MsalModuleVersion.V5
+ *
  * @example
  * ```typescript
- * mapVersionToEnumVersion('2.1.0') // returns MsalModuleVersion.V2
- * mapVersionToEnumVersion('7.0.0') // returns MsalModuleVersion.V4
+ * mapVersionToEnumVersion('2.39.0') // returns MsalModuleVersion.V2
+ * mapVersionToEnumVersion('4.28.1') // returns MsalModuleVersion.V4
+ * mapVersionToEnumVersion('5.0.2') // returns MsalModuleVersion.V5
+ * mapVersionToEnumVersion('7.0.0') // returns MsalModuleVersion.V5
  * ```
  */
 function mapVersionToEnumVersion(version: string | SemVer): MsalModuleVersion {
+  console.log('Resolving version:', version);
   const coercedVersion = semver.coerce(version);
   if (!coercedVersion) {
     throw new Error(`Invalid version: ${version}`);
   }
-  if (semver.satisfies(coercedVersion, '<6.0.0')) {
+  if (semver.satisfies(coercedVersion, '<4.0.0')) {
     return MsalModuleVersion.V2;
   }
-  return MsalModuleVersion.V4;
+  if (semver.satisfies(coercedVersion, '<7.0.0')) {
+    return MsalModuleVersion.V4;
+  }
+  return MsalModuleVersion.V5;
 }
 
 /**

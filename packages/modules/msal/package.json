@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework-module-msal",
-  "version": "6.0.5",
+  "version": "7.0.0-msal-v5.1",
   "description": "Microsoft Authentication Library (MSAL) integration module for Fusion Framework",
   "main": "dist/esm/index.js",
   "types": "dist/types/index.d.ts",
@@ -12,6 +12,10 @@
     "./v2": {
       "import": "./dist/esm/v2/index.js",
       "types": "./dist/types/v2/index.d.ts"
+    },
+    "./v4": {
+      "import": "./dist/esm/v4/index.js",
+      "types": "./dist/types/v4/index.d.ts"
     }
   },
   "typesVersions": {
@@ -21,6 +25,9 @@
       ],
       "v2": [
         "dist/types/v2/index.d.ts"
+      ],
+      "v4": [
+        "dist/types/v4/index.d.ts"
       ]
     }
   },
@@ -41,7 +48,7 @@
     "directory": "packages/modules/msal"
   },
   "dependencies": {
-    "@azure/msal-browser": "^2.21.0"
+    "@azure/msal-browser": "^5.0.2"
   },
   "devDependencies": {
     "@equinor/fusion-framework-module": "workspace:^",

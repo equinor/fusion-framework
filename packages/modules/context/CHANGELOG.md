@@ -1,5 +1,15 @@
 # Change Log
 
+## 7.0.3-msal-v5.0
+
+### Patch Changes
+
+- [#3944](https://github.com/equinor/fusion-framework/pull/3944) [`312755f`](https://github.com/equinor/fusion-framework/commit/312755f01c7592329aec847ee4956fe9bf58458f) Thanks [@dependabot](https://github.com/apps/dependabot)! - pre-release msal v5
+
+- Updated dependencies [[`312755f`](https://github.com/equinor/fusion-framework/commit/312755f01c7592329aec847ee4956fe9bf58458f)]:
+  - @equinor/fusion-framework-module@5.0.6-msal-v5.0
+  - @equinor/fusion-query@6.0.4-msal-v5.0
+
 ## 7.0.2
 
 ### Patch Changes
