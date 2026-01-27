@@ -60,9 +60,10 @@ export const command = withAuthOptions(
       [
         '',
         'WHAT THIS COMMAND DOES:',
-        '  1. Builds your application (if no bundle provided)',
-        '  2. Uploads the bundle to Fusion app registry',
-        '  3. Tags the uploaded version for deployment',
+        '  1. Validates app registration (using bundle metadata if provided, or local files)',
+        '  2. Builds your application (if no bundle provided)',
+        '  3. Uploads the bundle to Fusion app registry',
+        '  4. Tags the uploaded version for deployment',
         '',
         'If no manifest is provided, a default app.manifest(.$ENV)?.[ts|js|json] is used from the current directory.',
         'example: `ffc app publish --env prod` will search for `app.manifest.prod.ts` then fallback to `app.manifest.ts`',
@@ -78,6 +79,10 @@ export const command = withAuthOptions(
         '  - Ensure your app is registered in Fusion App Admin',
         '  - Use `ffc app check` first to verify registration status',
         '  - Start with a test environment before production',
+        '',
+        'ARTIFACT-BASED PUBLISHING:',
+        '  When providing a bundle, app validation uses metadata from the bundle instead',
+        '  of local files, enabling publishing from any directory (ideal for CI/CD).',
         '',
         'Examples:',
         '  $ ffc app publish',
@@ -110,6 +115,7 @@ export const command = withAuthOptions(
         log,
         environment: options.env,
         auth: 'token' in options ? { token: options.token } : options,
+        bundle: typeof bundle === 'string' ? bundle : undefined,
       });
       if (!appExists) {
         log.error('😢 App is not registered / deleted in app store');

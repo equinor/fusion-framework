@@ -1,4 +1,5 @@
 import type { FetchRequest } from '@equinor/fusion-framework-module-http/client';
+import AdmZip from 'adm-zip';
 
 import {
   initializeFramework,
@@ -10,6 +11,7 @@ import { defaultHeaders, type ConsoleLogger } from './utils/index.js';
 
 import { resolveProjectPackage } from './helpers/resolve-project-package.js';
 import { resolveAppManifest } from './helpers/resolve-app-manifest.js';
+import { resolveAppFromArtifact } from './helpers/resolve-app-from-artifact.js';
 
 /**
  * Options for checking application registration in the app store.
@@ -28,28 +30,64 @@ type AppCheckOptions = {
    * Optional logger for outputting progress and debug information.
    */
   log?: ConsoleLogger;
+  /**
+   * Optional path to the app bundle for artifact-based validation.
+   * When provided, the function will extract app metadata from the bundle
+   * instead of using the local package.json file.
+   */
+  bundle?: string;
 };
 
 /**
  * Checks if the application is registered in the app store.
  *
- * Resolves the app package and manifest, initializes the Fusion Framework, and queries the app store.
+ * This function can operate in two modes:
+ * 1. Traditional mode: Resolves the app package and manifest from local files
+ * 2. Artifact mode: Extracts app metadata from a provided bundle file
  *
- * @param options - Options for environment, authentication, and logging.
- * @returns A promise that resolves when the check is complete.
+ * The artifact mode enables publishing applications from any directory in CI/CD
+ * pipelines without requiring the source code directory structure.
+ *
+ * @param options - Options for environment, authentication, logging, and optional bundle path.
+ * @returns A promise that resolves to true if the app is registered, false otherwise.
  * @public
  */
-export const checkApp = async (options: AppCheckOptions) => {
-  const { log } = options;
+export const checkApp = async (options: AppCheckOptions): Promise<boolean> => {
+  const { log, bundle } = options;
 
-  // Resolve the application's package.json for metadata and dependencies
-  const pkg = await resolveProjectPackage(log);
+  let appKey: string;
 
-  // Resolve the application manifest for the build/production mode
-  // Manifest contains the appKey and other app metadata
-  const manifest = await resolveAppManifest({ command: 'build', mode: 'production' }, pkg, {
-    log,
-  });
+  if (bundle) {
+    // Artifact-based validation: extract app metadata from bundle
+    try {
+      log?.info('🗜️', 'Using artifact-based validation from bundle:', bundle);
+      const bundleZip = new AdmZip(bundle);
+      const appInfo = await resolveAppFromArtifact(bundleZip);
+      appKey = appInfo.appKey;
+      log?.info('📦', `Resolved app key "${appKey}" from bundle artifact`);
+    } catch (error) {
+      log?.fail(
+        '🚫',
+        'Failed to resolve app information from bundle:',
+        error instanceof Error ? error.message : String(error),
+      );
+      return false;
+    }
+  } else {
+    // Traditional validation: use local package.json and manifest files
+    log?.info('📁', 'Using traditional validation from local project files');
+
+    // Resolve the application's package.json for metadata and dependencies
+    const pkg = await resolveProjectPackage(log);
+
+    // Resolve the application manifest for the build/production mode
+    // Manifest contains the appKey and other app metadata
+    const manifest = await resolveAppManifest({ command: 'build', mode: 'production' }, pkg, {
+      log,
+    });
+
+    appKey = manifest.appKey;
+  }
 
   log?.start('Initializing Fusion Framework...');
   // Initialize the Fusion Framework with the provided environment and authentication
@@ -71,25 +109,25 @@ export const checkApp = async (options: AppCheckOptions) => {
 
   try {
     // Start the check for app registration in the app store
-    log?.info('Checking if', manifest.appKey, 'is registered in app store');
+    log?.info('Checking if', appKey, 'is registered in app store');
     // Send a HEAD request to check if the app is registered
-    const response = await appClient.fetch(`/apps/${manifest.appKey}`, {
+    const response = await appClient.fetch(`/apps/${appKey}`, {
       method: 'HEAD',
       headers: defaultHeaders,
     });
     // If the response is OK, the app is registered
     if (response.ok) {
-      log?.succeed('😃', `Application ${manifest.appKey} is registered in app store`);
+      log?.succeed('😃', `Application ${appKey} is registered in app store`);
       return true;
     }
     // If the response is 404, the app is not registered
     if (response.status === 404) {
-      log?.fail('😞', `Application ${manifest.appKey} is not registered in app store`);
+      log?.fail('😞', `Application ${appKey} is not registered in app store`);
       return false;
     }
     // If the response is 410 the app is deleted
     if (response.status === 410) {
-      log?.fail('😞', `Application ${manifest.appKey} is deleted from app store`);
+      log?.fail('😞', `Application ${appKey} is deleted from app store`);
       return false;
     }
     // Any other status is unexpected and should be handled as an error
