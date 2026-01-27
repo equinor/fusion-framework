@@ -17,7 +17,7 @@ The CLI publish command now supports validating applications using metadata extr
 fusion-framework-cli app publish
 
 # New artifact-based validation  
-fusion-framework-cli app publish ./my-app.zip
+fusion-framework-cli app publish ./app-bundle.zip
 ```
 
 This resolves the limitation where applications could only be published from directories containing the source package.json, enabling more flexible CI/CD deployment scenarios.
