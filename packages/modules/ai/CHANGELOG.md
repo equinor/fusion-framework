@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-module-ai
 
+## 2.0.1
+
+### Patch Changes
+
+- [#3960](https://github.com/equinor/fusion-framework/pull/3960) [`2eb7f69`](https://github.com/equinor/fusion-framework/commit/2eb7f6932f6becf965f7773ef065a0ee9f0b80bc) Thanks [@dependabot](https://github.com/apps/dependabot)! - Internal: Updated LangChain dependencies to v1.x (@langchain/community 0.3.59→1.1.8, @langchain/core 1.1.16→1.1.17, langchain 1.2.11→1.2.14) - compatibility update with security fixes
+
 ## 2.0.0
 
 ### Major Changes

@@ -1,5 +1,40 @@
 # Change Log
 
+## 13.2.0
+
+### Minor Changes
+
+- [`5121c48`](https://github.com/equinor/fusion-framework/commit/5121c48020accfa0b91415ddafb61ea82b3b24b6) Thanks [@Noggling](https://github.com/Noggling)! - Add support for artifact-based app validation in publish command.
+
+  The CLI publish command now supports validating applications using metadata extracted from bundle artifacts instead of requiring local package.json and manifest files. This enables publishing applications from any directory in CI/CD pipelines without maintaining the full project structure.
+
+  **New capabilities:**
+
+  - Extract app information from bundle's `metadata.json`
+  - Validate app registration using artifact metadata when bundle path is provided
+  - Maintain backward compatibility with existing package.json-based validation
+
+  **Usage:**
+
+  ```bash
+  # Traditional validation (unchanged)
+  fusion-framework-cli app publish
+
+  # New artifact-based validation
+  fusion-framework-cli app publish ./app-bundle.zip
+  ```
+
+  This resolves the limitation where applications could only be published from directories containing the source package.json, enabling more flexible CI/CD deployment scenarios.
+
+### Patch Changes
+
+- [#3961](https://github.com/equinor/fusion-framework/pull/3961) [`343f5f9`](https://github.com/equinor/fusion-framework/commit/343f5f9cc0acbd8e69b62cc73dda577c9015a620) Thanks [@asbjornhaland](https://github.com/asbjornhaland)! - Update docs explain the possibility to override Service Discovery urls in app-config
+
+- Updated dependencies [[`46a1c71`](https://github.com/equinor/fusion-framework/commit/46a1c710d9cd2ed20946932ceab2a5e8c0fb8a2b)]:
+  - @equinor/fusion-framework-module-msal-node@3.0.0
+  - @equinor/fusion-framework-dev-portal@1.4.0
+  - @equinor/fusion-framework-dev-server@1.1.21
+
 ## 13.1.1
 
 ### Patch Changes

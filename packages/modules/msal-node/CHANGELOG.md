@@ -1,5 +1,13 @@
 # @equinor/fusion-framework-module-msal-node
 
+## 3.0.0
+
+### Major Changes
+
+- [#3929](https://github.com/equinor/fusion-framework/pull/3929) [`46a1c71`](https://github.com/equinor/fusion-framework/commit/46a1c710d9cd2ed20946932ceab2a5e8c0fb8a2b) Thanks [@dependabot](https://github.com/apps/dependabot)! - Require Node.js >= 20 for `@equinor/fusion-framework-module-msal-node` due to upgrading `@azure/msal-node` and `@azure/msal-node-extensions` to v5.
+
+  Migration: upgrade runtimes to Node.js 20+.
+
 ## 2.0.3
 
 ### Patch Changes

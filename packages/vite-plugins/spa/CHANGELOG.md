@@ -1,5 +1,14 @@
 # @equinor/fusion-framework-vite-plugin-spa
 
+## 3.1.1
+
+### Patch Changes
+
+- [#3963](https://github.com/equinor/fusion-framework/pull/3963) [`122752b`](https://github.com/equinor/fusion-framework/commit/122752b075113b206583ec2c46240997162329b8) Thanks [@odinr](https://github.com/odinr)! - Remove `lodash.mergewith` from the SPA Vite plugin by switching environment merging to a simple object merge where loaded environment values override plugin defaults.
+
+  Resolves: https://github.com/equinor/fusion-framework/security/dependabot/188
+  Resolves: https://github.com/equinor/fusion-framework/security/dependabot/189
+
 ## 3.1.0
 
 ### Minor Changes

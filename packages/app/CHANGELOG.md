@@ -1,5 +1,30 @@
 # Change Log
 
+## 10.3.0
+
+### Minor Changes
+
+- [#3961](https://github.com/equinor/fusion-framework/pull/3961) [`343f5f9`](https://github.com/equinor/fusion-framework/commit/343f5f9cc0acbd8e69b62cc73dda577c9015a620) Thanks [@asbjornhaland](https://github.com/asbjornhaland)! - Add possibility to configure and override service-discovery in AppConfig.
+
+  Allows developers to define overrides in `app.config.[ENV].ts`:
+
+  ```typescript
+  export default defineAppConfig(() => ({
+    endpoints: {
+      admin: {
+        url: "MY_OVERRIDDEN_URL", // e.g. an url to a PR-environment
+        scopes: [],
+      },
+    },
+  }));
+  ```
+
+### Patch Changes
+
+- Updated dependencies [[`343f5f9`](https://github.com/equinor/fusion-framework/commit/343f5f9cc0acbd8e69b62cc73dda577c9015a620), [`122752b`](https://github.com/equinor/fusion-framework/commit/122752b075113b206583ec2c46240997162329b8)]:
+  - @equinor/fusion-framework-module-app@7.3.0
+  - @equinor/fusion-framework-module-event@4.4.1
+
 ## 10.2.1
 
 ### Patch Changes
