@@ -78,6 +78,7 @@ export const bundleApp = async (options: BundleAppOptions) => {
     content: {
       'app-manifest.json': JSON.stringify(appManifest.build, null, 2),
       'metadata.json': JSON.stringify({
+        appKey: appManifest.appKey,
         name: appManifest.appKey,
         version: appManifest.build.version,
       }),

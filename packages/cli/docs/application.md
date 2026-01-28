@@ -239,6 +239,9 @@ Continuous Integration and Continuous Deployment (CI/CD) automate the process of
 
 A recommended approach for CI/CD with Fusion Framework apps is to build your application once and reuse the generated artifact for deployments to multiple environments. This ensures consistency across environments and speeds up your pipeline by avoiding redundant builds.
 
+**Artifact-based Publishing:**  
+The CLI now supports publishing directly from build artifacts without requiring the original source code structure. This enables true "build once, deploy many" workflows where the same bundle can be deployed from any directory, including CI/CD agents that only have access to the built artifact.
+
 **Workflow Overview:**
 
 1. **Build Stage:**
@@ -414,11 +417,11 @@ pnpm fusion-framework-cli dev --manifest ./app.manifest.local.ts --config ./app.
 
 Publish your application to the Fusion app store (registry) for deployment.
 
-This command uploads and tags your app for deployment. If no bundle is provided, it will build your app first before uploading and tagging.
+This command uploads and tags your app for deployment. If no bundle is provided, it will build your app first before uploading and tagging. When a bundle is provided, the command validates app registration using metadata extracted from the bundle (`metadata.json`) instead of requiring local `package.json` and manifest files, enabling artifact-based publishing from any directory.
 
 | Option/Argument    | Description                                                                                         | Default / Example |
 | ------------------ | --------------------------------------------------------------------------------------------------- | ----------------- |
-| `[bundle]`         | Path to the app bundle to upload. If omitted, the CLI will build and bundle your app automatically. |                   |
+| `[bundle]`         | Path to the app bundle to upload. If omitted, the CLI will build and bundle your app automatically. When provided, app validation uses metadata from the bundle instead of local files. |                   |
 | `-e`, `--env`      | Target environment for deployment (e.g., `ci`, `fqa`, `fprd`).                                      |                   |
 | `-m`, `--manifest` | Manifest file to use for bundling (e.g., `app.manifest.ts`) (optional).                             | `app.manifest.ts` |
 | `-t`, `--tag`      | Tag to apply to the published app (`latest` \| `preview`).                                          | `latest`          |
@@ -441,10 +444,11 @@ pnpm fusion-framework-cli publish --tag latest app-bundle.zip
 
 > [!IMPORTANT]
 > **Building Behavior**: The publish command behaves differently based on whether you provide a bundle:
-> - **With bundle**: Uploads and tags the provided bundle (no building)
-> - **Without bundle**: Builds, uploads, and tags your app
+> - **With bundle**: Uses bundle metadata for app validation, then uploads and tags the provided bundle (no building required)
+> - **Without bundle**: Uses local files for app validation, builds the app, then uploads and tags it
 >
 > **Additional Notes**:
+> - **Artifact-based publishing**: When providing a bundle, the command extracts app metadata from `metadata.json` within the bundle, enabling publishing from any directory without requiring local project files.
 > - The `--tag` option lets you mark the published version (e.g., as `latest` or `preview`) for easier deployment targeting.
 > - Authentication options (`--token`, `--tenantId`, `--clientId`) can be set via CLI flags or environment variables.
 > - If any step fails (build, upload, or tagging), an error will be logged and the process will exit with a non-zero code.
