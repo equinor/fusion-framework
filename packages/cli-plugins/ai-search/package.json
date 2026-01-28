@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework-cli-plugin-ai-search",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "AI search plugin for Fusion Framework CLI providing vector store search capabilities",
   "main": "dist/esm/index.js",
   "type": "module",

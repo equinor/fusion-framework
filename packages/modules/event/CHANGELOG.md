@@ -1,5 +1,14 @@
 # Change Log
 
+## 4.4.1
+
+### Patch Changes
+
+- [#3963](https://github.com/equinor/fusion-framework/pull/3963) [`122752b`](https://github.com/equinor/fusion-framework/commit/122752b075113b206583ec2c46240997162329b8) Thanks [@odinr](https://github.com/odinr)! - Remove `lodash.clonedeep` from the event module by using `structuredClone` for capturing `FrameworkEvent.originalDetail`.
+
+  Resolves: https://github.com/equinor/fusion-framework/security/dependabot/188
+  Resolves: https://github.com/equinor/fusion-framework/security/dependabot/189
+
 ## 4.4.0
 
 ### Minor Changes

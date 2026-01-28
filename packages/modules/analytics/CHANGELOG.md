@@ -1,5 +1,15 @@
 # @equinor/fusion-framework-module-analytics
 
+## 0.2.2
+
+### Patch Changes
+
+- [#3948](https://github.com/equinor/fusion-framework/pull/3948) [`62be8e9`](https://github.com/equinor/fusion-framework/commit/62be8e95e752e0237a15834facf3c01c7aaabc11) Thanks [@dependabot](https://github.com/apps/dependabot)! - Internal: update OpenTelemetry dependencies to latest versions (api-logs, exporter-logs-otlp-http, otlp-exporter-base, otlp-transformer, resources, sdk-logs). Includes bug fixes for circular reference handling in logs and improved error retry logic. No public API changes.
+
+- Updated dependencies [[`343f5f9`](https://github.com/equinor/fusion-framework/commit/343f5f9cc0acbd8e69b62cc73dda577c9015a620), [`122752b`](https://github.com/equinor/fusion-framework/commit/122752b075113b206583ec2c46240997162329b8)]:
+  - @equinor/fusion-framework-module-app@7.3.0
+  - @equinor/fusion-framework-module-event@4.4.1
+
 ## 0.2.1
 
 ### Patch Changes
