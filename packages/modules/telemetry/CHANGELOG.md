@@ -1,5 +1,16 @@
 # Change Log
 
+## 4.6.2-next.0
+
+### Patch Changes
+
+- [#3820](https://github.com/equinor/fusion-framework/pull/3820) [`c787fc6`](https://github.com/equinor/fusion-framework/commit/c787fc6b6db2b2837ec863125220feffca7240ab) Thanks [@odinr](https://github.com/odinr)! - relase next
+
+- Updated dependencies [[`c787fc6`](https://github.com/equinor/fusion-framework/commit/c787fc6b6db2b2837ec863125220feffca7240ab)]:
+  - @equinor/fusion-observable@9.0.0-next.1
+  - @equinor/fusion-framework-module-event@4.4.2-next.0
+  - @equinor/fusion-framework-module@5.0.6-next.1
+
 ## 4.6.1
 
 ### Patch Changes
@@ -15,7 +26,6 @@
 - [#3777](https://github.com/equinor/fusion-framework/pull/3777) [`78f3679`](https://github.com/equinor/fusion-framework/commit/78f3679b09716f69b3093edcff9f06ad605092c3) Thanks [@odinr](https://github.com/odinr)! - Refactor telemetry filtering API to use a unified `setFilter` method instead of separate `setAdapterFilter` and `setRelayFilter` methods.
 
   **Changes**
-
   - Added unified `setFilter()` method that accepts a filter object
   - Config changed from `adapterFilter`/`relayFilter` to a single `filter` object
   - The new API provides a cleaner, more cohesive interface for configuring both adapter and relay filters together
@@ -36,7 +46,6 @@
 - [#3775](https://github.com/equinor/fusion-framework/pull/3775) [`1827381`](https://github.com/equinor/fusion-framework/commit/182738177dbbf5baaf9732ef3b540b4df80932f6) Thanks [@odinr](https://github.com/odinr)! - Add filtering options for telemetry messages passed from provider to adapters and parent providers.
 
   **New Features**
-
   - **`setAdapterFilter`**: Filter which telemetry items are passed to adapters
   - **`setRelayFilter`**: Filter which telemetry items are relayed to parent providers
 
@@ -52,7 +61,7 @@
       builder.setRelayFilter(
         (item) =>
           item.type === TelemetryType.Exception ||
-          item.scope?.includes("critical")
+          item.scope?.includes("critical"),
       );
     },
   });
@@ -61,7 +70,6 @@
   **Hierarchical Filtering**
 
   This feature enables filtering at each level of hierarchical telemetry setups (bootstrap → portal → apps), allowing:
-
   - Portal instances to filter which events reach bootstrap adapters
   - App instances to filter which events reach portal providers
   - Performance optimization by filtering unnecessary telemetry before processing
@@ -88,7 +96,6 @@
 ### Patch Changes
 
 - [#3680](https://github.com/equinor/fusion-framework/pull/3680) [`7ef76e3`](https://github.com/equinor/fusion-framework/commit/7ef76e36a854f01d1cd7bc1c40b1ca0172a01fc3) Thanks [@odinr](https://github.com/odinr)! - Fix incorrect TSDoc examples in telemetry module documentation.
-
   - Remove non-existent `setFilter` method references from TelemetryConfigurator documentation
   - Fix exception examples to include required `exception` property
   - Correct metric examples to have `value` at top level instead of in properties
@@ -110,13 +117,11 @@
   The new method allows adapters to be configured using callback functions that can access module instances through `requireInstance`, enabling more flexible and powerful adapter setup patterns.
 
   **Breaking Changes:**
-
   - `setAdapter()` method now requires an explicit identifier parameter: `builder.setAdapter('adapter-name', adapter)`
 
   **Note:** While this introduces breaking changes to the configurator API, we're treating this as a minor version bump since the telemetry module is still in active development and not yet widely adopted by consumers.
 
   **Changes:**
-
   - Fix RxJS observable chain in TelemetryConfigurator to properly resolve async adapters
   - Optimize adapter accumulation using mutable accumulator pattern for better performance with many adapters
   - Fix potential memory leaks by using proper shareReplay configuration with refCount: true
@@ -143,7 +148,6 @@
 ### Minor Changes
 
 - [#3488](https://github.com/equinor/fusion-framework/pull/3488) [`4e78565`](https://github.com/equinor/fusion-framework/commit/4e7856590f73fee840b065a0e4d89962e167ed9e) Thanks [@odinr](https://github.com/odinr)! - Add new telemetry module for collecting and sending telemetry data.
-
   - Add `TelemetryModule` with configurable adapters
   - Implement Application Insights and Console adapters
   - Add `Measurement` class for telemetry data collection
@@ -160,7 +164,6 @@
 - [#3500](https://github.com/equinor/fusion-framework/pull/3500) [`0bad642`](https://github.com/equinor/fusion-framework/commit/0bad642205a7f780dcb6685243102b65b3755fa2) Thanks [@dependabot](https://github.com/apps/dependabot)! - Update zod dependency from ^3.25.75 to ^4.1.11 and fix compatibility issues with zod v4's stricter record type requirements.
 
 - [#3490](https://github.com/equinor/fusion-framework/pull/3490) [`45954e5`](https://github.com/equinor/fusion-framework/commit/45954e5db471a2faa24e88e41fc6d6c18817d6d1) Thanks [@odinr](https://github.com/odinr)! - Add utility for mapping module configurator events to telemetry items.
-
   - Add `mapConfiguratorEvents` utility function to convert `ModuleEvent` to `TelemetryItem`
   - Map `ModuleEventLevel` to `TelemetryLevel` appropriately (Error=1, Warning=2, Information=3, Debug=4)
   - Include event metadata (timing, errors, properties) in telemetry data
@@ -193,14 +196,12 @@
 - [#3169](https://github.com/equinor/fusion-framework/pull/3169) [`1492d5d`](https://github.com/equinor/fusion-framework/commit/1492d5d8473e55672783a8a8adc18c9e73dd922c) Thanks [@dependabot](https://github.com/apps/dependabot)! - Updated @microsoft/applicationinsights-web from 3.3.8 to 3.3.9
 
   ### Changes
-
   - Fixed autoCaptureHandler issue that caused click events not to be auto-captured
   - Updated SDK Loader to avoid CodeQL scanning issues
   - Fixed HTML event capturing in Click Analytics
   - Export ICorrelationConfig interface from dependencies extension
 
   ### Links
-
   - [GitHub releases](https://github.com/microsoft/ApplicationInsights-JS/releases/tag/3.3.9)
   - [Changelog](https://github.com/microsoft/ApplicationInsights-JS/blob/main/RELEASES.md)
 
@@ -318,7 +319,6 @@
 - [#2320](https://github.com/equinor/fusion-framework/pull/2320) [`1dd85f3`](https://github.com/equinor/fusion-framework/commit/1dd85f3a408a73df556d1812a5f280945cc100ee) Thanks [@odinr](https://github.com/odinr)! - Removed the `removeComments` option from the `tsconfig.base.json` file.
 
   Removing the `removeComments` option allows TypeScript to preserve comments in the compiled JavaScript output. This can be beneficial for several reasons:
-
   1. Improved debugging: Preserved comments can help developers understand the code better during debugging sessions.
   2. Documentation: JSDoc comments and other important code documentation will be retained in the compiled output.
   3. Source map accuracy: Keeping comments can lead to more accurate source maps, which is crucial for debugging and error tracking.
@@ -469,7 +469,6 @@
 ### Patch Changes
 
 - [#905](https://github.com/equinor/fusion-framework/pull/905) [`a7858a1c`](https://github.com/equinor/fusion-framework/commit/a7858a1c01542e2dc94370709f122b4b99c3219c) Thanks [@odinr](https://github.com/odinr)! - **🚧 Chore: dedupe packages**
-
   - align all versions of typescript
   - update types to build
     - a couple of typecasts did not [satisfies](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-0.html#satisfies-support-in-jsdoc) and was recasted as `unknwon`, marked with `TODO`, should be fixed in future

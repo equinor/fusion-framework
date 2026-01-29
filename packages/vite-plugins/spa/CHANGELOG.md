@@ -1,5 +1,18 @@
 # @equinor/fusion-framework-vite-plugin-spa
 
+## 3.1.2-next.0
+
+### Patch Changes
+
+- [#3820](https://github.com/equinor/fusion-framework/pull/3820) [`c787fc6`](https://github.com/equinor/fusion-framework/commit/c787fc6b6db2b2837ec863125220feffca7240ab) Thanks [@odinr](https://github.com/odinr)! - relase next
+
+- Updated dependencies [[`c787fc6`](https://github.com/equinor/fusion-framework/commit/c787fc6b6db2b2837ec863125220feffca7240ab)]:
+  - @equinor/fusion-framework-module-telemetry@4.6.2-next.0
+  - @equinor/fusion-framework-module-http@7.0.7-next.0
+  - @equinor/fusion-framework-module@5.0.6-next.1
+  - @equinor/fusion-framework-module-msal@6.0.6-next.0
+  - @equinor/fusion-framework-module-service-discovery@9.0.6-next.0
+
 ## 3.1.1
 
 ### Patch Changes
@@ -16,7 +29,6 @@
 - [#3922](https://github.com/equinor/fusion-framework/pull/3922) [`d34ebd8`](https://github.com/equinor/fusion-framework/commit/d34ebd82c93acabc88f88e44a725f084af3af5ec) Thanks [@odinr](https://github.com/odinr)! - Enable AG Grid Enterprise license injection for the dev-portal by setting a global window key produced from the SPA template environment. The portal reads `window.FUSION_AG_GRID_KEY` to configure the AG Grid module and silence license warnings when a valid key is present. CLI docs now mention the license key setup.
 
   **Usage:**
-
   - In your SPA environment file, set `FUSION_SPA_AG_GRID_KEY=your-license-key-here`.
   - The SPA HTML template injects `window.FUSION_AG_GRID_KEY` before bootstrap runs, and the dev-portal picks it up automatically.
 
@@ -39,7 +51,6 @@
 - [#3932](https://github.com/equinor/fusion-framework/pull/3932) [`15aaa87`](https://github.com/equinor/fusion-framework/commit/15aaa87e6a8b391c0672db0dcdca4c1cac3b50a7) Thanks [@dependabot](https://github.com/apps/dependabot)! - Internal: update rollup build dependency from 4.52.5 to 4.55.2.
 
   This update includes:
-
   - Improved circular dependency handling for manual chunks
   - Enhanced tree-shaking for Symbol properties
   - Performance improvements via variable name caching
@@ -96,7 +107,6 @@
 ### Patch Changes
 
 - [#3714](https://github.com/equinor/fusion-framework/pull/3714) [`11fe961`](https://github.com/equinor/fusion-framework/commit/11fe961794e4960ccb987bc320268cc9b263f1f8) Thanks [@odinr](https://github.com/odinr)! - Fix MSAL v4 compatibility issues in SPA plugin.
-
   - Update MSAL client configuration to use nested auth object structure
   - Replace deprecated defaultAccount with account property
   - Update acquireToken calls to use MSAL v4 request structure
@@ -134,20 +144,17 @@
   This update addresses a security vulnerability in Vite's development server and includes bug fixes for improved compatibility. The update ensures secure development environments and better plugin ecosystem compatibility.
 
   **Changes:**
-
   - Updated Vite from v7.1.10 to v7.1.12
   - Includes security fix for development server file system checks
   - Includes compatibility fix for CommonJS plugin
   - No breaking changes or API modifications
 
   **Security Fix (v7.1.11):**
-
   - **dev**: trim trailing slash before `server.fs.deny` check ([#20968](https://github.com/vitejs/vite/issues/20968))
     - Prevents potential path traversal vulnerability in development server
     - Only affects development environment, not production builds
 
   **Bug Fix (v7.1.12):**
-
   - **deps**: downgrade commonjs plugin to 28.0.6 to avoid rollup/plugins issues ([#20990](https://github.com/vitejs/vite/issues/20990))
     - Improves compatibility with Rollup plugin ecosystem
     - Prevents potential build issues
@@ -163,19 +170,16 @@
 - [#3584](https://github.com/equinor/fusion-framework/pull/3584) [`0dd31cd`](https://github.com/equinor/fusion-framework/commit/0dd31cd1078b383ddab4a8cf1bb03d502e214715) Thanks [@dependabot](https://github.com/apps/dependabot)! - chore: bump @rollup/plugin-node-resolve from 16.0.1 to 16.0.3
 
   Bug fixes:
-
   - fix: resolve bare targets of package "imports" using export maps; avoid fileURLToPath(null)
   - fix: error thrown with empty entry
 
 - [#3604](https://github.com/equinor/fusion-framework/pull/3604) [`31e2581`](https://github.com/equinor/fusion-framework/commit/31e2581fca2765dc7caf54f74db3db51020b53b7) Thanks [@odinr](https://github.com/odinr)! - Update SPA bootstrap telemetry configuration to use proper adapter identifiers.
 
   **Changes:**
-
   - Refactor console adapter setup for cleaner conditional logic
   - Update setAdapter calls to include required identifier parameter
 
   **Migration:**
-
   - No breaking changes for SPA consumers - internal implementation update only
 
 - Updated dependencies [[`6900d98`](https://github.com/equinor/fusion-framework/commit/6900d98142c84f4703095f8d03b09af57a1d7d2e), [`e1a94c5`](https://github.com/equinor/fusion-framework/commit/e1a94c5a1df4ac2ec92ed25b75648397a3dbfa7b), [`e1a94c5`](https://github.com/equinor/fusion-framework/commit/e1a94c5a1df4ac2ec92ed25b75648397a3dbfa7b), [`31e2581`](https://github.com/equinor/fusion-framework/commit/31e2581fca2765dc7caf54f74db3db51020b53b7), [`0bc6b38`](https://github.com/equinor/fusion-framework/commit/0bc6b38e61c98a2f9dea7b55fa9983f268f860be), [`a13de68`](https://github.com/equinor/fusion-framework/commit/a13de68b2f196a779ea850af055d8db7926941ce)]:
@@ -194,7 +198,6 @@
   Previously, the plugin was using direct `.pathname` access on URL objects which could cause issues on Windows due to path separator differences. This change replaces the direct pathname access with `fileURLToPath()` and `normalizePath()` from Vite to ensure proper cross-platform path handling.
 
   **Changes:**
-
   - Import `normalizePath` from Vite for consistent path normalization
   - Use `fileURLToPath()` to properly convert file URLs to paths
   - Apply `normalizePath()` to ensure consistent path separators across platforms
@@ -208,7 +211,6 @@
 - [#3579](https://github.com/equinor/fusion-framework/pull/3579) [`b6a64d9`](https://github.com/equinor/fusion-framework/commit/b6a64d94bad7248c06b3aa7d65d7d698052437c7) Thanks [@Noggling](https://github.com/Noggling)! - Add peer dependencies to SPA Vite plugin
 
   Added peer dependencies to ensure proper dependency resolution for the SPA Vite plugin. This change declares the Fusion Framework modules that the plugin expects to be available in the consuming application:
-
   - `@equinor/fusion-framework-module`
   - `@equinor/fusion-framework-module-http`
   - `@equinor/fusion-framework-module-msal`
@@ -222,7 +224,6 @@
 ### Minor Changes
 
 - [#3547](https://github.com/equinor/fusion-framework/pull/3547) [`99a3c26`](https://github.com/equinor/fusion-framework/commit/99a3c26275c2089c3708124f5819ce383d8dc3dc) Thanks [@odinr](https://github.com/odinr)! - Enhanced SPA plugin with portal proxy support for testing apps in real portal environments ([Issue #3546](https://github.com/equinor/fusion-framework/issues/3546)).
-
   - Added `proxy` option to portal configuration to enable `/portal-proxy` routing
   - Added `FUSION_SPA_PORTAL_PROXY` environment variable support
   - Updated TypeScript types to include portal proxy configuration
@@ -248,7 +249,6 @@
 ### Patch Changes
 
 - [#3490](https://github.com/equinor/fusion-framework/pull/3490) [`45954e5`](https://github.com/equinor/fusion-framework/commit/45954e5db471a2faa24e88e41fc6d6c18817d6d1) Thanks [@odinr](https://github.com/odinr)! - Remove logger level configuration from bootstrap template.
-
   - Removed `configurator.logger.level` assignment from `bootstrap.ts`
   - Logger level configuration should be handled elsewhere or is no longer needed
 
@@ -259,7 +259,6 @@
   This patch update fixes bugs and improves stability in the vite dependency.
 
 - [#3521](https://github.com/equinor/fusion-framework/pull/3521) [`d1098f7`](https://github.com/equinor/fusion-framework/commit/d1098f7eeff04380c9e05e4a7a7d6b16e1d95884) Thanks [@odinr](https://github.com/odinr)! - Add comprehensive telemetry integration to SPA bootstrap and service worker.
-
   - Enable telemetry in SPA bootstrap with ConsoleAdapter
   - Add configurable console logging levels via FUSION_SPA_TELEMETRY_CONSOLE_LEVEL environment variable
   - Track bootstrap performance for portal loading operations
@@ -269,7 +268,6 @@
   - Fix console level filtering logic to properly respect environment variable settings
 
   **Implementation Notes:**
-
   - Console level filtering defaults to `TelemetryLevel.Information` (1) when env var not set
   - Invalid env var values fallback to logging all telemetry (robust error handling)
   - Backward compatible: existing behavior unchanged when no FUSION_SPA_TELEMETRY_CONSOLE_LEVEL specified
@@ -282,7 +280,6 @@
 ### Patch Changes
 
 - [`56c27ec`](https://github.com/equinor/fusion-framework/commit/56c27ec9de03e07e725eecfdf2c028a1e29b6ece) Thanks [@odinr](https://github.com/odinr)! - Updated workspace dependencies to use exact version specifiers for consistent release behavior.
-
   - Changed workspace dependencies from `workspace:^` to `workspace:*` across CLI, dev-server, and SPA vite plugin packages
   - Ensures exact version resolution within the monorepo for predictable builds and releases
   - Affects both dependencies and devDependencies where applicable
@@ -296,19 +293,16 @@
   **Problem**: During hard refresh, the service worker would not intercept fetch requests, causing authenticated API requests to fail. The service worker could be stuck in "waiting" state or already active but not controlling the page (`navigator.serviceWorker.controller` was `undefined`).
 
   **Root Cause**: Two related issues in the service worker lifecycle during hard refresh:
-
   1. **Waiting state**: When code changes, the new service worker enters "waiting" state, but `skipWaiting()` only runs in the `install` event (which already fired)
   2. **No controller**: Even when active, `clients.claim()` only runs in the `activate` event, which doesn't fire again if the service worker is already active
 
   **Solution**:
-
   - **Force activation on config receipt**: When receiving `INIT_CONFIG`, immediately call both `skipWaiting()` and `clients.claim()` to ensure the service worker activates and takes control regardless of its current state
   - **Wait for controller**: Registration now waits for `navigator.serviceWorker.controller` to be set before proceeding, ensuring fetch interception is ready
   - **Disable service worker caching**: Added `updateViaCache: 'none'` to always fetch fresh service worker code during development
   - **Comprehensive state handling**: Handle service workers in installing, waiting, and active states
 
   **Changes**:
-
   1. **sw.ts**: Call `skipWaiting()` and `clients.claim()` when receiving `INIT_CONFIG` message
   2. **register-service-worker.ts**: Wait for controller with polling and timeout fallback; disable service worker HTTP caching
 
@@ -332,7 +326,6 @@
 - [#3349](https://github.com/equinor/fusion-framework/pull/3349) [`c511123`](https://github.com/equinor/fusion-framework/commit/c511123c835e24e9ddefcc4c47c2455f5df12087) Thanks [@dependabot](https://github.com/apps/dependabot)! - chore: bump vite from 6.x to 7.1.5
 
   Major version update of Vite build tool across all packages. This update includes:
-
   - Enhanced build performance and caching
   - Better error reporting with code frames
   - Improved TypeScript integration
@@ -340,7 +333,6 @@
   - New development server features
 
   ### Links
-
   - [Vite 7.1.5 Release Notes](https://github.com/vitejs/vite/releases/tag/v7.1.5)
   - [Vite 7.x Migration Guide](https://vitejs.dev/guide/migration)
 
@@ -349,7 +341,6 @@
 ### Patch Changes
 
 - [#3381](https://github.com/equinor/fusion-framework/pull/3381) [`bae9c95`](https://github.com/equinor/fusion-framework/commit/bae9c9554f335d0384b864436874bded47d00ed8) Thanks [@dependabot](https://github.com/apps/dependabot)! - Update rollup from 4.49.0 to 4.50.2
-
   - Updated rollup dependency via vite transitive dependency
   - Includes bug fixes for tree-shaking array destructuring patterns
   - Performance improvements and platform support updates
@@ -358,7 +349,6 @@
 - [#2910](https://github.com/equinor/fusion-framework/pull/2910) [`07cc985`](https://github.com/equinor/fusion-framework/commit/07cc9857e1427b574e011cc319518e701dba784d) Thanks [@dependabot](https://github.com/apps/dependabot)! - Updated vitest from 2.1.9 to 3.2.4 across all packages.
 
   ## Breaking Changes
-
   - **Node.js Requirements**: Requires Node.js 18+ (already satisfied)
   - **Vite Compatibility**: Updated to work with Vite 7.x (already using Vite 7.1.5)
   - **Snapshot Format**: Snapshots now use backtick quotes (\`) instead of single quotes
@@ -366,18 +356,15 @@
   - **TypeScript Support**: Enhanced TypeScript integration and type definitions
 
   ## Security Updates
-
   - CVE-2025-24963: Browser mode serves arbitrary files (fixed in 2.1.9)
   - CVE-2025-24964: Remote Code Execution vulnerability (fixed in 2.1.9)
 
   ## Migration Notes
-
   - Test snapshots may need regeneration due to quote format changes
   - Some test configurations might need updates for new TypeScript support
   - Peer dependency warnings for @vitest/coverage-v8 are expected and safe to ignore
 
   ## Links
-
   - [Vitest 3.0 Migration Guide](https://vitest.dev/guide/migration)
   - [Vitest 3.2.4 Release Notes](https://github.com/vitest-dev/vitest/releases/tag/v3.2.4)
 
@@ -392,7 +379,6 @@
   This plugin represents a strategic modularization of the Fusion Framework CLI codebase. By extracting the SPA functionality into its own dedicated package, we've simplified the CLI's architecture while enabling greater flexibility. This modular design allows the SPA component to be replaced or reused by third-party developers independently of the CLI. The primary goal is to maintain a cleaner, more maintainable codebase through proper separation of concerns, with the CLI using this plugin rather than containing this functionality directly.
 
   **Key Features**:
-
   - **Fusion Framework Bootstrap**: Automatically initializes core modules and renders configured portals
   - **Service Discovery**: Enables dynamic service routing and eliminates hardcoded service endpoints
   - **MSAL Authentication**: Provides seamless Azure AD integration with configurable authentication flows
@@ -420,7 +406,6 @@
 ### Patch Changes
 
 - [#3075](https://github.com/equinor/fusion-framework/pull/3075) [`5973182`](https://github.com/equinor/fusion-framework/commit/5973182b156adb56137f1fc683635ae15274cc57) Thanks [@odinr](https://github.com/odinr)! - Update portal config and manifest API routes and types for consistency:
-
   - Change dev server API route for portal manifest/config from `/portals/portals/...` to `/portal-config/portals/...` for alignment with client usage.
   - Make portal config optional in dev server route and type definitions.
   - Update SPA bootstrap to use `portal-config` as the service discovery client key.
@@ -434,7 +419,6 @@
 ### Patch Changes
 
 - [#3075](https://github.com/equinor/fusion-framework/pull/3075) [`23fdc8a`](https://github.com/equinor/fusion-framework/commit/23fdc8a80d21ff063b17d8c596c0afc0a891305f) Thanks [@odinr](https://github.com/odinr)! - Fix dependency and devDependency declarations for lodash.mergewith:
-
   - Move "lodash.mergewith" to dependencies and ensure correct version for @types/lodash.mergewith in devDependencies.
   - Remove duplicate and misplaced entries for lodash.mergewith and its types.
   - Remove unused @equinor/fusion-framework-vite-plugin-api-service from devDependencies.
@@ -447,7 +431,6 @@
 ### Patch Changes
 
 - [#3075](https://github.com/equinor/fusion-framework/pull/3075) [`713cb15`](https://github.com/equinor/fusion-framework/commit/713cb15c5f1607e7f7285940a58165d97d8e41df) Thanks [@odinr](https://github.com/odinr)! - Refactor plugin internals for improved Vite compatibility and maintainability:
-
   - Made `resolveId` and `config` hooks async to support dynamic import resolution for virtual modules.
   - Improved resource alias resolution for `/@fusion-spa-bootstrap.js` and `/@fusion-spa-sw.js` using `import.meta.resolve` and `fileURLToPath`.
   - Enhanced environment variable handling by merging plugin and loaded environments, and defining them on `config.define`.
@@ -459,7 +442,6 @@
 ### Minor Changes
 
 - [#3075](https://github.com/equinor/fusion-framework/pull/3075) [`ea96493`](https://github.com/equinor/fusion-framework/commit/ea96493d95336f682e31a7b63161783ae7c99a63) Thanks [@odinr](https://github.com/odinr)! - Refactor build output and entrypoints for SPA Vite plugin:
-
   - Change main export entrypoint to `./dist/bin/index.js` (was `./dist/esm/index.js`).
   - Remove the `./html` export subpath.
   - Update Rollup config to bundle from `dist/esm` to `dist/bin` and adjust input/output accordingly.
@@ -473,7 +455,6 @@
 ### Patch Changes
 
 - [#3075](https://github.com/equinor/fusion-framework/pull/3075) [`8870e73`](https://github.com/equinor/fusion-framework/commit/8870e73bd6d4141142c69c11c67b5b154bc80023) Thanks [@odinr](https://github.com/odinr)! - Update build system and dependencies:
-
   - Switch build script to use Rollup with a new `rollup.config.js` for ESM output
   - Add postbuild script to emit TypeScript declarations
   - Move all dependencies to devDependencies for clarity
@@ -529,7 +510,6 @@
   This plugin enables building single-page applications (SPAs) with Vite. It provides features such as service discovery, MSAL authentication, and service worker configuration.
 
   **Features**:
-
   - **Service Discovery**: Fetch service discovery configurations and authenticate requests.
   - **MSAL Authentication**: Authenticate users with Azure AD.
   - **Service Worker**: Intercept fetch requests, apply authentication headers, and rewrite URLs.
@@ -578,7 +558,6 @@
   ```
 
   **Additional Details**:
-
   - **Custom Bootstrap**: Allows defining custom bootloader scripts.
   - **Dynamic Proxy**: Supports dynamic proxy services using `@equinor/fusion-framework-vite-plugin-api-service`.
   - **Environment Variables**: Automatically maps `.env` variables to `import.meta.env`.
@@ -588,7 +567,6 @@
 ### Patch Changes
 
 - [#3074](https://github.com/equinor/fusion-framework/pull/3074) [`6b034e5`](https://github.com/equinor/fusion-framework/commit/6b034e5459094cea0c0f2490335eef3092390a13) Thanks [@odinr](https://github.com/odinr)! - Fetch and pass portal config to portal render function in bootstrap.ts
-
   - The SPA bootstrap script now fetches the portal config from `/portals/{portalId}@{portalTag}/config` and passes it as `config` to the portal's render function.
   - This enables portals to receive their runtime configuration directly at startup.
 

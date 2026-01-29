@@ -1,5 +1,18 @@
 # Change Log
 
+## 4.1.83-next.0
+
+### Patch Changes
+
+- [#3820](https://github.com/equinor/fusion-framework/pull/3820) [`c787fc6`](https://github.com/equinor/fusion-framework/commit/c787fc6b6db2b2837ec863125220feffca7240ab) Thanks [@odinr](https://github.com/odinr)! - relase next
+
+- Updated dependencies [[`c787fc6`](https://github.com/equinor/fusion-framework/commit/c787fc6b6db2b2837ec863125220feffca7240ab)]:
+  - @equinor/fusion-framework-react-module-context@7.0.0-next.1
+  - @equinor/fusion-framework-module-navigation@7.0.0-next.2
+  - @equinor/fusion-observable@9.0.0-next.1
+  - @equinor/fusion-framework-react-app@8.2.1-next.0
+  - @equinor/fusion-framework-cli@13.2.1-next.0
+
 ## 4.1.82
 
 ### Patch Changes

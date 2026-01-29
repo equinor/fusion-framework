@@ -1,5 +1,15 @@
 # @equinor/fusion-framework-cli-plugin-ai-chat
 
+## 1.0.5-next.0
+
+### Patch Changes
+
+- Updated dependencies [[`c787fc6`](https://github.com/equinor/fusion-framework/commit/c787fc6b6db2b2837ec863125220feffca7240ab)]:
+  - @equinor/fusion-framework-cli@13.2.1-next.0
+  - @equinor/fusion-framework-module@5.0.6-next.1
+  - @equinor/fusion-framework-cli-plugin-ai-base@1.0.5-next.0
+  - @equinor/fusion-framework-module-ai@2.0.2-next.0
+
 ## 1.0.4
 
 ### Patch Changes
@@ -42,7 +52,6 @@
   This plugin extends the Fusion Framework CLI with interactive chat capabilities using vector store context retrieval for enhanced, context-aware responses.
 
   **Features:**
-
   - Interactive conversation mode with readline interface
   - Real-time streaming responses from AI models
   - Intelligent message history compression using AI summarization
@@ -50,7 +59,6 @@
   - Configurable context and history limits
 
   **Quick Usage:**
-
   1. Install the plugin:
 
   ```sh

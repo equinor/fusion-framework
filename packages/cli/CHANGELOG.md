@@ -1,5 +1,18 @@
 # Change Log
 
+## 13.2.1-next.0
+
+### Patch Changes
+
+- [#3820](https://github.com/equinor/fusion-framework/pull/3820) [`c787fc6`](https://github.com/equinor/fusion-framework/commit/c787fc6b6db2b2837ec863125220feffca7240ab) Thanks [@odinr](https://github.com/odinr)! - relase next
+
+- Updated dependencies [[`c787fc6`](https://github.com/equinor/fusion-framework/commit/c787fc6b6db2b2837ec863125220feffca7240ab), [`daf951f`](https://github.com/equinor/fusion-framework/commit/daf951f7ae0d55b31dc7a30a5c7a40c2c39d0534)]:
+  - @equinor/fusion-framework-vite-plugin-raw-imports@1.1.0-next.1
+  - @equinor/fusion-imports@1.1.11-next.0
+  - @equinor/fusion-framework-dev-portal@1.5.0-next.0
+  - @equinor/fusion-framework-dev-server@1.1.22-next.0
+  - @equinor/fusion-framework-module-msal-node@3.0.1-next.0
+
 ## 13.2.0
 
 ### Minor Changes
@@ -9,7 +22,6 @@
   The CLI publish command now supports validating applications using metadata extracted from bundle artifacts instead of requiring local package.json and manifest files. This enables publishing applications from any directory in CI/CD pipelines without maintaining the full project structure.
 
   **New capabilities:**
-
   - Extract app information from bundle's `metadata.json`
   - Validate app registration using artifact metadata when bundle path is provided
   - Maintain backward compatibility with existing package.json-based validation
@@ -42,7 +54,6 @@
 - [#3922](https://github.com/equinor/fusion-framework/pull/3922) [`d34ebd8`](https://github.com/equinor/fusion-framework/commit/d34ebd82c93acabc88f88e44a725f084af3af5ec) Thanks [@odinr](https://github.com/odinr)! - Enable AG Grid Enterprise license injection for the dev-portal by setting a global window key produced from the SPA template environment. The portal reads `window.FUSION_AG_GRID_KEY` to configure the AG Grid module and silence license warnings when a valid key is present. CLI docs now mention the license key setup.
 
   **Usage:**
-
   - In your SPA environment file, set `FUSION_SPA_AG_GRID_KEY=your-license-key-here`.
   - The SPA HTML template injects `window.FUSION_AG_GRID_KEY` before bootstrap runs, and the dev-portal picks it up automatically.
 
@@ -88,7 +99,6 @@
 - [#3932](https://github.com/equinor/fusion-framework/pull/3932) [`15aaa87`](https://github.com/equinor/fusion-framework/commit/15aaa87e6a8b391c0672db0dcdca4c1cac3b50a7) Thanks [@dependabot](https://github.com/apps/dependabot)! - Internal: update rollup build dependency from 4.52.5 to 4.55.2.
 
   This update includes:
-
   - Improved circular dependency handling for manual chunks
   - Enhanced tree-shaking for Symbol properties
   - Performance improvements via variable name caching
@@ -120,7 +130,6 @@
 - [`e2d2a76`](https://github.com/equinor/fusion-framework/commit/e2d2a76d08b86c3a9d8783fed1606551df9d5633) Thanks [@odinr](https://github.com/odinr)! - Add plugin system for extensible CLI architecture and new framework configuration utilities.
 
   **Plugin System:**
-
   - Support for optional plugins via `fusion-cli.config.ts` configuration file
   - Automatic plugin discovery and loading from project root or CLI package directory
   - Plugin registration via package name or direct function imports
@@ -128,23 +137,19 @@
   - Multiple plugin resolution strategies for different installation methods
 
   **New Exports:**
-
   - `configureFramework` - Separated framework configuration from initialization for advanced use cases
   - `defineFusionCli` - Type-safe utility for defining CLI plugin configurations
 
   **Enhancements:**
-
   - Non-interactive mode support for `create app` command with `--git-protocol`, `--cleanup`/`--no-cleanup`, and `--no-open` options
   - Automatic `.env` file loading via dotenv for environment variable support
   - Improved error handling and plugin resolution strategies
 
   **Documentation:**
-
   - Added comprehensive AI commands documentation (internal use only)
   - Updated README with plugin system usage instructions
 
   **Quick Usage:**
-
   1. Install a plugin package:
 
   ```sh
@@ -268,7 +273,6 @@
   Portal tagging functionality has been enhanced to accept any string value for tags instead of being restricted to predefined enum values.
 
   **Breaking Changes**
-
   - **Removed `AllowedPortalTags` enum**: The enum that previously restricted portal tags to only `'latest'` and `'preview'` has been removed.
   - **No longer exported**: `AllowedPortalTags` is no longer exported from `@equinor/fusion-framework-cli/bin`.
 
@@ -303,13 +307,11 @@
   ```
 
   **Enhanced Documentation**
-
   - Updated CLI help text with practical examples
   - Added common tag examples (`latest`, `preview`, `next`, `stable`) in documentation
   - Maintained guidance while showing flexibility
 
   **Validation**
-
   - Tags must be non-empty strings
   - No other restrictions on tag format or content
   - Backward compatibility maintained for existing tag values
@@ -379,20 +381,17 @@
   This update addresses a security vulnerability in Vite's development server and includes bug fixes for improved compatibility. The update ensures secure development environments and better plugin ecosystem compatibility.
 
   **Changes:**
-
   - Updated Vite from v7.1.10 to v7.1.12
   - Includes security fix for development server file system checks
   - Includes compatibility fix for CommonJS plugin
   - No breaking changes or API modifications
 
   **Security Fix (v7.1.11):**
-
   - **dev**: trim trailing slash before `server.fs.deny` check ([#20968](https://github.com/vitejs/vite/issues/20968))
     - Prevents potential path traversal vulnerability in development server
     - Only affects development environment, not production builds
 
   **Bug Fix (v7.1.12):**
-
   - **deps**: downgrade commonjs plugin to 28.0.6 to avoid rollup/plugins issues ([#20990](https://github.com/vitejs/vite/issues/20990))
     - Improves compatibility with Rollup plugin ecosystem
     - Prevents potential build issues
@@ -414,12 +413,10 @@
   Fixed a bug in the `app config` command where the `config` parameter was incorrectly referenced as `options.config` when calling `publishAppConfig`. This was causing the publish functionality to fail when a custom config file path was provided.
 
   ### What Changed
-
   - Corrected parameter passing in `packages/cli/src/cli/commands/app/config.ts`
   - Changed `config: options.config` to `config` in the `publishAppConfig` call
 
   ### Impact
-
   - The `ffc app config --publish` command now correctly uses the provided config file argument
   - Fixes the issue where custom config files were not being passed to the publish function
   - No breaking changes to the CLI interface
@@ -434,7 +431,6 @@
 - [#3584](https://github.com/equinor/fusion-framework/pull/3584) [`0dd31cd`](https://github.com/equinor/fusion-framework/commit/0dd31cd1078b383ddab4a8cf1bb03d502e214715) Thanks [@dependabot](https://github.com/apps/dependabot)! - chore: bump @rollup/plugin-node-resolve from 16.0.1 to 16.0.3
 
   Bug fixes:
-
   - fix: resolve bare targets of package "imports" using export maps; avoid fileURLToPath(null)
   - fix: error thrown with empty entry
 
@@ -468,11 +464,9 @@
   Added `is-mergeable-object` as a direct dependency to resolve runtime errors when using the CLI's app development features. This package is required by `deepmerge` but was not explicitly declared as a dependency, causing module resolution failures during app development.
 
   **Changes:**
-
   - Added `is-mergeable-object@^1.1.1` to dependencies in `packages/cli/package.json`
 
   **Impact:**
-
   - Fixes "Cannot find module 'is-mergeable-object'" errors during app development
   - Ensures proper dependency resolution for CLI tools that use deepmerge functionality
   - No breaking changes - this is purely a dependency fix
@@ -482,13 +476,11 @@
 ### Patch Changes
 
 - [#3559](https://github.com/equinor/fusion-framework/pull/3559) [`6667a4e`](https://github.com/equinor/fusion-framework/commit/6667a4ee24a5374a02ec76952f440d495d62dbc3) Thanks [@eikeland](https://github.com/eikeland)! - Added default headers to CLI REST API requests for better identification and tracking.
-
   - Created new `defaultHeaders` utility that includes CLI name, version, and user-agent
   - Updated app upload/tag operations to include default headers
   - Updated portal upload/tag operations to include default headers
 
   All HTTP requests from the CLI now include:
-
   - `X-Fusion-CLI-Name`: Identifies the CLI tool name
   - `X-Fusion-CLI-Version`: Specifies the CLI version making the request
   - `User-Agent`: Standard user agent header with CLI name and version
@@ -498,7 +490,6 @@
   Closes: #3539
 
 - [#3552](https://github.com/equinor/fusion-framework/pull/3552) [`8694e5b`](https://github.com/equinor/fusion-framework/commit/8694e5bb9bb1249dc52853dc6a5048f81ed9ab9c) Thanks [@eikeland](https://github.com/eikeland)! - Fixed release annotations to always include CLI version and required metadata.
-
   - Added `cliVersion` property to `ReleaseAnnotations` type
   - Ensured annotations are always returned (removed undefined return type)
   - Added fallback annotations for local builds with default values
@@ -516,7 +507,6 @@
 ### Minor Changes
 
 - [#3547](https://github.com/equinor/fusion-framework/pull/3547) [`99a3c26`](https://github.com/equinor/fusion-framework/commit/99a3c26275c2089c3708124f5819ce383d8dc3dc) Thanks [@odinr](https://github.com/odinr)! - Enhanced CLI with portal proxy support for testing apps in real portal environments ([Issue #3546](https://github.com/equinor/fusion-framework/issues/3546)).
-
   - Added `/portal-proxy` service worker resource configuration to CLI dev server
   - Routes portal proxy requests to Fusion portal service API (`/@fusion-api/portal-config`)
   - Enhanced dev server creation with improved logging and error handling
@@ -528,7 +518,6 @@
 ### Patch Changes
 
 - [`4717aab`](https://github.com/equinor/fusion-framework/commit/4717aab6b50d0a795255f7615bb334eae8dc9d3f) Thanks [@Noggling](https://github.com/Noggling)! - Enhanced dev server host configuration to respect Vite config settings.
-
   - Modified `startAppDevServer` function in `app-dev.ts` to use host configuration from local Vite config
   - Changed hardcoded 'localhost' host to respect `localViteConfig.server?.host` with 'localhost' as fallback
   - Improved configuration loading by storing `localViteConfig` in a variable to avoid duplicate loading
@@ -553,7 +542,6 @@
   ref: [3548](https://github.com/equinor/fusion-framework/issues/3548)
 
 - [#3547](https://github.com/equinor/fusion-framework/pull/3547) [`99a3c26`](https://github.com/equinor/fusion-framework/commit/99a3c26275c2089c3708124f5819ce383d8dc3dc) Thanks [@odinr](https://github.com/odinr)! - Enhanced CLI documentation with comprehensive portal proxy configuration guide.
-
   - Added detailed portal proxy configuration section in dev-server-config.md
   - Documented portal proxy behavior, use cases, and benefits
   - Provided complete code examples for portal proxy setup
@@ -571,7 +559,6 @@
 ### Minor Changes
 
 - [#3512](https://github.com/equinor/fusion-framework/pull/3512) [`6f17817`](https://github.com/equinor/fusion-framework/commit/6f17817d3e1290d0befca8bb528728128612f8f1) Thanks [@eikeland](https://github.com/eikeland)! - Enhanced app management commands with pre-flight registration checks.
-
   - Modified `checkApp` function to return boolean values instead of log results for better programmatic usage
   - Added handling for HTTP 410 status (deleted apps) in app registration checks
   - Added pre-flight app registration validation to `publish` and `upload` commands
@@ -587,7 +574,6 @@
 ### Patch Changes
 
 - [#3534](https://github.com/equinor/fusion-framework/pull/3534) [`8049b43`](https://github.com/equinor/fusion-framework/commit/8049b43847370c73814939f258a86723329b6b3c) Thanks [@odinr](https://github.com/odinr)! - Enhanced dev-server documentation with comprehensive configuration guide.
-
   - Added detailed `dev-server-config.md` documentation covering configuration options, API mocking, service discovery customization, and template environment overrides
   - Updated main `dev-server.md` documentation with improved architecture overview and configuration reference
   - Provided practical examples and troubleshooting guidance for dev-server configuration
@@ -614,7 +600,6 @@
 ### Patch Changes
 
 - [`56c27ec`](https://github.com/equinor/fusion-framework/commit/56c27ec9de03e07e725eecfdf2c028a1e29b6ece) Thanks [@odinr](https://github.com/odinr)! - Updated workspace dependencies to use exact version specifiers for consistent release behavior.
-
   - Changed workspace dependencies from `workspace:^` to `workspace:*` across CLI, dev-server, and SPA vite plugin packages
   - Ensures exact version resolution within the monorepo for predictable builds and releases
   - Affects both dependencies and devDependencies where applicable
@@ -635,7 +620,6 @@
 ### Minor Changes
 
 - [#3459](https://github.com/equinor/fusion-framework/pull/3459) [`58b5cee`](https://github.com/equinor/fusion-framework/commit/58b5ceeba5c6488a459ecaa22013823d3310ebc9) Thanks [@odinr](https://github.com/odinr)! - Enhanced Git repository cloning with user-controlled protocol selection.
-
   - Added interactive prompt for users to choose between HTTPS and SSH protocols
   - Implemented intelligent SSH detection using both git config and filesystem checks
   - Removed automatic SSH-to-HTTPS fallback in favor of explicit user choice
@@ -663,7 +647,6 @@
 - [#3425](https://github.com/equinor/fusion-framework/pull/3425) [`41cc520`](https://github.com/equinor/fusion-framework/commit/41cc520707c37672c59855ed53a0d4cedae0ec61) Thanks [@dependabot](https://github.com/apps/dependabot)! - Updated pretty-bytes from 7.0.1 to 7.1.0, adding `fixedWidth` and `nonBreakingSpace` options for enhanced CLI output formatting.
 
 - [#3428](https://github.com/equinor/fusion-framework/pull/3428) [`1700ca8`](https://github.com/equinor/fusion-framework/commit/1700ca8851fa108e55e9729fd24f595272766e63) Thanks [@dependabot](https://github.com/apps/dependabot)! - Update zod from 4.1.9 to 4.1.11
-
   - **v4.1.10**: Fixed shape caching issue (#5263) improving validation performance for complex schemas
   - **v4.1.11**: Maintenance release with general improvements
 
@@ -684,7 +667,6 @@
   Updated source code to migrate from zod v3 to v4. Updated zod dependency from v3.25.76 to v4.1.8 and modified schema definitions in the CLI package to use explicit key and value types for records, updated error message format, and changed ZodError `.errors` property to `.issues` for zod v4 compatibility.
 
   Key changes in source code:
-
   - Fixed record schema definitions to use explicit key and value types (`z.record(z.string(), z.any())`)
   - Updated portal manifest schemas to use `message` instead of `description` for error messages
   - Simplified error message options format (removed `required_error`, `invalid_type_error` from options object)
@@ -694,14 +676,12 @@
   Breaking changes: Record schemas must specify both key and value types explicitly. Error message format has changed from zod v3 to v4 format. Function schema definitions now require explicit typing.
 
   Links:
-
   - [Zod v4 Migration Guide](https://github.com/colinhacks/zod/releases/tag/v4.0.0)
   - [Zod v4.1.8 Release Notes](https://github.com/colinhacks/zod/releases/tag/v4.1.8)
 
 ### Patch Changes
 
 - [#3418](https://github.com/equinor/fusion-framework/pull/3418) [`6426d40`](https://github.com/equinor/fusion-framework/commit/6426d4051d153a01f2bc37ba7e7f4d0e85a82753) Thanks [@odinr](https://github.com/odinr)! - Improve publish command documentation clarity
-
   - Update app publish command description to clearly explain conditional building behavior
   - Add prominent note explaining when building occurs vs when it doesn't
   - Add complete portal publish command documentation (was missing)
@@ -722,24 +702,20 @@
 - [#3369](https://github.com/equinor/fusion-framework/pull/3369) [`bd8360e`](https://github.com/equinor/fusion-framework/commit/bd8360e6b93704b3f8ba4eb0d7fd142e27c01ef9) Thanks [@dependabot](https://github.com/apps/dependabot)! - Updated commander from v13 to v14 with improved help system and Node.js v20+ requirement.
 
   ### Breaking Changes
-
   - Commander 14 requires Node.js v20 or higher (compatible with existing project requirements)
 
   ### New Features
-
   - Support for groups of options and commands in help
   - Support for unescaped negative numbers as arguments
   - Enhanced TypeScript support with parseArg property
 
   ### Links
-
   - [GitHub releases](https://github.com/tj/commander.js/releases/tag/v14.0.1)
   - [Changelog](https://github.com/tj/commander.js/blob/master/CHANGELOG.md)
 
 - [#3349](https://github.com/equinor/fusion-framework/pull/3349) [`c511123`](https://github.com/equinor/fusion-framework/commit/c511123c835e24e9ddefcc4c47c2455f5df12087) Thanks [@dependabot](https://github.com/apps/dependabot)! - chore: bump vite from 6.x to 7.1.5
 
   Major version update of Vite build tool across all packages. This update includes:
-
   - Enhanced build performance and caching
   - Better error reporting with code frames
   - Improved TypeScript integration
@@ -747,7 +723,6 @@
   - New development server features
 
   ### Links
-
   - [Vite 7.1.5 Release Notes](https://github.com/vitejs/vite/releases/tag/v7.1.5)
   - [Vite 7.x Migration Guide](https://vitejs.dev/guide/migration)
 
@@ -756,17 +731,14 @@
 - [#3389](https://github.com/equinor/fusion-framework/pull/3389) [`db19291`](https://github.com/equinor/fusion-framework/commit/db192912ec35b41a10f0324ee70ecc85a686d4fa) Thanks [@dependabot](https://github.com/apps/dependabot)! - chore: bump ora from 8.2.0 to 9.0.0
 
   ### Breaking Changes
-
   - ora v9.0.0 now requires Node.js 20+ (previously supported older versions)
 
   ### New Features
-
   - Fix clearing in some cases
   - Fix `frame()` not displaying dynamic `prefixText`/`suffixText` from functions
   - Fix multiline text exceeding console height leaving garbage when scrolling
 
   ### Links
-
   - [GitHub releases](https://github.com/sindresorhus/ora/releases/tag/v9.0.0)
   - [npm changelog](https://www.npmjs.com/package/ora?activeTab=versions)
 
@@ -775,18 +747,15 @@
   Major version update of Vitest coverage package for CLI testing.
 
   ### Breaking Changes
-
   - Updated from @vitest/coverage-v8 v2 to v3
   - Coverage reporting may have configuration changes
 
   ### New Features
-
   - Enhanced coverage reporting capabilities
   - Improved test performance
   - Better error handling and reporting
 
   ### Links
-
   - [Vitest v3.2.4 Release Notes](https://github.com/vitest-dev/vitest/releases/tag/v3.2.4)
   - [Vitest v3 Migration Guide](https://vitest.dev/guide/migration.html)
   - [Coverage v8 Documentation](https://vitest.dev/guide/coverage.html)
@@ -801,13 +770,11 @@
 ### Patch Changes
 
 - [#3379](https://github.com/equinor/fusion-framework/pull/3379) [`96d319c`](https://github.com/equinor/fusion-framework/commit/96d319c64e2ccb0ad080d633b74b76cbc4f48083) Thanks [@dependabot](https://github.com/apps/dependabot)! - Updated inquirer dependency from 12.9.4 to 12.9.6
-
   - Updated inquirer to latest patch version 12.9.6
   - Includes bug fixes and performance improvements
   - No breaking changes in this patch update
 
 - [#3381](https://github.com/equinor/fusion-framework/pull/3381) [`bae9c95`](https://github.com/equinor/fusion-framework/commit/bae9c9554f335d0384b864436874bded47d00ed8) Thanks [@dependabot](https://github.com/apps/dependabot)! - Update rollup from 4.46.3 to 4.50.2
-
   - Updated rollup dependency to latest patch version
   - Includes bug fixes for tree-shaking array destructuring patterns
   - Performance improvements and platform support updates
@@ -816,7 +783,6 @@
 - [#2910](https://github.com/equinor/fusion-framework/pull/2910) [`07cc985`](https://github.com/equinor/fusion-framework/commit/07cc9857e1427b574e011cc319518e701dba784d) Thanks [@dependabot](https://github.com/apps/dependabot)! - Updated vitest from 2.1.9 to 3.2.4 across all packages.
 
   ## Breaking Changes
-
   - **Node.js Requirements**: Requires Node.js 18+ (already satisfied)
   - **Vite Compatibility**: Updated to work with Vite 7.x (already using Vite 7.1.5)
   - **Snapshot Format**: Snapshots now use backtick quotes (\`) instead of single quotes
@@ -824,18 +790,15 @@
   - **TypeScript Support**: Enhanced TypeScript integration and type definitions
 
   ## Security Updates
-
   - CVE-2025-24963: Browser mode serves arbitrary files (fixed in 2.1.9)
   - CVE-2025-24964: Remote Code Execution vulnerability (fixed in 2.1.9)
 
   ## Migration Notes
-
   - Test snapshots may need regeneration due to quote format changes
   - Some test configurations might need updates for new TypeScript support
   - Peer dependency warnings for @vitest/coverage-v8 are expected and safe to ignore
 
   ## Links
-
   - [Vitest 3.0 Migration Guide](https://vitest.dev/guide/migration)
   - [Vitest 3.2.4 Release Notes](https://github.com/vitest-dev/vitest/releases/tag/v3.2.4)
 
@@ -852,7 +815,6 @@
 - [#3377](https://github.com/equinor/fusion-framework/pull/3377) [`70638da`](https://github.com/equinor/fusion-framework/commit/70638da56c0dad3f349a2d063e8d8bcea3b71b12) Thanks [@odinr](https://github.com/odinr)! - Add comprehensive create app command for generating Fusion applications from templates.
 
   **New Features**
-
   - Added `ffc create app <name>` command with interactive template selection
   - Supports both `ffc create app` and `ffc app create` command patterns for improved flexibility
   - Includes template validation and interactive prompts using inquirer
@@ -860,13 +822,11 @@
   - Implemented modular helper functions for each step of app creation
 
   **Template Support**
-
   - Supports both bare and basic application templates from fusion-app-template repository
   - Includes template validation and interactive prompts using inquirer
   - Added comprehensive template repository system with schema validation
 
   **Developer Experience**
-
   - Added IDE integration with automatic project opening
   - Includes dependency management and dev server startup
   - Added comprehensive documentation with examples and best practices
@@ -874,7 +834,6 @@
   - Added GitHub template integration links for alternative app creation methods
 
   **Error Handling & Reliability**
-
   - Enhanced error handling for spawn operations in IDE opening and dev server startup
   - Migrated to execa for automatic process cleanup and better signal handling
   - Fixed misleading success messages by wrapping template copy operations in try-catch blocks
@@ -883,14 +842,12 @@
   - Enhanced TSDoc documentation and inline comments across helper functions
 
   **Dependencies**
-
   - Added new dependencies: `inquirer`, `@types/inquirer`, and `execa` for enhanced CLI experience
   - Migrated process spawning from native child_process to execa for better process management
 
   The new command provides an intuitive way for developers to bootstrap new Fusion applications using predefined templates from the ecosystem while maintaining backward compatibility and providing robust error handling.
 
 - [#3377](https://github.com/equinor/fusion-framework/pull/3377) [`70638da`](https://github.com/equinor/fusion-framework/commit/70638da56c0dad3f349a2d063e8d8bcea3b71b12) Thanks [@odinr](https://github.com/odinr)! - Add workspace dependency resolution to create app command
-
   - Added `updatePackageJson` helper for updating package.json with app name and resolving workspace dependencies
   - Added `resolve-workspace-dependencies` helper to convert workspace:^ dependencies to npm versions
   - Added `package-info` utility for fetching package metadata from npm registry
@@ -905,25 +862,21 @@
 - [#3377](https://github.com/equinor/fusion-framework/pull/3377) [`70638da`](https://github.com/equinor/fusion-framework/commit/70638da56c0dad3f349a2d063e8d8bcea3b71b12) Thanks [@odinr](https://github.com/odinr)! - Enhanced CLI security with path validation and improved error handling for create command.
 
   ## New Features
-
   - **Path Security Validation**: Added `validateSafePath()` function to prevent path traversal attacks
   - **Safe Directory Operations**: Added `safeRmSync()` function for secure directory removal
   - **Enhanced Error Messages**: Improved user-friendly error messages with visual indicators
 
   ## Security Improvements
-
   - **Path Traversal Protection**: Prevents users from specifying paths outside the current working directory
   - **Input Validation**: Validates target paths before performing file system operations
   - **Safe Cleanup**: Directory removal operations now validate paths before execution
 
   ## User Experience
-
   - **Better Error Messages**: Clear, actionable error messages with ❌ and 💡 indicators
   - **Helpful Guidance**: Users get specific suggestions when path validation fails
   - **Clean Error Handling**: No more messy stack traces for path-related errors
 
   ## Technical Details
-
   - Uses `is-path-inside` library for robust path validation
   - Integrates path security into `checkTargetDirectory` helper
   - Maintains backward compatibility with existing functionality
@@ -932,7 +885,6 @@
 - [`7983d30`](https://github.com/equinor/fusion-framework/commit/7983d302f5269d70646c3c5231944b8081844e86) Thanks [@odinr](https://github.com/odinr)! - **Note:** This changeset documents changes that were already implemented and released in [PR #3341](https://github.com/equinor/fusion-framework/pull/3341) (merged 2025-09-05) and included in the [🤖 Bip Bop - Fusion Framework Release](https://github.com/equinor/fusion-framework/pull/3342) (merged 2025-09-08). This changeset serves as a historical record and comprehensive documentation of the CLI tag command improvements, ensuring the changelog contains detailed information about the breaking changes, migration path, and technical details that may be referenced by users upgrading or troubleshooting CLI issues.
 
   Fixed `--version` flag conflict in CLI tag commands and improved API consistency.
-
   - **Fixed:** Resolved conflict between custom `--version` option and Commander's built-in `--version` flag that displays CLI version
   - **Refactored:** Replaced separate `--appKey`/`--version` options with unified `--package name@version` syntax for both `app tag` and `portal tag` commands
   - **Improved:** Enhanced error handling with clear validation messages for package format
@@ -941,7 +893,6 @@
 
   **Breaking Changes:**
   This introduces a breaking change to the CLI API by removing the `--version` and `--appKey` options in favor of the `--package` option. However, we're releasing this as a patch since:
-
   1. The `--version` flag never worked properly due to the conflict with Commander's built-in version flag
   2. The old API was fundamentally broken and unusable
   3. Limited adoption in production environments means minimal impact
@@ -950,7 +901,6 @@
      - The Fusion App Admin UI (graphical interface for release management)
 
   **Migration:**
-
   - Old: `fusion-framework-cli app tag --appKey my-app --version 1.2.3 latest`
   - New: `fusion-framework-cli app tag --package my-app@1.2.3 latest`
 
@@ -961,7 +911,6 @@
   **Fixes:** https://github.com/equinor/fusion/issues/652
 
 - [#3377](https://github.com/equinor/fusion-framework/pull/3377) [`70638da`](https://github.com/equinor/fusion-framework/commit/70638da56c0dad3f349a2d063e8d8bcea3b71b12) Thanks [@odinr](https://github.com/odinr)! - Add git repository validation utilities to CLI package.
-
   - Added `isGitDir` utility function to check if a directory is a valid git repository
   - Added `assertGitRepository` assertion function for git repository validation
   - Enhanced assert utilities with git repository checking capabilities
@@ -973,7 +922,6 @@
 ### Minor Changes
 
 - [#3362](https://github.com/equinor/fusion-framework/pull/3362) [`6151ff4`](https://github.com/equinor/fusion-framework/commit/6151ff429fc5dc221a4cb43f11362cf39c2a3136) Thanks [@odinr](https://github.com/odinr)! - Added comprehensive dev-server documentation with architecture overview and configuration guide.
-
   - Added new `docs/dev-server.md` with complete dev-server documentation
   - Updated README.md to include dev-server documentation link
   - Covers dev-server features, architecture, configuration, and troubleshooting
@@ -981,7 +929,6 @@
 ### Patch Changes
 
 - [#3345](https://github.com/equinor/fusion-framework/pull/3345) [`0b53fa8`](https://github.com/equinor/fusion-framework/commit/0b53fa8dcd31b0b333a172bfcc15b342c5548bf9) Thanks [@odinr](https://github.com/odinr)! - Documented missing breaking change for Vite configuration file naming in CLI v11 migration guide and changelog.
-
   - Added detailed explanation of `app.vite.config.ts` → `vite.config.ts` file naming change
   - Emphasized that `vite.config.ts` should be a last resort for custom setups
   - Recommended using `dev-server.config.js` instead to avoid unexpected behavior
@@ -998,7 +945,6 @@
 ### Patch Changes
 
 - [#3356](https://github.com/equinor/fusion-framework/pull/3356) [`2e47652`](https://github.com/equinor/fusion-framework/commit/2e47652aba8ab14dea62307953666d8f136d7ca0) Thanks [@odinr](https://github.com/odinr)! - Fix SemVer 2.0 compliance issue where build metadata was stripped from package versions.
-
   - Disabled built-in normalization in `read-package-up` to preserve version build metadata
   - Added manual package data normalization using `normalize-package-data` library
   - Preserves original version with build metadata (e.g., `11.8.0+commit`) in app manifests
@@ -1016,7 +962,6 @@
 ### Patch Changes
 
 - [#3341](https://github.com/equinor/fusion-framework/pull/3341) [`cd09bef`](https://github.com/equinor/fusion-framework/commit/cd09befcdab4162a38d4dfd14f280ce228ea97d9) Thanks [@odinr](https://github.com/odinr)! - Added `--silent` option to the `disco resolve` command to disable CLI logger output and only output structured JSON results for piping.
-
   - Added `--silent` flag that completely disables the CLI logger and all logging output
   - Only outputs the resolved service details as JSON when silent mode is enabled
   - Enables piping the command output to other tools (e.g., `jq`, `grep`, etc.)
@@ -1024,31 +969,26 @@
   - Cleaned up debug console.log statements
 
 - [#3341](https://github.com/equinor/fusion-framework/pull/3341) [`cd09bef`](https://github.com/equinor/fusion-framework/commit/cd09befcdab4162a38d4dfd14f280ce228ea97d9) Thanks [@odinr](https://github.com/odinr)! - Aligned portal dev command options with app dev command for consistency.
-
   - Standardized option format from short flags to long flags (--debug, --port)
   - Added --env option support for runtime environment configuration
   - Updated logging message to be portal-specific ("Starting portal in development mode...")
   - Enhanced startPortalDevServer function call to include env parameter
 
 - [#3343](https://github.com/equinor/fusion-framework/pull/3343) [`33054ac`](https://github.com/equinor/fusion-framework/commit/33054ac27b309e9d0301dd1f1d63639dac27f00b) Thanks [@odinr](https://github.com/odinr)! - Reorganized authentication documentation to improve maintainability and user experience.
-
   - Removed local `libsecret.md` documentation file
   - Updated all libsecret references to point to centralized MSAL Node module documentation
   - Enhanced authentication guide with cross-references to underlying module documentation
   - Improved documentation structure by consolidating authentication docs in the appropriate module packages
 
   **Migration Notes:**
-
   - libsecret installation guide is now available at: https://equinor.github.io/fusion-framework/modules/auth/msal-node/docs/libsecret.html
   - All authentication-related documentation is now centralized in the MSAL Node module package
 
 - [#3341](https://github.com/equinor/fusion-framework/pull/3341) [`cd09bef`](https://github.com/equinor/fusion-framework/commit/cd09befcdab4162a38d4dfd14f280ce228ea97d9) Thanks [@odinr](https://github.com/odinr)! - Fixed missing `env` parameter in `buildApplication` call within `bundleApp` function.
-
   - Added the required `env` parameter to the `buildApplication` function call in `packages/cli/src/bin/app-pack.ts`
   - This ensures the build process receives the correct runtime environment configuration
 
 - [#3341](https://github.com/equinor/fusion-framework/pull/3341) [`cd09bef`](https://github.com/equinor/fusion-framework/commit/cd09befcdab4162a38d4dfd14f280ce228ea97d9) Thanks [@odinr](https://github.com/odinr)! - Fixed stdout concatenation issues in CLI commands that output JSON to stdout.
-
   - Replaced `stdout.write()` with `console.log()` for proper newline handling in:
     - `ffc app manifest` command
     - `ffc app config` command
@@ -1060,7 +1000,6 @@
   These changes ensure that shell prompts no longer concatenate to JSON output, making the commands safe to pipe to tools like `jq`.
 
 - [#3341](https://github.com/equinor/fusion-framework/pull/3341) [`cd09bef`](https://github.com/equinor/fusion-framework/commit/cd09befcdab4162a38d4dfd14f280ce228ea97d9) Thanks [@odinr](https://github.com/odinr)! - Enhanced CLI command documentation and help text across all commands.
-
   - Updated command examples to use `ffc` (alias) instead of `fusion-framework-cli`
   - Improved TSDoc comments with comprehensive descriptions and examples
   - Streamlined help text by removing redundant information and improving formatting
@@ -1080,7 +1019,6 @@
 ### Patch Changes
 
 - [#3330](https://github.com/equinor/fusion-framework/pull/3330) [`3590104`](https://github.com/equinor/fusion-framework/commit/3590104bdf3bba3386cdec7e2692078e6a92bd01) Thanks [@odinr](https://github.com/odinr)! - Enhanced Vite configuration with improved TypeScript path resolution and centralized config loading.
-
   - Added `vite-tsconfig-paths` plugin for better TypeScript path resolution in development
   - Refactored app and portal dev servers to use centralized `loadViteConfig` function
   - Improved Vite config merging with `mergeConfigVite` for better configuration management
@@ -1179,14 +1117,12 @@
 ### Patch Changes
 
 - [#3271](https://github.com/equinor/fusion-framework/pull/3271) [`7832bd7`](https://github.com/equinor/fusion-framework/commit/7832bd78843621ca95373596761bec29d4bdbbb8) Thanks [@dependabot](https://github.com/apps/dependabot)! - Update dependency `chalk` to ^5.6.0
-
   - Updated `chalk` to version ^5.6.0 in root, CLI, and log utils packages.
   - No breaking changes expected.
 
   See [chalk changelog](https://github.com/chalk/chalk/releases) for details.
 
 - [#3309](https://github.com/equinor/fusion-framework/pull/3309) [`29efd10`](https://github.com/equinor/fusion-framework/commit/29efd10c48f9d11ba5aa7246d3217c5ea81ddc14) Thanks [@odinr](https://github.com/odinr)! - - Removed all YAML/Markdown frontmatter blocks from CLI documentation files in `/packages/cli/docs` and `/packages/cli/README.md` for a cleaner, more maintainable documentation source.
-
   - Updated all internal documentation links to use relative paths without leading `./` for consistency and compatibility with VuePress.
   - Updated the `TODO.md` file to remove completed or obsolete tasks and clarify remaining todos.
 
@@ -1201,7 +1137,6 @@
 ### Major Changes
 
 - [#3075](https://github.com/equinor/fusion-framework/pull/3075) [`8fffbfb`](https://github.com/equinor/fusion-framework/commit/8fffbfb12daa9748bf5290e5084cd4d409aed253) Thanks [@odinr](https://github.com/odinr)! - **Major Changes**
-
   - **Rewrite:** The CLI has been rewritten to use Fusion Framework internally, minimizing dependencies and improving performance. It is now a first-class citizen in the Fusion Framework ecosystem, providing a more consistent and integrated experience.
   - **Dev Portal Modularization:** The dev portal has been moved to a separate package `@equinor/fusion-framework-dev-server`, enabling modular architecture and independent updates. The dev portal can be configured via `dev-server.config.js` and supports live preview and API mocking.
   - **Command Structure:** CLI is now divided into three main groups: `bin` (executable functions), `commands` (CLI commands), and `lib` (for consumers, config, and utilities). This improves organization and modularity.
@@ -1213,22 +1148,18 @@
   - **New Utility Functions:** The CLI now includes new utility modules for resolving CI/CD metadata (GitHub Actions, Azure DevOps), git commit and remote info, and package metadata. These utilities support advanced scripting and automation scenarios.
 
   **Minor Changes**
-
   - **Portal Config Support:** Added helpers for loading and resolving portal configuration files, with new types and utilities for authoring static or dynamic portal configs. Dev server logic updated to use resolved portal config.
   - **Manifest Refactor:** Portal manifest now uses `name` and `templateEntry` for consistency with app manifests. Dev server config and routing updated. Asset paths now use `/@fs` for local development. Improved type safety and schema validation.
   - **ESM Modernization:** Refactored CLI to use deepmerge instead of lodash.mergewith, updated all imports to use explicit `.js` extensions, and re-exported all bin entrypoints for ESM compatibility. Updated package.json and tsconfig.json for ESM.
 
   **Patch Changes**
-
   - **Dev Server Config:** Refactored config loading and merging, added `RecursivePartial` type, custom array merge strategy, and improved documentation. Arrays of route objects are now merged by `match` property to ensure uniqueness.
   - **Node Version Check:** Added Node.js version check and LTS recommendation to CLI entrypoint. Build config injects version info via environment variables.
 
   **Other**
-
   - Improved maintainability, type safety, and developer experience throughout the CLI and dev server packages.
 
   **Note:**
-
   - The removal of Vite config and schema utilities is a breaking change for users who previously relied on CLI-provided defaults. Please migrate to custom configuration as needed.
   - The new utility modules are available for advanced use cases and automation, but do not affect most standard CLI usage.
   - If you are authoring an `app.config.ts` file, you now need to import the config helper as follows:
@@ -1242,14 +1173,12 @@
 
   +- See the CLI's [README](https://github.com/equinor/fusion-framework/blob/main/packages/cli/README.md) for a full overview, installation, and command reference.
   +- The [docs folder](https://github.com/equinor/fusion-framework/tree/main/packages/cli/docs) contains:
-
   - - [Developing Apps](https://github.com/equinor/fusion-framework/blob/main/packages/cli/docs/application.md): Step-by-step guide to app setup, config, CI/CD, and best practices.
   - - [Developing Portals](https://github.com/equinor/fusion-framework/blob/main/packages/cli/docs/portal.md): Portal template development, manifest/schema, and deployment.
   - - [Authentication](https://github.com/equinor/fusion-framework/blob/main/packages/cli/docs/auth.md): Local and CI/CD authentication, MSAL, and secure token storage.
   - - [Migration Guide: v10 to v11](https://github.com/equinor/fusion-framework/blob/main/packages/cli/docs/migration-v10-to-v11.md): Breaking changes, deprecated commands, and upgrade steps.
   - - [libsecret setup](https://github.com/equinor/fusion-framework/blob/main/packages/cli/docs/libsecret.md): Secure credential storage for Linux users.
       +- For real-world examples, see the [cookbooks/](https://github.com/equinor/fusion-framework/tree/main/cookbooks) directory.
-
   * Key usage notes:
     - All config and manifest files must use helpers from `@equinor/fusion-framework-cli/app`.
     - Use `fusion-framework-cli auth login` for local authentication; use `FUSION_TOKEN` for CI/CD.
@@ -1276,7 +1205,6 @@
 ### Patch Changes
 
 - [#3268](https://github.com/equinor/fusion-framework/pull/3268) [`7ef5afc`](https://github.com/equinor/fusion-framework/commit/7ef5afc96a8c2cebecedc85703be820d84e3885a) Thanks [@odinr](https://github.com/odinr)! - Fix: Improve type safety and error handling in `AppAssetExportPlugin` (app-assets plugin).
-
   - Use `unknown as PluginContext` for type casting in `resolveId` and `emitAssetSync` calls.
   - Add null check and warning if asset emission fails.
   - Minor code style and safety improvements.
@@ -1323,18 +1251,15 @@
 ### Minor Changes
 
 - [#2930](https://github.com/equinor/fusion-framework/pull/2930) [`5da6b2d`](https://github.com/equinor/fusion-framework/commit/5da6b2d4cb7fb93ff3784753a0052d3362ab828d) Thanks [@odinr](https://github.com/odinr)! - **@equinor/fusion-framework-react:**
-
   - Enhanced `useAppContextNavigation` to support custom context path extraction and generation. This allows for more flexible navigation handling based on application-specific requirements.
 
   **@equinor/fusion-framework-module-context:**
-
   - Added support for custom context path extraction and generation in `ContextConfigBuilder`, `ContextProvider`, and `ContextModuleConfigurator`.
   - Introduced `setContextPathExtractor` and `setContextPathGenerator` methods in `ContextConfigBuilder` to allow developers to define custom logic for extracting and generating context paths.
   - Updated `ContextProvider` to utilize `extractContextIdFromPath` and `generatePathFromContext` from the configuration, enabling dynamic path handling.
   - Enhanced `ContextModuleConfigurator` to include `extractContextIdFromPath` and `generatePathFromContext` in the module configuration.
 
   If you are using `@equinor/fusion-framework-module-context` and need custom logic for context path handling:
-
   1. Use `setContextPathExtractor` to define how to extract context IDs from paths.
   2. Use `setContextPathGenerator` to define how to generate paths based on context items.
 
@@ -1361,11 +1286,11 @@
         // Custom logic to generate path from context
         const path = contextProvider.generatePathFromContext?.(
           context,
-          location.pathname
+          location.pathname,
         );
         return path ?? fallbackPathGenerator(context, location.pathname);
       }),
-      filter(Boolean)
+      filter(Boolean),
     )
     .subscribe((path) => history.push(path));
   ```
@@ -1389,7 +1314,6 @@
 - [#2885](https://github.com/equinor/fusion-framework/pull/2885) [`abb3560`](https://github.com/equinor/fusion-framework/commit/abb3560a22ad8830df19904272035458433f4237) Thanks [@dependabot](https://github.com/apps/dependabot)! - Update he `Typescript` version `^5.7.3` to `^5.8.2`
 
 - [#2890](https://github.com/equinor/fusion-framework/pull/2890) [`1ad39f5`](https://github.com/equinor/fusion-framework/commit/1ad39f509a33627f2ad877a4125386a80ab8f510) Thanks [@odinr](https://github.com/odinr)! - refactor: adhere to self-closing tags for components
-
   - Updated `SelectorPage.tsx` to use self-closing tags for `PersonSelect` components.
   - Updated `Header.Actions.tsx` to use self-closing tags for `fwc-person-avatar` component.
   - Updated `FeatureSheetContent.tsx` to use self-closing tags for `Icon` and `Divider` components.
@@ -1499,12 +1423,10 @@
 - [#2661](https://github.com/equinor/fusion-framework/pull/2661) [`f60748b`](https://github.com/equinor/fusion-framework/commit/f60748b4f3980f00fa3aed131fef97513f1424c6) Thanks [@eikeland](https://github.com/eikeland)! - Added `noOpen` option to the development server configuration.
 
   **Modified files:**
-
   - `packages/cli/src/bin/create-dev-serve.ts`
   - `packages/cli/src/bin/main.app.ts`
 
   **Changes:**
-
   - Added `noOpen` boolean option to `createDevServer` function.
   - Updated the server configuration to conditionally open the app in the default browser based on the `noOpen` option.
   - Added `-n, --noOpen` option to the CLI command for starting the development server.
@@ -1550,7 +1472,6 @@
 ### Patch Changes
 
 - [#2612](https://github.com/equinor/fusion-framework/pull/2612) [`1f9da67`](https://github.com/equinor/fusion-framework/commit/1f9da67df85f466763788039c9f0df67164eb391) Thanks [@eikeland](https://github.com/eikeland)! - ### Changes
-
   - Stopped using node:path join in app-proxy-plugin since it caused issues on windows
 
 ## 10.2.4
@@ -1562,7 +1483,6 @@
   `AppLoader.tsx`
 
   ### Changes
-
   - Added import for last operator from rxjs/operators.
   - Updated the initialize subscription to use the last operator.
 
@@ -1571,7 +1491,6 @@
 ### Patch Changes
 
 - [#2591](https://github.com/equinor/fusion-framework/pull/2591) [`445760c`](https://github.com/equinor/fusion-framework/commit/445760ce73e1d76303c83c367a394adfb5b7a479) Thanks [@eikeland](https://github.com/eikeland)! - ### Updated Dependencies:
-
   - Updated @equinor/fusion-wc-person to ^3.0.5 in package.json.
 
 ## 10.2.2
@@ -1591,14 +1510,11 @@
 ### Minor Changes
 
 - [#2410](https://github.com/equinor/fusion-framework/pull/2410) [`9d1cb90`](https://github.com/equinor/fusion-framework/commit/9d1cb9003fa10e7ccaa95c20ef86f0a618034641) Thanks [@odinr](https://github.com/odinr)! - Updated Bookmark Integration in Dev Portal
-
   - **Refactored `BookMarkSideSheet.tsx`:**
-
     - Replaced `useHasBookmark` with `useCurrentAppModule<BookmarkModule>('bookmark')` for better module integration.
     - Updated button `disabled` state to use `bookmarkProvider?.hasBookmarkCreators`.
 
   - **Updated `Header.tsx`:**
-
     - Added `useCurrentAppModule<BookmarkModule>('bookmark')` to manage bookmark module state.
     - Disabled bookmark button if `bookmarkProvider` is not available.
     - Passed `bookmarkProvider` to `BookmarkProvider` component.
@@ -1630,7 +1546,6 @@
 ### Patch Changes
 
 - [#2523](https://github.com/equinor/fusion-framework/pull/2523) [`e188193`](https://github.com/equinor/fusion-framework/commit/e188193a09802cfb74bd8aeaa8713b75b10a0638) Thanks [@eikeland](https://github.com/eikeland)! - ## changes:
-
   - changing ci urls to new domain
 
 ## 10.0.2
@@ -1638,7 +1553,6 @@
 ### Patch Changes
 
 - [#2521](https://github.com/equinor/fusion-framework/pull/2521) [`65f03fa`](https://github.com/equinor/fusion-framework/commit/65f03fa01b71d387874dbe8ae21163c7c1c3d4b8) Thanks [@eikeland](https://github.com/eikeland)! - ### Adds CHANGELOG.md to app zip package
-
   - Removed individual file additions for package.json, LICENSE.md, and README.md.
   - Added a loop to handle multiple files (package.json, LICENSE.md, README.md, CHANGELOG.md) in a more concise manner.
   - Updated the spinner messages accordingly.
@@ -1658,7 +1572,6 @@
   Introduces new parameters to the `build-config` command for publishing the app config to a build version.
 
   Commands:
-
   - `build-pack` - Bundle the app for distribution
     - `-o, --output <output>` - Output directory for the packed app
     - `-a, --archive` - Archive name for the packed app
@@ -1719,7 +1632,6 @@
   ```
 
   **breaking changes:**
-
   - renaming all commands accociated with build.
   - The app-config endpoints is now an object containing url and scopes, where name is the object key:
 
@@ -1740,12 +1652,10 @@
 ### Minor Changes
 
 - [#2494](https://github.com/equinor/fusion-framework/pull/2494) [`e11ad64`](https://github.com/equinor/fusion-framework/commit/e11ad64a42210443bdfd9ab9eb2fb95e7e345251) Thanks [@odinr](https://github.com/odinr)! - Introduced `proxyRequestLogger` to log proxy requests in the CLI.
-
   - Show the request URL and method in the console when a proxy request is made.
   - Show proxy response status code
 
 - [#2494](https://github.com/equinor/fusion-framework/pull/2494) [`e11ad64`](https://github.com/equinor/fusion-framework/commit/e11ad64a42210443bdfd9ab9eb2fb95e7e345251) Thanks [@odinr](https://github.com/odinr)! - Create a plugin `externalPublicPlugin` to fix the issue with serving the `index.html` file from the specified external public directory. Vite mode `spa` will not serve the `index.html` file from the specified external public directory.
-
   - Enhanced the middleware to intercept requests and serve the `index.html` file from the specified external public directory.
   - Transformed the HTML using Vite's `transformIndexHtml` method.
   - Applied appropriate content headers and additional configured headers before sending the response.
@@ -1762,7 +1672,6 @@
   ```
 
 - [#2494](https://github.com/equinor/fusion-framework/pull/2494) [`e11ad64`](https://github.com/equinor/fusion-framework/commit/e11ad64a42210443bdfd9ab9eb2fb95e7e345251) Thanks [@odinr](https://github.com/odinr)! - Updated commands in CLI to reflect purpose of the command:
-
   - renamed `config` to `build-config` to generate build config of an application.
   - renamed `pack`to `build-pack` to bundle an application.
   - added `build-manifest` command to generate build manifest of an application.
@@ -1778,16 +1687,13 @@
   It sets up proxy rules for API and bundle requests and serves the app configuration and manifest based on the app key and version.
 
   Key Features:
-
   1. Proxy Configuration:
-
      - Proxies API calls to the Fusion apps backend.
      - Proxies bundle requests to the Fusion apps backend.
      - Uses a base path `proxyPath` for proxying.
      - Captures and reuses authorization tokens for asset requests.
 
   2. **App Configuration and Manifest**:
-
      - Serves the app configuration if the request matches the current app and version.
      - Serves the app manifest if the request matches the current app.
 
@@ -1864,7 +1770,6 @@
 - [#2494](https://github.com/equinor/fusion-framework/pull/2494) [`e11ad64`](https://github.com/equinor/fusion-framework/commit/e11ad64a42210443bdfd9ab9eb2fb95e7e345251) Thanks [@odinr](https://github.com/odinr)! - Updating fusion-wc-person to fix issues when using selectedPerson = null in PersonSelect component.
 
   Updated the following dependencies
-
   - `@equinor/fusion-wc-person` from `^3.0.1` to `^3.0.3` in `packages/cli/package.json` and `packages/react/components/people-resolver/package.json`.
 
 - [#2494](https://github.com/equinor/fusion-framework/pull/2494) [`e11ad64`](https://github.com/equinor/fusion-framework/commit/e11ad64a42210443bdfd9ab9eb2fb95e7e345251) Thanks [@odinr](https://github.com/odinr)! - Generated base manifest from package will now include `StandardIncludeAssetExtensions` as `allowedExtensions`
@@ -1876,7 +1781,6 @@
 - [#2493](https://github.com/equinor/fusion-framework/pull/2493) [`4839295`](https://github.com/equinor/fusion-framework/commit/4839295263f07704bc43930351ce34dfb27a4c81) Thanks [@eikeland](https://github.com/eikeland)! - Updating fusion-wc-person to fix issues when using selectedPerson = null in PersonSelect component.
 
   Updated the following dependencies
-
   - `@equinor/fusion-wc-person` from `^3.0.1` to `^3.0.3` in `packages/cli/package.json` and `packages/react/components/people-resolver/package.json`.
 
 - Updated dependencies [[`4839295`](https://github.com/equinor/fusion-framework/commit/4839295263f07704bc43930351ce34dfb27a4c81)]:
@@ -1896,7 +1800,6 @@
 
   > [!NOTE]
   > This is a quick fix until the new major version of the CLI is released.
-
   - Updated the `baseUri` to use a more specific URL path for service discovery.
   - Changed from `new URL(import.meta.url).origin` to `String(new URL('/_discovery/environments/current', import.meta.url))`.
   - Changed parsing of service discovery response to match new API format.
@@ -1958,7 +1861,6 @@
 - [#2350](https://github.com/equinor/fusion-framework/pull/2350) [`960ca34`](https://github.com/equinor/fusion-framework/commit/960ca34cae26f386e28c16bac00e7932f4f9199a) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps): bump @equinor/eds-core-react from 0.38.0 to 0.40.1
 
 - [#2360](https://github.com/equinor/fusion-framework/pull/2360) [`1c7ac1b`](https://github.com/equinor/fusion-framework/commit/1c7ac1b42213f33a668e79d750e0b12b227a7052) Thanks [@eikeland](https://github.com/eikeland)! - Enhanced ContextSelector component in the CLI package:
-
   - Implemented responsive context clearing mechanism
   - Improved handling of context selection and clearing events
   - Optimized component rendering with useMemo and useCallback hooks
@@ -2002,7 +1904,6 @@
 - [#2320](https://github.com/equinor/fusion-framework/pull/2320) [`1dd85f3`](https://github.com/equinor/fusion-framework/commit/1dd85f3a408a73df556d1812a5f280945cc100ee) Thanks [@odinr](https://github.com/odinr)! - Removed the `removeComments` option from the `tsconfig.base.json` file.
 
   Removing the `removeComments` option allows TypeScript to preserve comments in the compiled JavaScript output. This can be beneficial for several reasons:
-
   1. Improved debugging: Preserved comments can help developers understand the code better during debugging sessions.
   2. Documentation: JSDoc comments and other important code documentation will be retained in the compiled output.
   3. Source map accuracy: Keeping comments can lead to more accurate source maps, which is crucial for debugging and error tracking.
@@ -2121,7 +2022,6 @@
 ### Patch Changes
 
 - [#2107](https://github.com/equinor/fusion-framework/pull/2107) [`491c2e0`](https://github.com/equinor/fusion-framework/commit/491c2e05a2383dc7aa310f11ba6f7325a69e7197) Thanks [@odinr](https://github.com/odinr)! - Fixed issue with missing process env `FUSION_LOG_LEVEL`
-
   - added default resolve value when generating base vite configuration
   - moved default query log level resolve outside class
 
@@ -2289,7 +2189,6 @@
 ### Patch Changes
 
 - [#1878](https://github.com/equinor/fusion-framework/pull/1878) [`fe1a239`](https://github.com/equinor/fusion-framework/commit/fe1a239e9ce9fc0e39b4faf67ffda40d287d5bd2) Thanks [@asbjornhaland](https://github.com/asbjornhaland)! - - Add error icon for errors
-
   - Add info icon for no result
 
 - [#1875](https://github.com/equinor/fusion-framework/pull/1875) [`e018c6e`](https://github.com/equinor/fusion-framework/commit/e018c6e5b5f8676b642ded1bb8b5b41bc65f674f) Thanks [@asbjornhaland](https://github.com/asbjornhaland)! - Show message when unhandled error occurs in context selector
@@ -2625,7 +2524,6 @@
 ### Patch Changes
 
 - [#1348](https://github.com/equinor/fusion-framework/pull/1348) [`0acc8827`](https://github.com/equinor/fusion-framework/commit/0acc8827e5e2df8b5b2aeac5e1a2cd29c4384e78) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps): bump @equinor/eds-core-react from 0.32.4 to 0.33.0
-
   - support for [styled-components@6](https://styled-components.com/releases#v6.0.0)
 
 ## 9.1.3
@@ -2723,7 +2621,6 @@
   > the CLI was thrown together as a proof of concept, but grown un-manageable, because of lack of structure
 
   **Main Features**
-
   - Separate logic and utilities from program (app/cli commands)
   - allow user to provide config files `app.{config,manifest,vite}.{ts,js,json}`
     - the cli will try to resolve from `.ts` then `.js` then `.json`
@@ -2756,7 +2653,7 @@
           },
         },
       },
-    })
+    }),
   );
   ```
 
@@ -2833,7 +2730,6 @@
 
   align CLI with EDS and use style components instead of emotion 🥲
   prevent conflict of react types dependent on both emotion and eds
-
   - remove @emotion/\*
   - convert emotion to styled-components
   - fix styling of cli
@@ -2869,7 +2765,6 @@
   see [react changelog](https://github.com/facebook/react/releases) for details
 
 - [#1122](https://github.com/equinor/fusion-framework/pull/1122) [`1a055b21`](https://github.com/equinor/fusion-framework/commit/1a055b21e07f84bc5d35cc891586aa9aa0bdf661) Thanks [@dependabot](https://github.com/apps/dependabot)! - Update styled-components to [^6.0.7](https://github.com/styled-components/styled-components/releases/tag/v6.0.7)
-
   - upgraded dev deps of `@equinor/fusion-framework-react-components-bookmark` to react 18, see style-components [changelog](https://github.com/styled-components/styled-components/releases/tag/v6.0.0)
   - removed `@types/style-components` from `@equinor/fusion-framework-react-components-bookmark`
 
@@ -2947,7 +2842,6 @@
   both `"main": "src/index.ts"` and `"main": "/src/index.ts"` will resolve.
 
 - [#905](https://github.com/equinor/fusion-framework/pull/905) [`a7858a1c`](https://github.com/equinor/fusion-framework/commit/a7858a1c01542e2dc94370709f122b4b99c3219c) Thanks [@odinr](https://github.com/odinr)! - **🚧 Chore: dedupe packages**
-
   - align all versions of typescript
   - update types to build
     - a couple of typecasts did not [satisfies](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-0.html#satisfies-support-in-jsdoc) and was recasted as `unknwon`, marked with `TODO`, should be fixed in future

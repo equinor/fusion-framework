@@ -1,5 +1,16 @@
 # @equinor/fusion-framework-dev-server
 
+## 1.1.22-next.0
+
+### Patch Changes
+
+- [#3820](https://github.com/equinor/fusion-framework/pull/3820) [`c787fc6`](https://github.com/equinor/fusion-framework/commit/c787fc6b6db2b2837ec863125220feffca7240ab) Thanks [@odinr](https://github.com/odinr)! - relase next
+
+- Updated dependencies [[`c787fc6`](https://github.com/equinor/fusion-framework/commit/c787fc6b6db2b2837ec863125220feffca7240ab)]:
+  - @equinor/fusion-framework-vite-plugin-api-service@1.2.5-next.1
+  - @equinor/fusion-log@1.1.8-next.1
+  - @equinor/fusion-framework-vite-plugin-spa@3.1.2-next.0
+
 ## 1.1.21
 
 ### Patch Changes
@@ -95,20 +106,17 @@
   This update addresses a security vulnerability in Vite's development server and includes bug fixes for improved compatibility. The update ensures secure development environments and better plugin ecosystem compatibility.
 
   **Changes:**
-
   - Updated Vite from v7.1.10 to v7.1.12
   - Includes security fix for development server file system checks
   - Includes compatibility fix for CommonJS plugin
   - No breaking changes or API modifications
 
   **Security Fix (v7.1.11):**
-
   - **dev**: trim trailing slash before `server.fs.deny` check ([#20968](https://github.com/vitejs/vite/issues/20968))
     - Prevents potential path traversal vulnerability in development server
     - Only affects development environment, not production builds
 
   **Bug Fix (v7.1.12):**
-
   - **deps**: downgrade commonjs plugin to 28.0.6 to avoid rollup/plugins issues ([#20990](https://github.com/vitejs/vite/issues/20990))
     - Improves compatibility with Rollup plugin ecosystem
     - Prevents potential build issues
@@ -166,7 +174,6 @@
 ### Patch Changes
 
 - [`56c27ec`](https://github.com/equinor/fusion-framework/commit/56c27ec9de03e07e725eecfdf2c028a1e29b6ece) Thanks [@odinr](https://github.com/odinr)! - Updated workspace dependencies to use exact version specifiers for consistent release behavior.
-
   - Changed workspace dependencies from `workspace:^` to `workspace:*` across CLI, dev-server, and SPA vite plugin packages
   - Ensures exact version resolution within the monorepo for predictable builds and releases
   - Affects both dependencies and devDependencies where applicable
@@ -189,7 +196,6 @@
 ### Patch Changes
 
 - [#3443](https://github.com/equinor/fusion-framework/pull/3443) [`2291483`](https://github.com/equinor/fusion-framework/commit/2291483b10ea288102155839dc47dcfe2addc22c) Thanks [@eikeland](https://github.com/eikeland)! - Fix OPTIONS requests missing Allow header after Vite 7 update
-
   - Disabled Vite's internal CORS handling by setting `server.cors: false`
   - This allows backend services to properly handle OPTIONS requests with correct headers
   - Resolves issue where OPTIONS requests were not forwarded to backend after Vite 7 upgrade
@@ -204,7 +210,6 @@
 - [#3349](https://github.com/equinor/fusion-framework/pull/3349) [`c511123`](https://github.com/equinor/fusion-framework/commit/c511123c835e24e9ddefcc4c47c2455f5df12087) Thanks [@dependabot](https://github.com/apps/dependabot)! - chore: bump vite from 6.x to 7.1.5
 
   Major version update of Vite build tool across all packages. This update includes:
-
   - Enhanced build performance and caching
   - Better error reporting with code frames
   - Improved TypeScript integration
@@ -212,7 +217,6 @@
   - New development server features
 
   ### Links
-
   - [Vite 7.1.5 Release Notes](https://github.com/vitejs/vite/releases/tag/v7.1.5)
   - [Vite 7.x Migration Guide](https://vitejs.dev/guide/migration)
 
@@ -223,18 +227,15 @@
   Major version update of Vitest testing framework for dev-server package.
 
   ### Breaking Changes
-
   - Updated from Vitest v2 to v3
   - Test runner behavior improvements
 
   ### New Features
-
   - Enhanced test performance
   - Better error handling and reporting
   - Updated Vite integration (v6.3.5)
 
   ### Links
-
   - [Vitest v3.2.4 Release Notes](https://github.com/vitest-dev/vitest/releases/tag/v3.2.4)
   - [Vitest v3 Migration Guide](https://vitest.dev/guide/migration.html)
 
@@ -249,7 +250,6 @@
 - [#2910](https://github.com/equinor/fusion-framework/pull/2910) [`07cc985`](https://github.com/equinor/fusion-framework/commit/07cc9857e1427b574e011cc319518e701dba784d) Thanks [@dependabot](https://github.com/apps/dependabot)! - Updated vitest from 2.1.9 to 3.2.4 across all packages.
 
   ## Breaking Changes
-
   - **Node.js Requirements**: Requires Node.js 18+ (already satisfied)
   - **Vite Compatibility**: Updated to work with Vite 7.x (already using Vite 7.1.5)
   - **Snapshot Format**: Snapshots now use backtick quotes (\`) instead of single quotes
@@ -257,18 +257,15 @@
   - **TypeScript Support**: Enhanced TypeScript integration and type definitions
 
   ## Security Updates
-
   - CVE-2025-24963: Browser mode serves arbitrary files (fixed in 2.1.9)
   - CVE-2025-24964: Remote Code Execution vulnerability (fixed in 2.1.9)
 
   ## Migration Notes
-
   - Test snapshots may need regeneration due to quote format changes
   - Some test configurations might need updates for new TypeScript support
   - Peer dependency warnings for @vitest/coverage-v8 are expected and safe to ignore
 
   ## Links
-
   - [Vitest 3.0 Migration Guide](https://vitest.dev/guide/migration)
   - [Vitest 3.2.4 Release Notes](https://github.com/vitest-dev/vitest/releases/tag/v3.2.4)
 
@@ -284,7 +281,6 @@
 - [#3330](https://github.com/equinor/fusion-framework/pull/3330) [`3590104`](https://github.com/equinor/fusion-framework/commit/3590104bdf3bba3386cdec7e2692078e6a92bd01) Thanks [@odinr](https://github.com/odinr)! - Enhanced dev server configuration by removing `vite-tsconfig-paths` plugin.
 
   > The responsibility for adding the `vite-tsconfig-paths` plugin has been moved to `@equinor/fusion-framework-cli`, which now provides it via the `overrides` parameter in `createDevServerConfig`. This ensures consistent TypeScript path resolution in both development and build environments.
-
   - Removed `vite-tsconfig-paths` dependency from package.json
   - Removed plugin usage from `create-dev-server-config.ts`
 
@@ -297,7 +293,6 @@
 ### Patch Changes
 
 - [#3327](https://github.com/equinor/fusion-framework/pull/3327) [`22d6d3b`](https://github.com/equinor/fusion-framework/commit/22d6d3b7753da8ad30054839e8a6083850a208fa) Thanks [@odinr](https://github.com/odinr)! - Enhanced dev server configuration with improved React and TypeScript path resolution support.
-
   - Added `@vitejs/plugin-react` for better React development experience
   - Added `vite-tsconfig-paths` for improved TypeScript path resolution
   - Updated `create-dev-server-config.ts` to include both plugins in the vite configuration
@@ -311,7 +306,6 @@
   For more details, visit the [GitHub repository](https://github.com/equinor/fusion-framework/tree/main/packages/dev-server/README.md).
 
   **Features**
-
   - _`createDevServer` Function_: Simplifies the creation of a development server using a configuration object.
   - _`createDevServerConfig` Function_: Generates a Vite-compatible configuration for the development server.
   - _SPA Support_: Includes `spa.templateEnv` for defining environment variables specific to Single Page Applications.
@@ -322,7 +316,6 @@
   **Dependencies**
 
   The following dependencies were added to support the new package:
-
   - `@equinor/fusion-framework-vite-plugin-api-service`
   - `@equinor/fusion-framework-vite-plugin-spa`
   - `@equinor/fusion-log`
@@ -445,7 +438,6 @@
 ### Patch Changes
 
 - [#3075](https://github.com/equinor/fusion-framework/pull/3075) [`84c16d7`](https://github.com/equinor/fusion-framework/commit/84c16d74c3235f809ce4c3e75868be12010ed695) Thanks [@odinr](https://github.com/odinr)! - Add `prepack` script to `dev-portal` and `dev-server` packages
-
   - Added a `prepack` script to `@equinor/fusion-framework-dev-portal` and `@equinor/fusion-framework-dev-server` to ensure the build runs before packaging.
   - This helps guarantee that the latest build artifacts are included when publishing these packages.
 
@@ -456,7 +448,6 @@
 - [#3074](https://github.com/equinor/fusion-framework/pull/3074) [`6b034e5`](https://github.com/equinor/fusion-framework/commit/6b034e5459094cea0c0f2490335eef3092390a13) Thanks [@odinr](https://github.com/odinr)! - Introduced a new package, `@equinor/fusion-framework-dev-server`, designed to provide a development server tailored for Fusion Framework applications. Built on top of Vite, it seamlessly integrates Vite and Fusion Framework configurations.
 
   **Features**
-
   - _`createDevServer` Function_: Simplifies the creation of a development server using a configuration object.
   - _`createDevServerConfig` Function_: Generates a Vite-compatible configuration for the development server.
   - _SPA Support_: Includes `spa.templateEnv` for defining environment variables specific to Single Page Applications.
@@ -467,7 +458,6 @@
   **Dependencies**
 
   The following dependencies were added to support the new package:
-
   - `@equinor/fusion-framework-vite-plugin-api-service`
   - `@equinor/fusion-framework-vite-plugin-spa`
   - `@equinor/fusion-log`

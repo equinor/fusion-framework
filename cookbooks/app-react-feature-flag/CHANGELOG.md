@@ -1,5 +1,19 @@
 # @equinor/fusion-framework-cookbook-app-react-feature-flag
 
+## 1.3.64-next.0
+
+### Patch Changes
+
+- [#3820](https://github.com/equinor/fusion-framework/pull/3820) [`c787fc6`](https://github.com/equinor/fusion-framework/commit/c787fc6b6db2b2837ec863125220feffca7240ab) Thanks [@odinr](https://github.com/odinr)! - relase next
+
+- Updated dependencies [[`c787fc6`](https://github.com/equinor/fusion-framework/commit/c787fc6b6db2b2837ec863125220feffca7240ab)]:
+  - @equinor/fusion-framework-module-feature-flag@2.0.0-next.1
+  - @equinor/fusion-framework-module-navigation@7.0.0-next.2
+  - @equinor/fusion-observable@9.0.0-next.1
+  - @equinor/fusion-framework-react-app@8.2.1-next.0
+  - @equinor/fusion-framework-cli@13.2.1-next.0
+  - @equinor/fusion-framework-module-http@7.0.7-next.0
+
 ## 1.3.63
 
 ### Patch Changes
@@ -14,7 +28,6 @@
 - [#3714](https://github.com/equinor/fusion-framework/pull/3714) [`11fe961`](https://github.com/equinor/fusion-framework/commit/11fe961794e4960ccb987bc320268cc9b263f1f8) Thanks [@odinr](https://github.com/odinr)! - Improved all cookbook README documentation for better developer experience.
 
   All cookbook README files now feature:
-
   - Code examples matching actual implementations
   - Inline comments explaining patterns and concepts
   - Developer-friendly language for those new to Fusion Framework
@@ -46,7 +59,6 @@
 - [#3400](https://github.com/equinor/fusion-framework/pull/3400) [`aed6c53`](https://github.com/equinor/fusion-framework/commit/aed6c5385df496a86d06dc0af9dacafc255ea605) Thanks [@dependabot](https://github.com/apps/dependabot)! - chore: bump @equinor/eds-core-react from 0.45.1 to 0.49.0
 
   ### New Features
-
   - ✨ Always show "add new option" in Autocomplete when onAddNewOption is provided
   - ✨ Tabs call onChange with provided value if present
   - ✨ Add disabled prop to Tooltip
@@ -54,7 +66,6 @@
   - ✨ Add support for adding new options in Autocomplete
 
   ### Bug Fixes
-
   - 🐛 Autocomplete - Don't call onOptionsChange when clicking "Add new"
   - 🐛 Table - Fix Firefox table header wrapping issue
   - 🐛 Tabs documentation type mismatch - update onChange parameter from number to number | string
@@ -66,28 +77,24 @@
   - 🐛 Menu: Ensure onClose is called when a MenuItem without onClick is clicked
 
   ### Links
-
   - [GitHub releases](https://github.com/equinor/design-system/releases/tag/eds-core-react%400.49.0)
   - [npm changelog](https://www.npmjs.com/package/@equinor/eds-core-react?activeTab=versions)
 
 - [#3366](https://github.com/equinor/fusion-framework/pull/3366) [`daa362e`](https://github.com/equinor/fusion-framework/commit/daa362e7d92ad362e46d666c434d0f09687abad5) Thanks [@dependabot](https://github.com/apps/dependabot)! - Update @equinor/eds-core-react from 0.48.0 to 0.49.0
 
   ### Changes
-
   - Updated @equinor/eds-core-react dependency to latest version across all packages
   - Fixed peerDependencies version mismatch in bookmark package
   - Includes bug fixes for Autocomplete and Table components
   - Adds new Autocomplete features for "add new option" functionality
 
   ### Affected Packages
-
   - packages/dev-portal
   - packages/react/components/bookmark
   - cookbooks/app-react-feature-flag
   - cookbooks/app-react-people
 
   ### Links
-
   - [GitHub releases](https://github.com/equinor/design-system/releases)
   - [Full Changelog](https://github.com/equinor/design-system/compare/eds-core-react@0.48.0...eds-core-react@0.49.0)
 
@@ -960,7 +967,6 @@
 ### Minor Changes
 
 - [#1747](https://github.com/equinor/fusion-framework/pull/1747) [`8b031c3`](https://github.com/equinor/fusion-framework/commit/8b031c31f314deeffdf395fc847e4279b61aab7e) Thanks [@odinr](https://github.com/odinr)! - refactor application
-
   - simplified example
   - updated config
   - updated components

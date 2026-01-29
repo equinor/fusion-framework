@@ -1,5 +1,15 @@
 # @equinor/fusion-framework-cli-plugin-ai-base
 
+## 1.0.5-next.0
+
+### Patch Changes
+
+- Updated dependencies [[`c787fc6`](https://github.com/equinor/fusion-framework/commit/c787fc6b6db2b2837ec863125220feffca7240ab)]:
+  - @equinor/fusion-imports@1.1.11-next.0
+  - @equinor/fusion-framework-cli@13.2.1-next.0
+  - @equinor/fusion-framework-module@5.0.6-next.1
+  - @equinor/fusion-framework-module-ai@2.0.2-next.0
+
 ## 1.0.4
 
 ### Patch Changes
@@ -44,7 +54,6 @@
   This package provides shared utilities and options used across multiple AI CLI plugins including framework setup, AI configuration, and command option handling.
 
   **Features:**
-
   - Shared AI options and configuration schema
   - Framework setup utilities
   - Common command option handling

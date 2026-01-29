@@ -1,5 +1,15 @@
 # Change Log
 
+## 6.0.6-next.0
+
+### Patch Changes
+
+- [#3820](https://github.com/equinor/fusion-framework/pull/3820) [`c787fc6`](https://github.com/equinor/fusion-framework/commit/c787fc6b6db2b2837ec863125220feffca7240ab) Thanks [@odinr](https://github.com/odinr)! - relase next
+
+- Updated dependencies [[`c787fc6`](https://github.com/equinor/fusion-framework/commit/c787fc6b6db2b2837ec863125220feffca7240ab)]:
+  - @equinor/fusion-framework-module-telemetry@4.6.2-next.0
+  - @equinor/fusion-framework-module@5.0.6-next.1
+
 ## 6.0.5
 
 ### Patch Changes
@@ -73,7 +83,6 @@
   **🚀 Enhanced features available** - New v4 APIs provide better performance, security, and error handling.
 
   ## What You Get
-
   - **Better Security**: Latest MSAL v4 security improvements and vulnerability fixes
   - **Improved Performance**: Faster token acquisition and caching
   - **Enhanced Error Handling**: More robust error recovery and retry mechanisms
@@ -118,7 +127,6 @@
 - [#3714](https://github.com/equinor/fusion-framework/pull/3714) [`11fe961`](https://github.com/equinor/fusion-framework/commit/11fe961794e4960ccb987bc320268cc9b263f1f8) Thanks [@odinr](https://github.com/odinr)! - Add optional provider-level telemetry for MSAL flows and update interface methods.
 
   **BREAKING CHANGES:**
-
   - `acquireAccessToken(options: AcquireTokenOptions)` → `acquireAccessToken(options: AcquireTokenOptionsLegacy)`
   - `acquireToken(options: AcquireTokenOptions)` → `acquireToken(options: AcquireTokenOptionsLegacy)`
   - `logout(options?: LogoutOptions): Promise<void>` → `logout(options?: LogoutOptions): Promise<boolean>`
@@ -126,7 +134,6 @@
   - Added `initialize(): Promise<void>` method
 
   **New Features:**
-
   - Optional provider-level telemetry for MSAL flows (login, token acquisition, redirect handling)
   - Emits telemetry events and measurements via injected telemetry provider when available
   - Includes basic metadata (framework module version, clientId, tenantId) and authentication context
@@ -179,7 +186,6 @@
 ### Minor Changes
 
 - [#3573](https://github.com/equinor/fusion-framework/pull/3573) [`b42b116`](https://github.com/equinor/fusion-framework/commit/b42b11616487c534e8e01f2df126e2ad05ce6a8f) Thanks [@odinr](https://github.com/odinr)! - Refactored AuthProvider to use a cleaner `client` property instead of deprecated `defaultClient`.
-
   - Added `client` property to IAuthProvider interface
   - Replaced deprecated `defaultClient` getter with `client` getter
   - Updated internal references to use private `#client` field
@@ -188,14 +194,12 @@
 - [#3572](https://github.com/equinor/fusion-framework/pull/3572) [`2d90f8b`](https://github.com/equinor/fusion-framework/commit/2d90f8b3806aa3deec5ca60142d38118748b1d3e) Thanks [@odinr](https://github.com/odinr)! - Refactored MSAL versioning module to use warnings instead of errors for version incompatibilities.
 
   **Changes:**
-
   - Removed `create-version-message.ts` and `static.ts` utility files
   - Modified `resolveVersion()` to collect warnings for version mismatches instead of throwing errors
   - Simplified `VersionError` class by removing factory methods and type enum references
   - Updated tests to reflect new warning-based behavior
 
   **Breaking Changes:**
-
   - Version resolution now returns warnings for incompatible versions instead of throwing errors
   - This change is backward compatible as existing code will continue to work, but error handling behavior has changed
 
@@ -209,7 +213,6 @@
 - [#3442](https://github.com/equinor/fusion-framework/pull/3442) [`3b614f8`](https://github.com/equinor/fusion-framework/commit/3b614f87138f5a52f8ccc50ca8c6598ef3db37d6) Thanks [@asbjornhaland](https://github.com/asbjornhaland)! - Update biome to latest version
 
 - [#3428](https://github.com/equinor/fusion-framework/pull/3428) [`1700ca8`](https://github.com/equinor/fusion-framework/commit/1700ca8851fa108e55e9729fd24f595272766e63) Thanks [@dependabot](https://github.com/apps/dependabot)! - Update zod from 4.1.9 to 4.1.11
-
   - **v4.1.10**: Fixed shape caching issue (#5263) improving validation performance for complex schemas
   - **v4.1.11**: Maintenance release with general improvements
 
@@ -227,7 +230,6 @@
   Updated source code to migrate from zod v3 to v4. Updated zod dependency from v3.25.76 to v4.1.8 and modified authentication configuration schemas in the MSAL module to be compatible with zod v4's stricter type checking and updated API.
 
   Key changes in source code:
-
   - Updated `AuthClientConfigSchema` and `AuthConfigSchema` for zod v4 compatibility
   - Enhanced version schema transformation to work with zod v4
   - Improved validation of client configuration (clientId, tenantId, redirectUri)
@@ -236,7 +238,6 @@
   Breaking changes: Schema validation behavior may differ due to zod v4's stricter type checking. Error message format has changed from zod v3 to v4 format. Function schema definitions now require explicit typing.
 
   Links:
-
   - [Zod v4 Migration Guide](https://github.com/colinhacks/zod/releases/tag/v4.0.0)
   - [Zod v4.1.8 Release Notes](https://github.com/colinhacks/zod/releases/tag/v4.1.8)
 
@@ -247,7 +248,6 @@
 - [#3376](https://github.com/equinor/fusion-framework/pull/3376) [`da373ad`](https://github.com/equinor/fusion-framework/commit/da373ade663898b2628e28529b6e3dea3b91ed43) Thanks [@odinr](https://github.com/odinr)! - Improved MSAL module version checking to be more permissive for minor and patch versions.
 
   Fixes: #3375
-
   - Refactored version checking logic into dedicated versioning module
   - Made version checking more permissive for minor and patch versions
   - Only major version incompatibilities will block execution
@@ -262,7 +262,6 @@
 ### Patch Changes
 
 - [#3343](https://github.com/equinor/fusion-framework/pull/3343) [`68dc22f`](https://github.com/equinor/fusion-framework/commit/68dc22f582bb68fbc94f29ad053122f81c049405) Thanks [@odinr](https://github.com/odinr)! - Enhanced documentation with comprehensive guides and improved developer experience.
-
   - **Complete documentation rewrite** with better structure and organization
   - **Added comprehensive API reference** with detailed interface documentation
   - **Enhanced configuration guide** with clear required/optional settings tables
@@ -273,7 +272,6 @@
   - **Added package description** for better npm package visibility
 
   **Key Improvements:**
-
   - Clear separation between required and optional configuration
   - Comprehensive API reference with TypeScript interfaces
   - Migration guidance for v4 breaking changes
@@ -294,7 +292,6 @@
 ### Patch Changes
 
 - [#3088](https://github.com/equinor/fusion-framework/pull/3088) [`7441b13`](https://github.com/equinor/fusion-framework/commit/7441b13aa50dd7362d1629086a27b6b4e571575d) Thanks [@eikeland](https://github.com/eikeland)! - chore: update package typesVersions
-
   - Updated package.json typesVersions.
   - Ensures backward compatibility with older node versions.
   - Ensured consistency with workspace and repository configuration.
@@ -360,7 +357,6 @@
 - [#2814](https://github.com/equinor/fusion-framework/pull/2814) [`ea4b522`](https://github.com/equinor/fusion-framework/commit/ea4b5221b30719289fc947b5dbb0acd3ea52ffaa) Thanks [@odinr](https://github.com/odinr)! - Rework of the MSAL module to support module hoisting. This means that sub modules instances will proxy the parent module instance. This means that the module instance will be shared between all instances of the module.
 
   **Highlights:**
-
   - Versioning module, config and provider.
   - Interfaces for MSAL versions
   - Proxy provider instances for sub modules.
@@ -368,7 +364,6 @@
   - Configurator using `BaseConfigBuilder` (aligned with other modules)
 
   **BREAKING CHANGES:**
-
   - `configureMsal` has changed parameter signature to `configureMsal(msalConfigurator: MsalConfigurator): void`
   - Added `enableMsal` with parameter signature to `enableMsal(configurator: IModulesConfigurator, configureMsal: (msalConfigurator: MsalConfigurator) => void): void`
 
@@ -427,7 +422,6 @@
 - [#2320](https://github.com/equinor/fusion-framework/pull/2320) [`1dd85f3`](https://github.com/equinor/fusion-framework/commit/1dd85f3a408a73df556d1812a5f280945cc100ee) Thanks [@odinr](https://github.com/odinr)! - Removed the `removeComments` option from the `tsconfig.base.json` file.
 
   Removing the `removeComments` option allows TypeScript to preserve comments in the compiled JavaScript output. This can be beneficial for several reasons:
-
   1. Improved debugging: Preserved comments can help developers understand the code better during debugging sessions.
   2. Documentation: JSDoc comments and other important code documentation will be retained in the compiled output.
   3. Source map accuracy: Keeping comments can lead to more accurate source maps, which is crucial for debugging and error tracking.
@@ -553,7 +547,6 @@
 ### Patch Changes
 
 - [#905](https://github.com/equinor/fusion-framework/pull/905) [`a7858a1c`](https://github.com/equinor/fusion-framework/commit/a7858a1c01542e2dc94370709f122b4b99c3219c) Thanks [@odinr](https://github.com/odinr)! - **🚧 Chore: dedupe packages**
-
   - align all versions of typescript
   - update types to build
     - a couple of typecasts did not [satisfies](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-0.html#satisfies-support-in-jsdoc) and was recasted as `unknwon`, marked with `TODO`, should be fixed in future

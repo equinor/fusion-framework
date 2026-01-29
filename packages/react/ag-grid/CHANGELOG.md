@@ -1,5 +1,15 @@
 # @equinor/fusion-framework-react-ag-grid
 
+## 34.4.2-next.0
+
+### Patch Changes
+
+- [#3820](https://github.com/equinor/fusion-framework/pull/3820) [`c787fc6`](https://github.com/equinor/fusion-framework/commit/c787fc6b6db2b2837ec863125220feffca7240ab) Thanks [@odinr](https://github.com/odinr)! - relase next
+
+- Updated dependencies [[`c787fc6`](https://github.com/equinor/fusion-framework/commit/c787fc6b6db2b2837ec863125220feffca7240ab), [`daf951f`](https://github.com/equinor/fusion-framework/commit/daf951f7ae0d55b31dc7a30a5c7a40c2c39d0534)]:
+  - @equinor/fusion-framework-react-module@4.0.0-next.1
+  - @equinor/fusion-framework-module-ag-grid@34.5.0-next.1
+
 ## 34.4.1
 
 ### Patch Changes
@@ -37,7 +47,6 @@
 - [#3639](https://github.com/equinor/fusion-framework/pull/3639) [`31f94be`](https://github.com/equinor/fusion-framework/commit/31f94becb9da9387624e8f8ab9e64b0f1a7e3b18) Thanks [@dependabot](https://github.com/apps/dependabot)! - Upgrade AG Grid to 34.3.1 and ag-charts-enterprise to 12.3.1.
 
   Highlights in AG Grid 34.3.x:
-
   - Performance and stability improvements in community and enterprise
   - Minor feature refinements; no breaking API changes noted
   - React bindings remain compatible (React 18/19)
@@ -69,7 +78,6 @@
 - [#3556](https://github.com/equinor/fusion-framework/pull/3556) [`3522425`](https://github.com/equinor/fusion-framework/commit/3522425790e5ce25e28ba40f3636c4a7168afe5b) Thanks [@AndrejNikolicEq](https://github.com/AndrejNikolicEq)! - Add React 19 support and AgChartsEnterpriseModule demonstration
 
   ## React 19 Compatibility
-
   - **Updated peerDependencies**: AG Grid React package now supports React 17, 18, and 19
   - **Version Range**: Extended React support from `^17.0.0 || ^18.0.0` to `^17.0.0 || ^18.0.0 || ^19.0.0`
   - **Forward Compatibility**: Ensures compatibility with latest React features and improvements
@@ -79,7 +87,6 @@
   Enhanced the AG Grid cookbook with comprehensive charts functionality demonstration:
 
   ### New Features
-
   - **Charts Enterprise Tab**: Added dedicated tab showcasing AgChartsEnterpriseModule integration
   - **Interactive Demo**: Real-world sales data with chart creation instructions
   - **Business Scenarios**: Multiple chart examples including:
@@ -88,13 +95,11 @@
     - Quarterly Sales Chart (multi-series column chart)
 
   ### Components Added
-
   - **ChartsExample**: New component demonstrating enterprise charting capabilities
   - **Regional Sales Data**: 7 unique regions with comprehensive sales metrics
   - **Interactive Buttons**: One-click chart generation for different business scenarios
 
   ### Configuration Updates
-
   - **AgChartsEnterpriseModule**: Added to module configuration alongside existing enterprise modules
   - **Chart-Optimized Data**: Structured data for effective chart demonstrations
   - **Enhanced Grid Props**: Simplified configuration focusing on charting capabilities
@@ -102,7 +107,6 @@
   ## Usage
 
   The cookbook now provides a complete reference for integrating AG Charts Enterprise features:
-
   - Interactive chart creation via context menu and buttons
   - Multiple chart types (bar, column, pie) demonstration
   - Data filtering and aggregation examples
@@ -111,7 +115,6 @@
   This serves as both a functional demo and implementation reference for developers using AG Grid with enterprise charting in React 19 applications.
 
 - [#3556](https://github.com/equinor/fusion-framework/pull/3556) [`3522425`](https://github.com/equinor/fusion-framework/commit/3522425790e5ce25e28ba40f3636c4a7168afe5b) Thanks [@AndrejNikolicEq](https://github.com/AndrejNikolicEq)! - Add AgChartsEnterpriseModule support for charting
-
   - **Added AgChartsEnterpriseModule export**: Now available from `@equinor/fusion-framework-react-ag-grid/enterprise`
   - **New dependency**: Added `ag-charts-enterprise` as direct dependency (12.2.0)
   - Updated enterprise.ts to include AG Charts Enterprise module alongside existing AG Grid enterprise modules
@@ -137,7 +140,6 @@
 ### Patch Changes
 
 - [#3357](https://github.com/equinor/fusion-framework/pull/3357) [`e24cd15`](https://github.com/equinor/fusion-framework/commit/e24cd15175a322cbdd4d40a5dfa9933a3f55d624) Thanks [@dependabot](https://github.com/apps/dependabot)! - Updated ag-grid dependencies to version 34.2.0
-
   - Updated ag-grid-community from 34.1.2 to 34.2.0
   - Updated ag-grid-enterprise from 34.1.2 to 34.2.0
   - Updated ag-grid-react from 34.1.2 to 34.2.0
@@ -145,7 +147,6 @@
   This patch update includes bug fixes and improvements. See the [ag-grid changelog](https://www.ag-grid.com/changelog/?fixVersion=34.2.0) for detailed release notes.
 
   **Key changes in 34.2.0:**
-
   - RTI-3075: Ensure API stop/cancel succeed
   - RTI-3073: Enter during batch shouldn't end batch
   - RTI-3070: Only create strategies when editing
@@ -201,7 +202,6 @@
 ### Patch Changes
 
 - [#3088](https://github.com/equinor/fusion-framework/pull/3088) [`7441b13`](https://github.com/equinor/fusion-framework/commit/7441b13aa50dd7362d1629086a27b6b4e571575d) Thanks [@eikeland](https://github.com/eikeland)! - chore: update package typesVersions
-
   - Updated package.json typesVersions.
   - Ensures backward compatibility with older node versions.
   - Ensured consistency with workspace and repository configuration.
@@ -311,7 +311,6 @@
   This package is a wrapper for `ag-grid-react`, `ag-grid-community` and `ag-grid-enterprise` packages.
 
   ## Features
-
   - Consolidated AG Grid dependencies into a single package.
   - Method for enabling Fusion Framework AG Grid module
   - Utilities for extending Fusion themes
