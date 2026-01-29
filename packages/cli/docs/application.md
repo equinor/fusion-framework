@@ -424,7 +424,7 @@ This command uploads and tags your app for deployment. If no bundle is provided,
 | `[bundle]`         | Path to the app bundle to upload. If omitted, the CLI will build and bundle your app automatically. When provided, app validation uses metadata from the bundle instead of local files. |                   |
 | `-e`, `--env`      | Target environment for deployment (e.g., `ci`, `fqa`, `fprd`).                                      |                   |
 | `-m`, `--manifest` | Manifest file to use for bundling (e.g., `app.manifest.ts`) (optional).                             | `app.manifest.ts` |
-| `-t`, `--tag`      | Tag to apply to the published app (`latest` \| `preview`).                                          | `latest`          |
+| `-t`, `--tag`      | Tag to apply to the published app (any string, commonly `latest` or `preview`).                    | `latest`          |
 | `-d`, `--debug`    | Enable debug mode for verbose logging.                                                              | `false`           |
 | `--token`          | Authentication token for Fusion.                                                                    |                   |
 | `--tenantId`       | Azure tenant ID for authentication.                                                                 |                   |
@@ -449,7 +449,7 @@ pnpm fusion-framework-cli publish --tag latest app-bundle.zip
 >
 > **Additional Notes**:
 > - **Artifact-based publishing**: When providing a bundle, the command extracts app metadata from `metadata.json` within the bundle, enabling publishing from any directory without requiring local project files.
-> - The `--tag` option lets you mark the published version (e.g., as `latest` or `preview`) for easier deployment targeting.
+> - The `--tag` option lets you mark the published version with any custom tag (e.g., `latest`, `preview`, `dev`, `staging`, `v1.0`) for easier deployment targeting.
 > - Authentication options (`--token`, `--tenantId`, `--clientId`) can be set via CLI flags or environment variables.
 > - If any step fails (build, upload, or tagging), an error will be logged and the process will exit with a non-zero code.
 
@@ -591,11 +591,11 @@ Tag a published application version in the Fusion app store (registry).
 
 Tag a specific version of your Fusion application in the Fusion app registry for release management.
 
-The `tag` command applies a tag (such as `latest`, `preview`, or `stable`) to a published application version. This helps you manage which version is considered the default for deployment or preview purposes.
+The `tag` command applies a tag (such as `latest`, `preview`, `dev`, `staging`, or any custom string) to a published application version. This helps you manage which version is considered the default for deployment or preview purposes.
 
 | Argument/Option           | Description                                                        | Default / Example |
 | ------------------------- | ------------------------------------------------------------------ | ----------------- |
-| `<tag>`                   | Tag to apply (`latest` \| `preview` \| `stable`).                  |                   |
+| `<tag>`                   | Tag to apply (any string, e.g., `latest`, `preview`, `dev`, `staging`).     |                   |
 | `-p, --package`           | Package to tag in format name@version.                              |                   |
 | `-m, --manifest <string>` | Manifest file to use for resolving app key and version.            | `app.manifest.ts` |
 | `--debug`                 | Enable debug mode for verbose logging.                             | `false`           |
@@ -621,7 +621,7 @@ pnpm fusion-framework-cli app tag latest --package my-app@1.2.3
 
 > [!NOTE]
 > - The `tag` command requires a published application version. You can specify the package name and version using `--package`, or let the CLI resolve them from your manifest file.
-> - Supported tags are: `latest` and `preview`.
+> - Tags can be any string value. Common examples include `latest`, `preview`, `dev`, `staging`, or version numbers like `v1.0`.
 > - Authentication options (`--token`, `--tenantId`, `--clientId`) can be set via CLI flags or environment variables.
 > - If tagging fails, an error will be logged and the process will exit with a non-zero code.
 

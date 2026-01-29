@@ -70,7 +70,7 @@ export type AppBuildManifest = {
   version: string;
   entryPoint: string;
   tags?: Nullable<string[]>;
-  tag?: Nullable<'latest' | 'preview'>;
+  tag?: Nullable<string>;
   assetPath?: Nullable<string>;
   configUrl?: Nullable<string>;
   timestamp?: Nullable<string>;

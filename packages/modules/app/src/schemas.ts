@@ -67,7 +67,7 @@ const ApiApplicationPersonSchema = z.object({
  * - `version`: The version of the application build.
  * - `entryPoint`: The entry point of the application.
  * - `tags`: An optional array of tags associated with the build.
- * - `tag`: An optional tag indicating the build type, either 'latest' or 'preview'.
+ * - `tag`: An optional tag indicating the build type (can be any string, commonly 'latest' or 'preview').
  * - `assetPath`: An optional path to the build assets.
  * - `configUrl`: An optional URL to the build configuration.
  * - `timestamp`: An optional timestamp of the build.
@@ -81,7 +81,7 @@ export const ApiApplicationBuildSchema = z.object({
   version: z.string(),
   entryPoint: z.string(),
   tags: z.array(z.string()).nullish(),
-  tag: z.enum(['latest', 'preview']).nullish(),
+  tag: z.string().nullish(),
   assetPath: z.string().nullish(),
   configUrl: z.string().nullish(),
   timestamp: z.string().nullish(),
