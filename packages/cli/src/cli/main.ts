@@ -10,7 +10,9 @@ import { readPackageUpSync } from 'read-package-up';
 
 import registerCommands from './commands/index.js';
 
-loadDotEnv();
+// Load environment variables from .env file without stdout contamination
+// Uses dotenv's quiet option to suppress informational messages that contaminate JSON output
+loadDotEnv({ quiet: true });
 
 // Check Node.js version and recommend LTS (24.x)
 const MINIMUM_NODE_VERSION = process.env.MINIMUM_NODE_VERSION || '20';
