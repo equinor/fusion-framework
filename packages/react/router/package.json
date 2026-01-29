@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework-react-router",
-  "version": "1.0.0-next.0",
+  "version": "1.0.0-next.1",
   "description": "DSL API for defining React Router v7 routes with type safety",
   "main": "dist/esm/index.js",
   "type": "module",

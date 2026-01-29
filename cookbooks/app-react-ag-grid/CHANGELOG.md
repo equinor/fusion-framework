@@ -1,5 +1,16 @@
 # Change Log
 
+## 1.0.8-next.0
+
+### Patch Changes
+
+- [#3820](https://github.com/equinor/fusion-framework/pull/3820) [`c787fc6`](https://github.com/equinor/fusion-framework/commit/c787fc6b6db2b2837ec863125220feffca7240ab) Thanks [@odinr](https://github.com/odinr)! - relase next
+
+- Updated dependencies [[`c787fc6`](https://github.com/equinor/fusion-framework/commit/c787fc6b6db2b2837ec863125220feffca7240ab)]:
+  - @equinor/fusion-framework-react-app@8.2.1-next.0
+  - @equinor/fusion-framework-cli@13.2.1-next.0
+  - @equinor/fusion-framework-react-ag-grid@34.4.2-next.0
+
 ## 1.0.7
 
 ### Patch Changes

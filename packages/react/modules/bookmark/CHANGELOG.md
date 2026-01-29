@@ -1,5 +1,18 @@
 # Change Log
 
+## 6.0.0-next.1
+
+### Patch Changes
+
+- [#3820](https://github.com/equinor/fusion-framework/pull/3820) [`c787fc6`](https://github.com/equinor/fusion-framework/commit/c787fc6b6db2b2837ec863125220feffca7240ab) Thanks [@odinr](https://github.com/odinr)! - relase next
+
+- Updated dependencies [[`c787fc6`](https://github.com/equinor/fusion-framework/commit/c787fc6b6db2b2837ec863125220feffca7240ab)]:
+  - @equinor/fusion-framework-react-module@4.0.0-next.1
+  - @equinor/fusion-observable@9.0.0-next.1
+  - @equinor/fusion-framework-react@8.0.0-next.1
+  - @equinor/fusion-framework-module-bookmark@3.0.6-next.0
+  - @equinor/fusion-framework-module@5.0.6-next.1
+
 ## 6.0.0-next.0
 
 ### Major Changes

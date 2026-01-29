@@ -1,5 +1,11 @@
 # @equinor/fusion-imports
 
+## 1.1.11-next.0
+
+### Patch Changes
+
+- [#3820](https://github.com/equinor/fusion-framework/pull/3820) [`c787fc6`](https://github.com/equinor/fusion-framework/commit/c787fc6b6db2b2837ec863125220feffca7240ab) Thanks [@odinr](https://github.com/odinr)! - relase next
+
 ## 1.1.10
 
 ### Patch Changes
@@ -7,7 +13,6 @@
 - [#3867](https://github.com/equinor/fusion-framework/pull/3867) [`5a25a5e`](https://github.com/equinor/fusion-framework/commit/5a25a5e6fefc660131b77f58e667b1a05dca0d6b) Thanks [@dependabot](https://github.com/apps/dependabot)! - Internal: Update esbuild dependency from 0.27.0 to 0.27.2
 
   Includes bug fixes and enhancements:
-
   - Fix bundler bug with `var` nested inside `if`
   - Fix minifier bugs with edge cases
   - Improved switch statement minification
@@ -43,7 +48,6 @@
 ### Patch Changes
 
 - [#3606](https://github.com/equinor/fusion-framework/pull/3606) [`fa12d3a`](https://github.com/equinor/fusion-framework/commit/fa12d3a2466a590a943d85c873f02bc45e8fba52) Thanks [@dependabot](https://github.com/apps/dependabot)! - chore: bump esbuild from 0.25.10 to 0.25.11
-
   - Add support for `with { type: 'bytes' }` imports (TC39 stage 2.7)
   - Lower CSS media query range syntax for older browsers
   - Update platform-specific binaries for better performance
@@ -53,7 +57,6 @@
 ### Patch Changes
 
 - [#3437](https://github.com/equinor/fusion-framework/pull/3437) [`ff3ab8f`](https://github.com/equinor/fusion-framework/commit/ff3ab8fd64cacd9b0a691a696bb2a7c5187e2cf3) Thanks [@dependabot](https://github.com/apps/dependabot)! - Updated memfs from 4.42.0 to 4.46.0.
-
   - Patch update with internal improvements
   - No breaking changes to public API
   - All tests pass, build successful
@@ -65,7 +68,6 @@
 - [#2910](https://github.com/equinor/fusion-framework/pull/2910) [`07cc985`](https://github.com/equinor/fusion-framework/commit/07cc9857e1427b574e011cc319518e701dba784d) Thanks [@dependabot](https://github.com/apps/dependabot)! - Updated vitest from 2.1.9 to 3.2.4 across all packages.
 
   ## Breaking Changes
-
   - **Node.js Requirements**: Requires Node.js 18+ (already satisfied)
   - **Vite Compatibility**: Updated to work with Vite 7.x (already using Vite 7.1.5)
   - **Snapshot Format**: Snapshots now use backtick quotes (\`) instead of single quotes
@@ -73,18 +75,15 @@
   - **TypeScript Support**: Enhanced TypeScript integration and type definitions
 
   ## Security Updates
-
   - CVE-2025-24963: Browser mode serves arbitrary files (fixed in 2.1.9)
   - CVE-2025-24964: Remote Code Execution vulnerability (fixed in 2.1.9)
 
   ## Migration Notes
-
   - Test snapshots may need regeneration due to quote format changes
   - Some test configurations might need updates for new TypeScript support
   - Peer dependency warnings for @vitest/coverage-v8 are expected and safe to ignore
 
   ## Links
-
   - [Vitest 3.0 Migration Guide](https://vitest.dev/guide/migration)
   - [Vitest 3.2.4 Release Notes](https://github.com/vitest-dev/vitest/releases/tag/v3.2.4)
 
@@ -93,18 +92,15 @@
 ### Patch Changes
 
 - [#3324](https://github.com/equinor/fusion-framework/pull/3324) [`39188bf`](https://github.com/equinor/fusion-framework/commit/39188bfc84fe2b62f72b07acd58f10fe7149579c) Thanks [@odinr](https://github.com/odinr)! - Fixed incorrect repository directory reference in package.json.
-
   - Corrected the repository directory from "packages/utils/transpile" to "packages/utils/imports" to match the actual package location
 
 - [#3324](https://github.com/equinor/fusion-framework/pull/3324) [`39188bf`](https://github.com/equinor/fusion-framework/commit/39188bfc84fe2b62f72b07acd58f10fe7149579c) Thanks [@odinr](https://github.com/odinr)! - Changed `esbuild` from `devDependency` to `dependency` to fix Yarn Plug and Play compatibility.
-
   - Fixes issue with Yarn Plug and Play where `@equinor/fusion-imports` tried to access esbuild but it wasn't declared in dependencies
   - Moved esbuild from devDependencies to dependencies to resolve the ambiguous require call
 
   Fixes: https://github.com/equinor/fusion/issues/641
 
 - [#3325](https://github.com/equinor/fusion-framework/pull/3325) [`866d1c5`](https://github.com/equinor/fusion-framework/commit/866d1c52ab86aaa742605e401d8633bc032efeb2) Thanks [@odinr](https://github.com/odinr)! - Fixed Windows compatibility issue with ESM loader when importing bundled scripts.
-
   - Added `pathToFileURL` conversion before importing bundled scripts to prevent `ERR_UNSUPPORTED_ESM_URL_SCHEME` errors on Windows
   - Windows absolute paths like `C:\path\to\file.js` are now properly converted to `file:///C:/path/to/file.js` URLs before being passed to the ESM loader
   - This ensures cross-platform compatibility for dynamic imports in the CLI and build tools
@@ -140,7 +136,6 @@
 ### Minor Changes
 
 - [#3034](https://github.com/equinor/fusion-framework/pull/3034) [`e13592b`](https://github.com/equinor/fusion-framework/commit/e13592b8437914b36b9ea163affb5425c6372b38) Thanks [@odinr](https://github.com/odinr)! - This update to `@equinor/fusion-imports` improves error handling, enhances support for resolving multiple configuration file base names, and delivers structured results for import operations. Key enhancements include:
-
   - Dedicated error classes for file-related issues
   - Improved handling of script imports
   - Robust file resolution mechanisms
@@ -150,25 +145,21 @@
   Note: This release includes breaking changes, requiring updates to dependent codebases.
 
   **Added:**
-
   - Introduced `FileNotFoundError` and `FileNotAccessibleError` classes to handle specific file-related errors.
   - Added `processAccessError` utility to process file access errors and throw appropriate error types.
   - Added support for resolving multiple base names in `resolveConfigFile`.
   - Added `ImportConfigResult` type to provide structured results from `importConfig`.
 
   **Changed:**
-
   - Updated `importConfig` to return a structured result containing `path`, `extension`, and `config` instead of just the configuration object.
   - Modified `importScript` to support custom output paths and handle memory-based builds when `write` is set to `false`.
   - Enhanced `resolveConfigFile` to handle arrays of base names and throw `FileNotFoundError` for missing files.
 
   **Fixed:**
-
   - Fixed issues with `importScript` where missing files were not properly handled.
   - Improved error handling for file access in `resolveConfigFile`.
 
   **BREAKING CHANGES:**
-
   - `importConfig` now returns an object of type `ImportConfigResult` instead of the raw configuration content. This change requires updates to all consumers of this function.
   - `resolveConfigFile` now throws `FileNotFoundError` instead of a generic `Error` when no configuration file is found.
   - `importScript` now uses `read-package-up` to determine the package-local path, which may affect the output location of bundled files.
@@ -178,7 +169,6 @@
 ### Major Changes
 
 - [#2921](https://github.com/equinor/fusion-framework/pull/2921) [`37b7f21`](https://github.com/equinor/fusion-framework/commit/37b7f21b6c8742be5e92e54ec1faa8eaba61e2a6) Thanks [@odinr](https://github.com/odinr)! - The `@equinor/fusion-imports` package introduces utility functions to simplify handling imports in your projects. This release includes the following features:
-
   - Resolves configuration files by searching for TypeScript, JavaScript, and JSON files in order.
   - Supports custom resolution logic via the `script.resolve` option.
   - Automatically resolves `module.default` when available.

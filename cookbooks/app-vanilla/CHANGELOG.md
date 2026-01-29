@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-cookbook-app-vanilla
 
+## 1.0.5-next.1
+
+### Patch Changes
+
+- [#3820](https://github.com/equinor/fusion-framework/pull/3820) [`c787fc6`](https://github.com/equinor/fusion-framework/commit/c787fc6b6db2b2837ec863125220feffca7240ab) Thanks [@odinr](https://github.com/odinr)! - relase next
+
 ## 1.0.5-next.0
 
 ### Patch Changes

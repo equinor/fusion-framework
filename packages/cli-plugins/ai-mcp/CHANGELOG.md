@@ -1,5 +1,15 @@
 # @equinor/fusion-framework-cli-plugin-ai-mcp
 
+## 1.0.5-next.0
+
+### Patch Changes
+
+- Updated dependencies [[`c787fc6`](https://github.com/equinor/fusion-framework/commit/c787fc6b6db2b2837ec863125220feffca7240ab)]:
+  - @equinor/fusion-framework-cli@13.2.1-next.0
+  - @equinor/fusion-framework-module@5.0.6-next.1
+  - @equinor/fusion-framework-cli-plugin-ai-base@1.0.5-next.0
+  - @equinor/fusion-framework-module-ai@2.0.2-next.0
+
 ## 1.0.4
 
 ### Patch Changes
@@ -46,7 +56,6 @@
   This plugin extends the Fusion Framework CLI with MCP server capabilities, enabling AI assistants to search and query Fusion Framework documentation through specialized semantic search tools.
 
   **Features:**
-
   - MCP protocol server implementation (stdio transport)
   - Fusion Framework API reference search (TypeScript/TSDoc)
   - Cookbook examples and tutorials search
@@ -55,7 +64,6 @@
   - Vector store integration via Azure Cognitive Search
 
   **Quick Usage:**
-
   1. Install the plugin:
 
   ```sh

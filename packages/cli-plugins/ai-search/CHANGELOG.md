@@ -1,5 +1,15 @@
 # @equinor/fusion-framework-cli-plugin-ai-search
 
+## 1.0.5-next.0
+
+### Patch Changes
+
+- Updated dependencies [[`c787fc6`](https://github.com/equinor/fusion-framework/commit/c787fc6b6db2b2837ec863125220feffca7240ab)]:
+  - @equinor/fusion-framework-cli@13.2.1-next.0
+  - @equinor/fusion-framework-module@5.0.6-next.1
+  - @equinor/fusion-framework-cli-plugin-ai-base@1.0.5-next.0
+  - @equinor/fusion-framework-module-ai@2.0.2-next.0
+
 ## 1.0.4
 
 ### Patch Changes
@@ -42,7 +52,6 @@
   This plugin extends the Fusion Framework CLI with semantic search functionality for querying vector store embeddings, enabling validation of indexed documents and retrieval of relevant content.
 
   **Features:**
-
   - Semantic search using vector embeddings
   - Configurable result limits
   - OData filter expressions for metadata-based filtering
@@ -52,7 +61,6 @@
   - Verbose output mode
 
   **Quick Usage:**
-
   1. Install the plugin:
 
   ```sh

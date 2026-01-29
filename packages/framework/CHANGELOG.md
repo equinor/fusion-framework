@@ -1,5 +1,21 @@
 # Change Log
 
+## 7.4.3-next.1
+
+### Patch Changes
+
+- [#3820](https://github.com/equinor/fusion-framework/pull/3820) [`c787fc6`](https://github.com/equinor/fusion-framework/commit/c787fc6b6db2b2837ec863125220feffca7240ab) Thanks [@odinr](https://github.com/odinr)! - relase next
+
+- Updated dependencies [[`c787fc6`](https://github.com/equinor/fusion-framework/commit/c787fc6b6db2b2837ec863125220feffca7240ab)]:
+  - @equinor/fusion-framework-module-telemetry@4.6.2-next.0
+  - @equinor/fusion-framework-module-context@7.0.3-next.1
+  - @equinor/fusion-framework-module-event@4.4.2-next.0
+  - @equinor/fusion-framework-module-http@7.0.7-next.0
+  - @equinor/fusion-framework-module@5.0.6-next.1
+  - @equinor/fusion-framework-module-msal@6.0.6-next.0
+  - @equinor/fusion-framework-module-service-discovery@9.0.6-next.0
+  - @equinor/fusion-framework-module-services@7.1.8-next.0
+
 ## 7.4.3-next.0
 
 ### Patch Changes

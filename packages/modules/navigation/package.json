@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework-module-navigation",
-  "version": "7.0.0-next.1",
+  "version": "7.0.0-next.2",
   "description": "Navigation module for Fusion Framework providing routing and navigation capabilities using React Router 7",
   "sideEffects": false,
   "main": "dist/esm/index.js",
