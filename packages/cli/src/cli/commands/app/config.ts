@@ -100,6 +100,7 @@ export const command = withAuthOptions(
           environment: options.env,
           auth: 'token' in options ? { token: options.token } : options,
           debug: options.debug,
+          log,
         });
       }
 
