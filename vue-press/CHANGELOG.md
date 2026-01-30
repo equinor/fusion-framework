@@ -1,11 +1,22 @@
 # @equinor/fusion-framework-docs
 
+## 0.4.12-next.0
+
+### Patch Changes
+
+- [#3820](https://github.com/equinor/fusion-framework/pull/3820) [`265bb76`](https://github.com/equinor/fusion-framework/commit/265bb767249989eeb1971e83f3fba94879e0813b) Thanks [@odinr](https://github.com/odinr)! - relase next
+
+- [#3820](https://github.com/equinor/fusion-framework/pull/3820) [`d252b0d`](https://github.com/equinor/fusion-framework/commit/d252b0d442b7c8c1b50bf2768cf9ecbbb55a76f8) Thanks [@odinr](https://github.com/odinr)! - Add React Router module documentation page to vue-press with sidebar navigation.
+
+  Added documentation page for `@equinor/fusion-framework-react-router` module in the vue-press site, including it in the modules sidebar under a new React section.
+
+- [#3820](https://github.com/equinor/fusion-framework/pull/3820) [`d252b0d`](https://github.com/equinor/fusion-framework/commit/d252b0d442b7c8c1b50bf2768cf9ecbbb55a76f8) Thanks [@odinr](https://github.com/odinr)! - Improve Fusion React Router README with a clearer quick start, route DSL overview, Fusion context usage, and route schema examples to make it easier for application developers to adopt the extended router.
+
 ## 0.4.11
 
 ### Patch Changes
 
 - [#3792](https://github.com/equinor/fusion-framework/pull/3792) [`79a121b`](https://github.com/equinor/fusion-framework/commit/79a121be49f115a19990e734f51dfdd6a3dcf778) Thanks [@dependabot](https://github.com/apps/dependabot)! - Upgrade VuePress and related dependencies:
-
   - @vuepress/bundler-vite: 2.0.0-rc.24 → 2.0.0-rc.26
   - @vuepress/cli: 2.0.0-rc.24 → 2.0.0-rc.26
   - @vuepress/client: 2.0.0-rc.24 → 2.0.0-rc.26
@@ -26,7 +37,6 @@
 - [#3714](https://github.com/equinor/fusion-framework/pull/3714) [`11fe961`](https://github.com/equinor/fusion-framework/commit/11fe961794e4960ccb987bc320268cc9b263f1f8) Thanks [@odinr](https://github.com/odinr)! - Improved all cookbook README documentation for better developer experience.
 
   All cookbook README files now feature:
-
   - Code examples matching actual implementations
   - Inline comments explaining patterns and concepts
   - Developer-friendly language for those new to Fusion Framework
@@ -39,7 +49,6 @@
 - [#3714](https://github.com/equinor/fusion-framework/pull/3714) [`11fe961`](https://github.com/equinor/fusion-framework/commit/11fe961794e4960ccb987bc320268cc9b263f1f8) Thanks [@odinr](https://github.com/odinr)! - Reorganize MSAL v4 authentication documentation structure and add cookbook examples.
 
   **Changes:**
-
   - Moved authentication guide to `/guide/app/docs/msal.md` with direct link to module docs
   - Added new cookbooks section with MSAL authentication example
   - Updated navigation sidebar to reflect new documentation structure
@@ -60,7 +69,6 @@
 ### Patch Changes
 
 - [#3587](https://github.com/equinor/fusion-framework/pull/3587) [`8927882`](https://github.com/equinor/fusion-framework/commit/89278821d92b1d7a0847229f7892cc2c89e07d1a) Thanks [@odinr](https://github.com/odinr)! - Improved contributing documentation navigation by adding a dedicated "Contributing" section to the main navigation and reorganizing contributing guides into a structured sidebar with categories for Development, Code Quality, Process, and Documentation.
-
   - Added "Contributing" link to main navbar
   - Created organized sidebar structure for contributing guides
   - Grouped guides into logical categories: Development, Code Quality, Process, and Documentation
@@ -71,14 +79,12 @@
 ### Patch Changes
 
 - [#3534](https://github.com/equinor/fusion-framework/pull/3534) [`8049b43`](https://github.com/equinor/fusion-framework/commit/8049b43847370c73814939f258a86723329b6b3c) Thanks [@odinr](https://github.com/odinr)! - Updated documentation site navigation and added dev-server configuration guide.
-
   - Enhanced sidebar navigation with nested Dev Server section including Overview and Configuration
   - Added dev-server-config.md to the documentation site
 
   ref: [#3523](https://github.com/equinor/fusion-framework/issues/3523)
 
 - [#3534](https://github.com/equinor/fusion-framework/pull/3534) [`8049b43`](https://github.com/equinor/fusion-framework/commit/8049b43847370c73814939f258a86723329b6b3c) Thanks [@odinr](https://github.com/odinr)! - Added telemetry module documentation to the vue-press documentation site.
-
   - Created dedicated telemetry module documentation under modules section
   - Updated sidebar navigation to include telemetry module in alphabetical order
   - Includes comprehensive documentation for telemetry configuration, usage, adapters, and measurements
@@ -90,7 +96,6 @@
 ### Patch Changes
 
 - [#3377](https://github.com/equinor/fusion-framework/pull/3377) [`70638da`](https://github.com/equinor/fusion-framework/commit/70638da56c0dad3f349a2d063e8d8bcea3b71b12) Thanks [@odinr](https://github.com/odinr)! - Add comprehensive Creating Apps guide to documentation site.
-
   - Added new "Creating Apps" section to CLI documentation
   - Updated sidebar navigation to include creating-apps.md
   - Added detailed guide covering app creation, templates, and best practices
@@ -104,7 +109,6 @@
 ### Patch Changes
 
 - [#3362](https://github.com/equinor/fusion-framework/pull/3362) [`6151ff4`](https://github.com/equinor/fusion-framework/commit/6151ff429fc5dc221a4cb43f11362cf39c2a3136) Thanks [@odinr](https://github.com/odinr)! - Updated documentation site with dev-server docs and dependency updates.
-
   - Added dev-server documentation to CLI docs sidebar
   - Updated mermaid dependency from ^11.0.2 to ^11.11.0
   - Added dev-server documentation include file for vue-press
@@ -114,26 +118,22 @@
 ### Patch Changes
 
 - [#3343](https://github.com/equinor/fusion-framework/pull/3343) [`33054ac`](https://github.com/equinor/fusion-framework/commit/33054ac27b309e9d0301dd1f1d63639dac27f00b) Thanks [@odinr](https://github.com/odinr)! - Reorganized authentication documentation to improve maintainability and user experience.
-
   - Removed local `libsecret.md` documentation file
   - Updated all libsecret references to point to centralized MSAL Node module documentation
   - Enhanced authentication guide with cross-references to underlying module documentation
   - Improved documentation structure by consolidating authentication docs in the appropriate module packages
 
   **Migration Notes:**
-
   - libsecret installation guide is now available at: https://equinor.github.io/fusion-framework/modules/auth/msal-node/docs/libsecret.html
   - All authentication-related documentation is now centralized in the MSAL Node module package
 
 - [#3340](https://github.com/equinor/fusion-framework/pull/3340) [`ba147d8`](https://github.com/equinor/fusion-framework/commit/ba147d80cf99c3b998f8299774e2d1815cb392f7) Thanks [@dependabot](https://github.com/apps/dependabot)! - Updated mermaid dependency from 11.10.1 to 11.11.0.
-
   - Added support for new participant types (`actor`, `boundary`, `control`, `entity`, `database`, `collections`, `queue`) in sequence diagrams
   - Improved mindmap rendering with multiple layouts and better edge intersections
   - Fixed newline rendering in class diagrams
   - Fixed arrow handling when auto number is enabled
 
 - [#3343](https://github.com/equinor/fusion-framework/pull/3343) [`c1cd89a`](https://github.com/equinor/fusion-framework/commit/c1cd89abad4ca8f232a497316232d1f5ac8c530a) Thanks [@odinr](https://github.com/odinr)! - Comprehensive documentation overhaul with enhanced developer experience and platform-specific guidance.
-
   - **Complete README rewrite** with modern structure and comprehensive examples
   - **Added detailed API reference** with TypeScript interfaces and method documentation
   - **Enhanced authentication mode documentation** with clear use cases and examples
@@ -144,14 +144,12 @@
   - **Enhanced security documentation** explaining platform keychains and encryption
 
   **New Documentation:**
-
   - `docs/libsecret.md` - Platform-specific credential storage setup guide
   - Comprehensive Windows build tools installation instructions
   - Enhanced Linux libsecret installation for multiple distributions
   - macOS troubleshooting and setup guidance
 
   **Key Improvements:**
-
   - Clear separation between authentication modes with practical examples
   - Platform-specific installation and troubleshooting guidance
   - Better developer onboarding with quick start examples
@@ -159,7 +157,6 @@
   - Enhanced security documentation explaining credential storage
 
 - [#3343](https://github.com/equinor/fusion-framework/pull/3343) [`68dc22f`](https://github.com/equinor/fusion-framework/commit/68dc22f582bb68fbc94f29ad053122f81c049405) Thanks [@odinr](https://github.com/odinr)! - Enhanced documentation with comprehensive guides and improved developer experience.
-
   - **Complete documentation rewrite** with better structure and organization
   - **Added comprehensive API reference** with detailed interface documentation
   - **Enhanced configuration guide** with clear required/optional settings tables
@@ -170,7 +167,6 @@
   - **Added package description** for better npm package visibility
 
   **Key Improvements:**
-
   - Clear separation between required and optional configuration
   - Comprehensive API reference with TypeScript interfaces
   - Migration guidance for v4 breaking changes
@@ -178,7 +174,6 @@
   - Enhanced troubleshooting with platform-specific solutions
 
 - [#3343](https://github.com/equinor/fusion-framework/pull/3343) [`2e96f24`](https://github.com/equinor/fusion-framework/commit/2e96f24766e424f0b7d0f88dd21b8616bc95774c) Thanks [@odinr](https://github.com/odinr)! - Restructured documentation to create dedicated authentication section with improved navigation and module organization.
-
   - **Added new Authentication section** in sidebar navigation with dedicated auth module pages
   - **Created MSAL Browser module page** (`modules/auth/msal/`) with comprehensive documentation
   - **Created MSAL Node module page** (`modules/auth/msal-node/`) with detailed setup guides
@@ -187,14 +182,12 @@
   - **Enhanced navigation structure** with clear separation between browser and Node.js authentication modules
 
   **Documentation Structure:**
-
   - New `/modules/auth/` section with dedicated authentication module pages
   - Platform-specific setup guides for Windows, macOS, and Linux
   - Comprehensive module documentation with proper frontmatter and tags
   - Improved discoverability of authentication-related documentation
 
   **Migration Notes:**
-
   - Authentication documentation is now organized under `/modules/auth/`
   - MSAL Browser docs: `/modules/auth/msal/`
   - MSAL Node docs: `/modules/auth/msal-node/`
@@ -259,7 +252,6 @@
 ### Patch Changes
 
 - [#2626](https://github.com/equinor/fusion-framework/pull/2626) [`d6e7d62`](https://github.com/equinor/fusion-framework/commit/d6e7d62aaff295d53431a73a688bc2097f0a94f1) Thanks [@eikeland](https://github.com/eikeland)! - ### Changes
-
   - Update defineAppConfig function:
     - Change scope to var in the environment object.
     - Add scopes array to the api endpoint.
@@ -288,7 +280,6 @@
 ### Patch Changes
 
 - [#2518](https://github.com/equinor/fusion-framework/pull/2518) [`f21d582`](https://github.com/equinor/fusion-framework/commit/f21d5826c0c9b5400bf1e35b658c229f3de127fc) Thanks [@eikeland](https://github.com/eikeland)! - ### Changes:
-
   - Fixed indentation in `ModuleBadge.vue`.
   - Updated `packageName` method in `ModuleBadge.vue` to replace all '/' with '-'.
   - Updated `ModuleBadge` component usage in various README files to use the correct module paths:
@@ -305,7 +296,6 @@
 ### Patch Changes
 
 - [#2517](https://github.com/equinor/fusion-framework/pull/2517) [`e78861a`](https://github.com/equinor/fusion-framework/commit/e78861a17cb0174ad96cd05e1b873e5fee42660f) Thanks [@eikeland](https://github.com/eikeland)! - Updated `getting-started.md` documentation to:
-
   - Correct JSON code block formatting.
   - Update `app.config.ts` example to use `defineAppConfig` directly without `mergeAppConfigs`.
   - Provide an example of configuring an HTTP client with endpoint details from environment configuration.
@@ -339,7 +329,6 @@
 ### Patch Changes
 
 - [#2324](https://github.com/equinor/fusion-framework/pull/2324) [`788d0b9`](https://github.com/equinor/fusion-framework/commit/788d0b93edc25e5b682d88c58614560c204c1af9) Thanks [@odinr](https://github.com/odinr)! - Updated documentation in `README.md` for http module.
-
   - added introduction to http module
   - added concepts section which highlights the key concepts of http module
   - added sequence diagram for http request execution
@@ -368,7 +357,6 @@
 ### Patch Changes
 
 - [#2200](https://github.com/equinor/fusion-framework/pull/2200) [`d63b99e`](https://github.com/equinor/fusion-framework/commit/d63b99efa83b328354a0c437f70839ed733a63e4) Thanks [@odinr](https://github.com/odinr)! - **Updated the following dependencies:**
-
   - Bumped @vuepress/bundler-vite from 2.0.0-rc.9 to 2.0.0-rc.11
   - Bumped @vuepress/cli from 2.0.0-rc.9 to 2.0.0-rc.11
   - Bumped @vuepress/client from 2.0.0-rc.9 to 2.0.0-rc.11

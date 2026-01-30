@@ -41,6 +41,10 @@
       "types": "./dist/types/http/index.d.ts",
       "import": "./dist/esm/http/index.js"
     },
+    "./http/selectors": {
+      "types": "./dist/types/http/selectors.d.ts",
+      "import": "./dist/esm/http/selectors.js"
+    },
     "./msal": {
       "types": "./dist/types/msal/index.d.ts",
       "import": "./dist/esm/msal/index.js"
@@ -103,7 +107,8 @@
   },
   "scripts": {
     "build": "tsc -b",
-    "prepack": "pnpm build"
+    "prepack": "pnpm build",
+    "test": "vitest --run"
   },
   "keywords": [],
   "author": "",
@@ -120,6 +125,7 @@
     "@equinor/fusion-framework-app": "workspace:^",
     "@equinor/fusion-framework-module": "workspace:^",
     "@equinor/fusion-framework-module-app": "workspace:^",
+    "@equinor/fusion-framework-module-http": "workspace:^",
     "@equinor/fusion-framework-module-navigation": "workspace:^",
     "@equinor/fusion-framework-react": "workspace:^",
     "@equinor/fusion-framework-react-module": "workspace:^",
@@ -134,18 +140,22 @@
     "@equinor/fusion-framework-react-module-bookmark": "workspace:^",
     "@equinor/fusion-framework-react-module-context": "workspace:^",
     "@equinor/fusion-observable": "workspace:^",
-    "@types/react": "^18.2.50",
-    "@types/react-dom": "^18.2.7",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
+    "@testing-library/react": "^16.0.0",
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3",
+    "happy-dom": "^20.0.0",
+    "react": "^19.2.1",
+    "react-dom": "^19.2.1",
     "rxjs": "^7.8.1",
-    "typescript": "^5.8.2"
+    "typescript": "^5.8.2",
+    "vite-tsconfig-paths": "^5.1.4",
+    "vitest": "^3.2.4"
   },
   "peerDependencies": {
     "@equinor/fusion-framework-module-msal": "workspace:^",
-    "@types/react": "^17.0.0 || ^18.0.0",
-    "react": "^17.0.0 || ^18.0.0",
-    "react-dom": "^17.0.0 || ^18.0.0",
+    "@types/react": "^18.0.0 || ^19.0.0",
+    "react": "^18.0.0 || ^19.0.0",
+    "react-dom": "^18.0.0 || ^19.0.0",
     "rxjs": "^7.8.1"
   },
   "peerDependenciesMeta": {

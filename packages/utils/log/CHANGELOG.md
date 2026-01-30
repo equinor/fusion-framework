@@ -1,5 +1,11 @@
 # @equinor/fusion-log
 
+## 1.1.8-next.0
+
+### Patch Changes
+
+- [#3820](https://github.com/equinor/fusion-framework/pull/3820) [`265bb76`](https://github.com/equinor/fusion-framework/commit/265bb767249989eeb1971e83f3fba94879e0813b) Thanks [@odinr](https://github.com/odinr)! - relase next
+
 ## 1.1.7
 
 ### Patch Changes
@@ -7,7 +13,6 @@
 - [#2910](https://github.com/equinor/fusion-framework/pull/2910) [`07cc985`](https://github.com/equinor/fusion-framework/commit/07cc9857e1427b574e011cc319518e701dba784d) Thanks [@dependabot](https://github.com/apps/dependabot)! - Updated vitest from 2.1.9 to 3.2.4 across all packages.
 
   ## Breaking Changes
-
   - **Node.js Requirements**: Requires Node.js 18+ (already satisfied)
   - **Vite Compatibility**: Updated to work with Vite 7.x (already using Vite 7.1.5)
   - **Snapshot Format**: Snapshots now use backtick quotes (\`) instead of single quotes
@@ -15,18 +20,15 @@
   - **TypeScript Support**: Enhanced TypeScript integration and type definitions
 
   ## Security Updates
-
   - CVE-2025-24963: Browser mode serves arbitrary files (fixed in 2.1.9)
   - CVE-2025-24964: Remote Code Execution vulnerability (fixed in 2.1.9)
 
   ## Migration Notes
-
   - Test snapshots may need regeneration due to quote format changes
   - Some test configurations might need updates for new TypeScript support
   - Peer dependency warnings for @vitest/coverage-v8 are expected and safe to ignore
 
   ## Links
-
   - [Vitest 3.0 Migration Guide](https://vitest.dev/guide/migration)
   - [Vitest 3.2.4 Release Notes](https://github.com/vitest-dev/vitest/releases/tag/v3.2.4)
 
@@ -35,7 +37,6 @@
 ### Patch Changes
 
 - [#3271](https://github.com/equinor/fusion-framework/pull/3271) [`7832bd7`](https://github.com/equinor/fusion-framework/commit/7832bd78843621ca95373596761bec29d4bdbbb8) Thanks [@dependabot](https://github.com/apps/dependabot)! - Update dependency `chalk` to ^5.6.0
-
   - Updated `chalk` to version ^5.6.0 in root, CLI, and log utils packages.
   - No breaking changes expected.
 
@@ -96,7 +97,6 @@
 - [#2320](https://github.com/equinor/fusion-framework/pull/2320) [`1dd85f3`](https://github.com/equinor/fusion-framework/commit/1dd85f3a408a73df556d1812a5f280945cc100ee) Thanks [@odinr](https://github.com/odinr)! - Removed the `removeComments` option from the `tsconfig.base.json` file.
 
   Removing the `removeComments` option allows TypeScript to preserve comments in the compiled JavaScript output. This can be beneficial for several reasons:
-
   1. Improved debugging: Preserved comments can help developers understand the code better during debugging sessions.
   2. Documentation: JSDoc comments and other important code documentation will be retained in the compiled output.
   3. Source map accuracy: Keeping comments can lead to more accurate source maps, which is crucial for debugging and error tracking.
@@ -141,7 +141,6 @@
 ### Major Changes
 
 - [#2155](https://github.com/equinor/fusion-framework/pull/2155) [`97a79fb`](https://github.com/equinor/fusion-framework/commit/97a79fbec701edff276632f2219672b8eb4eb85a) Thanks [@odinr](https://github.com/odinr)! - The `Logger` module is a new package for handling logging in the Fusion frontend ecosystem.
-
   - The `Logger` class extends the `ILogger` interface, ensuring that all logger implementations adhere to a consistent contract.
   - The `ConsoleLogger` class is a concrete implementation of the `Logger` class that logs messages to the console.
   - The `_createMessage` method in the `Logger` class has been made abstract, allowing concrete implementations to define their own message formatting logic.
@@ -207,7 +206,6 @@
   This will run the test suite using Vitest and generate a code coverage report.
 
   Added a new test suite for the ConsoleLogger class. The test suite covers various scenarios, including:
-
   - Logging messages at different log levels (debug, info, warning, error)
   - Logging multiple messages in a single call
   - Logging messages with a custom title

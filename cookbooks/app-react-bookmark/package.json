@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework-cookbook-app-react-bookmark",
-  "version": "4.2.3",
+  "version": "4.2.4-next.0",
   "description": "",
   "private": true,
   "type": "module",
@@ -17,10 +17,10 @@
     "@equinor/fusion-framework-module-bookmark": "workspace:^",
     "@equinor/fusion-framework-module-context": "workspace:^",
     "@equinor/fusion-framework-react-app": "workspace:^",
-    "@types/react": "^18.2.50",
-    "@types/react-dom": "^18.2.7",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3",
+    "react": "^19.2.1",
+    "react-dom": "^19.2.1",
     "typescript": "^5.8.2"
   }
 }

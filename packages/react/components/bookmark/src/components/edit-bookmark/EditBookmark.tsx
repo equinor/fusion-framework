@@ -8,7 +8,7 @@ import { useFrameworkModule } from '@equinor/fusion-framework-react';
 import type { AppModule } from '@equinor/fusion-framework-module-app';
 import type { BookmarkUpdate } from '@equinor/fusion-framework-module-bookmark';
 
-import { Button, Checkbox, Dialog, Input, Label, TextField } from '@equinor/eds-core-react';
+import { Button, Checkbox, Dialog, Input, Label, Textarea } from '@equinor/eds-core-react';
 import styled from 'styled-components';
 
 import { useBookmarkComponentContext } from '../BookmarkProvider';
@@ -59,7 +59,7 @@ export const EditBookmarkModal = ({
     [provider, bookmarkId],
   );
 
-  const { value: bookmark, complete: isLoadingBookmark } = useObservableState(bookmark$);
+  const { value: bookmark } = useObservableState(bookmark$);
 
   // set the state when the bookmark is loaded
   useEffect(() => {
@@ -106,9 +106,6 @@ export const EditBookmarkModal = ({
     [onClose, provider, bookmarkId, updatePayload],
   );
 
-  // TODO - add loading spinner
-  isLoadingBookmark;
-
   return (
     <Styled.Dialog open={isOpen}>
       <Dialog.Header>Edit bookmark</Dialog.Header>
@@ -125,14 +122,13 @@ export const EditBookmarkModal = ({
           />
         </div>
         <div>
-          <TextField
+          <Textarea
             id={descriptionId}
             label="Description"
             value={state?.description}
-            multiline
             rows={3}
             rowsMax={10}
-            onChange={(event: ChangeEvent<HTMLInputElement>) => {
+            onChange={(event: ChangeEvent<HTMLTextAreaElement>) => {
               setState((s) => ({ ...s, description: event.target.value }));
             }}
           />
