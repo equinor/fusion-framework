@@ -106,6 +106,20 @@ export class AppConfigurator<
     this.addConfig(configureHttpClient(...args));
   }
 
+  /**
+   * Configures a http client for the service `serviceName`.
+   * The serviceName is looked up in ServiceDiscovery.
+   * User can override url and scopes with session values.
+   * App can override url and scopes with app config.
+   *
+   * Priority:
+   * 1. Session overrides
+   * 2. AppConfig
+   * 3. ServiceDiscovery
+   *
+   * @see modules/service-discovery/src/client.ts
+   * @see configureHttpClientsFromAppConfig()
+   */
   public useFrameworkServiceClient(
     serviceName: string,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -114,13 +128,16 @@ export class AppConfigurator<
     this.addConfig({
       module: http,
       configure: async (config, ref) => {
+        // Service from serviceDiscovery with potential session override.
         const service = await ref?.serviceDiscovery.resolveService(serviceName);
         if (!service) {
           throw Error(`failed to configure service [${serviceName}]`);
         }
 
-        // Check if serviceName is already configured
-        if (config.hasClient(serviceName)) {
+        // Check if serviceName is already configured (potentially with app-config)
+        // If the service is session overridden - we need the configuration to run
+        // as normal (the uri already updated).
+        if (config.hasClient(serviceName) && !service.overridden) {
           console.warn(
             `${serviceName} is already configured, possibly by app.config.[ENV].ts.
              Overriding configurations may lead to unintended behaviour and should

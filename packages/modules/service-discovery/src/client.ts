@@ -3,7 +3,14 @@ import { Query } from '@equinor/fusion-query';
 
 import type { Service } from './types';
 
-import { firstValueFrom, from, lastValueFrom, map, type ObservableInput } from 'rxjs';
+import {
+  firstValueFrom,
+  from,
+  lastValueFrom,
+  map,
+  type MonoTypeOperatorFunction,
+  type ObservableInput,
+} from 'rxjs';
 import { jsonSelector } from '@equinor/fusion-framework-module-http/selectors';
 import { ApiServices } from './api-schema';
 
@@ -27,6 +34,7 @@ export interface IServiceDiscoveryClientCtor {
 type ServiceDiscoveryClientCtorArgs = {
   http: IHttpClient;
   endpoint?: string;
+  postProcess?: MonoTypeOperatorFunction<Service[]>;
 };
 
 const queryKey = 'services';
@@ -35,14 +43,25 @@ const queryKey = 'services';
  * Transforms a Response object into an ObservableInput of Service arrays.
  *
  * @param response - The Response object to be transformed.
+ * @param postProcess - Optional callback to process the value.
  * @returns An ObservableInput that emits an array of Service objects.
  */
-const serviceResponseSelector = (response: Response): ObservableInput<Service[]> =>
+const serviceResponseSelector = (
+  response: Response,
+  postProcess?: MonoTypeOperatorFunction<Service[]>,
+): ObservableInput<Service[]> => {
   // parse response by using the jsonSelector
-  from(jsonSelector(response)).pipe(
+  const result$ = from(jsonSelector(response)).pipe(
     // parse and validate the response
     map((value) => ApiServices.default([]).parse(value)),
   );
+
+  if (postProcess) {
+    return result$.pipe(postProcess);
+  }
+
+  return result$;
+};
 
 export class ServiceDiscoveryClient implements IServiceDiscoveryClient {
   #query: Query<Service[], void>;
@@ -53,14 +72,18 @@ export class ServiceDiscoveryClient implements IServiceDiscoveryClient {
   /** HTTP client for fetching services */
   public readonly http: IHttpClient;
 
-  constructor({ http, endpoint }: ServiceDiscoveryClientCtorArgs) {
-    this.http = http;
-    this.endpoint = endpoint;
+  constructor(options: ServiceDiscoveryClientCtorArgs) {
+    this.http = options.http;
+    this.endpoint = options.endpoint;
+    const postProcess = options.postProcess;
 
     // setup api handler (queue and cache)
     this.#query = new Query<Service[], void>({
       client: {
-        fn: () => http.fetch$(endpoint ?? '', { selector: serviceResponseSelector }),
+        fn: () =>
+          this.http.fetch$(this.endpoint ?? '', {
+            selector: (response) => serviceResponseSelector(response, postProcess),
+          }),
       },
       key: () => queryKey,
       // Cache for 5 minutes
