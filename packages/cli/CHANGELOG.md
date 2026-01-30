@@ -1,5 +1,13 @@
 # Change Log
 
+## 13.2.1
+
+### Patch Changes
+
+- [#3986](https://github.com/equinor/fusion-framework/pull/3986) [`5211e98`](https://github.com/equinor/fusion-framework/commit/5211e98f65edb5292345d45757c5af740e04fffc) Thanks [@Noggling](https://github.com/Noggling)! - Fix CLI commands outputting invalid JSON due to dotenv messages appearing in stdout. Commands like `ffc app manifest` now produce clean JSON output suitable for automated tooling and CI/CD pipelines.
+
+- [#3988](https://github.com/equinor/fusion-framework/pull/3988) [`69b658a`](https://github.com/equinor/fusion-framework/commit/69b658a7bc0741512b0a8fb56d6424405701d336) Thanks [@asbjornhaland](https://github.com/asbjornhaland)! - Fix CLI app config not passing the potential logger to `publishAppConfig`.
+
 ## 13.2.0
 
 ### Minor Changes
