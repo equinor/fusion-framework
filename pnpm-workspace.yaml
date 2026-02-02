@@ -4,14 +4,4 @@ packages:
   - vue-press
 
 onlyBuiltDependencies:
-  - '@parcel/watcher'
-  - core-js
-  - esbuild
-  - msw
-  - protobufjs
-  - tree-sitter
-  - tree-sitter-javascript
-  - tree-sitter-typescript
-  - '@azure/msal-node-extensions'
-  - '@azure/msal-node-runtime'
   - keytar
