@@ -1,5 +1,6 @@
 import type { ModuleInstance } from '@equinor/fusion-framework-module';
 import type { IEventModuleProvider } from './provider';
+import { deepClone } from './deep-clone';
 
 export declare interface FrameworkEventMap {
   onModulesLoaded: FrameworkEvent<FrameworkEventInit<ModuleInstance, IEventModuleProvider>>;
@@ -157,7 +158,7 @@ export class FrameworkEvent<
     args: TInit,
   ) {
     this.#detail = args.detail;
-    this.#originalDetail = structuredClone(args.detail);
+    this.#originalDetail = deepClone(args.detail);
     this.#mutableDetails = !!args.mutableDetails;
     this.#source = args.source;
     this.#cancelable = !!args.cancelable;
