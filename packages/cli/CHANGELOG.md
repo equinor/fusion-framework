@@ -1,5 +1,37 @@
 # Change Log
 
+## 13.3.0
+
+### Minor Changes
+
+- [#3990](https://github.com/equinor/fusion-framework/pull/3990) [`8719068`](https://github.com/equinor/fusion-framework/commit/8719068b723975db90a1b4bee59808734eb87e20) Thanks [@odinr](https://github.com/odinr)! - Add `--config` option to `app publish` command for uploading application configuration after publishing the bundle.
+
+  ```bash
+  # Upload default app.config.ts after publishing
+  ffc app publish --config
+
+  # Upload specific config file
+  ffc app publish --config app.config.prod.ts --env prod
+  ```
+
+  This streamlines the deployment workflow by combining bundle upload and config upload in a single command.
+
+  **Internal changes:**
+
+  - Refactored `publishAppConfig` to accept pre-resolved config and framework instance, improving modularity and reusability
+  - Updated `generateApplicationConfig` to return both config and package metadata, with graceful fallback when package resolution fails
+  - Simplified `app config` command flow by handling config generation and manifest loading before publishing
+
+  Fixes: https://github.com/equinor/fusion-core-tasks/issues/257
+
+### Patch Changes
+
+- [#3990](https://github.com/equinor/fusion-framework/pull/3990) [`8719068`](https://github.com/equinor/fusion-framework/commit/8719068b723975db90a1b4bee59808734eb87e20) Thanks [@odinr](https://github.com/odinr)! - Update CLI documentation to include the new `--config` flag for the `app publish` command, showing how to upload application configuration after publishing in a single command.
+
+- Updated dependencies []:
+  - @equinor/fusion-framework-dev-portal@1.4.0
+  - @equinor/fusion-framework-dev-server@1.1.22
+
 ## 13.2.1
 
 ### Patch Changes
