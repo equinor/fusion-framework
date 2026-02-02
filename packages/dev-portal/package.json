@@ -23,7 +23,7 @@
     "access": "public"
   },
   "devDependencies": {
-    "@equinor/eds-core-react": "^0.49.0",
+    "@equinor/eds-core-react": "^2.3.2",
     "@equinor/eds-icons": "^0.22.0",
     "@equinor/eds-tokens": "^0.10.0",
     "@equinor/fusion-framework": "workspace:*",
