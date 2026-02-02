@@ -2,7 +2,7 @@
 
 This package is meant for dispatching events between modules (siblings) and cross instances (parent|adjunct)
 
-> Base on the native node/web js event system, __but__ the dispatcher is `async` for easier handling of `cancelable` events.
+> Based on the native node/web js event system, __but__ the dispatcher is `async` for easier handling of `cancelable` events.
 >
 > __NOTE__ that creating a `cancelable` event without awaiting resolution, will not respect the `preventDefault` behavior!
 

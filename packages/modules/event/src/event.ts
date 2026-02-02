@@ -34,36 +34,17 @@ export interface IFrameworkEvent<
   /** Payload of the event. */
   readonly detail: FrameworkEventInitDetail<TInit>;
 
-  /** Original payload of the event. */
-  readonly originalDetail: FrameworkEventInitDetail<TInit>;
-
   /** Source of the event (dispatcher). */
   readonly source?: FrameworkEventInitSource<TInit>;
 
   /** Indicates whether the event can be canceled. */
   readonly cancelable?: boolean;
 
-  /** Indicates whether the event detail is mutable */
-  readonly allowEventDetailsMutation: boolean;
-
   /** Indicates whether the event has been canceled and should not be processed further. */
   readonly canceled?: boolean;
 
   /** Indicates whether the event can bubble up. */
   readonly bubbles?: boolean;
-
-  /**
-   * Updates the details of the framework event.
-   *
-   * @remarks updating the details should only be allowed if the event is mutable.
-   *
-   * @param fn - A function that takes the current draft of the event details and returns the updated details, or `void` to cancel the update.
-   */
-  updateDetails(
-    fn: (
-      details: FrameworkEventInitDetail<TInit>,
-    ) => FrameworkEventInitDetail<TInit> | void | undefined,
-  ): void;
 }
 
 /**
@@ -76,8 +57,6 @@ export interface IFrameworkEvent<
 export type FrameworkEventInit<TDetail = any, TSource = any> = {
   /** Event data */
   detail: TDetail;
-  /** Flag for allowing to mutate event data */
-  mutableDetails?: boolean;
   /** Source of the event trigger */
   source?: TSource;
   /** Flag for allowing events to be canceled */
@@ -126,10 +105,9 @@ export interface FrameworkEvent<TInit extends FrameworkEventInit> {
  * with custom details and behavior. It allows you to:
  *
  * - Specify the event type and initial event details
- * - Access the event details, including the original details and any updates
+ * - Access the event details
  * - Check if the event is cancelable and whether it has been canceled
  * - Control whether the event can bubble up the event hierarchy
- * - Update the event details during the event lifecycle
  *
  * The `FrameworkEvent` class is designed to be used as a base class for creating custom event types that fit the needs
  * of your application or framework.
@@ -144,11 +122,9 @@ export class FrameworkEvent<
 > implements IFrameworkEvent<TInit, TType>
 {
   #detail: FrameworkEventInitDetail<TInit>;
-  #originalDetail: FrameworkEventInitDetail<TInit>;
   #source?: FrameworkEventInitSource<TInit>;
   #canceled = false;
   #cancelable: boolean;
-  #mutableDetails: boolean;
   #canBubble: boolean;
   #created: number = Date.now();
 
@@ -157,8 +133,6 @@ export class FrameworkEvent<
     args: TInit,
   ) {
     this.#detail = args.detail;
-    this.#originalDetail = structuredClone(args.detail);
-    this.#mutableDetails = !!args.mutableDetails;
     this.#source = args.source;
     this.#cancelable = !!args.cancelable;
     this.#canBubble = args.canBubble === undefined ? true : args.canBubble;
@@ -208,15 +182,6 @@ export class FrameworkEvent<
   }
 
   /**
-   * Gets the original event details that were passed to the `FrameworkEvent` constructor.
-   * This property provides access to the original event details, which may have been modified by the `updateDetails` method.
-   * @returns {FrameworkEventInitDetail<TInit>} The original event details.
-   */
-  public get originalDetail(): FrameworkEventInitDetail<TInit> {
-    return this.#originalDetail;
-  }
-
-  /**
    * Gets the source object that triggered the event.
    * @returns {FrameworkEventInitSource<TInit> | undefined} The source object that triggered the event, or `undefined` if the source is not available.
    */
@@ -230,15 +195,6 @@ export class FrameworkEvent<
    */
   public get type(): TType {
     return this.__type as TType;
-  }
-
-  /**
-   * Indicates whether the event details can be mutated.
-   * If this property is `true`, the event details can be updated using the `updateDetails` method.
-   * @returns {boolean} `true` if the event details can be mutated, `false` otherwise.
-   */
-  public get allowEventDetailsMutation(): boolean {
-    return this.#mutableDetails;
   }
 
   /**
@@ -257,27 +213,5 @@ export class FrameworkEvent<
    */
   public stopPropagation(): void {
     this.#canBubble = false;
-  }
-
-  /**
-   * Updates the event details using the provided function.
-   *
-   * @remarks If the event details are not mutable, an error will be thrown.
-   *
-   * @see {FrameworkEvent.originalDetail}
-   *
-   * @param fn - A function that takes the current event details and returns an updated version of the details.
-   * The function can return `void` or `undefined` to indicate that no changes should be made.
-   */
-  public updateDetails(
-    fn: (
-      details: FrameworkEventInitDetail<TInit>,
-    ) => FrameworkEventInitDetail<TInit> | void | undefined,
-  ) {
-    if (!this.#mutableDetails) {
-      throw new Error('Event details are not mutable');
-    }
-    const detail = fn(this.#detail);
-    this.#detail = detail === undefined ? this.#detail : detail;
   }
 }
