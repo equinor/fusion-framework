@@ -2,6 +2,7 @@ import type { IMsalProvider } from './MsalProvider.interface';
 import { MsalModuleVersion } from './static';
 import { resolveVersion } from './versioning/resolve-version';
 import { createProxyProvider as createProxyProvider_v2 } from './v2/create-proxy-provider';
+import { createProxyProvider as createProxyProvider_v4 } from './v4/create-proxy-provider';
 
 /**
  * Creates a proxy provider for version compatibility.
@@ -32,8 +33,10 @@ export function createProxyProvider<T = IMsalProvider>(
       // Create v2-compatible proxy with legacy API adapters
       return createProxyProvider_v2(provider) as T;
     case MsalModuleVersion.V4:
-      // Create transparent proxy for v4 - passes through to original provider
-      // This allows v4 code to be used where any version is expected
+      // Create v4-compatible proxy (passthrough with v4 version metadata)
+      return createProxyProvider_v4(provider) as T;
+    case MsalModuleVersion.V5:
+      // Create transparent proxy for v5 - passes through to original provider
       return new Proxy(provider, {
         get: (target: IMsalProvider, prop: keyof IMsalProvider) => {
           switch (prop) {

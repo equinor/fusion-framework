@@ -19,6 +19,12 @@ import type {
 export type { IMsalClient };
 
 /**
+ * Fallback correlation ID for logger calls when request doesn't provide one.
+ * Empty string indicates a non-request-specific log (validation, configuration warnings).
+ */
+const FUSION_CORRELATION_ID = '';
+
+/**
  * MSAL client configuration extending the standard MSAL Configuration.
  *
  * This type adds tenant-specific configuration options while maintaining
@@ -127,13 +133,17 @@ export class MsalClient extends PublicClientApplication implements IMsalClient {
       if (!options.request.account && !options.request.loginHint) {
         this.getLogger().warning(
           'No account or login hint provided, please provide an account or login hint in the request',
+          options.request.correlationId || FUSION_CORRELATION_ID,
         );
       }
       try {
         return await this.ssoSilent(options.request as SilentRequest);
       } catch {
         // Silent login failed - continue to interactive flow
-        this.getLogger().warning('Silent login failed, falling back to interactive');
+        this.getLogger().warning(
+          'Silent login failed, falling back to interactive',
+          options.request.correlationId || FUSION_CORRELATION_ID,
+        );
       }
     }
 
@@ -189,6 +199,7 @@ export class MsalClient extends PublicClientApplication implements IMsalClient {
     if (!options?.account) {
       this.getLogger().warning(
         'No account available for logout, please provide an account in the options',
+        FUSION_CORRELATION_ID,
       );
     }
 
@@ -233,6 +244,7 @@ export class MsalClient extends PublicClientApplication implements IMsalClient {
     if (request.scopes.length === 0) {
       this.getLogger().warning(
         'No scopes provided, please provide scopes in the request option, see options.request for more information.',
+        request.correlationId || FUSION_CORRELATION_ID,
       );
     }
 
@@ -241,15 +253,22 @@ export class MsalClient extends PublicClientApplication implements IMsalClient {
     if (silent) {
       if (request.account) {
         try {
-          this.getLogger().verbose('Attempting to acquire token silently');
+          this.getLogger().verbose(
+            'Attempting to acquire token silently',
+            request.correlationId || FUSION_CORRELATION_ID,
+          );
           return await this.acquireTokenSilent(request as SilentRequest);
         } catch {
           // Silent acquisition failed - fall back to interactive
-          this.getLogger().warning('Silent token acquisition failed, falling back to interactive');
+          this.getLogger().warning(
+            'Silent token acquisition failed, falling back to interactive',
+            request.correlationId || FUSION_CORRELATION_ID,
+          );
         }
       } else {
         this.getLogger().warning(
           'Cannot acquire token silently, no account provided, falling back to interactive.',
+          request.correlationId || FUSION_CORRELATION_ID,
         );
       }
     }
