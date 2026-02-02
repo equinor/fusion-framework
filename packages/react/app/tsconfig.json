@@ -16,6 +16,9 @@
       "path": "../framework"
     },
     {
+      "path": "../../modules/analytics"
+    },
+    {
       "path": "../../modules/ag-grid"
     },
     {
