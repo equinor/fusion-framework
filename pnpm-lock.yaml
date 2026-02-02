@@ -756,25 +756,25 @@ importers:
   packages/app:
     dependencies:
       '@equinor/fusion-framework':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../framework
       '@equinor/fusion-framework-module':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../modules/module
       '@equinor/fusion-framework-module-app':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../modules/app
       '@equinor/fusion-framework-module-event':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../modules/event
       '@equinor/fusion-framework-module-http':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../modules/http
       '@equinor/fusion-framework-module-msal':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../modules/msal
       '@equinor/fusion-framework-module-telemetry':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../modules/telemetry
       rxjs:
         specifier: ^7.8.1
@@ -1274,28 +1274,28 @@ importers:
   packages/framework:
     dependencies:
       '@equinor/fusion-framework-module':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../modules/module
       '@equinor/fusion-framework-module-context':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../modules/context
       '@equinor/fusion-framework-module-event':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../modules/event
       '@equinor/fusion-framework-module-http':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../modules/http
       '@equinor/fusion-framework-module-msal':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../modules/msal
       '@equinor/fusion-framework-module-service-discovery':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../modules/service-discovery
       '@equinor/fusion-framework-module-services':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../modules/services
       '@equinor/fusion-framework-module-telemetry':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../modules/telemetry
       rxjs:
         specifier: ^7.8.1
@@ -1366,19 +1366,19 @@ importers:
   packages/modules/analytics:
     dependencies:
       '@equinor/fusion-framework-module':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../module
       '@equinor/fusion-framework-module-app':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../app
       '@equinor/fusion-framework-module-context':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../context
       '@equinor/fusion-framework-module-event':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../event
       '@equinor/fusion-framework-module-http':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../http
       '@opentelemetry/api-logs':
         specifier: ^0.211.0
@@ -1767,10 +1767,10 @@ importers:
   packages/modules/telemetry:
     dependencies:
       '@equinor/fusion-framework-module':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../module
       '@equinor/fusion-framework-module-event':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../event
       deepmerge:
         specifier: ^4.3.1
@@ -1798,10 +1798,10 @@ importers:
   packages/modules/widget:
     dependencies:
       '@equinor/fusion-observable':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../../utils/observable
       '@equinor/fusion-query':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../../utils/query
       immer:
         specifier: ^11.0.0
@@ -17373,7 +17373,7 @@ snapshots:
       isstream: 0.1.2
       jsonwebtoken: 9.0.3
       mime-types: 2.1.35
-      retry-axios: 2.6.0(axios@1.13.2)
+      retry-axios: 2.6.0(axios@1.13.2(debug@4.4.3))
       tough-cookie: 4.1.4
     transitivePeerDependencies:
       - supports-color
@@ -19071,7 +19071,7 @@ snapshots:
       onetime: 7.0.0
       signal-exit: 4.1.0
 
-  retry-axios@2.6.0(axios@1.13.2):
+  retry-axios@2.6.0(axios@1.13.2(debug@4.4.3)):
     dependencies:
       axios: 1.13.2(debug@4.4.3)
 
