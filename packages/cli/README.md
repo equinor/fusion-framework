@@ -81,7 +81,11 @@ pnpm fusion-framework-cli auth login
 **Build and publish your app**
 
 ```sh
+# Publish without config
 pnpm fusion-framework-cli publish --env <environment>
+
+# Publish and upload config in one command
+pnpm fusion-framework-cli publish --env <environment> --config
 ```
 
 **Build or publish snapshot artifacts**
@@ -112,6 +116,10 @@ pnpm fusion-framework-cli app publish --snapshot nightly
 **Upload configuration**
 
 ```sh
+# Upload config with publish command
+pnpm fusion-framework-cli publish --config --env <environment>
+
+# Or upload config separately
 pnpm fusion-framework-cli app config --publish --env <environment>
 ```
 

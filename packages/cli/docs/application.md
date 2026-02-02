@@ -103,6 +103,10 @@ pnpm fusion-framework-cli auth login
 ### 6. Build, Publish, and Upload Config
 
 ```sh
+# Publish and upload config in one command
+pnpm fusion-framework-cli publish --env <environment> --config
+
+# Or separately
 pnpm fusion-framework-cli publish --env <environment>
 pnpm fusion-framework-cli app config --publish --env <environment>
 ```
@@ -276,10 +280,8 @@ jobs:
       - name: Setup node
       - name: Download Artifact
       - name: Set Fusion token
-      - name: Publish application
-        run: pnpm exec fusion-framework-cli app upload --env ${{ matrix.env }} app-bundle.zip
-      - step: Upload configuration
-        run: pnpm exec fusion-framework-cli app config --publish --env ${{ matrix.env }}
+      - name: Publish application with config
+        run: pnpm exec fusion-framework-cli app publish --env ${{ matrix.env }} app-bundle.zip --config
 ```
 
 > [!TIP]
@@ -425,6 +427,7 @@ This command uploads and tags your app for deployment. If no bundle is provided,
 | `-e`, `--env`      | Target environment for deployment (e.g., `ci`, `fqa`, `fprd`).                                      |                   |
 | `-m`, `--manifest` | Manifest file to use for bundling (e.g., `app.manifest.ts`) (optional).                             | `app.manifest.ts` |
 | `-t`, `--tag`      | Tag to apply to the published app (any string, commonly `latest` or `preview`).                    | `latest`          |
+| `-c`, `--config`   | Upload application config after publishing. Accepts true for default config file or a path to a specific config file. |                   |
 | `-d`, `--debug`    | Enable debug mode for verbose logging.                                                              | `false`           |
 | `--token`          | Authentication token for Fusion.                                                                    |                   |
 | `--tenantId`       | Azure tenant ID for authentication.                                                                 |                   |
@@ -440,6 +443,8 @@ pnpm fusion-framework-cli publish [bundle] [options]
 pnpm fusion-framework-cli publish
 pnpm fusion-framework-cli publish --env prod --manifest app.manifest.prod.ts
 pnpm fusion-framework-cli publish --tag latest app-bundle.zip
+pnpm fusion-framework-cli publish --config --env prod
+pnpm fusion-framework-cli publish --config app.config.prod.ts --env prod
 ```
 
 > [!IMPORTANT]
