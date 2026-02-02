@@ -1,5 +1,16 @@
 # Change Log
 
+## 10.3.2
+
+### Patch Changes
+
+- Updated dependencies [[`1f5a8e4`](https://github.com/equinor/fusion-framework/commit/1f5a8e475ea30fa1e0f32c7dab885a5a42c50bba)]:
+  - @equinor/fusion-framework-module-event@5.0.0
+  - @equinor/fusion-framework@7.4.4
+  - @equinor/fusion-framework-module-app@7.4.0
+  - @equinor/fusion-framework-module-bookmark@3.0.5
+  - @equinor/fusion-framework-module-telemetry@4.6.2
+
 ## 10.3.1
 
 ### Patch Changes

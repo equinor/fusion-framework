@@ -1,5 +1,12 @@
 # Change Log
 
+## 3.2.16
+
+### Patch Changes
+
+- Updated dependencies [[`1f5a8e4`](https://github.com/equinor/fusion-framework/commit/1f5a8e475ea30fa1e0f32c7dab885a5a42c50bba)]:
+  - @equinor/fusion-framework-module-event@5.0.0
+
 ## 3.2.15
 
 ### Patch Changes
