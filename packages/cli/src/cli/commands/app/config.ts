@@ -5,6 +5,7 @@ import chalk from 'chalk';
 import {
   ConsoleLogger,
   generateApplicationConfig,
+  loadAppManifest,
   publishAppConfig,
 } from '@equinor/fusion-framework-cli/bin';
 
@@ -78,13 +79,46 @@ export const command = withAuthOptions(
     )
     .argument('[config]', 'Config build file to use (e.g., app.config[.env]?.[ts,js,json])')
     .action(async (config, options) => {
+      const { env, publish, manifest } = options;
       const log = options.silent
         ? null
         : new ConsoleLogger('app:config', { debug: !!options.debug });
 
+      // Determine output option based on publish flag and user input
+      const output =
+        publish || options.output === 'stdout'
+          ? undefined // do not output to file when publishing or stdout requested
+          : options.output;
+
+      // Generate the application config using provided options and environment
+      const { config: appConfig } = await generateApplicationConfig({
+        log,
+        env,
+        output,
+        config,
+      });
+
+      // Load the application manifest for the specified environment
+      const {
+        manifest: { appKey, build },
+      } = await loadAppManifest({
+        log,
+        env,
+        manifest,
+      });
+
+      // Validate build version in manifest
+      if (!build?.version) {
+        log?.fail(
+          '🤪',
+          'No build version found in the manifest. Please make sure the manifest is valid.',
+        );
+        process.exit(1);
+      }
+
       // Validate env for publish (no dev allowed)
-      if (options.publish) {
-        if (options.env === 'dev') {
+      if (publish) {
+        if (env === 'dev') {
           log?.fail(
             '🤪',
             chalk.blue('--env'),
@@ -94,23 +128,25 @@ export const command = withAuthOptions(
           );
           process.exit(1);
         }
+        // Initialize the Fusion Framework
+        log?.start(`💾 Initializing Fusion Framework - Environment: ${env}`);
+        const framework = await import('@equinor/fusion-framework-cli/bin').then((mod) =>
+          mod.initializeFramework({
+            env,
+            auth: 'token' in options ? { token: options.token } : options,
+          }),
+        );
+        log?.succeed('Fusion Framework initialized');
+
+        // Publish the application config to the Fusion app registry
         return publishAppConfig({
-          config,
-          manifest: options.manifest,
-          environment: options.env,
-          auth: 'token' in options ? { token: options.token } : options,
-          debug: options.debug,
+          config: appConfig,
+          appKey,
           log,
+          buildVersion: build.version,
+          framework,
         });
       }
-
-      // Generate config
-      const { config: appConfig } = await generateApplicationConfig({
-        log,
-        config,
-        env: { environment: options.env },
-        output: options.output === 'stdout' ? undefined : options.output,
-      });
 
       if (options.output === 'stdout') {
         console.log(JSON.stringify(appConfig, null, 2));

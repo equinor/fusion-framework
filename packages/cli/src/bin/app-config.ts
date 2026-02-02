@@ -1,15 +1,11 @@
-import type { RuntimeEnv } from '../lib/index.js';
+import type { ApiAppConfig } from '@equinor/fusion-framework-cli/app';
+import type { ResolvedPackage, RuntimeEnv } from '../lib/index.js';
 import { writeFile } from '../lib/utils/index.js';
 
-import { formatPath, type ConsoleLogger } from './utils/index.js';
+import { chalk, formatPath, type ConsoleLogger } from './utils/index.js';
 
 import { resolveProjectPackage } from './helpers/resolve-project-package.js';
 import { resolveAppConfig } from './helpers/resolve-app-config.js';
-import {
-  initializeFramework,
-  type FusionEnv,
-  type FusionFrameworkSettings,
-} from './framework.node.js';
 
 /**
  * Options for generating the application configuration.
@@ -40,6 +36,25 @@ interface GenerateApplicationConfigOptions {
 }
 
 /**
+ * Result of generating the application configuration.
+ *
+ * Provides the resolved config and the resolved package metadata.
+ *
+ * @public
+ */
+export interface GenerateApplicationConfigResult {
+  /**
+   * Resolved application configuration.
+   */
+  config: ApiAppConfig;
+  /**
+   * Resolved package metadata for the current project.
+   * Will be undefined if package resolution fails.
+   */
+  pkg?: ResolvedPackage;
+}
+
+/**
  * Generates the application configuration object for the current project.
  *
  * This function resolves the app package, sets up the runtime environment, resolves the app config,
@@ -51,16 +66,34 @@ interface GenerateApplicationConfigOptions {
  * @throws If writing the config to file fails.
  * @public
  */
-export const generateApplicationConfig = async (options?: GenerateApplicationConfigOptions) => {
+export const generateApplicationConfig = async (
+  options?: GenerateApplicationConfigOptions,
+): Promise<GenerateApplicationConfigResult> => {
   const { log } = options ?? {};
-  // Resolve the application's package.json for root and metadata
-  const pkg = await resolveProjectPackage(log);
+
+  // Attempt to resolve the application's package.json for root and metadata
+  let pkg: ResolvedPackage | undefined;
+  try {
+    log?.start('resolve project package');
+    pkg = await resolveProjectPackage(null);
+    log?.succeed(
+      '📦',
+      chalk.yellowBright([pkg.packageJson.name, pkg.packageJson.version].join('@')),
+    );
+    // Log the root directory of the package
+    log?.info('🏠', chalk.blueBright(pkg.root));
+  } catch {
+    log?.info('Failed to resolve project package, using current directory as root');
+  }
+
+  // Determine the project root directory
+  const root = pkg?.root ?? process.cwd();
 
   // Setup the runtime environment for config resolution
   const env: RuntimeEnv = {
     command: 'build',
     mode: process.env.NODE_ENV ?? 'production',
-    root: pkg.root,
+    root,
     ...options?.env, // Allow overrides from options
   };
 
