@@ -1,4 +1,4 @@
-import { from, lastValueFrom, type ObservableInput } from 'rxjs';
+import { from, lastValueFrom, map, type ObservableInput } from 'rxjs';
 
 import {
   BaseConfigBuilder,
@@ -88,6 +88,32 @@ export class ServiceDiscoveryConfigurator extends BaseConfigBuilder<ServiceDisco
         return new ServiceDiscoveryClient({
           http: httpClient,
           endpoint,
+          postProcess: map((input) => {
+            // Check if there are any session overrides in session storage.
+            try {
+              const sessionOverrides: Record<string, { url: string; scopes: string[] }> =
+                JSON.parse(sessionStorage.getItem('overriddenServiceDiscoveryUrls') || '{}');
+
+              for (const [key, { url, scopes }] of Object.entries(sessionOverrides)) {
+                const service = input.find((service) => service.key === key);
+
+                // If the service can be found, override the values with the values
+                // from session override.
+                if (service) {
+                  service.uri = url;
+                  service.scopes = scopes;
+                  service.overridden = true;
+                }
+              }
+            } catch (e) {
+              console.error(
+                'Failed to JSON parse session overrides: "overriddenServiceDiscoveryUrls"',
+                e,
+              );
+            }
+
+            return input;
+          }),
         });
       }
       throw Error('httpClient is required');
