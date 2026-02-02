@@ -173,7 +173,7 @@ export const command = withAuthOptions(
           clientId: options.clientId,
         },
       });
-      log?.succeed('💾 Initialized Fusion Framework');
+      log.succeed('💾 Initialized Fusion Framework');
 
       // Upload the application bundle
       log.start('🚀 Uploading application...');
