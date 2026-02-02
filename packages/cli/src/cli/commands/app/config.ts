@@ -93,7 +93,7 @@ export const command = withAuthOptions(
       // Generate the application config using provided options and environment
       const { config: appConfig } = await generateApplicationConfig({
         log,
-        env,
+        env: { environment: env },
         output,
         config,
       });
@@ -103,7 +103,7 @@ export const command = withAuthOptions(
         manifest: { appKey, build },
       } = await loadAppManifest({
         log,
-        env,
+        env: { environment: env },
         manifest,
       });
 
