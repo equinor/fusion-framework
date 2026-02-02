@@ -164,7 +164,7 @@ export const command = withAuthOptions(
         process.exit(1);
       }
 
-      log?.start(`💾 Initializing Fusion Framework - Environment: ${options.env}`);
+      log.start(`💾 Initializing Fusion Framework - Environment: ${options.env}`);
       const framework = await initializeFramework({
         env: options.env,
         auth: {
