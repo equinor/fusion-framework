@@ -1,5 +1,5 @@
 ---
-"@equinor/fusion-framework-module-event": minor
+"@equinor/fusion-framework-module-event": major
 ---
 
 Remove unused event mutation support and detail cloning to fix `DataCloneError` with non-serializable values.

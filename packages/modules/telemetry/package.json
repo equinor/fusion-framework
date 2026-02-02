@@ -52,8 +52,8 @@
     "directory": "packages/modules/telemetry"
   },
   "dependencies": {
-    "@equinor/fusion-framework-module": "workspace:^",
-    "@equinor/fusion-framework-module-event": "workspace:^",
+    "@equinor/fusion-framework-module": "workspace:*",
+    "@equinor/fusion-framework-module-event": "workspace:*",
     "deepmerge": "^4.3.1",
     "rxjs": "^7.8.1",
     "zod": "^4.1.11"
@@ -65,9 +65,7 @@
     "vitest": "^3.2.4"
   },
   "peerDependencies": {
-    "@equinor/fusion-framework-module": "workspace:^",
-    "@equinor/fusion-framework-module-event": "workspace:^",
-    "@equinor/fusion-observable": "workspace:^",
+    "@equinor/fusion-observable": "workspace:*",
     "@microsoft/applicationinsights-web": "^3.0.2"
   },
   "peerDependenciesMeta": {

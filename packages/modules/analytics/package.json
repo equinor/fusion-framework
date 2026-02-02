@@ -44,11 +44,11 @@
     "directory": "packages/modules/analytics"
   },
   "dependencies": {
-    "@equinor/fusion-framework-module": "workspace:^",
-    "@equinor/fusion-framework-module-app": "workspace:^",
-    "@equinor/fusion-framework-module-context": "workspace:^",
-    "@equinor/fusion-framework-module-event": "workspace:^",
-    "@equinor/fusion-framework-module-http": "workspace:^",
+    "@equinor/fusion-framework-module": "workspace:*",
+    "@equinor/fusion-framework-module-app": "workspace:*",
+    "@equinor/fusion-framework-module-context": "workspace:*",
+    "@equinor/fusion-framework-module-event": "workspace:*",
+    "@equinor/fusion-framework-module-http": "workspace:*",
     "@opentelemetry/api-logs": "^0.211.0",
     "@opentelemetry/exporter-logs-otlp-http": "^0.211.0",
     "@opentelemetry/otlp-exporter-base": "^0.211.0",
@@ -66,8 +66,6 @@
     "vitest": "^3.2.4"
   },
   "peerDependencies": {
-    "@equinor/fusion-framework-module": "workspace:^",
-    "@equinor/fusion-framework-module-event": "workspace:^",
-    "@equinor/fusion-observable": "workspace:^"
+    "@equinor/fusion-observable": "workspace:*"
   }
 }
