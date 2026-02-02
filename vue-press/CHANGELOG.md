@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-docs
 
+## 0.4.12
+
+### Patch Changes
+
+- [#3990](https://github.com/equinor/fusion-framework/pull/3990) [`8719068`](https://github.com/equinor/fusion-framework/commit/8719068b723975db90a1b4bee59808734eb87e20) Thanks [@odinr](https://github.com/odinr)! - Update CLI documentation to include the new `--config` flag for the `app publish` command, showing how to upload application configuration after publishing in a single command.
+
 ## 0.4.11
 
 ### Patch Changes
