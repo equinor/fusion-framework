@@ -205,28 +205,26 @@ export const command = withAuthOptions(
 
       // Upload application config if requested
       if (options.config) {
-        try {
-          log.start('📝 Generating application config...');
-          const configPath = typeof options.config === 'string' ? options.config : undefined;
-          const { config } = await generateApplicationConfig({
-            log,
-            config: configPath,
-          });
-          log.succeed('📝 Config generated');
+        log.start('📝 Generating application config...');
+        const configPath = typeof options.config === 'string' ? options.config : undefined;
+        const { config } = await generateApplicationConfig({
+          log,
+          config: configPath,
+        });
+        log.succeed('📝 Config generated');
 
-          log.start('📤 Uploading application config...');
-          await publishAppConfig({
-            log,
-            config,
-            appKey: uploadResult.appKey,
-            buildVersion: uploadResult.version,
-            framework,
-          });
-          log.succeed('📤 Config uploaded successfully');
-        } catch (error) {
+        log.start('📤 Uploading application config...');
+        await publishAppConfig({
+          log,
+          config,
+          appKey: uploadResult.appKey,
+          buildVersion: uploadResult.version,
+          framework,
+        }).catch((error) => {
           log.error('😢 Failed to upload config:', error);
           process.exit(1);
-        }
+        });
+        log.succeed('📤 Config uploaded successfully');
       }
     }),
 );
