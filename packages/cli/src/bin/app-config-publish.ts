@@ -1,23 +1,17 @@
 import { HttpJsonResponseError } from '@equinor/fusion-framework-module-http/errors';
 import type { FetchRequest } from '@equinor/fusion-framework-module-http/client';
 
-import {
-  initializeFramework,
-  type FusionEnv,
-  type FusionFrameworkSettings,
-} from './framework.node.js';
+import type { FusionFramework } from './framework.node.js';
 
-import { formatPath, chalk, type ConsoleLogger, defaultHeaders } from './utils/index.js';
+import { formatPath, type ConsoleLogger, defaultHeaders } from './utils/index.js';
 
-import { generateApplicationConfig } from './app-config.js';
-import { loadAppManifest } from './app-manifest.js';
+import type { ApiAppConfig } from '../lib/app/schemas.js';
 
 type AppConfigPublishOptions = {
-  config?: string;
-  manifest?: string;
-  environment: Exclude<FusionEnv, FusionEnv.Development>;
-  auth: FusionFrameworkSettings['auth'];
-  debug?: boolean;
+  config: ApiAppConfig;
+  appKey: string;
+  buildVersion: string;
+  framework: FusionFramework;
   log?: ConsoleLogger | null;
 };
 
@@ -33,40 +27,7 @@ type AppConfigPublishOptions = {
  * @public
  */
 export const publishAppConfig = async (options: AppConfigPublishOptions) => {
-  const { log } = options;
-
-  // Generate the application config using provided options and environment
-  const { config: appConfig } = await generateApplicationConfig({
-    log,
-    config: options.config,
-    env: { environment: options.environment },
-  });
-
-  // Load the application manifest for the specified environment
-  const { manifest: appManifest } = await loadAppManifest({
-    log,
-    manifest: options.manifest,
-    env: { environment: options.environment },
-  });
-
-  // Extract the build version from the manifest
-  const appVersion = appManifest.build?.version;
-  if (!appVersion) {
-    // Fail if no build version is found in the manifest
-    const error = new Error(
-      'No build version found in the manifest. Please make sure the manifest is valid.',
-    );
-    log?.fail('🤪', error.message);
-    throw error;
-  }
-
-  log?.start('Initializing Fusion Framework...');
-  // Initialize the Fusion Framework with the provided environment and authentication
-  const framework = await initializeFramework({
-    env: options.environment,
-    auth: options.auth,
-  });
-  log?.succeed('Initialized Fusion Framework');
+  const { log, config, appKey, buildVersion, framework } = options;
 
   // Create a client for the 'apps' service
   const appClient = await framework.serviceDiscovery.createClient('apps');
@@ -77,17 +38,14 @@ export const publishAppConfig = async (options: AppConfigPublishOptions) => {
   });
 
   log?.start('Publishing application config');
-  log?.info('Using environment:', chalk.redBright(options.environment));
   try {
     // Send a PUT request to publish the app config for the specific build version
-    const response = await appClient.json(
-      `/apps/${appManifest.appKey}/builds/${appVersion}/config`,
-      {
-        method: 'PUT',
-        body: appConfig,
-        headers: defaultHeaders,
-      },
-    );
+    // The API expects the config to be wrapped in a 'request' field
+    const response = await appClient.json(`/apps/${appKey}/builds/${buildVersion}/config`, {
+      method: 'PUT',
+      body: config,
+      headers: defaultHeaders,
+    });
     log?.debug('Response:', response);
     log?.succeed('Published application config');
   } catch (error) {
@@ -97,14 +55,11 @@ export const publishAppConfig = async (options: AppConfigPublishOptions) => {
         case 410:
           log?.fail(
             '🤬',
-            `App ${appManifest.appKey} is deleted from apps-service. Please check the app key and try again.`,
+            `App ${appKey} is deleted from apps-service. Please check the app key and try again.`,
           );
           break;
         case 404:
-          log?.fail(
-            '🤬',
-            `App ${appManifest.appKey} not found. Please check the app key and try again.`,
-          );
+          log?.fail('🤬', `App ${appKey} not found. Please check the app key and try again.`);
           break;
         case 403:
         case 401:

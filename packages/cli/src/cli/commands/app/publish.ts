@@ -9,6 +9,8 @@ import {
   uploadApplication,
   tagApplication,
   checkApp,
+  generateApplicationConfig,
+  publishAppConfig,
 } from '@equinor/fusion-framework-cli/bin';
 
 import { withAuthOptions } from '../../options/auth.js';
@@ -75,6 +77,11 @@ export const command = withAuthOptions(
         '  - `ffc app publish --snapshot` → version-snapshot.{unix_timestamp}',
         '  - `ffc app publish --snapshot pr-123` → version-pr-123.{unix_timestamp}',
         '',
+        'CONFIG UPLOAD:',
+        '  Use --config to upload application configuration after publishing:',
+        '  - `ffc app publish --config` → uploads default app.config.ts',
+        '  - `ffc app publish --config app.config.prod.ts` → uploads specific config file',
+        '',
         'FIRST TIME PUBLISHING:',
         '  - Ensure your app is registered in Fusion App Admin',
         '  - Use `ffc app check` first to verify registration status',
@@ -90,6 +97,8 @@ export const command = withAuthOptions(
         '  $ ffc app publish --tag latest app.bundle.zip',
         '  $ ffc app publish --snapshot',
         '  $ ffc app publish --snapshot pr-456',
+        '  $ ffc app publish --config',
+        '  $ ffc app publish --config app.config.prod.ts --env prod',
       ].join('\n'),
     )
     .option('-d, --debug', 'Enable debug mode for verbose logging', false)
@@ -104,6 +113,10 @@ export const command = withAuthOptions(
       '-s, --snapshot [identifier]',
       'Build with a snapshot version (optionally with custom identifier). The identifier defaults to "snapshot" if not provided.',
     )
+    .option(
+      '-c, --config [path]',
+      'Upload application config after publishing. Accepts true for default config file or a path to a specific config file.',
+    )
     .argument('[bundle]', 'Path to the app bundle to upload')
     .action(async (bundle, options) => {
       const log = new ConsoleLogger('app:publish', {
@@ -117,10 +130,14 @@ export const command = withAuthOptions(
         auth: 'token' in options ? { token: options.token } : options,
         bundle: typeof bundle === 'string' ? bundle : undefined,
       });
+
+      // if the application is not registered in the app store, exit with error
       if (!appExists) {
         log.error('😢 App is not registered / deleted in app store');
         process.exit(1);
       }
+
+      // Bundle the app if no bundle is provided
       let archive: string | AdmZip;
       if (bundle) {
         log.info(`📦 Using provided bundle: ${bundle}`);
@@ -141,12 +158,13 @@ export const command = withAuthOptions(
         }
       }
 
+      // Ensure we have an archive to upload
       if (!archive) {
         log.error('😢 No bundle provided or created. Please specify a bundle file.');
         process.exit(1);
       }
 
-      log?.start('💾 Initializing Fusion Framework...');
+      log?.start(`💾 Initializing Fusion Framework - Environment: ${options.env}`);
       const framework = await initializeFramework({
         env: options.env,
         auth: {
@@ -157,6 +175,7 @@ export const command = withAuthOptions(
       });
       log?.succeed('💾 Initialized Fusion Framework');
 
+      // Upload the application bundle
       log.start('🚀 Uploading application...');
       const uploadResult = await uploadApplication({
         log,
@@ -169,6 +188,7 @@ export const command = withAuthOptions(
       log.succeed('🚀 Upload completed');
       log.debug('Upload result:', uploadResult);
 
+      // Tag the uploaded application version
       log.start('🏷️ Tagging application...');
       const tagResult = await tagApplication({
         tag: options.tag,
@@ -182,6 +202,32 @@ export const command = withAuthOptions(
       });
       log.succeed('Tagging completed');
       log.debug('Tagging result:', tagResult);
+
+      // Upload application config if requested
+      if (options.config) {
+        try {
+          log.start('📝 Generating application config...');
+          const configPath = typeof options.config === 'string' ? options.config : undefined;
+          const { config } = await generateApplicationConfig({
+            log,
+            config: configPath,
+          });
+          log.succeed('📝 Config generated');
+
+          log.start('📤 Uploading application config...');
+          await publishAppConfig({
+            log,
+            config,
+            appKey: uploadResult.appKey,
+            buildVersion: uploadResult.version,
+            framework,
+          });
+          log.succeed('📤 Config uploaded successfully');
+        } catch (error) {
+          log.error('😢 Failed to upload config:', error);
+          process.exit(1);
+        }
+      }
     }),
 );
 
