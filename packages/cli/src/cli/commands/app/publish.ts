@@ -200,7 +200,7 @@ export const command = withAuthOptions(
         log.error('😢 Failed to tag application:', error);
         process.exit(1);
       });
-      log.succeed('Tagging completed');
+      log.succeed('🏷️ Tagging completed');
       log.debug('Tagging result:', tagResult);
 
       // Upload application config if requested
