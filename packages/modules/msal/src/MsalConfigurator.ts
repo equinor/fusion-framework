@@ -43,6 +43,7 @@ const MsalConfigSchema = z.object({
   provider: z.custom<IMsalProvider>().optional(),
   requiresAuth: z.boolean().optional(),
   redirectUri: z.string().optional(),
+  authCode: z.string().optional(),
   version: z.string().transform((x: string) => String(semver.coerce(x))),
   telemetry: TelemetryConfigSchema,
 });
@@ -120,6 +121,38 @@ export class MsalConfigurator extends BaseConfigBuilder<MsalConfig> {
    */
   setClientConfig(config?: MsalClientConfig): this {
     this.#msalConfig = config;
+    return this;
+  }
+
+  /**
+   * Sets a backend-issued authorization code for token exchange.
+   *
+   * This enables the MSAL module to exchange a backend-generated auth code for tokens
+   * during initialization, allowing users to be automatically signed in without triggering
+   * an interactive MSAL login flow. The auth code is exchanged before the requiresAuth check,
+   * so tokens are cached and no login prompt appears.
+   *
+   * This follows Microsoft's standard SPA Auth Code Flow pattern and is compatible with
+   * MSAL Browser's acquireTokenByCode() method.
+   *
+   * @param authCode - The authorization code issued by the backend
+   * @returns The configurator instance for method chaining
+   *
+   * @example
+   * ```typescript
+   * // Backend provides auth code in HTML/config
+   * const config = { auth: { code: getAuthCodeFromBackend() } };
+   * configurator.setAuthCode(config.auth.code);
+   * ```
+   *
+   * @remarks
+   * - Auth codes are single-use and short-lived (typically 5-10 minutes)
+   * - The exchange happens during module initialization before requiresAuth check
+   * - If exchange fails, the provider falls back to standard MSAL authentication flows
+   * - Requires backend to be configured with SPA Auth Code support
+   */
+  setAuthCode(authCode: string): this {
+    this._set('authCode', async () => authCode);
     return this;
   }
 

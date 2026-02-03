@@ -60,6 +60,7 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
     scope: string[];
   };
   #requiresAuth?: boolean;
+  #authCode?: string;
 
   /**
    * The MSAL module version enum value indicating the API compatibility level.
@@ -127,6 +128,10 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
     this.#requiresAuth = config.requiresAuth;
     this.#telemetry = config.telemetry;
 
+    // Extract auth code from config if present
+    // This will be used during initialize to exchange for tokens
+    this.#authCode = config.authCode;
+
     // Validate required client configuration
     if (!config.client) {
       const error = new Error(
@@ -145,12 +150,17 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
    *
    * This method must be called before using any authentication operations. It performs:
    * - Client initialization
+   * - Auth code exchange (if backend-issued code provided)
    * - Redirect result handling (if returning from auth flow)
    * - Automatic login attempt if requiresAuth is enabled and no valid session exists
    *
    * @returns Promise that resolves when initialization is complete
    *
    * @remarks
+   * Auth code exchange happens before the requiresAuth check, allowing automatic sign-in
+   * without user interaction when a valid backend-issued code is provided. If exchange fails,
+   * the provider falls back to standard MSAL authentication flows.
+   *
    * The provider will attempt automatic login with empty scopes if requiresAuth is true.
    * Apps should call acquireToken with actual scopes after initialization completes.
    */
@@ -158,6 +168,54 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
     const measurement = this._trackMeasurement('initialize', TelemetryLevel.Debug);
     // Initialize the underlying MSAL client first
     await this.#client.initialize();
+
+    // Priority 0: Exchange auth code if provided by backend
+    // This must happen before the requiresAuth check so tokens are cached
+    if (this.#authCode) {
+      try {
+        this._trackEvent('initialize.exchanging-auth-code', TelemetryLevel.Information);
+
+        // Use MSAL's acquireTokenByCode to exchange backend auth code for tokens
+        // This follows Microsoft's standard SPA Auth Code Flow pattern
+        const clientId = this.#client.clientId;
+        if (!clientId) {
+          throw new Error('Client ID is required for auth code exchange');
+        }
+
+        // Exchange the auth code for tokens using the client ID's default scope.
+        // The `/.default` scope represents all permissions configured for this app in Entra ID,
+        // ensuring the exchanged tokens have the correct app-level permissions without requiring
+        // the caller to specify scopes. This follows MSAL's recommended SPA auth code pattern.
+        // This method is inherited from PublicClientApplication (MSAL Browser v4+)
+        const result = await this.#client.acquireTokenByCode({
+          code: this.#authCode,
+          scopes: [`${clientId}/.default`],
+        });
+
+        // Successfully exchanged auth code - set active account
+        if (result.account) {
+          this.#client.setActiveAccount(result.account);
+          this._trackEvent('initialize.auth-code-exchanged-account', TelemetryLevel.Information, {
+            properties: {
+              username: result.account.username,
+            },
+          });
+        }
+      } catch (error) {
+        // Auth code exchange failed - log and fall back to standard flows
+        this._trackException('initialize.auth-code-exchange-failed', TelemetryLevel.Warning, {
+          exception: error instanceof Error ? error : new Error(String(error)),
+          properties: {
+            message: error instanceof Error ? error.message : String(error),
+            reason: 'Auth code exchange failed, falling back to standard authentication flows',
+          },
+        });
+        // Continue to requiresAuth check - will trigger standard login if needed
+      } finally {
+        // Clear auth code to avoid repeated attempts
+        this.#authCode = undefined;
+      }
+    }
 
     // Only attempt authentication if this provider requires it
     if (this.#requiresAuth) {
