@@ -16,7 +16,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@equinor/eds-core-react": "^0.49.0",
+    "@equinor/eds-core-react": "^2.3.3",
     "@equinor/eds-icons": "^0.22.0",
     "@equinor/fusion-framework": "workspace:*",
     "@equinor/fusion-framework-app": "workspace:*",

@@ -13,7 +13,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@equinor/eds-core-react": "^0.49.0",
+    "@equinor/eds-core-react": "^2.3.3",
     "@equinor/fusion-framework-cli": "workspace:^",
     "@equinor/fusion-framework-react-ag-grid": "workspace:*",
     "@equinor/fusion-framework-react-app": "workspace:^",
