@@ -1,5 +1,15 @@
 # Change Log
 
+## 13.3.2
+
+### Patch Changes
+
+- [#3999](https://github.com/equinor/fusion-framework/pull/3999) [`5f6831f`](https://github.com/equinor/fusion-framework/commit/5f6831f0032ea5667bb1935883c85b6870133a5d) Thanks [@Noggling](https://github.com/Noggling)! - Corrected env parameter handling in CLI commands to ensure proper resolution of environment-specific configurations.
+
+- Updated dependencies []:
+  - @equinor/fusion-framework-dev-portal@1.4.0
+  - @equinor/fusion-framework-dev-server@1.1.24
+
 ## 13.3.1
 
 ### Patch Changes

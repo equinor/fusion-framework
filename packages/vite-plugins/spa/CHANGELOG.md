@@ -1,5 +1,12 @@
 # @equinor/fusion-framework-vite-plugin-spa
 
+## 3.1.4
+
+### Patch Changes
+
+- Updated dependencies [[`434ce70`](https://github.com/equinor/fusion-framework/commit/434ce707d237b399f8438eebe742641b2a81b11f)]:
+  - @equinor/fusion-framework-module-service-discovery@9.1.0
+
 ## 3.1.3
 
 ### Patch Changes
