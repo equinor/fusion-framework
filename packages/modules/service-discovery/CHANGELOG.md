@@ -1,5 +1,23 @@
 # Change Log
 
+## 9.1.0
+
+### Minor Changes
+
+- [#3995](https://github.com/equinor/fusion-framework/pull/3995) [`434ce70`](https://github.com/equinor/fusion-framework/commit/434ce707d237b399f8438eebe742641b2a81b11f) Thanks [@asbjornhaland](https://github.com/asbjornhaland)! - Add support for session overridden service discovery endpoints
+
+  Checks `overriddenServiceDiscoveryUrls` in session storage.
+
+  The serviceName is looked up in ServiceDiscovery.
+  User can override url and scopes with session values.
+  App can override url and scopes with app config.
+
+  Priority:
+
+  1. Session overrides
+  2. AppConfig
+  3. ServiceDiscovery
+
 ## 9.0.5
 
 ### Patch Changes
