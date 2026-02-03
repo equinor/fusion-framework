@@ -821,7 +821,7 @@ importers:
         version: 8.0.0
       inquirer:
         specifier: ^13.0.1
-        version: 13.2.1(@types/node@24.10.9)
+        version: 13.2.2(@types/node@24.10.9)
       is-mergeable-object:
         specifier: ^1.1.1
         version: 1.1.1
@@ -8074,8 +8074,8 @@ packages:
     peerDependencies:
       inquirer: ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0
 
-  inquirer@13.2.1:
-    resolution: {integrity: sha512-kjIN+joqgbSncQJ6GfN7gV9AbDQlMA+hJ96xcwkQUwP9KN/ZIusoJ2mAfdt0LPrZJQsEyk5i/YrgJQTxSgzlPw==}
+  inquirer@13.2.2:
+    resolution: {integrity: sha512-+hlN8I88JE9T3zjWHGnMhryniRDbSgFNJHJTyD2iKO5YNpMRyfghQ6wVoe+gV4ygMM4r4GzlsBxNa1g/UUZixA==}
     engines: {node: '>=23.5.0 || ^22.13.0 || ^21.7.0 || ^20.12.0'}
     peerDependencies:
       '@types/node': '>=18'
@@ -17437,7 +17437,7 @@ snapshots:
       run-async: 2.4.1
       rxjs: 6.6.7
 
-  inquirer@13.2.1(@types/node@24.10.9):
+  inquirer@13.2.2(@types/node@24.10.9):
     dependencies:
       '@inquirer/ansi': 2.0.3
       '@inquirer/core': 11.1.1(@types/node@24.10.9)
