@@ -806,7 +806,7 @@ importers:
         version: 9.0.9
       commander:
         specifier: ^14.0.1
-        version: 14.0.2
+        version: 14.0.3
       deepmerge:
         specifier: ^4.3.1
         version: 4.3.1
@@ -954,7 +954,7 @@ importers:
         version: link:../../utils/imports
       commander:
         specifier: ^14.0.1
-        version: 14.0.2
+        version: 14.0.3
       zod:
         specifier: ^4.3.5
         version: 4.3.5
@@ -985,7 +985,7 @@ importers:
         version: 1.1.18(@opentelemetry/api@1.9.0)(@opentelemetry/sdk-trace-base@2.5.0(@opentelemetry/api@1.9.0))(openai@6.17.0(ws@8.19.0)(zod@4.3.6))
       commander:
         specifier: ^14.0.1
-        version: 14.0.2
+        version: 14.0.3
       rxjs:
         specifier: ^7.8.1
         version: 7.8.2
@@ -1022,7 +1022,7 @@ importers:
         version: 1.0.1(@langchain/core@1.1.18(@opentelemetry/api@1.9.0)(@opentelemetry/sdk-trace-base@2.5.0(@opentelemetry/api@1.9.0))(openai@6.17.0(ws@8.19.0)(zod@4.3.5)))
       commander:
         specifier: ^14.0.1
-        version: 14.0.2
+        version: 14.0.3
       find-up:
         specifier: ^8.0.0
         version: 8.0.0
@@ -1083,7 +1083,7 @@ importers:
         version: 1.25.3(@cfworker/json-schema@4.1.1)(hono@4.11.4)(zod@4.3.5)
       commander:
         specifier: ^14.0.1
-        version: 14.0.2
+        version: 14.0.3
       zod:
         specifier: ^4.3.5
         version: 4.3.5
@@ -1114,7 +1114,7 @@ importers:
         version: 1.1.18(@opentelemetry/api@1.9.0)(@opentelemetry/sdk-trace-base@2.5.0(@opentelemetry/api@1.9.0))(openai@6.17.0(ws@8.19.0)(zod@4.3.6))
       commander:
         specifier: ^14.0.1
-        version: 14.0.2
+        version: 14.0.3
     devDependencies:
       typescript:
         specifier: ^5.8.2
@@ -7055,8 +7055,8 @@ packages:
   comma-separated-tokens@2.0.3:
     resolution: {integrity: sha512-Fu4hJdvzeylCfQPp9SGWidpzrMs7tTrlu6Vb8XGaRGck8QSNZJJp538Wrb60Lax4fPwR64ViY468OIUTbRlGZg==}
 
-  commander@14.0.2:
-    resolution: {integrity: sha512-TywoWNNRbhoD0BXs1P3ZEScW8W5iKrnbithIl0YH+uCmBd0QpPOA8yc82DS3BIE5Ma6FnBVUsJ7wVUDz4dvOWQ==}
+  commander@14.0.3:
+    resolution: {integrity: sha512-H+y0Jo/T1RZ9qPP4Eh1pkcQcLRglraJaSLoyOtHxu6AapkjWVCy2Sit1QQ4x3Dng8qDlSsZEet7g5Pq06MvTgw==}
     engines: {node: '>=20'}
 
   commander@2.20.3:
@@ -15829,7 +15829,7 @@ snapshots:
     dependencies:
       '@vuepress/helper': 2.0.0-rc.121(typescript@5.9.3)(vuepress@2.0.0-rc.26(@vuepress/bundler-vite@2.0.0-rc.26(@types/node@24.10.9)(sass-embedded@1.97.2)(sass@1.97.2)(terser@5.46.0)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2))(typescript@5.9.3)(vue@3.5.27(typescript@5.9.3)))
       '@vueuse/core': 14.2.0(vue@3.5.27(typescript@5.9.3))
-      commander: 14.0.2
+      commander: 14.0.3
       vue: 3.5.27(typescript@5.9.3)
       vuepress: 2.0.0-rc.26(@vuepress/bundler-vite@2.0.0-rc.26(@types/node@24.10.9)(sass-embedded@1.97.2)(sass@1.97.2)(terser@5.46.0)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2))(typescript@5.9.3)(vue@3.5.27(typescript@5.9.3))
     transitivePeerDependencies:
@@ -16313,7 +16313,7 @@ snapshots:
 
   comma-separated-tokens@2.0.3: {}
 
-  commander@14.0.2: {}
+  commander@14.0.3: {}
 
   commander@2.20.3: {}
 
