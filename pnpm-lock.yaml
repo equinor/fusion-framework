@@ -1633,7 +1633,7 @@ importers:
     dependencies:
       '@azure/msal-browser':
         specifier: ^5.0.2
-        version: 5.0.2
+        version: 5.1.0
     devDependencies:
       '@equinor/fusion-framework-module':
         specifier: workspace:^
@@ -2607,12 +2607,8 @@ packages:
     resolution: {integrity: sha512-fCqPIfOcLE+CGqGPd66c8bZpwAji98tZ4JI9i/mlTNTlsIWslCfpg48s/ypyLxZTump5sypjrKn2/kY7q8oAbA==}
     engines: {node: '>=20.0.0'}
 
-  '@azure/msal-browser@5.0.2':
-    resolution: {integrity: sha512-tTrADo/ZNE8O1vzYJ2lmmZQJ0VbeLWzfjILMMENWMxvcwp6p2ibbVaHj3I1+Lpvp4y5Gg0tQiPQdlr+fICrJ0A==}
-    engines: {node: '>=0.8.0'}
-
-  '@azure/msal-common@16.0.2':
-    resolution: {integrity: sha512-ZJ/UR7lyqIntURrIJCyvScwJFanM9QhJYcJCheB21jZofGKpP9QxWgvADANo7UkresHKzV+6YwoeZYP7P7HvUg==}
+  '@azure/msal-browser@5.1.0':
+    resolution: {integrity: sha512-5tZcp1zcALSLJvnxkmJ8MYxLtZzEyq28wX2jSV4Kz2QaHty4eYIb/Pc44DARLfgHD+G9F82k9nD7J89MbFRQxA==}
     engines: {node: '>=0.8.0'}
 
   '@azure/msal-common@16.0.3':
@@ -10906,11 +10902,9 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@azure/msal-browser@5.0.2':
+  '@azure/msal-browser@5.1.0':
     dependencies:
-      '@azure/msal-common': 16.0.2
-
-  '@azure/msal-common@16.0.2': {}
+      '@azure/msal-common': 16.0.3
 
   '@azure/msal-common@16.0.3': {}
 
