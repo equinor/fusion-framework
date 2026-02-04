@@ -24,6 +24,34 @@ export type ComponentRenderer<TFusion extends Fusion = Fusion, TEnv = AppEnv> = 
 ) => React.LazyExoticComponent<React.ComponentType>;
 
 /**
+ * Normalize environment config by providing legacy endpoint helpers.
+ * @param args - Render args containing environment configuration.
+ * @returns Normalized render args with endpoint helpers attached.
+ */
+const normalizeEnvConfig = <TRef extends Fusion, TEnv extends AppEnv>(args: {
+  fusion: TRef;
+  env: TEnv;
+}): { fusion: TRef; env: TEnv } => {
+  if (!args.env?.config) return args;
+
+  const configWithEndpoints = {
+    ...args.env.config,
+    getEndpoints: (): Record<string, { url: string; scopes?: string[] }> =>
+      (args.env.config?.endpoints ?? {}) as unknown as Record<string, { url: string; scopes?: string[] }>,
+    getEndpoint: (key: string): { url: string; scopes?: string[] } | undefined =>
+      args.env.config?.endpoints?.[key] as { url: string; scopes?: string[] } | undefined,
+  };
+
+  return {
+    ...args,
+    env: {
+      ...args.env,
+      config: configWithEndpoints,
+    } as TEnv,
+  };
+};
+
+/**
  * Creates a lazy loading React Component that initializes and configures modules,
  * then provides the necessary context to both the Fusion framework and the configured modules.
  * This function is particularly useful for setting up a React application with modular architecture,
@@ -54,13 +82,14 @@ export const makeComponent = <
   configure?: AppModuleInitiator<TModules, TRef, TEnv>,
 ): React.LazyExoticComponent<React.ComponentType> =>
   lazy(async () => {
+    const normalizedArgs = normalizeEnvConfig(args);
     const init = configureModules<TModules, TRef, TEnv>(configure);
-    const modules = (await init(args)) as unknown as AppModulesInstance;
+    const modules = (await init(normalizedArgs)) as unknown as AppModulesInstance;
 
-    const { fusion } = args;
+    const { fusion } = normalizedArgs;
 
     modules.event.dispatchEvent('onReactAppLoaded', {
-      detail: { modules, fusion, env: args.env },
+      detail: { modules, fusion, env: normalizedArgs.env },
       source: Component,
     });
 
