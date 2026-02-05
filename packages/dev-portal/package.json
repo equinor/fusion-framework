@@ -26,24 +26,6 @@
     "@equinor/eds-core-react": "^0.49.0",
     "@equinor/eds-icons": "^0.22.0",
     "@equinor/eds-tokens": "^0.10.0",
-    "@equinor/fusion-framework": "workspace:*",
-    "@equinor/fusion-framework-app": "workspace:*",
-    "@equinor/fusion-framework-dev-server": "workspace:*",
-    "@equinor/fusion-framework-module-ag-grid": "workspace:^",
-    "@equinor/fusion-framework-module-app": "workspace:*",
-    "@equinor/fusion-framework-module-analytics": "workspace:*",
-    "@equinor/fusion-framework-module-bookmark": "workspace:*",
-    "@equinor/fusion-framework-module-context": "workspace:*",
-    "@equinor/fusion-framework-module-feature-flag": "workspace:*",
-    "@equinor/fusion-framework-module-navigation": "workspace:*",
-    "@equinor/fusion-framework-module-services": "workspace:*",
-    "@equinor/fusion-framework-module-telemetry": "workspace:*",
-    "@equinor/fusion-framework-react": "workspace:*",
-    "@equinor/fusion-framework-react-components-bookmark": "workspace:*",
-    "@equinor/fusion-framework-react-components-people-provider": "workspace:*",
-    "@equinor/fusion-framework-react-module-bookmark": "workspace:*",
-    "@equinor/fusion-observable": "workspace:*",
-    "@equinor/fusion-query": "workspace:*",
     "@equinor/fusion-react-context-selector": "^1.0.6",
     "@equinor/fusion-react-progress-indicator": "^0.3.0",
     "@equinor/fusion-react-side-sheet": "2.0.0",
@@ -64,5 +46,81 @@
     "tsx": "^4.19.3",
     "typescript": "^5.8.2",
     "vite": "^7.1.12"
+  },
+  "peerDependencies": {
+    "@equinor/fusion-framework": "workspace:*",
+    "@equinor/fusion-framework-app": "workspace:*",
+    "@equinor/fusion-framework-dev-server": "workspace:*",
+    "@equinor/fusion-framework-module-ag-grid": "workspace:*",
+    "@equinor/fusion-framework-module-app": "workspace:*",
+    "@equinor/fusion-framework-module-analytics": "workspace:*",
+    "@equinor/fusion-framework-module-bookmark": "workspace:*",
+    "@equinor/fusion-framework-module-context": "workspace:*",
+    "@equinor/fusion-framework-module-feature-flag": "workspace:*",
+    "@equinor/fusion-framework-module-navigation": "workspace:*",
+    "@equinor/fusion-framework-module-services": "workspace:*",
+    "@equinor/fusion-framework-module-telemetry": "workspace:*",
+    "@equinor/fusion-framework-react": "workspace:*",
+    "@equinor/fusion-framework-react-components-bookmark": "workspace:*",
+    "@equinor/fusion-framework-react-components-people-provider": "workspace:*",
+    "@equinor/fusion-framework-react-module-bookmark": "workspace:*",
+    "@equinor/fusion-observable": "workspace:*",
+    "@equinor/fusion-query": "workspace:*"
+  },
+  "peerDependenciesMeta": {
+    "@equinor/fusion-framework": {
+      "optional": true
+    },
+    "@equinor/fusion-framework-app": {
+      "optional": true
+    },
+    "@equinor/fusion-framework-dev-server": {
+      "optional": true
+    },
+    "@equinor/fusion-framework-module-ag-grid": {
+      "optional": true
+    },
+    "@equinor/fusion-framework-module-app": {
+      "optional": true
+    },
+    "@equinor/fusion-framework-module-analytics": {
+      "optional": true
+    },
+    "@equinor/fusion-framework-module-bookmark": {
+      "optional": true
+    },
+    "@equinor/fusion-framework-module-context": {
+      "optional": true
+    },
+    "@equinor/fusion-framework-module-feature-flag": {
+      "optional": true
+    },
+    "@equinor/fusion-framework-module-navigation": {
+      "optional": true
+    },
+    "@equinor/fusion-framework-module-services": {
+      "optional": true
+    },
+    "@equinor/fusion-framework-module-telemetry": {
+      "optional": true
+    },
+    "@equinor/fusion-framework-react": {
+      "optional": true
+    },
+    "@equinor/fusion-framework-react-components-bookmark": {
+      "optional": true
+    },
+    "@equinor/fusion-framework-react-components-people-provider": {
+      "optional": true
+    },
+    "@equinor/fusion-framework-react-module-bookmark": {
+      "optional": true
+    },
+    "@equinor/fusion-observable": {
+      "optional": true
+    },
+    "@equinor/fusion-query": {
+      "optional": true
+    }
   }
 }
