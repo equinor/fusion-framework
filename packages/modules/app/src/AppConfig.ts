@@ -48,29 +48,12 @@ export class AppConfig<TEnvironment extends ConfigEnvironment = ConfigEnvironmen
    */
   public readonly environment: TEnvironment;
 
-  /**
-   * @deprecated Use `getEndpoint` instead.
-   *
-   * Retrieves the endpoints as a record of strings. This method returns a proxy
-   * that maps the endpoint names to their respective URLs.
-   *
-   * @returns {Record<string, string | undefined>} A record where the keys are endpoint names and the values are their URLs.
-   */
-  public get endpoints(): Record<string, string | undefined> {
-    console.warn('endpoints is deprecated, use getEndpoint instead');
-    return new Proxy(this.#endpoints, {
-      get(target, prop): string | undefined {
-        return target[prop as string]?.url;
-      },
-    }) as unknown as Record<string, string>;
-  }
-
   constructor(config: {
     environment?: TEnvironment | null;
     endpoints?: Record<string, ConfigEndPoint>;
   }) {
-    this.environment = deepFreeze(config.environment ?? {}) as TEnvironment;
-    this.#endpoints = config.endpoints ?? {};
+    this.environment = deepFreeze(structuredClone(config.environment ?? {})) as TEnvironment;
+    this.#endpoints = deepFreeze(structuredClone(config.endpoints ?? {}));
   }
 
   /**
