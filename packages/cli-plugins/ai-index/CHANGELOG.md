@@ -1,5 +1,22 @@
 # @equinor/fusion-framework-cli-plugin-ai-index
 
+## 1.0.5
+
+### Patch Changes
+
+- [`296fb30`](https://github.com/equinor/fusion-framework/commit/296fb3046d17314e9a59896daf5860ecf1117a41) Thanks [@odinr](https://github.com/odinr)! - Export `FusionAIConfigWithIndex` and `IndexConfig` types from main entry point for easier consumption.
+
+  ```typescript
+  // Now available
+  import {
+    FusionAIConfigWithIndex,
+    IndexConfig,
+  } from "@equinor/fusion-framework-cli-plugin-ai-index";
+  ```
+
+- Updated dependencies []:
+  - @equinor/fusion-framework-cli@13.3.3
+
 ## 1.0.4
 
 ### Patch Changes
