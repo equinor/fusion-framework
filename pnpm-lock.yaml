@@ -1766,12 +1766,6 @@ importers:
 
   packages/modules/telemetry:
     dependencies:
-      '@equinor/fusion-framework-module':
-        specifier: workspace:*
-        version: link:../module
-      '@equinor/fusion-framework-module-event':
-        specifier: workspace:*
-        version: link:../event
       deepmerge:
         specifier: ^4.3.1
         version: 4.3.1
@@ -1782,6 +1776,12 @@ importers:
         specifier: ^4.1.11
         version: 4.3.6
     devDependencies:
+      '@equinor/fusion-framework-module':
+        specifier: workspace:*
+        version: link:../module
+      '@equinor/fusion-framework-module-event':
+        specifier: workspace:*
+        version: link:../event
       '@equinor/fusion-observable':
         specifier: workspace:^
         version: link:../../utils/observable
