@@ -1,5 +1,13 @@
 # Change Log
 
+## 4.6.3
+
+### Patch Changes
+
+- [`21458e5`](https://github.com/equinor/fusion-framework/commit/21458e5e7585f0bf266c66d6f4135396fd7c1529) Thanks [@odinr](https://github.com/odinr)! - Internal: move framework dependencies to peerDependencies to prevent duplicate installations and version conflicts.
+
+  Framework module dependencies (`@equinor/fusion-framework-module` and `@equinor/fusion-framework-module-event`) are now properly declared as peer dependencies instead of direct dependencies. This ensures consumers provide compatible framework versions and prevents duplicate package installations in node_modules.
+
 ## 4.6.2
 
 ### Patch Changes

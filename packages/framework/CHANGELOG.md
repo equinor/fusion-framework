@@ -1,5 +1,12 @@
 # Change Log
 
+## 7.4.6
+
+### Patch Changes
+
+- Updated dependencies [[`21458e5`](https://github.com/equinor/fusion-framework/commit/21458e5e7585f0bf266c66d6f4135396fd7c1529)]:
+  - @equinor/fusion-framework-module-telemetry@4.6.3
+
 ## 7.4.5
 
 ### Patch Changes
