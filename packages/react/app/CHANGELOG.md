@@ -1,5 +1,13 @@
 # Change Log
 
+## 9.0.1
+
+### Patch Changes
+
+- [`bd539b5`](https://github.com/equinor/fusion-framework/commit/bd539b5355db0cdec7569e9a09f4e8dce2a9a05c) Thanks [@odinr](https://github.com/odinr)! - Internal: Update workspace dependency versions from `workspace:^` to `workspace:*` for better compatibility.
+
+  Changed all internal workspace dependencies to use `workspace:*` instead of `workspace:^` to ensure exact version matching within the monorepo. This prevents version mismatch issues when different parts of the framework have conflicting version constraints.
+
 ## 9.0.0
 
 ### Patch Changes
