@@ -41,19 +41,28 @@ export type ConfigEndPoint = {
  */
 export class AppConfig<TEnvironment extends ConfigEnvironment = ConfigEnvironment> {
   #endpoints: Record<string, ConfigEndPoint>;
+  #environment: TEnvironment;
 
   /**
    * The environment configuration for the application.
-   * This property is read-only and is of type `TEnvironment`.
    */
-  public readonly environment: TEnvironment;
+  get environment(): TEnvironment {
+    return this.#environment;
+  }
+
+  /**
+   * The configuration endpoints for the application,.
+   */
+  get endpoints(): Record<string, ConfigEndPoint> {
+    return this.#endpoints;
+  }
 
   constructor(config: {
     environment?: TEnvironment | null;
     endpoints?: Record<string, ConfigEndPoint>;
   }) {
-    this.environment = deepFreeze(structuredClone(config.environment ?? {})) as TEnvironment;
-    this.#endpoints = deepFreeze(structuredClone(config.endpoints ?? {}));
+    this.#environment = deepFreeze(config.environment ?? {}) as TEnvironment;
+    this.#endpoints = deepFreeze(config.endpoints ?? {});
   }
 
   /**
@@ -64,14 +73,5 @@ export class AppConfig<TEnvironment extends ConfigEnvironment = ConfigEnvironmen
    */
   getEndpoint(key: string): ConfigEndPoint | undefined {
     return this.#endpoints[key];
-  }
-
-  /**
-   * Retrieve all configuration endpoints associated with the app.
-   *
-   * @returns The configuration endpoints found.
-   */
-  getEndpoints(): Record<string, ConfigEndPoint> {
-    return this.#endpoints;
   }
 }

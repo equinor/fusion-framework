@@ -90,14 +90,7 @@ export class AppConfigurator<
    * Reads app config's endpoints and configure the endpoints as httpClients
    */
   protected _configureHttpClientsFromAppConfig() {
-    const { config } = this.env;
-
-    // If config is not provided, we assume there are no endpoints to configure and exit early.
-    if (!config) {
-      return;
-    }
-    // @ts-expect-error - @deprecated - getEndpoints is the new standard for providing endpoints.
-    const endpoints = config.getEndpoints?.() ?? config.endpoints ?? {};
+    const { endpoints = {} } = this.env.config ?? {};
     for (const [key, { url, scopes }] of Object.entries(endpoints)) {
       this.configureHttpClient(key, {
         baseUri: url,
