@@ -41,36 +41,28 @@ export type ConfigEndPoint = {
  */
 export class AppConfig<TEnvironment extends ConfigEnvironment = ConfigEnvironment> {
   #endpoints: Record<string, ConfigEndPoint>;
+  #environment: TEnvironment;
 
   /**
    * The environment configuration for the application.
-   * This property is read-only and is of type `TEnvironment`.
    */
-  public readonly environment: TEnvironment;
+  get environment(): TEnvironment {
+    return this.#environment;
+  }
 
   /**
-   * @deprecated Use `getEndpoint` instead.
-   *
-   * Retrieves the endpoints as a record of strings. This method returns a proxy
-   * that maps the endpoint names to their respective URLs.
-   *
-   * @returns {Record<string, string | undefined>} A record where the keys are endpoint names and the values are their URLs.
+   * The configuration endpoints for the application,.
    */
-  public get endpoints(): Record<string, string | undefined> {
-    console.warn('endpoints is deprecated, use getEndpoint instead');
-    return new Proxy(this.#endpoints, {
-      get(target, prop): string | undefined {
-        return target[prop as string]?.url;
-      },
-    }) as unknown as Record<string, string>;
+  get endpoints(): Record<string, ConfigEndPoint> {
+    return this.#endpoints;
   }
 
   constructor(config: {
     environment?: TEnvironment | null;
     endpoints?: Record<string, ConfigEndPoint>;
   }) {
-    this.environment = deepFreeze(config.environment ?? {}) as TEnvironment;
-    this.#endpoints = config.endpoints ?? {};
+    this.#environment = deepFreeze(config.environment ?? {}) as TEnvironment;
+    this.#endpoints = deepFreeze(config.endpoints ?? {});
   }
 
   /**
@@ -81,14 +73,5 @@ export class AppConfig<TEnvironment extends ConfigEnvironment = ConfigEnvironmen
    */
   getEndpoint(key: string): ConfigEndPoint | undefined {
     return this.#endpoints[key];
-  }
-
-  /**
-   * Retrieve all configuration endpoints associated with the app.
-   *
-   * @returns The configuration endpoints found.
-   */
-  getEndpoints(): Record<string, ConfigEndPoint> {
-    return this.#endpoints;
   }
 }

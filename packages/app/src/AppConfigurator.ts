@@ -79,17 +79,18 @@ export class AppConfigurator<
    */
   static readonly className: string = 'AppConfigurator';
 
+  // @todo - use zod to validate provided env config shape?
   constructor(public readonly env: TEnv) {
     super([event, http, auth]);
 
-    this.configureHttpClientsFromAppConfig();
+    this._configureHttpClientsFromAppConfig();
   }
 
   /**
    * Reads app config's endpoints and configure the endpoints as httpClients
    */
-  protected configureHttpClientsFromAppConfig() {
-    const endpoints = this.env.config ? this.env.config.getEndpoints() : {};
+  protected _configureHttpClientsFromAppConfig() {
+    const { endpoints = {} } = this.env.config ?? {};
     for (const [key, { url, scopes }] of Object.entries(endpoints)) {
       this.configureHttpClient(key, {
         baseUri: url,
