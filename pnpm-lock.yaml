@@ -1864,50 +1864,50 @@ importers:
   packages/react/app:
     dependencies:
       '@equinor/fusion-framework-app':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../../app
       '@equinor/fusion-framework-module':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../../modules/module
       '@equinor/fusion-framework-module-app':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../../modules/app
       '@equinor/fusion-framework-module-navigation':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../../modules/navigation
       '@equinor/fusion-framework-react':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../framework
       '@equinor/fusion-framework-react-module':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../modules/module
       '@equinor/fusion-framework-react-module-http':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../modules/http
     devDependencies:
       '@equinor/fusion-framework-module-ag-grid':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../../modules/ag-grid
       '@equinor/fusion-framework-module-analytics':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../../modules/analytics
       '@equinor/fusion-framework-module-event':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../../modules/event
       '@equinor/fusion-framework-module-feature-flag':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../../modules/feature-flag
       '@equinor/fusion-framework-module-msal':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../../modules/msal
       '@equinor/fusion-framework-react-module-bookmark':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../modules/bookmark
       '@equinor/fusion-framework-react-module-context':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../modules/context
       '@equinor/fusion-observable':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../../utils/observable
       '@types/react':
         specifier: ^18.2.50
