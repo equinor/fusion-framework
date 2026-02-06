@@ -1,5 +1,14 @@
 # @equinor/fusion-framework-dev-portal
 
+## 1.4.1
+
+### Patch Changes
+
+- [#4022](https://github.com/equinor/fusion-framework/pull/4022) [`1b62bd9`](https://github.com/equinor/fusion-framework/commit/1b62bd99410265aff08a3f77996d456d49bfc23d) Thanks [@odinr](https://github.com/odinr)! - Internal: add workspace dependencies as optional peerDependencies to ensure dev-portal bumps when dependencies change. No consumer-facing changes.
+
+- Updated dependencies [[`1b62bd9`](https://github.com/equinor/fusion-framework/commit/1b62bd99410265aff08a3f77996d456d49bfc23d)]:
+  - @equinor/fusion-framework-app@10.4.2
+
 ## 1.4.0
 
 ### Minor Changes

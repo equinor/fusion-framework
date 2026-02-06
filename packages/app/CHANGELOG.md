@@ -1,5 +1,18 @@
 # Change Log
 
+## 10.4.2
+
+### Patch Changes
+
+- [#4022](https://github.com/equinor/fusion-framework/pull/4022) [`1b62bd9`](https://github.com/equinor/fusion-framework/commit/1b62bd99410265aff08a3f77996d456d49bfc23d) Thanks [@odinr](https://github.com/odinr)! - Internal: simplify endpoint configuration in AppConfigurator to use direct property access via destructuring.
+
+  ```typescript
+  // Simplified from complex conditional to simple destructuring
+  const { endpoints = {} } = this.env.config ?? {};
+  ```
+
+  Resolves: equinor/fusion#792
+
 ## 10.4.1
 
 ### Patch Changes
