@@ -19,9 +19,9 @@
     }
   },
   "scripts": {
-    "build": "tsc -b",
-    "build:types": "tsc -b",
-    "watch": "tsc -b --watch",
+    "build": "tsgo -b",
+    "build:types": "tsgo -b",
+    "watch": "tsgo -b --watch",
     "prepack": "pnpm build",
     "test": "vitest"
   },
@@ -68,7 +68,7 @@
     "@equinor/fusion-framework-cli": "workspace:^"
   },
   "devDependencies": {
-    "typescript": "^5.8.2",
+    "@typescript/native-preview": "7.0.0-dev.20260205.1",
     "vitest": "^3.2.4"
   }
 }

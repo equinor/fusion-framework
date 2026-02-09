@@ -11,7 +11,7 @@
   },
   "types": "./dist/types/index.d.ts",
   "scripts": {
-    "build": "tsc -b",
+    "build": "tsgo -b",
     "prepack": "pnpm build"
   },
   "keywords": [
@@ -43,6 +43,6 @@
     "@equinor/fusion-framework-module-widget": "workspace:^"
   },
   "devDependencies": {
-    "typescript": "^5.8.2"
+    "@typescript/native-preview": "7.0.0-dev.20260205.1"
   }
 }

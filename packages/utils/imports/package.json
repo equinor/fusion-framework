@@ -35,7 +35,7 @@
     "directory": "packages/utils/imports"
   },
   "scripts": {
-    "build": "tsc -b",
+    "build": "tsgo -b",
     "prepack": "pnpm build",
     "test": "vitest"
   },
@@ -49,7 +49,7 @@
   "devDependencies": {
     "fs-monkey": "^1.1.0",
     "memfs": "^4.17.0",
-    "typescript": "^5.8.2",
+    "@typescript/native-preview": "7.0.0-dev.20260205.1",
     "unionfs": "^4.5.4",
     "vitest": "^3.2.4"
   }

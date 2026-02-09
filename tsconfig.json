@@ -4,18 +4,17 @@
     "noEmit": true,
     "skipLibCheck": true,
     "jsx": "react-jsx",
-    "baseUrl": "./packages",
     "paths": {
-      "@equinor/fusion-framework-react-module": ["./react/modules/module/src"],
-      "@equinor/fusion-framework-react-module-*": ["./react/modules/*/src"],
-      "@equinor/fusion-framework-react-*": ["./react/*/src"],
-      "@equinor/fusion-framework-module": ["./modules/module/src"],
-      "@equinor/fusion-framework-module-*": ["./modules/*/src"],
-      "@equinor/fusion-framework-*": ["./*/src"],
-      "@equinor/fusion-framework": ["./framework/src"],
-      "fusion-framework-vite-plugin-*": ["./vite-plugins/*/src"],
-      "@equinor/fusion-observable": ["./utils/observable/src"],
-      "@equinor/fusion-query": ["./utils/query/src"]
+      "@equinor/fusion-framework-react-module": ["./packages/react/modules/module/src"],
+      "@equinor/fusion-framework-react-module-*": ["./packages/react/modules/*/src"],
+      "@equinor/fusion-framework-react-*": ["./packages/react/*/src"],
+      "@equinor/fusion-framework-module": ["./packages/modules/module/src"],
+      "@equinor/fusion-framework-module-*": ["./packages/modules/*/src"],
+      "@equinor/fusion-framework-*": ["./packages/*/src"],
+      "@equinor/fusion-framework": ["./packages/framework/src"],
+      "fusion-framework-vite-plugin-*": ["./packages/vite-plugins/*/src"],
+      "@equinor/fusion-observable": ["./packages/utils/observable/src"],
+      "@equinor/fusion-query": ["./packages/utils/query/src"]
     }
   },
   "include": ["packages/**/src/**/*.ts", "packages/**/src/**/*.tsx"],

@@ -16,7 +16,7 @@
     }
   },
   "scripts": {
-    "build": "tsc -b",
+    "build": "tsgo -b",
     "prepack": "pnpm build"
   },
   "keywords": [
@@ -43,6 +43,6 @@
     "open": "^11.0.0"
   },
   "devDependencies": {
-    "typescript": "^5.8.2"
+    "@typescript/native-preview": "7.0.0-dev.20260205.1"
   }
 }

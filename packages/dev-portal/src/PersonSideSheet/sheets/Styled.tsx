@@ -1,5 +1,6 @@
-import styled from 'styled-components';
-export const Styled = {
+import styled, { type StyledObject } from 'styled-components';
+
+export const Styled: Record<string, StyledObject> = {
   SwitchList: styled.ul`
         list-style: none;
         padding-left: 0;

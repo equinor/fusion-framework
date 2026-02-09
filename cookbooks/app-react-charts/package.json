@@ -30,7 +30,7 @@
     "react-dom": "^18.2.0",
     "react-router-dom": "^7.6.0",
     "styled-components": "^6.1.19",
-    "typescript": "^5.8.2"
+    "@typescript/native-preview": "7.0.0-dev.20260205.1"
   },
   "dependencies": {
     "chart.js": "^4.4.9",

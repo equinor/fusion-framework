@@ -6,7 +6,6 @@
     "outDir": "dist/esm",
     "rootDir": "src",
     "declarationDir": "./dist/types",
-    "baseUrl": "."
   },
   "references": [
     {

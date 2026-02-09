@@ -1,4 +1,4 @@
-export type { Action, Path } from '@remix-run/router';
+export type { Action, Path, Router, AgnosticRouteObject } from '@remix-run/router'; // @TODO
 
 export { INavigationConfigurator, NavigationConfigurator } from './configurator';
 

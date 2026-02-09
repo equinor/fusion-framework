@@ -23,7 +23,7 @@
     "@vuepress/utils": "2.0.0-rc.26",
     "mermaid": "^11.11.0",
     "sass-embedded": "^1.86.3",
-    "typescript": "^5.8.2",
+	"@typescript/native-preview": "7.0.0-dev.20260205.1",
     "vue": "^3.5.25",
     "vuepress": "2.0.0-rc.26",
     "vuepress-theme-hope": "2.0.0-rc.102"

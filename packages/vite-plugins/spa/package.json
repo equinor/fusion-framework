@@ -27,7 +27,7 @@
     "directory": "packages/vite-plugins/spa"
   },
   "scripts": {
-    "build": "tsc -b",
+    "build": "tsgo -b",
     "postbuild": "rollup -c rollup.config.js",
     "test": "vitest",
     "prepack": "pnpm build"
@@ -54,7 +54,7 @@
     "@rollup/plugin-node-resolve": "^16.0.1",
     "@rollup/plugin-typescript": "^12.1.2",
     "rollup": "^4.39.0",
-    "typescript": "^5.8.2",
+    "@typescript/native-preview": "7.0.0-dev.20260205.1",
     "vite": "^7.1.12"
   }
 }

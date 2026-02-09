@@ -18,10 +18,13 @@
     "clean:npm": "pnpm -r exec rimraf node_modules && pnpm exec rimraf node_modules",
     "clean:build": "pnpm -r exec rimraf dist tmp .cache .turbo tsconfig.tsbuildinfo",
     "watch:packages": "turbo watch --filter './packages/**' build",
-    "build": "turbo build --filter=!@equinor/fusion-framework-docs",
+    "build": "turbo build --filter=!@equinor/fusion-framework-docs --filter=!./cookbooks/**",
+    "build:no-turbo": "pnpm --recursive --filter=!@equinor/fusion-framework-docs --filter=!./cookbooks/** build",
+    "build:no-turbo-a": "pnpm --recursive --filter=!@equinor/fusion-framework-docs build",
     "build:all": "pnpm build && pnpm build:docs",
     "build:cli": "turbo build --filter @equinor/fusion-framework-cli... build",
     "build:packages": "turbo build --filter './packages/**' build",
+    "build:packages:no-turbo": "pnpm --recursive --filter './packages/**' build",
     "build:cookbooks": "turbo build --filter './cookbooks/**' build",
     "build:docs": "turbo build --filter '@equinor/fusion-framework-docs' build",
     "build:affected": "turbo build --filter=...[origin/main] build",
@@ -63,11 +66,11 @@
     "rimraf": "^6.0.0",
     "tslib": "^2.6.1",
     "turbo": "^2.5.6",
-    "typescript": "^5.8.2",
+	"@typescript/native-preview": "7.0.0-dev.20260205.1",
     "vitest": "^3.2.4"
   },
   "peerDependencies": {
-    "typescript": ">=4.8"
+	"@typescript/native-preview": "7.0.0-dev.20260205.1"
   },
   "workspaces": {
     "packages": [

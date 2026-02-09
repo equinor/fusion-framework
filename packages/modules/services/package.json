@@ -111,7 +111,7 @@
     }
   },
   "scripts": {
-    "build": "tsc -b",
+    "build": "tsgo -b",
     "prepack": "pnpm build",
     "test": "vitest"
   },
@@ -136,7 +136,7 @@
     "@equinor/fusion-framework-module-service-discovery": "workspace:^",
     "@faker-js/faker": "^10.1.0",
     "msw": "^2.7.3",
-    "typescript": "^5.8.2",
+    "@typescript/native-preview": "7.0.0-dev.20260205.1",
     "vitest": "^3.2.4"
   },
   "peerDependencies": {

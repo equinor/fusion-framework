@@ -4,7 +4,6 @@
     "outDir": "dist",
     "rootDir": "src",
     "declarationDir": "./dist/types",
-    "baseUrl": ".",
     "jsx": "react-jsx"
   },
   "references": [

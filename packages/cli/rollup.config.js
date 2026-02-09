@@ -10,7 +10,9 @@ const externals = [...Object.keys(pkg.dependencies), 'keytar'];
 const plugins = [
   json(),
   resolve({ preferBuiltins: true }),
-  commonjs(),
+  commonjs({
+    sourceMap: false,
+  }),
   terser({ format: { comments: false } }), // This removes all comments
   replace({
     preventAssignment: true,
@@ -27,18 +29,21 @@ const output = {
 /** @type {import('rollup').RollupOptions} */
 export default [
   {
+    maxParallelFileOps: 10000,
     input: {
       bin: 'dist/esm/bin/index.js',
     },
+    perf: true,
     external: externals,
     plugins,
     output,
   },
   {
+    maxParallelFileOps: 10000,
     input: {
       cli: 'dist/esm/cli/main.js',
     },
-
+    perf: true,
     external: externals.concat(['@equinor/fusion-framework-cli/bin']),
     plugins,
     output,

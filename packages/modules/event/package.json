@@ -19,7 +19,7 @@
     }
   },
   "scripts": {
-    "build": "tsc -b",
+    "build": "tsgo -b",
     "prepack": "pnpm build"
   },
   "keywords": [
@@ -40,6 +40,6 @@
   },
   "devDependencies": {
     "rxjs": "^7.8.1",
-    "typescript": "^5.8.2"
+    "@typescript/native-preview": "7.0.0-dev.20260205.1"
   }
 }

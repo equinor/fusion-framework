@@ -15,6 +15,6 @@
   "devDependencies": {
     "@equinor/fusion-framework-app": "workspace:^",
     "@equinor/fusion-framework-cli": "workspace:^",
-    "typescript": "^5.8.2"
+    "@typescript/native-preview": "7.0.0-dev.20260205.1"
   }
 }

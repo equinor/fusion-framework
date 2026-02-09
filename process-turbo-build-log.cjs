@@ -4,7 +4,7 @@ const fs = require('fs');
 /** @param file string */
 const processLogFile = ({ logPath, projectPath }) => {
   const fileContent = fs.readFileSync(logPath, 'utf-8');
-  if (!fileContent.includes('> tsc -b')) {
+  if (!fileContent.includes('> tsgo -b')) {
     return;
   }
   return fileContent.replace(/(.*)([(]\d+,\d+[)])/g, (_, localPath, carrot) => {

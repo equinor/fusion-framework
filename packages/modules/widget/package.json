@@ -25,7 +25,7 @@
     }
   },
   "scripts": {
-    "build": "tsc -b",
+    "build": "tsgo -b",
     "prepack": "pnpm build"
   },
   "keywords": [],
@@ -51,7 +51,7 @@
     "@equinor/fusion-framework-module-http": "workspace:^",
     "@equinor/fusion-framework-module-service-discovery": "workspace:^",
     "@equinor/fusion-query": "workspace:^",
-    "typescript": "^5.8.2"
+    "@typescript/native-preview": "7.0.0-dev.20260205.1"
   },
   "peerDependencies": {
     "@equinor/fusion-framework-module": "workspace:*",

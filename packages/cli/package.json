@@ -94,8 +94,8 @@
     "directory": "packages/cli"
   },
   "scripts": {
-    "prebuild": "tsc -b",
-    "build": "rollup -c rollup.config.js",
+    "build": "tsgo -b",
+    "postbuild": "rollup -c rollup.config.js",
     "build:clean": "rm -rf dist && rm -rf bin/build && rm -f tsconfig.tsbuildinfo && pnpm build",
     "prepack": "pnpm build",
     "test": "vitest",
@@ -151,7 +151,7 @@
     "rollup-plugin-terser": "^7.0.2",
     "rxjs": "^7.8.1",
     "type-fest": "^5.0.0",
-    "typescript": "^5.8.2",
+    "@typescript/native-preview": "7.0.0-dev.20260205.1",
     "vitest": "^3.2.4"
   },
   "peerDependenciesMeta": {

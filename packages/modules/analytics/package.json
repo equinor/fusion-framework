@@ -24,7 +24,7 @@
   },
   "types": "dist/types/index.d.ts",
   "scripts": {
-    "build": "tsc -b",
+    "build": "tsgo -b",
     "prepack": "pnpm build",
     "test": "vitest"
   },
@@ -62,7 +62,7 @@
   },
   "devDependencies": {
     "@equinor/fusion-observable": "workspace:^",
-    "typescript": "^5.8.2",
+    "@typescript/native-preview": "7.0.0-dev.20260205.1",
     "vitest": "^3.2.4"
   },
   "peerDependencies": {

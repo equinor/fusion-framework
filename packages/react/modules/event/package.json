@@ -11,7 +11,7 @@
   },
   "types": "./dist/types/index.d.ts",
   "scripts": {
-    "build": "tsc -b",
+    "build": "tsgo -b",
     "prepack": "pnpm build"
   },
   "keywords": [],
@@ -35,7 +35,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "rxjs": "^7.8.1",
-    "typescript": "^5.8.2"
+    "@typescript/native-preview": "7.0.0-dev.20260205.1"
   },
   "peerDependencies": {
     "@types/react": "^17.0.0 || ^18.0.0",

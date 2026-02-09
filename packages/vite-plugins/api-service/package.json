@@ -19,7 +19,7 @@
     "directory": "packages/vite-plugins/api-service"
   },
   "scripts": {
-    "build": "tsc -b",
+    "build": "tsgo -b",
     "test": "vitest",
     "prepack": "pnpm build"
   },
@@ -43,7 +43,7 @@
   "devDependencies": {
     "@types/http-proxy": "^1.17.16",
     "nock": "^14.0.1",
-    "typescript": "^5.8.2",
+    "@typescript/native-preview": "7.0.0-dev.20260205.1",
     "vite": "^7.1.12",
     "vitest": "^3.2.4"
   }
