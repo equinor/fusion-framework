@@ -1833,8 +1833,8 @@ importers:
         specifier: ~12.3.1
         version: 12.3.1
       ag-charts-react:
-        specifier: ~12.3.1
-        version: 12.3.1(react@18.3.1)
+        specifier: ~13.1.0
+        version: 13.1.0(react@18.3.1)
       ag-grid-community:
         specifier: ~34.3.1
         version: 34.3.1
@@ -6983,8 +6983,14 @@ packages:
   ag-charts-community@12.3.1:
     resolution: {integrity: sha512-uRaUFmCl8e0Y3KxjaHUYlkCPS5OtwtfTChkdpoZuBKDXqerCPTjPu+uvlun3rYUSYxScwVf2LZCI0Hfw4Vc+WQ==}
 
+  ag-charts-community@13.1.0:
+    resolution: {integrity: sha512-w+uFTjxlAoTq1+8tgUORtB/zr9jm38ibXzbbWnkBP9Dep9yahi5a1jZL7yExAX35uq3g9QtjTh0Oj/QPDBQ9Ew==}
+
   ag-charts-core@12.3.1:
     resolution: {integrity: sha512-711UJ0fXengb8+4PEW4nlzWDowmbYymPcjW2eJWHRzzvttUf14hnh+wP/l/s3EGVgYkEHe9vkXFwmeOJUlkC0Q==}
+
+  ag-charts-core@13.1.0:
+    resolution: {integrity: sha512-mLHJZ8oU5CPeLRURescdISCtMsiiA/m4d1iBr6aQBEgiTVogRMGpFpsYNtQiYtoW2sRh+62I9sN8fhC3JQjX/g==}
 
   ag-charts-enterprise@12.3.1:
     resolution: {integrity: sha512-2sQIwLfksRTcI4JVRjgQkyGq6z68UVTO/I91HKmtpukrQLsW/o0TzzHmgTtVJOXd9yO9gx2KWa2DMg0+FKdXEQ==}
@@ -6992,13 +6998,19 @@ packages:
   ag-charts-locale@12.3.1:
     resolution: {integrity: sha512-dCn7oHh3xLI576FT514aBedNQgtb5zwh/Gcj7jHvjOWYRnfH8kaekZzLzntITA6dF6E78okJfoI7CUCbYduQ4Q==}
 
-  ag-charts-react@12.3.1:
-    resolution: {integrity: sha512-lwMzn+GWJccAHb9iJR4DR4DLkgrfbF/X7dIMzVHAufGhQmvgOVj6LsIVXc8/At0NycKq/PP59+6GVRu6wAXO0w==}
+  ag-charts-locale@13.1.0:
+    resolution: {integrity: sha512-mPgJnVsOI4Cf17CAlRh8BvLz19e165sdQJeUXNaB7M+DPB+pxODOcfx4oqZlR4Wc8Zu++TGb/2ueHa/aeV2qeQ==}
+
+  ag-charts-react@13.1.0:
+    resolution: {integrity: sha512-Ke+Ra/k+Yr0OK2JY0YA4+P50yLydRP+8oZzHYX1ulkbTTzFmMkSFZJVXtgCkBsTxq7S1P+lymEG/RWg+eIcCmQ==}
     peerDependencies:
       react: ^18.0.0 || ^19.0.0
 
   ag-charts-types@12.3.1:
     resolution: {integrity: sha512-5216xYoawnvMXDFI6kTpPku+mH0Csiwu/FE7lsAm8Z22HEN6ciSG/V7g+IrpLWncELqksgENebCTP75PZ3CsHA==}
+
+  ag-charts-types@13.1.0:
+    resolution: {integrity: sha512-DytRM3CXli+Y013SC1Mr8lQBrhVTACK+11ilDHOhwUM0sRpmGuR51XFGcBKOliW1Vas1AycP31Cm3Pp0jx3hqw==}
 
   ag-grid-community@34.3.1:
     resolution: {integrity: sha512-PwlrPudsFOzGumphi2y9ihWeaUlIwKhOra/MXu2LjeV2U8DgLLcYS8CartE5Hszhn1poJHawwI9HWrxlKliwdw==}
@@ -15677,7 +15689,7 @@ snapshots:
 
   '@types/node-fetch@2.6.13':
     dependencies:
-      '@types/node': 18.19.130
+      '@types/node': 24.10.9
       form-data: 4.0.5
 
   '@types/node@12.20.55': {}
@@ -16422,9 +16434,19 @@ snapshots:
       ag-charts-locale: 12.3.1
       ag-charts-types: 12.3.1
 
+  ag-charts-community@13.1.0:
+    dependencies:
+      ag-charts-core: 13.1.0
+      ag-charts-locale: 13.1.0
+      ag-charts-types: 13.1.0
+
   ag-charts-core@12.3.1:
     dependencies:
       ag-charts-types: 12.3.1
+
+  ag-charts-core@13.1.0:
+    dependencies:
+      ag-charts-types: 13.1.0
 
   ag-charts-enterprise@12.3.1:
     dependencies:
@@ -16433,12 +16455,16 @@ snapshots:
 
   ag-charts-locale@12.3.1: {}
 
-  ag-charts-react@12.3.1(react@18.3.1):
+  ag-charts-locale@13.1.0: {}
+
+  ag-charts-react@13.1.0(react@18.3.1):
     dependencies:
-      ag-charts-community: 12.3.1
+      ag-charts-community: 13.1.0
       react: 18.3.1
 
   ag-charts-types@12.3.1: {}
+
+  ag-charts-types@13.1.0: {}
 
   ag-grid-community@34.3.1:
     dependencies:
@@ -17893,7 +17919,7 @@ snapshots:
       isstream: 0.1.2
       jsonwebtoken: 9.0.3
       mime-types: 2.1.35
-      retry-axios: 2.6.0(axios@1.13.5(debug@4.4.3))
+      retry-axios: 2.6.0(axios@1.13.5)
       tough-cookie: 4.1.4
     transitivePeerDependencies:
       - supports-color
@@ -19611,7 +19637,7 @@ snapshots:
       onetime: 7.0.0
       signal-exit: 4.1.0
 
-  retry-axios@2.6.0(axios@1.13.5(debug@4.4.3)):
+  retry-axios@2.6.0(axios@1.13.5):
     dependencies:
       axios: 1.13.5(debug@4.4.3)
 
