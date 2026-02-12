@@ -1,5 +1,21 @@
 # @equinor/fusion-framework-docs
 
+## 0.4.13
+
+### Patch Changes
+
+- [#4000](https://github.com/equinor/fusion-framework/pull/4000) [`0b34d5d`](https://github.com/equinor/fusion-framework/commit/0b34d5d895c740a77fc995abeca910fdca1cf633) Thanks [@odinr](https://github.com/odinr)! - Add documentation for backend-issued auth code flow in MSAL module
+
+  Add comprehensive guide explaining the SPA Auth Code Flow pattern, including:
+
+  - Overview and motivation for using backend-issued codes
+  - Step-by-step usage instructions with code examples
+  - API documentation for `setAuthCode()` method
+  - Security considerations and best practices
+  - Troubleshooting guide for common issues
+
+  This enables developers to implement seamless authentication without double-login prompts.
+
 ## 0.4.12
 
 ### Patch Changes
