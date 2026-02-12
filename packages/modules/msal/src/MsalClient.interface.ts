@@ -4,6 +4,7 @@ import type {
   AuthenticationResult,
   PopupRequest,
   RedirectRequest,
+  AuthorizationCodeRequest,
 } from '@azure/msal-browser';
 
 /**
@@ -118,4 +119,21 @@ export interface IMsalClient extends IPublicClientApplication {
    * @returns Promise resolving to authentication result or null/undefined
    */
   acquireToken(options: AcquireTokenOptions): Promise<AcquireTokenResult>;
+
+  /**
+   * Exchange a backend-issued authorization code for tokens (SPA Auth Code Flow).
+   *
+   * This method enables automatic sign-in using a backend-issued auth code without
+   * requiring interactive MSAL flows. Primarily used during module initialization.
+   *
+   * @param request - Authorization code request with code and scopes
+   * @returns Promise resolving to authentication result with tokens
+   *
+   * @remarks
+   * - Auth codes are single-use and short-lived (typically 5-10 minutes)
+   * - MSAL handles token validation, caching, and refresh token management
+   * - Follows Microsoft's standard SPA Auth Code Flow pattern
+   * - Inherited from PublicClientApplication (MSAL Browser v4+)
+   */
+  acquireTokenByCode(request: AuthorizationCodeRequest): Promise<AuthenticationResult>;
 }
