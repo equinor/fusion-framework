@@ -61,6 +61,7 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
   };
   #requiresAuth?: boolean;
   #authCode?: string;
+  #loginHint?: string;
 
   /**
    * The MSAL module version enum value indicating the API compatibility level.
@@ -127,6 +128,7 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
     });
     this.#requiresAuth = config.requiresAuth;
     this.#telemetry = config.telemetry;
+    this.#loginHint = config.loginHint;
 
     // Extract auth code from config if present
     // This will be used during initialize to exchange for tokens
@@ -405,6 +407,9 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
    */
   async login(options: LoginOptions): Promise<LoginResult> {
     const { behavior = 'redirect', silent = true, request } = options;
+
+    request.loginHint ??=
+      this.#loginHint ?? this.account?.username ?? this.account?.loginHint ?? undefined;
 
     // Determine if silent login is possible based on available account/hint information
     // Silent login requires either an account object or a loginHint to work
