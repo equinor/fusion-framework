@@ -1,1 +1,1 @@
-export { AgCharts } from 'ag-charts-react';
+export * from 'ag-charts-react';
