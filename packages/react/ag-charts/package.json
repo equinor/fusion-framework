@@ -1,7 +1,7 @@
 {
-  "name": "@equinor/fusion-framework-react-ag-grid",
-  "version": "34.4.1",
-  "description": "Fusion module for using AG Grid",
+  "name": "@equinor/fusion-framework-react-ag-charts",
+  "version": "12.0.0",
+  "description": "Fusion package for using AG Charts",
   "main": "dist/esm/index.js",
   "types": "dist/types/index.d.ts",
   "exports": {
@@ -17,10 +17,6 @@
       "import": "./dist/esm/enterprise.js",
       "types": "./dist/types/enterprise.d.ts"
     },
-    "./themes": {
-      "import": "./dist/esm/themes.js",
-      "types": "./dist/types/themes.d.ts"
-    },
     "./package.json": "./package.json",
     "./README.md": "./README.md"
   },
@@ -34,9 +30,6 @@
       ],
       "enterprise": [
         "dist/types/enterprise.d.ts"
-      ],
-      "themes": [
-        "dist/types/themes.d.ts"
       ]
     }
   },
@@ -45,8 +38,8 @@
     "prepack": "pnpm build"
   },
   "keywords": [
-    "ag-grid",
-    "table"
+    "ag-charts",
+    "charts"
   ],
   "author": "",
   "license": "ISC",
@@ -56,13 +49,12 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/equinor/fusion-framework.git",
-    "directory": "packages/react/ag-grid"
+    "directory": "packages/react/ag-charts"
   },
   "dependencies": {
-    "@equinor/fusion-framework-module-ag-grid": "workspace:*",
-    "ag-grid-community": "~35.1.0",
-    "ag-grid-enterprise": "~35.1.0",
-    "ag-grid-react": "~35.1.0"
+    "ag-charts-community": "^13.1.0",
+    "ag-charts-enterprise": "~13.1.0",
+    "ag-charts-react": "~13.1.0"
   },
   "devDependencies": {
     "@equinor/fusion-framework-react-module": "workspace:^",

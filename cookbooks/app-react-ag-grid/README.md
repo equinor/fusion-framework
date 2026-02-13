@@ -21,7 +21,11 @@ In `src/config.ts`, enable AG Grid with required modules:
 ```typescript
 import type { AppModuleInitiator } from '@equinor/fusion-framework-react-app';
 import { enableAgGrid } from '@equinor/fusion-framework-react-ag-grid';
-import { ClientSideRowModelModule } from '@equinor/fusion-framework-react-ag-grid/community';
+import {
+  AllCommunityModule,
+  ClientSideRowModelModule,
+  ValidationModule,
+} from '@equinor/fusion-framework-react-ag-grid/community';
 import {
   ClipboardModule,
   ColumnsToolPanelModule,
@@ -29,8 +33,8 @@ import {
   FiltersToolPanelModule,
   MenuModule,
   IntegratedChartsModule,
-  AgChartsEnterpriseModule,
 } from '@equinor/fusion-framework-react-ag-grid/enterprise';
+import { AgChartsEnterpriseModule } from '@equinor/fusion-framework-react-ag-charts/enterprise';
 
 export const configure: AppModuleInitiator = (configurator, { env }) => {
   enableAgGrid(configurator, (builder) => {
@@ -42,6 +46,8 @@ export const configure: AppModuleInitiator = (configurator, { env }) => {
       ExcelExportModule,           // Excel export functionality
       ClipboardModule,             // Copy/paste functionality
       IntegratedChartsModule.with(AgChartsEnterpriseModule), // Enterprise charts
+      AllCommunityModule,          // All community features
+      ValidationModule,            // Data validation
     ]);
   });
 };
@@ -212,7 +218,9 @@ AG Grid requires specific modules to be configured:
 - **MenuModule**: Context menu functionality
 - **ExcelExportModule**: Export to Excel
 - **ClipboardModule**: Copy/paste support
-- **IntegratedChartsModule.with(AgChartsEnterpriseModule)**: Enterprise charting
+- **IntegratedChartsModule.with(AgChartsEnterpriseModule)**: Enterprise charting (requires `@equinor/fusion-framework-react-ag-charts` package)
+- **AllCommunityModule**: All community features
+- **ValidationModule**: Data validation
 
 ### Column Configuration
 
@@ -251,8 +259,10 @@ Use AG Grid for:
 
 ## Requirements
 
-- AG Grid Enterprise license for production use of charting features
+- AG Grid v35+ (provided by `@equinor/fusion-framework-react-ag-grid`)
+- AG Charts v13+ for charting features (provided by `@equinor/fusion-framework-react-ag-charts`)
+- AG Grid Enterprise license for production use of enterprise features
 - All community features work without license
-- React 19 support
+- React 18+
 
 See fusion-framework documentation: [AG Grid guide](https://equinor.github.io/fusion-framework/guide/app/ag-grid.html)

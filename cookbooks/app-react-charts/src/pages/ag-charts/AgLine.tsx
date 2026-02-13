@@ -1,8 +1,8 @@
-import type { AgChartOptions } from 'ag-charts-community';
 import { temperatureData } from './Data';
 import { type ReactElement, useMemo } from 'react';
 import Styled from '../../App.style';
-import { AgCharts } from '@equinor/fusion-framework-react-ag-grid/charts';
+import type { AgChartOptions } from '@equinor/fusion-framework-react-ag-charts/community';
+import { AgCharts } from '@equinor/fusion-framework-react-ag-charts';
 
 /**
  * AgLine Component - Line Chart Visualization
@@ -13,6 +13,7 @@ import { AgCharts } from '@equinor/fusion-framework-react-ag-grid/charts';
  *
  * @returns {ReactElement} A rendered line chart showing temperature trends
  */
+
 export const AgLine = (): ReactElement => {
   // Line Chart Configuration
   const lineChartOptions = useMemo<AgChartOptions>(
@@ -64,22 +65,6 @@ export const AgLine = (): ReactElement => {
             enabled: true,
             shape: 'square',
             size: 6,
-          },
-        },
-      ],
-      axes: [
-        {
-          type: 'category',
-          position: 'bottom',
-          title: {
-            text: 'Month',
-          },
-        },
-        {
-          type: 'number',
-          position: 'left',
-          title: {
-            text: 'Temperature (°C)',
           },
         },
       ],
