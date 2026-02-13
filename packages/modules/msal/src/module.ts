@@ -91,6 +91,11 @@ export type AuthConfigFn = (builder: {
    * @param requiresAuth - If true, app will attempt automatic login on initialization
    */
   setRequiresAuth: (requiresAuth: boolean) => void;
+  /**
+   * Set a default login hint used for silent SSO and pre-filled usernames
+   * @param loginHint - Preferred username/email to use for login hint
+   */
+  setLoginHint: (loginHint: string) => void;
 }) => void;
 
 /**

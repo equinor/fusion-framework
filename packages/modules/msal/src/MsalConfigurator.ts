@@ -43,6 +43,7 @@ const MsalConfigSchema = z.object({
   provider: z.custom<IMsalProvider>().optional(),
   requiresAuth: z.boolean().optional(),
   redirectUri: z.string().optional(),
+  loginHint: z.string().optional(),
   authCode: z.string().optional(),
   version: z.string().transform((x: string) => String(semver.coerce(x))),
   telemetry: TelemetryConfigSchema,
@@ -177,6 +178,25 @@ export class MsalConfigurator extends BaseConfigBuilder<MsalConfig> {
    */
   setRequiresAuth(requiresAuth: boolean): this {
     this._set('requiresAuth', async () => requiresAuth);
+    return this;
+  }
+
+  /**
+   * Sets a default login hint for authentication flows.
+   *
+   * The login hint is used to pre-fill the username during authentication and
+   * enables silent SSO when no account is available.
+   *
+   * @param loginHint - The preferred username/email to use as login hint
+   * @returns The configurator instance for method chaining
+   *
+   * @example
+   * ```typescript
+   * configurator.setLoginHint('user@company.com');
+   * ```
+   */
+  setLoginHint(loginHint?: string): this {
+    this._set('loginHint', async () => loginHint);
     return this;
   }
 
