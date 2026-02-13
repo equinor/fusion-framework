@@ -1,0 +1,68 @@
+{
+  "name": "@equinor/fusion-framework-react-ag-charts",
+  "version": "12.0.0",
+  "description": "Fusion package for using AG Charts",
+  "main": "dist/esm/index.js",
+  "types": "dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "types": "./dist/types/index.d.ts"
+    },
+    "./community": {
+      "import": "./dist/esm/community.js",
+      "types": "./dist/types/community.d.ts"
+    },
+    "./enterprise": {
+      "import": "./dist/esm/enterprise.js",
+      "types": "./dist/types/enterprise.d.ts"
+    },
+    "./package.json": "./package.json",
+    "./README.md": "./README.md"
+  },
+  "typesVersions": {
+    "*": {
+      ".": [
+        "dist/types/index.d.ts"
+      ],
+      "community": [
+        "dist/types/community.d.ts"
+      ],
+      "enterprise": [
+        "dist/types/enterprise.d.ts"
+      ]
+    }
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "prepack": "pnpm build"
+  },
+  "keywords": [
+    "ag-charts",
+    "charts"
+  ],
+  "author": "",
+  "license": "ISC",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/equinor/fusion-framework.git",
+    "directory": "packages/react/ag-charts"
+  },
+  "dependencies": {
+    "ag-charts-community": "^13.1.0",
+    "ag-charts-enterprise": "~13.1.0",
+    "ag-charts-react": "~13.1.0"
+  },
+  "devDependencies": {
+    "@equinor/fusion-framework-react-module": "workspace:^",
+    "typescript": "^5.8.2"
+  },
+  "peerDependencies": {
+    "@equinor/fusion-framework-react-module": "workspace:^",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
+  }
+}
