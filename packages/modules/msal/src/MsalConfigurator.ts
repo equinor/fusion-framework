@@ -195,7 +195,7 @@ export class MsalConfigurator extends BaseConfigBuilder<MsalConfig> {
    * configurator.setLoginHint('user@company.com');
    * ```
    */
-  setLoginHint(loginHint: string): this {
+  setLoginHint(loginHint?: string): this {
     this._set('loginHint', async () => loginHint);
     return this;
   }
