@@ -32,7 +32,7 @@
     "rxjs": "^7.8.1"
   },
   "devDependencies": {
-    "@equinor/eds-core-react": "^0.49.0",
+    "@equinor/eds-core-react": "^2.3.5",
     "@equinor/eds-icons": "^0.22.0",
     "@equinor/eds-tokens": "^0.10.0",
     "@equinor/eds-utils": "^0.9.0",
@@ -45,7 +45,7 @@
     "typescript": "^5.8.2"
   },
   "peerDependencies": {
-    "@equinor/eds-core-react": "^0.49.0",
+    "@equinor/eds-core-react": "^2.3.5",
     "@equinor/eds-icons": "^0.22.0",
     "@equinor/eds-tokens": "^0.10.0",
     "@equinor/eds-utils": "^0.9.0",
