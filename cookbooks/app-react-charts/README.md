@@ -1,14 +1,15 @@
 # Charts Cookbook
 
-This cookbook demonstrates how to create interactive data visualizations using Chart.js with the Fusion Framework.
+This cookbook demonstrates how to create interactive data visualizations using **Chart.js** and **AG Charts** with the Fusion Framework.
 
 ## What This Shows
 
 This cookbook illustrates how to:
 - Integrate Chart.js with React
-- Create different chart types (bar, line, pie)
+- Integrate AG Charts with the Fusion Framework
+- Create different chart types (bar, line, pie, area)
 - Use navigation to switch between chart examples
-- Register Chart.js components
+- Register Chart.js and AG Charts components
 - Style charts with options and colors
 
 ## Key Concepts
@@ -168,6 +169,76 @@ Setting `responsive: true` makes the chart automatically resize to fit its conta
   <Bar data={data} options={options} />
 </div>
 ```
+
+## Navigation in This Cookbook
+
+This cookbook uses React Router to navigate between different chart examples. The routing setup allows you to see multiple chart types from both Chart.js and AG Charts in one application.
+
+## AG Charts Examples
+
+This cookbook also includes AG Charts examples demonstrating the new standalone `@equinor/fusion-framework-react-ag-charts` package:
+
+### AG Charts Setup
+
+```typescript
+import { AgCharts } from '@equinor/fus
+
+## Requirements
+
+- `@equinor/fusion-framework-react-ag-charts` - AG Charts integration
+- `chart.js` and `react-chartjs-2` - Chart.js integration
+import { 
+  AgChartOptions, 
+  AllCommunityModule, 
+  ModuleRegistry 
+} from '@equinor/fusion-framework-react-ag-charts/community';
+
+// Register AG Charts modules
+ModuleRegistry.registerModules([AllCommunityModule]);
+
+export const AgBarChart = () => {
+  const chartOptions: AgChartOptions = {
+    data: [
+      { quarter: 'Q1', revenue: 45000, expenses: 30000 },
+      { quarter: 'Q2', revenue: 52000, expenses: 35000 },
+    ],
+    series: [
+      { type: 'bar', xKey: 'quarter', yKey: 'revenue', yName: 'Revenue' },
+      { type: 'bar', xKey: 'quarter', yKey: 'expenses', yName: 'Expenses' },
+    ],
+  };
+
+  return <AgCharts options={chartOptions} />;
+};
+```
+
+### AG Charts Features
+
+- **Professional charts** with built-in interactivity
+- **Zero configuration** for common chart types
+- **TypeScript support** with full type definitions
+- **Theme integration** with Fusion Framework
+- **Enterprise features** available (with license)
+
+See the AG Charts examples in the `/ag-charts` route for:
+- Bar charts
+- Line charts
+- Area charts
+- Pie charts
+
+## When to Use Each Library
+
+### Use Chart.js for:
+- Simple, lightweight charts
+- Quick prototypes
+- Basic visualizations
+- Custom styling control
+
+### Use AG Charts for:
+- Professional-grade charts
+- Integration with AG Grid
+- Advanced chart types
+- Enterprise features (stock charts, maps, etc.)
 
 ## Navigation in This Cookbook
 
