@@ -52,12 +52,17 @@ Enterprise features are available from the namespace `@equinor/fusion-framework-
 
 Community features are available from the namespace `@equinor/fusion-framework-react-ag-grid/community`.
 
-### AG Charts Enterprise Module
+### Integrated Charts
 
-The `AgChartsEnterpriseModule` is available from the enterprise namespace for advanced charting features:
+To use AG Charts within AG Grid, install the separate `@equinor/fusion-framework-react-ag-charts` package and use the `IntegratedChartsModule`:
+
+```sh
+npm i @equinor/fusion-framework-react-ag-charts
+```
 
 ```ts
-import { AgChartsEnterpriseModule, AgChartsEnterpriseModule } from '@equinor/fusion-framework-react-ag-grid/enterprise';
+import { IntegratedChartsModule } from '@equinor/fusion-framework-react-ag-grid/enterprise';
+import { AgChartsEnterpriseModule } from '@equinor/fusion-framework-react-ag-charts/enterprise';
 
 // Use in AG Grid configuration
 enableAgGrid(configurator, (builder) => {
@@ -65,12 +70,15 @@ enableAgGrid(configurator, (builder) => {
 });
 ```
 
+> [!NOTE]
+> AG Charts is now a standalone package. See [@equinor/fusion-framework-react-ag-charts](../ag-charts/README.md) for standalone chart usage.
+
 ### Customizing a grid instance
 
 The module provides a hook to customize a grid instance.
 
 ```tsx
-import { useTheme } from '@equinor/fusion-framework-react-app/ag-grid';
+import { useTheme } from '@equinor/fusion-framework-react-ag-grid';
 
 const MyComponent = () => {
     const baseTheme = useTheme();
@@ -89,8 +97,33 @@ const MyComponent = () => {
 };
 ```
 
-## Upgrading from 32 to 33
+## Upgrading to v35
 
-Before upgrading to AG Grid 33, please read remove all previous references to `@equinor/fusion-react-ag-grid-styles`, `@ag-grid-community/*` and `@ag-grid-enterprise/*` from your project dependencies.
+### Breaking Changes
+
+**AG Charts Separated**: AG Charts functionality has been moved to a separate package `@equinor/fusion-framework-react-ag-charts`.
+
+**Migration Required**:
+
+```ts
+// Before (v34)
+import { AgChartsEnterpriseModule } from '@equinor/fusion-framework-react-ag-grid/enterprise';
+
+// After (v35)
+import { IntegratedChartsModule } from '@equinor/fusion-framework-react-ag-grid/enterprise';
+import { AgChartsEnterpriseModule } from '@equinor/fusion-framework-react-ag-charts/enterprise';
+
+enableAgGrid(configurator, (builder) => {
+    builder.addModule(IntegratedChartsModule.with(AgChartsEnterpriseModule));
+});
+```
+
+**Dependencies**: Update peer dependencies to v35:
+- `ag-grid-community` >= 35.1.0
+- `ag-grid-enterprise` >= 35.1.0
+
+### Upgrading from v32 to v33
+
+Before upgrading to AG Grid 33, remove all previous references to `@equinor/fusion-react-ag-grid-styles`, `@ag-grid-community/*` and `@ag-grid-enterprise/*` from your project dependencies.
 
 __Only `@equinor/fusion-framework-react-ag-grid` should be installed.__ All references to ag-grid should be removed.
