@@ -1,5 +1,14 @@
 # @equinor/fusion-framework-dev-portal
 
+## 1.4.3
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @equinor/fusion-framework-app@10.4.4
+  - @equinor/fusion-framework@7.4.8
+  - @equinor/fusion-framework-dev-server@1.1.27
+
 ## 1.4.2
 
 ### Patch Changes
