@@ -1,14 +1,8 @@
 import { temperatureData } from './Data';
 import { type ReactElement, useMemo } from 'react';
 import Styled from '../../App.style';
-import {
-  AllCommunityModule,
-  ModuleRegistry,
-  type AgChartOptions,
-} from '@equinor/fusion-framework-react-ag-charts/community';
+import type { AgChartOptions } from '@equinor/fusion-framework-react-ag-charts/community';
 import { AgCharts } from '@equinor/fusion-framework-react-ag-charts';
-
-ModuleRegistry.registerModules([AllCommunityModule]);
 
 /**
  * AgLine Component - Line Chart Visualization
