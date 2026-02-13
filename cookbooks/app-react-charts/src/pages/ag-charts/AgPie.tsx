@@ -1,8 +1,14 @@
-import type { AgChartOptions } from 'ag-charts-community';
 import { marketShareData } from './Data';
 import { type ReactElement, useMemo } from 'react';
 import Styled from '../../App.style';
-import { AgCharts } from '@equinor/fusion-framework-react-ag-grid/charts';
+import {
+  AllCommunityModule,
+  ModuleRegistry,
+  type AgChartOptions,
+} from '@equinor/fusion-framework-react-ag-charts/community';
+import { AgCharts } from '@equinor/fusion-framework-react-ag-charts';
+
+ModuleRegistry.registerModules([AllCommunityModule]);
 
 /**
  * AgPie Component - Pie Chart Visualization
