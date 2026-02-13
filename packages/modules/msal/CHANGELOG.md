@@ -1,5 +1,11 @@
 # Change Log
 
+## 7.2.0
+
+### Minor Changes
+
+- [#4049](https://github.com/equinor/fusion-framework/pull/4049) [`dcf51aa`](https://github.com/equinor/fusion-framework/commit/dcf51aa87ac79200893ec4909632554464e75055) Thanks [@odinr](https://github.com/odinr)! - Add configurable default `loginHint` for MSAL logins to enable silent SSO and pre-fill usernames.
+
 ## 7.1.0
 
 ### Minor Changes
