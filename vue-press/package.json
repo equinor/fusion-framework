@@ -19,7 +19,7 @@
     "@vuepress/bundler-vite": "2.0.0-rc.26",
     "@vuepress/cli": "2.0.0-rc.26",
     "@vuepress/client": "2.0.0-rc.26",
-    "@vuepress/plugin-register-components": "2.0.0-rc.122",
+    "@vuepress/plugin-register-components": "2.0.0-rc.123",
     "@vuepress/utils": "2.0.0-rc.26",
     "mermaid": "^11.11.0",
     "sass-embedded": "^1.86.3",
