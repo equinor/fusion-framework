@@ -3,6 +3,7 @@ import { enableAgGrid } from '@equinor/fusion-framework-react-ag-grid';
 import {
   AllCommunityModule,
   ClientSideRowModelModule,
+  ValidationModule,
 } from '@equinor/fusion-framework-react-ag-grid/community';
 import {
   ClipboardModule,
@@ -11,8 +12,8 @@ import {
   FiltersToolPanelModule,
   MenuModule,
   IntegratedChartsModule,
-  AgChartsEnterpriseModule,
 } from '@equinor/fusion-framework-react-ag-grid/enterprise';
+import { AgChartsEnterpriseModule } from '@equinor/fusion-framework-react-ag-charts/enterprise';
 
 export const configure: AppModuleInitiator = (configurator, { env }) => {
   /** print render environment arguments */
@@ -28,6 +29,7 @@ export const configure: AppModuleInitiator = (configurator, { env }) => {
       ClipboardModule,
       IntegratedChartsModule.with(AgChartsEnterpriseModule),
       AllCommunityModule,
+      ValidationModule,
     ]);
     builder.setTheme((theme) =>
       theme.withParams({
