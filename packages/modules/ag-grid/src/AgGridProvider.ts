@@ -3,6 +3,31 @@ import { ModuleRegistry, provideGlobalGridOptions, type Theme } from 'ag-grid-co
 
 import type { AgGridConfig } from './AgGridConfigurator.interface';
 
+/**
+ * Ensures "window.agStyleInjectionState" has the shape AG Grid v35+ expects.
+ *
+ * AG Grid changed "grids" from a "Set" (v34) to a "Map" (v35).
+ * If the first bundle was v34, "grids" is a "Set" and v35 crashes
+ * because it calls "Map" methods ("get", "set") on it.
+ *
+ * AG Grid captures a local reference to the state object at module
+ * evaluation time, so replacing the global has no effect. Instead we
+ * mutate the existing object in-place so all captured references see
+ * the corrected "grids" property.
+ */
+const ensureStyleInjectionState = (): void => {
+  if (typeof window !== 'object') return;
+  const state = (window as Window & { agStyleInjectionState?: Record<string, unknown> })
+    .agStyleInjectionState;
+  if (!state) return;
+  if (!(state.grids instanceof Map)) {
+    state.grids = new Map();
+  }
+  if (!(state.map instanceof WeakMap)) {
+    state.map = new WeakMap();
+  }
+};
+
 export interface IAgGridProvider {
   readonly licenseKey?: string;
   readonly theme?: Theme;
@@ -32,6 +57,8 @@ export class AgGridProvider implements IAgGridProvider {
   }
 
   protected _init(): void {
+    ensureStyleInjectionState();
+
     if (this.licenseKey) {
       LicenseManager.setLicenseKey(this.licenseKey);
     }
