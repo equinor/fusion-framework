@@ -2,13 +2,7 @@ import { salesData } from './Data';
 import { type ReactElement, useMemo } from 'react';
 import Styled from '../../App.style';
 import { AgCharts } from '@equinor/fusion-framework-react-ag-charts';
-import {
-  type AgChartOptions,
-  AllCommunityModule,
-  ModuleRegistry,
-} from '@equinor/fusion-framework-react-ag-charts/community';
-
-ModuleRegistry.registerModules([AllCommunityModule]);
+import type { AgChartOptions } from '@equinor/fusion-framework-react-ag-charts/community';
 
 /**
  * AgArea Component - Stacked Area Chart Visualization

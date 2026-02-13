@@ -1,5 +1,12 @@
 import type { AppModuleInitiator } from '@equinor/fusion-framework-react-app';
 import { enableNavigation } from '@equinor/fusion-framework-module-navigation';
+import {
+  AllCommunityModule,
+  ModuleRegistry,
+} from '@equinor/fusion-framework-react-ag-charts/community';
+
+// Register AG Charts modules once at initialization
+ModuleRegistry.registerModules([AllCommunityModule]);
 
 export const configure: AppModuleInitiator = (configurator, args) => {
   const { basename } = args.env;
