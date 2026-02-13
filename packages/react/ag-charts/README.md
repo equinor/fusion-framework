@@ -1,4 +1,4 @@
-# AG Grid React for Fusion Framework
+# AG Charts React for Fusion Framework
 
 ## Installation
 
@@ -18,7 +18,7 @@ ModuleRegistry.registerModules([AllCommunityModule]);
 ## Usage
 
 ```tsx
-import { AgCharts } from '@equinor/fusion-framework-react-ag-grid';
+import { AgCharts } from '@equinor/fusion-framework-react-ag-charts';
 import { AgChartOptions } from '@equinor/fusion-framework-react-ag-charts/community';
 
 const ChartExample = () => {
@@ -41,10 +41,17 @@ const ChartExample = () => {
 };
 ```
 
-### AG Charts Enterprise Module
+## Enterprise Features
 
-The `AgChartsEnterpriseModule` is available from the enterprise for advanced charting features.
-When using `AgChartsEnterpriseModule` you need to have `@equinor/fusion-framework-react-ag-grid` package installed and use `IntegratedChartsModule`:
+The `AgChartsEnterpriseModule` is available from the `/enterprise` namespace for advanced charting features.
+
+```ts
+import { AgChartsEnterpriseModule } from '@equinor/fusion-framework-react-ag-charts/enterprise';
+```
+
+### Integration with AG Grid
+
+When using AG Charts with AG Grid's integrated charting, you need to have `@equinor/fusion-framework-react-ag-grid` package installed and use `IntegratedChartsModule`:
 
 ```ts
 // config.ts
