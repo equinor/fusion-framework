@@ -361,7 +361,9 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
           properties: { ...telemetryProperties, defaultScopes },
         });
       } else {
-        const exception = new Error('Empty scopes provided and clientId is missing for default scope');
+        const exception = new Error(
+          'Empty scopes provided and clientId is missing for default scope',
+        );
         this._trackException('acquireToken.missing-scope', TelemetryLevel.Warning, {
           exception,
           properties: telemetryProperties,
