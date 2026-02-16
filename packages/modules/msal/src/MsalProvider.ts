@@ -64,6 +64,16 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
   #loginHint?: string;
 
   /**
+   * Default OAuth scopes used when the caller provides no scopes.
+   *
+   * Resolves to the app's Entra ID configured permissions via the `/.default` scope.
+   */
+  get defaultScopes(): string[] {
+    const clientId = this.#client.clientId;
+    return clientId ? [`${clientId}/.default`] : [];
+  }
+
+  /**
    * The MSAL module version enum value indicating the API compatibility level.
    *
    * This getter resolves the current version string to its corresponding enum value,
@@ -238,7 +248,7 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
         // This handles first-time app load when no authentication state exists
         // Note: Using empty scopes here as we don't know what scopes the app needs yet
         // App should call acquireToken with actual scopes after initialization
-        const loginResult = await this.login({ request: { scopes: [] } });
+        const loginResult = await this.login({ request: { scopes: this.defaultScopes } });
         if (loginResult?.account) {
           // Automatic login successful - set as active account
           this.#client.setActiveAccount(loginResult.account);
@@ -316,18 +326,23 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
     // Silent mode defaults to true, meaning the provider will attempt silent token acquisition first
     const silent = options?.silent ?? true;
 
+    const defaultScopes = this.defaultScopes;
+
     // Resolve scopes from options, supporting both new request format and legacy format for compatibility
-    const request = options?.request ?? { scopes: [] };
+    const request = options?.request ?? { scopes: defaultScopes };
 
     // Determine the account to use for token acquisition, prioritizing request-specific account, then active account
     const account = request.account ?? this.account ?? undefined;
 
     // Extract scopes from either new format (request.scopes) or legacy format (scopes)
-    const scopes =
+    const candidateScopes =
       options?.request?.scopes ??
       (options as AcquireTokenOptionsLegacy)?.scopes ??
       request.scopes ??
       [];
+
+    const scopes =
+      candidateScopes.length > 0 ? candidateScopes : defaultScopes.length > 0 ? defaultScopes : [];
 
     // Prepare telemetry properties for this token acquisition attempt
     const telemetryProperties = { behavior, silent, scopes };
@@ -340,14 +355,20 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
     }
 
     // Handle empty scopes - currently monitoring for telemetry, will throw in future
-    if (scopes.length === 0) {
-      const exception = new Error('Empty scopes provided, not allowed');
-      this._trackException('acquireToken.missing-scope', TelemetryLevel.Warning, {
-        exception,
-        properties: telemetryProperties,
-      });
-      // TODO: throw exception when sufficient metrics are collected
-      // This allows us to monitor how often empty scopes are provided before enforcing validation
+    if (candidateScopes.length === 0) {
+      if (defaultScopes.length > 0) {
+        this._trackEvent('acquireToken.missing-scope.defaulted', TelemetryLevel.Warning, {
+          properties: { ...telemetryProperties, defaultScopes },
+        });
+      } else {
+        const exception = new Error('Empty scopes provided and clientId is missing for default scope');
+        this._trackException('acquireToken.missing-scope', TelemetryLevel.Warning, {
+          exception,
+          properties: telemetryProperties,
+        });
+        // TODO: throw exception when sufficient metrics are collected
+        // This allows us to monitor how often empty scopes are provided before enforcing validation
+      }
     }
 
     try {
@@ -425,6 +446,13 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
     request.loginHint ??=
       this.#loginHint ?? this.account?.username ?? this.account?.loginHint ?? undefined;
 
+    const defaultScopes = this.defaultScopes;
+
+    // Default to empty scopes is not allowed; fallback to app default scope when possible
+    if (!request.scopes || request.scopes.length === 0) {
+      request.scopes = defaultScopes.length > 0 ? defaultScopes : [];
+    }
+
     // Determine if silent login is possible based on available account/hint information
     // Silent login requires either an account object or a loginHint to work
     const canLoginSilently = silent && (request.account || request.loginHint);
@@ -435,10 +463,9 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
     // This allows silent login to work automatically with existing authentication state
     request.account ??= this.account ?? undefined;
 
-    // Default to empty scopes if none provided
-    // Empty scopes are tracked for monitoring but allowed for compatibility
-    if (!request.scopes) {
-      request.scopes = [];
+    // If scopes are still empty here, we couldn't derive a default scope (e.g. missing clientId).
+    // Track for monitoring; behavior will be enforced once we have sufficient metrics.
+    if (request.scopes.length === 0) {
       this._trackEvent('login.missing-scope', TelemetryLevel.Warning, {
         properties: telemetryProperties,
       });
