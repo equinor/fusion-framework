@@ -1,5 +1,12 @@
 # Change Log
 
+## 7.4.8
+
+### Patch Changes
+
+- Updated dependencies [[`dcf51aa`](https://github.com/equinor/fusion-framework/commit/dcf51aa87ac79200893ec4909632554464e75055)]:
+  - @equinor/fusion-framework-module-msal@7.2.0
+
 ## 7.4.7
 
 ### Patch Changes
