@@ -271,7 +271,9 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
    * }
    * ```
    */
-  async acquireAccessToken(options: AcquireTokenOptionsLegacy): Promise<string | undefined> {
+  async acquireAccessToken(
+    options?: AcquireTokenOptions | AcquireTokenOptionsLegacy,
+  ): Promise<string | undefined> {
     const { accessToken } = (await this.acquireToken(options)) ?? {};
     return accessToken;
   }
@@ -305,21 +307,33 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
    * });
    * ```
    */
-  async acquireToken(options: AcquireTokenOptionsLegacy): Promise<AcquireTokenResult> {
-    const {
-      behavior = 'redirect',
-      silent = true,
-      request = {} as AcquireTokenOptions['request'],
-    } = options;
+  async acquireToken(
+    options?: AcquireTokenOptions | AcquireTokenOptionsLegacy,
+  ): Promise<AcquireTokenResult> {
+    // Determine behavior and silent options, with defaults (popup and true respectively)
+    const behavior = options?.behavior ?? 'redirect';
 
+    // Silent mode defaults to true, meaning the provider will attempt silent token acquisition first
+    const silent = options?.silent ?? true;
+
+    // Resolve scopes from options, supporting both new request format and legacy format for compatibility
+    const request = options?.request ?? { scopes: [] };
+
+    // Determine the account to use for token acquisition, prioritizing request-specific account, then active account
     const account = request.account ?? this.account ?? undefined;
-    // Extract scopes from either new format (request.scopes) or legacy format (scopes)
-    const scopes = options.request?.scopes ?? options?.scopes ?? [];
 
+    // Extract scopes from either new format (request.scopes) or legacy format (scopes)
+    const scopes =
+      options?.request?.scopes ??
+      (options as AcquireTokenOptionsLegacy)?.scopes ??
+      request.scopes ??
+      [];
+
+    // Prepare telemetry properties for this token acquisition attempt
     const telemetryProperties = { behavior, silent, scopes };
 
     // Track usage of deprecated legacy scopes format for migration monitoring
-    if (options.scopes) {
+    if ((options as AcquireTokenOptionsLegacy)?.scopes) {
       this._trackEvent('acquireToken.legacy-scopes-provided', TelemetryLevel.Warning, {
         properties: telemetryProperties,
       });
@@ -345,7 +359,7 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
       const result = await this.#client.acquireToken({
         behavior,
         silent,
-        request: { ...options.request, account, scopes },
+        request: { ...request, account, scopes },
       });
       measurement?.measure();
       return result;
