@@ -5,10 +5,9 @@ tag:
   - cookbook
   - react
   - charts
+  - ag-charts
   - data-visualization
   - chart-js
 ---
-
-For detailed information about chart integration, see the [Charts Documentation](/guide/app/charts).
 
 <!-- @include: ../../../cookbooks/app-react-charts/README.md -->

@@ -43,6 +43,20 @@ export default sidebar({
     {
       text: 'Cookbooks',
       link: '/cookbooks/index.md',
+    },
+    {
+      text: "AG Grid",
+      link: 'ag-grid/ag-grid.md',
+      children: [
+        {
+          text: 'AG Grid',
+          link: 'ag-grid/ag-grid.md',
+        },
+        {
+          text: 'AG Charts',
+          link: 'ag-grid/ag-charts.md',
+        },
+      ]
     }
   ],
   '/cookbooks/': [
