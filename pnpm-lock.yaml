@@ -1315,14 +1315,14 @@ importers:
         specifier: workspace:^
         version: link:../module
       ag-charts-enterprise:
-        specifier: 12.3.1
-        version: 12.3.1
+        specifier: 13.1.0
+        version: 13.1.0
       ag-grid-community:
-        specifier: 34.3.1
-        version: 34.3.1
+        specifier: 35.1.0
+        version: 35.1.0
       ag-grid-enterprise:
-        specifier: 34.3.1
-        version: 34.3.1
+        specifier: 35.1.0
+        version: 35.1.0
       typescript:
         specifier: ^5.8.2
         version: 5.9.3
@@ -1830,20 +1830,20 @@ importers:
         specifier: workspace:*
         version: link:../../modules/ag-grid
       ag-charts-enterprise:
-        specifier: ~12.3.1
-        version: 12.3.1
+        specifier: ~13.1.0
+        version: 13.1.0
       ag-charts-react:
         specifier: ~12.3.1
         version: 12.3.1(react@18.3.1)
       ag-grid-community:
-        specifier: ~34.3.1
-        version: 34.3.1
+        specifier: ~35.1.0
+        version: 35.1.0
       ag-grid-enterprise:
-        specifier: ~34.3.1
-        version: 34.3.1
+        specifier: ~35.1.0
+        version: 35.1.0
       ag-grid-react:
-        specifier: ~34.3.1
-        version: 34.3.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: ~35.1.0
+        version: 35.1.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react:
         specifier: ^18.0.0
         version: 18.3.1
@@ -6977,14 +6977,23 @@ packages:
   ag-charts-community@12.3.1:
     resolution: {integrity: sha512-uRaUFmCl8e0Y3KxjaHUYlkCPS5OtwtfTChkdpoZuBKDXqerCPTjPu+uvlun3rYUSYxScwVf2LZCI0Hfw4Vc+WQ==}
 
+  ag-charts-community@13.1.0:
+    resolution: {integrity: sha512-w+uFTjxlAoTq1+8tgUORtB/zr9jm38ibXzbbWnkBP9Dep9yahi5a1jZL7yExAX35uq3g9QtjTh0Oj/QPDBQ9Ew==}
+
   ag-charts-core@12.3.1:
     resolution: {integrity: sha512-711UJ0fXengb8+4PEW4nlzWDowmbYymPcjW2eJWHRzzvttUf14hnh+wP/l/s3EGVgYkEHe9vkXFwmeOJUlkC0Q==}
 
-  ag-charts-enterprise@12.3.1:
-    resolution: {integrity: sha512-2sQIwLfksRTcI4JVRjgQkyGq6z68UVTO/I91HKmtpukrQLsW/o0TzzHmgTtVJOXd9yO9gx2KWa2DMg0+FKdXEQ==}
+  ag-charts-core@13.1.0:
+    resolution: {integrity: sha512-mLHJZ8oU5CPeLRURescdISCtMsiiA/m4d1iBr6aQBEgiTVogRMGpFpsYNtQiYtoW2sRh+62I9sN8fhC3JQjX/g==}
+
+  ag-charts-enterprise@13.1.0:
+    resolution: {integrity: sha512-WyKIqvkOdtdvEJxq76hjTacXTCpIR2lq1JDMYc5MtoHYtiVt1KHApsxS0nbutp/CxGKRgdOqJtxUF+3r33pgPw==}
 
   ag-charts-locale@12.3.1:
     resolution: {integrity: sha512-dCn7oHh3xLI576FT514aBedNQgtb5zwh/Gcj7jHvjOWYRnfH8kaekZzLzntITA6dF6E78okJfoI7CUCbYduQ4Q==}
+
+  ag-charts-locale@13.1.0:
+    resolution: {integrity: sha512-mPgJnVsOI4Cf17CAlRh8BvLz19e165sdQJeUXNaB7M+DPB+pxODOcfx4oqZlR4Wc8Zu++TGb/2ueHa/aeV2qeQ==}
 
   ag-charts-react@12.3.1:
     resolution: {integrity: sha512-lwMzn+GWJccAHb9iJR4DR4DLkgrfbF/X7dIMzVHAufGhQmvgOVj6LsIVXc8/At0NycKq/PP59+6GVRu6wAXO0w==}
@@ -6994,14 +7003,17 @@ packages:
   ag-charts-types@12.3.1:
     resolution: {integrity: sha512-5216xYoawnvMXDFI6kTpPku+mH0Csiwu/FE7lsAm8Z22HEN6ciSG/V7g+IrpLWncELqksgENebCTP75PZ3CsHA==}
 
-  ag-grid-community@34.3.1:
-    resolution: {integrity: sha512-PwlrPudsFOzGumphi2y9ihWeaUlIwKhOra/MXu2LjeV2U8DgLLcYS8CartE5Hszhn1poJHawwI9HWrxlKliwdw==}
+  ag-charts-types@13.1.0:
+    resolution: {integrity: sha512-DytRM3CXli+Y013SC1Mr8lQBrhVTACK+11ilDHOhwUM0sRpmGuR51XFGcBKOliW1Vas1AycP31Cm3Pp0jx3hqw==}
 
-  ag-grid-enterprise@34.3.1:
-    resolution: {integrity: sha512-pee4Zh0gLeQED+RM+ofxNun9JSrYrE0ZVw90BibuBkhBCLXrtXtjGPiwM+Ylntl+GwJUuCXrTcVLXRHpdXVYbQ==}
+  ag-grid-community@35.1.0:
+    resolution: {integrity: sha512-yWFQfRNjv3KUBkHHzFdDOYGjPcDMU0B8Up4qG651diFlGRUGEGVs94SK73niWvk1FDZdpV9oWrwq3f30/qAoVg==}
 
-  ag-grid-react@34.3.1:
-    resolution: {integrity: sha512-1UTlBT+xJkjNZAuf7RxK61mgxKGTPB+6XR99oIHq7cYC89kJmLbWqhHt/1XqRWF5cAgSKk8u+HtOQaN8tAZStw==}
+  ag-grid-enterprise@35.1.0:
+    resolution: {integrity: sha512-Zhod3fpgWa9KE0JNFkkkb8/3Qv66UR9KF3wFyCz++wQUtQm5wdExul4UA8wm1ukvBmD6QyBLQ5Cs9zDnIEb0uQ==}
+
+  ag-grid-react@35.1.0:
+    resolution: {integrity: sha512-n8pJh4RTpos8stzz91nEhTCZZdLy9bjQYAGxIxJ8ocVagnEsAk9T5Vz/VEKUhOGz36il68n7TVbVWSuUA3a+mg==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
@@ -15629,7 +15641,7 @@ snapshots:
 
   '@types/node-fetch@2.6.13':
     dependencies:
-      '@types/node': 18.19.130
+      '@types/node': 24.10.9
       form-data: 4.0.5
 
   '@types/node@12.20.55': {}
@@ -16374,16 +16386,28 @@ snapshots:
       ag-charts-locale: 12.3.1
       ag-charts-types: 12.3.1
 
+  ag-charts-community@13.1.0:
+    dependencies:
+      ag-charts-core: 13.1.0
+      ag-charts-locale: 13.1.0
+      ag-charts-types: 13.1.0
+
   ag-charts-core@12.3.1:
     dependencies:
       ag-charts-types: 12.3.1
 
-  ag-charts-enterprise@12.3.1:
+  ag-charts-core@13.1.0:
     dependencies:
-      ag-charts-community: 12.3.1
-      ag-charts-core: 12.3.1
+      ag-charts-types: 13.1.0
+
+  ag-charts-enterprise@13.1.0:
+    dependencies:
+      ag-charts-community: 13.1.0
+      ag-charts-core: 13.1.0
 
   ag-charts-locale@12.3.1: {}
+
+  ag-charts-locale@13.1.0: {}
 
   ag-charts-react@12.3.1(react@18.3.1):
     dependencies:
@@ -16392,20 +16416,22 @@ snapshots:
 
   ag-charts-types@12.3.1: {}
 
-  ag-grid-community@34.3.1:
-    dependencies:
-      ag-charts-types: 12.3.1
+  ag-charts-types@13.1.0: {}
 
-  ag-grid-enterprise@34.3.1:
+  ag-grid-community@35.1.0:
     dependencies:
-      ag-grid-community: 34.3.1
+      ag-charts-types: 13.1.0
+
+  ag-grid-enterprise@35.1.0:
+    dependencies:
+      ag-grid-community: 35.1.0
     optionalDependencies:
-      ag-charts-community: 12.3.1
-      ag-charts-enterprise: 12.3.1
+      ag-charts-community: 13.1.0
+      ag-charts-enterprise: 13.1.0
 
-  ag-grid-react@34.3.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+  ag-grid-react@35.1.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
-      ag-grid-community: 34.3.1
+      ag-grid-community: 35.1.0
       prop-types: 15.8.1
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
@@ -17853,7 +17879,7 @@ snapshots:
       isstream: 0.1.2
       jsonwebtoken: 9.0.3
       mime-types: 2.1.35
-      retry-axios: 2.6.0(axios@1.13.5)
+      retry-axios: 2.6.0(axios@1.13.5(debug@4.4.3))
       tough-cookie: 4.1.4
     transitivePeerDependencies:
       - supports-color
@@ -19550,7 +19576,7 @@ snapshots:
       onetime: 7.0.0
       signal-exit: 4.1.0
 
-  retry-axios@2.6.0(axios@1.13.5):
+  retry-axios@2.6.0(axios@1.13.5(debug@4.4.3)):
     dependencies:
       axios: 1.13.5(debug@4.4.3)
 

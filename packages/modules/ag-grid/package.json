@@ -47,9 +47,9 @@
   "devDependencies": {
     "@equinor/eds-tokens": "^0.10.0",
     "@equinor/fusion-framework-module": "workspace:^",
-    "ag-charts-enterprise": "12.3.1",
-    "ag-grid-community": "34.3.1",
-    "ag-grid-enterprise": "34.3.1",
+    "ag-charts-enterprise": "13.1.0",
+    "ag-grid-community": "35.1.0",
+    "ag-grid-enterprise": "35.1.0",
     "typescript": "^5.8.2"
   },
   "peerDependencies": {
