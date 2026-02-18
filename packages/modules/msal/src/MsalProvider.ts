@@ -246,7 +246,7 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
       } else if (!this.#client.hasValidClaims) {
         // Priority 2: No valid session found - attempt automatic login
         // This handles first-time app load when no authentication state exists
-        // Note: Using empty scopes here as we don't know what scopes the app needs yet
+        // Note: Using default scopes here as we don't know what scopes the app needs yet
         // App should call acquireToken with actual scopes after initialization
         const loginResult = await this.login({ request: { scopes: this.defaultScopes } });
         if (loginResult?.account) {
@@ -320,7 +320,7 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
   async acquireToken(
     options?: AcquireTokenOptions | AcquireTokenOptionsLegacy,
   ): Promise<AcquireTokenResult> {
-    // Determine behavior and silent options, with defaults (popup and true respectively)
+    // Determine behavior and silent options, with defaults (redirect and true respectively)
     const behavior = options?.behavior ?? 'redirect';
 
     // Silent mode defaults to true, meaning the provider will attempt silent token acquisition first
@@ -328,18 +328,14 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
 
     const defaultScopes = this.defaultScopes;
 
-    // Resolve scopes from options, supporting both new request format and legacy format for compatibility
-    const request = options?.request ?? { scopes: defaultScopes };
+    const inputRequest = options?.request;
 
     // Determine the account to use for token acquisition, prioritizing request-specific account, then active account
-    const account = request.account ?? this.account ?? undefined;
+    const account = inputRequest?.account ?? this.account ?? undefined;
 
-    // Extract scopes from either new format (request.scopes) or legacy format (scopes)
+    // Extract caller-provided scopes from either new format (request.scopes) or legacy format (scopes)
     const candidateScopes =
-      options?.request?.scopes ??
-      (options as AcquireTokenOptionsLegacy)?.scopes ??
-      request.scopes ??
-      [];
+      inputRequest?.scopes ?? (options as AcquireTokenOptionsLegacy)?.scopes ?? [];
 
     const scopes =
       candidateScopes.length > 0 ? candidateScopes : defaultScopes.length > 0 ? defaultScopes : [];
@@ -377,12 +373,12 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
       const measurement = this._trackMeasurement('acquireToken', TelemetryLevel.Information, {
         properties: telemetryProperties,
       });
-      // Merge account, original request options, and resolved scopes
-      // Account ensures context awareness, request preserves custom options, scopes uses resolved value
+      // Merge account, original request options, and resolved scopes.
+      // Account ensures context awareness, request preserves custom options, scopes uses resolved value.
       const result = await this.#client.acquireToken({
         behavior,
         silent,
-        request: { ...request, account, scopes },
+        request: { ...inputRequest, account, scopes },
       });
       measurement?.measure();
       return result;
@@ -450,7 +446,7 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
 
     const defaultScopes = this.defaultScopes;
 
-    // Default to empty scopes is not allowed; fallback to app default scope when possible
+    // Fallback to app default scope when possible; empty scopes tracked for monitoring
     if (!request.scopes || request.scopes.length === 0) {
       request.scopes = defaultScopes.length > 0 ? defaultScopes : [];
     }
