@@ -1,5 +1,12 @@
 # Change Log
 
+## 7.4.10
+
+### Patch Changes
+
+- Updated dependencies [[`c8e27eb`](https://github.com/equinor/fusion-framework/commit/c8e27eb3a119b4077effe20a10dfb2dfd3dc865e)]:
+  - @equinor/fusion-framework-module-msal@7.2.2
+
 ## 7.4.9
 
 ### Patch Changes

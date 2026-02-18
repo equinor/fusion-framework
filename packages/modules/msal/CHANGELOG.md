@@ -1,5 +1,11 @@
 # Change Log
 
+## 7.2.2
+
+### Patch Changes
+
+- [`c8e27eb`](https://github.com/equinor/fusion-framework/commit/c8e27eb3a119b4077effe20a10dfb2dfd3dc865e) Thanks [@odinr](https://github.com/odinr)! - Update the `enableMSAL` configuration callback typing (`AuthConfigFn`) to use `ModuleConfigType<MsalModule>` and accept an optional `ref` argument.
+
 ## 7.2.1
 
 ### Patch Changes
