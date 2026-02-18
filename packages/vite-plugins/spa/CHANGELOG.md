@@ -1,5 +1,12 @@
 # @equinor/fusion-framework-vite-plugin-spa
 
+## 3.1.8
+
+### Patch Changes
+
+- Updated dependencies [[`1594ed8`](https://github.com/equinor/fusion-framework/commit/1594ed879579d0db6e42c5052a33174f7bf9346c), [`1594ed8`](https://github.com/equinor/fusion-framework/commit/1594ed879579d0db6e42c5052a33174f7bf9346c)]:
+  - @equinor/fusion-framework-module-msal@7.2.1
+
 ## 3.1.7
 
 ### Patch Changes
