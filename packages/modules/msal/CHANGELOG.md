@@ -1,5 +1,36 @@
 # Change Log
 
+## 7.2.2
+
+### Patch Changes
+
+- [`c8e27eb`](https://github.com/equinor/fusion-framework/commit/c8e27eb3a119b4077effe20a10dfb2dfd3dc865e) Thanks [@odinr](https://github.com/odinr)! - Update the `enableMSAL` configuration callback typing (`AuthConfigFn`) to use `ModuleConfigType<MsalModule>` and accept an optional `ref` argument.
+
+## 7.2.1
+
+### Patch Changes
+
+- [#4067](https://github.com/equinor/fusion-framework/pull/4067) [`1594ed8`](https://github.com/equinor/fusion-framework/commit/1594ed879579d0db6e42c5052a33174f7bf9346c) Thanks [@odinr](https://github.com/odinr)! - Default missing/empty token request scopes to the app `/.default` scope (when `clientId` is available) and expose `MsalProvider.defaultScopes` for consumers that want the same fallback.
+
+  ```ts
+  // Reuse the provider's default scope logic
+  const scopes = provider.defaultScopes;
+
+  // If scopes are omitted/empty, the provider will fall back to `defaultScopes` when possible.
+  await provider.acquireToken();
+
+  // Explicitly using the same fallback
+  await provider.acquireToken({ request: { scopes } });
+  ```
+
+- [#4067](https://github.com/equinor/fusion-framework/pull/4067) [`1594ed8`](https://github.com/equinor/fusion-framework/commit/1594ed879579d0db6e42c5052a33174f7bf9346c) Thanks [@odinr](https://github.com/odinr)! - Fix `MsalProvider.acquireToken`/`acquireAccessToken` to handle missing options by defaulting to safe arguments, preventing runtime crashes when accessing properties like `behavior`.
+
+  ```ts
+  // Calling without options is now supported; safe defaults are applied.
+  await provider.acquireToken();
+  await provider.acquireAccessToken();
+  ```
+
 ## 7.2.0
 
 ### Minor Changes

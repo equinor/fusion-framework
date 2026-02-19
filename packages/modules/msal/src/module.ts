@@ -1,12 +1,12 @@
 import {
   type Module,
   type IModulesConfigurator,
+  type ModuleConfigType,
   SemanticVersion,
 } from '@equinor/fusion-framework-module';
 
 import { MsalConfigurator } from './MsalConfigurator';
 import { MsalProvider, type IMsalProvider } from './MsalProvider';
-import type { MsalClientConfig } from './MsalClient';
 
 import { version } from './version';
 
@@ -80,23 +80,10 @@ export const module: MsalModule = {
  * This function receives a builder object with methods to configure the MSAL client
  * and authentication requirements.
  */
-export type AuthConfigFn = (builder: {
-  /**
-   * Set MSAL client configuration
-   * @param config - Client configuration with tenant ID, client ID, etc.
-   */
-  setClientConfig: (config: MsalClientConfig) => void;
-  /**
-   * Set whether authentication is required for the application
-   * @param requiresAuth - If true, app will attempt automatic login on initialization
-   */
-  setRequiresAuth: (requiresAuth: boolean) => void;
-  /**
-   * Set a default login hint used for silent SSO and pre-filled usernames
-   * @param loginHint - Preferred username/email to use for login hint
-   */
-  setLoginHint: (loginHint: string) => void;
-}) => void;
+export type AuthConfigFn<TRef = unknown> = (
+  configurator: ModuleConfigType<MsalModule>,
+  ref?: TRef,
+) => void;
 
 /**
  * Enables MSAL authentication module in the framework.

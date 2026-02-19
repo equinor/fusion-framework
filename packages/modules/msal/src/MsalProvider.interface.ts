@@ -95,7 +95,9 @@ export interface IMsalProvider extends IProxyProvider {
    * });
    * ```
    */
-  acquireAccessToken(options: AcquireTokenOptionsLegacy): Promise<string | undefined>;
+  acquireAccessToken(
+    options?: AcquireTokenOptions | AcquireTokenOptionsLegacy,
+  ): Promise<string | undefined>;
 
   /**
    * Acquires a full authentication result including token and account information.
@@ -114,7 +116,9 @@ export interface IMsalProvider extends IProxyProvider {
    * });
    * ```
    */
-  acquireToken(options: AcquireTokenOptionsLegacy): Promise<AcquireTokenResult>;
+  acquireToken(
+    options?: AcquireTokenOptions | AcquireTokenOptionsLegacy,
+  ): Promise<AcquireTokenResult>;
 
   /**
    * Authenticates a user interactively with Microsoft Identity Platform.
