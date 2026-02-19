@@ -1,8 +1,8 @@
-import type { AgChartOptions } from 'ag-charts-community';
 import { salesData } from './Data';
 import { type ReactElement, useMemo } from 'react';
 import Styled from '../../App.style';
-import { AgCharts } from '@equinor/fusion-framework-react-ag-grid/charts';
+import { AgCharts } from '@equinor/fusion-framework-react-ag-charts';
+import type { AgChartOptions } from '@equinor/fusion-framework-react-ag-charts/community';
 
 /**
  * AgArea Component - Stacked Area Chart Visualization
@@ -13,6 +13,7 @@ import { AgCharts } from '@equinor/fusion-framework-react-ag-grid/charts';
  *
  * @returns {ReactElement} A rendered stacked area chart showing revenue composition
  */
+
 export const AgArea = (): ReactElement => {
   // Area Chart Configuration
   const areaChartOptions = useMemo<AgChartOptions>(
@@ -46,25 +47,6 @@ export const AgArea = (): ReactElement => {
           stroke: '#2ca02c',
           fillOpacity: 0.7,
           strokeWidth: 2,
-        },
-      ],
-      axes: [
-        {
-          type: 'category',
-          position: 'bottom',
-          title: {
-            text: 'Quarter',
-          },
-        },
-        {
-          type: 'number',
-          position: 'left',
-          title: {
-            text: 'Amount ($)',
-          },
-          label: {
-            formatter: ({ value }: { value: number }) => `$${(value / 1000).toFixed(0)}k`,
-          },
         },
       ],
       legend: {

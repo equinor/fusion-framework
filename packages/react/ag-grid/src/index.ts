@@ -1,5 +1,4 @@
 export { AgGridReact, AgGridReactProps } from 'ag-grid-react';
-
 export { enableAgGrid, type IAgGridProvider } from '@equinor/fusion-framework-module-ag-grid';
 
 export {

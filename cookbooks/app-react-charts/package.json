@@ -23,17 +23,17 @@
     "@equinor/fusion-framework-cli": "workspace:^",
     "@equinor/fusion-framework-module-navigation": "workspace:^",
     "@equinor/fusion-framework-react-app": "workspace:^",
-    "@equinor/fusion-framework-react-ag-grid": "workspace:^",
+    "@equinor/fusion-framework-react-ag-charts": "workspace:^",
     "@types/react": "^18.2.50",
     "@types/react-dom": "^18.2.7",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^7.6.0",
     "styled-components": "^6.1.19",
-    "typescript": "^5.8.2"
+    "typescript": "^5.9.3"
   },
   "dependencies": {
-    "chart.js": "^4.4.9",
-    "react-chartjs-2": "^5.3.0"
+    "chart.js": "^4.5.1",
+    "react-chartjs-2": "^5.3.1"
   }
 }

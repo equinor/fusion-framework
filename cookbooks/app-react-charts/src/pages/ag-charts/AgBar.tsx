@@ -1,8 +1,8 @@
-import type { AgChartOptions } from 'ag-charts-community';
 import { salesData } from './Data';
 import { type ReactElement, useMemo } from 'react';
 import Styled from '../../App.style';
-import { AgCharts } from '@equinor/fusion-framework-react-ag-grid/charts';
+import type { AgChartOptions } from '@equinor/fusion-framework-react-ag-charts/community';
+import { AgCharts } from '@equinor/fusion-framework-react-ag-charts';
 
 /**
  * AgBar Component - Bar Chart Visualization
@@ -13,6 +13,7 @@ import { AgCharts } from '@equinor/fusion-framework-react-ag-grid/charts';
  *
  * @returns {ReactElement} A rendered bar chart showing financial performance metrics
  */
+
 export const AgBar = (): ReactElement => {
   // Bar Chart Configuration
   const barChartOptions = useMemo<AgChartOptions>(
@@ -44,25 +45,6 @@ export const AgBar = (): ReactElement => {
           fill: '#ff7f0e',
           stroke: '#ff7f0e',
           strokeWidth: 2,
-        },
-      ],
-      axes: [
-        {
-          type: 'category',
-          position: 'bottom',
-          title: {
-            text: 'Quarter',
-          },
-        },
-        {
-          type: 'number',
-          position: 'left',
-          title: {
-            text: 'Amount ($)',
-          },
-          label: {
-            formatter: ({ value }: { value: number }) => `$${(value / 1000).toFixed(0)}k`,
-          },
         },
       ],
       legend: {

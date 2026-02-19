@@ -5,7 +5,7 @@ This module provides an agnostic wrapper around the [AG Grid](https://www.ag-gri
 The intention of this module is to provide a consistent way to configure AG Grid and to ensure that the correct version of AG Grid is used.
 
 > [!TIP]
-> This is the base package for AG Grid in Fusion, which means that `ag-grid-enterprise` and `ag-grid-community` is required to be installed. This package should be consumed by the host (portal) which configures AG Grid for the applications. See [`@equinor/fusion-framework-module-ag-grid`](https://www.npmjs.com/package/@equinor/fusion-framework-react-ag-grid) for usage in applications.
+> This is the base package for AG Grid in Fusion, which means that `ag-grid-enterprise` and `ag-grid-community` is required to be installed. This package should be consumed by the host (portal) which configures AG Grid for the applications. See [`@equinor/fusion-framework-react-ag-grid`](https://www.npmjs.com/package/@equinor/fusion-framework-react-ag-grid) for usage in applications.
 
 ## Installation
 
@@ -17,7 +17,9 @@ npm i @equinor/fusion-framework-module-ag-grid
 > Fusion will try to keep the semantic major and minor versions in sync with AG Grid, but there might be cases where this is not possible. So `@equinor/fusion-framework-module-ag-grid` and `ag-grid` might have different __patch__ versions.
 
 > [!IMPORTANT]
-> Before upgrading to AG Grid 33, please read remove all previous references to `@equinor/fusion-react-ag-grid-styles`, `@ag-grid-community/*` and `@ag-grid-enterprise/*` from your project dependencies.
+> **v35 Breaking Change**: AG Charts has been moved to a separate package `@equinor/fusion-framework-react-ag-charts`. If you need integrated charting, install both packages and use `IntegratedChartsModule.with(AgChartsEnterpriseModule)`.
+>
+> Before upgrading to AG Grid 33, remove all previous references to `@equinor/fusion-react-ag-grid-styles`, `@ag-grid-community/*` and `@ag-grid-enterprise/*` from your project dependencies.
 
 ## Configuration
 
@@ -71,7 +73,7 @@ enableAgGrid(configurator, (builder) => {
 The module provides a hook to customize a grid instance.
 
 ```tsx
-import { useTheme } from '@equinor/fusion-framework-react-app/ag-grid';
+import { useTheme } from '@equinor/fusion-framework-react-ag-grid';
 
 const MyComponent = () => {
     const baseTheme = useTheme();

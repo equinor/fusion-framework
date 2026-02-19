@@ -7,10 +7,15 @@ updates:
     open-pull-requests-limit: 50
     versioning-strategy: increase-if-necessary
     groups:
+      ag-charts:
+        applies-to: version-updates
+        patterns:
+          - "ag-charts-community"
+          - "ag-charts-react"
+          - "ag-charts-enterprise"
       ag-grid:
         applies-to: version-updates
         patterns:
-          - "ag-charts-enterprise"
           - "ag-grid-enterprise"
           - "ag-grid-community"
           - "ag-grid-react"
