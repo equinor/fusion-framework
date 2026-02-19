@@ -1,5 +1,42 @@
 # @equinor/fusion-framework-react-ag-grid
 
+## 35.0.0
+
+### Major Changes
+
+- [#4062](https://github.com/equinor/fusion-framework/pull/4062) [`7342a52`](https://github.com/equinor/fusion-framework/commit/7342a52cabf7c2e0281a1b5dc1ec6bfb683afe1e) Thanks [@AndrejNikolicEq](https://github.com/AndrejNikolicEq)! - ## Breaking Changes: Upgrade to AG Grid v35
+
+  **AG Grid upgraded from v34.3.1 to v35.1.0**
+
+  ### Removed AG Charts Integration
+
+  The AG Charts integration has been **removed** from both packages. If you need AG Charts functionality, install and import the packages directly:
+
+  ```typescript
+  // Before
+  import { AgChartsEnterpriseModule } from "@equinor/fusion-framework-react-ag-grid/charts";
+
+  // After
+  // Install @equinor/fusion-framework-react-ag-charts separately
+  import { AgChartsEnterpriseModule } from "@equinor/fusion-framework-react-ag-charts/enterprise";
+  import { AgCharts } from "@equinor/fusion-framework-react-ag-charts";
+  ```
+
+  ### Updated Peer Dependencies
+
+  - `ag-grid-community`: `>=35.1.0` (previously `>=33.0.3`)
+  - `ag-grid-enterprise`: `>=35.1.0` (previously `>=33.0.3`)
+  - Removed `ag-charts-enterprise` peer dependency
+
+  ### Compatibility Fix
+
+  Added automatic detection and correction for v34→v35 state migration issues. If you're upgrading from v34, the framework will automatically handle the internal `agStyleInjectionState` structure change that could cause crashes when mixing v34 and v35 bundles.
+
+### Patch Changes
+
+- Updated dependencies [[`7342a52`](https://github.com/equinor/fusion-framework/commit/7342a52cabf7c2e0281a1b5dc1ec6bfb683afe1e)]:
+  - @equinor/fusion-framework-module-ag-grid@35.0.0
+
 ## 34.4.1
 
 ### Patch Changes
