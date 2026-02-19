@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework-react-ag-charts",
-  "version": "12.0.0",
+  "version": "13.0.0",
   "description": "Fusion package for using AG Charts",
   "main": "dist/esm/index.js",
   "types": "dist/types/index.d.ts",

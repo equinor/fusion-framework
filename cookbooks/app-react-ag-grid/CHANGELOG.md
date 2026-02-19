@@ -1,5 +1,21 @@
 # Change Log
 
+## 1.0.9
+
+### Patch Changes
+
+- [#4062](https://github.com/equinor/fusion-framework/pull/4062) [`7342a52`](https://github.com/equinor/fusion-framework/commit/7342a52cabf7c2e0281a1b5dc1ec6bfb683afe1e) Thanks [@AndrejNikolicEq](https://github.com/AndrejNikolicEq)! - Update AG Grid Cookbook to use new standalone AG Charts package.
+
+  - Migrate `AgChartsEnterpriseModule` import from `@equinor/fusion-framework-react-ag-grid/enterprise` to `@equinor/fusion-framework-react-ag-charts/enterprise`
+  - Add `ValidationModule` to AG Grid configuration
+  - Add dependency on `@equinor/fusion-framework-react-ag-charts`
+
+- Updated dependencies [[`7342a52`](https://github.com/equinor/fusion-framework/commit/7342a52cabf7c2e0281a1b5dc1ec6bfb683afe1e), [`7342a52`](https://github.com/equinor/fusion-framework/commit/7342a52cabf7c2e0281a1b5dc1ec6bfb683afe1e)]:
+  - @equinor/fusion-framework-react-ag-charts@13.0.0
+  - @equinor/fusion-framework-react-ag-grid@35.0.0
+  - @equinor/fusion-framework-react-app@9.0.5
+  - @equinor/fusion-framework-cli@13.3.9
+
 ## 1.0.8
 
 ### Patch Changes
