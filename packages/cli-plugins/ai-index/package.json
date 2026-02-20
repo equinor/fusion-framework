@@ -55,7 +55,7 @@
     "find-up": "^8.0.0",
     "globby": "^16.1.0",
     "gray-matter": "^4.0.3",
-    "multimatch": "^7.0.0",
+    "multimatch": "^8.0.0",
     "read-package-up": "^12.0.0",
     "rxjs": "^7.8.1",
     "simple-git": "^3.28.0",
