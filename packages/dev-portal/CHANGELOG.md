@@ -1,5 +1,12 @@
 # @equinor/fusion-framework-dev-portal
 
+## 2.0.1
+
+### Patch Changes
+
+- Updated dependencies [[`27d7fab`](https://github.com/equinor/fusion-framework/commit/27d7fab7ee2c393bd9ef2f514b7415cc106acc16)]:
+  - @equinor/fusion-framework-module-ag-grid@35.0.1
+
 ## 2.0.0
 
 ### Patch Changes

@@ -1,5 +1,15 @@
 # Change Log
 
+## 35.0.1
+
+### Patch Changes
+
+- [#4087](https://github.com/equinor/fusion-framework/pull/4087) [`27d7fab`](https://github.com/equinor/fusion-framework/commit/27d7fab7ee2c393bd9ef2f514b7415cc106acc16) Thanks [@odinr](https://github.com/odinr)! - Fix AG Grid theme initialization crash in mixed v34/v35 runtime scenarios where shared style state can trigger `grids.add is not a function`.
+
+  Adds compatibility shimming for the shared AG Grid style injection state so Set-like and Map-like access patterns can coexist when bundles from different AG Grid versions are loaded on the same page.
+
+  Related: https://github.com/equinor/fusion-core-tasks/issues/388
+
 ## 35.0.0
 
 ### Major Changes
