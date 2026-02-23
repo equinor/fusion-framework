@@ -23,12 +23,7 @@ export const client =
     client: TClient,
     method: TMethod = 'json' as TMethod,
   ) =>
-    <T = ApiResponse>(
-      init?: ClientRequestInit<TClient, T>,
-    ): ApiResult<TMethod, T> =>
-      client[method](...generateParameters<T, TClient>(init)) as ApiResult<
-        TMethod,
-        T
-      >;
+  <T = ApiResponse>(init?: ClientRequestInit<TClient, T>): ApiResult<TMethod, T> =>
+    client[method](...generateParameters<T, TClient>(init)) as ApiResult<TMethod, T>;
 
 export default client;

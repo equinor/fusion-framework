@@ -144,7 +144,7 @@ export class PersonController implements IPersonController {
     this.#personResolveQuery = new Query({
       expire,
       queueOperator: 'merge',
-      key: ({ resolveIds }) => resolveIds.join(),
+      key: ({ resolveIds }) => JSON.stringify([...resolveIds].sort()),
       client: {
         fn: ({ resolveIds }, signal) => {
           return client.resolve('json$', {
@@ -158,10 +158,9 @@ export class PersonController implements IPersonController {
   }
 
   /**
-   * Search for persons matching the given search string, which can be a part
-   * of display name, mail, upn or the full azureId.
-   * If systemAccounts is true, it will also include system accounts in the result,
-   * which can be filtered by accountType property in the result.
+   * Suggest persons matching the given search string.
+   * Search string can be a part of display name, mail, upn or the full azureId.
+   * If systemAccounts is true, it will also include system accounts in the result.
    */
   public suggest(
     args: ResolverArgs<{ search: string; systemAccounts: boolean }>,
