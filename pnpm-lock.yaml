@@ -484,6 +484,9 @@ importers:
       '@equinor/fusion-react-person':
         specifier: ^0.10.10
         version: 0.10.10(react@18.3.1)
+      '@equinor/fusion-wc-people':
+        specifier: ^1.0.1
+        version: 1.0.1
       '@remix-run/router':
         specifier: ^1.8.0
         version: 1.23.2
@@ -3097,6 +3100,9 @@ packages:
   '@equinor/fusion-wc-list@1.1.4':
     resolution: {integrity: sha512-IZyG+Jyv7vJzQyYJg8RsIlars0q8Ix2LT+Vh1E26p70rBdZZzmU2q1KATOyyEr8vWJSX9HlFMuYTg+N26Mxtdg==}
 
+  '@equinor/fusion-wc-people@1.0.1':
+    resolution: {integrity: sha512-03HtVG0UzApGZL95No+EyV+IQ9YSoMogsy1SMe3R4VwvNq4khwxMUZfdeMI8ND/yCGhg5QUm5IcrEH3NG52ASA==}
+
   '@equinor/fusion-wc-person@3.2.4':
     resolution: {integrity: sha512-F+RqZVFuzeo5EKgs3QANmEnBiCqK7OEKmVrCjVx6dMDky5h1C5CT4ERFLTouiqreS4icRiABetIarR7x5tmRmg==}
 
@@ -4461,6 +4467,9 @@ packages:
 
   '@lit-labs/task@3.1.0':
     resolution: {integrity: sha512-zMlcUtZeHDT83IiT2+CJBSoFvWDLnPEezhOCgqjxW4DmRHlbgd7jdft97T6dw4S4RvIETfI7OOyvubCV/EzTlg==}
+
+  '@lit/context@1.1.6':
+    resolution: {integrity: sha512-M26qDE6UkQbZA2mQ3RjJ3Gzd8TxP+/0obMgE5HfkfLhEEyYE3Bui4A5XHiGPjy0MUGAyxB3QgVuw2ciS0kHn6A==}
 
   '@lit/reactive-element@1.6.3':
     resolution: {integrity: sha512-QuTgnG52Poic7uM1AN5yJ09QMe0O28e10XzSvWDz02TJiiKee4stsiownEIadWm8nYzyDAyT+gKzUoZmiWQtsQ==}
@@ -11946,6 +11955,21 @@ snapshots:
       '@material/mwc-list': 0.27.0
       lit: 3.3.0
 
+  '@equinor/fusion-wc-people@1.0.1':
+    dependencies:
+      '@equinor/fusion-wc-button': 2.4.2
+      '@equinor/fusion-wc-checkbox': 1.1.2
+      '@equinor/fusion-wc-chip': 1.2.2
+      '@equinor/fusion-wc-core': 2.0.0
+      '@equinor/fusion-wc-formfield': 1.1.2
+      '@equinor/fusion-wc-icon': 2.3.1
+      '@equinor/fusion-wc-person': 3.3.0
+      '@equinor/fusion-wc-progress-indicator': 1.1.2
+      '@equinor/fusion-wc-skeleton': 2.1.2
+      '@equinor/fusion-web-theme': 0.1.10
+      '@lit/context': 1.1.6
+      lit: 3.3.0
+
   '@equinor/fusion-wc-person@3.2.4':
     dependencies:
       '@equinor/fusion-wc-avatar': 3.2.3
@@ -12856,6 +12880,10 @@ snapshots:
   '@lit-labs/task@3.1.0':
     dependencies:
       '@lit/task': 1.0.3
+
+  '@lit/context@1.1.6':
+    dependencies:
+      '@lit/reactive-element': 2.1.2
 
   '@lit/reactive-element@1.6.3':
     dependencies:

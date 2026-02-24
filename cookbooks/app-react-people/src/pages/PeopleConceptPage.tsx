@@ -1,10 +1,14 @@
 import { useCallback, useState } from 'react';
 import {
-  PeoplePicker,
-  PeopleViewer,
+  PeoplePickerElement,
+  PeopleViewerElement,
   type PersonAddedEvent,
   type PersonRemovedEvent,
-} from '@equinor/fusion-react-person';
+} from '@equinor/fusion-wc-people';
+import { useRef } from 'react';
+import { useEffect } from 'react';
+PeoplePickerElement;
+PeopleViewerElement;
 
 type PersonInfo = {
   azureId: string;
@@ -12,6 +16,7 @@ type PersonInfo = {
 
 export const PeopleConceptPage = () => {
   const [selected, setSelected] = useState<PersonInfo[]>([]);
+  const eventRef = useRef<HTMLDivElement | null>(null);
 
   const handleSelect = useCallback((e: PersonAddedEvent) => {
     const person = e.detail;
@@ -27,8 +32,22 @@ export const PeopleConceptPage = () => {
     });
   }, []);
 
+  useEffect(() => {
+    const current = eventRef.current;
+    if (current) {
+      current.addEventListener('person-added', handleSelect as EventListener);
+      current.addEventListener('person-removed', handleDeSelect as EventListener);
+    }
+    return () => {
+      if (current) {
+        current.removeEventListener('person-added', handleSelect as EventListener);
+        current.removeEventListener('person-removed', handleDeSelect as EventListener);
+      }
+    };
+  }, [handleSelect, handleDeSelect]);
+
   return (
-    <div>
+    <div ref={eventRef}>
       <h2>People Concept Page</h2>
       <div style={{ marginBottom: '3em' }}>
         <h3>People Picker</h3>
@@ -36,14 +55,12 @@ export const PeopleConceptPage = () => {
           The People Picker component resolves persons from the given resolveIds property, and adds
           them to selected people state by listening to "person-added" event.
         </p>
-        <PeoplePicker onPersonAdded={handleSelect} onPersonRemoved={handleDeSelect} />
+        <fwc-people-picker></fwc-people-picker>
       </div>
       <div>
         <h3>People Viewer</h3>
-        <PeopleViewer
-          people={selected}
-          onPersonAdded={handleSelect}
-          onPersonRemoved={handleDeSelect}
+        <fwc-people-viewer
+          people={JSON.stringify(selected)}
           resolveIds={[
             'jones@equinor.com',
             '0b6dfe7d-69b2-42ca-920b-c0e4e6a1a633',
