@@ -17,6 +17,7 @@ import {
 } from '@equinor/fusion-framework-module-analytics/logExporters';
 import { enableNavigation } from '@equinor/fusion-framework-module-navigation';
 import { enableContext } from '@equinor/fusion-framework-react/context';
+import { enableBookmark } from '@equinor/fusion-framework-module-bookmark';
 import { Subject } from 'rxjs';
 import type { ServiceDiscoveryProvider } from '@equinor/fusion-framework-module-service-discovery';
 
@@ -38,6 +39,8 @@ export type PortalModuleInitiator<TRef extends Fusion = Fusion> = (
 
 export const frameworkConfig: PortalModuleInitiator = (configurator) => {
   enableContext(configurator);
+
+  enableBookmark(configurator);
 
   enableAppModule(configurator);
 

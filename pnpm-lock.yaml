@@ -688,6 +688,9 @@ importers:
       '@equinor/fusion-framework-module-app':
         specifier: workspace:*
         version: link:../../packages/modules/app
+      '@equinor/fusion-framework-module-bookmark':
+        specifier: workspace:*
+        version: link:../../packages/modules/bookmark
       '@equinor/fusion-framework-module-context':
         specifier: workspace:*
         version: link:../../packages/modules/context
@@ -15665,7 +15668,7 @@ snapshots:
 
   '@types/node-fetch@2.6.13':
     dependencies:
-      '@types/node': 18.19.130
+      '@types/node': 24.10.9
       form-data: 4.0.5
 
   '@types/node@12.20.55': {}

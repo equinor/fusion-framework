@@ -13,7 +13,7 @@ const ResourceSchema = z.object({
 });
 
 // Define the schema for the log record
-const LogRecordSchema = z.object({
+export const LogRecordSchema = z.object({
   timeUnixNano: z.string(),
   observedTimeUnixNano: z.string(),
   severityNumber: z.number(),
