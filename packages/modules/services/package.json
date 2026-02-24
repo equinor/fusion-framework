@@ -107,6 +107,12 @@
       "people/get": [
         "./dist/types/people/person-details/index.d.ts"
       ],
+      "people/suggest": [
+        "./dist/types/people/suggest/index.d.ts"
+      ],
+      "people/resolve": [
+        "./dist/types/people/resolve/index.d.ts"
+      ],
       "people/query": [
         "./dist/types/people/query/index.d.ts"
       ],
