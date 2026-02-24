@@ -10,5 +10,7 @@ tag:
 
 <ModuleBadge module="modules/service-discovery" />
 
+<!-- @include: ../../../../packages/modules/service-discovery/README.md -->
+
 ## Services
 @[code](./services.json)

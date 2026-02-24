@@ -89,6 +89,12 @@ export class ServiceDiscoveryConfigurator extends BaseConfigBuilder<ServiceDisco
           http: httpClient,
           endpoint,
           postProcess: map((input) => {
+            // Check runtime environment to ensure sessionStorage is available before attempting to access it.
+            // If sessionStorage is not available, return the input as is without attempting to apply any overrides.
+            if (typeof globalThis === 'undefined' || !('sessionStorage' in globalThis)) {
+              return input;
+            }
+
             // Check if there are any session overrides in session storage.
             try {
               const sessionOverrides: Record<string, { url: string; scopes: string[] }> =
