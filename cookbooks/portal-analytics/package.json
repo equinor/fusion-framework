@@ -23,6 +23,7 @@
     "@equinor/fusion-framework-cli": "workspace:*",
     "@equinor/fusion-framework-module-analytics": "workspace:*",
     "@equinor/fusion-framework-module-app": "workspace:*",
+    "@equinor/fusion-framework-module-bookmark": "workspace:*",
     "@equinor/fusion-framework-module-context": "workspace:*",
     "@equinor/fusion-framework-module-navigation": "workspace:*",
     "@equinor/fusion-framework-module-service-discovery": "workspace:*",

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import type { LogEntry } from '../types';
+import type { LogRecord } from '../types';
 import { LogEntrySchema } from '../schema';
 import { v4 as uuid } from 'uuid';
 import { SideSheet } from '@equinor/fusion-react-side-sheet';
@@ -15,8 +15,8 @@ import { useTrackFeature } from '@equinor/fusion-framework-react-app/analytics';
  * table.
  */
 export const LogReader = () => {
-  const [activeLogEntry, setActiveLogEntry] = useState<LogEntry | null>(null);
-  const [entries, setEntries] = useState<LogEntry[]>([]);
+  const [activeLogRecord, setActiveLogRecord] = useState<LogRecord | null>(null);
+  const [records, setRecords] = useState<LogRecord[]>([]);
   const [error, setError] = useState<string | null>(null);
   const trackFeature = useTrackFeature();
 
@@ -36,14 +36,22 @@ export const LogReader = () => {
        */
       const response = await fetch('/@fusion-api/logs');
       const text = await response.text();
-      const lines = text
+      const allRecords = text
         .split('\n')
         .filter((line) => line.trim() !== '')
         .map((line) => {
           return LogEntrySchema.parse(JSON.parse(line));
-        });
+        })
+        .reverse()
+        .reduce((acc, records) => {
+          const logRecords = records.resourceLogs?.[0]?.scopeLogs?.[0]?.logRecords;
+          if (Array.isArray(logRecords)) {
+            acc.push(...logRecords);
+          }
+          return acc;
+        }, [] as LogRecord[]);
 
-      setEntries(lines.reverse());
+      setRecords(allRecords);
     } catch (err) {
       setError(`Failed to fetch logs. ${err}`);
     }
@@ -81,9 +89,6 @@ export const LogReader = () => {
       <table border={1}>
         <thead>
           <tr>
-            <th>M.version</th>
-            <th>SessionId</th>
-            <th>PortalId</th>
             <th>Event</th>
             <th>Value</th>
             <th>Attributes</th>
@@ -92,28 +97,9 @@ export const LogReader = () => {
           </tr>
         </thead>
         <tbody>
-          {entries.map((entry) => {
-            const resourceLog = entry.resourceLogs[0];
-            const scopeLog = resourceLog.scopeLogs[0];
-            const logRecord = scopeLog.logRecords[0];
-
+          {records.map((logRecord) => {
             return (
               <tr key={uuid()}>
-                <td>
-                  {resourceLog.resource.attributes
-                    .filter((attr) => attr.key === 'module.version')
-                    .map((attr) => attr.value.stringValue)}
-                </td>
-                <td>
-                  {resourceLog.resource.attributes
-                    .filter((attr) => attr.key === 'session.id')
-                    .map((attr) => attr.value.stringValue)}
-                </td>
-                <td>
-                  {resourceLog.resource.attributes
-                    .filter((attr) => attr.key === 'portal.id')
-                    .map((attr) => attr.value.stringValue)}
-                </td>
                 <td>{logRecord.eventName}</td>
                 <td>{JSON.stringify(logRecord.body)}</td>
                 <td>{JSON.stringify(logRecord.attributes)}</td>
@@ -127,8 +113,8 @@ export const LogReader = () => {
                 <td>
                   <Button
                     variant="ghost_icon"
-                    title="Show all data for this log entry"
-                    onClick={() => setActiveLogEntry(entry)}
+                    title="Show all data for this log record"
+                    onClick={() => setActiveLogRecord(logRecord)}
                   >
                     <Icon data={info_circle} />
                   </Button>
@@ -140,18 +126,16 @@ export const LogReader = () => {
       </table>
 
       <SideSheet
-        isOpen={!!activeLogEntry}
+        isOpen={!!activeLogRecord}
         minWidth={480}
         isDismissable={true}
         onClose={() => {
-          setActiveLogEntry(null);
+          setActiveLogRecord(null);
         }}
       >
-        <SideSheet.Title
-          title={`Info: ${activeLogEntry?.resourceLogs[0].scopeLogs[0].logRecords[0].timeUnixNano}`}
-        />
+        <SideSheet.Title title="Info" />
         <SideSheet.Content>
-          <pre>{JSON.stringify(activeLogEntry, null, 2)}</pre>
+          <pre>{JSON.stringify(activeLogRecord, null, 2)}</pre>
         </SideSheet.Content>
       </SideSheet>
     </>

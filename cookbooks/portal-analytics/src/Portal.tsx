@@ -55,6 +55,11 @@ export const Portal = () => {
         <li>
           <Link to={'apps/pro-org'}>Pro org</Link>
         </li>
+        <li>
+          <Link to={'apps/lci-analytics/94dd5f4d-17f1-4312-bf75-ad75f4d9572c'}>
+            LCI Analytics w/Castberg
+          </Link>
+        </li>
       </ul>
 
       <Styled.LogWrapper>

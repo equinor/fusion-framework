@@ -3,7 +3,7 @@ import type { AnalyticsEvent } from '../types.js';
 
 import {
   LoggerProvider,
-  SimpleLogRecordProcessor,
+  BatchLogRecordProcessor,
   type ReadableLogRecord,
 } from '@opentelemetry/sdk-logs';
 import type { OTLPExporterBase } from '@opentelemetry/otlp-exporter-base';
@@ -34,7 +34,7 @@ export class FusionAnalyticsAdapter<T extends AnalyticsEvent = AnalyticsEvent>
     this.#logExporter = args.logExporter;
 
     this.#loggerProvider = new LoggerProvider({
-      processors: [new SimpleLogRecordProcessor(this.#logExporter)],
+      processors: [new BatchLogRecordProcessor(this.#logExporter)],
       resource: resourceFromAttributes({
         'module.version': version,
         'session.id': uuid(),
