@@ -1,5 +1,14 @@
 # @equinor/fusion-framework-module-analytics
 
+## 0.3.0
+
+### Minor Changes
+
+- [#4103](https://github.com/equinor/fusion-framework/pull/4103) [`cb94ac2`](https://github.com/equinor/fusion-framework/commit/cb94ac24744304a5cf61fc6e19d4217c92fa8a5c) Thanks [@asbjornhaland](https://github.com/asbjornhaland)! - Change the log processor from SimpleLogProcessor to BatchLogProcessor.
+
+  This will accumulate all events happening within 5 seconds and send them as a
+  batch. This will improve performance.
+
 ## 0.2.3
 
 ### Patch Changes

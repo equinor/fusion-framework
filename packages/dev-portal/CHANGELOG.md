@@ -1,5 +1,20 @@
 # @equinor/fusion-framework-dev-portal
 
+## 3.0.0
+
+### Patch Changes
+
+- [#4095](https://github.com/equinor/fusion-framework/pull/4095) [`f09b26f`](https://github.com/equinor/fusion-framework/commit/f09b26f100a94bf3c841be9830525aa2c734b180) Thanks [@eikeland](https://github.com/eikeland)! - Update bundled @equinor/fusion-wc-person web component version.
+
+  This implements the person component changes in the dev-portal.
+
+- Updated dependencies [[`f09b26f`](https://github.com/equinor/fusion-framework/commit/f09b26f100a94bf3c841be9830525aa2c734b180), [`cb94ac2`](https://github.com/equinor/fusion-framework/commit/cb94ac24744304a5cf61fc6e19d4217c92fa8a5c)]:
+  - @equinor/fusion-framework-module-services@7.2.0
+  - @equinor/fusion-framework-react-components-people-provider@1.6.0
+  - @equinor/fusion-framework-module-analytics@0.3.0
+  - @equinor/fusion-framework@7.4.11
+  - @equinor/fusion-framework-app@10.4.7
+
 ## 2.0.1
 
 ### Patch Changes
