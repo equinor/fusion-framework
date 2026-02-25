@@ -1,5 +1,12 @@
 # Change Log
 
+## 10.4.7
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @equinor/fusion-framework@7.4.11
+
 ## 10.4.6
 
 ### Patch Changes

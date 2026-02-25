@@ -1,5 +1,25 @@
 # portal-analytics
 
+## 0.3.0
+
+### Minor Changes
+
+- [#4103](https://github.com/equinor/fusion-framework/pull/4103) [`cb94ac2`](https://github.com/equinor/fusion-framework/commit/cb94ac24744304a5cf61fc6e19d4217c92fa8a5c) Thanks [@asbjornhaland](https://github.com/asbjornhaland)! - Change log reader table to show all the log records for each entry.
+
+  Add link to LCI Analytics report for testing PBI reports.
+
+  Also enables the bookmark module for the portal-analytics cookbook - to make
+  PBI report load correctly.
+
+### Patch Changes
+
+- Updated dependencies [[`cb94ac2`](https://github.com/equinor/fusion-framework/commit/cb94ac24744304a5cf61fc6e19d4217c92fa8a5c)]:
+  - @equinor/fusion-framework-module-analytics@0.3.0
+  - @equinor/fusion-framework-cli@13.3.11
+  - @equinor/fusion-framework@7.4.11
+  - @equinor/fusion-framework-react-app@9.0.6
+  - @equinor/fusion-framework-app@10.4.7
+
 ## 0.2.21
 
 ### Patch Changes

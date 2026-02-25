@@ -1,5 +1,38 @@
 # Change Log
 
+## 7.2.0
+
+### Minor Changes
+
+- [#4095](https://github.com/equinor/fusion-framework/pull/4095) [`f09b26f`](https://github.com/equinor/fusion-framework/commit/f09b26f100a94bf3c841be9830525aa2c734b180) Thanks [@eikeland](https://github.com/eikeland)! - Add `suggest` and `resolve` methods to People API client for improved people picker functionality.
+
+  The People service now supports:
+
+  - **suggest**: Autocomplete/typeahead for people picker with optional system account filtering
+  - **resolve**: Batch resolution of person identifiers to full person objects
+
+  ```typescript
+  // Suggest people based on search query
+  const suggestions = await peopleClient.suggest("json$", {
+    method: "POST",
+    body: JSON.stringify({
+      queryString: "john",
+      types: ["Person", "SystemAccount"],
+    }),
+  });
+
+  // Resolve multiple person identifiers
+  const resolved = await peopleClient.resolve("json$", {
+    method: "POST",
+    body: JSON.stringify({
+      identifiers: ["user1@example.com", "user2@example.com"],
+    }),
+  });
+  ```
+
+  The React people-resolver component has been updated to leverage these new endpoints with built-in query caching.
+  A cookbook example is also available demonstrating the integration using the new PeoplePicker and PeopleViewer components in the app-react-people cookbook.
+
 ## 7.1.7
 
 ### Patch Changes
