@@ -50,3 +50,60 @@ export type ApiPerson<T extends keyof typeof ApiVersion | ApiVersion> = T extend
   : T extends keyof typeof ApiVersion
     ? ApiPersonMap[(typeof ApiVersion)[T]]
     : unknown;
+
+export type ApiSuggestionPerson = {
+  accountType?:
+    | 'Unknown'
+    | 'Employee'
+    | 'Consultant'
+    | 'Enterprise'
+    | 'EnterpriseExternal'
+    | 'External'
+    | 'Local'
+    | 'TemporaryEmployee'
+    | 'System'
+    | 'Admin'
+    | 'MeetingRoom';
+  jobTitle?: string;
+  department?: string;
+  fullDepartment?: string;
+  employeeNumber?: string;
+  managerAzureUniqueId?: string;
+  upn?: string;
+  mobilePhone?: string;
+};
+
+export type ApiSuggestionApplication = {
+  applicationId: string;
+  applicationName?: string;
+  servicePrincipalType: 'Application' | 'ManagedIdentity' | 'ServicePrincipal';
+};
+
+export type ApiSuggestionValue = {
+  azureUniqueId: string;
+  name?: string;
+  accountType: 'Person' | 'SystemAccount' | 'Unknown';
+  accountLabel: string;
+  person?: ApiSuggestionPerson;
+  application?: ApiSuggestionApplication;
+  avatarColor: string;
+  avatarUrl: string;
+  isExpired: boolean;
+};
+
+export type ApiSuggestions = {
+  totalCount: number;
+  count: number;
+  '@nextPage': string | null;
+  value: Array<ApiSuggestionValue>;
+};
+
+export type ApiResolveItem = {
+  success: boolean;
+  statusCode: number;
+  errorMessage: string | null;
+  identifier: string;
+  account: ApiSuggestionValue | null;
+};
+
+export type ApiResolved = Array<ApiResolveItem>;

@@ -5,6 +5,7 @@ import { CardPage } from './pages/CardPage';
 import { ListItemPage } from './pages/ListItemPage';
 import { HomePage } from './pages/HomePage';
 import { SelectorPage } from './pages/SelectorPage';
+import { PeopleConceptPage } from './pages/PeopleConceptPage';
 
 export const routes: RouteObject[] = [
   {
@@ -30,6 +31,10 @@ export const routes: RouteObject[] = [
       {
         path: 'selector/*',
         Component: SelectorPage,
+      },
+      {
+        path: 'people-concepts',
+        Component: PeopleConceptPage,
       },
     ],
   },

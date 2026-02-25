@@ -27,6 +27,18 @@ import {
   type ApiRequestArgs as PersonPhotoApiRequestArgs,
 } from './person-photo';
 
+import {
+  client as personSuggestClient,
+  type ApiResponse as PersonSuggestApiResponse,
+  type ApiResult as PersonSuggestResult,
+} from './suggest';
+
+import {
+  client as personResolveClient,
+  type ApiResponse as PersonResolveApiResponse,
+  type ApiResult as PersonResolveResult,
+} from './resolve';
+
 export class PeopleApiClient<
   // TMethod extends keyof ClientMethod<unknown> = keyof ClientMethod<unknown>,
   TClient extends IHttpClient = IHttpClient,
@@ -90,16 +102,34 @@ export class PeopleApiClient<
     const fn = personPhotoClient<TVersion, TMethod, TClient>(this._client, version, method);
     return fn<TResult>(args, init);
   }
-}
 
-// const oo = new PeopleApiClient(null).get('v4', 'fetch', { azureId: '123' });
-// const o2 = await new PeopleApiClient(null).get('v4', 'fetch', {
-//     azureId: '123',
-//     expand: ['roles'],
-// });
-// const o3 = await new PeopleApiClient(null).get('v4', 'fetch', {
-//     azureId: '123',
-//     expand: ['companies', 'roles'],
-// });
+  /**
+   * Suggest person service
+   */
+  public suggest<
+    TResult = PersonSuggestApiResponse,
+    TMethod extends keyof ClientMethod<TResult> = keyof ClientMethod<TResult>,
+  >(
+    method: TMethod,
+    init?: ClientRequestInit<TClient, TResult>,
+  ): PersonSuggestResult<TMethod, TResult> {
+    const fn = personSuggestClient<TMethod, TClient>(this._client, method);
+    return fn<TResult>(init);
+  }
+
+  /**
+   * Resolve person service
+   */
+  public resolve<
+    TResult = PersonResolveApiResponse,
+    TMethod extends keyof ClientMethod<TResult> = keyof ClientMethod<TResult>,
+  >(
+    method: TMethod,
+    init?: ClientRequestInit<TClient, TResult>,
+  ): PersonResolveResult<TMethod, TResult> {
+    const fn = personResolveClient<TMethod, TClient>(this._client, method);
+    return fn<TResult>(init);
+  }
+}
 
 export default PeopleApiClient;

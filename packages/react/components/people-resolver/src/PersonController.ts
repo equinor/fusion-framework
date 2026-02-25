@@ -5,6 +5,8 @@ import type { ApiPerson, PeopleApiClient } from '@equinor/fusion-framework-modul
 import { isApiPerson } from '@equinor/fusion-framework-module-services/people/utils';
 import type { ApiResponse as GetPersonApiResponse } from '@equinor/fusion-framework-module-services/people/get';
 import type { ApiResponse as QueryPersonApiResponse } from '@equinor/fusion-framework-module-services/people/query';
+import type { ApiResponse as SuggestPersonApiResponse } from '@equinor/fusion-framework-module-services/people/suggest';
+import type { ApiResponse as ResolvePersonApiResponse } from '@equinor/fusion-framework-module-services/people/resolve';
 import { Query } from '@equinor/fusion-query';
 import { queryValue } from '@equinor/fusion-query/operators';
 
@@ -45,6 +47,10 @@ export interface IPersonController {
   getPersonInfo(args: ResolverArgs<MatcherArgs>): Observable<ApiPerson<'v2'>>;
   getPhoto(args: ResolverArgs<MatcherArgs>): Observable<string>;
   search(args: ResolverArgs<{ search: string }>): Observable<PersonSearchResult>;
+  suggest(
+    args: ResolverArgs<{ search: string; systemAccounts: boolean }>,
+  ): Observable<SuggestPersonApiResponse>;
+  resolve(args: ResolverArgs<{ resolveIds: string[] }>): Observable<ResolvePersonApiResponse>;
 }
 
 export type PersonControllerOptions = {
@@ -55,6 +61,11 @@ export class PersonController implements IPersonController {
   #personQuery: Query<GetPersonResult, ResolverArgs<{ azureId: string }>>;
   #personSearchQuery: Query<PersonSearchResult, ResolverArgs<{ search: string }>>;
   #personPhotoQuery: Query<Blob, ResolverArgs<{ azureId: string }>>;
+  #personSuggestQuery: Query<
+    SuggestPersonApiResponse,
+    ResolverArgs<{ search: string; systemAccounts: boolean }>
+  >;
+  #personResolveQuery: Query<ResolvePersonApiResponse, ResolverArgs<{ resolveIds: string[] }>>;
 
   constructor(client: PeopleApiClient, options?: PersonControllerOptions) {
     const expire = 3 * 60 * 1000;
@@ -112,6 +123,60 @@ export class PersonController implements IPersonController {
         },
       },
     });
+    this.#personSuggestQuery = new Query({
+      expire,
+      queueOperator: 'merge',
+      key: ({ search, systemAccounts }) => `${search}-${systemAccounts}`,
+      client: {
+        fn: ({ search, systemAccounts }, signal) => {
+          const types = ['Person'];
+          if (systemAccounts) {
+            types.push('SystemAccount');
+          }
+          return client.suggest('json$', {
+            method: 'POST',
+            body: JSON.stringify({ queryString: search, types }),
+            signal,
+          });
+        },
+      },
+    });
+    this.#personResolveQuery = new Query({
+      expire,
+      queueOperator: 'merge',
+      key: ({ resolveIds }) => JSON.stringify([...resolveIds].sort()),
+      client: {
+        fn: ({ resolveIds }, signal) => {
+          return client.resolve('json$', {
+            method: 'POST',
+            body: JSON.stringify({ identifiers: resolveIds }),
+            signal,
+          });
+        },
+      },
+    });
+  }
+
+  /**
+   * Suggest persons matching the given search string.
+   * Search string can be a part of display name, mail, upn or the full azureId.
+   * If systemAccounts is true, it will also include system accounts in the result.
+   */
+  public suggest(
+    args: ResolverArgs<{ search: string; systemAccounts: boolean }>,
+  ): Observable<SuggestPersonApiResponse> {
+    const { search, systemAccounts, signal } = args;
+    return this.#personSuggestQuery.query({ search, systemAccounts }, { signal }).pipe(queryValue);
+  }
+
+  /**
+   * Resolve person details for given identifiers, which can be a mix of azureIds and upns.
+   */
+  public resolve(
+    args: ResolverArgs<{ resolveIds: string[] }>,
+  ): Observable<ResolvePersonApiResponse> {
+    const { resolveIds, signal } = args;
+    return this.#personResolveQuery.query({ resolveIds }, { signal }).pipe(queryValue);
   }
 
   public search(args: { search: string; signal?: AbortSignal }): Observable<PersonSearchResult> {
@@ -198,18 +263,12 @@ export class PersonController implements IPersonController {
         /** type cast and end stream */
         find(isApiPerson('v2')),
       ),
-    ).pipe(
-      /** */
-      find(isApiPerson('v2')),
-      filter(isApiPerson('v2')),
-      filter(isApiPerson('v2')),
-      takeUntil(abort$),
-    );
+    ).pipe(find(isApiPerson('v2')), filter(isApiPerson('v2')), takeUntil(abort$));
   }
 
   protected _getPersonPhotoByAzureId(azureId: string, signal?: AbortSignal): Observable<string> {
     return this.#personPhotoQuery.query({ azureId }, { signal }).pipe(
-      /** */
+      /** make subscription cold */
       take(1),
       map((result) => URL.createObjectURL(result.value)),
     );
@@ -217,7 +276,7 @@ export class PersonController implements IPersonController {
 
   protected _getPersonPhotoByUpn(upn: string, signal?: AbortSignal) {
     return this._getPersonInfoByUpn(upn, signal).pipe(
-      /** */
+      /** make subscription cold */
       take(1),
       switchMap((x) => this._getPersonPhotoByAzureId(x.azureUniqueId, signal)),
     );
