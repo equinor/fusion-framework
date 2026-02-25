@@ -485,8 +485,8 @@ importers:
         specifier: ^0.10.10
         version: 0.10.10(react@18.3.1)
       '@equinor/fusion-wc-people':
-        specifier: ^1.0.1
-        version: 1.0.1
+        specifier: ^1.0.2
+        version: 1.0.2
       '@remix-run/router':
         specifier: ^1.8.0
         version: 1.23.2
@@ -3100,8 +3100,8 @@ packages:
   '@equinor/fusion-wc-list@1.1.4':
     resolution: {integrity: sha512-IZyG+Jyv7vJzQyYJg8RsIlars0q8Ix2LT+Vh1E26p70rBdZZzmU2q1KATOyyEr8vWJSX9HlFMuYTg+N26Mxtdg==}
 
-  '@equinor/fusion-wc-people@1.0.1':
-    resolution: {integrity: sha512-03HtVG0UzApGZL95No+EyV+IQ9YSoMogsy1SMe3R4VwvNq4khwxMUZfdeMI8ND/yCGhg5QUm5IcrEH3NG52ASA==}
+  '@equinor/fusion-wc-people@1.0.2':
+    resolution: {integrity: sha512-W7BWaW+lkZBZaLR20sgjPLZ90WCOwA7c8Z52njYiMI7fUColWi0hWlsZ8l0TrMtJhYkG7giZp5MbwTx0Aq4ikw==}
 
   '@equinor/fusion-wc-person@3.2.4':
     resolution: {integrity: sha512-F+RqZVFuzeo5EKgs3QANmEnBiCqK7OEKmVrCjVx6dMDky5h1C5CT4ERFLTouiqreS4icRiABetIarR7x5tmRmg==}
@@ -11955,7 +11955,7 @@ snapshots:
       '@material/mwc-list': 0.27.0
       lit: 3.3.0
 
-  '@equinor/fusion-wc-people@1.0.1':
+  '@equinor/fusion-wc-people@1.0.2':
     dependencies:
       '@equinor/fusion-wc-button': 2.4.2
       '@equinor/fusion-wc-checkbox': 1.1.2
