@@ -75,9 +75,9 @@ export const PeopleConceptPage = () => {
       <div style={{ margin: '3em 0' }}>
         <h3>People Picker</h3>
         <p>
-          The PeoplePicker component resolves persons from the given resolveIds property, and adds/
-          removes them to selected people state by listening to "person-added" and "person-removed"
-          events.
+          The PeoplePicker component resolves persons from the given resolveIds property on mount,
+          and adds/ removes people on user interaction, updating the selected people state by
+          listening to "person-added" and "person-removed" events.
         </p>
         <fwc-people-picker
           ref={pickerRef}
