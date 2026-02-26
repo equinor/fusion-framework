@@ -1,5 +1,43 @@
 # portal-analytics
 
+## 0.4.0
+
+### Minor Changes
+
+- [#4119](https://github.com/equinor/fusion-framework/pull/4119) [`4e2ae5c`](https://github.com/equinor/fusion-framework/commit/4e2ae5cf55c4d7924d40f7cef0f0c563246132e8) Thanks [@asbjornhaland](https://github.com/asbjornhaland)! - `ContextSelectedCollector` now accepts an `AppModuleProvider` as a second
+  constructor argument and includes the currently active application key
+  (`appKey`) in the event attributes.
+
+  This allows analytics consumers to correlate context-change events with the app
+  that was active when the context switch occurred.
+
+  **Breaking change for direct users of `ContextSelectedCollector`:** the
+  constructor now requires a second argument:
+
+  ```typescript
+  // Before
+  new ContextSelectedCollector(contextProvider);
+  // After
+  new ContextSelectedCollector(contextProvider, appProvider);
+  ```
+
+  The emitted event attributes schema is extended accordingly:
+
+  ```typescript
+  // attributes shape
+  {
+    previous: ContextMetadata | null | undefined;
+    appKey?: string; // newly added — the appKey of the active app at the time of the context change
+  }
+  ```
+
+### Patch Changes
+
+- Updated dependencies [[`4e2ae5c`](https://github.com/equinor/fusion-framework/commit/4e2ae5cf55c4d7924d40f7cef0f0c563246132e8)]:
+  - @equinor/fusion-framework-module-analytics@1.0.0
+  - @equinor/fusion-framework-cli@13.3.12
+  - @equinor/fusion-framework-react-app@9.0.6
+
 ## 0.3.0
 
 ### Minor Changes
