@@ -1,5 +1,15 @@
 # @equinor/fusion-framework-dev-portal
 
+## 4.0.0
+
+### Patch Changes
+
+- [#4120](https://github.com/equinor/fusion-framework/pull/4120) [`e8438fd`](https://github.com/equinor/fusion-framework/commit/e8438fdfe3d89b0135ef914068a75307f83ddd08) Thanks [@eikeland](https://github.com/eikeland)! - Fix web component type compatibility by updating `@equinor/fusion-wc-person` to 3.3.1.
+
+- Updated dependencies [[`e8438fd`](https://github.com/equinor/fusion-framework/commit/e8438fdfe3d89b0135ef914068a75307f83ddd08), [`4e2ae5c`](https://github.com/equinor/fusion-framework/commit/4e2ae5cf55c4d7924d40f7cef0f0c563246132e8)]:
+  - @equinor/fusion-framework-react-components-people-provider@1.6.1
+  - @equinor/fusion-framework-module-analytics@1.0.0
+
 ## 3.0.0
 
 ### Patch Changes

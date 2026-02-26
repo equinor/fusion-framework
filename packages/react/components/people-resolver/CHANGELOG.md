@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-react-components-people-provider
 
+## 1.6.1
+
+### Patch Changes
+
+- [#4120](https://github.com/equinor/fusion-framework/pull/4120) [`e8438fd`](https://github.com/equinor/fusion-framework/commit/e8438fdfe3d89b0135ef914068a75307f83ddd08) Thanks [@eikeland](https://github.com/eikeland)! - Fix web component type compatibility by updating `@equinor/fusion-wc-person` to 3.3.1.
+
 ## 1.6.0
 
 ### Minor Changes
