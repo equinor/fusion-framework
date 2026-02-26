@@ -25,7 +25,8 @@ const configure = (configurator: IModulesConfigurator<any, any>) => {
 
     builder.setCollector('context-selected', async (args) => {
       const contextProvider = await args.requireInstance('context');
-      return new ContextSelectedCollector(contextProvider);
+      const appProvider = await args.requireInstance('app');
+      return new ContextSelectedCollector(contextProvider, appProvider);
     });
   });
 }
@@ -180,7 +181,8 @@ const configure = (configurator: IModulesConfigurator<any, any>) => {
   enableAnalytics(configurator, (builder) => {
     builder.setCollector('context-selected', async (args) => {
       const contextProvider = await args.requireInstance('context');
-      return new ContextSelectedCollector(contextProvider);
+      const appProvider = await args.requireInstance('app');
+      return new ContextSelectedCollector(contextProvider, appProvider);
     });
   });
 }
@@ -210,7 +212,8 @@ const configure = (configurator: IModulesConfigurator<any, any>) => {
   enableAnalytics(configurator, (builder) => {
     builder.setCollector('context-selected', async (args) => {
       const contextProvider = await args.requireInstance('context');
-      return new ContextSelectedCollector(contextProvider);
+      const appProvider = await args.requireInstance('app');
+      return new ContextSelectedCollector(contextProvider, appProvider);
     });
   });
 }
