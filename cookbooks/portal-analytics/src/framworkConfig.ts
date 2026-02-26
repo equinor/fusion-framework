@@ -83,7 +83,8 @@ export const frameworkConfig: PortalModuleInitiator = (configurator) => {
 
     builder.setCollector('context-selected', async (args) => {
       const contextProvider = await args.requireInstance('context');
-      return new ContextSelectedCollector(contextProvider);
+      const appProvider = await args.requireInstance('app');
+      return new ContextSelectedCollector(contextProvider, appProvider);
     });
 
     builder.setCollector('app-selected', async (args) => {
