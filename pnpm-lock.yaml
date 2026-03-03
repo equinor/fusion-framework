@@ -1665,7 +1665,7 @@ importers:
         version: 5.0.6
       '@azure/msal-node-extensions':
         specifier: ^5.0.2
-        version: 5.0.5
+        version: 5.0.6
       '@equinor/fusion-framework-module':
         specifier: workspace:^
         version: link:../module
@@ -2928,16 +2928,12 @@ packages:
     resolution: {integrity: sha512-ZJ/UR7lyqIntURrIJCyvScwJFanM9QhJYcJCheB21jZofGKpP9QxWgvADANo7UkresHKzV+6YwoeZYP7P7HvUg==}
     engines: {node: '>=0.8.0'}
 
-  '@azure/msal-common@16.1.0':
-    resolution: {integrity: sha512-uiX0ChrRFbreXlPlDR8LwHKmZpJudDAr124iNWJKJ+b7MJUWXmvVU3idSi/c5lk1FwLVZeMxhQir3BGdV09I+g==}
-    engines: {node: '>=0.8.0'}
-
   '@azure/msal-common@16.2.0':
     resolution: {integrity: sha512-ge0nGzTLmEE5lg7tSCbTBrYqMGkpFQeQEtqfcKPuGJn/FPFf8Xz51uDfZsm5xpstNZGMYPhHvnYbL8OeNp/aLw==}
     engines: {node: '>=0.8.0'}
 
-  '@azure/msal-node-extensions@5.0.5':
-    resolution: {integrity: sha512-rIXgnb+EvJy3y9mCVI1qD7NY6Au2hz/kCDbXbUQpUqZYdcRIKbNt4HX6BmzKGewC8B4d+lkqHYaaims+jS17Pg==}
+  '@azure/msal-node-extensions@5.0.6':
+    resolution: {integrity: sha512-XIWWphFZyMXUoMkbUkGyCH9T+c5riI5MuWyZyWx3bie9wVNj1+SgEi7PXY1kJzSOY6iJv82GIafeLWEnZpwiDA==}
     engines: {node: '>=20'}
 
   '@azure/msal-node-runtime@0.20.1':
@@ -17433,9 +17429,6 @@ packages:
   pump@2.0.1:
     resolution: {integrity: sha512-ruPMNRkN3MHP1cWJc9OWr+T/xDP0jhXYCLfJcBuX54hhfIBnaQmAUMfDcG4DM5UMWByBbJY69QSphm3jtDKIkA==}
 
-  pump@3.0.3:
-    resolution: {integrity: sha512-todwxLMY7/heScKmntwQG8CXVkWUOdYxIvY2s0VWAAMh/nd8SoYiRaKjlr7+iCs984f2P8zvrfWcDDYVb73NfA==}
-
   pump@3.0.4:
     resolution: {integrity: sha512-VS7sjc6KR7e1ukRFhQSY5LM2uBWAUPiOPa/A3mkKmiMwSmRFUITt0xuj+/lesgnCv+dPIEYlkzrcyXgquIHMcA==}
 
@@ -21495,13 +21488,11 @@ snapshots:
 
   '@azure/msal-common@16.0.2': {}
 
-  '@azure/msal-common@16.1.0': {}
-
   '@azure/msal-common@16.2.0': {}
 
-  '@azure/msal-node-extensions@5.0.5':
+  '@azure/msal-node-extensions@5.0.6':
     dependencies:
-      '@azure/msal-common': 16.1.0
+      '@azure/msal-common': 16.2.0
       '@azure/msal-node-runtime': 0.20.1
       keytar: 7.9.0
 
@@ -40279,7 +40270,7 @@ snapshots:
       mkdirp-classic: 0.5.3
       napi-build-utils: 2.0.0
       node-abi: 3.87.0
-      pump: 3.0.3
+      pump: 3.0.4
       rc: 1.2.8
       simple-get: 4.0.1
       tar-fs: 2.1.4
@@ -40526,16 +40517,10 @@ snapshots:
       once: 1.4.0
     optional: true
 
-  pump@3.0.3:
-    dependencies:
-      end-of-stream: 1.4.5
-      once: 1.4.0
-
   pump@3.0.4:
     dependencies:
       end-of-stream: 1.4.5
       once: 1.4.0
-    optional: true
 
   pumpify@1.5.1:
     dependencies:
@@ -42486,7 +42471,7 @@ snapshots:
     dependencies:
       chownr: 1.1.4
       mkdirp-classic: 0.5.3
-      pump: 3.0.3
+      pump: 3.0.4
       tar-stream: 2.2.0
 
   tar-fs@3.1.1(bare-abort-controller@1.0.0)(bare-buffer@3.4.4)(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0)(bufferutil@4.1.0)(utf-8-validate@6.0.6))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0)):
