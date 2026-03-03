@@ -95,10 +95,13 @@ export class ServiceDiscoveryConfigurator extends BaseConfigBuilder<ServiceDisco
               return input;
             }
 
+            // Get a reference to sessionStorage after confirming it's available
+            const storage = globalThis.sessionStorage;
+
             // Check if there are any session overrides in session storage.
             try {
               const sessionOverrides: Record<string, { url: string; scopes: string[] }> =
-                JSON.parse(sessionStorage.getItem('overriddenServiceDiscoveryUrls') || '{}');
+                JSON.parse(storage.getItem('overriddenServiceDiscoveryUrls') || '{}');
 
               for (const [key, { url, scopes }] of Object.entries(sessionOverrides)) {
                 const service = input.find((service) => service.key === key);
