@@ -8,16 +8,18 @@ Enable automatic sign-in using a backend-issued SPA authorization code without r
 
 **New API:**
 
-- `MsalConfigurator.setAuthCode(authCode: string)` - Configure backend auth code for token exchange
+- `MsalConfigurator.setAuthCode(authCode?: string)` - Configure backend auth code for token exchange, or reset with `undefined`
 - `IMsalClient.acquireTokenByCode(request)` - Exchange auth code for tokens (inherited from PublicClientApplication)
 
 **How it works:**
 
 1. Backend authenticates user and generates short-lived SPA auth code
-2. Frontend calls `builder.setAuthCode(authCode)` during MSAL configuration
+2. Frontend calls `builder.setAuthCode(authCode)` during MSAL configuration (or `setAuthCode(undefined)` to clear)
 3. During `initialize()`, auth code is exchanged for tokens before `requiresAuth` check
 4. Tokens are cached by MSAL - user is automatically signed in
 5. Falls back to standard MSAL flows if exchange fails
+
+`setAuthCode` now normalizes values so empty or whitespace-only input is treated as absent auth code.
 
 **Example:**
 
