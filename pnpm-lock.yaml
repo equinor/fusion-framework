@@ -1086,7 +1086,7 @@ importers:
         version: link:../../modules/ai
       '@modelcontextprotocol/sdk':
         specifier: ^1.0.4
-        version: 1.26.0(@cfworker/json-schema@4.1.1)(zod@4.3.6)
+        version: 1.27.1(@cfworker/json-schema@4.1.1)(zod@4.3.6)
       commander:
         specifier: ^14.0.1
         version: 14.0.3
@@ -1337,7 +1337,7 @@ importers:
     dependencies:
       '@langchain/community':
         specifier: ^1.1.8
-        version: 1.1.22(33334f5feab34ffe37daf3a914bc572a)
+        version: 1.1.22(dbebc0242c009d3785fb7837d11687bb)
       '@langchain/core':
         specifier: ^1.0.1
         version: 1.1.30(@opentelemetry/api@1.9.0)(@opentelemetry/exporter-trace-otlp-proto@0.212.0(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-base@2.5.1(@opentelemetry/api@1.9.0))(openai@6.25.0(ws@8.19.0(bufferutil@4.1.0)(utf-8-validate@6.0.6))(zod@4.3.6))
@@ -5197,8 +5197,8 @@ packages:
   '@hapi/topo@5.1.0':
     resolution: {integrity: sha512-foQZKJig7Ob0BMAYBfcJk8d77QtOe7Wo4ox7ff1lQYoNNAb6jwcY1ncdoy2e9wQZzvNy7ODZCYJkK8kzmcAnAg==}
 
-  '@hono/node-server@1.19.9':
-    resolution: {integrity: sha512-vHL6w3ecZsky+8P5MD+eFfaGTyCeOHUIFYMGpQGbrBTSmNNoxv0if69rEZ5giu36weC5saFuznL411gRX7bJDw==}
+  '@hono/node-server@1.19.10':
+    resolution: {integrity: sha512-hZ7nOssGqRgyV3FVVQdfi+U4q02uB23bpnYpdvNXkYTRRyWx84b7yf1ans+dnJ/7h41sGL3CeQTfO+ZGxuO+Iw==}
     engines: {node: '>=18.14.1'}
     peerDependencies:
       hono: ^4
@@ -7017,8 +7017,8 @@ packages:
   '@mlc-ai/web-llm@0.2.81':
     resolution: {integrity: sha512-V2zdaHeCfv7KjnN6WOrt85v6tfefDVyTvWXZ5IN7OXu21Ee1hDg/jQu3ANWN/wjy2qdhVD16cAhoNpnxqyf+Gg==}
 
-  '@modelcontextprotocol/sdk@1.26.0':
-    resolution: {integrity: sha512-Y5RmPncpiDtTXDbLKswIJzTqu2hyBKxTNsgKqKclDbhIgg1wgtf1fRuvxgTnRfcnxtvvgbIEcqUOzZrJ6iSReg==}
+  '@modelcontextprotocol/sdk@1.27.1':
+    resolution: {integrity: sha512-sr6GbP+4edBwFndLbM60gf07z0FQ79gaExpnsjMGePXqFcSSb7t6iscpjk9DhFhwd+mTEQrzNafGP8/iGGFYaA==}
     engines: {node: '>=18'}
     peerDependencies:
       '@cfworker/json-schema': ^4.1.1
@@ -14102,8 +14102,8 @@ packages:
   hoist-non-react-statics@3.3.2:
     resolution: {integrity: sha512-/gGivxi8JPKWNm/W0jSmzcMPpfpPLc3dY/6GxhX2hQ9iGj3aDfklV4ET7NjKpSinLpJ5vafa9iiGIEZg10SfBw==}
 
-  hono@4.11.7:
-    resolution: {integrity: sha512-l7qMiNee7t82bH3SeyUCt9UF15EVmaBvsppY2zQtrbIhl/yzBTny+YUxsVjSjQ6gaqaeVtZmGocom8TzBlA4Yw==}
+  hono@4.12.5:
+    resolution: {integrity: sha512-3qq+FUBtlTHhtYxbxheZgY8NIFnkkC/MR8u5TTsr7YZ3wixryQ3cCwn3iZbg8p8B88iDBBAYSfZDS75t8MN7Vg==}
     engines: {node: '>=16.9.0'}
 
   hookable@5.5.3:
@@ -17480,10 +17480,6 @@ packages:
 
   qs@6.11.2:
     resolution: {integrity: sha512-tDNIz22aBzCDxLtVH++VnTfzxlfeK5CbqohpSqpJgj1Wg/cQbStNAz3NuqCs5vV+pjBsK4x4pN9HlVh7rcYRiA==}
-    engines: {node: '>=0.6'}
-
-  qs@6.14.1:
-    resolution: {integrity: sha512-4EK3+xJl8Ts67nLYNwqw/dsFVnCf+qR7RgXSK9jEEm9unao3njwMDdmsdvoKBKHzxd7tCYz5e5M+SnMjdtXGQQ==}
     engines: {node: '>=0.6'}
 
   qs@6.14.2:
@@ -24300,14 +24296,14 @@ snapshots:
       - supports-color
     optional: true
 
-  '@google/genai@1.43.0(@modelcontextprotocol/sdk@1.26.0(@cfworker/json-schema@4.1.1)(zod@4.3.6))(bufferutil@4.1.0)(utf-8-validate@6.0.6)':
+  '@google/genai@1.43.0(@modelcontextprotocol/sdk@1.27.1(@cfworker/json-schema@4.1.1)(zod@4.3.6))(bufferutil@4.1.0)(utf-8-validate@6.0.6)':
     dependencies:
       google-auth-library: 10.6.1
       p-retry: 4.6.2
       protobufjs: 7.5.4
       ws: 8.19.0(bufferutil@4.1.0)(utf-8-validate@6.0.6)
     optionalDependencies:
-      '@modelcontextprotocol/sdk': 1.26.0(@cfworker/json-schema@4.1.1)(zod@4.3.6)
+      '@modelcontextprotocol/sdk': 1.27.1(@cfworker/json-schema@4.1.1)(zod@4.3.6)
     transitivePeerDependencies:
       - bufferutil
       - supports-color
@@ -24358,9 +24354,9 @@ snapshots:
       '@hapi/hoek': 9.3.0
     optional: true
 
-  '@hono/node-server@1.19.9(hono@4.11.7)':
+  '@hono/node-server@1.19.10(hono@4.12.5)':
     dependencies:
-      hono: 4.11.7
+      hono: 4.12.5
 
   '@httptoolkit/websocket-stream@6.0.1(bufferutil@4.1.0)(utf-8-validate@6.0.6)':
     dependencies:
@@ -25176,7 +25172,7 @@ snapshots:
       - openai
       - ws
 
-  '@langchain/community@1.1.22(33334f5feab34ffe37daf3a914bc572a)':
+  '@langchain/community@1.1.22(dbebc0242c009d3785fb7837d11687bb)':
     dependencies:
       '@browserbasehq/stagehand': 1.14.0(@playwright/test@1.57.0)(bufferutil@4.1.0)(deepmerge@4.3.1)(dotenv@17.3.1)(encoding@0.1.13)(openai@6.25.0(ws@8.19.0(bufferutil@4.1.0)(utf-8-validate@6.0.6))(zod@4.3.6))(utf-8-validate@6.0.6)(zod@4.3.6)
       '@ibm-cloud/watsonx-ai': 1.7.6
@@ -25255,7 +25251,7 @@ snapshots:
       chromadb: 3.3.1
       closevector-common: 0.1.3
       closevector-node: 0.1.6
-      closevector-web: 0.1.6(bare-abort-controller@1.0.0)(bare-buffer@3.4.4)(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0)(bufferutil@4.1.0)(utf-8-validate@6.0.6))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0))
+      closevector-web: 0.1.6(bare-abort-controller@1.0.0)(bare-buffer@3.4.4)(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0))
       convex: 1.32.0(@auth0/auth0-react@2.15.0(react-dom@18.3.1(react@19.0.0))(react@19.0.0))(@clerk/clerk-react@5.61.1(react-dom@18.3.1(react@19.0.0))(react@19.0.0))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6)
       couchbase: 4.6.1
       crypto-js: 4.2.0
@@ -25280,7 +25276,7 @@ snapshots:
       lunary: 0.7.15(openai@6.25.0(ws@8.19.0(bufferutil@4.1.0)(utf-8-validate@6.0.6))(zod@4.3.6))(react@19.0.0)
       mammoth: 1.11.0
       mariadb: 3.5.1(@types/geojson@7946.0.16)(@types/node@25.3.3)
-      mem0ai: 2.2.3(9feb10a3939bace6bcc815d8ef4fc8ff)
+      mem0ai: 2.2.3(837859e66c346b648a4ddaa36a3c1aaf)
       mongodb: 6.21.0(@aws-sdk/credential-providers@3.998.0(aws-crt@1.29.0(bufferutil@4.1.0)(utf-8-validate@6.0.6)))(@mongodb-js/zstd@2.0.1)(kerberos@2.2.2)(mongodb-client-encryption@6.5.0)(snappy@7.3.3)(socks@2.8.7)
       mysql2: 3.18.1(@types/node@25.3.3)
       neo4j-driver: 6.0.1
@@ -25293,7 +25289,7 @@ snapshots:
       pickleparser: 0.2.1
       playwright: 1.57.0
       portkey-ai: 3.0.2(bufferutil@4.1.0)(utf-8-validate@6.0.6)(zod@4.3.6)
-      puppeteer: 24.37.5(bare-abort-controller@1.0.0)(bare-buffer@3.4.4)(bufferutil@4.1.0)(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0)(bufferutil@4.1.0)(utf-8-validate@6.0.6))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0))(typescript@5.9.3)(utf-8-validate@6.0.6)
+      puppeteer: 24.37.5(bare-abort-controller@1.0.0)(bare-buffer@3.4.4)(bufferutil@4.1.0)(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0))(typescript@5.9.3)(utf-8-validate@6.0.6)
       pyodide: 0.26.4(bufferutil@4.1.0)(utf-8-validate@6.0.6)
       redis: 4.7.1
       replicate: 1.4.0
@@ -26289,11 +26285,11 @@ snapshots:
       loglevel: 1.9.2
     optional: true
 
-  '@modelcontextprotocol/sdk@1.26.0(@cfworker/json-schema@4.1.1)(zod@4.3.6)':
+  '@modelcontextprotocol/sdk@1.27.1(@cfworker/json-schema@4.1.1)(zod@4.3.6)':
     dependencies:
-      '@hono/node-server': 1.19.9(hono@4.11.7)
-      ajv: 8.17.1
-      ajv-formats: 3.0.1(ajv@8.17.1)
+      '@hono/node-server': 1.19.10(hono@4.12.5)
+      ajv: 8.18.0
+      ajv-formats: 3.0.1(ajv@8.18.0)
       content-type: 1.0.5
       cors: 2.8.6
       cross-spawn: 7.0.6
@@ -26301,7 +26297,7 @@ snapshots:
       eventsource-parser: 3.0.6
       express: 5.2.1
       express-rate-limit: 8.2.1(express@5.2.1)
-      hono: 4.11.7
+      hono: 4.12.5
       jose: 6.1.3
       json-schema-typed: 8.0.2
       pkce-challenge: 5.0.1
@@ -27680,14 +27676,14 @@ snapshots:
 
   '@protobufjs/utf8@1.1.0': {}
 
-  '@puppeteer/browsers@2.13.0(bare-abort-controller@1.0.0)(bare-buffer@3.4.4)(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0)(bufferutil@4.1.0)(utf-8-validate@6.0.6))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0))':
+  '@puppeteer/browsers@2.13.0(bare-abort-controller@1.0.0)(bare-buffer@3.4.4)(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0))':
     dependencies:
       debug: 4.4.3(supports-color@8.1.1)
       extract-zip: 2.0.1
       progress: 2.0.3
       proxy-agent: 6.5.0
       semver: 7.7.4
-      tar-fs: 3.1.1(bare-abort-controller@1.0.0)(bare-buffer@3.4.4)(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0)(bufferutil@4.1.0)(utf-8-validate@6.0.6))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0))
+      tar-fs: 3.1.1(bare-abort-controller@1.0.0)(bare-buffer@3.4.4)(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0))
       yargs: 17.7.2
     transitivePeerDependencies:
       - bare-abort-controller
@@ -28517,7 +28513,7 @@ snapshots:
       yargs: 17.7.2
     optional: true
 
-  '@react-native/community-cli-plugin@0.84.0(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0)(bufferutil@4.1.0)(utf-8-validate@6.0.6))(bufferutil@4.1.0)(utf-8-validate@6.0.6)':
+  '@react-native/community-cli-plugin@0.84.0(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0))(bufferutil@4.1.0)(utf-8-validate@6.0.6)':
     dependencies:
       '@react-native/dev-middleware': 0.84.0(bufferutil@4.1.0)(utf-8-validate@6.0.6)
       debug: 4.4.3(supports-color@8.1.1)
@@ -28528,7 +28524,7 @@ snapshots:
       semver: 7.7.4
     optionalDependencies:
       '@react-native-community/cli': 20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)
-      '@react-native/metro-config': 0.84.0(@babel/core@7.29.0)(bufferutil@4.1.0)(utf-8-validate@6.0.6)
+      '@react-native/metro-config': 0.84.0(@babel/core@7.29.0)
     transitivePeerDependencies:
       - bufferutil
       - supports-color
@@ -28583,7 +28579,7 @@ snapshots:
       - supports-color
     optional: true
 
-  '@react-native/metro-config@0.84.0(@babel/core@7.29.0)(bufferutil@4.1.0)(utf-8-validate@6.0.6)':
+  '@react-native/metro-config@0.84.0(@babel/core@7.29.0)':
     dependencies:
       '@react-native/js-polyfills': 0.84.0
       '@react-native/metro-babel-transformer': 0.84.0(@babel/core@7.29.0)
@@ -28591,20 +28587,18 @@ snapshots:
       metro-runtime: 0.83.5
     transitivePeerDependencies:
       - '@babel/core'
-      - bufferutil
       - supports-color
-      - utf-8-validate
     optional: true
 
   '@react-native/normalize-colors@0.84.0':
     optional: true
 
-  '@react-native/virtualized-lists@0.84.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0)(bufferutil@4.1.0)(utf-8-validate@6.0.6))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0)':
+  '@react-native/virtualized-lists@0.84.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0)':
     dependencies:
       invariant: 2.2.4
       nullthrows: 1.1.1
       react: 19.0.0
-      react-native: 0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0)(bufferutil@4.1.0)(utf-8-validate@6.0.6))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6)
+      react-native: 0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6)
     optional: true
 
   '@react-stately/calendar@3.9.1(react@18.3.1)':
@@ -29910,7 +29904,7 @@ snapshots:
       '@storybook/theming': 6.5.16(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       core-js: 3.47.0
       memoizerific: 1.11.3
-      qs: 6.14.1
+      qs: 6.15.0
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
       regenerator-runtime: 0.13.11
@@ -29929,7 +29923,7 @@ snapshots:
       '@storybook/client-logger': 6.5.16
       core-js: 3.47.0
       memoizerific: 1.11.3
-      qs: 6.14.1
+      qs: 6.15.0
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
       regenerator-runtime: 0.13.11
@@ -30810,7 +30804,7 @@ snapshots:
       vite: 7.1.12(@types/node@25.3.3)(jiti@2.6.1)(less@4.5.1)(lightningcss@1.31.1)(sass-embedded@1.97.2)(sass@1.97.2)(stylus@0.64.0)(sugarss@5.0.1(postcss@8.5.6))(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2)
       vue: 3.5.29(typescript@5.9.3)
 
-  '@vitest/browser@3.2.4(1a5412b87f3b81d31f610b12f96a0429)':
+  '@vitest/browser@3.2.4(79332cc5ccdc215ffc664477c59b71bc)':
     dependencies:
       '@testing-library/dom': 10.4.1
       '@testing-library/user-event': 14.6.1(@testing-library/dom@10.4.1)
@@ -30823,7 +30817,7 @@ snapshots:
       ws: 8.19.0(bufferutil@4.1.0)(utf-8-validate@6.0.6)
     optionalDependencies:
       playwright: 1.57.0
-      webdriverio: 9.24.0(bare-abort-controller@1.0.0)(bare-buffer@3.4.4)(bufferutil@4.1.0)(puppeteer-core@24.37.5(bare-abort-controller@1.0.0)(bare-buffer@3.4.4)(bufferutil@4.1.0)(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0)(bufferutil@4.1.0)(utf-8-validate@6.0.6))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0))(utf-8-validate@6.0.6))(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0)(bufferutil@4.1.0)(utf-8-validate@6.0.6))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0))(utf-8-validate@6.0.6)
+      webdriverio: 9.24.0(bare-abort-controller@1.0.0)(bare-buffer@3.4.4)(bufferutil@4.1.0)(puppeteer-core@24.37.5(bare-abort-controller@1.0.0)(bare-buffer@3.4.4)(bufferutil@4.1.0)(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0))(utf-8-validate@6.0.6))(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0))(utf-8-validate@6.0.6)
     transitivePeerDependencies:
       - bufferutil
       - msw
@@ -30831,7 +30825,7 @@ snapshots:
       - vite
     optional: true
 
-  '@vitest/browser@3.2.4(6c1f4c271f18075cf36cf436bf55c25f)':
+  '@vitest/browser@3.2.4(88771061cb8c2b9f8e3a72f487c3a3aa)':
     dependencies:
       '@testing-library/dom': 10.4.1
       '@testing-library/user-event': 14.6.1(@testing-library/dom@10.4.1)
@@ -30844,7 +30838,7 @@ snapshots:
       ws: 8.19.0(bufferutil@4.1.0)(utf-8-validate@6.0.6)
     optionalDependencies:
       playwright: 1.57.0
-      webdriverio: 9.24.0(bare-abort-controller@1.0.0)(bare-buffer@3.4.4)(bufferutil@4.1.0)(puppeteer-core@24.37.5(bare-abort-controller@1.0.0)(bare-buffer@3.4.4)(bufferutil@4.1.0)(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0)(bufferutil@4.1.0)(utf-8-validate@6.0.6))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0))(utf-8-validate@6.0.6))(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0)(bufferutil@4.1.0)(utf-8-validate@6.0.6))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0))(utf-8-validate@6.0.6)
+      webdriverio: 9.24.0(bare-abort-controller@1.0.0)(bare-buffer@3.4.4)(bufferutil@4.1.0)(puppeteer-core@24.37.5(bare-abort-controller@1.0.0)(bare-buffer@3.4.4)(bufferutil@4.1.0)(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0))(utf-8-validate@6.0.6))(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0))(utf-8-validate@6.0.6)
     transitivePeerDependencies:
       - bufferutil
       - msw
@@ -30869,7 +30863,7 @@ snapshots:
       tinyrainbow: 2.0.0
       vitest: 3.2.4(@edge-runtime/vm@5.0.0)(@types/debug@4.1.12)(@types/node@25.3.3)(@vitest/browser@3.2.4)(@vitest/ui@3.2.4)(happy-dom@20.3.4(bufferutil@4.1.0)(utf-8-validate@6.0.6))(jiti@2.6.1)(jsdom@28.1.0(@noble/hashes@2.0.1)(canvas@3.2.1))(less@4.5.1)(lightningcss@1.31.1)(msw@2.12.10(@types/node@25.3.3)(typescript@5.9.3))(sass-embedded@1.97.2)(sass@1.97.2)(stylus@0.64.0)(sugarss@5.0.1(postcss@8.5.8))(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2)
     optionalDependencies:
-      '@vitest/browser': 3.2.4(1a5412b87f3b81d31f610b12f96a0429)
+      '@vitest/browser': 3.2.4(79332cc5ccdc215ffc664477c59b71bc)
     transitivePeerDependencies:
       - supports-color
 
@@ -31646,11 +31640,11 @@ snapshots:
       - typescript
     optional: true
 
-  '@wdio/config@9.24.0(bare-abort-controller@1.0.0)(bare-buffer@3.4.4)(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0)(bufferutil@4.1.0)(utf-8-validate@6.0.6))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0))':
+  '@wdio/config@9.24.0(bare-abort-controller@1.0.0)(bare-buffer@3.4.4)(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0))':
     dependencies:
       '@wdio/logger': 9.18.0
       '@wdio/types': 9.24.0
-      '@wdio/utils': 9.24.0(bare-abort-controller@1.0.0)(bare-buffer@3.4.4)(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0)(bufferutil@4.1.0)(utf-8-validate@6.0.6))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0))
+      '@wdio/utils': 9.24.0(bare-abort-controller@1.0.0)(bare-buffer@3.4.4)(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0))
       deepmerge-ts: 7.1.5
       glob: 10.5.0
       import-meta-resolve: 4.2.0
@@ -31684,9 +31678,9 @@ snapshots:
       '@types/node': 20.19.35
     optional: true
 
-  '@wdio/utils@9.24.0(bare-abort-controller@1.0.0)(bare-buffer@3.4.4)(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0)(bufferutil@4.1.0)(utf-8-validate@6.0.6))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0))':
+  '@wdio/utils@9.24.0(bare-abort-controller@1.0.0)(bare-buffer@3.4.4)(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0))':
     dependencies:
-      '@puppeteer/browsers': 2.13.0(bare-abort-controller@1.0.0)(bare-buffer@3.4.4)(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0)(bufferutil@4.1.0)(utf-8-validate@6.0.6))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0))
+      '@puppeteer/browsers': 2.13.0(bare-abort-controller@1.0.0)(bare-buffer@3.4.4)(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0))
       '@wdio/logger': 9.18.0
       '@wdio/types': 9.24.0
       decamelize: 6.0.1
@@ -31947,9 +31941,9 @@ snapshots:
       ajv: 8.18.0
     optional: true
 
-  ajv-formats@3.0.1(ajv@8.17.1):
+  ajv-formats@3.0.1(ajv@8.18.0):
     optionalDependencies:
-      ajv: 8.17.1
+      ajv: 8.18.0
 
   ajv-keywords@5.1.0(ajv@8.18.0):
     dependencies:
@@ -31970,7 +31964,6 @@ snapshots:
       fast-uri: 3.1.0
       json-schema-traverse: 1.0.0
       require-from-string: 2.0.2
-    optional: true
 
   already@2.2.1:
     optional: true
@@ -32102,14 +32095,14 @@ snapshots:
       readable-stream: 4.7.0
     optional: true
 
-  archiver@7.0.1(bare-abort-controller@1.0.0)(bare-buffer@3.4.4)(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0)(bufferutil@4.1.0)(utf-8-validate@6.0.6))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0)):
+  archiver@7.0.1(bare-abort-controller@1.0.0)(bare-buffer@3.4.4)(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0)):
     dependencies:
       archiver-utils: 5.0.2
       async: 3.2.6
       buffer-crc32: 1.0.0
       readable-stream: 4.7.0
       readdir-glob: 1.1.3
-      tar-stream: 3.1.8(bare-abort-controller@1.0.0)(bare-buffer@3.4.4)(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0)(bufferutil@4.1.0)(utf-8-validate@6.0.6))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0))
+      tar-stream: 3.1.8(bare-abort-controller@1.0.0)(bare-buffer@3.4.4)(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0))
       zip-stream: 6.0.1
     transitivePeerDependencies:
       - bare-abort-controller
@@ -32363,9 +32356,9 @@ snapshots:
       - webpack-cli
     optional: true
 
-  b4a@1.8.0(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0)(bufferutil@4.1.0)(utf-8-validate@6.0.6))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0)):
+  b4a@1.8.0(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0)):
     optionalDependencies:
-      react-native-b4a: 0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0)(bufferutil@4.1.0)(utf-8-validate@6.0.6))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0)
+      react-native-b4a: 0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0)
     optional: true
 
   babel-jest@29.7.0(@babel/core@7.29.0):
@@ -32512,11 +32505,11 @@ snapshots:
       bare-abort-controller: 1.0.0
     optional: true
 
-  bare-fs@4.5.5(bare-abort-controller@1.0.0)(bare-buffer@3.4.4)(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0)(bufferutil@4.1.0)(utf-8-validate@6.0.6))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0)):
+  bare-fs@4.5.5(bare-abort-controller@1.0.0)(bare-buffer@3.4.4)(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0)):
     dependencies:
       bare-events: 2.8.2(bare-abort-controller@1.0.0)
       bare-path: 3.0.0
-      bare-stream: 2.8.0(bare-abort-controller@1.0.0)(bare-buffer@3.4.4)(bare-events@2.8.2(bare-abort-controller@1.0.0))(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0)(bufferutil@4.1.0)(utf-8-validate@6.0.6))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0))
+      bare-stream: 2.8.0(bare-abort-controller@1.0.0)(bare-buffer@3.4.4)(bare-events@2.8.2(bare-abort-controller@1.0.0))(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0))
       bare-url: 2.3.2
       fast-fifo: 1.3.2
     optionalDependencies:
@@ -32534,10 +32527,10 @@ snapshots:
       bare-os: 3.7.1
     optional: true
 
-  bare-stream@2.8.0(bare-abort-controller@1.0.0)(bare-buffer@3.4.4)(bare-events@2.8.2(bare-abort-controller@1.0.0))(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0)(bufferutil@4.1.0)(utf-8-validate@6.0.6))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0)):
+  bare-stream@2.8.0(bare-abort-controller@1.0.0)(bare-buffer@3.4.4)(bare-events@2.8.2(bare-abort-controller@1.0.0))(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0)):
     dependencies:
-      streamx: 2.23.0(bare-abort-controller@1.0.0)(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0)(bufferutil@4.1.0)(utf-8-validate@6.0.6))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0))
-      teex: 1.0.1(bare-abort-controller@1.0.0)(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0)(bufferutil@4.1.0)(utf-8-validate@6.0.6))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0))
+      streamx: 2.23.0(bare-abort-controller@1.0.0)(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0))
+      teex: 1.0.1(bare-abort-controller@1.0.0)(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0))
     optionalDependencies:
       bare-buffer: 3.4.4
       bare-events: 2.8.2(bare-abort-controller@1.0.0)
@@ -32686,7 +32679,7 @@ snapshots:
       http-errors: 2.0.1
       iconv-lite: 0.7.2
       on-finished: 2.4.1
-      qs: 6.14.1
+      qs: 6.15.0
       raw-body: 3.0.2
       type-is: 2.0.1
     transitivePeerDependencies:
@@ -33343,7 +33336,7 @@ snapshots:
       events: 3.3.0
     optional: true
 
-  closevector-web@0.1.6(bare-abort-controller@1.0.0)(bare-buffer@3.4.4)(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0)(bufferutil@4.1.0)(utf-8-validate@6.0.6))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0)):
+  closevector-web@0.1.6(bare-abort-controller@1.0.0)(bare-buffer@3.4.4)(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0)):
     dependencies:
       axios: 1.13.6(debug@4.4.3)
       closevector-browserify-zlib: 0.1.0-alpha.3
@@ -33352,7 +33345,7 @@ snapshots:
       closevector-hnswlib-wasm: 0.1.1
       closevector-stream-browserify: 0.1.0-alpha.1
       gunzip-maybe: 1.4.2
-      tar-stream: 3.1.8(bare-abort-controller@1.0.0)(bare-buffer@3.4.4)(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0)(bufferutil@4.1.0)(utf-8-validate@6.0.6))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0))
+      tar-stream: 3.1.8(bare-abort-controller@1.0.0)(bare-buffer@3.4.4)(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0))
       typescript: 5.9.3
     transitivePeerDependencies:
       - bare-abort-controller
@@ -35074,7 +35067,7 @@ snapshots:
       once: 1.4.0
       parseurl: 1.3.3
       proxy-addr: 2.0.7
-      qs: 6.14.1
+      qs: 6.15.0
       range-parser: 1.2.1
       router: 2.2.0
       send: 1.2.1
@@ -36168,7 +36161,7 @@ snapshots:
     dependencies:
       react-is: 16.13.1
 
-  hono@4.11.7: {}
+  hono@4.12.5: {}
 
   hookable@5.5.3: {}
 
@@ -36414,7 +36407,7 @@ snapshots:
       isstream: 0.1.2
       jsonwebtoken: 9.0.3
       mime-types: 2.1.35
-      retry-axios: 2.6.0(axios@1.13.6)
+      retry-axios: 2.6.0(axios@1.13.6(debug@4.4.3))
       tough-cookie: 4.1.4
     transitivePeerDependencies:
       - supports-color
@@ -38119,13 +38112,13 @@ snapshots:
 
   media-typer@1.1.0: {}
 
-  mem0ai@2.2.3(9feb10a3939bace6bcc815d8ef4fc8ff):
+  mem0ai@2.2.3(837859e66c346b648a4ddaa36a3c1aaf):
     dependencies:
       '@anthropic-ai/sdk': 0.27.3(encoding@0.1.13)
       '@azure/identity': 4.13.0
       '@azure/search-documents': 12.2.0
       '@cloudflare/workers-types': 4.20260305.0
-      '@google/genai': 1.43.0(@modelcontextprotocol/sdk@1.26.0(@cfworker/json-schema@4.1.1)(zod@4.3.6))(bufferutil@4.1.0)(utf-8-validate@6.0.6)
+      '@google/genai': 1.43.0(@modelcontextprotocol/sdk@1.27.1(@cfworker/json-schema@4.1.1)(zod@4.3.6))(bufferutil@4.1.0)(utf-8-validate@6.0.6)
       '@langchain/core': 1.1.30(@opentelemetry/api@1.9.0)(@opentelemetry/exporter-trace-otlp-proto@0.212.0(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-base@2.5.1(@opentelemetry/api@1.9.0))(openai@6.25.0(ws@8.19.0(bufferutil@4.1.0)(utf-8-validate@6.0.6))(zod@4.3.6))
       '@mistralai/mistralai': 1.14.1(bufferutil@4.1.0)(utf-8-validate@6.0.6)
       '@qdrant/js-client-rest': 1.13.0(typescript@5.9.3)
@@ -40550,9 +40543,9 @@ snapshots:
 
   punycode@2.3.1: {}
 
-  puppeteer-core@24.37.5(bare-abort-controller@1.0.0)(bare-buffer@3.4.4)(bufferutil@4.1.0)(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0)(bufferutil@4.1.0)(utf-8-validate@6.0.6))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0))(utf-8-validate@6.0.6):
+  puppeteer-core@24.37.5(bare-abort-controller@1.0.0)(bare-buffer@3.4.4)(bufferutil@4.1.0)(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0))(utf-8-validate@6.0.6):
     dependencies:
-      '@puppeteer/browsers': 2.13.0(bare-abort-controller@1.0.0)(bare-buffer@3.4.4)(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0)(bufferutil@4.1.0)(utf-8-validate@6.0.6))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0))
+      '@puppeteer/browsers': 2.13.0(bare-abort-controller@1.0.0)(bare-buffer@3.4.4)(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0))
       chromium-bidi: 14.0.0(devtools-protocol@0.0.1566079)
       debug: 4.4.3(supports-color@8.1.1)
       devtools-protocol: 0.0.1566079
@@ -40568,13 +40561,13 @@ snapshots:
       - utf-8-validate
     optional: true
 
-  puppeteer@24.37.5(bare-abort-controller@1.0.0)(bare-buffer@3.4.4)(bufferutil@4.1.0)(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0)(bufferutil@4.1.0)(utf-8-validate@6.0.6))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0))(typescript@5.9.3)(utf-8-validate@6.0.6):
+  puppeteer@24.37.5(bare-abort-controller@1.0.0)(bare-buffer@3.4.4)(bufferutil@4.1.0)(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0))(typescript@5.9.3)(utf-8-validate@6.0.6):
     dependencies:
-      '@puppeteer/browsers': 2.13.0(bare-abort-controller@1.0.0)(bare-buffer@3.4.4)(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0)(bufferutil@4.1.0)(utf-8-validate@6.0.6))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0))
+      '@puppeteer/browsers': 2.13.0(bare-abort-controller@1.0.0)(bare-buffer@3.4.4)(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0))
       chromium-bidi: 14.0.0(devtools-protocol@0.0.1566079)
       cosmiconfig: 9.0.1(typescript@5.9.3)
       devtools-protocol: 0.0.1566079
-      puppeteer-core: 24.37.5(bare-abort-controller@1.0.0)(bare-buffer@3.4.4)(bufferutil@4.1.0)(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0)(bufferutil@4.1.0)(utf-8-validate@6.0.6))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0))(utf-8-validate@6.0.6)
+      puppeteer-core: 24.37.5(bare-abort-controller@1.0.0)(bare-buffer@3.4.4)(bufferutil@4.1.0)(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0))(utf-8-validate@6.0.6)
       typed-query-selector: 2.12.1
     transitivePeerDependencies:
       - bare-abort-controller
@@ -40612,10 +40605,6 @@ snapshots:
     dependencies:
       side-channel: 1.1.0
     optional: true
-
-  qs@6.14.1:
-    dependencies:
-      side-channel: 1.1.0
 
   qs@6.14.2:
     dependencies:
@@ -40799,22 +40788,22 @@ snapshots:
       react: 18.3.1
       react-is: 18.3.1
 
-  react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0)(bufferutil@4.1.0)(utf-8-validate@6.0.6))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0):
+  react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0):
     dependencies:
       react: 19.0.0
-      react-native: 0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0)(bufferutil@4.1.0)(utf-8-validate@6.0.6))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6)
+      react-native: 0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6)
     optional: true
 
-  react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0)(bufferutil@4.1.0)(utf-8-validate@6.0.6))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6):
+  react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6):
     dependencies:
       '@jest/create-cache-key-function': 29.7.0
       '@react-native/assets-registry': 0.84.0
       '@react-native/codegen': 0.84.0(@babel/core@7.29.0)
-      '@react-native/community-cli-plugin': 0.84.0(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0)(bufferutil@4.1.0)(utf-8-validate@6.0.6))(bufferutil@4.1.0)(utf-8-validate@6.0.6)
+      '@react-native/community-cli-plugin': 0.84.0(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0))(bufferutil@4.1.0)(utf-8-validate@6.0.6)
       '@react-native/gradle-plugin': 0.84.0
       '@react-native/js-polyfills': 0.84.0
       '@react-native/normalize-colors': 0.84.0
-      '@react-native/virtualized-lists': 0.84.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0)(bufferutil@4.1.0)(utf-8-validate@6.0.6))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0)
+      '@react-native/virtualized-lists': 0.84.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0)
       abort-controller: 3.0.0
       anser: 1.4.10
       ansi-regex: 5.0.1
@@ -41211,7 +41200,7 @@ snapshots:
   ret@0.5.0:
     optional: true
 
-  retry-axios@2.6.0(axios@1.13.6):
+  retry-axios@2.6.0(axios@1.13.6(debug@4.4.3)):
     dependencies:
       axios: 1.13.6(debug@4.4.3)
 
@@ -42230,11 +42219,11 @@ snapshots:
   stream-shift@1.0.3:
     optional: true
 
-  streamx@2.23.0(bare-abort-controller@1.0.0)(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0)(bufferutil@4.1.0)(utf-8-validate@6.0.6))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0)):
+  streamx@2.23.0(bare-abort-controller@1.0.0)(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0)):
     dependencies:
       events-universal: 1.0.1(bare-abort-controller@1.0.0)
       fast-fifo: 1.3.2
-      text-decoder: 1.2.7(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0)(bufferutil@4.1.0)(utf-8-validate@6.0.6))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0))
+      text-decoder: 1.2.7(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0))
     transitivePeerDependencies:
       - bare-abort-controller
       - react-native-b4a
@@ -42489,12 +42478,12 @@ snapshots:
       pump: 3.0.4
       tar-stream: 2.2.0
 
-  tar-fs@3.1.1(bare-abort-controller@1.0.0)(bare-buffer@3.4.4)(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0)(bufferutil@4.1.0)(utf-8-validate@6.0.6))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0)):
+  tar-fs@3.1.1(bare-abort-controller@1.0.0)(bare-buffer@3.4.4)(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0)):
     dependencies:
       pump: 3.0.4
-      tar-stream: 3.1.8(bare-abort-controller@1.0.0)(bare-buffer@3.4.4)(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0)(bufferutil@4.1.0)(utf-8-validate@6.0.6))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0))
+      tar-stream: 3.1.8(bare-abort-controller@1.0.0)(bare-buffer@3.4.4)(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0))
     optionalDependencies:
-      bare-fs: 4.5.5(bare-abort-controller@1.0.0)(bare-buffer@3.4.4)(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0)(bufferutil@4.1.0)(utf-8-validate@6.0.6))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0))
+      bare-fs: 4.5.5(bare-abort-controller@1.0.0)(bare-buffer@3.4.4)(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0))
       bare-path: 3.0.0
     transitivePeerDependencies:
       - bare-abort-controller
@@ -42521,12 +42510,12 @@ snapshots:
       inherits: 2.0.4
       readable-stream: 3.6.2
 
-  tar-stream@3.1.8(bare-abort-controller@1.0.0)(bare-buffer@3.4.4)(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0)(bufferutil@4.1.0)(utf-8-validate@6.0.6))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0)):
+  tar-stream@3.1.8(bare-abort-controller@1.0.0)(bare-buffer@3.4.4)(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0)):
     dependencies:
-      b4a: 1.8.0(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0)(bufferutil@4.1.0)(utf-8-validate@6.0.6))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0))
-      bare-fs: 4.5.5(bare-abort-controller@1.0.0)(bare-buffer@3.4.4)(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0)(bufferutil@4.1.0)(utf-8-validate@6.0.6))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0))
+      b4a: 1.8.0(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0))
+      bare-fs: 4.5.5(bare-abort-controller@1.0.0)(bare-buffer@3.4.4)(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0))
       fast-fifo: 1.3.2
-      streamx: 2.23.0(bare-abort-controller@1.0.0)(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0)(bufferutil@4.1.0)(utf-8-validate@6.0.6))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0))
+      streamx: 2.23.0(bare-abort-controller@1.0.0)(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0))
     transitivePeerDependencies:
       - bare-abort-controller
       - bare-buffer
@@ -42594,9 +42583,9 @@ snapshots:
       - supports-color
     optional: true
 
-  teex@1.0.1(bare-abort-controller@1.0.0)(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0)(bufferutil@4.1.0)(utf-8-validate@6.0.6))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0)):
+  teex@1.0.1(bare-abort-controller@1.0.0)(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0)):
     dependencies:
-      streamx: 2.23.0(bare-abort-controller@1.0.0)(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0)(bufferutil@4.1.0)(utf-8-validate@6.0.6))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0))
+      streamx: 2.23.0(bare-abort-controller@1.0.0)(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0))
     transitivePeerDependencies:
       - bare-abort-controller
       - react-native-b4a
@@ -42679,9 +42668,9 @@ snapshots:
       glob: 10.5.0
       minimatch: 9.0.5
 
-  text-decoder@1.2.7(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0)(bufferutil@4.1.0)(utf-8-validate@6.0.6))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0)):
+  text-decoder@1.2.7(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0)):
     dependencies:
-      b4a: 1.8.0(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0)(bufferutil@4.1.0)(utf-8-validate@6.0.6))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0))
+      b4a: 1.8.0(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0))
     transitivePeerDependencies:
       - react-native-b4a
     optional: true
@@ -43562,7 +43551,7 @@ snapshots:
       '@edge-runtime/vm': 5.0.0
       '@types/debug': 4.1.12
       '@types/node': 24.10.9
-      '@vitest/browser': 3.2.4(6c1f4c271f18075cf36cf436bf55c25f)
+      '@vitest/browser': 3.2.4(88771061cb8c2b9f8e3a72f487c3a3aa)
       '@vitest/ui': 3.2.4(vitest@3.2.4)
       happy-dom: 20.3.4(bufferutil@4.1.0)(utf-8-validate@6.0.6)
       jsdom: 28.1.0(@noble/hashes@2.0.1)(canvas@3.2.1)
@@ -43609,7 +43598,7 @@ snapshots:
       '@edge-runtime/vm': 5.0.0
       '@types/debug': 4.1.12
       '@types/node': 25.3.3
-      '@vitest/browser': 3.2.4(1a5412b87f3b81d31f610b12f96a0429)
+      '@vitest/browser': 3.2.4(79332cc5ccdc215ffc664477c59b71bc)
       '@vitest/ui': 3.2.4(vitest@3.2.4)
       happy-dom: 20.3.4(bufferutil@4.1.0)(utf-8-validate@6.0.6)
       jsdom: 28.1.0(@noble/hashes@2.0.1)(canvas@3.2.1)
@@ -43879,15 +43868,15 @@ snapshots:
   webdriver-bidi-protocol@0.4.1:
     optional: true
 
-  webdriver@9.24.0(bare-abort-controller@1.0.0)(bare-buffer@3.4.4)(bufferutil@4.1.0)(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0)(bufferutil@4.1.0)(utf-8-validate@6.0.6))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0))(utf-8-validate@6.0.6):
+  webdriver@9.24.0(bare-abort-controller@1.0.0)(bare-buffer@3.4.4)(bufferutil@4.1.0)(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0))(utf-8-validate@6.0.6):
     dependencies:
       '@types/node': 20.19.35
       '@types/ws': 8.18.1
-      '@wdio/config': 9.24.0(bare-abort-controller@1.0.0)(bare-buffer@3.4.4)(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0)(bufferutil@4.1.0)(utf-8-validate@6.0.6))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0))
+      '@wdio/config': 9.24.0(bare-abort-controller@1.0.0)(bare-buffer@3.4.4)(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0))
       '@wdio/logger': 9.18.0
       '@wdio/protocols': 9.24.0
       '@wdio/types': 9.24.0
-      '@wdio/utils': 9.24.0(bare-abort-controller@1.0.0)(bare-buffer@3.4.4)(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0)(bufferutil@4.1.0)(utf-8-validate@6.0.6))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0))
+      '@wdio/utils': 9.24.0(bare-abort-controller@1.0.0)(bare-buffer@3.4.4)(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0))
       deepmerge-ts: 7.1.5
       https-proxy-agent: 7.0.6
       undici: 6.23.0
@@ -43901,17 +43890,17 @@ snapshots:
       - utf-8-validate
     optional: true
 
-  webdriverio@9.24.0(bare-abort-controller@1.0.0)(bare-buffer@3.4.4)(bufferutil@4.1.0)(puppeteer-core@24.37.5(bare-abort-controller@1.0.0)(bare-buffer@3.4.4)(bufferutil@4.1.0)(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0)(bufferutil@4.1.0)(utf-8-validate@6.0.6))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0))(utf-8-validate@6.0.6))(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0)(bufferutil@4.1.0)(utf-8-validate@6.0.6))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0))(utf-8-validate@6.0.6):
+  webdriverio@9.24.0(bare-abort-controller@1.0.0)(bare-buffer@3.4.4)(bufferutil@4.1.0)(puppeteer-core@24.37.5(bare-abort-controller@1.0.0)(bare-buffer@3.4.4)(bufferutil@4.1.0)(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0))(utf-8-validate@6.0.6))(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0))(utf-8-validate@6.0.6):
     dependencies:
       '@types/node': 20.19.35
       '@types/sinonjs__fake-timers': 8.1.5
-      '@wdio/config': 9.24.0(bare-abort-controller@1.0.0)(bare-buffer@3.4.4)(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0)(bufferutil@4.1.0)(utf-8-validate@6.0.6))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0))
+      '@wdio/config': 9.24.0(bare-abort-controller@1.0.0)(bare-buffer@3.4.4)(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0))
       '@wdio/logger': 9.18.0
       '@wdio/protocols': 9.24.0
       '@wdio/repl': 9.16.2
       '@wdio/types': 9.24.0
-      '@wdio/utils': 9.24.0(bare-abort-controller@1.0.0)(bare-buffer@3.4.4)(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0)(bufferutil@4.1.0)(utf-8-validate@6.0.6))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0))
-      archiver: 7.0.1(bare-abort-controller@1.0.0)(bare-buffer@3.4.4)(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0)(bufferutil@4.1.0)(utf-8-validate@6.0.6))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0))
+      '@wdio/utils': 9.24.0(bare-abort-controller@1.0.0)(bare-buffer@3.4.4)(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0))
+      archiver: 7.0.1(bare-abort-controller@1.0.0)(bare-buffer@3.4.4)(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0))
       aria-query: 5.3.2
       cheerio: 1.2.0
       css-shorthand-properties: 1.1.2
@@ -43927,9 +43916,9 @@ snapshots:
       rgb2hex: 0.2.5
       serialize-error: 12.0.0
       urlpattern-polyfill: 10.1.0
-      webdriver: 9.24.0(bare-abort-controller@1.0.0)(bare-buffer@3.4.4)(bufferutil@4.1.0)(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0)(bufferutil@4.1.0)(utf-8-validate@6.0.6))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0))(utf-8-validate@6.0.6)
+      webdriver: 9.24.0(bare-abort-controller@1.0.0)(bare-buffer@3.4.4)(bufferutil@4.1.0)(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0))(utf-8-validate@6.0.6)
     optionalDependencies:
-      puppeteer-core: 24.37.5(bare-abort-controller@1.0.0)(bare-buffer@3.4.4)(bufferutil@4.1.0)(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0)(bufferutil@4.1.0)(utf-8-validate@6.0.6))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0))(utf-8-validate@6.0.6)
+      puppeteer-core: 24.37.5(bare-abort-controller@1.0.0)(bare-buffer@3.4.4)(bufferutil@4.1.0)(react-native-b4a@0.1.0(react-native@0.84.0(@babel/core@7.29.0)(@react-native-community/cli@20.1.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6))(@react-native/metro-config@0.84.0(@babel/core@7.29.0))(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0))(utf-8-validate@6.0.6)
     transitivePeerDependencies:
       - bare-abort-controller
       - bare-buffer
