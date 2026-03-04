@@ -136,24 +136,28 @@ export class MsalConfigurator extends BaseConfigBuilder<MsalConfig> {
    * This follows Microsoft's standard SPA Auth Code Flow pattern and is compatible with
    * MSAL Browser's acquireTokenByCode() method.
    *
-   * @param authCode - The authorization code issued by the backend
+    * @param authCode - The authorization code issued by the backend, or undefined to clear/reset it
    * @returns The configurator instance for method chaining
    *
    * @example
    * ```typescript
    * // Backend provides auth code in HTML/config
    * const config = { auth: { code: getAuthCodeFromBackend() } };
-   * configurator.setAuthCode(config.auth.code);
+    * configurator.setAuthCode(config.auth.code);
+    *
+    * // Clear previously configured auth code
+    * configurator.setAuthCode(undefined);
    * ```
    *
    * @remarks
    * - Auth codes are single-use and short-lived (typically 5-10 minutes)
    * - The exchange happens during module initialization before requiresAuth check
    * - If exchange fails, the provider falls back to standard MSAL authentication flows
+    * - Passing undefined, empty, or whitespace-only values clears the configured auth code
    * - Requires backend to be configured with SPA Auth Code support
    */
-  setAuthCode(authCode: string): this {
-    this._set('authCode', async () => authCode);
+  setAuthCode(authCode?: string): this {
+    this._set('authCode', async () => authCode?.trim() || undefined);
     return this;
   }
 
