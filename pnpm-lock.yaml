@@ -9,6 +9,7 @@ overrides:
   '@isaacs/brace-expansion@<=5.0.0': 5.0.1
   cross-spawn@<6.0.6: 6.0.6
   immutable@>=5.0.0 <5.1.5: 5.1.5
+  serialize-javascript@<=7.0.2: 7.0.3
 
 importers:
 
@@ -18312,11 +18313,9 @@ packages:
     resolution: {integrity: sha512-8I8TjW5KMOKsZQTvoxjuSIa7foAwPWGOts+6o7sgjz41/qMD9VQHEDxi6PBvK2l0MXUmqZyNpUK+T2tQaaElvw==}
     engines: {node: '>=10'}
 
-  serialize-javascript@4.0.0:
-    resolution: {integrity: sha512-GaNA54380uFefWghODBWEGisLZFj00nS5ACs6yHa9nLqlLpVLO8ChDGeKRjZnV4Nh4n0Qi7nhYZD/9fCPzEqkw==}
-
-  serialize-javascript@6.0.2:
-    resolution: {integrity: sha512-Saa1xPByTTq2gdeFZYLLo+RFE35NHZkAbqZeWNd3BpzppeVisAqpDjcp8dyf6uIvEqJRd46jemmyA4iFIeVk8g==}
+  serialize-javascript@7.0.3:
+    resolution: {integrity: sha512-h+cZ/XXarqDgCjo+YSyQU/ulDEESGGf8AMK9pPNmhNSl/FzPl6L8pMp1leca5z6NuG6tvV/auC8/43tmovowww==}
+    engines: {node: '>=20.0.0'}
 
   serve-index@1.9.2:
     resolution: {integrity: sha512-KDj11HScOaLmrPxl70KYNW1PksP4Nb/CLL2yvC+Qd2kHMPEEpfc4Re2e4FOay+bC/+XQl/7zAcWON3JVo5v3KQ==}
@@ -21833,7 +21832,7 @@ snapshots:
 
   '@babel/parser@7.28.6':
     dependencies:
-      '@babel/types': 7.28.6
+      '@babel/types': 7.29.0
 
   '@babel/parser@7.29.0':
     dependencies:
@@ -33750,7 +33749,7 @@ snapshots:
       glob-parent: 6.0.2
       normalize-path: 3.0.0
       schema-utils: 4.3.3
-      serialize-javascript: 6.0.2
+      serialize-javascript: 7.0.3
       tinyglobby: 0.2.15
       webpack: 5.105.4
     optional: true
@@ -33944,7 +33943,7 @@ snapshots:
       jest-worker: 30.2.0
       postcss: 8.5.8
       schema-utils: 4.3.3
-      serialize-javascript: 6.0.2
+      serialize-javascript: 7.0.3
       webpack: 5.105.4
     optionalDependencies:
       lightningcss: 1.31.1
@@ -40760,6 +40759,7 @@ snapshots:
   randombytes@2.1.0:
     dependencies:
       safe-buffer: 5.2.1
+    optional: true
 
   randomfill@1.0.4:
     dependencies:
@@ -41399,7 +41399,7 @@ snapshots:
       '@babel/code-frame': 7.28.6
       jest-worker: 26.6.2
       rollup: 4.59.0
-      serialize-javascript: 4.0.0
+      serialize-javascript: 7.0.3
       terser: 5.46.0
 
   rollup@4.55.3:
@@ -41799,14 +41799,7 @@ snapshots:
       type-fest: 0.13.1
     optional: true
 
-  serialize-javascript@4.0.0:
-    dependencies:
-      randombytes: 2.1.0
-
-  serialize-javascript@6.0.2:
-    dependencies:
-      randombytes: 2.1.0
-    optional: true
+  serialize-javascript@7.0.3: {}
 
   serve-index@1.9.2:
     dependencies:
