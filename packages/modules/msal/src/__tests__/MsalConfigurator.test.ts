@@ -9,7 +9,7 @@ const createConfigCallbackArgs = (): ConfigBuilderCallbackArgs => ({
   requireInstance: vi.fn(),
 });
 
-const createClient = (): IMsalClient => ({} as IMsalClient);
+const createClient = (): IMsalClient => ({}) as IMsalClient;
 
 const createInitialConfig = (): Pick<MsalConfig, 'telemetry'> => ({
   telemetry: {
