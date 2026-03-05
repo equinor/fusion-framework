@@ -10,6 +10,7 @@ overrides:
   cross-spawn@<6.0.6: 6.0.6
   immutable@>=5.0.0 <5.1.5: 5.1.5
   serialize-javascript@<=7.0.2: 7.0.3
+  tar@<=7.5.9: 7.5.10
 
 importers:
 
@@ -21832,7 +21833,7 @@ snapshots:
 
   '@babel/parser@7.28.6':
     dependencies:
-      '@babel/types': 7.29.0
+      '@babel/types': 7.28.6
 
   '@babel/parser@7.29.0':
     dependencies:

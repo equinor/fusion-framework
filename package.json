@@ -81,7 +81,8 @@
       "@isaacs/brace-expansion@<=5.0.0": "5.0.1",
       "cross-spawn@<6.0.6": "6.0.6",
       "immutable@>=5.0.0 <5.1.5": "5.1.5",
-      "serialize-javascript@<=7.0.2": "7.0.3"
+      "serialize-javascript@<=7.0.2": "7.0.3",
+      "tar@<=7.5.9": "7.5.10"
     }
   },
   "dependencies": {
