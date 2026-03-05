@@ -142,7 +142,7 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
 
     // Extract auth code from config if present
     // This will be used during initialize to exchange for tokens
-    this.#authCode = config.authCode;
+    this.#authCode = config.authCode?.trim() || undefined;
 
     // Validate required client configuration
     if (!config.client) {

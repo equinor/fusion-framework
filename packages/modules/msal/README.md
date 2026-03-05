@@ -118,9 +118,11 @@ enableMSAL(configurator, (builder) => {
 4. Tokens cached by MSAL → user automatically signed in
 5. Falls back to standard MSAL flows on exchange failure
 
-### API: `setAuthCode(authCode: string)`
+### API: `setAuthCode(authCode?: string)`
 
 Sets backend-issued auth code for token exchange during initialization.
+
+Pass `undefined` to clear/reset a previously configured auth code.
 
 **Returns:** configurator instance (chainable)
 
@@ -129,6 +131,10 @@ Sets backend-issued auth code for token exchange during initialization.
 - On success: user auto-authenticated, no login prompt
 - On failure: falls back to standard MSAL login
 - Auth code cleared after exchange (no reuse)
+- `setAuthCode(undefined)` clears configured auth code
+- `setAuthCode('')` is treated as absent auth code
+- `setAuthCode('   ')` is trimmed and treated as absent auth code
+- No auth-code exchange is attempted when auth code is absent/cleared
 
 **Example:**
 
@@ -138,6 +144,9 @@ if (typeof window !== 'undefined' && window.MSAL_AUTH_CODE) {
   builder.setAuthCode(window.MSAL_AUTH_CODE);
   delete (window as any).MSAL_AUTH_CODE; // Clear after consuming to prevent reuse
 }
+
+// Clear/reset auth code when input is missing
+builder.setAuthCode(undefined);
 ```
 
 ### Security
