@@ -157,7 +157,7 @@ export class MsalConfigurator extends BaseConfigBuilder<MsalConfig> {
    * - Requires backend to be configured with SPA Auth Code support
    */
   setAuthCode(authCode?: string): this {
-    this._set('authCode', async () => authCode?.trim() || undefined);
+    this._set('authCode', async () => authCode?.trim() ?? undefined);
     return this;
   }
 
