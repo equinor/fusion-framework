@@ -1,5 +1,13 @@
 # Change Log
 
+## 13.3.13
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @equinor/fusion-framework-dev-portal@4.0.1
+  - @equinor/fusion-framework-dev-server@1.1.30
+
 ## 13.3.12
 
 ### Patch Changes

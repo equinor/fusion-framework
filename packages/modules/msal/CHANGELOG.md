@@ -1,5 +1,15 @@
 # Change Log
 
+## 7.3.0
+
+### Minor Changes
+
+- [#4141](https://github.com/equinor/fusion-framework/pull/4141) [`ec7d2ce`](https://github.com/equinor/fusion-framework/commit/ec7d2ce0ed3f1d447b8cf410d2ef94fb1b557bbb) Thanks [@odinr](https://github.com/odinr)! - Allow resetting backend-issued auth code in `MsalConfigurator` by passing `undefined` to `setAuthCode`.
+
+  `setAuthCode` now trims input and treats empty or whitespace-only values as absent auth code, so no auth-code exchange is attempted during initialization when auth code is cleared or missing.
+
+  Closes #4137
+
 ## 7.2.2
 
 ### Patch Changes
