@@ -1208,7 +1208,7 @@ importers:
         specifier: ^1.2.2
         version: 1.2.2
       '@equinor/fusion-wc-person':
-        specifier: 3.4.0
+        specifier: ^3.4.0
         version: 3.4.0
       '@material-ui/styles':
         specifier: ^4.11.5
@@ -2027,7 +2027,7 @@ importers:
         specifier: workspace:^
         version: link:../../../modules/event
       '@equinor/fusion-wc-person':
-        specifier: 3.4.0
+        specifier: ^3.4.0
         version: 3.4.0
       '@types/react':
         specifier: ^18.2.50
