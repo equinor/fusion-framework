@@ -77,12 +77,10 @@ export type FetchRequestInit<
  * @template TRequest - The type of the fetch request.
  * @template TResponse - The type of the fetch response.
  */
-export type ClientRequestInit<T extends IHttpClient, TReturn = unknown> = T extends IHttpClient<
-  infer TRequest,
-  infer TResponse
->
-  ? FetchRequestInit<TReturn, TRequest, TResponse>
-  : never;
+export type ClientRequestInit<T extends IHttpClient, TReturn = unknown> =
+  T extends IHttpClient<infer TRequest, infer TResponse>
+    ? FetchRequestInit<TReturn, TRequest, TResponse>
+    : never;
 
 /**
  * Represents the available execution methods for an HTTP client.
