@@ -69,10 +69,10 @@ export const ListItemPage = () => {
       <FlexGridColumn>
         {persons.map(mapPersonToListItem)}
         {/*
-                  // Alternative way of mapping components, where the host people resolver is used.
-                  // Note this will cause the host to re-resolve each person and use the data from the host api. 
-                  persons.map(person => (<PersonListItem key={person.azureUniqueId} azureId={person.azureUniqueId} />))
-                 */}
+          Alternative way of mapping components, where the host people resolver is used.
+          Note this will cause the host to re-resolve each person and use the data from the host api.
+          persons.map(person => (<PersonListItem key={person.azureUniqueId} azureId={person.azureUniqueId} />))
+        */}
       </FlexGridColumn>
     </>
   );

@@ -94,6 +94,7 @@ export const PeopleConceptPage = () => {
         <fwc-people-viewer
           // selected people state from People Picker
           people={JSON.stringify(selected)}
+          display="table"
         />
       </div>
     </div>
