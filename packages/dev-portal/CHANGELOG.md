@@ -1,5 +1,14 @@
 # @equinor/fusion-framework-dev-portal
 
+## 4.0.2
+
+### Patch Changes
+
+- [#4143](https://github.com/equinor/fusion-framework/pull/4143) [`e38face`](https://github.com/equinor/fusion-framework/commit/e38facee6d29f1d93cdc08fe90aba3369335d522) Thanks [@eikeland](https://github.com/eikeland)! - Internal: update `@equinor/fusion-wc-person` to `3.4.0` in development dependencies for dev portal and people provider packages; no public API changes.
+
+- Updated dependencies [[`e38face`](https://github.com/equinor/fusion-framework/commit/e38facee6d29f1d93cdc08fe90aba3369335d522)]:
+  - @equinor/fusion-framework-react-components-people-provider@1.6.2
+
 ## 4.0.1
 
 ### Patch Changes

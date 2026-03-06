@@ -1,5 +1,12 @@
 # Change Log
 
+## 13.3.14
+
+### Patch Changes
+
+- Updated dependencies [[`e38face`](https://github.com/equinor/fusion-framework/commit/e38facee6d29f1d93cdc08fe90aba3369335d522)]:
+  - @equinor/fusion-framework-dev-portal@4.0.2
+
 ## 13.3.13
 
 ### Patch Changes
