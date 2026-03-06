@@ -131,3 +131,50 @@ enableServiceDiscovery(
     );
 });
 ```
+
+## Session Overrides
+
+The Service Discovery module supports runtime service overrides via `sessionStorage` for development and debugging purposes. This allows you to temporarily override service URLs and scopes without modifying your application configuration.
+
+### Setting Session Overrides
+
+To override services, store a JSON object in `sessionStorage` with the key `'overriddenServiceDiscoveryUrls'`:
+
+```typescript
+// Example: Override multiple services
+const overrides = {
+  'my-api': {
+    url: 'https://localhost:3000/api',
+    scopes: ['https://localhost/.default']
+  },
+  'another-service': {
+    url: 'https://dev.example.com/service',
+    scopes: ['https://dev.example.com/.default']
+  }
+};
+
+sessionStorage.setItem('overriddenServiceDiscoveryUrls', JSON.stringify(overrides));
+```
+
+### How Session Overrides Work
+
+When the service discovery client resolves services:
+
+1. **Service Resolution**: First, services are resolved normally from the configured service discovery endpoint
+2. **Override Application**: The module checks for session overrides in `sessionStorage`
+3. **Value Replacement**: For each service found in both the resolved services and session overrides:
+   - The service `uri` is replaced with the override `url`
+   - The service `scopes` are replaced with the override `scopes`
+   - An `overridden: true` flag is added to the service object
+4. **Environment Safety**: Session overrides are only applied in environments where `sessionStorage` is available
+
+### Clearing Session Overrides
+
+To remove session overrides:
+
+```typescript
+sessionStorage.removeItem('overriddenServiceDiscoveryUrls');
+```
+
+> [!NOTE]
+> Session overrides are temporary and will be cleared when the browser session ends. They only affect the current browser tab/window and are intended for development use only.
