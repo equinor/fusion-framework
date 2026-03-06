@@ -19,9 +19,9 @@ export type ContextItemType = z.infer<typeof contextSchema>;
 export const extractContextMetadata = (context: ContextItem): z.input<typeof contextSchema> => {
   return {
     id: context.id,
-    externalId: context.externalId,
-    title: context.title,
+    externalId: context.externalId ?? undefined,
+    title: context.title ?? undefined,
     type: context.type.id,
-    source: context.source,
+    source: context.source ?? undefined,
   };
 };
