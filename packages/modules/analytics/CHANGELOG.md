@@ -1,5 +1,13 @@
 # @equinor/fusion-framework-module-analytics
 
+## 1.0.1
+
+### Patch Changes
+
+- [#4149](https://github.com/equinor/fusion-framework/pull/4149) [`c0f86d0`](https://github.com/equinor/fusion-framework/commit/c0f86d00e939e00e08871aa6a7db3b51b7305220) Thanks [@asbjornhaland](https://github.com/asbjornhaland)! - Fix `extractContextMetadata` to use nullish coalescing (`?? undefined`) for
+  optional fields (`externalId`, `title`, `source`), ensuring `null` values from
+  `ContextItem` are coerced to `undefined` to comply with the Zod context schema.
+
 ## 1.0.0
 
 ### Major Changes

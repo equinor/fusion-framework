@@ -1,5 +1,12 @@
 # @equinor/fusion-framework-dev-portal
 
+## 4.0.3
+
+### Patch Changes
+
+- Updated dependencies [[`c0f86d0`](https://github.com/equinor/fusion-framework/commit/c0f86d00e939e00e08871aa6a7db3b51b7305220)]:
+  - @equinor/fusion-framework-module-analytics@1.0.1
+
 ## 4.0.2
 
 ### Patch Changes
