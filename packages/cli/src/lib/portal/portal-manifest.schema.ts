@@ -42,9 +42,11 @@ export const PortalManifestBuildSchema = z.object({
     .record(z.string(), z.string().optional())
     .optional()
     .transform((rec) => {
-      if (!rec) return undefined;
+      if (!rec) {
+        return undefined;
+      }
       return Object.fromEntries(
-        Object.entries(rec).filter((entry): entry is [string, string] => entry[1] !== undefined),
+        Object.entries(rec).filter(([, value]) => value !== undefined),
       );
     })
     .describe('Optional build annotations'),
