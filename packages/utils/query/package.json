@@ -85,7 +85,7 @@
     "@types/uuid": "^11.0.0",
     "react": "^18.2.0",
     "typescript": "^5.8.2",
-    "vitest": "^3.2.4"
+    "vitest": "^4.0.18"
   },
   "peerDependencies": {
     "@types/react": "^16.9.0 || ^17.0.0 || ^18.0.0",
