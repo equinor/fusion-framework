@@ -36,9 +36,17 @@ export const PortalManifestBuildSchema = z.object({
   // Current git commit SHA (required)
   commitSha: z.string({ message: 'commitSha must be a string' }).describe('Current git commit SHA'),
   // Optional build annotations (key-value pairs)
+  // Accepts Record<string, string | undefined> but transforms to Record<string, string>
+  // by filtering out undefined values to preserve the manifest contract
   annotations: z
     .record(z.string(), z.string().optional())
     .optional()
+    .transform((rec) => {
+      if (!rec) return undefined;
+      return Object.fromEntries(
+        Object.entries(rec).filter((entry): entry is [string, string] => entry[1] !== undefined),
+      );
+    })
     .describe('Optional build annotations'),
   // Optional project homepage
   projectPage: z
