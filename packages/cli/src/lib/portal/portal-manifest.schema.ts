@@ -45,9 +45,7 @@ export const PortalManifestBuildSchema = z.object({
       if (!rec) {
         return undefined;
       }
-      return Object.fromEntries(
-        Object.entries(rec).filter(([, value]) => value !== undefined),
-      );
+      return Object.fromEntries(Object.entries(rec).filter(([, value]) => value !== undefined));
     })
     .describe('Optional build annotations'),
   // Optional project homepage
