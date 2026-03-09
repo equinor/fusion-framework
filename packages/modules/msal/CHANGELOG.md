@@ -1,5 +1,17 @@
 # Change Log
 
+## 7.3.1
+
+### Patch Changes
+
+- [#4157](https://github.com/equinor/fusion-framework/pull/4157) [`6aa8e1f`](https://github.com/equinor/fusion-framework/commit/6aa8e1f5c9d852b25e97aa7d98a63008c64d4581) Thanks [@Noggling](https://github.com/Noggling)! - Internal: patch release to align TypeScript types across packages for consistent type compatibility.
+
+- [#4132](https://github.com/equinor/fusion-framework/pull/4132) [`db8fa81`](https://github.com/equinor/fusion-framework/commit/db8fa8134b77a628b15e06f7f72b50f04ef97458) Thanks [@dependabot](https://github.com/apps/dependabot)! - Internal: update @azure/msal-browser to 5.4.0 to include upstream security and authentication flow fixes without changing the module API.
+
+- Updated dependencies [[`6aa8e1f`](https://github.com/equinor/fusion-framework/commit/6aa8e1f5c9d852b25e97aa7d98a63008c64d4581)]:
+  - @equinor/fusion-framework-module@5.0.6
+  - @equinor/fusion-framework-module-telemetry@4.6.4
+
 ## 7.3.0
 
 ### Minor Changes

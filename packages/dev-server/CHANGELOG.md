@@ -1,5 +1,16 @@
 # @equinor/fusion-framework-dev-server
 
+## 1.1.31
+
+### Patch Changes
+
+- [#4157](https://github.com/equinor/fusion-framework/pull/4157) [`6aa8e1f`](https://github.com/equinor/fusion-framework/commit/6aa8e1f5c9d852b25e97aa7d98a63008c64d4581) Thanks [@Noggling](https://github.com/Noggling)! - Internal: patch release to align TypeScript types across packages for consistent type compatibility.
+
+- Updated dependencies [[`9d4d520`](https://github.com/equinor/fusion-framework/commit/9d4d520e9d3c3a3c4ef68a96952fbbc6f6d34720), [`6aa8e1f`](https://github.com/equinor/fusion-framework/commit/6aa8e1f5c9d852b25e97aa7d98a63008c64d4581)]:
+  - @equinor/fusion-framework-vite-plugin-spa@3.1.11
+  - @equinor/fusion-log@1.1.8
+  - @equinor/fusion-framework-vite-plugin-api-service@1.2.5
+
 ## 1.1.30
 
 ### Patch Changes

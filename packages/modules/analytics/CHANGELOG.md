@@ -1,5 +1,21 @@
 # @equinor/fusion-framework-module-analytics
 
+## 1.0.2
+
+### Patch Changes
+
+- [#4157](https://github.com/equinor/fusion-framework/pull/4157) [`6aa8e1f`](https://github.com/equinor/fusion-framework/commit/6aa8e1f5c9d852b25e97aa7d98a63008c64d4581) Thanks [@Noggling](https://github.com/Noggling)! - Internal: patch release to align TypeScript types across packages for consistent type compatibility.
+
+- [#4066](https://github.com/equinor/fusion-framework/pull/4066) [`390b1b3`](https://github.com/equinor/fusion-framework/commit/390b1b3f014a8af9900a6589911f65f068a1e9c0) Thanks [@dependabot](https://github.com/apps/dependabot)! - Internal: update the analytics module OpenTelemetry logging packages to 0.212.x/2.5.1 for upstream exporter and resource handling fixes without changing the module API.
+
+- Updated dependencies [[`6aa8e1f`](https://github.com/equinor/fusion-framework/commit/6aa8e1f5c9d852b25e97aa7d98a63008c64d4581)]:
+  - @equinor/fusion-framework-module-app@7.4.1
+  - @equinor/fusion-framework-module-context@7.0.3
+  - @equinor/fusion-framework-module-event@5.0.1
+  - @equinor/fusion-framework-module-http@7.0.8
+  - @equinor/fusion-framework-module@5.0.6
+  - @equinor/fusion-observable@8.5.8
+
 ## 1.0.1
 
 ### Patch Changes

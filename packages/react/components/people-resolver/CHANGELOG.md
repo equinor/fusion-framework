@@ -1,5 +1,17 @@
 # @equinor/fusion-framework-react-components-people-provider
 
+## 1.6.3
+
+### Patch Changes
+
+- [#4157](https://github.com/equinor/fusion-framework/pull/4157) [`6aa8e1f`](https://github.com/equinor/fusion-framework/commit/6aa8e1f5c9d852b25e97aa7d98a63008c64d4581) Thanks [@Noggling](https://github.com/Noggling)! - Internal: patch release to align TypeScript types across packages for consistent type compatibility.
+
+- Updated dependencies [[`6aa8e1f`](https://github.com/equinor/fusion-framework/commit/6aa8e1f5c9d852b25e97aa7d98a63008c64d4581)]:
+  - @equinor/fusion-framework-module-services@7.2.1
+  - @equinor/fusion-framework-react@7.4.20
+  - @equinor/fusion-framework-react-module@3.1.14
+  - @equinor/fusion-query@6.0.4
+
 ## 1.6.2
 
 ### Patch Changes

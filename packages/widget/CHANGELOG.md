@@ -1,5 +1,19 @@
 # Change Log
 
+## 1.1.50
+
+### Patch Changes
+
+- [#4157](https://github.com/equinor/fusion-framework/pull/4157) [`6aa8e1f`](https://github.com/equinor/fusion-framework/commit/6aa8e1f5c9d852b25e97aa7d98a63008c64d4581) Thanks [@Noggling](https://github.com/Noggling)! - Internal: patch release to align TypeScript types across packages for consistent type compatibility.
+
+- Updated dependencies [[`6aa8e1f`](https://github.com/equinor/fusion-framework/commit/6aa8e1f5c9d852b25e97aa7d98a63008c64d4581), [`db8fa81`](https://github.com/equinor/fusion-framework/commit/db8fa8134b77a628b15e06f7f72b50f04ef97458)]:
+  - @equinor/fusion-framework@7.4.13
+  - @equinor/fusion-framework-module-event@5.0.1
+  - @equinor/fusion-framework-module-http@7.0.8
+  - @equinor/fusion-framework-module@5.0.6
+  - @equinor/fusion-framework-module-msal@7.3.1
+  - @equinor/fusion-framework-module-widget@14.0.1
+
 ## 1.1.49
 
 ### Patch Changes

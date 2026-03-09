@@ -1,5 +1,33 @@
 # @equinor/fusion-framework-dev-portal
 
+## 4.0.4
+
+### Patch Changes
+
+- [#4100](https://github.com/equinor/fusion-framework/pull/4100) [`9d4d520`](https://github.com/equinor/fusion-framework/commit/9d4d520e9d3c3a3c4ef68a96952fbbc6f6d34720) Thanks [@dependabot](https://github.com/apps/dependabot)! - Internal: rebuild the CLI, dev portal, and SPA plugin with Rollup 4.59.0 to address a security advisory affecting packaged build output. No public API changes.
+
+- [#4157](https://github.com/equinor/fusion-framework/pull/4157) [`6aa8e1f`](https://github.com/equinor/fusion-framework/commit/6aa8e1f5c9d852b25e97aa7d98a63008c64d4581) Thanks [@Noggling](https://github.com/Noggling)! - Internal: patch release to align TypeScript types across packages for consistent type compatibility.
+
+- Updated dependencies [[`6aa8e1f`](https://github.com/equinor/fusion-framework/commit/6aa8e1f5c9d852b25e97aa7d98a63008c64d4581), [`390b1b3`](https://github.com/equinor/fusion-framework/commit/390b1b3f014a8af9900a6589911f65f068a1e9c0)]:
+  - @equinor/fusion-framework-app@10.4.9
+  - @equinor/fusion-framework-dev-server@1.1.31
+  - @equinor/fusion-framework@7.4.13
+  - @equinor/fusion-framework-module-ag-grid@35.0.2
+  - @equinor/fusion-framework-module-analytics@1.0.2
+  - @equinor/fusion-framework-module-app@7.4.1
+  - @equinor/fusion-framework-module-bookmark@3.0.6
+  - @equinor/fusion-framework-module-context@7.0.3
+  - @equinor/fusion-framework-module-feature-flag@1.1.28
+  - @equinor/fusion-framework-module-navigation@6.0.1
+  - @equinor/fusion-framework-module-services@7.2.1
+  - @equinor/fusion-framework-module-telemetry@4.6.4
+  - @equinor/fusion-framework-react-components-bookmark@1.1.3
+  - @equinor/fusion-framework-react-components-people-provider@1.6.3
+  - @equinor/fusion-framework-react@7.4.20
+  - @equinor/fusion-framework-react-module-bookmark@5.0.2
+  - @equinor/fusion-observable@8.5.8
+  - @equinor/fusion-query@6.0.4
+
 ## 4.0.3
 
 ### Patch Changes
