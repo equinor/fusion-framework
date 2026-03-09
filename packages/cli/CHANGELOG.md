@@ -1,5 +1,15 @@
 # Change Log
 
+## 13.3.17
+
+### Patch Changes
+
+- [#4160](https://github.com/equinor/fusion-framework/pull/4160) [`e2fb579`](https://github.com/equinor/fusion-framework/commit/e2fb579f82bf54c3631ac736583d6766450d9d8e) Thanks [@Noggling](https://github.com/Noggling)! - Fix portal manifest validation failing due to undefined annotation values.
+
+  The `annotations` schema now accepts optional string values, allowing CI/CD environment annotations with undefined fields to pass validation.
+
+  Fixes: https://github.com/equinor/fusion-core-tasks/issues/502
+
 ## 13.3.16
 
 ### Patch Changes
