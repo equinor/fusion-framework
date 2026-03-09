@@ -1703,6 +1703,9 @@ importers:
       '@equinor/fusion-framework-module-msal':
         specifier: workspace:^
         version: link:../msal
+      '@equinor/fusion-framework-module-service-discovery':
+        specifier: workspace:^
+        version: link:../service-discovery
       typescript:
         specifier: ^5.8.2
         version: 5.9.3
@@ -2002,6 +2005,9 @@ importers:
       '@equinor/fusion-framework-react-module-context':
         specifier: workspace:^
         version: link:../modules/context
+      '@equinor/fusion-framework-react-module-signalr':
+        specifier: workspace:^
+        version: link:../modules/signalr
       '@types/react':
         specifier: ^18.2.50
         version: 18.3.27
@@ -2054,6 +2060,9 @@ importers:
       '@equinor/fusion-framework-module-navigation':
         specifier: workspace:^
         version: link:../../modules/navigation
+      '@equinor/fusion-framework-module-service-discovery':
+        specifier: workspace:^
+        version: link:../../modules/service-discovery
       '@equinor/fusion-framework-react':
         specifier: workspace:^
         version: link:../framework
@@ -2236,6 +2245,9 @@ importers:
         specifier: workspace:^
         version: link:../../../modules/signalr
     devDependencies:
+      '@equinor/fusion-framework-react-module':
+        specifier: workspace:^
+        version: link:../module
       '@types/react':
         specifier: ^18.2.50
         version: 18.3.27
