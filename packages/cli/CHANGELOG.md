@@ -1,5 +1,27 @@
 # Change Log
 
+## 13.3.16
+
+### Patch Changes
+
+- [#4122](https://github.com/equinor/fusion-framework/pull/4122) [`0a3a23c`](https://github.com/equinor/fusion-framework/commit/0a3a23c230778d64c23fa3008d59d80908d44f45) Thanks [@dependabot](https://github.com/apps/dependabot)! - Internal: update simple-git to 3.32.3 to include upstream hardening for unsafe clone and protocol handling.
+
+- [#4070](https://github.com/equinor/fusion-framework/pull/4070) [`5cc81f5`](https://github.com/equinor/fusion-framework/commit/5cc81f58ad159f9308b1fe028f04629c407dac37) Thanks [@dependabot](https://github.com/apps/dependabot)! - Internal: update the CLI's bundled Ajv schema validation dependency to 8.18.0 to address a security advisory. No public API changes.
+
+- [#4100](https://github.com/equinor/fusion-framework/pull/4100) [`9d4d520`](https://github.com/equinor/fusion-framework/commit/9d4d520e9d3c3a3c4ef68a96952fbbc6f6d34720) Thanks [@dependabot](https://github.com/apps/dependabot)! - Internal: rebuild the CLI, dev portal, and SPA plugin with Rollup 4.59.0 to address a security advisory affecting packaged build output. No public API changes.
+
+- [#4098](https://github.com/equinor/fusion-framework/pull/4098) [`40328c3`](https://github.com/equinor/fusion-framework/commit/40328c3a1489ad29c7bbc03fa283e1daa9a9ee2e) Thanks [@dependabot](https://github.com/apps/dependabot)! - Internal: update inquirer to 13.3.0 to improve prompt handling and localization support without changing the CLI API.
+
+- [#4025](https://github.com/equinor/fusion-framework/pull/4025) [`0dc5e05`](https://github.com/equinor/fusion-framework/commit/0dc5e058d4adb28ee72a1aac6dbdbc4da84741e9) Thanks [@dependabot](https://github.com/apps/dependabot)! - Internal: update ora to 9.3.0 to reduce spinner flicker and improve terminal interaction behavior without changing the CLI API.
+
+- [#4157](https://github.com/equinor/fusion-framework/pull/4157) [`6aa8e1f`](https://github.com/equinor/fusion-framework/commit/6aa8e1f5c9d852b25e97aa7d98a63008c64d4581) Thanks [@Noggling](https://github.com/Noggling)! - Internal: patch release to align TypeScript types across packages for consistent type compatibility.
+
+- Updated dependencies [[`9d4d520`](https://github.com/equinor/fusion-framework/commit/9d4d520e9d3c3a3c4ef68a96952fbbc6f6d34720), [`6aa8e1f`](https://github.com/equinor/fusion-framework/commit/6aa8e1f5c9d852b25e97aa7d98a63008c64d4581)]:
+  - @equinor/fusion-framework-dev-portal@4.0.4
+  - @equinor/fusion-framework-dev-server@1.1.31
+  - @equinor/fusion-framework-module-msal-node@3.0.1
+  - @equinor/fusion-imports@1.1.11
+
 ## 13.3.15
 
 ### Patch Changes

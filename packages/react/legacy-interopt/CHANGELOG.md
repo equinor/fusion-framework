@@ -1,5 +1,22 @@
 # Change Log
 
+## 28.0.1
+
+### Patch Changes
+
+- [#4157](https://github.com/equinor/fusion-framework/pull/4157) [`6aa8e1f`](https://github.com/equinor/fusion-framework/commit/6aa8e1f5c9d852b25e97aa7d98a63008c64d4581) Thanks [@Noggling](https://github.com/Noggling)! - Internal: patch release to align TypeScript types across packages for consistent type compatibility.
+
+- Updated dependencies [[`6aa8e1f`](https://github.com/equinor/fusion-framework/commit/6aa8e1f5c9d852b25e97aa7d98a63008c64d4581), [`db8fa81`](https://github.com/equinor/fusion-framework/commit/db8fa8134b77a628b15e06f7f72b50f04ef97458)]:
+  - @equinor/fusion-framework-app@10.4.9
+  - @equinor/fusion-framework@7.4.13
+  - @equinor/fusion-framework-module-app@7.4.1
+  - @equinor/fusion-framework-module-http@7.0.8
+  - @equinor/fusion-framework-module-msal@7.3.1
+  - @equinor/fusion-framework-module-navigation@6.0.1
+  - @equinor/fusion-framework-module-service-discovery@9.1.1
+  - @equinor/fusion-framework-react-app@9.0.8
+  - @equinor/fusion-observable@8.5.8
+
 ## 28.0.0
 
 ### Patch Changes
