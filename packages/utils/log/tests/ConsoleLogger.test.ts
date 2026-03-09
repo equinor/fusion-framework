@@ -1,10 +1,14 @@
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import chalk from 'chalk';
 
 import { ConsoleLogger, LogLevel } from '../src';
 
 describe('Console logger', () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
   it('should log debug messages', () => {
     const spy = vi.spyOn(console, 'debug');
     const logger = new ConsoleLogger('MainLogger');
