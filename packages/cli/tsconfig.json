@@ -32,18 +32,6 @@
     },
     {
       "path": "../dev-server"
-    },
-    {
-      "path": "../cli-plugins/ai-index"
-    },
-    {
-      "path": "../cli-plugins/ai-search"
-    },
-    {
-      "path": "../cli-plugins/ai-chat"
-    },
-    {
-      "path": "../cli-plugins/ai-mcp"
     }
   ],
   "include": ["src/**/*", "types/*"],

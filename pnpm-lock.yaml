@@ -39,6 +39,18 @@ importers:
       '@changesets/cli':
         specifier: ^2.26.2
         version: 2.30.0(@types/node@24.12.0)
+      '@equinor/fusion-framework-cli-plugin-ai-chat':
+        specifier: workspace:*
+        version: link:packages/cli-plugins/ai-chat
+      '@equinor/fusion-framework-cli-plugin-ai-index':
+        specifier: workspace:*
+        version: link:packages/cli-plugins/ai-index
+      '@equinor/fusion-framework-cli-plugin-ai-mcp':
+        specifier: workspace:*
+        version: link:packages/cli-plugins/ai-mcp
+      '@equinor/fusion-framework-cli-plugin-ai-search':
+        specifier: workspace:*
+        version: link:packages/cli-plugins/ai-search
       '@vitest/coverage-v8':
         specifier: ^4.0.18
         version: 4.0.18(vitest@4.0.18(@opentelemetry/api@1.9.0)(@types/node@24.12.0)(happy-dom@20.8.4)(lightningcss@1.32.0)(msw@2.12.10(@types/node@24.12.0)(typescript@5.9.3))(sass-embedded@1.98.0)(sass@1.98.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2))
@@ -868,18 +880,6 @@ importers:
         specifier: ^4.1.8
         version: 4.3.6
     devDependencies:
-      '@equinor/fusion-framework-cli-plugin-ai-chat':
-        specifier: workspace:*
-        version: link:../cli-plugins/ai-chat
-      '@equinor/fusion-framework-cli-plugin-ai-index':
-        specifier: workspace:*
-        version: link:../cli-plugins/ai-index
-      '@equinor/fusion-framework-cli-plugin-ai-mcp':
-        specifier: workspace:*
-        version: link:../cli-plugins/ai-mcp
-      '@equinor/fusion-framework-cli-plugin-ai-search':
-        specifier: workspace:*
-        version: link:../cli-plugins/ai-search
       '@equinor/fusion-framework-module':
         specifier: workspace:*
         version: link:../modules/module
