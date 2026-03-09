@@ -9,6 +9,16 @@
     ".": {
       "import": "./dist/esm/index.js",
       "types": "./dist/types/index.d.ts"
+    },
+    "./utils": {
+      "import": "./dist/esm/lib/utils/index.js",
+      "types": "./dist/types/lib/utils/index.d.ts"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      ".": ["dist/types/index.d.ts"],
+      "utils": ["dist/types/lib/utils/index.d.ts"]
     }
   },
   "scripts": {
