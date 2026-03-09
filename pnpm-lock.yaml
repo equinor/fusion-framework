@@ -818,7 +818,7 @@ importers:
         version: 4.3.1
       dotenv:
         specifier: ^17.2.3
-        version: 17.2.4
+        version: 17.3.1
       execa:
         specifier: ^9.6.0
         version: 9.6.1
@@ -1227,7 +1227,7 @@ importers:
         version: 5.1.4(vite@7.3.1(@types/node@25.3.5)(jiti@2.6.1)(less@4.5.1)(lightningcss@1.31.1)(sass-embedded@1.97.2)(sass@1.97.2)(stylus@0.64.0)(sugarss@5.0.1(postcss@8.5.8))(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2))
       dotenv:
         specifier: ^17.2.2
-        version: 17.2.4
+        version: 17.3.1
       react:
         specifier: ^18.2.0
         version: 18.3.1
@@ -2357,7 +2357,7 @@ importers:
     dependencies:
       dotenv:
         specifier: ^17.2.2
-        version: 17.2.4
+        version: 17.3.1
       dotenv-expand:
         specifier: ^12.0.2
         version: 12.0.3
@@ -13070,10 +13070,6 @@ packages:
 
   dotenv@16.6.1:
     resolution: {integrity: sha512-uBq4egWHTcTt33a72vpSG0z3HnPuIl6NqYcTrKEg2azoEyl2hpW0zqlxysq2pK9HlDIHyHyakeYaYnSAwd8bow==}
-    engines: {node: '>=12'}
-
-  dotenv@17.2.4:
-    resolution: {integrity: sha512-mudtfb4zRB4bVvdj0xRo+e6duH1csJRM8IukBqfTRvHotn9+LBXB8ynAidP9zHqoRC/fsllXgk4kCKlR21fIhw==}
     engines: {node: '>=12'}
 
   dotenv@17.3.1:
@@ -30602,7 +30598,7 @@ snapshots:
 
   '@types/dotenv@8.2.3':
     dependencies:
-      dotenv: 17.2.4
+      dotenv: 17.3.1
 
   '@types/duplexify@3.6.5':
     dependencies:
@@ -32556,7 +32552,7 @@ snapshots:
       ajv-errors: 3.0.0(ajv@8.18.0)
       ajv-keywords: 5.1.0(ajv@8.18.0)
       assert-browserify: 2.0.0
-      babel-loader: 10.1.0(@babel/core@7.29.0)(@rspack/core@1.7.6(@swc/helpers@0.5.19))(webpack@5.105.4(@swc/core@1.15.13(@swc/helpers@0.5.19))(esbuild@0.25.12))
+      babel-loader: 10.1.0(@babel/core@7.29.0)(@rspack/core@1.7.6(@swc/helpers@0.5.19))(webpack@5.105.4(@swc/core@1.15.13(@swc/helpers@0.5.19)))
       browserify-zlib: 0.2.0
       chalk: 5.6.2
       cookie: 1.1.1
@@ -32611,7 +32607,7 @@ snapshots:
       - supports-color
     optional: true
 
-  babel-loader@10.1.0(@babel/core@7.29.0)(@rspack/core@1.7.6(@swc/helpers@0.5.19))(webpack@5.105.4(@swc/core@1.15.13(@swc/helpers@0.5.19))(esbuild@0.25.12)):
+  babel-loader@10.1.0(@babel/core@7.29.0)(@rspack/core@1.7.6(@swc/helpers@0.5.19))(webpack@5.105.4(@swc/core@1.15.13(@swc/helpers@0.5.19))):
     dependencies:
       '@babel/core': 7.29.0
       find-up: 5.0.0
@@ -34712,8 +34708,6 @@ snapshots:
       dotenv: 16.6.1
 
   dotenv@16.6.1: {}
-
-  dotenv@17.2.4: {}
 
   dotenv@17.3.1: {}
 
@@ -42886,7 +42880,7 @@ snapshots:
 
   term-size@2.2.1: {}
 
-  terser-webpack-plugin@5.3.17(@swc/core@1.15.13(@swc/helpers@0.5.19))(esbuild@0.25.12)(webpack@5.105.4(@swc/core@1.15.13(@swc/helpers@0.5.19))(esbuild@0.25.12)):
+  terser-webpack-plugin@5.3.17(@swc/core@1.15.13(@swc/helpers@0.5.19))(esbuild@0.25.12)(webpack@5.105.4(@swc/core@1.15.13(@swc/helpers@0.5.19))):
     dependencies:
       '@jridgewell/trace-mapping': 0.3.31
       jest-worker: 27.5.1
@@ -44348,7 +44342,7 @@ snapshots:
       neo-async: 2.6.2
       schema-utils: 4.3.3
       tapable: 2.3.0
-      terser-webpack-plugin: 5.3.17(@swc/core@1.15.13(@swc/helpers@0.5.19))(esbuild@0.25.12)(webpack@5.105.4(@swc/core@1.15.13(@swc/helpers@0.5.19))(esbuild@0.25.12))
+      terser-webpack-plugin: 5.3.17(@swc/core@1.15.13(@swc/helpers@0.5.19))(esbuild@0.25.12)(webpack@5.105.4(@swc/core@1.15.13(@swc/helpers@0.5.19)))
       watchpack: 2.5.1
       webpack-sources: 3.3.4
     transitivePeerDependencies:
