@@ -1,5 +1,11 @@
 # Change Log
 
+## 13.3.18
+
+### Patch Changes
+
+- [#4167](https://github.com/equinor/fusion-framework/pull/4167) [`35afdc9`](https://github.com/equinor/fusion-framework/commit/35afdc9d818818f86d2dc8f985466771cd05e7e5) Thanks [@Noggling](https://github.com/Noggling)! - Internal: update portal manifest build annotation validation to accept `null` values (`string | null | undefined`) and document the nullish handling behavior.
+
 ## 13.3.17
 
 ### Patch Changes
