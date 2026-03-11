@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-docs
 
+## 0.4.15-next.0
+
+### Patch Changes
+
+- [#3820](https://github.com/equinor/fusion-framework/pull/3820) [`f647825`](https://github.com/equinor/fusion-framework/commit/f647825cb5712763b09dafda21fd996211c78b78) Thanks [@odinr](https://github.com/odinr)! - relase next
+
 ## 0.4.14
 
 ### Patch Changes
@@ -13,7 +19,6 @@
 - [#4000](https://github.com/equinor/fusion-framework/pull/4000) [`0b34d5d`](https://github.com/equinor/fusion-framework/commit/0b34d5d895c740a77fc995abeca910fdca1cf633) Thanks [@odinr](https://github.com/odinr)! - Add documentation for backend-issued auth code flow in MSAL module
 
   Add comprehensive guide explaining the SPA Auth Code Flow pattern, including:
-
   - Overview and motivation for using backend-issued codes
   - Step-by-step usage instructions with code examples
   - API documentation for `setAuthCode()` method
@@ -27,6 +32,7 @@
 ### Patch Changes
 
 - [#3990](https://github.com/equinor/fusion-framework/pull/3990) [`8719068`](https://github.com/equinor/fusion-framework/commit/8719068b723975db90a1b4bee59808734eb87e20) Thanks [@odinr](https://github.com/odinr)! - Update CLI documentation to include the new `--config` flag for the `app publish` command, showing how to upload application configuration after publishing in a single command.
+
 ## 0.4.12-next.0
 
 ### Patch Changes

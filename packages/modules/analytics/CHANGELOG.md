@@ -1,5 +1,17 @@
 # @equinor/fusion-framework-module-analytics
 
+## 1.0.3-next.0
+
+### Patch Changes
+
+- Updated dependencies [[`f647825`](https://github.com/equinor/fusion-framework/commit/f647825cb5712763b09dafda21fd996211c78b78)]:
+  - @equinor/fusion-observable@8.5.9-next.0
+  - @equinor/fusion-framework-module-app@7.4.2-next.0
+  - @equinor/fusion-framework-module-context@7.0.4-next.0
+  - @equinor/fusion-framework-module-event@5.0.2-next.0
+  - @equinor/fusion-framework-module-http@7.0.9-next.0
+  - @equinor/fusion-framework-module@5.0.7-next.0
+
 ## 1.0.2
 
 ### Patch Changes

@@ -1,5 +1,17 @@
 # @equinor/fusion-framework-react-components-people-provider
 
+## 1.6.4-next.0
+
+### Patch Changes
+
+- [#3820](https://github.com/equinor/fusion-framework/pull/3820) [`f647825`](https://github.com/equinor/fusion-framework/commit/f647825cb5712763b09dafda21fd996211c78b78) Thanks [@odinr](https://github.com/odinr)! - relase next
+
+- Updated dependencies [[`f647825`](https://github.com/equinor/fusion-framework/commit/f647825cb5712763b09dafda21fd996211c78b78)]:
+  - @equinor/fusion-framework-react-module@3.1.15-next.0
+  - @equinor/fusion-framework-react@7.4.21-next.0
+  - @equinor/fusion-query@6.0.5-next.0
+  - @equinor/fusion-framework-module-services@7.2.2-next.0
+
 ## 1.6.3
 
 ### Patch Changes
@@ -31,7 +43,6 @@
 - [#4095](https://github.com/equinor/fusion-framework/pull/4095) [`f09b26f`](https://github.com/equinor/fusion-framework/commit/f09b26f100a94bf3c841be9830525aa2c734b180) Thanks [@eikeland](https://github.com/eikeland)! - Add `suggest` and `resolve` methods to People API client for improved people picker functionality.
 
   The People service now supports:
-
   - **suggest**: Autocomplete/typeahead for people picker with optional system account filtering
   - **resolve**: Batch resolution of person identifiers to full person objects
 
@@ -61,6 +72,7 @@
 
 - Updated dependencies [[`f09b26f`](https://github.com/equinor/fusion-framework/commit/f09b26f100a94bf3c841be9830525aa2c734b180)]:
   - @equinor/fusion-framework-module-services@7.2.0
+
 ## 2.0.0-next.0
 
 ### Major Changes

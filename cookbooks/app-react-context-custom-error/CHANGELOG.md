@@ -1,5 +1,17 @@
 # @equinor/fusion-framework-cookbook-app-react-context-custom-error
 
+## 4.1.85-next.0
+
+### Patch Changes
+
+- [#3820](https://github.com/equinor/fusion-framework/pull/3820) [`f647825`](https://github.com/equinor/fusion-framework/commit/f647825cb5712763b09dafda21fd996211c78b78) Thanks [@odinr](https://github.com/odinr)! - relase next
+
+- Updated dependencies [[`f647825`](https://github.com/equinor/fusion-framework/commit/f647825cb5712763b09dafda21fd996211c78b78)]:
+  - @equinor/fusion-framework-react-module-context@6.2.35-next.0
+  - @equinor/fusion-observable@8.5.9-next.0
+  - @equinor/fusion-framework-react-app@9.0.9-next.0
+  - @equinor/fusion-framework-cli@13.3.19-next.0
+
 ## 4.1.84
 
 ### Patch Changes
@@ -34,7 +46,6 @@
 - [#3714](https://github.com/equinor/fusion-framework/pull/3714) [`11fe961`](https://github.com/equinor/fusion-framework/commit/11fe961794e4960ccb987bc320268cc9b263f1f8) Thanks [@odinr](https://github.com/odinr)! - Improved all cookbook README documentation for better developer experience.
 
   All cookbook README files now feature:
-
   - Code examples matching actual implementations
   - Inline comments explaining patterns and concepts
   - Developer-friendly language for those new to Fusion Framework

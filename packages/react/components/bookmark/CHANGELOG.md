@@ -1,5 +1,22 @@
 # Change Log
 
+## 1.2.0-next.0
+
+### Minor Changes
+
+- [#3820](https://github.com/equinor/fusion-framework/pull/3820) [`fa89ed8`](https://github.com/equinor/fusion-framework/commit/fa89ed8aeed919950ef6a6775e60eb6904ec7946) Thanks [@odinr](https://github.com/odinr)! - Update EDS (Equinor Design System) packages to latest versions: `@equinor/eds-core-react` to ^2.2.0, `@equinor/eds-icons` to ^1.1.0, `@equinor/eds-tokens` to ^2.1.1, and `@equinor/eds-utils` to ^2.0.0.
+
+  These are major version updates from the 0.x series. Consumers should verify compatibility with their applications, particularly if using `@equinor/fusion-react-side-sheet` which may require updates to support the new EDS versions.
+
+### Patch Changes
+
+- [#3820](https://github.com/equinor/fusion-framework/pull/3820) [`f647825`](https://github.com/equinor/fusion-framework/commit/f647825cb5712763b09dafda21fd996211c78b78) Thanks [@odinr](https://github.com/odinr)! - relase next
+
+- Updated dependencies [[`f647825`](https://github.com/equinor/fusion-framework/commit/f647825cb5712763b09dafda21fd996211c78b78)]:
+  - @equinor/fusion-framework-react-module-bookmark@5.0.3-next.0
+  - @equinor/fusion-observable@8.5.9-next.0
+  - @equinor/fusion-framework-react@7.4.21-next.0
+
 ## 1.1.3
 
 ### Patch Changes
@@ -10,6 +27,7 @@
   - @equinor/fusion-framework-react@7.4.20
   - @equinor/fusion-framework-react-module-bookmark@5.0.2
   - @equinor/fusion-observable@8.5.8
+
 ## 2.0.0-next.0
 
 ### Major Changes

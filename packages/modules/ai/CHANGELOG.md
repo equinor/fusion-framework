@@ -1,5 +1,13 @@
 # @equinor/fusion-framework-module-ai
 
+## 2.0.3-next.0
+
+### Patch Changes
+
+- Updated dependencies [[`f647825`](https://github.com/equinor/fusion-framework/commit/f647825cb5712763b09dafda21fd996211c78b78)]:
+  - @equinor/fusion-framework-module-http@7.0.9-next.0
+  - @equinor/fusion-framework-module@5.0.7-next.0
+
 ## 2.0.2
 
 ### Patch Changes
@@ -25,7 +33,6 @@
   This module provides a framework-agnostic way to integrate AI/LLM services including Azure OpenAI models, embeddings, and vector stores, enabling semantic search and AI-powered features in Fusion Framework applications.
 
   **Features:**
-
   - Language model integration (OpenAI, Azure OpenAI)
   - Text embedding services for semantic search
   - Vector store integration (Azure Cognitive Search)
@@ -34,7 +41,6 @@
   - Fluent configuration API
 
   **Quick Usage:**
-
   1. Install the module:
 
   ```sh
@@ -60,14 +66,14 @@
             new AzureOpenAIModel({
               apiKey: process.env.AZURE_OPENAI_API_KEY!,
               modelName: "gpt-4",
-            })
+            }),
           )
           .setEmbedding(
             "embeddings",
             new AzureOpenAiEmbed({
               apiKey: process.env.AZURE_OPENAI_API_KEY!,
               modelName: "text-embedding-ada-002",
-            })
+            }),
           )
           .setVectorStore(
             "vector-db",
@@ -75,8 +81,8 @@
               endpoint: process.env.AZURE_SEARCH_ENDPOINT!,
               apiKey: process.env.AZURE_SEARCH_API_KEY!,
               indexName: "documents",
-            })
-          )
+            }),
+          ),
       ),
     ],
   });
@@ -112,7 +118,6 @@
   This module provides a framework-agnostic way to integrate AI/LLM services including Azure OpenAI models, embeddings, and vector stores.
 
   **Features:**
-
   - AI module configuration and initialization
   - Azure OpenAI integration for models and embeddings
   - Vector store support for document search
