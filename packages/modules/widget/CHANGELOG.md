@@ -1,5 +1,19 @@
 # Change Log
 
+## 14.0.2-next.0
+
+### Patch Changes
+
+- [#3820](https://github.com/equinor/fusion-framework/pull/3820) [`f647825`](https://github.com/equinor/fusion-framework/commit/f647825cb5712763b09dafda21fd996211c78b78) Thanks [@odinr](https://github.com/odinr)! - relase next
+
+- Updated dependencies [[`f647825`](https://github.com/equinor/fusion-framework/commit/f647825cb5712763b09dafda21fd996211c78b78)]:
+  - @equinor/fusion-observable@8.5.9-next.0
+  - @equinor/fusion-query@6.0.5-next.0
+  - @equinor/fusion-framework-module-event@5.0.2-next.0
+  - @equinor/fusion-framework-module-http@7.0.9-next.0
+  - @equinor/fusion-framework-module@5.0.7-next.0
+  - @equinor/fusion-framework-module-service-discovery@9.1.2-next.0
+
 ## 14.0.1
 
 ### Patch Changes
@@ -27,6 +41,7 @@
 
 - Updated dependencies [[`1f5a8e4`](https://github.com/equinor/fusion-framework/commit/1f5a8e475ea30fa1e0f32c7dab885a5a42c50bba)]:
   - @equinor/fusion-framework-module-event@5.0.0
+
 ## 12.0.4-next.0
 
 ### Patch Changes

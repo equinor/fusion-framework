@@ -1,5 +1,16 @@
 # Change Log
 
+## 10.0.2-next.0
+
+### Patch Changes
+
+- [#3820](https://github.com/equinor/fusion-framework/pull/3820) [`f647825`](https://github.com/equinor/fusion-framework/commit/f647825cb5712763b09dafda21fd996211c78b78) Thanks [@odinr](https://github.com/odinr)! - relase next
+
+- Updated dependencies [[`f647825`](https://github.com/equinor/fusion-framework/commit/f647825cb5712763b09dafda21fd996211c78b78)]:
+  - @equinor/fusion-framework-module@5.0.7-next.0
+  - @equinor/fusion-framework-module-msal@7.3.2-next.0
+  - @equinor/fusion-framework-module-service-discovery@9.1.2-next.0
+
 ## 10.0.1
 
 ### Patch Changes
@@ -17,6 +28,7 @@
 
 - Updated dependencies [[`cb37cae`](https://github.com/equinor/fusion-framework/commit/cb37cae45e06778e8d1ea20faed31b582e49fcae)]:
   - @equinor/fusion-framework-module-msal@7.0.0
+
 ## 10.0.0-next.0
 
 ### Patch Changes

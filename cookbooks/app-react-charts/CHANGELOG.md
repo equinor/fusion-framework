@@ -1,5 +1,15 @@
 # Change Log
 
+## 1.2.5-next.0
+
+### Patch Changes
+
+- [#3820](https://github.com/equinor/fusion-framework/pull/3820) [`f647825`](https://github.com/equinor/fusion-framework/commit/f647825cb5712763b09dafda21fd996211c78b78) Thanks [@odinr](https://github.com/odinr)! - relase next
+
+- Updated dependencies [[`f647825`](https://github.com/equinor/fusion-framework/commit/f647825cb5712763b09dafda21fd996211c78b78)]:
+  - @equinor/fusion-framework-react-router@1.0.0-next.1
+  - @equinor/fusion-framework-react-ag-grid@35.0.3-next.0
+
 ## 1.2.4
 
 ### Patch Changes
@@ -11,12 +21,12 @@
 ### Patch Changes
 
 - [#4062](https://github.com/equinor/fusion-framework/pull/4062) [`7342a52`](https://github.com/equinor/fusion-framework/commit/7342a52cabf7c2e0281a1b5dc1ec6bfb683afe1e) Thanks [@AndrejNikolicEq](https://github.com/AndrejNikolicEq)! - Update AG Charts Cookbook to use new standalone AG Charts package.
-
   - Migrate all AG Charts imports from `@equinor/fusion-framework-react-ag-grid/charts` to `@equinor/fusion-framework-react-ag-charts`
   - Add proper `ModuleRegistry` initialization with `AllCommunityModule`
   - Update chart component imports to use new package exports
   - Remove redundant axes configurations (now handled by default AG Charts configuration)
   - Update `chart.js` and `react-chartjs-2` to latest versions
+
 ## 1.2.3-next.0
 
 ### Patch Changes

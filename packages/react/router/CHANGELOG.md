@@ -1,5 +1,16 @@
 # @equinor/fusion-framework-react-router
 
+## 1.0.0-next.1
+
+### Patch Changes
+
+- [#3820](https://github.com/equinor/fusion-framework/pull/3820) [`f647825`](https://github.com/equinor/fusion-framework/commit/f647825cb5712763b09dafda21fd996211c78b78) Thanks [@odinr](https://github.com/odinr)! - relase next
+
+- Updated dependencies [[`f647825`](https://github.com/equinor/fusion-framework/commit/f647825cb5712763b09dafda21fd996211c78b78)]:
+  - @equinor/fusion-framework-react-module@3.1.15-next.0
+  - @equinor/fusion-framework-module-navigation@7.0.0-next.2
+  - @equinor/fusion-imports@1.1.12-next.0
+
 ## 1.0.0-next.0
 
 ### Major Changes
