@@ -100,3 +100,5 @@ export const PeopleConceptPage = () => {
     </div>
   );
 };
+
+export default PeopleConceptPage;
