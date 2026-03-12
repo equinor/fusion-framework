@@ -1123,6 +1123,35 @@ importers:
         specifier: ^5.8.2
         version: 5.9.3
 
+  packages/cli-plugins/live-ai:
+    dependencies:
+      '@equinor/fusion-framework-cli-plugin-live-ai-core':
+        specifier: workspace:*
+        version: link:../live-ai-core
+      commander:
+        specifier: ^14.0.1
+        version: 14.0.3
+    devDependencies:
+      typescript:
+        specifier: ^5.8.2
+        version: 5.9.3
+
+  packages/cli-plugins/live-ai-core:
+    dependencies:
+      diff:
+        specifier: ^8.0.2
+        version: 8.0.3
+      ws:
+        specifier: ^8.18.3
+        version: 8.19.0
+    devDependencies:
+      '@types/ws':
+        specifier: ^8.18.1
+        version: 8.18.1
+      typescript:
+        specifier: ^5.8.2
+        version: 5.9.3
+
   packages/dev-portal:
     devDependencies:
       '@equinor/eds-core-react':
@@ -1140,6 +1169,9 @@ importers:
       '@equinor/fusion-framework-app':
         specifier: workspace:*
         version: link:../app
+      '@equinor/fusion-framework-cli-plugin-live-ai-core':
+        specifier: workspace:*
+        version: link:../cli-plugins/live-ai-core
       '@equinor/fusion-framework-dev-server':
         specifier: workspace:*
         version: link:../dev-server
@@ -1182,6 +1214,9 @@ importers:
       '@equinor/fusion-framework-react-module-bookmark':
         specifier: workspace:*
         version: link:../react/modules/bookmark
+      '@equinor/fusion-framework-react-module-event':
+        specifier: workspace:*
+        version: link:../react/modules/event
       '@equinor/fusion-observable':
         specifier: workspace:*
         version: link:../utils/observable
@@ -7268,6 +7303,10 @@ packages:
 
   devlop@1.1.0:
     resolution: {integrity: sha512-RWmIqhcFf1lRYBvNmr7qTNuyCt/7/ns2jbpp1+PalgE/rDQcBT0fioSMUpJ93irlUhC5hrg4cYqe6U+0ImW0rA==}
+
+  diff@8.0.3:
+    resolution: {integrity: sha512-qejHi7bcSD4hQAZE0tNAawRK1ZtafHDmMTMkrrIGgSLl7hTnQHmKCeB45xAcbfTqK2zowkM3j3bHt/4b/ARbYQ==}
+    engines: {node: '>=0.3.1'}
 
   dijkstrajs@1.0.3:
     resolution: {integrity: sha512-qiSlmBq9+BCdCA/L46dw8Uy93mloxsPSbwnm5yrKn2vMPiy8KyAskTF6zuV/j5BMsmOGZDPs7KjU+mjb670kfA==}
@@ -15946,6 +15985,8 @@ snapshots:
   devlop@1.1.0:
     dependencies:
       dequal: 2.0.3
+
+  diff@8.0.3: {}
 
   dijkstrajs@1.0.3: {}
 

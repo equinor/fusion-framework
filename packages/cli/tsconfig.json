@@ -44,6 +44,9 @@
     },
     {
       "path": "../cli-plugins/ai-mcp"
+    },
+    {
+      "path": "../cli-plugins/live-ai"
     }
   ],
   "include": ["src/**/*", "types/*"],

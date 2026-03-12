@@ -1,5 +1,6 @@
-import { tag } from '@equinor/eds-icons';
+import { add, tag } from '@equinor/eds-icons';
 import { Button, Icon, TopBar } from '@equinor/eds-core-react';
+Icon.add({ add });
 
 import PersonAvatarElement from '@equinor/fusion-wc-person/avatar';
 PersonAvatarElement;
@@ -10,15 +11,29 @@ interface HeaderActionProps {
   readonly userAzureId?: string;
   readonly toggleBookmark: (open: (status: boolean) => boolean) => void;
   readonly togglePerson: (open: (status: boolean) => boolean) => void;
+  readonly aiDevEnabled?: boolean;
+  readonly aiDevAvailable?: boolean;
+  readonly toggleAiDev?: (open: (status: boolean) => boolean) => void;
 }
 
 export const HeaderActions = (props: HeaderActionProps) => {
-  const { toggleBookmark, togglePerson, userAzureId } = props;
+  const { toggleBookmark, togglePerson, userAzureId, aiDevEnabled, aiDevAvailable, toggleAiDev } =
+    props;
 
   const bookmarkContext = useBookmarkComponentContext();
 
   return (
     <TopBar.Actions style={{ minWidth: 48, minHeight: 48 }}>
+      {aiDevEnabled && aiDevAvailable && toggleAiDev ? (
+        <Button
+          onClick={() => toggleAiDev((x) => !x)}
+          variant="ghost_icon"
+          title="Toggle AI Dev chat panel"
+        >
+          <Icon data={add} />
+        </Button>
+      ) : null}
+
       <Button
         onClick={() => toggleBookmark((x) => !x)}
         variant="ghost_icon"

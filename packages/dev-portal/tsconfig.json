@@ -64,6 +64,9 @@
     },
     {
       "path": "../dev-server"
+    },
+    {
+      "path": "../cli-plugins/live-ai-core"
     }
   ],
   "include": ["src/**/*", "start.ts"],

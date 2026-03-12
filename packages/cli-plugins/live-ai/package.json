@@ -1,0 +1,55 @@
+{
+  "name": "@equinor/fusion-framework-cli-plugin-live-ai",
+  "version": "0.0.0",
+  "description": "Fusion Framework CLI plugin for experimental live AI editing",
+  "main": "dist/esm/index.js",
+  "type": "module",
+  "types": "dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "types": "./dist/types/index.d.ts"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      ".": [
+        "dist/types/index.d.ts"
+      ]
+    }
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "build:types": "tsc -b",
+    "watch": "tsc -b --watch",
+    "prepack": "pnpm build",
+    "test": "vitest"
+  },
+  "keywords": [
+    "fusion-framework",
+    "cli",
+    "plugin",
+    "ai",
+    "live"
+  ],
+  "author": "",
+  "license": "ISC",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/equinor/fusion-framework.git",
+    "directory": "packages/cli-plugins/live-ai"
+  },
+  "dependencies": {
+    "@equinor/fusion-framework-cli-plugin-live-ai-core": "workspace:*",
+    "commander": "^14.0.1"
+  },
+  "peerDependencies": {
+    "@equinor/fusion-framework-cli": "workspace:^"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.2"
+  }
+}

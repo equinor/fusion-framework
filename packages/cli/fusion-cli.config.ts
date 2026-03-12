@@ -16,5 +16,6 @@ export default {
     '@equinor/fusion-framework-cli-plugin-ai-search',
     aiChatPlugin,
     aiMcpPlugin,
+    '@equinor/fusion-framework-cli-plugin-live-ai',
   ],
 };

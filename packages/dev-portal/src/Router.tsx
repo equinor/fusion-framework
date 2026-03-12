@@ -2,53 +2,37 @@ import { useBookmarkNavigate } from '@equinor/fusion-framework-react-module-book
 
 import { Outlet, RouterProvider, type RouterProviderProps, useParams } from 'react-router-dom';
 import AppLoader from './AppLoader';
-import { Header } from './Header';
+import { AiDevPortalLayout } from './AiDevChatPanel/AiDevPortalLayout';
 
 import { useFramework } from '@equinor/fusion-framework-react';
 import type { NavigationModule } from '@equinor/fusion-framework-module-navigation';
 import { useState } from 'react';
-import { styled } from 'styled-components';
 import { useAppContextNavigation } from './useAppContextNavigation';
 
-const Styled = {
-  ContentContainer: styled.div`
-        display: grid;
-        grid-template-columns: 1fr;
-        grid-template-rows: 48px 1fr;
-        height: 100vh;
-        overflow: hidden;
-        grid-template-areas: 'head' 'main';
-    `,
-  Head: styled.section`
-        grid-area: head;
-    `,
-  Main: styled.section`
-        grid-area: main;
-        overflow: auto;
-        position: relative;
-        max-width: 100%;
-        display: grid;
-    `,
+const LEGACY_APP_KEY_ALIASES: Record<string, string> = {
+  'react-app': 'fusion-framework-cookbook-app-react',
+  'react-app-pr': 'fusion-framework-cookbook-app-react',
+};
+
+const resolveAppKeyAlias = (appKey: string): string => {
+  return LEGACY_APP_KEY_ALIASES[appKey] ?? appKey;
 };
 
 const Root = () => {
-  useBookmarkNavigate({ resolveAppPath: (appKey: string) => `/apps/${appKey}` });
+  useBookmarkNavigate({
+    resolveAppPath: (appKey: string) => `/apps/${resolveAppKeyAlias(appKey)}`,
+  });
   return (
-    <Styled.ContentContainer>
-      <Styled.Head>
-        <Header />
-      </Styled.Head>
-      <Styled.Main>
-        <Outlet />
-      </Styled.Main>
-    </Styled.ContentContainer>
+    <AiDevPortalLayout>
+      <Outlet />
+    </AiDevPortalLayout>
   );
 };
 
 // eslint-disable-next-line react/no-multi-comp
 const AppRoute = () => {
   const { appKey } = useParams();
-  return appKey ? <AppLoader appKey={appKey} /> : null;
+  return appKey ? <AppLoader appKey={resolveAppKeyAlias(appKey)} /> : null;
 };
 
 const routes = [

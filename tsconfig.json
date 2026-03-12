@@ -11,6 +11,7 @@
       "@equinor/fusion-framework-react-*": ["./react/*/src"],
       "@equinor/fusion-framework-module": ["./modules/module/src"],
       "@equinor/fusion-framework-module-*": ["./modules/*/src"],
+      "@equinor/fusion-framework-cli-plugin-*": ["./cli-plugins/*/src"],
       "@equinor/fusion-framework-*": ["./*/src"],
       "@equinor/fusion-framework": ["./framework/src"],
       "fusion-framework-vite-plugin-*": ["./vite-plugins/*/src"],

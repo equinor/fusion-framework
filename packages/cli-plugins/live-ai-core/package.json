@@ -1,0 +1,64 @@
+{
+  "name": "@equinor/fusion-framework-cli-plugin-live-ai-core",
+  "version": "0.0.0",
+  "description": "Core local WebSocket write server for experimental live AI editing",
+  "type": "module",
+  "main": "dist/esm/index.js",
+  "types": "dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "types": "./dist/types/index.d.ts"
+    },
+    "./cli": {
+      "import": "./dist/esm/cli.js",
+      "types": "./dist/types/cli.d.ts"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      ".": [
+        "dist/types/index.d.ts"
+      ],
+      "./cli": [
+        "dist/types/cli.d.ts"
+      ]
+    }
+  },
+  "bin": {
+    "fusion-live-ai": "dist/esm/cli.js"
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "build:types": "tsc -b",
+    "watch": "tsc -b --watch",
+    "prepack": "pnpm build",
+    "test": "vitest"
+  },
+  "keywords": [
+    "fusion-framework",
+    "cli",
+    "plugin",
+    "ai",
+    "live",
+    "websocket"
+  ],
+  "author": "",
+  "license": "ISC",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/equinor/fusion-framework.git",
+    "directory": "packages/cli-plugins/live-ai-core"
+  },
+  "dependencies": {
+    "diff": "^8.0.2",
+    "ws": "^8.18.3"
+  },
+  "devDependencies": {
+    "@types/ws": "^8.18.1",
+    "typescript": "^5.8.2"
+  }
+}

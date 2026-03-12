@@ -33,7 +33,12 @@ const Styled = {
     `,
 };
 
-export const Header = () => {
+type HeaderProps = {
+  readonly aiDevAvailable?: boolean;
+  readonly toggleAiDev?: (open: (status: boolean) => boolean) => void;
+};
+
+export const Header = ({ aiDevAvailable, toggleAiDev }: HeaderProps) => {
   const currentUser = useCurrentUser();
   const topBarId = useId();
   const [isPersonSheetOpen, setIsPersonSheetOpen] = useState(false);
@@ -70,6 +75,8 @@ export const Header = () => {
           userAzureId={currentUser?.localAccountId}
           toggleBookmark={setIsBookmarkOpen}
           togglePerson={setIsPersonSheetOpen}
+          aiDevAvailable={aiDevAvailable}
+          toggleAiDev={toggleAiDev}
         />
         <TopBar.CustomContent>
           <ContextSelector />
