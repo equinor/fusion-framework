@@ -19,7 +19,7 @@ When handling Dependabot pull requests in the Fusion Framework monorepo, you:
 
 ## Your Workflow
 
-Follow the complete 15-step workflow defined in [dependabot-pr-handler SKILL.md](../skills/dependabot-pr-handler/SKILL.md).
+Follow the repository Dependabot workflow defined in [dependabot-pr.instructions.md](../instructions/dependabot-pr.instructions.md), using [fusion-dependency-review](../../.agents/skills/fusion-dependency-review/SKILL.md) as the default review skill when a dependency PR needs investigation or patching.
 
 Select your operating mode based on user intent:
 

@@ -43,6 +43,8 @@ If rules conflict, **the more specific file wins** (for example, React + Testing
 - **React**: `.github/instructions/react.instructions.md`
 - **Testing (Vitest)**: `.github/instructions/testing.instructions.md`
 - **Changesets**: `.github/instructions/changesets.instructions.md`
+- **Workflow contributions**: `.github/instructions/workflow-contribution.instructions.md`
+- **Skills**: `.github/instructions/skills.instructions.md`
 - **Pull requests**: `.github/instructions/pull-requests.instructions.md`
 - **Dependabot PRs**: `.github/instructions/dependabot-pr.instructions.md`
 
@@ -77,6 +79,8 @@ When you receive a task, default to this behavior:
 - **Consider changesets and PRs**
   - For any consumer-facing change or docs change, follow the Changeset Rules.
   - For PR bodies and commit messages, follow the Pull Request Rules and conventional commits.
+  - For workflow-driven commits, changesets, or PR updates, follow the Workflow Contribution Rules.
+  - For `.agents/skills/**`, follow the Skills Rules and treat imported catalog entries as read-only unless explicitly asked to edit them; prefer repo-owned `custom-*` overlays for local divergence.
 
 ---
 
