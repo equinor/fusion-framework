@@ -8,7 +8,7 @@ applyTo: ".changeset/**/*.md"
 
 ## TL;DR (for AI agents)
 
-- **When**: Any change to a published package or `.md` docs → create a changeset (docs use `@equinor/fusion-framework-docs`).
+- **When**: Any change to a published package or consumer-facing `.md` docs → create a changeset (docs use `@equinor/fusion-framework-docs`).
 - **Type**: Feature → `minor`, bugfix → `patch`, internal refactor → `patch` with `Internal:` prefix, breaking change → `major` with migration notes.
 - **Format**: File in `.changeset/` named `{package-name}_{short-description}.md` with YAML frontmatter listing packages and bump types.
 - **Content**: Write consumer-focused summaries (aim for concise but prioritize clarity and completeness; issue references don't count), reference issues, include migration or code examples for complex/breaking changes.
@@ -20,11 +20,12 @@ applyTo: ".changeset/**/*.md"
 - ✅ New features (minor bump)
 - ✅ Bug fixes (patch bump)
 - ✅ Breaking changes (major bump)
-- ✅ Documentation updates (patch for `@equinor/fusion-framework-docs`)
+- ✅ Consumer-facing documentation updates such as package READMEs, docs pages, and published markdown content (patch for `@equinor/fusion-framework-docs`)
 - ✅ Internal refactoring (patch with "Internal:" prefix)
 
 **Skip changeset for:**
 - ❌ Workspace root changes (monorepo config, tooling, CI)
+- ❌ Repo-internal markdown such as contribution instructions, prompts, workflow docs, agent definitions, and imported skill-catalog content
 - ❌ Test-only changes (unless fixing public API tests)
 
 ## Changeset Format

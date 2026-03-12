@@ -8,7 +8,8 @@ This repository uses [Changesets](https://github.com/changesets/changesets) to v
 ### TL;DR
 - **Create a changeset for consumer-affecting changes:** New APIs, bug fixes, breaking changes → `patch`/`minor`/`major`
 - **Skip for internal-only work:** Refactors, tests, tooling → no changeset unless repo-wide impact
-- **ALL markdown changes need changesets:** Any changes to `.md` files → create changeset for `@equinor/fusion-framework-docs` (docs are linked/referenced)
+- **Consumer-facing markdown changes need changesets:** Published docs, package READMEs, and other consumer-facing `.md` content → create changeset for `@equinor/fusion-framework-docs`
+- **Repo-internal markdown can skip:** Contribution instructions, prompts, workflow docs, agent definitions, and skill-catalog markdown do not use docs changesets
 - **One package per changeset preferred:** Group only identical changes across packages
 - **Directory:** `.changeset/` (singular) with package-prefixed filename
 - **Use `pnpm changeset`** for guided creation; bot validates on PRs
@@ -19,8 +20,9 @@ This repository uses [Changesets](https://github.com/changesets/changesets) to v
 **Decision Tree:**
 1. **Are you on a feature/fix branch?** → Check `.changeset/` for existing changesets first
 2. **Is this a workspace root change?** (monorepo config, tooling, CI) → Skip changeset entirely
-3. **Are you changing any `.md` files?** → Create changeset for `@equinor/fusion-framework-docs`
-4. **All other package changes** → Create changeset (`patch`/`minor`/`major`)
+3. **Are you changing consumer-facing `.md` files?** → Create changeset for `@equinor/fusion-framework-docs`
+4. **Are you changing repo-internal `.md` files only?** → Skip changeset and state why in the PR
+5. **All other package changes** → Create changeset (`patch`/`minor`/`major`)
    - Even internal refactoring requires a changeset for proper versioning
    - Internal changes use `patch` with clear "internal only" notes
 
@@ -31,6 +33,7 @@ This repository uses [Changesets](https://github.com/changesets/changesets) to v
 
 **Special cases:**
 - **Workspace root only** (cannot be released): Skip changeset entirely
+- **Repo-internal markdown only** (instructions, prompts, workflows, skills): Skip changeset entirely
 - **Multi-package identical changes** (e.g., same dependency bump): Group in one changeset
 
 ### Directory and file naming

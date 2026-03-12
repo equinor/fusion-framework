@@ -64,7 +64,9 @@ See [GitHub's basic writing and formatting syntax](https://docs.github.com/en/ge
 
 ## Changesets for Documentation
 
-**All documentation changes require a changeset** for `@equinor/fusion-framework-docs` to publish updated docs.
+**Consumer-facing documentation changes require a changeset** for `@equinor/fusion-framework-docs` to publish updated docs.
+
+Repository-internal markdown such as workflow instructions, prompts, agent definitions, and skill-catalog content does not use the docs package changeset.
 
 ### Changeset Format
 

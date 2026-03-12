@@ -51,7 +51,8 @@ These files remain authoritative. Workflow documents should point to them instea
 ## Changeset decision
 
 - Create a changeset for published package changes.
-- Create a changeset for `.md` documentation changes.
+- Create a changeset for consumer-facing `.md` documentation changes.
+- Skip changesets for repo-internal markdown such as workflow instructions, prompts, agent definitions, and skill-catalog content that does not ship to consumers.
 - Skip changesets for workspace-root CI, tooling, or config-only changes.
 - Skip changesets for test-only changes unless public behavior changed.
 - When skipped, state why.
