@@ -9,10 +9,10 @@
  - Commit list, changed packages, pre.json updates
  
  Usage (from repo root):
-   node .github/skills/rebase/scripts/generate-rebase-report.cjs [--no-fetch]
+   node .agents/skills/custom-rebase/scripts/generate-rebase-report.cjs [--no-fetch]
 
  Output:
-   .tmp/skills/rebase/<timestamp>-rebase-report.md
+   .tmp/skills/custom-rebase/<timestamp>-rebase-report.md
 */
 const fs = require('fs');
 const path = require('path');
@@ -135,7 +135,7 @@ function loadPackageNames(dirs) {
     const pkgPath = path.join(d, 'package.json');
     if (fs.existsSync(pkgPath)) {
       const pkg = readJsonOrNull(pkgPath);
-      if (pkg && pkg.name) results.push({ dir: d, name: pkg.name });
+      if (pkg?.name) results.push({ dir: d, name: pkg.name });
     }
   }
   return results;
@@ -237,7 +237,7 @@ function lockfileShortstat(remoteRef) {
 }
 
 function ensureTmpDir() {
-  const dir = path.join('.tmp', 'skills', 'rebase');
+  const dir = path.join('.tmp', 'skills', 'custom-rebase');
   fs.mkdirSync(dir, { recursive: true });
   return dir;
 }
@@ -249,7 +249,6 @@ function nowStamp() {
 }
 
 function main() {
-  const repoRoot = process.cwd();
   const args = process.argv.slice(2);
   const noFetch = args.includes('--no-fetch');
 
@@ -335,14 +334,6 @@ function main() {
       ),
   );
 
-  // Parse shortStat to extract filesChanged, insertions, deletions
-  const shortStatMatch = shortStat.match(
-    /(\d+) files? changed(?:, (\d+) insertions?\(\+\))?(?:, (\d+) deletions?\(-\))?/,
-  );
-  const filesChanged = shortStatMatch ? Number(shortStatMatch[1]) : 0;
-  const insertions = shortStatMatch ? Number(shortStatMatch[2] || 0) : 0;
-  const deletions = shortStatMatch ? Number(shortStatMatch[3] || 0) : 0;
-
   const out = [];
   out.push(`# Rebase Sanity Report: ${branch}`);
   out.push('');
@@ -406,7 +397,7 @@ function main() {
 
   out.push('## pre.json initialVersions changes');
   out.push('');
-  if (preChanges && preChanges.length) {
+  if (preChanges?.length) {
     for (const c of preChanges) out.push(`- ${c.name}: ${c.from} -> ${c.to}`);
   } else {
     out.push('- None');

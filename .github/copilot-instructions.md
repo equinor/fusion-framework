@@ -39,6 +39,10 @@ Fusion Framework uses file-based AI instructions under `.github/instructions/`. 
   Package layout, naming, cross-package imports, `workspace:^` dependencies.
 - **Changesets** → `./.github/instructions/changesets.instructions.md`  
   When and how to create changesets, choose bump types, and write consumer-facing summaries.
+- **Workflow contributions** → `./.github/instructions/workflow-contribution.instructions.md`  
+  Cross-cutting rules for workflow-driven code changes, commits, validation, changesets, and pull requests.
+- **Skills** → `./.github/instructions/skills.instructions.md`  
+  How repository-local skills are handled as read-only catalog content during repo greenkeeping, with repo-owned `custom-*` overlays when needed.
 - **Testing** → `./.github/instructions/testing.instructions.md`  
   Vitest patterns, mocking, coverage expectations, async/error testing.
 - **Pull requests** → `./.github/instructions/pull-requests.instructions.md`  
@@ -60,6 +64,7 @@ When you receive a task, follow this workflow:
    - `*.tsx` or React UI → follow **React Rules** (and **Testing Rules** for `*.test.tsx`).
    - `packages/**` TypeScript code → follow **Monorepo Structure Rules** + **Code Generation Rules**.
    - `.changeset/*.md` → follow **Changeset Rules**.
+  - `.agents/skills/**` → follow **Skills Rules** and treat imported catalog entries as read-only unless the user explicitly asks to change them; prefer repo-owned `custom-*` overlays for local divergence.
    - PR / changeset / Dependabot tasks → follow the corresponding instructions file.
 
 2. **Apply core global rules**
@@ -74,6 +79,7 @@ When you receive a task, follow this workflow:
 
 4. **Consider changesets and PR impact**
    - If a change affects a published package or documentation, **follow Changeset Rules**.
+  - If a workflow or prompt will create commits, changesets, or PRs, **follow Workflow Contribution Rules**.
    - When preparing a PR, follow **Pull Request Rules** and conventional commits.
 
 ---

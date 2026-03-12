@@ -7,7 +7,7 @@
  - Skip packages still suffixed with `-TAG.NUMBER`.
 
  Run from repo root:
-   node .github/skills/rebase/scripts/align-pre-initial-versions.cjs
+   node .agents/skills/custom-rebase/scripts/align-pre-initial-versions.cjs
 */
 const fs = require('fs');
 const path = require('path');

@@ -1,9 +1,9 @@
 ---
-name: rebase
+name: custom-rebase
 description: Guide for rebasing feature branches onto main in the Fusion Framework monorepo, including handling pnpm-lock.yaml conflicts
 ---
 
-# Rebase Skill (Fusion Framework)
+# Custom Rebase Skill (Fusion Framework)
 
 This skill helps you rebase feature branches onto the latest `main` branch, handling common conflicts in a pnpm monorepo.
 
@@ -109,7 +109,7 @@ If `.changeset/pre.json` exists (pre-release mode), align `initialVersions` to c
 
 ```bash
 # From repo root
-node .github/skills/rebase/scripts/align-pre-initial-versions.cjs
+node .agents/skills/custom-rebase/scripts/align-pre-initial-versions.cjs
 ```
 
 What it does:
@@ -149,10 +149,10 @@ Run the data extraction script:
 
 ```bash
 # From repo root
-node .github/skills/rebase/scripts/generate-rebase-report.cjs --no-fetch
+node .agents/skills/custom-rebase/scripts/generate-rebase-report.cjs --no-fetch
 ```
 
-This generates `.tmp/skills/rebase/<timestamp>-rebase-report.md` with raw data:
+This generates `.tmp/skills/custom-rebase/<timestamp>-rebase-report.md` with raw data:
 - Ahead/behind counts and diff summary
 - Highlights & Anomalies: largest diffs, config changes, dependency summary
 - Full commit list (all 57+ commits with hashes and messages)
@@ -170,7 +170,7 @@ This generates `.tmp/skills/rebase/<timestamp>-rebase-report.md` with raw data:
 
 After the raw report is generated, the AI agent will automatically:
 
-1. Read the latest report from `.tmp/skills/rebase/<timestamp>-rebase-report.md`
+1. Read the latest report from `.tmp/skills/custom-rebase/<timestamp>-rebase-report.md`
 2. Analyze the "Detailed Dependency Changes" section
 3. Create a human-readable summary with:
    - **Breaking dependency changes** - Each major bump explained (what package, what changed, why it matters, what to test)
@@ -307,5 +307,4 @@ git push --force-with-lease origin react-19
 
 ## Related Skills
 
-- `pnpm-dependency-analysis` - Analyze dependencies before/after rebase
-- `dependabot-pr-handler` - Handle automated dependency updates that may conflict during rebase
+- `fusion-dependency-review` - Review dependency pull requests that need branch refresh or conflict follow-up
