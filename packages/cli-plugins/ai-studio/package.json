@@ -31,6 +31,10 @@
   "scripts": {
     "build": "tsc -b",
     "build:types": "tsc -b",
+    "serve": "node ./scripts/run-mode.mjs cli",
+    "serve:cli": "node ./scripts/run-mode.mjs cli",
+    "serve:sdk:http": "node ./scripts/run-mode.mjs sdk-http",
+    "serve:sdk:mock": "node ./scripts/run-mode.mjs sdk-mock",
     "sdk:mock-server": "node ./scripts/mock-sdk-server.mjs",
     "watch": "tsc -b --watch",
     "prepack": "pnpm build",

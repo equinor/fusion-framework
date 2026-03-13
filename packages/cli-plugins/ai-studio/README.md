@@ -17,6 +17,14 @@ Experimental local write server for Fusion Framework apps.
 pnpm fusion-live-ai --port 8787
 ```
 
+Package scripts:
+
+```sh
+pnpm serve -- --root /path/to/app
+pnpm serve:sdk:mock -- --root /path/to/app
+pnpm serve:sdk:http -- --root /path/to/app
+```
+
 Or from code:
 
 ```ts
@@ -38,8 +46,11 @@ pnpm sdk:mock-server
 Then start ai-studio with SDK HTTP mode enabled:
 
 ```sh
-FUSION_AI_STUDIO_EXECUTOR=sdk \
-FUSION_AI_STUDIO_SDK_ADAPTER=http \
-FUSION_AI_STUDIO_SDK_ENDPOINT=http://localhost:8799/sdk \
-node ./dist/esm/cli.js --root /path/to/app
+pnpm serve:sdk:http -- --root /path/to/app
+```
+
+Override the default endpoint when needed:
+
+```sh
+FUSION_AI_STUDIO_SDK_ENDPOINT=http://localhost:9000/sdk pnpm serve:sdk:http -- --root /path/to/app
 ```
