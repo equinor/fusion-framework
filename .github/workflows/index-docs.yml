@@ -135,6 +135,9 @@ jobs:
       - name: Build CLI
         run: pnpm build:cli
 
+      - name: Install built CLI
+        run: pnpm install ./packages/cli
+
       - name: Index docs to Azure AI Search
         timeout-minutes: 10
         env:
@@ -146,11 +149,11 @@ jobs:
           set -euo pipefail
 
           if [[ "$MODE" == "clean" ]]; then
-            node ./packages/cli/bin/cli.mjs ai embeddings --clean --config ./fusion-ai.config.ts
+            pnpm exec ffc ai embeddings --clean --config ./fusion-ai.config.ts
           elif [[ "$MODE" == "diff" ]]; then
-            node ./packages/cli/bin/cli.mjs ai embeddings --diff --base-ref "$BASE_REF" --config ./fusion-ai.config.ts
+            pnpm exec ffc ai embeddings --diff --base-ref "$BASE_REF" --config ./fusion-ai.config.ts
           else
-            node ./packages/cli/bin/cli.mjs ai embeddings --config ./fusion-ai.config.ts
+            pnpm exec ffc ai embeddings --config ./fusion-ai.config.ts
           fi
 
       - name: Configure git user
@@ -182,13 +185,13 @@ jobs:
           fi
 
           if [[ "$MODE" == "clean" ]]; then
-            command_summary='node ./packages/cli/bin/cli.mjs ai embeddings --clean --config ./fusion-ai.config.ts'
+            command_summary='pnpm exec ffc ai embeddings --clean --config ./fusion-ai.config.ts'
             mode_summary='Clean rebuild executed after deleting existing embeddings.'
           elif [[ "$MODE" == "diff" ]]; then
-            command_summary="node ./packages/cli/bin/cli.mjs ai embeddings --diff --base-ref $BASE_REF --config ./fusion-ai.config.ts"
+            command_summary="pnpm exec ffc ai embeddings --diff --base-ref $BASE_REF --config ./fusion-ai.config.ts"
             mode_summary='Incremental indexing ran against the tracked base ref.'
           else
-            command_summary='node ./packages/cli/bin/cli.mjs ai embeddings --config ./fusion-ai.config.ts'
+            command_summary='pnpm exec ffc ai embeddings --config ./fusion-ai.config.ts'
             mode_summary='Full indexing ran because no safe incremental base ref was available.'
           fi
 
