@@ -10,20 +10,13 @@ import type { MarkdownDocument, MarkdownMetadata } from './types.js';
 import { generateChunkId } from '../generate-chunk-id.js';
 
 const markdownConfig = {
-  chunkSize: 3000,
+  chunkSize: 2000,
   chunkOverlap: 300,
-  keepSeparator: true,
   separators: [
-    '\n# ',
-    '\n## ',
-    '\n### ',
-    '\n#### ',
-    '\n##### ',
-    '\n###### ',
-    '\n```',
-    '\n---\n',
-    '\n\n',
+    "\n# ", "\n## ", "\n### ", "\n#### ", "\n##### ", "\n###### ",
+    "\n```", "\n```\n", "\n---\n", "\n\n", "\n",
   ],
+  keepSeparator: true,
 };
 
 /**
@@ -33,6 +26,19 @@ const markdownConfig = {
  */
 export const isMarkdownFile = (filePath: string): boolean => {
   return filePath.endsWith('.md') || filePath.endsWith('.mdx');
+};
+
+/**
+ * Validates that chunk content is not empty or just code fence markers
+ * @param chunk - Content chunk to validate
+ * @returns True if chunk has meaningful content
+ */
+const isValidChunk = (chunk: string): boolean => {
+  const trimmed = chunk.trim();
+  if (!trimmed) return false;
+  // Skip chunks that are only code fence markers
+  if (/^`{3,}[\w-]*$/.test(trimmed)) return false;
+  return true;
 };
 
 /**
@@ -57,7 +63,16 @@ export const parseMarkdown = async <T extends Record<string, unknown> = Record<s
   );
   const textSplitter = new RecursiveCharacterTextSplitter(markdownConfig);
   const chunks = await textSplitter.splitText(markdownContent);
-  return chunks.map(
+  
+  // Filter out empty chunks and chunks that are just code fence markers
+  const validChunks = chunks.filter((chunk) => {
+    if (!isValidChunk(chunk)) {
+      return false;
+    }
+    return true;
+  });
+  
+  return validChunks.map(
     (chunk, _index): MarkdownDocument<T> => ({
       id: generateChunkId(source, _index),
       pageContent: chunk,
