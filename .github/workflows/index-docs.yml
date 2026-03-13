@@ -136,7 +136,7 @@ jobs:
         run: pnpm build:cli
 
       - name: Install built CLI
-        run: pnpm install ./packages/cli
+        run: pnpm install -w ./packages/cli
 
       - name: Index docs to Azure AI Search
         timeout-minutes: 10
