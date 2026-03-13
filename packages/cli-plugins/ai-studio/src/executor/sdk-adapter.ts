@@ -12,7 +12,29 @@ export interface SdkAdapterInput {
 /**
  * Supported SDK adapter implementations.
  */
-export type SdkAdapterMode = 'disabled' | 'mock';
+export type SdkAdapterMode = 'disabled' | 'mock' | 'http';
+
+/**
+ * Minimal fetch response shape used by SDK HTTP adapter.
+ */
+export interface SdkAdapterFetchResponse {
+  ok: boolean;
+  status: number;
+  text: () => Promise<string>;
+}
+
+/**
+ * Minimal fetch function shape used by SDK HTTP adapter.
+ */
+export type SdkAdapterFetch = (
+  url: string,
+  init: {
+    method: 'POST';
+    headers: Record<string, string>;
+    body: string;
+    signal: AbortSignal;
+  },
+) => Promise<SdkAdapterFetchResponse>;
 
 /**
  * Contract implemented by SDK adapters.
@@ -30,6 +52,7 @@ export interface SdkChatAdapter {
  */
 export interface CreateSdkAdapterOptions {
   env?: NodeJS.ProcessEnv;
+  fetchFn?: SdkAdapterFetch;
 }
 
 /**
@@ -40,7 +63,10 @@ export interface CreateSdkAdapterOptions {
 export function resolveSdkAdapterMode(options: CreateSdkAdapterOptions = {}): SdkAdapterMode {
   const env = options.env ?? process.env;
   const requested = env.FUSION_AI_STUDIO_SDK_ADAPTER?.trim().toLowerCase();
-  return requested === 'mock' ? 'mock' : 'disabled';
+  if (requested === 'mock') {
+    return 'mock';
+  }
+  return requested === 'http' ? 'http' : 'disabled';
 }
 
 /**
@@ -50,7 +76,15 @@ export function resolveSdkAdapterMode(options: CreateSdkAdapterOptions = {}): Sd
  */
 export function createSdkChatAdapter(options: CreateSdkAdapterOptions = {}): SdkChatAdapter {
   const mode = resolveSdkAdapterMode(options);
-  return mode === 'mock' ? createMockSdkAdapter() : createDisabledSdkAdapter();
+  if (mode === 'mock') {
+    return createMockSdkAdapter();
+  }
+
+  if (mode === 'http') {
+    return createHttpSdkAdapter(options);
+  }
+
+  return createDisabledSdkAdapter();
 }
 
 function createDisabledSdkAdapter(): SdkChatAdapter {
@@ -82,4 +116,174 @@ function createMockSdkAdapter(): SdkChatAdapter {
       };
     },
   };
+}
+
+function createHttpSdkAdapter(options: CreateSdkAdapterOptions): SdkChatAdapter {
+  return {
+    mode: 'http',
+    execute: async (input, callbacks) => {
+      const env = options.env ?? process.env;
+      const endpoint = env.FUSION_AI_STUDIO_SDK_ENDPOINT?.trim();
+      if (!endpoint) {
+        callbacks.onProgress('SDK HTTP adapter is missing endpoint configuration.');
+        return {
+          ok: false,
+          message:
+            'SDK HTTP adapter requires FUSION_AI_STUDIO_SDK_ENDPOINT. Falling back to draft planner.',
+          assistantText: 'SDK HTTP adapter endpoint is not configured.',
+        };
+      }
+
+      const fetchFn = options.fetchFn ?? createRuntimeFetch();
+      if (!fetchFn) {
+        callbacks.onProgress('SDK HTTP adapter cannot find a runtime fetch implementation.');
+        return {
+          ok: false,
+          message: 'SDK HTTP adapter requires fetch support in this runtime.',
+          assistantText: 'SDK HTTP adapter is unavailable in this runtime.',
+        };
+      }
+
+      const timeoutMs = resolveHttpTimeoutMs(env);
+      const abortController = new AbortController();
+      const timeoutId = setTimeout(() => {
+        abortController.abort();
+      }, timeoutMs);
+
+      callbacks.onProgress(`SDK HTTP adapter sending request to ${endpoint}.`);
+
+      try {
+        const response = await fetchFn(endpoint, {
+          method: 'POST',
+          headers: {
+            'content-type': 'application/json',
+          },
+          body: JSON.stringify({
+            prompt: input.prompt,
+            cwd: input.cwd,
+            model: input.options.model,
+            agent: input.options.agent,
+          }),
+          signal: abortController.signal,
+        });
+
+        const rawBody = await response.text();
+        if (!response.ok) {
+          return {
+            ok: false,
+            message: `SDK HTTP adapter request failed with status ${response.status}.`,
+            assistantText: rawBody || 'SDK HTTP adapter returned a non-success status.',
+          };
+        }
+
+        const parsed = parseHttpSdkResponse(rawBody);
+        if (!parsed) {
+          return {
+            ok: false,
+            message: 'SDK HTTP adapter returned invalid JSON response payload.',
+            assistantText: rawBody,
+          };
+        }
+
+        for (const progress of parsed.progress) {
+          callbacks.onProgress(progress);
+        }
+        for (const token of parsed.tokens) {
+          callbacks.onAssistantChunk(token);
+        }
+
+        return {
+          ok: parsed.ok,
+          message: parsed.message,
+          assistantText: parsed.assistantText,
+        };
+      } catch (error) {
+        const aborted = error instanceof Error && error.name === 'AbortError';
+        return {
+          ok: false,
+          message: aborted
+            ? `SDK HTTP adapter request timed out after ${timeoutMs}ms.`
+            : 'SDK HTTP adapter request failed.',
+          assistantText: error instanceof Error ? error.message : 'Unknown SDK HTTP adapter error.',
+        };
+      } finally {
+        clearTimeout(timeoutId);
+      }
+    },
+  };
+}
+
+function resolveHttpTimeoutMs(env: NodeJS.ProcessEnv): number {
+  const parsed = Number.parseInt(env.FUSION_AI_STUDIO_SDK_TIMEOUT_MS ?? '', 10);
+  if (!Number.isFinite(parsed) || parsed <= 0) {
+    return 15000;
+  }
+
+  return Math.min(parsed, 120000);
+}
+
+function createRuntimeFetch(): SdkAdapterFetch | undefined {
+  if (!globalThis.fetch) {
+    return undefined;
+  }
+
+  return async (url, init) => {
+    const response = await globalThis.fetch(url, init);
+    return {
+      ok: response.ok,
+      status: response.status,
+      text: async () => response.text(),
+    };
+  };
+}
+
+interface HttpSdkResponse {
+  ok: boolean;
+  message: string;
+  assistantText: string;
+  progress: string[];
+  tokens: string[];
+}
+
+function parseHttpSdkResponse(payload: string): HttpSdkResponse | null {
+  if (!payload.trim()) {
+    return null;
+  }
+
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(payload);
+  } catch {
+    return null;
+  }
+
+  if (!isRecord(parsed) || typeof parsed.ok !== 'boolean') {
+    return null;
+  }
+
+  const message =
+    typeof parsed.message === 'string' ? parsed.message : 'SDK HTTP adapter completed.';
+  const assistantText = typeof parsed.assistantText === 'string' ? parsed.assistantText : '';
+  const progress = toStringArray(parsed.progress);
+  const tokens = toStringArray(parsed.tokens);
+
+  return {
+    ok: parsed.ok,
+    message,
+    assistantText,
+    progress,
+    tokens,
+  };
+}
+
+function toStringArray(value: unknown): string[] {
+  if (!Array.isArray(value)) {
+    return [];
+  }
+
+  return value.filter((item): item is string => typeof item === 'string');
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null;
 }

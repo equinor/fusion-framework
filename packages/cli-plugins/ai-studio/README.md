@@ -24,3 +24,22 @@ import { startServer } from '@equinor/fusion-framework-cli-plugin-ai-studio';
 
 const server = await startServer({ root: process.cwd(), port: 8787 });
 ```
+
+## SDK HTTP Mock
+
+Use the bundled mock HTTP server to exercise the `sdk/http` executor path locally.
+
+Start the mock server:
+
+```sh
+pnpm sdk:mock-server
+```
+
+Then start ai-studio with SDK HTTP mode enabled:
+
+```sh
+FUSION_AI_STUDIO_EXECUTOR=sdk \
+FUSION_AI_STUDIO_SDK_ADAPTER=http \
+FUSION_AI_STUDIO_SDK_ENDPOINT=http://localhost:8799/sdk \
+node ./dist/esm/cli.js --root /path/to/app
+```
