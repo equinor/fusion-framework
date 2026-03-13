@@ -10,7 +10,9 @@ As a **contributor**, you must complete these checks before requesting review.
 
 ## Code Quality Check
 - [ ] **Readability**: Code is clear and understandable
-- [ ] **Documentation**: Public APIs have TSDoc comments
+- [ ] **Documentation**: Functions, hooks, components, classes, and named arrow functions have TSDoc that captures intent
+- [ ] **Intent**: Iterator blocks, decision gates, RxJS chains, and complex decisions explain why they exist
+- [ ] **README/Docs**: User-facing changes update package README and `docs/` when needed
 - [ ] **Tests**: New functionality is tested
 - [ ] **Breaking Changes**: Documented if present
 

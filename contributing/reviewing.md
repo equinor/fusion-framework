@@ -14,7 +14,9 @@ As a **reviewer**, you must ensure these requirements are met before approving a
 
 ## Quality Review
 - [ ] **Tests**: New functionality has adequate test coverage
-- [ ] **Documentation**: Public APIs have TSDoc comments
+- [ ] **Documentation**: Functions, hooks, components, classes, and named arrow functions have TSDoc that captures intent
+- [ ] **Intent**: Iterator blocks, decision gates, RxJS chains, and complex decisions explain why they exist
+- [ ] **README/Docs**: User-facing changes are reflected in package README and `docs/` when needed
 - [ ] **Code Quality**: Readable, follows established patterns
 - [ ] **Security**: No obvious vulnerabilities
 
