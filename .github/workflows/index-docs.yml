@@ -141,6 +141,8 @@ jobs:
       - name: Index docs to Azure AI Search
         timeout-minutes: 10
         env:
+          AZURE_OPENAI_API_KEY: N/A
+          AZURE_OPENAI_INSTANCE_NAME: N/A
           AZURE_OPENAI_EMBEDDING_DEPLOYMENT_NAME: ${{ vars.AZURE_OPENAI_EMBEDDING_DEPLOYMENT_NAME }}
           AZURE_SEARCH_ENDPOINT: ${{ vars.AZURE_SEARCH_ENDPOINT }}
           AZURE_SEARCH_API_KEY: ${{ secrets.AZURE_SEARCH_API_KEY }}
