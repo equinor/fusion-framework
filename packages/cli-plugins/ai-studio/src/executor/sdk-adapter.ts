@@ -1,4 +1,5 @@
 import type { ChatExecutionCallbacks, ChatExecutionOptions, ChatExecutionResult } from './types.js';
+import type { ParsedOperationLine } from '../copilot-stream.js';
 
 /**
  * Input payload for SDK adapter execution.
@@ -191,6 +192,9 @@ function createHttpSdkAdapter(options: CreateSdkAdapterOptions): SdkChatAdapter 
         for (const token of parsed.tokens) {
           callbacks.onAssistantChunk(token);
         }
+        for (const operation of parsed.operations) {
+          callbacks.onOperation(operation);
+        }
 
         return {
           ok: parsed.ok,
@@ -243,6 +247,7 @@ interface HttpSdkResponse {
   assistantText: string;
   progress: string[];
   tokens: string[];
+  operations: ParsedOperationLine[];
 }
 
 function parseHttpSdkResponse(payload: string): HttpSdkResponse | null {
@@ -266,6 +271,7 @@ function parseHttpSdkResponse(payload: string): HttpSdkResponse | null {
   const assistantText = typeof parsed.assistantText === 'string' ? parsed.assistantText : '';
   const progress = toStringArray(parsed.progress);
   const tokens = toStringArray(parsed.tokens);
+  const operations = toOperationArray(parsed.operations);
 
   return {
     ok: parsed.ok,
@@ -273,6 +279,7 @@ function parseHttpSdkResponse(payload: string): HttpSdkResponse | null {
     assistantText,
     progress,
     tokens,
+    operations,
   };
 }
 
@@ -282,6 +289,41 @@ function toStringArray(value: unknown): string[] {
   }
 
   return value.filter((item): item is string => typeof item === 'string');
+}
+
+function toOperationArray(value: unknown): ParsedOperationLine[] {
+  if (!Array.isArray(value)) {
+    return [];
+  }
+
+  return value.flatMap((item) => {
+    if (!isRecord(item) || typeof item.operation !== 'string' || typeof item.message !== 'string') {
+      return [];
+    }
+
+    if (!isParsedOperation(item.operation)) {
+      return [];
+    }
+
+    return [
+      {
+        operation: item.operation,
+        message: item.message,
+        kind: isOperationKind(item.kind) ? item.kind : undefined,
+        target: typeof item.target === 'string' ? item.target : undefined,
+        additions: typeof item.additions === 'number' ? item.additions : undefined,
+        deletions: typeof item.deletions === 'number' ? item.deletions : undefined,
+      },
+    ];
+  });
+}
+
+function isParsedOperation(value: string): value is ParsedOperationLine['operation'] {
+  return ['glob', 'list', 'search', 'read', 'edit', 'detail'].includes(value);
+}
+
+function isOperationKind(value: unknown): value is NonNullable<ParsedOperationLine['kind']> {
+  return value === 'info' || value === 'warning' || value === 'error';
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {

@@ -66,6 +66,13 @@ describe('createSdkChatAdapter', () => {
             message: 'done',
             assistantText: 'hello from sdk',
             progress: ['phase: run'],
+            operations: [
+              {
+                operation: 'detail',
+                kind: 'info',
+                message: 'timeline event',
+              },
+            ],
             tokens: ['hello ', 'from ', 'sdk'],
           }),
       }),
@@ -73,6 +80,7 @@ describe('createSdkChatAdapter', () => {
 
     const progress: string[] = [];
     const tokens: string[] = [];
+    const operations: string[] = [];
 
     const result = await adapter.execute(
       {
@@ -87,7 +95,9 @@ describe('createSdkChatAdapter', () => {
         onAssistantChunk: (chunk) => {
           tokens.push(chunk);
         },
-        onOperation: () => undefined,
+        onOperation: (operation) => {
+          operations.push(`${operation.operation}:${operation.message}`);
+        },
       },
     );
 
@@ -98,5 +108,6 @@ describe('createSdkChatAdapter', () => {
     });
     expect(progress).toContain('phase: run');
     expect(tokens).toEqual(['hello ', 'from ', 'sdk']);
+    expect(operations).toEqual(['detail:timeline event']);
   });
 });

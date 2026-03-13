@@ -47,6 +47,21 @@ const server = createServer(async (request, response) => {
         `HTTP mock received request for agent ${agent}.`,
         `HTTP mock selected model ${model}.`,
       ],
+      operations: [
+        {
+          operation: 'detail',
+          kind: 'info',
+          message: 'HTTP mock generated a synthetic timeline operation.',
+        },
+        {
+          operation: 'edit',
+          kind: 'info',
+          target: 'src/App.tsx',
+          message: 'HTTP mock prepared an edit for src/App.tsx',
+          additions: 1,
+          deletions: 0,
+        },
+      ],
       tokens: ['HTTP ', 'mock ', 'processed ', 'prompt: ', prompt],
     }),
   );
