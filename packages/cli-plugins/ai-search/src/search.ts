@@ -146,6 +146,7 @@ export const command = withAiOptions(
 
       if (options.verbose) {
         console.log('✅ Framework initialized successfully');
+        console.log(`📇 Index: ${options.azureSearchIndexName}`);
         console.log(`🔎 Searching for: "${query}"`);
         console.log(`📊 Limit: ${options.limit}`);
         console.log(`🔍 Search type: ${options.searchType}`);
