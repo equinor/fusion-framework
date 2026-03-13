@@ -15,10 +15,25 @@ const StyledSidebar = styled.section<{ $isOpen: boolean }>`
     grid-area: chat;
     overflow: hidden;
     position: relative;
+  height: 100%;
+  min-height: 0;
+  align-self: stretch;
     visibility: ${({ $isOpen }) => ($isOpen ? 'visible' : 'hidden')};
 
     @media (max-width: 960px) {
-      display: none;
+      position: fixed;
+      top: 48px;
+      right: 0;
+      bottom: 0;
+      width: min(100vw, 420px) !important;
+      max-width: 100vw;
+      z-index: 20;
+      background: #fff;
+      border-left: 1px solid rgba(61, 61, 61, 0.18);
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.18);
+      transform: translateX(${({ $isOpen }) => ($isOpen ? '0' : '100%')});
+      transition: transform 160ms ease;
+      visibility: visible;
     }
 `;
 
@@ -57,9 +72,10 @@ const ResizeHandle = styled.button`
 
 interface AiDevChatSidebarProps {
   readonly isOpen: boolean;
+  readonly onClose: () => void;
 }
 
-export const AiDevChatSidebar = ({ isOpen }: AiDevChatSidebarProps): JSX.Element => {
+export const AiDevChatSidebar = ({ isOpen, onClose }: AiDevChatSidebarProps): JSX.Element => {
   const [width, setWidth] = useState(DEFAULT_WIDTH);
   const [isResizing, setIsResizing] = useState(false);
   const startX = useRef(0);
@@ -104,7 +120,7 @@ export const AiDevChatSidebar = ({ isOpen }: AiDevChatSidebarProps): JSX.Element
 
   return (
     <StyledSidebar $isOpen={isOpen} style={{ width: `${width}px` }}>
-      <AiDevChatPanel />
+      <AiDevChatPanel onClose={onClose} />
       {isOpen && (
         <ResizeHandle
           type="button"

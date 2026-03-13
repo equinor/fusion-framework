@@ -1,0 +1,10 @@
+{"type":"chat.send","sessionId":"session-3da2d165-92f4-4f22-ae08-42d0ac397461","message":"hi there","mode":"claude-sonnet-4.6","agent":"default","model":"claude-sonnet-4.6","createdAt":"2026-03-13T00:34:02.294Z"}
+{"type":"changes.applied","sessionId":"session-3da2d165-92f4-4f22-ae08-42d0ac397461","changeSetId":"changeset-450fd62e-0ead-4468-8784-003ea9030f28","appliedAt":"2026-03-13T00:34:10.643Z","pathway":"copilot-cli"}
+{"type":"chat.send","sessionId":"session-3da2d165-92f4-4f22-ae08-42d0ac397461","message":"change color","mode":"claude-sonnet-4.6","agent":"default","model":"claude-sonnet-4.6","createdAt":"2026-03-13T00:34:18.528Z"}
+{"type":"changes.applied","sessionId":"session-3da2d165-92f4-4f22-ae08-42d0ac397461","changeSetId":"changeset-232d29c3-3419-44ea-91ea-c92240d6d871","appliedAt":"2026-03-13T00:34:49.914Z","pathway":"copilot-cli"}
+{"type":"chat.send","sessionId":"session-3da2d165-92f4-4f22-ae08-42d0ac397461","message":"hi my name is chris","mode":"claude-sonnet-4.6","agent":"default","model":"claude-sonnet-4.6","createdAt":"2026-03-13T00:44:11.512Z"}
+{"type":"changes.applied","sessionId":"session-3da2d165-92f4-4f22-ae08-42d0ac397461","changeSetId":"changeset-a31dd4bc-364f-4ed1-99ba-bf5217b5c3b9","appliedAt":"2026-03-13T00:44:23.430Z","pathway":"copilot-cli"}
+{"type":"chat.send","sessionId":"session-3da2d165-92f4-4f22-ae08-42d0ac397461","message":"whats my name?","mode":"claude-sonnet-4.6","agent":"default","model":"claude-sonnet-4.6","createdAt":"2026-03-13T00:44:29.488Z"}
+{"type":"changes.applied","sessionId":"session-3da2d165-92f4-4f22-ae08-42d0ac397461","changeSetId":"changeset-8f5642f6-ee94-4158-b193-4614634c3f4d","appliedAt":"2026-03-13T00:44:41.740Z","pathway":"copilot-cli"}
+{"type":"chat.send","sessionId":"session-3da2d165-92f4-4f22-ae08-42d0ac397461","message":"i said my name in the chat","mode":"claude-sonnet-4.6","agent":"default","model":"claude-sonnet-4.6","createdAt":"2026-03-13T00:44:58.739Z"}
+{"type":"changes.applied","sessionId":"session-3da2d165-92f4-4f22-ae08-42d0ac397461","changeSetId":"changeset-27768907-707c-44d7-8a17-94fe28a732f0","appliedAt":"2026-03-13T00:46:07.897Z","pathway":"copilot-cli"}

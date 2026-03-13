@@ -1,3 +1,4 @@
+import { useFrameworkFeatures } from '@equinor/fusion-framework-react/feature-flag';
 import { useEventProvider } from '@equinor/fusion-framework-react-module-event';
 import { type ReactNode, useEffect, useState } from 'react';
 import { styled } from 'styled-components';
@@ -60,10 +61,18 @@ export const AiDevPortalLayout = ({ children }: AiDevPortalLayoutProps): JSX.Ele
   };
   const aiDevSocketUrl = resolveAiDevSocketUrl(env.env);
   const events = useEventProvider();
+  const { features } = useFrameworkFeatures();
   const [isAiDevAvailable, setIsAiDevAvailable] = useState(false);
   const [isAiDevOpen, setIsAiDevOpen] = useState(false);
+  const aiDevEnabled = Boolean(features?.find((feature) => feature.key === 'aiDev')?.enabled);
 
   useEffect(() => {
+    if (!aiDevEnabled) {
+      setIsAiDevAvailable(false);
+      setIsAiDevOpen(false);
+      return;
+    }
+
     let disposed = false;
     let socket: WebSocket | null = null;
     let reconnectTimer: number | null = null;
@@ -117,7 +126,7 @@ export const AiDevPortalLayout = ({ children }: AiDevPortalLayoutProps): JSX.Ele
       if (reconnectTimer !== null) window.clearTimeout(reconnectTimer);
       socket?.close();
     };
-  }, [aiDevSocketUrl, events]);
+  }, [aiDevEnabled, aiDevSocketUrl, events]);
 
   useEffect(() => {
     const removeListener = events.addEventListener('ai-dev.open', () => {
@@ -155,11 +164,22 @@ export const AiDevPortalLayout = ({ children }: AiDevPortalLayoutProps): JSX.Ele
   }, [events]);
 
   return (
-    <Styled.ContentContainer $aiDevEnabled={isAiDevAvailable} $isChatOpen={isAiDevOpen}>
+    <Styled.ContentContainer $aiDevEnabled={aiDevEnabled} $isChatOpen={isAiDevOpen}>
       <Styled.Head>
-        <Header aiDevAvailable={isAiDevAvailable} toggleAiDev={setIsAiDevOpen} />
+        <Header
+          aiDevEnabled={aiDevEnabled}
+          aiDevAvailable={isAiDevAvailable}
+          aiDevWarning={
+            aiDevEnabled && !isAiDevAvailable
+              ? 'AI Dev server is not running or cannot be reached. Start the local server with:'
+              : undefined
+          }
+          toggleAiDev={setIsAiDevOpen}
+        />
       </Styled.Head>
-      {isAiDevAvailable ? <AiDevChatSidebar isOpen={isAiDevOpen} /> : null}
+      {aiDevEnabled ? (
+        <AiDevChatSidebar isOpen={isAiDevOpen} onClose={() => setIsAiDevOpen(false)} />
+      ) : null}
       <Styled.Main>{children}</Styled.Main>
     </Styled.ContentContainer>
   );

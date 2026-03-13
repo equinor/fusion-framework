@@ -1,43 +1,56 @@
 import { Typography } from '@equinor/eds-core-react';
+import { useEffect, useRef } from 'react';
 import { Styled } from '../styles.js';
 import { MessageView } from './MessageView.js';
 import { ChangeSetView } from './ChangeSetView.js';
+import { RunFeedbackView } from './RunFeedbackView.js';
 import type { ChatMessage, PendingChangeSet } from '../types.js';
-
-interface RunFeedbackView {
-  status: 'running' | 'done' | 'error';
-  title: string;
-  lines: string[];
-  collapsed: boolean;
-}
+import type { RunFeedbackState } from '../runFeedback.js';
 
 interface TimelineProps {
   readonly messages: ChatMessage[];
   readonly streamingText: string;
-  readonly runFeedback: RunFeedbackView | null;
-  readonly onToggleRunFeedback: () => void;
+  readonly runFeedback: RunFeedbackState | null;
   readonly pendingChangeSet: PendingChangeSet | null;
-  readonly onApplyChangeSet: () => void;
-  readonly onRejectChangeSet: () => void;
 }
 
 /**
  * Timeline view displaying messages, streaming response, and pending changesets.
  */
 export function Timeline(props: TimelineProps): JSX.Element {
+  const timelineRef = useRef<HTMLElement | null>(null);
+  const trimmedStreamingText = props.streamingText.trim();
+  const timelineScrollTrigger = [
+    props.messages.length,
+    trimmedStreamingText,
+    props.pendingChangeSet ? 'changes' : 'no-changes',
+    props.runFeedback?.status ?? 'no-status',
+    props.runFeedback?.entries.length ?? 0,
+  ].join('|');
+
   const isEmpty =
     props.messages.length === 0 &&
-    !props.streamingText &&
+    !trimmedStreamingText &&
     !props.pendingChangeSet &&
     !props.runFeedback;
 
+  useEffect(() => {
+    const element = timelineRef.current;
+    if (!element) {
+      return;
+    }
+
+    if (!timelineScrollTrigger) {
+      return;
+    }
+
+    element.scrollTop = element.scrollHeight;
+  }, [timelineScrollTrigger]);
+
   return (
-    <Styled.Timeline>
+    <Styled.Timeline ref={timelineRef}>
       {isEmpty ? (
         <Styled.EmptyState>
-          <Typography variant="body_short" color="secondary">
-            No conversation yet.
-          </Typography>
           <Typography variant="body_short" color="secondary">
             Ask for a change and the server will stream a response plus a proposed diff.
           </Typography>
@@ -49,49 +62,24 @@ export function Timeline(props: TimelineProps): JSX.Element {
       ))}
 
       {props.runFeedback ? (
-        <Styled.RunFeedbackCard $status={props.runFeedback.status}>
-          <Styled.RunFeedbackHeader>
-            <div>
-              <Styled.RunFeedbackTitle>{props.runFeedback.title}</Styled.RunFeedbackTitle>
-              <Styled.RunFeedbackMeta>
-                {props.runFeedback.status === 'running'
-                  ? 'Live progress stream'
-                  : props.runFeedback.status === 'error'
-                    ? 'Finished with issues'
-                    : 'Finished'}
-              </Styled.RunFeedbackMeta>
-            </div>
-            <Styled.RunFeedbackToggle type="button" onClick={props.onToggleRunFeedback}>
-              {props.runFeedback.collapsed ? 'Expand' : 'Collapse'}
-            </Styled.RunFeedbackToggle>
-          </Styled.RunFeedbackHeader>
-          {!props.runFeedback.collapsed ? (
-            <Styled.RunFeedbackBody>
-              <Styled.RunFeedbackLine>{props.runFeedback.lines.join('\n')}</Styled.RunFeedbackLine>
-            </Styled.RunFeedbackBody>
-          ) : null}
-        </Styled.RunFeedbackCard>
+        <RunFeedbackView
+          runFeedback={props.runFeedback}
+          pendingChangeSet={props.pendingChangeSet}
+        />
       ) : null}
 
-      {props.streamingText ? (
-        <Styled.MessageRow>
+      {trimmedStreamingText ? (
+        <Styled.MessageRow $role="assistant">
           <Styled.Message $role="assistant" $tone="default">
             <Styled.MessageMeta>
               <Styled.MessageRole>Assistant</Styled.MessageRole>
-              <Styled.MessageTime>streaming</Styled.MessageTime>
             </Styled.MessageMeta>
-            <Styled.MessageBody>{props.streamingText}</Styled.MessageBody>
+            <Styled.MessageBody>{trimmedStreamingText}</Styled.MessageBody>
           </Styled.Message>
         </Styled.MessageRow>
       ) : null}
 
-      {props.pendingChangeSet ? (
-        <ChangeSetView
-          changeSet={props.pendingChangeSet}
-          onApply={props.onApplyChangeSet}
-          onReject={props.onRejectChangeSet}
-        />
-      ) : null}
+      {props.pendingChangeSet ? <ChangeSetView changeSet={props.pendingChangeSet} /> : null}
     </Styled.Timeline>
   );
 }

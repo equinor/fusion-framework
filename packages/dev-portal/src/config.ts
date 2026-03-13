@@ -111,6 +111,11 @@ export const configure = async (config: FrameworkConfigurator) => {
           title: 'Use pink bg?',
           description: 'When enabled the background should be pink',
         },
+        {
+          key: 'aiDev',
+          title: 'Enable AI Dev',
+          description: 'Show the AI Dev chat entry points and status in the portal',
+        },
       ]),
     );
     // Add URL plugin to allow enabling debug features via query parameters
@@ -121,7 +126,7 @@ export const configure = async (config: FrameworkConfigurator) => {
   config.onInitialized(async (modules) => {
     // NOTE: TypeScript ignore needed due to window object extension
     // This provides developer access to all initialized modules via window.Fusion
-    // @ts-ignore
+    // @ts-expect-error
     window.Fusion = { modules };
   });
 };

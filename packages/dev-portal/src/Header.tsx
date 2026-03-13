@@ -3,9 +3,9 @@ import { ContextSelector } from './ContextSelector';
 import { FusionLogo } from './FusionLogo';
 
 import styled from 'styled-components';
-import { add, menu, tag } from '@equinor/eds-icons';
+import { add, menu, tag, warning_outlined } from '@equinor/eds-icons';
 import { Icon, TopBar } from '@equinor/eds-core-react';
-Icon.add({ menu, add, tag });
+Icon.add({ menu, add, tag, warning_outlined });
 
 import { useCurrentUser } from '@equinor/fusion-framework-react/hooks';
 import { useCurrentApp, useCurrentAppModule } from '@equinor/fusion-framework-react/app';
@@ -24,6 +24,10 @@ import { BookmarkSideSheet } from './BookMarkSideSheet';
 import { HeaderActions } from './Header.Actions';
 
 const Styled = {
+  Root: styled.div`
+        display: grid;
+        grid-template-rows: auto auto;
+    `,
   Title: styled.div`
         display: flex;
         align-items: center;
@@ -31,14 +35,42 @@ const Styled = {
         font-size: 1rem;
         font-weight: 500;
     `,
+  WarningBanner: styled.div`
+        display: flex;
+        align-items: center;
+        gap: 0.45rem;
+        min-height: 2rem;
+        padding: 0.32rem 1rem;
+        background: #fff4db;
+        border-top: 1px solid #f0d79a;
+        border-bottom: 1px solid #f0d79a;
+        color: #7a4b00;
+        font-size: 0.78rem;
+        line-height: 1.4;
+    `,
+  WarningCommand: styled.code`
+        font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+        font-size: 0.75rem;
+        background: rgba(122, 75, 0, 0.08);
+        border-radius: 4px;
+        padding: 0.08rem 0.32rem;
+        color: #6c4000;
+    `,
 };
 
 type HeaderProps = {
+  readonly aiDevEnabled?: boolean;
   readonly aiDevAvailable?: boolean;
+  readonly aiDevWarning?: string;
   readonly toggleAiDev?: (open: (status: boolean) => boolean) => void;
 };
 
-export const Header = ({ aiDevAvailable, toggleAiDev }: HeaderProps) => {
+export const Header = ({
+  aiDevEnabled,
+  aiDevAvailable,
+  aiDevWarning,
+  toggleAiDev,
+}: HeaderProps) => {
   const currentUser = useCurrentUser();
   const topBarId = useId();
   const [isPersonSheetOpen, setIsPersonSheetOpen] = useState(false);
@@ -64,25 +96,37 @@ export const Header = ({ aiDevAvailable, toggleAiDev }: HeaderProps) => {
         currentUser ? { id: currentUser.localAccountId, name: currentUser.name } : undefined
       }
     >
-      <TopBar id={topBarId} sticky={false} style={{ padding: '0 1em', height: 48 }}>
-        <TopBar.Header>
-          <Styled.Title>
-            <FusionLogo />
-            <span>Fusion Framework CLI</span>
-          </Styled.Title>
-        </TopBar.Header>
-        <HeaderActions
-          userAzureId={currentUser?.localAccountId}
-          toggleBookmark={setIsBookmarkOpen}
-          togglePerson={setIsPersonSheetOpen}
-          aiDevAvailable={aiDevAvailable}
-          toggleAiDev={toggleAiDev}
-        />
-        <TopBar.CustomContent>
-          <ContextSelector />
-        </TopBar.CustomContent>
-        {/* since buttons are 40px but have 48px click bounds */}
-      </TopBar>
+      <Styled.Root>
+        <TopBar id={topBarId} sticky={false} style={{ padding: '0 1em', height: 48 }}>
+          <TopBar.Header>
+            <Styled.Title>
+              <FusionLogo />
+              <span>Fusion Framework CLI</span>
+            </Styled.Title>
+          </TopBar.Header>
+          <HeaderActions
+            userAzureId={currentUser?.localAccountId}
+            toggleBookmark={setIsBookmarkOpen}
+            togglePerson={setIsPersonSheetOpen}
+            aiDevEnabled={aiDevEnabled}
+            aiDevAvailable={aiDevAvailable}
+            toggleAiDev={toggleAiDev}
+          />
+          <TopBar.CustomContent>
+            <ContextSelector />
+          </TopBar.CustomContent>
+          {/* since buttons are 40px but have 48px click bounds */}
+        </TopBar>
+        {aiDevEnabled && aiDevWarning ? (
+          <Styled.WarningBanner>
+            <Icon data={warning_outlined} size={16} />
+            <span>{aiDevWarning}</span>
+            <Styled.WarningCommand>
+              node packages/cli/bin/cli.mjs live-ai serve --root cookbooks/app-react
+            </Styled.WarningCommand>
+          </Styled.WarningBanner>
+        ) : null}
+      </Styled.Root>
       <BookmarkSideSheet isOpen={isBookmarkOpen} onClose={onBookmarkClose} />
       <PersonSideSheet
         azureId={currentUser?.localAccountId}

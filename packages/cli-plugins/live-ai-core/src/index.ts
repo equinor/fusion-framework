@@ -197,6 +197,7 @@ async function handleChatSend(ctx: HandleRequestContext, request: ChatSendReques
   const runtimeSelection = [normalizedAgent ?? 'default', selectedModel]
     .filter(Boolean)
     .join(' / ');
+  let previousStage: ReturnType<typeof detectTaskStage> = null;
 
   if (ctx.persistAuditLog) {
     appendAuditLog(ctx.root, request.sessionId, {
@@ -215,6 +216,7 @@ async function handleChatSend(ctx: HandleRequestContext, request: ChatSendReques
     level: 'info',
     message: 'Received prompt. Running Copilot apply flow.',
   });
+  emitTaskStatus(ctx.socket, request.sessionId, 'submitted', 'Request received');
 
   if (runtimeSelection) {
     emit(ctx.socket, {
@@ -223,6 +225,8 @@ async function handleChatSend(ctx: HandleRequestContext, request: ChatSendReques
       message: `Using runtime selection: ${runtimeSelection}`,
     });
   }
+
+  emitTaskStatus(ctx.socket, request.sessionId, 'reasoning', 'Thinking');
 
   const copilotResult = await runCopilotApply(
     request.message,
@@ -237,14 +241,37 @@ async function handleChatSend(ctx: HandleRequestContext, request: ChatSendReques
         level: 'info',
         message: progress,
       });
+
+      const stage = detectTaskStage(progress);
+      if (stage && stage !== previousStage) {
+        previousStage = stage;
+        emit(ctx.socket, {
+          type: 'task.stage',
+          sessionId: request.sessionId,
+          stage,
+          message: progress,
+        });
+        emitTaskStatus(ctx.socket, request.sessionId, stage, toTaskStatusMessage(stage));
+      }
+    },
+    (chunk) => {
+      emit(ctx.socket, { type: 'assistant.token', sessionId: request.sessionId, token: chunk });
+    },
+    (operationLine) => {
+      emit(ctx.socket, {
+        type: 'task.operation',
+        sessionId: request.sessionId,
+        operation: operationLine.operation,
+        kind: operationLine.kind,
+        target: operationLine.target,
+        message: operationLine.message,
+        additions: operationLine.additions,
+        deletions: operationLine.deletions,
+      });
     },
   );
 
   if (copilotResult.ok) {
-    for (const token of tokenize(copilotResult.assistantText)) {
-      emit(ctx.socket, { type: 'assistant.token', sessionId: request.sessionId, token });
-    }
-
     const changeSetId = createId('changeset');
 
     if (ctx.persistAuditLog) {
@@ -276,6 +303,7 @@ async function handleChatSend(ctx: HandleRequestContext, request: ChatSendReques
     level: 'info',
     message: 'Falling back to local draft planner for this request.',
   });
+  emitTaskStatus(ctx.socket, request.sessionId, 'processing', 'Preparing fallback change');
 
   const draft = createDraftChange(ctx.rootRealPath, request.message);
 
@@ -284,6 +312,7 @@ async function handleChatSend(ctx: HandleRequestContext, request: ChatSendReques
     level: 'info',
     message: `Fallback planned write operation: ${draft.file.path}`,
   });
+  emitTaskStatus(ctx.socket, request.sessionId, 'applying', 'Applying fallback change');
 
   for (const token of tokenize(`Fallback mode: ${draft.summary}`)) {
     emit(ctx.socket, { type: 'assistant.token', sessionId: request.sessionId, token });
@@ -419,7 +448,7 @@ async function detectCopilotRuntimeStatus(cwd: string): Promise<CopilotRuntimeSt
 }
 
 async function discoverCopilotAgents(): Promise<string[]> {
-  const result = await runToolCommand(
+  const probeResult = await runToolCommand(
     'copilot',
     [
       '--agent',
@@ -437,7 +466,39 @@ async function discoverCopilotAgents(): Promise<string[]> {
     12000,
   );
 
-  const source = `${result.stdout}\n${result.stderr}`;
+  const helpResult = await runToolCommand('copilot', ['--help'], process.cwd(), 10000);
+
+  const discovered = new Set<string>();
+
+  for (const agent of parseCopilotAgentChoices(`${helpResult.stdout}\n${helpResult.stderr}`)) {
+    discovered.add(agent);
+  }
+
+  for (const agent of parseCopilotAgentProbeOutput(
+    `${probeResult.stdout}\n${probeResult.stderr}`,
+  )) {
+    discovered.add(agent);
+  }
+
+  return Array.from(discovered).filter((agent) => agent !== 'default');
+}
+
+function parseCopilotAgentChoices(source: string): string[] {
+  const sectionMatch = source.match(/--agent\s+<agent>[\s\S]*?\(choices:\s*([\s\S]*?)\)/i);
+  if (!sectionMatch) {
+    return [];
+  }
+
+  return Array.from(
+    new Set(
+      [...sectionMatch[1].matchAll(/"([^"]+)"/g)]
+        .map((match) => match[1].trim().toLowerCase())
+        .filter((value) => value.length > 0),
+    ),
+  );
+}
+
+function parseCopilotAgentProbeOutput(source: string): string[] {
   const match = source.match(/available:\s*([^\n\r]+)/i);
   if (!match) {
     return [];
@@ -526,11 +587,22 @@ interface CopilotApplyResult {
   assistantText: string;
 }
 
+interface ParsedOperationLine {
+  operation: 'glob' | 'list' | 'search' | 'read' | 'edit' | 'detail';
+  kind?: 'info' | 'warning' | 'error';
+  message: string;
+  target?: string;
+  additions?: number;
+  deletions?: number;
+}
+
 async function runCopilotApply(
   prompt: string,
   cwd: string,
   options: CopilotApplyOptions,
   onProgress: (message: string) => void,
+  onAssistantChunk: (chunk: string) => void,
+  onOperation: (operation: ParsedOperationLine) => void,
 ): Promise<CopilotApplyResult> {
   const trimmedPrompt = prompt.trim();
   if (!trimmedPrompt) {
@@ -601,8 +673,17 @@ async function runCopilotApply(
           continue;
         }
 
+        const operationCandidate =
+          sink === 'stderr' ? sanitized.replace(/^stderr:\s*/i, '') : sanitized;
+        const operationLine = parseOperationLine(operationCandidate);
+        if (operationLine) {
+          onOperation(operationLine);
+          continue;
+        }
+
         if (sink === 'stdout') {
           stdout += `${sanitized}\n`;
+          streamAssistantText(`${sanitized}\n`, onAssistantChunk);
         } else {
           stderr += `${sanitized}\n`;
         }
@@ -610,6 +691,30 @@ async function runCopilotApply(
         onProgress(messagePrefix ? `${messagePrefix}${sanitized}` : sanitized);
       }
       return remainder;
+    };
+
+    const flushRemainder = (buffer: string, sink: 'stdout' | 'stderr'): void => {
+      const sanitized = sanitizeCopilotOutputLine(buffer);
+      if (!sanitized) {
+        return;
+      }
+
+      const operationCandidate =
+        sink === 'stderr' ? sanitized.replace(/^stderr:\s*/i, '') : sanitized;
+      const operationLine = parseOperationLine(operationCandidate);
+      if (operationLine) {
+        onOperation(operationLine);
+        return;
+      }
+
+      if (sink === 'stdout') {
+        stdout += `${sanitized}\n`;
+        streamAssistantText(`${sanitized}\n`, onAssistantChunk);
+      } else {
+        stderr += `${sanitized}\n`;
+      }
+
+      onProgress(sink === 'stderr' ? `stderr: ${sanitized}` : sanitized);
     };
 
     child.stdout.on('data', (chunk: Buffer | string) => {
@@ -633,6 +738,8 @@ async function runCopilotApply(
     child.on('close', (code) => {
       stdoutBuffer = flushLines(stdoutBuffer, 'stdout');
       stderrBuffer = flushLines(stderrBuffer, 'stderr', 'stderr: ');
+      flushRemainder(stdoutBuffer, 'stdout');
+      flushRemainder(stderrBuffer, 'stderr');
 
       if (code === 0) {
         const summary = summarizeCopilotOutput(stdout, stderr);
@@ -653,23 +760,83 @@ async function runCopilotApply(
   });
 }
 
-function summarizeCopilotOutput(stdout: string, stderr: string): string {
-  const combined = `${stdout}\n${stderr}`.trim();
-  if (!combined) {
-    return 'Copilot applied the requested changes in the workspace.';
+function detectTaskStage(
+  message: string,
+): 'reasoning' | 'loading' | 'processing' | 'analyzing' | 'refining' | 'applying' | null {
+  const lower = message.toLowerCase();
+
+  if (/reason|think|consider|plan/i.test(lower)) {
+    return 'reasoning';
+  }
+  if (/load|fetch|read|retriev/i.test(lower)) {
+    return 'loading';
+  }
+  if (/process|generat|build|transform/i.test(lower)) {
+    return 'processing';
+  }
+  if (/analyz|inspect|check|review|evaluat/i.test(lower)) {
+    return 'analyzing';
+  }
+  if (/refin|improv|adjust|optim|polish/i.test(lower)) {
+    return 'refining';
+  }
+  if (/apply|writ|creat|updat/i.test(lower)) {
+    return 'applying';
   }
 
-  const lines = combined
-    .split(/\r?\n/)
-    .map((line) => line.trim())
-    .filter((line) => line.length > 0)
-    .slice(-8);
+  return null;
+}
 
-  return ['Copilot run completed.', ...lines].join('\n');
+function toTaskStatusMessage(stage: NonNullable<ReturnType<typeof detectTaskStage>>): string {
+  switch (stage) {
+    case 'reasoning':
+      return 'Thinking';
+    case 'loading':
+      return 'Gathering context';
+    case 'processing':
+      return 'Working';
+    case 'analyzing':
+      return 'Analyzing';
+    case 'refining':
+      return 'Refining';
+    case 'applying':
+      return 'Applying changes';
+  }
+}
+
+function emitTaskStatus(
+  socket: WebSocket,
+  sessionId: string,
+  phase:
+    | 'submitted'
+    | 'reasoning'
+    | 'loading'
+    | 'processing'
+    | 'analyzing'
+    | 'refining'
+    | 'applying',
+  message: string,
+): void {
+  emit(socket, {
+    type: 'task.status',
+    sessionId,
+    phase,
+    message,
+  });
+}
+
+function summarizeCopilotOutput(stdout: string, stderr: string): string {
+  const merged = `${stdout}\n${stderr}`;
+  const lines = merged
+    .split(/\r?\n/)
+    .map((line) => line.trimEnd())
+    .filter((line) => line.trim().length > 0);
+
+  return lines.join('\n');
 }
 
 function sanitizeCopilotOutputLine(line: string): string {
-  const cleaned = line.trim();
+  const cleaned = line.trimEnd();
   if (!cleaned) {
     return '';
   }
@@ -678,7 +845,120 @@ function sanitizeCopilotOutputLine(line: string): string {
     return '';
   }
 
+  if (/^summary:\s*$/i.test(cleaned)) {
+    return '';
+  }
+
   return cleaned;
+}
+
+function parseOperationLine(line: string): ParsedOperationLine | null {
+  const withoutAnsi = line.replace(/\x1B\[[0-9;]*m/g, '');
+  const trimmed = withoutAnsi.trim();
+  const markerMatch = /^([●✗✓])\s*(.+)$/.exec(trimmed);
+  const marker = markerMatch?.[1];
+  const content = markerMatch?.[2] ?? trimmed;
+  const kind: ParsedOperationLine['kind'] = marker === '✗' ? 'error' : 'info';
+
+  const listMatch = /^list\s+directory\s+(.+)$/i.exec(content);
+  if (listMatch) {
+    return {
+      operation: 'list',
+      kind,
+      message: content,
+      target: listMatch[1].trim(),
+    };
+  }
+
+  const globMatch = /^glob\s+(.+)$/i.exec(content);
+  if (globMatch) {
+    return {
+      operation: 'glob',
+      kind,
+      message: content,
+      target: globMatch[1].trim(),
+    };
+  }
+
+  const readMatch = /^read\s+(.+?)(?:\s+lines?\s+\d+[-:]\d+)?$/i.exec(content);
+  if (readMatch) {
+    return {
+      operation: 'read',
+      kind,
+      message: content,
+      target: readMatch[1].trim(),
+    };
+  }
+
+  const grepMatch = /^grep\s+(.+)$/i.exec(content);
+  if (grepMatch) {
+    return {
+      operation: 'search',
+      kind,
+      message: content,
+      target: grepMatch[1].trim(),
+    };
+  }
+
+  const editMatch = /^edit\s+(.+?)(?:\s+\(\+(\d+)\s+-\s*(\d+)\))?$/i.exec(content);
+  if (editMatch) {
+    return {
+      operation: 'edit',
+      kind,
+      message: content,
+      target: editMatch[1].trim(),
+      additions: editMatch[2] ? Number(editMatch[2]) : undefined,
+      deletions: editMatch[3] ? Number(editMatch[3]) : undefined,
+    };
+  }
+
+  const detailMatch = /^└\s+(.+)$/i.exec(trimmed);
+  if (detailMatch) {
+    return {
+      operation: 'detail',
+      kind,
+      message: detailMatch[1].trim(),
+    };
+  }
+
+  if (/^no match found$/i.test(content)) {
+    return {
+      operation: 'detail',
+      kind: 'error',
+      message: content,
+    };
+  }
+
+  if (
+    /^(?:now|next|then)\s+(?:update|edit|change|modify|adjust|refactor|create|read|search|grep|glob)\b/i.test(
+      content,
+    ) ||
+    /^i(?:'ll| will)\s+(?:update|edit|change|modify|adjust|refactor|create|read|search|grep|glob)\b/i.test(
+      content,
+    )
+  ) {
+    return {
+      operation: 'detail',
+      kind,
+      message: content,
+    };
+  }
+
+  if (markerMatch) {
+    return {
+      operation: 'detail',
+      kind,
+      message: content,
+    };
+  }
+
+  return null;
+}
+
+function streamAssistantText(text: string, onAssistantChunk: (chunk: string) => void): void {
+  for (const token of tokenize(text)) {
+    onAssistantChunk(token);
+  }
 }
 
 interface DraftChange {
@@ -1001,6 +1281,9 @@ export type {
   LiveAiServer,
   ServerEvent,
   StartServerOptions,
+  TaskOperationEvent,
+  TaskStageEvent,
+  TaskStatusEvent,
 } from './types.js';
 export { AVAILABLE_AGENTS, AVAILABLE_MODELS } from './config.js';
 export type { AvailableAgent, AvailableModel } from './config.js';

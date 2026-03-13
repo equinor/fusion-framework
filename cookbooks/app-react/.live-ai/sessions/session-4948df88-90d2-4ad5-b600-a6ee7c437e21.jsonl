@@ -1,0 +1,6 @@
+{"type":"chat.send","sessionId":"session-4948df88-90d2-4ad5-b600-a6ee7c437e21","message":"hi there","mode":"claude-sonnet-4.6","agent":"default","model":"claude-sonnet-4.6","createdAt":"2026-03-13T00:25:10.662Z"}
+{"type":"changes.applied","sessionId":"session-4948df88-90d2-4ad5-b600-a6ee7c437e21","changeSetId":"changeset-21e0c2e6-3c41-4768-bbfd-12eb56e72cf4","appliedAt":"2026-03-13T00:25:19.914Z","pathway":"copilot-cli"}
+{"type":"chat.send","sessionId":"session-4948df88-90d2-4ad5-b600-a6ee7c437e21","message":"hi there","mode":"claude-sonnet-4.6","agent":"default","model":"claude-sonnet-4.6","createdAt":"2026-03-13T00:25:25.261Z"}
+{"type":"changes.applied","sessionId":"session-4948df88-90d2-4ad5-b600-a6ee7c437e21","changeSetId":"changeset-4d12fe1c-41d6-4c9d-87f6-a8e620853bb6","appliedAt":"2026-03-13T00:25:34.038Z","pathway":"copilot-cli"}
+{"type":"chat.send","sessionId":"session-4948df88-90d2-4ad5-b600-a6ee7c437e21","message":"how are you?","mode":"claude-sonnet-4.6","agent":"default","model":"claude-sonnet-4.6","createdAt":"2026-03-13T00:25:43.458Z"}
+{"type":"changes.applied","sessionId":"session-4948df88-90d2-4ad5-b600-a6ee7c437e21","changeSetId":"changeset-cce3c840-40a4-479e-bfc2-0a5b202b04a2","appliedAt":"2026-03-13T00:25:52.742Z","pathway":"copilot-cli"}

@@ -68,16 +68,19 @@ export function useChatState() {
     [createMessageId],
   );
 
-  const flushAssistantMessage = useCallback((): void => {
-    const content = streamingText.trimEnd();
-    if (!content) {
-      setStreamingText('');
-      return;
-    }
+  const flushAssistantMessage = useCallback(
+    (providedContent?: string): void => {
+      const content = (providedContent ?? streamingText).trim();
+      if (!content) {
+        setStreamingText('');
+        return;
+      }
 
-    appendMessage('assistant', content);
-    setStreamingText('');
-  }, [streamingText, appendMessage]);
+      appendMessage('assistant', content);
+      setStreamingText('');
+    },
+    [streamingText, appendMessage],
+  );
 
   const handleClear = useCallback((): void => {
     setMessages([]);

@@ -1,7 +1,7 @@
 /**
  * Available AI agents for live-ai server.
  */
-export const AVAILABLE_AGENTS = ['default', 'dependabot'] as const;
+export const AVAILABLE_AGENTS = ['default'] as const;
 
 /**
  * Available AI models for live-ai server.

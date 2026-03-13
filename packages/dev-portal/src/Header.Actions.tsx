@@ -24,10 +24,11 @@ export const HeaderActions = (props: HeaderActionProps) => {
 
   return (
     <TopBar.Actions style={{ minWidth: 48, minHeight: 48 }}>
-      {aiDevEnabled && aiDevAvailable && toggleAiDev ? (
+      {aiDevEnabled && toggleAiDev ? (
         <Button
           onClick={() => toggleAiDev((x) => !x)}
           variant="ghost_icon"
+          disabled={!aiDevAvailable}
           title="Toggle AI Dev chat panel"
         >
           <Icon data={add} />

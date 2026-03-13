@@ -880,6 +880,9 @@ importers:
       '@equinor/fusion-framework-cli-plugin-ai-search':
         specifier: workspace:*
         version: link:../cli-plugins/ai-search
+      '@equinor/fusion-framework-cli-plugin-live-ai':
+        specifier: workspace:*
+        version: link:../cli-plugins/live-ai
       '@equinor/fusion-framework-module':
         specifier: workspace:*
         version: link:../modules/module
@@ -1226,6 +1229,9 @@ importers:
       '@equinor/fusion-react-context-selector':
         specifier: ^1.0.6
         version: 1.0.6(@types/react@18.3.27)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@equinor/fusion-react-markdown':
+        specifier: ^1.0.0
+        version: 1.0.0(react@18.3.1)
       '@equinor/fusion-react-progress-indicator':
         specifier: ^0.3.0
         version: 0.3.0(react@18.3.1)
@@ -2982,6 +2988,11 @@ packages:
     peerDependencies:
       react: ^17.0.0 || ^18.0.0
 
+  '@equinor/fusion-react-markdown@1.0.0':
+    resolution: {integrity: sha512-VRUsvRyuDa1FnI1YiEOJ4nw6bUtsFCiezTxRybQmNUitrgzxanYEcPXt7SeurcNx2UodoBO1+S1UykMmPVDRcQ==}
+    peerDependencies:
+      react: ^18 || ^19
+
   '@equinor/fusion-react-person@1.0.0':
     resolution: {integrity: sha512-bcoEiLdcOuZEdK1Snbcv1zcOxmzrOxwvlFiHw32NfIaWMKgtFSdxXIyTmXo5dJ8zT2z099/327aGijiDMxJ3vA==}
     peerDependencies:
@@ -3080,6 +3091,9 @@ packages:
 
   '@equinor/fusion-wc-list@1.1.4':
     resolution: {integrity: sha512-IZyG+Jyv7vJzQyYJg8RsIlars0q8Ix2LT+Vh1E26p70rBdZZzmU2q1KATOyyEr8vWJSX9HlFMuYTg+N26Mxtdg==}
+
+  '@equinor/fusion-wc-markdown@1.5.0':
+    resolution: {integrity: sha512-8aEZxCazocUn2Zzj0HxLBLg4Ss9R7SeiDXd33FpBrQFzMYKts3kH5ov9fWn3GNChlFwl6DoaNdO24OFGDKuf2w==}
 
   '@equinor/fusion-wc-people@2.0.0':
     resolution: {integrity: sha512-LqCluIBevax9rFAo1/6vDLu/94Wpz+uKbEswp/aSrQPdK7CwQ1nAqMLsGc5HlMPBOQ+Y5Fb2gdK7vFynI/+4OA==}
@@ -8852,6 +8866,10 @@ packages:
     resolution: {integrity: sha512-gjVS5hOP+M3wMm5nmNOucbIrqudzs9v/57bWRHQWLYklXqoXKrVfYW2W9+glfGsqtPgpiz5WwyEEB+ksXIx3gQ==}
     engines: {node: '>=18'}
 
+  prismjs@1.30.0:
+    resolution: {integrity: sha512-DEvV2ZF2r2/63V+tK8hQvrR2ZGn10srHbXviTlcv7Kpzw8jWiNTqbVgjO3IY8RxrrOUF8VPMQQFysYYYv0YZxw==}
+    engines: {node: '>=6'}
+
   process@0.11.10:
     resolution: {integrity: sha512-cdGef/drWFoydD1JsMzuFf8100nZl+GT+yacc2bEced5f9Rjk4z+WtFUTBu9PhOi9j/jfmBPu0mMEY4wIdAF8A==}
     engines: {node: '>= 0.6.0'}
@@ -10899,6 +10917,12 @@ snapshots:
       '@equinor/fusion-wc-icon': 2.3.1
       react: 18.3.1
 
+  '@equinor/fusion-react-markdown@1.0.0(react@18.3.1)':
+    dependencies:
+      '@equinor/fusion-react-utils': 3.0.0(react@18.3.1)
+      '@equinor/fusion-wc-markdown': 1.5.0
+      react: 18.3.1
+
   '@equinor/fusion-react-person@1.0.0(react@18.3.1)':
     dependencies:
       '@equinor/fusion-react-utils': 3.0.0(react@18.3.1)
@@ -11058,6 +11082,26 @@ snapshots:
       '@equinor/fusion-web-theme': 0.1.10
       '@material/mwc-list': 0.27.0
       lit: 3.3.0
+
+  '@equinor/fusion-wc-markdown@1.5.0':
+    dependencies:
+      '@equinor/fusion-wc-core': 2.0.0
+      '@equinor/fusion-wc-icon': 2.3.1
+      '@equinor/fusion-web-theme': 0.1.10
+      lit: 3.3.0
+      marked: 16.4.2
+      prismjs: 1.30.0
+      prosemirror-commands: 1.7.1
+      prosemirror-history: 1.5.0
+      prosemirror-inputrules: 1.5.1
+      prosemirror-keymap: 1.2.3
+      prosemirror-markdown: 1.13.3
+      prosemirror-model: 1.25.4
+      prosemirror-schema-basic: 1.2.4
+      prosemirror-schema-list: 1.5.1
+      prosemirror-state: 1.4.4
+      prosemirror-transform: 1.10.5
+      prosemirror-view: 1.41.5
 
   '@equinor/fusion-wc-people@2.0.0':
     dependencies:
@@ -17702,6 +17746,8 @@ snapshots:
   pretty-ms@9.3.0:
     dependencies:
       parse-ms: 4.0.0
+
+  prismjs@1.30.0: {}
 
   process@0.11.10: {}
 

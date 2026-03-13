@@ -1,5 +1,11 @@
 import { useEffect, useRef, useCallback } from 'react';
-import type { ServerEvent, FileOperation } from '@equinor/fusion-framework-cli-plugin-live-ai-core';
+import type {
+  FileOperation,
+  ServerEvent,
+  TaskOperationEvent,
+  TaskStageEvent,
+  TaskStatusEvent,
+} from '@equinor/fusion-framework-cli-plugin-live-ai-core';
 import type { ConnectionState } from '../types.js';
 
 export interface UseAiDevSocketOptions {
@@ -11,8 +17,11 @@ export interface UseAiDevSocketOptions {
   readonly onChangesApplied: (changeSetId: string) => void;
   readonly onChangesRejected: (changeSetId: string) => void;
   readonly onLogMessage: (level: string, message: string) => void;
+  readonly onTaskStatus: (phase: TaskStatusEvent['phase'], message: string) => void;
+  readonly onTaskStage: (stage: TaskStageEvent['stage'], message: string) => void;
+  readonly onTaskOperation: (event: TaskOperationEvent) => void;
   readonly onError: (message: string) => void;
-  readonly onDone: () => void;
+  readonly onDone: (finalText: string) => void;
 }
 
 /**
@@ -94,12 +103,24 @@ export function useAiDevSocket(options: UseAiDevSocketOptions): {
             optionsRef.current.onLogMessage(payload.level, payload.message);
             break;
           }
+          case 'task.status': {
+            optionsRef.current.onTaskStatus(payload.phase, payload.message);
+            break;
+          }
+          case 'task.stage': {
+            optionsRef.current.onTaskStage(payload.stage, payload.message);
+            break;
+          }
+          case 'task.operation': {
+            optionsRef.current.onTaskOperation(payload);
+            break;
+          }
           case 'error': {
             optionsRef.current.onError(payload.message);
             break;
           }
           case 'done': {
-            optionsRef.current.onDone();
+            optionsRef.current.onDone(streamingBufferRef.current);
             streamingBufferRef.current = '';
             break;
           }

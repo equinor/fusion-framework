@@ -113,6 +113,47 @@ export interface LogEvent {
 }
 
 /**
+ * Compact status event for the simple progress UI.
+ */
+export interface TaskStatusEvent {
+  type: 'task.status';
+  sessionId: string;
+  phase:
+    | 'submitted'
+    | 'reasoning'
+    | 'loading'
+    | 'processing'
+    | 'analyzing'
+    | 'refining'
+    | 'applying';
+  message: string;
+}
+
+/**
+ * Task stage event for tracking work progress.
+ */
+export interface TaskStageEvent {
+  type: 'task.stage';
+  sessionId: string;
+  stage: 'reasoning' | 'loading' | 'processing' | 'analyzing' | 'refining' | 'applying';
+  message: string;
+}
+
+/**
+ * Task operation event for timeline actions.
+ */
+export interface TaskOperationEvent {
+  type: 'task.operation';
+  sessionId: string;
+  operation: 'glob' | 'list' | 'search' | 'read' | 'edit' | 'detail';
+  kind?: 'info' | 'warning' | 'error';
+  target?: string;
+  message: string;
+  additions?: number;
+  deletions?: number;
+}
+
+/**
  * Error event sent to the client.
  */
 export interface ErrorEvent {
@@ -146,6 +187,9 @@ export type ServerEvent =
   | ChangesAppliedEvent
   | ChangesRejectedEvent
   | LogEvent
+  | TaskStatusEvent
+  | TaskStageEvent
+  | TaskOperationEvent
   | ErrorEvent
   | DoneEvent
   | ConfigEvent;

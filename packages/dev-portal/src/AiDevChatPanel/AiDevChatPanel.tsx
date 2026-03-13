@@ -1,41 +1,99 @@
+import { undo, done } from '@equinor/eds-icons';
+import { Button, Icon } from '@equinor/eds-core-react';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { resolveAiDevSocketUrl } from './constants.js';
 import { useAiDevSocket, useChatState } from './hooks/index.js';
+import type {
+  RunFeedbackKind,
+  RunFeedbackLogEntry,
+  RunFeedbackOperationEntry,
+  RunFeedbackStageEntry,
+  RunFeedbackState,
+  RunFeedbackStatusEntry,
+} from './runFeedback.js';
+import { appendRunFeedbackEntry } from './runFeedback.js';
 import { Styled } from './styles.js';
 import { Header, Timeline, Composer } from './components/index.js';
 
-interface RunFeedbackState {
-  status: 'idle' | 'running' | 'done' | 'error';
-  title: string;
-  lines: string[];
-  collapsed: boolean;
-}
+Icon.add({ undo, done });
 
 /**
  * Live AI chat panel for the dev portal.
  * Orchestrates WebSocket connection, state management, and UI component composition.
  */
-export function AiDevChatPanel(): JSX.Element {
+interface AiDevChatPanelProps {
+  readonly onClose?: () => void;
+}
+
+export function AiDevChatPanel(props: AiDevChatPanelProps): JSX.Element {
   const socketUrl = useMemo(() => resolveAiDevSocketUrl(), []);
   const chatState = useChatState();
   const sessionIdRef = useRef(`session-${crypto.randomUUID()}`);
+  const feedbackEntryIdRef = useRef(0);
   const [composerValue, setComposerValue] = useState('');
   const [runFeedback, setRunFeedback] = useState<RunFeedbackState>({
     status: 'idle',
-    title: 'Waiting for request',
-    lines: [],
-    collapsed: false,
+    entries: [],
   });
 
-  const appendFeedbackLine = useCallback((line: string): void => {
-    setRunFeedback((current) => {
-      const nextLines = [...current.lines, line].slice(-24);
-      return {
-        ...current,
-        lines: nextLines,
-      };
-    });
+  const createFeedbackEntryId = useCallback((): string => {
+    feedbackEntryIdRef.current += 1;
+    return `feedback-${feedbackEntryIdRef.current}`;
   }, []);
+
+  const appendStatusFeedback = useCallback(
+    (entry: Omit<RunFeedbackStatusEntry, 'id'>): void => {
+      setRunFeedback((current) => ({
+        ...current,
+        entries: appendRunFeedbackEntry(current.entries, {
+          ...entry,
+          id: createFeedbackEntryId(),
+        }),
+      }));
+    },
+    [createFeedbackEntryId],
+  );
+
+  const appendStageFeedback = useCallback(
+    (entry: Omit<RunFeedbackStageEntry, 'id'>): void => {
+      setRunFeedback((current) => ({
+        ...current,
+        entries: appendRunFeedbackEntry(current.entries, {
+          ...entry,
+          id: createFeedbackEntryId(),
+        }),
+      }));
+    },
+    [createFeedbackEntryId],
+  );
+
+  const appendLogFeedback = useCallback(
+    (kind: RunFeedbackKind, message: string): void => {
+      const entry: Omit<RunFeedbackLogEntry, 'id'> = { type: 'log', kind, message };
+
+      setRunFeedback((current) => ({
+        ...current,
+        entries: appendRunFeedbackEntry(current.entries, {
+          ...entry,
+          id: createFeedbackEntryId(),
+        }),
+      }));
+    },
+    [createFeedbackEntryId],
+  );
+
+  const appendOperationFeedback = useCallback(
+    (entry: Omit<RunFeedbackOperationEntry, 'id'>): void => {
+      setRunFeedback((current) => ({
+        ...current,
+        entries: appendRunFeedbackEntry(current.entries, {
+          ...entry,
+          id: createFeedbackEntryId(),
+        }),
+      }));
+    },
+    [createFeedbackEntryId],
+  );
 
   // Agent and model selection
   const [availableAgents, setAvailableAgents] = useState<string[]>([]);
@@ -68,50 +126,79 @@ export function AiDevChatPanel(): JSX.Element {
       );
     },
     onChangesApplied: (changeSetId) => {
+      const hadPendingChangeSet = Boolean(chatState.pendingChangeSet);
       chatState.setPendingChangeSet(null);
-      chatState.appendMessage('system', `Applied change set ${changeSetId}.`, 'success');
+      if (hadPendingChangeSet) {
+        chatState.appendMessage('system', `Applied change set ${changeSetId}.`, 'success');
+      }
       setRunFeedback((current) => ({
         ...current,
         status: current.status === 'error' ? 'error' : 'done',
-        title: `Completed. Applied ${changeSetId}.`,
-        collapsed: true,
       }));
     },
     onChangesRejected: (changeSetId) => {
+      const hadPendingChangeSet = Boolean(chatState.pendingChangeSet);
       chatState.setPendingChangeSet(null);
-      chatState.appendMessage('system', `Rejected change set ${changeSetId}.`);
+      if (hadPendingChangeSet) {
+        chatState.appendMessage('system', `Rejected change set ${changeSetId}.`);
+      }
     },
     onLogMessage: (level, message) => {
-      const label = level === 'error' ? 'Error' : level === 'warn' ? 'Warning' : 'Info';
-      appendFeedbackLine(`${label}: ${message}`);
       if (level === 'error') {
+        appendLogFeedback('error', message);
         setRunFeedback((current) => ({
           ...current,
           status: 'error',
-          title: 'Completed with errors',
-          collapsed: true,
         }));
+        return;
       }
+
+      if (level === 'warn') {
+        appendLogFeedback('warning', message);
+      }
+    },
+    onTaskStatus: (phase, message) => {
+      appendStatusFeedback({
+        type: 'status',
+        kind: 'info',
+        phase,
+        message,
+      });
+    },
+    onTaskStage: (stage, message) => {
+      appendStageFeedback({
+        type: 'stage',
+        kind: 'info',
+        stage,
+        message,
+      });
+    },
+    onTaskOperation: (operationEvent) => {
+      appendOperationFeedback({
+        type: 'operation',
+        kind: operationEvent.kind ?? 'info',
+        operation: operationEvent.operation,
+        target: operationEvent.target,
+        message: operationEvent.message,
+        additions: operationEvent.additions,
+        deletions: operationEvent.deletions,
+      });
     },
     onError: (message) => {
       chatState.setIsWaitingForResponse(false);
       chatState.appendMessage('system', message, 'error');
+      appendLogFeedback('error', message);
       setRunFeedback((current) => ({
         ...current,
         status: 'error',
-        title: 'Run failed',
-        lines: [...current.lines, `Error: ${message}`].slice(-24),
-        collapsed: true,
       }));
     },
-    onDone: () => {
-      chatState.flushAssistantMessage();
+    onDone: (finalText) => {
+      chatState.flushAssistantMessage(finalText);
       chatState.setIsWaitingForResponse(false);
       setRunFeedback((current) => ({
         ...current,
         status: current.status === 'error' ? 'error' : 'done',
-        title: current.status === 'error' ? 'Completed with errors' : 'Completed successfully',
-        collapsed: true,
       }));
     },
   });
@@ -139,14 +226,20 @@ export function AiDevChatPanel(): JSX.Element {
     chatState.appendMessage('user', prompt);
     setRunFeedback({
       status: 'running',
-      title: 'AI is working...',
-      collapsed: false,
-      lines: ['Info: Request sent. Waiting for assistant response...'],
+      entries: [
+        {
+          id: createFeedbackEntryId(),
+          type: 'status',
+          kind: 'info',
+          phase: 'submitted',
+          message: 'Sending request',
+        },
+      ],
     });
     setComposerValue('');
     chatState.setIsWaitingForResponse(true);
     chatState.setStreamingText('');
-  }, [chatState, composerValue, selectedAgent, selectedModel, sendRequest]);
+  }, [chatState, composerValue, createFeedbackEntryId, selectedAgent, selectedModel, sendRequest]);
 
   const handleApplyChangeSet = useCallback((): void => {
     if (!chatState.pendingChangeSet) {
@@ -182,54 +275,83 @@ export function AiDevChatPanel(): JSX.Element {
     [handleSubmit],
   );
 
+  const showRunFeedback =
+    runFeedback.status !== 'idle' &&
+    runFeedback.status !== 'done' &&
+    (runFeedback.entries.length > 0 || Boolean(chatState.pendingChangeSet));
+
   return (
     <Styled.Root aria-label="Fusion AI Dev chat panel">
       <Header
         connectionState={connectionState}
         socketUrl={socketUrl}
-        visibleMessagesCount={chatState.visibleMessages.length}
-        selectedAgent={selectedAgent}
-        selectedModel={selectedModel}
-        availableAgents={availableAgents}
-        availableModels={availableModels}
         showSystemMessages={chatState.showSystemMessages}
         hiddenSystemMessageCount={chatState.hiddenSystemMessageCount}
-        onAgentChange={setSelectedAgent}
-        onModelChange={setSelectedModel}
         onToggleSystemMessages={() => chatState.setShowSystemMessages((x) => !x)}
-        onClear={chatState.handleClear}
+        onClose={() => props.onClose?.()}
       />
 
       <Timeline
         messages={chatState.visibleMessages}
         streamingText={chatState.streamingText}
         runFeedback={
-          runFeedback.status === 'idle'
+          !showRunFeedback
             ? null
             : {
                 status: runFeedback.status,
-                title: runFeedback.title,
-                lines: runFeedback.lines,
-                collapsed: runFeedback.collapsed,
+                entries: runFeedback.entries,
               }
         }
-        onToggleRunFeedback={() => {
-          setRunFeedback((current) => ({
-            ...current,
-            collapsed: !current.collapsed,
-          }));
-        }}
         pendingChangeSet={chatState.pendingChangeSet}
-        onApplyChangeSet={handleApplyChangeSet}
-        onRejectChangeSet={handleRejectChangeSet}
       />
+
+      <Styled.ActionLine>
+        <Styled.ActionLineText>
+          Files changed: {chatState.pendingChangeSet?.files.length ?? 0}
+        </Styled.ActionLineText>
+        <Styled.ActionLineActions>
+          <Button
+            variant="ghost"
+            onClick={chatState.handleClear}
+            style={{ minHeight: 24, padding: '0 6px', fontSize: '0.72rem' }}
+          >
+            Clear
+          </Button>
+          {chatState.pendingChangeSet ? (
+            <>
+              <Button
+                variant="ghost_icon"
+                title="Keep changes"
+                onClick={handleApplyChangeSet}
+                style={{ minWidth: 24, minHeight: 24, padding: 2 }}
+              >
+                <Icon data={done} size={16} />
+              </Button>
+              <Button
+                variant="ghost_icon"
+                title="Undo changes"
+                onClick={handleRejectChangeSet}
+                style={{ minWidth: 24, minHeight: 24, padding: 2 }}
+              >
+                <Icon data={undo} size={16} />
+              </Button>
+            </>
+          ) : null}
+        </Styled.ActionLineActions>
+      </Styled.ActionLine>
 
       <Composer
         value={composerValue}
+        selectedAgent={selectedAgent}
+        selectedModel={selectedModel}
+        availableAgents={availableAgents}
+        availableModels={availableModels}
         isDisabled={connectionState !== 'connected' || chatState.isWaitingForResponse}
         isButtonDisabled={
           connectionState !== 'connected' || chatState.isWaitingForResponse || !composerValue.trim()
         }
+        onAgentChange={setSelectedAgent}
+        onModelChange={setSelectedModel}
         onChange={setComposerValue}
         onKeyDown={handleComposerKeyDown}
         onSubmit={handleSubmit}

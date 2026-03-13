@@ -1,104 +1,95 @@
-import { Button, Typography } from '@equinor/eds-core-react';
-import type { ChangeEvent } from 'react';
+import { close, menu } from '@equinor/eds-icons';
+import { Icon } from '@equinor/eds-core-react';
+import { useEffect, useRef, useState } from 'react';
 import { Styled } from '../styles.js';
 import { getStatusText } from '../constants.js';
 import type { ConnectionState } from '../types.js';
 
+Icon.add({ close, menu });
+
 interface HeaderProps {
   readonly connectionState: ConnectionState;
   readonly socketUrl: string;
-  readonly visibleMessagesCount: number;
-  readonly selectedAgent: string;
-  readonly selectedModel: string;
-  readonly availableAgents: string[];
-  readonly availableModels: string[];
   readonly showSystemMessages: boolean;
   readonly hiddenSystemMessageCount: number;
-  readonly onAgentChange: (value: string) => void;
-  readonly onModelChange: (value: string) => void;
   readonly onToggleSystemMessages: () => void;
-  readonly onClear: () => void;
+  readonly onClose: () => void;
 }
 
 /**
  * Chat panel header with status, agent/model selection, and filters.
  */
 export function Header(props: HeaderProps): JSX.Element {
+  const statusText = getStatusText(props.connectionState);
+  const [showFilterMenu, setShowFilterMenu] = useState(false);
+  const popoverRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (!showFilterMenu) {
+      return;
+    }
+
+    const onPointerDown = (event: MouseEvent) => {
+      if (!popoverRef.current?.contains(event.target as Node)) {
+        setShowFilterMenu(false);
+      }
+    };
+
+    const onEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setShowFilterMenu(false);
+      }
+    };
+
+    document.addEventListener('mousedown', onPointerDown);
+    document.addEventListener('keydown', onEscape);
+
+    return () => {
+      document.removeEventListener('mousedown', onPointerDown);
+      document.removeEventListener('keydown', onEscape);
+    };
+  }, [showFilterMenu]);
+
   return (
     <Styled.Header>
       <Styled.HeaderTop>
-        <div>
-          <Styled.HeaderEyebrow>Live AI</Styled.HeaderEyebrow>
-          <Styled.HeaderIntro>
-            <Typography variant="h6">Developer Chat</Typography>
-            <Typography variant="body_short" color="secondary">
-              Stream assistant output, inspect diffs, and apply changes locally.
-            </Typography>
-          </Styled.HeaderIntro>
-        </div>
+        <Styled.HeaderEyebrow>Fusion Live AI</Styled.HeaderEyebrow>
         <Styled.HeaderMeta>
-          <span>{getStatusText(props.connectionState)}</span>
-          <span>•</span>
-          <span>{props.visibleMessagesCount} msgs</span>
+          <Styled.ConnectionDot
+            $state={props.connectionState}
+            title={`${statusText} (${props.socketUrl})`}
+            aria-label={statusText}
+          />
+          <Styled.TopIconButton
+            type="button"
+            title="Filter"
+            aria-expanded={showFilterMenu}
+            aria-haspopup="menu"
+            onClick={() => setShowFilterMenu((x) => !x)}
+          >
+            <Icon data={menu} size={14} />
+          </Styled.TopIconButton>
+          <Styled.TopIconButton type="button" title="Close chat" onClick={props.onClose}>
+            <Icon data={close} size={14} />
+          </Styled.TopIconButton>
         </Styled.HeaderMeta>
       </Styled.HeaderTop>
 
-      <Styled.StatusCard $state={props.connectionState}>
-        <Styled.StatusTitle>{getStatusText(props.connectionState)}</Styled.StatusTitle>
-        <Styled.StatusCopy>
-          {props.connectionState === 'connected'
-            ? `Connected to ${props.socketUrl}`
-            : props.connectionState === 'connecting'
-              ? `Connecting to ${props.socketUrl}`
-              : `Server unavailable at ${props.socketUrl}. Start fusion-framework-cli live-ai serve.`}
-        </Styled.StatusCopy>
-      </Styled.StatusCard>
-
-      <Styled.HeaderActions>
-        <Styled.Select
-          aria-label="Select AI agent"
-          value={props.selectedAgent}
-          onChange={(event: ChangeEvent<HTMLSelectElement>) =>
-            props.onAgentChange(event.currentTarget.value)
-          }
-          disabled={props.availableAgents.length === 0}
-        >
-          <option value="">Loading agents...</option>
-          {props.availableAgents.map((option) => (
-            <option key={option} value={option}>
-              Agent: {option}
-            </option>
-          ))}
-        </Styled.Select>
-
-        <Styled.Select
-          aria-label="Select AI model"
-          value={props.selectedModel}
-          onChange={(event: ChangeEvent<HTMLSelectElement>) =>
-            props.onModelChange(event.currentTarget.value)
-          }
-          disabled={props.availableModels.length === 0}
-        >
-          <option value="">Loading models...</option>
-          {props.availableModels.map((option) => (
-            <option key={option} value={option}>
-              Model: {option}
-            </option>
-          ))}
-        </Styled.Select>
-
-        <Button variant="ghost" onClick={props.onToggleSystemMessages}>
-          {props.showSystemMessages
-            ? 'Hide system'
-            : props.hiddenSystemMessageCount > 0
-              ? `Show system (${props.hiddenSystemMessageCount})`
-              : 'Show system'}
-        </Button>
-
-        <Button variant="outlined" onClick={props.onClear}>
-          Clear
-        </Button>
-      </Styled.HeaderActions>
+      {showFilterMenu ? (
+        <Styled.FilterPopover ref={popoverRef} role="menu" aria-label="Filter options">
+          <Styled.FilterMenuItem
+            type="button"
+            role="menuitem"
+            onClick={props.onToggleSystemMessages}
+          >
+            {props.showSystemMessages
+              ? 'Hide system messages'
+              : props.hiddenSystemMessageCount > 0
+                ? `Show system messages (${props.hiddenSystemMessageCount})`
+                : 'Show system messages'}
+          </Styled.FilterMenuItem>
+        </Styled.FilterPopover>
+      ) : null}
     </Styled.Header>
   );
 }
