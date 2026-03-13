@@ -3,7 +3,7 @@ import type {
   ClientRequest,
   FileOperation,
   ServerEvent,
-} from '@equinor/fusion-framework-cli-plugin-live-ai-core';
+} from '@equinor/fusion-framework-cli-plugin-ai-studio';
 import type { ChangeEvent, KeyboardEvent, TextareaHTMLAttributes } from 'react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import styled from 'styled-components';

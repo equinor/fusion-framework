@@ -2,7 +2,7 @@ import type {
   TaskOperationEvent,
   TaskStageEvent,
   TaskStatusEvent,
-} from '@equinor/fusion-framework-cli-plugin-live-ai-core';
+} from '@equinor/fusion-framework-cli-plugin-ai-studio';
 
 export type RunFeedbackKind = 'info' | 'warning' | 'error';
 export type RunFeedbackStateStatus = 'idle' | 'running' | 'done' | 'error';

@@ -28,7 +28,7 @@
     "@equinor/eds-tokens": "^0.10.0",
     "@equinor/fusion-framework": "workspace:*",
     "@equinor/fusion-framework-app": "workspace:*",
-    "@equinor/fusion-framework-cli-plugin-live-ai-core": "workspace:*",
+    "@equinor/fusion-framework-cli-plugin-ai-studio": "workspace:*",
     "@equinor/fusion-framework-dev-server": "workspace:*",
     "@equinor/fusion-framework-module-ag-grid": "workspace:*",
     "@equinor/fusion-framework-module-analytics": "workspace:*",

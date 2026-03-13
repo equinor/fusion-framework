@@ -43,7 +43,7 @@
     "directory": "packages/cli-plugins/live-ai"
   },
   "dependencies": {
-    "@equinor/fusion-framework-cli-plugin-live-ai-core": "workspace:*",
+    "@equinor/fusion-framework-cli-plugin-ai-studio": "workspace:*",
     "commander": "^14.0.1"
   },
   "peerDependencies": {

@@ -10,7 +10,7 @@
   },
   "references": [
     {
-      "path": "../live-ai-core"
+      "path": "../ai-studio"
     }
   ],
   "include": ["src/**/*"],

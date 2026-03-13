@@ -1,4 +1,4 @@
-import type { FileOperation } from '@equinor/fusion-framework-cli-plugin-live-ai-core';
+import type { FileOperation } from '@equinor/fusion-framework-cli-plugin-ai-studio';
 
 export type ConnectionState = 'connecting' | 'connected' | 'disconnected';
 export type MessageTone = 'default' | 'error' | 'success';

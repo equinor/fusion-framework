@@ -20,15 +20,9 @@ import type {
   StartServerOptions,
 } from './types.js';
 import { AVAILABLE_AGENTS, AVAILABLE_MODELS } from './config.js';
-import {
-  detectTaskStage,
-  parseOperationLine,
-  sanitizeCopilotOutputLine,
-  streamAssistantText,
-  toTaskStatusMessage,
-  tokenize,
-  type ParsedOperationLine,
-} from './copilot-stream.js';
+import { detectTaskStage, toTaskStatusMessage, tokenize } from './copilot-stream.js';
+import { createChatExecutor } from './executor/factory.js';
+import type { ChatExecutor } from './executor/types.js';
 
 interface SessionState {
   changeSets: Map<string, ChangeSet>;
@@ -59,6 +53,7 @@ export async function startServer(options: StartServerOptions = {}): Promise<Liv
   const sessions = new Map<string, SessionState>();
   const copilotStatus = await detectCopilotRuntimeStatus(root);
   const runtimeCatalog = await discoverRuntimeCatalog(copilotStatus);
+  const chatExecutor = createChatExecutor();
 
   const server = new WebSocketServer({ port });
 
@@ -75,8 +70,11 @@ export async function startServer(options: StartServerOptions = {}): Promise<Liv
     });
     emit(socket, {
       type: 'log',
-      level: copilotStatus.ready ? 'info' : 'warn',
-      message: copilotStatus.message,
+      level: chatExecutor.mode === 'cli' && !copilotStatus.ready ? 'warn' : 'info',
+      message:
+        chatExecutor.mode === 'cli'
+          ? copilotStatus.message
+          : 'SDK executor mode enabled. Copilot CLI runtime checks are bypassed.',
     });
 
     socket.on('message', async (rawData: RawData) => {
@@ -91,6 +89,7 @@ export async function startServer(options: StartServerOptions = {}): Promise<Liv
           sessions,
           runtimeCatalog,
           copilotStatus,
+          chatExecutor,
         });
       } catch (error) {
         emit(socket, {
@@ -127,6 +126,7 @@ interface HandleRequestContext {
   sessions: Map<string, SessionState>;
   runtimeCatalog: RuntimeCatalog;
   copilotStatus: CopilotRuntimeStatus;
+  chatExecutor: ChatExecutor;
 }
 
 async function handleRequest(ctx: HandleRequestContext): Promise<void> {
@@ -185,7 +185,9 @@ async function handleRequest(ctx: HandleRequestContext): Promise<void> {
 }
 
 async function handleChatSend(ctx: HandleRequestContext, request: ChatSendRequest): Promise<void> {
-  if (!ctx.copilotStatus.ready) {
+  const requiresCopilotRuntime = ctx.chatExecutor.mode === 'cli';
+
+  if (requiresCopilotRuntime && !ctx.copilotStatus.ready) {
     emit(ctx.socket, {
       type: 'log',
       level: 'warn',
@@ -237,51 +239,60 @@ async function handleChatSend(ctx: HandleRequestContext, request: ChatSendReques
 
   emitTaskStatus(ctx.socket, request.sessionId, 'reasoning', 'Thinking');
 
-  const copilotResult = await runCopilotApply(
+  emit(ctx.socket, {
+    type: 'log',
+    level: 'info',
+    message: `Using chat executor mode: ${ctx.chatExecutor.mode}`,
+  });
+
+  const copilotResult = await ctx.chatExecutor.execute(
     request.message,
     ctx.root,
     {
       model: selectedModel,
       agent: normalizedAgent,
     },
-    (progress) => {
-      emit(ctx.socket, {
-        type: 'log',
-        level: 'info',
-        message: progress,
-      });
-
-      const stage = detectTaskStage(progress);
-      if (stage && stage !== previousStage) {
-        previousStage = stage;
+    {
+      onProgress: (progress) => {
         emit(ctx.socket, {
-          type: 'task.stage',
-          sessionId: request.sessionId,
-          stage,
+          type: 'log',
+          level: 'info',
           message: progress,
         });
-        emitTaskStatus(ctx.socket, request.sessionId, stage, toTaskStatusMessage(stage));
-      }
-    },
-    (chunk) => {
-      emit(ctx.socket, { type: 'assistant.token', sessionId: request.sessionId, token: chunk });
-    },
-    (operationLine) => {
-      emit(ctx.socket, {
-        type: 'task.operation',
-        sessionId: request.sessionId,
-        operation: operationLine.operation,
-        kind: operationLine.kind,
-        target: operationLine.target,
-        message: operationLine.message,
-        additions: operationLine.additions,
-        deletions: operationLine.deletions,
-      });
+
+        const stage = detectTaskStage(progress);
+        if (stage && stage !== previousStage) {
+          previousStage = stage;
+          emit(ctx.socket, {
+            type: 'task.stage',
+            sessionId: request.sessionId,
+            stage,
+            message: progress,
+          });
+          emitTaskStatus(ctx.socket, request.sessionId, stage, toTaskStatusMessage(stage));
+        }
+      },
+      onAssistantChunk: (chunk) => {
+        emit(ctx.socket, { type: 'assistant.token', sessionId: request.sessionId, token: chunk });
+      },
+      onOperation: (operationLine) => {
+        emit(ctx.socket, {
+          type: 'task.operation',
+          sessionId: request.sessionId,
+          operation: operationLine.operation,
+          kind: operationLine.kind,
+          target: operationLine.target,
+          message: operationLine.message,
+          additions: operationLine.additions,
+          deletions: operationLine.deletions,
+        });
+      },
     },
   );
 
   if (copilotResult.ok) {
     const changeSetId = createId('changeset');
+    const pathway = ctx.chatExecutor.mode === 'sdk' ? 'copilot-sdk' : 'copilot-cli';
 
     if (ctx.persistAuditLog) {
       appendAuditLog(ctx.root, request.sessionId, {
@@ -289,7 +300,7 @@ async function handleChatSend(ctx: HandleRequestContext, request: ChatSendReques
         sessionId: request.sessionId,
         changeSetId,
         appliedAt: new Date().toISOString(),
-        pathway: 'copilot-cli',
+        pathway,
       });
     }
 
@@ -307,6 +318,13 @@ async function handleChatSend(ctx: HandleRequestContext, request: ChatSendReques
     level: 'warn',
     message: `Copilot apply unavailable: ${copilotResult.message}`,
   });
+  if (ctx.chatExecutor.mode === 'sdk') {
+    emit(ctx.socket, {
+      type: 'log',
+      level: 'warn',
+      message: 'SDK executor is not ready yet; switching to fallback planner.',
+    });
+  }
   emit(ctx.socket, {
     type: 'log',
     level: 'info',
@@ -347,11 +365,6 @@ async function handleChatSend(ctx: HandleRequestContext, request: ChatSendReques
     changeSetId: fallbackChangeSetId,
   });
   emit(ctx.socket, { type: 'done', sessionId: request.sessionId });
-}
-
-interface CopilotApplyOptions {
-  model?: string;
-  agent?: string;
 }
 
 function normalizeCopilotModel(model: string | undefined, catalog: RuntimeCatalog): string {
@@ -590,176 +603,6 @@ async function runToolCommand(
   });
 }
 
-interface CopilotApplyResult {
-  ok: boolean;
-  message: string;
-  assistantText: string;
-}
-
-async function runCopilotApply(
-  prompt: string,
-  cwd: string,
-  options: CopilotApplyOptions,
-  onProgress: (message: string) => void,
-  onAssistantChunk: (chunk: string) => void,
-  onOperation: (operation: ParsedOperationLine) => void,
-): Promise<CopilotApplyResult> {
-  const trimmedPrompt = prompt.trim();
-  if (!trimmedPrompt) {
-    return {
-      ok: false,
-      message: 'Prompt is empty.',
-      assistantText: 'No prompt was provided.',
-    };
-  }
-
-  const executionPrompt = [
-    'Act as an autonomous developer in this repository.',
-    'Apply the requested change directly with the smallest practical edit.',
-    'Prefer the current working directory and the currently running dev target.',
-    'Avoid broad repository exploration unless it is strictly necessary to make the edit.',
-    'If the request is ambiguous, choose the most user-visible change in the current dev target and keep the edit minimal.',
-    'Create new files when needed, keep modifications minimal and TypeScript-safe.',
-    'Do not run builds, tests, linters, diff checks, or validation steps unless the user explicitly asked for them.',
-    'Do not ask questions. Perform changes and finish.',
-    `User request: ${trimmedPrompt}`,
-  ].join('\n');
-
-  const args = [
-    '-p',
-    executionPrompt,
-    '--allow-all',
-    '--no-ask-user',
-    '--model',
-    options.model ?? 'gpt-5.3-codex',
-    '--stream',
-    'on',
-  ];
-
-  if (options.agent) {
-    args.push('--agent', options.agent);
-  }
-
-  return new Promise((resolvePromise) => {
-    const child = spawn('copilot', args, {
-      cwd,
-      stdio: ['ignore', 'pipe', 'pipe'],
-    });
-
-    let stdout = '';
-    let stderr = '';
-    let stdoutBuffer = '';
-    let stderrBuffer = '';
-    let settled = false;
-
-    const resolveOnce = (result: CopilotApplyResult) => {
-      if (settled) {
-        return;
-      }
-      settled = true;
-      resolvePromise(result);
-    };
-
-    const flushLines = (
-      buffer: string,
-      sink: 'stdout' | 'stderr',
-      messagePrefix?: string,
-    ): string => {
-      const lines = buffer.split(/\r?\n/);
-      const remainder = lines.pop() ?? '';
-      for (const line of lines) {
-        const sanitized = sanitizeCopilotOutputLine(line);
-        if (!sanitized) {
-          continue;
-        }
-
-        const operationCandidate =
-          sink === 'stderr' ? sanitized.replace(/^stderr:\s*/i, '') : sanitized;
-        const operationLine = parseOperationLine(operationCandidate);
-        if (operationLine) {
-          onOperation(operationLine);
-          continue;
-        }
-
-        if (sink === 'stdout') {
-          stdout += `${sanitized}\n`;
-          streamAssistantText(`${sanitized}\n`, onAssistantChunk);
-        } else {
-          stderr += `${sanitized}\n`;
-        }
-
-        onProgress(messagePrefix ? `${messagePrefix}${sanitized}` : sanitized);
-      }
-      return remainder;
-    };
-
-    const flushRemainder = (buffer: string, sink: 'stdout' | 'stderr'): void => {
-      const sanitized = sanitizeCopilotOutputLine(buffer);
-      if (!sanitized) {
-        return;
-      }
-
-      const operationCandidate =
-        sink === 'stderr' ? sanitized.replace(/^stderr:\s*/i, '') : sanitized;
-      const operationLine = parseOperationLine(operationCandidate);
-      if (operationLine) {
-        onOperation(operationLine);
-        return;
-      }
-
-      if (sink === 'stdout') {
-        stdout += `${sanitized}\n`;
-        streamAssistantText(`${sanitized}\n`, onAssistantChunk);
-      } else {
-        stderr += `${sanitized}\n`;
-      }
-
-      onProgress(sink === 'stderr' ? `stderr: ${sanitized}` : sanitized);
-    };
-
-    child.stdout.on('data', (chunk: Buffer | string) => {
-      stdoutBuffer += chunk.toString();
-      stdoutBuffer = flushLines(stdoutBuffer, 'stdout');
-    });
-
-    child.stderr.on('data', (chunk: Buffer | string) => {
-      stderrBuffer += chunk.toString();
-      stderrBuffer = flushLines(stderrBuffer, 'stderr', 'stderr: ');
-    });
-
-    child.on('error', (error) => {
-      resolveOnce({
-        ok: false,
-        message: `Failed to start copilot CLI: ${toErrorMessage(error)}`,
-        assistantText: 'Unable to run Copilot in this environment.',
-      });
-    });
-
-    child.on('close', (code) => {
-      stdoutBuffer = flushLines(stdoutBuffer, 'stdout');
-      stderrBuffer = flushLines(stderrBuffer, 'stderr', 'stderr: ');
-      flushRemainder(stdoutBuffer, 'stdout');
-      flushRemainder(stderrBuffer, 'stderr');
-
-      if (code === 0) {
-        const summary = summarizeCopilotOutput(stdout, stderr);
-        resolveOnce({
-          ok: true,
-          message: 'Copilot applied the requested changes.',
-          assistantText: summary,
-        });
-        return;
-      }
-
-      resolveOnce({
-        ok: false,
-        message: stderr.trim() || `Copilot exited with code ${String(code ?? 'unknown')}.`,
-        assistantText: 'Copilot could not complete the request.',
-      });
-    });
-  });
-}
-
 function emitTaskStatus(
   socket: WebSocket,
   sessionId: string,
@@ -779,16 +622,6 @@ function emitTaskStatus(
     phase,
     message,
   });
-}
-
-function summarizeCopilotOutput(stdout: string, stderr: string): string {
-  const merged = `${stdout}\n${stderr}`;
-  const lines = merged
-    .split(/\r?\n/)
-    .map((line) => line.trimEnd())
-    .filter((line) => line.trim().length > 0);
-
-  return lines.join('\n');
 }
 
 interface DraftChange {

@@ -2,7 +2,7 @@ import type { Command } from 'commander';
 import liveAiCommand from './command.js';
 
 /**
- * Registers the live-ai plugin command group with Fusion CLI.
+ * Registers the ai-studio plugin command group with Fusion CLI.
  *
  * @param program - Commander program instance from the host CLI.
  */

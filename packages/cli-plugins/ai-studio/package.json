@@ -1,5 +1,5 @@
 {
-  "name": "@equinor/fusion-framework-cli-plugin-live-ai-core",
+  "name": "@equinor/fusion-framework-cli-plugin-ai-studio",
   "version": "0.0.0",
   "description": "Core local WebSocket write server for experimental live AI editing",
   "type": "module",
@@ -51,7 +51,7 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/equinor/fusion-framework.git",
-    "directory": "packages/cli-plugins/live-ai-core"
+    "directory": "packages/cli-plugins/ai-studio"
   },
   "dependencies": {
     "diff": "^8.0.2",

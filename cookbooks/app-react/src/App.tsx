@@ -21,12 +21,12 @@ const NAV_LINKS: NavLink[] = [
 ];
 
 const GREEN = {
-  solid: '#10b981',
-  dark: '#047857',
-  text: '#6ee7b7',
-  bg: 'rgba(16,185,129,0.15)',
-  border: 'rgba(16,185,129,0.4)',
-  glow: 'rgba(16,185,129,0.6)',
+  solid: '#8b5cf6',
+  dark: '#6d28d9',
+  text: '#c4b5fd',
+  bg: 'rgba(139,92,246,0.15)',
+  border: 'rgba(139,92,246,0.4)',
+  glow: 'rgba(139,92,246,0.6)',
 } as const;
 
 const styles = {
@@ -34,7 +34,7 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     height: '100vh',
-    background: 'linear-gradient(135deg, #020d0a 0%, #041f14 50%, #063320 100%)',
+    background: 'linear-gradient(135deg, #0d0a1a 0%, #1a0f2e 50%, #2a1050 100%)',
     fontFamily: '"Equinor", system-ui, sans-serif',
     color: '#e0e6f0',
   } satisfies CSSProperties,
@@ -134,8 +134,8 @@ const styles = {
     lineHeight: 1.5,
   } satisfies CSSProperties,
   chatMsgUser: {
-    background: 'rgba(16,185,129,0.2)',
-    color: '#6ee7b7',
+    background: 'rgba(139,92,246,0.2)',
+    color: '#c4b5fd',
     alignSelf: 'flex-end',
     maxWidth: '80%',
   } satisfies CSSProperties,
@@ -162,8 +162,8 @@ const styles = {
   chatBtn: {
     padding: '0.45rem 1rem',
     borderRadius: '4px',
-    background: 'linear-gradient(90deg, #10b981, #047857)',
-    border: '1px solid #10b981',
+    background: 'linear-gradient(90deg, #8b5cf6, #6d28d9)',
+    border: '1px solid #8b5cf6',
     color: '#fff',
     fontSize: '0.88rem',
     fontWeight: 500,
@@ -184,7 +184,7 @@ function botReply(message: string): string {
   if (greetings.test(message)) {
     return "Hey there! What's your name?";
   }
-  return "I heard you! Feel free to introduce yourself 😊";
+  return 'I heard you! Feel free to introduce yourself 😊';
 }
 
 interface ChatMessage {
@@ -208,11 +208,7 @@ function Chat(): JSX.Element {
     const text = input.trim();
     if (!text) return;
     const reply = botReply(text);
-    setMessages((prev) => [
-      ...prev,
-      { from: 'user', text },
-      { from: 'bot', text: reply },
-    ]);
+    setMessages((prev) => [...prev, { from: 'user', text }, { from: 'bot', text: reply }]);
     setInput('');
   };
 
@@ -253,7 +249,6 @@ function Chat(): JSX.Element {
     </div>
   );
 }
-
 
 function Badge({ label }: { label: string }): JSX.Element {
   return <div style={styles.badge}>{label}</div>;

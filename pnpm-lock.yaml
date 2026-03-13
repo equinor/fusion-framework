@@ -1128,9 +1128,9 @@ importers:
 
   packages/cli-plugins/live-ai:
     dependencies:
-      '@equinor/fusion-framework-cli-plugin-live-ai-core':
+      '@equinor/fusion-framework-cli-plugin-ai-studio':
         specifier: workspace:*
-        version: link:../live-ai-core
+        version: link:../ai-studio
       commander:
         specifier: ^14.0.1
         version: 14.0.3
@@ -1139,7 +1139,7 @@ importers:
         specifier: ^5.8.2
         version: 5.9.3
 
-  packages/cli-plugins/live-ai-core:
+  packages/cli-plugins/ai-studio:
     dependencies:
       diff:
         specifier: ^8.0.2
@@ -1172,9 +1172,9 @@ importers:
       '@equinor/fusion-framework-app':
         specifier: workspace:*
         version: link:../app
-      '@equinor/fusion-framework-cli-plugin-live-ai-core':
+      '@equinor/fusion-framework-cli-plugin-ai-studio':
         specifier: workspace:*
-        version: link:../cli-plugins/live-ai-core
+        version: link:../cli-plugins/ai-studio
       '@equinor/fusion-framework-dev-server':
         specifier: workspace:*
         version: link:../dev-server

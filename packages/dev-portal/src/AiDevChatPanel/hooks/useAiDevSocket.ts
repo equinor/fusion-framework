@@ -5,7 +5,7 @@ import type {
   TaskOperationEvent,
   TaskStageEvent,
   TaskStatusEvent,
-} from '@equinor/fusion-framework-cli-plugin-live-ai-core';
+} from '@equinor/fusion-framework-cli-plugin-ai-studio';
 import type { ConnectionState } from '../types.js';
 
 export interface UseAiDevSocketOptions {

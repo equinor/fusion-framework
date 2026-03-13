@@ -3,8 +3,8 @@ import type { CSSProperties, JSX } from 'react';
 const styles = {
   header: {
     height: '56px',
-    background: 'rgba(13,28,20,0.85)',
-    borderBottom: '1px solid rgba(16,185,129,0.3)',
+    background: 'rgba(19,10,40,0.85)',
+    borderBottom: '1px solid rgba(139,92,246,0.3)',
     display: 'flex',
     alignItems: 'center',
     padding: '0 2rem',
@@ -14,7 +14,7 @@ const styles = {
   logo: {
     width: '28px',
     height: '28px',
-    background: 'linear-gradient(135deg, #10b981, #047857)',
+    background: 'linear-gradient(135deg, #8b5cf6, #6d28d9)',
     borderRadius: '6px',
     display: 'flex',
     alignItems: 'center',
@@ -39,9 +39,9 @@ const styles = {
     fontWeight: 600,
     letterSpacing: '0.08em',
     textTransform: 'uppercase' as const,
-    color: '#6ee7b7',
-    background: 'rgba(16,185,129,0.15)',
-    border: '1px solid rgba(16,185,129,0.4)',
+    color: '#c4b5fd',
+    background: 'rgba(139,92,246,0.15)',
+    border: '1px solid rgba(139,92,246,0.4)',
     borderRadius: '4px',
     padding: '0.15rem 0.6rem',
   } satisfies CSSProperties,

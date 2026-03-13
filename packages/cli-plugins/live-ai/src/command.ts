@@ -1,20 +1,20 @@
 import { createCommand, createOption } from 'commander';
-import { startServer } from '@equinor/fusion-framework-cli-plugin-live-ai-core';
+import { startServer } from '@equinor/fusion-framework-cli-plugin-ai-studio';
 
 interface ServeOptions {
   /** Optional explicit root directory for file operations. */
   root?: string;
-  /** WebSocket port for live-ai server. */
+  /** WebSocket port for ai-studio server. */
   port: number;
 }
 
 /**
- * `live-ai serve` command.
+ * `ai-studio serve` command.
  *
- * Starts the local live-ai write server with a manually applied change-set flow.
+ * Starts the local ai-studio write server with a manually applied change-set flow.
  */
 export const serveCommand = createCommand('serve')
-  .description('Start the experimental local live-ai write server')
+  .description('Start the experimental local ai-studio write server')
   .addOption(
     createOption('--port <number>', 'WebSocket port to bind')
       .default(8787)
@@ -33,8 +33,8 @@ export const serveCommand = createCommand('serve')
       root: options.root,
     });
 
-    console.log(`live-ai server listening on ws://localhost:${server.port}/ws`);
-    console.log(`live-ai root: ${server.root}`);
+    console.log(`ai-studio server listening on ws://localhost:${server.port}/ws`);
+    console.log(`ai-studio root: ${server.root}`);
 
     const shutdown = async () => {
       await server.close();
@@ -51,10 +51,11 @@ export const serveCommand = createCommand('serve')
   });
 
 /**
- * Root command group for all live-ai commands.
+ * Root command group for all ai-studio commands.
  */
-export const command = createCommand('live-ai')
-  .description('Experimental Copilot-like live editing commands')
+export const command = createCommand('ai-studio')
+  .alias('live-ai')
+  .description('Experimental Copilot-like ai-studio editing commands')
   .addCommand(serveCommand);
 
 export default command;
