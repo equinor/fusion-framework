@@ -40,7 +40,11 @@ export type HttpMsalModule = Module<
 >;
 
 /**
- * HTTP module with MSAL authentication.
+ * Default HTTP module definition for Fusion Framework applications.
+ *
+ * The module uses `HttpClientMsal` as the default client implementation and,
+ * when the auth module is available, installs a request handler that can acquire
+ * bearer tokens for scoped requests.
  */
 export const module: HttpMsalModule = {
   name: 'http',
@@ -95,7 +99,13 @@ export const module: HttpMsalModule = {
 };
 
 /**
- * Configures the HTTP module with MSAL authentication.
+ * Creates a module configurator for the HTTP module.
+ *
+ * Use this when you need lower-level access to the module configuration callback,
+ * for example when registering several named clients in one setup step.
+ *
+ * @param configure - The callback that receives the HTTP module configuration.
+ * @returns A module configurator for the HTTP module.
  */
 export const configureHttp = <TRef = unknown>(
   configure: (config: ModuleConfigType<HttpMsalModule>, ref?: TRef) => void,
@@ -105,15 +115,14 @@ export const configureHttp = <TRef = unknown>(
 });
 
 /**
- * Configures the HTTP client with MSAL authentication.
+ * Creates a module configurator that registers one named HTTP client.
  *
- * This function creates a module configurator that can be used to configure the HTTP module
- * with MSAL authentication. The configurator takes a name and a set of HTTP client options,
- * and returns a module configurator that can be used to configure the HTTP module.
+ * This is the convenience API for the common case where a setup step only needs to
+ * register one client with `baseUri`, `defaultScopes`, handlers, or a custom constructor.
  *
- * @param name - The name of the HTTP client configuration.
- * @param args - The HTTP client options, including the MSAL configuration.
- * @returns A module configurator that can be used to configure the HTTP module.
+ * @param name - The client key used later with `createClient(name)`.
+ * @param args - The named client configuration.
+ * @returns A module configurator that registers the named client.
  */
 export const configureHttpClient = <TRef = unknown>(
   name: string,

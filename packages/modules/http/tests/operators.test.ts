@@ -1,9 +1,12 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { describe, it, expect, vi } from 'vitest';
+import { lastValueFrom, of } from 'rxjs';
+import { toArray } from 'rxjs/operators';
 import {
   capitalizeRequestMethodOperator,
   type ProcessOperator,
   requestValidationOperator,
+  sseMap,
 } from '../src/lib/operators';
 import type { FetchRequest } from '../src/lib';
 
@@ -105,5 +108,26 @@ describe('requestValidationOperator', () => {
     });
 
     await expect(result).rejects.toThrowError('RFC 2615');
+  });
+});
+
+describe('sseMap', () => {
+  it('should map SSE responses through the operators index export', async () => {
+    const response = new Response(
+      new ReadableStream({
+        start(controller) {
+          controller.enqueue(new TextEncoder().encode('data: {"key": "value"}\n\n'));
+          controller.close();
+        },
+      }),
+      {
+        headers: { 'Content-Type': 'text/event-stream' },
+        status: 200,
+      },
+    );
+
+    const events = await lastValueFrom(of(response).pipe(sseMap<{ key: string }>(), toArray()));
+
+    expect(events).toEqual([{ data: { key: 'value' } }]);
   });
 });

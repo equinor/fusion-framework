@@ -11,10 +11,13 @@ import type { IHttpRequestHandler, IHttpResponseHandler } from './lib/operators'
  * Represents the options for constructing an `IHttpClient` instance.
  *
  * @template TInit - The type of the initial request object used by the `IHttpClient` instance.
+ * @template TResponse - The type of the response object used by the `IHttpClient` instance.
  * @property {IHttpRequestHandler<TInit>} requestHandler - The request handler to be used by the `IHttpClient` instance.
+ * @property {IHttpResponseHandler<TResponse>} [responseHandler] - The response handler to be used by the `IHttpClient` instance.
  */
-interface HttpClientConstructorOptions<TInit extends FetchRequest> {
+interface HttpClientConstructorOptions<TInit extends FetchRequest, TResponse = Response> {
   requestHandler: IHttpRequestHandler<TInit>;
+  responseHandler?: IHttpResponseHandler<TResponse>;
 }
 
 /**
@@ -28,14 +31,20 @@ interface HttpClientConstructorOptions<TInit extends FetchRequest> {
 interface HttpClientConstructor<TClient extends IHttpClient> {
   new (
     uri: string,
-    options: HttpClientConstructorOptions<HttpClientRequestInitType<TClient>>,
+    options: HttpClientConstructorOptions<
+      HttpClientRequestInitType<TClient>,
+      HttpClientResponseType<TClient>
+    >,
   ): TClient;
 }
 
 /**
- * Represents the options for configuring an `IHttpClient` instance.
+ * Configures how the provider creates a named `IHttpClient` instance.
  *
- * @template TClient - The type of the `IHttpClient` instance to be configured.
+ * Use these options to define a base URL, MSAL scopes, shared request or response handlers,
+ * a custom client constructor, or per-instance setup through `onCreate`.
+ *
+ * @template TClient - The client type created from this configuration.
  */
 export interface HttpClientOptions<TClient extends IHttpClient = IHttpClient> {
   /** The base URI for the `IHttpClient` instance. */
@@ -54,7 +63,7 @@ export interface HttpClientOptions<TClient extends IHttpClient = IHttpClient> {
   requestHandler?: IHttpRequestHandler<HttpClientRequestInitType<TClient>>;
 
   /** The response handler to be used by the `IHttpClient` instance. */
-  responseHandler?: IHttpResponseHandler<HttpClientRequestInitType<TClient>>;
+  responseHandler?: IHttpResponseHandler<HttpClientResponseType<TClient>>;
 }
 
 /**
@@ -68,8 +77,21 @@ export type HttpClientRequestInitType<T extends IHttpClient> =
   T extends IHttpClient<infer U> ? U : never;
 
 /**
- * Instance for configuring http client
- * @template TClient base type of client that the provider will create
+ * Utility type that extracts the response type from an `IHttpClient` implementation.
+ * This is useful for ensuring type safety when configuring response handlers for an `IHttpClient` instance.
+ *
+ * @template T - The type of the `IHttpClient` implementation.
+ * @returns The response type for the `IHttpClient` implementation.
+ */
+export type HttpClientResponseType<T extends IHttpClient> =
+  T extends IHttpClient<infer _TRequest, infer TResponse> ? TResponse : never;
+
+/**
+ * Registers and looks up named HTTP client configurations for the HTTP module.
+ *
+ * Each named configuration can later be turned into a fresh client instance by the provider.
+ *
+ * @template TClient - The base client type the provider creates.
  */
 export interface IHttpClientConfigurator<TClient extends IHttpClient = IHttpClient> {
   readonly clients: Record<string, HttpClientOptions<TClient>>;
@@ -77,14 +99,15 @@ export interface IHttpClientConfigurator<TClient extends IHttpClient = IHttpClie
   readonly defaultHttpRequestHandler: IHttpRequestHandler<HttpClientRequestInitType<TClient>>;
 
   /**
-   * Configure a client with arguments
-   * @param name name of the client
-   * @param args option that are used cor creating a client
+   * Registers or updates a named client configuration.
+   * @param name - The client key used later with `createClient(name)`.
+   * @param args - The configuration used when creating a client instance.
+   * @returns The configurator so registrations can be chained.
    * @example
    * ```ts
-   * configurator.http.configureClient('foo',{
-   *   baseUri: 'https://foo.bar',
-   *   defaultScopes: ['foobar/.default']
+   * configurator.http.configureClient('catalog', {
+   *   baseUri: 'https://api.example.com',
+   *   defaultScopes: ['api://catalog-api/.default'],
    * });
    * ```
    */
@@ -94,18 +117,21 @@ export interface IHttpClientConfigurator<TClient extends IHttpClient = IHttpClie
   ): IHttpClientConfigurator<TClient>;
 
   /**
-   * Configure a simple client by name to an endpoint
-   * @param name name of the client
-   * @param uri base endpoint for the client
+   * Registers a named client with only a base URI.
+   * @param name - The client key used later with `createClient(name)`.
+   * @param uri - The base endpoint for the client.
+   * @returns The configurator so registrations can be chained.
    */
   configureClient(name: string, uri: string): IHttpClientConfigurator<TClient>;
 
   /**
-   * Creates a client with callback configuration
-   * @param name name of the client
-   * @param onCreate callback when a client is created
+   * Registers a named client using only an `onCreate` callback.
+   * @param name - The client key used later with `createClient(name)`.
+   * @param onCreate - The callback that runs for every created client instance.
+   * @returns The configurator so registrations can be chained.
+   * @example
    * ```ts
-   * configurator.http.configureClient('foo',(client) => {
+   * configurator.http.configureClient('catalog', (client) => {
    *   client.requestHandler.add('logger', (request) => console.log(request));
    * });
    * ```
@@ -116,7 +142,9 @@ export interface IHttpClientConfigurator<TClient extends IHttpClient = IHttpClie
   ): HttpClientConfigurator<TClient>;
 
   /**
-   * Check if there is a configuration for provided name
+   * Checks whether a named client configuration exists.
+   * @param name - The client key to check.
+   * @returns `true` when a configuration exists for the key.
    */
   hasClient(name: string): boolean;
 }
@@ -127,15 +155,15 @@ export class HttpClientConfigurator<TClient extends IHttpClient>
 {
   protected _clients: Record<string, HttpClientOptions<TClient>> = {};
 
-  /** Get a clone of all configured clients */
+  /** Gets a shallow clone of all named client configurations. */
   public get clients(): Record<string, HttpClientOptions<TClient>> {
     return { ...this._clients };
   }
 
-  /** default class for creation of http clients */
+  /** Default constructor used when a client configuration does not provide `ctor`. */
   readonly defaultHttpClientCtor: HttpClientConstructor<TClient>;
 
-  /** default request handler for http clients, applied on creation */
+  /** Default request handler pipeline cloned into each created client instance. */
   readonly defaultHttpRequestHandler = new HttpRequestHandler<HttpClientRequestInitType<TClient>>({
     // convert all request methods to uppercase
     'capitalize-method': capitalizeRequestMethodOperator(),
@@ -144,8 +172,8 @@ export class HttpClientConfigurator<TClient extends IHttpClient>
   });
 
   /**
-   * Create a instance of http configuration
-   * @param client defaultHttpRequestHandler
+   * Creates a configurator with the default client constructor.
+   * @param client - The default client constructor used when `ctor` is not configured per client.
    */
   constructor(client: HttpClientConstructor<TClient>) {
     this.defaultHttpClientCtor = client;

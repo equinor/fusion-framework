@@ -1,9 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import { ServerSentEventResponseError } from '../src/errors.js';
-import { createSseSelector } from '../src/lib/selectors/sse-selector.js'; // Adjust the import path as needed
+import { createSseSelector, type ServerSentEvent } from '../src/lib/selectors';
 import { of, lastValueFrom } from 'rxjs';
 import { concatMap, scan } from 'rxjs/operators';
-import { set } from 'zod';
 
 // Helper to create a mock Response
 function createMockResponse(
@@ -34,7 +33,7 @@ describe('createSseSelector', () => {
     const events = await lastValueFrom(
       of(response).pipe(
         concatMap(selector),
-        scan((acc, event) => [...acc, event], [] as any[]),
+        scan((acc, event) => [...acc, event], [] as ServerSentEvent[]),
       ),
     );
     expect(events).toEqual([{ data: { key: 'value' } }]);
@@ -79,7 +78,7 @@ describe('createSseSelector', () => {
     const events = await lastValueFrom(
       of(response).pipe(
         concatMap(selector),
-        scan((acc, event) => [...acc, event], [] as any[]),
+        scan((acc, event) => [...acc, event], [] as ServerSentEvent[]),
       ),
     );
 
@@ -98,7 +97,7 @@ describe('createSseSelector', () => {
     const events = await lastValueFrom(
       of(response).pipe(
         concatMap(selector),
-        scan((acc, event) => [...acc, event], [] as any[]),
+        scan((acc, event) => [...acc, event], [] as ServerSentEvent[]),
       ),
     );
 
@@ -117,7 +116,7 @@ describe('createSseSelector', () => {
     const events = await lastValueFrom(
       of(response).pipe(
         concatMap(selector),
-        scan((acc, event) => [...acc, event], [] as any[]),
+        scan((acc, event) => [...acc, event], [] as ServerSentEvent[]),
       ),
     );
 
@@ -136,7 +135,7 @@ describe('createSseSelector', () => {
     const eventsPromise = lastValueFrom(
       of(response).pipe(
         concatMap(selector),
-        scan((acc, event) => [...acc, event], [] as any[]),
+        scan((acc, event) => [...acc, event], [] as ServerSentEvent[]),
       ),
     );
 

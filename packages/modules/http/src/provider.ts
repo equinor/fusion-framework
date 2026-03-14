@@ -11,15 +11,19 @@ import { BaseModuleProvider } from '@equinor/fusion-framework-module/provider';
 import { version } from './version';
 
 /**
- * Exception thrown when a client cannot be found.
+ * Thrown when `createClient(name)` is called with an unknown client key.
  *
- * This error is typically used to indicate that a requested client instance
- * does not exist or cannot be located within the current context.
- *
- * @extends {Error}
+ * This is only used when the provided string is neither a registered client name
+ * nor an absolute `http:` or `https:` URL.
  */
 export class ClientNotFoundException extends Error {}
 
+/**
+ * Creates fresh HTTP client instances from named or ad-hoc configuration.
+ *
+ * A provider can create clients from registered names, inline `HttpClientOptions`,
+ * or absolute URLs treated as ad-hoc `baseUri` values.
+ */
 export interface IHttpClientProvider<TClient extends IHttpClient = IHttpClient> {
   /**
    * The default HTTP request handler used by the HttpClientProvider.
@@ -43,13 +47,17 @@ export interface IHttpClientProvider<TClient extends IHttpClient = IHttpClient> 
   createClient(key: HttpClientOptions<TClient>): TClient;
 
   /**
-   * Class cast creation of custom client
+   * Creates a client instance and casts it to a custom HTTP client type.
+   *
+   * This is most useful when the named client configuration uses a custom `ctor`
+   * that extends `HttpClient` with domain-specific methods.
    * @example
    * ```ts
-   * config.http.configureClient('foobar', (client) => {
-   *   client.ctor = MyClient;
-   *   client.uri = 'https://foobar.com';
+   * config.http.configureClient('foobar', {
+   *   ctor: MyClient,
+   *   baseUri: 'https://foobar.com',
    * });
+   * ```
    */
   createCustomClient<T extends HttpClient>(key: string): T;
 }
@@ -60,16 +68,12 @@ export interface IHttpClientProvider<TClient extends IHttpClient = IHttpClient> 
  * @returns `true` if the input string is a valid URL, `false` otherwise.
  */
 const isURL = (url: string) => {
-  const pattern = new RegExp(
-    '^(https?:\\/\\/)?' + // protocol
-      '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.?)+[a-z]{2,}|' + // domain name
-      '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
-      '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
-      '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
-      '(\\#[-a-z\\d_]*)?$',
-    'i',
-  ); // fragment locator
-  return pattern.test(url);
+  try {
+    const parsed = new URL(url);
+    return ['http:', 'https:'].includes(parsed.protocol);
+  } catch {
+    return false;
+  }
 };
 
 /**
@@ -105,7 +109,7 @@ export class HttpClientProvider<TClient extends IHttpClient = IHttpClient>
   }
 
   /**
-   * Creates a new HTTP client instance with the specified configuration.
+   * Creates a fresh HTTP client instance from a named or ad-hoc configuration.
    *
    * @param keyOrConfig - The key or configuration object for the HTTP client.
    * @returns The created HTTP client instance.
@@ -115,12 +119,8 @@ export class HttpClientProvider<TClient extends IHttpClient = IHttpClient>
    * If a string is provided, it is treated as the key for a pre-configured client in the `HttpClientProvider`.
    * If an `HttpClientOptions` object is provided, it is used as the configuration for the new client instance.
    *
-   * The method sets up the HTTP client with the following options:
-   * - `baseUri`: The base URI for the HTTP client.
-   * - `defaultScopes`: The default scopes to be used for authentication.
-   * - `onCreate`: An optional callback function that is called when the client instance is created.
-   * - `ctor`: The constructor function for the HTTP client, defaulting to the configured `defaultHttpClientCtor`.
-   * - `requestHandler`: The HTTP request handler to be used by the client, defaulting to the `defaultHttpRequestHandler`.
+   * The method applies `baseUri`, `defaultScopes`, `requestHandler`, `responseHandler`,
+   * a custom `ctor` when configured, and finally runs `onCreate` for the newly created instance.
    *
    * The created HTTP client instance is returned.
    */
@@ -132,8 +132,9 @@ export class HttpClientProvider<TClient extends IHttpClient = IHttpClient>
       onCreate,
       ctor = this.config.defaultHttpClientCtor,
       requestHandler = this.defaultHttpRequestHandler,
+      responseHandler,
     } = config as HttpClientOptions<TClient>;
-    const options = { requestHandler };
+    const options = { requestHandler, responseHandler };
     const instance = new ctor(baseUri || '', options) as TClient;
     Object.assign(instance, { defaultScopes });
     onCreate?.(instance as TClient);
@@ -141,7 +142,7 @@ export class HttpClientProvider<TClient extends IHttpClient = IHttpClient>
   }
 
   /**
-   * Creates a new HTTP client instance with the specified configuration.
+   * Creates a client instance and returns it as the requested custom client type.
    *
    * @param key - The key of the pre-configured HTTP client to create.
    * @returns The created HTTP client instance, cast to the specified type `T`.
@@ -159,8 +160,9 @@ export class HttpClientProvider<TClient extends IHttpClient = IHttpClient>
   /**
    * Resolves the configuration for an HTTP client based on the provided `keyOrConfig` parameter.
    *
-   * If a string is provided, it is treated as the key for a pre-configured client in the `HttpClientProvider`.
-   * If an `HttpClientOptions` object is provided, it is used as the configuration for the new client instance.
+   * If a string is provided, it is treated as either a pre-configured client key or,
+   * when it is an absolute `http:` or `https:` URL, as an ad-hoc `baseUri`.
+   * If an `HttpClientOptions` object is provided, it is used directly as the configuration for the new client instance.
    *
    * @param keyOrConfig - The key or configuration object for the HTTP client.
    * @returns The resolved HTTP client configuration.

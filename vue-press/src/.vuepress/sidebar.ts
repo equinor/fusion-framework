@@ -264,6 +264,28 @@ export default sidebar({
     {
       text: 'HTTP',
       link: 'http/',
+      children: [
+        {
+          text: 'Overview',
+          link: 'http/',
+        },
+        {
+          text: 'Client Configuration',
+          link: 'http/docs/client-configuration.md',
+        },
+        {
+          text: 'Observable Patterns',
+          link: 'http/docs/observable-patterns.md',
+        },
+        {
+          text: 'Selectors And Handlers',
+          link: 'http/docs/selectors-and-handlers.md',
+        },
+        {
+          text: 'Server-Sent Events',
+          link: 'http/docs/server-sent-events.md',
+        },
+      ],
     },
     {
       text: 'Context',
