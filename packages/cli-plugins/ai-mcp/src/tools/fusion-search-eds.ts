@@ -2,8 +2,11 @@ import type { FrameworkInstance } from '@equinor/fusion-framework-cli-plugin-ai-
 import type { AiOptions } from '@equinor/fusion-framework-cli-plugin-ai-base/command-options';
 
 /**
- * Tool definition for searching EDS (Equinor Design System) components from Storybook.
- * This tool enables semantic search across component examples, props, usage patterns, and Storybook stories.
+ * MCP tool definition for `fusion_search_eds`.
+ *
+ * Enables semantic search scoped to EDS (Equinor Design System) Storybook
+ * content — component examples, prop tables, usage patterns, accessibility
+ * notes, and design-token references indexed as `storybook` documents.
  */
 export const toolDefinition = {
   name: 'fusion_search_eds',
@@ -28,7 +31,16 @@ export const toolDefinition = {
 } as const;
 
 /**
- * Tool handler for fusion_search_eds
+ * Handles invocations of the `fusion_search_eds` MCP tool.
+ *
+ * Queries the Azure Cognitive Search vector store with a `storybook` category
+ * filter and returns matching EDS component documents as JSON text content.
+ *
+ * @param args - Raw tool arguments containing `query` (string) and optional `limit` (number)
+ * @param framework - Active {@link FrameworkInstance} with the AI module loaded
+ * @param options - AI plugin options including Azure Search index name and optional `verbose` flag
+ * @returns MCP-compliant content array with search results, or an error payload
+ * @throws {Error} If the vector store is not configured or `query` is missing
  */
 export async function handleTool(
   args: Record<string, unknown>,
