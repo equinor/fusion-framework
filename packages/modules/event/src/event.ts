@@ -1,6 +1,22 @@
 import type { ModuleInstance } from '@equinor/fusion-framework-module';
 import type { IEventModuleProvider } from './provider';
 
+/**
+ * Registry of known framework event names mapped to their event types.
+ *
+ * Module consumers extend this interface via declaration merging to register
+ * custom event types. Registered events enable type-safe `addEventListener`
+ * and `dispatchEvent` calls on {@link IEventModuleProvider}.
+ *
+ * @example
+ * ```ts
+ * declare module '@equinor/fusion-framework-module-event' {
+ *   interface FrameworkEventMap {
+ *     'myFeature': FrameworkEvent<FrameworkEventInit<MyPayload, MySource>>;
+ *   }
+ * }
+ * ```
+ */
 export declare interface FrameworkEventMap {
   onModulesLoaded: FrameworkEvent<FrameworkEventInit<ModuleInstance, IEventModuleProvider>>;
 }
@@ -48,10 +64,13 @@ export interface IFrameworkEvent<
 }
 
 /**
- * initial args of event
+ * Initialization options passed when constructing a {@link FrameworkEvent}.
  *
- * @template TDetail - type of event detail, event data payload
- * @template TSource - type of event source
+ * Defines the event payload (`detail`), optional `source`, cancelability,
+ * creation timestamp, and bubble behavior.
+ *
+ * @template TDetail - Type of the event data payload.
+ * @template TSource - Type of the object that triggered the event.
  */
 // biome-ignore lint/suspicious/noExplicitAny: generic type parameters need flexibility
 export type FrameworkEventInit<TDetail = any, TSource = any> = {
@@ -67,33 +86,70 @@ export type FrameworkEventInit<TDetail = any, TSource = any> = {
   canBubble?: boolean;
 };
 
-/** defer init type args of event */
+/**
+ * Extracts the {@link FrameworkEventInit} type parameter from a
+ * {@link IFrameworkEvent} or {@link FrameworkEvent}.
+ *
+ * @template T - An event or event class to extract initialization args from.
+ */
 export type FrameworkEventInitType<T> =
   T extends IFrameworkEvent<infer U> ? U : T extends FrameworkEvent<infer U> ? U : never;
 
-/** defer name type of event */
+/**
+ * Extracts the event name (type string) from a {@link IFrameworkEvent}.
+ *
+ * @template T - An event type to extract the name from.
+ */
 export type FrameworkEventType<T> =
   T extends IFrameworkEvent<FrameworkEventInit, infer U> ? U : never;
 
+/**
+ * Extracts the `detail` payload type from a {@link FrameworkEventInit}.
+ *
+ * @template T - A {@link FrameworkEventInit} type to extract the detail from.
+ */
 export type FrameworkEventInitDetail<T> = T extends FrameworkEventInit<infer U> ? U : never;
 
+/**
+ * Extracts the `source` type from a {@link FrameworkEventInit}.
+ *
+ * @template T - A {@link FrameworkEventInit} type to extract the source from.
+ */
 export type FrameworkEventInitSource<T> =
   T extends FrameworkEventInit<unknown, infer U> ? U : never;
 
-/** defer detail type of event */
+/**
+ * Extracts the `detail` payload type from an {@link IFrameworkEvent}.
+ *
+ * @template T - An event type to extract the detail from.
+ */
 export type FrameworkEventDetail<T> =
   T extends IFrameworkEvent<infer U> ? FrameworkEventInitDetail<U> : never;
 
-/** defer source type of event */
+/**
+ * Extracts the `source` type from an {@link IFrameworkEvent}.
+ *
+ * @template T - An event type to extract the source from.
+ */
 export type FrameworkEventSource<T> =
   T extends IFrameworkEvent<infer U> ? FrameworkEventInitSource<U> : never;
 
-/** event constructor of mapped event  */
+/**
+ * Constructor signature for creating a {@link FrameworkEvent} from a
+ * registered event name in {@link FrameworkEventMap}.
+ *
+ * @template TInit - The initialization options type for the event.
+ */
 export interface FrameworkEvent<TInit extends FrameworkEventInit> {
   new (type: keyof FrameworkEventMap, args: TInit): IFrameworkEvent<TInit>;
 }
 
-/** event constructor for unknown event */
+/**
+ * Constructor signature for creating a {@link FrameworkEvent} with an
+ * arbitrary (unregistered) event name.
+ *
+ * @template TInit - The initialization options type for the event.
+ */
 export interface FrameworkEvent<TInit extends FrameworkEventInit> {
   new (type: string, args: TInit): IFrameworkEvent<TInit>;
 }
@@ -128,6 +184,12 @@ export class FrameworkEvent<
   #canBubble: boolean;
   #created: number = Date.now();
 
+  /**
+   * Creates a new framework event.
+   *
+   * @param __type - The event name used for listener matching.
+   * @param args - Initialization options including detail payload, source, and flags.
+   */
   constructor(
     private __type: string,
     args: TInit,
