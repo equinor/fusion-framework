@@ -7,9 +7,10 @@ AI indexing plugin for the Fusion Framework CLI that chunks TypeScript, Markdown
 - **Markdown / MDX chunking** — splits documents by heading hierarchy with YAML frontmatter extraction.
 - **TypeScript / TSX TSDoc extraction** — extracts documented declarations (functions, classes, interfaces, types, enums) into individual vector-store documents.
 - **Raw-file passthrough** — index files as-is when chunking is not needed.
+- **Semantic search** — query the vector store to validate indexed content.
 - **Git-diff workflow mode** — process only files changed since a base ref (`--diff`).
 - **Dry-run mode** — preview what would be indexed without writing to the vector store.
-- **Document deletion** — remove stale documents by source path or OData filter.
+- **Document removal** — remove stale documents by source path or OData filter.
 - **Package & git metadata** — optionally resolve `package.json` info and git commit/permalink metadata per document.
 - **Configurable patterns** — define file globs, ignore lists, chunk sizes, and custom attribute processors in `fusion-ai.config.ts`.
 
@@ -32,36 +33,49 @@ export default defineFusionCli(() => ({
 }));
 ```
 
-### Generate embeddings
+### Add documents to the index
 
 ```sh
 # Index all files matching default patterns
-ffc ai embeddings
+ffc ai index add
 
 # Index specific globs
-ffc ai embeddings "packages/**/*.ts" "packages/**/*.md"
+ffc ai index add "packages/**/*.ts" "packages/**/*.md"
 
 # Preview without writing (dry-run)
-ffc ai embeddings --dry-run
+ffc ai index add --dry-run
 
 # Process only files changed since origin/main
-ffc ai embeddings --diff --base-ref origin/main
+ffc ai index add --diff --base-ref origin/main
 
 # Wipe the vector store before re-indexing
-ffc ai embeddings --clean "**/*.ts"
+ffc ai index add --clean "**/*.ts"
 ```
 
-### Delete documents
+### Search the index
 
 ```sh
-# Delete by source paths
-ffc ai delete src/old-module.ts src/legacy/helper.ts
+# Semantic search
+ffc ai index search "how to configure modules"
 
-# Preview what would be deleted
-ffc ai delete --dry-run src/old-module.ts
+# Filter by package name
+ffc ai index search "hooks" --filter "metadata/attributes/any(a: a/key eq 'pkg_name' and a/value eq '@equinor/fusion-framework-react')"
 
-# Delete with a raw OData filter
-ffc ai delete --filter "metadata/source eq 'src/old-module.ts'"
+# JSON output
+ffc ai index search "API reference" --json --limit 5
+```
+
+### Remove documents from the index
+
+```sh
+# Remove by source paths
+ffc ai index remove src/old-module.ts src/legacy/helper.ts
+
+# Preview what would be removed
+ffc ai index remove --dry-run src/old-module.ts
+
+# Remove with a raw OData filter
+ffc ai index remove --filter "metadata/source eq 'src/old-module.ts'"
 ```
 
 ## Configuration
@@ -111,7 +125,7 @@ Azure OpenAI and Azure AI Search credentials can be provided via CLI options or 
 
 | Export | Description |
 |---|---|
-| `registerAiPlugin(program)` | Registers `ai embeddings` and `ai delete` subcommands on a Commander program. |
+| `registerAiPlugin(program)` | Registers the `ai index` command with `add`, `search`, and `remove` subcommands on a Commander program. |
 | `configureFusionAI(fn)` | Re-exported helper to create a typed `fusion-ai.config.ts`. |
 
 ### Types
@@ -120,8 +134,8 @@ Azure OpenAI and Azure AI Search credentials can be provided via CLI options or 
 |---|---|
 | `FusionAIConfigWithIndex` | Full config interface including `index` settings. |
 | `IndexConfig` | Index-specific configuration (patterns, metadata, embedding). |
-| `CommandOptions` | Validated options for the `ai embeddings` command. |
-| `DeleteOptions` | Validated options for the `ai delete` command. |
+| `CommandOptions` | Validated options for the `ai index add` command. |
+| `DeleteOptions` | Validated options for the `ai index remove` command. |
 
 ### Utilities (sub-path imports)
 

@@ -2,7 +2,7 @@
 
 > [!CAUTION]
 > **Internal base package** — not intended for direct consumption.
-> Use the higher-level AI CLI plugins (`ai-chat`, `ai-search`, `ai-index`) instead.
+> Use the higher-level AI CLI plugins (`ai-chat`, `ai-index`) instead.
 
 Shared utilities, option definitions, and framework bootstrapping for the
 Fusion Framework AI CLI plugins. Every AI sub-command in the Fusion CLI
@@ -152,7 +152,6 @@ Search vector store based on which options are present. The returned
 Changes to this package affect every AI CLI plugin:
 
 - `@equinor/fusion-framework-cli-plugin-ai-chat`
-- `@equinor/fusion-framework-cli-plugin-ai-search`
 - `@equinor/fusion-framework-cli-plugin-ai-index`
 
 Coordinate updates carefully and create changesets for any consumer-visible

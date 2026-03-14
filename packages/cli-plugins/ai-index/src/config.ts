@@ -10,15 +10,15 @@ import type { FusionAIConfig } from '@equinor/fusion-framework-cli-plugin-ai-bas
  * @example
  * ```ts
  * const indexConfig: IndexConfig = {
- *   patterns: ['**/*.ts', '**/*.md'],
- *   ignore: ['**/dist/**', '**/node_modules/**'],
+ *   patterns: ['src/\**\/*.ts', 'docs/\**\/*.md'],
+ *   ignore: ['dist/\**', 'node_modules/\**'],
  *   metadata: { resolvePackage: true, resolveGit: true },
  *   embedding: { chunkSize: 2000, chunkOverlap: 300 },
  * };
  * ```
  */
 export interface IndexConfig {
-  /** Glob patterns for files to process (defaults to `['**/*.ts', '**/*.md', '**/*.mdx']`). */
+  // Glob patterns for files to process (defaults to ['**/*.ts', '**/*.md', '**/*.mdx']).
   patterns?: string[];
   /** Glob patterns for files that should be indexed as-is, without chunking or transformation. */
   rawPatterns?: string[];
@@ -55,8 +55,8 @@ export interface IndexConfig {
 /**
  * Fusion AI configuration extended with {@link IndexConfig | index-specific settings}.
  *
- * Used as the return type of `configureFusionAI()` when the `ai embeddings` or
- * `ai delete` commands are configured.
+ * Used as the return type of `configureFusionAI()` when the `ai index add` or
+ * `ai index remove` commands are configured.
  *
  * @example
  * ```ts
@@ -64,7 +64,7 @@ export interface IndexConfig {
  *
  * export default configureFusionAI((): FusionAIConfigWithIndex => ({
  *   index: {
- *     patterns: ['packages/**/*.ts', 'packages/**/*.md'],
+ *     patterns: ['packages/\**\/*.ts', 'packages/\**\/*.md'],
  *   },
  * }));
  * ```

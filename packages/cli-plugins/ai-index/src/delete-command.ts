@@ -25,15 +25,15 @@ function buildFilter(sources: string[], rawFilter?: string): string | undefined 
 }
 
 /**
- * CLI command: `ai delete`
+ * CLI command: `ai index remove`
  *
- * Deletes documents from the Azure AI Search index by source path or OData filter.
+ * Removes documents from the Azure AI Search index by source path or OData filter.
  *
  * Use this when you need to remove stale, renamed, or noisy documents from the
  * vector store without running a full re-index.
  *
  * Usage:
- *   $ ffc ai delete [options] [source-paths...]
+ *   $ ffc ai index remove [options] [source-paths...]
  *
  * Arguments:
  *   source-paths    One or more relative file paths whose indexed chunks should
@@ -45,20 +45,20 @@ function buildFilter(sources: string[], rawFilter?: string): string | undefined 
  *   --dry-run        Preview matching documents without deleting them.
  *
  * Examples:
- *   # Delete by source paths
- *   $ ffc ai delete src/old-module.ts src/legacy/helper.ts
+ *   # Remove by source paths
+ *   $ ffc ai index remove src/old-module.ts src/legacy/helper.ts
  *
- *   # Preview what would be deleted (dry-run)
- *   $ ffc ai delete --dry-run src/old-module.ts
+ *   # Preview what would be removed (dry-run)
+ *   $ ffc ai index remove --dry-run src/old-module.ts
  *
- *   # Delete using a raw OData filter
- *   $ ffc ai delete --filter "metadata/source eq 'src/old-module.ts'"
+ *   # Remove using a raw OData filter
+ *   $ ffc ai index remove --filter "metadata/source eq 'src/old-module.ts'"
  *
- *   # Delete all chunks from a package
- *   $ ffc ai delete --filter "metadata/attributes/any(a: a/key eq 'pkg_name' and a/value eq '@equinor/my-pkg')"
+ *   # Remove all chunks from a package
+ *   $ ffc ai index remove --filter "metadata/attributes/any(a: a/key eq 'pkg_name' and a/value eq '@equinor/my-pkg')"
  */
-const _command = createCommand('delete')
-  .description('Delete documents from the search index by source path or OData filter')
+const _command = createCommand('remove')
+  .description('Remove documents from the search index by source path or OData filter')
   .addOption(
     createOption('--dry-run', 'Preview matching documents without deleting them').default(false),
   )
@@ -107,7 +107,7 @@ const _command = createCommand('delete')
   });
 
 /**
- * Configured Commander command for the `ai delete` subcommand.
+ * Configured Commander command for the `ai index remove` subcommand.
  *
  * This constant is the fully-configured {@link Command} instance with all
  * AI-specific options (embedding deployment, Azure Search credentials) applied

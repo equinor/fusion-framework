@@ -1,18 +1,33 @@
 import type { Command } from 'commander';
+import { createCommand } from 'commander';
 import { registerAiPlugin as registerAiPluginBase } from '@equinor/fusion-framework-cli-plugin-ai-base';
-import { command as embeddingsCommand } from './command.js';
-import { deleteCommand } from './delete-command.js';
+import { command as addCommand } from './embeddings-command.js';
+import { deleteCommand as removeCommand } from './delete-command.js';
+import { searchCommand } from './search-command.js';
 
 export { FusionAIConfigWithIndex, IndexConfig } from './config.js';
 
 /**
- * Registers the AI index plugin commands with the Fusion Framework CLI.
+ * Parent command for the `ai index` group.
  *
- * Adds the following subcommands under the `ai` command group:
- * - `ai embeddings` — index documents into the Azure AI Search vector store.
- * - `ai delete`     — remove documents from the vector store.
+ * Owns three subcommands:
+ * - `add`    — index documents into the Azure AI Search vector store.
+ * - `remove` — remove documents from the vector store.
+ * - `search` — query the vector store for indexed documents.
+ */
+const indexCommand = createCommand('index')
+  .description('Manage the AI search index (add, search, remove)')
+  .addCommand(addCommand)
+  .addCommand(removeCommand)
+  .addCommand(searchCommand);
+
+/**
+ * Registers the `ai index` command with the Fusion Framework CLI.
  *
- * @param program - The root Commander {@link Command} instance to attach subcommands to.
+ * Adds a single `index` command under `ai` with subcommands for indexing,
+ * searching, and removing documents in the Azure AI Search vector store.
+ *
+ * @param program - The root Commander {@link Command} instance to attach to.
  *
  * @example
  * ```ts
@@ -22,11 +37,13 @@ export { FusionAIConfigWithIndex, IndexConfig } from './config.js';
  * const program = new Command();
  * registerAiPlugin(program);
  * program.parse();
+ * // ffc ai index add [glob-patterns...]
+ * // ffc ai index search <query>
+ * // ffc ai index remove [source-paths...]
  * ```
  */
 export function registerAiPlugin(program: Command): void {
-  registerAiPluginBase(program, embeddingsCommand);
-  registerAiPluginBase(program, deleteCommand);
+  registerAiPluginBase(program, indexCommand);
 }
 
 export default registerAiPlugin;

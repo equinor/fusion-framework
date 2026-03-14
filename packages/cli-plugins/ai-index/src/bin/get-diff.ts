@@ -1,6 +1,6 @@
 import type { ChangedFile } from '../utils/git/index.js';
 import { getChangedFiles, getGitStatus } from '../utils/git/index.js';
-import type { CommandOptions } from '../command.options.js';
+import type { CommandOptions } from '../embeddings-command.options.js';
 
 /**
  * Handles diff-based processing to get changed files from git.

@@ -37,9 +37,6 @@
       "path": "../cli-plugins/ai-index"
     },
     {
-      "path": "../cli-plugins/ai-search"
-    },
-    {
       "path": "../cli-plugins/ai-chat"
     },
     {
