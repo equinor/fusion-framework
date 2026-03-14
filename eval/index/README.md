@@ -20,7 +20,7 @@ eval/
     auth.md              # Authentication and authorization
     react-app.md         # React app bootstrap, hooks, sub-path APIs
     features.md          # Feature flags, bookmarks, app features
-    utilities.md         # Shared utilities and helpers
+    utilities.md         # CLI, observable state, events, Vite plugin
 ```
 
 ## Format
