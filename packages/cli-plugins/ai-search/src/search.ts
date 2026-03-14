@@ -7,29 +7,41 @@ import { inspect } from 'node:util';
 import type { RetrieverOptions } from '@equinor/fusion-framework-module-ai/lib';
 
 /**
- * Command options for the search command
+ * Resolved option values for the `ai search` CLI command.
+ *
+ * Extends {@link AiOptions} with search-specific flags such as result limits,
+ * output format toggles, filter expressions, and search-type selection.
  */
 type CommandOptions = AiOptions & {
-  /** Maximum number of search results to return */
+  /** Maximum number of search results to return (default `10`). */
   limit: number;
-  /** Enable verbose output for debugging */
+  /** When `true`, print diagnostic details such as index name and metadata. */
   verbose: boolean;
-  /** OData filter expression for metadata-based filtering */
+  /** Optional OData filter expression applied to document metadata before ranking. */
   filter?: string;
-  /** Output results as JSON for programmatic use */
+  /** When `true`, emit results as JSON objects instead of human-readable text. */
   json: boolean;
-  /** Output raw metadata without normalization */
+  /** When `true`, output the raw Azure Search metadata without flattening attributes. */
   raw: boolean;
-  /** Search type: 'mmr' for Maximum Marginal Relevance or 'similarity' for similarity search */
+  /** Search algorithm: `'similarity'` for cosine similarity or `'mmr'` for Maximum Marginal Relevance diversity re-ranking. */
   searchType: 'mmr' | 'similarity';
 };
 
 /**
- * Normalizes metadata attributes from Azure Search format to a flat object
- * Azure Search returns metadata attributes as an array of {key, value} pairs,
- * which this function converts to a simple key-value object for easier access
- * @param metadata - Raw metadata object that may contain attributes array
- * @returns Normalized metadata with attributes flattened into the root object
+ * Flatten Azure Cognitive Search metadata attributes into a plain object.
+ *
+ * Azure Search stores custom metadata as an array of `{ key, value }` pairs
+ * under an `attributes` property.  This helper converts that array into a flat
+ * key–value map and merges it into the top-level metadata object so consumers
+ * can access attributes directly (e.g. `metadata.source` instead of iterating
+ * the attributes array).
+ *
+ * JSON-encoded attribute values are transparently parsed; plain strings are
+ * kept as-is.
+ *
+ * @param metadata - Raw metadata record from an Azure Search document.
+ * @returns A shallow copy of `metadata` with the `attributes` array replaced by
+ *   its flattened key–value entries.
  */
 const normalizeMetadata = (metadata: Record<string, unknown>): Record<string, unknown> => {
   const normalized = { ...metadata };
@@ -66,52 +78,49 @@ const normalizeMetadata = (metadata: Record<string, unknown>): Record<string, un
 };
 
 /**
- * CLI command: `ai search`
+ * Commander subcommand: **`ai search`**
  *
- * Search the vector store to validate embeddings and retrieve relevant documents.
+ * Performs semantic vector-store search against an Azure Cognitive Search index
+ * and displays the matching documents.  Use this command to validate that
+ * embeddings are indexed correctly, to explore the retrieval corpus, or to
+ * test OData filter expressions.
  *
- * Features:
- * - Semantic search using vector embeddings
- * - Configurable result limits
- * - Filter support for metadata-based filtering
- * - JSON output option for programmatic use
- * - Detailed result display with scores and metadata
+ * The command supports two search algorithms:
  *
- * Usage:
- *   $ ffc ai search <query> [options]
+ * - **`similarity`** (default) — pure cosine-similarity ranking.
+ * - **`mmr`** — Maximum Marginal Relevance, which re-ranks results to increase
+ *   diversity while staying relevant.
  *
- * Options:
- *   --limit <number>                    Maximum number of results to return (default: 10)
- *   --search-type <type>                Search type: 'mmr' or 'similarity' (default: similarity)
- *   --filter <expression>               OData filter expression for metadata filtering
- *   --json                              Output results as JSON
- *   --raw                               Output raw metadata without normalization
- *   --verbose                           Enable verbose output
- *   --openai-api-key <key>              API key for Azure OpenAI
- *   --openai-api-version <version>      API version (default: 2024-02-15-preview)
- *   --openai-instance <name>            Azure OpenAI instance name
- *   --openai-embedding-deployment <name> Azure OpenAI embedding deployment name
- *   --azure-search-endpoint <url>       Azure Search endpoint URL
- *   --azure-search-api-key <key>        Azure Search API key
- *   --azure-search-index-name <name>    Azure Search index name
+ * Results can be output as human-readable text (default) or as JSON objects
+ * (`--json`).  The `--raw` flag preserves Azure Search's native metadata
+ * structure; without it, metadata attributes are flattened by
+ * {@link normalizeMetadata}.
  *
- * Environment Variables:
- *   AZURE_OPENAI_API_KEY                    API key for Azure OpenAI
- *   AZURE_OPENAI_API_VERSION                API version
- *   AZURE_OPENAI_INSTANCE_NAME              Instance name
- *   AZURE_OPENAI_EMBEDDING_DEPLOYMENT_NAME  Embedding deployment name
- *   AZURE_SEARCH_ENDPOINT                   Azure Search endpoint
- *   AZURE_SEARCH_API_KEY                    Azure Search API key
- *   AZURE_SEARCH_INDEX_NAME                 Azure Search index name
+ * ### Required environment / flags
  *
- * Examples:
- *   $ ffc ai search "how to use the framework"
- *   $ ffc ai search "authentication" --limit 5
- *   $ ffc ai search "typescript" --filter "metadata/source eq 'src/index.ts'"
- *   $ ffc ai search "documentation" --search-type similarity
- *   $ ffc ai search "documentation" --json
- *   $ ffc ai search "documentation" --json --raw
- *   $ ffc ai search "API reference" --verbose
+ * | Purpose | Flag | Env var |
+ * |---|---|---|
+ * | OpenAI API key | `--openai-api-key` | `AZURE_OPENAI_API_KEY` |
+ * | OpenAI instance | `--openai-instance` | `AZURE_OPENAI_INSTANCE_NAME` |
+ * | Embedding deployment | `--openai-embedding-deployment` | `AZURE_OPENAI_EMBEDDING_DEPLOYMENT_NAME` |
+ * | Search endpoint | `--azure-search-endpoint` | `AZURE_SEARCH_ENDPOINT` |
+ * | Search API key | `--azure-search-api-key` | `AZURE_SEARCH_API_KEY` |
+ * | Search index name | `--azure-search-index-name` | `AZURE_SEARCH_INDEX_NAME` |
+ *
+ * @example
+ * ```sh
+ * # Basic similarity search
+ * ffc ai search "how to configure modules"
+ *
+ * # Limit results and use MMR for diversity
+ * ffc ai search "authentication" --limit 5 --search-type mmr
+ *
+ * # Filter by metadata and output JSON
+ * ffc ai search "hooks" --filter "metadata/source eq 'src/index.ts'" --json
+ *
+ * # Verbose output with raw Azure metadata
+ * ffc ai search "API reference" --verbose --raw
+ * ```
  */
 export const command = withAiOptions(
   createCommand('search')

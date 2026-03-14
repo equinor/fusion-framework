@@ -1,31 +1,39 @@
 import { type Command, createOption, InvalidOptionArgumentError } from 'commander';
 
 /**
- * Interface representing the AI-related options available in CLI commands.
- * This interface defines the structure of options that can be passed to AI commands.
+ * Parsed CLI option values for Azure OpenAI and Azure Cognitive Search commands.
+ *
+ * Every AI-related CLI command resolves its flags and environment variables into
+ * this shape before executing.  Values are supplied via Commander options or the
+ * corresponding `AZURE_*` environment variables.
+ *
+ * Use this interface when you need to type the resolved options object inside a
+ * command action handler or when passing configuration to {@link setupFramework}.
  */
 export interface AiOptions {
-  /** Azure OpenAI API key for authentication */
+  /** Azure OpenAI API key used to authenticate requests (`AZURE_OPENAI_API_KEY`). */
   openaiApiKey: string;
-  /** Azure OpenAI API version */
+  /** Azure OpenAI REST API version string, e.g. `"2024-02-15-preview"` (`AZURE_OPENAI_API_VERSION`). */
   openaiApiVersion: string;
-  /** Azure OpenAI instance name */
+  /** Azure OpenAI resource instance name used to build the service URL (`AZURE_OPENAI_INSTANCE_NAME`). */
   openaiInstance: string;
-  /** Azure OpenAI chat deployment name (optional) */
+  /** Deployment name of the Azure OpenAI chat model (`AZURE_OPENAI_CHAT_DEPLOYMENT_NAME`). */
   openaiChatDeployment?: string;
-  /** Azure OpenAI embedding deployment name (optional) */
+  /** Deployment name of the Azure OpenAI embedding model (`AZURE_OPENAI_EMBEDDING_DEPLOYMENT_NAME`). */
   openaiEmbeddingDeployment?: string;
-  /** Azure Search endpoint URL (optional) */
+  /** Full URL of the Azure Cognitive Search endpoint (`AZURE_SEARCH_ENDPOINT`). */
   azureSearchEndpoint?: string;
-  /** Azure Search API key (optional) */
+  /** API key for the Azure Cognitive Search service (`AZURE_SEARCH_API_KEY`). */
   azureSearchApiKey?: string;
-  /** Azure Search index name (optional) */
+  /** Name of the Azure Cognitive Search index to query (`AZURE_SEARCH_INDEX_NAME`). */
   azureSearchIndexName?: string;
 }
 
 /**
- * Option for specifying the Azure OpenAI API key.
- * Required for authentication with Azure OpenAI services.
+ * Commander option: `--openai-api-key <key>`.
+ *
+ * Provides the Azure OpenAI API key.  Falls back to `AZURE_OPENAI_API_KEY`
+ * environment variable when the flag is omitted.
  */
 export const apiKeyOption = createOption(
   '--openai-api-key <key>',
@@ -33,8 +41,10 @@ export const apiKeyOption = createOption(
 ).env('AZURE_OPENAI_API_KEY');
 
 /**
- * Option for specifying the Azure OpenAI API version.
- * Defaults to the latest stable version if not provided.
+ * Commander option: `--openai-api-version <version>`.
+ *
+ * Azure OpenAI REST API version string.  Defaults to `"2024-02-15-preview"`.
+ * Falls back to `AZURE_OPENAI_API_VERSION` environment variable.
  */
 export const apiVersionOption = createOption(
   '--openai-api-version <version>',
@@ -44,8 +54,10 @@ export const apiVersionOption = createOption(
   .default('2024-02-15-preview');
 
 /**
- * Option for specifying the Azure OpenAI instance name.
- * Required for Azure OpenAI service endpoint construction.
+ * Commander option: `--openai-instance <name>`.
+ *
+ * Azure OpenAI resource instance name used to construct the service URL.
+ * Falls back to `AZURE_OPENAI_INSTANCE_NAME` environment variable.
  */
 export const apiInstanceOption = createOption(
   '--openai-instance <name>',
@@ -53,8 +65,10 @@ export const apiInstanceOption = createOption(
 ).env('AZURE_OPENAI_INSTANCE_NAME');
 
 /**
- * Option for specifying the Azure OpenAI deployment name for chat models.
- * Required for chat completions API calls.
+ * Commander option: `--openai-chat-deployment <name>`.
+ *
+ * Names the Azure OpenAI deployment for chat completions.
+ * Falls back to `AZURE_OPENAI_CHAT_DEPLOYMENT_NAME` environment variable.
  */
 export const chatDeploymentOption = createOption(
   '--openai-chat-deployment <name>',
@@ -62,8 +76,10 @@ export const chatDeploymentOption = createOption(
 ).env('AZURE_OPENAI_CHAT_DEPLOYMENT_NAME');
 
 /**
- * Option for specifying the Azure OpenAI deployment name for embedding models.
- * Required for embeddings API calls.
+ * Commander option: `--openai-embedding-deployment <name>`.
+ *
+ * Names the Azure OpenAI deployment for vector embeddings.
+ * Falls back to `AZURE_OPENAI_EMBEDDING_DEPLOYMENT_NAME` environment variable.
  */
 export const embeddingDeploymentOption = createOption(
   '--openai-embedding-deployment <name>',
@@ -71,8 +87,10 @@ export const embeddingDeploymentOption = createOption(
 ).env('AZURE_OPENAI_EMBEDDING_DEPLOYMENT_NAME');
 
 /**
- * Option for specifying the Azure Search endpoint URL.
- * Required for Azure Cognitive Search operations.
+ * Commander option: `--azure-search-endpoint <url>`.
+ *
+ * Full URL of the Azure Cognitive Search service endpoint.
+ * Falls back to `AZURE_SEARCH_ENDPOINT` environment variable.
  */
 export const azureSearchEndpointOption = createOption(
   '--azure-search-endpoint <url>',
@@ -80,8 +98,10 @@ export const azureSearchEndpointOption = createOption(
 ).env('AZURE_SEARCH_ENDPOINT');
 
 /**
- * Option for specifying the Azure Search API key.
- * Required for authentication with Azure Cognitive Search.
+ * Commander option: `--azure-search-api-key <key>`.
+ *
+ * API key for authenticating with Azure Cognitive Search.
+ * Falls back to `AZURE_SEARCH_API_KEY` environment variable.
  */
 export const azureSearchApiKeyOption = createOption(
   '--azure-search-api-key <key>',
@@ -89,8 +109,10 @@ export const azureSearchApiKeyOption = createOption(
 ).env('AZURE_SEARCH_API_KEY');
 
 /**
- * Option for specifying the Azure Search index name.
- * Required for search operations on a specific index.
+ * Commander option: `--azure-search-index-name <name>`.
+ *
+ * Name of the Azure Cognitive Search index to query.
+ * Falls back to `AZURE_SEARCH_INDEX_NAME` environment variable.
  */
 export const azureSearchIndexNameOption = createOption(
   '--azure-search-index-name <name>',
@@ -98,38 +120,36 @@ export const azureSearchIndexNameOption = createOption(
 ).env('AZURE_SEARCH_INDEX_NAME');
 
 /**
- * Enhances a given command with AI-related options.
+ * Decorate a Commander command with Azure OpenAI and Azure Cognitive Search
+ * CLI options and pre-action validation.
  *
- * This function adds the following options to the provided command:
- * - `openaiApiKey`: Azure OpenAI API key
- * - `openaiApiVersion`: Azure OpenAI API version
- * - `openaiInstance`: Azure OpenAI instance name
- * - `openaiChatDeployment`: Chat model deployment name
- * - `openaiEmbeddingDeployment`: Embedding model deployment name (if includeEmbedding is true)
- * - `azureSearchEndpoint`: Azure Search endpoint URL (if includeSearch is true)
- * - `azureSearchApiKey`: Azure Search API key (if includeSearch is true)
- * - `azureSearchIndexName`: Azure Search index name (if includeSearch is true)
+ * Use this higher-order helper when building new `ffc ai *` subcommands that
+ * need Azure OpenAI credentials, embedding deployment names, or Azure Search
+ * connection details.  It attaches the relevant `--openai-*` / `--azure-search-*`
+ * flags plus a `preAction` hook that validates required values before the action
+ * runs.
  *
- * @param command - The command to which AI options will be added
- * @param args - Optional configuration for which options to include
- * @param args.includeEmbedding - Whether to include embedding deployment option
- * @param args.includeChat - Whether to include chat deployment option (defaults to true)
- * @param args.includeSearch - Whether to include Azure Search options (defaults to false)
- * @returns The enhanced command with AI options
+ * @param command - The Commander {@link Command} to enhance with AI option flags.
+ * @param args - Controls which optional option groups are attached.
+ * @param args.includeEmbedding - Attach `--openai-embedding-deployment` flag.
+ * @param args.includeChat - Attach `--openai-chat-deployment` flag (defaults to `true`).
+ * @param args.includeSearch - Attach `--azure-search-endpoint`, `--azure-search-api-key`,
+ *   and `--azure-search-index-name` flags (defaults to `false`).
+ * @returns The same {@link Command} instance, decorated in-place, for chaining.
+ *
+ * @throws {InvalidOptionArgumentError} When a required option is missing or
+ *   empty at execution time (validated in the `preAction` hook).
  *
  * @example
  * ```ts
  * import { createCommand } from 'commander';
- * import { withAiOptions } from './path/to/this/file';
+ * import { withAiOptions } from '@equinor/fusion-framework-cli-plugin-ai-search/options/ai';
  *
- * const command = withAiOptions(
- *   createCommand('ai-chat')
- *     .description('Chat with AI models')
- *     .action((options) => {
- *       console.log('API Key:', options.openaiApiKey);
- *       console.log('Instance:', options.openaiInstance);
- *       console.log('Chat Deployment:', options.openaiChatDeployment);
- *     })
+ * const myCommand = withAiOptions(
+ *   createCommand('my-search')
+ *     .description('Custom vector search command')
+ *     .action((query, options) => { /* ... *\/ }),
+ *   { includeEmbedding: true, includeSearch: true },
  * );
  * ```
  */

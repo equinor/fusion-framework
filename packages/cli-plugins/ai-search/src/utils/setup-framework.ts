@@ -10,10 +10,32 @@ import type { AiOptions } from '../options/ai.js';
 import { ModulesConfigurator, type ModulesInstance } from '@equinor/fusion-framework-module';
 
 /**
- * Initializes and configures the Fusion Framework with AI module capabilities
- * @param options - AI configuration options including API keys, deployments, and vector store settings
- * @returns Promise resolving to an initialized framework instance with AI module
- * @throws {Error} If embedding deployment is required but not provided when configuring vector store
+ * Bootstrap a headless Fusion Framework instance configured with the AI module.
+ *
+ * Creates a {@link ModulesConfigurator}, wires up Azure OpenAI chat and/or
+ * embedding models based on the supplied {@link AiOptions}, optionally
+ * provisions an Azure Cognitive Search vector store, and returns the fully
+ * initialised module instance.
+ *
+ * This is the standard factory used by every `ffc ai *` subcommand to obtain a
+ * framework with AI capabilities without running a full application shell.
+ *
+ * @param options - Resolved CLI option values containing Azure OpenAI
+ *   credentials, deployment names, and Azure Search connection details.
+ * @returns A promise that resolves to an initialised {@link ModulesInstance}
+ *   containing the {@link AIModule}.
+ *
+ * @throws {Error} When `azureSearchEndpoint`, `azureSearchApiKey`, and
+ *   `azureSearchIndexName` are provided but `openaiEmbeddingDeployment` is
+ *   missing — the vector store requires an embedding service.
+ *
+ * @example
+ * ```ts
+ * import { setupFramework } from '@equinor/fusion-framework-cli-plugin-ai-search/utils/setup-framework';
+ *
+ * const framework = await setupFramework(resolvedOptions);
+ * const searchService = framework.ai.getService('search', 'my-index');
+ * ```
  */
 export const setupFramework = async (options: AiOptions): Promise<ModulesInstance<[AIModule]>> => {
   // Create a new module configurator for the framework
