@@ -289,6 +289,12 @@ export class QueryClient<TType, TArgs> extends Observable<QueryClientState<TArgs
     return this.#state.value[transaction];
   }
 
+  /**
+   * Retrieves the request associated with the specified reference string.
+   *
+   * @param ref - The reference identifier to search for.
+   * @returns The request matching the reference, or `undefined` if not found.
+   */
   public getRequestByRef(ref: string): QueryClientRequest<TArgs> | undefined {
     return Object.values(this.#state.value).find((x) => x.ref === ref);
   }

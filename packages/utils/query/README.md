@@ -1,501 +1,304 @@
-## Use Case
+# @equinor/fusion-query
 
-The primary use case for `Query` involves:
+Reactive data fetching and caching library built on RxJS Observables with queue strategies, automatic retry, and a comprehensive event system.
 
--   **Asynchronous Data Fetching**: Seamlessly fetching data from APIs or databases asynchronously without blocking the UI, improving the user experience.
--   **State Management for Remote Data**: Managing the state of remote data, including loading states, error states, and the data itself, in a concise and scalable manner.
--   **Caching**: Storing fetched data in a cache to improve performance by reducing the number of redundant requests to the server.
--   **Automatic Updates**: Automatically updating the UI when the underlying data changes, without requiring explicit refresh actions from the user.
--   **Concurrent Requests Management**: Efficiently handling multiple, concurrent data fetches through strategies like merging, switching, or concatenating requests.
--   **Retry and Error Handling**: Automatically retrying failed requests and handling errors gracefully to ensure application stability.
+## When to Use
 
-## Benefits
+Use `@equinor/fusion-query` when you need to:
 
-Using a `Query` mechanism offers numerous benefits, including:
+- Fetch remote data with built-in caching that prevents redundant network requests
+- Manage concurrent requests with configurable queue strategies (`switch`, `merge`, `concat`)
+- Automatically retry failed requests with customizable delay and count
+- React to query lifecycle events for logging, debugging, or telemetry
+- Share cached data across multiple consumers through a shared `QueryCache`
+- Perform optimistic updates and cache mutations
 
-1. **Improved Performance and Efficiency**: By caching responses and reducing unnecessary server requests, applications load faster and use fewer resources, both on the client and server side.
-2. **Simplified Data Fetching Logic**: It abstracts away the boilerplate code associated with fetching data, handling errors, and managing response states, leading to cleaner and more maintainable code.
-3. **Automatic Synchronization**: `Query` libraries often come with features to automatically refetch data on certain triggers (e.g., window focus), ensuring the UI is always up-to-date with the latest server state without manual intervention.
-4. **Built-in Asynchronous Management**: Handling asynchronous data fetches becomes straightforward, with built-in support for loading states, error handling, and data updates.
-5. **Scalability**: Easily scalable for complex applications, supporting various fetching strategies to manage multiple data sources, endpoints, and concurrent requests effectively.
-6. **Developer Experience**: By standardizing the approach to data fetching and state management, it enhances developer experience, reducing the cognitive load and making it easier to onboard new developers.
-7. **Robust Error and Retry Handling**: Features to automatically retry requests and sophisticated mechanisms for error handling improve application reliability.
-8. **Customizable and Extendable**: While offering sensible defaults for most use cases, `Query` implementations are usually highly customizable, allowing developers to tailor their behavior for specific needs, such as custom caching strategies, query deduplication, and more.
+## Installation
 
-## Configuration
-
-When setting up a `Query`, you can typically configure it with several options to tailor its behavior to your application's specific needs. While the exact options available can vary depending on the implementation of the `Query`, common configuration parameters often include:
-
-1. **`fn` (Function):**
-
-    - This is the core function that the client will use to fetch data. It receives the querying arguments and returns a promise which resolves with the fetched data. Ideally, this function encapsulates your API call, utilizing `fetch`, Axios, or any other HTTP client.
-
-2. **Retry Strategy:**
-
-    - Options to configure how the client should behave in the event of a failed request. This could include the maximum number of retries, the conditions under which a retry should occur, and the delay between retries.
-
-3. **Caching Strategy:**
-
-    - Defines how and what the client should cache. This could include:
-        - **`expire`**: Time in milliseconds after which a cached item is considered stale.
-        - **Custom cache keys**: A function to generate unique cache keys based on query arguments.
-        - **Cache validation**: Function to determine if cached data is still valid based on custom logic.
-
-4. **Concurrent Request Handling (Queuing Strategy):**
-
-    - Determines how the client manages simultaneous requests. Common strategies might include:
-        - **`switch`**: Cancels any ongoing request when a new request comes in.
-        - **`merge`**: Allows multiple requests to run in parallel.
-        - **`concat`**: Queues requests and executes them sequentially.
-
-5. **Event System:**
-
-    - Observable event stream (`event$`) that emits lifecycle events for monitoring query execution, caching behavior, and debugging. Events include query creation, cache hits/misses, job execution stages, and completion states.
-
-6. **Request Transformation:**
-
-    - Functions to modify requests before they are sent. This could be used to add authorization headers, manipulate query parameters, or transform request bodies.
-
-7. **Response Transformation:**
-
-    - Similarly, functions to process data before it's handed off to your application code. This could involve shaping the response data or extracting relevant parts of it.
-
-8. **Error Handling:**
-
-    - Strategies to handle errors globally, such as transforming error responses or triggering global error states.
-
-9. **`signal` (AbortSignal):**
-
-    - Support for passing an `AbortSignal` to requests, allowing you to cancel them programmatically if needed.
-
-10. **Extended Configuration:**
-    - Depending on the specific implementation, there may be additional options to tweak the client's internals, such as modifying timeout durations, setting base URLs for requests, or configuring default headers.
-
-### Example of a Basic QueryClient Setup
-
-```javascript
-const queryClient = new QueryClient({
-    fn: async (args) => {
-        const response = await fetch(`https://your.api/${args.endpoint}`, {
-            method: 'GET',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(args.params),
-        });
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return response.json();
-    },
-    expire: 60000, // Cache data expires after 60 seconds
-    retry: { attempts: 3, delay: 1000 }, // Retry up to 3 times, 1 second apart
-    // Additional config options as necessary...
-});
+```bash
+pnpm add @equinor/fusion-query
 ```
 
-#### Observable
+## Quick Start
 
 ```typescript
-const args = {
-    /* your query arguments here */
-};
-query.query(args).subscribe({
-    next: (result) => console.log(result),
-    error: (error) => console.error(error),
-    complete: () => console.log('Query completed'),
-});
-```
+import { Query } from '@equinor/fusion-query';
 
-#### Asynchronous
-
-```typescript
-const args = {
-    /* your query arguments here */
-};
-query
-    .queryAsync(args)
-    .then((result) => console.log(result))
-    .catch((error) => console.error(error));
-```
-
-### Managing Cache
-
-#### Mutation
-
-```typescript
-const args = {
-    /* identify cache entry */
-};
-const changes = (prevState) => ({ ...prevState /* new state changes */ });
-query.mutate(args, changes);
-```
-
-#### Direct Cache Update (Optimistic Update)
-
-If you're confident about the new state of the data after the mutation, you can apply an optimistic update:
-
-```javascript
-// Assume a function to update a post returns the updated post data
-async function updatePost(postId, newData) {
-  const updatedPost = await apiUpdatePost(postId, newData); // perform API request to update the post
-  return updatedPost;
+interface User {
+  id: string;
+  name: string;
 }
 
-// Optimistically updating the cache with the new post data
-fastQueryClient.mutate(['post', postId], async (oldData) => {
-  const updatedData = await updatePost(postId, newData);
-  return { ...oldData, ...updatedData, updated: Date.now() };
+const userQuery = new Query<User, { id: string }>({
+  client: {
+    fn: async (args, signal) => {
+      const res = await fetch(`/api/users/${args.id}`, { signal });
+      if (!res.ok) throw new Error('Failed to fetch user');
+      return res.json();
+    },
+  },
+  key: (args) => args.id,
+  expire: 60_000, // cache valid for 60 seconds
+});
+
+// Observable usage
+userQuery.query({ id: '123' }).subscribe({
+  next: (result) => console.log(result.value),
+  error: (err) => console.error(err),
+});
+
+// Async/await usage
+const result = await userQuery.queryAsync({ id: '123' });
+console.log(result.value);
+```
+
+## Core Concepts
+
+### Query
+
+The `Query` class is the main entry point. It coordinates a `QueryClient` (handles fetching), a `QueryCache` (stores results), and a queue operator (controls concurrency). When `query()` is called, it first checks the cache; if valid data exists, it emits immediately. Otherwise, a new fetch is queued.
+
+### QueryClient
+
+The `QueryClient` manages the execution of fetch functions, including dispatching requests, handling retries on failure, and emitting lifecycle events. It can be shared across multiple `Query` instances.
+
+### QueryCache
+
+The `QueryCache` stores fetched results keyed by a generated cache key. It supports insertions, mutations, invalidation, trimming, and resets. Multiple `Query` instances can share a single cache for cross-component data sharing.
+
+### QueryTask
+
+A `QueryTask` represents a single in-flight fetch operation. Tasks are deduplicated by cache key: if two consumers request the same data simultaneously, they share the same task.
+
+## Configuration Options
+
+The `QueryCtorOptions` type defines all configuration for a `Query` instance:
+
+| Option | Type | Description |
+|---|---|---|
+| `client` | `QueryClient \| { fn, options? }` | The fetch function or an existing `QueryClient` instance |
+| `key` | `(args) => string` | Generates a unique cache key from the query arguments |
+| `expire` | `number` | Milliseconds before a cache entry is considered stale |
+| `validate` | `(entry, args) => boolean` | Custom function to validate cache entries |
+| `cache` | `QueryCache \| QueryCacheCtorArgs` | Shared cache instance or constructor args |
+| `queueOperator` | `'switch' \| 'merge' \| 'concat' \| fn` | Strategy for handling concurrent requests |
+
+## Queue Strategies
+
+Queue strategies determine how multiple concurrent requests for different data are handled:
+
+- **`switch`** (default): Cancels the active request when a new one arrives. Best for search-as-you-type where only the latest result matters.
+- **`merge`**: Runs all requests in parallel. Best when every request must resolve independently.
+- **`concat`**: Queues requests sequentially. Best when execution order matters.
+
+```typescript
+const query = new Query<SearchResult, { term: string }>({
+  client: { fn: searchApi },
+  key: (args) => args.term,
+  queueOperator: 'switch', // cancel stale searches
 });
 ```
 
-In this case, by providing the `updated` attribute with the current timestamp, FastQuery knows that the cached data is fresh, preventing unnecessary refetches.
+## Cache Management
 
-#### Marking Cache As Stale
+### Mutation (Optimistic Update)
 
-If the final state of the data after the mutation is uncertain or if it's preferable for the application to fetch fresh data from the server, you can choose to invalidate the cache item:
+Update cached data directly without refetching. The `mutate` method returns an undo function that restores the previous value:
 
-```javascript
-// Invalidate the cache item for the post, forcing a refetch next time
-fastQueryClient.mutate(['post', postId], oldData => {
-  // Perform the mutation without directly updating the cache data
-  updatePost(postId, newData);
-  
-  // Return null or undefined, or simply omit the updated attribute
-  // This marks the cache item as stale
-  return { ...oldData, updated: undefined }; // Omitting or setting undefined explicitly
+```typescript
+const undo = userQuery.mutate(
+  { id: '123' },
+  (current) => ({ value: { ...current!, name: 'Updated Name' }, updated: Date.now() }),
+);
+
+// Roll back if the server update fails
+try {
+  await updateUserOnServer('123', { name: 'Updated Name' });
+} catch {
+  undo();
+}
+```
+
+### Invalidation
+
+Mark specific entries or the entire cache as stale, forcing a refetch on the next query:
+
+```typescript
+userQuery.invalidate({ id: '123' }); // invalidate one entry
+userQuery.invalidate();                // invalidate all entries
+```
+
+### Custom Cache Validation
+
+Override the default expiration-based validation with custom logic:
+
+```typescript
+const query = new Query<Data, Args>({
+  client: { fn: fetchData },
+  key: (args) => JSON.stringify(args),
+  validate: (entry, args) => {
+    // Consider invalid if older than 30 minutes
+    return (entry.updated ?? 0) + 30 * 60_000 > Date.now();
+  },
 });
 ```
 
-#### Invalidation
+### Shared Cache
 
-Invalidate a specific cache entry or all:
+Multiple `Query` instances can share a `QueryCache` to avoid duplicate fetches across components:
 
 ```typescript
-query.invalidate(args); // Invalidates specific entry
-query.invalidate(); // Invalidates all cache entries
+import { Query } from '@equinor/fusion-query';
+import { QueryCache } from '@equinor/fusion-query/cache';
+
+const sharedCache = new QueryCache();
+
+const homepageQuery = new Query({
+  client: { fn: fetchPosts },
+  cache: sharedCache,
+  key: () => 'posts',
+});
+
+const sidebarQuery = new Query({
+  client: { fn: fetchPosts },
+  cache: sharedCache,
+  key: () => 'posts', // same key — reuses cached data
+});
 ```
 
-### Subscriptions and Cleanup
+## Persistent Query
 
-Remember to unsubscribe from observables or to complete the query to release resources:
+Use `persistentQuery` when the UI should reflect cache mutations in real time. Unlike `query()`, which completes after emitting the result, `persistentQuery()` keeps the subscription open and re-emits whenever the underlying cache entry is updated:
 
 ```typescript
-const subscription = query.query(args).subscribe((result) => console.log(result));
-// Later, when you're done:
-subscription.unsubscribe();
-
-// Or, to complete and clean up the query itself:
-query.complete();
+userQuery.persistentQuery({ id: '123' }).subscribe((result) => {
+  renderUser(result.value); // re-renders on cache mutation
+});
 ```
 
 ## Event System
 
-The Query package provides a comprehensive event system that aggregates events from three sources: the Query instance itself, the QueryClient (handling data fetching), and the QueryCache (managing cached data). All events are emitted through the `event$` observable stream, allowing you to monitor and debug the entire query lifecycle in real-time.
+The `Query.event$` Observable aggregates events from three sources — the Query itself, the QueryClient, and the QueryCache — into a single stream for monitoring and debugging.
 
 ### Query Events
 
-Events emitted by the Query instance itself:
-
-- **`query_created`**: Fired when a new query is created
-- **`query_completed`**: Fired when a query completes successfully
-- **`query_connected`**: Fired when connecting to an existing task
-- **`query_queued`**: Fired when a query is queued for execution
-- **`query_aborted`**: Fired when a query is aborted
-- **`query_cache_hit`**: Fired when cached data is used
-- **`query_cache_miss`**: Fired when no valid cache is found
-- **`query_cache_added`**: Fired when data is added to cache
-- **`query_job_created`**: Fired when a new job is created
-- **`query_job_selected`**: Fired when a job is selected for execution
-- **`query_job_started`**: Fired when job execution begins
-- **`query_job_closed`**: Fired when a job is closed
-- **`query_job_completed`**: Fired when a job completes
-- **`query_job_skipped`**: Fired when a job is skipped
+| Event | Description |
+|---|---|
+| `query_created` | A new query was initiated |
+| `query_completed` | A query finished (from cache or fetch) |
+| `query_connected` | Subscriber joined an existing in-flight task |
+| `query_queued` | A task was added to the processing queue |
+| `query_aborted` | A query was cancelled via `AbortSignal` |
+| `query_cache_hit` | Valid cached data was found |
+| `query_cache_miss` | No valid cache; fetch is required |
+| `query_cache_added` | Fetched data was written to cache |
+| `query_job_created` | A new fetch job was created |
+| `query_job_selected` | A job was picked by the queue operator |
+| `query_job_started` | A job began executing |
+| `query_job_closed` | A job subscription was closed |
+| `query_job_completed` | A job finished and its results were cached |
+| `query_job_skipped` | A job was skipped (no longer observed) |
 
 ### QueryClient Events
 
-Events emitted by the QueryClient during data fetching operations:
-
-- **`query_client_job_requested`**: Fired when a job is requested with arguments and options
-- **`query_client_job_executing`**: Fired when query execution begins
-- **`query_client_job_completed`**: Fired when a query completes successfully with result payload
-- **`query_client_job_failed`**: Fired when query execution fails with an error
-- **`query_client_job_canceled`**: Fired when a query is canceled with a reason
-- **`query_client_job_error`**: Fired when a general error occurs during query processing
+| Event | Description |
+|---|---|
+| `query_client_job_requested` | A fetch was requested with arguments |
+| `query_client_job_executing` | Fetch execution started |
+| `query_client_job_completed` | Fetch completed successfully |
+| `query_client_job_failed` | Fetch execution failed |
+| `query_client_job_canceled` | Fetch was canceled |
+| `query_client_job_error` | An irrecoverable error occurred |
 
 ### QueryCache Events
 
-Events emitted by the QueryCache during cache operations:
-
-- **`query_cache_entry_set`**: Fired when a cache entry is set with a complete record
-- **`query_cache_entry_inserted`**: Fired when a cache entry is inserted with new data
-- **`query_cache_entry_removed`**: Fired when a cache entry is removed
-- **`query_cache_entry_invalidated`**: Fired when a cache entry is invalidated
-- **`query_cache_entry_mutated`**: Fired when a cache entry is mutated/updated
-- **`query_cache_trimmed`**: Fired when the cache is trimmed based on criteria
-- **`query_cache_reset`**: Fired when the cache is reset to its initial state
+| Event | Description |
+|---|---|
+| `query_cache_entry_set` | A cache entry was set |
+| `query_cache_entry_inserted` | A new entry was inserted |
+| `query_cache_entry_removed` | An entry was removed |
+| `query_cache_entry_invalidated` | An entry was invalidated |
+| `query_cache_entry_mutated` | An entry was mutated |
+| `query_cache_trimmed` | The cache was trimmed |
+| `query_cache_reset` | The cache was reset |
 
 ### Subscribing to Events
 
 ```typescript
 import { filter } from 'rxjs';
-
-const query = new Query({
-  client: { fn: myFetchFunction },
-  key: (args) => JSON.stringify(args),
-});
-
-// Subscribe to all events
-query.event$.subscribe({
-  next: (event) => {
-    console.log(`Event: ${event.type}`, event);
-  },
-  error: (error) => console.error('Event error:', error),
-});
-
-// Subscribe to specific event types
-query.event$.pipe(
-  filter(event => event.type === 'query_cache_hit')
-).subscribe(event => {
-  console.log('Cache hit!', event.data);
-});
-
-// Filter events by source using instanceof
 import { QueryEvent } from '@equinor/fusion-query';
 import { QueryClientEvent } from '@equinor/fusion-query/client';
 import { QueryCacheEvent } from '@equinor/fusion-query/cache';
 
-const cacheEvents$ = query.event$.pipe(
-  filter(event => event instanceof QueryCacheEvent)
-);
+// All events
+query.event$.subscribe((event) => console.log(event.type, event));
 
-const clientEvents$ = query.event$.pipe(
-  filter(event => event instanceof QueryClientEvent)
-);
+// Filter by event type
+query.event$.pipe(
+  filter((event) => event.type === 'query_cache_hit'),
+).subscribe((event) => console.log('Cache hit:', event.data));
 
-const queryEvents$ = query.event$.pipe(
-  filter(event => event instanceof QueryEvent)
-);
+// Filter by event source using instanceof
+const cacheEvents$ = query.event$.pipe(filter((e) => e instanceof QueryCacheEvent));
+const clientEvents$ = query.event$.pipe(filter((e) => e instanceof QueryClientEvent));
+const queryEvents$ = query.event$.pipe(filter((e) => e instanceof QueryEvent));
 ```
 
-### Event Data
+## React Integration
 
-Each event includes:
-- **`type`**: The event type identifier
-- **`key`**: The cache key for the query
-- **`data`**: Type-safe event-specific data (varies by event type)
+The `@equinor/fusion-query/react` sub-path exports the `useDebounceQuery` hook for debounced data fetching in React components:
 
-## Advanced Usage
+```tsx
+import { useDebounceQuery } from '@equinor/fusion-query/react';
 
-### Queue Operators
+function SearchComponent() {
+  const [term, setTerm] = useState('');
+  const result = useDebounceQuery(myQuery, {
+    args: [{ search: term }],
+    delay: 300,
+  });
 
-The Query utility allows you to manage concurrent requests using different queue strategies: `switch`, `merge`, and `concat`. Here's how you can apply each strategy:
-
-#### Switch (Default)
-
-Cancels the current active request when a new request comes in. Only the result from the latest request will be returned.
-
-```typescript
-import { Query } from '@equinor/fusion-query';
-import { debounceTime, fromEvent, map, switchMap } from 'rxjs';
-
-// Mock function to simulate data fetching based on the search query
-async function fetchSearchResults(searchQuery: string) {
-    const response = await fetch(`https://your.api/search?query=${searchQuery}`);
-    if (!response.ok) {
-        throw new Error('Network response was not ok');
-    }
-    return response.json();
-}
-
-// Define the query with the switch as a debounce strategy
-const searchQuery = new Query<any, { searchQuery: string }>({
-    client: {
-        fn: ({ searchQuery }) => fetchSearchResults(searchQuery),
-    },
-    key: ({ searchQuery }) => `search-${searchQuery}`,
-    queueOperator: 'switch',
-});
-```
-
-#### Set Up the Event Listener on the Search Input
-
-Now, set up the search input to listen for changes and use the defined query to fetch data:
-
-```typescript
-const searchInput = document.getElementById('search-input');
-
-fromEvent(searchInput, 'input')
-    .pipe(
-        map((event) => (event.target as HTMLInputElement).value),
-        debounceTime(300), // Debounce typing to limit queries
-        switchMap((searchQuery) => (searchQuery ? searchQuery.query({ searchQuery }) : [])),
-    )
-    .subscribe({
-        next: (results) => {
-            console.log('Search Results:', results);
-            // Handle rendering the search results here
-        },
-        error: (error) => console.error('Error fetching search results:', error),
-    });
-```
-
-#### Merge
-
-Allows multiple requests to run in parallel without canceling each other. All responses will be returned as they arrive.
-
-```typescript
-async function fetchData(endpoint: string, queryParams: object) {
-    const response = await fetch(`https://your.api/${endpoint}`, {
-        method: 'GET',
-        body: JSON.stringify(queryParams),
-    });
-    if (!response.ok) {
-        throw new Error('Network response was not ok');
-    }
-    return response.json();
+  return <input value={term} onChange={(e) => setTerm(e.target.value)} />;
 }
 ```
 
-```typescript
-import { Query } from '@equinor/fusion-query';
-import { combineLatest } from 'rxjs';
+## Operators
 
-// Defining the query with `fn` function for client creation
-const userProfileQuery = new Query<any, { endpoint: string; queryParams: object }>({
-    client: {
-        fn: fetchData,
-    },
-    key: (args) => `${args.endpoint}-${JSON.stringify(args.queryParams)}`,
-    queueOperator: 'merge', // Using merge to handle parallel queries
-});
+The `operators` namespace provides RxJS operator utilities:
 
-const userId = 'exampleUserId';
-
-// Initiating parallel requests
-const userDetails$ = userProfileQuery.query({ endpoint: 'users', queryParams: { userId } });
-const userPosts$ = userProfileQuery.query({ endpoint: 'posts', queryParams: { userId } });
-const userComments$ = userProfileQuery.query({ endpoint: 'comments', queryParams: { userId } });
-
-// Combining the observables from parallel requests
-combineLatest([userDetails$, userPosts$, userComments$]).subscribe({
-    next: ([userDetails, userPosts, userComments]) => {
-        // Handle and display the combined data as needed
-        console.log('User Details:', userDetails);
-        console.log('User Posts:', userPosts);
-        console.log('User Comments:', userComments);
-    },
-    error: (error) => console.error('Error fetching data:', error),
-    complete: () => console.log('All parallel queries completed'),
-});
-```
-
-#### Concat
-
-Queues requests and executes them one after another in a sequential manner. A new request will only start after the previous one has completed.
+- **`switchQueue`**: Cancels in-progress work when new items arrive (default strategy).
+- **`mergeQueue`**: Processes items concurrently without cancellation.
+- **`concatQueue`**: Processes items sequentially in FIFO order.
+- **`queryValue`**: Extracts the raw `value` from a query result stream, stripping metadata.
 
 ```typescript
-const query = new Query<YourDataType, YourArgsType>({
-    client,
-    key: (args) => JSON.stringify(args),
-    queueOperator: 'concat',
+import { operators } from '@equinor/fusion-query';
+
+query.query({ id: '123' }).pipe(operators.queryValue).subscribe((user) => {
+  console.log(user.name); // plain User object, no wrapper
 });
 ```
 
-### Cache Validation Strategies
+## Cleanup
 
-Cache validation is crucial for determining whether cached data is still relevant or needs to be refreshed. You can customize cache validation using the `validate` option.
-
-#### Default Expiration Time
-
-Automatically consider cache entries as stale after a specified duration.
+Always unsubscribe from query Observables or call `complete()` to release resources:
 
 ```typescript
-const query = new Query<YourDataType, YourArgsType>({
-    client,
-    key: (args) => JSON.stringify(args),
-    expire: 60000, // 60 seconds
-});
+const sub = query.query(args).subscribe((r) => console.log(r));
+// Later:
+sub.unsubscribe();
+
+// Or dispose the entire Query instance:
+query.complete();
 ```
 
-#### Custom Validation Function
+## Sub-path Exports
 
-Implement a custom logic to validate cache entries based on your requirements.
-
-```typescript
-const query = new Query<YourDataType, YourArgsType>({
-    client,
-    key: (args) => JSON.stringify(args),
-    validate: (entry, args) => {
-        // Your custom validation logic here.
-        // For example, return `false` if the entry is older than 30 minutes.
-        return Date.now() - entry.updated < 30 * 60 * 1000;
-    },
-});
-```
-
-### Setting Up Shared QueryCache and Data Fetch Function
-
-First, establish a shared `QueryCache` instance and define a common function to fetch data. This shared cache will be utilized by different query instances across the application.
-
-```javascript
-import { Query, QueryCache } from '@equinor/fusion-query';
-
-// Initialize a shared QueryCache across the application
-const sharedQueryCache = new QueryCache();
-
-// Function to fetch blog posts data from your API
-async function fetchBlogPosts() {
-  const response = await fetch('https://example.com/api/blog-posts');
-  if (!response.ok) {
-    throw new Error('Failed to fetch blog posts');
-  }
-  return response.json();
-}
-```
-
-Next, directly initialize separate `Query` instances in different parts of your application (e.g., for homepage posts and sidebar posts). These instances will share the same `QueryCache` but are created independently.
-
-```javascript
-// Create a Query instance for the homepage using the shared cache
-const homepagePostsQuery = new Query({
-  client: {
-    fn: fetchBlogPosts,
-  },
-  cache: sharedQueryCache, // Utilize the shared cache
-  key: () => 'allBlogPosts', // Unique key for this query
-});
-
-// Fetch and render posts on the homepage
-homepagePostsQuery.query().subscribe({
-  next: (posts) => {
-    // Render posts on the homepage
-    console.log('Homepage posts:', posts);
-  },
-  error: (error) => console.error('Error fetching posts for homepage:', error),
-});
-```
-
-```javascript
-// Create a Query instance for the sidebar using the same shared cache
-const sidebarPostsQuery = new Query({
-  client: {
-    fn: fetchBlogPosts,
-  },
-  cache: sharedQueryCache,
-  key: () => 'allBlogPosts', // Same key, leveraging cache from homepage query
-});
-
-// Fetch and display posts in the sidebar widget
-sidebarPostsQuery.query().subscribe({
-  next: (posts) => {
-    // Render posts in the sidebar
-    console.log('Sidebar posts:', posts);
-  },
-  error: (error) => console.error('Error fetching posts for sidebar:', error),
-});
-```
-
-Since both `homepagePostsQuery` and `sidebarPostsQuery` instances use the shared `QueryCache`, fetching operations benefit from cache-first strategies, reducing unnecessary network requests. 
-
-- If `"allBlogPosts"` data is fetched first by the homepage and then requested by the sidebar, the sidebar will immediately access the cached data without needing to fetch from the network again.
-- Any updates to the cache by one query instance (either from fetching new data or manually updating the cache entries) are immediately available to the others, given they share the same cache and cache keys.
+| Path | Contents |
+|---|---|
+| `@equinor/fusion-query` | `Query`, types, operators, events |
+| `@equinor/fusion-query/cache` | `QueryCache`, `QueryCacheEvent`, cache types |
+| `@equinor/fusion-query/client` | `QueryClient`, `QueryClientError`, `QueryClientEvent`, client types |
+| `@equinor/fusion-query/operators` | Queue operators and `queryValue` |
+| `@equinor/fusion-query/react` | `useDebounceQuery` hook |
 
