@@ -1,3 +1,16 @@
+/**
+ * Context module for the Fusion Framework.
+ *
+ * Provides context management for Fusion-based applications and portals,
+ * including setting, querying, validating, and resolving context items.
+ *
+ * Use {@link enableContext} to register the module in a configurator,
+ * then access the {@link IContextProvider} from the module instance
+ * to interact with context state.
+ *
+ * @packageDocumentation
+ */
+
 export {
   ContextModuleConfigurator,
   IContextModuleConfigurator,
