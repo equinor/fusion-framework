@@ -19,8 +19,9 @@ eval/
     dev-server.md        # Development server, mocking, proxying
     auth.md              # Authentication and authorization
     react-app.md         # React app bootstrap, hooks, sub-path APIs
-    features.md          # Feature flags, bookmarks, app features
-    utilities.md         # CLI, observable state, events, Vite plugin
+    features.md          # Bookmarks, navigation, app loading, observability
+    cli.md               # CLI commands, auth, deployment, portal templates
+    utilities.md         # Observable state, event bus, Vite plugin
 ```
 
 ## Format

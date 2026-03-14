@@ -1,14 +1,10 @@
 # Utilities & Tooling
 
-These queries cover the shared infrastructure that Fusion developers interact
-with outside of application code: the CLI workflow, the Vite build plugin,
-the observable state primitives, and the cross-module event system.
+These queries cover shared infrastructure primitives that Fusion modules and
+apps build on: the observable state system, the cross-module event bus, and
+the Vite build plugin for local development.
 
 When judging results, verify that:
-- CLI results describe **real commands** (`ffc app dev`, `ffc app build`, etc.)
-  and reference the correct binary name (`fusion-framework-cli` / `ffc`). Reject
-  results that invent sub-commands or confuse the Fusion CLI with generic Vite
-  or Node tooling.
 - Observable results distinguish the **`@equinor/fusion-observable`** utility
   package from RxJS itself. The package wraps RxJS with action-driven state
   (`FlowSubject`, `createReducer`, `createAction`) — results that only mention
@@ -22,14 +18,6 @@ When judging results, verify that:
   explain both the plugin factory (`fusionSpaPlugin`) and the template
   environment shape. Reject results that confuse build-time config with runtime
   framework init.
-
-## How to build and develop Fusion apps with the CLI
-
-- must mention `fusion-framework-cli` or `ffc` as the CLI binary name
-- must mention `app dev` for starting a local dev server and `app build` for production bundles
-- must mention `app.manifest.ts` as the application manifest configuration file
-- should mention `defineAppManifest` and `defineAppConfig` from `@equinor/fusion-framework-cli/app`
-- should mention `auth login` for authenticating against Azure AD before deployment
 
 ## How to manage observable state with FlowSubject and actions
 
