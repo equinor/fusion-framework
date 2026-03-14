@@ -14,10 +14,14 @@ const findIndex = (state: LocationState) => {
 /**
  * Creates a reducer for history state management.
  *
- * @param initial - Initial navigation update or function that returns initial state
- * @param options - Optional configuration options
- * @param options.maxHistory - Maximum number of history entries to keep (default: 100)
- * @returns A reducer for history state
+ * Handles navigate, go, and pop success actions by updating the
+ * history array and current location. Enforces a maximum history
+ * length to prevent unbounded memory growth.
+ *
+ * @param initial - Initial navigation update or factory returning initial state
+ * @param options - Optional configuration
+ * @param options.maxHistory - Maximum number of history entries to keep (default: `100`)
+ * @returns A reducer with initial state for use with {@link createStore}
  */
 export const createHistoryReducer = (
   initial: NavigationUpdate | (() => LocationState),

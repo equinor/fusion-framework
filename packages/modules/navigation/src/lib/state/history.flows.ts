@@ -233,19 +233,14 @@ export const validateCurrentLocation: HistoryFlowCreator =
 /**
  * Creates a combined history flow from multiple flow creators.
  *
- * Execution flow:
- * 1. Creates a preprocessing step that applies blocker checking (unless skipped)
- * 2. Initializes each flow creator with the stack to create individual flows
- * 3. Merges all flows so they process actions in parallel
- * 4. Returns a combined flow that:
- *    - First applies preprocessing (blocker checking)
- *    - Then processes actions through all merged flows
- *    - Emits results from any flow that matches the action
+ * Merges all provided flows so they process actions in parallel.
+ * Optionally prepends a blocker-checking step that gates navigation
+ * actions through registered {@link NavigationBlocker | blockers}.
  *
  * @param flowCreators - Array of flow creators to combine
- * @param options - Optional configuration options
- * @param options.skipBlockCheck - If true, skip blocker checking
- * @returns A combined history flow creator
+ * @param options - Optional configuration
+ * @param options.skipBlockCheck - If `true`, skip blocker checking
+ * @returns A combined {@link HistoryFlowCreator} that merges all provided flows
  */
 export const createFlow = (
   flowCreators: HistoryFlowCreator[],

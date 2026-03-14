@@ -1,3 +1,13 @@
+/**
+ * Internal history implementations, stacks, and types.
+ *
+ * @remarks
+ * This sub-module is re-exported as `@equinor/fusion-framework-module-navigation/lib`
+ * and provides the low-level building blocks for navigation state management.
+ *
+ * @packageDocumentation
+ */
+
 // History implementations
 export { BaseHistory } from './BaseHistory';
 export { BrowserHistory } from './BrowserHistory';

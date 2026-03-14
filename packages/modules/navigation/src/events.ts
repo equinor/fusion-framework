@@ -15,7 +15,16 @@ export interface NavigateEventDetail {
 
 /**
  * Event emitted before navigation occurs.
- * Can be canceled by calling `preventDefault()`.
+ * Can be canceled by calling `preventDefault()` to block the navigation.
+ *
+ * @example
+ * ```ts
+ * eventProvider.addEventListener('onNavigate', (event) => {
+ *   if (hasUnsavedChanges) {
+ *     event.preventDefault();
+ *   }
+ * });
+ * ```
  */
 export class NavigateEvent extends FrameworkEvent<
   FrameworkEventInit<NavigateEventDetail, INavigationProvider>
@@ -41,8 +50,16 @@ export interface NavigatedEventDetail {
 }
 
 /**
- * Event emitted after navigation occurs.
- * Contains the navigation action and location details.
+ * Event emitted after navigation completes.
+ * Contains the navigation action type and both current and previous locations.
+ *
+ * @example
+ * ```ts
+ * eventProvider.addEventListener('onNavigated', (event) => {
+ *   const { action, current, previous } = event.detail;
+ *   console.log(`${action}: ${previous.location.pathname} → ${current.location.pathname}`);
+ * });
+ * ```
  */
 export class NavigatedEvent extends FrameworkEvent<
   FrameworkEventInit<NavigatedEventDetail, INavigationProvider>
