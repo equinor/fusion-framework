@@ -103,10 +103,41 @@ export interface IModulesConfigurator<
   dispose(instance: ModulesInstanceType<TModules>, ref?: TRef): Promise<void>;
 }
 
+/**
+ * Descriptor that registers a single module together with optional lifecycle hooks
+ * into a {@link ModulesConfigurator}.
+ *
+ * Pass an `IModuleConfigurator` to {@link IModulesConfigurator.addConfig | addConfig}
+ * or {@link IModulesConfigurator.configure | configure} to wire a module into the
+ * framework’s configuration → initialization pipeline.
+ *
+ * @template TModule - The module type being configured.
+ * @template TRef - Reference type provided during configuration (typically a parent module instance).
+ *
+ * @example
+ * ```typescript
+ * configurator.addConfig({
+ *   module: myHttpModule,
+ *   configure: (config) => {
+ *     config.setBaseUrl('https://api.example.com');
+ *   },
+ *   afterInit: (provider) => {
+ *     provider.defaultHeaders.set('X-App', 'my-app');
+ *   },
+ * });
+ * ```
+ */
 export interface IModuleConfigurator<TModule extends AnyModule = AnyModule, TRef = ModuleInstance> {
+  /** The module definition to register. */
   module: TModule;
+
+  /** Optional callback invoked during the configuration phase to mutate the module’s config builder. */
   configure?: (config: ModuleConfigType<TModule>, ref?: TRef) => void | Promise<void>;
+
+  /** Optional callback invoked after all modules have been configured. */
   afterConfig?: (config: ModuleConfigType<TModule>) => void;
+
+  /** Optional callback invoked after the module has been initialized with its provider instance. */
   afterInit?: (instance: ModuleType<TModule>) => void | Promise<void>;
 }
 
@@ -150,9 +181,37 @@ export type ModulesConfiguratorConfigCallback<TRef> = (
 ) => void | Promise<void>;
 
 /**
- * Configurator class for modules.
- * @template TModules - Array of modules.
- * @template TRef - Reference type.
+ * Core orchestrator that drives the module lifecycle in Fusion Framework.
+ *
+ * `ModulesConfigurator` manages the full configure → initialize → dispose pipeline
+ * for a set of modules. Consumers register modules via {@link addConfig} or
+ * {@link configure}, then call {@link initialize} to produce a sealed
+ * {@link ModulesInstance} whose properties are the initialized module providers.
+ *
+ * The lifecycle phases executed during {@link initialize} are:
+ *
+ * 1. **Configure** – each module’s `configure()` factory creates a config builder;
+ *    registered callbacks mutate it; `postConfigure()` hooks run.
+ * 2. **Initialize** – modules are initialized concurrently via `initialize()`;
+ *    cross-module dependencies are resolved through `requireInstance()`.
+ * 3. **Post-initialize** – `postInitialize()` hooks and `onInitialized` callbacks run.
+ *
+ * All lifecycle transitions emit {@link ModuleEvent} entries on the {@link event$}
+ * observable for telemetry and debugging.
+ *
+ * @template TModules - Tuple of module types managed by this configurator.
+ * @template TRef - Reference type passed through configuration (usually a parent instance).
+ *
+ * @example
+ * ```typescript
+ * const configurator = new ModulesConfigurator([httpModule, authModule]);
+ * configurator.addConfig({
+ *   module: httpModule,
+ *   configure: (cfg) => cfg.setBaseUrl('https://api.example.com'),
+ * });
+ * const modules = await configurator.initialize();
+ * // modules.http, modules.auth are now available
+ * ```
  */
 export class ModulesConfigurator<TModules extends Array<AnyModule> = Array<AnyModule>, TRef = any>
   implements IModulesConfigurator<TModules, TRef>
@@ -924,6 +983,8 @@ export class ModulesConfigurator<TModules extends Array<AnyModule> = Array<AnyMo
     });
   }
 
+  /**
+   * Disposes all modules managed by this configurator.\n   *\n   * Calls each module\u2019s `dispose` hook (if defined) and completes the\n   * internal event stream. After disposal the configurator should not be reused.\n   *\n   * @param instance - The initialized modules instance to tear down.\n   * @param ref - Optional reference object forwarded to module dispose hooks.\n   */
   public async dispose(instance: ModulesInstanceType<TModules>, ref?: TRef): Promise<void> {
     this._registerEvent({
       level: ModuleEventLevel.Debug,

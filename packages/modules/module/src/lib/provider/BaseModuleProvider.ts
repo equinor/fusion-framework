@@ -5,15 +5,45 @@ import SemanticVersion from '../semantic-version.js';
 
 import type { IModuleProvider } from './IModuleProvider.js';
 
+/**
+ * Constructor arguments accepted by {@link BaseModuleProvider}.
+ *
+ * @template TConfig - The resolved configuration type for the module.
+ */
 export type BaseModuleProviderCtorArgs<TConfig = unknown> = {
+  /** Semantic version string or instance identifying this provider release. */
   version: string | SemanticVersion;
+
+  /** The fully-resolved configuration object produced during the configure phase. */
   config: TConfig;
 };
 
 /**
- * Base class for creating module provider
+ * Abstract base class for Fusion Framework module providers.
  *
- * this is the interface which is returned after enabling a module
+ * Extend `BaseModuleProvider` to create the runtime instance that a module’s
+ * {@link Module.initialize | initialize} method returns. The base class
+ * handles version parsing, subscription lifecycle management, and duck-typed
+ * `instanceof` checks.
+ *
+ * Subclasses should register teardown callbacks via {@link _addTeardown} so
+ * that resources (subscriptions, timers, event listeners) are automatically
+ * cleaned up when the framework calls {@link dispose}.
+ *
+ * @template TConfig - The resolved configuration type for the module.
+ *
+ * @example
+ * ```typescript
+ * class MyProvider extends BaseModuleProvider<MyConfig> {
+ *   constructor(args: BaseModuleProviderCtorArgs<MyConfig>) {
+ *     super(args);
+ *     const sub = someObservable$.subscribe();
+ *     this._addTeardown(sub);
+ *   }
+ * }
+ * ```
+ *
+ * @see IModuleProvider
  */
 export abstract class BaseModuleProvider<TConfig = unknown> implements IModuleProvider {
   /**
@@ -49,6 +79,11 @@ export abstract class BaseModuleProvider<TConfig = unknown> implements IModulePr
     return this.#version;
   }
 
+  /**
+   * Creates a new module provider.
+   *
+   * @param args - Version and resolved configuration for the module.
+   */
   constructor(args: BaseModuleProviderCtorArgs<TConfig>) {
     const { version } = args;
     this.#version = new SemanticVersion(version);
@@ -66,6 +101,11 @@ export abstract class BaseModuleProvider<TConfig = unknown> implements IModulePr
     return () => this.#subscriptions.remove(teardown);
   }
 
+  /**
+   * Unsubscribes all registered teardowns and releases held resources.
+   *
+   * Called automatically by the framework during module disposal.
+   */
   public dispose() {
     this.#subscriptions.unsubscribe();
   }
