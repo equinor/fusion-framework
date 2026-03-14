@@ -16,6 +16,26 @@ import type { FusionRouterContext } from './types.js';
 export const routerContext = createRouterContext<FusionRouterContext | undefined>(undefined);
 const _routerContext = createContext<FusionRouterContext | undefined>(undefined);
 
+/**
+ * React hook that returns the current {@link FusionRouterContext}.
+ *
+ * Provides access to Fusion Framework modules and custom context from within
+ * route components, loaders, or any React component rendered inside the `<Router>`.
+ *
+ * @returns The current Fusion router context containing `modules` and `context`.
+ * @throws {Error} If called outside a `<Router>` (no `FusionRouterContextProvider` ancestor).
+ *
+ * @example
+ * ```tsx
+ * import { useRouterContext } from '@equinor/fusion-framework-react-router';
+ *
+ * function MyComponent() {
+ *   const { modules, context } = useRouterContext();
+ *   const httpClient = modules.http.createHttpClient('my-api');
+ *   // ...
+ * }
+ * ```
+ */
 export function useRouterContext(): FusionRouterContext {
   const context = useContext(_routerContext);
   if (!context) {
@@ -24,4 +44,11 @@ export function useRouterContext(): FusionRouterContext {
   return context;
 }
 
+/**
+ * React context provider that supplies {@link FusionRouterContext} to the component tree.
+ *
+ * Typically you do not use this directly — the `<Router>` component sets it up
+ * automatically. It is exported for advanced use cases such as testing or
+ * wrapping sub-trees with a custom context value.
+ */
 export const FusionRouterContextProvider = _routerContext.Provider;

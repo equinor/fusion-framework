@@ -13,26 +13,44 @@ import { version } from './version';
 import type { Service } from './types';
 import type { ServiceDiscoveryConfig } from './configurator';
 
+/**
+ * Public API surface of the Service Discovery provider.
+ *
+ * Consumers use this interface to resolve service endpoints, create
+ * pre-configured HTTP clients for discovered services, or register
+ * service-backed HTTP clients on a {@link ModulesConfigurator}.
+ */
 export interface IServiceDiscoveryProvider {
   /**
-   * Resolves a service by key
-   * @param key - The key of the service to resolve
+   * Resolves a single service endpoint by its lookup key.
+   *
+   * @param key - Unique service key (e.g. `"context"`, `"people"`).
+   * @returns The resolved {@link Service} with URI and scopes.
+   * @throws {Error} When no service matches the given key.
    */
   resolveService(key: string): Promise<Service>;
 
   /**
-   * Fetch all services
+   * Fetches all registered services from the service discovery API.
+   *
+   * @returns An array of {@link Service} objects.
    */
   resolveServices(): Promise<Service[]>;
 
   /**
-   * create http client for a service
-   * @param name key of the service
-   * @param opt http client options
+   * Creates an {@link IHttpClient} pre-configured with the base URI and
+   * default OAuth scopes of the named service.
+   *
+   * @param name - Service key to resolve.
+   * @param opt - Additional HTTP client options (headers, interceptors, etc.).
+   *   `baseUri`, `defaultScopes`, and `ctor` are set automatically.
+   * @returns A ready-to-use HTTP client bound to the resolved service.
+   * @throws {Error} When the service cannot be resolved.
    *
    * @example
    * ```typescript
-   * const myClient = await serviceDiscovery.createClient('my-service', {});
+   * const client = await serviceDiscovery.createClient('my-api');
+   * const data = await client.fetchAsync('/items');
    * ```
    */
   createClient(
@@ -41,27 +59,26 @@ export interface IServiceDiscoveryProvider {
   ): Promise<IHttpClient>;
 
   /**
-   * Used in the framework to configure a http client which is resolved by service discovery
+   * Registers a service-discovery-backed HTTP client on a configurator.
    *
-   * @deprecating this method will be reworked in later versions, please don`t use!
+   * Resolves the service by `key`, then calls
+   * `configureHttpClient` with the resolved URI and scopes so that the
+   * HTTP module can later create clients by name.
    *
-   * @param serviceName key of the service or an object with key and alias
-   * @param config http client configurator
+   * @deprecated This method will be reworked in a future version.
+   *   Prefer {@link createClient} for direct usage.
+   *
+   * @param serviceName - Service key, or an object `{ key, alias }` when
+   *   the HTTP client should be registered under a different name.
+   * @param config - The modules configurator to register the client on.
    *
    * @example
    * ```typescript
-   * configure = (
-   *   configurator: ModuleConfigBuilder<[HttpModule]>,
-   *   ref: ModuleInstanceType<ServiceDiscovery>
-   * )=> {
-   *   ref.serviceDiscovery.configureClient(
-   *     // use `my-service` from service discovery
-   *     // and register it as `foo` in the http module
-   *     { key: 'my-service', alias: 'foo'},
-   *     configurator
-   *   );
-   * });
-   *
+   * // Register 'my-service' as HTTP client 'foo'
+   * await serviceDiscovery.configureClient(
+   *   { key: 'my-service', alias: 'foo' },
+   *   configurator,
+   * );
    * ```
    */
   configureClient(
@@ -69,13 +86,25 @@ export interface IServiceDiscoveryProvider {
     config: ModulesConfigurator<[HttpModule]>,
   ): Promise<void>;
 
+  /** The resolved service discovery configuration. */
   readonly config: ServiceDiscoveryConfig;
 }
 
+/**
+ * Default implementation of {@link IServiceDiscoveryProvider}.
+ *
+ * Created during module initialization and delegates service resolution to
+ * the underlying {@link IServiceDiscoveryClient} while using the
+ * {@link HttpModule} to construct pre-configured HTTP clients.
+ */
 export class ServiceDiscoveryProvider
   extends BaseModuleProvider<ServiceDiscoveryConfig>
   implements IServiceDiscoveryProvider
 {
+  /**
+   * @param config - Resolved service discovery configuration.
+   * @param _http - HTTP module instance used to create clients.
+   */
   constructor(
     public readonly config: ServiceDiscoveryConfig,
     protected readonly _http: ModuleType<HttpModule>,
@@ -86,14 +115,17 @@ export class ServiceDiscoveryProvider
     });
   }
 
+  /** {@inheritDoc IServiceDiscoveryProvider.resolveServices} */
   public resolveServices(): Promise<Service[]> {
     return this.config.discoveryClient.resolveServices();
   }
 
+  /** {@inheritDoc IServiceDiscoveryProvider.resolveService} */
   public async resolveService(key: string): Promise<Service> {
     return this.config.discoveryClient.resolveService(key);
   }
 
+  /** {@inheritDoc IServiceDiscoveryProvider.createClient} */
   public async createClient(
     name: string,
     opt?: Omit<HttpClientOptions, 'baseUri' | 'defaultScopes' | 'ctor'>,
@@ -109,6 +141,7 @@ export class ServiceDiscoveryProvider
     });
   }
 
+  /** {@inheritDoc IServiceDiscoveryProvider.configureClient} */
   public async configureClient(
     serviceName: string | { key: string; alias: string },
     config: ModulesConfigurator<[HttpModule]>,

@@ -26,14 +26,36 @@ export class AuthConfigurator extends BaseConfigBuilder<AuthConfig> {
     this.setMode('interactive');
   }
 
+  /**
+   * Sets the authentication mode for the module.
+   *
+   * @param mode - The authentication mode: `'interactive'`, `'silent'`, or `'token_only'`.
+   */
   setMode(mode: AuthConfig['mode']) {
     this._set('mode', mode);
   }
 
+  /**
+   * Sets a pre-configured MSAL `PublicClientApplication` instance.
+   *
+   * Use this when you need full control over the MSAL client configuration.
+   * For most cases, prefer {@link AuthConfigurator.setClientConfig | setClientConfig}.
+   *
+   * @param client - The MSAL `PublicClientApplication` instance.
+   */
   setClient(client: AuthConfig['client']) {
     this._set('client', client);
   }
 
+  /**
+   * Configures the MSAL client using Azure AD tenant and client IDs.
+   *
+   * Lazily creates a `PublicClientApplication` with a secure persistence cache.
+   * The dynamic import avoids requiring `libsecret` in environments that do not need it.
+   *
+   * @param tenantId - Azure AD tenant (directory) ID.
+   * @param clientId - Azure AD application (client) ID.
+   */
   setClientConfig(tenantId: string, clientId: string): void {
     this._set('client', async () => {
       // Dynamically import the createAuthClient function since the client uses `libsecret``
@@ -44,14 +66,31 @@ export class AuthConfigurator extends BaseConfigBuilder<AuthConfig> {
     });
   }
 
+  /**
+   * Sets the port for the local HTTP callback server used in interactive mode.
+   *
+   * @param port - Port number for the local server.
+   */
   setServerPort(port: number) {
     this._set('server.port', port);
   }
 
+  /**
+   * Sets a callback invoked when the login URL is ready in interactive mode.
+   *
+   * Use this to display or log the authentication URL for the user.
+   *
+   * @param onOpen - Callback receiving the authentication URL, or `undefined` to disable.
+   */
   setServerOnOpen(onOpen: ((url: string) => void) | undefined) {
     this._set('server.onOpen', onOpen);
   }
 
+  /**
+   * Sets a pre-obtained access token for `token_only` mode.
+   *
+   * @param token - The static access token string.
+   */
   setAccessToken(token: string) {
     this._set('accessToken', token);
   }

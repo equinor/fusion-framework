@@ -6,10 +6,16 @@ import type { ClientDataMethod } from '../../types';
 import type { ApiResponse, ApiRequestArgs, SupportedApiVersion } from './types';
 
 /**
- * Method for fetching context item from context service
- * @param client - client for execution of request
- * @param version - version of API to call
- * @param method - client method to call
+ * Creates a curried function that fetches a person's profile photo.
+ *
+ * @template TVersion - Supported API version (e.g. `'v2'`).
+ * @template TMethod - Client execution method (`'blob'` or `'blob$'`).
+ * @template TClient - The underlying HTTP client type.
+ * @template TArgs - Request argument type.
+ * @param client - HTTP client used to execute the request.
+ * @param version - API version to call.
+ * @param method - Client method to use (defaults to `'blob'`).
+ * @returns A function that accepts photo args and returns blob data.
  */
 export const client =
   <

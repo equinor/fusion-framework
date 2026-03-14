@@ -12,6 +12,18 @@ import type {
   AppSettings,
 } from '../types';
 
+/**
+ * Factory function that creates all action creators used by the {@link App}
+ * state machine.
+ *
+ * Actions are grouped by domain:
+ * - **Manifest** – `setManifest`, `fetchManifest` (async)
+ * - **Config** – `setConfig`, `fetchConfig` (async)
+ * - **Settings** – `setSettings`, `fetchSettings` (async), `updateSettings` (async)
+ * - **Script module** – `setModule`, `importApp` (async)
+ * - **Instance** – `setInstance`
+ * - **Lifecycle** – `initialize` (async)
+ */
 const createActions = () => ({
   /** Manifest loading */
   setManifest: createAction('set_manifest', (manifest: AppManifest, update?: boolean) => ({
@@ -87,10 +99,14 @@ const createActions = () => ({
   ),
 });
 
+/** Singleton action creator map used by the app state machine. */
 export const actions = createActions();
 
+/** Record mapping action names to their creator functions. */
 export type ActionBuilder = ReturnType<typeof createActions>;
 
+/** Map of action names to their instantiated action shapes. */
 export type ActionMap = ActionInstanceMap<ActionBuilder>;
 
+/** Union of all action types dispatched by the app state machine. */
 export type Actions = ActionTypes<typeof actions>;

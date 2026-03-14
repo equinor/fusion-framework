@@ -2,14 +2,30 @@ import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import type { Observable, StatefulObservable } from '../types';
 import { useObservableLayoutSubscription } from './useObservableSubscription';
 
+/**
+ * Options for {@link useObservableState}.
+ *
+ * @template TType - The initial value type (may be `undefined`).
+ */
 type ObservableStateOptions<TType = undefined> = {
+  /** Value used before the first emission. */
   initial?: TType;
+  /** Teardown function called when the subscription is unsubscribed. */
   teardown?: VoidFunction;
 };
 
+/**
+ * Return type of {@link useObservableState}.
+ *
+ * @template TType - The value type.
+ * @template TError - The error type.
+ */
 export type ObservableStateReturnType<TType, TError = unknown> = {
+  /** The most recently emitted value. */
   value: TType;
+  /** The most recent error, or `null`. */
   error: TError | null;
+  /** Whether the observable has completed. */
   complete: boolean;
 };
 

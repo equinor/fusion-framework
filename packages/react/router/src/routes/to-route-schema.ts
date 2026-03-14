@@ -6,8 +6,20 @@ import { BaseFileRoute } from './BaseFileRoute.js';
 
 import type { RouteNode, ParamsSchema, SearchSchema, RouterSchema, RouteObject } from '../types.js';
 /**
- * Schema entry format for route documentation.
- * Each entry represents a route with its path, description, and optional parameter/search schemas.
+ * A single entry in the flat route schema produced by {@link toRouteSchema}.
+ *
+ * Each entry is a tuple representing one route:
+ * - `[path, description]` for routes without parameter or search metadata.
+ * - `[path, description, { params?, search? }]` when parameter/search schemas are present.
+ *
+ * @example
+ * ```ts
+ * const entry: RouteSchemaEntry = [
+ *   'products/:id',
+ *   'Product detail page',
+ *   { params: { id: 'Product identifier' }, search: { sort: 'Sort order' } },
+ * ];
+ * ```
  */
 export type RouteSchemaEntry =
   | [path: string, description: string]

@@ -3,10 +3,29 @@ import { useNavigationModule } from './useNavigationModule';
 import type { INavigationProvider } from '@equinor/fusion-framework-module-navigation';
 
 /**
- * create a router for react routing
- * @see {@link [docs](https://equinor.github.io/fusion-framework/modules/navigation/)}
- * @see {@link [react-router](https://reactrouter.com/en/main/routers/create-browser-router)}
- * @param routes router objects __(must be static | memorized)__
+ * React hook that creates a router instance for client-side navigation.
+ *
+ * The `routes` argument **must** be static or memoised to avoid re-creating
+ * the router on every render.
+ *
+ * @param routes - An array of route objects compatible with
+ *   `INavigationProvider.createRouter`.
+ * @returns A router instance to pass to `<RouterProvider>`.
+ *
+ * @see {@link https://equinor.github.io/fusion-framework/modules/navigation/ | Fusion navigation docs}
+ * @see {@link https://reactrouter.com/en/main/routers/create-browser-router | react-router docs}
+ *
+ * @example
+ * ```tsx
+ * import { useRouter } from '@equinor/fusion-framework-react-app/navigation';
+ * import { RouterProvider } from 'react-router-dom';
+ *
+ * const routes = [{ path: '/', element: <Home /> }];
+ * const App = () => {
+ *   const router = useRouter(routes);
+ *   return <RouterProvider router={router} />;
+ * };
+ * ```
  */
 export const useRouter = (
   routes: Parameters<INavigationProvider['createRouter']>[0],

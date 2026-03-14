@@ -52,8 +52,14 @@ import {
  *   $ ffc ai mcp --verbose
  *   $ ffc ai mcp --azure-search-endpoint https://my-search.search.windows.net
  */
+/**
+ * Combined option set for the `ai mcp` command.
+ *
+ * Merges the base AI options (Azure OpenAI + Azure Search credentials)
+ * with MCP-specific flags such as `verbose`.
+ */
 type CommandOptions = AiOptions & {
-  /** Enable verbose output for debugging */
+  /** When `true`, diagnostic messages are written to stderr during startup and shutdown. */
   verbose?: boolean;
 };
 
@@ -119,8 +125,13 @@ const _command = createCommand('mcp')
     });
   });
 
-// Export the command with AI options
-// Note: Search tools require embedding deployment, so we include it
+/**
+ * Fully-configured Commander {@link Command} for `ai mcp`.
+ *
+ * Includes all Azure OpenAI embedding and Azure Search options required by
+ * the search tools. Chat options are excluded because the MCP server does
+ * not perform chat completions.
+ */
 export const command = withAiOptions(_command, {
   includeChat: false,
   includeEmbedding: true,

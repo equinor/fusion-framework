@@ -3,14 +3,31 @@ import type { FrameworkEvent, FrameworkEventInit } from './event';
 import type { IEventModuleConfigurator } from './configurator';
 import { EventModuleProvider, type IEventModuleProvider } from './provider';
 
+/** Module key used to identify the event module in the Fusion module system. */
 export const moduleKey = 'event';
 
+/** Type alias for the event module definition. */
 export type EventModule = Module<typeof moduleKey, IEventModuleProvider, IEventModuleConfigurator>;
 
+/**
+ * Event type dispatched when all framework modules have finished loading.
+ *
+ * The `detail` payload contains the full `ModuleInstance` map and the
+ * `source` is the {@link EventModuleProvider} that dispatched the event.
+ */
 export type FrameworkEventModuleLoadedEvent = FrameworkEvent<
   FrameworkEventInit<ModuleInstance, EventModuleProvider>
 >;
 
+/**
+ * Event module definition for the Fusion Framework.
+ *
+ * Handles configuration, initialization, post-initialization event dispatch
+ * (`onModulesLoaded`), and disposal of the {@link EventModuleProvider}.
+ *
+ * When a parent module instance with an event provider is available, events
+ * automatically bubble to it.
+ */
 export const module: EventModule = {
   name: moduleKey,
   configure: (ref?: Partial<ModulesInstanceType<[EventModule]>>) => {

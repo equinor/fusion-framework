@@ -2,8 +2,14 @@ import fs from 'node:fs';
 import path from 'node:path';
 import type { Plugin, UserConfig } from 'vite';
 
+/**
+ * Configuration options for the {@link reactRouterPlugin | Fusion React Router Vite plugin}.
+ */
 export interface ReactRouterPluginOptions {
-  /** Whether to enable debug logging. Defaults to false */
+  /**
+   * Enable verbose debug logging during transformation.
+   * @defaultValue false
+   */
   debug?: boolean;
 }
 
@@ -494,6 +500,29 @@ function insertImports(code: string, importStatements: string[]): string {
 // Plugin Implementation
 // ============================================================================
 
+/**
+ * Vite plugin that transforms the Fusion React Router DSL into standard React Router data routes.
+ *
+ * The plugin scans source files for imports of `layout`, `index`, `route`, and `prefix`
+ * from `@equinor/fusion-framework-react-router/routes`, inspects the referenced page modules
+ * to discover available exports (`default`, `clientLoader`, `action`, `handle`, `ErrorElement`),
+ * and rewrites the DSL calls into plain `RouteObject` definitions at build time.
+ *
+ * @param options - Optional configuration for the plugin.
+ * @returns A Vite plugin instance.
+ *
+ * @example
+ * ```ts
+ * // vite.config.ts
+ * import { defineConfig } from 'vite';
+ * import react from '@vitejs/plugin-react';
+ * import { reactRouterPlugin } from '@equinor/fusion-framework-react-router/vite-plugin';
+ *
+ * export default defineConfig({
+ *   plugins: [react(), reactRouterPlugin({ debug: true })],
+ * });
+ * ```
+ */
 export const reactRouterPlugin = (options: ReactRouterPluginOptions = {}): Plugin => {
   const { debug = false } = options;
   let projectRoot: string;

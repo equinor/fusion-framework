@@ -1,8 +1,13 @@
 import { z } from 'zod';
 import type { ContextItem } from '@equinor/fusion-framework-module-context';
 
-// Schema representing an object with data points of a Fusion context.
-// Used to parse an object with context data.
+/**
+ * Zod schema for a Fusion context metadata object.
+ *
+ * @remarks
+ * Validates core context fields (id, type) and optional title, externalId,
+ * and source. Used by {@link ContextSelectedCollector} and {@link AppLoadedCollector}.
+ */
 export const contextSchema = z
   .object({
     id: z.string(),
@@ -14,8 +19,15 @@ export const contextSchema = z
   .optional()
   .nullable();
 
+/** Inferred type from {@link contextSchema}. */
 export type ContextItemType = z.infer<typeof contextSchema>;
 
+/**
+ * Extracts context metadata from a `ContextItem` for analytics events.
+ *
+ * @param context - The Fusion context item.
+ * @returns An object with id, type, and optional title, externalId, and source.
+ */
 export const extractContextMetadata = (context: ContextItem): z.input<typeof contextSchema> => {
   return {
     id: context.id,

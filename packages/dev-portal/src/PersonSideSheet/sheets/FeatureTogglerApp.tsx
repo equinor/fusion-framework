@@ -5,7 +5,10 @@ import { Typography, Switch } from '@equinor/eds-core-react';
 import { Styled } from './Styled';
 
 /**
- * JSX structure for Feature toggler tab for app features in the PersonSidesheet's Feature page.
+ * Feature toggle list for application-level feature flags.
+ *
+ * Reads feature flags from the current app's feature-flag module and renders
+ * each flag as a labeled switch. Clicking a row toggles the flag.
  */
 export const FeatureTogglerApp = () => {
   const { features, toggleFeature } = useCurrentAppFeatures();

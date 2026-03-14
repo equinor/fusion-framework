@@ -14,6 +14,17 @@ import type { Actions } from './actions';
 import type { AppBundleState, AppBundleStateInitial } from './types';
 import type { AppModuleProvider } from '../AppModuleProvider';
 
+/**
+ * Creates and configures the reactive state machine ({@link FlowSubject}) for
+ * an {@link App} instance.
+ *
+ * Registers flows for fetching manifests, configs, settings, and importing
+ * the application script module.
+ *
+ * @param value - Initial state values (appKey, tag, and any pre-loaded data).
+ * @param provider - The {@link AppModuleProvider} used by flows to fetch data.
+ * @returns A configured `FlowSubject` ready for use by the App class.
+ */
 export const createState = (
   value: AppBundleStateInitial,
   provider: AppModuleProvider,

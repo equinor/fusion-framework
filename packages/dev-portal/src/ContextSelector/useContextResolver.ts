@@ -24,10 +24,22 @@ import type { AppModulesInstance } from '@equinor/fusion-framework-app';
 import type { QueryClientError } from '@equinor/fusion-query/client';
 import type { FusionContextSearchError } from '@equinor/fusion-framework-module-context/errors.js';
 
+/**
+ * Capitalizes the first letter of a string and lowercases the rest.
+ *
+ * @param string - The input string to capitalize.
+ * @returns The capitalized string.
+ */
 function capitalizeFirstLetter(string: string): string {
   return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
 }
 
+/**
+ * Converts a {@link ContextItem} graphic field to the shape expected by `ContextResultItem`.
+ *
+ * @param graphic - The graphic value from a context item (string, SVG object, or undefined).
+ * @returns An object with `graphic` and `graphicType` properties, or an empty object.
+ */
 function convertGraphic(
   graphic: ContextItem['graphic'],
 ): Pick<ContextResultItem, 'graphic' | 'graphicType'> {
@@ -57,6 +69,12 @@ function convertGraphic(
   };
 }
 
+/**
+ * Converts a {@link ContextItem} meta field to the shape expected by `ContextResultItem`.
+ *
+ * @param meta - The meta value from a context item (string, SVG object, or undefined).
+ * @returns An object with `meta` and `metaType` properties, or an empty object.
+ */
 function convertMeta(meta: ContextItem['meta']): Pick<ContextResultItem, 'metaType' | 'meta'> {
   if (meta === undefined) {
     return {};
@@ -85,10 +103,13 @@ function convertMeta(meta: ContextItem['meta']): Pick<ContextResultItem, 'metaTy
 }
 
 /**
- * Map context query result to ContextSelectorResult.
- * Add any icons to selected types by using the 'graphic' property
- * @param src context query result
- * @returns src mapped to ContextResult type
+ * Maps an array of context items to `ContextResult` for the context selector dropdown.
+ *
+ * Applies custom rendering for `EquinorTask` (shows inactive state chip) and
+ * `OrgChart` (shows list icon and inactive state chip) context types.
+ *
+ * @param src - Array of context items from the context query.
+ * @returns Mapped array of `ContextResultItem` objects for the selector UI.
  */
 const mapper = (src: ContextItem<{ taskState?: string; state?: string }>[]): ContextResult => {
   return src.map((i) => {
@@ -127,19 +148,28 @@ const mapper = (src: ContextItem<{ taskState?: string; state?: string }>[]): Con
 };
 
 /**
- * Create a single ContextResultItem
- * @param props pops for the item to merge with defaults
- * @returns ContextResultItem
+ * Creates a single `ContextResultItem` with sensible defaults.
+ *
+ * Used to generate placeholder or error entries in the context selector dropdown.
+ *
+ * @param props - Partial properties to merge into the default item shape.
+ * @returns A complete `ContextResultItem` with defaults for `id` and `title`.
  */
 const singleItem = (props: Partial<ContextResultItem>): ContextResultItem => {
   return Object.assign({ id: 'no-such-item', title: 'Change me' }, props);
 };
 
 /**
- * Hook for querying context and setting resolver for ContextSelector component
- * See React Components storybook for info about ContextSelector component and its resolver
- * @link https://equinor.github.io/fusion-react-components/?path=/docs/data-contextselector--component
- * @return Array<ContextResolver, SetContextCallback>
+ * Hook that creates a context resolver, tracks the current context provider,
+ * and provides the currently selected context for the {@link ContextSelector}.
+ *
+ * Observes the current application's module instances. When the app exposes a
+ * context module, the hook wires up a search resolver that queries context items
+ * and maps results to `ContextResultItem`. It also handles error display and
+ * minimum query length enforcement.
+ *
+ * @see {@link https://equinor.github.io/fusion-react-components/?path=/docs/data-contextselector--component | ContextSelector Storybook}
+ * @returns An object containing the `resolver` for the selector, the current `provider`, and `currentContext` items.
  */
 export const useContextResolver = (): {
   resolver: ContextResolver | null;

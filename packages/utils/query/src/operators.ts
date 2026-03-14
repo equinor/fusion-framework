@@ -52,11 +52,26 @@ export const switchQueue: QueryQueueFn =
     source$.pipe(switchMap(...args));
 
 /**
- * Transforms an Observable stream of `QueryTaskValue<TType>` into an Observable stream of `TType`.
- * It extracts the `value` property from each `QueryTaskValue<TType>` in the stream.
+ * Transforms a query result Observable into a plain value Observable by extracting the `value` property.
  *
- * @param source$ - An Observable stream of `QueryTaskValue<TType>`.
- * @returns An Observable stream of `TType` where each emitted item is the `value` property from the input stream.
+ * Use this operator to strip query metadata (status, transaction, timestamps) from
+ * the result stream when only the raw data is needed.
+ *
+ * @template TType - The type of the data value extracted from the query result.
+ * @template TArgs - The type of the query arguments.
+ *
+ * @param source$ - An Observable stream of query task results (cached or completed).
+ * @returns An Observable stream of `TType` where each emission is the extracted value.
+ *
+ * @example
+ * ```typescript
+ * import { Query, operators } from '@equinor/fusion-query';
+ *
+ * const query = new Query({ client: { fn: fetchUser }, key: (args) => args.id });
+ * query.query({ id: '123' }).pipe(operators.queryValue).subscribe(user => {
+ *   console.log(user.name);
+ * });
+ * ```
  */
 export const queryValue = <TType, TArgs>(
   source$: ReturnType<Query<TType, TArgs>['query']>,

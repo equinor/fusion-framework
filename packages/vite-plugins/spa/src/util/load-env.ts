@@ -2,16 +2,22 @@ import { type ConfigEnv, loadEnv, type UserConfig } from 'vite';
 import { resolve } from 'node:path';
 
 /**
- * Loads environment variables for a Vite project based on the provided configuration and environment.
+ * Loads environment variables from `.env` files for the Fusion SPA plugin.
  *
- * @see {@link http://vite.dev/guide/env-and-mode.html#env-files}
+ * @remarks
+ * Delegates to Vite's {@link https://vite.dev/guide/env-and-mode.html#env-files | loadEnv}
+ * using the resolved project root and env directory. Only variables whose
+ * name starts with {@link namespace} are returned.
  *
- * @param config - The user configuration object, which includes properties such as `root` and `envDir`.
- *   - `root`: The root directory of the project. Defaults to the current working directory if not specified.
- *   - `envDir`: The directory containing environment files. If not specified, defaults to the root directory.
- * @param env - The environment configuration object.
- *   - `mode`: The mode in which the application is running (e.g., 'development', 'production').
- * @returns A record of environment variables prefixed with `FUSION_SPA_`.
+ * Values loaded here override any matching keys produced by
+ * {@link PluginOptions.generateTemplateEnv}.
+ *
+ * @param config - Vite user configuration (`root`, `envDir`).
+ * @param env - Vite configuration environment containing the current `mode`.
+ * @param namespace - Variable name prefix to filter on.
+ * @returns A flat record of matching environment variable names to their string values.
+ *
+ * @defaultValue namespace — `'FUSION_SPA_'`
  */
 export function loadEnvironment(
   config: UserConfig,

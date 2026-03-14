@@ -267,8 +267,12 @@ const getQueueOperator = <TDataType, TQueryArguments>(
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export class Query<TDataType, TQueryArguments = any> {
   /**
-   * A static method that extracts the value from a query task.
-   * It is a utility function that can be used externally to access the result of a task.
+   * Static utility that extracts the raw value from a query result Observable.
+   *
+   * Transforms a stream of `QueryTaskValue<TType>` into a plain `Observable<TType>`,
+   * stripping away query metadata such as status, transaction, and timestamps.
+   *
+   * @see {@link queryValue} for the standalone operator function.
    */
   static extractQueryValue = queryValue;
 
@@ -596,6 +600,21 @@ export class Query<TDataType, TQueryArguments = any> {
     });
   }
 
+  /**
+   * Executes a query that remains subscribed to cache mutations after the initial fetch completes.
+   *
+   * Unlike {@link Query.query}, which completes after emitting the result, `persistentQuery`
+   * continues to emit whenever the underlying cache entry is updated or mutated.
+   * This is useful for scenarios where the UI must reflect optimistic updates,
+   * background refetches, or external cache mutations in real time.
+   *
+   * The returned Observable deduplicates emissions based on the transaction identifier
+   * and mutation timestamp, so subscribers only receive meaningful state changes.
+   *
+   * @param args - The arguments to pass to the query function.
+   * @param options - Optional query options including signal, retry, and cache validation overrides.
+   * @returns An Observable that emits cached and completed results, and continues emitting on cache mutations.
+   */
   public persistentQuery(
     args: TQueryArguments,
     options?: QueryOptions<TDataType, TQueryArguments>,

@@ -1,7 +1,12 @@
 import z from 'zod';
 
 /**
- * Represents a service from the service discovery API.
+ * Zod schema for a single service object returned by the service
+ * discovery API.
+ *
+ * Validates required fields (`key`, `uri`) and optional metadata, then
+ * transforms the result to include a backward-compatible `defaultScopes`
+ * accessor.
  */
 const ApiService = z
   .object({
@@ -23,14 +28,11 @@ const ApiService = z
   }));
 
 /**
- * Represents a list of services from the service discovery API.
+ * Zod schema for the service list returned by the service discovery API.
  *
- * This constant is an array of `ApiService` objects, which are defined
- * elsewhere in the codebase. It uses the `z.array` method from the Zod
- * library to enforce that the array contains only `ApiService` objects.
- *
- * @constant
- * @description A list of services from the service discovery API.
+ * Parses and validates an array of service objects, each conforming to the
+ * `ApiService` schema above. Used internally by
+ * {@link ServiceDiscoveryClient} to validate API responses.
  */
 export const ApiServices = z
   .array(ApiService)

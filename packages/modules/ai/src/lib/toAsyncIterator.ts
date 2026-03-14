@@ -1,6 +1,15 @@
 import type { Observable } from 'rxjs';
 
-// Function to convert Observable to AsyncIterable
+/**
+ * Convert an RxJS `Observable` into an `AsyncIterable`.
+ *
+ * This bridge allows Observable-based service streams to be consumed with
+ * `for await...of` loops or as LangChain `AsyncGenerator` iterators.
+ *
+ * @template T - The element type emitted by the observable.
+ * @param observable - The source observable to adapt.
+ * @returns An `AsyncIterable` that yields each value emitted by the observable.
+ */
 export function toAsyncIterable<T>(observable: Observable<T>): AsyncIterable<T> {
   return {
     [Symbol.asyncIterator]() {

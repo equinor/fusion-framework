@@ -12,18 +12,21 @@ import { from, type ObservableInput } from 'rxjs';
 import { map, scan, filter, defaultIfEmpty, shareReplay, mergeMap } from 'rxjs/operators';
 
 /**
- * Configures analytics settings for the module.
- *
- * The `AnalyticsConfigurator` class extends `BaseConfigBuilder` to provide a fluent API for
- * setting up analytics adapters and collectors.
+ * Default {@link IAnalyticsConfigurator} implementation for registering analytics adapters and collectors.
  *
  * @remarks
- * - Adapters are managed internally and can be set using `setAdapter`.
- * - Collectors are managed internally and can be set using `setCollector`.
- * - All setter methods return `this` for method chaining.
+ * Extends `BaseConfigBuilder` to resolve adapter and collector factories
+ * asynchronously at module-initialisation time using RxJS `mergeMap`. Each
+ * registered factory is invoked with the module’s `ConfigBuilderCallbackArgs`
+ * so it can resolve dependencies from the framework before returning its
+ * adapter or collector instance.
  *
- * @see BaseConfigBuilder
- * @see IAnalyticsConfigurator
+ * Use {@link AnalyticsConfigurator.setAdapter | setAdapter} and
+ * {@link AnalyticsConfigurator.setCollector | setCollector} to register
+ * components. Both methods return `this` for fluent chaining.
+ *
+ * @see {@link IAnalyticsConfigurator}
+ * @see {@link BaseConfigBuilder}
  */
 export class AnalyticsConfigurator
   extends BaseConfigBuilder<AnalyticsConfig>
@@ -85,11 +88,12 @@ export class AnalyticsConfigurator
   }
 
   /**
-   * Registers a analytics collector with the configurator.
+   * Registers an analytics collector factory.
    *
-   * @param identifier - The name of the collector
-   * @param callback - A callback function that returns an analytics collector instance
-   * @returns The current instance for method chaining
+   * @template T - The concrete analytics event type the collector emits.
+   * @param identifier - Unique key for the collector.
+   * @param callback - Factory that receives module-resolution args and returns a collector.
+   * @returns `this` for method chaining.
    */
   setCollector<T extends AnalyticsEvent>(
     identifier: string,
@@ -100,11 +104,12 @@ export class AnalyticsConfigurator
   }
 
   /**
-   * Registers a analytics adapter with the configurator.
+   * Registers an analytics adapter factory.
    *
-   * @param identifier - The name of the adapter
-   * @param callback - A callback function that returns an analytics adapter instance
-   * @returns The current instance for method chaining
+   * @template T - The concrete analytics event type the adapter handles.
+   * @param identifier - Unique key for the adapter.
+   * @param callback - Factory that receives module-resolution args and returns an adapter.
+   * @returns `this` for method chaining.
    */
   setAdapter<T extends AnalyticsEvent>(
     identifier: string,

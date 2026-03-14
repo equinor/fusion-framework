@@ -4,40 +4,47 @@ import Logger from './Logger.js';
 import { LogLevel } from './static.js';
 
 /**
- * Provides a console-based logger implementation that supports different log levels.
+ * Console-based logger that writes colour-coded, titled messages via the
+ * native `console` API.
  *
- * The `ConsoleLogger` class implements the `ILogger` interface and allows for logging messages
- * to the console with different log levels (debug, info, warn, error). The logger can be
- * configured with a title and an optional subtitle to provide context for the log messages.
+ * `ConsoleLogger` is the default {@link ILogger} implementation shipped with
+ * `@equinor/fusion-log`. Use it whenever you need structured console output
+ * with a title prefix, optional subtitle, and severity-based formatting.
  *
- * The logger also supports creating sub-loggers with a new title and optional subtitle, which
- * inherit the logging level from the parent logger.
+ * Each instance subscribes to the filtered {@link Logger.log} observable at
+ * construction time, routing entries to `console.debug`, `console.info`,
+ * `console.warn`, or `console.error` according to severity.
  *
- * Example usage:
+ * Create hierarchical loggers with {@link ConsoleLogger.createSubLogger} to
+ * trace output back to specific components.
+ *
+ * @example
  * ```typescript
- * const logger = new ConsoleLogger('MainLogger');
- * logger.info('This is an info message');
- * logger.warn('This is a warning message');
- * logger.error('This is an error message');
+ * import { ConsoleLogger, LogLevel } from '@equinor/fusion-log';
  *
- * // supports multiple messages
- * logger.debug('This is a debug message', 'This is an additional message');
+ * const logger = new ConsoleLogger('App');
+ * logger.level = LogLevel.Debug;
+ * logger.info('Application started');
  *
- * const subLogger = logger.createSubLogger('SubLogger');
- * subLogger.debug('This is a debug message from the sub-logger');
+ * const sub = logger.createSubLogger('Router');
+ * sub.debug('Navigated to /dashboard');
  * ```
  */
 export class ConsoleLogger extends Logger {
   /**
-   * Constructs a new ConsoleLogger instance.
-   * @param title The main title of the logger, used to identify the source of the log messages.
-   * @param subtitle An optional subtitle for additional context, such as a specific component or functionality within the source.
+   * Create a new `ConsoleLogger`.
+   *
+   * @param title - Primary label prepended to every log line (e.g. module or
+   *   application name).
+   * @param subtitle - Optional secondary label for narrower context (e.g.
+   *   component or feature name).
    */
   constructor(
     protected readonly title: string,
     protected readonly subtitle?: string,
   ) {
     super();
+    // Route filtered log entries to the matching console method
     this.log.subscribe(({ lvl, msg }) => {
       switch (lvl) {
         case LogLevel.Debug:
@@ -57,14 +64,25 @@ export class ConsoleLogger extends Logger {
   }
 
   /**
-   * Generates the formatted message to log, including the title, subtitle (if any), and the messages provided.
-   * @param msg The messages or objects to include in the log.
-   * @returns An array of unknown, representing the formatted log message.
+   * Format raw log arguments by prepending a coloured title/subtitle prefix.
+   *
+   * @param lvl - Severity used to apply bold formatting for warnings/errors.
+   * @param msg - Caller-supplied values.
+   * @returns Formatted message array ready for `console.*`.
    */
   protected _createMessage(lvl: LogLevel, ...msg: unknown[]): unknown[] {
     return [this._formatTitle(lvl), ...msg];
   }
 
+  /**
+   * Build the chalk-coloured title prefix for a log entry.
+   *
+   * Warnings and errors are rendered in **bold** magenta; other levels use
+   * regular-weight magenta.
+   *
+   * @param _lvl - Severity level of the log entry.
+   * @returns A chalk-formatted title string.
+   */
   protected _formatTitle(_lvl: LogLevel): string {
     const title = chalk.magenta([this.title, this.subtitle].filter((x) => !!x).join(' - '));
     switch (_lvl) {
@@ -76,12 +94,16 @@ export class ConsoleLogger extends Logger {
   }
 
   /**
-   * Creates a new `ConsoleLogger` instance with a specific title and subtitle, and an optional log level.
+   * Create a child `ConsoleLogger` whose title is prefixed with the parent's title.
    *
-   * @param title - The title of the new logger, which will be prefixed to the log messages.
-   * @param subtitle - The subtitle of the new logger, which will be appended to the log messages.
-   * @param logLevel - The log level for the new logger. If not provided, the log level of the parent logger will be used.
-   * @returns A new ConsoleLogger instance as an ILogger.
+   * The sub-logger inherits the parent's log level unless an explicit
+   * `logLevel` is provided.
+   *
+   * @param title - Label for the child logger (appended as `ParentTitle::title`).
+   * @param subtitle - Optional subtitle; falls back to the parent's subtitle.
+   * @param logLevel - Explicit log level override. When omitted the parent's
+   *   current level is inherited.
+   * @returns A new {@link ConsoleLogger} cast to {@link ILogger}.
    */
   public createSubLogger(title: string, subtitle?: string, logLevel?: LogLevel): ILogger {
     const logger = new ConsoleLogger(`${this.title}::${title}`, subtitle ?? this.subtitle);

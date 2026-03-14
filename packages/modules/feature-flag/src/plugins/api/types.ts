@@ -4,13 +4,15 @@ import type { IFeatureFlag } from '../../FeatureFlag';
 export type { FeatureFlagPlugin as ApiFeatureFlagPlugin } from '../../types';
 
 /**
- * Interface for an Api Plugin client.
+ * HTTP client interface consumed by {@link ApiPlugin} to fetch feature flags
+ * from a remote API.
  */
 export interface IApiPluginClient {
-  /** Method for fetching Feature flags */
+  /** Fetches the current set of feature flags from the API. */
   getFeatureFlags(): ObservableInput<IFeatureFlag[]>;
-  // @TODO: Not implemented for v1
-  // storeFeatureFlags(flags: Array<IFeatureFlag>): void;
 }
 
+/**
+ * Function that maps an HTTP `Response` to an array of {@link IFeatureFlag}.
+ */
 export type ApiResponseSelector = (response: Response) => ObservableInput<IFeatureFlag[]>;

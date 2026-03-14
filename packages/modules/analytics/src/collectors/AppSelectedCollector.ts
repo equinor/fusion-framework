@@ -11,14 +11,23 @@ import type { AppModuleProvider } from '@equinor/fusion-framework-module-app';
 
 import { z } from 'zod';
 
-/**
- * The schema of the data to be sent.
- */
+/** Zod schema for the `app-selected` event (value + attributes). */
 const eventSchema = createSchema(appKeySchema, z.object({ previous: appKeySchema }));
 
 /**
- * Collector to listen for app selection and add values and attributes for
- * further processing by adapters.
+ * Collector that emits an analytics event whenever the active Fusion application changes.
+ *
+ * @remarks
+ * Listens to `AppModuleProvider.current$`, pairs consecutive values, and emits
+ * both the new and previous app key metadata.
+ *
+ * Register via:
+ * ```ts
+ * builder.setCollector('app-selected', async (args) => {
+ *   const app = await args.requireInstance('app');
+ *   return new AppSelectedCollector(app);
+ * });
+ * ```
  */
 export class AppSelectedCollector
   extends BaseCollector<AppKeyType, { previous?: AppKeyType }>
@@ -26,6 +35,9 @@ export class AppSelectedCollector
 {
   #appProvider: AppModuleProvider;
 
+  /**
+   * @param appProvider - Fusion app module provider to observe.
+   */
   constructor(appProvider: AppModuleProvider) {
     super('app-selected', eventSchema);
     this.#appProvider = appProvider;

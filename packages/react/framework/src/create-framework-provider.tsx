@@ -8,20 +8,41 @@ import type { AnyModule, ModulesInstanceType } from '@equinor/fusion-framework-m
 import { ModuleProvider } from '@equinor/fusion-framework-react-module';
 
 /**
- * Create a framework provider for react.
+ * Creates a lazy-loaded React component that initialises a Fusion Framework
+ * instance and exposes it via context providers.
  *
- * This function is for providers of framework, like a portal.
+ * @remarks
+ * This is the low-level factory used by the {@link Framework} component.
+ * Call it when you need fine-grained control over memoisation or when you
+ * want to embed the provider in a custom `<Suspense>` boundary.
  *
- * @param configurator - callback for configuring modules
+ * The returned component is created with `React.lazy`, so it **must** be
+ * rendered inside a `<Suspense>` boundary.
+ *
+ * @template TModules - Tuple of additional module types to register.
+ * @template TRef - Type of the optional parent module-instance reference.
+ *
+ * @param cb - Callback that receives a {@link FrameworkConfigurator} (and an
+ *   optional parent ref) for registering modules and configuration.
+ * @param ref - Optional parent module instance to inherit configuration from.
+ * @returns A `React.lazy` component that provides the initialised framework
+ *   to its children.
+ *
  * @example
  * ```tsx
- * const config: FrameworkConfigurator = (config) => {}
+ * import { createFrameworkProvider } from '@equinor/fusion-framework-react';
+ *
  * const Portal = () => {
- *   const Framework = createFrameworkProvider(config);
+ *   const FrameworkProvider = createFrameworkProvider((config) => {
+ *     config.http.configureClient('my-api', { baseUri: 'https://api.example.com' });
+ *   });
+ *
  *   return (
- *      <Suspense fallback={<span>loading...</span>}>
- *          <Framework>{children}</Framework>
- *      </Suspense>
+ *     <Suspense fallback={<span>Loading…</span>}>
+ *       <FrameworkProvider>
+ *         <App />
+ *       </FrameworkProvider>
+ *     </Suspense>
  *   );
  * };
  * ```

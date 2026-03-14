@@ -2,7 +2,7 @@ import { map, mergeMap, toArray, filter } from 'rxjs';
 import type { Observable } from 'rxjs';
 import type { FrameworkInstance } from '@equinor/fusion-framework-cli-plugin-ai-base';
 import type { ProcessedFile, DeleteRemovedFilesResult } from './types.js';
-import type { CommandOptions } from '../command.options.js';
+import type { CommandOptions } from '../embeddings-command.options.js';
 
 /**
  * Creates a stream that deletes removed files from the vector store.

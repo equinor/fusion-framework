@@ -4,6 +4,17 @@ import { parse } from 'dotenv';
 import { type DotenvPopulateInput, expand } from 'dotenv-expand';
 import { DEFAULT_ENV_PREFIX } from './static';
 
+/**
+ * Resolve the ordered list of `.env` file paths for a given directory and mode.
+ *
+ * The returned order determines override priority — later files override earlier
+ * ones when the same key exists. For mode `"dev"` the order is:
+ * `.env`, `.env.local`, `.env.dev`, `.env.dev.local`.
+ *
+ * @param envDir - Absolute or relative path to the directory containing `.env` files.
+ * @param mode - Optional environment mode name (e.g. `"dev"`, `"production"`).
+ * @returns An array of normalized absolute file paths in load order.
+ */
 export function getEnvFilesForMode(envDir: string, mode?: string): string[] {
   const envFileNames = ['.env', '.env.local'];
   if (mode) {
@@ -13,18 +24,40 @@ export function getEnvFilesForMode(envDir: string, mode?: string): string[] {
 }
 
 /**
- * Loads environment variables from `.env` files and the current process environment,
- * applying specified prefixes to filter and expose variables.
+ * Load environment variables from `.env` files and merge them with `process.env`.
  *
- * @param options - An object containing the following properties:
- * @param options.mode - The mode name used to determine which `.env` files to load.
- *                       The value `"local"` is not allowed as it conflicts with `.local` postfix for `.env` files.
- * @param options.envDir - The directory containing `.env` files. If `false`, no `.env` files will be loaded.
- * @param options.prefixes - A string or array of strings representing the prefixes used to filter environment variables.
- *                             Defaults to `DEFAULT_ENV_PREFIX`.
- * @returns A record of environment variables that match the specified prefixes.
+ * Use this function at application startup to populate configuration from
+ * `.env` files with support for per-mode overrides (e.g. `.env.dev`,
+ * `.env.production.local`). Only variables whose key starts with one of the
+ * specified prefixes are returned, keeping the result scoped and safe.
  *
- * @throws {Error} If the `mode` is `"local"`.
+ * Inline `process.env` values take priority over file-based values so that
+ * CI/CD pipelines or Docker `--env` flags always win.
+ *
+ * Variable interpolation (e.g. `$OTHER_VAR`) is supported via `dotenv-expand`.
+ *
+ * @param options - Configuration for the load operation.
+ * @param options.envDir - Directory containing `.env` files. Defaults to `process.cwd()`. Pass `false` to skip file loading entirely.
+ * @param options.mode - Environment mode name (e.g. `"dev"`, `"production"`). Determines which
+ *   mode-specific `.env` files are loaded. `"local"` is reserved and will throw.
+ * @param options.prefixes - One or more key prefixes used to filter variables.
+ *   Defaults to {@link DEFAULT_ENV_PREFIX} (`"FUSION"`).
+ * @returns A flat `Record<string, string>` of matching environment variables.
+ *
+ * @throws {Error} If `mode` is `"local"` — this value conflicts with the `.local` file suffix convention.
+ *
+ * @example
+ * ```ts
+ * import { loadEnv } from '@equinor/fusion-load-env';
+ *
+ * // Load all FUSION_* variables for the "dev" mode
+ * const env = loadEnv({ mode: 'dev' });
+ * console.log(env);
+ * // { FUSION_API_URL: '...', FUSION_CLIENT_ID: '...' }
+ *
+ * // Use a custom prefix and explicit directory
+ * const custom = loadEnv({ mode: 'production', prefixes: 'MY_APP', envDir: './config' });
+ * ```
  */
 export const loadEnv = (options: {
   envDir?: string;

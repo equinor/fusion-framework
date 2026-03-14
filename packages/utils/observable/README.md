@@ -1,179 +1,172 @@
-# Observable
+# @equinor/fusion-observable
 
-## `isObservableInput`
+Reactive state management utilities built on RxJS and Immer for Fusion Framework applications. Provides an action-driven, observable state container (`FlowSubject`), action creators, reducer builders, RxJS operators, and React hooks for subscribing to observable state.
 
-A utility to check if a value is an observable-like input (Observable, Promise, or Iterable). Useful for writing flexible APIs or utilities that can accept a wide range of input types.
+## Features
 
-**Example:**
+- **FlowSubject** — an observable state container that processes actions through a reducer, similar to Redux but fully reactive with RxJS.
+- **createReducer** — builds immutable reducers with Immer-powered draft mutations and a builder-pattern API (`addCase`, `addMatcher`, `addDefaultCase`).
+- **createAction / createAsyncAction** — type-safe action creator factories with optional payload preparation, including async request/success/failure patterns.
+- **createState** — convenience factory that wires a `FlowSubject`, action definitions, and dispatch functions in one call.
+- **RxJS operators** — `filterAction`, `mapAction`, `switchMapAction`, `mapProp` for concise action-stream transformations.
+- **React hooks** — `useObservable`, `useObservableState`, `useObservableSelector`, `useObservableEffect`, `useObservableFlow`, `useDebounce`, and more.
+- **Utility functions** — `isObservableInput` and `toObservable` for normalising diverse input types into RxJS observables.
 
-```ts
-import { isObservableInput } from '@equinor/fusion-observable';
-import { of } from 'rxjs';
+## Installation
 
-isObservableInput(Promise.resolve(1)); // true
-isObservableInput([1, 2, 3]); // true
-isObservableInput(of(42)); // true
-isObservableInput({}); // false
+```sh
+pnpm add @equinor/fusion-observable
 ```
 
-## `toObservable`
+## Usage
+
+### Creating a state container
+
+```ts
+import { createAction, createReducer, FlowSubject } from '@equinor/fusion-observable';
+
+// Define actions
+const increment = createAction<number>('increment');
+const decrement = createAction<number>('decrement');
+
+// Build a reducer with Immer support
+const reducer = createReducer({ count: 0 }, (builder) =>
+  builder
+    .addCase(increment, (state, action) => { state.count += action.payload; })
+    .addCase(decrement, (state, action) => { state.count -= action.payload; }),
+);
+
+// Create the observable state container
+const counter = new FlowSubject(reducer);
+counter.subscribe((state) => console.log('Count:', state.count));
+counter.next(increment(1)); // Count: 1
+counter.next(increment(5)); // Count: 6
+```
+
+### Using `createState` for quick setup
+
+```ts
+import { createState, createAction } from '@equinor/fusion-observable';
+
+const actions = {
+  setName: createAction<string>('setName'),
+};
+
+const { subject, dispatch } = createState(actions, {
+  initial: { name: '' },
+  builder: (builder, actions) => {
+    builder.addCase(actions.setName, (state, action) => {
+      state.name = action.payload;
+    });
+  },
+});
+
+dispatch.setName('Alice');
+console.log(subject.value); // { name: 'Alice' }
+```
+
+### Async actions
+
+```ts
+import { createAsyncAction, isSuccessAction, isFailureAction } from '@equinor/fusion-observable';
+
+const fetchUser = createAsyncAction(
+  'fetchUser',
+  (id: string) => ({ payload: { id } }),
+  (user: User) => ({ payload: user }),
+  (error: Error) => ({ payload: error }),
+);
+
+// fetchUser('123')           → { type: 'fetchUser::request', payload: { id: '123' } }
+// fetchUser.success(user)    → { type: 'fetchUser::success', payload: user }
+// fetchUser.failure(error)   → { type: 'fetchUser::failure', payload: error }
+```
+
+### Normalising inputs with `toObservable`
 
 ```ts
 import { toObservable } from '@equinor/fusion-observable';
-A utility to convert various input types (value, function, promise, observable, iterable) into a consistent Observable stream. This allows you to handle inputs uniformly without worrying about their original type.
-**Example:**
 
-```ts
-import { lastValueFrom, Observable } from 'rxjs';
-import { toObservable, type DynamicInputValue } from '@equinor/fusion-observable';
-
-const flexibleHandler = async (input: DynamicInputValue<{foo: string}>) => {
-  return lastValueFrom(toObservable(input));
-};
-
-// All of these work the same way:
-flexibleHandler(Promise.resolve({foo: 'bar'})).then(console.log); // {foo: 'bar'}
-flexibleHandler({foo: 'baz'}).then(console.log); // {foo: 'baz'}
-flexibleHandler(() => ({foo: 'qux'})).then(console.log); // {foo: 'qux'}
-flexibleHandler(async () => ({foo: 'async'})).then(console.log); // {foo: 'async'}
-flexibleHandler(new Observable((subscriber) => {
-  subscriber.next({foo: 'bar'}); // skipped
-  subscriber.next({foo: 'baz'});
-  subscriber.complete();
-})).then(console.log); // {foo: 'baz'}
+// Works with values, promises, functions, iterables, and observables
+toObservable(42).subscribe(console.log);                        // 42
+toObservable(Promise.resolve('hello')).subscribe(console.log);  // 'hello'
+toObservable(() => 'computed').subscribe(console.log);           // 'computed'
 ```
 
-*Works with iterables and async generators too:*
-```ts
-function* gen() {
-  yield 1;
-  yield 2;
-}
-toObservable(gen()).subscribe(console.log); // 1, 2
-
-async function* asyncGen() {
-  yield 'a';
-  yield 'b';
-}
-toObservable(asyncGen()).subscribe(console.log); // 'a', 'b'
-```
-
-
-## React
-
-### Observable
+### React hooks
 
 ```tsx
+import { useObservable, useObservableState } from '@equinor/fusion-observable/react';
 
-type TodoItem = {
-  id: string;
-  txt: string;
-}
+function Counter() {
+  const subject = useObservable(reducer, { count: 0 });
+  const { value } = useObservableState(subject);
 
-type State = Record<string, TodoItem>;
-
-enum ActionType {
-  ADD = 'add',
-  REMOVE = 'remove'
-}
-
-type ActionAdd = {
-  type: ActionType.ADD,
-  payload: Omit<TodoItem, 'id'>;
-}
-
-type ActionRemove = {
-  type: ActionType.REMOVE
-  payload: string;
-}
-
-type Actions = ActionAdd | ActionRemove
-
-const reducer = (state: State, action: Actions) => {
-  switch(action) {
-    case ActionType.ADD:
-      return {
-        ...state,
-        [generateId()]: action.payload
-      };
-
-    case ActionType.REMOVE:{
-      const next = {...state};
-      delete next[action.payload];
-      return next;
-    }
-  }
-};
-
-const TodoContext = React.createContext();
-
-export const TodoListProvider = (
-  options: React.PropsWithChildren<{ initial: State }>
-) => {
-
-  const [selected, setSelected] = useState<string|undefined>();
-  const state$ = useObservable(reducer, initial);
-
-  const add = useCallback((item: Emit<TodoItem, 'id'>) => {
-    state$.next({ type: ActionType.ADD, payload: item });
-  }, [state$]);
-
-  const remove = useCallback((id: string) => {
-    state$.next({ type: ActionType.REMOVE, payload: item });
-  }, [state$])
-  
-  return (
-    <TodoContext.Provider value={ {state$, add, remove, selected, setSelected} }>
-      { options.children }
-    </TodoContext.Provider>
-  );
-}
-
-const TodoDetail = () => {
-  const { state$, selected } = useContext(TodoContext);
-  const item = useObservableSelectorState(state$, selected)
-  return item ? (
-    <div>
-      <span>ID: {item.id}</span>
-      <span>TXT: {item.txt}</span>
-    </div>
-  ) : null;
-}
-
-const AddTodo = () => {
-  const { add } = useContext(TodoContext);
-  const txtRef = useRef(null);
-  const onSubmit = useCallback(() => {
-    add({ txt: txtRef.current.value })
-  }, [add, txtRef]);
   return (
     <div>
-      <input ref={ txtRef } />
-      <button onClick={ onSubmit } />
+      <p>Count: {value.count}</p>
+      <button onClick={() => subject.next(increment(1))}>+1</button>
     </div>
   );
-};
-
-const TodoList = () => {
-  const { state$, setSelected } = useContext(TodoContext);
-  const items = useObservableState(state$).next;
-  return (
-    <ul>
-      { Object.entries(items).map(
-        ([key,value]) => <li key={key} onClick={ () => setSelected(key) }>{value.txt}</li>
-      )}
-    </ul>
-  )
 }
-
-const App = () => {
-  return (
-    <TodoListProvider initial={ {} }>
-      <TodoDetail />
-      <TodoList />
-      <AddTodo />
-    </TodoListProvider>
-  )
-}
-
 ```
+
+### RxJS operators
+
+```ts
+import { filterAction, mapAction, switchMapAction } from '@equinor/fusion-observable/operators';
+
+// Filter to specific actions
+action$.pipe(filterAction('increment')).subscribe(handleIncrement);
+
+// Filter + map in one step
+action$.pipe(mapAction('fetchSuccess', (a) => a.payload.data)).subscribe(setData);
+
+// Filter + switchMap for async flows
+action$.pipe(switchMapAction('search', (a) => fetchResults(a.payload))).subscribe(setResults);
+```
+
+## API Reference
+
+### Core (`@equinor/fusion-observable`)
+
+| Export | Description |
+|---|---|
+| `FlowSubject<S, A>` | Observable state container driven by actions and a reducer |
+| `createReducer(initial, builder)` | Builds an Immer-powered reducer with builder pattern |
+| `createAction<P>(type)` | Creates a type-safe action creator |
+| `createAsyncAction(type, request, success, failure?)` | Creates request/success/failure action creators |
+| `createState(actions, reducer)` | Wires `FlowSubject` + actions + dispatch in one call |
+| `actionMapper(actions, subject)` | Binds action creators to a subject as dispatch functions |
+| `ActionError` | Error class linking an action to a causal error |
+| `ActionReducerMapBuilder` | Builder interface for defining case reducers |
+| `isObservableInput(input)` | Type guard for RxJS `ObservableInput` values |
+| `toObservable(input, ...args)` | Converts values/functions/promises to `Observable` |
+
+### Operators (`@equinor/fusion-observable/operators`)
+
+| Export | Description |
+|---|---|
+| `filterAction(...types)` | Filters an action stream by type(s) |
+| `mapAction(type, fn)` | Filters by type and maps the result |
+| `switchMapAction(type, fn)` | Filters by type and switchMaps to an inner observable |
+| `mapProp(path)` | Extracts a nested property via a dot-path string |
+
+### React hooks (`@equinor/fusion-observable/react`)
+
+| Export | Description |
+|---|---|
+| `useObservable(reducer, initial?)` | Creates a memoised `FlowSubject` |
+| `useObservableState(subject, options?)` | Tracks value/error/complete of an observable |
+| `useObservableSelector(subject, selector)` | Derives a child observable with `distinctUntilChanged` |
+| `useObservableEffect(subject, effect)` | Attaches a side-effect to a `FlowSubject` |
+| `useObservableFlow(subject, flow)` | Attaches an epic-style flow to a `FlowSubject` |
+| `useObservableSubscription(obs, observer)` | Manages an observable subscription lifecycle |
+| `useObservableRef(subject)` | Keeps a ref synchronised with observable emissions |
+| `useObservableInput(input)` | Converts `ObservableInput` to `Observable` |
+| `useObservableInputState(input)` | Combines `useObservableInput` + `useObservableState` |
+| `useDebounce(fn, options)` | Debounces a function and exposes results as an observable |
+
+### Actions (`@equinor/fusion-observable/actions`)
+
+Re-exports action types, `ActionError`, and action creator utilities for consumers that only need the action layer.

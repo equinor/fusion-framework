@@ -11,22 +11,39 @@ import { useObservableState } from '@equinor/fusion-observable/react';
 
 import { findFeature } from '@equinor/fusion-framework-module-feature-flag/selectors';
 
+/**
+ * Return type of the {@link useFeature} hook.
+ *
+ * @template T - Value type carried by the feature flag.
+ */
 export interface UseFeatureResult<T> {
+  /** The resolved feature flag, or `undefined` while loading. */
   feature?: IFeatureFlag<T>;
+  /** Any error emitted by the feature-flag observable. */
   error?: unknown;
   /**
-   * @param enable - Optional provide new enabled state of the feature flag. _Defaults to inversion of current feature flag state_
+   * Toggles the feature flag.
+   *
+   * @param enable - Explicit enabled state. When omitted the current state
+   *   is inverted.
    */
   toggleFeature: (enable?: boolean) => void;
 }
 
 /**
- * Custom hook that retrieves a feature flag from a feature flag provider.
+ * React hook that retrieves and manages a single feature flag.
  *
- * @template T - The type of the feature flag value.
- * @param {IFeatureFlagProvider} provider - The feature flag provider.
- * @param {string} key - The key of the feature flag.
- * @returns {UseFeatureResult<T>} - An object containing the feature flag value, a function to toggle the feature flag, and any error that occurred.
+ * @template T - Value type carried by the feature flag.
+ * @param provider - The feature-flag provider instance.
+ * @param key - Unique key identifying the feature flag.
+ * @returns A {@link UseFeatureResult} with the flag value, toggle helper,
+ *   and any error.
+ *
+ * @example
+ * ```ts
+ * const { feature, toggleFeature } = useFeature(provider, 'dark-mode');
+ * console.log(feature?.enabled);
+ * ```
  */
 export const useFeature = <T = unknown>(
   provider: IFeatureFlagProvider,

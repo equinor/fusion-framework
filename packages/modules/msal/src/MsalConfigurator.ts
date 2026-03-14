@@ -206,7 +206,12 @@ export class MsalConfigurator extends BaseConfigBuilder<MsalConfig> {
   }
 
   /**
-   * @deprecated - since version 5.1.0, use setClient instead
+   * Sets a pre-configured MSAL provider instance directly.
+   *
+   * @deprecated Since version 5.1.0. Use {@link MsalConfigurator.setClient | setClient} instead.
+   *
+   * @param provider - Pre-configured provider instance, or undefined to clear
+   * @returns The configurator instance for method chaining
    */
   setProvider(provider?: IMsalProvider): this {
     this._set('provider', async () => provider);
@@ -251,7 +256,11 @@ export class MsalConfigurator extends BaseConfigBuilder<MsalConfig> {
 
   /**
    * Sets optional metadata to be included on all MSAL telemetry events.
-   * @deprecated Use setTelemetry({ metadata }) instead
+   *
+   * @deprecated Use {@link MsalConfigurator.setTelemetry | setTelemetry} instead.
+   *
+   * @param metadata - Key-value metadata to attach to telemetry events, or undefined to clear
+   * @returns The configurator instance for method chaining
    */
   setTelemetryMetadata(metadata: Record<string, unknown> | undefined): this {
     this._set('telemetry.metadata', async () => metadata);

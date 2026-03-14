@@ -14,14 +14,12 @@ import type {
   FetchResponse,
   IHttpClient,
   JsonRequest,
-  ResponseSelector,
   StreamResponse,
 } from './types';
 
 import { HttpResponseError } from '../../errors';
 import {
   createSseSelector,
-  SseSelector,
   type ServerSentEvent,
   type SseSelectorOptions,
 } from '../selectors/sse-selector';
@@ -240,15 +238,15 @@ export class HttpClient<
    * @returns A `StreamResponse` that emits `ServerSentEvent<T>` objects as they are received from the server.
    *
    * @example
-   * const sse$ = httpClient.sse(
-   *  '/events',
-   *  { method: 'POST', body: JSON.stringify({ prompt: 'tell me a joke' }) },
-   *  { eventFilter: ['message'] }
+   * const sse$ = httpClient.sse$(
+   *   '/events',
+   *   { method: 'POST', body: JSON.stringify({ prompt: 'tell me a joke' }) },
+   *   { eventFilter: ['message'] },
    * );
    * sse$.subscribe({
-   *  next: (event) => console.log(event),
-   *  error: (err) => console.error(err),
-   *  complete: () => console.log('Completed'),
+   *   next: (event) => console.log(event),
+   *   error: (err) => console.error(err),
+   *   complete: () => console.log('Completed'),
    * });
    */
   public sse$<T = unknown>(
@@ -329,6 +327,7 @@ export class HttpClient<
     const { selector, ...options } = args || {};
     const response$ = of({
       ...options,
+      path,
       uri: this._resolveUrl(path),
     } as TRequest).pipe(
       /** prepare request, allow extensions to modify request  */

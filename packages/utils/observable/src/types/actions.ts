@@ -215,4 +215,8 @@ export type ActionWithSuffix<TAction extends Action, Suffix extends string> = TA
     : never
   : never;
 
+/**
+ * A record of named {@link ActionCreator} functions, used as input to
+ * {@link actionMapper} and {@link createState}.
+ */
 export type ActionDefinitions = Record<string, ActionCreator>;

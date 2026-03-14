@@ -7,7 +7,14 @@ import type {
 } from './types.js';
 
 /**
- * @deprecated @see {@link BaseConfigBuilder}
+ * Legacy configuration builder that provides access to module initializer arguments.
+ *
+ * @deprecated Use {@link BaseConfigBuilder} instead. `BaseConfigBuilder` offers a
+ * declarative, callback-driven approach to building module configuration with
+ * support for dot-path targeting, observable pipelines, and post-processing hooks.
+ *
+ * @template TModules - Array of peer module dependencies.
+ * @template TConfig - The configuration type managed by this builder.
  */
 export abstract class ModuleConfigBuilder<
   TModules extends Array<AnyModule> | unknown = unknown,

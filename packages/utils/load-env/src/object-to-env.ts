@@ -1,14 +1,31 @@
 import { DEFAULT_ENV_PREFIX } from './static';
 
 /**
- * Converts a nested object into a flat object with keys in snake_case and uppercase.
- * Nested keys are prefixed with their parent keys, separated by underscores.
- * Non-object values are stringified.
+ * Convert a nested JavaScript object into a flat record of environment variable entries.
  *
- * @param obj - The input object to be flattened and converted.
- * @param prefix - An optional prefix to prepend to the keys (default is an empty string).
- * @returns A flat object with snake_case, uppercase keys and stringified values.
+ * Use this function when you need to serialize application configuration into
+ * `KEY=value` pairs suitable for `process.env`, `.env` files, or Docker build-args.
  *
+ * Nested objects are recursively flattened; each nesting level is joined with an
+ * underscore. camelCase keys are converted to UPPER_SNAKE_CASE.
+ * Non-object values are stringified with `String()`.
+ *
+ * @param obj - The configuration object to flatten and convert.
+ * @param options - Optional settings for the conversion.
+ * @param options.prefix - Prefix prepended to every key. Defaults to {@link DEFAULT_ENV_PREFIX} (`"FUSION"`).
+ * @returns A flat `Record<string, string>` where keys are `PREFIX_UPPER_SNAKE` and values are stringified.
+ *
+ * @example
+ * ```ts
+ * import { objectToEnv } from '@equinor/fusion-load-env';
+ *
+ * const config = { apiUrl: 'https://api.example.com', feature: { enabled: true } };
+ * const env = objectToEnv(config);
+ * // { FUSION_API_URL: 'https://api.example.com', FUSION_FEATURE_ENABLED: 'true' }
+ *
+ * const custom = objectToEnv(config, { prefix: 'MY_APP' });
+ * // { MY_APP_API_URL: 'https://api.example.com', MY_APP_FEATURE_ENABLED: 'true' }
+ * ```
  */
 export function objectToEnv(obj: object, options?: { prefix?: string }): Record<string, string> {
   return Object.entries(obj).reduce((result, [key, value]) => {

@@ -1,3 +1,13 @@
+/**
+ * Binary / command-handler API for `@equinor/fusion-framework-cli/bin`.
+ *
+ * Exports the programmatic entry points for every CLI operation —
+ * build, pack, upload, publish, tag, dev-server, and framework
+ * initialisation — so they can be consumed by both the CLI and
+ * third-party automation scripts.
+ *
+ * @packageDocumentation
+ */
 export { buildApplication } from './app-build.js';
 export { bundleApp } from './app-pack.js';
 export { generateApplicationConfig } from './app-config.js';

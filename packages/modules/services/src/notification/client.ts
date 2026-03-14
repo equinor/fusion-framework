@@ -22,22 +22,40 @@ import getUserNotificationSettings, {
   type GetUserNotificationsSettingsResult,
 } from './settings/get';
 
+/**
+ * Typed API client for the Fusion notification service.
+ *
+ * Provides methods for notification CRUD operations, marking notifications
+ * as seen, and managing user notification settings.
+ *
+ * @template TMethod - The client execution method (`'json'` or `'json$'`).
+ * @template TClient - The underlying HTTP client type.
+ */
 export class NotificationApiClient<
   TMethod extends keyof ClientMethod<unknown> = keyof ClientMethod<unknown>,
   TClient extends IHttpClient = IHttpClient,
 > {
+  /** Returns the {@link ApiVersion} enum for version-constant access. */
   get Version(): typeof ApiVersion {
     return ApiVersion;
   }
 
+  /**
+   * @param _client - The HTTP client used to execute requests.
+   * @param _method - The execution method (`'json'` or `'json$'`).
+   */
   constructor(
     protected _client: TClient,
     protected _method: TMethod,
   ) {}
 
   /**
-   * Fetch all notifications
-   * @see {@link getAll/client}
+   * Fetch all notifications for the current user.
+   *
+   * @template TVersion - The API version key.
+   * @template TResult - The expected response type.
+   * @param version - API version to use.
+   * @returns All notifications matching the query.
    */
   public getAll<
     TVersion extends string = keyof typeof ApiVersion,
@@ -51,8 +69,12 @@ export class NotificationApiClient<
   }
 
   /**
-   * Fetch notification by id
-   * @see {@link getById/client}
+   * Fetch a single notification by its identifier.
+   *
+   * @template TVersion - The API version key.
+   * @template TResult - The expected response type.
+   * @param version - API version to use.
+   * @returns The notification with the specified ID.
    */
   public getById<
     TVersion extends string = keyof typeof ApiVersion,
@@ -66,8 +88,12 @@ export class NotificationApiClient<
   }
 
   /**
-   * Set notification seen by user
-   * @see {@link setSeenByUser/client}
+   * Mark a notification as seen by the current user.
+   *
+   * @template TVersion - The API version key.
+   * @template TResult - The expected response type.
+   * @param version - API version to use.
+   * @returns The updated notification.
    */
   public setSeenByUser<
     TVersion extends string = keyof typeof ApiVersion,
@@ -81,8 +107,12 @@ export class NotificationApiClient<
   }
 
   /**
-   * Create a notification
-   * @see {@link create/client}
+   * Create a new notification.
+   *
+   * @template TVersion - The API version key.
+   * @template TResult - The expected response type.
+   * @param version - API version to use.
+   * @returns The created notification.
    */
   public create<
     TVersion extends string = keyof typeof ApiVersion,
@@ -96,8 +126,12 @@ export class NotificationApiClient<
   }
 
   /**
-   * Delete a notification
-   * @see {@link delete/client}
+   * Delete a notification by its identifier.
+   *
+   * @template TVersion - The API version key.
+   * @template TResult - The expected response type.
+   * @param version - API version to use.
+   * @returns The deletion result.
    */
   public delete<
     TVersion extends string = keyof typeof ApiVersion,
@@ -110,8 +144,12 @@ export class NotificationApiClient<
     return fn<TResult>(...args);
   }
   /**
-   * Get users notification settings
-   * @see {@link getSettings/client}
+   * Retrieve the current user's notification settings.
+   *
+   * @template TVersion - The API version key.
+   * @template TResult - The expected response type.
+   * @param version - API version to use.
+   * @returns The user's notification settings.
    */
   public getSettings<
     TVersion extends string = keyof typeof ApiVersion,
@@ -128,8 +166,12 @@ export class NotificationApiClient<
     return fn<TResult>(...args);
   }
   /**
-   * Update user notification settings
-   * @see {@link updateSettings/client}
+   * Update the current user's notification settings.
+   *
+   * @template TVersion - The API version key.
+   * @template TResult - The expected response type.
+   * @param version - API version to use.
+   * @returns The updated notification settings.
    */
   public updateSettings<
     TVersion extends string = keyof typeof ApiVersion,

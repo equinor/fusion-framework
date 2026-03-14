@@ -2,17 +2,16 @@ import { pathToString, resolvePath, resolveWindowLocation } from './utils';
 import type { HistoryStack, Location, To } from './types';
 
 /**
- * Browser history stack implementation using native browser APIs.
+ * Browser history stack implementation using the native History API.
  *
- * Manages navigation state using the browser's History API (pushState/replaceState).
- * Stores location state in history.state and uses relative paths for navigation.
- * This is the base implementation for regular (non-hash) routing.
+ * Manages navigation state via `pushState` / `replaceState` and stores
+ * location state in `history.state`. This is the default stack for
+ * pathname-based (non-hash) routing.
  *
  * @example
  * ```ts
  * const stack = new BrowserHistoryStack(window);
- * stack.push({ pathname: '/users', key: 'abc123', state: { userId: 1 } });
- * // Updates URL to /users and adds entry to history
+ * stack.push({ pathname: '/users', search: '', hash: '', key: 'abc', state: null });
  * ```
  */
 export class BrowserHistoryStack implements HistoryStack {

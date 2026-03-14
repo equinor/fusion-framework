@@ -12,15 +12,45 @@ import type { WidgetModuleConfig } from './WidgetModuleConfigurator';
 import { WidgetManifestLoadError, WidgetConfigLoadError } from './errors';
 import { Widget } from './Widget';
 
+/**
+ * Public interface for the widget module provider.
+ *
+ * Consumers depend on this interface rather than the concrete
+ * {@link WidgetModuleProvider} class, enabling testability and
+ * alternative implementations.
+ */
 export interface IWidgetModuleProvider {
+  /**
+   * Creates a {@link Widget} instance for the given widget key.
+   *
+   * @param widgetKey - Unique identifier (name) of the widget.
+   * @param args - Optional version or tag selector.
+   * @returns A new `Widget` ready for initialization.
+   */
   getWidget(
     widgetKey: GetWidgetParameters['widgetKey'],
     args?: GetWidgetParameters['args'],
   ): Widget;
+
+  /**
+   * Fetches the manifest for a widget as an observable stream.
+   *
+   * @param widgetKey - Unique identifier (name) of the widget.
+   * @param args - Optional version or tag selector.
+   * @returns Observable that emits the {@link WidgetManifest}.
+   */
   getWidgetManifest(
     widgetKey: GetWidgetParameters['widgetKey'],
     args?: GetWidgetParameters['args'],
   ): Observable<WidgetManifest>;
+
+  /**
+   * Fetches the configuration for a widget as an observable stream.
+   *
+   * @param widgetKey - Unique identifier (name) of the widget.
+   * @param args - Optional version or tag selector.
+   * @returns Observable that emits the {@link WidgetConfig}.
+   */
   getWidgetConfig(
     widgetKey: GetWidgetParameters['widgetKey'],
     args?: GetWidgetParameters['args'],
@@ -28,7 +58,17 @@ export interface IWidgetModuleProvider {
 }
 
 /**
- * The `WidgetModuleProvider` class implements the `IWidgetModuleProvider` interface and serves as a provider for managing widgets.
+ * Concrete provider that manages widget instances and performs API queries
+ * for widget manifests and configurations.
+ *
+ * Created automatically during module initialization; see {@link module} and
+ * {@link enableWidgetModule}.
+ *
+ * @example
+ * ```typescript
+ * const widget = provider.getWidget('my-widget');
+ * widget.initialize().subscribe(result => { ... });
+ * ```
  */
 export class WidgetModuleProvider implements IWidgetModuleProvider {
   // Private fields
@@ -37,8 +77,11 @@ export class WidgetModuleProvider implements IWidgetModuleProvider {
   #event?: ModuleType<EventModule>;
 
   /**
-   * Constructs a new `WidgetModuleProvider` instance.
-   * @param args - An object containing configuration and optional event module for the widget provider.
+   * Creates a new `WidgetModuleProvider`.
+   *
+   * @param args - Provider dependencies.
+   * @param args.config - Resolved {@link WidgetModuleConfig} with HTTP client.
+   * @param args.event - Optional event module for dispatching lifecycle events.
    */
   constructor(args: { config: WidgetModuleConfig; event?: ModuleType<EventModule> }) {
     const { config, event } = args;
@@ -47,9 +90,13 @@ export class WidgetModuleProvider implements IWidgetModuleProvider {
   }
 
   /**
-   * Retrieves a widget instance based on the provided name and optional parameters.
-   * @param name - The name of the widget.
-   * @param widgetParams - Optional parameters for the widget.
+   * Creates a new {@link Widget} instance for the given name.
+   *
+   * The returned widget has not been initialized yet — call
+   * {@link Widget.initialize} to start the lifecycle.
+   *
+   * @param name - Unique widget name (used as lookup key).
+   * @param widgetPrams - Optional version or tag selector.
    * @returns A new `Widget` instance.
    */
   public getWidget(name: string, widgetPrams?: GetWidgetParameters['args']): Widget {
@@ -60,10 +107,12 @@ export class WidgetModuleProvider implements IWidgetModuleProvider {
   }
 
   /**
-   * Retrieves the manifest of a widget as an observable stream.
-   * @param name - The name of the widget.
-   * @param widgetParams - Optional parameters for the widget.
-   * @returns An observable stream of the widget manifest.
+   * Fetches the manifest for a widget via the configured HTTP client.
+   *
+   * @param name - Unique widget name.
+   * @param widgetPrams - Optional version or tag selector.
+   * @returns Observable that emits the {@link WidgetManifest} and completes.
+   * @throws {WidgetManifestLoadError} When the manifest request fails.
    */
   public getWidgetManifest(
     name: string,
@@ -73,10 +122,12 @@ export class WidgetModuleProvider implements IWidgetModuleProvider {
   }
 
   /**
-   * Retrieves the config of a widget as an observable stream.
-   * @param name - The name of the widget.
-   * @param widgetParams - Optional parameters for the widget.
-   * @returns An observable stream of the widget config.
+   * Fetches the configuration for a widget via the configured HTTP client.
+   *
+   * @param name - Unique widget name.
+   * @param widgetPrams - Optional version or tag selector.
+   * @returns Observable that emits the {@link WidgetConfig} and completes.
+   * @throws {WidgetConfigLoadError} When the config request fails.
    */
   public getWidgetConfig(
     name: string,
@@ -85,6 +136,14 @@ export class WidgetModuleProvider implements IWidgetModuleProvider {
     return this._getWidgetConfig(name, widgetPrams);
   }
 
+  /**
+   * Internal: queries widget config from the API and maps HTTP errors to
+   * typed {@link WidgetConfigLoadError} instances.
+   *
+   * @param widgetKey - Widget identifier.
+   * @param args - Optional version or tag selector.
+   * @returns Observable emitting the {@link WidgetConfig}.
+   */
   protected _getWidgetConfig(
     widgetKey: GetWidgetParameters['widgetKey'],
     args?: GetWidgetParameters['args'],
@@ -116,11 +175,12 @@ export class WidgetModuleProvider implements IWidgetModuleProvider {
   }
 
   /**
-   * Fetches the configuration for a widget using a query.
-   * @param widgetKey - The key identifying the widget.
-   * @param args - Optional arguments for the widget.
-   * @returns An observable stream of the widget manifest.
-   * @protected
+   * Internal: queries widget manifest from the API and maps HTTP errors to
+   * typed {@link WidgetManifestLoadError} instances.
+   *
+   * @param widgetKey - Widget identifier.
+   * @param args - Optional version or tag selector.
+   * @returns Observable emitting the {@link WidgetManifest}.
    */
   protected _getWidget(
     widgetKey: GetWidgetParameters['widgetKey'],
@@ -154,7 +214,9 @@ export class WidgetModuleProvider implements IWidgetModuleProvider {
   }
 
   /**
-   * Disposes of the widget provider by unsubscribing from any active subscriptions.
+   * Disposes all internal query subscriptions.
+   *
+   * After disposal the provider should not be reused.
    */
   public dispose() {
     this.#subscription.unsubscribe();

@@ -989,7 +989,12 @@ export default ContextProvider;
 
 declare module '@equinor/fusion-framework-module-event' {
   interface FrameworkEventMap {
-    // event which is dispatched before the context changes
+    /**
+     * Dispatched **before** the current context is changed.
+     *
+     * The event is cancelable — calling `event.preventDefault()` in a
+     * listener will abort the context change.
+     */
     onCurrentContextChange: FrameworkEvent<
       FrameworkEventInit<
         {
@@ -998,7 +1003,12 @@ declare module '@equinor/fusion-framework-module-event' {
         IContextProvider
       >
     >;
-    // event which is dispatched after the context changes
+    /**
+     * Dispatched **after** the current context has changed.
+     *
+     * Contains both the previous and next context items, enabling
+     * listeners to react to transitions.
+     */
     onCurrentContextChanged: FrameworkEvent<
       FrameworkEventInit<
         {
@@ -1009,7 +1019,12 @@ declare module '@equinor/fusion-framework-module-event' {
       >
     >;
 
-    // event which is dispatched before the parent context changes
+    /**
+     * Dispatched **before** a parent context change is applied locally.
+     *
+     * Cancelable — prevents the parent context from being mirrored into
+     * this provider.
+     */
     onParentContextChanged: FrameworkEvent<
       FrameworkEventInit<
         {
@@ -1019,7 +1034,12 @@ declare module '@equinor/fusion-framework-module-event' {
       >
     >;
 
-    // event which is dispatched before the context will be resolved
+    /**
+     * Dispatched **before** context resolution begins (when validation
+     * fails and the caller requested resolution).
+     *
+     * Cancelable — aborting prevents the resolution attempt.
+     */
     onSetContextResolve: FrameworkEvent<
       FrameworkEventInit<
         {
@@ -1029,7 +1049,12 @@ declare module '@equinor/fusion-framework-module-event' {
       >
     >;
 
-    // event which is dispatched after the context was resolved
+    /**
+     * Dispatched **after** the context has been resolved to a new item.
+     *
+     * Cancelable — aborting prevents the resolved item from being
+     * set as the current context.
+     */
     onSetContextResolved: FrameworkEvent<
       FrameworkEventInit<
         {
@@ -1040,7 +1065,10 @@ declare module '@equinor/fusion-framework-module-event' {
       >
     >;
 
-    // event which is dispatched if the context validation failed
+    /**
+     * Dispatched when context validation fails and resolution is not
+     * enabled.
+     */
     onSetContextValidationFailed: FrameworkEvent<
       FrameworkEventInit<
         {
@@ -1050,7 +1078,9 @@ declare module '@equinor/fusion-framework-module-event' {
       >
     >;
 
-    // event which is dispatched if the context resolve failed
+    /**
+     * Dispatched when context resolution fails with an error.
+     */
     onSetContextResolveFailed: FrameworkEvent<
       FrameworkEventInit<
         {

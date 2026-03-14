@@ -15,7 +15,13 @@ const BtnListItem = styled.li`
 `;
 
 /**
- * Content for the main  tab in the PersonSidesheet.
+ * Landing page content for the person settings side sheet.
+ *
+ * Displays navigation buttons for sub-sheets (e.g., feature toggles) and
+ * an external link to the user's Delve profile.
+ *
+ * @param props.azureId - Azure AD object ID used to build the Delve profile link.
+ * @param props.navigate - Callback to navigate to a sub-sheet by key.
  */
 export const LandingSheetContent = ({ azureId, navigate }: SheetContentProps) => {
   return (

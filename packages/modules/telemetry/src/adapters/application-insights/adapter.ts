@@ -102,6 +102,14 @@ export class ApplicationInsightsAdapter extends BaseTelemetryAdapter {
    * allowing for user-specific tracking and analysis in Application Insights.
    *
    * @param userId - The unique identifier of the authenticated user.
+   *
+   * @example
+   * ```typescript
+   * const adapter = provider.getAdapter(ApplicationInsightsAdapter.Identifier);
+   * if (adapter instanceof ApplicationInsightsAdapter) {
+   *   adapter.setAuthenticatedUserContext(currentUser.id);
+   * }
+   * ```
    */
   public setAuthenticatedUserContext(userId: string): void {
     this.#client.setAuthenticatedUserContext(userId);

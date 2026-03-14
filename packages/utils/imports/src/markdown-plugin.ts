@@ -3,30 +3,44 @@ import path from 'node:path';
 import { readFile } from 'node:fs/promises';
 
 /**
- * Options for configuring the markdown raw plugin.
+ * Configuration for the raw-markdown esbuild plugin.
  */
 export interface RawMarkdownPluginOptions {
   /**
-   * Regular expression filter to match file imports.
+   * Regex filter applied to import specifiers.
+   * Only imports matching this pattern are intercepted.
    * @default /\.mdx?\?raw$/
    */
   filter?: RegExp;
 }
 
 /**
- * Creates an esbuild plugin that handles `?raw` imports for markdown files.
+ * Creates an esbuild plugin that handles `?raw` imports for markdown
+ * (`.md` / `.mdx`) files, returning their content as a default-exported string.
  *
- * This plugin allows importing markdown files as raw strings using the `?raw` query parameter:
+ * The plugin is automatically included by {@link importScript}, but can be
+ * added independently to a custom esbuild build.
+ *
+ * @param options - Optional plugin configuration.
+ * @returns An esbuild `Plugin` instance.
+ *
+ * @example
  * ```typescript
- * import readmeContent from '../../README.md?raw';
- * import mdxContent from '../../docs/guide.mdx?raw';
+ * import { build } from 'esbuild';
+ * import { rawMarkdownPlugin } from '@equinor/fusion-imports';
+ *
+ * await build({
+ *   entryPoints: ['src/index.ts'],
+ *   plugins: [rawMarkdownPlugin()],
+ *   bundle: true,
+ *   format: 'esm',
+ * });
  * ```
  *
- * The plugin intercepts imports ending with `?raw` (or `.md?raw`/`.mdx?raw`), reads the file content,
- * and returns it as a default export string.
- *
- * @param options - Configuration options for the plugin
- * @returns An esbuild plugin
+ * Then in the bundled source files:
+ * ```typescript
+ * import readme from '../../README.md?raw';
+ * ```
  */
 export const rawMarkdownPlugin = (options: RawMarkdownPluginOptions = {}): Plugin => {
   const { filter = /\.mdx?\?raw$/ } = options;

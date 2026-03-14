@@ -10,7 +10,14 @@ import type {
   AppSettings,
 } from '../types';
 
-/** base event type for applications */
+/**
+ * Base event initialization type for application lifecycle events.
+ *
+ * Extends {@link FrameworkEventInit} with a mandatory `appKey` field and
+ * the {@link App} as the event source.
+ *
+ * @template TDetail - Additional detail properties carried by the event.
+ */
 export type AppEventEventInit<TDetail extends Record<string, unknown> | unknown = unknown> =
   FrameworkEventInit<
     /** additional event details and key of target event */
@@ -19,10 +26,19 @@ export type AppEventEventInit<TDetail extends Record<string, unknown> | unknown 
     App
   >;
 
+/**
+ * Framework event carrying application-scoped detail and an {@link App} source.
+ *
+ * @template TDetail - Additional detail properties carried by the event.
+ */
 export type AppEvent<TDetail extends Record<string, unknown> | unknown = unknown> = FrameworkEvent<
   AppEventEventInit<TDetail>
 >;
 
+/**
+ * Framework event emitted when an application lifecycle operation fails.
+ * The `error` detail carries the underlying failure.
+ */
 export type AppEventFailure = FrameworkEvent<
   AppEventEventInit<{
     error: AppConfig;

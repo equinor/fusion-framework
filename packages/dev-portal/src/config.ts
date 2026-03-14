@@ -26,16 +26,21 @@ declare global {
 }
 
 /**
- * Configures the Fusion Dev Portal with all required modules and features
+ * Configures the Fusion Dev Portal framework with all required modules.
  *
- * This function sets up the complete framework configuration including:
- * - Telemetry tracking for portal analytics
- * - Core app functionality and navigation
- * - Bookmark management system
- * - Feature flagging for development features
- * - Service integrations
+ * Enables and wires together:
+ * - **Telemetry** — portal-scoped usage analytics with version metadata.
+ * - **App module** — application manifest loading and lifecycle.
+ * - **Navigation** — router integration with optional telemetry.
+ * - **Services** — standard Fusion service integrations.
+ * - **AG Grid** — enterprise license key from `window.FUSION_AG_GRID_KEY`.
+ * - **Analytics** — console adapter gated by the `fusionLogAnalytics` feature flag.
+ * - **Bookmarks** — source-system metadata identifying CLI-created bookmarks.
+ * - **Feature flags** — local-storage and URL-based flag plugins for dev toggles.
  *
- * @param config - The framework configurator instance to extend with portal features
+ * On initialization, exposes all modules on `window.Fusion` for debugging.
+ *
+ * @param config - The framework configurator instance to extend with portal modules.
  */
 export const configure = async (config: FrameworkConfigurator) => {
   // Enable telemetry tracking for portal usage analytics and monitoring

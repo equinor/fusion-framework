@@ -42,7 +42,9 @@ export type Path = {
 
 /**
  * Location object representing a navigation entry.
- * Extends Path with state and a unique key.
+ * Extends {@link Path} with arbitrary state data and a unique key.
+ *
+ * @template T - The type of the state payload stored in this location entry
  */
 // biome-ignore lint/suspicious/noExplicitAny: necessary
 export type Location<T = any> = Path & {
@@ -65,7 +67,10 @@ export type LocationState = {
 export type NavigationListener = (update: Readonly<NavigationUpdate>) => void;
 
 /**
- * Navigation update event containing action and location.
+ * Navigation update event containing the action, location, and stack delta.
+ *
+ * @template A - The type of navigation action (defaults to {@link Action})
+ * @template T - The type of the state payload in the location
  */
 export type NavigationUpdate<A extends string = Action, T = unknown> = {
   delta: number;
@@ -108,7 +113,16 @@ export interface NavigateOptions {
 
 /**
  * History interface for managing navigation state.
- * Compatible with industry-standard routers (Remix/React Router) and provides observable state management.
+ *
+ * Compatible with Remix / React Router and provides observable
+ * state management via RxJS.
+ *
+ * @example
+ * ```ts
+ * const history = createHistory('browser');
+ * history.push('/dashboard');
+ * history.state$.subscribe(update => console.log(update.location.pathname));
+ * ```
  */
 export interface History extends Disposable {
   /** Observable stream of navigation state updates. */
@@ -120,11 +134,20 @@ export interface History extends Disposable {
   /** Current location in the history stack. */
   readonly location: Location;
 
-  /** Creates a valid href string for a given path. */
+  /** Creates a valid href string for a given path.
+   * @param to - Target path or partial path object
+   * @returns Fully-qualified href string
+   */
   createHref(to: To): string;
-  /** Creates a URL object for a given path. */
+  /** Creates a {@link URL} object for a given path.
+   * @param to - Target path or partial path object
+   * @returns Resolved {@link URL} instance
+   */
   createURL(to: To): URL;
-  /** Encodes a location by properly URL-encoding the pathname. */
+  /** Encodes a location by properly URL-encoding the pathname.
+   * @param to - Target path or partial path object
+   * @returns A {@link Path} with URL-encoded components
+   */
   encodeLocation(to: To): Path;
   /** Pushes a new navigation entry onto the history stack. */
   push(to: To, state?: unknown): void;
@@ -134,9 +157,15 @@ export interface History extends Disposable {
   navigate(to: To, options?: NavigateOptions): void;
   /** Navigates backward or forward in the history stack. */
   go(delta: number): void;
-  /** Sets up a listener for navigation changes. */
+  /** Sets up a listener for navigation changes.
+   * @param listener - Callback invoked on POP actions (browser back/forward)
+   * @returns A function that unsubscribes the listener when called
+   */
   listen(listener: NavigationListener): () => void;
-  /** Registers a blocker to intercept navigation attempts. */
+  /** Registers a blocker to intercept navigation attempts.
+   * @param blocker - Callback invoked before each navigation to allow or prevent it
+   * @returns A function that removes the blocker when called
+   */
   block(blocker: NavigationBlocker): VoidFunction;
 }
 

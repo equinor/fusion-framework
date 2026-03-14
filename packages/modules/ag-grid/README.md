@@ -1,16 +1,21 @@
 # AG Grid Module for Fusion Framework
 
-This module provides an agnostic wrapper around the [AG Grid](https://www.ag-grid.com/) library for use in Fusion applications. It sets up configuration and registers AG Grid modules, ensuring a consistent way to configure AG Grid and use it within Fusion portals and applications.
+`@equinor/fusion-framework-module-ag-grid` provides a Fusion module that wraps [AG Grid](https://www.ag-grid.com/) with centralised license-key management, theming, and module registration.
+It ensures every Fusion portal and application uses a consistent AG Grid setup.
 
-The intention of this module is to provide a consistent way to configure AG Grid and to ensure that the correct version of AG Grid is used.
+## When to use this package
+
+- **Portal hosts** — configure the AG Grid license key and default theme once so all child applications inherit them.
+- **Applications** — register the specific AG Grid feature modules (row models, toolpanels, export, etc.) needed by each app to keep bundles small via tree-shaking.
 
 > [!TIP]
-> This is the base package for AG Grid in Fusion, which means that `ag-grid-enterprise` and `ag-grid-community` is required to be installed. This package should be consumed by the host (portal) which configures AG Grid for the applications. See [`@equinor/fusion-framework-react-ag-grid`](https://www.npmjs.com/package/@equinor/fusion-framework-react-ag-grid) for usage in applications.
+> This is the **base** package. Both `ag-grid-community` and `ag-grid-enterprise` are required peer dependencies.
+> For React-specific hooks and components see [`@equinor/fusion-framework-react-ag-grid`](https://www.npmjs.com/package/@equinor/fusion-framework-react-ag-grid).
 
 ## Installation
 
 ```sh
-npm i @equinor/fusion-framework-module-ag-grid
+pnpm add @equinor/fusion-framework-module-ag-grid
 ```
 
 > [!WARNING]
@@ -21,9 +26,9 @@ npm i @equinor/fusion-framework-module-ag-grid
 >
 > Before upgrading to AG Grid 33, remove all previous references to `@equinor/fusion-react-ag-grid-styles`, `@ag-grid-community/*` and `@ag-grid-enterprise/*` from your project dependencies.
 
-## Configuration
+## Quick start
 
-### Portal
+Register the module in your portal or application configurator with `enableAgGrid`:
 
 ```ts
 import { type FrameworkConfigurator } from '@equinor/fusion-framework';
@@ -35,6 +40,8 @@ export async function configure(config: FrameworkConfigurator) {
     });
 }
 ```
+
+The `enableAgGrid` helper accepts an optional callback that receives an `IAgGridConfigurator` builder. Use it to set the license key, theme, and feature modules.
 
 ## Theming
 
@@ -92,24 +99,25 @@ const MyComponent = () => {
 };
 ```
 
-## Modules
+## Registering AG Grid feature modules
 
-Since AG Grid 33, all modules have been aggregated into a single package, which means the modules need to be defined in the application configuration.
+Since AG Grid 33, feature modules must be explicitly registered so tree-shaking can remove unused code.
+Use `builder.addModule()` or `builder.setModules()` inside the `enableAgGrid` callback:
 
 ```ts
 import { enableAgGrid } from '@equinor/fusion-framework-module-ag-grid';
-import { ClientSideRowModelModule } from '@equinor/fusion-framework-module-ag-grid/community';
+import { ClientSideRowModelModule } from 'ag-grid-community';
 import {
     ClipboardModule,
     ColumnsToolPanelModule,
     ExcelExportModule,
     FiltersToolPanelModule,
     MenuModule,
-} from '@equinor/fusion-framework-module-ag-grid/enterprise';
+} from 'ag-grid-enterprise';
 
 export const configure: AppModuleInitiator = (configurator, { env }) => {
     enableAgGrid(configurator, (builder) => {
-        builder.addModules([
+        builder.setModules([
             ClientSideRowModelModule,
             ClipboardModule,
             ColumnsToolPanelModule,
@@ -122,82 +130,44 @@ export const configure: AppModuleInitiator = (configurator, { env }) => {
 ```
 
 > [!IMPORTANT]
-> Modules are required to be defined in the application configuration, as this is the only way to ensure that tree shaking works correctly.
+> Modules **must** be registered in configuration to enable proper tree-shaking. Only import what you need.
 
-## Usage
+## Key exports
 
-### Enterprise and Community features
+| Export | Purpose |
+|---|---|
+| `enableAgGrid` | Register the AG Grid module with a Fusion configurator |
+| `AgGridConfigurator` | Configuration builder (license key, theme, modules) |
+| `AgGridProvider` | Runtime provider exposing the resolved config |
+| `fusionTheme` | Default Equinor-branded AG Grid theme (from `./themes`) |
+| `createThemeFromTheme` | Clone a theme to avoid cross-context `instanceof` issues (from `./themes`) |
 
-Enterprise features are available from the namespace `@equinor/fusion-framework-module-ag-grid/enterprise`.
+## API reference
 
-Community features are available from the namespace `@equinor/fusion-framework-module-ag-grid/community`.
+### `enableAgGrid(configurator, callback?)`
 
-> [!NOTE]
-> Since this is only a re-export of the `ag-grid` packages, there might be some issues with TypeScript typings.
-> 
-> Please leave an issue if you encounter any problems.
+Registers the AG Grid module. The optional callback receives an `IAgGridConfigurator`:
 
-### Example
+- `setLicenseKey(key)` — set the enterprise license key
+- `setTheme(theme | callback | null)` — set, customise, or clear the global theme
+- `setModules(modules)` — replace all registered AG Grid modules
+- `addModule(module)` — append a single module
+- `removeModule(module | name)` — remove a module by reference or name
 
-```ts
-import { AgGridReact } from "ag-grid-react";
-import type {
-  CellValueChangedEvent,
-  ColDef,
-  ValueParserParams,
-} from "@equinor/fusion-framework-module-ag-grid/community";
+### Theme inheritance
 
-function numberParser(params: ValueParserParams) {
-  return Number(params.newValue);
-}
-
-const GridExample = () => {
-  const containerStyle = useMemo(() => ({ width: "100%", height: "100%" }), []);
-  const gridStyle = useMemo(() => ({ height: "100%", width: "100%" }), []);
-  const [rowData, setRowData] = useState<any[]>(getData());
-  const [columnDefs, setColumnDefs] = useState<ColDef[]>([
-    { headerName: "Name", field: "simple" },
-    { headerName: "Bad Number", field: "numberBad" },
-    {
-      headerName: "Good Number",
-      field: "numberGood",
-      valueParser: numberParser,
-    },
-  ]);
-  const defaultColDef = useMemo<ColDef>(() => {
-    return {
-      flex: 1,
-      editable: true,
-      cellDataType: false,
-    };
-  }, []);
-
-  const onCellValueChanged = useCallback((event: CellValueChangedEvent) => {
-    console.log("data after changes is: ", event.data);
-  }, []);
-
-  return (
-    <div style={containerStyle}>
-      <div style={gridStyle}>
-        <AgGridReact
-          rowData={rowData}
-          columnDefs={columnDefs}
-          defaultColDef={defaultColDef}
-          onCellValueChanged={onCellValueChanged}
-        />
-      </div>
-    </div>
-  );
-};
-```
+Themes configured in a parent scope (portal) are automatically inherited by child scopes (applications). The module clones inherited themes via `createThemeFromTheme` to avoid `instanceof` mismatches across module-federation boundaries.
 
 ## Migration from AG Grid 32 to 33
 
-Since AG Grid version 33, there have been significant breaking changes regarding the module structure and tree shaking. All modules have been consolidated into a single package, which necessitates defining the modules in the application configuration to ensure proper tree shaking. This change aims to streamline the module management process and improve performance by only including the necessary modules in the final bundle.
+AG Grid 33 consolidated all feature modules into single `ag-grid-community` and `ag-grid-enterprise` packages. Key changes:
 
->[!IMPORTANT]
+- Remove all `@ag-grid-community/*` and `@ag-grid-enterprise/*` dependencies
+- Remove `@equinor/fusion-react-ag-grid-styles` — styles are bundled in v33+
+- Register feature modules explicitly via `builder.setModules()` for correct tree-shaking
 
->It is crucial for developers to read this guide thoroughly to understand the changes and migration steps required for upgrading to AG Grid 33.
+> [!IMPORTANT]
+> Read the [AG Grid v33 changelog](https://www.ag-grid.com/changelog/) before upgrading.
 > Additionally, developers should also refer to the official AG Grid upgrade guide available at [Upgrading to AG Grid 33](https://www.ag-grid.com/react-data-grid/upgrading-to-ag-grid-33/) for comprehensive details and best practices.
 
 ### Imports

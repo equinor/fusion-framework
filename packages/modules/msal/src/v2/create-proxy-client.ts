@@ -5,22 +5,24 @@ import { mapAuthenticationResult } from './map-authentication-result';
 import type { AccountInfo } from './types';
 
 /**
- * Creates a v2-compatible proxy for MSAL PublicClientApplication.
+ * Creates a v2-compatible proxy wrapper around an MSAL v4 client.
  *
- * This function creates a proxy that wraps the MSAL v4 PublicClientApplication
- * and provides v2-compatible method signatures and return types.
+ * The proxy intercepts property access on the v4 `IMsalClient` and adapts method
+ * signatures, return types, and account data to match the v2 `IAuthClient` interface.
+ * This allows consumer code written against MSAL v2 to continue working unchanged
+ * while the underlying implementation uses MSAL v4/v5.
  *
- * @param client - The MSAL v4 PublicClientApplication instance
- * @returns A proxy client with v2-compatible interface
+ * @param client - The MSAL v4 `IMsalClient` instance to wrap
+ * @returns A proxy implementing the v2-compatible `IAuthClient` interface
  *
  * @example
  * ```typescript
- * const v4Client = new PublicClientApplication(config);
- * const v2Client = createProxyClient_v2(v4Client);
+ * const v4Client = new MsalClient(config);
+ * const v2Client = createProxyClient(v4Client);
  *
  * // Use v2-compatible methods
  * const accounts = v2Client.getAllAccounts();
- * const token = await v2Client.acquireTokenSilent({ scopes: ['User.Read'], account });
+ * const result = await v2Client.acquireTokenSilent({ scopes: ['User.Read'], account });
  * ```
  */
 export function createProxyClient(client: IMsalClient): IAuthClient {

@@ -2,8 +2,14 @@ import type { FrameworkInstance } from '@equinor/fusion-framework-cli-plugin-ai-
 import type { AiOptions } from '@equinor/fusion-framework-cli-plugin-ai-base/command-options';
 
 /**
- * Tool definition for searching Fusion Framework API reference.
- * This tool enables semantic search across TypeScript/TSDoc code documentation, function signatures, and class definitions.
+ * MCP tool definition for `fusion_search_api`.
+ *
+ * Enables semantic search scoped to Fusion Framework TypeScript API
+ * reference — TSDoc blocks, function signatures, class definitions,
+ * and interface declarations indexed as `tsdoc` documents.
+ *
+ * Registered with the MCP server so that AI assistants can discover
+ * and invoke the tool by name.
  */
 export const toolDefinition = {
   name: 'fusion_search_api',
@@ -27,7 +33,16 @@ export const toolDefinition = {
 } as const;
 
 /**
- * Tool handler for fusion_search_api
+ * Handles invocations of the `fusion_search_api` MCP tool.
+ *
+ * Queries the Azure Cognitive Search vector store with a `tsdoc` category
+ * filter and returns matching documents as JSON text content.
+ *
+ * @param args - Raw tool arguments containing `query` (string) and optional `limit` (number)
+ * @param framework - Active {@link FrameworkInstance} with the AI module loaded
+ * @param options - AI plugin options including Azure Search index name and optional `verbose` flag
+ * @returns MCP-compliant content array with search results, or an error payload
+ * @throws {Error} If the vector store is not configured or `query` is missing
  */
 export async function handleTool(
   args: Record<string, unknown>,

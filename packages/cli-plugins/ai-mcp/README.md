@@ -1,129 +1,119 @@
 # @equinor/fusion-framework-cli-plugin-ai-mcp
 
-MCP server plugin for Fusion Framework CLI providing Model Context Protocol server capabilities for AI assistants.
+CLI plugin that adds a [Model Context Protocol](https://modelcontextprotocol.io/) (MCP) server to the Fusion Framework CLI (`ffc`). AI assistants such as Claude Desktop, Cursor, VS Code Copilot, and other MCP-compatible clients can connect to the server and semantically search the Fusion Framework codebase — API reference, cookbooks, markdown docs, and EDS Storybook content — via Azure Cognitive Search.
 
-## Installation
+## Who should use this
+
+- **AI-tool authors** integrating Fusion Framework knowledge into LLM workflows
+- **Developers** who want context-aware code assistance inside their editor
+- **Platform teams** embedding Fusion search into custom MCP client setups
+
+## Quick start
+
+### 1 — Install
 
 ```sh
 pnpm add -D @equinor/fusion-framework-cli-plugin-ai-mcp
 ```
 
-## Configuration
+### 2 — Register the plugin
 
-After installing the plugin, create a `fusion-cli.config.ts` file in your project root:
-
-```typescript
+```ts
+// fusion-cli.config.ts
 import { defineFusionCli } from '@equinor/fusion-framework-cli';
 
 export default defineFusionCli(() => ({
-  plugins: [
-    '@equinor/fusion-framework-cli-plugin-ai-mcp',
-  ],
+  plugins: ['@equinor/fusion-framework-cli-plugin-ai-mcp'],
 }));
 ```
 
-The CLI will automatically discover and load plugins listed in this configuration file. The config file can be `.ts`, `.js`, or `.json`. The `defineFusionCli` helper provides type safety and IntelliSense support.
-
-## Features
-
-This plugin extends the Fusion Framework CLI with MCP server capabilities:
-
-- **MCP Protocol Server** - Implements the Model Context Protocol for AI assistant integration
-- **Fusion Framework Tools** - Exposes tools for searching and querying the Fusion Framework codebase
-- **Vector Store Integration** - Uses Azure Cognitive Search for semantic code search
-- **Framework Information** - Provides tools to query framework configuration and capabilities
-
-## Usage
-
-Once installed, the MCP server command is automatically available:
+### 3 — Start the server
 
 ```sh
-# Start the MCP server (uses stdio by default)
 ffc ai mcp
 ```
 
-## Commands
+The server communicates over **stdio** (the standard MCP transport). All diagnostic output is written to **stderr** so it never interferes with the protocol stream.
 
-### `ai mcp`
+## CLI options
 
-Starts a Model Context Protocol (MCP) server that provides tools and resources for AI assistants to interact with the Fusion Framework.
+| Flag | Environment variable | Description | Required |
+|------|---------------------|-------------|----------|
+| `--openai-api-key` | `AZURE_OPENAI_API_KEY` | Azure OpenAI API key | Yes |
+| `--openai-api-version` | `AZURE_OPENAI_API_VERSION` | API version (default `2024-02-15-preview`) | No |
+| `--openai-instance` | `AZURE_OPENAI_INSTANCE_NAME` | Azure OpenAI instance name | Yes |
+| `--openai-embedding-deployment` | `AZURE_OPENAI_EMBEDDING_DEPLOYMENT_NAME` | Embedding deployment name | Yes |
+| `--azure-search-endpoint` | `AZURE_SEARCH_ENDPOINT` | Azure Cognitive Search endpoint URL | Yes |
+| `--azure-search-api-key` | `AZURE_SEARCH_API_KEY` | Azure Cognitive Search API key | Yes |
+| `--azure-search-index-name` | `AZURE_SEARCH_INDEX_NAME` | Azure Cognitive Search index name | Yes |
+| `--verbose` | — | Write diagnostic messages to stderr | No |
 
-**Features:**
-- Implements MCP protocol over stdio (standard for MCP servers)
-- Exposes tools for semantic search of Fusion Framework codebase
-- Provides framework information and configuration details
-- Integrates with Azure Cognitive Search for vector-based code search
+Every flag can also be set via the matching environment variable.
 
-**Options:**
-- `--openai-api-key <key>` - API key for Azure OpenAI (required)
-- `--openai-api-version <version>` - API version (default: 2024-02-15-preview)
-- `--openai-instance <name>` - Azure OpenAI instance name (required)
-- `--openai-embedding-deployment <name>` - Azure OpenAI embedding deployment name (required for search)
-- `--azure-search-endpoint <url>` - Azure Search endpoint URL (required for search)
-- `--azure-search-api-key <key>` - Azure Search API key (required for search)
-- `--azure-search-index-name <name>` - Azure Search index name (required for search)
-- `--verbose` - Enable verbose output
-
-**Examples:**
-```sh
-$ ffc ai mcp
-$ ffc ai mcp --verbose
-$ ffc ai mcp --azure-search-endpoint https://my-search.search.windows.net
-```
-
-## MCP Tools
-
-The server exposes the following tools:
+## MCP tools
 
 ### `fusion_search`
 
-Search the Fusion Framework codebase and documentation using semantic search.
+Unified semantic search across all Fusion Framework documentation.
 
-**Parameters:**
-- `query` (string, required) - The search query to find relevant code or documentation
-- `limit` (number, optional) - Maximum number of results to return (default: 5)
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `query` | `string` | — | Natural-language search query (required) |
+| `limit` | `number` | `5` | Maximum results to return (recommended 3–8) |
+| `category` | `'all'` | `'all'` | Category filter (currently only `all` is exposed) |
 
-**Returns:**
-- JSON object with search results including content and metadata
+The tool uses **Maximal Marginal Relevance (MMR)** retrieval to balance relevance and diversity, reducing near-duplicate results. Results are returned as MCP `text` content items with `_meta` containing document metadata and source links.
 
-### `fusion_info`
+## Integration with AI assistants
 
-Get information about the Fusion Framework instance and available modules.
+### Claude Desktop / Cursor / VS Code Copilot
 
-**Parameters:**
-- None
+Add the server to your MCP client configuration:
 
-**Returns:**
-- JSON object with framework version, module status, and service configuration
-
-## Integration with AI Assistants
-
-To use this MCP server with an AI assistant (like Claude Desktop, Cursor, etc.), configure the MCP server in your AI client's configuration file.
-
-**Example configuration for Claude Desktop:**
-
-```json
+```jsonc
+// Example: Claude Desktop mcp config
 {
   "mcpServers": {
     "fusion-framework": {
       "command": "ffc",
       "args": ["ai", "mcp"],
       "env": {
-        "AZURE_OPENAI_API_KEY": "your-api-key",
-        "AZURE_OPENAI_INSTANCE_NAME": "your-instance",
-        "AZURE_OPENAI_EMBEDDING_DEPLOYMENT_NAME": "your-embedding-deployment",
-        "AZURE_SEARCH_ENDPOINT": "https://your-search.search.windows.net",
-        "AZURE_SEARCH_API_KEY": "your-search-key",
-        "AZURE_SEARCH_INDEX_NAME": "your-index-name"
+        "AZURE_OPENAI_API_KEY": "<key>",
+        "AZURE_OPENAI_INSTANCE_NAME": "<instance>",
+        "AZURE_OPENAI_EMBEDDING_DEPLOYMENT_NAME": "<deployment>",
+        "AZURE_SEARCH_ENDPOINT": "https://<service>.search.windows.net",
+        "AZURE_SEARCH_API_KEY": "<search-key>",
+        "AZURE_SEARCH_INDEX_NAME": "<index>"
       }
     }
   }
 }
 ```
 
-## Configuration
+## Architecture
 
-The plugin requires Azure OpenAI and Azure Cognitive Search configuration for full functionality. See the main CLI documentation for details on setting up API keys and endpoints.
+```
+src/
+├── index.ts               # Plugin registration entry point
+├── mcp.ts                 # Commander command, MCP server bootstrap, stdio transport
+├── version.ts             # Auto-generated package version
+└── tools/
+    ├── fusion-search.tool.ts       # Primary `fusion_search` tool (MMR retrieval)
+    ├── fusion-search-api.ts        # Category: TSDoc / API reference
+    ├── fusion-search-cookbook.ts    # Category: cookbooks & tutorials
+    ├── fusion-search-eds.ts        # Category: EDS Storybook stories
+    └── fusion-search-markdown.ts   # Category: markdown guides & READMEs
+```
+
+### Key exports
+
+| Export | Module | Description |
+|--------|--------|-------------|
+| `registerAiPlugin` | `index.ts` | Registers the `ai mcp` command with the CLI |
+| `command` | `mcp.ts` | Fully-configured Commander command |
+| `toolConfig` / `handleTool` | `fusion-search.tool.ts` | MCP tool config and curried handler |
+| `FusionSearchCategory` | `fusion-search.tool.ts` | Union type for search category filters |
+| `inputSchema` | `fusion-search.tool.ts` | Zod schema for tool input validation |
 
 ## License
 

@@ -44,12 +44,34 @@ export type ContextItem<TType extends Record<string, unknown> = Record<string, u
       };
 };
 
+/**
+ * Describes the type classification of a {@link ContextItem}.
+ *
+ * Every context item carries a `type` that identifies what kind of
+ * entity it represents (e.g. `ProjectMaster`, `Facility`, `Contract`).
+ * The optional hierarchy fields indicate parent–child relationships
+ * between context types.
+ */
 export interface ContextItemType {
+  /** Unique identifier for the context type (e.g. `'ProjectMaster'`). */
   id: string;
+  /** Whether this type is a child of another context type. */
   isChildType?: boolean;
+  /** IDs of parent context types, when `isChildType` is `true`. */
   parentTypeIds?: string[];
 }
 
+/**
+ * Parameters for querying context items from the context API.
+ *
+ * Used by {@link ContextProvider.queryContext} and the underlying
+ * query client to search and filter context results.
+ *
+ * @property search - Free-text search term.
+ * @property filter - Optional structured filters.
+ * @property filter.type - Restrict results to specific context type IDs.
+ * @property filter.externalId - Filter by an external system identifier.
+ */
 export type QueryContextParameters = {
   search?: string;
   filter?: {

@@ -1,7 +1,10 @@
 import { SyntaxKind } from 'ts-morph';
 
 /**
- * Supported TSDoc node kinds for top-level processing
+ * Top-level TypeScript syntax kinds that the TSDoc extractor inspects.
+ *
+ * Only nodes matching one of these kinds are considered for document
+ * extraction; all other descendants are skipped.
  */
 export const nodeKinds = [
   SyntaxKind.FunctionDeclaration,

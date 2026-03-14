@@ -9,7 +9,17 @@ import type { IModuleProvider } from '@equinor/fusion-framework-module';
 
 /**
  * Navigation provider interface.
- * Provides routing and navigation capabilities with basename localization.
+ *
+ * Provides routing and navigation capabilities with automatic basename
+ * localization. Consumers work with clean paths (e.g. `/users`) while the
+ * underlying history operates on full paths (e.g. `/apps/my-app/users`).
+ *
+ * @example
+ * ```ts
+ * const nav: INavigationProvider = framework.modules.navigation;
+ * nav.push('/users');
+ * console.log(nav.path.pathname); // '/users'
+ * ```
  */
 export interface INavigationProvider extends IModuleProvider {
   /**
@@ -41,22 +51,25 @@ export interface INavigationProvider extends IModuleProvider {
   /**
    * Creates a router instance from route configuration.
    *
-   * @param routes - Route configuration objects compatible with industry-standard routers (Remix/React Router)
-   * @returns A configured and initialized router instance
+   * @deprecated Use `@equinor/fusion-framework-react-router` instead.
+   * @param routes - Route configuration objects compatible with Remix/React Router
+   * @returns A configured and initialized {@link Router} instance with basename applied
    */
   createRouter(routes: AgnosticRouteObject[]): Router;
 
   /**
-   * Creates a localized href string for navigation.
+   * Creates a localized href string including the basename prefix.
    *
-   * @param to - Optional path or location (defaults to current path)
+   * @param to - Path or location to resolve (defaults to current path)
+   * @returns Fully-qualified href string with basename included
    */
   createHref(to?: To): string;
 
   /**
-   * Creates a full URL object for navigation.
+   * Creates a full {@link URL} object including the basename prefix.
    *
-   * @param to - Optional path or location (defaults to current path)
+   * @param to - Path or location to resolve (defaults to current path)
+   * @returns A {@link URL} instance representing the resolved navigation target
    */
   createURL(to?: To): URL;
 

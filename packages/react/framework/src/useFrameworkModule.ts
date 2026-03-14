@@ -8,13 +8,20 @@ import type {
 } from '@equinor/fusion-framework-module';
 
 /**
- * Retrieves a module from the framework instance based on its name.
+ * React hook that retrieves a module from the Fusion Framework by name.
  *
- * @template TType - The type of the module to retrieve.
- * @template TKey - The type of the module name.
- * @param name - The name of the module to retrieve.
- * @returns The requested module from the framework instance.
- * @throws Error if the requested module is not included in the framework instance.
+ * @template TType - The expected module type (used for type-narrowing).
+ * @template TKey - The module key string.
+ * @param name - The registered name of the module to retrieve.
+ * @returns The resolved module instance, or `undefined` if the module is
+ *   not registered.
+ *
+ * @example
+ * ```ts
+ * import type { HttpModule } from '@equinor/fusion-framework-module-http';
+ *
+ * const http = useFrameworkModule<HttpModule>('http');
+ * ```
  */
 export const useFrameworkModule = <
   TType extends AnyModule | unknown = unknown,

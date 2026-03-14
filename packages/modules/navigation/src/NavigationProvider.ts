@@ -37,17 +37,23 @@ const normalizePathname = (path: string) => path.replace(/\/+/g, '/').replace(/\
 
 /**
  * Navigation provider implementation.
- * Manages routing and navigation state with basename localization.
+ *
+ * Manages routing and navigation state with automatic basename localization.
+ * Wraps a {@link History} instance to expose observable state, path localization,
+ * and router creation.
  *
  * @remarks
- * This provider:
- * - Wraps the Navigator to provide observable navigation state
- * - Localizes paths by removing basename prefix
- * - Creates routers compatible with industry-standard routers (Remix/React Router)
- * - Handles navigation actions (push, replace, createHref, etc.)
+ * - Emits localized paths (basename removed) to consumers via {@link NavigationProvider.state$ | state$}
+ * - Internally prefixes paths with the basename before forwarding to the history stack
+ * - Creates routers compatible with Remix / React Router via {@link NavigationProvider.createRouter | createRouter}
+ * - Dispatches {@link NavigatedEvent} and telemetry on navigation changes
  *
- * Path localization ensures that consumers receive paths relative to the basename,
- * while internally we work with full paths including basename.
+ * @example
+ * ```ts
+ * const provider = new NavigationProvider({ version, config });
+ * provider.push('/users');
+ * console.log(provider.path.pathname); // '/users'
+ * ```
  */
 export class NavigationProvider
   extends BaseModuleProvider<INavigationConfigurator>
@@ -62,14 +68,19 @@ export class NavigationProvider
 
   /**
    * Observable stream of navigation state updates.
-   * Emits localized paths (with basename removed) for consumers.
+   *
+   * Emits localized paths (with basename removed) and filters to only
+   * paths within the basename scope. Late subscribers receive the last
+   * emitted value immediately.
    */
   public get state$(): Observable<NavigationUpdate> {
     return this.#state$;
   }
 
   /**
-   * Gets the basename.
+   * Gets the basename prefix configured for this provider.
+   *
+   * @returns The basename string, or an empty string if none is configured
    */
   public get basename(): string {
     return this.#basename ?? '';
@@ -89,22 +100,28 @@ export class NavigationProvider
   }
 
   /**
-   * Gets the history instance.
+   * Gets the underlying history instance.
+   *
+   * @returns The {@link History} instance used for navigation
    */
   public get history(): History {
     return this.#history;
   }
 
   /**
-   * Gets the current localized path (basename removed).
+   * Gets the current localized path with the basename prefix removed.
+   *
+   * @returns A {@link Path} object representing the current location without basename
    */
   public get path(): Path {
     return this._localizePath(this.#history.location);
   }
 
   /**
+   * Creates a new {@link NavigationProvider}.
+   *
    * @param args - Configuration arguments containing module config
-   * @throws {Error} If no history is provided in the configuration
+   * @throws {Error} If no history instance is provided in the configuration
    */
   constructor(args: BaseModuleProviderCtorArgs<INavigationConfigurator>) {
     super(args);
@@ -201,10 +218,10 @@ export class NavigationProvider
   /**
    * Creates a router instance from route configuration.
    *
-   * @deprecated Use `@equinor/fusion-framework-react-router` instead
+   * @deprecated Use `@equinor/fusion-framework-react-router` instead.
    *
-   * @param routes - Route configuration objects compatible with industry-standard routers (Remix/React Router)
-   * @returns A configured and initialized router instance
+   * @param routes - Route configuration objects compatible with Remix/React Router
+   * @returns A configured and initialized {@link Router} instance with basename applied
    */
   public createRouter(routes: AgnosticRouteObject[]) {
     this.#telemetry?.trackEvent({
@@ -225,18 +242,26 @@ export class NavigationProvider
   }
 
   /**
-   * Creates a localized href string for navigation.
+   * Creates a localized href string including the basename prefix.
    *
-   * @param to - Optional path or location (defaults to current path)
+   * @param to - Path or location to resolve (defaults to current path)
+   * @returns Fully-qualified href string with basename included
+   *
+   * @example
+   * ```ts
+   * // basename = '/apps/my-app'
+   * provider.createHref('/users'); // '/apps/my-app/users'
+   * ```
    */
   public createHref(to?: To): string {
     return this.#history.createHref(this._createToPath(to ?? this.path));
   }
 
   /**
-   * Creates a full URL object for navigation.
+   * Creates a full {@link URL} object including the basename prefix.
    *
-   * @param to - Optional path or location (defaults to current path)
+   * @param to - Path or location to resolve (defaults to current path)
+   * @returns A {@link URL} instance representing the resolved navigation target
    */
   public createURL(to?: To): URL {
     return this.#history.createURL(this._createToPath(to ?? this.path));
@@ -277,14 +302,20 @@ export class NavigationProvider
     (this.#history as BaseHistory).pop();
   }
   /**
-   * Checks if a pathname is within the basename scope.
+   * Checks whether a pathname falls within the configured basename scope.
+   *
+   * @param pathname - The pathname to check
+   * @returns `true` if the pathname starts with the basename (or no basename is set)
    */
   protected _isWithinBasenameScope(pathname: string): boolean {
     return this.#basename ? pathname.startsWith(this.#basename) : true;
   }
 
   /**
-   * Localizes a path by removing the basename prefix.
+   * Localizes a path by stripping the basename prefix from the pathname.
+   *
+   * @param location - The full path to localize
+   * @returns A new {@link Path} with the basename removed from the pathname
    */
   protected _localizePath(location: Path): Path {
     const { pathname, search, hash } = location;
@@ -296,7 +327,10 @@ export class NavigationProvider
   }
 
   /**
-   * Creates a full path object from a target location, adding basename prefix.
+   * Creates a full path object from a target location, prepending the basename prefix.
+   *
+   * @param to - The target location (string path or partial {@link Path} object)
+   * @returns A partial {@link Path} with basename prepended to the pathname
    */
   protected _createToPath(to: To): Partial<Path> {
     // Parse the 'to' parameter into path components

@@ -1,5 +1,12 @@
 import type { Module } from 'ag-grid-enterprise';
 
-// TODO: Add default modules here which all consumers of the module will use
-// NOTE: Adding modules here will increase the bundle size
+/**
+ * Default AG Grid modules registered for every consumer of the Fusion AG Grid module.
+ *
+ * @remarks
+ * This array is intentionally empty. Adding modules here increases the bundle size
+ * for **all** consumers. Prefer registering modules per-application via
+ * {@link IAgGridConfigurator.addModule | builder.addModule()} or
+ * {@link IAgGridConfigurator.setModules | builder.setModules()}.
+ */
 export const defaultModules = [] as Module[];

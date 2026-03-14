@@ -1,52 +1,64 @@
 import { LogLevel } from './static.js';
 
 /**
- * Resolves a log level from a string representation.
+ * Parse a {@link LogLevel} from its case-insensitive enum key name.
  *
- * @param key - The string representation of the log level.
- * @returns The corresponding `LogLevel` value, or `undefined` if the input string does not match any known log level.
- * @throws Error if the input string does not match any known log level.
+ * Performs a case-insensitive lookup against `LogLevel` member names
+ * (e.g. `"debug"`, `"Warning"`, `"ERROR"`).
+ *
+ * @param key - The string name of the log level (case-insensitive).
+ * @returns The matching {@link LogLevel} numeric value.
+ * @throws {Error} If `key` is not a string or does not match any `LogLevel` member.
  */
 const resolveLogLevelFromString = (key: string): LogLevel => {
   if (typeof key !== 'string') {
     throw new Error('Expected LogLevel key to be a string.');
   }
-  // Convert the input key to lowercase for case-insensitive comparison
+
   const keyLowerCase = key.toLowerCase();
   const logLevelKey = Object.keys(LogLevel).find(
-    // Match log level key in a case-insensitive manner
     (x) => x.toLowerCase() === keyLowerCase,
   );
+
   if (!logLevelKey) {
-    // Throw error if no matching log level key is found
     throw new Error(`Failed to parse LogLevel from string: ${key}.`);
   }
-  // Return the corresponding LogLevel value
+
   return LogLevel[logLevelKey as keyof typeof LogLevel];
 };
 
 /**
- * Resolves the log level from the provided value, which can be a string or a number.
+ * Resolve a {@link LogLevel} from a string name or numeric value.
  *
- * If the value is a number, it checks if it is a valid log level. If it is, the function returns the log level.
- * If the value is not a valid log level, the function throws an error.
+ * Use this function to convert user-supplied or environment-variable values
+ * into a type-safe `LogLevel`. Accepts:
  *
- * If the value is a string, the function resolves the log level from the string using the `resolveLogLevelFromString` function.
+ * - A **number** that matches a `LogLevel` member value (`0`–`4`).
+ * - A **numeric string** (e.g. `"3"`) that, when parsed, matches a member value.
+ * - A **named string** that matches a `LogLevel` member name case-insensitively
+ *   (e.g. `"debug"`, `"Warning"`).
  *
- * @param value - The value to resolve the log level from, can be a string or a number.
- * @returns The resolved log level.
- * @throws {Error} If the provided value is not a valid log level.
+ * @param value - The string or number to resolve.
+ * @returns The resolved {@link LogLevel}.
+ * @throws {Error} If `value` cannot be mapped to a valid `LogLevel`.
+ *
+ * @example
+ * ```typescript
+ * import { resolveLogLevel, LogLevel } from '@equinor/fusion-log';
+ *
+ * resolveLogLevel('debug');   // LogLevel.Debug  (4)
+ * resolveLogLevel(2);         // LogLevel.Warning
+ * resolveLogLevel('3');       // LogLevel.Info
+ * ```
  */
 export const resolveLogLevel = (value: string | number): LogLevel => {
-  // Convert the level to a number
   const logLevel = Number(value);
-  // Check if the number is a valid log level
+
   if (Object.values(LogLevel).includes(logLevel)) {
     return logLevel;
   } else if (isNaN(logLevel)) {
-    // Resolve log level from string if level is NaN
     return resolveLogLevelFromString(value as string);
   }
-  // Throw an error if the level is invalid
+
   throw Error(`Invalid log level: ${value}`);
 };

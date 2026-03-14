@@ -29,15 +29,25 @@ import isEqual from 'fast-deep-equal';
 
 import './events';
 
-// TODO - move globally
+/**
+ * RxJS operator that filters out `null` and `undefined` emissions.
+ *
+ * @template T - The non-nullable value type.
+ * @returns An operator that only passes through non-nullable values.
+ */
 export function filterEmpty<T>(): OperatorFunction<T | null | undefined, T> {
   return filter((value): value is T => value !== undefined && value !== null);
 }
 
 /**
- * Represents an application in the framework.
- * @template TEnv The type of the environment.
- * @template TModules The type of the app modules.
+ * Public interface for a single loaded Fusion application.
+ *
+ * Provides reactive observables and imperative methods for accessing the
+ * application's manifest, configuration, per-user settings, script module,
+ * and initialized module instance.
+ *
+ * @template TEnv - Shape of the environment configuration record.
+ * @template TModules - Additional framework modules the app depends on.
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export interface IApp<
@@ -246,14 +256,29 @@ export interface IApp<
   getAppModuleAsync(allow_cache?: boolean): Promise<AppScriptModule>;
 }
 
+/** Default empty settings object used when no settings have been fetched. */
 const fallbackSettings: AppSettings = {};
 
+/**
+ * Result emitted by {@link IApp.initialize}, containing the resolved manifest,
+ * imported script module, and runtime configuration.
+ */
 export type AppInitializeResult = {
   manifest: AppManifest;
   script: AppScriptModule;
   config: AppConfig;
 };
 
+/**
+ * Concrete implementation of {@link IApp}.
+ *
+ * Manages an internal reactive state machine ({@link FlowSubject}) that orchestrates
+ * manifest fetching, config loading, settings management, and script import. Dispatches
+ * lifecycle events through the {@link EventModule} when available.
+ *
+ * @template TEnv - Shape of the environment configuration record.
+ * @template TModules - Additional framework modules the app depends on.
+ */
 // TODO make streams distinct until changed from state
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export class App<

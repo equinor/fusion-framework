@@ -4,10 +4,17 @@ import { useFrameworkModule } from '../useFrameworkModule';
 import { useFeatures } from './useFeatures';
 
 /**
- * Custom hook that provides access to framework-specific feature flags.
- * It returns the result of the `useFeatures` hook from the `featureFlag` module.
- * @returns The result of the `useFeatures` hook.
- * @throws Error if feature flagging is not enabled in the framework.
+ * React hook that returns all feature flags from the **framework-level**
+ * feature-flag provider.
+ *
+ * @returns A {@link UseFeaturesResult} containing all framework feature flags,
+ *   a toggle helper, and any error.
+ * @throws {Error} If the `FeatureFlagModule` is not enabled in the framework.
+ *
+ * @example
+ * ```ts
+ * const { features, toggleFeature } = useFrameworkFeatures();
+ * ```
  */
 export const useFrameworkFeatures = (): ReturnType<typeof useFeatures> => {
   const provider = useFrameworkModule<FeatureFlagModule>('featureFlag');

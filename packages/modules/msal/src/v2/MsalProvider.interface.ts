@@ -8,7 +8,17 @@ import type { IAuthClient } from './IAuthClient.interface';
  *
  * This interface defines the contract for authentication providers that maintain
  * backward compatibility with MSAL v2 API while using MSAL v4 implementation
- * under the hood. This is useful for gradual migration scenarios.
+ * under the hood. Used by the v2 proxy layer during gradual migration scenarios.
+ *
+ * @example
+ * ```typescript
+ * // Obtain a v2 proxy from the current provider
+ * const v2Provider: IMsalProvider = provider.createProxyProvider('2.0.0');
+ *
+ * // Use v2-style API
+ * await v2Provider.login();
+ * const token = await v2Provider.acquireAccessToken({ scopes: ['User.Read'] });
+ * ```
  */
 export interface IMsalProvider {
   /** Current version of the provider (MSAL module version) */

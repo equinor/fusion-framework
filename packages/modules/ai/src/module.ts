@@ -5,10 +5,13 @@ import type { IAIConfigurator } from './AIConfigurator.interface.js';
 import type { IAIProvider } from './AIProvider.js';
 import { AIProvider } from './AIProvider.js';
 
+/** Module key used to register the AI module in the Fusion Framework module map. */
 export type AIModuleKey = 'ai';
 
+/** Module key constant for the AI module (`'ai'`). */
 export const moduleKey: AIModuleKey = 'ai';
 
+/** Type alias describing the AI module shape within the Fusion Framework module system. */
 export type AIModule = Module<AIModuleKey, IAIProvider, IAIConfigurator, []>;
 
 /**
@@ -31,9 +34,24 @@ export const module: AIModule = {
 };
 
 /**
- * Method for enabling the AI module.
- * @param config - Configuration object for the modules
- * @param configure - Callback for configuring the AI module
+ * Enable the AI module on a Fusion Framework module configurator.
+ *
+ * Call this inside `configureModules` to register the AI module and provide
+ * a callback that configures language models, embedding services, and vector stores.
+ *
+ * @param config - The framework modules configurator.
+ * @param configure - Callback that receives the {@link IAIConfigurator} for service registration.
+ *
+ * @example
+ * ```typescript
+ * import { enableAI } from '@equinor/fusion-framework-module-ai';
+ *
+ * const configure = (config) => {
+ *   enableAI(config, (ai) => {
+ *     ai.setModel('gpt-4', new AzureOpenAIModel({ azureOpenAIApiKey: '...' }));
+ *   });
+ * };
+ * ```
  */
 export const enableAI = (
   config: IModulesConfigurator<any, any>,

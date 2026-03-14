@@ -2,11 +2,13 @@ import type { ApiPerson_v2 } from './api-models.v2';
 import type { ApiPerson_v4 } from './api-models.v4';
 import { ApiVersion } from './static';
 
+/** Project master reference attached to a person's contract. */
 export type ApiProjectMaster = {
   id: string;
   name?: string;
 };
 
+/** Manager information with contact details and classification. */
 export type ApiManager = {
   azureUniqueId: string;
   name?: string;
@@ -19,8 +21,10 @@ export type ApiManager = {
   accountClassification: ApiAccountClassification;
 };
 
+/** Invitation status for a person's account. */
 export type ApiInvitationStatus = 'Accepted' | 'Pending' | 'NotSent';
 
+/** Account type classification for a person profile. */
 export type ApiProfileAccountType =
   | 'Employee'
   | 'Consultant'
@@ -28,9 +32,10 @@ export type ApiProfileAccountType =
   | 'External'
   | 'External Hire';
 
-// TODO what are these?
+/** Account classification tier for access control. */
 export type ApiAccountClassification = 'Unclassified' | 'Internal' | 'External';
 
+/** Linked account reference for a person profile. */
 export type ApiProfileAccountLink = {
   azureUniqueId: string;
   mail?: string;
@@ -40,17 +45,32 @@ export type ApiProfileAccountLink = {
   upn?: string;
 };
 
+/**
+ * Map from API version to the corresponding person entity type.
+ *
+ * @see {@link ApiPerson_v2}
+ * @see {@link ApiPerson_v4}
+ */
 export type ApiPersonMap = {
   [ApiVersion.v2]: ApiPerson_v2;
   [ApiVersion.v4]: ApiPerson_v4;
 };
 
+/**
+ * Version-aware person entity type.
+ *
+ * Resolves to the concrete person shape for a given {@link ApiVersion}
+ * key or value.
+ *
+ * @template T - An `ApiVersion` key or value.
+ */
 export type ApiPerson<T extends keyof typeof ApiVersion | ApiVersion> = T extends ApiVersion
   ? ApiPersonMap[T]
   : T extends keyof typeof ApiVersion
     ? ApiPersonMap[(typeof ApiVersion)[T]]
     : unknown;
 
+/** Person suggestion result with account type and department detail. */
 export type ApiSuggestionPerson = {
   accountType?:
     | 'Unknown'
@@ -73,12 +93,14 @@ export type ApiSuggestionPerson = {
   mobilePhone?: string;
 };
 
+/** Application entity in a person suggestion result. */
 export type ApiSuggestionApplication = {
   applicationId: string;
   applicationName?: string;
   servicePrincipalType: 'Application' | 'ManagedIdentity' | 'ServicePrincipal';
 };
 
+/** Single suggestion value representing a person or system account. */
 export type ApiSuggestionValue = {
   azureUniqueId: string;
   name?: string;
@@ -91,6 +113,7 @@ export type ApiSuggestionValue = {
   isExpired: boolean;
 };
 
+/** Paginated suggestion response from the people suggest endpoint. */
 export type ApiSuggestions = {
   totalCount: number;
   count: number;
@@ -98,6 +121,7 @@ export type ApiSuggestions = {
   value: Array<ApiSuggestionValue>;
 };
 
+/** Single resolved item from the people resolve endpoint. */
 export type ApiResolveItem = {
   success: boolean;
   statusCode: number;
@@ -106,4 +130,5 @@ export type ApiResolveItem = {
   account: ApiSuggestionValue | null;
 };
 
+/** Array of resolved person lookup results. */
 export type ApiResolved = Array<ApiResolveItem>;

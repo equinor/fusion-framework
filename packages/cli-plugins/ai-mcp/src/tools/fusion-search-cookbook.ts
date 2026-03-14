@@ -2,8 +2,11 @@ import type { FrameworkInstance } from '@equinor/fusion-framework-cli-plugin-ai-
 import type { AiOptions } from '@equinor/fusion-framework-cli-plugin-ai-base/command-options';
 
 /**
- * Tool definition for searching Fusion Framework cookbooks.
- * This tool enables semantic search across example implementations, tutorials, and how-to guides.
+ * MCP tool definition for `fusion_search_cookbook`.
+ *
+ * Enables semantic search scoped to Fusion Framework cookbook content —
+ * example implementations, tutorials, how-to guides, and practical recipes
+ * indexed as `cookbook` documents.
  */
 export const toolDefinition = {
   name: 'fusion_search_cookbook',
@@ -27,7 +30,16 @@ export const toolDefinition = {
 } as const;
 
 /**
- * Tool handler for fusion_search_cookbook
+ * Handles invocations of the `fusion_search_cookbook` MCP tool.
+ *
+ * Queries the Azure Cognitive Search vector store with a `cookbook` category
+ * filter and returns matching tutorial / recipe documents as JSON text content.
+ *
+ * @param args - Raw tool arguments containing `query` (string) and optional `limit` (number)
+ * @param framework - Active {@link FrameworkInstance} with the AI module loaded
+ * @param options - AI plugin options including Azure Search index name and optional `verbose` flag
+ * @returns MCP-compliant content array with search results, or an error payload
+ * @throws {Error} If the vector store is not configured or `query` is missing
  */
 export async function handleTool(
   args: Record<string, unknown>,

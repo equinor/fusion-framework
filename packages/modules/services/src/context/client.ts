@@ -24,22 +24,40 @@ import {
   relatedContexts,
 } from './related';
 
+/**
+ * Typed API client for the Fusion context service.
+ *
+ * Delegates to versioned endpoint implementations for fetching a single context,
+ * querying contexts by search criteria, and listing related contexts.
+ *
+ * @template TMethod - The client execution method (`'json'` or `'json$'`).
+ * @template TClient - The underlying HTTP client type.
+ */
 export class ContextApiClient<
   TMethod extends keyof ClientMethod<unknown> = keyof ClientMethod<unknown>,
   TClient extends IHttpClient = IHttpClient,
 > {
+  /** Returns the {@link ApiVersion} enum for version-constant access. */
   get Version(): typeof ApiVersion {
     return ApiVersion;
   }
 
+  /**
+   * @param _client - The HTTP client used to execute requests.
+   * @param _method - The execution method (`'json'` or `'json$'`).
+   */
   constructor(
     protected _client: TClient,
     protected _method: TMethod,
   ) {}
 
   /**
-   * Fetch context by id
-   * @see {@link get/client}
+   * Fetch a single context entity by its identifier.
+   *
+   * @template TVersion - The API version key (e.g. `'v1'`).
+   * @template TResult - The expected response type.
+   * @param version - API version to use.
+   * @returns The context entity matching the provided arguments.
    */
   public get<
     TVersion extends string = keyof typeof ApiVersion,
@@ -53,8 +71,12 @@ export class ContextApiClient<
   }
 
   /**
-   * Query context service
-   * @see {@link query/client}
+   * Query the context service with search criteria.
+   *
+   * @template TVersion - The API version key (e.g. `'v1'`).
+   * @template TResult - The expected response type.
+   * @param version - API version to use.
+   * @returns An array of context entities matching the query.
    */
   public query<
     TVersion extends string = keyof typeof ApiVersion,
@@ -68,8 +90,12 @@ export class ContextApiClient<
   }
 
   /**
-   * Query context service
-   * @see {@link query/client}
+   * List contexts related to a specific context entity.
+   *
+   * @template TVersion - The API version key (e.g. `'v1'`).
+   * @template TResult - The expected response type.
+   * @param version - API version to use.
+   * @returns An array of related context entities.
    */
   public related<
     TVersion extends string = keyof typeof ApiVersion,

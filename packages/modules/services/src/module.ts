@@ -14,10 +14,19 @@ import { type IApiProvider, ApiProvider } from './provider';
 
 import type { ApiClientFactory } from './types';
 
+/** String literal type for the services module registration key. */
 export type ServicesModuleKey = 'services';
 
+/** Module registration key used to identify the services module. */
 export const moduleKey: ServicesModuleKey = 'services';
 
+/**
+ * Module definition for the services module.
+ *
+ * Declares the module key, provider type ({@link IApiProvider}),
+ * configurator type ({@link IApiConfigurator}), and required
+ * dependency modules (HTTP and service-discovery).
+ */
 export type ServicesModule = Module<
   ServicesModuleKey,
   IApiProvider,
@@ -26,7 +35,12 @@ export type ServicesModule = Module<
 >;
 
 /**
- * Method to trying to resolve method for creating an IHttpClient
+ * Creates the default {@link ApiClientFactory} by attempting named HTTP clients
+ * first, then falling back to service-discovery.
+ *
+ * @param http - The HTTP client provider from the `http` module.
+ * @param serviceDiscovery - Optional service-discovery provider for automatic client resolution.
+ * @returns A factory function that creates named HTTP clients.
  */
 const createDefaultClient =
   (http: IHttpClientProvider, serviceDiscovery?: ServiceDiscoveryProvider): ApiClientFactory =>
@@ -41,7 +55,11 @@ const createDefaultClient =
   };
 
 /**
- *  Configure http-client
+ * Services module definition.
+ *
+ * Registers the `'services'` module, wires up the {@link ApiConfigurator},
+ * and initializes the {@link ApiProvider} with an HTTP client factory
+ * resolved from the `http` and optional `serviceDiscovery` modules.
  */
 export const module: ServicesModule = {
   name: moduleKey,
@@ -66,8 +84,18 @@ export const module: ServicesModule = {
 };
 
 /**
- * Method for enabling the Service module
- * @param config - configuration object
+ * Registers the services module with the framework configurator.
+ *
+ * Call this during app configuration to make the services module
+ * available at runtime.
+ *
+ * @param config - The framework modules configurator.
+ *
+ * @example
+ * ```ts
+ * import { enableServices } from '@equinor/fusion-framework-module-services';
+ * configurator.addConfig(enableServices);
+ * ```
  */
 export const enableServices = (
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -77,12 +105,24 @@ export const enableServices = (
 };
 
 /**
+ * Creates a module configuration object for the services module
+ * with a custom configuration callback.
+ *
+ * Use this when you need to customise the services module (for example,
+ * supplying a custom `createClient` factory).
+ *
+ * @param configure - Callback that receives the {@link IApiConfigurator} for customisation.
+ * @returns A module configurator object that can be passed to `addConfig`.
+ *
  * @example
  * ```ts
- * config.addConfig(x => x.createClient(...));
+ * import { configureServices } from '@equinor/fusion-framework-module-services';
+ * configurator.addConfig(
+ *   configureServices((cfg) => {
+ *     cfg.createClient = myCustomClientFactory;
+ *   }),
+ * );
  * ```
- * @param configure - Callback for configuring the module
- * @returns Configuration object
  */
 export const configureServices = (
   configure: (configurator: IApiConfigurator) => void,

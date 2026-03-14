@@ -1,180 +1,208 @@
-# Fusion Service Discovery Module
+# @equinor/fusion-framework-module-service-discovery
 
-This module is for resolving service endpoints from a service discovery service.
+Resolves service endpoint URIs and authentication scopes from a central service discovery API so that application code can request named services without hard-coding URLs.
+
+## When to Use
+
+Use this module when your application needs to:
+
+- Look up backend service base URIs at runtime instead of baking them into config
+- Obtain OAuth scopes for token acquisition automatically
+- Create pre-configured HTTP clients for discovered services
+
+## Prerequisites
+
+The module depends on `@equinor/fusion-framework-module-http` for HTTP transport. An HTTP client pointing at the service discovery backend must be registered **before** service discovery is enabled.
 
 > [!WARNING]
-> This module requires `@equinor/fusion-framework-module-http` to to create http clients, so the module must be enabled in runtime.
+> The HTTP module must be enabled in the runtime (e.g. Portal). If you are building a sub-module such as an Application, the portal typically inherits this configuration for you.
 
-## Configure
+## Quick Start
 
-This module requires a http client to be configured. The http client should be configured with a key that is used to resolve the service endpoints.
+### 1. Register an HTTP client for the service discovery API
 
-> [!NOTE]
-> The Service Discovery Module inherits configuration when used in sub-modules (ex. Application), which means that the http client should be configured in the root module (ex Portal).
-> 
-> Skip this step if the http client is already configured.
+Skip this step if the runtime already provides an HTTP client keyed `"service_discovery"`.
 
 ```typescript
-import { ModulesConfigurator } from '@equinor/fusion-framework-module';
+import { configureHttpClient } from '@equinor/fusion-framework-module-http';
+import type { ModulesConfigurator } from '@equinor/fusion-framework-module';
+
 const configurator = new ModulesConfigurator();
 configurator.addConfig(
-    configureHttpClient(
-      'service_discovery', 
-      { /* http config */ }
-    )
+  configureHttpClient('service_discovery', {
+    baseUri: 'https://discovery.example.com',
+    defaultScopes: ['https://discovery.example.com/.default'],
+  }),
 );
 ```
 
-### Simple Configuration
-
-In the simplest form, the service discovery module can be enabled with the following code:
+### 2. Enable service discovery
 
 ```typescript
-import enableServiceDiscovery from '@equinor/fusion-framework-service-discovery';
+import { enableServiceDiscovery } from '@equinor/fusion-framework-module-service-discovery';
 
-// the module will setup the service discovery client with default configuration
-// Assumes that http client is configured with key 'service_discovery'
+// Auto-detects the 'service_discovery' HTTP client
 enableServiceDiscovery(configurator);
 ```
 
-#### Override default http client key
-
-If the http client is configured with a different key, the key can be specified as follows:
+### 3. Resolve services at runtime
 
 ```typescript
-enableServiceDiscovery(
-  configurator, 
-  async(builder: ServiceDiscoveryConfigurator) => {
-    builder.configureServiceDiscoveryClientByClientKey(
-      // assume that http client is configured with this key
-      'service_discovery_custom', 
-      // optional endpoint path
-      '/custom/services' 
-    );
+// Resolve a single service
+const contextService = await modules.serviceDiscovery.resolveService('context');
+console.log(contextService.uri); // 'https://api.example.com/context'
+
+// Create a ready-to-use HTTP client for a discovered service
+const client = await modules.serviceDiscovery.createClient('people');
+const data = await client.fetchAsync('/persons?search=Jane');
+```
+
+## Configuration
+
+### Simple — Custom HTTP Client Key
+
+If the HTTP client is registered under a key other than `"service_discovery"`:
+
+```typescript
+enableServiceDiscovery(configurator, async (builder) => {
+  builder.configureServiceDiscoveryClientByClientKey(
+    'sd_custom',        // HTTP client key
+    '/custom/services', // optional endpoint path
+  );
 });
 ```
 
-### Advanced Configuration
+### Intermediate — Custom HTTP Client
 
-#### Override default http client
-
-If a custom http client is required, the client can be configured as follows:
+Supply your own HTTP client and endpoint:
 
 ```typescript
-enableServiceDiscovery(
-  configurator, 
-  async(builder: ServiceDiscoveryConfigurator) => {
-    builder.configureServiceDiscoveryClient(
-      // configurator callback
-      async (args: ConfigBuilderCallbackArgs) => {
-        // using build environment to create a http client
-        const httpProvider = await requireInstance('http');
-        const httpClient = httpProvider.createClient('some_key');
-        return { 
-          httpClient: httpProvider.createClient('some_key'),
-          endpoint: '/custom/services'
-        };
-      }
-    );
+enableServiceDiscovery(configurator, async (builder) => {
+  builder.configureServiceDiscoveryClient(async ({ requireInstance }) => {
+    const httpProvider = await requireInstance('http');
+    return {
+      httpClient: httpProvider.createClient('my_key'),
+      endpoint: '/custom/services',
+    };
+  });
 });
 ```
 
-#### Setting a custom service discovery client
+### Advanced — Fully Custom Discovery Client
 
-If a custom service discovery client is required, the client can be configured as follows:
+Provide an object implementing `IServiceDiscoveryClient` directly:
 
 ```typescript
-enableServiceDiscovery(
-  configurator, 
-  async(builder: ServiceDiscoveryConfigurator) => {
-    builder.setServiceDiscoveryClient(
-      {
-        resolveServices() {
-          return [
-            { 
-              key: 'service1', 
-              url: 'http://service1.com' 
-            },
-            { 
-              key: 'service2', 
-              url: 'http://service2.com' 
-            }
-          ]
-        },
-        resolveService(key: string): Promise<ServiceEndpoint> {
-          return this.services.find(s => s.key === key);
-        }
-      }
-    );
+enableServiceDiscovery(configurator, async (builder) => {
+  builder.setServiceDiscoveryClient({
+    async resolveServices() {
+      return [
+        { key: 'api', uri: 'https://localhost:5000', defaultScopes: [] },
+      ];
+    },
+    async resolveService(key) {
+      const services = await this.resolveServices();
+      const service = services.find((s) => s.key === key);
+      if (!service) throw new Error(`Unknown service: ${key}`);
+      return service;
+    },
+  });
 });
 ```
 
-If custom logic for creating the service discovery client is required, the client can be configured as follows:
+Or use an async factory for access to the build environment:
 
 ```typescript
-enableServiceDiscovery(
-  configurator, 
-  async(builder: ServiceDiscoveryConfigurator) => {
-    builder.setServiceDiscoveryClient(
-      async(args: ConfigBuilderCallbackArgs) => {
-        const httpProvider = await requireInstance('http');
-        const httpClient = httpProvider.createClient('my_key');
-        return {
-          resolveServices() {
-            return httpClient.get('/services');
-          },
-          resolveService(key: string): Promise<ServiceEndpoint> {
-            return httpClient.get(`/services/${key}`);
-          }
-        };
-      }
-    );
+enableServiceDiscovery(configurator, async (builder) => {
+  builder.setServiceDiscoveryClient(async ({ requireInstance }) => {
+    const httpProvider = await requireInstance('http');
+    const httpClient = httpProvider.createClient('my_key');
+    return {
+      async resolveServices() {
+        return httpClient.fetchAsync('/services');
+      },
+      async resolveService(key) {
+        return httpClient.fetchAsync(`/services/${key}`);
+      },
+    };
+  });
 });
 ```
 
-## Session Overrides
+## Key Concepts
 
-The Service Discovery module supports runtime service overrides via `sessionStorage` for development and debugging purposes. This allows you to temporarily override service URLs and scopes without modifying your application configuration.
+### Inheritance
 
-### Setting Session Overrides
+When used inside a sub-module (e.g. an Application), the Service Discovery module inherits the parent module's discovery client by default. This means:
 
-To override services, store a JSON object in `sessionStorage` with the key `'overriddenServiceDiscoveryUrls'`:
+- The child shares the parent's cache, avoiding duplicate API calls
+- The child sees the same session overrides
+- Breaking changes in the parent's client could affect the child
+
+### Caching
+
+The built-in `ServiceDiscoveryClient` caches results for **5 minutes** via `@equinor/fusion-query`. The `allow_cache` parameter on `resolveService` / `resolveServices` controls whether to return the first cached snapshot (`true`) or wait for the latest response (`false`, the default).
+
+### Session Overrides
+
+> [!TIP]
+> Session overrides let you redirect services to local or staging URLs during development without touching application config.
+
+Store a JSON object in `sessionStorage` under the key `"overriddenServiceDiscoveryUrls"`:
 
 ```typescript
-// Example: Override multiple services
 const overrides = {
   'my-api': {
     url: 'https://localhost:3000/api',
-    scopes: ['https://localhost/.default']
+    scopes: ['https://localhost/.default'],
   },
-  'another-service': {
-    url: 'https://dev.example.com/service',
-    scopes: ['https://dev.example.com/.default']
-  }
 };
-
 sessionStorage.setItem('overriddenServiceDiscoveryUrls', JSON.stringify(overrides));
 ```
 
-### How Session Overrides Work
+How it works:
 
-When the service discovery client resolves services:
+1. Services are fetched normally from the API
+2. The module checks `sessionStorage` for overrides
+3. Matching services get their `uri` and `scopes` replaced, and an `overridden: true` flag is set
+4. Overrides are only applied when `sessionStorage` is available
 
-1. **Service Resolution**: First, services are resolved normally from the configured service discovery endpoint
-2. **Override Application**: The module checks for session overrides in `sessionStorage`
-3. **Value Replacement**: For each service found in both the resolved services and session overrides:
-   - The service `uri` is replaced with the override `url`
-   - The service `scopes` are replaced with the override `scopes`
-   - An `overridden: true` flag is added to the service object
-4. **Environment Safety**: Session overrides are only applied in environments where `sessionStorage` is available
-
-### Clearing Session Overrides
-
-To remove session overrides:
+Clear overrides by removing the storage key:
 
 ```typescript
 sessionStorage.removeItem('overriddenServiceDiscoveryUrls');
 ```
 
 > [!NOTE]
-> Session overrides are temporary and will be cleared when the browser session ends. They only affect the current browser tab/window and are intended for development use only.
+> Session overrides are temporary — they are cleared when the browser session ends and only affect the current tab/window.
+
+## API Reference
+
+### Exports
+
+| Export                             | Kind          | Description                                                    |
+| ---------------------------------- | ------------- | -------------------------------------------------------------- |
+| `enableServiceDiscovery`           | function      | Registers the module on a `ModulesConfigurator` (recommended)  |
+| `configureServiceDiscovery`        | function      | Creates an `IModuleConfigurator` for manual `addConfig` usage  |
+| `ServiceDiscoveryConfigurator`     | class         | Builder for service discovery configuration                    |
+| `ServiceDiscoveryProvider`         | class         | Runtime provider — resolves services, creates HTTP clients     |
+| `IServiceDiscoveryProvider`        | interface     | Public API contract for the provider                           |
+| `IServiceDiscoveryClient`          | interface     | Contract for pluggable discovery client implementations        |
+| `Service`                          | type          | Shape of a resolved service endpoint                           |
+| `ServiceDiscoveryConfig`           | interface     | Resolved module configuration holding the discovery client     |
+| `ServiceDiscoveryModule`           | type          | Module type alias for the framework module system              |
+
+### `Service` Shape
+
+```typescript
+type Service = {
+  key: string;         // Lookup key (e.g. "context")
+  uri: string;         // Base URI of the service
+  scopes?: string[];   // OAuth scopes
+  id?: string;         // Service registration ID
+  name?: string;       // Display name
+  tags?: string[];     // Freeform tags
+  overridden?: boolean; // True when session-overridden
+  defaultScopes: string[]; // @deprecated — use `scopes`
+};
+```

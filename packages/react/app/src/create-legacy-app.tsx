@@ -8,6 +8,19 @@ import type { AppEnv, AppModuleInitiator } from '@equinor/fusion-framework-app';
 import { createComponent } from './create-component';
 import type { AppModule } from '@equinor/fusion-framework-module-app';
 
+/**
+ * Creates a legacy wrapper component that bootstraps a Fusion React app within
+ * the older Fusion CLI hosting model.
+ *
+ * @deprecated Prefer {@link renderApp} for new applications. This helper exists
+ * only for backward-compatibility with apps that must run inside the legacy
+ * Fusion CLI.
+ *
+ * @template TModules - Array of additional module types to initialise.
+ * @param Component - The root React element to render.
+ * @param configure - Optional callback to configure application modules.
+ * @returns A React function component that initialises modules and renders the app.
+ */
 export const createLegacyApp = <TModules extends Array<AnyModule>>(
   Component: ElementType,
   configure?: AppModuleInitiator<TModules>,

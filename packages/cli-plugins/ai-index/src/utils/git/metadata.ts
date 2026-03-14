@@ -24,9 +24,13 @@ const generateGithubPermalink = (
 };
 
 /**
- * Extract git metadata for a file
- * @param filePath - Absolute file path
- * @returns Git metadata or undefined if not in a git repository
+ * Extracts git metadata for a single source file.
+ *
+ * Resolves the latest commit hash, commit date, and a GitHub permalink
+ * (when the remote is a GitHub URL) by inspecting `git log` output.
+ *
+ * @param filePath - Absolute path to the file.
+ * @returns Git metadata, or `undefined` if the file is not inside a git repository.
  */
 export const extractGitMetadata = async (filePath: string): Promise<GitMetadata | undefined> => {
   const { git, gitRepoPath: gitRepoRoot } = getGit(filePath) ?? {};
