@@ -1,4 +1,4 @@
-import { createCommand, createOption } from 'commander';
+import { type Command, createCommand, createOption } from 'commander';
 
 import { loadFusionAIConfig, setupFramework } from '@equinor/fusion-framework-cli-plugin-ai-base';
 import { withOptions as withAiOptions } from '@equinor/fusion-framework-cli-plugin-ai-base/command-options';
@@ -58,7 +58,7 @@ const _command = createCommand('add')
     ).default(false),
   )
   .argument('[glob-patterns...]', 'Glob patterns to match files (optional when using --diff)')
-  .action(async (patterns: string[], commandOptions: CommandOptions) => {
+  .action(async function (this: Command, patterns: string[], commandOptions: CommandOptions) {
     // Load configuration before validation so config values can fill gaps
     const preOptions = commandOptions as Record<string, unknown>;
     const config = await loadFusionAIConfig<FusionAIConfigWithIndex>(
@@ -67,12 +67,21 @@ const _command = createCommand('add')
     );
     const indexConfig = config.index ?? {};
 
-    // Config values act as defaults when CLI flags are absent
-    if (!preOptions.azureSearchIndexName && indexConfig.name) {
-      preOptions.azureSearchIndexName = indexConfig.name;
+    // Config file values override env-var defaults but not explicit CLI flags.
+    // Commander merges env vars before the action runs, so we use
+    // getOptionValueSource to distinguish "user passed --flag" from "came from env".
+    const parentCommand = this.parent ?? this;
+    if (indexConfig.name) {
+      const source = parentCommand.getOptionValueSource('azureSearchIndexName');
+      if (source !== 'cli') {
+        preOptions.azureSearchIndexName = indexConfig.name;
+      }
     }
-    if (!preOptions.openaiEmbeddingDeployment && indexConfig.model) {
-      preOptions.openaiEmbeddingDeployment = indexConfig.model;
+    if (indexConfig.model) {
+      const source = parentCommand.getOptionValueSource('openaiEmbeddingDeployment');
+      if (source !== 'cli') {
+        preOptions.openaiEmbeddingDeployment = indexConfig.model;
+      }
     }
 
     const options = await CommandOptionsSchema.parseAsync(preOptions);

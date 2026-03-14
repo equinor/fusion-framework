@@ -32,7 +32,101 @@ RUN npm install @fluentui/storybook-llms-extractor@latest
 RUN npx storybook-llms-extractor --distPath ./storybook-build
 RUN cd ./storybook-build/llms && for f in *.txt; do mv "$f" "${f%.txt}.md"; done
 
-# ── Stage 3: Export only the generated files ──
+# ── Stage 3: Convert token JSON → markdown for indexing ──
+FROM node:24-slim AS tokens
+
+WORKDIR /app
+COPY --from=build /app/packages/eds-tokens/build/json ./json
+COPY --from=build /app/packages/eds-icons/src/data.ts ./icons-data.ts
+COPY --from=build /app/packages/eds-icons/README.md ./icons-readme.md
+
+RUN cat <<'SCRIPT' > convert.mjs
+import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
+
+const out = './tokens';
+mkdirSync(out, { recursive: true });
+
+/**
+ * Convert a flat { key: value } token JSON file into a markdown table.
+ * @param {string} file - Path to JSON file
+ * @param {string} title - Human-readable heading
+ * @param {string} prefix - CSS variable prefix, e.g. "--eds-color-"
+ * @param {string} unit - Appended to numeric values, e.g. "px"
+ */
+function convert(file, title, prefix, unit = '') {
+  const tokens = JSON.parse(readFileSync(file, 'utf8'));
+  const rows = Object.entries(tokens).map(([key, val]) => {
+    const cssVar = `${prefix}${key}`;
+    const display = typeof val === 'number' ? `${val}${unit}` : val;
+    return `| \`${cssVar}\` | \`${display}\` |`;
+  });
+  return `# ${title}\n\nInstall: \`pnpm install @equinor/eds-tokens\`\nImport: \`@import '@equinor/eds-tokens/css/variables';\`\n\n| CSS Variable | Value |\n|---|---|\n${rows.join('\n')}\n`;
+}
+
+// Color tokens — static semantic (light theme, explicit category in var name)
+writeFileSync(`${out}/color-tokens-light.md`, convert(
+  'json/color/static/flat/semantic.json',
+  'EDS Color Tokens — Light Theme (Static Semantic)',
+  '--eds-color-',
+));
+
+// Color tokens — dark scheme
+writeFileSync(`${out}/color-tokens-dark.md`, convert(
+  'json/color/color-scheme/flat/dark-semantic.json',
+  'EDS Color Tokens — Dark Theme',
+  '--eds-color-',
+));
+
+// Spacing tokens — both density modes
+writeFileSync(`${out}/spacing-tokens-spacious.md`, convert(
+  'json/spacing/flat/spacious.json',
+  'EDS Spacing & Sizing Tokens — Spacious Density',
+  '--eds-',
+  'px',
+));
+
+writeFileSync(`${out}/spacing-tokens-comfortable.md`, convert(
+  'json/spacing/flat/comfortable.json',
+  'EDS Spacing & Sizing Tokens — Comfortable Density',
+  '--eds-',
+  'px',
+));
+
+// Dynamic color tokens (per-category, used with data-color-appearance)
+const categories = ['accent', 'neutral', 'success', 'info', 'warning', 'danger'];
+const dynamicRows = categories.map(cat => {
+  const tokens = JSON.parse(readFileSync(`json/color/dynamic/flat/semantic-${cat}.json`, 'utf8'));
+  const heading = `## ${cat.charAt(0).toUpperCase() + cat.slice(1)} (\`data-color-appearance="${cat}"\`)\n`;
+  const rows = Object.entries(tokens).map(([key, val]) =>
+    `| \`--eds-color-${key}\` | \`${val}\` |`
+  );
+  return `${heading}\n| CSS Variable | Value |\n|---|---|\n${rows.join('\n')}`;
+}).join('\n\n');
+
+writeFileSync(`${out}/color-tokens-dynamic.md`,
+  `# EDS Dynamic Color Tokens\n\nThese tokens resolve per semantic category set via \`data-color-appearance\` on a parent element.\nThe CSS variable names omit the category — the attribute controls which palette is active.\n\nInstall: \`pnpm install @equinor/eds-tokens\`\nImport: \`@import '@equinor/eds-tokens/css/variables';\`\n\n${dynamicRows}\n`
+);
+
+console.log('Token markdown generated:', out);
+
+// Append icon name list to the eds-icons README
+const iconsSource = readFileSync('icons-data.ts', 'utf8');
+const iconNames = [...iconsSource.matchAll(/^export const (\w+): IconData/gm)]
+  .map(m => m[1])
+  .sort();
+
+const readme = readFileSync('icons-readme.md', 'utf8');
+writeFileSync(`${out}/eds-icons.md`,
+  `${readme}\n\n## All available icons (${iconNames.length})\n\n${iconNames.join(', ')}\n`
+);
+console.log('Icon catalog generated:', iconNames.length, 'icons');
+SCRIPT
+
+RUN node convert.mjs
+
+# ── Stage 4: Export only the generated files ──
 FROM scratch AS export
 COPY --from=build /app/apps/design-system-docs/docs /docs
 COPY --from=extractor /app/storybook-build/llms/ /stories
+COPY --from=tokens /app/tokens/ /tokens
+COPY --from=build /app/packages/eds-tokens/README.md /tokens/eds-tokens.md

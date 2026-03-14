@@ -28,6 +28,8 @@ export interface IndexConfig {
   rawPatterns?: string[];
   /** Glob patterns to ignore — only applied when file paths are provided to the command. */
   ignore?: string[];
+  /** Respect `.gitignore` rules when globbing files. Defaults to `true`. Set to `false` for build-output directories that are gitignored. */
+  gitignore?: boolean;
   /** Metadata processing configuration. */
   metadata?: {
     /** Automatically resolve the nearest `package.json` and attach package name/version/keywords. */

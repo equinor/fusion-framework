@@ -36,6 +36,8 @@ const defaultIgnore = ['node_modules', '**/node_modules/**', 'dist', '**/dist/**
 export async function embed(binOptions: EmbeddingsBinOptions): Promise<void> {
   const { framework, options, config, filePatterns } = binOptions;
 
+  console.log(`📇 Index: ${options.azureSearchIndexName}`);
+
   // Handle clean operation (destructive - deletes all existing documents)
   const vectorStoreService = framework.ai.getService('search', options.azureSearchIndexName);
   if (options.clean && !options.dryRun) {
@@ -62,11 +64,14 @@ export async function embed(binOptions: EmbeddingsBinOptions): Promise<void> {
     // to prevent traversing these directories entirely.
     const ignore = config.index?.ignore ?? defaultIgnore;
 
+    // Respect .gitignore by default; configs targeting build artifacts can opt out.
+    const gitignore = config.index?.gitignore ?? true;
+
     return from(
       globbyStream(filePatterns, {
         ignore,
         onlyFiles: true,
-        gitignore: true,
+        gitignore,
         absolute: true,
       }),
     ).pipe(
