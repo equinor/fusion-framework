@@ -186,13 +186,35 @@ interface IAuthProvider {
 
 ### Common Issues
 
-| Issue | Solution |
-|-------|----------|
-| **Invalid client/tenant ID** | Verify your Azure AD app registration settings |
-| **Port already in use** | Change the `serverPort` or kill the process using the port |
-| **Silent auth fails** | Ensure you've logged in interactively first to cache credentials |
-| **Token expired** | The module handles refresh automatically; check your scopes |
-| **Credential storage errors** | See our [credential storage guide](docs/libsecret.md) |
+| Issue | Error Class | Solution |
+|-------|------------|----------|
+| **No cached session** | `NoAccountsError` | Run interactive login first to cache credentials, then retry with silent mode |
+| **Silent auth fails** | `SilentTokenAcquisitionError` | Cached session may have expired or network is unavailable; fall back to interactive login |
+| **Callback server fails** | `AuthServerError` | Check that the callback server port is not in use and the browser can reach it |
+| **Callback server timeout** | `AuthServerTimeoutError` | The browser did not complete login within the timeout (default 5 min); retry or check network |
+| **Invalid client/tenant ID** | — | Verify your Azure AD app registration settings |
+| **Port already in use** | — | Change the `serverPort` or kill the process using the port |
+| **Token expired** | — | The module handles refresh automatically; check your scopes |
+| **Credential storage errors** | — | See our [credential storage guide](docs/libsecret.md) |
+
+All error classes are exported from `@equinor/fusion-framework-module-msal-node/error`. A common pattern is to attempt silent token acquisition first and fall back to interactive login on failure:
+
+```typescript
+import { NoAccountsError, SilentTokenAcquisitionError } from '@equinor/fusion-framework-module-msal-node/error';
+
+try {
+  const token = await modules.auth.acquireAccessToken({
+    request: { scopes: ['api://my-api/.default'] },
+  });
+} catch (error) {
+  if (error instanceof NoAccountsError || error instanceof SilentTokenAcquisitionError) {
+    // Fall back to interactive login
+    await modules.auth.login({ request: { scopes: ['api://my-api/.default'] } });
+  } else {
+    throw error;
+  }
+}
+```
 
 ### Getting Help
 
