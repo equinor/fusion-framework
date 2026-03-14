@@ -105,7 +105,7 @@ jobs:
 
       - name: Summary
         run: |
-          echo "Indexing mode: ${{ steps.mode.outputs.mode }}"
+          echo "### Indexing mode: ${{ steps.mode.outputs.mode }}"
           echo "Reason: ${{ steps.mode.outputs.reason }}"
           if [[ "${{ steps.mode.outputs.mode }}" == "diff" ]]; then
             echo "Base ref: ${{ steps.mode.outputs.base_ref }}"
