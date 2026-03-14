@@ -93,9 +93,12 @@ enableContext(configurator, (builder) => {
   });
 
   // connect (or disconnect) from parent context
+  // when enabled (default), onParentContextChanged fires before mirroring the parent's context locally
   builder.connectParentContext(false);
 
   // path ↔ context integration
+  // the default resolver uses extractContextIdFromPath to pull a GUID from the URL,
+  // then fetches the matching context item — see resolveInitialContext in utils
   builder.setContextPathExtractor((path) => path.split('/')[2]);
   builder.setContextPathGenerator((ctx, path) =>
     path.replace(/\/context\/[^/]+/, `/context/${ctx.id}`),
@@ -118,10 +121,10 @@ enableContext(configurator, (builder) => {
 | `setContextParameterFn(fn)` | Maps search + type to API query params |
 | `setValidateContext(fn)` | Custom validation (`this` = provider) |
 | `setResolveContext(fn)` | Custom resolution (`this` = provider) |
-| `connectParentContext(bool)` | Enable/disable parent context sync |
+| `connectParentContext(bool)` | Enable/disable parent context sync (fires `onParentContextChanged` on change) |
 | `setContextPathExtractor(fn)` | Extract context ID from URL path |
 | `setContextPathGenerator(fn)` | Generate URL path from context item |
-| `setResolveInitialContext(fn)` | Override initial context resolution |
+| `setResolveInitialContext(fn)` | Override initial context resolution (default uses `extractContextIdFromPath` → `resolveContextFromPath`) |
 | `setContextClient(client)` | Custom get/query/related clients |
 
 ## Events
