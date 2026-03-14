@@ -1,9 +1,16 @@
 /**
- * Core types and interfaces for the LLM module
+ * @packageDocumentation
+ * Shared configuration interfaces for AI client setup.
+ *
+ * These types define the shape of provider-agnostic connection settings
+ * used when configuring AI clients programmatically.
  */
 
 /**
- * Base configuration for AI clients
+ * Base configuration for AI clients.
+ *
+ * Provides provider-agnostic connection parameters such as endpoint,
+ * authentication, timeout, and retry behaviour.
  */
 export interface AIConfig {
   /** API endpoint URL */
@@ -21,21 +28,27 @@ export interface AIConfig {
 }
 
 /**
- * Provider-specific configuration
+ * Provider-specific configuration.
+ *
+ * Associates a named provider (e.g. `'openai'`, `'azure-openai'`) with
+ * arbitrary provider-scoped settings.
  */
 export interface AIProviderConfig {
-  /** Provider name (e.g., 'openai', 'anthropic', 'azure-openai') */
+  /** Provider name (e.g., `'openai'`, `'anthropic'`, `'azure-openai'`) */
   provider: string;
   /** Provider-specific settings */
   settings?: Record<string, unknown>;
 }
 
 /**
- * Configuration for a specific AI client
+ * Configuration for a named AI client instance.
+ *
+ * Extends {@link AIConfig} with a unique `name` and optional `provider`
+ * discriminator for resolving provider-specific behaviour.
  */
 export interface AIClientConfig extends AIConfig {
   /** Unique identifier for this client configuration */
   name: string;
-  /** Provider-specific configuration */
+  /** Provider identifier used to select implementation details */
   provider?: string;
 }

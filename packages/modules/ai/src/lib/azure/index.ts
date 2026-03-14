@@ -1,5 +1,13 @@
 /**
- * Azure-specific AI service implementations
+ * @packageDocumentation
+ *
+ * Azure-specific AI service implementations backed by LangChain.
+ *
+ * Import from `@equinor/fusion-framework-module-ai/azure` to access
+ * {@link AzureOpenAIModel}, {@link AzureOpenAiEmbed}, and {@link AzureVectorStore}
+ * along with their configuration types.
+ *
+ * @module @equinor/fusion-framework-module-ai/azure
  */
 
 export { SearchClient as AzureSearchClient } from '@azure/search-documents';

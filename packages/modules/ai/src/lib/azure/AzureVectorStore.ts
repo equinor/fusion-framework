@@ -19,19 +19,44 @@ import { AIError } from '../../AIError.js';
 import type { Document } from '@langchain/core/documents';
 import { convertObjectToAttributes } from '../convert-object-to-attributes.js';
 
+/**
+ * A LangChain document enriched with Azure AI Search metadata.
+ */
 export type AzureDocument = Document & {
   metadata: AzureAISearchDocumentMetadata;
 };
 
 /**
- * Azure AI Search vector store implementation using LangChain
+ * Azure AI Search vector store implementation built on the LangChain
+ * `AzureAISearchVectorStore` backend.
+ *
+ * Persists documents alongside their embedding vectors and exposes
+ * similarity-based search, document CRUD, and LangChain retriever
+ * creation for RAG pipelines.
+ *
+ * @example
+ * ```typescript
+ * import { AzureOpenAiEmbed, AzureVectorStore } from '@equinor/fusion-framework-module-ai/azure';
+ *
+ * const embed = new AzureOpenAiEmbed({ azureOpenAIApiKey: '...' });
+ * const store = new AzureVectorStore(embed, {
+ *   endpoint: 'https://my-search.search.windows.net',
+ *   key: 'admin-key',
+ *   indexName: 'documents',
+ * });
+ *
+ * const results = await store.invoke('quarterly earnings summary');
+ * ```
  */
 export class AzureVectorStore extends BaseService<string, unknown[]> implements IVectorStore {
   private vectorStore: AzureAISearchVectorStore;
 
   /**
-   * Create a new Azure Vector Store client
-   * @param config - Vector store configuration
+   * Create a new Azure AI Search vector store client.
+   *
+   * @param embed - Embedding service used to vectorise documents and queries.
+   * @param config - Azure AI Search connection and index configuration.
+   * @throws {AIError} When the underlying Azure vector store fails to initialise.
    */
   constructor(embed: IEmbed, config: AzureAISearchConfig) {
     super();
@@ -45,6 +70,15 @@ export class AzureVectorStore extends BaseService<string, unknown[]> implements 
     }
   }
 
+  /**
+   * Add documents to the Azure AI Search index.
+   *
+   * Custom metadata attributes are flattened to `{ key, value }` pairs using
+   * {@link convertObjectToAttributes} before indexing.
+   *
+   * @param documents - Documents to index; each must include an `id` and `pageContent`.
+   * @returns Promise resolving to the IDs of the stored documents.
+   */
   public addDocuments(documents: VectorStoreDocument[]): Promise<string[]> {
     const options: AddDocumentsOptions = {
       ids: documents.map((document) => document.id ?? ''),
@@ -64,6 +98,12 @@ export class AzureVectorStore extends BaseService<string, unknown[]> implements 
     return this.vectorStore.addDocuments(processedDocuments, options);
   }
 
+  /**
+   * Delete documents from the Azure AI Search index by ID or filter.
+   *
+   * @param options - Deletion criteria — specify `ids`, a `filter`, or both.
+   * @returns Promise that resolves when the deletion completes.
+   */
   deleteDocuments(options: { ids?: string | string[]; filter?: SearchFilterType }): Promise<void> {
     return this.vectorStore.delete(options);
   }

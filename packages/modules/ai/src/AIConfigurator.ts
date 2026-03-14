@@ -209,6 +209,15 @@ export class AIConfigurator extends BaseConfigBuilder<AIModuleConfig> implements
     return this;
   }
 
+  /**
+   * Retrieve a previously registered service by category and identifier.
+   *
+   * @template T - The service category (`'models'`, `'embeddings'`, or `'vectorStores'`).
+   * @param type - Service category key matching {@link AIModuleConfig}.
+   * @param identifier - The identifier supplied when the service was registered.
+   * @returns The service instance or factory registered under the given key.
+   * @throws {Error} When the provided `type` is not a known service category.
+   */
   public getService<T extends keyof AIModuleConfig>(
     type: T,
     identifier: string,

@@ -4,7 +4,13 @@ import type { AIModuleConfig } from './AIConfigurator.interface.js';
 import { version } from './version.js';
 
 /**
- * Type for AI service types.
+ * Discriminated key used when calling {@link IAIProvider.getService}.
+ *
+ * | Value          | Returns         |
+ * |----------------|----------------|
+ * | `'chat'`       | {@link IModel}  |
+ * | `'embeddings'` | {@link IEmbed}  |
+ * | `'search'`     | {@link IVectorStore} |
  */
 export type AIServiceType = 'chat' | 'embeddings' | 'search';
 
@@ -30,17 +36,27 @@ export interface IAIProvider {
 }
 
 /**
- * Provider implementation for AI services.
+ * Runtime provider that gives application code access to configured AI services.
  *
- * The AIProvider extends BaseModuleProvider and implements IAIProvider,
- * providing access to configured AI services including language models,
- * embeddings, and vector stores.
+ * Created automatically by the AI module during Fusion Framework initialisation.
+ * Use {@link IAIProvider.getService} to retrieve language models, embedding
+ * services, or vector stores by the identifier supplied during configuration.
+ *
+ * @example
+ * ```typescript
+ * const ai = modules.ai;
+ * const model = ai.getService('chat', 'gpt-4');
+ * const response = await model.invoke('Summarise this document');
+ * ```
  */
 export class AIProvider extends BaseModuleProvider<AIModuleConfig> implements IAIProvider {
   #models: Record<string, IModel>;
   #embeddings: Record<string, IEmbed>;
   #vectorStores: Record<string, IVectorStore>;
 
+  /**
+   * @param config - Resolved AI module configuration containing all registered services.
+   */
   constructor(config: AIModuleConfig) {
     super({ version, config });
 
@@ -51,7 +67,13 @@ export class AIProvider extends BaseModuleProvider<AIModuleConfig> implements IA
   }
 
   /**
-   * Gets a configured AI service by type and identifier.
+   * Retrieve a configured AI service by type and identifier.
+   *
+   * @template T - The service type discriminator.
+   * @param type - Service category — `'chat'`, `'embeddings'`, or `'search'`.
+   * @param identifier - The identifier used when the service was registered via {@link IAIConfigurator}.
+   * @returns The resolved service instance.
+   * @throws {Error} When no service is registered under the given type and identifier.
    */
   public getService<T extends AIServiceType>(
     type: T,
