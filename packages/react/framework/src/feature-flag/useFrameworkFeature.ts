@@ -4,12 +4,19 @@ import { useFrameworkModule } from '../useFrameworkModule';
 import { useFeature } from './useFeature';
 
 /**
- * Custom hook that allows accessing a framework feature based on a given feature flag key.
+ * React hook that retrieves a single feature flag from the **framework-level**
+ * feature-flag provider.
  *
- * @template T - The type of the feature.
- * @param {string} key - The feature flag key.
- * @returns {ReturnType<typeof useFeature<T>>} - The result of the feature hook.
- * @throws {Error} - If feature flagging is not enabled in the framework.
+ * @template T - Value type carried by the feature flag.
+ * @param key - Unique key identifying the feature flag.
+ * @returns A {@link UseFeatureResult} with the flag value, toggle helper,
+ *   and any error.
+ * @throws {Error} If the `FeatureFlagModule` is not enabled in the framework.
+ *
+ * @example
+ * ```ts
+ * const { feature, toggleFeature } = useFrameworkFeature('experimental-ui');
+ * ```
  */
 export const useFrameworkFeature = <T>(key: string): ReturnType<typeof useFeature<T>> => {
   const provider = useFrameworkModule<FeatureFlagModule>('featureFlag');

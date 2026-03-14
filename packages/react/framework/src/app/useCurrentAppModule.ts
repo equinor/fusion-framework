@@ -8,14 +8,20 @@ import type {
 import useCurrentAppModules from './useCurrentAppModules';
 
 /**
- * Retrieves the current app module based on the provided module key.
- * @template TType - The type of the module.
- * @template TKey - The type of the module key.
- * @param {TKey} moduleKey - The key of the module to retrieve.
- * @returns {AnyModule | null | undefined} - The current app module or null if not found.
+ * React hook that retrieves a specific module from the current application.
+ *
+ * @template TType - The expected module type.
+ * @template TKey - The module key used for look-up.
+ * @param moduleKey - The key of the module to retrieve.
+ * @returns An object containing:
+ *   - `module` — The resolved module instance, `null` when no app is
+ *     selected, or `undefined` if the app does not enable the requested module.
+ *   - `error` — Any error emitted during initialisation.
+ *   - `complete` — `true` when the observable has completed.
+ *
  * @remarks
- *  - when module is null, there are no current selected application
- *  - when undefined is, the application has not enabled the requested module
+ * - A `null` value means no application is currently selected.
+ * - An `undefined` value means the application has not enabled the requested module.
  */
 export const useCurrentAppModule = <
   TType extends AnyModule | unknown = unknown,

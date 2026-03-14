@@ -12,23 +12,40 @@ import type { FeatureSelectorFn } from '@equinor/fusion-framework-module-feature
 
 import { useObservableState } from '@equinor/fusion-observable/react';
 
+/**
+ * Return type of the {@link useFeatures} hook.
+ */
 export interface UseFeaturesResult {
+  /** Array of all resolved feature flags. */
   features: IFeatureFlag[];
+  /** Any error emitted by the feature-flag observable. */
   error: unknown;
   /**
+   * Toggles a feature flag by key.
+   *
    * @param key - The key of the feature flag.
-   * @param enable - Optional provide new enabled state of the feature flag. _Defaults to inversion of current feature flag state_
+   * @param enable - Explicit enabled state. When omitted the current state
+   *   is inverted.
    */
   toggleFeature: (key: string, enable?: boolean) => void;
 }
 
 /**
- * Custom hook that provides access to the feature flags and their values.
+ * React hook that returns all feature flags from a provider, with optional
+ * filtering.
  *
- * @param provider - The feature flag provider.
- * @param selector - Optional function to filter the feature flags.
- * @returns An object containing the features, any error that occurred while retrieving them, and a function to set the enabled state of a feature flag.
- * @throws Error if the feature flag provider is missing.
+ * @param provider - The feature-flag provider instance, or `null`/`undefined`
+ *   when not yet available.
+ * @param selector - Optional predicate to filter the feature flags.
+ * @returns A {@link UseFeaturesResult} with the flags, a toggle helper,
+ *   and any error.
+ * @throws {Error} If `toggleFeature` is called when the provider is missing.
+ *
+ * @example
+ * ```ts
+ * const { features, toggleFeature } = useFeatures(provider);
+ * toggleFeature('beta', true);
+ * ```
  */
 export const useFeatures = (
   provider?: IFeatureFlagProvider | null,
