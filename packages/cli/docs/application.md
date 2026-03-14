@@ -2,6 +2,9 @@ The Fusion Framework CLI empowers you to rapidly build, configure, and deploy mo
 
 This guide will help you get set up, understand the most important commands, and follow best practices for configuration and CI/CD. Let’s get started building robust, scalable apps with Fusion Framework!
 
+> [!TIP]
+> The CLI exposes two binary aliases: `fusion-framework-cli` and `ffc`. All examples below use the long form, but you can substitute `ffc` anywhere — e.g. `ffc app dev`, `ffc app build`, `ffc app publish`.
+
 ## Getting Started
 
 ### Install the CLI
@@ -83,6 +86,8 @@ export default defineAppConfig((env, args) => ({
 
 ```sh
 pnpm fusion-framework-cli dev
+# or using the short alias
+ffc app dev
 ```
 
 ### Log in to Fusion Framework (if needed)
@@ -105,6 +110,8 @@ pnpm fusion-framework-cli auth login
 ```sh
 # Publish and upload config in one command
 pnpm fusion-framework-cli publish --env <environment> --config
+# or using the short alias
+ffc app publish --env <environment> --config
 
 # Or separately
 pnpm fusion-framework-cli publish --env <environment>
@@ -405,11 +412,13 @@ Start your application in development mode with hot reloading and environment-sp
 **Usage:**
 ```sh
 pnpm fusion-framework-cli dev [options]
+# or: ffc app dev [options]
 ```
 
 **Examples:**
 ```sh
 pnpm fusion-framework-cli dev
+ffc app dev
 pnpm fusion-framework-cli dev --port 4000
 pnpm fusion-framework-cli dev --manifest ./app.manifest.local.ts --config ./app.config.ts
 ```
@@ -472,11 +481,13 @@ This command uploads and tags your app for deployment. If no bundle is provided,
 **Usage:**
 ```sh
 pnpm fusion-framework-cli publish [bundle] [options]
+# or: ffc app publish [bundle] [options]
 ```
 
 **Examples:**
 ```sh
 pnpm fusion-framework-cli publish
+ffc app publish
 pnpm fusion-framework-cli publish --env prod --manifest app.manifest.prod.ts
 pnpm fusion-framework-cli publish --tag latest app-bundle.zip
 pnpm fusion-framework-cli publish --config --env prod
@@ -518,6 +529,7 @@ The `config` command allows you to generate your app's configuration and either 
 **Usage:**
 ```sh
 pnpm fusion-framework-cli app config [config] [options]
+# or: ffc app config [config] [options]
 ```
 
 **Examples:**
@@ -552,11 +564,13 @@ Build your application and generate the necessary artifacts for deployment:
 **Usage:**
 ```sh
 pnpm fusion-framework-cli build [manifest] [options]
+# or: ffc app build [manifest] [options]
 ```
 
 **Examples:**
 ```sh
 pnpm fusion-framework-cli build
+ffc app build
 pnpm fusion-framework-cli build app.manifest.dev.ts --debug
 ```
 
@@ -582,11 +596,13 @@ Build a distributable app bundle archive for deployment.
 **Usage:**
 ```sh
 pnpm fusion-framework-cli pack [manifest] [options]
+# or: ffc app pack [manifest] [options]
 ```
 
 **Examples:**
 ```sh
 pnpm fusion-framework-cli pack
+ffc app pack
 pnpm fusion-framework-cli pack app.manifest.dev.ts --archive my-app.zip --output ./dist
 ```
 
@@ -649,11 +665,13 @@ The `tag` command applies a tag (such as `latest`, `preview`, `dev`, `staging`, 
 **Usage:**
 ```sh
 pnpm fusion-framework-cli app tag <tag> [options]
+# or: ffc app tag <tag> [options]
 ```
 
 **Examples:**
 ```sh
 pnpm fusion-framework-cli app tag latest
+ffc app tag latest
 pnpm fusion-framework-cli app tag preview --env prod --manifest app.manifest.prod.ts
 pnpm fusion-framework-cli app tag latest --package my-app@1.2.3
 ```

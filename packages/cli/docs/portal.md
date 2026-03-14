@@ -8,6 +8,9 @@ The Fusion Framework CLI enables you to build, configure, and deploy **portal te
 
 This guide covers the essential commands and best practices for developing and managing portal templates. For information on registering and configuring portals, see the Portal Admin documentation.
 
+> [!TIP]
+> The CLI exposes two binary aliases: `fusion-framework-cli` and `ffc`. All examples below use the long form, but you can substitute `ffc` anywhere — e.g. `ffc portal dev`, `ffc portal build`, `ffc portal publish`.
+
 ## Getting Started
 
 ### Install the CLI
@@ -37,6 +40,16 @@ pnpm init
 ## Portal Manifest
 
 The portal manifest (`portal.manifest.ts`) describes your portal's metadata, configuration, and capabilities. It is required for all portal templates. You may also define a schema file for advanced configuration validation.
+
+```ts
+import { definePortalManifest } from '@equinor/fusion-framework-cli/portal';
+
+export default definePortalManifest((env, { base }) => ({
+  ...base,
+  name: 'my-portal',
+  // Add more manifest fields as needed
+}));
+```
 
 ---
 
@@ -71,11 +84,13 @@ Start the portal development server for local development and testing.
 **Usage:**
 ```sh
 pnpm fusion-framework-cli portal dev [options]
+# or: ffc portal dev [options]
 ```
 
 **Examples:**
 ```sh
 pnpm fusion-framework-cli portal dev
+ffc portal dev
 pnpm fusion-framework-cli portal dev --port 4001 --manifest ./portal.manifest.ts
 ```
 
@@ -93,11 +108,13 @@ Build your portal template using Vite.
 **Usage:**
 ```sh
 pnpm fusion-framework-cli portal build [options]
+# or: ffc portal build [options]
 ```
 
 **Examples:**
 ```sh
 pnpm fusion-framework-cli portal build
+ffc portal build
 pnpm fusion-framework-cli portal build --manifest ./portal.manifest.ts --env ci
 ```
 
@@ -116,6 +133,7 @@ Bundle your portal into a distributable archive for deployment.
 **Usage:**
 ```sh
 pnpm fusion-framework-cli portal pack [options]
+# or: ffc portal pack [options]
 ```
 
 **Examples:**
@@ -146,11 +164,13 @@ This command builds your portal template, uploads it to the Fusion portal regist
 **Usage:**
 ```sh
 pnpm fusion-framework-cli portal publish [options]
+# or: ffc portal publish [options]
 ```
 
 **Examples:**
 ```sh
 pnpm fusion-framework-cli portal publish
+ffc portal publish
 pnpm fusion-framework-cli portal publish --env prod --manifest portal.manifest.prod.ts
 pnpm fusion-framework-cli portal publish --tag preview --schema portal.schema.ts
 ```
