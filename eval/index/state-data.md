@@ -1,8 +1,8 @@
 # State & Data
 
-Ensure results reference `@equinor/fusion-observable`, `@equinor/fusion-query`, `@equinor/fusion-framework-module-context`, or `@equinor/fusion-framework-module-feature-flag` packages.
+Ensure results reference `@equinor/fusion-observable`, `@equinor/fusion-query`, or `@equinor/fusion-framework-module-feature-flag` packages.
 Verify that returned symbols, operators, and configuration helpers are real exports from these packages.
-Reject results that confuse framework-level context with React component context or mix up query cache vs HTTP cache.
+Reject results that mix up query cache vs HTTP cache or confuse FlowSubject with plain RxJS subjects.
 
 ## How to manage observable state with FlowSubject
 
@@ -12,16 +12,6 @@ Reject results that confuse framework-level context with React component context
 - should mention `createAsyncAction` for actions with request/success/failure lifecycle
 - should mention Immer-powered draft mutations inside reducer cases
 - should show `useObservableState` from `@equinor/fusion-observable/react` for subscribing in React
-
-## How to select and change the active context
-
-- must mention `enableContext` from `@equinor/fusion-framework-module-context`
-- must show `currentContext$` observable for subscribing to context changes
-- must mention `setCurrentContextAsync` for changing the active context
-- must mention `queryContextAsync` for searching available context items
-- should mention `clearCurrentContext` method
-- should mention `resolveInitialContext` utility for resolving context from URL path
-- should mention `connectParentContext` for syncing context between portal and app
 
 ## How to fetch and cache data with Query
 
