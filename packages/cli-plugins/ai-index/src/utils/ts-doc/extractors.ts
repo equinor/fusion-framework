@@ -46,11 +46,16 @@ const createTypescriptDocument = (
 };
 
 /**
- * Extracts a TSDoc document from a class node, including TSDoc, constructor, and public member signatures.
- * @param classNode - The ClassDeclaration node to process.
- * @param sourceFile - The source file containing the node.
- * @param options - Optional parsing configuration.
- * @returns A TypeScript document with TSDoc and class interface, or null if no TSDoc is found.
+ * Extracts a vector-store document from a TypeScript class declaration.
+ *
+ * Collects the class-level TSDoc comment, constructor signature (if documented),
+ * and all public members with TSDoc into a single document whose `pageContent`
+ * mirrors a minimal class interface.
+ *
+ * @param classNode - The `ts-morph` {@link ClassDeclaration} node to inspect.
+ * @param sourceFile - The project source file that contains the class.
+ * @param _options - Optional parsing configuration.
+ * @returns A {@link TypescriptDocument}, or `null` when the class has no TSDoc.
  */
 export const extractDocumentFromClassNode = (
   classNode: ClassDeclaration,
@@ -128,12 +133,19 @@ export const extractDocumentFromClassNode = (
 };
 
 /**
- * Extracts a TSDoc document from a single node.
- * @param node - The TypeScript node to process.
- * @param sourceFile - The source file containing the node.
+ * Extracts a vector-store document from a single TypeScript AST node.
+ *
+ * Handles function declarations, variable statements (arrow / function
+ * expressions), interfaces, type aliases, enums, and classes. Delegates
+ * to {@link extractDocumentFromClassNode} for class declarations.
+ *
+ * @param node - The `ts-morph` AST node to inspect.
+ * @param sourceFile - The project source file that contains the node.
  * @param options - Optional parsing configuration.
- * @param nodeOptions - Optional node-specific configuration (e.g., skipKindCheck for VariableStatement).
- * @returns A TypeScript document with TSDoc metadata, or null if no TSDoc is found.
+ * @param nodeOptions - Optional flags (e.g. `skipKindCheck`) to override default
+ *   kind filtering.
+ * @returns A {@link TypescriptDocument}, or `null` when the node has no TSDoc or
+ *   is not a supported kind.
  */
 export const extractDocumentFromNode = (
   node: Node,
@@ -224,10 +236,12 @@ export const extractDocumentFromNode = (
 };
 
 /**
- * Processes a TypeScript source file to extract TSDoc documents.
- * @param sourceFile - The source file to process.
+ * Walks a TypeScript source file and extracts a {@link TypescriptDocument}
+ * for every top-level declaration that carries a TSDoc comment.
+ *
+ * @param sourceFile - The `ts-morph` source file to traverse.
  * @param options - Optional parsing configuration.
- * @returns An array of TypeScript documents with TSDoc metadata.
+ * @returns Array of extracted documents (one per documented declaration).
  */
 export const processSourceFile = (
   sourceFile: ProjectSourceFile,

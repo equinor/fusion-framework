@@ -6,15 +6,16 @@ import { withOptions as withAiOptions } from '@equinor/fusion-framework-cli-plug
 import { DeleteOptionsSchema, type DeleteOptions } from './delete-command.options.js';
 
 /**
- * Builds an OData filter expression from source paths and/or a raw filter string.
+ * Builds an OData filter expression from source paths and/or a raw filter.
  *
- * Source paths are joined with `or`; a raw `--filter` expression is used directly.
- * When both are supplied, source-path filters take precedence
- * (to avoid unintentional broad deletions).
+ * Source paths are joined with `or`; a raw `--filter` expression is used
+ * directly. When both are supplied, source-path filters take precedence
+ * to prevent unintentional broad deletions.
  *
  * @param sources - Relative file paths to match against `metadata/source`.
  * @param rawFilter - A raw OData filter expression supplied via `--filter`.
- * @returns The combined OData filter expression, or undefined when no input was given.
+ * @returns The combined OData filter string, or `undefined` when neither
+ *   sources nor a raw filter were provided.
  */
 function buildFilter(sources: string[], rawFilter?: string): string | undefined {
   if (sources.length > 0) {
@@ -105,6 +106,14 @@ const _command = createCommand('delete')
     console.log(`\n✅ Deleted chunks matching filter.`);
   });
 
+/**
+ * Configured Commander command for the `ai delete` subcommand.
+ *
+ * This constant is the fully-configured {@link Command} instance with all
+ * AI-specific options (embedding deployment, Azure Search credentials) applied
+ * via `withAiOptions`. It is registered with the CLI automatically by
+ * {@link registerAiPlugin}.
+ */
 export const deleteCommand = withAiOptions(_command, {
   includeEmbedding: true,
   includeSearch: true,

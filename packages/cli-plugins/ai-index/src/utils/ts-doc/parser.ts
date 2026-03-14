@@ -7,19 +7,24 @@ import type { TypescriptDocument, ParseTsDocOptions } from './types.js';
 import { processSourceFile } from './extractors.js';
 
 /**
- * Checks if a file is a TypeScript or TSX file based on its extension.
- * @param filePath - The path to the file.
- * @returns True if the file ends with .ts or .tsx, false otherwise.
+ * Checks whether a file path has a TypeScript (`.ts`) or TSX (`.tsx`) extension.
+ *
+ * @param filePath - Absolute or relative file path.
+ * @returns `true` if the file extension is `.ts` or `.tsx`.
  */
 export const isTypescriptFile = (filePath: string): boolean => {
   return filePath.endsWith('.ts') || filePath.endsWith('.tsx');
 };
 
 /**
- * Parses TSDoc from a string of TypeScript code.
- * @param content - The TypeScript code content.
+ * Parses TSDoc comments from an in-memory TypeScript code string.
+ *
+ * Creates a temporary `ts-morph` project, analyses the source, and returns
+ * one {@link TypescriptDocument} per documented top-level declaration.
+ *
+ * @param content - TypeScript source code to parse.
  * @param options - Optional parsing configuration.
- * @returns An array of TypeScript documents with TSDoc metadata.
+ * @returns Array of extracted TypeScript documents with TSDoc metadata.
  */
 export const parseTsDocSync = (
   content: string,
@@ -31,11 +36,15 @@ export const parseTsDocSync = (
 };
 
 /**
- * Parses TSDoc from a TypeScript file by path.
- * @param file - The source file object.
+ * Parses TSDoc comments from a TypeScript file on disk.
+ *
+ * Reads the file synchronously, creates a `ts-morph` project, and returns
+ * one {@link TypescriptDocument} per documented top-level declaration.
+ *
+ * @param file - Source file descriptor with path and optional project root.
  * @param options - Optional parsing configuration.
- * @returns An array of TypeScript documents with TSDoc metadata.
- * @throws If the file is not a TypeScript file.
+ * @returns Array of extracted TypeScript documents.
+ * @throws {AssertionError} If the file does not have a `.ts` or `.tsx` extension.
  */
 export const parseTsDocFromFileSync = (
   file: SourceFile,

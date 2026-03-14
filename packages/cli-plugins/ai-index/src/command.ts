@@ -92,6 +92,14 @@ const _command = createCommand('embeddings')
     });
   });
 
+/**
+ * Configured Commander command for the `ai embeddings` subcommand.
+ *
+ * This constant is the fully-configured {@link Command} instance with all
+ * AI-specific options (embedding deployment, Azure Search credentials) applied
+ * via `withAiOptions`. It is registered with the CLI automatically by
+ * {@link registerAiPlugin}.
+ */
 export const command = withAiOptions(_command, {
   includeEmbedding: true,
   includeSearch: true,

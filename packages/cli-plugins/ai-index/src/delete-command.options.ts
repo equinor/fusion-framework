@@ -3,10 +3,17 @@ import { z } from 'zod';
 import { AiOptionsSchema } from '@equinor/fusion-framework-cli-plugin-ai-base/command-options';
 
 /**
- * Zod schema for validating delete command options.
+ * Zod schema for validating options of the `ai delete` command.
  *
- * Requires Azure Search credentials and the embedding deployment
- * (needed by the framework to initialise the vector store service).
+ * Extends the base AI options schema ({@link AiOptionsSchema}) to require
+ * Azure Search credentials and the embedding deployment (needed to initialise
+ * the vector store service for document deletion).
+ *
+ * @example
+ * ```ts
+ * const validated = await DeleteOptionsSchema.parseAsync(rawOptions);
+ * // validated.dryRun, validated.filter, validated.azureSearchEndpoint, etc.
+ * ```
  */
 export const DeleteOptionsSchema = AiOptionsSchema.extend({
   openaiEmbeddingDeployment: z
@@ -36,4 +43,9 @@ export const DeleteOptionsSchema = AiOptionsSchema.extend({
     .describe('Raw OData filter expression for selecting documents to delete'),
 }).describe('Command options for the delete command');
 
+/**
+ * Validated options for the `ai delete` command.
+ *
+ * Inferred from {@link DeleteOptionsSchema}.
+ */
 export type DeleteOptions = z.infer<typeof DeleteOptionsSchema>;
