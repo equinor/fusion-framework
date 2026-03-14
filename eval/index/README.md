@@ -14,7 +14,9 @@ eval/
     README.md            # This file
     core.md              # Modules, providers, initialization, events
     state-data.md        # State management and data flow
+    context.md           # Context module patterns
     http-services.md     # HTTP clients and service layer
+    dev-server.md        # Development server, mocking, proxying
     auth.md              # Authentication and authorization
     ui-components.md     # React components and UI
     features.md          # Feature flags, bookmarks, app features
