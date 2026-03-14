@@ -3,20 +3,24 @@ import { useObservableState } from './useObservableState';
 import type { Observable } from '../types';
 
 /**
- * @deprecated use useObservableState (since ^8.1)
+ * @deprecated Use `useObservableState(useObservableSelector(...))` instead (since ^8.1).
+ * Will be removed in the next major version.
  *
- * will be removed in next major
+ * React hook that selects a derived value from an observable and tracks
+ * its state (value, error, complete).
  *
- * ```ts
- * const {value} = useObservableState(useObservableSelector(...));
+ * @template TType - The source value type.
+ * @template TValue - The selected value type.
+ * @param subject - The source observable.
+ * @param selector - A function that projects each emitted value.
+ * @param options - Optional initial value and equality comparator.
+ * @returns An {@link ObservableStateReturnType} for the selected value.
+ *
+ * @example
+ * ```tsx
+ * // Preferred replacement:
+ * const { value } = useObservableState(useObservableSelector(subject, (s) => s.name));
  * ```
- *
- * Hook for extracting a property of an `Observable`
- * @param subject the subject to observe changes on
- * @param initial initial value of the state
- * @param selector the property of the subject state to observe
- * @param compare **Memoize** function for comparing difference
- * @returns Observable property of subject
  */
 export function useObservableSelectorState<TType, TValue>(
   subject: Observable<TType>,
