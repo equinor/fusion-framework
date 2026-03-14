@@ -7,6 +7,7 @@ export default {
     patterns: [
       'packages/**/src/**/*.{ts,tsx}',
       'cookbooks/**/*.{ts,tsx}',
+      'cookbooks/**/README.md',
       // doccs
       'packages/**/docs/**/*.md',
       'packages/**/README.md',

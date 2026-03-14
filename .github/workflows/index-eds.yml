@@ -23,7 +23,7 @@ on:
 env:
   EDS_REPO: equinor/design-system
   TAG_NAME: last-indexed/eds
-  CONFIG_PATH: ./eds/fusion-ai.config.ts
+  CONFIG_PATH: ./fusion-ai.config.eds.ts
 
 concurrency:
   group: index-eds
@@ -92,10 +92,10 @@ jobs:
       - name: Build EDS and extract docs
         uses: docker/build-push-action@v6
         with:
-          context: eds
-          file: eds/Dockerfile
+          context: .
+          file: Dockerfile.eds
           target: export
-          outputs: type=local,dest=eds/output
+          outputs: type=local,dest=eds-content
           build-args: |
             EDS_REF=${{ needs.resolve-ref.outputs.eds_ref }}
           cache-from: type=gha,scope=eds-build
@@ -104,7 +104,7 @@ jobs:
       - name: Verify output
         run: |
           set -euo pipefail
-          count=$(find eds/output -name '*.md' | wc -l)
+          count=$(find eds-content -name '*.md' | wc -l)
           echo "::notice::Extracted ${count} markdown files"
           if [[ "$count" -eq 0 ]]; then
             echo "::error::No markdown files extracted — aborting"
@@ -115,7 +115,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: eds-docs
-          path: eds/output/
+          path: eds-content/
           retention-days: 7
 
   index-eds:
@@ -134,7 +134,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: eds-docs
-          path: eds/output/
+          path: eds-content/
 
       - name: Setup node and install deps
         uses: ./.github/actions/node-setup
