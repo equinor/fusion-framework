@@ -132,6 +132,35 @@ export const greeterModule: Module<'greeter', GreeterProvider, GreeterConfigurat
 └──────────┴──────────────────────────┴────────────────┘
 ```
 
+### Cross-module dependencies with requireInstance
+
+Modules initialize concurrently. Use `requireInstance(name, timeout?)` inside `initialize` to wait for a dependency:
+
+```typescript
+initialize: async ({ config, requireInstance, hasModule }) => {
+  // Wait for the event module (with optional timeout in ms)
+  const event = await requireInstance('event', 5000);
+  return new MyProvider(config, event);
+},
+```
+
+`requireInstance` returns a promise that resolves when the requested module finishes initializing. If the module is not registered, the promise rejects.
+
+### postInitialize and the full modules map
+
+`postInitialize` runs after **all** modules are initialized. It receives the full `modules` map, making it the right place for cross-module wiring that depends on every module being ready:
+
+```typescript
+postInitialize: async ({ instance, modules }) => {
+  // All modules are available here
+  modules.event.addEventListener('onContextChanged', (e) => {
+    instance.handleContextChange(e.detail);
+  });
+},
+```
+
+`configure` and `initialize` are the two required hooks. `postConfigure`, `postInitialize`, and `dispose` are optional.
+
 Events are emitted on `configurator.event$` throughout the lifecycle for telemetry and debugging.
 
 ## Related Packages
