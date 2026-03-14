@@ -3,11 +3,18 @@ import type { Modules, ModulesInstanceType } from '@equinor/fusion-framework-rea
 
 /**
  * Utility type representing a value that may be synchronous or asynchronous.
- * @template T - The type of the value
+ *
+ * Used by loader and action function signatures to allow both sync and async implementations.
+ *
+ * @template T - The type of the resolved value.
  */
 export type MaybePromise<T> = T | Promise<T>;
 /**
- * The parameters that were parsed from the URL path.
+ * Dynamic route parameters parsed from the URL path segments.
+ *
+ * Maps parameter names (e.g. `id` from `:id`) to their string values.
+ *
+ * @template Key - Union of allowed parameter names. Defaults to `string`.
  */
 export type UrlParameters<Key extends string = string> = {
   readonly [key in Key]: string | undefined;
@@ -253,24 +260,34 @@ export type RouteObject = Omit<ReactRouterRouteObject, 'handle' | 'children'> & 
 
 /**
  * Type of route node in the route definition DSL.
+ *
+ * - `'route'` – A standard route with a path and optional children.
+ * - `'index'` – An index (default) route that renders at the parent’s path.
+ * - `'layout'` – A layout route that wraps children with a shared component.
+ * - `'prefix'` – A path-only grouping node that prepends a segment to children.
  */
 export type RouteKind = 'route' | 'index' | 'layout' | 'prefix';
 
 /**
- * Base interface for route definition nodes.
- * Route nodes are converted to React Router RouteObjects via the `toRouteObject` method.
+ * Base interface for route definition nodes in the DSL.
+ *
+ * Concrete implementations (`IndexRoute`, `Route`, `LayoutRoute`, `PrefixRoute`)
+ * extend this interface and are converted to React Router `RouteObject`s by the
+ * `<Router>` component or the Vite plugin.
  */
 export interface RouteNode {
-  /** The kind of route node */
+  /** The kind of route node. */
   kind: RouteKind;
 }
 
 /**
- * Route node that references a file containing the route component.
- * File-based routes support lazy loading and automatic code splitting.
+ * Route node that references a file containing the route’s component module.
+ *
+ * File-based routes support lazy loading and automatic code splitting when
+ * used with the Vite plugin.
  */
 export interface RouteFileNode extends RouteNode {
-  /** File path or import function for the route component module */
+  /** Relative file path (e.g. `'./pages/Home.tsx'`) to the route component module. */
   file: string;
 }
 
