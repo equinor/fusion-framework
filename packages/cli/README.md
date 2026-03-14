@@ -1,242 +1,199 @@
-[![License: ISC](https://img.shields.io/badge/License-ISC-blue.svg)](./LICENSE)
+# @equinor/fusion-framework-cli
 
-Fusion Framework CLI is a command-line tool for developing, building, and publishing applications and portal templates within the Fusion Framework ecosystem. It streamlines workflows, automates common tasks, and supports modern CI/CD pipelines.
+Command-line toolkit for developing, building, and publishing Fusion Framework applications and portal templates. Provides a unified developer experience from local development to production deployment.
 
-**What you can build:**
-- **Fusion Applications**: Interactive web apps that run within the Fusion Portal
-- **Portal Templates**: Customizable portal configurations for different business contexts
+## Features
 
-**Key capabilities:**
-- **Template-based app creation**: Generate new Fusion applications from predefined templates
-- Development server with hot reload and service discovery
-- Application manifest and configuration management
-- Automated building, bundling, and deployment
-- Environment-specific configuration handling
-- Integrated authentication and authorization
-- CI/CD pipeline support with automated publishing
-- **Plugin system**: Extensible architecture with optional plugins (e.g., AI/LLM commands)
+- **Application scaffolding** — generate new Fusion apps from predefined templates
+- **Development server** — hot-reload dev server with service discovery and authentication
+- **Build & bundle** — Vite-based production builds with manifest generation
+- **Publish & tag** — upload bundles and configs to the Fusion app/portal service
+- **Snapshot versions** — timestamped preview builds for PRs and CI (`--snapshot`)
+- **Portal templates** — build, bundle, and deploy portal configurations
+- **Service discovery** — resolve Fusion service endpoints from any environment
+- **Authentication** — Azure AD login, token management, CI/CD token support
+- **Plugin system** — extend the CLI with optional plugin packages
 
-## Prerequisites
-
-- **Node.js** (LTS version recommended)
-- **pnpm** (or npm/yarn) package manager
-- **Fusion Framework app or portal project** (or create a new one)
-- **Access to Fusion services** (for authentication and deployment)
-
-## Features & Benefits
-
-- **🚀 Unified developer experience**: Single tool for the entire development lifecycle - from local development to production deployment
-- **⚡ Rapid local development**: Built-in dev server with hot reload, service discovery, and real-time feedback
-- **🎯 Environment-specific configuration**: Seamlessly manage manifests and configs across dev, test, and production environments
-- **🔐 Integrated authentication**: Secure your apps locally and in CI/CD with Azure AD integration and token management
-- **🔍 Service discovery**: Built-in support for Fusion services with automatic endpoint resolution
-- **📦 Automated bundling & deployment**: One-command building, packaging, and publishing to Fusion registry
-- **🏗️ Extensible architecture**: Support for apps, portals, widgets, and future Fusion components
-- **📚 Comprehensive documentation**: Migration guides, detailed setup instructions, and troubleshooting resources
-
-## Getting Started
-
-**Install the CLI**
+## Installation
 
 ```sh
 pnpm add -D @equinor/fusion-framework-cli
 ```
 
-**Create a new Fusion application from template**
+The package exposes two binary aliases: `fusion-framework-cli` and `ffc`.
 
-Generate a new Fusion application using predefined templates:
+## Usage
+
+### Create a new application
 
 ```sh
-# Create a new app with interactive template selection
-pnpm fusion-framework-cli app create my-new-app
+# Interactive template selection
+pnpm fusion-framework-cli app create my-app
 
-# Create with a specific template
+# Use a specific template
 pnpm fusion-framework-cli app create my-app --template react-app
-
-# Create in a specific directory with debug logging
-pnpm fusion-framework-cli app create my-app --directory ./projects --debug
 ```
 
-**Initialize or update your app's manifest and config files**
-
-Create the required configuration files for your app:
-
-- `app.manifest.ts` - Defines your app's metadata and capabilities
-- `app.config.ts` - Contains runtime configuration and environment variables
-
-See [Developing Apps](docs/application.md) for detailed setup and configuration guidance.
-
-**Start the development server**
+### Local development
 
 ```sh
+# Start the dev server (app)
 pnpm fusion-framework-cli dev
+
+# Start the dev server (portal)
+pnpm fusion-framework-cli portal dev
 ```
 
-**Log in to the Fusion Framework (if needed)**
+### Build and publish
 
 ```sh
-pnpm fusion-framework-cli auth login
-```
+# Build an application
+pnpm fusion-framework-cli app build
 
-**Build and publish your app**
+# Bundle into a zip archive
+pnpm fusion-framework-cli app pack
 
-```sh
-# Publish without config
-pnpm fusion-framework-cli publish --env <environment>
+# Publish bundle + config to an environment
+pnpm fusion-framework-cli app publish --env ci --config
 
-# Publish and upload config in one command
-pnpm fusion-framework-cli publish --env <environment> --config
-```
-
-**Build or publish snapshot artifacts**
-
-> [!CAUTION]
-> Snapshot versions are designed for **preview and testing purposes only** (e.g., pull requests, CI/CD test deployments). The snapshot version **only affects the manifest build metadata** — your `package.json` and source files remain unchanged.
-
-- Use `--snapshot` to emit timestamped snapshot versions
-- Default: `--snapshot` → `{version}-snapshot.{unix_timestamp}`
-- Optional identifier: `--snapshot pr-123` → `{version}-pr-123.{unix_timestamp}`
-- Semver coercion strips any pre-release suffix first, e.g. `1.2.3-beta.1` → `1.2.3-snapshot.{unix_timestamp}`
-
-**Common use cases:**
-- Pull request previews: `--snapshot pr-456`
-- Nightly builds: `--snapshot nightly`
-- Feature branch testing: `--snapshot feature-xyz`
-
-```sh
-# Package an app with a snapshot version
-pnpm fusion-framework-cli app pack --snapshot
+# Snapshot build for a PR
 pnpm fusion-framework-cli app pack --snapshot pr-123
-
-# Publish with a snapshot version
-pnpm fusion-framework-cli app publish --snapshot
-pnpm fusion-framework-cli app publish --snapshot nightly
 ```
 
-**Upload configuration**
+### Authentication
 
 ```sh
-# Upload config with publish command
-pnpm fusion-framework-cli publish --config --env <environment>
+# Interactive login
+pnpm fusion-framework-cli auth login
 
-# Or upload config separately
-pnpm fusion-framework-cli app config --publish --env <environment>
+# Retrieve a token
+pnpm fusion-framework-cli auth token
+
+# CI/CD: set FUSION_TOKEN environment variable instead
 ```
 
-> **Tip:** For CI/CD and automation, set the `FUSION_TOKEN` environment variable. See [Authentication](docs/auth.md) for details.
+### Command overview
 
-## Common Commands
-
-| Command                                | Description                          |
-| -------------------------------------- | ------------------------------------ |
-| `pnpm fusion-framework-cli app create` | Create new Fusion applications from templates |
-| `pnpm fusion-framework-cli auth ...` | Authenticate with Fusion             |
-| `pnpm fusion-framework-cli app ...`    | Working with Fusion applications     |
-| `pnpm fusion-framework-cli portal ...` | Working with Fusion portal templates |
-| `pnpm fusion-framework-cli disco ...` | Service discovery and resolution     |
-
-**Optional Plugins:**
 | Command | Description |
-|---------|-------------|
-| `pnpm fusion-framework-cli ai ...` | AI/LLM commands (requires `@equinor/fusion-framework-cli-plugin-ai`) |
+|---|---|
+| `app create` | Scaffold a new Fusion application from a template |
+| `app build` | Build the application with Vite |
+| `app pack` | Bundle the build into a zip archive |
+| `app publish` | Build, pack, and upload in one step |
+| `app upload` | Upload a pre-built bundle |
+| `app config` | Generate or publish app configuration |
+| `app tag` | Tag a published version (e.g. `latest`) |
+| `app check` | Verify app registration in the app store |
+| `app dev` | Start the application dev server |
+| `app serve` | Preview a production build locally |
+| `portal build` | Build a portal template |
+| `portal pack` | Bundle the portal into a zip archive |
+| `portal publish` | Build, pack, and upload a portal |
+| `portal upload` | Upload a pre-built portal bundle |
+| `portal config` | Generate or publish portal configuration |
+| `portal tag` | Tag a published portal version |
+| `portal dev` | Start the portal dev server |
+| `auth login` | Authenticate with Azure AD |
+| `auth logout` | Clear stored credentials |
+| `auth token` | Print or acquire an access token |
+| `disco resolve` | Resolve a Fusion service endpoint |
 
-**Plugin System:**
+Run `pnpm fusion-framework-cli <command> --help` for detailed options.
 
-The CLI supports optional plugins that extend functionality. To use plugins:
+## API Reference
 
-1. Install the plugin package: `pnpm add -D @equinor/fusion-framework-cli-plugin-ai`
-2. Create a `fusion-cli.config.ts` file in your project root:
-   ```typescript
-   import { defineFusionCli } from '@equinor/fusion-framework-cli';
-   
-   export default defineFusionCli(() => ({
-     plugins: [
-       '@equinor/fusion-framework-cli-plugin-ai',
-     ],
-   }));
-   ```
+The package exposes several sub-path exports for programmatic use:
 
-Plugins are automatically discovered and loaded when the CLI starts. The config file can be `.ts`, `.js`, or `.json`. If no config file exists, the CLI works normally without plugins.
+### `@equinor/fusion-framework-cli` (root)
 
-## Example: package.json
+- `defineDevServerConfig` / `defineFusionCli` — type-safe config definition helpers
+- `loadDevServerConfig` — load and merge dev-server configuration files
+- `resolvePackage` / `resolveEntryPoint` — package and entry-point resolution
+- `RuntimeEnv` — runtime environment type used across the CLI
 
-A minimal example for a Fusion Framework app:
+### `@equinor/fusion-framework-cli/app`
 
-```json
-{
-  "name": "@equinor/fusion-framework-app",
-  "version": "1.0.0",
-  "description": "My Fusion Framework Application",
-  "main": "dist/bundle.js",
-  "files": [
-    "dist/",
-    "assets/",
-    "README.md"
-  ],
-  "scripts": {
-    "build": "fusion-framework-cli app build",
-    "dev": "fusion-framework-cli dev",
-    "publish": "fusion-framework-cli app publish"
-  },
-  "devDependencies": {
-    "@equinor/fusion-framework-cli": "^11.0.0"
-  }
-}
+- `defineAppManifest` / `defineAppConfig` — type-safe manifest and config helpers
+- `loadAppManifest` / `loadAppConfig` — load and validate app manifest/config files
+- `createAppManifestFromPackage` — generate a manifest from `package.json`
+- `mergeAppManifests` / `mergeAppConfig` — deep-merge manifest/config objects
+- `ApiAppConfigSchema` — Zod schema for app config validation
+
+### `@equinor/fusion-framework-cli/portal`
+
+- `definePortalManifest` / `definePortalConfig` / `definePortalSchema` — type-safe helpers
+- `loadPortalManifest` / `loadPortalConfig` / `loadPortalSchema` — load and validate files
+- `createPortalManifestFromPackage` — generate a portal manifest from `package.json`
+- `validatePortalManifest` — validate a manifest against the Zod schema
+
+### `@equinor/fusion-framework-cli/bin`
+
+- `buildApplication` / `buildPortal` — programmatic Vite builds
+- `bundleApp` / `bundlePortal` — build + pack into zip
+- `uploadApplication` / `uploadPortalBundle` — upload bundles to the service
+- `tagApplication` / `tagPortal` — tag published versions
+- `initializeFramework` / `configureFramework` — set up the Fusion Framework for CLI operations
+- `FusionEnv` — enum of supported Fusion environments
+
+### `@equinor/fusion-framework-cli/utils`
+
+- `assert` / `assertFileExists` / `assertObject` — assertion helpers
+- `fileExists` / `fileExistsSync` — file-existence checks
+- `writeFile` — write files with automatic directory creation
+- `resolveAnnotations` — resolve CI/CD build annotations
+- `generateSnapshotVersion` — create timestamped snapshot versions
+
+## Configuration
+
+### Application manifest (`app.manifest.ts`)
+
+```ts
+import { defineAppManifest } from '@equinor/fusion-framework-cli/app';
+
+export default defineAppManifest((env, { base }) => ({
+  ...base,
+  // override manifest fields here
+}));
 ```
 
-**Key fields:**
-- `main`: **Required** - Points to your build output directory (CLI uses this to determine where to place built files)
-- `files`: Specifies which files to include in your app bundle
-- `scripts`: Convenient shortcuts for common CLI commands
+### Application config (`app.config.ts`)
 
-> **Note:** The CLI determines the build output location from the `main` field in your package.json. If not specified, it defaults to `dist/bundle.js`.
+```ts
+import { defineAppConfig } from '@equinor/fusion-framework-cli/app';
+
+export default defineAppConfig((env, { base }) => ({
+  environment: { MY_VAR: 'value' },
+  endpoints: {
+    api: { url: 'https://api.example.com', scopes: ['api://scope/.default'] },
+  },
+}));
+```
+
+### Dev-server config (`dev-server.config.ts`)
+
+```ts
+import { defineDevServerConfig } from '@equinor/fusion-framework-cli';
+
+export default defineDevServerConfig((env, { base }) => ({
+  ...base,
+  // override dev-server options here
+}));
+```
+
+### CLI plugins (`fusion-cli.config.ts`)
+
+```ts
+import { defineFusionCli } from '@equinor/fusion-framework-cli';
+
+export default defineFusionCli(() => ({
+  plugins: ['@equinor/fusion-framework-cli-plugin-ai'],
+}));
+```
 
 ## Documentation
 
-**Getting Started**
-- [Developing Apps](docs/application.md): Complete guide to building, configuring, and deploying Fusion applications
-- [Developing Portals](docs/portal.md): Guide to building, configuring, and publishing portal templates
-- [Dev Server](docs/dev-server.md): Understanding how the development server works, including architecture and configuration
-
-**Setup & Configuration**
-- [Authentication](docs/auth.md): Setting up authentication for local development and CI/CD environments
-- [libsecret Installation](https://equinor.github.io/fusion-framework/modules/auth/msal-node/docs/libsecret.html): Fix credential storage issues on Linux systems
-
-**Migration & Updates**
-- [Migration Guide: v10 to v11](docs/migration-v10-to-v11.md): Breaking changes, deprecated commands, and upgrade instructions
-
-**Additional Resources**
-- [CLI Command Reference](docs/application.md#commands): Detailed documentation of all available commands and options
-- [CI/CD Best Practices](docs/application.md#ci-cd): Automated workflows and deployment strategies
-- [Troubleshooting Guide](docs/application.md#troubleshooting-faq): Common issues and solutions
-
-**Internal Tools** (Fusion Core Team Only)
-- [AI Commands](docs/ai-commands.md): ⚠️ **Internal use only** - AI-powered chat, embeddings, and search commands for codebase understanding (not supported for third-party users ...yet)
-
-  ## Troubleshooting
-
-### Common Issues
-
-**Authentication & Credentials**
-- **Authentication issues?** See [Authentication Guide](docs/auth.md) for token setup and troubleshooting
-- **libsecret errors on Linux?** Install libsecret using our [installation guide](https://equinor.github.io/fusion-framework/modules/auth/msal-node/#troubleshooting)
-
-**CLI & Commands**
-- **Command not found?** Ensure `node_modules/.bin` is in your PATH or use `pnpm`/`npx`
-- **Permission errors?** Check that you have the correct access rights to Fusion services
-
-**Build & Development**
-- **Build errors?** Verify your `app.manifest.ts` and `app.config.ts` files for syntax errors
-- **Dev server not starting?** Check for port conflicts (default: 3000) or use `--port` option
-- **Missing dependencies?** Ensure all required packages are installed with `pnpm install`
-
-**Publishing & Deployment**
-- **Upload failures?** Verify your app is registered in the Fusion App Admin
-- **Environment issues?** Check that you're using the correct `--env` parameter
-
-### Getting Help
-
-- **Detailed troubleshooting:** See our [comprehensive troubleshooting guide](docs/application.md#troubleshooting-faq)
-- **Found a bug?** Open an issue on our GitHub repository
-- **Need support?** Check the [docs folder](docs/) or reach out to the Fusion team
-
+- [Developing Apps](docs/application.md) — build, configure, and deploy applications
+- [Developing Portals](docs/portal.md) — build and publish portal templates
+- [Dev Server](docs/dev-server.md) — architecture and configuration
+- [Authentication](docs/auth.md) — local and CI/CD authentication setup
+- [Migration v10 → v11](docs/migration-v10-to-v11.md) — breaking changes and upgrade steps

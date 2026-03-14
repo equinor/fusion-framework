@@ -11,7 +11,26 @@ export {
 
 export { createPortalManifestFromPackage } from './create-portal-manifest.js';
 
-// Helper to define a typed portal manifest function
+/**
+ * Utility to define a portal manifest function with proper typing.
+ *
+ * This is a no-op at runtime — it returns the provided function unchanged.
+ * It exists to provide type safety and editor support when authoring portal manifest files.
+ *
+ * @template T - The portal manifest type, extending `PortalManifestSchemaType`.
+ * @param fn - A function that receives the runtime environment and base manifest, and returns manifest overrides.
+ * @returns The provided function, unchanged.
+ *
+ * @example
+ * ```ts
+ * import { definePortalManifest } from '@equinor/fusion-framework-cli/portal';
+ *
+ * export default definePortalManifest((env, { base }) => ({
+ *   ...base,
+ *   name: 'my-portal',
+ * }));
+ * ```
+ */
 export const definePortalManifest = <T extends PortalManifestSchemaType>(fn: PortalManifestFn<T>) =>
   fn;
 

@@ -7,6 +7,15 @@ import { formatPath, type ConsoleLogger, defaultHeaders } from './utils/index.js
 
 import type { ApiAppConfig } from '../lib/app/schemas.js';
 
+/**
+ * Options for publishing an application configuration to the app service.
+ *
+ * @property config - The validated application configuration object to publish.
+ * @property appKey - The unique key identifying the application in the app store.
+ * @property buildVersion - The build version to associate the config with.
+ * @property framework - The initialized FusionFramework instance for service discovery.
+ * @property log - Optional logger for outputting progress and debug information.
+ */
 type AppConfigPublishOptions = {
   config: ApiAppConfig;
   appKey: string;
