@@ -24,6 +24,7 @@ eval/
     utilities.md         # Observable state, event bus, Vite plugin
     routing.md           # React Router integration, route DSL, schema generation
     ag-grid.md           # AG Grid integration, theming, module registration
+    widget.md            # Widget authoring, hosting, lifecycle events
 ```
 
 ## Format
