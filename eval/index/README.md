@@ -18,7 +18,7 @@ eval/
     http-services.md     # HTTP clients and service layer
     dev-server.md        # Development server, mocking, proxying
     auth.md              # Authentication and authorization
-    ui-components.md     # React components and UI
+    react-app.md         # React app bootstrap, hooks, sub-path APIs
     features.md          # Feature flags, bookmarks, app features
     utilities.md         # Shared utilities and helpers
 ```
