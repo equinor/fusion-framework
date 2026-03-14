@@ -25,6 +25,7 @@ eval/
     routing.md           # React Router integration, route DSL, schema generation
     ag-grid.md           # AG Grid integration, theming, module registration
     widget.md            # Widget authoring, hosting, lifecycle events
+    app-config.md        # Environment variables, app settings, module init
 ```
 
 ## Format
