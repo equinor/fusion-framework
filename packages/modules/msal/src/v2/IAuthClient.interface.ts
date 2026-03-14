@@ -4,17 +4,40 @@ import type {
   IPublicClientApplication,
 } from './types';
 
+/**
+ * Simplified ID token claims used by the v2 compatibility layer.
+ *
+ * @property aud - Token audience (application ID)
+ * @property exp - Token expiration time (seconds since epoch)
+ */
 export type IdTokenClaims = {
   aud: string;
   exp: number;
 };
 
+/**
+ * Extended account information for v2 compatibility.
+ *
+ * Augments the base v2 `AccountInfo` with typed ID token claims.
+ */
 export type AccountInfo = AccountInfoBase & {
   idTokenClaims?: IdTokenClaims;
 };
 
+/**
+ * Authentication behavior type for v2-compatible login and token flows.
+ *
+ * - `'popup'` — Opens a popup window for authentication
+ * - `'redirect'` — Navigates the browser to the Microsoft login page
+ */
 export type AuthBehavior = 'popup' | 'redirect';
 
+/**
+ * Simplified authentication request for v2-compatible methods.
+ *
+ * @property scopes - Optional OAuth scopes to request (e.g. `['User.Read']`)
+ * @property loginHint - Optional username hint to pre-fill the login form
+ */
 export type AuthRequest = {
   scopes?: string[];
   loginHint?: string;
