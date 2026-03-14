@@ -59,15 +59,25 @@ const _command = createCommand('add')
   )
   .argument('[glob-patterns...]', 'Glob patterns to match files (optional when using --diff)')
   .action(async (patterns: string[], commandOptions: CommandOptions) => {
-    const options = await CommandOptionsSchema.parseAsync(commandOptions);
+    // Load configuration before validation so config values can fill gaps
+    const preOptions = commandOptions as Record<string, unknown>;
+    const config = await loadFusionAIConfig<FusionAIConfigWithIndex>(
+      (preOptions.config as string) ?? 'fusion-ai.config',
+      { baseDir: process.cwd() },
+    );
+    const indexConfig = config.index ?? {};
 
-    // Load configuration
-    const config = await loadFusionAIConfig<FusionAIConfigWithIndex>(options.config, {
-      baseDir: process.cwd(),
-    });
+    // Config values act as defaults when CLI flags are absent
+    if (!preOptions.azureSearchIndexName && indexConfig.name) {
+      preOptions.azureSearchIndexName = indexConfig.name;
+    }
+    if (!preOptions.openaiEmbeddingDeployment && indexConfig.model) {
+      preOptions.openaiEmbeddingDeployment = indexConfig.model;
+    }
+
+    const options = await CommandOptionsSchema.parseAsync(preOptions);
 
     // CLI args take precedence over config patterns
-    const indexConfig = config.index ?? {};
     const allowedFilePatterns = indexConfig.patterns ?? ['**/*.ts', '**/*.md', '**/*.mdx'];
     const filePatterns = patterns.length ? patterns : allowedFilePatterns;
 

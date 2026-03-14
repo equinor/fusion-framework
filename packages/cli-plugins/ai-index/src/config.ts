@@ -18,6 +18,10 @@ import type { FusionAIConfig } from '@equinor/fusion-framework-cli-plugin-ai-bas
  * ```
  */
 export interface IndexConfig {
+  /** Azure Cognitive Search index name. Overridden by the `--azure-search-index-name` CLI flag. */
+  name?: string;
+  /** Azure OpenAI embedding deployment name. Overridden by the `--openai-embedding-deployment` CLI flag. */
+  model?: string;
   // Glob patterns for files to process (defaults to ['**/*.ts', '**/*.md', '**/*.mdx']).
   patterns?: string[];
   /** Glob patterns for files that should be indexed as-is, without chunking or transformation. */
