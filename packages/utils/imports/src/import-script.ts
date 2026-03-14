@@ -9,45 +9,53 @@ import { importMetaResolvePlugin } from './import-meta-resolve-plugin.js';
 import { rawMarkdownPlugin } from './markdown-plugin.js';
 
 /**
- * Represents a Node.js module with an optional default export.
+ * Shape of an ESM module returned by {@link importScript}.
  *
- * @typedef {Object} EsmModule
- * @property {unknown} [default] - The default export of the module, if any.
- * @property {Record<string, unknown>} - Additional named exports of the module.
+ * Every named export is accessible as a string-keyed property.
+ * The optional `default` property holds the module's default export, if one
+ * exists.
  */
 export type EsmModule = Record<string, unknown> & {
   default?: unknown;
 };
 
 /**
- * Options for importing a script, excluding certain build options.
+ * Esbuild build-options subset accepted by {@link importScript}.
  *
- * @remarks when `write` is set to `false`, the output will be loaded from memory.
+ * Inherits all `esbuild.BuildOptions` except `entryPoints`, `bundle`, and
+ * `format`, which are controlled internally.
  *
- * This type is derived from `BuildOptions` but omits the following properties:
- * - `entryPoints`
- * - `bundle`
- * - `format`
+ * @remarks
+ * When `write` is `false` the bundled output is loaded from memory via a
+ * `data:` URL instead of being written to disk.
  */
 export type ImportScriptOptions = Omit<BuildOptions, 'entryPoints' | 'bundle' | 'format'>;
 
 /**
- * Asynchronously imports a script file using esbuild to bundle it.
+ * Bundles a TypeScript or JavaScript file with esbuild and dynamically imports
+ * the resulting ESM module.
  *
- * @template M - The type of the module to be imported.
- * @param {string} entryPoint - The path to the script file to be imported.
- * @param {ImportScriptOptions} [options] - Optional build options to customize the bundling process.
- * @returns {Promise<M>} A promise that resolves to the imported module.
- * @throws {Error} Throws an error if the bundling process fails or no output files are generated.
+ * The function resolves the entry point, bundles it in ESM format with all
+ * npm packages marked as external, and loads the output via `import()`. Two
+ * built-in esbuild plugins are included automatically:
+ *
+ * - {@link createImportMetaResolvePlugin | importMetaResolvePlugin} — resolves
+ *   `import.meta.resolve()` calls for relative paths at build time.
+ * - {@link rawMarkdownPlugin} — supports `?raw` imports for markdown files.
+ *
+ * @template M - Module shape returned by the dynamic import.
+ * @param entryPoint - Path to the script file to bundle and import.
+ * @param options    - Optional esbuild build options (see {@link ImportScriptOptions}).
+ * @returns The imported module.
+ * @throws {FileNotFoundError} When the entry point does not exist.
+ * @throws {FileNotAccessibleError} When the entry point cannot be read.
+ * @throws {Error} When esbuild bundling fails or produces no output.
  *
  * @example
  * ```typescript
- * import { importScript } from './import-script';
- *
- * (async () => {
- *   const myModule = await importScript<MyModuleType>('./path/to/my-module.ts');
- *   // Use myModule here
- * })();
+ * interface MyModule { greet(name: string): string }
+ * const mod = await importScript<MyModule>('./greet.ts');
+ * console.log(mod.greet('World'));
  * ```
  */
 export const importScript = async <M extends EsmModule>(
