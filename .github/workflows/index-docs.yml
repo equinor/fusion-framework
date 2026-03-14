@@ -151,10 +151,13 @@ jobs:
           set -euo pipefail
 
           if [[ "$MODE" == "clean" ]]; then
+            echo "::notice::Running clean rebuild — all existing embeddings will be deleted first"
             pnpm exec ffc ai embeddings --clean --config ./fusion-ai.config.ts
           elif [[ "$MODE" == "diff" ]]; then
+            echo "::notice::Running incremental indexing from base ref ${BASE_REF}"
             pnpm exec ffc ai embeddings --diff --base-ref "$BASE_REF" --config ./fusion-ai.config.ts
           else
+            echo "::notice::Running full indexing (no safe base ref available)"
             pnpm exec ffc ai embeddings --config ./fusion-ai.config.ts
           fi
 
