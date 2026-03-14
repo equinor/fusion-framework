@@ -8,8 +8,19 @@ import type {
 } from '@equinor/fusion-framework-module';
 import type { HttpModule } from '@equinor/fusion-framework-module-http';
 
+/**
+ * Module identifier used to register and look up the Service Discovery module
+ * within the Fusion Framework module system.
+ */
 export const moduleName = 'serviceDiscovery';
 
+/**
+ * Type alias describing the Service Discovery module shape.
+ *
+ * @remarks
+ * Binds together the module name, the runtime provider interface, the
+ * configurator class, and the required dependency on {@link HttpModule}.
+ */
 export type ServiceDiscoveryModule = Module<
   typeof moduleName,
   IServiceDiscoveryProvider,
@@ -18,23 +29,21 @@ export type ServiceDiscoveryModule = Module<
 >;
 
 /**
- * Represents the Service Discovery module configuration.
+ * Service Discovery module definition.
+ *
+ * Configures and initializes the service discovery mechanism within the
+ * Fusion Framework module system. During initialization the module:
+ *
+ * 1. Creates the {@link ServiceDiscoveryConfig} (optionally inheriting the
+ *    parent module's discovery client so sub-modules share cache).
+ * 2. Resolves the required {@link HttpModule} instance.
+ * 3. Returns a {@link ServiceDiscoveryProvider} ready to resolve endpoints.
  *
  * @remarks
- * This module is responsible for configuring and initializing the service discovery mechanism.
- * It ensures that the service discovery configuration is created and the necessary dependencies
- * are initialized before providing the service discovery provider.
- *
- * @returns {Promise<ServiceDiscoveryProvider>} - Returns a promise that resolves to the service discovery provider.
- *
- * @remarks
- * The initialization process involves creating the service discovery configuration, which may include
- * inheriting configurations from a parent module. This pattern, while allowing reuse of cache and ensuring
- * up-to-date configurations, can be risky as it exposes the child module to potential breaking changes
- * from the parent module's client.
- *
- * Additionally, the service discovery module requires the HTTP module to be initialized before it can
- * function properly.
+ * When a parent module exposes its own `serviceDiscovery` config, the child
+ * module reuses that configuration by default. This enables shared caching
+ * and consistent service resolution but means breaking changes in the
+ * parent's client can affect child modules.
  */
 export const module: ServiceDiscoveryModule = {
   name: moduleName,
@@ -62,20 +71,31 @@ export const module: ServiceDiscoveryModule = {
 };
 
 /**
- * Configures the Service Discovery module.
+ * Creates a module configurator object for the Service Discovery module.
  *
- * @template TRef - The type reference for the module configurator.
- * @param callback - A function that takes a `ServiceDiscoveryConfigurator` and returns a promise that resolves when the configuration is complete.
- * @returns An object implementing `IModuleConfigurator` for the `ServiceDiscoveryModule` with the provided configuration.
+ * Use this when you need to add service discovery to a
+ * {@link ModulesConfigurator} via `addConfig` and want full control over
+ * the configuration callback.
+ *
+ * For the simpler "just enable it" path, prefer {@link enableServiceDiscovery}.
+ *
+ * @template TRef - Module reference type forwarded to the configurator.
+ * @param callback - Receives a {@link ServiceDiscoveryConfigurator} and must
+ *   return a `Promise` that resolves when configuration is complete.
+ * @returns An `IModuleConfigurator` that can be passed to
+ *   `ModulesConfigurator.addConfig`.
  *
  * @example
  * ```typescript
  * import { configureServiceDiscovery } from '@equinor/fusion-framework-module-service-discovery';
  *
- * const config = (configurator: ModuleConfigurator) => {
- *  configurator.addConfig(configureServiceDiscovery(async (config) => {
- *      // custom configuration
- * });
+ * const configure = (configurator: ModulesConfigurator) => {
+ *   configurator.addConfig(
+ *     configureServiceDiscovery(async (builder) => {
+ *       builder.configureServiceDiscoveryClientByClientKey('my_sd_key');
+ *     }),
+ *   );
+ * };
  * ```
  */
 export const configureServiceDiscovery = <TRef>(
@@ -86,24 +106,29 @@ export const configureServiceDiscovery = <TRef>(
 });
 
 /**
- * Enables the service discovery module by adding its configuration to the provided configurator.
+ * Enables the Service Discovery module on a {@link ModulesConfigurator}.
  *
- * @param configurator - The configurator to which the service discovery configuration will be added.
- * @param callback - An optional callback function that can be used to customize the service discovery configuration.
+ * This is the recommended entry point for most consumers. When called
+ * without a callback the module auto-detects an HTTP client registered
+ * under the key `"service_discovery"`. Pass a callback to override the
+ * client key, endpoint, or provide a fully custom discovery client.
+ *
+ * @param configurator - The modules configurator to register the module on.
+ *   Must already include {@link HttpModule}.
+ * @param callback - Optional async callback receiving a
+ *   {@link ServiceDiscoveryConfigurator} for advanced setup.
  *
  * @example
  * ```typescript
  * import { enableServiceDiscovery } from '@equinor/fusion-framework-module-service-discovery';
  *
- * const config = (configurator: ModuleConfigurator) => {
- *     // simple
- *     enableServiceDiscovery(configurator);
+ * // Simplest usage — auto-detects the 'service_discovery' HTTP client
+ * enableServiceDiscovery(configurator);
  *
- *     // with custom configuration
- *     enableServiceDiscovery(configurator, async (config) => {
- *         config.configureServiceDiscoveryClientByClientKey('service-discovery-custom');
- *     });
- * };
+ * // Custom HTTP client key
+ * enableServiceDiscovery(configurator, async (builder) => {
+ *   builder.configureServiceDiscoveryClientByClientKey('sd_custom');
+ * });
  * ```
  */
 export const enableServiceDiscovery = (
