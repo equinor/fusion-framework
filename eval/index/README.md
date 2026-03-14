@@ -1,143 +1,78 @@
 # Fusion Framework Evaluation Index
 
-Shared evaluation infrastructure for validating Fusion Framework MCP search retrieval quality. Domain files in this directory define expected coding patterns, conventions, and usage guidance that the search index must surface accurately.
-
-## Purpose
-
-The evaluation index exists to:
-
-- Define authoritative framework patterns that retrieval must return correctly
-- Provide structured test material for validating index freshness and accuracy
-- Give contributors a clear format for documenting patterns that drive evaluation
-- Support automated evaluation workflows that compare retrieval results against expected patterns
+Shared evaluation infrastructure for validating Fusion Framework MCP search retrieval quality. Domain files in this directory define expected search queries and what the index should return for each.
 
 ## How it works
 
-Each **domain file** describes a set of patterns for a specific area of Fusion Framework. When the search index is evaluated, queries derived from these patterns are run against the index, and the results are checked for accuracy and completeness.
-
-A pattern represents a single coding convention, API usage rule, or architectural requirement. Each pattern includes:
-
-- A descriptive name
-- A requirement level (`must` or `should`)
-- Canonical code examples or file references showing the correct approach
-- Context explaining when and why the pattern applies
+Each **domain file** lists search queries as `##` headings. Under each heading, bullet points describe what the index **must** or **should** return. When evaluating, run the heading as a search query and check results against the expectations.
 
 ## Directory structure
 
 ```
 eval/
   index/
-    README.md            # This file — framework overview and contribution guide
-    core.md              # Core framework patterns (modules, providers, initialization)
-    state-data.md        # State management and data flow patterns
-    http-services.md     # HTTP client and service layer patterns
-    auth.md              # Authentication and authorization patterns
-    ui-components.md     # React components and UI patterns
-    features.md          # Feature flags, bookmarks, and app-level features
-    utilities.md         # Shared utilities and helper patterns
+    README.md            # This file
+    core.md              # Modules, providers, initialization, events
+    state-data.md        # State management and data flow
+    http-services.md     # HTTP clients and service layer
+    auth.md              # Authentication and authorization
+    ui-components.md     # React components and UI
+    features.md          # Feature flags, bookmarks, app features
+    utilities.md         # Shared utilities and helpers
 ```
 
-## Domain file template
+## Format
 
-Every domain file follows the same markdown structure. Use this template when adding new patterns to a domain file.
-
-### File header
-
-Each domain file starts with a title and a one-line summary of what the domain covers:
+Each domain file follows this structure:
 
 ```markdown
 # Domain Name
 
-Brief description of which part of Fusion Framework this domain covers and what kinds of patterns belong here.
+Judgement instructions for this domain — directed at you, the evaluator.
+Ensure results reference the right packages. Verify symbols are real exports.
+Reject results that contradict documented patterns.
+
+## Search query as a natural question
+
+- must mention X from `@equinor/fusion-framework-*`
+- must show Y pattern or API
+- should reference Z as related concept
 ```
 
-### Pattern format
-
-Each pattern is a level-2 heading followed by structured sections:
-
-```markdown
-## Pattern: Descriptive Pattern Name
-
-**Requirement:** `must` | `should`
-
-Brief explanation of what this pattern requires and why it matters for Fusion Framework consumers.
-
-### Example
-
-\`\`\`typescript
-// Canonical code example showing the correct approach
-import { something } from '@equinor/fusion-framework-module-something';
-
-const result = something.doTheRightThing();
-\`\`\`
-
-### File references
-
-- `packages/modules/something/src/provider.ts` — where the pattern is implemented
-- `cookbooks/app-react/src/App.tsx` — cookbook example demonstrating usage
-
-### Notes
-
-- Any constraints, edge cases, or related patterns worth mentioning
-- Links to related patterns in other domain files when relevant
-```
+The `#` heading names the domain. The paragraph below it tells the evaluator
+how to judge results across all queries in that domain.
+Each `##` heading is a search query. Bullets are expectations.
 
 ### Requirement levels
 
-- **`must`** — A hard requirement. Code that violates this pattern is incorrect or will break. The search index must surface this pattern accurately for relevant queries.
-- **`should`** — A strong recommendation. Code that follows this pattern is idiomatic and maintainable. The search index should surface this pattern for relevant queries but it is not a correctness issue if missed.
-
-### Complete single-pattern example
-
-Below is a fully populated example pattern showing the expected format:
-
-```markdown
-## Pattern: Use scoped package imports
-
-**Requirement:** `must`
-
-Always import from scoped `@equinor/fusion-framework-*` package names. Never use relative imports to reach into other monorepo packages. Scoped imports ensure correct dependency resolution and allow each package to be versioned and published independently.
+- **`must`** — the index must surface this for the query; absence means a gap
+- **`should`** — the index should ideally surface this; absence is not critical
 
 ### Example
 
-\`\`\`typescript
-// Correct — scoped package import
-import { useFramework } from '@equinor/fusion-framework-react';
+```markdown
+# HTTP & Services
 
-// Incorrect — relative cross-package import
-import { useFramework } from '../../react/src/useFramework';
-\`\`\`
+Ensure results reference `@equinor/fusion-framework-module-http` or
+`@equinor/fusion-framework-module-service-discovery`. Verify that
+package names, configuration helpers, and code examples are real.
 
-### File references
+## How to configure a named HTTP client
 
-- `packages/react/src/useFramework.ts` — hook implementation
-- `.github/instructions/monorepo-structure.instructions.md` — import rules
-
-### Notes
-
-- This applies to all source code, tests, and cookbooks
-- The `workspace:^` protocol is used in `package.json` but never in source imports
+- must mention `configureHttpClient` from `@equinor/fusion-framework-module-http`
+- must show `baseUri` and client name as parameters
+- should mention default headers configuration
+- should reference service discovery as an alternative
 ```
 
 ## How to contribute
 
-1. Identify which domain file your pattern belongs to
-2. Add a new `## Pattern:` section following the template above
-3. Choose the correct requirement level (`must` or `should`)
-4. Include at least one code example showing the correct approach
-5. Add file references pointing to real files in the repository
-6. Submit a PR with the pattern addition
-
-### Guidelines
-
-- One pattern per `## Pattern:` section — keep patterns focused and atomic
-- Use real package names, exported symbols, and file paths from the repository
-- Keep code examples minimal but realistic enough to be unambiguous
-- Prefer showing both correct and incorrect approaches when the distinction matters
-- Cross-reference related patterns in other domain files using relative links
+1. Pick the right domain file
+2. Add a `##` heading phrased as a natural question developers would search for
+3. Add `must` and `should` bullets for what the index should return
+4. Use real package names, exported symbols, and API names
+5. Submit a PR
 
 ## Related
-
-- **Parent issue:** [equinor/fusion-core-tasks#599](https://github.com/equinor/fusion-core-tasks/issues/599) — Fusion Framework documentation index freshness
-- **Evaluation automation:** Covered in separate follow-up issues
+- **Evaluation skill:** `.agents/skills/custom-index-eval/` — run `eval core` or `eval all`
 - **Framework instructions:** `.github/instructions/` — source-of-truth rules for code generation

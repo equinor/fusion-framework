@@ -4,7 +4,7 @@ description: 'Iterative evaluation of Fusion Framework MCP search quality agains
 license: MIT
 compatibility: Requires Fusion MCP access via `mcp_fusion_search` or `mcp_fusion_search_framework`. Works in any runtime that can read local files and call MCP tools.
 metadata:
-  version: "0.1.0"
+  version: "0.2.0"
   status: experimental
   owner: "@equinor/fusion-core"
   tags:
@@ -58,53 +58,41 @@ If the user says only `eval` with no domain, ask which domain to evaluate or whe
 
 1. If the target is a specific domain (e.g., `core`), read `eval/index/<domain>.md`
 2. If the target is `all`, list all `.md` files in `eval/index/` except `README.md` and process each one sequentially
-3. If the file does not exist or has no `## Pattern:` sections, report it as empty and skip
+3. If the file does not exist or has no `##` query sections, report it as empty and skip
 
-### Step 2 — Parse patterns from the domain file
+### Step 2 — Parse the domain file
 
-For each domain file, extract every `## Pattern:` section. Each pattern contains:
+Domain files have a simple structure:
 
-- **Pattern name**: the heading text after `## Pattern:`
-- **Requirement level**: `must` or `should` from the `**Requirement:**` line
-- **Description**: the prose explaining the pattern
-- **Code examples**: TypeScript codeblocks showing canonical usage
-- **File references**: real monorepo file paths
-- **Notes**: constraints, edge cases, related patterns
+- `# Domain Name` — the domain heading
+- Paragraph below `#` — **judgement instructions** for how to evaluate results across all queries in this domain
+- `## <query>` — each `##` heading is a search query to run against MCP
+- `- must ...` / `- should ...` — expectations for each query's results
 
-Build a list of patterns to evaluate. Track the requirement level for each.
+Extract the judgement instructions once (use them as context when evaluating every query). Then build a list of queries, each with its `must` and `should` expectations.
 
-### Step 3 — Query Fusion MCP for each pattern
+### Step 3 — Evaluate each query via judge sub-agent
 
-For each pattern, construct a search query and call Fusion MCP:
+For each `##` heading, spin up a **query-judge** sub-agent (see `agents/query-judge.md`). Pass it:
 
-1. Use the pattern name as the primary search query
-   - Example: for `## Pattern: Initialize framework with FrameworkConfigurator and init`, search for `"Initialize framework with FrameworkConfigurator and init"`
-2. Call `mcp_fusion_search_framework` (preferred) or `mcp_fusion_search` with the query
-3. Collect the top results returned by MCP
+- The heading text (search query)
+- The `must` and `should` bullets for that query
+- The domain-level judgement instructions
 
-### Step 4 — Validate results against the pattern
+The judge sub-agent will:
+1. Search MCP using the heading text
+2. Check results against each expectation
+3. Return a verdict (`pass` / `partial` / `fail`) with counts and explanation
 
-For each pattern, evaluate whether the MCP results satisfy the documented expectations:
+If the runtime does not support sub-agents, follow the same workflow inline:
+1. Use the heading text as the search query
+2. Call `mcp_fusion_search_framework` (preferred) or `mcp_fusion_search`
+3. Check results against each `must` / `should` bullet
+4. Record verdict with explanation
 
-**Pass criteria:**
-- At least one result references the same package, API, or concept described in the pattern
-- Key exported symbols mentioned in the pattern appear in the returned content
-- The returned guidance is consistent with (not contradicting) the pattern's must/should statements
+Collect all verdicts before producing the report.
 
-**Fail criteria:**
-- No results returned for the query
-- Results reference unrelated packages or concepts
-- Results contradict the documented must/should requirements
-- Key symbols or file paths from the pattern are absent from all returned results
-
-**Partial criteria:**
-- Results cover the concept but miss specific details (e.g., returns the package but not the specific API pattern)
-- Results are correct but outdated compared to the documented pattern
-- Only some of the key symbols appear in results
-
-Record the verdict as `pass`, `partial`, or `fail` with a brief explanation.
-
-### Step 5 — Generate the evaluation report
+### Step 4 — Generate the evaluation report
 
 Produce a report following the template in `assets/report-template.md`. The report includes:
 
@@ -113,7 +101,7 @@ Produce a report following the template in `assets/report-template.md`. The repo
 3. **Summary statistics**: total patterns, pass/partial/fail counts, pass rate
 4. **Recommendations**: actionable next steps for failed or partial patterns
 
-### Step 6 — Present results
+### Step 5 — Present results
 
 - Print the full report to the conversation
 - For `eval all`, present a per-domain summary first, then offer to show detailed results for any domain
@@ -134,11 +122,10 @@ A structured evaluation report containing:
 
 **Workflow:**
 1. Read `eval/index/core.md`
-2. Extract 5 patterns: "Initialize framework with FrameworkConfigurator and init", "Define a module with the Module interface", "Module lifecycle phases", "Configure application modules with AppModuleInitiator", "Listen to framework events with addEventListener"
-3. For each pattern, search Fusion MCP:
-   - Search: `"Initialize framework with FrameworkConfigurator and init"`
-   - Evaluate: Do results mention `FrameworkConfigurator`, `init`, `@equinor/fusion-framework`?
-4. Produce report:
+2. Note judgement instructions: "Results should reference `@equinor/fusion-framework` and `@equinor/fusion-framework-module`..."
+3. Extract 5 queries from `##` headings
+4. For each, search MCP and check `must`/`should` bullets
+5. Produce report:
 
 ```
 ## Evaluation Report: core
@@ -147,24 +134,21 @@ Date: 2026-03-14
 Strictness: full
 Domain: eval/index/core.md
 
-| # | Pattern | Req | Verdict | Explanation |
-|---|---------|-----|---------|-------------|
-| 1 | Initialize framework with FrameworkConfigurator and init | must | pass | Results include @equinor/fusion-framework README with FrameworkConfigurator and init examples |
-| 2 | Define a module with the Module interface | must | pass | Results cover Module type from @equinor/fusion-framework-module |
-| 3 | Module lifecycle phases | should | partial | Lifecycle mentioned but postConfigure/postInitialize hooks not detailed |
-| 4 | Configure application modules with AppModuleInitiator | must | fail | No results reference AppModuleInitiator or app-level configuration |
-| 5 | Listen to framework events with addEventListener | must | pass | Event module documentation returned with addEventListener examples |
+| # | Query | Verdict | Explanation |
+|---|-------|---------|-------------|
+| 1 | How to initialize Fusion Framework | pass | Results mention FrameworkConfigurator, init, configureMsal |
+| 2 | How to create a custom module | pass | Module interface, BaseConfigBuilder, BaseModuleProvider all covered |
+| 3 | Module lifecycle phases | partial | Lifecycle order shown but postConfigure/postInitialize hooks not detailed |
+| 4 | How to configure an app with AppModuleInitiator | fail | No results reference AppModuleInitiator |
+| 5 | How to listen to framework events | pass | addEventListener, dispatchEvent, event module all returned |
 
 ### Summary
-- Total: 5 patterns
-- Pass: 3 (60%)
-- Partial: 1 (20%)
-- Fail: 1 (20%)
-- Must pass rate: 3/4 (75%)
+- Queries: 5 | Pass: 3 | Partial: 1 | Fail: 1
+- Must expectations met: 14/17 (82%)
 
 ### Recommendations
-1. **[CRITICAL]** Pattern 4 — AppModuleInitiator: Re-index `packages/app/src/types.ts` and `cookbooks/app-react/src/config.ts` to cover app configuration patterns
-2. **[IMPROVE]** Pattern 3 — Lifecycle phases: Enrich `packages/modules/module/README.md` lifecycle section with postConfigure and postInitialize examples
+1. **[CRITICAL]** Query 4: Re-index `packages/app/src/types.ts` and `cookbooks/app-react/src/config.ts`
+2. **[IMPROVE]** Query 3: Enrich lifecycle section in `packages/modules/module/README.md`
 ```
 
 ## Safety & constraints

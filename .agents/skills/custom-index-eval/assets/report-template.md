@@ -10,27 +10,21 @@ Use this template when producing evaluation reports.
 **Strictness:** {full | strict}
 **Domain file:** `eval/index/{domain}.md`
 
-### Pattern Results
+### Results
 
-| # | Pattern | Req | Verdict | Explanation |
-|---|---------|-----|---------|-------------|
-| {n} | {pattern name} | {must\|should} | {pass\|partial\|fail} | {brief explanation of what MCP returned vs what was expected} |
+| # | Query | Verdict | Explanation |
+|---|-------|---------|-------------|
+| {n} | {## heading text} | {pass\|partial\|fail} | {which must/should expectations were met or missed} |
 
 ### Summary
 
-- **Total patterns:** {count}
-- **Pass:** {count} ({percent}%)
-- **Partial:** {count} ({percent}%)
-- **Fail:** {count} ({percent}%)
-- **Must pass rate:** {must_pass}/{must_total} ({percent}%)
-- **Should pass rate:** {should_pass}/{should_total} ({percent}%)
+- **Queries:** {count} | **Pass:** {count} | **Partial:** {count} | **Fail:** {count}
+- **Must expectations met:** {met}/{total} ({percent}%)
 
 ### Recommendations
 
-List recommendations in priority order. Use `[CRITICAL]` for `must` failures, `[IMPROVE]` for `should` failures or partials:
-
-1. **[CRITICAL]** Pattern {n} — {name}: {concrete action to fix the gap}
-2. **[IMPROVE]** Pattern {n} — {name}: {concrete action to improve coverage}
+1. **[CRITICAL]** Query {n}: {concrete action to fix the gap}
+2. **[IMPROVE]** Query {n}: {concrete action to improve coverage}
 
 ### Notes
 
