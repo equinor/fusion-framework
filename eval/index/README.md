@@ -26,6 +26,7 @@ eval/
     ag-grid.md           # AG Grid integration, theming, module registration
     widget.md            # Widget authoring, hosting, lifecycle events
     app-config.md        # Environment variables, app settings, module init
+    cookbooks.md         # Cookbook discoverability, working examples
 ```
 
 ## Format
