@@ -1,125 +1,137 @@
-# Fusion Log Utilities
+# @equinor/fusion-log
 
-This package provides a set of utilities for logging messages in a TypeScript/JavaScript application within the Fusion Framework. The primary purpose of this code is to provide a consistent and configurable logging mechanism that can be used throughout the application.
+Structured, level-filtered logging utilities for Fusion Framework applications.
 
-## Overview
+`@equinor/fusion-log` gives you a thin, RxJS-backed logging abstraction with a ready-made console implementation and helpers for resolving log levels from environment variables. Use it whenever you need consistent, configurable log output across modules.
 
-The logging utilities in this package are designed to provide a flexible and extensible logging solution. The main components are:
+## Key Exports
 
-- `Logger` (abstract class): Defines the base interface and functionality for logging messages with different severity levels (debug, info, warn, error).
-- `ConsoleLogger`: A concrete implementation of the `Logger` class that logs messages to the console.
-- `LogLevel` (enum): Defines the different log levels that can be used to control the verbosity of logging.
-- `resolveLogLevel` (function): Resolves a log level from a string or number representation.
+| Export             | Kind              | Purpose                                                                    |
+|--------------------|-------------------|----------------------------------------------------------------------------|
+| `ConsoleLogger`    | Class             | Colour-coded console logger with title prefixes and sub-logger support.    |
+| `Logger`           | Abstract class    | Base class to extend when building custom log destinations.                |
+| `ILogger`          | Interface         | Contract satisfied by every logger — use for dependency injection.         |
+| `LogLevel`         | Enum              | Severity constants (`None`, `Error`, `Warning`, `Info`, `Debug`).          |
+| `defaultLogLevel`  | Constant          | The level resolved at startup from `FUSION_LOG_LEVEL`.                     |
+| `resolveLogLevel`  | Function          | Parse a string or number into a type-safe `LogLevel`.                      |
 
-> [!WARNING]
-> Ensure that `FUSION_LOG_LEVEL` is set in your package manager's environment variables before compiling the code for production.
-> [Learn more about setting the log level as an environment variable](#setting-log-level-as-environment-variable)
-
-
-
-## ConsoleLogger
-The `ConsoleLogger` class is a concrete implementation of the `Logger` class. It logs messages to the console using the appropriate console methods (`console.debug`, `console.info`, `console.warn`, `console.error`). The `ConsoleLogger` class also supports creating sub-loggers with a new title and optional subtitle.
+## Quick Start
 
 ```typescript
 import { ConsoleLogger, LogLevel } from '@equinor/fusion-log';
 
-// Create a new ConsoleLogger instance
-const logger = new ConsoleLogger('MyApplication');
-
-// Set the logging level
+const logger = new ConsoleLogger('MyApp');
 logger.level = LogLevel.Debug;
 
-// Log messages at different severity levels
-logger.debug('This is a debug message');
-logger.info('This is an info message');
-logger.warn('This is a warning message');
-logger.error('This is an error message');
-
-// Create a sub-logger
-const subLogger = logger.createSubLogger('SubComponent');
-subLogger.debug('This is a debug message from the sub-logger');
+logger.debug('bootstrapping modules…');
+logger.info('application ready');
+logger.warn('deprecated API called');
+logger.error('failed to fetch config', err);
 ```
 
-## LogLevel
+## Log Levels
 
-The `LogLevel` enum represents the different log levels that can be used to control the verbosity of logging. It includes the following levels:
+Higher numeric values are more verbose. Setting `logger.level` to a given level enables that level **and all levels below it**.
 
-0. **None** - No logging will be performed.
-1. **Error** - Due to a more serious problem, the software has not been able to perform some function.
-2. **Warning** - An indication that something unexpected happened, or indicative of some problem in the near future.
-3. **Info** - Confirmation that things are working as expected.
-4. **Debug** - Detailed information, typically of interest only when diagnosing problems.
+| Level     | Value | When to use                                            |
+|-----------|-------|--------------------------------------------------------|
+| `None`    | 0     | Disable all logging.                                   |
+| `Error`   | 1     | An operation failed and the caller should be aware.    |
+| `Warning` | 2     | Something unexpected that may need investigation.      |
+| `Info`    | 3     | Routine confirmation (e.g. "module initialised").      |
+| `Debug`   | 4     | Verbose diagnostics for development only.              |
 
-#### Setting log level as Environment Variable
+### Configure via Environment Variable
 
-The logging level can be configured using the `FUSION_LOG_LEVEL` environment variable. If the environment variable is set, the resolveDefaultLogLevel function will attempt to parse the log level from it. If the parsing fails, it will default to LogLevel.Debug in development environments or LogLevel.Error in production environments.
+Set `FUSION_LOG_LEVEL` **before** your bundler compiles the code so the default level is inlined at build time.
 
 ```sh
-# .env file
-FUSION_LOG_LEVEL=4
+# .env
+FUSION_LOG_LEVEL=4        # numeric
 # or
-FUSION_LOG_LEVEL=debug
+FUSION_LOG_LEVEL=debug    # case-insensitive name
+```
+
+> [!WARNING]
+> Ensure that `FUSION_LOG_LEVEL` is set in your package manager's environment variables before compiling the code for production.
+
+Resolution rules (applied once at module load):
+
+1. If `FUSION_LOG_LEVEL` is set and parsable → use the parsed value.
+2. If parsing fails and `NODE_ENV === 'development'` → fall back to `Debug`.
+3. Otherwise → fall back to `Error`.
+4. If the variable is not set → default to `Error`.
+
+You can also resolve a level at runtime with `resolveLogLevel`:
+
+```typescript
+import { resolveLogLevel } from '@equinor/fusion-log';
+
+const level = resolveLogLevel(process.env.MY_LOG_LEVEL ?? 'error');
+logger.level = level;
+```
+
+## Sub-Loggers
+
+Create child loggers to add component-level context. The child's title is prefixed with the parent's title, and the log level is inherited unless overridden.
+
+```typescript
+const router = logger.createSubLogger('Router');
+router.debug('navigated to /dashboard');
+// console output: "MyApp::Router  navigated to /dashboard"
+
+const auth = logger.createSubLogger('Auth', undefined, LogLevel.Error);
+auth.info('token refreshed'); // suppressed — level is Error
 ```
 
 ## Custom Loggers
 
-Developers can define their own logger either by extending the `Logger` class or by implementing the `ILogger` interface. Below are examples of both approaches.
+### Extending `Logger`
 
-### Extending the `Logger` Class
-
-> The `Logger` class is an abstract class that implements the `ILogger` interface.
-> It provides basic functionality for creating messages with `chalk`.
-
-
-To create a custom logger by extending the `Logger` class, you need to create a new class that inherits from `Logger` and override the necessary methods.
+Subclass `Logger` to route log entries to any destination while reusing level filtering and the RxJS observable pipeline.
 
 ```typescript
-import { Logger, LogLevel } from '@equinor/fusion-log';
+import { Logger, LogLevel, type ILogger } from '@equinor/fusion-log';
 
-class CustomLogger extends Logger {
-    constructor(title: string) {
-        super(title);
-        // handle messages filtered by logLevel
-        this.log.subscribe(({lvl,msg}) => {
-          writeToMyDatabase(lvl, msg); 
-        });
-        // handle all messages
-        this._log$.subscribe(({lvl,msg}) => {
-          writeToMyDatabase(lvl, msg); // custom handling of messages
-        });
-    }
+class RemoteLogger extends Logger {
+  constructor(private readonly endpoint: string) {
+    super();
+    // subscribe to the filtered stream
+    this.log.subscribe(({ lvl, msg }) => {
+      fetch(this.endpoint, {
+        method: 'POST',
+        body: JSON.stringify({ level: lvl, messages: msg }),
+      });
+    });
+  }
 
-    // Override the log method to customize logging behavior
-    protected _createMessage(...msg: unknown[]): unknown[] {
-       return {
-        title: this.title,
-        timestamp: Date.Now(),
-        message: msg.map(convertMessageToString).join('\n'),
-       } // custom message
-    }
+  protected _createMessage(_lvl: LogLevel, ...msg: unknown[]): unknown[] {
+    return msg;
+  }
+
+  createSubLogger(title: string): ILogger {
+    const sub = new RemoteLogger(this.endpoint);
+    sub.level = this.level;
+    return sub;
+  }
 }
 ```
 
+### Implementing `ILogger`
 
-### Implementing the `ILogger` Interface
-
-> The `ILogger` interface defines the base interface and functionality for logging messages with different severity levels (debug, info, warn, error).
-
-To create a custom logger by implementing the `ILogger` interface, you need to create a new class that implements all the methods defined in the `ILogger` interface.
-
-### Resolving the log level
-
-The `defaultLogLevel` will be resolved by default. If the `FUSION_LOG_LEVEL` environment variable is set, the resolveDefaultLogLevel function will attempt to parse the log level from it. If the parsing fails, it will default to `LogLevel.Debug` in development environments or `LogLevel.Error` in production environments.
+If you don't need the RxJS pipeline, implement `ILogger` directly:
 
 ```typescript
-import { defaultLogLevel, type ILogger } from '@equinor/fusion-log';
-class CustomLogger implements ILogger {
-  logLevel: LogLevel = defaultLogLevel;
+import { type ILogger, LogLevel, defaultLogLevel } from '@equinor/fusion-log';
+
+class NoopLogger implements ILogger {
+  level: LogLevel = defaultLogLevel;
+  debug() {}
+  info() {}
+  warn() {}
+  error() {}
+  createSubLogger(): ILogger {
+    return new NoopLogger();
+  }
 }
 ```
-
-The `resolveLogLevel` function resolves a log level from a string or number representation. It handles both cases and throws an error if the provided value is not a valid log level.
-
-```typescript
-import { resolveLogLevel } from '@equinor/fusion-log';
-logger.logLevel = resolveLogLevel(process.env.MY_LOG_LEVEL);
