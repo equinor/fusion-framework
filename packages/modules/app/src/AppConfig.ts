@@ -1,4 +1,10 @@
-// todo: move to utils
+/**
+ * Recursively freezes an object and all of its nested properties.
+ *
+ * @template T - Object type being frozen.
+ * @param obj - The object to deep-freeze.
+ * @returns The same object, deeply frozen.
+ */
 const deepFreeze = <T extends Record<string, unknown>>(obj: T): T => {
   for (const property of Object.keys(obj)) {
     if (
@@ -12,8 +18,16 @@ const deepFreeze = <T extends Record<string, unknown>>(obj: T): T => {
   return Object.freeze(obj);
 };
 
+/**
+ * Arbitrary key-value record representing environment-specific variables
+ * injected into an application's runtime configuration.
+ */
 export type ConfigEnvironment = Record<string, unknown>;
 
+/**
+ * A named endpoint from the application configuration, containing a URL
+ * and the OAuth scopes required to call it.
+ */
 export type ConfigEndPoint = {
   url: string;
   scopes: string[];
