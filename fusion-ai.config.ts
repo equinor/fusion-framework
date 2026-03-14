@@ -1,10 +1,13 @@
 export default {
   index: {
+    name: 'fusion-framework-2026-03-16',
+    model: 'text-embedding-3-large',
     ignore: ['node_modules/**', 'dist/**', '**/node_modules/**', '**/dist/**'],
     // File patterns to match for processing
     patterns: [
       'packages/**/src/**/*.{ts,tsx}',
       'cookbooks/**/*.{ts,tsx}',
+      'cookbooks/**/README.md',
       // doccs
       'packages/**/docs/**/*.md',
       'packages/**/README.md',
