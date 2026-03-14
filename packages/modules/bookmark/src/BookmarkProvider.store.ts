@@ -8,7 +8,12 @@ import type { IBookmarkClient } from './BookmarkClient.interface';
 import type { Bookmark, BookmarkWithoutData } from './types';
 
 /**
- * Represents the state of the BookmarkProvider store.
+ * Internal state shape managed by the bookmark store.
+ *
+ * @property status - Set of base action types currently in-flight (used for loading indicators).
+ * @property errors - Map from base action type to the most recent error for that action.
+ * @property currentBookmark - The active bookmark, `null` when explicitly cleared, `undefined` before first set.
+ * @property bookmarks - Normalised record of bookmarks keyed by ID.
  */
 export type BookmarkState = {
   // current actions performed on the store
@@ -24,17 +29,21 @@ export type BookmarkState = {
 // export type BookmarkStoreFunctions = ActionCalls<typeof bookmarkActions>;
 
 /**
- * Represents the store for bookmarks, which is a flow subject that manages the state and actions for bookmarks.
+ * A {@link FlowSubject} specialised for bookmark state and actions.
+ *
+ * Combines a Redux-style reducer with RxJS side-effect flows to manage
+ * bookmark CRUD operations, favourites, and current-bookmark selection.
  */
 export type BookmarkStore = FlowSubject<BookmarkState, BookmarkActions>;
 
 /**
- * Creates a new BookmarkStore instance with the provided initial state and client.
+ * Creates and returns a new {@link BookmarkStore} wired with the bookmark
+ * reducer and all API side-effect flows.
  *
- * @param args - An object containing the initial state and client for the bookmark store.
- * @param args.initial - The initial state for the bookmark store.
- * @param args.client - The IBookmarkClient instance to bookmark store flows.
- * @returns A new BookmarkStore instance.
+ * @param args - Initialisation options.
+ * @param args.initial - Optional partial state merged over the reducer defaults.
+ * @param args.client - The {@link IBookmarkClient} used by store flows for API calls.
+ * @returns A fully configured bookmark store.
  */
 export const createBookmarkStore = (args: {
   initial?: Partial<BookmarkState>;

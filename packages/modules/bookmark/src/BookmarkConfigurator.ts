@@ -32,7 +32,14 @@ const parseInitialBookmarkConfigConfig = (initial?: unknown): BookmarkModuleConf
 
 /**
  * Configurator for the bookmark module.
- * This class provides a set of methods for configuring the bookmark module.
+ *
+ * Provides a builder-style API for setting the source system, bookmark client,
+ * context/application resolvers, filters, and parent provider before the module
+ * is initialised. Extends {@link BaseConfigBuilder} and produces a validated
+ * {@link BookmarkModuleConfig} at build time.
+ *
+ * In most cases you interact with this class through the callback provided to
+ * {@link enableBookmark} rather than instantiating it directly.
  */
 export class BookmarkModuleConfigurator extends BaseConfigBuilder<BookmarkModuleConfig> {
   #log?: ILogger;

@@ -10,6 +10,12 @@ import type { IBookmarkClient } from './BookmarkClient.interface';
 import { bookmarkSourceSystemSchema } from './bookmark.schemas';
 import type { BookmarkModuleConfig } from './types';
 
+/**
+ * Zod schema that validates the full {@link BookmarkModuleConfig} object.
+ *
+ * Used internally by {@link BookmarkModuleConfigurator} to verify the resolved
+ * configuration before the bookmark module is initialised.
+ */
 export const bookmarkConfigSchema = z.object({
   log: z.custom<ILogger>().optional(),
   logLevel: z.nativeEnum(LogLevel).optional(),
@@ -35,6 +41,13 @@ export const bookmarkConfigSchema = z.object({
     .default({ context: false, application: false }),
 });
 
+/**
+ * Parses an unknown configuration object against {@link bookmarkConfigSchema}.
+ *
+ * @param config - The raw config value to validate.
+ * @returns A validated {@link BookmarkModuleConfig}.
+ * @throws {ZodError} When validation fails.
+ */
 export const parseBookmarkConfig = (config: unknown): BookmarkModuleConfig => {
   return bookmarkConfigSchema.parse(config) as BookmarkModuleConfig;
 };

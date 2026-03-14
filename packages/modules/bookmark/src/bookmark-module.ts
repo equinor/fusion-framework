@@ -14,10 +14,18 @@ import { lastValueFrom } from 'rxjs';
 import { version } from './version';
 import type { IBookmarkProvider } from './BookmarkProvider.interface';
 
+/** String literal key used to register the bookmark module in the framework. */
 export type BookmarkModuleKey = 'bookmark';
 
+/** The module key constant used to identify the bookmark module at runtime. */
 export const moduleKey: BookmarkModuleKey = 'bookmark';
 
+/**
+ * Type definition for the bookmark framework module.
+ *
+ * Declares the module key, provider interface, configurator class,
+ * and optional peer dependencies (event, services, app, context modules).
+ */
 export type BookmarkModule = Module<
   BookmarkModuleKey,
   IBookmarkProvider,
@@ -28,6 +36,21 @@ export type BookmarkModule = Module<
 // TODO - remove when all framework uses log
 const fallbackLogger: ILogger = new ConsoleLogger('BookmarkModule');
 
+/**
+ * Bookmark module definition for the Fusion Framework.
+ *
+ * Handles configuration, initialization (creating a {@link BookmarkProvider}),
+ * and disposal of the bookmark module lifecycle.
+ *
+ * @example
+ * ```ts
+ * import { enableBookmark } from '@equinor/fusion-framework-module-bookmark';
+ *
+ * const configure = (configurator) => {
+ *   enableBookmark(configurator);
+ * };
+ * ```
+ */
 export const module: BookmarkModule = {
   name: moduleKey,
   version: new SemanticVersion(version),
