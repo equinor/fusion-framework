@@ -1,102 +1,141 @@
-The Fusion Framework Telemetry Module provides a unified way to track events, metrics, exceptions, and custom telemetry data in your application. It offers a consistent API for logging telemetry data while supporting multiple adapters for different telemetry backends.
+# @equinor/fusion-framework-module-telemetry
 
-Telemetry helps you:
-- Monitor application usage and performance
-- Track user interactions and behavior
-- Identify errors and exceptions in production
-- Measure performance metrics across your application
+Unified telemetry module for the Fusion Framework. Provides a consistent API for tracking events, exceptions, metrics, and custom telemetry data while supporting pluggable adapters for different backends.
 
-## Configuration
+## Features
 
-To configure the telemetry module, you need to provide a configuration object that specifies the telemetry adapters you want to use. The configuration can be done in your application's main entry file or wherever you initialize the Fusion Framework.
+- **Adapter-based architecture** — ship with Console and Application Insights adapters, or build your own by extending `BaseTelemetryAdapter`.
+- **Hierarchical providers** — child providers relay telemetry to a parent, with automatic metadata merging.
+- **Zod-validated schemas** — every telemetry item is parsed and validated at runtime.
+- **Performance measurements** — `Measurement` utility tracks elapsed time with `using` / `Symbol.dispose` support.
+- **Framework event integration** — emits `onTelemetry` and `onTelemetryError` events via the Fusion event system.
+- **Configurable filtering** — per-adapter and per-relay filter functions control which items are processed.
+- **Metadata extractors** — attach dynamic metadata (sync, async, or observable) to every telemetry item.
+
+## Installation
+
+```sh
+pnpm add @equinor/fusion-framework-module-telemetry
+```
+
+## Usage
+
+### Enabling telemetry in a Fusion app
 
 ```typescript
 import { enableTelemetry } from '@equinor/fusion-framework-module-telemetry';
+import { ConsoleAdapter } from '@equinor/fusion-framework-module-telemetry/console-adapter';
 
-const configure = (configurator: IModulesConfigurator<any, any>) => {
+const configure = (configurator) => {
   enableTelemetry(configurator, {
-    // Attach configurator events to telemetry for automatic tracking
-    attachConfiguratorEvents: true | false, 
+    attachConfiguratorEvents: true,
     configure: (builder) => {
-      // configure the telemetry module here
-    }
+      builder.setAdapter(ConsoleAdapter.Identifier, new ConsoleAdapter({ title: 'MyApp' }));
+      builder.setMetadata(() => ({ appVersion: '2.0.0' }));
+      builder.setDefaultScope(['application']);
+    },
   });
 };
 ```
 
-## Initialization
-
-The telemetry module supports asynchronous initialization of adapters. The provider exposes an `initialize()` method that should be called to set up all configured adapters:
+### Tracking events, exceptions, and metrics
 
 ```typescript
-// Get the telemetry provider from modules
-const provider = modules.telemetry;
-
-// Initialize adapters (required before use)
-await provider.initialize();
-
-// Check if provider is initialized
-if (provider.initialized) {
-  // Provider is ready for use
-}
-```
-
-> [!NOTE]
-> The telemetry module will automatically initialize when used within the Fusion Framework module system. Manual initialization is only required when accessing the provider directly.
-
-## Usage
-
-### Tracking Events and Data
-
-You can use the telemetry module to track events, metrics, and other telemetry data in your application. The module provides a unified interface for sending telemetry data to various adapters.
-
-```typescript
-// Import types
 import { TelemetryType, TelemetryLevel } from '@equinor/fusion-framework-module-telemetry';
 
-// Get the telemetry provider from modules
 const provider = modules.telemetry;
 
-// Generic tracking
+// Track a generic item
 provider.track({
-  name: 'MyEvent',
   type: TelemetryType.Event,
+  name: 'page_view',
   level: TelemetryLevel.Information,
-  properties: { /** ... additional properties ... */ },
-  scope: [/* optional scopes */]
+  properties: { page: '/dashboard' },
 });
 
-// Track an event
-provider.trackEvent({
-  name: 'MyEvent',
-});
+// Shorthand helpers
+provider.trackEvent({ name: 'button_click', properties: { id: 'save' } });
+provider.trackException({ name: 'api_error', exception: new Error('Not found') });
+provider.trackMetric({ name: 'response_time', value: 230 });
+provider.trackCustom({ name: 'feature_flag', properties: { flag: 'dark-mode' } });
+```
 
-// Track a metric
-provider.trackMetric({
-  name: 'MyMetric',
-  value: 123
-});
+### Measuring performance
 
-// Track exceptions
-provider.trackException({
-  name: 'MyException',
-  exception: new Error('This is an error'),
-});
+```typescript
+// Manual measurement
+const measurement = provider.measure({ name: 'data_load' });
+await fetchData();
+measurement.measure({ properties: { rows: 100 } }, { markAsMeasured: true });
 
-// Track a custom event
-provider.trackCustom({
-  name: 'MyCustomEvent',
+// Automatic measurement with `using` (explicit resource management)
+{
+  using m = provider.measure({ name: 'render_time' });
+  renderComponent();
+} // duration tracked automatically on scope exit
+
+// Promise-based measurement
+const result = await provider.measure({ name: 'api_call' }).resolve(fetch('/api/data'));
+```
+
+### Application Insights adapter
+
+```typescript
+import { ApplicationInsightsAdapter } from '@equinor/fusion-framework-module-telemetry/application-insights-adapter';
+
+enableTelemetry(configurator, {
+  configure: (builder) => {
+    builder.setAdapter(
+      ApplicationInsightsAdapter.Identifier,
+      new ApplicationInsightsAdapter({
+        snippet: { config: { connectionString: '...' } },
+        prefix: 'myApp',
+      }),
+    );
+  },
 });
 ```
 
-### Telemetry Types
+## API Reference
 
-The telemetry module supports several types of telemetry data:
+### Core exports (`@equinor/fusion-framework-module-telemetry`)
 
-- **Event**: General events that occur in your application
-- **Exception**: Error or exception information
-- **Metric**: Numerical measurements or metrics
-- **Custom**: Custom telemetry data that doesn't fit the other categories
+| Export | Kind | Description |
+| --- | --- | --- |
+| `enableTelemetry` | Function | Registers the telemetry module on a configurator. |
+| `TelemetryModule` / `telemetryModule` | Type / Object | Module definition for the framework module system. |
+| `ITelemetryProvider` | Interface | Provider for tracking events, exceptions, metrics, and measurements. |
+| `ITelemetryConfigurator` | Interface | Configurator for adapters, metadata, scopes, and parent providers. |
+| `Measurement` / `IMeasurement` | Class / Interface | Utility for tracking elapsed time with dispose support. |
+| `TelemetryType` | Enum | `Event`, `Exception`, `Metric`, `Custom`. |
+| `TelemetryLevel` | Enum | `Debug`, `Information`, `Warning`, `Error`, `Critical`. |
+| `TelemetryScope` | Enum | `Framework`, `Application`. |
+| `TelemetryItem` | Type | Zod-inferred base telemetry item shape. |
+| `TelemetryEvent` / `TelemetryException` / `TelemetryMetric` / `TelemetryCustomEvent` | Types | Specialised item types inferred from Zod schemas. |
+
+### Sub-path exports
+
+| Path | Key export | Description |
+| --- | --- | --- |
+| `/adapter` | `BaseTelemetryAdapter`, `ITelemetryAdapter` | Base class and interface for building custom adapters. |
+| `/console-adapter` | `ConsoleAdapter` | Console-based adapter with colour-coded output. |
+| `/application-insights-adapter` | `ApplicationInsightsAdapter` | Microsoft Application Insights adapter. |
+| `/schemas` | `parseTelemetryItem`, schema objects | Zod schemas and a parser for telemetry items. |
+| `/utils` | `mapConfiguratorEvents`, `mergeTelemetryItem`, `applyMetadata` | Internal helpers for metadata merging and event mapping. |
+
+## Configuration
+
+The telemetry module is configured through `ITelemetryConfigurator`, which provides a fluent builder API:
+
+| Method | Description |
+| --- | --- |
+| `setAdapter(id, adapter)` | Register a telemetry adapter. |
+| `configureAdapter(id, fn)` | Register an adapter via async factory. |
+| `setMetadata(extractor)` | Attach a metadata extractor (value, function, or observable). |
+| `setDefaultScope(scope)` | Set the default scope array applied to all items. |
+| `setParent(provider)` | Set a parent provider for hierarchical relay. |
+| `attachItems(items$)` | Pipe an observable stream of items into the provider. |
+| `setFilter(filter)` | Set adapter and/or relay filter functions. |
 
 ### Telemetry Levels
 

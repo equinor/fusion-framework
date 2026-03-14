@@ -8,6 +8,16 @@ import { catchError, defaultIfEmpty, first, map } from 'rxjs/operators';
 import { mergeTelemetryItem } from './merge-telemetry-item.js';
 import { TelemetryExceptionSchema } from '../schemas.js';
 
+/**
+ * Resolves metadata from a {@link MetadataExtractor} into an observable stream.
+ *
+ * Converts the extractor (which may be a static value, promise, function, or observable)
+ * into a normalised `Observable` that emits the resolved metadata record.
+ *
+ * @param metadata - The metadata extractor to resolve.
+ * @param args - Context passed to the extractor, including the telemetry item and optional module instances.
+ * @returns An `Observable` emitting the resolved metadata record.
+ */
 export const resolveMetadata = (
   metadata: MetadataExtractor,
   args: MetadataExtractorArgs,
