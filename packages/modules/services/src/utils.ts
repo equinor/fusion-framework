@@ -9,12 +9,7 @@ import {
 import type { ExtractApiVersion } from './types';
 
 /**
- * Extracts the correct API version from the provided `apiVersions` object based on the given `version` parameter.
- *
- * @param apiVersions - An object mapping API version strings to their corresponding versions.
- * @param version - The version string to extract.
- * @returns The extracted API version, or throws an error if the version is not supported.
- */
+ * Resolves an API version string from a named key or raw version value.\n *\n * Looks up `version` as a key in `apiVersions` first; if not found,\n * searches the object values for a direct match. Throws when neither\n * lookup succeeds.\n *\n * @template TApiVersions - Record mapping version names to version strings.\n * @template TAllowedApiVersion - Allowed version constraint.\n * @template TVersion - The version string provided by the caller.\n * @param apiVersions - Map of version names to version strings.\n * @param version - Version key or raw version string to resolve.\n * @returns The resolved API version string.\n * @throws {Error} When the version is not found in `apiVersions`.\n *\n * @example\n * ```ts\n * enum ApiVersions { v1 = '1.0', v2 = '2.0' }\n * extractVersion(ApiVersions, 'v1'); // '1.0'\n * extractVersion(ApiVersions, '1.0'); // '1.0'\n * ```\n */
 export const extractVersion = <
   TApiVersions extends Record<string, string>,
   TAllowedApiVersion extends string,
@@ -34,11 +29,7 @@ export const extractVersion = <
 };
 
 /**
- * Creates a response selector that parses the response body using the provided Zod schema.
- *
- * @param schema - The Zod schema to use for parsing the response body.
- * @returns A response selector function that parses the response body using the provided schema.
- */
+ * Creates a response selector that parses the HTTP response body with a Zod schema.\n *\n * Combines the built-in `jsonSelector` with Zod validation, ensuring the\n * response body matches the expected shape at runtime.\n *\n * @template Output - The validated output type produced by the schema.\n * @param schema - The Zod schema used to parse and validate the response body.\n * @returns A `ResponseSelector` that extracts JSON and runs it through `schema.parse`.\n *\n * @example\n * ```ts\n * import { z } from 'zod';\n * const UserSchema = z.object({ id: z.string(), name: z.string() });\n * const selector = schemaSelector(UserSchema);\n * ```\n */
 export const schemaSelector =
   <Output>(schema: z.ZodSchema<Output>): ResponseSelector<Output> =>
   async (response: FetchResponse<unknown>) =>

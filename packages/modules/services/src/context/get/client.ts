@@ -7,10 +7,15 @@ import { generateParameters } from './generate-parameters';
 import type { ClientMethod, GetContextArgs, GetContextResponse, GetContextResult } from './types';
 
 /**
- * Method for fetching context item from context service
- * @param client - client for execution of request
- * @param version - version of API to call
- * @param method - client method to call
+ * Creates a curried function that fetches a single context entity by ID.
+ *
+ * @template TVersion - The API version key (e.g. `'v1'`).
+ * @template TMethod - The client execution method (`'json'` or `'json$'`).
+ * @template TClient - The underlying HTTP client type.
+ * @param client - HTTP client used to execute the request.
+ * @param version - API version to call.
+ * @param method - Client method to use (defaults to `'json'`).
+ * @returns A function that accepts context args and returns the result.
  */
 export const getContext =
   <

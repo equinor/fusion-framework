@@ -5,6 +5,7 @@ import type {
   ApiProfileAccountType,
 } from './api-models';
 
+/** Person entity returned by the v2 people API. */
 export type ApiPerson_v2 = {
   fusionPersonId?: string;
   azureUniqueId: string;
