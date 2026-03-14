@@ -9,23 +9,37 @@ import { AppConfigurator } from './AppConfigurator';
 import type { AppModulesInstance, AppModuleInitiator, AppEnv } from './types';
 
 /**
+ * Create an application module initializer for a Fusion application.
  *
- * Creates a callback for initializing configuration of application modules
+ * `configureModules` is the primary entry point for setting up an application’s
+ * module pipeline. It returns an async function that, when called with the Fusion
+ * instance and the application environment, will:
+ *
+ * 1. Create an {@link AppConfigurator} with the provided environment.
+ * 2. Wire up telemetry scoped to the application.
+ * 3. Invoke the optional user-supplied configuration callback.
+ * 4. Initialize all registered modules and dispatch an `onAppModulesLoaded` event.
+ *
+ * @template TModules - Additional application-specific modules to register.
+ * @template TRef - The Fusion instance type, used as a configuration reference.
+ * @template TEnv - The application environment descriptor (manifest, config, basename).
+ *
+ * @param cb - Optional configuration callback invoked before modules are initialized.
+ *             Use this to register HTTP clients, enable bookmarks, or add custom modules.
+ * @returns An async initializer function that accepts `{ fusion, env }` and resolves
+ *          with the fully initialized application module instance.
  *
  * @example
- ```ts
-    const initialize =  configureModules((configurator, args) => {
-        configurator.configure(someModule);
-    });
-    await initialize({ fusion, { manifest, config }});
- ```
- * @template TModules Addition modules
- * @template TRef usually undefined, optional references
- * @template TEnv environment object for configuring modules
+ * ```ts
+ * import { configureModules } from '@equinor/fusion-framework-app';
  *
- * @param cb configuration callback
+ * const initialize = configureModules((configurator, { fusion, env }) => {
+ *   configurator.useFrameworkServiceClient('my-service');
+ * });
  *
- * @returns initialize function, executes configurator
+ * // Later, during app bootstrap:
+ * const modules = await initialize({ fusion, env });
+ * ```
  */
 export const configureModules =
   <
@@ -36,11 +50,12 @@ export const configureModules =
     cb?: AppModuleInitiator<TModules, TRef, TEnv>,
   ): ((args: { fusion: TRef; env: TEnv }) => Promise<AppModulesInstance<TModules>>) =>
   /**
+   * Async initializer that bootstraps application modules.
    *
-   * Callback for initializing application modules
-   *
-   * @param args - Fusion and application  environments (manifest, config ...)
-   * @returns initialized app modules
+   * @param args - Object containing the Fusion instance and the application environment.
+   * @param args.fusion - The active Fusion framework instance.
+   * @param args.env - The application environment with manifest, config, and basename.
+   * @returns The fully initialized application module instance.
    */
   async (args: { fusion: TRef; env: TEnv }): Promise<AppModulesInstance<TModules>> => {
     const { fusion } = args;
