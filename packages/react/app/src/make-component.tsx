@@ -13,11 +13,26 @@ import type { FrameworkEvent, FrameworkEventInit } from '@equinor/fusion-framewo
 
 import { ModuleProvider as AppModuleProvider } from '@equinor/fusion-framework-react-module';
 
+/**
+ * Arguments supplied when rendering a Fusion app component.
+ *
+ * @template TFusion - The Fusion framework instance type.
+ * @template TEnv - The application environment type.
+ */
 export type ComponentRenderArgs<TFusion extends Fusion = Fusion, TEnv = AppEnv> = {
+  /** The Fusion framework instance. */
   fusion: TFusion;
+  /** The application environment (manifest, config, basename, etc.). */
   env: TEnv;
 };
 
+/**
+ * Factory function that receives a Fusion instance and environment and returns a
+ * lazy React component ready to be rendered.
+ *
+ * @template TFusion - The Fusion framework instance type.
+ * @template TEnv - The application environment type.
+ */
 export type ComponentRenderer<TFusion extends Fusion = Fusion, TEnv = AppEnv> = (
   fusion: TFusion,
   env: TEnv,

@@ -1,3 +1,11 @@
+/**
+ * Context sub-path entry-point.
+ *
+ * Provides hooks for reading and interacting with the Fusion context
+ * (project, facility, etc.) at both the application and framework level.
+ *
+ * @packageDocumentation
+ */
 export * from '@equinor/fusion-framework-react-module-context';
 
 export { useContextProvider } from './useContextProvider';

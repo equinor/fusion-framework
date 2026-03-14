@@ -4,7 +4,23 @@ import type { AnalyticsModule, AnyValueMap } from '@equinor/fusion-framework-mod
 import { useCallback } from 'react';
 
 /**
- * Hook for using analytics module configured in the framework.
+ * React hook that returns a callback for tracking application feature usage
+ * via the Fusion analytics module.
+ *
+ * The tracked event includes the current app key and context (if available)
+ * as attributes, enabling downstream analytics dashboards to group events
+ * by application and context.
+ *
+ * @returns A `trackFeature` callback: `(name: string, data?: AnyValueMap) => void`.
+ *
+ * @example
+ * ```tsx
+ * const trackFeature = useTrackFeature();
+ *
+ * const handleClick = useCallback(() => {
+ *   trackFeature('button-click', { section: 'header' });
+ * }, [trackFeature]);
+ * ```
  */
 export const useTrackFeature = () => {
   const analyticsProvider = useFrameworkModule<AnalyticsModule>('analytics');
