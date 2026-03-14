@@ -10,17 +10,28 @@ import {
   extractContextMetadata,
 } from './utils/extractContextMetadata.js';
 
-/**
- * The schema of the data to be sent.
- */
+/** Zod schema for the `context-selected` event (value + attributes). */
 const eventSchema = createSchema(
   contextSchema,
   z.object({ previous: contextSchema, appKey: z.string().optional() }),
 );
 
 /**
- * Collector to listen for context changes and add values and attributes for
- * further processing by adapters.
+ * Collector that emits an analytics event whenever the active Fusion context changes.
+ *
+ * @remarks
+ * Listens to `IContextProvider.currentContext$`, de-duplicates by context ID,
+ * pairs consecutive values, and emits both the new and previous context
+ * metadata. The current application key is included in attributes.
+ *
+ * Register via:
+ * ```ts
+ * builder.setCollector('context-selected', async (args) => {
+ *   const ctx = await args.requireInstance('context');
+ *   const app = await args.requireInstance('app');
+ *   return new ContextSelectedCollector(ctx, app);
+ * });
+ * ```
  */
 export class ContextSelectedCollector
   extends BaseCollector<ContextItemType, { previous?: ContextItemType; appKey?: string }>
@@ -29,6 +40,10 @@ export class ContextSelectedCollector
   #contextProvider: IContextProvider;
   #appProvider: AppModuleProvider;
 
+  /**
+   * @param contextProvider - Fusion context module provider to observe.
+   * @param appProvider - Fusion app module provider for the current app key.
+   */
   constructor(contextProvider: IContextProvider, appProvider: AppModuleProvider) {
     super('context-selected', eventSchema);
     this.#contextProvider = contextProvider;

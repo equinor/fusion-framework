@@ -5,16 +5,16 @@ import { AnalyticsConfigurator } from './AnalyticsConfigurator.js';
 import { AnalyticsProvider } from './AnalyticsProvider.js';
 
 /**
- * Representes the Analytics module within the framework.
+ * Represents the Analytics module type within the Fusion Framework module system.
  *
  * @remarks
- * This type defines a module names `analytics` that integrates with the framwork's module system.
- * It specifies the provider and configurator interfaces for analytics functionality, and declares
- * its dependencies on itself (`AnalyticsModule`).
+ * This type defines a module named `analytics` that integrates with the framework's
+ * module system. It specifies the provider and configurator interfaces for analytics
+ * functionality, and declares a self-dependency so that child modules can inherit
+ * analytics from a parent scope.
  *
- * @typeParam IAnalyticsProvider - The interface for the analytics provider implementation.
- * @typeParam IAnalyticsConfigurator - The interface for configuring analytics behavior.
- * @typeParam AnalyticsModule - Self-reference to allow for recursive or hierarchical module composition.
+ * @see {@link IAnalyticsProvider} for the runtime provider interface.
+ * @see {@link IAnalyticsConfigurator} for configuration-time setup.
  */
 export type AnalyticsModule = Module<
   'analytics',
@@ -27,15 +27,15 @@ export type AnalyticsModule = Module<
  * Analytics module definition for the Fusion Framework.
  *
  * @remarks
- * This module provides analytics capabilities by configuring and initializing a analytics provider.
+ * This module provides analytics capabilities by configuring and initializing an
+ * {@link AnalyticsProvider}. Register it with {@link enableAnalytics} or add it
+ * directly to a module configurator.
  *
- * @type {AnalyticsModule}
- *
- * @property {string} name - The name of the module ('analytics').
- * @property {() => AnalyticsConfigurator} configure - Factory function to create a new AnalyticsConfigurator instance.
- * @property {(args) => Promise<IAnalyticsProvider>} initialize - Asynchronous initializer that creates and returns a AnalyticsProvider.
- *   - @param args - Initialization arguments, including configuration and module dependencies.
- *   - @returns A promise that resolves to an instance of IAnalyticsProvider.
+ * - `name` — `'analytics'`
+ * - `configure()` — creates a new {@link AnalyticsConfigurator} instance.
+ * - `initialize(args)` — resolves the configuration, creates an
+ *   {@link AnalyticsProvider}, calls {@link AnalyticsProvider.initialize},
+ *   and returns the ready-to-use provider.
  */
 export const module = {
   name: 'analytics',

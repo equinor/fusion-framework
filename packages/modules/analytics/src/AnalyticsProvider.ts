@@ -9,6 +9,13 @@ import { from, type ObservableInput, Subject, Subscription } from 'rxjs';
 import type { IAnalyticsCollector } from './collectors/AnalyticsCollector.interface.js';
 import type { IAnalyticsAdapter } from './adapters/AnalyticsAdapter.interface.js';
 
+/**
+ * An RxJS `Subscription` that also implements the TC39 `Disposable` protocol.
+ *
+ * @remarks
+ * Returned by {@link AnalyticsProvider.trackAnalytic$} so callers can clean up
+ * with either `subscription.unsubscribe()` or `using` / `Symbol.dispose`.
+ */
 class DisposableSubscription extends Subscription {
   constructor(subscription: Subscription) {
     super(subscription.unsubscribe);
@@ -20,14 +27,22 @@ class DisposableSubscription extends Subscription {
 }
 
 /**
- * Provides analytics tracking, adapters integration and collectors for application instrumentation.
+ * Runtime analytics provider that collects events from collectors and dispatches
+ * them to adapters.
  *
- * The `AnalyticsProvider` class is responsible for collecting, processing and relaying analytics
- * data to the adapters. The events are collected with collectors.
+ * @remarks
+ * Created by the analytics module during initialisation. The provider:
  *
- * @typeParam AnalyticsConfig - The configuration type for analytics.
- * @implements IAnalyticsProvider
+ * 1. Initialises all registered adapters and collectors.
+ * 2. Subscribes to every collector and merges their events into a shared stream.
+ * 3. Forwards each emitted event to every registered adapter via
+ *    {@link IAnalyticsAdapter.registerAnalytic}.
+ *
+ * Consumers can also push ad-hoc events with {@link AnalyticsProvider.trackAnalytic}
+ * or subscribe an observable stream with {@link AnalyticsProvider.trackAnalytic$}.
+ *
  * @extends BaseModuleProvider<AnalyticsConfig>
+ * @implements IAnalyticsProvider
  */
 export class AnalyticsProvider
   extends BaseModuleProvider<AnalyticsConfig>
@@ -46,16 +61,21 @@ export class AnalyticsProvider
   }
 
   /**
-   * Initializes the analytics provider with adapters and collectors.
+   * Initialises all adapters and collectors, then wires collector output into
+   * the adapter pipeline.
    *
-   * This method sets up the provider for operation by:
-   * 1. Storing the provided adapters
-   * 2. Initializing all adapters
-   * 3. Storing the provided collectors
-   * 4. Initializing all collectors
-   * 5. Setting up subscription for analytics processing
+   * @remarks
+   * Initialisation is idempotent within the module lifecycle — the module calls
+   * this once during `module.initialize`. Steps:
    *
-   * @returns A promise that resolves when initialization is complete
+   * 1. Initialise all collectors (via `Promise.allSettled`).
+   * 2. Initialise all adapters (via `Promise.allSettled`).
+   * 3. Subscribe to each collector and forward events into the shared subject.
+   * 4. Subscribe to the shared subject and dispatch to every adapter.
+   *
+   * All subscriptions are registered as teardowns on the base provider.
+   *
+   * @returns A promise that resolves when all adapters and collectors are initialised.
    */
   async initialize(): Promise<void> {
     const initializedCollectors = Object.values(this.#collectors).map((collector) =>
@@ -89,9 +109,9 @@ export class AnalyticsProvider
   }
 
   /**
-   * Tracks an analytics event
+   * Pushes a single analytics event to all registered adapters.
    *
-   * @param event - The analytics event to track
+   * @param event - The analytics event to track.
    */
   trackAnalytic(event: AnalyticsEvent): void {
     // @TODO: Validate AnalyticsEvent includes name, value and attributes
@@ -99,10 +119,11 @@ export class AnalyticsProvider
   }
 
   /**
-   * Uses a analytics stream and returns both Disposable and Subscription for cleanup.
+   * Subscribes to an observable stream of analytics events and forwards each
+   * emission to all registered adapters.
    *
-   * @param analytic$ - Observable input stream of analytic events.
-   * @returns Object containing both Disposable and Subscription for proper cleanup.
+   * @param analytic$ - Observable input stream of analytics events.
+   * @returns A {@link DisposableSubscription} supporting both `unsubscribe()` and `Symbol.dispose`.
    */
   trackAnalytic$(analytic$: ObservableInput<AnalyticsEvent>): Disposable & Subscription {
     const subscription = from(analytic$)
