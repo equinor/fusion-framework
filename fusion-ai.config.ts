@@ -10,6 +10,10 @@ export default {
       'packages/**/README.md',
       //
       '!packages/cli-plugins/**',
+      // Exclude boilerplate endpoint/parameter generators that produce low-value
+      // one-liner TSDoc chunks and pollute search results for "http client" queries
+      '!packages/modules/services/src/**/generate-parameters.ts',
+      '!packages/modules/services/src/**/endpoints/**',
     ],
     rawPatterns: ['cookbooks/**/*.{ts,tsx}'],
     // Metadata processing configuration
