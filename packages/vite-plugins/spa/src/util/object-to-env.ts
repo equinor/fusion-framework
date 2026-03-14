@@ -1,32 +1,26 @@
 /**
- * Converts a nested object into a flat object with keys in snake_case and uppercase.
- * Nested keys are prefixed with their parent keys, separated by underscores.
- * Non-object values are stringified.
+ * Flattens a nested object into a single-level record with
+ * `UPPER_SNAKE_CASE` keys suitable for Vite's `config.define`.
  *
- * @param obj - The input object to be flattened and converted.
- * @param prefix - An optional prefix to prepend to the keys (default is an empty string).
- * @returns A flat object with snake_case, uppercase keys and stringified values.
+ * @remarks
+ * Used internally by the Fusion SPA plugin to convert the object
+ * returned by {@link PluginOptions.generateTemplateEnv} into
+ * `import.meta.env.*` defines.
+ *
+ * - camelCase keys are converted to UPPER_SNAKE_CASE.
+ * - Nested objects are recursively flattened with `_` separators.
+ * - Arrays and primitives are JSON-stringified.
+ *
+ * @param obj - The object to flatten.
+ * @param prefix - Key prefix prepended to every output key.
+ * @returns A flat record mapping `PREFIX_KEY` strings to JSON-stringified values.
+ *
+ * @defaultValue prefix — `'FUSION_SPA'`
  *
  * @example
- * ```typescript
- * const input = {
- *   someKey: "value",
- *   nestedObject: {
- *     anotherKey: 42,
- *     deepNested: {
- *       finalKey: true
- *     }
- *   }
- * };
- *
- * const result = objectToEnv(input);
- * console.log(result);
- * // Output:
- * // {
- * //   SOME_KEY: "\"value\"",
- * //   NESTED_OBJECT_ANOTHER_KEY: "42",
- * //   NESTED_OBJECT_DEEP_NESTED_FINAL_KEY: "true"
- * // }
+ * ```ts
+ * objectToEnv({ portal: { id: 'my-portal' } }, 'FUSION_SPA');
+ * // => { FUSION_SPA_PORTAL_ID: '"my-portal"' }
  * ```
  */
 export function objectToEnv(obj: object, prefix = 'FUSION_SPA'): Record<string, string> {
