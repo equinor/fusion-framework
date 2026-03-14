@@ -18,16 +18,18 @@ import { useFrameworkModule } from '@equinor/fusion-framework-react';
 type CurrentAppModules = [ContextModule, NavigationModule];
 
 /**
- * Generates a pathname for navigation based on the current pathname,
- * context item, and optional context provider. If a `pathContextId` is provided,
- * it replaces the existing context ID in the pathname. Otherwise, it constructs
- * a new pathname using the context item's ID.
+ * Builds the navigation pathname when the context changes.
+ *
+ * If a context ID already exists in the current pathname (`pathContextId`),
+ * it is replaced with the new context item's ID. Otherwise a new path
+ * segment is appended. Falls back to the context provider's
+ * `generatePathFromContext` when available.
  *
  * @param currentPathname - The current URL pathname.
- * @param item - The context item containing the ID to be used in the pathname.
- * @param context - An optional context provider with a method to generate a pathname from the context item.
- * @param pathContextId - An optional context ID present in the current URL to be replaced.
- * @returns The generated pathname for navigation.
+ * @param item - The newly selected context item.
+ * @param context - Optional context provider with a custom path generator.
+ * @param pathContextId - Existing context ID found in the current URL, if any.
+ * @returns The generated pathname string for navigation.
  */
 const generatePathname = (
   currentPathname: string,
@@ -60,8 +62,15 @@ const generatePathname = (
 };
 
 /**
- * when current application changes, this hook will observe the application module instances.
- * If the module has Context and Navigation, this hook will navigate when the context changes
+ * Observes the current application's context changes and synchronizes the URL.
+ *
+ * When the loaded app exposes both a context and navigation module, this hook
+ * subscribes to `currentContext$`. On context change it updates the URL
+ * pathname — either replacing an existing context ID segment or appending one.
+ * When context is cleared, navigation resets to the root path.
+ *
+ * Uses the app's own navigation instance when available, falling back to the
+ * portal-level navigation module.
  */
 export const useAppContextNavigation = () => {
   // use the framework navigation instance

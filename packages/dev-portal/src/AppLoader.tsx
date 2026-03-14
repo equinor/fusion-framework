@@ -13,11 +13,18 @@ import { ErrorViewer } from './ErrorViewer';
 import type { AppModule } from '@equinor/fusion-framework-module-app';
 import EquinorLoader from './EquinorLoader';
 
+/**
+ * URL search-parameter key used to specify an app version tag.
+ *
+ * When present in the URL as `?$tag=<value>`, the portal loads that
+ * specific version of the application instead of the default.
+ */
 export const TAG = '$tag';
 
 /**
- * Gets the app tag/version from the current URL search parameters
- * @returns The app tag/version if present in URL, otherwise null
+ * Reads the application version tag from the current URL search parameters.
+ *
+ * @returns The tag string if the `$tag` search parameter is present, otherwise `null`.
  */
 export const getAppTagFromUrl = (): string | null => {
   const url = new URL(window.location.href);
@@ -25,11 +32,14 @@ export const getAppTagFromUrl = (): string | null => {
 };
 
 /**
- * React Functional Component for handling current application
+ * Loads, initializes, and mounts a Fusion application by its key.
  *
- * this component will set the current app by provided appKey.
- * when the appKey changes, this component will try to initialize the referred application
- * and render it.
+ * Sets the current app on the framework's app module, observes initialization
+ * progress, and renders the app's script output into a private DOM element.
+ * Displays a loading spinner while the app initializes and an error view if
+ * manifest resolution or initialization fails.
+ *
+ * @param props.appKey - Unique key identifying the Fusion application to load.
  */
 export const AppLoader = (props: { readonly appKey: string }) => {
   const { appKey } = props;

@@ -31,6 +31,12 @@ const Styled = {
     `,
 };
 
+/**
+ * Root layout component for the dev portal.
+ *
+ * Renders the header and a scrollable main area via `Outlet`. Activates
+ * bookmark-to-navigation linking through `useBookmarkNavigate`.
+ */
 const Root = () => {
   useBookmarkNavigate({ resolveAppPath: (appKey: string) => `/apps/${appKey}` });
   return (
@@ -45,12 +51,16 @@ const Root = () => {
   );
 };
 
+/**
+ * Route component that extracts the `appKey` parameter and delegates to {@link AppLoader}.
+ */
 // eslint-disable-next-line react/no-multi-comp
 const AppRoute = () => {
   const { appKey } = useParams();
   return appKey ? <AppLoader appKey={appKey} /> : null;
 };
 
+/** Route definitions for the dev portal. */
 const routes = [
   {
     path: '/',
@@ -64,6 +74,13 @@ const routes = [
   },
 ];
 
+/**
+ * Top-level router for the Fusion Dev Portal.
+ *
+ * Creates a router instance from the framework navigation module and
+ * renders it via `RouterProvider`. Observes context changes through
+ * {@link useAppContextNavigation} to keep the URL in sync.
+ */
 // eslint-disable-next-line react/no-multi-comp
 export const Router = () => {
   const { navigation } = useFramework<[NavigationModule]>().modules;

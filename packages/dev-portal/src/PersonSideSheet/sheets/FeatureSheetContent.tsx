@@ -9,8 +9,12 @@ Icon.add({ arrow_back, category });
 import type { SheetContentProps } from './types';
 
 /**
- * JSX structure for the content of the PersonSidesheet's Features page.
- * @param SheetContentProps
+ * Feature flags sub-sheet for the person settings side sheet.
+ *
+ * Contains tabbed panels for toggling application-level and portal-level
+ * feature flags. Includes a back-navigation button to return to the landing sheet.
+ *
+ * @param props.navigate - Callback to navigate back to the landing sheet.
  */
 export const FeatureSheetContent = ({ navigate }: SheetContentProps) => {
   const [tab, setTab] = useState<number>(0);
