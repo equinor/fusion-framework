@@ -37,8 +37,8 @@ When judging results, verify that:
 
 ## How to publish and tag a Fusion application
 
-- must mention `ffc app publish` or `fusion-framework-cli publish` for building, uploading, and tagging in one step
-- must mention `ffc app pack` or `fusion-framework-cli pack` for creating a distributable bundle archive
+- must mention `ffc app publish` or `fusion-framework-cli publish` or `fusion-framework-cli app publish` for building, uploading, and tagging in one step
+- must mention `ffc app pack` or `fusion-framework-cli pack` or `fusion-framework-cli app pack` for creating a distributable bundle archive
 - must mention `ffc app tag` or `fusion-framework-cli app tag` for tagging an existing published version
 - should mention `--env` flag for environment-specific config and `--tag` for version tagging
 - should mention `ffc app config --publish` or `fusion-framework-cli app config --publish` for publishing config separately from the bundle
