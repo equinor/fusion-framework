@@ -142,19 +142,19 @@
     "@equinor/fusion-observable": "workspace:*",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
-    "happy-dom": "^20.0.0",
+    "happy-dom": "^20.8.4",
     "react": "^19.2.1",
     "react-dom": "^19.2.1",
     "rxjs": "^7.8.1",
-    "typescript": "^5.8.2",
-    "vitest": "^4.0.18"
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.0"
   },
   "peerDependencies": {
     "@equinor/fusion-framework-module-msal": "workspace:^",
     "@types/react": "^18.0.0 || ^19.0.0",
     "react": "^18.0.0 || ^19.0.0",
     "react-dom": "^18.0.0 || ^19.0.0",
-    "rxjs": "^7.8.1"
+    "rxjs": "^7.0.0"
   },
   "peerDependenciesMeta": {
     "@equinor/fusion-framework-react-module-ag-grid": {

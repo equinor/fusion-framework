@@ -39,6 +39,7 @@ export class MemoryHistoryStack implements HistoryStack {
       hash: '',
       state: null,
       key: '',
+      unstable_mask: undefined,
     };
   }
 

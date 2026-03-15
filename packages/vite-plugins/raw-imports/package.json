@@ -34,8 +34,8 @@
     "access": "public"
   },
   "devDependencies": {
-    "typescript": "^5.8.2",
-    "vite": "^7.1.12",
-    "vitest": "^3.2.4"
+    "typescript": "^5.9.3",
+    "vite": "^8.0.0",
+    "vitest": "^4.1.0"
   }
 }

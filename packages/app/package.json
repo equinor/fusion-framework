@@ -60,7 +60,7 @@
   },
   "devDependencies": {
     "@equinor/fusion-framework-module-bookmark": "workspace:^",
-    "typescript": "^5.8.2"
+    "typescript": "^5.9.3"
   },
   "peerDependencies": {
     "@equinor/fusion-framework-module-bookmark": "workspace:^"

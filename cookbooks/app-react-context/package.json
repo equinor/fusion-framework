@@ -27,6 +27,6 @@
   "devDependencies": {
     "odata-query": "^8.0.4",
     "rxjs": "^7.8.1",
-    "typescript": "^5.8.2"
+    "typescript": "^5.9.3"
   }
 }

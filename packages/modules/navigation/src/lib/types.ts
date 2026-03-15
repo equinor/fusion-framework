@@ -50,6 +50,8 @@ export type Path = {
 export type Location<T = any> = Path & {
   state: T;
   key: string;
+  /** Masked path used by react-router 7.13+ for unstable view-transition masking. */
+  unstable_mask: Path | undefined;
 };
 
 /**

@@ -47,7 +47,7 @@ export const navigate: HistoryFlowCreator =
         const path = resolvePath(payload.to);
         const key = meta.key;
         const { replace, state } = payload.options;
-        const nextLocation = { ...path, key, state } satisfies Location;
+        const nextLocation = { ...path, key, state, unstable_mask: undefined } satisfies Location;
         // prevent death loop navigation
         if (compareLocation(nextLocation, stack.current)) {
           return actions.abortNavigate('Location is the same as the current location');

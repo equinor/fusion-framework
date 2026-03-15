@@ -41,17 +41,17 @@
     "@equinor/fusion-framework-module-event": "workspace:^",
     "@types/react": "^19.2.7",
     "react": "^19.2.1",
-    "styled-components": "^6.0.7",
-    "typescript": "^5.8.2"
+    "styled-components": "^6.3.11",
+    "typescript": "^5.9.3"
   },
   "peerDependencies": {
-    "@equinor/eds-core-react": "^2.2.0",
-    "@equinor/eds-icons": "^1.1.0",
-    "@equinor/eds-tokens": "^2.1.1",
+    "@equinor/eds-core-react": "^2.0.0",
+    "@equinor/eds-icons": "^1.0.0",
+    "@equinor/eds-tokens": "^2.0.0",
     "@equinor/eds-utils": "^2.0.0",
     "@types/react": "^18.0.0 || ^19.0.0",
     "react": "^18.0.0 || ^19.0.0",
-    "styled-components": "^6.0.7"
+    "styled-components": "^6.0.0"
   },
   "peerDependenciesMeta": {
     "@types/react": {

@@ -23,7 +23,7 @@
     "react": "^19.2.1",
     "react-dom": "^19.2.1",
     "react-router-dom": "^7.9.5",
-    "typescript": "^5.8.2"
+    "typescript": "^5.9.3"
   },
   "dependencies": {
     "@equinor/fusion-framework-react-router": "workspace:^"
