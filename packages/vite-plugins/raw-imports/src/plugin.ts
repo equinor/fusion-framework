@@ -22,6 +22,13 @@ export interface RawImportsPluginOptions {
    * @defaultValue `['.md']`
    */
   extensions?: string[];
+
+  /**
+   * Subdirectory for emitted asset files within the build output.
+   *
+   * @defaultValue `'assets'`
+   */
+  assetDir?: string;
 }
 
 /**
@@ -75,6 +82,10 @@ export const rawImportsPlugin = (options?: RawImportsPluginOptions): Plugin => {
   // Default extensions: only markdown files by default
   const defaultExtensions = ['.md'];
   const extensions = options?.extensions ?? defaultExtensions;
+  const assetDir = options?.assetDir ?? 'assets';
+
+  // Track whether we are in build mode (emitFile is only available during build)
+  let isBuild = false;
 
   /**
    * Check whether a file path ends with one of the configured extensions.
@@ -88,6 +99,9 @@ export const rawImportsPlugin = (options?: RawImportsPluginOptions): Plugin => {
   return {
     name: 'fusion-framework-vite-plugin-raw-imports',
     enforce: 'pre', // Run before other plugins
+    configResolved(config) {
+      isBuild = config.command === 'build';
+    },
     resolveId(id, importer) {
       // Check if the import ends with ?raw and matches our configured extensions
       if (id.endsWith('?raw')) {
@@ -146,7 +160,22 @@ export const rawImportsPlugin = (options?: RawImportsPluginOptions): Plugin => {
           // Read the file content
           const content = readFileSync(resolvedPath, 'utf-8');
 
-          // Return the content as a JavaScript module with default export
+          if (isBuild) {
+            // During build, emit as a separate asset so the content is
+            // not inlined into the main bundle. Vite 8's import-analysis
+            // parser chokes on very long string literals in served bundles.
+            const basename = path.basename(resolvedPath);
+            const name = assetDir ? `${assetDir}/${basename}` : basename;
+            const refId = this.emitFile({
+              type: 'asset',
+              name,
+              source: content,
+            });
+            return `export default import.meta.ROLLUP_FILE_URL_${refId};`;
+          }
+
+          // During dev, inline the content directly — Vite's dev server
+          // transforms files individually so the long-string issue doesn't apply.
           return `export default ${JSON.stringify(content)};`;
         } catch (error) {
           // Throw an error if the file cannot be read

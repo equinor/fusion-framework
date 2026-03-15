@@ -96,7 +96,7 @@ const ContextInfo = () => {
 
 ```tsx
 import { useRouter } from '@equinor/fusion-framework-react-app/navigation';
-import { RouterProvider } from 'react-router-dom';
+import { RouterProvider } from '@equinor/fusion-framework-react-router';
 
 const routes = [{ path: '/', element: <Home /> }];
 

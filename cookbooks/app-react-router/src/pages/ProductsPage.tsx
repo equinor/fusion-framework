@@ -1,4 +1,4 @@
-import { redirect } from 'react-router-dom';
+import { redirect } from '@equinor/fusion-framework-react-router';
 import type {
   LoaderFunctionArgs,
   ActionFunctionArgs,

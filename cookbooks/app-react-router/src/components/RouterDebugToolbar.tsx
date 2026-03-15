@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useLocation, useNavigation, useMatches } from 'react-router-dom';
+import { useLocation, useNavigation, useMatches } from '@equinor/fusion-framework-react-router';
 import { useNavigationModule } from '@equinor/fusion-framework-react-app/navigation';
 import { Button, Icon, Typography } from '@equinor/eds-core-react';
 import { SideSheet } from '@equinor/fusion-react-side-sheet';

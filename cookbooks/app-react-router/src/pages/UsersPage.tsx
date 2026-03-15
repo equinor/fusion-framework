@@ -1,14 +1,14 @@
 import { useCallback } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
-import { Button, Chip, Typography } from '@equinor/eds-core-react';
-import { work_outline } from '@equinor/eds-icons';
-import { tokens } from '@equinor/eds-tokens';
-import styled from 'styled-components';
+import { Link, useSearchParams } from '@equinor/fusion-framework-react-router';
 import type {
   LoaderFunctionArgs,
   RouteComponentProps,
   RouterHandle,
 } from '@equinor/fusion-framework-react-router';
+import { Button, Chip, Typography } from '@equinor/eds-core-react';
+import { work_outline } from '@equinor/eds-icons';
+import { tokens } from '@equinor/eds-tokens';
+import styled from 'styled-components';
 import type { User } from '../api/UserApi';
 
 type UsersPageLoaderData = {

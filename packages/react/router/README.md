@@ -14,13 +14,12 @@ Thin integration layer between [React Router v7](https://reactrouter.com/) and t
 ## Installation
 
 ```bash
-pnpm add @equinor/fusion-framework-react-router react-router-dom
+pnpm add @equinor/fusion-framework-react-router
 ```
 
 ### Prerequisites
 
 - React 18+ / React DOM 18+
-- React Router v7 (`react-router` / `react-router-dom`)
 - `@equinor/fusion-framework-react-module`
 - `@equinor/fusion-framework-module-navigation` configured in your app
 

@@ -1,10 +1,10 @@
 import { useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from '@equinor/fusion-framework-react-router';
+import type { ErrorElementProps, RouterHandle } from '@equinor/fusion-framework-react-router';
 import { Button, Typography } from '@equinor/eds-core-react';
 import { error_outlined } from '@equinor/eds-icons';
 import { tokens } from '@equinor/eds-tokens';
 import styled from 'styled-components';
-import type { ErrorElementProps, RouterHandle } from '@equinor/fusion-framework-react-router';
 
 export const handle = {
   route: {

@@ -1,11 +1,11 @@
-import { Link } from 'react-router-dom';
-import { tokens } from '@equinor/eds-tokens';
-import styled from 'styled-components';
+import { Link } from '@equinor/fusion-framework-react-router';
 import type {
   LoaderFunctionArgs,
   RouteComponentProps,
   RouterHandle,
 } from '@equinor/fusion-framework-react-router';
+import { tokens } from '@equinor/eds-tokens';
+import styled from 'styled-components';
 import { UserDetail } from '../components/user/UserDetail';
 import type { User } from '../api/UserApi';
 

@@ -17,3 +17,26 @@ export type {
   RouteNode,
   RouteObject,
 } from './types.js';
+
+// Re-export commonly used React Router hooks, components, and utilities
+// so consumers don't need to install or import `react-router` directly.
+export {
+  Form,
+  Link,
+  NavLink,
+  Outlet,
+  redirect,
+  RouterProvider,
+  useActionData,
+  useFormAction,
+  useLoaderData,
+  useLocation,
+  useMatch,
+  useMatches,
+  useNavigate,
+  useNavigation,
+  useParams,
+  useRouteError,
+  useSearchParams,
+  useSubmit,
+} from 'react-router';

@@ -106,7 +106,7 @@ The layout component receives child routes via `<Outlet />`:
 
 ```typescript
 // src/Root.tsx
-import { Outlet, useNavigation } from 'react-router-dom';
+import { Outlet, useNavigation } from '@equinor/fusion-framework-react-router';
 import Navigation from './components/Navigation';
 import Loader from './components/Loader';
 
@@ -325,7 +325,7 @@ export const clientLoader = async ({ fusion }: LoaderFunctionArgs) => {
 Access route parameters and search parameters in your components:
 
 ```typescript
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useParams, useSearchParams } from '@equinor/fusion-framework-react-router';
 
 export default function ProductPage() {
   // Route parameters (from URL path: /products/:id)
@@ -519,7 +519,7 @@ The router uses React Router's navigation primitives, which work seamlessly with
 ### Using Links
 
 ```typescript
-import { Link } from 'react-router-dom';
+import { Link } from '@equinor/fusion-framework-react-router';
 
 export function Navigation() {
   return (
@@ -536,7 +536,7 @@ export function Navigation() {
 ### Programmatic Navigation
 
 ```typescript
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from '@equinor/fusion-framework-react-router';
 
 export function MyComponent() {
   const navigate = useNavigate();
@@ -565,7 +565,7 @@ export function MyComponent() {
 ### Active Route Detection
 
 ```typescript
-import { useLocation, useMatch } from 'react-router-dom';
+import { useLocation, useMatch } from '@equinor/fusion-framework-react-router';
 
 export function Navigation() {
   const location = useLocation();
@@ -671,7 +671,7 @@ Handle form submissions and mutations:
 
 ```typescript
 import type { ActionFunctionArgs } from '@equinor/fusion-framework-react-router';
-import { Form } from 'react-router-dom';
+import { Form } from '@equinor/fusion-framework-react-router';
 
 export const action = async ({ request, fusion }: ActionFunctionArgs) => {
   const formData = await request.formData();
@@ -703,7 +703,7 @@ export default function MyPage() {
 Show different loading states based on navigation state:
 
 ```typescript
-import { useNavigation } from 'react-router-dom';
+import { useNavigation } from '@equinor/fusion-framework-react-router';
 
 export default function Layout() {
   const navigation = useNavigation();
@@ -888,7 +888,7 @@ const view = searchParams.get('view') || 'details';
 
 - Verify navigation module is configured in Fusion Framework
 - Check that routes are properly defined
-- Ensure you're using `useNavigate` from `react-router-dom`
+- Ensure you're using `useNavigate` from `@equinor/fusion-framework-react-router`
 
 ## Example Structure
 

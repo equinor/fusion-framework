@@ -1,5 +1,5 @@
 import { useRef, useCallback } from 'react';
-import { Form, useSubmit } from 'react-router-dom';
+import { Form, useSubmit } from '@equinor/fusion-framework-react-router';
 import { Button, NativeSelect, Checkbox } from '@equinor/eds-core-react';
 import { tokens } from '@equinor/eds-tokens';
 import styled from 'styled-components';
