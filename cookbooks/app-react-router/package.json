@@ -24,7 +24,7 @@
   },
   "devDependencies": {
     "@equinor/eds-core-react": "^2.3.7",
-    "@equinor/eds-icons": "^1.1.0",
+    "@equinor/eds-icons": "^1.3.0",
     "@equinor/eds-tokens": "^2.1.1",
     "@equinor/fusion-framework-cli": "workspace:^",
     "@equinor/fusion-framework-module": "workspace:^",
