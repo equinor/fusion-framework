@@ -173,9 +173,13 @@ export const handleImportApplication =
       filter(actions.importApp.match),
       // when request is received, abort any ongoing request and start new
       switchMap(({ payload }) => {
-        const endpoint = [provider.assetUri, payload].join('/').replace(/\/{2,}/g, '/');
         // dynamically import the application script
-        return from(import(/* @vite-ignore */ /* webpackIgnore: true */ endpoint)).pipe(
+        return from(
+          import(
+            /* @vite-ignore */ /* webpackIgnore: true */
+            [provider.assetUri, payload].join('/').replace(/\/{2,}/g, '/')
+          ),
+        ).pipe(
           // dispatch success action
           map(actions.importApp.success),
           // catch any error and dispatch failure action

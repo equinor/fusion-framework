@@ -1,11 +1,10 @@
 import type { ApiRoute } from './types.js';
 
 /**
- * Represents an error that occurs when a route is deemed invalid.
+ * Error thrown when an {@link ApiRoute} fails structural validation.
  *
- * @extends {Error}
- * @param {string} message - A descriptive message explaining why the route is invalid.
- * @param {ErrorOptions} [options] - Optional additional error options.
+ * Consumers can use `instanceof InvalidRouteError` to distinguish route
+ * validation failures from other error types.
  */
 export class InvalidRouteError extends Error {
   constructor(message: string, options?: ErrorOptions) {
@@ -15,11 +14,12 @@ export class InvalidRouteError extends Error {
 }
 
 /**
- * Validates an API route object to ensure it meets the required structure.
+ * Validates that an {@link ApiRoute} has the minimum required structure:
+ * a `match` pattern and at least one of `middleware` or `proxy`.
  *
- * @param route - The API route object to validate.
- * @throws {InvalidRouteError} If the route does not have a `match` property.
- * @throws {InvalidRouteError} If the route does not have either `middleware` or `proxy` defined.
+ * @param route - The route definition to validate.
+ * @throws {InvalidRouteError} When `route.match` is falsy.
+ * @throws {InvalidRouteError} When neither `middleware` nor `proxy` is defined.
  */
 export function validateRoute(route: ApiRoute): void {
   if (!route.match) {

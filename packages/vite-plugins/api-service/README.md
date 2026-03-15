@@ -1,323 +1,283 @@
-# Fusion Vite Api Plugin
+# @equinor/fusion-framework-vite-plugin-api-service
 
-This Vite plugin enhances the development experience for Fusion Framework applications by providing powerful API service handling capabilities. It solves common development challenges by:
+Vite plugin for proxying service discovery requests and mocking API endpoints during Fusion Framework application development.
 
-1. **Enabling Service Discovery Integration**: Generates proxy routes that seamlessly connect to your service discovery system, allowing your application to work with multiple backend services during development.
+Use this plugin when you need to:
 
-2. **Simplifying API Mocking**: Provides an intuitive way to mock API responses without modifying your application code, accelerating development when backend services aren't available or are still in development.
+- **Integrate with service discovery** — proxy requests to a remote discovery endpoint and remap service URLs to local routes the dev-server can manage.
+- **Mock API responses** — define middleware routes that return test or static data without touching application code.
+- **Intercept and transform responses** — modify proxy response payloads before they reach the client (normalise data, inject metadata, etc.).
 
-3. **Creating Consistent Development Environments**: Ensures your application works with the same API structure in development as it would in production, reducing environment-specific bugs.
+The plugin is designed for the Fusion Framework Dev Server ecosystem but works in any Vite project.
 
-4. **Facilitating Local Testing**: Makes it easy to test your application against real or mocked API endpoints, with flexible configuration options for different development scenarios.
+## Installation
 
-This plugin is a core component of the Fusion Framework Dev Server ecosystem, streamlining the way you interact with backend services during the development process.
+```bash
+pnpm add -D @equinor/fusion-framework-vite-plugin-api-service
+```
+
+## Quick Start
+
+```ts
+// vite.config.ts
+import { defineConfig } from 'vite';
+import apiServicePlugin, { createProxyHandler } from '@equinor/fusion-framework-vite-plugin-api-service';
+
+export default defineConfig({
+  plugins: [
+    apiServicePlugin({
+      proxyHandler: createProxyHandler(
+        'https://discovery.example.com/services',
+        (services, { route }) => {
+          const routes = services.map((svc) => ({
+            match: `/${svc.name}/:path*`,
+            proxy: {
+              target: svc.url,
+              rewrite: (p: string) => p.replace(`/${svc.name}`, ''),
+            },
+          }));
+          return {
+            data: services.map((svc) => ({ ...svc, uri: `${route}/${svc.name}` })),
+            routes,
+          };
+        },
+      ),
+    }),
+  ],
+});
+```
 
 ## How It Works
 
-The Fusion Vite API Plugin operates by intercepting API requests made from your application during development and intelligently routing them through configurable proxy paths. It dynamically creates route mappings between your local development environment and actual backend services, handling service discovery, request forwarding, and response processing. The plugin can transform backend responses, mock API endpoints when needed, and provide consistent service addressing regardless of the actual backend locations, creating a seamless development experience that closely mimics production behavior.
-
-
-### Process Flow
+### Service Discovery Flow
 
 ```mermaid
 flowchart TD
-    %% Service Discovery Flow
     subgraph "Service Discovery Flow"
-        SD1[Client] -->| Request @service-discovery| SD2[Fusion Vite API Plugin]
+        SD1[Client] -->|Request /@fusion-services| SD2[Plugin]
         SD2 -->|Proxy request| SD3[Service Discovery Endpoint]
         SD3 -->|Return service data| SD2
         SD2 -->|Transform & remap services| SD4[Modified Service List]
         SD4 -->|Return to client| SD1
     end
 ```
-1. Client requests the list of services (e.g., `/@service-discovery`)
-2. Plugin proxies the request to the real configured service discovery endpoint
-3. Plugin re-maps services (e.g., `@service/apps` => `https://apps-my-api/`)
-4. Modified service list is returned to the client
 
-__Example Proxy Response__
+1. The client requests the list of services (e.g. `/@fusion-services`).
+2. The plugin proxies the request to the real service discovery endpoint.
+3. The `generateRoutes` callback remaps each service URL to a local proxy path and registers the routes.
+4. The modified service list is returned to the client.
+
+**Proxy response** (upstream):
+
 ```json
-[
-  {
-    "id": "id-of-service",
-    "name": "name-of-service",
-    "url": "https://service-url/"
-  }
-]
+[{ "id": "abc", "name": "apps", "url": "https://apps.prod.example.com/" }]
 ```
 
-__Example Plugin Response__
+**Plugin response** (to client):
+
 ```json
-[
-  {
-    "id": "id-of-service",
-    "name": "name-of-service",
-    "url": "/@service/name-of-service",
-  }
-]
+[{ "id": "abc", "name": "apps", "url": "/@fusion-api/apps" }]
 ```
 
-#### Normal API Request Flow
+### Normal API Request Flow
 
 ```mermaid
 flowchart TD
-    subgraph "Normal API Request Flow"
-        API1[Client App] -->| Request API| API2[Vite API Plugin]
-        API2 -->| Proxy request| API4[Real API Service]
-        API4 -->| API response| API2
-        API2 -->| Apply interceptions| API5[Processed Response]
-        API5 -->| Modified response| API1
+    subgraph "API Request Flow"
+        API1[Client] -->|Request /@fusion-api/apps/all| API2[Plugin]
+        API2 -->|Proxy request| API3[Real API Service]
+        API3 -->|Response| API2
+        API2 -->|Apply interceptors| API4[Processed Response]
+        API4 -->|Return to client| API1
     end
 ```
-1. Client makes a request to a service using the proxy URL (e.g., `/@service/apps/all-apps`)
-2. Plugin resolves the request to the corresponding real service and proxies the request.
-3. Plugin applies any configured interceptions to the response
-4. Result is returned to the client
 
-#### Alternative: Mock Route Flow
+1. The client requests a service via the proxy URL (e.g. `/@fusion-api/apps/all`).
+2. The plugin resolves the matching route and proxies the request to the upstream URL.
+3. Optional response interceptors transform the payload.
+4. The result is returned to the client.
+
+### Mock Route Flow
 
 ```mermaid
 flowchart TD
-  subgraph "Mock Route Flow"
-      MOCK1[Client App] -->| Request API | MOCK2[Vite API Plugin]
-      MOCK2 -->| Check for configured route| MOCK3{Mock exists?}
-      MOCK3 -->|Yes| MOCK4[Generate Mock Response]
-      MOCK3 -->|No| MOCK5[Continue to Normal Flow]
-      MOCK4 -->| Mock data| MOCK1
-  end
+    subgraph "Mock Route Flow"
+        M1[Client] -->|Request| M2[Plugin]
+        M2 -->|Check routes| M3{Mock exists?}
+        M3 -->|Yes| M4[Return Mock Response]
+        M3 -->|No| M5[Continue to Proxy / Next]
+        M4 --> M1
+    end
 ```
-1. Client makes a request to a service (e.g., `/@service/apps/all-apps`)
-2. If the plugin is configured with a mock route matching the request path
-3. Plugin returns the configured mock data directly, without proxying to any real service
+
+1. The client makes a request that matches a middleware route.
+2. The plugin executes the middleware handler directly, without proxying.
+3. If no middleware route matches, the request falls through to proxy routes or the next middleware.
 
 ## Configuration
 
+### Plugin Options
+
+| Option    | Type                | Default              | Description |
+| --------- | ------------------- | -------------------- | ----------- |
+| `route`   | `string`            | `'/@fusion-api'`     | Base path where plugin middleware is mounted. |
+| `process` | `ProcessRouteOptions` | —                  | Extra route processing options (e.g. `onProxyRes` listener). |
+| `logger`  | `PluginLogger`      | —                    | Logger for debug/info/warn/error messages. Pass `console` for quick debugging. |
+
+### Service Discovery with `createProxyHandler`
+
+`createProxyHandler` creates an `ApiProxyHandler` that proxies to a service discovery endpoint and dynamically generates proxy routes from the response.
+
 ```ts
-import fusionApiPlugin, { createProxyHandler } from '@equinor/fusion-framework-vite-plugin-api-service';
+import { createProxyHandler } from '@equinor/fusion-framework-vite-plugin-api-service';
 
-fusionApiPlugin({
-  proxyHandler: createProxyHandler({
-    // proxy target for service discovery
-    serviceDiscoveryUrl: 'https://location.of.your/service/discovery',
-    // method for modifying the service discovery response and setting up routes
-    processServices: (dataResponse, args) => {
-      const { route, request } = args;
-      const apiRoutes = [] as ApiRoute[];
-      const apiServices = [];
+const proxyHandler = createProxyHandler(
+  // URL of the upstream service discovery endpoint
+  'https://api.example.com/service-discovery',
 
-      for (const service of data) {
-        apiServices.push({ ...service, uri: /** local proxy url */ });
-        apiRoutes.push({
-          match: /** proxy route to match */,
-          proxy: {
-            target: /** proxy target */,
-            rewrite: /** rewrite path */,
-          },
-        });
-      }
+  // Callback that processes the response and returns routes
+  (responseData, { route, request }) => {
+    const routes = responseData.services.map((service) => ({
+      match: `/${service.name}/:path*`,
+      proxy: {
+        target: service.url,
+        rewrite: (path: string) => path.replace(`/${service.name}`, ''),
+      },
+    }));
+    return {
+      data: responseData,
+      routes,
+    };
+  },
 
-      // add non-existing service to the list
-      apiServices.push(/** non-existing service */);
-      apiRoutes.push(/** non-existing service proxy route */);
-    },
-  }),
-});
+  // Optional configuration
+  {
+    route: '/@fusion-services',  // where discovery proxy is mounted (default)
+    apiRoute: '/@fusion-api',    // base path for generated routes (default)
+    proxyOptions: { changeOrigin: true, secure: false },
+    logger: console,
+  },
+);
+
+apiServicePlugin({ proxyHandler });
 ```
 
 ### Mock API Requests
 
-```ts
+Define middleware routes to return mocked responses without a real backend:
 
-fusionApiPlugin({
+```ts
+apiServicePlugin({
   routes: [
     {
-      match: '/service-name/path-to/mock',
+      match: '/health',
+      middleware: (_req, res) => {
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ status: 'ok' }));
+      },
+    },
+    {
+      match: '/users/:userId',
       middleware: (req, res) => {
-        // handle request and response
-        res.json({ data: 'mocked data' });
+        const userId = req.params?.userId;
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ id: userId, name: 'Test User' }));
       },
     },
   ],
 });
 ```
 
-## API Reference
+### Combining Proxy and Mock Routes
 
-### Proxy Handler with createProxyHandler
-
-The `createProxyHandler` utility function helps you create a proxy handler that can intercept and transform API requests and responses. It's particularly useful for setting up service discovery and API routing in development environments.
+You can supply both `proxyHandler` and `routes`. Custom routes are evaluated first, so mocks take priority over proxied services:
 
 ```ts
-import { createProxyHandler } from '@equinor/fusion-framework-vite-plugin-api-service';
-
-// Create a proxy handler for service discovery
-const proxyHandler = createProxyHandler(
-  // Target URL for service discovery
-  'https://api.example.com/service-discovery',
-  
-  // Function to process API response data and generate routes
-  (responseData, { route, request }) => {
-    const routes = [];
-    
-    // Transform the response data and generate API routes
-    for (const service of responseData.services) {
-      routes.push({
-        match: `/api/${service.name}/**`, 
-        proxy: {
-          target: service.url,
-          rewrite: (path) => path.replace(`/api/${service.name}`, ''),
-        },
-      });
-    }
-    
-    return {
-      // Return transformed data that will be sent to the client
-      data: {
-        ...responseData,
-        timestamp: new Date().toISOString(),
-      },
-      // Return routes that will be used for API proxying
-      routes,
-    };
-  },
-  
-  // Optional configuration
-  {
-    // Base route for service discovery API (default: '/@services')
-    route: '/@api/services',
-    
-    // API route path (default: '/api')
-    apiRoute: '/api',
-    
-    // Additional proxy options
-    proxyOptions: {
-      changeOrigin: true,
-      secure: false,
-    },
-    
-    // Optional logger
-    logger: console,
-  }
-);
-
-// Use the proxy handler in a Vite plugin
-fusionApiPlugin({
+apiServicePlugin({
   proxyHandler,
+  routes: [
+    {
+      match: '/apps/my-local-app',
+      middleware: (_req, res) => {
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ appKey: 'my-local-app', version: 'dev' }));
+      },
+    },
+  ],
 });
 ```
 
-### Route Matching with createRouteMatcher
+## Route Matching with `createRouteMatcher`
 
-The `createRouteMatcher` utility function creates a matcher that tests URL paths against a pattern and extracts parameters. This utility is built on [path-to-regexp](https://www.npmjs.com/package/path-to-regexp) and simplifies route handling in API services.
+`createRouteMatcher` creates a matcher function that tests URL paths against a pattern and extracts path parameters. Built on [path-to-regexp](https://www.npmjs.com/package/path-to-regexp).
+
+### Path Parameters
 
 ```ts
 import { createRouteMatcher } from '@equinor/fusion-framework-vite-plugin-api-service';
 
-// Basic route matching with path parameters
 const matcher = createRouteMatcher({ match: '/api/users/:userId/profile' });
 
-// Returns extracted parameters when matched
 matcher('/api/users/123/profile', req); // { params: { userId: '123' } }
-
-// Returns false when no match
-matcher('/api/posts/123', req); // false
+matcher('/api/posts/123', req);         // false
 ```
 
-#### Wildcards
-
-Wildcards allow matching multiple segments of a path, useful for catch-all routes or proxying to different services.
+### Wildcards
 
 ```ts
-// Simple wildcard matching
-const resourceMatcher = createRouteMatcher({ match: '/api/resources/*' });
-resourceMatcher('/api/resources/users'); // { params: { 0: 'users' } }
-
-// Named parameters with wildcards
-const serviceMatcher = createRouteMatcher({ match: '/api/services/:serviceName/*' });
-serviceMatcher('/api/services/auth/v1/token');
-// { params: { serviceName: 'auth', 0: 'v1/token' } }
+const serviceMatcher = createRouteMatcher({ match: '/api/services/:serviceName/:path*' });
+serviceMatcher('/api/services/auth/v1/token', req);
+// { params: { serviceName: 'auth', path: 'v1/token' } }
 ```
 
-#### Custom Matcher
+### Multiple Patterns
 
-For complex matching requirements, you can provide a custom function that gives you full control over the matching logic.
+Pass an array of patterns to match any of them:
+
+```ts
+const multiMatcher = createRouteMatcher({
+  match: ['/api/v1/users/:id', '/api/v2/users/:id'],
+  middleware: handler,
+});
+```
+
+### Custom Matcher Function
+
+For advanced logic, supply a function instead of a string pattern:
 
 ```ts
 const customMatcher = createRouteMatcher({
   match: (path, req) => {
-    if (path.startsWith('/api/custom')) {
+    if (path.startsWith('/api/custom') && req.method === 'GET') {
       return { params: { custom: path.substring(12) } };
     }
     return false;
-  }
+  },
+  middleware: handler,
 });
 ```
 
-#### Example Usage
+See the [path-to-regexp documentation](https://www.npmjs.com/package/path-to-regexp) for the full pattern syntax.
 
-Matchers are typically used in middleware functions to handle API requests based on path patterns.
+## Response Interceptor with `createResponseInterceptor`
 
-```ts
-const middleware = (req, res, next) => {
-  const match = matcher(req.url, req);
-  if (match) {
-    const { userId } = match.params;
-    // Process the request with the extracted parameters
-  } else {
-    next();
-  }
-};
-```
-
-For more complex pattern matching, refer to the [path-to-regexp documentation](https://www.npmjs.com/package/path-to-regexp).
-
-### Response Interceptor with createResponseInterceptor
-
-The `createResponseInterceptor` utility function allows you to intercept and transform API responses before they are sent to the client. This is particularly useful for modifying response data, adding additional information, or normalizing data structures across different API services.
+`createResponseInterceptor` intercepts JSON proxy responses and transforms them before they reach the client. Non-JSON responses and error responses (status >= 400) pass through untouched.
 
 ```ts
 import { createResponseInterceptor } from '@equinor/fusion-framework-vite-plugin-api-service';
 
-// Create a response interceptor that transforms API responses
-const responseInterceptor = createResponseInterceptor(
-  // Callback function that transforms the original response data
-  (responseData) => {
-    // Transform the response data
-    return {
-      ...responseData,
-      timestamp: new Date().toISOString(),
-      modified: true,
-    };
-  },
-  // Optional configuration
-  {
-    logger: console,
-  }
+const interceptor = createResponseInterceptor(
+  (data) => ({
+    ...data,
+    timestamp: new Date().toISOString(),
+  }),
+  { logger: console },
 );
-
-// Use the interceptor in a proxy configuration
-const apiProxy = {
-  match: '/api/data',
-  proxy: {
-    target: 'https://api.example.com',
-    changeOrigin: true,
-    selfHandleResponse: true, // Required for response interceptors
-    onProxyRes: responseInterceptor,
-  },
-};
-
-// Add to your Vite plugin configuration
-fusionApiPlugin({
-  routes: [apiProxy],
-});
 ```
 
-#### Handling Different Response Types
-
-The interceptor automatically checks if the response is JSON before attempting transformation:
+### Type-Safe Transformations
 
 ```ts
-// Type-safe response transformation
 interface OriginalResponse {
   items: string[];
   totalCount: number;
@@ -325,10 +285,7 @@ interface OriginalResponse {
 
 interface TransformedResponse {
   data: string[];
-  metadata: {
-    count: number;
-    timestamp: string;
-  };
+  metadata: { count: number; timestamp: string };
 }
 
 const typedInterceptor = createResponseInterceptor<OriginalResponse, TransformedResponse>(
@@ -338,10 +295,37 @@ const typedInterceptor = createResponseInterceptor<OriginalResponse, Transformed
       count: response.totalCount,
       timestamp: new Date().toISOString(),
     },
-  })
+  }),
 );
 ```
 
-> [!NOTE] 
-> Non-JSON responses and error responses (status codes >= 400) are passed through without transformation.
+> **Note:** The interceptor requires `selfHandleResponse: true` on the proxy configuration. This is set automatically when using `createProxyHandler`.
 
+## API Reference
+
+### Exports
+
+| Export | Description |
+| --- | --- |
+| `plugin` (default) | Vite plugin factory — pass `PluginArguments` and optional `PluginOptions`. |
+| `createProxyHandler` | Creates an `ApiProxyHandler` for service discovery proxying. |
+| `createRouteMatcher` | Creates a path matcher from a route definition. |
+| `createResponseInterceptor` | Creates a proxy response interceptor for JSON transformation. |
+| `DEFAULT_VALUES` | Enum with default route paths (`API_PATH`, `SERVICES_PATH`). |
+
+### Types
+
+| Type | Description |
+| --- | --- |
+| `PluginArguments` | Arguments for the plugin factory (`routes`, `proxyHandler`). |
+| `PluginOptions` | Optional plugin configuration (`route`, `process`, `logger`). |
+| `ApiProxyHandler` | Interface for proxy handlers returned by `createProxyHandler`. |
+| `ApiDataProcessor` | Callback type for processing service discovery responses. |
+| `ApiRoute` | Union of `MiddlewareRoute` and `ProxyRoute`. |
+| `MiddlewareRoute` | Route definition with a custom middleware handler. |
+| `ProxyRoute` | Route definition that proxies to a remote target. |
+| `ApiRouteProxyOptions` | Proxy configuration options for `ProxyRoute`. |
+| `Matcher` | Function type for route matching. |
+| `MatchResult` | Return type of a `Matcher` — `boolean` or `{ params }`. |
+| `PluginLogger` | Subset of `Console` used for plugin logging. |
+| `JsonData` | Union of JSON-serializable value types. |

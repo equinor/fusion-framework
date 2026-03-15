@@ -10,8 +10,19 @@ import { type IContextModuleConfigurator, ContextModuleConfigurator } from './co
 import { type IContextProvider, ContextProvider } from './ContextProvider';
 import type { ContextItem } from './types';
 
+/**
+ * Literal type identifying the context module within the Fusion Framework module system.
+ *
+ * Used as the key when registering or looking up the module in a `Modules` map.
+ */
 export type ContextModuleKey = 'context';
 
+/**
+ * Module registration key for the context module.
+ *
+ * Pass this value—or reference it as `contextModuleKey`—when you need to
+ * identify the context module by name at runtime (e.g., `hasModule(contextModuleKey)`).
+ */
 export const moduleKey: ContextModuleKey = 'context';
 
 /**

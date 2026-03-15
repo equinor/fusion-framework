@@ -23,12 +23,13 @@ describe('useObservableSelector', () => {
     expect(result.current.value).toBe('initial');
     expect(result.current.value).toBe(subject.value.foo.bar);
 
+    subject.next({ foo: { bar: 'test' } });
+
     await waitFor(() => {
-      subject.next({ foo: { bar: 'test' } });
+      expect(result.current.value).toBe('test');
+      expect(result.current.value).toBe(subject.value.foo.bar);
     });
 
-    expect(result.current.value).toBe('test');
-    expect(result.current.value).toBe(subject.value.foo.bar);
   });
 
   it('should create an observable selector by callback', async () => {
@@ -49,10 +50,10 @@ describe('useObservableSelector', () => {
       return { value, updateValue: subject.next };
     });
 
-    await waitFor(() => {
-      subject.next({ foo: 'bar' });
-    });
+    subject.next({ foo: 'bar' });
 
-    expect(result.current.value).to.equal('bar');
+    await waitFor(() => {
+      expect(result.current.value).to.equal('bar');
+    });
   });
 });

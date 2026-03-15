@@ -49,17 +49,17 @@
     "directory": "packages/cli-plugins/ai-base"
   },
   "dependencies": {
-    "@equinor/fusion-framework-module-ai": "workspace:*",
     "@equinor/fusion-framework-module": "workspace:*",
+    "@equinor/fusion-framework-module-ai": "workspace:*",
     "@equinor/fusion-imports": "workspace:*",
     "commander": "^14.0.1",
-    "zod": "^4.3.5"
+    "zod": "^4.3.6"
   },
   "peerDependencies": {
     "@equinor/fusion-framework-cli": "workspace:^"
   },
   "devDependencies": {
-    "typescript": "^5.8.2",
-    "vitest": "^4.0.18"
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.0"
   }
 }

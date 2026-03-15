@@ -59,7 +59,6 @@
     "@equinor/fusion-framework-module-event": "workspace:^",
     "@equinor/fusion-framework-module-http": "workspace:^",
     "@equinor/fusion-framework-module-navigation": "workspace:^",
-    "@types/uuid": "^11.0.0",
-    "typescript": "^5.8.2"
+    "typescript": "^5.9.3"
   }
 }

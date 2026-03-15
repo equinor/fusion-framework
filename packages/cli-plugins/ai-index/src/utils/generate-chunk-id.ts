@@ -1,9 +1,21 @@
 /**
- * Generates a unique identifier for a document chunk based on file path
- * Creates a deterministic, URL-safe hash from the file path for validation and checks
- * @param filePath - The file path to generate an ID from
- * @param chunkIndex - Optional chunk index to append for multi-chunk documents
- * @returns A base64-encoded hash of the file path, optionally suffixed with chunk index
+ * Generates a deterministic, URL-safe identifier for a document chunk.
+ *
+ * The identifier is a Base64-encoded hash of the file path with all
+ * non-alphanumeric characters stripped, making it safe for use as an
+ * Azure AI Search document key.
+ *
+ * @param filePath - The relative file path to hash.
+ * @param chunkIndex - Optional zero-based chunk index appended to distinguish
+ *   multiple chunks originating from the same file.
+ * @returns A stable, alphanumeric document ID string.
+ *
+ * @example
+ * ```ts
+ * generateChunkId('packages/cli/src/index.ts');        // 'cGFja2FnZXMvY2xpL3NyYy9pbmRleC50cw'
+ * generateChunkId('packages/cli/src/index.ts', 0);     // 'cGFja2FnZXMvY2xpL3NyYy9pbmRleC50cw-0'
+ * generateChunkId('packages/cli/src/index.ts', 3);     // 'cGFja2FnZXMvY2xpL3NyYy9pbmRleC50cw-3'
+ * ```
  */
 export const generateChunkId = (filePath: string, chunkIndex?: number): string => {
   // Convert file path to base64 and remove non-alphanumeric characters

@@ -50,6 +50,7 @@
     "@equinor/fusion-framework-module": "workspace:*",
     "@equinor/fusion-framework-module-ai": "workspace:*",
     "@equinor/fusion-imports": "workspace:*",
+    "@langchain/core": "^1.0.1",
     "@langchain/textsplitters": "^1.0.0",
     "commander": "^14.0.1",
     "find-up": "^8.0.0",
@@ -62,13 +63,13 @@
     "tree-sitter": "^0.25.0",
     "tree-sitter-typescript": "^0.23.2",
     "ts-morph": "^27.0.2",
-    "zod": "^4.3.5"
+    "zod": "^4.3.6"
   },
   "peerDependencies": {
     "@equinor/fusion-framework-cli": "workspace:^"
   },
   "devDependencies": {
-    "typescript": "^5.8.2",
-    "vitest": "^4.0.18"
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.0"
   }
 }

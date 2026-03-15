@@ -2,20 +2,24 @@ import { dirname } from 'node:path';
 import { readPackageUp, type PackageJson } from 'read-package-up';
 
 /**
- * Map of package base directories to package.json
+ * In-memory cache mapping package root directories to their parsed `package.json`.
+ * Avoids repeated file-system lookups when processing many files from the same package.
  */
 const packageMap = new Map<string, PackageJson>();
 
 /**
- * Resolves which package a file path belongs to.
- * First checks the cache map, then uses read-package-up if no match found.
+ * Resolves the nearest `package.json` for a given file path.
  *
- * @param filePath - Absolute or relative file path (e.g., '/path/to/packages/cli/src/index.ts')
- * @returns Package.json if found, undefined otherwise
+ * Uses an in-memory cache keyed by the package’s directory to avoid
+ * redundant file-system lookups when many files share the same package.
+ *
+ * @param filePath - Absolute path to a source file.
+ * @returns The parsed `PackageJson` if found, or `undefined`.
  *
  * @example
  * ```ts
- * const packageJson = await resolvePackage('/path/to/packages/cli/src/index.ts');
+ * const pkg = await resolvePackage('/repo/packages/cli/src/index.ts');
+ * console.log(pkg?.name); // '@equinor/fusion-framework-cli'
  * ```
  */
 export async function resolvePackage(filePath: string): Promise<PackageJson | undefined> {

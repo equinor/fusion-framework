@@ -6,6 +6,15 @@ import discoCommand from './disco/index.js';
 import portalCommand from './portal/index.js';
 import { loadPlugins } from '../plugins/loader.js';
 
+/**
+ * Registers all built-in CLI commands and optional plugins on the Commander program.
+ *
+ * Built-in command groups: `app`, `auth`, `create`, `disco`, `portal`.
+ * After registering built-in commands, loads any plugins declared in the
+ * project's `fusion-cli.config` file.
+ *
+ * @param program - The Commander program instance to register commands on.
+ */
 export default async (program: Command) => {
   program.addCommand(appCommand);
   program.addCommand(authCommands);

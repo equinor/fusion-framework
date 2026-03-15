@@ -4,8 +4,14 @@ import type { ModuleDeps } from './types';
 import { AppConfigurator } from './AppConfigurator';
 import { AppModuleProvider } from './AppModuleProvider';
 
+/** Module key used to register and look up the app module in the framework. */
 export const moduleKey = 'app';
 
+/**
+ * Type alias for the app module definition, binding the module key,
+ * provider type ({@link AppModuleProvider}), configurator type
+ * ({@link AppConfigurator}), and required module dependencies.
+ */
 export type AppModule = Module<typeof moduleKey, AppModuleProvider, AppConfigurator, ModuleDeps>;
 
 /**

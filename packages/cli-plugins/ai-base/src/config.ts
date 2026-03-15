@@ -34,12 +34,21 @@ export interface FusionAIConfig {
 export const configureFusionAI = <T extends FusionAIConfig>(fn: () => Promise<T> | T) => fn;
 
 /**
- * Options for loading Fusion AI configuration
+ * Options controlling how {@link loadFusionAIConfig} resolves and imports the
+ * Fusion AI configuration file.
  */
 export interface LoadFusionAIConfigOptions {
-  /** Base directory to resolve the config file from (default: process.cwd()) */
+  /**
+   * Base directory used to resolve the config file path.
+   *
+   * @defaultValue `process.cwd()`
+   */
   baseDir?: string;
-  /** File extensions to consider when resolving the config file (default: ['.ts', '.mjs', '.js', '.json']) */
+  /**
+   * File extensions tried (in order) when locating the config file.
+   *
+   * @defaultValue `['.ts', '.mjs', '.js', '.json']`
+   */
   extensions?: string[];
 }
 

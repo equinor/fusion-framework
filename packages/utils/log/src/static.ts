@@ -1,48 +1,73 @@
 import { resolveLogLevel } from './resolve-log-level.js';
 
 /**
- * Defines the different log levels that can be used to control the verbosity of logging.
+ * Severity levels that control which log messages are emitted.
  *
- * - `None`: No logging will be performed.
- * - `Error`: Due to a more serious problem, the software has not been able to perform some function.
- * - `Warning`: An indication that something unexpected happened, or indicative of some problem in the near future.
- * - `Info`: Confirmation that things are working as expected.
- * - `Debug`: Detailed information, typically of interest only when diagnosing problems.
+ * Higher numeric values represent more verbose output. Set a logger's
+ * {@link ILogger.level | level} property to one of these values to filter
+ * messages at runtime.
+ *
+ * | Member      | Value | Meaning                                                          |
+ * |-------------|-------|------------------------------------------------------------------|
+ * | `None`      | 0     | Logging disabled — no messages are emitted.                      |
+ * | `Error`     | 1     | A serious failure that prevented an operation from completing.   |
+ * | `Warning`   | 2     | Something unexpected that may need investigation.                |
+ * | `Info`      | 3     | Routine operational confirmation (e.g., "module initialised").   |
+ * | `Debug`     | 4     | Verbose diagnostic detail for development only.                  |
+ *
+ * @example
+ * ```typescript
+ * import { ConsoleLogger, LogLevel } from '@equinor/fusion-log';
+ * const logger = new ConsoleLogger('App');
+ * logger.level = LogLevel.Warning; // suppress Info and Debug
+ * ```
  */
 export enum LogLevel {
-  None = 0, // No logging will be performed.
-  Error = 1, // Due to a more serious problem, the software has not been able to perform some function.
-  Warning = 2, // An indication that something unexpected happened, or indicative of some problem in the near future.
-  Info = 3, // Confirmation that things are working as expected.
-  Debug = 4, // Detailed information, typically of interest only when diagnosing problems.
+  /** Logging disabled — no messages are emitted. */
+  None = 0,
+  /** A serious failure that prevented an operation from completing. */
+  Error = 1,
+  /** Something unexpected that may need investigation. */
+  Warning = 2,
+  /** Routine operational confirmation. */
+  Info = 3,
+  /** Verbose diagnostic detail for development only. */
+  Debug = 4,
 }
 
 /**
- * Resolves the default log level based on the `FUSION_LOG_LEVEL` environment variable.
+ * Resolve the default log level from the `FUSION_LOG_LEVEL` environment variable.
  *
- * If the `FUSION_LOG_LEVEL` environment variable is set, it will attempt to parse the log level from it.
- * If the parsing fails, it will return `LogLevel.Debug` in development environments, or `LogLevel.Error` in production environments.
+ * Resolution order:
+ * 1. If `FUSION_LOG_LEVEL` is set and parsable, use the parsed value.
+ * 2. If parsing fails and `NODE_ENV === 'development'`, fall back to {@link LogLevel.Debug}.
+ * 3. Otherwise fall back to {@link LogLevel.Error}.
+ * 4. If the variable is not set at all, default to {@link LogLevel.Error}.
  *
- * If the `FUSION_LOG_LEVEL` environment variable is not set, it will default to `LogLevel.Error`.
- *
- * @returns {LogLevel} The resolved default log level.
+ * @returns The resolved {@link LogLevel}.
  */
 const resolveDefaultLogLevel = (): LogLevel => {
-  // Check if FUSION_LOG_LEVEL is set in environment variables
   const envLogLevel = process.env.FUSION_LOG_LEVEL;
 
   if (envLogLevel) {
     try {
-      // Attempt to parse the log level from the environment variable
       return resolveLogLevel(envLogLevel);
-    } catch (error) {
-      // If parsing fails, return Debug level in development, otherwise Error level
+    } catch {
+      // Unparsable value — degrade gracefully based on environment
       return process.env.NODE_ENV === 'development' ? LogLevel.Debug : LogLevel.Error;
     }
   }
 
-  // Default to Error level if FUSION_LOG_LEVEL is not set
   return LogLevel.Error;
 };
 
+/**
+ * The default {@link LogLevel} resolved once at module load from the
+ * `FUSION_LOG_LEVEL` environment variable.
+ *
+ * Use this value when initialising a logger and no explicit level has
+ * been provided by the caller.
+ *
+ * @see {@link resolveDefaultLogLevel} for resolution rules.
+ */
 export const defaultLogLevel = resolveDefaultLogLevel();

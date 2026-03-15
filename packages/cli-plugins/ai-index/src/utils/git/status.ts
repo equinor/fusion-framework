@@ -1,9 +1,15 @@
 import { resolveProjectRoot, getGit } from './git-client.js';
 
 /**
- * Get git status information for debugging
- * @param cwd - Working directory
- * @returns Git status information
+ * Retrieves a summary of the current git working-tree status.
+ *
+ * Returns the current branch name, abbreviated HEAD commit, and counts of
+ * staged / unstaged changes. Useful for informational output in CLI commands.
+ *
+ * @param cwd - Working directory for git operations. Defaults to `process.cwd()`.
+ * @returns An object with branch, commit, and file-change counts.
+ * @throws {Error} If the working directory is not inside a git repository or
+ *   the git client cannot be initialised.
  */
 export const getGitStatus = async (
   cwd: string = process.cwd(),

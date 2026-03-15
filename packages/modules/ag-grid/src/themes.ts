@@ -3,7 +3,14 @@ import { type Part, type Theme, createPart, createTheme, themeAlpine } from 'ag-
 import { tokens } from '@equinor/eds-tokens';
 
 /**
- * The Fusion theme for AG Grid.
+ * Default Fusion theme for AG Grid.
+ *
+ * Based on the AG Grid `alpine` theme with Equinor brand overrides:
+ * - Font family set to `Equinor, sans-serif`
+ * - Accent colour set to the EDS interactive primary resting token
+ *
+ * Use {@link IAgGridConfigurator.setTheme | builder.setTheme()} to customise or
+ * replace this theme during application configuration.
  */
 export const fusionTheme: Theme = themeAlpine.withParams({
   fontFamily: 'Equinor, sans-serif',
@@ -51,6 +58,11 @@ export const createThemeFromTheme = (theme: Theme): Theme => {
   return newTheme;
 };
 
+/**
+ * Re-exported `createTheme` factory from `ag-grid-community`.
+ *
+ * Useful for building a brand-new theme without extending an existing one.
+ */
 export { createTheme, type Theme };
 
 export default { fusionTheme };

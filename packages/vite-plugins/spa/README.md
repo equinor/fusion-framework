@@ -1,59 +1,64 @@
 ---
 title: Fusion Framework Vite SPA Plugin
 description: >
-  A powerful Vite plugin for building Single Page Applications (SPAs) with the Fusion Framework. It automates HTML template generation, bootstraps authentication and service discovery, and streamlines portal loading and API proxying. Designed for seamless integration with the Fusion Framework CLI, this plugin provides flexible configuration for both standard and advanced SPA scenarios.
+  Vite plugin for building Fusion Framework Single Page Applications.
+  Automates HTML template generation, MSAL authentication bootstrapping,
+  service discovery wiring, portal manifest loading, and authenticated
+  API proxying via a service worker.
 tags:
   - fusion-framework
+  - vite-plugin
   - cli
   - app-development
   - portal-development
   - dev-server
   - authentication
-  - configuration
   - service-discovery
+  - service-worker
   - equinor
   - non-production
-  - documentation
 keywords:
+  - '@equinor/fusion-framework-vite-plugin-spa'
   - fusion-framework
   - vite
   - spa
   - plugin
   - development
   - non-production
+  - msal
+  - service-worker
+  - portal
 ---
 
-# Fusion Framework Vite SPA Plugin
+# @equinor/fusion-framework-vite-plugin-spa
 
 [![npm version](https://img.shields.io/npm/v/@equinor/fusion-framework-vite-plugin-spa.svg?style=flat)](https://www.npmjs.com/package/@equinor/fusion-framework-vite-plugin-spa)
 [![License: ISC](https://img.shields.io/badge/License-ISC-blue.svg)](./LICENSE)
 
-A powerful Vite plugin for building Single Page Applications (SPAs) with the Fusion Framework. It automates HTML template generation, bootstraps authentication and service discovery, and streamlines portal loading and API proxying. Designed for seamless integration with the Fusion Framework CLI, this plugin provides flexible configuration for both standard and advanced SPA scenarios.
+Vite plugin for building Fusion Framework Single Page Applications (SPAs). It generates an HTML shell, bootstraps MSAL authentication and service discovery, loads a portal by manifest, and registers a service worker that injects Bearer tokens into outgoing API requests.
 
-> [!CAUTION] 
-> This plugin is intended for use in non-production environments only.
+> [!CAUTION]
+> This plugin is intended for **non-production development environments** only.
 
 > [!WARNING]
-> This plugin is developed for usage with [`@equinor/fusion-framework-cli`](https://github.com/equinor/fusion-framework/tree/main/packages/cli) and this documentation is intended for deeper understanding of the plugin's capabilities and configuration options.
+> This plugin is designed for use with [`@equinor/fusion-framework-cli`](https://github.com/equinor/fusion-framework/tree/main/packages/cli). The CLI scaffolds all required configuration automatically.
 >
-> **NOTE:** _Just because there are buttons available doesn't mean you need to press them 🐒_
->
-> The plugin is written in a modular fashion, allowing for easy customization and extension __IF__ the developer has a deep understanding of the Fusion Framework and its internals.
+> Standalone usage is an advanced scenario that requires deep understanding of the Fusion Framework internals. The documentation below covers the full configuration surface for those who need it.
 
 ## What It Does
 
-The plugin:
-
-1. **Bootstraps the Fusion Framework** - Initializes core modules including MSAL authentication and service discovery
-2. **Renders a Configured Portal** - Loads and renders any portal by ID, as long as it exports a render function
-3. **Registers a Service Worker** - Enables authenticated API requests by automatically injecting auth tokens
-4. **Configures Development Environment** - Works with `plugin-api-service` to intercept and proxy authenticated requests during development
+| Responsibility | Description |
+| --- | --- |
+| **Bootstrap the Fusion Framework** | Initializes MSAL authentication, service discovery, and telemetry modules |
+| **Render a configured portal** | Fetches a portal manifest by ID and loads its entry point |
+| **Register a service worker** | Intercepts fetch requests, rewrites URLs, and attaches OAuth Bearer tokens |
+| **Configure the dev environment** | Works with `@equinor/fusion-framework-vite-plugin-api-service` to proxy authenticated requests during development |
 
 > [!TIP]
-> The plugin will render the configured portal which can be sourced from:
-> - A local npm package (like `@equinor/fusion-framework-dev-portal`, the default used by CLI)
-> - The Fusion Portal Service (using a portal identifier)
-> - Any custom portal implementation configured in your environment
+> The portal to render can be sourced from:
+> - A **local npm package** (e.g. `@equinor/fusion-framework-dev-portal`, the default used by CLI)
+> - The **Fusion Portal Service** (using a portal identifier)
+> - Any **custom portal** implementation that exports a `render` function
 
 ## How the Plugin Works
 
@@ -86,21 +91,61 @@ flowchart
 ## Getting Started
 
 > [!WARNING]
-> This plugin is primarily designed to be used with the [Fusion Framework CLI](https://github.com/equinor/fusion-framework-cli). The CLI scaffolds all required configuration and wiring for you.
+> This plugin is primarily designed to be used with the [Fusion Framework CLI](https://github.com/equinor/fusion-framework-cli). The CLI scaffolds all required configuration and wiring automatically.
 
-**Standalone usage is advanced:** If you use this plugin outside the CLI, you must provide detailed configuration for authentication, service discovery, portal loading, and more. There is no "one-line" quick start for custom setups. See the [Basic Configuration](#basic-configuration) and [Configuration Options](#configuration-options) sections below.
+Standalone usage requires you to supply authentication, service discovery, portal loading, and service worker configuration yourself. See [Configuration Options](#configuration-options) below.
 
-> [!NOTE]
-> This plugin should cover most use cases for building SPAs with the Fusion Framework, but advanced configurations may require additional setup. 
-> If for some reason you are adventurous enough to write your custom implementation of developer utilities, this guide should help you get started.
+### Installation
+
+```sh
+pnpm add -D @equinor/fusion-framework-vite-plugin-spa
+```
+
+### Minimal Vite Config
+
+```ts
+// vite.config.ts
+import { defineConfig } from 'vite';
+import { fusionSpaPlugin } from '@equinor/fusion-framework-vite-plugin-spa';
+
+export default defineConfig({
+  plugins: [
+    fusionSpaPlugin({
+      generateTemplateEnv: () => ({
+        title: 'My App',
+        portal: { id: 'my-portal' },
+        serviceDiscovery: {
+          url: 'https://my-server.com/service-discovery',
+          scopes: ['api://my-app/scope'],
+        },
+        msal: {
+          tenantId: 'my-tenant-id',
+          clientId: 'my-client-id',
+          redirectUri: 'http://localhost:3000/auth-callback',
+          requiresAuth: 'true',
+        },
+      }),
+    }),
+  ],
+});
+```
 
 ## Configuration Options
 
-The plugin accepts a variety of configuration options to tailor the SPA to your project's needs. These options control authentication flows, service discovery, and routing behaviors.
+The `fusionSpaPlugin` (also exported as `plugin`) accepts a `PluginOptions` object with the following properties:
 
-### Basic Configuration
+| Option | Type | Default | Description |
+| --- | --- | --- | --- |
+| `template` | `string` | Built-in HTML | Custom HTML template string with `%VAR%` placeholders |
+| `templateEnvPrefix` | `string` | `'FUSION_SPA_'` | Prefix for environment variable names |
+| `generateTemplateEnv` | `(env: ConfigEnv) => Partial<TemplateEnv>` | — | Factory producing environment values |
+| `logger` | `Pick<Console, 'debug'\|'info'\|'warn'\|'error'>` | — | Optional logger for plugin diagnostics |
 
-Here's a comprehensive example showing all major configuration options:
+### Template Environment (`generateTemplateEnv`)
+
+The `generateTemplateEnv` callback returns an object whose shape matches `FusionTemplateEnv`. All properties are flattened to `FUSION_SPA_*` environment variables at build time.
+
+Here's a comprehensive example:
 
 ```ts
 fusionSpaPlugin({
@@ -180,32 +225,28 @@ See [@equinor/fusion-framework-vite-plugin-api-service](https://github.com/equin
 
 ### Service Discovery
 
-The Service Discovery component provides a dynamic way to discover and connect to backend services. It's a crucial part of the Fusion Framework architecture that helps applications locate and communicate with various microservices.
+Configures the endpoint the Fusion Framework uses to discover backend service URLs at runtime.
 
-**Configuration Options:**
+- `url` — Endpoint URL of the service discovery configuration
+- `scopes` — OAuth scopes required to authenticate requests to the service discovery endpoint
 
-- `url`: The endpoint URL where the service discovery configuration can be fetched from
-- `scopes`: Array of OAuth scopes required to authenticate service discovery requests
+### MSAL Authentication
 
-**Benefits:**
-- Eliminates hardcoded service endpoints in your application
-- Enables dynamic service routing based on environment
-- Centralizes service endpoint management
+Configures Azure AD authentication via the Microsoft Authentication Library (MSAL).
 
-### MSAL
+- `tenantId` — Azure AD tenant identifier
+- `clientId` — Application (client) ID registered in Azure AD
+- `redirectUri` — URL to redirect to after authentication
+- `requiresAuth` _(optional, string)_ — When `'true'`, automatically prompts for login on first load
 
-The Microsoft Authentication Library (MSAL) configuration handles user authentication with Azure Active Directory. This enables single sign-on capabilities and secure access to protected resources.
-
-**Configuration Options:**
-
-- `tenantId`: The Azure AD tenant ID associated with your organization
-- `clientId`: The client/application ID registered in Azure AD
-- `redirectUri`: The URL where users are redirected after authentication
-- `requiresAuth` _(optional)_: When set to "true", the application will automatically prompt for login on initial load
+- `tenantId` — Azure AD tenant identifier
+- `clientId` — Application (client) ID registered in Azure AD
+- `redirectUri` — URL to redirect to after authentication
+- `requiresAuth` _(optional, string)_ — When `'true'`, automatically prompts for login on first load
 
 ### Service Worker
 
-The Service Worker component provides powerful capabilities for handling network requests, adding authentication, and enabling offline capabilities in your SPA.
+The service worker intercepts outgoing fetch requests, matches them against configured `ResourceConfiguration` patterns, optionally rewrites the URL, and attaches a Bearer token.
 
 #### How It Works
 
@@ -229,19 +270,21 @@ sequenceDiagram
   end
 ```
 
-The Service Worker intercepts network requests made by your application and can modify them before they're sent. This is particularly useful for:
+The Service Worker intercepts network requests and can:
 
-1. Adding authentication tokens automatically to API calls
-2. Rewriting request URLs for proxying purposes
-3. Enabling offline functionality
-4. Improving performance through caching
+1. Attach OAuth Bearer tokens to matched requests
+2. Rewrite request URLs for proxying
+3. Pass unmatched requests through unmodified
 
-#### Configuration Options
+#### Resource Configuration
 
-- `resources`: An array of resource configurations the service worker will manage
-  - `url`: Path pattern to match incoming requests against
-  - `rewrite` _(optional)_: Path to rewrite the matched URL to
-  - `scopes` _(optional)_: OAuth scopes to use for authenticating this resource
+Each entry in the `resources` array is a `ResourceConfiguration` object:
+
+| Property | Type | Description |
+| --- | --- | --- |
+| `url` | `string` | Path prefix to match against fetch requests |
+| `rewrite` | `string?` | Replacement path prefix for matched requests |
+| `scopes` | `string[]?` | OAuth scopes to acquire a Bearer token for matched requests |
 
 #### Complete Example
 
@@ -285,60 +328,37 @@ When the above `fetch` request is made, the following happens:
 
 ## Telemetry
 
-The Fusion Framework SPA plugin includes built-in telemetry configuration that automatically sets up console logging for development and debugging purposes. The plugin uses the `@equinor/fusion-framework-module-telemetry` module to provide structured logging with different severity levels.
+The plugin configures console telemetry via `@equinor/fusion-framework-module-telemetry`. Severity levels map to integers:
 
-### Telemetry Levels
+| Level | Value | Description |
+| --- | --- | --- |
+| Debug | 0 | Detailed debugging information |
+| Information | 1 | General operational information |
+| Warning | 2 | Potential issues that are not critical |
+| Error | 3 | Errors that do not prevent continued operation |
+| Critical | 4 | Severe errors that may halt functionality |
 
-The telemetry system supports the following severity levels (ordered from lowest to highest):
+### Controlling Console Output
 
-- **Debug** (0): Debugging information useful during development
-- **Information** (1): General information about the system's operation
-- **Warning** (2): Indicates a potential issue that is not critical
-- **Error** (3): Represents an error that has occurred, but the system can continue running
-- **Critical** (4): A severe error that may cause the system to stop functioning
+Set `FUSION_SPA_TELEMETRY_CONSOLE_LEVEL` to the minimum level to display. Default is `1` (Information).
 
-### Console Logging
-
-By default, the plugin enables console logging for all telemetry events. You can control the minimum log level displayed in the console using the `FUSION_SPA_TELEMETRY_CONSOLE_LEVEL` environment variable.
-
-```typescript
-// Environment variable configuration
-FUSION_SPA_TELEMETRY_CONSOLE_LEVEL=2  // Only show Warning, Error, and Critical events
+```sh
+FUSION_SPA_TELEMETRY_CONSOLE_LEVEL=2  # Warning and above
 ```
 
-When set to a valid number, only telemetry items with a level **greater than or equal to** the specified value will be logged to the console. For example:
-- `FUSION_SPA_TELEMETRY_CONSOLE_LEVEL=0` → Shows all telemetry events (Debug, Information, Warning, Error, Critical)
-- `FUSION_SPA_TELEMETRY_CONSOLE_LEVEL=1` → Shows Information, Warning, Error, and Critical events
-- `FUSION_SPA_TELEMETRY_CONSOLE_LEVEL=2` → Shows Warning, Error, and Critical events
+For advanced telemetry (e.g. Application Insights), provide a [custom bootstrap file](#providing-custom-bootstrap).
 
-If the environment variable is not set, the default is `FUSION_SPA_TELEMETRY_CONSOLE_LEVEL=1` (Information level and above). If the environment variable contains an invalid value, all telemetry events will be logged to the console.
+## Configuring through `.env` Files
 
-### Custom Telemetry Configuration
-
-For advanced telemetry setup (such as Application Insights integration), you can customize the telemetry configuration by providing a custom bootstrap file. See the [Providing Custom Bootstrap](#providing-custom-bootstrap) section for details.
-
-## Configuring through `.env` File
-
-For greater flexibility—especially in CI/CD pipelines and deployment scenarios—the plugin supports configuration through environment variables in a `.env` file.
-
-### How Environment Variables Work
-
-The plugin reads the `.env` file and overrides any properties defined in the `generateTemplateEnv` function with the corresponding environment variables. This approach allows you to:
-
-- Maintain different configurations for development, testing, and production
-- Keep sensitive information out of your source code
-- Override configuration values during deployment pipelines
+The plugin reads environment variables from `.env` files (via Vite's `loadEnv`) and **merges them on top of** values from `generateTemplateEnv`. This lets you keep secrets and per-environment values out of source code.
 
 ### Naming Convention
 
-Environment variables follow a specific naming pattern:
-1. All variables are prefixed with `FUSION_SPA_`
-2. Object paths are converted to snake case with underscores
-3. Arrays and objects are serialized as JSON strings
+1. Prefix all variables with `FUSION_SPA_` (or your custom `templateEnvPrefix`).
+2. Convert nested object paths to `UPPER_SNAKE_CASE` (e.g. `serviceDiscovery.url` → `FUSION_SPA_SERVICE_DISCOVERY_URL`).
+3. Serialize arrays and objects as JSON strings.
 
-### Example Conversion
-
-Here's how JavaScript configuration objects map to environment variables:
+### Mapping Example
 
 ```ts
 // JavaScript configuration
@@ -358,45 +378,45 @@ import.meta.env.FUSION_SPA_SERVICE_WORKER_RESOURCES
 ### Complete `.env` Example
 
 ```sh
-# Application basics
+# Page title
 FUSION_SPA_TITLE=My App
-FUSION_SPA_PORTAL_ID=my-portal  # Can be a package name, Fusion Portal Service ID, or any configured portal ID
-FUSION_SPA_PORTAL_TAG=latest    # (Optional) Version tag (defaults to 'latest')
-FUSION_SPA_PORTAL_PROXY=false   # (Optional) Whether to proxy portal requests through /portal-proxy (defaults to false)
 
-# Service Discovery configuration
+# Portal manifest
+FUSION_SPA_PORTAL_ID=my-portal
+FUSION_SPA_PORTAL_TAG=latest
+FUSION_SPA_PORTAL_PROXY=false
+
+# Service Discovery
 FUSION_SPA_SERVICE_DISCOVERY_URL=https://my-server.com/service-discovery
 FUSION_SPA_SERVICE_DISCOVERY_SCOPES=[api://my-app/scope]
 
-# MSAL Authentication configuration
+# MSAL
 FUSION_SPA_MSAL_TENANT_ID=my-tenant-id
 FUSION_SPA_MSAL_CLIENT_ID=my-client-id
 FUSION_SPA_MSAL_REDIRECT_URI=https://my-app.com/auth-callback
 FUSION_SPA_MSAL_REQUIRES_AUTH=true
 
-# Telemetry configuration
-FUSION_SPA_TELEMETRY_CONSOLE_LEVEL=2  # Only log Warning, Error, and Critical events to console
+# Telemetry
+FUSION_SPA_TELEMETRY_CONSOLE_LEVEL=2
 
-# Service Worker configuration (as JSON string)
+# Service Worker (JSON string)
 FUSION_SPA_SERVICE_WORKER_RESOURCES=[{"url":"/app-proxy","rewrite":"/@fusion-api/app","scopes":["xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/.default"]}]
 ```
 
 > [!TIP]
-> While environment variables are convenient for deployment scenarios, it's generally recommended to use the `generateTemplateEnv` function during development for better type checking and easier debugging.
+> Use `generateTemplateEnv` during development for type safety and easier debugging. Use `.env` files for CI/CD and deployment overrides.
 
 > [!IMPORTANT]
-> The `.env` file must be placed in the root of your project. Values defined in the `.env` file will override any corresponding values from the `generateTemplateEnv` function.
+> The `.env` file must be in the project root (or the directory specified by Vite's `envDir`). Values from `.env` files override matching values from `generateTemplateEnv`.
 
 ## Advanced Customization
 
-For advanced scenarios, the plugin provides options to customize both the HTML template and the application bootstrapping process. These customizations should be approached carefully as they may require deeper understanding of the framework.
-
 ### Providing a Custom Template
 
-You can provide a completely custom HTML template for your application. This gives you full control over the document structure while still leveraging the plugin's environment variable injection.
+Override the built-in HTML template by passing a `template` string to the plugin. Placeholders use the `%VAR%` syntax from [Vite's HTML constant replacement](https://vite.dev/guide/env-and-mode.html#html-constant-replacement).
 
 > [!WARNING]
-> Custom templates move you closer to the edge of the framework's capabilities. Proceed with caution as you'll be responsible for ensuring proper structure and bootstrapping.
+> Custom templates bypass the default structure. You are responsible for loading the bootstrap script and ensuring proper document structure.
 
 #### Example Custom Template
 
@@ -479,9 +499,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 ## Examples
 
-Here are some common implementation examples to help you get started quickly:
-
-### Basic SPA Configuration
+### Basic SPA with React
 
 ```ts
 // vite.config.ts
@@ -557,24 +575,15 @@ export default defineConfig({
 ```
 See [API Service Plugin docs](https://github.com/equinor/fusion-framework/tree/main/packages/vite-plugins/api-service) for more details.
 
-## Troubleshooting & FAQ
+## Troubleshooting
 
 ### Common Issues
 
-1. **Authentication Failures**
-  - Ensure your `tenantId` and `clientId` values are correct
-  - Check that your application is properly registered in Azure AD
-  - Verify that the required scopes are configured correctly
-
-2. **Service Worker Not Working**
-  - Ensure the service worker is properly registered in your bootstrap process
-  - Check browser console for any registration errors
-  - Verify that the URL patterns in the resources configuration match your fetch calls
-
-3. **Environment Variables Not Applied**
-  - Confirm your `.env` file is in the project root
-  - Verify the naming convention follows `FUSION_SPA_*` with proper snake_casing
-  - Restart your development server after changing environment variables
+| Symptom | Likely Cause | Fix |
+| --- | --- | --- |
+| Authentication failures | Wrong `tenantId` or `clientId` | Verify Azure AD app registration and scope configuration |
+| Service worker not intercepting | Worker not registered or not controlling | Check browser console for registration errors; ensure `registerServiceWorker` is called |
+| `.env` values ignored | Wrong prefix or missing restart | Confirm `FUSION_SPA_*` naming; restart the dev server |
 
 ### Known Issues
 
@@ -582,13 +591,11 @@ See [API Service Plugin docs](https://github.com/equinor/fusion-framework/tree/m
 | ----- | ------ | ----------- |
 | [#3266](https://github.com/equinor/fusion-framework/issues/3266) | **Missing bearer token on proxy assets** | When loading remote applications that use assets or code-splitting, the service worker may fail to attach the required Bearer token to requests for these resources. This occurs because the service worker rewrites `import.url`, which can interfere with proper token injection for asset requests. As a result, protected assets may not load correctly in some scenarios.|
 
-### Best Practices & FAQ
+### Best Practices
 
-- **Keep secrets out of source code** — use environment variables for sensitive values.
-- **Leverage the [API Service Plugin](https://github.com/equinor/fusion-framework/tree/main/packages/vite-plugins/api-service)** for advanced API proxying and local development.
-- **When customizing templates or bootloaders,** always test service worker registration and authentication flows.
-- **For local development:**
-  - Use [Vite's environment variable system](https://vitejs.dev/guide/env-and-mode.html)
+- Keep secrets out of source code — use `.env` files or CI/CD variables.
+- Use the [API Service Plugin](https://github.com/equinor/fusion-framework/tree/main/packages/vite-plugins/api-service) for advanced proxy routing during development.
+- When using custom templates or bootstrap files, always verify service worker registration and authentication flows.
 
 ## Contributing
 

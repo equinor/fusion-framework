@@ -1,44 +1,86 @@
 import type { LogLevel } from './static.js';
 
 /**
- * Defines the interface for a logger that can be used to log messages at different severity levels.
+ * Contract for a structured logger that emits messages at different severity levels.
+ *
+ * Implement `ILogger` when you need a custom log destination (remote service,
+ * in-memory buffer, test spy, etc.) while keeping the same call-site API that
+ * the rest of Fusion Framework expects. The built-in {@link ConsoleLogger}
+ * already satisfies this interface for browser / Node console output.
+ *
+ * @example
+ * ```typescript
+ * import { type ILogger, LogLevel } from '@equinor/fusion-log';
+ *
+ * class NoopLogger implements ILogger {
+ *   level = LogLevel.None;
+ *   debug() {}
+ *   info() {}
+ *   warn() {}
+ *   error() {}
+ *   createSubLogger(): ILogger { return this; }
+ * }
+ * ```
  */
 export interface ILogger {
   /**
-   * Logging level indicating the severity of messages to log.
+   * Active log level threshold.
+   *
+   * Messages with a severity **at or below** this level are emitted;
+   * messages above it are silently discarded.
+   *
    * @see {@link LogLevel}
    */
   level: LogLevel;
 
   /**
-   * Logs a debug message. Debug messages are detailed information, considered useful only during development and debugging.
-   * @param msg The messages or objects to log.
-   */
-  debug(...msg: unknown[]): void; // Log debug messages
-
-  /**
-   * Logs an informational message. Info messages convey general information about the application's execution.
-   * @param msg The messages or objects to log.
-   */
-  info(...msg: unknown[]): void; // Log informational messages
-
-  /**
-   * Logs a warning message. Warning messages indicate potential issues or important, but not critical, information.
-   * @param msg The messages or objects to log.
-   */
-  warn(...msg: unknown[]): void; // Log warning messages
-
-  /**
-   * Logs an error message. Error messages indicate a failure from which the application may not be able to recover.
-   * @param msg The messages or objects to log.
-   */
-  error(...msg: unknown[]): void; // Log error messages
-
-  /**
-   * Creates a new sub-logger with a specific title.
+   * Emit a **debug**-level message.
    *
-   * @param args - Additional arguments to pass to the sub-logger creation.
-   * @returns A new `ILogger` instance representing the sub-logger.
+   * Use for verbose, development-only diagnostics such as variable dumps
+   * or control-flow traces that should never appear in production.
+   *
+   * @param msg - One or more values to log (strings, objects, errors, etc.).
    */
-  createSubLogger(...args: unknown[]): ILogger; // Create a sub-logger with a specific title
+  debug(...msg: unknown[]): void;
+
+  /**
+   * Emit an **info**-level message.
+   *
+   * Use for routine operational confirmations, such as successful
+   * initialization or completed requests.
+   *
+   * @param msg - One or more values to log.
+   */
+  info(...msg: unknown[]): void;
+
+  /**
+   * Emit a **warning**-level message.
+   *
+   * Use when something unexpected occurred that does not prevent the
+   * current operation but may indicate an issue to investigate.
+   *
+   * @param msg - One or more values to log.
+   */
+  warn(...msg: unknown[]): void;
+
+  /**
+   * Emit an **error**-level message.
+   *
+   * Use when an operation failed and the caller should be aware.
+   * Prefer throwing an exception for unrecoverable failures.
+   *
+   * @param msg - One or more values to log.
+   */
+  error(...msg: unknown[]): void;
+
+  /**
+   * Create a child logger scoped to a narrower context.
+   *
+   * Sub-loggers typically prefix their output with the parent's title,
+   * making it easy to trace log lines back to a specific component.
+   *
+   * @param args - Implementation-specific arguments (e.g., title, subtitle, log level).
+   * @returns A new {@link ILogger} instance representing the sub-logger.
+   */
+  createSubLogger(...args: unknown[]): ILogger;
 }

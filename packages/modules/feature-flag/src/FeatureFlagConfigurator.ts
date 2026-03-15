@@ -15,6 +15,12 @@ import { createLocalStoragePlugin, createUrlPlugin } from './plugins/index.js';
 // TODO allow configurator to have array
 // TODO fix .dot type
 
+/**
+ * Public interface for configuring the feature-flag module.
+ *
+ * Consumers use the builder methods to register plugins that supply and
+ * persist feature flags.
+ */
 export interface IFeatureFlagConfigurator extends BaseConfigBuilder<FeatureFlagConfig> {
   /**
    * Adds a plugin to the feature flag configurator.
@@ -26,6 +32,12 @@ export interface IFeatureFlagConfigurator extends BaseConfigBuilder<FeatureFlagC
   addPlugin(handler: FeatureFlagPluginConfigCallback): void;
 }
 
+/**
+ * Default implementation of {@link IFeatureFlagConfigurator}.
+ *
+ * Collects plugin registrations during the configuration phase and resolves
+ * them into a {@link FeatureFlagConfig} when the module initialises.
+ */
 export class FeatureFlagConfigurator
   extends BaseConfigBuilder<FeatureFlagConfig>
   implements IFeatureFlagConfigurator
@@ -36,18 +48,34 @@ export class FeatureFlagConfigurator
   #plugins: FeatureFlagPluginConfigCallback[] = [];
   #flags: IFeatureFlag[] = [];
 
+  /**
+   * Registers a plugin configuration callback.
+   *
+   * @param handler - Factory that receives module init arguments and returns a plugin.
+   * @returns This configurator instance for chaining.
+   */
   public addPlugin(handler: FeatureFlagPluginConfigCallback) {
     this.#plugins.push(handler);
     return this;
   }
 
   /**
-   * this method will be deprecated when api
+   * Convenience method that registers the local-storage plugin.
+   *
+   * @param args - Arguments forwarded to {@link createLocalStoragePlugin}.
+   * @returns This configurator instance for chaining.
+   * @deprecated Will be removed when a dedicated API replaces local storage.
    */
   public enableLocalFeatures(...args: Parameters<typeof createLocalStoragePlugin>) {
     return this.addPlugin(createLocalStoragePlugin(...args));
   }
 
+  /**
+   * Convenience method that registers the URL-toggle plugin.
+   *
+   * @param args - Arguments forwarded to {@link createUrlPlugin}.
+   * @returns This configurator instance for chaining.
+   */
   public enableUrlToggle(...args: Parameters<typeof createUrlPlugin>) {
     return this.addPlugin(createUrlPlugin(...args));
   }

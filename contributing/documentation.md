@@ -110,6 +110,7 @@ packages/
 - Package overview and purpose
 - Installation instructions
 - Basic usage examples
+- Explain all user-facing entry points, expected usage, and important defaults
 - API reference or links to detailed docs
 - Migration guides for breaking changes
 
@@ -119,6 +120,8 @@ packages/
 - API references
 - Troubleshooting
 - Migration documentation
+
+Use `docs/` whenever advanced workflows, troubleshooting, architecture notes, or migration guidance would make the README noisy or hard to scan.
 
 **Critical:** VuePress structure in `vue-press/src/` must exactly mirror `packages/` structure for imports to work.
 
@@ -172,6 +175,7 @@ pnpm build:docs && echo "✅ Docs build successful"
 - **Accuracy**: Technical information must be correct and current
 - **Completeness**: Cover all public APIs and important use cases
 - **Clarity**: Use simple language, avoid jargon unless explained
+- **Intent**: Explain why an API or workflow exists, not just how to call it
 - **Examples**: Include practical code examples for key features
 - **Structure**: Use consistent headings, lists, and formatting
 
@@ -225,10 +229,12 @@ See [migration guide](docs/migration-v1-to-v2.md) for breaking changes.
 - [ ] Documentation accurately reflects implementation
 - [ ] Code examples are correct and runnable
 - [ ] All public APIs are documented
+- [ ] README explains user-facing behavior and intended usage
 - [ ] Breaking changes include migration guides
 
 #### Technical Requirements
 - [ ] README.md exists for new packages
+- [ ] Complex or advanced material is extracted into `packages/*/docs/`
 - [ ] Files follow directory structure (`packages/*/docs/`)
 - [ ] VuePress structure mirrors packages exactly
 - [ ] `<!-- @include: -->` paths are correct

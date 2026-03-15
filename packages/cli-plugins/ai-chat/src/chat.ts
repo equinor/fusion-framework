@@ -17,69 +17,59 @@ import {
 import { StringOutputParser } from '@langchain/core/output_parsers';
 
 /**
- * CLI command: `ai chat`
+ * CLI command definition for `ffc ai chat`.
  *
- * Interactive chat with Large Language Models using inquirer for a smooth CLI experience.
- * Enhanced with vector store context retrieval for more accurate and relevant responses.
+ * Provides an interactive, readline-based chat session with an Azure OpenAI
+ * model. Each user message triggers a Retrieval-Augmented Generation (RAG)
+ * pipeline that:
  *
- * Features:
- * - Interactive conversation mode with inquirer prompts
- * - Real-time streaming responses from AI models
- * - Intelligent message history compression using AI summarization
- * - Automatic vector store context retrieval for enhanced responses
- * - Special commands: exit, quit, clear, help
- * - Support for Azure OpenAI models and Azure Cognitive Search
- * - Live typing effect for AI responses
- * - Configurable context retrieval limits
+ * 1. Retrieves relevant documents from an Azure Cognitive Search vector store.
+ * 2. Injects the retrieved context into a system prompt via {@link createSystemMessage}.
+ * 3. Streams the model's response token-by-token to stdout using a
+ *    {@link RunnableSequence} LangChain chain.
  *
- * Usage:
- *   $ ffc ai chat [options]
+ * The command also manages conversation history with automatic AI-based
+ * compression: when the history reaches 10 messages the oldest 5 are
+ * summarised into a single assistant message, keeping token usage bounded
+ * while preserving conversational context.
  *
- * Options:
- *   --openai-api-key <key>              API key for Azure OpenAI
- *   --openai-api-version <version>       API version (default: 2024-02-15-preview)
- *   --openai-instance <name>             Azure OpenAI instance name
- *   --openai-chat-deployment <name>      Azure OpenAI chat deployment name
- *   --openai-embedding-deployment <name> Azure OpenAI embedding deployment name
- *   --azure-search-endpoint <url>        Azure Search endpoint URL
- *   --azure-search-api-key <key>        Azure Search API key
- *   --azure-search-index-name <name>     Azure Search index name
- *   --use-context                        Use vector store context (default: true)
- *   --context-limit <number>             Max context documents to retrieve (default: 5)
- *   --history-limit <number>             Max messages to keep in conversation history (default: 20, auto-compresses at 10)
- *   --verbose                            Enable verbose output
+ * @remarks
+ * Requires `--openai-chat-deployment` and `--azure-search-index-name` at
+ * minimum. All options can alternatively be supplied as environment variables
+ * (see {@link CommandOptions}).
  *
- * Environment Variables:
- *   AZURE_OPENAI_API_KEY                    API key for Azure OpenAI
- *   AZURE_OPENAI_API_VERSION                API version
- *   AZURE_OPENAI_INSTANCE_NAME              Instance name
- *   AZURE_OPENAI_CHAT_DEPLOYMENT_NAME        Chat deployment name
- *   AZURE_OPENAI_EMBEDDING_DEPLOYMENT_NAME   Embedding deployment name
- *   AZURE_SEARCH_ENDPOINT                    Azure Search endpoint
- *   AZURE_SEARCH_API_KEY                     Azure Search API key
- *   AZURE_SEARCH_INDEX_NAME                  Azure Search index name
+ * @example
+ * ```sh
+ * # Basic interactive chat
+ * ffc ai chat
  *
- * Interactive Commands:
- *   exit/quit  - End the conversation
- *   clear      - Clear conversation history
- *   help       - Show available commands
- *   Ctrl+C     - Exit immediately
+ * # With explicit deployment and search config
+ * ffc ai chat \
+ *   --openai-chat-deployment gpt-4o \
+ *   --azure-search-endpoint https://my.search.windows.net \
+ *   --azure-search-index-name fusion-docs
  *
- * Examples:
- *   $ ffc ai chat
- *   $ ffc ai chat --context-limit 10
- *   $ ffc ai chat --history-limit 100
- *   $ ffc ai chat --verbose --azure-search-endpoint https://my-search.search.windows.net
+ * # Increase context window and enable verbose logging
+ * ffc ai chat --context-limit 10 --verbose
+ * ```
  */
+
 /**
- * Command options for the chat command
+ * Merged option set for the `ai chat` command.
+ *
+ * Extends the shared {@link AiOptions} from
+ * `@equinor/fusion-framework-cli-plugin-ai-base` with chat-specific flags
+ * for verbose logging, context retrieval depth, and conversation history size.
+ *
+ * Every option can be supplied via the corresponding `AZURE_*` / `OPENAI_*`
+ * environment variable instead of a CLI flag.
  */
 type CommandOptions = AiOptions & {
-  /** Enable verbose output for debugging */
+  /** Enable verbose output for debugging. */
   verbose?: boolean;
-  /** Maximum number of context documents to retrieve from vector store */
+  /** Maximum number of context documents to retrieve from the vector store (default `5`). */
   contextLimit?: number;
-  /** Maximum number of messages to keep in conversation history */
+  /** Maximum number of messages to keep in conversation history before compression (default `20`). */
   historyLimit?: number;
 };
 
@@ -417,8 +407,18 @@ Summary:`;
   });
 
 /**
- * CLI command for interactive chat with AI models.
- * Enhanced with AI options including chat, embedding, and search capabilities.
+ * Fully configured Commander command for `ffc ai chat`.
+ *
+ * Wraps the base `_command` with shared AI options (chat, embedding, and
+ * search) from `@equinor/fusion-framework-cli-plugin-ai-base` via
+ * {@link withAiOptions}. This is the value imported by
+ * {@link registerChatPlugin} when mounting the command onto the CLI tree.
+ *
+ * @example
+ * ```ts
+ * import { command } from '@equinor/fusion-framework-cli-plugin-ai-chat/chat';
+ * program.addCommand(command);
+ * ```
  */
 export const command = withAiOptions(_command, {
   includeChat: true,

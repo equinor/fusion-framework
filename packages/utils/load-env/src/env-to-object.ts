@@ -1,38 +1,39 @@
 import { DEFAULT_ENV_PREFIX } from './static';
 
 /**
- * Converts an environment variables object into a nested object structure based on a specified prefix and camelcase rules.
+ * Parse a flat record of environment variables into a nested configuration object.
  *
- * @template T - The expected shape of the resulting object.
- * @param env - A record of environment variables where keys are strings and values are strings.
- * @param options - Optional configuration for the transformation.
- * @param options.prefix - A string prefix to filter and process environment variable keys. Defaults to `DEFAULT_ENV_PREFIX`.
- * @param options.camelcase - An array of keys that should remain flat and be converted to camelCase.
- * @returns A nested object of type `T` derived from the environment variables.
+ * Use this function to rehydrate structured configuration from `process.env` or
+ * the output of {@link loadEnv}. Only keys that start with the given prefix are
+ * included; the prefix is stripped before nesting. Each remaining `_`-delimited
+ * segment becomes a level in the result object, and leaf values are JSON-parsed
+ * so booleans and numbers arrive as their native types.
  *
- * @throws {Error} If a key defined as flat in `camelcase` is encountered in a nested structure.
- * @throws {Error} If an unexpected undefined value is encountered in the key processing.
+ * Keys listed in `camelcase` are kept flat and converted to camelCase rather than
+ * being split into nested levels (e.g. `ANOTHER_KEY` → `anotherKey` instead of
+ * `{ another: { key: … } }`).
+ *
+ * @template T - Expected shape of the resulting configuration object.
+ * @param env - Flat record of environment variables (e.g. `process.env`).
+ * @param options - Optional transformation settings.
+ * @param options.prefix - Prefix used to filter relevant keys. Defaults to {@link DEFAULT_ENV_PREFIX} (`"FUSION"`).
+ * @param options.camelcase - Array of suffix strings that should remain flat and be converted to camelCase.
+ * @returns A nested object of type `T` derived from the matched environment variables.
+ *
+ * @throws {Error} If a key listed in `camelcase` also appears as a nested segment — indicates an ambiguous schema.
+ * @throws {Error} If an internal key-processing step produces an unexpected `undefined` segment.
  *
  * @example
- * ```typescript
+ * ```ts
+ * import { envToObject } from '@equinor/fusion-load-env';
+ *
  * const env = {
- *   APP_PREFIX_FOO_BAR: "true",
- *   APP_PREFIX_BAZ: "42",
- *   APP_PREFIX_CAMEL_CASE: "value"
+ *   FUSION_API_URL: '"https://api.example.com"',
+ *   FUSION_FEATURE_ENABLED: 'true',
  * };
  *
- * const result = envToObject(env, {
- *   prefix: "APP_PREFIX_",
- *   camelcase: ["camelCase"]
- * });
- *
- * console.log(result);
- * // Output:
- * // {
- * //   foo: { bar: true },
- * //   baz: 42,
- * //   camelCase: "value"
- * // }
+ * const config = envToObject<{ api: { url: string }; feature: { enabled: boolean } }>(env);
+ * // { api: { url: 'https://api.example.com' }, feature: { enabled: true } }
  * ```
  */
 export function envToObject<T extends Record<string, unknown>>(
@@ -90,10 +91,10 @@ export function envToObject<T extends Record<string, unknown>>(
 }
 
 /**
- * Converts a snake_case or uppercase string to camelCase.
+ * Convert a UPPER_SNAKE_CASE or snake_case string to camelCase.
  *
- * @param str - The string to convert.
- * @returns The camelCase version of the string.
+ * @param str - The snake_case string to transform.
+ * @returns The camelCase representation of `str`.
  */
 function toCamelCase(str: string): string {
   return str.toLowerCase().replace(/_([a-z])/g, (_, char) => char.toUpperCase());

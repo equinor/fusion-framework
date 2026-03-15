@@ -3,9 +3,15 @@ import type { ChangedFile, FileChangeStatus, GitDiffOptions } from './types.js';
 import { resolveProjectRoot, getGit } from './git-client.js';
 
 /**
- * Get list of changed files using git diff with status
- * @param options - Git diff configuration options
- * @returns Array of changed files with their status
+ * Returns a list of files changed between `baseRef` and HEAD.
+ *
+ * Parses the output of `git diff --name-status` to classify each file as
+ * `'new'`, `'modified'`, or `'removed'`. Renames are expanded into a
+ * `'removed'` entry for the old path and a `'new'` entry for the new path.
+ *
+ * @param options - Configuration controlling the diff reference and working directory.
+ * @returns Array of changed files with their status.
+ * @throws {Error} If the working directory is not inside a git repository.
  */
 export const getChangedFiles = async (options: GitDiffOptions): Promise<ChangedFile[]> => {
   const { diff, baseRef = 'HEAD~1', cwd = process.cwd() } = options;
@@ -78,10 +84,15 @@ export const getChangedFiles = async (options: GitDiffOptions): Promise<ChangedF
 };
 
 /**
- * Determine the git status of a file, including handling renames
- * Returns an array of ChangedFile objects - if the file was renamed, returns both old and new paths
- * @param filePath - Absolute file path to check
- * @returns Promise resolving to array of changed files (1 or 2 items if renamed)
+ * Determines the git change status of a single file.
+ *
+ * Checks tracked status, porcelain output, and rename/copy detection to
+ * produce one or two {@link ChangedFile} entries (two when a rename is
+ * detected — one `'removed'` for the old path and one `'new'` for the
+ * current path).
+ *
+ * @param filePath - Absolute path to the file to inspect.
+ * @returns Array with one or two changed-file entries.
  */
 export const getFileStatus = async (filePath: string): Promise<ChangedFile[]> => {
   const { git, gitRepoPath } = getGit(filePath) ?? {};
@@ -199,10 +210,14 @@ export const getFileStatus = async (filePath: string): Promise<ChangedFile[]> =>
 };
 
 /**
- * Check if a file path matches any of the changed files
- * @param filePath - File path to check
- * @param changedFiles - Array of changed file objects
- * @returns True if file has changed
+ * Checks whether a file path appears in a list of changed files.
+ *
+ * When the changed-files list is empty (no diff filtering active), every
+ * file is considered changed so that all files are processed.
+ *
+ * @param filePath - Absolute file path to look up.
+ * @param changedFiles - Array of {@link ChangedFile} entries to search.
+ * @returns `true` if the file has changed or if diff filtering is disabled.
  */
 export const isFileChanged = (filePath: string, changedFiles: ChangedFile[]): boolean => {
   if (changedFiles.length === 0) {

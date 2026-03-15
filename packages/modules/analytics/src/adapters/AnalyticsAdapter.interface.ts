@@ -1,9 +1,22 @@
 import type { AnalyticsEvent } from '../types.js';
 
 /**
- * Interface representing an analytics adapter responsible for handling analytics events.
+ * Contract for an analytics adapter that receives events and exports them to a backend.
  *
- * @template T - The type of analytics event handled by the adapter. Defaults to `AnalyticsEvent`.
+ * @remarks
+ * Implement this interface to create a custom adapter. Register it via
+ * {@link IAnalyticsConfigurator.setAdapter}. The adapter must also implement
+ * `Disposable` for resource cleanup.
+ *
+ * @template T - The analytics event type handled by the adapter, defaults to {@link AnalyticsEvent}.
+ *
+ * @example
+ * ```ts
+ * class MyAdapter implements IAnalyticsAdapter {
+ *   registerAnalytic(event) { fetch('/analytics', { method: 'POST', body: JSON.stringify(event) }); }
+ *   [Symbol.dispose]() { /* cleanup *\/ }
+ * }
+ * ```
  */
 export interface IAnalyticsAdapter<T extends AnalyticsEvent = AnalyticsEvent> extends Disposable {
   /**

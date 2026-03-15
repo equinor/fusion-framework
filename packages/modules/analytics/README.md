@@ -1,202 +1,219 @@
-# Analytics Module
+# @equinor/fusion-framework-module-analytics
 
-The Fusion Framework Analytics Module provides an unified way to track analytics.
-It offers a consistent API for logging analytics data while supporting multiple
-adapters and collectors.
+Fusion Framework module for collecting and exporting application analytics using
+OpenTelemetry standards.
 
-When a collector emits a event, it will be sent to all adapters.
+## Overview
 
-## Configuration
+The analytics module provides a pluggable **adapter/collector** architecture:
 
-To configure the analytics module, you need to provide a function that specifies
-the adapters and collectors you want to use. The configuration can be done in
-your portal entry file or wherever you initialize the Fusion Framework.
+- **Collectors** observe application state (context changes, app selection,
+  app loads) and emit structured `AnalyticsEvent` objects.
+- **Adapters** receive those events and forward them to a backend — the browser
+  console for debugging, or an OTLP-compatible endpoint for production.
 
-```typescript
-import { enableAnalytics } from '@equinor/fusion-framework-module-analytics';
+When a collector emits an event it is delivered to **every** registered adapter.
 
-const configure = (configurator: IModulesConfigurator<any, any>) => {
-  enableAnalytics(configurator, (builder) => {
-    // configure the analytics module
+### Entry points
 
-    builder.setAdapter('console', async () => {
-      return new ConsoleAnalyticsAdapter();
-    });
+| Import path | Contents |
+|---|---|
+| `@equinor/fusion-framework-module-analytics` | Module definition, `enableAnalytics`, core types |
+| `@equinor/fusion-framework-module-analytics/adapters` | `ConsoleAnalyticsAdapter`, `FusionAnalyticsAdapter`, `IAnalyticsAdapter` |
+| `@equinor/fusion-framework-module-analytics/collectors` | `ContextSelectedCollector`, `AppSelectedCollector`, `AppLoadedCollector`, `IAnalyticsCollector` |
+| `@equinor/fusion-framework-module-analytics/logExporters` | `OTLPLogExporter`, `FusionOTLPLogExporter` |
 
-    builder.setCollector('context-selected', async (args) => {
-      const contextProvider = await args.requireInstance('context');
-      const appProvider = await args.requireInstance('app');
-      return new ContextSelectedCollector(contextProvider, appProvider);
-    });
-  });
-}
-```
+## Quick Start
 
-## Initialization
-
-The analytics module supports asynchronous initialization of adapters and
-collectors. The provider exposes an `initialize()` method that should be called
-to set up all configured adapters and collectors:
-
-```typescript
-// Get the analytics provider from modules
-const provider = modules.analytics;
-
-// Initialize adapters and collectors (required before use)
-await provider.initialize();
-
-// Check if provider is initialized
-if (provider.initialized) {
-  // Provider is ready for use
-}
-```
-
-> [!NOTE]
-> The analytics module will automatically initialize when used within the
-> Fusion Framework module system. Manual initialization is only required when
-> accessing the provider directly.
-
-## Adapters
-
-Adapters are responsible for processing and sending telemetry data to their
-respective destinations. All adapters support asynchronous initialization and
-will automatically be initialized when the analytics provider initializes.
-
-### Using `setAdapter`
-
-The `AnalyticsConfigurator` provides a method for adding adapters: `setAdapter`
-for pre-instantiated adapters.
-
-#### Simple `setAdapter` Example
+Call `enableAnalytics` inside your application or portal configuration callback
+to register adapters and collectors:
 
 ```typescript
 import { enableAnalytics } from '@equinor/fusion-framework-module-analytics';
 import { ConsoleAnalyticsAdapter } from '@equinor/fusion-framework-module-analytics/adapters';
-
-const configure = (configurator: IModulesConfigurator<any, any>) => {
-  enableAnalytics(configurator, (builder) => {
-    builder.setAdapter('console', async () => {
-      return new ConsoleAnalyticsAdapter();
-    });
-  });
-}
-```
-
-### Console Adapter
-
-The `ConsoleAnalyticsAdapter` provides a simple way to log analytics data to the
-console, useful for development and debugging.
-
-#### Installation
-
-The Console Adapter is included with the analytics module and doesn't require
-additional installation.
-
-#### Configuration
-
-The Console Adapter does not require any configuration.
-
-### Fusion Analytics Adapter
-
-The `FusionAnalyticsAdapter` provides a way to log analytics data to a service
-using the OpenTelemetry Logs pattern.
-
-#### Installation
-
-The Fusion Analytics Adapter is included with the analytics module and doesn't
-require additional installation.
-
-#### Configuration
-
-The Fusion Analytics Adapter support the following configuration options:
-
-- `portalId`: The portal Id to be included in log records.
-
-- `logExporter`: The exporter to use. We bundle `OTLPLogExporter` and `FusionOTLPLogExporter` - see below.
-
-##### Example configuration
-
-```typescript
-// OTLPLogExporter
-import { OTLPLogExporter } from '@equinor/fusion-framework-module-analytics/logExporters';
-
-builder.setAdapter('fusion-log', async () => {
-  const logExporter = new OTLPLogExporter({
-    url: 'URL_TO_POST_TO',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
-
-  return new FusionAnalyticsAdapter({
-    portalId: 'PORTAL_ID',
-    logExporter,
-  });
-});
-
-// FusionOTLPLogExporter with httpClient
-import { FusionOTLPLogExporter } from '@equinor/fusion-framework-module-analytics/logExporters';
-
-builder.setAdapter('fusion', async (args) => {
-  if (args.hasModule('serviceDiscovery')) {
-    const serviceDiscovery = await args.requireInstance<ServiceDiscoveryProvider>(
-      'serviceDiscovery'
-    );
-    const httpClient = await serviceDiscovery.createClient('SERVICE_DISCOVERY_NAME');
-
-    const logExporter = new FusionOTLPLogExporter(httpClient);
-
-    return new FusionAnalyticsAdapter({
-      portalId: 'PORTAL_ID',
-      logExporter,
-    });
-  }
-  console.error('Could not instanziate monitor http client from service-discovery');
-});
-```
-
-### Creating Custom Adapters
-
-You can create custom analytics adapters by implementing the `IAnalyticsAdapter`
-interface and add it in configuration.
-
-## Collectors
-
-Collectors are responsible for sending events that adapters can pick up. All
-collectors support asynchronous initialization and will automatically be
-initialized when the analytics provider initializes.
-
-### Using `setCollector`
-
-The `AnalyticsConfigurator` provides a method for adding collectors:
-`setCollector` for pre-instantiated collectors.
-
-### Simple `setCollector` Example
-
-```typescript
-import { enableAnalytics } from '@equinor/fusion-framework-module-analytics';
 import { ContextSelectedCollector } from '@equinor/fusion-framework-module-analytics/collectors';
 
-const configure = (configurator: IModulesConfigurator<any, any>) => {
+const configure = (configurator) => {
   enableAnalytics(configurator, (builder) => {
+    // Register an adapter — receives every event
+    builder.setAdapter('console', async () => new ConsoleAnalyticsAdapter());
+
+    // Register a collector — emits events on context change
     builder.setCollector('context-selected', async (args) => {
       const contextProvider = await args.requireInstance('context');
       const appProvider = await args.requireInstance('app');
       return new ContextSelectedCollector(contextProvider, appProvider);
     });
   });
+};
+```
+
+> **Note:** The analytics module initialises automatically when used inside the
+> Fusion Framework module system. Manual initialisation is only required when
+> accessing the provider directly.
+
+## Adapters
+
+Adapters implement `IAnalyticsAdapter` and are responsible for processing and
+sending analytics data to their destinations. All adapters support async
+initialisation and will be initialised automatically when the provider starts.
+
+### ConsoleAnalyticsAdapter
+
+Logs every analytics event to the browser console. Useful for development and
+debugging. No configuration required.
+
+```typescript
+builder.setAdapter('console', async () => new ConsoleAnalyticsAdapter());
+```
+
+### FusionAnalyticsAdapter
+
+Forwards analytics events to an OpenTelemetry-compatible log endpoint via a
+bundled `LoggerProvider`.
+
+Configuration options:
+
+| Option | Type | Description |
+|---|---|---|
+| `portalId` | `string` | Portal identifier included in every log record |
+| `logExporter` | `OTLPExporterBase` | OTLP log exporter for transport |
+
+#### Using `OTLPLogExporter` (direct HTTP)
+
+```typescript
+import { OTLPLogExporter } from '@equinor/fusion-framework-module-analytics/logExporters';
+import { FusionAnalyticsAdapter } from '@equinor/fusion-framework-module-analytics/adapters';
+
+builder.setAdapter('fusion-log', async () => {
+  const logExporter = new OTLPLogExporter({
+    url: 'https://example.com/v1/logs',
+    headers: { 'Content-Type': 'application/json' },
+  });
+  return new FusionAnalyticsAdapter({ portalId: 'my-portal', logExporter });
+});
+```
+
+#### Using `FusionOTLPLogExporter` (service discovery HTTP client)
+
+```typescript
+import { FusionOTLPLogExporter } from '@equinor/fusion-framework-module-analytics/logExporters';
+import { FusionAnalyticsAdapter } from '@equinor/fusion-framework-module-analytics/adapters';
+
+builder.setAdapter('fusion', async (args) => {
+  if (args.hasModule('serviceDiscovery')) {
+    const sd = await args.requireInstance('serviceDiscovery');
+    const httpClient = await sd.createClient('analytics');
+    const logExporter = new FusionOTLPLogExporter(httpClient);
+    return new FusionAnalyticsAdapter({ portalId: 'my-portal', logExporter });
+  }
+  console.error('Service discovery unavailable — analytics adapter not created');
+});
+```
+
+### Creating a Custom Adapter
+
+Implement `IAnalyticsAdapter` and register it with `setAdapter`:
+
+```typescript
+import type { IAnalyticsAdapter } from '@equinor/fusion-framework-module-analytics/adapters';
+import type { AnalyticsEvent } from '@equinor/fusion-framework-module-analytics';
+
+class MyRemoteAdapter implements IAnalyticsAdapter {
+  registerAnalytic(event: AnalyticsEvent): void {
+    navigator.sendBeacon('/analytics', JSON.stringify(event));
+  }
+
+  [Symbol.dispose](): void {
+    // cleanup if needed
+  }
+}
+
+builder.setAdapter('remote', async () => new MyRemoteAdapter());
+```
+
+## Collectors
+
+Collectors implement `IAnalyticsCollector` (or extend `BaseCollector`) and emit
+`AnalyticsEvent` objects that are forwarded to all adapters. All collectors
+support async initialisation.
+
+### ContextSelectedCollector
+
+Emits an event when the active Fusion context changes. Includes the new context,
+the previous context, and the current app key in attributes.
+
+```typescript
+builder.setCollector('context-selected', async (args) => {
+  const ctx = await args.requireInstance('context');
+  const app = await args.requireInstance('app');
+  return new ContextSelectedCollector(ctx, app);
+});
+```
+
+### AppSelectedCollector
+
+Emits an event when the active application changes. Includes the new and
+previous app key metadata.
+
+```typescript
+builder.setCollector('app-selected', async (args) => {
+  const app = await args.requireInstance('app');
+  return new AppSelectedCollector(app);
+});
+```
+
+### AppLoadedCollector
+
+Emits an event when an application's modules finish loading. Includes app
+manifest metadata and the current context (if available).
+
+```typescript
+builder.setCollector('app-loaded', async (args) => {
+  const event = await args.requireInstance('event');
+  const app = await args.requireInstance('app');
+  return new AppLoadedCollector(event, app);
+});
+```
+
+### Creating a Custom Collector
+
+Extend `BaseCollector` with a Zod schema for validation:
+
+```typescript
+import { BaseCollector, createSchema } from '@equinor/fusion-framework-module-analytics/collectors';
+import { z } from 'zod';
+import { of } from 'rxjs';
+
+const schema = createSchema(z.string(), z.object({ page: z.string() }));
+
+class PageViewCollector extends BaseCollector<string, { page: string }> {
+  constructor() {
+    super('page-view', schema);
+  }
+
+  _initialize() {
+    return of({ value: window.location.pathname, attributes: { page: document.title } });
+  }
 }
 ```
 
-### Context Selected Collector
+## Tracking Events Manually
 
-The `ContextSelectedCollector` listens for selection in the context module and emits
-the new and optional previous context.
+The provider exposes methods for ad-hoc event tracking outside of collectors:
 
-#### Installation
+```typescript
+// Single event
+provider.trackAnalytic({
+  name: 'button-click',
+  value: 'save',
+  attributes: { section: 'toolbar' },
+});
 
-The Context Selected Collector is included with the analytics module and doesn't
-require additional installation.
+// Observable stream
+const subscription = provider.trackAnalytic$(myEvent$);
+// later: subscription.unsubscribe();
+```
 
 #### Configuration
 

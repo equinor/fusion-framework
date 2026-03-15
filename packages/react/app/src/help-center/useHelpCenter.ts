@@ -77,7 +77,18 @@ export interface HelpCenter {
 }
 
 /**
- * Hook for accessing help center.
+ * React hook that returns an API for opening the portal help-center sidesheet.
+ *
+ * Each method dispatches a framework event that the portal shell listens for
+ * and opens the corresponding help page.
+ *
+ * @returns A {@link HelpCenter} object with methods to open specific help pages.
+ *
+ * @example
+ * ```tsx
+ * const helpCenter = useHelpCenter();
+ * <Button onClick={() => helpCenter.openFaqs()}>FAQs</Button>
+ * ```
  */
 export const useHelpCenter = (): HelpCenter => {
   const eventModule = useAppModule('event');

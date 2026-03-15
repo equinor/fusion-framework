@@ -1,13 +1,11 @@
-`@equinor/fusion-framework-module-msal-node` provides secure Azure AD authentication for Node.js applications using Microsoft's MSAL (Microsoft Authentication Library). Perfect for CLI tools, background services, and automated processes that need to authenticate with Microsoft services.
+`@equinor/fusion-framework-module-msal-node` provides Azure AD authentication for Node.js applications using Microsoft's MSAL library. It targets CLI tools, background services, and automated pipelines that need to acquire Azure AD access tokens within the Fusion Framework module system.
 
 ## Features
 
-- **Multiple Authentication Modes**: Choose the right auth flow for your use case
-- **Secure Token Storage**: Encrypted credential storage using platform keychains
-- **Easy Integration**: Simple API that works seamlessly with Fusion Framework
-- **Token Management**: Automatic token refresh and caching
-- **Cross-Platform**: Works on Windows, macOS, and Linux
-- **Zero Configuration**: Sensible defaults with optional customization
+- **Three authentication modes** — interactive (browser login), silent (cached credentials), and token-only (static token passthrough)
+- **Secure token storage** — encrypted credential caching via platform keychains (Windows Credential Manager, macOS Keychain, Linux libsecret) using `@azure/msal-node-extensions`
+- **Automatic token refresh** — silent re-acquisition of cached tokens without user interaction
+- **Fusion Framework integration** — registers as the `auth` module and exposes `IAuthProvider` on the module instance
 
 ## Quick Start
 
@@ -23,192 +21,200 @@ const configurator = new ModulesConfigurator();
 
 enableAuthModule(configurator, (builder) => {
   builder.setMode('interactive');
-  builder.setClientId('your-client-id');
-  builder.setTenantId('your-tenant-id');
+  builder.setClientConfig('your-tenant-id', 'your-client-id');
+  builder.setServerPort(3000);
 });
 
-const framework = await initialize();
-const token = await framework.auth.acquireAccessToken({ 
-  scopes: ['https://graph.microsoft.com/.default'] 
+// After initialization the auth provider is available on the module instance
+const token = await modules.auth.acquireAccessToken({
+  request: { scopes: ['https://graph.microsoft.com/.default'] },
 });
 ```
+
+## Architecture
+
+The module registers under the name `auth` and produces an `IAuthProvider` instance during initialization. Which concrete provider class is created depends on the configured mode:
+
+| Mode | Provider class | Behaviour |
+|------|---------------|-----------|
+| `interactive` | `AuthProviderInteractive` | Opens the default browser for OAuth 2.0 authorization code flow with PKCE, handled by a temporary local HTTP server |
+| `silent` | `AuthProvider` | Acquires tokens silently from the MSAL cache; throws `NoAccountsError` if no cached session exists |
+| `token_only` | `AuthTokenProvider` | Returns a static pre-supplied access token; login/logout are not supported |
+
+All three implement `IAuthProvider`, so consuming code can call `acquireAccessToken` regardless of mode.
 
 ## Authentication Modes
 
-Choose the authentication mode that best fits your application's needs:
+### Interactive — browser-based login
 
-| Mode | Description | Best For | User Interaction |
-|------|-------------|----------|------------------|
-| **`token_only`** | Uses a pre-provided access token | CI/CD pipelines, serverless functions | None |
-| **`silent`** | Uses cached credentials for background auth | Background services, scheduled tasks | None |
-| **`interactive`** | Browser-based login with local server | CLI tools, development, user-facing apps | Required |
+Best for CLI tools, developer utilities, and any scenario requiring user sign-in.
 
-### When to Use Each Mode
+```typescript
+enableAuthModule(configurator, (builder) => {
+  builder.setMode('interactive');
+  builder.setClientConfig('your-tenant-id', 'your-client-id');
+  builder.setServerPort(3000);
+  builder.setServerOnOpen((url) => {
+    console.log(`Open in browser: ${url}`);
+  });
+});
 
-- **`token_only`**: When you already have a valid access token (e.g., from environment variables, CI/CD secrets)
-- **`silent`**: When you need background authentication without user interaction (e.g., scheduled jobs, background services)
-- **`interactive`**: When you need user login (e.g., CLI tools, development environments, user-facing applications)
+// Login explicitly (opens browser)
+const result = await modules.auth.login({
+  request: { scopes: ['https://graph.microsoft.com/.default'] },
+});
+console.log('Logged in as', result.account?.username);
+```
+
+### Silent — cached credentials
+
+Best for background services and scheduled tasks where a user has previously authenticated.
+
+```typescript
+enableAuthModule(configurator, (builder) => {
+  builder.setMode('silent');
+  builder.setClientConfig(process.env.AZURE_TENANT_ID!, process.env.AZURE_CLIENT_ID!);
+});
+
+const token = await modules.auth.acquireAccessToken({
+  request: { scopes: ['https://graph.microsoft.com/.default'] },
+});
+```
+
+### Token-only — static token passthrough
+
+Best for CI/CD pipelines and automation where a token is provided externally.
+
+```typescript
+enableAuthModule(configurator, (builder) => {
+  builder.setMode('token_only');
+  builder.setAccessToken(process.env.ACCESS_TOKEN!);
+});
+
+const token = await modules.auth.acquireAccessToken({
+  request: { scopes: ['https://graph.microsoft.com/.default'] },
+});
+```
 
 ## Secure Token Storage
 
-The module uses `@azure/msal-node-extensions` for enterprise-grade security:
+When using `setClientConfig`, the module creates a `PublicClientApplication` backed by an encrypted persistence cache from `@azure/msal-node-extensions`:
 
-- **🔒 Platform Keychains**: Windows Credential Manager, macOS Keychain, Linux libsecret
-- **🔐 Encryption at Rest**: Tokens encrypted using platform-specific mechanisms
-- **🔄 Automatic Refresh**: Seamless token renewal without user intervention
-- **🌐 Cross-Platform**: Consistent security across Windows, macOS, and Linux
+- **Platform keychains** — Windows Credential Manager, macOS Keychain, Linux libsecret
+- **Encryption at rest** — tokens encrypted using platform-specific mechanisms
+- **User-scoped** — cache files are scoped to the current OS user via `DataProtectionScope.CurrentUser`
 
-## Usage Examples
+The `libsecret`  dependency is loaded lazily so environments that use `token_only` mode (such as CI runners) do not need it installed.
 
-### Token-Only Mode (CI/CD)
+## Configuration Reference
 
-Perfect for automated processes where you already have a valid token:
+### `IAuthConfigurator` methods
+
+| Method | Description |
+|--------|-------------|
+| `setMode(mode)` | Set authentication mode: `'interactive'`, `'silent'`, or `'token_only'` |
+| `setClientConfig(tenantId, clientId)` | Create an MSAL client with secure persistence cache |
+| `setClient(client)` | Provide a pre-configured `PublicClientApplication` instance |
+| `setAccessToken(token)` | Set a static access token (`token_only` mode) |
+| `setServerPort(port)` | Set the local callback server port (`interactive` mode) |
+| `setServerOnOpen(callback)` | Callback invoked with the login URL when the server is ready |
+
+### Required settings per mode
+
+| Setting | `interactive` | `silent` | `token_only` |
+|---------|:---:|:---:|:---:|
+| `setClientConfig` or `setClient` | required | required | — |
+| `setAccessToken` | — | — | required |
+| `setServerPort` | required | — | — |
+
+## Error Handling
+
+The module exports dedicated error classes from `@equinor/fusion-framework-module-msal-node/error`:
+
+| Error | Thrown when |
+|-------|-----------|
+| `NoAccountsError` | Silent token acquisition finds no cached accounts |
+| `SilentTokenAcquisitionError` | MSAL fails to acquire a token silently (expired session, network issue) |
+| `AuthServerError` | The local callback server receives no authorization code or token exchange fails |
+| `AuthServerTimeoutError` | The callback server times out (default 5 minutes) waiting for a browser response |
 
 ```typescript
-import { enableAuthModule } from '@equinor/fusion-framework-module-msal-node';
-import { ModulesConfigurator } from '@equinor/fusion-framework-module';
+import { NoAccountsError } from '@equinor/fusion-framework-module-msal-node/error';
 
-const configurator = new ModulesConfigurator();
-
-enableAuthModule(configurator, (builder) => {
-  builder.setMode('token_only');
-  builder.setAccessToken(process.env.ACCESS_TOKEN); // From CI/CD secrets
-});
-
-const framework = await initialize();
-const token = await framework.auth.acquireAccessToken({ 
-  scopes: ['https://graph.microsoft.com/.default'] 
-});
-```
-
-### Silent Mode (Background Services)
-
-For background services that need to authenticate without user interaction:
-
-```typescript
-import { enableAuthModule } from '@equinor/fusion-framework-module-msal-node';
-import { ModulesConfigurator } from '@equinor/fusion-framework-module';
-
-const configurator = new ModulesConfigurator();
-
-enableAuthModule(configurator, (builder) => {
-  builder.setMode('silent');
-  builder.setClientId(process.env.AZURE_CLIENT_ID);
-  builder.setTenantId(process.env.AZURE_TENANT_ID);
-});
-
-const framework = await initialize();
-
-// This will use cached credentials or fail if no valid cache exists
 try {
-  const token = await framework.auth.acquireAccessToken({ 
-    scopes: ['https://graph.microsoft.com/.default'] 
+  const token = await modules.auth.acquireAccessToken({
+    request: { scopes: ['api://my-api/.default'] },
   });
-  console.log('Authenticated successfully');
 } catch (error) {
-  console.error('Silent authentication failed:', error.message);
+  if (error instanceof NoAccountsError) {
+    console.error('No cached session — run interactive login first');
+  }
+  throw error;
 }
-```
-
-### Interactive Mode (CLI Tools)
-
-For CLI tools and development environments that require user login:
-
-```typescript
-import { enableAuthModule } from '@equinor/fusion-framework-module-msal-node';
-import { ModulesConfigurator } from '@equinor/fusion-framework-module';
-
-const configurator = new ModulesConfigurator();
-
-enableAuthModule(configurator, (builder) => {
-  builder.setMode('interactive');
-  builder.setClientId(process.env.AZURE_CLIENT_ID);
-  builder.setTenantId(process.env.AZURE_TENANT_ID);
-  builder.setServerPort(3000); // Optional: custom port
-  builder.setServerOnOpen((url) => {
-    console.log(`🌐 Please open your browser and navigate to: ${url}`);
-  });
-});
-
-const framework = await initialize();
-
-// This will open a browser for user login
-const result = await framework.auth.login({ 
-  scopes: ['https://graph.microsoft.com/.default'] 
-});
-console.log('Login successful:', result.account?.username);
-```
-
-## Configuration
-
-### Required Settings
-
-| Setting | Description | Required For |
-|---------|-------------|--------------|
-| `clientId` | Azure AD application client ID | `silent`, `interactive` |
-| `tenantId` | Azure AD tenant ID | `silent`, `interactive` |
-| `accessToken` | Pre-obtained access token | `token_only` |
-
-### Optional Settings
-
-| Setting | Description | Default | Mode |
-|---------|-------------|---------|------|
-| `serverPort` | Local server port for auth callbacks | `3000` | `interactive` |
-| `serverOnOpen` | Callback when browser opens | `undefined` | `interactive` |
-
-### Environment Variables
-
-```bash
-# Required for silent/interactive modes
-AZURE_CLIENT_ID=your-client-id
-AZURE_TENANT_ID=your-tenant-id
-
-# Required for token_only mode
-ACCESS_TOKEN=your-access-token
 ```
 
 ## API Reference
 
 ### `enableAuthModule(configurator, configure)`
 
-Enables the MSAL Node module in your Fusion Framework application.
+Registers the MSAL Node module with a Fusion Framework `ModulesConfigurator`.
 
-**Parameters:**
-- `configurator`: `ModulesConfigurator` - The modules configurator instance
-- `configure`: `(builder: IAuthConfigurator) => void` - Configuration function
+- **configurator** — the `IModulesConfigurator` instance
+- **configure** — callback receiving an `IAuthConfigurator` builder
 
 ### `IAuthProvider`
 
-The authentication provider interface available at `framework.auth`:
+Unified provider interface exposed as `modules.auth`:
 
 ```typescript
 interface IAuthProvider {
-  // Acquire an access token for the specified scopes
-  acquireAccessToken(options: { 
-    scopes: string[]; 
-    interactive?: boolean 
+  acquireAccessToken(options: {
+    request: { scopes: string[] };
+    interactive?: boolean;
   }): Promise<string>;
-  
-  // Login (interactive mode only)
-  login(options: { scopes: string[] }): Promise<AuthenticationResult>;
-  
-  // Logout (interactive mode only)
+
+  login(options: { request: { scopes: string[] } }): Promise<AuthenticationResult>;
+
   logout(): Promise<void>;
 }
 ```
+
+`login` and `logout` are only functional in interactive mode. In other modes they throw immediately.
 
 
 ## Troubleshooting
 
 ### Common Issues
 
-| Issue | Solution |
-|-------|----------|
-| **Invalid client/tenant ID** | Verify your Azure AD app registration settings |
-| **Port already in use** | Change the `serverPort` or kill the process using the port |
-| **Silent auth fails** | Ensure you've logged in interactively first to cache credentials |
-| **Token expired** | The module handles refresh automatically; check your scopes |
-| **Credential storage errors** | See our [credential storage guide](docs/libsecret.md) |
+| Issue | Error Class | Solution |
+|-------|------------|----------|
+| **No cached session** | `NoAccountsError` | Run interactive login first to cache credentials, then retry with silent mode |
+| **Silent auth fails** | `SilentTokenAcquisitionError` | Cached session may have expired or network is unavailable; fall back to interactive login |
+| **Callback server fails** | `AuthServerError` | Check that the callback server port is not in use and the browser can reach it |
+| **Callback server timeout** | `AuthServerTimeoutError` | The browser did not complete login within the timeout (default 5 min); retry or check network |
+| **Invalid client/tenant ID** | — | Verify your Azure AD app registration settings |
+| **Port already in use** | — | Change the `serverPort` or kill the process using the port |
+| **Token expired** | — | The module handles refresh automatically; check your scopes |
+| **Credential storage errors** | — | See our [credential storage guide](docs/libsecret.md) |
+
+All error classes are exported from `@equinor/fusion-framework-module-msal-node/error`. A common pattern is to attempt silent token acquisition first and fall back to interactive login on failure:
+
+```typescript
+import { NoAccountsError, SilentTokenAcquisitionError } from '@equinor/fusion-framework-module-msal-node/error';
+
+try {
+  const token = await modules.auth.acquireAccessToken({
+    request: { scopes: ['api://my-api/.default'] },
+  });
+} catch (error) {
+  if (error instanceof NoAccountsError || error instanceof SilentTokenAcquisitionError) {
+    // Fall back to interactive login
+    await modules.auth.login({ request: { scopes: ['api://my-api/.default'] } });
+  } else {
+    throw error;
+  }
+}
+```
 
 ### Getting Help
 

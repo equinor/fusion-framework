@@ -9,6 +9,17 @@ import {
   PersonSelectElement,
 } from '@equinor/fusion-wc-person';
 
+declare module 'react' {
+  namespace JSX {
+    interface IntrinsicElements {
+      'fwc-person-provider': React.DetailedHTMLProps<
+        React.HTMLAttributes<PersonProviderElement>,
+        PersonProviderElement
+      >;
+    }
+  }
+}
+
 PersonProviderElement;
 PersonAvatarElement;
 PersonCardElement;

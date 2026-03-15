@@ -2,6 +2,12 @@ import type { IExporterTransport, ExportResponse } from '@opentelemetry/otlp-exp
 
 import type { IHttpClient } from '@equinor/fusion-framework-module-http';
 
+/**
+ * Checks whether a failed HTTP status code is eligible for automatic retry.
+ *
+ * @param statusCode - HTTP response status code.
+ * @returns `true` for 429, 502, 503, and 504.
+ */
 function isExportRetryable(statusCode: number): boolean {
   // Status codes of when we should consider retrying.
   // 429 Too Many Requests
@@ -12,7 +18,12 @@ function isExportRetryable(statusCode: number): boolean {
   return retryCodes.includes(statusCode);
 }
 
-// Parse the `Retry-After` header and return when the service will allow a retry.
+/**
+ * Parses an HTTP `Retry-After` header value into milliseconds.
+ *
+ * @param retryAfter - Raw header value (integer seconds or HTTP-date).
+ * @returns Delay in milliseconds, `-1` for non-positive integers, or `undefined` if absent.
+ */
 function parseRetryAfterToMills(retryAfter?: string | undefined | null): number | undefined {
   if (retryAfter == null) {
     return undefined;
@@ -32,19 +43,36 @@ function parseRetryAfterToMills(retryAfter?: string | undefined | null): number 
 }
 
 /**
- * A Exporter Transport to POST events to provided path using the provided httpClient
+ * OpenTelemetry exporter transport that posts serialised log records using a
+ * Fusion `IHttpClient`.
+ *
+ * @remarks
+ * Implements `IExporterTransport` from `@opentelemetry/otlp-exporter-base`.
+ * The transport honours the exporter’s timeout via `AbortController` and
+ * inspects response status codes to report retryable failures (429, 502–504).
+ *
+ * @example
+ * ```ts
+ * const transport = new HttpClientExporterTransport(httpClient, '/v1/logs');
+ * ```
  */
 export class HttpClientExporterTransport implements IExporterTransport {
+  /**
+   * @param httpClient - Fusion HTTP client for outgoing requests.
+   * @param path - URL path appended to the client’s base URL (default `'/v1/logs'`).
+   */
   constructor(
     private httpClient: IHttpClient,
     private path: string = '/v1/logs',
   ) {}
 
-  // Will send data with the httpClient.
-  // If the service responds with a non 2** statusCode, we check if it is
-  // retryable.
-  // The timeoutMillis determines when to abort if the service has not yet
-  // responded.
+  /**
+   * Sends serialised log record data to the configured endpoint.
+   *
+   * @param data - Serialised OTLP payload as a `Uint8Array`.
+   * @param timeoutMillis - Maximum time in milliseconds before the request is aborted.
+   * @returns An `ExportResponse` indicating success, retryable failure, or permanent failure.
+   */
   async send(data: Uint8Array, timeoutMillis: number): Promise<ExportResponse> {
     const abortController = new AbortController();
     const timeout = setTimeout(() => abortController.abort(), timeoutMillis);
@@ -83,6 +111,7 @@ export class HttpClientExporterTransport implements IExporterTransport {
       clearTimeout(timeout);
     }
   }
+  /** No-op; the HTTP client does not hold persistent connections. */
   shutdown(): void {
     // intentionally left empty, nothing to do.
   }

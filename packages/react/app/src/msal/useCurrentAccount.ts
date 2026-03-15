@@ -2,8 +2,18 @@ import type { AccountInfo } from '@equinor/fusion-framework-module-msal';
 import useAppModule from '../useAppModule';
 
 /**
- * Retrieves the current account information from the MSAL provider.
- * @returns The current account information or undefined if no account is available.
+ * React hook that returns the currently signed-in user's MSAL account info.
+ *
+ * @returns The {@link AccountInfo} for the active account, or `undefined` if
+ *   no user is signed in.
+ *
+ * @example
+ * ```tsx
+ * const account = useCurrentAccount();
+ * if (account) {
+ *   console.log('Signed in as', account.name);
+ * }
+ * ```
  */
 export const useCurrentAccount = (): AccountInfo | undefined => {
   const msalProvider = useAppModule('auth');

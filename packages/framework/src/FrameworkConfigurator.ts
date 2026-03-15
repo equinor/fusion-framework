@@ -22,9 +22,37 @@ import type { MsalClientConfig } from '@equinor/fusion-framework-module-msal';
 import { version } from './version.js';
 
 /**
- * Module configurator for Framework modules
- * @template TModules - Addition modules
- * @template TRef - usually undefined, optional references
+ * Configurator that registers and wires the core Fusion Framework modules.
+ *
+ * Extend `FrameworkConfigurator` to declare which modules (authentication,
+ * HTTP, service-discovery, telemetry, context, …) the framework instance
+ * should contain and how each module is configured before the framework
+ * starts.
+ *
+ * Typical workflow:
+ * 1. Create a `FrameworkConfigurator` instance.
+ * 2. Call configuration helpers such as {@link configureMsal},
+ *    {@link configureHttp}, {@link configureHttpClient}, and
+ *    {@link configureServiceDiscovery}.
+ * 3. Pass the configurator to {@link init} to bootstrap the framework.
+ *
+ * @template TModules - Additional module descriptors to merge with the
+ *   built-in Fusion modules.
+ * @template TRef - Optional reference object forwarded to module
+ *   initialization (e.g. a parent framework instance).
+ *
+ * @example
+ * ```typescript
+ * import { FrameworkConfigurator, init } from '@equinor/fusion-framework';
+ *
+ * const configurator = new FrameworkConfigurator();
+ * configurator.configureMsal({ clientId: 'my-client-id', authority: '…' });
+ * configurator.configureServiceDiscovery({
+ *   client: { baseUri: 'https://service-registry.example.com' },
+ * });
+ *
+ * const fusion = await init(configurator);
+ * ```
  */
 export class FrameworkConfigurator<
   TModules extends Array<AnyModule> = [],

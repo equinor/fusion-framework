@@ -33,6 +33,13 @@ const Styled = {
     `,
 };
 
+/**
+ * Portal top bar header containing the Fusion logo, context selector, and action buttons.
+ *
+ * Composes the bookmark provider with the current app and user so bookmark
+ * and person side sheets can operate in context. Provides the sticky top bar
+ * layout used across all portal pages.
+ */
 export const Header = () => {
   const currentUser = useCurrentUser();
   const topBarId = useId();

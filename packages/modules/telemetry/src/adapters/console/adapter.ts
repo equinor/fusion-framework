@@ -20,7 +20,20 @@ export type ConsoleAdapterConfig = {
 
 /**
  * Telemetry adapter that outputs telemetry data to the browser console
- * with formatted titles and color-coded log levels
+ * with formatted titles and colour-coded log levels.
+ *
+ * Each telemetry item is logged using the console method that matches its
+ * {@link TelemetryLevel} (e.g. `console.error` for `Error` / `Critical`,
+ * `console.warn` for `Warning`). Event names are prefixed with a styled
+ * application title badge.
+ *
+ * @example
+ * ```typescript
+ * import { ConsoleAdapter } from '@equinor/fusion-framework-module-telemetry/console-adapter';
+ *
+ * const adapter = new ConsoleAdapter({ title: 'MyApp' });
+ * configurator.setAdapter(ConsoleAdapter.Identifier, adapter);
+ * ```
  */
 export class ConsoleAdapter extends BaseTelemetryAdapter {
   /** Default identifier for console adapter instances */

@@ -46,6 +46,8 @@ await devServer.listen();
 devServer.printUrls();
 ```
 
+If you only need the Vite configuration object without starting the server, use `createDevServerConfig(options, overrides?)` instead. This returns a `UserConfig` that you can pass to Vite directly or merge with other configurations.
+
 ## Configuration
 
 The dev server accepts a configuration object with the following structure:
@@ -66,7 +68,10 @@ Configure the Single Page Application environment and template generation:
       // Application title
       title: 'My Application',
 
-      // Service discovery settings
+      // Service discovery settings (SPA-side — tells the browser where to find services)
+      // The API-side counterpart is `api.serviceDiscoveryUrl` which sets up server-side proxying.
+      // During development you can redirect individual services to local URLs by storing
+      // overrides in sessionStorage under the key "overriddenServiceDiscoveryUrls".
       serviceDiscovery: {
         url: 'https://service-discovery.example.com',
         scopes: ['scope1', 'scope2'],
@@ -111,6 +116,8 @@ Configure API proxying and service discovery:
     serviceDiscoveryUrl: 'https://service-discovery.example.com',
 
     // Optional: Custom service processing
+    // Takes an array of FusionService objects ({ key, uri, name }) from discovery
+    // and returns { data: FusionService[], routes: ApiRoute[] } with proxy routes.
     processServices: (services, route) => {
       // Process and return services with routes
       return processServices(services, route);

@@ -5,14 +5,34 @@ import type {
 import type { IAppConfigurator } from './AppConfigurator';
 
 /**
- * When enabling bookmarks for applications, we will for now only provide the portals bookmark provider.
+ * Enable the bookmark module for a Fusion application.
  *
- * This function will add the portals bookmark provider to the applications modules.
- * When adding a payload generator to the bookmark provider, we will intercept the teardown function and add it to a cleanup set.
+ * Adds bookmark support by wiring the portal’s bookmark provider into the
+ * application’s module set. Payload generators registered by the application
+ * are automatically cleaned up when the module is disposed, preventing memory
+ * leaks across application load/unload cycles.
+ *
+ * Import this function from `@equinor/fusion-framework-app/enable-bookmark` or, for
+ * React apps, from `@equinor/fusion-framework-react-app/bookmark`.
  *
  * @remarks
- * The cleanup function will be called when the module is disposed.
- * There are no guarantees that the dispose function will be called, incase of weird behavior.
+ * - The portal must expose a bookmark provider on `ref.bookmark`; if it is
+ *   missing, an error is logged and the module initializes as a no-op.
+ * - The `@equinor/fusion-framework-module-bookmark` package must be installed,
+ *   but do **not** call its `enableBookmark` directly in app code — use this
+ *   app-level enabler instead.
+ *
+ * @param config - The application configurator to register the bookmark module on.
+ *
+ * @example
+ * ```ts
+ * import { configureModules } from '@equinor/fusion-framework-app';
+ * import { enableBookmark } from '@equinor/fusion-framework-app/enable-bookmark';
+ *
+ * const initialize = configureModules((configurator) => {
+ *   enableBookmark(configurator);
+ * });
+ * ```
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const enableBookmark = (config: IAppConfigurator): void => {
