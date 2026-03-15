@@ -1,6 +1,6 @@
 ---
-'@equinor/fusion-cli': patch
-'@equinor/fusion-cli-plugins-ai-index': patch
+'@equinor/fusion-framework-cli': patch
+'@equinor/fusion-framework-cli-plugin-ai-index': patch
 ---
 
 chore: bump simple-git from 3.32.3 to 3.33.0
