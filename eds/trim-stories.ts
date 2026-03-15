@@ -46,7 +46,8 @@ for await (const file of glob.scan(dir)) {
 
   // Remove beta component files — duplicates of stable docs with unstable APIs
   if (file.startsWith('eds-2-0-beta-')) {
-    await import('fs/promises').then((fs) => fs.unlink(path));
+    // @ts-expect-error Bun.glob doesn't support `rm` with `quiet` option, so we use the raw API here to avoid errors when files are already deleted.
+    await Bun.$`rm ${path}`.quiet();
     deleted++;
     continue;
   }
