@@ -1,0 +1,55 @@
+diff --git a/dom-element.js b/dom-element.js
+index 48783264a104365648a79a9fc38fbba3bd5950ad..550007897efedf2a75d37f243066383cf62a931b 100644
+--- a/dom-element.js
++++ b/dom-element.js
+@@ -6,6 +6,11 @@ var serializeNode = require("./serialize.js")
+ 
+ var htmlns = "http://www.w3.org/1999/xhtml"
+ 
++// Security fix: Prevent prototype pollution
++function isSafeProperty(prop) {
++    return prop !== '__proto__' && prop !== 'constructor' && prop !== 'prototype';
++}
++
+ module.exports = DOMElement
+ 
+ function DOMElement(tagName, owner, namespace) {
+@@ -97,6 +102,7 @@ DOMElement.prototype.insertBefore =
+ 
+ DOMElement.prototype.setAttributeNS =
+     function _Element_setAttributeNS(namespace, name, value) {
++        if (!isSafeProperty(namespace)) return; // Security fix
+         var prefix = null
+         var localName = name
+         var colonPosition = name.indexOf(":")
+@@ -115,6 +121,7 @@ DOMElement.prototype.setAttributeNS =
+ 
+ DOMElement.prototype.getAttributeNS =
+     function _Element_getAttributeNS(namespace, name) {
++        if (!isSafeProperty(namespace)) return null; // Security fix
+         var attributes = this._attributes[namespace];
+         var value = attributes && attributes[name] && attributes[name].value
+         if (this.tagName === 'INPUT' && name === 'type') {
+@@ -128,18 +135,16 @@ DOMElement.prototype.getAttributeNS =
+ 
+ DOMElement.prototype.removeAttributeNS =
+     function _Element_removeAttributeNS(namespace, name) {
+-        // Prevent prototype pollution by checking if namespace is a direct property
+-        if (!Object.prototype.hasOwnProperty.call(this._attributes, namespace)) {
+-            return;
+-        }
++        if (!isSafeProperty(namespace)) return; // Security fix
+         var attributes = this._attributes[namespace];
+-        if (attributes && Object.prototype.hasOwnProperty.call(attributes, name)) {
+-            delete attributes[name];
++        if (attributes) {
++            delete attributes[name]
+         }
+     }
+ 
+ DOMElement.prototype.hasAttributeNS =
+     function _Element_hasAttributeNS(namespace, name) {
++        if (!isSafeProperty(namespace)) return false; // Security fix
+         var attributes = this._attributes[namespace]
+         return !!attributes && name in attributes;
+     }

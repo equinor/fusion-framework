@@ -23,12 +23,13 @@ We prefer all communications to be in English.
 
 **Impact**: Low - This vulnerability only affects development environments since `min-document` is used by Storybook (via EDS Core React dev dependencies). Production builds are not affected.
 
-**Status**: Mitigated locally with a security patch.
+**Status**: Mitigated with a registered pnpm security patch.
 
-**Mitigation Applied**: A local patch has been applied to `min-document@2.19.0` that prevents access to dangerous prototype properties. The patch adds validation to reject operations on `__proto__`, `constructor`, and `prototype` namespace values.
+**Mitigation Applied**: A local security patch has been registered with pnpm for `min-document@2.19.2` that prevents access to dangerous prototype properties. The patch adds a validation function `isSafeProperty()` that rejects operations on `__proto__`, `constructor`, and `prototype` namespace values in the `setAttributeNS`, `getAttributeNS`, `removeAttributeNS`, and `hasAttributeNS` methods.
 
 **Files**:
-- `patches/min-document@2.19.0.patch` - The security patch
-- Applied to `node_modules/.pnpm/min-document@2.19.0/node_modules/min-document/dom-element.js`
+- `patches/min-document@2.19.2.patch` - The active security patch
+- Registered in `package.json` under `pnpm.patchedDependencies`
+- Applied automatically during `pnpm install`
 
 **Recommendation**: Monitor for updates to `min-document` or consider replacing it with a maintained alternative if the dependency chain allows.

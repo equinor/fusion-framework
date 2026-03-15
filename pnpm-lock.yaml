@@ -19,6 +19,11 @@ overrides:
   minimatch@>=9.0.0 <9.0.7: 9.0.7
   minimatch@<3.1.3: 3.1.5
 
+patchedDependencies:
+  min-document@2.19.2:
+    hash: 2d552c3e457f83ee369adad1f28e44ce46d10d38127681328091787e4a2ed1b0
+    path: patches/min-document@2.19.2.patch
+
 importers:
 
   .:
@@ -17009,7 +17014,7 @@ snapshots:
 
   global@4.4.0:
     dependencies:
-      min-document: 2.19.2
+      min-document: 2.19.2(patch_hash=2d552c3e457f83ee369adad1f28e44ce46d10d38127681328091787e4a2ed1b0)
       process: 0.11.10
 
   globby@11.1.0:
@@ -17903,7 +17908,7 @@ snapshots:
 
   mimic-response@3.1.0: {}
 
-  min-document@2.19.2:
+  min-document@2.19.2(patch_hash=2d552c3e457f83ee369adad1f28e44ce46d10d38127681328091787e4a2ed1b0):
     dependencies:
       dom-walk: 0.1.2
 
