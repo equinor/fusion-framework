@@ -5,16 +5,43 @@ import type { BookmarkNew, BookmarkUpdate } from './BookmarkClient.interface';
 import type { BookmarkProviderEventMap } from './BookmarkProvider.events';
 import type { BookmarkState } from './BookmarkProvider.store';
 
+/**
+ * Arguments for creating a bookmark via {@link IBookmarkProvider.createBookmark}.
+ *
+ * Omits fields that the provider resolves automatically (`appKey`, `contextId`, `sourceSystem`),
+ * but allows the caller to override `appKey` if needed.
+ *
+ * @template T - The type of payload data stored in the bookmark.
+ */
 export type BookmarkCreateArgs<T extends BookmarkData = any> = Omit<
   BookmarkNew<T>,
   'appKey' | 'contextId' | 'sourceSystem'
 > &
   Partial<Pick<BookmarkNew<T>, 'appKey'>>;
 
+/**
+ * Options that control how {@link IBookmarkProvider.updateBookmark} processes an update.
+ *
+ * @property excludePayloadGeneration - When `true`, skip running registered payload generators
+ *   and send the update payload as-is. Useful when the caller has already computed the full payload.
+ */
 export type BookmarkUpdateOptions = {
   excludePayloadGeneration?: boolean;
 };
 
+/**
+ * Callback registered with {@link IBookmarkProvider.addPayloadGenerator} that participates
+ * in building or transforming bookmark payload data during create and update operations.
+ *
+ * The `payload` argument is an Immer draft — mutate it in place rather than returning a new
+ * object. If the generator returns a value it will be used, but this is discouraged.
+ * Return `null` to signal that the bookmark payload should be cleared.
+ *
+ * @template TData - Shape of the bookmark payload.
+ * @param payload - The accumulated payload draft from previous generators (mutable).
+ * @param initial - The original payload before any generators ran (read-only reference).
+ * @returns A partial payload, `void` (when mutating the draft), or `null` to clear.
+ */
 export type BookmarkPayloadGenerator<TData extends BookmarkData = any> = (
   payload?: Partial<TData> | null,
   initial?: Partial<TData> | null,
@@ -124,6 +151,16 @@ export interface IBookmarkProvider {
    */
   isBookmarkInFavorites(bookmarkId: string): ObservableInput<boolean>;
 
+  /**
+   * Registers a payload generator that runs during bookmark create and update operations.
+   *
+   * Multiple generators can be registered and they execute sequentially, each receiving
+   * the accumulated payload from previous generators.
+   *
+   * @template TData - Shape of the bookmark payload.
+   * @param generator - The generator callback to register.
+   * @returns A disposal function that unregisters the generator when called.
+   */
   addPayloadGenerator<TData extends BookmarkData>(
     generator: BookmarkPayloadGenerator<TData>,
   ): VoidFunction;

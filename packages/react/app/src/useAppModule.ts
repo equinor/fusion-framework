@@ -9,12 +9,20 @@ import type {
 import { useAppModules } from './useAppModules';
 
 /**
- * Retrieves the specified app module from the app scope.
+ * React hook that retrieves a single module instance from the application scope.
  *
- * @template TType - The type of the app module.
- * @template TKey - The key of the app module.
- * @param module - The key of the app module to retrieve.
- * @returns The app module instance if found, otherwise throws an error.
+ * @template TType - The concrete module type (e.g. `ContextModule`). Pass
+ *   `unknown` to infer the type from the key.
+ * @template TKey - The string key used to look up the module.
+ * @param module - The key identifying the module to retrieve.
+ * @returns The resolved module instance.
+ * @throws If the requested module is not registered in the application scope.
+ *
+ * @example
+ * ```tsx
+ * const auth = useAppModule('auth');
+ * auth.acquireAccessToken().then(console.log);
+ * ```
  */
 export function useAppModule<
   TType extends AnyModule | unknown = unknown,

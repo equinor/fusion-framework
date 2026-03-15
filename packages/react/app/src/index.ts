@@ -1,3 +1,19 @@
+/**
+ * @packageDocumentation
+ *
+ * React bindings for building Fusion Framework applications.
+ *
+ * Provides the main entry-point helpers (`renderApp`, `createComponent`, `makeComponent`)
+ * plus React hooks for accessing framework modules (HTTP, auth, context, navigation, etc.)
+ * from within a Fusion app.
+ *
+ * @remarks
+ * This is the primary package application developers depend on when building
+ * React-based Fusion apps. It re-exports core types from `@equinor/fusion-framework-app`
+ * and adds React-specific rendering, hooks, and sub-path entry-points for optional
+ * modules such as MSAL, feature flags, bookmarks, analytics, and settings.
+ */
+
 export type {
   AppConfig,
   AppEnv,

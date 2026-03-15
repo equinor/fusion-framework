@@ -1,3 +1,9 @@
+/**
+ * Zod validation schema and inferred type for AI command options.
+ *
+ * @packageDocumentation
+ */
+
 import z from 'zod';
 
 /**

@@ -13,6 +13,13 @@ import { processServices as defaultProcessServices } from './process-services.js
 
 import type { DevServerOptions, TemplateEnv, TemplateEnvFn } from './types.js';
 
+/**
+ * Create a default {@link ConsoleLogger} instance for the dev server.
+ *
+ * @param lvl - Log verbosity level; defaults to {@link LogLevel.Info}.
+ * @param title - Logger title printed as a prefix in console output; defaults to `'dev-server'`.
+ * @returns A configured {@link ConsoleLogger} instance.
+ */
 const createDefaultLogger = (lvl: LogLevel = LogLevel.Info, title = 'dev-server') => {
   const logger = new ConsoleLogger(title);
   logger.level = lvl;
@@ -20,33 +27,49 @@ const createDefaultLogger = (lvl: LogLevel = LogLevel.Info, title = 'dev-server'
 };
 
 /**
- * Creates a development server configuration for a Fusion Framework application.
+ * Build a Vite {@link import('vite').UserConfig | UserConfig} for a Fusion Framework dev server
+ * without starting the server.
  *
- * @template TEnv - A type extending `Partial<TemplateEnv>` that represents the environment variables for the template.
- * @param options - The options for configuring the development server.
- * @param options.spa - Optional configuration for the Single Page Application (SPA), including template environment settings.
- * @param options.api - Configuration for the API, including service discovery URL, routes, and service processing logic.
+ * Use this function when you need control over the server lifecycle (e.g. to pass the config
+ * to another Vite tool). For a simpler create-and-listen workflow, use {@link createDevServer}.
  *
- * @returns A `UserConfig` object that defines the Vite development server configuration.
+ * The generated config includes:
+ * - `@vitejs/plugin-react` for React Fast Refresh / HMR
+ * - `@equinor/fusion-framework-vite-plugin-api-service` for service discovery proxying
+ * - `@equinor/fusion-framework-vite-plugin-spa` for template environment injection
+ * - CORS disabled so backend services handle OPTIONS with proper headers
+ *
+ * @template TEnv - Environment variable shape extending `Partial<TemplateEnv>`, used to type-check
+ *                  the SPA template environment object or factory function.
+ * @param options - Development server options containing SPA, API, and logging settings.
+ * @param overrides - Optional Vite config merged on top of the generated base config via
+ *                    {@link import('vite').mergeConfig | mergeConfig}.
+ * @returns A fully resolved Vite `UserConfig` ready for {@link import('vite').createServer | createServer}.
  *
  * @remarks
- * - The `spa.templateEnv` can either be a function or a partial object of type `TEnv`.
- * - The `api.processServices` defaults to `defaultProcessServices` if not provided.
- * - The server is configured to run on port 3000.
- * - Includes plugins for API service handling and SPA template environment generation.
- * - CORS is disabled to allow backend services to handle OPTIONS requests with proper headers.
+ * - `spa.templateEnv` accepts either a static object or a factory function returning the environment.
+ * - `api.processServices` defaults to the built-in {@link processServices} when omitted.
+ * - The default log level is `Info`; set `log.level` to `4` for debug output.
  *
  * @example
  * ```typescript
+ * import { createDevServerConfig } from '@equinor/fusion-framework-dev-server';
+ * import { createServer } from 'vite';
+ *
  * const config = createDevServerConfig({
  *   spa: {
- *     templateEnv: { API_URL: 'https://api.example.com' },
+ *     templateEnv: {
+ *       portal: { id: 'my-portal' },
+ *       title: 'My App',
+ *       serviceDiscovery: { url: 'https://discovery.example.com', scopes: [] },
+ *       msal: { clientId: 'cid', tenantId: 'tid', redirectUri: '/auth/cb', requiresAuth: 'true' },
+ *     },
  *   },
- *   api: {
- *     serviceDiscoveryUrl: 'https://discovery.example.com',
- *     routes: ['/api'],
- *   },
+ *   api: { serviceDiscoveryUrl: 'https://discovery.example.com' },
  * });
+ *
+ * const server = await createServer(config);
+ * await server.listen();
  * ```
  */
 export const createDevServerConfig = <TEnv extends Partial<TemplateEnv>>(

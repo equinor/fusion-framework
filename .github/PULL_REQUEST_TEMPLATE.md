@@ -11,6 +11,9 @@ Remove all HTML comments before submitting. Replace placeholders with actual con
 **What is the new behavior?**
 <!-- What will change after this PR is merged. -->
 
+**What is the intended behavior or invariant?**
+<!-- Explain the contract this change introduces or preserves. State the non-obvious rule, threshold, lifecycle expectation, stream behavior, or render assumption reviewers should protect. -->
+
 **Does this PR introduce a breaking change?**
 <!-- Yes/No. If yes, describe what breaks and how to migrate. -->
 
@@ -34,6 +37,10 @@ Remove all HTML comments before submitting. Replace placeholders with actual con
 ### Checklist
 
 - [ ] Confirm completion of the [self-review checklist](https://github.com/equinor/fusion-framework/blob/main/contributing/self-review.md)
+- [ ] Confirm TSDoc captures intent for functions, hooks, components, classes, and named arrow functions
+- [ ] Confirm iterator blocks, decision gates, RxJS chains, and complex decisions explain why they exist
+- [ ] Confirm React logic and derived values are resolved before markup when applicable
+- [ ] Confirm README/docs are updated for user-facing changes
 - [ ] Confirm changes to target branch validation
   - _Included files validated_
   - _No new linting warnings_

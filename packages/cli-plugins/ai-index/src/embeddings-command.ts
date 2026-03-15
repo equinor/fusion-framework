@@ -1,16 +1,16 @@
-import { createCommand, createOption } from 'commander';
+import { type Command, createCommand, createOption } from 'commander';
 
 import { loadFusionAIConfig, setupFramework } from '@equinor/fusion-framework-cli-plugin-ai-base';
 import { withOptions as withAiOptions } from '@equinor/fusion-framework-cli-plugin-ai-base/command-options';
 
 import { embed } from './bin/embed.js';
-import { CommandOptionsSchema, type CommandOptions } from './command.options.js';
+import { CommandOptionsSchema, type CommandOptions } from './embeddings-command.options.js';
 import type { FusionAIConfigWithIndex } from './config.js';
 
 /**
- * CLI command: `ai embeddings`
+ * CLI command: `ai index add`
  *
- * Document embedding utilities for Large Language Model processing.
+ * Add documents to the AI search index via embedding generation.
  *
  * Features:
  * - Markdown/MDX document chunking with frontmatter extraction
@@ -21,7 +21,7 @@ import type { FusionAIConfigWithIndex } from './config.js';
  * - Configurable file patterns via fusion-ai.config.ts
  *
  * Usage:
- *   $ ffc ai embeddings [options] [glob-patterns...]
+ *   $ ffc ai index add [options] [glob-patterns...]
  *
  * Arguments:
  *   glob-patterns          Glob patterns to match files (optional when using --diff)
@@ -34,24 +34,15 @@ import type { FusionAIConfigWithIndex } from './config.js';
  *   --base-ref <ref>       Git reference to compare against (default: HEAD~1)
  *   --clean                Delete all existing documents from the vector store before processing
  *
- * AI Options (required):
- *   --openai-api-key <key>              Azure OpenAI API key (or AZURE_OPENAI_API_KEY env var)
- *   --openai-api-version <version>      Azure OpenAI API version (default: 2024-02-15-preview)
- *   --openai-instance <name>            Azure OpenAI instance name (or AZURE_OPENAI_INSTANCE_NAME env var)
- *   --openai-embedding-deployment <name> Azure OpenAI embedding deployment name (or AZURE_OPENAI_EMBEDDING_DEPLOYMENT_NAME env var)
- *   --azure-search-endpoint <url>       Azure Search endpoint URL (or AZURE_SEARCH_ENDPOINT env var)
- *   --azure-search-api-key <key>        Azure Search API key (or AZURE_SEARCH_API_KEY env var)
- *   --azure-search-index-name <name>    Azure Search index name (or AZURE_SEARCH_INDEX_NAME env var)
- *
  * Examples:
- *   $ ffc ai embeddings --dry-run ./src
- *   $ ffc ai embeddings "*.ts" "*.md" "*.mdx"
- *   $ ffc ai embeddings --diff
- *   $ ffc ai embeddings --diff --base-ref origin/main
- *   $ ffc ai embeddings --clean "*.ts"
+ *   $ ffc ai index add --dry-run ./src
+ *   $ ffc ai index add "*.ts" "*.md" "*.mdx"
+ *   $ ffc ai index add --diff
+ *   $ ffc ai index add --diff --base-ref origin/main
+ *   $ ffc ai index add --clean "*.ts"
  */
-const _command = createCommand('embeddings')
-  .description('Document embedding utilities for Large Language Model processing')
+const _command = createCommand('add')
+  .description('Add documents to the AI search index via embedding generation')
   .addOption(
     createOption('--dry-run', 'Show what would be processed without actually doing it').default(
       false,
@@ -67,16 +58,35 @@ const _command = createCommand('embeddings')
     ).default(false),
   )
   .argument('[glob-patterns...]', 'Glob patterns to match files (optional when using --diff)')
-  .action(async (patterns: string[], commandOptions: CommandOptions) => {
-    const options = await CommandOptionsSchema.parseAsync(commandOptions);
+  .action(async function (this: Command, patterns: string[], commandOptions: CommandOptions) {
+    // Load configuration before validation so config values can fill gaps
+    const preOptions = commandOptions as Record<string, unknown>;
+    const config = await loadFusionAIConfig<FusionAIConfigWithIndex>(
+      (preOptions.config as string) ?? 'fusion-ai.config',
+      { baseDir: process.cwd() },
+    );
+    const indexConfig = config.index ?? {};
 
-    // Load configuration
-    const config = await loadFusionAIConfig<FusionAIConfigWithIndex>(options.config, {
-      baseDir: process.cwd(),
-    });
+    // Config file values override env-var defaults but not explicit CLI flags.
+    // Commander merges env vars before the action runs, so we use
+    // getOptionValueSource to distinguish "user passed --flag" from "came from env".
+    const parentCommand = this.parent ?? this;
+    if (indexConfig.name) {
+      const source = parentCommand.getOptionValueSource('azureSearchIndexName');
+      if (source !== 'cli') {
+        preOptions.azureSearchIndexName = indexConfig.name;
+      }
+    }
+    if (indexConfig.model) {
+      const source = parentCommand.getOptionValueSource('openaiEmbeddingDeployment');
+      if (source !== 'cli') {
+        preOptions.openaiEmbeddingDeployment = indexConfig.model;
+      }
+    }
+
+    const options = await CommandOptionsSchema.parseAsync(preOptions);
 
     // CLI args take precedence over config patterns
-    const indexConfig = config.index ?? {};
     const allowedFilePatterns = indexConfig.patterns ?? ['**/*.ts', '**/*.md', '**/*.mdx'];
     const filePatterns = patterns.length ? patterns : allowedFilePatterns;
 
@@ -92,6 +102,14 @@ const _command = createCommand('embeddings')
     });
   });
 
+/**
+ * Configured Commander command for the `ai index add` subcommand.
+ *
+ * This constant is the fully-configured {@link Command} instance with all
+ * AI-specific options (embedding deployment, Azure Search credentials) applied
+ * via `withAiOptions`. It is registered with the CLI automatically by
+ * {@link registerAiPlugin}.
+ */
 export const command = withAiOptions(_command, {
   includeEmbedding: true,
   includeSearch: true,

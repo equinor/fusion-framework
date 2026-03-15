@@ -18,24 +18,56 @@ import type { WidgetModuleConfig } from './WidgetModuleConfigurator';
 
 import './events';
 
-// Class representing a fusion widget
+/**
+ * Manages the full lifecycle of a single Fusion widget.
+ *
+ * A `Widget` encapsulates fetching its manifest, dynamically importing its
+ * script entry point, loading configuration, and emitting lifecycle events.
+ * Internally it uses an RxJS-based `FlowSubject` state machine driven by
+ * actions and flows defined in the `state/` directory.
+ *
+ * Create instances via {@link WidgetModuleProvider.getWidget} rather than
+ * constructing directly.
+ *
+ * @example
+ * ```typescript
+ * const widget = provider.getWidget('my-widget');
+ * widget.initialize().subscribe(({ manifest, script }) => {
+ *   script.renderWidget(el, { fusion, env: { manifest } });
+ * });
+ * ```
+ */
 export class Widget {
   #state: FlowSubject<WidgetState, Actions>;
+
+  /** Human-readable widget name used as the lookup key for manifest and config. */
   name: string;
+
+  /** Module-level HTTP client configuration used to resolve asset URLs. */
   config?: WidgetModuleConfig;
+
+  /** Optional version or tag parameters forwarded to manifest/config endpoints. */
   widgetPrams?: GetWidgetParameters['args'];
 
   #subscription = new Subscription();
 
-  // Getter for accessing the current state of the widget
+  /** Current snapshot of the widget's internal state (manifest, config, modules, status). */
   get state(): WidgetState {
     return this.#state.value;
   }
 
   /**
-   * Constructs a new Widget instance.
-   * @param value - Initial state of the widget.
-   * @param args - Configuration and event parameters for the widget.
+   * Constructs a new `Widget` instance.
+   *
+   * Prefer using {@link WidgetModuleProvider.getWidget} instead of calling
+   * this constructor directly.
+   *
+   * @param value - Initial widget state (at minimum, the widget `name`).
+   * @param args - Dependencies required by the widget.
+   * @param args.provider - The owning {@link WidgetModuleProvider}.
+   * @param args.config - Optional module-level HTTP client configuration.
+   * @param args.event - Optional event module for dispatching lifecycle events.
+   * @param args.widgetPrams - Optional version/tag selector for the widget.
    */
   constructor(
     value: WidgetStateInitial,
@@ -121,9 +153,15 @@ export class Widget {
   }
 
   /**
-   * Retrieves the manifest of the widget as an observable stream.
-   * @param force_refresh - Flag to force refresh the manifest.
-   * @returns An observable stream of the widget manifest.
+   * Retrieves the widget manifest as an observable stream.
+   *
+   * If the manifest is already cached in state it is emitted immediately.
+   * When `force_refresh` is `true`, a new fetch is dispatched regardless of
+   * cache status.
+   *
+   * @param force_refresh - When `true`, re-fetches the manifest even if cached.
+   * @returns Observable that emits the {@link WidgetManifest} and completes.
+   * @throws {Error} When the manifest fetch fails (wraps the underlying cause).
    */
   public getManifest(force_refresh = false): Observable<WidgetManifest> {
     return new Observable((subscriber) => {
@@ -159,9 +197,14 @@ export class Widget {
   }
 
   /**
-   * Retrieves the configuration of the widget as an observable stream.
-   * @param force_refresh - Flag to force refresh the configuration.
-   * @returns An observable stream of the widget configuration.
+   * Retrieves the widget configuration as an observable stream.
+   *
+   * Returns the cached config immediately when available. Set `force_refresh`
+   * to `true` to force a new fetch from the backend API.
+   *
+   * @param force_refresh - When `true`, re-fetches the config even if cached.
+   * @returns Observable that emits the {@link WidgetConfig} and completes.
+   * @throws {Error} When the config fetch fails (wraps the underlying cause).
    */
   public getConfig(force_refresh = false): Observable<WidgetConfig> {
     return new Observable((subscriber) => {
@@ -198,25 +241,35 @@ export class Widget {
   }
 
   /**
-   * Loads the configuration for the widget.
-   * @param update - Flag to force an update of the configuration.
+   * Dispatches a config fetch action into the state machine.
+   *
+   * @param update - When `true`, merges the fetched config with existing state
+   *   instead of replacing it.
    */
   public loadConfig(update?: boolean) {
     this.#state.next(actions.fetchConfig({ key: this.name, ...this.widgetPrams }, update));
   }
 
   /**
-   * Loads the manifest for the widget.
-   * @param update - Flag to force an update of the manifest.
+   * Dispatches a manifest fetch action into the state machine.
+   *
+   * @param update - When `true`, merges the fetched manifest with existing
+   *   state instead of replacing it.
    */
   public loadManifest(update?: boolean) {
     this.#state.next(actions.fetchManifest({ key: this.name, ...this.widgetPrams }, update));
   }
 
   /**
-   * Retrieves the widget module as an observable stream.
-   * @param force_refresh - Flag to force refresh the widget module.
-   * @returns An observable stream of the widget module.
+   * Retrieves the widget's script module as an observable stream.
+   *
+   * Resolves the manifest first, builds the full import URL from the asset
+   * path and entry point, then dynamically imports the script. The imported
+   * module is cached in state for subsequent calls.
+   *
+   * @param force_refresh - When `true`, re-imports the script even if cached.
+   * @returns Observable that emits the {@link WidgetScriptModule} and completes.
+   * @throws {Error} When the script import fails (wraps the underlying cause).
    */
   public getWidgetModule(force_refresh = false): Observable<WidgetScriptModule> {
     return new Observable((subscriber) => {
@@ -261,8 +314,12 @@ export class Widget {
     });
   }
   /**
-   * Initializes the widget and returns an observable stream with the combined results.
-   * @returns An observable stream with the manifest, script, and configuration.
+   * Initializes the widget by loading the manifest, importing the script, and
+   * preparing configuration. Emits a combined result when all resources are ready.
+   *
+   * @returns Observable that emits `{ manifest, script, config }` and completes
+   *   once all resources have been resolved.
+   * @throws {Error} When any initialization step fails.
    */
   public initialize(): Observable<{
     manifest: WidgetManifest;
@@ -299,25 +356,35 @@ export class Widget {
     });
   }
   /**
-   * Retrieves the widget module asynchronously as a Promise.
-   * @param allow_cache - Flag to allow caching of the widget module.
-   * @returns A Promise containing the widget module.
+   * Retrieves the widget script module as a `Promise`.
+   *
+   * When `allow_cache` is `true` (default), resolves with the first emitted
+   * value (which may be cached). When `false`, waits for the last emission
+   * after a forced refresh.
+   *
+   * @param allow_cache - When `true`, uses `firstValueFrom`; when `false`,
+   *   uses `lastValueFrom` after forcing a re-import.
+   * @returns Promise that resolves with the {@link WidgetScriptModule}.
    */
   public getWidgetModuleAsync(allow_cache = true): Promise<WidgetScriptModule> {
     const operator = allow_cache ? firstValueFrom : lastValueFrom;
     return operator(this.getWidgetModule(!allow_cache));
   }
   /**
-   * Updates the manifest of the widget.
-   * @param manifest - The new manifest for the widget.
-   * @param replace - Flag to replace the existing manifest.
+   * Replaces or merges the widget manifest in state.
+   *
+   * @param manifest - The new or partial manifest to set.
+   * @param replace - When `false` (default), the new manifest is merged with
+   *   the existing one. Pass explicit `false` to merge, or omit to merge.
    */
   public updateManifest(manifest: WidgetManifest, replace?: false) {
     this.#state.next(actions.setManifest(manifest, !replace));
   }
 
   /**
-   * Disposes of the widget by unsubscribing from any active subscriptions.
+   * Disposes of the widget by unsubscribing from all internal subscriptions.
+   *
+   * After disposal the widget instance should not be reused.
    */
   public dispose() {
     this.#subscription.unsubscribe();

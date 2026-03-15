@@ -1,11 +1,28 @@
 /**
- * System message template for FUSION framework chat assistant
+ * Creates the system message prompt for the Fusion Framework AI chat assistant.
  *
- * This template emphasizes using FUSION knowledge from the provided context
- * to provide accurate and comprehensive answers about the FUSION framework.
+ * Builds a system-role message that instructs the LLM to prioritise
+ * Fusion-specific knowledge from the provided RAG context. The returned
+ * string is used as the first message in the chat completion request so the
+ * model grounds its answers in retrieved Fusion documentation, code examples,
+ * and API references.
  *
- * @param context - The retrieved context from the vector store containing FUSION knowledge
- * @returns Formatted system message string for the AI chat assistant
+ * Use this when constructing the message array for an Azure OpenAI chat
+ * completion call inside the `ai chat` command.
+ *
+ * @param context - Concatenated page content retrieved from the Azure Cognitive Search
+ *   vector store. Each document's text is joined with newlines before being passed here.
+ * @returns A formatted system message string ready to be used as the `content` of a
+ *   `ChatMessage` with `role: 'system'`.
+ *
+ * @example
+ * ```ts
+ * const systemMsg = createSystemMessage(retrievedDocs);
+ * const messages: ChatMessage[] = [
+ *   { role: 'system', content: systemMsg },
+ *   { role: 'user', content: userQuestion },
+ * ];
+ * ```
  */
 export function createSystemMessage(context: string): string {
   return `You are a helpful assistant specialized in the FUSION framework. Your primary goal is to use FUSION knowledge from the provided context to answer questions accurately and comprehensively.

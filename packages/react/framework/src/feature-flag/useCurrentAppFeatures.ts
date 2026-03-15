@@ -3,8 +3,18 @@ import { useCurrentAppModule } from '../app';
 import { useFeatures, type UseFeaturesResult } from './useFeatures';
 
 /**
- * Custom hook that returns the current app features and provides a function to toggle a feature.
- * @returns An object containing the current app features, a function to toggle a feature, and any error that occurred.
+ * React hook that returns feature flags registered on the current application.
+ *
+ * @returns A {@link UseFeaturesResult} containing:
+ *   - `features` — Array of feature flags for the current app.
+ *   - `toggleFeature(key, enable?)` — Toggles a feature flag on or off.
+ *   - `error` — Any error from the feature-flag or app-module streams.
+ *
+ * @example
+ * ```ts
+ * const { features, toggleFeature } = useCurrentAppFeatures();
+ * toggleFeature('dark-mode', true);
+ * ```
  */
 export const useCurrentAppFeatures = (): UseFeaturesResult => {
   const { module, error: moduleError } = useCurrentAppModule<FeatureFlagModule>('featureFlag');

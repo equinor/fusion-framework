@@ -22,10 +22,16 @@ export const defaultFlows = [flowCreators.navigate, flowCreators.go, flowCreator
 /**
  * Creates a history store with the specified stack and reducer.
  *
- * @param stack - The history stack implementation
- * @param reducer - The reducer for history state
+ * Combines the reactive state container with a {@link HistoryStack} and wires
+ * up navigation flows for action processing.
+ *
+ * @param stack - The history stack implementation (browser, hash, or memory)
+ * @param reducer - The reducer that handles state transitions
  * @param options - Optional configuration options
- * @returns A HistoryState instance
+ * @param options.flows - Custom flow creators (defaults to {@link defaultFlows})
+ * @param options.skipBlockCheck - Skip blocker checking in flows
+ * @param options.validateCurrentLocation - Add location validation flow
+ * @returns A fully-initialized {@link HistoryState} with flows attached
  */
 export const createStore = (
   stack: HistoryStack,

@@ -1,11 +1,19 @@
-## Dev Portal
+# @equinor/fusion-framework-dev-portal
 
-This package provides a development portal for the Fusion framework.
+Minimal development portal for building and testing Fusion Framework applications locally.
 
-This Portal only contains the bare minimum to get started with the Fusion Application development. Visuals might differ from the production portal.
+## What Is It?
 
-It is recommended to use the `@equinor/fusion-framework-dev-server` package for a more complete development experience.
-This package is a small part of the refactoring of the `@equinor/fusion-framework-cli` and is not intended for direct use in production.
+`@equinor/fusion-framework-dev-portal` provides a lightweight portal shell that mirrors the production Fusion portal layout — header, context selector, bookmark side sheet, person settings, and application routing — without the full production overhead. It is the portal component loaded by `@equinor/fusion-framework-dev-server` and `@equinor/fusion-framework-cli` when running apps locally.
+
+Use this package when you need a portal host for local app development. For the recommended development workflow, pair it with `@equinor/fusion-framework-dev-server`.
+
+## Key Concepts
+
+- **Portal shell**: A React application that renders the top bar, context selector, and an app mounting area.
+- **Application loader**: Dynamically initializes and mounts a Fusion app by its `appKey`, handling manifest resolution, script loading, and teardown.
+- **Framework modules**: The portal pre-configures telemetry, navigation, bookmarks, feature flags, analytics, AG Grid, and service integrations so loaded apps inherit a realistic environment.
+- **Context navigation**: When an app uses the context module, the portal synchronizes URL navigation with context changes automatically.
 
 ## Installation
 
@@ -15,55 +23,55 @@ pnpm add @equinor/fusion-framework-dev-portal
 
 ## Environment Variables
 
-The following environment variables must be set in `.env` or in the environment variables of the server:
+Set these in a `.env` file or in your server environment:
 
-- FUSION_MSAL_CLIENT_ID: The client ID for MSAL authentication.
-- FUSION_MSAL_TENANT_ID: The tenant ID for MSAL authentication.
-- FUSION_SERVICE_DISCOVERY_URL: The URL for service discovery.
-- FUSION_SERVICE_SCOPE: The scopes for the service.
-- FUSION_SPA_AG_GRID_KEY: (Optional) AG Grid Enterprise license key for local development. When provided, this eliminates AG Grid license console warnings when running the portal locally with AG Grid-enabled features.
+| Variable | Required | Description |
+|---|---|---|
+| `FUSION_MSAL_CLIENT_ID` | Yes | MSAL application client ID for authentication |
+| `FUSION_MSAL_TENANT_ID` | Yes | Azure AD tenant ID for authentication |
+| `FUSION_SERVICE_DISCOVERY_URL` | Yes | URL for the Fusion service discovery endpoint |
+| `FUSION_SERVICE_SCOPE` | Yes | OAuth scopes for service requests |
+| `FUSION_SPA_AG_GRID_KEY` | No | AG Grid Enterprise license key — silences console warnings locally |
 
-### Local AG Grid Configuration
+### AG Grid License
 
-To use AG Grid Enterprise features without console warnings during local development:
+To suppress AG Grid Enterprise license warnings during local development:
 
-1. Obtain an AG Grid Enterprise license key from your organization
-2. Add the key to your `.env` file:
-   ```sh
-   FUSION_SPA_AG_GRID_KEY=your-license-key-here
-   ```
-3. Start the dev portal:
-   ```sh
-   pnpm start
-   ```
-4. Verify the configuration by opening the portal and checking the browser console - there should be no AG Grid license warnings
+1. Add `FUSION_SPA_AG_GRID_KEY=<your-key>` to your `.env` file.
+2. Start the dev portal with `pnpm start`.
+3. Verify the browser console shows no AG Grid license warnings.
 
-**Note**: The license key is only used for local development and is never committed to the repository or deployed to production.
+The license key is only used locally and must not be committed to the repository.
 
-## Development
+## Quick Start
 
 ```sh
 pnpm start
 ```
 
-## Usage
+This launches the dev server with the portal loaded.
+
+## Public API
+
+The package exports a single `render` function that mounts the portal into a DOM element:
 
 ```ts
-import { render } from "@equinor/fusion-framework-dev-portal";
+import { render } from '@equinor/fusion-framework-dev-portal';
 
-const el = document.createElement("div");
-el.id = "dev-portal";
+const el = document.createElement('div');
+el.id = 'dev-portal';
 document.body.appendChild(el);
 
-const framework = /** Fusion Framework, [Service Discovery, MSAL] */;
-
-render(el, {ref: framework});
+// `framework` is a pre-configured Fusion Framework instance with Service Discovery and MSAL
+render(el, { ref: framework });
 ```
 
 ### Usage with `@equinor/fusion-framework-dev-server`
 
+The dev server loads this portal automatically. A typical integration looks like:
+
 ```ts
-import { createDevServer } from "@equinor/fusion-framework-dev-server";
+import { createDevServer } from '@equinor/fusion-framework-dev-server';
 
 const portalId = '@equinor/fusion-framework-dev-portal';
 const devServer = await createDevServer({
@@ -72,33 +80,31 @@ const devServer = await createDevServer({
       portal: {
         id: portalId,
         tag: 'latest',
-      }
-      /** --- Add any other environment variables you need here --- */
+      },
     },
   },
   api: {
-    serviceDiscoveryUrl: "https://location.of.your.service.discovery",
-    processServices: /** generate proxy routes */
-    routes: [
-      {
-        // intercept for the dev-portal manifest
-        match: `/PROXY_SERVICE_KEY/PROXY_PATH/${options.portal}{@:tag}`,
-        middleware: async (req, res) => {
-          res.writeHead(200, { 'content-type': 'application/json' });
-          // resolve the local path to the dev-portal
-          // __CWD__/node_modules/@equinor/fusion-framework-dev-portal/dist/main.js
-          const path =  fileURLToPath('/@fs' + import.meta.resolve(portalId));
-          const manifest = {
-            build: { 
-              entrypoint: new URL(path, req.headers.referer), 
-            }
-          }
-          res.end(JSON.stringify(manifest));
-        },
-      }
-    ]
+    serviceDiscoveryUrl: 'https://location.of.your.service.discovery',
   },
 });
 ```
+
+## Architecture
+
+The portal is composed of these internal parts:
+
+- **`render`** — Entry point; creates a React root with theme, framework, and people-resolver providers.
+- **`configure`** — Configures all framework modules (telemetry, navigation, bookmarks, feature flags, analytics, AG Grid, services).
+- **`Router`** — Sets up routes with `react-router-dom` via the navigation module; routes `/apps/:appKey/*` to the app loader.
+- **`AppLoader`** — Resolves, initializes, and mounts a Fusion app by key; handles loading states and errors.
+- **`Header`** — Top bar with the Fusion logo, context selector, bookmark toggle, and person settings.
+- **`ContextSelector`** — Wired to the current app's context module for searching and selecting context items.
+- **`useAppContextNavigation`** — Synchronizes URL pathname with context changes for apps that use the context module.
+
+## Constraints
+
+- This portal is for **local development only** and is not intended for production deployment.
+- Visuals may differ from the production Fusion portal.
+- The portal assumes MSAL and service discovery are configured in the parent framework instance.
 
 

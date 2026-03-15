@@ -1,133 +1,100 @@
-# Fusion Load ENV
+# @equinor/fusion-load-env
 
-A lightweight utility package for managing environment variables in Node.js applications. It provides tools for converting between JavaScript objects and environment variables, as well as loading variables from `.env` files with customizable prefix support.
+Lightweight Node.js utilities for loading, parsing, and serializing environment variables with prefix-based namespacing.  
+Use it to read `.env` files at startup, convert between flat `KEY=value` records and nested configuration objects, and ensure only variables with a known prefix leak into your application.
 
-## Features
+## When to use this package
 
-- Convert JavaScript objects to environment variable strings and vice versa.
-- Load environment variables from `.env` files with support for different environments (e.g., `dev`, `prod`).
-- Customizable prefix for namespacing environment variables to prevent conflicts.
-- Support for camelCase key transformations.
-- Skips variables without the specified prefix for clean processing.
+- You need to load `.env` / `.env.local` / `.env.<mode>` files in a Node CLI, dev-server, or build script.
+- You want to convert a nested config object into `UPPER_SNAKE_CASE` env vars (e.g. for Docker or CI).
+- You want to rehydrate structured config from `process.env` at runtime.
 
 ## Installation
 
 ```bash
-npm install @equinor/fusion-load-env
+pnpm add @equinor/fusion-load-env
 ```
 
-## Default Prefix
+## Quick start
 
-The `DEFAULT_ENV_PREFIX` constant (default: `FUSION`) is used to namespace environment variables, ensuring no conflicts with other variables. Only variables starting with this prefix are processed unless a custom prefix is specified.
+```ts
+import { loadEnv, envToObject, objectToEnv, DEFAULT_ENV_PREFIX } from '@equinor/fusion-load-env';
 
-## Usage
+// 1. Load all FUSION_* variables from .env files for "dev" mode
+const env = loadEnv({ mode: 'dev' });
 
-### `objectToEnv`
+// 2. Parse the flat env record into a nested config object
+const config = envToObject<{ api: { url: string } }>(env);
+// → { api: { url: '...' } }
 
-Converts a JavaScript object into environment variable strings. Nested objects are flattened with underscores.
-
-#### Syntax
-```javascript
-objectToEnv(obj, [prefix])
+// 3. Serialize a config object back to flat env vars
+const flat = objectToEnv({ api: { url: 'https://example.com' } });
+// → { FUSION_API_URL: 'https://example.com' }
 ```
 
-- `obj`: The object to convert.
-- `prefix`: Optional custom prefix (defaults to `DEFAULT_ENV_PREFIX`).
+## Key concepts
 
-#### Example
-```javascript
-const { objectToEnv } = require('@equinor/fusion-load-env');
+### Prefix namespacing
 
-const envObject = { 
-  key: 'value', 
-  anotherKey: 'anotherValue',
-  complex: {
-    object: 'foo'
-  }
-};
+Every utility defaults to the `FUSION` prefix (exported as `DEFAULT_ENV_PREFIX`).  
+Only variables whose key starts with the prefix are included when loading or parsing, and the prefix is prepended when serializing. Pass a custom `prefix` / `prefixes` option to override.
 
-console.log(objectToEnv(envObject));
-// Output:
-// FUSION_KEY=value
-// FUSION_ANOTHER_KEY=anotherValue
-// FUSION_COMPLEX_OBJECT=foo
+### Mode-specific `.env` files
 
-console.log(objectToEnv(envObject, 'CUSTOM'));
-// Output:
-// CUSTOM_KEY=value
-// CUSTOM_ANOTHER_KEY=anotherValue
-// CUSTOM_COMPLEX_OBJECT=foo
+`loadEnv` resolves files in this order (later files override earlier ones):
+
+| Priority | File                    |
+| -------- | ----------------------- |
+| 1        | `.env`                  |
+| 2        | `.env.local`            |
+| 3        | `.env.<mode>`           |
+| 4        | `.env.<mode>.local`     |
+
+Inline `process.env` values always take the highest priority so that CI/CD flags win.
+
+### CamelCase flattening control
+
+By default `envToObject` splits every `_` segment into a nested level. Pass `camelcase: ['SOME_KEY']` to keep specific suffixes flat and convert them to camelCase instead.
+
+## API reference
+
+| Export               | Description |
+| -------------------- | ----------- |
+| `loadEnv(options)`   | Load `.env` files for a given mode and return matching variables as a flat record. |
+| `envToObject(env, options?)` | Parse a flat env-var record into a nested typed configuration object. |
+| `objectToEnv(obj, options?)` | Serialize a nested config object into a flat `UPPER_SNAKE_CASE` record. |
+| `DEFAULT_ENV_PREFIX` | The default prefix constant (`"FUSION"`). |
+| `getEnvFilesForMode(envDir, mode?)` | Resolve the ordered list of `.env` file paths for a directory and mode. |
+
+## Common patterns
+
+### Custom prefix
+
+```ts
+const env = loadEnv({ mode: 'production', prefixes: 'MY_APP' });
+const config = envToObject(env, { prefix: 'MY_APP' });
 ```
 
-### `envToObject`
+### Multiple prefixes
 
-Parses environment variables into a JavaScript object. Only variables with the specified prefix are included. Supports camelCase transformations for specific keys.
-
-#### Syntax
-```javascript
-envToObject(env, [options])
+```ts
+const env = loadEnv({ prefixes: ['FUSION', 'VITE'] });
 ```
 
-- `env`: Object containing environment variables (e.g., `process.env`).
-- `options`:
-  - `prefix`: Custom prefix to filter variables (defaults to `DEFAULT_ENV_PREFIX`).
-  - `camelcase`: Array of key suffixes to convert to camelCase.
+### Serialize config for Docker
 
-#### Example
-```javascript
-const { envToObject, DEFAULT_ENV_PREFIX } = require('@equinor/fusion-load-env');
+```ts
+import { objectToEnv } from '@equinor/fusion-load-env';
 
-const envs = {
-  [`${DEFAULT_ENV_PREFIX}_KEY`]: 'value',
-  [`${DEFAULT_ENV_PREFIX}_ANOTHER_KEY`]: 'another value',
-  CUSTOM_KEY: 'custom'
-};
-
-console.log(envToObject(envs));
-// Output:
-// { key: 'value', another: { key: 'another value' } }
-
-console.log(envToObject(envs, { camelcase: ['ANOTHER_KEY'] }));
-// Output:
-// { key: 'value', anotherKey: 'another value' }
-
-console.log(envToObject(envs, { prefix: 'CUSTOM' }));
-// Output:
-// { key: 'custom' }
+const envRecord = objectToEnv(
+  { clientId: 'abc-123', feature: { darkMode: true } },
+  { prefix: 'FUSION' },
+);
+// { FUSION_CLIENT_ID: 'abc-123', FUSION_FEATURE_DARK_MODE: 'true' }
 ```
-
-### `loadEnv`
-
-Loads environment variables from `.env` files into `process.env`. Supports environment-specific files (e.g., `.env.dev`, `.env.local`). Only variables with the specified prefix are loaded.
-
-#### Syntax
-```javascript
-loadEnv([envName], [options])
-```
-
-- `envName`: Environment name (e.g., `dev`, `prod`). Loads files like `.env`, `.env.[envName]`, `.env.local`, `.env.[envName].local`.
-- `options`:
-  - `prefix`: Custom prefix (defaults to `DEFAULT_ENV_PREFIX`).
-
-#### Example
-```javascript
-const { loadEnv } = require('@equinor/fusion-load-env');
-
-// Loads .env, .env.local, .env.dev, .env.dev.local
-const envs = loadEnv('dev');
-
-// Output depends on .env file contents
-console.log(envs);
-```
-
-## Configuration
-
-- **Custom Prefix**: Override `DEFAULT_ENV_PREFIX` by passing a `prefix` option to any function.
-- **Environment Files**: The `loadEnv` function prioritizes files in this order: `.env`, `.env.local`, `.env.[envName]`, `.env.[envName].local`.
-- **CamelCase**: Use the `camelcase` option in `envToObject` to transform specific keys.
 
 ## Notes
 
-- Ensure `.env` files are not committed to version control. Add them to `.gitignore`.
-- The package does not modify variables without the specified prefix, ensuring safe integration with existing environment setups.
-- Nested objects in `objectToEnv` are flattened using underscores (e.g., `complex.object` becomes `COMPLEX_OBJECT`).
+- The mode name `"local"` is reserved and will throw — it conflicts with the `.local` file-suffix convention.
+- Leaf values are JSON-parsed by `envToObject`, so booleans and numbers arrive as native types. Wrap plain strings in quotes in your `.env` file (e.g. `FUSION_NAME="hello"`).
+- Ensure `.env` files are listed in `.gitignore` to prevent secrets from being committed.

@@ -9,6 +9,14 @@ import type { Actions } from './actions';
 import type { WidgetState } from '../types';
 import type WidgetModuleProvider from '../WidgetModuleProvider';
 
+/**
+ * RxJS flow that reacts to `fetchManifest` actions by querying the
+ * {@link WidgetModuleProvider} for the manifest, emitting intermediate
+ * `setManifest` actions, and completing with a success or failure action.
+ *
+ * @param provider - The widget module provider used for API queries.
+ * @returns A `Flow` function for the widget state machine.
+ */
 export const handleFetchManifest =
   (provider: WidgetModuleProvider): Flow<Actions, WidgetState> =>
   (action$) =>
@@ -39,6 +47,14 @@ export const handleFetchManifest =
       }),
     );
 
+/**
+ * RxJS flow that reacts to `fetchConfig` actions by querying the
+ * {@link WidgetModuleProvider} for the widget config, emitting intermediate
+ * `setConfig` actions, and completing with a success or failure action.
+ *
+ * @param provider - The widget module provider used for API queries.
+ * @returns A `Flow` function for the widget state machine.
+ */
 export const handleFetchConfig =
   (provider: WidgetModuleProvider): Flow<Actions, WidgetState> =>
   (action$) =>
@@ -63,6 +79,12 @@ export const handleFetchConfig =
       }),
     );
 
+/**
+ * RxJS flow that reacts to `importWidget` actions by dynamically importing
+ * the widget’s JavaScript entry point URL and emitting success or failure.
+ *
+ * @returns A `Flow` function for the widget state machine.
+ */
 export const handleImportWidget = (): Flow<Actions, WidgetState> => (action$) =>
   action$.pipe(
     filter(actions.importWidget.match),

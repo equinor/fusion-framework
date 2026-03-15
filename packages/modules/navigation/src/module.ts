@@ -46,16 +46,16 @@ export const module: NavigationModule = {
   version: new SemanticVersion(version),
   name: moduleKey,
   /**
-   * Configures the navigation module.
+   * Creates a new {@link NavigationConfigurator} for the module.
    *
-   * @returns A new NavigationConfigurator instance
+   * @returns A fresh {@link NavigationConfigurator} instance with default settings
    */
   configure: () => new NavigationConfigurator(),
   /**
    * Initializes the navigation module with validated configuration.
    *
-   * @param init - Module initialization arguments
-   * @returns A Promise that resolves to a new NavigationProvider instance
+   * @param init - Module initialization arguments containing config and refs
+   * @returns A promise that resolves to a configured {@link NavigationProvider}
    */
   initialize: async (init) => {
     const config = await init.config.createConfigAsync(init);

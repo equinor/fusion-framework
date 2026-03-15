@@ -12,9 +12,23 @@ type UseAppsArgs = {
 };
 
 /**
- * React Hook - Get apps from framework
- * @param args Object with filterByCurrentUser: boolean
- * @returns Object {apps, isLoading, error} where apps is Array of ApplicationManifest, isLoading is a boolean on observable complete
+ * React hook that retrieves available application manifests from the framework.
+ *
+ * @param args - Optional filtering options.
+ * @param args.filterByCurrentUser - When `true`, only apps accessible to the
+ *   current user are returned.
+ * @returns An object containing:
+ *   - `apps` — Array of {@link AppManifest} objects, or `undefined` while loading.
+ *   - `isLoading` — `true` until the observable completes.
+ *   - `error` — Any error emitted by the underlying observable.
+ *
+ * @example
+ * ```tsx
+ * const { apps, isLoading, error } = useApps({ filterByCurrentUser: true });
+ * if (isLoading) return <Spinner />;
+ * return <AppList apps={apps} />;
+ * ```
+ *
  * @since 7.1.1
  */
 export const useApps = (

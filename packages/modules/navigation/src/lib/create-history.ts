@@ -13,25 +13,19 @@ type HistoryCtorMap = {
  * Creates a history instance based on the specified type.
  *
  * Factory function for creating different history implementations:
- * - `'browser'`: Creates a {@link BrowserHistory} instance using regular routing (pathname-based)
- * - `'hash'`: Creates a {@link BrowserHistory} instance using hash routing (hash-based)
- * - `'memory'`: Creates a {@link MemoryHistory} instance for testing or SSR (in-memory)
+ * - `'browser'`: Creates a {@link BrowserHistory} using pathname-based routing
+ * - `'hash'`: Creates a {@link BrowserHistory} using hash-based routing (`#/path`)
+ * - `'memory'`: Creates a {@link MemoryHistory} for testing, SSR, or widget apps
  *
- * All returned instances are compatible with industry-standard routers (Remix/React Router).
- *
- * @param type - The type of history to create ('browser', 'hash', or 'memory')
- * @param args - Optional arguments for the history type
- * @returns A History instance compatible with industry-standard routers (Remix/React Router)
+ * @param type - The type of history to create (`'browser'`, `'hash'`, or `'memory'`)
+ * @param args - Optional arguments forwarded to the history constructor
+ * @returns A {@link History} instance of the requested type
+ * @throws {Error} If `type` is not one of `'browser'`, `'hash'`, or `'memory'`
  *
  * @example
  * ```ts
- * // Regular browser routing
  * const history = createHistory('browser');
- *
- * // Hash-based routing
  * const hashHistory = createHistory('hash');
- *
- * // In-memory history for testing
  * const memoryHistory = createHistory('memory', { initialLocation: { ... } });
  * ```
  */

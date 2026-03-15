@@ -1,341 +1,242 @@
 # Bookmark Module
 
-The Bookmark module provides a way to manage bookmarks in the application. It allows users to create, update, and remove bookmarks, as well as manage the current bookmark and the list of bookmarks.
+`@equinor/fusion-framework-module-bookmark` provides bookmark management for Fusion Framework applications. It lets users **create, update, delete, and favourite bookmarks**, track a **current (active) bookmark**, and react to bookmark lifecycle events.
 
-## Features
+Under the hood the module uses an RxJS-based state store with side-effect flows, an API client backed by `@equinor/fusion-framework-module-services`, and an event system powered by `@equinor/fusion-framework-module-event`.
 
-- **Create, update, and delete bookmarks**
-- **Manage current bookmark**
-- **Add and remove bookmarks from favorites**
-- **Event listeners for bookmark-related events**
+## Key Concepts
 
-## Setup
+| Concept | Description |
+| --- | --- |
+| **BookmarkProvider** | Runtime service exposed after the module initialises. All CRUD, favourites, and current-bookmark operations go through this class. |
+| **BookmarkModuleConfigurator** | Builder used during the configure phase to set the source system, filters, resolvers, and custom client. |
+| **Payload Generator** | Callback registered via `addPayloadGenerator` that participates in building the bookmark payload during create and update. The callback receives an Immer draft — mutate in place. |
+| **Source System** | Identifies which system owns the bookmarks (used for filtering and creation). |
+| **Filters** | Optional flags (`application`, `context`) that restrict bookmark queries to the current app and/or context. |
+
+## Installation
 
 ```bash
-pnpm install @equinor/fusion-framework-module-bookmark
+pnpm add @equinor/fusion-framework-module-bookmark
 ```
 
+## Quick Start
+
+The simplest setup — no custom configuration, inherits everything from the parent (e.g. the portal framework):
+
 ```ts
-import { enableBookmarkModule } from ' @equinor/fusion-framework-module-bookmark'
+import { enableBookmark } from '@equinor/fusion-framework-module-bookmark';
+
 const configure = (configurator) => {
-  // simplest setup
-  enableBookmarkModule(configurator);
-}
+  enableBookmark(configurator);
+};
 ```
 
 ## Configuration
+
+Use the callback form of `enableBookmark` to customise behaviour:
+
 ```ts
-/** example of configuration */
-enableBookmarkModule(configurator, async(builder) => {
-    /** Set source system of bookmark, note used for queries and creation */
+import { enableBookmark } from '@equinor/fusion-framework-module-bookmark';
+
+const configure = (configurator) => {
+  enableBookmark(configurator, (builder) => {
+    // Tag bookmarks with their originating system
     builder.setSourceSystem({
-        id: 'source-system-id',
-        name: 'Source System Name',
+      identifier: 'my-app-id',
+      name: 'My Application',
     });
 
-    /** apply filters for current application */
+    // Only return bookmarks for the current application
     builder.setFilter('application', true);
 
-    /** apply filters for current context */
+    // Only return bookmarks for the current context
     builder.setFilter('context', true);
+  });
+};
+```
 
-    /** === Advance Configuration === */
+### Advanced Configuration
 
-    /** override default implementations */
-    builder.setClient(/** custom client implementation */)
-    builder.setParent(/** custom parent implementation */)
+```ts
+enableBookmark(configurator, (builder) => {
+  // Provide a custom API client (must implement IBookmarkClient)
+  builder.setClient(myCustomClient);
 
-    /** override default resolvers */
-    builder.setContextResolver(/** custom context resolver implementation */)
-    builder.setApplicationResolver(/** custom application resolver implementation */)
+  // Inherit bookmarks from a different parent provider
+  builder.setParent(parentProvider);
+
+  // Override how the current context is resolved
+  builder.setContextResolver(async (init) => {
+    return async () => ({ id: 'custom-context-id' });
+  });
+
+  // Override how the current application is resolved
+  builder.setApplicationResolver(async (init) => {
+    return async () => ({ appKey: 'my-app' });
+  });
 });
 ```
 
-
 > [!NOTE]
-> When not providing configuration, the configurator will use the parent (ref initiator, example portal framework) configuration, then fallback to default configuration.
-> - `SourceSystem`
-> - `Filter`
-> - `ContextResolver` 
-> - `ApplicationResolver`
-> 
+> When no explicit configuration is provided, the configurator resolves values
+> from the parent framework (portal) and falls back to defaults for:
+> - Source system
+> - Filters
+> - Context resolver
+> - Application resolver
 
 ## BookmarkProvider
 
-The `BookmarkProvider` class is responsible for managing bookmarks in the application. It provides methods for creating, updating, and removing bookmarks, as well as managing the current bookmark and the list of bookmarks.
+`BookmarkProvider` is the runtime service you interact with after the module is initialised. It exposes both **Observable** and **async/Promise** APIs for every operation.
 
-### Usage
-
-
-#### Creating a Bookmark
-
-To create a new bookmark, use the `createBookmark` method:
+### Creating a Bookmark
 
 ```ts
-const newBookmark = {
-    name: 'My Bookmark',
-    payload: { /* Your bookmark data */ },
+bookmarkProvider.createBookmark({
+  name: 'My Bookmark',
+  payload: { filters: { status: 'active' } },
+}).subscribe({
+  next: (bookmark) => console.log('Created:', bookmark.id),
+  error: (err) => console.error('Create failed:', err),
+});
+
+// Or with async/await:
+const bookmark = await bookmarkProvider.createBookmarkAsync({
+  name: 'My Bookmark',
+  payload: { filters: { status: 'active' } },
+});
+```
+
+### Updating a Bookmark
+
+```ts
+bookmarkProvider.updateBookmark('bookmark-id', {
+  name: 'Updated Name',
+  payload: { filters: { status: 'closed' } },
+}).subscribe({
+  next: (updated) => console.log('Updated:', updated.id),
+  error: (err) => console.error('Update failed:', err),
+});
+```
+
+### Deleting a Bookmark
+
+```ts
+bookmarkProvider.deleteBookmark('bookmark-id').subscribe({
+  next: () => console.log('Deleted'),
+  error: (err) => console.error('Delete failed:', err),
+});
+```
+
+### Payload Generators
+
+Register a callback that runs during create and update to build or transform the bookmark payload. The callback receives an **Immer draft** — mutate it in place:
+
+```ts
+const unregister = bookmarkProvider.addPayloadGenerator((payload, initial) => {
+  // `payload` is an Immer draft — mutate directly
+  payload.savedAt = new Date().toISOString();
+  payload.counter = (initial?.counter ?? 0) + 1;
+});
+
+// Call unregister() when the component unmounts to remove the generator
+```
+
+`canCreateBookmarks` returns `true` only when at least one payload generator is registered.
+
+### Current Bookmark
+
+Set, observe, or clear the active bookmark:
+
+```ts
+// Set current bookmark by ID (fetches full data automatically)
+bookmarkProvider.setCurrentBookmark('bookmark-id').subscribe();
+
+// Clear the current bookmark
+bookmarkProvider.setCurrentBookmark(null).subscribe();
+
+// Observe changes
+bookmarkProvider.currentBookmark$.subscribe((bookmark) => {
+  console.log('Active bookmark:', bookmark);
+});
+```
+
+### Favourites
+
+```ts
+// Add to favourites
+bookmarkProvider.addBookmarkToFavorites('bookmark-id').subscribe();
+
+// Remove from favourites
+bookmarkProvider.removeBookmarkAsFavorite('bookmark-id').subscribe();
+
+// Check favourite status
+bookmarkProvider.isBookmarkInFavorites('bookmark-id').subscribe((isFav) => {
+  console.log('Is favourite:', isFav);
+});
+```
+
+### Event Listeners
+
+Subscribe to lifecycle events emitted by the provider:
+
+```ts
+const unsubscribe = bookmarkProvider.on('onCurrentBookmarkChanged', (event) => {
+  console.log('Current bookmark changed:', event.detail);
+});
+
+// Call unsubscribe() to remove the listener
+```
+
+Available events:
+
+| Event | When it fires |
+| --- | --- |
+| `onCurrentBookmarkChange` | **Before** the current bookmark changes (cancelable) |
+| `onCurrentBookmarkChanged` | **After** the current bookmark has changed |
+| `onBookmarkCreate` | Before a bookmark is created (cancelable) |
+| `onBookmarkCreated` | After a bookmark has been created |
+| `onBookmarkUpdate` | Before a bookmark is updated (cancelable) |
+| `onBookmarkUpdated` | After a bookmark has been updated |
+| `onBookmarkDelete` | Before a bookmark is deleted (cancelable) |
+| `onBookmarkDeleted` | After a bookmark has been deleted |
+| `onBookmarkFavouriteAdd` | Before a bookmark is added to favourites (cancelable) |
+| `onBookmarkFavouriteAdded` | After a bookmark has been added to favourites |
+| `onBookmarkFavouriteRemove` | Before a bookmark is removed from favourites (cancelable) |
+| `onBookmarkFavouriteRemoved` | After a bookmark has been removed from favourites |
+| `onBookmarkPayloadCreatorAdded` | When a new payload generator is registered |
+
+## Custom Bookmark Client
+
+To use a different backend, implement the `IBookmarkClient` interface and pass it to the configurator:
+
+```ts
+import type { IBookmarkClient } from '@equinor/fusion-framework-module-bookmark';
+
+const myClient: IBookmarkClient = {
+  getAllBookmarks: (filter) => { /* ... */ },
+  getBookmarkById: (id) => { /* ... */ },
+  getBookmarkData: (id) => { /* ... */ },
+  setBookmarkData: (id, data) => { /* ... */ },
+  createBookmark: (bookmark) => { /* ... */ },
+  updateBookmark: (id, updates) => { /* ... */ },
+  deleteBookmark: (id) => { /* ... */ },
+  addBookmarkToFavorites: (id) => { /* ... */ },
+  removeBookmarkFromFavorites: (id) => { /* ... */ },
+  isBookmarkFavorite: (id) => { /* ... */ },
 };
 
-bookmarkProvider.createBookmark(newBookmark).subscribe({
-    next: (bookmark) => {
-        console.log('Bookmark created:', bookmark);
-    },
-    error: (err) => {
-        console.error('Failed to create bookmark:', err);
-    },
+enableBookmark(configurator, (builder) => {
+  builder.setClient(myClient);
 });
 ```
 
+## Error Handling
 
-#### Updating a Bookmark
+The module exposes two error classes:
 
-To update an existing bookmark, use the `updateBookmark` method:
+- **`BookmarkProviderError`** — thrown by `BookmarkProvider` methods when a high-level operation fails (e.g. timeout, cancelled event, resolution failure).
+- **`BookmarkFlowError`** — thrown inside internal store flows when an API call fails. Carries a reference to the originating request action.
 
-```ts
-const bookmarkId = 'bookmark-id';
-const bookmarkUpdates = {
-    name: 'Updated Bookmark Name',
-    payload: { /* Updated bookmark data */ },
-};
-
-bookmarkProvider.updateBookmark(bookmarkId, bookmarkUpdates).subscribe({
-    next: (updatedBookmark) => {
-        console.log('Bookmark updated:', updatedBookmark);
-    },
-    error: (err) => {
-        console.error('Failed to update bookmark:', err);
-    },
-});
-```
-
-#### Using payload generator
-
-Callback function which triggers on creation or update of bookmark. It is used to modify the payload of the bookmark.
-
-- payload: The payload of the bookmark, which can be modified of other payload generators.
-- initial: The initial payload of the bookmark, which is the payload of the bookmark before any payload generators have been applied.
-
-```ts
-const bookmarkPayloadGenerator = (payload, initial) => {
-    payload.counter = payload.counter ?? 0 + initial.counter;
-};
-```
-
-#### Removing a Bookmark
-
-To remove a bookmark, use the `removeBookmark` method:
-
-```ts
-const bookmarkId = 'bookmark-id';
-
-bookmarkProvider.removeBookmark(bookmarkId).subscribe({
-    next: (result) => {
-        console.log('Bookmark removed:', result);
-    },
-    error: (err) => {
-        console.error('Failed to remove bookmark:', err);
-    },
-});
-```
-
-
-#### Managing Favorites
-
-To add a bookmark to favorites, use the `addBookmarkToFavorites` method:
-
-```ts
-const bookmarkId = 'bookmark-id';
-
-bookmarkProvider.addBookmarkToFavorites(bookmarkId).subscribe({
-    next: (bookmark) => {
-        console.log('Bookmark added to favorites:', bookmark);
-    },
-    error: (err) => {
-        console.error('Failed to add bookmark to favorites:', err);
-    },
-});
-```
-
-To remove a bookmark from favorites, use the `removeBookmarkFromFavorites` method:
-
-```ts
-const bookmarkId = 'bookmark-id';
-bookmarkProvider.removeBookmarkFromFavorites(bookmarkId).subscribe({
-    next: (bookmark) => {
-        console.log('Bookmark removed from favorites:', bookmark);
-    },
-    error: (err) => {
-        console.error('Failed to remove bookmark from favorites:', err);
-    },
-});
-```
-
-
-To check if a bookmark is in favorites, use the `isBookmarkInFavorites` method:
-
-```ts
-const bookmarkId = 'bookmark-id';
-
-bookmarkProvider.isBookmarkInFavorites(bookmarkId).subscribe({
-    next: (isFavorite) => {
-        console.log('Is bookmark in favorites:', isFavorite);
-    },
-    error: (err) => {
-        console.error('Failed to check if bookmark is in favorites:', err);
-    },
-});
-```
-
-
-#### Event Listeners
-
-You can register event listeners for various bookmark-related events:
-
-```ts
-const removeListener = bookmarkProvider.on('onCurrentBookmarkChanged', (event) => {
-    console.log('Current bookmark changed:', event.detail);
-});
-
-// To remove the event listener
-removeListener();
-```
-
-## Client
-
-The `BookmarkClient` class is responsible for fetching bookmarks from the source system. It provides methods for fetching bookmarks by ID, fetching bookmarks by query, and fetching the current bookmark. This is the default implementation of the client and created if not overridden in the configuration.
-
-```ts
-/** Example usage with BookmarkClient as stand alone */
-import { BookmarkClient } from '@equinor/fusion-bookmark';
-import { BookmarksApiClient } from '@equinor/fusion-framework-module-services/bookmarks';
-import { HttpClient } from '@equinor/fusion-framework-module-http/client';
-
-const httpClient = new HttpClient('https://my-fusion-backend-url.com');
-const apiClient = new BookmarksApiClient(httpClient, 'json$');
-const client = new BookmarkClient(apiClient);
-
-client.getAllBookmarks().subscribe(bookmarks => {
-    // do something with bookmarks
-});
-
-client.getBookmarkById('bookmark-id').subscribe(bookmark => {
-// do something with bookmark
-});
-```
-
-### Custom Client
-
-By implementing the `IBookmarkClient` interface, you can create a custom client implementation.
-
-```typescript
-import { IBookmarkClient } from '@equinor/fusion-bookmark';
-
-export class CustomBookmarkClient implements IBookmarkClient {
-    // Implement the interface methods
-}
-
-const configure = (configurator) => {
-    enableBookmarkModule(configurator, async(builder) => {
-        builder.setClient(new CustomBookmarkClient());
-    });
-};
-```
-
-## Tips
-
-## Using "shared" creator across multiple components
-
-The bookmark module is designed to allow multiple subscribers to collectively manage the payload of an bookmark. This is done by using a payload generator that is triggered on creation and update of the bookmark. This allows multiple components to share the same payload and update it in a safe way.
-
-To solve this complex problem, internally the bookmark provider uses immer to generate a draft of the payload (a reducer function to update the payload, prevent flux and mutation). This allows the payload to be updated in a safe way, without the need to worry about immutability.
-
-__BAD!__
-```tsx
-/**
- * In this example, the mutation of the payload will fail since the currentBookmark is immutable.
- */ 
-const RootComponent = () => {
-  // note deprecated useBookmark
-  const {
-    addBookmarkCreator,
-    currentBookmark 
-  } = useBookmark();
-
-  const payloadRef = useRef(currentBookmark?.payload ?? {});
-
-  useEffect(() => {
-    // since the reference to is return within the reducer, the value will be frozen
-    // this will break, since `payloadRef.current` is supposed to be updated
-    return addBookmarkCreator(() => payloadRef.current);
-  }, [bookmarkProvider]);
-
-  // updates the payloadRef when the current bookmark changes
-  useEffect(() => {
-    payloadRef.current = currentBookmark?.payload ?? {};
-  }, [currentBookmark]);
-
-
-  return (
-    <>
-      <Component1 payloadRef={payloadRef} />
-      <Component2 payloadRef={payloadRef} />
-    </>
-  );
-}
-
-const Component1 = ({ payloadRef }) => {
-  return <input 
-    value={ payloadRef.current.foo } 
-    onChange={(e) => payloadRef.current.foo = e.target.value } 
-  />
-}
-
-const Component2 = ({ payloadRef }) => { ... }
-```
-
-this version can be improved by updating the payload generator, but see next example to migrate of deprecated `useBookmark` to `useCurrentBookmark`.
-
-```ts
-// fix issue with payload generator
-useEffect(() => {
-    return addBookmarkCreator((payload) => {
-        Object.assign(payload, payloadRef.current);
-    });
-}, [bookmarkProvider]);
-```
-
-
-__BETTER!__
-```tsx
-
-const RootComponent = () => {
-  return (
-    <>
-      <Component1 />
-      <Component2 />
-    </>
-  );
-}
-
-const Component1 = () => {
-  const ref = useRef(null);
-
-  // internally the payload generator will use immer to generate a draft
-  const payloadGenerator = useCallback((payload) => {
-    payload.foo = ref.current.value;
-  }, []);
-
-  // use the current bookmark and register the payload generator
-  const { currentBookmark } = useCurrentBookmark({ payloadGenerator });
-
-  // when the current bookmark changes, update the input value
-  useEffect(() => {
-    ref.current.value = currentBookmark.foo;
-  }, [currentBookmark]);
-
-  return <input ref={ref} />
-}
-
-Component2 = () => { ... }
-```
+Errors are also collected in the store and accessible via `bookmarkProvider.errors$`.

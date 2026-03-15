@@ -5,9 +5,13 @@ import { createApiPluginClient } from './create-client';
 import { ApiPlugin } from './plugin';
 
 /**
- * Default selector to map response to an array of FeatureFlags.
+ * Default selector that maps an HTTP JSON response to an array of
+ * {@link FeatureFlag} instances.
  *
- * @param response A HTTP Response
+ * All flags returned by the API are marked as `readonly`.
+ *
+ * @param response - The HTTP response containing a JSON array of feature flags.
+ * @returns Parsed array of {@link FeatureFlag} instances.
  */
 const defaultSelector: ApiResponseSelector = async (response: Response) => {
   const flags = (await response.json()) as IFeatureFlag[];
@@ -25,14 +29,22 @@ const defaultSelector: ApiResponseSelector = async (response: Response) => {
 };
 
 /**
- * Procuces an api plugin to use for FeatureFlag provider.
+ * Creates a plugin that fetches feature flags from a remote HTTP endpoint.
+ *
+ * Requires the `http` module to be registered so that an HTTP client can be
+ * created.
+ *
+ * @param args - Plugin configuration.
+ * @param args.httpClientName - Name of the configured HTTP client to use.
+ * @param args.path - Relative path appended to the HTTP client base URL.
+ * @param args.selector - Optional custom response selector (defaults to JSON parsing).
+ * @returns A {@link FeatureFlagPluginConfigCallback} ready for registration.
  *
  * @example
  * ```ts
- * createApiPlugin({
- *   httpClientName: 'foo',
- *   path: '/bar',
- * }));
+ * builder.addPlugin(
+ *   createApiPlugin({ httpClientName: 'my-api', path: '/feature-flags' })
+ * );
  * ```
  */
 export const createApiPlugin = (args: {

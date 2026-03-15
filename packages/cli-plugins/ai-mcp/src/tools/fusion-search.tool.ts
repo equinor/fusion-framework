@@ -5,9 +5,25 @@ import type { VectorStoreDocument } from '@equinor/fusion-framework-module-ai/li
 import type { ToolCallback } from '@modelcontextprotocol/sdk/server/mcp.js';
 import type { CallToolResult } from '@modelcontextprotocol/sdk/types.js';
 
-/** Valid documentation categories that can be searched */
+/**
+ * Valid documentation categories that can be used to scope a search.
+ *
+ * - `api` — TypeScript API reference (TSDoc, function signatures, interfaces)
+ * - `cookbook` — Practical code examples, tutorials, and recipes
+ * - `markdown` — Architecture guides, migration docs, and READMEs
+ * - `eds` — EDS Storybook stories, component props, and design tokens
+ * - `all` — Search across every category without filtering
+ */
 export type FusionSearchCategory = 'api' | 'cookbook' | 'markdown' | 'eds' | 'all';
 
+/**
+ * Zod input schema for the `fusion_search` MCP tool.
+ *
+ * Validates and documents the parameters that AI assistants supply when
+ * invoking the tool: a required `query` string, an optional `limit`
+ * (default 5), and an optional `category` filter (currently locked
+ * to `'all'`).
+ */
 export const inputSchema = z.object({
   query: z
     .string()
@@ -39,7 +55,11 @@ export const inputSchema = z.object({
 });
 
 /**
- * Tool configuration for McpServer.registerTool().
+ * Configuration object passed to `McpServer.registerTool()` for the
+ * `fusion_search` tool.
+ *
+ * Contains the human-readable description shown to AI assistants and the
+ * Zod {@link inputSchema} used for argument validation.
  */
 export const toolConfig = {
   description: [
@@ -51,7 +71,12 @@ export const toolConfig = {
 } as const;
 
 /**
- * Azure Cognitive Search OData filter expressions per category
+ * Azure Cognitive Search OData filter expressions keyed by
+ * {@link FusionSearchCategory}.
+ *
+ * Each expression restricts the vector search to documents whose
+ * `metadata/attributes` collection contains a matching `type` value.
+ * The `all` category maps to `undefined` (no filter applied).
  */
 const FILTER_EXPRESSIONS: Readonly<Record<FusionSearchCategory, string | undefined>> = {
   api: "metadata/attributes/any(x: x/key eq 'type' and x/value eq 'tsdoc')",

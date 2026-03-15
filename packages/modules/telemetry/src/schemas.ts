@@ -126,6 +126,17 @@ export function parseTelemetryItem(
  * @param item - The telemetry item to parse. The type property determines which schema is used for parsing.
  * @returns The parsed and validated telemetry object of the appropriate type.
  * @throws {Error} If the telemetry type is unknown or validation fails.
+ *
+ * @example
+ * ```typescript
+ * import { parseTelemetryItem } from '@equinor/fusion-framework-module-telemetry/schemas';
+ * import { TelemetryType } from '@equinor/fusion-framework-module-telemetry';
+ *
+ * const item = parseTelemetryItem({
+ *   name: 'page_view',
+ *   type: TelemetryType.Event,
+ * });
+ * ```
  */
 export function parseTelemetryItem(
   item: z.input<typeof TelemetryItemSchema>,

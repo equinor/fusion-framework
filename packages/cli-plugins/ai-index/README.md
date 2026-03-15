@@ -1,6 +1,18 @@
 # @equinor/fusion-framework-cli-plugin-ai-index
 
-AI indexing plugin for Fusion Framework CLI providing document embedding and chunking utilities.
+AI indexing plugin for the Fusion Framework CLI that chunks TypeScript, Markdown, and MDX source files, generates embeddings via Azure OpenAI, and upserts them into an Azure AI Search vector store.
+
+## Features
+
+- **Markdown / MDX chunking** — splits documents by heading hierarchy with YAML frontmatter extraction.
+- **TypeScript / TSX TSDoc extraction** — extracts documented declarations (functions, classes, interfaces, types, enums) into individual vector-store documents.
+- **Raw-file passthrough** — index files as-is when chunking is not needed.
+- **Semantic search** — query the vector store to validate indexed content.
+- **Git-diff workflow mode** — process only files changed since a base ref (`--diff`).
+- **Dry-run mode** — preview what would be indexed without writing to the vector store.
+- **Document removal** — remove stale documents by source path or OData filter.
+- **Package & git metadata** — optionally resolve `package.json` info and git commit/permalink metadata per document.
+- **Configurable patterns** — define file globs, ignore lists, chunk sizes, and custom attribute processors in `fusion-ai.config.ts`.
 
 ## Installation
 
@@ -8,107 +20,131 @@ AI indexing plugin for Fusion Framework CLI providing document embedding and chu
 pnpm add -D @equinor/fusion-framework-cli-plugin-ai-index
 ```
 
-## Configuration
+## Usage
 
-After installing the plugin, create a `fusion-cli.config.ts` file in your project root:
+### Register the plugin
 
-```typescript
+```ts
+// fusion-cli.config.ts
 import { defineFusionCli } from '@equinor/fusion-framework-cli';
 
 export default defineFusionCli(() => ({
-  plugins: [
-    '@equinor/fusion-framework-cli-plugin-ai-index',
-  ],
+  plugins: ['@equinor/fusion-framework-cli-plugin-ai-index'],
 }));
 ```
 
-The CLI will automatically discover and load plugins listed in this configuration file. The config file can be `.ts`, `.js`, or `.json`. The `defineFusionCli` helper provides type safety and IntelliSense support.
-
-## Features
-
-This plugin extends the Fusion Framework CLI with AI indexing capabilities:
-
-- **Document embedding** and chunking utilities
-- Markdown/MDX document chunking with frontmatter extraction
-- TypeScript/TSX TSDoc extraction and chunking
-- Glob pattern support for file collection
-- Git diff-based processing for workflow integration
-- Dry-run mode for testing without actual processing
-
-## Usage
-
-Once installed, the embeddings command is automatically available:
+### Add documents to the index
 
 ```sh
-# Generate embeddings from documents
-ffc ai embeddings ./src
+# Index all files matching default patterns
+ffc ai index add
+
+# Index specific globs
+ffc ai index add "packages/**/*.ts" "packages/**/*.md"
+
+# Preview without writing (dry-run)
+ffc ai index add --dry-run
+
+# Process only files changed since origin/main
+ffc ai index add --diff --base-ref origin/main
+
+# Wipe the vector store before re-indexing
+ffc ai index add --clean "**/*.ts"
 ```
 
-## Commands
+### Search the index
 
-### `ai embeddings`
-
-Document embedding utilities for Large Language Model processing.
-
-**Features:**
-- Markdown/MDX document chunking with frontmatter extraction
-- TypeScript/TSX TSDoc extraction and chunking
-- Glob pattern support for file collection
-- Git diff-based processing for workflow integration
-- Dry-run mode for testing without actual processing
-- Configurable file patterns via fusion-ai.config.ts
-
-**Options:**
-- `--dry-run` - Show what would be processed without actually doing it
-- `--config <config>` - Path to a config file (default: fusion-ai.config.ts)
-- `--diff` - Process only changed files (workflow mode)
-- `--base-ref <ref>` - Git reference to compare against (default: HEAD~1)
-- `--clean` - Delete all existing documents from the vector store before processing
-- `--openai-api-key <key>` - API key for Azure OpenAI
-- `--openai-api-version <version>` - API version (default: 2024-02-15-preview)
-- `--openai-instance <name>` - Azure OpenAI instance name
-- `--openai-embedding-deployment <name>` - Azure OpenAI embedding deployment name
-- `--azure-search-endpoint <url>` - Azure Search endpoint URL
-- `--azure-search-api-key <key>` - Azure Search API key
-- `--azure-search-index-name <name>` - Azure Search index name
-
-**Examples:**
 ```sh
-$ ffc ai embeddings --dry-run ./src
-$ ffc ai embeddings "*.ts" "*.md" "*.mdx"
-$ ffc ai embeddings --diff
-$ ffc ai embeddings --diff --base-ref origin/main
-$ ffc ai embeddings --clean "*.ts"
+# Semantic search
+ffc ai index search "how to configure modules"
+
+# Filter by package name
+ffc ai index search "hooks" --filter "metadata/attributes/any(a: a/key eq 'pkg_name' and a/value eq '@equinor/fusion-framework-react')"
+
+# JSON output
+ffc ai index search "API reference" --json --limit 5
+```
+
+### Remove documents from the index
+
+```sh
+# Remove by source paths
+ffc ai index remove src/old-module.ts src/legacy/helper.ts
+
+# Preview what would be removed
+ffc ai index remove --dry-run src/old-module.ts
+
+# Remove with a raw OData filter
+ffc ai index remove --filter "metadata/source eq 'src/old-module.ts'"
 ```
 
 ## Configuration
 
-The plugin requires Azure OpenAI and Azure Cognitive Search configuration. See the main CLI documentation for details on setting up API keys and endpoints.
+Create a `fusion-ai.config.ts` at the project root to customise file patterns, metadata enrichment, and chunk sizing:
 
-You can also create a `fusion-ai.config.ts` file to configure file patterns and metadata processing:
-
-```typescript
-import { configureFusionAI } from '@equinor/fusion-framework-cli-plugin-ai-index';
-import type { FusionAIConfigWithIndex } from '@equinor/fusion-framework-cli-plugin-ai-index';
+```ts
+import { configureFusionAI, type FusionAIConfigWithIndex } from '@equinor/fusion-framework-cli-plugin-ai-index';
 
 export default configureFusionAI((): FusionAIConfigWithIndex => ({
   index: {
-    patterns: ['**/*.ts', '**/*.md', '**/*.mdx'],
+    patterns: ['packages/**/src/**/*.ts', 'packages/**/*.md'],
+    rawPatterns: ['packages/**/README.md'],
+    ignore: ['**/dist/**', '**/node_modules/**'],
     metadata: {
-      attributeProcessor: (attributes, document) => {
-        // Custom metadata processing
-        return attributes;
-      },
+      resolvePackage: true,
+      resolveGit: true,
+      attributeProcessor: (attributes, _document) => ({
+        ...attributes,
+        custom_tag: 'my-project',
+      }),
     },
     embedding: {
-      chunkSize: 1000,
-      chunkOverlap: 200,
+      chunkSize: 2000,
+      chunkOverlap: 300,
     },
   },
 }));
 ```
 
-## License
+### Environment variables
 
-ISC
+Azure OpenAI and Azure AI Search credentials can be provided via CLI options or environment variables:
 
+| Variable | Description |
+|---|---|
+| `AZURE_OPENAI_API_KEY` | Azure OpenAI API key |
+| `AZURE_OPENAI_INSTANCE_NAME` | Azure OpenAI instance name |
+| `AZURE_OPENAI_EMBEDDING_DEPLOYMENT_NAME` | Embedding model deployment name |
+| `AZURE_SEARCH_ENDPOINT` | Azure AI Search endpoint URL |
+| `AZURE_SEARCH_API_KEY` | Azure AI Search admin API key |
+| `AZURE_SEARCH_INDEX_NAME` | Target search index name |
+
+## API Reference
+
+### Entry point
+
+| Export | Description |
+|---|---|
+| `registerAiPlugin(program)` | Registers the `ai index` command with `add`, `search`, and `remove` subcommands on a Commander program. |
+| `configureFusionAI(fn)` | Re-exported helper to create a typed `fusion-ai.config.ts`. |
+
+### Types
+
+| Type | Description |
+|---|---|
+| `FusionAIConfigWithIndex` | Full config interface including `index` settings. |
+| `IndexConfig` | Index-specific configuration (patterns, metadata, embedding). |
+| `CommandOptions` | Validated options for the `ai index add` command. |
+| `DeleteOptions` | Validated options for the `ai index remove` command. |
+
+### Utilities (sub-path imports)
+
+| Function / Type | Module | Description |
+|---|---|---|
+| `generateChunkId(path, index?)` | `utils/generate-chunk-id` | Deterministic, URL-safe document ID from a file path. |
+| `parseMarkdown(content, source)` | `utils/markdown` | Chunk Markdown/MDX content into vector-store documents. |
+| `parseTsDocSync(content, opts?)` | `utils/ts-doc` | Extract TSDoc documents from a TypeScript string. |
+| `parseTsDocFromFileSync(file, opts?)` | `utils/ts-doc` | Extract TSDoc documents from a TypeScript file on disk. |
+| `resolvePackage(filePath)` | `utils/package-resolver` | Resolve the nearest `package.json` for a file path. |
+| `getChangedFiles(options)` | `utils/git` | List files changed between a base ref and HEAD. |
+| `extractGitMetadata(filePath)` | `utils/git` | Extract commit hash, date, and GitHub permalink for a file. |

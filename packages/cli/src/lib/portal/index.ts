@@ -1,3 +1,11 @@
+/**
+ * Portal manifest, configuration, and schema utilities for `@equinor/fusion-framework-cli/portal`.
+ *
+ * Provides helpers for defining, loading, merging, and validating Fusion portal
+ * manifests, configurations, and schemas.
+ *
+ * @packageDocumentation
+ */
 export {
   createPortalManifestFromPackage,
   definePortalManifest,

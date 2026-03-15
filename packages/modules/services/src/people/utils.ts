@@ -14,6 +14,25 @@ const requiredApiPersonAttributes = {
   ] satisfies Array<keyof ApiPerson<'v4'>>,
 };
 
+/**
+ * Creates a type-guard function that validates whether a value conforms
+ * to the {@link ApiPerson} shape for a given API version.
+ *
+ * The guard checks that the value contains all required attributes
+ * defined for the specified version.
+ *
+ * @template V - API version key (e.g. `'v2'` or `'v4'`).
+ * @param version - The API version to validate against.
+ * @returns A type-guard function that narrows `T` to `ApiPerson<V>`.
+ *
+ * @example
+ * ```ts
+ * const isV4Person = isApiPerson('v4');
+ * if (isV4Person(data)) {
+ *   console.log(data.azureUniqueId);
+ * }
+ * ```
+ */
 export const isApiPerson = <V extends keyof typeof ApiVersion>(version: V) => {
   /** todo add options for more strict check */
   return <T>(value: T): value is T extends ApiPerson<V> ? T : never => {

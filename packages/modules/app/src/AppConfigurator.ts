@@ -10,21 +10,53 @@ import { moduleKey } from './module';
 
 import AppClient, { type IAppClient } from './AppClient';
 
+/**
+ * Resolved configuration for the app module.
+ *
+ * Produced by {@link AppConfigurator} during module initialization and consumed
+ * by {@link AppModuleProvider} at runtime.
+ */
 export interface AppModuleConfig {
+  /** HTTP client used to communicate with the Fusion app service API. */
   client: IAppClient;
-  // uri which to fetch the assets from aka the bundle of the application
+  /** Base URI for fetching application script bundles (e.g., `'/apps-proxy'`). */
   assetUri?: string;
 }
 
+/**
+ * Public interface for configuring the app module before initialization.
+ *
+ * Consumers use this interface (via the callback in {@link enableAppModule}) to
+ * override the default HTTP client or asset URI.
+ */
 export interface IAppConfigurator {
+  /**
+   * Sets the app service client used to fetch manifests, configs, and settings.
+   *
+   * @param client_or_cb - A promise resolving to an {@link IAppClient}, or a callback
+   *   that receives module initializer args and returns one.
+   */
   setClient: (
     client_or_cb:
       | Promise<AppModuleConfig['client']>
       | ConfigBuilderCallback<AppModuleConfig['client']>,
   ) => void;
+
+  /**
+   * Sets the base URI used to proxy-load application script bundles.
+   *
+   * @param base_or_cb - A static URI string or a callback returning one.
+   */
   setAssetUri: (base_or_cb: string | ConfigBuilderCallback<string>) => void;
 }
 
+/**
+ * Configuration builder for the app module.
+ *
+ * Extends {@link BaseConfigBuilder} to assemble an {@link AppModuleConfig} during
+ * framework initialization. If no explicit client is set, a default one is created
+ * via service discovery. The default `assetUri` is `'/apps-proxy'`.
+ */
 export class AppConfigurator
   extends BaseConfigBuilder<AppModuleConfig>
   implements IAppConfigurator
