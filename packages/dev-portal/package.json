@@ -63,7 +63,7 @@
     "styled-components": "^6.0.7",
     "tsx": "^4.19.3",
     "typescript": "^5.8.2",
-    "vite": "^7.1.12"
+    "vite": "^8.0.0"
   },
   "peerDependencies": {
     "@equinor/fusion-framework": "workspace:*",
