@@ -131,7 +131,7 @@ app-bundle.zip
 
 packages/cli/bin/build
 
-eds-content
+eds/out
 
 
 .assistant
