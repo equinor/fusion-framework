@@ -177,6 +177,20 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
    * Apps should call acquireToken with actual scopes after initialization completes.
    */
   async initialize(): Promise<void> {
+    // Guard: skip authentication when running inside MSAL's hidden iframe.
+    // MSAL uses a hidden iframe for silent token renewal (acquireTokenSilent).
+    // The iframe loads the app URL, which would re-initialize MSAL and attempt
+    // loginRedirect(), causing the "block_iframe_reload" error.  Detect this
+    // by checking if we're in an iframe and the URL contains MSAL's hash params.
+    if (typeof window !== 'undefined' && window !== window.parent) {
+      // Running inside an iframe — let the parent handle authentication.
+      // Still initialize the client so handleRedirectPromise can process
+      // the auth response and post it back to the parent frame.
+      await this.#client.initialize();
+      await this.#client.handleRedirectPromise();
+      return;
+    }
+
     const measurement = this._trackMeasurement('initialize', TelemetryLevel.Debug);
     // Initialize the underlying MSAL client first
     await this.#client.initialize();
