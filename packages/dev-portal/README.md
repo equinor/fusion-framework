@@ -95,7 +95,7 @@ The portal is composed of these internal parts:
 
 - **`render`** — Entry point; creates a React root with theme, framework, and people-resolver providers.
 - **`configure`** — Configures all framework modules (telemetry, navigation, bookmarks, feature flags, analytics, AG Grid, services).
-- **`Router`** — Sets up routes with `react-router-dom` via the navigation module; routes `/apps/:appKey/*` to the app loader.
+- **`Router`** — Sets up routes with `react-router` via the navigation module; routes `/apps/:appKey/*` to the app loader.
 - **`AppLoader`** — Resolves, initializes, and mounts a Fusion app by key; handles loading states and errors.
 - **`Header`** — Top bar with the Fusion logo, context selector, bookmark toggle, and person settings.
 - **`ContextSelector`** — Wired to the current app's context module for searching and selecting context items.

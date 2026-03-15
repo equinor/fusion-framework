@@ -13,7 +13,7 @@ Complete refactor of navigation module architecture with React Router v7 upgrade
    
    ```typescript
    // Example: Type assertions required with React Router v7
-   import { RouterProvider } from 'react-router-dom';
+   import { RouterProvider } from 'react-router';
    import { useRouter } from '@equinor/fusion-framework-react-app/navigation';
    
    export default function Router() {

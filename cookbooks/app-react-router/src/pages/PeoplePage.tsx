@@ -1,9 +1,5 @@
 import { useCallback } from 'react';
-import { Form, useSearchParams, redirect } from 'react-router-dom';
-import { Button, Search, Chip, Typography } from '@equinor/eds-core-react';
-import { category } from '@equinor/eds-icons';
-import { tokens } from '@equinor/eds-tokens';
-import styled from 'styled-components';
+import { Form, useSearchParams, redirect } from '@equinor/fusion-framework-react-router';
 import type {
   LoaderFunctionArgs,
   ActionFunctionArgs,
@@ -11,6 +7,10 @@ import type {
   RouteComponentProps,
   RouterHandle,
 } from '@equinor/fusion-framework-react-router';
+import { Button, Search, Chip, Typography } from '@equinor/eds-core-react';
+import { category } from '@equinor/eds-icons';
+import { tokens } from '@equinor/eds-tokens';
+import styled from 'styled-components';
 import type { PersonSearchResult } from '../api';
 
 export const handle = {

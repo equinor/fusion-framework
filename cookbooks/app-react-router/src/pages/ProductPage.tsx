@@ -1,12 +1,12 @@
-import { Link, useSearchParams, useParams } from 'react-router-dom';
-import { Button, Typography } from '@equinor/eds-core-react';
-import { tokens } from '@equinor/eds-tokens';
-import styled from 'styled-components';
+import { Link, useSearchParams, useParams } from '@equinor/fusion-framework-react-router';
 import type {
   LoaderFunctionArgs,
   RouteComponentProps,
   RouterHandle,
 } from '@equinor/fusion-framework-react-router';
+import { Button, Typography } from '@equinor/eds-core-react';
+import { tokens } from '@equinor/eds-tokens';
+import styled from 'styled-components';
 import type { Product } from '../api/ProductApi';
 
 export const handle = {
