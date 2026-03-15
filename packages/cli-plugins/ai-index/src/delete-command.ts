@@ -68,10 +68,7 @@ const _command = createCommand('remove')
       'Raw OData filter expression for selecting documents to delete',
     ),
   )
-  .argument(
-    '[source-paths...]',
-    'Relative file paths whose indexed chunks should be removed',
-  )
+  .argument('[source-paths...]', 'Relative file paths whose indexed chunks should be removed')
   .action(async (sources: string[], commandOptions: DeleteOptions) => {
     const options = await DeleteOptionsSchema.parseAsync(commandOptions);
     const filterExpression = buildFilter(sources, options.filter);

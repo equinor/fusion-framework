@@ -13,8 +13,17 @@ const markdownConfig = {
   chunkSize: 2000,
   chunkOverlap: 300,
   separators: [
-    "\n# ", "\n## ", "\n### ", "\n#### ", "\n##### ", "\n###### ",
-    "\n```", "\n```\n", "\n---\n", "\n\n", "\n",
+    '\n# ',
+    '\n## ',
+    '\n### ',
+    '\n#### ',
+    '\n##### ',
+    '\n###### ',
+    '\n```',
+    '\n```\n',
+    '\n---\n',
+    '\n\n',
+    '\n',
   ],
   keepSeparator: true,
 };
@@ -74,7 +83,7 @@ export const parseMarkdown = async <T extends Record<string, unknown> = Record<s
   );
   const textSplitter = new RecursiveCharacterTextSplitter(markdownConfig);
   const chunks = await textSplitter.splitText(markdownContent);
-  
+
   // Filter out empty chunks and chunks that are just code fence markers
   const validChunks = chunks.filter((chunk) => {
     if (!isValidChunk(chunk)) {
@@ -82,7 +91,7 @@ export const parseMarkdown = async <T extends Record<string, unknown> = Record<s
     }
     return true;
   });
-  
+
   return validChunks.map(
     (chunk, _index): MarkdownDocument<T> => ({
       id: generateChunkId(source, _index),

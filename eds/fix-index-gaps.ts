@@ -138,9 +138,7 @@ async function prependImportLines(): Promise<void> {
 
     // Insert import line after the heading (line 1)
     const lines = content.split('\n');
-    const patched_content = [lines[0], '', importLine, ...lines.slice(1)].join(
-      '\n',
-    );
+    const patched_content = [lines[0], '', importLine, ...lines.slice(1)].join('\n');
     await writeFile(file, patched_content);
 
     console.log(`  PATCH: ${basename(file)} → import { ${importName} }`);

@@ -150,9 +150,7 @@ const _command = createCommand('search')
     const vectorStoreService = framework.ai.getService('search', options.azureSearchIndexName);
 
     try {
-      const filter = options.filter
-        ? { filterExpression: options.filter }
-        : undefined;
+      const filter = options.filter ? { filterExpression: options.filter } : undefined;
 
       const retrieverOptions: RetrieverOptions =
         options.searchType === 'mmr'
