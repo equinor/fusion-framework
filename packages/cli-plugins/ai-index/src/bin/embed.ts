@@ -196,7 +196,7 @@ export async function embed(binOptions: EmbeddingsBinOptions): Promise<void> {
                   const retryAfterMs = retryAfterSec ? Number(retryAfterSec) * 1000 : 0;
 
                   // Exponential backoff: 2s, 4s, 8s, 16s — or Retry-After if larger
-                  const backoffMs = Math.pow(2, retryIndex) * 1000;
+                  const backoffMs = 2 ** retryIndex * 1000;
                   const delayMs = Math.max(backoffMs, retryAfterMs);
 
                   console.warn(
