@@ -1,5 +1,12 @@
 # Change Log
 
+## 14.0.2
+
+### Patch Changes
+
+- Updated dependencies [[`8f30948`](https://github.com/equinor/fusion-framework/commit/8f3094835eac5be1ea9037e1640dc0a897f2dfe8)]:
+  - @equinor/fusion-framework-module-service-discovery@9.1.2
+
 ## 14.0.1
 
 ### Patch Changes

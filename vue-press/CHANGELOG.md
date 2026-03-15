@@ -1,5 +1,15 @@
 # @equinor/fusion-framework-docs
 
+## 0.4.15
+
+### Patch Changes
+
+- [#4164](https://github.com/equinor/fusion-framework/pull/4164) [`1cab989`](https://github.com/equinor/fusion-framework/commit/1cab989a9d9ce55f564197db6aa43e202ea66a83) Thanks [@dependabot](https://github.com/apps/dependabot)! - chore: bump mermaid from 11.12.3 to 11.13.0
+
+  Updates mermaid to 11.13.0, which includes improved diagram rendering, new diagram types (venn-beta, Ishikawa-beta), and various bug fixes. No breaking changes to diagram syntax.
+
+- [#4105](https://github.com/equinor/fusion-framework/pull/4105) [`8f30948`](https://github.com/equinor/fusion-framework/commit/8f3094835eac5be1ea9037e1640dc0a897f2dfe8) Thanks [@Noggling](https://github.com/Noggling)! - Add readme to service discovery doc in VuePress
+
 ## 0.4.14
 
 ### Patch Changes

@@ -1,5 +1,17 @@
 # poc-portal
 
+## 1.1.57
+
+### Patch Changes
+
+- [#4185](https://github.com/equinor/fusion-framework/pull/4185) [`aa35c46`](https://github.com/equinor/fusion-framework/commit/aa35c46ec049d109bd95121dcefeb96b1e0c2c80) Thanks [@dependabot](https://github.com/apps/dependabot)! - chore: bump @vitejs/plugin-react from 5.1.4 to 6.0.1
+
+- Updated dependencies [[`ae92f13`](https://github.com/equinor/fusion-framework/commit/ae92f136d689dea96056b53c57f63bac4fe46c87), [`aaa3f74`](https://github.com/equinor/fusion-framework/commit/aaa3f747585ee3f22491488ed7c7a8e69aedac78), [`8f30948`](https://github.com/equinor/fusion-framework/commit/8f3094835eac5be1ea9037e1640dc0a897f2dfe8), [`c123c39`](https://github.com/equinor/fusion-framework/commit/c123c39d3adce2e739ab90ffb8e7042c159d13e7), [`3de232c`](https://github.com/equinor/fusion-framework/commit/3de232c0fcf20c1c2bea213c1396c4fdcae84e21), [`32bcf83`](https://github.com/equinor/fusion-framework/commit/32bcf832c21c785ceba4fab9c1fce2ac2dff525d)]:
+  - @equinor/fusion-framework-cli@13.3.19
+  - @equinor/fusion-framework@7.4.14
+  - @equinor/fusion-framework-react-app@9.0.9
+  - @equinor/fusion-framework-module-service-discovery@9.1.2
+
 ## 1.1.56
 
 ### Patch Changes

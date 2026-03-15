@@ -1,5 +1,18 @@
 # @equinor/fusion-framework-vite-plugin-spa
 
+## 3.1.12
+
+### Patch Changes
+
+- [#4179](https://github.com/equinor/fusion-framework/pull/4179) [`32bcf83`](https://github.com/equinor/fusion-framework/commit/32bcf832c21c785ceba4fab9c1fce2ac2dff525d) Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump `vite` from `7.3.1` to `8.0.0`.
+
+  Vite 8 replaces Rollup with Rolldown and esbuild with Oxc for faster builds.
+  No breaking API changes affect this codebase. The `dev-server` peerDependency
+  is widened to accept both Vite 7 and Vite 8.
+
+- Updated dependencies [[`8f30948`](https://github.com/equinor/fusion-framework/commit/8f3094835eac5be1ea9037e1640dc0a897f2dfe8)]:
+  - @equinor/fusion-framework-module-service-discovery@9.1.2
+
 ## 3.1.11
 
 ### Patch Changes
