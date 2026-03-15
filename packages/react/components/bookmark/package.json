@@ -32,7 +32,7 @@
     "rxjs": "^7.8.1"
   },
   "devDependencies": {
-    "@equinor/eds-core-react": "^2.2.0",
+    "@equinor/eds-core-react": "^2.3.7",
     "@equinor/eds-icons": "^1.1.0",
     "@equinor/eds-tokens": "^2.1.1",
     "@equinor/eds-utils": "^2.0.0",
