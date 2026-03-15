@@ -102,6 +102,15 @@ describe('HttpClient', () => {
       new ClientNotFoundException('No registered http client for key [missing-client]'),
     );
   });
+
+  it('should treat a bare hostname as https:// URL with a warning', () => {
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const client = provider.createClient('api.example.com');
+    expect(client.uri).toBe('https://api.example.com');
+    expect(warnSpy).toHaveBeenCalledWith(
+      expect.stringContaining('missing the http:// or https:// protocol'),
+    );
+  });
 });
 
 describe('HttpClientMsal', () => {

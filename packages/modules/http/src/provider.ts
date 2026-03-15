@@ -62,19 +62,32 @@ export interface IHttpClientProvider<TClient extends IHttpClient = IHttpClient> 
   createCustomClient<T extends HttpClient>(key: string): T;
 }
 
+/** URL protocols accepted as valid ad-hoc base URIs. */
+const SUPPORTED_PROTOCOLS = ['http:', 'https:', 'ws:', 'wss:'] as const;
+
 /**
- * Checks if a given string is a valid URL.
- * @param url - The string to check for a valid URL.
- * @returns `true` if the input string is a valid URL, `false` otherwise.
+ * Checks if a given string is a valid absolute URL with a supported protocol.
+ * @param url - The string to check.
+ * @returns `true` when the string uses one of {@link SUPPORTED_PROTOCOLS}.
  */
-const isURL = (url: string) => {
+const isURL = (url: string): boolean => {
   try {
     const parsed = new URL(url);
-    return ['http:', 'https:'].includes(parsed.protocol);
+    return (SUPPORTED_PROTOCOLS as readonly string[]).includes(parsed.protocol);
   } catch {
     return false;
   }
 };
+
+/**
+ * Heuristic check for strings that look like a bare hostname or URL without a
+ * protocol prefix (e.g. `api.example.com` or `api.example.com/v1`).
+ *
+ * Used to emit a deprecation warning when callers rely on the old (pre-patch)
+ * behaviour that accepted protocol-less URLs.
+ */
+const looksLikeURL = (value: string): boolean =>
+  !value.includes(' ') && /^[a-z\d]([a-z\d-]*\.)+[a-z]{2,}/i.test(value);
 
 /**
  * The `HttpClientProvider` class is responsible for managing HTTP client instances and their configuration.
@@ -174,6 +187,13 @@ export class HttpClientProvider<TClient extends IHttpClient = IHttpClient>
       const config = this.config.clients[keyOrConfig];
       if (!config && isURL(keyOrConfig)) {
         return { baseUri: keyOrConfig };
+      } else if (!config && looksLikeURL(keyOrConfig)) {
+        console.warn(
+          `[HttpClientProvider] "${keyOrConfig}" looks like a URL but is missing the http:// or https:// protocol. ` +
+            `Treating it as "https://${keyOrConfig}". ` +
+            `Pass a fully-qualified URL to silence this warning.`,
+        );
+        return { baseUri: `https://${keyOrConfig}` };
       } else if (!config) {
         throw new ClientNotFoundException(`No registered http client for key [${keyOrConfig}]`);
       }
