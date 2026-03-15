@@ -37,7 +37,7 @@
     "@equinor/fusion-framework-vite-plugin-api-service": "workspace:*",
     "@equinor/fusion-framework-vite-plugin-spa": "workspace:*",
     "@equinor/fusion-log": "workspace:*",
-    "@vitejs/plugin-react": "^5.0.2"
+    "@vitejs/plugin-react": "^6.0.1"
   },
   "devDependencies": {
     "typescript": "^5.8.2",
