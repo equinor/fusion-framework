@@ -7,11 +7,12 @@ name: Pull Request Rules
 
 ## TL;DR (for AI agents)
 
-- **Before PR**: Ensure `pnpm test && pnpm build && pnpm -w check` pass, changesets exist for consumer-facing or docs changes, and docs/TSDoc are updated.
+- **Before PR**: Ensure `pnpm test && pnpm build && pnpm -w check` pass, changesets exist for consumer-facing or docs changes, and intent-focused docs/TSDoc/comments are updated.
 - **Template**: Always use `.github/PULL_REQUEST_TEMPLATE.md`; fill all sections, describe current vs. new behavior, and clearly call out breaking changes.
 - **Commits**: Use Conventional Commits for titles and commit messages (e.g. `feat(module-http): add retry logic`).
-- **Content**: Do not list changed files in the PR body (GitHub already shows them); focus on motivation, behavior changes, and risk/impact.
-- **Review**: When reviewing PRs, the PR body must be reviewed and should clearly explain what the PR does and how to review the changes.
+- **Content**: Do not list changed files in the PR body (GitHub already shows them); focus on motivation, intent, behavior changes, invariants, and risk/impact.
+- **Review**: When reviewing PRs, the PR body must be reviewed and should clearly explain what the PR does, why it exists, and how to review the changes.
+- **Blockers**: Missing intent capture is blocking. Do not approve PRs that omit required TSDoc, intent comments, React logic separation, or README/docs updates.
 
 ## PR Creation
 
@@ -20,13 +21,17 @@ name: Pull Request Rules
 - [ ] Changeset created if change affects consumers
 - [ ] Code follows project standards
 - [ ] Tests written and passing
-- [ ] Documentation updated (TSDoc, README)
+- [ ] Documentation updated (TSDoc, README, docs)
+- [ ] TSDoc captures intent for functions, hooks, components, classes, and named arrow functions
+- [ ] Iterator blocks, decision gates, RxJS chains, and complex decisions explain why they exist
+- [ ] React code resolves data transforms and decision logic before markup
 
 ### PR Template
 **ALWAYS use the PR template** located at `.github/PULL_REQUEST_TEMPLATE.md`
 
 Required sections:
 - **Why**: What kind of change, current behavior, new behavior
+- **Intended behavior / invariants**: What contract this code is expected to preserve
 - **Breaking changes**: Yes/no and explanation
 - **Related issues**: Link to issues this PR closes
 - **Checklist**: Confirm self-review, validation, code of conduct
@@ -40,7 +45,7 @@ Required sections:
 
 ## Commit Messages
 
-Follow [Conventional Commits](contributing/conventional-commits.md):
+Follow [Conventional Commits](../../contributing/conventional-commits.md):
 ```
 <type>(<scope>): <description>
 
@@ -61,8 +66,10 @@ Follow [Conventional Commits](contributing/conventional-commits.md):
 ### When Reviewing a PR
 - **Review the PR body**: The PR body content must be reviewed as part of the code review process
 - **Clarity check**: The PR body must clearly explain what the PR does, including current vs. new behavior
+- **Intent check**: The PR body and diff must clearly explain intended behavior, invariants, and non-obvious decisions
 - **Review guidance**: The PR body should provide clear text on how to review the changes (e.g., what to focus on, testing steps, areas of concern)
 - If the PR body is unclear or missing essential information, request clarification before proceeding with code review
+- If required intent capture is missing in code or docs, request changes before approval
 
 ### When Changes Requested
 - PR automatically moves to draft
@@ -90,10 +97,11 @@ When generating PR content:
 - Include breaking change notes if applicable
 - Reference changeset if created
 - Follow conventional commit format for commits
-- Ensure the PR body clearly explains what the PR does and provides guidance on how to review the changes
+- Ensure the PR body clearly explains what the PR does, why it exists, what invariants it preserves, and how to review the changes
 
 When reviewing PRs:
 - Always review the PR body content as part of the review process
 - Verify the PR body clearly explains the change and provides review guidance
-- Request clarification if the PR body is unclear or missing essential information
+- Verify TSDoc, inline intent comments, React logic separation, and README/docs updates when applicable
+- Request changes if the PR body is unclear or if required intent capture is missing
 

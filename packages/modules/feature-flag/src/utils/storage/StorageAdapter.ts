@@ -5,6 +5,11 @@ const extractId = (key: string): { namespace: string; id: string } => {
   return { namespace, id };
 };
 
+/**
+ * Interface for a namespaced key-value storage adapter.
+ *
+ * @template TType - The type of values stored.
+ */
 export interface IStorageAdapter<TType = unknown> extends Iterable<TType> {
   setItem(key: string, item: TType): void;
   removeItem(key: string): void;
@@ -13,8 +18,20 @@ export interface IStorageAdapter<TType = unknown> extends Iterable<TType> {
   clear(): void;
 }
 
+/**
+ * Namespaced wrapper around the Web Storage API (`localStorage` / `sessionStorage`).
+ *
+ * All keys are automatically prefixed with a namespace to avoid collisions.
+ *
+ * @template TType - The type of values stored.
+ */
 export class StorageAdapter<TType = unknown> implements IStorageAdapter<TType> {
   #storage: Storage;
+
+  /**
+   * @param namespace - Prefix applied to all keys.
+   * @param storage - The underlying `Storage` backend.
+   */
   constructor(
     public readonly namespace: string,
     storage: Storage,

@@ -6,12 +6,24 @@ PersonAvatarElement;
 
 import { useBookmarkComponentContext } from '@equinor/fusion-framework-react-components-bookmark';
 
+/** Props for the {@link HeaderActions} component. */
 interface HeaderActionProps {
+  /** Azure AD object ID of the current user, used for the person avatar. */
   readonly userAzureId?: string;
+  /** Toggle callback for the bookmark side sheet open/close state. */
   readonly toggleBookmark: (open: (status: boolean) => boolean) => void;
+  /** Toggle callback for the person settings side sheet open/close state. */
   readonly togglePerson: (open: (status: boolean) => boolean) => void;
 }
 
+/**
+ * Action buttons displayed in the portal top bar header.
+ *
+ * Renders a bookmark toggle button (disabled when no bookmark provider is
+ * available) and a person-avatar button that opens the user settings sheet.
+ *
+ * @param props - {@link HeaderActionProps}
+ */
 export const HeaderActions = (props: HeaderActionProps) => {
   const { toggleBookmark, togglePerson, userAzureId } = props;
 

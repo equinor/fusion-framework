@@ -12,6 +12,16 @@ enableMapSet();
 import { type Actions, actions } from './actions';
 import type { WidgetStateInitial, WidgetState } from '../types';
 
+/**
+ * Creates an Immer-powered reducer for the widget state machine.
+ *
+ * Handles direct state setters (`setManifest`, `setConfig`, `setModule`,
+ * `setInstance`) and tracks in-flight async operations via the `status` set.
+ *
+ * @param value - Initial widget state (without `status`, which is added
+ *   automatically as an empty `Set`).
+ * @returns A reducer function compatible with `FlowSubject`.
+ */
 export const createReducer = (value: WidgetStateInitial) =>
   makeReducer<WidgetState, Actions>({ ...value, status: new Set() } as WidgetState, (builder) =>
     builder

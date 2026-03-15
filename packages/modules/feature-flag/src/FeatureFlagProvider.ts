@@ -27,6 +27,13 @@ import type { IFeatureFlag } from './FeatureFlag';
 import { normalizeFlags } from './utils/normalize-flags';
 import type { FeatureSelectorFn } from './utils/selectors';
 
+/**
+ * Custom equality comparison for two feature flag snapshots.
+ *
+ * @param a - Previous feature flag snapshot (may be `undefined`).
+ * @param b - Current feature flag snapshot (may be `undefined`).
+ * @returns `true` if the two snapshots are considered equal.
+ */
 export type CompareFeature = (a: IFeatureFlag | undefined, b: IFeatureFlag | undefined) => boolean;
 
 /**
@@ -90,6 +97,13 @@ export interface IFeatureFlagProvider {
   hasFeature(key: string): boolean;
 }
 
+/**
+ * Default implementation of {@link IFeatureFlagProvider}.
+ *
+ * Manages feature-flag state via an RxJS-powered store (Immer + FlowSubject),
+ * connects registered plugins, and optionally dispatches framework events on
+ * toggle.
+ */
 export class FeatureFlagProvider
   extends BaseModuleProvider<FeatureFlagConfig>
   implements IFeatureFlagProvider

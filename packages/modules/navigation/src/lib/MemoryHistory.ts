@@ -26,11 +26,11 @@ export type MemoryHistoryOptions = {
 /**
  * Memory history implementation using in-memory storage.
  *
- * Useful for:
- * - Testing: Control navigation state in tests without browser APIs
- * - SSR: Server-side rendering where window is not available
- * - Widgets: Serving applications as widgets without affecting the main browser history
- * - Node.js environments: Environments without browser APIs
+ * Does not touch browser APIs, making it suitable for:
+ * - **Testing** — deterministic navigation state without a DOM
+ * - **SSR** — server-side rendering where `window` is unavailable
+ * - **Widgets** — embedded apps that must not alter the host page URL
+ * - **Node.js** — any environment without browser history APIs
  */
 export class MemoryHistory extends BaseHistory {
   public constructor(options?: MemoryHistoryOptions) {

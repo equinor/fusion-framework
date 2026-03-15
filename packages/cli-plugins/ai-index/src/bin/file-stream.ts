@@ -3,7 +3,7 @@ import { from, mergeMap, concatMap, shareReplay } from 'rxjs';
 import type { Observable } from 'rxjs';
 import { getFileStatus } from '../utils/git/index.js';
 import type { ChangedFile } from '../utils/git/index.js';
-import type { CommandOptions } from '../command.options.js';
+import type { CommandOptions } from '../embeddings-command.options.js';
 
 /**
  * Creates a file stream based on diff mode or glob patterns.

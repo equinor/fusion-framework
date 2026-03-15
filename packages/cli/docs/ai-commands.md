@@ -19,11 +19,12 @@ The Fusion Framework CLI provides powerful AI commands for interacting with Larg
 
 ## Overview
 
-The `ai` command group includes three main subcommands:
+The `ai` command group includes the following subcommands:
 
-- **`chat`** - Interactive chat with AI models using vector store context retrieval
-- **`embeddings`** - Generate embeddings from markdown and TypeScript files for semantic search
-- **`search`** - Search the vector store to validate embeddings and retrieve relevant documents
+- **`ai chat`** - Interactive chat with AI models using vector store context retrieval
+- **`ai index add`** - Add documents to the search index by generating embeddings from source files
+- **`ai index search`** - Search the vector store to validate embeddings and retrieve relevant documents
+- **`ai index remove`** - Remove documents from the search index by source path or OData filter
 
 ## Prerequisites
 
@@ -81,7 +82,7 @@ For GitHub Actions workflows, configure:
 
 ### Configuration File
 
-For the `embeddings` command, you can create a `fusion-ai.config.ts` file in your project root:
+For the `ai index add` command, you can create a `fusion-ai.config.ts` file in your project root:
 
 ```typescript
 import { configureFusionAI } from '@equinor/fusion-framework-cli-plugin-ai-index';
@@ -160,7 +161,6 @@ While in chat mode, you can use these special commands:
 
 ```bash
 # Start interactive chat with default settings
-# (Azure configuration loaded from .env file)
 ffc ai chat
 
 # Increase context retrieval limit for more comprehensive responses
@@ -180,9 +180,9 @@ ffc ai chat --verbose
 3. **Streaming Response**: The AI response streams in real-time for immediate feedback
 4. **History Management**: Conversation history is automatically compressed when it reaches 10 messages to maintain context while reducing token usage
 
-### `ai embeddings`
+### `ai index add`
 
-Generate embeddings from markdown and TypeScript files for semantic search indexing.
+Add documents to the AI search index by generating embeddings from markdown and TypeScript files.
 
 #### Features
 
@@ -197,7 +197,7 @@ Generate embeddings from markdown and TypeScript files for semantic search index
 #### Usage
 
 ```bash
-ffc ai embeddings [options] [glob-patterns...]
+ffc ai index add [options] [glob-patterns...]
 ```
 
 #### Options
@@ -206,7 +206,6 @@ ffc ai embeddings [options] [glob-patterns...]
 |--------|-------------|---------|
 | `--dry-run` | Show what would be processed without doing it | `false` |
 | `--config <path>` | Path to config file | `fusion-ai.config.ts` |
-| `--recursive` | Process directories recursively | `false` |
 | `--diff` | Process only changed files (workflow mode) | `false` |
 | `--base-ref <ref>` | Git reference to compare against | `HEAD~1` |
 | `--clean` | Delete all existing documents before processing | `false` |
@@ -217,25 +216,25 @@ ffc ai embeddings [options] [glob-patterns...]
 
 ```bash
 # Dry run to see what would be processed
-ffc ai embeddings --dry-run ./src
+ffc ai index add --dry-run ./src
 
 # Process all TypeScript and Markdown files in a directory
-ffc ai embeddings ./src
+ffc ai index add ./src
 
 # Process only changed files (useful for CI/CD)
-ffc ai embeddings --diff ./src
+ffc ai index add --diff ./src
 
 # Process changed files compared to a specific branch
-ffc ai embeddings --diff --base-ref origin/main ./src
+ffc ai index add --diff --base-ref origin/main ./src
 
 # Clean and re-index all documents
-ffc ai embeddings --clean ./src
+ffc ai index add --clean ./src
 
 # Process specific file patterns
-ffc ai embeddings "packages/**/*.ts" "docs/**/*.md" "docs/**/*.mdx"
+ffc ai index add "packages/**/*.ts" "docs/**/*.md" "docs/**/*.mdx"
 
 # Use custom config file
-ffc ai embeddings --config ./custom-ai.config.ts ./src
+ffc ai index add --config ./custom-ai.config.ts ./src
 ```
 
 #### Workflow Integration
@@ -268,7 +267,7 @@ Each document is enriched with metadata:
   - `date` - Commit date
   - `message` - Commit message
 
-### `ai search`
+### `ai index search`
 
 Search the vector store to validate embeddings and retrieve relevant documents using semantic search.
 
@@ -283,7 +282,7 @@ Search the vector store to validate embeddings and retrieve relevant documents u
 #### Usage
 
 ```bash
-ffc ai search <query> [options]
+ffc ai index search <query> [options]
 ```
 
 #### Options
@@ -303,41 +302,54 @@ ffc ai search <query> [options]
 
 ```bash
 # Basic search
-ffc ai search "how to use the framework"
+ffc ai index search "how to use the framework"
 
 # Limit results
-ffc ai search "authentication" --limit 5
+ffc ai index search "authentication" --limit 5
 
 # Filter by source file
-ffc ai search "typescript" --filter "metadata/source eq 'src/index.ts'"
+ffc ai index search "typescript" --filter "metadata/source eq 'src/index.ts'"
 
 # Output as JSON for programmatic use
-ffc ai search "documentation" --json
+ffc ai index search "documentation" --json
 
 # Output raw metadata structure
-ffc ai search "documentation" --json --raw
+ffc ai index search "documentation" --json --raw
 
 # Enable verbose output
-ffc ai search "API reference" --verbose
+ffc ai index search "API reference" --verbose
 ```
 
 #### OData Filter Examples
 
-The `--filter` option supports OData filter expressions:
+The `--filter` option accepts [Azure AI Search OData filter expressions](https://learn.microsoft.com/azure/search/search-query-odata-filter). Both `search` and `remove` support the same filter syntax.
+
+Attributes are stored in Azure as a complex collection of `{key, value}` pairs (see [Indexed metadata](#indexed-metadata)). Use the `any()` lambda to match attribute keys and values.
 
 ```bash
-# Filter by source file
+# Filter by source file path (top-level field — no any() needed)
 --filter "metadata/source eq 'packages/framework/src/index.ts'"
 
-# Filter by multiple sources
+# Filter by multiple source paths
 --filter "metadata/source eq 'src/a.ts' or metadata/source eq 'src/b.ts'"
 
-# Filter by commit author
---filter "metadata/attributes/author eq 'John Doe'"
+# Filter by package name (attribute field — use any() lambda)
+--filter "metadata/attributes/any(a: a/key eq 'pkg_name' and a/value eq '@equinor/fusion-framework')"
 
-# Filter by date range (if available in metadata)
---filter "metadata/attributes/date gt '2024-01-01'"
+# Filter by document type (tsdoc or markdown)
+--filter "metadata/attributes/any(a: a/key eq 'type' and a/value eq 'tsdoc')"
+
+# Filter by custom tag
+--filter "metadata/attributes/any(a: a/key eq 'tags' and a/value eq 'react')"
+
+# Filter by TypeScript declaration kind
+--filter "metadata/attributes/any(a: a/key eq 'ts_kind' and a/value eq 'InterfaceDeclaration')"
+
+# Filter by git commit date
+--filter "metadata/attributes/any(a: a/key eq 'git_commit_date' and a/value gt '2025-01-01')"
 ```
+
+> **Common mistake:** Writing `metadata/attributes/pkg_name eq '...'` instead of using `any()`. Because attributes are stored as a `{key, value}` array in Azure, dot-path access does not work — you must use the lambda form shown above.
 
 #### Output Formats
 
@@ -350,6 +362,116 @@ The `--filter` option supports OData filter expressions:
 - Machine-readable output
 - Full document content and metadata
 - Suitable for piping to other tools or scripts
+
+### `ai index remove`
+
+Remove documents from the Azure AI Search index by source path or OData filter. Use this to remove stale, renamed, or excluded content without a full re-index.
+
+#### Usage
+
+```bash
+ffc ai index remove [options] [source-paths...]
+```
+
+#### Options
+
+| Option | Description | Default |
+|--------|-------------|--------|
+| `[source-paths...]` | One or more relative file paths to remove | - |
+| `--filter <expression>` | Raw OData filter expression for advanced selection | - |
+| `--dry-run` | Preview what would be removed without deleting anything | `false` |
+
+**Note:** Azure configuration (API keys, endpoints, etc.) is provided via environment variables (`.env` file or GitHub Variables/Secrets), not command-line options.
+
+#### Examples
+
+```bash
+# Remove by source file paths
+ffc ai index remove packages/modules/old/src/index.ts packages/modules/old/README.md
+
+# Preview what would be removed (dry-run)
+ffc ai index remove --dry-run packages/modules/old/src/index.ts
+
+# Remove all chunks from a specific package
+ffc ai index remove --filter "metadata/attributes/any(a: a/key eq 'pkg_name' and a/value eq '@equinor/fusion-framework-module-old')"
+
+# Remove all markdown documents from a package
+ffc ai index remove --filter "metadata/attributes/any(a: a/key eq 'pkg_name' and a/value eq '@equinor/my-pkg') and metadata/attributes/any(a: a/key eq 'type' and a/value eq 'markdown')"
+
+# Remove by raw source path filter
+ffc ai index remove --filter "metadata/source eq 'src/deprecated-file.ts'"
+```
+
+#### How source-path arguments work
+
+When you pass file paths as positional arguments, the command builds an OData filter that matches each path against the `metadata/source` field:
+
+```bash
+# This command:
+ffc ai index remove src/a.ts src/b.ts
+
+# Is equivalent to:
+ffc ai index remove --filter "metadata/source eq 'src/a.ts' or metadata/source eq 'src/b.ts'"
+```
+
+When both source paths and `--filter` are provided, source paths take precedence to prevent accidental broad deletions.
+
+---
+
+## Indexed Metadata
+
+Each indexed document has two kinds of metadata: **top-level fields** and **attributes** stored as a `{key, value}` array.
+
+### Top-level fields
+
+Access directly in OData filters:
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `metadata/source` | `string` | Relative file path (e.g. `packages/framework/src/index.ts`) |
+
+### Attribute fields
+
+Access via `metadata/attributes/any(a: a/key eq '...' and a/value eq '...')`:
+
+| Key | Values / Type | Set by | Description |
+|-----|---------------|--------|-------------|
+| `type` | `'tsdoc'` \| `'markdown'` | Parser | Document type discriminator |
+| `ts_kind` | `string` | TSDoc parser | TypeScript declaration kind (e.g. `FunctionDeclaration`, `InterfaceDeclaration`) |
+| `ts_name` | `string` | TSDoc parser | Exported symbol name |
+| `md_*` | `any` | Markdown parser | YAML frontmatter fields, prefixed with `md_` |
+| `pkg_name` | `string` | Package resolver | `name` from the nearest `package.json` |
+| `pkg_version` | `string` | Package resolver | `version` from the nearest `package.json` |
+| `pkg_keywords` | `string[]` | Package resolver | `keywords` from `package.json` |
+| `git_commit_hash` | `string` | Git metadata | Commit SHA of the source file |
+| `git_commit_date` | `string` | Git metadata | ISO 8601 commit date |
+| `git_link` | `string` | Git metadata | GitHub permalink to the file |
+| `tags` | `string[]` | `attributeProcessor` | Custom tags set by `fusion-ai.config.ts` (e.g. `package`, `react`, `module`, `cookbook`) |
+
+### Example: full document shape in Azure
+
+```json
+{
+  "id": "cGFja2FnZXMvZnJhbWV3b3JrL3NyYy9pbmRleC50cw",
+  "pageContent": "/** TSDoc comment... */\nfunction enableFramework() {...}",
+  "metadata": {
+    "source": "packages/framework/src/index.ts",
+    "attributes": [
+      { "key": "type", "value": "tsdoc" },
+      { "key": "ts_kind", "value": "FunctionDeclaration" },
+      { "key": "ts_name", "value": "enableFramework" },
+      { "key": "pkg_name", "value": "@equinor/fusion-framework" },
+      { "key": "pkg_version", "value": "8.1.0" },
+      { "key": "git_commit_hash", "value": "abc1234" },
+      { "key": "git_commit_date", "value": "2025-03-14T10:30:00Z" },
+      { "key": "git_link", "value": "https://github.com/equinor/fusion-framework/blob/main/packages/framework/src/index.ts" },
+      { "key": "tags", "value": "[\"package\"]" }
+    ]
+  }
+}
+```
+
+---
 
 ## Common Workflows
 
@@ -370,12 +492,12 @@ The `--filter` option supports OData filter expressions:
 
 3. **Generate initial embeddings**:
    ```bash
-   ffc ai embeddings --clean ./src
+   ffc ai index add --clean ./src
    ```
 
 4. **Verify embeddings with search**:
    ```bash
-   ffc ai search "test query"
+   ffc ai index search "test query"
    ```
 
 5. **Start using chat**:
@@ -389,7 +511,7 @@ For ongoing development, use diff-based processing:
 
 ```bash
 # Process only changed files
-ffc ai embeddings --diff ./src
+ffc ai index add --diff ./src
 ```
 
 ### CI/CD Integration
@@ -424,7 +546,7 @@ jobs:
 
       - name: Update embeddings
         run: |
-          ffc ai embeddings --diff
+          ffc ai index add --diff
         env:
           AZURE_OPENAI_API_KEY: ${{ secrets.AZURE_OPENAI_API_KEY }}
           AZURE_OPENAI_API_VERSION: ${{ vars.AZURE_OPENAI_API_VERSION }}
@@ -479,9 +601,9 @@ jobs:
       - name: Index documentation
         run: |
           if [ -n "${{ steps.last_sha.outputs.last_sha }}" ]; then
-            ffc ai embeddings --diff --base-ref ${{ steps.last_sha.outputs.last_sha }}
+            ffc ai index add --diff --base-ref ${{ steps.last_sha.outputs.last_sha }}
           else
-            ffc ai embeddings
+            ffc ai index add
           fi
         env:
           AZURE_OPENAI_API_KEY: ${{ secrets.AZURE_OPENAI_API_KEY }}
@@ -536,7 +658,7 @@ jobs:
 - Verify the index exists in your Azure Search service
 
 **No results from search**
-- Verify embeddings have been generated: `ffc ai embeddings --dry-run ./src`
+- Verify embeddings have been generated: `ffc ai index add --dry-run ./src`
 - Check that the index contains documents
 - Try a broader search query
 
@@ -556,7 +678,7 @@ Use the `--verbose` flag for detailed output:
 
 ```bash
 ffc ai chat --verbose
-ffc ai search "query" --verbose
+ffc ai index search "query" --verbose
 ```
 
 ## Best Practices

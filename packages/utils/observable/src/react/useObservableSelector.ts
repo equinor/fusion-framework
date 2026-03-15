@@ -23,10 +23,17 @@ const selectorFn = <
 };
 
 /**
- * Pluck observable value by string path
- * @param subject observable record
- * @param selector string path of property
- * @param compare [optional] compare values for changes
+ * React hook that derives a child observable from a parent observable by
+ * selecting a nested property (via a dot-path string) and emitting only when
+ * the selected value changes.
+ *
+ * @template TState - The source state object type.
+ * @template TPath - A dot-separated key path into `TState`.
+ * @template TValue - The resolved property type.
+ * @param subject - The source observable.
+ * @param selector - A dot-path string describing the property to select.
+ * @param compare - Optional equality comparator.
+ * @returns An `Observable<TValue>` that emits when the selected value changes.
  */
 export function useObservableSelector<
   TState extends Record<string, unknown>,
@@ -39,10 +46,15 @@ export function useObservableSelector<
 ): Observable<TValue>;
 
 /**
- * Pluck observable value by callback function
- * @param subject observable
- * @param selector callback function
- * @param compare [optional] compare values for changes
+ * React hook that derives a child observable from a parent observable using
+ * a callback selector function, emitting only when the selected value changes.
+ *
+ * @template TType - The source value type.
+ * @template TValue - The selected value type.
+ * @param subject - The source observable.
+ * @param selector - A function that projects each emitted value.
+ * @param compare - Optional equality comparator.
+ * @returns An `Observable<TValue>` that emits when the selected value changes.
  */
 export function useObservableSelector<TType, TValue = unknown>(
   subject: Observable<TType>,
@@ -50,9 +62,7 @@ export function useObservableSelector<TType, TValue = unknown>(
   compare?: (x: TValue, y: TValue) => boolean,
 ): Observable<TValue>;
 
-/**
- * Hook for observing a property of an object
- */
+/** Implementation of `useObservableSelector`. */
 export function useObservableSelector<
   TType extends Record<string, unknown>,
   TSelector extends NestedKeys<TType> | ((state: TType) => TValue),

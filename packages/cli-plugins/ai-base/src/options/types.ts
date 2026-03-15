@@ -1,4 +1,14 @@
 /**
+ * Hand-authored TypeScript interface for AI CLI command options.
+ *
+ * @remarks
+ * Use {@link AiOptions} when you need a lightweight type without pulling in Zod.
+ * For runtime validation prefer {@link AiOptionsSchema} from the schema module.
+ *
+ * @packageDocumentation
+ */
+
+/**
  * Configuration options for AI-related CLI commands.
  *
  * This interface defines all available options for configuring Azure OpenAI services

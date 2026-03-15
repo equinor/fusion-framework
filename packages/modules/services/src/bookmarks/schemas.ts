@@ -2,11 +2,13 @@ import { ApiVersion } from './api-version';
 
 import { z } from 'zod';
 
+/** Zod schema that parses an ISO-8601 datetime string into a `Date` object. */
 export const ApiDateSchema = z
   .string()
   .datetime({ offset: true })
   .transform((x) => new Date(x));
 
+/** Zod schema for a person reference in a bookmark response. */
 export const ApiPersonSchema = {
   [ApiVersion.v1]: z.object({
     azureUniqueId: z.string(),
@@ -19,6 +21,7 @@ export const ApiPersonSchema = {
   }),
 };
 
+/** Zod schema for the source system of a bookmark. */
 export const ApiSourceSystem = {
   [ApiVersion.v1]: z.object({
     identifier: z.string(),
@@ -27,6 +30,7 @@ export const ApiSourceSystem = {
   }),
 };
 
+/** Zod schema for a Fusion context reference attached to a bookmark. */
 export const ApiFusionContext = {
   [ApiVersion.v1]: z.object({
     id: z.string(),
@@ -61,6 +65,12 @@ export const ApiBookmarkSchema = {
   },
 };
 
+/**
+ * Zod schema for the bookmark payload.
+ *
+ * Accepts a record of key-value pairs, a JSON string, or `undefined`.
+ * JSON strings are automatically parsed into objects.
+ */
 export const ApiBookmarkPayload = {
   get [ApiVersion.v1]() {
     return z

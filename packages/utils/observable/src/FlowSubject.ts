@@ -24,9 +24,35 @@ import type { Flow, Effect } from './types/flow';
 import type { ReducerWithInitialState } from './types/reducers';
 
 /**
- * A specialized Observable that maintains internal state, which can be mutated by dispatching actions.
+ * A specialized Observable that maintains internal state mutated by dispatching actions.
+ *
  * Actions are processed sequentially by a reducer function to produce new state values.
- * This class extends from Observable to allow subscribers to react to state changes over time.
+ * Extends `Observable` so subscribers react to state changes over time.
+ *
+ * Inspired by Redux-style state management but built on top of RxJS, `FlowSubject`
+ * combines a `BehaviorSubject` for state with a `Subject` for actions, providing
+ * a reactive, observable state container.
+ *
+ * @template S - The state type managed by this subject.
+ * @template A - The action type dispatched to this subject.
+ *
+ * @example
+ * ```ts
+ * import { FlowSubject, createReducer } from '@equinor/fusion-observable';
+ *
+ * type State = { count: number };
+ * type Action = { type: 'increment' } | { type: 'decrement' };
+ *
+ * const reducer = createReducer<State, Action>({ count: 0 }, (builder) =>
+ *   builder
+ *     .addCase('increment', (state) => { state.count += 1; })
+ *     .addCase('decrement', (state) => { state.count -= 1; }),
+ * );
+ *
+ * const subject = new FlowSubject(reducer);
+ * subject.subscribe((state) => console.log(state.count));
+ * subject.next({ type: 'increment' }); // logs: 1
+ * ```
  */
 export class FlowSubject<S, A extends Action = Action> extends Observable<S> {
   /**
@@ -195,11 +221,9 @@ export class FlowSubject<S, A extends Action = Action> extends Observable<S> {
   }
 
   /**
-   * Deprecated. Use `addFlow` instead.
+   * @deprecated Use {@link FlowSubject.addFlow} instead.
    *
-   * @deprecated use `addFlow`
-   *
-   * @param fn The flow function to execute.
+   * @param fn - The flow function to execute.
    * @returns A subscription to the flow.
    */
   public addEpic(fn: Flow<A, S>): Subscription {
@@ -207,10 +231,29 @@ export class FlowSubject<S, A extends Action = Action> extends Observable<S> {
   }
 
   /**
-   * Adds a flow that listens for actions and performs side effects.
+   * Adds a flow (epic-style) that transforms the action stream and optionally
+   * reads state, then emits new actions back into the subject.
    *
-   * @param fn The flow function to execute.
-   * @returns A subscription to the flow.
+   * Flows receive the full `action$` stream and the state observable, and must
+   * return an `Observable<A>`. This is useful for complex async orchestration.
+   *
+   * @param fn - The flow function that receives `(action$, state$)` and returns an action observable.
+   * @returns A subscription to the flow. Unsubscribe to remove the flow.
+   * @throws {TypeError} If the flow function does not return an observable.
+   *
+   * @example
+   * ```ts
+   * subject.addFlow((action$) =>
+   *   action$.pipe(
+   *     filterAction('fetchData'),
+   *     switchMap((action) =>
+   *       fetchApi(action.payload).pipe(
+   *         map((data) => ({ type: 'fetchSuccess', payload: data })),
+   *       ),
+   *     ),
+   *   ),
+   * );
+   * ```
    */
   public addFlow(fn: Flow<A, S>): Subscription {
     const epic$ = fn(this.action$, this);
@@ -233,7 +276,9 @@ export class FlowSubject<S, A extends Action = Action> extends Observable<S> {
   }
 
   /**
-   * Unsubscribes from actions and removes subscribers.
+   * Tears down the subject by unsubscribing both the action and state subjects.
+   *
+   * After calling this method, the subject is no longer usable.
    */
   public unsubscribe() {
     this.#action.unsubscribe();
@@ -241,7 +286,8 @@ export class FlowSubject<S, A extends Action = Action> extends Observable<S> {
   }
 
   /**
-   * Finalizes the subject and completes observers.
+   * Completes both the action and state subjects, signalling to all
+   * subscribers that no further values will be emitted.
    */
   public complete() {
     this.#action.complete();
@@ -249,9 +295,10 @@ export class FlowSubject<S, A extends Action = Action> extends Observable<S> {
   }
 
   /**
-   * Clones the subject to a simple observable.
+   * Returns a plain `Observable` of the state, hiding the subject's
+   * `next`, `complete`, and other mutation methods.
    *
-   * @returns An observable of the state.
+   * @returns A read-only observable of the state.
    */
   public asObservable() {
     return this.#state.asObservable();

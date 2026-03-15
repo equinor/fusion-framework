@@ -1,0 +1,236 @@
+name: Index Docs
+
+on:
+  workflow_call:
+    inputs:
+      tag_name:
+        description: Git tag used to track the last indexed commit
+        type: string
+        required: true
+      environment:
+        description: GitHub environment containing the indexing configuration
+        type: string
+        required: true
+      clean_embeddings:
+        description: Force full rebuild and delete all embeddings
+        type: boolean
+        default: false
+        required: false
+  workflow_dispatch:
+    inputs:
+      tag_name:
+        description: Git tag used to track the last indexed commit
+        type: string
+        required: true
+      environment:
+        description: GitHub environment containing the indexing configuration
+        type: string
+        required: true
+      clean_embeddings:
+        description: Force full rebuild and delete all embeddings
+        type: boolean
+        default: false
+        required: false
+
+env:
+  TAG_NAME: ${{ inputs.tag_name }}
+
+concurrency:
+  group: index-docs-${{ inputs.environment }}-${{ inputs.tag_name }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  determine-mode:
+    name: Determine indexing mode
+    runs-on: ubuntu-latest
+    outputs:
+      mode: ${{ steps.mode.outputs.mode }}
+      base_ref: ${{ steps.mode.outputs.base_ref }}
+      reason: ${{ steps.mode.outputs.reason }}
+    steps:
+      - name: Validate inputs
+        env:
+          INPUT_TAG_NAME: ${{ inputs.tag_name }}
+          INPUT_ENVIRONMENT: ${{ inputs.environment }}
+        run: |
+          set -euo pipefail
+
+          if [[ -z "$INPUT_TAG_NAME" ]]; then
+            echo "::error::Input 'tag_name' is required."
+            exit 1
+          fi
+
+          if [[ -z "$INPUT_ENVIRONMENT" ]]; then
+            echo "::error::Input 'environment' is required."
+            exit 1
+          fi
+
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Fetch tags
+        run: git fetch origin tag ${{ env.TAG_NAME }} || true
+
+      - name: Determine indexing mode
+        id: mode
+        run: |
+          set -euo pipefail
+
+          if [[ "${{ inputs.clean_embeddings }}" == "true" ]]; then
+            echo "mode=clean" >> "$GITHUB_OUTPUT"
+            echo "base_ref=" >> "$GITHUB_OUTPUT"
+            echo "reason=Manual clean rebuild requested" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          last_indexed=$(git rev-parse ${{ env.TAG_NAME }}^{commit} 2>/dev/null || echo "")
+
+          if [[ -z "$last_indexed" ]]; then
+            echo "mode=full" >> "$GITHUB_OUTPUT"
+            echo "base_ref=" >> "$GITHUB_OUTPUT"
+            echo "reason=No previous indexing state found" >> "$GITHUB_OUTPUT"
+          elif ! git merge-base --is-ancestor "$last_indexed" HEAD 2>/dev/null; then
+            echo "mode=full" >> "$GITHUB_OUTPUT"
+            echo "base_ref=" >> "$GITHUB_OUTPUT"
+            echo "reason=Last indexed commit is not an ancestor of HEAD" >> "$GITHUB_OUTPUT"
+          else
+            echo "mode=diff" >> "$GITHUB_OUTPUT"
+            echo "base_ref=$last_indexed" >> "$GITHUB_OUTPUT"
+            echo "reason=Incremental indexing from $last_indexed" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Summary
+        run: |
+          echo "### Indexing mode: ${{ steps.mode.outputs.mode }}"
+          echo "Reason: ${{ steps.mode.outputs.reason }}"
+          if [[ "${{ steps.mode.outputs.mode }}" == "diff" ]]; then
+            echo "Base ref: ${{ steps.mode.outputs.base_ref }}"
+          fi
+
+  index-docs:
+    name: Index documentation
+    environment: ${{ inputs.environment }}
+    runs-on: ubuntu-latest
+    needs: determine-mode
+    permissions:
+      contents: write
+    env:
+      MODE: ${{ needs.determine-mode.outputs.mode }}
+      BASE_REF: ${{ needs.determine-mode.outputs.base_ref }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Fetch tags
+        run: git fetch origin tag ${{ env.TAG_NAME }} || true
+
+      - name: Setup node and install deps
+        uses: ./.github/actions/node-setup
+
+      - name: Build CLI
+        run: pnpm build:cli
+
+      - name: Install built CLI
+        run: pnpm install -w ./packages/cli
+
+      - name: Index docs to Azure AI Search
+        timeout-minutes: 10
+        env:
+          AZURE_OPENAI_API_KEY: ${{ secrets.AZURE_OPENAI_API_KEY }}
+          AZURE_OPENAI_API_VERSION: ${{ vars.AZURE_OPENAI_API_VERSION }}
+          AZURE_OPENAI_INSTANCE_NAME: ${{ vars.AZURE_OPENAI_INSTANCE_NAME }}
+          AZURE_OPENAI_EMBEDDING_DEPLOYMENT_NAME: ${{ vars.AZURE_OPENAI_EMBEDDING_DEPLOYMENT_NAME }}
+          AZURE_SEARCH_ENDPOINT: ${{ vars.AZURE_SEARCH_ENDPOINT }}
+          AZURE_SEARCH_API_KEY: ${{ secrets.AZURE_SEARCH_API_KEY }}
+          AZURE_SEARCH_INDEX_NAME: ${{ vars.AZURE_SEARCH_INDEX_NAME }}
+        run: |
+          set -euo pipefail
+
+          if [[ "$MODE" == "clean" ]]; then
+            echo "::notice::Running clean rebuild — all existing embeddings will be deleted first"
+            pnpm exec ffc ai index add --clean --config ./fusion-ai.config.ts
+          elif [[ "$MODE" == "diff" ]]; then
+            echo "::notice::Running incremental indexing from base ref ${BASE_REF}"
+            pnpm exec ffc ai index add --diff --base-ref "$BASE_REF" --config ./fusion-ai.config.ts
+          else
+            echo "::notice::Running full indexing (no safe base ref available)"
+            pnpm exec ffc ai index add --config ./fusion-ai.config.ts
+          fi
+
+      - name: Configure git user
+        if: success()
+        uses: ./.github/actions/config-git-user
+
+      - name: Update last indexed commit tag
+        if: success()
+        run: |
+          set -euo pipefail
+
+          git tag -f -m "last indexed commit for docs indexing" ${{ env.TAG_NAME }} ${{ github.sha }}
+          git push origin refs/tags/${{ env.TAG_NAME }} --force
+
+      - name: Write execution summary
+        if: always()
+        env:
+          EXECUTION_STATUS: ${{ job.status }}
+          INDEX_ENVIRONMENT: ${{ inputs.environment }}
+          INDEX_REASON: ${{ needs.determine-mode.outputs.reason }}
+          SEARCH_INDEX_NAME: ${{ vars.AZURE_SEARCH_INDEX_NAME }}
+        run: |
+          set -euo pipefail
+
+          if [[ -n "$BASE_REF" ]]; then
+            summary_base_ref="$BASE_REF"
+          else
+            summary_base_ref="n/a"
+          fi
+
+          if [[ "$MODE" == "clean" ]]; then
+            command_summary='pnpm exec ffc ai index add --clean --config ./fusion-ai.config.ts'
+            mode_summary='Clean rebuild executed after deleting existing embeddings.'
+          elif [[ "$MODE" == "diff" ]]; then
+            command_summary="pnpm exec ffc ai index add --diff --base-ref $BASE_REF --config ./fusion-ai.config.ts"
+            mode_summary='Incremental indexing ran against the tracked base ref.'
+          else
+            command_summary='pnpm exec ffc ai index add --config ./fusion-ai.config.ts'
+            mode_summary='Full indexing ran because no safe incremental base ref was available.'
+          fi
+
+          if [[ "$EXECUTION_STATUS" == "success" ]]; then
+            tag_update_status='updated'
+            outcome_summary='Indexing completed successfully and the tracking tag now points to this commit.'
+          else
+            tag_update_status='not updated'
+            outcome_summary='Indexing failed, so the tracking tag was left unchanged.'
+          fi
+
+          {
+            echo '# Index docs execution summary'
+            echo
+            echo "$outcome_summary"
+            echo
+            echo '| Field | Value |'
+            echo '| --- | --- |'
+            echo "| Status | $EXECUTION_STATUS |"
+            echo "| Environment | $INDEX_ENVIRONMENT |"
+            echo "| Mode | $MODE |"
+            echo "| Reason | $INDEX_REASON |"
+            echo "| Base ref | $summary_base_ref |"
+            echo "| Search index | $SEARCH_INDEX_NAME |"
+            echo "| Tracking tag | $TAG_NAME |"
+            echo "| Commit | $GITHUB_SHA |"
+            echo "| Tag update | $tag_update_status |"
+            echo
+            echo "$mode_summary"
+            echo
+            echo 'Executed command:'
+            echo
+            echo '```sh'
+            echo "$command_summary"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"

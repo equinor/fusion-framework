@@ -3,34 +3,62 @@ import type { ConfigBuilderCallbackArgs } from '@equinor/fusion-framework-module
 import { createDefaultClient } from './utils';
 import type { IClient } from './types';
 
-// Define the configuration type for the WidgetModule
+/**
+ * Resolved configuration produced by {@link WidgetModuleConfigurator}.
+ *
+ * Contains the {@link IClient} used to fetch widget manifests and configs
+ * from the backend API.
+ */
 export type WidgetModuleConfig = {
+  /** HTTP client abstraction for widget API calls. */
   client: IClient;
 };
 
-// Define a callback type for configuring the WidgetModule
+/**
+ * Callback signature accepted by {@link enableWidgetModule} for customizing
+ * the widget module configuration.
+ *
+ * @param builder - The {@link WidgetModuleConfigurator} instance to configure.
+ */
 export type WidgetModuleConfigBuilderCallback = (
   builder: WidgetModuleConfigurator,
 ) => void | Promise<void>;
 
-// Class responsible for configuring the WidgetModule
+/**
+ * Configuration builder for the widget module.
+ *
+ * Extends `BaseConfigBuilder` to produce a {@link WidgetModuleConfig}. If no
+ * custom client is provided via {@link setClient}, a default HTTP client is
+ * created from the `apps` service-discovery endpoint.
+ *
+ * @example
+ * ```typescript
+ * enableWidgetModule(configurator, (builder) => {
+ *   builder.setClient(async () => myCustomClient);
+ * });
+ * ```
+ */
 export class WidgetModuleConfigurator extends BaseConfigBuilder<WidgetModuleConfig> {
-  // Default expiration time for configurations (1 minute)
+  /** Default cache expiration time in milliseconds (1 minute). */
   defaultExpireTime = 1 * 60 * 1000;
 
   /**
-   * Set the client for the WidgetModule configuration.
-   * @param cb - Callback function to configure the client.
+   * Registers a custom {@link IClient} factory for the widget module.
+   *
+   * @param cb - Callback that receives config-builder args and returns an
+   *   `IClient` instance (or a `Promise` thereof).
    */
   public setClient(cb: ConfigBuilderCallback<IClient>) {
     this._set('client', cb);
   }
 
   /**
-   * Create an HTTP client based on the provided parameters.
-   * @param clientId - Identifier for the client.
-   * @param init - Configuration builder callback arguments.
-   * @returns An instance of the HTTP client.
+   * Creates an HTTP client by resolving the `apps` client from the HTTP module
+   * or falling back to service discovery.
+   *
+   * @param clientId - Registered HTTP client identifier (typically `'apps'`).
+   * @param init - Framework config-builder callback args providing module instances.
+   * @returns An `IHttpClient` instance for widget API calls.
    */
   private async _createHttpClient(clientId: string, init: ConfigBuilderCallbackArgs) {
     const http = await init.requireInstance('http');
@@ -45,23 +73,22 @@ export class WidgetModuleConfigurator extends BaseConfigBuilder<WidgetModuleConf
   }
 
   /**
-   * Process the WidgetModule configuration and create an HTTP client if needed.
-   * @param config - Partial configuration for the WidgetModule.
-   * @param _init - Configuration builder callback arguments.
-   * @returns The processed WidgetModule configuration.
+   * Finalizes the configuration by creating the default HTTP client when no
+   * custom client has been set.
+   *
+   * @param config - Partial configuration accumulated by builder callbacks.
+   * @param _init - Framework config-builder callback args.
+   * @returns The fully resolved {@link WidgetModuleConfig}.
    */
   protected async _processConfig(
     config: Partial<WidgetModuleConfig>,
     _init: ConfigBuilderCallbackArgs,
   ) {
-    // Create an HTTP client using the specified client ID and initialization parameters
     const httpClient = await this._createHttpClient('apps', _init);
 
-    // If the configuration does not have a client, use the default client
     if (!config.client) {
       config.client = createDefaultClient(httpClient);
     }
-    // Return the processed configuration as a WidgetModuleConfig object
     return config as WidgetModuleConfig;
   }
 }

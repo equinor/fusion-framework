@@ -67,9 +67,10 @@ export class HttpClientMsal<
      * Merges the default scopes defined in the `HttpClientMsal` class with the scopes provided in the `init` parameter, if any.
      * This ensures that the request includes the necessary scopes for MSAL authentication.
      */
-    const args = Object.assign(init || {}, {
+    const args = {
+      ...init,
       scopes: this.defaultScopes.concat(init?.scopes || []),
-    }) as FetchRequestInit<T, TRequest, TResponse>;
+    } as FetchRequestInit<T, TRequest, TResponse>;
 
     return super._fetch$(path, args);
   }

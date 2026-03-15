@@ -16,8 +16,10 @@ import type {
 
 /**
  * Abstract base class for history implementations.
- * Provides common state management and navigation logic that can be shared
- * across different history implementations (browser, memory, etc.).
+ *
+ * Provides common state management, navigation logic, and subscription
+ * lifecycle that is shared across different history backends (browser,
+ * hash, memory).
  */
 export abstract class BaseHistory implements History {
   // Subscriptions for cleanup
@@ -27,14 +29,18 @@ export abstract class BaseHistory implements History {
   #state: HistoryState;
 
   /**
-   * Gets the current location.
+   * Gets the current location in the history stack.
+   *
+   * @returns The current {@link Location} including pathname, search, hash, state, and key
    */
   public get location(): History['location'] {
     return this.#state.subject.value.current.location;
   }
 
   /**
-   * Gets the current action.
+   * Gets the current navigation action type.
+   *
+   * @returns The most recent {@link Action} (`Pop`, `Push`, or `Replace`)
    */
   public get action(): History['action'] {
     return this.#state.subject.value.current.action;
@@ -56,7 +62,9 @@ export abstract class BaseHistory implements History {
   }
 
   /**
-   * Checks if there are any active navigation blockers.
+   * Checks whether there are any active navigation blockers.
+   *
+   * @returns `true` if one or more blockers are registered
    */
   public get hasBlockers(): boolean {
     return this.#state.subject.value.blockers.length > 0;
@@ -68,13 +76,19 @@ export abstract class BaseHistory implements History {
 
   /**
    * Creates a valid href string for a given path.
+   *
+   * @param to - Target path or partial path object
+   * @returns Fully-qualified href string
    */
   public createHref(to: To): string {
     return this.createURL(to).href;
   }
 
   /**
-   * Creates a URL object for a given path.
+   * Creates a {@link URL} object for a given path.
+   *
+   * @param to - Target path or partial path object
+   * @returns Resolved {@link URL} instance
    */
   public createURL(to: To): URL {
     return this.#state.stack.createURL(to);
@@ -82,6 +96,9 @@ export abstract class BaseHistory implements History {
 
   /**
    * Encodes a location by properly URL-encoding the pathname.
+   *
+   * @param to - Target path or partial path object
+   * @returns A {@link Path} with URL-encoded components
    */
   public encodeLocation(to: To): Path {
     return this.#state.stack.createURL(to);

@@ -2,7 +2,14 @@ import type { IHttpClient } from '@equinor/fusion-framework-module-http';
 import type { ApiResponseSelector, IApiPluginClient } from './types';
 
 /**
- * Produces an api plugin client.
+ * Creates an {@link IApiPluginClient} that fetches feature flags using the
+ * provided HTTP client.
+ *
+ * @param args - Client configuration.
+ * @param args.httpClient - An `IHttpClient` instance.
+ * @param args.path - Relative path for the feature-flags endpoint.
+ * @param args.selector - Response selector that maps the HTTP response to flags.
+ * @returns An {@link IApiPluginClient} instance.
  *
  * @example
  * ```ts
@@ -14,7 +21,7 @@ import type { ApiResponseSelector, IApiPluginClient } from './types';
  */
 export const createApiPluginClient = (args: {
   httpClient: IHttpClient;
-  /** Relatice HTTP client path */
+  /** Relative HTTP client path. */
   path: string;
   selector: ApiResponseSelector;
 }): IApiPluginClient => {

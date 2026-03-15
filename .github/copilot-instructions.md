@@ -35,6 +35,8 @@ Fusion Framework uses file-based AI instructions under `.github/instructions/`. 
 
 - **Code generation** → `./.github/instructions/code-generation.instructions.md`  
   TypeScript standards, TSDoc, error handling, import patterns, `pnpm` usage.
+- **Documentation** → `./.github/instructions/documentation.instructions.md`  
+  README, docs, and cookbook writing for developers and retrieval-driven code generation.
 - **Monorepo structure** → `./.github/instructions/monorepo-structure.instructions.md`  
   Package layout, naming, cross-package imports, `workspace:^` dependencies.
 - **Changesets** → `./.github/instructions/changesets.instructions.md`  
@@ -63,12 +65,14 @@ When you receive a task, follow this workflow:
 1. **Identify file type and location**
    - `*.tsx` or React UI → follow **React Rules** (and **Testing Rules** for `*.test.tsx`).
    - `packages/**` TypeScript code → follow **Monorepo Structure Rules** + **Code Generation Rules**.
+  - `README.md`, docs markdown, or cookbooks → follow **Documentation Rules**.
    - `.changeset/*.md` → follow **Changeset Rules**.
   - `.agents/skills/**` → follow **Skills Rules** and treat imported catalog entries as read-only unless the user explicitly asks to change them; prefer repo-owned `custom-*` overlays for local divergence.
    - PR / changeset / Dependabot tasks → follow the corresponding instructions file.
 
 2. **Apply core global rules**
-   - Use **strict TypeScript** (no `any`), explicit return types, and **TSDoc for all public APIs and components**.
+  - Use **strict TypeScript** (no `any`), explicit return types, and **TSDoc for all public APIs and components**.
+  - Treat **TSDoc, READMEs, docs, and cookbooks as indexed retrieval assets** used by RAG and code-generation workflows. Write them for developer clarity and semantic recall.
    - Use **scoped imports** like `@equinor/fusion-framework-*`, never relative imports between packages.
    - Use **`pnpm` only** for scripts and dependencies; never `npm` or `yarn`.
 
@@ -88,6 +92,7 @@ When you receive a task, follow this workflow:
 
 - **Readability and maintainability first**: Prefer simple, obvious solutions over cleverness; follow `code-generation.instructions.md`.
 - **Strict TypeScript + TSDoc**: All exported functions, classes, and components must be well-typed and documented.
+- **Documentation is retrieval infrastructure**: TSDoc, READMEs, docs, and cookbooks are indexed for retrieval and code generation, so optimize for human clarity and semantic hit rate.
 - **React function components only**: No class components; handle loading and error states; follow `react.instructions.md`.
 - **Tests with Vitest**: Co-locate tests, cover success, error, and async behavior; follow `testing.instructions.md`.
 - **Monorepo discipline**: Treat each `packages/*` project as a versioned library; obey naming and import rules in `monorepo-structure.instructions.md`.

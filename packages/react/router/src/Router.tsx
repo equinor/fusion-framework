@@ -19,6 +19,13 @@ import type { FusionRouterContext, RouteNode, RouteObject, RouterContext } from 
 import { FusionRouterContextProvider, routerContext, useRouterContext } from './context.js';
 import React from 'react';
 
+/**
+ * Props accepted by the {@link Router} component.
+ *
+ * @property routes - A single route node, array of route nodes, or plain React Router `RouteObject` array.
+ * @property loader - Optional React element shown while lazy route chunks are loading.
+ * @property context - Custom object exposed as `fusion.context` in loaders, actions, and components.
+ */
 type RouterProps = {
   routes: RouteNode | RouteNode[] | RouteObject | RouteObject[];
   loader?: React.ReactElement;

@@ -24,37 +24,54 @@ Readable, well-documented code ages gracefully. It can be maintained, extended, 
 ## Core Principles
 
 ### Readability First
-Write "stupid" code that's easy to understand and maintain. Prioritize clarity over cleverness. If code needs a comment to explain what it does, rewrite it to be self-explanatory.
+Write "stupid" code that's easy to understand and maintain. Prioritize clarity over cleverness. The primary goal is to capture intent. Names and structure should carry as much meaning as possible, but when intent, invariants, or business rules are not obvious, document them explicitly.
 
 ### Documentation is Code
-All functions, components, and classes MUST have comprehensive TSDoc comments. Documentation is as important as the code itself - it's part of the API contract.
+All declared functions, named arrow functions, components, hooks, and classes MUST have comprehensive TSDoc comments. Generic APIs MUST document every type parameter with `@template`. User-facing APIs MUST include `@example`. Documentation is as important as the code itself - it's part of the API contract.
 
 ### Package Documentation
-Every package MUST have a comprehensive README.md file explaining its purpose, usage, and API. A package without documentation might as well not exist.
+Every package MUST have a comprehensive README.md file explaining its purpose, usage, and API. README content MUST explain user-facing behavior and intended usage. Complex workflows, troubleshooting, and migration guidance MUST live in `packages/*/docs/`. A package without documentation might as well not exist.
 
 ## Quick Reference
 
 | Standard | Requirement | Enforcement |
 |----------|-------------|-------------|
-| **TSDoc** | All public functions, components, classes | Code review + CI |
+| **TSDoc** | All declared functions, named arrow functions, components, hooks, classes | Code review + CI |
 | **README.md** | All packages | Code review |
 | **Code Quality** | Readable, maintainable code | Code review |
-| **Inline Comments** | Complex logic and business rules | Code review |
+| **Inline Comments** | Iterator blocks, decision gates, RxJS chains, complex logic | Code review |
 | **Formatting** | Biome | Pre-commit hooks |
 | **TypeScript** | Strict mode | CI builds |
 
 **Key Rules:**
-- All functions, components, and classes MUST have proper TSDoc comments
-- All packages MUST have comprehensive README.md files
-- Write readable code over clever optimizations
-- Add inline comments for complex logic
+- All declared functions, named arrow functions, components, hooks, and classes MUST have proper TSDoc comments
+- Every TSDoc block MUST explain intent and include `@param`, `@returns`, `@template` for generics, and `@example` for user-facing APIs
+- All packages MUST have comprehensive README.md files, and complex material MUST be moved into `packages/*/docs/`
+- Iterator blocks, decision gates, RxJS operator chains, and complex logic MUST capture intent with inline comments or extracted named helpers
 - Prioritize maintainability and clarity
 
 ## TSDoc Documentation
 
 ### Mandatory TSDoc Requirements
 
-**ALL functions, components, and classes MUST have TSDoc comments.** This is non-negotiable.
+**ALL declared functions, named arrow functions, components, hooks, and classes MUST have TSDoc comments.** This is non-negotiable.
+
+This applies to:
+- Function declarations
+- Class methods
+- Named arrow functions assigned to variables
+- React components and custom hooks
+- Classes
+
+If an inline anonymous callback in `map`, `filter`, `reduce`, `forEach`, or similar becomes non-trivial, extract it into a named helper with TSDoc or add an intent comment immediately above the callback.
+
+#### Required Tags
+- Lead with a summary that explains the API's intent and why it exists
+- Add `@param` for every parameter
+- Add `@returns` for every non-void function
+- Add `@template` for every generic type parameter
+- Add `@throws` for meaningful error paths
+- Add `@example` for user-facing APIs and non-trivial public APIs
 
 #### Functions and Methods
 ```typescript
@@ -111,12 +128,13 @@ export class AuthService {
 ### TSDoc Best Practices
 
 #### ✅ Do's
-- **Describe what and why**, not just how
+- **Describe intent first**: explain what the API enables and why it exists
 - **Include parameter descriptions** with types and constraints
 - **Document return values** and their meaning
+- **Document generic type parameters** and their constraints
 - **Note side effects** and important behavior
 - **Mention thrown errors** with specific error types
-- **Use examples** for complex APIs
+- **Use `@example`** for user-facing APIs and complex APIs
 - **Keep descriptions concise** but comprehensive
 
 #### ❌ Don'ts
@@ -127,13 +145,13 @@ export class AuthService {
 
 ## Package README Requirements
 
-Every package MUST have a comprehensive README.md file with:
+Every package MUST have a comprehensive README.md file that explains all user-facing behavior with enough detail for a consumer to get started safely.
 
 ### Required Sections
 - **Description**: What the package does and why it exists
 - **Installation**: How to install and set up the package
-- **Usage**: Basic usage examples with code snippets
-- **API Reference**: Complete API documentation
+- **Quick Start / Usage**: Basic usage examples with code snippets
+- **User-facing API Reference**: Entry points, configuration points, and links to detailed docs
 - **Configuration**: Configuration options and environment variables
 - **Contributing**: How to contribute to the package
 - **License**: License information
@@ -142,7 +160,9 @@ Every package MUST have a comprehensive README.md file with:
 - **Keep it updated** when APIs change
 - **Include working code examples** that can be copy-pasted
 - **Explain the problem** the package solves
+- **Explain the intended usage** and important defaults for user-facing code
 - **Document breaking changes** and migration guides
+- **Move advanced or noisy material** into `packages/*/docs/` instead of overloading the README
 - **Use consistent formatting** across all package READMEs
 
 ## Code Quality Standards
@@ -382,18 +402,40 @@ function processOrder(order: Order): ProcessedOrder {
 ### Inline Comments for Maintainability
 
 #### When to Add Comments
+Intent comments are REQUIRED for:
+- Iterator blocks such as `for`, `for...of`, `forEach`, `map`, `filter`, `reduce`, and `flatMap`
+- Decision gates such as `if`, `switch`, and non-trivial ternaries
+- RxJS operator chains and subscriptions
+- Complex decisions, heuristics, thresholds, and workarounds
+
+Comments must explain why the block exists, what invariant it protects, or what contract it produces. Do not paraphrase syntax.
+
 ```typescript
-// ✅ Good: Explain complex business logic
+// ✅ Good: Explain why an iterator exists and what it produces
+function groupVisibleModules(modules: Module[]): Record<string, Module[]> {
+  // Build the navigation model once so rendering can stay declarative and stable
+  return modules.reduce<Record<string, Module[]>>((groups, module) => {
+    if (!module.visible) {
+      return groups;
+    }
+
+    const group = groups[module.category] ?? [];
+    group.push(module);
+    groups[module.category] = group;
+    return groups;
+  }, {});
+}
+
+// ✅ Good: Explain the rule behind a decision gate
 function calculateShippingCost(order: Order): number {
   let cost = BASE_SHIPPING_COST;
 
-  // Free shipping for orders over $100, but only for non-bulky items
-  // Bulky items always incur shipping costs regardless of order total
+  // Free shipping only applies to lightweight orders because bulky handling is billed separately
   if (order.total >= 100 && !hasBulkyItems(order)) {
     return 0;
   }
 
-  // Additional cost for bulky items (over 10lbs or large dimensions)
+  // Bulky items always add handling overhead regardless of subtotal
   if (hasBulkyItems(order)) {
     cost += BULKY_ITEM_SURCHARGE;
   }
@@ -401,17 +443,18 @@ function calculateShippingCost(order: Order): number {
   return cost;
 }
 
-// ✅ Good: Explain non-obvious algorithmic choices
-function findOptimalRoute(routes: Route[]): Route {
-  // Using Dijkstra's algorithm here because we need the shortest path
-  // considering both distance and traffic conditions
-  return dijkstraShortestPath(routes, (route) =>
-    route.distance * TRAFFIC_MULTIPLIER + route.trafficDelay
-  );
-}
+// ✅ Good: Explain RxJS operator intent and stream contract
+const project$ = selectedProjectId$.pipe(
+  // Ignore repeated selections so downstream work only reflects real intent changes
+  distinctUntilChanged(),
+  // Cancel stale requests when the user switches project before the previous load finishes
+  switchMap((projectId) => api.getProject(projectId)),
+);
 ```
 
 #### What NOT to Comment
+Do not write comments that only restate syntax, variable names, or obvious control flow.
+
 ```typescript
 // ❌ Bad: Comments that just restate the code
 const total = price * quantity; // multiply price by quantity
@@ -474,10 +517,11 @@ export class AuthenticationError extends Error {
 
 ### Code Review Checklist
 
-- [ ] All functions, components, and classes have proper TSDoc comments
-- [ ] Package has comprehensive README.md documentation
+- [ ] All declared functions, named arrow functions, components, hooks, and classes have proper TSDoc comments
+- [ ] Generic APIs document `@template` and user-facing APIs include `@example`
+- [ ] Package has comprehensive README.md documentation and complex material is moved into `packages/*/docs/`
 - [ ] Code is readable and maintainable ("stupid" code preferred)
-- [ ] Complex logic has explanatory inline comments
+- [ ] Iterator blocks, decision gates, RxJS chains, and complex logic capture intent with explanatory comments or named helpers
 - [ ] Functions are small and focused on single responsibilities
 - [ ] Error handling is consistent and uses proper error types
 - [ ] No clever optimizations that sacrifice readability

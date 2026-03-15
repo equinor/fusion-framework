@@ -11,6 +11,16 @@ import { formatPath, chalk, type ConsoleLogger, defaultHeaders } from './utils/i
 
 import { generatePortalConfig } from './portal-config.js';
 
+/**
+ * Options for publishing a portal configuration to the portal service.
+ *
+ * @property config - Optional path to a custom portal config file.
+ * @property portal - Portal identification with name and version.
+ * @property environment - The target Fusion environment (excludes Development).
+ * @property auth - Authentication settings for the Fusion Framework.
+ * @property debug - Enable debug mode for verbose logging.
+ * @property log - Optional logger for outputting progress and debug information.
+ */
 type PortalConfigPublishOptions = {
   config?: string;
   portal: {

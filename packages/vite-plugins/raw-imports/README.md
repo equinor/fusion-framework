@@ -1,233 +1,164 @@
-# Fusion Framework Vite Plugin - Raw Imports
+# @equinor/fusion-framework-vite-plugin-raw-imports
 
-This Vite plugin enables importing files as raw strings using the `?raw` query parameter. While Vite has built-in support for `?raw` imports, this plugin ensures consistent behavior in library mode (`build.lib`) and handles edge cases with relative path resolution that may not work with Vite's default implementation.
+Vite plugin that embeds text files as inline string modules via `?raw` imports.
 
-## Features
-
-- **Library Mode Support**: Works reliably in Vite library builds (`build.lib`) where native `?raw` support may be inconsistent
-- **Relative Path Support**: Handles relative paths with `../` correctly, including edge cases
-- **Consistent Behavior**: Ensures `?raw` imports work the same way across all build modes
-- **Automatic Integration**: Included by default in Fusion Framework CLI builds
-- **TypeScript Support**: Full TypeScript support with proper type definitions
+Use this plugin when you need reliable raw-string imports in **Vite library mode** (`build.lib`) or when Vite's built-in `?raw` handler mishandles deeply nested relative paths. It is included automatically by `@equinor/fusion-framework-cli`.
 
 > [!NOTE]
-> While Vite supports `?raw` imports natively, it treats them as static assets. 
-> This plugin embeds the content directly in the JavaScript bundle, making it accessible at runtime without separate asset loading. 
-> This ensures reliable behavior in library mode and handles path resolution edge cases.
+> Vite supports `?raw` imports natively, but treats them as static assets.
+> This plugin reads the file at build time and inlines the content directly
+> into the JavaScript bundle, so the string is available at runtime without
+> a separate asset request.
 
-## Installation
+## Who Should Use This
 
-This plugin is automatically included when using `@equinor/fusion-framework-cli` for building applications. If you need to use it manually:
+- **Fusion app developers** — the plugin is already active when you build with `@equinor/fusion-framework-cli`. No setup needed.
+- **Library authors** building with `vite build --lib` who import markdown, text, or template files as strings.
+- **Anyone** hitting 404s or incorrect paths from Vite's native `?raw` with deeply nested relative imports.
+
+## Quick Start
+
+### Automatic (Fusion CLI)
+
+If you build with `@equinor/fusion-framework-cli`, the plugin is registered for you. Just import:
+
+```typescript
+import readme from '../../README.md?raw';
+console.log(readme); // full file content as a string
+```
+
+### Manual Installation
 
 ```bash
 pnpm add -D @equinor/fusion-framework-vite-plugin-raw-imports
 ```
 
-## Usage
-
-### Basic Usage
-
-Import any file as a raw string:
-
 ```typescript
-import readmeContent from '../../README.md?raw';
-
-console.log(readmeContent); // The raw markdown content as a string
-```
-
-### In React Components
-
-```tsx
-import readmeContent from '../../README.md?raw';
-import '@equinor/fusion-wc-markdown/markdown-viewer';
-
-export default function HomePage() {
-  return <fwc-markdown-viewer>{readmeContent}</fwc-markdown-viewer>;
-}
-```
-
-### With TypeScript
-
-Add type definitions for `?raw` imports:
-
-```typescript
-// types/markdown.d.ts
-declare module '*.md?raw' {
-  const content: string;
-  export default content;
-}
-```
-
-### Manual Plugin Configuration
-
-If you're not using the Fusion Framework CLI, add the plugin to your Vite config:
-
-```typescript
+// vite.config.ts
 import { defineConfig } from 'vite';
 import { rawImportsPlugin } from '@equinor/fusion-framework-vite-plugin-raw-imports';
 
 export default defineConfig({
-  plugins: [
-    rawImportsPlugin(),
-    // ... other plugins
-  ],
+  plugins: [rawImportsPlugin()],
 });
 ```
 
-### Customizing File Extensions
+## Key Concepts
 
-By default, the plugin only handles `.md` files. To handle additional file types, configure the `extensions` option:
+### Build-Time Embedding
 
-```typescript
-import { rawImportsPlugin } from '@equinor/fusion-framework-vite-plugin-raw-imports';
+The plugin runs during Vite's build (and dev-server) transform pipeline. When it encounters an import like `'./notes.md?raw'`, it:
 
-export default defineConfig({
-  plugins: [
-    rawImportsPlugin({
-      extensions: ['.md', '.txt', '.json'], // Add more extensions as needed
-    }),
-  ],
-});
-```
+1. Resolves the file path relative to the importing module.
+2. Reads the file content from disk.
+3. Returns a virtual module: `export default "<file content>"`.
 
-> [!NOTE]
-> Files with extensions not listed in the `extensions` option will be handled by Vite's built-in `?raw` support, ensuring compatibility with existing image imports and other file types.
+The result is a regular JavaScript string — no asset request at runtime.
 
-## How It Works
+### Extension Filtering
 
-1. **Import Detection**: The plugin intercepts imports ending with `?raw`
-2. **Path Resolution**: Resolves the file path relative to the importing file
-3. **Content Loading**: Reads the file content from disk
-4. **Module Generation**: Returns a JavaScript module with the content as a default export
+By default only `.md` files are intercepted. All other `?raw` imports (images, shaders, etc.) fall through to Vite's built-in handler, so existing imports keep working.
 
-The plugin uses Vite's `resolveId` and `load` hooks to:
-- Create a virtual module for each `?raw` import
-- Resolve paths correctly relative to the importing file
-- Read and return the file content as a string
+### Enforcement Phase
 
-## Supported File Types
+The plugin registers with `enforce: 'pre'`, meaning it resolves imports **before** Vite's internal asset plugin. This avoids conflicts in library mode.
 
-By default, the plugin only handles markdown files (`.md`). This ensures that:
-- Image imports with `?raw` (like `image.png?raw`) continue to work with Vite's built-in handler
-- Other file types use Vite's native `?raw` support
-- Only markdown files get the special library mode handling
+## Common Patterns
 
-You can configure additional extensions if needed (see [Customizing File Extensions](#customizing-file-extensions)).
-
-## Path Resolution
-
-The plugin handles various path formats:
-
-```typescript
-// Relative paths
-import content from './file.md?raw';
-import content from '../README.md?raw';
-import content from '../../docs/guide.md?raw';
-
-// Absolute paths (resolved from project root)
-import content from '/src/docs/guide.md?raw';
-```
-
-Paths are resolved relative to the importing file's directory, ensuring correct resolution regardless of the file structure.
-
-## Error Handling
-
-If a file cannot be read, the plugin throws a descriptive error:
-
-```
-Failed to read file: /path/to/file.md. ENOENT: no such file or directory
-```
-
-This helps identify missing files or incorrect paths during development.
-
-## Integration with Fusion Framework
-
-This plugin is automatically included in all Vite builds when using `@equinor/fusion-framework-cli`. No additional configuration is required.
-
-## Examples
-
-### Displaying README Content
+### Display Markdown in a React Component
 
 ```tsx
 import readmeContent from '../../README.md?raw';
 import '@equinor/fusion-wc-markdown/markdown-viewer';
 
 export default function AboutPage() {
-  return (
-    <div>
-      <fwc-markdown-viewer>{readmeContent}</fwc-markdown-viewer>
-    </div>
-  );
+  return <fwc-markdown-viewer>{readmeContent}</fwc-markdown-viewer>;
 }
 ```
 
-### Loading Configuration Files
-
-```typescript
-import configTemplate from './config.template.json?raw';
-
-const config = JSON.parse(configTemplate);
-```
-
-### Loading Text Content
-
-```typescript
-import licenseText from '../../LICENSE?raw';
-
-console.log('License:', licenseText);
-```
-
-## API Reference
-
-### `rawImportsPlugin(options?)`
-
-Creates a Vite plugin instance that handles `?raw` imports for configured file extensions.
-
-**Parameters:**
-- `options` (optional): Configuration options
-  - `extensions?: string[]` - File extensions to handle (default: `['.md']`)
-
-**Returns:** `Plugin` - A Vite plugin object
-
-**Example:**
+### Handle Additional File Extensions
 
 ```typescript
 import { rawImportsPlugin } from '@equinor/fusion-framework-vite-plugin-raw-imports';
 
-// Default: only handles .md files
-export default {
-  plugins: [rawImportsPlugin()],
-};
-
-// Custom: handle multiple file types
-export default {
+export default defineConfig({
   plugins: [
     rawImportsPlugin({
       extensions: ['.md', '.txt', '.json'],
     }),
   ],
-};
+});
 ```
 
-## When to Use This Plugin
+> [!NOTE]
+> Extensions not listed in the `extensions` option are handled by Vite's
+> built-in `?raw` support, so image and shader imports remain unaffected.
 
-While Vite has built-in `?raw` support, this plugin is recommended when:
+### Add TypeScript Declarations for Raw Imports
 
-- Building libraries with `build.lib` mode (Vite's native support may be inconsistent)
-- Using complex relative paths like `../../README.md?raw`
-- Needing guaranteed consistent behavior across all build modes
-- Working with files outside the standard `src` directory structure
+Create a declaration file so TypeScript recognises `?raw` imports:
 
-For simple app builds with standard file locations, Vite's built-in `?raw` support may be sufficient.
+```typescript
+// src/types/raw.d.ts
+declare module '*.md?raw' {
+  const content: string;
+  export default content;
+}
+```
 
-## Limitations
+### Resolve Various Path Formats
 
-- Only works with text-based files (binary files will be corrupted)
-- File content is loaded at build time, not runtime
-- Large files may impact build performance
+```typescript
+import a from './file.md?raw';            // same directory
+import b from '../README.md?raw';         // parent directory
+import c from '../../docs/guide.md?raw';  // deeply nested relative
+import d from '/src/docs/guide.md?raw';   // absolute from project root
+```
+
+Paths are resolved relative to the importing file's directory.
+
+## API Surface
+
+| Export | Type | Description |
+|---|---|---|
+| `rawImportsPlugin` | `(options?: RawImportsPluginOptions) => Plugin` | Factory that creates the Vite plugin instance. |
+| `default` | Same as `rawImportsPlugin` | Default export for convenient one-liner usage. |
+| `RawImportsPluginOptions` | `interface` | Configuration object accepted by the factory. |
+
+### `rawImportsPlugin(options?)`
+
+Create a Vite plugin that intercepts `?raw` imports for configured file extensions and returns their content as inline string modules.
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `options` | `RawImportsPluginOptions` | `undefined` | Optional configuration object. |
+| `options.extensions` | `string[]` | `['.md']` | File extensions to intercept. Each entry must include the leading dot. |
+
+**Returns:** `Plugin` — a Vite plugin with `resolveId` and `load` hooks.
+
+**Throws:** `Error` when a matched file cannot be read from disk. The error message includes the resolved path and the underlying OS error:
+
+```
+Failed to read file: /absolute/path/to/file.md. ENOENT: no such file or directory
+```
+
+## When to Use This Plugin vs Vite's Built-In `?raw`
+
+| Scenario | Recommendation |
+|---|---|
+| Standard app build, files inside `src/` | Vite's built-in `?raw` is usually sufficient. |
+| Library build with `build.lib` | Use this plugin — Vite's native handler can be inconsistent. |
+| Deeply nested relative paths (`../../`) | Use this plugin — it resolves relative paths more reliably. |
+| Binary files (images, fonts) | Do **not** use this plugin — it reads as UTF-8 text only. |
+
+## Constraints and Limitations
+
+- **Text files only** — binary content will be corrupted because the plugin reads with `utf-8` encoding.
+- **Build-time only** — file content is captured at build time; runtime file changes are not reflected.
+- **Bundle size** — large files are embedded verbatim in the JavaScript bundle, which affects bundle size.
 
 ## Related Packages
 
-- `@equinor/fusion-imports` - Similar functionality for esbuild-based imports
-- `@equinor/fusion-framework-cli` - CLI tool that includes this plugin by default
+- `@equinor/fusion-framework-cli` — CLI that includes this plugin by default for all Vite builds.
+- `@equinor/fusion-imports` — similar raw-import functionality for esbuild-based builds.
 
