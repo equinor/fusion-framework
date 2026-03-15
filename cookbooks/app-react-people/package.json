@@ -29,7 +29,7 @@
     "@equinor/eds-icons": "^1.1.0",
     "@equinor/fusion-framework-module-navigation": "workspace:^",
     "@equinor/fusion-framework-react-router": "workspace:^",
-    "@equinor/fusion-react-person": "^1.0.0",
+    "@equinor/fusion-react-person": "^2.0.0",
     "@equinor/fusion-wc-people": "^2.0.0",
     "react-router-dom": "^7.9.5",
     "styled-components": "^6.0.7"
