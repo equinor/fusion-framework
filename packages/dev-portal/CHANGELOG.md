@@ -1,5 +1,22 @@
 # @equinor/fusion-framework-dev-portal
 
+## 4.0.5
+
+### Patch Changes
+
+- [#4185](https://github.com/equinor/fusion-framework/pull/4185) [`aa35c46`](https://github.com/equinor/fusion-framework/commit/aa35c46ec049d109bd95121dcefeb96b1e0c2c80) Thanks [@dependabot](https://github.com/apps/dependabot)! - chore: bump @vitejs/plugin-react from 5.1.4 to 6.0.1
+
+- [#4179](https://github.com/equinor/fusion-framework/pull/4179) [`32bcf83`](https://github.com/equinor/fusion-framework/commit/32bcf832c21c785ceba4fab9c1fce2ac2dff525d) Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump `vite` from `7.3.1` to `8.0.0`.
+
+  Vite 8 replaces Rollup with Rolldown and esbuild with Oxc for faster builds.
+  No breaking API changes affect this codebase. The `dev-server` peerDependency
+  is widened to accept both Vite 7 and Vite 8.
+
+- Updated dependencies [[`aa35c46`](https://github.com/equinor/fusion-framework/commit/aa35c46ec049d109bd95121dcefeb96b1e0c2c80), [`aaa3f74`](https://github.com/equinor/fusion-framework/commit/aaa3f747585ee3f22491488ed7c7a8e69aedac78), [`32bcf83`](https://github.com/equinor/fusion-framework/commit/32bcf832c21c785ceba4fab9c1fce2ac2dff525d)]:
+  - @equinor/fusion-framework-dev-server@1.1.32
+  - @equinor/fusion-framework@7.4.14
+  - @equinor/fusion-framework-app@10.4.10
+
 ## 4.0.4
 
 ### Patch Changes

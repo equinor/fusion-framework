@@ -1,5 +1,40 @@
 # @equinor/fusion-framework-cli-plugin-ai-chat
 
+## 1.0.6
+
+### Patch Changes
+
+- [#4221](https://github.com/equinor/fusion-framework/pull/4221) [`aaa3f74`](https://github.com/equinor/fusion-framework/commit/aaa3f747585ee3f22491488ed7c7a8e69aedac78) Thanks [@odinr](https://github.com/odinr)! - fix(security): address undici multiple vulnerabilities (CVE-2026-1524, 1527, 1528, 2581)
+
+  Upgrade undici from 7.22.0 to 7.24.3 to fix multiple security vulnerabilities affecting WebSocket parsing, HTTP header validation, and request deduplication:
+
+  - **CVE-2026-1528** (HIGH): WebSocket 64-bit length integer overflow causing process crash
+  - **CVE-2026-1524** (MODERATE): HTTP/1.1 response field header injection
+  - **CVE-2026-1527** (MODERATE): CRLF injection via upgrade option enabling protocol smuggling
+  - **CVE-2026-2581** (MODERATE): Unbounded memory consumption in deduplication handler
+
+  These are non-breaking security patches that harden undici against untrusted upstream endpoints and malicious WebSocket frames.
+
+  **Advisories**: GHSA-f269-vfmq-vjvj, GHSA-v9p9-hfj2-hcw8, GHSA-4992-7rv2-5pvq, GHSA-phc3-fgpg-7m6h
+  **Fixed in**: undici 7.24.0+ (deployed 7.24.3)
+
+- [#4155](https://github.com/equinor/fusion-framework/pull/4155) [`3de232c`](https://github.com/equinor/fusion-framework/commit/3de232c0fcf20c1c2bea213c1396c4fdcae84e21) Thanks [@dependabot](https://github.com/apps/dependabot)! - fix(cli): break turbo workspace cycle for AI plugins
+
+  Upgrade turbo from 2.8.10 to 2.8.14. This version introduces stricter workspace cycle detection, requiring the AI plugin dependencies to be moved from the CLI package's devDependencies to the root package.json.
+
+  The CLI plugins are now configured at the repository root (fusion-cli.config.ts) instead of in the packages/cli package, ensuring a clean workspace dependency graph for turbo's build scheduler.
+
+  This change has no impact on the published CLI package's public API. Plugins continue to be wired identically; only the source of the wire definition has changed.
+
+  Additional improvements from turbo 2.8.14:
+
+  - Fix: Ensures turbo watch mode respects task dependencies on first run
+  - Perf: Skip irrelevant packages for faster monorepo builds
+  - Feature: AI agent telemetry support in turbo traces
+
+- Updated dependencies [[`ae92f13`](https://github.com/equinor/fusion-framework/commit/ae92f136d689dea96056b53c57f63bac4fe46c87), [`c123c39`](https://github.com/equinor/fusion-framework/commit/c123c39d3adce2e739ab90ffb8e7042c159d13e7), [`3de232c`](https://github.com/equinor/fusion-framework/commit/3de232c0fcf20c1c2bea213c1396c4fdcae84e21), [`32bcf83`](https://github.com/equinor/fusion-framework/commit/32bcf832c21c785ceba4fab9c1fce2ac2dff525d)]:
+  - @equinor/fusion-framework-cli@13.3.19
+
 ## 1.0.5
 
 ### Patch Changes
