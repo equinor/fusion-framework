@@ -147,8 +147,7 @@
     "react-dom": "^19.2.1",
     "rxjs": "^7.8.1",
     "typescript": "^5.8.2",
-    "vite-tsconfig-paths": "^5.1.4",
-    "vitest": "^3.2.4"
+    "vitest": "^4.0.18"
   },
   "peerDependencies": {
     "@equinor/fusion-framework-module-msal": "workspace:^",
