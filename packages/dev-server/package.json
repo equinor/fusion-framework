@@ -41,10 +41,10 @@
   },
   "devDependencies": {
     "typescript": "^5.8.2",
-    "vite": "^7.1.12",
+    "vite": "^8.0.0",
     "vitest": "^4.0.18"
   },
   "peerDependencies": {
-    "vite": "^7.0.0"
+    "vite": "^7.0.0 || ^8.0.0"
   }
 }
