@@ -54,7 +54,7 @@
     "@types/dotenv": "^8.2.3",
     "@types/react": "^18.2.50",
     "@types/react-dom": "^18.2.7",
-    "@vitejs/plugin-react": "^5.0.2",
+    "@vitejs/plugin-react": "^6.0.1",
     "dotenv": "^17.2.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
