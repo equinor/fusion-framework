@@ -509,8 +509,8 @@ importers:
         specifier: workspace:^
         version: link:../../packages/modules/navigation
       '@equinor/fusion-react-person':
-        specifier: ^1.0.0
-        version: 1.0.0(react@18.3.1)
+        specifier: ^2.0.0
+        version: 2.0.0(react@18.3.1)
       '@equinor/fusion-wc-people':
         specifier: ^2.0.0
         version: 2.0.0
@@ -2897,8 +2897,8 @@ packages:
     peerDependencies:
       react: ^17.0.0 || ^18.0.0
 
-  '@equinor/fusion-react-person@1.0.0':
-    resolution: {integrity: sha512-bcoEiLdcOuZEdK1Snbcv1zcOxmzrOxwvlFiHw32NfIaWMKgtFSdxXIyTmXo5dJ8zT2z099/327aGijiDMxJ3vA==}
+  '@equinor/fusion-react-person@2.0.0':
+    resolution: {integrity: sha512-efVxl4GmgqdSuH/XzeD0MrBwq1Csi0QgyqWq07eE+UIu1OTNvX+zEourOMZdnTy2c4njkmb+aFdWSniM8+fsIQ==}
     peerDependencies:
       react: ^18 || ^19
 
@@ -11124,9 +11124,10 @@ snapshots:
       '@equinor/fusion-wc-icon': 2.3.1
       react: 18.3.1
 
-  '@equinor/fusion-react-person@1.0.0(react@18.3.1)':
+  '@equinor/fusion-react-person@2.0.0(react@18.3.1)':
     dependencies:
       '@equinor/fusion-react-utils': 3.0.0(react@18.3.1)
+      '@equinor/fusion-wc-people': 2.0.0
       '@equinor/fusion-wc-person': 3.4.0
       react: 18.3.1
 
