@@ -57,10 +57,10 @@
     "@equinor/fusion-framework-module-navigation": "workspace:^",
     "@equinor/fusion-framework-module-services": "workspace:^",
     "rxjs": "^7.8.1",
-    "typescript": "^5.8.2"
+    "typescript": "^5.9.3"
   },
   "peerDependencies": {
     "@equinor/fusion-framework-module": "workspace:^",
-    "rxjs": "^7.8.1"
+    "rxjs": "^7.0.0"
   }
 }

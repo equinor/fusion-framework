@@ -10,7 +10,7 @@ import { createHistoryReducer, createStore } from './state';
 const defaultInitialLocation: NavigationUpdate = {
   delta: 0,
   action: Action.Pop,
-  location: { pathname: '/', search: '', hash: '', key: 'unknown', state: null },
+  location: { pathname: '/', search: '', hash: '', key: 'unknown', state: null, unstable_mask: undefined },
 };
 
 /**

@@ -29,14 +29,14 @@
     "react": "^19.2.1",
     "react-dom": "^19.2.1",
     "react-router-dom": "^7.9.5",
-    "styled-components": "^6.1.19",
+    "styled-components": "^6.3.11",
     "typescript": "^5.9.3"
   },
   "dependencies": {
     "@equinor/fusion-framework-react-ag-grid": "workspace:^",
     "@equinor/fusion-framework-react-router": "workspace:^",
-    "ag-charts-community": "^12.2.0",
-    "ag-charts-react": "^12.2.0",
+    "ag-charts-community": "^13.1.0",
+    "ag-charts-react": "^13.1.0",
     "chart.js": "^4.5.1",
     "react-chartjs-2": "^5.3.1"
   }

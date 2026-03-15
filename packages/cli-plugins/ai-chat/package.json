@@ -45,8 +45,8 @@
   },
   "dependencies": {
     "@equinor/fusion-framework-cli-plugin-ai-base": "workspace:*",
-    "@equinor/fusion-framework-module-ai": "workspace:*",
     "@equinor/fusion-framework-module": "workspace:*",
+    "@equinor/fusion-framework-module-ai": "workspace:*",
     "@langchain/core": "^1.0.1",
     "commander": "^14.0.1",
     "rxjs": "^7.8.1"
@@ -55,7 +55,7 @@
     "@equinor/fusion-framework-cli": "workspace:^"
   },
   "devDependencies": {
-    "typescript": "^5.8.2",
-    "vitest": "^4.0.18"
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.0"
   }
 }

@@ -142,7 +142,7 @@
   },
   "dependencies": {
     "odata-query": "^8.0.4",
-    "zod": "^4.1.8"
+    "zod": "^4.3.6"
   },
   "devDependencies": {
     "@equinor/fusion-framework-module": "workspace:^",
@@ -150,11 +150,11 @@
     "@equinor/fusion-framework-module-service-discovery": "workspace:^",
     "@faker-js/faker": "^10.1.0",
     "msw": "^2.7.3",
-    "typescript": "^5.8.2",
-    "vitest": "^4.0.18"
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.0"
   },
   "peerDependencies": {
     "@equinor/fusion-framework-module": "workspace:^",
-    "odata-query": "^8.0.4"
+    "odata-query": "^8.0.0"
   }
 }
