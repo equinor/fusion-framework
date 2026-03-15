@@ -125,7 +125,6 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
-    "@equinor/fusion-framework-react-router": "workspace:*",
     "@equinor/fusion-framework-module": "workspace:*",
     "@equinor/fusion-framework-module-app": "workspace:*",
     "@equinor/fusion-framework-module-http": "workspace:*",
