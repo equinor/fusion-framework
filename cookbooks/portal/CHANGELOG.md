@@ -1,5 +1,14 @@
 # portal
 
+## 0.1.44-next.0
+
+### Patch Changes
+
+- [#3820](https://github.com/equinor/fusion-framework/pull/3820) [`9461f76`](https://github.com/equinor/fusion-framework/commit/9461f768a4e790b94da9fd02272d139d5b354ea8) Thanks [@odinr](https://github.com/odinr)! - relase next
+
+- Updated dependencies [[`9461f76`](https://github.com/equinor/fusion-framework/commit/9461f768a4e790b94da9fd02272d139d5b354ea8), [`ae92f13`](https://github.com/equinor/fusion-framework/commit/ae92f136d689dea96056b53c57f63bac4fe46c87)]:
+  - @equinor/fusion-framework-cli@13.3.19-next.0
+
 ## 0.1.43
 
 ### Patch Changes
@@ -301,7 +310,6 @@
 ### Patch Changes
 
 - [`78b6ad5`](https://github.com/equinor/fusion-framework/commit/78b6ad5e76485a36dbda09ec75a0a8348fdf0664) Thanks [@odinr](https://github.com/odinr)! - Downgrade React version from 19.2.0 to 18.2.0 to maintain compatibility with EDS components used in other packages.
-
   - Updated dependencies and devDependencies in package.json
   - Ensures consistent React version across the monorepo
   - Fixes build failures caused by type compatibility issues

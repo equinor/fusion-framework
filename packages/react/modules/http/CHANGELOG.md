@@ -1,5 +1,15 @@
 # Change Log
 
+## 10.0.2-next.0
+
+### Patch Changes
+
+- [#3820](https://github.com/equinor/fusion-framework/pull/3820) [`9461f76`](https://github.com/equinor/fusion-framework/commit/9461f768a4e790b94da9fd02272d139d5b354ea8) Thanks [@odinr](https://github.com/odinr)! - relase next
+
+- Updated dependencies [[`9461f76`](https://github.com/equinor/fusion-framework/commit/9461f768a4e790b94da9fd02272d139d5b354ea8), [`cc9e7eb`](https://github.com/equinor/fusion-framework/commit/cc9e7ebbf1b92d067d8d799e55430d57ccb2e095)]:
+  - @equinor/fusion-framework-react-module@3.1.15-next.0
+  - @equinor/fusion-framework-module-http@7.0.9-next.0
+
 ## 10.0.1
 
 ### Patch Changes
@@ -9,6 +19,7 @@
 - Updated dependencies [[`6aa8e1f`](https://github.com/equinor/fusion-framework/commit/6aa8e1f5c9d852b25e97aa7d98a63008c64d4581)]:
   - @equinor/fusion-framework-module-http@7.0.8
   - @equinor/fusion-framework-react-module@3.1.14
+
 ## 11.0.0-next.0
 
 ### Major Changes

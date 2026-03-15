@@ -1,5 +1,20 @@
 # @equinor/fusion-framework-cli-plugin-ai-index
 
+## 1.0.7-next.0
+
+### Patch Changes
+
+- [#4183](https://github.com/equinor/fusion-framework/pull/4183) [`ae92f13`](https://github.com/equinor/fusion-framework/commit/ae92f136d689dea96056b53c57f63bac4fe46c87) Thanks [@odinr](https://github.com/odinr)! - Require `simple-git` 3.32.3 or newer in published package manifests to align installs with the upstream fix for CVE-2026-28292.
+
+  This does not change the CLI API. It tightens the minimum allowed dependency version so fresh installs and manifest-based scanners resolve the first safe `simple-git` release.
+
+- Updated dependencies [[`9461f76`](https://github.com/equinor/fusion-framework/commit/9461f768a4e790b94da9fd02272d139d5b354ea8), [`ae92f13`](https://github.com/equinor/fusion-framework/commit/ae92f136d689dea96056b53c57f63bac4fe46c87)]:
+  - @equinor/fusion-imports@1.1.12-next.0
+  - @equinor/fusion-framework-cli@13.3.19-next.0
+  - @equinor/fusion-framework-module@5.0.7-next.0
+  - @equinor/fusion-framework-cli-plugin-ai-base@1.0.6-next.0
+  - @equinor/fusion-framework-module-ai@2.0.3-next.0
+
 ## 1.0.6
 
 ### Patch Changes
@@ -88,7 +103,6 @@
   This plugin extends the Fusion Framework CLI with comprehensive document embedding and indexing capabilities for building searchable vector stores from code and documentation.
 
   **Features:**
-
   - Document chunking and embedding generation
   - Git metadata extraction for context-aware embeddings
   - Markdown/MDX and TypeScript/TSX documentation parsing
@@ -99,7 +113,6 @@
   - Dry-run mode for testing
 
   **Quick Usage:**
-
   1. Install the plugin:
 
   ```sh

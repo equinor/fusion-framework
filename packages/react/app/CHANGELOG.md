@@ -1,5 +1,22 @@
 # Change Log
 
+## 9.0.9-next.0
+
+### Patch Changes
+
+- [#3820](https://github.com/equinor/fusion-framework/pull/3820) [`9461f76`](https://github.com/equinor/fusion-framework/commit/9461f768a4e790b94da9fd02272d139d5b354ea8) Thanks [@odinr](https://github.com/odinr)! - relase next
+
+- Updated dependencies [[`9461f76`](https://github.com/equinor/fusion-framework/commit/9461f768a4e790b94da9fd02272d139d5b354ea8), [`cc9e7eb`](https://github.com/equinor/fusion-framework/commit/cc9e7ebbf1b92d067d8d799e55430d57ccb2e095)]:
+  - @equinor/fusion-framework-react-module@3.1.15-next.0
+  - @equinor/fusion-framework-module-navigation@7.0.0-next.2
+  - @equinor/fusion-framework-react-module-http@10.0.2-next.0
+  - @equinor/fusion-framework-react@7.4.21-next.0
+  - @equinor/fusion-framework-module-app@7.4.2-next.0
+  - @equinor/fusion-framework-app@10.4.10-next.0
+  - @equinor/fusion-framework-module-http@7.0.9-next.0
+  - @equinor/fusion-framework-module@5.0.7-next.0
+  - @equinor/fusion-framework-module-msal@7.3.2-next.0
+
 ## 9.0.8
 
 ### Patch Changes
@@ -130,7 +147,6 @@
 ### Patch Changes
 
 - [#3714](https://github.com/equinor/fusion-framework/pull/3714) [`11fe961`](https://github.com/equinor/fusion-framework/commit/11fe961794e4960ccb987bc320268cc9b263f1f8) Thanks [@odinr](https://github.com/odinr)! - Fix MSAL v4 compatibility issues in React app hooks.
-
   - Update useCurrentAccount to use account property instead of deprecated defaultAccount
   - Fix useToken hook to properly handle AcquireTokenResult type
   - Ensure proper null/undefined handling for account information
@@ -186,14 +202,12 @@
 - [#3075](https://github.com/equinor/fusion-framework/pull/3075) [`8fffbfb`](https://github.com/equinor/fusion-framework/commit/8fffbfb12daa9748bf5290e5084cd4d409aed253) Thanks [@odinr](https://github.com/odinr)! - Refactored the `Bookmark` type to be an intersection of `BookmarkWithoutData` and an optional `payload` property, improving type safety and flexibility. Updated `useBookmarkNavigate` to use proper TypeScript typing for bookmark events.
 
   **Module Bookmark Changes:**
-
   - Refactored `Bookmark` type in `packages/modules/bookmark/src/types.ts`
   - Added export for `BookmarkProviderEvents` type in `packages/modules/bookmark/src/index.ts`
   - Updated JSDoc comment from `@note` to `@remarks` in `packages/modules/bookmark/src/BookmarkClient.ts`
   - Reordered tsconfig references (event before services)
 
   **React Changes:**
-
   - Updated `packages/react/modules/bookmark/src/portal/useBookmarkNavigate.ts` to use proper TypeScript typing for bookmark provider events
   - Removed React paths configuration from `packages/react/app/tsconfig.json`
 
@@ -240,7 +254,6 @@
 ### Patch Changes
 
 - [#3088](https://github.com/equinor/fusion-framework/pull/3088) [`7441b13`](https://github.com/equinor/fusion-framework/commit/7441b13aa50dd7362d1629086a27b6b4e571575d) Thanks [@eikeland](https://github.com/eikeland)! - chore: update package typesVersions
-
   - Updated package.json typesVersions.
   - Ensures backward compatibility with older node versions.
   - Ensured consistency with workspace and repository configuration.
@@ -300,7 +313,6 @@
   `appKey (string)`: The key of the Fusion app to load and mount.
 
   ### Returns
-
   - **loading** `(boolean)`: true while the app is loading.
   - **error** `(Error | undefined)`: Error object if loading fails, otherwise undefined.
   - **appRef** `(React.RefObject<HTMLDivElement | null>)`: Ref to the DOM element where the child app is mounted.
@@ -334,7 +346,6 @@
   ```
 
   ### Notes
-
   - The hook is designed to be used in a parent Fusion app context.
   - The returned appRef should be appended to a container element in your component.
   - Handles subscription and cleanup automatically.
@@ -618,7 +629,6 @@
 ### Minor Changes
 
 - [#2577](https://github.com/equinor/fusion-framework/pull/2577) [`c3ba9f1`](https://github.com/equinor/fusion-framework/commit/c3ba9f109d9f96d6dc6ee2f0ddac00c8b3090982) Thanks [@eikeland](https://github.com/eikeland)! - #### Changes:
-
   1. **AppClient.ts**
      - Added `updateAppSettings` method to set app settings by appKey.
   2. **AppModuleProvider.ts**
@@ -666,7 +676,6 @@
 ### Minor Changes
 
 - [#2410](https://github.com/equinor/fusion-framework/pull/2410) [`9d1cb90`](https://github.com/equinor/fusion-framework/commit/9d1cb9003fa10e7ccaa95c20ef86f0a618034641) Thanks [@odinr](https://github.com/odinr)! - Updated bookmark namespace in `@equinor/fusion-react-app` to include new hooks and updated `useCurrentBookmark` hook.
-
   - Updated `index.ts` to re-export everything from `@equinor/fusion-framework-react-module-bookmark` instead of individual exports.
   - Marked `useBookmark` as deprecated in `useBookmark.ts`.
   - Enhanced `useCurrentBookmark` in `useCurrentBookmark.ts` to accept a `BookmarkPayloadGenerator` and use the `BookmarkModule` from `useAppModule`.
@@ -708,12 +717,10 @@
   > This will introduce breaking changes to the configuration of `AppConfigurator.client`.
 
   **Added**
-
   - Introduced `AppClient` class to handle application manifest and configuration queries.
   - Added `zod` to validate the application manifest.
 
   **Changed**
-
   - Updated `AppModuleProvider` to use `AppClient` for fetching application manifests and configurations.
   - Modified `AppConfigurator` to utilize `AppClient` for client configuration.
   - Updated `useApps` hook with new input parameter for `filterByCurrentUser` in `fusion-framework-react`.
@@ -845,7 +852,6 @@
 - [#2320](https://github.com/equinor/fusion-framework/pull/2320) [`1dd85f3`](https://github.com/equinor/fusion-framework/commit/1dd85f3a408a73df556d1812a5f280945cc100ee) Thanks [@odinr](https://github.com/odinr)! - Removed the `removeComments` option from the `tsconfig.base.json` file.
 
   Removing the `removeComments` option allows TypeScript to preserve comments in the compiled JavaScript output. This can be beneficial for several reasons:
-
   1. Improved debugging: Preserved comments can help developers understand the code better during debugging sessions.
   2. Documentation: JSDoc comments and other important code documentation will be retained in the compiled output.
   3. Source map accuracy: Keeping comments can lead to more accurate source maps, which is crucial for debugging and error tracking.
@@ -1214,7 +1220,6 @@
 ### Minor Changes
 
 - [#1646](https://github.com/equinor/fusion-framework/pull/1646) [`5eab8af`](https://github.com/equinor/fusion-framework/commit/5eab8afe3c3106cc67ad14ce4cbee6c7e4e8dfb1) Thanks [@odinr](https://github.com/odinr)! - Created namespace for MSAL:
-
   - Created hooks for accessing current authenticated account
   - Created hooks for acquiring token
   - Created hooks for acquiring access token
@@ -1441,7 +1446,6 @@
 ### Minor Changes
 
 - [#934](https://github.com/equinor/fusion-framework/pull/934) [`ea081696`](https://github.com/equinor/fusion-framework/commit/ea0816967244917b01a3aa43b75cd3cf59573958) Thanks [@odinr](https://github.com/odinr)! - **Add tooling for navigation in React App package**
-
   - add hook for using the navigation module
   - add hook for creating a react router
 
@@ -1472,7 +1476,6 @@
 ### Patch Changes
 
 - [#905](https://github.com/equinor/fusion-framework/pull/905) [`a7858a1c`](https://github.com/equinor/fusion-framework/commit/a7858a1c01542e2dc94370709f122b4b99c3219c) Thanks [@odinr](https://github.com/odinr)! - **🚧 Chore: dedupe packages**
-
   - align all versions of typescript
   - update types to build
     - a couple of typecasts did not [satisfies](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-0.html#satisfies-support-in-jsdoc) and was recasted as `unknwon`, marked with `TODO`, should be fixed in future

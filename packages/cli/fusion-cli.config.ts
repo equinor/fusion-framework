@@ -11,9 +11,5 @@ import aiChatPlugin from '@equinor/fusion-framework-cli-plugin-ai-chat';
 import aiMcpPlugin from '@equinor/fusion-framework-cli-plugin-ai-mcp';
 
 export default {
-  plugins: [
-    aiIndexPlugin,
-    aiChatPlugin,
-    aiMcpPlugin,
-  ],
+  plugins: [aiIndexPlugin, aiChatPlugin, aiMcpPlugin],
 };

@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-vite-plugin-raw-imports
 
+## 1.1.0-next.1
+
+### Patch Changes
+
+- [#3820](https://github.com/equinor/fusion-framework/pull/3820) [`9461f76`](https://github.com/equinor/fusion-framework/commit/9461f768a4e790b94da9fd02272d139d5b354ea8) Thanks [@odinr](https://github.com/odinr)! - relase next
+
 ## 1.1.0-next.0
 
 ### Minor Changes

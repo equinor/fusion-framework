@@ -1,5 +1,15 @@
 # Change Log
 
+## 3.2.18-next.0
+
+### Patch Changes
+
+- [#3820](https://github.com/equinor/fusion-framework/pull/3820) [`9461f76`](https://github.com/equinor/fusion-framework/commit/9461f768a4e790b94da9fd02272d139d5b354ea8) Thanks [@odinr](https://github.com/odinr)! - relase next
+
+- Updated dependencies [[`9461f76`](https://github.com/equinor/fusion-framework/commit/9461f768a4e790b94da9fd02272d139d5b354ea8)]:
+  - @equinor/fusion-framework-react-module@3.1.15-next.0
+  - @equinor/fusion-framework-module-event@5.0.2-next.0
+
 ## 3.2.17
 
 ### Patch Changes
@@ -16,6 +26,7 @@
 
 - Updated dependencies [[`1f5a8e4`](https://github.com/equinor/fusion-framework/commit/1f5a8e475ea30fa1e0f32c7dab885a5a42c50bba)]:
   - @equinor/fusion-framework-module-event@5.0.0
+
 ## 4.0.0-next.0
 
 ### Major Changes
