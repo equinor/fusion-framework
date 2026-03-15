@@ -5,14 +5,6 @@ export default {
     // eds-content is a gitignored build artifact — must opt out of gitignore filtering
     gitignore: false,
     // File patterns to match for processing
-    patterns: [
-      '**/*.md',
-      // Exclude boilerplate endpoint/parameter generators that produce low-value
-      '!**/docs/README.md',
-      '!**/docs/about',
-      '!**/docs/resources',
-      '!**/docs/tone-guide',
-    ],
     rawPatterns: ['**/stories/*.md', '**/tokens/*.md'],
     // Metadata processing configuration
     metadata: {
@@ -33,7 +25,6 @@ export default {
           if (filename.startsWith('surfaces-')) tags.push('surfaces');
           if (filename.startsWith('icons-')) tags.push('icons');
           if (filename.startsWith('typography-')) tags.push('typography');
-          if (filename.startsWith('eds-2-0-beta-')) tags.push('eds-2-beta');
         }
 
         // Tag docs by folder
@@ -48,7 +39,7 @@ export default {
           tags.push('design-tokens', 'css-variables', 'reference');
           if (source.includes('color-')) tags.push('color');
           if (source.includes('spacing-')) tags.push('spacing');
-          if (source.includes('icons-catalog')) tags.push('icons', 'catalog');
+          if (source.includes('icons')) tags.push('icons');
         }
 
         metadata.tags = tags;
