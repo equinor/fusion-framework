@@ -1,5 +1,14 @@
 # Change Log
 
+## 5.0.2-next.0
+
+### Patch Changes
+
+- [#3820](https://github.com/equinor/fusion-framework/pull/3820) [`9461f76`](https://github.com/equinor/fusion-framework/commit/9461f768a4e790b94da9fd02272d139d5b354ea8) Thanks [@odinr](https://github.com/odinr)! - relase next
+
+- Updated dependencies [[`9461f76`](https://github.com/equinor/fusion-framework/commit/9461f768a4e790b94da9fd02272d139d5b354ea8)]:
+  - @equinor/fusion-framework-module@5.0.7-next.0
+
 ## 5.0.1
 
 ### Patch Changes
@@ -18,7 +27,6 @@
   The event module was throwing `DataCloneError` when event details contained functions (like event listeners) because `structuredClone` cannot serialize functions. We've simplified the event model by removing unused mutation support.
 
   **Removed internal APIs (unused in codebase):**
-
   - `event.originalDetail` - getter removed
   - `event.allowEventDetailsMutation` - getter removed
   - `event.updateDetails()` - method removed
@@ -168,12 +176,10 @@
 - [#2343](https://github.com/equinor/fusion-framework/pull/2343) [`736ef31`](https://github.com/equinor/fusion-framework/commit/736ef310ee101738f9022d581a2b3189b30a2646) Thanks [@odinr](https://github.com/odinr)! - Mutating complex objects like class instances would cause immer to throw an error. This change adds a try-catch block around the creation of immutable copies of event details to handle potential errors and disable mutations if the event details cannot be securely mutated.
 
   **added:**
-
   - Imported `enableMapSet` from `immer` and invoked `enableMapSet()` to support Map and Set types in Immer drafts.
   - Added a try-catch block around the creation of immutable copies of event details to handle potential errors and disable mutations if the event details cannot be securely mutated.
 
   **modified:**
-
   - Removed the initial assignment of `#detail` and `#originalDetail` to the immutable copy produced by `immer`. Instead, they are initially assigned the raw `args.detail` value.
   - The assignment of `#detail` and `#originalDetail` to an immutable copy is now done inside the try block, ensuring that mutations are only disabled upon failure to create an immutable copy.
   - The assignment of `#source` is now done directly from `args.source` without attempting to create an immutable copy.
@@ -211,7 +217,6 @@
 - [#2320](https://github.com/equinor/fusion-framework/pull/2320) [`1dd85f3`](https://github.com/equinor/fusion-framework/commit/1dd85f3a408a73df556d1812a5f280945cc100ee) Thanks [@odinr](https://github.com/odinr)! - Removed the `removeComments` option from the `tsconfig.base.json` file.
 
   Removing the `removeComments` option allows TypeScript to preserve comments in the compiled JavaScript output. This can be beneficial for several reasons:
-
   1. Improved debugging: Preserved comments can help developers understand the code better during debugging sessions.
   2. Documentation: JSDoc comments and other important code documentation will be retained in the compiled output.
   3. Source map accuracy: Keeping comments can lead to more accurate source maps, which is crucial for debugging and error tracking.
@@ -271,11 +276,12 @@
   The type definition for `FrameworkEventInitType` has been updated as follows:
 
   ```typescript
-  export type FrameworkEventInitType<T> = T extends IFrameworkEvent<infer U>
-    ? U
-    : T extends FrameworkEvent<infer U>
-    ? U
-    : never;
+  export type FrameworkEventInitType<T> =
+    T extends IFrameworkEvent<infer U>
+      ? U
+      : T extends FrameworkEvent<infer U>
+        ? U
+        : never;
   ```
 
   This change ensures that `FrameworkEventInitType` can now correctly infer the type for both `IFrameworkEvent` and `FrameworkEvent`.

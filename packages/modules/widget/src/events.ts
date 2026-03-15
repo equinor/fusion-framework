@@ -19,10 +19,7 @@ import type {
  * @template TDetail - Additional detail properties merged with `{ name: string }`.
  */
 export type WidgetEventInit<TDetail extends Record<string, unknown> | unknown = unknown> =
-  FrameworkEventInit<
-    TDetail & { name: string },
-    Widget
-  >;
+  FrameworkEventInit<TDetail & { name: string }, Widget>;
 
 /**
  * Concrete framework-event type for widget lifecycle events.

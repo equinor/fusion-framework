@@ -1,5 +1,17 @@
 # Change Log
 
+## 6.2.35-next.0
+
+### Patch Changes
+
+- [#3820](https://github.com/equinor/fusion-framework/pull/3820) [`9461f76`](https://github.com/equinor/fusion-framework/commit/9461f768a4e790b94da9fd02272d139d5b354ea8) Thanks [@odinr](https://github.com/odinr)! - relase next
+
+- Updated dependencies [[`9461f76`](https://github.com/equinor/fusion-framework/commit/9461f768a4e790b94da9fd02272d139d5b354ea8)]:
+  - @equinor/fusion-framework-react-module@3.1.15-next.0
+  - @equinor/fusion-observable@8.5.9-next.0
+  - @equinor/fusion-query@6.0.5-next.0
+  - @equinor/fusion-framework-module-context@7.0.4-next.0
+
 ## 6.2.34
 
 ### Patch Changes
@@ -11,6 +23,7 @@
   - @equinor/fusion-framework-react-module@3.1.14
   - @equinor/fusion-observable@8.5.8
   - @equinor/fusion-query@6.0.4
+
 ## 7.0.0-next.0
 
 ### Major Changes

@@ -1,5 +1,12 @@
 # @equinor/fusion-framework-react-ag-charts
 
+## 13.0.2-next.0
+
+### Patch Changes
+
+- Updated dependencies [[`9461f76`](https://github.com/equinor/fusion-framework/commit/9461f768a4e790b94da9fd02272d139d5b354ea8)]:
+  - @equinor/fusion-framework-react-module@3.1.15-next.0
+
 ## 13.0.1
 
 ### Patch Changes
@@ -56,7 +63,6 @@
   ```
 
   ### Package Exports
-
   - **Main**: `AgCharts` React component
   - **Community**: `@equinor/fusion-framework-react-ag-charts/community` - community chart features
   - **Enterprise**: `@equinor/fusion-framework-react-ag-charts/enterprise` - advanced charting features

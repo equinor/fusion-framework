@@ -1,5 +1,21 @@
 # Change Log
 
+## 10.4.10-next.0
+
+### Patch Changes
+
+- [#3820](https://github.com/equinor/fusion-framework/pull/3820) [`9461f76`](https://github.com/equinor/fusion-framework/commit/9461f768a4e790b94da9fd02272d139d5b354ea8) Thanks [@odinr](https://github.com/odinr)! - relase next
+
+- Updated dependencies [[`9461f76`](https://github.com/equinor/fusion-framework/commit/9461f768a4e790b94da9fd02272d139d5b354ea8), [`cc9e7eb`](https://github.com/equinor/fusion-framework/commit/cc9e7ebbf1b92d067d8d799e55430d57ccb2e095)]:
+  - @equinor/fusion-framework-module-telemetry@4.6.5-next.0
+  - @equinor/fusion-framework-module-app@7.4.2-next.0
+  - @equinor/fusion-framework@7.4.14-next.0
+  - @equinor/fusion-framework-module-bookmark@3.0.7-next.0
+  - @equinor/fusion-framework-module-event@5.0.2-next.0
+  - @equinor/fusion-framework-module-http@7.0.9-next.0
+  - @equinor/fusion-framework-module@5.0.7-next.0
+  - @equinor/fusion-framework-module-msal@7.3.2-next.0
+
 ## 10.4.9
 
 ### Patch Changes
@@ -97,7 +113,6 @@
   App can override url and scopes with app config.
 
   Priority:
-
   1. Session overrides
   2. AppConfig
   3. ServiceDiscovery
@@ -203,7 +218,6 @@
 ### Minor Changes
 
 - [#3493](https://github.com/equinor/fusion-framework/pull/3493) [`9f5de98`](https://github.com/equinor/fusion-framework/commit/9f5de9844181b8bc2d770032ff3b1709e87c7c21) Thanks [@odinr](https://github.com/odinr)! - Add telemetry integration to app configurator.
-
   - Add telemetry module dependency to enable telemetry collection
   - Configure telemetry in app module configurator with metadata extraction from app manifest
   - Add event mapping to prefix configurator events with `AppConfigurator::` namespace
@@ -217,7 +231,6 @@
 ### Patch Changes
 
 - [#3490](https://github.com/equinor/fusion-framework/pull/3490) [`45954e5`](https://github.com/equinor/fusion-framework/commit/45954e5db471a2faa24e88e41fc6d6c18817d6d1) Thanks [@odinr](https://github.com/odinr)! - Remove explicit logger initialization from configurator constructors in favor of telemetry.
-
   - Removed `this.logger = new ModuleConsoleLogger(...)` from FrameworkConfigurator, AppConfigurator, and WidgetConfigurator constructors
   - Logger functionality will be handled through telemetry module with console logging adapter
 
@@ -289,7 +302,6 @@
 ### Patch Changes
 
 - [#3088](https://github.com/equinor/fusion-framework/pull/3088) [`7441b13`](https://github.com/equinor/fusion-framework/commit/7441b13aa50dd7362d1629086a27b6b4e571575d) Thanks [@eikeland](https://github.com/eikeland)! - chore: update package typesVersions
-
   - Updated package.json typesVersions.
   - Ensures backward compatibility with older node versions.
   - Ensured consistency with workspace and repository configuration.
@@ -667,7 +679,6 @@
 - [#2320](https://github.com/equinor/fusion-framework/pull/2320) [`1dd85f3`](https://github.com/equinor/fusion-framework/commit/1dd85f3a408a73df556d1812a5f280945cc100ee) Thanks [@odinr](https://github.com/odinr)! - Removed the `removeComments` option from the `tsconfig.base.json` file.
 
   Removing the `removeComments` option allows TypeScript to preserve comments in the compiled JavaScript output. This can be beneficial for several reasons:
-
   1. Improved debugging: Preserved comments can help developers understand the code better during debugging sessions.
   2. Documentation: JSDoc comments and other important code documentation will be retained in the compiled output.
   3. Source map accuracy: Keeping comments can lead to more accurate source maps, which is crucial for debugging and error tracking.
@@ -1139,7 +1150,6 @@
 ### Patch Changes
 
 - [#905](https://github.com/equinor/fusion-framework/pull/905) [`a7858a1c`](https://github.com/equinor/fusion-framework/commit/a7858a1c01542e2dc94370709f122b4b99c3219c) Thanks [@odinr](https://github.com/odinr)! - **🚧 Chore: dedupe packages**
-
   - align all versions of typescript
   - update types to build
     - a couple of typecasts did not [satisfies](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-0.html#satisfies-support-in-jsdoc) and was recasted as `unknwon`, marked with `TODO`, should be fixed in future
