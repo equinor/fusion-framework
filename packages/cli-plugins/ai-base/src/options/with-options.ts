@@ -79,7 +79,9 @@ export const withOptions = (
       typeof options.openaiApiKey !== 'string' ||
       options.openaiApiKey.trim() === ''
     ) {
-      throw new InvalidOptionArgumentError('API key is required and must be a non-empty string.');
+      throw new InvalidOptionArgumentError(
+        'Azure OpenAI API key is required. Provide it via --openai-api-key option or AZURE_OPENAI_API_KEY environment variable.',
+      );
     }
 
     // Validate API version
@@ -94,7 +96,7 @@ export const withOptions = (
       options.openaiInstance.trim() === ''
     ) {
       throw new InvalidOptionArgumentError(
-        'API instance name is required and must be a non-empty string.',
+        'Azure OpenAI instance name is required. Provide it via --openai-instance option or AZURE_OPENAI_INSTANCE_NAME environment variable.',
       );
     }
 
@@ -117,7 +119,7 @@ export const withOptions = (
         options.openaiEmbeddingDeployment.trim() === ''
       ) {
         throw new InvalidOptionArgumentError(
-          'Embedding deployment name is required and must be a non-empty string.',
+          'Azure OpenAI embedding deployment name is required. Provide it via --openai-embedding-deployment option or AZURE_OPENAI_EMBEDDING_DEPLOYMENT_NAME environment variable.',
         );
       }
     }
@@ -139,7 +141,7 @@ export const withOptions = (
         options.azureSearchApiKey.trim() === ''
       ) {
         throw new InvalidOptionArgumentError(
-          'Azure Search API key is required and must be a non-empty string.',
+          'Azure Search API key is required. Provide it via --azure-search-api-key option or AZURE_SEARCH_API_KEY environment variable.',
         );
       }
 

@@ -66,6 +66,20 @@ type CaseReducers<S, AS extends Record<string, Action>> = {
  *   case reducers via calls to `builder.addCase(actionCreatorOrType, reducer)`.
  *
  * @public
+ *
+ * @example
+ * ```ts
+ * import { createReducer, createAction } from '@equinor/fusion-observable';
+ *
+ * const increment = createAction<number>('increment');
+ * const decrement = createAction<number>('decrement');
+ *
+ * const counterReducer = createReducer({ count: 0 }, (builder) =>
+ *   builder
+ *     .addCase(increment, (state, action) => { state.count += action.payload; })
+ *     .addCase(decrement, (state, action) => { state.count -= action.payload; }),
+ * );
+ * ```
  */
 export function createReducer<S extends NotFunction, A extends Action = AnyAction>(
   initialState: S | (() => S),

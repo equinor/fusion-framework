@@ -128,18 +128,22 @@ export class BookmarkClient implements IBookmarkClient {
     });
   }
 
+  /** @inheritdoc */
   public getAllBookmarks(filter?: BookmarksFilter): ObservableInput<Bookmark[]> {
     return this.#queryBookmarks.query(filter).pipe(map((res) => res.value as Bookmark[]));
   }
 
+  /** @inheritdoc */
   public getBookmarkById(bookmarkId: string): ObservableInput<BookmarkWithoutData> {
     return this.#queryBookmark.query({ bookmarkId }).pipe(map((res) => res.value));
   }
 
+  /** @inheritdoc */
   public getBookmarkData<T extends BookmarkData>(bookmarkId: string): ObservableInput<T> {
     return this.#queryBookmarkData.query({ bookmarkId }).pipe(map((res): T => res.value as T));
   }
 
+  /** @inheritdoc */
   public setBookmarkData<T extends BookmarkData | null>(
     bookmarkId: string,
     data: T,
@@ -158,6 +162,7 @@ export class BookmarkClient implements IBookmarkClient {
     );
   }
 
+  /** @inheritdoc */
   public createBookmark<T extends BookmarkData>(
     newBookmark: BookmarkNew<T>,
   ): ObservableInput<Bookmark<T>> {
@@ -184,6 +189,7 @@ export class BookmarkClient implements IBookmarkClient {
     );
   }
 
+  /** @inheritdoc */
   public updateBookmark<T extends BookmarkData>(
     bookmarkId: string,
     updates: BookmarkUpdate<T>,
@@ -240,22 +246,26 @@ export class BookmarkClient implements IBookmarkClient {
     });
   }
 
+  /** @inheritdoc */
   public deleteBookmark(bookmarkId: string): ObservableInput<boolean> {
     return this.#api.delete('v1', { bookmarkId });
   }
 
+  /** @inheritdoc */
   public addBookmarkToFavorites(bookmarkId: string): ObservableInput<boolean> {
     return this.#api
       .addFavourite('v1', { bookmarkId })
       .pipe(tap(() => this.#queryBookmarks.invalidate()));
   }
 
+  /** @inheritdoc */
   public removeBookmarkFromFavorites(bookmarkId: string): ObservableInput<boolean> {
     return this.#api
       .removeFavourite('v1', { bookmarkId })
       .pipe(tap(() => this.#queryBookmarks.invalidate()));
   }
 
+  /** @inheritdoc */
   public isBookmarkFavorite(bookmarkId: string): ObservableInput<boolean> {
     return this.#api.isFavorite('v1', { bookmarkId });
   }

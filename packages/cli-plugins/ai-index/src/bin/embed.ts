@@ -1,8 +1,8 @@
 import { globbyStream } from 'globby';
 import { relative } from 'node:path';
 import multimatch from 'multimatch';
-import { concat, from, merge } from 'rxjs';
-import { concatMap, filter, map, mergeMap, shareReplay, toArray } from 'rxjs/operators';
+import { concat, from, merge, timer } from 'rxjs';
+import { concatMap, filter, map, mergeMap, retry, shareReplay, toArray } from 'rxjs/operators';
 
 import { isMarkdownFile, parseMarkdownFile } from '../utils/markdown/index.js';
 import { getFileStatus, resolveProjectRoot } from '../utils/git/index.js';
@@ -36,6 +36,8 @@ const defaultIgnore = ['node_modules', '**/node_modules/**', 'dist', '**/dist/**
 export async function embed(binOptions: EmbeddingsBinOptions): Promise<void> {
   const { framework, options, config, filePatterns } = binOptions;
 
+  console.log(`📇 Index: ${options.azureSearchIndexName}`);
+
   // Handle clean operation (destructive - deletes all existing documents)
   const vectorStoreService = framework.ai.getService('search', options.azureSearchIndexName);
   if (options.clean && !options.dryRun) {
@@ -62,11 +64,14 @@ export async function embed(binOptions: EmbeddingsBinOptions): Promise<void> {
     // to prevent traversing these directories entirely.
     const ignore = config.index?.ignore ?? defaultIgnore;
 
+    // Respect .gitignore by default; configs targeting build artifacts can opt out.
+    const gitignore = config.index?.gitignore ?? true;
+
     return from(
       globbyStream(filePatterns, {
         ignore,
         onlyFiles: true,
-        gitignore: true,
+        gitignore,
         absolute: true,
       }),
     ).pipe(
@@ -165,25 +170,49 @@ export async function embed(binOptions: EmbeddingsBinOptions): Promise<void> {
   // Apply metadata to documents
   const applyMetadata$ = applyMetadata(merge(rawFiles$, markdown$, typescript$), config.index);
 
-  // Generate embeddings
+  // Generate embeddings with concurrency limit and retry on rate-limit (429) errors
   const embeddingService = framework.ai.getService('embeddings', options.openaiEmbeddingDeployment);
+
+  /** Maximum parallel embedding requests to avoid hitting Azure OpenAI TPM limits. */
+  const EMBEDDING_CONCURRENCY = 5;
+
+  /** Maximum retry attempts for transient / rate-limit errors per chunk. */
+  const MAX_RETRIES = 4;
+
   const applyEmbedding$ = applyMetadata$.pipe(
     mergeMap((documents) =>
       from(documents).pipe(
-        mergeMap(async (document) => {
-          console.log('embedding document', document.metadata.source);
-          const embeddings = await embeddingService
-            .embedQuery(document.pageContent)
-            .catch((error) => {
-              console.error(
-                `❌ Error: ${error instanceof Error ? error.message : 'Unknown error'}`,
-              );
-              console.error('document', document);
-              process.exit(1);
-            });
-          const metadata = { ...document.metadata, embedding: embeddings };
-          return { ...document, metadata };
-        }),
+        // Limit concurrency to avoid overwhelming the embedding API
+        mergeMap(
+          (document) =>
+            from(embeddingService.embedQuery(document.pageContent)).pipe(
+              retry({
+                count: MAX_RETRIES,
+                delay: (error, retryIndex) => {
+                  // Parse Retry-After header when available (Azure sends seconds)
+                  const retryAfterSec =
+                    error?.response?.headers?.get?.('retry-after') ??
+                    error?.responseHeaders?.['retry-after'];
+                  const retryAfterMs = retryAfterSec ? Number(retryAfterSec) * 1000 : 0;
+
+                  // Exponential backoff: 2s, 4s, 8s, 16s — or Retry-After if larger
+                  const backoffMs = 2 ** retryIndex * 1000;
+                  const delayMs = Math.max(backoffMs, retryAfterMs);
+
+                  console.warn(
+                    `⏳ Retry ${retryIndex}/${MAX_RETRIES} for "${document.metadata.source}" in ${delayMs}ms`,
+                  );
+                  return timer(delayMs);
+                },
+              }),
+              map((embeddings) => {
+                console.log('embedding document', document.metadata.source);
+                const metadata = { ...document.metadata, embedding: embeddings };
+                return { ...document, metadata };
+              }),
+            ),
+          EMBEDDING_CONCURRENCY,
+        ),
         toArray(),
       ),
     ),

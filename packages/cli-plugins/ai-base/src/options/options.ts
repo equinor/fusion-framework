@@ -1,8 +1,11 @@
 import { createOption } from 'commander';
 
 /**
- * Option for specifying the Azure OpenAI API key.
- * Required for authentication with Azure OpenAI services.
+ * Commander option for the Azure OpenAI API key (`--openai-api-key`).
+ *
+ * @remarks
+ * Required for all Azure OpenAI operations. Falls back to the
+ * `AZURE_OPENAI_API_KEY` environment variable when the flag is omitted.
  */
 export const apiKeyOption = createOption(
   '--openai-api-key <key>',
@@ -10,8 +13,11 @@ export const apiKeyOption = createOption(
 ).env('AZURE_OPENAI_API_KEY');
 
 /**
- * Option for specifying the Azure OpenAI API version.
- * Defaults to the latest stable version if not provided.
+ * Commander option for the Azure OpenAI API version (`--openai-api-version`).
+ *
+ * @remarks
+ * Defaults to `2024-02-15-preview`. Falls back to the
+ * `AZURE_OPENAI_API_VERSION` environment variable when the flag is omitted.
  */
 export const apiVersionOption = createOption(
   '--openai-api-version <version>',
@@ -21,8 +27,11 @@ export const apiVersionOption = createOption(
   .default('2024-02-15-preview');
 
 /**
- * Option for specifying the Azure OpenAI instance name.
- * Required for Azure OpenAI service endpoint construction.
+ * Commander option for the Azure OpenAI instance name (`--openai-instance`).
+ *
+ * @remarks
+ * Required for constructing the Azure OpenAI service endpoint. Falls back to
+ * the `AZURE_OPENAI_INSTANCE_NAME` environment variable when the flag is omitted.
  */
 export const apiInstanceOption = createOption(
   '--openai-instance <name>',
@@ -30,8 +39,12 @@ export const apiInstanceOption = createOption(
 ).env('AZURE_OPENAI_INSTANCE_NAME');
 
 /**
- * Option for specifying the Azure OpenAI deployment name for chat models.
- * Required for chat completions API calls.
+ * Commander option for the Azure OpenAI chat deployment (`--openai-chat-deployment`).
+ *
+ * @remarks
+ * Required for chat-completion operations. Falls back to the
+ * `AZURE_OPENAI_CHAT_DEPLOYMENT_NAME` environment variable when the flag is omitted.
+ * Only added to a command when `withOptions` is called with `includeChat: true`.
  */
 export const chatDeploymentOption = createOption(
   '--openai-chat-deployment <name>',
@@ -39,8 +52,12 @@ export const chatDeploymentOption = createOption(
 ).env('AZURE_OPENAI_CHAT_DEPLOYMENT_NAME');
 
 /**
- * Option for specifying the Azure OpenAI deployment name for embedding models.
- * Required for embeddings API calls.
+ * Commander option for the Azure OpenAI embedding deployment (`--openai-embedding-deployment`).
+ *
+ * @remarks
+ * Required for embedding and vector-search operations. Falls back to the
+ * `AZURE_OPENAI_EMBEDDING_DEPLOYMENT_NAME` environment variable when the flag is omitted.
+ * Only added to a command when `withOptions` is called with `includeEmbedding: true`.
  */
 export const embeddingDeploymentOption = createOption(
   '--openai-embedding-deployment <name>',
@@ -48,8 +65,12 @@ export const embeddingDeploymentOption = createOption(
 ).env('AZURE_OPENAI_EMBEDDING_DEPLOYMENT_NAME');
 
 /**
- * Option for specifying the Azure Search endpoint URL.
- * Required for Azure Cognitive Search operations.
+ * Commander option for the Azure Cognitive Search endpoint (`--azure-search-endpoint`).
+ *
+ * @remarks
+ * Required for vector-search operations. Falls back to the
+ * `AZURE_SEARCH_ENDPOINT` environment variable when the flag is omitted.
+ * Only added to a command when `withOptions` is called with `includeSearch: true`.
  */
 export const azureSearchEndpointOption = createOption(
   '--azure-search-endpoint <url>',
@@ -57,8 +78,12 @@ export const azureSearchEndpointOption = createOption(
 ).env('AZURE_SEARCH_ENDPOINT');
 
 /**
- * Option for specifying the Azure Search API key.
- * Required for authentication with Azure Cognitive Search.
+ * Commander option for the Azure Cognitive Search API key (`--azure-search-api-key`).
+ *
+ * @remarks
+ * Required for authenticating with Azure Cognitive Search. Falls back to the
+ * `AZURE_SEARCH_API_KEY` environment variable when the flag is omitted.
+ * Only added to a command when `withOptions` is called with `includeSearch: true`.
  */
 export const azureSearchApiKeyOption = createOption(
   '--azure-search-api-key <key>',
@@ -66,8 +91,12 @@ export const azureSearchApiKeyOption = createOption(
 ).env('AZURE_SEARCH_API_KEY');
 
 /**
- * Option for specifying the Azure Search index name.
- * Required for search operations on a specific index.
+ * Commander option for the Azure Cognitive Search index name (`--azure-search-index-name`).
+ *
+ * @remarks
+ * Identifies the target search index to query or write to. Falls back to the
+ * `AZURE_SEARCH_INDEX_NAME` environment variable when the flag is omitted.
+ * Only added to a command when `withOptions` is called with `includeSearch: true`.
  */
 export const azureSearchIndexNameOption = createOption(
   '--azure-search-index-name <name>',
@@ -75,10 +104,11 @@ export const azureSearchIndexNameOption = createOption(
 ).env('AZURE_SEARCH_INDEX_NAME');
 
 /**
- * Default export containing all AI-related command options.
+ * All AI-related Commander option definitions as a single object.
  *
- * Provides convenient access to all option definitions for use in CLI commands.
- * Each option can also be imported individually for more granular control.
+ * @remarks
+ * Use this default export for convenient bulk access when you need every option.
+ * For selective inclusion prefer importing the named constants directly.
  */
 export default {
   apiKeyOption,

@@ -22,24 +22,48 @@ import type {
 import { AppBuildError, AppConfigError, AppManifestError, AppSettingsError } from './errors';
 import { AppConfigSelector } from './AppClient.Selectors';
 
+/**
+ * Contract for an app service client that fetches application manifests,
+ * build metadata, configurations, and per-user settings from the Fusion apps API.
+ *
+ * All methods return `ObservableInput` so consumers can use either `Observable`
+ * or `Promise`-based consumption patterns.
+ */
 export interface IAppClient extends Disposable {
   /**
-   * Fetch app manifest by appKey and tag
+   * Fetches the manifest for a single application.
+   *
+   * @param args - Object containing the `appKey` and an optional version `tag`.
+   * @returns An observable that emits the resolved {@link AppManifest}.
+   * @throws {AppManifestError} When the manifest cannot be loaded (404, 401, 410, or unknown).
    */
   getAppManifest: (args: { appKey: string; tag?: string }) => ObservableInput<AppManifest>;
 
   /**
-   * Fetch app build manifest by appKey and tag
+   * Fetches the build metadata (entry point, version, asset path) for an application.
+   *
+   * @param args - Object containing the `appKey` and an optional version `tag`.
+   * @returns An observable that emits the resolved {@link AppBuildManifest}.
+   * @throws {AppBuildError} When the build metadata cannot be loaded.
    */
   getAppBuild: (args: { appKey: string; tag?: string }) => ObservableInput<AppBuildManifest>;
 
   /**
-   * Fetch all app manifests
+   * Fetches manifests for all registered applications.
+   *
+   * @param args - Optional filter; set `filterByCurrentUser` to `true` to return
+   *   only apps the authenticated user has access to.
+   * @returns An observable that emits an array of {@link AppManifest} objects.
    */
   getAppManifests: (args?: { filterByCurrentUser?: boolean }) => ObservableInput<AppManifest[]>;
 
   /**
-   * Fetch app config by appKey and tag
+   * Fetches the runtime configuration (environment variables and endpoints) for an application.
+   *
+   * @template TType - Shape of the `environment` record in the returned config.
+   * @param args - Object containing the `appKey` and an optional version `tag`.
+   * @returns An observable that emits the resolved {@link AppConfig}.
+   * @throws {AppConfigError} When the configuration cannot be loaded.
    */
   getAppConfig: <TType extends ConfigEnvironment = ConfigEnvironment>(args: {
     appKey: string;
@@ -47,14 +71,20 @@ export interface IAppClient extends Disposable {
   }) => ObservableInput<AppConfig<TType>>;
 
   /**
-   * Fetch app settings by appKey
+   * Fetches per-user settings for an application.
+   *
+   * @param args - Object containing the `appKey`.
+   * @returns An observable that emits the {@link AppSettings} record.
+   * @throws {AppSettingsError} When settings cannot be loaded.
    */
   getAppSettings: (args: { appKey: string }) => ObservableInput<AppSettings>;
 
   /**
-   * Set app settings by appKey
-   * @param args - Object with appKey and settings
-   * @returns ObservableInput<AppSettings>
+   * Persists updated per-user settings for an application via PUT.
+   *
+   * @param args - Object containing the `appKey` and the `settings` payload to save.
+   * @returns An observable that emits the persisted {@link AppSettings}.
+   * @throws {AppSettingsError} When the update request fails.
    */
   updateAppSettings: (args: {
     appKey: string;
@@ -63,7 +93,8 @@ export interface IAppClient extends Disposable {
 }
 
 /**
- * Transforms an ApiApplicationSchema object into an AppManifest object.
+ * Transforms a raw API application response into an {@link AppManifest},
+ * adding backwards-compatible `key` and `name` getters.
  *
  * @returns An object conforming to the AppManifest interface.
  */
@@ -85,8 +116,20 @@ const ApplicationSchema = ApiApplicationSchema.transform((x): AppManifest => {
 });
 
 /**
- * The `AppClient` class implements the `IAppClient` interface and provides methods to query
- * application manifests and configurations from a backend service.
+ * Default implementation of {@link IAppClient} that communicates with the
+ * Fusion app service API over HTTP.
+ *
+ * Uses {@link Query} internally for request deduplication and caching
+ * (1-minute expiry by default). Responses are validated against Zod schemas
+ * ({@link ApiApplicationSchema}, {@link ApiApplicationBuildSchema}) and
+ * HTTP errors are mapped to typed error classes.
+ *
+ * @example
+ * ```ts
+ * const httpClient = await http.createClient('apps');
+ * const appClient = new AppClient(httpClient);
+ * appClient.getAppManifest({ appKey: 'my-app' }).subscribe(console.log);
+ * ```
  */
 export class AppClient implements IAppClient {
   #manifest: Query<AppManifest, { appKey: string }>;

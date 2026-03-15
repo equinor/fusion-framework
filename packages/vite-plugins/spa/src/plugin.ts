@@ -10,31 +10,103 @@ import { loadEnvironment } from './util/load-env.js';
 import type { TemplateEnv, TemplateEnvFn } from './types.js';
 
 /**
- * Represents the options for configuring a plugin.
+ * Options accepted by the Fusion SPA Vite plugin.
  *
- * @template TEnv - The type of the template environment. Defaults to `TemplateEnv`.
+ * @remarks
+ * Controls HTML template generation, environment variable prefixing,
+ * and the factory that produces template environment values from the
+ * current Vite build/serve context.
  *
- * @property {string} [template] - The path to the template file to be used.
- * @property {string} [templateEnvPrefix] - A prefix to filter environment variables for the template.
- * @property generateTemplateEnv -
- *    A function to generate the template environment. It receives the configuration environment and
- *    a partial template environment as arguments, and returns a modified or extended partial template environment.
+ * @template TEnv - Shape of the template environment. Defaults to {@link TemplateEnv}.
+ *
+ * @example
+ * ```ts
+ * const opts: PluginOptions<FusionTemplateEnv> = {
+ *   templateEnvPrefix: 'FUSION_SPA_',
+ *   generateTemplateEnv: (env) => ({
+ *     title: 'My App',
+ *     portal: { id: 'my-portal' },
+ *     serviceDiscovery: { url: '...', scopes: ['...'] },
+ *     msal: { tenantId: '...', clientId: '...', redirectUri: '...' },
+ *   }),
+ * };
+ * ```
  */
 export type PluginOptions<TEnv extends TemplateEnv = TemplateEnv> = {
+  /**
+   * Custom HTML template string.
+   *
+   * @remarks
+   * When omitted the plugin uses a built-in template that loads the
+   * bootstrap script, sets the page title, and includes the Equinor font.
+   */
   template?: string;
+
+  /**
+   * Prefix used when reading environment variables from `.env` files.
+   *
+   * @defaultValue `'FUSION_SPA_'`
+   */
   templateEnvPrefix?: string;
+
+  /**
+   * Factory that returns partial environment values merged with defaults
+   * and flattened into `{templateEnvPrefix}*` variables.
+   *
+   * @see {@link TemplateEnvFn}
+   */
   generateTemplateEnv?: TemplateEnvFn<TEnv>;
+
+  /**
+   * Optional logger used for plugin diagnostics during Vite config
+   * resolution.
+   */
   logger?: Pick<Console, 'debug' | 'info' | 'warn' | 'error'>;
 };
 
 /**
- * Represents the default environment configuration for the Fusion SPA.
+ * Built-in defaults applied when no matching value is provided by
+ * {@link PluginOptions.generateTemplateEnv} or `.env` files.
  */
 const defaultEnv: Partial<TemplateEnv> = {
   title: 'Fusion SPA',
   bootstrap: '/@fusion-spa-bootstrap.js',
 };
 
+/**
+ * Creates the Fusion SPA Vite plugin.
+ *
+ * @remarks
+ * The plugin hooks into Vite's `config`, `resolveId`, and `configureServer`
+ * lifecycle to:
+ *
+ * 1. Flatten {@link PluginOptions.generateTemplateEnv | template env} values
+ *    and `.env` overrides into `import.meta.env.FUSION_SPA_*` defines.
+ * 2. Resolve virtual module IDs (`/@fusion-spa-bootstrap.js`,
+ *    `/@fusion-spa-sw.js`) to the package's pre-built HTML assets.
+ * 3. Serve the SPA HTML template for every `text/html` GET request
+ *    (SPA fallback).
+ *
+ * @template TEnv - Shape of the template environment.
+ * @param options - Plugin configuration. See {@link PluginOptions}.
+ * @returns A Vite {@link Plugin} instance named `fusion-framework-plugin-spa`.
+ *
+ * @example
+ * ```ts
+ * import { plugin as fusionSpaPlugin } from '@equinor/fusion-framework-vite-plugin-spa';
+ *
+ * export default defineConfig({
+ *   plugins: [
+ *     fusionSpaPlugin({
+ *       generateTemplateEnv: () => ({
+ *         title: 'My App',
+ *         portal: { id: 'my-portal' },
+ *       }),
+ *     }),
+ *   ],
+ * });
+ * ```
+ */
 export const plugin = <TEnv extends TemplateEnv = TemplateEnv>(
   options?: PluginOptions<TEnv>,
 ): Plugin => {

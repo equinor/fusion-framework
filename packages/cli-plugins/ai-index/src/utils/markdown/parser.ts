@@ -10,9 +10,8 @@ import type { MarkdownDocument, MarkdownMetadata } from './types.js';
 import { generateChunkId } from '../generate-chunk-id.js';
 
 const markdownConfig = {
-  chunkSize: 3000,
+  chunkSize: 2000,
   chunkOverlap: 300,
-  keepSeparator: true,
   separators: [
     '\n# ',
     '\n## ',
@@ -21,25 +20,52 @@ const markdownConfig = {
     '\n##### ',
     '\n###### ',
     '\n```',
+    '\n```\n',
     '\n---\n',
     '\n\n',
+    '\n',
   ],
+  keepSeparator: true,
 };
 
 /**
- * Check if a file is a markdown or MDX file
- * @param filePath - File path to check
- * @returns True if file has .md or .mdx extension
+ * Checks whether a file path has a Markdown (`.md`) or MDX (`.mdx`) extension.
+ *
+ * @param filePath - Absolute or relative file path.
+ * @returns `true` when the extension is `.md` or `.mdx`.
  */
 export const isMarkdownFile = (filePath: string): boolean => {
   return filePath.endsWith('.md') || filePath.endsWith('.mdx');
 };
 
 /**
- * Parse markdown or MDX content into document chunks
- * @param content - Markdown or MDX content string
- * @param source - Source file path
- * @returns Array of markdown documents
+ * Validates that a text chunk contains meaningful content.
+ *
+ * Filters out empty strings and chunks consisting solely of code-fence
+ * markers (e.g. ` ``` ` or ` ```ts `).
+ *
+ * @param chunk - Content chunk to validate.
+ * @returns `true` if the chunk has substantive content.
+ */
+const isValidChunk = (chunk: string): boolean => {
+  const trimmed = chunk.trim();
+  if (!trimmed) return false;
+  // Skip chunks that are only code fence markers
+  if (/^`{3,}[\w-]*$/.test(trimmed)) return false;
+  return true;
+};
+
+/**
+ * Parses Markdown or MDX content into chunked vector-store documents.
+ *
+ * Extracts YAML frontmatter via `gray-matter`, splits the body using
+ * {@link RecursiveCharacterTextSplitter}, and returns one
+ * {@link MarkdownDocument} per valid chunk.
+ *
+ * @template T - Additional frontmatter attributes.
+ * @param content - Raw Markdown / MDX string.
+ * @param source - Relative source file path used as the document key.
+ * @returns Array of chunked Markdown documents.
  */
 export const parseMarkdown = async <T extends Record<string, unknown> = Record<string, unknown>>(
   content: string,
@@ -57,7 +83,16 @@ export const parseMarkdown = async <T extends Record<string, unknown> = Record<s
   );
   const textSplitter = new RecursiveCharacterTextSplitter(markdownConfig);
   const chunks = await textSplitter.splitText(markdownContent);
-  return chunks.map(
+
+  // Filter out empty chunks and chunks that are just code fence markers
+  const validChunks = chunks.filter((chunk) => {
+    if (!isValidChunk(chunk)) {
+      return false;
+    }
+    return true;
+  });
+
+  return validChunks.map(
     (chunk, _index): MarkdownDocument<T> => ({
       id: generateChunkId(source, _index),
       pageContent: chunk,
@@ -70,9 +105,15 @@ export const parseMarkdown = async <T extends Record<string, unknown> = Record<s
 };
 
 /**
- * Parse a markdown or MDX file into document chunks
- * @param file - Source file object
- * @returns Array of markdown documents with root path metadata
+ * Reads a Markdown or MDX file from disk and parses it into chunked documents.
+ *
+ * Delegates to {@link parseMarkdown} after reading the file content, then
+ * enriches each resulting document with the `rootPath` from the source file.
+ *
+ * @template T - Additional frontmatter attributes.
+ * @param file - Source file descriptor with path and optional project root.
+ * @returns Array of Markdown documents with root-path metadata.
+ * @throws {AssertionError} If the file does not have a `.md` or `.mdx` extension.
  */
 export const parseMarkdownFile = async <
   T extends Record<string, unknown> = Record<string, unknown>,

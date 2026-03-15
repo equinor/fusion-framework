@@ -1,3 +1,11 @@
+/**
+ * Barrel module that re-exports all action-related utilities and types.
+ *
+ * Import from `@equinor/fusion-observable/actions` to access action
+ * creators, async-action helpers, and action type definitions.
+ *
+ * @module actions
+ */
 export * from './ActionError';
 export * from './types/actions.js';
 

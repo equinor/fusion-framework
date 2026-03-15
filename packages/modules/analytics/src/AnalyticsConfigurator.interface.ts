@@ -4,29 +4,53 @@ import type { IAnalyticsAdapter } from './adapters/AnalyticsAdapter.interface.js
 import type { AnalyticsEvent } from './types.js';
 
 /**
- * Configuration options for setting up analytics within the framework.
+ * Resolved analytics configuration containing the instantiated collectors and adapters.
  *
- * @property collectors - Record of analytics collectors keyed by identifier to be used for reporting analytics data.
- * @property adapters - Record of analytics adapters keyed by identifier to be used to handle events.
+ * @remarks
+ * This type is the output of the configuration stage. The module’s `initialize`
+ * function receives the resolved `AnalyticsConfig` and passes it to
+ * {@link AnalyticsProvider}.
  */
 export type AnalyticsConfig = {
+  /** Record of analytics collectors keyed by a unique identifier. */
   collectors: Record<string, IAnalyticsCollector>;
+  /** Record of analytics adapters keyed by a unique identifier. */
   adapters: Record<string, IAnalyticsAdapter>;
 };
 
 /**
- * Interface for configuring analytics within the module.
+ * Configuration-time interface for registering analytics adapters and collectors.
  *
- * Provides methods to set analytics adapters and collectors.
+ * @remarks
+ * Obtain an instance of this interface inside the callback passed to
+ * {@link enableAnalytics}. Use {@link IAnalyticsConfigurator.setAdapter | setAdapter}
+ * and {@link IAnalyticsConfigurator.setCollector | setCollector} to register
+ * components. Both methods support method chaining.
  *
- * @interface IAnalyticsConfigurator
+ * @example
+ * ```ts
+ * enableAnalytics(configurator, (builder) => {
+ *   builder
+ *     .setAdapter('console', async () => new ConsoleAnalyticsAdapter())
+ *     .setCollector('context-selected', async (args) => {
+ *       const ctx = await args.requireInstance('context');
+ *       const app = await args.requireInstance('app');
+ *       return new ContextSelectedCollector(ctx, app);
+ *     });
+ * });
+ * ```
  */
 export interface IAnalyticsConfigurator {
   /**
-   * Sets a analytics collector with the given identifier and configuration callback.
+   * Registers an analytics collector factory identified by a unique key.
    *
-   * @param identifier - The unique identifier for the collector.
-   * @param callBack - Configuration callback that returns the collector instance.
+   * The factory callback receives module-resolution arguments so it can
+   * resolve dependencies (e.g. context or app providers) before returning
+   * the collector instance.
+   *
+   * @template T - The concrete analytics event type the collector emits.
+   * @param identifier - Unique key for this collector.
+   * @param callBack - Async factory that returns the collector instance.
    * @returns The configurator instance for method chaining.
    */
   setCollector<T extends AnalyticsEvent>(
@@ -35,10 +59,15 @@ export interface IAnalyticsConfigurator {
   ): this;
 
   /**
-   * Sets a analytics adapter with the given identifier and configuration callback.
+   * Registers an analytics adapter factory identified by a unique key.
    *
-   * @param identifier - The unique identifier for the adapter.
-   * @param callBack - Configuration callback that returns the adapter instance.
+   * The factory callback receives module-resolution arguments so it can
+   * resolve dependencies (e.g. service-discovery HTTP clients) before
+   * returning the adapter instance.
+   *
+   * @template T - The concrete analytics event type the adapter handles.
+   * @param identifier - Unique key for this adapter.
+   * @param callback - Async factory that returns the adapter instance.
    * @returns The configurator instance for method chaining.
    */
   setAdapter<T extends AnalyticsEvent>(

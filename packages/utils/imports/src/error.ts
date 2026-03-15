@@ -1,10 +1,20 @@
 /**
- * Represents an error that is thrown when a specified file cannot be found.
+ * Error thrown when a file cannot be found on disk (e.g. ENOENT).
  *
- * @extends {Error}
+ * Thrown by {@link processAccessError} when the underlying `fs` error code is
+ * `ENOENT`. Callers can use `instanceof FileNotFoundError` to distinguish
+ * "missing" from "permission denied" failures.
  *
- * @param message - A descriptive message providing details about the missing file.
- * @param options - Optional error options that can be used to provide additional context.
+ * @example
+ * ```typescript
+ * try {
+ *   await resolveConfigFile('app.config');
+ * } catch (error) {
+ *   if (error instanceof FileNotFoundError) {
+ *     console.error('Config file does not exist');
+ *   }
+ * }
+ * ```
  */
 export class FileNotFoundError extends Error {
   constructor(message: string, options?: ErrorOptions) {
@@ -14,11 +24,11 @@ export class FileNotFoundError extends Error {
 }
 
 /**
- * Represents an error that occurs when a file is not accessible.
+ * Error thrown when a file exists but cannot be accessed (e.g. EACCES or EISDIR).
  *
- * @extends Error
- * @param message - A descriptive message providing details about the error.
- * @param options - Optional error options that can include additional metadata or cause information.
+ * Thrown by {@link processAccessError} for permission or path-type errors.
+ * Callers can use `instanceof FileNotAccessibleError` to distinguish
+ * access failures from missing-file failures.
  */
 export class FileNotAccessibleError extends Error {
   constructor(message: string, options?: ErrorOptions) {
@@ -28,14 +38,12 @@ export class FileNotAccessibleError extends Error {
 }
 
 /**
- * Processes an access error and throws a specific error based on the error code.
+ * Converts a raw `fs` access error into a typed {@link FileNotFoundError},
+ * {@link FileNotAccessibleError}, or generic `Error` based on the errno code.
  *
- * @param error - The error object to process, typically of type `unknown`.
- * @param path - The file path associated with the error.
- *
- * @throws FileNotFoundError - If the error code is `ENOENT`, indicating the file was not found.
- * @throws FileNotAccessibleError - If the error code is `EACCES`, indicating the file is not accessible.
- * @throws Error - For any other error codes, indicating an unknown error occurred.
+ * @param error - The caught error, typically a `NodeJS.ErrnoException`.
+ * @param path  - Absolute or relative file path that triggered the error.
+ * @returns A typed error instance with the original error set as `cause`.
  */
 export const processAccessError = (error: unknown, path: string): Error => {
   switch ((error as NodeJS.ErrnoException).code) {

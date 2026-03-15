@@ -1,3 +1,11 @@
+/**
+ * Public library API for `@equinor/fusion-framework-cli`.
+ *
+ * Re-exports configuration helpers, dev-server utilities, and package resolution
+ * functions used by consumers to configure Fusion CLI projects.
+ *
+ * @packageDocumentation
+ */
 export type { RuntimeEnv } from './types.js';
 
 export { resolvePackage, type ResolvedPackage } from './utils/resolve-package.js';

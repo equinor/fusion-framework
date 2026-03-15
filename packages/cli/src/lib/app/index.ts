@@ -1,3 +1,11 @@
+/**
+ * Application manifest and configuration utilities for `@equinor/fusion-framework-cli/app`.
+ *
+ * Provides helpers for defining, loading, merging, and validating Fusion application
+ * manifests and configurations.
+ *
+ * @packageDocumentation
+ */
 export {
   defineAppManifest,
   type AppManifestFn,

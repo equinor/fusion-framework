@@ -20,14 +20,26 @@ import type { ContextModule } from '@equinor/fusion-framework-module-context';
 
 const EVENT_NAME = 'onAppModulesLoaded';
 
-/**
- * The schema of the data to be sent.
- */
+/** Zod schema for the `app-loaded` event (value + attributes). */
 const eventSchema = createSchema(appSchema, z.object({ context: contextSchema }));
 
 /**
- * Collector to listen for app loaded and add values and attributes for
- * further processing by adapters.
+ * Collector that emits an analytics event whenever an application’s modules
+ * finish loading.
+ *
+ * @remarks
+ * Listens to the framework `onAppModulesLoaded` event, extracts application
+ * manifest metadata, and includes the current context (if available) in the
+ * event attributes.
+ *
+ * Register via:
+ * ```ts
+ * builder.setCollector('app-loaded', async (args) => {
+ *   const event = await args.requireInstance('event');
+ *   const app = await args.requireInstance('app');
+ *   return new AppLoadedCollector(event, app);
+ * });
+ * ```
  */
 export class AppLoadedCollector
   extends BaseCollector<AppItemType, { context?: ContextItemType }>
@@ -36,6 +48,10 @@ export class AppLoadedCollector
   #eventProvider: IEventModuleProvider;
   #appProvider: AppModuleProvider;
 
+  /**
+   * @param eventProvider - Fusion event module provider to listen for app-loaded events.
+   * @param appProvider - Fusion app module provider for fallback manifest data.
+   */
   constructor(eventProvider: IEventModuleProvider, appProvider: AppModuleProvider) {
     super('app-loaded', eventSchema);
     this.#eventProvider = eventProvider;

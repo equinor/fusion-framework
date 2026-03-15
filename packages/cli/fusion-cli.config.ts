@@ -13,7 +13,6 @@ import aiMcpPlugin from '@equinor/fusion-framework-cli-plugin-ai-mcp';
 export default {
   plugins: [
     aiIndexPlugin,
-    '@equinor/fusion-framework-cli-plugin-ai-search',
     aiChatPlugin,
     aiMcpPlugin,
   ],

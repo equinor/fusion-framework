@@ -44,6 +44,18 @@ Scan through our [existing issues](https://github.com/equinor/fusion-framework/i
 
 3. Create a working branch and start with your changes!
 
+#### Non-negotiable code standards
+
+The primary goal of our standards is to capture intent, not just syntax.
+
+- All declared functions, named arrow functions, components, hooks, and classes must have TSDoc that explains intent
+- TSDoc must include `@param`, `@returns`, `@template` for generics, and `@example` for user-facing APIs
+- Iterator blocks, decision gates, RxJS operator chains, and complex decisions must explain why they exist with inline comments or extracted named helpers
+- In React code, resolve data transforms and decision logic before markup so JSX stays focused on composition
+- User-facing changes must update package `README.md`, and advanced or noisy material must be moved into `packages/*/docs/`
+
+See [contributing/code-standards.md](contributing/code-standards.md), [contributing/documentation.md](contributing/documentation.md), and [contributing/self-review.md](contributing/self-review.md) for the full standards.
+
 ### Commit your update
 
 Your commits should adhere to [our guidelines](contributing/conventional-commits.md) and follow a linear history.
@@ -76,6 +88,7 @@ __Before opening a new PR:__
 - Make sure the code builds: `pnpm build`
 - Make sure the code lints: `pnpm lint`
 - Make sure tests pass: `pnpm test run`
+- Make sure the change captures intent in TSDoc, inline comments, and README/docs where required
 
 When you're finished with the changes, create a pull request.
 
@@ -85,6 +98,7 @@ When you're finished with the changes, create a pull request.
 - Select the matching pull request template.
 - **Fill out every section of the template completely** (remove HTML comments, answer all questions):
   - Especially the **Why** section (motivation, current behavior, new behavior, breaking changes, context, related issues)
+  - Explicitly describe the intended behavior, invariants, and non-obvious decisions
   - Include clear guidance on **How to review/test** (files to focus on, commands to run, scenarios to try)
   - Describe the **Impact** (who benefits, performance/security implications, migration needs, scope/risks)
 - Don't forget to [link the PR to the issue](https://docs.github.com/en/issues/tracking-your-work-with-issues/linking-a-pull-request-to-an-issue) if you are solving one.
@@ -95,6 +109,11 @@ When you're finished with the changes, create a pull request.
 _Pull requests that trigger `ready_for_review` will post to our Teams channel._
 
 Once you submit your PR, a Fusion Core team member will review your proposal. We may ask questions or request additional information.
+
+> [!CAUTION]
+> Missing intent documentation is review-blocking.
+>
+> Expect changes requested if a PR omits required TSDoc, leaves non-trivial control flow unexplained, keeps business logic in React markup, or fails to update README/docs for user-facing changes.
 
 - We may ask for changes to be made before a PR can be merged, either using [suggested changes](https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/incorporating-feedback-in-your-pull-request) or pull request comments. You can apply suggested changes directly through the UI. You can make any other changes in your fork, then commit them to your branch.
 - As you update your PR and apply changes, mark each conversation as [resolved](https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/commenting-on-a-pull-request#resolving-conversations).

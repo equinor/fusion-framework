@@ -7,9 +7,17 @@ import { DEFAULT_VALUES } from './constants.js';
 
 const pluginName = 'fusion:dev_server::api-proxy';
 
-// Define PluginArguments with stricter type checking
+/**
+ * Arguments accepted by the {@link plugin} factory.
+ *
+ * At least one of `proxyHandler` or `routes` must be provided.
+ * Supply `proxyHandler` to enable service discovery proxying, and/or
+ * `routes` to register custom middleware or proxy route definitions.
+ */
 export type PluginArguments = {
+  /** Proxy handler created via {@link createProxyHandler} for service discovery. */
   proxyHandler?: ApiProxyHandler;
+  /** Custom API route definitions (middleware or proxy). */
   routes?: ApiRoute[];
 } & (
   | { proxyHandler: ApiProxyHandler; routes?: ApiRoute[] }
@@ -17,42 +25,67 @@ export type PluginArguments = {
 );
 
 /**
- * Configuration options for the API service plugin.
+ * Optional configuration for the API service plugin.
+ *
+ * Controls the base middleware path, route processing behaviour, and logging.
  */
 export type PluginOptions = {
   /**
-   * base router path for the plugin middleware
-   * @default '/@api-proxy'
+   * Base router path where plugin middleware is mounted.
+   * @default DEFAULT_VALUES.API_PATH ('/@fusion-api')
    */
   route?: string;
   /**
-   * options for processing the routes
+   * Additional options forwarded to {@link processRoutes} (excluding `logger`,
+   * which is set via the top-level `logger` option).
    */
   process?: Omit<ProcessRouteOptions, 'logger'>;
   /**
-   * logger for the plugin
+   * Logger used for debug, info, warning, and error messages emitted by the
+   * plugin. Pass `console` for quick debugging.
    */
   logger?: PluginLogger;
 };
 
 /**
- * Creates a Vite plugin for handling API proxying and custom routes.
+ * Creates a Vite plugin that proxies API requests and serves custom routes
+ * during Fusion Framework application development.
  *
- * This plugin allows you to define custom API routes or proxy handlers that
- * can be used during development. It integrates with Vite's server configuration
- * to set up middleware for handling API requests.
+ * Use this plugin to wire up service discovery proxying, define middleware
+ * routes for mocked responses, or both.
  *
- * @param args - The arguments for the plugin.
- * @param args.routes - An optional array of route definitions to handle API requests.
- * @param args.proxyHandler - An optional proxy handler for forwarding API requests.
+ * @param args - Plugin arguments specifying the routes and/or proxy handler.
+ * @param args.routes - Custom {@link ApiRoute} definitions (middleware or proxy).
+ * @param args.proxyHandler - A proxy handler created with {@link createProxyHandler}
+ *   for service discovery integration.
+ * @param options - Optional plugin configuration.
+ * @param options.route - Base middleware path. Defaults to {@link DEFAULT_VALUES.API_PATH}.
+ * @param options.process - Route processing options forwarded to {@link processRoutes}.
+ * @param options.logger - Logger for plugin diagnostics.
+ * @returns A Vite `Plugin` that configures server proxy and middleware.
+ * @throws {Error} When neither `routes` nor `proxyHandler` is provided.
  *
- * @param options - The options for the plugin.
- * @param options.route - The base route for the API proxy. Defaults to `'/@api'`.
- * @param options.process - An optional function to process requests and responses.
+ * @example
+ * ```ts
+ * import apiPlugin, { createProxyHandler } from '@equinor/fusion-framework-vite-plugin-api-service';
  *
- * @returns A Vite plugin object that satisfies the `Plugin` interface.
- *
- * @throws {Error} If neither `routes` nor `proxyHandler` is provided in `args`.
+ * export default defineConfig({
+ *   plugins: [
+ *     apiPlugin(
+ *       {
+ *         proxyHandler: createProxyHandler(
+ *           'https://discovery.example.com/services',
+ *           (data, { route }) => ({ data, routes: [] }),
+ *         ),
+ *         routes: [
+ *           { match: '/mock/health', middleware: (_req, res) => { res.end('ok'); } },
+ *         ],
+ *       },
+ *       { logger: console },
+ *     ),
+ *   ],
+ * });
+ * ```
  */
 export function plugin(args: PluginArguments, options?: PluginOptions): Plugin {
   const { routes, proxyHandler } = args;

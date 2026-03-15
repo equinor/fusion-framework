@@ -3,14 +3,21 @@ import { z } from 'zod';
 import { AiOptionsSchema } from '@equinor/fusion-framework-cli-plugin-ai-base/command-options';
 
 /**
- * Zod schema for validating command options for the embeddings command.
+ * Zod schema for validating command options for the `ai index add` command.
  *
- * This schema extends the base AI options schema with embeddings-specific options,
- * ensuring type safety and runtime validation of command arguments.
+ * Extends the base AI options schema ({@link AiOptionsSchema}) with
+ * add-specific options such as `--dry-run`, `--diff`, `--config`,
+ * `--base-ref`, and `--clean`.
  *
- * Note: Some optional AI options become required for the embeddings command
- * (openaiEmbeddingDeployment, azureSearchEndpoint, azureSearchApiKey, azureSearchIndexName)
- * because the command uses withAiOptions with includeEmbedding and includeSearch set to true.
+ * Azure Search and embedding options that are optional in the base schema
+ * become **required** because the add command always writes to a
+ * vector store.
+ *
+ * @example
+ * ```ts
+ * const validated = await CommandOptionsSchema.parseAsync(rawOptions);
+ * // validated.dryRun, validated.azureSearchEndpoint, etc.
+ * ```
  */
 export const CommandOptionsSchema = AiOptionsSchema.extend({
   // Override optional AI options to make them required for embeddings command
@@ -50,9 +57,9 @@ export const CommandOptionsSchema = AiOptionsSchema.extend({
 }).describe('Command options for the embeddings command');
 
 /**
- * Type representing the validated command options.
+ * Validated options for the `ai index add` command.
  *
- * This type is inferred from the Zod schema and should be used throughout the command
- * to ensure type safety and consistency with the schema.
+ * Inferred from {@link CommandOptionsSchema} and used as the single
+ * source of truth for option types throughout the add/embeddings pipeline.
  */
 export type CommandOptions = z.infer<typeof CommandOptionsSchema>;

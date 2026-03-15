@@ -3,10 +3,15 @@ import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 
 /**
- * Transforms import.meta.resolve() calls in code to resolved file:// URLs
- * @param code - The code to transform
- * @param baseDir - The base directory for resolving relative paths
- * @returns The transformed code
+ * Replaces `import.meta.resolve('./relative')` calls in source code with
+ * static `file://` URLs resolved against `baseDir`.
+ *
+ * Only relative specifiers (starting with `./` or `../`) are transformed;
+ * bare package specifiers are left untouched.
+ *
+ * @param code    - Source code string to transform.
+ * @param baseDir - Directory used to resolve relative specifiers.
+ * @returns The transformed source code.
  */
 function transformImportMetaResolve(code: string, baseDir: string): string {
   return code.replace(
@@ -30,7 +35,11 @@ function transformImportMetaResolve(code: string, baseDir: string): string {
 }
 
 /**
- * Gets the appropriate esbuild loader for a file extension
+ * Returns the esbuild loader name matching the file extension, or `undefined`
+ * for unsupported extensions.
+ *
+ * @param filePath - File path to inspect.
+ * @returns The loader identifier, or `undefined`.
  */
 function getLoader(filePath: string): 'ts' | 'tsx' | 'js' | 'jsx' | undefined {
   const ext = path.extname(filePath);
@@ -47,7 +56,10 @@ function getLoader(filePath: string): 'ts' | 'tsx' | 'js' | 'jsx' | undefined {
 }
 
 /**
- * Safely reads a file, returning undefined on error
+ * Reads a file and returns its content, or `undefined` if reading fails.
+ *
+ * @param filePath - Absolute path to read.
+ * @returns File content or `undefined` on any I/O error.
  */
 async function readFileSafe(filePath: string): Promise<string | undefined> {
   try {
@@ -59,7 +71,12 @@ async function readFileSafe(filePath: string): Promise<string | undefined> {
 }
 
 /**
- * Collects output files from esbuild result (handles both write: true and write: false)
+ * Gathers JavaScript output files from an esbuild `BuildResult`, supporting
+ * both in-memory (`write: false`) and on-disk (`write: true` with metafile)
+ * modes.
+ *
+ * @param result - The esbuild build result.
+ * @returns Array of `{ path, text }` objects for each `.js` / `.mjs` output.
  */
 async function collectOutputFiles(
   result: BuildResult,
@@ -101,13 +118,31 @@ async function collectOutputFiles(
 }
 
 /**
- * Creates an esbuild plugin that transforms `import.meta.resolve()` calls
- * to resolved file:// URLs at build time.
+ * Creates an esbuild plugin that statically resolves `import.meta.resolve()`
+ * calls for relative paths at build time.
  *
- * This plugin is necessary because esbuild doesn't handle `import.meta.resolve()`
- * calls during bundling - it leaves them as runtime calls. For local imports
- * (relative paths), we need to resolve them at build time so they work correctly
- * in the bundled output.
+ * Esbuild does not handle `import.meta.resolve()` during bundling — it
+ * preserves the calls as runtime expressions. This plugin intercepts source
+ * files and bundled output to replace relative-path calls with pre-resolved
+ * `file://` URLs, ensuring they work correctly in the final bundle.
+ *
+ * The plugin is included automatically by {@link importScript} but can be
+ * added explicitly to a custom esbuild configuration.
+ *
+ * @returns An esbuild `Plugin` instance.
+ *
+ * @example
+ * ```typescript
+ * import { build } from 'esbuild';
+ * import { createImportMetaResolvePlugin } from '@equinor/fusion-imports';
+ *
+ * await build({
+ *   entryPoints: ['src/index.ts'],
+ *   plugins: [createImportMetaResolvePlugin()],
+ *   bundle: true,
+ *   format: 'esm',
+ * });
+ * ```
  */
 export const importMetaResolvePlugin = (): Plugin => {
   return {

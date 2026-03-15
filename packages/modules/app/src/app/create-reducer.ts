@@ -13,6 +13,15 @@ import { type Actions, actions } from './actions';
 
 import type { AppBundleState, AppBundleStateInitial } from './types';
 
+/**
+ * Creates the Immer-powered reducer for the {@link App} state machine.
+ *
+ * Handles synchronous state updates (set manifest, config, settings, module, instance)
+ * and tracks in-progress async operations via a `status` set.
+ *
+ * @param value - Initial state values (appKey, tag, and any pre-loaded data).
+ * @returns A reducer function compatible with {@link FlowSubject}.
+ */
 export const createReducer = (value: AppBundleStateInitial) =>
   makeReducer<AppBundleState, Actions>(
     { ...value, status: new Set() } as AppBundleState,

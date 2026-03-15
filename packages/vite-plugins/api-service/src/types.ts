@@ -19,7 +19,11 @@ import type { Matcher } from './create-route-matcher.js';
 export type PluginLogger = Pick<Console, 'debug' | 'info' | 'warn' | 'error'>;
 
 /**
- * Represents JSON data which can be of various types including:
+ * Represents a JSON-serializable value.
+ *
+ * Accepted shapes include objects, arrays, strings, numbers, booleans, and `null`.
+ * Used throughout the plugin to type proxy response payloads that will be parsed
+ * from or serialized back to JSON.
  */
 export type JsonData = Record<string, unknown> | Array<unknown> | string | number | boolean | null;
 
@@ -38,6 +42,13 @@ export type JsonData = Record<string, unknown> | Array<unknown> | string | numbe
  */
 export type ProxyMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH' | 'HEAD' | 'OPTIONS';
 
+/**
+ * Callback that passes control to the next middleware in the Vite/Connect
+ * middleware chain.
+ *
+ * @see {@link https://github.com/senchalabs/connect | Connect} for the
+ *   underlying middleware model used by the Vite dev server.
+ */
 export type NextFunction = Connect.NextFunction;
 
 /**
@@ -158,4 +169,14 @@ export type ProxyRoute = {
   proxy: ApiRouteProxyOptions;
 };
 
+/**
+ * Describes a single route handled by the API service plugin.
+ *
+ * An `ApiRoute` is either a {@link MiddlewareRoute} that executes a custom
+ * server listener, or a {@link ProxyRoute} that forwards the request to a
+ * remote target via `http-proxy`.
+ *
+ * Routes are matched against incoming request paths using
+ * {@link createRouteMatcher}.
+ */
 export type ApiRoute = MiddlewareRoute | ProxyRoute;

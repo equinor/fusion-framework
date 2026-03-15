@@ -7,12 +7,22 @@ import type { AnyModule } from '@equinor/fusion-framework-module';
 import { useObservableState } from '@equinor/fusion-observable/react';
 
 /**
- * Observers the stream of current app initialized modules
+ * React hook that observes the initialised modules of the current application.
  *
- * __Warning:__ type hint templates are only hints, this does not check if the modules are actually enabled!
+ * @remarks
+ * Subscribes to the `instance$` stream of the current app and returns the
+ * resolved module instances.
  *
- * @template TModule type hint modules which the application has configured
- * @returns the observable instance of initialized modules of the application
+ * **Warning:** The template parameter is a compile-time hint only — the
+ * hook does not validate that the specified modules are actually enabled.
+ *
+ * @template TModules - Tuple of module types expected on the current app
+ *   (type-hint only).
+ * @returns An object containing:
+ *   - `modules` — The initialised {@link AppModulesInstance}, `null` when no
+ *     app is selected, or `undefined` while loading.
+ *   - `error` — Any error emitted during initialisation.
+ *   - `complete` — `true` when the observable has completed.
  */
 export const useCurrentAppModules = <TModules extends Array<AnyModule> = []>(): {
   modules?: AppModulesInstance<TModules> | null;

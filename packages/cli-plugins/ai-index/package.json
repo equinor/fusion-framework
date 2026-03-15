@@ -50,6 +50,7 @@
     "@equinor/fusion-framework-module": "workspace:*",
     "@equinor/fusion-framework-module-ai": "workspace:*",
     "@equinor/fusion-imports": "workspace:*",
+    "@langchain/core": "^1.0.1",
     "@langchain/textsplitters": "^1.0.0",
     "commander": "^14.0.1",
     "find-up": "^8.0.0",

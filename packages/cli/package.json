@@ -128,7 +128,6 @@
     "@equinor/fusion-framework-cli-plugin-ai-chat": "workspace:*",
     "@equinor/fusion-framework-cli-plugin-ai-index": "workspace:*",
     "@equinor/fusion-framework-cli-plugin-ai-mcp": "workspace:*",
-    "@equinor/fusion-framework-cli-plugin-ai-search": "workspace:*",
     "@equinor/fusion-framework-react-router": "workspace:*",
     "@equinor/fusion-framework-module": "workspace:*",
     "@equinor/fusion-framework-module-app": "workspace:*",

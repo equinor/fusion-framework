@@ -3,14 +3,22 @@ import type { BookmarkState } from './BookmarkProvider.store';
 import type { Bookmark, BookmarkData } from './types';
 
 /**
- * Selects all bookmarks from the application state.
+ * Selects all bookmarks from the store state as an array.
+ *
+ * @param state - The current bookmark store state.
+ * @returns An array of all bookmarks.
  */
 export const bookmarksSelector = (state: BookmarkState): Bookmark[] => {
   return Object.values(state.bookmarks) as Bookmark[];
 };
 
 /**
- * Retrieves a bookmark from the state by its ID.
+ * Retrieves a single bookmark from the store state by its ID.
+ *
+ * @template T - The bookmark payload data shape.
+ * @param state - The current bookmark store state.
+ * @param id - The bookmark identifier to look up.
+ * @returns The matching bookmark, or `undefined` if not found.
  */
 export const bookmarkSelector = <T extends BookmarkData>(
   state: BookmarkState,
@@ -20,12 +28,11 @@ export const bookmarkSelector = <T extends BookmarkData>(
 };
 
 /**
- * Selects the active bookmark from the bookmark state.
+ * Selects the currently active bookmark from the store state.
  *
- * if there is an active bookmark, the function returns the bookmark data.
- *
- * if there is no active bookmark, the function returns null.
- * if the active bookmark was never set, the function returns undefined.
+ * @template T - The bookmark payload data shape.
+ * @param state - The current bookmark store state.
+ * @returns The active bookmark, `null` if explicitly cleared, or `undefined` if never set.
  */
 export const activeBookmarkSelector = <T extends BookmarkData>(
   state: BookmarkState,
