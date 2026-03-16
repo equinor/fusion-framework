@@ -73,6 +73,9 @@ sequenceDiagram
 # Evaluate all eval files in a cookbook
 ffc copilot app eval ./cookbooks/app-react
 
+# Or use the workspace-root shortcut
+pnpm eval:app ./cookbooks/app-react
+
 # Run a specific eval
 ffc copilot app eval ./cookbooks/app-react --eval smoke
 
@@ -89,6 +92,8 @@ If the application requires authentication, run the login flow once to persist M
 
 ```bash
 ffc copilot app eval ./cookbooks/app-react --login
+# Alias
+ffc copilot app eval ./cookbooks/app-react --logon
 ```
 
 This opens a **headed** browser for interactive login. After you authenticate, press Ctrl+C. Subsequent eval runs reuse the saved session automatically.
@@ -144,7 +149,7 @@ ffc copilot app eval <path> [options]
 | `--host <host>` | Host for the app dev server | `0.0.0.0` |
 | `--url <url>` | Skip server start and use an already-running URL | none |
 | `--verbose` | Show `agent-browser` commands and app server output | `false` |
-| `--login` | Open a headed browser for interactive MSAL login | `false` |
+| `--login`, `--logon` | Open a headed browser for interactive MSAL login | `false` |
 | `-m, --model <model>` | LLM model to use, for example `claude-sonnet-4` | SDK default |
 | `-o, --output <dir>` | Output directory for run artifacts | `.tmp/copilot/` |
 

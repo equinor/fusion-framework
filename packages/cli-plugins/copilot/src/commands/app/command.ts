@@ -30,7 +30,7 @@ const _appEvalCommand = createCommand('eval')
   .option('--host <host>', 'Host for the app server', '0.0.0.0')
   .option('--url <url>', 'Skip server start, use an already-running URL')
   .option('--verbose', 'Show detailed output', false)
-  .option('--login', 'Open a headed browser for interactive MSAL login', false)
+  .option('--login, --logon', 'Open a headed browser for interactive MSAL login', false)
   .option('-m, --model <model>', 'LLM model to use (e.g. claude-sonnet-4)')
   .option('-o, --output <dir>', 'Output directory for run artifacts')
   .addHelpText(
@@ -45,6 +45,7 @@ const _appEvalCommand = createCommand('eval')
       '  $ ffc copilot app eval . --eval smoke',
       '  $ ffc copilot app eval . --model claude-sonnet-4',
       '  $ ffc copilot app eval . --login',
+      '  $ ffc copilot app eval . --logon',
       '  $ ffc copilot app eval . --url http://localhost:3000/apps/my-app',
     ].join('\n'),
   )

@@ -26,6 +26,7 @@
     "build:docs": "turbo build --filter '@equinor/fusion-framework-docs' build",
     "build:affected": "turbo build --filter=...[origin/main] build",
     "build:clean": "pnpm clean:build && pnpm build --force",
+    "eval:app": "pnpm exec ffc copilot app eval",
     "index:packages": "pnpm exec ffc ai index add packages",
     "index:cookbooks": "pnpm exec ffc ai index add cookbooks",
     "preindex:eds": "rm -rf eds/out && docker buildx build --target export --output type=local,dest=./eds/out eds",
