@@ -76,6 +76,9 @@ ffc copilot app eval ./cookbooks/app-react
 # Or use the workspace-root shortcut
 pnpm eval:app ./cookbooks/app-react
 
+# Use the fast workspace-root shortcut with --model haiku
+pnpm eval:app:fast ./cookbooks/app-react
+
 # Run a specific eval
 ffc copilot app eval ./cookbooks/app-react --eval smoke
 
