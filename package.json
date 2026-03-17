@@ -27,7 +27,7 @@
     "build:affected": "turbo build --filter=...[origin/main] build",
     "build:clean": "pnpm clean:build && pnpm build --force",
     "eval:app": "pnpm exec ffc copilot app eval",
-    "eval:app:fast": "eval:app -- --model gpt-4.5 -r low",
+    "eval:app:fast": "pnpm exec ffc copilot app eval --model claude-haiku-4.5",
     "index:packages": "pnpm exec ffc ai index add packages",
     "index:cookbooks": "pnpm exec ffc ai index add cookbooks",
     "preindex:eds": "rm -rf eds/out && docker buildx build --target export --output type=local,dest=./eds/out eds",

@@ -26,7 +26,7 @@ const _appEvalCommand = createCommand('eval')
   .description('Evaluate a Fusion app using Copilot SDK with agent-browser tools')
   .argument('<path-or-eval>', 'Path to the Fusion application directory or an eval markdown file')
   .option('--eval <name-or-path>', 'Specific eval to run (name or file path)')
-  .option('--port <port>', 'Port for the app server', '3000')
+  .option('--port <port>', 'Port for the app server', '3333')
   .option('--host <host>', 'Host for the app server', '0.0.0.0')
   .option('--url <url>', 'Skip server start, use an already-running URL')
   .option('--verbose', 'Show detailed output', false)
@@ -49,7 +49,7 @@ const _appEvalCommand = createCommand('eval')
       '  $ ffc copilot app eval . --model claude-sonnet-4',
       '  $ ffc copilot app eval . --login',
       '  $ ffc copilot app eval . --logon',
-      '  $ ffc copilot app eval . --url http://localhost:3000/apps/my-app',
+      '  $ ffc copilot app eval . --url http://localhost:3333/apps/my-app',
     ].join('\n'),
   )
   .action(async (appOrEvalPath: string, options: CopilotEvalOptions) => {
@@ -126,7 +126,7 @@ const _appEvalCommand = createCommand('eval')
           logger = attachSessionLogger(session, { requestedModel: options.model });
 
           // ── Phase 1: Plan ──────────────────────────────────────────
-          await session.sendAndWait({ prompt: createPlanPrompt(query, ctx) }, 120_000);
+          await session.sendAndWait({ prompt: createPlanPrompt(query, ctx) }, 300_000);
 
           const planPath = `${runDir}/plan.json`;
           if (!existsSync(planPath)) {
@@ -150,12 +150,12 @@ const _appEvalCommand = createCommand('eval')
             for (const c of step.criteria) {
               console.log(chalk.dim(`   • ${c}`));
             }
-            await session.sendAndWait({ prompt: createStepPrompt(step, ctx) }, 120_000);
+            await session.sendAndWait({ prompt: createStepPrompt(step, ctx) }, 300_000);
           }
 
           // ── Phase 3: Judge ─────────────────────────────────────────
           console.log(chalk.cyan('\n── Judging results...'));
-          await session.sendAndWait({ prompt: createJudgePrompt(ctx) }, 120_000);
+          await session.sendAndWait({ prompt: createJudgePrompt(ctx) }, 300_000);
 
           session.disconnect();
           logger.stop();
