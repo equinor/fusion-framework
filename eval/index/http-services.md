@@ -13,6 +13,15 @@ Reject results that confuse HTTP client configuration with service discovery, or
 - should mention `onCreate` callback for adding shared request headers or guards
 - should mention that each `createClient` call returns a fresh instance (factory pattern, not singleton)
 - should mention `fetch()`, `blob()`, and `sse$()` as alternative response methods
+- should mention that endpoints from `app.config.ts` are auto-registered as named HTTP clients
+
+## How are app.config.ts endpoints auto-registered as HTTP clients
+
+- must mention that endpoints defined in `app.config.ts` are automatically registered as named HTTP clients
+- must mention that no `configureHttpClient` call in `config.ts` is needed for endpoints already in `app.config.ts`
+- must mention resolution priority: session overrides > app config endpoints > service discovery > explicit registration
+- should link or reference `@equinor/fusion-framework-app` or `AppConfigurator` as the mechanism
+- should mention that explicit `configureHttpClient` is still needed for custom transport behavior like `onCreate` handlers
 
 ## How to use HTTP request and response operators
 
