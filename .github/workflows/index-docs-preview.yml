@@ -3,7 +3,7 @@ name: Index Docs Preview
 on:
   push:
     branches:
-      - next/doc
+      - react-19
     paths:
       - 'packages/**/docs/**'
       - 'packages/**/README.md'
