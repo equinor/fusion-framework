@@ -23,7 +23,7 @@ export function createSelectTool(
     },
     handler: async (args) => {
       const { target, value } = args as { target: string; value: string };
-      return context.runAb(['select', target, value]);
+      return context.invoke(['select', target, value]);
     },
   });
 }

@@ -22,8 +22,8 @@ export function createSnapshotTool(
       properties: {},
     },
     handler: async () => {
-      const output = context.runAb(['snapshot', '-ci']);
-      writeFileSync(join(context.evidenceDir, 'snapshot.txt'), output, 'utf-8');
+      const output = context.invoke(['snapshot', '-ci']);
+      writeFileSync(join(context.outDir, 'snapshot.txt'), output, 'utf-8');
       return output;
     },
   });

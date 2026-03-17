@@ -33,14 +33,14 @@ export function createWaitTool(
         load?: string;
         timeout?: number;
       };
-      if (text) return context.runAb(['wait', '--text', text], 60_000);
-      if (load) return context.runAb(['wait', '--load', load], 60_000);
-      if (selector) return context.runAb(['wait', selector], 60_000);
+      if (text) return context.invoke(['wait', '--text', text], 60_000);
+      if (load) return context.invoke(['wait', '--load', load], 60_000);
+      if (selector) return context.invoke(['wait', selector], 60_000);
       if (timeout) {
         await new Promise((resolve) => setTimeout(resolve, timeout));
         return `Waited ${timeout}ms`;
       }
-      return context.runAb(['wait', '--load', 'networkidle'], 60_000);
+      return context.invoke(['wait', '--load', 'networkidle'], 60_000);
     },
   });
 }

@@ -28,7 +28,7 @@ export function createTypeTextTool(
     handler: async (args) => {
       const { target, text } = args as { target?: string; text: string };
       const command = target ? ['type', target, text] : ['keyboard', 'type', text];
-      return context.runAb(command);
+      return context.invoke(command);
     },
   });
 }

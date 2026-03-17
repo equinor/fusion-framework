@@ -14,6 +14,6 @@ export function createGoBackTool(
   return defineTool('browser_go_back', {
     description: 'Navigate back in browser history.',
     parameters: { type: 'object' as const, properties: {} },
-    handler: async () => context.runAb(['back']),
+    handler: async () => context.invoke(['back']),
   });
 }

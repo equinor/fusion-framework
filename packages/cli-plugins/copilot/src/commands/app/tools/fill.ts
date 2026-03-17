@@ -26,7 +26,7 @@ export function createFillTool(
     },
     handler: async (args) => {
       const { target, value } = args as { target: string; value: string };
-      return context.runAb(['fill', target, value]);
+      return context.invoke(['fill', target, value]);
     },
   });
 }

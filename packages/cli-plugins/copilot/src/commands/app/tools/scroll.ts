@@ -37,12 +37,12 @@ export function createScrollTool(
         target?: string;
       };
       if (target) {
-        return context.runAb(['scrollintoview', target]);
+        return context.invoke(['scrollintoview', target]);
       }
       const scrollDirection = direction ?? 'down';
       const command = ['scroll', scrollDirection];
       if (amount) command.push(String(amount));
-      return context.runAb(command);
+      return context.invoke(command);
     },
   });
 }

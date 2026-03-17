@@ -334,11 +334,16 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
   async acquireToken(
     options?: AcquireTokenOptions | AcquireTokenOptionsLegacy,
   ): Promise<AcquireTokenResult> {
-    // Determine behavior and silent options, with defaults (redirect and true respectively)
-    const behavior = options?.behavior ?? 'redirect';
+    // Guard: when running inside MSAL's hidden iframe, only attempt silent
+    // acquisition.  Interactive flows (redirect/popup) must never be triggered
+    // from an iframe — MSAL will throw "block_iframe_reload".
+    const inIframe = typeof window !== 'undefined' && window !== window.parent;
 
-    // Silent mode defaults to true, meaning the provider will attempt silent token acquisition first
-    const silent = options?.silent ?? true;
+    // Determine behavior and silent options, with defaults (redirect and true respectively)
+    const behavior = inIframe ? 'redirect' : (options?.behavior ?? 'redirect');
+
+    // When in an iframe, force silent-only to prevent interactive fallback
+    const silent = inIframe ? true : (options?.silent ?? true);
 
     const defaultScopes = this.defaultScopes;
 
@@ -397,6 +402,15 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
       measurement?.measure();
       return result;
     } catch (error) {
+      // Inside MSAL's hidden iframe, silent acquisition may fail and the client
+      // would fall back to acquireTokenRedirect which throws "block_iframe_reload".
+      // Suppress this — the parent frame handles interactive auth.
+      if (inIframe) {
+        this._trackEvent('acquireToken.suppressed-in-iframe', TelemetryLevel.Debug, {
+          properties: telemetryProperties,
+        });
+        return undefined;
+      }
       this._trackException('acquireToken-failed', TelemetryLevel.Error, {
         exception: error as Error,
         properties: telemetryProperties,
@@ -453,6 +467,11 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
    * ```
    */
   async login(options: LoginOptions): Promise<LoginResult> {
+    // Guard: never attempt interactive login inside MSAL's hidden iframe.
+    if (typeof window !== 'undefined' && window !== window.parent) {
+      return undefined;
+    }
+
     const { behavior = 'redirect', silent = true, request } = options;
 
     request.loginHint ??=

@@ -46,7 +46,7 @@ export function createFindTool(
       if (action) command.push(action);
       if (name) command.push('--name', name);
       if (fillValue) command.push(fillValue);
-      return context.runAb(command);
+      return context.invoke(command);
     },
   });
 }

@@ -25,7 +25,7 @@ export function createNavigateTool(
     },
     handler: async (args) => {
       const { url } = args as { url: string };
-      const result = context.runAb(['open', url], 120_000);
+      const result = context.invoke(['open', url], 120_000);
       clearMsalInteraction();
       return result || 'Navigation complete';
     },

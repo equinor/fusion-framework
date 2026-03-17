@@ -2,7 +2,7 @@ import { spawn, type ChildProcess } from 'node:child_process';
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
-import { ab, resolveAppKey, cleanup, sleep, stripAnsi, waitForServer, pollConsole } from '../../utils/index.js';
+import { ab, resolveAppKey, cleanup, resetDaemon, sleep, stripAnsi, waitForServer, pollConsole } from '../../utils/index.js';
 
 /**
  * Interactive login mode for the `copilot app` command.
@@ -56,6 +56,8 @@ export async function runLogin(
   console.log(`✅ Server ready at ${appUrl}`);
   console.log('🌐 Opening headed browser — log in with your Equinor account...');
 
+  // Kill any stale daemon/Chrome so the new --headed --profile flags take effect
+  resetDaemon();
   ab(['open', appUrl, '--headed'], 60_000);
 
   // Ctrl+C handler: stop the dev server but leave the browser open

@@ -140,7 +140,7 @@ export function createScreenshotTool(
       };
       const screenshotFormat = resolveScreenshotFormat(format);
       const screenshotDirectory = resolveScreenshotDirectory(
-        context.evidenceDir,
+        context.outDir,
         screenshotDir,
       );
       mkdirSync(screenshotDirectory, { recursive: true });
@@ -167,7 +167,7 @@ export function createScreenshotTool(
       }
 
       command.push(screenshotPath);
-      context.runAb(command, 60_000);
+      context.invoke(command, 60_000);
 
       return buildScreenshotResult(screenshotPath, screenshotFormat);
     },

@@ -33,9 +33,9 @@ export function createGetStylesTool(
     },
     handler: async (args) => {
       const { selector } = args as { selector: string };
-      const output = context.runAb(['get', 'styles', selector]);
+      const output = context.invoke(['get', 'styles', selector]);
       const safeSelector = selector.replace(/[^a-z0-9]/gi, '_').slice(0, 40);
-      writeFileSync(join(context.evidenceDir, `styles-${safeSelector}.txt`), output, 'utf-8');
+      writeFileSync(join(context.outDir, `styles-${safeSelector}.txt`), output, 'utf-8');
       return output;
     },
   });

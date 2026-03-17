@@ -34,9 +34,9 @@ export function createEvalJsTool(
     },
     handler: async (args) => {
       const { script } = args as { script: string };
-      const output = context.runAb(['eval', script, '--json']);
+      const output = context.invoke(['eval', script, '--json']);
       const timestamp = Date.now();
-      writeFileSync(join(context.evidenceDir, `eval-${timestamp}.json`), output, 'utf-8');
+      writeFileSync(join(context.outDir, `eval-${timestamp}.json`), output, 'utf-8');
       return output;
     },
   });

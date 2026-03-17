@@ -21,8 +21,8 @@ export function createGetUrlTool(
       properties: {},
     },
     handler: async () => {
-      const output = context.runAb(['get', 'url']);
-      writeFileSync(join(context.evidenceDir, 'url.txt'), output, 'utf-8');
+      const output = context.invoke(['get', 'url']);
+      writeFileSync(join(context.outDir, 'url.txt'), output, 'utf-8');
       return output;
     },
   });

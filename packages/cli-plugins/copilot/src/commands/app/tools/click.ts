@@ -26,7 +26,7 @@ export function createClickTool(
     },
     handler: async (args) => {
       const { target } = args as { target: string };
-      return context.runAb(['click', target]);
+      return context.invoke(['click', target]);
     },
   });
 }

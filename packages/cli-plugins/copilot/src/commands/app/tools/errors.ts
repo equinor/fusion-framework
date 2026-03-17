@@ -21,8 +21,8 @@ export function createErrorsTool(
       properties: {},
     },
     handler: async () => {
-      const output = context.runAb(['errors']);
-      writeFileSync(join(context.evidenceDir, 'errors.txt'), output, 'utf-8');
+      const output = context.invoke(['errors']);
+      writeFileSync(join(context.outDir, 'errors.txt'), output, 'utf-8');
       return output || 'No errors';
     },
   });

@@ -1,5 +1,7 @@
 import { execFileSync } from 'node:child_process';
+import { existsSync, unlinkSync } from 'node:fs';
 import { homedir } from 'node:os';
+import { join } from 'node:path';
 
 /** Persistent Chrome profile directory used across agent-browser sessions. */
 export const PROFILE_DIR = `${homedir()}/.fusion-smoke-profile`;
@@ -17,6 +19,16 @@ export const PROFILE_DIR = `${homedir()}/.fusion-smoke-profile`;
  * @throws {Error} When `agent-browser` exits with a non-zero code or times out
  */
 export function ab(args: string[], timeoutMs = 30_000): string {
+  // Remove stale SingletonLock left by a previous Chrome crash to prevent
+  // "Failed to create SingletonLock: File exists" errors.
+  const lockPath = join(PROFILE_DIR, 'SingletonLock');
+  if (existsSync(lockPath)) {
+    try {
+      unlinkSync(lockPath);
+    } catch {
+      // Best-effort — if we can't remove it Chrome will fail with a clear message anyway.
+    }
+  }
   const fullArgs = ['--profile', PROFILE_DIR, ...args];
   return execFileSync('agent-browser', fullArgs, {
     encoding: 'utf-8',

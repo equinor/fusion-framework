@@ -14,6 +14,6 @@ export function createReloadTool(
   return defineTool('browser_reload', {
     description: 'Reload the current page.',
     parameters: { type: 'object' as const, properties: {} },
-    handler: async () => context.runAb(['reload']),
+    handler: async () => context.invoke(['reload']),
   });
 }

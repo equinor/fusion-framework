@@ -22,7 +22,7 @@ export function createPressKeyTool(
     },
     handler: async (args) => {
       const { key } = args as { key: string };
-      return context.runAb(['press', key]);
+      return context.invoke(['press', key]);
     },
   });
 }

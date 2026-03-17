@@ -22,7 +22,7 @@ export function createHoverTool(
     },
     handler: async (args) => {
       const { target } = args as { target: string };
-      return context.runAb(['hover', target]);
+      return context.invoke(['hover', target]);
     },
   });
 }

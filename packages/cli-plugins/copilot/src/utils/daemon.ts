@@ -53,7 +53,17 @@ export function resetDaemon(): void {
     // No matching processes — acceptable
   }
 
-  // 4. Clear Session Storage to remove stuck MSAL interaction.status flags
+  // 4. Remove stale SingletonLock left by crashed Chrome
+  const lockPath = join(PROFILE_DIR, 'SingletonLock');
+  if (existsSync(lockPath)) {
+    try {
+      rmSync(lockPath, { force: true });
+    } catch {
+      // Best-effort
+    }
+  }
+
+  // 5. Clear Session Storage to remove stuck MSAL interaction.status flags
   const sessionStorage = join(PROFILE_DIR, 'Default', 'Session Storage');
   if (existsSync(sessionStorage)) {
     rmSync(sessionStorage, { recursive: true, force: true });
