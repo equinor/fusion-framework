@@ -18,6 +18,8 @@ The main configuration APIs are:
 | One-off call to a specific base URL | `createClient({ baseUri })` | Useful for inline or temporary configuration |
 | One-off call to an absolute URL | `createClient('https://api.example.com')` | Useful when the URL itself is the configuration |
 
+> **Fusion app developers:** Higher-level frameworks like `@equinor/fusion-framework-app` can auto-register named clients from other sources (e.g. application config endpoints or service discovery) before your code runs. See the [`@equinor/fusion-framework-app` README](../../app/README.md) for details on how clients are registered at the app level and which source takes priority.
+
 ## Quick Start
 
 ```typescript

@@ -213,6 +213,9 @@ export default defineAppConfig((env, args) => {
 });
 ```
 
+> [!IMPORTANT]
+> Endpoints defined here are **automatically registered as named HTTP clients** when the application initializes. You do not need to call `configureHttpClient(name, ...)` in `config.ts` for these endpoints — they are ready to use via `framework.modules.http.createClient('my-end-point')`. See the [HTTP client configuration docs](../../modules/http/docs/client-configuration.md) for details.
+
 > [!TIP]
 > In `endpoints` you can also override Service Discovery urls. This might be useful when you are
 > testing in a PR-environment.
