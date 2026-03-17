@@ -239,6 +239,12 @@ export default defineAppConfig((env, args) => {
 > [!NOTE]
 > If the key of an endpoint is defined, it will not check Service Discovery for that key.
 > Service Discovery is the fallback.
+>
+> The full resolution priority (highest wins) is:
+> 1. **Session overrides** — user-specific URL / scopes set at runtime
+> 2. **Application config endpoints** — `endpoints` in `app.config.ts`
+> 3. **Service-discovery registry** — resolved via `useFrameworkServiceClient`
+> 4. **Explicit registration** — `configureHttpClient(name, options)` in `config.ts`
 
 > [!NOTE]
 > The CLI will only include the first matching config file for the environment (e.g., `app.config.dev.ts`). It will not merge `app.config.ts` and `app.config.dev.ts` automatically. If you want to combine base and environment-specific settings, you must implement the merging logic yourself in your configuration code. The CLI provides utilities such as `mergeAppManifests` to assist with merging configuration objects.

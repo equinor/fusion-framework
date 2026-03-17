@@ -41,3 +41,12 @@ When judging results, verify that:
 - should show composing multiple module enables (`enableContext`, `enableNavigation`, `enableBookmark`) in a single configure callback
 - should mention `onConfigured` and `onInitialized` lifecycle callbacks on the configurator
 - should show that the callback receives `(configurator, { fusion, env })` with access to the Fusion runtime and app environment
+- should mention that endpoints from `app.config.ts` are auto-registered and do not need explicit `configureHttpClient` calls
+
+## How do app.config.ts endpoints become HTTP clients
+
+- must mention that `endpoints` in `app.config.ts` are automatically registered as named HTTP clients by the `AppConfigurator`
+- must mention that `configureHttpClient` in `config.ts` is not needed for these endpoints
+- must mention the resolution priority: session overrides > app config endpoints > service discovery > explicit registration
+- should mention `defineAppConfig` from `@equinor/fusion-framework-cli/app` as the config helper
+- should mention that overriding a service-discovery key in `app.config.ts` prevents the service-discovery lookup for that key
