@@ -78,5 +78,17 @@ jobs:
     uses: ./.github/workflows/generate-docs.yml
     secrets: inherit
 
+  # Index documentation on package release
+  index-docs:
+    name: Index documentation
+    permissions:
+      contents: read
+    needs: release-pkg
+    if: needs.release-pkg.outputs.published == 'true'
+    uses: ./.github/workflows/index-docs.yml
+    with:
+      environment: preview
+      tag_name: last-indexed/docs-release
+    secrets: inherit
 
 
