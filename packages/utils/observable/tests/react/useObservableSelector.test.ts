@@ -29,7 +29,6 @@ describe('useObservableSelector', () => {
       expect(result.current.value).toBe('test');
       expect(result.current.value).toBe(subject.value.foo.bar);
     });
-
   });
 
   it('should create an observable selector by callback', async () => {

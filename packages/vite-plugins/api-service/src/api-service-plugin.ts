@@ -3,7 +3,13 @@ import type { ServerResponse } from 'node:http';
 
 import { type ProcessRouteOptions, processRoutes } from './process-route.js';
 
-import type { ApiProxyHandler, ApiRoute, IncomingRequest, NextFunction, PluginLogger } from './types.js';
+import type {
+  ApiProxyHandler,
+  ApiRoute,
+  IncomingRequest,
+  NextFunction,
+  PluginLogger,
+} from './types.js';
 import { DEFAULT_VALUES } from './constants.js';
 
 const pluginName = 'fusion:dev_server::api-proxy';
@@ -117,18 +123,26 @@ export function plugin(args: PluginArguments, options?: PluginOptions): Plugin {
     configureServer(server) {
       // first handle provided routes
       if (routes) {
-        server.middlewares.use(proxyBase, async (req: IncomingRequest, res: ServerResponse, next: NextFunction) => {
-          processRoutes(routes, [req, res, next], { ...options?.process, logger });
-        });
+        server.middlewares.use(
+          proxyBase,
+          async (req: IncomingRequest, res: ServerResponse, next: NextFunction) => {
+            processRoutes(routes, [req, res, next], { ...options?.process, logger });
+          },
+        );
         logger?.debug(`Added custom routes [${routes.length}] at ${proxyBase}`);
       }
 
       // then handle proxy handler routes
       if (proxyHandler) {
-        server.middlewares.use(proxyBase, async (req: IncomingRequest, res: ServerResponse, next: NextFunction) => {
-          logger?.debug(`Processing proxy routes [${proxyHandler.routes.length}] at ${proxyBase}`);
-          processRoutes(proxyHandler.routes, [req, res, next], { ...options?.process, logger });
-        });
+        server.middlewares.use(
+          proxyBase,
+          async (req: IncomingRequest, res: ServerResponse, next: NextFunction) => {
+            logger?.debug(
+              `Processing proxy routes [${proxyHandler.routes.length}] at ${proxyBase}`,
+            );
+            processRoutes(proxyHandler.routes, [req, res, next], { ...options?.process, logger });
+          },
+        );
       }
     },
   } satisfies Plugin;

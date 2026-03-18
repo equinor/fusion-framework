@@ -16,9 +16,7 @@ const resolveLogLevelFromString = (key: string): LogLevel => {
   }
 
   const keyLowerCase = key.toLowerCase();
-  const logLevelKey = Object.keys(LogLevel).find(
-    (x) => x.toLowerCase() === keyLowerCase,
-  );
+  const logLevelKey = Object.keys(LogLevel).find((x) => x.toLowerCase() === keyLowerCase);
 
   if (!logLevelKey) {
     throw new Error(`Failed to parse LogLevel from string: ${key}.`);
