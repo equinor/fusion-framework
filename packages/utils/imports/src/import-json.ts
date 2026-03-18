@@ -1,14 +1,27 @@
 import { readFile } from 'node:fs/promises';
 
+/** Union of types that `JSON.parse` can produce. */
 type JSONContent = Record<string, unknown> | string | number | boolean | null | unknown[];
 
 /**
- * Asynchronously imports and parses a JSON file.
+ * Reads a JSON file from disk and returns the parsed content.
  *
- * @template T - The expected type of the parsed JSON content. It can be a record, string, or number.
- * @param {string} filePath - The path to the JSON file to be imported.
- * @returns {Promise<T>} A promise that resolves to the parsed JSON content.
- * @throws {Error} If the file cannot be read or the content is not valid JSON.
+ * Use this when you need to load a plain JSON configuration file without
+ * esbuild transpilation. For mixed TypeScript / JSON config resolution,
+ * prefer {@link importConfig}.
+ *
+ * @template T - Expected shape of the parsed JSON. Constrained to valid JSON value types.
+ * @param filePath  - Absolute or relative path to the `.json` file.
+ * @param encoding  - Character encoding used when reading the file (default `'utf-8'`).
+ * @returns The parsed JSON content cast to `T`.
+ * @throws {Error} When the file cannot be read or contains invalid JSON, with
+ *   the original error attached as `cause`.
+ *
+ * @example
+ * ```typescript
+ * interface AppManifest { name: string; version: string }
+ * const manifest = await importJSON<AppManifest>('./app.manifest.json');
+ * ```
  */
 export const importJSON = async <T extends JSONContent>(
   filePath: string,

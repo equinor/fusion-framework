@@ -39,18 +39,39 @@ import {
   type ApiResult as PersonResolveResult,
 } from './resolve';
 
+/**
+ * Typed API client for the Fusion people service.
+ *
+ * Provides methods for fetching person details, querying persons,
+ * retrieving profile photos, getting suggestions, and resolving
+ * person identifiers.
+ *
+ * @template TClient - The underlying HTTP client type.
+ */
 export class PeopleApiClient<
   // TMethod extends keyof ClientMethod<unknown> = keyof ClientMethod<unknown>,
   TClient extends IHttpClient = IHttpClient,
 > {
+  /** Returns the {@link ApiVersion} enum for version-constant access. */
   get Version(): typeof ApiVersion {
     return ApiVersion;
   }
 
+  /** @param _client - The HTTP client used to execute people requests. */
   constructor(protected _client: TClient) {}
 
   /**
-   * Fetch person by id
+   * Fetch detailed information about a person by their Azure unique ID.
+   *
+   * @template TVersion - The API version key (e.g. `'v4'`).
+   * @template TArgs - Request argument type.
+   * @template TResult - Expected response type.
+   * @template TMethod - Client execution method (`'json'` or `'json$'`).
+   * @param version - API version to use.
+   * @param method - Client execution method.
+   * @param args - Request arguments including `azureId`.
+   * @param init - Optional request init overrides.
+   * @returns The person details.
    */
   public get<
     TVersion extends PersonDetailSupportedApiVersion,
@@ -68,7 +89,17 @@ export class PeopleApiClient<
   }
 
   /**
-   * Query person service
+   * Search for persons matching query criteria.
+   *
+   * @template TVersion - The API version key (e.g. `'v2'`).
+   * @template TArgs - Request argument type.
+   * @template TResult - Expected response type.
+   * @template TMethod - Client execution method.
+   * @param version - API version to use.
+   * @param method - Client execution method.
+   * @param args - Request arguments including `search` string.
+   * @param init - Optional request init overrides.
+   * @returns An array of matching person entities.
    */
   public query<
     TVersion extends PersonQuerySupportedApiVersion,
@@ -86,7 +117,17 @@ export class PeopleApiClient<
   }
 
   /**
-   * Photo person service
+   * Fetch a person's profile photo as binary blob data.
+   *
+   * @template TVersion - The API version key (e.g. `'v2'`).
+   * @template TArgs - Request argument type.
+   * @template TResult - Expected response type.
+   * @template TMethod - Client execution method (`'blob'` or `'blob$'`).
+   * @param version - API version to use.
+   * @param method - Client execution method.
+   * @param args - Request arguments including `azureId`.
+   * @param init - Optional request init overrides.
+   * @returns The person's photo as a blob.
    */
   public photo<
     TVersion extends PersonPhotoSupportedApiVersion,
@@ -104,7 +145,13 @@ export class PeopleApiClient<
   }
 
   /**
-   * Suggest person service
+   * Fetch person suggestions (type-ahead / autocomplete).
+   *
+   * @template TResult - Expected response type.
+   * @template TMethod - Client execution method.
+   * @param method - Client execution method.
+   * @param init - Optional request init overrides.
+   * @returns Paginated suggestion results.
    */
   public suggest<
     TResult = PersonSuggestApiResponse,
@@ -118,7 +165,13 @@ export class PeopleApiClient<
   }
 
   /**
-   * Resolve person service
+   * Resolve person identifiers to account information.
+   *
+   * @template TResult - Expected response type.
+   * @template TMethod - Client execution method.
+   * @param method - Client execution method.
+   * @param init - Optional request init overrides.
+   * @returns Array of resolved person results.
    */
   public resolve<
     TResult = PersonResolveApiResponse,

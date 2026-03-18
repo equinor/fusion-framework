@@ -1,12 +1,18 @@
+import type { Path } from '@equinor/fusion-framework-module-navigation';
 import type { IFeatureFlag } from '../../types';
 
-export type Path = Pick<Location, 'pathname' | 'hash' | 'search'>;
-
+/**
+ * Assertion function used by the URL plugin to determine whether a feature
+ * flag should be considered enabled based on its query-parameter value.
+ *
+ * @param options - Contextual information about the flag, its value, and the current path.
+ * @returns `true` if the feature flag should be enabled.
+ */
 export type AssertFeatureFlag = (options: {
-  /** name of the cgi parameter */
+  /** The feature flag being evaluated. */
   feature: IFeatureFlag;
-  /** value of the cgi parameter */
+  /** Raw query-parameter value (may be `null` when the key is present without a value). */
   value: string | null;
-  /** path of hit */
+  /** Current navigation path at the time of evaluation. */
   path: Path;
 }) => boolean;

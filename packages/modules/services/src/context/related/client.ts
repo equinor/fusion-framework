@@ -12,7 +12,15 @@ import type {
 } from './types';
 
 /**
- * Function for querying the context service
+ * Creates a curried function that fetches contexts related to a given context.
+ *
+ * @template TVersion - The API version key.
+ * @template TMethod - The client execution method.
+ * @template TClient - The underlying HTTP client type.
+ * @param client - HTTP client used to execute the request.
+ * @param version - API version to call.
+ * @param method - Client method to use (defaults to `'json'`).
+ * @returns A function that accepts relation args and returns related contexts.
  */
 export const relatedContexts =
   <

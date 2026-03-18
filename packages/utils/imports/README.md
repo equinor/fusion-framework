@@ -1,81 +1,166 @@
-# Fusion Imports
+# @equinor/fusion-imports
 
-This package provides utility functions for handling imports.
+Utilities for importing and transpiling TypeScript, JavaScript, and JSON configuration files at **Node.js runtime** using [esbuild](https://esbuild.github.io/).
 
-> [!important]
-> This module is meant for usage of __file__ content, not __url__
+> [!IMPORTANT]
+> This package works with **file paths**, not URLs. It is designed for loading configuration scripts at runtime in Node.js CLI tools and build pipelines.
 
-## Usage
+## Installation
 
-This module is primary for loading configuration from scripts runtime.
+```bash
+pnpm add @equinor/fusion-imports
+```
 
-### importConfig
+## When to use
 
-`importConfig` will resolve the provided basename by looking for `TypeScript`, then `JavaScript` and then `json`. Internally it will call [importScript](#importscript) and [importJSON](#importjson)
+| Scenario | Function |
+|---|---|
+| Load a config by basename, auto-resolving `.ts` → `.js` → `.json` | `importConfig` |
+| Bundle & import a single TypeScript/JS module at runtime | `importScript` |
+| Read and parse a JSON file from disk | `importJSON` |
+| Find the first accessible config file for a basename | `resolveConfigFile` |
 
-```ts
+## Quick start
+
+```typescript
 import { importConfig } from '@equinor/fusion-imports';
 
-type MyConfig {
+interface AppSettings {
   name: string;
-  bar: {
-    foobar: number;
-  }
-};
-
-type ScriptModule = {
-  generateConfig: (options: any) => MyConfig;
+  port: number;
 }
 
-const config = importConfig('my-config', {
+// Resolves app.config.ts → app.config.js → app.config.json
+const { config, path } = await importConfig<AppSettings>('app.config');
+console.log(`Loaded ${path}:`, config);
+```
+
+## API
+
+### `importConfig<C>(basename, options?)`
+
+Resolves a configuration file by basename, probing extensions in order (`.ts`, `.mjs`, `.js`, `.json`). JSON files are parsed directly; script files are bundled with esbuild and dynamically imported.
+
+```typescript
+import { importConfig } from '@equinor/fusion-imports';
+
+interface MyConfig {
+  name: string;
+  bar: { foobar: number };
+}
+
+interface ScriptModule {
+  generateConfig: (options: { env: string }) => MyConfig;
+}
+
+const { config } = await importConfig<MyConfig, ScriptModule>('my-config', {
   script: {
-    resolve: (module: ScriptModule) => {
-      return module.generateConfig(someOptions);
-    }
-  }
+    resolve: (module) => module.generateConfig({ env: 'production' }),
+  },
 });
 ```
 
-__example file: `./my-config.ts`__
-```ts
-import { base } from './baseConfig.ts'
+By default the module's `default` export is used as the config value. Provide `script.resolve` to extract a different export or call a factory function.
 
-export function generateConfig(options: any): MyConfig {
-  return {
-    name: 'foo'
-    ...base(options)
+#### Options
+
+| Option | Type | Description |
+|---|---|---|
+| `baseDir` | `string` | Base directory for file resolution (default: `process.cwd()`) |
+| `extensions` | `string[]` | Extensions to probe (default: `['.ts', '.mjs', '.js', '.json']`) |
+| `script.resolve` | `(module) => C` | Extracts the config value from the imported module |
+| `script.esBuildOptions` | `ImportScriptOptions` | Esbuild overrides forwarded to `importScript` |
+
+### `importScript<M>(entryPoint, options?)`
+
+Bundles a TypeScript or JavaScript file with esbuild (ESM, external packages) and dynamically imports the output. Two built-in esbuild plugins are included automatically:
+
+- **`importMetaResolvePlugin`** — resolves `import.meta.resolve()` calls for relative paths at build time.
+- **`rawMarkdownPlugin`** — supports `?raw` imports for `.md` / `.mdx` files.
+
+```typescript
+import { importScript } from '@equinor/fusion-imports';
+
+interface Greeting { greet(name: string): string }
+const mod = await importScript<Greeting>('./greet.ts');
+console.log(mod.greet('World'));
+```
+
+#### Esbuild customisation
+
+`ImportScriptOptions` inherits all `esbuild.BuildOptions` except `entryPoints`, `bundle`, and `format`. You can pass custom plugins, define aliases, or change the output directory:
+
+```typescript
+import { importScript } from '@equinor/fusion-imports';
+import alias from 'esbuild-plugin-alias';
+
+const mod = await importScript('./entry.ts', {
+  plugins: [alias({ '@app': './src' })],
+  outfile: '/tmp/bundle.js',
+});
+```
+
+### `importJSON<T>(filePath, encoding?)`
+
+Reads a JSON file from disk and returns the parsed content. Throws with the original error as `cause` if the file is unreadable or contains invalid JSON.
+
+```typescript
+import { importJSON } from '@equinor/fusion-imports';
+
+interface Manifest { name: string; version: string }
+const manifest = await importJSON<Manifest>('./package.json');
+```
+
+### `resolveConfigFile(baseName, options?)`
+
+Returns the absolute path of the first accessible configuration file matching the given basename and extension list. Useful when you need the path without importing the file.
+
+```typescript
+import { resolveConfigFile } from '@equinor/fusion-imports';
+
+const configPath = await resolveConfigFile('app.config', {
+  baseDir: '/project',
+  extensions: ['.ts', '.json'],
+});
+```
+
+### Plugins
+
+#### `rawMarkdownPlugin(options?)`
+
+Esbuild plugin that intercepts `?raw` imports for markdown files and returns
+their content as a default-exported string. Included automatically by `importScript`.
+
+```typescript
+// In a file bundled by importScript:
+import readme from '../../README.md?raw';
+console.log(readme); // raw markdown string
+```
+
+#### `createImportMetaResolvePlugin()`
+
+Esbuild plugin that replaces `import.meta.resolve('./relative')` calls with
+resolved `file://` URLs at build time. Included automatically by `importScript`.
+
+### Error handling
+
+The package provides two error classes for filesystem failures:
+
+| Error | Thrown when |
+|---|---|
+| `FileNotFoundError` | File does not exist (`ENOENT`) |
+| `FileNotAccessibleError` | File exists but cannot be read (`EACCES`, `EISDIR`) |
+
+Both extend `Error` and attach the original Node.js error as `cause`:
+
+```typescript
+import { importConfig, FileNotFoundError } from '@equinor/fusion-imports';
+
+try {
+  await importConfig('missing');
+} catch (error) {
+  if (error instanceof FileNotFoundError) {
+    console.error('Config not found:', error.message);
   }
 }
 ```
-
-#### resolve
-
-`importConfig` will try to resolve `module.default` as default
-
-```ts
-// my-script.ts
-const config = importConfig<number>('my-config');
-
-// my-config.ts
-export default 1;
-```
-
-### importScript
-
-Method for loading a script module. This function will use `EsBuild` under the hood, which is useful for loading external script within runtime of other script since it will transpile within the context of the target script.
-
-#### EsBuild
-
-`ImportScriptOptions` is a restricted set of `EsBuild.BuildOptions` which means that you could provide options for compiling the import content.
-
-**plugins**
-
-our implementation does not use any plugins, but working with mono-repos you most likely need to add plugins like:
-- [esbuild-plugin-alias](https://www.npmjs.com/package/esbuild-plugin-alias)
-- [esbuild-plugin-tsc](https://www.npmjs.com/package/esbuild-plugin-tsc)
-- [...more](https://github.com/esbuild/community-plugins)
-
-
-### importJSON
-
-Method for loading json from disk. Will read content and parse.

@@ -8,70 +8,109 @@ import type { QueryCtorOptions } from '@equinor/fusion-query';
 type Fusion = any;
 
 /**
- * WidgetEnv type represents the environment configuration for a widget.
+ * Environment descriptor passed to widget render functions.
+ *
+ * @template TProps - Custom props type forwarded to the widget.
  */
 export type WidgetEnv<TProps = unknown> = {
+  /** Base URL path the widget should use for routing (if applicable). */
   basename?: string;
+  /** The resolved widget manifest. */
   manifest?: WidgetManifest;
+  /** Arbitrary props forwarded from the host application. */
   props?: TProps;
 };
 
 /**
- * IClient interface represents a client with properties and methods for widget-related operations.
+ * HTTP client abstraction used by the widget module to fetch manifests
+ * and configurations from the backend API.
  */
 export type IClient = {
+  /** API version string appended as a query parameter to widget endpoints. */
   apiVersion: string;
+  /** Base URL used to construct full import URLs for widget scripts. */
   baseImportUrl: string;
+  /** Query constructor options for fetching a {@link WidgetManifest}. */
   getWidgetManifest: QueryCtorOptions<WidgetManifest, GetWidgetParameters>;
+  /** Query constructor options for fetching a {@link WidgetConfig}. */
   getWidgetConfig: QueryCtorOptions<WidgetConfig, GetWidgetParameters>;
 };
 
 /**
- * ModuleDeps type represents a tuple of dependencies required for a module.
+ * Peer-dependency module tuple required by the widget module.
+ *
+ * Includes {@link HttpModule}, {@link ServiceDiscoveryModule}, and
+ * {@link EventModule} (the latter two are optional at runtime).
  */
 export type ModuleDeps = [HttpModule, ServiceDiscoveryModule, EventModule];
 
 /**
- * GetWidgetParameters type represents parameters for retrieving widget information.
+ * Parameters for fetching a widget manifest or configuration.
  */
 export type GetWidgetParameters = {
+  /** Unique key (name) identifying the widget. */
   widgetKey: string;
+  /** Optional version or tag selector for the widget. */
   args?: { type: 'version' | 'tag'; value: string };
 };
 
 /**
- * WidgetEndpointBuilder type represents a function for building widget endpoints based on GetWidgetParameters.
+ * Function that builds a widget API endpoint URL from {@link GetWidgetParameters}.
  */
 export type WidgetEndpointBuilder = (args: GetWidgetParameters) => string;
 
 /**
- * WidgetManifest type represents the manifest information of a widget.
+ * Metadata manifest describing a widget’s identity, version, and entry point.
+ *
+ * Fetched from the backend API during widget initialization.
  */
 export type WidgetManifest = {
+  /** Unique backend identifier for the widget. */
   id: string;
+  /** Human-readable widget name (also used as lookup key). */
   name: string;
+  /** Semantic version of the widget. */
   version: string;
+  /** Brief description of the widget’s purpose. */
   description: string;
+  /** Optional list of maintainer identifiers. */
   maintainers?: string[];
+  /** Relative path to the JavaScript entry point (e.g., `index.js`). */
   entryPoint: string;
+  /** Base path for widget assets (combined with `entryPoint` to build the import URL). */
   assetPath: string;
 };
 
 /**
- * Endpoint type represents an endpoint with properties like name, uri, and optional scopes.
+ * Describes a named endpoint with a URI and optional OAuth scopes.
  */
-export type Endpoint = { name: string; uri: string; scopes?: string[] };
+export type Endpoint = {
+  /** Endpoint name. */
+  name: string;
+  /** Endpoint URI. */
+  uri: string;
+  /** Optional OAuth scopes required for the endpoint. */
+  scopes?: string[];
+};
 
 /**
- * WidgetConfig type represents the configuration for a widget, including environment and endpoints.
+ * Runtime configuration for a widget, including environment variables and
+ * backend endpoint mappings.
+ *
+ * @template TEnvironment - Custom environment shape.
  */
 export type WidgetConfig<TEnvironment = unknown> = {
+  /** Widget-specific environment variables. */
   environment: TEnvironment;
+  /** Map of endpoint names to URIs or structured {@link Endpoint} objects. */
   endpoints: Record<string, string | Endpoint>;
 };
 
 /**
- * WidgetModules type represents a combination of modules related to events and service discovery.
+ * Combined module set available inside a widget, merging custom modules with
+ * the standard {@link EventModule} and {@link ServiceDiscoveryModule}.
+ *
+ * @template TModules - Additional modules to combine.
  */
 export type WidgetModules<TModules extends Array<AnyModule> | unknown = unknown> = CombinedModules<
   TModules,
@@ -79,12 +118,18 @@ export type WidgetModules<TModules extends Array<AnyModule> | unknown = unknown>
 >;
 
 /**
- * WidgetProps type represents widget properties as a record of PropertyKey to unknown.
+ * Generic property bag passed from the host application to a widget render
+ * function.
  */
 export type WidgetProps = Record<PropertyKey, unknown>;
 
 /**
- * WidgetRenderArgs type represents arguments for rendering a widget, including fusion, environment, and optional properties.
+ * Arguments passed to a widget’s render functions (`renderWidget`, `render`,
+ * `renderIcon`, and the default export).
+ *
+ * @template TFusion - Fusion instance type.
+ * @template TEnv - Environment descriptor type.
+ * @template TProps - Custom props type.
  */
 
 export type WidgetRenderArgs<
@@ -98,34 +143,61 @@ export type WidgetRenderArgs<
 };
 
 /**
- * WidgetScriptModule type represents a script module for a widget with functions for rendering, rendering icons, etc.
+ * Describes the interface a widget script module must export.
+ *
+ * A dynamically imported widget entry point is expected to expose render
+ * functions that mount the widget into a given DOM element and return a
+ * cleanup function.
+ *
+ * @template TProps - Custom props type.
  */
 export type WidgetScriptModule<TProps extends WidgetProps = WidgetProps> = {
+  /** Default render function (fallback entry point). */
   default: (el: HTMLElement, args: WidgetRenderArgs, props?: TProps) => VoidFunction;
+  /** Primary render function for the widget body. */
   renderWidget: (el: HTMLElement, args: WidgetRenderArgs, props?: TProps) => VoidFunction;
+  /** Render function for the widget’s icon representation. */
   renderIcon: (el: HTMLElement, args: WidgetRenderArgs, props?: TProps) => VoidFunction;
+  /** Generic render function. */
   render: (el: HTMLElement, args: WidgetRenderArgs, props?: TProps) => VoidFunction;
 };
 
 /**
- * WidgetModulesInstance type represents an instance of widget modules.
+ * Resolved module instances available inside a running widget.
+ *
+ * @template TModules - Additional custom modules.
  */
 export type WidgetModulesInstance<TModules extends Array<AnyModule> | unknown = unknown> =
   ModulesInstance<WidgetModules<TModules>>;
 
 /**
- * WidgetState type represents the state of a widget, including properties like name, status, config, manifest, modules, and instance.
+ * Internal state managed by a {@link Widget}’s `FlowSubject` state machine.
+ *
+ * Tracks manifest, config, imported script, framework module instances, and
+ * a set of in-flight status markers.
+ *
+ * @template TModules - Custom module types.
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type WidgetState<TModules = any> = {
+  /** Widget name (lookup key). */
   name: string;
+  /** Set of in-flight action base types (e.g., `'fetch_manifest'`). */
   status: Set<string>;
+  /** Resolved widget configuration (when loaded). */
   config?: WidgetConfig;
+  /** Resolved widget manifest (when loaded). */
   manifest?: WidgetManifest;
+  /** Imported widget script module (when loaded). */
   modules?: WidgetScriptModule;
+  /** Framework module instances created for the widget. */
   instance?: WidgetModulesInstance<TModules>;
 };
+
 /**
- * WidgetStateInitial type represents an initial state of a widget, omitting the status property.
+ * Initial widget state shape passed to the `Widget` constructor.
+ *
+ * Same as {@link WidgetState} but without the `status` set, which is
+ * initialized internally by the reducer.
  */
 export type WidgetStateInitial = Omit<WidgetState, 'status'>;

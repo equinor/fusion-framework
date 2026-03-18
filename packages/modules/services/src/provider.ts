@@ -10,38 +10,69 @@ import BookmarksApiClient from './bookmarks/client';
 import { NotificationApiClient } from './notification';
 import { PeopleApiClient } from './people/client';
 
+/**
+ * Public interface for the services module provider.
+ *
+ * Exposes factory methods for creating domain-specific API clients
+ * for bookmarks, context, notification, and people services.
+ * Each factory resolves a named HTTP client, attaches response
+ * validation, and returns a typed client instance.
+ *
+ * @template TClient - The underlying HTTP client type.
+ */
 export interface IApiProvider<TClient extends IHttpClient = IHttpClient> {
   /**
-   * @param method - Version of the service to use
+   * Creates a typed client for the bookmarks API.
+   *
+   * @template TMethod - The client execution method (`'json'` or `'json$'`).
+   * @param method - The execution method to use for requests.
+   * @returns A configured {@link BookmarksApiClient} instance.
    */
   createBookmarksClient<TMethod extends keyof ClientMethod>(
     method: TMethod,
   ): Promise<BookmarksApiClient<TMethod, TClient>>;
 
   /**
-   * @param method - Version of the service to use
+   * Creates a typed client for the context API.
+   *
+   * @template TMethod - The client execution method (`'json'` or `'json$'`).
+   * @param method - The execution method to use for requests.
+   * @returns A configured {@link ContextApiClient} instance.
    */
   createContextClient<TMethod extends keyof ClientMethod>(
     method: TMethod,
   ): Promise<ContextApiClient<TMethod, TClient>>;
   /**
-   * @param method - Version of the service to use
+   * Creates a typed client for the notification API.
+   *
+   * @template TMethod - The client execution method (`'json'` or `'json$'`).
+   * @param method - The execution method to use for requests.
+   * @returns A configured {@link NotificationApiClient} instance.
    */
   createNotificationClient<TMethod extends keyof ClientMethod>(
     method: TMethod,
   ): Promise<NotificationApiClient<TMethod, TClient>>;
   /**
-   * @param method - Version of the service to use
+   * Creates a typed client for the people API.
+   *
+   * @returns A configured {@link PeopleApiClient} instance.
    */
   createPeopleClient(): Promise<PeopleApiClient<TClient>>;
 }
 
+/**
+ * Constructor arguments for {@link ApiProvider}.
+ *
+ * @template TClient - The underlying HTTP client type.
+ */
 type ApiProviderCtorArgs<TClient extends IHttpClient = IHttpClient> = {
-  /** method for creating IHttpClients for api clients */
+  /** Factory function for creating named HTTP clients used by API sub-clients. */
   createClient: ApiClientFactory<TClient>;
 };
 
-// TODO move to own file
+/**
+ * Shape of the structured error response attached to an {@link ApiProviderError}.
+ */
 type ApiProviderErrorResponse = {
   type: ResponseType;
   status: number;
@@ -51,10 +82,32 @@ type ApiProviderErrorResponse = {
   data: unknown;
 };
 
-// TODO move to own file
+/**
+ * Error thrown when an API response indicates a non-OK HTTP status.
+ *
+ * Contains the full {@link ApiProviderErrorResponse} (status, headers, body)
+ * so callers can inspect the failure details.
+ *
+ * @example
+ * ```ts
+ * try {
+ *   await provider.createNotificationClient('json');
+ * } catch (err) {
+ *   if (err instanceof ApiProviderError) {
+ *     console.error(err.response.status, err.response.data);
+ *   }
+ * }
+ * ```
+ */
 export class ApiProviderError extends Error {
+  /** Structured HTTP response data associated with this error. */
   readonly response: ApiProviderErrorResponse;
 
+  /**
+   * @param msg - Human-readable error message.
+   * @param response - The parsed HTTP response details.
+   * @param options - Standard `ErrorOptions` (e.g. `cause`).
+   */
   constructor(msg: string, response: ApiProviderErrorResponse, options?: ErrorOptions) {
     super(msg, options);
     this.response = response;
@@ -62,7 +115,10 @@ export class ApiProviderError extends Error {
   }
 }
 
-// TODO move to own file
+/**
+ * Validates that an HTTP response has an OK status.
+ * Throws an {@link ApiProviderError} with parsed body data when the response is not OK.
+ */
 const validateResponse = async (response: Response) => {
   if (!response.ok) {
     const { headers, status, statusText, type, url, bodyUsed } = response;
@@ -79,10 +135,25 @@ const validateResponse = async (response: Response) => {
   }
 };
 
+/**
+ * Internal configuration shape for {@link ApiProvider}.
+ *
+ * @template TClient - The underlying HTTP client type.
+ */
 type ApiProviderConfig<TClient extends IHttpClient = IHttpClient> = {
   createClient: ApiClientFactory<TClient>;
 };
 
+/**
+ * Default implementation of {@link IApiProvider}.
+ *
+ * Manages the lifecycle of domain-specific API clients (bookmarks, context,
+ * notification, people) by resolving named HTTP clients through the
+ * configured {@link ApiClientFactory} and attaching response-validation
+ * middleware.
+ *
+ * @template TClient - The underlying HTTP client type.
+ */
 export class ApiProvider<TClient extends IHttpClient = IHttpClient>
   extends BaseModuleProvider<ApiProviderConfig<TClient>>
   implements IApiProvider<TClient>

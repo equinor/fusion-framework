@@ -5,26 +5,79 @@ import type { SignalRConfig } from './SignalRModuleConfigurator';
 
 import { Topic } from './lib/Topic';
 
+/**
+ * Public interface for the SignalR module provider.
+ *
+ * Use {@link ISignalRProvider.connect} to subscribe to a named hub method
+ * through an RxJS-based {@link Topic}. Connections are reference-counted
+ * and automatically torn down when all subscribers unsubscribe.
+ */
 export interface ISignalRProvider {
   /**
-   * connect to SignalR hub
-   * re-use existing connections and close connection when nobody is listening
+   * Connect to a SignalR hub method and return an observable {@link Topic}.
+   *
+   * Existing hub connections are reused (shared via `shareReplay` with
+   * `refCount`). When the last subscriber unsubscribes, the underlying
+   * `HubConnection` is stopped automatically.
+   *
+   * @template T - Type of messages received from the hub method
+   * @param hubId - Name of the hub as registered in the configurator
+   * @param methodName - Server-side method name to listen on
+   * @returns A {@link Topic} observable that emits messages from the hub method
+   *
+   * @example
+   * ```ts
+   * const provider = modules.signalR;
+   * const topic = provider.connect<MyMessage>('notifications', 'OnNewMessage');
+   * topic.subscribe((msg) => console.log('Received:', msg));
+   * ```
    */
-  connect<T>(ubId: string, methodName: string): Topic<T>;
+  connect<T>(hubId: string, methodName: string): Topic<T>;
 }
 
+/**
+ * Default {@link ISignalRProvider} implementation.
+ *
+ * Creates and manages `@microsoft/signalr` `HubConnection` instances based on
+ * the resolved {@link SignalRConfig}. Hub connections are lazily created on
+ * first subscription and shared across all callers via `shareReplay`.
+ */
 export class SignalRModuleProvider implements ISignalRProvider {
   #config: SignalRConfig;
   #hubConnections: Record<string, Observable<HubConnection>> = {};
 
+  /**
+   * @param config - Resolved SignalR configuration containing all registered hubs
+   */
   constructor(config: SignalRConfig) {
     this.#config = config;
   }
 
+  /**
+   * Connect to a named hub method and return an observable {@link Topic}.
+   *
+   * @template T - Type of messages received from the hub method
+   * @param hubId - Name of the hub as registered in the configurator
+   * @param methodName - Server-side method name to listen on
+   * @returns A {@link Topic} observable emitting hub messages
+   * @throws {Error} When no hub configuration exists for `hubId`
+   */
   public connect<T>(hubId: string, methodName: string): Topic<T> {
     return new Topic<T>(methodName, this._createHubConnection(hubId));
   }
 
+  /**
+   * Create or retrieve a shared `HubConnection` observable for the given hub.
+   *
+   * The connection is lazily built using `HubConnectionBuilder` and shared
+   * with `shareReplay({ bufferSize: 1, refCount: true })` so that:
+   * - New subscribers immediately receive the current connection.
+   * - The connection is stopped when the last subscriber unsubscribes.
+   *
+   * @param hubId - Name of the hub as registered in the configurator
+   * @returns Observable that emits the active `HubConnection`
+   * @throws {Error} When no hub configuration exists for `hubId`
+   */
   protected _createHubConnection(hubId: string): Observable<HubConnection> {
     const LOG_LEVEL_CRITICAL = 5;
 
@@ -54,12 +107,13 @@ export class SignalRModuleProvider implements ISignalRProvider {
         })
         .catch((error: unknown) => {
           if (error instanceof AbortError) {
-            // Omit AbortError
+            // AbortError is expected during teardown — safe to ignore
           } else {
             throw error;
           }
         });
 
+      // Stop the connection and clean up the cache entry on unsubscribe
       const teardown = () => {
         connection.stop();
         observer.complete();

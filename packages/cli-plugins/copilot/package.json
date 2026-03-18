@@ -1,0 +1,57 @@
+{
+  "name": "@equinor/fusion-framework-cli-plugin-copilot",
+  "version": "0.1.0",
+  "description": "Copilot SDK powered evaluation plugin for Fusion Framework CLI",
+  "type": "module",
+  "main": "dist/esm/index.js",
+  "types": "dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "types": "./dist/types/index.d.ts"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      ".": [
+        "dist/types/index.d.ts"
+      ]
+    }
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "build:types": "tsc -b",
+    "prepack": "pnpm build"
+  },
+  "keywords": [
+    "fusion-framework",
+    "cli",
+    "plugin",
+    "copilot",
+    "copilot-sdk",
+    "agent-browser"
+  ],
+  "author": "",
+  "license": "ISC",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/equinor/fusion-framework.git",
+    "directory": "packages/cli-plugins/copilot"
+  },
+  "dependencies": {
+    "@github/copilot-sdk": "^0.1.32",
+    "chalk": "^5.6.2",
+    "commander": "^14.0.1",
+    "ora": "^9.3.0",
+    "rxjs": "^7.8.2"
+  },
+  "peerDependencies": {
+    "@equinor/fusion-framework-cli": "workspace:^"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  }
+}

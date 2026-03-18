@@ -1,4 +1,8 @@
 import styled from 'styled-components';
+
+/**
+ * Shared styled components used by feature toggle lists in the person side sheet.
+ */
 export const Styled = {
   SwitchList: styled.ul`
         list-style: none;

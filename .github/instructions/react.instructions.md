@@ -8,9 +8,9 @@ applyTo: "**/*.{tsx,jsx}"
 
 ## TL;DR (for AI agents)
 
-- **Components**: Function components only, no `any`, always add TSDoc for exported components and props.
-- **Hooks**: Prefix with `use`, return objects/tuples, throw clear errors when required context is missing.
-- **State & UX**: Always handle loading and error states explicitly; prefer early returns for clarity.
+- **Components**: Function components only, no `any`, always add TSDoc for components and props. User-facing components must include `@example`.
+- **Hooks**: Prefix with `use`, return objects/tuples, and document intent, params, returns, generics, errors, and usage for user-facing hooks.
+- **State & UX**: Resolve decision logic, transforms, and derived values before markup. JSX should render prepared values, and loading/error states should use early returns.
 - **Imports**: Use scoped framework imports (e.g. `@equinor/fusion-framework-react-*`), never cross-package relative imports.
 - **Styling**: Use `styled-components` with a `Styled` object and descriptive names.
 - **Testing**: Use Vitest + React Testing Library; also follow `testing.instructions.md` for general testing rules.
@@ -21,6 +21,7 @@ applyTo: "**/*.{tsx,jsx}"
 - **ALWAYS** use function components (never class components)
 - Use arrow functions or function declarations
 - Export components as named exports
+- Move business logic, data transforms, and non-trivial decisions out of markup and into named values or helpers before `return`
 
 ```typescript
 /**
@@ -44,6 +45,12 @@ export function UserProfile({
 - Destructure props in function signature
 - Provide default values using default parameters
 
+### Intent Before Markup
+- Resolve filters, maps, reduces, labels, flags, and handler composition before JSX
+- Keep JSX focused on composition and simple presentational branching
+- If a render path needs non-trivial `map`, `filter`, `reduce`, or conditional logic, move it into a named value or helper first
+- Prefer early returns for loading, error, empty, and access-denied states
+
 ```typescript
 import type { PropsWithChildren } from 'react';
 
@@ -60,10 +67,10 @@ export function UserProfile({ user, onUpdate, isLoading = false }: UserProfilePr
 
 ### TSDoc for Components
 **ALL components MUST have TSDoc comments** describing:
-- What the component does
+- The component's primary intent and usage context
 - Each prop parameter
 - Return value (if applicable)
-- Usage examples for complex components
+- `@example` for user-facing or complex components
 
 ```typescript
 /**
@@ -81,7 +88,9 @@ export function Bookmark({ groupBy, onBookmarkClick }: BookmarkProps) {
 ### Custom Hooks
 - Prefix hook names with `use` (e.g., `useBookmarkGrouping`, `useAppModule`)
 - Return objects or tuples, not single values when multiple values are returned
-- Include TSDoc comments explaining hook purpose and return values
+- Include TSDoc comments explaining hook intent, parameters, return values, and thrown errors
+- Add `@template` for every generic type parameter
+- Add `@example` for user-facing or non-trivial hooks
 
 ```typescript
 /**
@@ -90,6 +99,8 @@ export function Bookmark({ groupBy, onBookmarkClick }: BookmarkProps) {
  * @template TKey - The key of the app module
  * @param module - The key of the app module to retrieve
  * @returns The app module instance if found, otherwise throws an error
+ * @example
+ * const httpModule = useAppModule<HttpModule, 'http'>('http');
  */
 export function useAppModule<TType extends AnyModule, TKey extends string>(
   module: TKey,
@@ -194,6 +205,7 @@ export function useModules() {
 - Use `useObservableState` from `@equinor/fusion-observable/react` for RxJS observables
 - Provide initial values when needed
 - Use `useMemo` to memoize observable sources
+- Precede non-trivial RxJS operator chains with an intent comment that explains cancellation, deduplication, or stream-shape decisions
 
 ```typescript
 import { useObservableState } from '@equinor/fusion-observable/react';
@@ -209,6 +221,7 @@ export function BookmarkComponent() {
 
   const { value: isLoading } = useObservableState(
     useMemo(
+      // Treat any active bookmark fetch as a loading signal for the UI state machine
       () => (provider?.status$ || EMPTY).pipe(map((status) => !!status.has('fetch_bookmarks'))),
       [provider],
     ),

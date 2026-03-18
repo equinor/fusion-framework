@@ -1,15 +1,40 @@
 import { Subject, Subscription } from 'rxjs';
-import { map, takeUntil, withLatestFrom } from 'rxjs/operators';
+import { filter, map, takeUntil, withLatestFrom } from 'rxjs/operators';
 
-import type { INavigationProvider } from '@equinor/fusion-framework-module-navigation';
+import type { INavigationProvider, Path } from '@equinor/fusion-framework-module-navigation';
 
 import type { IFeatureFlagProvider } from '../../FeatureFlagProvider';
 
 import { assertFeatureFlag } from './assert-feature-flag';
 
 import type { FeatureFlagPlugin, FeatureFlagPluginConfigCallback, IFeatureFlag } from '../../types';
-import type { AssertFeatureFlag, Path } from './types';
+import type { AssertFeatureFlag } from './types';
 
+/**
+ * Creates a plugin that toggles feature flags based on URL query parameters.
+ *
+ * When the navigation path changes, the plugin scans the search parameters
+ * for keys matching registered feature flags and toggles them accordingly.
+ * By default, any truthy value enables the flag while `"0"` and `"false"`
+ * disable it.
+ *
+ * Requires the `navigation` module to be registered.
+ *
+ * @param features - Feature flags (or keys) that are allowed to be toggled via URL.
+ * @param options - Optional overrides.
+ * @param options.isFeatureEnabled - Custom assertion to evaluate the query-parameter value.
+ * @returns A {@link FeatureFlagPluginConfigCallback} ready for registration.
+ *
+ * @example
+ * ```ts
+ * import { createUrlPlugin } from '@equinor/fusion-framework-module-feature-flag/plugins';
+ *
+ * builder.addPlugin(
+ *   createUrlPlugin(['dark-mode'])
+ * );
+ * // Then toggle via URL: ?dark-mode=true
+ * ```
+ */
 export const createUrlPlugin = (
   features: Array<IFeatureFlag | string>,
   options?: {
@@ -45,7 +70,7 @@ export const createUrlPlugin = (
         const teardown$ = new Subject();
 
         /** stream of path changes */
-        const path$ = new Subject<Path>();
+        const path$ = new Subject<Path | undefined>();
 
         /** only include features defined in creation */
         const feature$ = provider.features$.pipe(
@@ -55,6 +80,7 @@ export const createUrlPlugin = (
 
         /** Observes path changes of the navigator and toggles feature flags */
         const change$ = path$.pipe(
+          filter((path) => path !== undefined),
           withLatestFrom(feature$),
           map(([path, flags]): Array<{ key: string; enabled: boolean }> => {
             const search = new URLSearchParams(path.search);

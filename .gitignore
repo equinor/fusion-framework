@@ -131,5 +131,8 @@ app-bundle.zip
 
 packages/cli/bin/build
 
+eds/out
+
+
 .assistant
 .planning

@@ -11,6 +11,13 @@ import type {
   TelemetryCustomEventSchema,
 } from './schemas.js';
 
+/**
+ * Arguments passed to a {@link MetadataExtractor} when resolving metadata for a telemetry item.
+ *
+ * @property modules - The resolved module instances, available when the provider has been
+ *   wired into the framework module graph. May be `undefined` during early initialization.
+ * @property item - The telemetry item for which metadata is being extracted.
+ */
 export type MetadataExtractorArgs = {
   /**
    * The modules instance, which may be undefined.

@@ -2,6 +2,9 @@ The Fusion Framework CLI provides secure, robust authentication for both automat
 
 For detailed information about the underlying authentication module, see the [MSAL Node Module documentation](https://equinor.github.io/fusion-framework/modules/auth/msal-node/).
 
+> [!TIP]
+> The CLI exposes two binary aliases: `fusion-framework-cli` and `ffc`. All examples below use the long form, but you can substitute `ffc` anywhere — e.g. `ffc auth login`, `ffc auth token`.
+
 ## Key features
 - **Multiple authentication modes:**
   - `token_only`: Use a pre-provided token (e.g., for CI/CD and automation).
@@ -42,6 +45,8 @@ To log in, run:
 
 ```sh
 fusion-framework-cli auth login
+# or using the short alias
+ffc auth login
 ```
 
 - This will open a browser window for you to complete the Azure AD sign-in process.
@@ -52,6 +57,7 @@ If you ever need to clear your cached credentials, you can run:
 
 ```sh
 fusion-framework-cli auth logout
+# or: ffc auth logout
 ```
 
 This will remove your stored tokens and require you to log in again for future CLI operations.
@@ -78,12 +84,15 @@ The `auth token` command is designed to show your access token for the current u
 
 ```sh
 fusion-framework-cli auth token
+# or using the short alias
+ffc auth token
 ```
 
 > [!TIP]
 > The `--silent` flag outputs only the token (no extra logging), which is useful for exporting the token as an environment variable or saving it to a file for local testing or scripting:
 > ```sh
 > export FUSION_TOKEN=$(fusion-framework-cli auth token --silent)
+> # or: export FUSION_TOKEN=$(ffc auth token --silent)
 > ```
 
 > [!Note] This command requires an interactive user context and MSAL Node. It is not suitable for CI/CD environments, as there is no user available in those scenarios. Use it for local development, testing, or whenever you need to preserve a Fusion token for your own scripts or tools.

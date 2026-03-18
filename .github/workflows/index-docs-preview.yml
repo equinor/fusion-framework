@@ -1,0 +1,26 @@
+name: Index Docs Preview
+
+on:
+  push:
+    branches:
+      - next/doc
+    paths:
+      - 'packages/**/docs/**'
+      - 'packages/**/README.md'
+      - 'packages/**/src/**/*.{ts,tsx}'
+      - 'cookbooks/**/*.{ts,tsx}'
+      - 'cookbooks/**/README.md'
+      - 'fusion-ai.config.ts'
+      - '.github/workflows/index-docs.yml'
+      - '.github/workflows/index-docs-preview.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  index-docs:
+    uses: ./.github/workflows/index-docs.yml
+    with:
+      environment: preview
+      tag_name: indexer/preview/react-19/last-commit
+    secrets: inherit

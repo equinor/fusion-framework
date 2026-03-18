@@ -1,103 +1,128 @@
----
-title: Feature flag module
----
+# @equinor/fusion-framework-module-feature-flag
 
-## Concept
+Fusion Framework module for managing feature flags in applications. Provides a plugin-based architecture for defining, persisting, and toggling feature flags from multiple sources such as local storage, URL query parameters, or a remote API.
 
-This module enables the usage of feature flags.
+## Features
+
+- **Plugin architecture** — compose multiple flag sources (local storage, URL, API) into one provider.
+- **Local-storage persistence** — toggled flags survive page reloads via `createLocalStoragePlugin`.
+- **URL toggle** — enable or disable flags through query parameters with `createUrlPlugin`.
+- **Remote API** — fetch flags from an HTTP endpoint using `createApiPlugin`.
+- **Observable state** — subscribe to flag changes via RxJS observables.
+- **Framework events** — emits `onFeatureFlagToggle` (cancelable) and `onFeatureFlagsToggled` when the event module is present.
+- **Typed values** — flags can carry a generic typed payload (`IFeatureFlag<T>`).
+
+## Installation
+
+```sh
+pnpm add @equinor/fusion-framework-module-feature-flag
+```
+
+## Usage
+
+### Register the module
 
 ```ts
-interface FeatureFlag<T> {
-  key: string;
-  title?: string;
-  description?: string;
-  source?: string;
-  enabled?: boolean;
-  readOnly?: boolean;
-  value?: T;
-}
+import { enableFeatureFlagging } from '@equinor/fusion-framework-module-feature-flag';
+import {
+  createLocalStoragePlugin,
+  createUrlPlugin,
+} from '@equinor/fusion-framework-module-feature-flag/plugins';
+
+export const configure = (configurator) => {
+  enableFeatureFlagging(configurator, (builder) => {
+    // Persist toggled state in localStorage
+    builder.addPlugin(
+      createLocalStoragePlugin([
+        { key: 'dark-mode', title: 'Dark mode' },
+        { key: 'beta-search', title: 'Beta search', enabled: false },
+      ]),
+    );
+    // Allow toggling via URL: ?beta-search=true
+    builder.addPlugin(createUrlPlugin(['beta-search']));
+  });
+};
 ```
+
+### Read flags at runtime
+
+```ts
+const featureFlags = modules.featureFlag;
+
+// Check a single flag
+if (featureFlags.getFeature('dark-mode')?.enabled) {
+  applyDarkTheme();
+}
+
+// Observe changes
+featureFlags.features$.subscribe((features) => {
+  console.log('Current flags:', features);
+});
+```
+
+### Toggle flags programmatically
+
+```ts
+await featureFlags.toggleFeature({ key: 'dark-mode', enabled: true });
+```
+
+### Fetch flags from an API
+
+```ts
+import { createApiPlugin } from '@equinor/fusion-framework-module-feature-flag/plugins';
+
+builder.addPlugin(
+  createApiPlugin({
+    httpClientName: 'my-api',
+    path: '/feature-flags',
+  }),
+);
+```
+
+## API Reference
+
+### Main exports (`@equinor/fusion-framework-module-feature-flag`)
+
+| Export | Description |
+| --- | --- |
+| `enableFeatureFlagging` | Registers the module on a configurator with an optional builder callback. |
+| `featureFlagModule` / `default` | Module descriptor for manual registration. |
+| `FeatureFlagProvider` | Manages flag state, toggling, and subscriptions. |
+| `FeatureFlagConfigurator` | Builder for registering plugins during configuration. |
+| `IFeatureFlag<T>` | Interface describing a single feature flag. |
+| `FeatureFlagPlugin` | Interface for plugins that supply and persist flags. |
+
+### Plugin exports (`@equinor/fusion-framework-module-feature-flag/plugins`)
+
+| Export | Description |
+| --- | --- |
+| `createLocalStoragePlugin` | Persists flag state in `localStorage` (or `sessionStorage`). |
+| `createUrlPlugin` | Reads flag state from URL query parameters on navigation. |
+| `createApiPlugin` | Fetches flags from a remote HTTP endpoint. |
+
+### Selector exports (`@equinor/fusion-framework-module-feature-flag/selectors`)
+
+| Export | Description |
+| --- | --- |
+| `filterFeatures` | RxJS operator that filters an observable feature map by a selector function. |
+| `findFeature` | RxJS operator that emits a single flag matching a key or predicate. |
 
 ## Configuration
 
-```ts
-import { enableFeatureFlags } from '@equinor/fusion-framework-module-feature-flag';
+The module is configured through `enableFeatureFlagging(configurator, callback)`. Inside the callback you receive an `IFeatureFlagConfigurator` builder with the following methods:
 
-import { 
-  createLocalStoragePlugin,
-  createUrlPlugin
-} from '@equinor/fusion-framework-module-feature-flag/plugins';
+| Method | Description |
+| --- | --- |
+| `addPlugin(handler)` | Registers a custom plugin factory. |
+| `enableLocalFeatures(...args)` | Shortcut for `createLocalStoragePlugin` _(deprecated)_. |
+| `enableUrlToggle(...args)` | Shortcut for `createUrlPlugin`. |
 
-export const configure: ModuleInitiator = (configurator, args) => {
-  enableFeatureFlags(configurator, builder => {
-    builder.addPlugin(
-      /** define flags that will be stored in local storage when toggled */
-      createLocalStoragePlugin([
-        {
-          key: MyFeatures.MyFlag,
-          title: 'this is a flag',
-        },
-        {
-          key: MyFeatures.MyUrlFlag,
-          title: 'this feature can be toggled by ?my-url-flag=true',
-        }
-      ])
-    );
-    builder.addPlugin(
-      /** define flags which are allowed to be toggled from url */
-      createUrlPlugin([ MyFeatures.MyUrlFlag ])
-    )
-  });
-}
-```
+### Plugin lifecycle
 
-> [!NOTE]
-> In the near future, features will be as an API service
-
-## Plugins
-
-```mermaid
-sequenceDiagram
-    autonumber
-    participant Configuration
-    participant Module
-    participant C as Configurator
-    participant Plugin
-    participant Provider
-
-    Configuration->>Module: enableFeatureFlagging
-    Module->>C: create configurator
-    C->>Configuration: configuration builder
-    Configuration->>Plugin: enablePlugin
-    Plugin->>C: setup callback
-    Configuration-->>+Module: initialize
-    Module-->>+C: initialize
-    C-->>Plugin: setup
-    Plugin-->>C: plugin instance
-    C->>-Module: module config
-    Module->>Provider: create provider
-    Provider-->>Plugin: connect
-    Provider-->>Plugin: subscribe to toggle actions
-    Module-->>-Configuration: Feature flag provider
-```
-
-1. when configuring the framework, the feature flag module is enabled
-2. the module creates a configuration builder (see `BaseConfigBuilder`).
-3. the module returns an configuration builder callback function
-4. when building the configuration, plugins are enabled to control feature flags
-    - the plugin can access the provider to toggle flags
-    - the plugin can set/add flags, like update/create flags from a rest call after initialization
-    - the plugin can subscribe to the provider state, like storing a flag to locale state.
-5. the plugin return a setup callback function which is called when the module is initialize
-    - the plugin receives `ConfigBuilderCallbackArgs` for accessing other modules
-    - the plugin return a callback for generating initial flags for the provider
-    - the plugin returns a callback for accessing the feature flag provider
-6. the framework initializes the module
-7. the module initializes configuration
-8. the configuration calls the registered plugins setup function
-9. Plugin instance
-    - the plugin creates initial flags, like read stored flags or fetch flags from a service
-    - the plugin returns a callback function for connecting the plugin to the provider
+1. During configuration each plugin factory is registered via `addPlugin`.
+2. At module initialisation every factory is called with `ConfigBuilderCallbackArgs`.
+3. Each plugin returns its `initial()` flags and an optional `connect()` hook.
+4. The provider merges all initial flags and invokes `connect()` so plugins can subscribe to toggle events (e.g. to persist changes).
 10. the configurator return an instance of the config
 11. the module create a provider instance
 12. the provider connects the plugins

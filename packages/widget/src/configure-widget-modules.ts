@@ -6,23 +6,42 @@ import type { WidgetModulesInstance, WidgetModuleInitiator, WidgetEnv } from './
 import type { WidgetRenderArgs } from '@equinor/fusion-framework-module-widget';
 
 /**
- * 
- * Creates a callback for initializing configuration of application modules
- * 
+ * Create a widget module initializer for configuring and bootstrapping widget modules.
+ *
+ * This is the primary entry point for widget authors. Call `configureWidgetModules`
+ * with an optional configuration callback and export the result as the widget's
+ * default export. The Fusion portal will invoke the returned async function at
+ * render time, passing the current {@link Fusion} runtime and widget environment.
+ *
+ * The configuration callback receives an {@link IWidgetConfigurator} that exposes
+ * helpers for setting up HTTP clients, MSAL authentication, service-discovery
+ * bindings, and additional custom modules.
+ *
+ * @template TModules - Additional modules beyond the default widget module set.
+ * @template TRef - Fusion runtime type (defaults to {@link Fusion}).
+ * @template TEnv - Widget environment shape (defaults to {@link WidgetEnv}).
+ *
+ * @param cb - Optional configuration callback invoked before modules initialize.
+ *             Use it to register HTTP clients, auth, service bindings, or custom modules.
+ * @returns An async initializer function that, given {@link WidgetRenderArgs},
+ *          creates and returns a fully initialized {@link WidgetModulesInstance}.
+ *
  * @example
- ```ts
-    const initialize =  configureModules((configurator, args) => {
-        configurator.configure(someModule);
-    });
-    await initialize({ fusion, { manifest, config }});
- ```
- * @template TModules Addition modules
- * @template TRef usually undefined, optional references
- * @template TEnv environment object for configuring modules
- * 
- * @param cb configuration callback
- * 
- * @returns initialize function, executes configurator
+ * ```ts
+ * import { configureWidgetModules } from '@equinor/fusion-framework-widget';
+ *
+ * export default configureWidgetModules((configurator, { env }) => {
+ *   configurator.configureMsal({
+ *     tenantId: '{TENANT_ID}',
+ *     clientId: '{CLIENT_ID}',
+ *     redirectUri: '/authentication/login-callback',
+ *   });
+ *   configurator.configureHttpClient('myApi', {
+ *     baseUri: 'https://api.example.com',
+ *     defaultScopes: ['api://my-client-id/.default'],
+ *   });
+ * });
+ * ```
  */
 export const configureWidgetModules =
   <
@@ -33,11 +52,10 @@ export const configureWidgetModules =
     cb?: WidgetModuleInitiator<TModules, TRef, TEnv>,
   ): ((args: WidgetRenderArgs<TRef, TEnv>) => Promise<WidgetModulesInstance<TModules>>) =>
   /**
+   * Async initializer that creates widget modules from the Fusion runtime.
    *
-   * Callback for initializing application modules
-   *
-   * @param args - Fusion and application  environments (manifest, config ...)
-   * @returns initialized app modules
+   * @param args - Render-time arguments containing the Fusion runtime and widget environment.
+   * @returns A promise resolving to the initialized widget modules instance.
    */
   async (args: WidgetRenderArgs<TRef, TEnv>): Promise<WidgetModulesInstance<TModules>> => {
     const configurator = new WidgetConfigurator<TModules, TRef['modules']>();

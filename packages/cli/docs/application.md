@@ -2,6 +2,9 @@ The Fusion Framework CLI empowers you to rapidly build, configure, and deploy mo
 
 This guide will help you get set up, understand the most important commands, and follow best practices for configuration and CI/CD. Let’s get started building robust, scalable apps with Fusion Framework!
 
+> [!TIP]
+> The CLI exposes two binary aliases: `fusion-framework-cli` and `ffc`. All examples below use the long form, but you can substitute `ffc` anywhere — e.g. `ffc app dev`, `ffc app build`, `ffc app publish`.
+
 ## Getting Started
 
 ### Install the CLI
@@ -83,6 +86,8 @@ export default defineAppConfig((env, args) => ({
 
 ```sh
 pnpm fusion-framework-cli dev
+# or using the short alias
+ffc app dev
 ```
 
 ### Log in to Fusion Framework (if needed)
@@ -105,6 +110,8 @@ pnpm fusion-framework-cli auth login
 ```sh
 # Publish and upload config in one command
 pnpm fusion-framework-cli publish --env <environment> --config
+# or using the short alias
+ffc app publish --env <environment> --config
 
 # Or separately
 pnpm fusion-framework-cli publish --env <environment>
@@ -206,6 +213,9 @@ export default defineAppConfig((env, args) => {
 });
 ```
 
+> [!IMPORTANT]
+> Endpoints defined here are **automatically registered as named HTTP clients** when the application initializes. You do not need to call `configureHttpClient(name, ...)` in `config.ts` for these endpoints — they are ready to use via `framework.modules.http.createClient('my-end-point')`. See the [HTTP client configuration docs](../../modules/http/docs/client-configuration.md) for details.
+
 > [!TIP]
 > In `endpoints` you can also override Service Discovery urls. This might be useful when you are
 > testing in a PR-environment.
@@ -229,6 +239,12 @@ export default defineAppConfig((env, args) => {
 > [!NOTE]
 > If the key of an endpoint is defined, it will not check Service Discovery for that key.
 > Service Discovery is the fallback.
+>
+> The full resolution priority (highest wins) is:
+> 1. **Session overrides** — user-specific URL / scopes set at runtime
+> 2. **Application config endpoints** — `endpoints` in `app.config.ts`
+> 3. **Service-discovery registry** — resolved via `useFrameworkServiceClient`
+> 4. **Explicit registration** — `configureHttpClient(name, options)` in `config.ts`
 
 > [!NOTE]
 > The CLI will only include the first matching config file for the environment (e.g., `app.config.dev.ts`). It will not merge `app.config.ts` and `app.config.dev.ts` automatically. If you want to combine base and environment-specific settings, you must implement the merging logic yourself in your configuration code. The CLI provides utilities such as `mergeAppManifests` to assist with merging configuration objects.
@@ -326,6 +342,7 @@ The Fusion Framework CLI provides a suite of commands to support the full applic
 
 - [Create](#create) — Create new Fusion applications from templates.
 - [Dev](#dev) — Start the development server with hot reloading.
+- [Serve](#serve) — Serve a built application with the dev-portal.
 - [Publish](#publish) — Build, upload, and tag your app for deployment.
 - [Config](#config) — Generate or upload your app configuration.
 - [Build](#build) — Build your application and generate deployment artifacts.
@@ -404,16 +421,53 @@ Start your application in development mode with hot reloading and environment-sp
 **Usage:**
 ```sh
 pnpm fusion-framework-cli dev [options]
+# or: ffc app dev [options]
 ```
 
 **Examples:**
 ```sh
 pnpm fusion-framework-cli dev
+ffc app dev
 pnpm fusion-framework-cli dev --port 4000
 pnpm fusion-framework-cli dev --manifest ./app.manifest.local.ts --config ./app.config.ts
 ```
 
 > **Tip:** Use `--debug` to get detailed logs for troubleshooting during development.
+
+### Serve
+
+Serve a built application using the dev-portal, providing a production-like preview environment.
+
+The `serve` command serves your built application through the dev-portal, similar to the `dev` command but using production-built files. This is useful for testing your built application locally before deployment.
+
+| Option              | Description                                                         | Default / Example |
+| ------------------- | ------------------------------------------------------------------- | ----------------- |
+| `--port <port>`     | Port for the preview server.                                        | `4173`            |
+| `--host <host>`     | Host for the preview server.                                        | `localhost`       |
+| `--dir <directory>` | Directory to serve (default: detected from build config).          |                   |
+| `--manifest <path>` | Path to the app manifest file (`app.manifest[.env]?.[ts,js,json]`). | `app.manifest.ts` |
+| `--config <path>`   | Path to the app config file (`app.config[.env]?.[ts,js,json]`).     | `app.config.ts`   |
+| `-d`, `--debug`     | Enable debug mode for verbose logging.                              | `false`           |
+
+**Usage:**
+```sh
+pnpm fusion-framework-cli app serve [options]
+```
+
+**Examples:**
+```sh
+pnpm fusion-framework-cli app serve
+pnpm fusion-framework-cli app serve --port 5000
+pnpm fusion-framework-cli app serve --dir ./dist --host 0.0.0.0
+pnpm fusion-framework-cli app serve --manifest app.manifest.prod.ts --config app.config.prod.ts
+```
+
+> [!IMPORTANT]
+> **Prerequisites**: The application must be built first using `ffc app build` or `pnpm fusion-framework-cli app build`. The serve command will check if the build directory exists and provide an error message if it doesn't.
+>
+> **Build Directory Detection**: The build directory is automatically detected from your Vite configuration. If you need to serve a different directory, use the `--dir` option.
+>
+> **Preview Environment**: The serve command uses production mode and marks the environment as preview, so the manifest uses the compiled entry point from your build output.
 
 ### Publish
 
@@ -436,11 +490,13 @@ This command uploads and tags your app for deployment. If no bundle is provided,
 **Usage:**
 ```sh
 pnpm fusion-framework-cli publish [bundle] [options]
+# or: ffc app publish [bundle] [options]
 ```
 
 **Examples:**
 ```sh
 pnpm fusion-framework-cli publish
+ffc app publish
 pnpm fusion-framework-cli publish --env prod --manifest app.manifest.prod.ts
 pnpm fusion-framework-cli publish --tag latest app-bundle.zip
 pnpm fusion-framework-cli publish --config --env prod
@@ -482,6 +538,7 @@ The `config` command allows you to generate your app's configuration and either 
 **Usage:**
 ```sh
 pnpm fusion-framework-cli app config [config] [options]
+# or: ffc app config [config] [options]
 ```
 
 **Examples:**
@@ -516,11 +573,13 @@ Build your application and generate the necessary artifacts for deployment:
 **Usage:**
 ```sh
 pnpm fusion-framework-cli build [manifest] [options]
+# or: ffc app build [manifest] [options]
 ```
 
 **Examples:**
 ```sh
 pnpm fusion-framework-cli build
+ffc app build
 pnpm fusion-framework-cli build app.manifest.dev.ts --debug
 ```
 
@@ -546,11 +605,13 @@ Build a distributable app bundle archive for deployment.
 **Usage:**
 ```sh
 pnpm fusion-framework-cli pack [manifest] [options]
+# or: ffc app pack [manifest] [options]
 ```
 
 **Examples:**
 ```sh
 pnpm fusion-framework-cli pack
+ffc app pack
 pnpm fusion-framework-cli pack app.manifest.dev.ts --archive my-app.zip --output ./dist
 ```
 
@@ -613,11 +674,13 @@ The `tag` command applies a tag (such as `latest`, `preview`, `dev`, `staging`, 
 **Usage:**
 ```sh
 pnpm fusion-framework-cli app tag <tag> [options]
+# or: ffc app tag <tag> [options]
 ```
 
 **Examples:**
 ```sh
 pnpm fusion-framework-cli app tag latest
+ffc app tag latest
 pnpm fusion-framework-cli app tag preview --env prod --manifest app.manifest.prod.ts
 pnpm fusion-framework-cli app tag latest --package my-app@1.2.3
 ```

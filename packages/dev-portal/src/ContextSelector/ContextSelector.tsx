@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useId, useMemo } from 'react';
+import { useCallback, useEffect, useId, useMemo, type ReactElement } from 'react';
 import {
   ContextProvider,
   ContextSearch,
@@ -9,11 +9,17 @@ import {
 import { useContextResolver } from './useContextResolver';
 
 /**
- * See fusion-react-component storybook for available attributes
- * @link https://equinor.github.io/fusion-react-components/?path=/docs/data-contextselector--component
- * @returns JSX element
+ * Context selector component wired to the current application's context module.
+ *
+ * Renders a search input with dropdown results from the Fusion context service.
+ * When the user selects a context item, it is set as the current context on the
+ * application's context provider. Clearing the selector resets the current context.
+ *
+ * @see {@link https://equinor.github.io/fusion-react-components/?path=/docs/data-contextselector--component | ContextSelector Storybook}
+ * @param props - Passthrough props for the underlying `ContextSearch` component.
+ * @returns The context selector element, or `null` if no context resolver is available.
  */
-export const ContextSelector = (props: ContextSearchProps): JSX.Element | null => {
+export const ContextSelector = (props: ContextSearchProps): ReactElement | null => {
   const contextSelectorId = useId();
   const {
     resolver,

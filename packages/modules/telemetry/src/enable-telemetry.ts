@@ -20,6 +20,21 @@ import { mapConfiguratorEvents } from './utils/map-configurator-events.js';
  * `attachConfiguratorEvents` allows for the automatic attachment of configurator events to the telemetry builder,
  * ensuring that relevant events are captured and processed. __NOTE__ if the configurator crashes before the telemetry
  * builder is fully initialized, some events may be missed.
+ *
+ * @example
+ * ```typescript
+ * import { enableTelemetry } from '@equinor/fusion-framework-module-telemetry';
+ *
+ * const configure = (configurator) => {
+ *   enableTelemetry(configurator, {
+ *     attachConfiguratorEvents: true,
+ *     configure: (builder) => {
+ *       builder.setAdapter('console', new ConsoleAdapter());
+ *       builder.setMetadata(() => ({ appVersion: '1.0.0' }));
+ *     },
+ *   });
+ * };
+ * ```
  */
 export const enableTelemetry = (
   // biome-ignore lint/suspicious/noExplicitAny: must be any to support all module types

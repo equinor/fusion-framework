@@ -1,4 +1,17 @@
-export { defineAppManifest, type AppManifestFn, type AppManifest } from './app-manifest.js';
+/**
+ * Application manifest and configuration utilities for `@equinor/fusion-framework-cli/app`.
+ *
+ * Provides helpers for defining, loading, merging, and validating Fusion application
+ * manifests and configurations.
+ *
+ * @packageDocumentation
+ */
+export {
+  defineAppManifest,
+  type AppManifestFn,
+  type AppManifest,
+} from './app-manifest.js';
+export type { RouteSchemaEntry } from '@equinor/fusion-framework-module-app';
 export { createAppManifestFromPackage } from './create-app-manifest.js';
 export { mergeAppManifests } from './merge-app-manifest.js';
 export { loadAppManifest, type AppManifestExport } from './load-app-manifest.js';

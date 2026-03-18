@@ -13,10 +13,26 @@ import { findFeature } from '@equinor/fusion-framework-module-feature-flag/selec
 import { useAppModule } from '../useAppModule';
 
 /**
- * Custom hook for accessing and manipulating feature flags.
- * @template T - The type of the feature flag value.
- * @param key - The key of the feature flag.
- * @returns An object containing the feature flag, toggle function, and error (if any).
+ * React hook for reading and toggling a single feature flag.
+ *
+ * Merges feature flags from both the framework and the application scope,
+ * so framework-level flags are visible alongside app-specific ones.
+ *
+ * @template T - The type of the feature flag's value payload.
+ * @param key - The unique key identifying the feature flag.
+ * @returns An object with:
+ *   - `feature` – the resolved {@link IFeatureFlag}, or `undefined` if not found.
+ *   - `toggleFeature` – callback to toggle the flag; pass `true`/`false` to
+ *     set explicitly, or omit to invert the current state.
+ *   - `error` – any error from the feature-flag observable.
+ *
+ * @example
+ * ```tsx
+ * const { feature, toggleFeature } = useFeature('dark-mode');
+ * return (
+ *   <Switch checked={feature?.enabled} onChange={() => toggleFeature()} />
+ * );
+ * ```
  */
 export const useFeature = <T = unknown>(
   key: string,

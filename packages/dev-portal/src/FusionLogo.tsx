@@ -1,10 +1,22 @@
 import { useId } from 'react';
 import type { SVGProps } from 'react';
 
+/** Props for the {@link FusionLogo} component. */
 type FusionLogoProps = Omit<SVGProps<SVGSVGElement>, 'viewBox'> & {
+  /** Uniform scale multiplier applied via CSS transform. Defaults to `1`. */
   readonly scale?: number;
 };
 
+/**
+ * Inline SVG rendering of the Fusion logo.
+ *
+ * Uses unique gradient IDs per instance so multiple logos can coexist on the
+ * same page without gradient collisions.
+ *
+ * @param props.scale - Scale multiplier for the logo size.
+ * @param props.style - Additional inline styles merged with the computed transform.
+ * @returns An inline SVG element sized to `1em` height.
+ */
 export const FusionLogo = ({ scale = 1, style }: FusionLogoProps) => {
   const paint0Id = useId();
   const paint1Id = useId();

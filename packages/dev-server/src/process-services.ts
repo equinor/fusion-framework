@@ -2,16 +2,19 @@ import type { ApiDataProcessor, ApiRoute } from '@equinor/fusion-framework-vite-
 import type { FusionService } from './types.js';
 
 /**
- * Processes an array of Fusion services, remapping their URIs to proxy through the development server
- * and generating corresponding proxy routes.
+ * Remap Fusion service discovery entries so their URIs point through the local dev server proxy,
+ * and generate matching Vite proxy routes for each service.
  *
- * @template T - The type of the input data, expected to be an array of `FusionService`.
- * @param data - The input array of Fusion services to process.
- * @param args - Additional arguments containing the route and request information.
- * @param args.route - The base route used to construct the proxy paths.
- * @param args.request - The HTTP request object, used to extract the referer header.
- * @returns An object containing the processed services and the generated proxy routes.
- * @throws {Error} If the input data is not an array.
+ * Use this as the default `api.processServices` handler in {@link DevServerOptions}, or call it
+ * inside a custom handler to get the base mapping before applying additional transformations
+ * (e.g. adding mock services or filtering environments).
+ *
+ * @param data - Array of {@link FusionService} entries returned by the service discovery endpoint.
+ * @param args - Context provided by the API service plugin.
+ * @param args.route - Base route path used to construct local proxy URLs (e.g. `'/services-proxy'`).
+ * @param args.request - Incoming HTTP request; the `referer` header is used to resolve the local origin.
+ * @returns An object with `data` (services with rewritten URIs) and `routes` (Vite proxy route configs).
+ * @throws {Error} When `data` is not an array, indicating an unexpected service discovery response.
  *
  * @example
  * ```typescript

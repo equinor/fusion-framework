@@ -17,6 +17,14 @@ import type {
 
 import type { ContextItem, QueryContextParameters, RelatedContextParameters } from './types';
 
+/**
+ * Callback passed to {@link IContextModuleConfigurator.addConfigBuilder}.
+ *
+ * Receives a {@link ContextConfigBuilder} and may use its setter methods
+ * to populate the context module configuration. The callback may be async.
+ *
+ * @typeParam TDeps - Module dependency array inferred from the configurator.
+ */
 export type ContextConfigBuilderCallback = <TDeps extends Array<AnyModule> = []>(
   builder: ContextConfigBuilder<TDeps, ModuleInitializerArgs<IContextModuleConfigurator, TDeps>>,
 ) => void | Promise<void>;
@@ -147,6 +155,13 @@ export class ContextConfigBuilder<
     this.config.generatePathFromContext = fn;
   }
 
+  /**
+   * Sets the function used to resolve the initial context during module post-initialization.
+   *
+   * @param fn - A function that returns an observable input emitting the initial context item.
+   *             The default resolver extracts a context ID from the navigation path, falling
+   *             back to the parent provider's current context.
+   */
   setResolveInitialContext(fn: ContextModuleConfig['resolveInitialContext']) {
     this.config.resolveInitialContext = fn;
   }

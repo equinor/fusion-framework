@@ -6,22 +6,29 @@ import type {
 } from '@equinor/fusion-framework-module-http/client';
 
 /**
- * A factory function that creates an instance of an HTTP client.
+ * Factory function that creates a named HTTP client instance.
  *
- * @param name - The name of the HTTP client to create.
- * @returns A Promise that resolves to an instance of the HTTP client.
+ * Used by {@link ApiProvider} to resolve service-specific HTTP clients
+ * (for example, `'bookmarks'`, `'context'`, `'notification'`, `'people'`).
+ * The factory first checks registered HTTP clients, then falls back to
+ * service discovery.
+ *
+ * @template TClient - The HTTP client type to create.
+ * @param name - Logical service name used to look up or create the HTTP client.
+ * @returns A Promise that resolves to a configured HTTP client instance.
  */
 export type ApiClientFactory<TClient extends IHttpClient = IHttpClient> = (
   name: string,
 ) => Promise<TClient>;
 
 /**
- * Represents the arguments for an API client function.
+ * Tuple type representing the positional arguments passed to an HTTP client method.
  *
- * @template TClient - The type of the HTTP client used by the API client.
- * @template TResult - The type of the result returned by the API client.
- * @param path - The path of the API endpoint.
- * @param init - Optional initialization options for the API client request.
+ * Used internally by endpoint generators to build the `[path, init]` pair
+ * that the HTTP client's `json()` or `json$()` method expects.
+ *
+ * @template TClient - The HTTP client type that will execute the request.
+ * @template TResult - The expected response body type.
  */
 export type ApiClientArguments<TClient extends IHttpClient, TResult = unknown> = [
   path: string,
@@ -29,24 +36,42 @@ export type ApiClientArguments<TClient extends IHttpClient, TResult = unknown> =
 ];
 
 /**
- * Execute methods on the IHttpClient
+ * Maps HTTP client execution methods to their return types.
+ *
+ * - `json` — returns a `Promise` that resolves with the parsed JSON body.
+ * - `json$` — returns an RxJS-style `StreamResponse` observable.
+ *
+ * All versioned API client methods are generic over `ClientMethod`,
+ * allowing callers to choose between promise-based and observable-based
+ * consumption.
+ *
+ * @template T - The expected deserialized response body type.
  */
 export type ClientMethod<T = unknown> = {
-  /**
-   * Fetch JSON data from a service
-   */
+  /** Fetch JSON data from a service as a promise. */
   json: Promise<T>;
-  /**
-   * Fetch JSON data from a service as observable
-   */
+  /** Fetch JSON data from a service as an observable stream. */
   json$: StreamResponse<T>;
 };
 
+/**
+ * Maps HTTP client binary-data execution methods to their return types.
+ *
+ * - `blob` — returns a `Promise` that resolves with the binary blob result.
+ * - `blob$` — returns an RxJS-style `StreamResponse` observable for the blob.
+ *
+ * Used by endpoints that return non-JSON data such as profile photos.
+ *
+ * @template T - The blob result type, defaults to `BlobResult`.
+ */
 export type ClientDataMethod<T extends BlobResult = BlobResult> = {
+  /** Fetch binary data from a service as a promise. */
   blob: Promise<T>;
+  /** Fetch binary data from a service as an observable stream. */
   blob$: StreamResponse<T>;
 };
 
+/** Union of available client method names (`'json' | 'json$'`). */
 export type ClientMethodType = keyof ClientMethod;
 
 /**

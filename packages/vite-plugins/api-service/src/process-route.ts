@@ -12,10 +12,11 @@ import { InvalidRouteError, validateRoute } from './validate-route.js';
 import { createResponseInterceptor } from './create-response-interceptor.js';
 
 /**
- * Options for processing a route in the Vite plugin API services.
+ * Options for {@link processRoutes} and the internal `processesRoute` helper.
  *
- * @property {PluginLogger} [logger] - An optional logger instance for logging purposes.
- * @property {ProxyListener} [onProxyRes] - An optional listener that is triggered on proxy responses.
+ * @property logger - Optional {@link PluginLogger} for diagnostic messages.
+ * @property onProxyRes - Optional listener invoked on every proxy response,
+ *   useful for custom header injection or logging.
  */
 export type ProcessRouteOptions = {
   logger?: PluginLogger;
@@ -149,13 +150,20 @@ function processesRoute(
 }
 
 /**
- * Processes a list of API routes by matching the incoming request URL against each route.
- * If a match is found, the corresponding route is processed and the middleware chain is terminated.
- * If no match is found, the `next` middleware function is called to continue the chain.
+ * Iterates over a list of {@link ApiRoute} definitions, matches the incoming
+ * request URL against each route using {@link createRouteMatcher}, and
+ * processes the first matching route.
  *
- * @param routes - An array of API routes to be processed.
- * @param middlewareArgs - The middleware arguments, which include the request object, response object, and the `next` function.
- * @param options - Optional configuration for processing the route.
+ * If a route matches, its extracted path parameters are attached to
+ * `req.params` and the route is handed off to `processesRoute` for
+ * middleware execution or proxy forwarding.  When no route matches, the
+ * `next` callback is invoked so the Vite/Connect middleware chain can
+ * continue.
+ *
+ * @param routes - Ordered array of API routes to evaluate.
+ * @param middlewareArgs - The Connect middleware triple `[req, res, next]`.
+ * @param options - Optional processing configuration (logger, proxy
+ *   response listener).
  */
 export function processRoutes(
   routes: ApiRoute[],
@@ -166,7 +174,9 @@ export function processRoutes(
 
   for (const route of routes) {
     if (!req.url) continue;
-    const match = createRouteMatcher(route)(req.url ?? '', req);
+    // Extract pathname only (exclude query parameters/CGI)
+    const pathname = req.url.split('?')[0];
+    const match = createRouteMatcher(route)(pathname, req);
     if (match) {
       const [req, res, next] = middlewareArgs;
       req.params = typeof match === 'object' ? match.params : {};

@@ -9,18 +9,31 @@ import type {
   WidgetScriptModule,
 } from './types';
 
-/** base event type for applications */
+/**
+ * Base event-init shape for all widget lifecycle events.
+ *
+ * Extends `FrameworkEventInit` with a mandatory `name` field identifying
+ * the widget, and sets the event `source` to the originating {@link Widget}
+ * instance.
+ *
+ * @template TDetail - Additional detail properties merged with `{ name: string }`.
+ */
 export type WidgetEventInit<TDetail extends Record<string, unknown> | unknown = unknown> =
-  FrameworkEventInit<
-    /** additional event details and key of target event */
-    TDetail & { name: string },
-    /** source of the event */
-    Widget
-  >;
+  FrameworkEventInit<TDetail & { name: string }, Widget>;
 
+/**
+ * Concrete framework-event type for widget lifecycle events.
+ *
+ * @template TDetail - Additional detail properties.
+ */
 export type WidgetEvent<TDetail extends Record<string, unknown> | unknown = unknown> =
   FrameworkEvent<WidgetEventInit<TDetail>>;
 
+/**
+ * Framework-event type for widget lifecycle failure events.
+ *
+ * Carries an `error` property in the event detail for error inspection.
+ */
 export type WidgetEventFailure = FrameworkEvent<
   WidgetEventInit<{
     error: WidgetConfig;
@@ -29,47 +42,53 @@ export type WidgetEventFailure = FrameworkEvent<
 
 declare module '@equinor/fusion-framework-module-event' {
   interface FrameworkEventMap {
-    /** fired when the application has initiated its modules */
+    /** Fired when a widget has finished initializing its framework modules. */
     onWidgetModulesLoaded: WidgetEvent<{
-      /** initiated modules for application */
+      /** The initialized module instances. */
       modules: WidgetModulesInstance;
     }>;
 
+    /** Fired when a widget manifest fetch starts. */
     onWidgetManifestLoad: WidgetEvent;
-    /** fired when the application has loaded corresponding manifest */
+    /** Fired when a widget manifest has been successfully loaded. */
     onWidgetManifestLoaded: WidgetEvent<{
       manifest: WidgetManifest;
     }>;
+    /** Fired when a widget manifest fetch fails. */
     onWidgetManifestFailure: WidgetEventFailure;
 
+    /** Fired when a widget config fetch starts. */
     onWidgetConfigLoad: WidgetEvent;
-    /** fired when the application has loaded corresponding config */
+    /** Fired when a widget config has been successfully loaded. */
     onWidgetConfigLoaded: WidgetEvent<{
       config: WidgetConfig;
     }>;
+    /** Fired when a widget config fetch fails. */
     onWidgetConfigFailure: WidgetEventFailure;
 
-    /** fired when the application has loaded corresponding javascript module */
+    /** Fired when a widget script import starts. */
     onAWidgetScriptLoad: WidgetEvent;
+    /** Fired when a widget script has been successfully imported. */
     onWidgetScriptLoaded: WidgetEvent<{
       script: WidgetScriptModule;
     }>;
+    /** Fired when a widget script import fails. */
     onWidgetScriptFailure: WidgetEventFailure;
 
-    /** fired before application loads manifest, config and script */
+    /** Fired before the widget begins loading manifest, config, and script. */
     onWidgetInitialize: WidgetEvent;
 
     /**
-     * fired after application has loaded manifest, config and script
+     * Fired after the widget has loaded manifest, config, and script.
      *
-     * __note:__ not fired until all loaders has settled (last emit)
+     * Not emitted until all loaders have settled (last emission).
      */
     onWidgetInitialized: WidgetEvent;
 
-    /** fired when application fails to load either manifest, config and script */
+    /** Fired when the widget fails to load manifest, config, or script. */
     onWidgetInitializeFailure: WidgetEventFailure;
 
-    /** fired when the application is disposed (unmounts) */
+    /** Fired when the widget is disposed (unmounted from the DOM). */
     onWidgetDispose: FrameworkEvent<WidgetEventInit>;
   }
 }

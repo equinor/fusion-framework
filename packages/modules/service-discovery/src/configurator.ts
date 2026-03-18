@@ -10,12 +10,49 @@ import type { IHttpClient } from '@equinor/fusion-framework-module-http';
 
 import { type IServiceDiscoveryClient, ServiceDiscoveryClient } from './client';
 
+/**
+ * Resolved configuration produced by {@link ServiceDiscoveryConfigurator}.
+ *
+ * Holds the fully-initialized {@link IServiceDiscoveryClient} that the
+ * module provider uses at runtime to resolve service endpoints.
+ */
 export interface ServiceDiscoveryConfig {
-  /** Service Discovery client */
+  /** The client responsible for fetching and caching service endpoints. */
   discoveryClient: IServiceDiscoveryClient;
 }
 
+/**
+ * Configuration builder for the Service Discovery module.
+ *
+ * Provides a fluent API to set up how service endpoints are resolved.
+ * The simplest path is to call
+ * {@link ServiceDiscoveryConfigurator.configureServiceDiscoveryClientByClientKey | configureServiceDiscoveryClientByClientKey}
+ * with the HTTP client key that points to the service discovery backend.
+ *
+ * For full control, use
+ * {@link ServiceDiscoveryConfigurator.setServiceDiscoveryClient | setServiceDiscoveryClient}
+ * to supply a custom {@link IServiceDiscoveryClient} implementation.
+ *
+ * @example
+ * ```typescript
+ * enableServiceDiscovery(configurator, async (builder) => {
+ *   builder.configureServiceDiscoveryClientByClientKey('sd_custom', '/services/v2');
+ * });
+ * ```
+ */
 export class ServiceDiscoveryConfigurator extends BaseConfigBuilder<ServiceDiscoveryConfig> {
+  /**
+   * Creates the final {@link ServiceDiscoveryConfig}.
+   *
+   * When no explicit discovery client has been registered, this method
+   * auto-detects an HTTP client with key `"service_discovery"` and uses it
+   * as the default transport.
+   *
+   * @param init - Builder callback arguments providing module accessors.
+   * @param initial - Optional partial config inherited from a parent module.
+   * @returns The fully resolved configuration.
+   * @throws {Error} When the HTTP module is not registered.
+   */
   protected async _createConfig(
     init: ConfigBuilderCallbackArgs,
     initial?: Partial<ServiceDiscoveryConfig> | undefined,
@@ -38,12 +75,12 @@ export class ServiceDiscoveryConfigurator extends BaseConfigBuilder<ServiceDisco
   }
 
   /**
-   * Processes the service discovery configuration.
+   * Validates and finalizes the service discovery configuration.
    *
-   * @param config - A partial configuration object for service discovery.
-   * @param init - Initialization arguments for the configuration builder callback.
-   * @returns An observable input of the complete service discovery configuration.
-   * @throws Will throw an error if `discoveryClient` is not configured.
+   * @param config - Partial configuration assembled by the builder.
+   * @param init - Builder callback arguments.
+   * @returns An observable that emits the complete {@link ServiceDiscoveryConfig}.
+   * @throws {Error} When `discoveryClient` has not been configured.
    */
   protected _processConfig(
     config: Partial<ServiceDiscoveryConfig>,
@@ -56,11 +93,25 @@ export class ServiceDiscoveryConfigurator extends BaseConfigBuilder<ServiceDisco
   }
 
   /**
-   * Sets the service discovery client.
+   * Sets the service discovery client directly.
    *
-   * @param discoveryClient - An instance of `IServiceDiscoveryClient` or a callback function that returns an instance of `IServiceDiscoveryClient`.
+   * Accepts either a ready-made {@link IServiceDiscoveryClient} instance or a
+   * {@link ConfigBuilderCallback} that will be invoked during module
+   * initialization to produce one.
    *
-   * This method configures the service discovery client by either directly setting the provided instance or by invoking the provided callback function to obtain the instance.
+   * Use this method when you need full control over service resolution
+   * (e.g. a mock client for testing or a static service list).
+   *
+   * @param discoveryClient - A client instance or an async factory function.
+   *
+   * @example
+   * ```typescript
+   * // Static / mock client
+   * builder.setServiceDiscoveryClient({
+   *   resolveServices: async () => [{ key: 'api', uri: 'https://localhost:5000', defaultScopes: [] }],
+   *   resolveService: async (key) => ({ key, uri: 'https://localhost:5000', defaultScopes: [] }),
+   * });
+   * ```
    */
   setServiceDiscoveryClient(
     discoveryClient: IServiceDiscoveryClient | ConfigBuilderCallback<IServiceDiscoveryClient>,
@@ -72,12 +123,26 @@ export class ServiceDiscoveryConfigurator extends BaseConfigBuilder<ServiceDisco
   }
 
   /**
-   * Configures the Service Discovery Client with the provided configuration callback.
+   * Configures a {@link ServiceDiscoveryClient} with a custom HTTP client and
+   * optional endpoint path.
    *
-   * @param configCallback - A callback function that takes an argument of type `{ httpClient: IHttpClient; endpoint?: string }`
-   * and returns a configuration object. The `httpClient` is required, while the `endpoint` is optional.
+   * This is the mid-level configuration path: you supply the transport
+   * details and the module constructs a standard
+   * {@link ServiceDiscoveryClient} with built-in caching, response parsing,
+   * and `sessionStorage` override support.
    *
-   * @throws {Error} Throws an error if `httpClient` is not provided in the configuration.
+   * @param configCallback - Async factory that must return
+   *   `{ httpClient, endpoint? }`. The `httpClient` is used to call the
+   *   service discovery API at the given `endpoint` (defaults to `""`).
+   * @throws {Error} When the factory does not return an `httpClient`.
+   *
+   * @example
+   * ```typescript
+   * builder.configureServiceDiscoveryClient(async ({ requireInstance }) => {
+   *   const http = await requireInstance('http');
+   *   return { httpClient: http.createClient('sd'), endpoint: '/services/v2' };
+   * });
+   * ```
    */
   configureServiceDiscoveryClient(
     configCallback: ConfigBuilderCallback<{ httpClient: IHttpClient; endpoint?: string }>,
@@ -131,17 +196,24 @@ export class ServiceDiscoveryConfigurator extends BaseConfigBuilder<ServiceDisco
   }
 
   /**
-   * Configures a service discovery client using the provided client key and optional endpoint.
+   * Configures service discovery using a named HTTP client key.
    *
-   * @param clientKey - The key used to identify the client.
-   * @param endpoint - An optional endpoint to be used by the service discovery client.
+   * This is the simplest configuration path. The HTTP module must already
+   * have a client registered under `clientKey`. If `endpoint` is omitted
+   * the client calls the root path of the HTTP client's base URI.
    *
-   * @remarks
-   * The http module must have a configured client which match provided `clientKey`.
+   * @param clientKey - Key of the HTTP client to use for service discovery
+   *   requests (must match an entry in the HTTP module configuration).
+   * @param endpoint - Optional sub-path appended to the client's base URI
+   *   when fetching the service list.
    *
-   * This method sets up the service discovery client by requiring an HTTP provider instance,
-   * creating an HTTP client with the given client key, and returning an object containing
-   * the HTTP client and the optional endpoint.
+   * @example
+   * ```typescript
+   * builder.configureServiceDiscoveryClientByClientKey(
+   *   'service_discovery',
+   *   '/custom/services',
+   * );
+   * ```
    */
   configureServiceDiscoveryClientByClientKey(clientKey: string, endpoint?: string): void {
     this.configureServiceDiscoveryClient(async ({ requireInstance }) => {

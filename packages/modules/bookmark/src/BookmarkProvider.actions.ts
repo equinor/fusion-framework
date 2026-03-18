@@ -128,4 +128,5 @@ export const bookmarkActions = {
   ),
 };
 
+/** Union type of all action objects produced by {@link bookmarkActions}. */
 export type BookmarkActions = ActionTypes<typeof bookmarkActions>;

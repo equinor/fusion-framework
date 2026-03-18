@@ -6,9 +6,13 @@ import { existsSync } from 'node:fs';
 const gitCache = new Map<string, SimpleGit>();
 
 /**
- * Resolve the project root (git repository root) for a given file path
- * @param filePath - File path to resolve from
- * @returns Project root path or undefined if not in a git repository
+ * Resolves the git repository root for a given file path.
+ *
+ * Walks up the directory tree looking for a `.git` directory or file
+ * (to support worktrees) and returns the enclosing directory.
+ *
+ * @param filePath - Absolute file or directory path to resolve from.
+ * @returns Absolute path to the repository root, or `undefined` if not inside a git repo.
  */
 export const resolveProjectRoot = (filePath: string): string | undefined => {
   // if we are in the root of the git repository, return the root
@@ -21,10 +25,15 @@ export const resolveProjectRoot = (filePath: string): string | undefined => {
 };
 
 /**
- * Get or create a SimpleGit instance for a given file path
- * Uses caching to avoid creating multiple instances for the same repository
- * @param filePath - File path to get git instance for
- * @returns Git instance and repository path, or undefined if not in a git repository
+ * Returns a cached `SimpleGit` instance scoped to the repository that
+ * contains `filePath`.
+ *
+ * Instances are cached by repository root to avoid repeatedly spawning
+ * new git processes for the same repo.
+ *
+ * @param filePath - Absolute file path to locate the repository for.
+ * @returns An object containing the git client and the repository root path,
+ *   or `undefined` when `filePath` is not inside a git repository.
  */
 export const getGit = (
   filePath: string,

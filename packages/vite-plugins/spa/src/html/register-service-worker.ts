@@ -2,6 +2,36 @@ import type { ModulesInstance } from '@equinor/fusion-framework-module';
 import type { MsalModule } from '@equinor/fusion-framework-module-msal';
 import { TelemetryLevel, type TelemetryModule } from '@equinor/fusion-framework-module-telemetry';
 
+/**
+ * Registers the Fusion SPA service worker and wires token acquisition.
+ *
+ * @remarks
+ * The service worker intercepts outgoing fetch requests that match
+ * the configured {@link ResourceConfiguration | resource patterns},
+ * rewrites URLs, and injects Bearer tokens obtained from the MSAL
+ * module. This function:
+ *
+ * 1. Registers `/@fusion-spa-sw.js` as a module service worker.
+ * 2. Listens for `GET_TOKEN` messages from the worker and responds
+ *    with MSAL access tokens.
+ * 3. Sends the `INIT_CONFIG` message containing resource configurations
+ *    to the active worker once it is ready and controlling the page.
+ *
+ * @param framework - An initialized Fusion Framework instance that
+ *   includes the {@link MsalModule} (for token acquisition) and
+ *   {@link TelemetryModule} (for structured logging).
+ * @throws {Error} When service workers are not supported by the browser.
+ * @throws {Error} When the `FUSION_SPA_SERVICE_WORKER_RESOURCES`
+ *   environment variable is not defined.
+ *
+ * @example
+ * ```ts
+ * import { registerServiceWorker } from '@equinor/fusion-framework-vite-plugin-spa/html';
+ *
+ * const framework = await configurator.initialize();
+ * await registerServiceWorker(framework);
+ * ```
+ */
 export async function registerServiceWorker(
   framework: ModulesInstance<[MsalModule, TelemetryModule]>,
 ) {
