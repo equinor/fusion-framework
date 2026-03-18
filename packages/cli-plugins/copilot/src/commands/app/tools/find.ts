@@ -7,10 +7,7 @@ import type { AgentBrowserToolContext, DefineTool } from './types.js';
  * @param defineTool - Copilot SDK helper used to declare tools
  * @returns Copilot tool definition for semantic element lookup and optional action execution
  */
-export function createFindTool(
-  context: AgentBrowserToolContext,
-  defineTool: DefineTool,
-) {
+export function createFindTool(context: AgentBrowserToolContext, defineTool: DefineTool) {
   return defineTool('browser_find', {
     description:
       'Find an element using semantic locators (role, text, label) and optionally perform an action on it.',

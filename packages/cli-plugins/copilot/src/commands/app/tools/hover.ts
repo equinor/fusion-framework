@@ -7,10 +7,7 @@ import type { AgentBrowserToolContext, DefineTool } from './types.js';
  * @param defineTool - Copilot SDK helper used to declare tools
  * @returns Copilot tool definition for hovering a page element
  */
-export function createHoverTool(
-  context: AgentBrowserToolContext,
-  defineTool: DefineTool,
-) {
+export function createHoverTool(context: AgentBrowserToolContext, defineTool: DefineTool) {
   return defineTool('browser_hover', {
     description: 'Hover over an element.',
     parameters: {

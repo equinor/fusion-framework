@@ -11,7 +11,10 @@ import type { PlanStep, RuntimeExecutionContext } from '../types.js';
  * @param ctx - Runtime context with output directory and app URL
  * @returns The fully interpolated execution prompt string
  */
-export const createExecuteStepPrompt = (actions: string[], ctx: RuntimeExecutionContext): string => {
+export const createExecuteStepPrompt = (
+  actions: string[],
+  ctx: RuntimeExecutionContext,
+): string => {
   return `
 You are now EXECUTING one test step using real browser tools.
 

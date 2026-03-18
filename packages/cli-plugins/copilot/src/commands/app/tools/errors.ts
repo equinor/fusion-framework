@@ -10,10 +10,7 @@ import type { AgentBrowserToolContext, DefineTool } from './types.js';
  * @param defineTool - Copilot SDK helper used to declare tools
  * @returns Copilot tool definition for retrieving JavaScript errors
  */
-export function createErrorsTool(
-  context: AgentBrowserToolContext,
-  defineTool: DefineTool,
-) {
+export function createErrorsTool(context: AgentBrowserToolContext, defineTool: DefineTool) {
   return defineTool('browser_errors', {
     description: 'Get all JavaScript console errors from the browser.',
     parameters: {

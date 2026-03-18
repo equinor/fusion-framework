@@ -29,7 +29,9 @@ function resolveSafe(baseDir: string, input: string): string {
   const relative = isAbsolute(input)
     ? input.startsWith(baseDir + '/') || input.startsWith(baseDir + '\\')
       ? input.slice(baseDir.length + 1)
-      : (() => { throw new Error(`Absolute path outside output directory: ${input}`); })()
+      : (() => {
+          throw new Error(`Absolute path outside output directory: ${input}`);
+        })()
     : input;
   const resolved = join(baseDir, relative);
   if (!resolved.startsWith(baseDir)) {

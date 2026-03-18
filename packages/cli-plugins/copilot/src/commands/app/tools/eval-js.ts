@@ -14,10 +14,7 @@ import type { AgentBrowserToolContext, DefineTool } from './types.js';
  * @param defineTool - Copilot SDK helper used to declare tools
  * @returns Copilot tool definition for evaluating arbitrary JavaScript in the browser
  */
-export function createEvalJsTool(
-  context: AgentBrowserToolContext,
-  defineTool: DefineTool,
-) {
+export function createEvalJsTool(context: AgentBrowserToolContext, defineTool: DefineTool) {
   return defineTool('browser_eval', {
     description:
       'Evaluate a JavaScript expression in the browser page context and return the result. Use for reading DOM values, computed styles, or element properties that need exact values (e.g. getComputedStyle(document.body).backgroundColor).',

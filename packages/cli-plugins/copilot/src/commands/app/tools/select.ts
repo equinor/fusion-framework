@@ -7,10 +7,7 @@ import type { AgentBrowserToolContext, DefineTool } from './types.js';
  * @param defineTool - Copilot SDK helper used to declare tools
  * @returns Copilot tool definition for choosing an option in a select element
  */
-export function createSelectTool(
-  context: AgentBrowserToolContext,
-  defineTool: DefineTool,
-) {
+export function createSelectTool(context: AgentBrowserToolContext, defineTool: DefineTool) {
   return defineTool('browser_select', {
     description: 'Select an option from a dropdown/select element.',
     parameters: {

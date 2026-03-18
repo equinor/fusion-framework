@@ -14,10 +14,7 @@ import type { AgentBrowserToolContext, DefineTool } from './types.js';
  * @param defineTool - Copilot SDK helper used to declare tools
  * @returns Copilot tool definition for retrieving computed CSS style properties
  */
-export function createGetStylesTool(
-  context: AgentBrowserToolContext,
-  defineTool: DefineTool,
-) {
+export function createGetStylesTool(context: AgentBrowserToolContext, defineTool: DefineTool) {
   return defineTool('browser_get_styles', {
     description:
       'Get computed CSS styles of an element. Use this for verifying visual properties such as background-color, color, or font-size WITHOUT relying on screenshot interpretation. Returns the computed style object as plain text.',
@@ -26,7 +23,8 @@ export function createGetStylesTool(
       properties: {
         selector: {
           type: 'string',
-          description: 'Element ref (e.g. @e1), CSS selector, or tag name to inspect (e.g. "body", "main", "h1")',
+          description:
+            'Element ref (e.g. @e1), CSS selector, or tag name to inspect (e.g. "body", "main", "h1")',
         },
       },
       required: ['selector'],

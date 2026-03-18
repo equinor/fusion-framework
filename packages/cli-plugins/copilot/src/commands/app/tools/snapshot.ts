@@ -10,10 +10,7 @@ import type { AgentBrowserToolContext, DefineTool } from './types.js';
  * @param defineTool - Copilot SDK helper used to declare tools
  * @returns Copilot tool definition for capturing the current page snapshot
  */
-export function createSnapshotTool(
-  context: AgentBrowserToolContext,
-  defineTool: DefineTool,
-) {
+export function createSnapshotTool(context: AgentBrowserToolContext, defineTool: DefineTool) {
   return defineTool('browser_snapshot', {
     description:
       'Capture an accessibility snapshot of the current page. Returns a text representation of all visible elements with ref identifiers (e.g. @e1, @e2) that can be used in other commands.',

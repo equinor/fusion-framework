@@ -9,13 +9,9 @@ import type { AgentBrowserToolContext, DefineTool } from './types.js';
  * @param defineTool - Copilot SDK helper used to declare tools
  * @returns Copilot tool definition for opening a URL
  */
-export function createNavigateTool(
-  context: AgentBrowserToolContext,
-  defineTool: DefineTool,
-) {
+export function createNavigateTool(context: AgentBrowserToolContext, defineTool: DefineTool) {
   return defineTool('browser_navigate', {
-    description:
-      'Navigate the browser to a URL. Use this to open the application or follow links.',
+    description: 'Navigate the browser to a URL. Use this to open the application or follow links.',
     parameters: {
       type: 'object' as const,
       properties: {

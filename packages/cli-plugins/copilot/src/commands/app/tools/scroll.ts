@@ -7,10 +7,7 @@ import type { AgentBrowserToolContext, DefineTool } from './types.js';
  * @param defineTool - Copilot SDK helper used to declare tools
  * @returns Copilot tool definition for page scrolling or scrolling an element into view
  */
-export function createScrollTool(
-  context: AgentBrowserToolContext,
-  defineTool: DefineTool,
-) {
+export function createScrollTool(context: AgentBrowserToolContext, defineTool: DefineTool) {
   return defineTool('browser_scroll', {
     description: 'Scroll the page or scroll an element into view.',
     parameters: {

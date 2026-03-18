@@ -2,7 +2,16 @@ import { spawn, type ChildProcess } from 'node:child_process';
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
-import { ab, resolveAppKey, cleanup, resetDaemon, sleep, stripAnsi, waitForServer, pollConsole } from '../../utils/index.js';
+import {
+  ab,
+  resolveAppKey,
+  cleanup,
+  resetDaemon,
+  sleep,
+  stripAnsi,
+  waitForServer,
+  pollConsole,
+} from '../../utils/index.js';
 
 /**
  * Interactive login mode for the `copilot app` command.
@@ -17,11 +26,7 @@ import { ab, resolveAppKey, cleanup, resetDaemon, sleep, stripAnsi, waitForServe
  * @param port - Port number for the dev server
  * @param host - Host address for the dev server
  */
-export async function runLogin(
-  absAppPath: string,
-  port: number,
-  host: string,
-): Promise<void> {
+export async function runLogin(absAppPath: string, port: number, host: string): Promise<void> {
   const pkgJsonPath = join(absAppPath, 'package.json');
   if (!existsSync(pkgJsonPath)) {
     console.error(`❌ No package.json found at ${absAppPath}`);
@@ -38,11 +43,11 @@ export async function runLogin(
   console.log('📦 Resolving app manifest...');
   const appKey = resolveAppKey(absAppPath);
   console.log(`🚀 Starting server for ${appKey}...`);
-  serverProcess = spawn(
-    'ffc',
-    ['app', 'dev', '--host', host, '--port', String(port)],
-    { cwd: absAppPath, stdio: 'inherit', detached: false },
-  );
+  serverProcess = spawn('ffc', ['app', 'dev', '--host', host, '--port', String(port)], {
+    cwd: absAppPath,
+    stdio: 'inherit',
+    detached: false,
+  });
 
   const serverUrl = `http://localhost:${port}`;
   const ready = await waitForServer(serverUrl, 60);

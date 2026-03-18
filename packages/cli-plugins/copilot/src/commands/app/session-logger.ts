@@ -67,9 +67,7 @@ export function attachSessionLogger(
         const detail = args?.url ?? args?.path ?? args?.load ?? args?.selector;
         const icon = TOOL_ICONS[toolName] ?? '🔧';
         const label =
-          typeof detail === 'string'
-            ? `${icon} ${toolName} (${detail})`
-            : `${icon} ${toolName}`;
+          typeof detail === 'string' ? `${icon} ${toolName} (${detail})` : `${icon} ${toolName}`;
         pendingTools.set(toolCallId, label);
         syncSpinner();
         break;

@@ -7,13 +7,9 @@ import type { AgentBrowserToolContext, DefineTool } from './types.js';
  * @param defineTool - Copilot SDK helper used to declare tools
  * @returns Copilot tool definition for clicking a page element
  */
-export function createClickTool(
-  context: AgentBrowserToolContext,
-  defineTool: DefineTool,
-) {
+export function createClickTool(context: AgentBrowserToolContext, defineTool: DefineTool) {
   return defineTool('browser_click', {
-    description:
-      'Click an element identified by a ref (@e1), CSS selector, or text selector.',
+    description: 'Click an element identified by a ref (@e1), CSS selector, or text selector.',
     parameters: {
       type: 'object' as const,
       properties: {

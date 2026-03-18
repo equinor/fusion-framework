@@ -31,9 +31,7 @@ type SessionOptions = {
   >;
 };
 
-export const createSession = async (
-  options: SessionOptions,
-): Promise<CopilotSession> => {
+export const createSession = async (options: SessionOptions): Promise<CopilotSession> => {
   const { ctx, config, defaultToolTimeoutMs } = options;
 
   const { CopilotClient, defineTool, approveAll } = await loadCopilotSdk();

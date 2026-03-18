@@ -7,10 +7,7 @@ import type { AgentBrowserToolContext, DefineTool } from './types.js';
  * @param defineTool - Copilot SDK helper used to declare tools
  * @returns Copilot tool definition for filling input fields
  */
-export function createFillTool(
-  context: AgentBrowserToolContext,
-  defineTool: DefineTool,
-) {
+export function createFillTool(context: AgentBrowserToolContext, defineTool: DefineTool) {
   return defineTool('browser_fill', {
     description: 'Fill a form field with text. Clears existing content first.',
     parameters: {

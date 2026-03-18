@@ -7,10 +7,7 @@ import type { AgentBrowserToolContext, DefineTool } from './types.js';
  * @param defineTool - Copilot SDK helper used to declare tools
  * @returns Copilot tool definition for pressing a single key
  */
-export function createPressKeyTool(
-  context: AgentBrowserToolContext,
-  defineTool: DefineTool,
-) {
+export function createPressKeyTool(context: AgentBrowserToolContext, defineTool: DefineTool) {
   return defineTool('browser_press_key', {
     description: 'Press a keyboard key (Enter, Tab, Escape, ArrowDown, etc.).',
     parameters: {

@@ -7,13 +7,9 @@ import type { AgentBrowserToolContext, DefineTool } from './types.js';
  * @param defineTool - Copilot SDK helper used to declare tools
  * @returns Copilot tool definition for typing text into the focused element or a target
  */
-export function createTypeTextTool(
-  context: AgentBrowserToolContext,
-  defineTool: DefineTool,
-) {
+export function createTypeTextTool(context: AgentBrowserToolContext, defineTool: DefineTool) {
   return defineTool('browser_type', {
-    description:
-      'Type text character by character (useful for inputs that respond to keystrokes).',
+    description: 'Type text character by character (useful for inputs that respond to keystrokes).',
     parameters: {
       type: 'object' as const,
       properties: {

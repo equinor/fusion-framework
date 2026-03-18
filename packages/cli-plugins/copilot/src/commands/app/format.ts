@@ -12,9 +12,7 @@ export function formatPlan(plan: Plan): string {
     '',
     ...plan.steps.flatMap((s, si) => [
       `  ${chalk.dim(`${si + 1}.`)} ${s.scenario}`,
-      ...s.criteria.map(
-        (c) => chalk.dim(`     • ${truncate(c, 70)}`),
-      ),
+      ...s.criteria.map((c) => chalk.dim(`     • ${truncate(c, 70)}`)),
     ]),
     '',
   ];
@@ -26,9 +24,7 @@ export function formatPlan(plan: Plan): string {
 /** Renders a single step execution result. */
 export function formatStepResult(result: StepResult): string {
   const icon = statusIcon(result.ok);
-  const files = result.evidence.length
-    ? chalk.dim(` [${result.evidence.join(', ')}]`)
-    : '';
+  const files = result.evidence.length ? chalk.dim(` [${result.evidence.join(', ')}]`) : '';
   return `  ${icon}  ${result.criterion}\n${chalk.dim(`     ${result.note}`)}${files}`;
 }
 
@@ -48,8 +44,7 @@ export function formatVerdict(verdict: Verdict): string {
     bar,
     '',
     ...verdict.steps.map(
-      (s) =>
-        `  ${statusIcon(s.ok)}  ${s.criterion}\n${chalk.dim(`     ${s.note}`)}`,
+      (s) => `  ${statusIcon(s.ok)}  ${s.criterion}\n${chalk.dim(`     ${s.note}`)}`,
     ),
     '',
     chalk.dim(`  ${verdict.reasoning}`),

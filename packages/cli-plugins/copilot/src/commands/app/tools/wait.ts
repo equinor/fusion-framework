@@ -7,10 +7,7 @@ import type { AgentBrowserToolContext, DefineTool } from './types.js';
  * @param defineTool - Copilot SDK helper used to declare tools
  * @returns Copilot tool definition for waiting on load state, text, elements, or time
  */
-export function createWaitTool(
-  context: AgentBrowserToolContext,
-  defineTool: DefineTool,
-) {
+export function createWaitTool(context: AgentBrowserToolContext, defineTool: DefineTool) {
   return defineTool('browser_wait', {
     description:
       'Wait for a condition: page load (networkidle), text to appear, an element, or a timeout in ms.',

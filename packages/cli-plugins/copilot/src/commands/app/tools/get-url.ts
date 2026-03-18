@@ -10,10 +10,7 @@ import type { AgentBrowserToolContext, DefineTool } from './types.js';
  * @param defineTool - Copilot SDK helper used to declare tools
  * @returns Copilot tool definition for retrieving the current page URL
  */
-export function createGetUrlTool(
-  context: AgentBrowserToolContext,
-  defineTool: DefineTool,
-) {
+export function createGetUrlTool(context: AgentBrowserToolContext, defineTool: DefineTool) {
   return defineTool('browser_get_url', {
     description: 'Get the current page URL.',
     parameters: {

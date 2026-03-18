@@ -72,10 +72,7 @@ function resolveScreenshotDirectory(
  * @param format - Image format used for the screenshot
  * @returns Tool result object containing both text and inline image data
  */
-function buildScreenshotResult(
-  screenshotPath: string,
-  format: 'jpeg' | 'png',
-): ToolResultObject {
+function buildScreenshotResult(screenshotPath: string, format: 'jpeg' | 'png'): ToolResultObject {
   return {
     textResultForLlm: `Saved screenshot to ${screenshotPath}. Inspect the attached image for visual evidence.`,
     binaryResultsForLlm: [
@@ -98,10 +95,7 @@ function buildScreenshotResult(
  * @param defineTool - Copilot SDK helper used to declare tools
  * @returns Copilot tool definition for saving an image screenshot and returning it to the model
  */
-export function createScreenshotTool(
-  context: AgentBrowserToolContext,
-  defineTool: DefineTool,
-) {
+export function createScreenshotTool(context: AgentBrowserToolContext, defineTool: DefineTool) {
   return defineTool('browser_screenshot', {
     description:
       'Capture a screenshot of the current page and return the image to the model. Use this for visual assertions such as colors, spacing, and layout.',
@@ -110,7 +104,8 @@ export function createScreenshotTool(
       properties: {
         path: {
           type: 'string',
-          description: 'Optional filename for the screenshot artifact (for example: "landing-page.jpg")',
+          description:
+            'Optional filename for the screenshot artifact (for example: "landing-page.jpg")',
         },
         annotate: {
           type: 'boolean',
@@ -126,7 +121,8 @@ export function createScreenshotTool(
         },
         screenshotDir: {
           type: 'string',
-          description: 'Default screenshot output directory, scoped inside the eval evidence folder.',
+          description:
+            'Default screenshot output directory, scoped inside the eval evidence folder.',
         },
       },
     },
@@ -139,10 +135,7 @@ export function createScreenshotTool(
         screenshotDir?: string;
       };
       const screenshotFormat = resolveScreenshotFormat(format);
-      const screenshotDirectory = resolveScreenshotDirectory(
-        context.outDir,
-        screenshotDir,
-      );
+      const screenshotDirectory = resolveScreenshotDirectory(context.outDir, screenshotDir);
       mkdirSync(screenshotDirectory, { recursive: true });
       const artifactName = resolveScreenshotArtifactName(path, screenshotFormat);
       const screenshotPath = join(

@@ -7,10 +7,7 @@ import type { AgentBrowserToolContext, DefineTool } from './types.js';
  * @param defineTool - Copilot SDK helper used to declare tools
  * @returns Copilot tool definition for going back in browser history
  */
-export function createGoBackTool(
-  context: AgentBrowserToolContext,
-  defineTool: DefineTool,
-) {
+export function createGoBackTool(context: AgentBrowserToolContext, defineTool: DefineTool) {
   return defineTool('browser_go_back', {
     description: 'Navigate back in browser history.',
     parameters: { type: 'object' as const, properties: {} },
