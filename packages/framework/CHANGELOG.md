@@ -1,5 +1,53 @@
 # Change Log
 
+## 8.0.0
+
+### Major Changes
+
+- abffa53: Major version bump for Fusion Framework React 19 release.
+
+  All packages are bumped to the next major version as part of the React 19 upgrade. This release drops support for React versions below 18 and includes breaking changes across the framework.
+
+  **Breaking changes:**
+  - Peer dependencies now require React 18 or 19 (`^18.0.0 || ^19.0.0`)
+  - React Router upgraded from v6 to v7
+  - Navigation module refactored with new history API
+  - `renderComponent` and `renderApp` now use `createRoot` API
+
+  **Migration:**
+  - Update your React version to 18.0.0 or higher before upgrading
+  - Replace `NavigationProvider.createRouter()` with `@equinor/fusion-framework-react-router`
+  - See individual package changelogs for package-specific migration steps
+
+### Patch Changes
+
+- aaa3f74: fix(security): address undici multiple vulnerabilities (CVE-2026-1524, 1527, 1528, 2581)
+
+  Upgrade undici from 7.22.0 to 7.24.3 to fix multiple security vulnerabilities affecting WebSocket parsing, HTTP header validation, and request deduplication:
+  - **CVE-2026-1528** (HIGH): WebSocket 64-bit length integer overflow causing process crash
+  - **CVE-2026-1524** (MODERATE): HTTP/1.1 response field header injection
+  - **CVE-2026-1527** (MODERATE): CRLF injection via upgrade option enabling protocol smuggling
+  - **CVE-2026-2581** (MODERATE): Unbounded memory consumption in deduplication handler
+
+  These are non-breaking security patches that harden undici against untrusted upstream endpoints and malicious WebSocket frames.
+
+  **Advisories**: GHSA-f269-vfmq-vjvj, GHSA-v9p9-hfj2-hcw8, GHSA-4992-7rv2-5pvq, GHSA-phc3-fgpg-7m6h
+  **Fixed in**: undici 7.24.0+ (deployed 7.24.3)
+
+- Updated dependencies [abffa53]
+- Updated dependencies [abffa53]
+- Updated dependencies [abffa53]
+- Updated dependencies [8f30948]
+- Updated dependencies [abffa53]
+  - @equinor/fusion-framework-module@6.0.0
+  - @equinor/fusion-framework-module-context@8.0.0
+  - @equinor/fusion-framework-module-event@6.0.0
+  - @equinor/fusion-framework-module-http@8.0.0
+  - @equinor/fusion-framework-module-msal@8.0.0
+  - @equinor/fusion-framework-module-service-discovery@10.0.0
+  - @equinor/fusion-framework-module-services@8.0.0
+  - @equinor/fusion-framework-module-telemetry@5.0.0
+
 ## 7.4.13
 
 ### Patch Changes
@@ -123,7 +171,6 @@
 ### Minor Changes
 
 - [#3492](https://github.com/equinor/fusion-framework/pull/3492) [`7ba4713`](https://github.com/equinor/fusion-framework/commit/7ba47139a8d7cfbb757bd4626425c611e22c2126) Thanks [@odinr](https://github.com/odinr)! - Integrate telemetry module into framework core.
-
   - Add TelemetryModule to FusionModules type definition
   - Enable telemetry in FrameworkConfigurator with default configuration
   - Add event$ observable with framework-specific event prefixing
@@ -134,7 +181,6 @@
 ### Patch Changes
 
 - [#3490](https://github.com/equinor/fusion-framework/pull/3490) [`45954e5`](https://github.com/equinor/fusion-framework/commit/45954e5db471a2faa24e88e41fc6d6c18817d6d1) Thanks [@odinr](https://github.com/odinr)! - Remove explicit logger initialization from configurator constructors in favor of telemetry.
-
   - Removed `this.logger = new ModuleConsoleLogger(...)` from FrameworkConfigurator, AppConfigurator, and WidgetConfigurator constructors
   - Logger functionality will be handled through telemetry module with console logging adapter
 
@@ -177,20 +223,17 @@
   Major version update of Vitest testing framework and coverage package.
 
   ### Breaking Changes
-
   - Updated from Vitest v2 to v3
   - Coverage reporting may have configuration changes
   - Test runner behavior improvements
 
   ### New Features
-
   - Enhanced coverage reporting capabilities
   - Improved test performance
   - Better error handling and reporting
   - Updated Vite integration (v6.3.5)
 
   ### Links
-
   - [Vitest v3.2.4 Release Notes](https://github.com/vitest-dev/vitest/releases/tag/v3.2.4)
   - [Vitest v3 Migration Guide](https://vitest.dev/guide/migration.html)
   - [Coverage v8 Documentation](https://vitest.dev/guide/coverage.html)
@@ -388,7 +431,6 @@
   **@equinor/fusion-framework:**
 
   Enhanced the `FrameworkConfigurator` class to improve the configuration of MSAL authentication.
-
   - Updated the `configureMsal` method to accept a callback function (`AuthConfigFn`) and an optional `requiresAuth` parameter.
   - The `configureMsal` method now adds a configuration object that sets the `requiresAuth` property and invokes the provided callback function with the builder.
 
@@ -414,7 +456,7 @@
       clientId: "...",
       redirectUri: "...",
     },
-    true
+    true,
   );
   ```
 
@@ -571,7 +613,6 @@
 - [#2320](https://github.com/equinor/fusion-framework/pull/2320) [`1dd85f3`](https://github.com/equinor/fusion-framework/commit/1dd85f3a408a73df556d1812a5f280945cc100ee) Thanks [@odinr](https://github.com/odinr)! - Removed the `removeComments` option from the `tsconfig.base.json` file.
 
   Removing the `removeComments` option allows TypeScript to preserve comments in the compiled JavaScript output. This can be beneficial for several reasons:
-
   1. Improved debugging: Preserved comments can help developers understand the code better during debugging sessions.
   2. Documentation: JSDoc comments and other important code documentation will be retained in the compiled output.
   3. Source map accuracy: Keeping comments can lead to more accurate source maps, which is crucial for debugging and error tracking.
@@ -960,7 +1001,6 @@
 ### Patch Changes
 
 - [#905](https://github.com/equinor/fusion-framework/pull/905) [`a7858a1c`](https://github.com/equinor/fusion-framework/commit/a7858a1c01542e2dc94370709f122b4b99c3219c) Thanks [@odinr](https://github.com/odinr)! - **🚧 Chore: dedupe packages**
-
   - align all versions of typescript
   - update types to build
     - a couple of typecasts did not [satisfies](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-0.html#satisfies-support-in-jsdoc) and was recasted as `unknwon`, marked with `TODO`, should be fixed in future

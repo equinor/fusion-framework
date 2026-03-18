@@ -1,5 +1,13 @@
 # Change Log
 
+## 5.0.0
+
+### Major Changes
+
+- abffa53: Upgrade cookbooks for React 19 and React Router v7 compatibility.
+
+  All cookbooks updated to use React 19 peer dependencies and aligned with the latest Fusion Framework packages.
+
 ## 4.2.4
 
 ### Patch Changes
@@ -13,7 +21,6 @@
 - [#3714](https://github.com/equinor/fusion-framework/pull/3714) [`11fe961`](https://github.com/equinor/fusion-framework/commit/11fe961794e4960ccb987bc320268cc9b263f1f8) Thanks [@odinr](https://github.com/odinr)! - Improved all cookbook README documentation for better developer experience.
 
   All cookbook README files now feature:
-
   - Code examples matching actual implementations
   - Inline comments explaining patterns and concepts
   - Developer-friendly language for those new to Fusion Framework
@@ -64,14 +71,12 @@
 ### Minor Changes
 
 - [#2410](https://github.com/equinor/fusion-framework/pull/2410) [`9d1cb90`](https://github.com/equinor/fusion-framework/commit/9d1cb9003fa10e7ccaa95c20ef86f0a618034641) Thanks [@odinr](https://github.com/odinr)! - Updated Bookmark Handling in App Component
-
   - Refactored `App.tsx` to use `useLayoutEffect` instead of `useEffect` for synchronizing the `payload` state with the current bookmark.
   - Replaced `useState` and `useCallback` with `useRef` for managing the `updateData` reference.
   - Simplified state management by removing `BookmarkState` and `init` and directly using `payload` state.
   - Updated input change handlers to directly update the `payload` state instead of using `updateState`.
 
   Configuration Changes
-
   - Updated `config.ts` to enable the bookmark module using `enableBookmark`.
   - Removed unnecessary logger level settings and configuration callbacks for a cleaner setup.
 
@@ -153,7 +158,6 @@
 ### Patch Changes
 
 - [#905](https://github.com/equinor/fusion-framework/pull/905) [`a7858a1c`](https://github.com/equinor/fusion-framework/commit/a7858a1c01542e2dc94370709f122b4b99c3219c) Thanks [@odinr](https://github.com/odinr)! - **🚧 Chore: dedupe packages**
-
   - align all versions of typescript
   - update types to build
     - a couple of typecasts did not [satisfies](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-0.html#satisfies-support-in-jsdoc) and was recasted as `unknwon`, marked with `TODO`, should be fixed in future

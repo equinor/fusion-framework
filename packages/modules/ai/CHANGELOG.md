@@ -1,5 +1,31 @@
 # @equinor/fusion-framework-module-ai
 
+## 3.0.0
+
+### Major Changes
+
+- abffa53: Major version bump for Fusion Framework React 19 release.
+
+  All packages are bumped to the next major version as part of the React 19 upgrade. This release drops support for React versions below 18 and includes breaking changes across the framework.
+
+  **Breaking changes:**
+  - Peer dependencies now require React 18 or 19 (`^18.0.0 || ^19.0.0`)
+  - React Router upgraded from v6 to v7
+  - Navigation module refactored with new history API
+  - `renderComponent` and `renderApp` now use `createRoot` API
+
+  **Migration:**
+  - Update your React version to 18.0.0 or higher before upgrading
+  - Replace `NavigationProvider.createRouter()` with `@equinor/fusion-framework-react-router`
+  - See individual package changelogs for package-specific migration steps
+
+### Patch Changes
+
+- Updated dependencies [abffa53]
+- Updated dependencies [abffa53]
+  - @equinor/fusion-framework-module@6.0.0
+  - @equinor/fusion-framework-module-http@8.0.0
+
 ## 2.0.2
 
 ### Patch Changes
@@ -25,7 +51,6 @@
   This module provides a framework-agnostic way to integrate AI/LLM services including Azure OpenAI models, embeddings, and vector stores, enabling semantic search and AI-powered features in Fusion Framework applications.
 
   **Features:**
-
   - Language model integration (OpenAI, Azure OpenAI)
   - Text embedding services for semantic search
   - Vector store integration (Azure Cognitive Search)
@@ -34,7 +59,6 @@
   - Fluent configuration API
 
   **Quick Usage:**
-
   1. Install the module:
 
   ```sh
@@ -60,14 +84,14 @@
             new AzureOpenAIModel({
               apiKey: process.env.AZURE_OPENAI_API_KEY!,
               modelName: "gpt-4",
-            })
+            }),
           )
           .setEmbedding(
             "embeddings",
             new AzureOpenAiEmbed({
               apiKey: process.env.AZURE_OPENAI_API_KEY!,
               modelName: "text-embedding-ada-002",
-            })
+            }),
           )
           .setVectorStore(
             "vector-db",
@@ -75,8 +99,8 @@
               endpoint: process.env.AZURE_SEARCH_ENDPOINT!,
               apiKey: process.env.AZURE_SEARCH_API_KEY!,
               indexName: "documents",
-            })
-          )
+            }),
+          ),
       ),
     ],
   });
@@ -112,7 +136,6 @@
   This module provides a framework-agnostic way to integrate AI/LLM services including Azure OpenAI models, embeddings, and vector stores.
 
   **Features:**
-
   - AI module configuration and initialization
   - Azure OpenAI integration for models and embeddings
   - Vector store support for document search

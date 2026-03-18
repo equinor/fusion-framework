@@ -1,5 +1,90 @@
 # Change Log
 
+## 10.0.0
+
+### Major Changes
+
+- abffa53: Major version bump for Fusion Framework React 19 release.
+
+  All packages are bumped to the next major version as part of the React 19 upgrade. This release drops support for React versions below 18 and includes breaking changes across the framework.
+
+  **Breaking changes:**
+  - Peer dependencies now require React 18 or 19 (`^18.0.0 || ^19.0.0`)
+  - React Router upgraded from v6 to v7
+  - Navigation module refactored with new history API
+  - `renderComponent` and `renderApp` now use `createRoot` API
+
+  **Migration:**
+  - Update your React version to 18.0.0 or higher before upgrading
+  - Replace `NavigationProvider.createRouter()` with `@equinor/fusion-framework-react-router`
+  - See individual package changelogs for package-specific migration steps
+
+- abffa53: Modernize `renderComponent` and `renderApp` to use React 18's `createRoot` API. These functions are no longer deprecated.
+
+  The legacy `ReactDOM.render` path has been removed. Both functions now use `createRoot` internally, matching React 18+ best practices. No migration is required if you already use React 18+.
+
+- abffa53: Upgrade to React 19 and remove support for React versions lower than 18.
+
+  **Breaking changes:**
+  - Peer dependencies now require React 18 or 19 (`^18.0.0 || ^19.0.0`)
+  - React 16 and 17 are no longer supported
+  - Dev dependencies upgraded to React 19.2.1 and @types/react 19.2.7
+
+  **Migration:**
+  - Update your React version to 18.0.0 or higher before upgrading these packages
+  - If using React 16 or 17, upgrade to React 18 or 19 first
+
+  Closes https://github.com/equinor/fusion-framework/issues/3504
+
+### Minor Changes
+
+- abffa53: Export `Fusion` type from `@equinor/fusion-framework-react-app` for better type reusability.
+
+  The `Fusion` type is now available directly from the react-app package:
+
+  ```typescript
+  import type { Fusion } from "@equinor/fusion-framework-react-app";
+  ```
+
+### Patch Changes
+
+- abffa53: Add test suite for `renderApp` function using Vitest and React Testing Library.
+
+  Includes test coverage for component rendering, teardown functionality, and React 18 createRoot integration.
+
+- aaa3f74: fix(security): address undici multiple vulnerabilities (CVE-2026-1524, 1527, 1528, 2581)
+
+  Upgrade undici from 7.22.0 to 7.24.3 to fix multiple security vulnerabilities affecting WebSocket parsing, HTTP header validation, and request deduplication:
+  - **CVE-2026-1528** (HIGH): WebSocket 64-bit length integer overflow causing process crash
+  - **CVE-2026-1524** (MODERATE): HTTP/1.1 response field header injection
+  - **CVE-2026-1527** (MODERATE): CRLF injection via upgrade option enabling protocol smuggling
+  - **CVE-2026-2581** (MODERATE): Unbounded memory consumption in deduplication handler
+
+  These are non-breaking security patches that harden undici against untrusted upstream endpoints and malicious WebSocket frames.
+
+  **Advisories**: GHSA-f269-vfmq-vjvj, GHSA-v9p9-hfj2-hcw8, GHSA-4992-7rv2-5pvq, GHSA-phc3-fgpg-7m6h
+  **Fixed in**: undici 7.24.0+ (deployed 7.24.3)
+
+- Updated dependencies [abffa53]
+- Updated dependencies [abffa53]
+- Updated dependencies [abffa53]
+- Updated dependencies [abffa53]
+- Updated dependencies [abffa53]
+- Updated dependencies [abffa53]
+- Updated dependencies [abffa53]
+- Updated dependencies [abffa53]
+- Updated dependencies [abffa53]
+- Updated dependencies [aaa3f74]
+  - @equinor/fusion-framework-app@11.0.0
+  - @equinor/fusion-framework-module@6.0.0
+  - @equinor/fusion-framework-module-app@8.0.0
+  - @equinor/fusion-framework-module-http@8.0.0
+  - @equinor/fusion-framework-module-msal@8.0.0
+  - @equinor/fusion-framework-module-navigation@7.0.0
+  - @equinor/fusion-framework-react@8.0.0
+  - @equinor/fusion-framework-react-module@4.0.0
+  - @equinor/fusion-framework-react-module-http@11.0.0
+
 ## 9.0.8
 
 ### Patch Changes
@@ -130,7 +215,6 @@
 ### Patch Changes
 
 - [#3714](https://github.com/equinor/fusion-framework/pull/3714) [`11fe961`](https://github.com/equinor/fusion-framework/commit/11fe961794e4960ccb987bc320268cc9b263f1f8) Thanks [@odinr](https://github.com/odinr)! - Fix MSAL v4 compatibility issues in React app hooks.
-
   - Update useCurrentAccount to use account property instead of deprecated defaultAccount
   - Fix useToken hook to properly handle AcquireTokenResult type
   - Ensure proper null/undefined handling for account information
@@ -186,14 +270,12 @@
 - [#3075](https://github.com/equinor/fusion-framework/pull/3075) [`8fffbfb`](https://github.com/equinor/fusion-framework/commit/8fffbfb12daa9748bf5290e5084cd4d409aed253) Thanks [@odinr](https://github.com/odinr)! - Refactored the `Bookmark` type to be an intersection of `BookmarkWithoutData` and an optional `payload` property, improving type safety and flexibility. Updated `useBookmarkNavigate` to use proper TypeScript typing for bookmark events.
 
   **Module Bookmark Changes:**
-
   - Refactored `Bookmark` type in `packages/modules/bookmark/src/types.ts`
   - Added export for `BookmarkProviderEvents` type in `packages/modules/bookmark/src/index.ts`
   - Updated JSDoc comment from `@note` to `@remarks` in `packages/modules/bookmark/src/BookmarkClient.ts`
   - Reordered tsconfig references (event before services)
 
   **React Changes:**
-
   - Updated `packages/react/modules/bookmark/src/portal/useBookmarkNavigate.ts` to use proper TypeScript typing for bookmark provider events
   - Removed React paths configuration from `packages/react/app/tsconfig.json`
 
@@ -240,7 +322,6 @@
 ### Patch Changes
 
 - [#3088](https://github.com/equinor/fusion-framework/pull/3088) [`7441b13`](https://github.com/equinor/fusion-framework/commit/7441b13aa50dd7362d1629086a27b6b4e571575d) Thanks [@eikeland](https://github.com/eikeland)! - chore: update package typesVersions
-
   - Updated package.json typesVersions.
   - Ensures backward compatibility with older node versions.
   - Ensured consistency with workspace and repository configuration.
@@ -300,7 +381,6 @@
   `appKey (string)`: The key of the Fusion app to load and mount.
 
   ### Returns
-
   - **loading** `(boolean)`: true while the app is loading.
   - **error** `(Error | undefined)`: Error object if loading fails, otherwise undefined.
   - **appRef** `(React.RefObject<HTMLDivElement | null>)`: Ref to the DOM element where the child app is mounted.
@@ -334,7 +414,6 @@
   ```
 
   ### Notes
-
   - The hook is designed to be used in a parent Fusion app context.
   - The returned appRef should be appended to a container element in your component.
   - Handles subscription and cleanup automatically.
@@ -618,7 +697,6 @@
 ### Minor Changes
 
 - [#2577](https://github.com/equinor/fusion-framework/pull/2577) [`c3ba9f1`](https://github.com/equinor/fusion-framework/commit/c3ba9f109d9f96d6dc6ee2f0ddac00c8b3090982) Thanks [@eikeland](https://github.com/eikeland)! - #### Changes:
-
   1. **AppClient.ts**
      - Added `updateAppSettings` method to set app settings by appKey.
   2. **AppModuleProvider.ts**
@@ -666,7 +744,6 @@
 ### Minor Changes
 
 - [#2410](https://github.com/equinor/fusion-framework/pull/2410) [`9d1cb90`](https://github.com/equinor/fusion-framework/commit/9d1cb9003fa10e7ccaa95c20ef86f0a618034641) Thanks [@odinr](https://github.com/odinr)! - Updated bookmark namespace in `@equinor/fusion-react-app` to include new hooks and updated `useCurrentBookmark` hook.
-
   - Updated `index.ts` to re-export everything from `@equinor/fusion-framework-react-module-bookmark` instead of individual exports.
   - Marked `useBookmark` as deprecated in `useBookmark.ts`.
   - Enhanced `useCurrentBookmark` in `useCurrentBookmark.ts` to accept a `BookmarkPayloadGenerator` and use the `BookmarkModule` from `useAppModule`.
@@ -708,12 +785,10 @@
   > This will introduce breaking changes to the configuration of `AppConfigurator.client`.
 
   **Added**
-
   - Introduced `AppClient` class to handle application manifest and configuration queries.
   - Added `zod` to validate the application manifest.
 
   **Changed**
-
   - Updated `AppModuleProvider` to use `AppClient` for fetching application manifests and configurations.
   - Modified `AppConfigurator` to utilize `AppClient` for client configuration.
   - Updated `useApps` hook with new input parameter for `filterByCurrentUser` in `fusion-framework-react`.
@@ -845,7 +920,6 @@
 - [#2320](https://github.com/equinor/fusion-framework/pull/2320) [`1dd85f3`](https://github.com/equinor/fusion-framework/commit/1dd85f3a408a73df556d1812a5f280945cc100ee) Thanks [@odinr](https://github.com/odinr)! - Removed the `removeComments` option from the `tsconfig.base.json` file.
 
   Removing the `removeComments` option allows TypeScript to preserve comments in the compiled JavaScript output. This can be beneficial for several reasons:
-
   1. Improved debugging: Preserved comments can help developers understand the code better during debugging sessions.
   2. Documentation: JSDoc comments and other important code documentation will be retained in the compiled output.
   3. Source map accuracy: Keeping comments can lead to more accurate source maps, which is crucial for debugging and error tracking.
@@ -1214,7 +1288,6 @@
 ### Minor Changes
 
 - [#1646](https://github.com/equinor/fusion-framework/pull/1646) [`5eab8af`](https://github.com/equinor/fusion-framework/commit/5eab8afe3c3106cc67ad14ce4cbee6c7e4e8dfb1) Thanks [@odinr](https://github.com/odinr)! - Created namespace for MSAL:
-
   - Created hooks for accessing current authenticated account
   - Created hooks for acquiring token
   - Created hooks for acquiring access token
@@ -1441,7 +1514,6 @@
 ### Minor Changes
 
 - [#934](https://github.com/equinor/fusion-framework/pull/934) [`ea081696`](https://github.com/equinor/fusion-framework/commit/ea0816967244917b01a3aa43b75cd3cf59573958) Thanks [@odinr](https://github.com/odinr)! - **Add tooling for navigation in React App package**
-
   - add hook for using the navigation module
   - add hook for creating a react router
 
@@ -1472,7 +1544,6 @@
 ### Patch Changes
 
 - [#905](https://github.com/equinor/fusion-framework/pull/905) [`a7858a1c`](https://github.com/equinor/fusion-framework/commit/a7858a1c01542e2dc94370709f122b4b99c3219c) Thanks [@odinr](https://github.com/odinr)! - **🚧 Chore: dedupe packages**
-
   - align all versions of typescript
   - update types to build
     - a couple of typecasts did not [satisfies](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-0.html#satisfies-support-in-jsdoc) and was recasted as `unknwon`, marked with `TODO`, should be fixed in future

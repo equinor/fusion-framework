@@ -1,5 +1,32 @@
 # Change Log
 
+## 8.0.0
+
+### Major Changes
+
+- abffa53: Major version bump for Fusion Framework React 19 release.
+
+  All packages are bumped to the next major version as part of the React 19 upgrade. This release drops support for React versions below 18 and includes breaking changes across the framework.
+
+  **Breaking changes:**
+  - Peer dependencies now require React 18 or 19 (`^18.0.0 || ^19.0.0`)
+  - React Router upgraded from v6 to v7
+  - Navigation module refactored with new history API
+  - `renderComponent` and `renderApp` now use `createRoot` API
+
+  **Migration:**
+  - Update your React version to 18.0.0 or higher before upgrading
+  - Replace `NavigationProvider.createRouter()` with `@equinor/fusion-framework-react-router`
+  - See individual package changelogs for package-specific migration steps
+
+### Patch Changes
+
+- abffa53: Fix HTTP client configuration so `responseHandler` options are applied when creating clients, preserve request `path` values in the request pipeline, only treat absolute `http:` and `https:` strings as ad-hoc client URLs, avoid mutating caller-provided MSAL request init objects, and re-export the SSE helpers from the operators and selectors entry points.
+- Updated dependencies [abffa53]
+- Updated dependencies [abffa53]
+  - @equinor/fusion-framework-module@6.0.0
+  - @equinor/fusion-framework-module-msal@8.0.0
+
 ## 7.0.8
 
 ### Patch Changes
@@ -77,7 +104,6 @@
 ### Patch Changes
 
 - [#3428](https://github.com/equinor/fusion-framework/pull/3428) [`1700ca8`](https://github.com/equinor/fusion-framework/commit/1700ca8851fa108e55e9729fd24f595272766e63) Thanks [@dependabot](https://github.com/apps/dependabot)! - Update zod from 4.1.9 to 4.1.11
-
   - **v4.1.10**: Fixed shape caching issue (#5263) improving validation performance for complex schemas
   - **v4.1.11**: Maintenance release with general improvements
 
@@ -96,7 +122,6 @@
   Updated source code to migrate from zod v3 to v4. Updated zod dependency from v3.25.76 to v4.1.8 and modified error handling in the HTTP module to use ZodError `.issues` property instead of `.errors` and replaced `z.custom()` with `z.string().refine()` for better v4 compatibility.
 
   Key changes in source code:
-
   - Updated ZodError `.errors` to `.issues` property in capitalize-request-method operator
   - Replaced `z.custom()` with `z.string().refine()` for better v4 compatibility in request method casing validation
   - Simplified error message configuration in request method verb validation
@@ -105,7 +130,6 @@
   Breaking changes: Error handling structure has changed to use new zod v4 error format.
 
   Links:
-
   - [Zod v4 Migration Guide](https://github.com/colinhacks/zod/releases/tag/v4.0.0)
   - [Zod v4.1.8 Release Notes](https://github.com/colinhacks/zod/releases/tag/v4.1.8)
 
@@ -121,7 +145,6 @@
 - [#2910](https://github.com/equinor/fusion-framework/pull/2910) [`07cc985`](https://github.com/equinor/fusion-framework/commit/07cc9857e1427b574e011cc319518e701dba784d) Thanks [@dependabot](https://github.com/apps/dependabot)! - Updated vitest from 2.1.9 to 3.2.4 across all packages.
 
   ## Breaking Changes
-
   - **Node.js Requirements**: Requires Node.js 18+ (already satisfied)
   - **Vite Compatibility**: Updated to work with Vite 7.x (already using Vite 7.1.5)
   - **Snapshot Format**: Snapshots now use backtick quotes (\`) instead of single quotes
@@ -129,18 +152,15 @@
   - **TypeScript Support**: Enhanced TypeScript integration and type definitions
 
   ## Security Updates
-
   - CVE-2025-24963: Browser mode serves arbitrary files (fixed in 2.1.9)
   - CVE-2025-24964: Remote Code Execution vulnerability (fixed in 2.1.9)
 
   ## Migration Notes
-
   - Test snapshots may need regeneration due to quote format changes
   - Some test configurations might need updates for new TypeScript support
   - Peer dependency warnings for @vitest/coverage-v8 are expected and safe to ignore
 
   ## Links
-
   - [Vitest 3.0 Migration Guide](https://vitest.dev/guide/migration)
   - [Vitest 3.2.4 Release Notes](https://github.com/vitest-dev/vitest/releases/tag/v3.2.4)
 
@@ -152,7 +172,6 @@
 ### Patch Changes
 
 - [#3075](https://github.com/equinor/fusion-framework/pull/3075) [`8fffbfb`](https://github.com/equinor/fusion-framework/commit/8fffbfb12daa9748bf5290e5084cd4d409aed253) Thanks [@odinr](https://github.com/odinr)! - fix(http): use acquireAccessToken instead of acquireToken
-
   - The HTTP module now uses the correct method `acquireAccessToken` from the auth provider to retrieve the access token for requests with scopes.
   - This fixes compatibility with the new MSAL node module interface, which no longer exposes `acquireToken` but instead provides `acquireAccessToken` for token retrieval.
   - Ensures the Authorization header is set correctly for authenticated HTTP requests.
@@ -170,7 +189,6 @@
 ### Patch Changes
 
 - [#3088](https://github.com/equinor/fusion-framework/pull/3088) [`7441b13`](https://github.com/equinor/fusion-framework/commit/7441b13aa50dd7362d1629086a27b6b4e571575d) Thanks [@eikeland](https://github.com/eikeland)! - chore: update package typesVersions
-
   - Updated package.json typesVersions.
   - Ensures backward compatibility with older node versions.
   - Ensured consistency with workspace and repository configuration.
@@ -201,7 +219,6 @@
 ### Minor Changes
 
 - [#3038](https://github.com/equinor/fusion-framework/pull/3038) [`7a0a510`](https://github.com/equinor/fusion-framework/commit/7a0a510e0af1f0769c596e1b9aaa391250efd95d) Thanks [@odinr](https://github.com/odinr)! - ### Added
-
   - Introduced support for Server-Sent Events (SSE) in the HTTP module.
     - Added `sse# Change Log method to `HttpClient` for subscribing to SSE streams.
     - Added `sseMap` operator for handling SSE in RxJS pipelines.
@@ -209,7 +226,6 @@
     - Enhanced error handling with `ServerSentEventResponseError`.
 
   ### Documentation
-
   - Updated README with examples and usage details for SSE support.
 
 ### Patch Changes
@@ -272,7 +288,6 @@
 ### Minor Changes
 
 - [#2491](https://github.com/equinor/fusion-framework/pull/2491) [`73af73e`](https://github.com/equinor/fusion-framework/commit/73af73e5582ca27b132210af8ba308b80e036d51) Thanks [@odinr](https://github.com/odinr)! - Added a new operator `capitalizeRequestMethodOperator` to ensure that the HTTP method of a given request is in uppercase.
-
   - Introduced `capitalizeRequestMethodOperator` which processes an HTTP request object and converts its method to uppercase.
   - Logs a warning if the HTTP method was converted, providing information about the change and a reference to RFC 7231 Section 4.1.
 
@@ -293,7 +308,7 @@
   const httpClient = new HttpClient();
   httpClient.requestHandler.add(
     "capatalize-method",
-    capitalizeRequestMethodOperator()
+    capitalizeRequestMethodOperator(),
   );
 
   // transforms `method` to uppercase and logs a warning.
@@ -411,7 +426,7 @@
   // Add the request validation operator to the HttpClient.
   httpClient.requestHandler.add(
     "validate-init",
-    requestValidationOperator({ parse: true })
+    requestValidationOperator({ parse: true }),
   );
 
   // will throw an error because of invalid method.
@@ -469,7 +484,6 @@
 ### Patch Changes
 
 - [#2324](https://github.com/equinor/fusion-framework/pull/2324) [`788d0b9`](https://github.com/equinor/fusion-framework/commit/788d0b93edc25e5b682d88c58614560c204c1af9) Thanks [@odinr](https://github.com/odinr)! - Updated documentation in `README.md` for http module.
-
   - added introduction to http module
   - added concepts section which highlights the key concepts of http module
   - added sequence diagram for http request execution
@@ -483,14 +497,12 @@
 - [#2324](https://github.com/equinor/fusion-framework/pull/2324) [`788d0b9`](https://github.com/equinor/fusion-framework/commit/788d0b93edc25e5b682d88c58614560c204c1af9) Thanks [@odinr](https://github.com/odinr)! - Updated TsDoc for http module
 
 - [#2324](https://github.com/equinor/fusion-framework/pull/2324) [`788d0b9`](https://github.com/equinor/fusion-framework/commit/788d0b93edc25e5b682d88c58614560c204c1af9) Thanks [@odinr](https://github.com/odinr)! - - Added a new type `ResponseSelector<TResult, TResponse>`: a function that takes a `Response` object and returns an observable stream of type `TResult`. The `ResponseSelector` type has two template parameters: `TResult` and `TResponse`.
-
   - Updated the `FetchRequestInit` type to include a new property `selector` of type `ResponseSelector<TReturn, TResponse>`, which allows specifying a response selector function.
   - Updated the blob-selector and json-selector functions to use the new `ResponseSelector` type.
 
 - [#2320](https://github.com/equinor/fusion-framework/pull/2320) [`1dd85f3`](https://github.com/equinor/fusion-framework/commit/1dd85f3a408a73df556d1812a5f280945cc100ee) Thanks [@odinr](https://github.com/odinr)! - Removed the `removeComments` option from the `tsconfig.base.json` file.
 
   Removing the `removeComments` option allows TypeScript to preserve comments in the compiled JavaScript output. This can be beneficial for several reasons:
-
   1. Improved debugging: Preserved comments can help developers understand the code better during debugging sessions.
   2. Documentation: JSDoc comments and other important code documentation will be retained in the compiled output.
   3. Source map accuracy: Keeping comments can lead to more accurate source maps, which is crucial for debugging and error tracking.
@@ -539,7 +551,6 @@
 ### Major Changes
 
 - [#2181](https://github.com/equinor/fusion-framework/pull/2181) [`ba2379b`](https://github.com/equinor/fusion-framework/commit/ba2379b177f23ccc023894e36e50d7fc56c929c8) Thanks [@odinr](https://github.com/odinr)! - The `blob` and `blob# Change Log methods in the `HttpClient` class have been updated to provide a more robust and flexible API for fetching blob resources.
-
   1. The `blob` and `blob# Change Log methods now accept an optional `args`parameter of type`FetchRequestInit<T, TRequest, TResponse>`, where `T` is the type of the expected blob result. This allows consumers to customize the fetch request and response handling.
   2. The `blob` and `blob# Change Log methods now return a `Promise<T>`and`StreamResponse<T>`respectively, where`T` is the type of the expected blob result. This allows consumers to handle the blob data in a more type-safe manner.
   3. The `blobSelector` function has been updated to extract the filename (if available) from the `content-disposition` header and return it along with the blob data in a `BlobResult` object.
@@ -562,7 +573,7 @@
 
   ```typescript
   const customBlobSelector = async (
-    response: Response
+    response: Response,
   ): Promise<{ filename: string; blob: Blob }> => {
     // Extract filename and blob from the response
     const { filename, blob } = await blobSelector(response);
@@ -606,12 +617,12 @@
       if (data) {
         console.error(
           "the request was not `ok`, see provided error data",
-          data
+          data,
         );
       } else {
         console.error(
           "failed to parse data from response, see provided cause",
-          cause
+          cause,
         );
       }
     }
@@ -663,7 +674,7 @@
 
   // generate a RequestInit object
   const fooRequest = await lastValueFrom(
-    fooClient.requestHandler.process({ path: "/api", uri: fooClient.uri })
+    fooClient.requestHandler.process({ path: "/api", uri: fooClient.uri }),
   );
 
   expect((fooRequest.headers as Headers)?.get("x-foo")).toBe("bar");
@@ -673,7 +684,7 @@
 
   // generate a RequestInit object
   const barRequest = await lastValueFrom(
-    barClient.requestHandler.process({ path: "/api", uri: barClient.uri })
+    barClient.requestHandler.process({ path: "/api", uri: barClient.uri }),
   );
 
   // expect the request header to not been modified
@@ -739,7 +750,6 @@
 - [#1621](https://github.com/equinor/fusion-framework/pull/1621) [`0af3540`](https://github.com/equinor/fusion-framework/commit/0af3540340bac85a19ca3a8ec4e0ccd42b3090ee) Thanks [@odinr](https://github.com/odinr)! - **Improves error handling when processing json http response**
 
   In packages/modules/http/src/errors.ts:
-
   - The class HttpResponseError now has a generic parameter TResponse.
     - Added a static property Name to the class.
   - Added a new class HttpJsonResponseError which extends HttpResponseError and also has generic parameters TType and TResponse.
@@ -748,7 +758,6 @@
     - Modified the constructor to accept an optional data parameter.
 
   In packages/modules/http/src/lib/selectors/json-selector.ts:
-
   - Added an import statement for HttpJsonResponseError.
   - Modified the jsonSelector function to handle errors when parsing the response.
     - Added a try-catch block.
@@ -781,7 +790,6 @@
 ### Minor Changes
 
 - [#1242](https://github.com/equinor/fusion-framework/pull/1242) [`8e9e34a0`](https://github.com/equinor/fusion-framework/commit/8e9e34a06a6905d092ad8ca3f9330a3699da20fa) Thanks [@odinr](https://github.com/odinr)! - add method for executing blob requests
-
   - added selector for extracting blob from response
   - added function for fetching blob as stream or promise on the http client
 
@@ -834,7 +842,6 @@
 ### Patch Changes
 
 - [#905](https://github.com/equinor/fusion-framework/pull/905) [`a7858a1c`](https://github.com/equinor/fusion-framework/commit/a7858a1c01542e2dc94370709f122b4b99c3219c) Thanks [@odinr](https://github.com/odinr)! - **🚧 Chore: dedupe packages**
-
   - align all versions of typescript
   - update types to build
     - a couple of typecasts did not [satisfies](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-0.html#satisfies-support-in-jsdoc) and was recasted as `unknwon`, marked with `TODO`, should be fixed in future

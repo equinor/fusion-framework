@@ -1,5 +1,42 @@
 # @equinor/fusion-framework-cli-plugin-ai-base
 
+## 2.0.0
+
+### Major Changes
+
+- abffa53: Major version bump for Fusion Framework React 19 release.
+
+  All packages are bumped to the next major version as part of the React 19 upgrade. This release drops support for React versions below 18 and includes breaking changes across the framework.
+
+  **Breaking changes:**
+  - Peer dependencies now require React 18 or 19 (`^18.0.0 || ^19.0.0`)
+  - React Router upgraded from v6 to v7
+  - Navigation module refactored with new history API
+  - `renderComponent` and `renderApp` now use `createRoot` API
+
+  **Migration:**
+  - Update your React version to 18.0.0 or higher before upgrading
+  - Replace `NavigationProvider.createRouter()` with `@equinor/fusion-framework-react-router`
+  - See individual package changelogs for package-specific migration steps
+
+### Patch Changes
+
+- Updated dependencies [abffa53]
+- Updated dependencies [abffa53]
+- Updated dependencies [abffa53]
+- Updated dependencies [ae92f13]
+- Updated dependencies [abffa53]
+- Updated dependencies [abffa53]
+- Updated dependencies [abffa53]
+- Updated dependencies [abffa53]
+- Updated dependencies [c123c39]
+- Updated dependencies [3de232c]
+- Updated dependencies [32bcf83]
+  - @equinor/fusion-framework-cli@14.0.0
+  - @equinor/fusion-framework-module@6.0.0
+  - @equinor/fusion-framework-module-ai@3.0.0
+  - @equinor/fusion-imports@2.0.0
+
 ## 1.0.5
 
 ### Patch Changes
@@ -56,7 +93,6 @@
   This package provides shared utilities and options used across multiple AI CLI plugins including framework setup, AI configuration, and command option handling.
 
   **Features:**
-
   - Shared AI options and configuration schema
   - Framework setup utilities
   - Common command option handling

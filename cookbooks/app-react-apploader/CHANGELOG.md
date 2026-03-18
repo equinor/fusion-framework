@@ -1,5 +1,13 @@
 # Change Log
 
+## 1.0.0
+
+### Major Changes
+
+- abffa53: Upgrade cookbooks for React 19 and React Router v7 compatibility.
+
+  All cookbooks updated to use React 19 peer dependencies and aligned with the latest Fusion Framework packages.
+
 ## 0.1.2
 
 ### Patch Changes
@@ -13,7 +21,6 @@
 - [#3714](https://github.com/equinor/fusion-framework/pull/3714) [`11fe961`](https://github.com/equinor/fusion-framework/commit/11fe961794e4960ccb987bc320268cc9b263f1f8) Thanks [@odinr](https://github.com/odinr)! - Improved all cookbook README documentation for better developer experience.
 
   All cookbook README files now feature:
-
   - Code examples matching actual implementations
   - Inline comments explaining patterns and concepts
   - Developer-friendly language for those new to Fusion Framework
@@ -70,7 +77,6 @@
   `appKey (string)`: The key of the Fusion app to load and mount.
 
   ### Returns
-
   - **loading** `(boolean)`: true while the app is loading.
   - **error** `(Error | undefined)`: Error object if loading fails, otherwise undefined.
   - **appRef** `(React.RefObject<HTMLDivElement | null>)`: Ref to the DOM element where the child app is mounted.
@@ -104,7 +110,6 @@
   ```
 
   ### Notes
-
   - The hook is designed to be used in a parent Fusion app context.
   - The returned appRef should be appended to a container element in your component.
   - Handles subscription and cleanup automatically.

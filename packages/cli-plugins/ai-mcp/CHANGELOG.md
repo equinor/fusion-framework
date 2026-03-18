@@ -1,5 +1,72 @@
 # @equinor/fusion-framework-cli-plugin-ai-mcp
 
+## 2.0.0
+
+### Major Changes
+
+- abffa53: Major version bump for Fusion Framework React 19 release.
+
+  All packages are bumped to the next major version as part of the React 19 upgrade. This release drops support for React versions below 18 and includes breaking changes across the framework.
+
+  **Breaking changes:**
+  - Peer dependencies now require React 18 or 19 (`^18.0.0 || ^19.0.0`)
+  - React Router upgraded from v6 to v7
+  - Navigation module refactored with new history API
+  - `renderComponent` and `renderApp` now use `createRoot` API
+
+  **Migration:**
+  - Update your React version to 18.0.0 or higher before upgrading
+  - Replace `NavigationProvider.createRouter()` with `@equinor/fusion-framework-react-router`
+  - See individual package changelogs for package-specific migration steps
+
+### Patch Changes
+
+- aaa3f74: fix(security): address hono prototype pollution (GHSA-v8w9-8mx6-g223)
+
+  Upgrade hono from 4.12.5 to 4.12.8 to fix prototype pollution vulnerability in parseBody({ dot: true }). The vulnerability allowed specially crafted form field names like `__proto__.x` to potentially enable prototype pollution if parsed data was later merged unsafely. This is a non-breaking security patch.
+
+  **Advisory**: GHSA-v8w9-8mx6-g223 (Moderate, CVSS 4.8)
+  **Fixed in**: hono 4.12.8
+
+- aaa3f74: fix(security): address undici multiple vulnerabilities (CVE-2026-1524, 1527, 1528, 2581)
+
+  Upgrade undici from 7.22.0 to 7.24.3 to fix multiple security vulnerabilities affecting WebSocket parsing, HTTP header validation, and request deduplication:
+  - **CVE-2026-1528** (HIGH): WebSocket 64-bit length integer overflow causing process crash
+  - **CVE-2026-1524** (MODERATE): HTTP/1.1 response field header injection
+  - **CVE-2026-1527** (MODERATE): CRLF injection via upgrade option enabling protocol smuggling
+  - **CVE-2026-2581** (MODERATE): Unbounded memory consumption in deduplication handler
+
+  These are non-breaking security patches that harden undici against untrusted upstream endpoints and malicious WebSocket frames.
+
+  **Advisories**: GHSA-f269-vfmq-vjvj, GHSA-v9p9-hfj2-hcw8, GHSA-4992-7rv2-5pvq, GHSA-phc3-fgpg-7m6h
+  **Fixed in**: undici 7.24.0+ (deployed 7.24.3)
+
+- 3de232c: fix(cli): break turbo workspace cycle for AI plugins
+
+  Upgrade turbo from 2.8.10 to 2.8.14. This version introduces stricter workspace cycle detection, requiring the AI plugin dependencies to be moved from the CLI package's devDependencies to the root package.json.
+
+  The CLI plugins are now configured at the repository root (fusion-cli.config.ts) instead of in the packages/cli package, ensuring a clean workspace dependency graph for turbo's build scheduler.
+
+  This change has no impact on the published CLI package's public API. Plugins continue to be wired identically; only the source of the wire definition has changed.
+
+  Additional improvements from turbo 2.8.14:
+  - Fix: Ensures turbo watch mode respects task dependencies on first run
+  - Perf: Skip irrelevant packages for faster monorepo builds
+  - Feature: AI agent telemetry support in turbo traces
+
+- Updated dependencies [abffa53]
+- Updated dependencies [abffa53]
+- Updated dependencies [abffa53]
+- Updated dependencies [ae92f13]
+- Updated dependencies [abffa53]
+- Updated dependencies [c123c39]
+- Updated dependencies [3de232c]
+- Updated dependencies [32bcf83]
+  - @equinor/fusion-framework-cli@14.0.0
+  - @equinor/fusion-framework-cli-plugin-ai-base@2.0.0
+  - @equinor/fusion-framework-module@6.0.0
+  - @equinor/fusion-framework-module-ai@3.0.0
+
 ## 1.0.5
 
 ### Patch Changes
@@ -60,7 +127,6 @@
   This plugin extends the Fusion Framework CLI with MCP server capabilities, enabling AI assistants to search and query Fusion Framework documentation through specialized semantic search tools.
 
   **Features:**
-
   - MCP protocol server implementation (stdio transport)
   - Fusion Framework API reference search (TypeScript/TSDoc)
   - Cookbook examples and tutorials search
@@ -69,7 +135,6 @@
   - Vector store integration via Azure Cognitive Search
 
   **Quick Usage:**
-
   1. Install the plugin:
 
   ```sh

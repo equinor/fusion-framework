@@ -1,5 +1,35 @@
 # Change Log
 
+## 36.0.0
+
+### Major Changes
+
+- abffa53: Major version bump for Fusion Framework React 19 release.
+
+  All packages are bumped to the next major version as part of the React 19 upgrade. This release drops support for React versions below 18 and includes breaking changes across the framework.
+
+  **Breaking changes:**
+  - Peer dependencies now require React 18 or 19 (`^18.0.0 || ^19.0.0`)
+  - React Router upgraded from v6 to v7
+  - Navigation module refactored with new history API
+  - `renderComponent` and `renderApp` now use `createRoot` API
+
+  **Migration:**
+  - Update your React version to 18.0.0 or higher before upgrading
+  - Replace `NavigationProvider.createRouter()` with `@equinor/fusion-framework-react-router`
+  - See individual package changelogs for package-specific migration steps
+
+### Minor Changes
+
+- abffa53: Update EDS (Equinor Design System) packages to latest versions: `@equinor/eds-core-react` to ^2.2.0, `@equinor/eds-icons` to ^1.1.0, `@equinor/eds-tokens` to ^2.1.1, and `@equinor/eds-utils` to ^2.0.0.
+
+  These are major version updates from the 0.x series. Consumers should verify compatibility with their applications, particularly if using `@equinor/fusion-react-side-sheet` which may require updates to support the new EDS versions.
+
+### Patch Changes
+
+- Updated dependencies [abffa53]
+  - @equinor/fusion-framework-module@6.0.0
+
 ## 35.0.2
 
 ### Patch Changes
@@ -42,7 +72,6 @@
   ```
 
   ### Updated Peer Dependencies
-
   - `ag-grid-community`: `>=35.1.0` (previously `>=33.0.3`)
   - `ag-grid-enterprise`: `>=35.1.0` (previously `>=33.0.3`)
   - Removed `ag-charts-enterprise` peer dependency
@@ -79,7 +108,6 @@
 - [#3639](https://github.com/equinor/fusion-framework/pull/3639) [`31f94be`](https://github.com/equinor/fusion-framework/commit/31f94becb9da9387624e8f8ab9e64b0f1a7e3b18) Thanks [@dependabot](https://github.com/apps/dependabot)! - Upgrade AG Grid to 34.3.1 and ag-charts-enterprise to 12.3.1.
 
   Highlights in AG Grid 34.3.x:
-
   - Performance and stability improvements in community and enterprise
   - Minor feature refinements; no breaking API changes noted
   - React bindings remain compatible (React 18/19)
@@ -101,14 +129,12 @@
 ### Patch Changes
 
 - [#3357](https://github.com/equinor/fusion-framework/pull/3357) [`e24cd15`](https://github.com/equinor/fusion-framework/commit/e24cd15175a322cbdd4d40a5dfa9933a3f55d624) Thanks [@dependabot](https://github.com/apps/dependabot)! - Updated ag-grid dependencies to version 34.2.0
-
   - Updated ag-grid-community from 34.1.2 to 34.2.0
   - Updated ag-grid-enterprise from 34.1.2 to 34.2.0
 
   This patch update includes bug fixes and improvements. See the [ag-grid changelog](https://www.ag-grid.com/changelog/?fixVersion=34.2.0) for detailed release notes.
 
   **Key changes in 34.2.0:**
-
   - RTI-3075: Ensure API stop/cancel succeed
   - RTI-3073: Enter during batch shouldn't end batch
   - RTI-3070: Only create strategies when editing
@@ -236,14 +262,12 @@
 ### Patch Changes
 
 - [#2802](https://github.com/equinor/fusion-framework/pull/2802) [`6277eef`](https://github.com/equinor/fusion-framework/commit/6277eefe89444fee150f01c11b1d01348e024ca3) Thanks [@odinr](https://github.com/odinr)! - - Updated `README.md` with detailed documentation for the AG Grid React for Fusion Framework, including installation, configuration, theming, customizing a grid instance, and upgrading from version 32 to 33.
-
   - Refactor: `package.json` to include peer dependencies for `ag-grid-community` and `ag-grid-enterprise`.
   - Fixed: `AgGridConfigurator` class to setting the license key on initialization.
   - Refactor: import statements to use `ag-grid-enterprise` and `ag-grid-community`.
   - Feature: Added `createThemeFromExistingTheme` function to decontruct an existing theme and create a new theme _(AG-Grid type checks with `instanceof` which will break since the parent scope has another instance than the consumer)._
 
   We have chose to only `patch` this release, to conform with the AG Grid versioning scheme, event tho there are some breaking changes. This is because the breaking changes are not related to the API of the module itself, but rather to the dependencies of the module.
-
   - `@equinor/fusion-framework-module-ag-grid/enterprise` and `@equinor/fusion-framework-module-ag-grid/community` have been removed. Instead, the module now relies on the `ag-grid-enterprise` and `ag-grid-community` packages as peer dependencies. This means that you will have to install these packages yourself.
 
 ## 33.0.0
@@ -251,7 +275,6 @@
 ### Major Changes
 
 - [#2687](https://github.com/equinor/fusion-framework/pull/2687) [`22219ab`](https://github.com/equinor/fusion-framework/commit/22219ab3c07b5578c48a012632fe16d9a823a3bf) Thanks [@odinr](https://github.com/odinr)! - Enhanced the AG Grid module with new functionalities and improvements.
-
   - Added TypeScript type definitions for better type support.
   - Introduced new exports for `community`, `enterprise`, and `themes`.
   - Implemented `AgGridConfigurator` and `AgGridProvider` classes for better configuration and initialization.
@@ -260,7 +283,6 @@
   - Removed deprecated files and refactored the module structure for better maintainability.
 
   **Detailed Changes:**
-
   - **package.json**: Updated dependencies and added new exports.
   - **AgGridConfigurator.interface.ts**: Defined the interface for configuring AG Grid settings and modules.
   - **AgGridConfigurator.ts**: Implemented the `AgGridConfigurator` class for managing AG Grid configuration.
@@ -273,13 +295,11 @@
   - **themes.ts**: Added a default theme for AG Grid.
 
   **Breaking Changes:**
-
   - `@ag-grid-community/*` and `@ag-grid-enterprise/*` must be removed from the project dependencies.
   - The new configurator no longer supports setting license keys directly. Use the `setLicense` function to set license keys.
   - Modules are now managed through the `AgGridConfigurator` class. Use the `setModule` or `addModule` function to set/add modules to the configuration.
 
   **References:**
-
   - [AG Grid 33 Migration Guide](https://www.ag-grid.com/react-data-grid/upgrading-to-ag-grid-33/)
   - [AG Grid Documentation](https://www.ag-grid.com/)
   - [AG Grid Theme Builder](https://www.ag-grid.com/theme-builder/)
@@ -319,7 +339,6 @@
 - [#2320](https://github.com/equinor/fusion-framework/pull/2320) [`1dd85f3`](https://github.com/equinor/fusion-framework/commit/1dd85f3a408a73df556d1812a5f280945cc100ee) Thanks [@odinr](https://github.com/odinr)! - Removed the `removeComments` option from the `tsconfig.base.json` file.
 
   Removing the `removeComments` option allows TypeScript to preserve comments in the compiled JavaScript output. This can be beneficial for several reasons:
-
   1. Improved debugging: Preserved comments can help developers understand the code better during debugging sessions.
   2. Documentation: JSDoc comments and other important code documentation will be retained in the compiled output.
   3. Source map accuracy: Keeping comments can lead to more accurate source maps, which is crucial for debugging and error tracking.
@@ -370,7 +389,6 @@
   AG Grid 32 introduces several new features and improvements for React applications, along with some breaking changes that developers need to be aware of when upgrading.
 
   ## Key Breaking Changes
-
   1. **Removal of deprecated APIs**
      - Several deprecated APIs have been removed, including some related to row models, column definitions, and grid options.
   2. **Changes to default behavior**
@@ -489,7 +507,6 @@
 ### Patch Changes
 
 - [#905](https://github.com/equinor/fusion-framework/pull/905) [`a7858a1c`](https://github.com/equinor/fusion-framework/commit/a7858a1c01542e2dc94370709f122b4b99c3219c) Thanks [@odinr](https://github.com/odinr)! - **🚧 Chore: dedupe packages**
-
   - align all versions of typescript
   - update types to build
     - a couple of typecasts did not [satisfies](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-0.html#satisfies-support-in-jsdoc) and was recasted as `unknwon`, marked with `TODO`, should be fixed in future
