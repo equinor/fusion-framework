@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import { makeStyles, createStyles } from '@equinor/fusion-react-styles';
 
 type ButtonType = 'primary' | 'secondary';
@@ -34,7 +35,7 @@ export const Button = ({
 }: {
   onClick: () => void;
   type: ButtonType;
-  children: React.ReactNode;
+  children: ReactNode;
 }) => {
   const classes = useStyles({ type });
 

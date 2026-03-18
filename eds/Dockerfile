@@ -31,7 +31,7 @@ FROM mcr.microsoft.com/playwright:v1.58.2-noble AS extractor
 WORKDIR /app
 COPY --from=build /app/packages/eds-core-react/storybook-build ./storybook-build
 
-RUN npm install @fluentui/storybook-llms-extractor@latest
+RUN npm install @fluentui/storybook-llms-extractor@0.0.4
 RUN npx storybook-llms-extractor --distPath ./storybook-build
 RUN cd ./storybook-build/llms && for f in *.txt; do mv "$f" "${f%.txt}.md"; done
 

@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react';
 import { tokens } from '@equinor/eds-tokens';
 import styled from 'styled-components';
 import { Typography } from '@equinor/eds-core-react';
@@ -8,7 +9,7 @@ interface ProductListProps {
   products?: Product[];
   total?: number;
   filtered?: number;
-  styles?: React.CSSProperties;
+  styles?: CSSProperties;
 }
 
 const Styled = {

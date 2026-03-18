@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import { makeStyles, createStyles } from '@equinor/fusion-react-styles';
 
 const useStyles = makeStyles((theme) =>
@@ -14,7 +15,7 @@ const useStyles = makeStyles((theme) =>
   }),
 );
 
-export const Container = ({ children }: { children: React.ReactNode }) => {
+export const Container = ({ children }: { children: ReactNode }) => {
   const classes = useStyles({});
 
   return <div className={classes.container}>{children}</div>;

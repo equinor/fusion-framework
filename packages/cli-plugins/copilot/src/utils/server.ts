@@ -16,9 +16,10 @@ export function createRunDir(title: string, baseDir?: string): string {
   const time = [now.getUTCHours(), now.getUTCMinutes(), now.getUTCSeconds()]
     .map((n) => String(n).padStart(2, '0'))
     .join('');
+  const ms = String(now.getUTCMilliseconds()).padStart(3, '0');
   const slug = title.replace(/[^a-zA-Z0-9_-]/g, '-').replace(/-+/g, '-');
   const parent = baseDir ? resolve(baseDir) : resolve('.tmp', 'copilot');
-  const dir = join(parent, `${slug}_${time}`);
+  const dir = join(parent, `${slug}_${time}${ms}`);
   mkdirSync(dir, { recursive: true });
   console.log(`📁 Run dir: ${relative(process.cwd(), dir)}`);
   return dir;
@@ -54,7 +55,7 @@ export function resolveAppKey(appDir: string): string {
 export async function waitForServer(url: string, timeoutSeconds: number): Promise<boolean> {
   for (let i = 0; i < timeoutSeconds; i++) {
     try {
-      const res = await fetch(url);
+      const res = await fetch(url, { signal: AbortSignal.timeout(2000) });
       if (res.ok || res.status < 500) return true;
     } catch {
       // Server not ready yet — retry

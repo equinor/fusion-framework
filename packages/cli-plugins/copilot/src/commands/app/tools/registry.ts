@@ -28,11 +28,11 @@ export class AgentBrowserToolRegistry {
   }
 
   /**
-   * Returns the registered tools in insertion order.
+   * Returns a shallow copy of the registered tools in insertion order.
    *
    * @returns The registered Copilot SDK tool list
    */
   getTools(): AgentBrowserToolList {
-    return this.tools;
+    return [...this.tools];
   }
 }
