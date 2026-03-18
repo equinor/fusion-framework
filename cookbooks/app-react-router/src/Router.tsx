@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { Router } from '@equinor/fusion-framework-react-router';
@@ -8,10 +9,11 @@ import { Api } from './api';
 
 export default function () {
   const httpProvider = useAppModule('http');
-  const queryClient = new QueryClient();
+  const [queryClient] = useState(() => new QueryClient());
+  const [api] = useState(() => new Api(queryClient, httpProvider));
   return (
     <QueryClientProvider client={queryClient}>
-      <Router routes={routes} context={{ api: new Api(queryClient, httpProvider), queryClient }} />
+      <Router routes={routes} context={{ api, queryClient }} />
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   );

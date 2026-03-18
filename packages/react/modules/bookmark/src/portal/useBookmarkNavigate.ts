@@ -42,7 +42,7 @@ export const useBookmarkNavigate = (args: { resolveAppPath: AppPathResolver }): 
 
         if (location.pathname !== pathname) {
           const hash = location.hash;
-          const search = location.search ? removeBookmarkIdFromURL(location.search) : undefined;
+          const search = location.search ? removeBookmarkIdFromURL(location.search) : '';
           history.navigate({ pathname, search, hash });
         }
 

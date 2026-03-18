@@ -42,17 +42,18 @@ const Styled = {
  */
 export function ProductList(props: ProductListProps) {
   const { products, total } = props;
+  const productList = products ?? [];
   return (
     <Styled.Container style={props.styles}>
       <Styled.Info>
-        Showing {products?.length} of {total} products
+        Showing {productList.length} of {total} products
       </Styled.Info>
 
-      {products?.length === 0 ? (
+      {productList.length === 0 ? (
         <Styled.Empty>No products found matching your filters.</Styled.Empty>
       ) : (
         <Styled.ProductGrid>
-          {products?.map((product: Product) => (
+          {productList.map((product: Product) => (
             <ProductCard key={product.id} product={product} />
           ))}
         </Styled.ProductGrid>

@@ -18,7 +18,7 @@ import assert from 'node:assert';
  */
 export const expect = <T>(value: T) => {
   return {
-    toBe: (expected: T, message: string): asserts expected => {
+    toBe: (expected: T, message: string): asserts value is T => {
       assert(
         value === expected,
         Error(message, {

@@ -46,7 +46,7 @@ for await (const file of glob.scan(dir)) {
 
   // Remove beta component files — duplicates of stable docs with unstable APIs
   if (file.startsWith('eds-2-0-beta-')) {
-    await Bun.$`rm ${path}`.quiet();
+    await import('fs/promises').then(fs => fs.unlink(path));
     deleted++;
     continue;
   }

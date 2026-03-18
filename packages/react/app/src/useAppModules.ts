@@ -16,6 +16,6 @@ import { useModules } from '@equinor/fusion-framework-react-module';
  */
 export const useAppModules = <
   T extends Array<AnyModule> | unknown = unknown,
->(): AppModulesInstance<T> => useModules<AppModules<T>>() as AppModulesInstance<T>;
+>(): AppModulesInstance<T> => useModules<AppModulesInstance<T>>();
 
 export default useAppModules;

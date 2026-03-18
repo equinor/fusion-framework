@@ -17,7 +17,7 @@ export type { AppManifest } from '@equinor/fusion-framework-module-app';
  * The CLI will serialize RouteNode objects to RouteSchemaEntry arrays when generating the final manifest.
  */
 export type AppManifestWithRoutes = Omit<AppManifest, 'routes'> & {
-  routes?: RouteSchemaEntry[] | unknown; // unknown allows RouteNode | RouteNode[] from router package
+  routes?: RouteSchemaEntry[] | RouteSchemaEntry[][];
 };
 
 /**

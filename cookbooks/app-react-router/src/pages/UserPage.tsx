@@ -40,6 +40,9 @@ export async function clientLoader({
     throw new Response('User ID is required', { status: 400 });
   }
   const userId = parseInt(params.id, 10);
+  if (!Number.isFinite(userId)) {
+    throw new Response('Invalid user ID', { status: 400 });
+  }
 
   // Use the unified API from context
   const { api } = fusion.context;
