@@ -6,6 +6,7 @@ export const routes = layout('./pages/Navigation.tsx', [
   route('card/*', './pages/CardPage.tsx'),
   route('list-item/*', './pages/ListItemPage.tsx'),
   route('selector/*', './pages/SelectorPage.tsx'),
+  route('people-concepts', './pages/PeopleConceptPage.tsx'),
 ]);
 
 export default routes;

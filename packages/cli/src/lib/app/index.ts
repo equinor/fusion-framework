@@ -10,7 +10,6 @@ export {
   defineAppManifest,
   type AppManifestFn,
   type AppManifest,
-  type AppManifestWithRoutes,
 } from './app-manifest.js';
 export type { RouteSchemaEntry } from '@equinor/fusion-framework-module-app';
 export { createAppManifestFromPackage } from './create-app-manifest.js';

@@ -45,8 +45,7 @@ describe('reactRouterPlugin', () => {
 
     const expected = [
       `import React from 'react';`,
-      `import { useLoaderData, useActionData, useRouteError } from 'react-router';`,
-      `import { useRouterContext, routerContext } from '@equinor/fusion-framework-react-router';`,
+      `import { useLoaderData, useActionData, useRouteError, useRouterContext, routerContext } from '@equinor/fusion-framework-react-router';`,
       `import { default as HomePage, handle as handleHomePage } from './mocks/pages/HomePage.tsx';`,
       `export const routes = [{ path: 'home', Component: HomePage, handle: handleHomePage }];`,
     ].join('\n');
@@ -71,8 +70,7 @@ describe('reactRouterPlugin', () => {
 
     const expected = [
       `import React from 'react';`,
-      `import { useLoaderData, useActionData, useRouteError } from 'react-router';`,
-      `import { useRouterContext, routerContext } from '@equinor/fusion-framework-react-router';`,
+      `import { useLoaderData, useActionData, useRouteError, useRouterContext, routerContext } from '@equinor/fusion-framework-react-router';`,
       `import {`,
       `    default as UserDetailPage,`,
       `    clientLoader as clientLoaderUserDetailPage,`,
@@ -112,8 +110,7 @@ describe('reactRouterPlugin', () => {
 
     const expected = [
       `import React from 'react';`,
-      `import { useLoaderData, useActionData, useRouteError } from 'react-router';`,
-      `import { useRouterContext, routerContext } from '@equinor/fusion-framework-react-router';`,
+      `import { useLoaderData, useActionData, useRouteError, useRouterContext, routerContext } from '@equinor/fusion-framework-react-router';`,
       `import { default as HomePage, handle as handleHomePage } from './mocks/pages/HomePage.tsx';`,
       `import { default as ProductsPage, handle as handleProductsPage } from './mocks/pages/ProductsPage.tsx';`,
       `import { default as MainLayout, handle as handleMainLayout } from './mocks/pages/MainLayout.tsx';`,

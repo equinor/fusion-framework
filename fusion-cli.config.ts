@@ -9,7 +9,8 @@
 import aiIndexPlugin from '@equinor/fusion-framework-cli-plugin-ai-index';
 import aiChatPlugin from '@equinor/fusion-framework-cli-plugin-ai-chat';
 import aiMcpPlugin from '@equinor/fusion-framework-cli-plugin-ai-mcp';
+import copilotPlugin from '@equinor/fusion-framework-cli-plugin-copilot';
 
 export default {
-  plugins: [aiIndexPlugin, aiChatPlugin, aiMcpPlugin],
+  plugins: [aiIndexPlugin, aiChatPlugin, aiMcpPlugin, copilotPlugin],
 };

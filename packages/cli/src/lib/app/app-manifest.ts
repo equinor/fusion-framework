@@ -1,4 +1,4 @@
-import type { AppManifest, RouteSchemaEntry } from '@equinor/fusion-framework-module-app';
+import type { AppManifest } from '@equinor/fusion-framework-module-app';
 
 import type { RuntimeEnv } from '@equinor/fusion-framework-cli/lib';
 import type { RecursivePartial } from '../utils/types.js';
@@ -10,20 +10,9 @@ import type { RecursivePartial } from '../utils/types.js';
 export type { AppManifest } from '@equinor/fusion-framework-module-app';
 
 /**
- * Extended manifest type that allows routes to be RouteNode objects (for TypeScript definitions)
- * or RouteSchemaEntry arrays (for JSON serialization).
- *
- * This type is used in manifest definition files where RouteNode objects can be passed directly.
- * The CLI will serialize RouteNode objects to RouteSchemaEntry arrays when generating the final manifest.
- */
-export type AppManifestWithRoutes = Omit<AppManifest, 'routes'> & {
-  routes?: RouteSchemaEntry[] | RouteSchemaEntry[][];
-};
-
-/**
  * Function type for loading or modifying an application manifest.
  *
- * @template T - A type extending AppManifest or AppManifestWithRoutes, defaults to AppManifestWithRoutes.
+ * @template T - A type extending AppManifest.
  * @param env - The runtime environment (see '../types').
  * @param args - Object containing the base manifest (`base`) of type T.
  * @returns A partial manifest that will be merged with the base, void if no changes, or a promise resolving to either.
@@ -35,7 +24,7 @@ export type AppManifestWithRoutes = Omit<AppManifest, 'routes'> & {
  * - Returning void allows for side-effect-only functions, but returning the manifest is preferred for clarity.
  * - Routes can be RouteNode | RouteNode[] (from router package) or RouteSchemaEntry[] (serialized format).
  */
-export type AppManifestFn<T extends AppManifest | AppManifestWithRoutes = AppManifestWithRoutes> = (
+export type AppManifestFn<T extends AppManifest = AppManifest> = (
   env: RuntimeEnv, // The runtime environment, e.g., 'development', 'production', etc.
   args: { base: T }, // The base manifest to be extended or modified.
 ) => RecursivePartial<T> | undefined | Promise<RecursivePartial<T> | undefined>; // Supports both sync and async manifest generation.

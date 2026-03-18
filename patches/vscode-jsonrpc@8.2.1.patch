@@ -1,0 +1,22 @@
+diff --git a/package.json b/package.json
+index 1234567..abcdefg 100644
+--- a/package.json
++++ b/package.json
+@@ -1,5 +1,17 @@
+ {
+ 	"name": "vscode-jsonrpc",
++	"exports": {
++		".": {
++			"types": "./typings/node/main.d.ts",
++			"default": "./lib/node/main.js"
++		},
++		"./node": {
++			"default": "./node.js"
++		},
++		"./node.js": {
++			"default": "./node.js"
++		}
++	},
+ 	"description": "A json rpc implementation over streams",
+ 	"version": "8.2.1",
+ 	"author": "Microsoft Corporation",
