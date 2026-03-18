@@ -1,5 +1,26 @@
 # Change Log
 
+## 5.0.0
+
+### Major Changes
+
+- abffa53: Migrate cookbook from `@remix-run/router` to `@equinor/fusion-framework-react-router`.
+
+  Updated the bookmark-advanced cookbook to use the new React Router DSL API:
+  - Replaced `NavigationProvider.createRouter()` with `Router` component from `@equinor/fusion-framework-react-router`
+  - Migrated route definitions to use DSL functions (`layout`, `index`, `route`) from `@equinor/fusion-framework-react-router/routes`
+  - Added `Root.tsx` component using the new layout pattern
+  - Added `enableBookmark` configuration
+
+  This cookbook now serves as an example of the recommended routing pattern for Fusion Framework applications.
+
+### Patch Changes
+
+- Updated dependencies [abffa53]
+- Updated dependencies [abffa53]
+- Updated dependencies [abffa53]
+  - @equinor/fusion-framework-react-router@1.0.0
+
 ## 4.1.8
 
 ### Patch Changes
@@ -13,7 +34,6 @@
 - [#3714](https://github.com/equinor/fusion-framework/pull/3714) [`11fe961`](https://github.com/equinor/fusion-framework/commit/11fe961794e4960ccb987bc320268cc9b263f1f8) Thanks [@odinr](https://github.com/odinr)! - Improved all cookbook README documentation for better developer experience.
 
   All cookbook README files now feature:
-
   - Code examples matching actual implementations
   - Inline comments explaining patterns and concepts
   - Developer-friendly language for those new to Fusion Framework
@@ -139,7 +159,6 @@
 ### Patch Changes
 
 - [#905](https://github.com/equinor/fusion-framework/pull/905) [`a7858a1c`](https://github.com/equinor/fusion-framework/commit/a7858a1c01542e2dc94370709f122b4b99c3219c) Thanks [@odinr](https://github.com/odinr)! - **🚧 Chore: dedupe packages**
-
   - align all versions of typescript
   - update types to build
     - a couple of typecasts did not [satisfies](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-0.html#satisfies-support-in-jsdoc) and was recasted as `unknwon`, marked with `TODO`, should be fixed in future

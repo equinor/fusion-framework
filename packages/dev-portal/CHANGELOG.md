@@ -1,5 +1,101 @@
 # @equinor/fusion-framework-dev-portal
 
+## 5.0.0
+
+### Major Changes
+
+- abffa53: Major version bump for Fusion Framework React 19 release.
+
+  All packages are bumped to the next major version as part of the React 19 upgrade. This release drops support for React versions below 18 and includes breaking changes across the framework.
+
+  **Breaking changes:**
+  - Peer dependencies now require React 18 or 19 (`^18.0.0 || ^19.0.0`)
+  - React Router upgraded from v6 to v7
+  - Navigation module refactored with new history API
+  - `renderComponent` and `renderApp` now use `createRoot` API
+
+  **Migration:**
+  - Update your React version to 18.0.0 or higher before upgrading
+  - Replace `NavigationProvider.createRouter()` with `@equinor/fusion-framework-react-router`
+  - See individual package changelogs for package-specific migration steps
+
+- abffa53: Upgrade to React 19 and remove support for React versions lower than 18.
+
+  **Breaking changes:**
+  - Peer dependencies now require React 18 or 19 (`^18.0.0 || ^19.0.0`)
+  - React 16 and 17 are no longer supported
+  - Dev dependencies upgraded to React 19.2.1 and @types/react 19.2.7
+
+  **Migration:**
+  - Update your React version to 18.0.0 or higher before upgrading these packages
+  - If using React 16 or 17, upgrade to React 18 or 19 first
+
+  Closes https://github.com/equinor/fusion-framework/issues/3504
+
+### Minor Changes
+
+- abffa53: Update EDS (Equinor Design System) packages to latest versions: `@equinor/eds-core-react` to ^2.2.0, `@equinor/eds-icons` to ^1.1.0, `@equinor/eds-tokens` to ^2.1.1, and `@equinor/eds-utils` to ^2.0.0.
+
+  These are major version updates from the 0.x series. Consumers should verify compatibility with their applications, particularly if using `@equinor/fusion-react-side-sheet` which may require updates to support the new EDS versions.
+
+### Patch Changes
+
+- abffa53: Render application content inside a stable `#app-section` container so browser-driven evaluation tools can target the app surface consistently.
+
+  This makes automated cookbook and dev-portal validation more reliable when using `agent-browser` and Copilot-based evaluation flows.
+
+  Refs https://github.com/equinor/fusion-core-tasks/issues/724
+
+- abffa53: Upgrade dev-portal dependencies for React 19 compatibility.
+  - Upgrade `react-router` from v6 to v7.13 (backward-compatible, no code changes required)
+  - Upgrade `@equinor/fusion-react-styles` to 2.0.0 (removes `@material-ui/styles` dependency)
+  - Upgrade `@equinor/fusion-react-context-selector` to 2.0.1
+
+  This resolves the React 19 blocker identified in https://github.com/equinor/fusion-framework/issues/3698
+
+- abffa53: Upgrade `react-router-dom` from v6 to v7.9.5 for React 19 compatibility.
+
+  This is a backward-compatible upgrade - all existing Router 6 patterns continue to work with Router 7. No code changes required.
+
+- aa35c46: chore: bump @vitejs/plugin-react from 5.1.4 to 6.0.1
+- 32bcf83: Bump `vite` from `7.3.1` to `8.0.0`.
+
+  Vite 8 replaces Rollup with Rolldown and esbuild with Oxc for faster builds.
+  No breaking API changes affect this codebase. The `dev-server` peerDependency
+  is widened to accept both Vite 7 and Vite 8.
+
+- Updated dependencies [abffa53]
+- Updated dependencies [abffa53]
+- Updated dependencies [abffa53]
+- Updated dependencies [abffa53]
+- Updated dependencies [abffa53]
+- Updated dependencies [aa35c46]
+- Updated dependencies [abffa53]
+- Updated dependencies [abffa53]
+- Updated dependencies [abffa53]
+- Updated dependencies [aaa3f74]
+- Updated dependencies [abffa53]
+- Updated dependencies [abffa53]
+- Updated dependencies [32bcf83]
+  - @equinor/fusion-framework@8.0.0
+  - @equinor/fusion-framework-app@11.0.0
+  - @equinor/fusion-framework-dev-server@2.0.0
+  - @equinor/fusion-framework-module-ag-grid@36.0.0
+  - @equinor/fusion-framework-module-analytics@2.0.0
+  - @equinor/fusion-framework-module-app@8.0.0
+  - @equinor/fusion-framework-module-bookmark@4.0.0
+  - @equinor/fusion-framework-module-context@8.0.0
+  - @equinor/fusion-framework-module-feature-flag@2.0.0
+  - @equinor/fusion-framework-module-navigation@7.0.0
+  - @equinor/fusion-framework-module-services@8.0.0
+  - @equinor/fusion-framework-module-telemetry@5.0.0
+  - @equinor/fusion-framework-react@8.0.0
+  - @equinor/fusion-framework-react-components-bookmark@2.0.0
+  - @equinor/fusion-framework-react-components-people-provider@2.0.0
+  - @equinor/fusion-framework-react-module-bookmark@6.0.0
+  - @equinor/fusion-observable@9.0.0
+  - @equinor/fusion-query@7.0.0
+
 ## 4.0.4
 
 ### Patch Changes
@@ -144,7 +240,6 @@
 - [#3922](https://github.com/equinor/fusion-framework/pull/3922) [`d34ebd8`](https://github.com/equinor/fusion-framework/commit/d34ebd82c93acabc88f88e44a725f084af3af5ec) Thanks [@odinr](https://github.com/odinr)! - Enable AG Grid Enterprise license injection for the dev-portal by setting a global window key produced from the SPA template environment. The portal reads `window.FUSION_AG_GRID_KEY` to configure the AG Grid module and silence license warnings when a valid key is present. CLI docs now mention the license key setup.
 
   **Usage:**
-
   - In your SPA environment file, set `FUSION_SPA_AG_GRID_KEY=your-license-key-here`.
   - The SPA HTML template injects `window.FUSION_AG_GRID_KEY` before bootstrap runs, and the dev-portal picks it up automatically.
 
@@ -182,20 +277,17 @@
   ## New Features
 
   ### App Tag/Version Support
-
   - **App Client**: Added `getAppBuild` method to fetch build manifests by app key and tag
   - **App Module Provider**: Enhanced `getAppManifest` to accept optional tag parameter
   - **App Loading**: Modified `setCurrentApp` to support `AppReference` objects with tag specification
   - **URL Integration**: Added `getAppTagFromUrl` utility to extract app tags from URL parameters
 
   ### Enhanced Type System
-
   - Added `AppReference` type for specifying app key and optional tag
   - Extended `AppBundleState` to include optional `tag` property
   - Updated `AppBuildManifest` type definition for build-specific metadata
 
   ### API Improvements
-
   - **AppClient**: Updated interface to support tag-based manifest and build fetching
   - **App Class**: Added `tag` getter property for accessing current app tag
   - **Action System**: Enhanced `fetchManifest` action to handle tag parameters
@@ -203,7 +295,6 @@
   ## Changes by Package
 
   ### `@equinor/fusion-framework-module-app`
-
   - **AppClient.ts**: Added `getAppBuild` method with tag support and updated `getAppManifest` signature
   - **AppModuleProvider.ts**: Enhanced `setCurrentApp` method to handle `AppReference` objects with tags
   - **App.ts**: Added `tag` getter and improved error handling in initialization
@@ -212,7 +303,6 @@
   - **flows.ts**: Modified manifest fetching flow to handle tag-based requests
 
   ### `@equinor/fusion-framework-dev-portal`
-
   - **AppLoader.tsx**: Added `getAppTagFromUrl` utility function and integrated tag-based app loading
 
   ## Usage Examples
@@ -245,17 +335,14 @@
   ## Migration Guide
 
   ### For App Consumers
-
   - No breaking changes - existing code continues to work
   - Optionally use new tag-based loading for version-specific deployments
 
   ### For App Developers
-
   - Consider adding `&tag` URL parameter support for testing different versions
   - Use new `AppReference` type when programmatically setting current apps with tags
 
   ## Technical Details
-
   - **Backward Compatibility**: All changes are backward compatible
   - **Caching**: Tag-based manifests and builds are cached separately
   - **Error Handling**: Enhanced error handling for build and manifest loading failures
@@ -281,20 +368,17 @@
   This update addresses a security vulnerability in Vite's development server and includes bug fixes for improved compatibility. The update ensures secure development environments and better plugin ecosystem compatibility.
 
   **Changes:**
-
   - Updated Vite from v7.1.10 to v7.1.12
   - Includes security fix for development server file system checks
   - Includes compatibility fix for CommonJS plugin
   - No breaking changes or API modifications
 
   **Security Fix (v7.1.11):**
-
   - **dev**: trim trailing slash before `server.fs.deny` check ([#20968](https://github.com/vitejs/vite/issues/20968))
     - Prevents potential path traversal vulnerability in development server
     - Only affects development environment, not production builds
 
   **Bug Fix (v7.1.12):**
-
   - **deps**: downgrade commonjs plugin to 28.0.6 to avoid rollup/plugins issues ([#20990](https://github.com/vitejs/vite/issues/20990))
     - Improves compatibility with Rollup plugin ecosystem
     - Prevents potential build issues
@@ -314,12 +398,10 @@
 ### Patch Changes
 
 - [#3542](https://github.com/equinor/fusion-framework/pull/3542) [`2d4fd18`](https://github.com/equinor/fusion-framework/commit/2d4fd18394e8545b4616140a93a369d5ae77ccbc) Thanks [@eikeland](https://github.com/eikeland)! - Updated person component dependencies for improved functionality and bug fixes.
-
   - Updated `@equinor/fusion-react-person` from `^0.10.3` to `^0.10.10` in app-react-people cookbook
   - Updated `@equinor/fusion-wc-person` from `^3.1.8` to `^3.2.4` in dev-portal and people-resolver packages
 
 - [#3547](https://github.com/equinor/fusion-framework/pull/3547) [`99a3c26`](https://github.com/equinor/fusion-framework/commit/99a3c26275c2089c3708124f5819ce383d8dc3dc) Thanks [@odinr](https://github.com/odinr)! - Enhanced dev-portal with portal proxy service worker configuration ([Issue #3546](https://github.com/equinor/fusion-framework/issues/3546)).
-
   - Added `/portal-proxy` service worker resource configuration in dev-server.ts
   - Routes portal proxy requests to Fusion portal service API (`/@fusion-api/portals`)
   - Enables portal proxy functionality for testing against real portal environments
@@ -333,14 +415,12 @@
 - [#3522](https://github.com/equinor/fusion-framework/pull/3522) [`63ac6a1`](https://github.com/equinor/fusion-framework/commit/63ac6a1178fc6f6b0702f51a9c36a67db76b92cd) Thanks [@odinr](https://github.com/odinr)! - Add comprehensive telemetry integration to the Fusion Dev Portal.
 
   **New Features:**
-
   - Enable telemetry tracking for portal usage analytics and monitoring
   - Configure portal-specific metadata including version and name identification
   - Set up telemetry event scoping for portal-specific tracking
   - Attach framework configurator events for comprehensive telemetry coverage
 
   **Technical Implementation:**
-
   - Integrate `@equinor/fusion-framework-module-telemetry` module
   - Configure telemetry with portal metadata (`type: 'portal-telemetry'`)
   - Set default scope to `['portal']` for event categorization
@@ -348,7 +428,6 @@
   - Add TypeScript path references for telemetry module
 
   **Configuration Updates:**
-
   - Enhanced `config.ts` with detailed telemetry setup and documentation
   - Updated dependency versions to use `workspace:*` for better monorepo compatibility
   - Improved code documentation and developer experience features
@@ -360,14 +439,12 @@
 - [#3515](https://github.com/equinor/fusion-framework/pull/3515) [`6cb288b`](https://github.com/equinor/fusion-framework/commit/6cb288b9e1ec4fae68ae6899735c176837bb4275) Thanks [@odinr](https://github.com/odinr)! - ## Global Biome Configuration Modernization
 
   **Workspace-wide changes:**
-
   - Remove 19 rule overrides from `biome.json` to use Biome's strict "error" defaults
   - Enable `correctness/useUniqueElementIds` accessibility rule globally
   - Reduce configuration size by 40% (60+ → ~35 lines)
   - Eliminate all custom linting rule customizations
 
   **Package-specific changes:**
-
   - Replace static IDs with React `useId()` hooks in bookmark and dev-portal components
   - Fix `suspicious/noAssignInExpressions` violations in context, legacy-interopt, and observable packages
   - Update 11 React components for accessibility compliance
@@ -414,7 +491,6 @@
 - [#3349](https://github.com/equinor/fusion-framework/pull/3349) [`c511123`](https://github.com/equinor/fusion-framework/commit/c511123c835e24e9ddefcc4c47c2455f5df12087) Thanks [@dependabot](https://github.com/apps/dependabot)! - chore: bump vite from 6.x to 7.1.5
 
   Major version update of Vite build tool across all packages. This update includes:
-
   - Enhanced build performance and caching
   - Better error reporting with code frames
   - Improved TypeScript integration
@@ -422,14 +498,12 @@
   - New development server features
 
   ### Links
-
   - [Vite 7.1.5 Release Notes](https://github.com/vitejs/vite/releases/tag/v7.1.5)
   - [Vite 7.x Migration Guide](https://vitejs.dev/guide/migration)
 
 ### Patch Changes
 
 - [#3365](https://github.com/equinor/fusion-framework/pull/3365) [`6eeef2f`](https://github.com/equinor/fusion-framework/commit/6eeef2f2033dfacf7c972295c8c2cc2d4cd83976) Thanks [@dependabot](https://github.com/apps/dependabot)! - Updated @equinor/eds-tokens from 0.9.2 to 0.10.0
-
   - Added support for CSS custom properties via variables-static.css and variables-dynamic.css
   - Improved design token integration for better CSS compatibility
   - Updated dependencies and internal tooling (pnpm v10, node v22)
@@ -439,7 +513,6 @@
 - [#3400](https://github.com/equinor/fusion-framework/pull/3400) [`aed6c53`](https://github.com/equinor/fusion-framework/commit/aed6c5385df496a86d06dc0af9dacafc255ea605) Thanks [@dependabot](https://github.com/apps/dependabot)! - chore: bump @equinor/eds-core-react from 0.45.1 to 0.49.0
 
   ### New Features
-
   - ✨ Always show "add new option" in Autocomplete when onAddNewOption is provided
   - ✨ Tabs call onChange with provided value if present
   - ✨ Add disabled prop to Tooltip
@@ -447,7 +520,6 @@
   - ✨ Add support for adding new options in Autocomplete
 
   ### Bug Fixes
-
   - 🐛 Autocomplete - Don't call onOptionsChange when clicking "Add new"
   - 🐛 Table - Fix Firefox table header wrapping issue
   - 🐛 Tabs documentation type mismatch - update onChange parameter from number to number | string
@@ -459,28 +531,24 @@
   - 🐛 Menu: Ensure onClose is called when a MenuItem without onClick is clicked
 
   ### Links
-
   - [GitHub releases](https://github.com/equinor/design-system/releases/tag/eds-core-react%400.49.0)
   - [npm changelog](https://www.npmjs.com/package/@equinor/eds-core-react?activeTab=versions)
 
 - [#3366](https://github.com/equinor/fusion-framework/pull/3366) [`daa362e`](https://github.com/equinor/fusion-framework/commit/daa362e7d92ad362e46d666c434d0f09687abad5) Thanks [@dependabot](https://github.com/apps/dependabot)! - Update @equinor/eds-core-react from 0.48.0 to 0.49.0
 
   ### Changes
-
   - Updated @equinor/eds-core-react dependency to latest version across all packages
   - Fixed peerDependencies version mismatch in bookmark package
   - Includes bug fixes for Autocomplete and Table components
   - Adds new Autocomplete features for "add new option" functionality
 
   ### Affected Packages
-
   - packages/dev-portal
   - packages/react/components/bookmark
   - cookbooks/app-react-feature-flag
   - cookbooks/app-react-people
 
   ### Links
-
   - [GitHub releases](https://github.com/equinor/design-system/releases)
   - [Full Changelog](https://github.com/equinor/design-system/compare/eds-core-react@0.48.0...eds-core-react@0.49.0)
 
@@ -489,7 +557,6 @@
 ### Patch Changes
 
 - [#3381](https://github.com/equinor/fusion-framework/pull/3381) [`bae9c95`](https://github.com/equinor/fusion-framework/commit/bae9c9554f335d0384b864436874bded47d00ed8) Thanks [@dependabot](https://github.com/apps/dependabot)! - Update rollup from 4.49.0 to 4.50.2
-
   - Updated rollup dependency via vite transitive dependency
   - Includes bug fixes for tree-shaking array destructuring patterns
   - Performance improvements and platform support updates
@@ -517,7 +584,6 @@
   The refactor moves specific functionality and code related to the development portal into its own dedicated package to improve modularity and maintainability.
 
   **Features**
-
   - Development portal for the Fusion framework
   - Support for MSAL authentication
   - Integration with service discovery
@@ -552,7 +618,6 @@
 ### Patch Changes
 
 - [#3075](https://github.com/equinor/fusion-framework/pull/3075) [`84c16d7`](https://github.com/equinor/fusion-framework/commit/84c16d74c3235f809ce4c3e75868be12010ed695) Thanks [@odinr](https://github.com/odinr)! - Add `prepack` script to `dev-portal` and `dev-server` packages
-
   - Added a `prepack` script to `@equinor/fusion-framework-dev-portal` and `@equinor/fusion-framework-dev-server` to ensure the build runs before packaging.
   - This helps guarantee that the latest build artifacts are included when publishing these packages.
 

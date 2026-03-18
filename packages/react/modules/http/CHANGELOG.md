@@ -1,5 +1,47 @@
 # Change Log
 
+## 11.0.0
+
+### Major Changes
+
+- abffa53: Major version bump for Fusion Framework React 19 release.
+
+  All packages are bumped to the next major version as part of the React 19 upgrade. This release drops support for React versions below 18 and includes breaking changes across the framework.
+
+  **Breaking changes:**
+  - Peer dependencies now require React 18 or 19 (`^18.0.0 || ^19.0.0`)
+  - React Router upgraded from v6 to v7
+  - Navigation module refactored with new history API
+  - `renderComponent` and `renderApp` now use `createRoot` API
+
+  **Migration:**
+  - Update your React version to 18.0.0 or higher before upgrading
+  - Replace `NavigationProvider.createRouter()` with `@equinor/fusion-framework-react-router`
+  - See individual package changelogs for package-specific migration steps
+
+- abffa53: Upgrade to React 19 and remove support for React versions lower than 18.
+
+  **Breaking changes:**
+  - Peer dependencies now require React 18 or 19 (`^18.0.0 || ^19.0.0`)
+  - React 16 and 17 are no longer supported
+  - Dev dependencies upgraded to React 19.2.1 and @types/react 19.2.7
+
+  **Migration:**
+  - Update your React version to 18.0.0 or higher before upgrading these packages
+  - If using React 16 or 17, upgrade to React 18 or 19 first
+
+  Closes https://github.com/equinor/fusion-framework/issues/3504
+
+### Patch Changes
+
+- Updated dependencies [abffa53]
+- Updated dependencies [abffa53]
+- Updated dependencies [abffa53]
+- Updated dependencies [abffa53]
+- Updated dependencies [abffa53]
+  - @equinor/fusion-framework-module-http@8.0.0
+  - @equinor/fusion-framework-react-module@4.0.0
+
 ## 10.0.1
 
 ### Patch Changes
@@ -128,7 +170,6 @@
 - [#2320](https://github.com/equinor/fusion-framework/pull/2320) [`1dd85f3`](https://github.com/equinor/fusion-framework/commit/1dd85f3a408a73df556d1812a5f280945cc100ee) Thanks [@odinr](https://github.com/odinr)! - Removed the `removeComments` option from the `tsconfig.base.json` file.
 
   Removing the `removeComments` option allows TypeScript to preserve comments in the compiled JavaScript output. This can be beneficial for several reasons:
-
   1. Improved debugging: Preserved comments can help developers understand the code better during debugging sessions.
   2. Documentation: JSDoc comments and other important code documentation will be retained in the compiled output.
   3. Source map accuracy: Keeping comments can lead to more accurate source maps, which is crucial for debugging and error tracking.
@@ -311,7 +352,6 @@
 ### Patch Changes
 
 - [#905](https://github.com/equinor/fusion-framework/pull/905) [`a7858a1c`](https://github.com/equinor/fusion-framework/commit/a7858a1c01542e2dc94370709f122b4b99c3219c) Thanks [@odinr](https://github.com/odinr)! - **🚧 Chore: dedupe packages**
-
   - align all versions of typescript
   - update types to build
     - a couple of typecasts did not [satisfies](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-0.html#satisfies-support-in-jsdoc) and was recasted as `unknwon`, marked with `TODO`, should be fixed in future

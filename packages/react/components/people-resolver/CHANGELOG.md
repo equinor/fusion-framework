@@ -1,5 +1,54 @@
 # @equinor/fusion-framework-react-components-people-provider
 
+## 2.0.0
+
+### Major Changes
+
+- abffa53: Major version bump for Fusion Framework React 19 release.
+
+  All packages are bumped to the next major version as part of the React 19 upgrade. This release drops support for React versions below 18 and includes breaking changes across the framework.
+
+  **Breaking changes:**
+  - Peer dependencies now require React 18 or 19 (`^18.0.0 || ^19.0.0`)
+  - React Router upgraded from v6 to v7
+  - Navigation module refactored with new history API
+  - `renderComponent` and `renderApp` now use `createRoot` API
+
+  **Migration:**
+  - Update your React version to 18.0.0 or higher before upgrading
+  - Replace `NavigationProvider.createRouter()` with `@equinor/fusion-framework-react-router`
+  - See individual package changelogs for package-specific migration steps
+
+- abffa53: Require React 18+ as peer dependency. React 17 is no longer supported.
+
+  **Migration:** Update your application to React 18+ to continue using these packages.
+
+  Closes https://github.com/equinor/fusion-framework/issues/3504
+
+- abffa53: Upgrade to React 19 and remove support for React versions lower than 18.
+
+  **Breaking changes:**
+  - Peer dependencies now require React 18 or 19 (`^18.0.0 || ^19.0.0`)
+  - React 16 and 17 are no longer supported
+  - Dev dependencies upgraded to React 19.2.1 and @types/react 19.2.7
+
+  **Migration:**
+  - Update your React version to 18.0.0 or higher before upgrading these packages
+  - If using React 16 or 17, upgrade to React 18 or 19 first
+
+  Closes https://github.com/equinor/fusion-framework/issues/3504
+
+### Patch Changes
+
+- Updated dependencies [abffa53]
+- Updated dependencies [abffa53]
+- Updated dependencies [abffa53]
+- Updated dependencies [abffa53]
+  - @equinor/fusion-framework-module-services@8.0.0
+  - @equinor/fusion-framework-react@8.0.0
+  - @equinor/fusion-framework-react-module@4.0.0
+  - @equinor/fusion-query@7.0.0
+
 ## 1.6.3
 
 ### Patch Changes
@@ -31,7 +80,6 @@
 - [#4095](https://github.com/equinor/fusion-framework/pull/4095) [`f09b26f`](https://github.com/equinor/fusion-framework/commit/f09b26f100a94bf3c841be9830525aa2c734b180) Thanks [@eikeland](https://github.com/eikeland)! - Add `suggest` and `resolve` methods to People API client for improved people picker functionality.
 
   The People service now supports:
-
   - **suggest**: Autocomplete/typeahead for people picker with optional system account filtering
   - **resolve**: Batch resolution of person identifiers to full person objects
 
@@ -67,7 +115,6 @@
 ### Patch Changes
 
 - [#3542](https://github.com/equinor/fusion-framework/pull/3542) [`2d4fd18`](https://github.com/equinor/fusion-framework/commit/2d4fd18394e8545b4616140a93a369d5ae77ccbc) Thanks [@eikeland](https://github.com/eikeland)! - Updated person component dependencies for improved functionality and bug fixes.
-
   - Updated `@equinor/fusion-react-person` from `^0.10.3` to `^0.10.10` in app-react-people cookbook
   - Updated `@equinor/fusion-wc-person` from `^3.1.8` to `^3.2.4` in dev-portal and people-resolver packages
 
@@ -345,7 +392,6 @@
 ### Patch Changes
 
 - [#2591](https://github.com/equinor/fusion-framework/pull/2591) [`445760c`](https://github.com/equinor/fusion-framework/commit/445760ce73e1d76303c83c367a394adfb5b7a479) Thanks [@eikeland](https://github.com/eikeland)! - ### Updated Dependencies:
-
   - Updated @equinor/fusion-wc-person to ^3.0.5 in package.json.
 
 ## 1.4.13
@@ -391,7 +437,6 @@
 - [#2494](https://github.com/equinor/fusion-framework/pull/2494) [`e11ad64`](https://github.com/equinor/fusion-framework/commit/e11ad64a42210443bdfd9ab9eb2fb95e7e345251) Thanks [@odinr](https://github.com/odinr)! - Updating fusion-wc-person to fix issues when using selectedPerson = null in PersonSelect component.
 
   Updated the following dependencies
-
   - `@equinor/fusion-wc-person` from `^3.0.1` to `^3.0.3` in `packages/cli/package.json` and `packages/react/components/people-resolver/package.json`.
 
 - Updated dependencies [[`e11ad64`](https://github.com/equinor/fusion-framework/commit/e11ad64a42210443bdfd9ab9eb2fb95e7e345251)]:
@@ -405,7 +450,6 @@
 - [#2493](https://github.com/equinor/fusion-framework/pull/2493) [`4839295`](https://github.com/equinor/fusion-framework/commit/4839295263f07704bc43930351ce34dfb27a4c81) Thanks [@eikeland](https://github.com/eikeland)! - Updating fusion-wc-person to fix issues when using selectedPerson = null in PersonSelect component.
 
   Updated the following dependencies
-
   - `@equinor/fusion-wc-person` from `^3.0.1` to `^3.0.3` in `packages/cli/package.json` and `packages/react/components/people-resolver/package.json`.
 
 - Updated dependencies [[`73af73e`](https://github.com/equinor/fusion-framework/commit/73af73e5582ca27b132210af8ba308b80e036d51)]:
@@ -476,7 +520,6 @@
 - [#2320](https://github.com/equinor/fusion-framework/pull/2320) [`1dd85f3`](https://github.com/equinor/fusion-framework/commit/1dd85f3a408a73df556d1812a5f280945cc100ee) Thanks [@odinr](https://github.com/odinr)! - Removed the `removeComments` option from the `tsconfig.base.json` file.
 
   Removing the `removeComments` option allows TypeScript to preserve comments in the compiled JavaScript output. This can be beneficial for several reasons:
-
   1. Improved debugging: Preserved comments can help developers understand the code better during debugging sessions.
   2. Documentation: JSDoc comments and other important code documentation will be retained in the compiled output.
   3. Source map accuracy: Keeping comments can lead to more accurate source maps, which is crucial for debugging and error tracking.
@@ -544,7 +587,6 @@
   Updated the `PeopleApiClient.photo` method to properly type the response as `PersonPhotoApiResponse<TVersion>` instead of `Blob`. This allows for more accurate type checking when using the method.
 
   To update your code:
-
   - If you are using the `PeopleApiClient.photo` method directly, no changes are needed. The method will now properly type the response.
   - If you have custom type assertions or checks around the response from `PeopleApiClient.photo`, you may need to update them to handle `PersonPhotoApiResponse<TVersion>` instead of `Blob`.
 

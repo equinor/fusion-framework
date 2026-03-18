@@ -1,5 +1,96 @@
 # Change Log
 
+## 7.0.0
+
+### Major Changes
+
+- abffa53: Major version bump for Fusion Framework React 19 release.
+
+  All packages are bumped to the next major version as part of the React 19 upgrade. This release drops support for React versions below 18 and includes breaking changes across the framework.
+
+  **Breaking changes:**
+  - Peer dependencies now require React 18 or 19 (`^18.0.0 || ^19.0.0`)
+  - React Router upgraded from v6 to v7
+  - Navigation module refactored with new history API
+  - `renderComponent` and `renderApp` now use `createRoot` API
+
+  **Migration:**
+  - Update your React version to 18.0.0 or higher before upgrading
+  - Replace `NavigationProvider.createRouter()` with `@equinor/fusion-framework-react-router`
+  - See individual package changelogs for package-specific migration steps
+
+- abffa53: Complete refactor of navigation module architecture with React Router v7 upgrade, improved state management, and history implementations.
+
+  **Breaking Changes:**
+  1. **Upgraded to React Router v7**: `@remix-run/router` upgraded from v1.8.0 to v1.23.0 for React Router v7 compatibility
+     - The `createRouter` API remains backward compatible
+     - All existing router patterns continue to work
+     - **Type compatibility note**: TypeScript types may not fully resolve with React Router v7, requiring type assertions (`as any`) in some cases when using `useRouter` with `RouterProvider`. This is a known limitation and will be addressed in future updates.
+
+     ```typescript
+     // Example: Type assertions required with React Router v7
+     import { RouterProvider } from 'react-router';
+     import { useRouter } from '@equinor/fusion-framework-react-app/navigation';
+
+     export default function Router() {
+       // biome-ignore lint/suspicious/noExplicitAny: types not fully resolving with React Router v7
+       const router = useRouter(routes as any);
+       // biome-ignore lint/suspicious/noExplicitAny: types not fully resolving with React Router v7
+       return <RouterProvider router={router as any} />;
+     }
+     ```
+
+  2. **Configurator exports restructured**: `NavigationConfigurator` and `INavigationConfigurator` are now exported from separate interface files
+     - Public API unchanged, but internal structure changed
+  3. **`createHistory` path changed**: Moved from root to `lib/create-history`
+     - Public API unchanged, but internal path changed
+  4. **Types reorganized**: Types moved from `./types` to `./lib/types`
+     - Public API unchanged, but internal path changed
+  5. **`navigator` deprecated**: Use `history` instead
+
+     ```typescript
+     // Before
+     const nav = navigation.navigator;
+
+     // After
+     const history = navigation.history;
+     ```
+
+  6. **`NavigationProvider.createRouter` deprecated**: Use `@equinor/fusion-framework-react-router` instead. The method now emits a deprecation warning via telemetry when called.
+
+  **New Features:**
+  - Added `NavigationProvider` and `INavigationProvider` exports
+  - Added `enableNavigation` helper function for easier configuration
+  - Added navigation events (`NavigateEvent`, `NavigatedEvent`)
+  - Improved history implementations with state management
+  - Added comprehensive test coverage
+  - Added detailed README documentation
+
+  **Internal Improvements:**
+  - Restructured history implementations (BrowserHistory, HashHistory, MemoryHistory)
+  - Added state management with reducer pattern
+  - Improved type safety and organization
+  - Better separation of concerns
+
+  Closes https://github.com/equinor/fusion-framework/issues/3699
+
+### Minor Changes
+
+- abffa53: Deprecate `NavigationProvider.createRouter` method in favor of `@equinor/fusion-framework-react-router`.
+
+  The `createRouter` method now emits a deprecation warning via telemetry when called. Applications should migrate to using `@equinor/fusion-framework-react-router` for new route definitions.
+
+  **Migration:** Replace `navigation.createRouter(routes)` with the React Router DSL from `@equinor/fusion-framework-react-router/routes`.
+
+### Patch Changes
+
+- Updated dependencies [abffa53]
+- Updated dependencies [abffa53]
+- Updated dependencies [abffa53]
+- Updated dependencies [abffa53]
+  - @equinor/fusion-framework-module@6.0.0
+  - @equinor/fusion-observable@9.0.0
+
 ## 6.0.1
 
 ### Patch Changes
@@ -21,7 +112,6 @@
 ### Patch Changes
 
 - [#3088](https://github.com/equinor/fusion-framework/pull/3088) [`7441b13`](https://github.com/equinor/fusion-framework/commit/7441b13aa50dd7362d1629086a27b6b4e571575d) Thanks [@eikeland](https://github.com/eikeland)! - chore: update package typesVersions
-
   - Updated package.json typesVersions.
   - Ensures backward compatibility with older node versions.
   - Ensured consistency with workspace and repository configuration.
@@ -122,7 +212,6 @@
 - [#2320](https://github.com/equinor/fusion-framework/pull/2320) [`1dd85f3`](https://github.com/equinor/fusion-framework/commit/1dd85f3a408a73df556d1812a5f280945cc100ee) Thanks [@odinr](https://github.com/odinr)! - Removed the `removeComments` option from the `tsconfig.base.json` file.
 
   Removing the `removeComments` option allows TypeScript to preserve comments in the compiled JavaScript output. This can be beneficial for several reasons:
-
   1. Improved debugging: Preserved comments can help developers understand the code better during debugging sessions.
   2. Documentation: JSDoc comments and other important code documentation will be retained in the compiled output.
   3. Source map accuracy: Keeping comments can lead to more accurate source maps, which is crucial for debugging and error tracking.
@@ -281,7 +370,6 @@
 ### Major Changes
 
 - [#907](https://github.com/equinor/fusion-framework/pull/907) [`7500ec2c`](https://github.com/equinor/fusion-framework/commit/7500ec2c9ca9b926a19539fc97c61c67f76fc8d9) Thanks [@odinr](https://github.com/odinr)! - extend base module provider
-
   - make `NavigationProvider` extend `BaseModuleProvider`
   - internal function `_localizeLocation` is renamed to `_localizePath`. _should not cause breaking changes_
   - expose localized state from `Navigator` _(history)_
@@ -291,7 +379,6 @@
 ### Minor Changes
 
 - [#907](https://github.com/equinor/fusion-framework/pull/907) [`7500ec2c`](https://github.com/equinor/fusion-framework/commit/7500ec2c9ca9b926a19539fc97c61c67f76fc8d9) Thanks [@odinr](https://github.com/odinr)! - add version to module
-
   - add `prebuild` step to generate version
   - update `.gitignore` to skip `version.ts` since this file is generated during building
 
@@ -302,7 +389,6 @@
   moved the init to constructor
 
 - [#905](https://github.com/equinor/fusion-framework/pull/905) [`a7858a1c`](https://github.com/equinor/fusion-framework/commit/a7858a1c01542e2dc94370709f122b4b99c3219c) Thanks [@odinr](https://github.com/odinr)! - **🚧 Chore: dedupe packages**
-
   - align all versions of typescript
   - update types to build
     - a couple of typecasts did not [satisfies](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-0.html#satisfies-support-in-jsdoc) and was recasted as `unknwon`, marked with `TODO`, should be fixed in future

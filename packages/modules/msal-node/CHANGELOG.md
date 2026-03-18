@@ -1,5 +1,29 @@
 # @equinor/fusion-framework-module-msal-node
 
+## 4.0.0
+
+### Major Changes
+
+- abffa53: Major version bump for Fusion Framework React 19 release.
+
+  All packages are bumped to the next major version as part of the React 19 upgrade. This release drops support for React versions below 18 and includes breaking changes across the framework.
+
+  **Breaking changes:**
+  - Peer dependencies now require React 18 or 19 (`^18.0.0 || ^19.0.0`)
+  - React Router upgraded from v6 to v7
+  - Navigation module refactored with new history API
+  - `renderComponent` and `renderApp` now use `createRoot` API
+
+  **Migration:**
+  - Update your React version to 18.0.0 or higher before upgrading
+  - Replace `NavigationProvider.createRouter()` with `@equinor/fusion-framework-react-router`
+  - See individual package changelogs for package-specific migration steps
+
+### Patch Changes
+
+- Updated dependencies [abffa53]
+  - @equinor/fusion-framework-module@6.0.0
+
 ## 3.0.1
 
 ### Patch Changes
@@ -49,7 +73,6 @@
 - [#3714](https://github.com/equinor/fusion-framework/pull/3714) [`11fe961`](https://github.com/equinor/fusion-framework/commit/11fe961794e4960ccb987bc320268cc9b263f1f8) Thanks [@odinr](https://github.com/odinr)! - Update AuthProvider interfaces to match MSAL v4 API format.
 
   This is a breaking change that updates the method signatures:
-
   - `login(options: { scopes: string[] })` → `login(options: { request: { scopes: string[] } })`
   - `acquireAccessToken(options: { scopes: string[]; interactive?: boolean })` → `acquireAccessToken(options: { request: { scopes: string[] }; interactive?: boolean })`
 
@@ -74,7 +97,6 @@
 - [#3674](https://github.com/equinor/fusion-framework/pull/3674) [`fe667d5`](https://github.com/equinor/fusion-framework/commit/fe667d54a8b9cb030ed7c2f2a6465c80b1b6b4f2) Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump @azure/msal-node from 3.8.0 to 3.8.1
 
   ## Changes
-
   - Update AccountEntity.getAccountInfo method
   - Fixed minor type error in BaseManagedIdentitySource.ts
   - Improved Managed Identity JSDocs
@@ -107,7 +129,6 @@
 - [#3403](https://github.com/equinor/fusion-framework/pull/3403) [`2fff2ea`](https://github.com/equinor/fusion-framework/commit/2fff2ea1e4838627e297b7b401601f1186c95335) Thanks [@dependabot](https://github.com/apps/dependabot)! - chore: bump @azure/msal-node from 3.7.3 to 3.7.4
 
   ### Links
-
   - [GitHub releases](https://github.com/AzureAD/microsoft-authentication-library-for-js/releases/tag/msal-node-v3.7.4)
   - [npm changelog](https://www.npmjs.com/package/@azure/msal-node?activeTab=versions)
 
@@ -116,7 +137,6 @@
 ### Patch Changes
 
 - [#3209](https://github.com/equinor/fusion-framework/pull/3209) [`4215d80`](https://github.com/equinor/fusion-framework/commit/4215d80799d156a248feb0f195af370907332a33) Thanks [@dependabot](https://github.com/apps/dependabot)! - Updated open dependency from 10.1.2 to 10.2.0
-
   - Internal refactoring: replaced `is-wsl` dependency with `wsl-utils`
   - No breaking changes to public API
   - Improved WSL detection and compatibility
@@ -138,7 +158,6 @@
 ### Patch Changes
 
 - [#3343](https://github.com/equinor/fusion-framework/pull/3343) [`c1cd89a`](https://github.com/equinor/fusion-framework/commit/c1cd89abad4ca8f232a497316232d1f5ac8c530a) Thanks [@odinr](https://github.com/odinr)! - Comprehensive documentation overhaul with enhanced developer experience and platform-specific guidance.
-
   - **Complete README rewrite** with modern structure and comprehensive examples
   - **Added detailed API reference** with TypeScript interfaces and method documentation
   - **Enhanced authentication mode documentation** with clear use cases and examples
@@ -149,14 +168,12 @@
   - **Enhanced security documentation** explaining platform keychains and encryption
 
   **New Documentation:**
-
   - `docs/libsecret.md` - Platform-specific credential storage setup guide
   - Comprehensive Windows build tools installation instructions
   - Enhanced Linux libsecret installation for multiple distributions
   - macOS troubleshooting and setup guidance
 
   **Key Improvements:**
-
   - Clear separation between authentication modes with practical examples
   - Platform-specific installation and troubleshooting guidance
   - Better developer onboarding with quick start examples
@@ -176,7 +193,6 @@
 ### Major Changes
 
 - [#3075](https://github.com/equinor/fusion-framework/pull/3075) [`8fffbfb`](https://github.com/equinor/fusion-framework/commit/8fffbfb12daa9748bf5290e5084cd4d409aed253) Thanks [@odinr](https://github.com/odinr)! - This release makes `@equinor/fusion-framework-module-msal-node` an explicit ESM package by setting `type: "module"` in `package.json` and updating all internal TypeScript imports to use explicit `.js` extensions. This ensures compatibility with NodeNext module resolution and ESM environments, and aligns the runtime and published output with ESM standards.
-
   - All internal imports now use `.js` extensions (e.g., `import { X } from './foo.js'`)
   - `package.json` now explicitly sets `"type": "module"`
   - `tsconfig.json` updated to use `module` and `moduleResolution` set to `NodeNext`
@@ -210,18 +226,15 @@
 - [#3056](https://github.com/equinor/fusion-framework/pull/3056) [`378bade`](https://github.com/equinor/fusion-framework/commit/378bade86c38e1057afe125fffc0bb06d6927deb) Thanks [@odinr](https://github.com/odinr)! - Easily add secure Azure AD authentication to your Node.js Fusion Framework apps with the new `@equinor/fusion-framework-module-msal-node` package. This module is designed for developers who need to authenticate services, CLI tools, or background jobs against Microsoft Azure using familiar, robust MSAL flows—without the hassle of manual token management or insecure storage.
 
   **Why use this module?**
-
   - **Simple integration:** Plug into the Fusion Framework with minimal setup.
   - **Multiple auth flows:** Choose the right authentication mode for your use case—CI/CD, background jobs, or interactive CLI tools.
   - **Secure by default:** Tokens are encrypted and stored safely using `@azure/msal-node-extensions`.
   - **Consistent API:** Acquire tokens the same way across all your Node.js Fusion projects.
 
   **How to use:**
-
   1. Install the package in your Fusion Framework Node.js project.
   2. Enable the module and pick your authentication mode (`token_only`, `silent`, or `interactive`).
   3. Use the provided API to acquire tokens for Azure resources—no need to handle refresh logic or storage yourself.
-
   - Supports token_only, silent, and interactive authentication modes
   - Provides secure, encrypted token storage using `@azure/msal-node-extensions`
   - Integrates with Fusion Framework for seamless authentication
@@ -247,7 +260,7 @@
 
   const instance = await initialize();
   console.log(
-    await instance.auth.acquireAccessToken({ scopes: ["user.read"] })
+    await instance.auth.acquireAccessToken({ scopes: ["user.read"] }),
   );
   ```
 
@@ -270,7 +283,7 @@
 
   const instance = await initialize();
   console.log(
-    await instance.auth.acquireAccessToken({ scopes: ["user.read"] })
+    await instance.auth.acquireAccessToken({ scopes: ["user.read"] }),
   );
   ```
 

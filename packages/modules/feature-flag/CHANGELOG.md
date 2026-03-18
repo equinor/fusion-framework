@@ -1,5 +1,47 @@
 # @equinor/fusion-framework-module-feature-flag
 
+## 2.0.0
+
+### Major Changes
+
+- abffa53: Major version bump for Fusion Framework React 19 release.
+
+  All packages are bumped to the next major version as part of the React 19 upgrade. This release drops support for React versions below 18 and includes breaking changes across the framework.
+
+  **Breaking changes:**
+  - Peer dependencies now require React 18 or 19 (`^18.0.0 || ^19.0.0`)
+  - React Router upgraded from v6 to v7
+  - Navigation module refactored with new history API
+  - `renderComponent` and `renderApp` now use `createRoot` API
+
+  **Migration:**
+  - Update your React version to 18.0.0 or higher before upgrading
+  - Replace `NavigationProvider.createRouter()` with `@equinor/fusion-framework-react-router`
+  - See individual package changelogs for package-specific migration steps
+
+- abffa53: Remove local `Path` type export from feature-flag module; now uses `Path` type from `@equinor/fusion-framework-module-navigation`.
+
+  **Breaking Change**: The `Path` type is no longer exported from `@equinor/fusion-framework-module-feature-flag/plugins/url`. If you were importing `Path` from the feature-flag module, update your imports to use `Path` from the navigation module instead:
+
+  ```typescript
+  // Before
+  import type { Path } from "@equinor/fusion-framework-module-feature-flag/plugins/url";
+
+  // After
+  import type { Path } from "@equinor/fusion-framework-module-navigation";
+  ```
+
+  This change ensures type consistency across modules and aligns with the navigation module's React Router v7 upgrade.
+
+### Patch Changes
+
+- Updated dependencies [abffa53]
+- Updated dependencies [abffa53]
+- Updated dependencies [abffa53]
+- Updated dependencies [abffa53]
+  - @equinor/fusion-framework-module@6.0.0
+  - @equinor/fusion-observable@9.0.0
+
 ## 1.1.28
 
 ### Patch Changes
@@ -47,19 +89,16 @@
 - [#3395](https://github.com/equinor/fusion-framework/pull/3395) [`29f6710`](https://github.com/equinor/fusion-framework/commit/29f6710238baf9b29f42394b30cb8b97f25462c3) Thanks [@odinr](https://github.com/odinr)! - Updated immer from 9.0.16 to 10.1.3 across all packages.
 
   ### Breaking Changes
-
   - Immer 10.x introduces stricter TypeScript types for draft functions
   - `ValidRecipeReturnType` type constraints have changed
   - Promise return types in draft functions are no longer automatically handled
 
   ### Fixes Applied
-
   - Updated BookmarkProvider to handle new immer type constraints
   - Fixed ObservableInput type assignments in mergeScan operations
   - Removed async/await from immer draft functions to comply with new type requirements
 
   ### Links
-
   - [Immer 10.0.0 Release Notes](https://github.com/immerjs/immer/releases/tag/v10.0.0)
   - [Immer Migration Guide](https://github.com/immerjs/immer/blob/main/MIGRATION.md)
 
@@ -68,32 +107,27 @@
   Updated TypeScript type definitions for UUID operations across multiple packages. This major version update provides improved type safety and compatibility with the latest UUID library features.
 
   ### Affected Packages
-
   - @equinor/fusion-framework-module-bookmark: @types/uuid ^9.0.8 → ^11.0.0
   - @equinor/fusion-framework-module-feature-flag: @types/uuid ^10.0.0 → ^11.0.0
   - @equinor/fusion-observable: @types/uuid ^10.0.0 → ^11.0.0
   - @equinor/fusion-query: @types/uuid ^10.0.0 → ^11.0.0
 
   ### Links
-
   - [@types/uuid on npm](https://www.npmjs.com/package/@types/uuid)
   - [DefinitelyTyped @types/uuid](https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/uuid)
 
 - [#3347](https://github.com/equinor/fusion-framework/pull/3347) [`11143fa`](https://github.com/equinor/fusion-framework/commit/11143fa3002fb8a6c095052a04c7e596c56bafa8) Thanks [@dependabot](https://github.com/apps/dependabot)! - chore: bump uuid from 11.0.3 to 13.0.0
 
   ### Breaking Changes
-
   - v13.0.0: Make browser exports the default
   - v12.0.0: Update to TypeScript 5.2, remove CommonJS support, drop Node 16 support
 
   ### New Features
-
   - Improved v4() performance
   - Added Node 24 to CI matrix
   - Restored node: prefix support
 
   ### Links
-
   - [GitHub releases](https://github.com/uuidjs/uuid/releases/tag/v13.0.0)
   - [npm changelog](https://www.npmjs.com/package/uuid?activeTab=versions)
 
@@ -118,7 +152,6 @@
 ### Patch Changes
 
 - [#3088](https://github.com/equinor/fusion-framework/pull/3088) [`7441b13`](https://github.com/equinor/fusion-framework/commit/7441b13aa50dd7362d1629086a27b6b4e571575d) Thanks [@eikeland](https://github.com/eikeland)! - chore: update package typesVersions
-
   - Updated package.json typesVersions.
   - Ensures backward compatibility with older node versions.
   - Ensured consistency with workspace and repository configuration.
@@ -264,7 +297,6 @@
 - [#2320](https://github.com/equinor/fusion-framework/pull/2320) [`1dd85f3`](https://github.com/equinor/fusion-framework/commit/1dd85f3a408a73df556d1812a5f280945cc100ee) Thanks [@odinr](https://github.com/odinr)! - Removed the `removeComments` option from the `tsconfig.base.json` file.
 
   Removing the `removeComments` option allows TypeScript to preserve comments in the compiled JavaScript output. This can be beneficial for several reasons:
-
   1. Improved debugging: Preserved comments can help developers understand the code better during debugging sessions.
   2. Documentation: JSDoc comments and other important code documentation will be retained in the compiled output.
   3. Source map accuracy: Keeping comments can lead to more accurate source maps, which is crucial for debugging and error tracking.
@@ -367,10 +399,8 @@
 ### Major Changes
 
 - [#1747](https://github.com/equinor/fusion-framework/pull/1747) [`8b031c3`](https://github.com/equinor/fusion-framework/commit/8b031c31f314deeffdf395fc847e4279b61aab7e) Thanks [@odinr](https://github.com/odinr)! - - removed function `enableCgi`, must be enabled by adding plugin _(see [URL](#url))_
-
   - removed function `enableApi`, must be enabled by adding plugin _(see [Local](#local))_
   - added ability to provide order _(`int`)_ to the plugin
-
     - initial values will be merged in the order which plugins are sorted by
 
   - added getter for current features
@@ -393,7 +423,7 @@
   ```ts
   featureConfigurator.addPlugin(
     /** array of IFeatureFlag */
-    createUrlPlugin(flags)
+    createUrlPlugin(flags),
   );
   ```
 
@@ -407,7 +437,7 @@
     createLocalStoragePlugin(flags, {
       name: `uniq-name`,
       // type: 'local' | 'local'
-    })
+    }),
   );
   ```
 

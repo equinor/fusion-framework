@@ -1,5 +1,38 @@
 # Change Log
 
+## 5.0.0
+
+### Major Changes
+
+- abffa53: Upgrade cookbooks for React 19 and React Router v7 compatibility.
+
+  All cookbooks updated to use React 19 peer dependencies and aligned with the latest Fusion Framework packages.
+
+### Patch Changes
+
+- Updated dependencies [abffa53]
+- Updated dependencies [abffa53]
+- Updated dependencies [abffa53]
+- Updated dependencies [ae92f13]
+- Updated dependencies [abffa53]
+- Updated dependencies [abffa53]
+- Updated dependencies [abffa53]
+- Updated dependencies [abffa53]
+- Updated dependencies [abffa53]
+- Updated dependencies [abffa53]
+- Updated dependencies [abffa53]
+- Updated dependencies [abffa53]
+- Updated dependencies [abffa53]
+- Updated dependencies [aaa3f74]
+- Updated dependencies [c123c39]
+- Updated dependencies [3de232c]
+- Updated dependencies [32bcf83]
+  - @equinor/fusion-framework-cli@14.0.0
+  - @equinor/fusion-framework-module-navigation@7.0.0
+  - @equinor/fusion-framework-react-app@10.0.0
+  - @equinor/fusion-framework-react-module-context@7.0.0
+  - @equinor/fusion-observable@9.0.0
+
 ## 4.1.84
 
 ### Patch Changes
@@ -35,7 +68,6 @@
 - [#3714](https://github.com/equinor/fusion-framework/pull/3714) [`11fe961`](https://github.com/equinor/fusion-framework/commit/11fe961794e4960ccb987bc320268cc9b263f1f8) Thanks [@odinr](https://github.com/odinr)! - Improved all cookbook README documentation for better developer experience.
 
   All cookbook README files now feature:
-
   - Code examples matching actual implementations
   - Inline comments explaining patterns and concepts
   - Developer-friendly language for those new to Fusion Framework

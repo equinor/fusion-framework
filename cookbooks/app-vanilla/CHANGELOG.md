@@ -1,5 +1,13 @@
 # @equinor/fusion-framework-cookbook-app-vanilla
 
+## 2.0.0
+
+### Major Changes
+
+- abffa53: Upgrade cookbooks for React 19 and React Router v7 compatibility.
+
+  All cookbooks updated to use React 19 peer dependencies and aligned with the latest Fusion Framework packages.
+
 ## 1.0.5
 
 ### Patch Changes
