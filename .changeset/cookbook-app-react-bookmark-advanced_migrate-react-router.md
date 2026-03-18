@@ -1,5 +1,5 @@
 ---
-"@equinor/fusion-framework-cookbook-app-react-bookmark-advanced": patch
+"@equinor/fusion-framework-cookbook-app-react-bookmark-advanced": major
 ---
 
 Migrate cookbook from `@remix-run/router` to `@equinor/fusion-framework-react-router`.

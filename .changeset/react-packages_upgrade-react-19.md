@@ -10,6 +10,8 @@
 "@equinor/fusion-framework-react-module-signalr": major
 "@equinor/fusion-framework-react-components-bookmark": major
 "@equinor/fusion-framework-react-components-people-provider": major
+"@equinor/fusion-framework-react-ag-charts": major
+"@equinor/fusion-framework-react-ag-grid": major
 "@equinor/fusion-observable": major
 "@equinor/fusion-query": major
 "@equinor/fusion-framework-dev-portal": major
@@ -25,3 +27,5 @@ Upgrade to React 19 and remove support for React versions lower than 18.
 **Migration:**
 - Update your React version to 18.0.0 or higher before upgrading these packages
 - If using React 16 or 17, upgrade to React 18 or 19 first
+
+Closes https://github.com/equinor/fusion-framework/issues/3504

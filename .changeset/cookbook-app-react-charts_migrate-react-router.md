@@ -1,5 +1,5 @@
 ---
-"@equinor/fusion-framework-cookbook-app-react-charts": patch
+"@equinor/fusion-framework-cookbook-app-react-charts": major
 ---
 
 Migrate cookbook from legacy router pattern to `@equinor/fusion-framework-react-router`.

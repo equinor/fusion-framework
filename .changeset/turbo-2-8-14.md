@@ -3,7 +3,6 @@
 '@equinor/fusion-framework-cli-plugin-ai-index': patch
 '@equinor/fusion-framework-cli-plugin-ai-chat': patch
 '@equinor/fusion-framework-cli-plugin-ai-mcp': patch
-'@equinor/fusion-framework-cli-plugin-ai-search': patch
 ---
 
 fix(cli): break turbo workspace cycle for AI plugins

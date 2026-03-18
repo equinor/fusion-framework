@@ -1,5 +1,5 @@
 ---
-"@equinor/fusion-framework-cookbook-app-react-styling": minor
+"@equinor/fusion-framework-cookbook-app-react-styling": major
 ---
 
 Add new cookbook demonstrating React 19 compatible version of `@equinor/fusion-react-styles`.

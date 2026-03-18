@@ -42,6 +42,8 @@ Complete refactor of navigation module architecture with React Router v7 upgrade
    const history = navigation.history;
    ```
 
+6. **`NavigationProvider.createRouter` deprecated**: Use `@equinor/fusion-framework-react-router` instead. The method now emits a deprecation warning via telemetry when called.
+
 **New Features:**
 
 - Added `NavigationProvider` and `INavigationProvider` exports
