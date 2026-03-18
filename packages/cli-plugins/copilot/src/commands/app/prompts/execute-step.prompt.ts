@@ -7,7 +7,7 @@ import type { PlanStep, RuntimeExecutionContext } from '../types.js';
  * running application using browser tools, collecting evidence artifacts
  * into the evidence directory.
  *
- * @param step - The plan step to execute
+ * @param actions - The action strings to execute in order
  * @param ctx - Runtime context with output directory and app URL
  * @returns The fully interpolated execution prompt string
  */

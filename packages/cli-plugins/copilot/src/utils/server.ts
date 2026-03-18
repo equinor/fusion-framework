@@ -1,4 +1,5 @@
 import { execFileSync } from 'node:child_process';
+import { randomUUID } from 'node:crypto';
 import { mkdirSync } from 'node:fs';
 import { join, relative, resolve } from 'node:path';
 
@@ -13,12 +14,17 @@ import { sleep } from './process.js';
  */
 export function createRunDir(title: string, baseDir?: string): string {
   const now = new Date();
+  const date = [now.getUTCFullYear(), now.getUTCMonth() + 1, now.getUTCDate()]
+    .map((n) => String(n).padStart(2, '0'))
+    .join('');
   const time = [now.getUTCHours(), now.getUTCMinutes(), now.getUTCSeconds()]
     .map((n) => String(n).padStart(2, '0'))
     .join('');
+  const ms = String(now.getUTCMilliseconds()).padStart(3, '0');
   const slug = title.replace(/[^a-zA-Z0-9_-]/g, '-').replace(/-+/g, '-');
   const parent = baseDir ? resolve(baseDir) : resolve('.tmp', 'copilot');
-  const dir = join(parent, `${slug}_${time}`);
+  const id = randomUUID().slice(0, 8);
+  const dir = join(parent, `${slug}_${date}${time}${ms}_${id}`);
   mkdirSync(dir, { recursive: true });
   console.log(`📁 Run dir: ${relative(process.cwd(), dir)}`);
   return dir;
@@ -53,11 +59,15 @@ export function resolveAppKey(appDir: string): string {
  */
 export async function waitForServer(url: string, timeoutSeconds: number): Promise<boolean> {
   for (let i = 0; i < timeoutSeconds; i++) {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 1_500);
     try {
-      const res = await fetch(url);
+      const res = await fetch(url, { signal: controller.signal });
       if (res.ok || res.status < 500) return true;
     } catch {
-      // Server not ready yet — retry
+      // Server not ready yet or request timed out — retry
+    } finally {
+      clearTimeout(timeoutId);
     }
     await sleep(1000);
   }

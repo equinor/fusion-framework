@@ -33,6 +33,6 @@ export class AgentBrowserToolRegistry {
    * @returns The registered Copilot SDK tool list
    */
   getTools(): AgentBrowserToolList {
-    return this.tools;
+    return this.tools.slice();
   }
 }

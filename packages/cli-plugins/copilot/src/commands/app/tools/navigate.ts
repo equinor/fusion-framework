@@ -21,9 +21,12 @@ export function createNavigateTool(context: AgentBrowserToolContext, defineTool:
     },
     handler: async (args) => {
       const { url } = args as { url: string };
-      const result = context.invoke(['open', url], 120_000);
-      clearMsalInteraction();
-      return result || 'Navigation complete';
+      try {
+        const result = context.invoke(['open', url], 120_000);
+        return result || 'Navigation complete';
+      } finally {
+        clearMsalInteraction();
+      }
     },
   });
 }
