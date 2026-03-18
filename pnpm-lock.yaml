@@ -1064,6 +1064,9 @@ importers:
         specifier: ^4.3.6
         version: 4.3.6
     devDependencies:
+      '@equinor/fusion-framework-cli':
+        specifier: workspace:^
+        version: link:../../cli
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
@@ -1092,6 +1095,9 @@ importers:
         specifier: ^7.8.1
         version: 7.8.2
     devDependencies:
+      '@equinor/fusion-framework-cli':
+        specifier: workspace:^
+        version: link:../../cli
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
@@ -1159,6 +1165,9 @@ importers:
         specifier: ^4.3.6
         version: 4.3.6
     devDependencies:
+      '@equinor/fusion-framework-cli':
+        specifier: workspace:^
+        version: link:../../cli
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
@@ -1190,6 +1199,9 @@ importers:
         specifier: ^4.3.6
         version: 4.3.6
     devDependencies:
+      '@equinor/fusion-framework-cli':
+        specifier: workspace:^
+        version: link:../../cli
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
@@ -1215,6 +1227,9 @@ importers:
         specifier: ^7.8.2
         version: 7.8.2
     devDependencies:
+      '@equinor/fusion-framework-cli':
+        specifier: workspace:^
+        version: link:../../cli
       typescript:
         specifier: ^5.9.3
         version: 5.9.3

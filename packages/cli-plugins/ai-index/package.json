@@ -69,6 +69,7 @@
     "@equinor/fusion-framework-cli": "workspace:^"
   },
   "devDependencies": {
+    "@equinor/fusion-framework-cli": "workspace:^",
     "typescript": "^5.9.3",
     "vitest": "^4.1.0"
   }
