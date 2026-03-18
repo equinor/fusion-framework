@@ -82,7 +82,7 @@ jobs:
   index-docs:
     name: Index documentation
     permissions:
-      contents: read
+      contents: write
     needs: release-pkg
     if: needs.release-pkg.outputs.published == 'true'
     uses: ./.github/workflows/index-docs.yml
