@@ -56,7 +56,7 @@ export const PeopleConceptPage = () => {
           the onPersonAdded and onPersonRemoved callback props.
         </p>
         <PeoplePicker
-          // PS: resolveIds are resolved on mount only so dont keep pushing to that array.
+          // PS: resolveIds are resolved on mount only so don't keep pushing to that array.
           resolveIds={resolvePeople}
           onPersonAdded={handlePersonAdded}
           onPersonRemoved={handlePersonRemoved}
