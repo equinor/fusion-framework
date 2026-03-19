@@ -13,6 +13,9 @@
     },
     {
       "path": "../modules/module"
+    },
+    {
+      "path": "../../utils/imports"
     }
   ],
   "include": ["src/**/*"],
