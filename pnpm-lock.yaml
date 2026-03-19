@@ -63,8 +63,8 @@ importers:
         specifier: ^4.0.18
         version: 4.0.18(vitest@4.1.0(@opentelemetry/api@1.9.0)(@types/node@24.12.0)(happy-dom@20.8.4)(jsdom@27.4.0)(msw@2.12.7(@types/node@24.12.0)(typescript@5.9.3))(vite@8.0.0(@types/node@24.12.0)(esbuild@0.27.2)(sass-embedded@1.98.0)(sass@1.98.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2)))
       agent-browser:
-        specifier: ^0.20.10
-        version: 0.20.10
+        specifier: ^0.21.2
+        version: 0.21.2
       genversion:
         specifier: ^3.1.1
         version: 3.2.0
@@ -6732,8 +6732,8 @@ packages:
     resolution: {integrity: sha512-MnA+YT8fwfJPgBx3m60MNqakm30XOkyIoH1y6huTQvC0PwZG7ki8NacLBcrPbNoo8vEZy7Jpuk7+jMO+CUovTQ==}
     engines: {node: '>= 14'}
 
-  agent-browser@0.20.10:
-    resolution: {integrity: sha512-Zs3q6eDPY5n9In4C0tA9ST8LNYB9lP4X6o0/4OM9WU3K6iEuhO5m7QqvJYOw7JVRTQkQB7X9XTPLxA3W235eTg==}
+  agent-browser@0.21.2:
+    resolution: {integrity: sha512-05TgoluWYRPAwUruJqFGsZVoZfoUVMpT8AT3HcA4sxSHbYsIsLkQTZmNvsmMGS3DL2I/7tu27RiqYDOPswAeMg==}
     hasBin: true
 
   ajv-formats@3.0.1:
@@ -15144,7 +15144,7 @@ snapshots:
 
   agent-base@7.1.4: {}
 
-  agent-browser@0.20.10: {}
+  agent-browser@0.21.2: {}
 
   ajv-formats@3.0.1:
     dependencies:
