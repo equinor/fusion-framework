@@ -32,6 +32,12 @@
     },
     {
       "path": "../dev-server"
+    },
+    {
+      "path": "../react/router"
+    },
+    {
+      "path": "../vite-plugins/raw-imports"
     }
   ],
   "include": ["src/**/*", "types/*"],
