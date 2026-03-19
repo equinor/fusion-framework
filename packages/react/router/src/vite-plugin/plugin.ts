@@ -69,6 +69,7 @@ interface RouteImports {
   action?: string;
   handle?: string;
   errorElement?: string;
+  hydrateFallback?: string;
   availableExports: Set<string>;
 }
 
@@ -184,7 +185,7 @@ function getAvailableExports(filePath: string, currentFileId: string, debug: boo
     }
 
     // Check for named exports and re-exports
-    const exportNames = ['clientLoader', 'action', 'handle', 'ErrorElement'];
+    const exportNames = ['clientLoader', 'action', 'handle', 'ErrorElement', 'HydrateFallback'];
     for (const name of exportNames) {
       if (
         fileContent.match(EXPORT_NAMED_PATTERN(name)) ||
@@ -239,6 +240,10 @@ function buildRouteProperties(imports: RouteImports): string {
     properties.push(`errorElement: ${imports.errorElement}`);
   }
 
+  if (imports.hydrateFallback) {
+    properties.push(`HydrateFallback: ${imports.hydrateFallback}`);
+  }
+
   return properties.join(',\n        ');
 }
 
@@ -277,6 +282,9 @@ function generateImportStatements(
     }
     if (imports.errorElement) {
       importParts.push(`ErrorElement as ${imports.errorElement}`);
+    }
+    if (imports.hydrateFallback) {
+      importParts.push(`HydrateFallback as ${imports.hydrateFallback}`);
     }
 
     if (importParts.length > 0) {
@@ -584,6 +592,9 @@ export const reactRouterPlugin = (options: ReactRouterPluginOptions = {}): Plugi
             handle: availableExports.has('handle') ? `handle${componentName}` : undefined,
             errorElement: availableExports.has('ErrorElement')
               ? `ErrorElement${componentName}`
+              : undefined,
+            hydrateFallback: availableExports.has('HydrateFallback')
+              ? `HydrateFallback${componentName}`
               : undefined,
             availableExports,
           });
