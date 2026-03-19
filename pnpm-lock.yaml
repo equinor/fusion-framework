@@ -534,9 +534,6 @@ importers:
       '@equinor/fusion-react-person':
         specifier: ^2.0.0
         version: 2.0.0(react@19.2.4)
-      '@equinor/fusion-wc-people':
-        specifier: ^2.0.0
-        version: 2.0.0
       react-router-dom:
         specifier: ^7.9.5
         version: 7.12.0(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
