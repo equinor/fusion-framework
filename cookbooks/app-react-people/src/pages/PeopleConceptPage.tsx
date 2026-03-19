@@ -52,8 +52,8 @@ export const PeopleConceptPage = () => {
         <h3>People Picker</h3>
         <p>
           The PeoplePicker component resolves persons from the given resolveIds property on mount,
-          and adds/ removes people on user interaction, updating the selected people state by
-          listening to "person-added" and "person-removed" events.
+          and adds/removes people on user interaction, updating the selected people state through
+          the onPersonAdded and onPersonRemoved callback props.
         </p>
         <PeoplePicker
           // PS: resolveIds are resolved on mount only so dont keep pushing to that array.
