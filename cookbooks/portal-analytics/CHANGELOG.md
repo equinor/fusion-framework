@@ -1,5 +1,12 @@
 # portal-analytics
 
+## 0.4.8
+
+### Patch Changes
+
+- Updated dependencies [9fceca5]
+  - @equinor/fusion-framework-cli@14.0.1
+
 ## 0.4.7
 
 ### Patch Changes
