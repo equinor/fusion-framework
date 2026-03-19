@@ -1,14 +1,10 @@
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import {
-  PeoplePickerElement,
-  PeopleViewerElement,
+  PeoplePicker,
+  PeopleViewer,
   type PersonAddedEvent,
   type PersonRemovedEvent,
-} from '@equinor/fusion-wc-people';
-import { useRef } from 'react';
-import { useEffect } from 'react';
-PeoplePickerElement;
-PeopleViewerElement;
+} from '@equinor/fusion-react-person';
 
 type PersonInfo = {
   azureId: string;
@@ -16,7 +12,6 @@ type PersonInfo = {
 
 export const PeopleConceptPage = () => {
   const [selected, setSelected] = useState<PersonInfo[]>([]);
-  const pickerRef = useRef<PeoplePickerElement | null>(null);
 
   // list of ids to resolve on mount, including edge cases like expired and non-existing users.
   const resolvePeople = useMemo(() => {
@@ -35,31 +30,12 @@ export const PeopleConceptPage = () => {
     ];
   }, []);
 
-  useEffect(() => {
-    const element = pickerRef.current;
-    if (!element) {
-      return;
-    }
+  const handlePersonAdded = useCallback((event: PersonAddedEvent) => {
+    setSelected((prev) => [...prev, event.detail]);
+  }, []);
 
-    const onAdded = (event: Event) => {
-      const e = event as PersonAddedEvent;
-      setSelected((prev) => [...prev, e.detail]);
-    };
-
-    const onRemoved = (event: Event) => {
-      const e = event as PersonRemovedEvent;
-      setSelected((prev) => prev.filter((p) => p.azureId !== e.detail.azureId));
-    };
-
-    // add listeners
-    element.addEventListener('person-added', onAdded);
-    element.addEventListener('person-removed', onRemoved);
-
-    return () => {
-      // remove listeners
-      element.removeEventListener('person-added', onAdded);
-      element.removeEventListener('person-removed', onRemoved);
-    };
+  const handlePersonRemoved = useCallback((event: PersonRemovedEvent) => {
+    setSelected((prev) => prev.filter((p) => p.azureId !== event.detail.azureId));
   }, []);
 
   return (
@@ -79,11 +55,12 @@ export const PeopleConceptPage = () => {
           and adds/ removes people on user interaction, updating the selected people state by
           listening to "person-added" and "person-removed" events.
         </p>
-        <fwc-people-picker
-          ref={pickerRef}
+        <PeoplePicker
           // PS: resolveIds are resolved on mount only so dont keep pushing to that array.
           resolveIds={resolvePeople}
-        ></fwc-people-picker>
+          onPersonAdded={handlePersonAdded}
+          onPersonRemoved={handlePersonRemoved}
+        />
       </div>
       <div>
         <h3>People Viewer</h3>
@@ -91,12 +68,14 @@ export const PeopleConceptPage = () => {
           The PeopleViewer component displays information about the selected people in the selected
           state.
         </p>
-        <fwc-people-viewer
+        <PeopleViewer
           // selected people state from People Picker
-          people={JSON.stringify(selected)}
+          people={selected}
           display="table"
         />
       </div>
     </div>
   );
 };
+
+export default PeopleConceptPage;

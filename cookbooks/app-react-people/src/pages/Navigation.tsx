@@ -1,4 +1,4 @@
-import { Outlet, useNavigate } from 'react-router-dom';
+import { Outlet, useNavigate } from '@equinor/fusion-framework-react-router';
 import { Button } from '@equinor/eds-core-react';
 import { FlexGrid } from '../Styled';
 
