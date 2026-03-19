@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { RouterProvider } from 'react-router/dom';
 import {
   type Modules,
@@ -33,6 +33,20 @@ type RouterProps = {
 };
 
 /**
+ * Normalizes the routes prop into a flat array of React Router route objects.
+ *
+ * @param routes - Single route, array of routes, or mixed input.
+ * @returns Array of route objects safe to pass to `UNSAFE_createRouter`.
+ */
+function normalizeRoutes(
+  routes: RouteNode | RouteNode[] | RouteObject | RouteObject[],
+): ReactRouterRouteObject[] {
+  // Wrap a single route object in an array so the router always receives an array
+  const routeArray = Array.isArray(routes) ? routes : [routes];
+  return routeArray as ReactRouterRouteObject[];
+}
+
+/**
  * Router component that integrates React Router v7 with Fusion Framework.
  *
  * This component sets up a React Router instance that:
@@ -42,6 +56,7 @@ type RouterProps = {
  *
  * @param routes - Single route node or array of route nodes defining the application routes
  * @param context - Optional context object that will be available in route loaders and components via `fusion.context`
+ * @param loader - Optional React element rendered while the router is initializing lazy routes
  *
  * @example
  * ```tsx
@@ -79,45 +94,52 @@ export function Router({ routes, context }: RouterProps) {
     } as FusionRouterContext;
   }, [context, modules]);
 
+  // Store the context in a ref so route loaders/actions always read the
+  // latest value without forcing a full router recreation.
+  const fusionContextRef = useRef(fusionRouterContext);
+  fusionContextRef.current = fusionRouterContext;
+
   const router = useMemo(() => {
     const { navigation } = modules as unknown as ModulesInstanceType<{
       navigation: NavigationModule;
     }>;
 
-    const contextProvider = new RouterContextProvider(
-      new Map([[routerContext, fusionRouterContext]]),
-    );
-
     const routerInstance = UNSAFE_createRouter({
-      routes: routes as ReactRouterRouteObject[],
+      routes: normalizeRoutes(routes),
       history: navigation.history,
       basename: navigation.basename,
       getContext: () => {
-        return contextProvider;
+        // Read from ref so the context provider always returns the current value
+        return new RouterContextProvider(new Map([[routerContext, fusionContextRef.current]]));
       },
       // @ts-expect-error
       mapRouteProperties: (route: RouteObject) => {
-        if (route.loader) {
-          const originalLoader = route.loader;
-          route.loader = function __FusionRouterLoader(args) {
+        // Clone the route to avoid mutating the original objects.
+        // Without this, re-creating the router would double-wrap loaders,
+        // actions, and components — a common cause of blank pages.
+        const mapped = { ...route };
+
+        if (mapped.loader) {
+          const originalLoader = mapped.loader;
+          mapped.loader = function __FusionRouterLoader(args) {
             const fusion = args.context.get(routerContext);
             // @ts-expect-error
             return originalLoader({ ...args, fusion });
           };
         }
-        if (route.action) {
-          const originalAction = route.action;
-          route.action = function __FusionRouterAction(args) {
+        if (mapped.action) {
+          const originalAction = mapped.action;
+          mapped.action = function __FusionRouterAction(args) {
             const fusion = args.context.get(routerContext);
             // @ts-expect-error
             return originalAction({ ...args, fusion });
           };
         }
-        if (route.errorElement) {
-          const originalErrorElement = route.errorElement;
+        if (mapped.errorElement) {
+          const originalErrorElement = mapped.errorElement;
           // Wrap errorElement component to inject error and fusion context as props
           // errorElement must be a React element, not a function
-          route.errorElement = React.createElement(function __FusionRouterErrorElement() {
+          mapped.errorElement = React.createElement(function __FusionRouterErrorElement() {
             // biome-ignore lint/correctness/useHookAtTopLevel: hooks are used inside component function
             const error = useRouteError();
             // biome-ignore lint/correctness/useHookAtTopLevel: hooks are used inside component function
@@ -125,11 +147,11 @@ export function Router({ routes, context }: RouterProps) {
             // @ts-expect-error - originalErrorElement is a component that accepts error and fusion props
             return React.createElement(originalErrorElement, { error, fusion });
           });
-          route.hasErrorBoundary = true;
+          mapped.hasErrorBoundary = true;
         }
-        if (route.Component) {
-          const originalComponent = route.Component;
-          route.Component = function __FusionRouterComponent() {
+        if (mapped.Component) {
+          const originalComponent = mapped.Component;
+          mapped.Component = function __FusionRouterComponent() {
             // biome-ignore lint/correctness/useHookAtTopLevel: hooks are used inside component function
             const loaderData = useLoaderData();
             // biome-ignore lint/correctness/useHookAtTopLevel: hooks are used inside component function
@@ -140,11 +162,17 @@ export function Router({ routes, context }: RouterProps) {
             return React.createElement(originalComponent, { fusion, loaderData, actionData });
           };
         }
-        return route;
+        return mapped;
       },
     });
     return routerInstance.initialize();
-  }, [routes, modules, fusionRouterContext]);
+    // Intentionally excluding fusionRouterContext — it is read via ref so
+    // context updates do not destroy and recreate the entire router.
+  }, [routes, modules]);
+
+  // Dispose previous router instance when the router is recreated or unmounted
+  // to clean up history listeners and pending navigations.
+  useEffect(() => router.dispose.bind(router), [router]);
 
   return (
     <FusionRouterContextProvider value={fusionRouterContext}>
