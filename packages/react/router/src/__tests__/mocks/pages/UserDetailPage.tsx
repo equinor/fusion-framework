@@ -8,6 +8,10 @@ export function ErrorElement({ error, fusion }: ErrorElementProps) {
   return <div>Error: {error?.message}</div>;
 }
 
+export function HydrateFallback() {
+  return <div>Loading user details...</div>;
+}
+
 export default function UserDetailPage() {
   return <div>User Detail Page</div>;
 }
