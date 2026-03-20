@@ -49,7 +49,7 @@
     "@equinor/fusion-react-side-sheet": "^2.0.0",
     "@equinor/fusion-react-styles": "^2.0.0",
     "@equinor/fusion-wc-chip": "^1.2.2",
-    "@equinor/fusion-wc-person": "^3.4.0",
+    "@equinor/fusion-wc-person": "^3.4.1",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.1",
