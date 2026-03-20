@@ -1,5 +1,12 @@
 # Change Log
 
+## 14.0.2
+
+### Patch Changes
+
+- Updated dependencies [ed3786d]
+  - @equinor/fusion-framework-dev-portal@5.0.1
+
 ## 14.0.1
 
 ### Patch Changes
