@@ -1,5 +1,13 @@
 # @equinor/fusion-framework-dev-portal
 
+## 5.0.1
+
+### Patch Changes
+
+- ed3786d: Internal: update `@equinor/fusion-wc-person` from `^3.4.0` to `^3.4.1` for the development and people provider packages; no public API changes.
+- Updated dependencies [ed3786d]
+  - @equinor/fusion-framework-react-components-people-provider@2.0.1
+
 ## 5.0.0
 
 ### Major Changes
