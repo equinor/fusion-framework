@@ -53,11 +53,13 @@ Our React cookbooks demonstrate how to build applications using the Fusion Frame
 To run any cookbook:
 
 ```bash
+# From repository root run
+pnpm i
+
+pnpm build:packages
+
 # Navigate to the cookbook directory
 cd cookbooks/app-react-msal
-
-# Install dependencies
-pnpm install
 
 # Start the development server
 pnpm dev
