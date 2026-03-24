@@ -31,10 +31,14 @@ type CurrentAppModules = [ContextModule, NavigationModule];
  */
 const generatePathname = (
   currentPathname: string,
-  item: ContextItem,
+  item: ContextItem | null,
   context?: IContextProvider,
   pathContextId?: string,
 ) => {
+  if (!item) {
+    console.debug('🌍 Portal: no context item provided, navigating to root');
+    return '/';
+  }
   if (pathContextId) {
     // context id exists in the url, replace it with the new context id
     const pathname =
@@ -84,13 +88,6 @@ export const useAppContextNavigation = () => {
           return;
         }
 
-        // resolve the app base path (application base fragment of url)
-        const currentPathname = appNavigation
-          ? // if the app has its own navigation, use it to resolve the app base path
-            appNavigation.path.pathname
-          : // if the app does not have its own navigation, use the portal navigation to resolve the app base path
-            navigation.path.pathname;
-
         console.debug(
           '🌍 Portal:',
           appNavigation
@@ -98,16 +95,12 @@ export const useAppContextNavigation = () => {
             : 'App does not have its own navigation, using portal navigation.',
         );
 
-        /** context was cleared  */
-        if (item === null) {
-          console.debug('🌍 Portal:', 'current context was cleared, navigating to root');
-          if (appNavigation) {
-            appNavigation.replace('/');
-          } else {
-            navigation.replace('/');
-          }
-          return;
-        }
+        // resolve the app base path (application base fragment of url)
+        const currentPathname = appNavigation
+          ? // if the app has its own navigation, use it to resolve the app base path
+            appNavigation.path.pathname
+          : // if the app does not have its own navigation, use the portal navigation to resolve the app base path
+            navigation.path.pathname;
 
         const pathname = generatePathname(
           currentPathname,
@@ -117,14 +110,14 @@ export const useAppContextNavigation = () => {
             extractContextIdFromPath(currentPathname),
         );
 
-        // if app has its own navigation, use it to navigate
-        if (appNavigation) {
-          // update the path of the app navigation, preserving search and hash
-          appNavigation.replace({ ...appNavigation.path, pathname });
-        } else {
-          // update the path of the portal navigation, preserving search and hash
-          navigation.replace({ ...navigation.path, pathname });
-        }
+        // generate the new url using the app navigation if available, otherwise use the portal navigation
+        const newUrl = appNavigation
+          ? appNavigation.createURL({ pathname })
+          : navigation.createURL({ pathname });
+
+        console.debug('🌍 Portal: navigating to url', newUrl);
+
+        navigation.navigate(newUrl, { replace: true });
       },
       [
         // framework navigation instance, should not change
