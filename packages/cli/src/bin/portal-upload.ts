@@ -3,7 +3,7 @@ import type { FetchRequest } from '@equinor/fusion-framework-module-http/client'
 
 import type { FusionFramework } from './framework.node.js';
 import type { ConsoleLogger } from './utils/ConsoleLogger.js';
-import { chalk, defaultHeaders } from './utils/index.js';
+import { chalk, defaultHeaders, formatAuthError, formatTokenAcquisitionError } from './utils/index.js';
 import { loadMetadata } from './helpers/load-bundle-metadata.js';
 
 /**
@@ -28,41 +28,43 @@ export type UploadPortalOptions = {
 };
 
 /**
- * Handles HTTP response errors during the upload process by throwing descriptive errors
- * based on the response status code.
+ * Logs a user-friendly error for the given HTTP status and exits the process.
  *
- * @param response - The HTTP response object from the upload request.
- * @param name - The name of the resource being uploaded.
- * @throws {Error} Throws an error with a specific message depending on the response status:
- * - 409: Version already published.
- * - 410: Resource removed.
- * - 404: Resource not found.
- * - 401/403: Operation not allowed for the user's role.
- * - 500: Internal server error.
- * - Any other status: Generic upload failure message.
+ * Auth failures (401/403) receive expanded, actionable guidance via
+ * {@link formatAuthError}. Other status codes get a short one-liner.
+ *
+ * @param response - The HTTP response from the upload request.
+ * @param name - The portal name being uploaded.
+ * @param log - Optional logger.
  */
-function processUploadError(response: Response, name: string) {
+function handleUploadError(response: Response, name: string, log?: ConsoleLogger): never {
+  const authMsg = formatAuthError(response.status, `upload portal bundle for ${name}`);
+  if (authMsg) {
+    log?.fail('🔒', `Authentication/authorization error uploading ${name}`);
+    log?.error(authMsg);
+    process.exit(1);
+  }
+
+  let message: string;
   switch (response.status) {
     case 409:
-      throw new Error(
-        `${response.status} - Version is already published, please generate a new release`,
-      );
+      message = `${response.status} - Version is already published, please generate a new release`;
+      break;
     case 410:
-      throw new Error(`${response.status} - ${name} is removed from Fusion`);
+      message = `${response.status} - ${name} is removed from Fusion`;
+      break;
     case 404:
-      throw new Error(`${response.status} - ${name} not found`);
-    case 401:
-    case 403:
-      throw new Error(`${response.status} - This is not allowed for your role on ${name}`);
+      message = `${response.status} - ${name} not found`;
+      break;
     case 500:
-      throw new Error(
-        `${response.status} - Internal server error, please try again later or contact support`,
-      );
+      message = `${response.status} - Internal server error, please try again later or contact support`;
+      break;
     default:
-      throw new Error(
-        `Failed to upload bundle. HTTP status ${response.status}, ${response.statusText}`,
-      );
+      message = `Failed to upload bundle. HTTP status ${response.status}, ${response.statusText}`;
+      break;
   }
+  log?.fail('🙅‍♂️', message);
+  process.exit(1);
 }
 
 /**
@@ -135,17 +137,24 @@ export const uploadPortalBundle = async (opt: UploadPortalOptions) => {
         log?.debug('Error:', response.statusText);
       }
 
-      // Handle specific HTTP status codes for user-friendly error messages
-      processUploadError(response, name);
+      // Handle specific HTTP status codes — logs and exits, never throws
+      handleUploadError(response, name, log);
     }
 
     // Log and return the successful response
     log?.succeed('Successfully uploaded portal bundle');
     log?.debug('Response:', response);
   } catch (error) {
+    // Surface MSAL token acquisition failures with actionable guidance
+    const tokenMsg = formatTokenAcquisitionError(error, `upload portal bundle for ${name}`);
+    if (tokenMsg) {
+      log?.fail('🔒', `Token acquisition failed uploading ${name}`);
+      log?.error(tokenMsg);
+      process.exit(1);
+    }
     // Log and exit on any error during upload
     log?.fail('🙅‍♂️', 'Failed to upload portal bundle');
-    log?.error(error);
+    log?.error(error instanceof Error ? error.message : error);
     process.exit(1);
   }
 };

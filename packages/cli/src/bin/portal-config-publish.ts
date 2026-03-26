@@ -7,7 +7,7 @@ import {
   type FusionFrameworkSettings,
 } from './framework.node.js';
 
-import { formatPath, chalk, type ConsoleLogger, defaultHeaders } from './utils/index.js';
+import { formatPath, chalk, type ConsoleLogger, defaultHeaders, formatAuthError, formatTokenAcquisitionError } from './utils/index.js';
 
 import { generatePortalConfig } from './portal-config.js';
 
@@ -62,17 +62,18 @@ export const publishPortalConfig = async (options: PortalConfigPublishOptions) =
   });
   log?.succeed('Initialized Fusion Framework');
 
-  // Create a client for the 'portals' service
-  const portalClient = await framework.serviceDiscovery.createClient('portals');
-  // Subscribe to outgoing requests for logging and debugging
-  portalClient.request$.subscribe((request: FetchRequest) => {
-    log?.debug('Request:', request);
-    log?.info('🌎', 'Executing request to:', formatPath(request.uri));
-  });
-
-  log?.start('Publishing portal config');
-  log?.info('Using environment:', chalk.redBright(options.environment));
+  // Create a client for the 'portals' service — inside try/catch to
+  // handle token acquisition failures (e.g. expired refresh tokens).
   try {
+    const portalClient = await framework.serviceDiscovery.createClient('portals');
+    // Subscribe to outgoing requests for logging and debugging
+    portalClient.request$.subscribe((request: FetchRequest) => {
+      log?.debug('Request:', request);
+      log?.info('🌎', 'Executing request to:', formatPath(request.uri));
+    });
+
+    log?.start('Publishing portal config');
+    log?.info('Using environment:', chalk.redBright(options.environment));
     // Send a PUT request to publish the portal config for the specific build version
     const response = await portalClient.json(`/portals/${portal.name}@${portal.version}/config`, {
       method: 'PUT',
@@ -97,13 +98,19 @@ export const publishPortalConfig = async (options: PortalConfigPublishOptions) =
             `Portal ${portal.name} not found. Please check the portal key and try again.`,
           );
           break;
-        case 403:
-        case 401:
-          log?.fail(
-            '🤬',
-            'You are not authorized to publish portal config. Please check your permissions.',
+        case 403: // falls through
+        case 401: {
+          const authMsg = formatAuthError(
+            error.response.status,
+            `publish config for portal ${portal.name}`,
           );
+          log?.fail('🔒', 'Authentication/authorization error publishing portal config.');
+          if (authMsg) {
+            log?.error(authMsg);
+          }
+          process.exit(1);
           break;
+        }
         default:
           log?.fail(
             '🤬',
@@ -114,8 +121,16 @@ export const publishPortalConfig = async (options: PortalConfigPublishOptions) =
           break;
       }
     }
-    // Rethrow error for upstream handling
-    throw error;
+    // Surface MSAL token acquisition failures with actionable guidance
+    const tokenMsg = formatTokenAcquisitionError(error, `publish config for portal ${portal.name}`);
+    if (tokenMsg) {
+      log?.fail('🔒', `Token acquisition failed publishing config for ${portal.name}`);
+      log?.error(tokenMsg);
+      process.exit(1);
+    }
+    // Unknown error — log message only, no stack trace
+    log?.fail('🤬', 'Failed to publish portal config:', error instanceof Error ? error.message : String(error));
+    process.exit(1);
   }
 };
 
