@@ -158,7 +158,7 @@ function extractMsalDetail(error: unknown): string | undefined {
         return descMatch?.[1]?.trim() ?? raw.split(' - ')[0]?.trim();
       }
       current = current.cause;
-    } else if (current && typeof current === 'object' && 'errorMessage' in current) {
+    } else if (typeof current === 'object' && 'errorMessage' in current) {
       // MSAL ServerError-like object that may not extend Error
       const raw = (current as Record<string, unknown>).errorMessage;
       if (typeof raw === 'string') {
