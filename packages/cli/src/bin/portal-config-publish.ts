@@ -7,7 +7,14 @@ import {
   type FusionFrameworkSettings,
 } from './framework.node.js';
 
-import { formatPath, chalk, type ConsoleLogger, defaultHeaders, formatAuthError, formatTokenAcquisitionError } from './utils/index.js';
+import {
+  formatPath,
+  chalk,
+  type ConsoleLogger,
+  defaultHeaders,
+  formatAuthError,
+  formatTokenAcquisitionError,
+} from './utils/index.js';
 
 import { generatePortalConfig } from './portal-config.js';
 
@@ -129,7 +136,11 @@ export const publishPortalConfig = async (options: PortalConfigPublishOptions) =
       process.exit(1);
     }
     // Unknown error — log message only, no stack trace
-    log?.fail('🤬', 'Failed to publish portal config:', error instanceof Error ? error.message : String(error));
+    log?.fail(
+      '🤬',
+      'Failed to publish portal config:',
+      error instanceof Error ? error.message : String(error),
+    );
     process.exit(1);
   }
 };

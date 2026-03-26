@@ -6,7 +6,12 @@ import type { FetchRequest } from '@equinor/fusion-framework-module-http/client'
 
 import { loadMetadata } from './helpers/load-bundle-metadata.js';
 
-import { type ConsoleLogger, defaultHeaders, formatAuthError, formatTokenAcquisitionError } from './utils/index.js';
+import {
+  type ConsoleLogger,
+  defaultHeaders,
+  formatAuthError,
+  formatTokenAcquisitionError,
+} from './utils/index.js';
 
 /**
  * Logs a user-friendly error for the given HTTP status and exits the process.

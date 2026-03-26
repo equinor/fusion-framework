@@ -111,10 +111,7 @@ export const tagApplication = async (options: TagApplicationOptions) => {
           break;
         case 403: // falls through
         case 401: {
-          const authMsg = formatAuthError(
-            error.response.status,
-            `tag ${appKey}@${version}`,
-          );
+          const authMsg = formatAuthError(error.response.status, `tag ${appKey}@${version}`);
           log?.fail('🔒', 'Authentication/authorization error tagging application.');
           if (authMsg) {
             log?.error(authMsg);
@@ -140,7 +137,11 @@ export const tagApplication = async (options: TagApplicationOptions) => {
       process.exit(1);
     }
     // Unknown error — log message only, no stack trace
-    log?.fail('🤬', 'Failed to tag application:', error instanceof Error ? error.message : String(error));
+    log?.fail(
+      '🤬',
+      'Failed to tag application:',
+      error instanceof Error ? error.message : String(error),
+    );
     // Exit with non-zero code — do not rethrow, to avoid a second
     // ugly error dump in the calling publish command's .catch() handler.
     process.exit(1);

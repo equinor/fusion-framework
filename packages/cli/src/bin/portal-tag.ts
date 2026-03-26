@@ -3,7 +3,14 @@ import type { FetchRequest } from '@equinor/fusion-framework-module-http/client'
 
 import type { FusionFramework } from './framework.node.js';
 
-import { chalk, formatPath, type ConsoleLogger, defaultHeaders, formatAuthError, formatTokenAcquisitionError } from './utils/index.js';
+import {
+  chalk,
+  formatPath,
+  type ConsoleLogger,
+  defaultHeaders,
+  formatAuthError,
+  formatTokenAcquisitionError,
+} from './utils/index.js';
 
 /**
  * Options for tagging a portal template version in the portal service.
@@ -112,10 +119,7 @@ export const tagPortal = async (options: TagPortalOptions) => {
           break;
         case 403: // falls through
         case 401: {
-          const authMsg = formatAuthError(
-            response?.status ?? 401,
-            `tag portal ${name}@${version}`,
-          );
+          const authMsg = formatAuthError(response?.status ?? 401, `tag portal ${name}@${version}`);
           log?.fail('🔒', 'Authentication/authorization error tagging portal.');
           if (authMsg) {
             log?.error(authMsg);
@@ -136,7 +140,11 @@ export const tagPortal = async (options: TagPortalOptions) => {
       process.exit(1);
     }
     // Unknown error — log message only, no stack trace
-    log?.fail('🤬', 'Failed to tag portal:', error instanceof Error ? error.message : String(error));
+    log?.fail(
+      '🤬',
+      'Failed to tag portal:',
+      error instanceof Error ? error.message : String(error),
+    );
     process.exit(1);
   }
 };

@@ -7,7 +7,12 @@ import {
   type FusionFrameworkSettings,
 } from './framework.node.js';
 
-import { defaultHeaders, formatAuthError, formatTokenAcquisitionError, type ConsoleLogger } from './utils/index.js';
+import {
+  defaultHeaders,
+  formatAuthError,
+  formatTokenAcquisitionError,
+  type ConsoleLogger,
+} from './utils/index.js';
 
 import { resolveProjectPackage } from './helpers/resolve-project-package.js';
 import { resolveAppManifest } from './helpers/resolve-app-manifest.js';
@@ -151,7 +156,10 @@ export const checkApp = async (options: AppCheckOptions): Promise<boolean> => {
     }
     // Log and handle other errors during the registration check
     log?.fail('🙅‍♂️', 'Error checking application registration');
-    log?.error('Error checking application registration:', err instanceof Error ? err.message : err);
+    log?.error(
+      'Error checking application registration:',
+      err instanceof Error ? err.message : err,
+    );
     return false;
   }
 };

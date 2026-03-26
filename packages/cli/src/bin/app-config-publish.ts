@@ -3,7 +3,13 @@ import type { FetchRequest } from '@equinor/fusion-framework-module-http/client'
 
 import type { FusionFramework } from './framework.node.js';
 
-import { formatPath, type ConsoleLogger, defaultHeaders, formatAuthError, formatTokenAcquisitionError } from './utils/index.js';
+import {
+  formatPath,
+  type ConsoleLogger,
+  defaultHeaders,
+  formatAuthError,
+  formatTokenAcquisitionError,
+} from './utils/index.js';
 
 import type { ApiAppConfig } from '../lib/app/schemas.js';
 
@@ -73,10 +79,7 @@ export const publishAppConfig = async (options: AppConfigPublishOptions) => {
           break;
         case 403: // falls through
         case 401: {
-          const authMsg = formatAuthError(
-            error.response.status,
-            `publish config for ${appKey}`,
-          );
+          const authMsg = formatAuthError(error.response.status, `publish config for ${appKey}`);
           log?.fail('🔒', 'Authentication/authorization error publishing app config.');
           if (authMsg) {
             log?.error(authMsg);
@@ -102,7 +105,11 @@ export const publishAppConfig = async (options: AppConfigPublishOptions) => {
       process.exit(1);
     }
     // Unknown error — log message only, no stack trace
-    log?.fail('🤬', 'Failed to publish app config:', error instanceof Error ? error.message : String(error));
+    log?.fail(
+      '🤬',
+      'Failed to publish app config:',
+      error instanceof Error ? error.message : String(error),
+    );
     process.exit(1);
   }
 };
