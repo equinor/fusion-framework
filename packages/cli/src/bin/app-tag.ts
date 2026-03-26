@@ -3,7 +3,14 @@ import type { FetchRequest } from '@equinor/fusion-framework-module-http/client'
 
 import type { FusionFramework } from '@equinor/fusion-framework-cli/bin';
 
-import { type ConsoleLogger, formatPath, chalk, defaultHeaders } from './utils/index.js';
+import {
+  type ConsoleLogger,
+  formatPath,
+  chalk,
+  defaultHeaders,
+  formatAuthError,
+  formatTokenAcquisitionError,
+} from './utils/index.js';
 
 /**
  * Options for tagging an application version in the app service.
@@ -66,16 +73,17 @@ export const tagApplication = async (options: TagApplicationOptions) => {
     process.exit(1);
   }
 
-  // Create a client for the 'apps' service
-  const appClient = await framework.serviceDiscovery.createClient('apps');
-  // Subscribe to outgoing requests for logging and debugging
-  appClient.request$.subscribe((request: FetchRequest) => {
-    log?.debug('Request:', request);
-    log?.info('🌎', 'Executing request to:', formatPath(request.uri));
-  });
-
-  log?.start('Publishing application config');
+  // Create a client for the 'apps' service — inside try/catch to
+  // handle token acquisition failures (e.g. expired refresh tokens).
   try {
+    const appClient = await framework.serviceDiscovery.createClient('apps');
+    // Subscribe to outgoing requests for logging and debugging
+    appClient.request$.subscribe((request: FetchRequest) => {
+      log?.debug('Request:', request);
+      log?.info('🌎', 'Executing request to:', formatPath(request.uri));
+    });
+
+    log?.start('Publishing application config');
     // Send a PUT request to tag the application version
     const result = await appClient.json(`/apps/${appKey}/tags/${tag}`, {
       method: 'PUT',
@@ -101,13 +109,16 @@ export const tagApplication = async (options: TagApplicationOptions) => {
         case 404:
           log?.fail('🤬', `App ${appKey} not found. Please check the app key and try again.`);
           break;
-        case 403:
-        case 401:
-          log?.fail(
-            '🤬',
-            'You are not authorized to tag application. Please check your permissions.',
-          );
+        case 403: // falls through
+        case 401: {
+          const authMsg = formatAuthError(error.response.status, `tag ${appKey}@${version}`);
+          log?.fail('🔒', 'Authentication/authorization error tagging application.');
+          if (authMsg) {
+            log?.error(authMsg);
+          }
+          process.exit(1);
           break;
+        }
         default:
           log?.fail(
             '🤬',
@@ -118,8 +129,22 @@ export const tagApplication = async (options: TagApplicationOptions) => {
           break;
       }
     }
-    // Rethrow error for upstream handling
-    throw error;
+    // Surface MSAL token acquisition failures with actionable guidance
+    const tokenMsg = formatTokenAcquisitionError(error, `tag ${appKey}@${version}`);
+    if (tokenMsg) {
+      log?.fail('🔒', `Token acquisition failed tagging ${appKey}@${version}`);
+      log?.error(tokenMsg);
+      process.exit(1);
+    }
+    // Unknown error — log message only, no stack trace
+    log?.fail(
+      '🤬',
+      'Failed to tag application:',
+      error instanceof Error ? error.message : String(error),
+    );
+    // Exit with non-zero code — do not rethrow, to avoid a second
+    // ugly error dump in the calling publish command's .catch() handler.
+    process.exit(1);
   }
 };
 

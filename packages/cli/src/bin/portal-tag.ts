@@ -3,7 +3,14 @@ import type { FetchRequest } from '@equinor/fusion-framework-module-http/client'
 
 import type { FusionFramework } from './framework.node.js';
 
-import { chalk, formatPath, type ConsoleLogger, defaultHeaders } from './utils/index.js';
+import {
+  chalk,
+  formatPath,
+  type ConsoleLogger,
+  defaultHeaders,
+  formatAuthError,
+  formatTokenAcquisitionError,
+} from './utils/index.js';
 
 /**
  * Options for tagging a portal template version in the portal service.
@@ -69,16 +76,17 @@ export const tagPortal = async (options: TagPortalOptions) => {
   // Log the tagging action for traceability
   log?.info('Tagging portal:', chalk.greenBright(`${name}@${tag}`, version));
 
-  // Create a client for the 'portal-config' service
-  const client = await framework.serviceDiscovery.createClient('portal-config');
-  // Subscribe to outgoing requests for logging and debugging
-  client.request$.subscribe((request: FetchRequest) => {
-    log?.debug('Request:', request);
-    log?.info('🌎', 'Executing request to:', formatPath(request.uri));
-  });
-
-  log?.start('Tagging portal template...');
+  // Create a client for the 'portal-config' service — inside try/catch to
+  // handle token acquisition failures (e.g. expired refresh tokens).
   try {
+    const client = await framework.serviceDiscovery.createClient('portal-config');
+    // Subscribe to outgoing requests for logging and debugging
+    client.request$.subscribe((request: FetchRequest) => {
+      log?.debug('Request:', request);
+      log?.info('🌎', 'Executing request to:', formatPath(request.uri));
+    });
+
+    log?.start('Tagging portal template...');
     // Send a PUT request to tag the portal template version
     const response = await client.json(`/templates/${name}/tags/${tag}`, {
       method: 'PUT',
@@ -109,20 +117,35 @@ export const tagPortal = async (options: TagPortalOptions) => {
             `${name} not found. Please check the name and try again.`,
           );
           break;
-        case 403:
-        case 401:
-          log?.fail(
-            `🤬 - ${response?.status} -`,
-            'You are not authorized to tag. Please check your permissions.',
-          );
+        case 403: // falls through
+        case 401: {
+          const authMsg = formatAuthError(response?.status ?? 401, `tag portal ${name}@${version}`);
+          log?.fail('🔒', 'Authentication/authorization error tagging portal.');
+          if (authMsg) {
+            log?.error(authMsg);
+          }
+          process.exit(1);
           break;
+        }
         default:
           log?.fail(`🤬 - ${response?.status} -`, 'Failed to tag', `Error: ${error.message}`);
           break;
       }
     }
-    // Rethrow error for upstream handling
-    throw error;
+    // Surface MSAL token acquisition failures with actionable guidance
+    const tokenMsg = formatTokenAcquisitionError(error, `tag portal ${name}@${version}`);
+    if (tokenMsg) {
+      log?.fail('🔒', `Token acquisition failed tagging ${name}@${version}`);
+      log?.error(tokenMsg);
+      process.exit(1);
+    }
+    // Unknown error — log message only, no stack trace
+    log?.fail(
+      '🤬',
+      'Failed to tag portal:',
+      error instanceof Error ? error.message : String(error),
+    );
+    process.exit(1);
   }
 };
 

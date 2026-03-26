@@ -7,7 +7,12 @@ import {
   type FusionFrameworkSettings,
 } from './framework.node.js';
 
-import { defaultHeaders, type ConsoleLogger } from './utils/index.js';
+import {
+  defaultHeaders,
+  formatAuthError,
+  formatTokenAcquisitionError,
+  type ConsoleLogger,
+} from './utils/index.js';
 
 import { resolveProjectPackage } from './helpers/resolve-project-package.js';
 import { resolveAppManifest } from './helpers/resolve-app-manifest.js';
@@ -99,15 +104,17 @@ export const checkApp = async (options: AppCheckOptions): Promise<boolean> => {
   log?.succeed('Initialized Fusion Framework');
 
   // Create a client for the 'apps' service using service discovery
-  const appClient = await framework.serviceDiscovery.createClient('apps');
-
-  // Subscribe to outgoing requests for logging and debugging
-  appClient.request$.subscribe((request: FetchRequest) => {
-    log?.info('🌎', 'Executing request to:', request.uri);
-    log?.debug('Request:', request);
-  });
-
+  // and check registration — wrapped in try/catch to handle token
+  // acquisition failures (e.g. expired refresh tokens) cleanly.
   try {
+    const appClient = await framework.serviceDiscovery.createClient('apps');
+
+    // Subscribe to outgoing requests for logging and debugging
+    appClient.request$.subscribe((request: FetchRequest) => {
+      log?.info('🌎', 'Executing request to:', request.uri);
+      log?.debug('Request:', request);
+    });
+
     // Start the check for app registration in the app store
     log?.info('Checking if', appKey, 'is registered in app store');
     // Send a HEAD request to check if the app is registered
@@ -130,12 +137,29 @@ export const checkApp = async (options: AppCheckOptions): Promise<boolean> => {
       log?.fail('😞', `Application ${appKey} is deleted from app store`);
       return false;
     }
+    // Surface actionable auth errors for 401/403 instead of a cryptic status code
+    const authMessage = formatAuthError(response.status, `check registration for ${appKey}`);
+    if (authMessage) {
+      log?.fail('🔒', `Authentication/authorization error checking ${appKey}`);
+      log?.error(authMessage);
+      process.exit(1);
+    }
     // Any other status is unexpected and should be handled as an error
     throw new Error(`Unexpected response status: ${response.status}`);
   } catch (err) {
-    // Log and handle errors during the registration check
+    // Surface MSAL token acquisition failures with actionable guidance
+    const tokenMsg = formatTokenAcquisitionError(err, `check registration for ${appKey}`);
+    if (tokenMsg) {
+      log?.fail('🔒', `Token acquisition failed checking ${appKey}`);
+      log?.error(tokenMsg);
+      process.exit(1);
+    }
+    // Log and handle other errors during the registration check
     log?.fail('🙅‍♂️', 'Error checking application registration');
-    log?.error('Error checking application registration:', err);
+    log?.error(
+      'Error checking application registration:',
+      err instanceof Error ? err.message : err,
+    );
     return false;
   }
 };
