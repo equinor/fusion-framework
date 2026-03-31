@@ -26,6 +26,6 @@
     "typescript": "^5.9.3",
     "vue": "^3.5.25",
     "vuepress": "2.0.0-rc.27",
-    "vuepress-theme-hope": "2.0.0-rc.104"
+    "vuepress-theme-hope": "2.0.0-rc.105"
   }
 }
