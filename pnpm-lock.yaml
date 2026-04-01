@@ -1011,7 +1011,7 @@ importers:
         version: 4.0.18(vitest@4.1.2(@opentelemetry/api@1.9.0)(@types/node@25.5.0)(esbuild@0.27.4)(happy-dom@20.8.9)(jsdom@27.4.0)(msw@2.12.14(@types/node@25.5.0)(typescript@5.9.3))(sass-embedded@1.98.0)(sass@1.98.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3))
       adm-zip:
         specifier: ^0.5.10
-        version: 0.5.16
+        version: 0.5.17
       ajv:
         specifier: ^8.17.1
         version: 8.17.1
@@ -6929,8 +6929,8 @@ packages:
     engines: {node: '>=0.4.0'}
     hasBin: true
 
-  adm-zip@0.5.16:
-    resolution: {integrity: sha512-TGw5yVi4saajsSEgz25grObGHEUaDrniwvA2qwSC060KfqGPdglhvPMA2lPIoxs3PQIItj2iag35fONcQqgUaQ==}
+  adm-zip@0.5.17:
+    resolution: {integrity: sha512-+Ut8d9LLqwEvHHJl1+PIHqoyDxFgVN847JTVM3Izi3xHDWPE4UtzzXysMZQs64DMcrJfBeS/uoEP4AD3HQHnQQ==}
     engines: {node: '>=12.0'}
 
   ag-charts-community@13.1.0:
@@ -15609,7 +15609,7 @@ snapshots:
 
   acorn@8.16.0: {}
 
-  adm-zip@0.5.16: {}
+  adm-zip@0.5.17: {}
 
   ag-charts-community@13.1.0:
     dependencies:
