@@ -1185,13 +1185,13 @@ importers:
         version: link:../../modules/ai
       '@modelcontextprotocol/sdk':
         specifier: ^1.0.4
-        version: 1.25.3(@cfworker/json-schema@4.1.1)(hono@4.12.10)(zod@4.3.6)
+        version: 1.25.3(@cfworker/json-schema@4.1.1)(hono@4.12.11)(zod@4.3.6)
       commander:
         specifier: ^14.0.1
         version: 14.0.3
       hono:
         specifier: ^4.12.8
-        version: 4.12.10
+        version: 4.12.11
       zod:
         specifier: ^4.3.6
         version: 4.3.6
@@ -8084,8 +8084,8 @@ packages:
   hoist-non-react-statics@3.3.2:
     resolution: {integrity: sha512-/gGivxi8JPKWNm/W0jSmzcMPpfpPLc3dY/6GxhX2hQ9iGj3aDfklV4ET7NjKpSinLpJ5vafa9iiGIEZg10SfBw==}
 
-  hono@4.12.10:
-    resolution: {integrity: sha512-mx/p18PLy5og9ufies2GOSUqep98Td9q4i/EF6X7yJgAiIopxqdfIO3jbqsi3jRgTgw88jMDEzVKi+V2EF+27w==}
+  hono@4.12.11:
+    resolution: {integrity: sha512-r4xbIa3mGGGoH9nN4A14DOg2wx7y2oQyJEb5O57C/xzETG/qx4c7CVDQ5WMeKHZ7ORk2W0hZ/sQKXTav3cmYBA==}
     engines: {node: '>=16.9.0'}
 
   hookable@5.5.3:
@@ -11811,9 +11811,9 @@ snapshots:
       '@github/copilot-win32-arm64': 1.0.5
       '@github/copilot-win32-x64': 1.0.5
 
-  '@hono/node-server@1.19.9(hono@4.12.10)':
+  '@hono/node-server@1.19.9(hono@4.12.11)':
     dependencies:
-      hono: 4.12.10
+      hono: 4.12.11
 
   '@iconify/types@2.0.0': {}
 
@@ -12951,9 +12951,9 @@ snapshots:
 
   '@mjackson/node-fetch-server@0.2.0': {}
 
-  '@modelcontextprotocol/sdk@1.25.3(@cfworker/json-schema@4.1.1)(hono@4.12.10)(zod@4.3.6)':
+  '@modelcontextprotocol/sdk@1.25.3(@cfworker/json-schema@4.1.1)(hono@4.12.11)(zod@4.3.6)':
     dependencies:
-      '@hono/node-server': 1.19.9(hono@4.12.10)
+      '@hono/node-server': 1.19.9(hono@4.12.11)
       ajv: 8.17.1
       ajv-formats: 3.0.1
       content-type: 1.0.5
@@ -16845,7 +16845,7 @@ snapshots:
     dependencies:
       react-is: 16.13.1
 
-  hono@4.12.10: {}
+  hono@4.12.11: {}
 
   hookable@5.5.3: {}
 
