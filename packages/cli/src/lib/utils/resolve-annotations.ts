@@ -1,5 +1,6 @@
 import { resolveGithubAnnotations } from './resolve-github-annotations.js';
 import { resolveDevopsAnnotations } from './resolve-devops-annotations.js';
+import { resolveGitBranch } from './resolve-git-branch.js';
 import { version } from '../../version.js';
 
 /**
@@ -40,6 +41,20 @@ export type ReleaseAnnotations = {
 };
 
 /**
+ * Extracts a branch name from a GitHub ref when the ref points to a branch.
+ *
+ * GitHub exposes refs like `refs/heads/main` for push events and `refs/tags/v1.0.0`
+ * for tag/release events. Only branch refs should populate the manifest branch annotation.
+ */
+const resolveGithubBranch = (ref?: string): string | undefined => {
+  if (!ref?.startsWith('refs/heads/')) {
+    return undefined;
+  }
+
+  return ref.slice('refs/heads/'.length) || undefined;
+};
+
+/**
  * Resolves CI/CD environment-specific annotation variables.
  *
  * This function determines the current CI/CD runtime environment (GitHub Actions, Azure DevOps, or other)
@@ -59,7 +74,7 @@ export const resolveAnnotations = (): ReleaseAnnotations => {
 
   // Check if running in GitHub Actions environment
   // If so, delegate to the GitHub-specific annotation resolver
-  if (process.env.GITHUB_ACTIONS) {
+  if (process.env.GITHUB_ACTIONS === 'true') {
     const annotation = resolveGithubAnnotations();
     const baseAnnotations = {
       ...requiredAnnotations,
@@ -96,7 +111,10 @@ export const resolveAnnotations = (): ReleaseAnnotations => {
       } satisfies ReleaseAnnotations;
     }
 
-    return baseAnnotations;
+    return {
+      ...baseAnnotations,
+      branch: resolveGithubBranch(annotation.ref ?? process.env.GITHUB_REF),
+    } satisfies ReleaseAnnotations;
   }
 
   // Check if running in Azure DevOps environment
@@ -119,5 +137,8 @@ export const resolveAnnotations = (): ReleaseAnnotations => {
 
   // Fallback: No known CI/CD environment detected
   // Return required annotations indicating local build
-  return requiredAnnotations;
+  return {
+    ...requiredAnnotations,
+    branch: resolveGitBranch(),
+  } satisfies ReleaseAnnotations;
 };
