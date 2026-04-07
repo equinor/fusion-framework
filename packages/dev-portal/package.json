@@ -47,7 +47,7 @@
     "@equinor/fusion-react-context-selector": "^2.0.1",
     "@equinor/fusion-react-progress-indicator": "^0.3.0",
     "@equinor/fusion-react-side-sheet": "^2.0.0",
-    "@equinor/fusion-react-styles": "^2.0.0",
+    "@equinor/fusion-react-styles": "^2.1.0",
     "@equinor/fusion-wc-chip": "^1.2.2",
     "@equinor/fusion-wc-person": "^3.4.1",
     "@types/react": "^19.2.7",
