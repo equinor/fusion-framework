@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-dev-portal
 
+## 5.1.0
+
+### Minor Changes
+
+- ffe9b06: Update @equinor/fusion-react-styles to provide EDS variables
+
 ## 5.0.1
 
 ### Patch Changes

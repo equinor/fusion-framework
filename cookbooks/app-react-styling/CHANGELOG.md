@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-cookbook-app-react-styling
 
+## 1.1.0
+
+### Minor Changes
+
+- ffe9b06: Update @equinor/fusion-react-styles to provide EDS variables
+
 ## 1.0.0
 
 ### Major Changes
