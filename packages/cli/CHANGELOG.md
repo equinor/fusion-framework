@@ -1,5 +1,16 @@
 # Change Log
 
+## 14.1.0
+
+### Minor Changes
+
+- d63c376: Add branch annotations to generated manifests for local builds and GitHub Actions push events.
+
+### Patch Changes
+
+- Updated dependencies [ffe9b06]
+  - @equinor/fusion-framework-dev-portal@5.1.0
+
 ## 14.0.3
 
 ### Patch Changes
