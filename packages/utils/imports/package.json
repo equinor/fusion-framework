@@ -43,7 +43,7 @@
     "url": "https://github.com/equinor/fusion-framework/issues"
   },
   "dependencies": {
-    "esbuild": "^0.27.0",
+    "esbuild": "^0.28.0",
     "read-package-up": "^12.0.0"
   },
   "devDependencies": {
