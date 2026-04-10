@@ -2656,7 +2656,7 @@ importers:
         specifier: ^11.11.0
         version: 11.12.2
       sass-embedded:
-        specifier: ^1.99.0
+        specifier: ^1.98.0
         version: 1.99.0
       typescript:
         specifier: ^5.9.3
