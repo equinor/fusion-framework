@@ -131,7 +131,7 @@ jobs:
           fetch-depth: 0
 
       - name: Download extracted docs
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: eds-docs
           path: eds-content/
