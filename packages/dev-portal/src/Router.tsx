@@ -88,9 +88,6 @@ export const Router = () => {
   // observe the context changes and navigate when the context changes
   useAppContextNavigation();
   return (
-    <RouterProvider
-      router={router as unknown as RouterProviderProps['router']}
-      fallbackElement={<p>wooot</p>}
-    />
+    <RouterProvider router={router as unknown as RouterProviderProps['router']} />
   );
 };

@@ -32,7 +32,7 @@ export const FeatureSheetContent = ({ navigate }: SheetContentProps) => {
       </div>
       <Divider />
       <div>
-        <Tabs activeTab={tab} onChange={(index) => setTab(index)}>
+        <Tabs activeTab={tab} onChange={(index) => setTab(Number(index))}>
           <Tabs.List>
             <Tabs.Tab>App features</Tabs.Tab>
             <Tabs.Tab>Portal features</Tabs.Tab>
