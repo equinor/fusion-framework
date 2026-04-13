@@ -1,5 +1,24 @@
 # portal-analytics
 
+## 0.4.12
+
+### Patch Changes
+
+- fd40e7d: Fix context navigation using `NavigationProvider.navigate` instead of `replace` to trigger the synthetic `pop()` workaround. This ensures apps with listeners filtered to `POP` actions (e.g. React Router via `BaseHistory.listen`) correctly detect URL changes when context switches.
+
+  Also handles `null` context (cleared) through `generatePathname` returning `'/'` rather than a separate branch.
+
+  Fixes: https://github.com/equinor/fusion-framework/issues/4295
+
+- Updated dependencies [8f16c97]
+- Updated dependencies [fe63b78]
+- Updated dependencies [3198879]
+  - @equinor/fusion-framework-cli@14.1.1
+  - @equinor/fusion-framework-module-analytics@2.0.1
+  - @equinor/fusion-framework-app@11.0.1
+  - @equinor/fusion-framework@8.0.1
+  - @equinor/fusion-framework-react-app@10.0.1
+
 ## 0.4.11
 
 ### Patch Changes
