@@ -87,7 +87,5 @@ export const Router = () => {
   const [router] = useState(() => navigation.createRouter(routes));
   // observe the context changes and navigate when the context changes
   useAppContextNavigation();
-  return (
-    <RouterProvider router={router as unknown as RouterProviderProps['router']} />
-  );
+  return <RouterProvider router={router as unknown as RouterProviderProps['router']} />;
 };
