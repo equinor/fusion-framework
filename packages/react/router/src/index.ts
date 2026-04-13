@@ -24,6 +24,7 @@ export {
   Form,
   Link,
   NavLink,
+  Navigate,
   Outlet,
   redirect,
   RouterProvider,
