@@ -24,17 +24,23 @@ type CurrentAppModules = [ContextModule, NavigationModule];
  * a new pathname using the context item's ID.
  *
  * @param currentPathname - The current URL pathname.
- * @param item - The context item containing the ID to be used in the pathname.
+ * @param item - The context item containing the ID to be used in the pathname,
+ *   or `null` when the context has been cleared — in which case the function
+ *   returns `'/'` and navigation resets to the root path.
  * @param context - An optional context provider with a method to generate a pathname from the context item.
  * @param pathContextId - An optional context ID present in the current URL to be replaced.
  * @returns The generated pathname for navigation.
  */
 const generatePathname = (
   currentPathname: string,
-  item: ContextItem,
+  item: ContextItem | null,
   context?: IContextProvider,
   pathContextId?: string,
 ) => {
+  if (!item) {
+    console.debug('🌍 Portal: no context item provided, navigating to root');
+    return '/';
+  }
   if (pathContextId) {
     // context id exists in the url, replace it with the new context id
     const pathname =
@@ -84,13 +90,6 @@ export const useAppContextNavigation = () => {
           return;
         }
 
-        // resolve the app base path (application base fragment of url)
-        const currentPathname = appNavigation
-          ? // if the app has its own navigation, use it to resolve the app base path
-            appNavigation.path.pathname
-          : // if the app does not have its own navigation, use the portal navigation to resolve the app base path
-            navigation.path.pathname;
-
         console.debug(
           '🌍 Portal:',
           appNavigation
@@ -98,16 +97,12 @@ export const useAppContextNavigation = () => {
             : 'App does not have its own navigation, using portal navigation.',
         );
 
-        /** context was cleared  */
-        if (item === null) {
-          console.debug('🌍 Portal:', 'current context was cleared, navigating to root');
-          if (appNavigation) {
-            appNavigation.replace('/');
-          } else {
-            navigation.replace('/');
-          }
-          return;
-        }
+        // resolve the app base path (application base fragment of url)
+        const currentPathname = appNavigation
+          ? // if the app has its own navigation, use it to resolve the app base path
+            appNavigation.path.pathname
+          : // if the app does not have its own navigation, use the portal navigation to resolve the app base path
+            navigation.path.pathname;
 
         const pathname = generatePathname(
           currentPathname,
@@ -117,13 +112,19 @@ export const useAppContextNavigation = () => {
             extractContextIdFromPath(currentPathname),
         );
 
-        // if app has its own navigation, use it to navigate
+        // always navigate via the portal navigation to trigger the synthetic pop() workaround,
+        // ensuring app routers that listen only for POP actions detect the URL change
         if (appNavigation) {
-          // update the path of the app navigation, preserving search and hash
-          appNavigation.replace({ ...appNavigation.path, pathname });
+          // resolve the full URL via the app navigation (includes app basename),
+          // then hand it to the portal navigation which will not double-prefix when basename is empty
+          const newUrl = appNavigation.createURL({ pathname });
+          console.debug('🌍 Portal: navigating to url', newUrl);
+          navigation.navigate(newUrl, { replace: true });
         } else {
-          // update the path of the portal navigation, preserving search and hash
-          navigation.replace({ ...navigation.path, pathname });
+          // pass the pathname directly so navigation.navigate does not re-run createURL
+          // (which would duplicate the basename if one is configured)
+          console.debug('🌍 Portal: navigating to pathname', pathname);
+          navigation.navigate({ pathname }, { replace: true });
         }
       },
       [
