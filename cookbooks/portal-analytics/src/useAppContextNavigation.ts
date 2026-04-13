@@ -112,14 +112,20 @@ export const useAppContextNavigation = () => {
             extractContextIdFromPath(currentPathname),
         );
 
-        // generate the new url using the app navigation if available, otherwise use the portal navigation
-        const newUrl = appNavigation
-          ? appNavigation.createURL({ pathname })
-          : navigation.createURL({ pathname });
-
-        console.debug('🌍 Portal: navigating to url', newUrl);
-
-        navigation.navigate(newUrl, { replace: true });
+        // always navigate via the portal navigation to trigger the synthetic pop() workaround,
+        // ensuring app routers that listen only for POP actions detect the URL change
+        if (appNavigation) {
+          // resolve the full URL via the app navigation (includes app basename),
+          // then hand it to the portal navigation which will not double-prefix when basename is empty
+          const newUrl = appNavigation.createURL({ pathname });
+          console.debug('🌍 Portal: navigating to url', newUrl);
+          navigation.navigate(newUrl, { replace: true });
+        } else {
+          // pass the pathname directly so navigation.navigate does not re-run createURL
+          // (which would duplicate the basename if one is configured)
+          console.debug('🌍 Portal: navigating to pathname', pathname);
+          navigation.navigate({ pathname }, { replace: true });
+        }
       },
       [
         // framework navigation instance, should not change
