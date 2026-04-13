@@ -126,9 +126,7 @@ export function attachSessionLogger(
         }
         break;
       }
-      // @ts-expect-error - missing case types in SDK typings
       case 'session.tools_updated': {
-        // @ts-expect-error - model property missing in SDK typings
         const negotiatedModel = event.data.model as string | undefined;
         if (negotiatedModel) {
           console.log(chalk.dim(`💾  ${negotiatedModel}`));
