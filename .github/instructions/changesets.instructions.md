@@ -8,7 +8,7 @@ applyTo: ".changeset/**/*.md"
 
 ## TL;DR (for AI agents)
 
-- **When**: Any change to a published package or consumer-facing `.md` docs → create a changeset (docs use `@equinor/fusion-framework-docs`).
+- **When**: Any change to a published package, a `cookbooks/*` package, or consumer-facing `.md` docs → create a changeset (docs use `@equinor/fusion-framework-docs`; cookbooks use their own package name).
 - **Type**: Feature → `minor`, bugfix → `patch`, internal refactor → `patch` with `Internal:` prefix, breaking change → `major` with migration notes.
 - **Format**: File in `.changeset/` named `{package-name}_{short-description}.md` with YAML frontmatter listing packages and bump types.
 - **Content**: Write consumer-focused summaries (aim for concise but prioritize clarity and completeness; issue references don't count), reference issues, include migration or code examples for complex/breaking changes.
@@ -22,6 +22,7 @@ applyTo: ".changeset/**/*.md"
 - ✅ Breaking changes (major bump)
 - ✅ Consumer-facing documentation updates such as package READMEs, docs pages, and published markdown content (patch for `@equinor/fusion-framework-docs`)
 - ✅ Internal refactoring (patch with "Internal:" prefix)
+- ✅ Any change to a `cookbooks/*` package (patch bump against the cookbook's own package name, e.g. `@equinor/fusion-framework-cookbook-app-react-people`)
 
 **Skip changeset for:**
 - ❌ Workspace root changes (monorepo config, tooling, CI)
