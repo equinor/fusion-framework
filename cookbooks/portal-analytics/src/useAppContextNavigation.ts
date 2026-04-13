@@ -24,7 +24,9 @@ type CurrentAppModules = [ContextModule, NavigationModule];
  * a new pathname using the context item's ID.
  *
  * @param currentPathname - The current URL pathname.
- * @param item - The context item containing the ID to be used in the pathname.
+ * @param item - The context item containing the ID to be used in the pathname,
+ *   or `null` when the context has been cleared — in which case the function
+ *   returns `'/'` and navigation resets to the root path.
  * @param context - An optional context provider with a method to generate a pathname from the context item.
  * @param pathContextId - An optional context ID present in the current URL to be replaced.
  * @returns The generated pathname for navigation.
