@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-react-router
 
+## 1.2.0
+
+### Minor Changes
+
+- 46cea46: Export `LinkProps` from the package root so consumers can type link wrappers and related helpers without importing directly from `react-router`.
+
 ## 1.1.0
 
 ### Minor Changes
