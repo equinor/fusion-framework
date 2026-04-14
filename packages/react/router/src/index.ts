@@ -23,6 +23,7 @@ export type {
 export {
   Form,
   Link,
+  type LinkProps,
   NavLink,
   Navigate,
   Outlet,
