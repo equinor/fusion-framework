@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-react-router
 
+## 1.1.0
+
+### Minor Changes
+
+- 88a5455: Export `Navigate` from the package root so consumers can import router primitives directly from `@equinor/fusion-framework-react-router`.
+
 ## 1.0.2
 
 ### Patch Changes

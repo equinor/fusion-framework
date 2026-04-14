@@ -1,5 +1,27 @@
 # Change Log
 
+## 14.1.1
+
+### Patch Changes
+
+- 8f16c97: Update rollup (4.59.0 → 4.60.1) used to produce the published bundles for both packages.
+
+  rollup 4.60.1 fixes a bug where side-effect imports could be silently dropped during bundling due to a namespace re-export caching issue ([rollup#6274](https://github.com/rollup/rollup/issues/6274)). Both packages use rollup to bundle their published output, so the fix ensures the emitted artifacts are correct.
+
+  No API or behaviour changes for consumers.
+
+- fe63b78: Internal: update bundled ajv (8.17.1 → 8.18.0) in the CLI.
+
+  ajv 8.18.0 includes a security fix for CVE-2025-69873 — a ReDoS vulnerability in the `$data` keyword's `pattern` validation. The CLI bundles ajv for portal schema validation, so this patch updates the bundled copy.
+
+  No CLI API or behaviour changes for consumers.
+
+- Updated dependencies [6872aad]
+- Updated dependencies [5c836fb]
+  - @equinor/fusion-framework-module-msal-node@4.0.1
+  - @equinor/fusion-framework-dev-server@2.0.1
+  - @equinor/fusion-framework-dev-portal@5.1.1
+
 ## 14.1.0
 
 ### Minor Changes

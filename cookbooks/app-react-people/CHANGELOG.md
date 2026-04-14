@@ -1,5 +1,13 @@
 # Change Log
 
+## 5.0.1
+
+### Patch Changes
+
+- 605ecb6: Update `@equinor/fusion-react-person` from `^2.0.0` to `^2.0.2` to pick up the latest fixes for the `PeoplePicker` and `PeopleViewer` components.
+- Updated dependencies [88a5455]
+  - @equinor/fusion-framework-react-router@1.1.0
+
 ## 5.0.0
 
 ### Major Changes

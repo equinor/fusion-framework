@@ -1,5 +1,17 @@
 # @equinor/fusion-framework-module-msal-node
 
+## 4.0.1
+
+### Patch Changes
+
+- 6872aad: Internal: update resolved `@azure/msal-node-extensions` from 5.0.2 to 5.1.2.
+
+  Lock-step minor bump with `@azure/msal-node`, keeping the MSAL Node extension libraries aligned. No breaking changes — lockfile-only bump within the existing `^5.0.2` range constraint.
+
+- 5c836fb: Internal: update resolved `@azure/msal-node` from 5.0.2 to 5.1.2.
+
+  Lock-step minor bump with `@azure/msal-browser`, keeping both MSAL libraries aligned. Includes bug fixes and minor improvements. No breaking changes — lockfile-only bump within the existing `^5.0.2` range constraint.
+
 ## 4.0.0
 
 ### Major Changes
