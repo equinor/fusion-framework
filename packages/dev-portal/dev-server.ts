@@ -49,6 +49,10 @@ if (serviceScopes.length === 0) {
               scopes: serviceScopes,
             },
             {
+              url: '/@fusion-api/apps',
+              scopes: serviceScopes,
+            },
+            {
               url: '/help-proxy',
               rewrite: '/@fusion-api/help',
               scopes: serviceScopes,
