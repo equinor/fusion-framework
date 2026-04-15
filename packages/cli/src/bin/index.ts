@@ -20,6 +20,7 @@ export { uploadApplication } from './app-upload.js';
 export { tagApplication } from './app-tag.js';
 
 export { startPortalDevServer } from './portal-dev.js';
+export { servePortal, type ServePortalOptions } from './portal-serve.js';
 export { buildPortal } from './portal-build.js';
 export { bundlePortal } from './portal-pack.js';
 export { loadPortalManifest } from './portal-manifest.js';
