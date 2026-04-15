@@ -1,5 +1,6 @@
 ---
 "@equinor/fusion-framework-cli": patch
+"@equinor/fusion-framework-dev-portal": patch
 ---
 
 Add `/@fusion-api/apps` as a direct service worker resource so auth tokens are injected for app bundle chunk requests in portal mode.
