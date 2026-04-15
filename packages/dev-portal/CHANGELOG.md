@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-dev-portal
 
+## 5.1.2
+
+### Patch Changes
+
+- b733f91: Replace `react-router-dom` imports with `@equinor/fusion-framework-react-router` and remove the direct `react-router-dom` dependency.
+
 ## 5.1.1
 
 ### Patch Changes

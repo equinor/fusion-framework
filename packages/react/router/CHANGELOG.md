@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-react-router
 
+## 1.2.1
+
+### Patch Changes
+
+- b733f91: Export `RouterProviderProps` type from `react-router` for consumer use.
+
 ## 1.2.0
 
 ### Minor Changes

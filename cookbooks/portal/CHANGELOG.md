@@ -1,5 +1,12 @@
 # portal
 
+## 0.1.50
+
+### Patch Changes
+
+- Updated dependencies [8c5d77a]
+  - @equinor/fusion-framework-cli@14.2.0
+
 ## 0.1.49
 
 ### Patch Changes

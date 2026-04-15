@@ -1,5 +1,13 @@
 # Change Log
 
+## 5.0.2
+
+### Patch Changes
+
+- b733f91: Remove unused `react-router-dom` dependency. Imports already use `@equinor/fusion-framework-react-router`.
+- Updated dependencies [b733f91]
+  - @equinor/fusion-framework-react-router@1.2.1
+
 ## 5.0.1
 
 ### Patch Changes
