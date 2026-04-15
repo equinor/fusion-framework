@@ -1,6 +1,6 @@
 import { useCurrentBookmark } from '@equinor/fusion-framework-react-module-bookmark';
 import { type FC, type PropsWithChildren, useLayoutEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from '@equinor/fusion-framework-react-router';
 
 import type { MyBookmark } from './types';
 
