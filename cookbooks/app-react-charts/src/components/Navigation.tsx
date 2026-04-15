@@ -1,6 +1,6 @@
 import { SideBar, type SidebarLinkProps } from '@equinor/eds-core-react';
 import { home, bar_chart, timeline, pie_chart } from '@equinor/eds-icons';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from '@equinor/fusion-framework-react-router';
 
 export const Navigation = () => {
   const navigate = useNavigate();

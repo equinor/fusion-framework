@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { LogReader } from './components/LogReader';
-import { Link } from 'react-router-dom';
+import { Link } from '@equinor/fusion-framework-react-router';
 
 const Styled = {
   Wrapper: styled.div`

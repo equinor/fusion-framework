@@ -18,7 +18,7 @@ import type { INavigationProvider } from '@equinor/fusion-framework-module-navig
  * @example
  * ```tsx
  * import { useRouter } from '@equinor/fusion-framework-react-app/navigation';
- * import { RouterProvider } from 'react-router-dom';
+ * import { RouterProvider } from '@equinor/fusion-framework-react-router';
  *
  * const routes = [{ path: '/', element: <Home /> }];
  * const App = () => {
