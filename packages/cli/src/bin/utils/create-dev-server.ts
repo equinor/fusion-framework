@@ -104,6 +104,10 @@ const createDevServerTemplate = (
         scopes: ['5a842df8-3238-415d-b168-9f16a6a6031b/.default'],
       },
       {
+        url: '/@fusion-api/apps',
+        scopes: ['5a842df8-3238-415d-b168-9f16a6a6031b/.default'],
+      },
+      {
         url: '/help-proxy',
         rewrite: '/@fusion-api/help',
         scopes: ['5a842df8-3238-415d-b168-9f16a6a6031b/.default'],
