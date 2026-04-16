@@ -1,5 +1,12 @@
 # Change Log
 
+## 14.2.1
+
+### Patch Changes
+
+- 5823e72: Add missing empty `endpoints` field in default fallback for app config
+  - @equinor/fusion-framework-dev-portal@5.1.3
+
 ## 14.2.0
 
 ### Minor Changes
