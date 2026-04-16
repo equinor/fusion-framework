@@ -19,7 +19,9 @@ export const CommandOptionsSchema = AiOptionsSchema.extend({
   config: z.string().min(1).describe('Path to a config file'),
   diff: z.boolean().describe('Process only changed files (workflow mode)'),
   baseRef: z.string().min(1).optional().describe('Git reference to compare against'),
-  clean: z.boolean().describe('Delete all existing documents from the vector store before processing'),
+  clean: z
+    .boolean()
+    .describe('Delete all existing documents from the vector store before processing'),
 }).describe('Command options for the embeddings command');
 
 export type CommandOptions = z.infer<typeof CommandOptionsSchema>;

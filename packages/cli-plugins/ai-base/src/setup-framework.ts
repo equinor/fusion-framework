@@ -1,10 +1,7 @@
 import { enableAI } from '@equinor/fusion-framework-module-ai';
 import type { AIModule } from '@equinor/fusion-framework-module-ai';
 
-import {
-  initializeFramework,
-  FusionEnv,
-} from '@equinor/fusion-framework-cli/bin';
+import { initializeFramework, FusionEnv } from '@equinor/fusion-framework-cli/bin';
 import type { FusionFrameworkSettings, FusionFramework } from '@equinor/fusion-framework-cli/bin';
 import type { AiOptions } from './options/index.js';
 
@@ -61,12 +58,9 @@ export const setupFramework = async (options: AiOptions): Promise<FusionFramewor
 
   /** Initialise the framework, resolve the AI service, and pre-cache tokens. */
   const initAndSetup = async (): Promise<FusionFramework<[AIModule]>> => {
-    const framework = await initializeFramework<[AIModule]>(
-      { env, auth },
-      (configurator) => {
-        enableAI(configurator);
-      },
-    );
+    const framework = await initializeFramework<[AIModule]>({ env, auth }, (configurator) => {
+      enableAI(configurator);
+    });
 
     // resolveService makes an authenticated HTTP call — will throw
     // NoAccountsError if the user has never logged in.

@@ -41,4 +41,9 @@ export {
   FUSION_INDEX_STRATEGY_NAME,
   STRATEGY_TYPE,
 } from './lib/strategies/index.js';
-export type { Strategy, ModelStrategy, EmbedStrategy, IndexStrategy } from './lib/strategies/index.js';
+export type {
+  Strategy,
+  ModelStrategy,
+  EmbedStrategy,
+  IndexStrategy,
+} from './lib/strategies/index.js';

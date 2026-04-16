@@ -77,7 +77,11 @@ type CommandOptions = AiOptions & {
 const _command = createCommand('chat')
   .description('Interactive chat with Large Language Models')
   .addOption(createOption('--verbose', 'Enable verbose output').default(false))
-  .addOption(createOption('--debug', 'Enable debug mode (sets OPENAI_LOG=debug, implies --verbose)').default(false))
+  .addOption(
+    createOption('--debug', 'Enable debug mode (sets OPENAI_LOG=debug, implies --verbose)').default(
+      false,
+    ),
+  )
   .addOption(
     createOption(
       '--history-limit <number>',
@@ -132,20 +136,20 @@ const _command = createCommand('chat')
       new StringOutputParser(),
     ]);
 
-    const messageHistory = new MessageHistory(
-      options.historyLimit ?? 20,
-      async (messages) => {
-        const conversationText = messages.map((m) => `${m.role}: ${m.content}`).join('\n');
-        const summaryPrompt = `Provide a concise summary of this conversation history, focusing on key topics and context:\n\n${conversationText}\n\nSummary:`;
-        try {
-          const raw = await chatService.invoke([{ role: 'user', content: summaryPrompt }]);
-          const text = typeof raw === 'string' ? raw : String(raw);
-          return { role: 'assistant', content: `[Previous conversation summary: ${text}]` };
-        } catch {
-          return { role: 'assistant', content: `[Previous conversation summary: ${messages.length} messages]` };
-        }
-      },
-    );
+    const messageHistory = new MessageHistory(options.historyLimit ?? 20, async (messages) => {
+      const conversationText = messages.map((m) => `${m.role}: ${m.content}`).join('\n');
+      const summaryPrompt = `Provide a concise summary of this conversation history, focusing on key topics and context:\n\n${conversationText}\n\nSummary:`;
+      try {
+        const raw = await chatService.invoke([{ role: 'user', content: summaryPrompt }]);
+        const text = typeof raw === 'string' ? raw : String(raw);
+        return { role: 'assistant', content: `[Previous conversation summary: ${text}]` };
+      } catch {
+        return {
+          role: 'assistant',
+          content: `[Previous conversation summary: ${messages.length} messages]`,
+        };
+      }
+    });
 
     console.log('💬 Chat ready! Start typing your message...\n');
     console.log('💡 Press Ctrl+C to exit at any time\n');
@@ -203,7 +207,10 @@ const _command = createCommand('chat')
           }
 
           // Stream the response from the chain for real-time output
-          const responseStream = await chain.stream({ userMessage, messageHistory: messageHistory.messages });
+          const responseStream = await chain.stream({
+            userMessage,
+            messageHistory: messageHistory.messages,
+          });
 
           // Collect the full response while streaming chunks to stdout
           // This allows users to see the response as it's generated

@@ -34,7 +34,10 @@ export const embedCommand = withAiOptions(
 
       console.log(`Dimensions: ${vector.length}`);
       console.log(
-        `Vector (first 8): [${vector.slice(0, 8).map((v) => v.toFixed(6)).join(', ')}, ...]`,
+        `Vector (first 8): [${vector
+          .slice(0, 8)
+          .map((v) => v.toFixed(6))
+          .join(', ')}, ...]`,
       );
     }),
   { includeEmbedding: true },

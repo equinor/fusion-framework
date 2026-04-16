@@ -9,4 +9,3 @@ export const STRATEGY_TYPE = {
   MODEL: 'model',
   EMBED: 'embed',
 } as const;
-

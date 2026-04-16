@@ -1,6 +1,11 @@
 import { SearchClient } from '@azure/search-documents';
 import type { TokenCredential } from '@azure/core-auth';
-import type { PipelinePolicy, PipelineRequest, PipelineResponse, SendRequest } from '@azure/core-rest-pipeline';
+import type {
+  PipelinePolicy,
+  PipelineRequest,
+  PipelineResponse,
+  SendRequest,
+} from '@azure/core-rest-pipeline';
 import type { AzureAISearchDocument } from '@langchain/community/vectorstores/azure_aisearch';
 
 /**
