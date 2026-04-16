@@ -1,6 +1,7 @@
 import { Subscription } from 'rxjs';
 import type { Observable } from 'rxjs';
 
+import type { BaseHistory } from './BaseHistory';
 import type {
   History,
   NavigateOptions,
@@ -98,6 +99,19 @@ export class ProxyHistory implements History {
   /** @inheritdoc */
   go(delta: number): void {
     this.#target.go(delta);
+  }
+
+  /**
+   * Triggers a POP action on the underlying history to notify framework
+   * listeners (e.g. React Router) after programmatic navigation.
+   *
+   * Delegates to the target's `pop()` when it is a {@link BaseHistory}
+   * instance; otherwise this is a no-op.
+   */
+  pop(): void {
+    if ('pop' in this.#target && typeof this.#target.pop === 'function') {
+      (this.#target as BaseHistory).pop();
+    }
   }
 
   /** @inheritdoc */

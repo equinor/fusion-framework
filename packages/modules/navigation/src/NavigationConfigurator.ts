@@ -1,5 +1,6 @@
 import { z } from 'zod';
-import { of, firstValueFrom, from, type ObservableInput } from 'rxjs';
+import { of, from, type ObservableInput } from 'rxjs';
+import { map } from 'rxjs/operators';
 import {
   BaseConfigBuilder,
   type ModulesInstance,
@@ -149,15 +150,13 @@ export class NavigationConfigurator extends BaseConfigBuilder<INavigationConfigu
           async () => historyOrCallback;
 
     if (proxy) {
-      // Wrap the resolved history in a ProxyHistory so dispose only tears down
+      // Wrap each emitted history in a ProxyHistory so dispose only tears down
       // proxy-owned listeners/blockers, never the underlying history itself.
-      this._set('history', async (args) => {
-        const result = resolve(args);
-        // Unwrap the ObservableInput to get the resolved history value.
-        // biome-ignore lint/suspicious/noConfusingVoidType: matches ConfigBuilderCallback signature
-        const history = await firstValueFrom(from(result as ObservableInput<History | void>));
-        return history ? new ProxyHistory(history) : undefined;
-      });
+      this._set('history', (args) =>
+        from(resolve(args) as ObservableInput<History | undefined>).pipe(
+          map((history) => (history ? new ProxyHistory(history) : undefined)),
+        ),
+      );
     } else {
       this._set('history', resolve);
     }
