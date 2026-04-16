@@ -134,6 +134,13 @@ export class AuthProviderInteractive extends AuthProvider {
     if ((await this.getAccount()) === null) {
       return this.login({ request: { scopes } });
     }
-    return super.acquireToken(options);
+    try {
+      return await super.acquireToken(options);
+    } catch {
+      // Silent acquisition failed (e.g. no cached token for this resource/audience).
+      // Fall back to interactive login so the user only needs one browser session
+      // rather than seeing an unhandled error or a separate prompted login elsewhere.
+      return this.login({ request: { scopes } });
+    }
   }
 }

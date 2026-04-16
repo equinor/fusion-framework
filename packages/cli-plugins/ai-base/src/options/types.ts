@@ -1,42 +1,28 @@
 /**
- * Hand-authored TypeScript interface for AI CLI command options.
+ * Base options for all Fusion AI CLI commands.
  *
- * @remarks
- * Use {@link AiOptions} when you need a lightweight type without pulling in Zod.
- * For runtime validation prefer {@link AiOptionsSchema} from the schema module.
- *
- * @packageDocumentation
- */
-
-/**
- * Configuration options for AI-related CLI commands.
- *
- * This interface defines all available options for configuring Azure OpenAI services
- * and Azure Cognitive Search integration. Required fields must be provided either
- * via command-line arguments or environment variables. Optional fields enable
- * specific features (chat, embeddings, vector search) when provided.
- *
- * @remarks
- * - All required fields (apiKey, apiVersion, instance) must be provided for any AI operation
- * - Chat operations require `openaiChatDeployment`
- * - Embedding operations require `openaiEmbeddingDeployment`
- * - Vector search requires all three Azure Search fields plus `openaiEmbeddingDeployment`
+ * When `aiServiceUrl` is omitted the service URL and token are resolved
+ * automatically from Fusion service discovery using the provided
+ * environment and authentication options.
  */
 export interface AiOptions {
-  /** Azure OpenAI API key for authentication with Azure OpenAI services */
-  openaiApiKey: string;
-  /** Azure OpenAI API version (e.g., '2024-02-15-preview') */
-  openaiApiVersion: string;
-  /** Azure OpenAI instance name (the resource name in Azure) */
-  openaiInstance: string;
-  /** Azure OpenAI chat model deployment name. Required for chat operations */
-  openaiChatDeployment?: string;
-  /** Azure OpenAI embedding model deployment name. Required for embedding and vector search operations */
-  openaiEmbeddingDeployment?: string;
-  /** Azure Cognitive Search endpoint URL. Required for vector search operations */
-  azureSearchEndpoint?: string;
-  /** Azure Cognitive Search API key. Required for vector search operations */
-  azureSearchApiKey?: string;
-  /** Azure Cognitive Search index name. Required for vector search operations */
-  azureSearchIndexName?: string;
+  /**
+   * Base URL of the Fusion AI service (e.g. `https://ai.fusion-dev.net`).
+   * When omitted the URL is resolved from Fusion service discovery.
+   */
+  aiServiceUrl?: string;
+  /** Fusion environment used for service discovery (e.g. `ci`, `fprd`). */
+  env?: string;
+  /** Bearer token passed directly to the auth module (overrides clientId/tenantId). */
+  token?: string;
+  /** Azure AD tenant ID for MSAL silent authentication. */
+  tenantId?: string;
+  /** Azure AD client ID for MSAL silent authentication. */
+  clientId?: string;
+  /** Azure OpenAI chat model deployment name. Required for chat operations. */
+  chatModel?: string;
+  /** Azure OpenAI embedding model deployment name. Required for embedding and index operations. */
+  embedModel?: string;
+  /** Azure AI Search index name. Required for vector search / indexing operations. */
+  indexName?: string;
 }

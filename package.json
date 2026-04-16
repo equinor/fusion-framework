@@ -64,7 +64,6 @@
     "@changesets/cli": "^2.26.2",
     "@equinor/fusion-framework-cli-plugin-ai-chat": "workspace:*",
     "@equinor/fusion-framework-cli-plugin-ai-index": "workspace:*",
-    "@equinor/fusion-framework-cli-plugin-ai-mcp": "workspace:*",
     "@equinor/fusion-framework-cli-plugin-copilot": "workspace:*",
     "@vitest/coverage-v8": "^4.0.18",
     "agent-browser": "^0.25.3",

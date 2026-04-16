@@ -131,13 +131,13 @@ const _command = createCommand('search')
 
     const framework = await setupFramework(options);
 
-    if (!options.azureSearchIndexName) {
-      throw new Error('Azure Search index name is required');
+    if (!options.indexName) {
+      throw new Error('Index name is required');
     }
 
     if (options.verbose) {
       console.log('✅ Framework initialized successfully');
-      console.log(`📇 Index: ${options.azureSearchIndexName}`);
+      console.log(`📇 Index: ${options.indexName}`);
       console.log(`🔎 Searching for: "${query}"`);
       console.log(`📊 Limit: ${options.limit}`);
       console.log(`🔍 Search type: ${options.searchType}`);
@@ -147,7 +147,7 @@ const _command = createCommand('search')
       console.log('');
     }
 
-    const vectorStoreService = framework.ai.getService('search', options.azureSearchIndexName);
+    const vectorStoreService = framework.ai.useIndex(options.indexName);
 
     try {
       const filter = options.filter ? { filterExpression: options.filter } : undefined;

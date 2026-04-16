@@ -95,7 +95,7 @@ const _command = createCommand('remove')
     }
 
     const framework = await setupFramework(options);
-    const vectorStoreService = framework.ai.getService('search', options.azureSearchIndexName);
+    const vectorStoreService = framework.ai.useIndex(options.indexName);
     await vectorStoreService.deleteDocuments({
       filter: { filterExpression },
     });

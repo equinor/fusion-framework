@@ -15,5 +15,5 @@ export {
   configureFusionAI,
   loadFusionAIConfig,
 } from './config.js';
-export { setupFramework, FrameworkInstance } from './setup-framework.js';
+export { setupFramework, type FrameworkInstance } from './setup-framework.js';
 export { registerAiPlugin } from './register.js';

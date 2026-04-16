@@ -1,108 +1,122 @@
 import { BaseModuleProvider } from '@equinor/fusion-framework-module/provider';
 import type { IModel, IEmbed, IVectorStore } from './lib/types.js';
-import type { AIModuleConfig } from './AIConfigurator.interface.js';
 import { version } from './version.js';
+import type { AIModuleConfig } from './AIConfigurator.js';
+import {
+  FUSION_EMBED_STRATEGY_NAME,
+  FUSION_INDEX_STRATEGY_NAME,
+  FUSION_MODEL_STRATEGY_NAME,
+  STRATEGY_TYPE,
+} from './lib/strategies/index.js';
+import type { EmbedStrategy, ModelStrategy, Strategy } from './lib/strategies/index.js';
+
+/** @internal Default embedding model used when none is specified. */
+const DEFAULT_EMBED_MODEL = 'text-embedding-3-large' as const;
+
+/** @internal Default chat model deployment used when none is specified. */
+const DEFAULT_MODEL = 'gpt-5.1-chat' as const;
 
 /**
- * Discriminated key used when calling {@link IAIProvider.getService}.
+ * Public API surface of the Fusion AI provider.
  *
- * | Value          | Returns         |
- * |----------------|----------------|
- * | `'chat'`       | {@link IModel}  |
- * | `'embeddings'` | {@link IEmbed}  |
- * | `'search'`     | {@link IVectorStore} |
+ * All three factory methods create a fresh client instance on each call,
+ * binding them to the resolved service URI and MSAL token factory.
  */
-export type AIServiceType = 'chat' | 'embeddings' | 'search';
-
-/**
- * Interface for AI service provider.
- *
- * Provides access to configured AI services including language models,
- * embeddings, and vector stores. Services are resolved from the configuration
- * and made available through this provider interface.
- */
-export interface IAIProvider {
+export interface IAiProvider {
   /**
-   * Gets a configured AI service by type and identifier.
-   * @param type - The type of service ('chat', 'embeddings', or 'search')
-   * @param identifier - The identifier used when configuring the service
-   * @returns The configured service instance
-   * @throws Error if the service is not found
+   * Creates a language model client backed by the Fusion AI service.
+   *
+   * @param model - Azure OpenAI deployment/model name (e.g. `'gpt-4.1'`).
+   *   Defaults to `'gpt-5.1-chat'`.
    */
-  getService<T extends AIServiceType>(
-    type: T,
-    identifier: string,
-  ): T extends 'chat' ? IModel : T extends 'embeddings' ? IEmbed : IVectorStore;
+  useModel(model: string): IModel;
+
+  /**
+   * Creates a text-embedding client backed by the Fusion AI service.
+   *
+   * @param model - Azure OpenAI deployment/model name.
+   *   Defaults to `'text-embedding-3-large'`.
+   */
+  useEmbed(model?: string): IEmbed;
+
+  /**
+   * Creates an Azure AI Search vector store backed by the Fusion AI service.
+   *
+   * @param indexName - Name of the Azure AI Search index to use.
+   * @param opts.embedModel - Embedding model override; defaults to `'text-embedding-3-large'`.
+   */
+  useIndex(indexName: string, opts?: { embedModel?: string }): IVectorStore;
 }
 
 /**
- * Runtime provider that gives application code access to configured AI services.
+ * Runtime implementation of the Fusion AI provider.
  *
- * Created automatically by the AI module during Fusion Framework initialisation.
- * Use {@link IAIProvider.getService} to retrieve language models, embedding
- * services, or vector stores by the identifier supplied during configuration.
+ * Constructed automatically by the AI module initialiser with the resolved
+ * Fusion AI service URI and a bound MSAL token factory.  Each factory method
+ * returns a pre-configured Azure client wired to the same endpoint.
  *
  * @example
  * ```typescript
- * const ai = modules.ai;
- * const model = ai.getService('chat', 'gpt-4');
- * const response = await model.invoke('Summarise this document');
+ * const model = modules.ai.useModel('gpt-4.1');
+ * const reply = await model.invoke('Summarise this document');
+ *
+ * const embedder = modules.ai.useEmbed('text-embedding-3-large');
+ * const vector = await embedder.embedQuery('Fusion Framework');
+ *
+ * const index = modules.ai.useIndex('framework');
+ * const hits = await index.invoke('module initialisation');
  * ```
  */
-export class AIProvider extends BaseModuleProvider<AIModuleConfig> implements IAIProvider {
-  #models: Record<string, IModel>;
-  #embeddings: Record<string, IEmbed>;
-  #vectorStores: Record<string, IVectorStore>;
+export class AiProvider extends BaseModuleProvider<AIModuleConfig> implements IAiProvider {
+  readonly #strategies: Strategy[];
 
   /**
-   * @param config - Resolved AI module configuration containing all registered services.
+   * @param config - Resolved AI module configuration with service URI and token factory.
    */
   constructor(config: AIModuleConfig) {
     super({ version, config });
-
-    // The configurator has already resolved the services, so we can cast them
-    this.#models = config.models || {};
-    this.#embeddings = config.embeddings || {};
-    this.#vectorStores = config.vectorStores || {};
+    this.#strategies = config.strategies ?? [];
   }
 
-  /**
-   * Retrieve a configured AI service by type and identifier.
-   *
-   * @template T - The service type discriminator.
-   * @param type - Service category — `'chat'`, `'embeddings'`, or `'search'`.
-   * @param identifier - The identifier used when the service was registered via {@link IAIConfigurator}.
-   * @returns The resolved service instance.
-   * @throws {Error} When no service is registered under the given type and identifier.
-   */
-  public getService<T extends AIServiceType>(
-    type: T,
-    identifier: string,
-  ): T extends 'chat' ? IModel : T extends 'embeddings' ? IEmbed : IVectorStore {
-    switch (type) {
-      case 'chat': {
-        const model = this.#models[identifier];
-        if (!model) {
-          throw new Error(`Chat service with identifier '${identifier}' not found`);
-        }
-        return model as any;
-      }
-      case 'embeddings': {
-        const embedding = this.#embeddings[identifier];
-        if (!embedding) {
-          throw new Error(`Embedding service with identifier '${identifier}' not found`);
-        }
-        return embedding as any;
-      }
-      case 'search': {
-        const vectorStore = this.#vectorStores[identifier];
-        if (!vectorStore) {
-          throw new Error(`Search service with identifier '${identifier}' not found`);
-        }
-        return vectorStore as any;
-      }
-      default:
-        throw new Error(`Unknown service type: ${type}`);
+  /** {@inheritDoc IAiProvider.useModel} */
+  public useModel(model: string = DEFAULT_MODEL, options?: { strategy?: string }): IModel {
+    const strategyName = options?.strategy ?? FUSION_MODEL_STRATEGY_NAME;
+    const strategy = this.#strategies.find(
+      (s): s is ModelStrategy => s.name === strategyName && s.type === STRATEGY_TYPE.MODEL,
+    );
+    if (!strategy) {
+      throw new Error(`Model strategy "${strategyName}" not found in configuration`);
     }
+    return strategy.createModel(model);
+  }
+
+  /** {@inheritDoc IAiProvider.useEmbed} */
+  public useEmbed(model: string = DEFAULT_EMBED_MODEL, options?: { strategy?: string }): IEmbed {
+    const strategyName = options?.strategy ?? FUSION_EMBED_STRATEGY_NAME;
+    const strategy = this.#strategies.find(
+      (s): s is EmbedStrategy => s.name === strategyName && s.type === STRATEGY_TYPE.EMBED,
+    );
+    if (!strategy) {
+      throw new Error(`Embed strategy "${strategyName}" not found in configuration`);
+    }
+    return strategy.createClient(model);
+  }
+
+  /** {@inheritDoc IAiProvider.useIndex} */
+  public useIndex(
+    indexName: string,
+    opts?: { embedModel?: string; strategy?: string },
+  ): IVectorStore {
+    const strategyName = opts?.strategy ?? FUSION_INDEX_STRATEGY_NAME;
+    const strategy = this.#strategies.find(
+      (s): s is Extract<Strategy, { type: typeof STRATEGY_TYPE.INDEX }> =>
+        s.name === strategyName && s.type === STRATEGY_TYPE.INDEX,
+    );
+    if (!strategy) {
+      throw new Error(`Index strategy "${strategyName}" not found in configuration`);
+    }
+    const embedModel = opts?.embedModel ?? DEFAULT_EMBED_MODEL;
+    const embedClient = this.useEmbed(embedModel, { strategy: FUSION_EMBED_STRATEGY_NAME });
+    return strategy.createStore(embedClient, indexName);
   }
 }

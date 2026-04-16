@@ -4,6 +4,7 @@ import { registerAiPlugin as registerAiPluginBase } from '@equinor/fusion-framew
 import { command as addCommand } from './embeddings-command.js';
 import { deleteCommand as removeCommand } from './delete-command.js';
 import { searchCommand } from './search-command.js';
+import { embedCommand } from './embed-command.js';
 
 export { FusionAIConfigWithIndex, IndexConfig } from './config.js';
 
@@ -19,7 +20,8 @@ const indexCommand = createCommand('index')
   .description('Manage the AI search index (add, search, remove)')
   .addCommand(addCommand)
   .addCommand(removeCommand)
-  .addCommand(searchCommand);
+  .addCommand(searchCommand)
+  .addCommand(embedCommand);
 
 /**
  * Registers the `ai index` command with the Fusion Framework CLI.

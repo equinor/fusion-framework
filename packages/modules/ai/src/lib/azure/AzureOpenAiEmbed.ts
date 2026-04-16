@@ -25,6 +25,8 @@ type EmbedOpenAiConfig = {
 export type AzureOpenAiEmbedConfig = EmbedOpenAiConfig & {
   azureOpenAIApiDeploymentName?: string;
   azureOpenAIApiInstanceName?: string;
+  /** Direct base path for the Azure OpenAI endpoint (e.g. a Fusion AI proxy URI). */
+  azureOpenAIBasePath?: string;
   azureOpenAIApiKey?: string;
   azureOpenAIApiVersion?: string;
   azureADTokenProvider?: () => Promise<string>;

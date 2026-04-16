@@ -1,159 +1,65 @@
 import { type Command, InvalidOptionArgumentError } from 'commander';
 import {
-  apiInstanceOption,
-  apiKeyOption,
-  apiVersionOption,
-  azureSearchApiKeyOption,
-  azureSearchEndpointOption,
-  azureSearchIndexNameOption,
-  chatDeploymentOption,
-  embeddingDeploymentOption,
+  chatModelOption,
+  clientIdOption,
+  embedModelOption,
+  envOption,
+  indexNameOption,
+  tenantIdOption,
+  tokenOption,
 } from './options.js';
 
 /**
- * Enhances a Commander command with AI-related options and validation.
+ * Enhances a Commander command with Fusion AI options and validation.
  *
- * This function adds Azure OpenAI and Azure Cognitive Search options to the provided
- * command, along with pre-action validation hooks to ensure required options are provided.
- * The function allows selective inclusion of chat, embedding, and search capabilities
- * based on the command's requirements.
+ * Core auth options (`--env`, `--token`, `--tenant-id`, `--client-id`) are always
+ * added.  When no explicit `--token` is provided, the framework will authenticate
+ * via MSAL and resolve the AI service endpoint from Fusion service discovery.
  *
- * Options added:
- * - Core: `openaiApiKey`, `openaiApiVersion`, `openaiInstance` (always included)
- * - Chat: `openaiChatDeployment` (if includeChat is true)
- * - Embedding: `openaiEmbeddingDeployment` (if includeEmbedding is true)
- * - Search: `azureSearchEndpoint`, `azureSearchApiKey`, `azureSearchIndexName` (if includeSearch is true)
+ * Pass flags to include optional chat, embed, or index options and make
+ * them required at runtime via the `preAction` validation hook.
  *
- * @param command - The Commander command instance to enhance with AI options
- * @param args - Optional configuration object for selective feature inclusion
- * @param args.includeEmbedding - Whether to include and require embedding deployment option (default: false)
- * @param args.includeChat - Whether to include and require chat deployment option (default: false)
- * @param args.includeSearch - Whether to include and require Azure Search options (default: false)
- * @returns The enhanced command with AI options and validation hooks attached
- * @throws {InvalidOptionArgumentError} During command execution if required options are missing or invalid
- *
- * @example
- * ```ts
- * const chatCommand = createCommand('chat')
- *   .description('Start a chat session');
- *
- * withOptions(chatCommand, { includeChat: true });
- * ```
+ * @param command - The Commander command to decorate with options.
+ * @param args - Feature flags controlling which optional options to add.
+ * @param args.includeChat - Add `--chat-model` and validate it at runtime.
+ * @param args.includeEmbedding - Add `--embed-model` and validate it at runtime.
+ * @param args.includeSearch - Add `--index-name` and validate it at runtime.
+ * @returns The decorated command.
  */
 export const withOptions = (
   command: Command,
   args?: Partial<{
-    includeEmbedding: boolean;
     includeChat: boolean;
+    includeEmbedding: boolean;
     includeSearch: boolean;
   }>,
 ): Command => {
-  // Core authentication options
-  command.addOption(apiKeyOption);
-  command.addOption(apiVersionOption);
-  command.addOption(apiInstanceOption);
+  command.addOption(envOption);
+  command.addOption(tokenOption);
+  command.addOption(tenantIdOption);
+  command.addOption(clientIdOption);
 
-  // Deployment options
-  if (args?.includeChat === true) {
-    command.addOption(chatDeploymentOption);
-  }
+  if (args?.includeChat) command.addOption(chatModelOption);
+  if (args?.includeEmbedding) command.addOption(embedModelOption);
+  if (args?.includeSearch) command.addOption(indexNameOption);
 
-  if (args?.includeEmbedding === true) {
-    command.addOption(embeddingDeploymentOption);
-  }
-
-  // Azure Search options
-  if (args?.includeSearch === true) {
-    command.addOption(azureSearchEndpointOption);
-    command.addOption(azureSearchApiKeyOption);
-    command.addOption(azureSearchIndexNameOption);
-  }
-
-  // Validation hook
   command.hook('preAction', (thisCommand) => {
-    const options = thisCommand.opts();
+    const opts = thisCommand.opts();
 
-    // Validate API key
-    if (
-      !options.openaiApiKey ||
-      typeof options.openaiApiKey !== 'string' ||
-      options.openaiApiKey.trim() === ''
-    ) {
+    if (args?.includeChat && !opts.chatModel?.trim()) {
       throw new InvalidOptionArgumentError(
-        'Azure OpenAI API key is required. Provide it via --openai-api-key option or AZURE_OPENAI_API_KEY environment variable.',
+        'Chat model name is required. Provide --chat-model or set FUSION_AI_CHAT_MODEL.',
       );
     }
-
-    // Validate API version
-    if (!options.openaiApiVersion || typeof options.openaiApiVersion !== 'string') {
-      throw new InvalidOptionArgumentError('API version must be a non-empty string.');
-    }
-
-    // Validate instance name
-    if (
-      !options.openaiInstance ||
-      typeof options.openaiInstance !== 'string' ||
-      options.openaiInstance.trim() === ''
-    ) {
+    if (args?.includeEmbedding && !opts.embedModel?.trim()) {
       throw new InvalidOptionArgumentError(
-        'Azure OpenAI instance name is required. Provide it via --openai-instance option or AZURE_OPENAI_INSTANCE_NAME environment variable.',
+        'Embedding model name is required. Provide --embed-model or set FUSION_AI_EMBED_MODEL.',
       );
     }
-
-    if (args?.includeChat === true) {
-      if (
-        !options.openaiChatDeployment ||
-        typeof options.openaiChatDeployment !== 'string' ||
-        options.openaiChatDeployment.trim() === ''
-      ) {
-        throw new InvalidOptionArgumentError(
-          'Chat deployment name is required and must be a non-empty string.',
-        );
-      }
-    }
-
-    if (args?.includeEmbedding === true) {
-      if (
-        !options.openaiEmbeddingDeployment ||
-        typeof options.openaiEmbeddingDeployment !== 'string' ||
-        options.openaiEmbeddingDeployment.trim() === ''
-      ) {
-        throw new InvalidOptionArgumentError(
-          'Azure OpenAI embedding deployment name is required. Provide it via --openai-embedding-deployment option or AZURE_OPENAI_EMBEDDING_DEPLOYMENT_NAME environment variable.',
-        );
-      }
-    }
-
-    if (args?.includeSearch === true) {
-      if (
-        !options.azureSearchEndpoint ||
-        typeof options.azureSearchEndpoint !== 'string' ||
-        options.azureSearchEndpoint.trim() === ''
-      ) {
-        throw new InvalidOptionArgumentError(
-          'Azure Search endpoint is required and must be a non-empty string.',
-        );
-      }
-
-      if (
-        !options.azureSearchApiKey ||
-        typeof options.azureSearchApiKey !== 'string' ||
-        options.azureSearchApiKey.trim() === ''
-      ) {
-        throw new InvalidOptionArgumentError(
-          'Azure Search API key is required. Provide it via --azure-search-api-key option or AZURE_SEARCH_API_KEY environment variable.',
-        );
-      }
-
-      if (
-        !options.azureSearchIndexName ||
-        typeof options.azureSearchIndexName !== 'string' ||
-        options.azureSearchIndexName.trim() === ''
-      ) {
-        throw new InvalidOptionArgumentError(
-          'Azure Search index name is required and must be a non-empty string.',
-        );
-      }
+    if (args?.includeSearch && !opts.indexName?.trim()) {
+      throw new InvalidOptionArgumentError(
+        'Index name is required. Provide --index-name or set FUSION_AI_INDEX_NAME.',
+      );
     }
   });
 
