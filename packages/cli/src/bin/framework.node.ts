@@ -1,4 +1,8 @@
-import { ModulesConfigurator, type ModulesInstance, type AnyModule } from '@equinor/fusion-framework-module';
+import {
+  ModulesConfigurator,
+  type ModulesInstance,
+  type AnyModule,
+} from '@equinor/fusion-framework-module';
 import { enableAuthModule, type MsalNodeModule } from '@equinor/fusion-framework-module-msal-node';
 import { type HttpModule, module as httpModule } from '@equinor/fusion-framework-module-http';
 import {
@@ -16,7 +20,9 @@ type Modules = [MsalNodeModule, HttpModule, ServiceDiscoveryModule];
  * Type representing the initialized Fusion Framework instance.
  * This is a composition of the modules defined in the Modules tuple.
  */
-export type FusionFramework<TExtra extends Array<AnyModule> = []> = ModulesInstance<[...Modules, ...TExtra]>;
+export type FusionFramework<TExtra extends Array<AnyModule> = []> = ModulesInstance<
+  [...Modules, ...TExtra]
+>;
 
 // Default scope for Fusion service discovery
 const FUSION_SERVICE_SCOPE = ['5a842df8-3238-415d-b168-9f16a6a6031b/.default'];

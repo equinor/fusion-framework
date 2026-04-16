@@ -1,5 +1,8 @@
 import { BaseConfigBuilder } from '@equinor/fusion-framework-module';
-import type { ConfigBuilderCallback, ConfigBuilderCallbackArgs } from '@equinor/fusion-framework-module';
+import type {
+  ConfigBuilderCallback,
+  ConfigBuilderCallbackArgs,
+} from '@equinor/fusion-framework-module';
 import { from } from 'rxjs';
 import type { ObservableInput } from 'rxjs';
 import { mergeMap, toArray } from 'rxjs';

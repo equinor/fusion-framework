@@ -37,11 +37,10 @@ export type StrategyType = (typeof STRATEGY_TYPE)[keyof typeof STRATEGY_TYPE];
  * Conditional type mapping a {@link StrategyType} discriminator to its
  * corresponding strategy interface.
  */
-export type Strategy<T extends StrategyType = StrategyType> =
-  T extends typeof STRATEGY_TYPE.MODEL
-    ? ModelStrategy
-    : T extends typeof STRATEGY_TYPE.EMBED
-      ? EmbedStrategy
-      : T extends typeof STRATEGY_TYPE.INDEX
-        ? IndexStrategy
-        : never;
+export type Strategy<T extends StrategyType = StrategyType> = T extends typeof STRATEGY_TYPE.MODEL
+  ? ModelStrategy
+  : T extends typeof STRATEGY_TYPE.EMBED
+    ? EmbedStrategy
+    : T extends typeof STRATEGY_TYPE.INDEX
+      ? IndexStrategy
+      : never;
