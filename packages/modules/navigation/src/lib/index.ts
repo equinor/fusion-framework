@@ -12,6 +12,7 @@
 export { BaseHistory } from './BaseHistory';
 export { BrowserHistory } from './BrowserHistory';
 export { MemoryHistory } from './MemoryHistory';
+export { ProxyHistory } from './ProxyHistory';
 
 // History stacks
 export { BrowserHistoryStack } from './BrowserHistoryStack';

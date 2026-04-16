@@ -1,5 +1,12 @@
 # @equinor/fusion-framework-dev-portal
 
+## 5.1.3
+
+### Patch Changes
+
+- Updated dependencies [e97bba0]
+  - @equinor/fusion-framework-module-navigation@7.0.1
+
 ## 5.1.2
 
 ### Patch Changes
