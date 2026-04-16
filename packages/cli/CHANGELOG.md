@@ -1,5 +1,16 @@
 # Change Log
 
+## 14.2.2
+
+### Patch Changes
+
+- 53b725f: Add `/@fusion-api/apps` as a direct service worker resource so auth tokens are injected for app bundle chunk requests in portal mode.
+
+  Previously, only `/apps-proxy` was registered. When the browser resolved relative chunk imports (e.g. `lib-*.js`) against the rewritten `/@fusion-api/apps/` origin, the service worker did not match the URL and the request was sent without an Authorization header, resulting in 401 errors.
+
+- Updated dependencies [53b725f]
+  - @equinor/fusion-framework-dev-portal@5.1.4
+
 ## 14.2.1
 
 ### Patch Changes
