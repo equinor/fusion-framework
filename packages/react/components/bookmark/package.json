@@ -42,7 +42,7 @@
     "@types/react": "^19.2.7",
     "react": "^19.2.1",
     "styled-components": "^6.3.11",
-    "typescript": "^5.9.3"
+    "typescript": "^6.0.2"
   },
   "peerDependencies": {
     "@equinor/eds-core-react": "^2.0.0",

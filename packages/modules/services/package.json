@@ -150,7 +150,7 @@
     "@equinor/fusion-framework-module-service-discovery": "workspace:^",
     "@faker-js/faker": "^10.1.0",
     "msw": "^2.7.3",
-    "typescript": "^5.9.3",
+    "typescript": "^6.0.2",
     "vitest": "^4.1.0"
   },
   "peerDependencies": {
