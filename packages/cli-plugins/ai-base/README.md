@@ -11,10 +11,9 @@ logic from this package.
 
 ## Who should use this
 
-Authors of **new Fusion CLI AI plugins** that need the same Azure OpenAI /
-Azure Cognitive Search options and framework setup that the existing plugins
-share. If you are building a Fusion application, use the published CLI
-plugins directly.
+Authors of **new Fusion CLI AI plugins** that need the same Fusion service
+discovery options and framework setup that the existing plugins share. If you
+are building a Fusion application, use the published CLI plugins directly.
 
 ## Quick start
 
@@ -45,12 +44,12 @@ import {
 const myCommand = createCommand('my-task')
   .description('Run my custom AI task');
 
-// Attach core + chat + embedding options and pre-action validation
+// Attach core auth + chat + embedding options and pre-action validation
 withOptions(myCommand, { includeChat: true, includeEmbedding: true });
 
 myCommand.action(async (options: AiOptions) => {
   const framework = await setupFramework(options);
-  // use framework.ai …
+  // use framework.modules.ai …
 });
 
 // Register under `fusion-cli ai my-task`
@@ -61,16 +60,10 @@ export const register = (program: Command) =>
 ### 3. Load a configuration file (optional)
 
 ```ts
-import {
-  loadFusionAIConfig,
-  configureFusionAI,
-} from '@equinor/fusion-framework-cli-plugin-ai-base';
+import { loadFusionAIConfig } from '@equinor/fusion-framework-cli-plugin-ai-base';
 
-// fusion-ai.config.ts
-export default configureFusionAI(async () => ({
-  apiKey: process.env.OPENAI_API_KEY,
-  deployment: 'gpt-4',
-}));
+// fusion-ai.config.ts — export a default configuration object
+export default { includes: ['./src/**/*.ts'] };
 
 // at runtime
 const config = await loadFusionAIConfig('fusion-ai.config', {
@@ -91,7 +84,7 @@ The package exposes two entry points:
 
 | Export | Kind | Description |
 |---|---|---|
-| `setupFramework` | function | Initialise the Fusion Framework with Azure OpenAI chat, embedding, and vector-store modules |
+| `setupFramework` | function | Initialise the Fusion Framework with AI module, MSAL auth, and service discovery |
 | `registerAiPlugin` | function | Register a Commander sub-command under the shared `ai` command group |
 | `loadFusionAIConfig` | function | Locate and import a `fusion-ai.config.{ts,mjs,js,json}` file |
 | `configureFusionAI` | function | Type-safe factory for writing configuration files |
@@ -116,14 +109,13 @@ without explicit flags.
 
 | Flag | Environment variable | Required | Default |
 |---|---|---|---|
-| `--openai-api-key` | `AZURE_OPENAI_API_KEY` | Yes | — |
-| `--openai-api-version` | `AZURE_OPENAI_API_VERSION` | Yes | `2024-02-15-preview` |
-| `--openai-instance` | `AZURE_OPENAI_INSTANCE_NAME` | Yes | — |
-| `--openai-chat-deployment` | `AZURE_OPENAI_CHAT_DEPLOYMENT_NAME` | When chat is enabled | — |
-| `--openai-embedding-deployment` | `AZURE_OPENAI_EMBEDDING_DEPLOYMENT_NAME` | When embedding is enabled | — |
-| `--azure-search-endpoint` | `AZURE_SEARCH_ENDPOINT` | When search is enabled | — |
-| `--azure-search-api-key` | `AZURE_SEARCH_API_KEY` | When search is enabled | — |
-| `--azure-search-index-name` | `AZURE_SEARCH_INDEX_NAME` | When search is enabled | — |
+| `--env` | `FUSION_ENV` | No | `ci` |
+| `--token` | `FUSION_TOKEN` | No | — (MSAL interactive login) |
+| `--tenant-id` | `FUSION_TENANT_ID` | No | Equinor default |
+| `--client-id` | `FUSION_CLIENT_ID` | No | Fusion CLI default |
+| `--chat-model` | `FUSION_AI_CHAT_MODEL` | When chat is enabled | `gpt-5.1-chat` |
+| `--embed-model` | `FUSION_AI_EMBED_MODEL` | When embedding is enabled | `text-embedding-3-large` |
+| `--index-name` | `FUSION_AI_INDEX_NAME` | When search is enabled | — |
 
 ## Key concepts
 
@@ -142,9 +134,9 @@ that includes the corresponding environment variable name.
 
 ### Framework bootstrap
 
-`setupFramework` creates a `ModulesConfigurator`, enables the AI module, and
-conditionally registers chat models, embedding models, and an Azure Cognitive
-Search vector store based on which options are present. The returned
+`setupFramework` creates a Fusion Framework instance with MSAL authentication,
+service discovery, and the AI module. It registers strategy-based model, embed,
+and index providers resolved through Fusion's AI service. The returned
 `FrameworkInstance` is ready for downstream use.
 
 ## Consuming plugins

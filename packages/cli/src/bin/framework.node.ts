@@ -1,4 +1,4 @@
-import { ModulesConfigurator, type ModulesInstance } from '@equinor/fusion-framework-module';
+import { ModulesConfigurator, type ModulesInstance, type AnyModule } from '@equinor/fusion-framework-module';
 import { enableAuthModule, type MsalNodeModule } from '@equinor/fusion-framework-module-msal-node';
 import { type HttpModule, module as httpModule } from '@equinor/fusion-framework-module-http';
 import {
@@ -16,7 +16,7 @@ type Modules = [MsalNodeModule, HttpModule, ServiceDiscoveryModule];
  * Type representing the initialized Fusion Framework instance.
  * This is a composition of the modules defined in the Modules tuple.
  */
-export type FusionFramework = ModulesInstance<Modules>;
+export type FusionFramework<TExtra extends Array<AnyModule> = []> = ModulesInstance<[...Modules, ...TExtra]>;
 
 // Default scope for Fusion service discovery
 const FUSION_SERVICE_SCOPE = ['5a842df8-3238-415d-b168-9f16a6a6031b/.default'];
@@ -178,18 +178,48 @@ export const configureFramework = (
  * based on the supplied configuration. It supports multiple authentication modes
  * and allows customization of service discovery endpoints and scopes.
  *
+ * When no `configure` callback is provided (or `TExtra` defaults to `[]`) the
+ * return type is {@link FusionFramework}.  Pass a typed `configure` callback to
+ * extend the instance with additional modules:
+ *
+ * @template TExtra - Tuple of additional module types added via `configure`.
+ *   Defaults to `[]`, which means the return type is exactly {@link FusionFramework}.
+ *
  * @param config - The settings for framework initialization.
- * @returns A promise resolving to the initialized Fusion Framework instance.
+ * @param configure - Optional callback to add or further configure modules.
+ *   Receives a configurator already set up with the base {@link Modules}.
+ * @returns A promise resolving to the initialized Fusion Framework instance,
+ *   typed as `ModulesInstance<[...Modules, ...TExtra]>`.
  * @throws Will throw if required authentication parameters are missing.
+ *
+ * @example Basic usage (returns FusionFramework)
+ * ```typescript
+ * const framework = await initializeFramework({ env, auth });
+ * ```
+ *
+ * @example With extra modules
+ * ```typescript
+ * const framework = await initializeFramework<[AiModule]>(
+ *   { env, auth },
+ *   (configurator) => enableAI(configurator),
+ * );
+ * framework.ai.useModel('gpt-4.1');
+ * ```
  */
-export const initializeFramework = async (
+export const initializeFramework = async <TExtra extends Array<AnyModule> = []>(
   config: FusionFrameworkSettings,
-): Promise<FusionFramework> => {
+  configure?: (configurator: ModulesConfigurator<[...Modules, ...TExtra]>) => void,
+): Promise<FusionFramework<TExtra>> => {
   // Get the configured framework
   const configurator = configureFramework(config);
+
+  // Apply additional configuration if provided
+  if (configure) {
+    configure(configurator as ModulesConfigurator<[...Modules, ...TExtra]>);
+  }
 
   // Initialize all configured modules and return the framework instance
   const instance = await configurator.initialize();
 
-  return instance;
+  return instance as FusionFramework<TExtra>;
 };

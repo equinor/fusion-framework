@@ -33,7 +33,7 @@ export function createDeleteRemovedFilesStream(
         console.log('Removing entry from vector store', file.relativePath);
       }
       if (!options.dryRun) {
-        const vectorStoreService = framework.ai.getService('search', options.azureSearchIndexName);
+        const vectorStoreService = framework.ai.useIndex(options.indexName);
         // Single batch deletion - one file can produce multiple document chunks
         await vectorStoreService.deleteDocuments({
           filter: { filterExpression: filterExpression ?? undefined },
