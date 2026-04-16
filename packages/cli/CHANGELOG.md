@@ -1,5 +1,11 @@
 # Change Log
 
+## 14.2.3
+
+### Patch Changes
+
+- b2ee9f1: Internal: republish `@equinor/fusion-framework-cli` after a failed CI publish; no consumer-facing changes are included in this release.
+
 ## 14.2.2
 
 ### Patch Changes
