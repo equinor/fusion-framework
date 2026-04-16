@@ -102,7 +102,6 @@ const _command = createCommand('chat')
     if (options.verbose) {
       console.log('✅ Framework initialized successfully');
       console.log('💬 Starting interactive chat...');
-      console.log('🔍 Context retrieval enabled');
       console.log(`📝 Message history limit: ${options.historyLimit || 20} messages`);
       console.log('🔍 Using model:', options.chatModel);
       console.log('Type "exit" or "quit" to end the conversation');
@@ -199,10 +198,9 @@ const _command = createCommand('chat')
         // Show typing indicator
         console.log('\n🤖 AI Response:');
 
-        // Use LangChain runnable chain for RAG (Retrieval-Augmented Generation)
         try {
           if (options.verbose) {
-            console.log('🔍 Using LangChain chain with context retrieval...');
+            console.log('🔍 Invoking chat chain...');
             console.log(`📝 Message history contains ${messageHistory.messages.length} messages`);
           }
 

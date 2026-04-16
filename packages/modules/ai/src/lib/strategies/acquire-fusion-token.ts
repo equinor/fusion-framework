@@ -40,8 +40,14 @@ export const acquireFusionToken = async (
         'Ensure the auth (MSAL) module is correctly configured, or call setAccessToken() with a custom provider.',
     );
   }
+  const expiresOnTimestamp =
+    token.expiresOn instanceof Date
+      ? token.expiresOn.getTime()
+      : typeof token.expiresOn === 'number'
+        ? token.expiresOn
+        : Date.now() + 3600_000; // fallback: 1 hour from now
   return {
     token: token.accessToken,
-    expiresOnTimestamp: Number(token.expiresOn),
+    expiresOnTimestamp,
   };
 };

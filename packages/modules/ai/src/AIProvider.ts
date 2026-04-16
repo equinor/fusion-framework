@@ -28,24 +28,26 @@ export interface IAiProvider {
    *
    * @param model - Azure OpenAI deployment/model name (e.g. `'gpt-4.1'`).
    *   Defaults to `'gpt-5.1-chat'`.
+   * @param options - Optional strategy selector.
    */
-  useModel(model: string): IModel;
+  useModel(model?: string, options?: { strategy?: string }): IModel;
 
   /**
    * Creates a text-embedding client backed by the Fusion AI service.
    *
    * @param model - Azure OpenAI deployment/model name.
    *   Defaults to `'text-embedding-3-large'`.
+   * @param options - Optional strategy selector.
    */
-  useEmbed(model?: string): IEmbed;
+  useEmbed(model?: string, options?: { strategy?: string }): IEmbed;
 
   /**
    * Creates an Azure AI Search vector store backed by the Fusion AI service.
    *
    * @param indexName - Name of the Azure AI Search index to use.
-   * @param opts.embedModel - Embedding model override; defaults to `'text-embedding-3-large'`.
+   * @param opts - Optional overrides for embedding model and strategy selection.
    */
-  useIndex(indexName: string, opts?: { embedModel?: string }): IVectorStore;
+  useIndex(indexName: string, opts?: { embedModel?: string; strategy?: string }): IVectorStore;
 }
 
 /**

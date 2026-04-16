@@ -57,18 +57,20 @@ export class MessageHistory {
   async add(message: ChatMessage): Promise<void> {
     this.#history.push(message);
 
-    let hasSummary = false;
-
     // Stage 1: compress when threshold is reached
     if (this.#history.length >= COMPRESS_AT) {
       const oldest = this.#history.splice(0, COMPRESS_TAKE);
       const summary = await this.#summarise(oldest);
       this.#history.unshift(summary);
-      hasSummary = true;
     }
 
-    // Stage 2: enforce hard limit, preserving a leading summary if present
+    // Stage 2: enforce hard limit, preserving a leading summary if present.
+    // Detect whether the first message is a summary (from this or a previous
+    // compression pass) by checking for the marker prefix.
     if (this.#history.length > this.#limit) {
+      const hasSummary =
+        this.#history[0]?.content?.toString().startsWith('[Previous conversation summary:') ??
+        false;
       const excess = this.#history.length - this.#limit;
       const startIndex = hasSummary ? 1 : 0;
       const maxRemovable = this.#history.length - (hasSummary ? 2 : 1);

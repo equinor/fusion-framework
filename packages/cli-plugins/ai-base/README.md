@@ -49,7 +49,7 @@ withOptions(myCommand, { includeChat: true, includeEmbedding: true });
 
 myCommand.action(async (options: AiOptions) => {
   const framework = await setupFramework(options);
-  // use framework.modules.ai …
+  // use framework.ai …
 });
 
 // Register under `fusion-cli ai my-task`

@@ -14,7 +14,6 @@ import z from 'zod';
  */
 export const AiOptionsSchema = z
   .object({
-    aiServiceUrl: z.string().url('Fusion AI service URL must be a valid URL.').optional(),
     env: z.string().optional(),
     token: z.string().optional(),
     tenantId: z.string().optional(),

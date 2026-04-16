@@ -13,8 +13,7 @@ A new `FusionSearchClient` handles OData path rewriting for the Fusion AI proxy,
 configurator.setModel('chat', new AzureOpenAIModel({ apiKey, endpoint }));
 const model = provider.getService('chat', 'my-model');
 
-// After
-configurator.addStrategy(createFusionModelStrategy({ deployment: 'gpt-5.1-chat' }));
+// After — default Fusion strategies are registered automatically
 const model = provider.useModel('gpt-5.1-chat');
 ```
 
