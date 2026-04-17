@@ -43,11 +43,10 @@ export const createFusionAiEmbedStrategy = async (modules: {
   // shared across all clients created by this strategy instance.
   const service = await modules.serviceDiscovery.resolveService('ai');
 
-  // Same URL rewrite as the model strategy: strip the model-scoped path and
-  // rebuild as `{origin}/openai/deployments` so LangChain can append the
-  // deployment name without the SDK double-inserting the segment.
-  const { origin } = new URL(service.uri);
-  const basePath = `${origin}/openai/deployments`;
+  // Use the full service URI (which may include a proxy path like /@fusion-api/ai
+  // in the dev server) so that LangChain can append the deployment name correctly.
+  const baseUri = service.uri.replace(/\/+$/, '');
+  const basePath = `${baseUri}/openai/deployments`;
 
   return {
     name: FUSION_EMBED_STRATEGY_NAME,

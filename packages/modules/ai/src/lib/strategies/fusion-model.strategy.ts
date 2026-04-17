@@ -40,14 +40,15 @@ export const createFusionAiModelStrategy = async (modules: {
   // shared across all clients created by this strategy instance.
   const service = await modules.serviceDiscovery.resolveService('ai');
 
-  // Service discovery returns a model-scoped URI (e.g. https://ai.test.api.fusion-dev.net/gpt-5.1-chat).
+  // Service discovery returns a full URI (e.g. https://ai.test.api.fusion-dev.net or
+  // http://localhost:3000/@fusion-api/ai when proxied by the dev server).
   // LangChain constructs: `${azureOpenAIBasePath}/${deploymentName}` as the baseURL for the openai SDK.
   // The openai@6 AzureOpenAI client prepends `/deployments/${model}` to every request path
   // UNLESS the baseURL already contains '/deployments' (which suppresses the injection).
   // So basePath must end with '/openai/deployments' so the final baseURL becomes
-  // `{origin}/openai/deployments/{model}` and the SDK does not double-insert the deployment segment.
-  const { origin } = new URL(service.uri);
-  const basePath = `${origin}/openai/deployments`;
+  // `{serviceUri}/openai/deployments/{model}` and the SDK does not double-insert the deployment segment.
+  const baseUri = service.uri.replace(/\/+$/, '');
+  const basePath = `${baseUri}/openai/deployments`;
 
   return {
     name: FUSION_MODEL_STRATEGY_NAME,
