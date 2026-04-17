@@ -1,68 +1,77 @@
-import type { IModulesConfigurator, Module } from '@equinor/fusion-framework-module';
+import type {
+  IModulesConfigurator,
+  Module,
+  ModuleConfigType,
+} from '@equinor/fusion-framework-module';
 
-import { AIConfigurator } from './AIConfigurator.js';
-import type { IAIConfigurator } from './AIConfigurator.interface.js';
-import type { IAIProvider } from './AIProvider.js';
-import { AIProvider } from './AIProvider.js';
+import { AiConfigurator } from './AIConfigurator.js';
+import { AiProvider } from './AIProvider.js';
+import type { IAiProvider } from './AIProvider.js';
 
 /** Module key used to register the AI module in the Fusion Framework module map. */
-export type AIModuleKey = 'ai';
+export type AiModuleKey = 'ai';
 
 /** Module key constant for the AI module (`'ai'`). */
-export const moduleKey: AIModuleKey = 'ai';
+export const moduleKey: AiModuleKey = 'ai';
 
 /** Type alias describing the AI module shape within the Fusion Framework module system. */
-export type AIModule = Module<AIModuleKey, IAIProvider, IAIConfigurator, []>;
+export type AiModule = Module<AiModuleKey, IAiProvider, AiConfigurator>;
 
 /**
  * AI module definition for Fusion Framework.
  *
- * This module provides AI services including language models, embeddings,
- * and vector stores. It follows the standard Fusion Framework module pattern
- * with configuration and initialization phases.
+ * Service URI and bearer token are resolved by {@link AiConfigurator} via
+ * default strategies that use the service discovery and MSAL auth modules.
+ * Register custom strategies with {@link IAIConfigurator.addStrategy}.
  */
-export const module: AIModule = {
+export const module: AiModule = {
   name: moduleKey,
-  configure: () => new AIConfigurator(),
+  configure: () => new AiConfigurator(),
   initialize: async (args) => {
-    // Resolve the configuration to get the actual service instances
-    const resolvedConfig = await (args.config as AIConfigurator).createConfigAsync(args);
-
-    // Create the AI provider with the resolved configuration
-    return new AIProvider(resolvedConfig);
+    const config = await args.config.createConfigAsync(args);
+    return new AiProvider(config);
   },
 };
 
 /**
  * Enable the AI module on a Fusion Framework module configurator.
  *
- * Call this inside `configureModules` to register the AI module and provide
- * a callback that configures language models, embedding services, and vector stores.
+ * The AI module resolves its service endpoint and credentials automatically
+ * from Fusion service discovery and the MSAL auth module — no callback is
+ * required.  Pass a `configure` callback to register additional or custom
+ * strategies.
  *
  * @param config - The framework modules configurator.
- * @param configure - Callback that receives the {@link IAIConfigurator} for service registration.
+ * @param configure - Optional callback that receives the {@link AiConfigurator}
+ *   for registering custom strategies.
  *
  * @example
  * ```typescript
  * import { enableAI } from '@equinor/fusion-framework-module-ai';
  *
  * const configure = (config) => {
- *   enableAI(config, (ai) => {
- *     ai.setModel('gpt-4', new AzureOpenAIModel({ azureOpenAIApiKey: '...' }));
- *   });
+ *   enableAI(config);
  * };
  * ```
  */
-export const enableAI = (
+export const enableAI = <TRef = unknown>(
+  // biome-ignore lint/suspicious/noExplicitAny: accepts any framework module configurator
   config: IModulesConfigurator<any, any>,
-  configure: (configurator: IAIConfigurator) => void,
+  configure?: (config: ModuleConfigType<AiModule>, ref: TRef) => void,
 ): void => {
-  config.addConfig({ module, configure });
+  config.addConfig({
+    module,
+    configure: (config, ref) => {
+      if (configure) {
+        configure(config, ref);
+      }
+    },
+  });
 };
 
 declare module '@equinor/fusion-framework-module' {
   interface Modules {
-    ai: AIModule;
+    ai: AiModule;
   }
 }
 

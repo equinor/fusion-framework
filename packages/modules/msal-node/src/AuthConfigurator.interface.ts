@@ -1,4 +1,4 @@
-import type { PublicClientApplication } from '@azure/msal-node';
+import type { DeviceCodeRequest, PublicClientApplication } from '@azure/msal-node';
 
 import type { IAuthProvider } from './AuthProvider.interface.js';
 
@@ -54,14 +54,43 @@ type AuthConfigInteractiveMode = {
 };
 
 /**
+ * Configuration type for the device code authentication mode.
+ *
+ * In this mode the user is shown a short code and a URL (`https://microsoft.com/devicelogin`).
+ * They open the URL on any device, enter the code, and authenticate there.
+ * No local HTTP server is required, making this the recommended mode for CLI tools.
+ *
+ * @property mode - Specifies the authentication mode as `'device_code'`.
+ * @property client - An instance of `PublicClientApplication` used for authentication.
+ * @property deviceCodeCallback - Optional callback invoked with the device code response.
+ *   Receives the full {@link DeviceCodeRequest.deviceCodeCallback} response containing
+ *   `userCode`, `verificationUri`, `message`, and expiry details.
+ *   Defaults to printing `response.message` to `console.log`.
+ * @property parent - An optional parent `IAuthProvider` instance for delegation.
+ */
+type AuthConfigDeviceCodeMode = {
+  mode: 'device_code';
+  client: PublicClientApplication;
+  deviceCodeCallback?: DeviceCodeRequest['deviceCodeCallback'];
+  server?: never;
+  accessToken?: never;
+  parent?: IAuthProvider;
+};
+
+/**
  * Represents the configuration options for authentication.
  *
- * This type is a union of three different authentication modes:
- * - `AuthConfigInteractiveMode`: Configuration for interactive authentication.
- * - `AuthConfigSilentMode`: Configuration for silent authentication.
- * - `AuthConfigTokenMode`: Configuration for token-based authentication.
+ * This type is a union of four different authentication modes:
+ * - `AuthConfigInteractiveMode`: Browser-based login with a local callback server.
+ * - `AuthConfigSilentMode`: Silent authentication using cached/refreshed tokens.
+ * - `AuthConfigTokenMode`: Static pre-obtained token passthrough (CI/CD, automation).
+ * - `AuthConfigDeviceCodeMode`: Device code flow — prints a code for the user to enter at a URL. Recommended for CLI tools.
  */
-export type AuthConfig = AuthConfigInteractiveMode | AuthConfigSilentMode | AuthConfigTokenMode;
+export type AuthConfig =
+  | AuthConfigInteractiveMode
+  | AuthConfigSilentMode
+  | AuthConfigTokenMode
+  | AuthConfigDeviceCodeMode;
 
 /**
  * Interface for configuring authentication settings for the MSAL Node module.
@@ -73,11 +102,20 @@ export type AuthConfig = AuthConfigInteractiveMode | AuthConfigSilentMode | Auth
  * - `token_only`: Use a pre-obtained access token (e.g., for CI/CD or automation).
  * - `silent`: Use MSAL's silent authentication with a configured client (for background services or cached tokens).
  * - `interactive`: Use MSAL's interactive authentication, typically for CLI tools or development, with a local server for browser-based login.
+ * - `device_code`: Use MSAL's device code flow — prints a code for the user to enter at `https://microsoft.com/devicelogin`. No local server required. **Recommended for CLI tools.**
  *
  * Consumers should use the provided methods to configure the module according to their use case.
  * Maintainers should ensure that new authentication flows or configuration options are exposed via this interface for consistency.
  *
  * @example
+ * // --- Device code mode (recommended for CLI tools) ---
+ * ```ts
+ * builder.setMode('device_code');
+ * builder.setClientConfig('your-tenant-id', 'your-client-id');
+ * // Optional: customise the output shown to the user
+ * builder.setDeviceCodeCallback((response) => console.log(response.message));
+ * ```
+ *
  * // --- Interactive mode (browser login, local server) ---
  * ```ts
  * builder.setMode('interactive');
@@ -103,7 +141,7 @@ export interface IAuthConfigurator {
   /**
    * Sets the authentication mode for the module.
    *
-   * @param mode - The authentication mode to use: 'token_only', 'silent', or 'interactive'.
+   * @param mode - The authentication mode to use: `'token_only'`, `'silent'`, `'interactive'`, or `'device_code'`.
    *
    * Consumers: Call this first to define the overall authentication strategy.
    * Maintainers: Add new modes here if supporting additional auth flows.
@@ -160,4 +198,26 @@ export interface IAuthConfigurator {
    * Maintainers: Ensure this is securely handled and not mixed with other modes.
    */
   setAccessToken(token: string): void;
+
+  /**
+   * Sets a callback invoked with the device code response during `device_code` authentication.
+   *
+   * The callback receives a `DeviceCodeResponse` containing `userCode`, `verificationUri`,
+   * `message`, and expiry information. Typically used to display the code and URL to the user.
+   *
+   * If not set, the default behaviour is to print `response.message` to `console.log`.
+   *
+   * @param callback - The callback function, or `undefined` to restore the default.
+   *
+   * @example
+   * ```ts
+   * builder.setMode('device_code');
+   * builder.setClientConfig('your-tenant-id', 'your-client-id');
+   * builder.setDeviceCodeCallback((response) => {
+   *   console.log(`\nAuthenticate at: ${response.verificationUri}`);
+   *   console.log(`Enter code: ${response.userCode}\n`);
+   * });
+   * ```
+   */
+  setDeviceCodeCallback(callback: DeviceCodeRequest['deviceCodeCallback'] | undefined): void;
 }

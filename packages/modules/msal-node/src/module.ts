@@ -3,6 +3,7 @@ import { AuthConfigurator } from './AuthConfigurator.js';
 import { AuthProvider } from './AuthProvider.js';
 import { AuthTokenProvider } from './AuthTokenProvider.js';
 import { AuthProviderInteractive } from './AuthProviderInteractive.js';
+import { AuthProviderDeviceCode } from './AuthProviderDeviceCode.js';
 import type { IAuthProvider } from './AuthProvider.interface.js';
 
 /**
@@ -15,6 +16,7 @@ import type { IAuthProvider } from './AuthProvider.interface.js';
  *
  * - In `token_only` mode, a static access token is used (see {@link AuthTokenProvider}).
  * - In `interactive` mode, the user is prompted via a local server and browser (see {@link AuthProviderInteractive}).
+ * - In `device_code` mode, the user authenticates by entering a code at a URL on any device (see {@link AuthProviderDeviceCode}). Recommended for CLI tools.
  * - In all other cases, silent authentication is attempted using cached credentials (see {@link AuthProvider}).
  *
  * @see AuthProvider
@@ -41,6 +43,11 @@ export const module: MsalNodeModule = {
           throw new Error('Server configuration is required for interactive mode');
         }
         return new AuthProviderInteractive(client, { server });
+      }
+
+      case 'device_code': {
+        const { client, deviceCodeCallback } = config;
+        return new AuthProviderDeviceCode(client, { deviceCodeCallback });
       }
 
       default:

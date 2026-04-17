@@ -1,4 +1,5 @@
 import { PublicClientApplication } from '@azure/msal-node';
+import type { DeviceCodeRequest } from '@azure/msal-node';
 import {
   BaseConfigBuilder,
   type ConfigBuilderCallbackArgs,
@@ -96,6 +97,17 @@ export class AuthConfigurator extends BaseConfigBuilder<AuthConfig> {
   }
 
   /**
+   * Sets the callback invoked with the device code response during `device_code` authentication.
+   *
+   * If not set, the default behaviour is `console.log(response.message)`.
+   *
+   * @param callback - The callback, or `undefined` to restore the default handler.
+   */
+  setDeviceCodeCallback(callback: DeviceCodeRequest['deviceCodeCallback'] | undefined) {
+    this._set('deviceCodeCallback', callback ?? undefined);
+  }
+
+  /**
    * Prepares and finalizes the authentication configuration before validation and use.
    *
    * This method injects the parent authentication provider reference (if available)
@@ -156,6 +168,13 @@ export class AuthConfigurator extends BaseConfigBuilder<AuthConfig> {
         // Silent mode requires a valid MSAL client instance
         if (config.client instanceof PublicClientApplication === false) {
           throw new Error('Client is required when mode is silent');
+        }
+        break;
+      }
+      case 'device_code': {
+        // Device code mode requires a valid MSAL client instance
+        if (config.client instanceof PublicClientApplication === false) {
+          throw new Error('Client is required when mode is device_code');
         }
         break;
       }
