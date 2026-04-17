@@ -47,6 +47,8 @@ export const extractContextIdFromPath = (
   matcher: RegExp = matchGUID,
 ): string | undefined =>
   path
+    // remove query-string and hash fragments before segment matching
+    .split(/[?#]/)[0]
     // remove leading slashes
     .replace(/^\/+/, '')
     // split path by slashes

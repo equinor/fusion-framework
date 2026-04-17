@@ -96,3 +96,12 @@ export type RelatedContextParameters = { item: ContextItem; filter?: { type?: st
  * @returns A new array of `ContextItem` objects after applying the filter.
  */
 export type ContextFilterFn = (items: ContextItem[]) => ContextItem[];
+
+/**
+ * Supported URL routing strategies for context-aware deep links.
+ *
+ * - `query`: preferred query-parameter strategy using `$contextId`.
+ * - `path`: legacy path-segment strategy.
+ * - `custom`: path-segment strategy with custom extractor/generator hooks.
+ */
+export type ContextRoutingStrategy = 'query' | 'path' | 'custom';

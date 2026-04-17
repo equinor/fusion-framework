@@ -70,6 +70,10 @@ All configuration flows through `enableContext` → `ContextConfigBuilder`:
 
 ```ts
 enableContext(configurator, (builder) => {
+  // recommended: choose routing strategy explicitly
+  // when omitted, strategy defaults to 'path' for compatibility
+  builder.setRoutingStrategy('path');
+
   // restrict accepted context types
   builder.setContextType(['ProjectMaster', 'Facility']);
 
@@ -116,6 +120,7 @@ enableContext(configurator, (builder) => {
 
 | Builder method | Purpose |
 |---|---|
+| `setRoutingStrategy(strategy)` | Set routing strategy (`query` uses `$contextId`, `path` keeps legacy path compatibility, `custom` uses app-defined path extractor/generator hooks) |
 | `setContextType(types)` | Allowed context type IDs for validation |
 | `setContextFilter(fn)` | Post-query result filter |
 | `setContextParameterFn(fn)` | Maps search + type to API query params |
