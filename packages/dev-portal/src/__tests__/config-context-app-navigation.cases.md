@@ -12,7 +12,7 @@ without coupling to implementation details.
 |---|---|
 | **legacy app** | app whose context module version is < 8.0.0 — does **not** call `setRoutingStrategy`, so `routingStrategy` is `undefined` on the provider |
 | **modern app** | app whose context module version is ≥ 8.0.0 — explicitly calls `setRoutingStrategy('query' \| 'path' \| 'custom')` |
-| **query strategy** | modern app called `setRoutingStrategy('query')` — context id lives in `?$ctx=` |
+| **query strategy** | modern app called `setRoutingStrategy('query')` — context id lives in `?$contextId=` |
 | **path strategy** | modern app called `setRoutingStrategy('path')` — context id is the 3rd URL segment |
 | **custom strategy** | modern app called `setRoutingStrategy('custom')` — app owns its own URL shape |
 | **context cleared** | portal emits `null` for `currentContext$` |
@@ -25,7 +25,7 @@ without coupling to implementation details.
 **Given** a modern app (v8+) that called `setRoutingStrategy('query')`  
 **And** the portal URL is `/apps/my-app`  
 **When** the user selects a context with id `ctx-abc`  
-**Then** the URL becomes `/apps/my-app?$ctx=ctx-abc`  
+**Then** the URL becomes `/apps/my-app?$contextId=ctx-abc`  
 **And** the pathname does **not** contain a context segment
 
 Confirmed: ✅
@@ -37,7 +37,7 @@ Confirmed: ✅
 **And** the portal URL is `/apps/my-app`  
 **When** the user selects a context with id `ctx-abc`  
 **Then** the URL becomes `/apps/my-app/ctx-abc`  
-**And** there is no `$ctx` query parameter
+**And** there is no `$contextId` query parameter
 
 
 Confirmed: ✅
@@ -48,9 +48,9 @@ note: context here will always be guid if the app is using default context clien
 ## 3. Context changes — modern app, query strategy, previous context already in URL
 
 **Given** a modern app (v8+) that called `setRoutingStrategy('query')`  
-**And** the portal URL is `/apps/my-app?$ctx=old-ctx`  
+**And** the portal URL is `/apps/my-app?$contextId=old-ctx`  
 **When** the user selects a different context with id `new-ctx`  
-**Then** the URL becomes `/apps/my-app?$ctx=new-ctx`  
+**Then** the URL becomes `/apps/my-app?$contextId=new-ctx`  
 **And** `old-ctx` is gone from both path and query
 
 Confirmed: ✅
@@ -62,7 +62,7 @@ Confirmed: ✅
 **And** the portal URL is `/apps/my-app`  
 **When** the user selects a context with id `ctx-abc`  
 **Then** the URL becomes `/apps/my-app/ctx-abc`  
-**And** there is no `$ctx` query parameter  
+**And** there is no `$contextId` query parameter  
 **And** the version gate forces path-only behavior — `routingStrategy` is never read
 
 Confirmed: ✅
@@ -75,7 +75,7 @@ Confirmed: ✅
 **When** the user selects a new context with id `ctx-xyz`  
 **Then** the portal calls the app's `generatePathFromContext` to build the next pathname  
 **And** the URL reflects the custom path shape produced by the app — e.g. `/apps/my-app/route-a/ctx-xyz`  
-**And** there is no `$ctx` query parameter — the version gate forces path-only, custom hooks are honored within that constraint
+**And** there is no `$contextId` query parameter — the version gate forces path-only, custom hooks are honored within that constraint
 
 Confirmed: ✅
 ---
@@ -83,10 +83,10 @@ Confirmed: ✅
 ## 5. Context cleared — modern app, query strategy
 
 **Given** a modern app (v8+) that called `setRoutingStrategy('query')`  
-**And** the portal URL is `/apps/my-app?$ctx=ctx-abc`  
+**And** the portal URL is `/apps/my-app?$contextId=ctx-abc`  
 **When** the user clears context  
 **Then** the URL becomes `/apps/my-app`  
-**And** `$ctx` is removed  
+**And** `$contextId` is removed  
 **And** the user stays on the app — **not redirected to `/`**
 
 Confirmed: ✅
@@ -96,10 +96,10 @@ Confirmed: ✅
 ## 6. Context cleared — modern app, query strategy, on a sub-route
 
 **Given** a modern app (v8+) that called `setRoutingStrategy('query')`  
-**And** the portal URL is `/apps/my-app/some-route?$ctx=ctx-abc`  
+**And** the portal URL is `/apps/my-app/some-route?$contextId=ctx-abc`  
 **When** the user clears context  
 **Then** the URL becomes `/apps/my-app/some-route`  
-**And** `$ctx` is removed  
+**And** `$contextId` is removed  
 **And** `some-route` is preserved — it is an app sub-route, **not** a context segment
 
 Note: the app itself has to handle navigation if the current route requires context, since portal does not know which routes are valid without context.
@@ -144,9 +144,9 @@ Note: this has been the historical behavior for legacy apps, and we want to pres
 **And** somehow the portal URL is `/apps/my-app/ctx-abc`  
   (e.g. navigated here from a legacy path URL before the app loaded)  
 **When** the context-change subscription fires for `ctx-abc`  
-**Then** the URL is normalized to `/apps/my-app?$ctx=ctx-abc`  
+**Then** the URL is normalized to `/apps/my-app?$contextId=ctx-abc`  
 **And** the path segment is stripped  
-**And** `$ctx` is written
+**And** `$contextId` is written
 
 Confirmed: ✅
 
@@ -155,10 +155,10 @@ Confirmed: ✅
 ## 10. App switch — from query app to legacy app (carry-over)
 
 **Given** the portal has context `ctx-abc` active  
-**And** the user was on a modern app with query strategy at `/apps/new-app?$ctx=ctx-abc`  
+**And** the user was on a modern app with query strategy at `/apps/new-app?$contextId=ctx-abc`  
 **When** the user navigates to `/apps/legacy-app` (a legacy app, version < 8, no `routingStrategy`)  
 **Then** the portal carry-over writes the URL as `/apps/legacy-app/ctx-abc`  
-**And** `$ctx` is **not** added to the search string  
+**And** `$contextId` is **not** added to the search string  
 **And** path-only behavior is used because version gate applies before `routingStrategy` is read
 
 Confirmed: ✅
@@ -169,7 +169,7 @@ Confirmed: ✅
 **Given** the portal has context `ctx-abc` active  
 **And** the user was on a legacy app at `/apps/old-app/ctx-abc`  
 **When** the user navigates to `/apps/new-app` (a modern app that called `setRoutingStrategy('query')`)  
-**Then** the portal carry-over writes the URL as `/apps/new-app?$ctx=ctx-abc`  
+**Then** the portal carry-over writes the URL as `/apps/new-app?$contextId=ctx-abc`  
 **And** there is no context segment in the pathname
 
 Confirmed: ✅
@@ -180,7 +180,7 @@ Confirmed: ✅
 **Given** the portal has context `ctx-abc` active  
 **And** the user was on a modern app with path strategy at `/apps/path-app/ctx-abc`  
 **When** the user navigates to `/apps/query-app` (a modern app that called `setRoutingStrategy('query')`)  
-**Then** the portal carry-over writes the URL as `/apps/query-app?$ctx=ctx-abc`  
+**Then** the portal carry-over writes the URL as `/apps/query-app?$contextId=ctx-abc`  
 **And** there is no context segment in the pathname  
 **And** the path-embedded context from the previous app is not carried to the new pathname
 
@@ -190,10 +190,10 @@ Confirmed: ✅
 ## 11c. App switch — from modern query app to modern path app (carry-over)
 
 **Given** the portal has context `ctx-abc` active  
-**And** the user was on a modern app with query strategy at `/apps/query-app?$ctx=ctx-abc`  
+**And** the user was on a modern app with query strategy at `/apps/query-app?$contextId=ctx-abc`  
 **When** the user navigates to `/apps/path-app` (a modern app that called `setRoutingStrategy('path')`)  
 **Then** the portal carry-over writes the URL as `/apps/path-app/ctx-abc`  
-**And** there is no `$ctx` in the search string  
+**And** there is no `$contextId` in the search string  
 **And** the query-embedded context from the previous app is not leaked to the new search string
 
 Confirmed: ✅
@@ -225,7 +225,7 @@ Confirmed: ✅
 
 **Given** a modern app (v8+) with `routingStrategy: 'custom'`  
 **When** the context changes or the user navigates  
-**Then** the portal context does **not** modify the pathname or add `$ctx`  
+**Then** the portal context does **not** modify the pathname or add `$contextId`  
 **And** the app context handler is responsible for parsing the URL and performing any navigation needed based on the new context
 **And** the app is solely responsible for its own URL shape
 

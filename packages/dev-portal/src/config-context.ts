@@ -48,7 +48,7 @@ interface DevPortalContextConfigBuilder {
  *
  * **Path extractor** — called when the context module needs to read a context
  * id back out of a URL (e.g. on initial page load). Uses query-first resolution
- * so `$ctx` query-param routes take precedence over path-segment routes.
+ * so `$contextId` query-param routes take precedence over path-segment routes.
  *
  * @param builder - Context configuration builder supplied by `enableContext()`.
  */
