@@ -38,7 +38,7 @@ export const createFusionAiIndexStrategy = async (modules: {
   // Resolve the AI service once — the resulting endpoint and credentials are
   // shared across all stores created by this strategy instance.
   const aiService = await modules.serviceDiscovery.resolveService('ai');
-  const { origin } = new URL(aiService.uri);
+  const baseUri = aiService.uri.replace(/\/+$/, '');
 
   return {
     name: FUSION_INDEX_STRATEGY_NAME,
@@ -46,7 +46,7 @@ export const createFusionAiIndexStrategy = async (modules: {
     createStore: (embed: IEmbed, indexName: string): IVectorStore => {
       // FusionSearchClient already embeds the path-rewrite policy that maps
       // OData action paths to the simpler Fusion AI proxy route structure.
-      const searchClient = new FusionSearchClient(origin, indexName, {
+      const searchClient = new FusionSearchClient(baseUri, indexName, {
         getToken: () => acquireFusionToken(modules.auth, aiService),
       });
       return new AzureVectorStore(embed, { client: searchClient, indexName });
