@@ -15,107 +15,72 @@
 
 ---
 
-The Fusion Framework CLI provides powerful AI commands for interacting with Large Language Models (LLMs), generating document embeddings, and performing semantic search. These commands integrate with Azure OpenAI and Azure Cognitive Search to enable intelligent codebase understanding and Q&A capabilities.
+The Fusion Framework CLI provides AI commands for interacting with Large Language Models (LLMs), generating document embeddings, and performing semantic search. These commands integrate with the Fusion AI service via automatic service discovery and MSAL authentication.
 
 ## Overview
 
 The `ai` command group includes the following subcommands:
 
-- **`ai chat`** - Interactive chat with AI models using vector store context retrieval
+- **`ai chat`** - Interactive chat with AI models
 - **`ai index add`** - Add documents to the search index by generating embeddings from source files
 - **`ai index search`** - Search the vector store to validate embeddings and retrieve relevant documents
 - **`ai index remove`** - Remove documents from the search index by source path or OData filter
+- **`ai index embed`** - Embed a single text string and print the resulting vector (for testing)
 
 ## Prerequisites
 
 Before using the AI commands, you need:
 
-1. **Azure OpenAI Service** with:
-   - Chat model deployment (e.g., GPT-4, GPT-3.5-turbo)
-   - Embedding model deployment (e.g., text-embedding-ada-002)
+1. **Access to the Fusion AI service** — the CLI resolves the service endpoint automatically from Fusion service discovery.
+2. **Azure AD credentials** — the CLI authenticates via MSAL. On first use it will launch an interactive browser login; subsequent runs use the cached token silently.
 
-2. **Azure Cognitive Search** with:
-   - A search service instance
-   - A search index configured for vector search
+## Authentication
 
-3. **Configuration** - Via environment variables (`.env` file for local development or GitHub Variables/Secrets for CI/CD)
+The CLI supports three authentication modes, tried in this order:
 
-## Configuration
+1. **Static token** (`--token` / `FUSION_TOKEN`) — bypasses MSAL entirely. Useful for CI/CD with pre-obtained tokens.
+2. **Silent MSAL** — uses cached credentials from a previous interactive login.
+3. **Interactive login** — if no cached credentials exist, the CLI automatically spawns `ffc auth login` (opens a browser) and retries.
 
-### Environment Variables
+### Environment variables
 
-All AI commands are configured via environment variables. For local development, use a `.env` file in your project root. For CI/CD, use GitHub Variables and Secrets.
-
-#### Local Development (.env file)
-
-Create a `.env` file in your project root:
-
-```bash
-# Azure OpenAI Configuration
-AZURE_OPENAI_API_KEY=your-api-key
-AZURE_OPENAI_API_VERSION=2024-02-15-preview
-AZURE_OPENAI_INSTANCE_NAME=your-instance-name
-AZURE_OPENAI_CHAT_DEPLOYMENT_NAME=gpt-4
-AZURE_OPENAI_EMBEDDING_DEPLOYMENT_NAME=text-embedding-ada-002
-
-# Azure Cognitive Search Configuration
-AZURE_SEARCH_ENDPOINT=https://your-search.search.windows.net
-AZURE_SEARCH_API_KEY=your-search-api-key
-AZURE_SEARCH_INDEX_NAME=your-index-name
-```
-
-**Note:** Add `.env` to your `.gitignore` to keep credentials secure.
-
-#### CI/CD (GitHub Actions)
-
-For GitHub Actions workflows, configure:
-- **Secrets** (Settings → Secrets and variables → Actions → Secrets): For sensitive data
-  - `AZURE_OPENAI_API_KEY`
-  - `AZURE_SEARCH_API_KEY`
-- **Variables** (Settings → Secrets and variables → Actions → Variables): For non-sensitive configuration
-  - `AZURE_OPENAI_API_VERSION`
-  - `AZURE_OPENAI_INSTANCE_NAME`
-  - `AZURE_OPENAI_CHAT_DEPLOYMENT_NAME`
-  - `AZURE_OPENAI_EMBEDDING_DEPLOYMENT_NAME`
-  - `AZURE_SEARCH_ENDPOINT`
-  - `AZURE_SEARCH_INDEX_NAME`
+| Flag | Environment variable | Default | Description |
+|---|---|---|---|
+| `--env` | `FUSION_ENV` | `ci` | Fusion environment for service discovery |
+| `--token` | `FUSION_TOKEN` | — | Explicit bearer token (skips MSAL auth) |
+| `--tenant-id` | `FUSION_TENANT_ID` | Equinor tenant | Azure AD tenant ID |
+| `--client-id` | `FUSION_CLIENT_ID` | Fusion default | Azure AD application client ID |
+| `--chat-model` | `FUSION_AI_CHAT_MODEL` | `gpt-5.1-chat` | Azure OpenAI chat model deployment |
+| `--embed-model` | `FUSION_AI_EMBED_MODEL` | `text-embedding-3-large` | Azure OpenAI embedding model deployment |
+| `--index-name` | `FUSION_AI_INDEX_NAME` | — | Azure AI Search index name |
 
 ### Configuration File
 
-For the `ai index add` command, you can create a `fusion-ai.config.ts` file in your project root:
+For the `ai index add` command, you can create a `fusion-ai.config.ts` file in your project root to control which files are indexed and how metadata is processed:
 
 ```typescript
-import { configureFusionAI } from '@equinor/fusion-framework-cli-plugin-ai-index';
-import type { FusionAIConfigWithIndex } from '@equinor/fusion-framework-cli-plugin-ai-index';
-
-export default configureFusionAI((): FusionAIConfigWithIndex => {
-  return {
-    // Index-specific configuration
-    index: {
-      // File patterns to match for processing
-      patterns: [
-        'packages/**/src/**/*.{ts,tsx}',
-        'packages/**/docs/**/*.md',
-        'packages/**/README.md',
-      ],
-      // Embedding generation configuration
-      embedding: {
-        // Size of text chunks for embedding
-        chunkSize: 1000,
-        // Overlap between chunks to maintain context
-        chunkOverlap: 200,
-      },
-      // Metadata processing configuration
-      metadata: {
-        // Optional: Custom metadata processor
-        // attributeProcessor: (metadata, document) => {
-        //   // Transform or filter metadata attributes
-        //   return metadata;
-        // },
+export default {
+  index: {
+    name: 'my-index',                     // Index name (overridden by --index-name)
+    model: 'text-embedding-3-large',       // Embedding model (overridden by --embed-model)
+    patterns: [
+      'packages/**/src/**/*.{ts,tsx}',
+      'packages/**/docs/**/*.md',
+      'packages/**/README.md',
+    ],
+    metadata: {
+      resolvePackage: true,                // Extract package.json metadata
+      attributeProcessor: (metadata, document) => {
+        // Add custom tags based on file path
+        metadata.tags ??= [];
+        if (document.metadata.source.includes('cookbooks/')) {
+          metadata.tags.push('cookbook');
+        }
+        return metadata;
       },
     },
-  };
-});
+  },
+};
 ```
 
 ## Commands
@@ -142,11 +107,9 @@ ffc ai chat [options]
 
 | Option | Description | Default |
 |--------|-------------|---------|
-| `--context-limit <number>` | Max context documents to retrieve | `5` |
 | `--history-limit <number>` | Max messages in conversation history | `20` |
 | `--verbose` | Enable verbose output | `false` |
-
-**Note:** Azure configuration (API keys, endpoints, etc.) is provided via environment variables (`.env` file or GitHub Variables/Secrets), not command-line options.
+| `--debug` | Enable debug mode (sets `OPENAI_LOG=debug`, implies `--verbose`) | `false` |
 
 #### Interactive Commands
 
@@ -163,22 +126,21 @@ While in chat mode, you can use these special commands:
 # Start interactive chat with default settings
 ffc ai chat
 
-# Increase context retrieval limit for more comprehensive responses
-ffc ai chat --context-limit 10
-
 # Increase conversation history limit for longer sessions
 ffc ai chat --history-limit 100
 
 # Enable verbose output for debugging
 ffc ai chat --verbose
+
+# Enable full debug mode (OPENAI_LOG=debug)
+ffc ai chat --debug
 ```
 
 #### How It Works
 
-1. **Context Retrieval**: When you ask a question, the system automatically searches the vector store for relevant documents
-2. **Message Formatting**: Retrieved context is included in the system message to provide the AI with relevant information
-3. **Streaming Response**: The AI response streams in real-time for immediate feedback
-4. **History Management**: Conversation history is automatically compressed when it reaches 10 messages to maintain context while reducing token usage
+1. **Message Formatting**: User messages and conversation history are sent to the chat model
+2. **Streaming Response**: The AI response streams in real-time for immediate feedback
+3. **History Management**: Conversation history is automatically compressed when it reaches 10 messages using AI summarisation to maintain context while reducing token usage
 
 ### `ai index add`
 
@@ -209,8 +171,6 @@ ffc ai index add [options] [glob-patterns...]
 | `--diff` | Process only changed files (workflow mode) | `false` |
 | `--base-ref <ref>` | Git reference to compare against | `HEAD~1` |
 | `--clean` | Delete all existing documents before processing | `false` |
-
-**Note:** Azure configuration (API keys, endpoints, etc.) is provided via environment variables (`.env` file or GitHub Variables/Secrets), not command-line options.
 
 #### Examples
 
@@ -296,8 +256,6 @@ ffc ai index search <query> [options]
 | `--raw` | Output raw metadata without normalization | `false` |
 | `--verbose` | Enable verbose output | `false` |
 
-**Note:** Azure configuration (API keys, endpoints, etc.) is provided via environment variables (`.env` file or GitHub Variables/Secrets), not command-line options.
-
 #### Examples
 
 ```bash
@@ -380,8 +338,6 @@ ffc ai index remove [options] [source-paths...]
 | `[source-paths...]` | One or more relative file paths to remove | - |
 | `--filter <expression>` | Raw OData filter expression for advanced selection | - |
 | `--dry-run` | Preview what would be removed without deleting anything | `false` |
-
-**Note:** Azure configuration (API keys, endpoints, etc.) is provided via environment variables (`.env` file or GitHub Variables/Secrets), not command-line options.
 
 #### Examples
 
@@ -477,12 +433,11 @@ Access via `metadata/attributes/any(a: a/key eq '...' and a/value eq '...')`:
 
 ### Initial Setup
 
-1. **Create `.env` file** in your project root with Azure configuration:
+1. **Authenticate** with your Equinor / Fusion identity:
    ```bash
-   # See Configuration section above for all required variables
-   AZURE_OPENAI_API_KEY=your-key
-   AZURE_OPENAI_INSTANCE_NAME=your-instance
-   # ... other variables
+   # Interactive device-code login (opens a browser)
+   ffc ai chat
+   # The CLI will prompt you to sign in on first use
    ```
 
 2. **Create configuration file** (optional):
@@ -548,13 +503,10 @@ jobs:
         run: |
           ffc ai index add --diff
         env:
-          AZURE_OPENAI_API_KEY: ${{ secrets.AZURE_OPENAI_API_KEY }}
-          AZURE_OPENAI_API_VERSION: ${{ vars.AZURE_OPENAI_API_VERSION }}
-          AZURE_OPENAI_INSTANCE_NAME: ${{ vars.AZURE_OPENAI_INSTANCE_NAME }}
-          AZURE_OPENAI_EMBEDDING_DEPLOYMENT_NAME: ${{ vars.AZURE_OPENAI_EMBEDDING_DEPLOYMENT_NAME }}
-          AZURE_SEARCH_ENDPOINT: ${{ vars.AZURE_SEARCH_ENDPOINT }}
-          AZURE_SEARCH_API_KEY: ${{ secrets.AZURE_SEARCH_API_KEY }}
-          AZURE_SEARCH_INDEX_NAME: ${{ vars.AZURE_SEARCH_INDEX_NAME }}
+          FUSION_TOKEN: ${{ secrets.FUSION_TOKEN }}
+          FUSION_ENV: ${{ vars.FUSION_ENV }}
+          FUSION_AI_EMBED_MODEL: ${{ vars.FUSION_AI_EMBED_MODEL }}
+          FUSION_AI_INDEX_NAME: ${{ vars.FUSION_AI_INDEX_NAME }}
 ```
 
 #### Advanced Workflow with SHA Tracking
@@ -606,13 +558,10 @@ jobs:
             ffc ai index add
           fi
         env:
-          AZURE_OPENAI_API_KEY: ${{ secrets.AZURE_OPENAI_API_KEY }}
-          AZURE_OPENAI_API_VERSION: ${{ vars.AZURE_OPENAI_API_VERSION }}
-          AZURE_OPENAI_INSTANCE_NAME: ${{ vars.AZURE_OPENAI_INSTANCE_NAME }}
-          AZURE_OPENAI_EMBEDDING_DEPLOYMENT_NAME: ${{ vars.AZURE_OPENAI_EMBEDDING_DEPLOYMENT_NAME }}
-          AZURE_SEARCH_API_KEY: ${{ secrets.AZURE_SEARCH_API_KEY }}
-          AZURE_SEARCH_ENDPOINT: ${{ vars.AZURE_SEARCH_ENDPOINT }}
-          AZURE_SEARCH_INDEX_NAME: ${{ vars.AZURE_SEARCH_INDEX_NAME }}
+          FUSION_TOKEN: ${{ secrets.FUSION_TOKEN }}
+          FUSION_ENV: ${{ vars.FUSION_ENV }}
+          FUSION_AI_EMBED_MODEL: ${{ vars.FUSION_AI_EMBED_MODEL }}
+          FUSION_AI_INDEX_NAME: ${{ vars.FUSION_AI_INDEX_NAME }}
 
       - name: Save current SHA
         run: echo ${{ github.sha }} > .index-base-ref
@@ -633,39 +582,30 @@ jobs:
 - More efficient than comparing against a fixed branch reference
 
 **GitHub Secrets and Variables:**
-- **Secrets** (Settings → Secrets and variables → Actions → Secrets): Store sensitive data like API keys
-  - `AZURE_OPENAI_API_KEY`
-  - `AZURE_SEARCH_API_KEY`
+- **Secrets** (Settings → Secrets and variables → Actions → Secrets): Store sensitive data
+  - `FUSION_TOKEN` — a pre-obtained bearer token for the Fusion service
 - **Variables** (Settings → Secrets and variables → Actions → Variables): Store non-sensitive configuration
-  - `AZURE_OPENAI_API_VERSION`
-  - `AZURE_OPENAI_INSTANCE_NAME`
-  - `AZURE_OPENAI_EMBEDDING_DEPLOYMENT_NAME`
-  - `AZURE_SEARCH_ENDPOINT`
-  - `AZURE_SEARCH_INDEX_NAME`
+  - `FUSION_ENV` — e.g. `ci` or `fprd`
+  - `FUSION_AI_EMBED_MODEL` — embedding model deployment name
+  - `FUSION_AI_INDEX_NAME` — target search index name
 
 ## Troubleshooting
 
 ### Common Issues
 
-**Error: "API key is required"**
-- Ensure environment variables are set in your `.env` file
-- Verify the `.env` file is in your project root
-- Check that variable names match exactly (case-sensitive)
-- For CI/CD, verify GitHub Secrets and Variables are configured
+**Error: "Authentication failed"**
+- Ensure you have a valid Equinor identity and can sign in via the browser
+- If using `--token`, verify the token is still valid (tokens expire)
+- For CI/CD, verify `FUSION_TOKEN` is set in GitHub Secrets
 
-**Error: "Azure Search index name is required"**
-- Ensure `AZURE_SEARCH_INDEX_NAME` is set
-- Verify the index exists in your Azure Search service
+**Error: "Index name is required"**
+- Pass `--index-name <name>` or set `FUSION_AI_INDEX_NAME`
+- Verify the index exists in the Fusion AI Search service
 
 **No results from search**
 - Verify embeddings have been generated: `ffc ai index add --dry-run ./src`
 - Check that the index contains documents
 - Try a broader search query
-
-**Chat not retrieving context**
-- Verify vector store is configured correctly in your `.env` file
-- Check that embeddings exist in the index
-- Ensure `AZURE_SEARCH_INDEX_NAME` is set correctly
 
 **Embeddings command processes no files**
 - Check file patterns in config or command arguments
@@ -674,26 +614,26 @@ jobs:
 
 ### Debug Mode
 
-Use the `--verbose` flag for detailed output:
+Use the `--debug` flag for detailed output:
 
 ```bash
-ffc ai chat --verbose
-ffc ai index search "query" --verbose
+ffc ai chat --debug
+ffc ai index search "query" --debug
 ```
 
 ## Best Practices
 
-1. **Use environment variables** for sensitive credentials
+1. **Use `--token` or `FUSION_TOKEN` in CI/CD** to avoid interactive auth
 2. **Start with `--dry-run`** when testing new configurations
 3. **Use `--diff` in CI/CD** to only process changed files
 4. **Regular re-indexing** with `--clean` to keep index fresh
-5. **Monitor token usage** - embeddings and chat consume API tokens
+5. **Monitor token usage** — embeddings and chat consume API tokens
 6. **Test search queries** before relying on chat context retrieval
 7. **Keep configuration files** in version control (without secrets)
 
 ## Additional Resources
 
+- [Fusion Framework Documentation](https://github.com/equinor/fusion-framework)
 - [Azure OpenAI Documentation](https://learn.microsoft.com/azure/ai-services/openai/)
-- [Azure Cognitive Search Documentation](https://learn.microsoft.com/azure/search/)
-- [LangChain Documentation](https://js.langchain.com/) (used internally for RAG)
+- [Azure AI Search Documentation](https://learn.microsoft.com/azure/search/)
 

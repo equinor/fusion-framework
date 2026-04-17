@@ -25,14 +25,16 @@ Peer dependencies you may need depending on your use-case:
 | `@azure/search-documents` | Using Azure AI Search vector store |
 | `rxjs` | Always (shared with the framework) |
 | `@equinor/fusion-framework-module` | Always (module system) |
-| `@equinor/fusion-framework-module-http` | Using HTTP-based service clients |
+| `@equinor/fusion-framework-module-msal` | Always (MSAL auth for Fusion services) |
+| `@equinor/fusion-framework-module-service-discovery` | Always (resolves AI service endpoint) |
 
 ## Key concepts
 
 | Concept | Description |
 |---|---|
-| **`AIConfigurator`** | Fluent builder for registering models, embeddings, and vector stores by identifier. Supports both direct instances (eager init) and factory functions (lazy init). |
-| **`AIProvider`** | Runtime provider created during module initialisation. Exposes `getService(type, id)` to retrieve resolved service instances. |
+| **`AiConfigurator`** | Fluent builder that registers `Strategy` implementations. Defaults to three Fusion-backed strategies (model, embed, index). |
+| **`AiProvider`** | Runtime provider created during module initialisation. Exposes `useModel`, `useEmbed`, and `useIndex` factory methods. |
+| **`Strategy`** | A named, typed factory for one of the three capability types (`model`, `embed`, `index`). |
 | **`IModel`** | Interface for language model services — invoke with a prompt, stream responses, or bind tools. |
 | **`IEmbed`** | Interface for text-embedding services — convert text to dense vectors. |
 | **`IVectorStore`** | Interface for vector-store services — add, delete, and search documents by similarity. |
@@ -44,86 +46,66 @@ Peer dependencies you may need depending on your use-case:
 
 ```typescript
 import { enableAI } from '@equinor/fusion-framework-module-ai';
-import { AzureOpenAIModel } from '@equinor/fusion-framework-module-ai/azure';
 
 export const configure = (config) => {
-  enableAI(config, (ai) => {
-    ai.setModel('gpt-4', new AzureOpenAIModel({
-      azureOpenAIApiKey: process.env.AZURE_OPENAI_API_KEY,
-      azureOpenAIApiDeploymentName: 'gpt-4',
-    }));
-  });
+  // The module resolves the AI service endpoint and credentials automatically
+  // from Fusion service discovery and the MSAL auth module.
+  enableAI(config);
 };
 ```
 
 ### 2. Consume the provider
 
 ```typescript
-// Inside an initialised Fusion application
-const model = modules.ai.getService('chat', 'gpt-4');
+// Inside an initialised Fusion application — all three factories create a
+// fresh client bound to the Fusion AI service endpoint.
+const model = modules.ai.useModel('gpt-4.1');
 const reply = await model.invoke('Summarise the quarterly report');
+
+const embedder = modules.ai.useEmbed('text-embedding-3-large');
+const vector = await embedder.embedQuery('Fusion Framework documentation');
+
+const index = modules.ai.useIndex('my-index');
+const hits = await index.invoke('module initialisation patterns');
 ```
 
-## Configuration patterns
+## Provider API
 
-### Eager initialisation (direct instances)
-
-Pass ready-to-use service instances to the configurator:
-
-```typescript
-enableAI(config, (ai) => {
-  ai.setModel('gpt-4', new AzureOpenAIModel({
-    azureOpenAIApiKey: 'your-key',
-    azureOpenAIApiDeploymentName: 'gpt-4',
-  }));
-
-  ai.setEmbedding('ada', new AzureOpenAiEmbed({
-    azureOpenAIApiKey: 'your-key',
-    azureOpenAIApiDeploymentName: 'text-embedding-ada-002',
-  }));
-
-  ai.setVectorStore('docs', new AzureVectorStore(embedInstance, {
-    endpoint: 'https://my-search.search.windows.net',
-    key: 'admin-key',
-    indexName: 'documents',
-  }));
-});
-```
-
-### Lazy initialisation (factory functions)
-
-Supply a factory function when the service depends on environment variables or other modules resolved at startup:
-
-```typescript
-enableAI(config, (ai) => {
-  ai.setModel('gpt-4', (args) =>
-    new AzureOpenAIModel({
-      azureOpenAIApiKey: args.env.AZURE_OPENAI_API_KEY,
-      azureOpenAIApiDeploymentName: 'gpt-4',
-    }),
-  );
-});
-```
-
-Factory functions receive `ConfigBuilderCallbackArgs` containing the framework configuration context, environment variables, and resolved module dependencies.
-
-## Retrieving services at runtime
-
-Use `AIProvider.getService(type, identifier)` to look up a registered service:
-
-| `type` | Returns | Registered via |
+| Method | Returns | Default |
 |---|---|---|
-| `'chat'` | `IModel` | `setModel()` |
-| `'embeddings'` | `IEmbed` | `setEmbedding()` |
-| `'search'` | `IVectorStore` | `setVectorStore()` |
+| `useModel(model?)` | `IModel` | `'gpt-5.1-chat'` |
+| `useEmbed(model?)` | `IEmbed` | `'text-embedding-3-large'` |
+| `useIndex(indexName, opts?)` | `IVectorStore` | Uses the default embed strategy |
+
+Each factory creates a new client instance bound to the same Fusion AI service endpoint. Cherry-pick a different strategy by passing `{ strategy: strategyName }` as options.
+
+## Strategies
+
+The `AiConfigurator` ships with three default strategies, each backed by Fusion service discovery and MSAL auth:
+
+| Strategy name | Type | Factory |
+|---|---|---|
+| `'fusion-ai-model-strategy'` | `model` | `createFusionAiModelStrategy` |
+| `'fusion-ai-embed-strategy'` | `embed` | `createFusionAiEmbedStrategy` |
+| `'fusion-ai-index-strategy'` | `index` | `createFusionAiIndexStrategy` |
+
+Register additional strategies with `addStrategy`:
 
 ```typescript
-const model = modules.ai.getService('chat', 'gpt-4');
-const embedder = modules.ai.getService('embeddings', 'ada');
-const store = modules.ai.getService('search', 'docs');
-```
+import { enableAI } from '@equinor/fusion-framework-module-ai';
 
-An `Error` is thrown if no service is found for the given type and identifier.
+enableAI(config, (ai) => {
+  // Add a custom strategy under a different name.
+  ai.addStrategy({
+    name: 'my-fine-tuned-model',
+    type: 'model',
+    createModel: (model) => new AzureOpenAIModel({ ... }),
+  });
+});
+
+// Select it by name at runtime:
+const model = modules.ai.useModel('gpt-4', { strategy: 'my-fine-tuned-model' });
+```
 
 ## Azure implementations
 
@@ -132,6 +114,7 @@ The `@equinor/fusion-framework-module-ai/azure` entry point re-exports concrete 
 - **`AzureOpenAIModel`** — chat / completion via Azure OpenAI (LangChain `AzureChatOpenAI`). Supports streaming, tool binding, and AD-token authentication.
 - **`AzureOpenAiEmbed`** — text embeddings via Azure OpenAI (LangChain `AzureOpenAIEmbeddings`).
 - **`AzureVectorStore`** — document search via Azure AI Search (LangChain `AzureAISearchVectorStore`). Supports similarity and MMR retrieval, document CRUD, and LangChain retriever creation.
+- **`FusionSearchClient`** — `SearchClient` subclass pre-wired with the Fusion AI proxy path-rewrite policy.
 
 ## Streaming and observables
 
@@ -140,7 +123,7 @@ Every service exposes two invocation modes:
 - `invoke(input)` — returns a single `Promise` for request-response usage.
 - `invoke$(input)` — returns an RxJS `Observable` for streaming or event-driven usage.
 
-Services also implement the LangChain `RunnableInterface`, so they can be composed into LangChain chains, pipelines, and streaming iterators.
+Services also implement the LangChain `RunnableInterface`, so they can be composed into LangChain chains, pipelines, and streaming iterators (`for await...of`).
 
 ## Error handling
 
@@ -148,12 +131,12 @@ Services also implement the LangChain `RunnableInterface`, so they can be compos
 |---|---|
 | `AIError` | Module-level failures — initialisation errors, search failures. Includes `code`, `statusCode`, and `details` fields. |
 | `ServiceError` | Service-level operation failures (e.g. embedding request failed). Wraps the original provider error as `cause`. |
-| `Error` | Unknown service type or identifier passed to `getService()`. |
+| `Error` | Strategy not found for the requested name and type. |
 
 ## Entry points
 
 | Import path | Contents |
 |---|---|
-| `@equinor/fusion-framework-module-ai` | Module definition, `enableAI`, `AIConfigurator`, `AIProvider`, core types |
+| `@equinor/fusion-framework-module-ai` | Module definition, `enableAI`, `AiConfigurator`, `AiProvider`, core types |
 | `@equinor/fusion-framework-module-ai/lib` | `BaseService`, `ServiceError`, service interfaces, utility functions |
-| `@equinor/fusion-framework-module-ai/azure` | `AzureOpenAIModel`, `AzureOpenAiEmbed`, `AzureVectorStore`, config types |
+| `@equinor/fusion-framework-module-ai/azure` | `AzureOpenAIModel`, `AzureOpenAiEmbed`, `AzureVectorStore`, `FusionSearchClient`, config types |

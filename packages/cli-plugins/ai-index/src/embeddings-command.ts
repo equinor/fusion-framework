@@ -72,15 +72,15 @@ const _command = createCommand('add')
     // getOptionValueSource to distinguish "user passed --flag" from "came from env".
     const parentCommand = this.parent ?? this;
     if (indexConfig.name) {
-      const source = parentCommand.getOptionValueSource('azureSearchIndexName');
+      const source = parentCommand.getOptionValueSource('indexName');
       if (source !== 'cli') {
-        preOptions.azureSearchIndexName = indexConfig.name;
+        preOptions.indexName = indexConfig.name;
       }
     }
     if (indexConfig.model) {
-      const source = parentCommand.getOptionValueSource('openaiEmbeddingDeployment');
+      const source = parentCommand.getOptionValueSource('embedModel');
       if (source !== 'cli') {
-        preOptions.openaiEmbeddingDeployment = indexConfig.model;
+        preOptions.embedModel = indexConfig.model;
       }
     }
 

@@ -36,10 +36,10 @@ const defaultIgnore = ['node_modules', '**/node_modules/**', 'dist', '**/dist/**
 export async function embed(binOptions: EmbeddingsBinOptions): Promise<void> {
   const { framework, options, config, filePatterns } = binOptions;
 
-  console.log(`📇 Index: ${options.azureSearchIndexName}`);
+  console.log(`📇 Index: ${options.indexName}`);
 
   // Handle clean operation (destructive - deletes all existing documents)
-  const vectorStoreService = framework.ai.getService('search', options.azureSearchIndexName);
+  const vectorStoreService = framework.ai.useIndex(options.indexName);
   if (options.clean && !options.dryRun) {
     console.log('🧹 Cleaning vector store: deleting all existing documents...');
     // OData filter: delete all documents with non-empty source (all indexed docs)
@@ -171,7 +171,7 @@ export async function embed(binOptions: EmbeddingsBinOptions): Promise<void> {
   const applyMetadata$ = applyMetadata(merge(rawFiles$, markdown$, typescript$), config.index);
 
   // Generate embeddings with concurrency limit and retry on rate-limit (429) errors
-  const embeddingService = framework.ai.getService('embeddings', options.openaiEmbeddingDeployment);
+  const embeddingService = framework.ai.useEmbed(options.embedModel);
 
   /** Maximum parallel embedding requests to avoid hitting Azure OpenAI TPM limits. */
   const EMBEDDING_CONCURRENCY = 5;
@@ -221,7 +221,7 @@ export async function embed(binOptions: EmbeddingsBinOptions): Promise<void> {
   // Update vector store
   const upsert$ = applyEmbedding$.pipe(
     mergeMap(async (documents) => {
-      const vectorStoreService = framework.ai.getService('search', options.azureSearchIndexName);
+      const vectorStoreService = framework.ai.useIndex(options.indexName);
       if (documents.length === 0) {
         return undefined;
       }
