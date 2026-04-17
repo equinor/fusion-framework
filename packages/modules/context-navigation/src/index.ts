@@ -12,11 +12,12 @@ export { ContextNavigationProvider } from './provider';
 export { ContextNavigationConfigurator } from './configurator';
 export type {
   ContextNavigationConfig,
-  OnCustomStrategyDetectedCallback,
+  OnStrategyDetectedCallback,
   NullContextHandler,
   SourceFactory,
   SourceFactoryDeps,
   ContextNavigationSourceEmission,
+  TelemetryTracker,
 } from './types';
 
 // ─── Orchestrator ───────────────────────────────────────────────────

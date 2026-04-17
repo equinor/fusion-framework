@@ -15,18 +15,17 @@ import {
   createUrlPlugin,
 } from '@equinor/fusion-framework-module-feature-flag/plugins';
 import { enableAgGrid } from '@equinor/fusion-framework-module-ag-grid';
-
 import { enableTelemetry } from '@equinor/fusion-framework-module-telemetry';
 import { enableContextNavigation } from '@equinor/fusion-framework-module-context-navigation';
-import { EMPTY, switchMap, map } from 'rxjs';
+
 import { configureDevPortalContext } from './config-context';
 import { version } from './version';
 
 declare global {
   interface Window {
     /**
-     * AG Grid license key for enabling enterprise features
-     * @remarks This is typically set via environment variables during build time
+     * AG Grid license key for enabling enterprise features.
+     * @remarks Typically set via environment variables during build time.
      */
     FUSION_AG_GRID_KEY?: string;
   }
@@ -35,10 +34,14 @@ declare global {
 /**
  * Configures the Fusion Dev Portal framework with all required modules.
  *
- * Enables and wires together:
+ * Modules enabled:
  * - **Telemetry** — portal-scoped usage analytics with version metadata.
- * - **App module** — application manifest loading and lifecycle.
- * - **Navigation** — router integration with optional telemetry.
+ * - **App** — application manifest loading and lifecycle.
+ * - **Context** — context routing URL hooks via {@link configureDevPortalContext}.
+ * - **Context Navigation** — keeps the browser URL in sync with the active context,
+ *   handles app-switch carry-over, and guards against accidental context loss.
+ *   Telemetry is auto-resolved from the framework telemetry module.
+ * - **Navigation** — router integration with telemetry.
  * - **Services** — standard Fusion service integrations.
  * - **AG Grid** — enterprise license key from `window.FUSION_AG_GRID_KEY`.
  * - **Analytics** — console adapter gated by the `fusionLogAnalytics` feature flag.
@@ -58,10 +61,7 @@ export const configure = async (config: FrameworkConfigurator) => {
       builder.setMetadata(() => ({
         fusion: {
           type: 'portal-telemetry',
-          portal: {
-            version,
-            name: 'Fusion Dev Portal',
-          },
+          portal: { version, name: 'Fusion Dev Portal' },
         },
       }));
       // Scope telemetry events to portal-specific tracking
@@ -76,9 +76,9 @@ export const configure = async (config: FrameworkConfigurator) => {
   enableContext(config, configureDevPortalContext);
 
   enableNavigation(config, {
-    configure: (config) => {
-      config.setBasename('/');
-      config.setTelemetry(async (args) => {
+    configure: (navConfig) => {
+      navConfig.setBasename('/');
+      navConfig.setTelemetry(async (args) => {
         if (args.hasModule('telemetry')) {
           return await args.requireInstance('telemetry');
         }
@@ -140,23 +140,18 @@ export const configure = async (config: FrameworkConfigurator) => {
     builder.addPlugin(createUrlPlugin(['fusionDebug']));
   });
 
-  // Context navigation module — replaces config-context-app-navigation.ts and
-  // useAppContextNavigation.ts with a proper framework module.
-  // Dev-portal subscribes to the APP's context (not the portal's), since the
-  // dev-portal doesn't have its own context module — the loaded app does.
+  // Context-navigation module — synchronizes browser URL with active context.
+  // Telemetry is auto-resolved from the framework telemetry module above.
+  // Warns when apps use 'custom' routing strategy to discourage non-standard URL shapes.
   enableContextNavigation(config, (builder) => {
     builder.setConsoleDebug(true);
-    builder.enableTelemetry(true);
-    builder.setWarnOnCustomStrategy(true);
+    builder.setWarnOnStrategies(['custom']);
     builder.enableAppSwitchCarryOver(true);
   });
 
   config.onInitialized<[AppModule, NavigationModule]>((modules) => {
     // Expose framework modules globally for development debugging and inspection.
-    // NOTE: TypeScript ignore needed because `window` is not typed with `Fusion`.
-    // @ts-expect-error
+    // @ts-expect-error — `window` is not typed with `Fusion`
     window.Fusion = { modules };
   });
 };
-
-export default configure;

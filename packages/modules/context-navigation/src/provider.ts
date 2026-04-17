@@ -21,14 +21,11 @@ import { contextNavigationOrchestrator } from './orchestrator/context-navigation
 import { mergeContextProviders } from './orchestrator/context-provider-adapter';
 import { resolveNavigationExecutor } from './navigation-executors';
 import { buildAppRoute, parseAppRoute } from './utils/app-route';
-import type { ContextNavigationConfig } from './types';
+import type { ContextNavigationConfig, TelemetryTracker } from './types';
 import type { RoutingExecutionMode } from './orchestrator/routing-mode-orchestrator';
 
 /** Minimal telemetry surface — avoids hard coupling to the full telemetry module. */
-interface TelemetryTracking {
-  // biome-ignore lint/suspicious/noExplicitAny: minimal structural contract for telemetry integration
-  trackEvent(item: { name: string; properties?: Record<string, any> } & Record<string, any>): void;
-}
+type TelemetryTracking = TelemetryTracker;
 
 /** Arguments required to construct a {@link ContextNavigationProvider}. */
 export interface ContextNavigationProviderArgs {
@@ -75,12 +72,13 @@ interface AppSnapshot {
 export class ContextNavigationProvider {
   private readonly _subscription = new Subscription();
   private readonly _config: ContextNavigationConfig;
-  private readonly _telemetry?: TelemetryTracking;
+  private readonly _telemetry: TelemetryTracking | null;
   private readonly _args: ContextNavigationProviderArgs;
 
   constructor(args: ContextNavigationProviderArgs) {
     this._config = args.config;
-    this._telemetry = args.telemetry;
+    // Config telemetry (resolved by configurator) wins, then explicit arg fallback
+    this._telemetry = args.config.telemetry ?? args.telemetry ?? null;
     this._args = args;
 
     this._setupContextChangeSync();
@@ -174,7 +172,7 @@ export class ContextNavigationProvider {
             });
 
             if (!instruction) {
-              this._handleCustomStrategy(appKey, mode);
+              this._handleStrategyDetected(appKey, mode);
               return;
             }
 
@@ -369,12 +367,11 @@ export class ContextNavigationProvider {
 
   // ── Internal helpers ───────────────────────────────────────────────
 
-  private _handleCustomStrategy(appKey: string, mode: RoutingExecutionMode): void {
-    if (mode !== 'custom') return;
-    this._log(`Custom strategy active for [${appKey}] — skipping portal URL rewrite.`);
-    this._warnOnCustomStrategy(appKey);
-    this._config.onCustomStrategyDetected?.(appKey, mode);
-    this._trackEvent('context-navigation.custom-detected', { appKey });
+  private _handleStrategyDetected(appKey: string, mode: RoutingExecutionMode): void {
+    this._log(`Strategy [${mode}] active for [${appKey}].`);
+    this._warnOnStrategy(appKey, mode);
+    this._config.onStrategyDetected?.(appKey, mode);
+    this._trackEvent('context-navigation.strategy-detected', { appKey, mode });
   }
 
   private _log(message: string): void {
@@ -383,19 +380,17 @@ export class ContextNavigationProvider {
     }
   }
 
-  private _warnOnCustomStrategy(appKey: string): void {
-    if (this._config.warnOnCustomStrategy) {
+  private _warnOnStrategy(appKey: string, mode: RoutingExecutionMode): void {
+    if (this._config.warnOnStrategies.includes(mode)) {
       console.warn(
         `🌍 ${this._config.portalName}:`,
-        `App [${appKey}] uses custom context path hooks. Consider migrating to 'path' or 'query'.`,
+        `App [${appKey}] uses '${mode}' context routing strategy.`,
       );
     }
   }
 
   private _trackEvent(name: string, properties: Record<string, string>): void {
-    if (this._config.enableTelemetry && this._telemetry) {
-      this._telemetry.trackEvent({ name, properties });
-    }
+    this._telemetry?.trackEvent({ name, properties });
   }
 
   dispose(): void {

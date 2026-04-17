@@ -9,10 +9,19 @@ import type { RoutingExecutionMode } from './orchestrator/routing-mode-orchestra
 import type { NavigationInstruction } from './strategy-adapters/contracts';
 
 /**
- * Callback invoked when a custom strategy is detected on a loaded app.
+ * Callback invoked when a routing strategy is detected on a loaded app.
  * Portals decide what to do: warn, log, report to telemetry, etc.
  */
-export type OnCustomStrategyDetectedCallback = (appKey: string, mode: RoutingExecutionMode) => void;
+export type OnStrategyDetectedCallback = (appKey: string, mode: RoutingExecutionMode) => void;
+
+/**
+ * Minimal telemetry surface — avoids hard coupling to the full telemetry module.
+ * Portals can supply a custom implementation via `setTelemetry()`.
+ */
+export interface TelemetryTracker {
+  // biome-ignore lint/suspicious/noExplicitAny: minimal structural contract for telemetry integration
+  trackEvent(item: { name: string; properties?: Record<string, any> } & Record<string, any>): void;
+}
 
 /**
  * Called when context is cleared (null). Returns a navigation instruction
@@ -92,17 +101,21 @@ export interface ContextNavigationConfig {
   enableAppSwitchCarryOver: boolean;
 
   /**
-   * Optional callback fired when a loaded app uses `routingStrategy: 'custom'`.
-   * For full control over how custom strategy is handled.
+   * Optional callback fired when a routing strategy is detected on a loaded app.
+   * Fires for every strategy mode, not just custom — portals decide which modes
+   * deserve special handling.
    */
-  onCustomStrategyDetected?: OnCustomStrategyDetectedCallback;
+  onStrategyDetected?: OnStrategyDetectedCallback;
 
   /**
-   * When true, emits a console.warn when a custom strategy is detected.
-   * This is a convenience flag — for custom behavior use `onCustomStrategyDetected`.
-   * @default false
+   * List of routing execution modes that trigger a `console.warn` when detected.
+   *
+   * For example, Fusion Portal sets `['custom']` to discourage apps from using
+   * custom URL strategies. Other portals might warn on `['legacy']` instead.
+   *
+   * @default []
    */
-  warnOnCustomStrategy: boolean;
+  warnOnStrategies: RoutingExecutionMode[];
 
   /**
    * Enable verbose console.debug output for context navigation.
@@ -112,17 +125,17 @@ export interface ContextNavigationConfig {
   consoleDebug: boolean;
 
   /**
-   * Enable telemetry tracking for navigation events.
-   * When enabled, the provider reports events to the telemetry module (if registered).
+   * Custom telemetry tracker override.
+   *
+   * By default, the provider uses the framework telemetry module if registered.
+   * Set this to provide a custom tracker instead of the framework default.
    *
    * Events tracked:
    * - `context-navigation.context-change` — strategy, mode, appKey, executorType
    * - `context-navigation.app-switch` — carry-over result, appKey, contextId
-   * - `context-navigation.custom-detected` — appKey
-   *
-   * @default false
+   * - `context-navigation.strategy-detected` — appKey, mode
    */
-  enableTelemetry: boolean;
+  telemetry?: TelemetryTracker;
 
   /**
    * Enable the URL guard (Subscription 3).

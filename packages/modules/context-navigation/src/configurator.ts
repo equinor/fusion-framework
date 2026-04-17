@@ -1,14 +1,18 @@
 import {
   BaseConfigBuilder,
+  type ConfigBuilderCallback,
   type ConfigBuilderCallbackArgs,
 } from '@equinor/fusion-framework-module';
 
 import type {
   ContextNavigationConfig,
-  OnCustomStrategyDetectedCallback,
+  OnStrategyDetectedCallback,
   NullContextHandler,
   SourceFactory,
+  TelemetryTracker,
 } from './types';
+
+import type { RoutingExecutionMode } from './orchestrator/routing-mode-orchestrator';
 
 import { createAppFirstSource } from './sources/app-first-source';
 
@@ -75,13 +79,13 @@ export class ContextNavigationConfigurator extends BaseConfigBuilder<ContextNavi
   }
 
   /**
-   * Register a callback that fires when a loaded app uses `routingStrategy: 'custom'`.
+   * Register a callback that fires when a routing strategy is detected on a loaded app.
    *
-   * The module does NOT treat custom as deprecated — apps may legitimately
-   * own their URL shape. This callback lets portals decide how to respond.
+   * The module fires this for every strategy mode, not just custom.
+   * Portals decide which modes deserve special handling.
    */
-  setOnCustomStrategyDetected(callback: OnCustomStrategyDetectedCallback): this {
-    this._set('onCustomStrategyDetected', async () => callback);
+  setOnStrategyDetected(callback: OnStrategyDetectedCallback): this {
+    this._set('onStrategyDetected', async () => callback);
     return this;
   }
 
@@ -95,25 +99,51 @@ export class ContextNavigationConfigurator extends BaseConfigBuilder<ContextNavi
   }
 
   /**
-   * When enabled, emits `console.warn` when a loaded app uses custom routing strategy.
-   * Convenience shorthand — for custom handling use `setOnCustomStrategyDetected`.
+   * Set which routing execution modes trigger a `console.warn` when detected.
+   *
+   * For example, Fusion Portal uses `['custom']` to discourage apps from using
+   * custom URL strategies. Other portals might warn on `['legacy']` instead.
+   *
+   * @example
+   * ```ts
+   * builder.setWarnOnStrategies(['custom', 'legacy']);
+   * ```
    */
-  setWarnOnCustomStrategy(enabled: boolean): this {
-    this._set('warnOnCustomStrategy', enabled);
+  setWarnOnStrategies(modes: RoutingExecutionMode[]): this {
+    this._set('warnOnStrategies', modes);
     return this;
   }
 
   /**
-   * Enable telemetry event tracking for context navigation.
+   * Set the telemetry tracker for navigation events.
    *
-   * When enabled and the telemetry module is available, the provider
-   * will call `trackEvent()` for:
-   * - `context-navigation.context-change` — strategy, mode, appKey
-   * - `context-navigation.app-switch` — carry-over result, appKey
-   * - `context-navigation.custom-detected` — appKey
+   * Accepts a direct tracker instance or a callback that resolves one
+   * from module init args (same pattern as `NavigationConfigurator.setTelemetry`).
+   *
+   * By default, the module auto-resolves the framework telemetry module
+   * if registered. Use this to override with a custom implementation.
+   *
+   * @example
+   * ```ts
+   * // Use framework telemetry (default — no call needed)
+   *
+   * // Override with custom tracker
+   * builder.setTelemetry(myCustomTracker);
+   *
+   * // Resolve from module args (same as navigation module pattern)
+   * builder.setTelemetry(async (args) => {
+   *   if (args.hasModule('telemetry')) {
+   *     return await args.requireInstance('telemetry');
+   *   }
+   * });
+   * ```
    */
-  enableTelemetry(enabled: boolean): this {
-    this._set('enableTelemetry', enabled);
+  setTelemetry(
+    trackerOrCallback: TelemetryTracker | ConfigBuilderCallback<TelemetryTracker>,
+  ): this {
+    const fn =
+      typeof trackerOrCallback === 'function' ? trackerOrCallback : async () => trackerOrCallback;
+    this._set('telemetry', fn);
     return this;
   }
 
@@ -145,17 +175,23 @@ export class ContextNavigationConfigurator extends BaseConfigBuilder<ContextNavi
     if (!this._has('enableAppSwitchCarryOver')) {
       this._set('enableAppSwitchCarryOver', true);
     }
-    if (!this._has('warnOnCustomStrategy')) {
-      this._set('warnOnCustomStrategy', false);
+    if (!this._has('warnOnStrategies')) {
+      this._set('warnOnStrategies', []);
     }
     if (!this._has('consoleDebug')) {
       this._set('consoleDebug', false);
     }
-    if (!this._has('enableTelemetry')) {
-      this._set('enableTelemetry', false);
-    }
     if (!this._has('enableContextUrlGuard')) {
       this._set('enableContextUrlGuard', true);
+    }
+
+    // Auto-resolve framework telemetry module if no explicit tracker was set
+    if (!this._has('telemetry')) {
+      this._set('telemetry', async (args: ConfigBuilderCallbackArgs) => {
+        if (args.hasModule('telemetry')) {
+          return await args.requireInstance('telemetry');
+        }
+      });
     }
 
     return super._createConfig(init, config);

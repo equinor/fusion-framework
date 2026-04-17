@@ -26,20 +26,12 @@ export const module: ContextNavigationModule = {
     const navigation = await args.requireInstance('navigation');
     const context = await args.requireInstance('context');
 
-    // Telemetry is optional — only resolve if the module is registered
-    // biome-ignore lint/suspicious/noExplicitAny: telemetry module type not in deps array
-    const telemetry = args.hasModule('telemetry')
-      ? await (args as unknown as { requireInstance(key: string): Promise<any> }).requireInstance(
-          'telemetry',
-        )
-      : undefined;
-
     return new ContextNavigationProvider({
       app,
       navigation,
       context,
       config,
-      telemetry,
+      telemetry: config.telemetry,
     });
   },
   dispose: (args) => {

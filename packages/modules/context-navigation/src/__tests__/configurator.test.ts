@@ -11,9 +11,9 @@ describe('ContextNavigationConfigurator', () => {
     const config = await new ContextNavigationConfigurator().createConfigAsync(INIT);
     expect(config.enableAppSwitchCarryOver).toBe(true);
     expect(config.consoleDebug).toBe(false);
-    expect(config.enableTelemetry).toBe(false);
-    expect(config.warnOnCustomStrategy).toBe(false);
-    expect(config.onCustomStrategyDetected).toBeUndefined();
+    expect(config.warnOnStrategies).toEqual([]);
+    expect(config.onStrategyDetected).toBeUndefined();
+    expect(config.telemetry).toBeUndefined();
   });
 
   it('setConsoleDebug enables debug', async () => {
@@ -23,18 +23,24 @@ describe('ContextNavigationConfigurator', () => {
     expect(config.consoleDebug).toBe(true);
   });
 
-  it('enableTelemetry enables telemetry', async () => {
+  it('setTelemetry stores custom tracker', async () => {
+    const tracker = { trackEvent: () => {} };
     const configurator = new ContextNavigationConfigurator();
-    configurator.enableTelemetry(true);
+    configurator.setTelemetry(tracker);
     const config = await configurator.createConfigAsync(INIT);
-    expect(config.enableTelemetry).toBe(true);
+    expect(config.telemetry).toBe(tracker);
   });
 
-  it('setWarnOnCustomStrategy enables warning', async () => {
+  it('telemetry defaults to undefined (framework auto-detection)', async () => {
+    const config = await new ContextNavigationConfigurator().createConfigAsync(INIT);
+    expect(config.telemetry).toBeUndefined();
+  });
+
+  it('setWarnOnStrategies stores strategy list', async () => {
     const configurator = new ContextNavigationConfigurator();
-    configurator.setWarnOnCustomStrategy(true);
+    configurator.setWarnOnStrategies(['custom', 'legacy']);
     const config = await configurator.createConfigAsync(INIT);
-    expect(config.warnOnCustomStrategy).toBe(true);
+    expect(config.warnOnStrategies).toEqual(['custom', 'legacy']);
   });
 
   it('enableAppSwitchCarryOver can be disabled', async () => {
@@ -44,20 +50,19 @@ describe('ContextNavigationConfigurator', () => {
     expect(config.enableAppSwitchCarryOver).toBe(false);
   });
 
-  it('setOnCustomStrategyDetected stores callback', async () => {
+  it('setOnStrategyDetected stores callback', async () => {
     const callback = () => {};
     const configurator = new ContextNavigationConfigurator();
-    configurator.setOnCustomStrategyDetected(callback);
+    configurator.setOnStrategyDetected(callback);
     const config = await configurator.createConfigAsync(INIT);
-    expect(config.onCustomStrategyDetected).toBe(callback);
+    expect(config.onStrategyDetected).toBe(callback);
   });
 
   it('methods return this for chaining', () => {
     const configurator = new ContextNavigationConfigurator();
     const result = configurator
       .setConsoleDebug(true)
-      .enableTelemetry(true)
-      .setWarnOnCustomStrategy(true)
+      .setWarnOnStrategies(['custom'])
       .enableAppSwitchCarryOver(false);
     expect(result).toBe(configurator);
   });
