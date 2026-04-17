@@ -10,7 +10,7 @@ import type { Strategy } from './types.js';
  * Module instances required by Fusion strategy factories to resolve the AI
  * service endpoint and acquire MSAL access tokens.
  */
-export interface FusionStrategyModules {
+export interface FusionAiStrategyModules {
   /** MSAL provider used to acquire bearer tokens for the AI service. */
   auth: IMsalProvider;
   /** Service discovery provider used to resolve the AI service endpoint. */
@@ -18,7 +18,7 @@ export interface FusionStrategyModules {
 }
 
 /**
- * Factory function signature accepted by {@link createFusionStrategy}.
+ * Factory function signature accepted by {@link fusionAiStrategy}.
  *
  * Receives the resolved Fusion module instances and returns a fully
  * constructed {@link Strategy}.
@@ -27,8 +27,8 @@ export interface FusionStrategyModules {
  * @param modules - Resolved auth and service discovery module instances.
  * @returns A promise that resolves to the constructed strategy.
  */
-export type FusionStrategyFactory<T extends Strategy = Strategy> = (
-  modules: FusionStrategyModules,
+export type FusionAiStrategyFactory<T extends Strategy = Strategy> = (
+  modules: FusionAiStrategyModules,
 ) => Promise<T>;
 
 /**
@@ -51,11 +51,11 @@ export type FusionStrategyFactory<T extends Strategy = Strategy> = (
  *
  * @example
  * ```typescript
- * configurator.addStrategy(createFusionStrategy(createFusionEmbedStrategy));
+ * configurator.addStrategy(fusionAiStrategy(createFusionAiEmbedStrategy));
  * ```
  */
-export const createFusionStrategy = <T extends Strategy = Strategy>(
-  factory: FusionStrategyFactory<T>,
+export const fusionAiStrategy = <T extends Strategy = Strategy>(
+  factory: FusionAiStrategyFactory<T>,
 ): ConfigBuilderCallback<T> => {
   return async (args: ConfigBuilderCallbackArgs): Promise<T> => {
     // Cast ref to the expected shape so auth/serviceDiscovery can be accessed safely.

@@ -8,10 +8,10 @@ import type { ObservableInput } from 'rxjs';
 import { mergeMap, toArray } from 'rxjs';
 
 import {
-  createFusionStrategy,
-  createFusionEmbedStrategy,
-  createFusionIndexStrategy,
-  createFusionModelStrategy,
+  fusionAiStrategy,
+  createFusionAiEmbedStrategy,
+  createFusionAiIndexStrategy,
+  createFusionAiModelStrategy,
 } from './lib/strategies/index.js';
 import type { Strategy } from './lib/strategies/types.js';
 import type { IAIConfigurator, AIModuleConfig } from './AIConfigurator.interface.js';
@@ -63,9 +63,9 @@ export class AiConfigurator extends BaseConfigBuilder<AIModuleConfig> implements
     );
 
     // Register the three default Fusion-backed strategies.
-    this.addStrategy(createFusionStrategy(createFusionModelStrategy));
-    this.addStrategy(createFusionStrategy(createFusionEmbedStrategy));
-    this.addStrategy(createFusionStrategy(createFusionIndexStrategy));
+    this.addStrategy(fusionAiStrategy(createFusionAiModelStrategy));
+    this.addStrategy(fusionAiStrategy(createFusionAiEmbedStrategy));
+    this.addStrategy(fusionAiStrategy(createFusionAiIndexStrategy));
   }
 
   /**
@@ -83,7 +83,7 @@ export class AiConfigurator extends BaseConfigBuilder<AIModuleConfig> implements
    * @example
    * ```typescript
    * enableAI(config, (ai) => {
-   *   ai.addStrategy(createFusionStrategy(myCustomIndexStrategy));
+   *   ai.addStrategy(fusionAiStrategy(myCustomIndexStrategy));
    * });
    * ```
    */

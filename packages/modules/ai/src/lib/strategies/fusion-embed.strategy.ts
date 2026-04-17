@@ -7,7 +7,7 @@ import type { EmbedStrategy } from './types.js';
 import { acquireFusionToken } from './acquire-fusion-token.js';
 
 /** Strategy name for the default Fusion embed strategy. */
-export const FUSION_EMBED_STRATEGY_NAME = 'fusion-embed-strategy' as const;
+export const FUSION_EMBED_STRATEGY_NAME = 'fusion-ai-embed-strategy' as const;
 
 /** @internal Default Azure OpenAI API version used by the Fusion embed strategy. */
 const DEFAULT_API_VERSION = '2025-01-01-preview' as const;
@@ -30,12 +30,12 @@ const DEFAULT_EMBED_MODEL = 'text-embedding-3-large' as const;
  *
  * @example
  * ```typescript
- * const strategy = await createFusionEmbedStrategy({ auth, serviceDiscovery });
+ * const strategy = await createFusionAiEmbedStrategy({ auth, serviceDiscovery });
  * const embedder = strategy.createClient('text-embedding-3-large');
  * const vector = await embedder.embedQuery('Fusion Framework documentation');
  * ```
  */
-export const createFusionEmbedStrategy = async (modules: {
+export const createFusionAiEmbedStrategy = async (modules: {
   auth: IMsalProvider;
   serviceDiscovery: IServiceDiscoveryProvider;
 }): Promise<EmbedStrategy> => {

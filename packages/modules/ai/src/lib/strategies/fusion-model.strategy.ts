@@ -7,7 +7,7 @@ import type { ModelStrategy } from './types.js';
 import { acquireFusionToken } from './acquire-fusion-token.js';
 
 /** Strategy name for the default Fusion model strategy. */
-export const FUSION_MODEL_STRATEGY_NAME = 'fusion-model-strategy' as const;
+export const FUSION_MODEL_STRATEGY_NAME = 'fusion-ai-model-strategy' as const;
 
 /** @internal Default Azure OpenAI API version used by the Fusion model strategy. */
 const DEFAULT_API_VERSION = '2025-01-01-preview' as const;
@@ -27,12 +27,12 @@ const DEFAULT_API_VERSION = '2025-01-01-preview' as const;
  *
  * @example
  * ```typescript
- * const strategy = await createFusionModelStrategy({ auth, serviceDiscovery });
+ * const strategy = await createFusionAiModelStrategy({ auth, serviceDiscovery });
  * const model = strategy.createModel('gpt-4.1');
  * const reply = await model.invoke('Summarise the quarterly report');
  * ```
  */
-export const createFusionModelStrategy = async (modules: {
+export const createFusionAiModelStrategy = async (modules: {
   auth: IMsalProvider;
   serviceDiscovery: IServiceDiscoveryProvider;
 }): Promise<ModelStrategy> => {

@@ -6,7 +6,7 @@
 
 The AI module now uses a strategy pattern (`ModelStrategy`, `EmbedStrategy`, `IndexStrategy`) configured via `addStrategy()` on the `AiConfigurator`. The provider exposes `useModel()`, `useEmbed()`, and `useIndex()` methods that resolve strategies by deployment name.
 
-A new `FusionSearchClient` handles OData path rewriting for the Fusion AI proxy, and factory functions `createFusionModelStrategy`, `createFusionEmbedStrategy`, and `createFusionIndexStrategy` simplify strategy creation with automatic token acquisition and service endpoint resolution.
+A new `FusionSearchClient` handles OData path rewriting for the Fusion AI proxy, and factory functions `createFusionAiModelStrategy`, `createFusionAiEmbedStrategy`, and `createFusionAiIndexStrategy` simplify strategy creation with automatic token acquisition and service endpoint resolution.
 
 ```typescript
 // Before

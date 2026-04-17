@@ -85,9 +85,9 @@ The `AiConfigurator` ships with three default strategies, each backed by Fusion 
 
 | Strategy name | Type | Factory |
 |---|---|---|
-| `'fusion-model-strategy'` | `model` | `createFusionModelStrategy` |
-| `'fusion-embed-strategy'` | `embed` | `createFusionEmbedStrategy` |
-| `'fusion-index-strategy'` | `index` | `createFusionIndexStrategy` |
+| `'fusion-ai-model-strategy'` | `model` | `createFusionAiModelStrategy` |
+| `'fusion-ai-embed-strategy'` | `embed` | `createFusionAiEmbedStrategy` |
+| `'fusion-ai-index-strategy'` | `index` | `createFusionAiIndexStrategy` |
 
 Register additional strategies with `addStrategy`:
 

@@ -8,7 +8,7 @@ import type { IndexStrategy } from './types.js';
 import { acquireFusionToken } from './acquire-fusion-token.js';
 
 /** Strategy name for the default Fusion index strategy. */
-export const FUSION_INDEX_STRATEGY_NAME = 'fusion-index-strategy' as const;
+export const FUSION_INDEX_STRATEGY_NAME = 'fusion-ai-index-strategy' as const;
 
 /**
  * Creates an {@link IndexStrategy} backed by the Fusion AI service discovered
@@ -26,12 +26,12 @@ export const FUSION_INDEX_STRATEGY_NAME = 'fusion-index-strategy' as const;
  *
  * @example
  * ```typescript
- * const strategy = await createFusionIndexStrategy({ auth, serviceDiscovery });
+ * const strategy = await createFusionAiIndexStrategy({ auth, serviceDiscovery });
  * const store = strategy.createStore(embedClient, 'my-index');
  * const results = await store.invoke('quarterly earnings summary');
  * ```
  */
-export const createFusionIndexStrategy = async (modules: {
+export const createFusionAiIndexStrategy = async (modules: {
   auth: IMsalProvider;
   serviceDiscovery: IServiceDiscoveryProvider;
 }): Promise<IndexStrategy> => {
