@@ -1,0 +1,63 @@
+{
+  "name": "@equinor/fusion-framework-module-context-navigation",
+  "version": "0.1.0",
+  "description": "Fusion Framework module for synchronizing context state with browser URL",
+  "type": "module",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "types": "./dist/types/index.d.ts"
+    },
+    "./sources": {
+      "import": "./dist/esm/sources/index.js",
+      "types": "./dist/types/sources/index.d.ts"
+    },
+    "./utils": {
+      "import": "./dist/esm/utils/index.js",
+      "types": "./dist/types/utils/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc -b"
+  },
+  "dependencies": {
+    "semver": "^7.7.2"
+  },
+  "peerDependencies": {
+    "@equinor/fusion-framework-module": "workspace:^",
+    "@equinor/fusion-framework-module-app": "workspace:^",
+    "@equinor/fusion-framework-module-context": "workspace:^",
+    "@equinor/fusion-framework-module-navigation": "workspace:^",
+    "@equinor/fusion-framework-module-telemetry": "workspace:^",
+    "rxjs": "^7.8.1"
+  },
+  "peerDependenciesMeta": {
+    "@equinor/fusion-framework-module-telemetry": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@equinor/fusion-framework-module": "workspace:^",
+    "@equinor/fusion-framework-module-app": "workspace:^",
+    "@equinor/fusion-framework-module-context": "workspace:^",
+    "@equinor/fusion-framework-module-navigation": "workspace:^",
+    "@equinor/fusion-framework-module-telemetry": "workspace:^",
+    "@types/semver": "^7.0.0",
+    "rxjs": "^7.8.1",
+    "typescript": "^5.9.3",
+    "urlpattern-polyfill": "^10.0.0"
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/equinor/fusion-framework.git",
+    "directory": "packages/modules/context-navigation"
+  }
+}
