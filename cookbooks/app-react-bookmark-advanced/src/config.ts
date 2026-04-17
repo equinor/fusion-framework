@@ -9,6 +9,7 @@ export const configure: AppModuleInitiator = (configurator, args) => {
   enableNavigation(configurator, basename);
 
   enableContext(configurator, async (builder) => {
+    builder.setRoutingStrategy('path');
     builder.setContextType(['projectMaster']); // set contextType to match against
   });
 

@@ -6,6 +6,7 @@ import {
 
 export const configure: AppModuleInitiator = (configurator) => {
   enableContext(configurator, async (builder) => {
+    builder.setRoutingStrategy('path');
     builder.setContextFilter((items) => {
       if (items.length === 0) {
         throw new FusionContextSearchError({
