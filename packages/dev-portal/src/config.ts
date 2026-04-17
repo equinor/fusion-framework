@@ -1,9 +1,13 @@
-import { enableAppModule } from '@equinor/fusion-framework-module-app';
+import { enableAppModule, type AppModule } from '@equinor/fusion-framework-module-app';
 import { enableBookmark } from '@equinor/fusion-framework-react-module-bookmark';
 import type { FrameworkConfigurator } from '@equinor/fusion-framework';
 import { enableAnalytics } from '@equinor/fusion-framework-module-analytics';
 import { ConsoleAnalyticsAdapter } from '@equinor/fusion-framework-module-analytics/adapters';
-import { enableNavigation } from '@equinor/fusion-framework-module-navigation';
+import { enableContext } from '@equinor/fusion-framework-module-context';
+import {
+  enableNavigation,
+  type NavigationModule,
+} from '@equinor/fusion-framework-module-navigation';
 import { enableServices } from '@equinor/fusion-framework-module-services';
 import { enableFeatureFlagging } from '@equinor/fusion-framework-module-feature-flag';
 import {
@@ -13,6 +17,9 @@ import {
 import { enableAgGrid } from '@equinor/fusion-framework-module-ag-grid';
 
 import { enableTelemetry } from '@equinor/fusion-framework-module-telemetry';
+import { enableContextNavigation } from '@equinor/fusion-framework-module-context-navigation';
+import { EMPTY, switchMap, map } from 'rxjs';
+import { configureDevPortalContext } from './config-context';
 import { version } from './version';
 
 declare global {
@@ -66,8 +73,11 @@ export const configure = async (config: FrameworkConfigurator) => {
 
   enableAppModule(config);
 
+  enableContext(config, configureDevPortalContext);
+
   enableNavigation(config, {
     configure: (config) => {
+      config.setBasename('/');
       config.setTelemetry(async (args) => {
         if (args.hasModule('telemetry')) {
           return await args.requireInstance('telemetry');
@@ -130,10 +140,20 @@ export const configure = async (config: FrameworkConfigurator) => {
     builder.addPlugin(createUrlPlugin(['fusionDebug']));
   });
 
-  // Expose framework modules globally for development debugging and inspection
-  config.onInitialized(async (modules) => {
-    // NOTE: TypeScript ignore needed due to window object extension
-    // This provides developer access to all initialized modules via window.Fusion
+  // Context navigation module — replaces config-context-app-navigation.ts and
+  // useAppContextNavigation.ts with a proper framework module.
+  // Dev-portal subscribes to the APP's context (not the portal's), since the
+  // dev-portal doesn't have its own context module — the loaded app does.
+  enableContextNavigation(config, (builder) => {
+    builder.setConsoleDebug(true);
+    builder.enableTelemetry(true);
+    builder.setWarnOnCustomStrategy(true);
+    builder.enableAppSwitchCarryOver(true);
+  });
+
+  config.onInitialized<[AppModule, NavigationModule]>((modules) => {
+    // Expose framework modules globally for development debugging and inspection.
+    // NOTE: TypeScript ignore needed because `window` is not typed with `Fusion`.
     // @ts-expect-error
     window.Fusion = { modules };
   });
