@@ -1,3 +1,13 @@
+/**
+ * Context routing strategy integration test app.
+ *
+ * This is NOT a minimal example — it is a comprehensive test bed that exercises
+ * all routing modes (`query`, `path`, `custom`, `none`) with runtime strategy
+ * switching. For a minimal context setup, see `app-react-context`.
+ *
+ * @module @equinor/fusion-framework-cookbook-app-react-context-routing
+ */
+
 import type { AppModuleInitiator } from '@equinor/fusion-framework-react-app';
 import { enableContext } from '@equinor/fusion-framework-react-module-context';
 import { enableNavigation } from '@equinor/fusion-framework-module-navigation';
