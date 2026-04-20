@@ -1314,7 +1314,7 @@ importers:
         version: 2.1.1(react@19.2.5)(styled-components@6.4.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))
       '@equinor/fusion-wc-chip':
         specifier: ^1.2.2
-        version: 1.2.2
+        version: 1.3.0
       '@equinor/fusion-wc-person':
         specifier: ^3.4.1
         version: 3.4.1
@@ -3194,9 +3194,6 @@ packages:
   '@equinor/fusion-wc-checkbox@1.2.0':
     resolution: {integrity: sha512-bimJKRjLDH8fv/AOphCN5NE5XWlJJiDsGy64VogCueyy5qKW/ODStzlrfAJdISJ0bW7XwJ1OGdjDoE4LLGQixA==}
 
-  '@equinor/fusion-wc-chip@1.2.2':
-    resolution: {integrity: sha512-jT0WOcaaOLuQMkGdetwSwb1ZYAaRA9Z2hrUVJIEFsct+tsmob7aKlz3Hj0bLlgoXXqYOTYjgk0j0b1fu8MQrOw==}
-
   '@equinor/fusion-wc-chip@1.3.0':
     resolution: {integrity: sha512-YeuDfU3vgDqzDUtNqB4JeXMv7mMOhEXWabt0DLnIE1c/EK7wMuZ43nCfVEopBGzWRIph8wjethX9gNXMDq7sEw==}
 
@@ -3247,9 +3244,6 @@ packages:
 
   '@equinor/fusion-wc-radio@1.2.0':
     resolution: {integrity: sha512-m0rPpp0QLeE+WdXU9xe/Hhp/nAQDlKFWaQ4GKQ6rlmK+tjcJs7Hv8xHlVIYt0AYcXLU6qU8+J9ih8vSOkk0ulA==}
-
-  '@equinor/fusion-wc-ripple@1.1.1':
-    resolution: {integrity: sha512-TuyBqTRekg7Kh+09+guD7P0HldGOkE7gicYF+rW1yfVFJGwCjBWQ+2EDqhImDPViRq5RWvE73Y8Ajayt/wO0Qw==}
 
   '@equinor/fusion-wc-ripple@1.2.0':
     resolution: {integrity: sha512-9IbnC1N9c/BCuxwCQkv4ckeBEsxCxPsX2GpPIprwmJWiI63HRohHG7fHtGK3fwkWVNOdiYmn0Kd+vr9JqubQmg==}
@@ -11455,14 +11449,6 @@ snapshots:
       '@material/mwc-checkbox': 0.27.0
       lit: 3.3.2
 
-  '@equinor/fusion-wc-chip@1.2.2':
-    dependencies:
-      '@equinor/fusion-wc-core': 2.0.0
-      '@equinor/fusion-wc-icon': 2.3.1
-      '@equinor/fusion-wc-ripple': 1.1.1
-      '@equinor/fusion-web-theme': 0.1.10
-      lit: 3.2.0
-
   '@equinor/fusion-wc-chip@1.3.0':
     dependencies:
       '@equinor/fusion-wc-core': 2.0.0
@@ -11608,12 +11594,6 @@ snapshots:
       '@equinor/fusion-web-theme': 0.1.10
       '@material/mwc-radio': 0.27.0
       lit: 3.3.2
-
-  '@equinor/fusion-wc-ripple@1.1.1':
-    dependencies:
-      '@equinor/fusion-wc-core': 2.0.0
-      '@material/mwc-ripple': 0.27.0
-      lit: 3.2.0
 
   '@equinor/fusion-wc-ripple@1.2.0':
     dependencies:
