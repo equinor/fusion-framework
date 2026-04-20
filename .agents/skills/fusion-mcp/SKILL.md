@@ -3,7 +3,7 @@ name: fusion-mcp
 description: Explain what Fusion MCP is and guide users through setting it up when they need Fusion-aware MCP capabilities in Copilot workflows.
 license: MIT
 metadata:
-  version: "0.1.1"
+  version: "0.1.2"
   status: experimental
   owner: "@equinor/fusion-core"
   tags:
@@ -37,6 +37,7 @@ Do not use this skill for:
 - implementing product features unrelated to MCP setup
 - making destructive environment changes without user confirmation
 - assuming private repository details that are not visible
+- answering source-backed questions about Fusion Framework APIs, EDS components, or the skill catalog — once MCP is running, use `fusion-research` for that
 
 ## Required inputs
 
@@ -55,6 +56,8 @@ If details are missing, ask concise follow-up questions first.
    - Fusion-oriented MCP capabilities for retrieval and workflow support
    - tool surface may evolve over time as the server is a PoC
    - examples today may include retrieval, index guidance, metadata summaries, and skill discovery
+   - retrieval tools: `search_framework`, `search_docs`, `search_eds`, `search_skills`, `search_indexes`
+   - skill advisory: `skills`, `skills_index_status`
 2. Use the official README quick start as source of truth, then present a minimal 2-step setup path:
    - choose image source: GHCR release image or local build
    - configure VS Code MCP using Docker `stdio` only (scope for this iteration)

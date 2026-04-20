@@ -49,6 +49,7 @@ Return:
 
 ## Guardrails
 
+- When operating inside a repository with repo-local workflow instructions, defer to those rules for commit conventions, validation commands, changeset requirements, and branch-refresh policy. Repo-local instructions take precedence over inline guidance in this advisor.
 - Do not use destructive recovery commands such as `git reset --hard`
 - Do not force-push without explicit maintainer confirmation
 - Do not start git mutation on a live PR until the research checkpoint comment is posted

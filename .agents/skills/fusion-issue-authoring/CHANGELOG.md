@@ -1,5 +1,69 @@
 # Changelog
 
+## 0.3.3 - 2026-04-06
+
+### patch
+
+- [#135](https://github.com/equinor/fusion-skills/pull/135) [`5fa9384`](https://github.com/equinor/fusion-skills/commit/5fa938467edfad41d381f0ee2d7320b609c156ed) - Make draft location flexible — check user preferences and session memory before defaulting to `.tmp/`
+
+
+  - Step 4 now checks user preferences and session memory for a preferred draft location
+  - Asks once when intent is ambiguous and remembers the answer for the session
+  - Falls back to `.tmp/{TYPE}-{CONTEXT}.md` only when no preference is found
+
+## 0.3.2 - 2026-03-23
+
+### patch
+
+- [#121](https://github.com/equinor/fusion-skills/pull/121) [`831f8ee`](https://github.com/equinor/fusion-skills/commit/831f8eed3054ee747d3300c9144312ef3b5c02e0) - Add devil's advocate agent for issue authoring
+
+
+  - Always-on moderate mode raises 2-3 key concerns after classification
+  - Interrogator mode runs full structured interview on explicit user request or when scope/criteria gaps are significant
+  - Wired into SKILL.md agent modes section
+
+  Refs: equinor/fusion-core-tasks#847
+
+## 0.3.1 - 2026-03-21
+
+### patch
+
+- [#112](https://github.com/equinor/fusion-skills/pull/112) [`e90fb97`](https://github.com/equinor/fusion-skills/commit/e90fb97b20d1aceb0929dbc96bddf28fdf358f0a) - Add contributor-guide-aware repository routing to issue authoring
+
+
+  - SKILL.md Step 2: read active workspace `CONTRIBUTING.md` / `contribute/` for routing rules before asking the user
+  - `references/instructions.md`: add Repository routing note pointing to SKILL.md Step 2 as authoritative flow
+
+## 0.3.0 - 2026-03-18
+
+### minor
+
+- [#98](https://github.com/equinor/fusion-skills/pull/98) [`6bb9cdc`](https://github.com/equinor/fusion-skills/commit/6bb9cdcc1e2e0ed25d562bfd5db4dfab52559c0f) - Consolidate issue-authoring capability into a single skill with agent modes
+
+
+  - Merge type-specific drafting logic from 4 subordinate skills into agent mode files (`agents/*.agent.md`)
+  - Move all 10 issue templates into `assets/issue-templates/` within this skill
+  - Update orchestrator to route to internal agent modes instead of external subordinate skills
+  - Retain full 8-step workflow, shared gates, caching strategy, and MCP mutation sequencing
+
+  Resolves equinor/fusion-core-tasks#802
+
+## 0.2.4 - 2026-03-17
+
+### patch
+
+- [#85](https://github.com/equinor/fusion-skills/pull/85) [`c8ba3df`](https://github.com/equinor/fusion-skills/commit/c8ba3df924c5a712c835cdb9f4de44bac03b7ad4) - Make all GitHub-API-consuming skills more conservative with token usage.
+
+
+  - `fusion-issue-authoring`: concrete session-cache flow for labels and assignee candidates; per-session budget table
+  - `fusion-issue-solving`: expanded low-token strategy with session-cache references and budget awareness
+  - `fusion-github-review-resolution`: token budget guidance for thread-heavy reviews; cache PR metadata once
+  - `fusion-issue-task-planning`: session-cache delegation rules and batch-size warning for large task plans
+  - `fusion-dependency-review`: explicit data-reuse rules across parallel advisor fan-out
+  - `fusion-discover-skills`: tighter GraphQL budget and call-count cap for discovery sessions
+
+  resolves equinor/fusion-core-tasks#797
+
 ## 0.2.3 - 2026-03-11
 
 ### patch

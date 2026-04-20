@@ -4,7 +4,7 @@ description: 'Review dependency PRs with structured research, existing-PR-discus
 license: MIT
 compatibility: Requires GitHub MCP server for PR context. Uses fusion-issue-authoring for follow-up handoff when post-merge work is identified.
 metadata:
-  version: "0.1.1"
+  version: "0.1.3"
   status: experimental
   owner: "@equinor/fusion-core"
   tags:
@@ -141,6 +141,8 @@ If the PR target is resolved, return a structured review containing:
 
 ## Safety & constraints
 
+- This skill is mutation-capable. Repository-local workflow instructions take precedence over inline guidance when they conflict.
+
 Never:
 
 - Merge or approve a dependency PR without explicit user confirmation
@@ -159,7 +161,8 @@ Always:
 - Present evidence for each assessment (link to changelog, CVE, CI status)
 - List candidate dependency PRs for user selection when repository context exists but the PR target does not
 - Fetch existing PR comments and review threads via GitHub MCP before analysis on a live PR
-- Reuse one shared research packet across advisors instead of rediscovering the same facts in each pass
+- Reuse one shared research packet across advisors instead of rediscovering the same facts in each pass — this includes PR metadata, changed files, CI status, and existing discussion
+- Do not re-fetch PR comments or review threads independently in each advisor; pass the pre-fetched data from the research advisor to all lens advisors
 - Prefer parallel lens analysis when the runtime supports it, then chain synthesis after all lens outputs are ready
 - Post the research checkpoint comment to the PR before any branch mutation on a live PR
 - Post the final verdict comment to the PR before any approval or merge on a live PR

@@ -17,6 +17,8 @@ Use this file for GitHub MCP-specific tools and payload examples.
 
 Common expensive paths in issue workflows:
 
+- repeated label lookups for the same repository,
+- repeated assignee-candidate searches for the same repository/org and query,
 - repeated `list_issue_types` calls per issue,
 - repeated duplicate searches with broad queries,
 - unnecessary second-pass issue updates for labels/assignees,
@@ -24,6 +26,8 @@ Common expensive paths in issue workflows:
 
 Mitigation policy:
 
+- cache repository labels per `owner/repo` for the active session,
+- cache assignee-candidate results per `owner/repo` (or owner) and query for the active session,
 - cache issue types per owner for the active session,
 - run one focused duplicate search unless scope materially changes,
 - send full known issue payload in the first `issue_write` call,
@@ -80,6 +84,35 @@ There is no dedicated Issues MCP tool in this set for setting blocking/blocked l
 - Use `mcp_github::list_issue_types` to get valid type values for the organization.
 - Only send `type` when the repository has issue types configured.
 - If issue types are unsupported, omit `type`.
+
+## Label lookup caching (recommended)
+
+Do **not** validate requested labels with one point lookup per label.
+
+Use this strategy:
+
+1. On the first label request for `owner/repo`, do one repository-wide label fetch or equivalent bulk read and cache the result for the active session.
+2. Prefer a host session-memory artifact when available:
+  - `/memories/session/<owner>-<repo>-labels.json`
+  - fallback: `.tmp/issue-authoring-labels-<owner>-<repo>.json` (never committed)
+3. On cache hit, filter requested labels locally and send only the surviving set in the first `mcp_github::issue_write` call.
+4. If the host only exposes point label lookups and no cached label set exists yet, do not loop through labels. Ask whether to skip optional labels or include only user-confirmed labels in the first mutation and accept a single rejection path.
+5. Refresh the cache only when the repository changes or the user explicitly asks for a reload.
+
+## Assignee candidate caching (recommended)
+
+Do **not** repeat the same assignee-candidate lookup for every issue in a session.
+
+Use this strategy:
+
+1. If the user says `@me` or gives an exact GitHub login, skip `mcp_github::search_users` entirely.
+2. When lookup is needed, cache candidate results keyed by `owner/repo + query` (or `owner + query` if repository scoping is unavailable).
+3. Prefer a host session-memory artifact when available:
+  - `/memories/session/<owner>-<repo>-assignee-candidates.json`
+  - `/memories/session/<owner>-assignee-candidates.json`
+  - fallback: `.tmp/issue-authoring-assignee-candidates-<owner>-<repo>.json` (never committed)
+4. If the host exposes repository contributors or organization members, hydrate that cache once per session and reuse it. Otherwise, reuse the first `mcp_github::search_users` result for the same query.
+5. If rate limits block candidate enrichment, ask whether to continue unassigned or with `@me` instead of retrying lookup loops.
 
 ## Issue type lookup caching (recommended)
 
@@ -167,7 +200,7 @@ Use either `after_id` or `before_id` for reprioritization.
 
 ## Minimal task-batch order
 
-1. `mcp_github::issue_write` create/update with full known fields (`title`, `body`, `labels`, `assignees`, optional `type`)
+1. `mcp_github::issue_write` create/update with full known fields (`title`, `body`, `labels`, `assignees`, optional `type`) using cache-backed label/assignee data when available
 2. Optional single follow-up `mcp_github::issue_write` only for fields that were unavailable in step 1
 3. `mcp_github::sub_issue_write` add/reprioritize children in execution order only when linkage changed
 4. Optional: `mcp_github::add_issue_comment` to record blocker context when requested
@@ -187,8 +220,24 @@ GitHub GraphQL limits (summary from https://docs.github.com/en/graphql/overview/
 Behavior when limits are approached or hit:
 
 - Check `x-ratelimit-remaining` and `retry-after` headers; respect the reset window.
-- Stop optional enrichments and avoid automatic retry loops.
+- Stop optional label/assignee enrichments and avoid automatic retry loops.
 - Pause at least 1 second between consecutive mutation calls.
 - Preserve draft state and return a clear retry sequence to the user.
 - Prefer MCP calls over ad hoc GraphQL retries when equivalent MCP tools are available.
 - Never retry a request that returned a secondary rate-limit error without waiting for the `retry-after` period.
+
+### Per-session budget estimate
+
+A typical multi-issue authoring session with cache-first behavior:
+
+| Activity | Calls (with caching) | Calls (without caching) |
+|---|---|---|
+| Label set fetch per repo | 1 | N × L (N issues × L labels each) |
+| Issue-type lookup per org | 1 | N |
+| Duplicate search per issue | N | N |
+| Assignee lookup per session | 0–1 | N |
+| Issue create/update | N | N |
+| Sub-issue link | 0–N | 0–N |
+| **Total for 3 issues, 3 labels each** | **~10** | **~25+** |
+
+Stay under ~30 MCP calls per session for a typical 3-issue run. If the running total approaches this threshold, stop optional enrichment (extra label checks, assignee searches, duplicate re-scans) and proceed with the data already cached.

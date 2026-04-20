@@ -4,7 +4,7 @@ description: 'Creates or modernizes repository skills with clear activation cues
 license: MIT
 compatibility: Works best in repositories that can inspect their local skill catalog and run catalog-specific validation commands. Optional helper agents are most useful in Anthropic-compatible runtimes or other clients that support skill-local agents/subagents.
 metadata:
-   version: "0.3.0"
+   version: "0.3.3"
    status: active
    owner: "@equinor/fusion-core"
    tags:
@@ -153,6 +153,8 @@ Write the smallest useful main document first:
 - `Expected output`
 - `Safety & constraints`
 
+Keep the draft under 300 lines. Different agent runtimes have different context window limits — SKILL.md files over 300 lines risk degradation on smaller-window runtimes and trigger CI warnings. Files over 500 lines fail CI. Move overflow to `references/` early rather than trimming later.
+
 Prefer concise, specific instructions over background explanation. Assume the agent is already capable and only add context it would not reliably infer.
 
 Set the degree of freedom intentionally:
@@ -201,6 +203,7 @@ Use the representative requests from Step 2 to review the final result:
 
 If subagents are available, use the bundled role files when they help:
 - `agents/scoper.md` before drafting to decide create vs update vs not-a-skill and to choose the smallest useful structure
+- `agents/devils-advocate.md` during scoping and drafting to surface key concerns (moderate mode), or before drafting for a full structured interview when the user asks to be grilled or when the orchestrator detects significant ambiguity (interrogator mode)
 - `agents/reviewer.md` after drafting to review discovery, structure, safety, and validation evidence like a strict maintainer
 - `agents/trigger-tuner.md` when the main risk is weak activation cues or when choosing between two description variants
 
@@ -232,6 +235,7 @@ This skill borrows Anthropic `skill-creator`'s pattern of bundling a small `agen
 - `agents/scoper.md` — decide whether the request should become a new skill, an update, or not a skill at all; choose the smallest folder structure that still solves the problem
 - `agents/reviewer.md` — review a drafted skill package against discovery, structure, safety, and validation expectations
 - `agents/trigger-tuner.md` — sharpen description wording and compare activation-cue variants against realistic prompts
+- `agents/devils-advocate.md` — always-on quality collaborator that raises key concerns during authoring (moderate mode) and runs a full structured interview when explicitly asked or when the orchestrator flags significant ambiguity (interrogator mode)
 
 If a runtime offers no subagents, keep the same review loop inline and do not skip the agent-shaped reasoning just because the packaging is ignored.
 
@@ -257,80 +261,11 @@ Return:
 - Any repository-specific overlays applied after the portable draft
 - Any follow-up actions, unresolved questions, or recommended issue links
 
-For a newly scaffolded skill, the default structure should be:
-
-If no repository overlay says otherwise, default `<final-skill-name>` to `custom-<base-skill-name>`.
-
-```text
-skills/<final-skill-name>/
-├── SKILL.md
-├── references/
-└── assets/
-```
-
-Optional extras when they are justified:
-
-```text
-skills/<final-skill-name>/
-├── agents/
-└── scripts/
-```
-
-Use this baseline for generated `SKILL.md` files:
-
-```markdown
----
-name: <final-skill-name>
-description: '<what it does>. USE FOR: <trigger phrases>. DO NOT USE FOR: <anti-triggers>.'
-license: MIT
-compatibility: <optional: real environment requirements only>
-metadata:
-   version: "0.0.0"
-   tags:
-      - <tag>
----
-
-# <Skill Title>
-
-## When to use
-
-## When not to use
-
-## Required inputs
-
-## Instructions
-
-## Examples
-
-## Expected output
-
-## Safety & constraints
-```
-
-Add repository- or runtime-specific fields such as `owner`, `status`, composition metadata, or `mcp` only when they reflect real catalog or tool requirements.
+See `references/skill-template-baseline.md` for the default folder structure and `SKILL.md` baseline template.
 
 ## Validation
 
-Success signals:
-
-```text
-- the skill is discoverable in the target catalog or inventory view
-- the target environment's validation commands pass
-- direct references resolve without depending on files outside the installed skill package
-- representative requests trigger the right behavior and avoid obvious false positives
-```
-
-Common failure signals:
-- `name` does not match the folder name or violates naming rules
-- `description` is too vague, missing use cues, or contains invalid markup
-- repository- or catalog-required metadata is missing or inconsistent
-- the skill still depends on repo-local docs, sibling skills, or hidden conventions that will not ship with the installed package
-- references or structure are inconsistent with the declared role / MCP needs
-
-If validation fails:
-- fix the reported metadata or structure error,
-- re-run the failed command,
-- report the final status instead of stopping at the first failure.
+See `references/validation-signals.md` for success signals, common failure signals, and recovery steps.
 
 ## Skill Readiness Checklist
 
