@@ -1,6 +1,6 @@
 import { Page1 } from './Page1';
 import { Page2 } from './Page2';
-import { Link, Outlet, type RouteObject } from 'react-router-dom';
+import { Link, Outlet, type RouteObject } from '@equinor/fusion-framework-react-router';
 import { Create } from './Create';
 import { Provider } from './Provider';
 import { BookmarkAppNavigation } from './BoomarkAppNavigation';

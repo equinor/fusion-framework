@@ -1,5 +1,20 @@
 # Change Log
 
+## 10.0.2
+
+### Patch Changes
+
+- Updated dependencies [e97bba0]
+  - @equinor/fusion-framework-module-navigation@7.0.1
+
+## 10.0.1
+
+### Patch Changes
+
+- Updated dependencies [244b995]
+  - @equinor/fusion-framework-module-msal@8.0.1
+  - @equinor/fusion-framework-app@11.0.1
+
 ## 10.0.0
 
 ### Major Changes

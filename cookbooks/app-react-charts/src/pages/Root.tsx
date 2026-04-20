@@ -1,4 +1,4 @@
-import { Outlet } from 'react-router-dom';
+import { Outlet } from '@equinor/fusion-framework-react-router';
 import Navigation from '../components/Navigation';
 
 const Root = () => {

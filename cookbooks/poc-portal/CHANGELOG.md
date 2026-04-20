@@ -1,5 +1,46 @@
 # poc-portal
 
+## 1.1.66
+
+### Patch Changes
+
+- Updated dependencies [b2ee9f1]
+  - @equinor/fusion-framework-cli@14.2.3
+
+## 1.1.65
+
+### Patch Changes
+
+- Updated dependencies [53b725f]
+  - @equinor/fusion-framework-cli@14.2.2
+
+## 1.1.64
+
+### Patch Changes
+
+- Updated dependencies [5823e72]
+  - @equinor/fusion-framework-cli@14.2.1
+  - @equinor/fusion-framework-react-app@10.0.2
+
+## 1.1.63
+
+### Patch Changes
+
+- Updated dependencies [8c5d77a]
+  - @equinor/fusion-framework-cli@14.2.0
+
+## 1.1.62
+
+### Patch Changes
+
+- Updated dependencies [8f16c97]
+- Updated dependencies [fe63b78]
+- Updated dependencies [244b995]
+  - @equinor/fusion-framework-cli@14.1.1
+  - @equinor/fusion-framework-module-msal@8.0.1
+  - @equinor/fusion-framework@8.0.1
+  - @equinor/fusion-framework-react-app@10.0.1
+
 ## 1.1.61
 
 ### Patch Changes

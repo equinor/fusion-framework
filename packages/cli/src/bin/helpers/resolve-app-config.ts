@@ -44,7 +44,7 @@ export const resolveAppConfig = async (
       } else {
         // Fallback to built-in config if no local config is present
         log?.succeed(chalk.dim('⚙️ no local application config applied, using built-in'));
-        return { environment: {} };
+        return { environment: {}, endpoints: {} };
       }
     }
     // Log failure and debug information for other errors

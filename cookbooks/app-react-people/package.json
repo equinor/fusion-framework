@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework-cookbook-app-react-people",
-  "version": "5.0.0",
+  "version": "5.0.2",
   "description": "",
   "private": true,
   "type": "module",
@@ -29,7 +29,6 @@
     "@equinor/fusion-framework-module-navigation": "workspace:^",
     "@equinor/fusion-framework-react-router": "workspace:^",
     "@equinor/fusion-react-person": "^2.0.2",
-    "react-router-dom": "^7.9.5",
     "styled-components": "^6.3.11"
   }
 }

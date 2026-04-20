@@ -1,6 +1,7 @@
 import { createCommand } from 'commander';
 
 import devCommand from './dev.js';
+import serveCommand from './serve.js';
 import manifestCommand from './manifest.js';
 import schemaCommand from './schema.js';
 import buildCommand from './build.js';
@@ -13,6 +14,7 @@ import configCommand from './config.js';
 export const command = createCommand('portal')
   .description('Develop and deploy portal templates')
   .addCommand(devCommand)
+  .addCommand(serveCommand)
   .addCommand(manifestCommand)
   .addCommand(schemaCommand)
   .addCommand(buildCommand)

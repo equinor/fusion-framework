@@ -1,5 +1,23 @@
 # @equinor/fusion-framework-react-router
 
+## 1.2.1
+
+### Patch Changes
+
+- b733f91: Export `RouterProviderProps` type from `react-router` for consumer use.
+
+## 1.2.0
+
+### Minor Changes
+
+- 46cea46: Export `LinkProps` from the package root so consumers can type link wrappers and related helpers without importing directly from `react-router`.
+
+## 1.1.0
+
+### Minor Changes
+
+- 88a5455: Export `Navigate` from the package root so consumers can import router primitives directly from `@equinor/fusion-framework-react-router`.
+
 ## 1.0.2
 
 ### Patch Changes

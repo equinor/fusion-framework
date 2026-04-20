@@ -1,5 +1,6 @@
 import { z } from 'zod';
-import { of, type ObservableInput } from 'rxjs';
+import { of, from, type ObservableInput } from 'rxjs';
+import { map } from 'rxjs/operators';
 import {
   BaseConfigBuilder,
   type ModulesInstance,
@@ -12,6 +13,7 @@ import type { INavigationConfigurator } from './NavigationConfigurator.interface
 
 import type { History } from './lib/types';
 import { createHistory } from './lib/create-history';
+import { ProxyHistory } from './lib/ProxyHistory';
 import type { NavigationModule } from './module';
 
 /**
@@ -72,16 +74,21 @@ export class NavigationConfigurator extends BaseConfigBuilder<INavigationConfigu
         return await args.requireInstance('event');
       }
     });
-    this.setHistory(async (args) => {
-      const history = (args.ref as ModulesInstance<[NavigationModule]>)?.navigation?.history;
-      if (history) {
-        return history;
-      }
-      if (typeof window !== 'undefined') {
-        return createHistory('browser');
-      }
-      return createHistory('memory');
-    });
+    this.setHistory(
+      async (args) => {
+        const history = (args.ref as ModulesInstance<[NavigationModule]>)?.navigation?.history;
+        if (history) {
+          // Wrap the provided history in a ProxyHistory to ensure the module can manage its own teardowns without affecting the original instance.
+          return new ProxyHistory(history);
+        }
+        if (typeof window !== 'undefined') {
+          return createHistory('browser');
+        }
+        return createHistory('memory');
+      },
+      // Don't wrap the default history in a ProxyHistory since it's already owned by the module and will be properly disposed.
+      { proxy: false },
+    );
   }
   /**
    * @deprecated Use `setBasename()` method instead
@@ -121,13 +128,38 @@ export class NavigationConfigurator extends BaseConfigBuilder<INavigationConfigu
   /**
    * Sets a custom history instance for the navigation module.
    *
+   * By default the resolved history is wrapped in a {@link ProxyHistory} so the
+   * module gets its own disposable handle without owning (or accidentally
+   * disposing) the original instance. Set `proxy` to `false` to use the
+   * history as-is.
+   *
    * @param historyOrCallback - History instance or configuration callback
+   * @param options - Optional settings for history wrapping
+   * @param options.proxy - Wrap the history in a {@link ProxyHistory} (default: `true`)
    * @returns The configurator instance for method chaining
    */
-  public setHistory(historyOrCallback?: History | ConfigBuilderCallback<History>): this {
-    const fn =
-      typeof historyOrCallback === 'function' ? historyOrCallback : async () => historyOrCallback;
-    this._set('history', fn);
+  public setHistory(
+    historyOrCallback?: History | ConfigBuilderCallback<History>,
+    options?: { proxy?: boolean },
+  ): this {
+    const { proxy = true } = options ?? {};
+    const resolve =
+      typeof historyOrCallback === 'function'
+        ? historyOrCallback
+        : // Normalize a direct instance to a callback for consistent handling.
+          async () => historyOrCallback;
+
+    if (proxy) {
+      // Wrap each emitted history in a ProxyHistory so dispose only tears down
+      // proxy-owned listeners/blockers, never the underlying history itself.
+      this._set('history', (args) =>
+        from(resolve(args) as ObservableInput<History | undefined>).pipe(
+          map((history) => (history ? new ProxyHistory(history) : undefined)),
+        ),
+      );
+    } else {
+      this._set('history', resolve);
+    }
     return this;
   }
 

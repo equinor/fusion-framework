@@ -1,4 +1,9 @@
-import { Outlet, RouterProvider, type RouterProviderProps, useParams } from 'react-router-dom';
+import {
+  Outlet,
+  RouterProvider,
+  type RouterProviderProps,
+  useParams,
+} from '@equinor/fusion-framework-react-router';
 import { AppLoader } from './AppLoader';
 import { Header } from './components/Header';
 
