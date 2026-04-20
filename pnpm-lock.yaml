@@ -822,7 +822,7 @@ importers:
         version: 2.0.2(react@19.2.5)(styled-components@6.4.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))
       '@equinor/fusion-react-date':
         specifier: ^1.0.0
-        version: 1.0.0(react@19.2.5)
+        version: 1.0.1(react@19.2.5)
       '@equinor/fusion-react-progress-indicator':
         specifier: ^0.3.0
         version: 0.3.0(react@19.2.5)
@@ -3127,8 +3127,8 @@ packages:
     peerDependencies:
       react: ^18 || ^19
 
-  '@equinor/fusion-react-date@1.0.0':
-    resolution: {integrity: sha512-rDXj8jeRhffg9aGk7qzu1eY4u7A1m4Nq9mOXayrettQ2BOF7zMEFx47TDf70/pCc6OWZW87roXVA55s8I5wJZA==}
+  '@equinor/fusion-react-date@1.0.1':
+    resolution: {integrity: sha512-2ERzHu/W4ZGLTFKWbGZ2brtylDP8pWfisFby1V9dpxScYugp6x9Qe7qjF69r5Xe0ASWQU2iTSDGscXsdq54Juw==}
     peerDependencies:
       react: ^18 || ^19
 
@@ -3198,8 +3198,8 @@ packages:
   '@equinor/fusion-wc-core@2.0.0':
     resolution: {integrity: sha512-yxUepfQhMIkKNYn2Vc73R6/cyvyO0hde3LXFitCCaa8QR9woK0UXZlxP+RwnEYzve528l9K1t7SnEsX6x5eyPg==}
 
-  '@equinor/fusion-wc-date@1.1.3':
-    resolution: {integrity: sha512-aOSM/ANRnSNUKENx8MPzPfoDYCzZEgv4x/PYrp1ymAW1QqUyfC2t4QEV96t2sme/bmDG1C35tGWcLlXu2b8Apw==}
+  '@equinor/fusion-wc-date@1.2.0':
+    resolution: {integrity: sha512-i6oH9e2ee8Tveuq10V/40WDXUrNFVMGNIYwl9Kb0JD+t5agavMD/IAMhqMFfzB8lp7nsi8/7mNQ2OL7SvIxJtQ==}
 
   '@equinor/fusion-wc-divider@1.1.2':
     resolution: {integrity: sha512-kb5kmq8S+aMqe+91RNHmJtjCg8ecrnB5DYrcm6RzucLicxL0NTwlLAJfy49xDR5kzt2laoyq6XsQ+4MqnlTbyw==}
@@ -7753,9 +7753,6 @@ packages:
   dataloader@1.4.0:
     resolution: {integrity: sha512-68s5jYdlvasItOJnCuI2Q9s4q98g0pCyL3HrcKJu8KNugUl8ahgmZYg38ysLTgQjjXX3H8CJLkAvWrclWfcalw==}
 
-  date-fns@3.6.0:
-    resolution: {integrity: sha512-fRHTG8g/Gif+kSh50gaGEdToemgfj74aRX3swtiouboip5JDLAyDE9F11nHMIcvOaXeOC6D7SpNhi7uFyB7Uww==}
-
   date-fns@4.1.0:
     resolution: {integrity: sha512-Ukq0owbQXxa/U3EGtsdVBkR1w7KOQ5gIBqdH2hkvknzZPYvBxb/aa6E8L7tmjFtkwZBu3UXBbjIgPo/Ez4xaNg==}
 
@@ -11514,10 +11511,10 @@ snapshots:
     transitivePeerDependencies:
       - styled-components
 
-  '@equinor/fusion-react-date@1.0.0(react@19.2.5)':
+  '@equinor/fusion-react-date@1.0.1(react@19.2.5)':
     dependencies:
-      '@equinor/fusion-react-utils': 3.0.0(react@19.2.5)
-      '@equinor/fusion-wc-date': 1.1.3
+      '@equinor/fusion-react-utils': 3.0.1(react@19.2.5)
+      '@equinor/fusion-wc-date': 1.2.0
       react: 19.2.5
 
   '@equinor/fusion-react-person@2.0.3(react@19.2.5)':
@@ -11639,12 +11636,12 @@ snapshots:
 
   '@equinor/fusion-wc-core@2.0.0': {}
 
-  '@equinor/fusion-wc-date@1.1.3':
+  '@equinor/fusion-wc-date@1.2.0':
     dependencies:
       '@equinor/fusion-wc-core': 2.0.0
       '@equinor/fusion-web-theme': 0.1.10
-      date-fns: 3.6.0
-      lit: 3.2.0
+      date-fns: 4.1.0
+      lit: 3.3.2
 
   '@equinor/fusion-wc-divider@1.1.2':
     dependencies:
@@ -16578,8 +16575,6 @@ snapshots:
       - '@noble/hashes'
 
   dataloader@1.4.0: {}
-
-  date-fns@3.6.0: {}
 
   date-fns@4.1.0: {}
 
