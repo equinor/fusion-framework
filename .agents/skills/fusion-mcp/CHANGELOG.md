@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.1.2 - 2026-03-21
+
+### patch
+
+- [#107](https://github.com/equinor/fusion-skills/pull/107) [`d75d8c6`](https://github.com/equinor/fusion-skills/commit/d75d8c60f15888fbe71340b53b2698f3361ac4c8) - Document `search_skills` in the MCP server tool surface.
+
+
+  - add explicit tool listing to the setup instructions: `search_framework`, `search_docs`, `search_eds`, `search_skills`, `search_indexes`, `skills`, `skills_index_status`
+
+  Resolves equinor/fusion-core-tasks#834
+
+- [#106](https://github.com/equinor/fusion-skills/pull/106) [`1f8a01d`](https://github.com/equinor/fusion-skills/commit/1f8a01ddcb5c9afe9119a1fcf1ded2c6980036d0) - Connect `fusion-mcp` to `fusion-research` as a next-step redirect.
+
+
+  - add "When not to use" entry directing source-backed research questions to `fusion-research` once MCP is running
+
 ## 0.1.1 - 2026-03-05
 
 ### patch

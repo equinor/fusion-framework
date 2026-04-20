@@ -1,5 +1,32 @@
 # Changelog
 
+## 0.1.6 - 2026-03-24
+
+### patch
+
+- [#126](https://github.com/equinor/fusion-skills/pull/126) [`1470bc8`](https://github.com/equinor/fusion-skills/commit/1470bc81e1b04e9727049f01742ea881579ad57b) - Add repository-policy handoff section for governance alignment
+
+
+  - Add explicit "Repository-policy handoff" section that defers commit, validation, changeset, and PR rules to repo-local instructions
+
+  Resolves equinor/fusion-core-tasks#581
+
+## 0.1.5 - 2026-03-17
+
+### patch
+
+- [#85](https://github.com/equinor/fusion-skills/pull/85) [`c8ba3df`](https://github.com/equinor/fusion-skills/commit/c8ba3df924c5a712c835cdb9f4de44bac03b7ad4) - Make all GitHub-API-consuming skills more conservative with token usage.
+
+
+  - `fusion-issue-authoring`: concrete session-cache flow for labels and assignee candidates; per-session budget table
+  - `fusion-issue-solving`: expanded low-token strategy with session-cache references and budget awareness
+  - `fusion-github-review-resolution`: token budget guidance for thread-heavy reviews; cache PR metadata once
+  - `fusion-issue-task-planning`: session-cache delegation rules and batch-size warning for large task plans
+  - `fusion-dependency-review`: explicit data-reuse rules across parallel advisor fan-out
+  - `fusion-discover-skills`: tighter GraphQL budget and call-count cap for discovery sessions
+
+  resolves equinor/fusion-core-tasks#797
+
 ## 0.1.4 - 2026-03-11
 
 ### patch

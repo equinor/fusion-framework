@@ -1,18 +1,11 @@
 ---
 name: fusion-issue-authoring
-description: Orchestrate GitHub issue authoring by classifying request type, routing to a type-specific issue-author skill, and enforcing shared safety gates before mutation.
+description: Classify issue type, activate the matching agent mode for type-specific drafting, and enforce shared safety gates before GitHub mutation.
 license: MIT
 metadata:
-  version: "0.2.3"
+  version: "0.3.3"
   status: active
   owner: "@equinor/fusion-core"
-
-  role: "orchestrator"
-  skills:
-    - fusion-issue-author-bug
-    - fusion-issue-author-feature
-    - fusion-issue-author-user-story
-    - fusion-issue-author-task
   tags:
     - github
     - issue-authoring
@@ -21,18 +14,19 @@ metadata:
       - github
 ---
 
-# Issue Authoring Orchestrator
+# Issue Authoring
 
-## Subordinates
+## Agent modes
 
-This skill routes to the following subordinate skills:
+This skill uses internal agent modes for type-specific drafting logic:
 
-- `fusion-issue-author-bug` (`skills/fusion-issue-author-bug/SKILL.md`): bug-focused issue drafting and triage structure
-- `fusion-issue-author-feature` (`skills/fusion-issue-author-feature/SKILL.md`): feature-focused scope and acceptance structure
-- `fusion-issue-author-user-story` (`skills/fusion-issue-author-user-story/SKILL.md`): role/workflow/scenario-driven story structure
-- `fusion-issue-author-task` (`skills/fusion-issue-author-task/SKILL.md`): checklist-first task decomposition and dependency planning
+- `agents/bug.agent.md`: bug-focused issue drafting and triage structure
+- `agents/feature.agent.md`: feature-focused scope and acceptance structure
+- `agents/user-story.agent.md`: role/workflow/scenario-driven story structure
+- `agents/task.agent.md`: checklist-first task decomposition and dependency planning
+- `agents/devils-advocate.agent.md`: always-on quality collaborator that raises key concerns after classification (moderate mode) and runs a full structured interview when explicitly asked or when scope/criteria gaps are significant (interrogator mode)
 
-All subordinates require this orchestrator for shared gates (labels, assignee confirmation, draft review, publish confirmation, and mutation sequencing).
+Agent modes are activated internally based on issue type classification. Users never reference agent files directly. Shared gates (labels, assignee confirmation, draft review, publish confirmation, and mutation sequencing) remain in this skill.
 
 ## When to use
 
@@ -62,9 +56,9 @@ Collect before publishing:
 - Issue intent/context
 - Issue type (Bug, Feature, User Story, Task)
 - Existing issue number/url when updating
-- Repository label set (or confirmation that labels are intentionally skipped). Reuse cached label results per repository within the same session.
+- Repository label set (or confirmation that labels are intentionally skipped). Cache the full label set per repository for the active session and filter locally instead of validating labels one by one. Prefer host session memory when available; otherwise use a `.tmp/` cache file that is never committed.
 - Parent/related issue links and dependency direction (sub-issue vs blocking)
-- Assignee preference (assign to user, specific person, or leave unassigned)
+- Assignee preference (assign to user, specific person, or leave unassigned). Reuse cached assignee-candidate results for the active session and skip candidate searches when the user already gave `@me` or an exact login.
 
 If required details are missing, ask concise clarifying questions from `references/questions.md`.
 If issue destination is unclear, ask explicitly where the issue should be created/updated before drafting mutation commands.
@@ -73,17 +67,21 @@ If issue destination is unclear, ask explicitly where the issue should be create
 
 ### Step 1 — Classify and route
 
-Classify request as `Bug`, `Feature`, `User Story`, or `Task`, then route to:
-- Bug -> `skills/fusion-issue-author-bug/SKILL.md`
-- Feature -> `skills/fusion-issue-author-feature/SKILL.md`
-- User Story -> `skills/fusion-issue-author-user-story/SKILL.md`
-- Task -> `skills/fusion-issue-author-task/SKILL.md`
+Classify request as `Bug`, `Feature`, `User Story`, or `Task`, then activate the matching agent mode:
+- Bug -> `agents/bug.agent.md`
+- Feature -> `agents/feature.agent.md`
+- User Story -> `agents/user-story.agent.md`
+- Task -> `agents/task.agent.md`
 
 If ambiguous, ask only essential clarifying questions.
+
+Devil's advocate pass: `agents/devils-advocate.agent.md` is always active in moderate mode — it surfaces the 2–3 most important concerns after classification without interrupting flow. When the user asks to be "grilled", says "stress-test this", or when scope/criteria gaps are significant, escalate to interrogator mode for a full structured interview before the type-specific agent. The devil's advocate returns confirmed decisions and noted risks, then hands off to the type-specific drafting agent.
 
 ### Step 2 — Resolve repository and template
 
 - Resolve the destination repository before any mutation.
+- When no explicit repository is given, check the active workspace for contributor guides (`CONTRIBUTING.md`, `contribute/`) that define default issue routing by type. Apply any routing rules found there before asking the user.
+- If no routing guidance exists in the repo, ask explicitly where the issue should be created.
 - Template precedence:
   1. repository template (`.github/ISSUE_TEMPLATE/`)
   2. specialist fallback template
@@ -95,7 +93,7 @@ Do not run repeated broad duplicate scans unless the user changes scope/title ma
 
 ### Step 4 — Draft first
 
-Draft in `.tmp/{TYPE}-{CONTEXT}.md` using GitHub Flavored Markdown.
+Before writing, check user preferences and session memory for a preferred draft location. If a stored preference exists, use it. If no preference is found and the intent is ambiguous, ask once and remember the answer for the session. Default to `.tmp/{TYPE}-{CONTEXT}.md` when no preference is found and there is nothing to ask about. Write the draft using GitHub Flavored Markdown.
 
 ### Step 5 — Review and confirm
 
@@ -108,6 +106,14 @@ Draft in `.tmp/{TYPE}-{CONTEXT}.md` using GitHub Flavored Markdown.
 Before mutation, confirm:
 - labels (only labels that exist in the target repo)
 - assignee intent (`@me`, specific login, or unassigned)
+
+Shared gate cache policy:
+- On the first label lookup for `owner/repo`, fetch the repository label set once and cache it for the active session. Prefer `/memories/session/<owner>-<repo>-labels.json` when the host exposes session memory; otherwise use `.tmp/issue-authoring-labels-<owner>-<repo>.json`.
+- On cache hit, validate requested labels locally. Do not repeat point lookups for each requested label.
+- If the host only exposes point label lookups and no cached label set exists yet, do not loop through labels one by one. Ask whether to skip optional labels or include only user-confirmed labels in the first `mcp_github::issue_write` call and handle a single rejection path.
+- Skip `mcp_github::search_users` when the user already gave `@me` or an exact GitHub login.
+- When assignee lookup is needed, cache candidate results for the active session keyed by owner/repo (or owner) and query. Prefer `/memories/session/<owner>-<repo>-assignee-candidates.json` or `/memories/session/<owner>-assignee-candidates.json`; otherwise use `.tmp/issue-authoring-assignee-candidates-<owner>-<repo>.json`.
+- If rate limits block optional label or assignee enrichment, ask whether to continue without them instead of looping retries.
 
 ### Step 7 — Mutate via MCP (ordered)
 
@@ -148,20 +154,20 @@ Use detailed behavior and payload examples in `references/instructions.md` and `
 ## Core behavior to preserve
 
 - Classification-first workflow
-- Route-to-specialized-skill workflow
+- Route-to-agent-mode workflow
 - Draft-first workflow
 - Clarifying questions for missing critical context
 - Explicit confirmation before any GitHub mutation
 
 Use detailed authoring guidance in `references/instructions.md`.
-Specialist fallback template locations:
-- Bug: `skills/fusion-issue-author-bug/assets/issue-templates/bug.md`
-- Feature: `skills/fusion-issue-author-feature/assets/issue-templates/feature.md`
-- User Story: `skills/fusion-issue-author-user-story/assets/issue-templates/user-story.md`
-- Task: `skills/fusion-issue-author-task/assets/issue-templates/task*.md`
+Fallback template locations:
+- Bug: `assets/issue-templates/bug.md`
+- Feature: `assets/issue-templates/feature.md`
+- User Story: `assets/issue-templates/user-story.md`
+- Task: `assets/issue-templates/task*.md`
 
 ## Expected output
-- Selected specialized skill path
+- Selected agent mode path
 - Draft issue file path under `.tmp/`
 - Template source used (repository template path or fallback asset path)
 - Proposed title, body summary, and labels

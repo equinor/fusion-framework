@@ -3,7 +3,7 @@ name: fusion-issue-task-planning
 description: Plan and break down user-story issues into ordered, traceable task issue drafts with explicit publish gates.
 license: MIT
 metadata:
-   version: "0.1.3"
+   version: "0.1.5"
    status: experimental
    owner: "@equinor/fusion-core"
 
@@ -103,6 +103,8 @@ Execute in order and state assumptions explicitly.
    - Delegate publish execution to `fusion-issue-authoring` and prefer sub-agent invocation for task issue creation/update/linking.
    - Pass required context to `fusion-issue-authoring`: `owner`, `repo`, parent story reference, ordered task drafts, labels/assignee intent, and dependency ordering.
    - Require `fusion-issue-authoring` to keep MCP-first behavior and apply GraphQL fallback only when MCP write coverage is unavailable.
+   - The orchestrator's session-cache rules apply to all delegated calls: labels, assignee candidates, and issue types are fetched once per session and reused across all task issues in the batch.
+   - Budget awareness: a task-planning publish of N tasks costs ~N issue-write mutations + optional sub-issue link mutations. If N > 5, warn the user about rate-limit risk and offer to publish in batches.
    - Do not call MCP write tools directly from this skill in publish mode.
    - Hard fail publish mode if delegated execution returns unresolved item-level failures.
 
@@ -151,6 +153,7 @@ For `publish-now` or `repair` mode, include a per-issue post-flight report with:
 
 ## Safety & constraints
 
+- This skill is mutation-capable. Repository-local workflow instructions take precedence over inline guidance when they conflict.
 - Never mutate GitHub state without explicit confirmation.
 - Never infer acceptance criteria without flagging assumptions.
 - Always preserve AC traceability in the task plan.

@@ -4,7 +4,7 @@ description: "Resolves unresolved GitHub PR review threads end-to-end: evaluates
 license: MIT
 compatibility: Requires GitHub MCP server or gh CLI, and git.
 metadata:
-   version: "0.1.4"
+   version: "0.1.6"
    status: experimental
    owner: "@equinor/fusion-core"
    tags:
@@ -175,6 +175,14 @@ Review-resolution workflows make multiple GraphQL mutation calls (reply + resolv
 - If a secondary rate-limit error or `retry-after` header is returned, stop processing and respect the indicated wait before retrying.
 - Always prefer a dedicated MCP review-thread tool over raw GraphQL when the client exposes one.
 
+### Token budget guidance
+
+- Fetch the full thread list once and reuse it for all per-thread work; do not re-fetch threads between reply and resolve.
+- Budget estimate: for N unresolved threads expect ~1 list call + N reply mutations + N resolve mutations = 1 + 2N calls. A 10-thread review costs ~21 calls.
+- If the thread count exceeds 15, warn the user about rate-limit risk before starting mutations and offer to batch in smaller groups.
+- Cache PR metadata (title, branch, CI status, changed files) from the first fetch and reuse it for commit messages and replies.
+- Avoid redundant PR-level reads between steps; the data does not change within a single resolution run.
+
 ## Expected output
 
 Return a concise report containing:
@@ -197,6 +205,7 @@ When an issue is provided (for example `equinor/fusion-core-tasks#432`):
 
 ## Safety & constraints
 
+- This skill is mutation-capable. Repository-local workflow instructions take precedence over inline guidance when they conflict.
 - Never expose secrets or tokens in logs/replies.
 - Prefer argv-based process execution over shell-interpolated command strings.
 - Keep diffs minimal and scoped to review feedback.
