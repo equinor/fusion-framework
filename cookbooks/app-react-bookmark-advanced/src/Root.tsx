@@ -1,4 +1,4 @@
-import { Link, Outlet } from 'react-router-dom';
+import { Link, Outlet } from '@equinor/fusion-framework-react-router';
 import { Provider } from './Provider';
 import { BookmarkAppNavigation } from './BoomarkAppNavigation';
 import Create from './Create';

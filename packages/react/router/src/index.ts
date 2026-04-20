@@ -40,4 +40,6 @@ export {
   useRouteError,
   useSearchParams,
   useSubmit,
+  type LinkProps,
+  type RouterProviderProps,
 } from 'react-router';

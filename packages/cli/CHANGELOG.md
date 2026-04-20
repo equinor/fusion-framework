@@ -1,5 +1,72 @@
 # Change Log
 
+## 14.2.3
+
+### Patch Changes
+
+- b2ee9f1: Internal: republish `@equinor/fusion-framework-cli` after a failed CI publish; no consumer-facing changes are included in this release.
+
+## 14.2.2
+
+### Patch Changes
+
+- 53b725f: Add `/@fusion-api/apps` as a direct service worker resource so auth tokens are injected for app bundle chunk requests in portal mode.
+
+  Previously, only `/apps-proxy` was registered. When the browser resolved relative chunk imports (e.g. `lib-*.js`) against the rewritten `/@fusion-api/apps/` origin, the service worker did not match the URL and the request was sent without an Authorization header, resulting in 401 errors.
+
+- Updated dependencies [53b725f]
+  - @equinor/fusion-framework-dev-portal@5.1.4
+
+## 14.2.1
+
+### Patch Changes
+
+- 5823e72: Add missing empty `endpoints` field in default fallback for app config
+  - @equinor/fusion-framework-dev-portal@5.1.3
+
+## 14.2.0
+
+### Minor Changes
+
+- 8c5d77a: Add `portal serve` command for serving built portal templates in a production-like preview environment.
+
+  The new command starts a dev server that serves pre-built portal files, automatically detecting the build output directory from Vite configuration.
+
+  ```sh
+  ffc portal serve
+  ffc portal serve --port 5000 --host 0.0.0.0
+  ffc portal serve --dir ./dist
+  ```
+
+  Options include `--port`, `--host`, `--dir`, `--manifest`, `--config`, and `--debug`.
+
+### Patch Changes
+
+- Updated dependencies [b733f91]
+  - @equinor/fusion-framework-dev-portal@5.1.2
+
+## 14.1.1
+
+### Patch Changes
+
+- 8f16c97: Update rollup (4.59.0 → 4.60.1) used to produce the published bundles for both packages.
+
+  rollup 4.60.1 fixes a bug where side-effect imports could be silently dropped during bundling due to a namespace re-export caching issue ([rollup#6274](https://github.com/rollup/rollup/issues/6274)). Both packages use rollup to bundle their published output, so the fix ensures the emitted artifacts are correct.
+
+  No API or behaviour changes for consumers.
+
+- fe63b78: Internal: update bundled ajv (8.17.1 → 8.18.0) in the CLI.
+
+  ajv 8.18.0 includes a security fix for CVE-2025-69873 — a ReDoS vulnerability in the `$data` keyword's `pattern` validation. The CLI bundles ajv for portal schema validation, so this patch updates the bundled copy.
+
+  No CLI API or behaviour changes for consumers.
+
+- Updated dependencies [6872aad]
+- Updated dependencies [5c836fb]
+  - @equinor/fusion-framework-module-msal-node@4.0.1
+  - @equinor/fusion-framework-dev-server@2.0.1
+  - @equinor/fusion-framework-dev-portal@5.1.1
+
 ## 14.1.0
 
 ### Minor Changes

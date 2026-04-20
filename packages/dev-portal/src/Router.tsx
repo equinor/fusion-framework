@@ -1,6 +1,11 @@
 import { useBookmarkNavigate } from '@equinor/fusion-framework-react-module-bookmark/portal';
 
-import { Outlet, RouterProvider, type RouterProviderProps, useParams } from 'react-router-dom';
+import {
+  Outlet,
+  RouterProvider,
+  type RouterProviderProps,
+  useParams,
+} from '@equinor/fusion-framework-react-router';
 import AppLoader from './AppLoader';
 import { Header } from './Header';
 
