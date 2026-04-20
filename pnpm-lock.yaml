@@ -574,7 +574,7 @@ importers:
     dependencies:
       '@equinor/fusion-wc-markdown':
         specifier: ^1.5.0
-        version: 1.5.1
+        version: 1.6.0
       '@tanstack/react-query':
         specifier: ^5.90.10
         version: 5.99.2(react@19.2.5)
@@ -3224,8 +3224,8 @@ packages:
   '@equinor/fusion-wc-list@1.2.0':
     resolution: {integrity: sha512-+7QJ+qb4SNbjo6Ox466Fv/BY4ddnZRs8ynG56IztsW600SO0pj8lF8BQN8y+5z25dNZ15DAkUOjtprGmWVHLow==}
 
-  '@equinor/fusion-wc-markdown@1.5.1':
-    resolution: {integrity: sha512-fH/vU+JOqN9z7RWofvnmbRTBxWxfQFWdjWmWweyyxVMbzmZf9rKMgVswwTngWr7InEGXtA+iYkkRSeVDJX7gBw==}
+  '@equinor/fusion-wc-markdown@1.6.0':
+    resolution: {integrity: sha512-6+bAnkglCU6Qb0asuuGigy+UOxVBFgetSzJAjAGVlwayEP31iGRenKx2KbxIYvhqNNOTVYvSGYB0rfNW4jhTCw==}
 
   '@equinor/fusion-wc-people@2.0.1':
     resolution: {integrity: sha512-edBC6UKT0XelJiQoytfnUZ1mP2SkBvZK1GqwHVMpwEQQvjl6VTJC5s92wvxtL9lzeHQFwRW0cX5K/82wHLQnJg==}
@@ -11519,10 +11519,10 @@ snapshots:
       '@material/mwc-list': 0.27.0
       lit: 3.3.2
 
-  '@equinor/fusion-wc-markdown@1.5.1':
+  '@equinor/fusion-wc-markdown@1.6.0':
     dependencies:
       '@equinor/fusion-wc-core': 2.0.0
-      '@equinor/fusion-wc-icon': 2.3.1
+      '@equinor/fusion-wc-icon': 2.4.0
       '@equinor/fusion-web-theme': 0.1.10
       lit: 3.3.2
       marked: 17.0.6
