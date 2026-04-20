@@ -67,7 +67,7 @@
     "@equinor/fusion-framework-cli-plugin-ai-mcp": "workspace:*",
     "@equinor/fusion-framework-cli-plugin-copilot": "workspace:*",
     "@vitest/coverage-v8": "^4.0.18",
-    "agent-browser": "^0.25.3",
+    "agent-browser": "^0.26.0",
     "genversion": "^3.1.1",
     "happy-dom": "^20.8.4",
     "tslib": "^2.6.1",
