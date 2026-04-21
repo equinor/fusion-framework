@@ -1,7 +1,10 @@
 import { type Command, createCommand, createOption } from 'commander';
 
-import { loadFusionAIConfig } from '@equinor/fusion-framework-cli-plugin-ai-base';
-import { withOptions as withAiOptions } from '@equinor/fusion-framework-cli-plugin-ai-base/command-options';
+import { loadFusionAIConfig, setupFramework } from '@equinor/fusion-framework-cli-plugin-ai-base';
+import {
+  withOptions as withAiOptions,
+  type AiOptions,
+} from '@equinor/fusion-framework-cli-plugin-ai-base/command-options';
 
 import type { FusionAIConfigWithIndex } from './config.js';
 import { zodToAzureFields } from './utils/zod-to-azure-fields.js';
@@ -35,7 +38,10 @@ const _command = createCommand('create')
   .addOption(
     createOption('--dry-run', 'Preview the index schema without creating it').default(false),
   )
-  .action(async function (this: Command, commandOptions: { config: string; dryRun: boolean }) {
+  .action(async function (
+    this: Command,
+    commandOptions: AiOptions & { config: string; dryRun: boolean },
+  ) {
     const config = await loadFusionAIConfig<FusionAIConfigWithIndex>(commandOptions.config, {
       baseDir: process.cwd(),
     });
@@ -139,6 +145,15 @@ const _command = createCommand('create')
     const fullSchema = {
       name: indexName,
       fields: [...baseFields, ...schemaFields],
+      vectorSearch: {
+        algorithms: [{ name: 'default-hnsw', kind: 'hnsw' }],
+        profiles: [
+          {
+            name: 'default-vector-profile',
+            algorithm: 'default-hnsw',
+          },
+        ],
+      },
     };
 
     if (commandOptions.dryRun) {
@@ -150,12 +165,36 @@ const _command = createCommand('create')
       process.exit(0);
     }
 
-    // TODO: Send schema to Fusion AI proxy via POST /indexes/{name}
-    // Blocked by equinor/fusion-core-tasks#1009 and #1010
-    console.error(
-      '❌ Index creation via the proxy is not yet implemented. Use --dry-run to preview the schema.',
-    );
-    process.exit(1);
+    // Create or update the index via the Fusion AI proxy
+    const framework = await setupFramework(commandOptions);
+    const service = await framework.serviceDiscovery.resolveService('ai');
+    const baseUri = service.uri.replace(/\/+$/, '');
+    const scopes = service.scopes ?? service.defaultScopes ?? [];
+    const token = await framework.auth.acquireAccessToken({ request: { scopes } });
+
+    if (!token) {
+      console.error('❌ Failed to acquire access token for the AI service.');
+      process.exit(1);
+    }
+
+    const url = `${baseUri}/indexes/${encodeURIComponent(indexName)}?api-version=2024-07-01`;
+    const response = await fetch(url, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(fullSchema),
+    });
+
+    if (!response.ok) {
+      const body = await response.text();
+      console.error(`❌ Index creation failed (${response.status} ${response.statusText})`);
+      console.error(body);
+      process.exit(1);
+    }
+
+    console.log(`✅ Index "${indexName}" created/updated successfully.`);
   });
 
 /**
