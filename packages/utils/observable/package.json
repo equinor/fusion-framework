@@ -74,7 +74,7 @@
   "dependencies": {
     "immer": "^11.0.0",
     "rxjs": "^7.8.1",
-    "uuid": "^13.0.0"
+    "uuid": "^14.0.0"
   },
   "devDependencies": {
     "@testing-library/dom": "^10.0.0",
