@@ -30,7 +30,7 @@ describe('createPortalEntryPoint', () => {
     );
 
     expect(result).toBe(
-      'https://cdn.example.com/bundles/templates/app-portal@2.0.1/dist/index.mjs?import'
+      'https://cdn.example.com/bundles/templates/app-portal@2.0.1/dist/index.mjs?import',
     );
   });
 });
