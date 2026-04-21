@@ -29,6 +29,8 @@ describe('createPortalEntryPoint', () => {
       '/index.mjs?import',
     );
 
-    expect(result).toBe('https://cdn.example.com/bundles/templates/app-portal@2.0.1/dist/index.mjs?import');
+    expect(result).toBe(
+      'https://cdn.example.com/bundles/templates/app-portal@2.0.1/dist/index.mjs?import'
+    );
   });
 });

@@ -1,6 +1,5 @@
 ---
 "@equinor/fusion-framework-cli": patch
-"@equinor/fusion-framework-dev-server": patch
 ---
 
 Fix 401 Unauthorized responses when loading the portal-config API in the Fusion dev server.
