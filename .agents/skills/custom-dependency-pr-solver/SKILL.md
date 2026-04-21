@@ -1,6 +1,6 @@
 ---
 name: custom-dependency-pr-solver
-description: 'Batch-process Dependabot PRs end-to-end: checkout, rebase, research, changeset, validate, and auto-merge high-confidence PRs as admin squash. USE FOR: process all Dependabot PRs, clear dependency backlog, solve dependency PRs, merge safe dependency updates. DO NOT USE FOR: single-PR deep review (use fusion-dependency-review), feature PRs, non-Dependabot dependency PRs, or PRs requiring manual code changes.'
+description: 'Batch-process Dependabot PRs end-to-end: checkout, rebase, research, changeset, validate, and auto-merge high-confidence PRs as admin squash. USE FOR: process all Dependabot PRs, clear dependency backlog, batch-merge safe Dependabot updates, batch-process dependency PRs. DO NOT USE FOR: single-PR deep review (use fusion-dependency-review), feature PRs, non-Dependabot dependency PRs, or PRs requiring manual code changes.'
 license: MIT
 compatibility: Requires GitHub CLI (`gh`) authenticated with admin merge rights. Requires pnpm and the Fusion Framework monorepo build toolchain.
 metadata:
@@ -30,10 +30,10 @@ Typical triggers:
 
 - "Process all open Dependabot PRs"
 - "Clear the dependency PR backlog"
-- "Solve dependency PRs"
-- "Merge safe dependency updates"
-- "Handle open Dependabot PRs and merge what's safe"
-- "Batch process dependency updates"
+- "Batch-process dependency PRs"
+- "Batch-merge safe Dependabot updates"
+- "Handle all open Dependabot PRs and merge what's safe"
+- "Solve all dependency PRs"
 
 ## When not to use
 

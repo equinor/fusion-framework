@@ -5,9 +5,24 @@ name: Dependabot PR Handler Prompt
 
 # Dependabot PR Handler Prompt
 
-You are handling a Dependabot pull request. Follow the instructions in `.github/instructions/dependabot-pr.instructions.md` **completely and in order**.
+You are handling Dependabot pull requests. Follow the instructions in `.github/instructions/dependabot-pr.instructions.md` **completely and in order**.
 
-## Initial Step: Identify the PR
+## Initial Step: Determine Workflow
+
+### If the user wants to batch-process multiple PRs:
+- Use the batch workflow: `.agents/skills/custom-dependency-pr-solver/SKILL.md`
+- List all open Dependabot PRs, confirm the batch with the user, and process sequentially
+- High-confidence PRs are auto-merged after posting research and verdict comments
+- Proceed with the solver skill's instructions
+
+### If the user wants to review a single PR:
+- Use the single-PR workflow below
+- Proceed to "Identify the PR"
+
+### If the intent is unclear:
+- Ask: "Do you want to review a single PR in detail, or batch-process multiple Dependabot PRs?"
+
+## Identify the PR (single-PR workflow)
 
 ### If PR URL is provided:
 - Extract PR details: repository owner, repository name, PR number, and branch name
