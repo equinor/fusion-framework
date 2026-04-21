@@ -6,15 +6,15 @@
  */
 export const createPortalEntryPoint = (...segments: Array<string | undefined | null>): string => {
   const normalized = segments
-    .filter((segment): segment is string => Boolean(segment))
+    .filter((segment): segment is string => segment !== undefined && segment !== null)
+    .map((segment) => segment.trim())
+    .filter(Boolean)
     .map((segment, index) => {
-      const value = segment.trim();
       if (index === 0) {
-        return value.replace(/\/+$/g, '');
+        return segment.replace(/\/+$/g, '');
       }
-      return value.replace(/^\/+|\/+$/g, '');
-    })
-    .filter(Boolean);
+      return segment.replace(/^\/+|\/+$/g, '');
+    });
 
   return normalized.join('/');
 };
