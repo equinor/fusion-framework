@@ -153,12 +153,25 @@ export class AzureVectorStore extends BaseService<string, unknown[]> implements 
    * @returns Promise resolving to the IDs of the stored documents.
    */
   private async addDocumentsWithSchemaFields(documents: VectorStoreDocument[]): Promise<string[]> {
-    // Use pre-computed embeddings when every document has them (from the
-    // CLI embed pipeline), otherwise batch-compute via LangChain
-    const allPreComputed = documents.every((doc) => doc.metadata.embedding);
-    const vectors = allPreComputed
-      ? documents.map((doc) => doc.metadata.embedding as number[])
-      : await this.vectorStore.embeddings.embedDocuments(documents.map((doc) => doc.pageContent));
+    // Resolve embeddings per-document: reuse pre-computed ones and only
+    // call the embedding service for documents that lack them, avoiding
+    // unnecessary API calls when batches are partially pre-computed.
+    const missingIndices: number[] = [];
+    for (let i = 0; i < documents.length; i++) {
+      if (!documents[i].metadata.embedding) {
+        missingIndices.push(i);
+      }
+    }
+
+    const vectors: number[][] = documents.map((doc) => (doc.metadata.embedding as number[]) ?? []);
+
+    if (missingIndices.length > 0) {
+      const textsToEmbed = missingIndices.map((i) => documents[i].pageContent);
+      const computed = await this.vectorStore.embeddings.embedDocuments(textsToEmbed);
+      for (let j = 0; j < missingIndices.length; j++) {
+        vectors[missingIndices[j]] = computed[j];
+      }
+    }
 
     // Construct Azure Search documents with promoted fields at the top level
     const entities = documents.map((doc, idx) => {

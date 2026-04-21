@@ -48,14 +48,11 @@ const _command = createCommand('create')
       process.exit(1);
     }
 
-    // Resolve index name from config or CLI parent options
-    const parentCommand = this.parent ?? this;
-    const indexName =
-      (parentCommand as Command & { opts: () => Record<string, unknown> }).opts?.().indexName ??
-      indexConfig.name;
+    // Resolve index name from config
+    const indexName = indexConfig.name;
 
     if (!indexName) {
-      console.error('❌ Index name is required. Set `name` in config or pass --index-name.');
+      console.error('❌ Index name is required. Set `name` in the index config.');
       process.exit(1);
     }
 
