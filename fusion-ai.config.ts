@@ -3,7 +3,7 @@ import { defineIndexSchema } from '@equinor/fusion-framework-cli-plugin-ai-index
 
 export default {
   index: {
-    name: 'fusion-framework-2026-03-16',
+    name: 'fusion-framework-2026-04-21',
     model: 'text-embedding-3-large',
     ignore: ['node_modules/**', 'dist/**', '**/node_modules/**', '**/dist/**'],
     // File patterns to match for processing
