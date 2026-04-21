@@ -7,19 +7,17 @@ name: Dependabot PR Rules
 
 ## TL;DR (for AI agents)
 
-- Use `.agents/skills/fusion-dependency-review/SKILL.md` as the default review workflow for Dependabot PRs.
-- Do not approve, merge, push, close, or comment on a Dependabot PR without explicit user confirmation.
+- Do not approve, merge, push, close, or comment on a Dependabot PR without explicit user confirmation (batch-level confirmation counts for the solver skill).
 - If the branch needs refreshing, use rebase-only refreshes; never merge the base branch into the PR branch.
 - If the PR needs patching, follow `.github/instructions/workflow-contribution.instructions.md`.
 - Treat missing changesets, missing validation, or weak PR-template usage as explicit findings.
 
-## Default workflow
+## Skills
 
-1. Identify the target Dependabot PR by URL or PR number.
-2. Review it with `.agents/skills/fusion-dependency-review/SKILL.md`.
-3. If branch updates are required, rebase onto the latest base branch; do not merge the base branch into the PR branch.
-4. If code changes are required, apply `.github/instructions/workflow-contribution.instructions.md` before committing or updating the PR.
-5. Before approval or merge, verify required validation status, changeset handling, and PR-body quality.
+| Intent | Skill |
+|--------|-------|
+| Review a single dependency PR in detail | `.agents/skills/fusion-dependency-review/SKILL.md` |
+| Batch-process multiple Dependabot PRs with auto-merge | `.agents/skills/custom-dependency-pr-solver/SKILL.md` |
 
 ## Safety
 
