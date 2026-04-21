@@ -57,7 +57,7 @@
     "@opentelemetry/sdk-logs": "^0.215.0",
     "deepmerge": "^4.3.1",
     "rxjs": "^7.8.1",
-    "uuid": "^13.0.0",
+    "uuid": "^14.0.0",
     "zod": "^4.3.6"
   },
   "devDependencies": {
