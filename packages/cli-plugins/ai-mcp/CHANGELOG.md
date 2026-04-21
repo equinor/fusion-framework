@@ -1,5 +1,14 @@
 # @equinor/fusion-framework-cli-plugin-ai-mcp
 
+## 2.0.1
+
+### Patch Changes
+
+- Updated dependencies [4f71408]
+- Updated dependencies [ee9c669]
+  - @equinor/fusion-framework-module-ai@3.0.1
+  - @equinor/fusion-framework-cli-plugin-ai-base@2.0.1
+
 ## 2.0.0
 
 ### Major Changes

@@ -1,5 +1,12 @@
 # Change Log
 
+## 2.0.1
+
+### Patch Changes
+
+- 4f71408: Internal: Bump `@equinor/eds-core-react` from 2.4.1 to 2.5.0.
+- 1fc204f: Internal: Bump `@equinor/eds-icons` from 1.3.0 to 1.4.0 (adds `partial_completion` icon).
+
 ## 2.0.0
 
 ### Major Changes

@@ -1,5 +1,11 @@
 # Change Log
 
+## 11.0.1
+
+### Patch Changes
+
+- a2b9ae4: Internal: Bump `@microsoft/signalr` from 7.0.14 to 10.0.0.
+
 ## 11.0.0
 
 ### Major Changes

@@ -1,5 +1,12 @@
 # @equinor/fusion-framework-react-router
 
+## 1.2.2
+
+### Patch Changes
+
+- 90313fa: Internal: Bump `@react-router/dev` from 7.13.2 to 7.14.1 (adds Vite 8 and TypeScript 6 support).
+- 4f71408: Internal: Bump `react-router` from 7.13.2 to 7.14.1.
+
 ## 1.2.1
 
 ### Patch Changes

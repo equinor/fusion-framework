@@ -1,5 +1,15 @@
 # @equinor/fusion-framework-cli-plugin-ai-chat
 
+## 2.0.1
+
+### Patch Changes
+
+- 4f71408: Internal: Bump LangChain ecosystem dependencies (`langchain`, `@langchain/core`, `@langchain/community`, `@langchain/textsplitters`).
+- Updated dependencies [4f71408]
+- Updated dependencies [ee9c669]
+  - @equinor/fusion-framework-module-ai@3.0.1
+  - @equinor/fusion-framework-cli-plugin-ai-base@2.0.1
+
 ## 2.0.0
 
 ### Major Changes

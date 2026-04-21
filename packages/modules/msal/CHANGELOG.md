@@ -1,5 +1,11 @@
 # Change Log
 
+## 8.0.2
+
+### Patch Changes
+
+- 02a5859: Internal: Bump `@azure/msal-browser` from 5.4.0 to 5.7.0.
+
 ## 8.0.1
 
 ### Patch Changes

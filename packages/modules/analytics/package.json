@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework-module-analytics",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Fusion module for collecting and exporting application analytics using OpenTelemetry standards",
   "main": "dist/esm/index.js",
   "type": "module",

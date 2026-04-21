@@ -1,5 +1,23 @@
 # Change Log
 
+## 14.2.4
+
+### Patch Changes
+
+- 4f71408: Internal: Bump `simple-git` from 3.35.2 to 3.36.0.
+- ee9c669: Patched transitive security vulnerabilities in build toolchain dependencies:
+  - `serialize-javascript` → 7.0.5 (CPU exhaustion DoS)
+  - `minimatch` → 5.1.8 / 9.0.7 (ReDoS via repeated wildcards)
+  - `brace-expansion` → 2.0.3 / 5.0.5 (zero-step sequence DoS)
+
+- Updated dependencies [4f71408]
+- Updated dependencies [1fc204f]
+- Updated dependencies [d14caa6]
+- Updated dependencies [4f71408]
+  - @equinor/fusion-framework-dev-portal@5.1.5
+  - @equinor/fusion-framework-module-msal-node@4.0.2
+  - @equinor/fusion-framework-dev-server@2.0.2
+
 ## 14.2.3
 
 ### Patch Changes
