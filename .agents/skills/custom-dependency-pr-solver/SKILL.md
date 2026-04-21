@@ -1,10 +1,10 @@
 ---
 name: custom-dependency-pr-solver
-description: 'Batch-process Dependabot PRs end-to-end: checkout, rebase, research, changeset, validate, and auto-merge high-confidence PRs as admin squash. USE FOR: process all Dependabot PRs, clear dependency backlog, batch-merge safe Dependabot updates, batch-process dependency PRs. DO NOT USE FOR: single-PR deep review (use fusion-dependency-review), feature PRs, non-Dependabot dependency PRs, or PRs requiring manual code changes.'
+description: 'Batch-process Dependabot PRs end-to-end: checkout, rebase, review, changeset, validate, and auto-merge high-confidence PRs. USE FOR: process all Dependabot PRs, clear dependency backlog, batch-merge safe Dependabot updates, batch-process dependency PRs. DO NOT USE FOR: single-PR deep review (use fusion-dependency-review), feature PRs, non-Dependabot dependency PRs, or PRs requiring manual code changes.'
 license: MIT
 compatibility: Requires GitHub CLI (`gh`) authenticated with admin merge rights. Requires pnpm and the Fusion Framework monorepo build toolchain.
 metadata:
-  version: "0.0.0"
+  version: "0.1.0"
   status: experimental
   owner: "@equinor/fusion-core"
   tags:
@@ -20,11 +20,9 @@ metadata:
 
 # Dependency PR Solver
 
-Batch workflow that processes open Dependabot PRs sequentially: checkout, rebase, research, create changesets, validate, and auto-merge high-confidence PRs with admin squash merge.
+Batch workflow that processes open Dependabot PRs sequentially. Delegates per-PR research, lens analysis, and verdicts to `fusion-dependency-review`. This skill owns batch orchestration, source-control operations, changeset creation, auto-merge, and reporting.
 
 ## When to use
-
-Use this skill when you want to process multiple Dependabot PRs in a single session with automated merge for safe updates.
 
 Typical triggers:
 
@@ -32,203 +30,118 @@ Typical triggers:
 - "Clear the dependency PR backlog"
 - "Batch-process dependency PRs"
 - "Batch-merge safe Dependabot updates"
-- "Handle all open Dependabot PRs and merge what's safe"
 - "Solve all dependency PRs"
 
 ## When not to use
 
-Do not use this skill for:
-
-- Deep single-PR review (use `fusion-dependency-review` instead)
+- Deep single-PR review → use `fusion-dependency-review`
 - Feature PRs or application code reviews
-- Non-Dependabot dependency PRs (Renovate, manual bumps)
-- PRs that require manual code changes beyond changesets
-- When you lack admin merge rights on the repository
+- PRs requiring manual code changes beyond changesets
+- When you lack admin merge rights
 
 ## Required inputs
 
-### Mandatory
-
-- **Repository**: owner and name (infer from current workspace when possible)
+- **Repository**: owner and name (infer from workspace when possible)
 - **Confirmation**: explicit user approval before starting the batch
 
-### Optional
+Optional: PR filter (include/exclude numbers), `--review-only` (skip merge), `--merge-medium` (merge medium-confidence too).
 
-- PR filter: specific PR numbers to include or exclude
-- `--review-only`: skip auto-merge entirely (post research and verdict comments without merging)
-- `--merge-medium`: also auto-merge medium-confidence PRs (default: only `high`)
+## Delegation
+
+This skill delegates per-PR analysis to `fusion-dependency-review`:
+
+- **Research** — upstream changelog, breaking changes, security, existing discussion
+- **Lens analysis** — security, code quality, impact assessments
+- **Verdict** — recommendation and confidence scoring
+
+Changeset rules, confidence criteria, rebase strategy, and validation commands follow `.github/instructions/dependabot-pr.instructions.md`.
 
 ## Instructions
 
-### Step 1 — List and triage open Dependabot PRs
+### Step 1 — List and triage
 
 ```bash
 gh pr list --author "app/dependabot" --state open --json number,title,headRefName,baseRefName,mergeable,statusCheckRollup
 ```
 
-Present a summary table to the user:
-
-| PR | Title | Base | CI | Mergeable |
-|----|-------|------|-----|-----------|
-
-Ask the user to confirm which PRs to process, or confirm "all".
+Present a summary table and ask the user to confirm which PRs to process or confirm "all".
 
 ### Step 2 — Process each PR sequentially
 
-For each PR in the confirmed set, execute Steps 3–8 in order. Track progress with todos. If a PR fails at any step, log the failure, skip to the next PR, and include it in the final report.
+For each confirmed PR, execute Steps 3–7. If a PR fails at any step, log the failure, skip to the next, and include it in the final report.
 
 ### Step 3 — Checkout and rebase
 
-1. Fetch the latest base branch and PR branch:
-   ```bash
-   git fetch origin <base-branch>
-   gh pr checkout <number>
-   ```
-2. Rebase onto the base branch (usually `main`):
-   ```bash
-   git rebase origin/<base-branch>
-   ```
-3. If rebase conflicts occur, abort the rebase, mark the PR as `needs-manual-intervention`, and skip to the next PR.
-4. After successful rebase, force-push:
-   ```bash
-   git push --force-with-lease
-   ```
-5. Install dependencies after rebase:
-   ```bash
-   pnpm install --frozen-lockfile
-   ```
-   If lockfile is out of sync after rebase, run `pnpm install` without `--frozen-lockfile`, commit the lockfile update, and push.
+Follow the rebase strategy in `.github/instructions/dependabot-pr.instructions.md`:
 
-### Step 4 — Research changes
+1. `git fetch origin <base-branch> && gh pr checkout <number>`
+2. `git rebase origin/<base-branch>`
+3. On conflict: abort, mark `needs-manual-intervention`, skip.
+4. `git push --force-with-lease`
+5. `pnpm install --frozen-lockfile` (if lockfile drifts: `pnpm install`, commit, push).
 
-1. Identify all package(s) and version changes from the PR diff and commit message.
-2. For each dependency, research upstream changes: changelog, release notes, breaking changes, security advisories.
-3. Check existing PR comments and review threads.
-4. Post a **single** research comment per PR using `assets/research-comment-template.md`, listing all updated dependencies in one comment.
+### Step 4 — Review via fusion-dependency-review
 
-Use web search or npm registry for changelog and advisory lookups. Keep research focused — do not deep-dive unless a concern is found.
+Run the `fusion-dependency-review` workflow for this PR:
+
+1. Research upstream changes and existing PR discussion.
+2. Assess security, code quality, and impact.
+3. Post a research comment using `assets/research-comment-template.md`.
+4. Produce a confidence score (high / medium / low) using the criteria in `.github/instructions/dependabot-pr.instructions.md`.
+
+Keep research focused — do not deep-dive unless a concern surfaces.
 
 ### Step 5 — Create changesets
 
-Determine whether a changeset is needed using `references/changeset-decision.md`.
+Follow the changeset decision rules in `.github/instructions/dependabot-pr.instructions.md`. Create, commit, and push changesets for affected published packages.
 
-**Rules:**
-
-- If the dependency is used by a published package, create a changeset.
-- If the dependency touches a compilable package (`cli`, `dev-portal`, `dev-server`, or any package with a `build` script and `publishConfig`), a changeset is **mandatory**.
-- Use `patch` bump for dependency updates unless the upstream change is a major version bump with breaking changes.
-- Use the `Internal:` prefix for the changeset summary.
-- One changeset per affected published package.
-
-**Changeset creation:**
+### Step 6 — Validate
 
 ```bash
-# Create .changeset/<package-name>_bump-<dep-name>.md
+pnpm test && pnpm build && pnpm -w check
 ```
 
-```markdown
----
-"@equinor/<package-name>": patch
----
+On failure: attempt trivial fixes (e.g., `pnpm format`). If non-trivial, mark `needs-manual-intervention`.
 
-Internal: bump `<dependency>` from `<old>` to `<new>`.
-```
+### Step 7 — Merge or report
 
-Commit the changeset:
-```bash
-git add .changeset/
-git commit -m "chore: add changeset for <dependency> bump"
-git push
-```
+**High confidence:**
 
-### Step 6 — Build, test, lint, and format
+1. Post verdict comment using `assets/verdict-comment-template.md`.
+2. `gh pr merge <number> --squash --admin`
 
-Run the full validation suite:
+**Medium or low confidence:**
 
-```bash
-pnpm build && pnpm test && pnpm -w check
-```
+1. Post verdict comment with findings.
+2. Do not merge. Include in final report.
 
-If any step fails:
-
-1. Capture the error output.
-2. Attempt a targeted fix only if trivial (e.g., formatting with `pnpm format`).
-3. If the fix is non-trivial, mark the PR as `needs-manual-intervention`.
-
-### Step 7 — Assess merge confidence
-
-Evaluate confidence using `references/confidence-criteria.md`. Score as `high`, `medium`, or `low`. See that file for the full criteria — do not duplicate the checklist here.
-
-### Step 8 — Merge or report
-
-**If high confidence:**
-
-1. Post a verdict comment to the PR using `assets/verdict-comment-template.md`.
-2. Squash merge as admin:
-   ```bash
-   gh pr merge <number> --squash --admin
-   ```
-
-**If medium or low confidence:**
-
-1. Post the verdict comment with findings.
-2. Do not merge. Include in the final report as "needs manual review".
-
-### Step 9 — Final batch report
-
-After all PRs are processed, present a summary:
+### Step 8 — Final batch report
 
 | PR | Title | Status | Confidence | Action |
 |----|-------|--------|------------|--------|
 | #N | ... | merged / skipped / failed | high/med/low | merged / needs review / needs intervention |
 
-Include:
-
-- Total PRs processed
-- PRs merged
-- PRs skipped (with reasons)
-- PRs needing manual intervention (with specific issues)
-
-## Examples
-
-- User: "Process all open Dependabot PRs"
-  - Result: list 8 open PRs, user confirms all, process sequentially, merge 5 high-confidence, report 2 medium and 1 low for manual review.
-
-- User: "Solve dependency PRs but don't merge anything"
-  - Result: process all PRs in review-only mode, post research and verdict comments, report all results without merging.
-
-- User: "Handle Dependabot PRs #42 and #45"
-  - Result: process only the specified PRs, merge if high confidence, report otherwise.
-
 ## Expected output
 
-- Research comment posted to each processed PR
-- Changesets created and committed where required
-- Verdict comment posted to each PR with validation results and confidence
+- Research and verdict comments posted to each processed PR
+- Changesets created where required
 - High-confidence PRs merged via admin squash
-- Final batch summary table with per-PR status and actions taken
-- List of PRs requiring manual intervention with specific reasons
+- Final batch summary table
+- List of PRs needing manual intervention with reasons
 
 ## Safety & constraints
 
+- This skill is mutation-capable. `.github/instructions/dependabot-pr.instructions.md` takes precedence on conflicts.
+
 Never:
 
-- Merge without posting a research comment and verdict comment first
-- Merge a PR with failing validation (build, test, or lint)
-- Merge a PR with unresolved security concerns
-- Merge a PR with major version bumps without explicit user override
+- Merge without posting research and verdict comments first
+- Merge a PR with failing validation
+- Merge major version bumps without explicit user override
 - Merge the base branch into a Dependabot PR branch (rebase only)
-- Skip changeset creation for compilable packages
 - Force-push without `--force-with-lease`
-- Process PRs without initial user confirmation of the batch
+- Process PRs without initial user confirmation
 
 Always:
 
-- Rebase Dependabot branches onto base; never merge base into the PR branch
-- Post research and verdict comments before any merge action
-- Create changesets for published package dependency changes
-- Run full validation (`pnpm build && pnpm test && pnpm -w check`) before merge
-- Report exact validation output in the verdict comment
-- Track per-PR status throughout the batch
-- Present a final summary after all PRs are processed
-- Return to `main` branch after batch processing is complete
+- Return to `main` after batch processing is complete
