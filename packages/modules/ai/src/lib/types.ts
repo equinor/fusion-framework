@@ -27,7 +27,7 @@ export type VectorStoreDocumentMetadata<
   rootPath?: string;
   /**
    * Schema-promoted fields to store as top-level Azure AI Search document
-   * properties instead of inside the generic `attributes` array.
+   * properties instead of inside the generic `attributes` key-value bag.
    *
    * When present, the vector store backend places these values alongside
    * the standard fields (`id`, `content`, `content_vector`, `metadata`)

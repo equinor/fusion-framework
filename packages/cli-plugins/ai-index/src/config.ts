@@ -56,6 +56,8 @@ export interface IndexConfig {
     chunkSize?: number;
     /** Number of overlapping tokens between consecutive chunks. */
     chunkOverlap?: number;
+    /** Explicit vector dimensions for custom embedding models not in the known model map. */
+    dimensions?: number;
   };
 
   /**

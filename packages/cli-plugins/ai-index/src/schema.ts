@@ -71,13 +71,14 @@ export interface IndexSchemaConfig<T extends z.ZodObject = z.ZodObject> {
    * Type-safe attribute processor that enriches document attributes before
    * the schema resolver runs.
    *
-   * Replaces the untyped `metadata.attributeProcessor` callback when a
-   * schema is defined. The `attributes` parameter is typed from the Zod
-   * shape so that schema-declared fields (e.g. `tags`, `pkg_name`) have
-   * proper types while non-schema attributes remain accessible via the
-   * `Record<string, unknown>` base.
+   * Runs in addition to the untyped `metadata.attributeProcessor` callback
+   * when a schema is defined. The `attributes` parameter is typed from the
+   * Zod shape so that schema-declared fields (e.g. `tags`, `pkg_name`)
+   * have proper types while non-schema attributes remain accessible via
+   * the `Record<string, unknown>` base.
    *
-   * Runs after git and package metadata enrichment, before
+   * Runs after git and package metadata enrichment and after
+   * `metadata.attributeProcessor`, before
    * {@link IndexSchemaConfig.resolve | resolve}.
    *
    * @param attributes - The accumulated attributes for the document, typed

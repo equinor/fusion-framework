@@ -5,6 +5,7 @@ import { withOptions as withAiOptions } from '@equinor/fusion-framework-cli-plug
 
 import type { FusionAIConfigWithIndex } from './config.js';
 import { zodToAzureFields } from './utils/zod-to-azure-fields.js';
+import { resolveEmbeddingDimensions } from './utils/embedding-dimensions.js';
 
 /**
  * CLI command: `ai index create`
@@ -61,6 +62,16 @@ const _command = createCommand('create')
     // Convert Zod shape to Azure AI Search field definitions
     const schemaFields = zodToAzureFields(indexConfig.schema.shape);
 
+    // Resolve embedding vector dimensions from the model name or explicit config
+    const model = indexConfig.model ?? 'text-embedding-3-large';
+    let dimensions: number;
+    try {
+      dimensions = resolveEmbeddingDimensions(model, indexConfig.embedding?.dimensions);
+    } catch (error) {
+      console.error(`❌ ${error instanceof Error ? error.message : String(error)}`);
+      process.exit(1);
+    }
+
     // Base Azure AI Search fields that every index requires
     const baseFields = [
       {
@@ -87,7 +98,7 @@ const _command = createCommand('create')
         sortable: false,
         facetable: false,
         searchable: true,
-        dimensions: 3072,
+        dimensions,
         vectorSearchProfile: 'default-vector-profile',
       },
       {

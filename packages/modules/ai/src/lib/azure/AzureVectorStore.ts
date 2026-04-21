@@ -126,6 +126,17 @@ export class AzureVectorStore extends BaseService<string, unknown[]> implements 
   }
 
   /**
+   * Azure Search document property names reserved by the base schema.
+   * Schema-promoted fields must not collide with these.
+   */
+  private static readonly RESERVED_FIELDS = new Set([
+    'id',
+    'content',
+    'content_vector',
+    'metadata',
+  ]);
+
+  /**
    * Write documents to Azure AI Search with schema-promoted fields stored as
    * top-level document properties.
    *
@@ -155,6 +166,17 @@ export class AzureVectorStore extends BaseService<string, unknown[]> implements 
         ? convertObjectToAttributes(doc.metadata.attributes as Record<string, unknown>)
         : [];
 
+      // Strip reserved base-schema keys to prevent schema-promoted fields
+      // from accidentally overwriting `id`, `content`, etc.
+      const safeSchemaFields: Record<string, unknown> = {};
+      if (doc.metadata.schemaFields) {
+        for (const [key, value] of Object.entries(doc.metadata.schemaFields)) {
+          if (!AzureVectorStore.RESERVED_FIELDS.has(key)) {
+            safeSchemaFields[key] = value;
+          }
+        }
+      }
+
       return {
         id: doc.id,
         content: doc.pageContent,
@@ -165,7 +187,7 @@ export class AzureVectorStore extends BaseService<string, unknown[]> implements 
         },
         // Promoted schema fields become top-level Azure Search document
         // properties, enabling direct OData filters (no `any()` needed)
-        ...(doc.metadata.schemaFields ?? {}),
+        ...safeSchemaFields,
       };
     });
 

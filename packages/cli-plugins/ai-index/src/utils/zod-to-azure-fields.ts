@@ -1,4 +1,15 @@
-import type { z } from 'zod';
+import {
+  type z,
+  ZodString,
+  ZodNumber,
+  ZodBoolean,
+  ZodArray,
+  ZodEnum,
+  ZodOptional,
+  ZodDefault,
+  ZodNullable,
+  type ZodType,
+} from 'zod';
 
 /**
  * Azure AI Search EDM (Entity Data Model) type identifiers used in
@@ -35,58 +46,60 @@ export interface AzureSearchField {
 
 /**
  * Unwrap wrapper types (optional, default, nullable) to reach the
- * underlying Zod type definition.
+ * underlying concrete Zod type.
  *
- * @param def - The `_zod.def` object from a Zod schema node.
- * @returns The innermost non-wrapper definition.
+ * Uses public `instanceof` checks and `unwrap()` methods to avoid
+ * reliance on Zod's private `_zod.def` internals.
+ *
+ * @param schema - A Zod schema node, possibly wrapped.
+ * @returns The innermost non-wrapper schema.
  */
-function unwrapDef(def: Record<string, unknown>): Record<string, unknown> {
-  const wrapperTypes = new Set(['optional', 'default', 'nullable']);
-  // Walk through wrapper layers until we reach the concrete type
-  let current = def;
-  while (wrapperTypes.has(current.type as string)) {
-    const inner = current.innerType as { _zod?: { def: Record<string, unknown> } } | undefined;
-    if (!inner?._zod?.def) break;
-    current = inner._zod.def;
+function unwrapSchema(schema: ZodType): ZodType {
+  let current: ZodType = schema;
+  // Walk through wrapper layers until we reach a concrete type
+  while (
+    current instanceof ZodOptional ||
+    current instanceof ZodDefault ||
+    current instanceof ZodNullable
+  ) {
+    current = current.unwrap() as ZodType;
   }
   return current;
 }
 
 /**
- * Map a Zod type definition to its Azure EDM field type.
+ * Map a concrete (unwrapped) Zod schema to its Azure EDM field type.
  *
- * @param def - The unwrapped `_zod.def` object from a Zod schema node.
+ * Uses public `instanceof` checks against Zod's exported class hierarchy
+ * for forward-compatible type mapping.
+ *
+ * @param schema - The unwrapped Zod schema node.
  * @returns The corresponding Azure EDM type string.
  * @throws {Error} When the Zod type cannot be mapped to an Azure EDM type.
  */
-function zodDefToEdmType(def: Record<string, unknown>): AzureEdmType {
-  switch (def.type) {
-    case 'string':
-    case 'enum':
-      return 'Edm.String';
-    case 'number':
-      return 'Edm.Double';
-    case 'boolean':
-      return 'Edm.Boolean';
-    case 'array': {
-      const elementDef = (def.element as { _zod?: { def: Record<string, unknown> } })?._zod?.def;
-      if (!elementDef) {
-        throw new Error('Array schema missing element type definition');
-      }
-      const innerDef = unwrapDef(elementDef);
-      if (innerDef.type === 'string' || innerDef.type === 'enum') {
-        return 'Collection(Edm.String)';
-      }
-      throw new Error(
-        `Unsupported array element type "${String(innerDef.type)}". Only string arrays are supported for Azure Search fields.`,
-      );
-    }
-    default:
-      throw new Error(
-        `Unsupported Zod type "${String(def.type)}" for Azure Search field mapping. ` +
-          'Supported types: string, number, boolean, enum, array(string).',
-      );
+function zodToEdmType(schema: ZodType): AzureEdmType {
+  if (schema instanceof ZodString || schema instanceof ZodEnum) {
+    return 'Edm.String';
   }
+  if (schema instanceof ZodNumber) {
+    return 'Edm.Double';
+  }
+  if (schema instanceof ZodBoolean) {
+    return 'Edm.Boolean';
+  }
+  if (schema instanceof ZodArray) {
+    const elementSchema = unwrapSchema(schema.element as ZodType);
+    if (elementSchema instanceof ZodString || elementSchema instanceof ZodEnum) {
+      return 'Collection(Edm.String)';
+    }
+    throw new Error(
+      `Unsupported array element type "${elementSchema.constructor.name}". Only string arrays are supported for Azure Search fields.`,
+    );
+  }
+  throw new Error(
+    `Unsupported Zod type "${schema.constructor.name}" for Azure Search field mapping. ` +
+      'Supported types: ZodString, ZodNumber, ZodBoolean, ZodEnum, ZodArray(ZodString).',
+  );
 }
 
 /**
@@ -125,6 +138,10 @@ function defaultCapabilities(
  * default capabilities (filterable, facetable, sortable). Used by the
  * `ffc ai index create` command to generate the index schema.
  *
+ * Uses public `instanceof` checks and `unwrap()` methods to avoid
+ * reliance on Zod's private `_zod.def` internals, ensuring compatibility
+ * across Zod versions.
+ *
  * @param schema - A Zod object schema whose keys define the promoted fields.
  * @returns An array of Azure AI Search field definitions.
  * @throws {Error} When a field type cannot be mapped to an Azure EDM type.
@@ -147,17 +164,12 @@ function defaultCapabilities(
  * ```
  */
 export function zodToAzureFields(schema: z.ZodObject): AzureSearchField[] {
-  const shape = schema.shape as Record<string, { _zod?: { def: Record<string, unknown> } }>;
+  const shape = schema.shape as Record<string, ZodType>;
 
   return Object.entries(shape).map(([name, fieldSchema]) => {
-    const def = fieldSchema._zod?.def;
-    if (!def) {
-      throw new Error(`Field "${name}" is missing Zod type definition`);
-    }
-
     // Unwrap wrapper types to reach the concrete type
-    const innerDef = unwrapDef(def);
-    const edmType = zodDefToEdmType(innerDef);
+    const innerSchema = unwrapSchema(fieldSchema);
+    const edmType = zodToEdmType(innerSchema);
     const capabilities = defaultCapabilities(edmType);
 
     return { name, type: edmType, ...capabilities };
