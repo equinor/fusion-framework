@@ -47,7 +47,7 @@ Internal: bump `<dependency>` from `<old>` to `<new>`.
 Run the full suite before recommending merge:
 
 ```bash
-pnpm build && pnpm test && pnpm -w check
+pnpm test && pnpm build && pnpm -w check
 ```
 
 `pnpm -w check` runs Biome lint and format checks at the workspace root.

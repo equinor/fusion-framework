@@ -12,7 +12,7 @@ name: Dependabot PR Rules
 - If the PR needs patching, follow `.github/instructions/workflow-contribution.instructions.md`.
 - Treat missing changesets, missing validation, or weak PR-template usage as explicit findings.
 - Changesets are mandatory for dependency changes that affect published packages (see changeset decision below).
-- Validate with `pnpm build && pnpm test && pnpm -w check` before any merge recommendation.
+- Validate with `pnpm test && pnpm build && pnpm -w check` before any merge recommendation.
 
 ## Skills
 
@@ -40,6 +40,13 @@ Any package under `packages/` with `publishConfig` requires a changeset when its
 ### Cookbook packages
 
 `cookbooks/*` packages are versioned and published — always create a changeset when their dependencies change, including dev dependencies.
+
+### Identifying affected packages
+
+1. Check which `package.json` files changed in the PR diff.
+2. For each changed `package.json`, read the `name` field.
+3. If the package has `publishConfig`, it needs a changeset.
+4. If only `pnpm-lock.yaml` changed, trace which packages are affected by checking the lockfile diff for workspace package entries.
 
 ### When to skip
 
@@ -69,7 +76,7 @@ Internal: bump `<dependency>` from `<old-version>` to `<new-version>`.
 Run the full validation suite before recommending merge:
 
 ```bash
-pnpm build && pnpm test && pnpm -w check
+pnpm test && pnpm build && pnpm -w check
 ```
 
 `pnpm -w check` runs Biome lint and format checks at the workspace root.
@@ -95,7 +102,7 @@ All of the following must be true:
 - Patch or minor version bump (no major)
 - No breaking changes identified in upstream changelog
 - No security advisories on the target version
-- All validation passes (`pnpm build && pnpm test && pnpm -w check`)
+- All validation passes (`pnpm test && pnpm build && pnpm -w check`)
 - No unresolved reviewer comments on the PR
 - Change scope is lockfile-only or minimal manifest change
 - Upstream release is at least 48 hours old
@@ -109,6 +116,7 @@ One or more of the following:
 - Validation passes with non-blocking warnings
 - Upstream release is very recent (< 48 hours)
 - Dependency has broad consumer surface but change is backward-compatible
+- Changeset was required and created, but the consumer impact scope is unclear
 
 ### Low confidence — hold and flag
 

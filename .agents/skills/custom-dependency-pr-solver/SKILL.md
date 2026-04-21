@@ -82,7 +82,7 @@ Follow the rebase strategy in `.github/instructions/dependabot-pr.instructions.m
 
 ### Step 4 — Review via fusion-dependency-review
 
-Run the `fusion-dependency-review` workflow for this PR in lightweight batch mode:
+Run the `fusion-dependency-review` workflow for this PR:
 
 1. Research upstream changes and existing PR discussion.
 2. Assess security, code quality, and impact.
@@ -98,7 +98,7 @@ Follow the changeset decision rules in `.github/instructions/dependabot-pr.instr
 ### Step 6 — Validate
 
 ```bash
-pnpm build && pnpm test && pnpm -w check
+pnpm test && pnpm build && pnpm -w check
 ```
 
 On failure: attempt trivial fixes (e.g., `pnpm format`). If non-trivial, mark `needs-manual-intervention`.
