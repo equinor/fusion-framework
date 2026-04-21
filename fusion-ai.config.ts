@@ -1,3 +1,6 @@
+import { z } from 'zod';
+import { defineIndexSchema } from '@equinor/fusion-framework-cli-plugin-ai-index';
+
 export default {
   index: {
     name: 'fusion-framework-2026-03-16',
@@ -23,39 +26,65 @@ export default {
       '!packages/modules/services/src/**/endpoints/**',
     ],
     rawPatterns: ['cookbooks/**/*.{ts,tsx}'],
-    // Metadata processing configuration
-    metadata: {
-      // Optional: Custom metadata processor to transform metadata before embedding
-      attributeProcessor: (metadata, document) => {
-        const source = document.metadata.source;
-        // Transform or filter metadata attributes
-        metadata.tags ??= [];
+
+    // Promoted fields — top-level Azure AI Search fields for direct filtering
+    // without the `any()` OData operator (see fusion-core-tasks#1011)
+    schema: defineIndexSchema({
+      shape: z.object({
+        pkg_name: z.string().optional(),
+        type: z.string(),
+        ts_kind: z.string().optional(),
+        tags: z.array(z.string()).default([]),
+        source_dir: z.string(),
+        git_commit_date: z.string().optional(),
+      }),
+      prepareAttributes: (attrs, doc) => {
+        const source = doc.metadata.source;
+        // Build up tags based on source location — attrs.tags is string[] | undefined ✅
+        attrs.tags ??= [];
         if (source.includes('packages/')) {
-          metadata.tags.push('package');
+          attrs.tags.push('package');
         }
         if (source.includes('packages/react/')) {
-          metadata.tags.push('react');
+          attrs.tags.push('react');
         }
         if (source.includes('packages/react/app')) {
-          metadata.tags.push('app');
+          attrs.tags.push('app');
         }
         if (source.includes('packages/modules/')) {
-          metadata.tags.push('module');
+          attrs.tags.push('module');
         }
         if (source.includes('packages/utils/')) {
-          metadata.tags.push('utils');
+          attrs.tags.push('utils');
         }
         if (source.includes('packages/cli/')) {
-          metadata.tags.push('cli', 'node');
+          attrs.tags.push('cli', 'node');
         }
         if (source.includes('cookbooks/')) {
-          metadata.tags.push('cookbook', 'examples', 'howtos', 'tutorials', 'guides');
+          attrs.tags.push('cookbook', 'examples', 'howtos', 'tutorials', 'guides');
         }
         if (source.includes('CHANGELOG.md')) {
-          metadata.tags.push('changelog', 'release notes');
+          attrs.tags.push('changelog', 'release notes');
         }
-        return metadata;
+        // Fold package keywords into tags for richer faceting
+        const keywords = doc.metadata.attributes?.pkg_keywords;
+        if (Array.isArray(keywords)) {
+          attrs.tags.push(...keywords.filter((k): k is string => typeof k === 'string'));
+        }
+        return attrs;
       },
+      resolve: (doc) => ({
+        pkg_name: doc.metadata.attributes?.pkg_name as string | undefined,
+        type: (doc.metadata.attributes?.type as string) ?? 'unknown',
+        ts_kind: doc.metadata.attributes?.ts_kind as string | undefined,
+        tags: (doc.metadata.attributes?.tags as string[]) ?? [],
+        // Top-level directory for scoping filters (e.g. "packages", "cookbooks")
+        source_dir: doc.metadata.source.split('/')[0],
+        git_commit_date: doc.metadata.attributes?.git_commit_date as string | undefined,
+      }),
+    }),
+    // Metadata processing configuration
+    metadata: {
       resolvePackage: true,
     },
   },

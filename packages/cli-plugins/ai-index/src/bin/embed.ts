@@ -11,6 +11,7 @@ import { isTypescriptFile, parseTsDocFromFileSync } from '../utils/ts-doc/index.
 import { getDiff } from './get-diff.js';
 import { createDeleteRemovedFilesStream } from './delete-removed-files.js';
 import { applyMetadata } from './apply-metadata.js';
+import { applySchema } from './apply-schema.js';
 import type {
   DocumentEntry,
   EmbeddingsBinOptions,
@@ -170,6 +171,11 @@ export async function embed(binOptions: EmbeddingsBinOptions): Promise<void> {
   // Apply metadata to documents
   const applyMetadata$ = applyMetadata(merge(rawFiles$, markdown$, typescript$), config.index);
 
+  // Resolve promoted schema fields (if schema is configured) — runs after
+  // metadata enrichment so the resolver has access to git, package, and
+  // custom attributes from attributeProcessor
+  const applySchema$ = applySchema(applyMetadata$, config.index?.schema);
+
   // Generate embeddings with concurrency limit and retry on rate-limit (429) errors
   const embeddingService = framework.ai.useEmbed(options.embedModel);
 
@@ -179,7 +185,7 @@ export async function embed(binOptions: EmbeddingsBinOptions): Promise<void> {
   /** Maximum retry attempts for transient / rate-limit errors per chunk. */
   const MAX_RETRIES = 4;
 
-  const applyEmbedding$ = applyMetadata$.pipe(
+  const applyEmbedding$ = applySchema$.pipe(
     mergeMap((documents) =>
       from(documents).pipe(
         // Limit concurrency to avoid overwhelming the embedding API

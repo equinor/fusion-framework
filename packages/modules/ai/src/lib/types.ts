@@ -25,6 +25,15 @@ export type VectorStoreDocumentMetadata<
   attributes?: T;
   /** Root path prefix used when resolving relative document references */
   rootPath?: string;
+  /**
+   * Schema-promoted fields to store as top-level Azure AI Search document
+   * properties instead of inside the generic `attributes` array.
+   *
+   * When present, the vector store backend places these values alongside
+   * the standard fields (`id`, `content`, `content_vector`, `metadata`)
+   * so they can be filtered and faceted without the `any()` OData operator.
+   */
+  schemaFields?: Record<string, unknown>;
 };
 
 /**
