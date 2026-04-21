@@ -55,8 +55,8 @@ Do not use this skill for:
 ### Optional
 
 - PR filter: specific PR numbers to include or exclude
-- Merge strategy override: skip auto-merge entirely (review-only mode)
-- Confidence threshold override: merge only `high` (default) or also `medium`
+- `--review-only`: skip auto-merge entirely (post research and verdict comments without merging)
+- `--merge-medium`: also auto-merge medium-confidence PRs (default: only `high`)
 
 ## Instructions
 
@@ -79,8 +79,9 @@ For each PR in the confirmed set, execute Steps 3–8 in order. Track progress w
 
 ### Step 3 — Checkout and rebase
 
-1. Fetch the PR branch:
+1. Fetch the latest base branch and PR branch:
    ```bash
+   git fetch origin <base-branch>
    gh pr checkout <number>
    ```
 2. Rebase onto the base branch (usually `main`):
@@ -100,12 +101,10 @@ For each PR in the confirmed set, execute Steps 3–8 in order. Track progress w
 
 ### Step 4 — Research changes
 
-For each dependency updated in the PR:
-
-1. Identify the package(s) and version change from the PR diff and commit message.
-2. Research upstream changes: changelog, release notes, breaking changes, security advisories.
+1. Identify all package(s) and version changes from the PR diff and commit message.
+2. For each dependency, research upstream changes: changelog, release notes, breaking changes, security advisories.
 3. Check existing PR comments and review threads.
-4. Post a research comment to the PR using `assets/research-comment-template.md`.
+4. Post a **single** research comment per PR using `assets/research-comment-template.md`, listing all updated dependencies in one comment.
 
 Use web search or npm registry for changelog and advisory lookups. Keep research focused — do not deep-dive unless a concern is found.
 
@@ -158,31 +157,7 @@ If any step fails:
 
 ### Step 7 — Assess merge confidence
 
-Evaluate confidence using `references/confidence-criteria.md`. Score as `high`, `medium`, or `low`.
-
-**High confidence** (auto-merge candidate):
-
-- Patch or minor version bump
-- No breaking changes identified
-- All validation passes (build + test + lint)
-- No unresolved reviewer concerns
-- Lockfile-only or minimal manifest changes
-- No security advisories on the target version
-
-**Medium confidence** (report, do not auto-merge):
-
-- Minor version bump with new features but no breaking changes
-- Validation passes but with warnings
-- Upstream release is very recent (< 48 hours)
-
-**Low confidence** (skip, flag for manual review):
-
-- Major version bump
-- Breaking changes identified
-- Validation failures
-- Security concerns
-- Unresolved reviewer comments
-- Rebase conflicts
+Evaluate confidence using `references/confidence-criteria.md`. Score as `high`, `medium`, or `low`. See that file for the full criteria — do not duplicate the checklist here.
 
 ### Step 8 — Merge or report
 

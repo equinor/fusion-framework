@@ -28,7 +28,8 @@ Any package under `packages/` with `"publishConfig": { "access": "public" }` req
 
 - Lockfile-only changes with no `package.json` manifest modifications in published packages
 - Changes to `devDependencies` that do not affect the published output
-- Changes only affecting `cookbooks/` dev dependencies
+
+> **Note:** `cookbooks/*` packages are versioned and published — always create a changeset when their dependencies change, including dev dependencies.
 
 ## Bump type
 

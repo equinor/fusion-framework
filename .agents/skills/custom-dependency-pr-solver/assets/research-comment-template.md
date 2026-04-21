@@ -5,14 +5,16 @@
 | Signal | Notes |
 | ------ | ----- |
 | PR | `#<number>` |
-| Dependency | `<name>` |
-| Version jump | `<from>` → `<to>` |
-| Update lane | `<patch/minor/major>` |
-| Ecosystem | `<npm>` |
 | Change scope | `<lockfile-only / manifest + lockfile>` |
 | CI status | `<passing/failing/pending/unknown>` |
 | Branch health | `<current / behind base / rebased>` |
-| Consumer role | `<runtime / build / test / dev-tooling>` |
+
+## Dependencies Updated
+
+| Dependency | From | To | Lane | Consumer role |
+|------------|------|----|------|---------------|
+| `<name>` | `<from>` | `<to>` | `<patch/minor/major>` | `<runtime / build / test / dev-tooling>` |
+| `<name>` | `<from>` | `<to>` | `<patch/minor/major>` | `<runtime / build / test / dev-tooling>` |
 
 ## Upstream Changes
 
