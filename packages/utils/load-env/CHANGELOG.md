@@ -1,5 +1,11 @@
 # @equinor/fusion-load-env
 
+## 2.0.1
+
+### Patch Changes
+
+- 1fd9ea4: Internal: bump `dotenv-expand` from `12.0.3` to `13.0.0`.
+
 ## 2.0.0
 
 ### Major Changes

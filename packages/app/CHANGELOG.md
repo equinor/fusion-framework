@@ -1,5 +1,13 @@
 # Change Log
 
+## 11.0.2
+
+### Patch Changes
+
+- Updated dependencies [02a5859]
+  - @equinor/fusion-framework-module-msal@8.0.2
+  - @equinor/fusion-framework@8.0.2
+
 ## 11.0.1
 
 ### Patch Changes

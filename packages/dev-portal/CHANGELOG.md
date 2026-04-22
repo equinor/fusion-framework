@@ -1,5 +1,20 @@
 # @equinor/fusion-framework-dev-portal
 
+## 5.1.5
+
+### Patch Changes
+
+- 4f71408: Internal: Bump `@equinor/eds-core-react` from 2.4.1 to 2.5.0.
+- 1fc204f: Internal: Bump `@equinor/eds-icons` from 1.3.0 to 1.4.0 (adds `partial_completion` icon).
+- Updated dependencies [4f71408]
+- Updated dependencies [1fc204f]
+- Updated dependencies [faaba9f]
+  - @equinor/fusion-framework-react-components-bookmark@2.0.1
+  - @equinor/fusion-framework-module-analytics@2.0.2
+  - @equinor/fusion-framework-app@11.0.2
+  - @equinor/fusion-framework@8.0.2
+  - @equinor/fusion-framework-dev-server@2.0.2
+
 ## 5.1.4
 
 ### Patch Changes

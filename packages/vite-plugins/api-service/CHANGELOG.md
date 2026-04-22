@@ -1,5 +1,14 @@
 # @equinor/fusion-framework-vite-plugin-api-service
 
+## 2.0.1
+
+### Patch Changes
+
+- 4f71408: Internal: Bump `path-to-regexp` from 8.3.0 to 8.4.2.
+- ee9c669: Patched transitive security vulnerabilities:
+  - `path-to-regexp` → 8.4.0 (ReDoS via sequential optional groups)
+  - `follow-redirects` → 1.16.0 (auth header leak on cross-domain redirect)
+
 ## 2.0.0
 
 ### Major Changes
