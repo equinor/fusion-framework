@@ -1,5 +1,5 @@
 export { Router } from './Router.js';
-export { routerContext, useRouterContext, FusionRouterContextProvider } from './context.js';
+export { FusionRouterContextProvider, routerContext, useRouterContext } from './context.js';
 export type { RouteSchemaEntry } from './routes/to-route-schema.js';
 export type {
   ActionFunction,
@@ -10,36 +10,43 @@ export type {
   LoaderFunction,
   LoaderFunctionArgs,
   RouteComponentProps,
+  RouteNode,
+  RouteObject,
   RouterComponent,
   RouterContext,
   RouterHandle,
   RouterSchema,
-  RouteNode,
-  RouteObject,
 } from './types.js';
 
 // Re-export commonly used React Router hooks, components, and utilities
 // so consumers don't need to install or import `react-router` directly.
 export {
+  createMemoryRouter,
   Form,
   Link,
   NavLink,
   Navigate,
+  NavigateFunction,
   Outlet,
-  redirect,
   RouterProvider,
+  UNSAFE_RouteContext,
+  matchPath,
+  matchRoutes,
+  redirect,
+  type LinkProps,
+  type RouterProviderProps,
   useActionData,
   useFormAction,
-  useLoaderData,
   useLocation,
+  useLoaderData,
   useMatch,
   useMatches,
   useNavigate,
   useNavigation,
+  useOutlet,
+  useOutletContext,
   useParams,
   useRouteError,
   useSearchParams,
   useSubmit,
-  type LinkProps,
-  type RouterProviderProps,
 } from 'react-router';
