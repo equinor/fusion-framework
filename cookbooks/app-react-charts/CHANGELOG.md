@@ -1,5 +1,12 @@
 # Change Log
 
+## 2.0.2
+
+### Patch Changes
+
+- Updated dependencies [8aa1eb0]
+  - @equinor/fusion-framework-react-router@2.0.0
+
 ## 2.0.1
 
 ### Patch Changes
