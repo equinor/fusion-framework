@@ -1,5 +1,14 @@
 # @equinor/fusion-framework-module-analytics
 
+## 2.0.3
+
+### Patch Changes
+
+- a6355fe: Internal: bump `uuid` from `13.0.0` to `14.0.0`.
+- Updated dependencies [a6355fe]
+  - @equinor/fusion-framework-module-app@8.0.1
+  - @equinor/fusion-observable@9.0.1
+
 ## 2.0.2
 
 ### Patch Changes

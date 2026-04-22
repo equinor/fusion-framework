@@ -1,5 +1,14 @@
 # Change Log
 
+## 11.0.3
+
+### Patch Changes
+
+- Updated dependencies [a6355fe]
+  - @equinor/fusion-framework-module-app@8.0.1
+  - @equinor/fusion-framework-module-telemetry@5.0.1
+  - @equinor/fusion-framework@8.0.3
+
 ## 11.0.2
 
 ### Patch Changes

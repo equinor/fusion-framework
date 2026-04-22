@@ -1,5 +1,11 @@
 # Change Log
 
+## 9.0.1
+
+### Patch Changes
+
+- a6355fe: Internal: bump `uuid` from `13.0.0` to `14.0.0`.
+
 ## 9.0.0
 
 ### Major Changes
