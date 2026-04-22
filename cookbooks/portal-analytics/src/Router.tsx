@@ -1,15 +1,7 @@
-import {
-  Outlet,
-  RouterProvider,
-  type RouterProviderProps,
-  useParams,
-} from '@equinor/fusion-framework-react-router';
+import { Outlet, Router as FusionRouter, useParams } from '@equinor/fusion-framework-react-router';
 import { AppLoader } from './AppLoader';
 import { Header } from './components/Header';
 
-import { useFramework } from '@equinor/fusion-framework-react';
-import type { NavigationModule } from '@equinor/fusion-framework-module-navigation';
-import { useState } from 'react';
 import { styled } from 'styled-components';
 import { Portal } from './Portal';
 import { useAppContextNavigation } from './useAppContextNavigation';
@@ -35,6 +27,11 @@ const Styled = {
   `,
 };
 
+/**
+ * Root layout component for the portal analytics app.
+ *
+ * Renders the header, portal panel, and a scrollable main area via `Outlet`.
+ */
 const Root = () => {
   return (
     <Styled.ContentContainer>
@@ -49,12 +46,16 @@ const Root = () => {
   );
 };
 
+/**
+ * Route component that extracts the `appKey` parameter and delegates to {@link AppLoader}.
+ */
 // eslint-disable-next-line react/no-multi-comp
 const AppRoute = () => {
   const { appKey } = useParams();
   return appKey ? <AppLoader appKey={appKey} /> : null;
 };
 
+/** Route definitions for the portal analytics app. */
 const routes = [
   {
     path: '/',
@@ -68,16 +69,15 @@ const routes = [
   },
 ];
 
+/**
+ * Top-level router for the Fusion Portal Analytics app.
+ *
+ * Renders the application via `FusionRouter`. Observes context changes through
+ * {@link useAppContextNavigation} to keep the URL in sync.
+ */
 // eslint-disable-next-line react/no-multi-comp
 export const Router = () => {
-  const { navigation } = useFramework<[NavigationModule]>().modules;
-  const [router] = useState(() => navigation.createRouter(routes));
   // observe the context changes and navigate when the context changes
   useAppContextNavigation();
-  return (
-    <RouterProvider
-      router={router as unknown as RouterProviderProps['router']}
-      fallbackElement={<p>wooot</p>}
-    />
-  );
+  return <FusionRouter routes={routes} />;
 };
