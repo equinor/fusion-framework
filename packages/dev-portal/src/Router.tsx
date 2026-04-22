@@ -1,17 +1,9 @@
 import { useBookmarkNavigate } from '@equinor/fusion-framework-react-module-bookmark/portal';
 
-import {
-  Outlet,
-  RouterProvider,
-  type RouterProviderProps,
-  useParams,
-} from '@equinor/fusion-framework-react-router';
+import { Outlet, Router as FusionRouter, useParams } from '@equinor/fusion-framework-react-router';
 import AppLoader from './AppLoader';
 import { Header } from './Header';
 
-import { useFramework } from '@equinor/fusion-framework-react';
-import type { NavigationModule } from '@equinor/fusion-framework-module-navigation';
-import { useState } from 'react';
 import { styled } from 'styled-components';
 import { useAppContextNavigation } from './useAppContextNavigation';
 
@@ -82,15 +74,12 @@ const routes = [
 /**
  * Top-level router for the Fusion Dev Portal.
  *
- * Creates a router instance from the framework navigation module and
- * renders it via `RouterProvider`. Observes context changes through
+ * Renders the application via `FusionRouter`. Observes context changes through
  * {@link useAppContextNavigation} to keep the URL in sync.
  */
 // eslint-disable-next-line react/no-multi-comp
 export const Router = () => {
-  const { navigation } = useFramework<[NavigationModule]>().modules;
-  const [router] = useState(() => navigation.createRouter(routes));
   // observe the context changes and navigate when the context changes
   useAppContextNavigation();
-  return <RouterProvider router={router as unknown as RouterProviderProps['router']} />;
+  return <FusionRouter routes={routes} />;
 };

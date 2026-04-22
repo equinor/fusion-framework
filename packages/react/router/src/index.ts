@@ -30,7 +30,6 @@ export {
   matchRoutes,
   redirect,
   type LinkProps,
-  type RouterProviderProps,
   useActionData,
   useFormAction,
   useLocation,
