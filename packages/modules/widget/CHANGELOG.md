@@ -1,5 +1,13 @@
 # Change Log
 
+## 15.0.1
+
+### Patch Changes
+
+- Updated dependencies [a6355fe]
+  - @equinor/fusion-observable@9.0.1
+  - @equinor/fusion-query@7.0.1
+
 ## 15.0.0
 
 ### Major Changes

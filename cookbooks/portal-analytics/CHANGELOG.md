@@ -1,5 +1,24 @@
 # portal-analytics
 
+## 0.4.18
+
+### Patch Changes
+
+- a6355fe: Internal: bump `uuid` from `13.0.0` to `14.0.0`.
+- Updated dependencies [538725c]
+- Updated dependencies [a6355fe]
+  - @equinor/fusion-framework-react-router@1.2.3
+  - @equinor/fusion-framework-module-analytics@2.0.3
+  - @equinor/fusion-framework-module-app@8.0.1
+  - @equinor/fusion-framework-module-bookmark@4.0.1
+  - @equinor/fusion-framework-module-navigation@7.0.2
+  - @equinor/fusion-observable@9.0.1
+  - @equinor/fusion-query@7.0.1
+  - @equinor/fusion-framework-cli@14.2.5
+  - @equinor/fusion-framework-react-app@10.0.4
+  - @equinor/fusion-framework-app@11.0.3
+  - @equinor/fusion-framework@8.0.3
+
 ## 0.4.17
 
 ### Patch Changes

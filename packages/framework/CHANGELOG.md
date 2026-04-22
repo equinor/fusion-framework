@@ -1,5 +1,11 @@
 # Change Log
 
+## 8.0.3
+
+### Patch Changes
+
+- @equinor/fusion-framework-module-telemetry@5.0.1
+
 ## 8.0.2
 
 ### Patch Changes
