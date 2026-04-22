@@ -1,5 +1,13 @@
 # @equinor/fusion-framework-react-router
 
+## 2.0.0
+
+### Major Changes
+
+- 8aa1eb0: Remove exports from `react-router` that users should not use in implementation.
+
+  Breaking Changes: Removes `RouterProvider`, users should use `Router` instead.
+
 ## 1.2.3
 
 ### Patch Changes
