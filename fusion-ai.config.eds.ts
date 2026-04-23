@@ -1,3 +1,6 @@
+import { z } from 'zod';
+import { defineIndexSchema } from '@equinor/fusion-framework-cli-plugin-ai-index';
+
 export default {
   index: {
     name: 'eds-2026-03-14',
@@ -12,6 +15,19 @@ export default {
       '!**/docs/tone-guide',
     ],
     rawPatterns: ['**/*.md'],
+
+    // Promoted fields for direct OData filtering (see fusion-core-tasks#1011)
+    schema: defineIndexSchema({
+      shape: z.object({
+        type: z.string(),
+        tags: z.array(z.string()).default([]),
+      }),
+      resolve: (doc) => ({
+        type: (doc.metadata.attributes?.type as string) ?? 'markdown',
+        tags: (doc.metadata.attributes?.tags as string[]) ?? [],
+      }),
+    }),
+
     // Metadata processing configuration
     metadata: {
       resolvePackage: false,

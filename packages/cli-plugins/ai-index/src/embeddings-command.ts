@@ -58,31 +58,31 @@ const _command = createCommand('add')
     ).default(false),
   )
   .argument('[glob-patterns...]', 'Glob patterns to match files (optional when using --diff)')
+  .hook('preAction', async (thisCommand) => {
+    // Load config early so index name and embed model are available
+    // before the withOptions validation hook fires.
+    const opts = thisCommand.opts();
+    const config = await loadFusionAIConfig<FusionAIConfigWithIndex>(
+      (opts.config as string) ?? 'fusion-ai.config',
+      { baseDir: process.cwd() },
+    );
+    const indexConfig = config.index ?? {};
+
+    if (indexConfig.name && !opts.indexName?.trim()) {
+      thisCommand.setOptionValue('indexName', indexConfig.name);
+    }
+    if (indexConfig.model && !opts.embedModel?.trim()) {
+      thisCommand.setOptionValue('embedModel', indexConfig.model);
+    }
+  })
   .action(async function (this: Command, patterns: string[], commandOptions: CommandOptions) {
-    // Load configuration before validation so config values can fill gaps
+    // Config was already loaded in preAction; reload here for embed() usage.
     const preOptions = commandOptions as Record<string, unknown>;
     const config = await loadFusionAIConfig<FusionAIConfigWithIndex>(
       (preOptions.config as string) ?? 'fusion-ai.config',
       { baseDir: process.cwd() },
     );
     const indexConfig = config.index ?? {};
-
-    // Config file values override env-var defaults but not explicit CLI flags.
-    // Commander merges env vars before the action runs, so we use
-    // getOptionValueSource to distinguish "user passed --flag" from "came from env".
-    const parentCommand = this.parent ?? this;
-    if (indexConfig.name) {
-      const source = parentCommand.getOptionValueSource('indexName');
-      if (source !== 'cli') {
-        preOptions.indexName = indexConfig.name;
-      }
-    }
-    if (indexConfig.model) {
-      const source = parentCommand.getOptionValueSource('embedModel');
-      if (source !== 'cli') {
-        preOptions.embedModel = indexConfig.model;
-      }
-    }
 
     const options = await CommandOptionsSchema.parseAsync(preOptions);
 

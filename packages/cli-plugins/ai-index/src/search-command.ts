@@ -2,11 +2,12 @@ import { createCommand, createOption } from 'commander';
 import type { Document } from '@langchain/core/documents';
 import { inspect } from 'node:util';
 
-import { setupFramework } from '@equinor/fusion-framework-cli-plugin-ai-base';
+import { loadFusionAIConfig, setupFramework } from '@equinor/fusion-framework-cli-plugin-ai-base';
 import {
   withOptions as withAiOptions,
   type AiOptions,
 } from '@equinor/fusion-framework-cli-plugin-ai-base/command-options';
+import type { FusionAIConfigWithIndex } from './config.js';
 import type { RetrieverOptions } from '@equinor/fusion-framework-module-ai/lib';
 
 /**
@@ -107,6 +108,7 @@ const normalizeMetadata = (metadata: Record<string, unknown>): Record<string, un
  */
 const _command = createCommand('search')
   .description('Search the vector store to validate embeddings and retrieve relevant documents')
+  .addOption(createOption('--config <config>', 'Path to a config file').default('fusion-ai.config'))
   .addOption(
     createOption('--limit <number>', 'Maximum number of results to return')
       .default(10)
@@ -124,6 +126,21 @@ const _command = createCommand('search')
   .addOption(createOption('--raw', 'Output raw metadata without normalization').default(false))
   .addOption(createOption('--verbose', 'Enable verbose output').default(false))
   .argument('<query>', 'Search query string')
+  .hook('preAction', async (thisCommand) => {
+    const opts = thisCommand.opts();
+    const config = await loadFusionAIConfig<FusionAIConfigWithIndex>(
+      (opts.config as string) ?? 'fusion-ai.config',
+      { baseDir: process.cwd() },
+    );
+    const indexConfig = config.index ?? {};
+
+    if (indexConfig.name && !opts.indexName?.trim()) {
+      thisCommand.setOptionValue('indexName', indexConfig.name);
+    }
+    if (indexConfig.model && !opts.embedModel?.trim()) {
+      thisCommand.setOptionValue('embedModel', indexConfig.model);
+    }
+  })
   .action(async (query: string, options: CommandOptions) => {
     if (options.verbose) {
       console.log('🔍 Initializing framework...');

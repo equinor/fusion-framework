@@ -1,11 +1,14 @@
 import path from 'node:path';
-import { from, mergeMap, map, toArray } from 'rxjs';
+import { from, mergeMap, map, tap, toArray } from 'rxjs';
 import type { Observable } from 'rxjs';
 import type { VectorStoreDocument } from '@equinor/fusion-framework-module-ai/lib';
 import { extractGitMetadata } from '../utils/git/index.js';
 import { resolvePackage } from '../utils/package-resolver.js';
 import type { DocumentEntry } from './types.js';
 import type { FusionAIConfigWithIndex } from '../config.js';
+
+/** Callback invoked after each document is enriched with metadata. */
+export type MetadataProgressCallback = (source: string) => void;
 
 /**
  * Creates a stream that applies metadata to documents.
@@ -14,14 +17,25 @@ import type { FusionAIConfigWithIndex } from '../config.js';
 export function applyMetadata(
   document$: Observable<DocumentEntry>,
   indexConfig: FusionAIConfigWithIndex['index'],
+  onProgress?: MetadataProgressCallback,
 ): Observable<VectorStoreDocument[]> {
   // Resolve packages if enabled
   const shouldResolvePackage = indexConfig?.metadata?.resolvePackage ?? false;
 
+  /** Cap concurrent git subprocess calls to avoid overwhelming the OS process table. */
+  const GIT_CONCURRENCY = 20;
+
+  /**
+   * Cap the number of file entries processed in parallel.
+   * Each entry fans out to GIT_CONCURRENCY inner git calls, so
+   * total concurrent git processes ≤ ENTRY_CONCURRENCY × GIT_CONCURRENCY.
+   */
+  const ENTRY_CONCURRENCY = 20;
+
   return document$.pipe(
     mergeMap((entry) => {
       return from(entry.documents).pipe(
-        // Extract git metadata concurrently for all documents
+        // Extract git metadata concurrently (capped to limit parallel git processes)
         mergeMap(async (document): Promise<VectorStoreDocument> => {
           const rootPath = document.metadata.rootPath ?? process.cwd();
           const sourcePath = path.join(rootPath, document.metadata.source);
@@ -54,7 +68,9 @@ export function applyMetadata(
               },
             },
           };
-        }),
+        }, GIT_CONCURRENCY),
+        // Notify caller after each document is enriched
+        tap((document) => onProgress?.(document.metadata.source)),
         // Apply custom attribute processor from config
         map((document: VectorStoreDocument) => {
           const attributeProcessor =
@@ -72,6 +88,6 @@ export function applyMetadata(
         // Group back by file for batch deletion in next step
         toArray(),
       );
-    }),
+    }, ENTRY_CONCURRENCY),
   );
 }

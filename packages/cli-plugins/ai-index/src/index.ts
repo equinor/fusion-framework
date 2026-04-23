@@ -5,23 +5,30 @@ import { command as addCommand } from './embeddings-command.js';
 import { deleteCommand as removeCommand } from './delete-command.js';
 import { searchCommand } from './search-command.js';
 import { embedCommand } from './embed-command.js';
+import { createIndexCommand } from './create-command.js';
+import { deleteIndexCommand } from './delete-index-command.js';
 
 export { FusionAIConfigWithIndex, IndexConfig } from './config.js';
+export { defineIndexSchema, IndexSchemaConfig } from './schema.js';
 
 /**
  * Parent command for the `ai index` group.
  *
- * Owns three subcommands:
+ * Owns subcommands:
  * - `add`    — index documents into the Azure AI Search vector store.
  * - `remove` — remove documents from the vector store.
  * - `search` — query the vector store for indexed documents.
+ * - `create` — create an index from the config schema definition.
+ * - `delete` — permanently delete an index and all its documents.
  */
 const indexCommand = createCommand('index')
-  .description('Manage the AI search index (add, search, remove)')
+  .description('Manage the AI search index (add, search, remove, create, delete)')
   .addCommand(addCommand)
   .addCommand(removeCommand)
   .addCommand(searchCommand)
-  .addCommand(embedCommand);
+  .addCommand(embedCommand)
+  .addCommand(createIndexCommand)
+  .addCommand(deleteIndexCommand);
 
 /**
  * Registers the `ai index` command with the Fusion Framework CLI.
