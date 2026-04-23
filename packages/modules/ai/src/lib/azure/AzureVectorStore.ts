@@ -157,14 +157,39 @@ export class AzureVectorStore extends BaseService<string, unknown[]> implements 
     // call the embedding service for documents that lack them, avoiding
     // unnecessary API calls when batches are partially pre-computed.
     const missingIndices: number[] = [];
-    for (let i = 0; i < documents.length; i++) {
-      if (!documents[i].metadata.embedding) {
-        missingIndices.push(i);
+    const vectors: number[][] = documents.map((doc, index) => {
+      const embedding = doc.metadata.embedding;
+
+      // No embedding provided — mark for batch computation below
+      if (embedding == null) {
+        missingIndices.push(index);
+        return [];
       }
-    }
 
-    const vectors: number[][] = documents.map((doc) => (doc.metadata.embedding as number[]) ?? []);
+      // Reject corrupted metadata (e.g. serialised as a string or object)
+      if (!Array.isArray(embedding)) {
+        throw new AIError(
+          `Invalid embedding for document "${doc.id}": expected an array of numbers.`,
+        );
+      }
 
+      // Empty array is technically truthy but has no dimensions — treat as missing
+      if (embedding.length === 0) {
+        missingIndices.push(index);
+        return [];
+      }
+
+      // Guard against NaN / Infinity values that Azure Search would reject
+      if (!embedding.every((value) => typeof value === 'number' && Number.isFinite(value))) {
+        throw new AIError(
+          `Invalid embedding for document "${doc.id}": expected a non-empty array of finite numbers.`,
+        );
+      }
+
+      return embedding as number[];
+    });
+
+    // Compute embeddings only for the documents that were missing them
     if (missingIndices.length > 0) {
       const textsToEmbed = missingIndices.map((i) => documents[i].pageContent);
       const computed = await this.vectorStore.embeddings.embedDocuments(textsToEmbed);

@@ -65,6 +65,20 @@ const _command = createCommand('create')
     // Convert Zod shape to Azure AI Search field definitions
     const schemaFields = zodToAzureFields(indexConfig.schema.shape);
 
+    // Guard against schema fields that collide with reserved base-schema names
+    const reservedFieldNames = ['id', 'content', 'content_vector', 'metadata'] as const;
+    const conflictingSchemaFields = schemaFields
+      .map((field) => field.name)
+      .filter((name) => reservedFieldNames.includes(name as (typeof reservedFieldNames)[number]));
+
+    if (conflictingSchemaFields.length > 0) {
+      const conflicts = [...new Set(conflictingSchemaFields)].sort().join(', ');
+      console.error(
+        `❌ Schema fields use reserved names: ${conflicts}. Reserved field names are: ${reservedFieldNames.join(', ')}. Rename these fields in \`index.schema\`.`,
+      );
+      process.exit(1);
+    }
+
     // Resolve embedding vector dimensions from the model name or explicit config
     const model = indexConfig.model ?? 'text-embedding-3-large';
     let dimensions: number;

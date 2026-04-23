@@ -17,6 +17,8 @@ Features:
 import { z } from 'zod';
 import { defineIndexSchema } from '@equinor/fusion-framework-cli-plugin-ai-index';
 
+// Note: `zod` must be a direct dependency of your project.
+// The CLI plugin uses zod internally but does not re-export it.
 const schema = defineIndexSchema({
   shape: z.object({
     type: z.string(),
