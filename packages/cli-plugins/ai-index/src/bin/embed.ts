@@ -106,9 +106,7 @@ class ProgressDisplay {
     const linesUp = this.lines.length - line;
     const prefix = this.spinning[line] ? SPINNER_FRAMES[this.frame] : '';
     const text = this.spinning[line] ? `${prefix} ${this.lines[line]}` : this.lines[line];
-    process.stdout.write(
-      `\x1b[${linesUp}A\x1b[2K\r${text}\x1b[${linesUp}B\r`,
-    );
+    process.stdout.write(`\x1b[${linesUp}A\x1b[2K\r${text}\x1b[${linesUp}B\r`);
   }
 }
 
@@ -311,14 +309,10 @@ export async function embed(binOptions: EmbeddingsBinOptions): Promise<void> {
   // Apply metadata to documents
   let metadataCount = 0;
   let metadataDone = false;
-  const applyMetadata$ = applyMetadata(
-    parsed$,
-    config.index,
-    (source) => {
-      metadataCount++;
-      progress.update(LINE_META, `🏷️  Metadata [${metadataCount}] ${source}`);
-    },
-  ).pipe(
+  const applyMetadata$ = applyMetadata(parsed$, config.index, (source) => {
+    metadataCount++;
+    progress.update(LINE_META, `🏷️  Metadata [${metadataCount}] ${source}`);
+  }).pipe(
     finalize(() => {
       metadataDone = true;
       progress.succeed(LINE_META, `🏷️  Metadata ${metadataCount} documents`);
