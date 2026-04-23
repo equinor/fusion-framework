@@ -41,6 +41,7 @@ export {
   useOutlet,
   useOutletContext,
   useParams,
+  useResolvedPath,
   useRouteError,
   useSearchParams,
   useSubmit,
