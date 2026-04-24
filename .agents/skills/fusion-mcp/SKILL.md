@@ -56,7 +56,8 @@ If details are missing, ask concise follow-up questions first.
    - Fusion-oriented MCP capabilities for retrieval and workflow support
    - tool surface may evolve over time as the server is a PoC
    - examples today may include retrieval, index guidance, metadata summaries, and skill discovery
-   - retrieval tools: `search_framework`, `search_docs`, `search_eds`, `search_skills`, `search_indexes`
+   - retrieval tools: `search_framework`, `search_docs`, `search_eds`, `search_skills`, `search_indexes`, `search_backend_code`
+   - backend code tools: `get_backend_symbol`, `list_backend_projects`
    - skill advisory: `skills`, `skills_index_status`
 2. Use the official README quick start as source of truth, then present a minimal 2-step setup path:
    - choose image source: GHCR release image or local build
