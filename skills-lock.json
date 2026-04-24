@@ -54,7 +54,7 @@
     "fusion-mcp": {
       "source": "equinor/fusion-skills",
       "sourceType": "github",
-      "computedHash": "2eca1514e8e53f27eda6a345978a7c26713f57bc150ebd58c3d6fc43597e4baa"
+      "computedHash": "969cfd602e4c33fd473a8b13af69701765470a3f711ee24ade28fc33068bee4f"
     },
     "fusion-skill-authoring": {
       "source": "equinor/fusion-skills",
