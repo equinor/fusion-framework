@@ -6,7 +6,12 @@ import type {
   IContextProvider,
 } from '@equinor/fusion-framework-module-context';
 import type { RoutingExecutionMode } from './orchestrator/routing-mode-orchestrator';
-import type { NavigationInstruction } from './strategy-adapters/contracts';
+import type {
+  ContextChangeStrategyInput,
+  IContextNavigationStrategyAdapter,
+  NavigationInstruction,
+} from './strategy-adapters/contracts';
+import type { INavigationProvider } from '@equinor/fusion-framework-module-navigation';
 
 /**
  * Callback invoked when a routing strategy is detected on a loaded app.
@@ -22,20 +27,6 @@ export interface TelemetryTracker {
   // biome-ignore lint/suspicious/noExplicitAny: minimal structural contract for telemetry integration
   trackEvent(item: { name: string; properties?: Record<string, any> } & Record<string, any>): void;
 }
-
-/**
- * Called when context is cleared (null). Returns a navigation instruction
- * that replaces the default adapter behavior, or `undefined` to fall through.
- *
- * App-portal default: `{ pathname: '/apps/{appKey}/' }`
- * Context-portal override: `{ pathname: '/' }`
- */
-export type NullContextHandler = (args: {
-  appKey: string;
-  mode: RoutingExecutionMode;
-  currentPathname: string;
-  currentSearch: string;
-}) => NavigationInstruction | undefined;
 
 /**
  * Emission from the source factory — the single data shape that drives
@@ -74,6 +65,18 @@ export type SourceFactory = (
   deps: SourceFactoryDeps,
 ) => Observable<ContextNavigationSourceEmission>;
 
+export type AppNavigationHandler = (args: { appNavigation?: INavigationProvider }) => void;
+
+export type UndefinedContextHandler = (args: {
+  portalNavigation: INavigationProvider;
+  appKey?: string;
+}) => void;
+
+export type ContextStrategyAdapters<T extends RoutingExecutionMode> = Record<
+  T,
+  IContextNavigationStrategyAdapter<T>
+>;
+
 /**
  * Configuration for the context navigation module.
  */
@@ -86,19 +89,32 @@ export interface ContextNavigationConfig {
    */
   portalName: string;
 
+  /**  * Default routing mode to assume when an app doesn't specify one.
+   * The provider uses this as a fallback in several places to decide how to
+   * handle navigation for apps with no declared strategy.
+   *
+   * Defaults to 'path' for maximum compatibility, but portals can set it to
+   * 'query' to encourage modern strategies and better URL hygiene.
+   */
+  defaultRoutingMode: RoutingExecutionMode;
+
+  /**
+   * Optional callback for handling app navigation events.
+   * If set, called with the active app's navigation provider
+   * and context whenever an app navigation event occurs.
+   * The handler can return a custom path to navigate to, or `undefined` to
+   * fall back to the default behavior (no navigation).
+   */
+  appNavigationHandler?: AppNavigationHandler;
+
+  undefinedContextHandler?: UndefinedContextHandler;
+
   /**
    * Factory that builds the primary observable for subscription 1.
    * Default: `createAppFirstSource()` — app.current$ × context$.
    * Context-portal: `createContextFirstSource()` — context$ × app.current$.
    */
   sourceFactory: SourceFactory;
-
-  /**
-   * Whether to enable app-switch carry-over (Subscription 2).
-   * When enabled, navigating to a bare app route auto-appends the current context id.
-   * @default true
-   */
-  enableAppSwitchCarryOver: boolean;
 
   /**
    * Optional callback fired when a routing strategy is detected on a loaded app.
@@ -152,10 +168,11 @@ export interface ContextNavigationConfig {
    */
   enableContextUrlGuard: boolean;
 
-  /**
-   * Called when context is cleared (null). Returns a navigation instruction
-   * that overrides the default adapter behavior, or `undefined` to fall through
-   * to the strategy adapter's default.
-   */
-  nullContextHandler?: NullContextHandler;
+  contextStrategyAdapters: ContextStrategyAdapters<RoutingExecutionMode>;
 }
+
+export const NoContextValue = undefined;
+export type NoContext = typeof NoContextValue;
+
+export const ClearContextValue = null;
+export type ClearContext = typeof ClearContextValue;

@@ -8,6 +8,7 @@ import type {
   ContextNavigationConfig,
   OnStrategyDetectedCallback,
   NullContextHandler,
+  UndefinedContextHandler,
   SourceFactory,
   TelemetryTracker,
 } from './types';
@@ -15,6 +16,7 @@ import type {
 import type { RoutingExecutionMode } from './orchestrator/routing-mode-orchestrator';
 
 import { createAppFirstSource } from './sources/app-first-source';
+import type { INavigationProvider } from '@equinor/fusion-framework-module-navigation';
 
 /**
  * Configurator for the context navigation module.
@@ -45,6 +47,11 @@ export class ContextNavigationConfigurator extends BaseConfigBuilder<ContextNavi
     return this;
   }
 
+  setDefaultRoutingMode(mode: RoutingExecutionMode): this {
+    this._set('defaultRoutingMode', mode);
+    return this;
+  }
+
   /**
    * Override the source factory that drives subscription 1.
    *
@@ -63,6 +70,26 @@ export class ContextNavigationConfigurator extends BaseConfigBuilder<ContextNavi
    */
   setNullContextHandler(handler: NullContextHandler): this {
     this._set('nullContextHandler', async () => handler);
+    return this;
+  }
+
+  /**
+   * Register a handler for undefined context (initializing / not yet resolved).
+   *
+   * Receives the portal navigation provider so the handler can navigate
+   * if needed. When no handler is set, undefined context emissions are
+   * silently skipped.
+   *
+   * @example
+   * ```ts
+   * // context-portal: navigate to root when context is undefined
+   * builder.setUndefinedContextHandler(({ navigation }) => {
+   *   navigation.navigate('/');
+   * });
+   * ```
+   */
+  setUndefinedContextHandler(handler: UndefinedContextHandler): this {
+    this._set('undefinedContextHandler', async () => handler);
     return this;
   }
   /**
@@ -172,8 +199,8 @@ export class ContextNavigationConfigurator extends BaseConfigBuilder<ContextNavi
     if (!this._has('sourceFactory')) {
       this._set('sourceFactory', async () => createAppFirstSource());
     }
-    if (!this._has('enableAppSwitchCarryOver')) {
-      this._set('enableAppSwitchCarryOver', true);
+    if (!this._has('defaultRoutingMode')) {
+      this._set('defaultRoutingMode', 'path');
     }
     if (!this._has('warnOnStrategies')) {
       this._set('warnOnStrategies', []);
@@ -190,6 +217,20 @@ export class ContextNavigationConfigurator extends BaseConfigBuilder<ContextNavi
       this._set('telemetry', async (args: ConfigBuilderCallbackArgs) => {
         if (args.hasModule('telemetry')) {
           return await args.requireInstance('telemetry');
+        }
+      });
+    }
+
+    if (!this._has('appNavigationHandler')) {
+      this._set('appNavigationHandler', async (args: { appNavigation?: INavigationProvider }) => {
+        const { appNavigation } = args;
+        if (!appNavigation) return;
+        if (appNavigation.version.major < 7) {
+          console.warn(
+            `🌍 Portal: App router V(${appNavigation.version.major}) has lower version of router than portal V7 please update to match portal navigation events.`,
+          );
+
+          appNavigation.replace('/');
         }
       });
     }

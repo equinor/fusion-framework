@@ -14,6 +14,7 @@ export type {
   ContextNavigationConfig,
   OnStrategyDetectedCallback,
   NullContextHandler,
+  UndefinedContextHandler,
   SourceFactory,
   SourceFactoryDeps,
   ContextNavigationSourceEmission,

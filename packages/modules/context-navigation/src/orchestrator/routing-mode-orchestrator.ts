@@ -8,12 +8,11 @@ import type { IContextProvider } from '@equinor/fusion-framework-module-context'
  * - `query` — modern app, `setRoutingStrategy('query')`
  * - `custom` — modern app, `setRoutingStrategy('custom')` + has own provider
  */
-export type RoutingExecutionMode = 'legacy' | 'query' | 'path' | 'custom';
+export type RoutingExecutionMode = 'query' | 'path' | 'custom';
 
 interface ResolveRoutingExecutionModeInput {
-  isLegacy: boolean;
   routingStrategy: IContextProvider['routingStrategy'];
-  hasAppContextProvider: boolean;
+  hasAppContextPathGenerators: boolean;
 }
 
 /**
@@ -26,8 +25,14 @@ interface ResolveRoutingExecutionModeInput {
 export const resolveRoutingExecutionMode = (
   input: ResolveRoutingExecutionModeInput,
 ): RoutingExecutionMode => {
-  if (input.isLegacy) return 'legacy';
-  if (input.routingStrategy === 'custom' && input.hasAppContextProvider) return 'custom';
-  if (input.routingStrategy === 'query') return 'query';
-  return 'path';
+  switch (input.routingStrategy) {
+    case 'query':
+      return 'query';
+    case 'custom':
+      return input.hasAppContextPathGenerators ? 'custom' : 'path';
+    case 'path':
+      return 'path';
+    default:
+      return 'path';
+  }
 };

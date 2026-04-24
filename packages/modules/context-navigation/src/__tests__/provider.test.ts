@@ -34,6 +34,7 @@ function createMockContextProvider(
     setCurrentContext: vi.fn(),
     clearCurrentContext: vi.fn(),
     resolveContext: vi.fn(),
+    validateContext: vi.fn((_item: ContextItem) => true), // Accept all context types by default
     ...overrides,
   } as unknown as IContextProvider;
 }
@@ -64,8 +65,8 @@ function createMockAppModules(
 }
 
 /** Telemetry spy. */
-function createMockTelemetry(): TelemetryTracker & { trackEvent: ReturnType<typeof vi.fn> } {
-  return { trackEvent: vi.fn() };
+function createMockTelemetry(): TelemetryTracker {
+  return { trackEvent: vi.fn() } as TelemetryTracker;
 }
 
 /** Default config factory — all features enabled, controlled source. */
@@ -410,140 +411,123 @@ describe('ContextNavigationProvider', () => {
     });
   });
 
-  // ── Subscription 2: App-switch carry-over ──────────────────────────
+  // ── App-switch cleanup (inside Sub 1) ───────────────────────────────
 
-  describe('app-switch carry-over', () => {
-    it('carries context to new app on app switch', async () => {
+  describe('app-switch cleanup', () => {
+    it('strips stale $contextId from URL on app switch', async () => {
       const source$ = new Subject<ContextNavigationSourceEmission>();
-      const nav = createMockNavigation('/apps/app-a', '');
-      const currentApp$ = new Subject<{ appKey: string; instance$: typeof EMPTY } | null>();
-      const portalContext = createMockContextProvider({
-        currentContext: CONTEXT_ITEM,
-      });
+      const nav = createMockNavigation('/apps/app-b', '?$contextId=ctx-123');
+      const appModulesA = createMockAppModules();
+      const appModulesB = createMockAppModules();
 
       provider = new ContextNavigationProvider({
-        app: { current$: currentApp$ } as unknown as ContextNavigationProviderArgs['app'],
+        app: { current$: EMPTY } as unknown as ContextNavigationProviderArgs['app'],
         navigation: nav as unknown as ContextNavigationProviderArgs['navigation'],
-        context: portalContext,
+        context: createMockContextProvider({ currentContext: CONTEXT_ITEM }),
         config: createConfig(source$, { enableAppSwitchCarryOver: true }),
       });
 
-      // First emission — sets previousAppKey
-      currentApp$.next({ appKey: 'app-a', instance$: EMPTY });
+      // First emission sets _lastSub1AppKey = 'app-a'
+      source$.next({ appModules: appModulesA, appKey: 'app-a', context: CONTEXT_ITEM });
       await flush();
+      nav.navigate.mockClear();
 
-      // Switch to app-b — should carry context
-      nav.path.pathname = '/apps/app-b';
-      currentApp$.next({ appKey: 'app-b', instance$: EMPTY });
+      // App switch — Sub 1 detects appKey change and strips stale param
+      source$.next({ appModules: appModulesB, appKey: 'app-b', context: CONTEXT_ITEM });
       await flush();
 
       expect(nav.navigate).toHaveBeenCalledTimes(1);
-      const [navPath, opts] = nav.navigate.mock.calls[0];
-      expect(navPath.pathname).toContain('app-b');
-      expect(navPath.pathname).toContain('ctx-123');
-      expect(opts).toEqual({ replace: true });
+      const [navPath] = nav.navigate.mock.calls[0];
+      expect(navPath.search ?? '').not.toContain('$contextId');
     });
 
-    it('does not carry context when disabled', async () => {
+    it('does not navigate when URL has no stale context params', async () => {
       const source$ = new Subject<ContextNavigationSourceEmission>();
-      const nav = createMockNavigation('/apps/app-a', '');
-      const currentApp$ = new Subject<{ appKey: string; instance$: typeof EMPTY } | null>();
+      const nav = createMockNavigation('/apps/app-b', '');
+      const appModulesA = createMockAppModules();
+      const appModulesB = createMockAppModules();
 
       provider = new ContextNavigationProvider({
-        app: { current$: currentApp$ } as unknown as ContextNavigationProviderArgs['app'],
+        app: { current$: EMPTY } as unknown as ContextNavigationProviderArgs['app'],
+        navigation: nav as unknown as ContextNavigationProviderArgs['navigation'],
+        context: createMockContextProvider({ currentContext: CONTEXT_ITEM }),
+        config: createConfig(source$, { enableAppSwitchCarryOver: true }),
+      });
+
+      source$.next({ appModules: appModulesA, appKey: 'app-a', context: CONTEXT_ITEM });
+      await flush();
+      nav.navigate.mockClear();
+
+      source$.next({ appModules: appModulesB, appKey: 'app-b', context: CONTEXT_ITEM });
+      await flush();
+
+      // No stale params to strip — no navigation needed
+      expect(nav.navigate).not.toHaveBeenCalled();
+    });
+
+    it('does not strip when enableAppSwitchCarryOver is false', async () => {
+      const source$ = new Subject<ContextNavigationSourceEmission>();
+      const nav = createMockNavigation('/apps/app-b', '?$contextId=ctx-123');
+      const appModulesA = createMockAppModules();
+      const appModulesB = createMockAppModules();
+
+      provider = new ContextNavigationProvider({
+        app: { current$: EMPTY } as unknown as ContextNavigationProviderArgs['app'],
         navigation: nav as unknown as ContextNavigationProviderArgs['navigation'],
         context: createMockContextProvider({ currentContext: CONTEXT_ITEM }),
         config: createConfig(source$, { enableAppSwitchCarryOver: false }),
       });
 
-      currentApp$.next({ appKey: 'app-a', instance$: EMPTY });
+      source$.next({ appModules: appModulesA, appKey: 'app-a', context: CONTEXT_ITEM });
       await flush();
-      currentApp$.next({ appKey: 'app-b', instance$: EMPTY });
+      nav.navigate.mockClear();
+
+      source$.next({ appModules: appModulesB, appKey: 'app-b', context: CONTEXT_ITEM });
       await flush();
 
+      // Stale emission is still skipped, but no cleanup navigate
       expect(nav.navigate).not.toHaveBeenCalled();
     });
 
-    it('skips carry-over when no context is active', async () => {
+    it('tracks telemetry on app switch cleanup', async () => {
       const source$ = new Subject<ContextNavigationSourceEmission>();
-      const nav = createMockNavigation('/apps/app-a', '');
-      const currentApp$ = new Subject<{ appKey: string; instance$: typeof EMPTY } | null>();
-
-      provider = new ContextNavigationProvider({
-        app: { current$: currentApp$ } as unknown as ContextNavigationProviderArgs['app'],
-        navigation: nav as unknown as ContextNavigationProviderArgs['navigation'],
-        context: createMockContextProvider({ currentContext: null }),
-        config: createConfig(source$, { enableAppSwitchCarryOver: true }),
-      });
-
-      currentApp$.next({ appKey: 'app-a', instance$: EMPTY });
-      await flush();
-      nav.path.pathname = '/apps/app-b';
-      currentApp$.next({ appKey: 'app-b', instance$: EMPTY });
-      await flush();
-
-      expect(nav.navigate).not.toHaveBeenCalled();
-    });
-
-    it('skips when context already present in target URL', async () => {
-      const source$ = new Subject<ContextNavigationSourceEmission>();
-      const nav = createMockNavigation('/apps/app-b/ctx-123', '');
-      const currentApp$ = new Subject<{ appKey: string; instance$: typeof EMPTY } | null>();
-
-      provider = new ContextNavigationProvider({
-        app: { current$: currentApp$ } as unknown as ContextNavigationProviderArgs['app'],
-        navigation: nav as unknown as ContextNavigationProviderArgs['navigation'],
-        context: createMockContextProvider({ currentContext: CONTEXT_ITEM }),
-        config: createConfig(source$, { enableAppSwitchCarryOver: true }),
-      });
-
-      currentApp$.next({ appKey: 'app-a', instance$: EMPTY });
-      await flush();
-      currentApp$.next({ appKey: 'app-b', instance$: EMPTY });
-      await flush();
-
-      expect(nav.navigate).not.toHaveBeenCalled();
-    });
-
-    it('tracks telemetry on app switch', async () => {
-      const source$ = new Subject<ContextNavigationSourceEmission>();
-      const nav = createMockNavigation('/apps/app-a', '');
+      const nav = createMockNavigation('/apps/app-b', '?$contextId=ctx-123');
       const telemetry = createMockTelemetry();
-      const currentApp$ = new Subject<{ appKey: string; instance$: typeof EMPTY } | null>();
+      const appModulesA = createMockAppModules();
+      const appModulesB = createMockAppModules();
 
       provider = new ContextNavigationProvider({
-        app: { current$: currentApp$ } as unknown as ContextNavigationProviderArgs['app'],
+        app: { current$: EMPTY } as unknown as ContextNavigationProviderArgs['app'],
         navigation: nav as unknown as ContextNavigationProviderArgs['navigation'],
         context: createMockContextProvider({ currentContext: CONTEXT_ITEM }),
         config: createConfig(source$, { enableAppSwitchCarryOver: true, telemetry }),
       });
 
-      currentApp$.next({ appKey: 'app-a', instance$: EMPTY });
+      source$.next({ appModules: appModulesA, appKey: 'app-a', context: CONTEXT_ITEM });
       await flush();
-      nav.path.pathname = '/apps/app-b';
-      currentApp$.next({ appKey: 'app-b', instance$: EMPTY });
+
+      source$.next({ appModules: appModulesB, appKey: 'app-b', context: CONTEXT_ITEM });
       await flush();
 
       expect(telemetry.trackEvent).toHaveBeenCalledWith(
         expect.objectContaining({
-          name: 'context-navigation.app-switch',
-          properties: expect.objectContaining({
-            appKey: 'app-b',
-            contextId: 'ctx-123',
-          }),
+          name: 'context-navigation.app-switch-cleanup',
+          properties: expect.objectContaining({ appKey: 'app-b' }),
         }),
       );
     });
   });
 
-  // ── Subscription 3: Context URL guard ──────────────────────────────
+  // ── Subscription 2: Context URL guard ──────────────────────────────
 
   describe('context URL guard', () => {
     it('re-applies context when missing from URL', async () => {
       const source$ = new Subject<ContextNavigationSourceEmission>();
       const nav = createMockNavigation('/apps/test-app', '');
+      // App's own context provider has an active context
       const appContextProvider = createMockContextProvider({
         routingStrategy: 'query',
+        currentContext: CONTEXT_ITEM,
       });
       const appModules = createMockAppModules(appContextProvider);
 
@@ -555,19 +539,18 @@ describe('ContextNavigationProvider', () => {
         instance$: typeof instanceSubject;
       } | null>({ appKey: 'test-app', instance$: instanceSubject });
 
-      const portalContext = createMockContextProvider({ currentContext: CONTEXT_ITEM });
-
       provider = new ContextNavigationProvider({
         app: { current$: currentApp$ } as unknown as ContextNavigationProviderArgs['app'],
         navigation: nav as unknown as ContextNavigationProviderArgs['navigation'],
-        context: portalContext,
+        context: createMockContextProvider(),
         config: createConfig(source$, {
           enableContextUrlGuard: true,
           enableAppSwitchCarryOver: false,
         }),
       });
 
-      // Simulate URL change without context
+      // Simulate URL change without context — guard sees the app has
+      // an active context and re-applies it.
       nav._stateSubject.next({});
       await flush();
 
@@ -579,6 +562,40 @@ describe('ContextNavigationProvider', () => {
       const nav = createMockNavigation('/apps/test-app', '');
       const appContextProvider = createMockContextProvider({
         routingStrategy: 'custom',
+        currentContext: CONTEXT_ITEM,
+      });
+      const appModules = createMockAppModules(appContextProvider);
+
+      const instanceSubject = new BehaviorSubject<AppModulesInstance<[ContextModule]> | null>(
+        appModules,
+      );
+      const currentApp$ = new BehaviorSubject<{
+        appKey: string;
+        instance$: typeof instanceSubject;
+      } | null>({ appKey: 'test-app', instance$: instanceSubject });
+
+      provider = new ContextNavigationProvider({
+        app: { current$: currentApp$ } as unknown as ContextNavigationProviderArgs['app'],
+        navigation: nav as unknown as ContextNavigationProviderArgs['navigation'],
+        context: createMockContextProvider(),
+        config: createConfig(source$, {
+          enableContextUrlGuard: true,
+          enableAppSwitchCarryOver: false,
+        }),
+      });
+
+      nav._stateSubject.next({});
+      await flush();
+
+      expect(nav.navigate).not.toHaveBeenCalled();
+    });
+
+    it('skips when app has no active context', async () => {
+      const source$ = new Subject<ContextNavigationSourceEmission>();
+      const nav = createMockNavigation('/apps/test-app', '');
+      // App's context provider has no active context
+      const appContextProvider = createMockContextProvider({
+        currentContext: null,
       });
       const appModules = createMockAppModules(appContextProvider);
 
@@ -603,44 +620,17 @@ describe('ContextNavigationProvider', () => {
       nav._stateSubject.next({});
       await flush();
 
-      expect(nav.navigate).not.toHaveBeenCalled();
-    });
-
-    it('skips when no context is active', async () => {
-      const source$ = new Subject<ContextNavigationSourceEmission>();
-      const nav = createMockNavigation('/apps/test-app', '');
-      const appModules = createMockAppModules(
-      );
-
-      const instanceSubject = new BehaviorSubject<AppModulesInstance<[ContextModule]> | null>(
-        appModules,
-      );
-      const currentApp$ = new BehaviorSubject<{
-        appKey: string;
-        instance$: typeof instanceSubject;
-      } | null>({ appKey: 'test-app', instance$: instanceSubject });
-
-      provider = new ContextNavigationProvider({
-        app: { current$: currentApp$ } as unknown as ContextNavigationProviderArgs['app'],
-        navigation: nav as unknown as ContextNavigationProviderArgs['navigation'],
-        context: createMockContextProvider({ currentContext: null }),
-        config: createConfig(source$, {
-          enableContextUrlGuard: true,
-          enableAppSwitchCarryOver: false,
-        }),
-      });
-
-      nav._stateSubject.next({});
-      await flush();
-
+      // Portal has context but app doesn't — guard should not act
       expect(nav.navigate).not.toHaveBeenCalled();
     });
 
     it('is not set up when disabled', async () => {
       const source$ = new Subject<ContextNavigationSourceEmission>();
       const nav = createMockNavigation('/apps/test-app', '');
-      const appModules = createMockAppModules(
-      );
+      const appContextProvider = createMockContextProvider({
+        currentContext: CONTEXT_ITEM,
+      });
+      const appModules = createMockAppModules(appContextProvider);
 
       const instanceSubject = new BehaviorSubject<AppModulesInstance<[ContextModule]> | null>(
         appModules,
@@ -653,7 +643,7 @@ describe('ContextNavigationProvider', () => {
       provider = new ContextNavigationProvider({
         app: { current$: currentApp$ } as unknown as ContextNavigationProviderArgs['app'],
         navigation: nav as unknown as ContextNavigationProviderArgs['navigation'],
-        context: createMockContextProvider({ currentContext: CONTEXT_ITEM }),
+        context: createMockContextProvider(),
         config: createConfig(source$, {
           enableContextUrlGuard: false,
           enableAppSwitchCarryOver: false,
