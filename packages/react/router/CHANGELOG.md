@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-react-router
 
+## 2.0.1
+
+### Patch Changes
+
+- d2ff4fd: Export `useResolvedPath` from `react-router`
+
 ## 2.0.0
 
 ### Major Changes
