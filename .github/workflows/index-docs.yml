@@ -130,14 +130,18 @@ jobs:
       - name: Fetch tags
         run: git fetch origin tag ${{ env.TAG_NAME }} || true
 
-      - name: Setup node and install deps
-        uses: ./.github/actions/node-setup
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
 
-      - name: Build CLI
-        run: pnpm build:cli
-
-      - name: Install built CLI
-        run: pnpm install -w ./packages/cli
+      - name: Install CLI from registry
+        run: >-
+          npm install --no-save
+          @equinor/fusion-framework-cli
+          @equinor/fusion-framework-cli-plugin-ai-index
+          @equinor/fusion-framework-cli-plugin-ai-chat
+          @equinor/fusion-framework-cli-plugin-copilot
 
       - name: Read index name from config
         id: index
@@ -164,7 +168,7 @@ jobs:
       - name: Ensure index exists
         env:
           FUSION_ENV: ${{ vars.FUSION_ENV }}
-        run: pnpm exec ffc ai index create --env "$FUSION_ENV" --config ./fusion-ai.config.ts
+        run: npx ffc ai index create --env "$FUSION_ENV" --config ./fusion-ai.config.ts
 
       - name: Index docs to Azure AI Search
         timeout-minutes: 10
@@ -175,13 +179,13 @@ jobs:
 
           if [[ "$MODE" == "clean" ]]; then
             echo "::notice::Running clean rebuild — all existing embeddings will be deleted first"
-            pnpm exec ffc ai index add --clean --env "$FUSION_ENV" --config ./fusion-ai.config.ts
+            npx ffc ai index add --clean --env "$FUSION_ENV" --config ./fusion-ai.config.ts
           elif [[ "$MODE" == "diff" ]]; then
             echo "::notice::Running incremental indexing from base ref ${BASE_REF}"
-            pnpm exec ffc ai index add --diff --base-ref "$BASE_REF" --env "$FUSION_ENV" --config ./fusion-ai.config.ts
+            npx ffc ai index add --diff --base-ref "$BASE_REF" --env "$FUSION_ENV" --config ./fusion-ai.config.ts
           else
             echo "::notice::Running full indexing (no safe base ref available)"
-            pnpm exec ffc ai index add --env "$FUSION_ENV" --config ./fusion-ai.config.ts
+            npx ffc ai index add --env "$FUSION_ENV" --config ./fusion-ai.config.ts
           fi
 
       - name: Configure git user
@@ -213,13 +217,13 @@ jobs:
           fi
 
           if [[ "$MODE" == "clean" ]]; then
-            command_summary='pnpm exec ffc ai index add --clean --env '"$FUSION_ENV"' --config ./fusion-ai.config.ts'
+            command_summary='npx ffc ai index add --clean --env '"$FUSION_ENV"' --config ./fusion-ai.config.ts'
             mode_summary='Clean rebuild executed after deleting existing embeddings.'
           elif [[ "$MODE" == "diff" ]]; then
-            command_summary="pnpm exec ffc ai index add --diff --base-ref $BASE_REF --env $FUSION_ENV --config ./fusion-ai.config.ts"
+            command_summary="npx ffc ai index add --diff --base-ref $BASE_REF --env $FUSION_ENV --config ./fusion-ai.config.ts"
             mode_summary='Incremental indexing ran against the tracked base ref.'
           else
-            command_summary='pnpm exec ffc ai index add --env '"$FUSION_ENV"' --config ./fusion-ai.config.ts'
+            command_summary='npx ffc ai index add --env '"$FUSION_ENV"' --config ./fusion-ai.config.ts'
             mode_summary='Full indexing ran because no safe incremental base ref was available.'
           fi
 

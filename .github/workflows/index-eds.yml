@@ -154,25 +154,18 @@ jobs:
           name: eds-docs
           path: eds-content/
 
-      - name: Setup node and install deps
-        uses: ./.github/actions/node-setup
-
-      - name: Cache turbo builds
-        uses: actions/cache@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          path: |
-            .turbo
-            **/.turbo
-          key: ${{ runner.os }}-turbo-cli-${{ hashFiles('pnpm-lock.yaml') }}-${{ hashFiles('packages/cli/**', 'packages/utils/**', 'packages/modules/**') }}
-          restore-keys: |
-            ${{ runner.os }}-turbo-cli-${{ hashFiles('pnpm-lock.yaml') }}-
-            ${{ runner.os }}-turbo-cli-
+          node-version: 24
 
-      - name: Build CLI
-        run: pnpm build:cli
-
-      - name: Install built CLI
-        run: pnpm install -w ./packages/cli
+      - name: Install CLI from registry
+        run: >-
+          npm install --no-save
+          @equinor/fusion-framework-cli
+          @equinor/fusion-framework-cli-plugin-ai-index
+          @equinor/fusion-framework-cli-plugin-ai-chat
+          @equinor/fusion-framework-cli-plugin-copilot
 
       - name: Read index name from config
         id: index
@@ -202,7 +195,7 @@ jobs:
       - name: Ensure index exists
         env:
           FUSION_ENV: ${{ vars.FUSION_ENV }}
-        run: pnpm exec ffc ai index create --env "$FUSION_ENV" --config "$CONFIG_PATH"
+        run: npx ffc ai index create --env "$FUSION_ENV" --config "$CONFIG_PATH"
 
       - name: Index EDS docs to Azure AI Search
         timeout-minutes: 10
@@ -214,10 +207,10 @@ jobs:
 
           if [[ "${INPUT_CLEAN:-false}" == "true" ]]; then
             echo "::notice::Running clean rebuild — deleting existing EDS embeddings first"
-            pnpm exec ffc ai index add --clean --env "$FUSION_ENV" --config "$CONFIG_PATH"
+            npx ffc ai index add --clean --env "$FUSION_ENV" --config "$CONFIG_PATH"
           else
             echo "::notice::Running full EDS indexing"
-            pnpm exec ffc ai index add --env "$FUSION_ENV" --config "$CONFIG_PATH"
+            npx ffc ai index add --env "$FUSION_ENV" --config "$CONFIG_PATH"
           fi
 
       - name: Configure git user
