@@ -1,5 +1,12 @@
 # Change Log
 
+## 14.2.6
+
+### Patch Changes
+
+- Updated dependencies [ece8f42]
+  - @equinor/fusion-framework-module-msal-node@4.1.0
+
 ## 14.2.5
 
 ### Patch Changes

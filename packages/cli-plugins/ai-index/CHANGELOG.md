@@ -1,5 +1,57 @@
 # @equinor/fusion-framework-cli-plugin-ai-index
 
+## 2.1.0
+
+### Minor Changes
+
+- ece8f42: Add Zod-based schema promotion for Azure AI Search indexes.
+
+  New `defineIndexSchema()` factory lets config authors declare which metadata fields should be promoted to top-level Azure AI Search fields, enabling direct OData filtering without `any()` operators.
+
+  Features:
+  - `defineIndexSchema({ shape, prepareAttributes, resolve })` — type-safe schema config with Zod object shape, typed attribute processor, and field resolver
+  - `zodToAzureFields()` — converts Zod schemas to Azure EDM field definitions with appropriate capabilities
+  - `applySchema` pipeline step — validates resolved values via Zod and moves promoted fields to `metadata.schemaFields`
+  - `ffc ai index create --dry-run` — previews the full index schema including promoted fields
+  - `resolveEmbeddingDimensions()` — maps known embedding models to vector dimensions, with fallback to `embedding.dimensions` config
+
+  ```typescript
+  import { z } from "zod";
+  import { defineIndexSchema } from "@equinor/fusion-framework-cli-plugin-ai-index";
+
+  // Note: `zod` must be a direct dependency of your project.
+  // The CLI plugin uses zod internally but does not re-export it.
+  const schema = defineIndexSchema({
+    shape: z.object({
+      type: z.string(),
+      tags: z.array(z.string()).default([]),
+    }),
+    prepareAttributes: (attrs, doc) => {
+      attrs.tags ??= [];
+      if (doc.metadata.source.includes("packages/")) attrs.tags.push("package");
+      return attrs;
+    },
+    resolve: (doc) => ({
+      type: (doc.metadata.attributes?.type as string) ?? "unknown",
+      tags: (doc.metadata.attributes?.tags as string[]) ?? [],
+    }),
+  });
+  ```
+
+  ref: equinor/fusion-core-tasks#1011
+
+- ece8f42: Internal: update index plugin to use Fusion service discovery and strategy-based AI module. Add `ai index embed` sub-command for standalone embedding operations.
+
+  Ref: https://github.com/equinor/fusion-framework/issues/1008
+
+### Patch Changes
+
+- Updated dependencies [ece8f42]
+- Updated dependencies [ece8f42]
+- Updated dependencies [ece8f42]
+  - @equinor/fusion-framework-cli-plugin-ai-base@3.0.0
+  - @equinor/fusion-framework-module-ai@4.0.0
+
 ## 2.0.1
 
 ### Patch Changes
