@@ -92,8 +92,8 @@ jobs:
       - name: Build EDS and extract docs
         uses: docker/build-push-action@v7
         with:
-          context: .
-          file: Dockerfile.eds
+          context: ./eds
+          file: eds/Dockerfile
           target: export
           outputs: type=local,dest=eds-content
           build-args: |
@@ -168,19 +168,25 @@ jobs:
           echo "::add-mask::${token}"
           echo "FUSION_TOKEN=${token}" >> "$GITHUB_ENV"
 
+      - name: Ensure index exists
+        env:
+          FUSION_ENV: ${{ vars.FUSION_ENV }}
+        run: pnpm exec ffc ai index create --env "$FUSION_ENV" --config "$CONFIG_PATH"
+
       - name: Index EDS docs to Azure AI Search
         timeout-minutes: 10
         env:
           INPUT_CLEAN: ${{ inputs.clean }}
+          FUSION_ENV: ${{ vars.FUSION_ENV }}
         run: |
           set -euo pipefail
 
           if [[ "${INPUT_CLEAN:-false}" == "true" ]]; then
             echo "::notice::Running clean rebuild — deleting existing EDS embeddings first"
-            pnpm exec ffc ai index add --clean --config "$CONFIG_PATH"
+            pnpm exec ffc ai index add --clean --env "$FUSION_ENV" --config "$CONFIG_PATH"
           else
             echo "::notice::Running full EDS indexing"
-            pnpm exec ffc ai index add --config "$CONFIG_PATH"
+            pnpm exec ffc ai index add --env "$FUSION_ENV" --config "$CONFIG_PATH"
           fi
 
       - name: Configure git user
