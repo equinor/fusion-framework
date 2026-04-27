@@ -46,13 +46,16 @@ importers:
         version: 14.2.5(a2a3e87a11ffb5737043be2ee76ecd94)
       '@equinor/fusion-framework-cli-plugin-ai-chat':
         specifier: '*'
-        version: 2.0.1(78044be9ac46bc756af2f8521c60b043)
+        version: 2.0.1(@azure/search-documents@12.2.0)(@equinor/fusion-framework-cli@14.2.5(a2a3e87a11ffb5737043be2ee76ecd94))(@equinor/fusion-framework-module-http@8.0.0(@equinor/fusion-framework-module-telemetry@5.0.1(@equinor/fusion-framework-module-event@6.0.0(@types/semver@7.7.1))(@equinor/fusion-framework-module@6.0.0(@types/semver@7.7.1))(@equinor/fusion-observable@9.0.1(@types/react@19.2.14)(react@19.2.5))(@microsoft/applicationinsights-web@3.4.1(tslib@2.8.1)))(@types/semver@7.7.1)(semver@7.7.4)(typescript@5.9.3))(@langchain/openai@1.4.4(@langchain/core@1.1.41(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.7.0(@opentelemetry/api@1.9.1))(openai@6.34.0(ws@8.20.0)(zod@4.3.6))(ws@8.20.0))(ws@8.20.0))(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.7.0(@opentelemetry/api@1.9.1))(@types/semver@7.7.1)(cheerio@1.2.0)(d3-dsv@3.0.1)(ignore@7.0.5)(jsdom@29.0.2)(jsonwebtoken@9.0.3)(lodash@4.18.1)(openai@6.34.0(ws@8.20.0)(zod@4.3.6))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(ws@8.20.0)
       '@equinor/fusion-framework-cli-plugin-ai-index':
         specifier: '*'
-        version: 2.0.1(@equinor/fusion-framework-cli@14.2.5(a2a3e87a11ffb5737043be2ee76ecd94))(@equinor/fusion-framework-module-http@8.0.0(@equinor/fusion-framework-module-telemetry@5.0.1(@equinor/fusion-framework-module-event@6.0.0(@types/semver@7.7.1))(@equinor/fusion-framework-module@6.0.0(@types/semver@7.7.1))(@equinor/fusion-observable@9.0.1(@types/react@19.2.14)(react@19.2.5))(@microsoft/applicationinsights-web@3.4.1(tslib@2.8.1)))(@types/semver@7.7.1)(semver@7.7.4)(typescript@5.9.3))(@langchain/openai@1.4.4(@langchain/core@1.1.41(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.7.0(@opentelemetry/api@1.9.1))(openai@6.34.0(ws@8.20.0)(zod@4.3.6))(ws@8.20.0))(ws@8.20.0))(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.7.0(@opentelemetry/api@1.9.1))(@types/semver@7.7.1)(cheerio@1.2.0)(d3-dsv@3.0.1)(ignore@7.0.5)(jsdom@29.0.2)(jsonwebtoken@9.0.3)(lodash@4.18.1)(openai@6.34.0(ws@8.20.0)(zod@4.3.6))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(vue@3.5.33(typescript@5.9.3))(ws@8.20.0)
+        version: 2.0.1(@equinor/fusion-framework-cli@14.2.5(a2a3e87a11ffb5737043be2ee76ecd94))(@equinor/fusion-framework-module-http@8.0.0(@equinor/fusion-framework-module-telemetry@5.0.1(@equinor/fusion-framework-module-event@6.0.0(@types/semver@7.7.1))(@equinor/fusion-framework-module@6.0.0(@types/semver@7.7.1))(@equinor/fusion-observable@9.0.1(@types/react@19.2.14)(react@19.2.5))(@microsoft/applicationinsights-web@3.4.1(tslib@2.8.1)))(@types/semver@7.7.1)(semver@7.7.4)(typescript@5.9.3))(@langchain/openai@1.4.4(@langchain/core@1.1.41(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.7.0(@opentelemetry/api@1.9.1))(openai@6.34.0(ws@8.20.0)(zod@4.3.6))(ws@8.20.0))(ws@8.20.0))(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.7.0(@opentelemetry/api@1.9.1))(@types/semver@7.7.1)(cheerio@1.2.0)(d3-dsv@3.0.1)(ignore@7.0.5)(jsdom@29.0.2)(jsonwebtoken@9.0.3)(lodash@4.18.1)(openai@6.34.0(ws@8.20.0)(zod@4.3.6))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(ws@8.20.0)
       '@equinor/fusion-framework-cli-plugin-copilot':
         specifier: '*'
         version: 1.1.0(@equinor/fusion-framework-cli@14.2.5(a2a3e87a11ffb5737043be2ee76ecd94))
+      genversion:
+        specifier: ^3.1.1
+        version: 3.2.0
       zod:
         specifier: ^4.3.6
         version: 4.3.6
@@ -78,9 +81,6 @@ importers:
       chalk:
         specifier: ^5.6.0
         version: 5.6.2
-      genversion:
-        specifier: ^3.1.1
-        version: 3.2.0
       happy-dom:
         specifier: ^20.8.4
         version: 20.9.0
@@ -12615,11 +12615,11 @@ snapshots:
       - zod
     optional: true
 
-  '@equinor/fusion-framework-cli-plugin-ai-base@2.0.1(6d4d5219a5606f0a7547815c62cd1525)':
+  '@equinor/fusion-framework-cli-plugin-ai-base@2.0.1(8b16e0620da742887dc08e19ab30c898)':
     dependencies:
       '@equinor/fusion-framework-cli': 14.2.5(a2a3e87a11ffb5737043be2ee76ecd94)
       '@equinor/fusion-framework-module': 6.0.0(@types/semver@7.7.1)
-      '@equinor/fusion-framework-module-ai': 3.0.1(043d31207def00269ab2384483a40870)
+      '@equinor/fusion-framework-module-ai': 3.0.1(@azure/search-documents@12.2.0)(@equinor/fusion-framework-module-http@8.0.0(@equinor/fusion-framework-module-telemetry@5.0.1(@equinor/fusion-framework-module-event@6.0.0(@types/semver@7.7.1))(@equinor/fusion-framework-module@6.0.0(@types/semver@7.7.1))(@equinor/fusion-observable@9.0.1(@types/react@19.2.14)(react@19.2.5))(@microsoft/applicationinsights-web@3.4.1(tslib@2.8.1)))(@types/semver@7.7.1)(semver@7.7.4)(typescript@5.9.3))(@equinor/fusion-framework-module@6.0.0(@types/semver@7.7.1))(@langchain/openai@1.4.4(@langchain/core@1.1.41(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.7.0(@opentelemetry/api@1.9.1))(openai@6.34.0(ws@8.20.0)(zod@4.3.6))(ws@8.20.0))(ws@8.20.0))(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.7.0(@opentelemetry/api@1.9.1))(cheerio@1.2.0)(d3-dsv@3.0.1)(ignore@7.0.5)(jsdom@29.0.2)(jsonwebtoken@9.0.3)(lodash@4.18.1)(openai@6.34.0(ws@8.20.0)(zod@4.3.6))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(rxjs@7.8.2)(ws@8.20.0)
       '@equinor/fusion-imports': 2.0.0
       commander: 14.0.3
       zod: 4.3.6
@@ -12760,12 +12760,12 @@ snapshots:
       - youtubei.js
       - zod-to-json-schema
 
-  '@equinor/fusion-framework-cli-plugin-ai-chat@2.0.1(78044be9ac46bc756af2f8521c60b043)':
-    dependencies:
+  ? '@equinor/fusion-framework-cli-plugin-ai-chat@2.0.1(@azure/search-documents@12.2.0)(@equinor/fusion-framework-cli@14.2.5(a2a3e87a11ffb5737043be2ee76ecd94))(@equinor/fusion-framework-module-http@8.0.0(@equinor/fusion-framework-module-telemetry@5.0.1(@equinor/fusion-framework-module-event@6.0.0(@types/semver@7.7.1))(@equinor/fusion-framework-module@6.0.0(@types/semver@7.7.1))(@equinor/fusion-observable@9.0.1(@types/react@19.2.14)(react@19.2.5))(@microsoft/applicationinsights-web@3.4.1(tslib@2.8.1)))(@types/semver@7.7.1)(semver@7.7.4)(typescript@5.9.3))(@langchain/openai@1.4.4(@langchain/core@1.1.41(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.7.0(@opentelemetry/api@1.9.1))(openai@6.34.0(ws@8.20.0)(zod@4.3.6))(ws@8.20.0))(ws@8.20.0))(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.7.0(@opentelemetry/api@1.9.1))(@types/semver@7.7.1)(cheerio@1.2.0)(d3-dsv@3.0.1)(ignore@7.0.5)(jsdom@29.0.2)(jsonwebtoken@9.0.3)(lodash@4.18.1)(openai@6.34.0(ws@8.20.0)(zod@4.3.6))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(ws@8.20.0)'
+  : dependencies:
       '@equinor/fusion-framework-cli': 14.2.5(a2a3e87a11ffb5737043be2ee76ecd94)
-      '@equinor/fusion-framework-cli-plugin-ai-base': 2.0.1(6d4d5219a5606f0a7547815c62cd1525)
+      '@equinor/fusion-framework-cli-plugin-ai-base': 2.0.1(8b16e0620da742887dc08e19ab30c898)
       '@equinor/fusion-framework-module': 6.0.0(@types/semver@7.7.1)
-      '@equinor/fusion-framework-module-ai': 3.0.1(043d31207def00269ab2384483a40870)
+      '@equinor/fusion-framework-module-ai': 3.0.1(@azure/search-documents@12.2.0)(@equinor/fusion-framework-module-http@8.0.0(@equinor/fusion-framework-module-telemetry@5.0.1(@equinor/fusion-framework-module-event@6.0.0(@types/semver@7.7.1))(@equinor/fusion-framework-module@6.0.0(@types/semver@7.7.1))(@equinor/fusion-observable@9.0.1(@types/react@19.2.14)(react@19.2.5))(@microsoft/applicationinsights-web@3.4.1(tslib@2.8.1)))(@types/semver@7.7.1)(semver@7.7.4)(typescript@5.9.3))(@equinor/fusion-framework-module@6.0.0(@types/semver@7.7.1))(@langchain/openai@1.4.4(@langchain/core@1.1.41(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.7.0(@opentelemetry/api@1.9.1))(openai@6.34.0(ws@8.20.0)(zod@4.3.6))(ws@8.20.0))(ws@8.20.0))(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.7.0(@opentelemetry/api@1.9.1))(cheerio@1.2.0)(d3-dsv@3.0.1)(ignore@7.0.5)(jsdom@29.0.2)(jsonwebtoken@9.0.3)(lodash@4.18.1)(openai@6.34.0(ws@8.20.0)(zod@4.3.6))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(rxjs@7.8.2)(ws@8.20.0)
       '@langchain/core': 1.1.41(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.7.0(@opentelemetry/api@1.9.1))(openai@6.34.0(ws@8.20.0)(zod@4.3.6))(ws@8.20.0)
       commander: 14.0.3
       rxjs: 7.8.2
@@ -12905,13 +12905,13 @@ snapshots:
       - youtubei.js
       - zod-to-json-schema
 
-  ? '@equinor/fusion-framework-cli-plugin-ai-index@2.0.1(@equinor/fusion-framework-cli@14.2.5(a2a3e87a11ffb5737043be2ee76ecd94))(@equinor/fusion-framework-module-http@8.0.0(@equinor/fusion-framework-module-telemetry@5.0.1(@equinor/fusion-framework-module-event@6.0.0(@types/semver@7.7.1))(@equinor/fusion-framework-module@6.0.0(@types/semver@7.7.1))(@equinor/fusion-observable@9.0.1(@types/react@19.2.14)(react@19.2.5))(@microsoft/applicationinsights-web@3.4.1(tslib@2.8.1)))(@types/semver@7.7.1)(semver@7.7.4)(typescript@5.9.3))(@langchain/openai@1.4.4(@langchain/core@1.1.41(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.7.0(@opentelemetry/api@1.9.1))(openai@6.34.0(ws@8.20.0)(zod@4.3.6))(ws@8.20.0))(ws@8.20.0))(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.7.0(@opentelemetry/api@1.9.1))(@types/semver@7.7.1)(cheerio@1.2.0)(d3-dsv@3.0.1)(ignore@7.0.5)(jsdom@29.0.2)(jsonwebtoken@9.0.3)(lodash@4.18.1)(openai@6.34.0(ws@8.20.0)(zod@4.3.6))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(vue@3.5.33(typescript@5.9.3))(ws@8.20.0)'
-  : dependencies:
+  '@equinor/fusion-framework-cli-plugin-ai-index@2.0.1(@equinor/fusion-framework-cli@14.2.5(a2a3e87a11ffb5737043be2ee76ecd94))(@equinor/fusion-framework-module-http@8.0.0(@equinor/fusion-framework-module-telemetry@5.0.1(@equinor/fusion-framework-module-event@6.0.0(@types/semver@7.7.1))(@equinor/fusion-framework-module@6.0.0(@types/semver@7.7.1))(@equinor/fusion-observable@9.0.1(@types/react@19.2.14)(react@19.2.5))(@microsoft/applicationinsights-web@3.4.1(tslib@2.8.1)))(@types/semver@7.7.1)(semver@7.7.4)(typescript@5.9.3))(@langchain/openai@1.4.4(@langchain/core@1.1.41(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.7.0(@opentelemetry/api@1.9.1))(openai@6.34.0(ws@8.20.0)(zod@4.3.6))(ws@8.20.0))(ws@8.20.0))(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.7.0(@opentelemetry/api@1.9.1))(@types/semver@7.7.1)(cheerio@1.2.0)(d3-dsv@3.0.1)(ignore@7.0.5)(jsdom@29.0.2)(jsonwebtoken@9.0.3)(lodash@4.18.1)(openai@6.34.0(ws@8.20.0)(zod@4.3.6))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(ws@8.20.0)':
+    dependencies:
       '@azure/search-documents': 12.2.0
       '@equinor/fusion-framework-cli': 14.2.5(a2a3e87a11ffb5737043be2ee76ecd94)
-      '@equinor/fusion-framework-cli-plugin-ai-base': 2.0.1(6d4d5219a5606f0a7547815c62cd1525)
+      '@equinor/fusion-framework-cli-plugin-ai-base': 2.0.1(8b16e0620da742887dc08e19ab30c898)
       '@equinor/fusion-framework-module': 6.0.0(@types/semver@7.7.1)
-      '@equinor/fusion-framework-module-ai': 3.0.1(043d31207def00269ab2384483a40870)
+      '@equinor/fusion-framework-module-ai': 3.0.1(@azure/search-documents@12.2.0)(@equinor/fusion-framework-module-http@8.0.0(@equinor/fusion-framework-module-telemetry@5.0.1(@equinor/fusion-framework-module-event@6.0.0(@types/semver@7.7.1))(@equinor/fusion-framework-module@6.0.0(@types/semver@7.7.1))(@equinor/fusion-observable@9.0.1(@types/react@19.2.14)(react@19.2.5))(@microsoft/applicationinsights-web@3.4.1(tslib@2.8.1)))(@types/semver@7.7.1)(semver@7.7.4)(typescript@5.9.3))(@equinor/fusion-framework-module@6.0.0(@types/semver@7.7.1))(@langchain/openai@1.4.4(@langchain/core@1.1.41(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.7.0(@opentelemetry/api@1.9.1))(openai@6.34.0(ws@8.20.0)(zod@4.3.6))(ws@8.20.0))(ws@8.20.0))(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.7.0(@opentelemetry/api@1.9.1))(cheerio@1.2.0)(d3-dsv@3.0.1)(ignore@7.0.5)(jsdom@29.0.2)(jsonwebtoken@9.0.3)(lodash@4.18.1)(openai@6.34.0(ws@8.20.0)(zod@4.3.6))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(rxjs@7.8.2)(ws@8.20.0)
       '@equinor/fusion-imports': 2.0.0
       '@langchain/core': 1.1.41(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.7.0(@opentelemetry/api@1.9.1))(openai@6.34.0(ws@8.20.0)(zod@4.3.6))(ws@8.20.0)
       '@langchain/textsplitters': 1.0.1(@langchain/core@1.1.41(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.7.0(@opentelemetry/api@1.9.1))(openai@6.34.0(ws@8.20.0)(zod@4.3.6))(ws@8.20.0))
@@ -13190,7 +13190,7 @@ snapshots:
       ag-grid-enterprise: 35.2.1
     optional: true
 
-  '@equinor/fusion-framework-module-ai@3.0.1(043d31207def00269ab2384483a40870)':
+  '@equinor/fusion-framework-module-ai@3.0.1(@azure/search-documents@12.2.0)(@equinor/fusion-framework-module-http@8.0.0(@equinor/fusion-framework-module-telemetry@5.0.1(@equinor/fusion-framework-module-event@6.0.0(@types/semver@7.7.1))(@equinor/fusion-framework-module@6.0.0(@types/semver@7.7.1))(@equinor/fusion-observable@9.0.1(@types/react@19.2.14)(react@19.2.5))(@microsoft/applicationinsights-web@3.4.1(tslib@2.8.1)))(@types/semver@7.7.1)(semver@7.7.4)(typescript@5.9.3))(@equinor/fusion-framework-module@6.0.0(@types/semver@7.7.1))(@langchain/openai@1.4.4(@langchain/core@1.1.41(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.7.0(@opentelemetry/api@1.9.1))(openai@6.34.0(ws@8.20.0)(zod@4.3.6))(ws@8.20.0))(ws@8.20.0))(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.7.0(@opentelemetry/api@1.9.1))(cheerio@1.2.0)(d3-dsv@3.0.1)(ignore@7.0.5)(jsdom@29.0.2)(jsonwebtoken@9.0.3)(lodash@4.18.1)(openai@6.34.0(ws@8.20.0)(zod@4.3.6))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(rxjs@7.8.2)(ws@8.20.0)':
     dependencies:
       '@equinor/fusion-framework-module': 6.0.0(@types/semver@7.7.1)
       '@equinor/fusion-framework-module-http': 8.0.0(@equinor/fusion-framework-module-telemetry@5.0.1(@equinor/fusion-framework-module-event@6.0.0(@types/semver@7.7.1))(@equinor/fusion-framework-module@6.0.0(@types/semver@7.7.1))(@equinor/fusion-observable@9.0.1(@types/react@19.2.14)(react@19.2.5))(@microsoft/applicationinsights-web@3.4.1(tslib@2.8.1)))(@types/semver@7.7.1)(semver@7.7.4)(typescript@5.9.3)
