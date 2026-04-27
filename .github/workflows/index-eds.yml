@@ -69,6 +69,24 @@ jobs:
           fi
 
           echo "::notice::Latest EDS release: ${latest_tag}"
+
+          # Compare against the last-indexed ref stored in the tracking tag.
+          # Annotated tags require two API calls: ref → tag object → message.
+          last_indexed=""
+          tag_sha=$(gh api "repos/${{ github.repository }}/git/refs/tags/eds-index/main" \
+            --jq '.object.sha' 2>/dev/null) || true
+          if [[ -n "$tag_sha" ]]; then
+            last_indexed=$(gh api "repos/${{ github.repository }}/git/tags/${tag_sha}" \
+              --jq '.message' 2>/dev/null \
+              | sed -n 's/^last indexed EDS ref: //p') || true
+          fi
+
+          if [[ -n "$last_indexed" && "$latest_tag" == "$last_indexed" ]]; then
+            echo "::notice::EDS ref ${latest_tag} already indexed — skipping"
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
           echo "eds_ref=${latest_tag}" >> "$GITHUB_OUTPUT"
           echo "skip=false" >> "$GITHUB_OUTPUT"
           echo "environment=docs" >> "$GITHUB_OUTPUT"
@@ -158,7 +176,7 @@ jobs:
       - name: Azure login (OIDC)
         uses: azure/login@v2
         with:
-          client-id: ${{ vars.FUSION_AI_SERVICE_SP }}
+          client-id: ${{ vars.FUSION_AI_SP_CLIENT_ID }}
           tenant-id: 3aa4a235-b6e2-48d5-9195-7fcf05b459b0
           allow-no-subscriptions: true
 
