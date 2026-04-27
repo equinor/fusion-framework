@@ -53,12 +53,14 @@ jobs:
           node-version: 24
 
       - name: Install CLI from registry
-        run: >-
-          pnpm add -g
-          @equinor/fusion-framework-cli
-          @equinor/fusion-framework-cli-plugin-ai-index
-          @equinor/fusion-framework-cli-plugin-ai-chat
-          @equinor/fusion-framework-cli-plugin-copilot
+        run: |
+          pnpm add -g \
+            @equinor/fusion-framework-cli \
+            @equinor/fusion-framework-cli-plugin-ai-index \
+            @equinor/fusion-framework-cli-plugin-ai-chat \
+            @equinor/fusion-framework-cli-plugin-copilot \
+            zod
+          echo "NODE_PATH=$(pnpm root -g)" >> "$GITHUB_ENV"
 
       - name: Resolve index config
         id: index
