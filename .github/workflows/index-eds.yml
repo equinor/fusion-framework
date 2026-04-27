@@ -22,7 +22,6 @@ on:
 
 env:
   EDS_REPO: equinor/design-system
-  TAG_NAME: last-indexed/eds
   CONFIG_PATH: ./fusion-ai.config.eds.ts
 
 concurrency:
@@ -150,8 +149,11 @@ jobs:
         id: index
         run: |
           index_name=$(node -e "import('$CONFIG_PATH').then(m => console.log(m.default.index.name))")
+          tag_name="${index_name}/${GITHUB_REF_NAME}"
           echo "name=${index_name}" >> "$GITHUB_OUTPUT"
+          echo "tag_name=${tag_name}" >> "$GITHUB_OUTPUT"
           echo "::notice::Index name: ${index_name}"
+          echo "::notice::Tracking tag: ${tag_name}"
 
       - name: Azure login (OIDC)
         uses: azure/login@v2
@@ -197,6 +199,7 @@ jobs:
         if: success()
         env:
           EDS_REF: ${{ needs.resolve-ref.outputs.eds_ref }}
+          TAG_NAME: ${{ steps.index.outputs.tag_name }}
         run: |
           set -euo pipefail
           git tag -f -m "last indexed EDS ref: ${EDS_REF}" "$TAG_NAME" "$GITHUB_SHA"
@@ -208,6 +211,7 @@ jobs:
           EDS_REF: ${{ needs.resolve-ref.outputs.eds_ref }}
           EXECUTION_STATUS: ${{ job.status }}
           SEARCH_INDEX_NAME: ${{ steps.index.outputs.name }}
+          TAG_NAME: ${{ steps.index.outputs.tag_name }}
         run: |
           set -euo pipefail
 
