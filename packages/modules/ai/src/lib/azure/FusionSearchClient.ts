@@ -1,5 +1,5 @@
-import { SearchClient } from '@azure/search-documents';
-import type { TokenCredential } from '@azure/core-auth';
+import { SearchClient, type SearchClientOptions } from '@azure/search-documents';
+import type { KeyCredential, TokenCredential } from '@azure/core-auth';
 import type {
   PipelinePolicy,
   PipelineRequest,
@@ -9,12 +9,13 @@ import type {
 import type { AzureAISearchDocument } from '@langchain/community/vectorstores/azure_aisearch';
 
 /**
- * Token credential accepted by {@link FusionSearchClient}.
+ * Credential accepted by {@link FusionSearchClient}.
  *
- * An alias of `TokenCredential` from `@azure/core-auth`. Any object whose
- * `getToken` method returns a bearer token for the requested scopes is valid.
+ * - `TokenCredential` — standard MSAL / managed-identity flow (production).
+ * - `KeyCredential` — used when bypassing the SDK's HTTPS-only bearer token
+ *   check (local dev-server proxy).
  */
-export type FusionSearchCredential = TokenCredential;
+export type FusionSearchCredential = TokenCredential | KeyCredential;
 
 /**
  * Azure Core pipeline policy that rewrites the OData action-suffixed paths
@@ -67,11 +68,21 @@ export class FusionSearchClient extends SearchClient<AzureAISearchDocument> {
   /**
    * @param endpoint - Fusion AI service origin (e.g. `https://ai.test.api.fusion-dev.net`).
    * @param indexName - Name of the Azure AI Search index to target.
-   * @param credential - Token credential used to authenticate requests.
+   * @param credential - Token credential or key credential used to authenticate requests.
+   * @param options - Additional search client options forwarded to the Azure SDK.
    */
-  constructor(endpoint: string, indexName: string, credential: FusionSearchCredential) {
+  constructor(
+    endpoint: string,
+    indexName: string,
+    credential: FusionSearchCredential,
+    options?: SearchClientOptions,
+  ) {
     super(endpoint, indexName, credential, {
-      additionalPolicies: [{ policy: fusionPathRewritePolicy, position: 'perCall' }],
+      ...options,
+      additionalPolicies: [
+        { policy: fusionPathRewritePolicy, position: 'perCall' },
+        ...(options?.additionalPolicies ?? []),
+      ],
     });
   }
 }

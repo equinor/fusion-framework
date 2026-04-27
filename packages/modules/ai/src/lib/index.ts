@@ -21,10 +21,14 @@ export { convertObjectToAttributes } from './convert-object-to-attributes.js';
 // Export core types
 export type {
   IModel,
+  IModelRunnable,
   IEmbed,
   IVectorStore,
   ChatMessage,
   ChatResponse,
+  ModelInput,
+  ModelOutput,
+  ModelTool,
   ToolCall,
   VectorStoreDocument,
   VectorStoreDocumentMetadata,

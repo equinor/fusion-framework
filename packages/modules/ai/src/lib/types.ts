@@ -237,6 +237,38 @@ export interface IVectorStore extends IService<string, unknown[]> {
 }
 
 /**
+ * Minimal runnable interface for invoking a language model.
+ *
+ * Represents any object that can accept prompt input and produce
+ * {@link ModelOutput} — typically the result of {@link IModel.bindTools}
+ * or a model instance itself. Use this when a function only needs to
+ * call `invoke` / `stream` without access to the full {@link IModel} surface.
+ *
+ * Input and options use structural types instead of the nominal LangChain
+ * types so that consumers whose `@langchain/core` copy differs from the
+ * AI module's copy can call these methods without casts.
+ */
+export interface IModelRunnable {
+  /**
+   * Invoke the model and return the full response.
+   *
+   * @param input - Prompt string or array of chat messages.
+   * @param options - Optional configuration (e.g. `signal` for cancellation).
+   * @returns Promise resolving to the model output chunk.
+   */
+  invoke(input: unknown, options?: { signal?: AbortSignal }): Promise<ModelOutput>;
+
+  /**
+   * Stream the model response token-by-token.
+   *
+   * @param input - Prompt string or array of chat messages.
+   * @param options - Optional configuration (e.g. `signal` for cancellation).
+   * @returns An async iterable of output chunks.
+   */
+  stream(input: unknown, options?: { signal?: AbortSignal }): Promise<AsyncIterable<ModelOutput>>;
+}
+
+/**
  * Interface for language model (LLM / chat model) implementations.
  *
  * Concrete model clients (e.g. {@link AzureOpenAIModel}) implement this interface
