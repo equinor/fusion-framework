@@ -2,36 +2,29 @@ import { useMemo, useRef } from 'react';
 import { useModule } from '@equinor/fusion-framework-react-module';
 import { useLocalRuntime, type ChatModelAdapter } from '@assistant-ui/react';
 import type { AIModule } from '@equinor/fusion-framework-module-ai';
+import type { IModelRunnable } from '@equinor/fusion-framework-module-ai/lib';
 import {
   HumanMessage,
   AIMessage,
   SystemMessage,
   ToolMessage,
   type BaseMessage,
-  type AIMessageChunk,
 } from '@langchain/core/messages';
 
 const SYSTEM_PROMPT = [
-  'You are CryptoBot, a helpful cryptocurrency assistant.',
-  'You have access to real-time market data from Binance via the get_crypto_price tool.',
-  'When a user asks about a crypto price, use the tool with the correct trading pair (e.g. BTCUSDT, ETHUSDT, SOLUSDT).',
-  'If the user mentions a coin name like "Bitcoin" or "Ethereum", map it to the right symbol yourself.',
-  'Keep answers concise and informative. Format numbers for readability.',
-  'If asked about something outside crypto, politely steer the conversation back to crypto topics.',
+  'You are FusionBot, a helpful assistant for the Fusion Framework platform.',
+  'You have access to a Fusion search index:',
+  'search_fusion_framework — Fusion Framework documentation, modules, hooks, React patterns, and cookbook examples.',
+  'Use it when the user asks about Fusion Framework APIs, modules, hooks, configuration, React patterns, or how to build Fusion apps.',
+  'Keep answers concise and informative. Use code examples from the index when available.',
 ].join(' ');
 
-import { getStockPriceTool } from './tools/get-crypto-price';
-
-/** Tools available to the assistant. */
-const tools = [getStockPriceTool];
-
-/** Map of tool name → executable tool for resolving tool calls. */
-const toolMap = new Map<string, (typeof tools)[number]>(tools.map((t) => [t.name, t]));
+import { createFusionSearchTool } from './tools/search-fusion-index';
 
 /**
  * Extracts text content from a model output chunk.
  */
-function extractText(content: AIMessageChunk['content']): string {
+function extractText(content: string | Array<Record<string, unknown>>): string {
   if (typeof content === 'string') return content;
   if (Array.isArray(content)) {
     return content
@@ -45,16 +38,6 @@ function extractText(content: AIMessageChunk['content']): string {
   return '';
 }
 
-/**
- * Invokes the model and returns the full response.
- */
-async function invokeModel(
-  runnable: { invoke: (input: BaseMessage[], options?: { signal?: AbortSignal }) => Promise<AIMessageChunk> },
-  input: BaseMessage[],
-  signal?: AbortSignal,
-): Promise<AIMessageChunk> {
-  return runnable.invoke(input, { signal });
-}
 
 /**
  * Creates an assistant-ui runtime backed by the Fusion AI module.
@@ -75,10 +58,23 @@ export const useFusionAiRuntime = (model?: string) => {
       async *run({ messages, abortSignal }) {
         const provider = aiRef.current;
         const chatModel = provider.useModel.bind(provider)(model);
+
+        // Build tool list with provider-dependent tools created at call time
+        const frameworkSearchTool = createFusionSearchTool(provider, {
+          name: 'search_fusion_framework',
+          description:
+            'Search the Fusion Framework documentation and source code index. ' +
+            'Use this when the user asks about Fusion Framework APIs, modules, hooks, ' +
+            'configuration, React patterns, or how to build Fusion apps.',
+          indexName: 'fusion-framework-2026-04-21',
+        });
+        const tools = [frameworkSearchTool];
+        const toolMap = new Map<string, (typeof tools)[number]>(tools.map((t) => [t.name, t]));
+
         // Cast needed: pnpm may resolve separate @langchain/core copies for the cookbook
         // and the AI module, making structurally identical types nominally incompatible.
         // biome-ignore lint/suspicious/noExplicitAny: cross-package type boundary
-        const modelWithTools = chatModel.bindTools(tools as any);
+        const modelWithTools = chatModel.bindTools(tools as any) as IModelRunnable;
 
         const langchainMessages: BaseMessage[] = [
           new SystemMessage(SYSTEM_PROMPT),
@@ -91,9 +87,8 @@ export const useFusionAiRuntime = (model?: string) => {
           }),
         ];
 
-        /** Run inference, executing tool calls in a loop until the model produces a final text reply. */
-        // biome-ignore lint/suspicious/noExplicitAny: cross-package type boundary
-        let response = await invokeModel(modelWithTools as any, langchainMessages, abortSignal);
+        /** Execute tool calls (non-streaming) until the model stops requesting tools. */
+        let response = await modelWithTools.invoke(langchainMessages, {signal: abortSignal});
 
         while (response.tool_calls && response.tool_calls.length > 0) {
           langchainMessages.push(new AIMessage(response));
@@ -104,12 +99,19 @@ export const useFusionAiRuntime = (model?: string) => {
             langchainMessages.push(new ToolMessage({ content: String(result), tool_call_id: tc.id ?? tc.name }));
           }
 
-          response = await invokeModel(modelWithTools as any, langchainMessages, abortSignal);
+          response = await modelWithTools.invoke(langchainMessages, {signal: abortSignal});
         }
 
-        yield {
-          content: [{ type: 'text' as const, text: extractText(response.content) }],
-        };
+        /** Stream the final text response token-by-token. */
+        let text = '';
+        const stream = await modelWithTools.stream(langchainMessages, { signal: abortSignal });
+        for await (const chunk of stream) {
+          const delta = extractText(chunk.content);
+          if (delta) {
+            text += delta;
+            yield { content: [{ type: 'text' as const, text }] };
+          }
+        }
       },
     };
   }, [model]);

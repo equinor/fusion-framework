@@ -4,7 +4,33 @@ import {
   MessagePrimitive,
   ComposerPrimitive,
 } from '@assistant-ui/react';
+import type { TextMessagePartComponent } from '@assistant-ui/react';
+import {
+  MarkdownTextPrimitive,
+  type SyntaxHighlighterProps,
+} from '@assistant-ui/react-markdown';
+import { Prism as SyntaxHighlighterImpl } from 'react-syntax-highlighter';
+import { oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { useFusionAiRuntime } from './useFusionAiRuntime';
+
+const SyntaxHighlighter = ({
+  language,
+  code,
+  components: { Pre, Code },
+}: SyntaxHighlighterProps) => (
+  <SyntaxHighlighterImpl
+    language={language}
+    style={oneLight}
+    PreTag={Pre}
+    CodeTag={Code}
+  >
+    {code}
+  </SyntaxHighlighterImpl>
+);
+
+const MarkdownText: TextMessagePartComponent = () => (
+  <MarkdownTextPrimitive components={{ SyntaxHighlighter }} />
+);
 
 const Thread = () => (
   <ThreadPrimitive.Root
@@ -25,11 +51,11 @@ const Thread = () => (
             color: '#6b7280',
           }}
         >
-          <span style={{ fontSize: '2rem' }}>₿</span>
-          <h2 style={{ margin: 0, color: '#111827' }}>CryptoBot</h2>
+          <span style={{ fontSize: '2rem' }}>⚙️</span>
+          <h2 style={{ margin: 0, color: '#111827' }}>FusionBot</h2>
           <p style={{ margin: 0, maxWidth: '20rem', textAlign: 'center' }}>
-            Ask me about any cryptocurrency — prices, trends, or trading pairs.
-            I pull live data from Binance.
+            Ask me about Fusion Framework APIs, modules, hooks, patterns,
+            or Fusion Core Services.
           </p>
         </div>
       </ThreadPrimitive.Empty>
@@ -60,7 +86,9 @@ const Thread = () => (
                 maxWidth: '80%',
               }}
             >
-              <MessagePrimitive.Content />
+              <MessagePrimitive.Content
+                components={{ Text: MarkdownText }}
+              />
             </MessagePrimitive.Root>
           ),
         }}
@@ -69,7 +97,7 @@ const Thread = () => (
     <div style={{ padding: '1rem', borderTop: '1px solid #e5e7eb' }}>
       <ComposerPrimitive.Root>
         <ComposerPrimitive.Input
-          placeholder="Ask about a crypto price, e.g. 'What's the price of Bitcoin?'"
+          placeholder="Ask about Fusion Framework or Core Services..."
           style={{
             width: '100%',
             padding: '0.75rem',
