@@ -21,4 +21,3 @@ jobs:
     with:
       branch: main
       filter: node-cache-
-      rebuild: true
