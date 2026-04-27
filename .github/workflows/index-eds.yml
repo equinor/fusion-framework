@@ -157,6 +157,17 @@ jobs:
       - name: Setup node and install deps
         uses: ./.github/actions/node-setup
 
+      - name: Cache turbo builds
+        uses: actions/cache@v4
+        with:
+          path: |
+            .turbo
+            **/.turbo
+          key: ${{ runner.os }}-turbo-cli-${{ hashFiles('pnpm-lock.yaml') }}-${{ hashFiles('packages/cli/**', 'packages/utils/**', 'packages/modules/**') }}
+          restore-keys: |
+            ${{ runner.os }}-turbo-cli-${{ hashFiles('pnpm-lock.yaml') }}-
+            ${{ runner.os }}-turbo-cli-
+
       - name: Build CLI
         run: pnpm build:cli
 
@@ -183,7 +194,7 @@ jobs:
       - name: Acquire Fusion token
         run: |
           token=$(az account get-access-token \
-            --scope 5a842df8-3238-415d-b168-9f16a6a6031b/.default \
+            --scope ${{ vars.FUSION_AI_SP_SCOPE }}\
             --query accessToken --output tsv)
           echo "::add-mask::${token}"
           echo "FUSION_TOKEN=${token}" >> "$GITHUB_ENV"
