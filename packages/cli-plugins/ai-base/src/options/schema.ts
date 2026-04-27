@@ -1,77 +1,27 @@
-/**
- * Zod validation schema and inferred type for AI command options.
- *
- * @packageDocumentation
- */
-
 import z from 'zod';
 
 /**
- * Base Zod schema for AI-related command options.
+ * Base Zod schema for Fusion AI command options.
  *
- * This schema defines the validation rules for all AI options. Other AI plugins
- * can extend this schema to add their own command-specific options.
+ * All fields are optional — when omitted the service URL and token are
+ * resolved automatically from Fusion service discovery and MSAL auth.
  *
  * @example
  * ```ts
- * import { AiOptionsSchema } from '@equinor/fusion-framework-cli-plugin-ai-base';
- * import { z } from 'zod';
- *
- * const MyCommandOptionsSchema = AiOptionsSchema.extend({
- *   myOption: z.string(),
- * });
+ * import { AiOptionsSchema } from '@equinor/fusion-framework-cli-plugin-ai-base/command-options';
+ * const MySchema = AiOptionsSchema.extend({ extra: z.string() });
  * ```
  */
 export const AiOptionsSchema = z
   .object({
-    // Required AI options
-    openaiApiKey: z
-      .string({ message: 'Azure OpenAI API key is required and must be a non-empty string.' })
-      .min(1, 'API key must be a non-empty string.')
-      .describe('Azure OpenAI API key for authentication'),
-    openaiApiVersion: z
-      .string({ message: 'Azure OpenAI API version is required and must be a non-empty string.' })
-      .min(1, 'API version must be a non-empty string.')
-      .describe('Azure OpenAI API version'),
-    openaiInstance: z
-      .string({ message: 'Azure OpenAI instance name is required and must be a non-empty string.' })
-      .min(1, 'Instance name must be a non-empty string.')
-      .describe('Azure OpenAI instance name'),
-
-    // Optional AI options
-    openaiChatDeployment: z
-      .string()
-      .min(1, 'Chat deployment name must be a non-empty string.')
-      .optional()
-      .describe('Azure OpenAI chat deployment name'),
-    openaiEmbeddingDeployment: z
-      .string()
-      .min(1, 'Embedding deployment name must be a non-empty string.')
-      .optional()
-      .describe('Azure OpenAI embedding deployment name'),
-    azureSearchEndpoint: z
-      .string()
-      .url('Azure Search endpoint must be a valid URL.')
-      .min(1, 'Azure Search endpoint must be a non-empty string.')
-      .optional()
-      .describe('Azure Search endpoint URL'),
-    azureSearchApiKey: z
-      .string()
-      .min(1, 'Azure Search API key must be a non-empty string.')
-      .optional()
-      .describe('Azure Search API key'),
-    azureSearchIndexName: z
-      .string()
-      .min(1, 'Azure Search index name must be a non-empty string.')
-      .optional()
-      .describe('Azure Search index name'),
+    env: z.string().optional(),
+    token: z.string().optional(),
+    tenantId: z.string().optional(),
+    clientId: z.string().optional(),
+    chatModel: z.string().min(1).optional(),
+    embedModel: z.string().min(1).optional(),
+    indexName: z.string().min(1).optional(),
   })
-  .describe('Base AI-related command options');
+  .describe('Base Fusion AI command options');
 
-/**
- * Type representing the validated AI options.
- *
- * This type is inferred from the Zod schema and should be used throughout AI plugins
- * to ensure type safety and consistency with the schema.
- */
 export type AiOptionsType = z.infer<typeof AiOptionsSchema>;

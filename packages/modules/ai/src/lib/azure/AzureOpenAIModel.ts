@@ -28,6 +28,8 @@ type ModelOpenAiConfig = {
  */
 export type AzureOpenAIModelConfig = ModelOpenAiConfig & {
   azureOpenAIApiEndpoint?: string;
+  /** Direct base path for the Azure OpenAI endpoint (e.g. a Fusion AI proxy URI). */
+  azureOpenAIBasePath?: string;
   azureOpenAIApiDeploymentName?: string;
   azureOpenAIApiInstanceName?: string;
   azureOpenAIApiKey?: string;

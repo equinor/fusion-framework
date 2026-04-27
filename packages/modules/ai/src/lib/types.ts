@@ -25,6 +25,15 @@ export type VectorStoreDocumentMetadata<
   attributes?: T;
   /** Root path prefix used when resolving relative document references */
   rootPath?: string;
+  /**
+   * Schema-promoted fields to store as top-level Azure AI Search document
+   * properties instead of inside the generic `attributes` key-value bag.
+   *
+   * When present, the vector store backend places these values alongside
+   * the standard fields (`id`, `content`, `content_vector`, `metadata`)
+   * so they can be filtered and faceted without the `any()` OData operator.
+   */
+  schemaFields?: Record<string, unknown>;
 };
 
 /**
@@ -225,6 +234,38 @@ export interface IVectorStore extends IService<string, unknown[]> {
    * @returns LangChain BaseRetriever instance
    */
   asRetriever(options?: RetrieverOptions): BaseRetriever;
+}
+
+/**
+ * Minimal runnable interface for invoking a language model.
+ *
+ * Represents any object that can accept prompt input and produce
+ * {@link ModelOutput} — typically the result of {@link IModel.bindTools}
+ * or a model instance itself. Use this when a function only needs to
+ * call `invoke` / `stream` without access to the full {@link IModel} surface.
+ *
+ * Input and options use structural types instead of the nominal LangChain
+ * types so that consumers whose `@langchain/core` copy differs from the
+ * AI module's copy can call these methods without casts.
+ */
+export interface IModelRunnable {
+  /**
+   * Invoke the model and return the full response.
+   *
+   * @param input - Prompt string or array of chat messages.
+   * @param options - Optional configuration (e.g. `signal` for cancellation).
+   * @returns Promise resolving to the model output chunk.
+   */
+  invoke(input: unknown, options?: { signal?: AbortSignal }): Promise<ModelOutput>;
+
+  /**
+   * Stream the model response token-by-token.
+   *
+   * @param input - Prompt string or array of chat messages.
+   * @param options - Optional configuration (e.g. `signal` for cancellation).
+   * @returns An async iterable of output chunks.
+   */
+  stream(input: unknown, options?: { signal?: AbortSignal }): Promise<AsyncIterable<ModelOutput>>;
 }
 
 /**

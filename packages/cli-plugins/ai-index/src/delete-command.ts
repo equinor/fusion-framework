@@ -1,7 +1,8 @@
 import { createCommand, createOption } from 'commander';
 
-import { setupFramework } from '@equinor/fusion-framework-cli-plugin-ai-base';
+import { loadFusionAIConfig, setupFramework } from '@equinor/fusion-framework-cli-plugin-ai-base';
 import { withOptions as withAiOptions } from '@equinor/fusion-framework-cli-plugin-ai-base/command-options';
+import type { FusionAIConfigWithIndex } from './config.js';
 
 import { DeleteOptionsSchema, type DeleteOptions } from './delete-command.options.js';
 
@@ -59,6 +60,7 @@ function buildFilter(sources: string[], rawFilter?: string): string | undefined 
  */
 const _command = createCommand('remove')
   .description('Remove documents from the search index by source path or OData filter')
+  .addOption(createOption('--config <config>', 'Path to a config file').default('fusion-ai.config'))
   .addOption(
     createOption('--dry-run', 'Preview matching documents without deleting them').default(false),
   )
@@ -69,6 +71,21 @@ const _command = createCommand('remove')
     ),
   )
   .argument('[source-paths...]', 'Relative file paths whose indexed chunks should be removed')
+  .hook('preAction', async (thisCommand) => {
+    const opts = thisCommand.opts();
+    const config = await loadFusionAIConfig<FusionAIConfigWithIndex>(
+      (opts.config as string) ?? 'fusion-ai.config',
+      { baseDir: process.cwd() },
+    );
+    const indexConfig = config.index ?? {};
+
+    if (indexConfig.name && !opts.indexName?.trim()) {
+      thisCommand.setOptionValue('indexName', indexConfig.name);
+    }
+    if (indexConfig.model && !opts.embedModel?.trim()) {
+      thisCommand.setOptionValue('embedModel', indexConfig.model);
+    }
+  })
   .action(async (sources: string[], commandOptions: DeleteOptions) => {
     const options = await DeleteOptionsSchema.parseAsync(commandOptions);
     const filterExpression = buildFilter(sources, options.filter);
@@ -95,7 +112,7 @@ const _command = createCommand('remove')
     }
 
     const framework = await setupFramework(options);
-    const vectorStoreService = framework.ai.getService('search', options.azureSearchIndexName);
+    const vectorStoreService = framework.ai.useIndex(options.indexName);
     await vectorStoreService.deleteDocuments({
       filter: { filterExpression },
     });

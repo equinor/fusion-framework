@@ -1,90 +1,48 @@
 import type { ConfigBuilderCallback } from '@equinor/fusion-framework-module';
-import type { IModel, IEmbed, IVectorStore } from './lib/types.js';
+import type { Strategy } from './lib/strategies/types.js';
 
 /**
- * A service instance **or** a factory function that lazily creates one.
+ * Configuration shape produced by the Fusion AI module builder.
  *
- * When a factory ({@link ConfigBuilderCallback}) is supplied, it receives
- * {@link ConfigBuilderCallbackArgs} at resolution time so it can depend on
- * environment variables, other modules, or async setup.
- *
- * @template T - The service type to provide (e.g. {@link IModel}, {@link IEmbed}).
- */
-export type ValueOrCallback<T> = T | ConfigBuilderCallback<T>;
-
-/**
- * Resolved AI module configuration produced by {@link AIConfigurator}.
- *
- * Each record maps a user-chosen identifier to the fully-resolved service
- * instance.  This object is consumed by {@link AIProvider} at module
- * initialisation.
+ * This is the resolved configuration object passed to {@link AiProvider}.
+ * Consumer code typically does not interact with this type directly — use
+ * {@link IAIConfigurator} to configure the module and {@link IAiProvider} to
+ * consume it at runtime.
  */
 export type AIModuleConfig = {
-  /** Language model services keyed by identifier */
-  models?: Record<string, IModel>;
-  /** Text-embedding services keyed by identifier */
-  embeddings?: Record<string, IEmbed>;
-  /** Vector store (document search) services keyed by identifier */
-  vectorStores?: Record<string, IVectorStore>;
+  /** Resolved strategies for model, embed, and index operations. */
+  strategies: Strategy[];
 };
 
 /**
- * Resolves a service category key from {@link AIModuleConfig} to its concrete
- * service interface.
+ * Public interface for the Fusion AI module configurator.
  *
- * @template T - The `AIModuleConfig` key (`'models'`, `'embeddings'`, or `'vectorStores'`).
- */
-export type ConfiguredService<T extends keyof AIModuleConfig> = T extends 'models'
-  ? IModel
-  : T extends 'embeddings'
-    ? IEmbed
-    : T extends 'vectorStores'
-      ? IVectorStore
-      : never;
-
-/**
- * Fluent configuration interface for the Fusion AI module.
+ * Use this interface to reference the configurator in framework configuration
+ * callbacks without depending on the concrete {@link AiConfigurator} class.
  *
- * Implementations provide methods to register language models, embedding
- * services, and vector stores by identifier.  Each service can be supplied
- * either as a ready-to-use instance (eager initialisation) or as a factory
- * function (lazy initialisation).
+ * @example
+ * ```typescript
+ * import { enableAI } from '@equinor/fusion-framework-module-ai';
+ * import type { IAIConfigurator } from '@equinor/fusion-framework-module-ai';
+ *
+ * enableAI(config, (ai: IAIConfigurator) => {
+ *   ai.addStrategy(myCustomEmbedStrategy);
+ * });
+ * ```
  */
 export interface IAIConfigurator {
   /**
-   * Register a language model service.
+   * Register a strategy with the AI module configurator.
    *
-   * @param identifier - Unique name used to retrieve the model at runtime.
-   * @param modelOrFactory - An {@link IModel} instance or a factory that creates one.
-   * @returns This configurator for method chaining.
-   */
-  setModel(identifier: string, modelOrFactory: ValueOrCallback<IModel>): this;
-
-  /**
-   * Register a text-embedding service.
+   * Strategies can be provided as a ready-to-use instance (eager init) or as a
+   * `ConfigBuilderCallback` factory that resolves the strategy during the module
+   * initialise phase (lazy init).
    *
-   * @param identifier - Unique name used to retrieve the embedding service at runtime.
-   * @param embeddingOrFactory - An {@link IEmbed} instance or a factory that creates one.
-   * @returns This configurator for method chaining.
-   */
-  setEmbedding(identifier: string, embeddingOrFactory: ValueOrCallback<IEmbed>): this;
-
-  /**
-   * Register a vector store (document search) service.
+   * Multiple strategies of a given type can coexist; {@link AiProvider} selects
+   * the active strategy by name when a method such as `useModel` is called.
    *
-   * @param identifier - Unique name used to retrieve the vector store at runtime.
-   * @param vectorStoreOrFactory - An {@link IVectorStore} instance or a factory that creates one.
-   * @returns This configurator for method chaining.
+   * @param strategy - A strategy instance or async factory callback.
+   * @returns `this` for fluent chaining.
    */
-  setVectorStore(identifier: string, vectorStoreOrFactory: ValueOrCallback<IVectorStore>): this;
-
-  /**
-   * Retrieve a previously registered service by category and identifier.
-   *
-   * @template T - The service category key.
-   * @param type - Service category (`'models'`, `'embeddings'`, or `'vectorStores'`).
-   * @param identifier - The identifier supplied when the service was registered.
-   * @returns The service instance (or factory) registered under the given key.
-   */
-  getService<T extends keyof AIModuleConfig>(type: T, identifier: string): ConfiguredService<T>;
+  addStrategy(strategy: Strategy | ConfigBuilderCallback<Strategy>): this;
 }

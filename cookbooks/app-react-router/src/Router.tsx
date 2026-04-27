@@ -7,7 +7,7 @@ import { useAppModule } from '@equinor/fusion-framework-react-app';
 import routes from './routes';
 import { Api } from './api';
 
-export default function () {
+export default function AppRouter() {
   const httpProvider = useAppModule('http');
   const [queryClient] = useState(() => new QueryClient());
   const [api] = useState(() => new Api(queryClient, httpProvider));

@@ -1,5 +1,6 @@
 import type { VectorStoreDocument } from '@equinor/fusion-framework-module-ai/lib';
 import type { FusionAIConfig } from '@equinor/fusion-framework-cli-plugin-ai-base';
+import type { IndexSchemaConfig } from './schema.js';
 
 /**
  * Index-specific configuration for Fusion AI document indexing operations.
@@ -55,7 +56,21 @@ export interface IndexConfig {
     chunkSize?: number;
     /** Number of overlapping tokens between consecutive chunks. */
     chunkOverlap?: number;
+    /** Explicit vector dimensions for custom embedding models not in the known model map. */
+    dimensions?: number;
   };
+
+  /**
+   * Custom index schema that promotes frequently-filtered metadata to
+   * top-level Azure AI Search fields.
+   *
+   * When defined, the schema resolver runs after metadata enrichment and
+   * places resolved values as top-level document fields in Azure Search,
+   * enabling direct OData filters without the `any()` operator.
+   *
+   * @see {@link IndexSchemaConfig} for details and examples.
+   */
+  schema?: IndexSchemaConfig;
 }
 
 /**

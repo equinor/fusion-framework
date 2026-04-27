@@ -15,6 +15,7 @@ export { SearchClient as AzureSearchClient } from '@azure/search-documents';
 export { AzureOpenAIModel } from './AzureOpenAIModel.js';
 export { AzureOpenAiEmbed } from './AzureOpenAiEmbed.js';
 export { AzureVectorStore, type AzureDocument } from './AzureVectorStore.js';
+export { FusionSearchClient, type FusionSearchCredential } from './FusionSearchClient.js';
 
 // Export configuration types
 export type { AzureOpenAIModelConfig } from './AzureOpenAIModel.js';

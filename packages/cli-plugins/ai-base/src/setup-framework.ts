@@ -1,107 +1,102 @@
-import { enableAI, type IAIConfigurator, type AIModule } from '@equinor/fusion-framework-module-ai';
+import { enableAI } from '@equinor/fusion-framework-module-ai';
+import type { AIModule } from '@equinor/fusion-framework-module-ai';
 
-import {
-  AzureOpenAiEmbed,
-  AzureOpenAIModel,
-  AzureVectorStore,
-} from '@equinor/fusion-framework-module-ai/azure';
-
+import { initializeFramework, FusionEnv } from '@equinor/fusion-framework-cli/bin';
+import type { FusionFrameworkSettings, FusionFramework } from '@equinor/fusion-framework-cli/bin';
 import type { AiOptions } from './options/index.js';
-import { ModulesConfigurator, type ModulesInstance } from '@equinor/fusion-framework-module';
+
+import { execFileSync } from 'node:child_process';
+
+/** Initialized framework instance with the AI module. */
+export type FrameworkInstance = FusionFramework<[AIModule]>;
 
 /**
- * Framework instance with AI module capabilities.
+ * Check whether an error (possibly wrapped in a cause chain) is an
+ * authentication-related failure that may be recoverable via interactive login.
  *
- * This type represents an initialized Fusion Framework instance that includes
- * the AI module, providing access to chat models, embedding services, and
- * vector stores configured via the setup process.
+ * @internal
  */
-export type FrameworkInstance = ModulesInstance<[AIModule]>;
+const isAuthError = (error: unknown): boolean => {
+  let current: unknown = error;
+  while (current) {
+    if (current instanceof Error) {
+      if (
+        current.name === 'NoAccountsError' ||
+        current.name === 'SilentTokenAcquisitionError' ||
+        current.message.includes('No accounts found')
+      ) {
+        return true;
+      }
+    }
+    current = (current as { cause?: unknown }).cause;
+  }
+  return false;
+};
 
 /**
- * Initializes and configures the Fusion Framework with AI module capabilities.
+ * Creates a Fusion Framework instance with the AI module enabled.
  *
- * Sets up the framework with Azure OpenAI chat models, embedding services, and
- * optionally Azure Cognitive Search vector stores. The function handles the complete
- * initialization process including service registration and dependency injection.
+ * Initialises the Fusion Framework with service discovery and MSAL auth,
+ * resolves the `'ai'` service endpoint, and pre-caches a bearer token.
+ * If MSAL has no cached credentials, the CLI's interactive `auth login`
+ * flow is spawned automatically before retrying.
  *
- * @param options - AI configuration options
- * @param options.openaiApiKey - Azure OpenAI API key for authentication
- * @param options.openaiApiVersion - Azure OpenAI API version (e.g., '2024-02-15-preview')
- * @param options.openaiInstance - Azure OpenAI instance name
- * @param options.openaiChatDeployment - Optional chat model deployment name
- * @param options.openaiEmbeddingDeployment - Optional embedding model deployment name
- * @param options.azureSearchEndpoint - Optional Azure Search service endpoint URL
- * @param options.azureSearchApiKey - Optional Azure Search API key
- * @param options.azureSearchIndexName - Optional Azure Search index name
- * @returns Promise resolving to an initialized framework instance with AI module configured
- * @throws {Error} If embedding deployment is required but not provided when configuring vector store
- * @throws {Error} If embedding service cannot be retrieved for vector store configuration
+ * @param options - CLI options resolved by {@link withOptions}.
+ * @returns A fully initialised framework instance with the AI module.
+ * @throws {Error} When authentication fails after the interactive retry.
  */
-export const setupFramework = async (options: AiOptions): Promise<FrameworkInstance> => {
-  // Create a new module configurator for the framework
-  const configurator = new ModulesConfigurator<[AIModule]>();
+export const setupFramework = async (options: AiOptions): Promise<FusionFramework<[AIModule]>> => {
+  // Service-discovery mode: resolve URL + scopes from Fusion service registry
+  const auth: FusionFrameworkSettings['auth'] = options.token
+    ? { token: options.token }
+    : {
+        tenantId: options.tenantId ?? '3aa4a235-b6e2-48d5-9195-7fcf05b459b0',
+        clientId: options.clientId ?? 'a318b8e1-0295-4e17-98d5-35f67dfeba14',
+      };
 
-  // Configure AI module with provided options
-  enableAI(configurator, (aiConfig: IAIConfigurator) => {
-    // Configure chat model if deployment name is provided
-    if (options.openaiChatDeployment) {
-      aiConfig.setModel(
-        options.openaiChatDeployment,
-        new AzureOpenAIModel({
-          azureOpenAIApiKey: options.openaiApiKey,
-          azureOpenAIApiDeploymentName: options.openaiChatDeployment,
-          azureOpenAIApiInstanceName: options.openaiInstance,
-          azureOpenAIApiVersion: options.openaiApiVersion,
-        }),
+  const env = (options.env as FusionEnv) ?? FusionEnv.ContinuesIntegration;
+
+  /** Initialise the framework, resolve the AI service, and pre-cache tokens. */
+  const initAndSetup = async (): Promise<FusionFramework<[AIModule]>> => {
+    const framework = await initializeFramework<[AIModule]>({ env, auth }, (configurator) => {
+      enableAI(configurator);
+    });
+
+    // resolveService makes an authenticated HTTP call — will throw
+    // NoAccountsError if the user has never logged in.
+    const service = await framework.serviceDiscovery.resolveService('ai');
+    const scopes = service.scopes ?? service.defaultScopes ?? [];
+
+    // Pre-cache a token for the AI service scopes so strategy callbacks
+    // don't attempt (and fail) a silent acquisition later.
+    const token = await framework.auth.acquireAccessToken({ request: { scopes } });
+    if (!token) throw new Error('Failed to acquire access token for the AI service.');
+
+    return framework;
+  };
+
+  try {
+    return await initAndSetup();
+  } catch (error: unknown) {
+    // If the failure is auth-related and we're not using a static token,
+    // spawn the CLI's own `auth login` (starts local server + browser)
+    // and retry the full init sequence.
+    if (!isAuthError(error) || options.token) throw error;
+
+    const cliEntry = process.argv[1];
+    if (!cliEntry) {
+      throw new Error(
+        'Failed to acquire access token and could not determine CLI path for interactive login.',
       );
     }
 
-    // Configure embedding model if deployment name is provided
-    if (options.openaiEmbeddingDeployment) {
-      aiConfig.setEmbedding(
-        options.openaiEmbeddingDeployment,
-        new AzureOpenAiEmbed({
-          azureOpenAIApiKey: options.openaiApiKey,
-          azureOpenAIApiDeploymentName: options.openaiEmbeddingDeployment,
-          azureOpenAIApiInstanceName: options.openaiInstance,
-          azureOpenAIApiVersion: options.openaiApiVersion,
-        }),
-      );
-    }
+    console.log('No cached credentials — launching interactive login…');
+    execFileSync(process.execPath, [cliEntry, 'auth', 'login'], {
+      stdio: 'inherit',
+    });
 
-    // Configure vector store if Azure Search options are provided
-    // Vector store requires an embedding service to generate embeddings for documents
-    if (options.azureSearchEndpoint && options.azureSearchApiKey && options.azureSearchIndexName) {
-      if (!options.openaiEmbeddingDeployment) {
-        throw new Error('Embedding deployment is required to configure the vector store');
-      }
-
-      // Retrieve the embedding service to pass to the vector store
-      // The vector store uses embeddings to index and search documents
-      const embeddingService = aiConfig.getService('embeddings', options.openaiEmbeddingDeployment);
-
-      // Check that the embedding service was successfully retrieved
-      if (!embeddingService) {
-        throw new Error(
-          `Embedding service '${options.openaiEmbeddingDeployment}' not found for vector store configuration`,
-        );
-      }
-
-      aiConfig.setVectorStore(
-        options.azureSearchIndexName,
-        new AzureVectorStore(embeddingService, {
-          endpoint: options.azureSearchEndpoint,
-          key: options.azureSearchApiKey,
-          indexName: options.azureSearchIndexName,
-        }),
-      );
-    }
-  });
-
-  // Initialize the framework with all configured modules
-  const framework = await configurator.initialize();
-  return framework;
+    return await initAndSetup();
+  }
 };
 
 export default setupFramework;
