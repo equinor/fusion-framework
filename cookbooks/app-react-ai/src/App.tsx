@@ -5,10 +5,7 @@ import {
   ComposerPrimitive,
 } from '@assistant-ui/react';
 import type { TextMessagePartComponent } from '@assistant-ui/react';
-import {
-  MarkdownTextPrimitive,
-  type SyntaxHighlighterProps,
-} from '@assistant-ui/react-markdown';
+import { MarkdownTextPrimitive, type SyntaxHighlighterProps } from '@assistant-ui/react-markdown';
 import { Prism as SyntaxHighlighterImpl } from 'react-syntax-highlighter';
 import { oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { useFusionAiRuntime } from './useFusionAiRuntime';
@@ -18,12 +15,7 @@ const SyntaxHighlighter = ({
   code,
   components: { Pre, Code },
 }: SyntaxHighlighterProps) => (
-  <SyntaxHighlighterImpl
-    language={language}
-    style={oneLight}
-    PreTag={Pre}
-    CodeTag={Code}
-  >
+  <SyntaxHighlighterImpl language={language} style={oneLight} PreTag={Pre} CodeTag={Code}>
     {code}
   </SyntaxHighlighterImpl>
 );
@@ -33,12 +25,8 @@ const MarkdownText: TextMessagePartComponent = () => (
 );
 
 const Thread = () => (
-  <ThreadPrimitive.Root
-    style={{ height: '100%', display: 'flex', flexDirection: 'column' }}
-  >
-    <ThreadPrimitive.Viewport
-      style={{ flex: 1, overflowY: 'auto', padding: '1rem' }}
-    >
+  <ThreadPrimitive.Root style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+    <ThreadPrimitive.Viewport style={{ flex: 1, overflowY: 'auto', padding: '1rem' }}>
       <ThreadPrimitive.Empty>
         <div
           style={{
@@ -54,8 +42,7 @@ const Thread = () => (
           <span style={{ fontSize: '2rem' }}>⚙️</span>
           <h2 style={{ margin: 0, color: '#111827' }}>FusionBot</h2>
           <p style={{ margin: 0, maxWidth: '20rem', textAlign: 'center' }}>
-            Ask me about Fusion Framework APIs, modules, hooks, patterns,
-            or Fusion Core Services.
+            Ask me about Fusion Framework APIs, modules, hooks, patterns, or Fusion Core Services.
           </p>
         </div>
       </ThreadPrimitive.Empty>
@@ -86,9 +73,7 @@ const Thread = () => (
                 maxWidth: '80%',
               }}
             >
-              <MessagePrimitive.Content
-                components={{ Text: MarkdownText }}
-              />
+              <MessagePrimitive.Content components={{ Text: MarkdownText }} />
             </MessagePrimitive.Root>
           ),
         }}

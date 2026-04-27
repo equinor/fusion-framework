@@ -72,7 +72,7 @@ jobs:
           echo "::notice::Latest EDS release: ${latest_tag}"
           echo "eds_ref=${latest_tag}" >> "$GITHUB_OUTPUT"
           echo "skip=false" >> "$GITHUB_OUTPUT"
-          echo "environment=eds-index" >> "$GITHUB_OUTPUT"
+          echo "environment=docs" >> "$GITHUB_OUTPUT"
 
       - name: Summary
         if: steps.resolve.outputs.skip != 'true'
@@ -125,6 +125,7 @@ jobs:
     environment: ${{ needs.resolve-ref.outputs.environment }}
     permissions:
       contents: write
+      id-token: write
     steps:
       - uses: actions/checkout@v6
         with:
@@ -145,14 +146,31 @@ jobs:
       - name: Install built CLI
         run: pnpm install -w ./packages/cli
 
+      - name: Read index name from config
+        id: index
+        run: |
+          index_name=$(node -e "import('$CONFIG_PATH').then(m => console.log(m.default.index.name))")
+          echo "name=${index_name}" >> "$GITHUB_OUTPUT"
+          echo "::notice::Index name: ${index_name}"
+
+      - name: Azure login (OIDC)
+        uses: azure/login@v2
+        with:
+          client-id: ${{ vars.FUSION_AI_SERVICE_SP }}
+          tenant-id: 3aa4a235-b6e2-48d5-9195-7fcf05b459b0
+          allow-no-subscriptions: true
+
+      - name: Acquire Fusion token
+        run: |
+          token=$(az account get-access-token \
+            --scope 5a842df8-3238-415d-b168-9f16a6a6031b/.default \
+            --query accessToken --output tsv)
+          echo "::add-mask::${token}"
+          echo "FUSION_TOKEN=${token}" >> "$GITHUB_ENV"
+
       - name: Index EDS docs to Azure AI Search
         timeout-minutes: 10
         env:
-          AZURE_OPENAI_API_KEY: ${{ secrets.AZURE_OPENAI_API_KEY }}
-          AZURE_OPENAI_API_VERSION: ${{ vars.AZURE_OPENAI_API_VERSION }}
-          AZURE_OPENAI_INSTANCE_NAME: ${{ vars.AZURE_OPENAI_INSTANCE_NAME }}
-          AZURE_SEARCH_ENDPOINT: ${{ vars.AZURE_SEARCH_ENDPOINT }}
-          AZURE_SEARCH_API_KEY: ${{ secrets.AZURE_SEARCH_API_KEY }}
           INPUT_CLEAN: ${{ inputs.clean }}
         run: |
           set -euo pipefail
@@ -183,7 +201,7 @@ jobs:
         env:
           EDS_REF: ${{ needs.resolve-ref.outputs.eds_ref }}
           EXECUTION_STATUS: ${{ job.status }}
-          SEARCH_INDEX_NAME: ${{ vars.AZURE_SEARCH_INDEX_NAME }}
+          SEARCH_INDEX_NAME: ${{ steps.index.outputs.name }}
         run: |
           set -euo pipefail
 

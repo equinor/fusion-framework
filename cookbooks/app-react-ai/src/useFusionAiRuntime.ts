@@ -38,7 +38,6 @@ function extractText(content: string | Array<Record<string, unknown>>): string {
   return '';
 }
 
-
 /**
  * Creates an assistant-ui runtime backed by the Fusion AI module.
  *
@@ -88,7 +87,7 @@ export const useFusionAiRuntime = (model?: string) => {
         ];
 
         /** Execute tool calls (non-streaming) until the model stops requesting tools. */
-        let response = await modelWithTools.invoke(langchainMessages, {signal: abortSignal});
+        let response = await modelWithTools.invoke(langchainMessages, { signal: abortSignal });
 
         while (response.tool_calls && response.tool_calls.length > 0) {
           langchainMessages.push(new AIMessage(response));
@@ -96,10 +95,12 @@ export const useFusionAiRuntime = (model?: string) => {
           for (const tc of response.tool_calls) {
             const fn = toolMap.get(tc.name);
             const result = fn ? await fn.invoke(tc.args) : `Unknown tool: ${tc.name}`;
-            langchainMessages.push(new ToolMessage({ content: String(result), tool_call_id: tc.id ?? tc.name }));
+            langchainMessages.push(
+              new ToolMessage({ content: String(result), tool_call_id: tc.id ?? tc.name }),
+            );
           }
 
-          response = await modelWithTools.invoke(langchainMessages, {signal: abortSignal});
+          response = await modelWithTools.invoke(langchainMessages, { signal: abortSignal });
         }
 
         /** Stream the final text response token-by-token. */
