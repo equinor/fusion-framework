@@ -52,8 +52,10 @@ jobs:
         with:
           node-version: 24
 
-      - name: Install CLI from registry
-        run: pnpm install --filter . --prod
+      - name: Install dependencies and build CLI
+        run: |
+          pnpm install
+          pnpm build:cli
 
       - name: Resolve index config
         id: index
