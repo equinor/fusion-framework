@@ -163,14 +163,7 @@ jobs:
           node-version: 24
 
       - name: Install CLI from registry
-        run: |
-          pnpm add -g \
-            @equinor/fusion-framework-cli \
-            @equinor/fusion-framework-cli-plugin-ai-index \
-            @equinor/fusion-framework-cli-plugin-ai-chat \
-            @equinor/fusion-framework-cli-plugin-copilot \
-            zod
-          echo "NODE_PATH=$(pnpm root -g)" >> "$GITHUB_ENV"
+        run: pnpm install --filter . --prod
 
       - name: Read index name from config
         id: index
@@ -200,7 +193,7 @@ jobs:
       - name: Ensure index exists
         env:
           FUSION_ENV: ${{ vars.FUSION_ENV }}
-        run: ffc ai index create --env "$FUSION_ENV" --config "$CONFIG_PATH"
+        run: pnpm exec ffc ai index create --env "$FUSION_ENV" --config "$CONFIG_PATH"
 
       - name: Index EDS docs to Azure AI Search
         timeout-minutes: 10
@@ -212,10 +205,10 @@ jobs:
 
           if [[ "${INPUT_CLEAN:-false}" == "true" ]]; then
             echo "::notice::Running clean rebuild — deleting existing EDS embeddings first"
-            ffc ai index add --clean --env "$FUSION_ENV" --config "$CONFIG_PATH"
+            pnpm exec ffc ai index add --clean --env "$FUSION_ENV" --config "$CONFIG_PATH"
           else
             echo "::notice::Running full EDS indexing"
-            ffc ai index add --env "$FUSION_ENV" --config "$CONFIG_PATH"
+            pnpm exec ffc ai index add --env "$FUSION_ENV" --config "$CONFIG_PATH"
           fi
 
       - name: Configure git user
