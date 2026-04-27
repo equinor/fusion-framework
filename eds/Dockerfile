@@ -25,13 +25,15 @@ RUN pnpm build:tokens-build \
     && pnpm build:storybook
 
 # ── Stage 2: Extract LLM docs from the Storybook build ──
-# Playwright is required by @fluentui/storybook-llms-extractor to render stories.
-FROM mcr.microsoft.com/playwright:v1.58.2-noble AS extractor
+# Use a base image with system deps for Playwright; browser binaries are
+# installed at npm-install time so the image version never drifts out of sync.
+FROM node:24-bookworm AS extractor
 
 WORKDIR /app
 COPY --from=build /app/packages/eds-core-react/storybook-build ./storybook-build
 
 RUN npm install @fluentui/storybook-llms-extractor@0.0.4
+RUN npx playwright install --with-deps chromium
 RUN npx storybook-llms-extractor --distPath ./storybook-build
 RUN cd ./storybook-build/llms && for f in *.txt; do mv "$f" "${f%.txt}.md"; done
 
