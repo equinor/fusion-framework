@@ -102,7 +102,7 @@ jobs:
           fi
 
       - name: Azure login (OIDC)
-        uses: azure/login@v2
+        uses: azure/login@v3
         with:
           client-id: ${{ vars.FUSION_AI_SP_CLIENT_ID }}
           tenant-id: 3aa4a235-b6e2-48d5-9195-7fcf05b459b0
