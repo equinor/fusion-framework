@@ -1,5 +1,34 @@
 # @equinor/fusion-framework-module-ai
 
+## 4.0.0
+
+### Major Changes
+
+- ece8f42: **BREAKING:** Replace direct Azure API key configuration with Fusion service discovery and MSAL authentication.
+
+  The AI module now uses a strategy pattern (`ModelStrategy`, `EmbedStrategy`, `IndexStrategy`) configured via `addStrategy()` on the `AiConfigurator`. The provider exposes `useModel()`, `useEmbed()`, and `useIndex()` methods that resolve strategies by deployment name.
+
+  A new `FusionSearchClient` handles OData path rewriting for the Fusion AI proxy, and factory functions `createFusionAiModelStrategy`, `createFusionAiEmbedStrategy`, and `createFusionAiIndexStrategy` simplify strategy creation with automatic token acquisition and service endpoint resolution.
+
+  ```typescript
+  // Before
+  configurator.setModel("chat", new AzureOpenAIModel({ apiKey, endpoint }));
+  const model = provider.getService("chat", "my-model");
+
+  // After — default Fusion strategies are registered automatically
+  const model = provider.useModel("gpt-5.1-chat");
+  ```
+
+  Closes: https://github.com/equinor/fusion-framework/issues/1008
+
+### Minor Changes
+
+- ece8f42: Add `schemaFields` to `VectorStoreDocumentMetadata` and direct-write path in `AzureVectorStore`.
+
+  When documents carry `metadata.schemaFields`, the Azure vector store bypasses LangChain's hardcoded document shape and writes promoted fields as top-level Azure Search properties via the search client. Reserved field names (`id`, `content`, `content_vector`, `metadata`) are automatically stripped to prevent collisions. Mixed embedding batches (partially pre-computed) are handled efficiently by only computing embeddings for documents that lack them.
+
+  ref: equinor/fusion-core-tasks#1011
+
 ## 3.0.1
 
 ### Patch Changes

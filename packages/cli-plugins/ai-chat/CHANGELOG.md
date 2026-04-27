@@ -1,5 +1,21 @@
 # @equinor/fusion-framework-cli-plugin-ai-chat
 
+## 2.1.0
+
+### Minor Changes
+
+- ece8f42: Internal: update chat plugin to use Fusion service discovery and strategy-based AI module. No public API changes to the chat command itself.
+
+  Ref: https://github.com/equinor/fusion-framework/issues/1008
+
+### Patch Changes
+
+- Updated dependencies [ece8f42]
+- Updated dependencies [ece8f42]
+- Updated dependencies [ece8f42]
+  - @equinor/fusion-framework-cli-plugin-ai-base@3.0.0
+  - @equinor/fusion-framework-module-ai@4.0.0
+
 ## 2.0.1
 
 ### Patch Changes

@@ -1,5 +1,21 @@
 # @equinor/fusion-framework-cli-plugin-ai-base
 
+## 3.0.0
+
+### Major Changes
+
+- ece8f42: **BREAKING:** Replace Azure API key options with Fusion service discovery options.
+
+  CLI options now use `--env`, `--token`, `--tenant-id`, `--client-id`, `--chat-model`, `--embed-model`, and `--index-name` instead of `--openai-api-key`, `--openai-instance`, `--azure-search-endpoint`, etc. The `setupFramework` function bootstraps MSAL authentication and resolves the AI service endpoint via Fusion service discovery.
+
+  Ref: https://github.com/equinor/fusion-framework/issues/1008
+
+### Patch Changes
+
+- Updated dependencies [ece8f42]
+- Updated dependencies [ece8f42]
+  - @equinor/fusion-framework-module-ai@4.0.0
+
 ## 2.0.1
 
 ### Patch Changes

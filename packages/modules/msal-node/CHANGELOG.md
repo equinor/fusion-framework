@@ -1,5 +1,15 @@
 # @equinor/fusion-framework-module-msal-node
 
+## 4.1.0
+
+### Minor Changes
+
+- ece8f42: Add `device_code` authentication mode for interactive CLI login.
+
+  The new `AuthProviderDeviceCode` class prompts the user to visit a URL and enter a code, then exchanges it for tokens. This enables CLI tools to authenticate without a client secret, using the standard MSAL device code flow.
+
+  Ref: https://github.com/equinor/fusion-framework/issues/1008
+
 ## 4.0.2
 
 ### Patch Changes

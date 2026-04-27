@@ -1,9 +1,18 @@
 export { fusionAiStrategy } from './create-fusion-strategy.js';
 export type { FusionAiStrategyFactory, FusionAiStrategyModules } from './create-fusion-strategy.js';
 
-export { FUSION_EMBED_STRATEGY_NAME, createFusionAiEmbedStrategy } from './fusion-embed.strategy.js';
-export { FUSION_INDEX_STRATEGY_NAME, createFusionAiIndexStrategy } from './fusion-index.strategy.js';
-export { FUSION_MODEL_STRATEGY_NAME, createFusionAiModelStrategy } from './fusion-model.strategy.js';
+export {
+  FUSION_EMBED_STRATEGY_NAME,
+  createFusionAiEmbedStrategy,
+} from './fusion-embed.strategy.js';
+export {
+  FUSION_INDEX_STRATEGY_NAME,
+  createFusionAiIndexStrategy,
+} from './fusion-index.strategy.js';
+export {
+  FUSION_MODEL_STRATEGY_NAME,
+  createFusionAiModelStrategy,
+} from './fusion-model.strategy.js';
 
 // ── Deprecated aliases (old names without "Ai" infix) ──────────────────────
 /** @deprecated Use {@link fusionAiStrategy} instead. */
