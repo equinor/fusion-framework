@@ -3,10 +3,6 @@ name: Index Docs
 on:
   workflow_call:
     inputs:
-      tag_name:
-        description: Git tag used to track the last indexed commit
-        type: string
-        required: true
       environment:
         description: GitHub environment containing the indexing configuration
         type: string
@@ -18,10 +14,6 @@ on:
         required: false
   workflow_dispatch:
     inputs:
-      tag_name:
-        description: Git tag used to track the last indexed commit
-        type: string
-        required: true
       environment:
         description: GitHub environment containing the indexing configuration
         type: string
@@ -32,67 +24,76 @@ on:
         default: false
         required: false
 
-env:
-  TAG_NAME: ${{ inputs.tag_name }}
-
 concurrency:
-  group: index-docs-${{ inputs.environment }}-${{ inputs.tag_name }}
+  group: index-docs-${{ inputs.environment }}
   cancel-in-progress: false
 
 permissions:
   contents: read
 
 jobs:
-  determine-mode:
-    name: Determine indexing mode
+  index-docs:
+    name: Index documentation
+    environment: ${{ inputs.environment }}
     runs-on: ubuntu-latest
-    outputs:
-      mode: ${{ steps.mode.outputs.mode }}
-      base_ref: ${{ steps.mode.outputs.base_ref }}
-      reason: ${{ steps.mode.outputs.reason }}
+    permissions:
+      contents: write
+      id-token: write
     steps:
-      - name: Validate inputs
-        env:
-          INPUT_TAG_NAME: ${{ inputs.tag_name }}
-          INPUT_ENVIRONMENT: ${{ inputs.environment }}
-        run: |
-          set -euo pipefail
-
-          if [[ -z "$INPUT_TAG_NAME" ]]; then
-            echo "::error::Input 'tag_name' is required."
-            exit 1
-          fi
-
-          if [[ -z "$INPUT_ENVIRONMENT" ]]; then
-            echo "::error::Input 'environment' is required."
-            exit 1
-          fi
-
       - uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
-      - name: Fetch tags
-        run: git fetch origin tag ${{ env.TAG_NAME }} || true
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Install CLI from registry
+        run: >-
+          pnpm add -g
+          @equinor/fusion-framework-cli
+          @equinor/fusion-framework-cli-plugin-ai-index
+          @equinor/fusion-framework-cli-plugin-ai-chat
+          @equinor/fusion-framework-cli-plugin-copilot
+
+      - name: Resolve index config
+        id: index
+        run: |
+          set -euo pipefail
+          index_name=$(node -e "import('./fusion-ai.config.ts').then(m => console.log(m.default.index.name))")
+          tag_name="${index_name}/${GITHUB_REF_NAME}"
+          echo "name=${index_name}" >> "$GITHUB_OUTPUT"
+          echo "tag_name=${tag_name}" >> "$GITHUB_OUTPUT"
+          echo "::notice::Index name: ${index_name}"
+          echo "::notice::Tracking tag: ${tag_name}"
 
       - name: Determine indexing mode
         id: mode
+        env:
+          TAG_NAME: ${{ steps.index.outputs.tag_name }}
+          CLEAN: ${{ inputs.clean_embeddings }}
         run: |
           set -euo pipefail
 
-          if [[ "${{ inputs.clean_embeddings }}" == "true" ]]; then
+          git fetch origin "tag" "$TAG_NAME" 2>/dev/null || true
+
+          if [[ "$CLEAN" == "true" ]]; then
             echo "mode=clean" >> "$GITHUB_OUTPUT"
             echo "base_ref=" >> "$GITHUB_OUTPUT"
             echo "reason=Manual clean rebuild requested" >> "$GITHUB_OUTPUT"
             exit 0
           fi
 
-          last_indexed=$(git rev-parse ${{ env.TAG_NAME }}^{commit} 2>/dev/null || echo "")
+          last_indexed=$(git rev-parse "${TAG_NAME}^{commit}" 2>/dev/null || echo "")
 
           if [[ -z "$last_indexed" ]]; then
             echo "mode=full" >> "$GITHUB_OUTPUT"
             echo "base_ref=" >> "$GITHUB_OUTPUT"
-            echo "reason=No previous indexing state found" >> "$GITHUB_OUTPUT"
+            echo "reason=No previous indexing state found (tag ${TAG_NAME} does not exist)" >> "$GITHUB_OUTPUT"
           elif ! git merge-base --is-ancestor "$last_indexed" HEAD 2>/dev/null; then
             echo "mode=full" >> "$GITHUB_OUTPUT"
             echo "base_ref=" >> "$GITHUB_OUTPUT"
@@ -102,53 +103,6 @@ jobs:
             echo "base_ref=$last_indexed" >> "$GITHUB_OUTPUT"
             echo "reason=Incremental indexing from $last_indexed" >> "$GITHUB_OUTPUT"
           fi
-
-      - name: Summary
-        run: |
-          echo "### Indexing mode: ${{ steps.mode.outputs.mode }}"
-          echo "Reason: ${{ steps.mode.outputs.reason }}"
-          if [[ "${{ steps.mode.outputs.mode }}" == "diff" ]]; then
-            echo "Base ref: ${{ steps.mode.outputs.base_ref }}"
-          fi
-
-  index-docs:
-    name: Index documentation
-    environment: ${{ inputs.environment }}
-    runs-on: ubuntu-latest
-    needs: determine-mode
-    permissions:
-      contents: write
-      id-token: write
-    env:
-      MODE: ${{ needs.determine-mode.outputs.mode }}
-      BASE_REF: ${{ needs.determine-mode.outputs.base_ref }}
-    steps:
-      - uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
-
-      - name: Fetch tags
-        run: git fetch origin tag ${{ env.TAG_NAME }} || true
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 24
-
-      - name: Install CLI from registry
-        run: >-
-          npm install --no-save
-          @equinor/fusion-framework-cli
-          @equinor/fusion-framework-cli-plugin-ai-index
-          @equinor/fusion-framework-cli-plugin-ai-chat
-          @equinor/fusion-framework-cli-plugin-copilot
-
-      - name: Read index name from config
-        id: index
-        run: |
-          index_name=$(node -e "import('./fusion-ai.config.ts').then(m => console.log(m.default.index.name))")
-          echo "name=${index_name}" >> "$GITHUB_OUTPUT"
-          echo "::notice::Index name: ${index_name}"
 
       - name: Azure login (OIDC)
         uses: azure/login@v2
@@ -168,45 +122,51 @@ jobs:
       - name: Ensure index exists
         env:
           FUSION_ENV: ${{ vars.FUSION_ENV }}
-        run: npx ffc ai index create --env "$FUSION_ENV" --config ./fusion-ai.config.ts
+        run: ffc ai index create --env "$FUSION_ENV" --config ./fusion-ai.config.ts
 
       - name: Index docs to Azure AI Search
         timeout-minutes: 10
         env:
+          MODE: ${{ steps.mode.outputs.mode }}
+          BASE_REF: ${{ steps.mode.outputs.base_ref }}
           FUSION_ENV: ${{ vars.FUSION_ENV }}
         run: |
           set -euo pipefail
 
           if [[ "$MODE" == "clean" ]]; then
             echo "::notice::Running clean rebuild — all existing embeddings will be deleted first"
-            npx ffc ai index add --clean --env "$FUSION_ENV" --config ./fusion-ai.config.ts
+            ffc ai index add --clean --env "$FUSION_ENV" --config ./fusion-ai.config.ts
           elif [[ "$MODE" == "diff" ]]; then
             echo "::notice::Running incremental indexing from base ref ${BASE_REF}"
-            npx ffc ai index add --diff --base-ref "$BASE_REF" --env "$FUSION_ENV" --config ./fusion-ai.config.ts
+            ffc ai index add --diff --base-ref "$BASE_REF" --env "$FUSION_ENV" --config ./fusion-ai.config.ts
           else
             echo "::notice::Running full indexing (no safe base ref available)"
-            npx ffc ai index add --env "$FUSION_ENV" --config ./fusion-ai.config.ts
+            ffc ai index add --env "$FUSION_ENV" --config ./fusion-ai.config.ts
           fi
 
       - name: Configure git user
         if: success()
         uses: ./.github/actions/config-git-user
 
-      - name: Update last indexed commit tag
+      - name: Update tracking tag
         if: success()
+        env:
+          TAG_NAME: ${{ steps.index.outputs.tag_name }}
         run: |
           set -euo pipefail
+          git tag -f -m "last indexed commit for docs indexing" "$TAG_NAME" "$GITHUB_SHA"
+          git push origin "refs/tags/${TAG_NAME}" --force
 
-          git tag -f -m "last indexed commit for docs indexing" ${{ env.TAG_NAME }} ${{ github.sha }}
-          git push origin refs/tags/${{ env.TAG_NAME }} --force
-
-      - name: Write execution summary
+      - name: Execution summary
         if: always()
         env:
           EXECUTION_STATUS: ${{ job.status }}
           INDEX_ENVIRONMENT: ${{ inputs.environment }}
-          INDEX_REASON: ${{ needs.determine-mode.outputs.reason }}
+          MODE: ${{ steps.mode.outputs.mode }}
+          BASE_REF: ${{ steps.mode.outputs.base_ref }}
+          INDEX_REASON: ${{ steps.mode.outputs.reason }}
           SEARCH_INDEX_NAME: ${{ steps.index.outputs.name }}
+          TAG_NAME: ${{ steps.index.outputs.tag_name }}
         run: |
           set -euo pipefail
 
@@ -217,13 +177,13 @@ jobs:
           fi
 
           if [[ "$MODE" == "clean" ]]; then
-            command_summary='npx ffc ai index add --clean --env '"$FUSION_ENV"' --config ./fusion-ai.config.ts'
+            command_summary='ffc ai index add --clean --env '"$FUSION_ENV"' --config ./fusion-ai.config.ts'
             mode_summary='Clean rebuild executed after deleting existing embeddings.'
           elif [[ "$MODE" == "diff" ]]; then
-            command_summary="npx ffc ai index add --diff --base-ref $BASE_REF --env $FUSION_ENV --config ./fusion-ai.config.ts"
+            command_summary="ffc ai index add --diff --base-ref $BASE_REF --env $FUSION_ENV --config ./fusion-ai.config.ts"
             mode_summary='Incremental indexing ran against the tracked base ref.'
           else
-            command_summary='npx ffc ai index add --env '"$FUSION_ENV"' --config ./fusion-ai.config.ts'
+            command_summary='ffc ai index add --env '"$FUSION_ENV"' --config ./fusion-ai.config.ts'
             mode_summary='Full indexing ran because no safe incremental base ref was available.'
           fi
 

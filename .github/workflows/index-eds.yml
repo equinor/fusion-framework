@@ -154,6 +154,9 @@ jobs:
           name: eds-docs
           path: eds-content/
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -161,7 +164,7 @@ jobs:
 
       - name: Install CLI from registry
         run: >-
-          npm install --no-save
+          pnpm add -g
           @equinor/fusion-framework-cli
           @equinor/fusion-framework-cli-plugin-ai-index
           @equinor/fusion-framework-cli-plugin-ai-chat
@@ -195,7 +198,7 @@ jobs:
       - name: Ensure index exists
         env:
           FUSION_ENV: ${{ vars.FUSION_ENV }}
-        run: npx ffc ai index create --env "$FUSION_ENV" --config "$CONFIG_PATH"
+        run: ffc ai index create --env "$FUSION_ENV" --config "$CONFIG_PATH"
 
       - name: Index EDS docs to Azure AI Search
         timeout-minutes: 10
@@ -207,10 +210,10 @@ jobs:
 
           if [[ "${INPUT_CLEAN:-false}" == "true" ]]; then
             echo "::notice::Running clean rebuild — deleting existing EDS embeddings first"
-            npx ffc ai index add --clean --env "$FUSION_ENV" --config "$CONFIG_PATH"
+            ffc ai index add --clean --env "$FUSION_ENV" --config "$CONFIG_PATH"
           else
             echo "::notice::Running full EDS indexing"
-            npx ffc ai index add --env "$FUSION_ENV" --config "$CONFIG_PATH"
+            ffc ai index add --env "$FUSION_ENV" --config "$CONFIG_PATH"
           fi
 
       - name: Configure git user

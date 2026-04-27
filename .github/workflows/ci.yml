@@ -89,7 +89,6 @@ jobs:
     uses: ./.github/workflows/index-docs.yml
     with:
       environment: docs
-      tag_name: last-indexed/docs-release
     secrets: inherit
 
 
