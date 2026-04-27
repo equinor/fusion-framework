@@ -15,6 +15,17 @@ export type FusionService = {
   uri: string;
   /** Human-readable display name of the service. */
   name: string;
+  /**
+   * OAuth scopes required when requesting tokens for this service.
+   *
+   * @remarks
+   * When present, these scopes are forwarded through {@link processServices} so the
+   * Fusion Framework HTTP module can acquire a Bearer token for service requests.
+   * If absent (i.e. the service discovery endpoint does not return scopes), the HTTP
+   * client will make unauthenticated requests — use the service worker resource
+   * configuration to inject auth in that case.
+   */
+  scopes?: string[];
 };
 
 /**

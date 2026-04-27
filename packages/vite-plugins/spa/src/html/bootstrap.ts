@@ -14,6 +14,7 @@ import {
 } from '@equinor/fusion-framework-module-telemetry';
 import { ConsoleAdapter } from '@equinor/fusion-framework-module-telemetry/console-adapter';
 
+import { createPortalEntryPoint } from './create-portal-entry-point.js';
 import { registerServiceWorker } from './register-service-worker.js';
 
 import { version } from '../version.js';
@@ -163,13 +164,11 @@ enableTelemetry(configurator, {
   document.body.innerHTML = '';
   document.body.appendChild(el);
 
-  const portalEntryPoint = [
-    portalProxy ? '/portal-proxy' : '',
+  const portalEntryPoint = createPortalEntryPoint(
+    portalProxy ? '/portal-proxy' : undefined,
     portal_manifest.build.assetPath,
     portal_manifest.build.templateEntry,
-  ]
-    .filter(Boolean)
-    .join('/');
+  );
 
   // @todo: should test if the entrypoint is external or internal
   // @todo: add proper return type

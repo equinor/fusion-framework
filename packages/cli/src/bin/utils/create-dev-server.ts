@@ -117,6 +117,13 @@ const createDevServerTemplate = (
         rewrite: '/@fusion-api/portal-config',
         scopes: ['5a842df8-3238-415d-b168-9f16a6a6031b/.default'],
       },
+      {
+        // Inject auth for direct portal-config API calls (manifest and config fetches).
+        // This keeps portal bootstrap requests authenticated even when they are issued
+        // before the regular client token flow has attached Authorization headers.
+        url: '/@fusion-api/portal-config',
+        scopes: ['5a842df8-3238-415d-b168-9f16a6a6031b/.default'],
+      },
     ],
   },
   // todo - deep merge with user config
