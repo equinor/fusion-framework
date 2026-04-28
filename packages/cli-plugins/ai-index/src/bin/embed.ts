@@ -147,18 +147,31 @@ const GIT_CONCURRENCY = 20;
 /** Maximum parallel upsert requests to the vector store. */
 const UPSERT_CONCURRENCY = 10;
 
-/** Number of texts to embed per API request. */
-const EMBED_BATCH_SIZE = 20;
+/**
+ * Number of texts to embed per API request.
+ *
+ * Azure OpenAI accepts up to 2 048 inputs per embedding call.
+ * Larger batches amortise the per-request network overhead (TLS
+ * handshake, round-trip latency) and are the single biggest lever
+ * for indexing speed.
+ */
+const EMBED_BATCH_SIZE = 500;
 
-/** Number of concurrent batch requests in flight. */
-const EMBED_BATCH_CONCURRENCY = 4;
+/**
+ * Number of concurrent embedding API requests in flight.
+ *
+ * With `EMBED_BATCH_SIZE = 500` each request already carries a large
+ * payload, so moderate concurrency avoids overwhelming the endpoint
+ * while still saturating throughput.
+ */
+const EMBED_BATCH_CONCURRENCY = 6;
 
 /**
  * Maximum time (ms) to wait before flushing a partial embedding batch.
  * Without this, `bufferCount` waits indefinitely for a full batch, which
  * starves `mergeMap` concurrency when upstream document throughput is slow.
  */
-const EMBED_BUFFER_FLUSH_MS = 250;
+const EMBED_BUFFER_FLUSH_MS = 500;
 
 /** Maximum retry attempts for transient / rate-limit errors per chunk. */
 const MAX_RETRIES = 4;
