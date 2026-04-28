@@ -1,16 +1,24 @@
 import { DefaultAzureCredential } from '@azure/identity';
-import { useIdentityPlugin } from '@azure/identity';
-import { cachePersistencePlugin } from '@azure/identity-cache-persistence';
 import type { IAuthProvider } from './AuthProvider.interface.js';
 import { NoCredentialError } from './errors.js';
 
-// Register the persistence plugin once at module load so that all
-// Azure Identity credentials (DefaultAzureCredential, InteractiveBrowserCredential)
-// can use encrypted OS-level token caching (Keychain on macOS, DPAPI on Windows,
-// libsecret on Linux). Placed here because this module is always imported first
-// via the barrel export, ensuring the plugin is available before any credential
-// is constructed.
-useIdentityPlugin(cachePersistencePlugin);
+let pluginRegistered = false;
+
+/**
+ * Lazily registers the Azure Identity cache persistence plugin on first use.
+ *
+ * Deferred to avoid loading `keytar` (a native C++ addon) at import time,
+ * which would fail in CI environments where the prebuilt binary is unavailable
+ * (e.g. `ERR_DLOPEN_FAILED`). The plugin is registered once before any
+ * credential is constructed.
+ */
+export async function ensureCachePersistencePlugin(): Promise<void> {
+  if (pluginRegistered) return;
+  const { useIdentityPlugin } = await import('@azure/identity');
+  const { cachePersistencePlugin } = await import('@azure/identity-cache-persistence');
+  useIdentityPlugin(cachePersistencePlugin);
+  pluginRegistered = true;
+}
 
 /**
  * Authentication provider backed by Azure Identity's `DefaultAzureCredential`.
