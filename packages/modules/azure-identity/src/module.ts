@@ -30,12 +30,12 @@ export const module: AzureIdentityModule = {
   initialize: async (args) => {
     const config: AzureIdentityAuthConfig = await args.config.createConfigAsync(args);
 
-    // Register the cache persistence plugin lazily (avoids loading native
-    // keytar binary at import time, which fails on CI runners).
-    await ensureCachePersistencePlugin();
-
     switch (config.mode) {
       case 'interactive':
+        // Register the cache persistence plugin lazily — only interactive mode
+        // needs OS-level token caching. Avoids loading the native `keytar`
+        // binary in CI/headless environments.
+        await ensureCachePersistencePlugin();
         return AuthProviderInteractiveBrowser.create({
           tenantId: config.tenantId,
           clientId: config.clientId,

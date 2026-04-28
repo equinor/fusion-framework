@@ -24,7 +24,7 @@ export const setupFramework = async (options: AiOptions): Promise<FusionFramewor
   const debug = options.debug ?? false;
 
   // Auth strategy:
-  // 1. Explicit token (--token / FUSION_TOKEN) → MSAL token_only passthrough
+  // 1. Explicit token (--token / FUSION_TOKEN) → direct token passthrough
   // 2. Everything else → Azure Identity (DefaultAzureCredential)
   const auth: FusionFrameworkSettings['auth'] = options.token
     ? { token: options.token }

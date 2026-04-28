@@ -136,18 +136,26 @@ export class AuthProviderInteractiveBrowser implements IAuthProvider {
   /**
    * Acquires an access token for the given scopes.
    *
-   * If no {@link AuthenticationRecord} was loaded from persistence, performs a
-   * one-time interactive authentication and saves the record so that all
-   * subsequent calls (including from new processes) resolve silently.
+   * If no {@link AuthenticationRecord} was loaded from persistence, this method
+   * throws {@link NoCredentialError} unless `options.interactive` is `true`.
+   * When interactive, it performs a one-time browser authentication and saves
+   * the record so that all subsequent calls resolve silently.
    *
-   * @param options - Scopes to request.
+   * @param options - Scopes to request, and whether interactive prompting is allowed.
    * @returns The access token string.
-   * @throws {Error} When the credential returns no token.
+   * @throws {NoCredentialError} When no cached credential exists and interactive is not enabled.
+   * @throws {NoCredentialError} When the credential returns no token.
    */
-  async acquireAccessToken(options: { request: { scopes: string[] } }): Promise<string> {
-    // If no auth record exists yet, authenticate interactively once and persist
-    // the record so future invocations can resolve tokens silently.
+  async acquireAccessToken(options: {
+    request: { scopes: string[] };
+    interactive?: boolean;
+  }): Promise<string> {
     if (!this.#authRecord) {
+      if (!options.interactive) {
+        throw new NoCredentialError(
+          'No cached credentials found. Run `ffc auth login` first, or pass interactive: true.',
+        );
+      }
       const record = await this.#credential.authenticate(options.request.scopes);
       if (record) {
         await this.#authRecordPersistence.save(serializeAuthenticationRecord(record));
