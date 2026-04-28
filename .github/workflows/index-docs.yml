@@ -156,6 +156,7 @@ jobs:
           INDEX_REASON: ${{ steps.mode.outputs.reason }}
           SEARCH_INDEX_NAME: ${{ steps.index.outputs.name }}
           TAG_NAME: ${{ steps.index.outputs.tag_name }}
+          FUSION_ENV: ${{ vars.FUSION_ENV }}
         run: |
           set -euo pipefail
 
