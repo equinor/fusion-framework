@@ -4,7 +4,7 @@ import {
   serializeAuthenticationRecord,
   deserializeAuthenticationRecord,
 } from '@azure/identity';
-import { PersistenceCreator, type IPersistence } from '@azure/msal-node-extensions';
+import type { IPersistence } from '@azure/msal-node-extensions';
 import { homedir } from 'node:os';
 import { join } from 'node:path';
 import type { IAuthProvider } from './AuthProvider.interface.js';
@@ -73,6 +73,10 @@ export class AuthProviderInteractiveBrowser implements IAuthProvider {
    * @returns A fully initialised provider with any persisted auth record pre-loaded.
    */
   static async create(options: InteractiveAuthOptions): Promise<AuthProviderInteractiveBrowser> {
+    // Dynamically import to avoid loading the native `keytar` binary at
+    // module-load time, which fails on CI runners missing `libsecret`.
+    const { PersistenceCreator } = await import('@azure/msal-node-extensions');
+
     // OS-level secure storage: Keychain (macOS), DPAPI (Windows), libsecret (Linux)
     const persistence = await PersistenceCreator.createPersistence({
       cachePath: join(
