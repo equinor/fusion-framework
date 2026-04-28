@@ -21,6 +21,10 @@ export interface AuthRecord {
  * Provides a minimal contract for acquiring access tokens. Implementations may
  * support login/logout (interactive flows) or throw if those operations are not
  * applicable to the credential type.
+ *
+ * Both {@link acquireToken} and {@link acquireAccessToken} mirror the same
+ * methods on `IMsalProvider` so consumers can use either provider
+ * interchangeably via structural typing.
  */
 export interface IAuthProvider {
   /**
@@ -36,6 +40,20 @@ export interface IAuthProvider {
    * that have no session state should throw.
    */
   logout(): Promise<void>;
+
+  /**
+   * Acquires a token result including the access token and expiry metadata.
+   *
+   * Structurally compatible with `IMsalProvider.acquireToken` — the returned
+   * object contains the same `accessToken` and `expiresOn` properties that
+   * MSAL's `AuthenticationResult` exposes.
+   *
+   * @param options - The scopes to request.
+   * @returns The token result, or `null` if acquisition fails silently.
+   */
+  acquireToken(options: {
+    request: { scopes: string[] };
+  }): Promise<{ accessToken: string; expiresOn: Date | null } | null>;
 
   /**
    * Acquires an access token for the specified scopes.

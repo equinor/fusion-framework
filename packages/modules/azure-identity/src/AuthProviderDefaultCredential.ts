@@ -62,20 +62,40 @@ export class AuthProviderDefaultCredential implements IAuthProvider {
   }
 
   /**
-   * Acquires an access token using the `DefaultAzureCredential` chain.
+   * Acquires a token result with expiry metadata using the `DefaultAzureCredential` chain.
    *
    * @param options - An object containing the scopes to request.
-   * @returns The access token string.
-   * @throws {Error} When no credential source is available or token acquisition fails.
+   * @returns The token result including access token and expiry.
+   * @throws {NoCredentialError} When no credential source is available or token acquisition fails.
    */
-  async acquireAccessToken(options: { request: { scopes: string[] } }): Promise<string> {
+  async acquireToken(options: { request: { scopes: string[] } }): Promise<{ accessToken: string; expiresOn: Date | null } | null> {
     const tokenResponse = await this.#credential.getToken(options.request.scopes);
     if (!tokenResponse) {
       throw new NoCredentialError(
         'DefaultAzureCredential returned no token. Verify that Azure credentials are available in the environment.',
       );
     }
-    return tokenResponse.token;
+    return {
+      accessToken: tokenResponse.token,
+      expiresOn: new Date(tokenResponse.expiresOnTimestamp),
+    };
+  }
+
+  /**
+   * Acquires an access token using the `DefaultAzureCredential` chain.
+   *
+   * @param options - An object containing the scopes to request.
+   * @returns The access token string.
+   * @throws {NoCredentialError} When no credential source is available or token acquisition fails.
+   */
+  async acquireAccessToken(options: { request: { scopes: string[] } }): Promise<string> {
+    const result = await this.acquireToken(options);
+    if (!result) {
+      throw new NoCredentialError(
+        'DefaultAzureCredential returned no token. Verify that Azure credentials are available in the environment.',
+      );
+    }
+    return result.accessToken;
   }
 }
 

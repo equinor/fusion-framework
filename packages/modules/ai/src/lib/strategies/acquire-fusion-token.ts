@@ -1,19 +1,23 @@
-import type { IMsalProvider } from '@equinor/fusion-framework-module-msal';
 import type { Service } from '@equinor/fusion-framework-module-service-discovery';
 
 /**
  * Auth provider that can supply an access token.
  *
- * Accepts both the MSAL provider (`acquireToken`) and the azure-identity
- * provider (`acquireAccessToken`).
+ * Accepts any provider exposing `acquireToken` — both the MSAL provider
+ * (`IMsalProvider`) and the Azure Identity provider (`IAuthProvider`)
+ * satisfy this contract via structural typing.
  */
-type TokenProvider = IMsalProvider | { acquireAccessToken(options: { request: { scopes: string[] } }): Promise<string> };
+export type AuthProvider = {
+  acquireToken(options: {
+    request: { scopes: string[] };
+  }): Promise<{ accessToken: string; expiresOn: Date | null } | null | undefined>;
+};
 
 /**
  * Acquires an access token for the given Fusion AI service entry.
  *
- * Works with both the MSAL provider (returns full `AuthenticationResult`) and
- * the Azure Identity provider (returns a plain token string).
+ * Works with both the MSAL provider and the Azure Identity provider
+ * since both expose `acquireToken` with compatible signatures.
  *
  * @param auth - An MSAL or Azure Identity auth provider.
  * @param service - The resolved Fusion service entry; must include `scopes`.
@@ -29,7 +33,7 @@ type TokenProvider = IMsalProvider | { acquireAccessToken(options: { request: { 
  * ```
  */
 export const acquireFusionToken = async (
-  auth: TokenProvider,
+  auth: AuthProvider,
   service: Service,
 ): Promise<{ token: string; expiresOnTimestamp: number }> => {
   if (!service.scopes) {
@@ -39,38 +43,23 @@ export const acquireFusionToken = async (
     );
   }
 
-  // Azure Identity provider — returns a plain token string with no expiry metadata.
-  if (!('acquireToken' in auth) || typeof auth.acquireToken !== 'function') {
-    const accessToken = await auth.acquireAccessToken({ request: { scopes: service.scopes } });
-    if (!accessToken) {
-      throw new Error(
-        'Failed to acquire access token for AI service. ' +
-          'Ensure the auth module is correctly configured, or call setAccessToken() with a custom provider.',
-      );
-    }
-    return {
-      token: accessToken,
-      // No expiry info available from acquireAccessToken — assume 1 hour.
-      expiresOnTimestamp: Date.now() + 3600_000,
-    };
-  }
-
-  // MSAL provider — returns full AuthenticationResult with expiry.
-  const token = await auth.acquireToken({ request: { scopes: service.scopes } });
-  if (!token) {
+  const result = await auth.acquireToken({ request: { scopes: service.scopes } });
+  if (!result) {
     throw new Error(
       'Failed to acquire access token for AI service. ' +
-        'Ensure the auth (MSAL) module is correctly configured, or call setAccessToken() with a custom provider.',
+        'Ensure the auth module is correctly configured, or call setAccessToken() with a custom provider.',
     );
   }
+
   const expiresOnTimestamp =
-    token.expiresOn instanceof Date
-      ? token.expiresOn.getTime()
-      : typeof token.expiresOn === 'number'
-        ? token.expiresOn
+    result.expiresOn instanceof Date
+      ? result.expiresOn.getTime()
+      : typeof result.expiresOn === 'number'
+        ? result.expiresOn
         : Date.now() + 3600_000; // fallback: 1 hour from now
+
   return {
-    token: token.accessToken,
+    token: result.accessToken,
     expiresOnTimestamp,
   };
 };

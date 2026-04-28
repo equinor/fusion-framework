@@ -28,6 +28,16 @@ export class AuthProviderTokenOnly implements IAuthProvider {
   }
 
   /**
+   * Returns the pre-obtained token with no expiry metadata.
+   *
+   * @param _options - Ignored — the static token is returned regardless of scopes.
+   * @returns The token result. `expiresOn` is `null` because the static token has no known expiry.
+   */
+  acquireToken(_options: { request: { scopes: string[] } }): Promise<{ accessToken: string; expiresOn: Date | null } | null> {
+    return Promise.resolve({ accessToken: this.#accessToken, expiresOn: null });
+  }
+
+  /**
    * Returns the pre-obtained access token.
    *
    * @param _options - Ignored — the static token is returned regardless of scopes.

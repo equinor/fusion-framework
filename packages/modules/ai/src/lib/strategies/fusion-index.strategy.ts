@@ -2,14 +2,13 @@ import type {
   IServiceDiscoveryProvider,
   Service,
 } from '@equinor/fusion-framework-module-service-discovery';
-import type { IMsalProvider } from '@equinor/fusion-framework-module-msal';
 import { AzureKeyCredential } from '@azure/search-documents';
 import { FusionSearchClient } from '../azure/FusionSearchClient.js';
 import { AzureVectorStore } from '../azure/AzureVectorStore.js';
 import type { IEmbed, IVectorStore } from '../types.js';
 import { STRATEGY_TYPE } from './static.js';
 import type { IndexStrategy } from './types.js';
-import { acquireFusionToken } from './acquire-fusion-token.js';
+import { acquireFusionToken, type AuthProvider } from './acquire-fusion-token.js';
 
 /** Strategy name for the default Fusion index strategy. */
 export const FUSION_INDEX_STRATEGY_NAME = 'fusion-ai-index-strategy' as const;
@@ -35,7 +34,7 @@ const LOCAL_DEV_RE = /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?/i;
 function createSearchClient(
   aiService: Service,
   indexName: string,
-  modules: { auth: IMsalProvider },
+  modules: { auth: AuthProvider },
 ): FusionSearchClient {
   const baseUri = aiService.uri.replace(/\/+$/, '');
 
@@ -94,7 +93,7 @@ function createSearchClient(
  * ```
  */
 export const createFusionAiIndexStrategy = async (modules: {
-  auth: IMsalProvider;
+  auth: AuthProvider;
   serviceDiscovery: IServiceDiscoveryProvider;
 }): Promise<IndexStrategy> => {
   // Resolve the AI service once — the resulting endpoint and credentials are

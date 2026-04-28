@@ -1,10 +1,9 @@
 import type { IServiceDiscoveryProvider } from '@equinor/fusion-framework-module-service-discovery';
-import type { IMsalProvider } from '@equinor/fusion-framework-module-msal';
 import { AzureOpenAIModel } from '../azure/AzureOpenAIModel.js';
 import type { IModel } from '../types.js';
 import { STRATEGY_TYPE } from './static.js';
 import type { ModelStrategy } from './types.js';
-import { acquireFusionToken } from './acquire-fusion-token.js';
+import { acquireFusionToken, type AuthProvider } from './acquire-fusion-token.js';
 
 /** Strategy name for the default Fusion model strategy. */
 export const FUSION_MODEL_STRATEGY_NAME = 'fusion-ai-model-strategy' as const;
@@ -33,7 +32,7 @@ const DEFAULT_API_VERSION = '2025-01-01-preview' as const;
  * ```
  */
 export const createFusionAiModelStrategy = async (modules: {
-  auth: IMsalProvider;
+  auth: AuthProvider;
   serviceDiscovery: IServiceDiscoveryProvider;
 }): Promise<ModelStrategy> => {
   // Resolve the AI service once — the resulting endpoint and credentials are

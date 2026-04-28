@@ -1,10 +1,9 @@
 import type { IServiceDiscoveryProvider } from '@equinor/fusion-framework-module-service-discovery';
-import type { IMsalProvider } from '@equinor/fusion-framework-module-msal';
 import { AzureOpenAiEmbed } from '../azure/AzureOpenAiEmbed.js';
 import type { IEmbed } from '../types.js';
 import { STRATEGY_TYPE } from './static.js';
 import type { EmbedStrategy } from './types.js';
-import { acquireFusionToken } from './acquire-fusion-token.js';
+import { acquireFusionToken, type AuthProvider } from './acquire-fusion-token.js';
 
 /** Strategy name for the default Fusion embed strategy. */
 export const FUSION_EMBED_STRATEGY_NAME = 'fusion-ai-embed-strategy' as const;
@@ -36,7 +35,7 @@ const DEFAULT_EMBED_MODEL = 'text-embedding-3-large' as const;
  * ```
  */
 export const createFusionAiEmbedStrategy = async (modules: {
-  auth: IMsalProvider;
+  auth: AuthProvider;
   serviceDiscovery: IServiceDiscoveryProvider;
 }): Promise<EmbedStrategy> => {
   // Resolve the AI service once — the resulting endpoint and credentials are

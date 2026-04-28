@@ -3,16 +3,16 @@ import type {
   ConfigBuilderCallbackArgs,
 } from '@equinor/fusion-framework-module';
 import type { IServiceDiscoveryProvider } from '@equinor/fusion-framework-module-service-discovery';
-import type { IMsalProvider } from '@equinor/fusion-framework-module-msal';
 import type { Strategy } from './types.js';
+import type { AuthProvider } from './acquire-fusion-token.js';
 
 /**
  * Module instances required by Fusion strategy factories to resolve the AI
- * service endpoint and acquire MSAL access tokens.
+ * service endpoint and acquire access tokens.
  */
 export interface FusionAiStrategyModules {
-  /** MSAL provider used to acquire bearer tokens for the AI service. */
-  auth: IMsalProvider;
+  /** Auth provider used to acquire bearer tokens for the AI service. */
+  auth: AuthProvider;
   /** Service discovery provider used to resolve the AI service endpoint. */
   serviceDiscovery: IServiceDiscoveryProvider;
 }
@@ -60,12 +60,12 @@ export const fusionAiStrategy = <T extends Strategy = Strategy>(
   return async (args: ConfigBuilderCallbackArgs): Promise<T> => {
     // Cast ref to the expected shape so auth/serviceDiscovery can be accessed safely.
     const ref = args.ref as
-      | { auth?: IMsalProvider; serviceDiscovery?: IServiceDiscoveryProvider }
+      | { auth?: AuthProvider; serviceDiscovery?: IServiceDiscoveryProvider }
       | undefined;
 
     // Prefer sibling modules in the current scope; fall back to ref parent modules.
     const auth = args.hasModule('auth')
-      ? await args.requireInstance<IMsalProvider>('auth')
+      ? await args.requireInstance<AuthProvider>('auth')
       : ref?.auth;
 
     const serviceDiscovery = args.hasModule('serviceDiscovery')
@@ -74,7 +74,7 @@ export const fusionAiStrategy = <T extends Strategy = Strategy>(
 
     if (!auth) {
       throw new Error(
-        'MSAL auth module is required to resolve AI service credentials. ' +
+        'Auth module is required to resolve AI service credentials. ' +
           'Ensure the auth module is added to the framework configuration.',
       );
     }

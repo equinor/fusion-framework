@@ -146,10 +146,10 @@ export class AuthProviderInteractiveBrowser implements IAuthProvider {
    * @throws {NoCredentialError} When no cached credential exists and interactive is not enabled.
    * @throws {NoCredentialError} When the credential returns no token.
    */
-  async acquireAccessToken(options: {
+  async acquireToken(options: {
     request: { scopes: string[] };
     interactive?: boolean;
-  }): Promise<string> {
+  }): Promise<{ accessToken: string; expiresOn: Date | null } | null> {
     if (!this.#authRecord) {
       if (!options.interactive) {
         throw new NoCredentialError(
@@ -169,6 +169,22 @@ export class AuthProviderInteractiveBrowser implements IAuthProvider {
         'InteractiveBrowserCredential returned no token. Ensure you have logged in first.',
       );
     }
-    return tokenResponse.token;
+    return {
+      accessToken: tokenResponse.token,
+      expiresOn: new Date(tokenResponse.expiresOnTimestamp),
+    };
+  }
+
+  async acquireAccessToken(options: {
+    request: { scopes: string[] };
+    interactive?: boolean;
+  }): Promise<string> {
+    const result = await this.acquireToken(options);
+    if (!result) {
+      throw new NoCredentialError(
+        'InteractiveBrowserCredential returned no token. Ensure you have logged in first.',
+      );
+    }
+    return result.accessToken;
   }
 }
