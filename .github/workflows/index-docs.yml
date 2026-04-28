@@ -108,14 +108,6 @@ jobs:
           tenant-id: 3aa4a235-b6e2-48d5-9195-7fcf05b459b0
           allow-no-subscriptions: true
 
-      - name: Acquire Fusion token
-        run: |
-          token=$(az account get-access-token \
-            --scope ${{ vars.FUSION_AI_SP_SCOPE }} \
-            --query accessToken --output tsv)
-          echo "::add-mask::${token}"
-          echo "FUSION_TOKEN=${token}" >> "$GITHUB_ENV"
-
       - name: Ensure index exists
         env:
           FUSION_ENV: ${{ vars.FUSION_ENV }}

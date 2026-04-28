@@ -3,7 +3,10 @@ import {
   type ModulesInstance,
   type AnyModule,
 } from '@equinor/fusion-framework-module';
-import { enableAuthModule, type MsalNodeModule } from '@equinor/fusion-framework-module-msal-node';
+import {
+  enableAzureIdentityAuth,
+  type AzureIdentityModule,
+} from '@equinor/fusion-framework-module-azure-identity';
 import { type HttpModule, module as httpModule } from '@equinor/fusion-framework-module-http';
 import {
   type ServiceDiscoveryModule,
@@ -12,9 +15,7 @@ import {
 import isContinuousIntegration from 'is-ci';
 
 // Define the module types used in the framework instance
-// This tuple ensures type safety for the framework's module composition
-// Add or remove modules here to change the framework's capabilities
-type Modules = [MsalNodeModule, HttpModule, ServiceDiscoveryModule];
+type Modules = [AzureIdentityModule, HttpModule, ServiceDiscoveryModule];
 
 /**
  * Type representing the initialized Fusion Framework instance.
@@ -82,12 +83,20 @@ interface AuthInteractiveOptions extends Omit<AuthSilentOptions, 'interactive'> 
 }
 
 /**
+ * Auth option for Azure Identity's DefaultAzureCredential.
+ * No configuration needed — credentials are resolved from the environment.
+ */
+interface AuthDefaultCredentialOptions {
+  defaultCredential: true;
+}
+
+/**
  * Settings for initializing the Fusion Framework.
  * Includes environment, authentication, and service discovery options.
  */
 export type FusionFrameworkSettings = {
   env?: (typeof FusionEnv)[keyof typeof FusionEnv];
-  auth: AuthTokenOptions | AuthSilentOptions | AuthInteractiveOptions;
+  auth: AuthTokenOptions | AuthSilentOptions | AuthInteractiveOptions | AuthDefaultCredentialOptions;
   serviceDiscovery?: {
     url?: string;
     scope?: string[];
@@ -140,37 +149,49 @@ export const configureFramework = (
   // Enable the service discovery module
   enableServiceDiscovery(configurator);
 
-  // Enable the authentication module with custom configuration logic
-  enableAuthModule(configurator, (builder) => {
-    const { auth } = config;
-    // Handle direct token authentication
-    if ('token' in auth && auth.token) {
-      const { token } = auth as AuthTokenOptions;
-      builder.setMode('token_only');
-      builder.setAccessToken(token);
+  // Enable the authentication module — Azure Identity for all modes
+  const { auth } = config;
+
+  enableAzureIdentityAuth(configurator, (builder) => {
+    if ('defaultCredential' in auth && auth.defaultCredential) {
+      // Use DefaultAzureCredential (CI/CD, managed identity, OIDC)
+      builder.setDefaultCredential();
       return;
     }
 
-    // Handle silent or interactive authentication
-    const { clientId, tenantId, interactive } = auth as AuthSilentOptions;
+    if ('token' in auth && auth.token) {
+      // Use a pre-obtained static token
+      builder.setTokenOnly(auth.token);
+      return;
+    }
+
+    // Interactive or silent — both use InteractiveBrowserCredential.
+    // The credential silently uses cached tokens and only opens a browser
+    // when no cached credentials are available.
+    const { clientId, tenantId } = auth as AuthSilentOptions;
     if (!clientId || !tenantId) {
-      // Both clientId and tenantId are required for these modes
       throw new Error('clientId and tenantId are required for auth module');
     }
 
-    // Set client configuration for authentication
-    builder.setClientConfig(tenantId, clientId);
-
-    // Set authentication mode based on interactive flag
-    builder.setMode(interactive ? 'interactive' : 'silent');
-    if (interactive) {
-      // For interactive mode, server configuration is required
+    if ('interactive' in auth && auth.interactive) {
       const { server } = auth as AuthInteractiveOptions;
       if (!server.port) {
         throw new Error('server.port is required for interactive mode');
       }
-      builder.setServerPort(server.port);
-      builder.setServerOnOpen(server.onOpen);
+      builder.setInteractive({
+        tenantId,
+        clientId,
+        redirectPort: server.port,
+        onOpen: server.onOpen,
+      });
+    } else {
+      // Non-interactive callers (token, logout) — use a default port.
+      // InteractiveBrowserCredential will use cached tokens silently.
+      builder.setInteractive({
+        tenantId,
+        clientId,
+        redirectPort: 49741,
+      });
     }
   });
 

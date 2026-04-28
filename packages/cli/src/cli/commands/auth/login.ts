@@ -69,14 +69,20 @@ export const command = createCommand('login')
 
     try {
       log.start('Logging in...');
-      const authToken = await framework.auth.login({ request: { scopes } });
-      log.info('username:', chalk.green(authToken.account?.username));
-      log.info('tenant:  ', chalk.yellow(authToken.tenantId));
-      log.info('audience:', chalk.yellow(authToken.account?.idTokenClaims?.aud));
-      for (const scope of authToken.scopes) {
+      const record = await framework.auth.login({ request: { scopes } });
+      const authRecord = record as {
+        username?: string;
+        tenantId?: string;
+        clientId?: string;
+        authority?: string;
+      };
+      log.info('username:', chalk.green(authRecord.username ?? 'unknown'));
+      log.info('tenant:  ', chalk.yellow(authRecord.tenantId ?? 'unknown'));
+      log.info('client:  ', chalk.yellow(authRecord.clientId ?? 'unknown'));
+      for (const scope of scopes) {
         log.info('scope:   ', chalk.dim(scope));
       }
-      log.succeed('Successfully logged in', chalk.greenBright(authToken.account?.name));
+      log.succeed('Successfully logged in', chalk.greenBright(authRecord.username));
     } catch (error) {
       log.fail(
         'Failed to log in 🥺',

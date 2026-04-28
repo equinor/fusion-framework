@@ -1,16 +1,16 @@
-The Fusion Framework CLI provides secure, robust authentication for both automation and interactive development scenarios by leveraging Microsoft's MSAL (Microsoft Authentication Library) and Azure Active Directory (Azure AD). Authentication is handled through the Fusion Framework for Node.js, using the `@equinor/fusion-framework-module-msal-node` package, which is built on top of Microsoft's official `msal-node` library. This ensures standards-compliant, up-to-date authentication flows and seamless integration across Fusion Framework applications and tools.
+The Fusion Framework CLI provides secure, robust authentication for both automation and interactive development scenarios using Azure Identity and Azure Active Directory (Azure AD). Authentication is handled through the `@equinor/fusion-framework-module-azure-identity` package, which wraps `@azure/identity` credentials with OS-level token caching via `@azure/identity-cache-persistence`. This ensures standards-compliant, up-to-date authentication flows and seamless integration across Fusion Framework applications and tools.
 
-For detailed information about the underlying authentication module, see the [MSAL Node Module documentation](https://equinor.github.io/fusion-framework/modules/auth/msal-node/).
+For detailed information about the underlying authentication module, see the [Azure Identity Module README](../../packages/modules/azure-identity/README.md).
 
 > [!TIP]
 > The CLI exposes two binary aliases: `fusion-framework-cli` and `ffc`. All examples below use the long form, but you can substitute `ffc` anywhere — e.g. `ffc auth login`, `ffc auth token`.
 
 ## Key features
 - **Multiple authentication modes:**
+  - `interactive`: Browser-based Azure AD login with OS-level token caching (CLI tools, development).
+  - `default_credential`: Ambient credential chain — environment variables, managed identity, Azure CLI (CI/CD, infrastructure).
   - `token_only`: Use a pre-provided token (e.g., for CI/CD and automation).
-  - `silent`: Acquire tokens silently using cached or refresh tokens (background services, scripts).
-  - `interactive`: Prompt for authentication via a local HTTP server (CLI tools, development).
-- **Secure token storage:** Tokens are encrypted at rest using platform-specific mechanisms (e.g., Secure Enclave on macOS, DPAPI on Windows).
+- **Secure token storage:** Tokens and authentication records are encrypted at rest using platform-specific mechanisms (Keychain on macOS, DPAPI on Windows, libsecret on Linux) via `@azure/msal-node-extensions`.
 - **Consistent experience:** The same authentication logic and token handling is used across CLI and app environments.
 
 ## Azure AD Concepts: Tenant, Client App, and Scopes
@@ -95,7 +95,7 @@ ffc auth token
 > # or: export FUSION_TOKEN=$(ffc auth token --silent)
 > ```
 
-> [!Note] This command requires an interactive user context and MSAL Node. It is not suitable for CI/CD environments, as there is no user available in those scenarios. Use it for local development, testing, or whenever you need to preserve a Fusion token for your own scripts or tools.
+> [!Note] This command requires an interactive user context. It is not suitable for CI/CD environments, as there is no user available in those scenarios. Use it for local development, testing, or whenever you need to preserve a Fusion token for your own scripts or tools.
 
 ## CI/CD
 
@@ -174,6 +174,7 @@ runs:
 
 ## Additional Resources
 
-- [MSAL Node Module Documentation](https://equinor.github.io/fusion-framework/modules/auth/msal-node/) - Complete reference for the underlying authentication module
-- [libsecret Setup Guide](https://equinor.github.io/fusion-framework/modules/auth/msal-node/docs/libsecret.html) - Platform-specific setup for secure credential storage on Linux systems
+- [Azure Identity Module README](../../packages/modules/azure-identity/README.md) - Complete reference for the underlying authentication module
+- [Azure Identity documentation](https://learn.microsoft.com/en-us/javascript/api/overview/azure/identity-readme) - Microsoft's official Azure Identity SDK docs
+- [libsecret Setup Guide](https://learn.microsoft.com/en-us/javascript/api/overview/azure/identity-cache-persistence-readme) - Platform-specific setup for secure credential storage
 ```
