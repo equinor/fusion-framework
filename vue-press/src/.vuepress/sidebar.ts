@@ -300,7 +300,11 @@ export default sidebar({
           link: 'msal/',
         },
         {
-          text: 'NodeJS',
+          text: 'NodeJS (Azure Identity)',
+          link: 'azure-identity/',
+        },
+        {
+          text: 'NodeJS (MSAL - legacy)',
           link: 'msal-node/',
         },
       ],

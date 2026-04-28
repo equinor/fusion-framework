@@ -5,41 +5,16 @@ import { initializeFramework, FusionEnv } from '@equinor/fusion-framework-cli/bi
 import type { FusionFrameworkSettings, FusionFramework } from '@equinor/fusion-framework-cli/bin';
 import type { AiOptions } from './options/index.js';
 
-import { execFileSync } from 'node:child_process';
-
 /** Initialized framework instance with the AI module. */
 export type FrameworkInstance = FusionFramework<[AIModule]>;
 
 /**
- * Check whether an error (possibly wrapped in a cause chain) is an
- * authentication-related failure that may be recoverable via interactive login.
- *
- * @internal
- */
-const isAuthError = (error: unknown): boolean => {
-  let current: unknown = error;
-  while (current) {
-    if (current instanceof Error) {
-      if (
-        current.name === 'NoAccountsError' ||
-        current.name === 'SilentTokenAcquisitionError' ||
-        current.message.includes('No accounts found')
-      ) {
-        return true;
-      }
-    }
-    current = (current as { cause?: unknown }).cause;
-  }
-  return false;
-};
-
-/**
  * Creates a Fusion Framework instance with the AI module enabled.
  *
- * Initialises the Fusion Framework with service discovery and MSAL auth,
- * resolves the `'ai'` service endpoint, and pre-caches a bearer token.
- * If MSAL has no cached credentials, the CLI's interactive `auth login`
- * flow is spawned automatically before retrying.
+ * Uses Azure Identity's `DefaultAzureCredential` by default, which resolves
+ * credentials from the environment (OIDC, managed identity, Azure CLI, etc.).
+ * When an explicit token is provided via `--token` or `FUSION_TOKEN`, that
+ * token is used directly instead.
  *
  * @param options - CLI options resolved by {@link withOptions}.
  * @returns A fully initialised framework instance with the AI module.
@@ -48,23 +23,18 @@ const isAuthError = (error: unknown): boolean => {
 export const setupFramework = async (options: AiOptions): Promise<FusionFramework<[AIModule]>> => {
   const debug = options.debug ?? false;
 
-  // Service-discovery mode: resolve URL + scopes from Fusion service registry
+  // Auth strategy:
+  // 1. Explicit token (--token / FUSION_TOKEN) → direct token passthrough
+  // 2. Everything else → Azure Identity (DefaultAzureCredential)
   const auth: FusionFrameworkSettings['auth'] = options.token
     ? { token: options.token }
-    : {
-        tenantId: options.tenantId ?? '3aa4a235-b6e2-48d5-9195-7fcf05b459b0',
-        clientId: options.clientId ?? 'a318b8e1-0295-4e17-98d5-35f67dfeba14',
-      };
+    : { defaultCredential: true };
 
   const env = (options.env as FusionEnv) ?? FusionEnv.ContinuesIntegration;
 
   if (debug) {
     console.debug('[debug] Environment:', env);
-    console.debug('[debug] Auth mode:', options.token ? 'static-token' : 'MSAL');
-    if (!options.token) {
-      console.debug('[debug] Tenant ID:', (auth as { tenantId: string }).tenantId);
-      console.debug('[debug] Client ID:', (auth as { clientId: string }).clientId);
-    }
+    console.debug('[debug] Auth mode:', options.token ? 'static-token' : 'azure-identity');
   }
 
   /** Initialise the framework, resolve the AI service, and pre-cache tokens. */
@@ -95,28 +65,7 @@ export const setupFramework = async (options: AiOptions): Promise<FusionFramewor
     return framework;
   };
 
-  try {
-    return await initAndSetup();
-  } catch (error: unknown) {
-    // If the failure is auth-related and we're not using a static token,
-    // spawn the CLI's own `auth login` (starts local server + browser)
-    // and retry the full init sequence.
-    if (!isAuthError(error) || options.token) throw error;
-
-    const cliEntry = process.argv[1];
-    if (!cliEntry) {
-      throw new Error(
-        'Failed to acquire access token and could not determine CLI path for interactive login.',
-      );
-    }
-
-    console.log('No cached credentials — launching interactive login…');
-    execFileSync(process.execPath, [cliEntry, 'auth', 'login'], {
-      stdio: 'inherit',
-    });
-
-    return await initAndSetup();
-  }
+  return await initAndSetup();
 };
 
 export default setupFramework;

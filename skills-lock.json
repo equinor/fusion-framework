@@ -1,6 +1,12 @@
 {
   "version": 1,
   "skills": {
+    "fusion-code-conventions": {
+      "source": "equinor/fusion-skills",
+      "sourceType": "github",
+      "skillPath": "skills/.system/fusion-code-conventions/SKILL.md",
+      "computedHash": "b5094425d13bf88e9a9a2c76d439f96c20ad5e03d87f956266518d502446bd12"
+    },
     "fusion-dependency-review": {
       "source": "equinor/fusion-skills",
       "sourceType": "github",

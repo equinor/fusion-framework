@@ -1,8 +1,7 @@
 import { createCommand } from 'commander';
 
-import { NoAccountsError } from '@equinor/fusion-framework-module-msal-node/error';
-
 import { ConsoleLogger, initializeFramework } from '@equinor/fusion-framework-cli/bin';
+import { NoCredentialError } from '@equinor/fusion-framework-module-azure-identity';
 
 import { withAuthOptions } from '../../options/auth.js';
 
@@ -86,8 +85,8 @@ export const command = createCommand('token')
         log?.info('Access token:', accessToken);
       }
     } catch (error) {
-      if (!options.silent && error instanceof NoAccountsError) {
-        log?.fail('No accounts found, please login first');
+      if (!options.silent && error instanceof NoCredentialError) {
+        log?.fail('No cached credentials found, please login first');
       } else {
         throw error;
       }
