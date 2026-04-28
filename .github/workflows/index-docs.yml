@@ -111,7 +111,7 @@ jobs:
       - name: Acquire Fusion token
         run: |
           token=$(az account get-access-token \
-            --scope 5a842df8-3238-415d-b168-9f16a6a6031b/.default \
+            --scope ${{ vars.FUSION_AI_SP_SCOPE }} \
             --query accessToken --output tsv)
           echo "::add-mask::${token}"
           echo "FUSION_TOKEN=${token}" >> "$GITHUB_ENV"
