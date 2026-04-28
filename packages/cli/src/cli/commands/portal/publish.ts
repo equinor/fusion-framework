@@ -60,7 +60,7 @@ export const command = withAuthOptions(
         '  $ ffc portal publish --tag pr-1234',
       ].join('\n'),
     )
-    .option('-d, --debug', 'Enable debug mode for verbose logging', false)
+    .option('-d, --debug', 'Enable debug mode for verbose logging', !!process.env.RUNNER_DEBUG)
     .addOption(createEnvOption({ allowDev: false }))
     .option(
       '-m, --manifest [string]',

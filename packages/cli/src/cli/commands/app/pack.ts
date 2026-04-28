@@ -71,7 +71,7 @@ export const command = createCommand('pack')
     'Directory where the archive will be saved (default: current working directory)',
     process.cwd(),
   )
-  .option('-d, --debug', 'Enable debug mode for verbose logging', false)
+  .option('-d, --debug', 'Enable debug mode for verbose logging', !!process.env.RUNNER_DEBUG)
   .option(
     '-s, --snapshot [identifier]',
     'Generate a snapshot version (optionally with custom identifier). The identifier defaults to "snapshot" if not provided.',

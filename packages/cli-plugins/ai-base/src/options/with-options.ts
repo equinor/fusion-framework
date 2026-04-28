@@ -2,6 +2,7 @@ import { type Command, InvalidOptionArgumentError } from 'commander';
 import {
   chatModelOption,
   clientIdOption,
+  debugOption,
   embedModelOption,
   envOption,
   indexNameOption,
@@ -38,6 +39,7 @@ export const withOptions = (
   command.addOption(tokenOption);
   command.addOption(tenantIdOption);
   command.addOption(clientIdOption);
+  command.addOption(debugOption);
 
   if (args?.includeChat) command.addOption(chatModelOption);
   if (args?.includeEmbedding) command.addOption(embedModelOption);

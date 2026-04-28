@@ -51,7 +51,7 @@ export const command = createCommand('dev')
       'See https://equinor.github.io/fusion-framework/cli/docs/dev-server-config.html for configuration options.',
     ].join('\n'),
   )
-  .option('--debug', 'Enable debug mode')
+  .option('--debug', 'Enable debug mode', !!process.env.RUNNER_DEBUG)
   .option('--env <environment>', 'Runtime environment for the dev server', 'local')
   .option('--port <port>', 'Port for the development server', '3000')
   .action(async (options) => {

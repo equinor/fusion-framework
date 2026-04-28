@@ -54,7 +54,7 @@ export const command = createCommand('manifest')
       '  $ ffc app manifest --debug',
     ].join('\n'),
   )
-  .option('-d, --debug', 'Enable debug mode for verbose logging', false)
+  .option('-d, --debug', 'Enable debug mode for verbose logging', !!process.env.RUNNER_DEBUG)
   .option('-o, --output <string>', 'Output the result to stdout or a file', 'stdout')
   .option('-s, --silent', 'Silent mode, suppresses output except errors')
   .argument('[manifest]', 'Manifest build file to use (e.g., app.manifest[.env]?.[ts,js,json])')

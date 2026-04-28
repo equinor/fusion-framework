@@ -186,7 +186,7 @@ export const createAppCommand = (name: string) =>
     .option('-d, --directory <path>', 'Directory to create the app in', '.')
     .option('--branch <branch>', 'Branch to checkout', 'main')
     .option('--clean', 'Clean the repo directory before cloning')
-    .option('--debug', 'Enable debug mode for verbose logging')
+    .option('--debug', 'Enable debug mode for verbose logging', !!process.env.RUNNER_DEBUG)
     .option(
       '--git-protocol <protocol>',
       'Git protocol to use for cloning (https or ssh) - skips prompt if provided',

@@ -19,4 +19,6 @@ export interface AiOptions {
   embedModel?: string;
   /** Azure AI Search index name. Required for vector search / indexing operations. */
   indexName?: string;
+  /** Enable debug mode for verbose logging. */
+  debug?: boolean;
 }

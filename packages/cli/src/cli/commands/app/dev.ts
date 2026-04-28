@@ -56,7 +56,7 @@ export const command = createCommand('dev')
       'See https://equinor.github.io/fusion-framework/cli/docs/dev-server-config.html for configuration options.',
     ].join('\n'),
   )
-  .option('--debug', 'Enable debug mode')
+  .option('--debug', 'Enable debug mode', !!process.env.RUNNER_DEBUG)
   .option('--manifest <path>', 'Path to the app manifest file (app.manifest[.env]?.[ts,js,json])')
   .option('--config <path>', 'Path to the app config file (app.config[.env]?.[ts,js,json])')
   .option('--env <environment>', 'Runtime environment for the dev server', 'local')

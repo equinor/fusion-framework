@@ -46,6 +46,8 @@ const isAuthError = (error: unknown): boolean => {
  * @throws {Error} When authentication fails after the interactive retry.
  */
 export const setupFramework = async (options: AiOptions): Promise<FusionFramework<[AIModule]>> => {
+  const debug = options.debug ?? false;
+
   // Service-discovery mode: resolve URL + scopes from Fusion service registry
   const auth: FusionFrameworkSettings['auth'] = options.token
     ? { token: options.token }
@@ -56,8 +58,19 @@ export const setupFramework = async (options: AiOptions): Promise<FusionFramewor
 
   const env = (options.env as FusionEnv) ?? FusionEnv.ContinuesIntegration;
 
+  if (debug) {
+    console.debug('[debug] Environment:', env);
+    console.debug('[debug] Auth mode:', options.token ? 'static-token' : 'MSAL');
+    if (!options.token) {
+      console.debug('[debug] Tenant ID:', (auth as { tenantId: string }).tenantId);
+      console.debug('[debug] Client ID:', (auth as { clientId: string }).clientId);
+    }
+  }
+
   /** Initialise the framework, resolve the AI service, and pre-cache tokens. */
   const initAndSetup = async (): Promise<FusionFramework<[AIModule]>> => {
+    if (debug) console.debug('[debug] Initializing framework with AI module…');
+
     const framework = await initializeFramework<[AIModule]>({ env, auth }, (configurator) => {
       enableAI(configurator);
     });
@@ -67,10 +80,17 @@ export const setupFramework = async (options: AiOptions): Promise<FusionFramewor
     const service = await framework.serviceDiscovery.resolveService('ai');
     const scopes = service.scopes ?? service.defaultScopes ?? [];
 
+    if (debug) {
+      console.debug('[debug] AI service URL:', service.uri);
+      console.debug('[debug] AI service scopes:', scopes);
+    }
+
     // Pre-cache a token for the AI service scopes so strategy callbacks
     // don't attempt (and fail) a silent acquisition later.
     const token = await framework.auth.acquireAccessToken({ request: { scopes } });
     if (!token) throw new Error('Failed to acquire access token for the AI service.');
+
+    if (debug) console.debug('[debug] Token acquired successfully');
 
     return framework;
   };

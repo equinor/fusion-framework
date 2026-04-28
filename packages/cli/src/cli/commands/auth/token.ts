@@ -56,7 +56,7 @@ export const command = createCommand('token')
       '  $ ffc auth token --tenant my-tenant --client my-client-id --silent',
     ].join('\n'),
   )
-  .option('-d, --debug', 'Enable debug mode for verbose logging', false)
+  .option('-d, --debug', 'Enable debug mode for verbose logging', !!process.env.RUNNER_DEBUG)
   .option('--silent', 'Only output the token (no extra logging)')
   .action(async (options) => {
     const log = options.silent ? null : new ConsoleLogger('auth:token', { debug: options.debug });

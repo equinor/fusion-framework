@@ -152,8 +152,20 @@ const MAX_RETRIES = 4;
  */
 export async function embed(binOptions: EmbeddingsBinOptions): Promise<void> {
   const { framework, options, config, filePatterns } = binOptions;
+  const debug = options.debug ?? false;
 
   console.log(`📇 Index: ${options.indexName}`);
+
+  if (debug) {
+    console.debug('[debug] Embed model:', options.embedModel);
+    console.debug('[debug] File patterns:', filePatterns);
+    console.debug('[debug] Allowed patterns:', config.index?.patterns ?? ['**/*.ts', '**/*.tsx', '**/*.md', '**/*.mdx']);
+    console.debug('[debug] Raw patterns:', config.index?.rawPatterns ?? []);
+    console.debug('[debug] Ignore patterns:', config.index?.ignore ?? defaultIgnore);
+    console.debug('[debug] Diff mode:', options.diff);
+    console.debug('[debug] Dry run:', options.dryRun);
+    console.debug('[debug] Clean:', options.clean);
+  }
 
   const progress = new ProgressDisplay();
 
@@ -227,6 +239,9 @@ export async function embed(binOptions: EmbeddingsBinOptions): Promise<void> {
     }),
     filter((file) => {
       const matches = multimatch(file.relativePath, allowedFilePatterns);
+      if (debug && matches.length === 0) {
+        console.debug('[debug] Skipped (no pattern match):', file.relativePath);
+      }
       return matches.length > 0;
     }),
     tap((file) => {
@@ -283,6 +298,9 @@ export async function embed(binOptions: EmbeddingsBinOptions): Promise<void> {
     mergeMap(async (file) => {
       const documents = await parseMarkdownFile(file);
       docCount++;
+      if (debug) {
+        console.debug(`[debug] Markdown ${file.relativePath} → ${documents.length} chunk(s)`);
+      }
       progress.update(LINE_PARSE, `📄 Parsing [${docCount}] ${file.relativePath}`);
       return { status: file.status, documents };
     }),
@@ -294,6 +312,9 @@ export async function embed(binOptions: EmbeddingsBinOptions): Promise<void> {
     map((file) => {
       const documents = parseTsDocFromFileSync(file);
       docCount++;
+      if (debug) {
+        console.debug(`[debug] TypeScript ${file.relativePath} → ${documents.length} chunk(s)`);
+      }
       progress.update(LINE_PARSE, `📄 Parsing [${docCount}] ${file.relativePath}`);
       return { status: file.status, documents };
     }),
@@ -337,8 +358,11 @@ export async function embed(binOptions: EmbeddingsBinOptions): Promise<void> {
     bufferTime(EMBED_BUFFER_FLUSH_MS, null, EMBED_BATCH_SIZE),
     filter((batch) => batch.length > 0),
     mergeMap(
-      (batch) =>
-        from(embeddingService.embedDocuments(batch.map((d) => d.pageContent))).pipe(
+      (batch) => {
+        if (debug) {
+          console.debug(`[debug] Embedding batch of ${batch.length} documents`);
+        }
+        return from(embeddingService.embedDocuments(batch.map((d) => d.pageContent))).pipe(
           retry({
             count: MAX_RETRIES,
             delay: (error, retryIndex) => {
@@ -378,7 +402,8 @@ export async function embed(binOptions: EmbeddingsBinOptions): Promise<void> {
               return { ...document, metadata };
             });
           }),
-        ),
+        );
+      },
       EMBED_BATCH_CONCURRENCY,
     ),
     finalize(() => {
@@ -398,6 +423,9 @@ export async function embed(binOptions: EmbeddingsBinOptions): Promise<void> {
         return undefined;
       }
       if (!options.dryRun) {
+        if (debug) {
+          console.debug(`[debug] Upserting batch of ${documents.length} documents:`, documents.map((d) => d.id));
+        }
         await vectorStoreService.addDocuments(documents);
       }
       return {

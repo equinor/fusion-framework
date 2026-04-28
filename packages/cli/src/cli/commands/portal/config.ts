@@ -64,7 +64,7 @@ export const command = withAuthOptions(
         '  $ ffc portal config --env prod my-custom.config.ts',
       ].join('\n'),
     )
-    .option('--debug', 'Enable debug mode for verbose logging')
+    .option('--debug', 'Enable debug mode for verbose logging', !!process.env.RUNNER_DEBUG)
     .option('--silent', 'Silent mode, suppresses output except errors')
     .option(
       '--publish <name@version>',
