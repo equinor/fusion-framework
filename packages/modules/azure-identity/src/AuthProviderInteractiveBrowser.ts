@@ -9,6 +9,7 @@ import { homedir } from 'node:os';
 import { join } from 'node:path';
 import type { IAuthProvider } from './AuthProvider.interface.js';
 import type { InteractiveAuthOptions } from './configurator.js';
+import { NoCredentialError } from './errors.js';
 
 /**
  * Authentication provider backed by Azure Identity's `InteractiveBrowserCredential`.
@@ -50,6 +51,15 @@ export class AuthProviderInteractiveBrowser implements IAuthProvider {
       clientId: options.clientId,
       redirectUri: `http://localhost:${options.redirectPort}`,
       tokenCachePersistenceOptions: { enabled: true },
+      ...(options.onOpen
+        ? {
+            browserCustomizationOptions: {
+              openBrowser: async (url: string) => {
+                options.onOpen?.(url);
+              },
+            },
+          }
+        : {}),
       ...(authenticationRecord ? { authenticationRecord } : {}),
     });
   }
@@ -143,7 +153,7 @@ export class AuthProviderInteractiveBrowser implements IAuthProvider {
 
     const tokenResponse = await this.#credential.getToken(options.request.scopes);
     if (!tokenResponse) {
-      throw new Error(
+      throw new NoCredentialError(
         'InteractiveBrowserCredential returned no token. Ensure you have logged in first.',
       );
     }

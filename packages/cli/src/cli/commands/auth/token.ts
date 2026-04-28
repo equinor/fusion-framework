@@ -1,6 +1,7 @@
 import { createCommand } from 'commander';
 
 import { ConsoleLogger, initializeFramework } from '@equinor/fusion-framework-cli/bin';
+import { NoCredentialError } from '@equinor/fusion-framework-module-azure-identity';
 
 import { withAuthOptions } from '../../options/auth.js';
 
@@ -84,7 +85,7 @@ export const command = createCommand('token')
         log?.info('Access token:', accessToken);
       }
     } catch (error) {
-      if (!options.silent && error instanceof Error && error.message.includes('no token')) {
+      if (!options.silent && error instanceof NoCredentialError) {
         log?.fail('No cached credentials found, please login first');
       } else {
         throw error;

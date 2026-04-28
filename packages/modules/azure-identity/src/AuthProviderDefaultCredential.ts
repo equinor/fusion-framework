@@ -2,6 +2,7 @@ import { DefaultAzureCredential } from '@azure/identity';
 import { useIdentityPlugin } from '@azure/identity';
 import { cachePersistencePlugin } from '@azure/identity-cache-persistence';
 import type { IAuthProvider } from './AuthProvider.interface.js';
+import { NoCredentialError } from './errors.js';
 
 // Register the persistence plugin once at module load so that all
 // Azure Identity credentials (DefaultAzureCredential, InteractiveBrowserCredential)
@@ -40,7 +41,7 @@ export class AuthProviderDefaultCredential implements IAuthProvider {
    * Not supported — credentials are resolved from the environment.
    * @throws {Error} Always.
    */
-  login(_options: { request: { scopes: string[] } }): Promise<never> {
+  async login(_options: { request: { scopes: string[] } }): Promise<never> {
     throw new Error('Login is not supported in default_credential mode');
   }
 
@@ -48,7 +49,7 @@ export class AuthProviderDefaultCredential implements IAuthProvider {
    * Not supported — there is no session to clear.
    * @throws {Error} Always.
    */
-  logout(): Promise<never> {
+  async logout(): Promise<never> {
     throw new Error('Logout is not supported in default_credential mode');
   }
 
@@ -62,7 +63,7 @@ export class AuthProviderDefaultCredential implements IAuthProvider {
   async acquireAccessToken(options: { request: { scopes: string[] } }): Promise<string> {
     const tokenResponse = await this.#credential.getToken(options.request.scopes);
     if (!tokenResponse) {
-      throw new Error(
+      throw new NoCredentialError(
         'DefaultAzureCredential returned no token. Verify that Azure credentials are available in the environment.',
       );
     }

@@ -82,7 +82,7 @@ export const command = createCommand('login')
       for (const scope of scopes) {
         log.info('scope:   ', chalk.dim(scope));
       }
-      log.succeed('Successfully logged in', chalk.greenBright(authRecord.username));
+      log.succeed('Successfully logged in', chalk.greenBright(authRecord.username ?? 'unknown'));
     } catch (error) {
       log.fail(
         'Failed to log in 🥺',

@@ -32,6 +32,7 @@
 export { AuthProviderDefaultCredential } from './AuthProviderDefaultCredential.js';
 export { AuthProviderInteractiveBrowser } from './AuthProviderInteractiveBrowser.js';
 export { AuthProviderTokenOnly } from './AuthProviderTokenOnly.js';
+export { NoCredentialError } from './errors.js';
 
 export type { IAuthProvider } from './AuthProvider.interface.js';
 export type { AzureIdentityAuthConfig, InteractiveAuthOptions } from './configurator.js';
