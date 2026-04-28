@@ -55,10 +55,17 @@ class ProgressDisplay {
   private frame = 0;
   private timer: ReturnType<typeof setInterval> | undefined;
 
+  /** Tracks last CI log time per line to throttle output. */
+  private lastCiLog: number[] = [];
+
+  /** Minimum interval (ms) between CI progress lines for the same line slot. */
+  private static CI_LOG_INTERVAL_MS = 15_000;
+
   /** Register the line labels up front and print empty placeholders. */
   start(count: number): void {
     this.lines = new Array<string>(count).fill('');
     this.spinning = new Array<boolean>(count).fill(false);
+    this.lastCiLog = new Array<number>(count).fill(0);
 
     if (!IS_CI) {
       // Print placeholder lines so the cursor block exists
@@ -76,7 +83,14 @@ class ProgressDisplay {
     if (!this.started) return;
     this.lines[line] = message;
     this.spinning[line] = true;
-    if (IS_CI) return; // CI updates are printed only on succeed/clear
+    if (IS_CI) {
+      const now = Date.now();
+      if (now - this.lastCiLog[line] >= ProgressDisplay.CI_LOG_INTERVAL_MS) {
+        this.lastCiLog[line] = now;
+        console.log(`⏳ ${message}`);
+      }
+      return;
+    }
     this.render(line);
   }
 
