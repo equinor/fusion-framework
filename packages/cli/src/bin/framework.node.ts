@@ -96,7 +96,11 @@ interface AuthDefaultCredentialOptions {
  */
 export type FusionFrameworkSettings = {
   env?: (typeof FusionEnv)[keyof typeof FusionEnv];
-  auth: AuthTokenOptions | AuthSilentOptions | AuthInteractiveOptions | AuthDefaultCredentialOptions;
+  auth:
+    | AuthTokenOptions
+    | AuthSilentOptions
+    | AuthInteractiveOptions
+    | AuthDefaultCredentialOptions;
   serviceDiscovery?: {
     url?: string;
     scope?: string[];
