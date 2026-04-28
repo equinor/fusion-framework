@@ -29,7 +29,10 @@
  * @packageDocumentation
  */
 
-export { AuthProviderDefaultCredential, ensureCachePersistencePlugin } from './AuthProviderDefaultCredential.js';
+export {
+  AuthProviderDefaultCredential,
+  ensureCachePersistencePlugin,
+} from './AuthProviderDefaultCredential.js';
 export { AuthProviderInteractiveBrowser } from './AuthProviderInteractiveBrowser.js';
 export { AuthProviderTokenOnly } from './AuthProviderTokenOnly.js';
 export { NoCredentialError } from './errors.js';

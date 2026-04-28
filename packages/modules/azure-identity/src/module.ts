@@ -1,6 +1,9 @@
 import type { Module } from '@equinor/fusion-framework-module';
 import { AzureIdentityAuthConfigurator, type AzureIdentityAuthConfig } from './configurator.js';
-import { AuthProviderDefaultCredential, ensureCachePersistencePlugin } from './AuthProviderDefaultCredential.js';
+import {
+  AuthProviderDefaultCredential,
+  ensureCachePersistencePlugin,
+} from './AuthProviderDefaultCredential.js';
 import { AuthProviderInteractiveBrowser } from './AuthProviderInteractiveBrowser.js';
 import { AuthProviderTokenOnly } from './AuthProviderTokenOnly.js';
 import type { IAuthProvider } from './AuthProvider.interface.js';
