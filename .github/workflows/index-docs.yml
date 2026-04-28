@@ -114,7 +114,7 @@ jobs:
         run: pnpm exec ffc ai index create --env "$FUSION_ENV" --config ./fusion-ai.config.ts
 
       - name: Index docs to Azure AI Search
-        timeout-minutes: 10
+        timeout-minutes: 30
         env:
           MODE: ${{ steps.mode.outputs.mode }}
           BASE_REF: ${{ steps.mode.outputs.base_ref }}

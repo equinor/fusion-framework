@@ -36,9 +36,16 @@ import { generateChunkId } from '../utils/generate-chunk-id.js';
 /** Braille spinner frames (same as ora's default). */
 const SPINNER_FRAMES = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'];
 
+/** Whether the process is running in a non-interactive environment (CI). */
+const IS_CI = !process.stdout.isTTY || Boolean(process.env.CI);
+
 /**
  * Manages a fixed block of sticky progress lines with per-line spinners.
  * Each line can be updated independently without overwriting the others.
+ *
+ * In non-interactive environments (CI) the ANSI cursor-movement dance is
+ * replaced with simple `console.log` lines so the output is readable in
+ * plain-text log viewers.
  * @internal
  */
 class ProgressDisplay {
@@ -52,13 +59,16 @@ class ProgressDisplay {
   start(count: number): void {
     this.lines = new Array<string>(count).fill('');
     this.spinning = new Array<boolean>(count).fill(false);
-    // Print placeholder lines so the cursor block exists
-    for (let i = 0; i < count; i++) {
-      process.stdout.write('\n');
+
+    if (!IS_CI) {
+      // Print placeholder lines so the cursor block exists
+      for (let i = 0; i < count; i++) {
+        process.stdout.write('\n');
+      }
+      // Tick spinner at 80ms (same cadence as ora)
+      this.timer = setInterval(() => this.tick(), 80);
     }
     this.started = true;
-    // Tick spinner at 80ms (same cadence as ora)
-    this.timer = setInterval(() => this.tick(), 80);
   }
 
   /** Update a specific line (0-indexed) without touching the others. */
@@ -66,14 +76,20 @@ class ProgressDisplay {
     if (!this.started) return;
     this.lines[line] = message;
     this.spinning[line] = true;
+    if (IS_CI) return; // CI updates are printed only on succeed/clear
     this.render(line);
   }
 
   /** Mark a line as completed — stops its spinner and shows a checkmark. */
   succeed(line: number, message: string): void {
     if (!this.started) return;
-    this.lines[line] = `✅ ${message}`;
+    const text = `✅ ${message}`;
+    this.lines[line] = text;
     this.spinning[line] = false;
+    if (IS_CI) {
+      console.log(text);
+      return;
+    }
     this.render(line);
   }
 
@@ -81,13 +97,15 @@ class ProgressDisplay {
   clear(): void {
     if (!this.started) return;
     if (this.timer) clearInterval(this.timer);
-    // Move up to the first progress line and clear each one
-    for (let i = 0; i < this.lines.length; i++) {
-      const linesUp = this.lines.length - i;
-      process.stdout.write(`\x1b[${linesUp}A\x1b[2K\r\x1b[${linesUp}B\r`);
+    if (!IS_CI) {
+      // Move up to the first progress line and clear each one
+      for (let i = 0; i < this.lines.length; i++) {
+        const linesUp = this.lines.length - i;
+        process.stdout.write(`\x1b[${linesUp}A\x1b[2K\r\x1b[${linesUp}B\r`);
+      }
+      // Move cursor up past the now-empty block
+      process.stdout.write(`\x1b[${this.lines.length}A\r`);
     }
-    // Move cursor up past the now-empty block
-    process.stdout.write(`\x1b[${this.lines.length}A\r`);
     this.started = false;
   }
 
