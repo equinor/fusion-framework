@@ -51,6 +51,14 @@ export const indexNameOption = createOption(
   'Azure AI Search index name',
 ).env('FUSION_AI_INDEX_NAME');
 
+/** `-d, --debug` | `RUNNER_DEBUG` — enable verbose logging */
+export const debugOption = createOption(
+  '-d, --debug',
+  'Enable debug mode for verbose logging',
+)
+  .env('RUNNER_DEBUG')
+  .default(false);
+
 export default {
   envOption,
   tokenOption,
@@ -59,4 +67,5 @@ export default {
   chatModelOption,
   embedModelOption,
   indexNameOption,
+  debugOption,
 };

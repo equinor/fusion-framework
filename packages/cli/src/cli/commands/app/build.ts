@@ -50,7 +50,7 @@ export const command = createCommand('build')
       '  $ ffc app build app.manifest.dev.ts --debug',
     ].join('\n'),
   )
-  .option('-d, --debug', 'Enable debug mode for verbose logging', false)
+  .option('-d, --debug', 'Enable debug mode for verbose logging', !!process.env.RUNNER_DEBUG)
   .argument('[manifest]', 'Manifest file to use for building (e.g., app.manifest.ts)')
   .action(async (manifest, opt) => {
     const log = new ConsoleLogger('app:build', { debug: opt.debug });

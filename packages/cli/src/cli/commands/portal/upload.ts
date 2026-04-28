@@ -49,7 +49,7 @@ export const command = withAuthOptions(
         '  $ ffc portal upload --debug',
       ].join('\n'),
     )
-    .option('-d, --debug [boolean]', 'Enable debug mode for verbose logging', false)
+    .option('-d, --debug [boolean]', 'Enable debug mode for verbose logging', !!process.env.RUNNER_DEBUG)
     .addOption(createEnvOption({ allowDev: false }))
     .argument('<bundle>', 'Portal bundle to upload (e.g., out/bundle.zip)')
     .action(async (bundle, options) => {

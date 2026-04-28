@@ -21,6 +21,7 @@ export const AiOptionsSchema = z
     chatModel: z.string().min(1).optional(),
     embedModel: z.string().min(1).optional(),
     indexName: z.string().min(1).optional(),
+    debug: z.coerce.boolean().default(false),
   })
   .describe('Base Fusion AI command options');
 

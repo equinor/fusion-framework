@@ -43,7 +43,7 @@ export const command = createCommand('build')
       '',
     ].join('\n'),
   )
-  .option('-d, --debug', 'Enable debug mode for verbose logging', false)
+  .option('-d, --debug', 'Enable debug mode for verbose logging', !!process.env.RUNNER_DEBUG)
   .argument(
     '[manifest]',
     'Manifest build file to use for building (e.g., portal.manifest[.env]?.[ts|js|json])',

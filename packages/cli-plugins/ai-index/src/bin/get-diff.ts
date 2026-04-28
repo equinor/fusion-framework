@@ -25,6 +25,11 @@ export async function getDiff(options: CommandOptions): Promise<ChangedFile[]> {
     }
 
     console.log(`📝 Found ${changedFiles.length} changed files matching patterns`);
+    if (options.debug) {
+      for (const file of changedFiles) {
+        console.debug(`[debug] ${file.status}: ${file.filepath}`);
+      }
+    }
     return changedFiles;
   } catch (error) {
     console.error(`❌ Git diff error: ${error instanceof Error ? error.message : 'Unknown error'}`);

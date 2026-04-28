@@ -54,7 +54,7 @@ export const command = createCommand('schema')
   )
   .addOption(createEnvOption({ allowDev: true }))
   .option('-o, --output <string>', 'Output file name (default: stdout)', 'stdout')
-  .option('-d, --debug', 'Enable debug mode for verbose logging', false)
+  .option('-d, --debug', 'Enable debug mode for verbose logging', !!process.env.RUNNER_DEBUG)
   .option('-v, --validate <file>', 'Validate the generated schema against a JSON file')
   .argument('[schema]', 'Schema build file to use (e.g., portal.schema[.env]?.[ts,js,json])')
   .action(async (manifest, args) => {
