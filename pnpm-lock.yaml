@@ -2123,7 +2123,7 @@ importers:
         version: 2.2.0
       '@equinor/eds-utils':
         specifier: ^2.0.0
-        version: 2.0.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(styled-components@6.4.1(react-dom@19.2.5(react@19.2.5))(react@19.2.5))
+        version: 2.1.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(styled-components@6.4.1(react-dom@19.2.5(react@19.2.5))(react@19.2.5))
       '@equinor/fusion-framework-module-app':
         specifier: workspace:^
         version: link:../../../modules/app
@@ -3240,13 +3240,6 @@ packages:
 
   '@equinor/eds-tokens@2.2.0':
     resolution: {integrity: sha512-MUbv83ppGHzRBSgaZTkPqMU+2cAQsaDiE/b22GsIXnmptVH4NV5tyHJdz7Yrd1U7yKWO4L7IUwK849IBixyVyg==}
-
-  '@equinor/eds-utils@2.0.0':
-    resolution: {integrity: sha512-7VfLYkPA/qJst6HadcFXeLBhGiq3j1UaA5mW0zsIDurh/tesr+CziaXrPtopOfYJ5nIoQ9Zb0d6Mfx98XHLnjA==}
-    peerDependencies:
-      react: ^19
-      react-dom: ^19
-      styled-components: ^6
 
   '@equinor/eds-utils@2.1.0':
     resolution: {integrity: sha512-yMrqw22Rc3UXrru4tGCSSyuLNY60ikuEyhJXu54beorllB3iCxvMxD5P9tFP6tkkTl/V0tYH9tD79JfzO2w6Ew==}
@@ -12294,14 +12287,6 @@ snapshots:
   '@equinor/eds-tokens@0.9.2': {}
 
   '@equinor/eds-tokens@2.2.0': {}
-
-  '@equinor/eds-utils@2.0.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(styled-components@6.4.1(react-dom@19.2.5(react@19.2.5))(react@19.2.5))':
-    dependencies:
-      '@babel/runtime': 7.28.6
-      '@equinor/eds-tokens': 2.2.0
-      react: 19.2.5
-      react-dom: 19.2.5(react@19.2.5)
-      styled-components: 6.4.1(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
 
   '@equinor/eds-utils@2.1.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(styled-components@6.4.1(react-dom@19.2.5(react@19.2.5))(react@19.2.5))':
     dependencies:
