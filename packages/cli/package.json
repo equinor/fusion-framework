@@ -122,7 +122,6 @@
     "semver": "^7.7.4",
     "simple-git": "^3.32.3",
     "vite": "^8.0.0",
-    "vite-tsconfig-paths": "^6.0.4",
     "zod": "^4.3.6"
   },
   "devDependencies": {
