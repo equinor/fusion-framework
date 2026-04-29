@@ -364,7 +364,18 @@ export default sidebar({
     },
     {
       text: 'Analytics',
+      prefix: 'analytics/',
       link: 'analytics/',
+      children: [
+        {
+          text: 'module',
+          link: 'README.md',
+        },
+        {
+          text: 'React',
+          link: 'react.md',
+        },
+      ],
     },
     {
       text: 'Services',
