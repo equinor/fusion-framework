@@ -1,41 +1,142 @@
-## Analytics
+## Analytics React Hooks
 
-The Fusion Framework Analytics Module provides an unified way to track analytics.
+React hooks for tracking application feature usage through the Fusion analytics module.
 
-This is a hook to manually send features to track.
+These hooks are available from `@equinor/fusion-framework-react-app/analytics` and require the analytics module to be enabled in your application configuration.
 
-This hook can be used by app teams wanting to track a specific feature they use.
+### Why track feature usage?
+
+Understanding how users interact with your application helps you make informed decisions about what to build, improve, or remove. Without usage data, you are guessing which features matter.
+
+Common reasons to add feature tracking:
+
+- **Measure adoption** — find out whether a newly released feature is actually being used, and by how many users across different contexts.
+- **Identify unused features** — discover features that can be simplified or removed, reducing maintenance cost and complexity.
+- **Understand user workflows** — see which paths users take through your application, revealing unexpected patterns or friction points.
+- **Support data-driven prioritisation** — back up roadmap discussions with real usage numbers instead of assumptions.
+- **Debug user-reported issues** — correlate analytics events with error reports to understand what the user was doing when something went wrong.
+
+### When to use `useTrackFeature`
+
+Use `useTrackFeature` when you want to record a discrete user action or application milestone from a React component. Typical use cases include:
+
+| Use case | What to track | Example event name |
+|----------|---------------|-------------------|
+| Button or action clicks | User triggers a specific workflow | `'export-clicked'`, `'filter-applied'` |
+| Page or component views | A section of the app is displayed | `'dashboard-loaded'`, `'settings-opened'` |
+| Feature gate checks | A feature behind a flag is accessed | `'beta-feature-used'` |
+| Form submissions | A user completes a form or wizard step | `'report-submitted'`, `'wizard-step-3'` |
+| Error recovery actions | A user retries or dismisses an error | `'retry-clicked'`, `'error-dismissed'` |
+| Search and filtering | A user interacts with data exploration tools | `'search-executed'`, `'date-range-changed'` |
+
+> [!TIP]
+> You do not need to track every click. Focus on actions that answer a question about user behavior or feature value.
 
 ### useTrackFeature
 
-A hook to send feature used.
+Returns a stable callback for tracking feature usage events. Each event automatically includes the current app key and active context as attributes, so downstream dashboards can group events by application and context without extra work.
+
+**Signature:**
 
 ```typescript
-const trackFeature = useTrackFeature();
-
-trackFeature('foo');
+function useTrackFeature(): (name: string, data?: AnyValueMap) => void;
 ```
 
-```typescript
-const SomeComponent = () => {
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `name` | `string` | Name of the feature being tracked |
+| `data` | `AnyValueMap` (optional) | Additional key-value pairs to include with the event |
+
+#### Track a button click
+
+```tsx
+import { useCallback } from 'react';
+import { useTrackFeature } from '@equinor/fusion-framework-react-app/analytics';
+
+const MyButton = () => {
   const trackFeature = useTrackFeature();
 
-  // Tracks when button is clicked.
-  const handleOnClick = useCallback(() => {
+  const handleClick = useCallback(() => {
     trackFeature('button-clicked');
   }, [trackFeature]);
 
-  // Triggers when the component is loaded.
+  return <button onClick={handleClick}>Click me</button>;
+};
+```
+
+#### Track with additional data
+
+Pass a second argument to include custom attributes with the event:
+
+```tsx
+import { useCallback } from 'react';
+import { useTrackFeature } from '@equinor/fusion-framework-react-app/analytics';
+
+const SaveButton = ({ section }: { section: string }) => {
+  const trackFeature = useTrackFeature();
+
+  const handleSave = useCallback(() => {
+    trackFeature('save-clicked', { section, timestamp: Date.now() });
+  }, [trackFeature, section]);
+
+  return <button onClick={handleSave}>Save</button>;
+};
+```
+
+#### Track on component mount
+
+Use `useEffect` to track when a component or page loads:
+
+```tsx
+import { useEffect } from 'react';
+import { useTrackFeature } from '@equinor/fusion-framework-react-app/analytics';
+
+const Dashboard = () => {
+  const trackFeature = useTrackFeature();
+
+  useEffect(() => {
+    trackFeature('dashboard-loaded');
+  }, [trackFeature]);
+
+  return <div>Dashboard content</div>;
+};
+```
+
+#### Combine click and mount tracking
+
+```tsx
+import { useCallback, useEffect } from 'react';
+import { useTrackFeature } from '@equinor/fusion-framework-react-app/analytics';
+
+const SomeComponent = () => {
+  const trackFeature = useTrackFeature();
+
   useEffect(() => {
     trackFeature('SomeComponent loaded');
+    trackFeature('some feature happened', { extra: 'data', foo: 'bar' });
+  }, [trackFeature]);
 
-    // Send additional data
-    trackFeature('some feature happened', {
-      extra: 'data',
-      foo: 'bar',
-    });
+  const handleOnClick = useCallback(() => {
+    trackFeature('button-clicked');
   }, [trackFeature]);
 
   return <button onClick={handleOnClick}>Click me</button>;
 };
 ```
+
+### Prerequisites
+
+The analytics module must be enabled in your app configuration. If the module is not configured, `useTrackFeature` logs an exception via the telemetry provider instead of throwing.
+
+```typescript
+import { enableAnalytics } from '@equinor/fusion-framework-module-analytics';
+import { ConsoleAnalyticsAdapter } from '@equinor/fusion-framework-module-analytics/adapters';
+
+const configure = (configurator) => {
+  enableAnalytics(configurator, (builder) => {
+    builder.setAdapter('console', async () => new ConsoleAnalyticsAdapter());
+  });
+};
+```
+
+See the [analytics module documentation](https://equinor.github.io/fusion-framework/modules/analytics/) for adapter and collector setup.
