@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-react-router
 
+## 2.0.2
+
+### Patch Changes
+
+- 51e6e50: Internal: bump `react-router` from `7.13.2` to `7.14.2`.
+
 ## 2.0.1
 
 ### Patch Changes

@@ -1,5 +1,14 @@
 # Change Log
 
+## 15.0.1
+
+### Patch Changes
+
+- a00ba38: Internal: bump `ora` from `9.3.0` to `9.4.0`.
+- 51e6e50: Internal: bump `simple-git` from `3.35.2` to `3.36.0`.
+  - @equinor/fusion-framework-dev-portal@5.1.8
+  - @equinor/fusion-framework-dev-server@2.0.5
+
 ## 15.0.0
 
 ### Major Changes

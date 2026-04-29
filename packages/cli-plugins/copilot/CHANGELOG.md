@@ -1,5 +1,12 @@
 # @equinor/fusion-framework-cli-plugin-copilot
 
+## 2.0.1
+
+### Patch Changes
+
+- 9a29a89: Internal: bump `@github/copilot-sdk` from `0.2.2` to `0.3.0`.
+- a00ba38: Internal: bump `ora` from `9.3.0` to `9.4.0`.
+
 ## 2.0.0
 
 ### Patch Changes

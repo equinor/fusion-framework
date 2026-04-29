@@ -1,5 +1,13 @@
 # @equinor/fusion-framework-dev-portal
 
+## 5.1.8
+
+### Patch Changes
+
+- @equinor/fusion-framework-app@11.0.4
+- @equinor/fusion-framework@8.0.4
+- @equinor/fusion-framework-dev-server@2.0.5
+
 ## 5.1.7
 
 ### Patch Changes
