@@ -10,6 +10,10 @@ runs:
   using: composite
   steps:
 
+    - name: Disable turbo daemon for CI
+      shell: bash
+      run: echo "TURBO_DAEMON=false" >> "$GITHUB_ENV"
+
     - name: Get pnpm lockfile hash
       if: ${{ inputs.turbo-cache == 'true' }}
       id: pnpm-lock-hash
