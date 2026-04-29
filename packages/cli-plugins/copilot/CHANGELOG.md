@@ -1,5 +1,13 @@
 # @equinor/fusion-framework-cli-plugin-copilot
 
+## 2.0.0
+
+### Patch Changes
+
+- Updated dependencies [8d7b8a1]
+- Updated dependencies [4711dbc]
+  - @equinor/fusion-framework-cli@15.0.0
+
 ## 1.1.0
 
 ### Minor Changes

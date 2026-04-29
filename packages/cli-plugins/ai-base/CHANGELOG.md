@@ -1,5 +1,19 @@
 # @equinor/fusion-framework-cli-plugin-ai-base
 
+## 4.0.0
+
+### Minor Changes
+
+- 4711dbc: Add `-d, --debug` option to all AI CLI commands, with automatic activation via the `RUNNER_DEBUG` environment variable.
+
+  When GitHub Actions debug logging is enabled (`RUNNER_DEBUG=1`), all `ffc ai` commands now start in debug mode automatically. Debug output includes environment, auth mode, AI service URL, scopes, and token acquisition status.
+
+### Patch Changes
+
+- Updated dependencies [8d7b8a1]
+- Updated dependencies [4711dbc]
+  - @equinor/fusion-framework-cli@15.0.0
+
 ## 3.0.0
 
 ### Major Changes

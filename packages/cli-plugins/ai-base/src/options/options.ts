@@ -52,10 +52,7 @@ export const indexNameOption = createOption(
 ).env('FUSION_AI_INDEX_NAME');
 
 /** `-d, --debug` | `RUNNER_DEBUG` — enable verbose logging */
-export const debugOption = createOption(
-  '-d, --debug',
-  'Enable debug mode for verbose logging',
-)
+export const debugOption = createOption('-d, --debug', 'Enable debug mode for verbose logging')
   .env('RUNNER_DEBUG')
   .default(false);
 

@@ -204,7 +204,10 @@ export async function embed(binOptions: EmbeddingsBinOptions): Promise<void> {
   if (debug) {
     console.debug('[debug] Embed model:', options.embedModel);
     console.debug('[debug] File patterns:', filePatterns);
-    console.debug('[debug] Allowed patterns:', config.index?.patterns ?? ['**/*.ts', '**/*.tsx', '**/*.md', '**/*.mdx']);
+    console.debug(
+      '[debug] Allowed patterns:',
+      config.index?.patterns ?? ['**/*.ts', '**/*.tsx', '**/*.md', '**/*.mdx'],
+    );
     console.debug('[debug] Raw patterns:', config.index?.rawPatterns ?? []);
     console.debug('[debug] Ignore patterns:', config.index?.ignore ?? defaultIgnore);
     console.debug('[debug] Diff mode:', options.diff);
@@ -402,55 +405,52 @@ export async function embed(binOptions: EmbeddingsBinOptions): Promise<void> {
     // whichever comes first — prevents upstream starvation from blocking concurrency
     bufferTime(EMBED_BUFFER_FLUSH_MS, null, EMBED_BATCH_SIZE),
     filter((batch) => batch.length > 0),
-    mergeMap(
-      (batch) => {
-        if (debug) {
-          console.debug(`[debug] Embedding batch of ${batch.length} documents`);
-        }
-        return from(embeddingService.embedDocuments(batch.map((d) => d.pageContent))).pipe(
-          retry({
-            count: MAX_RETRIES,
-            delay: (error, retryIndex) => {
-              // Auth errors are terminal — abort immediately with actionable message
-              if (error?.name === 'NoAccountsError') {
-                console.error(
-                  '\n🔒 Authentication expired. Run `ffc auth login` then retry with `--diff`.',
-                );
-                throw error;
-              }
-
-              const retryAfterSec =
-                error?.response?.headers?.get?.('retry-after') ??
-                error?.responseHeaders?.['retry-after'];
-              const retryAfterMs = retryAfterSec ? Number(retryAfterSec) * 1000 : 0;
-
-              const backoffMs = 2 ** retryIndex * 1000;
-              const delayMs = Math.max(backoffMs, retryAfterMs);
-
-              console.warn(
-                `\n⏳ Retry ${retryIndex}/${MAX_RETRIES} for batch of ${batch.length} in ${delayMs}ms`,
+    mergeMap((batch) => {
+      if (debug) {
+        console.debug(`[debug] Embedding batch of ${batch.length} documents`);
+      }
+      return from(embeddingService.embedDocuments(batch.map((d) => d.pageContent))).pipe(
+        retry({
+          count: MAX_RETRIES,
+          delay: (error, retryIndex) => {
+            // Auth errors are terminal — abort immediately with actionable message
+            if (error?.name === 'NoAccountsError') {
+              console.error(
+                '\n🔒 Authentication expired. Run `ffc auth login` then retry with `--diff`.',
               );
-              return timer(delayMs);
-            },
-          }),
-          map((allEmbeddings) => {
-            return batch.map((document, i) => {
-              embeddedCount++;
-              const total = metadataDone ? metadataCount : 0;
-              const pct = total > 0 ? ` ${Math.round((embeddedCount / total) * 100)}%` : '';
-              const denominator = total > 0 ? `/${total}` : '';
-              progress.update(
-                LINE_EMBED,
-                `🧠 Embedding [${embeddedCount}${denominator}]${pct} — ${document.metadata.source}`,
-              );
-              const metadata = { ...document.metadata, embedding: allEmbeddings[i] };
-              return { ...document, metadata };
-            });
-          }),
-        );
-      },
-      EMBED_BATCH_CONCURRENCY,
-    ),
+              throw error;
+            }
+
+            const retryAfterSec =
+              error?.response?.headers?.get?.('retry-after') ??
+              error?.responseHeaders?.['retry-after'];
+            const retryAfterMs = retryAfterSec ? Number(retryAfterSec) * 1000 : 0;
+
+            const backoffMs = 2 ** retryIndex * 1000;
+            const delayMs = Math.max(backoffMs, retryAfterMs);
+
+            console.warn(
+              `\n⏳ Retry ${retryIndex}/${MAX_RETRIES} for batch of ${batch.length} in ${delayMs}ms`,
+            );
+            return timer(delayMs);
+          },
+        }),
+        map((allEmbeddings) => {
+          return batch.map((document, i) => {
+            embeddedCount++;
+            const total = metadataDone ? metadataCount : 0;
+            const pct = total > 0 ? ` ${Math.round((embeddedCount / total) * 100)}%` : '';
+            const denominator = total > 0 ? `/${total}` : '';
+            progress.update(
+              LINE_EMBED,
+              `🧠 Embedding [${embeddedCount}${denominator}]${pct} — ${document.metadata.source}`,
+            );
+            const metadata = { ...document.metadata, embedding: allEmbeddings[i] };
+            return { ...document, metadata };
+          });
+        }),
+      );
+    }, EMBED_BATCH_CONCURRENCY),
     finalize(() => {
       embeddingDone = true;
       progress.succeed(LINE_EMBED, `🧠 Embedded ${embeddedCount} documents`);
@@ -469,7 +469,10 @@ export async function embed(binOptions: EmbeddingsBinOptions): Promise<void> {
       }
       if (!options.dryRun) {
         if (debug) {
-          console.debug(`[debug] Upserting batch of ${documents.length} documents:`, documents.map((d) => d.id));
+          console.debug(
+            `[debug] Upserting batch of ${documents.length} documents:`,
+            documents.map((d) => d.id),
+          );
         }
         await vectorStoreService.addDocuments(documents);
       }

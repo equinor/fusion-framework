@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework-module-azure-identity",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Fusion Framework authentication module using Azure Identity. Supports ambient credentials (DefaultAzureCredential), interactive browser login, and static token modes.",
   "type": "module",
   "main": "dist/esm/index.js",

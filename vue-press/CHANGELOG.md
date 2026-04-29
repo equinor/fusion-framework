@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-docs
 
+## 0.4.16
+
+### Patch Changes
+
+- 8d7b8a1: Add Azure Identity module documentation page and sidebar entry under Modules → Auth. Rename existing MSAL Node entry to "NodeJS (MSAL - legacy)".
+
 ## 0.4.15
 
 ### Patch Changes
