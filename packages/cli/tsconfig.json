@@ -13,7 +13,7 @@
       "path": "../modules/module"
     },
     {
-      "path": "../modules/msal-node"
+      "path": "../modules/azure-identity"
     },
     {
       "path": "../utils/imports"
