@@ -2,7 +2,7 @@
 
 React hooks for tracking application feature usage through the Fusion analytics module.
 
-These hooks are available from `@equinor/fusion-framework-react-app/analytics` and require the analytics module to be enabled in your application configuration.
+These hooks are available from `@equinor/fusion-framework-react-app/analytics`. The analytics module is enabled and configured by the hosting portal, so **apps running inside a Fusion portal can use these hooks immediately without any setup**.
 
 ### Why track feature usage?
 
@@ -126,7 +126,13 @@ const SomeComponent = () => {
 
 ### Prerequisites
 
-The analytics module must be enabled in your app configuration. If the module is not configured, `useTrackFeature` logs an exception via the telemetry provider instead of throwing.
+The analytics module must be enabled for these hooks to work. **In most cases, no app-level configuration is needed** — the hosting Fusion portal already enables and configures analytics with the appropriate adapters and collectors. Your app inherits this automatically.
+
+If the module is not available (e.g. in a standalone or custom portal setup), `useTrackFeature` logs an exception via the telemetry provider instead of throwing, so your app will not crash.
+
+#### Custom or standalone setups
+
+If you are building a custom portal or running outside the standard Fusion portal, you need to enable the analytics module yourself:
 
 ```typescript
 import { enableAnalytics } from '@equinor/fusion-framework-module-analytics';
