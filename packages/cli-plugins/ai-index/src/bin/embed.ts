@@ -175,17 +175,24 @@ const EMBED_BATCH_SIZE = 500;
  * Number of concurrent embedding API requests in flight.
  *
  * Each request now carries EMBED_BATCH_SIZE texts in a single HTTP call
- * (LangChain batchSize is aligned), so 2 concurrent requests already
- * saturate most Azure OpenAI TPM quotas.
+ * (LangChain batchSize is aligned), so 3 concurrent requests should
+ * saturate most Azure OpenAI TPM quotas without triggering rate limits.
  */
-const EMBED_BATCH_CONCURRENCY = 2;
+const EMBED_BATCH_CONCURRENCY = 3;
 
 /**
  * Maximum time (ms) to wait before flushing a partial embedding batch.
- * Without this, `bufferCount` waits indefinitely for a full batch, which
- * starves `mergeMap` concurrency when upstream document throughput is slow.
+ *
+ * A longer window lets more documents accumulate before triggering an
+ * HTTP call, which drastically cuts the number of round-trips when
+ * upstream (metadata enrichment) feeds documents slowly.
+ *
+ * Full batches (EMBED_BATCH_SIZE) are emitted immediately regardless of
+ * the timer, and `bufferTime` flushes any remainder the instant the
+ * source stream completes — so a large value only affects mid-stream
+ * partial batches, not tail latency.
  */
-const EMBED_BUFFER_FLUSH_MS = 500;
+const EMBED_BUFFER_FLUSH_MS = 10_000;
 
 /** Maximum retry attempts for transient / rate-limit errors per chunk. */
 const MAX_RETRIES = 4;
