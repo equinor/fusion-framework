@@ -710,7 +710,7 @@ importers:
         version: link:../../packages/react/app
       '@equinor/fusion-react-styles':
         specifier: ^2.1.0
-        version: 2.1.1(react@19.2.5)(styled-components@6.4.1(react-dom@19.2.5(react@19.2.5))(react@19.2.5))
+        version: 2.1.3(react@19.2.5)(styled-components@6.4.1(react-dom@19.2.5(react@19.2.5))(react@19.2.5))
       '@types/react':
         specifier: ^19.2.7
         version: 19.2.14
@@ -1319,7 +1319,7 @@ importers:
         version: 2.0.4(@equinor/eds-core-react@2.4.1(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(styled-components@6.4.1(react-dom@19.2.5(react@19.2.5))(react@19.2.5)))(@equinor/eds-icons@1.4.0)(@equinor/eds-tokens@2.2.0)(react-dom@19.2.5(react@19.2.5))(react-is@18.3.1)(react@19.2.5)(styled-components@6.4.1(react-dom@19.2.5(react@19.2.5))(react@19.2.5))
       '@equinor/fusion-react-styles':
         specifier: ^2.1.0
-        version: 2.1.1(react@19.2.5)(styled-components@6.4.1(react-dom@19.2.5(react@19.2.5))(react@19.2.5))
+        version: 2.1.3(react@19.2.5)(styled-components@6.4.1(react-dom@19.2.5(react@19.2.5))(react@19.2.5))
       '@equinor/fusion-wc-chip':
         specifier: ^1.2.2
         version: 1.3.0
@@ -3285,12 +3285,6 @@ packages:
       react-dom: ^18 || ^19
       styled-components: ^6.1.0
 
-  '@equinor/fusion-react-styles@2.1.1':
-    resolution: {integrity: sha512-Ovodj3A6kuvZmzyJB4+xIMrDkjs7gSQpBbnrz1uOuwc8kcvwwIFe3tbVJ1XI2MoSvHarvtAOD2P7kuHfiVYl+Q==}
-    peerDependencies:
-      react: ^18 || ^19
-      styled-components: ^6
-
   '@equinor/fusion-react-styles@2.1.3':
     resolution: {integrity: sha512-BM1i99Rk5tOMG1p/y/Zo3UbIgY7ekQLK4BB+LlgIy/7NbdsEwAAXz1gCCord9Tm4Uca+xIDsTxvjZtYFHQj0vw==}
     peerDependencies:
@@ -3380,9 +3374,6 @@ packages:
 
   '@equinor/fusion-wc-textinput@1.2.1':
     resolution: {integrity: sha512-9j9BgABBNYaQoqQl/iGfKNZVRyMxWhYEJaOXgUajGrE1sho+0Bs1827a9+hHJYrJ1jK55yZM5lOuTATOftH+7Q==}
-
-  '@equinor/fusion-wc-theme@1.2.0':
-    resolution: {integrity: sha512-vWySsYaD2QyIaoYORd3wOWc1Ak0dKg37ozP3dt031CQgbv5Zh05h4zlCywmdx9/65gir7b7sCE8cdE0c0euRZw==}
 
   '@equinor/fusion-wc-theme@1.2.1':
     resolution: {integrity: sha512-ZZ047PglAqwg6NlAHpJAP/00NiMJHv4KqjqaSemikP1afvHmMEfG9Z6eQIWdRkw6LTx53gj8tEWqhZjGpSoM2w==}
@@ -12376,24 +12367,6 @@ snapshots:
     transitivePeerDependencies:
       - react-is
 
-  '@equinor/fusion-react-styles@2.1.1(react@19.2.5)(styled-components@6.4.1(react-dom@19.2.5(react@19.2.5))(react@19.2.5))':
-    dependencies:
-      '@equinor/eds-tokens': 2.2.0
-      '@equinor/fusion-wc-theme': 1.2.0
-      '@equinor/fusion-web-theme': 0.1.10
-      clsx: 2.1.1
-      hoist-non-react-statics: 3.3.2
-      jss: 10.10.0
-      jss-plugin-camel-case: 10.10.0
-      jss-plugin-default-unit: 10.10.0
-      jss-plugin-global: 10.10.0
-      jss-plugin-nested: 10.10.0
-      jss-plugin-props-sort: 10.10.0
-      jss-plugin-rule-value-function: 10.10.0
-      jss-plugin-vendor-prefixer: 10.10.0
-      react: 19.2.5
-      styled-components: 6.4.1(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
-
   '@equinor/fusion-react-styles@2.1.3(react@19.2.5)(styled-components@6.4.1(react-dom@19.2.5(react@19.2.5))(react@19.2.5))':
     dependencies:
       '@equinor/eds-tokens': 2.2.0
@@ -12613,13 +12586,6 @@ snapshots:
       '@equinor/fusion-wc-icon': 2.4.1
       '@equinor/fusion-web-theme': 0.1.10
       '@material/mwc-textfield': 0.27.0
-      lit: 3.3.2
-
-  '@equinor/fusion-wc-theme@1.2.0':
-    dependencies:
-      '@equinor/fusion-wc-core': 2.0.0
-      '@equinor/fusion-web-theme': 0.1.10
-      '@material/theme': 14.0.0
       lit: 3.3.2
 
   '@equinor/fusion-wc-theme@1.2.1':
