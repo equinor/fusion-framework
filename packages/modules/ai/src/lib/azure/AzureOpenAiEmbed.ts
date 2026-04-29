@@ -11,6 +11,15 @@ import type { IEmbed } from '../types.js';
  * Base configuration shared by all OpenAI-compatible embedding clients.
  */
 type EmbedOpenAiConfig = {
+  /**
+   * Number of texts to send in a single API request.
+   *
+   * LangChain defaults to `1`, which means `embedDocuments` sends one
+   * HTTP request per text.  Set this to a higher value (Azure OpenAI
+   * supports up to 2 048) to amortise network overhead.
+   *
+   * @defaultValue `500`
+   */
   batchSize?: number;
   stripNewLines?: boolean;
 };
@@ -61,7 +70,10 @@ export class AzureOpenAiEmbed extends BaseService<string[], number[][]> implemen
    */
   constructor(config: AzureOpenAiEmbedConfig) {
     super();
-    this.client = new AzureOpenAIEmbeddings(config);
+    this.client = new AzureOpenAIEmbeddings({
+      ...config,
+      batchSize: config.batchSize ?? 500,
+    });
   }
 
   /**

@@ -165,20 +165,20 @@ const UPSERT_CONCURRENCY = 10;
  * Number of texts to embed per API request.
  *
  * Azure OpenAI accepts up to 2 048 inputs per embedding call.
- * Larger batches amortise the per-request network overhead (TLS
- * handshake, round-trip latency) and are the single biggest lever
- * for indexing speed.
+ * LangChain's `batchSize` default is 1 (!) so we also set it on the
+ * client constructor.  This outer batch controls how many documents
+ * are grouped before handing them to the embed client.
  */
 const EMBED_BATCH_SIZE = 500;
 
 /**
  * Number of concurrent embedding API requests in flight.
  *
- * With `EMBED_BATCH_SIZE = 500` each request already carries a large
- * payload, so moderate concurrency avoids overwhelming the endpoint
- * while still saturating throughput.
+ * Each request now carries EMBED_BATCH_SIZE texts in a single HTTP call
+ * (LangChain batchSize is aligned), so 2 concurrent requests already
+ * saturate most Azure OpenAI TPM quotas.
  */
-const EMBED_BATCH_CONCURRENCY = 6;
+const EMBED_BATCH_CONCURRENCY = 2;
 
 /**
  * Maximum time (ms) to wait before flushing a partial embedding batch.
