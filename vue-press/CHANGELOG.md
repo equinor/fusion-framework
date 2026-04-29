@@ -1,5 +1,13 @@
 # @equinor/fusion-framework-docs
 
+## 0.4.17
+
+### Patch Changes
+
+- 7b2f40f: Improve analytics React hooks documentation with motivation, use cases, complete imports, and additional examples.
+
+  Add a React sub-article to the published analytics module docs site with sidebar navigation.
+
 ## 0.4.16
 
 ### Patch Changes

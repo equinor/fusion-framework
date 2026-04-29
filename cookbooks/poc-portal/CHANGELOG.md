@@ -1,5 +1,12 @@
 # poc-portal
 
+## 1.1.72
+
+### Patch Changes
+
+- Updated dependencies [7b2f40f]
+  - @equinor/fusion-framework-react-app@10.0.5
+
 ## 1.1.71
 
 ### Patch Changes
