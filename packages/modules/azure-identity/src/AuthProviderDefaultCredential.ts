@@ -68,7 +68,9 @@ export class AuthProviderDefaultCredential implements IAuthProvider {
    * @returns The token result including access token and expiry.
    * @throws {NoCredentialError} When no credential source is available or token acquisition fails.
    */
-  async acquireToken(options: { request: { scopes: string[] } }): Promise<{ accessToken: string; expiresOn: Date | null } | null> {
+  async acquireToken(options: {
+    request: { scopes: string[] };
+  }): Promise<{ accessToken: string; expiresOn: Date | null } | null> {
     const tokenResponse = await this.#credential.getToken(options.request.scopes);
     if (!tokenResponse) {
       throw new NoCredentialError(

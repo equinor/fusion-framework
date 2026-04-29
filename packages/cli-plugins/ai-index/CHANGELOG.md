@@ -1,5 +1,19 @@
 # @equinor/fusion-framework-cli-plugin-ai-index
 
+## 3.0.0
+
+### Patch Changes
+
+- 4711dbc: Add verbose debug logging to the `ai index add` pipeline when `--debug` is active.
+
+  Debug output includes config/pattern details, skipped files, per-file chunk counts, embedding batch sizes, upsert document IDs, and git diff file listings.
+
+- Updated dependencies [4711dbc]
+- Updated dependencies [8d7b8a1]
+- Updated dependencies [4711dbc]
+  - @equinor/fusion-framework-cli-plugin-ai-base@4.0.0
+  - @equinor/fusion-framework-cli@15.0.0
+
 ## 2.1.0
 
 ### Minor Changes

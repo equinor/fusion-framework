@@ -46,7 +46,11 @@ export const command = createCommand('pack')
     'Name of the output archive file (default: out/bundle.zip)',
     'out/bundle.zip',
   )
-  .option('-d, --debug [boolean]', 'Enable debug mode for verbose logging', !!process.env.RUNNER_DEBUG)
+  .option(
+    '-d, --debug [boolean]',
+    'Enable debug mode for verbose logging',
+    !!process.env.RUNNER_DEBUG,
+  )
   .option('--schema [string]', 'Schema file to use for validation')
   .argument('[manifest]', 'Manifest file to use for bundling (e.g., my-portal.manifest.ts)')
   .action(async (manifest, options) => {

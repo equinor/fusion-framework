@@ -1,5 +1,24 @@
 # Change Log
 
+## 15.0.0
+
+### Major Changes
+
+- 8d7b8a1: **BREAKING:** Replace CLI authentication backend from `@equinor/fusion-framework-module-msal-node` with `@equinor/fusion-framework-module-azure-identity`.
+
+  `ffc auth login` and `ffc auth token` now use `InteractiveBrowserCredential` with OS-level token persistence — tokens survive across process restarts without re-prompting. The previous MSAL-based token cache is no longer used; users must re-authenticate with `ffc auth login` after upgrading.
+
+  Ref: https://github.com/equinor/fusion-core-tasks/issues/1067
+
+### Patch Changes
+
+- 4711dbc: Default the `--debug` flag to `true` when the `RUNNER_DEBUG` environment variable is set.
+
+  All app, portal, auth, and create commands now automatically enable debug mode in GitHub Actions debug runs without requiring `--debug` in workflow YAML.
+
+- Updated dependencies [8d7b8a1]
+  - @equinor/fusion-framework-module-azure-identity@0.2.0
+
 ## 14.2.7
 
 ### Patch Changes
