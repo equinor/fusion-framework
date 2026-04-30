@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.1.3 - 2026-04-22
+
+### patch
+
+- [#143](https://github.com/equinor/fusion-skills/pull/143) [`3c02e1d`](https://github.com/equinor/fusion-skills/commit/3c02e1d348a4de8ee9a0fd5a088ff18c0019dc2b) Thanks [@alftore](https://github.com/alftore)! - Document backend code tools in the Fusion MCP setup guide.
+
+
+  - Add `search_backend_code` to retrieval tool examples
+  - Add `get_backend_symbol` and `list_backend_projects` in the available backend tooling list
+
 ## 0.1.2 - 2026-03-21
 
 ### patch

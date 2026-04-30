@@ -10,6 +10,7 @@
     "fusion-dependency-review": {
       "source": "equinor/fusion-skills",
       "sourceType": "github",
+      "skillPath": "skills/.experimental/fusion-dependency-review/SKILL.md",
       "computedHash": "1ef3e75fb9116bc336d60c3d4e0dc75ce4ff91003a9f0abf7bed9c017c35043f"
     },
     "fusion-discover-skills": {
@@ -20,6 +21,7 @@
     "fusion-github-review-resolution": {
       "source": "equinor/fusion-skills",
       "sourceType": "github",
+      "skillPath": "skills/.experimental/fusion-github-review-resolution/SKILL.md",
       "computedHash": "31ec168649090359fd7cccefd06871098ee973dfbf1f41ce6d29ef291de8c826"
     },
     "fusion-issue-author-bug": {
@@ -45,26 +47,31 @@
     "fusion-issue-authoring": {
       "source": "equinor/fusion-skills",
       "sourceType": "github",
+      "skillPath": "skills/fusion-issue-authoring/SKILL.md",
       "computedHash": "df7b705977b4207bc0e678668d4bb6123ddce58266a9864b5e9c87c4dc74a660"
     },
     "fusion-issue-solving": {
       "source": "equinor/fusion-skills",
       "sourceType": "github",
+      "skillPath": "skills/.experimental/fusion-issue-solving/SKILL.md",
       "computedHash": "f028d8bb4dab2b4959f62f5578f450a8fc4fe848eb2111fa90a1bfba2d0c5393"
     },
     "fusion-issue-task-planning": {
       "source": "equinor/fusion-skills",
       "sourceType": "github",
+      "skillPath": "skills/.experimental/fusion-issue-task-planning/SKILL.md",
       "computedHash": "d8d7e2d1399538a98cd416e3024da0135d3af2477d671e2f1d7448f9e652b732"
     },
     "fusion-mcp": {
       "source": "equinor/fusion-skills",
       "sourceType": "github",
-      "computedHash": "969cfd602e4c33fd473a8b13af69701765470a3f711ee24ade28fc33068bee4f"
+      "skillPath": "skills/.experimental/fusion-mcp/SKILL.md",
+      "computedHash": "42e92117a6ce14834da4e3f9aedb1288e5a44c2a893ff500fa3c4b5e80efd430"
     },
     "fusion-skill-authoring": {
       "source": "equinor/fusion-skills",
       "sourceType": "github",
+      "skillPath": "skills/fusion-skill-authoring/SKILL.md",
       "computedHash": "7fff89ef0babfe248ae95c5f183de104d07206c9fbcffb4a843cbe33cf9b42bc"
     },
     "fusion-skill-self-report-bug": {
