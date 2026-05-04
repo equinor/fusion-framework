@@ -61,7 +61,7 @@
   "devDependencies": {
     "@azure/core-auth": "^1.10.1",
     "@azure/core-rest-pipeline": "^1.23.0",
-    "@azure/search-documents": "^12.2.0",
+    "@azure/search-documents": "^13.0.0",
     "@equinor/fusion-framework-module": "workspace:^",
     "@equinor/fusion-framework-module-msal": "workspace:^",
     "@equinor/fusion-framework-module-service-discovery": "workspace:^",
