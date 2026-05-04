@@ -1,3 +1,12 @@
+/**
+ * React integration for the Fusion HTTP module.
+ *
+ * Re-exports the {@link useHttpClient} hook for making authenticated HTTP requests
+ * from React components, plus core HTTP types and error classes from the
+ * underlying `@equinor/fusion-framework-module-http` module.
+ *
+ * @packageDocumentation
+ */
 export {
   IHttpClient,
   HttpClientMsal,
