@@ -5,7 +5,9 @@
     "rootDir": "src",
     "target": "ES6",
     "declarationDir": "./dist/types",
-    "baseUrl": ".",
+    "paths": {
+      "*": ["./*"]
+    },
     "jsx": "react-jsx"
   },
   "references": [

@@ -4,7 +4,9 @@
     "outDir": "dist/esm",
     "rootDir": "src",
     "declarationDir": "./dist/types",
-    "baseUrl": ".",
+    "paths": {
+      "*": ["./*"]
+    },
     "types": ["vite/client"],
     "lib": ["dom", "esnext", "webworker"]
   },
