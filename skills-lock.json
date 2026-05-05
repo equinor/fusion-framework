@@ -48,7 +48,7 @@
       "source": "equinor/fusion-skills",
       "sourceType": "github",
       "skillPath": "skills/fusion-issue-authoring/SKILL.md",
-      "computedHash": "df7b705977b4207bc0e678668d4bb6123ddce58266a9864b5e9c87c4dc74a660"
+      "computedHash": "faefff5a9557e394b281e53e5b8d4e33875ea0850656fc36b6bb01ad9be9cdb9"
     },
     "fusion-issue-solving": {
       "source": "equinor/fusion-skills",
@@ -60,13 +60,13 @@
       "source": "equinor/fusion-skills",
       "sourceType": "github",
       "skillPath": "skills/.experimental/fusion-issue-task-planning/SKILL.md",
-      "computedHash": "d8d7e2d1399538a98cd416e3024da0135d3af2477d671e2f1d7448f9e652b732"
+      "computedHash": "38b9f74a69b19f354c9f4fa9e759b772b5f5b21bc1a243c9295a3d9337bae77a"
     },
     "fusion-mcp": {
       "source": "equinor/fusion-skills",
       "sourceType": "github",
       "skillPath": "skills/.experimental/fusion-mcp/SKILL.md",
-      "computedHash": "42e92117a6ce14834da4e3f9aedb1288e5a44c2a893ff500fa3c4b5e80efd430"
+      "computedHash": "8d6a347dc657450bfcba331e6881f30844f3ebe816585d861b6b265e2877ca4b"
     },
     "fusion-skill-authoring": {
       "source": "equinor/fusion-skills",

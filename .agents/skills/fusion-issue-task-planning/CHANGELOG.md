@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.1.6 - 2026-05-04
+
+### patch
+
+- [#156](https://github.com/equinor/fusion-skills/pull/156) [`3ed5296`](https://github.com/equinor/fusion-skills/commit/3ed52962820549c21ddbec57df01273c5c930749) - Add explicit devil's-advocate review step before task draft generation
+
+
+  Inserts a new step 6 that inspects the proposed task set for architecture-ambiguity signals before any drafts are generated. When two or more signals are present (unresolved design decisions, implicit backend/frontend contracts, vague sequencing, contested ownership), the workflow automatically routes to interrogator mode without requiring a user trigger. In draft-only mode with unresolved ambiguities, an `⚠ Ambiguity warning` block is emitted at the top of the plan preview.
+
+  resolves equinor/fusion-skills#132
+
 ## 0.1.5 - 2026-03-24
 
 ### patch

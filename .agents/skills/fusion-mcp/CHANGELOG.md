@@ -1,5 +1,23 @@
 # Changelog
 
+## 1.0.0 - 2026-05-04
+
+### major
+
+- [#150](https://github.com/equinor/fusion-skills/pull/150) [`7f7c2d4`](https://github.com/equinor/fusion-skills/commit/7f7c2d480b8a562ddf6e5028a877b13a90bdb11a) - Update skill to reflect the new `equinor/fusion-mcp` server
+
+
+  - Replace all references to the old `fusion-poc-mcp` PoC server and image
+  - Promote the hosted production server (`https://mcp.api.fusion.equinor.com/mcp`) as the only recommended setup path; remove local Docker/GHCR guidance for end users
+  - Update VS Code config to use HTTP + OAuth (Microsoft Entra) instead of Docker `stdio` with API keys
+  - Rewrite `references/vscode-mcp-config.md` with one-click install link and manual OAuth config template
+  - Update tool inventory to match the new server: `search`, `search_framework`, `search_docs`, `search_backend_code`, `search_eds`, `search_indexes`
+  - Rewrite `references/mcp-call-snippets.md` with accurate per-tool parameter tables sourced from server code
+  - Remove `references/local-http-quickstart.md` (local setup not promoted to end users)
+  - Update troubleshooting to cover hosted-server failure modes (Entra auth, `401`, empty tool list)
+
+  Resolves equinor/fusion-skills#149
+
 ## 0.1.3 - 2026-04-22
 
 ### patch
