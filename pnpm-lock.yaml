@@ -1323,7 +1323,7 @@ importers:
         version: 2.1.3(react@19.2.5)(styled-components@6.4.1(react-dom@19.2.5(react@19.2.5))(react@19.2.5))
       '@equinor/fusion-wc-chip':
         specifier: ^1.2.2
-        version: 1.3.0
+        version: 1.3.2
       '@equinor/fusion-wc-person':
         specifier: ^3.4.1
         version: 3.5.0
@@ -3306,11 +3306,8 @@ packages:
   '@equinor/fusion-wc-checkbox@1.2.2':
     resolution: {integrity: sha512-XiwJk5bcwJyWJ4+q6cQRWEDQU77y+ucS0F88LVyHAwmFt70FMjGJDFWRJ0etSL3lh0B/eQWqt2/5QF8fLOUPPQ==}
 
-  '@equinor/fusion-wc-chip@1.3.0':
-    resolution: {integrity: sha512-YeuDfU3vgDqzDUtNqB4JeXMv7mMOhEXWabt0DLnIE1c/EK7wMuZ43nCfVEopBGzWRIph8wjethX9gNXMDq7sEw==}
-
-  '@equinor/fusion-wc-chip@1.3.1':
-    resolution: {integrity: sha512-PZ+8EdKydfkxWWGF31efDJuTSX3zg0J8AHSyntYhJjJfwLcqdZ8eFbmYBnMOR3JkA5IQFFwMVgZ7pmNtDC1gRQ==}
+  '@equinor/fusion-wc-chip@1.3.2':
+    resolution: {integrity: sha512-3PehNQTTGB0nXTGg1eQFulXXz9A28WHlZpADMlY++plSLEhlzs+ESv74jE/pFfbmdGwWnTbzuWU4nHvXICjljA==}
 
   '@equinor/fusion-wc-core@2.0.0':
     resolution: {integrity: sha512-yxUepfQhMIkKNYn2Vc73R6/cyvyO0hde3LXFitCCaa8QR9woK0UXZlxP+RwnEYzve528l9K1t7SnEsX6x5eyPg==}
@@ -3381,11 +3378,8 @@ packages:
   '@equinor/fusion-wc-radio@1.2.2':
     resolution: {integrity: sha512-qH1pbqU6+1OdCi7uIDBsVK+2uievme5a/MCu9jGGyiLLoDKiwFA4iO1A2GjgCsiAPR6ByugDQbKl/s3qhcRF3A==}
 
-  '@equinor/fusion-wc-ripple@1.2.0':
-    resolution: {integrity: sha512-9IbnC1N9c/BCuxwCQkv4ckeBEsxCxPsX2GpPIprwmJWiI63HRohHG7fHtGK3fwkWVNOdiYmn0Kd+vr9JqubQmg==}
-
-  '@equinor/fusion-wc-ripple@1.2.1':
-    resolution: {integrity: sha512-q+kY0Jxk4UU8+fsOYREYaPiKt8OMWF4NYrWsYWRtcaRrs4RVMTsP+QxLNB8DFtYqM2TK4F1zv3bce30I/guOrw==}
+  '@equinor/fusion-wc-ripple@1.2.2':
+    resolution: {integrity: sha512-yaBpmN6me91YQ49QgQKB66aR2UdE/BYuQAFvMG47LoDN57lsQbuRzhg6AD2SpgP3k2CcZ99DqjbSOiABfAjpkw==}
 
   '@equinor/fusion-wc-searchable-dropdown@4.1.0':
     resolution: {integrity: sha512-Khax3pq89t0+DDfq/vltwsDODZs3LxQxOBdVN4uUGfLqAonkYQR3exTVYNntxuTKpp5XMZMMsko2VgsQcfnOiA==}
@@ -12444,19 +12438,11 @@ snapshots:
       '@material/mwc-checkbox': 0.27.0
       lit: 3.3.2
 
-  '@equinor/fusion-wc-chip@1.3.0':
+  '@equinor/fusion-wc-chip@1.3.2':
     dependencies:
-      '@equinor/fusion-wc-core': 2.0.0
-      '@equinor/fusion-wc-icon': 2.4.0
-      '@equinor/fusion-wc-ripple': 1.2.0
-      '@equinor/fusion-web-theme': 0.1.10
-      lit: 3.3.2
-
-  '@equinor/fusion-wc-chip@1.3.1':
-    dependencies:
-      '@equinor/fusion-wc-core': 2.0.1
-      '@equinor/fusion-wc-icon': 2.4.1
-      '@equinor/fusion-wc-ripple': 1.2.1
+      '@equinor/fusion-wc-core': 2.0.2
+      '@equinor/fusion-wc-icon': 2.4.2
+      '@equinor/fusion-wc-ripple': 1.2.2
       '@equinor/fusion-web-theme': 0.1.10
       lit: 3.3.2
 
@@ -12573,7 +12559,7 @@ snapshots:
     dependencies:
       '@equinor/fusion-wc-button': 2.5.1
       '@equinor/fusion-wc-checkbox': 1.2.1
-      '@equinor/fusion-wc-chip': 1.3.1
+      '@equinor/fusion-wc-chip': 1.3.2
       '@equinor/fusion-wc-core': 2.0.1
       '@equinor/fusion-wc-formfield': 1.2.1
       '@equinor/fusion-wc-icon': 2.4.1
@@ -12647,15 +12633,9 @@ snapshots:
       '@material/mwc-radio': 0.27.0
       lit: 3.3.2
 
-  '@equinor/fusion-wc-ripple@1.2.0':
+  '@equinor/fusion-wc-ripple@1.2.2':
     dependencies:
-      '@equinor/fusion-wc-core': 2.0.0
-      '@material/mwc-ripple': 0.27.0
-      lit: 3.3.2
-
-  '@equinor/fusion-wc-ripple@1.2.1':
-    dependencies:
-      '@equinor/fusion-wc-core': 2.0.1
+      '@equinor/fusion-wc-core': 2.0.2
       '@material/mwc-ripple': 0.27.0
       lit: 3.3.2
 
