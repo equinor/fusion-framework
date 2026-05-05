@@ -53,7 +53,7 @@ importers:
         version: 3.2.0
       zod:
         specifier: ^4.3.6
-        version: 4.3.6
+        version: 4.4.3
     devDependencies:
       '@biomejs/biome':
         specifier: 2.4.14
@@ -90,7 +90,7 @@ importers:
         version: 6.0.3
       vitest:
         specifier: ^4.1.0
-        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@24.12.0)(@vitest/coverage-v8@4.1.4)(esbuild@0.28.0)(happy-dom@20.9.0)(jsdom@29.1.1)(msw@2.14.3(@types/node@24.12.0)(typescript@6.0.3))(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3)
+        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@24.12.0)(@vitest/coverage-v8@4.1.4)(happy-dom@20.9.0)(jsdom@29.1.1)(msw@2.14.3(@types/node@24.12.0)(typescript@6.0.3))(vite@8.0.9(@types/node@24.12.0)(esbuild@0.28.0)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3))
 
   cookbooks/app-react:
     devDependencies:
@@ -174,7 +174,7 @@ importers:
         version: link:../../packages/react/modules/module
       '@langchain/core':
         specifier: ^1.0.1
-        version: 1.1.44(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.7.0(@opentelemetry/api@1.9.1))(openai@6.36.0(ws@8.20.0)(zod@4.3.6))(ws@8.20.0)
+        version: 1.1.44(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.7.0(@opentelemetry/api@1.9.1))(openai@6.36.0(ws@8.20.0)(zod@4.4.3))(ws@8.20.0)
       '@types/react':
         specifier: ^19.2.7
         version: 19.2.14
@@ -195,7 +195,7 @@ importers:
         version: 16.1.1(react@19.2.5)
       zod:
         specifier: ^4.3.6
-        version: 4.3.6
+        version: 4.4.3
 
   cookbooks/app-react-apploader:
     devDependencies:
@@ -899,7 +899,7 @@ importers:
         version: 14.0.0
       zod:
         specifier: ^4.3.6
-        version: 4.3.6
+        version: 4.4.3
     devDependencies:
       '@types/react':
         specifier: ^19.2.7
@@ -1009,7 +1009,7 @@ importers:
         version: 6.1.1(typescript@6.0.3)(vite@8.0.9(@types/node@25.6.0)(esbuild@0.28.0)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3))
       zod:
         specifier: ^4.3.6
-        version: 4.3.6
+        version: 4.4.3
     devDependencies:
       '@equinor/fusion-framework-module':
         specifier: workspace:*
@@ -1085,7 +1085,7 @@ importers:
         version: 6.0.3
       vitest:
         specifier: ^4.1.0
-        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@25.6.0)(@vitest/coverage-v8@4.1.4)(esbuild@0.28.0)(happy-dom@20.9.0)(jsdom@29.1.1)(msw@2.14.3(@types/node@25.6.0)(typescript@6.0.3))(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3)
+        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@25.6.0)(@vitest/coverage-v8@4.1.4)(happy-dom@20.9.0)(jsdom@29.1.1)(msw@2.14.3(@types/node@25.6.0)(typescript@6.0.3))(vite@8.0.9(@types/node@25.6.0)(esbuild@0.28.0)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3))
 
   packages/cli-plugins/ai-base:
     dependencies:
@@ -1103,7 +1103,7 @@ importers:
         version: 14.0.3
       zod:
         specifier: ^4.3.6
-        version: 4.3.6
+        version: 4.4.3
     devDependencies:
       '@equinor/fusion-framework-cli':
         specifier: workspace:^
@@ -1113,7 +1113,7 @@ importers:
         version: 6.0.3
       vitest:
         specifier: ^4.1.0
-        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@25.6.0)(@vitest/coverage-v8@4.1.4)(esbuild@0.28.0)(happy-dom@20.9.0)(jsdom@29.1.1)(msw@2.14.3(@types/node@25.6.0)(typescript@6.0.3))(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3)
+        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@25.6.0)(@vitest/coverage-v8@4.1.4)(happy-dom@20.9.0)(jsdom@29.1.1)(msw@2.14.3(@types/node@25.6.0)(typescript@6.0.3))(vite@8.0.9(@types/node@25.6.0)(esbuild@0.28.0)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3))
 
   packages/cli-plugins/ai-chat:
     dependencies:
@@ -1144,7 +1144,7 @@ importers:
         version: 6.0.3
       vitest:
         specifier: ^4.1.0
-        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@25.6.0)(@vitest/coverage-v8@4.1.4)(esbuild@0.28.0)(happy-dom@20.9.0)(jsdom@29.1.1)(msw@2.14.3(@types/node@25.6.0)(typescript@6.0.3))(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3)
+        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@25.6.0)(@vitest/coverage-v8@4.1.4)(happy-dom@20.9.0)(jsdom@29.1.1)(msw@2.14.3(@types/node@25.6.0)(typescript@6.0.3))(vite@8.0.9(@types/node@25.6.0)(esbuild@0.28.0)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3))
 
   packages/cli-plugins/ai-index:
     dependencies:
@@ -1165,10 +1165,10 @@ importers:
         version: link:../../utils/imports
       '@langchain/core':
         specifier: ^1.0.1
-        version: 1.1.44(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.7.0(@opentelemetry/api@1.9.1))(openai@6.36.0(ws@8.20.0)(zod@4.3.6))(ws@8.20.0)
+        version: 1.1.44(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.7.0(@opentelemetry/api@1.9.1))(openai@6.36.0(ws@8.20.0)(zod@4.4.3))(ws@8.20.0)
       '@langchain/textsplitters':
         specifier: ^1.0.0
-        version: 1.0.1(@langchain/core@1.1.44(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.7.0(@opentelemetry/api@1.9.1))(openai@6.36.0(ws@8.20.0)(zod@4.3.6))(ws@8.20.0))
+        version: 1.0.1(@langchain/core@1.1.44(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.7.0(@opentelemetry/api@1.9.1))(openai@6.36.0(ws@8.20.0)(zod@4.4.3))(ws@8.20.0))
       commander:
         specifier: ^14.0.1
         version: 14.0.3
@@ -1204,7 +1204,7 @@ importers:
         version: 28.0.0
       zod:
         specifier: ^4.3.6
-        version: 4.3.6
+        version: 4.4.3
     devDependencies:
       '@equinor/fusion-framework-cli':
         specifier: workspace:^
@@ -1214,7 +1214,7 @@ importers:
         version: 6.0.3
       vitest:
         specifier: ^4.1.0
-        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@25.6.0)(@vitest/coverage-v8@4.1.4)(esbuild@0.28.0)(happy-dom@20.9.0)(jsdom@29.1.1)(msw@2.14.3(@types/node@25.6.0)(typescript@6.0.3))(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3)
+        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@25.6.0)(@vitest/coverage-v8@4.1.4)(happy-dom@20.9.0)(jsdom@29.1.1)(msw@2.14.3(@types/node@25.6.0)(typescript@6.0.3))(vite@8.0.9(@types/node@25.6.0)(esbuild@0.28.0)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3))
 
   packages/cli-plugins/copilot:
     dependencies:
@@ -1384,7 +1384,7 @@ importers:
         version: 8.0.9(@types/node@25.6.0)(esbuild@0.28.0)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3)
       vitest:
         specifier: ^4.1.0
-        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@25.6.0)(@vitest/coverage-v8@4.1.4)(esbuild@0.28.0)(happy-dom@20.9.0)(jsdom@29.1.1)(msw@2.14.3(@types/node@25.6.0)(typescript@6.0.3))(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3)
+        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@25.6.0)(@vitest/coverage-v8@4.1.4)(happy-dom@20.9.0)(jsdom@29.1.1)(msw@2.14.3(@types/node@25.6.0)(typescript@6.0.3))(vite@8.0.9(@types/node@25.6.0)(esbuild@0.28.0)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3))
 
   packages/framework:
     dependencies:
@@ -1421,7 +1421,7 @@ importers:
         version: 6.0.3
       vitest:
         specifier: ^4.1.0
-        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@25.6.0)(@vitest/coverage-v8@4.1.4)(esbuild@0.28.0)(happy-dom@20.9.0)(jsdom@29.1.1)(msw@2.14.3(@types/node@25.6.0)(typescript@6.0.3))(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3)
+        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@25.6.0)(@vitest/coverage-v8@4.1.4)(happy-dom@20.9.0)(jsdom@29.1.1)(msw@2.14.3(@types/node@25.6.0)(typescript@6.0.3))(vite@8.0.9(@types/node@25.6.0)(esbuild@0.28.0)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3))
 
   packages/modules/ag-grid:
     devDependencies:
@@ -1482,7 +1482,7 @@ importers:
         version: 6.0.3
       vitest:
         specifier: ^4.1.0
-        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@25.6.0)(@vitest/coverage-v8@4.1.4)(esbuild@0.28.0)(happy-dom@20.9.0)(jsdom@29.1.1)(msw@2.14.3(@types/node@25.6.0)(typescript@6.0.3))(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3)
+        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@25.6.0)(@vitest/coverage-v8@4.1.4)(happy-dom@20.9.0)(jsdom@29.1.1)(msw@2.14.3(@types/node@25.6.0)(typescript@6.0.3))(vite@8.0.9(@types/node@25.6.0)(esbuild@0.28.0)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3))
 
   packages/modules/analytics:
     dependencies:
@@ -1530,7 +1530,7 @@ importers:
         version: 14.0.0
       zod:
         specifier: ^4.3.6
-        version: 4.3.6
+        version: 4.4.3
     devDependencies:
       '@equinor/fusion-observable':
         specifier: workspace:^
@@ -1540,7 +1540,7 @@ importers:
         version: 6.0.3
       vitest:
         specifier: ^4.1.0
-        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@25.6.0)(@vitest/coverage-v8@4.1.4)(esbuild@0.28.0)(happy-dom@20.9.0)(jsdom@29.1.1)(msw@2.14.3(@types/node@25.6.0)(typescript@6.0.3))(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3)
+        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@25.6.0)(@vitest/coverage-v8@4.1.4)(happy-dom@20.9.0)(jsdom@29.1.1)(msw@2.14.3(@types/node@25.6.0)(typescript@6.0.3))(vite@8.0.9(@types/node@25.6.0)(esbuild@0.28.0)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3))
 
   packages/modules/app:
     dependencies:
@@ -1564,7 +1564,7 @@ importers:
         version: 14.0.0
       zod:
         specifier: ^4.3.6
-        version: 4.3.6
+        version: 4.4.3
     devDependencies:
       '@equinor/fusion-framework-module':
         specifier: workspace:^
@@ -1651,7 +1651,7 @@ importers:
         version: 6.0.3
       zod:
         specifier: ^4.3.6
-        version: 4.3.6
+        version: 4.4.3
 
   packages/modules/context:
     dependencies:
@@ -1738,14 +1738,14 @@ importers:
         version: 7.8.2
       zod:
         specifier: ^4.3.6
-        version: 4.3.6
+        version: 4.4.3
     devDependencies:
       typescript:
         specifier: ^6.0.3
         version: 6.0.3
       vitest:
         specifier: ^4.1.0
-        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@25.6.0)(@vitest/coverage-v8@4.1.4)(esbuild@0.28.0)(happy-dom@20.9.0)(jsdom@29.1.1)(msw@2.14.3(@types/node@25.6.0)(typescript@6.0.3))(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3)
+        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@25.6.0)(@vitest/coverage-v8@4.1.4)(happy-dom@20.9.0)(jsdom@29.1.1)(msw@2.14.3(@types/node@25.6.0)(typescript@6.0.3))(vite@8.0.9(@types/node@25.6.0)(esbuild@0.28.0)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3))
 
   packages/modules/module:
     dependencies:
@@ -1786,7 +1786,7 @@ importers:
         version: 6.0.3
       zod:
         specifier: ^4.3.6
-        version: 4.3.6
+        version: 4.4.3
 
   packages/modules/msal-node:
     dependencies:
@@ -1817,7 +1817,7 @@ importers:
         version: 14.0.0
       zod:
         specifier: ^4.3.6
-        version: 4.3.6
+        version: 4.4.3
     devDependencies:
       '@equinor/fusion-framework-module':
         specifier: workspace:^
@@ -1842,7 +1842,7 @@ importers:
         version: 6.0.3
       vitest:
         specifier: ^4.1.0
-        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@25.6.0)(@vitest/coverage-v8@4.1.4)(esbuild@0.28.0)(happy-dom@20.9.0)(jsdom@29.1.1)(msw@2.14.3(@types/node@25.6.0)(typescript@6.0.3))(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3)
+        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@25.6.0)(@vitest/coverage-v8@4.1.4)(happy-dom@20.9.0)(jsdom@29.1.1)(msw@2.14.3(@types/node@25.6.0)(typescript@6.0.3))(vite@8.0.9(@types/node@25.6.0)(esbuild@0.28.0)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3))
 
   packages/modules/service-discovery:
     dependencies:
@@ -1860,7 +1860,7 @@ importers:
         version: 7.8.2
       zod:
         specifier: ^4.3.6
-        version: 4.3.6
+        version: 4.4.3
     devDependencies:
       typescript:
         specifier: ^6.0.3
@@ -1873,7 +1873,7 @@ importers:
         version: 8.0.7
       zod:
         specifier: ^4.3.6
-        version: 4.3.6
+        version: 4.4.3
     devDependencies:
       '@equinor/fusion-framework-module':
         specifier: workspace:^
@@ -1895,7 +1895,7 @@ importers:
         version: 6.0.3
       vitest:
         specifier: ^4.1.0
-        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@25.6.0)(@vitest/coverage-v8@4.1.4)(esbuild@0.28.0)(happy-dom@20.9.0)(jsdom@29.1.1)(msw@2.14.3(@types/node@25.6.0)(typescript@6.0.3))(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3)
+        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@25.6.0)(@vitest/coverage-v8@4.1.4)(happy-dom@20.9.0)(jsdom@29.1.1)(msw@2.14.3(@types/node@25.6.0)(typescript@6.0.3))(vite@8.0.9(@types/node@25.6.0)(esbuild@0.28.0)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3))
 
   packages/modules/signalr:
     dependencies:
@@ -1929,7 +1929,7 @@ importers:
         version: 7.8.2
       zod:
         specifier: ^4.3.6
-        version: 4.3.6
+        version: 4.4.3
     devDependencies:
       '@equinor/fusion-framework-module':
         specifier: workspace:*
@@ -1948,7 +1948,7 @@ importers:
         version: 6.0.3
       vitest:
         specifier: ^4.1.0
-        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@25.6.0)(@vitest/coverage-v8@4.1.4)(esbuild@0.28.0)(happy-dom@20.9.0)(jsdom@29.1.1)(msw@2.14.3(@types/node@25.6.0)(typescript@6.0.3))(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3)
+        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@25.6.0)(@vitest/coverage-v8@4.1.4)(happy-dom@20.9.0)(jsdom@29.1.1)(msw@2.14.3(@types/node@25.6.0)(typescript@6.0.3))(vite@8.0.9(@types/node@25.6.0)(esbuild@0.28.0)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3))
 
   packages/modules/widget:
     dependencies:
@@ -2096,7 +2096,7 @@ importers:
         version: 6.0.3
       vitest:
         specifier: ^4.1.0
-        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@25.6.0)(@vitest/coverage-v8@4.1.4)(esbuild@0.28.0)(happy-dom@20.9.0)(jsdom@29.1.1)(msw@2.14.3(@types/node@25.6.0)(typescript@6.0.3))(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3)
+        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@25.6.0)(@vitest/coverage-v8@4.1.4)(happy-dom@20.9.0)(jsdom@29.1.1)(msw@2.14.3(@types/node@25.6.0)(typescript@6.0.3))(vite@8.0.9(@types/node@25.6.0)(esbuild@0.28.0)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3))
 
   packages/react/components/bookmark:
     dependencies:
@@ -2444,7 +2444,7 @@ importers:
         version: 8.0.9(@types/node@25.6.0)(esbuild@0.28.0)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3)
       vitest:
         specifier: ^4.1.0
-        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@25.6.0)(@vitest/coverage-v8@4.1.4)(esbuild@0.28.0)(happy-dom@20.9.0)(jsdom@29.1.1)(msw@2.14.3(@types/node@25.6.0)(typescript@6.0.3))(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3)
+        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@25.6.0)(@vitest/coverage-v8@4.1.4)(happy-dom@20.9.0)(jsdom@29.1.1)(msw@2.14.3(@types/node@25.6.0)(typescript@6.0.3))(vite@8.0.9(@types/node@25.6.0)(esbuild@0.28.0)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3))
 
   packages/utils/imports:
     dependencies:
@@ -2469,7 +2469,7 @@ importers:
         version: 4.6.0
       vitest:
         specifier: ^4.1.0
-        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@25.6.0)(@vitest/coverage-v8@4.1.4)(esbuild@0.28.0)(happy-dom@20.9.0)(jsdom@29.1.1)(msw@2.14.3(@types/node@25.6.0)(typescript@6.0.3))(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3)
+        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@25.6.0)(@vitest/coverage-v8@4.1.4)(happy-dom@20.9.0)(jsdom@29.1.1)(msw@2.14.3(@types/node@25.6.0)(typescript@6.0.3))(vite@8.0.9(@types/node@25.6.0)(esbuild@0.28.0)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3))
 
   packages/utils/load-env:
     dependencies:
@@ -2485,7 +2485,7 @@ importers:
         version: 6.0.3
       vitest:
         specifier: ^4.1.0
-        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@25.6.0)(@vitest/coverage-v8@4.1.4)(esbuild@0.28.0)(happy-dom@20.9.0)(jsdom@29.1.1)(msw@2.14.3(@types/node@25.6.0)(typescript@6.0.3))(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3)
+        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@25.6.0)(@vitest/coverage-v8@4.1.4)(happy-dom@20.9.0)(jsdom@29.1.1)(msw@2.14.3(@types/node@25.6.0)(typescript@6.0.3))(vite@8.0.9(@types/node@25.6.0)(esbuild@0.28.0)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3))
 
   packages/utils/log:
     dependencies:
@@ -2501,7 +2501,7 @@ importers:
         version: 6.0.3
       vitest:
         specifier: ^4.1.0
-        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@25.6.0)(@vitest/coverage-v8@4.1.4)(esbuild@0.28.0)(happy-dom@20.9.0)(jsdom@29.1.1)(msw@2.14.3(@types/node@25.6.0)(typescript@6.0.3))(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3)
+        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@25.6.0)(@vitest/coverage-v8@4.1.4)(happy-dom@20.9.0)(jsdom@29.1.1)(msw@2.14.3(@types/node@25.6.0)(typescript@6.0.3))(vite@8.0.9(@types/node@25.6.0)(esbuild@0.28.0)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3))
 
   packages/utils/observable:
     dependencies:
@@ -2538,7 +2538,7 @@ importers:
         version: 6.0.3
       vitest:
         specifier: ^4.1.0
-        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@25.6.0)(@vitest/coverage-v8@4.1.4)(esbuild@0.28.0)(happy-dom@20.9.0)(jsdom@29.1.1)(msw@2.14.3(@types/node@25.6.0)(typescript@6.0.3))(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3)
+        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@25.6.0)(@vitest/coverage-v8@4.1.4)(happy-dom@20.9.0)(jsdom@29.1.1)(msw@2.14.3(@types/node@25.6.0)(typescript@6.0.3))(vite@8.0.9(@types/node@25.6.0)(esbuild@0.28.0)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3))
 
   packages/utils/query:
     dependencies:
@@ -2569,7 +2569,7 @@ importers:
         version: 6.0.3
       vitest:
         specifier: ^4.1.0
-        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@25.6.0)(@vitest/coverage-v8@4.1.4)(esbuild@0.28.0)(happy-dom@20.9.0)(jsdom@29.1.1)(msw@2.14.3(@types/node@25.6.0)(typescript@6.0.3))(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3)
+        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@25.6.0)(@vitest/coverage-v8@4.1.4)(happy-dom@20.9.0)(jsdom@29.1.1)(msw@2.14.3(@types/node@25.6.0)(typescript@6.0.3))(vite@8.0.9(@types/node@25.6.0)(esbuild@0.28.0)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3))
 
   packages/vite-plugins/api-service:
     dependencies:
@@ -2597,7 +2597,7 @@ importers:
         version: 8.0.9(@types/node@25.6.0)(esbuild@0.28.0)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3)
       vitest:
         specifier: ^4.1.0
-        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@25.6.0)(@vitest/coverage-v8@4.1.4)(esbuild@0.28.0)(happy-dom@20.9.0)(jsdom@29.1.1)(msw@2.14.3(@types/node@25.6.0)(typescript@6.0.3))(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3)
+        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@25.6.0)(@vitest/coverage-v8@4.1.4)(happy-dom@20.9.0)(jsdom@29.1.1)(msw@2.14.3(@types/node@25.6.0)(typescript@6.0.3))(vite@8.0.9(@types/node@25.6.0)(esbuild@0.28.0)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3))
 
   packages/vite-plugins/raw-imports:
     devDependencies:
@@ -2609,7 +2609,7 @@ importers:
         version: 8.0.9(@types/node@25.6.0)(esbuild@0.28.0)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3)
       vitest:
         specifier: ^4.1.0
-        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@25.6.0)(@vitest/coverage-v8@4.1.4)(esbuild@0.28.0)(happy-dom@20.9.0)(jsdom@29.1.1)(msw@2.14.3(@types/node@25.6.0)(typescript@6.0.3))(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3)
+        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@25.6.0)(@vitest/coverage-v8@4.1.4)(happy-dom@20.9.0)(jsdom@29.1.1)(msw@2.14.3(@types/node@25.6.0)(typescript@6.0.3))(vite@8.0.9(@types/node@25.6.0)(esbuild@0.28.0)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3))
 
   packages/vite-plugins/spa:
     dependencies:
@@ -11184,6 +11184,7 @@ packages:
       '@vitest/ui': 4.1.4
       happy-dom: '*'
       jsdom: '*'
+      vite: ^6.0.0 || ^7.0.0 || ^8.0.0
     peerDependenciesMeta:
       '@edge-runtime/vm':
         optional: true
@@ -11534,9 +11535,6 @@ packages:
     resolution: {integrity: sha512-CzhO+pFNo8ajLM2d2IW/R93ipy99LWjtwblvC1RsoSUMZgyLbYFr221TnSNT7GjGdYui6P459mw9JH/g/zW2ug==}
     engines: {node: '>=18'}
 
-  zod@4.3.6:
-    resolution: {integrity: sha512-rftlrkhHZOcjDwkGlnUtZZkvaPHCsDATp4pGpuOOMDaTdDDXF91wuVDJoWoPsKX/3YPQ5fHuF3STjcYyKr+Qhg==}
-
   zod@4.4.3:
     resolution: {integrity: sha512-ytENFjIJFl2UwYglde2jchW2Hwm4GJFLDiSXWdTrJQBIN9Fcyp7n4DhxJEiWNAJMV1/BqWfW/kkg71UDcHJyTQ==}
 
@@ -11633,7 +11631,7 @@ snapshots:
       react: 19.2.5
       react-dom: 19.2.5(react@19.2.5)
       react-textarea-autosize: 8.5.9(@types/react@19.2.14)(react@19.2.5)
-      zod: 4.3.6
+      zod: 4.4.3
       zustand: 5.0.12(@types/react@19.2.14)(immer@11.1.6)(react@19.2.5)(use-sync-external-store@1.6.0(react@19.2.5))
     optionalDependencies:
       '@types/react': 19.2.14
@@ -12976,7 +12974,7 @@ snapshots:
     dependencies:
       '@github/copilot': 1.0.39
       vscode-jsonrpc: 8.2.1(patch_hash=d78796f2e6ae0a6c190cb4da47138eafba7404e190b66f5ac22b382e16f04eca)
-      zod: 4.3.6
+      zod: 4.4.3
 
   '@github/copilot-win32-arm64@1.0.39':
     optional: true
@@ -13380,25 +13378,6 @@ snapshots:
       - '@opentelemetry/sdk-trace-base'
       - peggy
 
-  '@langchain/core@1.1.44(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.7.0(@opentelemetry/api@1.9.1))(openai@6.36.0(ws@8.20.0)(zod@4.3.6))(ws@8.20.0)':
-    dependencies:
-      '@cfworker/json-schema': 4.1.1
-      '@standard-schema/spec': 1.1.0
-      ansi-styles: 5.2.0
-      camelcase: 6.3.0
-      decamelize: 1.2.0
-      js-tiktoken: 1.0.21
-      langsmith: 0.5.21(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.7.0(@opentelemetry/api@1.9.1))(openai@6.36.0(ws@8.20.0)(zod@4.3.6))(ws@8.20.0)
-      mustache: 4.2.0
-      p-queue: 6.6.2
-      zod: 4.3.6
-    transitivePeerDependencies:
-      - '@opentelemetry/api'
-      - '@opentelemetry/exporter-trace-otlp-proto'
-      - '@opentelemetry/sdk-trace-base'
-      - openai
-      - ws
-
   '@langchain/core@1.1.44(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.7.0(@opentelemetry/api@1.9.1))(openai@6.36.0(ws@8.20.0)(zod@4.4.3))(ws@8.20.0)':
     dependencies:
       '@cfworker/json-schema': 4.1.1
@@ -13410,7 +13389,7 @@ snapshots:
       langsmith: 0.5.21(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.7.0(@opentelemetry/api@1.9.1))(openai@6.36.0(ws@8.20.0)(zod@4.4.3))(ws@8.20.0)
       mustache: 4.2.0
       p-queue: 6.6.2
-      zod: 4.3.6
+      zod: 4.4.3
     transitivePeerDependencies:
       - '@opentelemetry/api'
       - '@opentelemetry/exporter-trace-otlp-proto'
@@ -13457,11 +13436,6 @@ snapshots:
       zod: 4.4.3
     transitivePeerDependencies:
       - ws
-
-  '@langchain/textsplitters@1.0.1(@langchain/core@1.1.44(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.7.0(@opentelemetry/api@1.9.1))(openai@6.36.0(ws@8.20.0)(zod@4.3.6))(ws@8.20.0))':
-    dependencies:
-      '@langchain/core': 1.1.44(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.7.0(@opentelemetry/api@1.9.1))(openai@6.36.0(ws@8.20.0)(zod@4.3.6))(ws@8.20.0)
-      js-tiktoken: 1.0.21
 
   '@langchain/textsplitters@1.0.1(@langchain/core@1.1.44(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.7.0(@opentelemetry/api@1.9.1))(openai@6.36.0(ws@8.20.0)(zod@4.4.3))(ws@8.20.0))':
     dependencies:
@@ -16779,7 +16753,7 @@ snapshots:
       obug: 2.1.1
       std-env: 4.0.0
       tinyrainbow: 3.1.0
-      vitest: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@25.6.0)(@vitest/coverage-v8@4.1.4)(esbuild@0.28.0)(happy-dom@20.9.0)(jsdom@29.1.1)(msw@2.14.3(@types/node@25.6.0)(typescript@6.0.3))(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3)
+      vitest: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@25.6.0)(@vitest/coverage-v8@4.1.4)(happy-dom@20.9.0)(jsdom@29.1.1)(msw@2.14.3(@types/node@25.6.0)(typescript@6.0.3))(vite@8.0.9(@types/node@25.6.0)(esbuild@0.28.0)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3))
 
   '@vitest/expect@4.1.4':
     dependencies:
@@ -19005,16 +18979,6 @@ snapshots:
       vscode-languageserver-textdocument: 1.0.12
       vscode-uri: 3.0.8
 
-  langsmith@0.5.21(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.7.0(@opentelemetry/api@1.9.1))(openai@6.36.0(ws@8.20.0)(zod@4.3.6))(ws@8.20.0):
-    dependencies:
-      p-queue: 6.6.2
-      uuid: 10.0.0
-    optionalDependencies:
-      '@opentelemetry/api': 1.9.1
-      '@opentelemetry/sdk-trace-base': 2.7.0(@opentelemetry/api@1.9.1)
-      openai: 6.36.0(ws@8.20.0)(zod@4.3.6)
-      ws: 8.20.0
-
   langsmith@0.5.21(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.7.0(@opentelemetry/api@1.9.1))(openai@6.36.0(ws@8.20.0)(zod@4.4.3))(ws@8.20.0):
     dependencies:
       p-queue: 6.6.2
@@ -19694,12 +19658,6 @@ snapshots:
       is-inside-container: 1.0.0
       powershell-utils: 0.1.0
       wsl-utils: 0.3.1
-
-  openai@6.36.0(ws@8.20.0)(zod@4.3.6):
-    optionalDependencies:
-      ws: 8.20.0
-      zod: 4.3.6
-    optional: true
 
   openai@6.36.0(ws@8.20.0)(zod@4.4.3):
     optionalDependencies:
@@ -21177,7 +21135,7 @@ snapshots:
       tsx: 4.21.0
       yaml: 2.8.3
 
-  vitest@4.1.4(@opentelemetry/api@1.9.1)(@types/node@24.12.0)(@vitest/coverage-v8@4.1.4)(esbuild@0.28.0)(happy-dom@20.9.0)(jsdom@29.1.1)(msw@2.14.3(@types/node@24.12.0)(typescript@6.0.3))(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3):
+  vitest@4.1.4(@opentelemetry/api@1.9.1)(@types/node@24.12.0)(@vitest/coverage-v8@4.1.4)(happy-dom@20.9.0)(jsdom@29.1.1)(msw@2.14.3(@types/node@24.12.0)(typescript@6.0.3))(vite@8.0.9(@types/node@24.12.0)(esbuild@0.28.0)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3)):
     dependencies:
       '@vitest/expect': 4.1.4
       '@vitest/mocker': 4.1.4(msw@2.14.3(@types/node@24.12.0)(typescript@6.0.3))(vite@8.0.9(@types/node@24.12.0)(esbuild@0.28.0)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3))
@@ -21206,20 +21164,9 @@ snapshots:
       happy-dom: 20.9.0
       jsdom: 29.1.1
     transitivePeerDependencies:
-      - '@vitejs/devtools'
-      - esbuild
-      - jiti
-      - less
       - msw
-      - sass
-      - sass-embedded
-      - stylus
-      - sugarss
-      - terser
-      - tsx
-      - yaml
 
-  vitest@4.1.4(@opentelemetry/api@1.9.1)(@types/node@25.6.0)(@vitest/coverage-v8@4.1.4)(esbuild@0.28.0)(happy-dom@20.9.0)(jsdom@29.1.1)(msw@2.14.3(@types/node@25.6.0)(typescript@6.0.3))(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3):
+  vitest@4.1.4(@opentelemetry/api@1.9.1)(@types/node@25.6.0)(@vitest/coverage-v8@4.1.4)(happy-dom@20.9.0)(jsdom@29.1.1)(msw@2.14.3(@types/node@25.6.0)(typescript@6.0.3))(vite@8.0.9(@types/node@25.6.0)(esbuild@0.28.0)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3)):
     dependencies:
       '@vitest/expect': 4.1.4
       '@vitest/mocker': 4.1.4(msw@2.14.3(@types/node@25.6.0)(typescript@6.0.3))(vite@8.0.9(@types/node@25.6.0)(esbuild@0.28.0)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3))
@@ -21248,18 +21195,7 @@ snapshots:
       happy-dom: 20.9.0
       jsdom: 29.1.1
     transitivePeerDependencies:
-      - '@vitejs/devtools'
-      - esbuild
-      - jiti
-      - less
       - msw
-      - sass
-      - sass-embedded
-      - stylus
-      - sugarss
-      - terser
-      - tsx
-      - yaml
 
   vscode-jsonrpc@8.2.0: {}
 
@@ -21581,8 +21517,6 @@ snapshots:
   yocto-queue@1.2.2: {}
 
   yoctocolors@2.1.2: {}
-
-  zod@4.3.6: {}
 
   zod@4.4.3: {}
 
