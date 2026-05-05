@@ -32,7 +32,7 @@
     "@types/react-dom": "^19.2.3",
     "react": "^19.2.1",
     "react-dom": "^19.2.1",
-    "typescript": "^5.9.3"
+    "typescript": "^6.0.3"
   },
   "peerDependencies": {
     "@equinor/fusion-framework-module-http": "workspace:^",
