@@ -171,6 +171,22 @@ Only include `type` when issue types are supported.
 
 ### Add a sub-issue to a parent issue
 
+> **`sub_issue_id` is the GitHub object ID, NOT the issue number.**
+>
+> | Format | Example | Used in URLs / UI? |
+> |---|---|---|
+> | Issue number | `#79`, `79` | Yes |
+> | Object ID | `3969391411` | No — internal only |
+>
+> **Always retrieve the object ID before calling `sub_issue_write`.**
+>
+> ```bash
+> # Get the object ID for a sub-issue by its number
+> gh api repos/OWNER/REPO/issues/NUMBER -q '.id'
+> # Example: gh api repos/equinor/fusion-skills/issues/79 -q '.id'
+> # Output: 3969391411
+> ```
+
 ```json
 {
   "method": "add",
@@ -181,7 +197,13 @@ Only include `type` when issue types are supported.
 }
 ```
 
-Note: `sub_issue_id` is the sub-issue **ID**, not issue number.
+#### Troubleshooting sub-issue linking
+
+| Symptom | Likely cause | Fix |
+|---|---|---|
+| 404 error | Used issue number instead of object ID | Run `gh api repos/OWNER/REPO/issues/NUMBER -q '.id'` to get the correct ID |
+| "Invalid input" error | `sub_issue_id` missing or wrong format | Confirm value is a numeric ID (e.g. `3969391411`), not a string or `#79` |
+| Sub-issue not added silently | Parent issue or sub-issue does not exist, or insufficient permissions | Verify both issues exist and the token has write access |
 
 ### Reprioritize sub-issues
 
@@ -196,7 +218,7 @@ Note: `sub_issue_id` is the sub-issue **ID**, not issue number.
 }
 ```
 
-Use either `after_id` or `before_id` for reprioritization.
+Use either `after_id` or `before_id` for reprioritization. Both `sub_issue_id` and `after_id`/`before_id` are object IDs, not issue numbers.
 
 ## Minimal task-batch order
 
