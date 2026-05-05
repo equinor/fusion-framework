@@ -1,49 +1,48 @@
 # POC Portal Cookbook
 
-> [!NOTE]
-> This application is a proof of concept for a portal as an application from a static hosted site.
-
 > [!WARNING]
-> This is **NOT** an example of a production ready application. This is a proof of concept and should **NOT** be used as a reference for production applications.
-
-## Overview
-
-This cookbook demonstrates a proof of concept for hosting a portal as an application from a static site. It explores the boundaries and capabilities of the Fusion Framework portal system.
+> This is a **proof of concept** — not a production-ready application. Use it to learn portal initialization patterns, not as a template.
 
 ## Purpose
 
-This POC is designed to:
-- Test portal functionality in a static hosting environment
-- Explore integration patterns for portal applications
-- Validate architectural concepts
+This cookbook demonstrates how to **bootstrap a Fusion portal from a statically hosted site**. It validates that a portal can:
 
-## What This Is
+1. Receive framework modules from the host environment
+2. Create a `FrameworkProvider` and configure portal-level modules (app, HTTP)
+3. Load and render child applications inside the portal shell
 
-- A working example of portal concepts
-- An experimental implementation
-- A learning resource
+Study this cookbook to understand the portal bootstrapping lifecycle before building a real portal host.
 
-## What This Is Not
+## Key Concepts
 
-- **NOT** a production-ready application
-- **NOT** a recommended pattern for production use
-- **NOT** fully tested or supported
+### Portal entry point (`src/index.tsx`)
 
-## Getting Started
+The portal exports a `render(el, modules)` function that receives an HTML element and the host's pre-initialized modules. This is the contract between the static host and the portal shell.
 
-\`\`\`bash
-# Install dependencies
+### Framework provider (`src/Framework.tsx`)
+
+`createFrameworkProvider` wraps the portal in a Fusion framework context. Inside, the configurator:
+
+- Enables the **app module** (`enableAppModule`) so the portal can discover and load child apps
+- Configures an HTTP client for the app proxy endpoint
+- Sets the current app on initialization
+
+### App list (`src/AppList.tsx`)
+
+Renders the list of discoverable applications, demonstrating how a portal enumerates and presents available apps.
+
+## How to Run
+
+```bash
 pnpm install
-
-# Start development server
 pnpm dev
-\`\`\`
+```
 
-## Important Notes
+## What to Look At
 
-This proof of concept should be used only for:
-- Understanding portal concepts
-- Experimentation
-- Testing ideas
-
-Do **NOT** use this as a template for production applications.
+| File               | What it demonstrates                                    |
+| ------------------ | ------------------------------------------------------- |
+| `src/index.tsx`    | Portal render contract — `render(el, modules)`          |
+| `src/Framework.tsx`| `createFrameworkProvider` + app module configuration     |
+| `src/AppList.tsx`  | Listing and rendering child apps inside a portal        |
+| `src/config.ts`    | Application-level module configurator lifecycle hooks    |

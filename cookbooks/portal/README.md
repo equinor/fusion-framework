@@ -1,54 +1,46 @@
 # Portal Cookbook
 
-This cookbook demonstrates the basic portal framework for building widget-based applications.
+A minimal portal shell built with the Fusion Framework CLI. Demonstrates the simplest possible portal bootstrap — a standalone React render without framework module wiring.
 
-## What This Shows
+## Purpose
 
-This cookbook illustrates a simple portal implementation that provides a foundation for widget-based architectures.
+This cookbook shows **how a portal entry point is structured** when using the Fusion CLI dev server. Unlike a Fusion *app* (which receives its framework context from a hosting portal), a portal *is* the host. It owns the root render and decides which modules, apps, and layout to provide.
 
-## Code Example
+## How It Differs from an App Cookbook
 
-```typescript
-import { createElement } from 'react';
-import { createRoot } from 'react-dom/client';
-import { Portal } from './Portal';
+| Aspect           | App cookbook                          | Portal cookbook                        |
+| ---------------- | ------------------------------------ | ------------------------------------- |
+| Entry export     | `configure` + component              | `render(el)` — owns the DOM root      |
+| Framework context| Provided by the portal host          | Created by the portal itself          |
+| Module setup     | Receives pre-configured modules      | Configures and initializes modules    |
+| Typical use      | Feature inside a portal              | The shell that hosts features         |
 
+## Key Concept: The Render Contract
+
+A portal exports a `render` function that the CLI dev server calls with a DOM element:
+
+```ts
 export const render = (el: HTMLElement) => {
   createRoot(el).render(createElement(Portal));
 };
 ```
 
-## Portal Component
+In production, this same contract is used by the static host to mount the portal.
 
-```typescript
-export const Portal = () => {
-  return (
-    <div style={{
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      height: '100vh',
-      backgroundColor: '#cfd2d3',
-    }}>
-      <div style={{
-        maxHeight: '90%',
-        backgroundColor: 'white',
-        borderRadius: '8px',
-        padding: '20px',
-        boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
-        textAlign: 'center',
-      }}>
-        <h1>Welcome to the CLI Demo Portal</h1>
-        <p>This is a sample portal application.</p>
-      </div>
-    </div>
-  );
-};
+## How to Run
+
+```bash
+pnpm install
+pnpm dev
 ```
 
-## When to Use Portals
+## What to Look At
 
-Use portals for:
-- Widget-based application architecture
-- Hosting multiple apps in cabinets
-- Building workspaces with multiple tools
+| File            | What it demonstrates                          |
+| --------------- | --------------------------------------------- |
+| `src/index.tsx` | Portal render contract — `render(el)`         |
+| `src/Portal.tsx`| Minimal portal shell component                |
+
+## Next Steps
+
+For a more complete portal example with framework modules, app loading, and HTTP configuration, see the [poc-portal cookbook](../poc-portal/README.md).
