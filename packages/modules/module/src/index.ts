@@ -1,3 +1,16 @@
+/**
+ * Core module system for the Fusion Framework.
+ *
+ * Defines the base types, interfaces, and utilities for creating and
+ * initializing framework modules. All Fusion modules implement the
+ * {@link Module} interface and are wired together via
+ * {@link initializeModules}.
+ *
+ * @see {@link ModuleConfigBuilder} for building module configuration.
+ * @see {@link SemanticVersion} for version utilities.
+ *
+ * @packageDocumentation
+ */
 export type {
   AnyModule,
   AnyModuleInstance,
