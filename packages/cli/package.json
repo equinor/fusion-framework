@@ -123,7 +123,7 @@
     "simple-git": "^3.32.3",
     "vite": "^8.0.0",
     "vite-tsconfig-paths": "^6.0.4",
-    "zod": "^4.3.6"
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@equinor/fusion-framework-module": "workspace:*",

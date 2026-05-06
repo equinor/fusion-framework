@@ -39,7 +39,7 @@ export type TelemetryConfig = z.infer<typeof TelemetryConfigSchema>;
  * @internal
  */
 const MsalConfigSchema = z.object({
-  client: z.custom<IMsalClient>(),
+  client: z.custom<IMsalClient>().optional(),
   provider: z.custom<IMsalProvider>().optional(),
   requiresAuth: z.boolean().optional(),
   redirectUri: z.string().optional(),
