@@ -17,7 +17,8 @@ import {
 import { enableAgGrid } from '@equinor/fusion-framework-module-ag-grid';
 import { enableTelemetry } from '@equinor/fusion-framework-module-telemetry';
 // import { enableContextNavigation } from '@equinor/fusion-framework-module-context-navigation';
-import { enableContextNavigationHandler } from '@equinor/fusion-framework-module-context-navigation-handler';
+// import { enableContextNavigationHandler } from '@equinor/fusion-framework-module-context-navigation-handler';
+import { enableContextNavigationHandler } from '@equinor/fusion-framework-module-context-navigation-handler-new';
 
 import { configureDevPortalContext } from './config-context';
 import { version } from './version';
