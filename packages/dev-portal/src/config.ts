@@ -16,7 +16,8 @@ import {
 } from '@equinor/fusion-framework-module-feature-flag/plugins';
 import { enableAgGrid } from '@equinor/fusion-framework-module-ag-grid';
 import { enableTelemetry } from '@equinor/fusion-framework-module-telemetry';
-import { enableContextNavigation } from '@equinor/fusion-framework-module-context-navigation';
+// import { enableContextNavigation } from '@equinor/fusion-framework-module-context-navigation';
+import { enableContextNavigationHandler } from '@equinor/fusion-framework-module-context-navigation-handler';
 
 import { configureDevPortalContext } from './config-context';
 import { version } from './version';
@@ -143,9 +144,16 @@ export const configure = async (config: FrameworkConfigurator) => {
   // Context-navigation module — synchronizes browser URL with active context.
   // Telemetry is auto-resolved from the framework telemetry module above.
   // Warns when apps use 'custom' routing strategy to discourage non-standard URL shapes.
-  enableContextNavigation(config, (builder) => {
-    builder.setConsoleDebug(true);
-    builder.setWarnOnStrategies(['custom']);
+  // enableContextNavigation(config, (builder) => {
+  //   builder.setConsoleDebug(true);
+  //   builder.setWarnOnStrategies(['custom']);
+  // });
+
+  // NEW: Event-driven context navigation handler (encode/decode model)
+  enableContextNavigationHandler(config, (builder) => {
+    builder.setPortalName('dev-portal');
+    builder.setDebug(true);
+    builder.setUrlGuard(true);
   });
 
   config.onInitialized<[AppModule, NavigationModule]>((modules) => {
