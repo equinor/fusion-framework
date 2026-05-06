@@ -4,11 +4,6 @@ import type { ContextModule, IContextProvider } from '@equinor/fusion-framework-
 
 import { Subscription, EMPTY, combineLatestWith, of, switchMap, tap } from 'rxjs';
 
-import { CONTEXT_QUERY_PARAM_KEY, urlAlreadyHasContext } from './utils/url-utils';
-import { contextNavigationOrchestrator } from './orchestrator/context-navigation-orchestrator';
-import { mergeContextProviders } from './orchestrator/context-provider-adapter';
-import type { resolveNavigationExecutor } from './navigation-executors';
-import { parseAppRoute } from './utils/app-route';
 import {
   ClearContextValue,
   NoContextValue,
@@ -16,10 +11,11 @@ import {
   type TelemetryTracker,
 } from './types';
 import {
+  resolveHasAppPathGenerators,
   resolveRoutingExecutionMode,
   type RoutingExecutionMode,
 } from './orchestrator/routing-mode-orchestrator';
-import path from 'path/posix';
+import type { IContextNavigationStrategyAdapter } from './strategy-adapters/contracts';
 
 /** Minimal telemetry surface — avoids hard coupling to the full telemetry module. */
 type TelemetryTracking = TelemetryTracker;
@@ -31,17 +27,6 @@ export interface ContextNavigationProviderArgs {
   context: IContextProvider;
   config: ContextNavigationConfig;
   telemetry?: TelemetryTracking;
-}
-
-/**
- * Snapshot of the currently loaded app's resolved providers and executor.
- */
-interface AppSnapshot {
-  appKey: string;
-  activeContextProvider: IContextProvider;
-  hasAppContextProvider: boolean;
-  executor: ReturnType<typeof resolveNavigationExecutor>;
-  appContextProvider?: IContextProvider;
 }
 
 // ─── Provider ───────────────────────────────────────────────────────
@@ -64,7 +49,7 @@ interface AppSnapshot {
  *    invisible in browser history.
  */
 export class ContextNavigationProvider {
-  private readonly _subscription = new Subscription();
+  readonly #subscription = new Subscription();
   private readonly _config: ContextNavigationConfig;
   private readonly _telemetry: TelemetryTracking | null;
   private readonly _args: ContextNavigationProviderArgs;
@@ -77,14 +62,14 @@ export class ContextNavigationProvider {
 
     this._setupContextChangeSync();
 
-    // if (args.config.enableContextUrlGuard) {
-    //   this._setupContextUrlGuard();
-    // }
+    if (args.config.enableContextUrlGuard) {
+      this._setupContextUrlGuard();
+    }
   }
 
   // ── Subscription 1: Context-change sync ────────────────────────────
 
-  private _setupContextChangeSync(): void {
+  protected _setupContextChangeSync(): void {
     const source$ = this._config.sourceFactory({
       app: this._args.app,
       navigation: this._args.navigation,
@@ -93,7 +78,7 @@ export class ContextNavigationProvider {
     const portalNavigation = this._args.navigation;
     const portalContextProvider = this._args.context;
 
-    this._subscription.add(
+    this.#subscription.add(
       source$
         .pipe(
           tap(({ appModules, appKey, context }) => {
@@ -101,12 +86,15 @@ export class ContextNavigationProvider {
 
             const mode = resolveRoutingExecutionMode({
               routingStrategy: appModules.context?.routingStrategy,
-              hasAppContextPathGenerators:
-                !!appModules.context?.extractContextIdFromPath &&
-                !!appModules.context?.generatePathFromContext,
+              hasAppContextPathGenerators: resolveHasAppPathGenerators(appModules.context),
             });
 
-            const contextStrategyAdapter = this._config.contextStrategyAdapters[mode];
+            const contextStrategyAdapter = this._getStrategyAdapter(appKey, mode);
+
+            const appContextProvider = appModules.context;
+            const appNavigation = (
+              appModules as AppModulesInstance<[ContextModule, NavigationModule]>
+            ).navigation;
 
             /**
              * Handle the "no context" case upfront.
@@ -127,13 +115,19 @@ export class ContextNavigationProvider {
                 const instructions = contextStrategyAdapter.onNonContext({
                   appKey,
                   mode,
+                  origin: this._config.origin,
+                  appContextProvider,
+                  appNavigation,
+                  portalNavigation,
+                  portalContextProvider,
                   currentPathname: portalNavigation.path.pathname,
                   currentSearch: portalNavigation.path.search,
+                  log: this._log.bind(this),
                 });
 
                 if (instructions) {
                   this._trackEvent('context-navigation.non-context-handled', { appKey, mode });
-                  portalNavigation.navigate(instructions.pathname, { replace: true });
+                  portalNavigation.navigate(instructions, { replace: true });
                   return;
                 }
 
@@ -144,146 +138,133 @@ export class ContextNavigationProvider {
                 this._trackEvent('context-navigation.non-context-no-handler', { appKey, mode });
                 return;
               }
+              return;
+            }
 
-              const appContextProvider = appModules.context;
-              const appNavigation = (
-                appModules as AppModulesInstance<[ContextModule, NavigationModule]>
-              ).navigation;
+            if (context === ClearContextValue) {
+              this._log('Context is null — treating as cleared.');
+              const instructions = contextStrategyAdapter.onClearContext?.({
+                appKey,
+                mode,
+                origin: this._config.origin,
+                appContextProvider,
+                appNavigation,
+                portalNavigation,
+                portalContextProvider,
+                currentPathname: portalNavigation.path.pathname,
+                currentSearch: portalNavigation.path.search,
+                log: this._log.bind(this),
+              });
 
-              /**
-               * Handle app navigation events while context is still initializing (undefined).
-               *
-               * When an `appContextHandler` is registered on the strategy adapter,
-               * it is invoked here so the portal can coordinate with app-level state
-               * or trigger side effects before context resolves.
-               *
-               * This is especially useful for the `custom` strategy — the app
-               * controls when context updates are emitted and may emit an initial
-               * undefined context while still expecting the portal to respond to
-               * app navigation events.
-               *
-               * **Note:** `portalContextHandler` is NOT called in this branch
-               * because the portal context is irrelevant while the app context is
-               * still initializing. The URL should reflect the app context as soon
-               * as possible, but the portal context may not be usable at this point.
-               */
-              if (appContextProvider && contextStrategyAdapter.appContextHandler) {
-                const appContextHandlerInstructions = contextStrategyAdapter.appContextHandler();
-
-                if (!appContextHandlerInstructions) {
-                  this._log(
-                    `App context handler returned no instructions for [${appKey}] — skipping app navigation handling.`,
-                  );
-                  this._trackEvent('context-navigation.app-context-handled-no-instructions', {
-                    appKey,
-                  });
-                  return;
-                }
-
-                // Guard: skip when the handler returns the current URL to prevent
-                // an infinite navigate → emit → navigate loop.
-                if (appContextHandlerInstructions.pathname === portalNavigation.path.pathname) {
-                  this._log(
-                    `App context handler returned the current pathname for [${appKey}] — skipping app navigation.`,
-                  );
-                  this._trackEvent('context-navigation.app-context-handled-current-path', {
-                    appKey,
-                  });
-                  return;
-                }
-
-                this._log(
-                  `🌍 Portal: Generated pathname for app navigation: ${appContextHandlerInstructions.pathname}`,
-                );
-
-                const appNavigationInstruction = contextStrategyAdapter.onAppNavigation?.({
-                  appKey,
-                  currentPathname: portalNavigation.path.pathname,
-                  currentSearch: portalNavigation.path.search,
-                });
-
-                // The strategy adapter can override the app's navigation instruction,
-                // e.g. to carry over context ids during an app switch. When no
-                // override is returned, fall back to the app context handler's target.
-                if (appNavigation && appNavigationInstruction) {
-                  this._log(
-                    `App navigation handler generated pathname: ${appNavigationInstruction.pathname} for [${appKey}]`,
-                  );
-                  appNavigation.navigate(appNavigationInstruction?.pathname, { replace: true });
-                  this._trackEvent('context-navigation.app-navigation-handled', { appKey, mode });
-                }
-
-                portalNavigation.navigate(
-                  appContextHandlerInstructions?.pathname ?? portalNavigation.path.pathname,
-                  { replace: true },
-                );
-              }
-
-              if (context === ClearContextValue) {
-                this._log('Context is null — treating as cleared.');
-                contextStrategyAdapter.onClearContext?.({
-                  appKey,
-                  mode,
-                  currentPathname: portalNavigation.path.pathname,
-                  currentSearch: portalNavigation.path.search,
-                });
-                this._trackEvent('context-navigation.context-cleared', { appKey, mode });
+              if (instructions) {
+                this._trackEvent('context-navigation.context-cleared-handled', { appKey, mode });
+                portalNavigation.navigate(instructions, { replace: true });
                 return;
               }
 
-              /**
-               * Handle the "undefined context" case next, after checking for an app-level handler.
-               *
-               * This covers the scenario where context is still initializing but the app
-               * doesn't have its own handler for that case. In this situation, it makes
-               * sense to give the portal a chance to handle it before giving up and
-               * skipping navigation — e.g. the portal might want to navigate to a
-               * loading screen or trigger other side effects while waiting for context.
-               *
-               * The portal context handler is called here because the app context is not
-               * yet available, so the portal context is the only relevant state for
-               * deciding how to respond to navigation events during initialization.
-               */
-              if (portalContextProvider && contextStrategyAdapter.portalContextHandler) {
-                const portalContextHandlerInstructions =
-                  contextStrategyAdapter.portalContextHandler();
+              this._trackEvent('context-navigation.context-cleared', { appKey, mode });
+              return;
+            }
+            /**
+             * Handle app navigation events while context is still initializing (undefined).
+             *
+             * When an `appContextHandler` is registered on the strategy adapter,
+             * it is invoked here so the portal can coordinate with app-level state
+             * or trigger side effects before context resolves.
+             *
+             * This is especially useful for the `custom` strategy — the app
+             * controls when context updates are emitted and may emit an initial
+             * undefined context while still expecting the portal to respond to
+             * app navigation events.
+             *
+             * **Note:** `portalContextHandler` is NOT called in this branch
+             * because the portal context is irrelevant while the app context is
+             * still initializing. The URL should reflect the app context as soon
+             * as possible, but the portal context may not be usable at this point.
+             */
+            if (appContextProvider && contextStrategyAdapter.appContextHandler) {
+              const appContextHandlerInstructions = contextStrategyAdapter.appContextHandler({
+                appKey,
+                mode,
+                origin: this._config.origin,
+                currentContext: context,
+                contextProvider: appContextProvider,
+                appNavigation: appNavigation,
+                portalNavigation: portalNavigation,
+                log: this._log.bind(this),
+              });
 
-                if (!portalContextHandlerInstructions) {
-                  this._log(
-                    `Portal context handler returned no instructions for [${appKey}] — skipping navigation.`,
-                  );
-                  this._trackEvent('context-navigation.portal-context-handled-no-instructions', {
-                    appKey,
-                    mode,
-                  });
-                  return;
-                }
+              this._log(
+                `App context handler returned instructions [${appContextHandlerInstructions?.pathname}] for [${appKey}].`,
+              );
 
-                // Guard: skip when the handler returns the current URL to prevent
-                // an infinite navigate → emit → navigate loop.
-                if (portalContextHandlerInstructions.pathname === portalNavigation.path.pathname) {
-                  this._log(
-                    `Portal context handler returned the current pathname for [${appKey}] — skipping navigation.`,
-                  );
-                  this._trackEvent('context-navigation.portal-context-handled-current-path', {
-                    appKey,
-                    mode,
-                  });
-                  return;
-                }
-
+              if (!appContextHandlerInstructions) {
                 this._log(
-                  `Portal context handler generated pathname: ${portalContextHandlerInstructions?.pathname} for [${appKey}]`,
+                  `App context handler returned no instructions for [${appKey}] — skipping app navigation handling.`,
                 );
+                this._trackEvent('context-navigation.app-context-handled-no-instructions', {
+                  appKey,
+                });
+                return;
+              }
 
-                if (portalContextHandlerInstructions) {
-                  portalNavigation.navigate(portalContextHandlerInstructions.pathname, {
-                    replace: true,
-                  });
-                  this._trackEvent('context-navigation.portal-context-handled', { appKey, mode });
-                  return;
-                }
+              // Guard: skip when the handler returns the current URL to prevent
+              // an infinite navigate → emit → navigate loop.
+              if (
+                appContextHandlerInstructions.pathname === appNavigation.path.pathname &&
+                appContextHandlerInstructions.search === appNavigation.path.search
+              ) {
+                this._log(
+                  `App context handler returned the current pathname for [${appKey}] — skipping app navigation.`,
+                );
+                this._trackEvent('context-navigation.app-context-handled-current-path', {
+                  appKey,
+                });
+                return;
+              }
 
+              // The strategy adapter can override the app's navigation instruction,
+              // e.g. to carry over context ids during an app switch. When no
+              // override is returned, fall back to the app context handler's target.
+              if (appNavigation && appContextHandlerInstructions) {
+                this._log(
+                  `App navigation handler generated pathname: ${appContextHandlerInstructions.pathname} for [${appKey}]`,
+                );
+                const url = appNavigation.createURL({
+                  pathname: appContextHandlerInstructions.pathname,
+                });
+
+                this._trackEvent('context-navigation.app-navigation-handled', { appKey, mode });
+                portalNavigation.navigate(url, { replace: true });
+              }
+            }
+
+            /**
+             * Handle the "undefined context" case next, after checking for an app-level handler.
+             *
+             * This covers the scenario where context is still initializing but the app
+             * doesn't have its own handler for that case. In this situation, it makes
+             * sense to give the portal a chance to handle it before giving up and
+             * skipping navigation — e.g. the portal might want to navigate to a
+             * loading screen or trigger other side effects while waiting for context.
+             *
+             * The portal context handler is called here because the app context is not
+             * yet available, so the portal context is the only relevant state for
+             * deciding how to respond to navigation events during initialization.
+             */
+            if (portalContextProvider && contextStrategyAdapter.portalContextHandler) {
+              const portalContextHandlerInstructions = contextStrategyAdapter.portalContextHandler({
+                appKey,
+                mode,
+                origin: this._config.origin,
+                currentContext: context,
+                contextProvider: portalContextProvider,
+                appNavigation: appNavigation,
+                portalNavigation: portalNavigation,
+                log: this._log.bind(this),
+              });
+
+              if (!portalContextHandlerInstructions) {
                 this._log(
                   `Portal context handler returned no instructions for [${appKey}] — skipping navigation.`,
                 );
@@ -294,12 +275,49 @@ export class ContextNavigationProvider {
                 return;
               }
 
-              this._trackEvent('context-navigation.context-emission-unhandled', { appKey, mode });
+              // Guard: skip when the handler returns the current URL to prevent
+              // an infinite navigate → emit → navigate loop.
+              if (
+                portalContextHandlerInstructions.pathname === portalNavigation.path.pathname &&
+                portalContextHandlerInstructions.search === portalNavigation.path.search
+              ) {
+                this._log(
+                  `Portal context handler returned the current pathname for [${appKey}] — skipping navigation.`,
+                );
+                this._trackEvent('context-navigation.portal-context-handled-current-path', {
+                  appKey,
+                  mode,
+                });
+                return;
+              }
+
               this._log(
-                `No handlers for context emission in [${appKey}] with mode [${mode}] — skipping navigation.`,
+                `Portal context handler generated pathname: ${portalContextHandlerInstructions?.pathname} for [${appKey}]`,
               );
+
+              if (portalContextHandlerInstructions) {
+                portalNavigation.navigate(portalContextHandlerInstructions, {
+                  replace: true,
+                });
+                this._trackEvent('context-navigation.portal-context-handled', { appKey, mode });
+                return;
+              }
+
+              this._log(
+                `Portal context handler returned no instructions for [${appKey}] — skipping navigation.`,
+              );
+              this._trackEvent('context-navigation.portal-context-handled-no-instructions', {
+                appKey,
+                mode,
+              });
               return;
             }
+
+            this._trackEvent('context-navigation.context-emission-unhandled', { appKey, mode });
+            this._log(
+              `No handlers for context emission in [${appKey}] with mode [${mode}] — skipping navigation.`,
+            );
+            return;
           }),
         )
         .subscribe(),
@@ -324,11 +342,10 @@ export class ContextNavigationProvider {
 
   private _setupContextUrlGuard(): void {
     const { app: appModule, navigation: portalNavigation } = this._args;
-
     // Combine portal URL changes with the current loaded app's modules.
     // switchMap on app.current$ → instance$ gives us the app's routing
     // strategy; combineLatestWith state$ triggers on every URL change.
-    this._subscription.add(
+    this.#subscription.add(
       appModule.current$
         .pipe(
           switchMap((currentApp) => {
@@ -344,118 +361,69 @@ export class ContextNavigationProvider {
             );
           }),
           combineLatestWith(portalNavigation.state$),
-          tap(([{ appModules, appKey }]) => {
-            // Use the app's own context — only guard when the app has
-            // actually resolved a context. Portal context is irrelevant;
-            // the URL should reflect what the app instance has active.
-            const appContext = appModules.context?.currentContext;
-            const contextId = appContext?.id;
-            if (!contextId) return;
+          tap(([{ appModules, appKey }, portalNavigationState]) => {
+            const mode = resolveRoutingExecutionMode({
+              routingStrategy: appModules.context?.routingStrategy,
+              hasAppContextPathGenerators: resolveHasAppPathGenerators(appModules.context),
+            });
 
-            // Bail out when the URL is no longer within the tracked app's
-            // route scope — the user (or portal) is navigating away.
-            const route = parseAppRoute(portalNavigation.path.pathname);
-            if (!route || route.appKey !== appKey) return;
-
-            const snapshot = this._resolveAppSnapshot(appModules, appKey);
-
-            // Custom strategy apps own their URL — don't interfere
-            const strategy = snapshot.activeContextProvider.routingStrategy;
-            if (strategy === 'custom') return;
-
-            const currentPathname = snapshot.executor.workingPathname;
-            const currentSearch = snapshot.executor.workingSearch;
-
-            // Context is already in the URL — nothing to fix
-            if (
-              urlAlreadyHasContext(
-                { pathname: currentPathname, search: currentSearch },
-                snapshot.activeContextProvider,
-                contextId,
-              )
-            ) {
+            if (mode === 'custom') {
+              this._log(`Context URL guard skipping app [${appKey}] with custom routing strategy.`);
               return;
             }
 
-            this._log(
-              `[app=${appKey}] URL guard — context [${contextId}] missing from URL, re-applying.`,
-            );
+            const contextProvider = appModules.context;
+            const activeContextId = contextProvider?.currentContext?.id;
 
-            // Re-use the orchestrator to compute the correct URL shape,
-            // preserving existing query params and sub-routes.
-            const { mode, instruction } = contextNavigationOrchestrator.onContextChange({
-              newContext: appContext,
-              activeContextProvider: snapshot.activeContextProvider,
-              hasAppContextProvider: snapshot.hasAppContextProvider,
-              portalPathname: currentPathname,
-              portalSearch: currentSearch,
-            });
-
-            if (!instruction) return;
-
-            snapshot.executor.execute(appContext, instruction);
-
-            this._trackEvent('context-navigation.url-guard', {
-              appKey,
-              mode,
-              executorType: snapshot.executor.type,
-              contextId,
-              pathname: instruction.pathname,
-            });
+            if (!activeContextId) {
+              this._log(
+                `Context URL guard skipping app [${appKey}] because no active context is set.`,
+              );
+              return;
+            }
+            const strategyAdapter = this._getStrategyAdapter(appKey, mode);
           }),
         )
         .subscribe(),
     );
   }
 
-  // ── Internal helpers ───────────────────────────────────────────────
-
-  /**
-   * Strips stale `$contextId` from the URL when carry-over is skipped.
-   * The portal may preserve query params from the previous app during
-   * navigation — this cleans up context params that don't belong.
-   */
-  private _stripStaleContextFromUrl(snapshot: AppSnapshot): void {
-    const search = snapshot.executor.workingSearch;
-    if (!search.includes(CONTEXT_QUERY_PARAM_KEY)) return;
-
-    const params = new URLSearchParams(search.replace(/^\?/, ''));
-    params.delete(CONTEXT_QUERY_PARAM_KEY);
-    const cleanSearch = params.toString();
-
-    snapshot.executor.execute(null, {
-      pathname: snapshot.executor.workingPathname,
-      search: cleanSearch ? `?${cleanSearch}` : '',
-    });
-
-    this._log(`Stripped stale $contextId from URL for [${snapshot.appKey}].`);
-  }
-
-  private _handleStrategyDetected(appKey: string, mode: RoutingExecutionMode): void {
+  private _getStrategyAdapter<TMode extends RoutingExecutionMode>(
+    appKey: string,
+    mode: TMode,
+  ): IContextNavigationStrategyAdapter<TMode> {
     this._log(`Strategy [${mode}] active for [${appKey}].`);
     this._warnOnStrategy(appKey, mode);
     this._config.onStrategyDetected?.(appKey, mode);
     this._trackEvent('context-navigation.strategy-detected', { appKey, mode });
-  }
-  private _log(message: string): void {
-    if (this._config.consoleDebug) {
-      console.debug(`🌍 ${this._config.portalName}: ${message}`);
-    }
+
+    return this._config.contextStrategyAdapters[mode] as IContextNavigationStrategyAdapter<TMode>;
   }
 
   private _warnOnStrategy(appKey: string, mode: RoutingExecutionMode): void {
     if (this._config.warnOnStrategies.includes(mode)) {
       console.warn(
         `🌍 ${this._config.portalName}:`,
-        `App [${appKey}] uses '${mode}' context routing strategy.`,
+        `App [${appKey}] uses '${mode}' context routing strategy. Please be aware that this strategy is not recommended in production environments.`,
       );
     }
+
+    console.debug(
+      `🌍 ${this._config.portalName}: Detected routing strategy [${mode}] for app [${appKey}].`,
+    );
   }
+
+  private _log(message: string, ...args: any[]): void {
+    if (this._config.consoleDebug) {
+      console.debug(`🌍 ${this._config.portalName}: ${message}`, ...args);
+    }
+  }
+
   private _trackEvent(name: string, properties: Record<string, string>): void {
     this._telemetry?.trackEvent({ name, properties });
   }
 
   dispose(): void {
-    this._subscription.unsubscribe();
+    this.#subscription.unsubscribe();
   }
 }

@@ -1,80 +1,54 @@
-import type {
-  AppSwitchStrategyInput,
-  ContextChangeStrategyInput,
-  IContextNavigationStrategyAdapter,
-} from './contracts';
-
-const readAppPrefix = (pathname: string): string | undefined => {
-  const parts = pathname.split('/').filter(Boolean);
-  if (parts[0] !== 'apps' || !parts[1]) return undefined;
-  return `/apps/${parts[1]}`;
-};
-
-const toAppRelativePath = (pathname: string): string => {
-  const parts = pathname.split('/').filter(Boolean);
-  if (parts[0] !== 'apps' || !parts[1]) return pathname;
-  const appRelative = parts.slice(2).join('/');
-  return appRelative ? `/${appRelative}` : '/';
-};
-
-const toPortalPath = (generatedPath: string, appPrefix: string | undefined): string | undefined => {
-  if (generatedPath.startsWith('/apps/')) return generatedPath;
-  if (!appPrefix) return undefined;
-  const normalized = generatedPath.startsWith('/') ? generatedPath : `/${generatedPath}`;
-  if (normalized === '/') return appPrefix;
-  return `${appPrefix}${normalized}`;
-};
+import type { IContextNavigationStrategyAdapter } from './contracts';
+import { generatePathname } from '../utils/generate-pathname';
 
 /**
- * Custom app-owned strategy — portal uses app's hooks to understand
- * and carry context through the app's custom URL shape.
- *
- * context cleared → returns undefined (app handles its own routing)
- * context change → uses generatePathFromContext if registered
- * app switch → uses generatePathFromContext for carry-over
+ * Custom strategy — context id handled by app-specific logic.
+ * Preserves deeper sub-routes on context change.
  */
-export const customStrategyAdapter: IContextNavigationStrategyAdapter = {
+export const customAdapter: IContextNavigationStrategyAdapter = {
   mode: 'custom',
-  onContextChange(input: ContextChangeStrategyInput) {
-    const appRelativePath = toAppRelativePath(input.portalPathname);
-    const appPrefix = readAppPrefix(input.portalPathname);
-
-    // Custom strategy: context cleared is fully app-owned
-    if (input.newContext === null) return undefined;
-
-    const generatedCustomPath = input.activeContextProvider?.generatePathFromContext?.(
-      input.newContext,
-      appRelativePath,
-    );
-    const normalizedPortalPath =
-      generatedCustomPath && toPortalPath(generatedCustomPath, appPrefix);
-
-    if (normalizedPortalPath) {
-      return { pathname: normalizedPortalPath, search: input.portalSearch };
-    }
-
-    // No generated path — app handles routing in its own router
+  // If context is undefined, clear the path strategy segment will do noting.
+  onNonContext: ({ log }) => {
+    log('🌍 Portal: Context is undefined, do nothing!');
     return undefined;
   },
-  onAppSwitch(input: AppSwitchStrategyInput) {
-    const appRelativePath = toAppRelativePath(input.newPathname);
-    const appPrefix = readAppPrefix(input.newPathname);
-    const currentContextItem = input.activeContextProvider?.currentContext;
+  onClearContext({ appKey, appNavigation, portalNavigation, origin, log }) {
+    log(`🌍 Portal: Context cleared, navigating to app [${appKey}] root url!`);
 
-    const generatedCustomPath =
-      currentContextItem && currentContextItem.id === input.contextIdToCarry
-        ? input.activeContextProvider?.generatePathFromContext?.(
-            currentContextItem,
-            appRelativePath,
-          )
-        : undefined;
-    const normalizedPortalPath =
-      generatedCustomPath && toPortalPath(generatedCustomPath, appPrefix);
+    log(appKey, appNavigation, portalNavigation);
+    if (appNavigation) {
+      if (appNavigation?.version.major < 7) {
+        console.warn(
+          `🌍 Portal: App router V(${appNavigation.version.major}) has lower version of router than portal V(${portalNavigation.version.major}), please update to match portal navigation events.`,
+        );
+        appNavigation.replace(`/`);
+      }
 
-    if (normalizedPortalPath) {
-      return { pathname: normalizedPortalPath, search: input.newSearch };
+      return new URL(`apps/${appKey ?? ''}/`, origin);
     }
 
-    return undefined;
+    return new URL(`/`, origin);
+  },
+  appContextHandler({ appKey, currentContext, contextProvider, appNavigation, origin, log }) {
+    if (!appNavigation || !currentContext || !contextProvider.extractContextIdFromPath) {
+      log(
+        `🌍 Portal: No app navigation, context or context extraction function available for app [${appKey}], cannot apply custom strategy!`,
+      );
+      return undefined;
+    }
+
+    const pathname = generatePathname(
+      appNavigation.path.pathname,
+      currentContext,
+      contextProvider,
+      contextProvider.extractContextIdFromPath(appNavigation.path.pathname),
+    );
+
+    log(
+      `🌍 Portal: Context changed, navigating to app's context url:`,
+      `generated path [${pathname}] using custom strategy!`,
+    );
+
+    return new URL(pathname, origin);
   },
 };

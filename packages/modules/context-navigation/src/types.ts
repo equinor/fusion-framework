@@ -67,6 +67,13 @@ export type SourceFactory = (
 
 export type AppNavigationHandler = (args: { appNavigation?: INavigationProvider }) => void;
 
+export type NullContextHandler = (args: {
+  appKey: string;
+  mode: RoutingExecutionMode;
+  currentPathname: string;
+  currentSearch: string;
+}) => NavigationInstruction | undefined;
+
 export type UndefinedContextHandler = (args: {
   portalNavigation: INavigationProvider;
   appKey?: string;
@@ -89,6 +96,17 @@ export interface ContextNavigationConfig {
    */
   portalName: string;
 
+  /**
+   * Origin to use for generated URLs — defaults to `window.location.origin`.
+   * Used in strategy adapters when constructing URL objects to ensure they
+   * are absolute and compatible with the navigation providers.
+   * Portals can set this to a custom value for testing or non-browser environments.
+   * Note: this is not the same as the `basePath` used by the navigation providers,
+   * which is handled separately in the adapters.
+   * @default window.location.origin
+   */
+  origin: string;
+
   /**  * Default routing mode to assume when an app doesn't specify one.
    * The provider uses this as a fallback in several places to decide how to
    * handle navigation for apps with no declared strategy.
@@ -99,15 +117,12 @@ export interface ContextNavigationConfig {
   defaultRoutingMode: RoutingExecutionMode;
 
   /**
-   * Optional callback for handling app navigation events.
-   * If set, called with the active app's navigation provider
-   * and context whenever an app navigation event occurs.
-   * The handler can return a custom path to navigate to, or `undefined` to
-   * fall back to the default behavior (no navigation).
+   * Optional portal-level override for null context (cleared).
+   * Fires before the strategy adapter's `onClearContext`.
+   * Return a navigation instruction to handle it, or `undefined` to
+   * fall through to the adapter.
    */
-  appNavigationHandler?: AppNavigationHandler;
-
-  undefinedContextHandler?: UndefinedContextHandler;
+  nullContextHandler?: NullContextHandler;
 
   /**
    * Factory that builds the primary observable for subscription 1.

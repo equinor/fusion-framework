@@ -1,77 +1,22 @@
 import type { ContextModuleConfig } from '@equinor/fusion-framework-module-context';
 import type { IContextProvider } from '@equinor/fusion-framework-module-context';
-import { parseAppRoute, buildAppRoute } from './app-route';
 
-/** Query-parameter key for context id in query-routing mode. */
-export const CONTEXT_QUERY_PARAM_KEY = '$contextId';
+import { readContextIdFromAppPath, writeContextIdToAppPath } from './path-utils';
+import { readContextIdFromQueryParam, writeContextIdToQueryParam } from './query-utils';
 
-/** Splits a relative URL into pathname, search, and hash (without delimiters). */
-export const splitRelativePath = (
-  path: string,
-): { pathname: string; search: string; hash: string } => {
-  const [withSearch, hash = ''] = path.split('#', 2);
-  const [pathname, search = ''] = withSearch.split('?', 2);
-  return { pathname, search, hash };
-};
-
-// ── Query-param helpers ──────────────────────────────────────────────
-
-/** Serializes URLSearchParams keeping `$contextId` as a literal unencoded key. */
-const serializeQueryKeepingCtxReadable = (params: URLSearchParams): string =>
-  Array.from(params.entries())
-    .map(([key, value]) => {
-      const encodedKey =
-        key === CONTEXT_QUERY_PARAM_KEY ? CONTEXT_QUERY_PARAM_KEY : encodeURIComponent(key);
-      return `${encodedKey}=${encodeURIComponent(value)}`;
-    })
-    .join('&');
-
-/** Writes context id to `$contextId` query param, or removes it when undefined. */
-export const writeContextIdToQueryParam = (path: string, contextId?: string): string => {
-  const { pathname, search, hash } = splitRelativePath(path);
-  const params = new URLSearchParams(search);
-
-  if (contextId) {
-    params.set(CONTEXT_QUERY_PARAM_KEY, contextId);
-  } else {
-    params.delete(CONTEXT_QUERY_PARAM_KEY);
-  }
-
-  const nextSearch = serializeQueryKeepingCtxReadable(params);
-  return `${pathname}${nextSearch ? `?${nextSearch}` : ''}${hash ? `#${hash}` : ''}`;
-};
-
-/** Reads `$contextId` query parameter value from a relative URL. */
-export const readContextIdFromQueryParam = (path: string): string | undefined => {
-  const { search } = splitRelativePath(path);
-  return new URLSearchParams(search).get(CONTEXT_QUERY_PARAM_KEY) ?? undefined;
-};
-
-// ── Path-segment helpers (URLPattern-based) ──────────────────────────
-
-/** Reads context id from `/apps/:appKey/:contextId`. */
-export const readContextIdFromAppPath = (path: string): string | undefined => {
-  const { pathname } = splitRelativePath(path);
-  return parseAppRoute(pathname)?.contextId;
-};
-
-/** Embeds context id as path segment, or clears it. */
-export const writeContextIdToAppPath = (path: string, contextId?: string): string => {
-  const { pathname } = splitRelativePath(path);
-  const match = parseAppRoute(pathname);
-  if (!match) return path;
-  return buildAppRoute(match.appKey, contextId ?? undefined);
-};
-
-/** Returns true when pathname is a bare app route without context. */
-export const isBarAppRouteWithoutContext = (pathname: string): boolean => {
-  const match = parseAppRoute(pathname);
-  return !!match && !match.contextId;
-};
-
-/** Appends context id segment to a bare app route pathname. */
-export const appendContextToAppRoute = (pathname: string, contextId: string): string =>
-  `${pathname.replace(/\/+$/, '')}/${contextId}`;
+// Re-export path and query utils so existing imports from './url-utils' keep working.
+export {
+  splitRelativePath,
+  readContextIdFromAppPath,
+  writeContextIdToAppPath,
+  isBarAppRouteWithoutContext,
+  appendContextToAppRoute,
+} from './path-utils';
+export {
+  CONTEXT_QUERY_PARAM_KEY,
+  writeContextIdToQueryParam,
+  readContextIdFromQueryParam,
+} from './query-utils';
 
 // ── Strategy dispatch ────────────────────────────────────────────────
 
@@ -97,6 +42,7 @@ export const buildContextUrlForStrategy = (
     case 'query':
       return writeContextIdToQueryParam(path, contextId);
     case 'path':
+      return writeContextIdToAppPath(path, contextId);
     default:
       return writeContextIdToAppPath(path, contextId);
   }

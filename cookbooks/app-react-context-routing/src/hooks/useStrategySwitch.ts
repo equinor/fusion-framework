@@ -85,9 +85,9 @@ export function useStrategySwitch(): StrategySwitchActions {
     }
 
     if (appNavigate) {
-      appNavigate({ pathname: url.pathname, search: url.search }, { replace: false });
+      appNavigate(url, { replace: false });
     } else if (portalNavigation) {
-      portalNavigation.navigate({ pathname: url.pathname, search: url.search }, { replace: false });
+      portalNavigation.navigate(url, { replace: false });
     } else {
       globalThis.location.assign(url.toString());
     }

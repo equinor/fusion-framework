@@ -22,11 +22,11 @@ export type {
 } from './types';
 
 // ─── Orchestrator ───────────────────────────────────────────────────
-export { contextNavigationOrchestrator } from './orchestrator/context-navigation-orchestrator';
-export type { OrchestratedNavigationResult } from './orchestrator/context-navigation-orchestrator';
-export { resolveRoutingExecutionMode } from './orchestrator/routing-mode-orchestrator';
+export {
+  resolveRoutingExecutionMode,
+  resolveHasAppPathGenerators,
+} from './orchestrator/routing-mode-orchestrator';
 export type { RoutingExecutionMode } from './orchestrator/routing-mode-orchestrator';
-export { mergeContextProviders } from './orchestrator/context-provider-adapter';
 
 // ─── Navigation executors ───────────────────────────────────────────
 export { resolveNavigationExecutor } from './navigation-executors';
@@ -43,4 +43,3 @@ export type {
   ContextChangeStrategyInput,
   AppSwitchStrategyInput,
 } from './strategy-adapters/contracts';
-export { getContextNavigationStrategyAdapter } from './strategy-adapters/registry';

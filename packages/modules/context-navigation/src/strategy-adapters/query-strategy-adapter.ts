@@ -1,13 +1,5 @@
-import {
-  buildQuerySearchWithContextId,
-  stripContextSegmentFromAppPath,
-} from '../utils/navigation-helpers';
-import { readContextIdFromAppPath, CONTEXT_QUERY_PARAM_KEY } from '../utils/url-utils';
-import type {
-  AppSwitchStrategyInput,
-  ContextChangeStrategyInput,
-  IContextNavigationStrategyAdapter,
-} from './contracts';
+import type { IContextNavigationStrategyAdapter } from './contracts';
+import { CONTEXT_QUERY_PARAM_KEY } from '../utils/query-utils';
 
 /**
  * Modern query strategy — context id in `$contextId` query parameter.
@@ -15,39 +7,50 @@ import type {
  */
 export const queryStrategyAdapter: IContextNavigationStrategyAdapter = {
   mode: 'query',
-  onContextChange(input: ContextChangeStrategyInput) {
-    if (input.newContext === null) {
-      const extractedContextId = input.activeContextProvider?.extractContextIdFromPath?.(
-        input.portalPathname,
-      );
-      const pathname = stripContextSegmentFromAppPath(input.portalPathname, extractedContextId);
-      const params = new URLSearchParams((input.portalSearch ?? '').replace(/^\?/, ''));
-      params.delete(CONTEXT_QUERY_PARAM_KEY);
-      const search = Array.from(params.entries())
-        .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
-        .join('&');
-      return { pathname, search: search ? `?${search}` : '' };
+  onNonContext: ({ log }) => {
+    log('🌍 Portal: Context is undefined, do nothing!');
+    return undefined;
+  },
+  onClearContext({
+    appKey,
+    appNavigation,
+    portalNavigation,
+    origin,
+    currentPathname,
+    currentSearch,
+    log,
+  }) {
+    log(`🌍 Portal: Context cleared for app [${appKey}], removing query param.`);
+
+    if (appNavigation) {
+      if (appNavigation.version.major < 7) {
+        console.warn(
+          `🌍 Portal: App router V(${appNavigation.version.major}) has lower version of router than portal V(${portalNavigation.version.major}), please update to match portal navigation events.`,
+        );
+        appNavigation.replace(`/`);
+      }
     }
 
-    // Canonicalize: if context is in path, move it to query
-    const pathContextId = input.activeContextProvider?.extractContextIdFromPath?.(
-      input.portalPathname,
-    );
-    const parsedPathContextId = readContextIdFromAppPath(input.portalPathname);
-    const pathname =
-      pathContextId === input.newContext.id || parsedPathContextId === input.newContext.id
-        ? stripContextSegmentFromAppPath(input.portalPathname, pathContextId ?? parsedPathContextId)
-        : input.portalPathname;
-
-    return {
-      pathname,
-      search: buildQuerySearchWithContextId(input.portalSearch, input.newContext.id),
-    };
+    const url = new URL(currentPathname, origin);
+    url.search = currentSearch ?? '';
+    url.searchParams.delete(CONTEXT_QUERY_PARAM_KEY);
+    return url;
   },
-  onAppSwitch(input: AppSwitchStrategyInput) {
-    return {
-      pathname: input.newPathname,
-      search: buildQuerySearchWithContextId(input.newSearch, input.contextIdToCarry),
-    };
+  portalContextHandler({ appKey, portalNavigation, currentContext, origin, log }) {
+    if (!currentContext) {
+      log(`🌍 Portal: No context available for app [${appKey}], cannot apply query strategy!`);
+      return undefined;
+    }
+
+    const url = new URL(portalNavigation.path.pathname, origin);
+    url.search = portalNavigation.path.search ?? '';
+    url.searchParams.set(CONTEXT_QUERY_PARAM_KEY, currentContext.id);
+
+    log(
+      `🌍 Portal: Context changed, setting query param on portal URL for app [${appKey}]:`,
+      `[${url.pathname}${url.search}]`,
+    );
+
+    return url;
   },
 };

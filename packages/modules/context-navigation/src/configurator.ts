@@ -7,7 +7,6 @@ import {
 import type {
   ContextNavigationConfig,
   OnStrategyDetectedCallback,
-  NullContextHandler,
   UndefinedContextHandler,
   SourceFactory,
   TelemetryTracker,
@@ -17,6 +16,9 @@ import type { RoutingExecutionMode } from './orchestrator/routing-mode-orchestra
 
 import { createAppFirstSource } from './sources/app-first-source';
 import type { INavigationProvider } from '@equinor/fusion-framework-module-navigation';
+import { customAdapter } from './strategy-adapters/custom-adapter';
+import { pathStrategyAdapter } from './strategy-adapters/path-strategy-adapter';
+import { queryStrategyAdapter } from './strategy-adapters/query-strategy-adapter';
 
 /**
  * Configurator for the context navigation module.
@@ -60,48 +62,6 @@ export class ContextNavigationConfigurator extends BaseConfigBuilder<ContextNavi
    */
   setSourceFactory(factory: SourceFactory): this {
     this._set('sourceFactory', async () => factory);
-    return this;
-  }
-
-  /**
-   * Register a handler for null context (context cleared).
-   * Returns a navigation instruction that overrides the adapter default,
-   * or `undefined` to fall through.
-   */
-  setNullContextHandler(handler: NullContextHandler): this {
-    this._set('nullContextHandler', async () => handler);
-    return this;
-  }
-
-  /**
-   * Register a handler for undefined context (initializing / not yet resolved).
-   *
-   * Receives the portal navigation provider so the handler can navigate
-   * if needed. When no handler is set, undefined context emissions are
-   * silently skipped.
-   *
-   * @example
-   * ```ts
-   * // context-portal: navigate to root when context is undefined
-   * builder.setUndefinedContextHandler(({ navigation }) => {
-   *   navigation.navigate('/');
-   * });
-   * ```
-   */
-  setUndefinedContextHandler(handler: UndefinedContextHandler): this {
-    this._set('undefinedContextHandler', async () => handler);
-    return this;
-  }
-  /**
-   * Enable or disable app-switch context carry-over.
-   *
-   * When disabled, navigating to a new app won't auto-inject the current
-   * context into the URL. The context stream emission handles it instead.
-   *
-   * Context-portal may want this disabled since context drives app selection.
-   */
-  enableAppSwitchCarryOver(enabled: boolean): this {
-    this._set('enableAppSwitchCarryOver', enabled);
     return this;
   }
 
@@ -212,6 +172,10 @@ export class ContextNavigationConfigurator extends BaseConfigBuilder<ContextNavi
       this._set('enableContextUrlGuard', true);
     }
 
+    if (!this._has('origin')) {
+      this._set('origin', window.location.origin);
+    }
+
     // Auto-resolve framework telemetry module if no explicit tracker was set
     if (!this._has('telemetry')) {
       this._set('telemetry', async (args: ConfigBuilderCallbackArgs) => {
@@ -221,18 +185,27 @@ export class ContextNavigationConfigurator extends BaseConfigBuilder<ContextNavi
       });
     }
 
-    if (!this._has('appNavigationHandler')) {
-      this._set('appNavigationHandler', async (args: { appNavigation?: INavigationProvider }) => {
-        const { appNavigation } = args;
-        if (!appNavigation) return;
-        if (appNavigation.version.major < 7) {
-          console.warn(
-            `🌍 Portal: App router V(${appNavigation.version.major}) has lower version of router than portal V7 please update to match portal navigation events.`,
-          );
+    // if (!this._has('appNavigationHandler')) {
+    //   this._set('appNavigationHandler', async (args: { appNavigation?: INavigationProvider }) => {
+    //     const { appNavigation } = args;
+    //     if (!appNavigation) return;
+    //     if (appNavigation.version.major < 7) {
+    //       console.warn(
+    //         `🌍 Portal: App router V(${appNavigation.version.major}) has lower version of router than portal V7 please update to match portal navigation events.`,
+    //       );
 
-          appNavigation.replace('/');
-        }
-      });
+    //       appNavigation.replace('/');
+    //     }
+    //   });
+    // }
+
+    if (!this._has('contextStrategyAdapters')) {
+      const defaultAdapters = {
+        query: queryStrategyAdapter,
+        path: pathStrategyAdapter,
+        custom: customAdapter,
+      };
+      this._set('contextStrategyAdapters', defaultAdapters);
     }
 
     return super._createConfig(init, config);

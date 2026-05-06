@@ -11,7 +11,7 @@ import type { IContextProvider } from '@equinor/fusion-framework-module-context'
 export type RoutingExecutionMode = 'query' | 'path' | 'custom';
 
 interface ResolveRoutingExecutionModeInput {
-  routingStrategy: IContextProvider['routingStrategy'];
+  routingStrategy: IContextProvider['routingStrategy'] | undefined;
   hasAppContextPathGenerators: boolean;
 }
 
@@ -25,6 +25,10 @@ interface ResolveRoutingExecutionModeInput {
 export const resolveRoutingExecutionMode = (
   input: ResolveRoutingExecutionModeInput,
 ): RoutingExecutionMode => {
+  console.debug(
+    `🌍 Portal: Resolving routing execution mode with input:`,
+    JSON.stringify(input, null, 2),
+  );
   switch (input.routingStrategy) {
     case 'query':
       return 'query';
@@ -33,6 +37,23 @@ export const resolveRoutingExecutionMode = (
     case 'path':
       return 'path';
     default:
-      return 'path';
+      return !input.hasAppContextPathGenerators ? 'path' : 'custom';
   }
+};
+
+/**
+ * Heuristic to detect if the app has a context-aware routing strategy, by checking for the presence of path generator functions on the provider. This is used to determine if the 'custom' strategy can be used, which requires the app to handle its own routing logic. If these functions are not present, we fall back to 'path' strategy to maintain compatibility with apps that do not have context-aware routing.
+ *
+ * @param {IContextProvider} provider
+ * @return {*}  {boolean}
+ */
+export const resolveHasAppPathGenerators = (provider?: IContextProvider): boolean => {
+  if (!provider) {
+    console.debug(
+      `🌍 Portal: No context provider found, assuming no context path generators are available!`,
+    );
+    return false;
+  }
+
+  return !!provider.generatePathFromContext && !!provider.extractContextIdFromPath;
 };

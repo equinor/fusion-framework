@@ -146,7 +146,6 @@ export const configure = async (config: FrameworkConfigurator) => {
   enableContextNavigation(config, (builder) => {
     builder.setConsoleDebug(true);
     builder.setWarnOnStrategies(['custom']);
-    builder.enableAppSwitchCarryOver(true);
   });
 
   config.onInitialized<[AppModule, NavigationModule]>((modules) => {
