@@ -16,7 +16,7 @@ The advanced pattern is useful when bookmarks need to capture *where* the user w
 
 ## Key Concepts
 
-### Typed bookmark payload (`types.ts`)
+### Typed bookmark payload (`src/types.ts`)
 
 ```ts
 interface MyBookmark {
@@ -26,11 +26,11 @@ interface MyBookmark {
 }
 ```
 
-### Bookmark context provider (`Provider.tsx`)
+### Bookmark context provider (`src/Provider.tsx`)
 
-A React context wraps the route tree and holds the current bookmark draft state. Components read and update this state via `useBookmarkContext()`. When the user creates a bookmark, the provider captures the current `{ page, title, data }` as the payload.
+A React context wraps the route tree and holds the current bookmark draft state. Components read and update this state via `useBookmarkContext()`. The actual bookmark creation (calling `createBookmark(state)`) happens in `src/Create.tsx`, which reads the current state from the provider.
 
-### Route layout (`Routes.tsx`)
+### Route layout (`src/Routes.tsx`)
 
 Routes are wrapped in `<Provider>` so all pages share bookmark state:
 
@@ -54,16 +54,21 @@ const routes: RouteObject[] = [
 ];
 ```
 
-### Configuration (`config.ts`)
+### Configuration (`src/config.ts`)
 
 Enables navigation, context, and bookmark modules:
 
 ```ts
-enableNavigation(configurator, basename);
-enableContext(configurator, async (builder) => {
-  builder.setContextType(['projectMaster']);
-});
-enableBookmark(configurator);
+import type { AppModuleInitiator } from '@equinor/fusion-framework-react-app';
+
+export const configure: AppModuleInitiator = (configurator, args) => {
+  const { basename } = args.env;
+  enableNavigation(configurator, basename);
+  enableContext(configurator, async (builder) => {
+    builder.setContextType(['projectMaster']);
+  });
+  enableBookmark(configurator);
+};
 ```
 
 ## How to Run
@@ -75,13 +80,13 @@ pnpm dev
 
 ## File Guide
 
-| File                      | Role                                           |
-| ------------------------- | ---------------------------------------------- |
-| `config.ts`               | Module configuration (navigation, context, bookmark) |
-| `types.ts`                | `MyBookmark` and `BookmarkState` type definitions |
-| `Provider.tsx`            | React context for bookmark draft state         |
-| `Router.tsx`              | Wraps routes with Fusion router                |
-| `Routes.tsx`              | Route tree with provider + layout              |
-| `Create.tsx`              | Form to create/update/delete bookmarks         |
-| `Selected.tsx`            | Displays the currently selected bookmark       |
-| `Page1.tsx` / `Page2.tsx` | Example pages that update bookmark payload     |
+| File                          | Role                                           |
+| ----------------------------- | ---------------------------------------------- |
+| `src/config.ts`               | Module configuration (navigation, context, bookmark) |
+| `src/types.ts`                | `MyBookmark` and `BookmarkState` type definitions |
+| `src/Provider.tsx`            | React context for bookmark draft state         |
+| `src/Router.tsx`              | Wraps routes with Fusion router                |
+| `src/Routes.tsx`              | Route tree with provider + layout              |
+| `src/Create.tsx`              | Form to create/update/delete bookmarks         |
+| `src/Selected.tsx`            | Displays the currently selected bookmark       |
+| `src/Page1.tsx` / `src/Page2.tsx` | Example pages that update bookmark payload     |
