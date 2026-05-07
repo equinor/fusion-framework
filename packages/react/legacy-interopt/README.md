@@ -7,7 +7,7 @@
 
 ## Status
 
-This directory contains only a generated `version.ts` file. It is not published to npm, has no documented exports, and serves no purpose for application developers or framework consumers.
+This directory contains only `src/version.ts` (a generated version file). It is not published to npm, has no documented exports, and serves no purpose for application developers or framework consumers.
 
 ## Migration
 
