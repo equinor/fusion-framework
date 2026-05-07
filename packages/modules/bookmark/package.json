@@ -57,6 +57,6 @@
     "@equinor/fusion-framework-module-http": "workspace:^",
     "@equinor/fusion-framework-module-services": "workspace:^",
     "typescript": "^6.0.3",
-    "zod": "^4.3.6"
+    "zod": "^4.4.3"
   }
 }

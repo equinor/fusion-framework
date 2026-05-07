@@ -61,4 +61,15 @@ describe('MsalConfigurator', () => {
 
     expect(config.authCode).toBeUndefined();
   });
+
+  it('createConfigAsync should succeed when client is omitted', async () => {
+    const configurator = new MsalConfigurator();
+
+    const config = await configurator.createConfigAsync(
+      createConfigCallbackArgs(),
+      createInitialConfig(),
+    );
+
+    expect(config.client).toBeUndefined();
+  });
 });

@@ -58,7 +58,7 @@
     "deepmerge": "^4.3.1",
     "rxjs": "^7.8.1",
     "uuid": "^14.0.0",
-    "zod": "^4.3.6"
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@equinor/fusion-observable": "workspace:^",
