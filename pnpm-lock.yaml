@@ -873,7 +873,7 @@ importers:
         version: link:../../packages/utils/query
       '@equinor/fusion-react-context-selector':
         specifier: ^2.0.1
-        version: 2.0.3(react@19.2.5)(styled-components@6.4.1(react-dom@19.2.5(react@19.2.5))(react@19.2.5))
+        version: 2.0.4(react@19.2.5)(styled-components@6.4.1(react-dom@19.2.5(react@19.2.5))(react@19.2.5))
       '@equinor/fusion-react-date':
         specifier: ^1.0.0
         version: 1.0.3(react@19.2.5)
@@ -1312,7 +1312,7 @@ importers:
         version: link:../utils/query
       '@equinor/fusion-react-context-selector':
         specifier: ^2.0.1
-        version: 2.0.3(react@19.2.5)(styled-components@6.4.1(react-dom@19.2.5(react@19.2.5))(react@19.2.5))
+        version: 2.0.4(react@19.2.5)(styled-components@6.4.1(react-dom@19.2.5(react@19.2.5))(react@19.2.5))
       '@equinor/fusion-react-progress-indicator':
         specifier: ^0.3.0
         version: 0.3.0(react@19.2.5)
@@ -3219,8 +3219,8 @@ packages:
       react-dom: ^18 || ^19
       styled-components: ^6
 
-  '@equinor/fusion-react-context-selector@2.0.3':
-    resolution: {integrity: sha512-ybIMktkVmnGeY80IoLbSlNETlSH1lJ8x+XQ5DGEgCIkbpQUYI6N5MxGyg2Ba2GPW9puKpzHGtg2/jFcA0ovclg==}
+  '@equinor/fusion-react-context-selector@2.0.4':
+    resolution: {integrity: sha512-Z4oZeZNOlmKKNTEFZRIao2nPT9fiOIpjNBv0pv2WU0WKPzq4nXW/0wIimdsG2l0ePezQ6dQZl9HLpudGFoaOPw==}
     peerDependencies:
       react: ^18 || ^19
 
@@ -3238,8 +3238,8 @@ packages:
     resolution: {integrity: sha512-NNVkTq0gRJYqobHEBPpWG7bFw3JhLlRhsd8AmCFfvQwdRCRnrf5cStql2bb+apetmRalJvH0U1+1swtT3vhFVg==}
     deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
 
-  '@equinor/fusion-react-searchable-dropdown@2.0.3':
-    resolution: {integrity: sha512-eHHCIHh0giuFNa0HmECvuwL34BYL6Df2xdSDKXDHvrDEJ6X9tdL8qv8FatZIx5yYipYHgqtWAedMjK+inglIKg==}
+  '@equinor/fusion-react-searchable-dropdown@2.0.4':
+    resolution: {integrity: sha512-aAWqA6zSCcqGh/dLEwk3FIcVpEBSxHqINboTtiufyuC9IRJk++tYGSzDRMUS6NWsNvw2bG/T9s13Nbf9QT1ZPA==}
     peerDependencies:
       react: ^18 || ^19
 
@@ -11900,9 +11900,9 @@ snapshots:
       react-dom: 19.2.5(react@19.2.5)
       styled-components: 6.4.1(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
 
-  '@equinor/fusion-react-context-selector@2.0.3(react@19.2.5)(styled-components@6.4.1(react-dom@19.2.5(react@19.2.5))(react@19.2.5))':
+  '@equinor/fusion-react-context-selector@2.0.4(react@19.2.5)(styled-components@6.4.1(react-dom@19.2.5(react@19.2.5))(react@19.2.5))':
     dependencies:
-      '@equinor/fusion-react-searchable-dropdown': 2.0.3(react@19.2.5)
+      '@equinor/fusion-react-searchable-dropdown': 2.0.4(react@19.2.5)
       '@equinor/fusion-react-styles': 2.1.4(react@19.2.5)(styled-components@6.4.1(react-dom@19.2.5(react@19.2.5))(react@19.2.5))
       '@equinor/fusion-react-utils': 3.0.2(react@19.2.5)
       '@equinor/fusion-wc-icon': 2.4.2
@@ -11931,7 +11931,7 @@ snapshots:
     transitivePeerDependencies:
       - react
 
-  '@equinor/fusion-react-searchable-dropdown@2.0.3(react@19.2.5)':
+  '@equinor/fusion-react-searchable-dropdown@2.0.4(react@19.2.5)':
     dependencies:
       '@equinor/fusion-react-utils': 3.0.2(react@19.2.5)
       '@equinor/fusion-wc-icon': 2.4.2
