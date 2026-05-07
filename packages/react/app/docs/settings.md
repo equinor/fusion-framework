@@ -35,8 +35,11 @@ Manages a single setting by key. Returns the current value and a setter function
 function useAppSetting<TSettings, TProp extends keyof TSettings>(
   prop: TProp,
   defaultValue?: TSettings[TProp],
-  hooks?: AppSettingsStatusHooks,
-): [TSettings[TProp] | undefined, (update: TSettings[TProp] | ((current: TSettings[TProp]) => TSettings[TProp])) => void];
+  hooks?: AppSettingsStatusHooks & {
+    onError?: (error: Error | null) => void;
+    onUpdated?: () => void;
+  },
+): [TSettings[TProp] | undefined, (update: TSettings[TProp] | ((current: TSettings[TProp] | undefined) => TSettings[TProp])) => void];
 ```
 
 ### Example
@@ -55,7 +58,8 @@ const ThemeSwitcher = () => {
 
   return (
     <div>
-      <select value={theme} onChange={(e) => setTheme(e.target.value)}>
+      {/* cast: e.target.value is string, but setTheme expects the union type */}
+      <select value={theme ?? 'default'} onChange={(e) => setTheme(e.target.value as AppSettings['theme'])}>
         <option value="default">Default</option>
         <option value="light">Light</option>
         <option value="dark">Dark</option>
@@ -75,8 +79,11 @@ Returns all settings as a single object with a bulk setter. Use `useAppSetting` 
 ```ts
 function useAppSettings<TSettings>(
   defaultValue?: TSettings,
-  hooks?: AppSettingsStatusHooks,
-): [TSettings | undefined, (update: TSettings | ((current: TSettings) => TSettings)) => void];
+  hooks?: AppSettingsStatusHooks & {
+    onError?: (error: Error | null) => void;
+    onUpdated?: () => void;
+  },
+): [TSettings, (update: TSettings | ((current: TSettings | undefined) => TSettings)) => void];
 ```
 
 > [!WARNING]
@@ -96,7 +103,7 @@ const SettingsPanel = () => {
   const [settings, setSettings] = useAppSettings();
 
   const updateTheme = useCallback(
-    (theme: string) => setSettings((current) => ({ ...current, theme })),
+    (theme: AppSettings['theme']) => setSettings((current) => ({ ...current, theme })),
     [setSettings],
   );
 
@@ -127,5 +134,6 @@ const [theme, setTheme] = useAppSetting('theme', 'default', {
 ## Notes
 
 - Settings are async — there is a loading phase when the component mounts and an updating phase when values are saved
-- Status callbacks must be memoised; the hooks do not memoise them internally
+- `useAppSetting` captures the `hooks` object once on mount (via `useState`); **the callbacks must be stable before the first render** — changes after mount are ignored
+- `useAppSettings` reads `hooks` on every render; **memoise callbacks** (e.g. with `useCallback`) to avoid unnecessary re-renders
 - Settings are persisted per-user per-app by the Fusion platform
