@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-react-components-people-provider
 
+## 2.0.2
+
+### Patch Changes
+
+- 71a7131: Internal: update @equinor/fusion-wc-person dependency to version 3.5.3.
+
 ## 2.0.1
 
 ### Patch Changes
