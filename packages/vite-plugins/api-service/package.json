@@ -37,7 +37,7 @@
   },
   "dependencies": {
     "http-proxy": "^1.18.1",
-    "http-proxy-middleware": "^3.0.3",
+    "http-proxy-middleware": "^4.0.0",
     "path-to-regexp": "^8.2.0"
   },
   "devDependencies": {
