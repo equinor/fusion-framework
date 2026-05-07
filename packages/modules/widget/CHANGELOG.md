@@ -1,5 +1,13 @@
 # Change Log
 
+## 15.0.2
+
+### Patch Changes
+
+- Updated dependencies [f045ac0]
+  - @equinor/fusion-framework-module-http@8.0.1
+  - @equinor/fusion-framework-module-service-discovery@10.0.1
+
 ## 15.0.1
 
 ### Patch Changes

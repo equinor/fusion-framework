@@ -1,5 +1,15 @@
 # Change Log
 
+## 10.0.7
+
+### Patch Changes
+
+- Updated dependencies [f045ac0]
+  - @equinor/fusion-framework-module-app@8.0.2
+  - @equinor/fusion-framework-module-http@8.0.1
+  - @equinor/fusion-framework-module-navigation@7.0.3
+  - @equinor/fusion-framework-app@11.0.5
+
 ## 10.0.6
 
 ### Patch Changes

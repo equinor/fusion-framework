@@ -1,5 +1,13 @@
 # @equinor/fusion-framework-cli-plugin-ai-index
 
+## 3.0.2
+
+### Patch Changes
+
+- f045ac0: Internal: upgrade `zod` from 4.3.6 to 4.4.3 to resolve validation issues; no public API changes.
+- Updated dependencies [f045ac0]
+  - @equinor/fusion-framework-cli-plugin-ai-base@4.0.1
+
 ## 3.0.1
 
 ### Patch Changes

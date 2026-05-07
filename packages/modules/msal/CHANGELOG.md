@@ -1,5 +1,13 @@
 # Change Log
 
+## 8.0.4
+
+### Patch Changes
+
+- f045ac0: Make `client` field optional in MSAL config schema to prevent `ZodError` validation failures when the MSAL client has not yet been configured during local development.
+
+  Fixes: https://github.com/equinor/fusion/issues/840
+
 ## 8.0.3
 
 ### Patch Changes

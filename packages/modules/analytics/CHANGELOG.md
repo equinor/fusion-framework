@@ -1,5 +1,14 @@
 # @equinor/fusion-framework-module-analytics
 
+## 2.0.4
+
+### Patch Changes
+
+- f045ac0: Internal: upgrade `zod` from 4.3.6 to 4.4.3 to resolve validation issues; no public API changes.
+- Updated dependencies [f045ac0]
+  - @equinor/fusion-framework-module-app@8.0.2
+  - @equinor/fusion-framework-module-http@8.0.1
+
 ## 2.0.3
 
 ### Patch Changes

@@ -1,5 +1,17 @@
 # Change Log
 
+## 11.0.5
+
+### Patch Changes
+
+- Updated dependencies [f045ac0]
+- Updated dependencies [f045ac0]
+  - @equinor/fusion-framework-module-msal@8.0.4
+  - @equinor/fusion-framework-module-app@8.0.2
+  - @equinor/fusion-framework-module-http@8.0.1
+  - @equinor/fusion-framework-module-telemetry@5.0.2
+  - @equinor/fusion-framework@8.0.5
+
 ## 11.0.4
 
 ### Patch Changes

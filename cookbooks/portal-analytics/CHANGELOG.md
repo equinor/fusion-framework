@@ -1,5 +1,21 @@
 # portal-analytics
 
+## 0.4.26
+
+### Patch Changes
+
+- f045ac0: Internal: upgrade `zod` from 4.3.6 to 4.4.3; no public API changes.
+- Updated dependencies [f045ac0]
+  - @equinor/fusion-framework-module-analytics@2.0.4
+  - @equinor/fusion-framework-module-app@8.0.2
+  - @equinor/fusion-framework-module-bookmark@4.0.2
+  - @equinor/fusion-framework-module-navigation@7.0.3
+  - @equinor/fusion-framework-module-service-discovery@10.0.1
+  - @equinor/fusion-framework-cli@15.0.2
+  - @equinor/fusion-framework-app@11.0.5
+  - @equinor/fusion-framework@8.0.5
+  - @equinor/fusion-framework-react-app@10.0.7
+
 ## 0.4.25
 
 ### Patch Changes

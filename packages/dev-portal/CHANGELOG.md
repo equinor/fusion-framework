@@ -1,5 +1,20 @@
 # @equinor/fusion-framework-dev-portal
 
+## 5.1.9
+
+### Patch Changes
+
+- Updated dependencies [f045ac0]
+  - @equinor/fusion-framework-module-analytics@2.0.4
+  - @equinor/fusion-framework-module-app@8.0.2
+  - @equinor/fusion-framework-module-bookmark@4.0.2
+  - @equinor/fusion-framework-module-navigation@7.0.3
+  - @equinor/fusion-framework-module-services@8.0.1
+  - @equinor/fusion-framework-module-telemetry@5.0.2
+  - @equinor/fusion-framework-app@11.0.5
+  - @equinor/fusion-framework@8.0.5
+  - @equinor/fusion-framework-dev-server@2.0.6
+
 ## 5.1.8
 
 ### Patch Changes
