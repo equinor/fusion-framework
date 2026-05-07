@@ -5,7 +5,7 @@ Apply the Fusion-managed AG Grid theme to your `<AgGridReact>` instance.
 **Import:**
 
 ```ts
-import { useTheme } from '@equinor/fusion-framework-react-app/ag-grid';
+import { useTheme } from '@equinor/fusion-framework-react-ag-grid';
 ```
 
 ## Overview
@@ -46,8 +46,8 @@ export const configure = (configurator) => {
 ### Apply Theme to AgGridReact
 
 ```tsx
-import { useTheme } from '@equinor/fusion-framework-react-app/ag-grid';
-import { AgGridReact } from 'ag-grid-react';
+import { useTheme } from '@equinor/fusion-framework-react-ag-grid';
+import { AgGridReact } from '@equinor/fusion-framework-react-ag-grid';
 
 const MyGrid = ({ rowData, columnDefs }) => {
   const theme = useTheme();
