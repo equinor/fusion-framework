@@ -66,4 +66,4 @@ The provider manages modal state for creating, editing, and importing bookmarks.
 ## Related
 
 - [`@equinor/fusion-framework-module-bookmark`](../../../modules/bookmark/README.md) — the underlying bookmark module
-- [`@equinor/fusion-framework-react-app/bookmark`](../../app/docs/bookmark.md) — bookmark hooks for custom UI
+- `@equinor/fusion-framework-react-app/bookmark` — bookmark hooks for custom UI
