@@ -42,6 +42,7 @@ pnpm dev
 
 | File               | What it demonstrates                                    |
 | ------------------ | ------------------------------------------------------- |
+| `src/portal/bootloader.ts` | Static-host side — initializes modules and calls `render(el, ref)` |
 | `src/index.tsx`    | Portal render contract — `render(el, modules)`          |
 | `src/Framework.tsx`| `createFrameworkProvider` + app module configuration     |
 | `src/AppList.tsx`  | Listing and rendering child apps inside a portal        |
