@@ -52,5 +52,5 @@ const DataFetcher = () => {
 
 ## Related
 
-- [`@equinor/fusion-framework-module-http`](../../modules/http/README.md) — the underlying HTTP module with full configuration documentation
-- [`@equinor/fusion-framework-react-app/http`](../app/docs/http.md) — app-developer-facing wrapper
+- [`@equinor/fusion-framework-module-http`](../../../modules/http/README.md) — the underlying HTTP module with full configuration documentation
+- [`@equinor/fusion-framework-react-app/http`](../../app/README.md#http-requests) — app-developer-facing wrapper
