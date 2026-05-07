@@ -1,5 +1,11 @@
 # Change Log
 
+## 5.0.2
+
+### Patch Changes
+
+- f045ac0: Internal: upgrade `zod` from 4.3.6 to 4.4.3 to resolve validation issues; no public API changes.
+
 ## 5.0.1
 
 ### Patch Changes
