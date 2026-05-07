@@ -1,5 +1,13 @@
 # @equinor/fusion-framework-dev-portal
 
+## 5.1.10
+
+### Patch Changes
+
+- 71a7131: Internal: update @equinor/fusion-wc-person dependency to version 3.5.3.
+- Updated dependencies [71a7131]
+  - @equinor/fusion-framework-react-components-people-provider@2.0.2
+
 ## 5.1.9
 
 ### Patch Changes
