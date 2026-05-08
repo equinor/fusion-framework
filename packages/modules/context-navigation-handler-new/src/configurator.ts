@@ -12,6 +12,7 @@ import type {
 import { createPathAdapter } from './adapters/path-adapter';
 import { createQueryAdapter } from './adapters/query-adapter';
 import { createCustomAdapter } from './adapters/custom-adapter';
+import { createResolveContextFromUrl } from './utils/resolve-context-from-url';
 
 /**
  * Configurator for the context-navigation-handler module.
@@ -114,6 +115,12 @@ export class ContextNavigationHandlerConfigurator extends BaseConfigBuilder<Cont
     ];
 
     this._set('adapters', allAdapters);
+
+    // Default initial context resolver — decode URL via adapters, set on context provider.
+    if (!this._has('resolveInitialContext')) {
+      const resolver = createResolveContextFromUrl(allAdapters);
+      this._set('resolveInitialContext', async () => resolver);
+    }
 
     return super._createConfig(init, config);
   }

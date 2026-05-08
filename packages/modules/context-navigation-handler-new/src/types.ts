@@ -1,4 +1,5 @@
 import type { ContextItem, IContextProvider } from '@equinor/fusion-framework-module-context';
+import type { INavigationProvider } from '@equinor/fusion-framework-module-navigation';
 
 // ─── Adapter Contract ───────────────────────────────────────────────
 
@@ -96,12 +97,7 @@ export interface ContextNavigationHandlerAdapterResolvedDetail {
 /** Fired when reconciliation skips. */
 export interface ContextNavigationHandlerSkippedDetail {
   appKey: string;
-  reason:
-    | 'url-matches'
-    | 'no-context'
-    | 'no-adapter'
-    | 'encode-returned-null'
-    | 'canceled';
+  reason: 'url-matches' | 'no-context' | 'no-adapter' | 'encode-returned-null' | 'canceled';
 }
 
 // ─── Configuration ──────────────────────────────────────────────────
@@ -141,4 +137,21 @@ export interface ContextNavigationHandlerConfig {
    * Optional side-effect hook called after navigation completes.
    */
   onTransition?: (detail: ContextNavigationHandlerNavigatedDetail) => void;
+
+  /**
+   * Resolves the initial context from the URL and sets it on the context
+   * provider before the reconciler activates.
+   *
+   * The default implementation iterates registered adapters, decodes the
+   * first matching context ID, and calls `setCurrentContextByIdAsync`.
+   * Override to customise initial context resolution or disable it by
+   * setting to `undefined`.
+   *
+   * @param context - The portal's context provider.
+   * @param navigation - The navigation provider (for reading the current URL).
+   */
+  resolveInitialContext?: (
+    context: IContextProvider,
+    navigation: INavigationProvider,
+  ) => Promise<void>;
 }

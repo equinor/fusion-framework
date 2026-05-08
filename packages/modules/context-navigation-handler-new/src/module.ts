@@ -1,4 +1,4 @@
-import type { IModulesConfigurator, Module } from '@equinor/fusion-framework-module';
+import type { Module } from '@equinor/fusion-framework-module';
 import type { AppModule } from '@equinor/fusion-framework-module-app';
 import type { ContextModule } from '@equinor/fusion-framework-module-context';
 import type { NavigationModule } from '@equinor/fusion-framework-module-navigation';
@@ -29,6 +29,9 @@ export const module: ContextNavigationHandlerModule = {
     const navigation = await args.requireInstance('navigation');
     const context = await args.requireInstance('context');
     const event = await args.requireInstance('event');
+
+    // Resolve initial context from URL before the provider starts
+    await config.resolveInitialContext?.(context, navigation);
 
     return new ContextNavigationHandlerProvider({
       app,

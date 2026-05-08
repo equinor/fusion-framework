@@ -263,16 +263,7 @@ export class ContextModuleConfigurator implements IContextModuleConfigurator {
       config.routingStrategy = 'query';
     }
 
-    config.resolveInitialContext ??= resolveInitialContext({
-      strategy: config.routingStrategy,
-      query: {
-        key: '$contextId',
-      },
-      path: {
-        extract: config.extractContextIdFromPath,
-        validate: config.extractContextIdFromPath ? () => true : undefined,
-      },
-    });
+    config.resolveInitialContext ??= resolveInitialContext();
 
     // TODO - make less lazy
     config.client ??= await (async (): Promise<ContextModuleConfig['client']> => {
