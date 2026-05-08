@@ -51,8 +51,8 @@ export class ContextNavigationHandlerProvider {
   readonly #navigation: INavigationProvider;
 
   #phase: ReconcilerPhase = 'idle';
-  /** Last pathname we navigated to — used by URL guard to ignore our own navigations. */
-  #lastNavigatedPathname: string | null = null;
+  /** Last path (pathname + search) we navigated to — used by URL guard to ignore our own navigations. */
+  #lastNavigatedPath: string | null = null;
 
   constructor(args: ContextNavigationHandlerProviderArgs) {
     this.#config = args.config;
@@ -146,10 +146,8 @@ export class ContextNavigationHandlerProvider {
         // Don't guard if the URL has moved to a different app
         if (!currentURL.pathname.startsWith(`/apps/${appKey}`)) return;
 
-        // Skip if this URL was set by us (avoid re-entrant loop, normalize trailing slash)
-        const normPathname = currentURL.pathname.replace(/\/$/, '') || '/';
-        const normLastNav = this.#lastNavigatedPathname?.replace(/\/$/, '') || null;
-        if (normPathname === normLastNav) return;
+        // Skip if this URL was set by us (avoid re-entrant loop)
+        if (this.#isOwnNavigation(currentURL)) return;
 
         const adapter = this.#resolveAdapter(appKey, appContext, currentURL);
         if (!adapter) return;
@@ -218,10 +216,8 @@ export class ContextNavigationHandlerProvider {
       return;
     }
 
-    // Loop guard: skip if URL already matches (normalize trailing slashes)
-    const normTarget = targetURL.pathname.replace(/\/$/, '') || '/';
-    const normCurrent = currentURL.pathname.replace(/\/$/, '') || '/';
-    if (normTarget === normCurrent && targetURL.search === currentURL.search) {
+    // Loop guard: skip if URL already matches
+    if (this.#normalizePath(targetURL) === this.#normalizePath(currentURL)) {
       this.#dispatchSkipped(appKey, 'url-matches');
       this.#log(`URL already correct for [${appKey}] — skipping.`);
       return;
@@ -249,8 +245,8 @@ export class ContextNavigationHandlerProvider {
           return;
         }
 
-        // Perform navigation — track pathname so URL guard ignores our own navigations
-        this.#lastNavigatedPathname = targetURL.pathname;
+        // Perform navigation — track path so URL guard ignores our own navigations
+        this.#lastNavigatedPath = this.#normalizePath(targetURL);
         this.#navigation.navigate(targetURL, { replace: true });
 
         // Dispatch "navigated" event
@@ -328,5 +324,16 @@ export class ContextNavigationHandlerProvider {
       detail,
       source: this,
     });
+  }
+
+  /** Normalize a URL to a comparable path string (pathname + search, no trailing slash). */
+  #normalizePath(url: URL): string {
+    const pathname = url.pathname.replace(/\/$/, '') || '/';
+    return `${pathname}${url.search}`;
+  }
+
+  /** Check if the given URL was the last one we navigated to (re-entrant guard). */
+  #isOwnNavigation(url: URL): boolean {
+    return this.#lastNavigatedPath !== null && this.#normalizePath(url) === this.#lastNavigatedPath;
   }
 }

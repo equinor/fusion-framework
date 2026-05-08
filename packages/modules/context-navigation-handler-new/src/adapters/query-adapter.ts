@@ -1,7 +1,7 @@
 import type { ContextItem } from '@equinor/fusion-framework-module-context';
 import type { ContextNavigationAdapter, AdapterResolutionContext } from '../types';
 
-const DEFAULT_PARAM = 'contextId';
+const DEFAULT_PARAM = '$contextId';
 
 /**
  * Query adapter — encodes context ID as a query parameter.
