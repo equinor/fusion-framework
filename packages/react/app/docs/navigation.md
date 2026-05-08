@@ -17,25 +17,26 @@ The navigation module wraps React Router with Fusion's base path handling, ensur
 
 ## Enable Navigation
 
-The navigation module must be enabled in your app's configurator:
+The navigation module must be enabled in your app's configurator. Always pass the basename so routes resolve correctly under the portal's URL prefix:
 
 ```ts
 import { enableNavigation } from '@equinor/fusion-framework-module-navigation';
 
 export const configure = (configurator) => {
-  enableNavigation(configurator);
+  // Pass the basename that matches where the portal mounts your app.
+  // In a Fusion portal this is typically the app's appKey path, e.g. '/apps/my-app'.
+  enableNavigation(configurator, '/apps/my-app');
 };
 ```
 
+Without a basename, routes will not be prefixed and will conflict with the portal's URL structure.
+
 ## useRouter
 
-Creates a router instance from route definitions. The returned router is compatible with React Router's `<RouterProvider>`.
+Creates a router instance from route definitions. The returned router is compatible with `<Router>` from `@equinor/fusion-framework-react-router`.
 
-**Signature:**
-
-```ts
-function useRouter(routes: RouteObject[]): Router;
-```
+> [!WARNING]
+> `useRouter` calls `INavigationProvider.createRouter()`, which is **deprecated** in the navigation module and emits a telemetry warning at runtime. For new apps, prefer `<Router>` from `@equinor/fusion-framework-react-router` directly — it handles the basename and Fusion context automatically without requiring `useRouter`.
 
 > [!CAUTION]
 > **Routes must be stable or memoised.** If you pass a new array reference on every render, the router will be recreated each time, resetting navigation state. Define routes outside the component or use `useMemo`.
@@ -44,7 +45,7 @@ function useRouter(routes: RouteObject[]): Router;
 
 ```tsx
 import { useRouter } from '@equinor/fusion-framework-react-app/navigation';
-import { RouterProvider } from 'react-router-dom';
+import { Router } from '@equinor/fusion-framework-react-router';
 
 const Home = () => <h1>Home</h1>;
 const Settings = () => <h1>Settings</h1>;
@@ -57,7 +58,7 @@ const routes = [
 
 const App = () => {
   const router = useRouter(routes);
-  return <RouterProvider router={router} />;
+  return <Router router={router} />;
 };
 ```
 
