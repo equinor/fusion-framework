@@ -192,12 +192,13 @@ self.addEventListener('message', async (event: ExtendableMessageEvent) => {
 
 // Handle fetch events
 self.addEventListener('fetch', (event: FetchEvent) => {
-  const url = new URL(event.request.url);
+  const request = event.request.clone();
+  const url = new URL(request.url);
   const matchedConfig = getMatchingConfig(url.toString());
 
   // only handle requests that match the config
   if (matchedConfig) {
-    const requestHeaders = new Headers(event.request.headers);
+    const requestHeaders = new Headers(request.headers);
     const handleRequest = async () => {
       // if the matched config has scopes, append the token to the request
       if (matchedConfig.scopes) {
@@ -210,8 +211,18 @@ self.addEventListener('fetch', (event: FetchEvent) => {
         url.pathname = url.pathname.replace(matchedConfig?.url, matchedConfig.rewrite);
       }
 
-      // fetch the request with the modified url and headers
-      return fetch(url, { headers: requestHeaders });
+      // Consume the ReadableStream body and convert to text
+      // ReadableStreams can only be consumed once, so we extract the content here
+      // request.text() resolves to empty string when the request has no body
+      const body = await request.text();
+
+      // fetch the request with the modified url and headers, preserving the original HTTP method and body
+      // This ensures OPTIONS, PATCH, DELETE and other methods are forwarded correctly
+      return fetch(url, {
+        method: request.method,
+        headers: requestHeaders,
+        body: body || undefined,
+      });
     };
     event.respondWith(handleRequest());
   }
