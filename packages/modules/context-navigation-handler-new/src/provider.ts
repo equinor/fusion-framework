@@ -1,4 +1,4 @@
-import { Subscription, switchMap, EMPTY, of, combineLatestWith, distinctUntilChanged } from 'rxjs';
+import { Subscription, switchMap, EMPTY, of } from 'rxjs';
 
 import type { AppModuleProvider, AppModulesInstance } from '@equinor/fusion-framework-module-app';
 import type {
@@ -77,33 +77,14 @@ export class ContextNavigationHandlerProvider {
   // ── Reconciler (single subscription) ────────────────────────────────
 
   #setupReconciler(args: ContextNavigationHandlerProviderArgs): void {
-    const { app, context } = args;
-
-    const source$ = app.current$.pipe(
-      switchMap((currentApp) => {
-        if (!currentApp) return EMPTY;
-        return currentApp.instance$.pipe(
-          switchMap((appModules) => {
-            if (!appModules) return EMPTY;
-            return of({
-              appModules: appModules as AppModulesInstance<[ContextModule]>,
-              appKey: currentApp.appKey,
-            });
-          }),
-        );
-      }),
-      combineLatestWith(
-        context.currentContext$.pipe(
-          distinctUntilChanged((a, b) => {
-            if (a && b) return a.id === b.id;
-            return a === b;
-          }),
-        ),
-      ),
-    );
+    const source$ = args.config.sourceFactory({
+      app: args.app,
+      context: args.context,
+      navigation: args.navigation,
+    });
 
     this.#subscription.add(
-      source$.subscribe(([{ appModules, appKey }, contextState]) => {
+      source$.subscribe(({ appKey, appModules, contextState }) => {
         this.#reconcile(appKey, appModules, contextState);
       }),
     );
@@ -116,10 +97,14 @@ export class ContextNavigationHandlerProvider {
 
     const source$ = app.current$.pipe(
       switchMap((currentApp) => {
-        if (!currentApp) return EMPTY;
+        if (!currentApp) {
+          return EMPTY;
+        }
         return currentApp.instance$.pipe(
           switchMap((appModules) => {
-            if (!appModules) return EMPTY;
+            if (!appModules) {
+              return EMPTY;
+            }
             return navigation.state$.pipe(
               switchMap(() =>
                 of({
@@ -136,26 +121,38 @@ export class ContextNavigationHandlerProvider {
     this.#subscription.add(
       source$.subscribe(({ appModules, appKey }) => {
         const appContext = appModules.context;
-        if (!appContext) return;
+        if (!appContext) {
+          return;
+        }
 
         const activeContext = appContext.currentContext;
-        if (!activeContext) return;
+        if (!activeContext) {
+          return;
+        }
 
         const currentURL = this.#getCurrentURL();
 
         // Don't guard if the URL has moved to a different app
-        if (!currentURL.pathname.startsWith(`/apps/${appKey}`)) return;
+        if (!currentURL.pathname.startsWith(`/apps/${appKey}`)) {
+          return;
+        }
 
         // Skip if this URL was set by us (avoid re-entrant loop)
-        if (this.#isOwnNavigation(currentURL)) return;
+        if (this.#isOwnNavigation(currentURL)) {
+          return;
+        }
 
         const adapter = this.#resolveAdapter(appKey, appContext, currentURL);
-        if (!adapter) return;
+        if (!adapter) {
+          return;
+        }
 
         const urlContextId = adapter.decode(currentURL);
 
         // If URL already has the right context, nothing to do
-        if (urlContextId === activeContext.id) return;
+        if (urlContextId === activeContext.id) {
+          return;
+        }
 
         this.#log(`URL guard: context missing from URL, re-applying for [${appKey}]`);
         this.#applyNavigation(appKey, adapter, activeContext, currentURL);
@@ -181,12 +178,28 @@ export class ContextNavigationHandlerProvider {
     // Phase: null → cleared
     if (contextState === null) {
       this.#phase = 'cleared';
+
+      // Portal-level null-context override — bypass adapter entirely
+      if (this.#config.nullContextUrl) {
+        const currentURL = this.#getCurrentURL();
+        const targetURL = new URL(this.#config.nullContextUrl, this.#config.origin);
+
+        if (this.#normalizePath(targetURL) !== this.#normalizePath(currentURL)) {
+          this.#lastNavigatedPath = this.#normalizePath(targetURL);
+          this.#navigation.navigate(targetURL, { replace: true });
+          this.#log(`Null context → navigated to [${this.#config.nullContextUrl}] for [${appKey}]`);
+        }
+
+        return;
+      }
     } else {
       this.#phase = 'active';
     }
 
     const appContext = appModules.context;
-    if (!appContext) return;
+    if (!appContext) {
+      return;
+    }
 
     const currentURL = this.#getCurrentURL();
     const adapter = this.#resolveAdapter(appKey, appContext, currentURL);

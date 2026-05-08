@@ -7,12 +7,14 @@ import type {
   ContextNavigationHandlerConfig,
   ContextNavigationAdapter,
   ContextNavigationHandlerNavigatedDetail,
+  ReconcilerSourceFactory,
 } from './types';
 
 import { createPathAdapter } from './adapters/path-adapter';
 import { createQueryAdapter } from './adapters/query-adapter';
 import { createCustomAdapter } from './adapters/custom-adapter';
 import { createResolveContextFromUrl } from './utils/resolve-context-from-url';
+import { createAppFirstSource } from './sources/app-first-source';
 
 /**
  * Configurator for the context-navigation-handler module.
@@ -36,11 +38,28 @@ export class ContextNavigationHandlerConfigurator extends BaseConfigBuilder<Cont
 
   /**
    * Register a navigation adapter.
-   * Adapters are evaluated by priority (highest first). The first adapter
+   * Adapters are evaluated in registration order. The first adapter
    * whose `canHandle()` returns `true` is used.
+   *
+   * **Note:** Registering any adapter disables the built-in defaults
+   * (custom, query, path). Register all adapters you need explicitly.
    */
   registerAdapter(adapter: ContextNavigationAdapter): this {
     this.#adapters.push(adapter);
+    return this;
+  }
+
+  /**
+   * Register multiple navigation adapters at once.
+   * Adapters are appended in the order provided.
+   *
+   * **Note:** Registering any adapter disables the built-in defaults
+   * (custom, query, path). Register all adapters you need explicitly.
+   */
+  registerAdapters(adapters: readonly ContextNavigationAdapter[]): this {
+    for (const adapter of adapters) {
+      this.#adapters.push(adapter);
+    }
     return this;
   }
 
@@ -81,10 +100,36 @@ export class ContextNavigationHandlerConfigurator extends BaseConfigBuilder<Cont
   }
 
   /**
+   * Set the URL to navigate to when context is cleared.
+   *
+   * When set, the reconciler bypasses adapter encoding for null context
+   * and navigates directly to this URL. Use in context-portal where
+   * clearing context should return to the portal landing page.
+   *
+   * @param url - The target URL path (e.g. `'/'`).
+   */
+  setNullContextUrl(url: string): this {
+    this._set('nullContextUrl', url);
+    return this;
+  }
+
+  /**
    * Set a side-effect hook called after each successful navigation.
    */
   setOnTransition(fn: (detail: ContextNavigationHandlerNavigatedDetail) => void): this {
     this._set('onTransition', async () => fn);
+    return this;
+  }
+
+  /**
+   * Set the source factory that drives the reconciler's observable stream.
+   *
+   * @default createAppFirstSource()
+   * @see createAppFirstSource
+   * @see createContextFirstSource
+   */
+  setSourceFactory(factory: ReconcilerSourceFactory): this {
+    this._set('sourceFactory', async () => factory);
     return this;
   }
 
@@ -105,16 +150,20 @@ export class ContextNavigationHandlerConfigurator extends BaseConfigBuilder<Cont
       this._set('debug', false);
     }
 
-    // User-registered adapters first (override defaults), then built-in defaults.
-    // First match wins — order is evaluation order.
-    const allAdapters = [
-      ...this.#adapters,
-      createCustomAdapter(),
-      createQueryAdapter(),
-      createPathAdapter(),
-    ];
+    // If user registered adapters, use those exclusively.
+    // Otherwise fall back to built-in defaults (custom → query → path).
+    const allAdapters =
+      this.#adapters.length > 0
+        ? [...this.#adapters]
+        : [createCustomAdapter(), createQueryAdapter(), createPathAdapter()];
 
     this._set('adapters', allAdapters);
+
+    // Default source factory — app-first (app switches lead).
+    if (!this._has('sourceFactory')) {
+      const factory = createAppFirstSource();
+      this._set('sourceFactory', async () => factory);
+    }
 
     // Default initial context resolver — decode URL via adapters, set on context provider.
     if (!this._has('resolveInitialContext')) {

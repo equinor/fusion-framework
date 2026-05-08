@@ -1,15 +1,21 @@
 import type { ContextItem, IContextProvider } from '@equinor/fusion-framework-module-context';
 import type { ContextNavigationAdapter, AdapterResolutionContext } from '../types';
+import { hasCustomContextGenerators } from '../utils/has-custom-context-generators';
 
 /**
  * Normalize legacy app generator outputs.
  * Some apps return arrays instead of strings (e.g. `['path']` or `[]`).
  */
 function normalizeStringResult(value: unknown): string | undefined {
-  if (typeof value === 'string' && value.length > 0) return value;
+  if (typeof value === 'string' && value.length > 0) {
+    return value;
+  }
   if (Array.isArray(value)) {
     const first = value[0];
-    return typeof first === 'string' && first.length > 0 ? first : undefined;
+    if (typeof first === 'string' && first.length > 0) {
+      return first;
+    }
+    return undefined;
   }
   return undefined;
 }
@@ -18,8 +24,9 @@ function normalizeStringResult(value: unknown): string | undefined {
  * Custom adapter — uses app-provided `generatePathFromContext` and
  * `extractContextIdFromPath` hooks.
  *
- * Matches apps that either declare `routingStrategy: 'custom'` or have
- * both generator hooks registered (legacy auto-detection).
+ * Matches apps that have both generator hooks registered, regardless of
+ * declared routing strategy. This handles legacy apps that configured
+ * generators without an explicit strategy.
  *
  * Operates on **app-relative paths** (strips `/apps/{appKey}` prefix before
  * calling app hooks, prepends it back after).
@@ -29,15 +36,7 @@ export function createCustomAdapter(): ContextNavigationAdapter {
     id: 'custom',
 
     canHandle({ appContext }: AdapterResolutionContext): boolean {
-      if (appContext.routingStrategy === 'custom') return true;
-
-      // Legacy auto-detection: app has both generators but no explicit strategy
-      const declared = appContext.routingStrategy;
-      if (declared === undefined || declared === null) {
-        return !!appContext.generatePathFromContext && !!appContext.extractContextIdFromPath;
-      }
-
-      return false;
+      return hasCustomContextGenerators(appContext);
     },
 
     encode(context: ContextItem | null, currentURL: URL): URL | null {
@@ -113,7 +112,9 @@ export function createBoundCustomAdapter(
         generatedPath = generatePathFromContext(context, appRelativePath);
       }
 
-      if (!generatedPath) return null;
+      if (!generatedPath) {
+        return null;
+      }
 
       const fullPath = toFullPath(generatedPath);
       return new URL(fullPath, currentURL.origin);

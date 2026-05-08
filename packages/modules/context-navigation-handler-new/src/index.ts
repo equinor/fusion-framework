@@ -19,6 +19,9 @@ export type {
   ContextNavigationHandlerConfig,
   ContextState,
   ReconcilerPhase,
+  ReconcilerSourceEntry,
+  ReconcilerSourceDeps,
+  ReconcilerSourceFactory,
   ContextNavigationHandlerNavigateDetail,
   ContextNavigationHandlerNavigatedDetail,
   ContextNavigationHandlerAdapterResolvedDetail,
@@ -29,6 +32,13 @@ export type {
 export { createPathAdapter } from './adapters/path-adapter';
 export { createQueryAdapter } from './adapters/query-adapter';
 export { createCustomAdapter, createBoundCustomAdapter } from './adapters/custom-adapter';
+
+// Built-in source factories
+export { createAppFirstSource } from './sources/app-first-source';
+export { createContextFirstSource } from './sources/context-first-source';
+
+// Utils
+export { hasCustomContextGenerators } from './utils/has-custom-context-generators';
 
 // Events (side-effect: augments FrameworkEventMap)
 import './events';

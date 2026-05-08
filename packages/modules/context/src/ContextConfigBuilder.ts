@@ -94,7 +94,7 @@ export class ContextConfigBuilder<
   /**
    * Sets the URL routing strategy used by the context module.
    *
-   * @param strategy - Context routing strategy (`query`, `path`, or `custom`).
+   * @param strategy - Context routing strategy (`query` or `path`).
    */
   setRoutingStrategy(strategy: ContextModuleConfig['routingStrategy']) {
     this.config.routingStrategy = strategy;

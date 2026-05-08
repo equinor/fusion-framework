@@ -1,5 +1,6 @@
 import type { ContextItem } from '@equinor/fusion-framework-module-context';
 import type { ContextNavigationAdapter, AdapterResolutionContext } from '../types';
+import { hasCustomContextGenerators } from '../utils/has-custom-context-generators';
 
 const UUID_PATTERN = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i;
 
@@ -8,22 +9,30 @@ const UUID_PATTERN = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{1
  *
  * URL shape: `/apps/{appKey}/{contextId}/...`
  *
- * This is the lowest-priority default adapter. It handles any app that
- * declares `routingStrategy: 'path'` or has no specific strategy configured
- * and no custom generators.
+ * Fallback adapter: handles apps that declare `routingStrategy: 'path'` or
+ * have no explicit strategy and no custom generators registered.
+ * Apps with custom generators are handled by the custom adapter instead.
  */
 export function createPathAdapter(): ContextNavigationAdapter {
   return {
     id: 'path',
 
     canHandle({ appContext }: AdapterResolutionContext): boolean {
-      // Matches when: explicit 'path' strategy, OR no strategy and no generators
-      const declared = appContext.routingStrategy;
-      if (declared === 'path') return true;
-      if (declared === undefined || declared === null) {
-        // Only fallback if app has no custom generators
-        return !appContext.generatePathFromContext || !appContext.extractContextIdFromPath;
+      // Skip apps with custom generators — those belong to the custom adapter
+      if (hasCustomContextGenerators(appContext)) {
+        return false;
       }
+
+      const declared = appContext.routingStrategy;
+      // Explicit path strategy
+      if (declared === 'path') {
+        return true;
+      }
+      // No strategy declared — path is the default fallback
+      if (declared === undefined || declared === null) {
+        return true;
+      }
+
       return false;
     },
 

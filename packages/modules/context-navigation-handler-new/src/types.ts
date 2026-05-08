@@ -1,5 +1,8 @@
 import type { ContextItem, IContextProvider } from '@equinor/fusion-framework-module-context';
 import type { INavigationProvider } from '@equinor/fusion-framework-module-navigation';
+import type { AppModuleProvider, AppModulesInstance } from '@equinor/fusion-framework-module-app';
+import type { ContextModule } from '@equinor/fusion-framework-module-context';
+import type { Observable } from 'rxjs';
 
 // ─── Adapter Contract ───────────────────────────────────────────────
 
@@ -68,6 +71,49 @@ export type ContextState = ContextItem | null | undefined;
 // ─── Reconciler State Machine ───────────────────────────────────────
 
 export type ReconcilerPhase = 'idle' | 'active' | 'cleared';
+
+// ─── Source Factory ─────────────────────────────────────────────────
+
+/**
+ * A single reconciliation entry emitted by the source factory.
+ *
+ * Contains everything the reconciler needs to decide whether and how
+ * to navigate.
+ */
+export interface ReconcilerSourceEntry {
+  /** Current app key. */
+  appKey: string;
+  /** The app's loaded module instances (must include context). */
+  appModules: AppModulesInstance<[ContextModule]>;
+  /** The portal-level context state driving reconciliation. */
+  contextState: ContextState;
+}
+
+/**
+ * Dependencies injected into a source factory.
+ */
+export interface ReconcilerSourceDeps {
+  /** The app module provider (for watching app switches). */
+  app: AppModuleProvider;
+  /** The portal's context provider (for watching context changes). */
+  context: IContextProvider;
+  /** The navigation provider (for reading current URL). */
+  navigation: INavigationProvider;
+}
+
+/**
+ * A source factory produces the observable stream that drives the reconciler.
+ *
+ * The stream composition determines **what leads** — app switches or context
+ * changes — making it the primary extension point for portal-specific behavior.
+ *
+ * Built-in factories:
+ * - `createAppFirstSource` — app switches lead, context follows (app-portal)
+ * - `createContextFirstSource` — context changes lead, app follows (context-portal)
+ */
+export type ReconcilerSourceFactory = (
+  deps: ReconcilerSourceDeps,
+) => Observable<ReconcilerSourceEntry>;
 
 // ─── Events ─────────────────────────────────────────────────────────
 
@@ -154,4 +200,30 @@ export interface ContextNavigationHandlerConfig {
     context: IContextProvider,
     navigation: INavigationProvider,
   ) => Promise<void>;
+
+  /**
+   * Factory that produces the observable stream driving the reconciler.
+   *
+   * Controls whether app switches or context changes lead the stream,
+   * which is the primary behavioral difference between app-portal and
+   * context-portal.
+   *
+   * @default createAppFirstSource()
+   * @see createAppFirstSource
+   * @see createContextFirstSource
+   */
+  sourceFactory: ReconcilerSourceFactory;
+
+  /**
+   * URL to navigate to when context is cleared (`null`).
+   *
+   * When set, the reconciler navigates directly to this URL on null context
+   * instead of delegating to the adapter's `encode(null, ...)`.
+   *
+   * Typical usage: context-portal sets this to `'/'` so clearing context
+   * returns to the portal landing page regardless of adapter type.
+   *
+   * @default undefined — adapters handle null context themselves
+   */
+  nullContextUrl?: string;
 }

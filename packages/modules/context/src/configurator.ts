@@ -39,7 +39,6 @@ export interface ContextModuleConfig {
    *
    * - `query`: preferred query-parameter strategy using `$contextId`.
    * - `path`: legacy path-segment strategy.
-   * - `custom`: path-segment strategy driven by custom extract/generate hooks.
    */
   routingStrategy?: ContextRoutingStrategy;
 

@@ -102,6 +102,5 @@ export type ContextFilterFn = (items: ContextItem[]) => ContextItem[];
  *
  * - `query`: preferred query-parameter strategy using `$contextId`.
  * - `path`: legacy path-segment strategy.
- * - `custom`: path-segment strategy with custom extractor/generator hooks.
  */
-export type ContextRoutingStrategy = 'query' | 'path' | 'custom';
+export type ContextRoutingStrategy = 'query' | 'path';
