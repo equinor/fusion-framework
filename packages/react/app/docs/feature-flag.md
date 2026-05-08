@@ -2,6 +2,9 @@
 
 Add, read, and toggle feature flags in your Fusion app.
 
+> [!NOTE]
+> Requires `@equinor/fusion-framework-module-feature-flag` to be installed as a dependency. The `enableFeatureFlag` helper and `useFeature` hook will not work without it.
+
 **Import:**
 
 ```ts
@@ -30,7 +33,7 @@ export const configure = (configurator) => {
       key: 'beta-dashboard',
       title: 'Beta Dashboard',
       enabled: false,
-      allowUrl: true, // can be toggled via URL query parameter
+      allowUrl: true, // can be toggled via URL query parameter — requires the navigation module to be registered
     },
   ]);
 };
@@ -91,15 +94,20 @@ const FeatureGate = ({ flagKey, children }: { flagKey: string; children: React.R
 
 ## Advanced Configuration
 
-For advanced scenarios, pass a builder callback instead of an array:
+For advanced scenarios, pass a builder callback instead of an array. The builder exposes `addPlugin` — use it to register feature sources such as the local-storage or URL plugin directly:
 
 ```ts
 import { enableFeatureFlag } from '@equinor/fusion-framework-react-app/feature-flag';
+import {
+  createLocalStoragePlugin,
+  createUrlPlugin,
+} from '@equinor/fusion-framework-module-feature-flag/plugins';
 
 export const configure = (configurator) => {
   enableFeatureFlag(configurator, (builder) => {
-    builder.addFeatures([{ key: 'dark-mode', title: 'Dark Mode', enabled: false }]);
-    builder.addPlugin(myCustomPlugin);
+    builder.addPlugin(createLocalStoragePlugin([{ key: 'dark-mode', title: 'Dark Mode', enabled: false }]));
+    // only add URL plugin if your app also registers the navigation module
+    builder.addPlugin(createUrlPlugin([{ key: 'beta-dashboard', title: 'Beta Dashboard', enabled: false }]));
   });
 };
 ```
@@ -107,5 +115,5 @@ export const configure = (configurator) => {
 ## Notes
 
 - Framework-level flags are merged with app-level flags — if both define the same key, the app-level flag takes precedence
-- Feature flags persist to local storage by default
-- With `allowUrl: true`, flags can be overridden via URL query parameters
+- **Array overload**: local-storage persistence and URL override support are wired automatically. Flags with `allowUrl: true` are passed to the URL plugin (requires the `navigation` module)
+- **Builder-callback overload**: no plugins are added automatically — add `createLocalStoragePlugin` and/or `createUrlPlugin` explicitly if you need persistence or URL overrides
