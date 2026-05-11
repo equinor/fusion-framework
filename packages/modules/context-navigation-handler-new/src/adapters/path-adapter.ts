@@ -36,7 +36,7 @@ export function createPathAdapter(): ContextNavigationAdapter {
       return false;
     },
 
-    encode(context: ContextItem | null, currentURL: URL): URL | null {
+    encode({ context, currentURL }: { context: ContextItem | null; currentURL: URL }): URL | null {
       const { pathname } = currentURL;
       // Expected shape: /apps/{appKey}/...
       const segments = pathname.split('/').filter(Boolean);

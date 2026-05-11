@@ -18,7 +18,7 @@ export function createQueryAdapter(paramName = DEFAULT_PARAM): ContextNavigation
       return appContext.routingStrategy === 'query';
     },
 
-    encode(context: ContextItem | null, currentURL: URL): URL | null {
+    encode({ context, currentURL }: { context: ContextItem | null; currentURL: URL }): URL | null {
       const url = new URL(currentURL.href);
 
       if (context === null) {
@@ -26,6 +26,8 @@ export function createQueryAdapter(paramName = DEFAULT_PARAM): ContextNavigation
       } else {
         url.searchParams.set(paramName, context.id);
       }
+
+      url.search = url.search.replace(/%24/gi, '$'); // Restore $ from %24 — $ is a reserved namespace prefix we want visible in URLs
 
       return url;
     },

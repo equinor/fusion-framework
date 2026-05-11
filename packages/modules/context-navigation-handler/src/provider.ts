@@ -7,11 +7,7 @@ import type {
   IContextProvider,
 } from '@equinor/fusion-framework-module-context';
 import type { INavigationProvider } from '@equinor/fusion-framework-module-navigation';
-import type {
-  IEventModuleProvider,
-  FrameworkEvent,
-  FrameworkEventInit,
-} from '@equinor/fusion-framework-module-event';
+import type { IEventModuleProvider } from '@equinor/fusion-framework-module-event';
 
 import type {
   ContextNavigationHandlerConfig,
@@ -21,11 +17,9 @@ import type {
   RoutingStrategyId,
   ContextNavigationHandlerNavigateDetail,
   ContextNavigationHandlerNavigatedDetail,
-  ContextNavigationHandlerStrategyResolvedDetail,
   ContextNavigationHandlerSkippedDetail,
 } from './types';
 
-import { pathStrategy } from './strategies/path-strategy';
 import { createCustomStrategyFromProvider } from './strategies/custom-strategy';
 
 // ─── Provider Args ──────────────────────────────────────────────────
@@ -83,7 +77,7 @@ export class ContextNavigationHandlerProvider {
   // ── Reconciler (single subscription) ────────────────────────────────
 
   #setupReconciler(args: ContextNavigationHandlerProviderArgs): void {
-    const { app, context, navigation } = args;
+    const { app, context } = args;
 
     // Source: app switches + context changes → unified emission
     const source$ = app.current$.pipe(
@@ -298,35 +292,24 @@ export class ContextNavigationHandlerProvider {
     const appContext = appModules.context;
     const declaredStrategy = appContext?.routingStrategy;
 
-    let strategyId: RoutingStrategyId;
-
-    if (declaredStrategy === 'custom') {
-      // Custom requires app to provide encode/decode hooks
-      const custom = appContext ? createCustomStrategyFromProvider(appContext, appKey) : null;
-      if (custom) {
-        this.#dispatchStrategyResolved(appKey, 'custom');
-        return custom;
-      }
-      // Fallback to path if hooks are missing
-      strategyId = 'path';
-      this.#log(`App [${appKey}] declared custom but lacks hooks — falling back to path.`);
-    } else if (declaredStrategy === 'query') {
-      strategyId = 'query';
-    } else if (declaredStrategy === 'path') {
-      strategyId = 'path';
-    } else {
-      // undefined strategy — legacy apps: check if app has generators → use custom
-      const custom = appContext ? createCustomStrategyFromProvider(appContext, appKey) : null;
-      if (custom) {
-        this.#log(`App [${appKey}] has no declared strategy but has generators — using custom.`);
-        this.#dispatchStrategyResolved(appKey, 'custom');
-        return custom;
-      }
-      strategyId = 'path';
+    // Explicitly declared strategy — use it directly
+    if (declaredStrategy) {
+      const strategy = this.#config.strategies[declaredStrategy];
+      this.#dispatchStrategyResolved(appKey, declaredStrategy);
+      return strategy ?? null;
     }
 
-    const strategy = this.#config.strategies[strategyId];
-    this.#dispatchStrategyResolved(appKey, strategyId);
+    // undefined strategy — legacy apps: check if app has generators → use custom
+    const custom = appContext ? createCustomStrategyFromProvider(appContext, appKey) : null;
+    if (custom) {
+      this.#log(`App [${appKey}] has no declared strategy but has generators — using custom.`);
+      this.#dispatchStrategyResolved(appKey, 'custom');
+      return custom;
+    }
+
+    // Fall back to path strategy
+    const strategy = this.#config.strategies.path;
+    this.#dispatchStrategyResolved(appKey, 'path');
     return strategy ?? null;
   }
 

@@ -42,11 +42,11 @@ export interface ContextNavigationAdapter {
   /**
    * Build a URL that encodes the given context.
    *
-   * @param context - The context to encode, or `null` to clear context from URL.
-   * @param currentURL - The current browser URL (absolute).
+   * @param args.context - The context to encode, or `null` to clear context from URL.
+   * @param args.currentURL - The current browser URL (absolute).
    * @returns The target URL with context encoded, or `null` to skip navigation.
    */
-  encode(context: ContextItem | null, currentURL: URL): URL | null;
+  encode(args: { context: ContextItem | null; currentURL: URL }): URL | null;
 
   /**
    * Extract the context id from a URL.
@@ -56,6 +56,31 @@ export interface ContextNavigationAdapter {
    */
   decode(url: URL): string | null;
 }
+
+/**
+ * An adapter factory receives the resolution context and returns a
+ * fully-bound adapter, or `null` to indicate it cannot handle
+ * the current app/URL combination.
+ *
+ * Use a factory when the adapter needs runtime state from the app
+ * (e.g. custom path generators) that isn't available at registration time.
+ */
+export type ContextNavigationAdapterFactory = (
+  ctx: AdapterResolutionContext,
+) => ContextNavigationAdapter | null;
+
+/**
+ * An adapter registration — either a static adapter object or a factory
+ * function that produces one.
+ *
+ * - **Object** — must implement `canHandle`, `encode`, `decode`.
+ *   The reconciler calls `canHandle` to determine if it applies.
+ * - **Function** — called with the resolution context, returns a bound
+ *   adapter or `null` to skip. Implies the factory handles its own selection.
+ */
+export type ContextNavigationAdapterInput =
+  | ContextNavigationAdapter
+  | ContextNavigationAdapterFactory;
 
 // ─── Context States ─────────────────────────────────────────────────
 
@@ -124,6 +149,8 @@ export interface ContextNavigationHandlerNavigateDetail {
   targetURL: URL;
   sourceURL: URL;
   context: ContextItem | null;
+  /** The current app's loaded module instances. */
+  appModules: AppModulesInstance<[ContextModule]>;
 }
 
 /** Fired after navigation completes. */
@@ -132,6 +159,8 @@ export interface ContextNavigationHandlerNavigatedDetail {
   adapterId: string;
   targetURL: URL;
   context: ContextItem | null;
+  /** The current app's loaded module instances. */
+  appModules: AppModulesInstance<[ContextModule]>;
 }
 
 /** Fired when an adapter is resolved for an app. */
@@ -163,9 +192,10 @@ export interface ContextNavigationHandlerConfig {
   origin: string;
 
   /**
-   * Registered adapters, sorted by priority (highest first).
+   * Registered adapters in evaluation order.
+   * Each entry is either a static adapter object or a factory function.
    */
-  adapters: ContextNavigationAdapter[];
+  adapters: ContextNavigationAdapterInput[];
 
   /**
    * Enable reconciliation on URL changes (guard behavior).
@@ -193,13 +223,13 @@ export interface ContextNavigationHandlerConfig {
    * Override to customise initial context resolution or disable it by
    * setting to `undefined`.
    *
-   * @param context - The portal's context provider.
-   * @param navigation - The navigation provider (for reading the current URL).
+   * @param args.context - The portal's context provider.
+   * @param args.navigation - The navigation provider (for reading the current URL).
    */
-  resolveInitialContext?: (
-    context: IContextProvider,
-    navigation: INavigationProvider,
-  ) => Promise<void>;
+  resolveInitialContext?: (args: {
+    context: IContextProvider;
+    navigation: INavigationProvider;
+  }) => Promise<void>;
 
   /**
    * Factory that produces the observable stream driving the reconciler.

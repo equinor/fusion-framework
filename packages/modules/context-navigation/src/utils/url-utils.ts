@@ -37,8 +37,6 @@ export const buildContextUrlForStrategy = (
   routingStrategy?: ContextModuleConfig['routingStrategy'],
 ): string => {
   switch (routingStrategy) {
-    case 'custom':
-      return path;
     case 'query':
       return writeContextIdToQueryParam(path, contextId);
     case 'path':

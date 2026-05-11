@@ -18,6 +18,8 @@ export const queryStrategy: ContextRoutingStrategy = {
       url.searchParams.delete(CONTEXT_QUERY_PARAM);
     } else {
       url.searchParams.set(CONTEXT_QUERY_PARAM, context.id);
+      // Restore $ from %24 — $ is a reserved namespace prefix we want visible in URLs
+      url.search = url.search.replace(/%24/gi, '$');
     }
     return url;
   },

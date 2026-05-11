@@ -5,7 +5,7 @@ import {
 
 import type {
   ContextNavigationHandlerConfig,
-  ContextNavigationAdapter,
+  ContextNavigationAdapterInput,
   ContextNavigationHandlerNavigatedDetail,
   ReconcilerSourceFactory,
 } from './types';
@@ -34,17 +34,21 @@ import { createAppFirstSource } from './sources/app-first-source';
  * ```
  */
 export class ContextNavigationHandlerConfigurator extends BaseConfigBuilder<ContextNavigationHandlerConfig> {
-  readonly #adapters: ContextNavigationAdapter[] = [];
+  readonly #adapters: ContextNavigationAdapterInput[] = [];
 
   /**
-   * Register a navigation adapter.
-   * Adapters are evaluated in registration order. The first adapter
-   * whose `canHandle()` returns `true` is used.
+   * Register a navigation adapter or adapter factory.
+   *
+   * - **Object** — a static adapter with `canHandle`, `encode`, `decode`.
+   * - **Function** — a factory called with the resolution context that
+   *   returns a bound adapter or `null` to skip.
+   *
+   * Adapters are evaluated in registration order. The first match wins.
    *
    * **Note:** Registering any adapter disables the built-in defaults
    * (custom, query, path). Register all adapters you need explicitly.
    */
-  registerAdapter(adapter: ContextNavigationAdapter): this {
+  registerAdapter(adapter: ContextNavigationAdapterInput): this {
     this.#adapters.push(adapter);
     return this;
   }
@@ -56,7 +60,7 @@ export class ContextNavigationHandlerConfigurator extends BaseConfigBuilder<Cont
    * **Note:** Registering any adapter disables the built-in defaults
    * (custom, query, path). Register all adapters you need explicitly.
    */
-  registerAdapters(adapters: readonly ContextNavigationAdapter[]): this {
+  registerAdapters(adapters: readonly ContextNavigationAdapterInput[]): this {
     for (const adapter of adapters) {
       this.#adapters.push(adapter);
     }

@@ -32,12 +32,10 @@ export const resolveRoutingExecutionMode = (
   switch (input.routingStrategy) {
     case 'query':
       return 'query';
-    case 'custom':
-      return input.hasAppContextPathGenerators ? 'custom' : 'path';
     case 'path':
       return 'path';
     default:
-      return !input.hasAppContextPathGenerators ? 'path' : 'custom';
+      return input.hasAppContextPathGenerators ? 'custom' : 'path';
   }
 };
 

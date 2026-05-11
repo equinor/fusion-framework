@@ -12,16 +12,15 @@ import type { IEventModuleProvider } from '@equinor/fusion-framework-module-even
 import type {
   ContextNavigationHandlerConfig,
   ContextNavigationAdapter,
-  ContextState,
+  ContextNavigationAdapterInput,
   ReconcilerPhase,
   AdapterResolutionContext,
+  ReconcilerSourceEntry,
   ContextNavigationHandlerNavigateDetail,
   ContextNavigationHandlerNavigatedDetail,
   ContextNavigationHandlerAdapterResolvedDetail,
   ContextNavigationHandlerSkippedDetail,
 } from './types';
-
-import { createBoundCustomAdapter } from './adapters/custom-adapter';
 
 // ─── Provider Args ──────────────────────────────────────────────────
 
@@ -84,8 +83,8 @@ export class ContextNavigationHandlerProvider {
     });
 
     this.#subscription.add(
-      source$.subscribe(({ appKey, appModules, contextState }) => {
-        this.#reconcile(appKey, appModules, contextState);
+      source$.subscribe((entry) => {
+        this.#reconcile(entry);
       }),
     );
   }
@@ -142,7 +141,7 @@ export class ContextNavigationHandlerProvider {
           return;
         }
 
-        const adapter = this.#resolveAdapter(appKey, appContext, currentURL);
+        const adapter = this.#resolveAdapter({ appKey, appContext, currentURL });
         if (!adapter) {
           return;
         }
@@ -155,22 +154,18 @@ export class ContextNavigationHandlerProvider {
         }
 
         this.#log(`URL guard: context missing from URL, re-applying for [${appKey}]`);
-        this.#applyNavigation(appKey, adapter, activeContext, currentURL);
+        this.#applyNavigation({ appKey, appModules, adapter, context: activeContext, currentURL });
       }),
     );
   }
 
   // ── Core Reconciliation Logic ──────────────────────────────────────
 
-  #reconcile(
-    appKey: string,
-    appModules: AppModulesInstance<[ContextModule]>,
-    contextState: ContextState,
-  ): void {
+  #reconcile({ appKey, appModules, contextState }: ReconcilerSourceEntry): void {
     // Phase: undefined → idle (still initializing)
     if (contextState === undefined) {
       this.#phase = 'idle';
-      this.#dispatchSkipped(appKey, 'no-context');
+      this.#dispatchSkipped({ appKey, reason: 'no-context' });
       this.#log(`Context undefined for [${appKey}] — idle, waiting.`);
       return;
     }
@@ -202,36 +197,38 @@ export class ContextNavigationHandlerProvider {
     }
 
     const currentURL = this.#getCurrentURL();
-    const adapter = this.#resolveAdapter(appKey, appContext, currentURL);
+    const adapter = this.#resolveAdapter({ appKey, appContext, currentURL });
 
     if (!adapter) {
-      this.#dispatchSkipped(appKey, 'no-adapter');
+      this.#dispatchSkipped({ appKey, reason: 'no-adapter' });
       this.#log(`No adapter matched for [${appKey}] — skipping.`);
       return;
     }
 
-    this.#applyNavigation(appKey, adapter, contextState, currentURL);
+    this.#applyNavigation({ appKey, appModules, adapter, context: contextState, currentURL });
   }
 
-  // ── Apply Navigation ───────────────────────────────────────────────
+  // ── Apply Navigation ───────────────────────────────────────────────────────
 
-  #applyNavigation(
-    appKey: string,
-    adapter: ContextNavigationAdapter,
-    context: ContextItem | null,
-    currentURL: URL,
-  ): void {
-    const targetURL = adapter.encode(context, currentURL);
+  #applyNavigation(args: {
+    appKey: string;
+    appModules: AppModulesInstance<[ContextModule]>;
+    adapter: ContextNavigationAdapter;
+    context: ContextItem | null;
+    currentURL: URL;
+  }): void {
+    const { appKey, appModules, adapter, context, currentURL } = args;
+    const targetURL = adapter.encode({ context, currentURL });
 
     if (!targetURL) {
-      this.#dispatchSkipped(appKey, 'encode-returned-null');
+      this.#dispatchSkipped({ appKey, reason: 'encode-returned-null' });
       this.#log(`Adapter [${adapter.id}] returned null for [${appKey}] — skipping.`);
       return;
     }
 
     // Loop guard: skip if URL already matches
     if (this.#normalizePath(targetURL) === this.#normalizePath(currentURL)) {
-      this.#dispatchSkipped(appKey, 'url-matches');
+      this.#dispatchSkipped({ appKey, reason: 'url-matches' });
       this.#log(`URL already correct for [${appKey}] — skipping.`);
       return;
     }
@@ -243,6 +240,7 @@ export class ContextNavigationHandlerProvider {
       targetURL,
       sourceURL: currentURL,
       context,
+      appModules,
     };
 
     this.#event
@@ -253,7 +251,7 @@ export class ContextNavigationHandlerProvider {
       })
       .then((event) => {
         if (event.canceled) {
-          this.#dispatchSkipped(appKey, 'canceled');
+          this.#dispatchSkipped({ appKey, reason: 'canceled' });
           this.#log(`Navigation canceled by listener for [${appKey}].`);
           return;
         }
@@ -268,6 +266,7 @@ export class ContextNavigationHandlerProvider {
           adapterId: adapter.id,
           targetURL,
           context,
+          appModules,
         };
 
         this.#event.dispatchEvent('onContextNavigationHandlerNavigated', {
@@ -285,29 +284,32 @@ export class ContextNavigationHandlerProvider {
 
   // ── Adapter Resolution ─────────────────────────────────────────────
 
-  #resolveAdapter(
-    appKey: string,
-    appContext: IContextProvider,
-    currentURL: URL,
-  ): ContextNavigationAdapter | null {
-    const resolutionCtx: AdapterResolutionContext = { appKey, appContext, currentURL };
-
-    for (const adapter of this.#config.adapters) {
-      if (adapter.canHandle(resolutionCtx)) {
-        // Custom adapter needs binding to the specific app's generators
-        if (adapter.id === 'custom') {
-          const bound = createBoundCustomAdapter(appContext, appKey);
-          this.#dispatchAdapterResolved(appKey, bound.id);
-          this.#log(`Resolved adapter [${bound.id}] for [${appKey}]`);
-          return bound;
-        }
-
-        this.#dispatchAdapterResolved(appKey, adapter.id);
-        this.#log(`Resolved adapter [${adapter.id}] for [${appKey}]`);
+  #resolveAdapter(ctx: AdapterResolutionContext): ContextNavigationAdapter | null {
+    for (const entry of this.#config.adapters) {
+      const adapter = this.#resolveAdapterEntry(entry, ctx);
+      if (adapter) {
+        this.#dispatchAdapterResolved({ appKey: ctx.appKey, adapterId: adapter.id });
+        this.#log(`Resolved adapter [${adapter.id}] for [${ctx.appKey}]`);
         return adapter;
       }
     }
 
+    return null;
+  }
+
+  /**
+   * Resolve a single adapter entry — either call the factory or check canHandle.
+   */
+  #resolveAdapterEntry(
+    entry: ContextNavigationAdapterInput,
+    ctx: AdapterResolutionContext,
+  ): ContextNavigationAdapter | null {
+    if (typeof entry === 'function') {
+      return entry(ctx);
+    }
+    if (entry.canHandle(ctx)) {
+      return entry;
+    }
     return null;
   }
 
@@ -324,15 +326,14 @@ export class ContextNavigationHandlerProvider {
     }
   }
 
-  #dispatchSkipped(appKey: string, reason: ContextNavigationHandlerSkippedDetail['reason']): void {
+  #dispatchSkipped(detail: ContextNavigationHandlerSkippedDetail): void {
     this.#event.dispatchEvent('onContextNavigationHandlerSkipped', {
-      detail: { appKey, reason },
+      detail,
       source: this,
     });
   }
 
-  #dispatchAdapterResolved(appKey: string, adapterId: string): void {
-    const detail: ContextNavigationHandlerAdapterResolvedDetail = { appKey, adapterId };
+  #dispatchAdapterResolved(detail: ContextNavigationHandlerAdapterResolvedDetail): void {
     this.#event.dispatchEvent('onContextNavigationHandlerAdapterResolved', {
       detail,
       source: this,

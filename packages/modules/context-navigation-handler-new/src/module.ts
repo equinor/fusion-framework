@@ -31,7 +31,7 @@ export const module: ContextNavigationHandlerModule = {
     const event = await args.requireInstance('event');
 
     // Resolve initial context from URL before the provider starts
-    await config.resolveInitialContext?.(context, navigation);
+    await config.resolveInitialContext?.({ context, navigation });
 
     return new ContextNavigationHandlerProvider({
       app,

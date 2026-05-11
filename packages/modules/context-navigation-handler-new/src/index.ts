@@ -15,6 +15,8 @@ export { enableContextNavigationHandler } from './enable';
 // Types
 export type {
   ContextNavigationAdapter,
+  ContextNavigationAdapterFactory,
+  ContextNavigationAdapterInput,
   AdapterResolutionContext,
   ContextNavigationHandlerConfig,
   ContextState,
@@ -31,7 +33,7 @@ export type {
 // Built-in adapters
 export { createPathAdapter } from './adapters/path-adapter';
 export { createQueryAdapter } from './adapters/query-adapter';
-export { createCustomAdapter, createBoundCustomAdapter } from './adapters/custom-adapter';
+export { createCustomAdapter } from './adapters/custom-adapter';
 
 // Built-in source factories
 export { createAppFirstSource } from './sources/app-first-source';
@@ -39,6 +41,7 @@ export { createContextFirstSource } from './sources/context-first-source';
 
 // Utils
 export { hasCustomContextGenerators } from './utils/has-custom-context-generators';
+export { enableLegacyAppNavigationFix } from './utils/legacy-app-navigation-fix';
 
 // Events (side-effect: augments FrameworkEventMap)
 import './events';
