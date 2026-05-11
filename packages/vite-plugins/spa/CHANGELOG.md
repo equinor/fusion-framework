@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-vite-plugin-spa
 
+## 4.0.7
+
+### Patch Changes
+
+- 5c05455: Forward request method and body to service worker fetch calls
+
 ## 4.0.6
 
 ### Patch Changes
