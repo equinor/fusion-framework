@@ -873,7 +873,7 @@ importers:
         version: link:../../packages/utils/query
       '@equinor/fusion-react-context-selector':
         specifier: ^2.0.1
-        version: 2.0.3(react@19.2.5)(styled-components@6.4.1(react-dom@19.2.5(react@19.2.5))(react@19.2.5))
+        version: 2.0.4(react@19.2.5)(styled-components@6.4.1(react-dom@19.2.5(react@19.2.5))(react@19.2.5))
       '@equinor/fusion-react-date':
         specifier: ^1.0.0
         version: 1.0.3(react@19.2.5)
@@ -1312,7 +1312,7 @@ importers:
         version: link:../utils/query
       '@equinor/fusion-react-context-selector':
         specifier: ^2.0.1
-        version: 2.0.3(react@19.2.5)(styled-components@6.4.1(react-dom@19.2.5(react@19.2.5))(react@19.2.5))
+        version: 2.0.4(react@19.2.5)(styled-components@6.4.1(react-dom@19.2.5(react@19.2.5))(react@19.2.5))
       '@equinor/fusion-react-progress-indicator':
         specifier: ^0.3.0
         version: 0.3.0(react@19.2.5)
@@ -3246,8 +3246,8 @@ packages:
       react-dom: ^18 || ^19
       styled-components: ^6
 
-  '@equinor/fusion-react-context-selector@2.0.3':
-    resolution: {integrity: sha512-ybIMktkVmnGeY80IoLbSlNETlSH1lJ8x+XQ5DGEgCIkbpQUYI6N5MxGyg2Ba2GPW9puKpzHGtg2/jFcA0ovclg==}
+  '@equinor/fusion-react-context-selector@2.0.4':
+    resolution: {integrity: sha512-Z4oZeZNOlmKKNTEFZRIao2nPT9fiOIpjNBv0pv2WU0WKPzq4nXW/0wIimdsG2l0ePezQ6dQZl9HLpudGFoaOPw==}
     peerDependencies:
       react: ^18 || ^19
 
@@ -3265,8 +3265,8 @@ packages:
     resolution: {integrity: sha512-NNVkTq0gRJYqobHEBPpWG7bFw3JhLlRhsd8AmCFfvQwdRCRnrf5cStql2bb+apetmRalJvH0U1+1swtT3vhFVg==}
     deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
 
-  '@equinor/fusion-react-searchable-dropdown@2.0.3':
-    resolution: {integrity: sha512-eHHCIHh0giuFNa0HmECvuwL34BYL6Df2xdSDKXDHvrDEJ6X9tdL8qv8FatZIx5yYipYHgqtWAedMjK+inglIKg==}
+  '@equinor/fusion-react-searchable-dropdown@2.0.4':
+    resolution: {integrity: sha512-aAWqA6zSCcqGh/dLEwk3FIcVpEBSxHqINboTtiufyuC9IRJk++tYGSzDRMUS6NWsNvw2bG/T9s13Nbf9QT1ZPA==}
     peerDependencies:
       react: ^18 || ^19
 
@@ -3282,6 +3282,12 @@ packages:
 
   '@equinor/fusion-react-styles@2.1.3':
     resolution: {integrity: sha512-BM1i99Rk5tOMG1p/y/Zo3UbIgY7ekQLK4BB+LlgIy/7NbdsEwAAXz1gCCord9Tm4Uca+xIDsTxvjZtYFHQj0vw==}
+    peerDependencies:
+      react: ^18 || ^19
+      styled-components: ^6
+
+  '@equinor/fusion-react-styles@2.1.4':
+    resolution: {integrity: sha512-dTVqUSbarOfRGTdHV1LOTduilogipewutw/qwwhuv7HU6HBVbu1dk998jXZBQuRHGqkQ2YOeqEcZ3SZS2cHqow==}
     peerDependencies:
       react: ^18 || ^19
       styled-components: ^6
@@ -3305,9 +3311,6 @@ packages:
   '@equinor/fusion-wc-checkbox@1.2.1':
     resolution: {integrity: sha512-c9pC+mmcxAxa9vYVNl30lVtl7o1THp/tQMqmEhKh3dBSvdtmoEpI//ORdwbJa1QhEkSDALmaW5aaWoQtn4Fc0Q==}
 
-  '@equinor/fusion-wc-checkbox@1.2.2':
-    resolution: {integrity: sha512-XiwJk5bcwJyWJ4+q6cQRWEDQU77y+ucS0F88LVyHAwmFt70FMjGJDFWRJ0etSL3lh0B/eQWqt2/5QF8fLOUPPQ==}
-
   '@equinor/fusion-wc-checkbox@1.2.3':
     resolution: {integrity: sha512-2CR/XZxDAOigI3VRlEuQns7dsUdM6uW8R233c3s0JQZmeQA0JlX2vSzijmE2z+Lm7Pz5Gb5DEmN7MJt/s7q0MQ==}
 
@@ -3329,9 +3332,6 @@ packages:
   '@equinor/fusion-wc-divider@1.2.1':
     resolution: {integrity: sha512-H0aUUHQ/kCjYOlBU6lgvgQJu/0vdN1KYZ9tv1fOdZ0RAV8hITrIOE11/+sJ3K2AVkmgpqvyQQoG80jcB42sEOw==}
 
-  '@equinor/fusion-wc-divider@1.2.2':
-    resolution: {integrity: sha512-Y/ERLlazlhs3swbopPgTZuDKk/dXg3EBYrqOYG2mgV/m5nt6gQzc4WEl8ut4osTnPM0s+bWmZpQD/jo0juV4Dw==}
-
   '@equinor/fusion-wc-divider@1.2.3':
     resolution: {integrity: sha512-uh/92AOVszIQzUnOnNYOgXQR+OV3mAOIvNfbngd25EXoiYx4YPhbBbiaMe23s+oFaONAOdqXL2Z9NloEm2LhjA==}
 
@@ -3349,9 +3349,6 @@ packages:
 
   '@equinor/fusion-wc-list@1.2.1':
     resolution: {integrity: sha512-ctrFk+nKYPsHE/58POYqT76aWTw98B0Eip6XXXdaZ91MqUoHWsf3eTdqhaMqyiBoRUvCFzhPuMmCU+Yeg/3rMA==}
-
-  '@equinor/fusion-wc-list@1.2.2':
-    resolution: {integrity: sha512-65sK34gEkj/039s2aPef0bu2ffP6BHN4xMnt8dEtHyffmGLQ2QyvdzWLZTrU6Om868Imiwbu0WQHkS12ctOnsA==}
 
   '@equinor/fusion-wc-list@1.2.3':
     resolution: {integrity: sha512-QRGtbAQeNsSHadTp+gn6K2NNn18czbyPe1Rt0Cuuy9jfpNKZFDFxTGX2vWpM38qRpaIjezqPh1ZEzzjlGj8SdQ==}
@@ -3374,9 +3371,6 @@ packages:
   '@equinor/fusion-wc-radio@1.2.1':
     resolution: {integrity: sha512-9CMf4dXD2AOEok6RFBvdFd4NBeiWVkKG9xVLW3hofqc/z9wPYsm6YXSO3SrOFAaV0furZcgOpC90VXRhD1WO+A==}
 
-  '@equinor/fusion-wc-radio@1.2.2':
-    resolution: {integrity: sha512-qH1pbqU6+1OdCi7uIDBsVK+2uievme5a/MCu9jGGyiLLoDKiwFA4iO1A2GjgCsiAPR6ByugDQbKl/s3qhcRF3A==}
-
   '@equinor/fusion-wc-radio@1.2.3':
     resolution: {integrity: sha512-gFf6mdH2kVkDkm7kawS77d/bjtV506BA39DOEGoipAshDp5bhydgDP+u1XneqaADHW090OQSd9XUbFfIK0wVYQ==}
 
@@ -3385,9 +3379,6 @@ packages:
 
   '@equinor/fusion-wc-searchable-dropdown@4.1.1':
     resolution: {integrity: sha512-p2/7MVsYGXVIZzG09BNmjGiaVt2jQX1EbplFvCVL8gcMTfQbSs6nB7TysyrKZFIFvWGm33Mc0OaW93MHVHIcFQ==}
-
-  '@equinor/fusion-wc-searchable-dropdown@4.1.2':
-    resolution: {integrity: sha512-arzBu+wdPVSehdx+lZdMfUKM7AFg+hUAxzP1GwbnOSRhtIpy0xeLrNoVRbBWltP4Mz6bNuO2cixnIashyWFcdg==}
 
   '@equinor/fusion-wc-searchable-dropdown@4.1.3':
     resolution: {integrity: sha512-ciNW+BqiYpZkGgieJ6Mei5mb+a06p6nyx1d6YN2PzEEPVVpntm9jvwivrNjsflGHxA3CuQecBaJsrTzWabhZOQ==}
@@ -3401,14 +3392,14 @@ packages:
   '@equinor/fusion-wc-textinput@1.2.1':
     resolution: {integrity: sha512-9j9BgABBNYaQoqQl/iGfKNZVRyMxWhYEJaOXgUajGrE1sho+0Bs1827a9+hHJYrJ1jK55yZM5lOuTATOftH+7Q==}
 
-  '@equinor/fusion-wc-textinput@1.2.2':
-    resolution: {integrity: sha512-HJgNauY8JDksv01vhJ4HutzOeQFlEFt57OPTclWgIDk+TVOyinZiJdCZSee5eIrEXuFgLH5YrozziCI7cJ9Q9A==}
-
   '@equinor/fusion-wc-textinput@1.2.3':
     resolution: {integrity: sha512-Ktyet6iH01C/WZW0JDcn+OYEcrG7VGlIaWItoXuHdGezkCDUG8UBb8DXUFrYKH0OnRvl9RnemmgEXVP0+bPMkw==}
 
   '@equinor/fusion-wc-theme@1.2.1':
     resolution: {integrity: sha512-ZZ047PglAqwg6NlAHpJAP/00NiMJHv4KqjqaSemikP1afvHmMEfG9Z6eQIWdRkw6LTx53gj8tEWqhZjGpSoM2w==}
+
+  '@equinor/fusion-wc-theme@1.2.3':
+    resolution: {integrity: sha512-Owf6ON9M5BoWOd3fsjRJf6VufObCOMLwxkuK3GNLhmQR0sWXxAYdxYxylJIMa8Lwzm2qff3ay7K1GubDB5JgIw==}
 
   '@equinor/fusion-web-theme@0.1.10':
     resolution: {integrity: sha512-/Yzfie73UvMoBMo35gmeHO+5nTty5EyemomcB5ZbEDyHFNIodgCL1JGm2KfrIwqez9w9CTneHjnJWvwhu9TM+w==}
@@ -12204,13 +12195,13 @@ snapshots:
       react-dom: 19.2.5(react@19.2.5)
       styled-components: 6.4.1(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
 
-  '@equinor/fusion-react-context-selector@2.0.3(react@19.2.5)(styled-components@6.4.1(react-dom@19.2.5(react@19.2.5))(react@19.2.5))':
+  '@equinor/fusion-react-context-selector@2.0.4(react@19.2.5)(styled-components@6.4.1(react-dom@19.2.5(react@19.2.5))(react@19.2.5))':
     dependencies:
-      '@equinor/fusion-react-searchable-dropdown': 2.0.3(react@19.2.5)
-      '@equinor/fusion-react-styles': 2.1.3(react@19.2.5)(styled-components@6.4.1(react-dom@19.2.5(react@19.2.5))(react@19.2.5))
+      '@equinor/fusion-react-searchable-dropdown': 2.0.4(react@19.2.5)
+      '@equinor/fusion-react-styles': 2.1.4(react@19.2.5)(styled-components@6.4.1(react-dom@19.2.5(react@19.2.5))(react@19.2.5))
       '@equinor/fusion-react-utils': 3.0.2(react@19.2.5)
-      '@equinor/fusion-wc-icon': 2.4.2
-      '@equinor/fusion-wc-searchable-dropdown': 4.1.2
+      '@equinor/fusion-wc-icon': 2.4.3
+      '@equinor/fusion-wc-searchable-dropdown': 4.1.3
       react: 19.2.5
     transitivePeerDependencies:
       - styled-components
@@ -12235,11 +12226,11 @@ snapshots:
     transitivePeerDependencies:
       - react
 
-  '@equinor/fusion-react-searchable-dropdown@2.0.3(react@19.2.5)':
+  '@equinor/fusion-react-searchable-dropdown@2.0.4(react@19.2.5)':
     dependencies:
       '@equinor/fusion-react-utils': 3.0.2(react@19.2.5)
-      '@equinor/fusion-wc-icon': 2.4.2
-      '@equinor/fusion-wc-searchable-dropdown': 4.1.2
+      '@equinor/fusion-wc-icon': 2.4.3
+      '@equinor/fusion-wc-searchable-dropdown': 4.1.3
       react: 19.2.5
 
   '@equinor/fusion-react-side-sheet@2.0.4(@equinor/eds-core-react@2.4.1(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(styled-components@6.4.1(react-dom@19.2.5(react@19.2.5))(react@19.2.5)))(@equinor/eds-icons@1.4.0)(@equinor/eds-tokens@2.2.0)(react-dom@19.2.5(react@19.2.5))(react-is@18.3.1)(react@19.2.5)(styled-components@6.4.1(react-dom@19.2.5(react@19.2.5))(react@19.2.5))':
@@ -12259,6 +12250,24 @@ snapshots:
     dependencies:
       '@equinor/eds-tokens': 2.2.0
       '@equinor/fusion-wc-theme': 1.2.1
+      '@equinor/fusion-web-theme': 0.1.10
+      clsx: 2.1.1
+      hoist-non-react-statics: 3.3.2
+      jss: 10.10.0
+      jss-plugin-camel-case: 10.10.0
+      jss-plugin-default-unit: 10.10.0
+      jss-plugin-global: 10.10.0
+      jss-plugin-nested: 10.10.0
+      jss-plugin-props-sort: 10.10.0
+      jss-plugin-rule-value-function: 10.10.0
+      jss-plugin-vendor-prefixer: 10.10.0
+      react: 19.2.5
+      styled-components: 6.4.1(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+
+  '@equinor/fusion-react-styles@2.1.4(react@19.2.5)(styled-components@6.4.1(react-dom@19.2.5(react@19.2.5))(react@19.2.5))':
+    dependencies:
+      '@equinor/eds-tokens': 2.2.0
+      '@equinor/fusion-wc-theme': 1.2.3
       '@equinor/fusion-web-theme': 0.1.10
       clsx: 2.1.1
       hoist-non-react-statics: 3.3.2
@@ -12310,13 +12319,6 @@ snapshots:
       '@material/mwc-checkbox': 0.27.0
       lit: 3.3.2
 
-  '@equinor/fusion-wc-checkbox@1.2.2':
-    dependencies:
-      '@equinor/fusion-wc-core': 2.0.2
-      '@equinor/fusion-web-theme': 0.1.10
-      '@material/mwc-checkbox': 0.27.0
-      lit: 3.3.2
-
   '@equinor/fusion-wc-checkbox@1.2.3':
     dependencies:
       '@equinor/fusion-wc-core': 2.0.3
@@ -12348,12 +12350,6 @@ snapshots:
   '@equinor/fusion-wc-divider@1.2.1':
     dependencies:
       '@equinor/fusion-wc-core': 2.0.1
-      '@equinor/fusion-web-theme': 0.1.10
-      lit: 3.3.2
-
-  '@equinor/fusion-wc-divider@1.2.2':
-    dependencies:
-      '@equinor/fusion-wc-core': 2.0.2
       '@equinor/fusion-web-theme': 0.1.10
       lit: 3.3.2
 
@@ -12395,17 +12391,6 @@ snapshots:
       '@equinor/fusion-wc-divider': 1.2.1
       '@equinor/fusion-wc-icon': 2.4.1
       '@equinor/fusion-wc-radio': 1.2.1
-      '@equinor/fusion-web-theme': 0.1.10
-      '@material/mwc-list': 0.27.0
-      lit: 3.3.2
-
-  '@equinor/fusion-wc-list@1.2.2':
-    dependencies:
-      '@equinor/fusion-wc-checkbox': 1.2.2
-      '@equinor/fusion-wc-core': 2.0.2
-      '@equinor/fusion-wc-divider': 1.2.2
-      '@equinor/fusion-wc-icon': 2.4.2
-      '@equinor/fusion-wc-radio': 1.2.2
       '@equinor/fusion-web-theme': 0.1.10
       '@material/mwc-list': 0.27.0
       lit: 3.3.2
@@ -12499,13 +12484,6 @@ snapshots:
       '@material/mwc-radio': 0.27.0
       lit: 3.3.2
 
-  '@equinor/fusion-wc-radio@1.2.2':
-    dependencies:
-      '@equinor/fusion-wc-core': 2.0.2
-      '@equinor/fusion-web-theme': 0.1.10
-      '@material/mwc-radio': 0.27.0
-      lit: 3.3.2
-
   '@equinor/fusion-wc-radio@1.2.3':
     dependencies:
       '@equinor/fusion-wc-core': 2.0.3
@@ -12526,19 +12504,6 @@ snapshots:
       '@equinor/fusion-wc-icon': 2.4.1
       '@equinor/fusion-wc-list': 1.2.1
       '@equinor/fusion-wc-textinput': 1.2.1
-      '@equinor/fusion-web-theme': 0.1.10
-      '@lit-labs/task': 3.1.0
-      '@types/uuid': 11.0.0
-      lit: 3.3.2
-      uuid: 14.0.0
-
-  '@equinor/fusion-wc-searchable-dropdown@4.1.2':
-    dependencies:
-      '@equinor/fusion-wc-core': 2.0.2
-      '@equinor/fusion-wc-divider': 1.2.2
-      '@equinor/fusion-wc-icon': 2.4.2
-      '@equinor/fusion-wc-list': 1.2.2
-      '@equinor/fusion-wc-textinput': 1.2.2
       '@equinor/fusion-web-theme': 0.1.10
       '@lit-labs/task': 3.1.0
       '@types/uuid': 11.0.0
@@ -12578,14 +12543,6 @@ snapshots:
       '@material/mwc-textfield': 0.27.0
       lit: 3.3.2
 
-  '@equinor/fusion-wc-textinput@1.2.2':
-    dependencies:
-      '@equinor/fusion-wc-core': 2.0.2
-      '@equinor/fusion-wc-icon': 2.4.2
-      '@equinor/fusion-web-theme': 0.1.10
-      '@material/mwc-textfield': 0.27.0
-      lit: 3.3.2
-
   '@equinor/fusion-wc-textinput@1.2.3':
     dependencies:
       '@equinor/fusion-wc-core': 2.0.3
@@ -12597,6 +12554,13 @@ snapshots:
   '@equinor/fusion-wc-theme@1.2.1':
     dependencies:
       '@equinor/fusion-wc-core': 2.0.2
+      '@equinor/fusion-web-theme': 0.1.10
+      '@material/theme': 14.0.0
+      lit: 3.3.2
+
+  '@equinor/fusion-wc-theme@1.2.3':
+    dependencies:
+      '@equinor/fusion-wc-core': 2.0.3
       '@equinor/fusion-web-theme': 0.1.10
       '@material/theme': 14.0.0
       lit: 3.3.2
