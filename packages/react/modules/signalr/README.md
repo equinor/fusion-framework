@@ -45,6 +45,9 @@ Same as `useTopic`, but accepts an explicit `ISignalRProvider` instead of resolv
 
 ```ts
 import { useProviderTopic } from '@equinor/fusion-framework-react-module-signalr';
+import type { ISignalRProvider } from '@equinor/fusion-framework-module-signalr';
+
+declare const provider: ISignalRProvider;
 
 const topic = useProviderTopic<MyPayload>(provider, 'hub-id', 'topic-id');
 ```
