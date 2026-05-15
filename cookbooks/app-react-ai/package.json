@@ -9,7 +9,7 @@
     "build": "fusion-framework-cli app build"
   },
   "devDependencies": {
-    "@assistant-ui/react": "^0.12.0",
+    "@assistant-ui/react": "^0.14.5",
     "@assistant-ui/react-markdown": "^0.12.9",
     "@equinor/fusion-framework-cli": "workspace:^",
     "@equinor/fusion-framework-module-ai": "workspace:^",
