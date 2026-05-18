@@ -15,4 +15,4 @@ jobs:
     permissions:
       pull-requests: write
     steps:
-      - uses: fuxingloh/multi-labeler@v4.0.0
+      - uses: fuxingloh/multi-labeler@v5.0.0
