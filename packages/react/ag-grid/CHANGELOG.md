@@ -1,5 +1,13 @@
 # @equinor/fusion-framework-react-ag-grid
 
+## 36.0.2
+
+### Patch Changes
+
+- 17c84af: Internal: bump ag-grid group with 3 updates.
+- Updated dependencies [17c84af]
+  - @equinor/fusion-framework-module-ag-grid@36.0.1
+
 ## 36.0.1
 
 ### Patch Changes

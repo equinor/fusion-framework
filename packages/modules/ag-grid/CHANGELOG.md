@@ -1,5 +1,11 @@
 # Change Log
 
+## 36.0.1
+
+### Patch Changes
+
+- 17c84af: Internal: bump ag-grid group with 3 updates.
+
 ## 36.0.0
 
 ### Major Changes

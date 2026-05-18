@@ -1,5 +1,14 @@
 # @equinor/fusion-framework-cli-plugin-ai-index
 
+## 3.0.3
+
+### Patch Changes
+
+- 436ae67: Internal: bump @azure/search-documents from 12 to 13
+- Updated dependencies [436ae67]
+  - @equinor/fusion-framework-module-ai@4.0.1
+  - @equinor/fusion-framework-cli-plugin-ai-base@4.0.2
+
 ## 3.0.2
 
 ### Patch Changes
