@@ -72,8 +72,8 @@ importers:
         specifier: ^4.0.18
         version: 4.1.4(vitest@4.1.4)
       agent-browser:
-        specifier: ^0.26.0
-        version: 0.26.0
+        specifier: ^0.27.0
+        version: 0.27.0
       chalk:
         specifier: ^5.6.0
         version: 5.6.2
@@ -7078,8 +7078,8 @@ packages:
     resolution: {integrity: sha512-MnA+YT8fwfJPgBx3m60MNqakm30XOkyIoH1y6huTQvC0PwZG7ki8NacLBcrPbNoo8vEZy7Jpuk7+jMO+CUovTQ==}
     engines: {node: '>= 14'}
 
-  agent-browser@0.26.0:
-    resolution: {integrity: sha512-pdqSfjwbFSp+qnwlb2g23e9wXveIOfMi19xpPA9xZUbzEAUp6W4YBZj6Ybj8z4M7WkcbGDDYc+oDIHDt9R3EDQ==}
+  agent-browser@0.27.0:
+    resolution: {integrity: sha512-mmHzVsYFVA6nshNNGJzg83aVMgKpf4h98ytY3pvtJB1Cot0ZyA2bfnkbSngGD56Azkj+GlhVH6qx9DfKOVE0yg==}
     hasBin: true
 
   ajv@8.20.0:
@@ -15517,7 +15517,7 @@ snapshots:
 
   agent-base@7.1.4: {}
 
-  agent-browser@0.26.0: {}
+  agent-browser@0.27.0: {}
 
   ajv@8.20.0:
     dependencies:
