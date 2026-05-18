@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework-cookbook-app-react-ai",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "private": true,
   "type": "module",
   "main": "dist/main.js",

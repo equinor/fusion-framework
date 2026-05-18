@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-vite-plugin-api-service
 
+## 2.0.2
+
+### Patch Changes
+
+- 806c623: Internal: bump http-proxy-middleware from 3 to 4
+
 ## 2.0.1
 
 ### Patch Changes

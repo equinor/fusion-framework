@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-react-ag-charts
 
+## 14.0.3
+
+### Patch Changes
+
+- 1d4db72: Internal: bump ag-charts group with 3 updates.
+
 ## 14.0.2
 
 ### Patch Changes

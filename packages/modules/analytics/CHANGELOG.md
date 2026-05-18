@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-module-analytics
 
+## 2.0.5
+
+### Patch Changes
+
+- 5c1173d: Internal: bump opentelemetry group (@opentelemetry/api-logs, @opentelemetry/exporter-logs-otlp-http, @opentelemetry/otlp-exporter-base, @opentelemetry/otlp-transformer, @opentelemetry/sdk-logs) from 0.215.0 to 0.218.0 and @opentelemetry/resources from 2.7.0 to 2.7.1.
+
 ## 2.0.4
 
 ### Patch Changes

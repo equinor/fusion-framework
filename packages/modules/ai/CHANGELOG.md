@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-module-ai
 
+## 4.0.1
+
+### Patch Changes
+
+- 436ae67: Internal: bump @azure/search-documents from 12 to 13
+
 ## 4.0.0
 
 ### Major Changes
