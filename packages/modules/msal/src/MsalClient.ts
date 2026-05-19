@@ -1,5 +1,6 @@
 import {
   PublicClientApplication,
+  type CacheLookupPolicy,
   type SilentRequest,
   type Configuration,
   type EndSessionRequest,
@@ -40,6 +41,23 @@ export type MsalClientConfig = Configuration & {
     /** Optional tenant identifier for Azure AD tenant */
     tenantId?: string;
   };
+  /**
+   * Cache lookup policy applied to every `acquireTokenSilent` call.
+   *
+   * Controls whether MSAL falls back to a hidden iframe when the refresh token
+   * fails. When `undefined`, MSAL's built-in default applies (cache → refresh
+   * token → iframe). Set to `CacheLookupPolicy.AccessTokenAndRefreshToken` to
+   * skip the iframe step and fail immediately with `InteractionRequiredAuthError`
+   * when the refresh token is revoked — avoiding the ~10–20 s
+   * `monitor_window_timeout` delay.
+   *
+   * When using {@link MsalConfigurator}, this defaults to
+   * `CacheLookupPolicy.AccessTokenAndRefreshToken`. When constructing `MsalClient`
+   * directly, the field is optional and defaults to `undefined` (MSAL default).
+   *
+   * Per-request `cacheLookupPolicy` on `SilentRequest` takes precedence over this value.
+   */
+  cacheLookupPolicy?: CacheLookupPolicy;
 };
 
 /**
@@ -65,6 +83,7 @@ export type MsalClientConfig = Configuration & {
 export class MsalClient extends PublicClientApplication implements IMsalClient {
   #tenantId?: string;
   #clientId?: string;
+  #cacheLookupPolicy?: CacheLookupPolicy;
 
   /**
    * Creates a new MSAL client instance.
@@ -75,6 +94,7 @@ export class MsalClient extends PublicClientApplication implements IMsalClient {
     super(config);
     this.#tenantId = config.auth?.tenantId;
     this.#clientId = config.auth?.clientId;
+    this.#cacheLookupPolicy = config.cacheLookupPolicy;
   }
 
   /**
@@ -257,7 +277,11 @@ export class MsalClient extends PublicClientApplication implements IMsalClient {
             'Attempting to acquire token silently',
             request.correlationId || FUSION_CORRELATION_ID,
           );
-          return await this.acquireTokenSilent(request as SilentRequest);
+          return await this.acquireTokenSilent({
+            // Instance-level policy is the default; request-level cacheLookupPolicy takes precedence
+            cacheLookupPolicy: this.#cacheLookupPolicy,
+            ...(request as SilentRequest),
+          });
         } catch {
           // Silent acquisition failed - fall back to interactive
           this.getLogger().warning(
