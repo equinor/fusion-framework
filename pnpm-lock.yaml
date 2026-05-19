@@ -1329,15 +1329,9 @@ importers:
       '@equinor/fusion-framework-module-context':
         specifier: workspace:*
         version: link:../modules/context
-      '@equinor/fusion-framework-module-context-navigation':
-        specifier: workspace:*
-        version: link:../modules/context-navigation
       '@equinor/fusion-framework-module-context-navigation-handler':
         specifier: workspace:*
         version: link:../modules/context-navigation-handler
-      '@equinor/fusion-framework-module-context-navigation-handler-new':
-        specifier: workspace:*
-        version: link:../modules/context-navigation-handler-new
       '@equinor/fusion-framework-module-feature-flag':
         specifier: workspace:*
         version: link:../modules/feature-flag
@@ -1755,68 +1749,7 @@ importers:
         specifier: ^6.0.3
         version: 6.0.3
 
-  packages/modules/context-navigation:
-    dependencies:
-      semver:
-        specifier: ^7.7.2
-        version: 7.7.4
-    devDependencies:
-      '@equinor/fusion-framework-module':
-        specifier: workspace:^
-        version: link:../module
-      '@equinor/fusion-framework-module-app':
-        specifier: workspace:^
-        version: link:../app
-      '@equinor/fusion-framework-module-context':
-        specifier: workspace:^
-        version: link:../context
-      '@equinor/fusion-framework-module-navigation':
-        specifier: workspace:^
-        version: link:../navigation
-      '@equinor/fusion-framework-module-telemetry':
-        specifier: workspace:^
-        version: link:../telemetry
-      '@types/semver':
-        specifier: ^7.0.0
-        version: 7.7.1
-      rxjs:
-        specifier: ^7.8.1
-        version: 7.8.2
-      typescript:
-        specifier: ^5.9.3
-        version: 5.9.3
-      urlpattern-polyfill:
-        specifier: ^10.0.0
-        version: 10.1.0
-
   packages/modules/context-navigation-handler:
-    devDependencies:
-      '@equinor/fusion-framework-module':
-        specifier: workspace:^
-        version: link:../module
-      '@equinor/fusion-framework-module-app':
-        specifier: workspace:^
-        version: link:../app
-      '@equinor/fusion-framework-module-context':
-        specifier: workspace:^
-        version: link:../context
-      '@equinor/fusion-framework-module-event':
-        specifier: workspace:^
-        version: link:../event
-      '@equinor/fusion-framework-module-navigation':
-        specifier: workspace:^
-        version: link:../navigation
-      rxjs:
-        specifier: ^7.8.1
-        version: 7.8.2
-      typescript:
-        specifier: ^5.8.3
-        version: 5.9.3
-      vitest:
-        specifier: ^3.1.1
-        version: 3.2.4(@types/debug@4.1.13)(@types/node@25.6.0)(happy-dom@20.8.9)(jsdom@29.0.2)(lightningcss@1.32.0)(msw@2.13.4(@types/node@25.6.0)(typescript@5.9.3))(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3)
-
-  packages/modules/context-navigation-handler-new:
     devDependencies:
       '@equinor/fusion-framework-module':
         specifier: workspace:^
@@ -11413,9 +11346,6 @@ packages:
 
   url-parse@1.5.10:
     resolution: {integrity: sha512-WypcfiRhfeUP9vvF0j6rw0J3hrWrw6iZv3+22h6iRMJ/8z1Tj6XfLP4DsUix5MhMPnXpiHDoKyoZ/bdCkwBCiQ==}
-
-  urlpattern-polyfill@10.1.0:
-    resolution: {integrity: sha512-IGjKp/o0NL3Bso1PymYURCJxMPNAf/ILOpendP9f5B6e1rTJgdgiOvgfoT8VxCAdY+Wisb9uhGaJJf3yZ2V9nw==}
 
   use-callback-ref@1.3.3:
     resolution: {integrity: sha512-jQL3lRnocaFtu3V00JToYz/4QkNWswxijDaCVNZRiRTO3HQDLsdu1ZtmIUvV4yPp+rvWm5j0y0TG/S61cuijTg==}
@@ -21805,8 +21735,6 @@ snapshots:
     dependencies:
       querystringify: 2.2.0
       requires-port: 1.0.0
-
-  urlpattern-polyfill@10.1.0: {}
 
   use-callback-ref@1.3.3(@types/react@19.2.14)(react@19.2.5):
     dependencies:

@@ -1,49 +1,29 @@
-import type { FrameworkEvent, FrameworkEventInit } from '@equinor/fusion-framework-module-event';
+import type { FrameworkEventMap, FrameworkEvent, FrameworkEventInit } from '@equinor/fusion-framework-module-event';
 
 import type {
   ContextNavigationHandlerNavigateDetail,
   ContextNavigationHandlerNavigatedDetail,
-  ContextNavigationHandlerStrategyResolvedDetail,
+  ContextNavigationHandlerAdapterResolvedDetail,
   ContextNavigationHandlerSkippedDetail,
 } from './types';
+
 import type { ContextNavigationHandlerProvider } from './provider';
 
-/**
- * Augment the framework event map with context-navigation-handler events.
- *
- * This enables type-safe `addEventListener` and `dispatchEvent` calls
- * for all events emitted by this module.
- */
 declare module '@equinor/fusion-framework-module-event' {
   interface FrameworkEventMap {
-    /**
-     * Dispatched **before** the reconciler navigates.
-     * Cancelable — call `event.preventDefault()` to abort navigation.
-     */
+    /** Fired before context navigation. Cancelable — call `event.preventDefault()` to block. */
     onContextNavigationHandlerNavigate: FrameworkEvent<
       FrameworkEventInit<ContextNavigationHandlerNavigateDetail, ContextNavigationHandlerProvider>
     >;
-
-    /**
-     * Dispatched **after** navigation completes.
-     */
+    /** Fired after context navigation completes. */
     onContextNavigationHandlerNavigated: FrameworkEvent<
       FrameworkEventInit<ContextNavigationHandlerNavigatedDetail, ContextNavigationHandlerProvider>
     >;
-
-    /**
-     * Dispatched when a routing strategy is resolved for an app.
-     */
-    onContextNavigationHandlerStrategyResolved: FrameworkEvent<
-      FrameworkEventInit<
-        ContextNavigationHandlerStrategyResolvedDetail,
-        ContextNavigationHandlerProvider
-      >
+    /** Fired when an adapter is resolved for an app. */
+    onContextNavigationHandlerAdapterResolved: FrameworkEvent<
+      FrameworkEventInit<ContextNavigationHandlerAdapterResolvedDetail, ContextNavigationHandlerProvider>
     >;
-
-    /**
-     * Dispatched when reconciliation is skipped.
-     */
+    /** Fired when navigation is skipped. */
     onContextNavigationHandlerSkipped: FrameworkEvent<
       FrameworkEventInit<ContextNavigationHandlerSkippedDetail, ContextNavigationHandlerProvider>
     >;

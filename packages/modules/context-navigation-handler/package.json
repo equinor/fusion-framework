@@ -1,7 +1,7 @@
 {
   "name": "@equinor/fusion-framework-module-context-navigation-handler",
   "version": "0.1.0",
-  "description": "Event-driven context-to-URL reconciler for Fusion Framework portals",
+  "description": "Adapter-based context-to-URL reconciler for Fusion Framework portals",
   "type": "module",
   "module": "./dist/esm/index.js",
   "types": "./dist/types/index.d.ts",
@@ -10,9 +10,13 @@
       "import": "./dist/esm/index.js",
       "types": "./dist/types/index.d.ts"
     },
-    "./strategies": {
-      "import": "./dist/esm/strategies/index.js",
-      "types": "./dist/types/strategies/index.d.ts"
+    "./adapters": {
+      "import": "./dist/esm/adapters/index.js",
+      "types": "./dist/types/adapters/index.d.ts"
+    },
+    "./utils": {
+      "import": "./dist/esm/utils/url/index.js",
+      "types": "./dist/types/utils/url/index.d.ts"
     }
   },
   "scripts": {

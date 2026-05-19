@@ -1,32 +1,50 @@
-// ─── Module ─────────────────────────────────────────────────────────
+// Module
 export { module, moduleKey } from './module';
 export type { ContextNavigationHandlerModule, ContextNavigationHandlerModuleKey } from './module';
 
-// ─── Enable function ────────────────────────────────────────────────
-export { enableContextNavigationHandler } from './enable';
-
-// ─── Provider ───────────────────────────────────────────────────────
+// Provider
 export { ContextNavigationHandlerProvider } from './provider';
+export type { ContextNavigationHandlerProviderArgs } from './provider';
 
-// ─── Configuration ──────────────────────────────────────────────────
+// Configurator
 export { ContextNavigationHandlerConfigurator } from './configurator';
 
-// ─── Types ──────────────────────────────────────────────────────────
+// Enable helper
+export { enableContextNavigationHandler } from './enable';
+
+// Types
 export type {
+  ContextNavigationAdapter,
+  ContextNavigationAdapterFactory,
+  ContextNavigationAdapterInput,
+  AdapterResolutionContext,
   ContextNavigationHandlerConfig,
-  ContextRoutingStrategy,
-  RoutingStrategyId,
   ContextState,
   ReconcilerPhase,
+  ReconcilerSourceEntry,
+  ReconcilerSourceDeps,
+  ReconcilerSourceFactory,
   ContextNavigationHandlerNavigateDetail,
   ContextNavigationHandlerNavigatedDetail,
-  ContextNavigationHandlerStrategyResolvedDetail,
+  ContextNavigationHandlerAdapterResolvedDetail,
   ContextNavigationHandlerSkippedDetail,
 } from './types';
 
-// ─── Events (module augmentation — side-effect import) ──────────────
+// Built-in adapters
+export { createPathAdapter } from './adapters/path-adapter';
+export { createQueryAdapter } from './adapters/query-adapter';
+export { createCustomAdapter } from './adapters/custom-adapter';
+
+// Built-in source factories
+export { createAppFirstSource } from './sources/app-first-source';
+export { createContextFirstSource } from './sources/context-first-source';
+
+// Utils
+export { hasCustomContextGenerators } from './utils/has-custom-context-generators';
+export { enableLegacyAppNavigationFix } from './utils/legacy-app-navigation-fix';
+
+// Events (side-effect: augments FrameworkEventMap)
 import './events';
 
-// ─── Strategies ─────────────────────────────────────────────────────
-export { queryStrategy, pathStrategy, createCustomStrategy } from './strategies';
-export type { CustomStrategyOptions } from './strategies';
+// Version
+export { version } from './version';

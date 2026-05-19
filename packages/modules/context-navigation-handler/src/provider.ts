@@ -1,4 +1,4 @@
-import { Subscription, switchMap, EMPTY, of, combineLatestWith, distinctUntilChanged } from 'rxjs';
+import { Subscription, switchMap, EMPTY, of } from 'rxjs';
 
 import type { AppModuleProvider, AppModulesInstance } from '@equinor/fusion-framework-module-app';
 import type {
@@ -11,16 +11,16 @@ import type { IEventModuleProvider } from '@equinor/fusion-framework-module-even
 
 import type {
   ContextNavigationHandlerConfig,
-  ContextRoutingStrategy,
-  ContextState,
+  ContextNavigationAdapter,
+  ContextNavigationAdapterInput,
   ReconcilerPhase,
-  RoutingStrategyId,
+  AdapterResolutionContext,
+  ReconcilerSourceEntry,
   ContextNavigationHandlerNavigateDetail,
   ContextNavigationHandlerNavigatedDetail,
+  ContextNavigationHandlerAdapterResolvedDetail,
   ContextNavigationHandlerSkippedDetail,
 } from './types';
-
-import { createCustomStrategyFromProvider } from './strategies/custom-strategy';
 
 // ─── Provider Args ──────────────────────────────────────────────────
 
@@ -37,9 +37,8 @@ export interface ContextNavigationHandlerProviderArgs {
 /**
  * Event-driven context-to-URL reconciler.
  *
- * Single reconciliation loop: on every relevant event, compare
- * desired context vs what's currently in the URL. If they differ,
- * encode and navigate.
+ * Iterates registered adapters by priority, uses the first whose
+ * `canHandle()` returns `true`, then delegates encode/decode to it.
  *
  * All navigation intent is communicated via the framework event module,
  * making the system observable and cancelable.
@@ -51,8 +50,8 @@ export class ContextNavigationHandlerProvider {
   readonly #navigation: INavigationProvider;
 
   #phase: ReconcilerPhase = 'idle';
-  /** Last pathname we navigated to — used by URL guard to ignore our own navigations. */
-  #lastNavigatedPathname: string | null = null;
+  /** Last path (pathname + search) we navigated to — used by URL guard to ignore our own navigations. */
+  #lastNavigatedPath: string | null = null;
 
   constructor(args: ContextNavigationHandlerProviderArgs) {
     this.#config = args.config;
@@ -77,35 +76,15 @@ export class ContextNavigationHandlerProvider {
   // ── Reconciler (single subscription) ────────────────────────────────
 
   #setupReconciler(args: ContextNavigationHandlerProviderArgs): void {
-    const { app, context } = args;
-
-    // Source: app switches + context changes → unified emission
-    const source$ = app.current$.pipe(
-      switchMap((currentApp) => {
-        if (!currentApp) return EMPTY;
-        return currentApp.instance$.pipe(
-          switchMap((appModules) => {
-            if (!appModules) return EMPTY;
-            return of({
-              appModules: appModules as AppModulesInstance<[ContextModule]>,
-              appKey: currentApp.appKey,
-            });
-          }),
-        );
-      }),
-      combineLatestWith(
-        context.currentContext$.pipe(
-          distinctUntilChanged((a, b) => {
-            if (a && b) return a.id === b.id;
-            return a === b;
-          }),
-        ),
-      ),
-    );
+    const source$ = args.config.sourceFactory({
+      app: args.app,
+      context: args.context,
+      navigation: args.navigation,
+    });
 
     this.#subscription.add(
-      source$.subscribe(([{ appModules, appKey }, contextState]) => {
-        this.#reconcile(appKey, appModules, contextState);
+      source$.subscribe((entry) => {
+        this.#reconcile(entry);
       }),
     );
   }
@@ -117,10 +96,14 @@ export class ContextNavigationHandlerProvider {
 
     const source$ = app.current$.pipe(
       switchMap((currentApp) => {
-        if (!currentApp) return EMPTY;
+        if (!currentApp) {
+          return EMPTY;
+        }
         return currentApp.instance$.pipe(
           switchMap((appModules) => {
-            if (!appModules) return EMPTY;
+            if (!appModules) {
+              return EMPTY;
+            }
             return navigation.state$.pipe(
               switchMap(() =>
                 of({
@@ -137,47 +120,52 @@ export class ContextNavigationHandlerProvider {
     this.#subscription.add(
       source$.subscribe(({ appModules, appKey }) => {
         const appContext = appModules.context;
-        if (!appContext) return;
+        if (!appContext) {
+          return;
+        }
 
         const activeContext = appContext.currentContext;
-        if (!activeContext) return;
+        if (!activeContext) {
+          return;
+        }
 
         const currentURL = this.#getCurrentURL();
 
-        // Don't guard if the URL has moved to a different app (app switch in progress)
-        if (!currentURL.pathname.startsWith(`/apps/${appKey}`)) return;
+        // Don't guard if the URL has moved to a different app
+        if (!currentURL.pathname.startsWith(`/apps/${appKey}`)) {
+          return;
+        }
 
-        const strategy = this.#resolveStrategy(appKey, appModules);
-        if (!strategy) return;
+        // Skip if this URL was set by us (avoid re-entrant loop)
+        if (this.#isOwnNavigation(currentURL)) {
+          return;
+        }
 
-        // Skip if this URL was set by us (avoid re-entrant loop, normalize trailing slash)
-        const normPathname = currentURL.pathname.replace(/\/$/, '') || '/';
-        const normLastNav = this.#lastNavigatedPathname?.replace(/\/$/, '') || null;
-        if (normPathname === normLastNav) return;
+        const adapter = this.#resolveAdapter({ appKey, appContext, currentURL });
+        if (!adapter) {
+          return;
+        }
 
-        const urlContextId = strategy.decode(currentURL);
+        const urlContextId = adapter.decode(currentURL);
 
         // If URL already has the right context, nothing to do
-        if (urlContextId === activeContext.id) return;
+        if (urlContextId === activeContext.id) {
+          return;
+        }
 
-        // Re-apply context via reconciliation
         this.#log(`URL guard: context missing from URL, re-applying for [${appKey}]`);
-        this.#applyNavigation(appKey, strategy, activeContext, currentURL);
+        this.#applyNavigation({ appKey, appModules, adapter, context: activeContext, currentURL });
       }),
     );
   }
 
   // ── Core Reconciliation Logic ──────────────────────────────────────
 
-  #reconcile(
-    appKey: string,
-    appModules: AppModulesInstance<[ContextModule]>,
-    contextState: ContextState,
-  ): void {
-    // Phase: undefined → idle (waiting)
+  #reconcile({ appKey, appModules, contextState }: ReconcilerSourceEntry): void {
+    // Phase: undefined → idle (still initializing)
     if (contextState === undefined) {
       this.#phase = 'idle';
-      this.#dispatchSkipped(appKey, 'no-context');
+      this.#dispatchSkipped({ appKey, reason: 'no-context' });
       this.#log(`Context undefined for [${appKey}] — idle, waiting.`);
       return;
     }
@@ -185,52 +173,62 @@ export class ContextNavigationHandlerProvider {
     // Phase: null → cleared
     if (contextState === null) {
       this.#phase = 'cleared';
+
+      // Portal-level null-context override — bypass adapter entirely
+      if (this.#config.nullContextUrl) {
+        const currentURL = this.#getCurrentURL();
+        const targetURL = new URL(this.#config.nullContextUrl, this.#config.origin);
+
+        if (this.#normalizePath(targetURL) !== this.#normalizePath(currentURL)) {
+          this.#lastNavigatedPath = this.#normalizePath(targetURL);
+          this.#navigation.navigate(targetURL, { replace: true });
+          this.#log(`Null context → navigated to [${this.#config.nullContextUrl}] for [${appKey}]`);
+        }
+
+        return;
+      }
     } else {
       this.#phase = 'active';
     }
 
-    // Validate: does this app support the current context?
-    // If the app's context provider rejects it, don't encode it into the URL.
-    if (contextState !== null) {
-      const appContext = appModules.context;
-      if (appContext?.validateContext && !appContext.validateContext(contextState)) {
-        this.#dispatchSkipped(appKey, 'context-not-supported');
-        this.#log(
-          `Context [${contextState.id}] not supported by app [${appKey}] — skipping navigation.`,
-        );
-        return;
-      }
-    }
-
-    const strategy = this.#resolveStrategy(appKey, appModules);
-    if (!strategy) {
-      this.#log(`No strategy resolved for [${appKey}] — skipping.`);
+    const appContext = appModules.context;
+    if (!appContext) {
       return;
     }
 
     const currentURL = this.#getCurrentURL();
-    this.#applyNavigation(appKey, strategy, contextState, currentURL);
-  }
+    const adapter = this.#resolveAdapter({ appKey, appContext, currentURL });
 
-  #applyNavigation(
-    appKey: string,
-    strategy: ContextRoutingStrategy,
-    context: ContextItem | null,
-    currentURL: URL,
-  ): void {
-    const targetURL = strategy.encode(context, currentURL);
-
-    if (!targetURL) {
-      this.#dispatchSkipped(appKey, 'encode-returned-null');
-      this.#log(`Strategy [${strategy.id}] returned null for [${appKey}] — skipping.`);
+    if (!adapter) {
+      this.#dispatchSkipped({ appKey, reason: 'no-adapter' });
+      this.#log(`No adapter matched for [${appKey}] — skipping.`);
       return;
     }
 
-    // Loop guard: skip if URL already matches (normalize trailing slashes)
-    const normTarget = targetURL.pathname.replace(/\/$/, '') || '/';
-    const normCurrent = currentURL.pathname.replace(/\/$/, '') || '/';
-    if (normTarget === normCurrent && targetURL.search === currentURL.search) {
-      this.#dispatchSkipped(appKey, 'url-matches');
+    this.#applyNavigation({ appKey, appModules, adapter, context: contextState, currentURL });
+  }
+
+  // ── Apply Navigation ───────────────────────────────────────────────────────
+
+  #applyNavigation(args: {
+    appKey: string;
+    appModules: AppModulesInstance<[ContextModule]>;
+    adapter: ContextNavigationAdapter;
+    context: ContextItem | null;
+    currentURL: URL;
+  }): void {
+    const { appKey, appModules, adapter, context, currentURL } = args;
+    const targetURL = adapter.encode({ context, currentURL });
+
+    if (!targetURL) {
+      this.#dispatchSkipped({ appKey, reason: 'encode-returned-null' });
+      this.#log(`Adapter [${adapter.id}] returned null for [${appKey}] — skipping.`);
+      return;
+    }
+
+    // Loop guard: skip if URL already matches
+    if (this.#normalizePath(targetURL) === this.#normalizePath(currentURL)) {
+      this.#dispatchSkipped({ appKey, reason: 'url-matches' });
       this.#log(`URL already correct for [${appKey}] — skipping.`);
       return;
     }
@@ -238,10 +236,11 @@ export class ContextNavigationHandlerProvider {
     // Dispatch cancelable "navigate" event
     const navigateDetail: ContextNavigationHandlerNavigateDetail = {
       appKey,
-      strategy: strategy.id,
+      adapterId: adapter.id,
       targetURL,
       sourceURL: currentURL,
       context,
+      appModules,
     };
 
     this.#event
@@ -252,21 +251,22 @@ export class ContextNavigationHandlerProvider {
       })
       .then((event) => {
         if (event.canceled) {
-          this.#dispatchSkipped(appKey, 'canceled');
+          this.#dispatchSkipped({ appKey, reason: 'canceled' });
           this.#log(`Navigation canceled by listener for [${appKey}].`);
           return;
         }
 
-        // Perform navigation — track pathname so URL guard ignores our own navigations
-        this.#lastNavigatedPathname = targetURL.pathname;
+        // Perform navigation — track path so URL guard ignores our own navigations
+        this.#lastNavigatedPath = this.#normalizePath(targetURL);
         this.#navigation.navigate(targetURL, { replace: true });
 
         // Dispatch "navigated" event
         const navigatedDetail: ContextNavigationHandlerNavigatedDetail = {
           appKey,
-          strategy: strategy.id,
+          adapterId: adapter.id,
           targetURL,
           context,
+          appModules,
         };
 
         this.#event.dispatchEvent('onContextNavigationHandlerNavigated', {
@@ -274,7 +274,6 @@ export class ContextNavigationHandlerProvider {
           source: this,
         });
 
-        // Call onTransition hook if configured
         this.#config.onTransition?.(navigatedDetail);
 
         this.#log(
@@ -283,34 +282,35 @@ export class ContextNavigationHandlerProvider {
       });
   }
 
-  // ── Strategy Resolution ────────────────────────────────────────────
+  // ── Adapter Resolution ─────────────────────────────────────────────
 
-  #resolveStrategy(
-    appKey: string,
-    appModules: AppModulesInstance<[ContextModule]>,
-  ): ContextRoutingStrategy | null {
-    const appContext = appModules.context;
-    const declaredStrategy = appContext?.routingStrategy;
-
-    // Explicitly declared strategy — use it directly
-    if (declaredStrategy) {
-      const strategy = this.#config.strategies[declaredStrategy];
-      this.#dispatchStrategyResolved(appKey, declaredStrategy);
-      return strategy ?? null;
+  #resolveAdapter(ctx: AdapterResolutionContext): ContextNavigationAdapter | null {
+    for (const entry of this.#config.adapters) {
+      const adapter = this.#resolveAdapterEntry(entry, ctx);
+      if (adapter) {
+        this.#dispatchAdapterResolved({ appKey: ctx.appKey, adapterId: adapter.id });
+        this.#log(`Resolved adapter [${adapter.id}] for [${ctx.appKey}]`);
+        return adapter;
+      }
     }
 
-    // undefined strategy — legacy apps: check if app has generators → use custom
-    const custom = appContext ? createCustomStrategyFromProvider(appContext, appKey) : null;
-    if (custom) {
-      this.#log(`App [${appKey}] has no declared strategy but has generators — using custom.`);
-      this.#dispatchStrategyResolved(appKey, 'custom');
-      return custom;
-    }
+    return null;
+  }
 
-    // Fall back to path strategy
-    const strategy = this.#config.strategies.path;
-    this.#dispatchStrategyResolved(appKey, 'path');
-    return strategy ?? null;
+  /**
+   * Resolve a single adapter entry — either call the factory or check canHandle.
+   */
+  #resolveAdapterEntry(
+    entry: ContextNavigationAdapterInput,
+    ctx: AdapterResolutionContext,
+  ): ContextNavigationAdapter | null {
+    if (typeof entry === 'function') {
+      return entry(ctx);
+    }
+    if (entry.canHandle(ctx)) {
+      return entry;
+    }
+    return null;
   }
 
   // ── Helpers ────────────────────────────────────────────────────────
@@ -326,17 +326,28 @@ export class ContextNavigationHandlerProvider {
     }
   }
 
-  #dispatchSkipped(appKey: string, reason: ContextNavigationHandlerSkippedDetail['reason']): void {
+  #dispatchSkipped(detail: ContextNavigationHandlerSkippedDetail): void {
     this.#event.dispatchEvent('onContextNavigationHandlerSkipped', {
-      detail: { appKey, reason },
+      detail,
       source: this,
     });
   }
 
-  #dispatchStrategyResolved(appKey: string, strategy: RoutingStrategyId): void {
-    this.#event.dispatchEvent('onContextNavigationHandlerStrategyResolved', {
-      detail: { appKey, strategy },
+  #dispatchAdapterResolved(detail: ContextNavigationHandlerAdapterResolvedDetail): void {
+    this.#event.dispatchEvent('onContextNavigationHandlerAdapterResolved', {
+      detail,
       source: this,
     });
+  }
+
+  /** Normalize a URL to a comparable path string (pathname + search, no trailing slash). */
+  #normalizePath(url: URL): string {
+    const pathname = url.pathname.replace(/\/$/, '') || '/';
+    return `${pathname}${url.search}`;
+  }
+
+  /** Check if the given URL was the last one we navigated to (re-entrant guard). */
+  #isOwnNavigation(url: URL): boolean {
+    return this.#lastNavigatedPath !== null && this.#normalizePath(url) === this.#lastNavigatedPath;
   }
 }

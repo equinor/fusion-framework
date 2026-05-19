@@ -7,17 +7,14 @@ import { module } from './module';
  *
  * @example
  * ```ts
- * // Minimal — all defaults (path strategy, URL guard on)
+ * // Minimal — all defaults (built-in adapters: custom > query > path)
  * enableContextNavigationHandler(configurator);
  *
- * // With configuration
+ * // With custom adapter
  * enableContextNavigationHandler(configurator, (builder) => {
- *   builder.setPortalName('dev-portal');
+ *   builder.setPortalName('my-portal');
  *   builder.setDebug(true);
- *   builder.setUrlGuard(true);
- *   builder.setOnTransition((detail) => {
- *     console.log(`Navigated to ${detail.targetURL.pathname}`);
- *   });
+ *   builder.registerAdapter(myHashAdapter);
  * });
  * ```
  */

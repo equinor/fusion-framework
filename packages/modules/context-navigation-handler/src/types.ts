@@ -1,25 +1,52 @@
-import type { ContextItem } from '@equinor/fusion-framework-module-context';
+import type { ContextItem, IContextProvider } from '@equinor/fusion-framework-module-context';
+import type { INavigationProvider } from '@equinor/fusion-framework-module-navigation';
+import type { AppModuleProvider, AppModulesInstance } from '@equinor/fusion-framework-module-app';
+import type { ContextModule } from '@equinor/fusion-framework-module-context';
+import type { Observable } from 'rxjs';
 
-// ─── Strategy Contract ──────────────────────────────────────────────
+// ─── Adapter Contract ───────────────────────────────────────────────
 
 /**
- * A routing strategy encodes/decodes context identity in the URL.
+ * Context for adapter resolution — passed to `canHandle` so the adapter
+ * can self-select based on app config, URL shape, or other signals.
+ */
+export interface AdapterResolutionContext {
+  /** Current app key. */
+  appKey: string;
+  /** The app's context provider (has routingStrategy, generators, etc.) */
+  appContext: IContextProvider;
+  /** The current browser URL. */
+  currentURL: URL;
+}
+
+/**
+ * A context navigation adapter encodes/decodes context identity in the URL.
+ *
+ * Adapters are **self-selecting** — they declare via `canHandle` whether they
+ * apply to a given app/URL combination. The provider iterates registered
+ * adapters by priority and uses the first match.
  *
  * Implementations must be **pure** — no side effects, no navigation calls.
- * The reconciler handles all navigation; strategies only compute URLs.
+ * The reconciler handles all navigation; adapters only compute URLs.
  */
-export interface ContextRoutingStrategy {
-  /** Identifier for this strategy. */
-  readonly id: RoutingStrategyId;
+export interface ContextNavigationAdapter {
+  /** Unique identifier for logging/events. */
+  readonly id: string;
+
+  /**
+   * Self-selecting predicate: should this adapter handle navigation for
+   * the given app and URL?
+   */
+  canHandle(ctx: AdapterResolutionContext): boolean;
 
   /**
    * Build a URL that encodes the given context.
    *
-   * @param context - The context to encode, or `null` to clear context from URL.
-   * @param currentURL - The current browser URL (absolute).
+   * @param args.context - The context to encode, or `null` to clear context from URL.
+   * @param args.currentURL - The current browser URL (absolute).
    * @returns The target URL with context encoded, or `null` to skip navigation.
    */
-  encode(context: ContextItem | null, currentURL: URL): URL | null;
+  encode(args: { context: ContextItem | null; currentURL: URL }): URL | null;
 
   /**
    * Extract the context id from a URL.
@@ -30,9 +57,30 @@ export interface ContextRoutingStrategy {
   decode(url: URL): string | null;
 }
 
-// ─── Strategy Identifiers ───────────────────────────────────────────
+/**
+ * An adapter factory receives the resolution context and returns a
+ * fully-bound adapter, or `null` to indicate it cannot handle
+ * the current app/URL combination.
+ *
+ * Use a factory when the adapter needs runtime state from the app
+ * (e.g. custom path generators) that isn't available at registration time.
+ */
+export type ContextNavigationAdapterFactory = (
+  ctx: AdapterResolutionContext,
+) => ContextNavigationAdapter | null;
 
-export type RoutingStrategyId = 'path' | 'query' | 'custom';
+/**
+ * An adapter registration — either a static adapter object or a factory
+ * function that produces one.
+ *
+ * - **Object** — must implement `canHandle`, `encode`, `decode`.
+ *   The reconciler calls `canHandle` to determine if it applies.
+ * - **Function** — called with the resolution context, returns a bound
+ *   adapter or `null` to skip. Implies the factory handles its own selection.
+ */
+export type ContextNavigationAdapterInput =
+  | ContextNavigationAdapter
+  | ContextNavigationAdapterFactory;
 
 // ─── Context States ─────────────────────────────────────────────────
 
@@ -49,51 +97,90 @@ export type ContextState = ContextItem | null | undefined;
 
 export type ReconcilerPhase = 'idle' | 'active' | 'cleared';
 
+// ─── Source Factory ─────────────────────────────────────────────────
+
+/**
+ * A single reconciliation entry emitted by the source factory.
+ *
+ * Contains everything the reconciler needs to decide whether and how
+ * to navigate.
+ */
+export interface ReconcilerSourceEntry {
+  /** Current app key. */
+  appKey: string;
+  /** The app's loaded module instances (must include context). */
+  appModules: AppModulesInstance<[ContextModule]>;
+  /** The portal-level context state driving reconciliation. */
+  contextState: ContextState;
+}
+
+/**
+ * Dependencies injected into a source factory.
+ */
+export interface ReconcilerSourceDeps {
+  /** The app module provider (for watching app switches). */
+  app: AppModuleProvider;
+  /** The portal's context provider (for watching context changes). */
+  context: IContextProvider;
+  /** The navigation provider (for reading current URL). */
+  navigation: INavigationProvider;
+}
+
+/**
+ * A source factory produces the observable stream that drives the reconciler.
+ *
+ * The stream composition determines **what leads** — app switches or context
+ * changes — making it the primary extension point for portal-specific behavior.
+ *
+ * Built-in factories:
+ * - `createAppFirstSource` — app switches lead, context follows (app-portal)
+ * - `createContextFirstSource` — context changes lead, app follows (context-portal)
+ */
+export type ReconcilerSourceFactory = (
+  deps: ReconcilerSourceDeps,
+) => Observable<ReconcilerSourceEntry>;
+
 // ─── Events ─────────────────────────────────────────────────────────
 
 /** Fired before reconciliation navigates. Cancelable. */
 export interface ContextNavigationHandlerNavigateDetail {
-  /** The app that owns the context. */
   appKey: string;
-  /** The strategy used. */
-  strategy: RoutingStrategyId;
-  /** The URL being navigated to. */
+  adapterId: string;
   targetURL: URL;
-  /** The current URL before navigation. */
   sourceURL: URL;
-  /** The context being applied. */
   context: ContextItem | null;
+  /** The current app's loaded module instances. */
+  appModules: AppModulesInstance<[ContextModule]>;
 }
 
 /** Fired after navigation completes. */
 export interface ContextNavigationHandlerNavigatedDetail {
   appKey: string;
-  strategy: RoutingStrategyId;
+  adapterId: string;
   targetURL: URL;
   context: ContextItem | null;
+  /** The current app's loaded module instances. */
+  appModules: AppModulesInstance<[ContextModule]>;
 }
 
-/** Fired when a strategy is resolved for an app. */
-export interface ContextNavigationHandlerStrategyResolvedDetail {
+/** Fired when an adapter is resolved for an app. */
+export interface ContextNavigationHandlerAdapterResolvedDetail {
   appKey: string;
-  strategy: RoutingStrategyId;
+  adapterId: string;
 }
 
-/** Fired when reconciliation skips (URL already correct). */
+/** Fired when reconciliation skips. */
 export interface ContextNavigationHandlerSkippedDetail {
   appKey: string;
-  reason: 'url-matches' | 'no-context' | 'encode-returned-null' | 'canceled' | 'context-not-supported';
+  reason: 'url-matches' | 'no-context' | 'no-adapter' | 'encode-returned-null' | 'canceled';
 }
 
 // ─── Configuration ──────────────────────────────────────────────────
 
-/**
- * Configuration for the context-navigation-handler module.
- */
 export interface ContextNavigationHandlerConfig {
   /**
    * Human-readable name for the portal consuming this module.
-   * Used in event details and debug logging.
+   * Used in debug logging.
    * @default 'Portal'
    */
   portalName: string;
@@ -105,14 +192,13 @@ export interface ContextNavigationHandlerConfig {
   origin: string;
 
   /**
-   * Map of strategy id → strategy implementation.
-   * Override individual strategies or provide all three.
+   * Registered adapters in evaluation order.
+   * Each entry is either a static adapter object or a factory function.
    */
-  strategies: Record<RoutingStrategyId, ContextRoutingStrategy>;
+  adapters: ContextNavigationAdapterInput[];
 
   /**
    * Enable reconciliation on URL changes (guard behavior).
-   * When enabled, URL changes that accidentally drop context trigger re-sync.
    * @default true
    */
   enableUrlGuard: boolean;
@@ -125,7 +211,49 @@ export interface ContextNavigationHandlerConfig {
 
   /**
    * Optional side-effect hook called after navigation completes.
-   * Use for legacy compat (e.g. resetting old app routers).
    */
   onTransition?: (detail: ContextNavigationHandlerNavigatedDetail) => void;
+
+  /**
+   * Resolves the initial context from the URL and sets it on the context
+   * provider before the reconciler activates.
+   *
+   * The default implementation iterates registered adapters, decodes the
+   * first matching context ID, and calls `setCurrentContextByIdAsync`.
+   * Override to customise initial context resolution or disable it by
+   * setting to `undefined`.
+   *
+   * @param args.context - The portal's context provider.
+   * @param args.navigation - The navigation provider (for reading the current URL).
+   */
+  resolveInitialContext?: (args: {
+    context: IContextProvider;
+    navigation: INavigationProvider;
+  }) => Promise<void>;
+
+  /**
+   * Factory that produces the observable stream driving the reconciler.
+   *
+   * Controls whether app switches or context changes lead the stream,
+   * which is the primary behavioral difference between app-portal and
+   * context-portal.
+   *
+   * @default createAppFirstSource()
+   * @see createAppFirstSource
+   * @see createContextFirstSource
+   */
+  sourceFactory: ReconcilerSourceFactory;
+
+  /**
+   * URL to navigate to when context is cleared (`null`).
+   *
+   * When set, the reconciler navigates directly to this URL on null context
+   * instead of delegating to the adapter's `encode(null, ...)`.
+   *
+   * Typical usage: context-portal sets this to `'/'` so clearing context
+   * returns to the portal landing page regardless of adapter type.
+   *
+   * @default undefined — adapters handle null context themselves
+   */
+  nullContextUrl?: string;
 }

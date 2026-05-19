@@ -15,7 +15,7 @@ import type { ContextModuleConfig } from '@equinor/fusion-framework-module-conte
 import {
   buildContextUrlForStrategy,
   resolveContextIdFromUrl,
-} from '@equinor/fusion-framework-module-context-navigation/utils';
+} from '@equinor/fusion-framework-module-context-navigation-handler/utils';
 
 /**
  * Minimal builder surface needed to configure dev-portal context URL behavior.
