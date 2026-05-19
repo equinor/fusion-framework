@@ -8,7 +8,7 @@ import {
 } from '@equinor/fusion-framework-module-telemetry';
 import { MsalClient, type MsalClientConfig, type IMsalClient } from './MsalClient';
 import { createClientLogCallback } from './create-client-log-callback';
-import { LogLevel } from '@azure/msal-browser';
+import { CacheLookupPolicy, LogLevel } from '@azure/msal-browser';
 import { version } from './version';
 
 /**
@@ -45,6 +45,13 @@ const MsalConfigSchema = z.object({
   redirectUri: z.string().optional(),
   loginHint: z.string().optional(),
   authCode: z.string().optional(),
+  cacheLookupPolicy: z
+    .custom<CacheLookupPolicy>(
+      (val) =>
+        typeof val === 'number' &&
+        Object.values(CacheLookupPolicy).includes(val as CacheLookupPolicy),
+    )
+    .optional(),
   version: z.string().transform((x: string) => String(semver.coerce(x))),
   telemetry: TelemetryConfigSchema,
 });
@@ -98,6 +105,8 @@ export class MsalConfigurator extends BaseConfigBuilder<MsalConfig> {
         return telemetry;
       }
     });
+    // Default cache lookup policy to AccessTokenAndRefreshToken to avoid iframe fallback delays
+    this._set('cacheLookupPolicy', async () => CacheLookupPolicy.AccessTokenAndRefreshToken);
   }
 
   /**
@@ -122,6 +131,34 @@ export class MsalConfigurator extends BaseConfigBuilder<MsalConfig> {
    */
   setClientConfig(config?: MsalClientConfig): this {
     this.#msalConfig = config;
+    return this;
+  }
+
+  /**
+   * Sets the cache lookup policy used for every silent token acquisition.
+   *
+   * Controls whether MSAL falls back to a hidden iframe when the refresh token
+   * fails. Defaults to `CacheLookupPolicy.AccessTokenAndRefreshToken`, which skips
+   * the iframe step and fails immediately with `InteractionRequiredAuthError` when
+   * the refresh token is revoked — avoiding the ~10–20 s `monitor_window_timeout`
+   * delay caused by MSAL's built-in iframe fallback.
+   *
+   * Set to `CacheLookupPolicy.Default` to restore MSAL's full waterfall:
+   * cache → refresh token → iframe.
+   *
+   * @param policy - Cache lookup policy to apply
+   * @returns The configurator instance for method chaining
+   *
+   * @example
+   * ```typescript
+   * import { CacheLookupPolicy } from '@azure/msal-browser';
+   *
+   * // Restore MSAL's built-in iframe fallback (not recommended for most apps)
+   * configurator.setCacheLookupPolicy(CacheLookupPolicy.Default);
+   * ```
+   */
+  setCacheLookupPolicy(policy: CacheLookupPolicy | undefined): this {
+    this._set('cacheLookupPolicy', async () => policy);
     return this;
   }
 
@@ -346,6 +383,11 @@ export class MsalConfigurator extends BaseConfigBuilder<MsalConfig> {
           },
         };
       }
+      // Apply silent cache lookup policy if configured
+      if (config.cacheLookupPolicy !== undefined) {
+        clientConfig.cacheLookupPolicy = config.cacheLookupPolicy;
+      }
+
       // Instantiate MSAL client with fully configured options
       config.client = new MsalClient(clientConfig);
     }

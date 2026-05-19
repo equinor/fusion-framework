@@ -1,4 +1,5 @@
 import type { ConfigBuilderCallbackArgs } from '@equinor/fusion-framework-module';
+import { CacheLookupPolicy } from '@azure/msal-browser';
 import { describe, expect, it, vi } from 'vitest';
 import type { IMsalClient } from '../MsalClient.interface';
 import { type MsalConfig, MsalConfigurator } from '../MsalConfigurator';
@@ -71,5 +72,45 @@ describe('MsalConfigurator', () => {
     );
 
     expect(config.client).toBeUndefined();
+  });
+
+  describe('cacheLookupPolicy', () => {
+    it('defaults to CacheLookupPolicy.AccessTokenAndRefreshToken', async () => {
+      const configurator = new MsalConfigurator();
+      configurator.setClient(createClient());
+
+      const config = await configurator.createConfigAsync(
+        createConfigCallbackArgs(),
+        createInitialConfig(),
+      );
+
+      expect(config.cacheLookupPolicy).toBe(CacheLookupPolicy.AccessTokenAndRefreshToken);
+    });
+
+    it('setCacheLookupPolicy(undefined) clears the policy so MSAL default applies', async () => {
+      const configurator = new MsalConfigurator();
+      configurator.setClient(createClient());
+      configurator.setCacheLookupPolicy(undefined);
+
+      const config = await configurator.createConfigAsync(
+        createConfigCallbackArgs(),
+        createInitialConfig(),
+      );
+
+      expect(config.cacheLookupPolicy).toBeUndefined();
+    });
+
+    it('setCacheLookupPolicy overrides the default', async () => {
+      const configurator = new MsalConfigurator();
+      configurator.setClient(createClient());
+      configurator.setCacheLookupPolicy(CacheLookupPolicy.Default);
+
+      const config = await configurator.createConfigAsync(
+        createConfigCallbackArgs(),
+        createInitialConfig(),
+      );
+
+      expect(config.cacheLookupPolicy).toBe(CacheLookupPolicy.Default);
+    });
   });
 });
