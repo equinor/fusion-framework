@@ -45,7 +45,11 @@ const MsalConfigSchema = z.object({
   redirectUri: z.string().optional(),
   loginHint: z.string().optional(),
   authCode: z.string().optional(),
-  cacheLookupPolicy: z.custom<CacheLookupPolicy>().optional(),
+  cacheLookupPolicy: z
+    .custom<CacheLookupPolicy>(
+      (val) => typeof val === 'number' && Object.values(CacheLookupPolicy).includes(val as CacheLookupPolicy),
+    )
+    .optional(),
   version: z.string().transform((x: string) => String(semver.coerce(x))),
   telemetry: TelemetryConfigSchema,
 });
@@ -100,7 +104,7 @@ export class MsalConfigurator extends BaseConfigBuilder<MsalConfig> {
       }
     });
     // Default cache lookup policy to AccessTokenAndRefreshToken to avoid iframe fallback delays
-    this._set('cacheLookupPolicy', async () => CacheLookupPolicy.AccessTokenAndRefreshToken); 
+    this._set('cacheLookupPolicy', async () => CacheLookupPolicy.AccessTokenAndRefreshToken);
   }
 
   /**
