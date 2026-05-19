@@ -52,7 +52,7 @@ export const resolveContextMode = (): ContextMode => {
  */
 export const resolveRoutingStrategy = (): ContextRoutingStrategy => {
   const mode = resolveContextMode();
-  return mode === 'query' || mode === 'custom' ? mode : 'path';
+  return mode === 'query' || mode === 'custom' ? 'path' : 'path';
 };
 
 /**

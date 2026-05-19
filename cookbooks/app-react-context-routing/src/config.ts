@@ -14,12 +14,7 @@ import { enableNavigation } from '@equinor/fusion-framework-module-navigation';
 import { resolveInitialContext } from '@equinor/fusion-framework-module-context/utils';
 import { from, map } from 'rxjs';
 
-import {
-  resolveContextMode,
-  resolveRoutingStrategy,
-  type ContextRoutingStrategy,
-  type InitSource,
-} from './utils/strategy';
+import { resolveContextMode, type ContextRoutingStrategy, type InitSource } from './utils/strategy';
 import {
   extractContextIdFromQuery,
   extractCustomContextIdFromPath,
@@ -53,20 +48,7 @@ export const configure: AppModuleInitiator = (configurator, conf) => {
           : extractPathStrategyContextIdFromPath;
 
     builder.setResolveInitialContext((args) => {
-      const resolver = resolveInitialContext({
-        strategy,
-        query: {
-          key: '$contextId',
-        },
-        path:
-          contextMode === 'custom' || contextMode === 'path' || contextMode === 'none'
-            ? {
-                extract: pathExtractor,
-                validate: () => true,
-              }
-            : undefined,
-      });
-
+      const resolver = resolveInitialContext();
       return from(resolver(args)).pipe(
         map((item) => {
           const navigationPath = args.modules.navigation?.path;
@@ -91,15 +73,18 @@ export const configure: AppModuleInitiator = (configurator, conf) => {
     });
 
     if (isCustomMode) {
-      builder.setRoutingStrategy('custom');
+      builder.setRoutingStrategy('path');
       builder.setContextPathExtractor(extractCustomContextIdFromPath);
       builder.setContextPathGenerator(generateCustomPathFromContext);
     } else if (contextMode === 'path' || contextMode === 'none') {
       builder.setContextPathExtractor(extractPathStrategyContextIdFromPath);
     }
 
-    if (contextMode === 'query' || contextMode === 'path') {
-      builder.setRoutingStrategy(resolveRoutingStrategy());
+    if (contextMode === 'path') {
+      builder.setRoutingStrategy('path');
+    }
+    if (contextMode === 'query') {
+      builder.setRoutingStrategy('query');
     }
 
     builder.setContextType(['projectmaster']);
