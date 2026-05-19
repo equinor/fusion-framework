@@ -47,7 +47,9 @@ const MsalConfigSchema = z.object({
   authCode: z.string().optional(),
   cacheLookupPolicy: z
     .custom<CacheLookupPolicy>(
-      (val) => typeof val === 'number' && Object.values(CacheLookupPolicy).includes(val as CacheLookupPolicy),
+      (val) =>
+        typeof val === 'number' &&
+        Object.values(CacheLookupPolicy).includes(val as CacheLookupPolicy),
     )
     .optional(),
   version: z.string().transform((x: string) => String(semver.coerce(x))),
