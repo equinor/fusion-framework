@@ -18,7 +18,7 @@ Returns an object with methods for opening specific pages of the portal help sid
 **Signature:**
 
 ```ts
-function useHelpCenter(): HelpCenter;
+useHelpCenter(): HelpCenter;
 ```
 
 **Returned methods:**
@@ -75,3 +75,14 @@ const SearchHelp = ({ query }: { query: string }) => {
 ## How It Works
 
 Each method dispatches a `@Portal::FusionHelp::open` framework event with a `page` discriminator. The portal shell listens for this event and opens the corresponding help sidesheet page. The event module must be available in the app's module scope — this is the default when running inside a Fusion portal.
+
+The known `page` values and their additional fields are:
+
+| `page` value      | Extra fields                  | Opened by          |
+| ----------------- | ----------------------------- | ------------------ |
+| `home`            | —                             | `openHelp()`       |
+| `article`         | `articleId: string`           | `openArticle(id)`  |
+| `faqs`            | —                             | `openFaqs()`       |
+| `search`          | `search: string`              | `openSearch(q)`    |
+| `governance`      | —                             | `openGovernance()` |
+| `release-notes`   | —                             | `openReleaseNotes()` |
