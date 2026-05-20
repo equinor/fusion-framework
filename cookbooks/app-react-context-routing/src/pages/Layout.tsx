@@ -1,4 +1,4 @@
-import { SideBar, Divider, Typography, Icon } from '@equinor/eds-core-react';
+import { SideBar, Divider, Typography } from '@equinor/eds-core-react';
 import { home, router, swap_horizontal, info_circle } from '@equinor/eds-icons';
 import { Outlet, useLocation } from '@equinor/fusion-framework-react-router';
 
