@@ -6,7 +6,7 @@
  * {@link Module} interface and are wired together via
  * {@link initializeModules}.
  *
- * @see {@link ModuleConfigBuilder} for building module configuration.
+ * @see {@link BaseConfigBuilder} for building module configuration.
  * @see {@link SemanticVersion} for version utilities.
  *
  * @packageDocumentation
