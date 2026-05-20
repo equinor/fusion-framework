@@ -35,7 +35,7 @@ function useCurrentBookmark<TData extends BookmarkData>(
   payloadGenerator?: BookmarkPayloadGenerator<TData>,
 ): {
   currentBookmark: Bookmark<TData> | null;
-  setCurrentBookmark: (bookmarkId: string) => void;
+  setCurrentBookmark: (bookmark_or_id: Bookmark | string | null) => VoidFunction;
 };
 ```
 
@@ -98,4 +98,4 @@ If you need the full CRUD API, import directly from `@equinor/fusion-framework-r
 ## Prerequisites
 
 - The bookmark module must be enabled via `enableBookmark` in the app configurator
-- `@equinor/fusion-framework-react-module-bookmark` must be installed as a peer dependency
+- `@equinor/fusion-framework-react-module-bookmark` must be installed explicitly in your app
