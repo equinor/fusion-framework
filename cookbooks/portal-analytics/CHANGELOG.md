@@ -1,5 +1,13 @@
 # portal-analytics
 
+## 0.4.31
+
+### Patch Changes
+
+- Updated dependencies [a5dc246]
+  - @equinor/fusion-framework-react-router@2.1.0
+  - @equinor/fusion-framework-cli@15.0.6
+
 ## 0.4.30
 
 ### Patch Changes
