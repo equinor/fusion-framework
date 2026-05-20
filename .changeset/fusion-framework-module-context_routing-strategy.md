@@ -12,4 +12,6 @@ The context module now supports a `routingStrategy` configuration field that con
 
 The `generatePathFromContext` callback now receives the active `routingStrategy` as a third argument so host integrations can produce strategy-appropriate URLs.
 
-When no strategy is explicitly configured, the module defaults to `query` and emits a console warning prompting explicit configuration.
+When no strategy is explicitly configured, the module defaults to `path` for backward compatibility.
+
+**Deprecations:** `resolveContextFromPath` and `resolveInitialContext` utilities are deprecated in favour of the new `context-navigation-handler` module which handles URL-to-context reconciliation via adapters. `extractContextIdFromPath` remains supported — it is the default extractor used by `setContextPathExtractor` and the custom adapter fallback.
