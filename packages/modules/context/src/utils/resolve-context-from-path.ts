@@ -28,19 +28,31 @@ const matchGUID =
   /^(?:(?:[0-9a-fA-F]){8}-(?:[0-9a-fA-F]){4}-(?:[0-9a-fA-F]){4}-(?:[0-9a-fA-F]){4}-(?:[0-9a-fA-F]){12})$/;
 
 /**
- * Method will try to extract a context id from a path.
- * The default matcher is a GUID pattern.
- * Will iterate over the path and return the first match.
+ * Extracts a context ID (GUID) from a URL path string.
+ *
+ * Strips query-string and hash fragments, then iterates path segments
+ * and returns the first segment matching the GUID pattern. Used as the
+ * default extractor when apps configure `setContextPathExtractor` and
+ * as a fallback inside the context-navigation-handler's custom adapter.
+ *
+ * Pass a custom `matcher` to support non-GUID context identifiers.
  *
  * @example
  * ```ts
- * const path = '/apps/context/7fd97952-7fe6-409b-a6dc-292dbf0e50d7?dsadasdas#example';
- * const contextId = extractContextIdFromPath(path); // '7fd97952-7fe6-409b-a6dc-292dbf0e50d7'
+ * // Default GUID extraction
+ * const path = '/apps/my-app/7fd97952-7fe6-409b-a6dc-292dbf0e50d7/dashboard?tab=1#section';
+ * extractContextIdFromPath(path); // '7fd97952-7fe6-409b-a6dc-292dbf0e50d7'
+ *
+ * // Custom matcher for numeric IDs
+ * extractContextIdFromPath('/projects/42/details', /^\d+$/);  // '42'
+ *
+ * // No match
+ * extractContextIdFromPath('/apps/my-app/settings'); // undefined
  * ```
  *
- * @param path string - the path to extract the context id from
- * @param matcher RegExp - the pattern to match against
- * @returns string | undefined - the context id or undefined
+ * @param path - The URL path to extract from (may include query/hash).
+ * @param matcher - RegExp pattern to match against each path segment.
+ * @returns The first matching segment, or `undefined` if none match.
  */
 export const extractContextIdFromPath = (
   path: string,
@@ -77,6 +89,10 @@ const validateContextId = (contextId: string): boolean => !!contextId.match(matc
  *
  * @param context The context module.
  * @returns A function that takes a path and returns an Observable of the resolved context item.
+ * @deprecated Replaced by the context-navigation-handler module which resolves
+ * initial context from the URL via adapter `decode()` during module initialization.
+ * Portal-level code should use `enableContextNavigationHandler` which handles
+ * URL-to-context resolution automatically. Will be removed in a future major version.
  */
 export function resolveContextFromPath(
   context: ModuleType<ContextModule>,
@@ -100,6 +116,10 @@ export function resolveContextFromPath(
  * @param context The context module.
  * @param args The arguments for resolving the path.
  * @returns A function that takes a path and returns an Observable of the resolved context item.
+ * @deprecated Replaced by the context-navigation-handler module which resolves
+ * initial context from the URL via adapter `decode()` during module initialization.
+ * Portal-level code should use `enableContextNavigationHandler` which handles
+ * URL-to-context resolution automatically. Will be removed in a future major version.
  */
 export function resolveContextFromPath(
   context: ModuleType<ContextModule>,
