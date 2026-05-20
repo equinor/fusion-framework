@@ -25,9 +25,9 @@ The `selectors` sub-path re-exports response selectors (`jsonSelector`, `blobSel
 Register a named client in your app's configuration callback:
 
 ```ts
-import type { AppConfigurator } from '@equinor/fusion-framework-react-app';
+import type { AppModuleInitiator } from '@equinor/fusion-framework-react-app';
 
-export const configure = (configurator: AppConfigurator) => {
+export const configure: AppModuleInitiator = (configurator) => {
   configurator.configureHttpClient('my-api', {
     baseUri: 'https://api.example.com',
     defaultScopes: ['api://my-api/.default'],
@@ -56,7 +56,6 @@ function useHttpClient(name: string): IHttpClient;
 ```tsx
 import { useEffect, useState } from 'react';
 import { useHttpClient } from '@equinor/fusion-framework-react-app/http';
-import { jsonSelector } from '@equinor/fusion-framework-react-app/http/selectors';
 
 type Item = { id: string; name: string };
 
@@ -65,7 +64,7 @@ const ItemList = () => {
   const [items, setItems] = useState<Item[]>([]);
 
   useEffect(() => {
-    client.fetch('/items', { selector: jsonSelector })
+    client.json<Item[]>('/items')
       .then(setItems);
   }, [client]);
 
@@ -106,7 +105,7 @@ The `selectors` sub-path provides typed helpers for parsing HTTP responses:
 
 | Selector             | Description                                    |
 | -------------------- | ---------------------------------------------- |
-| `jsonSelector`       | Parses response as JSON with type inference     |
+| `jsonSelector`       | Parses response as JSON; use a typed call (e.g. `client.json<T>(...)`) to get a typed result |
 | `blobSelector`       | Returns response as a `Blob`                   |
 | `createSseSelector`  | Creates a selector for Server-Sent Events streams |
 
@@ -116,4 +115,4 @@ These are re-exported from `@equinor/fusion-framework-module-http/selectors`.
 
 - HTTP clients must be configured in your app's configurator before calling `useHttpClient`
 - Authentication scopes are attached automatically based on the client configuration
-- For detailed HTTP module configuration, see the [`@equinor/fusion-framework-module-http` documentation](../../modules/http/README.md)
+- For detailed HTTP module configuration, see the [`@equinor/fusion-framework-module-http` documentation](../../../modules/http/README.md)
