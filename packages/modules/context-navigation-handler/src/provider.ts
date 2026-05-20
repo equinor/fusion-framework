@@ -181,7 +181,7 @@ export class ContextNavigationHandlerProvider extends BaseModuleProvider<Context
 
         if (this.#normalizePath(targetURL) !== this.#normalizePath(currentURL)) {
           this.#lastNavigatedPath = this.#normalizePath(targetURL);
-          this.#navigation.navigate(targetURL, { replace: true });
+          this.#navigation.navigate(targetURL, this.#config.navigationOptions);
           this.#log(`Null context → navigated to [${targetPath}] for [${appKey}]`);
         }
 
@@ -258,7 +258,7 @@ export class ContextNavigationHandlerProvider extends BaseModuleProvider<Context
 
         // Perform navigation — track path so URL guard ignores our own navigations
         this.#lastNavigatedPath = this.#normalizePath(targetURL);
-        this.#navigation.navigate(targetURL, { replace: true });
+        this.#navigation.navigate(targetURL, this.#config.navigationOptions);
 
         // Dispatch "navigated" event
         const navigatedDetail: ContextNavigationHandlerNavigatedDetail = {

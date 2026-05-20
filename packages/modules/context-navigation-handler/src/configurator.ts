@@ -132,6 +132,16 @@ export class ContextNavigationHandlerConfigurator extends BaseConfigBuilder<Cont
   }
 
   /**
+   * Set the options passed to `navigation.navigate()` during URL updates.
+   *
+   * @default { replace: true }
+   */
+  setNavigationOptions(options: { replace?: boolean; state?: unknown }): this {
+    this._set('navigationOptions', options);
+    return this;
+  }
+
+  /**
    * Set the source factory that drives the reconciler's observable stream.
    *
    * @default createAppFirstSource()
@@ -158,6 +168,9 @@ export class ContextNavigationHandlerConfigurator extends BaseConfigBuilder<Cont
     }
     if (!this._has('debug')) {
       this._set('debug', false);
+    }
+    if (!this._has('navigationOptions')) {
+      this._set('navigationOptions', { replace: true });
     }
 
     // If user registered adapters, use those exclusively.

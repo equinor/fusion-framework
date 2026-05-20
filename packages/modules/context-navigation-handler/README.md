@@ -112,6 +112,7 @@ enableContextNavigationHandler(configurator, (builder) => {
 | `setUrlGuard(enabled)` | `true` | Re-sync context if an external navigation drops it from the URL. |
 | `setDebug(enabled)` | `false` | Enable verbose `console.debug` output. |
 | `setNullContextUrl(urlOrFn)` | — | Function (or static string) that returns the URL to navigate to when context is cleared. Receives `{ appKey, currentURL }`. |
+| `setNavigationOptions(options)` | `{ replace: true }` | Options passed to `navigation.navigate()` during URL updates. Set `{ replace: false }` to push history entries instead. |
 | `setOnTransition(fn)` | — | Side-effect hook called after each successful navigation. |
 | `setSourceFactory(factory)` | `createAppFirstSource()` | Observable source factory that drives the reconciler. |
 

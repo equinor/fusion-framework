@@ -260,4 +260,11 @@ export interface ContextNavigationHandlerConfig {
    * @default undefined — adapters handle null context themselves
    */
   nullContextUrl?: (args: { appKey: string; currentURL: URL }) => string;
+
+  /**
+   * Options passed to `navigation.navigate()` when the reconciler performs URL updates.
+   *
+   * @default { replace: true }
+   */
+  navigationOptions: { replace?: boolean; state?: unknown };
 }
