@@ -1,5 +1,6 @@
-import { Subscription, switchMap, EMPTY, of } from 'rxjs';
+import { switchMap, EMPTY, of } from 'rxjs';
 
+import { BaseModuleProvider } from '@equinor/fusion-framework-module/provider';
 import type { AppModuleProvider, AppModulesInstance } from '@equinor/fusion-framework-module-app';
 import type {
   ContextModule,
@@ -22,6 +23,8 @@ import type {
   ContextNavigationHandlerSkippedDetail,
 } from './types';
 
+import { version } from './version';
+
 // ─── Provider Args ──────────────────────────────────────────────────
 
 export interface ContextNavigationHandlerProviderArgs {
@@ -43,8 +46,7 @@ export interface ContextNavigationHandlerProviderArgs {
  * All navigation intent is communicated via the framework event module,
  * making the system observable and cancelable.
  */
-export class ContextNavigationHandlerProvider {
-  readonly #subscription = new Subscription();
+export class ContextNavigationHandlerProvider extends BaseModuleProvider<ContextNavigationHandlerConfig> {
   readonly #config: ContextNavigationHandlerConfig;
   readonly #event: IEventModuleProvider;
   readonly #navigation: INavigationProvider;
@@ -54,6 +56,7 @@ export class ContextNavigationHandlerProvider {
   #lastNavigatedPath: string | null = null;
 
   constructor(args: ContextNavigationHandlerProviderArgs) {
+    super({ version, config: args.config });
     this.#config = args.config;
     this.#event = args.event;
     this.#navigation = args.navigation;
@@ -69,10 +72,6 @@ export class ContextNavigationHandlerProvider {
     return this.#phase;
   }
 
-  dispose(): void {
-    this.#subscription.unsubscribe();
-  }
-
   // ── Reconciler (single subscription) ────────────────────────────────
 
   #setupReconciler(args: ContextNavigationHandlerProviderArgs): void {
@@ -82,7 +81,7 @@ export class ContextNavigationHandlerProvider {
       navigation: args.navigation,
     });
 
-    this.#subscription.add(
+    this._addTeardown(
       source$.subscribe((entry) => {
         this.#reconcile(entry);
       }),
@@ -117,7 +116,7 @@ export class ContextNavigationHandlerProvider {
       }),
     );
 
-    this.#subscription.add(
+    this._addTeardown(
       source$.subscribe(({ appModules, appKey }) => {
         const appContext = appModules.context;
         if (!appContext) {
