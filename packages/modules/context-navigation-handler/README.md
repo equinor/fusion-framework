@@ -44,24 +44,51 @@ pnpm add @equinor/fusion-framework-module-context-navigation-handler
 
 ## Quick Start
 
+### App-portal (app switches lead)
+
+An app-portal shows one app at a time. When the user switches apps, the reconciler
+picks up the new app's context and encodes it into the URL. This is the default behavior.
+
 ```ts
 import { enableContextNavigationHandler } from '@equinor/fusion-framework-module-context-navigation-handler';
 
 export const configure = (configurator) => {
-  // Minimal — uses built-in adapters: custom → query → path
-  enableContextNavigationHandler(configurator);
+  enableContextNavigationHandler(configurator, (builder) => {
+    builder.setPortalName('app-portal');
+    builder.setDebug(true);
+  });
 };
 ```
 
-With configuration:
+The default source factory (`createAppFirstSource`) watches `app.current$` and
+resolves the app's context modules before emitting to the reconciler. When an app
+switch happens, the new app's active context drives the URL update.
+
+### Context-portal (context changes lead)
+
+A context-portal is organized around a shared context (e.g. a project). When the
+user selects a context, navigation updates the URL immediately — regardless of
+which app is active. Clearing context navigates back to the portal root.
 
 ```ts
-enableContextNavigationHandler(configurator, (builder) => {
-  builder.setPortalName('my-portal');
-  builder.setDebug(true);
-  builder.setUrlGuard(true);
-});
+import {
+  enableContextNavigationHandler,
+  createContextFirstSource,
+} from '@equinor/fusion-framework-module-context-navigation-handler';
+
+export const configure = (configurator) => {
+  enableContextNavigationHandler(configurator, (builder) => {
+    builder.setPortalName('context-portal');
+    builder.setSourceFactory(createContextFirstSource());
+    builder.setNullContextUrl('/');
+    builder.setDebug(true);
+  });
+};
 ```
+
+Key differences from app-portal:
+- **`createContextFirstSource()`** — context changes are the primary trigger; app modules are resolved as a dependency.
+- **`setNullContextUrl('/')`** — when context is cleared, navigate to the portal landing page instead of delegating to the adapter.
 
 ## Built-in Adapters
 
