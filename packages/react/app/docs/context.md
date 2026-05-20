@@ -27,10 +27,13 @@ Returns the currently selected context from the application-scoped context modul
 **Signature:**
 
 ```ts
-function useCurrentContext(): ContextItem | undefined;
+function useCurrentContext(): {
+  currentContext: ContextItem | null | undefined;
+  setCurrentContext: (context?: ContextItem | string | null) => void;
+};
 ```
 
-**Returns:** The current context object, or `undefined` if no context is selected.
+**Returns:** An object with the current context (`ContextItem | null | undefined`) and a setter to change it.
 
 ### Example
 
@@ -38,16 +41,16 @@ function useCurrentContext(): ContextItem | undefined;
 import { useCurrentContext } from '@equinor/fusion-framework-react-app/context';
 
 const ProjectHeader = () => {
-  const context = useCurrentContext();
+  const { currentContext } = useCurrentContext();
 
-  if (!context) {
+  if (!currentContext) {
     return <p>No context selected</p>;
   }
 
   return (
     <header>
-      <h1>{context.title}</h1>
-      <span>Type: {context.type.id}</span>
+      <h1>{currentContext.title}</h1>
+      <span>Type: {currentContext.type.id}</span>
     </header>
   );
 };
@@ -60,7 +63,7 @@ Returns the app-scoped context module provider instance directly. Use this when 
 **Signature:**
 
 ```ts
-function useContextProvider(): ContextModuleInstance;
+function useContextProvider(): IContextProvider;
 ```
 
 **Throws** if the context module is not registered in the application scope.
