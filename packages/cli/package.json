@@ -12,7 +12,7 @@
     "access": "public"
   },
   "engines": {
-    "node": ">=20.0.0"
+    "node": ">=22.22.2"
   },
   "files": [
     "./bin",
