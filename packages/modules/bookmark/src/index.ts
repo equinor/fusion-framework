@@ -1,3 +1,14 @@
+/**
+ * Bookmark module for the Fusion Framework.
+ *
+ * Provides bookmark management (create, update, delete, favourite) with
+ * application-scoped payloads and event-driven state updates.
+ *
+ * @see {@link enableBookmark} to enable the module in a configurator.
+ * @see {@link BookmarkProvider} for the runtime provider API.
+ *
+ * @packageDocumentation
+ */
 export { BookmarkModuleConfigurator } from './BookmarkConfigurator';
 
 export type {
