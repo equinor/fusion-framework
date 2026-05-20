@@ -176,12 +176,13 @@ export class ContextNavigationHandlerProvider extends BaseModuleProvider<Context
       // Portal-level null-context override — bypass adapter entirely
       if (this.#config.nullContextUrl) {
         const currentURL = this.#getCurrentURL();
-        const targetURL = new URL(this.#config.nullContextUrl, this.#config.origin);
+        const targetPath = this.#config.nullContextUrl({ appKey, currentURL });
+        const targetURL = new URL(targetPath, this.#config.origin);
 
         if (this.#normalizePath(targetURL) !== this.#normalizePath(currentURL)) {
           this.#lastNavigatedPath = this.#normalizePath(targetURL);
           this.#navigation.navigate(targetURL, { replace: true });
-          this.#log(`Null context → navigated to [${this.#config.nullContextUrl}] for [${appKey}]`);
+          this.#log(`Null context → navigated to [${targetPath}] for [${appKey}]`);
         }
 
         return;

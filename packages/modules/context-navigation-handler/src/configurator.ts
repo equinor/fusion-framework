@@ -104,16 +104,22 @@ export class ContextNavigationHandlerConfigurator extends BaseConfigBuilder<Cont
   }
 
   /**
-   * Set the URL to navigate to when context is cleared.
+   * Set a function that computes the URL to navigate to when context is cleared.
    *
    * When set, the reconciler bypasses adapter encoding for null context
-   * and navigates directly to this URL. Use in context-portal where
+   * and navigates directly to the returned URL. Use in context-portal where
    * clearing context should return to the portal landing page.
    *
-   * @param url - The target URL path (e.g. `'/'`).
+   * Accepts either a static string (shorthand) or a function that receives
+   * the current app key and URL for dynamic path construction.
+   *
+   * @param urlOrFn - A static path (e.g. `'/'`) or a function returning one.
    */
-  setNullContextUrl(url: string): this {
-    this._set('nullContextUrl', url);
+  setNullContextUrl(
+    urlOrFn: string | ((args: { appKey: string; currentURL: URL }) => string),
+  ): this {
+    const fn = typeof urlOrFn === 'string' ? () => urlOrFn : urlOrFn;
+    this._set('nullContextUrl', fn);
     return this;
   }
 

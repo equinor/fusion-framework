@@ -245,15 +245,19 @@ export interface ContextNavigationHandlerConfig {
   sourceFactory: ReconcilerSourceFactory;
 
   /**
-   * URL to navigate to when context is cleared (`null`).
+   * Compute the URL to navigate to when context is cleared (`null`).
    *
-   * When set, the reconciler navigates directly to this URL on null context
-   * instead of delegating to the adapter's `encode(null, ...)`.
+   * When set, the reconciler calls this function on null context instead
+   * of delegating to the adapter's `encode(null, ...)`.
    *
-   * Typical usage: context-portal sets this to `'/'` so clearing context
+   * Typical usage: context-portal returns `'/'` so clearing context
    * returns to the portal landing page regardless of adapter type.
+   *
+   * @param args.appKey - The current app key.
+   * @param args.currentURL - The current browser URL.
+   * @returns The target URL path string (e.g. `'/'` or `/apps/${appKey}`).
    *
    * @default undefined — adapters handle null context themselves
    */
-  nullContextUrl?: string;
+  nullContextUrl?: (args: { appKey: string; currentURL: URL }) => string;
 }
