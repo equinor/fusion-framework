@@ -16,10 +16,12 @@ The standard bootstrap function for Fusion React apps. Wraps your root component
 
 ```ts
 function renderApp(
-  Component: React.ComponentType,
-  configure?: (configurator: IAppConfigurator) => void,
+  Component: React.ElementType,
+  configure?: AppModuleInitiator,
 ): (el: HTMLElement, args: ComponentRenderArgs) => RenderTeardown;
 ```
+
+`AppModuleInitiator` receives `(configurator, { fusion, env })` and may return `Promise<void>` for async setup.
 
 **Returns:** A mount function the portal calls with a DOM element and render args. The returned `RenderTeardown` callback unmounts the app.
 
@@ -37,13 +39,13 @@ export const render = renderApp(App, configure);
 export default render;
 ```
 
-The `configure` callback receives an `IAppConfigurator` where you register modules (HTTP clients, context, navigation, etc.):
+The `configure` callback is an `AppModuleInitiator` — it receives `(configurator, { fusion, env })` and may be async:
 
 ```ts
 // config.ts
-import type { IAppConfigurator } from '@equinor/fusion-framework-react-app';
+import type { AppModuleInitiator } from '@equinor/fusion-framework-react-app';
 
-export const configure = (configurator: IAppConfigurator) => {
+export const configure: AppModuleInitiator = (configurator) => {
   configurator.configureHttpClient('my-api', {
     baseUri: 'https://api.example.com',
     defaultScopes: ['api://my-api/.default'],
@@ -58,8 +60,14 @@ Retrieves a single typed module instance from the application scope. Throws if t
 **Signature:**
 
 ```ts
-function useAppModule<TType>(module: string): ModuleType<TType>;
+// Key-based inference (no explicit generic needed for known modules):
+function useAppModule(module: 'auth' | 'context' | ...): InferredModuleType;
+
+// Explicit generic for custom/unknown module keys:
+function useAppModule<TType extends AnyModule>(module: string): ModuleType<TType>;
 ```
+
+When called with a known string literal key (e.g. `'auth'`), the return type is inferred automatically. Pass an explicit generic only when using a custom or unrecognised key.
 
 **Example:**
 
@@ -108,9 +116,9 @@ function useAppEnvironmentVariables<TEnvironmentVariables>(): ObservableStateRet
 
 | Property   | Type                         | Description                                          |
 | ---------- | ---------------------------- | ---------------------------------------------------- |
-| `value`    | `TEnvironmentVariables`      | The resolved environment variables                   |
-| `complete` | `boolean`                    | `true` when loading is finished                      |
-| `error`    | `unknown`                    | Error if loading failed, otherwise `undefined`       |
+| `value`    | `TEnvironmentVariables \| undefined` | The resolved environment variables, or `undefined` before the observable emits |
+| `complete` | `boolean`                           | `true` when loading is finished                                                |
+| `error`    | `unknown \| null`                   | Error if loading failed, `null` otherwise                                      |
 
 **Example:**
 
@@ -135,6 +143,6 @@ const MyComponent = () => {
 ## Deprecated APIs
 
 > [!CAUTION]
-> `createComponent` and `makeComponent` are **deprecated**. Use `renderApp` instead.
+> `createComponent` is **deprecated**. Use `renderApp` instead.
 
 These older bootstrapping functions are still exported for backward compatibility but should not be used in new apps.
