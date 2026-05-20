@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-react-router
 
+## 2.1.0
+
+### Minor Changes
+
+- a5dc246: Expose `Routes` and `Route` as public exports from `@equinor/fusion-framework-react-router` for compatibility, and mark them as deprecated in favor of the Fusion route DSL or `RouteObject`-based routing.
+
 ## 2.0.2
 
 ### Patch Changes
