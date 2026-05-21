@@ -59,7 +59,7 @@ export function normalizeStringResult(value: unknown): string | undefined {
  * ```
  */
 export function toAppRelative(fullPathname: string, appBasename: string): string {
-  if (fullPathname.startsWith(appBasename)) {
+  if (fullPathname === appBasename || fullPathname.startsWith(`${appBasename}/`)) {
     const relative = fullPathname.slice(appBasename.length);
     return relative.startsWith('/') ? relative : `/${relative}`;
   }
