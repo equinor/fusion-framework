@@ -13,6 +13,20 @@ The context module now supports explicit URL routing strategies that control how
 
 When no strategy is explicitly set, the module defaults to `query` and logs a console warning prompting you to declare one.
 
+The strategy is declared by the app, then consumed by the portal's context navigation handler when it synchronizes context and URL state:
+
+```mermaid
+flowchart LR
+  App["App using enableContext"] --> Builder["ContextConfigBuilder"]
+  Builder --> Strategy["setRoutingStrategy"]
+  Strategy --> Query["query strategy"]
+  Strategy --> Path["path strategy"]
+  Query --> ContextModule["App context module config"]
+  Path --> ContextModule
+  ContextModule --> Portal["Portal context-navigation-handler"]
+  Portal --> URL["Browser URL"]
+```
+
 ## Who needs to migrate
 
 **Every app that uses `enableContext`** should add an explicit `setRoutingStrategy()` call. Without it, you will see this console warning on every app load:
@@ -22,6 +36,19 @@ ContextModuleConfigurator.createConfig: missing routing strategy, defaulting to 
 ```
 
 ## How to migrate
+
+Use this decision flow to pick the right migration path:
+
+```mermaid
+flowchart TD
+  Start["Does your app use enableContext?"] -->|No| Done["No routingStrategy change needed"]
+  Start -->|Yes| Custom{"Does the app use custom context path extractor or generator hooks?"}
+  Custom -->|Yes| CustomPath["Use setRoutingStrategy path and keep the custom hooks"]
+  Custom -->|No| ExistingPath{"Do existing links depend on /apps/my-app/context-id paths?"}
+  ExistingPath -->|Yes| LegacyPath["Use setRoutingStrategy path to preserve current URL shape"]
+  ExistingPath -->|No| Query["Use setRoutingStrategy query"]
+  Query --> Recommended["Recommended for new and migrated apps"]
+```
 
 ### Apps that currently use path-segment context URLs
 
