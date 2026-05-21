@@ -119,7 +119,7 @@ export class ContextNavigationHandlerConfigurator extends BaseConfigBuilder<Cont
     urlOrFn: string | ((args: { appKey: string; currentURL: URL }) => string),
   ): this {
     const fn = typeof urlOrFn === 'string' ? () => urlOrFn : urlOrFn;
-    this._set('nullContextUrl', fn);
+    this._set('nullContextUrl', async () => fn);
     return this;
   }
 
@@ -157,11 +157,13 @@ export class ContextNavigationHandlerConfigurator extends BaseConfigBuilder<Cont
     init: ConfigBuilderCallbackArgs,
     config: Partial<ContextNavigationHandlerConfig>,
   ) {
+    const origin = window.location.origin;
+
     if (!this._has('portalName')) {
       this._set('portalName', 'Portal');
     }
     if (!this._has('origin')) {
-      this._set('origin', window.location.origin);
+      this._set('origin', origin);
     }
     if (!this._has('enableUrlGuard')) {
       this._set('enableUrlGuard', true);
@@ -190,7 +192,7 @@ export class ContextNavigationHandlerConfigurator extends BaseConfigBuilder<Cont
 
     // Default initial context resolver — decode URL via adapters, set on context provider.
     if (!this._has('resolveInitialContext')) {
-      const resolver = createResolveContextFromUrl(allAdapters);
+      const resolver = createResolveContextFromUrl(allAdapters, origin);
       this._set('resolveInitialContext', async () => resolver);
     }
 
