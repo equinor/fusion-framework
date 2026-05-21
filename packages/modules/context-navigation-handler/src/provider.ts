@@ -131,7 +131,8 @@ export class ContextNavigationHandlerProvider extends BaseModuleProvider<Context
         const currentURL = this.#getCurrentURL();
 
         // Don't guard if the URL has moved to a different app
-        if (!currentURL.pathname.startsWith(`/apps/${appKey}`)) {
+        const appBase = `/apps/${appKey}`;
+        if (currentURL.pathname !== appBase && !currentURL.pathname.startsWith(`${appBase}/`)) {
           return;
         }
 
