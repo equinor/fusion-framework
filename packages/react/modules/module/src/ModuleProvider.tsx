@@ -21,8 +21,7 @@ type ModuleProviderCreator = <
   // biome-ignore lint/suspicious/noExplicitAny: Default type parameter for module instance reference
   TRef extends ModulesInstanceType<[AnyModule]> = any,
 >(
-  configurator: ModulesConfigurator<TModules>,
-  modules: TModules,
+  configurator: ModulesConfigurator<TModules, TRef>,
   ref?: TRef,
 ) => Promise<LazyExoticComponent<FunctionComponent>>;
 
@@ -52,8 +51,7 @@ type ModuleProviderCreator = <
  *  [http, msal]
  *);
  * ```
- * @param configurator callback for configuring provided modules
- * @param modules modules which should be initiated
+ * @param configurator configurator for the modules that should be initialized
  * @param ref optional parent module instance
  * @returns Suspensive `ModuleProvider`
  */
@@ -62,7 +60,7 @@ export const createModuleProvider: ModuleProviderCreator = async <
   // biome-ignore lint/suspicious/noExplicitAny: Default type parameter for module instance reference
   TRef extends ModulesInstanceType<[AnyModule]> = any,
 >(
-  configurator: ModulesConfigurator<TModules>,
+  configurator: ModulesConfigurator<TModules, TRef>,
   ref?: TRef,
 ): Promise<LazyExoticComponent<FunctionComponent>> => {
   const Component = lazy(async () => {

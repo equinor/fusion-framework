@@ -11,6 +11,7 @@ import type {
 } from '../../types.js';
 
 import type { IModuleConfigurator } from './IModuleConfigurator.js';
+import type { FrameworkPluginCallback } from '../plugin/index.js';
 
 /**
  * Contract for the top-level module orchestrator in Fusion Framework.
@@ -96,6 +97,33 @@ export interface IModulesConfigurator<
    */
   onInitialized<T extends Array<AnyModule> | unknown>(
     cb: (instance: ModulesInstanceType<CombinedModules<T, TModules>>) => void | Promise<void>,
+  ): void;
+
+  /**
+   * Registers a plugin that connects side effects after modules are ready.
+   *
+   * Plugins run after module initialization and post-initialize hooks, but
+   * before {@link initialize} resolves to the application renderer. Return a
+   * teardown callback to clean up subscriptions or global listeners during
+   * {@link dispose}. Plugin failures are isolated from other plugins.
+   *
+   * @param cb - Plugin callback receiving the initialized module map and optional ref.
+   * @template T - Additional modules to include in the plugin module map.
+   * @example
+   * ```typescript
+   * function connectContextTelemetry(args: FrameworkPluginArgs<[EventModule, TelemetryModule]>) {
+   *   const teardown = args.modules.event.addEventListener('context:changed', (event) => {
+   *     args.modules.telemetry.track('context.changed', event.detail);
+   *   });
+   *
+   *   return teardown;
+   * }
+   *
+   * configurator.registerPlugin(connectContextTelemetry);
+   * ```
+   */
+  registerPlugin<T extends Array<AnyModule> | unknown>(
+    cb: FrameworkPluginCallback<CombinedModules<T, TModules>, TRef>,
   ): void;
 
   /**

@@ -2,6 +2,19 @@
 import type { Subject } from 'rxjs';
 
 import { ModuleEventLevel, type AnyModule, type ModuleEvent } from '../../../types.js';
+import type { FrameworkPluginTeardown } from '../../plugin/index.js';
+
+function getPluginTeardownName(teardown: FrameworkPluginTeardown): string {
+  return typeof teardown === 'function' ? teardown.name || 'anonymous' : 'dispose';
+}
+
+async function runPluginTeardown(teardown: FrameworkPluginTeardown): Promise<void> {
+  if (typeof teardown === 'function') {
+    await teardown();
+    return;
+  }
+  await teardown.dispose();
+}
 
 /**
  * Context passed to the dispose lifecycle phase.
@@ -18,6 +31,8 @@ export interface DisposePhaseContext {
    * are disposed to signal that the lifecycle is fully torn down.
    */
   event$: Subject<ModuleEvent>;
+  /** Plugin teardown callbacks registered during the plugin phase. */
+  pluginTeardowns?: FrameworkPluginTeardown[];
 }
 
 /**
@@ -38,7 +53,7 @@ export async function runDisposePhase(
   instance: Record<string, unknown>,
   ref?: unknown,
 ): Promise<void> {
-  const { modules, registerEvent, event$ } = ctx;
+  const { modules, registerEvent, event$, pluginTeardowns = [] } = ctx;
 
   registerEvent({
     level: ModuleEventLevel.Debug,
@@ -46,6 +61,43 @@ export async function runDisposePhase(
     message: 'Disposing modules instance',
     properties: { modules: Object.keys(instance).join(', ') },
   });
+
+  if (pluginTeardowns.length) {
+    registerEvent({
+      level: ModuleEventLevel.Debug,
+      name: 'dispose.pluginsDisposing',
+      message: `Disposing plugins [${pluginTeardowns.length}]`,
+      properties: { count: pluginTeardowns.length },
+    });
+
+    // Tear down plugins before module providers so side effects can still access
+    // live providers while unsubscribing. LIFO mirrors common subscription stacks.
+    await Promise.allSettled(
+      pluginTeardowns
+        .splice(0)
+        .reverse()
+        .map(async (teardown) => {
+          const name = getPluginTeardownName(teardown);
+          try {
+            await runPluginTeardown(teardown);
+            registerEvent({
+              level: ModuleEventLevel.Debug,
+              name: 'dispose.pluginDisposed',
+              message: `Plugin ${name} disposed successfully`,
+              properties: { name },
+            });
+          } catch (err) {
+            registerEvent({
+              level: ModuleEventLevel.Warning,
+              name: 'dispose.pluginDisposeError',
+              message: `Plugin ${name} dispose failed`,
+              properties: { name },
+              error: err,
+            });
+          }
+        }),
+    );
+  }
 
   // Dispose all modules concurrently; failures are isolated per module so
   // one bad teardown cannot leave other modules in an inconsistent state.
