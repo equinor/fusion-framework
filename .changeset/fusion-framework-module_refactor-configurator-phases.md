@@ -11,6 +11,6 @@ Internal: split `ModulesConfigurator` monolith into explicit lifecycle phase mod
 - `post-initialize` — `postInitialize` hooks and `onInitialized` callbacks
 - `dispose` — ordered teardown with failure isolation
 
-All public exports (`IModulesConfigurator`, `IModuleConfigurator`, `ModulesConfigurator`, `addConfig`, `configure`, `initialize`, `dispose`, `onConfigured`, `onInitialized`, `event$`) are unchanged and re-exported from the same entry points. No consumer-facing behaviour is altered.
+All configurator symbols remain available from the package root and are also exposed through the `@equinor/fusion-framework-module/configurator` secondary entrypoint. No consumer-facing behaviour is altered.
 
-Prerequisite for the plugin registration phase (equinor/fusion-core-tasks#1257).
+Prerequisite for the plugin registration phase (equinor/fusion-core-tasks#1256).
