@@ -1,6 +1,7 @@
 import type { ContextItem } from '@equinor/fusion-framework-module-context';
 import type { ContextNavigationAdapter, ContextNavigationAdapterFactory } from '../types';
 import { hasCustomContextGenerators } from '../utils/has-custom-context-generators';
+import { stripContextQueryParam } from '../utils/url/strip-context-query-param';
 
 /**
  * Normalize legacy app generator outputs to a plain string.
@@ -161,6 +162,8 @@ export function createCustomAdapter(): ContextNavigationAdapterFactory {
         if (context === null) {
           const url = new URL(appBasename, currentURL.origin);
           url.search = currentURL.search;
+          // Remove query-adapter param — custom apps encode context in the path
+          stripContextQueryParam(url);
           return url;
         }
 
@@ -186,6 +189,8 @@ export function createCustomAdapter(): ContextNavigationAdapterFactory {
         const fullPath = toFullPath(generatedPath, appBasename);
         const url = new URL(fullPath, currentURL.origin);
         url.search = currentURL.search;
+        // Remove query-adapter param — custom apps encode context in the path
+        stripContextQueryParam(url);
         return url;
       },
 

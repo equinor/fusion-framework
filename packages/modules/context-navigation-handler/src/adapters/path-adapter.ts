@@ -1,6 +1,7 @@
 import type { ContextItem } from '@equinor/fusion-framework-module-context';
 import type { ContextNavigationAdapter, AdapterResolutionContext } from '../types';
 import { hasCustomContextGenerators } from '../utils/has-custom-context-generators';
+import { stripContextQueryParam } from '../utils/url/strip-context-query-param';
 
 /**
  * Regex matching a standard UUID (v4 format, case-insensitive).
@@ -88,6 +89,8 @@ export function createPathAdapter(): ContextNavigationAdapter {
         }
         const url = new URL(`/${segments.join('/')}`, currentURL.origin);
         url.search = currentURL.search;
+        // Remove query-adapter param — context is encoded in the path, not the query string
+        stripContextQueryParam(url);
         return url;
       }
 
@@ -100,6 +103,8 @@ export function createPathAdapter(): ContextNavigationAdapter {
 
       const url = new URL(`/${segments.join('/')}`, currentURL.origin);
       url.search = currentURL.search;
+      // Remove query-adapter param — context is encoded in the path, not the query string
+      stripContextQueryParam(url);
       return url;
     },
 

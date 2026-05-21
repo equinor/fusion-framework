@@ -17,12 +17,12 @@ export const readContextIdFromAppPath = (path: string): string | undefined => {
   return parseAppRoute(pathname)?.contextId;
 };
 
-/** Embeds context id as path segment, or clears it. Preserves sub-routes and query/hash. */
+/** Embeds context id as path segment, or clears it. */
 export const writeContextIdToAppPath = (path: string, contextId?: string): string => {
   const { pathname } = splitRelativePath(path);
   const match = parseAppRoute(pathname);
   if (!match) return path;
-  return buildAppRoute(match.appKey, contextId ?? undefined, match.rest);
+  return buildAppRoute(match.appKey, contextId ?? undefined);
 };
 
 /** Returns true when pathname is a bare app route without context. */

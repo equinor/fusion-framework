@@ -140,17 +140,11 @@ export const configure = async (config: FrameworkConfigurator) => {
     builder.addPlugin(createUrlPlugin(['fusionDebug']));
   });
 
-  // Context-navigation module — synchronizes browser URL with active context.
-  // Telemetry is auto-resolved from the framework telemetry module above.
-  // Warns when apps use 'custom' routing strategy to discourage non-standard URL shapes.
-  // enableContextNavigation(config, (builder) => {
-  //   builder.setConsoleDebug(true);
-  //   builder.setWarnOnStrategies(['custom']);
-  // });
-
-  // NEW: Event-driven context navigation handler (encode/decode model)
   enableContextNavigationHandler(config, (builder) => {
     builder.setPortalName('dev-portal');
+    // builder.setNavigationOptions({
+    //   replace: false,
+    // });
     builder.setDebug(true);
     builder.setUrlGuard(true);
   });

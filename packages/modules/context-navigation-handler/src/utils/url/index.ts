@@ -21,3 +21,5 @@ export {
   resolveContextIdToCarry,
   urlAlreadyHasContext,
 } from './url-utils';
+
+export { stripContextQueryParam } from './strip-context-query-param';
