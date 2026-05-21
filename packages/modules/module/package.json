@@ -27,7 +27,8 @@
   },
   "scripts": {
     "build": "tsc -b",
-    "prepack": "pnpm build"
+    "prepack": "pnpm build",
+    "test": "vitest"
   },
   "keywords": [],
   "author": "",
@@ -46,7 +47,8 @@
   },
   "devDependencies": {
     "@types/semver": "^7.7.1",
-    "typescript": "^6.0.3"
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.0"
   },
   "peerDependencies": {
     "@types/semver": "^7.0.0"
