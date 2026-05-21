@@ -31,19 +31,12 @@ export interface AppRouteMatch {
  * @returns Named segments, or undefined if the pathname is not an app route.
  */
 export const parseAppRoute = (pathname: string): AppRouteMatch | undefined => {
-  console.debug(`🌍 Portal: Parsing app route from pathname [${pathname}]!`);
-
   if (!pathname[0] || pathname[0] !== '/') {
-    console.debug(
-      `🌍 Portal: Pathname [${pathname}] does not start with "/", adding it for matching!`,
-    );
     pathname = `/${pathname}`;
   }
 
   const normalized = pathname.replace(/\/+$/, '') || '/';
-  console.debug(`🌍 Portal: Normalized pathname for matching: [${normalized}]!`);
   const result = APP_ROUTE_PATTERN.exec({ pathname: normalized });
-  console.debug(`🌍 Portal: URLPattern match result:`, { result });
   if (!result) return undefined;
   const { appKey, contextId, rest } = result.pathname.groups;
   if (!appKey) return undefined;
