@@ -30,7 +30,7 @@ export interface PostInitializePhaseContext {
  * 1. Calls each module's `postInitialize` hook (if defined) concurrently.
  *    Individual failures are caught and emitted as Warning events so one
  *    failing module cannot block others.
- * 2. Runs all registered `afterInit` callbacks sequentially via `Promise.allSettled`.
+ * 2. Runs all registered `afterInit` callbacks concurrently via `Promise.allSettled`.
  *
  * @param ctx - The post-initialize phase context.
  * @param instance - The sealed module instance map produced by the initialize phase.
@@ -71,7 +71,7 @@ export async function runPostInitializePhase(
       return from(
         module.postInitialize({
           ref,
-          modules: instance as never,
+          modules: instance,
           instance: instance[module.name],
         }),
       ).pipe(

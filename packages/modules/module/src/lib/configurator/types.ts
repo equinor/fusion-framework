@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { AnyModule, ModuleConfigType, ModulesConfig } from '../../types.js';
 
 export type { IModulesConfigurator } from './IModulesConfigurator.js';

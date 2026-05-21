@@ -1,8 +1,13 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { BehaviorSubject, firstValueFrom, from, lastValueFrom, throwError } from 'rxjs';
-import { defaultIfEmpty, filter, map, mergeMap, tap, timeout } from 'rxjs/operators';
+import { filter, map, mergeMap, tap, timeout } from 'rxjs/operators';
 
-import { ModuleEventLevel, type AnyModule, type ModuleEvent } from '../../../types.js';
+import {
+  ModuleEventLevel,
+  type AnyModule,
+  type ModuleEvent,
+  type ModuleInitializerArgs,
+} from '../../../types.js';
+
 import { BaseModuleProvider } from '../../provider/index.js';
 import { RequiredModuleTimeoutError } from '../types.js';
 
@@ -19,6 +24,122 @@ export interface InitializePhaseContext {
   modules: AnyModule[];
   /** Emits a structured lifecycle event into the configurator's event stream. */
   registerEvent: (event: ModuleEvent) => void;
+}
+
+/** @internal */
+type ModuleInitContext = {
+  config: unknown;
+  ref: unknown;
+  requireInstance: RequireInstance;
+  hasModule: (name: string) => boolean;
+  registerEvent: (event: ModuleEvent) => void;
+};
+
+/**
+ * Concrete shape of the `requireInstance` resolver passed into each module's
+ * `initialize` call. Extracted from `ModuleInitializerArgs` so call-sites stay
+ * readable without repeating the `<any, any>` instantiation.
+ *
+ * @internal
+ */
+// biome-ignore lint/suspicious/noExplicitAny: ModuleInitializerArgs is generic over config and deps; at this layer both are unknown and any is the honest escape hatch
+type RequireInstance = ModuleInitializerArgs<any, any>['requireInstance'];
+
+/**
+ * Initializes a single module and emits a `[name, instance]` tuple when complete.
+ *
+ * Validates that the module exposes an `initialize` method, calls it with the
+ * provided context, and emits lifecycle events for start, completion, and any
+ * provider contract warnings.
+ *
+ * @internal
+ */
+async function initializeModule(
+  module: AnyModule,
+  ctx: ModuleInitContext,
+): Promise<readonly [string, unknown]> {
+  const { config, ref, requireInstance, hasModule, registerEvent } = ctx;
+  const key = module.name;
+
+  if (!module.initialize) {
+    const error = new Error(`Module ${module.name} does not have initialize method`);
+    error.name = 'ModuleInitializeError';
+    registerEvent({
+      level: ModuleEventLevel.Error,
+      name: '_initialize.moduleInitializeError',
+      message: error.message,
+      properties: {
+        moduleName: module.name,
+        moduleVersion: module.version?.toString() || 'unknown',
+      },
+      error,
+    });
+    throw error;
+  }
+
+  registerEvent({
+    level: ModuleEventLevel.Debug,
+    name: '_initialize.moduleInitializing',
+    message: `Initializing module ${module.name}`,
+    properties: {
+      moduleName: module.name,
+      moduleVersion: module.version?.toString() || 'unknown',
+    },
+  });
+
+  const moduleInitStart = performance.now();
+
+  const instance = await (module.initialize({
+    ref,
+    config: (config as Record<string, unknown>)[key],
+    requireInstance,
+    hasModule,
+  }) as Promise<unknown>);
+
+  // Warn when providers deviate from the expected base class — these modules
+  // may lack version tracking and standard provider interfaces.
+  if (!(instance instanceof BaseModuleProvider)) {
+    registerEvent({
+      level: ModuleEventLevel.Warning,
+      name: '_initialize.providerNotBaseModuleProvider',
+      message: `Provider for module ${module.name} does not extend BaseModuleProvider`,
+      properties: {
+        moduleName: module.name,
+        moduleVersion: module.version?.toString() || 'unknown',
+      },
+    });
+  }
+  // Providers should expose a version string for diagnostics and compatibility checks.
+  // Warn when absent so module authors catch missing version early rather than at runtime.
+  const maybeVersioned = instance as { version?: string };
+  if (!maybeVersioned.version) {
+    registerEvent({
+      level: ModuleEventLevel.Warning,
+      name: '_initialize.providerVersionWarning',
+      message: `Provider for module ${module.name} does not expose version`,
+      properties: {
+        moduleName: module.name,
+        moduleVersion: module.version?.toString() || 'unknown',
+      },
+    });
+  }
+
+  const moduleInitTime = Math.round(performance.now() - moduleInitStart);
+  registerEvent({
+    level: ModuleEventLevel.Debug,
+    name: '_initialize.moduleInitialized',
+    message: `Module ${module.name} initialized in ${moduleInitTime}ms`,
+    properties: {
+      moduleName: module.name,
+      moduleVersion: module.version?.toString() || 'unknown',
+      providerName: typeof instance,
+      providerVersion: maybeVersioned.version?.toString() || 'unknown',
+      moduleInitTime,
+    },
+    metric: moduleInitTime,
+  });
+
+  return [key, instance] as const;
 }
 
 /**
@@ -39,7 +160,11 @@ export function createRequireInstance<T>(
   moduleNames: string[],
   instance$: BehaviorSubject<T>,
   registerEvent: (event: ModuleEvent) => void,
-): (name: string, wait?: number) => Promise<unknown> {
+): RequireInstance {
+  // The implementation signature is concrete (name: string) but the public contract
+  // must be the generic shape expected by ModuleInitializerArgs. Module names are
+  // always strings at runtime — the keyof-derived `string | number` constraint comes
+  // from TypeScript's keyof semantics, not actual usage.
   return function requireInstance(name: string, wait = 60): Promise<unknown> {
     // Fail fast if the caller requests a module that was never registered —
     // this almost always indicates a misconfiguration rather than a timing issue.
@@ -78,9 +203,13 @@ export function createRequireInstance<T>(
     // Wait for the module to appear in the shared instance subject, up to `wait` seconds.
     return firstValueFrom(
       instance$.pipe(
+        // Ignore emissions until the requested module has been added to the instance map.
         filter((x) => !!(x as Record<string, unknown>)[name]),
+        // Resolve the dependency promise with the provider instance, not the full module map.
         map((x) => (x as Record<string, unknown>)[name]),
+        // Convert unresolved dependencies into a typed timeout error with lifecycle diagnostics.
         timeout({
+          // requireInstance accepts seconds; RxJS timeout expects milliseconds.
           each: wait * 1000,
           with: () =>
             throwError(() => {
@@ -95,6 +224,7 @@ export function createRequireInstance<T>(
               return error;
             }),
         }),
+        // Emit timing diagnostics only after the dependency has actually resolved.
         tap(() => {
           const requireTime = Math.round(performance.now() - requireStart);
           registerEvent({
@@ -107,7 +237,7 @@ export function createRequireInstance<T>(
         }),
       ),
     );
-  };
+  } as unknown as RequireInstance;
 }
 
 /**
@@ -134,6 +264,13 @@ export async function runInitializePhase<T>(
   ref?: unknown,
 ): Promise<T> {
   const { modules, registerEvent } = ctx;
+
+  // Fast-path: no modules registered — return a sealed empty instance immediately
+  // to avoid a subscribe/lastValueFrom race on an already-completed observable.
+  if (modules.length === 0) {
+    return Object.seal({}) as T;
+  }
+
   const moduleNames = modules.map((m) => m.name);
 
   // Accumulates initialized module providers; BehaviorSubject lets requireInstance
@@ -146,95 +283,9 @@ export async function runInitializePhase<T>(
   // Initialize all modules concurrently; modules that depend on peers will
   // suspend inside requireInstance until the dependency resolves.
   const init$ = from(modules).pipe(
-    mergeMap((module) => {
-      const key = module.name;
-
-      if (!module.initialize) {
-        const error = new Error(`Module ${module.name} does not have initialize method`);
-        error.name = 'ModuleInitializeError';
-        registerEvent({
-          level: ModuleEventLevel.Error,
-          name: '_initialize.moduleInitializeError',
-          message: error.message,
-          properties: {
-            moduleName: module.name,
-            moduleVersion: module.version?.toString() || 'unknown',
-          },
-          error,
-        });
-        throw error;
-      }
-
-      registerEvent({
-        level: ModuleEventLevel.Debug,
-        name: '_initialize.moduleInitializing',
-        message: `Initializing module ${module.name}`,
-        properties: {
-          moduleName: module.name,
-          moduleVersion: module.version?.toString() || 'unknown',
-        },
-      });
-
-      const moduleInitStart = performance.now();
-
-      return from(
-        // Wrap in Promise.resolve to normalize sync and async initialize return values
-        Promise.resolve(
-          module.initialize({
-            ref,
-            config: (config as Record<string, unknown>)[key],
-            requireInstance: requireInstance as never,
-            hasModule,
-          }) as unknown,
-        ),
-      ).pipe(
-        map((instance) => {
-          // Warn when providers deviate from the expected base class — these modules
-          // may lack version tracking and standard provider interfaces.
-          if (!(instance instanceof BaseModuleProvider)) {
-            registerEvent({
-              level: ModuleEventLevel.Warning,
-              name: '_initialize.providerNotBaseModuleProvider',
-              message: `Provider for module ${module.name} does not extend BaseModuleProvider`,
-              properties: {
-                moduleName: module.name,
-                moduleVersion: module.version?.toString() || 'unknown',
-              },
-            });
-          }
-          const maybeVersioned = instance as { version?: string };
-          if (!maybeVersioned.version) {
-            registerEvent({
-              level: ModuleEventLevel.Warning,
-              name: '_initialize.providerVersionWarning',
-              message: `Provider for module ${module.name} does not expose version`,
-              properties: {
-                moduleName: module.name,
-                moduleVersion: module.version?.toString() || 'unknown',
-              },
-            });
-          }
-
-          const moduleInitTime = Math.round(performance.now() - moduleInitStart);
-          registerEvent({
-            level: ModuleEventLevel.Debug,
-            name: '_initialize.moduleInitialized',
-            message: `Module ${module.name} initialized in ${moduleInitTime}ms`,
-            properties: {
-              moduleName: module.name,
-              moduleVersion: module.version?.toString() || 'unknown',
-              providerName: typeof instance,
-              providerVersion: maybeVersioned.version?.toString() || 'unknown',
-              moduleInitTime,
-            },
-            metric: moduleInitTime,
-          });
-
-          return [key, instance] as const;
-        }),
-      );
-    }),
-    defaultIfEmpty([] as unknown as readonly [string, unknown]),
+    mergeMap((module) =>
+      initializeModule(module, { config, ref, requireInstance, hasModule, registerEvent }),
+    ),
   );
 
   const initStart = performance.now();

@@ -214,7 +214,7 @@ export async function runConfigurePhase<TRef>(
   // Step 1: Create raw config objects for all registered modules
   const config = await createModuleConfigs<TRef>(ctx, ref);
 
-  // Step 2: Apply all user-registered configuration callbacks in registration order
+  // Step 2: Apply all user-registered configuration callbacks concurrently.
   await Promise.all(ctx.configs.map((cb) => Promise.resolve(cb(config, ref))));
 
   // Step 3: Run module postConfigure hooks and afterConfiguration callbacks
