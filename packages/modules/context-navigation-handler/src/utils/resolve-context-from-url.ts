@@ -11,10 +11,11 @@ import type { ContextNavigationAdapterInput } from '../types';
  * since no app context is available at initial resolution time.
  *
  * @param adapters - Registered adapters, evaluated in order.
+ * @param origin - The origin to use when constructing the URL (defaults to `window.location.origin`).
  * @returns An async function compatible with `ContextNavigationHandlerConfig.resolveInitialContext`.
  */
 export const createResolveContextFromUrl =
-  (adapters: ContextNavigationAdapterInput[]) =>
+  (adapters: ContextNavigationAdapterInput[], origin?: string) =>
   async ({
     context,
     navigation,
@@ -22,9 +23,10 @@ export const createResolveContextFromUrl =
     context: IContextProvider;
     navigation: INavigationProvider;
   }): Promise<void> => {
+    const resolvedOrigin = origin ?? window.location.origin;
     const currentURL = new URL(
       `${navigation.path.pathname}${navigation.path.search ?? ''}`,
-      window.location.origin,
+      resolvedOrigin,
     );
 
     for (const entry of adapters) {
