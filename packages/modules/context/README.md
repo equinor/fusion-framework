@@ -30,6 +30,25 @@ Use this module when your application or portal needs to:
 | **Context resolution** | Automatic lookup of related context items when a context type does not match the configured types. |
 | **Parent connection** | Bi-directional sync between a parent portal context and a child app context. |
 
+The usual context update flow is:
+
+```mermaid
+sequenceDiagram
+  participant App as App code
+  participant Provider as ContextProvider
+  participant Client as Context client
+  participant Event as Event module
+
+  App->>Provider: setCurrentContextAsync(item or id)
+  Provider->>Event: onCurrentContextChange
+  Provider->>Provider: validate configured context types
+  Provider->>Client: resolve related context when needed
+  Client-->>Provider: matching ContextItem
+  Provider->>Provider: update currentContext
+  Provider->>Event: onCurrentContextChanged
+  Provider-->>App: currentContext$ emits next value
+```
+
 ## Quick start
 
 ```ts
@@ -62,6 +81,29 @@ await modules.context.setCurrentContextByIdAsync('7fd97952-...');
 
 // clear the active context
 modules.context.clearCurrentContext();
+```
+
+## Context routing strategies
+
+`routingStrategy` controls how a context ID is represented in deep links. Apps should declare the strategy explicitly so portal hosts and the `@equinor/fusion-framework-module-context-navigation-handler` module can keep context and URLs synchronized consistently.
+
+```mermaid
+flowchart TD
+  App["App configures enableContext"] --> Strategy["setRoutingStrategy"]
+  Strategy --> Query["query: ?$contextId=abc-123"]
+  Strategy --> Path["path: /apps/my-app/abc-123"]
+  Query --> Handler["Portal context-navigation-handler"]
+  Path --> Handler
+  Handler --> URL["Synced browser URL"]
+```
+
+Choose `query` for new or migrated apps unless you need to preserve existing path-segment links. Choose `path` when current bookmarks, shared links, or custom path hooks depend on the context ID being part of the pathname.
+
+```ts
+enableContext(configurator, (builder) => {
+  builder.setRoutingStrategy('query');
+  builder.setContextType(['ProjectMaster']);
+});
 ```
 
 ## Configuration
