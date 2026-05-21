@@ -262,6 +262,41 @@ export default sidebar({
   '/modules/': [
     '',
     {
+      text: 'Module System',
+      prefix: 'module/',
+      link: 'module/',
+      children: [
+        {
+          text: 'Concepts',
+          link: 'docs/concepts.md',
+        },
+        {
+          text: 'Lifecycle',
+          link: 'docs/lifecycle.md',
+        },
+        {
+          text: 'Configuration',
+          link: 'docs/configuration.md',
+        },
+        {
+          text: 'Cross-Module Dependencies',
+          link: 'docs/cross-module-deps.md',
+        },
+        {
+          text: 'Events',
+          link: 'docs/events.md',
+        },
+        {
+          text: 'Authoring Modules',
+          link: 'docs/authoring-modules.md',
+        },
+        {
+          text: 'Common Mistakes',
+          link: 'docs/common-mistakes.md',
+        },
+      ],
+    },
+    {
       text: 'HTTP',
       link: 'http/',
       children: [

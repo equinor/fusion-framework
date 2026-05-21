@@ -28,6 +28,18 @@ An abstract class for building module configuration declaratively. Subclasses ex
 
 Abstract base class for module providers (the runtime instances returned by `initialize()`). It manages a `Subscription` container for automatic teardown and exposes a `SemanticVersion` for compatibility checks.
 
+## Documentation
+
+| Topic | Description |
+|---|---|
+| [Concepts](./docs/concepts.md) | Module system overview, roles, and mental model |
+| [Lifecycle](./docs/lifecycle.md) | Configure → initialize → post-initialize → dispose phase sequence |
+| [Configuration](./docs/configuration.md) | How to register modules and use `addConfig` / `configure` |
+| [Cross-Module Dependencies](./docs/cross-module-deps.md) | `requireInstance` pattern for inter-module dependencies |
+| [Events](./docs/events.md) | `event$` observable and event naming conventions |
+| [Authoring Modules](./docs/authoring-modules.md) | Step-by-step guide for creating a custom module |
+| [Common Mistakes](./docs/common-mistakes.md) | FAQ-style pitfalls and how to avoid them |
+
 ## Installation
 
 ```sh
