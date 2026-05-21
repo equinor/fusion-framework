@@ -45,14 +45,16 @@ export const resolveContextMode = (): ContextMode => {
  * Maps the current context mode to a framework-compatible
  * {@link ContextRoutingStrategy} value.
  *
- * `'none'` and `'path'` both resolve to `'path'` because the framework
- * requires a concrete strategy value.
+ * `'none'`, `'path'`, and `'custom'` all resolve to `'path'` because the
+ * framework `ContextRoutingStrategy` type only accepts `'query' | 'path'`.
+ * Custom URL shapes are detected by the portal via registered hooks, not
+ * via the strategy value.
  *
  * @returns The strategy value passed to the context module builder
  */
 export const resolveRoutingStrategy = (): ContextRoutingStrategy => {
   const mode = resolveContextMode();
-  return mode === 'query' || mode === 'custom' ? 'path' : 'path';
+  return mode === 'query' ? 'query' : 'path';
 };
 
 /**

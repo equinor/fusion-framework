@@ -4,10 +4,11 @@
  * This module wires the context module's two URL hooks — the path generator
  * and the path extractor — to the dev-portal's URL conventions.
  *
- * All URL-shaping logic lives in `config-context-utils.ts`. This module only
- * maps those utilities onto the framework's builder API.
+ * All URL-shaping logic is provided by the context-navigation-handler's
+ * URL utilities. This module only maps those utilities onto the framework's
+ * builder API.
  *
- * See `config-context-app-navigation.ts` for the RxJS subscription that keeps
+ * The context-navigation-handler module (enabled in `config.ts`) keeps
  * the URL updated as the active context changes at runtime.
  */
 

@@ -1,4 +1,4 @@
-import type { FrameworkEventMap, FrameworkEvent, FrameworkEventInit } from '@equinor/fusion-framework-module-event';
+import type { FrameworkEvent, FrameworkEventInit } from '@equinor/fusion-framework-module-event';
 
 import type {
   ContextNavigationHandlerNavigateDetail,
@@ -21,7 +21,10 @@ declare module '@equinor/fusion-framework-module-event' {
     >;
     /** Fired when an adapter is resolved for an app. */
     onContextNavigationHandlerAdapterResolved: FrameworkEvent<
-      FrameworkEventInit<ContextNavigationHandlerAdapterResolvedDetail, ContextNavigationHandlerProvider>
+      FrameworkEventInit<
+        ContextNavigationHandlerAdapterResolvedDetail,
+        ContextNavigationHandlerProvider
+      >
     >;
     /** Fired when navigation is skipped. */
     onContextNavigationHandlerSkipped: FrameworkEvent<

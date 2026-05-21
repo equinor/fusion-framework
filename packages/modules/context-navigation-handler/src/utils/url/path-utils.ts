@@ -17,14 +17,12 @@ export const readContextIdFromAppPath = (path: string): string | undefined => {
   return parseAppRoute(pathname)?.contextId;
 };
 
-/** Embeds context id as path segment, or clears it. */
+/** Embeds context id as path segment, or clears it. Preserves sub-routes and query/hash. */
 export const writeContextIdToAppPath = (path: string, contextId?: string): string => {
-  console.debug(`🌍 Portal: writeContextIdToAppPath!`, { path, contextId });
   const { pathname } = splitRelativePath(path);
   const match = parseAppRoute(pathname);
-  console.debug(`🌍 Portal: Parsed app route:`, { match });
   if (!match) return path;
-  return buildAppRoute(match.appKey, contextId ?? undefined);
+  return buildAppRoute(match.appKey, contextId ?? undefined, match.rest);
 };
 
 /** Returns true when pathname is a bare app route without context. */

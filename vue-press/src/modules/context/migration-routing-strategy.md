@@ -2,7 +2,7 @@
 title: Migration - Context Routing Strategy
 description: Migration guide for adding explicit routing strategy to your app's context module configuration.
 category: Module
-tags:
+tag:
   - context
   - migration
   - routing-strategy

@@ -10,7 +10,6 @@ The context module now supports explicit URL routing strategies that control how
 |---|---|---|
 | `query` | `?$contextId=abc-123` | New default. Recommended for all apps. |
 | `path` | `/apps/my-app/abc-123` | Legacy path-segment convention. |
-| `custom` | App-defined | App fully owns URL shape via custom hooks. |
 
 When no strategy is explicitly set, the module defaults to `query` and logs a console warning prompting you to declare one.
 
@@ -64,18 +63,18 @@ Benefits of `query`:
 
 ### Apps with custom path extractors/generators
 
-If your app provides custom `setContextPathExtractor` and `setContextPathGenerator` hooks:
+If your app provides custom `setContextPathExtractor` and `setContextPathGenerator` hooks, use `'path'` as the strategy and register your hooks. The portal's context-navigation-handler module detects apps with custom generators and delegates URL handling to them automatically:
 
 ```ts
 enableContext(configurator, (builder) => {
-  builder.setRoutingStrategy('custom');
+  builder.setRoutingStrategy('path');
   builder.setContextType(['projectMaster']);
   builder.setContextPathExtractor(myExtractor);
   builder.setContextPathGenerator(myGenerator);
 });
 ```
 
-Setting `custom` tells the portal that this app owns its URL shape and the portal should not modify context-related URL segments.
+The portal's custom adapter will detect your registered hooks and use them for URL encoding/decoding instead of the default path-segment logic.
 
 ## Portal impact
 

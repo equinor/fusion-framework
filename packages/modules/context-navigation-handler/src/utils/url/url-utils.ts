@@ -29,7 +29,11 @@ export const resolveContextIdFromUrl = (path: string): string | undefined =>
  *
  * - `'query'`  → `$contextId` query parameter
  * - `'path'`   → 3rd path segment
- * - `'custom'` → path unchanged (app manages its own URL)
+ * - `undefined` → falls back to path (legacy default)
+ *
+ * Apps with custom URL shapes are handled by the custom adapter and
+ * never reach this helper — their `generatePathFromContext` hook
+ * produces the URL directly.
  */
 export const buildContextUrlForStrategy = (
   contextId: string | undefined,
