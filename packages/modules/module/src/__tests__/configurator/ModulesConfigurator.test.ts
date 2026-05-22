@@ -180,6 +180,42 @@ describe('ModulesConfigurator', () => {
       expect(disposable.dispose).toHaveBeenCalledOnce();
     });
 
+    it('passes a sealed module map to plugins', async () => {
+      const configurator = new ModulesConfigurator([createMockModule('alpha')]);
+      let isPluginModuleMapSealed = false;
+
+      configurator.registerPlugin(({ modules }) => {
+        isPluginModuleMapSealed = Object.isSealed(modules);
+      });
+
+      await configurator.initialize();
+
+      expect(isPluginModuleMapSealed).toBe(true);
+    });
+
+    it('runs plugin teardowns in reverse registration order', async () => {
+      const configurator = new ModulesConfigurator([createMockModule('alpha')]);
+      const order: string[] = [];
+      let releaseFirstPlugin: () => void = () => {};
+      const firstPluginReady = new Promise<void>((resolve) => {
+        releaseFirstPlugin = resolve;
+      });
+
+      configurator.registerPlugin(async () => {
+        await firstPluginReady;
+        return () => order.push('first');
+      });
+      configurator.registerPlugin(() => {
+        releaseFirstPlugin();
+        return () => order.push('second');
+      });
+
+      const instance = await configurator.initialize();
+      await configurator.dispose(instance as never);
+
+      expect(order).toEqual(['second', 'first']);
+    });
+
     it('uses createPlugin names in plugin lifecycle events', async () => {
       const configurator = new ModulesConfigurator([createMockModule('alpha')]);
       const [events, cleanup] = collectEvents(configurator.event$);

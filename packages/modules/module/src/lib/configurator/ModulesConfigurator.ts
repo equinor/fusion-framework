@@ -31,10 +31,11 @@ import { version } from '../../version.js';
 /**
  * Core orchestrator that drives the module lifecycle in Fusion Framework.
  *
- * `ModulesConfigurator` manages the full **configure → initialize → plugin → dispose**
- * pipeline for a set of modules. Consumers register modules via {@link addConfig}
- * or {@link configure}, then call {@link initialize} to produce a sealed
- * {@link ModulesInstance} whose properties are the initialized module providers.
+ * `ModulesConfigurator` manages the full **configure → post-configure → initialize →
+ * post-initialize → plugin → dispose** pipeline for a set of modules. Consumers
+ * register modules via {@link addConfig} or {@link configure}, then call
+ * {@link initialize} to produce a sealed {@link ModulesInstance} whose properties
+ * are the initialized module providers.
  *
  * ### Lifecycle phases (in execution order)
  *
@@ -44,7 +45,7 @@ import { version } from '../../version.js';
  * | 2 | **Post-configure** | `_postConfigure` (inside `_configure`) | `postConfigure()` hooks and `onConfigured` callbacks run. |
  * | 3 | **Initialize** | `_initialize` | Modules are initialized concurrently; cross-module dependencies are resolved through `requireInstance`. |
  * | 4 | **Post-initialize** | `_postInitialize` | `postInitialize()` hooks and `onInitialized` callbacks run. |
- * | 5 | **Plugin** | `registerPlugin` | Application plugins connect side effects after modules are ready. |
+ * | 5 | **Plugin** | `_registerPlugins` (inside `initialize`) | Registered application plugins connect side effects after modules are ready. |
  * | 6 | **Dispose** | `dispose` | Plugin teardowns and module `dispose()` hooks run; the event stream is completed. |
  *
  * ### Registering phase callbacks
@@ -369,12 +370,14 @@ export class ModulesConfigurator<
 
     await this._postInitialize<T, R>(instance, ref);
 
-    const modules = Object.assign({}, instance, {
-      dispose: () => this.dispose(instance as unknown as ModulesInstance<TModules>),
-    });
+    const modules = Object.seal(
+      Object.assign({}, instance, {
+        dispose: () => this.dispose(instance as unknown as ModulesInstance<TModules>),
+      }),
+    );
     await this._registerPlugins<T, R>(modules, ref);
 
-    return Object.seal(modules);
+    return modules;
   }
 
   /**

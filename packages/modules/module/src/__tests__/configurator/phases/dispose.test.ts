@@ -141,6 +141,28 @@ describe('dispose phase', () => {
     expect(mod.dispose).toHaveBeenCalledOnce();
   });
 
+  it('runs plugin teardowns in LIFO order', async () => {
+    const order: string[] = [];
+    const firstTeardown = vi.fn(async () => {
+      order.push('first');
+    });
+    const secondTeardown = vi.fn(async () => {
+      order.push('second');
+    });
+    const mod: AnyModule = {
+      name: 'alpha',
+      initialize: vi.fn(),
+      dispose: vi.fn(async () => {
+        order.push('module');
+      }),
+    };
+    const ctx = makeCtx([mod], { pluginTeardowns: [firstTeardown, secondTeardown] });
+
+    await runDisposePhase(ctx, { alpha: {} });
+
+    expect(order).toEqual(['second', 'first', 'module']);
+  });
+
   it('completes the event$ subject after all modules are disposed', async () => {
     const mod: AnyModule = {
       name: 'alpha',

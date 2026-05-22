@@ -72,31 +72,26 @@ export async function runDisposePhase(
 
     // Tear down plugins before module providers so side effects can still access
     // live providers while unsubscribing. LIFO mirrors common subscription stacks.
-    await Promise.allSettled(
-      pluginTeardowns
-        .splice(0)
-        .reverse()
-        .map(async (teardown) => {
-          const name = getPluginTeardownName(teardown);
-          try {
-            await runPluginTeardown(teardown);
-            registerEvent({
-              level: ModuleEventLevel.Debug,
-              name: 'dispose.pluginDisposed',
-              message: `Plugin ${name} disposed successfully`,
-              properties: { name },
-            });
-          } catch (err) {
-            registerEvent({
-              level: ModuleEventLevel.Warning,
-              name: 'dispose.pluginDisposeError',
-              message: `Plugin ${name} dispose failed`,
-              properties: { name },
-              error: err,
-            });
-          }
-        }),
-    );
+    for (const teardown of pluginTeardowns.splice(0).reverse()) {
+      const name = getPluginTeardownName(teardown);
+      try {
+        await runPluginTeardown(teardown);
+        registerEvent({
+          level: ModuleEventLevel.Debug,
+          name: 'dispose.pluginDisposed',
+          message: `Plugin ${name} disposed successfully`,
+          properties: { name },
+        });
+      } catch (err) {
+        registerEvent({
+          level: ModuleEventLevel.Warning,
+          name: 'dispose.pluginDisposeError',
+          message: `Plugin ${name} dispose failed`,
+          properties: { name },
+          error: err,
+        });
+      }
+    }
   }
 
   // Dispose all modules concurrently; failures are isolated per module so

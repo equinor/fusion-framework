@@ -56,15 +56,12 @@ export async function runPluginPhase<TRef = unknown>(
     properties: { count: plugins.length },
   });
 
-  await Promise.allSettled(
+  const pluginRegistrations = await Promise.all(
     plugins.map(async (plugin) => {
       const pluginStart = performance.now();
       const name = plugin.name || 'anonymous';
       try {
         const teardown = await plugin({ modules, ref });
-        if (isPluginTeardown(teardown)) {
-          teardowns.push(teardown);
-        }
         const pluginTime = Math.round(performance.now() - pluginStart);
         registerEvent({
           level: ModuleEventLevel.Debug,
@@ -73,6 +70,7 @@ export async function runPluginPhase<TRef = unknown>(
           properties: { name, pluginTime },
           metric: pluginTime,
         });
+        return isPluginTeardown(teardown) ? teardown : undefined;
       } catch (err) {
         registerEvent({
           level: ModuleEventLevel.Warning,
@@ -81,9 +79,16 @@ export async function runPluginPhase<TRef = unknown>(
           properties: { name },
           error: err,
         });
+        return undefined;
       }
     }),
   );
+
+  for (const teardown of pluginRegistrations) {
+    if (teardown) {
+      teardowns.push(teardown);
+    }
+  }
 
   registerEvent({
     level: ModuleEventLevel.Debug,
