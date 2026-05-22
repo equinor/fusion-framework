@@ -21,8 +21,7 @@ type ModuleProviderCreator = <
   // biome-ignore lint/suspicious/noExplicitAny: Default type parameter for module instance reference
   TRef extends ModulesInstanceType<[AnyModule]> = any,
 >(
-  configurator: ModulesConfigurator<TModules>,
-  modules: TModules,
+  configurator: ModulesConfigurator<TModules, TRef>,
   ref?: TRef,
 ) => Promise<LazyExoticComponent<FunctionComponent>>;
 
@@ -35,25 +34,25 @@ type ModuleProviderCreator = <
  * ```ts
  * import http, { HttpModule } from '@equinor/fusion-framework-module-http';
  * import msal, { MsalModule } from '@equinor/fusion-framework-module-msal';
+ * import { ModulesConfigurator } from '@equinor/fusion-framework-module';
  * import { createModuleProvider } from '@equinor/fusion-framework-react-module';
  *
- * export default createModuleProvider(
- *   (config) => {
- *     config.auth.configureDefault({
- *       tenantId: 'MY_TENANT_ID',
- *       clientId: 'MY_CLIENT_ID',
- *       redirectUri: '/authentication/login-callback',
- *     });
- *     config.http.configureClient('foo', {
- *       baseUri: 'https://foo.bar',
- *       defaultScopes: ['FOO_CLIENT_ID/.default'],
- *     });
- *   },
- *  [http, msal]
- *);
+ * const configurator = new ModulesConfigurator([http, msal]);
+ * configurator.onConfigured((config) => {
+ *   config.auth.configureDefault({
+ *     tenantId: 'MY_TENANT_ID',
+ *     clientId: 'MY_CLIENT_ID',
+ *     redirectUri: '/authentication/login-callback',
+ *   });
+ *   config.http.configureClient('foo', {
+ *     baseUri: 'https://foo.bar',
+ *     defaultScopes: ['FOO_CLIENT_ID/.default'],
+ *   });
+ * });
+ *
+ * export default createModuleProvider(configurator);
  * ```
- * @param configurator callback for configuring provided modules
- * @param modules modules which should be initiated
+ * @param configurator configurator for the modules that should be initialized
  * @param ref optional parent module instance
  * @returns Suspensive `ModuleProvider`
  */
@@ -62,7 +61,7 @@ export const createModuleProvider: ModuleProviderCreator = async <
   // biome-ignore lint/suspicious/noExplicitAny: Default type parameter for module instance reference
   TRef extends ModulesInstanceType<[AnyModule]> = any,
 >(
-  configurator: ModulesConfigurator<TModules>,
+  configurator: ModulesConfigurator<TModules, TRef>,
   ref?: TRef,
 ): Promise<LazyExoticComponent<FunctionComponent>> => {
   const Component = lazy(async () => {

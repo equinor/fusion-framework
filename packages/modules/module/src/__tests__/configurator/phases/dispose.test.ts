@@ -89,6 +89,80 @@ describe('dispose phase', () => {
     expect(goodMod.dispose).toHaveBeenCalledOnce();
   });
 
+  it('runs plugin teardowns before module dispose', async () => {
+    const order: string[] = [];
+    const pluginTeardown = vi.fn(async () => {
+      order.push('plugin');
+    });
+    const mod: AnyModule = {
+      name: 'alpha',
+      initialize: vi.fn(),
+      dispose: vi.fn(async () => {
+        order.push('module');
+      }),
+    };
+    const ctx = makeCtx([mod], { pluginTeardowns: [pluginTeardown] });
+    await runDisposePhase(ctx, { alpha: {} });
+    expect(order).toEqual(['plugin', 'module']);
+  });
+
+  it('runs disposable plugin teardowns before module dispose', async () => {
+    const order: string[] = [];
+    const pluginTeardown = {
+      dispose: vi.fn(async () => {
+        order.push('plugin');
+      }),
+    };
+    const mod: AnyModule = {
+      name: 'alpha',
+      initialize: vi.fn(),
+      dispose: vi.fn(async () => {
+        order.push('module');
+      }),
+    };
+    const ctx = makeCtx([mod], { pluginTeardowns: [pluginTeardown] });
+    await runDisposePhase(ctx, { alpha: {} });
+    expect(order).toEqual(['plugin', 'module']);
+  });
+
+  it('isolates plugin teardown failures', async () => {
+    const goodTeardown = vi.fn(async () => {});
+    const badTeardown = vi.fn(async () => {
+      throw new Error('plugin dispose failed');
+    });
+    const mod: AnyModule = {
+      name: 'alpha',
+      initialize: vi.fn(),
+      dispose: vi.fn(async () => {}),
+    };
+    const ctx = makeCtx([mod], { pluginTeardowns: [badTeardown, goodTeardown] });
+    await expect(runDisposePhase(ctx, { alpha: {} })).resolves.toBeUndefined();
+    expect(goodTeardown).toHaveBeenCalledOnce();
+    expect(mod.dispose).toHaveBeenCalledOnce();
+  });
+
+  it('runs plugin teardowns in LIFO order', async () => {
+    const order: string[] = [];
+    const firstTeardown = vi.fn(async () => {
+      order.push('first');
+    });
+    const secondTeardown = vi.fn(async () => {
+      order.push('second');
+    });
+    const mod: AnyModule = {
+      name: 'alpha',
+      initialize: vi.fn(),
+      dispose: vi.fn(async () => {
+        order.push('module');
+      }),
+    };
+    const ctx = makeCtx([mod], { pluginTeardowns: [firstTeardown, secondTeardown] });
+
+    await runDisposePhase(ctx, { alpha: {} });
+
+    expect(order).toEqual(['second', 'first', 'module']);
+  });
+
   it('completes the event$ subject after all modules are disposed', async () => {
     const mod: AnyModule = {
       name: 'alpha',
