@@ -13,6 +13,15 @@ export type {
   ModuleConfiguratorConfigCallback,
   ModulesConfiguratorConfigCallback,
 } from './types.js';
+export type {
+  FrameworkPluginArgs,
+  FrameworkPluginTeardown,
+  FrameworkPluginCallback,
+  FrameworkPlugin,
+  FrameworkPluginInitializer,
+  FrameworkPluginRegistration,
+} from '../plugin/index.js';
+export { createPlugin } from '../plugin/index.js';
 
 export { RequiredModuleTimeoutError } from './types.js';
 
@@ -27,4 +36,5 @@ export {
 } from './phases/configure.js';
 export { runInitializePhase, createRequireInstance } from './phases/initialize.js';
 export { runPostInitializePhase } from './phases/post-initialize.js';
+export { runPluginPhase } from './phases/plugin.js';
 export { runDisposePhase } from './phases/dispose.js';

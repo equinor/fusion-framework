@@ -17,6 +17,10 @@
     "./configurator": {
       "import": "./dist/esm/lib/configurator/index.js",
       "types": "./dist/types/lib/configurator/index.d.ts"
+    },
+    "./plugins": {
+      "import": "./dist/esm/lib/plugin/index.js",
+      "types": "./dist/types/lib/plugin/index.d.ts"
     }
   },
   "typesVersions": {
@@ -29,6 +33,9 @@
       ],
       "configurator": [
         "dist/types/lib/configurator/index.d.ts"
+      ],
+      "plugins": [
+        "dist/types/lib/plugin/index.d.ts"
       ]
     }
   },

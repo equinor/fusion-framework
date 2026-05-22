@@ -19,20 +19,23 @@ import type {
   IModulesConfigurator,
   ModulesConfiguratorConfigCallback,
 } from './types.js';
+import type { FrameworkPluginCallback, FrameworkPluginTeardown } from '../plugin/index.js';
 
 import { runConfigurePhase } from './phases/configure.js';
 import { runInitializePhase } from './phases/initialize.js';
 import { runPostInitializePhase } from './phases/post-initialize.js';
+import { runPluginPhase } from './phases/plugin.js';
 import { runDisposePhase } from './phases/dispose.js';
 import { version } from '../../version.js';
 
 /**
  * Core orchestrator that drives the module lifecycle in Fusion Framework.
  *
- * `ModulesConfigurator` manages the full **configure → initialize → dispose**
- * pipeline for a set of modules. Consumers register modules via {@link addConfig}
- * or {@link configure}, then call {@link initialize} to produce a sealed
- * {@link ModulesInstance} whose properties are the initialized module providers.
+ * `ModulesConfigurator` manages the full **configure → post-configure → initialize →
+ * post-initialize → plugin → dispose** pipeline for a set of modules. Consumers
+ * register modules via {@link addConfig} or {@link configure}, then call
+ * {@link initialize} to produce a sealed {@link ModulesInstance} whose properties
+ * are the initialized module providers.
  *
  * ### Lifecycle phases (in execution order)
  *
@@ -42,13 +45,15 @@ import { version } from '../../version.js';
  * | 2 | **Post-configure** | `_postConfigure` (inside `_configure`) | `postConfigure()` hooks and `onConfigured` callbacks run. |
  * | 3 | **Initialize** | `_initialize` | Modules are initialized concurrently; cross-module dependencies are resolved through `requireInstance`. |
  * | 4 | **Post-initialize** | `_postInitialize` | `postInitialize()` hooks and `onInitialized` callbacks run. |
- * | 5 | **Dispose** | `dispose` | Each module's `dispose()` hook runs; the event stream is completed. |
+ * | 5 | **Plugin** | `_registerPlugins` (inside `initialize`) | Registered application plugins connect side effects after modules are ready. |
+ * | 6 | **Dispose** | `dispose` | Plugin teardowns and module `dispose()` hooks run; the event stream is completed. |
  *
  * ### Registering phase callbacks
  *
  * - **Per-module callbacks**: use `addConfig({ module, configure, afterConfig, afterInit })`.
  * - **Global post-configure**: use `onConfigured(cb)`.
  * - **Global post-initialize**: use `onInitialized(cb)`.
+ * - **Plugins**: use `registerPlugin(cb)` to connect side effects before render.
  *
  * All lifecycle transitions emit {@link ModuleEvent} entries on the {@link event$}
  * observable for telemetry and debugging.
@@ -123,6 +128,25 @@ export class ModulesConfigurator<
    * @protected
    */
   protected _afterInit: Array<(instance: any) => void | Promise<void>> = [];
+
+  /**
+   * Registered plugin callbacks.
+   *
+   * Plugins run after all modules have initialized and before initialize resolves.
+   * Typed as `any` because callbacks are registered with concrete module maps but
+   * stored erased by the base orchestrator.
+   * @protected
+   */
+  protected _plugins: Array<FrameworkPluginCallback<any, TRef>> = [];
+
+  /**
+   * Teardown callbacks returned by registered plugins.
+   *
+   * Consumed during dispose and cleared after execution so repeated dispose calls
+   * do not run plugin cleanup more than once.
+   * @protected
+   */
+  protected _pluginTeardowns: FrameworkPluginTeardown[] = [];
 
   /**
    * Set of all registered module descriptors.
@@ -246,12 +270,50 @@ export class ModulesConfigurator<
   }
 
   /**
+   * Registers a plugin that connects side effects after modules are initialized.
+   *
+   * The callback runs after `postInitialize` and `onInitialized` callbacks have
+   * settled, but before {@link initialize} resolves. Return a teardown callback
+   * to clean up subscriptions or listeners during {@link dispose}.
+   *
+   * @param cb - Plugin callback receiving the initialized module map and optional ref.
+   * @template T - Additional modules to include in the plugin module map.
+   * @example
+   * ```typescript
+   * function connectContextTelemetry(args: FrameworkPluginArgs<[EventModule, TelemetryModule]>) {
+   *   const teardown = args.modules.event.addEventListener('context:changed', (event) => {
+   *     args.modules.telemetry.track('context.changed', event.detail);
+   *   });
+   *
+   *   return teardown;
+   * }
+   *
+   * configurator.registerPlugin(connectContextTelemetry);
+   * ```
+   */
+  public registerPlugin<T extends Array<AnyModule> | unknown>(
+    cb: FrameworkPluginCallback<CombinedModules<T, TModules>, TRef>,
+  ): void {
+    this._plugins.push(cb as FrameworkPluginCallback<any, TRef>);
+    this._registerEvent({
+      level: ModuleEventLevel.Debug,
+      name: 'addPlugin',
+      message: 'Added plugin callback',
+      properties: {
+        count: this._plugins.length,
+        name: cb.name || 'anonymous',
+      },
+    });
+  }
+
+  /**
    * Runs the full configure → initialize pipeline and returns a sealed module instance.
    *
    * Execution order:
    * 1. {@link _configure} — configure phase (creates config, applies callbacks, post-configure hooks).
    * 2. {@link _initialize} — initialize phase (concurrent module init with `requireInstance`).
    * 3. {@link _postInitialize} — post-initialize phase (`postInitialize` hooks + `onInitialized` callbacks).
+   * 4. {@link _registerPlugins} — plugin phase (`registerPlugin` callbacks connect side effects).
    *
    * @param ref - Optional reference forwarded to all module lifecycle hooks.
    * @returns A promise resolving to the sealed, initialized module instance.
@@ -308,11 +370,14 @@ export class ModulesConfigurator<
 
     await this._postInitialize<T, R>(instance, ref);
 
-    return Object.seal(
+    const modules = Object.seal(
       Object.assign({}, instance, {
         dispose: () => this.dispose(instance as unknown as ModulesInstance<TModules>),
       }),
     );
+    await this._registerPlugins<T, R>(modules, ref);
+
+    return modules;
   }
 
   /**
@@ -416,6 +481,33 @@ export class ModulesConfigurator<
   }
 
   /**
+   * Runs the plugin lifecycle phase.
+   *
+   * Delegates to {@link runPluginPhase} which calls each registered plugin and
+   * stores returned teardown callbacks for dispose.
+   *
+   * Override this method in a subclass to customize plugin registration.
+   *
+   * @param instance - The sealed module instance from the initialize phase.
+   * @param ref - Optional reference forwarded to each plugin callback.
+   * @protected
+   */
+  protected async _registerPlugins<T, R extends TRef = TRef>(
+    instance: ModulesInstanceType<CombinedModules<T, TModules>>,
+    ref?: R,
+  ): Promise<void> {
+    return runPluginPhase(
+      {
+        plugins: this._plugins,
+        teardowns: this._pluginTeardowns,
+        registerEvent: this._registerEvent.bind(this),
+      },
+      instance,
+      ref,
+    );
+  }
+
+  /**
    * Tears down all modules managed by this configurator.
    *
    * Delegates to {@link runDisposePhase} which calls each module's `dispose`
@@ -432,6 +524,7 @@ export class ModulesConfigurator<
         registerEvent: this._registerEvent.bind(this),
         // ReplaySubject extends Subject — dispose only needs .complete() which both have.
         event$: this.#event$,
+        pluginTeardowns: this._pluginTeardowns,
       },
       instance,
       ref,

@@ -1,6 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import type { AnyModule } from '../../types.js';
 import { ModulesConfigurator } from '../../lib/configurator/ModulesConfigurator.js';
+import { createPlugin } from '../../lib/plugin/index.js';
 import { createMockModule, createMinimalModule, collectEvents } from '../helpers.js';
 
 describe('ModulesConfigurator', () => {
@@ -124,6 +125,134 @@ describe('ModulesConfigurator', () => {
       });
       await configurator.initialize();
       expect(receivedInstance).toHaveProperty('alpha');
+    });
+  });
+
+  describe('registerPlugin', () => {
+    it('runs plugins after post-initialize callbacks before initialize resolves', async () => {
+      const configurator = new ModulesConfigurator([createMockModule('alpha')]);
+      const order: string[] = [];
+      configurator.onInitialized(() => {
+        order.push('onInitialized');
+      });
+      configurator.registerPlugin(() => {
+        order.push('registerPlugin');
+      });
+      await configurator.initialize();
+      expect(order).toEqual(['onInitialized', 'registerPlugin']);
+    });
+
+    it('passes initialized modules and ref to plugins', async () => {
+      const configurator = new ModulesConfigurator([createMockModule('alpha')]);
+      const plugin = vi.fn();
+      const ref = { parent: true };
+      configurator.registerPlugin(plugin);
+      const instance = await configurator.initialize(ref);
+      expect(plugin).toHaveBeenCalledWith({ modules: instance, ref });
+    });
+
+    it('isolates plugin registration failures', async () => {
+      const configurator = new ModulesConfigurator([createMockModule('alpha')]);
+      const goodPlugin = vi.fn();
+      configurator.registerPlugin(() => {
+        throw new Error('plugin failed');
+      });
+      configurator.registerPlugin(goodPlugin);
+      await expect(configurator.initialize()).resolves.toHaveProperty('alpha');
+      expect(goodPlugin).toHaveBeenCalledOnce();
+    });
+
+    it('runs plugin teardowns during dispose', async () => {
+      const configurator = new ModulesConfigurator([createMockModule('alpha')]);
+      const teardown = vi.fn();
+      configurator.registerPlugin(() => teardown);
+      const instance = await configurator.initialize();
+      await configurator.dispose(instance as never);
+      expect(teardown).toHaveBeenCalledOnce();
+    });
+
+    it('runs disposable plugin teardowns during dispose', async () => {
+      const configurator = new ModulesConfigurator([createMockModule('alpha')]);
+      const disposable = { dispose: vi.fn() };
+      configurator.registerPlugin(() => disposable);
+      const instance = await configurator.initialize();
+      await configurator.dispose(instance as never);
+      expect(disposable.dispose).toHaveBeenCalledOnce();
+    });
+
+    it('passes a sealed module map to plugins', async () => {
+      const configurator = new ModulesConfigurator([createMockModule('alpha')]);
+      let isPluginModuleMapSealed = false;
+
+      configurator.registerPlugin(({ modules }) => {
+        isPluginModuleMapSealed = Object.isSealed(modules);
+      });
+
+      await configurator.initialize();
+
+      expect(isPluginModuleMapSealed).toBe(true);
+    });
+
+    it('runs plugin teardowns in reverse registration order', async () => {
+      const configurator = new ModulesConfigurator([createMockModule('alpha')]);
+      const order: string[] = [];
+      let releaseFirstPlugin: () => void = () => {};
+      const firstPluginReady = new Promise<void>((resolve) => {
+        releaseFirstPlugin = resolve;
+      });
+
+      configurator.registerPlugin(async () => {
+        await firstPluginReady;
+        return () => order.push('first');
+      });
+      configurator.registerPlugin(() => {
+        releaseFirstPlugin();
+        return () => order.push('second');
+      });
+
+      const instance = await configurator.initialize();
+      await configurator.dispose(instance as never);
+
+      expect(order).toEqual(['second', 'first']);
+    });
+
+    it('uses createPlugin names in plugin lifecycle events', async () => {
+      const configurator = new ModulesConfigurator([createMockModule('alpha')]);
+      const [events, cleanup] = collectEvents(configurator.event$);
+
+      function connectContextTelemetry(): void {}
+
+      configurator.registerPlugin(createPlugin('contextTelemetry', connectContextTelemetry));
+
+      await configurator.initialize();
+      cleanup();
+
+      expect(events).toContainEqual(
+        expect.objectContaining({
+          name: 'ModulesConfigurator::_plugin.pluginRegistered',
+          properties: expect.objectContaining({ name: 'contextTelemetry' }),
+        }),
+      );
+    });
+
+    it('passes modules and ref directly to createPlugin callbacks', async () => {
+      const configurator = new ModulesConfigurator([createMockModule('alpha')]);
+      const plugin = vi.fn();
+      const ref = { parent: true };
+
+      configurator.registerPlugin(createPlugin('directArgs', plugin));
+
+      const instance = await configurator.initialize(ref);
+
+      expect(plugin).toHaveBeenCalledWith(instance, ref);
+    });
+
+    it('requires createPlugin names to be non-empty', () => {
+      function connectContextTelemetry(): void {}
+
+      expect(() => createPlugin('   ', connectContextTelemetry)).toThrow(
+        'Framework plugin name must be a non-empty string',
+      );
     });
   });
 
