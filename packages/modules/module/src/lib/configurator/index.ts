@@ -1,8 +1,9 @@
 /**
  * Module configurator — public API re-exports.
  *
- * Consumers should import from `@equinor/fusion-framework-module` (or its
- * `configurator.js` path) rather than from this internal directory directly.
+ * Consumers should import from `@equinor/fusion-framework-module` or the
+ * `@equinor/fusion-framework-module/configurator` secondary entrypoint rather
+ * than from this internal directory directly.
  *
  * @packageDocumentation
  */
