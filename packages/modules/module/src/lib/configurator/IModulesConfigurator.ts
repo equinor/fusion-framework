@@ -95,7 +95,7 @@ export interface IModulesConfigurator<
    * @template T - Additional modules to include in the instance type.
    */
   onInitialized<T extends Array<AnyModule> | unknown>(
-    cb: (instance: ModulesInstanceType<CombinedModules<T, TModules>>) => void,
+    cb: (instance: ModulesInstanceType<CombinedModules<T, TModules>>) => void | Promise<void>,
   ): void;
 
   /**

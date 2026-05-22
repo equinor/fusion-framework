@@ -122,7 +122,7 @@ export class ModulesConfigurator<
    * internal dispatch; concrete instance types are known at registration but not stored.
    * @protected
    */
-  protected _afterInit: Array<(instance: any) => void> = [];
+  protected _afterInit: Array<(instance: any) => void | Promise<void>> = [];
 
   /**
    * Set of all registered module descriptors.
@@ -231,7 +231,7 @@ export class ModulesConfigurator<
    * @template T - Additional modules to include in the instance type.
    */
   public onInitialized<T>(
-    cb: (instance: ModulesInstanceType<CombinedModules<T, TModules>>) => void,
+    cb: (instance: ModulesInstanceType<CombinedModules<T, TModules>>) => void | Promise<void>,
   ): void {
     this._afterInit.push(cb);
     this._registerEvent({
