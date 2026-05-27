@@ -1,6 +1,5 @@
-import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { useMemo, useSyncExternalStore } from 'react';
 import type { Observable, StatefulObservable } from '../types';
-import { useObservableLayoutSubscription } from './useObservableSubscription';
 
 /**
  * Options for {@link useObservableState}.
@@ -28,6 +27,125 @@ export type ObservableStateReturnType<TType, TError = unknown> = {
   /** Whether the observable has completed. */
   complete: boolean;
 };
+
+/**
+ * Internal snapshot model used by `useSyncExternalStore`.
+ *
+ * @template TType - Observable value type.
+ * @template TError - Observable error type.
+ */
+type ObservableStateSnapshot<TType, TError> = ObservableStateReturnType<TType | undefined, TError>;
+
+/**
+ * Internal store contract consumed by `useSyncExternalStore`.
+ *
+ * @template TType - Observable value type.
+ * @template TError - Observable error type.
+ */
+type ObservableStateStore<TType, TError> = {
+  /** Returns the current client snapshot. */
+  getSnapshot: () => ObservableStateSnapshot<TType, TError>;
+  /** Returns the current server snapshot. */
+  getServerSnapshot: () => ObservableStateSnapshot<TType, TError>;
+  /** Subscribes to store updates and returns an unsubscribe function. */
+  subscribe: (onStoreChange: () => void) => () => void;
+};
+
+/**
+ * Type guard for observables exposing a synchronous `value` property.
+ *
+ * @template TType - Observable value type.
+ * @param subject - Observable candidate.
+ * @returns `true` when the observable exposes a `value` field.
+ */
+function hasStatefulValue<TType>(
+  subject: Observable<TType> | StatefulObservable<TType>,
+): subject is StatefulObservable<TType> {
+  return 'value' in (subject as object);
+}
+
+/**
+ * Resolves the initial value for an observable snapshot.
+ *
+ * @template TType - Observable value type.
+ * @param subject - Observable source.
+ * @param initial - Optional initial value supplied by the caller.
+ * @returns A resolved initial value, or `undefined`.
+ */
+function resolveInitialValue<TType>(
+  subject: Observable<TType> | StatefulObservable<TType>,
+  initial: TType | undefined,
+): TType | undefined {
+  return (
+    /** provided initial value */
+    initial ??
+    /** use subject current value if supported */
+    (hasStatefulValue(subject) ? subject.value : undefined) ??
+    /** nothing to resolve */
+    undefined
+  );
+}
+
+/**
+ * Creates a `useSyncExternalStore` adapter for observable state.
+ *
+ * @template TType - Observable value type.
+ * @template TError - Observable error type.
+ * @param subject - Observable source.
+ * @param options - Hook options.
+ * @returns Store methods used by `useSyncExternalStore`.
+ */
+function createObservableStateStore<TType, TError = unknown>(
+  subject: Observable<TType> | StatefulObservable<TType>,
+  initial?: TType,
+  teardown?: VoidFunction,
+): ObservableStateStore<TType, TError> {
+  let snapshot: ObservableStateSnapshot<TType, TError> = {
+    value: resolveInitialValue(subject, initial),
+    error: null,
+    complete: false,
+  };
+
+  const listeners = new Set<() => void>();
+
+  const notify = (): void => {
+    listeners.forEach((listener) => {
+      listener();
+    });
+  };
+
+  const getSnapshot = (): ObservableStateSnapshot<TType, TError> => snapshot;
+
+  return {
+    getSnapshot,
+    getServerSnapshot: getSnapshot,
+    subscribe: (onStoreChange: () => void): (() => void) => {
+      listeners.add(onStoreChange);
+
+      const subscription = subject.subscribe({
+        next: (value) => {
+          snapshot = { ...snapshot, value };
+          notify();
+        },
+        error: (error) => {
+          snapshot = { ...snapshot, error: error as TError };
+          notify();
+        },
+        complete: () => {
+          snapshot = { ...snapshot, complete: true };
+          notify();
+        },
+      });
+
+      subscription.add(teardown);
+
+      return (): void => {
+        listeners.delete(onStoreChange);
+        subscription.unsubscribe();
+      };
+    },
+  };
+}
 
 /**
  * use state of observable
@@ -81,49 +199,18 @@ export function useObservableState<S, E = unknown>(
   subject: Observable<S> | StatefulObservable<S>,
   opt?: ObservableStateOptions<S>,
 ): ObservableStateReturnType<S | undefined, E> {
-  const resolveInitial = useCallback(
-    () =>
-      /** provided initial value */
-      opt?.initial ??
-      /** use subject current value if supported */
-      (subject as StatefulObservable<S>).value ??
-      /** nothing to resolve */
-      undefined,
-    [subject, opt?.initial],
+  const store = useMemo(
+    () => createObservableStateStore<S, E>(subject, opt?.initial, opt?.teardown),
+    [subject, opt?.initial, opt?.teardown],
   );
 
-  const initialValue = useRef(resolveInitial());
-
-  const [next, setNext] = useState<S | undefined>(initialValue.current);
-  const [error, setError] = useState<E | null>(null);
-  const [complete, setComplete] = useState<boolean>(false);
-
-  useLayoutEffect(() => {
-    initialValue.current = resolveInitial();
-  }, [resolveInitial]);
-
-  /**
-   * when subject change, reset state
-   */
-  useLayoutEffect(() => {
-    subject;
-    setError(null);
-    setComplete(false);
-    setNext(initialValue.current);
-  }, [subject]);
-
-  const subscriber = useMemo(
-    () => ({
-      next: setNext,
-      error: setError,
-      complete: () => setComplete(true),
-    }),
-    [],
+  const snapshot = useSyncExternalStore(
+    store.subscribe,
+    store.getSnapshot,
+    store.getServerSnapshot,
   );
 
-  useObservableLayoutSubscription(subject, subscriber, opt?.teardown);
-
-  return { value: next, error, complete };
+  return snapshot;
 }
 
 export default useObservableState;
