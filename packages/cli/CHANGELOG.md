@@ -1,5 +1,13 @@
 # Change Log
 
+## 15.1.0
+
+### Minor Changes
+
+- c0a1cd5: Bump minimum Node.js engine requirement from `>=20.0.0` to `>=22.22.2`.
+
+  This change aligns the CLI with `normalize-package-data@9`, which drops support for Node 20 and 21. Node 22 LTS (22.22.2+) and Node 24+ are supported.
+
 ## 15.0.6
 
 ### Patch Changes
