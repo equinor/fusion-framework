@@ -5,6 +5,7 @@ import { BehaviorSubject, Subject } from 'rxjs';
 import { act, renderHook } from '@testing-library/react';
 
 import { useObservableState } from '../../src/react';
+import type { StatefulObservable } from '../../src/types';
 
 describe('useObservableState', () => {
   it('should sync state with an Observable', () => {
@@ -39,6 +40,29 @@ describe('useObservableState', () => {
     expect(result.current.value).toBe(1);
     expect(result.current.error).toBeNull();
     expect(result.current.complete).toBe(false);
+  });
+
+  it('should prioritize explicit initial value over stateful observable value', () => {
+    const subject: Subject<number> & StatefulObservable<number> = Object.assign(
+      new Subject<number>(),
+      { value: 0 },
+    );
+
+    const { result } = renderHook(() =>
+      useObservableState(subject, {
+        initial: 42,
+      }),
+    );
+
+    expect(result.current.value).toBe(42);
+    expect(result.current.error).toBeNull();
+    expect(result.current.complete).toBe(false);
+
+    act(() => {
+      subject.next(1);
+    });
+
+    expect(result.current.value).toBe(1);
   });
 
   it('should use provided initial value for a non-stateful observable', () => {

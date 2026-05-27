@@ -92,7 +92,8 @@ function resolveInitialValue<TType>(
  * @template TType - Observable value type.
  * @template TError - Observable error type.
  * @param subject - Observable source.
- * @param options - Hook options.
+ * @param initial - Optional initial value supplied by the caller.
+ * @param teardown - Optional teardown function added to the subscription.
  * @returns Store methods used by `useSyncExternalStore`.
  */
 function createObservableStateStore<TType, TError = unknown>(
@@ -199,9 +200,10 @@ export function useObservableState<S, E = unknown>(
   subject: Observable<S> | StatefulObservable<S>,
   opt?: ObservableStateOptions<S>,
 ): ObservableStateReturnType<S | undefined, E> {
+  const { initial, teardown } = opt ?? {};
   const store = useMemo(
-    () => createObservableStateStore<S, E>(subject, opt?.initial, opt?.teardown),
-    [subject, opt?.initial, opt?.teardown],
+    () => createObservableStateStore<S, E>(subject, initial, teardown),
+    [subject, initial, teardown],
   );
 
   const snapshot = useSyncExternalStore(
