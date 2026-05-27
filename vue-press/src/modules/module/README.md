@@ -11,7 +11,7 @@ tag:
 
 Core module system for Fusion Framework. This package defines the contracts, base classes, and orchestration logic that every Fusion Framework module depends on.
 
-A Fusion application is assembled from **modules**. Each module owns a slice of runtime capability — an HTTP client, an auth provider, a context selector — and exposes it through a typed **provider** instance. The **`ModulesConfigurator`** drives the three-phase lifecycle that wires modules together: configure → initialize → dispose.
+A Fusion application is assembled from **modules**. Each module owns a slice of runtime capability — an HTTP client, an auth provider, a context selector — and exposes it through a typed **provider** instance. The **`ModulesConfigurator`** drives the lifecycle that wires modules together: configure → initialize → plugin → dispose.
 
 ```mermaid
 graph TD
@@ -90,6 +90,7 @@ console.log(modules.greeter.greet('World')); // Hello, World!
 | [Authoring Modules](./docs/authoring-modules.md) | Step-by-step guide for writing a new module |
 | [Configuration](./docs/configuration.md) | How `BaseConfigBuilder`, `_set`, and `ConfigBuilderCallback` work |
 | [Cross-Module Dependencies](./docs/cross-module-deps.md) | `requireInstance`, `postInitialize`, optional deps, circular dep avoidance |
+| [Plugins](./docs/plugins.md) | `registerPlugin`, `createPlugin`, plugin teardown, and host-level side effects |
 | [Events and Observability](./docs/events.md) | `configurator.event$`, `ModuleEvent`, telemetry patterns |
 | [Common Mistakes](./docs/common-mistakes.md) | Pitfalls — accessing modules early, missing `await`, no timeout, circular deps |
 
@@ -101,7 +102,7 @@ console.log(modules.greeter.greet('World')); // Hello, World!
 |---|---|---|
 | `Module` | type | Interface describing a module's structure and lifecycle hooks |
 | `AnyModule` | type | `Module<any, any, any, any>` — used for generic constraints |
-| `ModulesConfigurator` | class | Orchestrates configure → initialize → dispose for a set of modules |
+| `ModulesConfigurator` | class | Orchestrates configure → initialize → plugin → dispose for a set of modules |
 | `IModulesConfigurator` | interface | Public contract for the modules configurator |
 | `IModuleConfigurator` | interface | Descriptor for registering a single module with lifecycle hooks |
 | `BaseConfigBuilder` | class | Abstract config builder with dot-path targeting and async callbacks |
@@ -113,6 +114,13 @@ console.log(modules.greeter.greet('World')); // Hello, World!
 | `SemanticVersion` | class | Extended `SemVer` with a `satisfies()` method |
 | `ModuleConsoleLogger` | class | Styled console logger with module-name prefix |
 
+### Configurator Sub-path (`@equinor/fusion-framework-module/configurator`)
+
+| Export | Kind | Description |
+|---|---|---|
+| `ModuleConfiguratorEventBaseName` | const | Shared `ModuleConfigurator` base segment for configurator lifecycle event names |
+| `ModuleConfiguratorEventName` | object | Map of `ModuleConfigurator.{name}.{state}` event names for filtering `event$` without hard-coded strings |
+
 ### Provider Sub-path (`@equinor/fusion-framework-module/provider`)
 
 | Export | Kind | Description |
@@ -120,3 +128,15 @@ console.log(modules.greeter.greet('World')); // Hello, World!
 | `IModuleProvider` | interface | Contract every module provider must satisfy |
 | `BaseModuleProvider` | class | Abstract base with version, subscription management, and dispose |
 | `BaseModuleProviderCtorArgs` | type | Constructor arguments for `BaseModuleProvider` |
+
+### Plugins Sub-path (`@equinor/fusion-framework-module/plugins`)
+
+| Export | Kind | Description |
+|---|---|---|
+| `createPlugin` | function | Creates a named plugin callback for stable lifecycle diagnostics |
+| `FrameworkPluginArgs` | type | Arguments passed to inline plugin callbacks: initialized modules and optional ref |
+| `FrameworkPluginCallback` | type | Callback accepted by `IModulesConfigurator.registerPlugin` |
+| `FrameworkPluginTeardown` | type | Cleanup callback or disposable object returned by a plugin |
+| `FrameworkPluginRegistration` | type | Plugin return type: teardown or `undefined` |
+| `FrameworkPlugin` | interface | Named plugin callback returned by `createPlugin` |
+| `FrameworkPluginInitializer` | type | Developer-facing callback signature used by `createPlugin` |

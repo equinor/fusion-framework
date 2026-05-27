@@ -5,6 +5,7 @@ import {
   createRequireInstance,
   type InitializePhaseContext,
 } from '../../../lib/configurator/phases/initialize.js';
+import { ModuleConfiguratorEventName } from '../../../lib/configurator/events.js';
 import type { AnyModule, ModuleEvent } from '../../../types.js';
 
 function makeCtx(
@@ -184,7 +185,7 @@ describe('initialize phase', () => {
       const ctx = makeCtx([mod], { registerEvent });
       await runInitializePhase(ctx, { alpha: {} });
       const names = registerEvent.mock.calls.map(([e]) => e.name);
-      expect(names.some((n) => n.includes('moduleInitialized'))).toBe(true);
+      expect(names).toContain(ModuleConfiguratorEventName.ModuleInitialized);
     });
   });
 });

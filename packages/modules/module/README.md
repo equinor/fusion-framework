@@ -17,6 +17,7 @@ A `Module` is a plain object that declares a name, an optional configuration fac
 1. **Configure** – each module's `configure()` factory creates a config builder; registered callbacks mutate it; `postConfigure()` hooks run.
 2. **Initialize** – modules are initialized concurrently; cross-module dependencies are resolved through `requireInstance()`.
 3. **Post-initialize** – `postInitialize()` hooks and `onInitialized` callbacks run.
+4. **Plugins** – registered plugins connect host-level side effects after every module is ready.
 
 The result is a sealed `ModulesInstance` whose property names match the module keys and whose values are the initialized providers.
 
@@ -36,6 +37,7 @@ Abstract base class for module providers (the runtime instances returned by `ini
 | [Lifecycle](./docs/lifecycle.md) | Configure → initialize → post-initialize → dispose phase sequence |
 | [Configuration](./docs/configuration.md) | How to register modules and use `addConfig` / `configure` |
 | [Cross-Module Dependencies](./docs/cross-module-deps.md) | `requireInstance` pattern for inter-module dependencies |
+| [Plugins](./docs/plugins.md) | `registerPlugin`, `createPlugin`, plugin teardown, and host-level side effects |
 | [Events](./docs/events.md) | `event$` observable and event naming conventions |
 | [Authoring Modules](./docs/authoring-modules.md) | Step-by-step guide for creating a custom module |
 | [Common Mistakes](./docs/common-mistakes.md) | FAQ-style pitfalls and how to avoid them |
@@ -104,7 +106,7 @@ export const greeterModule: Module<'greeter', GreeterProvider, GreeterConfigurat
 | Export | Kind | Description |
 |---|---|---|
 | `Module` | type | Interface describing a module's structure and lifecycle hooks |
-| `ModulesConfigurator` | class | Orchestrates configure → initialize → dispose for a set of modules |
+| `ModulesConfigurator` | class | Orchestrates configure → initialize → plugin → dispose for a set of modules |
 | `IModulesConfigurator` | interface | Public contract for the modules configurator |
 | `IModuleConfigurator` | interface | Descriptor for registering a single module with lifecycle hooks |
 | `BaseConfigBuilder` | class | Abstract config builder with dot-path targeting and observable pipelines |
@@ -116,6 +118,25 @@ export const greeterModule: Module<'greeter', GreeterProvider, GreeterConfigurat
 | `ModuleConsoleLogger` | class | Styled console logger with module-name formatting |
 | `IModuleConsoleLogger` | interface | Logger interface with `formatModuleName` |
 | `DotPath`, `DotPathType`, `DotPathUnion` | types | Recursive dot-notation path utilities |
+
+### Configurator Sub-path (`@equinor/fusion-framework-module/configurator`)
+
+| Export | Kind | Description |
+|---|---|---|
+| `ModuleConfiguratorEventBaseName` | const | Shared `ModuleConfigurator` base segment for configurator lifecycle event names |
+| `ModuleConfiguratorEventName` | object | Map of `ModuleConfigurator.{name}.{state}` event names for filtering `event$` without hard-coded strings |
+
+### Plugins Sub-path (`@equinor/fusion-framework-module/plugins`)
+
+| Export | Kind | Description |
+|---|---|---|
+| `createPlugin` | function | Creates a named plugin callback for stable lifecycle diagnostics |
+| `FrameworkPluginArgs` | type | Arguments passed to inline plugin callbacks: initialized modules and optional ref |
+| `FrameworkPluginCallback` | type | Callback accepted by `IModulesConfigurator.registerPlugin` |
+| `FrameworkPluginTeardown` | type | Cleanup callback or disposable object returned by a plugin |
+| `FrameworkPluginRegistration` | type | Plugin return type: teardown or `undefined` |
+| `FrameworkPlugin` | interface | Named plugin callback returned by `createPlugin` |
+| `FrameworkPluginInitializer` | type | Developer-facing callback signature used by `createPlugin` |
 
 ### Provider Sub-path (`@equinor/fusion-framework-module/provider`)
 
@@ -138,6 +159,8 @@ export const greeterModule: Module<'greeter', GreeterProvider, GreeterConfigurat
 ├──────────┼──────────────────────────┼────────────────┤
 │ Init     │ module.initialize()      │                │
 │          │ module.postInitialize()  │ onInitialized()│
+├──────────┼──────────────────────────┼────────────────┤
+│ Plugin   │                          │ registerPlugin │
 ├──────────┼──────────────────────────┼────────────────┤
 │ Dispose  │ module.dispose()         │ instance.      │
 │          │                          │  dispose()     │
@@ -172,6 +195,25 @@ postInitialize: async ({ instance, modules }) => {
 ```
 
 `configure` and `initialize` are the two required hooks. `postConfigure`, `postInitialize`, and `dispose` are optional.
+
+### Plugins and host-level side effects
+
+Use `registerPlugin` for application-owned wiring that needs the complete module instance before render. Plugins run after `postInitialize` and `onInitialized`, but before `initialize()` resolves. Return a teardown callback to clean up subscriptions, global listeners, timers, or telemetry bindings during dispose.
+
+```typescript
+import { createPlugin } from '@equinor/fusion-framework-module/plugins';
+
+const contextTelemetryPlugin = createPlugin<[typeof eventModule, typeof telemetryModule]>(
+  'contextTelemetry',
+  (modules) => modules.event.addEventListener('context:changed', (event) => {
+    modules.telemetry.track('context.changed', event.detail);
+  }),
+);
+
+configurator.registerPlugin(contextTelemetryPlugin);
+```
+
+See [Plugins](./docs/plugins.md) for teardown rules, failure behavior, and API reference.
 
 Events are emitted on `configurator.event$` throughout the lifecycle for telemetry and debugging.
 

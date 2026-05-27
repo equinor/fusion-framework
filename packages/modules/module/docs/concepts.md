@@ -21,6 +21,7 @@ After initialization, providers are collected into a `ModulesInstance` object. T
 - Collects module registrations via `addConfig`.
 - Runs the configure → initialize → dispose pipeline.
 - Resolves cross-module dependencies through `requireInstance`.
+- Registers host-level plugins via `registerPlugin` after modules are initialized.
 - Emits structured lifecycle events on `event$`.
 
 You create one configurator, register your modules, and call `initialize()`. From that point on the configurator and the resulting `ModulesInstance` are the only things you need to keep a reference to.
@@ -201,5 +202,6 @@ export function enableHttpModule(
 ## Next Steps
 
 - [Lifecycle](./lifecycle.md) — the full configure → initialize → dispose pipeline
+- [Plugins](./plugins.md) — application-level side effects that run after modules initialize
 - [Authoring Modules](./authoring-modules.md) — step-by-step guide to creating a module
 - [Configuration](./configuration.md) — how `BaseConfigBuilder` and config callbacks work

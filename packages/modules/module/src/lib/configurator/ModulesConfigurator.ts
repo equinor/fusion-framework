@@ -27,6 +27,7 @@ import { runPostInitializePhase } from './phases/post-initialize.js';
 import { runPluginPhase } from './phases/plugin.js';
 import { runDisposePhase } from './phases/dispose.js';
 import { version } from '../../version.js';
+import { ModuleConfiguratorEventName } from './events.js';
 
 /**
  * Core orchestrator that drives the module lifecycle in Fusion Framework.
@@ -205,7 +206,7 @@ export class ModulesConfigurator<
     this._modules.add(module);
     this._registerEvent({
       level: ModuleEventLevel.Debug,
-      name: 'moduleConfigAdded',
+      name: ModuleConfiguratorEventName.ModuleConfigAdded,
       message: `Module configurator added for ${module.name}`,
       properties: {
         moduleName: module.name,
@@ -236,7 +237,7 @@ export class ModulesConfigurator<
     this._afterConfiguration.push(cb);
     this._registerEvent({
       level: ModuleEventLevel.Debug,
-      name: 'addOnConfigured',
+      name: ModuleConfiguratorEventName.OnConfiguredAdded,
       message: 'Added onConfigured callback',
       properties: {
         count: this._afterConfiguration.length,
@@ -260,7 +261,7 @@ export class ModulesConfigurator<
     this._afterInit.push(cb);
     this._registerEvent({
       level: ModuleEventLevel.Debug,
-      name: 'addOnInitialized',
+      name: ModuleConfiguratorEventName.OnInitializedAdded,
       message: 'Added onInitialized callback',
       properties: {
         count: this._afterInit.length,
@@ -297,7 +298,7 @@ export class ModulesConfigurator<
     this._plugins.push(cb as FrameworkPluginCallback<any, TRef>);
     this._registerEvent({
       level: ModuleEventLevel.Debug,
-      name: 'addPlugin',
+      name: ModuleConfiguratorEventName.PluginAdded,
       message: 'Added plugin callback',
       properties: {
         count: this._plugins.length,
@@ -328,7 +329,7 @@ export class ModulesConfigurator<
 
     this._registerEvent({
       level: ModuleEventLevel.Debug,
-      name: 'initialize.configLoaded',
+      name: ModuleConfiguratorEventName.InitializeConfigLoaded,
       message: `Modules configured in ${configLoadTime}ms`,
       properties: {
         modules: this.modules.map((m) => m.name).join(', '),
@@ -344,7 +345,7 @@ export class ModulesConfigurator<
 
     this._registerEvent({
       level: ModuleEventLevel.Debug,
-      name: 'initialize.instanceInitialized',
+      name: ModuleConfiguratorEventName.InitializeInstanceInitialized,
       message: `Modules initialized in ${instanceLoadTime}ms`,
       properties: {
         modules: this.modules.map((m) => m.name).join(', '),
@@ -357,7 +358,7 @@ export class ModulesConfigurator<
     const totalLoadTime = configLoadTime + instanceLoadTime;
     this._registerEvent({
       level: ModuleEventLevel.Information,
-      name: 'initialize',
+      name: ModuleConfiguratorEventName.Initialize,
       message: `initialize in ${totalLoadTime}ms`,
       properties: {
         modules: this.modules.map((m) => m.name).join(', '),
@@ -384,8 +385,8 @@ export class ModulesConfigurator<
    * Namespaces and emits a lifecycle event into the internal event stream.
    *
    * The event name is prefixed with the configurator class name (e.g.
-   * `"ModulesConfigurator::moduleConfigAdded"`) to prevent name collisions
-   * between nested configurators.
+   * `"ModulesConfigurator::ModuleConfigurator.module.configAdded"`) to prevent
+   * name collisions between nested configurators.
    *
    * @param event - The lifecycle event to emit.
    * @protected

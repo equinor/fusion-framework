@@ -1,6 +1,6 @@
 ---
 title: Lifecycle
-description: The five phases of the module lifecycle — configure, post-configure, initialize, post-initialize, and dispose.
+description: The module lifecycle phases: configure, post-configure, initialize, post-initialize, plugins, and dispose.
 category: Module
 tag:
   - module

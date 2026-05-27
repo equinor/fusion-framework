@@ -31,7 +31,7 @@ type ModuleEvent = {
   /** Severity: 'error' | 'warning' | 'info' | 'debug' */
   level: ModuleEventLevel;
 
-  /** Machine-readable event name, e.g. 'moduleConfigAdded', 'initializeStart' */
+  /** Machine-readable event name, e.g. 'ModuleConfigurator.initialize.complete' */
   name: string;
 
   /** Human-readable description */
@@ -48,17 +48,50 @@ type ModuleEvent = {
 
 ## Common event names
 
+Use `ModuleConfiguratorEventName` instead of hard-coded strings when filtering known configurator events. Configurator event names use `ModuleConfigurator.{name}.{state}` as their base shape:
+
+```typescript
+import { ModuleConfiguratorEventName } from '@equinor/fusion-framework-module/configurator';
+import { filter } from 'rxjs/operators';
+
+configurator.event$.pipe(
+  filter((event) => event.name.endsWith(ModuleConfiguratorEventName.Initialize)),
+).subscribe((event) => {
+  telemetry.mark(event.name);
+});
+```
+
+`ModuleConfiguratorEventBaseName` is the shared base segment. `ModulesConfigurator` prefixes emitted names with `ModulesConfigurator::` at runtime, so the actual event stream contains names like `ModulesConfigurator::ModuleConfigurator.initialize.complete`. The map stores the unprefixed event name so subclasses can apply their own configurator class prefix.
+
 | Event name | Level | When it fires |
 |---|---|---|
-| `moduleConfigAdded` | `debug` | A module is registered via `addConfig` |
-| `configureStart` | `info` | The configure phase begins |
-| `configureEnd` | `info` | The configure phase completes |
-| `initializeStart` | `info` | The initialize phase begins |
-| `initializeModuleStart` | `debug` | A single module's `initialize` is called |
-| `initializeModuleEnd` | `debug` | A single module's `initialize` resolves |
-| `initializeEnd` | `info` | All modules have initialized |
-| `disposeStart` | `info` | Dispose begins |
-| `disposeEnd` | `info` | Dispose completes |
+| `ModuleConfigurator.module.configAdded` | `debug` | A module is registered via `addConfig` |
+| `ModuleConfigurator.onConfigured.added` | `debug` | An `onConfigured` callback is registered |
+| `ModuleConfigurator.onInitialized.added` | `debug` | An `onInitialized` callback is registered |
+| `ModuleConfigurator.plugin.added` | `debug` | A plugin callback is registered |
+| `ModuleConfigurator.config.loaded` | `debug` | Module configuration completes |
+| `ModuleConfigurator.instance.initialized` | `debug` | Module initialization completes |
+| `ModuleConfigurator.initialize.complete` | `info` | The configure and initialize phases have completed |
+| `ModuleConfigurator.module.initializing` | `debug` | A single module's `initialize` is called |
+| `ModuleConfigurator.module.initialized` | `debug` | A single module's `initialize` resolves |
+| `ModuleConfigurator.module.initializeError` | `error` | Module initialization fails |
+| `ModuleConfigurator.requireInstance.awaitingModule` | `debug` | `requireInstance` starts waiting for a dependency |
+| `ModuleConfigurator.requireInstance.moduleResolved` | `debug` | `requireInstance` resolves a dependency |
+| `ModuleConfigurator.requireInstance.timeout` | `error` | `requireInstance` times out |
+| `ModuleConfigurator.postInitialize.started` | `debug` | Post-initialize processing begins |
+| `ModuleConfigurator.postInitialize.complete` | `debug` | Post-initialize processing completes |
+| `ModuleConfigurator.plugins.registering` | `debug` | Plugin registration begins after post-initialize callbacks settle |
+| `ModuleConfigurator.plugin.registered` | `debug` | A single plugin callback resolves and any teardown is captured |
+| `ModuleConfigurator.plugin.registerError` | `warning` | A plugin callback throws or rejects during registration |
+| `ModuleConfigurator.plugins.registered` | `debug` | All registered plugins have settled |
+| `ModuleConfigurator.dispose.started` | `debug` | Dispose begins |
+| `ModuleConfigurator.plugins.disposing` | `debug` | Plugin teardowns begin during dispose |
+| `ModuleConfigurator.plugin.disposed` | `debug` | A plugin teardown completes successfully |
+| `ModuleConfigurator.plugin.disposeError` | `warning` | A plugin teardown throws or rejects during dispose |
+| `ModuleConfigurator.modules.disposing` | `debug` | Module dispose hooks begin |
+| `ModuleConfigurator.module.disposed` | `debug` | A module dispose hook completes successfully |
+| `ModuleConfigurator.module.disposeError` | `warning` | A module dispose hook throws or rejects |
+| `ModuleConfigurator.modules.disposed` | `debug` | Module dispose hooks have settled |
 
 The framework emits many `debug`-level events during normal operation. Filter to `info` and `error` in production telemetry to keep volume manageable.
 
@@ -170,4 +203,5 @@ Use it inside your module's `initialize` or provider constructor for development
 ## Next Steps
 
 - [Lifecycle](./lifecycle.md) — when each event fires in the pipeline
+- [Plugins](./plugins.md) — plugin registration and teardown behavior
 - [Common Mistakes](./common-mistakes.md) — observable subscription pitfalls

@@ -4,7 +4,7 @@ This document describes the full module lifecycle: what phases exist, what runs 
 
 ## Overview
 
-Calling `ModulesConfigurator.initialize()` runs a deterministic five-phase pipeline. The key ordering guarantee is:
+Calling `ModulesConfigurator.initialize()` runs a deterministic lifecycle pipeline. The key ordering guarantee is:
 
 > **Every module's configure phase completes before any module's initialize phase begins.**
 
@@ -34,10 +34,14 @@ sequenceDiagram
     Cfg->>App: afterInit(provider)               [addConfig callback]
     Cfg->>App: onInitialized(modulesInstance)    [global callback]
 
+    Note over Cfg,App: -- Phase 3 - Plugins --
+    Cfg->>App: registerPlugin({ modules, ref })
+
     Cfg-->>App: ModulesInstance { [module.name]: provider }
 
-    Note over Cfg,Mod: ── Phase 3 — Dispose (on demand) ──
+    Note over Cfg,Mod: -- Phase 4 - Dispose (on demand) --
     App->>Cfg: dispose(instance, ref?)
+    Cfg->>App: plugin teardown
     Cfg->>Mod: module.dispose({ instance, modules, ref })
 ```
 
@@ -81,7 +85,7 @@ Once all modules are configured, the framework initializes them **concurrently**
 
 4. **`onInitialized(cb)` callback** — Global hook that runs once all modules have fully initialized. The `ModulesInstance` is complete at this point.
 
-5. **`initialize()` resolves** — The promise returned by `configurator.initialize()` resolves with the sealed `ModulesInstance`.
+5. **Plugin phase begins** — The configurator runs `registerPlugin` callbacks before resolving `initialize()`.
 
 ### The `ref` parameter
 
@@ -89,11 +93,36 @@ Once all modules are configured, the framework initializes them **concurrently**
 
 ---
 
-## Phase 3 — Dispose
+## Phase 3 - Plugins
+
+The plugin phase runs after `postInitialize`, `afterInit`, and `onInitialized` callbacks have settled, but before `initialize()` resolves. Plugins are registered with `IModulesConfigurator.registerPlugin` and receive the sealed module instance map plus the optional `ref` object.
+
+Use plugins for host-level side effects that need multiple initialized providers, such as telemetry bridges, global listeners, feature instrumentation, or subscriptions owned by the application shell.
+
+```typescript
+import { createPlugin } from '@equinor/fusion-framework-module/plugins';
+
+const telemetryPlugin = createPlugin<[typeof eventModule, typeof telemetryModule]>(
+  'contextTelemetry',
+  (modules) => modules.event.addEventListener('context:changed', (event) => {
+    modules.telemetry.track('context.changed', event.detail);
+  }),
+);
+
+configurator.registerPlugin(telemetryPlugin);
+```
+
+Plugins can return a teardown function or an object with a `dispose()` method. Those teardowns run during `configurator.dispose()` before module `dispose` hooks. Plugin registration and teardown failures are isolated and reported as warning events, so one failing plugin does not prevent the remaining lifecycle work from running.
+
+After plugins have settled, the promise returned by `configurator.initialize()` resolves with the sealed `ModulesInstance`.
+
+---
+
+## Phase 4 — Dispose
 
 Dispose is **not** called automatically. It is your responsibility to call `configurator.dispose(instance, ref?)` when the application tears down — for example, when a React application unmounts, or when a service worker is replaced.
 
-The framework calls `module.dispose({ instance, modules, ref })` for each registered module. This is the right place to cancel subscriptions, close WebSocket connections, clear caches, and release any other resources the provider holds.
+The framework first runs plugin teardowns returned by `registerPlugin` callbacks. It then calls `module.dispose({ instance, modules, ref })` for each registered module. This is the right place to cancel subscriptions, close WebSocket connections, clear caches, and release any other resources the provider holds.
 
 `BaseModuleProvider` exposes a `subscription: Subscription` property (RxJS `Subscription`) that collects disposables. Adding to `this.subscription` inside `initialize` means they are automatically cleaned up when the provider's `dispose()` method is called — you do not need to track them separately.
 
@@ -124,10 +153,13 @@ class MyProvider extends BaseModuleProvider {
 | `module.postInitialize(args)` | Module definition | Framework | After all modules have initialized |
 | `addConfig({ afterInit })` | Consumer | Framework | After `module.postInitialize()` |
 | `onInitialized(cb)` | Consumer | Framework | After all modules' initialize phases complete |
+| `registerPlugin(cb)` | Consumer | Framework | After post-initialize callbacks, before `initialize()` resolves |
+| plugin teardown | Consumer | Framework | During `configurator.dispose(instance)`, before module dispose hooks |
 | `module.dispose(args)` | Module definition | Framework | On `configurator.dispose(instance)` |
 
 ## Next Steps
 
 - [Authoring Modules](./authoring-modules.md) — implement each hook step by step
 - [Cross-Module Dependencies](./cross-module-deps.md) — how `requireInstance` and `postInitialize` work together
+- [Plugins](./plugins.md) — register host-level side effects after modules are initialized
 - [Events](./events.md) — observe the lifecycle with `event$`

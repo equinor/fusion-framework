@@ -4,6 +4,7 @@ import { EMPTY, from, lastValueFrom } from 'rxjs';
 import { catchError, defaultIfEmpty, filter, mergeMap, tap } from 'rxjs/operators';
 
 import { ModuleEventLevel, type AnyModule, type ModuleEvent } from '../../../types.js';
+import { ModuleConfiguratorEventName } from '../events.js';
 
 /**
  * Context passed to the post-initialize lifecycle phase.
@@ -46,7 +47,7 @@ export async function runPostInitializePhase(
 
   registerEvent({
     level: ModuleEventLevel.Debug,
-    name: '_postInitialize.modulesPostInitializing',
+    name: ModuleConfiguratorEventName.ConfiguratorPostInitializeStart,
     message: `Post-initializing all modules [${Object.keys(instance).length}]`,
     properties: { modules: Object.keys(instance).join(', ') },
   });
@@ -58,7 +59,7 @@ export async function runPostInitializePhase(
     tap((module) => {
       registerEvent({
         level: ModuleEventLevel.Debug,
-        name: '_postInitialize.modulePostInitializing',
+        name: ModuleConfiguratorEventName.ModulePostInitializeStart,
         message: `Module ${module.name} is being post-initialized`,
         properties: {
           moduleName: module.name,
@@ -79,7 +80,7 @@ export async function runPostInitializePhase(
           const postInitTime = Math.round(performance.now() - postInitStart);
           registerEvent({
             level: ModuleEventLevel.Debug,
-            name: '_postInitialize.modulePostInitialized',
+            name: ModuleConfiguratorEventName.ModulePostInitializeComplete,
             message: `Module ${module.name} has been post-initialized in ${postInitTime}ms`,
             metric: postInitTime,
             properties: {
@@ -93,7 +94,7 @@ export async function runPostInitializePhase(
         catchError((err) => {
           registerEvent({
             level: ModuleEventLevel.Warning,
-            name: '_postInitialize.modulePostInitializeError',
+            name: ModuleConfiguratorEventName.ModulePostInitializeError,
             message: `Module ${module.name} post-initialize failed`,
             properties: {
               moduleName: module.name,
@@ -116,7 +117,7 @@ export async function runPostInitializePhase(
 
   registerEvent({
     level: ModuleEventLevel.Debug,
-    name: '_postInitialize.modulesPostInitializeComplete',
+    name: ModuleConfiguratorEventName.PostInitializeComplete,
     message: `Post-initialization of all modules completed in ${postInitTime}ms`,
     properties: { modules: Object.keys(instance).join(', '), postInitTime },
     metric: postInitTime,
@@ -125,7 +126,7 @@ export async function runPostInitializePhase(
   if (!afterInit.length) {
     registerEvent({
       level: ModuleEventLevel.Debug,
-      name: '_postInitialize.complete',
+      name: ModuleConfiguratorEventName.PostInitializeCompleteNoHooks,
       message: 'Post-initialization complete',
       properties: { modules: Object.keys(instance).join(', '), postInitCompleteTime: postInitTime },
     });
@@ -137,7 +138,7 @@ export async function runPostInitializePhase(
   try {
     registerEvent({
       level: ModuleEventLevel.Debug,
-      name: '_postInitialize.afterInitHooks',
+      name: ModuleConfiguratorEventName.PostInitializeHooks,
       message: `Executing post-initialize hooks [${afterInit.length}]`,
       properties: { hooks: afterInit.map((x) => x.name || 'anonymous').join(', ') },
     });
@@ -146,7 +147,7 @@ export async function runPostInitializePhase(
     const afterInitTime = Math.round(performance.now() - afterInitStart);
     registerEvent({
       level: ModuleEventLevel.Debug,
-      name: '_postInitialize.afterInitHooksComplete',
+      name: ModuleConfiguratorEventName.PostInitializeHooksComplete,
       message: `Post-initialize hooks completed in ${afterInitTime}ms`,
       properties: {
         hooks: afterInit.map((x) => x.name || 'anonymous').join(', '),
@@ -157,7 +158,7 @@ export async function runPostInitializePhase(
   } catch (err) {
     registerEvent({
       level: ModuleEventLevel.Warning,
-      name: '_postInitialize.afterInitHooksError',
+      name: ModuleConfiguratorEventName.PostInitializeHooksError,
       message: 'Post-initialize hooks failed',
       properties: { hooks: afterInit.map((x) => x.name || 'anonymous').join(', ') },
       error: err,
@@ -167,7 +168,7 @@ export async function runPostInitializePhase(
   const postInitCompleteTime = Math.round(performance.now() - postInitStart);
   registerEvent({
     level: ModuleEventLevel.Debug,
-    name: '_postInitialize.complete',
+    name: ModuleConfiguratorEventName.PostInitializeComplete,
     message: 'Post-initialization complete',
     properties: { modules: Object.keys(instance).join(', '), postInitCompleteTime },
   });

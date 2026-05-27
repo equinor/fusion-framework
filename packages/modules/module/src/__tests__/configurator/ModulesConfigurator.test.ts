@@ -1,6 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import type { AnyModule } from '../../types.js';
 import { ModulesConfigurator } from '../../lib/configurator/ModulesConfigurator.js';
+import { ModuleConfiguratorEventName } from '../../lib/configurator/events.js';
 import { createPlugin } from '../../lib/plugin/index.js';
 import { createMockModule, createMinimalModule, collectEvents } from '../helpers.js';
 
@@ -50,13 +51,15 @@ describe('ModulesConfigurator', () => {
       expect(afterInitSpy).toHaveBeenCalledOnce();
     });
 
-    it('emits a moduleConfigAdded event', () => {
+    it('emits a module config added event', () => {
       const configurator = new ModulesConfigurator();
       const [events, cleanup] = collectEvents(configurator.event$);
       configurator.addConfig({ module: createMockModule('alpha') });
       cleanup();
       const names = events.map((e) => (e as { name: string }).name);
-      expect(names.some((n) => n.includes('moduleConfigAdded'))).toBe(true);
+      expect(names.some((n) => n.endsWith(ModuleConfiguratorEventName.ModuleConfigAdded))).toBe(
+        true,
+      );
     });
   });
 
@@ -229,7 +232,7 @@ describe('ModulesConfigurator', () => {
 
       expect(events).toContainEqual(
         expect.objectContaining({
-          name: 'ModulesConfigurator::_plugin.pluginRegistered',
+          name: `ModulesConfigurator::${ModuleConfiguratorEventName.PluginRegistered}`,
           properties: expect.objectContaining({ name: 'contextTelemetry' }),
         }),
       );
@@ -358,7 +361,9 @@ describe('ModulesConfigurator', () => {
       await configurator.initialize();
       cleanup();
       const names = events.map((e) => (e as { name: string }).name);
-      expect(names.some((n: string) => n.includes('initialize') && !n.includes('.'))).toBe(true);
+      expect(names.some((n: string) => n.endsWith(ModuleConfiguratorEventName.Initialize))).toBe(
+        true,
+      );
     });
   });
 

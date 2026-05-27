@@ -10,6 +10,7 @@ import {
 
 import { BaseModuleProvider } from '../../provider/index.js';
 import { RequiredModuleTimeoutError } from '../types.js';
+import { ModuleConfiguratorEventName } from '../events.js';
 
 /**
  * Context passed to the initialize lifecycle phase.
@@ -66,7 +67,7 @@ async function initializeModule(
     error.name = 'ModuleInitializeError';
     registerEvent({
       level: ModuleEventLevel.Error,
-      name: '_initialize.moduleInitializeError',
+      name: ModuleConfiguratorEventName.ModuleInitializeError,
       message: error.message,
       properties: {
         moduleName: module.name,
@@ -79,7 +80,7 @@ async function initializeModule(
 
   registerEvent({
     level: ModuleEventLevel.Debug,
-    name: '_initialize.moduleInitializing',
+    name: ModuleConfiguratorEventName.ModuleInitializing,
     message: `Initializing module ${module.name}`,
     properties: {
       moduleName: module.name,
@@ -101,7 +102,7 @@ async function initializeModule(
   if (!(instance instanceof BaseModuleProvider)) {
     registerEvent({
       level: ModuleEventLevel.Warning,
-      name: '_initialize.providerNotBaseModuleProvider',
+      name: ModuleConfiguratorEventName.ProviderNotBaseModuleProvider,
       message: `Provider for module ${module.name} does not extend BaseModuleProvider`,
       properties: {
         moduleName: module.name,
@@ -115,7 +116,7 @@ async function initializeModule(
   if (!maybeVersioned.version) {
     registerEvent({
       level: ModuleEventLevel.Warning,
-      name: '_initialize.providerVersionWarning',
+      name: ModuleConfiguratorEventName.ProviderVersionWarning,
       message: `Provider for module ${module.name} does not expose version`,
       properties: {
         moduleName: module.name,
@@ -127,7 +128,7 @@ async function initializeModule(
   const moduleInitTime = Math.round(performance.now() - moduleInitStart);
   registerEvent({
     level: ModuleEventLevel.Debug,
-    name: '_initialize.moduleInitialized',
+    name: ModuleConfiguratorEventName.ModuleInitialized,
     message: `Module ${module.name} initialized in ${moduleInitTime}ms`,
     properties: {
       moduleName: module.name,
@@ -173,7 +174,7 @@ export function createRequireInstance<T>(
       error.name = 'ModuleNotDefinedError';
       registerEvent({
         level: ModuleEventLevel.Error,
-        name: '_initialize.requireInstance.moduleNotDefined',
+        name: ModuleConfiguratorEventName.RequireInstanceModuleNotDefined,
         message: error.message,
         properties: { moduleName: String(name), wait },
         error,
@@ -185,7 +186,7 @@ export function createRequireInstance<T>(
     if ((instance$.value as Record<string, unknown>)[name]) {
       registerEvent({
         level: ModuleEventLevel.Debug,
-        name: '_initialize.requireInstance.moduleAlreadyInitialized',
+        name: ModuleConfiguratorEventName.RequireInstanceModuleAlreadyInitialized,
         message: `Module [${String(name)}] is already initialized, skipping queue`,
         properties: { moduleName: String(name), wait },
       });
@@ -195,7 +196,7 @@ export function createRequireInstance<T>(
     const requireStart = performance.now();
     registerEvent({
       level: ModuleEventLevel.Debug,
-      name: '_initialize.requireInstance.awaiting',
+      name: ModuleConfiguratorEventName.RequireInstanceAwaitingModule,
       message: `Awaiting module [${String(name)}] initialization, timeout ${wait}s`,
       properties: { moduleName: String(name), wait },
     });
@@ -216,7 +217,7 @@ export function createRequireInstance<T>(
               const error = new RequiredModuleTimeoutError();
               registerEvent({
                 level: ModuleEventLevel.Error,
-                name: '_initialize.requireInstance.timeout',
+                name: ModuleConfiguratorEventName.RequireInstanceTimeout,
                 message: `Module [${String(name)}] initialization timed out after ${wait}s`,
                 properties: { moduleName: String(name), wait },
                 error,
@@ -229,7 +230,7 @@ export function createRequireInstance<T>(
           const requireTime = Math.round(performance.now() - requireStart);
           registerEvent({
             level: ModuleEventLevel.Debug,
-            name: '_initialize.requireInstance.moduleResolved',
+            name: ModuleConfiguratorEventName.RequireInstanceModuleResolved,
             message: `Module [${String(name)}] required in ${requireTime}ms`,
             properties: { moduleName: String(name), wait, requireTime },
             metric: requireTime,
@@ -299,7 +300,7 @@ export async function runInitializePhase<T>(
     error: (err) => {
       registerEvent({
         level: ModuleEventLevel.Error,
-        name: '_initialize.moduleInitializationError',
+        name: ModuleConfiguratorEventName.ModuleInitializeError,
         message: `Failed to initialize module ${err.name || 'unknown'}`,
         error: err,
       });
@@ -309,7 +310,7 @@ export async function runInitializePhase<T>(
       const loadTime = Math.round(performance.now() - initStart);
       registerEvent({
         level: ModuleEventLevel.Debug,
-        name: '_initialize.moduleInitializationComplete',
+        name: ModuleConfiguratorEventName.ModuleInitializeComplete,
         message: `All modules initialized in ${loadTime}ms`,
         properties: {
           modules: Object.keys(instance$.value).join(', '),
@@ -327,7 +328,7 @@ export async function runInitializePhase<T>(
 
   registerEvent({
     level: ModuleEventLevel.Debug,
-    name: '_initialize.complete',
+    name: ModuleConfiguratorEventName.InitializeComplete,
     message: `Modules instance created in ${initTime}ms`,
     properties: {
       modules: Object.keys(instance).join(', '),
