@@ -4,6 +4,7 @@ import {
   runDisposePhase,
   type DisposePhaseContext,
 } from '../../../lib/configurator/phases/dispose.js';
+import { ModuleConfiguratorEventName } from '../../../lib/configurator/events.js';
 import type { AnyModule, ModuleEvent } from '../../../types.js';
 
 function makeCtx(
@@ -205,7 +206,7 @@ describe('dispose phase', () => {
     const ctx = makeCtx([mod], { registerEvent });
     await runDisposePhase(ctx, { alpha: {} });
     const names = registerEvent.mock.calls.map(([e]) => e.name);
-    expect(names.some((n) => n === 'dispose')).toBe(true);
-    expect(names.some((n) => n.includes('moduleDisposed'))).toBe(true);
+    expect(names).toContain(ModuleConfiguratorEventName.Dispose);
+    expect(names).toContain(ModuleConfiguratorEventName.ModuleDisposed);
   });
 });

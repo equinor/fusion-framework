@@ -5,6 +5,7 @@ import { mergeMap, reduce } from 'rxjs/operators';
 
 import { ModuleEventLevel, type AnyModule, type ModuleEvent } from '../../../types.js';
 import type { ModulesConfiguratorConfigCallback } from '../types.js';
+import { ModuleConfiguratorEventName } from '../events.js';
 
 /**
  * Context passed to the configure lifecycle phase.
@@ -66,7 +67,7 @@ export async function createModuleConfigs<TRef>(
         const configLoadTime = Math.round(performance.now() - configStart);
         registerEvent({
           level: ModuleEventLevel.Debug,
-          name: '_createConfig.configuratorCreated',
+          name: ModuleConfiguratorEventName.ConfiguratorCreated,
           message: `Configurator created for ${module.name} in ${configLoadTime}ms`,
           properties: {
             moduleName: module.name,
@@ -79,7 +80,7 @@ export async function createModuleConfigs<TRef>(
       } catch (err) {
         registerEvent({
           level: ModuleEventLevel.Error,
-          name: '_createConfig.configuratorFailed',
+          name: ModuleConfiguratorEventName.ConfiguratorFailed,
           message: `Failed to create configurator for ${module.name}`,
           properties: {
             moduleName: module.name,
@@ -138,7 +139,7 @@ export async function runPostConfigureHooks<TRef>(
           await module.postConfigure?.(config);
           registerEvent({
             level: ModuleEventLevel.Debug,
-            name: '_postConfigure.modulePostConfigured',
+            name: ModuleConfiguratorEventName.ModulePostConfigured,
             message: `Module ${module.name} post-configured successfully`,
             properties: {
               moduleName: module.name,
@@ -149,7 +150,7 @@ export async function runPostConfigureHooks<TRef>(
         } catch (err) {
           registerEvent({
             level: ModuleEventLevel.Warning,
-            name: '_postConfigure.modulePostConfigureError',
+            name: ModuleConfiguratorEventName.ModulePostConfigureError,
             message: `Module ${module.name} post-configure failed`,
             properties: {
               moduleName: module.name,
@@ -169,7 +170,7 @@ export async function runPostConfigureHooks<TRef>(
   try {
     registerEvent({
       level: ModuleEventLevel.Debug,
-      name: '_postConfigure.hooks',
+      name: ModuleConfiguratorEventName.PostConfigureHooks,
       message: `Post configure hooks [${afterConfiguration.length}] called`,
     });
     const postConfigHooksStart = performance.now();
@@ -177,7 +178,7 @@ export async function runPostConfigureHooks<TRef>(
     const postConfigHooksTime = Math.round(performance.now() - postConfigHooksStart);
     registerEvent({
       level: ModuleEventLevel.Debug,
-      name: '_postConfigure.hooksComplete',
+      name: ModuleConfiguratorEventName.PostConfigureHooksComplete,
       message: 'Post configure hooks complete',
       properties: {
         count: afterConfiguration.length,
@@ -188,7 +189,7 @@ export async function runPostConfigureHooks<TRef>(
   } catch (err) {
     registerEvent({
       level: ModuleEventLevel.Warning,
-      name: '_postConfigure.hooksError',
+      name: ModuleConfiguratorEventName.PostConfigureHooksError,
       message: 'Post configure hook failed',
       error: err,
     });

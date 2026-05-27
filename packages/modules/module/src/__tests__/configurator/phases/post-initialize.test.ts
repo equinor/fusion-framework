@@ -3,6 +3,7 @@ import {
   runPostInitializePhase,
   type PostInitializePhaseContext,
 } from '../../../lib/configurator/phases/post-initialize.js';
+import { ModuleConfiguratorEventName } from '../../../lib/configurator/events.js';
 import type { AnyModule, ModuleEvent } from '../../../types.js';
 
 function makeCtx(
@@ -127,9 +128,7 @@ describe('post-initialize phase', () => {
     const ctx = makeCtx([mod], { registerEvent });
     await runPostInitializePhase(ctx, { alpha: {} });
     const names = registerEvent.mock.calls.map(([e]) => e.name);
-    expect(names.some((n) => n.includes('PostInitialized') || n.includes('postInitialized'))).toBe(
-      true,
-    );
-    expect(names.some((n) => n.includes('complete'))).toBe(true);
+    expect(names).toContain(ModuleConfiguratorEventName.ModulePostInitializeComplete);
+    expect(names).toContain(ModuleConfiguratorEventName.PostInitializeComplete);
   });
 });

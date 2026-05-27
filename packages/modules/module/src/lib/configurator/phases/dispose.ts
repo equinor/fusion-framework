@@ -3,6 +3,7 @@ import type { Subject } from 'rxjs';
 
 import { ModuleEventLevel, type AnyModule, type ModuleEvent } from '../../../types.js';
 import type { FrameworkPluginTeardown } from '../../plugin/index.js';
+import { ModuleConfiguratorEventName } from '../events.js';
 
 function getPluginTeardownName(teardown: FrameworkPluginTeardown): string {
   return typeof teardown === 'function' ? teardown.name || 'anonymous' : 'dispose';
@@ -57,7 +58,7 @@ export async function runDisposePhase(
 
   registerEvent({
     level: ModuleEventLevel.Debug,
-    name: 'dispose',
+    name: ModuleConfiguratorEventName.Dispose,
     message: 'Disposing modules instance',
     properties: { modules: Object.keys(instance).join(', ') },
   });
@@ -65,7 +66,7 @@ export async function runDisposePhase(
   if (pluginTeardowns.length) {
     registerEvent({
       level: ModuleEventLevel.Debug,
-      name: 'dispose.pluginsDisposing',
+      name: ModuleConfiguratorEventName.PluginsDisposing,
       message: `Disposing plugins [${pluginTeardowns.length}]`,
       properties: { count: pluginTeardowns.length },
     });
@@ -78,14 +79,14 @@ export async function runDisposePhase(
         await runPluginTeardown(teardown);
         registerEvent({
           level: ModuleEventLevel.Debug,
-          name: 'dispose.pluginDisposed',
+          name: ModuleConfiguratorEventName.PluginDisposed,
           message: `Plugin ${name} disposed successfully`,
           properties: { name },
         });
       } catch (err) {
         registerEvent({
           level: ModuleEventLevel.Warning,
-          name: 'dispose.pluginDisposeError',
+          name: ModuleConfiguratorEventName.PluginDisposeError,
           message: `Plugin ${name} dispose failed`,
           properties: { name },
           error: err,
@@ -93,6 +94,13 @@ export async function runDisposePhase(
       }
     }
   }
+
+  registerEvent({
+    level: ModuleEventLevel.Debug,
+    name: ModuleConfiguratorEventName.ModulesDispose,
+    message: 'Disposing modules',
+    properties: { count: modules.length },
+  });
 
   // Dispose all modules concurrently; failures are isolated per module so
   // one bad teardown cannot leave other modules in an inconsistent state.
@@ -109,7 +117,7 @@ export async function runDisposePhase(
           });
           registerEvent({
             level: ModuleEventLevel.Debug,
-            name: 'dispose.moduleDisposed',
+            name: ModuleConfiguratorEventName.ModuleDisposed,
             message: `Module ${module.name} disposed successfully`,
             properties: {
               moduleName: module.name,
@@ -119,7 +127,7 @@ export async function runDisposePhase(
         } catch (err) {
           registerEvent({
             level: ModuleEventLevel.Warning,
-            name: 'dispose.moduleDisposeError',
+            name: ModuleConfiguratorEventName.ModuleDisposeError,
             message: `Module ${module.name} dispose failed`,
             properties: {
               moduleName: module.name,
@@ -130,6 +138,13 @@ export async function runDisposePhase(
         }
       }),
   );
+
+  registerEvent({
+    level: ModuleEventLevel.Debug,
+    name: ModuleConfiguratorEventName.ModulesDisposed,
+    message: 'Module dispose complete',
+    properties: { count: modules.length },
+  });
 
   // Complete the event stream last so all dispose events are captured before
   // any subscriber teardown triggered by completion.

@@ -2,7 +2,18 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ModuleEventLevel, type ModuleEvent } from '../../../types.js';
 import type { FrameworkPluginCallback, FrameworkPluginTeardown } from '../../plugin/index.js';
+import { ModuleConfiguratorEventName } from '../events.js';
 
+/**
+ * Checks whether a plugin return value should be treated as dispose-time cleanup.
+ *
+ * Plugins may return either a plain callback or an object with a `dispose` method.
+ * Any other value is ignored so plugin authors can return `undefined` when no
+ * cleanup is needed.
+ *
+ * @param value - Value returned by a registered plugin callback.
+ * @returns True when the value is a valid plugin teardown registration.
+ */
 function isPluginTeardown(value: unknown): value is FrameworkPluginTeardown {
   return (
     typeof value === 'function' ||
@@ -30,10 +41,16 @@ export interface PluginPhaseContext<TRef = unknown> {
 /**
  * Runs configurator plugins after modules are ready.
  *
- * Executes all registered plugins with the initialized module map. Plugin
- * failures are isolated and emitted as warning events so one failing side
- * effect cannot block application rendering. Returned teardown callbacks are
- * stored for the dispose phase.
+ * The plugin phase is the final initialization step before `initialize()`
+ * resolves. Each plugin receives the sealed module instance map and optional
+ * initialization reference, which makes this phase suitable for application
+ * side effects such as telemetry bridges, global event listeners, and runtime
+ * subscriptions that require multiple initialized module providers.
+ *
+ * Plugin callbacks run concurrently. Failures are isolated and emitted as
+ * warning events so one failing side effect cannot block application rendering.
+ * Returned teardown callbacks are stored for the dispose phase and are invoked
+ * before module `dispose` hooks.
  *
  * @param ctx - The plugin phase context.
  * @param modules - The initialized module instance map.
@@ -51,7 +68,7 @@ export async function runPluginPhase<TRef = unknown>(
 
   registerEvent({
     level: ModuleEventLevel.Debug,
-    name: '_plugin.pluginsRegistering',
+    name: ModuleConfiguratorEventName.PluginsRegister,
     message: `Registering plugins [${plugins.length}]`,
     properties: { count: plugins.length },
   });
@@ -65,7 +82,7 @@ export async function runPluginPhase<TRef = unknown>(
         const pluginTime = Math.round(performance.now() - pluginStart);
         registerEvent({
           level: ModuleEventLevel.Debug,
-          name: '_plugin.pluginRegistered',
+          name: ModuleConfiguratorEventName.PluginRegistered,
           message: `Plugin ${name} registered in ${pluginTime}ms`,
           properties: { name, pluginTime },
           metric: pluginTime,
@@ -74,7 +91,7 @@ export async function runPluginPhase<TRef = unknown>(
       } catch (err) {
         registerEvent({
           level: ModuleEventLevel.Warning,
-          name: '_plugin.pluginRegisterError',
+          name: ModuleConfiguratorEventName.PluginRegisterError,
           message: `Plugin ${name} registration failed`,
           properties: { name },
           error: err,
@@ -92,7 +109,7 @@ export async function runPluginPhase<TRef = unknown>(
 
   registerEvent({
     level: ModuleEventLevel.Debug,
-    name: '_plugin.pluginsRegistered',
+    name: ModuleConfiguratorEventName.PluginsRegistered,
     message: 'Plugin registration complete',
     properties: { count: plugins.length, teardowns: teardowns.length },
   });

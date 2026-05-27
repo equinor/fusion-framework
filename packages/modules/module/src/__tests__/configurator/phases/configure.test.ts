@@ -5,6 +5,7 @@ import {
   runPostConfigureHooks,
   type ConfigurePhaseContext,
 } from '../../../lib/configurator/phases/configure.js';
+import { ModuleConfiguratorEventName } from '../../../lib/configurator/events.js';
 import type { AnyModule, ModuleEvent } from '../../../types.js';
 
 function makeCtx(
@@ -78,7 +79,7 @@ describe('configure phase', () => {
       const ctx = makeCtx([mod], { registerEvent });
       await createModuleConfigs(ctx);
       const eventNames = registerEvent.mock.calls.map((args) => (args[0] as ModuleEvent).name);
-      expect(eventNames.some((n) => n.includes('configuratorCreated'))).toBe(true);
+      expect(eventNames).toContain(ModuleConfiguratorEventName.ConfiguratorCreated);
     });
 
     it('emits an error event and rethrows when configure() throws', async () => {

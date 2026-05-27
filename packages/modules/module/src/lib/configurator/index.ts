@@ -24,6 +24,8 @@ export type {
 export { createPlugin } from '../plugin/index.js';
 
 export { RequiredModuleTimeoutError } from './types.js';
+export { ModuleConfiguratorEventBaseName, ModuleConfiguratorEventName } from './events.js';
+export type { ModuleConfiguratorEventName as ModuleConfiguratorEventNameType } from './events.js';
 
 export { ModulesConfigurator } from './ModulesConfigurator.js';
 
