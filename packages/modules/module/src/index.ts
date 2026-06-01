@@ -58,4 +58,4 @@ export {
   type IModuleConfigurator,
   type IModulesConfigurator,
   ModulesConfigurator,
-} from './configurator.js';
+} from './lib/configurator/index.js';

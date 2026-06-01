@@ -379,7 +379,7 @@ export type ModuleEvent = {
   /** The severity level of the event */
   level: ModuleEventLevel;
 
-  /** A unique identifier for the event type (e.g., 'initialize', 'moduleConfigAdded') */
+  /** A unique identifier for the event type (e.g., 'ModuleConfigurator.initialize.complete') */
   name: string;
 
   /** A human-readable description of what occurred */

@@ -13,6 +13,14 @@
     "./provider": {
       "import": "./dist/esm/lib/provider/index.js",
       "types": "./dist/types/lib/provider/index.d.ts"
+    },
+    "./configurator": {
+      "import": "./dist/esm/lib/configurator/index.js",
+      "types": "./dist/types/lib/configurator/index.d.ts"
+    },
+    "./plugins": {
+      "import": "./dist/esm/lib/plugin/index.js",
+      "types": "./dist/types/lib/plugin/index.d.ts"
     }
   },
   "typesVersions": {
@@ -22,12 +30,19 @@
       ],
       "provider": [
         "dist/types/lib/provider/index.d.ts"
+      ],
+      "configurator": [
+        "dist/types/lib/configurator/index.d.ts"
+      ],
+      "plugins": [
+        "dist/types/lib/plugin/index.d.ts"
       ]
     }
   },
   "scripts": {
     "build": "tsc -b",
-    "prepack": "pnpm build"
+    "prepack": "pnpm build",
+    "test": "vitest"
   },
   "keywords": [],
   "author": "",
@@ -46,7 +61,8 @@
   },
   "devDependencies": {
     "@types/semver": "^7.7.1",
-    "typescript": "^6.0.3"
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.0"
   },
   "peerDependencies": {
     "@types/semver": "^7.0.0"
