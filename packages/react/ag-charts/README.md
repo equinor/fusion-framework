@@ -65,7 +65,7 @@ const ChartExample = () => {
 
 ## Enable Enterprise Chart Features
 
-Import `AgChartsEnterpriseModule` from the `/enterprise` sub-path to unlock 
+Import `AgChartsEnterpriseModule` from the `/enterprise` sub-path to unlock
 advanced chart types such as waterfall, heatmap, sunburst, and treemap.
 
 > Enterprise features require a valid AG Charts enterprise license. Follow the steps to [Integrate AG Charts with AG Grid](#integrate-ag-charts-with-ag-grid) to enable the license for AG Charts.
