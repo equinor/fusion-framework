@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { RouterProvider } from 'react-router/dom';
 import {
   type Modules,
@@ -84,7 +84,7 @@ function normalizeRoutes(
  * }
  * ```
  */
-export function Router({ routes, context }: RouterProps) {
+export function Router({ routes, context, loader }: RouterProps) {
   const modules = useModules();
 
   const fusionRouterContext: FusionRouterContext = useMemo(() => {
@@ -104,7 +104,7 @@ export function Router({ routes, context }: RouterProps) {
       navigation: NavigationModule;
     }>;
 
-    const routerInstance = UNSAFE_createRouter({
+    return UNSAFE_createRouter({
       routes: normalizeRoutes(routes),
       history: navigation.history,
       basename: navigation.basename,
@@ -165,14 +165,27 @@ export function Router({ routes, context }: RouterProps) {
         return mapped;
       },
     });
-    return routerInstance.initialize();
     // Intentionally excluding fusionRouterContext — it is read via ref so
     // context updates do not destroy and recreate the entire router.
   }, [routes, modules]);
 
-  // Dispose previous router instance when the router is recreated or unmounted
-  // to clean up history listeners and pending navigations.
-  useEffect(() => router.dispose.bind(router), [router]);
+  const [isInitialized, setIsInitialized] = useState(false);
+
+  useEffect(() => {
+    // Initialize and dispose the router inside an effect to avoid side effects
+    // during render. This prevents leaked subscriptions in React StrictMode.
+    setIsInitialized(false);
+    router.initialize();
+    setIsInitialized(true);
+
+    // Dispose previous router instance when the router is recreated or unmounted
+    // to clean up history listeners and pending navigations.
+    return router.dispose.bind(router);
+  }, [router]);
+
+  if (!isInitialized) {
+    return loader ?? null;
+  }
 
   return (
     <FusionRouterContextProvider value={fusionRouterContext}>
