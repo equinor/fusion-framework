@@ -15,6 +15,7 @@ import aiIndexPlugin from '@equinor/fusion-framework-cli-plugin-ai-index';
 const optionalPlugins = await Promise.allSettled([
   import('@equinor/fusion-framework-cli-plugin-ai-chat').then((m) => m.default),
   import('@equinor/fusion-framework-cli-plugin-copilot').then((m) => m.default),
+  import('@equinor/fusion-framework-cli-plugin-ai-eval').then((m) => m.default),
 ]);
 
 export default {

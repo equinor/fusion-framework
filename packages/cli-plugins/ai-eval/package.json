@@ -1,0 +1,61 @@
+{
+  "name": "@equinor/fusion-framework-cli-plugin-ai-eval",
+  "version": "0.1.0",
+  "description": "Agentic acceptance-testing plugin for Fusion Framework CLI — runs Planner → Explorer → Sanitiser → Judge against a running app",
+  "main": "dist/esm/index.js",
+  "type": "module",
+  "types": "dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "types": "./dist/types/index.d.ts"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      ".": [
+        "dist/types/index.d.ts"
+      ]
+    }
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "build:types": "tsc -b",
+    "watch": "tsc -b --watch",
+    "prepack": "pnpm build"
+  },
+  "keywords": [
+    "fusion-framework",
+    "cli",
+    "plugin",
+    "ai",
+    "eval",
+    "agentic-testing",
+    "acceptance-testing"
+  ],
+  "author": "",
+  "license": "ISC",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/equinor/fusion-framework.git",
+    "directory": "packages/cli-plugins/ai-eval"
+  },
+  "dependencies": {
+    "@equinor/fusion-framework-cli-plugin-ai-base": "workspace:*",
+    "@equinor/fusion-framework-module": "workspace:*",
+    "@equinor/fusion-framework-module-ai": "workspace:*",
+    "@langchain/core": "^1.0.1",
+    "commander": "^14.0.1",
+    "zod": "^3.24.1"
+  },
+  "peerDependencies": {
+    "@equinor/fusion-framework-cli": "workspace:^"
+  },
+  "devDependencies": {
+    "@equinor/fusion-framework-cli": "workspace:^",
+    "typescript": "^6.0.3"
+  }
+}
