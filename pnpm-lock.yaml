@@ -634,7 +634,7 @@ importers:
         version: 1.4.0
       '@equinor/eds-tokens':
         specifier: ^2.2.0
-        version: 2.2.0
+        version: 2.3.0
       '@equinor/fusion-framework-cli':
         specifier: workspace:^
         version: link:../../packages/cli
@@ -655,7 +655,7 @@ importers:
         version: link:../../packages/react/router
       '@equinor/fusion-react-side-sheet':
         specifier: ^2.0.0
-        version: 2.0.5(@equinor/eds-core-react@2.6.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6)))(@equinor/eds-icons@1.4.0)(@equinor/eds-tokens@2.2.0)(react-dom@19.2.6(react@19.2.6))(react-is@18.3.1)(react@19.2.6)(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6))
+        version: 2.0.5(@equinor/eds-core-react@2.6.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6)))(@equinor/eds-icons@1.4.0)(@equinor/eds-tokens@2.3.0)(react-dom@19.2.6(react@19.2.6))(react-is@18.3.1)(react@19.2.6)(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6))
       '@faker-js/faker':
         specifier: ^10.1.0
         version: 10.4.0
@@ -882,7 +882,7 @@ importers:
         version: 0.3.0(react@19.2.6)
       '@equinor/fusion-react-side-sheet':
         specifier: ^2.0.0
-        version: 2.0.5(@equinor/eds-core-react@2.6.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6)))(@equinor/eds-icons@1.4.0)(@equinor/eds-tokens@2.2.0)(react-dom@19.2.6(react@19.2.6))(react-is@18.3.1)(react@19.2.6)(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6))
+        version: 2.0.5(@equinor/eds-core-react@2.6.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6)))(@equinor/eds-icons@1.4.0)(@equinor/eds-tokens@2.3.0)(react-dom@19.2.6(react@19.2.6))(react-is@18.3.1)(react@19.2.6)(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6))
       react:
         specifier: ^19.2.1
         version: 19.2.6
@@ -1252,7 +1252,7 @@ importers:
         version: 1.4.0
       '@equinor/eds-tokens':
         specifier: ^2.2.0
-        version: 2.2.0
+        version: 2.3.0
       '@equinor/fusion-framework':
         specifier: workspace:*
         version: link:../framework
@@ -1318,7 +1318,7 @@ importers:
         version: 0.3.0(react@19.2.6)
       '@equinor/fusion-react-side-sheet':
         specifier: ^2.0.0
-        version: 2.0.5(@equinor/eds-core-react@2.6.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6)))(@equinor/eds-icons@1.4.0)(@equinor/eds-tokens@2.2.0)(react-dom@19.2.6(react@19.2.6))(react-is@18.3.1)(react@19.2.6)(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6))
+        version: 2.0.5(@equinor/eds-core-react@2.6.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6)))(@equinor/eds-icons@1.4.0)(@equinor/eds-tokens@2.3.0)(react-dom@19.2.6(react@19.2.6))(react-is@18.3.1)(react@19.2.6)(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6))
       '@equinor/fusion-react-styles':
         specifier: ^2.1.0
         version: 2.1.4(react@19.2.6)(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6))
@@ -1428,7 +1428,7 @@ importers:
     devDependencies:
       '@equinor/eds-tokens':
         specifier: ^2.2.0
-        version: 2.2.0
+        version: 2.3.0
       '@equinor/fusion-framework-module':
         specifier: workspace:^
         version: link:../module
@@ -2125,7 +2125,7 @@ importers:
         version: 1.4.0
       '@equinor/eds-tokens':
         specifier: ^2.2.0
-        version: 2.2.0
+        version: 2.3.0
       '@equinor/eds-utils':
         specifier: ^2.0.0
         version: 2.1.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6))
@@ -3258,6 +3258,9 @@ packages:
 
   '@equinor/eds-tokens@2.2.0':
     resolution: {integrity: sha512-MUbv83ppGHzRBSgaZTkPqMU+2cAQsaDiE/b22GsIXnmptVH4NV5tyHJdz7Yrd1U7yKWO4L7IUwK849IBixyVyg==}
+
+  '@equinor/eds-tokens@2.3.0':
+    resolution: {integrity: sha512-CAuO75EnYw053nNB78OafNbA3+Orfav7a6SoFaEPfuiHiEopYqeEHnptijo5Pznd73dwMK8wMqmlzynQkDBYCg==}
 
   '@equinor/eds-utils@2.1.0':
     resolution: {integrity: sha512-yMrqw22Rc3UXrru4tGCSSyuLNY60ikuEyhJXu54beorllB3iCxvMxD5P9tFP6tkkTl/V0tYH9tD79JfzO2w6Ew==}
@@ -11536,10 +11539,12 @@ snapshots:
 
   '@equinor/eds-tokens@2.2.0': {}
 
+  '@equinor/eds-tokens@2.3.0': {}
+
   '@equinor/eds-utils@2.1.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6))':
     dependencies:
       '@babel/runtime': 7.29.2
-      '@equinor/eds-tokens': 2.2.0
+      '@equinor/eds-tokens': 2.3.0
       react: 19.2.6
       react-dom: 19.2.6(react@19.2.6)
       styled-components: 6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
@@ -11590,11 +11595,11 @@ snapshots:
       '@equinor/fusion-wc-searchable-dropdown': 4.1.3
       react: 19.2.6
 
-  '@equinor/fusion-react-side-sheet@2.0.5(@equinor/eds-core-react@2.6.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6)))(@equinor/eds-icons@1.4.0)(@equinor/eds-tokens@2.2.0)(react-dom@19.2.6(react@19.2.6))(react-is@18.3.1)(react@19.2.6)(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6))':
+  '@equinor/fusion-react-side-sheet@2.0.5(@equinor/eds-core-react@2.6.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6)))(@equinor/eds-icons@1.4.0)(@equinor/eds-tokens@2.3.0)(react-dom@19.2.6(react@19.2.6))(react-is@18.3.1)(react@19.2.6)(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6))':
     dependencies:
       '@equinor/eds-core-react': 2.6.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6))
       '@equinor/eds-icons': 1.4.0
-      '@equinor/eds-tokens': 2.2.0
+      '@equinor/eds-tokens': 2.3.0
       re-resizable: 6.11.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       react: 19.2.6
       react-dom: 19.2.6(react@19.2.6)
