@@ -28,7 +28,10 @@ Subscribe to a framework event by name. The callback is registered on mount and 
 **Signature:**
 
 ```ts
-function useEventHandler(key: string, cb: FrameworkEventHandler): void;
+function useEventHandler<TKey extends keyof FrameworkEventMap>(
+  key: TKey,
+  cb: FrameworkEventHandler<FrameworkEventMap[TKey]>,
+): void;
 ```
 
 **Example:**
@@ -56,7 +59,10 @@ Returns an RxJS observable stream filtered to a specific event. Useful when you 
 **Signature:**
 
 ```ts
-function useEventStream<TKey>(key: TKey, operator?: OperatorFunction): Observable;
+function useEventStream<
+  TKey extends keyof FrameworkEventMap,
+  TData = FrameworkEventMap[TKey],
+>(key: TKey, operator?: OperatorFunction<FrameworkEventMap[TKey], TData>): Observable<TData>;
 ```
 
 > [!NOTE]
@@ -78,4 +84,4 @@ const EventCounter = () => {
 
 ## Related
 
-- [`@equinor/fusion-framework-module-event`](../../modules/event/README.md) — the underlying event module with full API documentation
+- [`@equinor/fusion-framework-module-event`](../../../modules/event/README.md) — the underlying event module with full API documentation
