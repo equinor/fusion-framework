@@ -8,4 +8,6 @@ Fix blank page and broken back/forward navigation under React StrictMode.
 
 The router is now initialized and disposed inside a `useEffect`, matching React's expected side-effect lifecycle. A `loader` prop (already accepted by `RouterProps`) is rendered as a fallback during the brief initialization window.
 
+Readiness is tied to the active router instance identity so a newly recreated router is never rendered before its own initialization effect has completed.
+
 Fixes: https://github.com/equinor/fusion/issues/848
