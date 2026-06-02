@@ -8,13 +8,19 @@ React hooks for tracking application feature usage through the Fusion analytics 
 import { useTrackFeature } from '@equinor/fusion-framework-react-app/analytics';
 ```
 
-The analytics module is enabled and configured by the hosting portal, so **apps running inside a Fusion portal can use these hooks immediately without any setup**.
+The analytics module is enabled and configured by the hosting portal, so **apps running inside a Fusion portal can use these hooks immediately without any runtime setup**.
+
+> [!IMPORTANT]
+> `useTrackFeature` accepts an `AnyValueMap` type parameter from `@equinor/fusion-framework-module-analytics`. This package is a `devDependency` of `@equinor/fusion-framework-react-app`, so **no runtime installation is needed** when running inside a Fusion portal. However, if your app imports `AnyValueMap` directly for typing, you may need to add `@equinor/fusion-framework-module-analytics` as a `devDependency` in your own project for TypeScript to resolve the type.
 
 ## When to Track
 
 Use `useTrackFeature` when you want to record a discrete user action or application milestone. Focus on actions that answer a question about user behavior or feature value — you do not need to track every click.
 
-| Use case                | What to track                            | Example event name           |
+> [!NOTE]
+> The `name` argument you pass to the tracking callback becomes `value.feature` in the analytics event. The emitted analytics event always has `name: 'app-feature'` — the `name` you supply is the **feature name**, not the analytics event name.
+
+| Use case                | What to track                            | Example feature name        |
 | ----------------------- | ---------------------------------------- | ---------------------------- |
 | Button or action clicks | User triggers a specific workflow        | `'export-clicked'`           |
 | Page or component views | A section of the app is displayed        | `'dashboard-loaded'`         |
