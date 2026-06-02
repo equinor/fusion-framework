@@ -19,7 +19,10 @@ import { useCurrentContext, useQueryContext, enableContext } from '@equinor/fusi
 | `enableContext`             | Function | Enable the context module in a configurator                    |
 | `ContextModule`             | Type     | Context module type definition                                 |
 | `ContextItem`               | Type     | A single context entry (project, facility, etc.)               |
+| `ContextItemType`           | Type     | Context item type discriminator                                |
 | `IContextProvider`          | Type     | Context provider interface                                     |
+| `IContextModuleConfigurator` | Type     | Configurator interface for enabling the context module         |
+| `FusionContextSearchError`  | Error    | Error thrown when context search fails                         |
 
 ## This Package vs `react-app/context`
 
@@ -75,4 +78,4 @@ const ContextSearch = () => {
 ## Related
 
 - [`@equinor/fusion-framework-module-context`](../../modules/context/README.md) — the underlying context module
-- [`@equinor/fusion-framework-react-app/context`](../app/docs/context.md) — app-developer-facing wrapper
+- [`@equinor/fusion-framework-react-app/context`](../../app/README.md#context) — app-developer-facing wrapper
