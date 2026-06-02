@@ -169,21 +169,22 @@ export function Router({ routes, context, loader }: RouterProps) {
     // context updates do not destroy and recreate the entire router.
   }, [routes, modules]);
 
-  const [isInitialized, setIsInitialized] = useState(false);
+  const [initializedRouter, setInitializedRouter] = useState<ReturnType<
+    typeof UNSAFE_createRouter
+  > | null>(null);
 
   useEffect(() => {
     // Initialize and dispose the router inside an effect to avoid side effects
     // during render. This prevents leaked subscriptions in React StrictMode.
-    setIsInitialized(false);
     router.initialize();
-    setIsInitialized(true);
+    setInitializedRouter(router);
 
     // Dispose previous router instance when the router is recreated or unmounted
     // to clean up history listeners and pending navigations.
     return router.dispose.bind(router);
   }, [router]);
 
-  if (!isInitialized) {
+  if (initializedRouter !== router) {
     return loader ?? null;
   }
 

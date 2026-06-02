@@ -57,4 +57,15 @@ describe('NavigationProvider', () => {
     provider.dispose();
     expect(disposeSpy).toHaveBeenCalled();
   });
+
+  it('should preserve root basename when set to slash', () => {
+    const providerWithRootBasename = new NavigationProvider({
+      version: '1.0.0',
+      config: { history, basename: '/' },
+    });
+
+    expect(providerWithRootBasename.basename).toBe('/');
+
+    providerWithRootBasename.dispose();
+  });
 });

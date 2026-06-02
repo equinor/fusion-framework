@@ -133,7 +133,9 @@ export class NavigationProvider
     // the current URL to start with the exact basename string, so a basename
     // of "/apps/my-app/" would fail to match the URL "/apps/my-app" and
     // render nothing (blank page).
-    this.#basename = basename ? normalizePathname(basename) : basename;
+    // Preserve slash-only basenames (e.g. "/") by falling back to the
+    // original input when normalization collapses to an empty string.
+    this.#basename = basename ? normalizePathname(basename) || basename : basename;
     this.#event = eventProvider;
     this.#telemetry = telemetry;
 
