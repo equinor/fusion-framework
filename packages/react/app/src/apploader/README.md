@@ -1,5 +1,8 @@
 # `@equinor/fusion-framework-react-app/apploader`
 
+> [!NOTE]
+> This file is kept for legacy tooling. The canonical documentation is in [`packages/react/app/docs/apploader.md`](../../docs/apploader.md) and published via VuePress.
+
 [Apploader](#apploader) component and [useApploader](#useapploader) is intended to be used to embed Fusion applications inside other Fusion application.
 
 > [!WARNING]
