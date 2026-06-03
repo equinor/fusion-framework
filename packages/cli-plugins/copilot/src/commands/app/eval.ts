@@ -35,7 +35,7 @@ export const createSession = async (options: SessionOptions): Promise<CopilotSes
   const { ctx, config, defaultToolTimeoutMs } = options;
 
   const { CopilotClient, defineTool, approveAll } = await loadCopilotSdk();
-  const client = new CopilotClient({ autoStart: true });
+  const client = new CopilotClient();
   await client.start();
 
   const fileTools = [
