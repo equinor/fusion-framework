@@ -25,6 +25,10 @@
     "./context": {
       "import": "./dist/esm/context.js",
       "types": "./dist/types/context.d.ts"
+    },
+    "./interop": {
+      "import": "./dist/esm/interop.js",
+      "types": "./dist/types/interop.d.ts"
     }
   },
   "scripts": {

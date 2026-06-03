@@ -1,6 +1,6 @@
 # @equinor/fusion-framework-react-router
 
-Thin integration layer between [React Router v7](https://reactrouter.com/) and the Fusion Framework. It adds Fusion-specific behaviour — navigation module wiring, typed `fusion` context injection, a file-style route DSL, and manifest-ready route schemas — while keeping the full power of React Router.
+Integration layer between [React Router v7](https://reactrouter.com/) and the Fusion Framework. Provides automatic navigation module wiring, typed `fusion` context injection into loaders, actions, and components, a file-style route DSL, and manifest-ready route schemas.
 
 ## Features
 
@@ -17,13 +17,13 @@ Thin integration layer between [React Router v7](https://reactrouter.com/) and t
 pnpm add @equinor/fusion-framework-react-router
 ```
 
-### Prerequisites
+**Prerequisites**
 
 - React 18+ / React DOM 18+
 - `@equinor/fusion-framework-react-module`
 - `@equinor/fusion-framework-module-navigation` configured in your app
 
-## Usage
+## Quick start
 
 ### 1. Define page modules
 
@@ -41,7 +41,6 @@ export const handle = {
   route: {
     description: 'Product page',
     params: { id: 'Product identifier' },
-    search: { filter: 'Product type filter' },
   },
 } satisfies RouterHandle;
 
@@ -55,7 +54,7 @@ export default function ProductPage({ loaderData }: RouteComponentProps<{ name: 
 }
 ```
 
-### 2. Build the route tree with the DSL
+### 2. Build the route tree
 
 ```ts
 // src/pages/index.ts
@@ -84,8 +83,6 @@ export default function AppRouter() {
 
 ### Passing custom context
 
-Extend `RouterContext` via module augmentation, then pass the context to `<Router>`:
-
 ```ts
 // router-context.d.ts
 declare module '@equinor/fusion-framework-react-router' {
@@ -96,7 +93,6 @@ declare module '@equinor/fusion-framework-react-router' {
 ```
 
 ```tsx
-// src/Router.tsx
 import { Router } from '@equinor/fusion-framework-react-router';
 import { QueryClient } from '@tanstack/react-query';
 import { pages } from './pages';
@@ -116,17 +112,12 @@ import { toRouteSchema } from '@equinor/fusion-framework-react-router/schema';
 import { pages } from './pages';
 
 const schema = await toRouteSchema(pages);
-// => [['/', 'Home page'], ['products/:id', 'Product page', { params: { id: 'Product identifier' } }]]
 ```
 
 ### Vite plugin
 
-Enable the DSL transform so route definitions are rewritten to standard `RouteObject` code at build time:
-
 ```ts
 // vite.config.ts
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
 import { reactRouterPlugin } from '@equinor/fusion-framework-react-router/vite-plugin';
 
 export default defineConfig({
@@ -134,62 +125,20 @@ export default defineConfig({
 });
 ```
 
-## API Reference
+## Entry points
 
-### Components
-
-| Export | Description |
+| Entry point | Purpose |
 |---|---|
-| `Router` | Integrates React Router v7 with Fusion Framework. Accepts `routes`, optional `loader`, and optional `context`. |
+| `@equinor/fusion-framework-react-router` | Main — `Router`, hooks, types, and React Router re-exports |
+| `/routes` | Route DSL — `layout`, `index`, `route`, `prefix` |
+| `/schema` | Schema generation — `toRouteSchema` |
+| `/context` | Internal context — `routerContext`, `FusionRouterContextProvider`, `useRouterContext` |
+| `/vite-plugin` | Vite build plugin |
+| `/interop` | Interop re-exports for teams mid-migration — see [docs/interop.md](docs/interop.md) |
 
-### Hooks & Context
+## Documentation
 
-| Export | Description |
-|---|---|
-| `useRouterContext()` | Returns the current `FusionRouterContext` (`modules` + `context`). Throws if used outside `<Router>`. |
-| `routerContext` | React Router context key used internally to pass the Fusion context to loaders and actions. |
-| `FusionRouterContextProvider` | React context provider for `FusionRouterContext`. Used internally by `<Router>`. |
+- [Migration guide — from `react-router` to Fusion router](docs/migration.md)
+- [Interop entry point](docs/interop.md)
+- [End-to-end cookbook](../../../cookbooks/app-react-router/)
 
-### Route DSL (`/routes` entry point)
-
-| Export | Description |
-|---|---|
-| `layout(file, children)` | Layout route wrapping children with a shared component containing `<Outlet />`. |
-| `index(file, schema?)` | Index route rendered at the parent's path. |
-| `route(path, file, children?, schema?)` | Standard route with a URL path and optional children. |
-| `prefix(path, children)` | Path-only grouping — prepends a segment to children without rendering a component. |
-
-### Schema (`/schema` entry point)
-
-| Export | Description |
-|---|---|
-| `toRouteSchema(nodes)` | Converts a route tree (DSL nodes or legacy `RouteObject[]`) to a flat `RouteSchemaEntry[]`. |
-
-### Vite Plugin (`/vite-plugin` entry point)
-
-| Export | Description |
-|---|---|
-| `reactRouterPlugin(options?)` | Vite plugin that transforms DSL calls into React Router `RouteObject` code at build time. |
-
-### Key Types
-
-| Type | Description |
-|---|---|
-| `FusionRouterContext` | Object containing `modules` (Fusion modules instance) and `context` (custom context). |
-| `RouterContext` | Extensible interface for custom context (extend via module augmentation). |
-| `RouterHandle` | Handle interface with `route: RouterSchema` and extensible custom fields. |
-| `RouterSchema` | Schema with `description`, `params`, and `search` for a single route. |
-| `RouteComponentProps<TData, TActionData>` | Props received by route components: `loaderData`, `actionData`, `fusion`. |
-| `LoaderFunctionArgs<TParams>` | Arguments passed to `clientLoader` functions. |
-| `ActionFunctionArgs<TParams>` | Arguments passed to `action` functions. |
-| `ErrorElementProps<TError>` | Props received by error boundary components: `error`, `fusion`. |
-| `RouteNode` | Base interface for DSL route nodes. |
-| `RouteSchemaEntry` | Tuple format: `[path, description]` or `[path, description, { params?, search? }]`. |
-
-## Configuration
-
-The `<Router>` component reads `history` and `basename` from the Fusion navigation module. Ensure your app configures `@equinor/fusion-framework-module-navigation` before mounting the router.
-
-For the Vite plugin, pass `{ debug: true }` to `reactRouterPlugin()` to enable verbose transformation logging during development.
-
-For a complete end-to-end example, see the [`cookbooks/app-react-router`](../../../cookbooks/app-react-router/) cookbook.
