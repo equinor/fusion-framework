@@ -1,11 +1,11 @@
 # Getting started with `@equinor/fusion-framework-react-router`
 
-This guide walks through setting up routing in a Fusion Framework React app from scratch.
+This guide walks through setting up routing in any Fusion Framework React consumer — apps, portals, widgets, or any other Fusion-enabled context.
 
 ## Prerequisites
 
-- A Fusion Framework React app bootstrapped with `@equinor/fusion-framework-react-app`
-- `@equinor/fusion-framework-module-navigation` available (bundled with the framework)
+- A Fusion Framework React consumer (app, portal, widget, etc.) with access to the Fusion module system
+- `@equinor/fusion-framework-module-navigation` enabled in your configurator (bundled with the framework)
 
 ## Installation
 
@@ -13,28 +13,36 @@ This guide walks through setting up routing in a Fusion Framework React app from
 pnpm add @equinor/fusion-framework-react-router
 ```
 
-## Step 1 — Enable navigation in your app config
+## Step 1 — Enable navigation in your configurator
 
-The router reads `history` and `basename` from the Fusion navigation module. Configure it in your app's `config.ts`:
+The router reads `history` and `basename` from the Fusion navigation module. Enable it in your configurator:
 
 ```ts
 // src/config.ts
 import { enableNavigation } from '@equinor/fusion-framework-module-navigation';
-import type { IAppConfigurator, AppEnv, Fusion } from '@equinor/fusion-framework-react-app';
+import type { IConfigurator } from '@equinor/fusion-framework';
 
-export const configure = (
-  configurator: IAppConfigurator,
-  args: { fusion: Fusion; env: AppEnv },
-) => {
+export const configure = (configurator: IConfigurator) => {
   enableNavigation(configurator, {
     configure: (config) => {
-      config.setBasename(args.env.basename);
+      // Set the basename to scope routing to a sub-path.
+      // For apps this is typically the app's assigned path segment;
+      // for portals it may be '/' or a portal-specific prefix.
+      config.setBasename('/');
     },
   });
 };
 
 export default configure;
 ```
+
+> **App consumers** can read `basename` from the app environment:
+> ```ts
+> import type { IAppConfigurator, AppEnv, Fusion } from '@equinor/fusion-framework-react-app';
+> export const configure = (configurator: IAppConfigurator, args: { fusion: Fusion; env: AppEnv }) => {
+>   enableNavigation(configurator, { configure: (c) => c.setBasename(args.env.basename) });
+> };
+> ```
 
 ## Step 2 — Define your routes
 
