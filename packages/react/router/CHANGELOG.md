@@ -1,5 +1,65 @@
 # @equinor/fusion-framework-react-router
 
+## 2.2.0
+
+### Minor Changes
+
+- e4969db: Add `./interop` entry point with curated deprecated re-exports of `react-router` symbols.
+
+  Teams that are mid-migration from `react-router` to `@equinor/fusion-framework-react-router`, or
+  that need `MemoryRouter` for testing and widget scenarios, can now import these symbols without
+  adding `react-router` as a direct dependency — which risks dual-bundling when the Fusion router is
+  also present.
+
+  **Exported symbols** (all marked `@deprecated` — interop only, will be removed in a future major):
+
+  ```ts
+  import {
+    MemoryRouter,
+    RouterProvider,
+    createMemoryRouter,
+    Routes,
+    Route,
+  } from "@equinor/fusion-framework-react-router/interop";
+  ```
+
+  **Typical use cases:**
+
+  ```tsx
+  // Testing with a memory router
+  import { MemoryRouter } from "@equinor/fusion-framework-react-router/interop";
+
+  render(
+    <MemoryRouter initialEntries={["/products/42"]}>
+      <ProductPage />
+    </MemoryRouter>,
+  );
+
+  // Widget / SSR — no window available
+  import {
+    createMemoryRouter,
+    RouterProvider,
+  } from "@equinor/fusion-framework-react-router/interop";
+
+  const router = createMemoryRouter(routes, { initialEntries: ["/"] });
+  root.render(<RouterProvider router={router} />);
+  ```
+
+  These exports are a temporary bridge. Migrate to `@equinor/fusion-framework-react-router` fully
+  and remove the `/interop` import once your team is ready.
+
+### Patch Changes
+
+- f3bf74b: Fix blank page and broken back/forward navigation under React StrictMode.
+
+  `router.initialize()` was previously called during render (inside `useMemo`), which creates history listener side effects before React's commit phase. In StrictMode, React intentionally mounts, unmounts, and remounts components in development, which left stale initialized router instances with dangling history subscriptions. This caused `navigation.navigate()` to update the URL without the app router reacting, and browser back/forward to produce a blank page.
+
+  The router is now initialized and disposed inside a `useEffect`, matching React's expected side-effect lifecycle. A `loader` prop (already accepted by `RouterProps`) is rendered as a fallback during the brief initialization window.
+
+  Readiness is tied to the active router instance identity so a newly recreated router is never rendered before its own initialization effect has completed.
+
+  Fixes: https://github.com/equinor/fusion/issues/848
+
 ## 2.1.0
 
 ### Minor Changes

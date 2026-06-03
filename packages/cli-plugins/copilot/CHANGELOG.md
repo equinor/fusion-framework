@@ -1,5 +1,12 @@
 # @equinor/fusion-framework-cli-plugin-copilot
 
+## 2.0.2
+
+### Patch Changes
+
+- 68ca7f6: Internal: bump `commander` from `14.0.3` to `15.0.0`.
+- 3d3cbb1: Internal: bump `@github/copilot-sdk` from `0.3.0` to `1.0.0`.
+
 ## 2.0.1
 
 ### Patch Changes

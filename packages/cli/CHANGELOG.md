@@ -1,5 +1,14 @@
 # Change Log
 
+## 15.1.1
+
+### Patch Changes
+
+- 68ca7f6: Internal: bump `commander` from `14.0.3` to `15.0.0`.
+- 5b4699b: Internal: bump `inquirer` from `13.4.3` to `14.0.0`.
+  - @equinor/fusion-framework-dev-portal@6.0.0
+  - @equinor/fusion-framework-dev-server@2.0.10
+
 ## 15.1.0
 
 ### Minor Changes

@@ -1,5 +1,18 @@
 # @equinor/fusion-framework-cli-plugin-ai-index
 
+## 3.0.4
+
+### Patch Changes
+
+- 68ca7f6: Internal: bump `commander` from `14.0.3` to `15.0.0`.
+- Updated dependencies [68ca7f6]
+- Updated dependencies [b7b1d9a]
+- Updated dependencies [b7b1d9a]
+- Updated dependencies [b7b1d9a]
+  - @equinor/fusion-framework-cli-plugin-ai-base@4.0.3
+  - @equinor/fusion-framework-module@6.1.0
+  - @equinor/fusion-framework-module-ai@5.0.0
+
 ## 3.0.3
 
 ### Patch Changes

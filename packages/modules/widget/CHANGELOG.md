@@ -1,5 +1,17 @@
 # Change Log
 
+## 16.0.0
+
+### Patch Changes
+
+- Updated dependencies [b7b1d9a]
+- Updated dependencies [b7b1d9a]
+- Updated dependencies [b7b1d9a]
+- Updated dependencies [8dd9b9a]
+  - @equinor/fusion-framework-module@6.1.0
+  - @equinor/fusion-observable@9.0.2
+  - @equinor/fusion-framework-module-http@8.0.2
+
 ## 15.0.2
 
 ### Patch Changes

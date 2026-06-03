@@ -1,5 +1,18 @@
 # @equinor/fusion-framework-module-analytics
 
+## 2.0.6
+
+### Patch Changes
+
+- Updated dependencies [b7b1d9a]
+- Updated dependencies [b7b1d9a]
+- Updated dependencies [b7b1d9a]
+- Updated dependencies [8dd9b9a]
+  - @equinor/fusion-framework-module@6.1.0
+  - @equinor/fusion-observable@9.0.2
+  - @equinor/fusion-framework-module-app@8.0.2
+  - @equinor/fusion-framework-module-http@8.0.2
+
 ## 2.0.5
 
 ### Patch Changes

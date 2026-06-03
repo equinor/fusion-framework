@@ -1,5 +1,38 @@
 # @equinor/fusion-framework-docs
 
+## 0.4.18
+
+### Patch Changes
+
+- b7b1d9a: Document module configurator plugins, including `registerPlugin`, `createPlugin`, plugin teardown behavior, lifecycle ordering, and VuePress navigation updates.
+- 693085c: Add analytics documentation for `@equinor/fusion-framework-react-app/analytics`. Covers the `useTrackFeature` hook, the `AnyValueMap` type dependency note, the `app-feature` event shape, and usage examples for button clicks, data attributes, and component mount tracking.
+- 696a2ad: Add apploader documentation for `@equinor/fusion-framework-react-app/apploader`. Covers the `Apploader` component and `useApploader` hook APIs, usage examples, and known limitations around routing and context sharing in embedded apps.
+- e15272d: Add help-center documentation for `@equinor/fusion-framework-react-app/help-center`. Covers the `useHelpCenter` hook API, all returned methods (`openHelp`, `openArticle`, `openFaqs`, `openSearch`, `openGovernance`, `openReleaseNotes`), usage examples, and the underlying `@Portal::FusionHelp::open` event page discriminator values.
+- e4969db: Add getting started, migration, and interop documentation for `@equinor/fusion-framework-react-router`,
+  and a routing guide for `@equinor/fusion-framework-react-app`.
+  - **Getting started** — 7-step setup walkthrough covering navigation config, route DSL, `<Router>` mount,
+    page loaders, hooks, custom context, and the Vite plugin. Framed for all Fusion consumers (apps, portals, widgets).
+  - **Migration guide** — step-by-step instructions for moving from a plain `react-router` setup to the Fusion router.
+  - **Interop entry point** — documents `./interop` with code examples for `MemoryRouter`, `createMemoryRouter + RouterProvider`,
+    and `Routes + Route`; explains the dual-bundling risk that motivates the interop bridge.
+  - **Routing (react-app)** — documents the `./routing` entry point on `@equinor/fusion-framework-react-app`
+    with installation, configuration, and usage examples.
+
+- b7b1d9a: Document the `@equinor/fusion-framework-module` configurator and lifecycle.
+
+  Adds structured `docs/` pages covering:
+  - **concepts** — module system overview, roles, and mental model
+  - **lifecycle** — configure → initialize → post-initialize → dispose phase sequence
+  - **configuration** — how to register modules and use `addConfig` / `configure`
+  - **cross-module deps** — `requireInstance` pattern for inter-module dependencies
+  - **events** — `event$` observable and event naming conventions
+  - **authoring modules** — step-by-step guide for creating a custom module
+  - **common mistakes** — FAQ-style pitfalls and how to avoid them
+
+  All pages are structured for retrieval (chunked sections, import paths, copy-pasteable examples) to improve Fusion Knowledge / Azure AI Search answer quality.
+
+  Closes: equinor/fusion-core-tasks#1258
+
 ## 0.4.17
 
 ### Patch Changes
