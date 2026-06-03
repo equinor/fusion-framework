@@ -385,7 +385,18 @@ export default sidebar({
       children: [
         {
           text: 'Router',
+          prefix: 'router/',
           link: 'router/',
+          children: [
+            {
+              text: 'Migration Guide',
+              link: 'migration.md',
+            },
+            {
+              text: 'Interop Entry Point',
+              link: 'interop.md',
+            },
+          ],
         },
       ],
     },
