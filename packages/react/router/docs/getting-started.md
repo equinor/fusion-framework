@@ -159,6 +159,6 @@ export default defineConfig({
 
 ## Next steps
 
-- [Migration guide](./migration.md) — moving from a plain `react-router` setup
-- [Interop entry point](./interop.md) — `MemoryRouter`, `createMemoryRouter`, and JSX-based routing for testing and mid-migration scenarios
+- [Migration guide](/modules/react/router/migration) — moving from a plain `react-router` setup
+- [Interop entry point](/modules/react/router/interop) — `MemoryRouter`, `createMemoryRouter`, and JSX-based routing for testing and mid-migration scenarios
 - [End-to-end cookbook](/cookbooks/react-app-router) — full working example
