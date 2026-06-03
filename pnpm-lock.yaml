@@ -2131,7 +2131,7 @@ importers:
         version: 2.3.0
       '@equinor/eds-utils':
         specifier: ^2.0.0
-        version: 2.1.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6))
+        version: 2.2.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6))
       '@equinor/fusion-framework-module-app':
         specifier: workspace:^
         version: link:../../../modules/app
@@ -3264,13 +3264,6 @@ packages:
 
   '@equinor/eds-tokens@2.3.0':
     resolution: {integrity: sha512-CAuO75EnYw053nNB78OafNbA3+Orfav7a6SoFaEPfuiHiEopYqeEHnptijo5Pznd73dwMK8wMqmlzynQkDBYCg==}
-
-  '@equinor/eds-utils@2.1.0':
-    resolution: {integrity: sha512-yMrqw22Rc3UXrru4tGCSSyuLNY60ikuEyhJXu54beorllB3iCxvMxD5P9tFP6tkkTl/V0tYH9tD79JfzO2w6Ew==}
-    peerDependencies:
-      react: ^18 || ^19
-      react-dom: ^18 || ^19
-      styled-components: ^6
 
   '@equinor/eds-utils@2.2.1':
     resolution: {integrity: sha512-rYBZMPrnXvpd8f/ZkShg9mh3iJzvuvTKso9WRc72Z1kAEH+BrineNdrxRle69iYxnyytIE4b5bLGGvVVIaigYA==}
@@ -11541,18 +11534,10 @@ snapshots:
 
   '@equinor/eds-tokens@2.3.0': {}
 
-  '@equinor/eds-utils@2.1.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6))':
-    dependencies:
-      '@babel/runtime': 7.29.2
-      '@equinor/eds-tokens': 2.3.0
-      react: 19.2.6
-      react-dom: 19.2.6(react@19.2.6)
-      styled-components: 6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
-
   '@equinor/eds-utils@2.2.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6))':
     dependencies:
-      '@babel/runtime': 7.29.2
-      '@equinor/eds-tokens': 2.2.0
+      '@babel/runtime': 7.29.7
+      '@equinor/eds-tokens': 2.3.0
       react: 19.2.6
       react-dom: 19.2.6(react@19.2.6)
       styled-components: 6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
@@ -12517,14 +12502,14 @@ snapshots:
 
   '@manypkg/find-root@1.1.0':
     dependencies:
-      '@babel/runtime': 7.29.2
+      '@babel/runtime': 7.29.7
       '@types/node': 12.20.55
       find-up: 4.1.0
       fs-extra: 8.1.0
 
   '@manypkg/get-packages@1.1.3':
     dependencies:
-      '@babel/runtime': 7.29.2
+      '@babel/runtime': 7.29.7
       '@changesets/types': 4.1.0
       '@manypkg/find-root': 1.1.0
       fs-extra: 8.1.0
