@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.1.3 - 2026-03-18
+
+### patch
+
+- [#98](https://github.com/equinor/fusion-skills/pull/98) [`6bb9cdc`](https://github.com/equinor/fusion-skills/commit/6bb9cdcc1e2e0ed25d562bfd5db4dfab52559c0f) - Deprecate in favor of consolidated `fusion-issue-authoring` skill
+
+
+  - Set `metadata.status: deprecated` and `metadata.successor: fusion-issue-authoring`
+  - Move to `skills/.deprecated/` placement lane
+  - Add deprecation notice pointing to the consolidated skill
+
+  Resolves equinor/fusion-core-tasks#802
+
 ## 0.1.2 - 2026-03-05
 
 ### patch

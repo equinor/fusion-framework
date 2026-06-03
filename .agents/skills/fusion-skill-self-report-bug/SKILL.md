@@ -3,18 +3,25 @@ name: fusion-skill-self-report-bug
 description: Capture Fusion skill workflow failure context and guide a draft-first bug reporting flow with explicit confirmation before any GitHub mutation.
 license: MIT
 metadata:
-  version: "0.1.1"
-  status: active
+  version: "0.1.2"
+  status: deprecated
+  deprecated_at: "2026-03-21"
+  successor: fusion-skills
   owner: "@equinor/fusion-core"
   tags:
     - github
     - issue-authoring
     - reliability
     - automation
+    - deprecated
   mcp:
     required:
       - github
 ---
+
+> **Deprecated as of 2026-03-21.** This skill has been superseded by the `warden` agent in [`fusion-skills`](../../fusion-skills/SKILL.md), which inlines the full bug reporting workflow and adds proactive frustration detection and skill smell inspection. Use `fusion-skills` instead.
+>
+> Install: `npx -y skills add equinor/fusion-skills fusion-skills`
 
 # Self-report Fusion Skill Bugs
 

@@ -5,79 +5,85 @@
       "source": "equinor/fusion-skills",
       "sourceType": "github",
       "skillPath": "skills/.system/fusion-code-conventions/SKILL.md",
-      "computedHash": "b5094425d13bf88e9a9a2c76d439f96c20ad5e03d87f956266518d502446bd12"
+      "computedHash": "1666a34580dbd070727a53625e6fb3a481b613449af503ce16913ee7aa03254f"
     },
     "fusion-dependency-review": {
       "source": "equinor/fusion-skills",
       "sourceType": "github",
       "skillPath": "skills/.experimental/fusion-dependency-review/SKILL.md",
-      "computedHash": "1ef3e75fb9116bc336d60c3d4e0dc75ce4ff91003a9f0abf7bed9c017c35043f"
+      "computedHash": "3c7edde1fa83819d26191bbf5a931412632b1c1ef3e0f9856ef7408159b5cf1f"
     },
     "fusion-discover-skills": {
       "source": "equinor/fusion-skills",
       "sourceType": "github",
-      "computedHash": "f95b135480dd1e7c77581ba48e1b13a01850931c2f1a8ec757757972338821c6"
+      "skillPath": "skills/.deprecated/fusion-discover-skills/SKILL.md",
+      "computedHash": "f42ebe27aa02719a55cf122d800409021bf586f715708a300136402aa2b22ecf"
     },
     "fusion-github-review-resolution": {
       "source": "equinor/fusion-skills",
       "sourceType": "github",
       "skillPath": "skills/.experimental/fusion-github-review-resolution/SKILL.md",
-      "computedHash": "31ec168649090359fd7cccefd06871098ee973dfbf1f41ce6d29ef291de8c826"
+      "computedHash": "eb8e917045ed8229f608683e3eb3c433ea23e75ba27ceda620d820f080d2e2d9"
     },
     "fusion-issue-author-bug": {
       "source": "equinor/fusion-skills",
       "sourceType": "github",
-      "computedHash": "6d55416c2722e3de8dca47e2f60d48a47add616327ec30162db9fc1f8a10180d"
+      "skillPath": "skills/.deprecated/fusion-issue-author-bug/SKILL.md",
+      "computedHash": "c6c71dce15ec9eadbc43cf88c72f229302d686a41fa39fae3260ca855be2c3b6"
     },
     "fusion-issue-author-feature": {
       "source": "equinor/fusion-skills",
       "sourceType": "github",
-      "computedHash": "598132e872388fcc1c96114c90ea768cf340a8ef04a464803d16afba9bafc89a"
+      "skillPath": "skills/.deprecated/fusion-issue-author-feature/SKILL.md",
+      "computedHash": "625ea98130f57200cf69bd87f0939d378a0261b59989474701e990551c1af375"
     },
     "fusion-issue-author-task": {
       "source": "equinor/fusion-skills",
       "sourceType": "github",
-      "computedHash": "8ad6e9f947a10a5fe2a777fd94c88fc7d56eb49b2daf90f35c42e58aee53327d"
+      "skillPath": "skills/.deprecated/fusion-issue-author-task/SKILL.md",
+      "computedHash": "80b1ee20a9f539deabfc2c2f516af927d858778c361535f78e0bf99aea45a8e4"
     },
     "fusion-issue-author-user-story": {
       "source": "equinor/fusion-skills",
       "sourceType": "github",
-      "computedHash": "a15ebfd34432b62bd6dbf3a11a35b0b8422ccb3c130ac7e890b04af82db4d33f"
+      "skillPath": "skills/.deprecated/fusion-issue-author-user-story/SKILL.md",
+      "computedHash": "03101699b681b44a669821614c02ef4d1a50f4195650175206d99dd43806b594"
     },
     "fusion-issue-authoring": {
       "source": "equinor/fusion-skills",
       "sourceType": "github",
       "skillPath": "skills/fusion-issue-authoring/SKILL.md",
-      "computedHash": "df7b705977b4207bc0e678668d4bb6123ddce58266a9864b5e9c87c4dc74a660"
+      "computedHash": "2a01af52a20e4ce54466c8131ad0f55af0cee0347f429b449056769cac91bf0d"
     },
     "fusion-issue-solving": {
       "source": "equinor/fusion-skills",
       "sourceType": "github",
       "skillPath": "skills/.experimental/fusion-issue-solving/SKILL.md",
-      "computedHash": "f028d8bb4dab2b4959f62f5578f450a8fc4fe848eb2111fa90a1bfba2d0c5393"
+      "computedHash": "ecf0b1b14a53aef2f48143a00fb67a7fdb13cf2f4ed44a10a36983938981ab62"
     },
     "fusion-issue-task-planning": {
       "source": "equinor/fusion-skills",
       "sourceType": "github",
       "skillPath": "skills/.experimental/fusion-issue-task-planning/SKILL.md",
-      "computedHash": "d8d7e2d1399538a98cd416e3024da0135d3af2477d671e2f1d7448f9e652b732"
+      "computedHash": "38b9f74a69b19f354c9f4fa9e759b772b5f5b21bc1a243c9295a3d9337bae77a"
     },
     "fusion-mcp": {
       "source": "equinor/fusion-skills",
       "sourceType": "github",
       "skillPath": "skills/.experimental/fusion-mcp/SKILL.md",
-      "computedHash": "42e92117a6ce14834da4e3f9aedb1288e5a44c2a893ff500fa3c4b5e80efd430"
+      "computedHash": "7a16c6a48ed7fce0adb05bc3356bf49264ca55ed5100339eb11e2026f057f4af"
     },
     "fusion-skill-authoring": {
       "source": "equinor/fusion-skills",
       "sourceType": "github",
       "skillPath": "skills/fusion-skill-authoring/SKILL.md",
-      "computedHash": "7fff89ef0babfe248ae95c5f183de104d07206c9fbcffb4a843cbe33cf9b42bc"
+      "computedHash": "345ccc076009bb00c933d273281ed9d04f052c684e1a9c14a180ccee863160d8"
     },
     "fusion-skill-self-report-bug": {
       "source": "equinor/fusion-skills",
       "sourceType": "github",
-      "computedHash": "91ce7ac38fde706f5a4ee99df6da99759b4565d51cbdbdc21df7d94e4ad58ea1"
+      "skillPath": "skills/.deprecated/fusion-skill-self-report-bug/SKILL.md",
+      "computedHash": "186523eb9ad4eca462c518c6c7be6b63e4ae6af50a7c44b9ca64212d4d6556a9"
     }
   }
 }

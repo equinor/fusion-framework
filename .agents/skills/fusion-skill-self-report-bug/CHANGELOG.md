@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.1.2 - 2026-03-21
+
+### patch
+
+- [#113](https://github.com/equinor/fusion-skills/pull/113) [`d777366`](https://github.com/equinor/fusion-skills/commit/d777366fe6e1b710876a8e1abd2f311e3f4440c4) - Deprecate `fusion-skill-self-report-bug` in favour of the `warden` agent in `fusion-skills`
+
+
+  The bug reporting workflow has been inlined into `fusion-skills/agents/warden.agent.md`, which also adds proactive frustration detection and skill smell inspection. The `fusion-skill-self-report-bug` skill is no longer needed as a standalone install.
+
+  Superseded by the `warden` agent in `fusion-skills`.
+
 ## 0.1.1 - 2026-03-05
 
 ### patch

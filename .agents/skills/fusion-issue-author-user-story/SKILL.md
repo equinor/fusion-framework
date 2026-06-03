@@ -1,10 +1,12 @@
 ---
 name: fusion-issue-author-user-story
-description: Draft and update user-story issues with role-action-value framing, workflow scenarios, repository-valid labels, and explicit publish confirmation.
+description: "DEPRECATED: Use fusion-issue-authoring instead. Previously: Draft and update user-story issues with role-action-value framing and workflow scenarios."
 license: MIT
 metadata:
-  version: "0.1.2"
-  status: active
+  version: "0.1.3"
+  status: deprecated
+  deprecated_at: "2026-03-18"
+  successor: fusion-issue-authoring
   owner: "@equinor/fusion-core"
   orchestrator: "fusion-issue-authoring"
   role: "subordinate"
@@ -12,10 +14,13 @@ metadata:
     - github
     - issue-authoring
     - user-story
+    - deprecated
   mcp:
     required:
       - github
 ---
+
+> **DEPRECATED**: This skill has been consolidated into [`fusion-issue-authoring`](../../fusion-issue-authoring/SKILL.md). Install only `fusion-issue-authoring` for full bug/feature/user-story/task authoring capability. See [equinor/fusion-core-tasks#802](https://github.com/equinor/fusion-core-tasks/issues/802) for details.
 
 # Author User Story Issue
 
