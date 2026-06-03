@@ -18,4 +18,16 @@
  * @packageDocumentation
  */
 export * from '@equinor/fusion-framework-react-router';
-export * from '@equinor/fusion-framework-react-router/routes';
+// Explicit re-exports from /routes so the DSL `Route` class takes precedence
+// over the deprecated react-router `Route` component from the main entry.
+export {
+  index,
+  IndexRoute,
+  route,
+  Route,
+  layout,
+  LayoutRoute,
+  prefix,
+  PrefixRoute,
+} from '@equinor/fusion-framework-react-router/routes';
+export type { RouteSchemaEntry } from '@equinor/fusion-framework-react-router/routes';
