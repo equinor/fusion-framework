@@ -44,7 +44,8 @@ export const RouterProvider: typeof ReactRouterRouterProvider = ReactRouterRoute
  *
  * @deprecated Interop export. This will be removed in a future major version.
  */
-export const createMemoryRouter: typeof reactRouterCreateMemoryRouter = reactRouterCreateMemoryRouter;
+export const createMemoryRouter: typeof reactRouterCreateMemoryRouter =
+  reactRouterCreateMemoryRouter;
 
 /**
  * Interop re-export of `Routes` from `react-router`.
