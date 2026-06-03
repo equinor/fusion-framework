@@ -1,5 +1,21 @@
 # @equinor/fusion-framework-dev-portal
 
+## 6.0.0
+
+### Patch Changes
+
+- Updated dependencies [f3bf74b]
+- Updated dependencies [8dd9b9a]
+  - @equinor/fusion-framework-module-navigation@7.0.4
+  - @equinor/fusion-observable@9.0.2
+  - @equinor/fusion-framework-app@11.0.7
+  - @equinor/fusion-framework@8.0.7
+  - @equinor/fusion-framework-module-analytics@2.0.6
+  - @equinor/fusion-framework-module-telemetry@6.0.0
+  - @equinor/fusion-framework-dev-server@2.0.10
+  - @equinor/fusion-framework-module-app@8.0.2
+  - @equinor/fusion-framework-react@8.0.0
+
 ## 5.1.13
 
 ### Patch Changes

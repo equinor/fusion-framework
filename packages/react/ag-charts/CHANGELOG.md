@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-react-ag-charts
 
+## 14.0.4
+
+### Patch Changes
+
+- ef96e1b: Updated documentation for licensing
+
 ## 14.0.3
 
 ### Patch Changes

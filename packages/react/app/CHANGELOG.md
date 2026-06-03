@@ -1,5 +1,56 @@
 # Change Log
 
+## 11.0.0
+
+### Minor Changes
+
+- e4969db: Add `./routing` entry point that re-exports the full public API of
+  `@equinor/fusion-framework-react-router` and its route builder DSL.
+
+  App, portal, and widget consumers can now import all routing primitives from a single package
+  without adding `@equinor/fusion-framework-react-router` as a direct dependency.
+
+  Requires `@equinor/fusion-framework-react-router` (optional peer dependency):
+
+  ```bash
+  pnpm add @equinor/fusion-framework-react-router
+  ```
+
+  **Usage:**
+
+  ```ts
+  import { Router } from "@equinor/fusion-framework-react-app/routing";
+  import {
+    layout,
+    index,
+    route,
+    prefix,
+  } from "@equinor/fusion-framework-react-app/routing";
+  import {
+    useNavigate,
+    useParams,
+    Link,
+  } from "@equinor/fusion-framework-react-app/routing";
+  ```
+
+  All exports from `@equinor/fusion-framework-react-router` and its `/routes` DSL are available
+  from this single entry point.
+
+### Patch Changes
+
+- Updated dependencies [f3bf74b]
+- Updated dependencies [b7b1d9a]
+- Updated dependencies [b7b1d9a]
+- Updated dependencies [b7b1d9a]
+  - @equinor/fusion-framework-module-navigation@7.0.4
+  - @equinor/fusion-framework-module@6.1.0
+  - @equinor/fusion-framework-react-module@4.0.1
+  - @equinor/fusion-framework-app@11.0.7
+  - @equinor/fusion-framework-module-msal@9.0.0
+  - @equinor/fusion-framework-module-app@8.0.2
+  - @equinor/fusion-framework-module-http@8.0.2
+  - @equinor/fusion-framework-react@8.0.0
+
 ## 10.0.8
 
 ### Patch Changes

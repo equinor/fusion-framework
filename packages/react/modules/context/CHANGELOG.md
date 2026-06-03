@@ -1,5 +1,11 @@
 # Change Log
 
+## 7.0.1
+
+### Patch Changes
+
+- 86a0599: Clarify the React context module README by documenting all package exports and linking to the existing app-scoped context wrapper documentation.
+
 ## 7.0.0
 
 ### Major Changes
