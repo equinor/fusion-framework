@@ -2074,6 +2074,9 @@ importers:
       '@equinor/fusion-framework-react-module-context':
         specifier: workspace:*
         version: link:../modules/context
+      '@equinor/fusion-framework-react-router':
+        specifier: workspace:*
+        version: link:../router
       '@equinor/fusion-observable':
         specifier: workspace:*
         version: link:../../utils/observable
