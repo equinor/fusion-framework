@@ -1,5 +1,3 @@
-import { Route as ReactRouterRoute, Routes as ReactRouterRoutes } from 'react-router';
-
 export { Router } from './Router.js';
 export { FusionRouterContextProvider, routerContext, useRouterContext } from './context.js';
 export type { RouteSchemaEntry } from './routes/to-route-schema.js';
@@ -48,15 +46,3 @@ export {
   useSearchParams,
   useSubmit,
 } from 'react-router';
-
-/**
- * Use Fusion route schema DSL or RouteObject-based routing instead of React Router `<Routes>`.
- * @deprecated Please use Fusion DSL or RouteObject instead.
- */
-export const Routes: typeof ReactRouterRoutes = ReactRouterRoutes;
-
-/**
- * Use Fusion route schema DSL or RouteObject-based routing instead of React Router `<Route>`.
- * @deprecated Please use Fusion DSL or RouteObject instead.
- */
-export const Route: typeof ReactRouterRoute = ReactRouterRoute;

@@ -11,6 +11,10 @@ export default sidebar({
           text: 'Authentication',
           link: 'app/docs/msal.md',
         },
+        {
+          text: 'Routing',
+          link: 'app/docs/routing.md',
+        },
         // 'app/getting-started',
         // {
         //   text: 'Cookbooks',
@@ -385,7 +389,22 @@ export default sidebar({
       children: [
         {
           text: 'Router',
+          prefix: 'router/',
           link: 'router/',
+          children: [
+            {
+              text: 'Getting Started',
+              link: 'getting-started.md',
+            },
+            {
+              text: 'Migration Guide',
+              link: 'migration.md',
+            },
+            {
+              text: 'Interop Entry Point',
+              link: 'interop.md',
+            },
+          ],
         },
       ],
     },

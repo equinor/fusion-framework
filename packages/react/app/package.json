@@ -60,6 +60,10 @@
     "./widget": {
       "types": "./dist/types/widget/index.d.ts",
       "import": "./dist/esm/widget/index.js"
+    },
+    "./routing": {
+      "types": "./dist/types/routing/index.d.ts",
+      "import": "./dist/esm/routing/index.js"
     }
   },
   "typesVersions": {
@@ -102,6 +106,9 @@
       ],
       "widget": [
         "dist/types/widget/index.d.ts"
+      ],
+      "routing": [
+        "dist/types/routing/index.d.ts"
       ]
     }
   },
@@ -139,6 +146,7 @@
     "@equinor/fusion-framework-module-msal": "workspace:*",
     "@equinor/fusion-framework-react-module-bookmark": "workspace:*",
     "@equinor/fusion-framework-react-module-context": "workspace:*",
+    "@equinor/fusion-framework-react-router": "workspace:*",
     "@equinor/fusion-observable": "workspace:*",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
@@ -151,6 +159,7 @@
   },
   "peerDependencies": {
     "@equinor/fusion-framework-module-msal": "workspace:^",
+    "@equinor/fusion-framework-react-router": "workspace:^",
     "@types/react": "^18.0.0 || ^19.0.0",
     "react": "^18.0.0 || ^19.0.0",
     "react-dom": "^18.0.0 || ^19.0.0",
@@ -182,6 +191,9 @@
       "optional": true
     },
     "rxjs": {
+      "optional": true
+    },
+    "@equinor/fusion-framework-react-router": {
       "optional": true
     }
   }
