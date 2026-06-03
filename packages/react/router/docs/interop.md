@@ -84,4 +84,4 @@ Migrate to `RouteObject[]` passed to `<Router>` or the Fusion DSL (`layout`, `in
 
 These utilities belong to `react-router` and are intentionally not part of the Fusion router's main public API surface. Exposing them here avoids teams adding `react-router` as a separate dependency — which would risk bundling two copies of the router — while they complete their migration to the Fusion patterns.
 
-Once your codebase no longer uses this entry point, remove the import. The symbols remain available from `react-router` through the peer dependency resolution handled by your package manager.
+Once your codebase no longer uses this entry point, remove the import. The symbols remain available from `react-router`, which is bundled as a direct dependency of `@equinor/fusion-framework-react-router`.

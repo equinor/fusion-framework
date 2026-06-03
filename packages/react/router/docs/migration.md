@@ -62,7 +62,7 @@ export const pages = layout('./MainLayout.tsx', [
 ]);
 ```
 
-The Vite plugin transforms these DSL calls into standard `RouteObject` code at build time. See the [Vite plugin section](../README.md#vite-plugin) in the README.
+The Vite plugin transforms these DSL calls into standard `RouteObject` code at build time. See the [Vite plugin section](/modules/react/router/#vite-plugin) in the router module docs.
 
 ## Step 3 — Replace loader and action signatures
 
@@ -128,7 +128,7 @@ import { useNavigate, useParams, useLocation } from '@equinor/fusion-framework-r
 
 ## Step 6 — Remove `react-router` from your dependencies
 
-Once all imports are updated, remove `react-router` from your `package.json`. It is a peer dependency of `@equinor/fusion-framework-react-router` and will always be present — adding it separately risks bundling two copies of the router.
+Once all imports are updated, remove `react-router` from your `package.json`. It is bundled as a direct dependency of `@equinor/fusion-framework-react-router` and will always be present — adding it separately risks bundling two copies of the router.
 
 ```bash
 pnpm remove react-router

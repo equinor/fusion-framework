@@ -1,6 +1,7 @@
 ---
 title: Getting Started
-tags:
+category: Module
+tag:
   - router
   - react-router
   - routing

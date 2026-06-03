@@ -81,6 +81,6 @@ import { useNavigate, useParams, useLocation, Link } from '@equinor/fusion-frame
 
 ## See also
 
-- [Getting started](../../react/router/getting-started.md) — full setup walkthrough for the standalone router package
-- [Interop entry point](../../react/router/interop.md) — `MemoryRouter` and other react-router bridges for testing and mid-migration
-- [Migration guide](../../react/router/migration.md) — moving from a plain react-router setup
+- [Getting started](/modules/react/router/getting-started) — full setup walkthrough for the standalone router package
+- [Interop entry point](/modules/react/router/interop) — `MemoryRouter` and other react-router bridges for testing and mid-migration
+- [Migration guide](/modules/react/router/migration) — moving from a plain react-router setup

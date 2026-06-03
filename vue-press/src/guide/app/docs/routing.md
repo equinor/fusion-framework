@@ -1,6 +1,7 @@
 ---
 title: Routing
-tags:
+category: Guide
+tag:
   - router
   - react-router
   - routing

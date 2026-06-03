@@ -17,7 +17,7 @@ export type {
  * Useful for wrapping components in unit tests or embedding isolated widgets
  * that must not interact with the host page URL. Teams already using
  * `MemoryRouter` for testing can continue importing from this interop entry
- * point while migrating to a direct `react-router` dependency.
+ * point while migrating away from direct `react-router` imports.
  *
  * @deprecated Interop export. This will be removed in a future major version.
  */
@@ -40,7 +40,7 @@ export const RouterProvider: typeof ReactRouterRouterProvider = ReactRouterRoute
  * Useful for building test routers that support loaders, actions, and nested
  * routes without touching browser history. Teams using this for component or
  * integration tests can keep importing from this interop entry point while
- * migrating to a direct `react-router` dependency.
+ * migrating away from direct `react-router` imports.
  *
  * @deprecated Interop export. This will be removed in a future major version.
  */
@@ -53,7 +53,8 @@ export const createMemoryRouter: typeof reactRouterCreateMemoryRouter =
  * Teams migrating from React Router v6 JSX-based routing can use this while
  * transitioning to the Fusion route schema DSL or `RouteObject`-based routing.
  *
- * @deprecated Use the Fusion DSL (`Route`, `IndexRoute`, `LayoutRoute`) or a
+ * @deprecated Interop export. This will be removed in a future major version.
+ * Use the Fusion DSL (`Route`, `IndexRoute`, `LayoutRoute`) or a
  * `RouteObject` array passed to `<Router>` instead.
  */
 export const Routes: typeof ReactRouterRoutes = ReactRouterRoutes;
@@ -64,7 +65,8 @@ export const Routes: typeof ReactRouterRoutes = ReactRouterRoutes;
  * Teams migrating from React Router v6 JSX-based routing can use this while
  * transitioning to the Fusion route schema DSL or `RouteObject`-based routing.
  *
- * @deprecated Use the Fusion DSL (`Route`, `IndexRoute`, `LayoutRoute`) or a
+ * @deprecated Interop export. This will be removed in a future major version.
+ * Use the Fusion DSL (`Route`, `IndexRoute`, `LayoutRoute`) or a
  * `RouteObject` array passed to `<Router>` instead.
  */
 export const Route: typeof ReactRouterRoute = ReactRouterRoute;

@@ -45,4 +45,9 @@ export {
   useRouteError,
   useSearchParams,
   useSubmit,
+  // @deprecated — re-exported here for backwards compatibility; prefer importing
+  // from `@equinor/fusion-framework-react-router/interop` or migrating to the
+  // Fusion DSL. These will be removed in a future major version.
+  Route,
+  Routes,
 } from 'react-router';
