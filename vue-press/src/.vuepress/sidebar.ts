@@ -11,6 +11,10 @@ export default sidebar({
           text: 'Authentication',
           link: 'app/docs/msal.md',
         },
+        {
+          text: 'Routing',
+          link: 'app/docs/routing.md',
+        },
         // 'app/getting-started',
         // {
         //   text: 'Cookbooks',
