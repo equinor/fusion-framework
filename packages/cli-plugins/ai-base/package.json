@@ -52,7 +52,7 @@
     "@equinor/fusion-framework-module": "workspace:*",
     "@equinor/fusion-framework-module-ai": "workspace:*",
     "@equinor/fusion-imports": "workspace:*",
-    "commander": "^14.0.1",
+    "commander": "^15.0.0",
     "zod": "^4.4.3"
   },
   "peerDependencies": {
