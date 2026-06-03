@@ -389,6 +389,10 @@ export default sidebar({
           link: 'router/',
           children: [
             {
+              text: 'Getting Started',
+              link: 'getting-started.md',
+            },
+            {
               text: 'Migration Guide',
               link: 'migration.md',
             },
