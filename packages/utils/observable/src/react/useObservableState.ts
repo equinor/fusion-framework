@@ -1,4 +1,5 @@
 import { useMemo, useSyncExternalStore } from 'react';
+import { distinctUntilChanged } from 'rxjs';
 import type { Observable, StatefulObservable } from '../types';
 
 /**
@@ -121,15 +122,15 @@ function createObservableStateStore<TType, TError = unknown>(
     getSnapshot,
     getServerSnapshot: getSnapshot,
     subscribe: (onStoreChange: () => void): (() => void) => {
-      const subscription = subject.subscribe({
+      /**
+       * Pipe distinctUntilChanged so synchronous emissions from stateful
+       * observables (BehaviorSubject, FlowSubject) that replay their current
+       * value on subscribe are filtered out before reaching the next handler.
+       * This prevents spurious snapshot object creation and the resulting
+       * useSyncExternalStore tearing loop.
+       */
+      const subscription = subject.pipe(distinctUntilChanged()).subscribe({
         next: (value) => {
-          /**
-           * Skip when value is unchanged — avoids creating a new snapshot object
-           * for synchronous emissions (e.g. BehaviorSubject) that fire during
-           * subscribe and would otherwise trigger infinite re-renders via
-           * useSyncExternalStore's tearing detection.
-           */
-          if (Object.is(snapshot.value, value)) return;
           snapshot = { ...snapshot, value };
           notify();
         },
