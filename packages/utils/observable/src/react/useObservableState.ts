@@ -122,21 +122,19 @@ function createObservableStateStore<TType, TError = unknown>(
     getSnapshot,
     getServerSnapshot: getSnapshot,
     subscribe: (onStoreChange: () => void): (() => void) => {
-      /**
-       * Filter out emissions that match the current snapshot value.
-       *
-       * `distinctUntilChanged` is not sufficient here because it always emits
-       * the first value (no previous to compare against). A BehaviorSubject
-       * fires synchronously on subscribe, so without this filter the snapshot
-       * gets a new object reference before the listener is registered — React's
-       * useSyncExternalStore tearing check then detects a mismatch and forces
-       * a re-render, which re-subscribes, which repeats indefinitely.
-       *
-       * Using `snapshot.value` as the comparand is correct: it is already
-       * seeded via resolveInitialValue and advances with each emission, so
-       * subsequent duplicate values are also suppressed.
-       */
-      const subscription = subject.pipe(filter((value) => !Object.is(snapshot.value, value))).subscribe({
+      const subscription = subject
+        .pipe(
+          // `distinctUntilChanged` is not sufficient — it always emits the first value
+          // (no previous to compare against). BehaviorSubject fires synchronously on
+          // subscribe, so that first emission would update the snapshot before the listener
+          // is registered. React's tearing check then sees a new object reference and forces
+          // a re-render, which re-subscribes, which repeats indefinitely.
+          // Comparing against `snapshot.value` is correct: it is already seeded via
+          // resolveInitialValue, so the sync replay is caught, and subsequent duplicates
+          // are suppressed for free.
+          filter((value) => !Object.is(snapshot.value, value)),
+        )
+        .subscribe({
         next: (value) => {
           snapshot = { ...snapshot, value };
           notify();
