@@ -1,4 +1,4 @@
-import type { z, ZodError } from 'zod';
+import type { ZodError } from 'zod';
 
 import {
   BaseConfigBuilder,
@@ -179,7 +179,7 @@ export class BookmarkModuleConfigurator extends BaseConfigBuilder<BookmarkModule
     value: BookmarkModuleConfig['filters'][TKey],
   ) {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
+    // @ts-expect-error
     this._set(`filters.${key}`, async () => value);
   }
 
@@ -336,7 +336,7 @@ export class BookmarkModuleConfigurator extends BaseConfigBuilder<BookmarkModule
       const apiProvider = await this._getServiceProvider(init);
       const api = await apiProvider.createBookmarksClient('json$');
       return new BookmarkClient(api);
-    } catch (err) {
+    } catch (_err) {
       this.#log?.warn('Failed to create bookmark api client');
     }
   }

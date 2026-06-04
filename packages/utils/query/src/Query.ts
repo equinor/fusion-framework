@@ -13,7 +13,6 @@ import {
   distinctUntilChanged,
   filter,
   map,
-  merge,
   takeWhile,
   tap,
   throwIfEmpty,

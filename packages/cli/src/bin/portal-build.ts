@@ -1,10 +1,6 @@
 import { build as viteBuild } from 'vite';
 
-import {
-  initializeFramework,
-  type FusionEnv,
-  type FusionFrameworkSettings,
-} from './framework.node.js';
+import type { FusionEnv } from './framework.node.js';
 import { type ConsoleLogger, chalk } from './utils/index.js';
 
 import { loadViteConfig } from './helpers/load-vite-config.js';

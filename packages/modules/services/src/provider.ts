@@ -1,7 +1,6 @@
 import type { IHttpClient } from '@equinor/fusion-framework-module-http';
 import { BaseModuleProvider } from '@equinor/fusion-framework-module/provider';
 import type { ClientMethod } from './types';
-import type { IApiConfigurator } from './configurator';
 
 import type { ApiClientFactory } from './types';
 import { version } from './version.js';

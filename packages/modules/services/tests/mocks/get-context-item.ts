@@ -1,4 +1,4 @@
-import { Faker, da, en } from '@faker-js/faker';
+import { Faker, en } from '@faker-js/faker';
 import { type ApiContextEntity, ApiVersion } from '../../src/context';
 
 import { createHash } from 'node:crypto';

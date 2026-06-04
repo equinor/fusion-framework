@@ -1,4 +1,4 @@
-import { existsSync, readdirSync, rmSync } from 'node:fs';
+import { existsSync, readdirSync } from 'node:fs';
 import inquirer from 'inquirer';
 import type { ConsoleLogger } from '@equinor/fusion-framework-cli/bin';
 import { assert } from '../../../../lib/utils/assert.js';
