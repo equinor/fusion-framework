@@ -1,5 +1,5 @@
 import { useMemo, useSyncExternalStore } from 'react';
-import { distinctUntilChanged } from 'rxjs';
+import { filter } from 'rxjs';
 import type { Observable, StatefulObservable } from '../types';
 
 /**
@@ -123,13 +123,20 @@ function createObservableStateStore<TType, TError = unknown>(
     getServerSnapshot: getSnapshot,
     subscribe: (onStoreChange: () => void): (() => void) => {
       /**
-       * Pipe distinctUntilChanged so synchronous emissions from stateful
-       * observables (BehaviorSubject, FlowSubject) that replay their current
-       * value on subscribe are filtered out before reaching the next handler.
-       * This prevents spurious snapshot object creation and the resulting
-       * useSyncExternalStore tearing loop.
+       * Filter out emissions that match the current snapshot value.
+       *
+       * `distinctUntilChanged` is not sufficient here because it always emits
+       * the first value (no previous to compare against). A BehaviorSubject
+       * fires synchronously on subscribe, so without this filter the snapshot
+       * gets a new object reference before the listener is registered — React's
+       * useSyncExternalStore tearing check then detects a mismatch and forces
+       * a re-render, which re-subscribes, which repeats indefinitely.
+       *
+       * Using `snapshot.value` as the comparand is correct: it is already
+       * seeded via resolveInitialValue and advances with each emission, so
+       * subsequent duplicate values are also suppressed.
        */
-      const subscription = subject.pipe(distinctUntilChanged()).subscribe({
+      const subscription = subject.pipe(filter((value) => !Object.is(snapshot.value, value))).subscribe({
         next: (value) => {
           snapshot = { ...snapshot, value };
           notify();
