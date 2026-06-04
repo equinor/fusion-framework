@@ -1,15 +1,11 @@
 ---
 name: custom-rebase
-description: Guide for rebasing feature branches onto main in the Fusion Framework monorepo, including handling pnpm-lock.yaml conflicts
+description: "Rebases feature branches onto main in the Fusion Framework monorepo by regenerating pnpm-lock.yaml on conflict, resolving Version Packages commits with --ours, aligning pre.json initialVersions, and generating a post-rebase dependency change report. Use when the user needs to rebase a branch onto main, encounters pnpm-lock.yaml merge conflicts, hits Version Packages commit conflicts during rebase, or asks about git rebase workflows in this monorepo."
 ---
 
 # Custom Rebase Skill (Fusion Framework)
 
-This skill helps you rebase feature branches onto the latest `main` branch, handling common conflicts in a pnpm monorepo.
-
-## Overview
-
-When rebasing a feature branch, you'll often encounter conflicts in `pnpm-lock.yaml` due to parallel dependency changes. The correct approach is to regenerate the lockfile rather than manually resolving conflicts.
+Rebases feature branches onto the latest `main` branch, handling pnpm-lock.yaml regeneration, Version Packages commit resolution, pre.json alignment, and post-rebase reporting.
 
 ## Standard Rebase Workflow
 
@@ -184,81 +180,16 @@ The summary will be displayed in the chat for review before you push.
 
 Open the SUMMARY.md file in your editor to review before pushing.
 
-## Common Scenarios
+## Quick Reference
 
-### Reset local branch to match remote
-
-If your local branch has diverged incorrectly:
-
-```bash
-# Fetch latest
-git fetch origin
-
-# Hard reset to remote branch
-git reset --hard origin/YOUR_BRANCH_NAME
-```
-
-### Abort a rebase in progress
-
-If you need to start over:
-
-```bash
-git rebase --abort
-```
-
-### Continue after fixing conflicts
-
-```bash
-# After resolving conflicts and staging changes
-git rebase --continue
-```
-
-### Skip a commit during rebase
-
-Only if the commit is no longer needed:
-
-```bash
-git rebase --skip
-```
-
-## Rebase Checklist
-
-- [ ] Fetch latest changes from origin
-- [ ] Start rebase onto `origin/main`
-- [ ] For `pnpm-lock.yaml` conflicts:
-  - [ ] Remove the file with `git rm pnpm-lock.yaml`
-  - [ ] Run `pnpm install` to regenerate
-  - [ ] Stage with `git add pnpm-lock.yaml`
-- [ ] For source file conflicts:
-  - [ ] Manually resolve conflicts
-  - [ ] Stage resolved files
-- [ ] Continue rebase with `git rebase --continue`
-- [ ] Repeat until all commits are applied
-- [ ] Force push with `--force-with-lease`
-
-## Why Regenerate pnpm-lock.yaml?
-
-The lockfile contains exact dependency resolutions for the entire monorepo. During a rebase:
-
-1. **Base branch** (main) has new/updated dependencies
-2. **Your branch** has different/updated dependencies
-3. Git cannot merge these semantically - it only sees text conflicts
-
-By regenerating with `pnpm install`:
-- pnpm reads all current `package.json` files (including your changes)
-- Resolves dependencies against the latest registry state
-- Creates a consistent lockfile that works with both sets of changes
-- Respects workspace protocols and catalog references
+- **Abort**: `git rebase --abort`
+- **Skip commit**: `git rebase --skip`
+- **Reset to remote**: `git fetch origin && git reset --hard origin/YOUR_BRANCH_NAME`
 
 ## Troubleshooting
 
-### "diverged and have X and Y different commits"
+### Diverged branch
 
-Your local branch has commits that aren't on remote. Common causes:
-- Previous force push to a different commit
-- Local branch accidentally pointing to wrong commit
-
-**Fix:** Reset to remote and rebase:
 ```bash
 git fetch origin
 git fetch origin main:refs/remotes/origin/main
@@ -266,44 +197,9 @@ git reset --hard origin/YOUR_BRANCH_NAME
 git rebase origin/main
 ```
 
-### Rebase conflicts on every commit
-
-You may be rebasing in the wrong direction. Ensure:
-- You're ON your feature branch
-- You're rebasing ONTO main: `git rebase origin/main`
-
 ### pnpm install fails during rebase
 
-Check:
-- All `package.json` changes are staged/committed
-- No syntax errors in modified `package.json` files
-- You're running from the repository root
-
-## Example: Complete rebase flow
-
-```bash
-# 1. Navigate and prepare
-cd /Users/odin.rochmann/dev/GitHub/fusion-framework.worktree/react-19
-git fetch origin
-git fetch origin main:refs/remotes/origin/main
-
-# 2. Ensure clean state
-git status  # Should show "nothing to commit, working tree clean"
-
-# 3. Start rebase
-git rebase origin/main
-
-# 4. If pnpm-lock.yaml conflict appears:
-git rm pnpm-lock.yaml
-pnpm install
-git add pnpm-lock.yaml
-git rebase --continue
-
-# 5. Repeat step 4 for each commit with lockfile conflicts
-
-# 6. When rebase completes:
-git push --force-with-lease origin react-19
-```
+Check that all `package.json` changes are staged/committed, no syntax errors exist in modified `package.json` files, and you're running from the repository root.
 
 ## Related Skills
 
