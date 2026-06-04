@@ -27,6 +27,7 @@ export const mapProp = <TObject extends Record<string, unknown>, TPath extends N
   map((obj: TObject) => {
     return String(path)
       .split('.')
+      // biome-ignore lint/suspicious/noExplicitAny: generic constraint — substituting unknown breaks interface compatibility
       .reduce((cur: any, attr: string) => cur[attr], obj) as NestedPropType<TObject, TPath>;
   });
 

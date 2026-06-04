@@ -15,9 +15,13 @@ import type { IfMaybeUndefined, IfVoid, IsAny, IsUnknownOrNonInferrable } from '
  * @public
  */
 export type PrepareAction<P> =
+  // biome-ignore lint/suspicious/noExplicitAny: generic constraint — substituting unknown breaks interface compatibility
   | ((...args: any[]) => { payload: P })
+  // biome-ignore lint/suspicious/noExplicitAny: generic constraint — substituting unknown breaks interface compatibility
   | ((...args: any[]) => { payload: P; meta: any })
+  // biome-ignore lint/suspicious/noExplicitAny: generic constraint — substituting unknown breaks interface compatibility
   | ((...args: any[]) => { payload: P; error: any })
+  // biome-ignore lint/suspicious/noExplicitAny: generic constraint — substituting unknown breaks interface compatibility
   | ((...args: any[]) => { payload: P; meta: any; error: any });
 
 /**
@@ -25,6 +29,7 @@ export type PrepareAction<P> =
  *
  */
 export type _ActionCreatorWithPreparedPayload<
+  // biome-ignore lint/suspicious/noExplicitAny: generic constraint — substituting unknown breaks interface compatibility
   PA extends PrepareAction<any> | void,
   T extends string = string,
 > =
@@ -169,6 +174,7 @@ export type PayloadActionCreator<
   // else
   IsAny<
     P,
+    // biome-ignore lint/suspicious/noExplicitAny: generic constraint — substituting unknown breaks interface compatibility
     ActionCreatorWithPayload<any, T>,
     IsUnknownOrNonInferrable<
       P,
@@ -219,12 +225,15 @@ export function createAction<P = void, T extends string = string>(
  *
  * @public
  */
+// biome-ignore lint/suspicious/noExplicitAny: generic constraint — substituting unknown breaks interface compatibility
 export function createAction<PA extends PrepareAction<any>, T extends string = string>(
   type: T,
   prepareAction: PA,
 ): PayloadActionCreator<ReturnType<PA>['payload'], T, PA>;
 
+// biome-ignore lint/suspicious/noExplicitAny: generic constraint — substituting unknown breaks interface compatibility
 export function createAction(type: string, prepareAction?: PrepareAction<any>): any {
+  // biome-ignore lint/suspicious/noExplicitAny: generic constraint — substituting unknown breaks interface compatibility
   function actionCreator(...args: any[]) {
     if (prepareAction) {
       const prepared = prepareAction(...args);
@@ -284,14 +293,18 @@ export function getBaseType<T extends string>(type: T): BaseType<T> {
  *
  * @public
  */
+// biome-ignore lint/suspicious/noExplicitAny: generic constraint — substituting unknown breaks interface compatibility
 export function getType<T extends string>(actionCreator: PayloadActionCreator<any, T>): T {
   return `${actionCreator}` as T;
 }
 
 // helper types for more readable typings
 
+// biome-ignore lint/suspicious/noExplicitAny: generic constraint — substituting unknown breaks interface compatibility
 type IfPrepareActionMethodProvided<PA extends PrepareAction<any> | void, True, False> = PA extends (
+  // biome-ignore lint/suspicious/noExplicitAny: generic constraint — substituting unknown breaks interface compatibility
   ...args: any[]
+// biome-ignore lint/suspicious/noExplicitAny: generic constraint — substituting unknown breaks interface compatibility
 ) => any
   ? True
   : False;

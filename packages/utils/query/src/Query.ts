@@ -263,6 +263,7 @@ const getQueueOperator = <TDataType, TQueryArguments>(
  * @see {@link Query.invalidate} for more details on invalidating cache entries.
  * @see {@link QueueOperatorType} for more details on the available queue operators.
  */
+// biome-ignore lint/suspicious/noExplicitAny: generic constraint — substituting unknown breaks interface compatibility
 export class Query<TDataType, TQueryArguments = any> {
   /**
    * Static utility that extracts the raw value from a query result Observable.

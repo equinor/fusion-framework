@@ -79,6 +79,7 @@ export type QueryCacheState<TType = unknown, TArgs = unknown> = QueryCacheStateD
  * @returns A number that determines the order of the records; a negative number if `a` should come before `b`,
  * zero if they are considered equal, or a positive number if `a` should come after `b`.
  */
+// biome-ignore lint/suspicious/noExplicitAny: generic constraint — substituting unknown breaks interface compatibility
 export type CacheSortFn<TType = any, TArgs = any> = (
   a: QueryCacheRecord<TType, TArgs>,
   b: QueryCacheRecord<TType, TArgs>,

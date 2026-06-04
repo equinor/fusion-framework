@@ -74,12 +74,14 @@ export interface QueryCacheEvents<TData = unknown, TArgs = unknown> {
   query_cache_entry_mutated: QueryCacheEvent<{
     previousValue: TData;
     newValue: TData;
+    // biome-ignore lint/suspicious/noExplicitAny: generic constraint — substituting unknown breaks interface compatibility
     mutation: any;
   }>;
 
   /** Emitted when the cache is trimmed based on criteria */
   query_cache_trimmed: QueryCacheEvent<{
     removedKeys: string[];
+    // biome-ignore lint/suspicious/noExplicitAny: generic constraint — substituting unknown breaks interface compatibility
     criteria: { sort?: any; validate?: any; size?: number };
   }>;
 

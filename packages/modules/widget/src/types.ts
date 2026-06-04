@@ -4,6 +4,7 @@ import type { HttpModule } from '@equinor/fusion-framework-module-http';
 import type { ServiceDiscoveryModule } from '@equinor/fusion-framework-module-service-discovery';
 import type { QueryCtorOptions } from '@equinor/fusion-query';
 
+// biome-ignore lint/suspicious/noExplicitAny: generic constraint — substituting unknown breaks interface compatibility
 type Fusion = any;
 
 /**
@@ -177,6 +178,7 @@ export type WidgetModulesInstance<TModules extends Array<AnyModule> | unknown = 
  *
  * @template TModules - Custom module types.
  */
+// biome-ignore lint/suspicious/noExplicitAny: generic constraint — substituting unknown breaks interface compatibility
 export type WidgetState<TModules = any> = {
   /** Widget name (lookup key). */
   name: string;

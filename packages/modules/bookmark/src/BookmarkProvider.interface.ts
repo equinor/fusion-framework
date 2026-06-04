@@ -12,6 +12,7 @@ import type { BookmarkState } from './BookmarkProvider.store';
  *
  * @template T - The type of payload data stored in the bookmark.
  */
+// biome-ignore lint/suspicious/noExplicitAny: generic constraint — substituting unknown breaks interface compatibility
 export type BookmarkCreateArgs<T extends BookmarkData = any> = Omit<
   BookmarkNew<T>,
   'appKey' | 'contextId' | 'sourceSystem'
@@ -41,6 +42,7 @@ export type BookmarkUpdateOptions = {
  * @param initial - The original payload before any generators ran (read-only reference).
  * @returns A partial payload, `void` (when mutating the draft), or `null` to clear.
  */
+// biome-ignore lint/suspicious/noExplicitAny: generic constraint — substituting unknown breaks interface compatibility
 export type BookmarkPayloadGenerator<TData extends BookmarkData = any> = (
   payload?: Partial<TData> | null,
   initial?: Partial<TData> | null,

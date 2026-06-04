@@ -32,6 +32,7 @@ export type IsUnknownOrNonInferrable<T, True, False> = IsUnknown<T, True, False>
 /**
  * A type predicate function signature for narrowing values to type `T`.
  */
+// biome-ignore lint/suspicious/noExplicitAny: generic constraint — substituting unknown breaks interface compatibility
 export type TypeGuard<T> = (value: any) => value is T;
 
 /**

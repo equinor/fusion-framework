@@ -53,6 +53,7 @@ export class Topic<T> extends Observable<T> {
    * @param args - Arguments forwarded to `HubConnection.send()`
    * @throws {Error} When the hub connection has not been established yet
    */
+  // biome-ignore lint/suspicious/noExplicitAny: generic constraint — substituting unknown breaks interface compatibility
   public send(...args: any[]): void {
     if (!this.connection) {
       throw new Error('No hub connection awaitable');
@@ -68,6 +69,7 @@ export class Topic<T> extends Observable<T> {
    * @returns Promise resolving with the server's response
    * @throws {Error} When the hub connection has not been established yet
    */
+  // biome-ignore lint/suspicious/noExplicitAny: generic constraint — substituting unknown breaks interface compatibility
   public invoke<T>(...args: any[]): Promise<T> {
     if (!this.connection) {
       throw new Error('No hub connection awaitable');

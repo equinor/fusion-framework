@@ -10,6 +10,7 @@ import type { Fusion } from '@equinor/fusion-framework';
  *
  * @internal
  */
+// biome-ignore lint/suspicious/noExplicitAny: generic constraint — substituting unknown breaks interface compatibility
 export const context = createContext<Fusion<any> | null>(null);
 
 /**

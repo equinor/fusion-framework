@@ -89,6 +89,7 @@ export interface IAppConfigurator<
   // TODO - rename
   useFrameworkServiceClient(
     serviceName: string,
+    // biome-ignore lint/suspicious/noExplicitAny: generic constraint — substituting unknown breaks interface compatibility
     options?: Omit<HttpClientOptions<any>, 'baseUri' | 'defaultScopes'>,
   ): void;
 }
@@ -195,6 +196,7 @@ export class AppConfigurator<
    */
   public useFrameworkServiceClient(
     serviceName: string,
+    // biome-ignore lint/suspicious/noExplicitAny: generic constraint — substituting unknown breaks interface compatibility
     options?: Omit<HttpClientOptions<any>, 'baseUri' | 'defaultScopes'>,
   ): void {
     this.addConfig({

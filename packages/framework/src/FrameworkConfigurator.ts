@@ -56,6 +56,7 @@ import { version } from './version.js';
  */
 export class FrameworkConfigurator<
   TModules extends Array<AnyModule> = [],
+  // biome-ignore lint/suspicious/noExplicitAny: generic constraint — substituting unknown breaks interface compatibility
   TRef = any,
 > extends ModulesConfigurator<FusionModules<TModules>, TRef> {
   /**

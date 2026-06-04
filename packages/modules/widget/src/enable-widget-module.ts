@@ -22,6 +22,7 @@ import type { WidgetModuleConfigBuilderCallback } from './WidgetModuleConfigurat
  * ```
  */
 export const enableWidgetModule = (
+  // biome-ignore lint/suspicious/noExplicitAny: generic constraint — substituting unknown breaks interface compatibility
   configurator: IModulesConfigurator<any, any>,
   builder?: WidgetModuleConfigBuilderCallback,
 ): void => {

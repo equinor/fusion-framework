@@ -97,6 +97,7 @@ export const module: ServicesModule = {
  * configurator.addConfig(enableServices);
  * ```
  */
+// biome-ignore lint/suspicious/noExplicitAny: generic constraint — substituting unknown breaks interface compatibility
 export const enableServices = (config: IModulesConfigurator<any, any>): void => {
   config.addConfig({ module });
 };

@@ -8,6 +8,7 @@ import type { ObservableType } from '../types';
  *
  * @template TArgs - The argument tuple type.
  */
+// biome-ignore lint/suspicious/noExplicitAny: generic constraint — substituting unknown breaks interface compatibility
 export type UseDebounceOptions<TArgs extends any[]> = {
   /**
    * Either a numeric millisecond delay, or a function returning an
@@ -46,12 +47,15 @@ export type UseDebounceOptions<TArgs extends any[]> = {
  */
 export const useDebounce = <
   TFn extends (...args: TArgs) => TType,
+  // biome-ignore lint/suspicious/noExplicitAny: generic constraint — substituting unknown breaks interface compatibility
   TType extends ObservableInput<any> = ReturnType<TFn>,
+  // biome-ignore lint/suspicious/noExplicitAny: generic constraint — substituting unknown breaks interface compatibility
   TArgs extends any[] = Parameters<TFn>,
 >(
   fn: TFn,
   options: UseDebounceOptions<TArgs>,
 ): {
+  // biome-ignore lint/suspicious/noExplicitAny: generic constraint — substituting unknown breaks interface compatibility
   value$: Observable<TType extends ObservableInput<any> ? ObservableType<TType> : TType>;
   next: (...args: TArgs) => void;
   idle: boolean;

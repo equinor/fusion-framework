@@ -77,6 +77,7 @@ const createActions = () => ({
     payload: id,
   })),
   /** App loading */
+  // biome-ignore lint/suspicious/noExplicitAny: generic constraint — substituting unknown breaks interface compatibility
   setModule: createAction('set_module', (module: any) => ({ payload: module })),
   importApp: createAsyncAction(
     'import_app',

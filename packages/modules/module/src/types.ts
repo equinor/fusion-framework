@@ -18,6 +18,7 @@ import type { ObservableInput } from 'rxjs';
  *   @returns `true` if the module exists, otherwise `false`.
  */
 export type ModuleInitializerArgs<TConfig, TDeps extends Array<AnyModule> = []> = {
+  // biome-ignore lint/suspicious/noExplicitAny: generic constraint — substituting unknown breaks interface compatibility
   ref?: any;
   config: TConfig;
   requireInstance: <TKey extends keyof ModulesInstanceType<TDeps>>(
@@ -58,6 +59,7 @@ export interface Module<TKey extends string, TType, TConfig, TDeps extends Array
    */
   // @todo - change return type to `ObservableInput`
   // @todo - add reference to `IConfigurationBuilder`
+  // biome-ignore lint/suspicious/noExplicitAny: generic constraint — substituting unknown breaks interface compatibility
   configure?: (ref?: any) => TConfig | Promise<TConfig>;
 
   /**
@@ -94,6 +96,7 @@ export interface Module<TKey extends string, TType, TConfig, TDeps extends Array
    * @param args @see {@link ModuleInitializerArgs}
    */
   postInitialize?: (args: {
+    // biome-ignore lint/suspicious/noExplicitAny: generic constraint — substituting unknown breaks interface compatibility
     ref?: any;
     instance: TType;
     modules: ModuleInstance; // Record<TKey, TType> & ModulesInstanceType<ModulesType<TDeps>>;
@@ -107,6 +110,7 @@ export interface Module<TKey extends string, TType, TConfig, TDeps extends Array
    * @param args
    */
   dispose?: (args: {
+    // biome-ignore lint/suspicious/noExplicitAny: generic constraint — substituting unknown breaks interface compatibility
     ref?: any;
     instance: TType;
     modules: Record<TKey, TType> & ModulesInstanceType<ModulesType<TDeps>>;
@@ -121,6 +125,7 @@ export interface Module<TKey extends string, TType, TConfig, TDeps extends Array
  *
  * @see Module
  */
+// biome-ignore lint/suspicious/noExplicitAny: generic constraint — substituting unknown breaks interface compatibility
 export type AnyModule = Module<any, any, any, any>;
 
 /**
@@ -155,6 +160,7 @@ export type AnyModuleInstance = Record<string, AnyModule>;
  * @typeParam M - The `Module` type to extract the key from.
  * @returns The key type (`TKey`) if `M` extends `Module`, otherwise `never`.
  */
+// biome-ignore lint/suspicious/noExplicitAny: generic constraint — substituting unknown breaks interface compatibility
 export type ModuleKey<M> = M extends Module<infer TKey, any, any, any> ? TKey : never;
 
 /**
@@ -166,6 +172,7 @@ export type ModuleKey<M> = M extends Module<infer TKey, any, any, any> ? TKey : 
  *
  * @template M - The type to extract the module type from.
  */
+// biome-ignore lint/suspicious/noExplicitAny: generic constraint — substituting unknown breaks interface compatibility
 export type ModuleType<M> = M extends Module<any, infer TType, any, any> ? TType : never;
 
 /**
@@ -186,6 +193,7 @@ export type ModuleTypes<M extends Array<AnyModule>> = M extends Array<infer U> ?
  * @typeParam M - The module type to extract the configuration type from.
  * @returns The configuration type (`TType`) if `M` extends `Module<any, any, TType, any>`, otherwise `never`.
  */
+// biome-ignore lint/suspicious/noExplicitAny: generic constraint — substituting unknown breaks interface compatibility
 export type ModuleConfigType<M> = M extends Module<any, any, infer TType, any> ? TType : never;
 
 /**
@@ -229,6 +237,7 @@ export interface Modules {
 export type ModulesType<M extends Array<AnyModule>> =
   M extends Array<AnyModule>
     ? {
+        // biome-ignore lint/suspicious/noExplicitAny: generic constraint — substituting unknown breaks interface compatibility
         [K in keyof M as M[K] extends Module<infer T, any, any, any> ? T : never]: M[Extract<
           K,
           string

@@ -28,6 +28,7 @@ import type { BookmarkModuleConfigurator } from './BookmarkConfigurator';
  * ```
  */
 export const enableBookmark = (
+  // biome-ignore lint/suspicious/noExplicitAny: generic constraint — substituting unknown breaks interface compatibility
   configurator: IModulesConfigurator<any>,
   callback?: (builder: BookmarkModuleConfigurator) => void | Promise<void>,
 ): void => {

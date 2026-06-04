@@ -25,6 +25,7 @@ import type { Actions } from './actions';
  */
 export type AppBundleState<
   TConfig extends ConfigEnvironment = ConfigEnvironment,
+  // biome-ignore lint/suspicious/noExplicitAny: generic constraint — substituting unknown breaks interface compatibility
   TModules = any,
 > = {
   appKey: string;
@@ -45,5 +46,6 @@ export type AppBundleState<
  */
 export type AppBundleStateInitial<
   TConfig extends ConfigEnvironment = ConfigEnvironment,
+  // biome-ignore lint/suspicious/noExplicitAny: generic constraint — substituting unknown breaks interface compatibility
   TModules = any,
 > = Omit<AppBundleState<TConfig, TModules>, 'status'>;

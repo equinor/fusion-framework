@@ -35,7 +35,9 @@ import type { Action, ActionWithSuffix, AnyAction } from './types';
  * ```
  */
 export function createAsyncAction<
+  // biome-ignore lint/suspicious/noExplicitAny: generic constraint — substituting unknown breaks interface compatibility
   PA extends PrepareAction<any>,
+  // biome-ignore lint/suspicious/noExplicitAny: generic constraint — substituting unknown breaks interface compatibility
   PA_Success extends PrepareAction<any>,
   T extends string,
 >(
@@ -47,8 +49,11 @@ export function createAsyncAction<
 };
 
 export function createAsyncAction<
+  // biome-ignore lint/suspicious/noExplicitAny: generic constraint — substituting unknown breaks interface compatibility
   PA extends PrepareAction<any>,
+  // biome-ignore lint/suspicious/noExplicitAny: generic constraint — substituting unknown breaks interface compatibility
   PA_Success extends PrepareAction<any>,
+  // biome-ignore lint/suspicious/noExplicitAny: generic constraint — substituting unknown breaks interface compatibility
   PA_Failure extends PrepareAction<any>,
   T extends string,
 >(
@@ -63,9 +68,13 @@ export function createAsyncAction<
 
 export function createAsyncAction(
   type: string,
+  // biome-ignore lint/suspicious/noExplicitAny: generic constraint — substituting unknown breaks interface compatibility
   request: PrepareAction<any>,
+  // biome-ignore lint/suspicious/noExplicitAny: generic constraint — substituting unknown breaks interface compatibility
   success: PrepareAction<any>,
+  // biome-ignore lint/suspicious/noExplicitAny: generic constraint — substituting unknown breaks interface compatibility
   failure?: PrepareAction<any>,
+// biome-ignore lint/suspicious/noExplicitAny: generic constraint — substituting unknown breaks interface compatibility
 ): any {
   const action = createAction([type, 'request'].join(actionSuffixDivider), request);
   if (success) {
@@ -78,6 +87,7 @@ export function createAsyncAction(
       failure: createAction([type, 'failure'].join(actionSuffixDivider), failure),
     });
   }
+  // biome-ignore lint/suspicious/noExplicitAny: generic constraint — substituting unknown breaks interface compatibility
   return action as unknown as any;
 }
 

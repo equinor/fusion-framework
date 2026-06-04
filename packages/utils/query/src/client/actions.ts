@@ -72,12 +72,15 @@ const createActions = <TType, TArgs>() => ({
 
 export const actions = createActions();
 
+// biome-ignore lint/suspicious/noExplicitAny: generic constraint — substituting unknown breaks interface compatibility
 export type ActionBuilder<TType = any, TArgs = any> = ReturnType<
   typeof createActions<TType, TArgs>
 >;
 
+// biome-ignore lint/suspicious/noExplicitAny: generic constraint — substituting unknown breaks interface compatibility
 export type ActionMap<TType = any, TArgs = any> = ActionInstanceMap<ActionBuilder<TType, TArgs>>;
 
+// biome-ignore lint/suspicious/noExplicitAny: generic constraint — substituting unknown breaks interface compatibility
 export type Actions<TType = any, TArgs = any> = ActionTypes<ActionMap<TType, TArgs>>;
 
 export default actions;

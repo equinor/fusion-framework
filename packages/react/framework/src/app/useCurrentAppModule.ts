@@ -43,6 +43,7 @@ export const useCurrentAppModule = <
       ? null
       : modules === undefined
         ? undefined
+        // biome-ignore lint/suspicious/noExplicitAny: generic constraint — substituting unknown breaks interface compatibility
         : (modules[moduleKey as keyof typeof modules] as any);
   return { module, error, complete };
 };

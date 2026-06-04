@@ -15,6 +15,7 @@ export interface enableSignalR {
    * @param cb - Builder callback for manual hub configuration
    */
   (
+    // biome-ignore lint/suspicious/noExplicitAny: generic constraint — substituting unknown breaks interface compatibility
     configurator: IModulesConfigurator<any, any>,
     name: string,
     cb: SignalRModuleConfigBuilderCallback,
@@ -28,6 +29,7 @@ export interface enableSignalR {
    * @param options - Service name and path used to resolve the hub endpoint
    */
   (
+    // biome-ignore lint/suspicious/noExplicitAny: generic constraint — substituting unknown breaks interface compatibility
     configurator: IModulesConfigurator<any, any>,
     name: string,
     options: { service: string; path: string },
@@ -67,6 +69,7 @@ export interface enableSignalR {
  * ```
  */
 export function enableSignalR(
+  // biome-ignore lint/suspicious/noExplicitAny: generic constraint — substituting unknown breaks interface compatibility
   configurator: IModulesConfigurator<any, any>,
   name: string,
   optionsOrCallback: SignalRModuleConfigBuilderCallback | { service: string; path: string },

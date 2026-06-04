@@ -79,6 +79,7 @@ export const module: AgGridModule = {
  * @param callback - Optional callback to customise the AG Grid configuration.
  */
 export const enableAgGrid = (
+  // biome-ignore lint/suspicious/noExplicitAny: generic constraint — substituting unknown breaks interface compatibility
   configurator: IModulesConfigurator<any, any>,
   callback?: AgGridBuilderCallback,
 ): void => {

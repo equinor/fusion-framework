@@ -56,6 +56,7 @@ export const module: FeatureFlagModule = {
  * ```
  */
 export const enableFeatureFlagging = (
+  // biome-ignore lint/suspicious/noExplicitAny: generic constraint — substituting unknown breaks interface compatibility
   configurator: IModulesConfigurator<any, any>,
   callback?: FeatureFlagBuilderCallback,
 ): void => {

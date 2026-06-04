@@ -53,6 +53,7 @@ const createActions = () => ({
     (error: unknown) => ({ payload: error }),
   ),
   /** Sets the dynamically imported widget script module in state. */
+  // biome-ignore lint/suspicious/noExplicitAny: generic constraint — substituting unknown breaks interface compatibility
   setModule: createAction('set_module', (module: any) => ({ payload: module })),
   /** Async action triplet for dynamically importing the widget script. */
   importWidget: createAsyncAction(

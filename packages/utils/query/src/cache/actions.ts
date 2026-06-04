@@ -8,6 +8,7 @@ import type { CacheSortFn, QueryCacheMutation, QueryCacheRecord } from './types'
  * @template TArgs The type of the arguments associated with the cache entry.
  * @returns An object containing the cache actions.
  */
+// biome-ignore lint/suspicious/noExplicitAny: generic constraint — substituting unknown breaks interface compatibility
 export default function createActions<TType = any, TArgs = any>() {
   return {
     /**
@@ -89,6 +90,7 @@ export default function createActions<TType = any, TArgs = any>() {
  * @template TType The type of the value being cached.
  * @template TArgs The type of the arguments associated with the cache entry.
  */
+// biome-ignore lint/suspicious/noExplicitAny: generic constraint — substituting unknown breaks interface compatibility
 export type ActionBuilder<TType = any, TArgs = any> = ReturnType<
   typeof createActions<TType, TArgs>
 >;
@@ -104,6 +106,7 @@ export const actions = createActions();
  * @template TType The type of the value being cached.
  * @template TArgs The type of the arguments associated with the cache entry.
  */
+// biome-ignore lint/suspicious/noExplicitAny: generic constraint — substituting unknown breaks interface compatibility
 export type ActionMap<TType = any, TArgs = any> = ActionInstanceMap<ActionBuilder<TType, TArgs>>;
 
 /**
@@ -112,4 +115,5 @@ export type ActionMap<TType = any, TArgs = any> = ActionInstanceMap<ActionBuilde
  * @template TType The type of the value being cached.
  * @template TArgs The type of the arguments associated with the cache entry.
  */
+// biome-ignore lint/suspicious/noExplicitAny: generic constraint — substituting unknown breaks interface compatibility
 export type Actions<TType = any, TArgs = any> = ActionTypes<ActionMap<TType, TArgs>>;

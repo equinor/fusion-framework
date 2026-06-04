@@ -59,6 +59,7 @@ export type ContextConfigBuilderCallback = <TDeps extends Array<AnyModule> = []>
  */
 export class ContextConfigBuilder<
   TModules extends Array<AnyModule> = [],
+  // biome-ignore lint/suspicious/noExplicitAny: generic constraint — substituting unknown breaks interface compatibility
   TInit extends ModuleInitializerArgs<any, any> = ModuleInitializerArgs<
     ContextModuleConfigurator,
     TModules
@@ -78,6 +79,7 @@ export class ContextConfigBuilder<
 
   requireInstance<T>(module: string): Promise<T>;
 
+  // biome-ignore lint/suspicious/noExplicitAny: generic constraint — substituting unknown breaks interface compatibility
   requireInstance(module: string): Promise<any> {
     return this.#init.requireInstance(module);
   }

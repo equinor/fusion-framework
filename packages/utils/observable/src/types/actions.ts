@@ -180,6 +180,7 @@ export type ActionBaseType<TAction extends Action> = TAction extends Action
  * @returns The payload type of the `ActionInstance`, or `never` if it does not extend `PayloadAction<any>`.
  */
 export type ActionPayloadType<T> =
+  // biome-ignore lint/suspicious/noExplicitAny: generic constraint — substituting unknown breaks interface compatibility
   ActionInstance<T> extends PayloadAction<any> ? ActionInstance<T>['payload'] : never;
 
 /**

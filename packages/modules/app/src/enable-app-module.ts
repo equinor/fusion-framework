@@ -24,6 +24,7 @@ import type { AppConfigurator } from './AppConfigurator';
  * ```
  */
 export const enableAppModule = (
+  // biome-ignore lint/suspicious/noExplicitAny: generic constraint — substituting unknown breaks interface compatibility
   configurator: IModulesConfigurator<any, any>,
   callback?: (builder: AppConfigurator) => void | Promise<void>,
 ): void => {

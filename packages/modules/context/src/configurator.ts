@@ -149,6 +149,7 @@ export interface ContextModuleConfig {
    * @returns An observable input emitting the initial context item, or void.
    */
   resolveInitialContext?: (args: {
+    // biome-ignore lint/suspicious/noExplicitAny: generic constraint — substituting unknown breaks interface compatibility
     ref?: AnyModuleInstance | any;
     modules: ModuleInstance;
   }) => ObservableInput<ContextItem | void>;
@@ -231,6 +232,7 @@ export class ContextModuleConfigurator implements IContextModuleConfigurator {
   ): Promise<ContextModuleConfig> {
     const config = await this.#configBuilders.reduce(
       async (cur, cb) => {
+        // biome-ignore lint/suspicious/noExplicitAny: generic constraint — substituting unknown breaks interface compatibility
         const builder = new ContextConfigBuilder<any, any>(init, await cur);
         await Promise.resolve(cb(builder));
         return Object.assign(cur, builder.config);

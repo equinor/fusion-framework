@@ -49,6 +49,7 @@ import { ModuleProvider } from '@equinor/fusion-framework-react-module';
  */
 export const createFrameworkProvider = <
   TModules extends Array<AnyModule> = [],
+  // biome-ignore lint/suspicious/noExplicitAny: generic constraint — substituting unknown breaks interface compatibility
   TRef extends ModulesInstanceType<[AnyModule]> = any,
 >(
   cb: (configurator: FrameworkConfigurator<TModules>, ref?: TRef) => void | Promise<void>,
