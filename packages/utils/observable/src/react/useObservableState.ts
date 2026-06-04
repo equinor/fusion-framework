@@ -121,10 +121,15 @@ function createObservableStateStore<TType, TError = unknown>(
     getSnapshot,
     getServerSnapshot: getSnapshot,
     subscribe: (onStoreChange: () => void): (() => void) => {
-      listeners.add(onStoreChange);
-
       const subscription = subject.subscribe({
         next: (value) => {
+          /**
+           * Skip when value is unchanged — avoids creating a new snapshot object
+           * for synchronous emissions (e.g. BehaviorSubject) that fire during
+           * subscribe and would otherwise trigger infinite re-renders via
+           * useSyncExternalStore's tearing detection.
+           */
+          if (Object.is(snapshot.value, value)) return;
           snapshot = { ...snapshot, value };
           notify();
         },
@@ -139,6 +144,14 @@ function createObservableStateStore<TType, TError = unknown>(
       });
 
       subscription.add(teardown);
+
+      /**
+       * Add the listener AFTER subscribing so that synchronous emissions from
+       * stateful observables (BehaviorSubject, FlowSubject) don't call
+       * onStoreChange during the subscribe call itself — React forbids this and
+       * it causes a re-render / tearing loop.
+       */
+      listeners.add(onStoreChange);
 
       return (): void => {
         listeners.delete(onStoreChange);
