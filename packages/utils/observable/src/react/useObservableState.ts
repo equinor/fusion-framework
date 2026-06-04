@@ -78,11 +78,10 @@ function resolveInitialValue<TType>(
   initial: TType | undefined,
 ): TType | undefined {
   return (
-    /** provided initial value */
+    // caller wins over subject's current value
     initial ??
-    /** use subject current value if supported */
+    // read synchronous value from stateful subjects (BehaviorSubject, FlowSubject)
     (hasStatefulValue(subject) ? subject.value : undefined) ??
-    /** nothing to resolve */
     undefined
   );
 }
@@ -124,14 +123,15 @@ function createObservableStateStore<TType, TError = unknown>(
     subscribe: (onStoreChange: () => void): (() => void) => {
       const subscription = subject
         .pipe(
-          // `distinctUntilChanged` is not sufficient — it always emits the first value
-          // (no previous to compare against). BehaviorSubject fires synchronously on
-          // subscribe, so that first emission would update the snapshot before the listener
-          // is registered. React's tearing check then sees a new object reference and forces
-          // a re-render, which re-subscribes, which repeats indefinitely.
-          // Comparing against `snapshot.value` is correct: it is already seeded via
-          // resolveInitialValue, so the sync replay is caught, and subsequent duplicates
-          // are suppressed for free.
+          // Stateful observables (BehaviorSubject, FlowSubject) emit their current value
+          // synchronously on subscribe. useSyncExternalStore compares getSnapshot() before
+          // and after the subscribe call; a new snapshot object causes a tearing mismatch,
+          // which forces a re-render → re-subscribe → infinite loop.
+          //
+          // We compare against snapshot.value (already seeded by resolveInitialValue) so
+          // the replayed current value is dropped. Subsequent duplicate emissions are
+          // suppressed for free — distinctUntilChanged cannot do this because it always
+          // passes the first emission through.
           filter((value) => !Object.is(snapshot.value, value)),
         )
         .subscribe({
@@ -151,12 +151,9 @@ function createObservableStateStore<TType, TError = unknown>(
 
       subscription.add(teardown);
 
-      /**
-       * Add the listener AFTER subscribing so that synchronous emissions from
-       * stateful observables (BehaviorSubject, FlowSubject) don't call
-       * onStoreChange during the subscribe call itself — React forbids this and
-       * it causes a re-render / tearing loop.
-       */
+      // Register the listener only after subscribing. The filter above drops the
+      // synchronous replay, but adding the listener first would still cause
+      // onStoreChange to be called inside subscribe — React forbids this.
       listeners.add(onStoreChange);
 
       return (): void => {
@@ -168,16 +165,19 @@ function createObservableStateStore<TType, TError = unknown>(
 }
 
 /**
- * use state of observable
- * @param subject [dep] Observable subject
+ * Subscribes to an {@link Observable} and returns its current state.
+ *
+ * @param subject - Observable to subscribe to.
  */
 export function useObservableState<S, TError = unknown>(
   subject: Observable<S>,
 ): ObservableStateReturnType<S | undefined, TError>;
 
 /**
- * use state of observable
- * @param subject [dep] Observable subject
+ * Subscribes to an {@link Observable} and returns its current state.
+ *
+ * @param subject - Observable to subscribe to.
+ * @param opt - Options including an optional initial value and teardown callback.
  */
 export function useObservableState<
   TType,
@@ -188,19 +188,24 @@ export function useObservableState<
   opt: ObservableStateOptions<TInitial>,
 ): ObservableStateReturnType<TType | TInitial, TError>;
 
-/** === StatefulObservable === */
+// --- StatefulObservable overloads (BehaviorSubject, FlowSubject) ---
+// The initial value is read synchronously from subject.value on mount.
 
 /**
- * use state of observable with value property (`FlowSubject`, `BehaviorSubject`)
- * @param subject [dep] Observable subject
+ * Subscribes to a {@link StatefulObservable} and returns its current state.
+ * The initial value is read synchronously from `subject.value`.
+ *
+ * @param subject - Stateful observable (e.g. `BehaviorSubject`, `FlowSubject`).
  */
 export function useObservableState<TType, TError = unknown>(
   subject: StatefulObservable<TType>,
 ): ObservableStateReturnType<TType, TError>;
 
 /**
- * use state of observable with value property (`FlowSubject`, `BehaviorSubject`)
- * @param subject [dep] Observable subject
+ * Subscribes to a {@link StatefulObservable} and returns its current state.
+ *
+ * @param subject - Stateful observable (e.g. `BehaviorSubject`, `FlowSubject`).
+ * @param options - Options including an optional override initial value and teardown callback.
  */
 export function useObservableState<TType, TError = unknown>(
   subject: StatefulObservable<TType>,
@@ -208,12 +213,12 @@ export function useObservableState<TType, TError = unknown>(
 ): ObservableStateReturnType<TType, TError>;
 
 /**
- * Hook for extracting state of observable.
- * **note** when state changes the consumer of the hook will rerender
+ * Hook that subscribes to an observable and exposes its state to a React component.
+ * Re-renders the consumer whenever a new value, error, or completion is emitted.
  *
- * @param subject [dep] Observable subject
- * @param initial initial value
- * @returns current state of observable
+ * @param subject - Observable or stateful observable to subscribe to.
+ * @param opt - Optional initial value and teardown callback.
+ * @returns Current `{ value, error, complete }` snapshot.
  */
 export function useObservableState<S, E = unknown>(
   subject: Observable<S> | StatefulObservable<S>,
