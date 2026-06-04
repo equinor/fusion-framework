@@ -1,5 +1,4 @@
 // biome-ignore-all lint/suspicious/noExplicitAny: internal type-erased dispatch — the configure phase coordinates opaque module configs without knowing their concrete shapes
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { from, lastValueFrom } from 'rxjs';
 import { mergeMap, reduce } from 'rxjs/operators';
 
@@ -27,14 +26,12 @@ export interface ConfigurePhaseContext<TRef> {
    * Typed as `any` — internal type-erased dispatch array; the phase never inspects
    * the config shape, it only forwards the value to each registered callback.
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   afterConfiguration: ((config: any) => void | Promise<void>)[];
   /**
    * Post-init callbacks — mutable array shared with the configurator.
    * Modules can push their own hooks via `config.onAfterInit`.
    * Typed as `any` — same rationale as `afterConfiguration`.
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   afterInit: ((instance: any) => void | Promise<void>)[];
   /** Emits a structured lifecycle event into the configurator's event stream. */
   registerEvent: (event: ModuleEvent) => void;

@@ -49,7 +49,6 @@ import { ModuleProvider } from '@equinor/fusion-framework-react-module';
  */
 export const createFrameworkProvider = <
   TModules extends Array<AnyModule> = [],
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   TRef extends ModulesInstanceType<[AnyModule]> = any,
 >(
   cb: (configurator: FrameworkConfigurator<TModules>, ref?: TRef) => void | Promise<void>,

@@ -51,7 +51,6 @@ export const module: EventModule = {
 
 export default module;
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 declare interface ModuleEventMap {
   onModulesLoaded: FrameworkEventModuleLoadedEvent;
 }

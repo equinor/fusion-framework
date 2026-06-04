@@ -25,7 +25,6 @@ import type { Actions } from './actions';
  */
 export type AppBundleState<
   TConfig extends ConfigEnvironment = ConfigEnvironment,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   TModules = any,
 > = {
   appKey: string;
@@ -46,6 +45,5 @@ export type AppBundleState<
  */
 export type AppBundleStateInitial<
   TConfig extends ConfigEnvironment = ConfigEnvironment,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   TModules = any,
 > = Omit<AppBundleState<TConfig, TModules>, 'status'>;

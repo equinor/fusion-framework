@@ -161,7 +161,6 @@ export class SignalRConfigurator implements ISignalRConfigurator {
   ): Promise<SignalRConfig> {
     /** trigger all builder callbacks */
     for (const cb of this.#builderCallbacks) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const builder = new SignalRModuleConfigBuilder<[ServiceDiscoveryModule]>(init, this);
       await Promise.resolve(cb(builder));
     }

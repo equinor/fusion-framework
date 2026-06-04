@@ -1,5 +1,4 @@
 // biome-ignore-all lint/suspicious/noExplicitAny: TInstance defaults to any intentionally — callers that don't provide a ref type should not be forced to specify one
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { IModulesConfigurator } from './lib/configurator/index.js';
 
 import type { AnyModule } from './types.js';

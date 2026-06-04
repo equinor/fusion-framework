@@ -66,7 +66,6 @@ export const Row = ({ name, menuOptions, children, id, menuOpen, onMenuOpen }: R
 
   // TODO: @noggling fix this
   return (
-    /* eslint-disable-next-line styled-components-a11y/click-events-have-key-events, styled-components-a11y/no-static-element-interactions*/
     <Styled.ListItem onClick={onListItemClick}>
       <Typography>{name}</Typography>
       <Styled.Icons>

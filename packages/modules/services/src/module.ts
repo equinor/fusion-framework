@@ -97,10 +97,7 @@ export const module: ServicesModule = {
  * configurator.addConfig(enableServices);
  * ```
  */
-export const enableServices = (
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  config: IModulesConfigurator<any, any>,
-): void => {
+export const enableServices = (config: IModulesConfigurator<any, any>): void => {
   config.addConfig({ module });
 };
 

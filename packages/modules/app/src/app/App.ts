@@ -49,7 +49,6 @@ export function filterEmpty<T>(): OperatorFunction<T | null | undefined, T> {
  * @template TEnv - Shape of the environment configuration record.
  * @template TModules - Additional framework modules the app depends on.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export interface IApp<
   TEnv extends ConfigEnvironment = ConfigEnvironment,
   TModules extends Array<AnyModule> | unknown = unknown,
@@ -280,7 +279,6 @@ export type AppInitializeResult = {
  * @template TModules - Additional framework modules the app depends on.
  */
 // TODO make streams distinct until changed from state
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export class App<
   TEnv extends ConfigEnvironment = ConfigEnvironment,
   TModules extends Array<AnyModule> | unknown = unknown,

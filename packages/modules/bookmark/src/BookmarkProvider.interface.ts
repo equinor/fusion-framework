@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { Observable, ObservableInput } from 'rxjs';
 import type { Bookmark, BookmarkData, BookmarkWithoutData } from './types';
 import type { BookmarkNew, BookmarkUpdate } from './BookmarkClient.interface';

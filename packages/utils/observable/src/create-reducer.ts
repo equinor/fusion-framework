@@ -139,7 +139,6 @@ export function createReducer<S extends NotFunction, A extends Action = AnyActio
 
           return result as S;
         } else {
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
           // createNextState() produces an Immutable<Draft<S>> rather
           // than an Immutable<S>, and TypeScript cannot find out how to reconcile

@@ -95,7 +95,6 @@ export const createComponent =
           <FrameworkProvider value={fusion}>
             <AppModuleProvider value={modules}>
               {/* TODO */}
-              {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment*/}
               {/* @ts-ignore */}
               <Component />
             </AppModuleProvider>

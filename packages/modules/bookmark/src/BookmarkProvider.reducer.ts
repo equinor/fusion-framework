@@ -79,7 +79,6 @@ export const createBookmarkReducer = (initialState?: Partial<BookmarkState>) =>
           state.currentBookmark = action.payload;
         })
         .addCase(bookmarkActions.createBookmark.success, (state, action) => {
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
           const { payload, ...bookmark } = action.payload;
           state.bookmarks[bookmark.id] = bookmark;
         })

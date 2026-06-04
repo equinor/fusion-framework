@@ -27,7 +27,6 @@ import { QueryClientEvent, type QueryClientEventData, type QueryClientEvents } f
  * @property {Partial<RetryOptions>} [retry] - Configuration for retry behavior, including number of retries and delay strategy.
  * @property {string} [ref] - A reference string to associate with a query, which can be used for cancellation or tracking purposes.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type QueryClientOptions = {
   signal?: AbortSignal;
   retry?: Partial<RetryOptions>;

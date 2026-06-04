@@ -28,7 +28,6 @@ import type { BookmarkModuleConfigurator } from './BookmarkConfigurator';
  * ```
  */
 export const enableBookmark = (
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   configurator: IModulesConfigurator<any>,
   callback?: (builder: BookmarkModuleConfigurator) => void | Promise<void>,
 ): void => {

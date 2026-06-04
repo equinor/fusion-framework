@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 /**
  * Represents a single record in the query cache with generic types for the value and arguments.
  * @typeParam TType - The type of the value stored in the cache record.

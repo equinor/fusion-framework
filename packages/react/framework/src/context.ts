@@ -10,7 +10,6 @@ import type { Fusion } from '@equinor/fusion-framework';
  *
  * @internal
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const context = createContext<Fusion<any> | null>(null);
 
 /**

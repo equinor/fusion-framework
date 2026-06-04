@@ -178,7 +178,6 @@ export class BookmarkModuleConfigurator extends BaseConfigBuilder<BookmarkModule
     key: TKey,
     value: BookmarkModuleConfig['filters'][TKey],
   ) {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-expect-error
     this._set(`filters.${key}`, async () => value);
   }

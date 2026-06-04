@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { describe, it, expect, vi } from 'vitest';
 import { lastValueFrom, of } from 'rxjs';
 import { toArray } from 'rxjs/operators';

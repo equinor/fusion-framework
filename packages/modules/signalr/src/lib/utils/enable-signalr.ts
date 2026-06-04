@@ -15,7 +15,6 @@ export interface enableSignalR {
    * @param cb - Builder callback for manual hub configuration
    */
   (
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     configurator: IModulesConfigurator<any, any>,
     name: string,
     cb: SignalRModuleConfigBuilderCallback,
@@ -29,7 +28,6 @@ export interface enableSignalR {
    * @param options - Service name and path used to resolve the hub endpoint
    */
   (
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     configurator: IModulesConfigurator<any, any>,
     name: string,
     options: { service: string; path: string },
@@ -69,7 +67,6 @@ export interface enableSignalR {
  * ```
  */
 export function enableSignalR(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   configurator: IModulesConfigurator<any, any>,
   name: string,
   optionsOrCallback: SignalRModuleConfigBuilderCallback | { service: string; path: string },

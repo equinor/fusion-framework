@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { Subject } from 'rxjs';
 
 import { ModuleEventLevel, type AnyModule, type ModuleEvent } from '../../../types.js';

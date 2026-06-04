@@ -33,7 +33,6 @@ export const useFrameworkModule = <
   : FusionModulesInstance[Extract<keyof FusionModulesInstance, TKey>] | undefined => {
   const framework = useFramework();
   // TODO
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   const module = framework.modules[name];
   if (!module) {

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * taken from https://github.com/reduxjs/redux-toolkit/tree/master/packages/toolkit/src
  */
@@ -225,7 +224,6 @@ export function createAction<PA extends PrepareAction<any>, T extends string = s
   prepareAction: PA,
 ): PayloadActionCreator<ReturnType<PA>['payload'], T, PA>;
 
-// eslint-disable-next-line @typescript-eslint/ban-types
 export function createAction(type: string, prepareAction?: PrepareAction<any>): any {
   function actionCreator(...args: any[]) {
     if (prepareAction) {
@@ -257,7 +255,6 @@ export const actionSuffixDivider = '::';
 
 export const matchActionSuffix = (suffix: string) => new RegExp(`${actionSuffixDivider}${suffix}$`);
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 type BaseType<T extends string> = T extends `${infer A}${typeof actionSuffixDivider}${infer R}`
   ? A
   : never;

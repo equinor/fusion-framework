@@ -20,7 +20,6 @@ import {
  * @template TData - Current applications  bookmark type
  * @return {*}  {Bookmarks<TData>} the full api fro handling bookmarks
  */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const useBookmark = <TData>(): useBookmarkResult => _useBookmark();
 
 export default useBookmark;

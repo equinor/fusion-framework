@@ -92,7 +92,6 @@ export class BookmarkProvider implements IBookmarkProvider {
   get config() {
     return {
       getCurrentAppIdentification() {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         return window.Fusion.modules.app.current.appKey;
       },

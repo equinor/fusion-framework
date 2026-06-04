@@ -1,5 +1,4 @@
 // biome-ignore-all lint/suspicious/noExplicitAny: internal type-erased dispatch — the post-initialize phase forwards opaque instances without inspecting their concrete shapes
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { EMPTY, from, lastValueFrom } from 'rxjs';
 import { catchError, defaultIfEmpty, filter, mergeMap, tap } from 'rxjs/operators';
 
@@ -18,7 +17,6 @@ export interface PostInitializePhaseContext {
   /** All registered modules — only those with `postInitialize` are processed. */
   modules: AnyModule[];
   /** Post-init callbacks registered via `addConfig` afterInit or `onInitialized`. */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   afterInit: ((instance: any) => void | Promise<void>)[];
   /** Emits a structured lifecycle event into the configurator's event stream. */
   registerEvent: (event: ModuleEvent) => void;

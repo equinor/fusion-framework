@@ -4,7 +4,6 @@ import type { HttpModule } from '@equinor/fusion-framework-module-http';
 import type { ServiceDiscoveryModule } from '@equinor/fusion-framework-module-service-discovery';
 import type { QueryCtorOptions } from '@equinor/fusion-query';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Fusion = any;
 
 /**
@@ -178,7 +177,6 @@ export type WidgetModulesInstance<TModules extends Array<AnyModule> | unknown = 
  *
  * @template TModules - Custom module types.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type WidgetState<TModules = any> = {
   /** Widget name (lookup key). */
   name: string;

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/ban-types */
 import { useMemo } from 'react';
 
 import type { HttpMsalModule, IHttpClient } from '@equinor/fusion-framework-module-http';

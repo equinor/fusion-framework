@@ -79,7 +79,6 @@ export const module: AgGridModule = {
  * @param callback - Optional callback to customise the AG Grid configuration.
  */
 export const enableAgGrid = (
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   configurator: IModulesConfigurator<any, any>,
   callback?: AgGridBuilderCallback,
 ): void => {

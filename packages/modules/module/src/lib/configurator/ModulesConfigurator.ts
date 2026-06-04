@@ -1,5 +1,4 @@
 // biome-ignore-all lint/suspicious/noExplicitAny: internal type-erased dispatch arrays — callbacks are registered with concrete module types but stored erased; the orchestrator never inspects these shapes itself
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ReplaySubject } from 'rxjs';
 
 import {

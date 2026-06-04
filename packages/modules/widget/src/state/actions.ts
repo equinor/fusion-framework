@@ -53,7 +53,6 @@ const createActions = () => ({
     (error: unknown) => ({ payload: error }),
   ),
   /** Sets the dynamically imported widget script module in state. */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   setModule: createAction('set_module', (module: any) => ({ payload: module })),
   /** Async action triplet for dynamically importing the widget script. */
   importWidget: createAsyncAction(

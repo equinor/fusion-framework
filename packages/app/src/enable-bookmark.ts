@@ -34,7 +34,6 @@ import type { IAppConfigurator } from './AppConfigurator';
  * });
  * ```
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const enableBookmark = (config: IAppConfigurator): void => {
   // collection of cleanup functions
   const cleanupFunctions = new Set<VoidFunction>();

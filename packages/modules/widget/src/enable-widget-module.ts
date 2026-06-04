@@ -22,7 +22,6 @@ import type { WidgetModuleConfigBuilderCallback } from './WidgetModuleConfigurat
  * ```
  */
 export const enableWidgetModule = (
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   configurator: IModulesConfigurator<any, any>,
   builder?: WidgetModuleConfigBuilderCallback,
 ): void => {

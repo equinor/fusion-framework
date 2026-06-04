@@ -53,7 +53,6 @@ const parseBookmark = <T extends BookmarkData>(value: unknown): Bookmark<T> => {
 };
 
 const parseBookmarkWithoutPayload = (value: unknown): BookmarkWithoutData => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { payload, ...bookmark } = parseBookmark(value);
   return bookmark;
 };

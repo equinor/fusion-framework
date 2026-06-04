@@ -149,7 +149,6 @@ export interface ContextModuleConfig {
    * @returns An observable input emitting the initial context item, or void.
    */
   resolveInitialContext?: (args: {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ref?: AnyModuleInstance | any;
     modules: ModuleInstance;
   }) => ObservableInput<ContextItem | void>;
@@ -232,7 +231,6 @@ export class ContextModuleConfigurator implements IContextModuleConfigurator {
   ): Promise<ContextModuleConfig> {
     const config = await this.#configBuilders.reduce(
       async (cur, cb) => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const builder = new ContextConfigBuilder<any, any>(init, await cur);
         await Promise.resolve(cb(builder));
         return Object.assign(cur, builder.config);

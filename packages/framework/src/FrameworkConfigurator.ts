@@ -56,7 +56,6 @@ import { version } from './version.js';
  */
 export class FrameworkConfigurator<
   TModules extends Array<AnyModule> = [],
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   TRef = any,
 > extends ModulesConfigurator<FusionModules<TModules>, TRef> {
   /**

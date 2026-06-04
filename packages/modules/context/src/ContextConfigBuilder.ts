@@ -216,7 +216,6 @@ export class ContextConfigBuilder<
           : client.query,
     };
     if (client.related) {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       this.config.client!.related =
         typeof client.related === 'function'
           ? {

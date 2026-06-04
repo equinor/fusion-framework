@@ -56,7 +56,6 @@ export const module: FeatureFlagModule = {
  * ```
  */
 export const enableFeatureFlagging = (
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   configurator: IModulesConfigurator<any, any>,
   callback?: FeatureFlagBuilderCallback,
 ): void => {

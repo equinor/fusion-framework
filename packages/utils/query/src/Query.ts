@@ -263,7 +263,6 @@ const getQueueOperator = <TDataType, TQueryArguments>(
  * @see {@link Query.invalidate} for more details on invalidating cache entries.
  * @see {@link QueueOperatorType} for more details on the available queue operators.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export class Query<TDataType, TQueryArguments = any> {
   /**
    * Static utility that extracts the raw value from a query result Observable.

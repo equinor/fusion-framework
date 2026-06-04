@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 /**
  * Returns `True` if `T` is `any`, otherwise returns `False`.
  *

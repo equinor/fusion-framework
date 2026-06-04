@@ -1,5 +1,4 @@
 // biome-ignore-all lint/suspicious/noExplicitAny: internal type-erased dispatch — plugins are registered with concrete module maps but stored erased by the orchestrator
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ModuleEventLevel, type ModuleEvent } from '../../../types.js';
 import type { FrameworkPluginCallback, FrameworkPluginTeardown } from '../../plugin/index.js';
 import { ModuleConfiguratorEventName } from '../events.js';

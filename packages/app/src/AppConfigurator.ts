@@ -89,7 +89,6 @@ export interface IAppConfigurator<
   // TODO - rename
   useFrameworkServiceClient(
     serviceName: string,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     options?: Omit<HttpClientOptions<any>, 'baseUri' | 'defaultScopes'>,
   ): void;
 }
@@ -196,7 +195,6 @@ export class AppConfigurator<
    */
   public useFrameworkServiceClient(
     serviceName: string,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     options?: Omit<HttpClientOptions<any>, 'baseUri' | 'defaultScopes'>,
   ): void {
     this.addConfig({
