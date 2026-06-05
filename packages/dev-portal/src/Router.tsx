@@ -1,11 +1,10 @@
 import { useBookmarkNavigate } from '@equinor/fusion-framework-react-module-bookmark/portal';
 
-import { Outlet, Router as FusionRouter, useParams } from '@equinor/fusion-framework-react-router';
+import { Router as FusionRouter, Outlet, useParams } from '@equinor/fusion-framework-react-router';
 import AppLoader from './AppLoader';
 import { Header } from './Header';
 
 import { styled } from 'styled-components';
-import { useAppContextNavigation } from './useAppContextNavigation';
 
 const Styled = {
   ContentContainer: styled.div`
@@ -74,12 +73,10 @@ const routes = [
 /**
  * Top-level router for the Fusion Dev Portal.
  *
- * Renders the application via `FusionRouter`. Observes context changes through
- * {@link useAppContextNavigation} to keep the URL in sync.
+ * Uses `@equinor/fusion-framework-react-router` which automatically connects
+ * to the framework's navigation module for history and basename.
  */
 // eslint-disable-next-line react/no-multi-comp
 export const Router = () => {
-  // observe the context changes and navigate when the context changes
-  useAppContextNavigation();
   return <FusionRouter routes={routes} />;
 };
