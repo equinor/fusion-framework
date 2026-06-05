@@ -1,10 +1,7 @@
 import type { ModulesInstance } from '@equinor/fusion-framework-module';
 import type { ContextModule } from '../module';
 import type { ContextModuleConfig } from '../configurator';
-import { concat, EMPTY, first, of } from 'rxjs';
-
-import { type ContextPathResolveArgs, resolveContextFromPath } from './resolve-context-from-path';
-import type { NavigationModule } from '@equinor/fusion-framework-module-navigation';
+import { concat, EMPTY, of, take } from 'rxjs';
 
 /**
  * Resolves the initial context from the parent module.
@@ -14,9 +11,9 @@ import type { NavigationModule } from '@equinor/fusion-framework-module-navigati
  */
 export const resolveContextFromParent: ContextModuleConfig['resolveInitialContext'] = ({ ref }) => {
   const parentContext = (ref as ModulesInstance<[ContextModule]>)?.context;
-  // check if the parent has context module
   if (!parentContext) {
-    throw Error(['resolveContextFromNavigation', 'ref does not support context!'].join('\n'));
+    // No parent context available — either portal level or parent lacks context module.
+    return EMPTY;
   }
   // return the current context from the parent or empty if the parent does not have a context
   return parentContext.currentContext ? of(parentContext.currentContext) : EMPTY;
@@ -25,28 +22,17 @@ export const resolveContextFromParent: ContextModuleConfig['resolveInitialContex
 /**
  * Resolves the initial context for a Fusion Framework context module.
  *
- * will try to resolve the initial context from the path, and if that fails, it will try to resolve the context from the parent.
+ * Attempts to resolve the initial context from the parent context provider.
+ * URL-based resolution is handled by the context-navigation plugin.
  *
- * @param options - Optional configuration for resolving the context path.
  * @returns A function that accepts the module's reference and modules, and returns an Observable of the resolved initial context.
  */
 export const resolveInitialContext =
-  (options?: {
-    path?: ContextPathResolveArgs;
-  }): Required<ContextModuleConfig>['resolveInitialContext'] =>
+  (): Required<ContextModuleConfig>['resolveInitialContext'] =>
   ({ ref, modules }) => {
-    const { context, navigation } = modules;
-    // create a path resolver from the context module
-    const pathResolver = resolveContextFromPath(context, options?.path);
-    // use the path from the navigation module, or the path from the parent navigation module
-    const pathname =
-      navigation?.path.pathname ??
-      (ref as Partial<ModulesInstance<[NavigationModule]>>).navigation?.path.pathname;
-    // try to resolve the context from the path, and if that fails, try to resolve the context from the parent
-    return concat(
-      pathname ? pathResolver(pathname) : EMPTY,
-      resolveContextFromParent({ ref, modules }),
-    ).pipe(first());
+    // Resolve from parent context if available.
+    // URL-based resolution is handled by the context-navigation plugin.
+    return concat(resolveContextFromParent({ ref, modules })).pipe(take(1));
   };
 
 export default resolveInitialContext;
