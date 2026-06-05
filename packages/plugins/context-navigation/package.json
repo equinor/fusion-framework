@@ -1,0 +1,54 @@
+{
+  "name": "@equinor/fusion-framework-plugin-context-navigation",
+  "version": "0.0.0",
+  "description": "Adapter-based context-to-URL reconciler for Fusion Framework portals",
+  "type": "module",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "types": "./dist/types/index.d.ts"
+    },
+    "./adapters": {
+      "import": "./dist/esm/adapters/index.js",
+      "types": "./dist/types/adapters/index.d.ts"
+    },
+    "./sources": {
+      "import": "./dist/esm/sources/index.js",
+      "types": "./dist/types/sources/index.d.ts"
+    },
+    "./utils": {
+      "import": "./dist/esm/utils/url/index.js",
+      "types": "./dist/types/utils/url/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "test": "vitest run"
+  },
+  "peerDependencies": {
+    "@equinor/fusion-framework-module": "workspace:^",
+    "@equinor/fusion-framework-module-app": "workspace:^",
+    "@equinor/fusion-framework-module-context": "workspace:^",
+    "@equinor/fusion-framework-module-event": "workspace:^",
+    "@equinor/fusion-framework-module-navigation": "workspace:^",
+    "rxjs": "^7.8.1"
+  },
+  "devDependencies": {
+    "@equinor/fusion-framework-module": "workspace:^",
+    "@equinor/fusion-framework-module-app": "workspace:^",
+    "@equinor/fusion-framework-module-context": "workspace:^",
+    "@equinor/fusion-framework-module-event": "workspace:^",
+    "@equinor/fusion-framework-module-navigation": "workspace:^",
+    "rxjs": "^7.8.1",
+    "typescript": "^6.0.3",
+    "vitest": "^3.1.1"
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
+}
