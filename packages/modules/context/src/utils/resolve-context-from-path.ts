@@ -51,6 +51,10 @@ const validateContextId = (contextId: string): boolean => !!contextId.match(matc
  *
  * @param context The context module.
  * @returns A function that takes a path and returns an Observable of the resolved context item.
+ * @deprecated Replaced by the context-navigation plugin which resolves
+ * initial context from the URL via adapter `decode()` during module initialization.
+ * Portal-level code should use `enableContextNavigation` which handles
+ * URL-to-context resolution automatically. Will be removed in a future major version.
  */
 export function resolveContextFromPath(
   context: ModuleType<ContextModule>,
@@ -74,6 +78,10 @@ export function resolveContextFromPath(
  * @param context The context module.
  * @param args The arguments for resolving the path.
  * @returns A function that takes a path and returns an Observable of the resolved context item.
+ * @deprecated Replaced by the context-navigation plugin which resolves
+ * initial context from the URL via adapter `decode()` during module initialization.
+ * Portal-level code should use `enableContextNavigation` which handles
+ * URL-to-context resolution automatically. Will be removed in a future major version.
  */
 export function resolveContextFromPath(
   context: ModuleType<ContextModule>,
