@@ -15,8 +15,8 @@
       "types": "./dist/types/lib/index.d.ts"
     },
     "./utils": {
-      "import": "./dist/esm/utils/index.js",
-      "types": "./dist/types/utils/index.d.ts"
+      "import": "./dist/esm/lib/utils/index.js",
+      "types": "./dist/types/lib/utils/index.d.ts"
     }
   },
   "scripts": {
