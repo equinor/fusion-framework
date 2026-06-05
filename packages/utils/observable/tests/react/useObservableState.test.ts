@@ -112,4 +112,32 @@ describe('useObservableState', () => {
 
     expect(teardown).toHaveBeenCalledTimes(1);
   });
+
+  it('should not re-render when a stateful observable emits the same value', () => {
+    const subject = new BehaviorSubject(1);
+    let renderCount = 0;
+
+    const { result } = renderHook(() => {
+      renderCount++;
+      return useObservableState(subject);
+    });
+
+    const renderCountAfterMount = renderCount;
+
+    // Emitting the same value should be swallowed by distinctUntilChanged
+    act(() => {
+      subject.next(1);
+    });
+
+    expect(result.current.value).toBe(1);
+    expect(renderCount).toBe(renderCountAfterMount);
+
+    // A different value should still trigger a re-render
+    act(() => {
+      subject.next(2);
+    });
+
+    expect(result.current.value).toBe(2);
+    expect(renderCount).toBeGreaterThan(renderCountAfterMount);
+  });
 });
