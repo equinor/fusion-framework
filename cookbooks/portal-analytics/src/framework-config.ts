@@ -38,7 +38,9 @@ export type PortalModuleInitiator<TRef extends Fusion = Fusion> = (
 ) => void | Promise<void>;
 
 export const frameworkConfig: PortalModuleInitiator = (configurator) => {
-  enableContext(configurator);
+  enableContext(configurator, (builder) => {
+    builder.setRoutingStrategy('path');
+  });
 
   enableBookmark(configurator);
 

@@ -6,6 +6,7 @@ import {
 
 export const configure: AppModuleInitiator = (configurator) => {
   enableContext(configurator, async (builder) => {
+    builder.setRoutingStrategy('path');
     builder.setContextFilter((items) => {
       // Surface the intentional custom error when context search returns nothing.
       if (items.length === 0) {

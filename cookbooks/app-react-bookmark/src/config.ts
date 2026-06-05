@@ -5,6 +5,7 @@ import { enableBookmark } from '@equinor/fusion-framework-react-app/bookmark';
 
 export const configure: AppModuleInitiator = (configurator: IAppConfigurator) => {
   enableContext(configurator, async (builder) => {
+    builder.setRoutingStrategy('path');
     builder.setContextType(['projectMaster']); // set contextType to match against
   });
   enableBookmark(configurator);
