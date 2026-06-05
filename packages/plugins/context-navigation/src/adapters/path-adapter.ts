@@ -40,13 +40,13 @@ export function createPathAdapter(): ContextNavigationAdapter {
      * Accepts apps with explicit `'path'` strategy or no declared strategy
      * (the path adapter serves as the system-wide default fallback).
      */
-    canHandle({ appContext }: AdapterResolutionContext): boolean {
+    canHandle({ appContext, routingStrategy }: AdapterResolutionContext): boolean {
       // Apps with custom generators are owned by the custom adapter
       if (hasCustomContextGenerators(appContext)) {
         return false;
       }
 
-      const declared = appContext.routingStrategy;
+      const declared = routingStrategy;
       // Explicit path strategy
       if (declared === 'path') {
         return true;

@@ -89,12 +89,11 @@ export const configure = async (config: FrameworkConfigurator) => {
    * active context as it changes at runtime.
    */
   enableContext(config, (builder) => {
-    builder.setContextPathGenerator((context, path, routingStrategy) =>
-      buildContextUrlForStrategy(context?.id, path, routingStrategy),
+    builder.setContextPathGenerator((context, path) =>
+      buildContextUrlForStrategy(context?.id, path),
     );
 
     builder.setContextPathExtractor((path) => resolveContextIdFromUrl(path));
-    builder.setRoutingStrategy('path');
   });
 
   enableNavigation(config, {

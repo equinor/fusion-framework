@@ -1,6 +1,10 @@
 import type { Observable } from 'rxjs';
 
-import type { AppModuleProvider, AppModulesInstance } from '@equinor/fusion-framework-module-app';
+import type {
+  AppModuleProvider,
+  AppModulesInstance,
+  FrameworkOptions,
+} from '@equinor/fusion-framework-module-app';
 import type {
   ContextModule,
   ContextItem,
@@ -38,6 +42,8 @@ export interface ReconcilerSourceEntry {
   appModules: AppModulesInstance<[ContextModule]>;
   /** The portal-level context state driving reconciliation. */
   contextState: ContextState;
+  /** Routing strategy declared in the app manifest's build options. */
+  routingStrategy?: FrameworkOptions['contextRouting'];
 }
 
 /**
