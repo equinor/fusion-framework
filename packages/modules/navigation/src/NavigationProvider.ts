@@ -24,16 +24,15 @@ import type { BaseHistory } from './lib';
 /**
  * Normalizes a pathname by:
  * - Collapsing multiple consecutive slashes into a single slash
- * - Removing trailing slashes
  *
  * @example
- * normalizePathname("/app//users///profile/") // returns "/app/users/profile"
- * normalizePathname("///multiple///slashes///") // returns "/multiple/slashes"
+ * normalizePathname("/app//users///profile/") // returns "/app/users/profile/"
+ * normalizePathname("///multiple///slashes///") // returns "/multiple/slashes/"
  *
  * @param path - The pathname to normalize
- * @returns The normalized pathname without consecutive or trailing slashes
+ * @returns The normalized pathname without consecutive slashes
  */
-const normalizePathname = (path: string) => path.replace(/\/+/g, '/').replace(/\/$/, '');
+const normalizePathname = (path: string) => path.replace(/\/+/g, '/');
 
 /**
  * Navigation provider implementation.
@@ -310,11 +309,17 @@ export class NavigationProvider
   /**
    * Checks whether a pathname falls within the configured basename scope.
    *
+   * Uses a path-boundary check to avoid false positives from apps with
+   * overlapping name prefixes (e.g. `/apps/my-app` must not match
+   * `/apps/my-app-other/foo`).
+   *
    * @param pathname - The pathname to check
-   * @returns `true` if the pathname starts with the basename (or no basename is set)
+   * @returns `true` if the pathname matches the basename exactly or starts
+   *          with the basename followed by `/` (or no basename is set)
    */
   protected _isWithinBasenameScope(pathname: string): boolean {
-    return this.#basename ? pathname.startsWith(this.#basename) : true;
+    if (!this.#basename) return true;
+    return pathname === this.#basename || pathname.startsWith(`${this.#basename}/`);
   }
 
   /**
@@ -326,7 +331,7 @@ export class NavigationProvider
   protected _localizePath(location: Path): Path {
     const { pathname, search, hash } = location;
     return {
-      pathname: normalizePathname(pathname.replace(this.#basename ?? '', '')),
+      pathname: normalizePathname(pathname.replace(this.#basename ?? '', '')) || '/',
       search,
       hash,
     };

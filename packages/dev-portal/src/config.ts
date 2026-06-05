@@ -1,9 +1,13 @@
-import { enableAppModule } from '@equinor/fusion-framework-module-app';
+import { enableAppModule, type AppModule } from '@equinor/fusion-framework-module-app';
 import { enableBookmark } from '@equinor/fusion-framework-react-module-bookmark';
 import type { FrameworkConfigurator } from '@equinor/fusion-framework';
 import { enableAnalytics } from '@equinor/fusion-framework-module-analytics';
 import { ConsoleAnalyticsAdapter } from '@equinor/fusion-framework-module-analytics/adapters';
-import { enableNavigation } from '@equinor/fusion-framework-module-navigation';
+import { enableContext } from '@equinor/fusion-framework-module-context';
+import {
+  enableNavigation,
+  type NavigationModule,
+} from '@equinor/fusion-framework-module-navigation';
 import { enableServices } from '@equinor/fusion-framework-module-services';
 import { enableFeatureFlagging } from '@equinor/fusion-framework-module-feature-flag';
 import {
@@ -11,15 +15,22 @@ import {
   createUrlPlugin,
 } from '@equinor/fusion-framework-module-feature-flag/plugins';
 import { enableAgGrid } from '@equinor/fusion-framework-module-ag-grid';
-
 import { enableTelemetry } from '@equinor/fusion-framework-module-telemetry';
+import {
+  enableContextNavigation,
+  enableLegacyAppNavigationFix,
+} from '@equinor/fusion-framework-plugin-context-navigation';
+import {
+  buildContextUrlForStrategy,
+  resolveContextIdFromUrl,
+} from '@equinor/fusion-framework-plugin-context-navigation/utils';
 import { version } from './version';
 
 declare global {
   interface Window {
     /**
-     * AG Grid license key for enabling enterprise features
-     * @remarks This is typically set via environment variables during build time
+     * AG Grid license key for enabling enterprise features.
+     * @remarks Typically set via environment variables during build time.
      */
     FUSION_AG_GRID_KEY?: string;
   }
@@ -28,10 +39,15 @@ declare global {
 /**
  * Configures the Fusion Dev Portal framework with all required modules.
  *
- * Enables and wires together:
+ * Modules enabled:
  * - **Telemetry** — portal-scoped usage analytics with version metadata.
- * - **App module** — application manifest loading and lifecycle.
- * - **Navigation** — router integration with optional telemetry.
+ * - **App** — application manifest loading and lifecycle.
+ * - **Context** — context routing URL hooks via {@link configureDevPortalContext}.
+ * - **Context Navigation plugin** — keeps the browser URL in sync with the
+ *   active context, handles app-switch carry-over, and guards against
+ *   accidental context loss. Telemetry is auto-resolved from the framework
+ *   telemetry module.
+ * - **Navigation** — router integration with telemetry.
  * - **Services** — standard Fusion service integrations.
  * - **AG Grid** — enterprise license key from `window.FUSION_AG_GRID_KEY`.
  * - **Analytics** — console adapter gated by the `fusionLogAnalytics` feature flag.
@@ -51,10 +67,7 @@ export const configure = async (config: FrameworkConfigurator) => {
       builder.setMetadata(() => ({
         fusion: {
           type: 'portal-telemetry',
-          portal: {
-            version,
-            name: 'Fusion Dev Portal',
-          },
+          portal: { version, name: 'Fusion Dev Portal' },
         },
       }));
       // Scope telemetry events to portal-specific tracking
@@ -66,9 +79,28 @@ export const configure = async (config: FrameworkConfigurator) => {
 
   enableAppModule(config);
 
+  /**
+   * Configure context module with dev-portal URL conventions.
+   *
+   * This wires the context module's URL hooks — the path generator
+   * and path extractor — to the dev-portal's URL routing strategy.
+   *
+   * The context-navigation plugin keeps the browser URL in sync with the
+   * active context as it changes at runtime.
+   */
+  enableContext(config, (builder) => {
+    builder.setContextPathGenerator((context, path, routingStrategy) =>
+      buildContextUrlForStrategy(context?.id, path, routingStrategy),
+    );
+
+    builder.setContextPathExtractor((path) => resolveContextIdFromUrl(path));
+    builder.setRoutingStrategy('path');
+  });
+
   enableNavigation(config, {
-    configure: (config) => {
-      config.setTelemetry(async (args) => {
+    configure: (navConfig) => {
+      navConfig.setBasename('/');
+      navConfig.setTelemetry(async (args) => {
         if (args.hasModule('telemetry')) {
           return await args.requireInstance('telemetry');
         }
@@ -130,13 +162,20 @@ export const configure = async (config: FrameworkConfigurator) => {
     builder.addPlugin(createUrlPlugin(['fusionDebug']));
   });
 
-  // Expose framework modules globally for development debugging and inspection
-  config.onInitialized(async (modules) => {
-    // NOTE: TypeScript ignore needed due to window object extension
-    // This provides developer access to all initialized modules via window.Fusion
-    // @ts-expect-error
+  // Keep portal URLs aligned with the active app/context combination by using
+  // the shared context-navigation plugin and the dev-portal URL helpers.
+  enableContextNavigation(config, (builder) => {
+    builder.setPortalName('dev-portal');
+    builder.setDebug(true);
+    builder.setUrlGuard(true);
+  });
+
+  config.onInitialized<[AppModule, NavigationModule]>((modules) => {
+    // Reset legacy app routers on context navigation for apps with navigation <v7.
+    enableLegacyAppNavigationFix({ event: modules.event });
+
+    // Expose framework modules globally for development debugging and inspection.
+    // @ts-expect-error — `window` is not typed with `Fusion`
     window.Fusion = { modules };
   });
 };
-
-export default configure;

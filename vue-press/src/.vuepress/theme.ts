@@ -16,6 +16,10 @@ const navbar: NavbarOptions = [
     link: '/modules/',
   },
   {
+    text: 'Plugins',
+    link: '/plugins/',
+  },
+  {
     text: 'CLI',
     link: '/cli/',
   },
