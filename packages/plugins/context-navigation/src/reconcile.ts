@@ -53,7 +53,15 @@ export function reconcile(
   deps: ReconcileDeps,
   options: ReconcileOptions = {},
 ): void {
-  const { appKey, appModules, contextState } = entry;
+  const { appKey, appModules, contextState, routingStrategy } = entry;
+
+  console.debug(
+    `[ContextNavigation] Reconciling context for [${appKey}] with state:`,
+    contextState,
+    'and routing strategy:',
+    routingStrategy,
+  );
+
   const { event, navigation, config, eventSource, ownNavTokens, log } = deps;
 
   if (contextState === undefined) {
@@ -90,7 +98,10 @@ export function reconcile(
     log(`App switch detected → stripped query params for [${appKey}]`);
   }
 
-  const adapter = resolveAdapter({ appKey, appContext, currentURL }, config.adapters);
+  const adapter = resolveAdapter(
+    { appKey, appContext, routingStrategy, currentURL },
+    config.adapters,
+  );
 
   if (!adapter) {
     event.dispatchEvent('onContextNavigationSkipped', {

@@ -13,8 +13,8 @@ Use this plugin when your **portal** needs to:
 
 > [!NOTE]
 > This plugin is intended for **portal hosts**, not individual applications.
-> Applications declare their preferred routing strategy via the context module's
-> `setRoutingStrategy()` builder method — the portal's context-navigation
+> Applications declare their preferred routing strategy via the app manifest's
+> `build.options.contextRouting` field — the portal's context-navigation plugin
 > picks up that declaration and applies the correct URL encoding automatically.
 
 ## Key Concepts
@@ -95,7 +95,7 @@ The plugin ships with three adapters evaluated in priority order:
 | Adapter | URL Shape | When Selected |
 |---|---|---|
 | **custom** | App-defined (via `generatePathFromContext` / `extractContextIdFromPath` hooks) | App provides `generatePathFromContext` and/or `extractContextIdFromPath` hooks on its context provider |
-| **query** | `?$contextId={id}` | App declares `routingStrategy: 'query'` |
+| **query** | `?$contextId={id}` | App manifest declares `build.options.contextRouting: 'query'` |
 | **path** | `/apps/{appKey}/{contextId}/sub-route` | Default fallback — context as 3rd path segment |
 
 When no custom adapters are registered, all three built-in adapters are available. The first whose `canHandle()` returns `true` for the current app wins.
@@ -107,7 +107,7 @@ import type { ContextNavigationAdapter } from '@equinor/fusion-framework-plugin-
 
 const hashAdapter: ContextNavigationAdapter = {
   id: 'hash',
-  canHandle: ({ appContext }) => appContext.routingStrategy === 'hash',
+  canHandle: ({ routingStrategy }) => routingStrategy === 'hash',
   encode: ({ context, currentURL }) => {
     const url = new URL(currentURL.href);
     url.hash = context ? `#ctx=${context.id}` : '';
@@ -193,6 +193,7 @@ interface ContextNavigationAdapter {
 interface AdapterResolutionContext {
   appKey: string;
   appContext: IContextProvider;
+  routingStrategy?: 'path' | 'query' | null;
   currentURL: URL;
 }
 ```
@@ -219,5 +220,5 @@ interface AdapterResolutionContext {
 
 ## See Also
 
-- [`@equinor/fusion-framework-module-context`](../../modules/context/) — context module with routing strategy configuration
-- [Context Routing Strategy Migration Guide](../../modules/context/docs/migration-routing-strategy.md) — migration guide for adding explicit routing strategy
+- [`@equinor/fusion-framework-module-context`](../../modules/context/) — context module for query, validation, and resolution
+- [`@equinor/fusion-framework-module-app`](../../modules/app/) — app module defining `FrameworkOptions.contextRouting` in build manifest

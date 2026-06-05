@@ -5,7 +5,6 @@ import buildQuery from 'odata-query';
 
 export const configure: AppModuleInitiator = (configurator, conf) => {
   enableContext(configurator, async (builder) => {
-    builder.setRoutingStrategy('path');
     builder.setContextType(['projectmaster']); // set contextType to match against
     builder.setContextParameterFn(({ search, type }) => {
       return buildQuery({

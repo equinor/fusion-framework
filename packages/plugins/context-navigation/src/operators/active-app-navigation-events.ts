@@ -1,6 +1,10 @@
-import { EMPTY, type Observable, map, switchMap } from 'rxjs';
+import { EMPTY, type Observable, combineLatestWith, map, switchMap } from 'rxjs';
 
-import type { AppModuleProvider, AppModulesInstance } from '@equinor/fusion-framework-module-app';
+import type {
+  AppModuleProvider,
+  AppModulesInstance,
+  FrameworkOptions,
+} from '@equinor/fusion-framework-module-app';
 import type { ContextModule } from '@equinor/fusion-framework-module-context';
 import type { INavigationProvider } from '@equinor/fusion-framework-module-navigation';
 
@@ -15,6 +19,8 @@ export interface ActiveAppNavigationEvent {
   appKey: string;
   /** The app's resolved module instances, guaranteed to include the context module. */
   appModules: AppModulesInstance<[ContextModule]>;
+  /** Routing strategy declared in the app manifest's build options. */
+  routingStrategy?: FrameworkOptions['contextRouting'];
 }
 
 /**
@@ -49,8 +55,9 @@ export function activeAppNavigationEvents$(
       !currentApp
         ? EMPTY
         : currentApp.instance$.pipe(
+            combineLatestWith(currentApp.manifest$),
             // Wait for modules to resolve; bail if they're null (loading/error).
-            switchMap((appModules) =>
+            switchMap(([appModules, manifest]) =>
               !appModules
                 ? EMPTY
                 : navigation.state$.pipe(
@@ -59,6 +66,7 @@ export function activeAppNavigationEvents$(
                     map(() => ({
                       appKey: currentApp.appKey,
                       appModules: appModules as AppModulesInstance<[ContextModule]>,
+                      routingStrategy: manifest?.build?.options?.contextRouting,
                     })),
                   ),
             ),

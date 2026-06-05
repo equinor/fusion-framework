@@ -118,6 +118,17 @@ export type RouteSchemaEntry = [
 ];
 
 /**
+ * Typed representation of the options object.
+ *
+ * Only known keys are declared in the type — additional properties are
+ * handled by the Zod schema at runtime. Keeping the type narrow avoids
+ * structural incompatibilities with `RecursivePartial<AppManifest>`.
+ */
+export type FrameworkOptions = {
+  contextRouting?: 'path' | 'query' | null;
+};
+
+/**
  * Build metadata returned by the app service for a specific application version.
  * Contains the script entry point, asset path, tags, and optional CI metadata.
  */
@@ -133,6 +144,7 @@ export type AppBuildManifest = {
   githubRepo?: Nullable<string>;
   projectPage?: Nullable<string>;
   annotations?: Nullable<Record<string, string>>;
+  options?: Nullable<FrameworkOptions>;
   allowedExtensions?: Nullable<string[]>;
   uploadedBy?: Nullable<AppOwner>;
 };

@@ -1,4 +1,5 @@
 import type { ContextItem, IContextProvider } from '@equinor/fusion-framework-module-context';
+import type { FrameworkOptions } from '@equinor/fusion-framework-module-app';
 
 // ─── Adapter Contract ───────────────────────────────────────────────
 
@@ -9,8 +10,10 @@ import type { ContextItem, IContextProvider } from '@equinor/fusion-framework-mo
 export interface AdapterResolutionContext {
   /** Current app key. */
   appKey: string;
-  /** The app's context provider (has routingStrategy, generators, etc.) */
+  /** The app's context provider (has custom generators, etc.) */
   appContext: IContextProvider;
+  /** Routing strategy declared in the app manifest's build options. */
+  routingStrategy?: FrameworkOptions['contextRouting'];
   /** The current browser URL. */
   currentURL: URL;
 }

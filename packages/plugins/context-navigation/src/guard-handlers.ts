@@ -1,4 +1,4 @@
-import type { AppModulesInstance } from '@equinor/fusion-framework-module-app';
+import type { AppModulesInstance, FrameworkOptions } from '@equinor/fusion-framework-module-app';
 import type { ContextModule, IContextProvider } from '@equinor/fusion-framework-module-context';
 
 import type { ContextNavigationConfig } from './types';
@@ -15,6 +15,8 @@ export interface GuardTickPayload {
   appKey: string;
   /** The app's resolved module instances (provides access to context provider). */
   appModules: AppModulesInstance<[ContextModule]>;
+  /** Routing strategy declared in the app manifest's build options. */
+  routingStrategy?: FrameworkOptions['contextRouting'];
 }
 
 /**
@@ -106,14 +108,14 @@ export function handlePushModeGuard(
   currentURL: URL,
   deps: GuardTickDeps,
 ): void {
-  const { appKey, appModules } = payload;
+  const { appKey, appModules, routingStrategy } = payload;
   const { context, log } = deps;
 
   // Resolve the active context and adapter — both are required to fall back.
   const activeContext = appModules.context.currentContext;
   if (!activeContext) return;
   const adapter = resolveAdapter(
-    { appKey, appContext: appModules.context, currentURL },
+    { appKey, appContext: appModules.context, routingStrategy, currentURL },
     deps.config.adapters,
   );
   if (!adapter) return;
@@ -147,14 +149,14 @@ export function handleReplaceModeGuard(
   currentURL: URL,
   deps: GuardTickDeps,
 ): void {
-  const { appKey, appModules } = payload;
+  const { appKey, appModules, routingStrategy } = payload;
   const { log } = deps;
 
   // Resolve the active context and adapter for re-encoding.
   const activeContext = appModules.context.currentContext;
   if (!activeContext) return;
   const adapter = resolveAdapter(
-    { appKey, appContext: appModules.context, currentURL },
+    { appKey, appContext: appModules.context, routingStrategy, currentURL },
     deps.config.adapters,
   );
   if (!adapter) return;
