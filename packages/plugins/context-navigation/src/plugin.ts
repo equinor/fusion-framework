@@ -124,45 +124,55 @@ export function createContextNavigationPlugin(args: ContextNavigationPluginArgs)
     subscriptions.add(
       // activeAppNavigationEvents$ emits the current app key and modules
       // on every navigation state change, filtering out null/unresolved states.
-      activeAppNavigationEvents$(app, navigation).subscribe(({ appModules, appKey }) => {
-        const appContext = appModules.context;
+      activeAppNavigationEvents$(app, navigation).subscribe(
+        ({ appModules, appKey, routingStrategy }) => {
+          const appContext = appModules.context;
 
-        // No active context means nothing to guard — bail early.
-        if (!appContext?.currentContext) return;
+          // No active context means nothing to guard — bail early.
+          if (!appContext?.currentContext) return;
 
-        const currentURL = getCurrentURL(navigation, config.origin);
+          const currentURL = getCurrentURL(navigation, config.origin);
 
-        // Scope check: only guard URLs that belong to this app's path namespace.
-        // Navigations to other apps or external paths are not our responsibility.
-        if (!isInAppScope(currentURL, appKey)) return;
+          // Scope check: only guard URLs that belong to this app's path namespace.
+          // Navigations to other apps or external paths are not our responsibility.
+          if (!isInAppScope(currentURL, appKey)) return;
 
-        // Own-navigation check: if this URL was navigated to by the plugin itself,
-        // consume the token and skip — prevents infinite reconcile/guard loops.
-        if (consumeOwnNavToken(currentURL, ownNavTokens)) return;
+          // Own-navigation check: if this URL was navigated to by the plugin itself,
+          // consume the token and skip — prevents infinite reconcile/guard loops.
+          if (consumeOwnNavToken(currentURL, ownNavTokens)) return;
 
-        // Resolve the adapter for this app/URL combination.
-        // If no adapter matches, the URL format is unknown — we can't guard it.
-        const adapter = resolveAdapter({ appKey, appContext, currentURL }, config.adapters);
-        if (!adapter) return;
+          // Resolve the adapter for this app/URL combination.
+          // If no adapter matches, the URL format is unknown — we can't guard it.
+          const adapter = resolveAdapter(
+            { appKey, appContext, routingStrategy, currentURL },
+            config.adapters,
+          );
+          if (!adapter) return;
 
-        const activeContext = appContext.currentContext;
-        const urlContextId = adapter.decode(currentURL);
+          const activeContext = appContext.currentContext;
+          const urlContextId = adapter.decode(currentURL);
 
-        // If the URL already encodes the active context, state is in sync — done.
-        if (urlContextId === activeContext.id) return;
+          // If the URL already encodes the active context, state is in sync — done.
+          if (urlContextId === activeContext.id) return;
 
-        // Decision branch: push mode vs replace mode determines how we reconcile drift.
-        if (urlContextId !== null && config.navigationOptions?.replace === false) {
-          // Push mode: URL has a different context ID, meaning the user navigated
-          // via browser back/forward. Drive context FROM the URL to stay in sync.
-          handlePushModeGuard(urlContextId, { appKey, appModules }, currentURL, guardDeps);
-          return;
-        }
+          // Decision branch: push mode vs replace mode determines how we reconcile drift.
+          if (urlContextId !== null && config.navigationOptions?.replace === false) {
+            // Push mode: URL has a different context ID, meaning the user navigated
+            // via browser back/forward. Drive context FROM the URL to stay in sync.
+            handlePushModeGuard(
+              urlContextId,
+              { appKey, appModules, routingStrategy },
+              currentURL,
+              guardDeps,
+            );
+            return;
+          }
 
-        // Replace mode (default): URL diverged from active context (external redirect,
-        // stripped segment, etc.). Re-assert the active context INTO the URL.
-        handleReplaceModeGuard({ appKey, appModules }, currentURL, guardDeps);
-      }),
+          // Replace mode (default): URL diverged from active context (external redirect,
+          // stripped segment, etc.). Re-assert the active context INTO the URL.
+          handleReplaceModeGuard({ appKey, appModules, routingStrategy }, currentURL, guardDeps);
+        },
+      ),
     );
   }
 

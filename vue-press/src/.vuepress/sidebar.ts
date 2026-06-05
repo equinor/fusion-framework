@@ -451,4 +451,11 @@ export default sidebar({
       ],
     },
   ],
+  '/plugins/': [
+    '',
+    {
+      text: 'Context Navigation',
+      link: 'context-navigation/',
+    },
+  ],
 });

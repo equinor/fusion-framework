@@ -2,6 +2,7 @@ packages:
   - packages/**
   - cookbooks/*
   - vue-press
+  - .tmp/*
 
 onlyBuiltDependencies:
   - keytar

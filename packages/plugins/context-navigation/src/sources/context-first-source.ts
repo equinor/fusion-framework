@@ -10,7 +10,7 @@ import { contextStateChanged, type ReconcilerSourceFactory } from './types';
  *
  * Stream composition:
  * ```
- * context.currentContext$ → combineLatestWith(app.current$ → app.instance$)
+ * context.currentContext$ → combineLatestWith(app.current$ → combineLatest(instance$, manifest$))
  * ```
  *
  * Use this for **context-portal** where the selected context drives all
@@ -29,13 +29,15 @@ export const createContextFirstSource = (): ReconcilerSourceFactory => {
                 return EMPTY;
               }
               return currentApp.instance$.pipe(
-                switchMap((appModules) => {
+                combineLatestWith(currentApp.manifest$),
+                switchMap(([appModules, manifest]) => {
                   if (!appModules) {
                     return EMPTY;
                   }
                   return of({
                     appModules: appModules as AppModulesInstance<[ContextModule]>,
                     appKey: currentApp.appKey,
+                    routingStrategy: manifest?.build?.options?.contextRouting,
                   });
                 }),
               );
@@ -44,8 +46,8 @@ export const createContextFirstSource = (): ReconcilerSourceFactory => {
         ),
       )
       .pipe(
-        switchMap(([contextState, { appModules, appKey }]) =>
-          of({ appKey, appModules, contextState }),
+        switchMap(([contextState, { appModules, appKey, routingStrategy }]) =>
+          of({ appKey, appModules, contextState, routingStrategy }),
         ),
       );
   };

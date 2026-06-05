@@ -10,7 +10,7 @@ import { contextStateChanged, type ReconcilerSourceFactory } from './types';
  *
  * Stream composition:
  * ```
- * app.current$ → app.instance$ → combineLatestWith(context.currentContext$)
+ * app.current$ → combineLatest(instance$, manifest$) → combineLatestWith(context.currentContext$)
  * ```
  *
  * Use this for **app-portal** where the active app determines the navigation
@@ -24,20 +24,22 @@ export const createAppFirstSource = (): ReconcilerSourceFactory => {
           return EMPTY;
         }
         return currentApp.instance$.pipe(
-          switchMap((appModules) => {
+          combineLatestWith(currentApp.manifest$),
+          switchMap(([appModules, manifest]) => {
             if (!appModules) {
               return EMPTY;
             }
             return of({
               appModules: appModules as AppModulesInstance<[ContextModule]>,
               appKey: currentApp.appKey,
+              routingStrategy: manifest?.build?.options?.contextRouting,
             });
           }),
         );
       }),
       combineLatestWith(context.currentContext$.pipe(distinctUntilChanged(contextStateChanged))),
-      switchMap(([{ appModules, appKey }, contextState]) =>
-        of({ appKey, appModules, contextState }),
+      switchMap(([{ appModules, appKey, routingStrategy }, contextState]) =>
+        of({ appKey, appModules, contextState, routingStrategy }),
       ),
     );
   };

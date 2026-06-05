@@ -24,7 +24,6 @@ import type {
   FrameworkEventInit,
 } from '@equinor/fusion-framework-module-event';
 import Query from '@equinor/fusion-query';
-import type { ContextRoutingStrategy } from './types';
 import type { SemVer } from 'semver';
 
 /**
@@ -59,13 +58,6 @@ import type { SemVer } from 'semver';
  * @template T - The shape of the context item data.
  */
 export interface IContextProvider {
-  /**
-   * Declares the configured URL routing strategy for this provider.
-   *
-   * Exposed for host integrations that need mixed-major compatibility behavior.
-   */
-  readonly routingStrategy?: ContextRoutingStrategy;
-
   /** DANGER */
   readonly contextClient: ContextClient;
   /** DANGER */
@@ -348,8 +340,6 @@ export class ContextProvider
   extends BaseModuleProvider<ContextModuleConfig>
   implements IContextProvider
 {
-  readonly routingStrategy?: ContextRoutingStrategy;
-
   #contextClient: ContextClient;
   #contextQuery: Query<Array<ContextItem>, QueryContextParameters>;
   #contextRelated?: Query<Array<ContextItem>, RelatedContextParameters>;
@@ -411,7 +401,6 @@ export class ContextProvider
     }
 
     this.#event = event;
-    this.routingStrategy = config.routingStrategy;
 
     // set the resolve and validate context functions
     if (config.resolveContext) {

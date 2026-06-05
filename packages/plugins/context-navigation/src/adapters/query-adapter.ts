@@ -43,8 +43,8 @@ export function createQueryAdapter(paramName = CONTEXT_QUERY_PARAM_KEY): Context
      * Only returns `true` when `routingStrategy === 'query'` — there is no
      * implicit fallback. Apps without a declared strategy use the path adapter.
      */
-    canHandle({ appContext }: AdapterResolutionContext): boolean {
-      return appContext.routingStrategy === 'query';
+    canHandle({ routingStrategy }: AdapterResolutionContext): boolean {
+      return routingStrategy === 'query';
     },
 
     /**

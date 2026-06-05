@@ -13,7 +13,6 @@ import type { QueryCtorOptions } from '@equinor/fusion-query';
 import type {
   ContextFilterFn,
   ContextItem,
-  ContextRoutingStrategy,
   QueryContextParameters,
   RelatedContextParameters,
 } from './types';
@@ -34,14 +33,6 @@ import resolveInitialContext from './utils/resolve-initial-context';
  * @see ContextProvider — runtime consumer of this config.
  */
 export interface ContextModuleConfig {
-  /**
-   * URL routing strategy used for resolving and generating contextual deep links.
-   *
-   * - `query`: preferred query-parameter strategy using `$contextId`.
-   * - `path`: legacy path-segment strategy.
-   */
-  routingStrategy?: ContextRoutingStrategy;
-
   /**
    * Query client options used to fetch, search, and resolve related context items.
    *
@@ -104,14 +95,9 @@ export interface ContextModuleConfig {
    *
    * @param context - The active context item.
    * @param path - The current URL path.
-   * @param routingStrategy - The active routing strategy, useful for conditional generation logic.
    * @returns The updated path, or `undefined` to leave it unchanged.
    */
-  generatePathFromContext?: (
-    context: ContextItem,
-    path: string,
-    routingStrategy?: ContextRoutingStrategy,
-  ) => string | undefined;
+  generatePathFromContext?: (context: ContextItem, path: string) => string | undefined;
 
   /**
    * Transforms a user search string and the configured context type into
@@ -253,14 +239,6 @@ export class ContextModuleConfigurator implements IContextModuleConfigurator {
       },
       Promise.resolve({} as Partial<ContextModuleConfig>),
     );
-
-    if (!config.routingStrategy) {
-      console.warn(
-        'ContextModuleConfigurator.createConfig',
-        "missing routing strategy, defaulting to 'path' — declare setRoutingStrategy('query') or setRoutingStrategy('path') explicitly, we encourage new apps to use 'query' and 'path' is primarily for legacy support",
-      );
-      config.routingStrategy = 'path';
-    }
 
     config.resolveInitialContext ??= resolveInitialContext();
 

@@ -11,7 +11,7 @@ export { CONTEXT_QUERY_PARAM_KEY, UUID_PATTERN } from '../../constants';
 // `setContextPathGenerator` / `setContextPathExtractor` hooks.
 // All runtime URL handling goes through the adapter layer instead.
 
-import type { ContextModuleConfig } from '@equinor/fusion-framework-module-context';
+import type { FrameworkOptions } from '@equinor/fusion-framework-module-app';
 import { parseAppRoute, buildAppRoute } from './app-route';
 import { UUID_PATTERN, CONTEXT_QUERY_PARAM_KEY } from '../../constants';
 
@@ -49,7 +49,7 @@ export const resolveContextIdFromUrl = (path: string): string | undefined => {
 export const buildContextUrlForStrategy = (
   contextId: string | undefined,
   path: string,
-  routingStrategy?: ContextModuleConfig['routingStrategy'],
+  routingStrategy?: FrameworkOptions['contextRouting'],
 ): string => {
   if (routingStrategy === 'query') {
     try {
