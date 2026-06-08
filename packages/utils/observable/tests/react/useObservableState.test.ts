@@ -112,4 +112,112 @@ describe('useObservableState', () => {
 
     expect(teardown).toHaveBeenCalledTimes(1);
   });
+
+  describe('store stability', () => {
+    it('should not recreate the store when a non-memoized complex initial object is passed on every render', () => {
+      const subject = new Subject<{ id: number }>();
+
+      // Spy on Subject.subscribe to count store creations — each new store subscribes once.
+      const subscribeSpy = vi.spyOn(subject, 'subscribe');
+
+      const { rerender } = renderHook(() =>
+        useObservableState(subject, {
+          // Intentionally non-memoized: a new object reference on every render.
+          initial: { id: 0 },
+        }),
+      );
+
+      rerender();
+      rerender();
+      rerender();
+
+      // The store should have been created once regardless of how many times the
+      // component re-renders with a different initial object reference.
+      expect(subscribeSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('should not recreate the store when a non-memoized teardown function is passed on every render', () => {
+      const subject = new Subject<number>();
+      const subscribeSpy = vi.spyOn(subject, 'subscribe');
+
+      const { rerender } = renderHook(() =>
+        useObservableState(subject, {
+          // Intentionally non-memoized: a new arrow function on every render.
+          teardown: () => {},
+        }),
+      );
+
+      rerender();
+      rerender();
+      rerender();
+
+      expect(subscribeSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('should recreate the store when the subject reference changes', () => {
+      const subjectA = new BehaviorSubject(1);
+      const subjectB = new BehaviorSubject(2);
+
+      const spyA = vi.spyOn(subjectA, 'subscribe');
+      const spyB = vi.spyOn(subjectB, 'subscribe');
+
+      let activeSubject = subjectA as BehaviorSubject<number>;
+      const { result, rerender } = renderHook(() => useObservableState(activeSubject));
+
+      expect(result.current.value).toBe(1);
+
+      activeSubject = subjectB;
+      rerender();
+
+      expect(result.current.value).toBe(2);
+      expect(spyA).toHaveBeenCalledTimes(1);
+      expect(spyB).toHaveBeenCalledTimes(1);
+    });
+
+    it('should use the latest initial value when the subject changes', () => {
+      const subjectA = new Subject<{ label: string }>();
+      const subjectB = new Subject<{ label: string }>();
+
+      let activeSubject = subjectA as Subject<{ label: string }>;
+      let initialValue = { label: 'first' };
+
+      const { result, rerender } = renderHook(() =>
+        useObservableState(activeSubject, { initial: initialValue }),
+      );
+
+      expect(result.current.value).toEqual({ label: 'first' });
+
+      // Switch to a new subject with an updated initial value.
+      activeSubject = subjectB;
+      initialValue = { label: 'second' };
+      rerender();
+
+      expect(result.current.value).toEqual({ label: 'second' });
+    });
+  });
+
+  describe('persist option', () => {
+    it('should not recreate the store when subject reference changes and persist=true', () => {
+      const subjectA = new BehaviorSubject(1);
+      const subjectB = new BehaviorSubject(99);
+
+      const spyA = vi.spyOn(subjectA, 'subscribe');
+      const spyB = vi.spyOn(subjectB, 'subscribe');
+
+      let activeSubject = subjectA as BehaviorSubject<number>;
+      const { result, rerender } = renderHook(() =>
+        useObservableState(activeSubject, { persist: true }),
+      );
+
+      expect(result.current.value).toBe(1);
+
+      // Swap subject — the store should ignore it because persist=true.
+      activeSubject = subjectB;
+      rerender();
+
+      expect(result.current.value).toBe(1);
+      expect(spyA).toHaveBeenCalledTimes(1);
+      expect(spyB).not.toHaveBeenCalled();
+    });
+  });
 });
