@@ -15,7 +15,7 @@ export const resolveGitRemoteUrl = (): string | undefined => {
   try {
     const origin = execSync('git remote get-url origin').toString().trim();
     return origin.replace('git@github.com:', 'https://github.com/').replace(/\.git$/, '');
-  } catch (error) {
+  } catch {
     // most likely due to not being in a git repository or no remote named "origin"
     return undefined; // Return undefined if the command fails or origin is not set
   }

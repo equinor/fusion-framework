@@ -169,7 +169,7 @@ export async function fetchMultiplePackageInfo(
     try {
       const packageInfo = await fetchPackageInfo(packageName, registry);
       return { packageName, packageInfo };
-    } catch (error) {
+    } catch {
       // Return null for failed packages - they'll be filtered out later
       return null;
     }

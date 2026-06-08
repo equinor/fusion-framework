@@ -15,7 +15,7 @@ import { execSync } from 'node:child_process';
 export const resolveGitCommitSha = (ref = 'HEAD'): string | undefined => {
   try {
     return execSync(`git rev-parse ${ref}`).toString().trim();
-  } catch (error) {
+  } catch {
     // most likely due to not being in a git repository or invalid ref
     return undefined; // Return undefined if the command fails or ref is not valid
   }
