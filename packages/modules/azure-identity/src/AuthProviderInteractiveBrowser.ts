@@ -76,7 +76,7 @@ export class AuthProviderInteractiveBrowser implements IAuthProvider {
     // Dynamically import to avoid loading the native `keytar` binary at
     // module-load time. The package is optional — throw a clear error when
     // it is absent (e.g. missing libsecret on Linux).
-    let PersistenceCreator: (typeof import('@azure/msal-node-extensions'))['PersistenceCreator'];
+    let PersistenceCreator: typeof import('@azure/msal-node-extensions')['PersistenceCreator'];
     try {
       ({ PersistenceCreator } = await import('@azure/msal-node-extensions'));
     } catch {
