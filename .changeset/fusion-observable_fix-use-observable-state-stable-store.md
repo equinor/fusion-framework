@@ -2,7 +2,7 @@
 "@equinor/fusion-observable": patch
 ---
 
-Internal: `useObservableState` — stabilize store across re-renders
+`useObservableState` — stabilize store across re-renders
 
 Previously, passing non-memoized values for `opt.initial` or `opt.teardown`
 (e.g. inline object literals or arrow functions) caused `useMemo` to recreate
