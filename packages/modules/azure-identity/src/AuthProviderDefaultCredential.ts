@@ -15,8 +15,18 @@ let pluginRegistered = false;
 export async function ensureCachePersistencePlugin(): Promise<void> {
   if (pluginRegistered) return;
   const { useIdentityPlugin } = await import('@azure/identity');
-  const { cachePersistencePlugin } = await import('@azure/identity-cache-persistence');
-  useIdentityPlugin(cachePersistencePlugin);
+  let cachePersistencePlugin: unknown;
+  try {
+    ({ cachePersistencePlugin } = await import('@azure/identity-cache-persistence'));
+  } catch {
+    throw new Error(
+      'Failed to load @azure/identity-cache-persistence. ' +
+        'Token cache persistence requires a native module (keytar/libsecret) that is only ' +
+        'available in interactive desktop environments. Install the optional dependency or ' +
+        'use a non-caching auth mode.',
+    );
+  }
+  useIdentityPlugin(cachePersistencePlugin as Parameters<typeof useIdentityPlugin>[0]);
   pluginRegistered = true;
 }
 

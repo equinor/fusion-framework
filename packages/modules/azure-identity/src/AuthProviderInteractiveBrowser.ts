@@ -74,8 +74,19 @@ export class AuthProviderInteractiveBrowser implements IAuthProvider {
    */
   static async create(options: InteractiveAuthOptions): Promise<AuthProviderInteractiveBrowser> {
     // Dynamically import to avoid loading the native `keytar` binary at
-    // module-load time, which fails on CI runners missing `libsecret`.
-    const { PersistenceCreator } = await import('@azure/msal-node-extensions');
+    // module-load time. The package is optional — throw a clear error when
+    // it is absent (e.g. missing libsecret on Linux).
+    let PersistenceCreator: (typeof import('@azure/msal-node-extensions'))['PersistenceCreator'];
+    try {
+      ({ PersistenceCreator } = await import('@azure/msal-node-extensions'));
+    } catch {
+      throw new Error(
+        'Failed to load @azure/msal-node-extensions. ' +
+          'Interactive browser authentication requires a native module (keytar/libsecret) ' +
+          'that is only available in interactive desktop environments. ' +
+          'Install the optional dependency or use a non-interactive auth mode.',
+      );
+    }
 
     // OS-level secure storage: Keychain (macOS), DPAPI (Windows), libsecret (Linux)
     const persistence = await PersistenceCreator.createPersistence({
