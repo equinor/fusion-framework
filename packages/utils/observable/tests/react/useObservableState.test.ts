@@ -174,12 +174,12 @@ describe('useObservableState', () => {
       expect(spyB).toHaveBeenCalledTimes(1);
     });
 
-    it('should use the latest initial value when the subject changes', () => {
+    it('should keep the mounted initial value until the new subject emits', () => {
       const subjectA = new Subject<{ label: string }>();
       const subjectB = new Subject<{ label: string }>();
 
       let activeSubject = subjectA as Subject<{ label: string }>;
-      let initialValue = { label: 'first' };
+      const initialValue = { label: 'first' };
 
       const { result, rerender } = renderHook(() =>
         useObservableState(activeSubject, { initial: initialValue }),
@@ -187,37 +187,83 @@ describe('useObservableState', () => {
 
       expect(result.current.value).toEqual({ label: 'first' });
 
-      // Switch to a new subject with an updated initial value.
       activeSubject = subjectB;
-      initialValue = { label: 'second' };
       rerender();
+
+      expect(result.current.value).toEqual({ label: 'first' });
+
+      act(() => {
+        subjectB.next({ label: 'second' });
+      });
 
       expect(result.current.value).toEqual({ label: 'second' });
     });
-  });
 
-  describe('persist option', () => {
-    it('should not recreate the store when subject reference changes and persist=true', () => {
-      const subjectA = new BehaviorSubject(1);
-      const subjectB = new BehaviorSubject(99);
+    it('should keep the first subject when deps is empty', () => {
+      const subjectA = new Subject<number>();
+      const subjectB = new Subject<number>();
 
       const spyA = vi.spyOn(subjectA, 'subscribe');
       const spyB = vi.spyOn(subjectB, 'subscribe');
 
-      let activeSubject = subjectA as BehaviorSubject<number>;
+      let activeSubject = subjectA as Subject<number>;
       const { result, rerender } = renderHook(() =>
-        useObservableState(activeSubject, { persist: true }),
+        useObservableState(activeSubject, { deps: [] }),
       );
 
-      expect(result.current.value).toBe(1);
-
-      // Swap subject — the store should ignore it because persist=true.
       activeSubject = subjectB;
       rerender();
+
+      act(() => {
+        subjectB.next(2);
+      });
+
+      expect(result.current.value).toBeUndefined();
+
+      act(() => {
+        subjectA.next(1);
+      });
 
       expect(result.current.value).toBe(1);
       expect(spyA).toHaveBeenCalledTimes(1);
       expect(spyB).not.toHaveBeenCalled();
+    });
+
+    it('should recreate the subscription when custom deps change', () => {
+      const subjectA = new Subject<number>();
+      const subjectB = new Subject<number>();
+
+      const spyA = vi.spyOn(subjectA, 'subscribe');
+      const spyB = vi.spyOn(subjectB, 'subscribe');
+
+      let activeSubject = subjectA as Subject<number>;
+      let subscriptionKey = 'a';
+
+      const { result, rerender } = renderHook(() =>
+        useObservableState(activeSubject, { deps: [subscriptionKey] }),
+      );
+
+      activeSubject = subjectB;
+      rerender();
+
+      act(() => {
+        subjectB.next(2);
+      });
+
+      expect(result.current.value).toBeUndefined();
+      expect(spyA).toHaveBeenCalledTimes(1);
+      expect(spyB).not.toHaveBeenCalled();
+
+      subscriptionKey = 'b';
+      rerender();
+
+      act(() => {
+        subjectB.next(2);
+      });
+
+      expect(result.current.value).toBe(2);
+      expect(spyA).toHaveBeenCalledTimes(1);
+      expect(spyB).toHaveBeenCalledTimes(1);
     });
   });
 });
