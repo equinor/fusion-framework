@@ -276,8 +276,7 @@ export function useObservableState<S, E = unknown>(
   const stream = persist ? subjectRef.current : subject;
 
   const store = useMemo(
-    () =>
-      createObservableStateStore<S, E>(stream, initialRef.current, teardownRef.current),
+    () => createObservableStateStore<S, E>(stream, initialRef.current, teardownRef.current),
     [stream],
   );
 
