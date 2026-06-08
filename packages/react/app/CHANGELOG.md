@@ -1,5 +1,16 @@
 # Change Log
 
+## 12.0.0
+
+### Patch Changes
+
+- @equinor/fusion-framework-app@11.0.9
+- @equinor/fusion-framework-module-msal@10.0.0
+- @equinor/fusion-framework-module-navigation@7.0.4
+- @equinor/fusion-framework-module-app@8.0.2
+- @equinor/fusion-framework-module-http@8.0.3
+- @equinor/fusion-framework-react@8.0.0
+
 ## 11.0.1
 
 ### Patch Changes

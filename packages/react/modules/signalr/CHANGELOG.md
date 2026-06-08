@@ -1,5 +1,11 @@
 # Change Log
 
+## 4.0.2
+
+### Patch Changes
+
+- @equinor/fusion-framework-module-signalr@13.0.0
+
 ## 4.0.1
 
 ### Patch Changes

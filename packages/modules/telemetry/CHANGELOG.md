@@ -1,5 +1,12 @@
 # Change Log
 
+## 7.0.0
+
+### Patch Changes
+
+- Updated dependencies [658af0e]
+  - @equinor/fusion-observable@9.1.0
+
 ## 6.0.1
 
 ### Patch Changes

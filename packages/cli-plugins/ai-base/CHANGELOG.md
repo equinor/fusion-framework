@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-cli-plugin-ai-base
 
+## 4.0.4
+
+### Patch Changes
+
+- @equinor/fusion-framework-module-ai@6.0.0
+
 ## 4.0.3
 
 ### Patch Changes
