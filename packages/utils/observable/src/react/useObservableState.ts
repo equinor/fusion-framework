@@ -1,4 +1,13 @@
-import { useMemo, useRef, useSyncExternalStore } from 'react';
+import {
+  type DependencyList,
+  useCallback,
+  useLayoutEffect,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from 'react';
+import { BehaviorSubject, type Subscription } from 'rxjs';
+import { distinctUntilChanged } from 'rxjs/operators';
 import type { Observable, StatefulObservable } from '../types';
 
 /**
@@ -7,19 +16,31 @@ import type { Observable, StatefulObservable } from '../types';
  * @template TType - The initial value type (may be `undefined`).
  */
 type ObservableStateOptions<TType = undefined> = {
-  /** Value used before the first emission. */
+  /**
+   * Value exposed until the observable emits its first value.
+   *
+   * The initial value is read when the internal state stream is created and is
+   * not treated as a subscription dependency. Passing a new object literal on
+   * later renders does not recreate the subscription.
+   */
   initial?: TType;
-  /** Teardown function called when the subscription is unsubscribed. */
+  /**
+   * Teardown function added to the active observable subscription.
+   *
+   * The latest callback is used when a subscription is created, but changing the
+   * callback alone does not recreate the subscription.
+   */
   teardown?: VoidFunction;
   /**
-   * When `true`, the subject reference is frozen at the first render and the
-   * store is never recreated, even if the caller passes a different observable
-   * instance on subsequent renders. Use this as an escape hatch when the
-   * subject cannot be memoized at the call site.
+   * React-style dependency list that controls when the observable subscription
+   * is recreated.
    *
-   * @default false
+   * When omitted, the hook follows the `subject` reference. Passing `[]` keeps
+   * the first subject for the component lifetime. Passing custom dependencies
+   * lets callers recreate non-memoized subjects during render while only
+   * resubscribing when the selected dependency values change.
    */
-  persist?: boolean;
+  deps?: DependencyList;
 };
 
 /**
@@ -44,21 +65,6 @@ export type ObservableStateReturnType<TType, TError = unknown> = {
  * @template TError - Observable error type.
  */
 type ObservableStateSnapshot<TType, TError> = ObservableStateReturnType<TType | undefined, TError>;
-
-/**
- * Internal store contract consumed by `useSyncExternalStore`.
- *
- * @template TType - Observable value type.
- * @template TError - Observable error type.
- */
-type ObservableStateStore<TType, TError> = {
-  /** Returns the current client snapshot. */
-  getSnapshot: () => ObservableStateSnapshot<TType, TError>;
-  /** Returns the current server snapshot. */
-  getServerSnapshot: () => ObservableStateSnapshot<TType, TError>;
-  /** Subscribes to store updates and returns an unsubscribe function. */
-  subscribe: (onStoreChange: () => void) => () => void;
-};
 
 /**
  * Type guard for observables exposing a synchronous `value` property.
@@ -94,65 +100,38 @@ function resolveInitialValue<TType>(
 }
 
 /**
- * Creates a `useSyncExternalStore` adapter for observable state.
+ * Compares React-style dependency lists with `Object.is` semantics.
+ *
+ * @param previous - Previous dependency list, or `null` before the first subscription.
+ * @param next - Next dependency list to compare.
+ * @returns `true` when the dependency lists are equivalent.
+ */
+function areDependenciesEqual(previous: DependencyList | null, next: DependencyList): boolean {
+  return (
+    previous !== null &&
+    previous.length === next.length &&
+    previous.every((value, index) => Object.is(value, next[index]))
+  );
+}
+
+/**
+ * Compares observable state snapshots by the fields exposed from the hook.
  *
  * @template TType - Observable value type.
  * @template TError - Observable error type.
- * @param subject - Observable source.
- * @param initial - Optional initial value supplied by the caller.
- * @param teardown - Optional teardown function added to the subscription.
- * @returns Store methods used by `useSyncExternalStore`.
+ * @param previous - Previous observable state snapshot.
+ * @param next - Next observable state snapshot.
+ * @returns `true` when the hook state is unchanged.
  */
-function createObservableStateStore<TType, TError = unknown>(
-  subject: Observable<TType> | StatefulObservable<TType>,
-  initial?: TType,
-  teardown?: VoidFunction,
-): ObservableStateStore<TType, TError> {
-  let snapshot: ObservableStateSnapshot<TType, TError> = {
-    value: resolveInitialValue(subject, initial),
-    error: null,
-    complete: false,
-  };
-
-  const listeners = new Set<() => void>();
-
-  const notify = (): void => {
-    listeners.forEach((listener) => {
-      listener();
-    });
-  };
-
-  const getSnapshot = (): ObservableStateSnapshot<TType, TError> => snapshot;
-
-  return {
-    getSnapshot,
-    getServerSnapshot: getSnapshot,
-    subscribe: (onStoreChange: () => void): (() => void) => {
-      listeners.add(onStoreChange);
-
-      const subscription = subject.subscribe({
-        next: (value) => {
-          snapshot = { ...snapshot, value };
-          notify();
-        },
-        error: (error) => {
-          snapshot = { ...snapshot, error: error as TError };
-          notify();
-        },
-        complete: () => {
-          snapshot = { ...snapshot, complete: true };
-          notify();
-        },
-      });
-
-      subscription.add(teardown);
-
-      return (): void => {
-        listeners.delete(onStoreChange);
-        subscription.unsubscribe();
-      };
-    },
-  };
+function areObservableStateSnapshotsEqual<TType, TError>(
+  previous: ObservableStateSnapshot<TType, TError>,
+  next: ObservableStateSnapshot<TType, TError>,
+): boolean {
+  return (
+    Object.is(previous.value, next.value) &&
+    Object.is(previous.error, next.error) &&
+    previous.complete === next.complete
+  );
 }
 
 /**
@@ -215,13 +194,16 @@ export function useObservableState<TType, TError = unknown>(
  * `subject` reference and cleaned up automatically when the component unmounts
  * or the subject changes.
  *
- * **`subject` must be stable (memoized).** Passing a new observable instance
- * on every render recreates the store and resets state on every render cycle.
- * Wrap the subject in `useMemo`, derive it outside the component, or pass
- * `opt.persist: true` to freeze the subject reference at first render.
+ * By default, the subscription follows the `subject` reference, matching the
+ * original hook contract: callers should pass a stable observable or expect a
+ * resubscription when the observable reference changes. When an observable is
+ * intentionally recreated during render, pass `opt.deps` to describe the real
+ * lifecycle of the subscription. For example, `deps: []` subscribes to the
+ * first subject for the lifetime of the component, while `deps: [id]`
+ * resubscribes only when `id` changes.
  *
- * `opt.initial` and `opt.teardown` do **not** need to be memoized — they are
- * captured in refs and never trigger a store recreation on their own.
+ * `opt.initial` and `opt.teardown` do **not** need to be memoized and do not
+ * trigger a subscription recreation on their own.
  *
  * @param subject - The observable to subscribe to. Must have a stable reference.
  * @param opt - Optional initial value and teardown callback.
@@ -243,9 +225,18 @@ export function useObservableState<TType, TError = unknown>(
  *
  * @example
  * ```tsx
- * // Cannot memoize? Use persist to freeze the subject at first render.
- * function Widget({ stream }: { stream: Observable<number> }) {
- *   const { value } = useObservableState(stream, { persist: true });
+ * // Cannot memoize the observable instance? Describe the real subscription lifetime.
+ * function Widget({ stream, widgetId }: { stream: Observable<number>; widgetId: string }) {
+ *   const { value } = useObservableState(stream, { deps: [widgetId] });
+ *   return <p>{value}</p>;
+ * }
+ * ```
+ *
+ * @example
+ * ```tsx
+ * // Subscribe to the first observable for the component lifetime.
+ * function StaticWidget({ stream }: { stream: Observable<number> }) {
+ *   const { value } = useObservableState(stream, { deps: [] });
  *   return <p>{value}</p>;
  * }
  * ```
@@ -254,39 +245,71 @@ export function useObservableState<S, E = unknown>(
   subject: Observable<S> | StatefulObservable<S>,
   opt?: ObservableStateOptions<S>,
 ): ObservableStateReturnType<S | undefined, E> {
-  const { initial, teardown, persist } = opt ?? {};
+  const { initial, teardown, deps } = opt ?? {};
 
-  // Refs keep initial/teardown out of useMemo deps — non-memoized caller values
-  // (inline objects, arrow functions) would otherwise recreate the store on every render.
-  const initialRef = useRef(initial);
+  const subscribedRef = useRef<Subscription | null>(null);
+  const depsRef = useRef<DependencyList | null>(null);
   const teardownRef = useRef(teardown);
+  teardownRef.current = teardown;
 
-  // subjectRef freezes the subject when persist=true (store never recreated).
-  // When persist=false (default), all refs are kept current so the store picks
-  // up the latest values whenever the subject changes.
-  const subjectRef = useRef(subject);
-  if (!persist) {
-    subjectRef.current = subject;
-    initialRef.current = initial;
-    teardownRef.current = teardown;
-  }
+  const [stream] = useState(
+    () =>
+      new BehaviorSubject({
+        value: resolveInitialValue(subject, initial),
+        error: null,
+        complete: false,
+      } as ObservableStateSnapshot<S, E>),
+  );
 
-  // persist=true  → stable ref identity → useMemo never re-runs
-  // persist=false → live subject value   → useMemo re-runs on subject swap
-  const stream = persist ? subjectRef.current : subject;
+  useLayoutEffect(() => {
+    const subscriptionDeps = deps ?? [subject];
+    if (areDependenciesEqual(depsRef.current, subscriptionDeps)) {
+      return;
+    }
 
-  const store = useMemo(
-    () => createObservableStateStore<S, E>(stream, initialRef.current, teardownRef.current),
+    depsRef.current = subscriptionDeps;
+
+    if (subscribedRef.current) {
+      subscribedRef.current.unsubscribe();
+    }
+
+    subscribedRef.current = subject.subscribe({
+      next: (value) => {
+        stream.next({ value, error: null, complete: false });
+      },
+      error: (error) => {
+        stream.next({ value: stream.value?.value, error, complete: false });
+      },
+      complete: () => {
+        stream.next({
+          value: stream.value?.value,
+          error: stream.value?.error ?? null,
+          complete: true,
+        });
+      },
+    });
+    subscribedRef.current.add(teardownRef.current);
+  });
+
+  useLayoutEffect(() => {
+    return () => {
+      subscribedRef.current?.unsubscribe();
+    };
+  }, []);
+
+  const onStoreChange = useCallback(
+    (cb: VoidFunction) => {
+      const subscription: Subscription = stream
+        .pipe(distinctUntilChanged(areObservableStateSnapshotsEqual))
+        .subscribe(cb);
+      return () => subscription.unsubscribe();
+    },
     [stream],
   );
 
-  const snapshot = useSyncExternalStore(
-    store.subscribe,
-    store.getSnapshot,
-    store.getServerSnapshot,
-  );
+  const getSnapshot = useCallback(() => stream.value as ObservableStateSnapshot<S, E>, [stream]);
 
-  return snapshot;
+  return useSyncExternalStore(onStoreChange, getSnapshot);
 }
 
 export default useObservableState;
