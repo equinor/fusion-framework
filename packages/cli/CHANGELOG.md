@@ -1,5 +1,14 @@
 # Change Log
 
+## 15.1.2
+
+### Patch Changes
+
+- Updated dependencies [3e82dee]
+  - @equinor/fusion-framework-module-azure-identity@0.2.1
+  - @equinor/fusion-framework-dev-portal@6.0.1
+  - @equinor/fusion-framework-dev-server@2.0.11
+
 ## 15.1.1
 
 ### Patch Changes
