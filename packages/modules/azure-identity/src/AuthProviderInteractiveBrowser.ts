@@ -37,6 +37,7 @@ import { NoCredentialError } from './errors.js';
 interface IPersistence {
   load(): Promise<string | null>;
   save(contents: string): Promise<void>;
+  delete(): Promise<void>;
 }
 
 export class AuthProviderInteractiveBrowser implements IAuthProvider {
