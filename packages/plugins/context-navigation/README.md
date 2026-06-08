@@ -17,6 +17,70 @@ Use this plugin when your **portal** needs to:
 > `build.options.contextRouting` field — the portal's context-navigation plugin
 > picks up that declaration and applies the correct URL encoding automatically.
 
+## For App Developers
+
+You don't need to install or configure this plugin. The portal handles it.
+Your only responsibility is to **declare how context should appear in your URL**.
+
+### Declare a routing strategy
+
+Set `contextRouting` in your app manifest's `build.options`:
+
+```jsonc
+// app.manifest.config.ts
+export default defineAppManifest((env) => ({
+  // ...
+  build: {
+    options: {
+      contextRouting: 'query',  // or 'path', or omit for default path behavior
+    },
+  },
+}));
+```
+
+| Value | URL Shape | When to Use |
+|---|---|---|
+| `'path'` (or omitted) | `/apps/{appKey}/{contextId}/sub-route` | Default — simple apps without complex routing |
+| `'query'` | `/apps/{appKey}/route?$contextId={id}` | Apps with path-based sub-routes that conflict with a context segment |
+
+Apps with custom URL shapes should omit `contextRouting` and register custom hooks instead (see below).
+
+> [!NOTE]
+> When `contextRouting` is not set (or set to `null`), the portal defaults to the
+> **path adapter** which encodes context as a path segment after the app key.
+> If the app registers custom hooks (`setContextPathExtractor` /
+> `setContextPathGenerator`), the custom adapter takes priority over the path
+> adapter regardless of the `contextRouting` value.
+
+### Custom URL shapes
+
+If your app encodes context in a non-standard position (e.g. `/route-a/{contextId}`
+instead of `/{contextId}/route-a`), register custom hooks in your app's context
+configuration:
+
+```ts
+// app config
+builder.setContextPathExtractor((pathname) => {
+  // Extract context id from your custom URL position
+  const segments = pathname.split('/').filter(Boolean);
+  return segments[1]; // e.g. /route-a/{contextId} → contextId
+});
+
+builder.setContextPathGenerator((context, pathname) => {
+  // Generate a URL with context in your custom position
+  const segments = pathname.split('/').filter(Boolean);
+  const route = segments[0] ?? '';
+  return `/${route}/${context.id}`;
+});
+```
+
+When these hooks are registered, the plugin's custom adapter picks them up
+automatically — no manifest `contextRouting` declaration needed.
+
+## For Portal Developers
+
+The rest of this README covers portal-level setup and configuration.
+
 ## Key Concepts
 
 | Concept | Description |
@@ -95,19 +159,24 @@ The plugin ships with three adapters evaluated in priority order:
 | Adapter | URL Shape | When Selected |
 |---|---|---|
 | **custom** | App-defined (via `generatePathFromContext` / `extractContextIdFromPath` hooks) | App provides `generatePathFromContext` and/or `extractContextIdFromPath` hooks on its context provider |
-| **query** | `?$contextId={id}` | App manifest declares `build.options.contextRouting: 'query'` |
-| **path** | `/apps/{appKey}/{contextId}/sub-route` | Default fallback — context as 3rd path segment |
+| **query** | `/apps/{appKey}/route?$contextId={id}` | App manifest declares `build.options.contextRouting: 'query'` |
+| **path** | `/apps/{appKey}/{contextId}/sub-route` | Default fallback — matches when `contextRouting` is `'path'`, `null`, or omitted |
 
 When no custom adapters are registered, all three built-in adapters are available. The first whose `canHandle()` returns `true` for the current app wins.
 
 ### Registering a Custom Adapter
+
+You can register your own adapters for URL shapes not covered by the built-in set.
+The `canHandle` predicate controls when your adapter is selected — use any signal
+available in `AdapterResolutionContext` (app key, URL, context provider, routing strategy).
 
 ```ts
 import type { ContextNavigationAdapter } from '@equinor/fusion-framework-plugin-context-navigation/adapters';
 
 const hashAdapter: ContextNavigationAdapter = {
   id: 'hash',
-  canHandle: ({ routingStrategy }) => routingStrategy === 'hash',
+  // Select this adapter for a specific app that uses hash-based context
+  canHandle: ({ appKey }) => appKey === 'my-hash-app',
   encode: ({ context, currentURL }) => {
     const url = new URL(currentURL.href);
     url.hash = context ? `#ctx=${context.id}` : '';
