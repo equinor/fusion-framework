@@ -55,13 +55,6 @@ export function reconcile(
 ): void {
   const { appKey, appModules, contextState, routingStrategy } = entry;
 
-  console.debug(
-    `[ContextNavigation] Reconciling context for [${appKey}] with state:`,
-    contextState,
-    'and routing strategy:',
-    routingStrategy,
-  );
-
   const { event, navigation, config, eventSource, ownNavTokens, log } = deps;
 
   if (contextState === undefined) {

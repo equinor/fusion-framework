@@ -29,16 +29,21 @@ export interface ActiveAppNavigationEvent {
  *
  * Intent: decouple the URL guard from the mechanics of observing app readiness.
  * The guard only needs to know "an app is active and a navigation just happened" —
- * this operator encapsulates the three-level observable plumbing required to
+ * this operator encapsulates the four-level observable plumbing required to
  * produce that signal:
  *
  * 1. **App switch** — outer `switchMap` on `app.current$`. If the portal switches
  *    to a different app (or clears the app), inner subscriptions auto-cancel.
- * 2. **Module resolution** — middle `switchMap` on `currentApp.instance$`. Waits
- *    until the app's lazy modules have initialized. Emits EMPTY if null.
- * 3. **Navigation event** — inner `map` on `navigation.state$`. Each state change
+ * 2. **Module + manifest resolution** — middle `switchMap` on
+ *    `currentApp.instance$.pipe(combineLatestWith(currentApp.manifest$))`.
+ *    Waits until both the app's lazy modules and its manifest have resolved.
+ *    Emits EMPTY if modules are null.
+ * 3. **Routing strategy extraction** — `manifest.build.options.contextRouting`
+ *    is projected into the downstream payload so the guard can pass it to
+ *    adapter resolution without a separate manifest lookup.
+ * 4. **Navigation event** — inner `map` on `navigation.state$`. Each state change
  *    (push, replace, popstate) triggers a downstream emission carrying the
- *    resolved app key and modules.
+ *    resolved app key, modules, and routing strategy.
  *
  * @param app - The app module provider (source of `current$`).
  * @param navigation - The navigation provider (source of `state$`).
