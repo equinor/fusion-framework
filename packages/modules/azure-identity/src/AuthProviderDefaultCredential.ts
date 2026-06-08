@@ -2,32 +2,37 @@ import { DefaultAzureCredential } from '@azure/identity';
 import type { IAuthProvider } from './AuthProvider.interface.js';
 import { NoCredentialError } from './errors.js';
 
-let pluginRegistered = false;
+// Stored as a Promise so concurrent callers await the same registration
+// and the plugin is never registered twice.
+let pluginRegistrationPromise: Promise<void> | null = null;
 
 /**
  * Lazily registers the Azure Identity cache persistence plugin on first use.
  *
  * Deferred to avoid loading `keytar` (a native C++ addon) at import time,
  * which would fail in CI environments where the prebuilt binary is unavailable
- * (e.g. `ERR_DLOPEN_FAILED`). The plugin is registered once before any
- * credential is constructed.
+ * (e.g. `ERR_DLOPEN_FAILED`). Concurrent callers share the same Promise so
+ * the plugin is registered exactly once even under parallel invocation.
  */
-export async function ensureCachePersistencePlugin(): Promise<void> {
-  if (pluginRegistered) return;
-  const { useIdentityPlugin } = await import('@azure/identity');
-  let cachePersistencePlugin: unknown;
-  try {
-    ({ cachePersistencePlugin } = await import('@azure/identity-cache-persistence'));
-  } catch {
-    throw new Error(
-      'Failed to load @azure/identity-cache-persistence. ' +
-        'Token cache persistence requires a native module (keytar/libsecret) that is only ' +
-        'available in interactive desktop environments. Install the optional dependency or ' +
-        'use a non-caching auth mode.',
-    );
-  }
-  useIdentityPlugin(cachePersistencePlugin as Parameters<typeof useIdentityPlugin>[0]);
-  pluginRegistered = true;
+export function ensureCachePersistencePlugin(): Promise<void> {
+  pluginRegistrationPromise ??= (async () => {
+    const { useIdentityPlugin } = await import('@azure/identity');
+    let cachePersistencePlugin: Parameters<typeof useIdentityPlugin>[0];
+    try {
+      ({ cachePersistencePlugin } = await import('@azure/identity-cache-persistence'));
+    } catch (cause) {
+      pluginRegistrationPromise = null; // allow retry after transient failures
+      throw new Error(
+        'Failed to load @azure/identity-cache-persistence. ' +
+          'Token cache persistence requires a native module (keytar/libsecret) that is only ' +
+          'available in interactive desktop environments. Install the optional dependency or ' +
+          'use a non-caching auth mode.',
+        { cause },
+      );
+    }
+    useIdentityPlugin(cachePersistencePlugin);
+  })();
+  return pluginRegistrationPromise;
 }
 
 /**

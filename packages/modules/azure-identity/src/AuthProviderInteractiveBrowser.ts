@@ -4,7 +4,6 @@ import {
   serializeAuthenticationRecord,
   deserializeAuthenticationRecord,
 } from '@azure/identity';
-import type { IPersistence } from '@azure/msal-node-extensions';
 import { homedir } from 'node:os';
 import { join } from 'node:path';
 import type { IAuthProvider } from './AuthProvider.interface.js';
@@ -34,6 +33,12 @@ import { NoCredentialError } from './errors.js';
  * const token = await provider.acquireAccessToken({ request: { scopes: ['user.read'] } });
  * ```
  */
+/** Minimal persistence contract — subset of `IPersistence` from `@azure/msal-node-extensions`. */
+interface IPersistence {
+  load(): Promise<string | null>;
+  save(contents: string): Promise<void>;
+}
+
 export class AuthProviderInteractiveBrowser implements IAuthProvider {
   readonly #credential: InteractiveBrowserCredential;
   readonly #authRecordPersistence: IPersistence;
@@ -79,12 +84,13 @@ export class AuthProviderInteractiveBrowser implements IAuthProvider {
     let PersistenceCreator: typeof import('@azure/msal-node-extensions')['PersistenceCreator'];
     try {
       ({ PersistenceCreator } = await import('@azure/msal-node-extensions'));
-    } catch {
+    } catch (cause) {
       throw new Error(
         'Failed to load @azure/msal-node-extensions. ' +
           'Interactive browser authentication requires a native module (keytar/libsecret) ' +
           'that is only available in interactive desktop environments. ' +
           'Install the optional dependency or use a non-interactive auth mode.',
+        { cause },
       );
     }
 

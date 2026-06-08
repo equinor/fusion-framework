@@ -1,15 +1,16 @@
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 
-const importMsalNodeExtensions = async () => {
+const importMsalNodeExtensions = async (): Promise<typeof import('@azure/msal-node-extensions')> => {
   try {
     return await import('@azure/msal-node-extensions');
-  } catch {
+  } catch (cause) {
     throw new Error(
       'Failed to load @azure/msal-node-extensions. ' +
         'Token cache persistence requires a native module (keytar/libsecret) that is only ' +
         'available in interactive desktop environments. Install the optional dependency or ' +
         'use a non-caching auth mode.',
+      { cause },
     );
   }
 };
