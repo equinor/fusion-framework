@@ -132,14 +132,29 @@ function createObservableStateStore<TType, TError = unknown>(
 
       const subscription = subject.subscribe({
         next: (value) => {
+          // Avoid notifying React when the emitted value does not change the snapshot.
+          // This prevents rerender loops for stateful observables that emit their current
+          // value synchronously on subscribe.
+          if (Object.is(snapshot.value, value)) {
+            return;
+          }
+
           snapshot = { ...snapshot, value };
           notify();
         },
         error: (error) => {
+          if (Object.is(snapshot.error, error)) {
+            return;
+          }
+
           snapshot = { ...snapshot, error: error as TError };
           notify();
         },
         complete: () => {
+          if (snapshot.complete) {
+            return;
+          }
+
           snapshot = { ...snapshot, complete: true };
           notify();
         },

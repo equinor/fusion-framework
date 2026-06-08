@@ -42,6 +42,14 @@ describe('useObservableState', () => {
     expect(result.current.complete).toBe(false);
   });
 
+  it('should not enter an update loop when a stateful observable is created in render', () => {
+    const { result } = renderHook(() => useObservableState(new BehaviorSubject(1)));
+
+    expect(result.current.value).toBe(1);
+    expect(result.current.error).toBeNull();
+    expect(result.current.complete).toBe(false);
+  });
+
   it('should prioritize explicit initial value over stateful observable value', () => {
     const subject: Subject<number> & StatefulObservable<number> = Object.assign(
       new Subject<number>(),
