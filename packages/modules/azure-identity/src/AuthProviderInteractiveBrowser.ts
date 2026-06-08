@@ -9,7 +9,11 @@ import { join } from 'node:path';
 import type { IAuthProvider } from './AuthProvider.interface.js';
 
 /** Derived from the dynamic import to avoid static resolution-mode conflicts with `@azure/msal-node-extensions`. */
-type IPersistence = Awaited<ReturnType<typeof import('@azure/msal-node-extensions')['PersistenceCreator']['createPersistence']>>;
+type IPersistence = Awaited<
+  ReturnType<
+    typeof import('@azure/msal-node-extensions')['PersistenceCreator']['createPersistence']
+  >
+>;
 import type { InteractiveAuthOptions } from './configurator.js';
 import { NoCredentialError } from './errors.js';
 

@@ -1,7 +1,9 @@
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 
-const importMsalNodeExtensions = async (): Promise<typeof import('@azure/msal-node-extensions')> => {
+const importMsalNodeExtensions = async (): Promise<
+  typeof import('@azure/msal-node-extensions')
+> => {
   try {
     return await import('@azure/msal-node-extensions');
   } catch (cause) {
