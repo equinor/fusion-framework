@@ -6,6 +6,7 @@ import {
 } from '@azure/identity';
 import { homedir } from 'node:os';
 import { join } from 'node:path';
+import type { IPersistence } from '@azure/msal-node-extensions';
 import type { IAuthProvider } from './AuthProvider.interface.js';
 import type { InteractiveAuthOptions } from './configurator.js';
 import { NoCredentialError } from './errors.js';
@@ -33,13 +34,6 @@ import { NoCredentialError } from './errors.js';
  * const token = await provider.acquireAccessToken({ request: { scopes: ['user.read'] } });
  * ```
  */
-/** Minimal persistence contract — subset of `IPersistence` from `@azure/msal-node-extensions`. */
-interface IPersistence {
-  load(): Promise<string | null>;
-  save(contents: string): Promise<void>;
-  delete(): Promise<void>;
-}
-
 export class AuthProviderInteractiveBrowser implements IAuthProvider {
   readonly #credential: InteractiveBrowserCredential;
   readonly #authRecordPersistence: IPersistence;
