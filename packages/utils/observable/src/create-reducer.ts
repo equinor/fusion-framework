@@ -139,7 +139,7 @@ export function createReducer<S extends NotFunction, A extends Action = AnyActio
 
           return result as S;
         } else {
-          // @ts-ignore
+          // @ts-expect-error
           // createNextState() produces an Immutable<Draft<S>> rather
           // than an Immutable<S>, and TypeScript cannot find out how to reconcile
           // these two types.

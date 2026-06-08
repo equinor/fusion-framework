@@ -403,11 +403,11 @@ export class ContextProvider
     }
 
     if (config.extractContextIdFromPath) {
-      // @ts-ignore
+      // @ts-expect-error
       this.extractContextIdFromPath = config.extractContextIdFromPath;
     }
     if (config.generatePathFromContext) {
-      // @ts-ignore
+      // @ts-expect-error
       this.generatePathFromContext = config.generatePathFromContext;
     }
 

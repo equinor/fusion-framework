@@ -95,7 +95,7 @@ export const createComponent =
           <FrameworkProvider value={fusion}>
             <AppModuleProvider value={modules}>
               {/* TODO */}
-              {/* @ts-ignore */}
+              {/* @ts-expect-error */}
               <Component />
             </AppModuleProvider>
           </FrameworkProvider>

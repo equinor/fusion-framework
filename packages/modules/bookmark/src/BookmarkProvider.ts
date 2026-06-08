@@ -92,7 +92,7 @@ export class BookmarkProvider implements IBookmarkProvider {
   get config() {
     return {
       getCurrentAppIdentification() {
-        // @ts-ignore
+        // @ts-expect-error
         return window.Fusion.modules.app.current.appKey;
       },
     };

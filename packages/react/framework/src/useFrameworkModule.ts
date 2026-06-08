@@ -33,7 +33,7 @@ export const useFrameworkModule = <
   : FusionModulesInstance[Extract<keyof FusionModulesInstance, TKey>] | undefined => {
   const framework = useFramework();
   // TODO
-  // @ts-ignore
+  // @ts-expect-error
   const module = framework.modules[name];
   if (!module) {
     console.warn(`the requested module [${module}] is not included in the framework instance`);
