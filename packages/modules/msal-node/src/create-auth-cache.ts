@@ -1,14 +1,21 @@
-import {
-  DataProtectionScope,
-  Environment,
-  PersistenceCreator,
-  PersistenceCachePlugin,
-  type IPersistence,
-} from '@azure/msal-node-extensions';
-
 import { tmpdir } from 'node:os';
-
 import path from 'node:path';
+
+const importMsalNodeExtensions = async (): Promise<
+  typeof import('@azure/msal-node-extensions')
+> => {
+  try {
+    return await import('@azure/msal-node-extensions');
+  } catch (cause) {
+    throw new Error(
+      'Failed to load @azure/msal-node-extensions. ' +
+        'Token cache persistence requires a native module (keytar/libsecret) that is only ' +
+        'available in interactive desktop environments. Install the optional dependency or ' +
+        'use a non-caching auth mode.',
+      { cause },
+    );
+  }
+};
 
 /**
  * Resolves the directory path for storing the authentication cache.
@@ -17,7 +24,8 @@ import path from 'node:path';
  *
  * @returns The resolved cache directory path as a string.
  */
-const resolveCachePath = () => {
+const resolveCachePath = async (): Promise<string> => {
+  const { Environment } = await importMsalNodeExtensions();
   return Environment?.getUserRootDirectory() ?? tmpdir();
 };
 
@@ -28,8 +36,8 @@ const resolveCachePath = () => {
  * @param clientId - The Azure AD client/application ID.
  * @returns The full file path for the cache file.
  */
-const resolveCacheFilePath = (tenantId: string, clientId: string) => {
-  return path.join(resolveCachePath(), `.token-cache-${tenantId}_${clientId}`);
+const resolveCacheFilePath = async (tenantId: string, clientId: string): Promise<string> => {
+  return path.join(await resolveCachePath(), `.token-cache-${tenantId}_${clientId}`);
 };
 
 /**
@@ -38,16 +46,17 @@ const resolveCacheFilePath = (tenantId: string, clientId: string) => {
  * The cache is encrypted and scoped to the current user for security. It is uniquely identified
  * by the provided tenant and client IDs, and is associated with the 'fusion-framework' service.
  *
+ * Requires `@azure/msal-node-extensions` to be installed (optional dependency).
+ * Only available in interactive desktop environments with a system keychain.
+ *
  * @param tenantId - The Azure AD tenant ID used to identify the cache.
  * @param clientId - The Azure AD client/application ID used to identify the cache.
  * @returns A promise that resolves to the created persistence cache instance.
  */
-export const createPersistenceCache = async (
-  tenantId: string,
-  clientId: string,
-): Promise<IPersistence> => {
+export const createPersistenceCache = async (tenantId: string, clientId: string) => {
+  const { DataProtectionScope, PersistenceCreator } = await importMsalNodeExtensions();
   return PersistenceCreator.createPersistence({
-    cachePath: resolveCacheFilePath(tenantId, clientId),
+    cachePath: await resolveCacheFilePath(tenantId, clientId),
     serviceName: 'fusion-framework',
     accountName: [tenantId, clientId].join('_'),
     dataProtectionScope: DataProtectionScope.CurrentUser,
@@ -77,9 +86,7 @@ export const clearPersistenceCache = async (tenantId: string, clientId: string):
  * @param clientId - The Azure AD client/application ID.
  * @returns A promise that resolves to an instance of `PersistenceCachePlugin`.
  */
-export const createPersistenceCachePlugin = async (
-  tenantId: string,
-  clientId: string,
-): Promise<PersistenceCachePlugin> => {
+export const createPersistenceCachePlugin = async (tenantId: string, clientId: string) => {
+  const { PersistenceCachePlugin } = await importMsalNodeExtensions();
   return new PersistenceCachePlugin(await createPersistenceCache(tenantId, clientId));
 };

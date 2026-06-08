@@ -38,9 +38,11 @@
   },
   "dependencies": {
     "@azure/msal-node": "^5.0.2",
-    "@azure/msal-node-extensions": "^5.0.2",
     "@equinor/fusion-framework-module": "workspace:^",
     "open": "^11.0.0"
+  },
+  "optionalDependencies": {
+    "@azure/msal-node-extensions": "^5.0.2"
   },
   "devDependencies": {
     "typescript": "^6.0.3"

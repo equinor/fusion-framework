@@ -4,10 +4,16 @@ import {
   serializeAuthenticationRecord,
   deserializeAuthenticationRecord,
 } from '@azure/identity';
-import type { IPersistence } from '@azure/msal-node-extensions';
 import { homedir } from 'node:os';
 import { join } from 'node:path';
 import type { IAuthProvider } from './AuthProvider.interface.js';
+
+/** Derived from the dynamic import to avoid static resolution-mode conflicts with `@azure/msal-node-extensions`. */
+type IPersistence = Awaited<
+  ReturnType<
+    typeof import('@azure/msal-node-extensions')['PersistenceCreator']['createPersistence']
+  >
+>;
 import type { InteractiveAuthOptions } from './configurator.js';
 import { NoCredentialError } from './errors.js';
 
@@ -74,8 +80,20 @@ export class AuthProviderInteractiveBrowser implements IAuthProvider {
    */
   static async create(options: InteractiveAuthOptions): Promise<AuthProviderInteractiveBrowser> {
     // Dynamically import to avoid loading the native `keytar` binary at
-    // module-load time, which fails on CI runners missing `libsecret`.
-    const { PersistenceCreator } = await import('@azure/msal-node-extensions');
+    // module-load time. The package is optional — throw a clear error when
+    // it is absent (e.g. missing libsecret on Linux).
+    let PersistenceCreator: typeof import('@azure/msal-node-extensions')['PersistenceCreator'];
+    try {
+      ({ PersistenceCreator } = await import('@azure/msal-node-extensions'));
+    } catch (cause) {
+      throw new Error(
+        'Failed to load @azure/msal-node-extensions. ' +
+          'Interactive browser authentication requires a native module (keytar/libsecret) ' +
+          'that is only available in interactive desktop environments. ' +
+          'Install the optional dependency or use a non-interactive auth mode.',
+        { cause },
+      );
+    }
 
     // OS-level secure storage: Keychain (macOS), DPAPI (Windows), libsecret (Linux)
     const persistence = await PersistenceCreator.createPersistence({
