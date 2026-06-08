@@ -32,7 +32,7 @@ export const blobSelector: ResponseSelector = async <TResponse extends Response 
     // Convert the response to a Blob and return the filename and Blob
     const blob = await response.blob();
     return { filename, blob };
-  } catch (err) {
+  } catch {
     // Throw an error if there's a problem parsing the response
     throw Error('failed to parse response');
   }

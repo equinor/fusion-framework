@@ -60,16 +60,6 @@ export interface IApiProvider<TClient extends IHttpClient = IHttpClient> {
 }
 
 /**
- * Constructor arguments for {@link ApiProvider}.
- *
- * @template TClient - The underlying HTTP client type.
- */
-type ApiProviderCtorArgs<TClient extends IHttpClient = IHttpClient> = {
-  /** Factory function for creating named HTTP clients used by API sub-clients. */
-  createClient: ApiClientFactory<TClient>;
-};
-
-/**
  * Shape of the structured error response attached to an {@link ApiProviderError}.
  */
 type ApiProviderErrorResponse = {

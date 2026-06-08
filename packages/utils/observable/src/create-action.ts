@@ -264,7 +264,7 @@ export const actionSuffixDivider = '::';
 
 export const matchActionSuffix = (suffix: string) => new RegExp(`${actionSuffixDivider}${suffix}$`);
 
-type BaseType<T extends string> = T extends `${infer A}${typeof actionSuffixDivider}${infer R}`
+type BaseType<T extends string> = T extends `${infer A}${typeof actionSuffixDivider}${infer _R}`
   ? A
   : never;
 

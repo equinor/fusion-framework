@@ -12,8 +12,6 @@ import type {
 } from './types.js';
 import { DEFAULT_VALUES } from './constants.js';
 
-const pluginName = 'fusion:dev_server::api-proxy';
-
 /**
  * Arguments accepted by the {@link plugin} factory.
  *

@@ -20,6 +20,6 @@ import {
  * @template TData - Current applications  bookmark type
  * @return {*}  {Bookmarks<TData>} the full api fro handling bookmarks
  */
-export const useBookmark = <TData>(): useBookmarkResult => _useBookmark();
+export const useBookmark = (): useBookmarkResult => _useBookmark();
 
 export default useBookmark;

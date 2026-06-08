@@ -163,7 +163,7 @@ export type ActionType<T> = T extends ActionCreator
  */
 export type ActionBaseType<TAction extends Action> = TAction extends Action
   ? Extract<
-      TAction['type'] extends `${infer AName}::${infer ASuffix}` ? AName : TAction['type'],
+      TAction['type'] extends `${infer AName}::${infer _ASuffix}` ? AName : TAction['type'],
       string
     >
   : never;
@@ -206,7 +206,7 @@ export type ExtractAction<
  * @returns The original action type if it has the required suffix, or `never` if it does not.
  */
 export type ActionWithSuffix<TAction extends Action, Suffix extends string> = TAction extends Action
-  ? TAction['type'] extends `${infer AName}::${infer ASuffix}`
+  ? TAction['type'] extends `${infer _AName}::${infer ASuffix}`
     ? ASuffix extends Suffix
       ? TAction
       : never
