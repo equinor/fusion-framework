@@ -44,7 +44,8 @@ export function reorderTodoItems(
     return items;
   }
 
-  nextItems.splice(toIndex, 0, draggedItem);
+  const insertIndex = fromIndex < toIndex ? toIndex - 1 : toIndex;
+  nextItems.splice(insertIndex, 0, draggedItem);
   return nextItems;
 }
 
