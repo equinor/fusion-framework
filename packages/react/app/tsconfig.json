@@ -16,6 +16,9 @@
       "path": "../framework"
     },
     {
+      "path": "../router"
+    },
+    {
       "path": "../../modules/analytics"
     },
     {
