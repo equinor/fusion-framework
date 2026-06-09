@@ -1,31 +1,26 @@
-# Evaluation Report Template
+# Evaluation Report: {domain}
 
-Use this template when producing evaluation reports.
+- Date: {YYYY-MM-DD}
+- Strictness: {full | strict}
+- Domain file: `eval/index/{domain}.md`
 
----
+## Results
 
-## Evaluation Report: {domain}
+| # | Query | Verdict | Must | Should | Explanation |
+|---|---|---|---|---|---|
+| {n} | {heading} | {pass|partial|fail} | {met}/{total} | {met}/{total} | {summary} |
 
-**Date:** {YYYY-MM-DD}
-**Strictness:** {full | strict}
-**Domain file:** `eval/index/{domain}.md`
+## Summary
 
-### Results
+- Queries: {count}
+- Pass / partial / fail: {pass} / {partial} / {fail}
+- Must expectations met: {met}/{total} ({percent}%)
 
-| # | Query | Verdict | Explanation |
-|---|-------|---------|-------------|
-| {n} | {## heading text} | {pass\|partial\|fail} | {which must/should expectations were met or missed} |
+## Recommendations
 
-### Summary
+1. [CRITICAL] Query {n}: {fix required for must failure}
+2. [IMPROVE] Query {n}: {coverage improvement}
 
-- **Queries:** {count} | **Pass:** {count} | **Partial:** {count} | **Fail:** {count}
-- **Must expectations met:** {met}/{total} ({percent}%)
+## Notes
 
-### Recommendations
-
-1. **[CRITICAL]** Query {n}: {concrete action to fix the gap}
-2. **[IMPROVE]** Query {n}: {concrete action to improve coverage}
-
-### Notes
-
-- {optional context about MCP availability, rate limits, or evaluation conditions}
+- {MCP availability, rate limits, stale-index clues, or omitted details}
