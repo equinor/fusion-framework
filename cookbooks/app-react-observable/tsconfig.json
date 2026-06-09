@@ -1,0 +1,22 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "dist",
+    "rootDir": "src",
+    "jsx": "react-jsx",
+    "tsBuildInfoFile": "tsconfig.tsbuildinfo"
+  },
+  "references": [
+    {
+      "path": "../../packages/react/app"
+    },
+    {
+      "path": "../../packages/cli"
+    },
+    {
+      "path": "../../packages/utils/observable"
+    }
+  ],
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "lib"]
+}
