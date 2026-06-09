@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-module-ai
 
+## 6.0.0
+
+### Patch Changes
+
+- @equinor/fusion-framework-module-msal@10.0.0
+
 ## 5.0.0
 
 ### Patch Changes
