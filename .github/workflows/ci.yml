@@ -43,6 +43,10 @@ jobs:
       - name: Setup node and install deps
         uses: ./.github/actions/node-setup
 
+      # Build all packages before publishing so dist/ and type declarations exist
+      - name: Build packages
+        run: pnpm build
+
       # Process changesets: create version PR or publish packages to npm
       # This step requires write permissions to create releases and publish packages
       - name: Create Release Pull Request or Publish to npm
