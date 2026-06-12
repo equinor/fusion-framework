@@ -1,8 +1,9 @@
+import { useMemo } from 'react';
+import { map } from 'rxjs/internal/operators/map';
 import type { ConfigEnvironment } from '@equinor/fusion-framework-module-app';
 import { useCurrentApp } from '@equinor/fusion-framework-react/app';
 import {
   type ObservableStateReturnType,
-  useObservableSelector,
   useObservableState,
 } from '@equinor/fusion-observable/react';
 
@@ -42,14 +43,19 @@ export const useAppEnvironmentVariables = <
     throw Error('Framework is missing app module');
   }
 
-  // Get the environment configuration observable from the app module
-  const env$ = useObservableSelector(
-    app.getConfig(),
-    (config) => config.environment as TEnvironmentVariables,
-  );
+  const config$ = useMemo(() => {
+    return app.getConfig().pipe(
+      map((config) => {
+        return config.environment as TEnvironmentVariables;
+      }),
+    );
+  }, [app]);
 
   // Return the observable state of the environment configuration
-  return useObservableState(env$, {
-    initial: app.config?.environment,
-  });
+  return useObservableState(
+    useMemo(() => config$, [config$]),
+    {
+      initial: app.config?.environment,
+    },
+  );
 };
