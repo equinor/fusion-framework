@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { map } from 'rxjs/internal/operators/map';
+import { map } from 'rxjs/operators';
 import type { ConfigEnvironment } from '@equinor/fusion-framework-module-app';
 import { useCurrentApp } from '@equinor/fusion-framework-react/app';
 import {
