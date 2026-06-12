@@ -7,6 +7,7 @@ export default defineAppConfig(() => {
       features: {
         enableDarkMode: true,
         enableBetaFeatures: false,
+        enablePbiIntegration: true,
       },
     },
   };
