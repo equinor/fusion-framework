@@ -43,7 +43,7 @@ export const useAppEnvironmentVariables = <
     throw Error('Framework is missing app module');
   }
 
-  const config$ = useMemo(() => {
+  const env$ = useMemo(() => {
     return app.getConfig().pipe(
       map((config) => {
         return config.environment as TEnvironmentVariables;
@@ -52,10 +52,7 @@ export const useAppEnvironmentVariables = <
   }, [app]);
 
   // Return the observable state of the environment configuration
-  return useObservableState(
-    useMemo(() => config$, [config$]),
-    {
-      initial: app.config?.environment,
-    },
-  );
+  return useObservableState(env$, {
+    initial: app.config?.environment || ({} as TEnvironmentVariables),
+  });
 };
