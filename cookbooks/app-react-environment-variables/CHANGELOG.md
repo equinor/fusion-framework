@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-cookbook-app-react-environment-variables
 
+## 2.0.1
+
+### Patch Changes
+
+- d7eefd7: Add `app.config.ts` with example `environment` values to document and demonstrate environment variable configuration in the cookbook app.
+
 ## 2.0.0
 
 ### Major Changes

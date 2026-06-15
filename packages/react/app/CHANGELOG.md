@@ -1,5 +1,11 @@
 # Change Log
 
+## 12.0.1
+
+### Patch Changes
+
+- d7eefd7: Fix `useAppEnvironmentVariables` to map environment values from app config through a memoized observable before subscribing with `useObservableState`, improving subscription stability.
+
 ## 12.0.0
 
 ### Patch Changes
