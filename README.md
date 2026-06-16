@@ -6,7 +6,7 @@ Fusion Framework is a modular and extensible framework designed to simplify the 
 
 The best place to start is by reading through the [documentation](https://equinor.github.io/fusion-framework/) on the core concepts and architecture. The framework is modular, so you can pick and choose which parts to use.
 
-If you're developing an application for the Fusion Portals, check out the [Fusion Docs](https://fusion-docs.fusion-dev.net/docs/i-want-to-create/application/getting-started) for specific requirements and setup.
+If you're developing an application for the Fusion Portals, check out the [Fusion Docs](https://docs.fusion.equinor.com/) for specific requirements and setup.
 
 ## 👨🏻‍🍳 Cookbooks
 
