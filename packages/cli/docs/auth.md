@@ -8,7 +8,7 @@ For detailed information about the underlying authentication module, see the [Az
 ## Key features
 - **Multiple authentication modes:**
   - `interactive`: Browser-based Azure AD login with OS-level token caching (CLI tools, development).
-  - `default_credential`: Ambient credential chain — environment variables, managed identity, Azure CLI (CI/CD, infrastructure).
+  - **DefaultAzureCredential (default credential chain)**: Ambient credential chain — environment variables, managed identity, Azure CLI (CI/CD, infrastructure).
   - `token_only`: Use a pre-provided token (e.g., for CI/CD and automation).
 - **Secure token storage:** Tokens and authentication records are encrypted at rest using platform-specific mechanisms (Keychain on macOS, DPAPI on Windows, libsecret on Linux) via `@azure/msal-node-extensions`.
 - **Consistent experience:** The same authentication logic and token handling is used across CLI and app environments.
@@ -103,12 +103,16 @@ ffc auth token
 
 For CI/CD, authenticate with Azure using `azure/login@v2` and run the CLI command directly.
 
-When running in CI and no `--token`/`FUSION_TOKEN` is provided, the CLI automatically uses Azure Identity `default_credential` (`DefaultAzureCredential`). This works with OIDC federation, managed identities, and other ambient credentials.
+When running in CI and no `--token`/`FUSION_TOKEN` is provided, the CLI automatically uses Azure Identity's `DefaultAzureCredential`. This works with OIDC federation, managed identities, and other ambient credentials.
 
 ```yml
 name: Publish app
 on:
   workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
 
 jobs:
   publish:
@@ -124,7 +128,7 @@ jobs:
           allow-no-subscriptions: true
 
       - name: Publish to Fusion
-        run: ffc app publish --env ci ./dist/app.zip
+        run: fusion-framework-cli app publish --env ci ./dist/app.zip
 ```
 
 ### Optional Explicit Token Mode
@@ -137,7 +141,7 @@ You can still provide an explicit token with `--token` or `FUSION_TOKEN` when ne
     echo "FUSION_TOKEN=$(az account get-access-token --scope ${{ vars.FUSION_SCOPE }} --query accessToken --output tsv)" >> $GITHUB_ENV
 
 - name: Publish with explicit token
-  run: ffc app publish --env ci ./dist/app.zip
+  run: fusion-framework-cli app publish --env ci ./dist/app.zip
 ```
 
 ## Additional Resources

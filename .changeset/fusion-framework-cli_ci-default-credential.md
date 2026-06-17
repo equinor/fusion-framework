@@ -2,7 +2,7 @@
 "@equinor/fusion-framework-cli": patch
 ---
 
-Fix `ffc app publish` to use `DefaultAzureCredential` in CI environments when no token is provided.
+Use `DefaultAzureCredential` in CI environments when no token is provided for any CLI command that initializes the framework.
 
 Previously, when `FUSION_TOKEN` was removed from CI pipelines, the CLI would fall back to interactive authentication mode, which attempted to load OS-level token cache persistence (keytar/libsecret). This native module is unavailable on GitHub-hosted runners and other headless CI environments, causing publish to fail.
 
