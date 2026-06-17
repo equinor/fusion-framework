@@ -170,6 +170,9 @@ export const configure = async (config: FrameworkConfigurator) => {
     builder.setPortalName('dev-portal');
     builder.setDebug(true);
     builder.setUrlGuard(true);
+    builder.setNavigationOptions({
+      replace: false, // Use pushState for navigation to allow back button support
+    });
   });
 
   config.onInitialized<[AppModule, NavigationModule]>((modules) => {

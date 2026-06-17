@@ -91,6 +91,12 @@ export function reconcile(
     log(`App switch detected → stripped query params for [${appKey}]`);
   }
 
+  // When switching apps, always replace the history entry rather than pushing.
+  // The portal already pushed a new entry for the app navigation; adding another
+  // push here would create a double entry that traps the user when pressing Back.
+  // `config.navigationOptions.replace` only applies to in-app context changes.
+  const navOptionsOverride = options.isAppSwitch ? { replace: true } : undefined;
+
   const adapter = resolveAdapter(
     { appKey, appContext, routingStrategy, currentURL },
     config.adapters,
@@ -111,5 +117,5 @@ export function reconcile(
   });
   log(`Resolved adapter [${adapter.id}] for [${appKey}]`);
 
-  applyNavigation({ appKey, appModules, adapter, context: contextState, currentURL }, deps);
+  applyNavigation({ appKey, appModules, adapter, context: contextState, currentURL }, deps, navOptionsOverride);
 }
