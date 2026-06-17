@@ -162,5 +162,10 @@ export function handleReplaceModeGuard(
   if (!adapter) return;
 
   log(`URL guard: context missing from URL, re-applying for [${appKey}]`);
-  applyNavigation({ appKey, appModules, adapter, context: activeContext, currentURL }, deps);
+  // Always replace when correcting URL drift. The URL has no context segment
+  // (e.g. a bare app route the portal pushed), so we fix it in-place. Using
+  // push here would create an extra history entry that traps Back navigation.
+  applyNavigation({ appKey, appModules, adapter, context: activeContext, currentURL }, deps, {
+    replace: true,
+  });
 }

@@ -84,11 +84,16 @@ export interface ApplyNavigationPayload {
  *
  * @param payload - The navigation target details (app, adapter, context, URL).
  * @param deps - Shared plugin dependencies (event bus, navigation provider, config).
+ * @param navOptionsOverride - Optional navigation options that override
+ *   `config.navigationOptions` for this specific call. Used by app-switch
+ *   reconciliation and URL-drift correction, which must always replace the
+ *   current history entry regardless of the user's `replace` setting.
  * @returns A promise that resolves after the navigation completes or is skipped.
  */
 export function applyNavigation(
   payload: ApplyNavigationPayload,
   deps: ApplyNavigationDeps,
+  navOptionsOverride?: { replace?: boolean; state?: unknown },
 ): Promise<void> {
   const { appKey, appModules, adapter, context, currentURL } = payload;
   const { event, navigation, config, eventSource, ownNavTokens, log } = deps;
@@ -149,7 +154,7 @@ export function applyNavigation(
       // Step 4: Record the token BEFORE navigating so the guard sees it
       // on the resulting state$ emission and skips re-processing.
       ownNavTokens.add(normalizePath(targetURL));
-      navigation.navigate(targetURL, config.navigationOptions);
+      navigation.navigate(targetURL, navOptionsOverride ?? config.navigationOptions);
 
       // Post-navigation bookkeeping: notify listeners and invoke callback.
       const navigatedDetail: ContextNavigationNavigatedDetail = {
