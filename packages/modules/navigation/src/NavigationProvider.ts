@@ -128,13 +128,13 @@ export class NavigationProvider
     // Extract configuration values
     const { basename, history, telemetry, eventProvider } = args.config;
 
-    // Normalize the basename to strip trailing slashes. React Router requires
-    // the current URL to start with the exact basename string, so a basename
-    // of "/apps/my-app/" would fail to match the URL "/apps/my-app" and
-    // render nothing (blank page).
-    // Preserve slash-only basenames (e.g. "/") by falling back to the
-    // original input when normalization collapses to an empty string.
-    this.#basename = basename ? normalizePathname(basename) || basename : basename;
+    // Normalize the basename to strip trailing slashes and collapse consecutive
+    // slashes. React Router requires the current URL to start with the exact
+    // basename string, so a basename of "/apps/my-app/" would fail to match
+    // the URL "/apps/my-app" and render nothing (blank page).
+    // Treat '/' as "no basename" (empty string) since all paths start with '/'.
+    const normalizedBasename = basename ? normalizePathname(basename).replace(/\/+$/, '') : '';
+    this.#basename = normalizedBasename || undefined;
     this.#event = eventProvider;
     this.#telemetry = telemetry;
 
@@ -318,20 +318,49 @@ export class NavigationProvider
    *          with the basename followed by `/` (or no basename is set)
    */
   protected _isWithinBasenameScope(pathname: string): boolean {
+    // No basename means everything is in scope
     if (!this.#basename) return true;
-    return pathname === this.#basename || pathname.startsWith(`${this.#basename}/`);
+    
+    // Normalize the pathname for comparison (collapse consecutive slashes)
+    const normalized = normalizePathname(pathname);
+    
+    // Check exact match or path-boundary prefix
+    return normalized === this.#basename || normalized.startsWith(`${this.#basename}/`);
   }
 
   /**
    * Localizes a path by stripping the basename prefix from the pathname.
+   *
+   * Only removes the basename when it matches on a path boundary to avoid
+   * incorrectly stripping partial matches.
    *
    * @param location - The full path to localize
    * @returns A new {@link Path} with the basename removed from the pathname
    */
   protected _localizePath(location: Path): Path {
     const { pathname, search, hash } = location;
+    
+    // No basename - return normalized pathname as-is
+    if (!this.#basename) {
+      return {
+        pathname: normalizePathname(pathname) || '/',
+        search,
+        hash,
+      };
+    }
+    
+    const normalized = normalizePathname(pathname);
+    let localized = normalized;
+    
+    // Strip basename only if it matches at path boundary
+    if (normalized === this.#basename) {
+      localized = '/';
+    } else if (normalized.startsWith(`${this.#basename}/`)) {
+      localized = normalized.slice(this.#basename.length);
+    }
+    
     return {
-      pathname: normalizePathname(pathname.replace(this.#basename ?? '', '')) || '/',
+      pathname: localized || '/',
       search,
       hash,
     };
