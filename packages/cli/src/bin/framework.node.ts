@@ -177,6 +177,7 @@ export const configureFramework = (
       throw new Error('clientId and tenantId are required for auth module');
     }
 
+    // Interactive mode with custom server configuration
     if ('interactive' in auth && auth.interactive) {
       const { server } = auth as AuthInteractiveOptions;
       if (!server.port) {
@@ -188,15 +189,27 @@ export const configureFramework = (
         redirectPort: server.port,
         onOpen: server.onOpen,
       });
-    } else {
-      // Non-interactive callers (token, logout) — use a default port.
-      // InteractiveBrowserCredential will use cached tokens silently.
-      builder.setInteractive({
-        tenantId,
-        clientId,
-        redirectPort: 49741,
-      });
+
+      return;
     }
+
+    // In CI environments with no token provided, use DefaultAzureCredential.
+    // This avoids loading keytar/libsecret (native modules unavailable on
+    // GitHub-hosted runners and other headless CI environments) and instead
+    // uses the ambient credential chain: OIDC, managed identity, Azure CLI, etc.
+    // established by azure/login or equivalent CI tooling.
+    if (isContinuousIntegration) {
+      builder.setDefaultCredential();
+      return;
+    }
+
+    // Local non-interactive callers — use a default port.
+    // InteractiveBrowserCredential will use cached tokens silently.
+    builder.setInteractive({
+      tenantId,
+      clientId,
+      redirectPort: 49741,
+    });
   });
 
   return configurator;

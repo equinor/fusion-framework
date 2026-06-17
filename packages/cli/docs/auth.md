@@ -99,78 +99,46 @@ ffc auth token
 
 ## CI/CD
 
-### Setting the Fusion Token in GitHub
+### Authentication in GitHub Actions
 
-To publish or deploy your Fusion Framework app, you need to authenticate and set the `FUSION_TOKEN` environment variable. This token is required for secure access to Fusion APIs during CI/CD workflows.
+For CI/CD, authenticate with Azure using `azure/login@v2` and run the CLI command directly.
 
-You can obtain and set the `FUSION_TOKEN` using the Azure CLI as part of your pipeline steps. For example:
-
-This ensures the `FUSION_TOKEN` is available as an environment variable for subsequent steps, such as publishing source code or config.
+When running in CI and no `--token`/`FUSION_TOKEN` is provided, the CLI automatically uses Azure Identity `default_credential` (`DefaultAzureCredential`). This works with OIDC federation, managed identities, and other ambient credentials.
 
 ```yml
-# This GitHub Action authenticates with Azure and retrieves an access token for use as FUSION_TOKEN.
-#
-# - The Azure Login step uses the azure/login action to authenticate with Azure using the provided client and tenant IDs.
-# - The Get Access Token step runs the Azure CLI to acquire an access token for the specified scope, then sets it as the FUSION_TOKEN environment variable for subsequent steps.
-#
-# This makes the token available for publishing, deploying, or running Fusion CLI commands that require authentication.
-#
-# Example usage in a workflow:
-#
-# steps:
-#   - name: Acquire Fusion Token
-#     uses: ./.github/actions/fusion-token
-#   - name: Fusion CLI command
-#     run: fusion-framework-cli app check
-#
-# ---
-# How to set up a Service Principal in Azure for CI/CD:
-#
-# 1. Sign in to Azure CLI:
-#      az login
-# 2. Create a new service principal (replace <NAME> and <SCOPE> as needed):
-#      az ad sp create-for-rbac --name <NAME> --role contributor --scopes <SCOPE>
-#    - This will output appId (client-id), password (client-secret), and tenant.
-# 3. Grant the service principal API permissions if needed (e.g., to call Fusion APIs):
-#    - In Azure Portal, go to Azure Active Directory > App registrations > [Your App] > API permissions.
-#    - Add the required API permissions and grant admin consent.
-# 4. Store the client-id, client-secret, and tenant-id as GitHub Action secrets.
-# 5. Use these secrets in your workflow as shown below.
-# 6. (Optional) For more on setting up environment variables in GitHub Actions workflows, see:
-#    https://docs.github.com/en/actions/deployment/targeting-different-environments/using-environments-for-deployment
-#
-# For more details, see:
-# https://learn.microsoft.com/en-us/azure/active-directory/develop/howto-create-service-principal-portal
-# https://learn.microsoft.com/en-us/cli/azure/create-an-azure-service-principal-azure-cli
-#
-name: Azure Login and Get Access Token
-description: Authenticates with Azure and retrieves an access token
-inputs:
-  client-id:
-    description: >
-      The Azure AD Application (client) ID to use for authentication. This should correspond to an app registration with permissions to request the required scopes.
-    required: true
-  tenant-id:
-    description: >
-      The Azure AD Tenant ID (directory) to authenticate against. This identifies the Azure AD instance where the app is registered.
-    required: true
-  scope:
-    description: >
-      The scope(s) for the access token, typically the Application ID URI of the API you want to access, followed by /.default (e.g., https://my-api/.default). Multiple scopes can be space-separated.
-    required: true
-runs:
-  using: composite
-  steps:
-    - name: Azure Login
-      uses: azure/login@v2
-      with:
-        client-id: ${{ inputs.client-id }}
-        tenant-id: ${{ inputs.tenant-id }}
-        allow-no-subscriptions: true
-    - name: Get Access Token
-      shell: bash
-      run: |
-        echo "FUSION_TOKEN=$(az account get-access-token --scope ${{ inputs.scope }} --query accessToken --output tsv)" >> $GITHUB_ENV
+name: Publish app
+on:
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          allow-no-subscriptions: true
+
+      - name: Publish to Fusion
+        run: ffc app publish --env ci ./dist/app.zip
+```
+
+### Optional Explicit Token Mode
+
+You can still provide an explicit token with `--token` or `FUSION_TOKEN` when needed.
+
+```yml
+- name: Acquire token (optional)
+  run: |
+    echo "FUSION_TOKEN=$(az account get-access-token --scope ${{ vars.FUSION_SCOPE }} --query accessToken --output tsv)" >> $GITHUB_ENV
+
+- name: Publish with explicit token
+  run: ffc app publish --env ci ./dist/app.zip
+```
 
 ## Additional Resources
 

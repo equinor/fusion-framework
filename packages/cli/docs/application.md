@@ -97,9 +97,11 @@ ffc app dev
 > For example, before running `fusion-framework-cli app publish`, make sure you are authenticated using `fusion-framework-cli auth login`.
 
 > [!WARNING]
-> The `fusion-framework-cli auth login` command is only available in interactive environments (such as your local terminal). For CI/CD pipelines or automated deployments, you must provide a valid authentication token using the `FUSION_TOKEN` environment variable.
+> The `fusion-framework-cli auth login` command is only available in interactive environments (such as your local terminal). In CI/CD pipelines, authenticate with `azure/login` and run the CLI command directly.
 >
-> See [Authentication](auth.md#setting-the-fusion-token-in-github) for details on setting up tokens for CI/CD.
+> In CI, when no `--token` or `FUSION_TOKEN` is provided, the CLI automatically uses Azure Identity `DefaultAzureCredential`.
+>
+> See [Authentication](auth.md#authentication-in-github-actions) for CI setup details.
 
 ```sh
 pnpm fusion-framework-cli auth login
@@ -118,7 +120,7 @@ pnpm fusion-framework-cli publish --env <environment>
 pnpm fusion-framework-cli app config --publish --env <environment>
 ```
 
-> **Tip:** For CI/CD and automation, set the `FUSION_TOKEN` environment variable. See [Authentication](auth.md) for details.
+> **Tip:** For CI/CD and automation, prefer Azure OIDC with `azure/login`; `FUSION_TOKEN` remains an optional explicit override. See [Authentication](auth.md) for details.
 
 ---
 
