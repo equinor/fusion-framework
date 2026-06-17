@@ -101,7 +101,7 @@ ffc auth token
 
 ### Authentication in GitHub Actions
 
-For CI/CD, authenticate with Azure using `azure/login@v2` and run the CLI command directly.
+For CI/CD, authenticate with Azure using `azure/login@v2` and run your desired CLI command (e.g. `app publish`) directly. The `fusion-framework-cli auth login` command requires an interactive browser session and is intended for **local development only** — it is not applicable in CI environments.
 
 When running in CI and no `--token`/`FUSION_TOKEN` is provided, the CLI automatically uses Azure Identity's `DefaultAzureCredential`. This works with OIDC federation, managed identities, and other ambient credentials.
 
@@ -123,7 +123,7 @@ jobs:
       - name: Azure Login
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}    # The app registration (Service Principal) client ID
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           allow-no-subscriptions: true
 
@@ -133,7 +133,7 @@ jobs:
 
 ### Optional Explicit Token Mode
 
-You can still provide an explicit token with `--token` or `FUSION_TOKEN` when needed.
+You can still provide an explicit token with `--token` or `FUSION_TOKEN` if needed.
 
 ```yml
 - name: Acquire token (optional)

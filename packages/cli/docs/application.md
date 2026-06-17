@@ -90,20 +90,17 @@ pnpm fusion-framework-cli dev
 ffc app dev
 ```
 
-### Log in to Fusion Framework (if needed)
+### Authentication
 
 > [!NOTE]
-> __All HTTP requests to Fusion services require an authorized user.__
-> For example, before running `fusion-framework-cli app publish`, make sure you are authenticated using `fusion-framework-cli auth login`.
-
-> [!WARNING]
-> The `fusion-framework-cli auth login` command is only available in interactive environments (such as your local terminal). In CI/CD pipelines, authenticate with `azure/login` and run the CLI command directly.
+> **All HTTP requests to Fusion services require an authorized user.**
+> - **Local development:** use `fusion-framework-cli auth login` to authenticate interactively. This launches a browser-based login and caches your credentials locally — run it once before issuing other CLI commands.
+> - **CI/CD:** use `azure/login` to establish ambient credentials. The CLI picks them up automatically via `DefaultAzureCredential`. The `auth login` command requires an interactive browser session and is **not applicable** in CI.
 >
-> In CI, when no `--token` or `FUSION_TOKEN` is provided, the CLI automatically uses Azure Identity `DefaultAzureCredential`.
->
-> See [Authentication](auth.md#authentication-in-github-actions) for CI setup details.
+> See [Authentication](auth.md) for full setup details.
 
 ```sh
+# Local development — launches interactive browser login
 pnpm fusion-framework-cli auth login
 ```
 
