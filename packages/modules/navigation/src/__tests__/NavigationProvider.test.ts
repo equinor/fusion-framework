@@ -58,14 +58,175 @@ describe('NavigationProvider', () => {
     expect(disposeSpy).toHaveBeenCalled();
   });
 
-  it('should preserve root basename when set to slash', () => {
+  it('should normalize root basename "/" to empty string', () => {
     const providerWithRootBasename = new NavigationProvider({
       version: '1.0.0',
       config: { history, basename: '/' },
     });
 
-    expect(providerWithRootBasename.basename).toBe('/');
+    // Root basename '/' should be treated as "no basename"
+    expect(providerWithRootBasename.basename).toBe('');
 
     providerWithRootBasename.dispose();
+  });
+
+  describe('basename normalization', () => {
+    it('should strip trailing slashes from basename', () => {
+      const provider1 = new NavigationProvider({
+        version: '1.0.0',
+        config: { history, basename: '/apps/my-app/' },
+      });
+      expect(provider1.basename).toBe('/apps/my-app');
+      provider1.dispose();
+
+      const provider2 = new NavigationProvider({
+        version: '1.0.0',
+        config: { history, basename: '/apps/my-app///' },
+      });
+      expect(provider2.basename).toBe('/apps/my-app');
+      provider2.dispose();
+    });
+
+    it('should collapse consecutive slashes in basename', () => {
+      const provider = new NavigationProvider({
+        version: '1.0.0',
+        config: { history, basename: '/apps//my-app' },
+      });
+      expect(provider.basename).toBe('/apps/my-app');
+      provider.dispose();
+    });
+
+    it('should handle undefined basename', () => {
+      const provider = new NavigationProvider({
+        version: '1.0.0',
+        config: { history, basename: undefined },
+      });
+      expect(provider.basename).toBe('');
+      provider.dispose();
+    });
+  });
+
+  describe('_isWithinBasenameScope', () => {
+    it('should allow all paths when basename is "/" (no basename)', () => {
+      const provider = new NavigationProvider({
+        version: '1.0.0',
+        config: { history, basename: '/' },
+      });
+
+      // All paths should be in scope
+      expect((provider as any)._isWithinBasenameScope('/')).toBe(true);
+      expect((provider as any)._isWithinBasenameScope('/apps')).toBe(true);
+      expect((provider as any)._isWithinBasenameScope('/apps/my-app')).toBe(true);
+      expect((provider as any)._isWithinBasenameScope('/apps/my-app/users')).toBe(true);
+
+      provider.dispose();
+    });
+
+    it('should check path boundaries correctly with basename', () => {
+      const provider = new NavigationProvider({
+        version: '1.0.0',
+        config: { history, basename: '/apps/my-app' },
+      });
+
+      // Exact match should be in scope
+      expect((provider as any)._isWithinBasenameScope('/apps/my-app')).toBe(true);
+
+      // Paths starting with basename/ should be in scope
+      expect((provider as any)._isWithinBasenameScope('/apps/my-app/')).toBe(true);
+      expect((provider as any)._isWithinBasenameScope('/apps/my-app/users')).toBe(true);
+
+      // Similar but different path should NOT be in scope (path boundary check)
+      expect((provider as any)._isWithinBasenameScope('/apps/my-app-other')).toBe(false);
+      expect((provider as any)._isWithinBasenameScope('/apps/my-app-other/users')).toBe(false);
+
+      // Completely different paths should NOT be in scope
+      expect((provider as any)._isWithinBasenameScope('/other')).toBe(false);
+      expect((provider as any)._isWithinBasenameScope('/')).toBe(false);
+
+      provider.dispose();
+    });
+
+    it('should handle consecutive slashes in pathname', () => {
+      const provider = new NavigationProvider({
+        version: '1.0.0',
+        config: { history, basename: '/apps/my-app' },
+      });
+
+      // Pathname with consecutive slashes should be normalized
+      expect((provider as any)._isWithinBasenameScope('/apps//my-app')).toBe(true);
+      expect((provider as any)._isWithinBasenameScope('/apps/my-app//users')).toBe(true);
+
+      provider.dispose();
+    });
+  });
+
+  describe('_localizePath', () => {
+    it('should strip basename from paths on boundary', () => {
+      const provider = new NavigationProvider({
+        version: '1.0.0',
+        config: { history, basename: '/apps/my-app' },
+      });
+
+      // Exact match should become '/'
+      expect((provider as any)._localizePath({ pathname: '/apps/my-app', search: '', hash: '' }))
+        .toEqual({ pathname: '/', search: '', hash: '' });
+
+      // Path with basename prefix should have it stripped
+      expect((provider as any)._localizePath({ pathname: '/apps/my-app/users', search: '?q=test', hash: '#section' }))
+        .toEqual({ pathname: '/users', search: '?q=test', hash: '#section' });
+
+      provider.dispose();
+    });
+
+    it('should not strip similar paths without boundary match', () => {
+      const provider = new NavigationProvider({
+        version: '1.0.0',
+        config: { history, basename: '/apps/my-app' },
+      });
+
+      // Path that starts similarly but isn't a real match should not be stripped
+      const result = (provider as any)._localizePath({ 
+        pathname: '/apps/my-app-other/users', 
+        search: '', 
+        hash: '' 
+      });
+      
+      // Should not strip anything since it doesn't match on path boundary
+      expect(result.pathname).toBe('/apps/my-app-other/users');
+
+      provider.dispose();
+    });
+
+    it('should handle root basename "/" correctly', () => {
+      const provider = new NavigationProvider({
+        version: '1.0.0',
+        config: { history, basename: '/' },
+      });
+
+      // With no basename, paths should be returned normalized
+      expect((provider as any)._localizePath({ pathname: '/', search: '', hash: '' }))
+        .toEqual({ pathname: '/', search: '', hash: '' });
+
+      expect((provider as any)._localizePath({ pathname: '/apps', search: '', hash: '' }))
+        .toEqual({ pathname: '/apps', search: '', hash: '' });
+
+      expect((provider as any)._localizePath({ pathname: '/apps/my-app', search: '', hash: '' }))
+        .toEqual({ pathname: '/apps/my-app', search: '', hash: '' });
+
+      provider.dispose();
+    });
+
+    it('should normalize consecutive slashes', () => {
+      const provider = new NavigationProvider({
+        version: '1.0.0',
+        config: { history, basename: '/apps/my-app' },
+      });
+
+      // Consecutive slashes should be collapsed
+      expect((provider as any)._localizePath({ pathname: '/apps//my-app//users', search: '', hash: '' }))
+        .toEqual({ pathname: '/users', search: '', hash: '' });
+
+      provider.dispose();
+    });
   });
 });
