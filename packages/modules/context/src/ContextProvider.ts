@@ -443,12 +443,12 @@ export class ContextProvider
 
     // override extractContextIdFromPath if configured
     if (config.extractContextIdFromPath) {
-      // @ts-expect-error
+       // @ts-ignore - this is to avoid breaking change, the signature will be updated in future major release
       this.extractContextIdFromPath = config.extractContextIdFromPath;
     }
     // override generatePathFromContext if configured
     if (config.generatePathFromContext) {
-      // @ts-expect-error
+       // @ts-ignore - this is to avoid breaking change, the signature will be updated in future major release
       this.generatePathFromContext = config.generatePathFromContext;
     }
 
