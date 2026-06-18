@@ -658,7 +658,7 @@ importers:
         version: 2.0.5(@equinor/eds-core-react@2.6.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(styled-components@6.4.2(react-dom@19.2.7(react@19.2.7))(react@19.2.7)))(@equinor/eds-icons@1.4.0)(@equinor/eds-tokens@2.3.0)(react-dom@19.2.7(react@19.2.7))(react-is@18.3.1)(react@19.2.7)(styled-components@6.4.2(react-dom@19.2.7(react@19.2.7))(react@19.2.7))
       '@faker-js/faker':
         specifier: ^10.1.0
-        version: 10.4.0
+        version: 10.5.0
       '@tanstack/react-query-devtools':
         specifier: ^5.90.2
         version: 5.101.0(@tanstack/react-query@5.100.14(react@19.2.7))(react@19.2.7)
@@ -1892,7 +1892,7 @@ importers:
         version: link:../service-discovery
       '@faker-js/faker':
         specifier: ^10.1.0
-        version: 10.4.0
+        version: 10.5.0
       msw:
         specifier: ^2.7.3
         version: 2.14.6(@types/node@25.9.3)(typescript@6.0.3)
@@ -3866,8 +3866,8 @@ packages:
       '@noble/hashes':
         optional: true
 
-  '@faker-js/faker@10.4.0':
-    resolution: {integrity: sha512-sDBWI3yLy8EcDzgobvJTWq1MJYzAkQdpjXuPukga9wXonhpMRvd1Izuo2Qgwey2OiEoRIBr35RMU9HJRoOHzpw==}
+  '@faker-js/faker@10.5.0':
+    resolution: {integrity: sha512-bsxD8WLS5lIj7aaoCx1YJkktqYj5vlBUE6HWzu2Q51ksrGJ0H737ECCKlFU7Yf8Br45z9t99frBp/J7kzbMPAg==}
     engines: {node: ^20.19.0 || ^22.13.0 || ^23.5.0 || >=24.0.0, npm: '>=10'}
 
   '@floating-ui/core@1.7.5':
@@ -12280,7 +12280,7 @@ snapshots:
 
   '@exodus/bytes@1.15.0': {}
 
-  '@faker-js/faker@10.4.0': {}
+  '@faker-js/faker@10.5.0': {}
 
   '@floating-ui/core@1.7.5':
     dependencies:
