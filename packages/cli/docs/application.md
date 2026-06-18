@@ -90,18 +90,17 @@ pnpm fusion-framework-cli dev
 ffc app dev
 ```
 
-### Log in to Fusion Framework (if needed)
+### Authentication
 
 > [!NOTE]
-> __All HTTP requests to Fusion services require an authorized user.__
-> For example, before running `fusion-framework-cli app publish`, make sure you are authenticated using `fusion-framework-cli auth login`.
-
-> [!WARNING]
-> The `fusion-framework-cli auth login` command is only available in interactive environments (such as your local terminal). For CI/CD pipelines or automated deployments, you must provide a valid authentication token using the `FUSION_TOKEN` environment variable.
+> **All HTTP requests to Fusion services require an authorized user.**
+> - **Local development:** use `fusion-framework-cli auth login` to authenticate interactively. This launches a browser-based login and caches your credentials locally — run it once before issuing other CLI commands.
+> - **CI/CD:** use `azure/login` to establish ambient credentials. The CLI picks them up automatically via `DefaultAzureCredential`. The `auth login` command requires an interactive browser session and is **not applicable** in CI.
 >
-> See [Authentication](auth.md#setting-the-fusion-token-in-github) for details on setting up tokens for CI/CD.
+> See [Authentication](auth.md) for full setup details.
 
 ```sh
+# Local development — launches interactive browser login
 pnpm fusion-framework-cli auth login
 ```
 
@@ -118,7 +117,7 @@ pnpm fusion-framework-cli publish --env <environment>
 pnpm fusion-framework-cli app config --publish --env <environment>
 ```
 
-> **Tip:** For CI/CD and automation, set the `FUSION_TOKEN` environment variable. See [Authentication](auth.md) for details.
+> **Tip:** For CI/CD and automation, prefer Azure OIDC with `azure/login`; `FUSION_TOKEN` remains an optional explicit override. See [Authentication](auth.md) for details.
 
 ---
 
