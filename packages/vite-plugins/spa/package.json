@@ -11,11 +11,11 @@
     },
     "./bootstrap.js": {
       "import": "./dist/html/bootstrap.js",
-      "types": "./dist/types/bootstrap.d.ts"
+      "types": "./dist/types/html/bootstrap.d.ts"
     },
     "./sw.js": {
       "import": "./dist/html/sw.js",
-      "types": "./dist/types/sw.d.ts"
+      "types": "./dist/types/html/sw.d.ts"
     }
   },
   "directories": {
@@ -29,6 +29,7 @@
   "scripts": {
     "build": "tsc -b",
     "postbuild": "rollup -c rollup.config.js",
+    "test:package": "node scripts/verify-package-exports.js",
     "test": "vitest",
     "prepack": "pnpm build"
   },
