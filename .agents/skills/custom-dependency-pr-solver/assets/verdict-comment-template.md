@@ -1,42 +1,31 @@
-# 🤖 Dependency Update Verdict
-
-## Decision
+# Dependency Update Verdict
 
 | Signal | Notes |
-| ------ | ----- |
-| Recommendation | `<merge / hold / decline>` |
-| Confidence | `<high / medium / low>` |
+|---|---|
+| Recommendation | `<merge | hold | decline>` |
+| Confidence | `<high | medium | low>` |
+| Action | `<merged | skipped | needs review>` |
 
-## Validation Results
+## Validation
 
 | Check | Status | Notes |
-|-------|--------|-------|
-| Build (`pnpm build`) | `<pass/fail>` | |
-| Test (`pnpm test`) | `<pass/fail>` | |
-| Lint & Format (`pnpm -w check`) | `<pass/fail>` | |
+|---|---|---|
+| `pnpm build` | `<pass | fail | skipped>` | `<notes>` |
+| `pnpm test` | `<pass | fail | skipped>` | `<notes>` |
+| `pnpm -w check` | `<pass | fail | skipped>` | `<notes>` |
 
 ## Changesets
 
 | Package | Bump | File |
-|---------|------|------|
-| `@equinor/<name>` | `patch` | `.changeset/<filename>.md` |
+|---|---|---|
+| `@equinor/<name>` | `<patch | minor | major | none>` | `.changeset/<file>.md` |
 
 ## Assessment
 
-### Security
-- Signal: `<clear / concern / blocking>`
-- Detail: <!-- brief note -->
+- Security: `<clear | concern | blocking>` - `<detail>`
+- Compatibility: `<clear | concern | blocking>` - `<detail>`
+- Impact: `<clear | concern | blocking>` - `<detail>`
 
-### Compatibility
-- Signal: `<clear / concern / blocking>`
-- Detail: <!-- brief note -->
+## Next Step
 
-### Impact
-- Signal: `<clear / concern / blocking>`
-- Detail: <!-- brief note -->
-
-## Action
-
-`<Merged via admin squash / Skipped — needs manual review / Skipped — validation failure>`
-
-<!-- If merged: commit SHA. If skipped: specific reason and recommended next steps. -->
+`<Merged via admin squash | skipped because ... | awaiting manual review because ...>`
