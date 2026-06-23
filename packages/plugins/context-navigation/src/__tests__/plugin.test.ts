@@ -402,6 +402,7 @@ describe('createContextNavigationPlugin', () => {
       const currentApp$ = new BehaviorSubject({
         appKey: 'my-app',
         instance$: new BehaviorSubject(appModules),
+        manifest$: new BehaviorSubject(null),
       });
 
       const app = { current$: currentApp$ } as unknown as ContextNavigationPluginArgs['app'];
@@ -452,6 +453,7 @@ describe('createContextNavigationPlugin', () => {
       const currentApp$ = new BehaviorSubject({
         appKey: 'my-app',
         instance$: new BehaviorSubject(appModules),
+        manifest$: new BehaviorSubject(null),
       });
 
       const app = { current$: currentApp$ } as unknown as ContextNavigationPluginArgs['app'];
@@ -509,6 +511,7 @@ describe('createContextNavigationPlugin', () => {
       const currentApp$ = new BehaviorSubject({
         appKey: 'my-app',
         instance$: new BehaviorSubject(appModules),
+        manifest$: new BehaviorSubject(null),
       });
 
       const app = { current$: currentApp$ } as unknown as ContextNavigationPluginArgs['app'];
@@ -559,6 +562,7 @@ describe('createContextNavigationPlugin', () => {
       const currentApp$ = new BehaviorSubject({
         appKey: 'my-app',
         instance$: new BehaviorSubject(appModules),
+        manifest$: new BehaviorSubject(null),
       });
 
       const app = { current$: currentApp$ } as unknown as ContextNavigationPluginArgs['app'];

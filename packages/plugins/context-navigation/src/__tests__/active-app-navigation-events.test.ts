@@ -15,6 +15,7 @@ describe('activeAppNavigationEvents$', () => {
     const currentApp$ = new BehaviorSubject({
       appKey: 'my-app',
       instance$: new BehaviorSubject(appModules),
+      manifest$: new BehaviorSubject(null),
     });
 
     const app = { current$: currentApp$ } as unknown as ContextNavigationPluginArgs['app'];
@@ -56,6 +57,7 @@ describe('activeAppNavigationEvents$', () => {
     const currentApp$ = new BehaviorSubject({
       appKey: 'my-app',
       instance$: new BehaviorSubject(null),
+      manifest$: new BehaviorSubject(null),
     });
 
     const app = { current$: currentApp$ } as unknown as ContextNavigationPluginArgs['app'];
@@ -79,6 +81,7 @@ describe('activeAppNavigationEvents$', () => {
     const currentApp$ = new BehaviorSubject({
       appKey: 'my-app',
       instance$: new BehaviorSubject(appModules),
+      manifest$: new BehaviorSubject(null),
     });
 
     const app = { current$: currentApp$ } as unknown as ContextNavigationPluginArgs['app'];
@@ -109,6 +112,7 @@ describe('activeAppNavigationEvents$', () => {
     const currentApp$ = new BehaviorSubject<unknown>({
       appKey: 'app-a',
       instance$: new BehaviorSubject(appModulesA),
+      manifest$: new BehaviorSubject(null),
     });
 
     const app = { current$: currentApp$ } as unknown as ContextNavigationPluginArgs['app'];
@@ -122,7 +126,7 @@ describe('activeAppNavigationEvents$', () => {
     navigationState$.next({});
     expect(emissions[0]?.appKey).toBe('app-a');
 
-    currentApp$.next({ appKey: 'app-b', instance$: new BehaviorSubject(appModulesB) });
+    currentApp$.next({ appKey: 'app-b', instance$: new BehaviorSubject(appModulesB), manifest$: new BehaviorSubject(null) });
     navigationState$.next({});
     expect(emissions[1]?.appKey).toBe('app-b');
 
