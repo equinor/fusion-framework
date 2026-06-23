@@ -1,4 +1,4 @@
-import { BehaviorSubject, EMPTY, Subject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { describe, expect, it } from 'vitest';
 
 import type { AppModulesInstance } from '@equinor/fusion-framework-module-app';
