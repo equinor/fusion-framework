@@ -24,16 +24,54 @@ import type { BaseHistory } from './lib';
 /**
  * Normalizes a pathname by:
  * - Collapsing multiple consecutive slashes into a single slash
- * - Removing trailing slashes
  *
  * @example
- * normalizePathname("/app//users///profile/") // returns "/app/users/profile"
- * normalizePathname("///multiple///slashes///") // returns "/multiple/slashes"
+ * normalizePathname("/app//users///profile/") // returns "/app/users/profile/"
+ * normalizePathname("///multiple///slashes///") // returns "/multiple/slashes/"
  *
  * @param path - The pathname to normalize
- * @returns The normalized pathname without consecutive or trailing slashes
+ * @returns The normalized pathname without consecutive slashes
  */
-const normalizePathname = (path: string) => path.replace(/\/+/g, '/').replace(/\/$/, '');
+const normalizePathname = (path: string): string => {
+  // Use iterative approach instead of regex to avoid potential ReDoS with untrusted input
+  let result = '';
+  let lastWasSlash = false;
+
+  for (let i = 0; i < path.length; i++) {
+    const char = path[i];
+    if (char === '/') {
+      if (!lastWasSlash) {
+        result += char;
+        lastWasSlash = true;
+      }
+      // Skip consecutive slashes
+    } else {
+      result += char;
+      lastWasSlash = false;
+    }
+  }
+
+  return result;
+};
+
+/**
+ * Removes trailing slashes from a path string.
+ *
+ * @param path - The path to trim
+ * @returns The path without trailing slashes
+ *
+ * @example
+ * stripTrailingSlashes("/apps/my-app/") // returns "/apps/my-app"
+ * stripTrailingSlashes("/apps/my-app///") // returns "/apps/my-app"
+ */
+const stripTrailingSlashes = (path: string): string => {
+  // Use iterative approach to avoid ReDoS vulnerability
+  let endIndex = path.length;
+  while (endIndex > 0 && path[endIndex - 1] === '/') {
+    endIndex--;
+  }
+  return path.substring(0, endIndex);
+};
 
 /**
  * Navigation provider implementation.
@@ -129,13 +167,13 @@ export class NavigationProvider
     // Extract configuration values
     const { basename, history, telemetry, eventProvider } = args.config;
 
-    // Normalize the basename to strip trailing slashes. React Router requires
-    // the current URL to start with the exact basename string, so a basename
-    // of "/apps/my-app/" would fail to match the URL "/apps/my-app" and
-    // render nothing (blank page).
-    // Preserve slash-only basenames (e.g. "/") by falling back to the
-    // original input when normalization collapses to an empty string.
-    this.#basename = basename ? normalizePathname(basename) || basename : basename;
+    // Normalize the basename to strip trailing slashes and collapse consecutive
+    // slashes. React Router requires the current URL to start with the exact
+    // basename string, so a basename of "/apps/my-app/" would fail to match
+    // the URL "/apps/my-app" and render nothing (blank page).
+    // Treat '/' as "no basename" (empty string) since all paths start with '/'.
+    const normalizedBasename = basename ? stripTrailingSlashes(normalizePathname(basename)) : '';
+    this.#basename = normalizedBasename || undefined;
     this.#event = eventProvider;
     this.#telemetry = telemetry;
 
@@ -310,23 +348,58 @@ export class NavigationProvider
   /**
    * Checks whether a pathname falls within the configured basename scope.
    *
+   * Uses a path-boundary check to avoid false positives from apps with
+   * overlapping name prefixes (e.g. `/apps/my-app` must not match
+   * `/apps/my-app-other/foo`).
+   *
    * @param pathname - The pathname to check
-   * @returns `true` if the pathname starts with the basename (or no basename is set)
+   * @returns `true` if the pathname matches the basename exactly or starts
+   *          with the basename followed by `/` (or no basename is set)
    */
   protected _isWithinBasenameScope(pathname: string): boolean {
-    return this.#basename ? pathname.startsWith(this.#basename) : true;
+    // No basename means everything is in scope
+    if (!this.#basename) return true;
+
+    // Normalize the pathname for comparison (collapse consecutive slashes)
+    const normalized = normalizePathname(pathname);
+
+    // Check exact match or path-boundary prefix
+    return normalized === this.#basename || normalized.startsWith(`${this.#basename}/`);
   }
 
   /**
    * Localizes a path by stripping the basename prefix from the pathname.
+   *
+   * Only removes the basename when it matches on a path boundary to avoid
+   * incorrectly stripping partial matches.
    *
    * @param location - The full path to localize
    * @returns A new {@link Path} with the basename removed from the pathname
    */
   protected _localizePath(location: Path): Path {
     const { pathname, search, hash } = location;
+
+    // No basename - return normalized pathname as-is
+    if (!this.#basename) {
+      return {
+        pathname: normalizePathname(pathname) || '/',
+        search,
+        hash,
+      };
+    }
+
+    const normalized = normalizePathname(pathname);
+    let localized = normalized;
+
+    // Strip basename only if it matches at path boundary
+    if (normalized === this.#basename) {
+      localized = '/';
+    } else if (normalized.startsWith(`${this.#basename}/`)) {
+      localized = normalized.slice(this.#basename.length);
+    }
+
     return {
-      pathname: normalizePathname(pathname.replace(this.#basename ?? '', '')),
+      pathname: localized || '/',
       search,
       hash,
     };

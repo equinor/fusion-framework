@@ -69,6 +69,9 @@
     },
     {
       "path": "../dev-server"
+    },
+    {
+      "path": "../plugins/context-navigation"
     }
   ],
   "include": ["src/**/*", "start.ts"],

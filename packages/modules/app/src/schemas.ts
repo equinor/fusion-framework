@@ -61,6 +61,26 @@ const ApiApplicationPersonSchema = z.object({
 });
 
 /**
+ * Schema for validating the options object on application builds.
+ *
+ * Known properties:
+ * - `contextRouting` (optional): Routing strategy for context — `'path'` or `'query'`.
+ *
+ * The schema uses `.catchall(z.unknown())` to permit additional properties
+ * at runtime without requiring them to be declared here. Add known properties
+ * to this schema as they are introduced.
+ */
+export const FramworkOptionsSchema = z
+  .object({
+    contextRouting: z
+      .enum(['path', 'query'], {
+        message: "The routing strategy for context, which can be either 'path' or 'query'.",
+      })
+      .nullish(),
+  })
+  .catchall(z.unknown());
+
+/**
  * Schema for validating the structure of an API application build.
  *
  * Properties:
@@ -75,6 +95,7 @@ const ApiApplicationPersonSchema = z.object({
  * - `githubRepo`: An optional GitHub repository associated with the build.
  * - `projectPage`: An optional project page URL.
  * - `allowedExtensions`: An optional array of allowed extensions for the build.
+ * - `options`: An optional record of additional build options, where the key is a string and the value can be of any type.
  * - `uploadedBy`: An optional schema for the person who uploaded the build.
  */
 export const ApiApplicationBuildSchema = z.object({
@@ -88,6 +109,9 @@ export const ApiApplicationBuildSchema = z.object({
   commitSha: z.string().nullish(),
   githubRepo: z.string().nullish(),
   projectPage: z.string().nullish(),
+  options: FramworkOptionsSchema.nullish().default({
+    contextRouting: 'path',
+  }),
   allowedExtensions: z.array(z.string()).nullish(),
   uploadedBy: ApiApplicationPersonSchema.nullish(),
 });

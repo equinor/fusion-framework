@@ -118,6 +118,37 @@ export type RouteSchemaEntry = [
 ];
 
 /**
+ * Typed representation of the options object.
+ *
+ * Only known keys are declared in the type — additional properties are
+ * handled by the Zod schema at runtime. Keeping the type narrow avoids
+ * structural incompatibilities with `RecursivePartial<AppManifest>`.
+ */
+export type FrameworkOptions = {
+  /**
+   * Declares how the portal should encode this app's active context into the URL.
+   *
+   * Read by the `@equinor/fusion-framework-plugin-context-navigation` plugin
+   * to select the correct adapter at runtime.
+   *
+   * - `'path'`  — context id as a path segment: `/apps/{appKey}/{contextId}/...`
+   * - `'query'` — context id as a query parameter: `/apps/{appKey}/...?$contextId={id}`
+   * - `null`    — explicitly opt out of automatic context-to-URL encoding
+   * - `undefined` (omitted) — falls back to `'path'` (the default adapter)
+   *
+   * Apps with custom URL shapes should omit this field and register
+   * `setContextPathExtractor` / `setContextPathGenerator` hooks instead —
+   * the custom adapter picks those up automatically.
+   *
+   * Set this in the app manifest's `build.options.contextRouting` field,
+   * either in `app.manifest.config.ts` or via the app service manifest.
+   *
+   * @default undefined (falls back to path adapter)
+   */
+  contextRouting?: 'path' | 'query' | null;
+};
+
+/**
  * Build metadata returned by the app service for a specific application version.
  * Contains the script entry point, asset path, tags, and optional CI metadata.
  */
@@ -133,6 +164,7 @@ export type AppBuildManifest = {
   githubRepo?: Nullable<string>;
   projectPage?: Nullable<string>;
   annotations?: Nullable<Record<string, string>>;
+  options?: Nullable<FrameworkOptions>;
   allowedExtensions?: Nullable<string[]>;
   uploadedBy?: Nullable<AppOwner>;
 };
