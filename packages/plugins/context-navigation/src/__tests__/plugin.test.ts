@@ -1,5 +1,5 @@
 import { BehaviorSubject, EMPTY, Subject } from 'rxjs';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import type { AppModulesInstance } from '@equinor/fusion-framework-module-app';
 import type { ContextItem, ContextModule } from '@equinor/fusion-framework-module-context';
