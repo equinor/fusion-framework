@@ -117,5 +117,9 @@ export function reconcile(
   });
   log(`Resolved adapter [${adapter.id}] for [${appKey}]`);
 
-  applyNavigation({ appKey, appModules, adapter, context: contextState, currentURL }, deps, navOptionsOverride);
+  applyNavigation(
+    { appKey, appModules, adapter, context: contextState, currentURL },
+    deps,
+    navOptionsOverride,
+  );
 }

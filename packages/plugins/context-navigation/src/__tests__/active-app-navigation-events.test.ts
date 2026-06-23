@@ -126,7 +126,11 @@ describe('activeAppNavigationEvents$', () => {
     navigationState$.next({});
     expect(emissions[0]?.appKey).toBe('app-a');
 
-    currentApp$.next({ appKey: 'app-b', instance$: new BehaviorSubject(appModulesB), manifest$: new BehaviorSubject(null) });
+    currentApp$.next({
+      appKey: 'app-b',
+      instance$: new BehaviorSubject(appModulesB),
+      manifest$: new BehaviorSubject(null),
+    });
     navigationState$.next({});
     expect(emissions[1]?.appKey).toBe('app-b');
 
