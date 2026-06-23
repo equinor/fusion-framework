@@ -100,14 +100,14 @@ describe('NavigationProvider', () => {
       // Create a string with many consecutive slashes to test performance
       // This would cause ReDoS with certain regex patterns
       const manySlashes = '/apps' + '/'.repeat(10000) + 'my-app';
-      
+
       const startTime = Date.now();
       const provider = new NavigationProvider({
         version: '1.0.0',
         config: { history, basename: manySlashes },
       });
       const endTime = Date.now();
-      
+
       // Should complete in reasonable time (< 100ms for 10k slashes)
       expect(endTime - startTime).toBeLessThan(100);
       expect(provider.basename).toBe('/apps/my-app');
@@ -118,14 +118,14 @@ describe('NavigationProvider', () => {
       // Create a string with many trailing slashes
       // The /\/+$/ regex pattern would cause ReDoS with this input
       const manyTrailingSlashes = '/apps/my-app' + '/'.repeat(10000);
-      
+
       const startTime = Date.now();
       const provider = new NavigationProvider({
         version: '1.0.0',
         config: { history, basename: manyTrailingSlashes },
       });
       const endTime = Date.now();
-      
+
       // Should complete in reasonable time (< 100ms for 10k trailing slashes)
       expect(endTime - startTime).toBeLessThan(100);
       expect(provider.basename).toBe('/apps/my-app');
@@ -204,12 +204,18 @@ describe('NavigationProvider', () => {
       });
 
       // Exact match should become '/'
-      expect((provider as any)._localizePath({ pathname: '/apps/my-app', search: '', hash: '' }))
-        .toEqual({ pathname: '/', search: '', hash: '' });
+      expect(
+        (provider as any)._localizePath({ pathname: '/apps/my-app', search: '', hash: '' }),
+      ).toEqual({ pathname: '/', search: '', hash: '' });
 
       // Path with basename prefix should have it stripped
-      expect((provider as any)._localizePath({ pathname: '/apps/my-app/users', search: '?q=test', hash: '#section' }))
-        .toEqual({ pathname: '/users', search: '?q=test', hash: '#section' });
+      expect(
+        (provider as any)._localizePath({
+          pathname: '/apps/my-app/users',
+          search: '?q=test',
+          hash: '#section',
+        }),
+      ).toEqual({ pathname: '/users', search: '?q=test', hash: '#section' });
 
       provider.dispose();
     });
@@ -221,12 +227,12 @@ describe('NavigationProvider', () => {
       });
 
       // Path that starts similarly but isn't a real match should not be stripped
-      const result = (provider as any)._localizePath({ 
-        pathname: '/apps/my-app-other/users', 
-        search: '', 
-        hash: '' 
+      const result = (provider as any)._localizePath({
+        pathname: '/apps/my-app-other/users',
+        search: '',
+        hash: '',
       });
-      
+
       // Should not strip anything since it doesn't match on path boundary
       expect(result.pathname).toBe('/apps/my-app-other/users');
 
@@ -240,14 +246,21 @@ describe('NavigationProvider', () => {
       });
 
       // With no basename, paths should be returned normalized
-      expect((provider as any)._localizePath({ pathname: '/', search: '', hash: '' }))
-        .toEqual({ pathname: '/', search: '', hash: '' });
+      expect((provider as any)._localizePath({ pathname: '/', search: '', hash: '' })).toEqual({
+        pathname: '/',
+        search: '',
+        hash: '',
+      });
 
-      expect((provider as any)._localizePath({ pathname: '/apps', search: '', hash: '' }))
-        .toEqual({ pathname: '/apps', search: '', hash: '' });
+      expect((provider as any)._localizePath({ pathname: '/apps', search: '', hash: '' })).toEqual({
+        pathname: '/apps',
+        search: '',
+        hash: '',
+      });
 
-      expect((provider as any)._localizePath({ pathname: '/apps/my-app', search: '', hash: '' }))
-        .toEqual({ pathname: '/apps/my-app', search: '', hash: '' });
+      expect(
+        (provider as any)._localizePath({ pathname: '/apps/my-app', search: '', hash: '' }),
+      ).toEqual({ pathname: '/apps/my-app', search: '', hash: '' });
 
       provider.dispose();
     });
@@ -259,8 +272,9 @@ describe('NavigationProvider', () => {
       });
 
       // Consecutive slashes should be collapsed
-      expect((provider as any)._localizePath({ pathname: '/apps//my-app//users', search: '', hash: '' }))
-        .toEqual({ pathname: '/users', search: '', hash: '' });
+      expect(
+        (provider as any)._localizePath({ pathname: '/apps//my-app//users', search: '', hash: '' }),
+      ).toEqual({ pathname: '/users', search: '', hash: '' });
 
       provider.dispose();
     });

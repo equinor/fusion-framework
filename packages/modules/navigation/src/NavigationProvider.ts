@@ -33,25 +33,25 @@ import type { BaseHistory } from './lib';
  * @returns The normalized pathname without consecutive slashes
  */
 const normalizePathname = (path: string): string => {
-	// Use iterative approach instead of regex to avoid potential ReDoS with untrusted input
-	let result = '';
-	let lastWasSlash = false;
-	
-	for (let i = 0; i < path.length; i++) {
-		const char = path[i];
-		if (char === '/') {
-			if (!lastWasSlash) {
-				result += char;
-				lastWasSlash = true;
-			}
-			// Skip consecutive slashes
-		} else {
-			result += char;
-			lastWasSlash = false;
-		}
-	}
-	
-	return result;
+  // Use iterative approach instead of regex to avoid potential ReDoS with untrusted input
+  let result = '';
+  let lastWasSlash = false;
+
+  for (let i = 0; i < path.length; i++) {
+    const char = path[i];
+    if (char === '/') {
+      if (!lastWasSlash) {
+        result += char;
+        lastWasSlash = true;
+      }
+      // Skip consecutive slashes
+    } else {
+      result += char;
+      lastWasSlash = false;
+    }
+  }
+
+  return result;
 };
 
 /**
@@ -65,12 +65,12 @@ const normalizePathname = (path: string): string => {
  * stripTrailingSlashes("/apps/my-app///") // returns "/apps/my-app"
  */
 const stripTrailingSlashes = (path: string): string => {
-	// Use iterative approach to avoid ReDoS vulnerability
-	let endIndex = path.length;
-	while (endIndex > 0 && path[endIndex - 1] === '/') {
-		endIndex--;
-	}
-	return path.substring(0, endIndex);
+  // Use iterative approach to avoid ReDoS vulnerability
+  let endIndex = path.length;
+  while (endIndex > 0 && path[endIndex - 1] === '/') {
+    endIndex--;
+  }
+  return path.substring(0, endIndex);
 };
 
 /**
@@ -359,10 +359,10 @@ export class NavigationProvider
   protected _isWithinBasenameScope(pathname: string): boolean {
     // No basename means everything is in scope
     if (!this.#basename) return true;
-    
+
     // Normalize the pathname for comparison (collapse consecutive slashes)
     const normalized = normalizePathname(pathname);
-    
+
     // Check exact match or path-boundary prefix
     return normalized === this.#basename || normalized.startsWith(`${this.#basename}/`);
   }
@@ -378,7 +378,7 @@ export class NavigationProvider
    */
   protected _localizePath(location: Path): Path {
     const { pathname, search, hash } = location;
-    
+
     // No basename - return normalized pathname as-is
     if (!this.#basename) {
       return {
@@ -387,17 +387,17 @@ export class NavigationProvider
         hash,
       };
     }
-    
+
     const normalized = normalizePathname(pathname);
     let localized = normalized;
-    
+
     // Strip basename only if it matches at path boundary
     if (normalized === this.#basename) {
       localized = '/';
     } else if (normalized.startsWith(`${this.#basename}/`)) {
       localized = normalized.slice(this.#basename.length);
     }
-    
+
     return {
       pathname: localized || '/',
       search,
