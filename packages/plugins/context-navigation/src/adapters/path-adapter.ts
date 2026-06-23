@@ -78,6 +78,7 @@ export function createPathAdapter(): ContextNavigationAdapter {
       const url = new URL(targetPath, currentURL.origin);
       url.search = currentURL.search;
       stripContextQueryParam(url);
+      // Hash is intentionally not preserved — context changes reset app to root view
       return url;
     },
 

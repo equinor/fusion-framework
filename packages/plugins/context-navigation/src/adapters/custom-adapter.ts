@@ -164,6 +164,7 @@ export function createCustomAdapter(): ContextNavigationAdapterFactory {
           url.search = currentURL.search;
           // Remove query-adapter param — custom apps encode context in the path
           stripContextQueryParam(url);
+          // Hash is intentionally not preserved — returning to root app view
           return url;
         }
 
@@ -191,6 +192,7 @@ export function createCustomAdapter(): ContextNavigationAdapterFactory {
         url.search = currentURL.search;
         // Remove query-adapter param — custom apps encode context in the path
         stripContextQueryParam(url);
+        // Hash is intentionally not preserved — context changes reset app to root view
         return url;
       },
 

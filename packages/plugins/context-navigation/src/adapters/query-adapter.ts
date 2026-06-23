@@ -56,6 +56,9 @@ export function createQueryAdapter(paramName = CONTEXT_QUERY_PARAM_KEY): Context
      * After mutation, the `$` character is restored from `%24` encoding
      * because `URLSearchParams` percent-encodes `$` but we want it
      * human-readable in the address bar as a namespace marker.
+     *
+     * Hash fragment is intentionally cleared — context changes reset the app
+     * to its root view, so any hash pointing to sub-route sections would be invalid.
      */
     encode({ context, currentURL }: { context: ContextItem | null; currentURL: URL }): URL | null {
       const url = new URL(currentURL.href);
@@ -68,6 +71,9 @@ export function createQueryAdapter(paramName = CONTEXT_QUERY_PARAM_KEY): Context
 
       // Restore $ from %24 — $ is a reserved namespace prefix we want visible in URLs
       url.search = url.search.replace(/%24/gi, '$');
+
+      // Clear hash — context change resets app to root view
+      url.hash = '';
 
       return url;
     },

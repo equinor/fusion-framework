@@ -320,6 +320,35 @@ describe('createContextNavigationPlugin', () => {
         expect(targetURL.pathname).toBe('/apps/my-app/ctx-5');
       });
     });
+
+    it('clears hash fragment on context change to avoid inconsistent app state', async () => {
+      const adapter = makeAdapter({
+        encode: ({ context, currentURL }) => {
+          if (!context) return null;
+          const target = new URL(`/apps/my-app/${context.id}`, currentURL.origin);
+          target.search = currentURL.search;
+          // Hash intentionally not preserved — context change resets app to root view
+          return target;
+        },
+      });
+      harness = createHarness({ adapters: [adapter] });
+      Object.assign(harness.navigation, {
+        path: { pathname: '/apps/my-app', search: '', hash: '#section-2' },
+      });
+      const appModules = { context: { currentContext: null } } as unknown as AppModulesInstance<
+        [ContextModule]
+      >;
+
+      harness.source$.next({ appKey: 'my-app', appModules, contextState: makeContext('ctx-6') });
+
+      await vi.waitFor(() => {
+        const navigateCall = vi.mocked(harness.navigation.navigate).mock.calls[0];
+        const targetURL = navigateCall?.[0] as URL;
+        // Hash should be empty — dropped when context changes
+        expect(targetURL.hash).toBe('');
+        expect(targetURL.pathname).toBe('/apps/my-app/ctx-6');
+      });
+    });
   });
 
   // ─── Null Context URL ─────────────────────────────────────────────
