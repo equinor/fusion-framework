@@ -96,6 +96,24 @@ describe('NavigationProvider', () => {
       provider.dispose();
     });
 
+    it('should handle pathological input efficiently (ReDoS protection)', () => {
+      // Create a string with many consecutive slashes to test performance
+      // This would cause ReDoS with certain regex patterns
+      const manySlashes = '/apps' + '/'.repeat(10000) + 'my-app';
+      
+      const startTime = Date.now();
+      const provider = new NavigationProvider({
+        version: '1.0.0',
+        config: { history, basename: manySlashes },
+      });
+      const endTime = Date.now();
+      
+      // Should complete in reasonable time (< 100ms for 10k slashes)
+      expect(endTime - startTime).toBeLessThan(100);
+      expect(provider.basename).toBe('/apps/my-app');
+      provider.dispose();
+    });
+
     it('should handle undefined basename', () => {
       const provider = new NavigationProvider({
         version: '1.0.0',
