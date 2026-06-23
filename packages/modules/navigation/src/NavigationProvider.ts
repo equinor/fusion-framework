@@ -32,7 +32,27 @@ import type { BaseHistory } from './lib';
  * @param path - The pathname to normalize
  * @returns The normalized pathname without consecutive slashes
  */
-const normalizePathname = (path: string) => path.replace(/\/+/g, '/');
+const normalizePathname = (path: string): string => {
+	// Use iterative approach instead of regex to avoid potential ReDoS with untrusted input
+	let result = '';
+	let lastWasSlash = false;
+	
+	for (let i = 0; i < path.length; i++) {
+		const char = path[i];
+		if (char === '/') {
+			if (!lastWasSlash) {
+				result += char;
+				lastWasSlash = true;
+			}
+			// Skip consecutive slashes
+		} else {
+			result += char;
+			lastWasSlash = false;
+		}
+	}
+	
+	return result;
+};
 
 /**
  * Navigation provider implementation.
