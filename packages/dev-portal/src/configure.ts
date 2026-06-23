@@ -18,7 +18,7 @@ import { enableAgGrid } from '@equinor/fusion-framework-module-ag-grid';
 import { enableTelemetry } from '@equinor/fusion-framework-module-telemetry';
 import {
   enableContextNavigation,
-  enableLegacyAppNavigationFix,
+  legacyAppNavigationFix,
 } from '@equinor/fusion-framework-plugin-context-navigation';
 import {
   buildContextUrlForStrategy,
@@ -177,7 +177,7 @@ export const configure = async (config: FrameworkConfigurator) => {
 
   config.onInitialized<[AppModule, NavigationModule]>((modules) => {
     // Reset legacy app routers on context navigation for apps with navigation <v7.
-    enableLegacyAppNavigationFix({ event: modules.event });
+    legacyAppNavigationFix({ event: modules.event });
 
     // Expose framework modules globally for development debugging and inspection.
     // @ts-expect-error — `window` is not typed with `Fusion`

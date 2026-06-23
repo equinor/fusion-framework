@@ -6,7 +6,7 @@ import type {
   ContextNavigationConfig,
   ContextNavigationSkippedDetail,
 } from './types';
-import type { ContextNavigationEventSource } from './plugin';
+import type { ContextNavigationEventSource } from './create-context-navigation-plugin';
 import type { ReconcilerSourceEntry } from './sources/types';
 import { getCurrentURL, normalizePath, resolveAdapter, stripQueryParams } from './helpers';
 import { applyNavigation, type ApplyNavigationDeps } from './apply-navigation';
@@ -57,6 +57,7 @@ export function reconcile(
 
   const { event, navigation, config, eventSource, ownNavTokens, log } = deps;
 
+  // Context not yet resolved, skip reconciliation and wait for context to be available
   if (contextState === undefined) {
     event.dispatchEvent('onContextNavigationSkipped', {
       detail: { appKey, reason: 'no-context' } as ContextNavigationSkippedDetail,
@@ -66,11 +67,13 @@ export function reconcile(
     return;
   }
 
+  // Context cleared, navigate to the configured null context URL
   if (contextState === null && config.nullContextUrl) {
     const currentURL = getCurrentURL(navigation, config.origin);
     const targetPath = config.nullContextUrl({ appKey, currentURL });
     const targetURL = new URL(targetPath, config.origin);
 
+    // Only navigate if the target path differs from current path
     if (normalizePath(targetURL) !== normalizePath(currentURL)) {
       ownNavTokens.add(normalizePath(targetURL));
       navigation.navigate(targetURL, config.navigationOptions);
@@ -80,12 +83,16 @@ export function reconcile(
   }
 
   const appContext = appModules.context;
-  if (!appContext) return;
 
+  // App context not available, skip reconciliation
+  if (!appContext) {
+    return;
+  }
   const currentURL = getCurrentURL(navigation, config.origin);
 
   // On app switch, strip all query params so nothing leaks from the
   // previous app. The adapter will add back what it needs.
+  // This ensures a clean slate for the new app's context encoding.
   if (options.isAppSwitch) {
     stripQueryParams(currentURL);
     log(`App switch detected → stripped query params for [${appKey}]`);
@@ -102,6 +109,7 @@ export function reconcile(
     config.adapters,
   );
 
+  // No matching adapter found for this app, skip navigation
   if (!adapter) {
     event.dispatchEvent('onContextNavigationSkipped', {
       detail: { appKey, reason: 'no-adapter' } as ContextNavigationSkippedDetail,

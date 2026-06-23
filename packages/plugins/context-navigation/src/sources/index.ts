@@ -1,5 +1,5 @@
-export { createAppFirstSource } from './app-first-source';
-export { createContextFirstSource } from './context-first-source';
+export { appFirstSource } from './app-first-source';
+export { contextFirstSource } from './context-first-source';
 
 export {
   contextStateChanged,

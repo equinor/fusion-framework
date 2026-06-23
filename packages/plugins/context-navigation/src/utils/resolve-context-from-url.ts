@@ -14,7 +14,7 @@ import type { ContextNavigationAdapterInput } from '../adapters/types';
  * @param origin - The origin to use when constructing the URL (defaults to `window.location.origin`).
  * @returns An async function compatible with `ContextNavigationConfig.resolveInitialContext`.
  */
-export const createResolveContextFromUrl =
+export const resolveContextFromUrl =
   (adapters: ContextNavigationAdapterInput[], origin?: string) =>
   async ({
     context,
@@ -29,17 +29,21 @@ export const createResolveContextFromUrl =
       resolvedOrigin,
     );
 
+    // Adapters are evaluated in registration order — first successful decode wins
     for (const entry of adapters) {
-      // Factory adapters need app context — skip during initial resolution
+      // Factory adapters need app context to decode — skip until an app is active
       if (typeof entry === 'function') {
+        // No app is mounted yet — factory adapters cannot produce a valid decode
         continue;
       }
 
       const contextId = entry.decode(currentURL);
+      // First adapter to decode a valid ID wins — apply context and stop processing
       if (contextId) {
         try {
           await context.setCurrentContextByIdAsync(contextId);
         } catch (err) {
+          // Log the error but do not throw — initial context resolution is best-effort
           console.warn(
             'ContextNavigation: failed to resolve initial context from URL',
             contextId,

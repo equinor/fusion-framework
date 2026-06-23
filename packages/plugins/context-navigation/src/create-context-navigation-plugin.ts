@@ -8,7 +8,7 @@ import type { INavigationProvider } from '@equinor/fusion-framework-module-navig
 import type { ContextNavigationConfig } from './types';
 import { getCurrentURL, resolveAdapter } from './helpers';
 import type { OwnNavigationTokens } from './apply-navigation';
-import { activeAppNavigationEvents$ } from './operators/active-app-navigation-events';
+import { activeAppNavigationEvents } from './operators/active-app-navigation-events';
 import {
   consumeOwnNavToken,
   handlePushModeGuard,
@@ -84,6 +84,7 @@ export function createContextNavigationPlugin(args: ContextNavigationPluginArgs)
 
   // Conditional debug logger scoped to this plugin instance.
   const log = (msg: string): void => {
+    // Only log debug messages if debug mode is enabled in config.
     if (config.debug) {
       console.debug(`[${config.portalName}] ContextNavigation: ${msg}`);
     }
@@ -98,6 +99,9 @@ export function createContextNavigationPlugin(args: ContextNavigationPluginArgs)
   // It emits whenever the active context or app changes (implementation-specific).
   // Each emission triggers reconcile(), which resolves an adapter and navigates.
   const source$ = config.sourceFactory({ app, context, navigation });
+
+  // Emit [null, firstEntry] on first emission, then [prevEntry, currEntry] thereafter.
+  // Map pairs to object with entry and isAppSwitch flag for reconciler.
   subscriptions.add(
     source$
       .pipe(
@@ -124,22 +128,28 @@ export function createContextNavigationPlugin(args: ContextNavigationPluginArgs)
     subscriptions.add(
       // activeAppNavigationEvents$ emits the current app key and modules
       // on every navigation state change, filtering out null/unresolved states.
-      activeAppNavigationEvents$(app, navigation).subscribe(
+      activeAppNavigationEvents(app, navigation).subscribe(
         ({ appModules, appKey, routingStrategy }) => {
           const appContext = appModules.context;
 
           // No active context means nothing to guard — bail early.
-          if (!appContext?.currentContext) return;
+          if (!appContext?.currentContext) {
+            return;
+          }
 
           const currentURL = getCurrentURL(navigation, config.origin);
 
           // Scope check: only guard URLs that belong to this app's path namespace.
           // Navigations to other apps or external paths are not our responsibility.
-          if (!isInAppScope(currentURL, appKey)) return;
+          if (!isInAppScope(currentURL, appKey)) {
+            return;
+          }
 
           // Own-navigation check: if this URL was navigated to by the plugin itself,
           // consume the token and skip — prevents infinite reconcile/guard loops.
-          if (consumeOwnNavToken(currentURL, ownNavTokens)) return;
+          if (consumeOwnNavToken(currentURL, ownNavTokens)) {
+            return;
+          }
 
           // Resolve the adapter for this app/URL combination.
           // If no adapter matches, the URL format is unknown — we can't guard it.
@@ -147,13 +157,19 @@ export function createContextNavigationPlugin(args: ContextNavigationPluginArgs)
             { appKey, appContext, routingStrategy, currentURL },
             config.adapters,
           );
-          if (!adapter) return;
+
+          // No matching adapter means we can't decode the URL — bail out.
+          if (!adapter) {
+            return;
+          }
 
           const activeContext = appContext.currentContext;
           const urlContextId = adapter.decode(currentURL);
 
           // If the URL already encodes the active context, state is in sync — done.
-          if (urlContextId === activeContext.id) return;
+          if (urlContextId === activeContext.id) {
+            return;
+          }
 
           // Decision branch: push mode vs replace mode determines how we reconcile drift.
           if (urlContextId !== null && config.navigationOptions?.replace === false) {

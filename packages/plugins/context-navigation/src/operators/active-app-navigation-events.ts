@@ -9,7 +9,7 @@ import type { ContextModule } from '@equinor/fusion-framework-module-context';
 import type { INavigationProvider } from '@equinor/fusion-framework-module-navigation';
 
 /**
- * Emission from the {@link activeAppNavigationEvents$} stream.
+ * Emission from the {@link activeAppNavigationEvents} stream.
  *
  * Represents the snapshot of the currently active app and its resolved modules
  * at the moment a browser navigation state change occurred.
@@ -50,32 +50,37 @@ export interface ActiveAppNavigationEvent {
  * @returns An observable that emits `{ appKey, appModules }` on every navigation
  *          event while an active app with resolved modules is present.
  */
-export function activeAppNavigationEvents$(
+export function activeAppNavigationEvents(
   app: AppModuleProvider,
   navigation: INavigationProvider,
 ): Observable<ActiveAppNavigationEvent> {
+  // Emit once per navigation event while the active app is fully resolved
   return app.current$.pipe(
     // Cancel inner subscriptions when the active app changes or is cleared.
     switchMap((currentApp) =>
       !currentApp
         ? EMPTY
-        : currentApp.instance$.pipe(
-            combineLatestWith(currentApp.manifest$),
-            // Wait for modules to resolve; bail if they're null (loading/error).
-            switchMap(([appModules, manifest]) =>
-              !appModules
-                ? EMPTY
-                : navigation.state$.pipe(
-                    // Each state$ emission means a navigation happened — project
-                    // the resolved app identity into the downstream payload.
-                    map(() => ({
-                      appKey: currentApp.appKey,
-                      appModules: appModules as AppModulesInstance<[ContextModule]>,
-                      routingStrategy: manifest?.build?.options?.contextRouting,
-                    })),
-                  ),
+        : currentApp.instance$
+            // Pair the app instance with its manifest; both must resolve before emitting
+            .pipe(
+              combineLatestWith(currentApp.manifest$),
+              // Wait for modules to resolve; bail if they're null (loading/error).
+              switchMap(([appModules, manifest]) =>
+                !appModules
+                  ? EMPTY
+                  : navigation.state$
+                      // Each state$ emission represents a navigation event; project app identity into payload
+                      .pipe(
+                        // Each state$ emission means a navigation happened — project
+                        // the resolved app identity into the downstream payload.
+                        map(() => ({
+                          appKey: currentApp.appKey,
+                          appModules: appModules as AppModulesInstance<[ContextModule]>,
+                          routingStrategy: manifest?.build?.options?.contextRouting,
+                        })),
+                      ),
+              ),
             ),
-          ),
     ),
   );
 }

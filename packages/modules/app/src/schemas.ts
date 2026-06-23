@@ -70,7 +70,7 @@ const ApiApplicationPersonSchema = z.object({
  * at runtime without requiring them to be declared here. Add known properties
  * to this schema as they are introduced.
  */
-export const FramworkOptionsSchema = z
+export const FrameworkOptionsSchema = z
   .object({
     contextRouting: z
       .enum(['path', 'query'], {
@@ -111,7 +111,7 @@ export const ApiApplicationBuildSchema = z.object({
   commitSha: z.string().nullish(),
   githubRepo: z.string().nullish(),
   projectPage: z.string().nullish(),
-  options: FramworkOptionsSchema.nullish().default({
+  options: FrameworkOptionsSchema.nullish().default({
     contextRouting: 'path',
   }),
   allowedExtensions: z.array(z.string()).nullish(),

@@ -2,11 +2,11 @@ import type { ContextNavigationConfig, ContextNavigationNavigatedDetail } from '
 import type { ContextNavigationAdapterInput } from './adapters/types';
 import type { ReconcilerSourceFactory } from './sources/types';
 
-import { createPathAdapter } from './adapters/path-adapter';
-import { createQueryAdapter } from './adapters/query-adapter';
-import { createCustomAdapter } from './adapters/custom-adapter';
-import { createResolveContextFromUrl } from './utils/resolve-context-from-url';
-import { createAppFirstSource } from './sources/app-first-source';
+import { createPathAdapter } from './adapters/create-path-adapter';
+import { createQueryAdapter } from './adapters/create-query-adapter';
+import { createCustomAdapter } from './adapters/custom-adapter/create-custom-adapter';
+import { resolveContextFromUrl } from './utils/resolve-context-from-url';
+import { appFirstSource } from './sources/app-first-source';
 
 /**
  * Resolves the default origin used for URL construction.
@@ -52,6 +52,9 @@ export class ContextNavigationConfigurator {
    *
    * **Note:** Registering any adapter disables the built-in defaults
    * (custom, query, path). Register all adapters you need explicitly.
+   *
+   * @param adapter - The adapter instance or factory function to register.
+   * @returns The configurator instance for chaining.
    */
   registerAdapter(adapter: ContextNavigationAdapterInput): this {
     this.#adapters.push(adapter);
@@ -61,6 +64,9 @@ export class ContextNavigationConfigurator {
   /**
    * Set the portal name used in debug output.
    * @default 'Portal'
+   *
+   * @param name - The portal name to use in debug output.
+   * @returns The configurator instance for chaining.
    */
   setPortalName(name: string): this {
     this.#config.portalName = name;
@@ -70,6 +76,9 @@ export class ContextNavigationConfigurator {
   /**
    * Set the origin for constructing absolute URLs.
    * @default window.location.origin
+   *
+   * @param origin - The origin string to use for URL construction.
+   * @returns The configurator instance for chaining.
    */
   setOrigin(origin: string): this {
     this.#config.origin = origin;
@@ -79,6 +88,9 @@ export class ContextNavigationConfigurator {
   /**
    * Enable or disable the URL guard.
    * @default true
+   *
+   * @param enabled - Whether to enable the URL guard.
+   * @returns The configurator instance for chaining.
    */
   setUrlGuard(enabled: boolean): this {
     this.#config.enableUrlGuard = enabled;
@@ -88,6 +100,9 @@ export class ContextNavigationConfigurator {
   /**
    * Enable or disable verbose debug logging.
    * @default false
+   *
+   * @param enabled - Whether to enable debug logging.
+   * @returns The configurator instance for chaining.
    */
   setDebug(enabled: boolean): this {
     this.#config.debug = enabled;
@@ -105,6 +120,7 @@ export class ContextNavigationConfigurator {
    * the current app key and URL for dynamic path construction.
    *
    * @param urlOrFn - A static path (e.g. `'/'`) or a function returning one.
+   * @returns The configurator instance for chaining.
    */
   setNullContextUrl(
     urlOrFn: string | ((args: { appKey: string; currentURL: URL }) => string),
@@ -115,6 +131,8 @@ export class ContextNavigationConfigurator {
 
   /**
    * Set a side-effect hook called after each successful navigation.
+   * @param fn - The callback function to invoke after navigation.
+   * @returns The configurator instance for chaining.
    */
   setOnTransition(fn: (detail: ContextNavigationNavigatedDetail) => void): this {
     this.#config.onTransition = fn;
@@ -125,6 +143,10 @@ export class ContextNavigationConfigurator {
    * Set the options passed to `navigation.navigate()` during URL updates.
    *
    * @default { replace: true }
+   * @param options - The navigation options to use for URL updates.
+   * @returns The configurator instance for chaining.
+   * @see INavigationProvider.navigate
+   * @see ContextNavigationConfig.navigationOptions
    */
   setNavigationOptions(options: { replace?: boolean; state?: unknown }): this {
     this.#config.navigationOptions = options;
@@ -135,8 +157,11 @@ export class ContextNavigationConfigurator {
    * Set the source factory that drives the reconciler's observable stream.
    *
    * @default createAppFirstSource()
-   * @see createAppFirstSource
-   * @see createContextFirstSource
+   * @param factory - The source factory to use for the reconciler.
+   * @returns The configurator instance for chaining.
+   * @see ReconcilerSourceFactory
+   * @see appFirstSource
+   * @see contextFirstSource
    */
   setSourceFactory(factory: ReconcilerSourceFactory): this {
     this.#config.sourceFactory = factory;
@@ -166,9 +191,9 @@ export class ContextNavigationConfigurator {
       nullContextUrl: this.#config.nullContextUrl,
       onTransition: this.#config.onTransition,
       navigationOptions: this.#config.navigationOptions ?? { replace: true },
-      sourceFactory: this.#config.sourceFactory ?? createAppFirstSource(),
+      sourceFactory: this.#config.sourceFactory ?? appFirstSource(),
       resolveInitialContext:
-        this.#config.resolveInitialContext ?? createResolveContextFromUrl(adapters, origin),
+        this.#config.resolveInitialContext ?? resolveContextFromUrl(adapters, origin),
       adapters,
     };
   }

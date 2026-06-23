@@ -7,7 +7,7 @@ import type {
   ContextNavigationSkippedDetail,
 } from './types';
 
-import type { ContextNavigationEventSource } from './plugin';
+import type { ContextNavigationEventSource } from './create-context-navigation-plugin';
 
 declare module '@equinor/fusion-framework-module-event' {
   interface FrameworkEventMap {

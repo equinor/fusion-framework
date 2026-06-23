@@ -1,12 +1,15 @@
 // Plugin
-export { createContextNavigationPlugin } from './plugin';
-export type { ContextNavigationPluginArgs, ContextNavigationEventSource } from './plugin';
+export { createContextNavigationPlugin } from './create-context-navigation-plugin';
+export type {
+  ContextNavigationPluginArgs,
+  ContextNavigationEventSource,
+} from './create-context-navigation-plugin';
 
 // Configurator
-export { ContextNavigationConfigurator } from './configurator';
+export { ContextNavigationConfigurator } from './ContextNavigationConfigurator';
 
 // Enable helper
-export { enableContextNavigation } from './enable';
+export { enableContextNavigation } from './enable-context-navigation';
 
 // Types (root-level only: config + event details)
 export type {
@@ -18,7 +21,7 @@ export type {
 } from './types';
 
 // Legacy compat
-export { enableLegacyAppNavigationFix } from './utils/legacy-app-navigation-fix';
+export { legacyAppNavigationFix } from './utils/legacy-app-navigation-fix';
 
 // Events (side-effect: augments FrameworkEventMap)
 import './events';

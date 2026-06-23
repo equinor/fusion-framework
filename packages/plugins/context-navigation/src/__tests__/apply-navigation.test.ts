@@ -12,6 +12,7 @@ import {
 import type { ContextNavigationAdapter } from '../adapters/types';
 
 function makeContext(id: string): ContextItem {
+  // Test double — only id and title are read by the code under test
   return { id, title: `Context ${id}` } as unknown as ContextItem;
 }
 
@@ -20,6 +21,7 @@ function makeAdapter(overrides: Partial<ContextNavigationAdapter> = {}): Context
     id: 'test-adapter',
     canHandle: () => true,
     encode: ({ context, currentURL }) => {
+      // Guard — adapter cannot encode without a context item
       if (!context) return null;
       return new URL(`/apps/my-app/${context.id}${currentURL.search}`, currentURL.origin);
     },
@@ -32,6 +34,7 @@ function makeAdapter(overrides: Partial<ContextNavigationAdapter> = {}): Context
 }
 
 function makeDeps(overrides: Partial<ApplyNavigationDeps> = {}): ApplyNavigationDeps {
+  // Test doubles — only the methods exercised by applyNavigation are provided
   return {
     event: {
       dispatchEvent: vi.fn(async () => ({ canceled: false })),
@@ -55,6 +58,7 @@ function makeDeps(overrides: Partial<ApplyNavigationDeps> = {}): ApplyNavigation
 
 describe('applyNavigation', () => {
   const currentURL = new URL('/apps/my-app', 'https://example.com');
+  // Test double — only the context property is accessed by the code under test
   const appModules = { context: {} } as unknown as AppModulesInstance<[ContextModule]>;
   let deps: ApplyNavigationDeps;
 
@@ -121,6 +125,7 @@ describe('applyNavigation', () => {
   });
 
   it('dispatches canceled skip when navigate event is canceled', async () => {
+    // Test double — simulates dispatch returning canceled=true only for the navigate event
     deps = makeDeps({
       event: {
         dispatchEvent: vi.fn(async (name) => ({
@@ -147,6 +152,7 @@ describe('applyNavigation', () => {
   });
 
   it('logs and does not throw when dispatch rejects', async () => {
+    // Test double — simulates dispatch throwing to verify the .catch() path
     deps = makeDeps({
       event: {
         dispatchEvent: vi.fn(async () => {

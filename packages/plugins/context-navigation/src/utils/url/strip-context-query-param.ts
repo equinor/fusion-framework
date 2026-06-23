@@ -11,6 +11,7 @@ import { CONTEXT_QUERY_PARAM_KEY } from '../../constants';
  * @param url - The URL object to mutate (parameter is deleted in-place).
  */
 export function stripContextQueryParam(url: URL): void {
+  // Only mutate the URL if the param is actually present
   if (url.searchParams.has(CONTEXT_QUERY_PARAM_KEY)) {
     url.searchParams.delete(CONTEXT_QUERY_PARAM_KEY);
     // Restore $ from %24 encoding in remaining params

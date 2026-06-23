@@ -4,8 +4,8 @@ import type { AppModule } from '@equinor/fusion-framework-module-app';
 import type { ContextModule } from '@equinor/fusion-framework-module-context';
 import type { EventModule } from '@equinor/fusion-framework-module-event';
 import type { NavigationModule } from '@equinor/fusion-framework-module-navigation';
-import { ContextNavigationConfigurator } from './configurator';
-import { createContextNavigationPlugin } from './plugin';
+import { ContextNavigationConfigurator } from './ContextNavigationConfigurator';
+import { createContextNavigationPlugin } from './create-context-navigation-plugin';
 
 type ContextNavigationModules = [AppModule, NavigationModule, ContextModule, EventModule];
 

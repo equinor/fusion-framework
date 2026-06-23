@@ -1,5 +1,5 @@
-export { createPathAdapter } from './path-adapter';
-export { createQueryAdapter } from './query-adapter';
+export { createPathAdapter } from './create-path-adapter';
+export { createQueryAdapter } from './create-query-adapter';
 export { createCustomAdapter } from './custom-adapter';
 
 export type {

@@ -32,10 +32,10 @@ interface LegacyAppNavigationFixDeps {
  * @example
  * ```ts
  * // In portal framework configuration:
- * const teardown = enableLegacyAppNavigationFix({ event });
+ * const teardown = legacyAppNavigationFix({ event });
  * ```
  */
-export function enableLegacyAppNavigationFix(deps: LegacyAppNavigationFixDeps): VoidFunction {
+export function legacyAppNavigationFix(deps: LegacyAppNavigationFixDeps): VoidFunction {
   const { event } = deps;
 
   return event.addEventListener('onContextNavigationNavigated', (e) => {
@@ -47,10 +47,13 @@ export function enableLegacyAppNavigationFix(deps: LegacyAppNavigationFixDeps): 
     const { appKey, appModules } = e.detail;
 
     const appNavigation = (appModules as { navigation?: INavigationProvider }).navigation;
+
+    // Apps without a navigation module have no router to reset — nothing to do
     if (!appNavigation) {
       return;
     }
 
+    // Legacy nav modules don't respond to portal context changes — force a router reset
     if (appNavigation.version.major < LEGACY_NAVIGATION_VERSION) {
       console.warn(
         `[ContextNavigation] App [${appKey}] uses navigation v${appNavigation.version.major} (< ${LEGACY_NAVIGATION_VERSION}). Resetting app router to keep it in sync.`,

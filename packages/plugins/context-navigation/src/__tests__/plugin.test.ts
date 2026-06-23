@@ -8,11 +8,15 @@ import type {
   ContextNavigationConfig,
   ReconcilerSourceEntry,
 } from '../types';
-import { createContextNavigationPlugin, type ContextNavigationPluginArgs } from '../plugin';
+import {
+  createContextNavigationPlugin,
+  type ContextNavigationPluginArgs,
+} from '../create-context-navigation-plugin';
 
 // ── Test Helpers ────────────────────────────────────────────────────────
 
 function makeContext(id: string): ContextItem {
+  // Test double — only id and title are read by the code under test
   return { id, title: `Context ${id}` } as unknown as ContextItem;
 }
 
@@ -21,6 +25,7 @@ function makeAdapter(overrides: Partial<ContextNavigationAdapter> = {}): Context
     id: 'test-adapter',
     canHandle: () => true,
     encode: ({ context, currentURL }) => {
+      // Guard — adapter cannot encode without a context item
       if (!context) return null;
       return new URL(`/apps/my-app/${context.id}${currentURL.search}`, currentURL.origin);
     },
@@ -46,21 +51,25 @@ function createHarness(configOverrides: Partial<ContextNavigationConfig> = {}): 
   const source$ = new Subject<ReconcilerSourceEntry>();
   const navigationState$ = new BehaviorSubject({});
 
+  // Test double — only path, navigate, and state$ are accessed by the plugin under test
   const navigation = {
     path: { pathname: '/apps/my-app', search: '' },
     navigate: vi.fn(),
     state$: navigationState$,
   } as unknown as ContextNavigationPluginArgs['navigation'];
 
+  // Test double — only dispatchEvent is called by the plugin under test
   const event = {
     dispatchEvent: vi.fn(async () => ({ canceled: false })),
   } as unknown as ContextNavigationPluginArgs['event'];
 
+  // Test double — only currentContext$ and setCurrentContextByIdAsync are accessed
   const context = {
     currentContext$: EMPTY,
     setCurrentContextByIdAsync: vi.fn(async () => undefined),
   } as unknown as ContextNavigationPluginArgs['context'];
 
+  // Test double — only current$ is accessed by the plugin under test
   const app = {
     current$: EMPTY,
   } as unknown as ContextNavigationPluginArgs['app'];
@@ -98,6 +107,7 @@ describe('createContextNavigationPlugin', () => {
       const adapterB = makeAdapter({ id: 'adapter-b', canHandle: () => true });
 
       harness = createHarness({ adapters: [adapterA, adapterB] });
+      // Test double — only the context property is accessed by the plugin under test
       const appModules = { context: { currentContext: null } } as unknown as AppModulesInstance<
         [ContextModule]
       >;
@@ -117,6 +127,7 @@ describe('createContextNavigationPlugin', () => {
     it('dispatches no-adapter skip when no adapter matches', () => {
       const adapterA = makeAdapter({ id: 'never', canHandle: () => false });
       harness = createHarness({ adapters: [adapterA] });
+      // Test double — only the context property is accessed by the plugin under test
       const appModules = { context: { currentContext: null } } as unknown as AppModulesInstance<
         [ContextModule]
       >;
@@ -135,6 +146,7 @@ describe('createContextNavigationPlugin', () => {
       const factoryAdapter = makeAdapter({ id: 'factory-based' });
       const factory = vi.fn(() => factoryAdapter);
       harness = createHarness({ adapters: [factory] });
+      // Test double — only the context property is accessed by the plugin under test
       const appModules = { context: { currentContext: null } } as unknown as AppModulesInstance<
         [ContextModule]
       >;
@@ -156,6 +168,7 @@ describe('createContextNavigationPlugin', () => {
   describe('skip reasons', () => {
     it('skips with no-context when contextState is undefined', () => {
       harness = createHarness();
+      // Test double — only the context property is accessed by the plugin under test
       const appModules = { context: { currentContext: null } } as unknown as AppModulesInstance<
         [ContextModule]
       >;
@@ -176,6 +189,7 @@ describe('createContextNavigationPlugin', () => {
       Object.assign(harness.navigation, {
         path: { pathname: '/apps/my-app/ctx-1', search: '' },
       });
+      // Test double — only the context property is accessed by the plugin under test
       const appModules = { context: { currentContext: null } } as unknown as AppModulesInstance<
         [ContextModule]
       >;
@@ -196,6 +210,7 @@ describe('createContextNavigationPlugin', () => {
         encode: () => null,
       });
       harness = createHarness({ adapters: [nullEncoder] });
+      // Test double — only the context property is accessed by the plugin under test
       const appModules = { context: { currentContext: null } } as unknown as AppModulesInstance<
         [ContextModule]
       >;
@@ -213,9 +228,11 @@ describe('createContextNavigationPlugin', () => {
     it('skips with canceled when navigation event is canceled', async () => {
       harness = createHarness();
       vi.mocked(harness.event.dispatchEvent).mockImplementation(async (name: unknown) => {
+        // Mock conditional — simulate cancel only for the navigate event
         if (name === 'onContextNavigationNavigate') return { canceled: true } as never;
         return { canceled: false } as never;
       });
+      // Test double — only the context property is accessed by the plugin under test
       const appModules = { context: { currentContext: null } } as unknown as AppModulesInstance<
         [ContextModule]
       >;
@@ -238,6 +255,7 @@ describe('createContextNavigationPlugin', () => {
   describe('navigation behavior', () => {
     it('navigates with config.navigationOptions', async () => {
       harness = createHarness({ navigationOptions: { replace: true } });
+      // Test double — only the context property is accessed by the plugin under test
       const appModules = { context: { currentContext: null } } as unknown as AppModulesInstance<
         [ContextModule]
       >;
@@ -253,6 +271,7 @@ describe('createContextNavigationPlugin', () => {
 
     it('dispatches onContextNavigationNavigated after successful navigation', async () => {
       harness = createHarness();
+      // Test double — only the context property is accessed by the plugin under test
       const appModules = { context: { currentContext: null } } as unknown as AppModulesInstance<
         [ContextModule]
       >;
@@ -277,6 +296,7 @@ describe('createContextNavigationPlugin', () => {
     it('calls onTransition callback after navigation', async () => {
       const onTransition = vi.fn();
       harness = createHarness({ onTransition });
+      // Test double — only the context property is accessed by the plugin under test
       const appModules = { context: { currentContext: null } } as unknown as AppModulesInstance<
         [ContextModule]
       >;
@@ -297,6 +317,7 @@ describe('createContextNavigationPlugin', () => {
     it('preserves query parameters from the current URL', async () => {
       const adapter = makeAdapter({
         encode: ({ context, currentURL }) => {
+          // Guard — adapter cannot encode without a context item
           if (!context) return null;
           const target = new URL(`/apps/my-app/${context.id}`, currentURL.origin);
           target.search = currentURL.search;
@@ -307,6 +328,7 @@ describe('createContextNavigationPlugin', () => {
       Object.assign(harness.navigation, {
         path: { pathname: '/apps/my-app', search: '?view=grid&page=2' },
       });
+      // Test double — only the context property is accessed by the plugin under test
       const appModules = { context: { currentContext: null } } as unknown as AppModulesInstance<
         [ContextModule]
       >;
@@ -324,6 +346,7 @@ describe('createContextNavigationPlugin', () => {
     it('clears hash fragment on context change to avoid inconsistent app state', async () => {
       const adapter = makeAdapter({
         encode: ({ context, currentURL }) => {
+          // Guard — adapter cannot encode without a context item
           if (!context) return null;
           const target = new URL(`/apps/my-app/${context.id}`, currentURL.origin);
           target.search = currentURL.search;
@@ -335,6 +358,7 @@ describe('createContextNavigationPlugin', () => {
       Object.assign(harness.navigation, {
         path: { pathname: '/apps/my-app', search: '', hash: '#section-2' },
       });
+      // Test double — only the context property is accessed by the plugin under test
       const appModules = { context: { currentContext: null } } as unknown as AppModulesInstance<
         [ContextModule]
       >;
@@ -360,6 +384,7 @@ describe('createContextNavigationPlugin', () => {
       Object.assign(harness.navigation, {
         path: { pathname: '/apps/my-app/some-context', search: '' },
       });
+      // Test double — only the context property is accessed by the plugin under test
       const appModules = { context: { currentContext: null } } as unknown as AppModulesInstance<
         [ContextModule]
       >;
@@ -379,6 +404,7 @@ describe('createContextNavigationPlugin', () => {
       Object.assign(harness.navigation, {
         path: { pathname: '/apps/my-app', search: '' },
       });
+      // Test double — only the context property is accessed by the plugin under test
       const appModules = { context: { currentContext: null } } as unknown as AppModulesInstance<
         [ContextModule]
       >;
@@ -395,6 +421,7 @@ describe('createContextNavigationPlugin', () => {
     it('sets context from URL when URL has different context ID in push mode', async () => {
       const adapter = makeAdapter();
       const navigationState$ = new Subject<unknown>();
+      // Test double — only the context property is accessed by the URL guard
       const appModules = {
         context: { currentContext: makeContext('active-ctx') },
       } as unknown as AppModulesInstance<[ContextModule]>;
@@ -405,17 +432,21 @@ describe('createContextNavigationPlugin', () => {
         manifest$: new BehaviorSubject(null),
       });
 
+      // Test double — only current$ is accessed by the URL guard
       const app = { current$: currentApp$ } as unknown as ContextNavigationPluginArgs['app'];
+      // Test double — only path, navigate, and state$ are accessed by the URL guard
       const navigation = {
         path: { pathname: '/apps/my-app/url-ctx', search: '' },
         navigate: vi.fn(),
         state$: navigationState$,
       } as unknown as ContextNavigationPluginArgs['navigation'];
 
+      // Test double — only setCurrentContextByIdAsync is called by the URL guard
       const context = {
         setCurrentContextByIdAsync: vi.fn(async () => undefined),
       } as unknown as ContextNavigationPluginArgs['context'];
 
+      // Test double — only dispatchEvent is called by the plugin
       const event = {
         dispatchEvent: vi.fn(async () => ({ canceled: false })),
       } as unknown as ContextNavigationPluginArgs['event'];
@@ -446,6 +477,7 @@ describe('createContextNavigationPlugin', () => {
       const adapter = makeAdapter();
       const navigationState$ = new Subject<unknown>();
       const activeContext = makeContext('active-ctx');
+      // Test double — only the context property is accessed by the URL guard
       const appModules = {
         context: { currentContext: activeContext },
       } as unknown as AppModulesInstance<[ContextModule]>;
@@ -456,19 +488,23 @@ describe('createContextNavigationPlugin', () => {
         manifest$: new BehaviorSubject(null),
       });
 
+      // Test double — only current$ is accessed by the URL guard
       const app = { current$: currentApp$ } as unknown as ContextNavigationPluginArgs['app'];
+      // Test double — only path, navigate, and state$ are accessed by the URL guard
       const navigation = {
         path: { pathname: '/apps/my-app/stale-ctx', search: '' },
         navigate: vi.fn(),
         state$: navigationState$,
       } as unknown as ContextNavigationPluginArgs['navigation'];
 
+      // Test double — only setCurrentContextByIdAsync is called; throws to trigger fallback
       const context = {
         setCurrentContextByIdAsync: vi.fn(async () => {
           throw new Error('Context not found');
         }),
       } as unknown as ContextNavigationPluginArgs['context'];
 
+      // Test double — only dispatchEvent is called by the plugin
       const event = {
         dispatchEvent: vi.fn(async () => ({ canceled: false })),
       } as unknown as ContextNavigationPluginArgs['event'];
@@ -504,6 +540,7 @@ describe('createContextNavigationPlugin', () => {
       const adapter = makeAdapter();
       const navigationState$ = new Subject<unknown>();
       const activeContext = makeContext('active-ctx');
+      // Test double — only the context property is accessed by the URL guard
       const appModules = {
         context: { currentContext: activeContext },
       } as unknown as AppModulesInstance<[ContextModule]>;
@@ -514,17 +551,21 @@ describe('createContextNavigationPlugin', () => {
         manifest$: new BehaviorSubject(null),
       });
 
+      // Test double — only current$ is accessed by the URL guard
       const app = { current$: currentApp$ } as unknown as ContextNavigationPluginArgs['app'];
+      // Test double — only path, navigate, and state$ are accessed by the URL guard
       const navigation = {
         path: { pathname: '/apps/my-app/wrong-ctx', search: '' },
         navigate: vi.fn(),
         state$: navigationState$,
       } as unknown as ContextNavigationPluginArgs['navigation'];
 
+      // Test double — only setCurrentContextByIdAsync is called by the URL guard
       const context = {
         setCurrentContextByIdAsync: vi.fn(async () => undefined),
       } as unknown as ContextNavigationPluginArgs['context'];
 
+      // Test double — only dispatchEvent is called by the plugin
       const event = {
         dispatchEvent: vi.fn(async () => ({ canceled: false })),
       } as unknown as ContextNavigationPluginArgs['event'];
@@ -555,6 +596,7 @@ describe('createContextNavigationPlugin', () => {
     it('ignores navigation state changes for URLs outside the app base path', async () => {
       const adapter = makeAdapter();
       const navigationState$ = new Subject<unknown>();
+      // Test double — only the context property is accessed by the URL guard
       const appModules = {
         context: { currentContext: makeContext('active-ctx') },
       } as unknown as AppModulesInstance<[ContextModule]>;
@@ -565,17 +607,21 @@ describe('createContextNavigationPlugin', () => {
         manifest$: new BehaviorSubject(null),
       });
 
+      // Test double — only current$ is accessed by the URL guard
       const app = { current$: currentApp$ } as unknown as ContextNavigationPluginArgs['app'];
+      // Test double — only path, navigate, and state$ are accessed by the URL guard
       const navigation = {
         path: { pathname: '/apps/other-app/something', search: '' },
         navigate: vi.fn(),
         state$: navigationState$,
       } as unknown as ContextNavigationPluginArgs['navigation'];
 
+      // Test double — only dispatchEvent is called by the plugin
       const event = {
         dispatchEvent: vi.fn(async () => ({ canceled: false })),
       } as unknown as ContextNavigationPluginArgs['event'];
 
+      // Test double — only setCurrentContextByIdAsync is called by the URL guard
       const context = {
         setCurrentContextByIdAsync: vi.fn(async () => undefined),
       } as unknown as ContextNavigationPluginArgs['context'];
@@ -607,6 +653,7 @@ describe('createContextNavigationPlugin', () => {
   describe('teardown', () => {
     it('unsubscribes from source on teardown', () => {
       harness = createHarness();
+      // Test double — only the context property is accessed by the plugin under test
       const appModules = { context: { currentContext: null } } as unknown as AppModulesInstance<
         [ContextModule]
       >;

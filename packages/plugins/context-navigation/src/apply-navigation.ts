@@ -10,7 +10,7 @@ import type {
   ContextNavigationNavigatedDetail,
   ContextNavigationSkippedDetail,
 } from './types';
-import type { ContextNavigationEventSource } from './plugin';
+import type { ContextNavigationEventSource } from './create-context-navigation-plugin';
 import { normalizePath } from './helpers';
 
 /**
@@ -88,9 +88,11 @@ export interface ApplyNavigationPayload {
  *   `config.navigationOptions` for this specific call. Used by app-switch
  *   reconciliation and URL-drift correction, which must always replace the
  *   current history entry regardless of the user's `replace` setting.
- * @returns A promise that resolves after the navigation completes or is skipped.
+ * @returns A promise that resolves after the transition is handled in this
+ *   function (applied or skipped). It does not wait for browser-level
+ *   navigation completion.
  */
-export function applyNavigation(
+export async function applyNavigation(
   payload: ApplyNavigationPayload,
   deps: ApplyNavigationDeps,
   navOptionsOverride?: { replace?: boolean; state?: unknown },
@@ -103,6 +105,7 @@ export function applyNavigation(
   // context type not supported by this adapter's URL scheme).
   const targetURL = adapter.encode({ context, currentURL });
 
+  // If the adapter returned null, skip navigation and log the reason.
   if (!targetURL) {
     event.dispatchEvent('onContextNavigationSkipped', {
       detail: { appKey, reason: 'encode-returned-null' } as ContextNavigationSkippedDetail,

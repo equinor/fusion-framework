@@ -63,6 +63,7 @@ export function createQueryAdapter(paramName = CONTEXT_QUERY_PARAM_KEY): Context
     encode({ context, currentURL }: { context: ContextItem | null; currentURL: URL }): URL | null {
       const url = new URL(currentURL.href);
 
+      // Null context means the user deselected context — remove the param to produce a clean URL
       if (context === null) {
         url.searchParams.delete(paramName);
       } else {

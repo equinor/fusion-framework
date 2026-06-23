@@ -28,32 +28,25 @@ export interface AppRouteMatch {
  * pathname matching does not treat `/apps/my-app/` and `/apps/my-app`
  * as equivalent.
  *
+ * @param pathname - The URL pathname to parse.
  * @returns Named segments, or undefined if the pathname is not an app route.
  */
 export const parseAppRoute = (pathname: string): AppRouteMatch | undefined => {
+  // URLPattern requires an absolute path — prepend slash if missing
   if (!pathname[0] || pathname[0] !== '/') {
     pathname = `/${pathname}`;
   }
 
   const normalized = pathname.replace(/\/+$/, '') || '/';
   const result = APP_ROUTE_PATTERN.exec({ pathname: normalized });
+  // Pathname does not match the /apps/:appKey pattern
   if (!result) return undefined;
   const { appKey, contextId, rest } = result.pathname.groups;
+  // Guard against an empty appKey capture group (malformed pattern match)
   if (!appKey) return undefined;
   return {
     appKey,
     contextId: contextId || undefined,
     rest: rest || undefined,
   };
-};
-
-/**
- * Builds `/apps/:appKey[/:contextId][/:rest]` from named segments.
- * Inverse of `parseAppRoute` — used by all write/upsert helpers.
- */
-export const buildAppRoute = (appKey: string, contextId?: string, rest?: string): string => {
-  let path = `/apps/${appKey}`;
-  if (contextId) path += `/${contextId}`;
-  if (rest) path += `/${rest}`;
-  return path;
 };

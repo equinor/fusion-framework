@@ -2,8 +2,9 @@ import type { ContextItem } from '@equinor/fusion-framework-module-context';
 import type { ContextNavigationAdapter, AdapterResolutionContext } from './types';
 import { hasCustomContextGenerators } from '../utils/has-custom-context-generators';
 import { stripContextQueryParam } from '../utils/url/strip-context-query-param';
-import { parseAppRoute, buildAppRoute } from '../utils/url/app-route';
+import { parseAppRoute } from '../utils/url/parse-app-route';
 import { UUID_PATTERN } from '../constants';
+import { buildAppRoute } from '../utils/url/build-app-route';
 
 /**
  * Path adapter — encodes context identity as the first path segment after
@@ -41,17 +42,17 @@ export function createPathAdapter(): ContextNavigationAdapter {
      * (the path adapter serves as the system-wide default fallback).
      */
     canHandle({ appContext, routingStrategy }: AdapterResolutionContext): boolean {
-      // Apps with custom generators are owned by the custom adapter
+      // Custom generators mean the app owns its URL shape — the custom adapter handles it, not us
       if (hasCustomContextGenerators(appContext)) {
         return false;
       }
 
       const declared = routingStrategy;
-      // Explicit path strategy
+      // App explicitly opted into path-segment routing — take ownership
       if (declared === 'path') {
         return true;
       }
-      // No strategy declared — path is the default fallback
+      // No strategy declared — path adapter is the system-wide default for legacy apps
       if (declared === undefined || declared === null) {
         return true;
       }
@@ -70,6 +71,7 @@ export function createPathAdapter(): ContextNavigationAdapter {
      */
     encode({ context, currentURL }: { context: ContextItem | null; currentURL: URL }): URL | null {
       const match = parseAppRoute(currentURL.pathname);
+      // Pathname doesn't match the /apps/{key}/... shape — not a Fusion app route, bail out
       if (!match) return null;
 
       const targetPath =
@@ -89,6 +91,7 @@ export function createPathAdapter(): ContextNavigationAdapter {
      */
     decode(url: URL): string | null {
       const match = parseAppRoute(url.pathname);
+      // Only treat the segment as a context id if it's a valid UUID — route names can occupy the same slot
       if (match?.contextId && UUID_PATTERN.test(match.contextId)) {
         return match.contextId;
       }

@@ -9,6 +9,7 @@ import type { ContextNavigationAdapter } from '../adapters/types';
 import type { OwnNavigationTokens } from '../apply-navigation';
 
 function makeContext(id: string): ContextItem {
+  // Test double — only id and title are read by the code under test
   return { id, title: `Context ${id}` } as unknown as ContextItem;
 }
 
@@ -17,6 +18,7 @@ function makeAdapter(overrides: Partial<ContextNavigationAdapter> = {}): Context
     id: 'test-adapter',
     canHandle: () => true,
     encode: ({ context, currentURL }) => {
+      // Guard — adapter cannot encode without a context item
       if (!context) return null;
       return new URL(`/apps/my-app/${context.id}`, currentURL.origin);
     },
@@ -26,6 +28,7 @@ function makeAdapter(overrides: Partial<ContextNavigationAdapter> = {}): Context
 }
 
 function makeDeps(overrides: Partial<ReconcileDeps> = {}): ReconcileDeps {
+  // Test doubles — only the methods exercised by reconcile are provided
   return {
     event: {
       dispatchEvent: vi.fn(async () => ({ canceled: false })),
@@ -51,6 +54,7 @@ function makeDeps(overrides: Partial<ReconcileDeps> = {}): ReconcileDeps {
 }
 
 describe('reconcile', () => {
+  // Test double — only the context property is accessed by the code under test
   const appModules = {
     context: { currentContext: null },
   } as unknown as AppModulesInstance<[ContextModule]>;
@@ -147,6 +151,7 @@ describe('reconcile', () => {
     // Adapter that carries currentURL.search through to its output
     const adapter = makeAdapter({
       encode: ({ context, currentURL }) => {
+        // Guard — adapter cannot encode without a context item
         if (!context) return null;
         const url = new URL(`/apps/new-app/${context.id}`, currentURL.origin);
         url.search = currentURL.search;
@@ -177,6 +182,7 @@ describe('reconcile', () => {
   it('preserves query params on context change within the same app', async () => {
     const adapter = makeAdapter({
       encode: ({ context, currentURL }) => {
+        // Guard — adapter cannot encode without a context item
         if (!context) return null;
         const url = new URL(`/apps/my-app/${context.id}`, currentURL.origin);
         url.search = currentURL.search;

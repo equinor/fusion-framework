@@ -1,97 +1,10 @@
 import type { ContextItem } from '@equinor/fusion-framework-module-context';
-import type { ContextNavigationAdapter, ContextNavigationAdapterFactory } from './types';
-import { hasCustomContextGenerators } from '../utils/has-custom-context-generators';
-import { stripContextQueryParam } from '../utils/url/strip-context-query-param';
-
-/**
- * Normalize legacy app generator outputs to a plain string.
- *
- * Legacy apps may return their path values as either a bare string or
- * wrapped in an array (e.g. `['path']` or `[]`). This function unifies
- * both shapes into `string | undefined` so downstream code doesn't need
- * to branch on format.
- *
- * @param value - Raw return value from an app generator hook
- * @returns The resolved string, or `undefined` if the value is empty/invalid
- *
- * @example
- * ```ts
- * normalizeStringResult('/foo/bar');    // '/foo/bar'
- * normalizeStringResult(['/foo/bar']); // '/foo/bar'
- * normalizeStringResult([]);           // undefined
- * normalizeStringResult('');           // undefined
- * ```
- */
-export function normalizeStringResult(value: unknown): string | undefined {
-  if (typeof value === 'string' && value.length > 0) {
-    return value;
-  }
-  if (Array.isArray(value)) {
-    const first = value[0];
-    if (typeof first === 'string' && first.length > 0) {
-      return first;
-    }
-    return undefined;
-  }
-  return undefined;
-}
-
-/**
- * Strips the app basename prefix from a full pathname to produce an
- * app-relative path.
- *
- * App-provided hooks (`extractContextIdFromPath`, `generatePathFromContext`)
- * operate on app-relative paths — they don't know about the portal's
- * `/apps/{appKey}` prefix. This function converts a browser-absolute
- * pathname into the app's local coordinate system before calling those hooks.
- *
- * Always returns a path starting with `/` so app hooks receive consistent input.
- *
- * @param fullPathname - Absolute browser pathname (e.g. `/apps/my-app/route-a`)
- * @param appBasename - The app's base path (e.g. `/apps/my-app`)
- * @returns App-relative path (e.g. `/route-a`), or the input unchanged if
- *          the basename doesn't match (defensive fallback)
- *
- * @example
- * ```ts
- * toAppRelative('/apps/my-app/route-a/ctx', '/apps/my-app'); // '/route-a/ctx'
- * toAppRelative('/apps/my-app', '/apps/my-app');             // '/'
- * toAppRelative('/other/path', '/apps/my-app');              // '/other/path'
- * ```
- */
-export function toAppRelative(fullPathname: string, appBasename: string): string {
-  if (fullPathname === appBasename || fullPathname.startsWith(`${appBasename}/`)) {
-    const relative = fullPathname.slice(appBasename.length);
-    return relative.startsWith('/') ? relative : `/${relative}`;
-  }
-  return fullPathname;
-}
-
-/**
- * Prepends the app basename to an app-relative path to produce a full
- * browser-absolute pathname.
- *
- * Inverse of {@link toAppRelative}. After an app hook generates a new
- * app-relative path (with context encoded), this function converts it
- * back into a full pathname suitable for browser navigation.
- *
- * Handles edge cases where either side may or may not have a leading/trailing slash.
- *
- * @param appRelativePath - App-relative path (e.g. `/route-a/ctx-id`)
- * @param appBasename - The app's base path (e.g. `/apps/my-app`)
- * @returns Full browser pathname (e.g. `/apps/my-app/route-a/ctx-id`)
- *
- * @example
- * ```ts
- * toFullPath('/route-a/ctx-id', '/apps/my-app');  // '/apps/my-app/route-a/ctx-id'
- * toFullPath('route-a/ctx-id', '/apps/my-app/');  // '/apps/my-app/route-a/ctx-id'
- * ```
- */
-export function toFullPath(appRelativePath: string, appBasename: string): string {
-  const base = appBasename.endsWith('/') ? appBasename.slice(0, -1) : appBasename;
-  const rel = appRelativePath.startsWith('/') ? appRelativePath : `/${appRelativePath}`;
-  return `${base}${rel}`;
-}
+import type { ContextNavigationAdapter, ContextNavigationAdapterFactory } from '../types';
+import { hasCustomContextGenerators } from '../../utils/has-custom-context-generators';
+import { stripContextQueryParam } from '../../utils/url/strip-context-query-param';
+import { normalizeStringResult } from './normalize-string-result';
+import { toAppRelative } from './to-app-relative';
+import { toFullPath } from './to-full-path';
 
 /**
  * Custom adapter factory — delegates URL encoding/decoding to app-provided hooks.
@@ -114,9 +27,14 @@ export function toFullPath(appRelativePath: string, appBasename: string): string
  * **Query string preservation:** The adapter always carries forward
  * `currentURL.search` to the output URL, ensuring query parameters
  * (e.g. `?routingStrategy=custom`) survive navigation.
+ *
+ * @returns A {@link ContextNavigationAdapterFactory} that produces a custom adapter when the
+ *          app context exposes both `extractContextIdFromPath` and `generatePathFromContext`,
+ *          or `null` to fall through to the next adapter in the resolution chain.
  */
 export function createCustomAdapter(): ContextNavigationAdapterFactory {
   return ({ appContext, appKey }): ContextNavigationAdapter | null => {
+    // This app hasn't registered custom context hooks — let a lower-priority adapter handle it
     if (!hasCustomContextGenerators(appContext)) {
       return null;
     }
@@ -125,6 +43,7 @@ export function createCustomAdapter(): ContextNavigationAdapterFactory {
     const rawExtract = appContext.extractContextIdFromPath;
     const rawGenerate = appContext.generatePathFromContext;
 
+    // Both hooks must be present; if one is missing the custom URL contract can't be fulfilled
     if (!rawExtract || !rawGenerate) {
       return null;
     }
@@ -159,6 +78,7 @@ export function createCustomAdapter(): ContextNavigationAdapterFactory {
         context: ContextItem | null;
         currentURL: URL;
       }): URL | null {
+        // Null context means the user deselected context — navigate to the app root
         if (context === null) {
           const url = new URL(appBasename, currentURL.origin);
           url.search = currentURL.search;
@@ -173,16 +93,20 @@ export function createCustomAdapter(): ContextNavigationAdapterFactory {
 
         let generatedPath: string | undefined;
 
+        // Context already lives in the URL — prefer the generator's output, but substitute the
+        // id directly as a last resort to avoid a no-op navigation
         if (existingContextId) {
-          // Context already in URL — regenerate path or fall back to id replacement
+          // Context already embedded in the URL — let the generator rewrite it, or fall back to
+          // a simple string replacement of the old id with the new one
           generatedPath =
             normalizeStringResult(generate(context, appRelativePath)) ??
             appRelativePath.replace(existingContextId, context.id);
         } else {
-          // No context in URL — ask app generator where to place it
+          // No context in the current URL — ask the generator where to place the new context id
           generatedPath = normalizeStringResult(generate(context, appRelativePath));
         }
 
+        // Generator returned nothing — can't produce a valid URL; skip navigation
         if (!generatedPath) {
           return null;
         }

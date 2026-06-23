@@ -83,6 +83,7 @@ export type ReconcilerSourceFactory = (
  * are compared by `id`.
  */
 export const contextStateChanged = (a: ContextState, b: ContextState): boolean => {
+  // Both are active contexts — compare by ID
   if (a && b) return a.id === b.id;
   return a === b;
 };
