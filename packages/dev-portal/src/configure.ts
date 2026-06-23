@@ -42,7 +42,7 @@ declare global {
  * Modules enabled:
  * - **Telemetry** — portal-scoped usage analytics with version metadata.
  * - **App** — application manifest loading and lifecycle.
- * - **Context** — context routing URL hooks via {@link configureDevPortalContext}.
+ * - **Context** — context routing URL hooks (path generator + extractor) wired to the shared context-navigation URL utilities.
  * - **Context Navigation plugin** — keeps the browser URL in sync with the
  *   active context, handles app-switch carry-over, and guards against
  *   accidental context loss. Telemetry is auto-resolved from the framework
