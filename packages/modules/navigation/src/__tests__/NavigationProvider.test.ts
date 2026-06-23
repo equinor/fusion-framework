@@ -114,6 +114,24 @@ describe('NavigationProvider', () => {
       provider.dispose();
     });
 
+    it('should handle pathological trailing slashes efficiently (ReDoS protection)', () => {
+      // Create a string with many trailing slashes
+      // The /\/+$/ regex pattern would cause ReDoS with this input
+      const manyTrailingSlashes = '/apps/my-app' + '/'.repeat(10000);
+      
+      const startTime = Date.now();
+      const provider = new NavigationProvider({
+        version: '1.0.0',
+        config: { history, basename: manyTrailingSlashes },
+      });
+      const endTime = Date.now();
+      
+      // Should complete in reasonable time (< 100ms for 10k trailing slashes)
+      expect(endTime - startTime).toBeLessThan(100);
+      expect(provider.basename).toBe('/apps/my-app');
+      provider.dispose();
+    });
+
     it('should handle undefined basename', () => {
       const provider = new NavigationProvider({
         version: '1.0.0',

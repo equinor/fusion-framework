@@ -55,6 +55,25 @@ const normalizePathname = (path: string): string => {
 };
 
 /**
+ * Removes trailing slashes from a path string.
+ *
+ * @param path - The path to trim
+ * @returns The path without trailing slashes
+ *
+ * @example
+ * stripTrailingSlashes("/apps/my-app/") // returns "/apps/my-app"
+ * stripTrailingSlashes("/apps/my-app///") // returns "/apps/my-app"
+ */
+const stripTrailingSlashes = (path: string): string => {
+	// Use iterative approach to avoid ReDoS vulnerability
+	let endIndex = path.length;
+	while (endIndex > 0 && path[endIndex - 1] === '/') {
+		endIndex--;
+	}
+	return path.substring(0, endIndex);
+};
+
+/**
  * Navigation provider implementation.
  *
  * Manages routing and navigation state with automatic basename localization.
@@ -153,7 +172,7 @@ export class NavigationProvider
     // basename string, so a basename of "/apps/my-app/" would fail to match
     // the URL "/apps/my-app" and render nothing (blank page).
     // Treat '/' as "no basename" (empty string) since all paths start with '/'.
-    const normalizedBasename = basename ? normalizePathname(basename).replace(/\/+$/, '') : '';
+    const normalizedBasename = basename ? stripTrailingSlashes(normalizePathname(basename)) : '';
     this.#basename = normalizedBasename || undefined;
     this.#event = eventProvider;
     this.#telemetry = telemetry;
