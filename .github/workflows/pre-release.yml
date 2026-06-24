@@ -39,7 +39,7 @@ jobs:
     runs-on: ubuntu-latest
 #    if: github.ref_protected == true
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
