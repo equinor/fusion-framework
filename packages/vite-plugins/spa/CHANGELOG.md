@@ -1,5 +1,12 @@
 # @equinor/fusion-framework-vite-plugin-spa
 
+## 4.0.12
+
+### Patch Changes
+
+- 74beb1c: Fix type export paths for `./bootstrap.js` and `./sw.js` so TypeScript resolves the published declarations correctly.
+  - Prevent broken type resolution when consuming the SPA bootstrap and service worker entrypoints.
+
 ## 4.0.11
 
 ### Patch Changes
