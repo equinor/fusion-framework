@@ -10,25 +10,23 @@ type PersonInfo = {
   azureId: string;
 };
 
+// list of ids to resolve on mount, including edge cases like expired and non-existing users.
+const resolvePeople = [
+  'jones@equinor.com',
+  '0b6dfe7d-69b2-42ca-920b-c0e4e6a1a633',
+  '49132c24-6ea4-41fe-8221-112f314573f0',
+  'cbc6480d-12c1-467e-b0b8-cfbb22612daa',
+  '2a424f0d-ae50-4f2b-b203-ba4ca60c378e', // expired
+  '2a424f0d-ae50-4f2b-b203-ba4ca60c378f', // 404
+  '06f8b423-dd89-4482-892b-a78fccaeaaf5',
+  '0a14f828-adb9-460c-9a30-0dfa6f312a28',
+  'a68f76e4-8092-4464-a079-c393d29016f0',
+  '05f25990-3ba3-4795-b6f8-36efb5834ec7',
+  '000248d4-bb4f-4056-a9ac-9a0dd855cbd4',
+];
+
 export const PeopleConceptPage = () => {
   const [selected, setSelected] = useState<PersonInfo[]>([]);
-
-  // list of ids to resolve on mount, including edge cases like expired and non-existing users.
-  const resolvePeople = useMemo(() => {
-    return [
-      'jones@equinor.com',
-      '0b6dfe7d-69b2-42ca-920b-c0e4e6a1a633',
-      '49132c24-6ea4-41fe-8221-112f314573f0',
-      'cbc6480d-12c1-467e-b0b8-cfbb22612daa',
-      '2a424f0d-ae50-4f2b-b203-ba4ca60c378e', // expired
-      '2a424f0d-ae50-4f2b-b203-ba4ca60c378f', // 404
-      '06f8b423-dd89-4482-892b-a78fccaeaaf5',
-      '0a14f828-adb9-460c-9a30-0dfa6f312a28',
-      'a68f76e4-8092-4464-a079-c393d29016f0',
-      '05f25990-3ba3-4795-b6f8-36efb5834ec7',
-      '000248d4-bb4f-4056-a9ac-9a0dd855cbd4',
-    ];
-  }, []);
 
   const handlePersonAdded = useCallback((event: PersonAddedEvent) => {
     setSelected((prev) => [...prev, event.detail]);
@@ -56,7 +54,6 @@ export const PeopleConceptPage = () => {
           the onPersonAdded and onPersonRemoved callback props.
         </p>
         <PeoplePicker
-          // PS: resolveIds are resolved on mount only so don't keep pushing to that array.
           resolveIds={resolvePeople}
           onPersonAdded={handlePersonAdded}
           onPersonRemoved={handlePersonRemoved}
