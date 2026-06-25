@@ -334,7 +334,6 @@ function applyStateChangeEvents<T extends AllowedValue = AllowedValue>(
       // Accumulate changes using scan operator, starting with the initial array
       scan((acc, event) => {
         const {
-          type,
           detail: { key, item },
         } = event;
 

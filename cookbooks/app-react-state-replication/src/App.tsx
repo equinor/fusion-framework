@@ -1,4 +1,3 @@
-import { ProfileManager } from './components/ProfileManager';
 import Router from './Router';
 
 /**
