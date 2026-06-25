@@ -15,6 +15,7 @@ type PouchDbSyncStorageOptions = {
   syncOptions: PouchDB.Replication.SyncOptions;
 };
 
+// biome-ignore lint/correctness/noUnusedVariables: intentionally internal — not yet tested or integrated into the public API
 class PouchDbSyncStorage extends PouchDbStorage {
   #remoteDb: PouchDB.Database;
   #syncOptions: PouchDB.Replication.SyncOptions;

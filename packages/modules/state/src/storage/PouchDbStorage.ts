@@ -29,6 +29,17 @@ const STORAGE_KEY_SEPARATOR = '::';
  */
 export type PouchDbStorageOptions = PouchDB.Configuration.DatabaseConfiguration & {
   key_prefix?: string;
+  /**
+   * Number of old revisions to keep for each document.
+   * Lower values reduce storage usage at the cost of revision history.
+   */
+  revs_limit?: number;
+  /**
+   * Maximum local database size in megabytes.
+   * Important for Safari (IndexedDB quota enforcement).
+   * Valid values: 10, 50, 100, 500, 1000.
+   */
+  size?: number;
 };
 
 /**
@@ -554,7 +565,7 @@ export class PouchDbStorage implements IStorage, Disposable {
 
       // Try to get existing document for update, fallback to creation template
       // This pattern handles both create and update operations seamlessly
-      const existingDoc = await this.#db.get(key).catch((e) => {
+      const existingDoc = await this.#db.get(key).catch((_e) => {
         // Document doesn't exist - create template for new document
         // _rev: undefined tells PouchDB this is a new document
         return { _id: key, _rev: undefined };

@@ -18,8 +18,8 @@ import type { HttpClientMsal } from '@equinor/fusion-framework-module-http/clien
 
 import auth from '@equinor/fusion-framework-module-msal';
 
-import type { AppEnv, AppModules, AppModulesInstance } from './types';
-import { AppModulesConfiguredEvent, AppModulesInitializedEvent } from './events';
+import type { AppEnv, AppModules } from './types';
+import { AppModulesConfiguredEvent } from './events';
 import { AppConfiguratorError } from './error';
 import { deepClone, deepFreeze, type DeepImmutable } from './utils';
 
