@@ -1,3 +1,10 @@
+/**
+ * @fileoverview Application module configuration factory
+ *
+ * Provides the core factory function for configuring and initializing
+ * application-specific modules in the Fusion framework.
+ */
+
 import type { Fusion } from '@equinor/fusion-framework';
 import type { AnyModule } from '@equinor/fusion-framework-module';
 import {
@@ -5,8 +12,14 @@ import {
   type MetadataExtractor,
 } from '@equinor/fusion-framework-module-telemetry';
 
-import { AppConfigurator } from './AppConfigurator';
-import type { AppModulesInstance, AppModuleInitiator, AppEnv } from './types';
+import {
+  AppConfigurator,
+  type IAppConfigurator,
+  type AppConfiguratorConstructor,
+} from './AppConfigurator';
+
+import type { AppModulesInstance, AppModuleInitiator, AppEnv, AppModuleInitArgs } from './types';
+import { AppConfiguratorError } from './error';
 
 /**
  * Create an application module initializer for a Fusion application.
@@ -104,7 +117,7 @@ export const configureModules =
         detail: { appKey: args.env.manifest.appKey, manifest: args.env.manifest, modules },
       });
     }
-    return modules;
   };
+};
 
 export default configureModules;
