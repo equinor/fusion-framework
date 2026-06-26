@@ -1,5 +1,13 @@
 # Change Log
 
+## 5.0.4
+
+### Patch Changes
+
+- 033f11d: Refresh the people cookbook to use the latest `@equinor/fusion-react-person` package and keep the `PeoplePicker` preload example stable.
+  - Update the cookbook dependency to `@equinor/fusion-react-person` 2.0.15.
+  - Keep the sample `resolveIds` list stable so the initial people are resolved consistently on mount.
+
 ## 5.0.3
 
 ### Patch Changes

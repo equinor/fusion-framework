@@ -1,5 +1,16 @@
 # @equinor/fusion-framework-dev-portal
 
+## 7.0.2
+
+### Patch Changes
+
+- 033f11d: Update the dev portal and people provider packages to use the latest person components.
+  - Update the dev portal and people provider packages to use `@equinor/fusion-wc-person` 3.5.5.
+  - Pull in the latest person component fixes without changing either package API.
+
+- Updated dependencies [033f11d]
+  - @equinor/fusion-framework-react-components-people-provider@2.0.3
+
 ## 7.0.1
 
 ### Patch Changes
