@@ -655,7 +655,7 @@ importers:
         version: link:../../packages/react/router
       '@equinor/fusion-react-side-sheet':
         specifier: ^2.0.0
-        version: 2.0.5(@equinor/eds-core-react@2.6.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(styled-components@6.4.3(react-dom@19.2.7(react@19.2.7))(react@19.2.7)))(@equinor/eds-icons@1.4.0)(@equinor/eds-tokens@2.3.1)(react-dom@19.2.7(react@19.2.7))(react-is@18.3.1)(react@19.2.7)(styled-components@6.4.3(react-dom@19.2.7(react@19.2.7))(react@19.2.7))
+        version: 2.0.7(@equinor/eds-core-react@2.6.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(styled-components@6.4.3(react-dom@19.2.7(react@19.2.7))(react@19.2.7)))(@equinor/eds-icons@1.4.0)(@equinor/eds-tokens@2.3.1)(react-dom@19.2.7(react@19.2.7))(react-is@18.3.1)(react@19.2.7)(styled-components@6.4.3(react-dom@19.2.7(react@19.2.7))(react@19.2.7))
       '@faker-js/faker':
         specifier: ^10.1.0
         version: 10.4.0
@@ -882,7 +882,7 @@ importers:
         version: 0.3.0(react@19.2.7)
       '@equinor/fusion-react-side-sheet':
         specifier: ^2.0.0
-        version: 2.0.5(@equinor/eds-core-react@2.6.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(styled-components@6.4.3(react-dom@19.2.7(react@19.2.7))(react@19.2.7)))(@equinor/eds-icons@1.4.0)(@equinor/eds-tokens@2.3.1)(react-dom@19.2.7(react@19.2.7))(react-is@18.3.1)(react@19.2.7)(styled-components@6.4.3(react-dom@19.2.7(react@19.2.7))(react@19.2.7))
+        version: 2.0.7(@equinor/eds-core-react@2.6.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(styled-components@6.4.3(react-dom@19.2.7(react@19.2.7))(react@19.2.7)))(@equinor/eds-icons@1.4.0)(@equinor/eds-tokens@2.3.1)(react-dom@19.2.7(react@19.2.7))(react-is@18.3.1)(react@19.2.7)(styled-components@6.4.3(react-dom@19.2.7(react@19.2.7))(react@19.2.7))
       react:
         specifier: ^19.2.1
         version: 19.2.7
@@ -1318,7 +1318,7 @@ importers:
         version: 0.3.0(react@19.2.7)
       '@equinor/fusion-react-side-sheet':
         specifier: ^2.0.0
-        version: 2.0.5(@equinor/eds-core-react@2.6.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(styled-components@6.4.3(react-dom@19.2.7(react@19.2.7))(react@19.2.7)))(@equinor/eds-icons@1.4.0)(@equinor/eds-tokens@2.3.1)(react-dom@19.2.7(react@19.2.7))(react-is@18.3.1)(react@19.2.7)(styled-components@6.4.3(react-dom@19.2.7(react@19.2.7))(react@19.2.7))
+        version: 2.0.7(@equinor/eds-core-react@2.6.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(styled-components@6.4.3(react-dom@19.2.7(react@19.2.7))(react@19.2.7)))(@equinor/eds-icons@1.4.0)(@equinor/eds-tokens@2.3.1)(react-dom@19.2.7(react@19.2.7))(react-is@18.3.1)(react@19.2.7)(styled-components@6.4.3(react-dom@19.2.7(react@19.2.7))(react@19.2.7))
       '@equinor/fusion-react-styles':
         specifier: ^2.1.0
         version: 2.1.6(react@19.2.7)(styled-components@6.4.3(react-dom@19.2.7(react@19.2.7))(react@19.2.7))
@@ -3296,8 +3296,8 @@ packages:
     peerDependencies:
       react: ^18 || ^19
 
-  '@equinor/fusion-react-side-sheet@2.0.5':
-    resolution: {integrity: sha512-jogkDw9dGFwV13DjmlO/2rXxJm16jCG4mlJcAn2F1F7nj0lFaAba51Edb/4XUv/IlgFPeMCX10F3nzokU3ydzw==}
+  '@equinor/fusion-react-side-sheet@2.0.7':
+    resolution: {integrity: sha512-StR0Fg5P3JtBeK7ExGXy2vdcPQNjwLeyRG9vqEUan2zCZTsbn1mzkc1gVTxWKz8Exeb9/4hFVOfHF1KYeQwVvw==}
     peerDependencies:
       '@equinor/eds-core-react': ^2
       '@equinor/eds-icons': ^1
@@ -9584,8 +9584,8 @@ packages:
   react-is@18.3.1:
     resolution: {integrity: sha512-/LLMVyas0ljjAtoYiPqYiL8VWXzUUdThrmU5+n20DZv+a+ClRoevUzw5JxU+Ieh5/c87ytoTBV9G1FiKfNJdmg==}
 
-  react-keyed-flatten-children@5.1.2:
-    resolution: {integrity: sha512-jM6/Em2S6g8DAhFGbxlQwVfCRIhXgoQo9Ks1CyjtzCa5O/S52wW2jsj7qaASHBln86UxiP4ZBLwtLJd70glpVw==}
+  react-keyed-flatten-children@5.1.3:
+    resolution: {integrity: sha512-Sg/dy1L74BTU+X1X5Wy4CUcf1SzDVJCIwIt3Zhr+yPtCMl7OAKHVxx2b5zhLfbTveFFmTa8a82j5tqaji0feEQ==}
     peerDependencies:
       react: '>=18.0.0'
       react-is: '>=18.0.0'
@@ -11750,7 +11750,7 @@ snapshots:
       '@equinor/fusion-wc-searchable-dropdown': 4.1.3
       react: 19.2.7
 
-  '@equinor/fusion-react-side-sheet@2.0.5(@equinor/eds-core-react@2.6.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(styled-components@6.4.3(react-dom@19.2.7(react@19.2.7))(react@19.2.7)))(@equinor/eds-icons@1.4.0)(@equinor/eds-tokens@2.3.1)(react-dom@19.2.7(react@19.2.7))(react-is@18.3.1)(react@19.2.7)(styled-components@6.4.3(react-dom@19.2.7(react@19.2.7))(react@19.2.7))':
+  '@equinor/fusion-react-side-sheet@2.0.7(@equinor/eds-core-react@2.6.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(styled-components@6.4.3(react-dom@19.2.7(react@19.2.7))(react@19.2.7)))(@equinor/eds-icons@1.4.0)(@equinor/eds-tokens@2.3.1)(react-dom@19.2.7(react@19.2.7))(react-is@18.3.1)(react@19.2.7)(styled-components@6.4.3(react-dom@19.2.7(react@19.2.7))(react@19.2.7))':
     dependencies:
       '@equinor/eds-core-react': 2.6.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(styled-components@6.4.3(react-dom@19.2.7(react@19.2.7))(react@19.2.7))
       '@equinor/eds-icons': 1.4.0
@@ -11758,7 +11758,7 @@ snapshots:
       re-resizable: 6.11.2(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       react: 19.2.7
       react-dom: 19.2.7(react@19.2.7)
-      react-keyed-flatten-children: 5.1.2(react-is@18.3.1)(react@19.2.7)
+      react-keyed-flatten-children: 5.1.3(react-is@18.3.1)(react@19.2.7)
       styled-components: 6.4.3(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
     transitivePeerDependencies:
       - react-is
@@ -18395,7 +18395,7 @@ snapshots:
 
   react-is@18.3.1: {}
 
-  react-keyed-flatten-children@5.1.2(react-is@18.3.1)(react@19.2.7):
+  react-keyed-flatten-children@5.1.3(react-is@18.3.1)(react@19.2.7):
     dependencies:
       react: 19.2.7
       react-is: 18.3.1
