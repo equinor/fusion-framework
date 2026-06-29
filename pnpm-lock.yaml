@@ -876,7 +876,7 @@ importers:
         version: 2.0.4(react@19.2.7)(styled-components@6.4.2(react-dom@19.2.7(react@19.2.7))(react@19.2.7))
       '@equinor/fusion-react-date':
         specifier: ^1.0.0
-        version: 1.0.3(react@19.2.7)
+        version: 1.0.6(react@19.2.7)
       '@equinor/fusion-react-progress-indicator':
         specifier: ^0.3.0
         version: 0.3.0(react@19.2.7)
@@ -3280,8 +3280,8 @@ packages:
     peerDependencies:
       react: ^18 || ^19
 
-  '@equinor/fusion-react-date@1.0.3':
-    resolution: {integrity: sha512-/T2dNi4yOdTdQFtcnOi0SSOftJFXQYlxdSEzLTeY9iW+yzY9upEfc+PFuLKE6g2P2hTF6XajLj2FijsVpNZkcw==}
+  '@equinor/fusion-react-date@1.0.6':
+    resolution: {integrity: sha512-FSbnpyaVdWumTm4oCldEtF+LLsmAf1mib/JlFn2VFKRtFyenQkuNaHMbxGMBEdV+GW0Iqda9ikMfayW5Y3VjUA==}
     peerDependencies:
       react: ^18 || ^19
 
@@ -3342,8 +3342,8 @@ packages:
   '@equinor/fusion-wc-core@2.0.3':
     resolution: {integrity: sha512-o52mbfI8ck1bJMfC+y3Hf4eyS7dJv1i/8C/bSv9cMRDRz6CgiKxrTzQhXSAFCDwm8tSQ3zQyB8EPKivyTx4KFA==}
 
-  '@equinor/fusion-wc-date@1.2.1':
-    resolution: {integrity: sha512-tvuxfXZtqioJXG03FNlnvDTzbBchOX1ERT/gqNsKNQPcvPTB/vX6jfcOCpKHcgl5qKTcvxH9Mf6P+PwWDlh7yQ==}
+  '@equinor/fusion-wc-date@1.2.3':
+    resolution: {integrity: sha512-vK9PArGY4Bwa2QIKALJYG21Y9VndcNMpLbMhAwDrh6y+TaTtxaBH5BfzD6/NqFhtCIg4C4vJTxfc6HPTUWR8gQ==}
 
   '@equinor/fusion-wc-divider@1.2.3':
     resolution: {integrity: sha512-uh/92AOVszIQzUnOnNYOgXQR+OV3mAOIvNfbngd25EXoiYx4YPhbBbiaMe23s+oFaONAOdqXL2Z9NloEm2LhjA==}
@@ -11738,10 +11738,10 @@ snapshots:
     transitivePeerDependencies:
       - styled-components
 
-  '@equinor/fusion-react-date@1.0.3(react@19.2.7)':
+  '@equinor/fusion-react-date@1.0.6(react@19.2.7)':
     dependencies:
-      '@equinor/fusion-react-utils': 3.0.2(react@19.2.7)
-      '@equinor/fusion-wc-date': 1.2.1
+      '@equinor/fusion-react-utils': 3.0.6(react@19.2.7)
+      '@equinor/fusion-wc-date': 1.2.3
       react: 19.2.7
 
   '@equinor/fusion-react-person@2.0.15(react@19.2.7)':
@@ -11851,11 +11851,11 @@ snapshots:
 
   '@equinor/fusion-wc-core@2.0.3': {}
 
-  '@equinor/fusion-wc-date@1.2.1':
+  '@equinor/fusion-wc-date@1.2.3':
     dependencies:
       '@equinor/fusion-wc-core': 2.0.3
       '@equinor/fusion-web-theme': 0.1.10
-      date-fns: 4.1.0
+      date-fns: 4.4.0
       lit: 3.3.2
 
   '@equinor/fusion-wc-divider@1.2.3':
