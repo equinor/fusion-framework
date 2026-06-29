@@ -1056,7 +1056,7 @@ importers:
         version: 4.1.4(vitest@4.1.4)
       adm-zip:
         specifier: ^0.5.10
-        version: 0.5.17
+        version: 0.5.18
       ajv:
         specifier: ^8.17.1
         version: 8.20.0
@@ -7277,8 +7277,8 @@ packages:
     engines: {node: '>=0.4.0'}
     hasBin: true
 
-  adm-zip@0.5.17:
-    resolution: {integrity: sha512-+Ut8d9LLqwEvHHJl1+PIHqoyDxFgVN847JTVM3Izi3xHDWPE4UtzzXysMZQs64DMcrJfBeS/uoEP4AD3HQHnQQ==}
+  adm-zip@0.5.18:
+    resolution: {integrity: sha512-ufJnssQGbxzLNS1Ho9bCtX4rQKCCvoVuDLHoJyc3F9dOGDB4BkWs2Ci0kv53lqocAEQ/Cbi+I2XCsNYGqVYqng==}
     engines: {node: '>=12.0'}
 
   ag-charts-community@13.3.1:
@@ -15766,7 +15766,7 @@ snapshots:
 
   acorn@8.16.0: {}
 
-  adm-zip@0.5.17: {}
+  adm-zip@0.5.18: {}
 
   ag-charts-community@13.3.1:
     dependencies:
