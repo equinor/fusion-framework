@@ -18,6 +18,14 @@ const Styled = {
     `,
   Head: styled.section`
         grid-area: head;
+        /**
+         * Establish an explicit stacking context above the default (auto)
+         * layer so the portal chrome (Header/TopBar and its ContextSelector
+         * dropdown) always paints above the loaded app's content, regardless
+         * of any z-index the app sets internally on its own elements.
+         */
+        position: relative;
+        z-index: 1;
     `,
   Main: styled.section`
         grid-area: main;
@@ -25,6 +33,12 @@ const Styled = {
         position: relative;
         max-width: 100%;
         display: grid;
+        /**
+         * Isolate the loaded app's stacking context so any z-index it sets
+         * internally is contained within this region and can never escape
+         * to compete with the portal chrome rendered in the Head section.
+         */
+        isolation: isolate;
     `,
 };
 
