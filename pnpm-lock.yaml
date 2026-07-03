@@ -157,10 +157,10 @@ importers:
     devDependencies:
       '@assistant-ui/react':
         specifier: ^0.14.5
-        version: 0.14.24(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(immer@11.1.9)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7))
+        version: 0.14.24(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(immer@11.1.11)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7))
       '@assistant-ui/react-markdown':
         specifier: ^0.14.0
-        version: 0.14.5(@assistant-ui/react@0.14.24(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(immer@11.1.9)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)))(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+        version: 0.14.5(@assistant-ui/react@0.14.24(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(immer@11.1.11)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)))(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@equinor/fusion-framework-cli':
         specifier: workspace:^
         version: link:../../packages/cli
@@ -1556,7 +1556,7 @@ importers:
         version: 3.1.3
       immer:
         specifier: ^11.0.0
-        version: 11.1.9
+        version: 11.1.11
       rxjs:
         specifier: ^7.8.1
         version: 7.8.2
@@ -1625,7 +1625,7 @@ importers:
         version: 3.1.3
       immer:
         specifier: ^11.0.0
-        version: 11.1.9
+        version: 11.1.11
       rxjs:
         specifier: ^7.8.1
         version: 7.8.2
@@ -1706,7 +1706,7 @@ importers:
         version: link:../../utils/observable
       immer:
         specifier: ^11.0.0
-        version: 11.1.9
+        version: 11.1.11
       rxjs:
         specifier: ^7.8.1
         version: 7.8.2
@@ -1966,7 +1966,7 @@ importers:
         version: link:../../utils/query
       immer:
         specifier: ^11.0.0
-        version: 11.1.9
+        version: 11.1.11
       rxjs:
         specifier: ^7.8.1
         version: 7.8.2
@@ -2516,7 +2516,7 @@ importers:
     dependencies:
       immer:
         specifier: ^11.0.0
-        version: 11.1.9
+        version: 11.1.11
       rxjs:
         specifier: ^7.8.1
         version: 7.8.2
@@ -2559,7 +2559,7 @@ importers:
         version: link:../observable
       immer:
         specifier: ^11.0.0
-        version: 11.1.9
+        version: 11.1.11
       rxjs:
         specifier: ^7.8.1
         version: 7.8.2
@@ -8082,8 +8082,8 @@ packages:
     resolution: {integrity: sha512-Hs59xBNfUIunMFgWAbGX5cq6893IbWg4KnrjbYwX3tx0ztorVgTDA6B2sxf8ejHJ4wz8BqGUMYlnzNBer5NvGg==}
     engines: {node: '>= 4'}
 
-  immer@11.1.9:
-    resolution: {integrity: sha512-sc/z0Cyti70bZa0ZU4sWfAElfovFb9Ni8tArJZLuklYWxegPiK3pDOql1Rq5H0FIRAW9LSQRG6OX4KqBldbhBA==}
+  immer@11.1.11:
+    resolution: {integrity: sha512-qzXuyXAkPySAGYkfsAwodDPWT8Zm7/Uo5BNt4BjhMhG5WlWyZZ4wQqnWwdS8kjlQ1Cwu6gjw3A6+0gTQwlyYtw==}
 
   immutable@5.1.5:
     resolution: {integrity: sha512-t7xcm2siw+hlUM68I+UEOK+z84RzmN59as9DZ7P1l0994DKUWV7UXBMQZVxaoMSRQ+PBZbHCOoBt7a2wxOMt+A==}
@@ -10659,7 +10659,7 @@ snapshots:
 
   '@asamuzakjp/nwsapi@2.3.9': {}
 
-  '@assistant-ui/core@0.2.19(@assistant-ui/store@0.2.19(@assistant-ui/tap@0.9.3(@types/react@19.2.17)(react@19.2.7))(@types/react@19.2.17)(react@19.2.7))(@assistant-ui/tap@0.9.3(@types/react@19.2.17)(react@19.2.7))(@types/react@19.2.17)(assistant-cloud@0.1.34)(react@19.2.7)(zustand@5.0.14(@types/react@19.2.17)(immer@11.1.9)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)))':
+  '@assistant-ui/core@0.2.19(@assistant-ui/store@0.2.19(@assistant-ui/tap@0.9.3(@types/react@19.2.17)(react@19.2.7))(@types/react@19.2.17)(react@19.2.7))(@assistant-ui/tap@0.9.3(@types/react@19.2.17)(react@19.2.7))(@types/react@19.2.17)(assistant-cloud@0.1.34)(react@19.2.7)(zustand@5.0.14(@types/react@19.2.17)(immer@11.1.11)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)))':
     dependencies:
       '@assistant-ui/store': 0.2.19(@assistant-ui/tap@0.9.3(@types/react@19.2.17)(react@19.2.7))(@types/react@19.2.17)(react@19.2.7)
       '@assistant-ui/tap': 0.9.3(@types/react@19.2.17)(react@19.2.7)
@@ -10669,14 +10669,14 @@ snapshots:
       '@types/react': 19.2.17
       assistant-cloud: 0.1.34
       react: 19.2.7
-      zustand: 5.0.14(@types/react@19.2.17)(immer@11.1.9)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7))
+      zustand: 5.0.14(@types/react@19.2.17)(immer@11.1.11)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7))
     transitivePeerDependencies:
       - ioredis
       - redis
 
-  '@assistant-ui/react-markdown@0.14.5(@assistant-ui/react@0.14.24(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(immer@11.1.9)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)))(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
+  '@assistant-ui/react-markdown@0.14.5(@assistant-ui/react@0.14.24(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(immer@11.1.11)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)))(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
     dependencies:
-      '@assistant-ui/react': 0.14.24(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(immer@11.1.9)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7))
+      '@assistant-ui/react': 0.14.24(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(immer@11.1.11)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7))
       '@radix-ui/react-primitive': 2.1.6(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@radix-ui/react-use-callback-ref': 1.1.2(@types/react@19.2.17)(react@19.2.7)
       classnames: 2.5.1
@@ -10689,9 +10689,9 @@ snapshots:
       - react-dom
       - supports-color
 
-  '@assistant-ui/react@0.14.24(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(immer@11.1.9)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7))':
+  '@assistant-ui/react@0.14.24(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(immer@11.1.11)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7))':
     dependencies:
-      '@assistant-ui/core': 0.2.19(@assistant-ui/store@0.2.19(@assistant-ui/tap@0.9.3(@types/react@19.2.17)(react@19.2.7))(@types/react@19.2.17)(react@19.2.7))(@assistant-ui/tap@0.9.3(@types/react@19.2.17)(react@19.2.7))(@types/react@19.2.17)(assistant-cloud@0.1.34)(react@19.2.7)(zustand@5.0.14(@types/react@19.2.17)(immer@11.1.9)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)))
+      '@assistant-ui/core': 0.2.19(@assistant-ui/store@0.2.19(@assistant-ui/tap@0.9.3(@types/react@19.2.17)(react@19.2.7))(@types/react@19.2.17)(react@19.2.7))(@assistant-ui/tap@0.9.3(@types/react@19.2.17)(react@19.2.7))(@types/react@19.2.17)(assistant-cloud@0.1.34)(react@19.2.7)(zustand@5.0.14(@types/react@19.2.17)(immer@11.1.11)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)))
       '@assistant-ui/store': 0.2.19(@assistant-ui/tap@0.9.3(@types/react@19.2.17)(react@19.2.7))(@types/react@19.2.17)(react@19.2.7)
       '@assistant-ui/tap': 0.9.3(@types/react@19.2.17)(react@19.2.7)
       '@radix-ui/primitive': 1.1.4
@@ -10709,7 +10709,7 @@ snapshots:
       react-textarea-autosize: 8.5.9(@types/react@19.2.17)(react@19.2.7)
       safe-content-frame: 0.0.21
       zod: 4.4.3
-      zustand: 5.0.14(@types/react@19.2.17)(immer@11.1.9)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7))
+      zustand: 5.0.14(@types/react@19.2.17)(immer@11.1.11)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7))
     optionalDependencies:
       '@types/react': 19.2.17
       '@types/react-dom': 19.2.3(@types/react@19.2.17)
@@ -16431,7 +16431,7 @@ snapshots:
 
   ignore@7.0.5: {}
 
-  immer@11.1.9: {}
+  immer@11.1.11: {}
 
   immutable@5.1.5: {}
 
@@ -19238,10 +19238,10 @@ snapshots:
 
   zod@4.4.3: {}
 
-  zustand@5.0.14(@types/react@19.2.17)(immer@11.1.9)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)):
+  zustand@5.0.14(@types/react@19.2.17)(immer@11.1.11)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)):
     optionalDependencies:
       '@types/react': 19.2.17
-      immer: 11.1.9
+      immer: 11.1.11
       react: 19.2.7
       use-sync-external-store: 1.6.0(react@19.2.7)
 
