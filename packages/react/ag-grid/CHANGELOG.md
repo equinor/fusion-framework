@@ -1,5 +1,12 @@
 # @equinor/fusion-framework-react-ag-grid
 
+## 36.0.3
+
+### Patch Changes
+
+- d0c9af3: Add a dedicated `react` subpath export that re-exports `ag-grid-react` symbols.
+  This lets consumers import the AG Grid React wrapper from `@equinor/fusion-framework-react-ag-grid/react` while resolving the monorepo-managed package instance.
+
 ## 36.0.2
 
 ### Patch Changes
