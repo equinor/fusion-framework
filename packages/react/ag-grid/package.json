@@ -17,6 +17,10 @@
       "import": "./dist/esm/enterprise.js",
       "types": "./dist/types/enterprise.d.ts"
     },
+    "./react": {
+      "import": "./dist/esm/react.js",
+      "types": "./dist/types/react.d.ts"
+    },
     "./themes": {
       "import": "./dist/esm/themes.js",
       "types": "./dist/types/themes.d.ts"
@@ -34,6 +38,9 @@
       ],
       "enterprise": [
         "dist/types/enterprise.d.ts"
+      ],
+      "react": [
+        "dist/types/react.d.ts"
       ],
       "themes": [
         "dist/types/themes.d.ts"

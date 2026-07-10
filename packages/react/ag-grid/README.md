@@ -82,6 +82,10 @@ Re-exports everything from `ag-grid-community` — column definitions, cell rend
 
 Re-exports everything from `ag-grid-enterprise` — row grouping, tree data, server-side row model, Excel export, integrated charts, and more. Requires a valid license key.
 
+### React Entry Point (`@equinor/fusion-framework-react-ag-grid/react`)
+
+Re-exports everything from `ag-grid-react` — components, props, hooks, and utilities.
+
 ### Themes Entry Point (`@equinor/fusion-framework-react-ag-grid/themes`)
 
 | Export | Kind | Description |
