@@ -1,5 +1,11 @@
 # Change Log
 
+## 36.0.2
+
+### Patch Changes
+
+- 4f0c5fb: Update ag-grid-\* to 35.3.1
+
 ## 36.0.1
 
 ### Patch Changes
