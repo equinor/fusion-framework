@@ -1797,7 +1797,7 @@ importers:
     dependencies:
       '@azure/msal-node':
         specifier: ^5.0.2
-        version: 5.1.5
+        version: 5.4.1
       '@equinor/fusion-framework-module':
         specifier: workspace:^
         version: link:../module
@@ -2847,6 +2847,10 @@ packages:
     resolution: {integrity: sha512-CzE+4PefDSJWj26zU7G1bKchlGRRHMBFreG4tAlGuzyI8hAPiYGobaJvZBgZBf6L63iphX7VH+ityL8VgEQz9Q==}
     engines: {node: '>=0.8.0'}
 
+  '@azure/msal-common@16.11.2':
+    resolution: {integrity: sha512-yDhtBOGDCdK9ipQ9g3+wmlMEPnZx2pXaDicDd9jYyR1L+7lEbvEohTDmF5qejZDutZY3m9pWPxeYxzNC701A2w==}
+    engines: {node: '>=0.8.0'}
+
   '@azure/msal-common@16.5.2':
     resolution: {integrity: sha512-GkDEL6TYo3HgT3UuqakdgE9PZfc1hMki6+Hwgy1uddb/EauvAKfu85vVhuofRSo22D1xTnWt8Ucwfg4vSCVwvA==}
     engines: {node: '>=0.8.0'}
@@ -2864,6 +2868,10 @@ packages:
 
   '@azure/msal-node@5.1.5':
     resolution: {integrity: sha512-ObTeMoNPmq19X3z40et9Xvs4ZoWVeJg43PZMRLG5iwVL+2nCtAerG3YTDItqPp1CfXNwmCXBbg8jn1DOx65c3g==}
+    engines: {node: '>=20'}
+
+  '@azure/msal-node@5.4.1':
+    resolution: {integrity: sha512-yqgoyOIMCH7TNaSLMBTP+4LUlbMMf1zgC8nzOFG95lmW82CmsAEtUT0J93e4BdqDcnX5qle/9X+yb7A8Mw9M0g==}
     engines: {node: '>=20'}
 
   '@azure/search-documents@13.0.0':
@@ -9640,6 +9648,11 @@ packages:
     engines: {node: '>=10'}
     hasBin: true
 
+  semver@7.8.5:
+    resolution: {integrity: sha512-Y7/KDsb8LjooZpwaqGyulO6DQlksgCncchHGk+sZIY4SBvUocMBEFH5Ur1fI4dV+Jvl0w6cjvucaIi40puRioA==}
+    engines: {node: '>=10'}
+    hasBin: true
+
   serialize-javascript@7.0.5:
     resolution: {integrity: sha512-F4LcB0UqUl1zErq+1nYEEzSHJnIwb3AF2XWB94b+afhrekOUijwooAYqFyRbjYkm2PAKBabx6oYv/xDxNi8IBw==}
     engines: {node: '>=20.0.0'}
@@ -10854,6 +10867,8 @@ snapshots:
     dependencies:
       '@azure/msal-common': 16.5.2
 
+  '@azure/msal-common@16.11.2': {}
+
   '@azure/msal-common@16.5.2': {}
 
   '@azure/msal-common@16.6.1': {}
@@ -10871,6 +10886,11 @@ snapshots:
   '@azure/msal-node@5.1.5':
     dependencies:
       '@azure/msal-common': 16.5.2
+      jsonwebtoken: 9.0.3
+
+  '@azure/msal-node@5.4.1':
+    dependencies:
+      '@azure/msal-common': 16.11.2
       jsonwebtoken: 9.0.3
 
   '@azure/search-documents@13.0.0':
@@ -16668,7 +16688,7 @@ snapshots:
       lodash.isstring: 4.0.1
       lodash.once: 4.1.1
       ms: 2.1.3
-      semver: 7.8.0
+      semver: 7.8.5
 
   jss-plugin-camel-case@10.10.0:
     dependencies:
@@ -17357,7 +17377,7 @@ snapshots:
 
   node-abi@3.87.0:
     dependencies:
-      semver: 7.8.0
+      semver: 7.8.5
     optional: true
 
   node-addon-api@4.3.0:
@@ -18314,6 +18334,8 @@ snapshots:
   semver@7.7.4: {}
 
   semver@7.8.0: {}
+
+  semver@7.8.5: {}
 
   serialize-javascript@7.0.5: {}
 
