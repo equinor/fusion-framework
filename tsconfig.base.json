@@ -1,7 +1,6 @@
 {
   "compilerOptions": {
     "strict": true,
-    "isolatedDeclarations": true,
     "target": "ESNext",
     "module": "ESNext",
     "moduleResolution": "bundler",
