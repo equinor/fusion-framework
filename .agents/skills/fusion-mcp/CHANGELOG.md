@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.0.2 - 2026-07-03
+
+### patch
+
+- [#197](https://github.com/equinor/fusion-skills/pull/197) [`380c0a1`](https://github.com/equinor/fusion-skills/commit/380c0a18d417f1c8003b91eae127ec9d8b450622) Thanks [@alftore](https://github.com/alftore)! - Fix outdated hosted-server config
+
+
+  The one-click install links and manual JSON config were missing the required
+  `oauth.clientId` field, and only covered Prod (no NonProd link). Both are now
+  aligned with the upstream README.
+
 ## 1.0.1 - 2026-05-07
 
 ### patch

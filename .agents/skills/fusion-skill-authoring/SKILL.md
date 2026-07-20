@@ -4,7 +4,7 @@ description: 'Creates or modernizes repository skills with clear activation cues
 license: MIT
 compatibility: Works best in repositories that can inspect their local skill catalog and run catalog-specific validation commands. Optional helper agents are most useful in Anthropic-compatible runtimes or other clients that support skill-local agents/subagents.
 metadata:
-   version: "0.3.4"
+   version: "0.3.5"
    status: active
    owner: "@equinor/fusion-core"
    tags:
@@ -101,7 +101,19 @@ Repository-specific prefix rules, ownership/lifecycle requirements, release poli
 
 ## Instructions
 
-### Step 1 — Decide whether this should be a skill at all
+### Step 1 — Check for installed-copy provenance before editing
+
+Before editing an existing `SKILL.md` (or its `references/`, `assets/`, `agents/`), check `skills-lock.json` at the repository root. Its `skillPath` values are relative to the local skills root (e.g. `caveman-compress/SKILL.md`), not absolute or fully-qualified paths — strip any leading skills-root segment (such as `.agents/skills/` or `skills/`) from the target file's path before comparing. If a stripped entry's `skillPath` matches the target this way and its `source` differs from the current repository, the target is an **installed copy**, not the canonical source.
+
+**If it is an installed copy:**
+- Do not edit in place — local edits are overwritten on the next `npx skills update` and never reach other consumers.
+- Tell the user the file is installed from `<source>`; changes belong there.
+- Offer to switch to `<source>` and make the change there, or draft a bug/improvement issue against it instead.
+- Only edit locally if the user explicitly confirms a one-off override and accepts it won't persist.
+
+If no `skills-lock.json` exists, or `source` matches the current repository, proceed normally.
+
+### Step 2 — Decide whether this should be a skill at all
 
 1. Check existing catalog first:
    - If an existing skill covers the request, recommend reuse or update instead of a duplicate
@@ -112,7 +124,7 @@ Repository-specific prefix rules, ownership/lifecycle requirements, release poli
    - a standalone script with no skill-routing value, or
    - a tiny copy edit to an existing skill
 
-### Step 2 — Define representative requests before drafting
+### Step 3 — Define representative requests before drafting
 
 Capture at least three representative requests before writing long instructions:
 - the user request or trigger phrase,
@@ -121,7 +133,7 @@ Capture at least three representative requests before writing long instructions:
 
 Use these as acceptance criteria. If you can't define realistic requests, the scope is underspecified or not reusable enough to become a skill.
 
-### Step 3 — Classify the skill and choose the smallest valid structure
+### Step 4 — Classify the skill and choose the smallest valid structure
 
 Decide skill type:
 - `capability uplift`: packages domain knowledge, tools, or reference material
@@ -141,7 +153,7 @@ Choose minimum folder structure:
 
 Keep references one level deep. Don't create nested chains that force partial reads.
 
-### Step 4 — Draft the minimum viable `SKILL.md`
+### Step 5 — Draft the minimum viable `SKILL.md`
 
 Write the smallest useful main document first:
 - concise frontmatter with strong discovery cues
@@ -162,7 +174,7 @@ Set degree of freedom intentionally:
 
 Include at least one concrete example in `SKILL.md` or link to one in `references/`.
 
-### Step 5 — Add supporting files only when they reduce ambiguity
+### Step 6 — Add supporting files only when they reduce ambiguity
 
 Move long or specialized content out of `SKILL.md`:
 - `references/` for deep guidance, large examples, API/platform notes, or long checklists
@@ -180,7 +192,7 @@ If runtime ignores bundled helper agents, follow the same roles inline.
 
 If skill depends on MCP, declare in `metadata.mcp` and document client-specific tool naming in skill content.
 
-### Step 6 — Validate discovery, structure, and local policy
+### Step 7 — Validate discovery, structure, and local policy
 
 Run validation supported by the target environment after authoring changes:
 
@@ -194,7 +206,7 @@ If no dedicated skill tooling:
 - verify each representative request would trigger the skill correctly
 - verify every referenced file path and workflow assumption is valid
 
-Use representative requests from Step 2 to review:
+Use representative requests from Step 3 to review:
 - Does the description trigger on the right requests and avoid false positives?
 - Can the agent locate all directly referenced files without chasing nested links?
 - Are outputs, approval gates, and safety constraints explicit?
@@ -207,7 +219,7 @@ If subagents are available:
 
 After portable package is correct, apply any repository-specific release or versioning rules.
 
-### Step 7 — Report what changed and what still needs input
+### Step 8 — Report what changed and what still needs input
 
 Return authoring result as explicit contract:
 - what was created or updated,
@@ -219,6 +231,7 @@ Return authoring result as explicit contract:
 
 ## Core behavior to preserve
 
+- Installed-copy provenance check before editing an existing skill
 - Reuse before creation
 - Portable first, repository overlays second
 - Representative requests before long-form wordsmithing
@@ -277,6 +290,7 @@ Never:
 - Invent validation results or evaluation evidence
 - Modify unrelated files outside the requested scope
 - Add hidden network access, remote-code execution, or unsafe script guidance
+- Edit a `skills-lock.json`-tracked installed copy in place without first surfacing its source repo and getting explicit confirmation
 
 Always:
 - Keep `SKILL.md` concise; move overflow to direct references

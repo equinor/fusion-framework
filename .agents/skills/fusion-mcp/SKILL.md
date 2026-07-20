@@ -3,7 +3,7 @@ name: fusion-mcp
 description: Explain what Fusion MCP is and guide users through setting it up when they need Fusion-aware MCP capabilities in Copilot workflows.
 license: MIT
 metadata:
-  version: "1.0.1"
+  version: "1.0.2"
   status: experimental
   owner: "@equinor/fusion-core"
   tags:
@@ -75,12 +75,12 @@ If details are missing, ask concise follow-up questions first.
    - `401 Unauthorized` → re-authenticate via VS Code account settings; ensure Equinor Entra account is active
    - `tools/list` returns empty or tool call fails → verify MCP server entry is selected/enabled in VS Code and retry after reloading
    - partial tool behavior → check VS Code Output > Copilot for error details and restart the MCP server
-7. When MCP setup fails or user asks to file a bug, produce a bug report draft from `assets/bug-report-template.md`.
+6. When MCP setup fails or user asks to file a bug, produce a bug report draft from `assets/bug-report-template.md`.
    - default target repository: `equinor/fusion-mcp`
    - include concrete repro steps, expected vs actual behavior, and troubleshooting already attempted
    - include non-sensitive environment details (OS, VS Code version, MCP server URL, Entra account type)
    - never include secrets, tokens, or raw credential values
-8. For uncertainty or repo-private constraints, state assumptions explicitly and link to authoritative docs instead of guessing.
+7. For uncertainty or repo-private constraints, state assumptions explicitly and link to authoritative docs instead of guessing.
 
 ## Expected output
 
