@@ -2610,6 +2610,27 @@ importers:
         specifier: ^4.1.0
         version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@26.1.1)(@vitest/coverage-v8@4.1.4)(happy-dom@20.10.6)(jsdom@29.1.1)(msw@2.14.6(@types/node@26.1.1)(typescript@7.0.2))(vite@8.0.16(@types/node@26.1.1)(esbuild@0.28.1)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.22.5)(yaml@2.8.3))
 
+  packages/vite-plugins/markdown:
+    devDependencies:
+      '@rollup/plugin-commonjs':
+        specifier: ^29.0.0
+        version: 29.0.3(rollup@4.61.1)
+      '@rollup/plugin-node-resolve':
+        specifier: ^16.0.1
+        version: 16.0.3(rollup@4.61.1)
+      '@rollup/plugin-typescript':
+        specifier: ^12.1.2
+        version: 12.3.0(rollup@4.61.1)(tslib@2.8.1)(typescript@5.9.3)
+      rollup:
+        specifier: ^4.39.0
+        version: 4.61.1
+      typescript:
+        specifier: ^5.8.2
+        version: 5.9.3
+      vite:
+        specifier: ^7.1.12
+        version: 7.3.6(@types/node@26.1.1)(lightningcss@1.32.0)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.22.5)(yaml@2.8.3)
+
   packages/vite-plugins/raw-imports:
     devDependencies:
       typescript:
@@ -2621,6 +2642,27 @@ importers:
       vitest:
         specifier: ^4.1.0
         version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@26.1.1)(@vitest/coverage-v8@4.1.4)(happy-dom@20.10.6)(jsdom@29.1.1)(msw@2.14.6(@types/node@26.1.1)(typescript@7.0.2))(vite@8.0.16(@types/node@26.1.1)(esbuild@0.28.1)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.22.5)(yaml@2.8.3))
+
+  packages/vite-plugins/routes-dsl:
+    devDependencies:
+      '@rollup/plugin-commonjs':
+        specifier: ^29.0.0
+        version: 29.0.3(rollup@4.61.1)
+      '@rollup/plugin-node-resolve':
+        specifier: ^16.0.1
+        version: 16.0.3(rollup@4.61.1)
+      '@rollup/plugin-typescript':
+        specifier: ^12.1.2
+        version: 12.3.0(rollup@4.61.1)(tslib@2.8.1)(typescript@5.9.3)
+      rollup:
+        specifier: ^4.39.0
+        version: 4.61.1
+      typescript:
+        specifier: ^5.8.2
+        version: 5.9.3
+      vite:
+        specifier: ^7.1.12
+        version: 7.3.6(@types/node@26.1.1)(lightningcss@1.32.0)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.22.5)(yaml@2.8.3)
 
   packages/vite-plugins/spa:
     dependencies:
@@ -10136,6 +10178,11 @@ packages:
     resolution: {integrity: sha512-1URUxUqfHFM1c+zfSPsa3gnkO7Aq21qyH75SIduNYz4SzY964rn1X2vCMQaHSHhktiw+0kPa2iyb6PUpXqB6Vg==}
     engines: {node: '>=20'}
 
+  typescript@5.9.3:
+    resolution: {integrity: sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw==}
+    engines: {node: '>=14.17'}
+    hasBin: true
+
   typescript@7.0.2:
     resolution: {integrity: sha512-8FYau96o3NKOhbjKi/qNvG/W5jhzxkbdm5sj9AbZ/5T5sWqn3hJgLfGx27sRKZWTvyzCP8dLRBTf5tBTSRVUNA==}
     engines: {node: '>=16.20.0'}
@@ -14249,6 +14296,15 @@ snapshots:
     optionalDependencies:
       rollup: 4.61.1
 
+  '@rollup/plugin-typescript@12.3.0(rollup@4.61.1)(tslib@2.8.1)(typescript@5.9.3)':
+    dependencies:
+      '@rollup/pluginutils': 5.3.0(rollup@4.61.1)
+      resolve: 1.22.11
+      typescript: 5.9.3
+    optionalDependencies:
+      rollup: 4.61.1
+      tslib: 2.8.1
+
   '@rollup/plugin-typescript@12.3.0(rollup@4.61.1)(tslib@2.8.1)(typescript@7.0.2)':
     dependencies:
       '@rollup/pluginutils': 5.3.0(rollup@4.61.1)
@@ -17926,7 +17982,7 @@ snapshots:
 
   postcss@8.5.16:
     dependencies:
-      nanoid: 3.3.15
+      nanoid: 3.3.16
       picocolors: 1.1.1
       source-map-js: 1.2.1
 
@@ -18923,6 +18979,8 @@ snapshots:
     dependencies:
       tagged-tag: 1.0.0
 
+  typescript@5.9.3: {}
+
   typescript@7.0.2:
     optionalDependencies:
       '@typescript/typescript-aix-ppc64': 7.0.2
@@ -19153,7 +19211,7 @@ snapshots:
       picomatch: 4.0.5
       postcss: 8.5.12
       rollup: 4.61.1
-      tinyglobby: 0.2.16
+      tinyglobby: 0.2.17
     optionalDependencies:
       '@types/node': 26.1.1
       fsevents: 2.3.3
@@ -19275,7 +19333,7 @@ snapshots:
       mlly: 1.8.2
       muggle-string: 0.4.1
       pathe: 2.0.3
-      picomatch: 4.0.4
+      picomatch: 4.0.5
       scule: 1.3.0
       tinyglobby: 0.2.17
       unplugin: 3.0.0
