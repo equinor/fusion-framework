@@ -33,11 +33,12 @@ export const markdownPlugin = (options: MarkdownPluginOptions = {}): Plugin => {
       if (id.includes('.md') && id.includes('?raw')) {
         const filePath = id.split('?')[0];
         // Resolve to absolute path if relative
-        const resolvedPath = importer && !filePath.startsWith('/') && !filePath.startsWith(process.cwd())
-          ? resolve(dirname(importer), filePath)
-          : filePath.startsWith('/')
-            ? filePath
-            : resolve(process.cwd(), filePath);
+        const resolvedPath =
+          importer && !filePath.startsWith('/') && !filePath.startsWith(process.cwd())
+            ? resolve(dirname(importer), filePath)
+            : filePath.startsWith('/')
+              ? filePath
+              : resolve(process.cwd(), filePath);
         // Return virtual module ID with \0 prefix (Vite convention for virtual modules)
         return `\0markdown:${resolvedPath}`;
       }
@@ -47,7 +48,7 @@ export const markdownPlugin = (options: MarkdownPluginOptions = {}): Plugin => {
       // Handle our virtual markdown modules
       if (id.startsWith('\0markdown:')) {
         const filePath = id.slice('\0markdown:'.length);
-        
+
         // Read the file synchronously
         try {
           const content = readFileSync(filePath, 'utf-8');
@@ -58,13 +59,13 @@ export const markdownPlugin = (options: MarkdownPluginOptions = {}): Plugin => {
           return null;
         }
       }
-      
+
       return null;
     },
     transform(code, id) {
       // Handle .md files without ?raw (fallback for cases where load didn't catch it)
       const idWithoutQuery = id.split('?')[0];
-      
+
       if (idWithoutQuery.endsWith('.md') && !id.includes('?raw')) {
         // Return the raw content as a default export
         return {
@@ -72,7 +73,7 @@ export const markdownPlugin = (options: MarkdownPluginOptions = {}): Plugin => {
           map: null,
         };
       }
-      
+
       return null;
     },
     // Include markdown files as assets if configured
@@ -83,4 +84,3 @@ export const markdownPlugin = (options: MarkdownPluginOptions = {}): Plugin => {
 };
 
 export default markdownPlugin;
-

@@ -1,7 +1,7 @@
 {
-  "name": "@equinor/fusion-framework-vite-plugin-markdown",
+  "name": "@equinor/fusion-framework-vite-plugin-routes-dsl",
   "version": "1.0.0",
-  "description": "Vite plugin for handling markdown file imports with ?raw query parameter",
+  "description": "Vite plugin for transforming import.meta.resolve() calls in route DSL files",
   "type": "module",
   "types": "dist/types/index.d.ts",
   "exports": {
@@ -16,7 +16,7 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/equinor/fusion-framework.git",
-    "directory": "packages/vite-plugins/markdown"
+    "directory": "packages/vite-plugins/routes-dsl"
   },
   "scripts": {
     "build": "tsc -b",
@@ -26,7 +26,9 @@
   "keywords": [
     "vite",
     "fusion-framework",
-    "markdown",
+    "routes",
+    "dsl",
+    "react-router",
     "plugin",
     "typescript"
   ],
