@@ -1,0 +1,50 @@
+{
+  "name": "@equinor/fusion-framework-vite-plugin-routes-dsl",
+  "version": "1.0.0",
+  "description": "Vite plugin for transforming import.meta.resolve() calls in route DSL files",
+  "type": "module",
+  "types": "dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "types": "./dist/types/index.d.ts"
+    }
+  },
+  "directories": {
+    "dist": "dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/equinor/fusion-framework.git",
+    "directory": "packages/vite-plugins/routes-dsl"
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "test": "vitest",
+    "prepack": "pnpm build"
+  },
+  "keywords": [
+    "vite",
+    "fusion-framework",
+    "routes",
+    "dsl",
+    "react-router",
+    "plugin",
+    "typescript"
+  ],
+  "license": "ISC",
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^29.0.0",
+    "@rollup/plugin-node-resolve": "^16.0.1",
+    "@rollup/plugin-typescript": "^12.1.2",
+    "rollup": "^4.39.0",
+    "typescript": "^5.8.2",
+    "vite": "^7.1.12"
+  },
+  "peerDependencies": {
+    "vite": "^7.0.0"
+  }
+}

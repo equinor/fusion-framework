@@ -93,7 +93,7 @@ const executeApiCall = <TVersion extends AllowedVersions, TMethod extends keyof 
   method: TMethod = 'json' as TMethod,
 ) => {
   type MethodVersion = ExtractApiVersion<TVersion>;
-  const apiVersion = extractVersion(ApiVersion, version);
+  const apiVersion = extractVersion(ApiVersion, version) as MethodVersion;
   return <
     TResponse = ApiResponse<MethodVersion>,
     TResult = MethodResult<MethodVersion, TMethod, TResponse>,

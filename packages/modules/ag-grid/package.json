@@ -49,7 +49,7 @@
     "@equinor/fusion-framework-module": "workspace:^",
     "ag-grid-community": "~36.0.1",
     "ag-grid-enterprise": "~36.0.1",
-    "typescript": "^6.0.3"
+    "typescript": "^7.0.2"
   },
   "peerDependencies": {
     "@equinor/eds-tokens": "^2.0.0",

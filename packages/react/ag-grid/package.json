@@ -73,7 +73,7 @@
   },
   "devDependencies": {
     "@equinor/fusion-framework-react-module": "workspace:^",
-    "typescript": "^6.0.3"
+    "typescript": "^7.0.2"
   },
   "peerDependencies": {
     "@equinor/fusion-framework-react-module": "workspace:^",
