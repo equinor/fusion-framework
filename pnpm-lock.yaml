@@ -1433,11 +1433,11 @@ importers:
         specifier: workspace:^
         version: link:../module
       ag-grid-community:
-        specifier: ~35.3.1
-        version: 35.3.1
+        specifier: ~36.0.1
+        version: 36.0.1
       ag-grid-enterprise:
-        specifier: ~35.3.1
-        version: 35.3.1
+        specifier: ~36.0.1
+        version: 36.0.1
       typescript:
         specifier: ^6.0.3
         version: 6.0.3
@@ -2012,14 +2012,14 @@ importers:
         specifier: workspace:*
         version: link:../../modules/ag-grid
       ag-grid-community:
-        specifier: ~35.3.1
-        version: 35.3.1
+        specifier: ~36.0.1
+        version: 36.0.1
       ag-grid-enterprise:
-        specifier: ~35.3.1
-        version: 35.3.1
+        specifier: ~36.0.1
+        version: 36.0.1
       ag-grid-react:
-        specifier: ~35.3.1
-        version: 35.3.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+        specifier: ~36.0.1
+        version: 36.0.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
     devDependencies:
       '@equinor/fusion-framework-react-module':
         specifier: workspace:^
@@ -7273,14 +7273,26 @@ packages:
   ag-charts-community@13.3.1:
     resolution: {integrity: sha512-xRwyuP4xcMoyzaa27fccUhKqGyiWp/0h6vq0ZBuAtj2k0OC5UbV6IQUW6/0AgmLIQ4/K9QlRWFOe3sL/x5MHow==}
 
+  ag-charts-community@14.0.1:
+    resolution: {integrity: sha512-XHYdDRtEz4OYyZZuut9BiHSDy6KjXoVXNom2Zvq8EEO6HN67x73xLZNlo/9Vxwoch/3mNGkQkVTzi0zqdKFQ4w==}
+
   ag-charts-core@13.3.1:
     resolution: {integrity: sha512-oDnK07/S6Z10EwIBxhC4tMDwdf2ck5MMcuSB/h+0/Q2XcL2l3S4jmlq3iKI7Kp9sh0H5JYDDc2sAdkUN87W8RA==}
+
+  ag-charts-core@14.0.1:
+    resolution: {integrity: sha512-8fjv8XnqokFTYXWTsJ6LDH1GdPFpZtDRDv5G4j3MbDk3uGjD2p65hM2z1f60DzL8C0Ii7gD6q4O26TxhIIAtBA==}
 
   ag-charts-enterprise@13.3.1:
     resolution: {integrity: sha512-Y/RYwg38rLflcMJpERIRvUW5zL02HUoRXBv3j4UdnOjiEb4mPQTXU7chTfYf3+vqtUsMjFGxyGh4nPM7shwM1g==}
 
+  ag-charts-enterprise@14.0.1:
+    resolution: {integrity: sha512-ZOivbXClgqrMh42OjMfId3xIIuKmuRbLPVMUYfGSt9MhGkEI1KIkMtgjSp8W64xKmdysTNOFM+Xf/8NXNE8OSQ==}
+
   ag-charts-locale@13.3.1:
     resolution: {integrity: sha512-jF7iXI3PBFq/LFgBKwt72CykDBWcl3HYgP7B/hSJGsFdK+yuUTPrP67dA/wghgC6sg+Qw2U2GeykhZkG0yH8ww==}
+
+  ag-charts-locale@14.0.1:
+    resolution: {integrity: sha512-GjeoU/0nRcEALK3K2VkVgeAkwtuH958XQlMawiN5XUt95Hj/IC1drwF7JJMkcV8U8GFHzNsXhsY1gFJfLY2L4g==}
 
   ag-charts-react@13.3.1:
     resolution: {integrity: sha512-m1Wqv8HydZ0aQw+k8oV4ind+We1REdb7v0MKcGRbiWt+vX+1J8kWb1Yu61zZPSkT8yX/ZZuLto+yEcTY1n3iPQ==}
@@ -7290,17 +7302,23 @@ packages:
   ag-charts-types@13.3.1:
     resolution: {integrity: sha512-m37eUe4g//swvGh8PWMlYQH3gknjSsPeW4sQwBhM3/auGAHmN0wvxEWlrdAn98pBPg4HoKbtOy+yf7gPCYsnvQ==}
 
-  ag-grid-community@35.3.1:
-    resolution: {integrity: sha512-Wmkd/xYTCbAApcZZO74nBggZCnd/oX753NY3MJ4zYARVpfBHRWWhIBJ2sFTFKbDWwHZOWsx3YT9+kkyeuyLKlw==}
+  ag-charts-types@14.0.1:
+    resolution: {integrity: sha512-fGNDptlNzaQDqDoZxAYeLtBrV8sIXE1iRXX9s5W+/drobP3Ig2fhdAOlKp3IIrHlbiKZUiuhraqT0D4IYVyM4w==}
 
-  ag-grid-enterprise@35.3.1:
-    resolution: {integrity: sha512-AdxpzZVn4tOg/eAFm+KDfvQE2/KX1wNjVMMHZFzKr528V2OaQYx8LWv3Ly3jlWbF8Pxsfe7ViacH0gnsjrkbyQ==}
+  ag-grid-community@36.0.1:
+    resolution: {integrity: sha512-wQetUqoY6SBCtKzDjsYkImiGpM4+hU7S5/NvxcCAO6liL6mSRXlEvCHdQZUfj6amuhsdjVlGK1C8e+B54EyDTQ==}
 
-  ag-grid-react@35.3.1:
-    resolution: {integrity: sha512-M3ljCQyGL+qzoyPN0BYrn4eAlgZr6Ailcjd8+a7OcneSiVsMNSJb/gTkIMUwmYivkPLIA8EEJ4hTxxKSaya6mQ==}
+  ag-grid-enterprise@36.0.1:
+    resolution: {integrity: sha512-sGxqekLggZWvjpCSl9b2T8qDpqrd/alFQRVGZhmkayZTftlpRPCkgWKCv374Msd46qXGJUkQcGwMhLrO0hqO3Q==}
+
+  ag-grid-react@36.0.1:
+    resolution: {integrity: sha512-cqyZWHks9LF7MBZvX6QP8IGlYBScssdQ3B6EMli0nO2TClbBiRTZuP1ja3AwVL0THnl+WksO2kBB2ATWp8vVAQ==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+
+  ag-stack@36.0.1:
+    resolution: {integrity: sha512-FsrO55fl7EDToQVgRDaTF1+QKWpfJK1nxTxTavkkfHeq6Kei4skAeP0MsjXm7zECjfyHczlwmWvp+KN7KHnlYQ==}
 
   agent-base@7.1.4:
     resolution: {integrity: sha512-MnA+YT8fwfJPgBx3m60MNqakm30XOkyIoH1y6huTQvC0PwZG7ki8NacLBcrPbNoo8vEZy7Jpuk7+jMO+CUovTQ==}
@@ -9101,6 +9119,11 @@ packages:
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
 
+  nanoid@3.3.16:
+    resolution: {integrity: sha512-bzlKTyNJ7+LdGIIwy8ijFpIqEQIvafahV7eYykJ8Cvh42EdJeODoJ6gUJXpQJvej1BddH8OqTXZNE/KfbWAu8Q==}
+    engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
+    hasBin: true
+
   nanoid@5.1.11:
     resolution: {integrity: sha512-v+KEsUv2ps74PaSKv0gHTxTCgMXOIfBEbaqa6w6ISIGC7ZsvHN4N9oJ8d4cmf0n5oTzQz2SLmThbQWhjd/8eKg==}
     engines: {node: ^18 || >=20}
@@ -10499,8 +10522,8 @@ packages:
     peerDependencies:
       vite: '*'
 
-  vite@7.3.5:
-    resolution: {integrity: sha512-KuOaNhcnGFN2zIPGA7wRmzF+lJA1sea7rHq17aiJ++9lzY1WWG6Jpwqwe1KNbRVPIqHmr8GLYx7jbrQcN/7/ww==}
+  vite@7.3.6:
+    resolution: {integrity: sha512-4XP60spRGjSZFf1qYH+dJIkK2znL3zQfl9KkOV9MkkRR/3Dls0dxaBsQPTloEc5BLXWPL9vsOxopxyKoMmDueg==}
     engines: {node: ^20.19.0 || >=22.12.0}
     hasBin: true
     peerDependencies:
@@ -13496,7 +13519,7 @@ snapshots:
       detect-libc: 2.1.2
       is-glob: 4.0.3
       node-addon-api: 7.1.1
-      picomatch: 4.0.4
+      picomatch: 4.0.5
     optionalDependencies:
       '@parcel/watcher-android-arm64': 2.5.6
       '@parcel/watcher-darwin-arm64': 2.5.6
@@ -15768,16 +15791,37 @@ snapshots:
       ag-charts-locale: 13.3.1
       ag-charts-types: 13.3.1
 
+  ag-charts-community@14.0.1:
+    dependencies:
+      ag-charts-core: 14.0.1
+      ag-charts-locale: 14.0.1
+      ag-charts-types: 14.0.1
+    optional: true
+
   ag-charts-core@13.3.1:
     dependencies:
       ag-charts-types: 13.3.1
+
+  ag-charts-core@14.0.1:
+    dependencies:
+      ag-charts-types: 14.0.1
+    optional: true
 
   ag-charts-enterprise@13.3.1:
     dependencies:
       ag-charts-community: 13.3.1
       ag-charts-core: 13.3.1
 
+  ag-charts-enterprise@14.0.1:
+    dependencies:
+      ag-charts-community: 14.0.1
+      ag-charts-core: 14.0.1
+    optional: true
+
   ag-charts-locale@13.3.1: {}
+
+  ag-charts-locale@14.0.1:
+    optional: true
 
   ag-charts-react@13.3.1(react@19.2.7):
     dependencies:
@@ -15786,23 +15830,29 @@ snapshots:
 
   ag-charts-types@13.3.1: {}
 
-  ag-grid-community@35.3.1:
-    dependencies:
-      ag-charts-types: 13.3.1
+  ag-charts-types@14.0.1: {}
 
-  ag-grid-enterprise@35.3.1:
+  ag-grid-community@36.0.1:
     dependencies:
-      ag-grid-community: 35.3.1
+      ag-charts-types: 14.0.1
+      ag-stack: 36.0.1
+
+  ag-grid-enterprise@36.0.1:
+    dependencies:
+      ag-grid-community: 36.0.1
+      ag-stack: 36.0.1
     optionalDependencies:
-      ag-charts-community: 13.3.1
-      ag-charts-enterprise: 13.3.1
+      ag-charts-community: 14.0.1
+      ag-charts-enterprise: 14.0.1
 
-  ag-grid-react@35.3.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7):
+  ag-grid-react@36.0.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7):
     dependencies:
-      ag-grid-community: 35.3.1
+      ag-grid-community: 36.0.1
       prop-types: 15.8.1
       react: 19.2.7
       react-dom: 19.2.7(react@19.2.7)
+
+  ag-stack@36.0.1: {}
 
   agent-base@7.1.4: {}
 
@@ -16624,6 +16674,10 @@ snapshots:
   fdir@6.5.0(picomatch@4.0.4):
     optionalDependencies:
       picomatch: 4.0.4
+
+  fdir@6.5.0(picomatch@4.0.5):
+    optionalDependencies:
+      picomatch: 4.0.5
 
   fetch-cookie@2.2.0:
     dependencies:
@@ -17866,6 +17920,8 @@ snapshots:
 
   nanoid@3.3.12: {}
 
+  nanoid@3.3.16: {}
+
   nanoid@5.1.11: {}
 
   napi-build-utils@2.0.0:
@@ -18156,7 +18212,7 @@ snapshots:
 
   postcss@8.5.12:
     dependencies:
-      nanoid: 3.3.12
+      nanoid: 3.3.16
       picocolors: 1.1.1
       source-map-js: 1.2.1
 
@@ -19338,7 +19394,7 @@ snapshots:
       debug: 4.4.3
       es-module-lexer: 1.7.0
       pathe: 2.0.3
-      vite: 7.3.5(@types/node@25.8.0)(lightningcss@1.32.0)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.22.4)(yaml@2.8.3)
+      vite: 7.3.6(@types/node@25.8.0)(lightningcss@1.32.0)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.22.4)(yaml@2.8.3)
     transitivePeerDependencies:
       - '@types/node'
       - jiti
@@ -19367,11 +19423,11 @@ snapshots:
       - supports-color
       - typescript
 
-  vite@7.3.5(@types/node@25.8.0)(lightningcss@1.32.0)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.22.4)(yaml@2.8.3):
+  vite@7.3.6(@types/node@25.8.0)(lightningcss@1.32.0)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.22.4)(yaml@2.8.3):
     dependencies:
       esbuild: 0.27.7
-      fdir: 6.5.0(picomatch@4.0.4)
-      picomatch: 4.0.4
+      fdir: 6.5.0(picomatch@4.0.5)
+      picomatch: 4.0.5
       postcss: 8.5.12
       rollup: 4.62.2
       tinyglobby: 0.2.16
