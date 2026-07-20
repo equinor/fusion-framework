@@ -20,12 +20,11 @@ overrides:
   undici@>=8.0.0 <8.5.0: 8.5.0
   ws@>=7.0.0 <7.5.11: 7.5.11
   brace-expansion@>=2.0.0 <2.0.3: 2.0.3
-  brace-expansion@>=5.0.0 <5.0.5: 5.0.5
+  brace-expansion@>=5.0.0 <5.0.6: 5.0.6
   dompurify@>=3.1.3 <3.4.11: 3.4.11
   follow-redirects@<=1.15.11: 1.16.0
   handlebars@>=4.0.0 <=4.7.8: 4.7.9
-  langsmith@>=0.4.0 <0.5.19: 0.5.21
-  langsmith@>=0.5.0 <0.5.19: 0.5.21
+  langsmith@>=0.4.0 <0.6.0: 0.8.3
   lodash@>=4.0.0 <=4.17.23: 4.18.1
   lodash-es@>=4.0.0 <=4.17.23: 4.18.1
   minimatch@>=5.0.0 <5.1.8: 5.1.8
@@ -7178,8 +7177,8 @@ packages:
   brace-expansion@2.0.3:
     resolution: {integrity: sha512-MCV/fYJEbqx68aE58kv2cA/kiky1G8vux3OR6/jbS+jIMe/6fJWa0DTzJU7dqijOWYwHi1t29FlfYI9uytqlpA==}
 
-  brace-expansion@5.0.5:
-    resolution: {integrity: sha512-VZznLgtwhn+Mact9tfiwx64fA9erHH/MCXEUfB/0bX/6Fz6ny5EGTXYltMocqg4xFAQZtnO3DHWWXi8RiuN7cQ==}
+  brace-expansion@5.0.6:
+    resolution: {integrity: sha512-kLpxurY4Z4r9sgMsyG0Z9uzsBlgiU/EFKhj/h91/8yHu0edo7XuixOIH3VcJ8kkxs6/jPzoI6U9Vj3WqbMQ94g==}
     engines: {node: 18 || 20 || >=22}
 
   braces@3.0.3:
@@ -8402,8 +8401,8 @@ packages:
     peerDependencies:
       '@langchain/core': ^1.1.49
 
-  langsmith@0.5.21:
-    resolution: {integrity: sha512-l140hzgqo91T/QKDXLEfRnnxahuwVEVohr9zqpy3BaGDeBdrPiJuNJ2TBhPZxNXNCl68IkVcn555FD3jp5peyw==}
+  langsmith@0.8.3:
+    resolution: {integrity: sha512-3y1PRTmY24wiN8NiMb0CcNI2LwgovsKAz+ymVmBSmUx4nXL+GlmPY6Ju7FGeaPV1DMfQs9SjceNZHIfY2XYMKQ==}
     peerDependencies:
       '@opentelemetry/api': '*'
       '@opentelemetry/exporter-trace-otlp-proto': '*'
@@ -10177,11 +10176,6 @@ packages:
 
   util-deprecate@1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
-
-  uuid@10.0.0:
-    resolution: {integrity: sha512-8XkAphELsDnEGrDxUOHB3RGvXz6TeuYSGEZBOjtTtPm2lwhGBjLgOzLHB63IUWfBpNucQjND6d3AOudO+H3RWQ==}
-    deprecated: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
-    hasBin: true
 
   uuid@14.0.1:
     resolution: {integrity: sha512-6ZxzVpzDXDa3bJWaHilVayA+BH/1zmxCJoVgvmqJnid/gPoKHxUrS/aC/T6LGQtNHT+XHG9fXPJB4d+IrU30Ew==}
@@ -12220,7 +12214,7 @@ snapshots:
       zod: 4.4.3
     optionalDependencies:
       cheerio: 1.2.0
-      langsmith: 0.5.21(@opentelemetry/api@1.9.1)(openai@6.39.0(ws@8.21.0)(zod@4.4.3))(ws@8.21.0)
+      langsmith: 0.8.3(@opentelemetry/api@1.9.1)(openai@6.39.0(ws@8.21.0)(zod@4.4.3))(ws@8.21.0)
     transitivePeerDependencies:
       - '@opentelemetry/api'
       - '@opentelemetry/exporter-trace-otlp-proto'
@@ -12236,7 +12230,7 @@ snapshots:
       binary-extensions: 2.3.0
       flat: 5.0.2
       js-yaml: 4.2.0
-      langsmith: 0.5.21(@opentelemetry/api@1.9.1)(openai@6.39.0(ws@8.21.0)(zod@4.4.3))(ws@8.21.0)
+      langsmith: 0.8.3(@opentelemetry/api@1.9.1)(openai@6.39.0(ws@8.21.0)(zod@4.4.3))(ws@8.21.0)
       math-expression-evaluator: 2.0.7
       openai: 6.39.0(ws@8.21.0)(zod@4.4.3)
       uuid: 14.0.1
@@ -12261,7 +12255,7 @@ snapshots:
       '@cfworker/json-schema': 4.1.1
       '@standard-schema/spec': 1.1.0
       js-tiktoken: 1.0.21
-      langsmith: 0.5.21(@opentelemetry/api@1.9.1)(openai@6.39.0(ws@7.5.11)(zod@4.4.3))(ws@7.5.11)
+      langsmith: 0.8.3(@opentelemetry/api@1.9.1)(openai@6.39.0(ws@7.5.11)(zod@4.4.3))(ws@7.5.11)
       mustache: 4.2.0
       p-queue: 6.6.2
       zod: 4.4.3
@@ -12277,7 +12271,7 @@ snapshots:
       '@cfworker/json-schema': 4.1.1
       '@standard-schema/spec': 1.1.0
       js-tiktoken: 1.0.21
-      langsmith: 0.5.21(@opentelemetry/api@1.9.1)(openai@6.39.0(ws@8.21.0)(zod@4.4.3))(ws@8.21.0)
+      langsmith: 0.8.3(@opentelemetry/api@1.9.1)(openai@6.39.0(ws@8.21.0)(zod@4.4.3))(ws@8.21.0)
       mustache: 4.2.0
       p-queue: 6.6.2
       zod: 4.4.3
@@ -15545,7 +15539,7 @@ snapshots:
     dependencies:
       balanced-match: 1.0.2
 
-  brace-expansion@5.0.5:
+  brace-expansion@5.0.6:
     dependencies:
       balanced-match: 4.0.4
 
@@ -16834,7 +16828,7 @@ snapshots:
       '@langchain/core': 1.1.49(@opentelemetry/api@1.9.1)(openai@6.39.0(ws@8.21.0)(zod@4.4.3))(ws@8.21.0)
       '@langchain/langgraph': 1.4.2(@langchain/core@1.1.49(@opentelemetry/api@1.9.1)(openai@6.39.0(ws@8.21.0)(zod@4.4.3))(ws@8.21.0))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(vue@3.5.39(typescript@6.0.3))(zod@4.4.3)
       '@langchain/langgraph-checkpoint': 1.1.1(@langchain/core@1.1.49(@opentelemetry/api@1.9.1)(openai@6.39.0(ws@8.21.0)(zod@4.4.3))(ws@8.21.0))
-      langsmith: 0.5.21(@opentelemetry/api@1.9.1)(openai@6.39.0(ws@8.21.0)(zod@4.4.3))(ws@8.21.0)
+      langsmith: 0.8.3(@opentelemetry/api@1.9.1)(openai@6.39.0(ws@8.21.0)(zod@4.4.3))(ws@8.21.0)
       zod: 4.4.3
     transitivePeerDependencies:
       - '@opentelemetry/api'
@@ -16848,19 +16842,17 @@ snapshots:
       - ws
       - zod-to-json-schema
 
-  langsmith@0.5.21(@opentelemetry/api@1.9.1)(openai@6.39.0(ws@7.5.11)(zod@4.4.3))(ws@7.5.11):
+  langsmith@0.8.3(@opentelemetry/api@1.9.1)(openai@6.39.0(ws@7.5.11)(zod@4.4.3))(ws@7.5.11):
     dependencies:
       p-queue: 6.6.2
-      uuid: 10.0.0
     optionalDependencies:
       '@opentelemetry/api': 1.9.1
       openai: 6.39.0(ws@7.5.11)(zod@4.4.3)
       ws: 7.5.11
 
-  langsmith@0.5.21(@opentelemetry/api@1.9.1)(openai@6.39.0(ws@8.21.0)(zod@4.4.3))(ws@8.21.0):
+  langsmith@0.8.3(@opentelemetry/api@1.9.1)(openai@6.39.0(ws@8.21.0)(zod@4.4.3))(ws@8.21.0):
     dependencies:
       p-queue: 6.6.2
-      uuid: 10.0.0
     optionalDependencies:
       '@opentelemetry/api': 1.9.1
       openai: 6.39.0(ws@8.21.0)(zod@4.4.3)
@@ -17351,7 +17343,7 @@ snapshots:
 
   minimatch@10.2.4:
     dependencies:
-      brace-expansion: 5.0.5
+      brace-expansion: 5.0.6
 
   minimatch@5.1.8:
     dependencies:
@@ -18890,8 +18882,6 @@ snapshots:
   util-deprecate@1.0.2:
     optional: true
 
-  uuid@10.0.0: {}
-
   uuid@14.0.1: {}
 
   valibot@1.3.1(typescript@6.0.3):
@@ -19084,7 +19074,7 @@ snapshots:
       mlly: 1.8.2
       muggle-string: 0.4.1
       pathe: 2.0.3
-      picomatch: 4.0.5
+      picomatch: 4.0.4
       scule: 1.3.0
       tinyglobby: 0.2.17
       unplugin: 3.0.0
