@@ -1,5 +1,11 @@
 # Change Log
 
+## 12.0.2
+
+### Patch Changes
+
+- @equinor/fusion-framework-app@11.0.10
+
 ## 12.0.1
 
 ### Patch Changes

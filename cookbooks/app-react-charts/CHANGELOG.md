@@ -1,5 +1,13 @@
 # Change Log
 
+## 2.0.3
+
+### Patch Changes
+
+- 707da0d: Internal: bump `@equinor/eds-icons` from `1.4.0` to `1.5.1`.
+- Updated dependencies [e6a7eda]
+  - @equinor/fusion-framework-react-ag-grid@37.0.0
+
 ## 2.0.2
 
 ### Patch Changes

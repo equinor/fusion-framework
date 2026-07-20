@@ -1,5 +1,22 @@
 # Change Log
 
+## 15.1.8
+
+### Patch Changes
+
+- 48d55b4: Updated `adm-zip` from `^0.5.x` to `^0.6.0`. This release includes a fix for **CVE-2026-39244** (decompression bomb — crafted archives could exhaust memory via a declared-but-absent huge uncompressed size), a prototype pollution hardening fix, and several bug fixes.
+- 841c728: Updated `semver` from `7.8.4` to `7.8.5`. Patch bug fix release.
+- c39af35: Updated `vite` from `8.0.16` to `8.1.5`.
+
+  Notable changes:
+  - `server.fs.deny` extended with common sensitive files (security hardening)
+  - New `caseSensitive` option for `import.meta.glob`
+  - WASM ESM Integration (direct `.wasm` imports)
+  - `html.additionalAssetSources` option
+  - Various bug fixes across HMR, CSS, SSR, and dev server
+  - @equinor/fusion-framework-dev-portal@8.0.0
+  - @equinor/fusion-framework-dev-server@2.0.14
+
 ## 15.1.7
 
 ### Patch Changes

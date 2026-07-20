@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-module-ai
 
+## 6.0.1
+
+### Patch Changes
+
+- edb7e4f: Updated LangChain dependencies: `@langchain/core` from `1.1.49` to `1.2.3`, `langchain` from `1.4.5` to `1.5.3`.
+
 ## 6.0.0
 
 ### Patch Changes

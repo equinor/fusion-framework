@@ -1,5 +1,17 @@
 # @equinor/fusion-framework-dev-portal
 
+## 8.0.0
+
+### Patch Changes
+
+- Updated dependencies [e6a7eda]
+- Updated dependencies [c424e43]
+  - @equinor/fusion-framework-module-ag-grid@37.0.0
+  - @equinor/fusion-framework-module-analytics@3.0.1
+  - @equinor/fusion-framework-app@11.0.10
+  - @equinor/fusion-framework@8.0.10
+  - @equinor/fusion-framework-dev-server@2.0.14
+
 ## 7.0.3
 
 ### Patch Changes
