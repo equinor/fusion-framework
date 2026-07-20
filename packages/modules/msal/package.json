@@ -63,7 +63,7 @@
     "@equinor/fusion-framework-module-telemetry": "workspace:^",
     "@types/semver": "^7.0.0",
     "semver": "^7.0.0",
-    "typescript": "^5.0.0",
+    "typescript": ">=5.0.0",
     "zod": "^4.0.0"
   },
   "peerDependenciesMeta": {
