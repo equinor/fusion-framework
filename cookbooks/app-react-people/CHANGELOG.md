@@ -1,5 +1,11 @@
 # Change Log
 
+## 5.0.5
+
+### Patch Changes
+
+- 707da0d: Internal: bump `@equinor/eds-icons` from `1.4.0` to `1.5.1`.
+
 ## 5.0.4
 
 ### Patch Changes

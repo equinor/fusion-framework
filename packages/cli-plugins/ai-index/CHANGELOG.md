@@ -1,5 +1,14 @@
 # @equinor/fusion-framework-cli-plugin-ai-index
 
+## 3.0.6
+
+### Patch Changes
+
+- edb7e4f: Updated LangChain dependencies: `@langchain/core` from `1.1.49` to `1.2.3`, `langchain` from `1.4.5` to `1.5.3`.
+- Updated dependencies [edb7e4f]
+  - @equinor/fusion-framework-module-ai@6.0.1
+  - @equinor/fusion-framework-cli-plugin-ai-base@4.0.5
+
 ## 3.0.5
 
 ### Patch Changes

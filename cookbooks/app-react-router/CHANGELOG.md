@@ -1,5 +1,13 @@
 # Change Log
 
+## 5.0.1
+
+### Patch Changes
+
+- 707da0d: Internal: bump `@equinor/eds-icons` from `1.4.0` to `1.5.1`.
+- 2d3028d: Internal: bump `@faker-js/faker` from `10.4.0` to `10.5.0`.
+- e224181: Internal: bump `@tanstack/react-query` from `5.100.14` to `5.101.2`.
+
 ## 5.0.0
 
 ### Major Changes
