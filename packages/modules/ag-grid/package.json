@@ -47,15 +47,15 @@
   "devDependencies": {
     "@equinor/eds-tokens": "^2.2.0",
     "@equinor/fusion-framework-module": "workspace:^",
-    "ag-grid-community": "~35.3.1",
-    "ag-grid-enterprise": "~35.3.1",
+    "ag-grid-community": "~36.0.1",
+    "ag-grid-enterprise": "~36.0.1",
     "typescript": "^6.0.3"
   },
   "peerDependencies": {
     "@equinor/eds-tokens": "^2.0.0",
     "@equinor/fusion-framework-module": "workspace:^",
-    "ag-grid-community": ">=35.1.0",
-    "ag-grid-enterprise": ">=35.1.0"
+    "ag-grid-community": ">=36.0.0",
+    "ag-grid-enterprise": ">=36.0.0"
   },
   "peerDependenciesMeta": {
     "ag-charts-enterprise": {
