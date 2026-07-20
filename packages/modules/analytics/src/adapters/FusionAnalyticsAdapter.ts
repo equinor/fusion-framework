@@ -61,7 +61,7 @@ export class FusionAnalyticsAdapter<T extends AnalyticsEvent = AnalyticsEvent>
     this.#logExporter = args.logExporter;
 
     this.#loggerProvider = new LoggerProvider({
-      processors: [new BatchLogRecordProcessor(this.#logExporter)],
+      processors: [new BatchLogRecordProcessor({ exporter: this.#logExporter })],
       resource: resourceFromAttributes({
         'module.version': version,
         'session.id': uuid(),
