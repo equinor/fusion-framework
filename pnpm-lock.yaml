@@ -567,6 +567,36 @@ importers:
         specifier: ^7.0.2
         version: 7.0.2
 
+  cookbooks/app-react-observable:
+    devDependencies:
+      '@equinor/fusion-framework-cli':
+        specifier: workspace:^
+        version: link:../../packages/cli
+      '@equinor/fusion-framework-react-app':
+        specifier: workspace:^
+        version: link:../../packages/react/app
+      '@equinor/fusion-observable':
+        specifier: workspace:^
+        version: link:../../packages/utils/observable
+      '@types/react':
+        specifier: ^19.2.7
+        version: 19.2.16
+      '@types/react-dom':
+        specifier: ^19.2.3
+        version: 19.2.3(@types/react@19.2.16)
+      react:
+        specifier: ^19.2.1
+        version: 19.2.7
+      react-dom:
+        specifier: ^19.2.1
+        version: 19.2.7(react@19.2.7)
+      rxjs:
+        specifier: ^7.8.1
+        version: 7.8.2
+      typescript:
+        specifier: ^6.0.3
+        version: 6.0.3
+
   cookbooks/app-react-people:
     dependencies:
       '@equinor/eds-core-react':
