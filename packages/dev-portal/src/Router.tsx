@@ -18,6 +18,19 @@ const Styled = {
     `,
   Head: styled.section`
         grid-area: head;
+        /**
+         * Give the portal chrome (Header/TopBar and its ContextSelector
+         * dropdown) an explicit stacking context comfortably above the
+         * small, incidental z-index values apps tend to use for ordinary
+         * layout elements (sticky headers, dropdowns, etc.), so those can
+         * never leak above the portal chrome. Deliberately kept well below
+         * the z-index range conventionally used by real overlay/backdrop
+         * components (e.g. modal libraries typically use 1000+), so an
+         * app's intentional fullscreen scrim (e.g. opening a sidepanel)
+         * can still render above the header when that's the desired UX.
+         */
+        position: relative;
+        z-index: 10;
     `,
   Main: styled.section`
         grid-area: main;
