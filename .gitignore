@@ -89,6 +89,9 @@ dist
 # VS Code extension packages
 *.vsix
 
+# Compiled CLI binary (produced by pkg/nexe — not for version control)
+packages/linting/cli/bin/fusion-lint
+
 # Gatsby files
 .cache/
 # Comment in the public line in if your project uses Gatsby and *not* Next.js
