@@ -1,0 +1,47 @@
+{
+  "name": "@equinor/fusion-framework-lint-config",
+  "version": "0.1.0",
+  "description": "Recommended Fusion lint configuration and rule presets",
+  "keywords": [
+    "equinor",
+    "fusion",
+    "lint",
+    "linting",
+    "config"
+  ],
+  "license": "ISC",
+  "type": "module",
+  "main": "dist/esm/index.js",
+  "types": "dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "types": "./dist/types/index.d.ts"
+    }
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/equinor/fusion-framework.git",
+    "directory": "packages/linting/config"
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "prepack": "pnpm build"
+  },
+  "dependencies": {
+    "@equinor/fusion-framework-lint-core": "workspace:^",
+    "@equinor/fusion-framework-lint-rules": "workspace:^",
+    "@equinor/fusion-imports": "^2.0.0",
+    "yaml": "^2.9.0"
+  },
+  "devDependencies": {
+    "typescript": "^7.0.2"
+  }
+}
