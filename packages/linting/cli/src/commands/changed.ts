@@ -7,7 +7,14 @@ import { simpleGit } from 'simple-git';
 import { LintEngine } from '@equinor/fusion-framework-lint-core';
 import type { LintConfig, Diagnostic } from '@equinor/fusion-framework-lint-core';
 import { recommendedConfig, recommendedRules } from '@equinor/fusion-framework-lint-config';
-import { formatAnnotations, formatPretty, formatSummary, formatRdjsonl, formatJson, resolveReporter } from '../formatter/index.js';
+import {
+  formatAnnotations,
+  formatPretty,
+  formatSummary,
+  formatRdjsonl,
+  formatJson,
+  resolveReporter,
+} from '../formatter/index.js';
 
 const TS_EXTENSIONS = new Set(['.ts', '.tsx', '.mts', '.cts']);
 
@@ -123,7 +130,10 @@ async function runChanged(options: ChangedOptions): Promise<void> {
       ? `files changed since ${options.against}`
       : 'uncommitted files';
 
-  const spinner = (isCI || isMachineReadable) ? null : ora({ text: `Detecting ${modeLabel}…`, color: 'cyan' }).start();
+  const spinner =
+    isCI || isMachineReadable
+      ? null
+      : ora({ text: `Detecting ${modeLabel}…`, color: 'cyan' }).start();
 
   const files = await resolveChangedFiles(options);
 
@@ -165,7 +175,7 @@ async function runChanged(options: ChangedOptions): Promise<void> {
     if (options.output) {
       await writeFile(options.output, output, 'utf-8');
     } else {
-      process.stdout.write(output + '\n');
+      process.stdout.write(`${output}\n`);
     }
     // JSON is a report, not a gate — always exit 0 so draft-PR jobs stay green
     return;

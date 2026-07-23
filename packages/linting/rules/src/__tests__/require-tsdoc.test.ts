@@ -6,7 +6,7 @@ function lint(source: string): Diagnostic[] {
   return requireTsDoc.check(source, 'fixture.ts');
 }
 
-function rules(diagnostics: Diagnostic[]): string[] {
+function _rules(diagnostics: Diagnostic[]): string[] {
   // Extract the message text from each diagnostic for compact assertion
   const messages = diagnostics.map((d) => d.message);
   return messages;

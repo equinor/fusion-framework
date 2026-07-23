@@ -35,7 +35,7 @@ export function resolveReporter(reporter?: string, githubActionsFlag?: boolean):
     return reporter;
   }
   // --github-actions flag and GITHUB_ACTIONS env var are treated as aliases for convenience
-  if (githubActionsFlag || process.env['GITHUB_ACTIONS'] === 'true') {
+  if (githubActionsFlag || process.env.GITHUB_ACTIONS === 'true') {
     return 'github-actions';
   }
   return 'pretty';

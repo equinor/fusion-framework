@@ -49,7 +49,7 @@ function isLoopBreak(node: Node): boolean {
  * @param node - The `break_statement` node to inspect.
  * @returns `true` if the break carries a label identifier.
  */
-function isLabeled(node: Node): boolean {
+function _isLabeled(node: Node): boolean {
   return node.namedChildCount > 0;
 }
 

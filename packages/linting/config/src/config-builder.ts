@@ -1,4 +1,9 @@
-import type { Rule, Diagnostic, LintConfig, SeverityConfig } from '@equinor/fusion-framework-lint-core';
+import type {
+  Rule,
+  Diagnostic,
+  LintConfig,
+  SeverityConfig,
+} from '@equinor/fusion-framework-lint-core';
 
 /**
  * The resolved output of {@link loadLintConfig}.

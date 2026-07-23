@@ -76,7 +76,7 @@ function checkDeclarator(
 
   const prev = exportStmt.previousNamedSibling;
   // A TSDoc block comment must immediately precede the export statement
-  if (!prev || prev.type !== 'comment' || !isTsDoc(prev.text)) {
+  if (prev?.type !== 'comment' || !isTsDoc(prev.text)) {
     out.push({
       file: filePath,
       line: declarator.startPosition.row + 1,

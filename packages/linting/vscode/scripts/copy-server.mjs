@@ -39,6 +39,9 @@ console.log('  copied web-tree-sitter.wasm');
 
 // --- TypeScript + TSX grammar WASMs ---
 const tsGrammarDir = dirname(r.resolve('tree-sitter-typescript/package.json'));
-copyFileSync(join(tsGrammarDir, 'tree-sitter-typescript.wasm'), join(wasmDir, 'tree-sitter-typescript.wasm'));
+copyFileSync(
+  join(tsGrammarDir, 'tree-sitter-typescript.wasm'),
+  join(wasmDir, 'tree-sitter-typescript.wasm'),
+);
 copyFileSync(join(tsGrammarDir, 'tree-sitter-tsx.wasm'), join(wasmDir, 'tree-sitter-tsx.wasm'));
 console.log('  copied tree-sitter-typescript.wasm + tree-sitter-tsx.wasm');

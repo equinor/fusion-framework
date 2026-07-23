@@ -47,5 +47,5 @@ export function formatRdjsonl(diagnostics: Diagnostic[]): string {
     };
     return JSON.stringify(entry);
   });
-  return lines.join('\n') + '\n';
+  return `${lines.join('\n')}\n`;
 }

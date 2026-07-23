@@ -5,11 +5,24 @@
   "version": "0.1.0",
   "publisher": "equinor",
   "license": "MIT",
-  "engines": { "vscode": "^1.85.0" },
+  "engines": {
+    "vscode": "^1.85.0"
+  },
   "icon": "images/icon.png",
-  "categories": ["Linters"],
-  "keywords": ["equinor", "fusion", "lint", "linting", "typescript"],
-  "activationEvents": ["onLanguage:typescript", "onLanguage:typescriptreact"],
+  "categories": [
+    "Linters"
+  ],
+  "keywords": [
+    "equinor",
+    "fusion",
+    "lint",
+    "linting",
+    "typescript"
+  ],
+  "activationEvents": [
+    "onLanguage:typescript",
+    "onLanguage:typescriptreact"
+  ],
   "main": "./dist/index.js",
   "contributes": {
     "configuration": {
@@ -22,7 +35,10 @@
         },
         "fusion-lint.runOn": {
           "type": "string",
-          "enum": ["change", "save"],
+          "enum": [
+            "change",
+            "save"
+          ],
           "enumDescriptions": [
             "Lint as you type on every keystroke.",
             "Lint only when the file is saved."
@@ -32,7 +48,11 @@
         },
         "fusion-lint.trace.server": {
           "type": "string",
-          "enum": ["off", "messages", "verbose"],
+          "enum": [
+            "off",
+            "messages",
+            "verbose"
+          ],
           "default": "off",
           "description": "Traces LSP communication between VS Code and the fusion-lint-server."
         }

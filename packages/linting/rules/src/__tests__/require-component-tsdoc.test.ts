@@ -55,9 +55,9 @@ export const DEFAULT_CONFIG = { timeout: 5000 };
   });
 
   it('passes: ignored on .ts file regardless of PascalCase name', () => {
-    expect(requireComponentTsDoc.check('export const Foo = () => null;', 'fixture.ts')).toHaveLength(
-      0,
-    );
+    expect(
+      requireComponentTsDoc.check('export const Foo = () => null;', 'fixture.ts'),
+    ).toHaveLength(0);
   });
 
   it('passes: @inheritdoc-style TSDoc is accepted', () => {

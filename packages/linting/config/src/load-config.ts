@@ -1,10 +1,6 @@
 import { readFile } from 'node:fs/promises';
 import { parse as parseYaml } from 'yaml';
-import {
-  importConfig,
-  resolveConfigFile,
-  FileNotFoundError,
-} from '@equinor/fusion-imports';
+import { importConfig, resolveConfigFile, FileNotFoundError } from '@equinor/fusion-imports';
 import type { LintConfig, Rule } from '@equinor/fusion-framework-lint-core';
 import { ConfigBuilder } from './config-builder.js';
 import type { LoadedLintConfig } from './config-builder.js';
@@ -111,4 +107,3 @@ export async function loadLintConfig(
   }
   return normalise(rawExport);
 }
-

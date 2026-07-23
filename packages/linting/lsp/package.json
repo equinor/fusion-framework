@@ -2,7 +2,13 @@
   "name": "@equinor/fusion-framework-lint-lsp",
   "version": "0.1.0",
   "description": "LSP language server for Fusion Framework lint rules",
-  "keywords": ["equinor", "fusion", "lint", "lsp", "language-server"],
+  "keywords": [
+    "equinor",
+    "fusion",
+    "lint",
+    "lsp",
+    "language-server"
+  ],
   "license": "ISC",
   "type": "module",
   "main": "dist/esm/index.js",
@@ -16,8 +22,13 @@
       "types": "./dist/types/index.d.ts"
     }
   },
-  "files": ["bin/fusion-lint-server.mjs", "dist"],
-  "publishConfig": { "access": "public" },
+  "files": [
+    "bin/fusion-lint-server.mjs",
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/equinor/fusion-framework.git",

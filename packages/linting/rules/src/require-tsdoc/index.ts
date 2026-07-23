@@ -146,7 +146,7 @@ function checkFunctionNode(
     '(anonymous)';
 
   // ── 1. Require a TSDoc comment ────────────────────────────────────────────
-  if (!prev || prev.type !== 'comment' || !isTsDoc(prev.text)) {
+  if (prev?.type !== 'comment' || !isTsDoc(prev.text)) {
     out.push({
       ...loc,
       rule: RULE_ID,
@@ -278,7 +278,7 @@ function checkClassNode(node: Node, filePath: string, severity: Severity, out: D
   const prev = anchor.previousNamedSibling;
   const name = node.childForFieldName('name')?.text ?? '(anonymous)';
   // Require a TSDoc comment block on every class declaration in scope
-  if (!prev || prev.type !== 'comment' || !isTsDoc(prev.text)) {
+  if (prev?.type !== 'comment' || !isTsDoc(prev.text)) {
     out.push({
       file: filePath,
       line: node.startPosition.row + 1,

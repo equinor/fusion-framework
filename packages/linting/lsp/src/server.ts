@@ -2,7 +2,7 @@ import {
   createConnection,
   TextDocuments,
   ProposedFeatures,
-  InitializeResult,
+  type InitializeResult,
   TextDocumentSyncKind,
   DiagnosticSeverity,
   type Diagnostic,
@@ -125,8 +125,7 @@ function lintDocument(document: TextDocument): void {
 
 connection.onInitialize((params): InitializeResult => {
   // Derive workspace root from the first workspace folder, falling back to cwd
-  const workspaceRoot =
-    params.workspaceFolders?.[0]?.uri.replace('file://', '') ?? process.cwd();
+  const workspaceRoot = params.workspaceFolders?.[0]?.uri.replace('file://', '') ?? process.cwd();
 
   // Read the runOn preference sent by the client at startup
   const initRunOn = params.initializationOptions?.runOn;
@@ -151,9 +150,10 @@ connection.onInitialize((params): InitializeResult => {
 
 connection.onDidChangeConfiguration((change) => {
   // The client sends the fusion-lint section when configurationSection is registered
-  const settings = (change.settings as Record<string, unknown> | null)
-    ?.["fusion-lint"] as Record<string, unknown> | undefined;
-  const newRunOn = settings?.["runOn"];
+  const settings = (change.settings as Record<string, unknown> | null)?.['fusion-lint'] as
+    | Record<string, unknown>
+    | undefined;
+  const newRunOn = settings?.runOn;
   if (newRunOn === 'change' || newRunOn === 'save') runOn = newRunOn;
 });
 

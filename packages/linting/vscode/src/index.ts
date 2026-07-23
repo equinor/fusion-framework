@@ -1,9 +1,9 @@
 import * as path from 'node:path';
-import { ExtensionContext, workspace, window } from 'vscode';
+import { type ExtensionContext, workspace, window } from 'vscode';
 import {
   LanguageClient,
-  LanguageClientOptions,
-  ServerOptions,
+  type LanguageClientOptions,
+  type ServerOptions,
   TransportKind,
 } from 'vscode-languageclient/node';
 
@@ -76,12 +76,7 @@ export function activate(context: ExtensionContext): void {
     traceOutputChannel: window.createOutputChannel('Fusion Lint (LSP trace)'),
   };
 
-  client = new LanguageClient(
-    'fusion-lint',
-    'Fusion Lint',
-    serverOptions,
-    clientOptions,
-  );
+  client = new LanguageClient('fusion-lint', 'Fusion Lint', serverOptions, clientOptions);
 
   // Register the client so VS Code disposes it on deactivation
   context.subscriptions.push(client);

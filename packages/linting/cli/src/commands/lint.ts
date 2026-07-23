@@ -6,7 +6,14 @@ import ora from 'ora';
 import { LintEngine } from '@equinor/fusion-framework-lint-core';
 import type { LintConfig, Diagnostic } from '@equinor/fusion-framework-lint-core';
 import { recommendedConfig, recommendedRules } from '@equinor/fusion-framework-lint-config';
-import { formatAnnotations, formatPretty, formatSummary, formatRdjsonl, formatJson, resolveReporter } from '../formatter/index.js';
+import {
+  formatAnnotations,
+  formatPretty,
+  formatSummary,
+  formatRdjsonl,
+  formatJson,
+  resolveReporter,
+} from '../formatter/index.js';
 
 interface LintOptions {
   githubActions?: boolean;
@@ -38,7 +45,10 @@ async function runLint(patterns: string[], options: LintOptions): Promise<void> 
   }
 
   const engine = new LintEngine(recommendedRules, config);
-  const spinner = (isCI || isMachineReadable) ? null : ora({ text: 'Resolving file patterns…', color: 'cyan' }).start();
+  const spinner =
+    isCI || isMachineReadable
+      ? null
+      : ora({ text: 'Resolving file patterns…', color: 'cyan' }).start();
 
   const files = await fg(patterns, {
     absolute: true,
@@ -74,7 +84,7 @@ async function runLint(patterns: string[], options: LintOptions): Promise<void> 
   // Pre-filter error-severity diagnostics for both visible selection and tallying
   const errorFiltered = allDiagnostics.filter((d) => d.severity === 'error');
   // Narrow to visible diagnostics for display
-  const visible = errorsOnly ? errorFiltered : allDiagnostics;
+  const _visible = errorsOnly ? errorFiltered : allDiagnostics;
   // Tally error-severity diagnostics for exit-code logic
   const errors = errorFiltered.length;
   // Tally warning-severity diagnostics for the summary line
@@ -90,7 +100,7 @@ async function runLint(patterns: string[], options: LintOptions): Promise<void> 
     if (options.output) {
       await writeFile(options.output, output, 'utf-8');
     } else {
-      process.stdout.write(output + '\n');
+      process.stdout.write(`${output}\n`);
     }
     // JSON is a report, not a gate — always exit 0 so draft-PR jobs stay green
     return;

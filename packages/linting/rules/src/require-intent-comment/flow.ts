@@ -28,13 +28,20 @@ const FLOW_LABEL: Record<string, string> = {
 
 /** Instruction appended to the diagnostic message per control-flow type. */
 const FLOW_DETAIL: Record<string, string> = {
-  if_statement: 'A comment here helps reviewers understand what triggers this branch without having to trace the data flow.',
-  for_statement: 'A comment here makes it clear what is being iterated and why — invaluable when revisiting this code later.',
-  for_in_statement: 'A comment here makes it clear what is being iterated and why — invaluable when revisiting this code later.',
-  for_of_statement: 'A comment here makes it clear what is being iterated and why — invaluable when revisiting this code later.',
-  while_statement: 'A comment here documents what this loop is waiting for and when it should stop — prevents future readers from having to reverse-engineer the exit condition.',
-  do_statement: 'A comment here documents what this loop is waiting for and when it should stop — prevents future readers from having to reverse-engineer the exit condition.',
-  switch_statement: 'A comment here turns a wall of cases into a readable decision table — document what drives this switch.',
+  if_statement:
+    'A comment here helps reviewers understand what triggers this branch without having to trace the data flow.',
+  for_statement:
+    'A comment here makes it clear what is being iterated and why — invaluable when revisiting this code later.',
+  for_in_statement:
+    'A comment here makes it clear what is being iterated and why — invaluable when revisiting this code later.',
+  for_of_statement:
+    'A comment here makes it clear what is being iterated and why — invaluable when revisiting this code later.',
+  while_statement:
+    'A comment here documents what this loop is waiting for and when it should stop — prevents future readers from having to reverse-engineer the exit condition.',
+  do_statement:
+    'A comment here documents what this loop is waiting for and when it should stop — prevents future readers from having to reverse-engineer the exit condition.',
+  switch_statement:
+    'A comment here turns a wall of cases into a readable decision table — document what drives this switch.',
 };
 
 /**

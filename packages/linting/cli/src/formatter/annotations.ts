@@ -13,5 +13,5 @@ export function formatAnnotations(diagnostics: Diagnostic[]): string {
   const lines = diagnostics.map(
     (d) => `::${d.severity} file=${d.file},line=${d.line},col=${d.col}::${d.rule}: ${d.message}`,
   );
-  return lines.join('\n') + '\n';
+  return `${lines.join('\n')}\n`;
 }
