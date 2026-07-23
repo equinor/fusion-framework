@@ -165,12 +165,12 @@ function resolveFilePath(filePath: string, baseDir: string): string | null {
  *
  * | Export | Mapped to |
  * |---|---|
- * | `default` | Route component (`element`) |
+ * | `default` | `Component` |
  * | `clientLoader` | `loader` |
  * | `action` | `action` |
  * | `handle` | `handle` |
  * | `ErrorElement` | `errorElement` |
- * | `HydrateFallback` | `hydrateFallbackElement` |
+ * | `HydrateFallback` | `HydrateFallback` |
  *
  * Any other named export in the file is silently ignored.
  */

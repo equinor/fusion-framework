@@ -166,7 +166,7 @@ const schema = await toRouteSchema(pages);
 The Vite plugin is optional but strongly recommended when using the file-route DSL. At build time it resolves each file reference in your route tree, detects which named exports are present (`clientLoader`, `action`, `handle`, etc.), and rewrites the DSL calls to standard React Router lazy data routes.
 
 > [!WARNING]
-> Without the Vite plugin, routes are **not code-split**. The entire route tree is bundled into the main chunk, which defeats the purpose of file-based routing in production builds.
+> Without the Vite plugin, **the file-route DSL does not work**. The DSL objects (`layout`, `route`, `index`, etc.) carry only a `file` path string — they have no `Component`, `loader`, or `action` wired in. The Vite plugin performs that transformation at build time. Without it, routes will render blank pages. Code-splitting is an additional benefit, not the primary one.
 
 ```ts
 // vite.config.ts

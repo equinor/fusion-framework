@@ -13,8 +13,8 @@ import { BaseRoute } from './BaseRoute.js';
  * | Export | Type | Description |
  * |---|---|---|
  * | `default` | `React.ComponentType` | **Required.** The page / route component. |
- * | `clientLoader` | `LoaderFunctionArgs => MaybePromise<unknown>` | Route loader — called before the component renders. Receives `fusion` context. |
- * | `action` | `ActionFunctionArgs => MaybePromise<unknown>` | Route action — handles form submissions and mutations. Receives `fusion` context. |
+ * | `clientLoader` | `LoaderFunction` | Route loader — called before the component renders. Receives `fusion` context. |
+ * | `action` | `ActionFunction` | Route action — handles form submissions and mutations. Receives `fusion` context. |
  * | `handle` | `RouterHandle` | Arbitrary route metadata attached to `useMatches()` entries. |
  * | `ErrorElement` | `React.ComponentType<ErrorElementProps>` | Component rendered when this route or a descendant throws. Receives `error` and `fusion` props. |
  * | `HydrateFallback` | `React.ComponentType` | Component rendered during client-side hydration before `clientLoader` resolves. |

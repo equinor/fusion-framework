@@ -8,12 +8,12 @@ The `README.md`, `BaseFileRoute` class, and `getAvailableExports` in the Vite pl
 
 | Export | Mapped to |
 |---|---|
-| `default` | Route component (`element`) |
+| `default` | `Component` |
 | `clientLoader` | `loader` |
 | `action` | `action` |
 | `handle` | `handle` |
 | `ErrorElement` | `errorElement` |
-| `HydrateFallback` | `hydrateFallbackElement` |
+| `HydrateFallback` | `HydrateFallback` |
 
 The README was also updated to fix incorrect prerequisites (Fusion packages are bundled dependencies, not peer dependencies), clarify the `/context` entry point, and add GFM alert callouts for common gotchas (navigation module configuration, file-path resolution, Vite plugin being required for code-splitting).
 
