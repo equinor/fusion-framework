@@ -1606,7 +1606,7 @@ importers:
         version: 1.3.0
       '@azure/msal-node-extensions':
         specifier: ^5.1.4
-        version: 5.1.5
+        version: 5.3.3
 
   packages/modules/bookmark:
     dependencies:
@@ -1813,7 +1813,7 @@ importers:
     optionalDependencies:
       '@azure/msal-node-extensions':
         specifier: ^5.0.2
-        version: 5.1.5
+        version: 5.3.3
 
   packages/modules/navigation:
     dependencies:
@@ -2903,6 +2903,10 @@ packages:
     resolution: {integrity: sha512-CzE+4PefDSJWj26zU7G1bKchlGRRHMBFreG4tAlGuzyI8hAPiYGobaJvZBgZBf6L63iphX7VH+ityL8VgEQz9Q==}
     engines: {node: '>=0.8.0'}
 
+  '@azure/msal-common@16.11.2':
+    resolution: {integrity: sha512-yDhtBOGDCdK9ipQ9g3+wmlMEPnZx2pXaDicDd9jYyR1L+7lEbvEohTDmF5qejZDutZY3m9pWPxeYxzNC701A2w==}
+    engines: {node: '>=0.8.0'}
+
   '@azure/msal-common@16.5.2':
     resolution: {integrity: sha512-GkDEL6TYo3HgT3UuqakdgE9PZfc1hMki6+Hwgy1uddb/EauvAKfu85vVhuofRSo22D1xTnWt8Ucwfg4vSCVwvA==}
     engines: {node: '>=0.8.0'}
@@ -2911,8 +2915,8 @@ packages:
     resolution: {integrity: sha512-VxKdEtUwDuLD0F1hOQP7kye0YadZxFJfv37Em440geEf/w9uggKnHpRrqwZJOdxmPUOdhZ9kyRtKuAJW8wUcRg==}
     engines: {node: '>=0.8.0'}
 
-  '@azure/msal-node-extensions@5.1.5':
-    resolution: {integrity: sha512-ME26pDG81VlT75bBWhad8lf1egYqD5Mt/guP3ClN/Ol9htqQK1IYfQJFwa0FJyCdVwDvmsOyLy/WmK/RTLZuIQ==}
+  '@azure/msal-node-extensions@5.3.3':
+    resolution: {integrity: sha512-WNF0XJyZLWOhRo4Pta2ubWn6gWE7gEEMYD7olQepiisAn+txb4/QRxXikNmd4oeYfk5wQ67QFSK/OQ8m6hYlXA==}
     engines: {node: '>=20'}
 
   '@azure/msal-node-runtime@0.20.5':
@@ -11040,7 +11044,7 @@ snapshots:
       '@azure/core-auth': 1.11.0
       '@azure/identity': 4.13.1
       '@azure/msal-node': 5.1.5
-      '@azure/msal-node-extensions': 5.1.5
+      '@azure/msal-node-extensions': 5.3.3
       keytar: 7.9.0
       tslib: 2.8.1
     transitivePeerDependencies:
@@ -11078,13 +11082,16 @@ snapshots:
     dependencies:
       '@azure/msal-common': 16.5.2
 
+  '@azure/msal-common@16.11.2':
+    optional: true
+
   '@azure/msal-common@16.5.2': {}
 
   '@azure/msal-common@16.6.1': {}
 
-  '@azure/msal-node-extensions@5.1.5':
+  '@azure/msal-node-extensions@5.3.3':
     dependencies:
-      '@azure/msal-common': 16.5.2
+      '@azure/msal-common': 16.11.2
       '@azure/msal-node-runtime': 0.20.5
       keytar: 7.9.0
     optional: true
