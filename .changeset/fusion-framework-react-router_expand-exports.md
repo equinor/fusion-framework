@@ -24,3 +24,4 @@ Expand re-exports so consumers don't need a direct `react-router` or `react-dom`
 ```
 
 Fixes: https://github.com/equinor/fusion/issues/880
+Thanks: @edmondbaloku for the report.
