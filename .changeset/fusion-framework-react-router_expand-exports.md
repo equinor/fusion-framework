@@ -12,9 +12,6 @@ Expand re-exports so consumers don't need a direct `react-router` or `react-dom`
 - `type PathParam`
 - `type SetURLSearchParams`
 
-**New export from `react-dom`:**
-- `createPortal`
-
 **New `Router` prop:**
 - `useTransitions?: boolean` — forwarded to `RouterProvider`. Set to `false` to disable React transition wrapping on navigation state updates (workaround for route-change UI flashing).
 

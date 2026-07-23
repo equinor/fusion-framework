@@ -52,6 +52,3 @@ export {
   useSearchParams,
   useSubmit,
 } from 'react-router';
-
-// Re-export createPortal from react-dom so consumers don't need a direct react-dom import.
-export { createPortal } from 'react-dom';
