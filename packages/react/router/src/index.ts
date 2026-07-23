@@ -21,15 +21,21 @@ export type {
 // Re-export commonly used React Router hooks, components, and utilities
 // so consumers don't need to install or import `react-router` directly.
 export {
+  BrowserRouter,
   Form,
   Link,
   NavLink,
   Navigate,
   Outlet,
+  createSearchParams,
+  generatePath,
+  isRouteErrorResponse,
   matchPath,
   matchRoutes,
   redirect,
   type LinkProps,
+  type PathParam,
+  type SetURLSearchParams,
   useActionData,
   useFormAction,
   useLocation,
@@ -46,3 +52,6 @@ export {
   useSearchParams,
   useSubmit,
 } from 'react-router';
+
+// Re-export createPortal from react-dom so consumers don't need a direct react-dom import.
+export { createPortal } from 'react-dom';
