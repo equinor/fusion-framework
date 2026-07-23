@@ -25,11 +25,15 @@ import React from 'react';
  * @property routes - A single route node, array of route nodes, or plain React Router `RouteObject` array.
  * @property loader - Optional React element shown while lazy route chunks are loading.
  * @property context - Custom object exposed as `fusion.context` in loaders, actions, and components.
+ * @property useTransitions - Controls whether React Router wraps navigation state updates in `React.startTransition`.
+ *   When `undefined` (the default), React Router decides based on its own internal logic.
+ *   Set to `false` to opt out of transition wrapping — useful for apps experiencing UI flashing on route changes.
  */
 type RouterProps = {
   routes: RouteNode | RouteNode[] | RouteObject | RouteObject[];
   loader?: React.ReactElement;
   context?: RouterContext;
+  useTransitions?: boolean;
 };
 
 /**
@@ -84,7 +88,12 @@ function normalizeRoutes(
  * }
  * ```
  */
-export function Router({ routes, context, loader }: RouterProps) {
+export function Router({
+  routes,
+  context,
+  loader,
+  useTransitions,
+}: RouterProps): React.ReactElement | null {
   const modules = useModules();
 
   const fusionRouterContext: FusionRouterContext = useMemo(() => {
@@ -190,7 +199,7 @@ export function Router({ routes, context, loader }: RouterProps) {
 
   return (
     <FusionRouterContextProvider value={fusionRouterContext}>
-      <RouterProvider router={router} />
+      <RouterProvider router={router} useTransitions={useTransitions} />
     </FusionRouterContextProvider>
   );
 }
