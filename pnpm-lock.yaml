@@ -1436,10 +1436,10 @@ importers:
         version: link:../module
       ag-grid-community:
         specifier: ~36.0.1
-        version: 36.0.1
+        version: 36.0.2
       ag-grid-enterprise:
         specifier: ~36.0.1
-        version: 36.0.1
+        version: 36.0.2
       typescript:
         specifier: ^7.0.2
         version: 7.0.2
@@ -2015,13 +2015,13 @@ importers:
         version: link:../../modules/ag-grid
       ag-grid-community:
         specifier: ~36.0.1
-        version: 36.0.1
+        version: 36.0.2
       ag-grid-enterprise:
         specifier: ~36.0.1
-        version: 36.0.1
+        version: 36.0.2
       ag-grid-react:
         specifier: ~36.0.1
-        version: 36.0.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+        version: 36.0.2(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
     devDependencies:
       '@equinor/fusion-framework-react-module':
         specifier: workspace:^
@@ -7152,26 +7152,14 @@ packages:
     resolution: {integrity: sha512-XleryMhbuksdKtofnWZ9Sk+4CUTbms4Mb/EU32SZwToAyZ5RgVos/ki8n+yr0LWHOGKuakbXTuuYNHLQjhddgg==}
     engines: {node: '>=14.0'}
 
-  ag-charts-community@14.0.1:
-    resolution: {integrity: sha512-XHYdDRtEz4OYyZZuut9BiHSDy6KjXoVXNom2Zvq8EEO6HN67x73xLZNlo/9Vxwoch/3mNGkQkVTzi0zqdKFQ4w==}
-
   ag-charts-community@14.0.2:
     resolution: {integrity: sha512-a0iQAd85HdYUeCdo90vNcgV1zYVwr9muulhcmpdAdKOJjj0I9CtS+x9v6yMx8QDcSQkBWa8E8xJDIW6tbVfESg==}
-
-  ag-charts-core@14.0.1:
-    resolution: {integrity: sha512-8fjv8XnqokFTYXWTsJ6LDH1GdPFpZtDRDv5G4j3MbDk3uGjD2p65hM2z1f60DzL8C0Ii7gD6q4O26TxhIIAtBA==}
 
   ag-charts-core@14.0.2:
     resolution: {integrity: sha512-tfvAwdE9ZRsOXqB8xPeYDy9O47Cy9ewSNH87yRONvTgMPHzsiJxJSXfQDQSG272zq9IJvfXxh0+SyPlMsTAkHg==}
 
-  ag-charts-enterprise@14.0.1:
-    resolution: {integrity: sha512-ZOivbXClgqrMh42OjMfId3xIIuKmuRbLPVMUYfGSt9MhGkEI1KIkMtgjSp8W64xKmdysTNOFM+Xf/8NXNE8OSQ==}
-
   ag-charts-enterprise@14.0.2:
     resolution: {integrity: sha512-QHxV0Jv31in97yrBsnKPxG+wCu9hOB+V4cYprJ9xoA1+VRUDd1rbzFwED1G4CIqqm+oFYdgy+IBiDnSudZmuIg==}
-
-  ag-charts-locale@14.0.1:
-    resolution: {integrity: sha512-GjeoU/0nRcEALK3K2VkVgeAkwtuH958XQlMawiN5XUt95Hj/IC1drwF7JJMkcV8U8GFHzNsXhsY1gFJfLY2L4g==}
 
   ag-charts-locale@14.0.2:
     resolution: {integrity: sha512-uuv4VS9AUc7bd0j6XNocD/3Aw9JsQiRme4ce2pW4AL/fqDQnL6HAVDhADJtS7NKkB3BKpeUxDGLOdBPXOLQWEA==}
@@ -7181,26 +7169,23 @@ packages:
     peerDependencies:
       react: ^18.0.0 || ^19.0.0
 
-  ag-charts-types@14.0.1:
-    resolution: {integrity: sha512-fGNDptlNzaQDqDoZxAYeLtBrV8sIXE1iRXX9s5W+/drobP3Ig2fhdAOlKp3IIrHlbiKZUiuhraqT0D4IYVyM4w==}
-
   ag-charts-types@14.0.2:
     resolution: {integrity: sha512-F7ZG0g8Y+iKhJi50AfZRwEyUM/TBsNyh2IoXB0JaDN97lnbemIK8GE5kF1eBtXtN4mcC+lPXK9oZUeVXwO9EWA==}
 
-  ag-grid-community@36.0.1:
-    resolution: {integrity: sha512-wQetUqoY6SBCtKzDjsYkImiGpM4+hU7S5/NvxcCAO6liL6mSRXlEvCHdQZUfj6amuhsdjVlGK1C8e+B54EyDTQ==}
+  ag-grid-community@36.0.2:
+    resolution: {integrity: sha512-TINZfuFvMY2nc3JfQHiUWT7dNIxI89ZxS5XkXIPi/rYICoNupRqpaM41KVzGPPfSkM0AwhuzTFxAiF08zEkV1Q==}
 
-  ag-grid-enterprise@36.0.1:
-    resolution: {integrity: sha512-sGxqekLggZWvjpCSl9b2T8qDpqrd/alFQRVGZhmkayZTftlpRPCkgWKCv374Msd46qXGJUkQcGwMhLrO0hqO3Q==}
+  ag-grid-enterprise@36.0.2:
+    resolution: {integrity: sha512-5km2v3BvcbjNMJPaPVTi/0vhpSPFCT598acX+F1ZmjUrUTQPFjccS5M+zMlgdIlcD2eCEIDtoNFDadxbld05yw==}
 
-  ag-grid-react@36.0.1:
-    resolution: {integrity: sha512-cqyZWHks9LF7MBZvX6QP8IGlYBScssdQ3B6EMli0nO2TClbBiRTZuP1ja3AwVL0THnl+WksO2kBB2ATWp8vVAQ==}
+  ag-grid-react@36.0.2:
+    resolution: {integrity: sha512-yVPmqdhx1zp06FLyZmwmIxIO57w4ko+qN64MXgPlBMJVL0MNA5hULqAY/+SoB4cd0bBHqz8okuuAbHHpu5QoHQ==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
-  ag-stack@36.0.1:
-    resolution: {integrity: sha512-FsrO55fl7EDToQVgRDaTF1+QKWpfJK1nxTxTavkkfHeq6Kei4skAeP0MsjXm7zECjfyHczlwmWvp+KN7KHnlYQ==}
+  ag-stack@36.0.2:
+    resolution: {integrity: sha512-YuhQExQw5YsWK0wxrksRyYBAqOU0v08lJH5uxRsKx+49ko5vkDgnJuhX4yF995BBVdLY1LKlXukLEub+olKyuA==}
 
   agent-base@7.1.4:
     resolution: {integrity: sha512-MnA+YT8fwfJPgBx3m60MNqakm30XOkyIoH1y6huTQvC0PwZG7ki8NacLBcrPbNoo8vEZy7Jpuk7+jMO+CUovTQ==}
@@ -15607,41 +15592,20 @@ snapshots:
 
   adm-zip@0.6.0: {}
 
-  ag-charts-community@14.0.1:
-    dependencies:
-      ag-charts-core: 14.0.1
-      ag-charts-locale: 14.0.1
-      ag-charts-types: 14.0.1
-    optional: true
-
   ag-charts-community@14.0.2:
     dependencies:
       ag-charts-core: 14.0.2
       ag-charts-locale: 14.0.2
       ag-charts-types: 14.0.2
 
-  ag-charts-core@14.0.1:
-    dependencies:
-      ag-charts-types: 14.0.1
-    optional: true
-
   ag-charts-core@14.0.2:
     dependencies:
       ag-charts-types: 14.0.2
-
-  ag-charts-enterprise@14.0.1:
-    dependencies:
-      ag-charts-community: 14.0.1
-      ag-charts-core: 14.0.1
-    optional: true
 
   ag-charts-enterprise@14.0.2:
     dependencies:
       ag-charts-community: 14.0.2
       ag-charts-core: 14.0.2
-
-  ag-charts-locale@14.0.1:
-    optional: true
 
   ag-charts-locale@14.0.2: {}
 
@@ -15650,31 +15614,29 @@ snapshots:
       ag-charts-community: 14.0.2
       react: 19.2.7
 
-  ag-charts-types@14.0.1: {}
-
   ag-charts-types@14.0.2: {}
 
-  ag-grid-community@36.0.1:
+  ag-grid-community@36.0.2:
     dependencies:
-      ag-charts-types: 14.0.1
-      ag-stack: 36.0.1
+      ag-charts-types: 14.0.2
+      ag-stack: 36.0.2
 
-  ag-grid-enterprise@36.0.1:
+  ag-grid-enterprise@36.0.2:
     dependencies:
-      ag-grid-community: 36.0.1
-      ag-stack: 36.0.1
+      ag-grid-community: 36.0.2
+      ag-stack: 36.0.2
     optionalDependencies:
-      ag-charts-community: 14.0.1
-      ag-charts-enterprise: 14.0.1
+      ag-charts-community: 14.0.2
+      ag-charts-enterprise: 14.0.2
 
-  ag-grid-react@36.0.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7):
+  ag-grid-react@36.0.2(react-dom@19.2.7(react@19.2.7))(react@19.2.7):
     dependencies:
-      ag-grid-community: 36.0.1
+      ag-grid-community: 36.0.2
       prop-types: 15.8.1
       react: 19.2.7
       react-dom: 19.2.7(react@19.2.7)
 
-  ag-stack@36.0.1: {}
+  ag-stack@36.0.2: {}
 
   agent-base@7.1.4: {}
 
