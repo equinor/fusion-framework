@@ -159,7 +159,20 @@ function resolveFilePath(filePath: string, baseDir: string): string | null {
 }
 
 /**
- * Checks what exports exist in a file
+ * Scans a route file and returns the set of recognised export names.
+ *
+ * The following exports are detected and wired into the generated React Router data route:
+ *
+ * | Export | Mapped to |
+ * |---|---|
+ * | `default` | `Component` |
+ * | `clientLoader` | `loader` |
+ * | `action` | `action` |
+ * | `handle` | `handle` |
+ * | `ErrorElement` | `errorElement` |
+ * | `HydrateFallback` | `HydrateFallback` |
+ *
+ * Any other named export in the file is silently ignored.
  */
 function getAvailableExports(filePath: string, currentFileId: string, debug: boolean): Set<string> {
   const availableExports = new Set<string>();
