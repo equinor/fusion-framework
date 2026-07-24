@@ -70,8 +70,10 @@ function walkNode(node: Node, filePath: string, severity: Severity, out: Diagnos
     if (source) {
       // source text includes surrounding quotes, e.g. `'fs'` or `"path"`
       const raw = source.text.replace(/^['"]|['"]$/g, '');
+      // Subpath imports like 'fs/promises' are also built-ins — check the first segment
+      const [firstSegment] = raw.split('/');
       // Only flag modules that are known Node.js built-ins without the node: prefix
-      if (NODE_BUILTINS.has(raw)) {
+      if (NODE_BUILTINS.has(firstSegment)) {
         out.push({
           file: filePath,
           line: node.startPosition.row + 1,
