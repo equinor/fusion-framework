@@ -9,9 +9,10 @@ import type { Diagnostic } from '@equinor/fusion-framework-lint-core';
  * @see https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/workflow-commands-for-github-actions#setting-a-warning-message
  */
 export function formatAnnotations(diagnostics: Diagnostic[]): string {
-  // Map each diagnostic to a GitHub Actions ::warning/::error annotation command
-  const lines = diagnostics.map(
-    (d) => `::${d.severity} file=${d.file},line=${d.line},col=${d.col}::${d.rule}: ${d.message}`,
-  );
+  // GitHub Actions only recognizes `::warning`/`::error`, not our internal `warn` severity
+  const lines = diagnostics.map((d) => {
+    const command = d.severity === 'warn' ? 'warning' : d.severity;
+    return `::${command} file=${d.file},line=${d.line},col=${d.col}::${d.rule}: ${d.message}`;
+  });
   return `${lines.join('\n')}\n`;
 }
