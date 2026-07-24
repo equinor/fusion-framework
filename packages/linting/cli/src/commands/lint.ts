@@ -1,7 +1,7 @@
 import { readFile, writeFile, stat } from 'node:fs/promises';
 import { basename } from 'node:path';
 import { Command } from 'commander';
-import fg from 'fast-glob';
+import { globby } from 'globby';
 import ora from 'ora';
 import { LintEngine } from '@equinor/fusion-framework-lint-core';
 import type { LintConfig, Diagnostic } from '@equinor/fusion-framework-lint-core';
@@ -22,6 +22,7 @@ interface LintOptions {
   rule?: string[];
   diagnosticLevel?: string;
   verbose?: boolean;
+  skipGitignore?: boolean;
 }
 
 interface FileResult {
@@ -78,9 +79,10 @@ async function runLint(patterns: string[], options: LintOptions): Promise<void> 
       ? null
       : ora({ text: 'Resolving file patterns…', color: 'cyan' }).start();
 
-  const files = await fg(await expandPatterns(patterns), {
+  const files = await globby(await expandPatterns(patterns), {
     absolute: true,
     onlyFiles: true,
+    gitignore: !options.skipGitignore,
     ignore: ['**/node_modules/**', '**/*.d.ts'],
   });
 
@@ -225,5 +227,6 @@ export function createLintCommand(name = 'lint'): Command {
     )
     .option('--rule <rule...>', 'Override rule severity  e.g. --rule require-intent-comment=error')
     .option('--verbose', 'Show extended diagnostic descriptions instead of terse rule IDs')
+    .option('--skip-gitignore', 'Lint files ignored by .gitignore too (respected by default)')
     .action(runLint);
 }

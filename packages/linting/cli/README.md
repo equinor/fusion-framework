@@ -26,6 +26,12 @@ fusion-lint --github-actions src
 
 Supported extensions: `.ts`, `.tsx`, `.mts`, `.cts` (`.d.ts` files are always skipped).
 
+`.gitignore` is respected by default. Pass `--skip-gitignore` to lint ignored files too:
+
+```bash
+fusion-lint src --skip-gitignore
+```
+
 Exit code `0` when all diagnostics are `warn`. Exit code `1` when any diagnostic is `error`.
 
 ## Programmatic API
