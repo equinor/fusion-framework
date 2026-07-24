@@ -35,7 +35,7 @@
     "directory": "packages/linting/lsp"
   },
   "scripts": {
-    "build": "tsc --noEmit && pnpm bundle",
+    "build": "tsc -b && pnpm bundle",
     "bundle": "esbuild src/server.ts --bundle --platform=node --format=esm --banner:js=\"import{createRequire as __cjsRequire}from'module';const require=__cjsRequire(import.meta.url);\" --outfile=dist/esm/server.mjs",
     "prepack": "pnpm build"
   },
