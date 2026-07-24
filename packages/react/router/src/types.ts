@@ -1,6 +1,7 @@
 import type { RouteObject as ReactRouterRouteObject } from 'react-router';
 import type { Modules, ModulesInstanceType } from '@equinor/fusion-framework-react-module';
 
+
 /**
  * Utility type representing a value that may be synchronous or asynchronous.
  *
@@ -177,7 +178,7 @@ export type RouterComponent<
  * @template TContext - The type of Fusion router context
  */
 export interface ErrorElementProps<
-  TError = Error,
+  TError = unknown,
   TContext extends FusionRouterContext = FusionRouterContext,
 > {
   /** The error that triggered the error boundary */
@@ -194,7 +195,7 @@ export interface ErrorElementProps<
  * @template TContext - The type of Fusion router context
  */
 export type ErrorElement<
-  TError = Error,
+  TError = unknown,
   TContext extends FusionRouterContext = FusionRouterContext,
 > = React.ComponentType<ErrorElementProps<TError, TContext>>;
 
@@ -249,13 +250,36 @@ export interface RouterHandle {
 
 /**
  * Extended React Router RouteObject with Fusion Framework handle support.
- * Adds support for RouterHandle in the handle field and typed children.
+ *
+ * **`errorElement` diverges from React Router**: React Router accepts a `ReactNode`
+ * (a rendered element), but Fusion requires a `ComponentType` so it can inject
+ * `error` and `fusion` context as props at render time. Pass the component
+ * class/function directly — do **not** wrap it in JSX.
+ *
+ * ```tsx
+ * // Correct (component reference):
+ * { errorElement: MyErrorPage }
+ *
+ * // Wrong (rendered element — will fail at runtime):
+ * { errorElement: <MyErrorPage /> }
+ * ```
+ *
+ * `ErrorBoundary` works exactly as in React Router (a `ComponentType` that may
+ * additionally receive `error` and `fusion` props from the Fusion router).
  */
-export type RouteObject = Omit<ReactRouterRouteObject, 'handle' | 'children'> & {
+export type RouteObject = Omit<ReactRouterRouteObject, 'handle' | 'children' | 'errorElement'> & {
   /** Route metadata handle containing schema and custom properties */
   handle?: RouterHandle;
   /** Child routes */
   children?: RouteObject[];
+  /**
+   * Component rendered when this route throws. The Fusion router injects
+   * `error` and `fusion` as props.
+   *
+   * **Note**: Unlike React Router, this must be a `ComponentType`, not a `ReactNode`.
+   * Mutually exclusive with `ErrorBoundary`.
+   */
+  errorElement?: ErrorElement;
 };
 
 /**
