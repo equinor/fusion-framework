@@ -110,7 +110,10 @@ function lintDocument(document: TextDocument): void {
   // Only lint TypeScript source files
   if (!document.uri.endsWith('.ts') && !document.uri.endsWith('.tsx')) return;
 
-  const results = engine.lint(document.getText(), document.uri);
+  // documentSelector is scheme: 'file', so this is always a file:// URI —
+  // convert to a real filesystem path since rules/formatters expect one
+  const filePath = fileURLToPath(document.uri);
+  const results = engine.lint(document.getText(), filePath);
   const text = document.getText();
   // Map each fusion-lint diagnostic to the LSP Diagnostic shape the client expects
   const diagnostics: Diagnostic[] = results.map((d) => ({
