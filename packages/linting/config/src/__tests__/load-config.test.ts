@@ -1,6 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import { fileURLToPath } from 'node:url';
 import { join, dirname } from 'node:path';
+import { mkdtemp, mkdir, writeFile, rm } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
 import { loadLintConfig } from '../load-config.js';
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -101,6 +103,50 @@ describe('loadLintConfig', () => {
       const [rule] = result?.customRules ?? [];
 
       expect(rule?.check('const x = 1;', 'test.ts')).toEqual([]);
+    });
+  });
+
+  describe('find-up', () => {
+    it('finds a config file in an ancestor directory by default', async () => {
+      const result = await loadLintConfig({ cwd: fixture('find-up/nested/deep') });
+
+      expect(result).toEqual({
+        config: { 'require-tsdoc': 'error', 'require-intent-comment': 'warn' },
+        customRules: [],
+      });
+    });
+
+    it('returns null when findUp is disabled and cwd has no config of its own', async () => {
+      const result = await loadLintConfig({
+        cwd: fixture('find-up/nested/deep'),
+        findUp: false,
+      });
+
+      expect(result).toBeNull();
+    });
+
+    it('stops walking up once a directory containing .git has been checked', async () => {
+      // Build a throwaway tree so this test doesn't depend on the real repo layout:
+      // <tmp>/fusion-lint.config.json   (must NOT be found)
+      // <tmp>/repo/.git                 (repo root boundary marker)
+      // <tmp>/repo/nested/              (search starts here)
+      const tmpRoot = await mkdtemp(join(tmpdir(), 'fusion-lint-find-up-'));
+      try {
+        await writeFile(
+          join(tmpRoot, 'fusion-lint.config.json'),
+          JSON.stringify({ 'require-tsdoc': 'error' }),
+        );
+        const repoDir = join(tmpRoot, 'repo');
+        const nestedDir = join(repoDir, 'nested');
+        await mkdir(nestedDir, { recursive: true });
+        await writeFile(join(repoDir, '.git'), 'gitdir: /elsewhere\n');
+
+        const result = await loadLintConfig({ cwd: nestedDir });
+
+        expect(result).toBeNull();
+      } finally {
+        await rm(tmpRoot, { recursive: true, force: true });
+      }
     });
   });
 });

@@ -1,4 +1,5 @@
-import { readFile } from 'node:fs/promises';
+import { access, readFile } from 'node:fs/promises';
+import { dirname, join, resolve as resolvePath } from 'node:path';
 import { parse as parseYaml } from 'yaml';
 import { importConfig, resolveConfigFile, FileNotFoundError } from '@equinor/fusion-imports';
 import type { LintConfig, Rule } from '@equinor/fusion-framework-lint-core';
@@ -17,7 +18,7 @@ const CONFIG_EXTENSIONS = ['.ts', '.js', '.json', '.yml', '.yaml'] as const;
  */
 export interface LoadLintConfigOptions {
   /**
-   * Directory to search for the configuration file.
+   * Directory to start searching for the configuration file from.
    * @default process.cwd()
    */
   cwd?: string;
@@ -27,6 +28,60 @@ export interface LoadLintConfigOptions {
    * @default {}
    */
   base?: LintConfig;
+  /**
+   * When `true`, searches parent directories for a config file if none is
+   * found in `cwd` — useful when linting a file deep inside a monorepo
+   * package that inherits its config from the repo root. The search stops
+   * after checking the directory containing `.git` (the repo root), so it
+   * never reads a config from outside the current repository.
+   * @default true
+   */
+  findUp?: boolean;
+}
+
+/**
+ * Returns `true` when `dir` contains a `.git` entry (directory or file, the
+ * latter used by git worktrees), marking it as the repository root.
+ */
+async function isRepoRoot(dir: string): Promise<boolean> {
+  try {
+    await access(join(dir, '.git'));
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Resolves the first accessible config file starting at `startDir`, walking
+ * up through parent directories when `findUp` is enabled. The walk stops
+ * after checking the repository root (detected via `.git`), or at the
+ * filesystem root if no `.git` is found.
+ */
+async function resolveConfigFileUpwards(startDir: string, findUp: boolean): Promise<string> {
+  let dir = resolvePath(startDir);
+
+  // Directory-walk loop: try each directory, then step up unless a boundary was hit
+  while (true) {
+    try {
+      return await resolveConfigFile([...CONFIG_BASENAMES], {
+        baseDir: dir,
+        extensions: [...CONFIG_EXTENSIONS],
+      });
+    } catch (err) {
+      // Anything other than "not found in this directory" is a real failure — propagate it
+      if (!(err instanceof FileNotFoundError)) throw err;
+    }
+    // Parent of the filesystem root is itself — that's the walk-terminating condition below
+    const parent = dirname(dir);
+    // Guard: find-up disabled, or repo/filesystem root already checked — stop searching
+    if (!findUp || parent === dir || (await isRepoRoot(dir))) {
+      throw new FileNotFoundError(
+        `No configuration file found for basename '${CONFIG_BASENAMES.join("', '")}'`,
+      );
+    }
+    dir = parent;
+  }
 }
 
 /**
@@ -53,7 +108,9 @@ function normalise(raw: FusionLintFileConfig): LoadedLintConfig {
 }
 
 /**
- * Loads a `fusion-lint` configuration file from the given directory.
+ * Loads a `fusion-lint` configuration file, searching from `cwd` upward
+ * through parent directories (stopping at the repository root) unless
+ * `findUp` is disabled.
  *
  * Searches for `fusion-lint.config` or `.fusion-lintrc` with extensions
  * `.ts`, `.js`, `.json`, `.yml`, or `.yaml` — in that order.
@@ -76,11 +133,8 @@ export async function loadLintConfig(
   let filePath: string;
 
   try {
-    // Find the first accessible config file across all basenames and extensions
-    filePath = await resolveConfigFile([...CONFIG_BASENAMES], {
-      baseDir,
-      extensions: [...CONFIG_EXTENSIONS],
-    });
+    // Find the first accessible config file, walking up to the repo root when enabled
+    filePath = await resolveConfigFileUpwards(baseDir, options.findUp ?? true);
   } catch (err) {
     // Guard: no config file present — caller falls back to defaults
     if (err instanceof FileNotFoundError) return null;
