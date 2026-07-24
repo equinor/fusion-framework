@@ -92,9 +92,12 @@ export const configureModules =
     if (cb) {
       await Promise.resolve(cb(configurator, args));
     }
+    // Type cast is safe because AppConfigurator.initialize() returns the exact module
+    // instance that was registered and configured above. The intermediate 'unknown'
+    // cast is necessary due to TypeScript's generic inference limitations with the
+    // configurator's initialization chain, but the runtime value is guaranteed to match.
     const modules: AppModulesInstance<TModules> = (await configurator.initialize(
       args.fusion.modules,
-      // TODO: type cast to unknown should not be needed in future
     )) as unknown as AppModulesInstance<TModules>;
 
     // Dispatch app modules loaded event for app lifecycle tracking

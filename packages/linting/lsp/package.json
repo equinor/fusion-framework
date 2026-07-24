@@ -1,0 +1,52 @@
+{
+  "name": "@equinor/fusion-framework-lint-lsp",
+  "version": "0.1.0",
+  "description": "LSP language server for Fusion Framework lint rules",
+  "keywords": [
+    "equinor",
+    "fusion",
+    "lint",
+    "lsp",
+    "language-server"
+  ],
+  "license": "ISC",
+  "type": "module",
+  "main": "dist/esm/index.js",
+  "types": "dist/types/index.d.ts",
+  "bin": {
+    "fusion-lint-server": "./bin/fusion-lint-server.mjs"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "types": "./dist/types/index.d.ts"
+    }
+  },
+  "files": [
+    "bin/fusion-lint-server.mjs",
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/equinor/fusion-framework.git",
+    "directory": "packages/linting/lsp"
+  },
+  "scripts": {
+    "build": "tsc -b && pnpm bundle",
+    "bundle": "esbuild src/server.ts --bundle --platform=node --format=esm --banner:js=\"import{createRequire as __cjsRequire}from'module';const require=__cjsRequire(import.meta.url);\" --outfile=dist/esm/server.mjs",
+    "prepack": "pnpm build"
+  },
+  "dependencies": {
+    "@equinor/fusion-framework-lint-config": "workspace:^",
+    "@equinor/fusion-framework-lint-core": "workspace:^",
+    "vscode-languageserver": "^9.0.1",
+    "vscode-languageserver-textdocument": "^1.0.12"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.0",
+    "typescript": "^7.0.2"
+  }
+}

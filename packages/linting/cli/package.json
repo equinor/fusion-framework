@@ -1,0 +1,54 @@
+{
+  "name": "@equinor/fusion-lint",
+  "version": "0.1.0",
+  "description": "CLI for running Fusion lint rules on TypeScript source files",
+  "keywords": [
+    "equinor",
+    "fusion",
+    "lint",
+    "linting",
+    "cli"
+  ],
+  "license": "ISC",
+  "type": "module",
+  "main": "dist/esm/index.js",
+  "types": "dist/types/index.d.ts",
+  "bin": {
+    "fusion-lint": "./bin/fusion-lint.mjs"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "types": "./dist/types/index.d.ts"
+    }
+  },
+  "files": [
+    "bin/fusion-lint.mjs",
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/equinor/fusion-framework.git",
+    "directory": "packages/linting/cli"
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "typecheck": "tsc --noEmit",
+    "prepack": "pnpm build"
+  },
+  "dependencies": {
+    "@equinor/fusion-framework-lint-config": "workspace:^",
+    "@equinor/fusion-framework-lint-core": "workspace:^",
+    "chalk": "^5.6.0",
+    "commander": "^15.0.0",
+    "globby": "^16.2.1",
+    "ora": "^9.0.0",
+    "simple-git": "^3.32.3"
+  },
+  "devDependencies": {
+    "typescript": "^7.0.2"
+  }
+}

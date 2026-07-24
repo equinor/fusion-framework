@@ -1,0 +1,10 @@
+tsconfig.json
+tsconfig.tsbuildinfo
+**/*.tsbuildinfo
+**/*.d.ts
+**/*.map
+src/
+scripts/
+.vscode/
+node_modules/
+*.vsix

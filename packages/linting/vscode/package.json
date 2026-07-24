@@ -1,0 +1,85 @@
+{
+  "name": "fusion-lint-vscode",
+  "displayName": "Fusion Lint",
+  "description": "Real-time Fusion Framework lint diagnostics — no separate server install required",
+  "version": "0.1.0",
+  "publisher": "equinor",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "icon": "images/icon.png",
+  "categories": [
+    "Linters"
+  ],
+  "keywords": [
+    "equinor",
+    "fusion",
+    "lint",
+    "linting",
+    "typescript"
+  ],
+  "activationEvents": [
+    "onLanguage:typescript",
+    "onLanguage:typescriptreact"
+  ],
+  "main": "./dist/index.js",
+  "contributes": {
+    "configuration": {
+      "title": "Fusion Lint",
+      "properties": {
+        "fusion-lint.serverPath": {
+          "type": "string",
+          "default": "",
+          "description": "Override the bundled fusion-lint-server path. Leave empty to use the version bundled with this extension."
+        },
+        "fusion-lint.runOn": {
+          "type": "string",
+          "enum": [
+            "change",
+            "save"
+          ],
+          "enumDescriptions": [
+            "Lint as you type on every keystroke.",
+            "Lint only when the file is saved."
+          ],
+          "default": "change",
+          "description": "When to run the Fusion Lint engine."
+        },
+        "fusion-lint.trace.server": {
+          "type": "string",
+          "enum": [
+            "off",
+            "messages",
+            "verbose"
+          ],
+          "default": "off",
+          "description": "Traces LSP communication between VS Code and the fusion-lint-server."
+        }
+      }
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/equinor/fusion-framework.git",
+    "directory": "packages/linting/vscode"
+  },
+  "scripts": {
+    "build": "tsc --noEmit && pnpm bundle && pnpm copy-server",
+    "bundle": "esbuild src/index.ts --bundle --external:vscode --platform=node --format=cjs --outfile=dist/index.js",
+    "copy-server": "node scripts/copy-server.mjs",
+    "icon": "pnpm dlx @resvg/resvg-js-cli images/icon.svg images/icon.png",
+    "prepack": "pnpm build",
+    "package": "vsce package --no-dependencies"
+  },
+  "dependencies": {
+    "vscode-languageclient": "^9.0.1"
+  },
+  "devDependencies": {
+    "@equinor/fusion-framework-lint-lsp": "workspace:^",
+    "@types/vscode": "^1.85.0",
+    "@vscode/vsce": "^3.0.0",
+    "esbuild": "^0.25.0",
+    "typescript": "^7.0.2"
+  }
+}
