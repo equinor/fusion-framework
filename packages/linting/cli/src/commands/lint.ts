@@ -1,4 +1,4 @@
-import { readFile, writeFile } from 'node:fs/promises';
+import { readFile, writeFile, stat } from 'node:fs/promises';
 import { basename } from 'node:path';
 import { Command } from 'commander';
 import fg from 'fast-glob';
@@ -29,6 +29,34 @@ interface FileResult {
   diagnostics: Diagnostic[];
 }
 
+/** Extensions fusion-lint understands, used to expand bare directory arguments into a glob. */
+const SUPPORTED_EXTENSIONS = ['ts', 'tsx', 'mts', 'cts'];
+
+/**
+ * Expands directory arguments into a recursive glob over supported extensions,
+ * so `fusion-lint lint packages/modules/http` works without spelling out
+ * `"packages/modules/http/**\/*.ts"`. Patterns that aren't existing directories
+ * (plain glob patterns, single files, or paths that don't exist) pass through unchanged.
+ */
+async function expandPatterns(patterns: string[]): Promise<string[]> {
+  return Promise.all(
+    // Resolve each pattern to itself, or to a recursive glob if it's a directory
+    patterns.map(async (pattern) => {
+      try {
+        const stats = await stat(pattern);
+        // Only directories need expanding — files and globs are already fast-glob-ready
+        if (stats.isDirectory()) {
+          const normalized = pattern.replace(/\\/g, '/').replace(/\/+$/, '');
+          return `${normalized}/**/*.{${SUPPORTED_EXTENSIONS.join(',')}}`;
+        }
+      } catch {
+        // Not an existing filesystem path — treat as a glob pattern as-is
+      }
+      return pattern;
+    }),
+  );
+}
+
 async function runLint(patterns: string[], options: LintOptions): Promise<void> {
   const reporter = resolveReporter(options.reporter, options.githubActions);
   const isCI = reporter === 'github-actions';
@@ -50,13 +78,13 @@ async function runLint(patterns: string[], options: LintOptions): Promise<void> 
       ? null
       : ora({ text: 'Resolving file patterns…', color: 'cyan' }).start();
 
-  const files = await fg(patterns, {
+  const files = await fg(await expandPatterns(patterns), {
     absolute: true,
     onlyFiles: true,
     ignore: ['**/node_modules/**', '**/*.d.ts'],
   });
 
-  // Guard: nothing to lint when no files match the provided glob patterns
+  // Guard: nothing to lint when no files match the provided patterns
   if (files.length === 0) {
     spinner?.warn(`No files matched: ${patterns.join(', ')}`);
     return;
@@ -170,7 +198,7 @@ async function runLint(patterns: string[], options: LintOptions): Promise<void> 
  * // packages/cli — app command
  * import { createLintCommand } from '@equinor/fusion-lint';
  * appCommand.addCommand(createLintCommand());
- * // → ffc app lint "src/**\/*.ts"
+ * // → ffc app lint packages/modules/http
  * ```
  *
  * @param name - Command name; use `'fusion-lint'` for the standalone binary.
@@ -179,7 +207,10 @@ async function runLint(patterns: string[], options: LintOptions): Promise<void> 
 export function createLintCommand(name = 'lint'): Command {
   return new Command(name)
     .description('Run Fusion lint rules on TypeScript source files')
-    .argument('<patterns...>', 'Glob pattern(s) for source files to lint')
+    .argument(
+      '<patterns...>',
+      'File(s), director(y/ies), or glob pattern(s) of source files to lint',
+    )
     .option('--github-actions', 'Alias for --reporter=github-actions (GitHub Actions annotations)')
     .option(
       '--reporter <name>',

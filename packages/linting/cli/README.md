@@ -11,15 +11,20 @@ pnpm add -D @equinor/fusion-lint
 ## Usage
 
 ```bash
-# Lint all TypeScript files under src/
-fusion-lint "src/**/*.ts"
+# Lint all supported TypeScript files under src/ (recursively)
+fusion-lint src
 
-# Lint TSX files too
+# Lint a specific package
+fusion-lint packages/modules/http
+
+# Glob patterns and individual files also work
 fusion-lint "src/**/*.{ts,tsx}"
 
 # Emit GitHub Actions inline annotations (auto-detected from $GITHUB_ACTIONS)
-fusion-lint --github-actions "src/**/*.ts"
+fusion-lint --github-actions src
 ```
+
+Supported extensions: `.ts`, `.tsx`, `.mts`, `.cts` (`.d.ts` files are always skipped).
 
 Exit code `0` when all diagnostics are `warn`. Exit code `1` when any diagnostic is `error`.
 
@@ -40,7 +45,7 @@ const diagnostics = engine.lint(source, filePath);
 
 ```yaml
 - name: Fusion lint
-  run: pnpm fusion-lint "src/**/*.ts"
+  run: pnpm fusion-lint src
   env:
     GITHUB_ACTIONS: 'true'
 ```
