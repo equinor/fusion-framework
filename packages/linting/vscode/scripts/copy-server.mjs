@@ -3,7 +3,7 @@
  * extension's dist/ directory so the VSIX is fully self-contained.
  *
  * Outputs:
- *   dist/server.js                              — bundled LSP server
+ *   dist/server.mjs                             — bundled LSP server
  *   dist/wasm/web-tree-sitter.wasm              — web-tree-sitter runtime
  *   dist/wasm/tree-sitter-typescript.wasm       — TypeScript grammar
  *   dist/wasm/tree-sitter-tsx.wasm              — TSX grammar
