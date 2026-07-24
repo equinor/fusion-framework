@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-docs
 
+## 0.4.19
+
+### Patch Changes
+
+- e4ee22b: Add "Linting" and "Setup" guides under the Guide section, covering Fusion Lint, Biome, pnpm, TypeScript, and Vitest conventions for Fusion apps. Add a one-click VS Code install link to the Fusion Lint overview README.
+
 ## 0.4.18
 
 ### Patch Changes
