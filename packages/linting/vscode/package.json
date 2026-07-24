@@ -2,7 +2,7 @@
   "name": "fusion-ts-lint-vscode",
   "displayName": "Fusion TS Lint",
   "description": "Real-time Fusion Framework lint diagnostics — no separate server install required",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "publisher": "equinor-fusion",
   "license": "MIT",

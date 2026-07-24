@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework-lint-lsp",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "LSP language server for Fusion Framework lint rules",
   "keywords": [
     "equinor",
