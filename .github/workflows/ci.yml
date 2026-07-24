@@ -78,8 +78,10 @@ jobs:
     name: Publish VS Code extension to Marketplace
     needs: release-pkg
     runs-on: ubuntu-latest
+    environment: vs-marketplace
     permissions:
       contents: read
+      id-token: write  # Required for OIDC login to Azure (Marketplace publish)
     steps:
       - uses: actions/checkout@v7
         with:
@@ -109,12 +111,18 @@ jobs:
         if: steps.check.outputs.should-publish == 'true'
         run: pnpm turbo build --filter=fusion-ts-lint-vscode...
 
+      - name: Azure login (Marketplace publisher identity)
+        if: steps.check.outputs.should-publish == 'true'
+        uses: azure/login@532459ea530d8321f2fb9bb10d1e0bcf23869a43
+        with:
+          client-id: ${{ vars.AZURE_CLIENT_ID }}
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          allow-no-subscriptions: true
+
       - name: Publish to VS Code Marketplace
         if: steps.check.outputs.should-publish == 'true'
         working-directory: packages/linting/vscode
-        run: pnpm exec vsce publish --no-dependencies
-        env:
-          VSCE_PAT: ${{ secrets.VS_MARKETPLACE_PAT }}
+        run: pnpm exec vsce publish --no-dependencies --azure-credential
 
   # Update documentation only when packages are published
   # Uses dispatched workflow with minimal required permissions
