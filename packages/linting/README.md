@@ -5,6 +5,8 @@
 Squiggles in your editor. Failures in CI. Inline comments on pull requests.  
 All from one tool that understands how Fusion apps are supposed to be written.
 
+[Install in VS Code](vscode:extension/equinor-fusion.fusion-ts-lint-vscode)
+
 ---
 
 ## ✨ What makes it different
@@ -71,8 +73,7 @@ export const UserCard = ({ user }: Props): JSX.Element => ( ... );
 ## 📦 Packages
 
 ```
-core → rules → config → cli
-                      → lsp → vscode
+core → rules → config → cli → lsp → vscode
 ```
 
 | Package | What it is |
