@@ -5,8 +5,8 @@ export function HomePage() {
     <div>
       <h1>RouteObject[] (legacy) router cookbook</h1>
       <p>
-        This cookbook demonstrates the manual <code>RouteObject[]</code> approach to Fusion
-        routing — the alternative to the DSL (<code>route()</code> / <code>layout()</code>).
+        This cookbook demonstrates the manual <code>RouteObject[]</code> approach to Fusion routing
+        — the alternative to the DSL (<code>route()</code> / <code>layout()</code>).
       </p>
       <ul>
         <li>
