@@ -9,6 +9,6 @@ Provides the foundational engine, rule interface, and diagnostic types for the F
 ```typescript
 import { LintEngine } from '@equinor/fusion-framework-lint-core';
 
-const engine = new LintEngine(config);
+const engine = new LintEngine(rules, config);
 const diagnostics = engine.lint(sourceText, filePath);
 ```
