@@ -1,5 +1,11 @@
 # fusion-ts-lint-vscode
 
+## 0.2.1
+
+### Patch Changes
+
+- ea3e404: Internal: test release to validate Marketplace publishing via Azure OIDC service principal login instead of a personal access token; no functional changes.
+
 ## 0.2.0
 
 ### Minor Changes
