@@ -70,6 +70,7 @@ interface RouteImports {
   handle?: string;
   errorElement?: string;
   hydrateFallback?: string;
+  shouldRevalidate?: string;
   availableExports: Set<string>;
 }
 
@@ -171,6 +172,7 @@ function resolveFilePath(filePath: string, baseDir: string): string | null {
  * | `handle` | `handle` |
  * | `ErrorElement` | `errorElement` |
  * | `HydrateFallback` | `HydrateFallback` |
+ * | `shouldRevalidate` | `shouldRevalidate` |
  *
  * Any other named export in the file is silently ignored.
  */
@@ -198,7 +200,14 @@ function getAvailableExports(filePath: string, currentFileId: string, debug: boo
     }
 
     // Check for named exports and re-exports
-    const exportNames = ['clientLoader', 'action', 'handle', 'ErrorElement', 'HydrateFallback'];
+    const exportNames = [
+      'clientLoader',
+      'action',
+      'handle',
+      'ErrorElement',
+      'HydrateFallback',
+      'shouldRevalidate',
+    ];
     for (const name of exportNames) {
       if (
         fileContent.match(EXPORT_NAMED_PATTERN(name)) ||
@@ -257,6 +266,10 @@ function buildRouteProperties(imports: RouteImports): string {
     properties.push(`HydrateFallback: ${imports.hydrateFallback}`);
   }
 
+  if (imports.shouldRevalidate) {
+    properties.push(`shouldRevalidate: ${imports.shouldRevalidate}`);
+  }
+
   return properties.join(',\n        ');
 }
 
@@ -298,6 +311,9 @@ function generateImportStatements(
     }
     if (imports.hydrateFallback) {
       importParts.push(`HydrateFallback as ${imports.hydrateFallback}`);
+    }
+    if (imports.shouldRevalidate) {
+      importParts.push(`shouldRevalidate as ${imports.shouldRevalidate}`);
     }
 
     if (importParts.length > 0) {
@@ -608,6 +624,9 @@ export const reactRouterPlugin = (options: ReactRouterPluginOptions = {}): Plugi
               : undefined,
             hydrateFallback: availableExports.has('HydrateFallback')
               ? `HydrateFallback${componentName}`
+              : undefined,
+            shouldRevalidate: availableExports.has('shouldRevalidate')
+              ? `shouldRevalidate${componentName}`
               : undefined,
             availableExports,
           });
