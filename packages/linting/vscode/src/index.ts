@@ -67,7 +67,7 @@ export function activate(context: ExtensionContext): void {
     ],
     synchronize: {
       // Re-lint when a config file is saved, and forward setting changes to the server
-      fileEvents: workspace.createFileSystemWatcher('**/fusion-lint.config.*'),
+      fileEvents: workspace.createFileSystemWatcher('**/{fusion-lint.config.*,.fusion-lintrc.*}'),
       configurationSection: 'fusion-lint',
     },
     initializationOptions: () => ({
