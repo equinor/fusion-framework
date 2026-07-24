@@ -29,6 +29,9 @@ let engine: LintEngine = new LintEngine(recommendedRules, recommendedConfig);
 /** Controls when linting is triggered — updated from VS Code settings. */
 let runOn: 'change' | 'save' = 'change';
 
+/** Set on initialize; reused to reload config when a watched file changes. */
+let workspaceRoot: string = process.cwd();
+
 /**
  * Loads (or reloads) the lint engine from the nearest `fusion-lint.config.*`
  * file in `cwd`.
@@ -129,7 +132,7 @@ connection.onInitialize((params): InitializeResult => {
   // Use fileURLToPath rather than a raw string replace so URL-encoding, Windows
   // drive letters, and UNC paths are handled correctly.
   const workspaceFolderUri = params.workspaceFolders?.[0]?.uri;
-  const workspaceRoot = workspaceFolderUri ? fileURLToPath(workspaceFolderUri) : process.cwd();
+  workspaceRoot = workspaceFolderUri ? fileURLToPath(workspaceFolderUri) : process.cwd();
 
   // Read the runOn preference sent by the client at startup
   const initRunOn = params.initializationOptions?.runOn;
@@ -159,6 +162,19 @@ connection.onDidChangeConfiguration((change) => {
     | undefined;
   const newRunOn = settings?.runOn;
   if (newRunOn === 'change' || newRunOn === 'save') runOn = newRunOn;
+});
+
+connection.onDidChangeWatchedFiles(() => {
+  // The client watches fusion-lint.config.* / .fusion-lintrc.* and notifies on save;
+  // reload the engine and re-lint every open document so changes take effect immediately
+  reloadEngine(workspaceRoot)
+    .then(() => {
+      // Re-lint every currently open document with the freshly reloaded config
+      for (const document of documents.all()) lintDocument(document);
+    })
+    .catch((err) => {
+      connection.console.warn(`fusion-lint: failed to reload config — ${String(err)}`);
+    });
 });
 
 // ── Document events ───────────────────────────────────────────────────────────
