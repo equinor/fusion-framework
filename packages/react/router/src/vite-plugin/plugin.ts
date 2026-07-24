@@ -200,7 +200,14 @@ function getAvailableExports(filePath: string, currentFileId: string, debug: boo
     }
 
     // Check for named exports and re-exports
-    const exportNames = ['clientLoader', 'action', 'handle', 'ErrorElement', 'HydrateFallback', 'shouldRevalidate'];
+    const exportNames = [
+      'clientLoader',
+      'action',
+      'handle',
+      'ErrorElement',
+      'HydrateFallback',
+      'shouldRevalidate',
+    ];
     for (const name of exportNames) {
       if (
         fileContent.match(EXPORT_NAMED_PATTERN(name)) ||
