@@ -8,8 +8,10 @@
  * connect to it by pointing at the `fusion-lint-server` binary.
  *
  * @example
- * ```json
- * // .vscode/settings.json  (or equivalent editor config)
- * { "fusion-lint.server": "fusion-lint-server" }
+ * ```sh
+ * fusion-lint-server --stdio
  * ```
+ *
+ * See the editor-specific extension README (e.g. `packages/linting/vscode/README.md`)
+ * for settings like the VS Code `fusion-lint.serverPath` override.
  */
