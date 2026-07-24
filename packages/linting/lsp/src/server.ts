@@ -8,6 +8,7 @@ import {
   type Diagnostic,
 } from 'vscode-languageserver/node.js';
 import { TextDocument } from 'vscode-languageserver-textdocument';
+import { fileURLToPath } from 'node:url';
 import { LintEngine } from '@equinor/fusion-framework-lint-core';
 import {
   loadLintConfig,
@@ -124,8 +125,11 @@ function lintDocument(document: TextDocument): void {
 // ── Lifecycle ─────────────────────────────────────────────────────────────────
 
 connection.onInitialize((params): InitializeResult => {
-  // Derive workspace root from the first workspace folder, falling back to cwd
-  const workspaceRoot = params.workspaceFolders?.[0]?.uri.replace('file://', '') ?? process.cwd();
+  // Derive workspace root from the first workspace folder, falling back to cwd.
+  // Use fileURLToPath rather than a raw string replace so URL-encoding, Windows
+  // drive letters, and UNC paths are handled correctly.
+  const workspaceFolderUri = params.workspaceFolders?.[0]?.uri;
+  const workspaceRoot = workspaceFolderUri ? fileURLToPath(workspaceFolderUri) : process.cwd();
 
   // Read the runOn preference sent by the client at startup
   const initRunOn = params.initializationOptions?.runOn;
