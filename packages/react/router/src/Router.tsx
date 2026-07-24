@@ -15,9 +15,76 @@ import {
   useRouteError,
   type RouteObject as ReactRouterRouteObject,
 } from 'react-router';
-import type { FusionRouterContext, RouteNode, RouteObject, RouterContext } from './types.js';
+import type {
+  ActionFunction,
+  ErrorElement,
+  FusionRouterContext,
+  LoaderFunction,
+  RouteNode,
+  RouteObject,
+  RouterComponent,
+  RouterContext,
+} from './types.js';
 import { FusionRouterContextProvider, routerContext, useRouterContext } from './context.js';
 import React from 'react';
+
+// React Router's loader/action/component types as used internally.
+type RRLoader = NonNullable<ReactRouterRouteObject['loader']>;
+type RRAction = NonNullable<ReactRouterRouteObject['action']>;
+type RRErrorBoundary = NonNullable<ReactRouterRouteObject['ErrorBoundary']>;
+type RRComponent = NonNullable<ReactRouterRouteObject['Component']>;
+
+// ---------------------------------------------------------------------------
+// Route property wrappers
+//
+// Defined at module level so hooks called inside the returned components are
+// always at the top of a named function — satisfying the hooks-at-top-level
+// rule without suppression comments.
+// ---------------------------------------------------------------------------
+
+/** Wraps a route loader to inject the Fusion context as `fusion` in its args. */
+function wrapLoader(original: RRLoader): RRLoader {
+  return function __FusionRouterLoader(args) {
+    const fusion = (args.context as RouterContextProvider).get(routerContext);
+    return (original as unknown as LoaderFunction)({
+      ...args,
+      fusion,
+    } as Parameters<LoaderFunction>[0]);
+  };
+}
+
+/** Wraps a route action to inject the Fusion context as `fusion` in its args. */
+function wrapAction(original: RRAction): RRAction {
+  return function __FusionRouterAction(args) {
+    const fusion = (args.context as RouterContextProvider).get(routerContext);
+    return (original as unknown as ActionFunction)({
+      ...args,
+      fusion,
+    } as Parameters<ActionFunction>[0]);
+  };
+}
+
+/**
+ * Wraps an error component (`errorElement` or `ErrorBoundary`) to inject the
+ * caught route error and Fusion context as props.
+ */
+function wrapErrorComponent(Original: ErrorElement<unknown>): RRErrorBoundary {
+  return function __FusionRouterErrorComponent() {
+    const error = useRouteError();
+    const fusion = useRouterContext();
+    return React.createElement(Original, { error, fusion });
+  };
+}
+
+/** Wraps a route component to inject `loaderData`, `actionData`, and `fusion` as props. */
+function wrapComponent(Original: RouterComponent): RRComponent {
+  return function __FusionRouterComponent() {
+    const loaderData = useLoaderData();
+    const actionData = useActionData();
+    const fusion = useRouterContext();
+    return React.createElement(Original, { fusion, loaderData, actionData });
+  };
+}
 
 /**
  * Props accepted by the {@link Router} component.
@@ -121,56 +188,35 @@ export function Router({
         // Read from ref so the context provider always returns the current value
         return new RouterContextProvider(new Map([[routerContext, fusionContextRef.current]]));
       },
-      // @ts-expect-error
+      // @ts-expect-error — mapRouteProperties is an UNSAFE react-router internal API
       mapRouteProperties: (route: RouteObject) => {
         // Clone the route to avoid mutating the original objects.
         // Without this, re-creating the router would double-wrap loaders,
         // actions, and components — a common cause of blank pages.
-        const mapped = { ...route };
+        const mapped = { ...route } as ReactRouterRouteObject;
 
-        if (mapped.loader) {
-          const originalLoader = mapped.loader;
-          mapped.loader = function __FusionRouterLoader(args) {
-            const fusion = args.context.get(routerContext);
-            // @ts-expect-error
-            return originalLoader({ ...args, fusion });
-          };
-        }
-        if (mapped.action) {
-          const originalAction = mapped.action;
-          mapped.action = function __FusionRouterAction(args) {
-            const fusion = args.context.get(routerContext);
-            // @ts-expect-error
-            return originalAction({ ...args, fusion });
-          };
-        }
-        if (mapped.errorElement) {
-          const originalErrorElement = mapped.errorElement;
-          // Wrap errorElement component to inject error and fusion context as props
-          // errorElement must be a React element, not a function
-          mapped.errorElement = React.createElement(function __FusionRouterErrorElement() {
-            // biome-ignore lint/correctness/useHookAtTopLevel: hooks are used inside component function
-            const error = useRouteError();
-            // biome-ignore lint/correctness/useHookAtTopLevel: hooks are used inside component function
-            const fusion = useRouterContext();
-            // @ts-expect-error - originalErrorElement is a component that accepts error and fusion props
-            return React.createElement(originalErrorElement, { error, fusion });
-          });
+        if (mapped.loader) mapped.loader = wrapLoader(mapped.loader as RRLoader);
+        if (mapped.action) mapped.action = wrapAction(mapped.action as RRAction);
+
+        if (route.errorElement) {
+          // errorElement is typed as ComponentType in fusion's RouteObject (not ReactNode),
+          // so we wrap it into a ReactElement for react-router to consume.
+          mapped.errorElement = React.createElement(wrapErrorComponent(route.errorElement));
+          mapped.hasErrorBoundary = true;
+        } else if (mapped.ErrorBoundary) {
+          // Mirror react-router's default mapRouteProperties: convert ErrorBoundary (ComponentType)
+          // into errorElement (ReactElement) and set hasErrorBoundary so the router registers it.
+          // errorElement and ErrorBoundary are mutually exclusive per React Router docs.
+          mapped.errorElement = React.createElement(
+            wrapErrorComponent(mapped.ErrorBoundary as ErrorElement),
+          );
+          (mapped as ReactRouterRouteObject).ErrorBoundary = undefined;
           mapped.hasErrorBoundary = true;
         }
         if (mapped.Component) {
-          const originalComponent = mapped.Component;
-          mapped.Component = function __FusionRouterComponent() {
-            // biome-ignore lint/correctness/useHookAtTopLevel: hooks are used inside component function
-            const loaderData = useLoaderData();
-            // biome-ignore lint/correctness/useHookAtTopLevel: hooks are used inside component function
-            const actionData = useActionData();
-            // biome-ignore lint/correctness/useHookAtTopLevel: hooks are used inside component function
-            const fusion = useRouterContext();
-            // @ts-expect-error - originalComponent accepts fusion, loaderData, and actionData props
-            return React.createElement(originalComponent, { fusion, loaderData, actionData });
-          };
+          mapped.Component = wrapComponent(mapped.Component as RouterComponent);
         }
+
         return mapped;
       },
     });
