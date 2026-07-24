@@ -1,7 +1,6 @@
 import type { RouteObject as ReactRouterRouteObject } from 'react-router';
 import type { Modules, ModulesInstanceType } from '@equinor/fusion-framework-react-module';
 
-
 /**
  * Utility type representing a value that may be synchronous or asynchronous.
  *

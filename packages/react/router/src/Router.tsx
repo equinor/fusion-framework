@@ -46,7 +46,10 @@ type RRComponent = NonNullable<ReactRouterRouteObject['Component']>;
 function wrapLoader(original: RRLoader): RRLoader {
   return function __FusionRouterLoader(args) {
     const fusion = (args.context as RouterContextProvider).get(routerContext);
-    return (original as unknown as LoaderFunction)({ ...args, fusion } as Parameters<LoaderFunction>[0]);
+    return (original as unknown as LoaderFunction)({
+      ...args,
+      fusion,
+    } as Parameters<LoaderFunction>[0]);
   };
 }
 
@@ -54,7 +57,10 @@ function wrapLoader(original: RRLoader): RRLoader {
 function wrapAction(original: RRAction): RRAction {
   return function __FusionRouterAction(args) {
     const fusion = (args.context as RouterContextProvider).get(routerContext);
-    return (original as unknown as ActionFunction)({ ...args, fusion } as Parameters<ActionFunction>[0]);
+    return (original as unknown as ActionFunction)({
+      ...args,
+      fusion,
+    } as Parameters<ActionFunction>[0]);
   };
 }
 
