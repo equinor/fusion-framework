@@ -88,14 +88,14 @@ function walkNode(node: Node, filePath: string, severity: Severity, out: Diagnos
       // A comment immediately before satisfies the intent requirement
       if (node.previousNamedSibling?.type !== 'comment') {
         const label = node.namedChild(0)?.text;
-        const label_suffix = label ? ` '${label}'` : '';
+        const labelSuffix = label ? ` '${label}'` : '';
         out.push({
           file: filePath,
           line: node.startPosition.row + 1,
           col: node.startPosition.column + 1,
           rule: RULE_ID,
-          message: `\`break${label_suffix}\` is missing an intent comment`,
-          detail: `\`break${label_suffix}\` is missing an intent comment. A comment here explains why the loop exits at this exact point — without one, it reads as an accident.`,
+          message: `\`break${labelSuffix}\` is missing an intent comment`,
+          detail: `\`break${labelSuffix}\` is missing an intent comment. A comment here explains why the loop exits at this exact point — without one, it reads as an accident.`,
           severity,
         });
       }
