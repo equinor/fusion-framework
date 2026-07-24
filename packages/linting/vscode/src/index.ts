@@ -14,7 +14,7 @@ let client: LanguageClient | undefined;
  * Resolves the path to the `fusion-lint-server` entry point.
  *
  * Priority:
- * 1. `fusion-lint.serverPath` setting — explicit override for local builds or
+ * 1. `fusion-ts-lint.serverPath` setting — explicit override for local builds or
  *    alternative installations.
  * 2. The server bundled inside this extension's own `node_modules` — the
  *    default, requires no manual installation by the user.
@@ -23,7 +23,7 @@ let client: LanguageClient | undefined;
  * @returns Absolute path to the server module file.
  */
 function resolveServerPath(extensionPath: string): string {
-  const config = workspace.getConfiguration('fusion-lint');
+  const config = workspace.getConfiguration('fusion-ts-lint');
   const override: string = config.get('serverPath') ?? '';
   // Use the explicit override when the user has configured one
   if (override.trim().length > 0) return override.trim();
@@ -67,16 +67,19 @@ export function activate(context: ExtensionContext): void {
     ],
     synchronize: {
       // Re-lint when a config file is saved, and forward setting changes to the server
+      // NOTE: config file basenames are the shared fusion-lint convention from
+      // @equinor/fusion-framework-lint-config — do not rename these to match
+      // the extension's own fusion-ts-lint namespace, the CLI relies on them too.
       fileEvents: workspace.createFileSystemWatcher('**/{fusion-lint.config.*,.fusion-lintrc.*}'),
-      configurationSection: 'fusion-lint',
+      configurationSection: 'fusion-ts-lint',
     },
     initializationOptions: () => ({
-      runOn: workspace.getConfiguration('fusion-lint').get<string>('runOn') ?? 'change',
+      runOn: workspace.getConfiguration('fusion-ts-lint').get<string>('runOn') ?? 'change',
     }),
-    traceOutputChannel: window.createOutputChannel('Fusion Lint (LSP trace)'),
+    traceOutputChannel: window.createOutputChannel('Fusion TS Lint (LSP trace)'),
   };
 
-  client = new LanguageClient('fusion-lint', 'Fusion Lint', serverOptions, clientOptions);
+  client = new LanguageClient('fusion-ts-lint', 'Fusion TS Lint', serverOptions, clientOptions);
 
   // Register the client so VS Code disposes it on deactivation
   context.subscriptions.push(client);

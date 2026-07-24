@@ -65,6 +65,57 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
 
+  # Publish the Fusion TS Lint VS Code extension to the Marketplace.
+  #
+  # The extension's package.json is "private" (it ships via the Marketplace,
+  # not npm). `privatePackages.tag: true` (.changeset/config.json) makes
+  # `changeset tag` create a git tag for it anyway on release. Rather than
+  # relying on changesets/action's `publishedPackages` output (which parses
+  # "New tag:" lines from that command's stdout — an implementation detail),
+  # we check directly whether that tag now points at *this* commit, i.e.
+  # whether this push is the exact release commit that bumped the extension.
+  publish-vscode-extension:
+    name: Publish VS Code extension to Marketplace
+    needs: release-pkg
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Check for a new release tag at this commit
+        id: check
+        run: |
+          VERSION=$(node -p "require('./packages/linting/vscode/package.json').version")
+          TAG="fusion-ts-lint-vscode@${VERSION}"
+          TAG_SHA=$(git rev-list -n 1 "$TAG" 2>/dev/null || echo "")
+          if [ "$TAG_SHA" = "$GITHUB_SHA" ]; then
+            echo "should-publish=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "should-publish=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Setup node and install deps
+        if: steps.check.outputs.should-publish == 'true'
+        uses: ./.github/actions/node-setup
+
+      # Build the extension and its workspace dependencies (lsp, rules, core)
+      # in the correct order — vsce does not run the "prepack" build hook.
+      # The trailing "..." is required so turbo includes fusion-ts-lint-vscode's
+      # dependencies in the run, not just the extension package itself.
+      - name: Build extension
+        if: steps.check.outputs.should-publish == 'true'
+        run: pnpm turbo build --filter=fusion-ts-lint-vscode...
+
+      - name: Publish to VS Code Marketplace
+        if: steps.check.outputs.should-publish == 'true'
+        working-directory: packages/linting/vscode
+        run: pnpm exec vsce publish --no-dependencies
+        env:
+          VSCE_PAT: ${{ secrets.VS_MARKETPLACE_PAT }}
+
   # Update documentation only when packages are published
   # Uses dispatched workflow with minimal required permissions
   documentation:
