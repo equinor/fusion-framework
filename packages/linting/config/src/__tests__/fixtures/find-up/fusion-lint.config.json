@@ -1,0 +1,4 @@
+{
+  "require-tsdoc": "error",
+  "require-intent-comment": "warn"
+}

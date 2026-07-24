@@ -4,9 +4,7 @@ import { resolve, extname, basename } from 'node:path';
 import { Command } from 'commander';
 import ora from 'ora';
 import { simpleGit } from 'simple-git';
-import { LintEngine } from '@equinor/fusion-framework-lint-core';
-import type { LintConfig, Diagnostic } from '@equinor/fusion-framework-lint-core';
-import { recommendedConfig, recommendedRules } from '@equinor/fusion-framework-lint-config';
+import type { Diagnostic } from '@equinor/fusion-framework-lint-core';
 import {
   formatAnnotations,
   formatPretty,
@@ -15,6 +13,7 @@ import {
   formatJson,
   resolveReporter,
 } from '../formatter/index.js';
+import { createConfiguredEngine } from '../create-engine.js';
 
 const TS_EXTENSIONS = new Set(['.ts', '.tsx', '.mts', '.cts']);
 
@@ -114,16 +113,6 @@ async function runChanged(options: ChangedOptions): Promise<void> {
   const isCI = reporter === 'github-actions';
   const isMachineReadable = reporter === 'rdjsonl' || reporter === 'json';
 
-  // Apply per-invocation rule severity overrides on top of the recommended config
-  const config: LintConfig = { ...recommendedConfig };
-  // Process each --rule=id=severity argument
-  for (const override of options.rule ?? []) {
-    const eqIdx = override.indexOf('=');
-    // Guard: skip malformed overrides that lack a '=' separator
-    if (eqIdx === -1) continue;
-    config[override.slice(0, eqIdx)] = override.slice(eqIdx + 1) as LintConfig[string];
-  }
-
   const modeLabel = options.staged
     ? 'staged files'
     : options.against
@@ -143,7 +132,7 @@ async function runChanged(options: ChangedOptions): Promise<void> {
     return;
   }
 
-  const engine = new LintEngine(recommendedRules, config);
+  const engine = await createConfiguredEngine(options.rule);
   const results: Array<{ file: string; diagnostics: Diagnostic[] }> = [];
   let scanned = 0;
 

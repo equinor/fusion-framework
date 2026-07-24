@@ -81,17 +81,24 @@ itself ignores (`git ls-files --exclude-standard`), so it has no `--skip-gitigno
 
 ## Rule configuration
 
-Both commands run with the curated `recommendedRules` + `recommendedConfig` from
-[`@equinor/fusion-framework-lint-config`](../config/). Override individual rule severities
-per invocation with `--rule`:
+Both commands start from the curated `recommendedRules` + `recommendedConfig` from
+[`@equinor/fusion-framework-lint-config`](../config/), then layer in a project config file if
+one is found. Severity resolution, lowest to highest precedence:
+
+1. `recommendedConfig` / `recommendedRules`
+2. A `fusion-lint.config.*` / `.fusion-lintrc.*` file, resolved by searching from the current
+   working directory upward through parent directories until one is found or the repository
+   root (the directory containing `.git`) has been checked — so a single config at your
+   monorepo root applies to every package without duplicating it
+3. `--rule <id>=<severity>` overrides, which always win
 
 ```bash
 fusion-lint src --rule require-intent-comment=error --rule require-tsdoc=off
 ```
 
-> The CLI does not currently read a `fusion-lint.config.*` / `.fusion-lintrc.*` project file
-> (the VS Code extension and LSP server do). Use `--rule` overrides, or consume the
-> [programmatic API](#programmatic-api) directly if you need `loadLintConfig`.
+See [`@equinor/fusion-framework-lint-config`](../config/) for the supported config file
+formats (flat severity maps, rich `{ rules, customRules }` objects, and factory-style
+`defineConfig` builders).
 
 ## Reporters
 
