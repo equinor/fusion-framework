@@ -1,5 +1,23 @@
 # Change Log
 
+## 15.2.0
+
+### Minor Changes
+
+- 98d8f08: Automatically include markdown plugin in app builds and manifest loading.
+
+  The CLI now automatically includes the `@equinor/fusion-framework-vite-plugin-markdown` plugin in all app builds, enabling support for markdown file imports with `?raw` query parameter without requiring manual configuration. The plugin is also included during app manifest loading to handle markdown imports in route definitions.
+
+  Apps can now import markdown files directly:
+
+  ```typescript
+  import readmeContent from "./README.md?raw";
+  ```
+
+### Patch Changes
+
+- @equinor/fusion-framework-dev-portal@8.0.0
+
 ## 15.1.8
 
 ### Patch Changes

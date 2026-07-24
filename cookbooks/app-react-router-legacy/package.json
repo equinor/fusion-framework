@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework-cookbook-app-react-router-legacy",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Demonstrates RouteObject[] (legacy) routing with errorElement and ErrorBoundary",
   "private": true,
   "type": "module",

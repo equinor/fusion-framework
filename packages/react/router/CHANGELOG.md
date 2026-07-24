@@ -1,5 +1,105 @@
 # @equinor/fusion-framework-react-router
 
+## 2.3.0
+
+### Minor Changes
+
+- 6a338f1: Expand re-exports so consumers don't need a direct `react-router` or `react-dom` import.
+
+  **New exports from `react-router`:**
+  - `BrowserRouter`
+  - `createSearchParams`
+  - `generatePath`
+  - `isRouteErrorResponse`
+  - `type PathParam`
+  - `type SetURLSearchParams`
+
+  **New `Router` prop:**
+  - `useTransitions?: boolean` — forwarded to `RouterProvider`. Set to `false` to disable React transition wrapping on navigation state updates (workaround for route-change UI flashing).
+
+  ```tsx
+  // Disable transitions to suppress route-change flash
+  <Router routes={routes} useTransitions={false} />
+  ```
+
+  Fixes: https://github.com/equinor/fusion/issues/880
+  Thanks: @edmondbaloku for the report.
+
+- bc05307: Fix `errorElement` typing and add `ErrorBoundary` support in `RouteObject`.
+
+  **`errorElement`**: The type was incorrectly inherited from React Router as `ReactNode`, but the Fusion router has always required a `ComponentType` so it can inject `error` and `fusion` context as props. Passing a rendered element (`<MyError />`) compiled but failed at runtime. The type now correctly reflects the implementation.
+
+  ```tsx
+  // Before — compiled but crashed at runtime
+  const routes = [
+    { path: "/", element: <Home />, errorElement: <MyError /> },
+  ] satisfies RouteObject[];
+
+  // After — pass the component directly (no cast needed)
+  const routes = [
+    { path: "/", element: <Home />, errorElement: MyError },
+  ] satisfies RouteObject[];
+  ```
+
+  **`ErrorBoundary`**: Previously silently ignored at runtime — the Fusion router replaced react-router's default `mapRouteProperties` entirely but never converted `ErrorBoundary` to `errorElement` or set `hasErrorBoundary`, so react-router never registered the boundary. Now works correctly: the component is wrapped to inject `error` and `fusion` as props and then converted to `errorElement` internally, matching react-router's own default behaviour.
+
+  ```tsx
+  const routes = [
+    { path: "/", element: <Home />, ErrorBoundary: MyError },
+  ] satisfies RouteObject[];
+  ```
+
+  **`ErrorElementProps` / `ErrorElement`**: The default `TError` type changed from `Error` to `unknown`, which is more accurate since React Router can throw any value (strings, response objects, etc.). Narrow the error type in your component if needed.
+
+  ```tsx
+  // Explicit type param still works as before
+  function MyError({ error }: ErrorElementProps<Error>) {
+    return <p>{error.message}</p>;
+  }
+  ```
+
+  Fixes: https://github.com/equinor/fusion/issues/863
+  Thanks @AndreasPresthammer for the detailed repro.
+
+### Patch Changes
+
+- 739adc9: Add `shouldRevalidate` support to the file-route Vite plugin.
+
+  The Vite plugin now detects and wires a `shouldRevalidate` named export from route files into the generated React Router data route. This allows apps to control whether a route re-runs its loader after a navigation or action — for example to prevent revalidation on search-parameter-only changes.
+
+  ```ts
+  // src/pages/ProductsPage.tsx
+  import type { ShouldRevalidateFunctionArgs } from 'react-router';
+
+  export function shouldRevalidate({ currentUrl, nextUrl }: ShouldRevalidateFunctionArgs) {
+    // Only revalidate when the path segment changes, not on search param updates
+    return currentUrl.pathname !== nextUrl.pathname;
+  }
+
+  export default function ProductsPage() { ... }
+  ```
+
+  Reported by: @yusijs in equinor/fusion#870
+  Closes: https://github.com/equinor/fusion-core-tasks/issues/1631
+
+- 6694431: Document all supported file-route exports for the React Router Vite plugin.
+
+  The `README.md`, `BaseFileRoute` class, and `getAvailableExports` in the Vite plugin now carry a complete reference table of the six named exports the plugin recognises and wires into the generated React Router data route:
+
+  | Export            | Mapped to         |
+  | ----------------- | ----------------- |
+  | `default`         | `Component`       |
+  | `clientLoader`    | `loader`          |
+  | `action`          | `action`          |
+  | `handle`          | `handle`          |
+  | `ErrorElement`    | `errorElement`    |
+  | `HydrateFallback` | `HydrateFallback` |
+
+  The README was also updated to fix incorrect prerequisites (Fusion packages are bundled dependencies, not peer dependencies), clarify the `/context` entry point, and add GFM alert callouts for common gotchas (navigation module configuration, file-path resolution, Vite plugin being required for code-splitting).
+
+  Reported by: @yusijs in https://github.com/equinor/fusion/issues/870
+  Closes: https://github.com/equinor/fusion-core-tasks/issues/1630
+
 ## 2.2.0
 
 ### Minor Changes
