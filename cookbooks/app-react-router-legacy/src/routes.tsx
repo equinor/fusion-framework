@@ -2,7 +2,11 @@ import type { RouteObject } from '@equinor/fusion-framework-react-router';
 import { Link, Outlet } from '@equinor/fusion-framework-react-router';
 
 import { HomePage } from './pages/HomePage';
-import { ErrorElementPage, ErrorElementBoundary } from './pages/ErrorElementPage';
+import {
+  ErrorElementPage,
+  ErrorElementBoundary,
+  clientLoader as errorElementLoader,
+} from './pages/ErrorElementPage';
 import { ErrorBoundaryPage, ErrorBoundaryComponent } from './pages/ErrorBoundaryPage';
 import { RootErrorBoundary } from './pages/RootErrorBoundary';
 
@@ -43,6 +47,8 @@ const routes: RouteObject[] = [
         // errorElement: a ComponentType — the Fusion router injects `error` and `fusion` as props.
         // Do NOT pass a rendered element (<ErrorElementBoundary />) here; pass the component directly.
         errorElement: ErrorElementBoundary,
+        // loader throws, so errorElement is actually exercised (see ErrorElementPage.tsx).
+        loader: errorElementLoader,
         element: <ErrorElementPage />,
       },
       {
