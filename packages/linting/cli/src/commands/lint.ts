@@ -81,10 +81,8 @@ async function runLint(patterns: string[], options: LintOptions): Promise<void> 
 
   const allDiagnostics = results.flatMap((r) => r.diagnostics);
   const errorsOnly = options.diagnosticLevel === 'error';
-  // Pre-filter error-severity diagnostics for both visible selection and tallying
+  // Pre-filter error-severity diagnostics for tallying
   const errorFiltered = allDiagnostics.filter((d) => d.severity === 'error');
-  // Narrow to visible diagnostics for display
-  const _visible = errorsOnly ? errorFiltered : allDiagnostics;
   // Tally error-severity diagnostics for exit-code logic
   const errors = errorFiltered.length;
   // Tally warning-severity diagnostics for the summary line
