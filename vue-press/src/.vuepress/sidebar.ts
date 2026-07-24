@@ -45,6 +45,14 @@ export default sidebar({
       link: '/cli/docs/dev-server.md',
     },
     {
+      text: 'Linting',
+      link: '/guide/linting.md',
+    },
+    {
+      text: 'Setup',
+      link: '/guide/setup.md',
+    },
+    {
       text: 'Cookbooks',
       link: '/cookbooks/index.md',
     },

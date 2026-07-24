@@ -5,6 +5,8 @@ panel entries, and hover messages as you type.**
 
 The language server is bundled inside the extension. Nothing extra to install.
 
+[Install in VS Code](vscode:extension/equinor-fusion.fusion-ts-lint-vscode)
+
 ---
 
 ## Features
