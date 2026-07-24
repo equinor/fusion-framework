@@ -1,9 +1,10 @@
 {
-  "name": "fusion-lint-vscode",
-  "displayName": "Fusion Lint",
+  "name": "fusion-ts-lint-vscode",
+  "displayName": "Fusion TS Lint",
   "description": "Real-time Fusion Framework lint diagnostics — no separate server install required",
   "version": "0.1.0",
-  "publisher": "equinor",
+  "private": true,
+  "publisher": "equinor-fusion",
   "license": "MIT",
   "engines": {
     "vscode": "^1.85.0"
@@ -26,14 +27,14 @@
   "main": "./dist/index.js",
   "contributes": {
     "configuration": {
-      "title": "Fusion Lint",
+      "title": "Fusion TS Lint",
       "properties": {
-        "fusion-lint.serverPath": {
+        "fusion-ts-lint.serverPath": {
           "type": "string",
           "default": "",
           "description": "Override the bundled fusion-lint-server path. Leave empty to use the version bundled with this extension."
         },
-        "fusion-lint.runOn": {
+        "fusion-ts-lint.runOn": {
           "type": "string",
           "enum": [
             "change",
@@ -46,7 +47,7 @@
           "default": "change",
           "description": "When to run the Fusion Lint engine."
         },
-        "fusion-lint.trace.server": {
+        "fusion-ts-lint.trace.server": {
           "type": "string",
           "enum": [
             "off",

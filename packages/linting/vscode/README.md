@@ -1,4 +1,4 @@
-# Fusion Lint
+# Fusion TS Lint
 
 **Fusion Framework lint diagnostics inside VS Code — inline squiggles, Problems
 panel entries, and hover messages as you type.**
@@ -40,16 +40,16 @@ The language server is bundled inside the extension. Nothing extra to install.
 
 ### From the marketplace
 
-Search for **Fusion Lint** in the VS Code Extensions panel, or run:
+Search for **Fusion TS Lint** in the VS Code Extensions panel, or run:
 
 ```sh
-code --install-extension equinor.fusion-lint-vscode
+code --install-extension equinor-fusion.fusion-ts-lint-vscode
 ```
 
 ### From a VSIX file
 
 ```sh
-code --install-extension fusion-lint-vscode-0.1.0.vsix
+code --install-extension fusion-ts-lint-vscode-0.1.0.vsix
 ```
 
 Or via the VS Code UI: **Extensions → ⋯ → Install from VSIX…**
@@ -60,7 +60,7 @@ Add to `.vscode/extensions.json` so contributors are prompted to install:
 
 ```json
 {
-  "recommendations": ["equinor.fusion-lint-vscode"]
+  "recommendations": ["equinor-fusion.fusion-ts-lint-vscode"]
 }
 ```
 
@@ -72,9 +72,9 @@ All settings are optional. The defaults work without any changes.
 
 | Setting | Default | Description |
 |---|---|---|
-| `fusion-lint.runOn` | `"change"` | `"change"` — lint as you type. `"save"` — lint only on save. |
-| `fusion-lint.serverPath` | _(bundled)_ | Override the bundled server path. Useful when developing the lint engine locally. |
-| `fusion-lint.trace.server` | `"off"` | LSP message tracing. Set to `"messages"` or `"verbose"` when debugging. |
+| `fusion-ts-lint.runOn` | `"change"` | `"change"` — lint as you type. `"save"` — lint only on save. |
+| `fusion-ts-lint.serverPath` | _(bundled)_ | Override the bundled server path. Useful when developing the lint engine locally. |
+| `fusion-ts-lint.trace.server` | `"off"` | LSP message tracing. Set to `"messages"` or `"verbose"` when debugging. |
 
 To disable a rule or change its severity, add a `fusion-lint.config.js` (or
 `.fusion-lintrc.json`) to your project root:

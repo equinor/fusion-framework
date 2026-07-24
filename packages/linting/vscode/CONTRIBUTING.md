@@ -1,4 +1,4 @@
-# Contributing to Fusion Lint
+# Contributing to Fusion TS Lint
 
 Thank you for your interest in contributing! This extension is part of the
 [Fusion Framework](https://github.com/equinor/fusion-framework) monorepo.
@@ -13,7 +13,7 @@ repository. Please include:
 - VS Code version
 - Extension version (shown in the Extensions panel)
 - A minimal code sample that reproduces the diagnostic (or the lack of one)
-- The contents of the **Output → Fusion Lint** channel if the server crashed
+- The contents of the **Output → Fusion TS Lint** channel if the server crashed
 
 ## Development setup
 
@@ -39,7 +39,7 @@ cd packages/linting/vscode && pnpm build
 pnpm package
 
 # Install into VS Code
-code --install-extension fusion-lint-vscode-*.vsix
+code --install-extension fusion-ts-lint-vscode-*.vsix
 ```
 
 Open `packages/linting/vscode` in VS Code and press **F5** to launch an

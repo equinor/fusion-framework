@@ -13,5 +13,5 @@
  * ```
  *
  * See the editor-specific extension README (e.g. `packages/linting/vscode/README.md`)
- * for settings like the VS Code `fusion-lint.serverPath` override.
+ * for settings like the VS Code `fusion-ts-lint.serverPath` override.
  */

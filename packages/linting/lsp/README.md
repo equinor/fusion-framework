@@ -38,7 +38,7 @@ Point your editor at the server binary using `stdio` transport. Replace `fusion-
 
 ### VS Code
 
-Install the companion extension (`fusion-lint-vscode`). It handles the connection automatically. See [packages/linting/vscode](../vscode/README.md).
+Install the companion extension (`fusion-ts-lint-vscode`). It handles the connection automatically. See [packages/linting/vscode](../vscode/README.md).
 
 ### Neovim (nvim-lspconfig)
 

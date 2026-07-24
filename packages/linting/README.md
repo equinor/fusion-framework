@@ -82,4 +82,4 @@ core → rules → config → cli
 | [`@equinor/fusion-framework-lint-config`](./config/) | `recommended` preset and config loader |
 | [`@equinor/fusion-lint`](./cli/) | CLI — `fusion-lint check` and `fusion-lint changed` |
 | [`@equinor/fusion-framework-lint-lsp`](./lsp/) | LSP server for editor integration |
-| [`fusion-lint-vscode`](./vscode/) | VS Code extension — squiggles, Problems panel, hover messages |
+| [`fusion-ts-lint-vscode`](./vscode/) | VS Code extension — squiggles, Problems panel, hover messages |
