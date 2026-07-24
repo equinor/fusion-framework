@@ -76,8 +76,8 @@ All settings are optional. The defaults work without any changes.
 | `fusion-lint.serverPath` | _(bundled)_ | Override the bundled server path. Useful when developing the lint engine locally. |
 | `fusion-lint.trace.server` | `"off"` | LSP message tracing. Set to `"messages"` or `"verbose"` when debugging. |
 
-To disable a rule or change its severity, add a `fusion-lint.json` (or
-`fusion-lint` key in `package.json`) to your project root:
+To disable a rule or change its severity, add a `fusion-lint.config.js` (or
+`.fusion-lintrc.json`) to your project root:
 
 ```json
 {
