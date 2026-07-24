@@ -53,6 +53,7 @@ The following named exports are recognised:
 | `handle` | Route handle metadata, available via `useMatches()`. |
 | `ErrorElement` | Error boundary component rendered when the route throws. |
 | `HydrateFallback` | Shown during hydration while `clientLoader` resolves. |
+| `shouldRevalidate` | Controls whether the route re-runs its loader after navigation or an action. Return `false` to suppress revalidation. |
 
 > [!NOTE]
 > Any other named export is silently ignored by the plugin. You can co-locate utilities, hooks, and helpers in the same file without side effects.

@@ -57,7 +57,7 @@ describe('reactRouterPlugin', () => {
     expect(normalizeCode(transformResult)).toBe(normalizeCode(expected));
   });
 
-  it('should transform route with clientLoader, ErrorElement, and HydrateFallback', () => {
+  it('should transform route with clientLoader, ErrorElement, HydrateFallback, and shouldRevalidate', () => {
     const inputCode = [
       `import { route } from '@equinor/fusion-framework-react-router/routes';`,
       `export const routes = route(':id', './mocks/pages/UserDetailPage.tsx');`,
@@ -75,14 +75,16 @@ describe('reactRouterPlugin', () => {
       `    default as UserDetailPage,`,
       `    clientLoader as clientLoaderUserDetailPage,`,
       `    ErrorElement as ErrorElementUserDetailPage,`,
-      `    HydrateFallback as HydrateFallbackUserDetailPage`,
+      `    HydrateFallback as HydrateFallbackUserDetailPage,`,
+      `    shouldRevalidate as shouldRevalidateUserDetailPage`,
       `} from './mocks/pages/UserDetailPage.tsx';`,
       `export const routes = [{`,
       `        path: ':id',`,
       `        Component: UserDetailPage,`,
       `        loader: clientLoaderUserDetailPage,`,
       `        errorElement: ErrorElementUserDetailPage,`,
-      `        HydrateFallback: HydrateFallbackUserDetailPage`,
+      `        HydrateFallback: HydrateFallbackUserDetailPage,`,
+      `        shouldRevalidate: shouldRevalidateUserDetailPage`,
       `    }];`,
     ].join('\n');
 

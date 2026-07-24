@@ -18,6 +18,7 @@ import { BaseRoute } from './BaseRoute.js';
  * | `handle` | `RouterHandle` | Arbitrary route metadata attached to `useMatches()` entries. |
  * | `ErrorElement` | `React.ComponentType<ErrorElementProps>` | Component rendered when this route or a descendant throws. Receives `error` and `fusion` props. |
  * | `HydrateFallback` | `React.ComponentType` | Component rendered during client-side hydration before `clientLoader` resolves. |
+ * | `shouldRevalidate` | `ShouldRevalidateFunction` | Controls whether the route re-runs its loader after a navigation or action. Return `false` to suppress revalidation. |
  *
  * Any export not in the table above is ignored by the plugin.
  *
