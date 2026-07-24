@@ -68,7 +68,7 @@
     "build": "tsc --noEmit && pnpm bundle && pnpm copy-server",
     "bundle": "esbuild src/index.ts --bundle --external:vscode --platform=node --format=cjs --outfile=dist/index.js",
     "copy-server": "node scripts/copy-server.mjs",
-    "icon": "npx @resvg/resvg-js-cli images/icon.svg images/icon.png",
+    "icon": "pnpm dlx @resvg/resvg-js-cli images/icon.svg images/icon.png",
     "prepack": "pnpm build",
     "package": "vsce package --no-dependencies"
   },
