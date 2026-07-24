@@ -149,6 +149,21 @@ while (running) {
     expect(lint(source)).toHaveLength(1);
   });
 
+  it('fails: labeled break out of a labeled block (not a loop) with no comment', () => {
+    // Labeled breaks are always checked, even when they exit a non-loop labeled
+    // block rather than a loop or switch — see rule TSDoc.
+    const source = `
+outer: {
+  if (cond) {
+    break outer;
+  }
+}
+`;
+    const diags = lint(source);
+    expect(diags).toHaveLength(1);
+    expect(diags[0].message).toContain("'outer'");
+  });
+
   it('fails: multiple violations each flagged', () => {
     const source = `
 for (const x of xs) {

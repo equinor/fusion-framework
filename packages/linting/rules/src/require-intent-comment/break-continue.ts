@@ -49,7 +49,7 @@ function isLoopBreak(node: Node): boolean {
  * @param node - The `break_statement` node to inspect.
  * @returns `true` if the break carries a label identifier.
  */
-function _isLabeled(node: Node): boolean {
+function isLabeled(node: Node): boolean {
   return node.namedChildCount > 0;
 }
 
@@ -83,8 +83,9 @@ function walkNode(node: Node, filePath: string, severity: Severity, out: Diagnos
       }
     }
 
-    // break requires a comment only when it exits a loop (switch breaks are exempt)
-    if (node.type === 'break_statement' && isLoopBreak(node)) {
+    // break requires a comment when it exits a loop, or always when labeled
+    // (labeled breaks escape arbitrary nesting and are rarely self-documenting)
+    if (node.type === 'break_statement' && (isLoopBreak(node) || isLabeled(node))) {
       // A comment immediately before satisfies the intent requirement
       if (node.previousNamedSibling?.type !== 'comment') {
         const label = node.namedChild(0)?.text;
