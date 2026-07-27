@@ -3,7 +3,7 @@ import ora from 'ora';
 
 import type { CopilotSession } from '@github/copilot-sdk';
 
-import { tryFormatMessage } from './format.js';
+import { tryFormatMessage } from './try-format-message.js';
 
 const TOOL_ICONS: Record<string, string> = {
   browser_screenshot: '📷',

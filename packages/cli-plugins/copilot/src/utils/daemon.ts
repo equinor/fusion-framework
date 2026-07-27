@@ -3,7 +3,7 @@ import { existsSync, readFileSync, rmSync } from 'node:fs';
 import { join } from 'node:path';
 import { homedir } from 'node:os';
 
-import { ab, PROFILE_DIR } from './agent-browser.js';
+import { PROFILE_DIR } from './profile-dir.js';
 
 /** PID file written by the agent-browser daemon to track its own process. */
 const DAEMON_PID_FILE = join(homedir(), '.agent-browser', 'default.pid');
@@ -35,6 +35,7 @@ export function resetDaemon(): void {
   if (existsSync(DAEMON_PID_FILE)) {
     try {
       const pid = parseInt(readFileSync(DAEMON_PID_FILE, 'utf-8').trim(), 10);
+      // Only attempt to signal the process when the pid file held a valid number
       if (pid > 0) process.kill(pid);
       console.log('🔄 Killed agent-browser daemon (pid %d)', pid);
     } catch {
@@ -55,6 +56,7 @@ export function resetDaemon(): void {
 
   // 4. Remove stale SingletonLock left by crashed Chrome
   const lockPath = join(PROFILE_DIR, 'SingletonLock');
+  // Only attempt removal when a stale lock file is actually present
   if (existsSync(lockPath)) {
     try {
       rmSync(lockPath, { force: true });
@@ -65,20 +67,10 @@ export function resetDaemon(): void {
 
   // 5. Clear Session Storage to remove stuck MSAL interaction.status flags
   const sessionStorage = join(PROFILE_DIR, 'Default', 'Session Storage');
+  // Only clear session storage when it exists to avoid unnecessary work
   if (existsSync(sessionStorage)) {
     rmSync(sessionStorage, { recursive: true, force: true });
     console.log('🔄 Cleared Session Storage (MSAL interaction flags)');
   }
 }
 
-/**
- * Clears the MSAL `interaction.status` flag from `sessionStorage` in the
- * running browser via `agent-browser eval`.
- */
-export function clearMsalInteraction(): void {
-  try {
-    ab(['eval', 'sessionStorage.removeItem("msal.interaction.status")'], 5_000);
-  } catch {
-    // Browser may not be ready yet — non-fatal
-  }
-}

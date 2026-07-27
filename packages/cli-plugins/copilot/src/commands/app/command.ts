@@ -3,12 +3,13 @@ import { basename } from 'node:path';
 
 import { resetDaemon, cleanup, createRunDir } from '../../utils/index.js';
 import { runLogin } from './login.js';
-import { resolveEvalCommandInput, resolveEvalFiles } from '../../eval-resolve.js';
+import { resolveEvalCommandInput } from '../../resolve-eval-command-input.js';
+import { resolveEvalFiles } from '../../resolve-eval-files.js';
 import { createSession } from './eval.js';
 import { startAppServer } from './server.js';
 import { attachSessionLogger } from './session-logger.js';
 import type { CopilotEvalOptions, Plan, Verdict } from './types.js';
-import { formatVerdict } from './format.js';
+import { formatVerdict } from './format-verdict.js';
 import { existsSync, readFileSync } from 'node:fs';
 import { createPlanPrompt } from './prompts/plan.prompt.js';
 import { createStepPrompt } from './prompts/step.prompt.js';
@@ -58,6 +59,7 @@ const _appEvalCommand = createCommand('eval')
     const port = parseInt(options.port, 10);
     const verbose = options.verbose;
 
+    // Reject ambiguous input that selects an eval two different ways
     if (resolvedInput.evalFile && options.eval) {
       console.error('❌ Do not combine a positional eval markdown file with --eval');
       process.exit(1);
@@ -73,9 +75,12 @@ const _appEvalCommand = createCommand('eval')
     const evalFiles = resolvedInput.evalFile
       ? [resolvedInput.evalFile]
       : resolveEvalFiles(absAppPath, options.eval);
-    console.log(
-      `📋 Found ${evalFiles.length} eval(s): ${evalFiles.map((f) => basename(f)).join(', ')}`,
-    );
+    // Summarize which eval files were discovered before the run starts
+    const evalFileNames = evalFiles
+      // Reduce each resolved eval path down to just its filename for display
+      .map((f) => basename(f))
+      .join(', ');
+    console.log(`📋 Found ${evalFiles.length} eval(s): ${evalFileNames}`);
 
     // Start the app dev server (unless --url provides an already-running URL)
     const { serverProcess, appUrl } = await startAppServer(absAppPath, {
@@ -103,6 +108,7 @@ const _appEvalCommand = createCommand('eval')
 
     let failures = 0;
     try {
+      // Run every resolved eval file sequentially so output stays readable
       for (const evalFilePath of evalFiles) {
         const evalName = basename(evalFilePath, '.md');
         const query = readFileSync(evalFilePath, 'utf-8').trim();
@@ -129,6 +135,7 @@ const _appEvalCommand = createCommand('eval')
           await session.sendAndWait({ prompt: createPlanPrompt(query, ctx) }, 300_000);
 
           const planPath = `${runDir}/plan.json`;
+          // Bail out of this eval when the planning phase produced no plan file
           if (!existsSync(planPath)) {
             console.error(
               chalk.red(
@@ -138,6 +145,7 @@ const _appEvalCommand = createCommand('eval')
             session.disconnect();
             logger.stop();
             failures++;
+            // Skip execution/judging phases; this eval already failed at planning
             continue;
           }
 
@@ -147,6 +155,7 @@ const _appEvalCommand = createCommand('eval')
           // ── Phase 2: Execute + Evaluate each step ──────────────────
           for (const step of plan.steps) {
             console.log(chalk.cyan(`\n── Scenario: ${step.scenario}`));
+            // Print each acceptance criterion the agent will be judged against
             for (const c of step.criteria) {
               console.log(chalk.dim(`   • ${c}`));
             }
@@ -162,9 +171,11 @@ const _appEvalCommand = createCommand('eval')
 
           // Print the verdict
           const verdictPath = `${runDir}/verdict.json`;
+          // Only report a verdict when the judge phase actually produced one
           if (existsSync(verdictPath)) {
             const verdict = JSON.parse(readFileSync(verdictPath, 'utf-8')) as Verdict;
             console.log(formatVerdict(verdict));
+            // A failing verdict counts toward the overall exit-code failure total
             if (!verdict.pass) failures++;
           } else {
             console.error(chalk.red(`❌ Judge did not produce ${verdictPath}.`));
@@ -174,6 +185,7 @@ const _appEvalCommand = createCommand('eval')
           logger?.stop();
           const msg = err instanceof Error ? err.message : String(err);
           console.error(chalk.red(`\n❌ Eval "${evalName}" failed: ${msg}`));
+          // Print the stack trace too when one is available for debugging
           if (err instanceof Error && err.stack) {
             console.error(chalk.dim(err.stack));
           }

@@ -1,5 +1,5 @@
 import { ab } from './agent-browser.js';
-import { sleep } from './process.js';
+import { sleep } from './sleep.js';
 
 /**
  * Polls the browser's console log output until a predicate returns `true`
@@ -14,9 +14,11 @@ export async function pollConsole(
   timeoutMs: number,
 ): Promise<boolean> {
   const deadline = Date.now() + timeoutMs;
+  // Keep polling console output until the predicate matches or time runs out
   while (Date.now() < deadline) {
     try {
       const logs = ab(['console']);
+      // Stop polling as soon as the caller's condition is satisfied
       if (predicate(logs)) return true;
     } catch {
       // Browser not ready — retry
