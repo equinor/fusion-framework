@@ -118,6 +118,7 @@ export const routesDslPlugin = (options: RoutesDslPluginOptions = {}): Plugin =>
     },
     // Modify build config to include route files as entry points
     config(config, { command }) {
+      // Route entry points are added later in buildStart, once collected
       if (command === 'build') {
         // We'll modify rollupOptions.input in buildStart after we've collected route files
         return {};
@@ -138,8 +139,10 @@ export const routesDslPlugin = (options: RoutesDslPluginOptions = {}): Plugin =>
       // Track route files referenced by import.meta.resolve
       const fileDir = dirname(id);
       const matches = code.matchAll(/import\.meta\.resolve\((['"`])([^'"`]+)\1\)/g);
+      // Resolve each relative resolve() specifier to an absolute route file path
       for (const match of matches) {
         const specifier = match[2];
+        // Only relative specifiers point at local route files worth tracking
         if (specifier.startsWith('./') || specifier.startsWith('../')) {
           try {
             const resolvedPath = resolve(fileDir, specifier);
@@ -175,6 +178,7 @@ export const routesDslPlugin = (options: RoutesDslPluginOptions = {}): Plugin =>
     },
     // Ensure route files are included in the build
     buildStart() {
+      // Watch every discovered route file so edits trigger a rebuild
       for (const routeFile of routeFiles) {
         // Add as watch file to ensure Vite processes it
         this.addWatchFile(routeFile);
@@ -206,6 +210,7 @@ export const routesDslPlugin = (options: RoutesDslPluginOptions = {}): Plugin =>
       if (importer && (id.endsWith('.tsx') || id.endsWith('.ts'))) {
         try {
           const resolved = resolve(dirname(importer), id);
+          // Only resolve to a route file's absolute path when it's a tracked route
           if (routeFiles.has(resolved)) {
             return resolved;
           }

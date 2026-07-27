@@ -126,10 +126,12 @@ describe('API Service Vite Plugin - Middleware Route', () => {
     const serviceProxyRoute = DEFAULT_VALUES.API_PATH;
 
     const setupMockServices = (number: number): Array<Service> => {
-      const mockServices: Array<Service> = Array.from({ length: number }).map((_, index) => ({
-        name: `api_${index}`,
-        uri: `http://localhost:300${index}`,
-      }));
+      const mockServices: Array<Service> = Array.from({ length: number })
+        // Generate a batch of fake services with predictable names/uris
+        .map((_, index) => ({
+          name: `api_${index}`,
+          uri: `http://localhost:300${index}`,
+        }));
 
       // set up mock service discovery
       nock(serviceDiscoveryUrl).get('/services').reply(200, mockServices);
@@ -144,6 +146,7 @@ describe('API Service Vite Plugin - Middleware Route', () => {
     const serviceDiscoveryHandler = (data: Service[]) => {
       const routes = [] as ApiRoute[];
       const services = [] as Service[];
+      // Build a route + rewritten service uri for each discovered service
       for (const service of data) {
         const url = new URL(service.uri);
         const proxyUrl = `${serviceProxyRoute}/${service.name}`;
@@ -179,6 +182,7 @@ describe('API Service Vite Plugin - Middleware Route', () => {
 
       expect(services.length).toBe(numberOfMockServices);
 
+      // Every generated service should be reachable through the proxy
       for (const service of services) {
         const endpoint = new URL(`${service.uri}/api/posts`, serverUrl);
         expect(endpoint).toMatchObject({

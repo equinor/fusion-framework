@@ -19,7 +19,7 @@ import { registerServiceWorker } from './register-service-worker.js';
 
 import { version } from '../version.js';
 
-// @todo - add type for portal manifest when available
+// TODO(#5065): add type for portal manifest when available
 type PortalManifest = {
   build: {
     config: Record<string, unknown>;
@@ -89,6 +89,7 @@ enableTelemetry(configurator, {
         },
         // biome-ignore lint/suspicious/noExplicitAny: we need to use any here to allow dynamic properties
       } as Record<string, any>;
+      // Only attach user metadata when the auth module has resolved an account
       if (modules?.auth) {
         metadata.fusion.user = {
           id: modules.auth.account?.homeAccountId,
@@ -170,8 +171,8 @@ enableTelemetry(configurator, {
     portal_manifest.build.templateEntry,
   );
 
-  // @todo: should test if the entrypoint is external or internal
-  // @todo: add proper return type
+  // TODO(#5066): should test if the entrypoint is external or internal
+  // TODO(#5066): add proper return type
   const { render } = await measurement
     .clone()
     .resolve(

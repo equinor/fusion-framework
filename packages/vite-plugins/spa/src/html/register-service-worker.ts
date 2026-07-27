@@ -36,6 +36,7 @@ export async function registerServiceWorker(
   framework: ModulesInstance<[MsalModule, TelemetryModule]>,
 ) {
   const telemetry = framework.telemetry;
+  // Bail out early when the browser has no service worker support at all
   if ('serviceWorker' in navigator === false) {
     const exception = new Error('Service workers are not supported in this browser.');
     exception.name = 'ServiceWorkerNotSupported';
@@ -47,6 +48,7 @@ export async function registerServiceWorker(
   }
 
   const resourceConfigs = import.meta.env.FUSION_SPA_SERVICE_WORKER_RESOURCES;
+  // The worker needs a resource config to know which requests to intercept
   if (!resourceConfigs) {
     const exception = new Error('Service worker config is not defined.');
     exception.name = 'ServiceWorkerConfigNotDefined';
@@ -73,10 +75,12 @@ export async function registerServiceWorker(
 
     // listen for messages from the service worker (set up before registration)
     navigator.serviceWorker.addEventListener('message', async (event) => {
+      // Only the GET_TOKEN message type requests a token from this handler
       if (event.data.type === 'GET_TOKEN') {
         try {
           // extract scopes from the event data
           const scopes = event.data.scopes as string[];
+          // Scopes must be a real array before they can be used to request a token
           if (!scopes || !Array.isArray(scopes)) {
             const error = new Error('Invalid scopes provided');
             error.name = 'InvalidScopesProvided';
@@ -86,6 +90,7 @@ export async function registerServiceWorker(
           // request a token from the MSAL module
           const token = await framework.auth.acquireToken({ request: { scopes } });
 
+          // A missing token means acquisition failed and the worker can't proceed
           if (!token) {
             const error = new Error('Failed to acquire token');
             error.name = 'FailedToAcquireToken';
@@ -137,9 +142,11 @@ export async function registerServiceWorker(
     if (registration.waiting) {
       sendConfigToServiceWorker(registration.waiting);
     }
+    // A worker still installing needs to reach the 'activated' state before it can receive config
     if (registration.installing) {
       registration.installing.addEventListener('statechange', (event) => {
         const worker = event.target as ServiceWorker;
+        // Only send config once the worker has fully activated
         if (worker.state === 'activated') {
           sendConfigToServiceWorker(worker);
         }
@@ -148,6 +155,7 @@ export async function registerServiceWorker(
 
     // Listen for controller changes (happens during hard refresh or updates)
     navigator.serviceWorker.addEventListener('controllerchange', () => {
+      // Only send config once this page is actually controlled by a worker
       if (navigator.serviceWorker.controller) {
         sendConfigToServiceWorker(navigator.serviceWorker.controller);
       }
@@ -163,6 +171,7 @@ export async function registerServiceWorker(
 
     // ensure we have an active service worker before sending config
     const activeWorker = readyRegistration.active;
+    // Without an active worker there's nothing to send config to
     if (!activeWorker) {
       console.error('[Service Worker Registration] Service worker is not active after ready state');
       return;
@@ -188,6 +197,7 @@ export async function registerServiceWorker(
 
           // Polling fallback and timeout to prevent infinite waiting
           checkInterval = setInterval(() => {
+            // Stop polling once a controller has taken over
             if (navigator.serviceWorker.controller) finish();
           }, 200);
 

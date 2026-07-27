@@ -8,7 +8,8 @@ import type {
   IncomingRequest,
 } from './types.js';
 import { createRouteMatcher } from './create-route-matcher.js';
-import { InvalidRouteError, validateRoute } from './validate-route.js';
+import { validateRoute } from './validate-route.js';
+import { InvalidRouteError } from './invalid-route-error.js';
 import { createResponseInterceptor } from './create-response-interceptor.js';
 
 /**
@@ -61,6 +62,7 @@ function processesRoute(
   }
 
   const requestUrl = req.url;
+  // A request without a url can't be matched or proxied
   if (!requestUrl) {
     next(new InvalidRouteError('missing request url'));
     return;
@@ -69,6 +71,7 @@ function processesRoute(
   // if route has middleware, execute it
   if (route.middleware) {
     logger?.info(`executing route middleware on match ${route.match} -> ${req.originalUrl}`);
+    // Middleware takes precedence, so warn if a proxy config would otherwise be ignored
     if (route.proxy) {
       logger?.warn('route.middleware and route.proxy are both defined. Using middleware');
     }
@@ -78,6 +81,7 @@ function processesRoute(
 
   const { configure, rewrite, transformResponse, ...proxyOptions } = route.proxy;
 
+  // A rewrite function transforms the request url before proxying
   if (rewrite) {
     req.url = rewrite(req.url ?? '');
   }
@@ -112,6 +116,7 @@ function processesRoute(
       'x-proxy-rewrite-target': proxyOptions.target,
     });
 
+    // Log errors verbosely (with request/response detail) for non-2xx/3xx responses
     if (statusCode ?? 0 >= 400) {
       logger?.error(message);
       logger?.debug({
@@ -130,11 +135,13 @@ function processesRoute(
     }
   });
 
+  // A custom onProxyRes listener lets consumers hook into every proxy response
   if (options?.onProxyRes) {
     logger?.debug('adding custom onProxyRes handler');
     proxyServer.on('proxyRes', options.onProxyRes);
   }
 
+  // A transformResponse function requires intercepting the raw proxy response
   if (transformResponse) {
     logger?.debug('adding response interceptor');
     proxyServer.on('proxyRes', createResponseInterceptor(transformResponse, { logger }));
@@ -172,11 +179,14 @@ export function processRoutes(
 ): void {
   const [req, _res, next] = middlewareArgs;
 
+  // Check each route in order and process the first one that matches
   for (const route of routes) {
+    // Requests without a url can never match a route
     if (!req.url) continue;
     // Extract pathname only (exclude query parameters/CGI)
     const pathname = req.url.split('?')[0];
     const match = createRouteMatcher(route)(pathname, req);
+    // A match means this route owns the request; stop checking further routes
     if (match) {
       const [req, res, next] = middlewareArgs;
       req.params = typeof match === 'object' ? match.params : {};

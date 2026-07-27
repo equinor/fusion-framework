@@ -79,6 +79,7 @@ export function createResponseInterceptor<
     // If the status code is 4xx or 5xx, we should skip the transformation
     // and return the original response to the client
     if (statusCode >= 400) {
+      // Forward the error response to the client untouched
       proxyRes.pipe(res);
       return;
     }
@@ -88,6 +89,7 @@ export function createResponseInterceptor<
     // and return the original response to the client
     if (!headers['content-type']?.includes('application/json')) {
       logger?.debug('response is not JSON, skipping transformation');
+      // Non-JSON responses are passed through unmodified
       proxyRes.pipe(res);
       return;
     }

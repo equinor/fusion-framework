@@ -150,6 +150,7 @@ export const plugin = <TEnv extends TemplateEnv = TemplateEnv>(
 
       // define environment variables
       config.define ??= {};
+      // Convert each env entry into a valid JS expression for Vite's config.define
       for (const [key, value] of Object.entries(env)) {
         // All values must be valid JavaScript expressions for Vite's config.define
         // Try to parse as JSON first (handles booleans, numbers, objects, arrays)

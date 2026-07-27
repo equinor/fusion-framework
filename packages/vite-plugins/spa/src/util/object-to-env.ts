@@ -24,19 +24,22 @@
  * ```
  */
 export function objectToEnv(obj: object, prefix = 'FUSION_SPA'): Record<string, string> {
-  return Object.entries(obj).reduce((result, [key, value]) => {
-    // Convert camelCase to snake_case and uppercase
-    const snakeKey = key.replace(/([A-Z])/g, '_$1').toUpperCase();
+  return Object.entries(obj)
+    // Build up the flat env record one entry at a time, recursing into nested objects
+    .reduce((result, [key, value]) => {
+      // Convert camelCase to snake_case and uppercase
+      const snakeKey = key.replace(/([A-Z])/g, '_$1').toUpperCase();
 
-    const newPrefix = prefix ? `${prefix.replace(/_$/, '')}_${snakeKey}` : snakeKey;
+      const newPrefix = prefix ? `${prefix.replace(/_$/, '')}_${snakeKey}` : snakeKey;
 
-    if (value && typeof value === 'object' && !Array.isArray(value)) {
-      // Recursively flatten nested objects
-      return Object.assign(result, objectToEnv(value, newPrefix));
-    }
-    // Stringify non-object values
-    return Object.assign(result, { [newPrefix]: JSON.stringify(value) });
-  }, {});
+      // Nested (non-array) objects are flattened recursively under the extended prefix
+      if (value && typeof value === 'object' && !Array.isArray(value)) {
+        // Recursively flatten nested objects
+        return Object.assign(result, objectToEnv(value, newPrefix));
+      }
+      // Stringify non-object values
+      return Object.assign(result, { [newPrefix]: JSON.stringify(value) });
+    }, {});
 }
 
 export default objectToEnv;

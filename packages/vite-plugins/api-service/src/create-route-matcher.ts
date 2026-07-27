@@ -37,7 +37,7 @@ export type MatchResult<T extends RequestParams> = boolean | { params: T };
  * - **Custom matcher function:** If `route.match` is a function, it is used directly as the matcher,
  *   allowing for advanced or custom matching logic that can utilize both the path and the request object.
  *
- * @typeParam T - The type of request parameters to extract from the path, extending `RequestParams`.
+ * @template T - The type of request parameters to extract from the path, extending `RequestParams`.
  * @param route - The API route definition, which specifies either a string pattern or a custom matcher function.
  * @returns A matcher function that takes a path and request, returning either a boolean or an object containing extracted parameters.
  *
@@ -56,11 +56,14 @@ export type MatchResult<T extends RequestParams> = boolean | { params: T };
 export function createRouteMatcher<T extends RequestParams>(route: ApiRoute): Matcher<T> {
   // extract the match patterns, if string wrap it to array
   const match = typeof route.match === 'string' ? [route.match] : route.match;
+  // String patterns (single or array) are matched with path-to-regexp; functions are used as-is
   if (Array.isArray(match)) {
     // create a path-to-regexp matcher for each pattern
     return (path: string): MatchResult<T> => {
+      // Try each pattern in order and return on the first match
       for (const pattern of match) {
         const result = pathToRegexp.match<T>(pattern)(path);
+        // A truthy result means this pattern matched the path
         if (result) {
           return result;
         }

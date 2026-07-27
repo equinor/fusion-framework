@@ -111,6 +111,7 @@ export function plugin(args: PluginArguments, options?: PluginOptions): Plugin {
   return {
     name: 'fusion:api-proxy',
     config(config, env) {
+      // Only wire up the vite dev-server proxy when a proxyHandler was configured
       if (proxyHandler) {
         config.server ??= {};
         const proxyOptions = proxyHandler.createProxyOptions(config, env);

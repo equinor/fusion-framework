@@ -66,6 +66,7 @@ export const markdownPlugin = (options: MarkdownPluginOptions = {}): Plugin => {
       // Handle .md files without ?raw (fallback for cases where load didn't catch it)
       const idWithoutQuery = id.split('?')[0];
 
+      // Only transform actual .md files that weren't already handled via ?raw
       if (idWithoutQuery.endsWith('.md') && !id.includes('?raw')) {
         // Return the raw content as a default export
         return {
