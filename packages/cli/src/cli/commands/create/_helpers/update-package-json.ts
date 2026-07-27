@@ -75,6 +75,7 @@ export const updatePackageJson = async (
     // Check if there are actual changes to avoid unnecessary file writes
     const hasChanges = JSON.stringify(originalPackageJson) !== JSON.stringify(updatedPackageJson);
 
+    // Avoid an unnecessary disk write when nothing actually changed
     if (hasChanges) {
       logger?.debug('Writing updated package.json to disk');
       // Use JSON.stringify with 2-space indentation to maintain readable formatting

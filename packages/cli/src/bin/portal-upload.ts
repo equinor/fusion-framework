@@ -44,6 +44,7 @@ export type UploadPortalOptions = {
  */
 function handleUploadError(response: Response, name: string, log?: ConsoleLogger): never {
   const authMsg = formatAuthError(response.status, `upload portal bundle for ${name}`);
+  // Only print the formatted message if one was resolved
   if (authMsg) {
     log?.fail('🔒', `Authentication/authorization error uploading ${name}`);
     log?.error(authMsg);
@@ -51,6 +52,7 @@ function handleUploadError(response: Response, name: string, log?: ConsoleLogger
   }
 
   let message: string;
+  // Map known HTTP status codes to a user-facing message
   switch (response.status) {
     case 409:
       message = `${response.status} - Version is already published, please generate a new release`;
@@ -131,6 +133,7 @@ export const uploadPortalBundle = async (opt: UploadPortalOptions) => {
       try {
         const { error } = await response.json();
         log?.debug('Error:', error);
+        // Surface the service-provided error details when present
         if (error.message) {
           log?.warn(
             chalk.red(`🤯 error: ${error.code}\n`),
@@ -152,6 +155,7 @@ export const uploadPortalBundle = async (opt: UploadPortalOptions) => {
   } catch (error) {
     // Surface MSAL token acquisition failures with actionable guidance
     const tokenMsg = formatTokenAcquisitionError(error, `upload portal bundle for ${name}`);
+    // Only print the formatted message if a token-acquisition failure was resolved
     if (tokenMsg) {
       log?.fail('🔒', `Token acquisition failed uploading ${name}`);
       log?.error(tokenMsg);

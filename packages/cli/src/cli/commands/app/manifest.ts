@@ -61,6 +61,7 @@ export const command = createCommand('manifest')
   .action(async (manifest, opt) => {
     const log = opt.silent ? null : new ConsoleLogger('app:manifest', { debug: opt.debug });
     const result = await loadAppManifest({ log, manifest });
+    // Only write to a file when a non-default output target was requested
     if (opt.output !== 'stdout') {
       const output = resolve(process.cwd(), opt.output);
       log?.start('Writing manifest to file', opt.output);

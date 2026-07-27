@@ -62,6 +62,7 @@ export async function fetchPackageInfo(
   try {
     // Make HTTP request to npm registry API
     const response = await fetch(`${registry}/${packageName}`);
+    // Registry errors should surface as a clear, contextual failure
     if (!response.ok) {
       throw new Error(`Failed to fetch package info for ${packageName}: ${response.statusText}`);
     }
@@ -76,6 +77,7 @@ export async function fetchPackageInfo(
 
     // Extract latest version from dist-tags (required for package resolution)
     const latestVersion = data['dist-tags']?.latest;
+    // A package without dist-tags.latest can't be resolved
     if (!latestVersion) {
       throw new Error(`No latest version found for package ${packageName}`);
     }
@@ -180,6 +182,7 @@ export async function fetchMultiplePackageInfo(
 
   // Process results and build the final map
   for (const result of settledPromises) {
+    // Only include packages that were fetched successfully
     if (result.status === 'fulfilled' && result.value) {
       const { packageName, packageInfo } = result.value;
       results[packageName] = packageInfo;

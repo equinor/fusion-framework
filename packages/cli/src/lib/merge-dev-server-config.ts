@@ -18,10 +18,12 @@ const keyedArrayMerger = <TType extends Record<string, unknown>>(
   target: Array<TType>,
   source: Array<TType>,
 ): Array<TType> => {
+  // Index source records by key for O(1) lookup during the merge below
   const sourceRecords = source.reduce(
     (acc, item) => Object.assign(acc, { [String(item[key])]: item }),
     {} as TType,
   );
+  // Index target records by key so source entries can override matching keys
   const targetRecords = target.reduce(
     (acc, item) => Object.assign(acc, { [String(item[key])]: item }),
     {} as TType,

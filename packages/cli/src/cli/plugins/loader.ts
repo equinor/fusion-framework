@@ -56,8 +56,8 @@ export async function loadPlugins(program: Command): Promise<void> {
     fileURLToPath(import.meta.url), // CLI package directory
   ];
 
-  // Find all fusion-cli.config.ts files (supports .ts, .js, .json extensions)
   const configFiles = await Promise.all(
+    // Find all fusion-cli.config.ts files (supports .ts, .js, .json extensions)
     searchPaths.map(async (startPath) => {
       const configFile = await findUp(
         ['fusion-cli.config.ts', 'fusion-cli.config.js', 'fusion-cli.config.json'],
@@ -70,9 +70,11 @@ export async function loadPlugins(program: Command): Promise<void> {
   // Load configs from found files (deduplicate by path)
   const uniqueConfigFiles: string[] = Array.from(
     new Set(
+      // Drop entries where findUp found nothing for that search path
       configFiles.filter((f: string | undefined): f is string => f !== undefined && f !== null),
     ),
   );
+  // Load and merge plugins from every discovered config file
   for (const configFile of uniqueConfigFiles) {
     const plugins = await loadConfigFromFile(configFile);
     allPlugins.push(...plugins);
@@ -98,6 +100,7 @@ export async function loadPlugins(program: Command): Promise<void> {
       // If plugin is a function, call it directly
       if (typeof plugin === 'function') {
         plugin(program);
+        // Nothing else to resolve for inline function plugins
         continue;
       }
 
@@ -172,6 +175,7 @@ export async function loadPlugins(program: Command): Promise<void> {
         }
       }
 
+      // Every resolution strategy has been exhausted at this point
       if (!resolved || !pluginModule) {
         throw new Error(
           `Could not resolve plugin "${pluginPackage}" using any resolution strategy`,

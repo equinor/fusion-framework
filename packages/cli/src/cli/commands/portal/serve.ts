@@ -63,6 +63,7 @@ export const command = createCommand('serve')
     const log = new ConsoleLogger('portal:serve', { debug: options.debug });
 
     const port = options.port ? parseInt(options.port, 10) : undefined;
+    // Reject an explicitly-provided port that isn't a valid TCP port number
     if (port && (Number.isNaN(port) || port < 1 || port > 65535)) {
       log.fail('Invalid port number. Port must be between 1 and 65535.');
       process.exit(1);

@@ -20,6 +20,7 @@ export type BundleMetadata = {
 export const loadMetadata = (bundle: AdmZip): Promise<BundleMetadata> => {
   // Attempt to retrieve the metadata.json entry from the zip bundle
   const metadataEntry = bundle.getEntry('metadata.json');
+  // The bundle is invalid without a metadata.json entry
   if (!metadataEntry) {
     // If not found, throw an error
     throw new Error('Metadata file not found in bundle');
@@ -27,6 +28,7 @@ export const loadMetadata = (bundle: AdmZip): Promise<BundleMetadata> => {
   // Read the metadata entry asynchronously
   return new Promise((resolve, reject) => {
     metadataEntry.getDataAsync((data, err) => {
+      // Propagate read failures as a rejected promise
       if (err) {
         // Reject if reading the file fails
         return reject(new Error('Failed to read metadata file', { cause: err }));

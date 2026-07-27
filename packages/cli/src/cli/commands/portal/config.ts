@@ -88,11 +88,13 @@ export const command = withAuthOptions(
       // Validate env for publish (no dev allowed)
       if (options.publish) {
         const [name, version] = options.publish.split('@') || [];
+        // Both name and version segments are required for a valid portal identifier
         if (!name || !version) {
           log?.fail('🤪', 'Portal identifier is required when using', chalk.blue('--publish'));
           log?.info('Example: fusion-framework-cli portal config --publish my-portal@1.2.3');
           process.exit(1);
         }
+        // The dev environment is not a valid publish target
         if (options.env === 'dev') {
           log?.fail(
             '🤪',
@@ -123,6 +125,7 @@ export const command = withAuthOptions(
         output: options.output === 'stdout' ? undefined : options.output,
       });
 
+      // Print to stdout only when explicitly requested (default output mode)
       if (options.output === 'stdout') {
         console.log(JSON.stringify(portalConfig, null, 2));
       }

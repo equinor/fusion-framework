@@ -139,6 +139,7 @@ export const command = withAuthOptions(
 
       // Bundle the app if no bundle is provided
       let archive: string | AdmZip;
+      // Reuse the caller-provided bundle instead of re-bundling from source
       if (bundle) {
         log.info(`📦 Using provided bundle: ${bundle}`);
         archive = bundle;

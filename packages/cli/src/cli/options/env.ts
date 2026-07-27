@@ -11,6 +11,7 @@ import { resolveDefaultEnv, FusionEnv } from '@equinor/fusion-framework-cli/bin'
  * @returns A configured Commander option for the environment.
  */
 export const createEnvOption = (options: { default?: FusionEnv; allowDev: boolean }) => {
+  // Hide the development environment from the option unless explicitly allowed
   const allowedEnvs = Object.values(FusionEnv).filter((env) =>
     env === FusionEnv.Development ? options.allowDev : true,
   );

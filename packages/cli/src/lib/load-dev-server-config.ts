@@ -60,6 +60,7 @@ export const loadDevServerConfig = async (
       resolve: async (module: { default: DevServerConfigExport }): Promise<DevServerOptions> => {
         // If the default export is a function, call it with env and a cloned base config
         let overrides: RecursivePartial<DevServerOptions> | undefined;
+        // Config files may export either a factory function or a plain overrides object
         if (typeof module.default === 'function') {
           const baseClone = { ...base }; // Clone base to avoid mutation
           overrides = await module.default(env, { base: baseClone });

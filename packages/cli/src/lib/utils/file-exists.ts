@@ -26,6 +26,7 @@ export const fileExistsSync = (file: string, options?: Options) => {
     accessSync(file, constants.F_OK);
     return true;
   } catch (err) {
+    // Re-throw the original error instead of swallowing it when asserting
     if (options?.assert) {
       throw err;
     }
@@ -52,6 +53,7 @@ export const fileExists = async (file: string, options?: Options): Promise<boole
     await access(file, constants.F_OK);
     return true;
   } catch (err) {
+    // Re-throw the original error instead of swallowing it when asserting
     if (options?.assert) {
       throw err;
     }

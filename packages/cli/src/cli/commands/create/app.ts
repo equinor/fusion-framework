@@ -75,6 +75,7 @@ async function createApplication(
     options.clean,
     options.directory,
   );
+  // Abort the rest of the workflow when the user declined to proceed
   if (!shouldContinue) {
     // Clean exit when user aborts the operation
     process.exit(0);
@@ -218,8 +219,8 @@ export const createAppCommand = (name: string) =>
           '❌ An unexpected error occurred:',
           error instanceof Error ? error.message : String(error),
         );
+        // Include stack trace in debug mode for troubleshooting
         if (options.debug) {
-          // Include stack trace in debug mode for troubleshooting
           logger.error(
             'Stack trace:',
             error instanceof Error ? error.stack : 'No stack trace available',

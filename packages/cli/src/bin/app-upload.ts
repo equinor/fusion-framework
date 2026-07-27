@@ -110,10 +110,9 @@ export const uploadApplication = async (
       });
 
   log?.info('📦', `Uploading application bundle for ${chalk.bold(appKey)}`);
-  log?.debug(
-    'Bundle contents:',
-    (await bundle.getEntries()).map((entry) => entry.entryName),
-  );
+  // List entry names only — full entry objects are too verbose for debug logging
+  const bundleEntryNames = (await bundle.getEntries()).map((entry) => entry.entryName);
+  log?.debug('Bundle contents:', bundleEntryNames);
 
   // Read the bundle content as a buffer
   const content = await bundle.toBufferPromise().catch((error) => {

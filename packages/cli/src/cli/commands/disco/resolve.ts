@@ -70,6 +70,7 @@ const command = withAuthOptions(
       log?.succeed(`Resolved service ${service}`);
 
       log?.debug(appClient);
+      // Print raw JSON only in silent mode for scriptable/piped output
       if (options.silent) {
         console.log(JSON.stringify(appClient, null, 2));
       }

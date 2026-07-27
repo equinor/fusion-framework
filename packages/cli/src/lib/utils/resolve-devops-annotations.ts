@@ -66,6 +66,7 @@ export const resolveDevopsAnnotations = (): DevopsAnnotations => {
 
   // Construct a direct URL to the build results if all required parts are available
   let runUrl = 'unknown';
+  // Only construct a results URL when all required pieces are known
   if (orgUrl !== 'unknown' && project !== 'unknown' && runId !== 'unknown') {
     // Remove trailing slash from orgUrl if present, then build the run results URL
     runUrl = `${orgUrl.replace(/\/$/, '')}${project}/_build/results?buildId=${runId}`;

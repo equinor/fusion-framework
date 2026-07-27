@@ -92,6 +92,7 @@ export const publishPortalConfig = async (options: PortalConfigPublishOptions) =
   } catch (error) {
     // Handle known HTTP errors with specific log messages
     if (error instanceof HttpJsonResponseError) {
+      // Map known HTTP status codes to actionable log messages
       switch (error.response.status) {
         case 410:
           log?.fail(
@@ -112,6 +113,7 @@ export const publishPortalConfig = async (options: PortalConfigPublishOptions) =
             `publish config for portal ${portal.name}`,
           );
           log?.fail('🔒', 'Authentication/authorization error publishing portal config.');
+          // Only print the formatted message if one was resolved
           if (authMsg) {
             log?.error(authMsg);
           }
@@ -130,6 +132,7 @@ export const publishPortalConfig = async (options: PortalConfigPublishOptions) =
     }
     // Surface MSAL token acquisition failures with actionable guidance
     const tokenMsg = formatTokenAcquisitionError(error, `publish config for portal ${portal.name}`);
+    // Only print the formatted message if a token-acquisition failure was resolved
     if (tokenMsg) {
       log?.fail('🔒', `Token acquisition failed publishing config for ${portal.name}`);
       log?.error(tokenMsg);

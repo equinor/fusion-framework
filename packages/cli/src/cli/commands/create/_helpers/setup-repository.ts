@@ -41,6 +41,7 @@ export async function setupRepository(
   const repoDir = resolve(tmpdir(), 'ffc', 'repo', templateRepoName);
   logger.debug(`Repo dir: ${repoDir}`);
 
+  // Wipe any existing clone before setting up a fresh one
   if (clean) {
     logger.debug(`Removing repo dir: ${repoDir}`);
     // Use safeRmSync for recursive directory removal with path validation

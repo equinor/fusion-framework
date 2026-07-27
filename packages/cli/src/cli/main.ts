@@ -16,7 +16,9 @@ loadDotEnv({ quiet: true });
 
 // Check Node.js version and recommend LTS (24.x)
 const MINIMUM_NODE_VERSION = process.env.MINIMUM_NODE_VERSION || '20';
+// Parse the major version number only, for comparison against the minimum
 const [major] = process.versions.node.split('.').map(Number);
+// Refuse to run on Node versions below the supported minimum
 if (major < Number(MINIMUM_NODE_VERSION)) {
   console.error(
     chalk.red('[ERROR]'),
@@ -26,6 +28,7 @@ if (major < Number(MINIMUM_NODE_VERSION)) {
 }
 
 const RECOMMENDED_NODE_LTS = process.env.RECOMMENDED_NODE_LTS || '24';
+// Warn (but don't block) when running on a non-recommended Node version
 if (major !== Number(RECOMMENDED_NODE_LTS)) {
   console.warn(
     chalk.yellow('[WARNING]'),
@@ -36,6 +39,7 @@ if (major !== Number(RECOMMENDED_NODE_LTS)) {
 
 // try to find the package.json of the CLI
 const pkg = readPackageUpSync({ cwd: fileURLToPath(import.meta.url) });
+// The CLI cannot resolve its own binary path without a package.json
 if (!pkg) {
   throw Error('failed to find program root');
 }

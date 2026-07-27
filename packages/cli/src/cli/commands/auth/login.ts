@@ -73,6 +73,7 @@ export const command = createCommand('login')
       log.info('username:', chalk.green(record.username));
       log.info('tenant:  ', chalk.yellow(record.tenantId));
       log.info('client:  ', chalk.yellow(record.clientId));
+      // Log each requested scope individually for visibility
       for (const scope of scopes) {
         log.info('scope:   ', chalk.dim(scope));
       }

@@ -75,6 +75,9 @@ export const createPortalManifestFromPackage = (
   // Attempt to resolve GitHub repo from package, fallback to local git remote
   const githubRepo = resolveRepoFromPackage(packageJson) ?? resolveGitRemoteUrl();
 
+  // Normalize extensions to a leading-dot format expected by the asset matcher
+  const allowedExtensions = ASSET_EXTENSIONS.map((ext) => `.${ext}`);
+
   // Construct the portal manifest object with all required fields
   const manifest = {
     name,
@@ -93,14 +96,16 @@ export const createPortalManifestFromPackage = (
         // ...packageJson.annotations ?? {}
       },
       projectPage: packageJson.homepage,
-      allowedExtensions: ASSET_EXTENSIONS.map((ext) => `.${ext}`),
+      allowedExtensions,
     },
   };
 
   // Validate manifest against schema and throw if invalid
   const parsed = PortalManifestSchema.safeParse(manifest);
+  // Fail fast with a readable error instead of returning an invalid manifest
   if (!parsed.success) {
     const details = parsed.error.issues
+      // Format each Zod issue as a single readable line
       .map((i) => `- ${i.path.join('.')}: ${i.message}`)
       .join('\n');
     throw new Error(['Invalid portal manifest generated from package.json:', details].join('\n'));

@@ -60,6 +60,7 @@ export const command = createCommand('manifest')
   .action(async (manifest, opt) => {
     const log = opt.silent ? null : new ConsoleLogger('portal:manifest', { debug: opt.debug });
     const result = await loadPortalManifest({ log, manifest });
+    // Only write to a file when an output path was requested
     if (opt.output) {
       const output = resolve(process.cwd(), opt.output);
       log?.start('Writing manifest to file', opt.output);

@@ -34,6 +34,7 @@ export async function checkTargetDirectory(
     return false; // Return false to abort the operation instead of throwing
   }
 
+  // Nothing to check if the directory doesn't exist yet
   if (!existsSync(validatedTargetDir)) {
     logger.debug(`Target directory does not exist: ${validatedTargetDir}`);
     return true;
@@ -41,6 +42,7 @@ export async function checkTargetDirectory(
 
   try {
     const contents = readdirSync(validatedTargetDir);
+    // An empty directory needs no conflict handling
     if (contents.length === 0) {
       logger.debug(`Target directory is empty: ${validatedTargetDir}`);
       return true;
@@ -54,6 +56,7 @@ export async function checkTargetDirectory(
       contents.slice(0, 10).join(', ') + (contents.length > 10 ? '...' : ''),
     );
 
+    // Skip the interactive prompt entirely when --clean was requested
     if (clean) {
       // Clean flag is set, automatically clean the directory
       logger.info('Cleaning target directory (--clean flag)...');
@@ -95,11 +98,13 @@ export async function checkTargetDirectory(
         },
       ]);
 
+      // User chose to cancel — signal the caller to stop
       if (action === 'abort') {
         logger.info('Operation cancelled by user.');
         return false;
       }
 
+      // User chose to wipe the directory before continuing
       if (action === 'clean') {
         logger.info('Cleaning target directory...');
         try {

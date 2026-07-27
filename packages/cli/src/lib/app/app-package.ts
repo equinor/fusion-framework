@@ -137,6 +137,7 @@ export const resolveAppPackage = async (
 ): Promise<ResolvedAppPackage> => {
   // Attempt to find the nearest package.json using read-package-up.
   const pkg = await readPackageUp(options);
+  // No package.json means there's nothing valid to resolve
   if (!pkg) {
     // Throw if no package.json is found in the directory tree.
     throw Error('failed to find package.json');

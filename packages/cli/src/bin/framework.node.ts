@@ -157,12 +157,14 @@ export const configureFramework = (
   const { auth } = config;
 
   enableAzureIdentityAuth(configurator, (builder) => {
+    // Prefer DefaultAzureCredential when explicitly configured (CI/CD, managed identity, OIDC)
     if ('defaultCredential' in auth && auth.defaultCredential) {
       // Use DefaultAzureCredential (CI/CD, managed identity, OIDC)
       builder.setDefaultCredential();
       return;
     }
 
+    // Fall back to a pre-obtained static token when provided
     if ('token' in auth && auth.token) {
       // Use a pre-obtained static token
       builder.setTokenOnly(auth.token);
@@ -173,6 +175,7 @@ export const configureFramework = (
     // The credential silently uses cached tokens and only opens a browser
     // when no cached credentials are available.
     const { clientId, tenantId } = auth as AuthSilentOptions;
+    // Both silent and interactive modes require these to build a credential
     if (!clientId || !tenantId) {
       throw new Error('clientId and tenantId are required for auth module');
     }
@@ -180,6 +183,7 @@ export const configureFramework = (
     // Interactive mode with custom server configuration
     if ('interactive' in auth && auth.interactive) {
       const { server } = auth as AuthInteractiveOptions;
+      // A redirect port is required to receive the interactive auth callback
       if (!server.port) {
         throw new Error('server.port is required for interactive mode');
       }

@@ -36,6 +36,7 @@ export async function installPackageDependencies(
     logger?.succeed('Dependencies installed successfully!');
     return packageManager;
   } catch (error) {
+    // Surface non-zero exit codes from the package manager as a clearer error
     if (error instanceof ExecaError && error.exitCode !== 0) {
       logger?.error(`${packageManager} install failed with exit code ${error.exitCode}`);
       throw new Error(`${packageManager} install failed with exit code ${error.exitCode}`);

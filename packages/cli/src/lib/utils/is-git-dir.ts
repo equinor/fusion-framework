@@ -9,6 +9,7 @@ import { existsSync } from 'node:fs';
  * @public
  */
 export function isGitDir(dir: string): boolean {
+  // A non-existent directory cannot be a git repository
   if (!existsSync(dir)) {
     return false;
   }

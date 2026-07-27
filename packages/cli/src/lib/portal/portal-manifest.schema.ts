@@ -42,10 +42,13 @@ export const PortalManifestBuildSchema = z.object({
     .record(z.string(), z.string().nullish())
     .optional()
     .transform((rec) => {
+      // Nothing to normalize when annotations weren't provided at all
       if (!rec) {
         return undefined;
       }
-      return Object.fromEntries(Object.entries(rec).filter(([, value]) => value !== undefined));
+      // Drop keys explicitly set to undefined, keeping explicit nulls
+      const definedEntries = Object.entries(rec).filter(([, value]) => value !== undefined);
+      return Object.fromEntries(definedEntries);
     })
     .describe('Optional build annotations'),
   // Optional project homepage

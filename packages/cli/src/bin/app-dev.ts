@@ -97,6 +97,7 @@ export const startAppDevServer = async (options?: StartAppDevServerOptions) => {
   let templateEntry: string | undefined;
   let templateFilePath: string | undefined;
   const portalFilePath = fileURLToPath(import.meta.resolve(portalId));
+  // Only wire up a dev-server template entry when the portal resolves to a local file
   if (fileExistsSync(portalFilePath)) {
     // If the portal file exists locally, set the entry point for the dev server
     templateEntry = portalFilePath;

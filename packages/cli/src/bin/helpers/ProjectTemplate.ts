@@ -89,6 +89,7 @@ export class ProjectTemplate {
       // Verify source exists before attempting to copy
       if (!existsSync(sourcePath)) {
         this.#logger?.warn(`Source resource does not exist, skipping: ${sourcePath}`);
+        // Skip this resource entirely rather than failing the whole copy
         continue;
       }
 

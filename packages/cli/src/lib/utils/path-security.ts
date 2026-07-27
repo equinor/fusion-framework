@@ -23,6 +23,7 @@ import isPathInside from 'is-path-inside';
  * ```
  */
 export function validateSafePath(targetPath: string, baseDir?: string): string {
+  // Reject blank/whitespace-only input before attempting to resolve it
   if (typeof targetPath !== 'string' || targetPath.trim() === '') {
     throw new Error('Target path must be a non-empty string');
   }
@@ -34,6 +35,7 @@ export function validateSafePath(targetPath: string, baseDir?: string): string {
   if (baseDir) {
     const resolvedBaseDir = resolve(baseDir);
 
+    // Reject any path that escapes the configured base directory
     if (!isPathInside(resolvedPath, resolvedBaseDir)) {
       throw new Error(
         'The target path must be within the specified base directory. Please specify a relative path or ensure the absolute path is within the base directory.',

@@ -73,7 +73,9 @@ export const command = createCommand('schema')
     log.debug('Schema:', JSON.stringify(schemaResult, null, 2));
     log.succeed('Schema generated successfully!');
 
+    // Only handle output when a target (stdout or file path) was requested
     if (args.output) {
+      // stdout output prints directly instead of writing a file
       if (args.output === 'stdout') {
         log.info('Schema:', JSON.stringify(schemaResult.schema, null, 2));
       } else {
@@ -84,6 +86,7 @@ export const command = createCommand('schema')
       process.exit(0);
     }
 
+    // Optionally validate a sample JSON file against the generated schema
     if (args.validate) {
       log.start('Validating schema against JSON file...');
       const ajv = new Ajv2020({ strict: true });
@@ -94,6 +97,7 @@ export const command = createCommand('schema')
       log.debug('JSON value:', JSON.stringify(jsonValue, null, 2));
 
       const valid = validate(jsonValue);
+      // Surface Ajv's detailed error list on validation failure
       if (!valid) {
         log.fail('Schema validation failed:', JSON.stringify(validate.errors ?? 'Unknown error'));
         process.exit(1);

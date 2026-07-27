@@ -106,10 +106,13 @@ export const loadPortalManifest = async <T extends Partial<PortalManifest> = Por
   // Validate the manifest before returning using the PortalManifestSchema (Zod)
   const manifest = importResult.config as T;
   const validation = PortalManifestSchema.safeParse(manifest);
+  // Fail fast with a readable error instead of returning an invalid manifest
   if (!validation.success) {
-    throw new Error(
-      `Invalid portal manifest: ${validation.error.issues.map((e) => `${e.path.join('.')}: ${e.message}`).join('; ')}`,
-    );
+    const issueMessages = validation.error.issues
+      // Format each Zod issue as a single readable, semicolon-joined line
+      .map((e) => `${e.path.join('.')}: ${e.message}`)
+      .join('; ');
+    throw new Error(`Invalid portal manifest: ${issueMessages}`);
   }
   return {
     manifest,

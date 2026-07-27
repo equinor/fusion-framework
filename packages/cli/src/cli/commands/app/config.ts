@@ -118,6 +118,7 @@ export const command = withAuthOptions(
 
       // Validate env for publish (no dev allowed)
       if (publish) {
+        // The dev environment is not a valid publish target
         if (env === 'dev') {
           log?.fail(
             '🤪',
@@ -148,6 +149,7 @@ export const command = withAuthOptions(
         });
       }
 
+      // Print to stdout only when explicitly requested (default output mode)
       if (options.output === 'stdout') {
         console.log(JSON.stringify(appConfig, null, 2));
       }

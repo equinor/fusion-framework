@@ -29,6 +29,7 @@ export function generateSnapshotVersion(version: string, identifier?: boolean | 
   // Coerce the version to strip any pre-release suffix and get the base version
   const baseVersion = coerce(version)?.version;
 
+  // A version that doesn't coerce to semver can't be turned into a snapshot
   if (!baseVersion) {
     throw new Error(`Invalid semantic version: "${version}". Expected format: major.minor.patch`);
   }

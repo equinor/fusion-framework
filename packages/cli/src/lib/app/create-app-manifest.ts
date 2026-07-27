@@ -67,6 +67,10 @@ export const createAppManifestFromPackage = (
   // Try to resolve the GitHub repo from package or git config
   const githubRepo = resolveRepoFromPackage(packageJson) ?? resolveGitRemoteUrl();
 
+  // Normalize extensions to a leading-dot format expected by the asset matcher
+  // TODO: @jaysencpp, this is just 🫤, extensions should not require leading dot
+  const allowedExtensions = ASSET_EXTENSIONS.map((ext) => `.${ext}`);
+
   // Return the manifest object, using satisfies for type safety
   return {
     appKey,
@@ -83,10 +87,7 @@ export const createAppManifestFromPackage = (
       commitSha: resolveGitCommitSha(), // Current git commit SHA for traceability
       annotations: resolveAnnotations(), // Resolve any build annotations
       projectPage: packageJson.homepage,
-      allowedExtensions: ASSET_EXTENSIONS.map(
-        // TODO: @jaysencpp, this is just 🫤, extensions should not require leading dot
-        (ext) => `.${ext}`,
-      ),
+      allowedExtensions,
     },
   } satisfies AppManifest;
 };

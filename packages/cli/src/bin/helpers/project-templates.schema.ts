@@ -81,6 +81,7 @@ export function parseTemplatesManifest(jsonString: string): TemplatesManifest {
     const parsed = JSON.parse(jsonString);
     return TemplatesManifestSchema.parse(parsed);
   } catch (error) {
+    // Zod validation errors get a friendlier, field-specific message
     if (error instanceof z.ZodError) {
       throw new Error(`Template manifest validation failed: ${error.message}`);
     }

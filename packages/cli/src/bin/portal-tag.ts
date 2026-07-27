@@ -101,9 +101,11 @@ export const tagPortal = async (options: TagPortalOptions) => {
     if (error instanceof HttpJsonResponseError) {
       const { data, response } = error;
       log?.debug('Error:', data);
+      // Surface the service-provided error details when present
       if (data) {
         log?.warn(chalk.red(`🤯 error: ${data.code}\n`), chalk.yellowBright(data.message), '\n');
       }
+      // Map known HTTP status codes to actionable log messages
       switch (response?.status) {
         case 410:
           log?.fail(
@@ -121,6 +123,7 @@ export const tagPortal = async (options: TagPortalOptions) => {
         case 401: {
           const authMsg = formatAuthError(response?.status ?? 401, `tag portal ${name}@${version}`);
           log?.fail('🔒', 'Authentication/authorization error tagging portal.');
+          // Only print the formatted message if one was resolved
           if (authMsg) {
             log?.error(authMsg);
           }
@@ -134,6 +137,7 @@ export const tagPortal = async (options: TagPortalOptions) => {
     }
     // Surface MSAL token acquisition failures with actionable guidance
     const tokenMsg = formatTokenAcquisitionError(error, `tag portal ${name}@${version}`);
+    // Only print the formatted message if a token-acquisition failure was resolved
     if (tokenMsg) {
       log?.fail('🔒', `Token acquisition failed tagging ${name}@${version}`);
       log?.error(tokenMsg);

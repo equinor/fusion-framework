@@ -99,6 +99,7 @@ export const tagApplication = async (options: TagApplicationOptions) => {
   } catch (error) {
     // Handle known HTTP errors with specific log messages
     if (error instanceof HttpJsonResponseError) {
+      // Map known HTTP status codes to actionable log messages
       switch (error.response.status) {
         case 410:
           log?.fail(
@@ -113,6 +114,7 @@ export const tagApplication = async (options: TagApplicationOptions) => {
         case 401: {
           const authMsg = formatAuthError(error.response.status, `tag ${appKey}@${version}`);
           log?.fail('🔒', 'Authentication/authorization error tagging application.');
+          // Only print the formatted message if one was resolved
           if (authMsg) {
             log?.error(authMsg);
           }
@@ -131,6 +133,7 @@ export const tagApplication = async (options: TagApplicationOptions) => {
     }
     // Surface MSAL token acquisition failures with actionable guidance
     const tokenMsg = formatTokenAcquisitionError(error, `tag ${appKey}@${version}`);
+    // Only print the formatted message if a token-acquisition failure was resolved
     if (tokenMsg) {
       log?.fail('🔒', `Token acquisition failed tagging ${appKey}@${version}`);
       log?.error(tokenMsg);

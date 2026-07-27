@@ -95,6 +95,7 @@ export async function openInIDE(
 
       // Handle process errors
       child.catch((error: { exitCode?: number; message: string }) => {
+        // Distinguish a non-zero exit code from a spawn/launch failure
         if (error.exitCode !== undefined && error.exitCode !== 0) {
           logger.error(
             `IDE process exited with code ${error.exitCode}. The IDE may not have opened successfully.`,

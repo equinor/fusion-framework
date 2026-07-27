@@ -81,10 +81,12 @@ export const withAuthOptions = (
   command.addOption(tenantOption);
   command.addOption(clientOption);
 
+  // Token-based auth is opt-out; skip the option unless explicitly excluded
   if (!args?.excludeToken) {
     command.addOption(tokenOption);
   }
 
+  // Scope is only meaningful for commands that request scoped tokens
   if (args?.includeScope) {
     command.addOption(scopeOption);
   }
@@ -92,12 +94,14 @@ export const withAuthOptions = (
     const options = thisCommand.opts();
     // If token is provided, skip other validations
     if (options.token) {
+      // A blank/whitespace-only token is treated as invalid input
       if (typeof options.token !== 'string' || options.token.trim() === '') {
         throw new InvalidOptionArgumentError('Token must be a non-empty string.');
       }
       // Remove tenantId, clientId, and scope by setting them to undefined
       thisCommand.setOptionValue('tenantId', undefined);
       thisCommand.setOptionValue('clientId', undefined);
+      // Scope is irrelevant once a static token is supplied
       if (args?.includeScope) {
         thisCommand.setOptionValue('scope', undefined);
       }
@@ -108,6 +112,7 @@ export const withAuthOptions = (
     if (!options.tenantId || typeof options.tenantId !== 'string') {
       throw new InvalidOptionArgumentError('Tenant ID must be a non-empty string.');
     }
+    // Reject non-UUID tenant IDs even if the basic presence check passed
     if (!UUID_REGEX.test(options.tenantId)) {
       throw new InvalidOptionArgumentError('Tenant ID must be a valid UUID.');
     }
@@ -116,16 +121,20 @@ export const withAuthOptions = (
     if (!options.clientId || typeof options.clientId !== 'string') {
       throw new InvalidOptionArgumentError('Client ID must be a non-empty string.');
     }
+    // Reject non-UUID client IDs even if the basic presence check passed
     if (!UUID_REGEX.test(options.clientId)) {
       throw new InvalidOptionArgumentError('Client ID must be a valid UUID.');
     }
 
     // Validate scope if included
     if (args?.includeScope) {
+      // Scope must be a real, non-empty list to be usable
       if (!Array.isArray(options.scope) || options.scope.length === 0) {
         throw new InvalidOptionArgumentError('Scope must be a non-empty array of strings.');
       }
+      // Validate each scope entry individually
       for (const scope of options.scope) {
+        // Reject blank/whitespace-only scope strings
         if (typeof scope !== 'string' || scope.trim() === '') {
           throw new InvalidOptionArgumentError('Each scope must be a non-empty string.');
         }

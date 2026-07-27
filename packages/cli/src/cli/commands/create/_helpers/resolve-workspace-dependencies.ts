@@ -58,6 +58,7 @@ async function processDependencyType(
 
     // Resolve all workspace dependencies in parallel for better performance
     const resolvedEntries: DependencyEntry[] = await Promise.all(
+      // Resolve every workspace dependency to its latest npm version in parallel
       workspaceDeps.map(async ([depName, depVersion]): Promise<DependencyEntry> => {
         try {
           // Fetch latest version from npm registry
@@ -75,6 +76,7 @@ async function processDependencyType(
 
     // Merge resolved dependencies with non-workspace dependencies
     const resolved = { ...deps };
+    // Merge each resolved workspace dependency back into the full dependency map
     for (const [depName, version] of resolvedEntries) {
       resolved[depName] = version;
     }
@@ -140,6 +142,7 @@ export async function resolvePackageJsonWorkspaceDependencies(
   try {
     // Process all dependency types in parallel for optimal performance
     const resolvedDependencies = await Promise.all(
+      // Resolve every dependency type (dependencies/devDependencies/peerDependencies) in parallel
       dependencyTypes.map(({ key, deps }) => processDependencyType(key, deps, logger)),
     );
 

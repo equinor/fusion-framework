@@ -32,6 +32,7 @@ export class Spinner {
    * When enabled, console.log/info are redirected to spinner.info.
    */
   set attachConsole(value: boolean) {
+    // Only redirect console output while attaching; leave it alone when detaching
     if (value) {
       console.log = this.info.bind(this);
       console.info = this.info.bind(this);

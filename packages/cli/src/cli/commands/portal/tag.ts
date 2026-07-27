@@ -24,6 +24,7 @@ async function parsePortalInfo(
   // Parse from package option if provided
   if (options.package) {
     const [name, version] = options.package.split('@');
+    // Both name and version segments are required for a valid package reference
     if (!name || !version) {
       throw new Error(
         'Package must be in format name@version (e.g., my-portal@1.0.0). Please verify the package name and version with --package',
@@ -39,6 +40,7 @@ async function parsePortalInfo(
   });
 
   const version = portalManifest.build?.version;
+  // A manifest without a build version can't be tagged
   if (!version) {
     throw new Error(
       `Could not determine version from manifest. Please verify manifest ${options.manifest} or provide a package name and version with --package`,

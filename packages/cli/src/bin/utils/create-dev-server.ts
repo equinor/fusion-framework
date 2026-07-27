@@ -140,6 +140,7 @@ const createDevServerTemplate = (
  */
 const applyAppRouting = (base: DevServerOptions, manifest: AppManifest, config?: ApiAppConfig) => {
   const { build, appKey } = manifest;
+  // Routing requires build info to construct bundle paths
   if (!build) {
     throw new Error('App manifest does not contain build information');
   }
@@ -153,6 +154,7 @@ const applyAppRouting = (base: DevServerOptions, manifest: AppManifest, config?:
     ],
     middleware: async (req, res, next) => {
       const location = req.params?.path as string[];
+      // Bail out early if the wildcard route param didn't resolve to an array
       if (Array.isArray(location) === false) {
         next();
       }
@@ -262,10 +264,12 @@ export const createDevServerConfig = (options: CreateDevServerOptions) => {
     },
   };
 
+  // Only wire up app routing when an app manifest was provided
   if (options.app) {
     applyAppRouting(config, options.app.manifest, options.app.config);
   }
 
+  // Only wire up portal routing when a portal manifest was provided
   if (options.portal) {
     applyPortalRouting(config, options.portal.manifest, options.portal.config);
   }
@@ -288,6 +292,7 @@ const createDevServerConfigWatcherPlugin = (
 
       // Handle file changes
       server.watcher.on('change', (file) => {
+        // Only restart when the watched config file itself changed
         if (file === configFilePath) {
           log?.info(`\n${configFilePath} changed, restarting dev server...`);
           // Restart the server to reload the config

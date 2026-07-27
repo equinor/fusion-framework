@@ -73,6 +73,7 @@ export const command = withAuthOptions(
         environment: options.env,
         auth: 'token' in options ? { token: options.token } : options,
       });
+      // Uploading a deleted/unregistered app would fail server-side anyway
       if (!appExists) {
         log.error('😢 App is not registered / deleted in app store');
         process.exit(1);

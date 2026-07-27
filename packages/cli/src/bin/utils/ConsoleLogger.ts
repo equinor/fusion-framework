@@ -93,6 +93,7 @@ export class ConsoleLogger {
    */
   // biome-ignore lint/suspicious/noExplicitAny: same as original
   debug(...args: any[]) {
+    // Debug output is opt-in to avoid noisy default logs
     if (this.debugMode) {
       console.debug(...args);
     }

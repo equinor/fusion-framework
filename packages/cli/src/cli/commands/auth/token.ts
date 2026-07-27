@@ -79,12 +79,14 @@ export const command = createCommand('token')
       log?.start('Getting access token...');
       const accessToken = await framework.auth.acquireAccessToken({ request: { scopes } });
       log?.succeed('Successfully acquired access token');
+      // Print only the raw token in silent mode so output can be piped/captured
       if (options.silent) {
         console.log(accessToken);
       } else {
         log?.info('Access token:', accessToken);
       }
     } catch (error) {
+      // Give a friendlier hint when the failure is due to missing cached credentials
       if (!options.silent && error instanceof NoCredentialError) {
         log?.fail('No cached credentials found, please login first');
       } else {

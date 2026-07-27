@@ -16,7 +16,10 @@ const trimLeadingDot = (ext: string) => ext.replace(/^\./, '');
  * console.log(pattern); // Output: /\.(js|ts)(\?.*)?$/
  * ```
  */
-export const createExtensionFilterPattern = (exts: string[]) =>
-  new RegExp(`\\.(${exts.map(trimLeadingDot).join('|')})(\\?.*)?$`);
+export const createExtensionFilterPattern = (exts: string[]) => {
+  // Normalize extensions (strip leading dots) before building the alternation group
+  const normalizedExts = exts.map(trimLeadingDot);
+  return new RegExp(`\\.(${normalizedExts.join('|')})(\\?.*)?$`);
+};
 
 export default createExtensionFilterPattern;

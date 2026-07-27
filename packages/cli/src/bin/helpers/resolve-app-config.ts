@@ -37,6 +37,7 @@ export const resolveAppConfig = async (
   } catch (err) {
     // Handle missing config file error
     if (err instanceof FileNotFoundError) {
+      // Distinguish an explicitly-requested missing file from the default-lookup case
       if (options.config) {
         // Warn if a specific config file was requested but not found
         log?.warn(

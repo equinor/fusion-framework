@@ -8,6 +8,7 @@ import type { PackageJson } from 'type-fest';
  * @throws Will throw an error if the `package.json` does not contain a repository field.
  */
 export const resolveRepoFromPackage = (pkg: PackageJson): string | undefined => {
+  // repository may be a plain URL string or an object with a `url` field
   if (pkg.repository) {
     return typeof pkg.repository === 'string' ? pkg.repository : pkg.repository.url;
   }

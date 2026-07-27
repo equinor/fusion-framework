@@ -27,6 +27,7 @@ export const loadViteConfig = async (env: RuntimeEnv, pkg: ResolvedPackage) => {
   const outFile = packageJson.main ?? packageJson.module ?? './dist/bundle.js';
   const entrypoint = resolveEntryPoint(root);
 
+  // Additional output-path guards only matter for production builds
   if (env.command === 'build') {
     // Prevent output directory from being the project root
     if (dirname(outFile) === root) {
