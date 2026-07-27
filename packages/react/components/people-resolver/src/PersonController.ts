@@ -76,6 +76,7 @@ export class PersonController implements IPersonController {
       key: ({ azureId }) => azureId,
       client: {
         fn: ({ azureId }, signal): Observable<GetPersonResult> => {
+          // Filter out expired positions from the fetched person's result before returning it
           return client
             .get('v4', 'json$', { azureId, expand: ['manager', 'positions'] }, { signal })
             .pipe(
@@ -108,6 +109,7 @@ export class PersonController implements IPersonController {
       key: ({ azureId }) => azureId,
       client: {
         fn: ({ azureId }, signal): Observable<Blob> => {
+          // Extract the blob from the response, falling back to a placeholder image on 404
           return client.photo('v2', 'blob$', { azureId }, { signal }).pipe(
             map((result) => {
               return result.blob;
@@ -171,6 +173,7 @@ export class PersonController implements IPersonController {
     args: ResolverArgs<{ search: string; systemAccounts: boolean }>,
   ): Observable<SuggestPersonApiResponse> {
     const { search, systemAccounts, signal } = args;
+    // Unwrap the query result to just its value
     return this.#personSuggestQuery.query({ search, systemAccounts }, { signal }).pipe(queryValue);
   }
 
@@ -181,11 +184,13 @@ export class PersonController implements IPersonController {
     args: ResolverArgs<{ resolveIds: string[] }>,
   ): Observable<ResolvePersonApiResponse> {
     const { resolveIds, signal } = args;
+    // Unwrap the query result to just its value
     return this.#personResolveQuery.query({ resolveIds }, { signal }).pipe(queryValue);
   }
 
   public search(args: { search: string; signal?: AbortSignal }): Observable<PersonSearchResult> {
     const { search, signal } = args;
+    // Unwrap the query result to just its value
     return this.#personSearchQuery.query({ search }, { signal }).pipe(queryValue);
   }
 
@@ -226,34 +231,33 @@ export class PersonController implements IPersonController {
 
   protected _getPersonByUpn(upn: string, signal?: AbortSignal): Observable<GetPersonResult> {
     const abort$ = signal ? fromEvent(signal, 'abort') : EMPTY;
-    return concat(
-      this._personCache$({ upn }),
-      this._getPersonInfoByUpn(upn, signal).pipe(
-        filter(isApiPerson('v2')),
-        switchMap(({ azureUniqueId: azureId }) => {
-          return this._getPersonByAzureId(azureId, signal);
-        }),
-      ),
-    ).pipe(
-      /** */
+    // Resolve the v2 person info by upn, then use its azureId to fetch the full v4 person
+    const personByAzureId$ = this._getPersonInfoByUpn(upn, signal).pipe(
+      filter(isApiPerson('v2')),
+      switchMap(({ azureUniqueId: azureId }) => {
+        return this._getPersonByAzureId(azureId, signal);
+      }),
+    );
+    // Emit from cache first, then fall back to the live lookup, stopping once a v4 person arrives
+    return concat(this._personCache$({ upn }), personByAzureId$).pipe(
       filter(isApiPerson('v4')),
       takeUntil(abort$),
     );
   }
 
   public _getPersonByAzureId(azureId: string, signal?: AbortSignal): Observable<GetPersonResult> {
+    // Unwrap the query result to just its value
     return this.#personQuery.query({ azureId }, { signal }).pipe(queryValue);
   }
 
   protected _getPersonInfoById(azureId: string, signal?: AbortSignal): Observable<ApiPerson<'v2'>> {
     const abort$ = signal ? fromEvent(signal, 'abort') : EMPTY;
+    // Emit from caches first, then fall back to a live lookup, keeping only v2 persons
     return concat(
-      /** */
       this._personCache$({ azureId }),
       this._queryCache$({ azureId }),
       this._getPersonByAzureId(azureId, signal),
     ).pipe(
-      /** */
       filter(isApiPerson('v2')),
       takeUntil(abort$),
     );
@@ -262,33 +266,34 @@ export class PersonController implements IPersonController {
   protected _getPersonInfoByUpn(upn: string, signal?: AbortSignal): Observable<ApiPerson<'v2'>> {
     const matcher = personMatcher({ upn });
     const abort$ = signal ? fromEvent(signal, 'abort') : EMPTY;
-    return concat(
-      this._personCache$({ upn }),
-      this._queryCache$({ upn }),
-      this.#personSearchQuery.query({ search: upn }, { signal }).pipe(
-        /** extract first match, should only be 0 or 1 */
-        map((x) => {
-          // Narrow the search results down to the one entry matching this upn/azureId
-          const match = x.value.find(matcher);
-          return match;
-        }),
-        /** type cast and end stream */
-        find(isApiPerson('v2')),
-      ),
-    ).pipe(find(isApiPerson('v2')), filter(isApiPerson('v2')), takeUntil(abort$));
+    // Search by upn, then narrow the results down to the single matching entry, if any
+    const searchMatch$ = this.#personSearchQuery.query({ search: upn }, { signal }).pipe(
+      map((x) => {
+        // Narrow the search results down to the one entry matching this upn/azureId
+        const match = x.value.find(matcher);
+        return match;
+      }),
+      find(isApiPerson('v2')),
+    );
+    // Emit from caches first, then fall back to the search-based lookup, keeping only v2 persons
+    return concat(this._personCache$({ upn }), this._queryCache$({ upn }), searchMatch$).pipe(
+      find(isApiPerson('v2')),
+      filter(isApiPerson('v2')),
+      takeUntil(abort$),
+    );
   }
 
   protected _getPersonPhotoByAzureId(azureId: string, signal?: AbortSignal): Observable<string> {
+    // Take just the first emission and convert the blob result to an object URL
     return this.#personPhotoQuery.query({ azureId }, { signal }).pipe(
-      /** make subscription cold */
       take(1),
       map((result) => URL.createObjectURL(result.value)),
     );
   }
 
   protected _getPersonPhotoByUpn(upn: string, signal?: AbortSignal) {
+    // Take just the first emission, then fetch the photo using its resolved azureId
     return this._getPersonInfoByUpn(upn, signal).pipe(
-      /** make subscription cold */
       take(1),
       switchMap((x) => this._getPersonPhotoByAzureId(x.azureUniqueId, signal)),
     );
@@ -296,10 +301,9 @@ export class PersonController implements IPersonController {
 
   protected _personCache$(args: MatcherArgs): Observable<GetPersonResult> {
     const mather = personMatcher(args);
+    // Search the person-query cache for the first matching v4 entry
     return this.#personQuery.cache.state$.pipe(
-      /** make subscription cold */
       take(1),
-      /** map out cached ApiPerson_v2 which matches upn  */
       map((x) => {
         // Search each cached query result entry for the one matching this person
         const match = Object.values(x).find((x) => mather(x.value));
@@ -312,19 +316,17 @@ export class PersonController implements IPersonController {
 
   protected _queryCache$(args: MatcherArgs): Observable<ApiPerson<'v2'>> {
     const mather = personMatcher(args);
+    // Search the search-query cache for the first matching v2 entry
     return this.#personSearchQuery.cache.state$.pipe(
-      /** make subscription cold */
       take(1),
       switchMap((entry) => {
-        /** expand cache records */
+        // Expand the cache entry's records and find the one matching this person
         return from(Object.values(entry)).pipe(
-          /** find matching cache record item */
           map((x) => {
             // Search each cached entry's results for the one matching this person
             const match = x.value.find((x) => mather(x));
             return match;
           }),
-          /** type cast and end stream */
           find(isApiPerson('v2')),
         );
       }),

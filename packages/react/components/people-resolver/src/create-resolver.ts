@@ -5,6 +5,7 @@ import type { IPersonController } from './PersonController';
 
 export const createResolver = (controller: IPersonController): PersonResolver => ({
   getDetails(args) {
+    // Remap the controller result to the public PersonDetails shape
     return firstValueFrom(
       controller.getPerson(args).pipe(
         map((x) => {
@@ -15,6 +16,7 @@ export const createResolver = (controller: IPersonController): PersonResolver =>
     );
   },
   getInfo(args) {
+    // Remap the controller result to the public PersonInfo shape
     return firstValueFrom(
       controller.getPersonInfo(args).pipe(
         map((x) => {
@@ -28,6 +30,7 @@ export const createResolver = (controller: IPersonController): PersonResolver =>
     return firstValueFrom(controller.getPhoto(args));
   },
   search(args) {
+    // Remap each result's azureUniqueId to azureId and cast to the public PersonInfo shape.
     return firstValueFrom(
       controller.search(args).pipe(
         map((x) => {
