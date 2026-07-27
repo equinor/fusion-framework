@@ -48,6 +48,7 @@ export class AgGridConfigurator
 
   /** {@inheritDoc IAgGridConfigurator.setTheme} */
   setTheme(valueOrCallback: Theme | ((baseTheme: Theme) => Theme) | null): void {
+    // A function callback derives the new theme from the current one; a value replaces it outright
     if (typeof valueOrCallback === 'function') {
       this._set('theme', async () => () => valueOrCallback(this.#theme()));
     } else {
@@ -67,10 +68,12 @@ export class AgGridConfigurator
 
   /** {@inheritDoc IAgGridConfigurator.removeModule} */
   removeModule(value: Module | string): void {
+    // Match by module reference or by its registered name, since callers may pass either
     const module = [...this.#modules].find(
       (module) => module === value || module.moduleName === value,
     );
 
+    // Only warn when the module isn't registered — deleting a missing entry is a silent no-op otherwise
     if (module) {
       this.#modules.delete(module);
     } else {

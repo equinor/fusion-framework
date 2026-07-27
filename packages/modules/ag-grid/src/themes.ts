@@ -45,6 +45,8 @@ export const fusionTheme: Theme = themeAlpine.withParams({
  * @param theme - The theme to clone
  * @returns A new theme with the same parts as the input theme
  */
+// Deliberately co-located with the related `fusionTheme` default
+// fusion-lint-disable-next-line single-export-per-file
 export const createThemeFromTheme = (theme: Theme): Theme => {
   // biome-ignore lint/suspicious/noExplicitAny: fails to infer type of theme.parts
   const parts = (theme as Theme & { parts: Part<any>[] }).parts ?? [];
