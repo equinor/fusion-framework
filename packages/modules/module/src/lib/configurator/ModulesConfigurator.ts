@@ -371,6 +371,8 @@ export class ModulesConfigurator<
 
     await this._postInitialize<T, R>(instance, ref);
 
+    // `instance` is the freshly built module instance record, which is structurally compatible
+    // with `ModulesInstance<TModules>` but not nominally assignable across the generic params.
     const modules = Object.seal(
       Object.assign({}, instance, {
         dispose: () => this.dispose(instance as unknown as ModulesInstance<TModules>),

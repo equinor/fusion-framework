@@ -196,6 +196,8 @@ export const importMetaResolvePlugin = (): Plugin => {
             try {
               await fs.writeFile(file.path, transformedText, 'utf-8');
             } catch (error) {
+              // Failing to write one transformed output file must not abort the whole build —
+              // log and continue processing the remaining files.
               console.warn(`Failed to write transformed output to ${file.path}:`, error);
             }
           }

@@ -185,5 +185,7 @@ export function createProxyClient(client: IMsalClient): IAuthClient {
     },
   });
 
+  // The Proxy handler above implements every member of `IAuthClient` at runtime via its `get`
+  // trap, but TypeScript can't verify a `Proxy<T>` satisfies `T` structurally.
   return proxy as unknown as IAuthClient;
 }

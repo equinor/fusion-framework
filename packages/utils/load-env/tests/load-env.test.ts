@@ -22,6 +22,8 @@ describe('loadEnv', () => {
       path.join(envDir, `.env.${mode}.local`),
     ];
 
+    // Only the mocked stat call cares whether the fake file "exists" — casting the
+    // minimal stub through `any` avoids reproducing the full `fs.Stats` shape.
     mockFs.statSync.mockImplementation((filePath) =>
       // biome-ignore lint/suspicious/noExplicitAny: test only
       envFiles.includes(String(filePath)) ? ({ isFile: () => true } as any) : undefined,

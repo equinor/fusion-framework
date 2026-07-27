@@ -235,6 +235,9 @@ export class NavigationProvider
       level: TelemetryLevel.Warning,
       scope: ['navigation', 'deprecated', TelemetryScope.Application],
     });
+    // `this.#history` is typed as the framework's minimal history interface, but Remix Router
+    // requires its own richer `History` type — the two are runtime-compatible, so cast through
+    // `unknown`.
     const router = createRouter({
       basename: this.#basename,
       history: this.#history as unknown as import('@remix-run/router').History,

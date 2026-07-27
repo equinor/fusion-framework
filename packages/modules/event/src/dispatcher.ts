@@ -101,6 +101,8 @@ export class FrameworkEventDispatcher<TEvent extends IFrameworkEvent>
       throw err as Error;
     }
 
+    // `TEvent` extends the base `Event` type with dispatcher-tracking fields that this
+    // dispatcher itself attaches — cast through `unknown` to read/write them.
     const dispatchEvent = event as unknown as FrameworkDispatchEvent<TEvent>;
     if (!dispatchEvent.dispatcher) {
       dispatchEvent.dispatcher = this;

@@ -181,6 +181,8 @@ export class ServiceDiscoveryConfigurator extends BaseConfigBuilder<ServiceDisco
                 }
               }
             } catch (e) {
+              // Malformed or missing session storage overrides are not fatal — fall back to
+              // the unmodified input and just log for visibility.
               console.error(
                 'Failed to JSON parse session overrides: "overriddenServiceDiscoveryUrls"',
                 e,

@@ -191,6 +191,8 @@ export class HttpClientConfigurator<TClient extends IHttpClient>
   ): HttpClientConfigurator<TClient> {
     const argFn = typeof args === 'string' ? ({ baseUri: args } as HttpClientOptions<T>) : args;
     const options = typeof argFn === 'function' ? { onCreate: argFn } : argFn;
+    // `options` is `HttpClientOptions<T>` (this call's generic), but `_clients` is keyed by the
+    // configurator's own `TClient` — callers are expected to keep the two in sync.
     this._clients[name] = {
       ...this._clients[name],
       ...(options as unknown as HttpClientOptions<TClient>),

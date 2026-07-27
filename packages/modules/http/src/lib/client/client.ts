@@ -325,6 +325,9 @@ export class HttpClient<
     args?: FetchRequestInit<T, TRequest, TResponse>,
   ): Observable<T> {
     const { selector, ...options } = args || {};
+    // `fromFetch` yields the raw fetch `Response`, but `responseHandler.process()` (called via
+    // `_prepareResponse`) expects the pipeline's generic `TResponse` shape — cast through
+    // `unknown` since the two are only compatible after that processing step.
     const response$ = of({
       ...options,
       path,
@@ -361,6 +364,8 @@ export class HttpClient<
       /** cancel request on abort signal */
       takeUntil(this._abort$),
     );
+    // The pipe above resolves to the per-call generic `T` (via the optional `selector`), but
+    // the observable's static type tracks the class-level `TResponse` — cast to the caller's `T`.
     return response$ as unknown as Observable<T>;
   }
 

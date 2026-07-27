@@ -62,6 +62,7 @@ export function createProxyProvider(provider: IMsalProvider): IMsalProvider_v2 {
         case 'defaultClient': {
           // Deprecated property - redirect to client with warning
           console.warn('defaultClient is deprecated, use client instead');
+          // Same v2-compatible client wrapper as the `client` case above.
           return v2Client as unknown as IMsalProvider_v2['defaultClient'];
         }
         case 'defaultAccount': {

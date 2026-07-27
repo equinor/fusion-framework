@@ -80,6 +80,8 @@ export function createAsyncAction(
       failure: createAction([type, 'failure'].join(actionSuffixDivider), failure),
     });
   }
+  // `action` is progressively mutated with `success`/`failure` properties above, so its static
+  // type can't reflect the final shape declared by this function's overload signatures.
   return action as unknown as any;
 }
 

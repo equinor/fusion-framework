@@ -403,11 +403,11 @@ export class ContextProvider
     }
 
     if (config.extractContextIdFromPath) {
-      // @ts-ignore
+      // @ts-expect-error
       this.extractContextIdFromPath = config.extractContextIdFromPath;
     }
     if (config.generatePathFromContext) {
-      // @ts-ignore
+      // @ts-expect-error
       this.generatePathFromContext = config.generatePathFromContext;
     }
 
@@ -709,6 +709,8 @@ export class ContextProvider
           return subscriber.error(Error('failed to validate provided context'));
         }
         if (opt.resolve) {
+          // the recursive `_setCurrentContext` call below is re-entered with the already
+          // validated/resolved context, so the generic `T` cast is safe here.
           return of(context)
             .pipe(
               // notify event observers that context is about to get resolved

@@ -167,6 +167,8 @@ export class HttpClientProvider<TClient extends IHttpClient = IHttpClient>
    * is configured to use a different implementation.
    */
   public createCustomClient<T extends HttpClient>(key: string): T {
+    // `createClient` always returns the provider's configured `HttpClient` implementation —
+    // cast through `unknown` to hand back the caller-requested implementation type `T`.
     return this.createClient(key) as unknown as T;
   }
 

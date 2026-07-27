@@ -44,6 +44,8 @@ export const module: AppModule = {
    * @param args - The disposal arguments.
    */
   dispose: (args) => {
+    // `args.instance` is typed as the generic module instance, but the module descriptor
+    // guarantees it was created as an `AppModuleProvider` — safe to cast for disposal.
     (args.instance as unknown as AppModuleProvider).dispose();
   },
 };

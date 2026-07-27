@@ -32,6 +32,8 @@ export const ContextSelector = (props: ContextSearchProps): ReactElement | null 
     (e: Event | ContextSelectEvent) => {
       if (provider) {
         if (e.type === 'select') {
+          // The 'select' event's `Event` type doesn't reflect the CustomEvent detail payload
+          // dispatched by the underlying context-selector element, so a cast is required here.
           const ev = e as unknown as ContextSelectEvent;
           if (ev.nativeEvent.detail.selected.length) {
             provider.contextClient.setCurrentContext(ev.nativeEvent.detail.selected[0].id);

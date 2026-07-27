@@ -179,7 +179,7 @@ export class BookmarkModuleConfigurator extends BaseConfigBuilder<BookmarkModule
     value: BookmarkModuleConfig['filters'][TKey],
   ) {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
+    // @ts-expect-error
     this._set(`filters.${key}`, async () => value);
   }
 
@@ -206,10 +206,10 @@ export class BookmarkModuleConfigurator extends BaseConfigBuilder<BookmarkModule
       const parentModules = init.ref as ModulesInstanceType<[BookmarkModule]>;
       if (parentModules && 'bookmark' in parentModules) {
         const parent = parentModules.bookmark;
-        if (
-          'version' in parent &&
-          (parent as unknown as BookmarkProvider).version.satisfies('>=2.0.0')
-        ) {
+        // `parent` is narrowed to `{ version: unknown }` by the `'version' in parent` check below,
+        // so it must be cast through `unknown` to access `BookmarkProvider`-specific members.
+        const parentProvider = parent as unknown as BookmarkProvider;
+        if ('version' in parent && parentProvider.version.satisfies('>=2.0.0')) {
           this._set('parent', async () => parent);
         } else {
           this.#log?.warn('invalid version of parent BookmarkProvider provided');

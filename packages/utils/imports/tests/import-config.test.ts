@@ -87,6 +87,7 @@ describe('import-config', () => {
   });
 
   it('should throw an error if base name is not a string', async () => {
+    // Intentionally passing a non-string to verify the runtime validation error
     await expect(importConfig(undefined as unknown as string)).rejects.toThrow(
       'baseName must be a non-empty string',
     );

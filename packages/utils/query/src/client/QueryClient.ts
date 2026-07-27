@@ -265,6 +265,8 @@ export class QueryClient<TType, TArgs> extends Observable<QueryClientState<TArgs
       cancel: { value: (reason: string) => job.cancel(reason) },
       complete: { value: () => job.complete() },
     });
+    // `job$` is a plain shared Observable; the properties defined above give it the
+    // `QueryClientJob` shape at runtime, which TypeScript can't infer structurally.
     return job$ as unknown as QueryClientJob<TType, TArgs>;
   }
 

@@ -16,6 +16,8 @@ const selectorFn = <
   compare?: (x: TValue, y: TValue) => boolean,
 ): Observable<TValue> => {
   const selectorFn = typeof selector === 'function' ? map(selector) : mapProp(selector);
+  // `map`/`mapProp` both return an `OperatorFunction`, but their generic parameters can't be
+  // unified across the `TSelector` union — cast through `unknown` to the resolved shape.
   return subject.pipe(
     selectorFn as unknown as OperatorFunction<TType, TValue>,
     distinctUntilChanged(compare),

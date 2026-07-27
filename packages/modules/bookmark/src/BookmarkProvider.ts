@@ -93,7 +93,7 @@ export class BookmarkProvider implements IBookmarkProvider {
     return {
       getCurrentAppIdentification() {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
+        // @ts-expect-error
         return window.Fusion.modules.app.current.appKey;
       },
     };
@@ -982,6 +982,9 @@ export class BookmarkProvider implements IBookmarkProvider {
         'updateBookmarkAsync(bookmark, updates, options) is deprecated, use updateBookmarkAsync(id, updates, options) instead',
       );
       const { id, ...updates } = id_or_bookmark as Bookmark<T>;
+      // `updates_or_options` is a union of `BookmarkUpdate<T> | BookmarkUpdateOptions` here,
+      // neither of which declares `updatePayload` — cast through `unknown` to probe for the
+      // legacy options shape at runtime.
       return lastValueFrom(
         this.updateBookmark<T>(id, updates as BookmarkUpdate<T>, {
           excludePayloadGeneration: !(
