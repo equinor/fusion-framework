@@ -17,12 +17,19 @@ export class AuthProviderTokenOnly implements IAuthProvider {
     this.#accessToken = token;
   }
 
-  /** @throws Always — login is not supported with a static token. */
+  /**
+   * @param _options - Unused; login is not supported in token-only mode.
+   * @returns Never resolves; always throws.
+   * @throws Always — login is not supported with a static token.
+   */
   async login(_options: { request: { scopes: string[] } }): Promise<never> {
     throw new Error('Login is not supported in token-only mode');
   }
 
-  /** @throws Always — logout is not supported with a static token. */
+  /**
+   * @returns Never resolves; always throws.
+   * @throws Always — logout is not supported with a static token.
+   */
   async logout(): Promise<never> {
     throw new Error('Logout is not supported in token-only mode');
   }

@@ -8,6 +8,9 @@
 export class NoCredentialError extends Error {
   override readonly name = 'NoCredentialError';
 
+  /**
+   * @param message - Human-readable description of why no credential was available.
+   */
   constructor(message: string) {
     super(message);
   }

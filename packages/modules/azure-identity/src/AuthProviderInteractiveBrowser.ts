@@ -45,6 +45,11 @@ export class AuthProviderInteractiveBrowser implements IAuthProvider {
   readonly #authRecordPersistence: IPersistence;
   #authRecord: AuthenticationRecord | undefined;
 
+  /**
+   * @param options - Azure AD tenant, client, redirect port, and optional browser callback.
+   * @param authRecordPersistence - OS-level secure storage for the authentication record.
+   * @param authenticationRecord - Previously persisted authentication record, if any.
+   */
   private constructor(
     options: InteractiveAuthOptions,
     authRecordPersistence: IPersistence,
@@ -77,6 +82,8 @@ export class AuthProviderInteractiveBrowser implements IAuthProvider {
    *
    * @param options - Azure AD tenant, client, redirect port, and optional browser callback.
    * @returns A fully initialised provider with any persisted auth record pre-loaded.
+   * @throws {Error} When `@azure/msal-node-extensions` cannot be loaded (e.g. the native
+   *   keytar/libsecret module is unavailable in the current environment).
    */
   static async create(options: InteractiveAuthOptions): Promise<AuthProviderInteractiveBrowser> {
     // Dynamically import to avoid loading the native `keytar` binary at
@@ -109,6 +116,7 @@ export class AuthProviderInteractiveBrowser implements IAuthProvider {
     let record: AuthenticationRecord | undefined;
     try {
       const content = await persistence.load();
+      // Only deserialize when a previously persisted record actually exists
       if (content) {
         record = deserializeAuthenticationRecord(content);
       }
@@ -132,6 +140,7 @@ export class AuthProviderInteractiveBrowser implements IAuthProvider {
    */
   async login(options: { request: { scopes: string[] } }): Promise<AuthenticationRecord> {
     const record = await this.#credential.authenticate(options.request.scopes);
+    // The interactive flow can complete without yielding a usable record
     if (!record) {
       throw new Error('Interactive authentication did not return an authentication record.');
     }
@@ -168,13 +177,16 @@ export class AuthProviderInteractiveBrowser implements IAuthProvider {
     request: { scopes: string[] };
     interactive?: boolean;
   }): Promise<{ accessToken: string; expiresOn: Date | null } | null> {
+    // No persisted auth record yet — need an interactive login before a token can be acquired
     if (!this.#authRecord) {
+      // Refuse to prompt unless the caller explicitly allows interactive authentication
       if (!options.interactive) {
         throw new NoCredentialError(
           'No cached credentials found. Run `ffc auth login` first, or pass interactive: true.',
         );
       }
       const record = await this.#credential.authenticate(options.request.scopes);
+      // Persist the freshly acquired record so future calls can resolve silently
       if (record) {
         await this.#authRecordPersistence.save(serializeAuthenticationRecord(record));
         this.#authRecord = record;
@@ -182,6 +194,7 @@ export class AuthProviderInteractiveBrowser implements IAuthProvider {
     }
 
     const tokenResponse = await this.#credential.getToken(options.request.scopes);
+    // The credential resolved but returned no usable token
     if (!tokenResponse) {
       throw new NoCredentialError(
         'InteractiveBrowserCredential returned no token. Ensure you have logged in first.',
@@ -193,11 +206,20 @@ export class AuthProviderInteractiveBrowser implements IAuthProvider {
     };
   }
 
+  /**
+   * Acquires an access token for the given scopes.
+   *
+   * @param options - Scopes to request, and whether interactive prompting is allowed.
+   * @returns The access token string.
+   * @throws {NoCredentialError} When no cached credential exists and interactive is not enabled,
+   *   or when the credential returns no token.
+   */
   async acquireAccessToken(options: {
     request: { scopes: string[] };
     interactive?: boolean;
   }): Promise<string> {
     const result = await this.acquireToken(options);
+    // acquireToken returns null when the underlying credential yields no token
     if (!result) {
       throw new NoCredentialError(
         'InteractiveBrowserCredential returned no token. Ensure you have logged in first.',

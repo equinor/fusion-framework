@@ -86,6 +86,7 @@ export class AzureIdentityAuthConfigurator extends BaseConfigBuilder<AzureIdenti
    */
   setConfig(config: AzureIdentityAuthConfig): void {
     this._set('mode', config.mode);
+    // Apply the mode-specific fields relevant to the selected auth mode
     switch (config.mode) {
       case 'interactive':
         this._set('tenantId', config.tenantId);
@@ -147,6 +148,13 @@ export class AzureIdentityAuthConfigurator extends BaseConfigBuilder<AzureIdenti
     this._set('accessToken', accessToken);
   }
 
+  /**
+   * Builds the final {@link AzureIdentityAuthConfig}, delegating to the base builder.
+   *
+   * @param init - Config builder callback arguments provided by the framework.
+   * @param initial - Optional partial configuration to seed the build with.
+   * @returns The resolved configuration.
+   */
   protected override _buildConfig(
     init: ConfigBuilderCallbackArgs,
     initial?: Partial<AzureIdentityAuthConfig>,

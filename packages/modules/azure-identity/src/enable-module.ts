@@ -1,7 +1,6 @@
 import type { IModulesConfigurator } from '@equinor/fusion-framework-module';
 import { module } from './module.js';
 import type { AzureIdentityAuthConfigurator } from './configurator.js';
-import type { InteractiveAuthOptions } from './configurator.js';
 
 /**
  * Enables the Azure Identity auth module on a Fusion Framework configurator.
@@ -48,6 +47,7 @@ export const enableAzureIdentityAuth = (
   configurator.addConfig({
     module,
     configure: (builder) => {
+      // Fall back to ambient credential resolution when no callback is supplied
       if (configure) {
         configure(builder);
       } else {
@@ -55,77 +55,6 @@ export const enableAzureIdentityAuth = (
         builder.setDefaultCredential();
       }
     },
-  });
-};
-
-/**
- * Enables Azure Identity auth in `default_credential` mode.
- *
- * Uses the `DefaultAzureCredential` chain: environment variables, workload
- * identity, managed identity, Azure CLI, etc.
- *
- * @param configurator - The modules configurator to register the module with.
- *
- * @example
- * ```typescript
- * enableAzureIdentityDefaultCredential(configurator);
- * ```
- */
-export const enableAzureIdentityDefaultCredential = (
-  // biome-ignore lint/suspicious/noExplicitAny: module configurator accepts any module set
-  configurator: IModulesConfigurator<any, any>,
-): void => {
-  enableAzureIdentityAuth(configurator, (builder) => {
-    builder.setDefaultCredential();
-  });
-};
-
-/**
- * Enables Azure Identity auth in `interactive` mode with browser-based login
- * and OS-level token caching (Keychain / DPAPI / libsecret).
- *
- * @param configurator - The modules configurator to register the module with.
- * @param options - Tenant, client, redirect port, and optional browser callback.
- *
- * @example
- * ```typescript
- * enableAzureIdentityInteractive(configurator, {
- *   tenantId: '3aa4a235-...',
- *   clientId: 'a318b8e1-...',
- *   redirectPort: 49741,
- *   onOpen: (url) => open(url),
- * });
- * ```
- */
-export const enableAzureIdentityInteractive = (
-  // biome-ignore lint/suspicious/noExplicitAny: module configurator accepts any module set
-  configurator: IModulesConfigurator<any, any>,
-  options: InteractiveAuthOptions,
-): void => {
-  enableAzureIdentityAuth(configurator, (builder) => {
-    builder.setInteractive(options);
-  });
-};
-
-/**
- * Enables Azure Identity auth in `token_only` mode with a pre-obtained
- * static access token.
- *
- * @param configurator - The modules configurator to register the module with.
- * @param accessToken - The access token string.
- *
- * @example
- * ```typescript
- * enableAzureIdentityTokenOnly(configurator, process.env.FUSION_TOKEN);
- * ```
- */
-export const enableAzureIdentityTokenOnly = (
-  // biome-ignore lint/suspicious/noExplicitAny: module configurator accepts any module set
-  configurator: IModulesConfigurator<any, any>,
-  accessToken: string,
-): void => {
-  enableAzureIdentityAuth(configurator, (builder) => {
-    builder.setTokenOnly(accessToken);
   });
 };
 

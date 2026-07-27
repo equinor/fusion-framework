@@ -29,10 +29,8 @@
  * @packageDocumentation
  */
 
-export {
-  AuthProviderDefaultCredential,
-  ensureCachePersistencePlugin,
-} from './AuthProviderDefaultCredential.js';
+export { AuthProviderDefaultCredential } from './AuthProviderDefaultCredential.js';
+export { ensureCachePersistencePlugin } from './ensure-cache-persistence-plugin.js';
 export { AuthProviderInteractiveBrowser } from './AuthProviderInteractiveBrowser.js';
 export { AuthProviderTokenOnly } from './AuthProviderTokenOnly.js';
 export { NoCredentialError } from './errors.js';
@@ -43,9 +41,7 @@ export { AzureIdentityAuthConfigurator } from './configurator.js';
 
 export { module as azureIdentityModule, type AzureIdentityModule } from './module.js';
 
-export {
-  enableAzureIdentityAuth,
-  enableAzureIdentityDefaultCredential,
-  enableAzureIdentityInteractive,
-  enableAzureIdentityTokenOnly,
-} from './enable-module.js';
+export { enableAzureIdentityAuth } from './enable-module.js';
+export { enableAzureIdentityDefaultCredential } from './enable-azure-identity-default-credential.js';
+export { enableAzureIdentityInteractive } from './enable-azure-identity-interactive.js';
+export { enableAzureIdentityTokenOnly } from './enable-azure-identity-token-only.js';
