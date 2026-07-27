@@ -1,87 +1,6 @@
 import { join, relative } from 'node:path';
-import type { ChangedFile, FileChangeStatus, GitDiffOptions } from './types.js';
-import { resolveProjectRoot, getGit } from './git-client.js';
-
-/**
- * Returns a list of files changed between `baseRef` and HEAD.
- *
- * Parses the output of `git diff --name-status` to classify each file as
- * `'new'`, `'modified'`, or `'removed'`. Renames are expanded into a
- * `'removed'` entry for the old path and a `'new'` entry for the new path.
- *
- * @param options - Configuration controlling the diff reference and working directory.
- * @returns Array of changed files with their status.
- * @throws {Error} If the working directory is not inside a git repository.
- */
-export const getChangedFiles = async (options: GitDiffOptions): Promise<ChangedFile[]> => {
-  const { diff, baseRef = 'HEAD~1', cwd = process.cwd() } = options;
-
-  if (!diff) {
-    return [];
-  }
-
-  const projectRoot = resolveProjectRoot(cwd);
-  if (!projectRoot) {
-    throw new Error('Not in a git repository. Cannot use --diff option.');
-  }
-
-  const { git } = getGit(cwd) ?? {};
-  if (!git) {
-    throw new Error('Failed to initialize git client');
-  }
-
-  try {
-    // Get changes since baseRef with status (A=added, M=modified, D=deleted)
-    try {
-      const diffResult = await git.diff([`${baseRef}`, '--name-status']);
-      const lines = diffResult.split('\n').filter((line) => line.trim() !== '');
-
-      const changedFiles: ChangedFile[] = [];
-
-      for (const line of lines) {
-        // Match status and file path
-        // Format: "A\tfile.ts" or "M\tfile.ts" or "D\tfile.ts"
-        // Also handle renames: "R100\told.ts\tnew.ts"
-        const renameMatch = line.match(/^R\d*\s+(.+?)\s+(.+)$/);
-        if (renameMatch) {
-          const [, oldFile, newFile] = renameMatch;
-          // Add both the removed old file and the new file
-          changedFiles.push({ filepath: `${projectRoot}/${oldFile}`, status: 'removed' });
-          changedFiles.push({ filepath: `${projectRoot}/${newFile}`, status: 'new' });
-          continue;
-        }
-
-        const match = line.match(/^([AMD])\s+(.+)$/);
-        if (match) {
-          const [, gitStatus, file] = match;
-          const fullPath = `${projectRoot}/${file}`;
-
-          let status: FileChangeStatus;
-          if (gitStatus === 'A') {
-            status = 'new';
-          } else if (gitStatus === 'M') {
-            status = 'modified';
-          } else if (gitStatus === 'D') {
-            status = 'removed';
-          } else {
-            // Skip unknown statuses (C=copied, etc.)
-            continue;
-          }
-
-          changedFiles.push({ filepath: fullPath, status });
-        }
-      }
-
-      return changedFiles;
-    } catch {
-      // Handle case where baseRef doesn't exist (e.g., first commit)
-      console.warn(`⚠️  Warning: Git reference '${baseRef}' not found. Processing all files.`);
-      return [];
-    }
-  } catch (error) {
-    throw new Error(`Git diff failed: ${error instanceof Error ? error.message : String(error)}`);
-  }
-};
+import type { ChangedFile } from './types.js';
+import { getGit } from './git-client.js';
 
 /**
  * Determines the git change status of a single file.
@@ -96,8 +15,8 @@ export const getChangedFiles = async (options: GitDiffOptions): Promise<ChangedF
  */
 export const getFileStatus = async (filePath: string): Promise<ChangedFile[]> => {
   const { git, gitRepoPath } = getGit(filePath) ?? {};
+  // Not in a git repository, assume new
   if (!git || !gitRepoPath) {
-    // Not in a git repository, assume new
     return [{ filepath: filePath, status: 'new' }];
   }
 
@@ -112,8 +31,8 @@ export const getFileStatus = async (filePath: string): Promise<ChangedFile[]> =>
       .then(() => true)
       .catch(() => false);
 
+    // File is tracked at this path, it's modified
     if (isTracked) {
-      // File is tracked at this path, it's modified
       return [{ filepath: filePath, status: 'modified' }];
     }
 
@@ -128,6 +47,7 @@ export const getFileStatus = async (filePath: string): Promise<ChangedFile[]> =>
       ]);
       const trimmed = fileStatusOutput.trim();
 
+      // Only inspect porcelain output when git actually reported something for this path
       if (trimmed.length > 0) {
         // If status shows ??, it's untracked (truly new)
         if (/^\?\?/.test(trimmed)) {
@@ -143,11 +63,16 @@ export const getFileStatus = async (filePath: string): Promise<ChangedFile[]> =>
     try {
       // Get full git status to check for renames (only if needed)
       const statusOutput = await git.raw(['status', '--porcelain']);
-      const lines = statusOutput.split('\n').filter((line) => line.trim() !== '');
+      const lines = statusOutput
+        .split('\n')
+        // Drop blank lines left by the trailing newline in git's output
+        .filter((line) => line.trim() !== '');
 
+      // Scan every status line for a rename or copy that produced this file
       for (const line of lines) {
         // Check for rename format: "R100\told.ts\tnew.ts"
         const renameMatch = line.match(/^R\d+\s+(.+?)\s+(.+)$/);
+        // A rename line resolves this file only if it matches the new path
         if (renameMatch) {
           const [, oldPath, newPath] = renameMatch;
           const oldFullPath = join(gitRepoPath, oldPath);
@@ -164,6 +89,7 @@ export const getFileStatus = async (filePath: string): Promise<ChangedFile[]> =>
 
         // Check for copy format: "C100\told.ts\tnew.ts" (similar to rename)
         const copyMatch = line.match(/^C\d+\s+(.+?)\s+(.+)$/);
+        // A copy line resolves this file only if it matches the new path
         if (copyMatch) {
           const [, , newPath] = copyMatch;
           const newFullPath = join(gitRepoPath, newPath);
@@ -207,22 +133,4 @@ export const getFileStatus = async (filePath: string): Promise<ChangedFile[]> =>
     // If we can't determine status, default to 'new'
     return [{ filepath: filePath, status: 'new' }];
   }
-};
-
-/**
- * Checks whether a file path appears in a list of changed files.
- *
- * When the changed-files list is empty (no diff filtering active), every
- * file is considered changed so that all files are processed.
- *
- * @param filePath - Absolute file path to look up.
- * @param changedFiles - Array of {@link ChangedFile} entries to search.
- * @returns `true` if the file has changed or if diff filtering is disabled.
- */
-export const isFileChanged = (filePath: string, changedFiles: ChangedFile[]): boolean => {
-  if (changedFiles.length === 0) {
-    return true; // If no diff filtering, process all files
-  }
-
-  return changedFiles.some((file) => file.filepath === filePath);
 };
