@@ -18,9 +18,18 @@ function fixture(name: string): string {
 
 describe('loadLintConfig', () => {
   it('returns null when the directory contains no config file', async () => {
-    const result = await loadLintConfig({ cwd: fixture('no-config') });
+    // Use an isolated tmp tree (with its own .git boundary marker) rather than a
+    // fixture nested inside this repo, so this test doesn't pick up the real
+    // repo's root fusion-lint.config.json when findUp walks upward.
+    const tmpRoot = await mkdtemp(join(tmpdir(), 'fusion-lint-no-config-'));
+    try {
+      await writeFile(join(tmpRoot, '.git'), 'gitdir: /elsewhere\n');
+      const result = await loadLintConfig({ cwd: tmpRoot });
 
-    expect(result).toBeNull();
+      expect(result).toBeNull();
+    } finally {
+      await rm(tmpRoot, { recursive: true, force: true });
+    }
   });
 
   describe('JSON config', () => {

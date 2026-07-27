@@ -54,10 +54,12 @@ function parseSuppressionLine(lineText: string, lineNumber: number): Suppression
  * @returns The trimmed rule ids.
  */
 function splitRuleIds(ruleList: string): string[] {
-  return ruleList
-    .split(',')
-    // Trim whitespace around each captured rule id
-    .map((id) => id.trim());
+  return (
+    ruleList
+      .split(',')
+      // Trim whitespace around each captured rule id
+      .map((id) => id.trim())
+  );
 }
 
 /**
@@ -89,7 +91,8 @@ export function collectSuppressions(source: string): SuppressionMap {
       continue;
     }
     // Merge with any rule ids already suppressed on this line by another directive
-    const merged = existing === 'all' ? 'all' : new Set([...(existing ?? []), ...suppression.ruleIds]);
+    const merged =
+      existing === 'all' ? 'all' : new Set([...(existing ?? []), ...suppression.ruleIds]);
     suppressedLines.set(targetLine, merged);
   }
 
