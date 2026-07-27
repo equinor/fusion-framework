@@ -139,9 +139,10 @@ const _command = createCommand('chat')
     ]);
 
     const messageHistory = new MessageHistory(options.historyLimit ?? 20, async (messages) => {
-      // Flatten each message into a `role: content` line for the summary prompt.
-      const formattedLines = messages.map((m) => `${m.role}: ${m.content}`);
-      const conversationText = formattedLines.join('\n');
+      const conversationText = messages
+        // Flatten each message into a `role: content` line for the summary prompt.
+        .map((m) => `${m.role}: ${m.content}`)
+        .join('\n');
       const summaryPrompt = `Provide a concise summary of this conversation history, focusing on key topics and context:\n\n${conversationText}\n\nSummary:`;
       try {
         const raw = await chatService.invoke([{ role: 'user', content: summaryPrompt }]);
