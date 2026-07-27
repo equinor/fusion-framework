@@ -1,10 +1,8 @@
 import { BaseCollector, createSchema } from './BaseCollector.js';
-import { type AppItemType, appSchema, extractAppMetadata } from './utils/extractAppMetadata.js';
-import {
-  type ContextItemType,
-  contextSchema,
-  extractContextMetadata,
-} from './utils/extractContextMetadata.js';
+import { type AppItemType, appSchema } from './utils/app-schema.js';
+import { extractAppMetadata } from './utils/extract-app-metadata.js';
+import { type ContextItemType, contextSchema } from './utils/extractContextMetadata.js';
+import { extractContextMetadata } from './utils/extract-context-metadata.js';
 import type { IAnalyticsCollector } from './AnalyticsCollector.interface.js';
 
 import type {
@@ -58,6 +56,12 @@ export class AppLoadedCollector
     this.#appProvider = appProvider;
   }
 
+  /**
+   * Builds an observable that emits an analytics event whenever the app-loaded
+   * event fires, falling back to `appProvider` for manifest data when needed.
+   *
+   * @returns An observable input emitting the app-loaded event's value and attributes.
+   */
   _initialize(): ObservableInput<{
     value: AppItemType;
     attributes: { context?: ContextItemType };

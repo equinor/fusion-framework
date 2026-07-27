@@ -20,11 +20,17 @@ import type { AnalyticsEvent } from '../types.js';
 export class ConsoleAnalyticsAdapter<T extends AnalyticsEvent = AnalyticsEvent>
   implements IAnalyticsAdapter
 {
-  /** Logs the event to the console. */
+  /**
+   * Logs the event to the console.
+   *
+   * @param event - The analytics event to log.
+   * @returns Resolves once the event has been logged.
+   */
   registerAnalytic(event: T): Promise<void> | void {
     console.log('Analytics::Adapter::Console', event);
   }
 
+  /** No teardown is required for this adapter. */
   [Symbol.dispose]() {
     // no-op
   }

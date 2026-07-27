@@ -92,9 +92,12 @@ export abstract class BaseCollector<
    * Subscribes to the source returned by {@link BaseCollector._initialize},
    * validates each emission with the Zod schema, and publishes through the
    * internal subject.
+   *
+   * @returns Resolves once the source has been subscribed to.
    */
   initialize(): Promise<void> | void {
     from(this._initialize())
+      // Shape each emission into the named/validated event before publishing
       .pipe(
         map(({ value, attributes }) => {
           return {

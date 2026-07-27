@@ -25,17 +25,20 @@ function isExportRetryable(statusCode: number): boolean {
  * @returns Delay in milliseconds, `-1` for non-positive integers, or `undefined` if absent.
  */
 function parseRetryAfterToMills(retryAfter?: string | undefined | null): number | undefined {
+  // No header present — nothing to compute
   if (retryAfter == null) {
     return undefined;
   }
 
   const seconds = Number.parseInt(retryAfter, 10);
+  // Retry-After given as a plain integer number of seconds
   if (Number.isInteger(seconds)) {
     return seconds > 0 ? seconds * 1000 : -1;
   }
   // https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Retry-After#directives
   const delay = new Date(retryAfter).getTime() - Date.now();
 
+  // Only report a positive delay; a past date means retry is already due
   if (delay >= 0) {
     return delay;
   }
@@ -84,6 +87,7 @@ export class HttpClientExporterTransport implements IExporterTransport {
         signal: abortController.signal,
       });
 
+      // A 2xx response means the export succeeded outright
       if (response.ok) {
         return { status: 'success' };
       } else if (isExportRetryable(response.status)) {
@@ -97,6 +101,7 @@ export class HttpClientExporterTransport implements IExporterTransport {
       };
     } catch (error) {
       const err = error as Error;
+      // Distinguish a timeout (AbortController fired) from other fetch failures
       if (err?.name === 'AbortError') {
         return {
           status: 'failure',

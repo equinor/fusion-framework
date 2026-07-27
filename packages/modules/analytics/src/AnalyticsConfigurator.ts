@@ -35,6 +35,9 @@ export class AnalyticsConfigurator
   #collectorCallbacks: Record<string, ConfigBuilderCallback<IAnalyticsCollector>> = {};
   #adapterCallbacks: Record<string, ConfigBuilderCallback<IAnalyticsAdapter>> = {};
 
+  /**
+   * Registers the async resolvers for `collectors` and `adapters` config keys.
+   */
   constructor() {
     super();
 
@@ -42,22 +45,28 @@ export class AnalyticsConfigurator
     this._set(
       'collectors',
       (args: ConfigBuilderCallbackArgs): ObservableInput<Record<string, IAnalyticsCollector>> => {
-        return from(Object.entries(this.#collectorCallbacks)).pipe(
-          mergeMap(([identifier, collectorFn]) =>
-            from(collectorFn(args)).pipe(
-              filter((collector): collector is IAnalyticsCollector => !!collector),
-              map((collector) => [identifier, collector] as const),
-            ),
-          ),
-          scan(
-            (acc, [identifier, collector]) => {
-              acc[identifier] = collector;
-              return acc;
-            },
-            {} as Record<string, IAnalyticsCollector>,
-          ),
-          defaultIfEmpty({}),
-          shareReplay({ bufferSize: 1, refCount: true }),
+        return (
+          from(Object.entries(this.#collectorCallbacks))
+            // Resolve each collector factory and drop any that resolve to a falsy value
+            .pipe(
+              mergeMap(([identifier, collectorFn]) =>
+                from(collectorFn(args))
+                  // Resolve the collector's own Promise/Observable factory result
+                  .pipe(
+                    filter((collector): collector is IAnalyticsCollector => !!collector),
+                    map((collector) => [identifier, collector] as const),
+                  ),
+              ),
+              scan(
+                (acc, [identifier, collector]) => {
+                  acc[identifier] = collector;
+                  return acc;
+                },
+                {} as Record<string, IAnalyticsCollector>,
+              ),
+              defaultIfEmpty({}),
+              shareReplay({ bufferSize: 1, refCount: true }),
+            )
         );
       },
     );
@@ -66,22 +75,28 @@ export class AnalyticsConfigurator
     this._set(
       'adapters',
       (args: ConfigBuilderCallbackArgs): ObservableInput<Record<string, IAnalyticsAdapter>> => {
-        return from(Object.entries(this.#adapterCallbacks)).pipe(
-          mergeMap(([identifier, adapterFn]) =>
-            from(adapterFn(args)).pipe(
-              filter((adapter): adapter is IAnalyticsAdapter => !!adapter),
-              map((adapter) => [identifier, adapter] as const),
-            ),
-          ),
-          scan(
-            (acc, [identifier, adapter]) => {
-              acc[identifier] = adapter;
-              return acc;
-            },
-            {} as Record<string, IAnalyticsAdapter>,
-          ),
-          defaultIfEmpty({}),
-          shareReplay({ bufferSize: 1, refCount: true }),
+        return (
+          from(Object.entries(this.#adapterCallbacks))
+            // Resolve each adapter factory and drop any that resolve to a falsy value
+            .pipe(
+              mergeMap(([identifier, adapterFn]) =>
+                from(adapterFn(args))
+                  // Resolve the adapter's own Promise/Observable factory result
+                  .pipe(
+                    filter((adapter): adapter is IAnalyticsAdapter => !!adapter),
+                    map((adapter) => [identifier, adapter] as const),
+                  ),
+              ),
+              scan(
+                (acc, [identifier, adapter]) => {
+                  acc[identifier] = adapter;
+                  return acc;
+                },
+                {} as Record<string, IAnalyticsAdapter>,
+              ),
+              defaultIfEmpty({}),
+              shareReplay({ bufferSize: 1, refCount: true }),
+            )
         );
       },
     );

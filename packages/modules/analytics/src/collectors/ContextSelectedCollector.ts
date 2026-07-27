@@ -4,11 +4,8 @@ import type { IContextProvider } from '@equinor/fusion-framework-module-context'
 import type { AppModuleProvider } from '@equinor/fusion-framework-module-app';
 import { z } from 'zod';
 import { BaseCollector, createSchema } from './BaseCollector.js';
-import {
-  type ContextItemType,
-  contextSchema,
-  extractContextMetadata,
-} from './utils/extractContextMetadata.js';
+import { type ContextItemType, contextSchema } from './utils/extractContextMetadata.js';
+import { extractContextMetadata } from './utils/extract-context-metadata.js';
 
 /** Zod schema for the `context-selected` event (value + attributes). */
 const eventSchema = createSchema(
@@ -50,10 +47,17 @@ export class ContextSelectedCollector
     this.#appProvider = appProvider;
   }
 
+  /**
+   * Builds an observable that emits an analytics event each time the selected
+   * context changes, including the previous context and current app key.
+   *
+   * @returns An observable input emitting the newly selected context's value and attributes.
+   */
   _initialize(): ObservableInput<{
     value: ContextItemType;
     attributes: { previous?: ContextItemType; appKey?: string };
   }> {
+    // Track context changes, pairing each new context with the previously selected one
     const contextSelected$ = this.#contextProvider.currentContext$.pipe(
       // Only emit when an actual change has happened.
       distinctUntilChanged((prev, curr) => prev?.id === curr?.id),
@@ -61,6 +65,7 @@ export class ContextSelectedCollector
       pairwise(),
     );
 
+    // Map the [previous, next] pair into the analytics event shape
     const data$ = contextSelected$.pipe(
       map(([prev, next]) => {
         return {

@@ -71,7 +71,12 @@ export class FusionAnalyticsAdapter<T extends AnalyticsEvent = AnalyticsEvent>
     this.#logger = this.#loggerProvider.getLogger('fusion');
   }
 
-  /** Maps an analytics event to an OTLP `LogRecord` and emits it via the logger. */
+  /**
+   * Maps an analytics event to an OTLP `LogRecord` and emits it via the logger.
+   *
+   * @param event - The analytics event to map and emit.
+   * @returns Resolves once the event has been emitted to the logger.
+   */
   registerAnalytic(event: T): Promise<void> | void {
     const logRecord: Partial<LogRecord> = {
       eventName: event.name,

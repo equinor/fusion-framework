@@ -17,6 +17,9 @@ import type { IAnalyticsAdapter } from './adapters/AnalyticsAdapter.interface.js
  * with either `subscription.unsubscribe()` or `using` / `Symbol.dispose`.
  */
 class DisposableSubscription extends Subscription {
+  /**
+   * @param subscription - The underlying subscription to wrap with `Symbol.dispose` support.
+   */
   constructor(subscription: Subscription) {
     super(subscription.unsubscribe);
   }
@@ -52,6 +55,9 @@ export class AnalyticsProvider
   #collectors: Record<string, IAnalyticsCollector>;
   #adapters: Record<string, IAnalyticsAdapter>;
 
+  /**
+   * @param config - Resolved analytics module configuration, including collectors and adapters.
+   */
   constructor(config: AnalyticsConfig) {
     super({ version, config });
 
@@ -78,16 +84,17 @@ export class AnalyticsProvider
    * @returns A promise that resolves when all adapters and collectors are initialised.
    */
   async initialize(): Promise<void> {
-    const initializedCollectors = Object.values(this.#collectors).map((collector) =>
-      Promise.resolve(collector.initialize?.()),
-    );
-    const initializedAdapters = Object.values(this.#adapters).map((adapters) =>
-      Promise.resolve(adapters.initialize?.()),
-    );
+    const initializedCollectors = Object.values(this.#collectors)
+      // Kick off initialization for every collector, tolerating individual failures
+      .map((collector) => Promise.resolve(collector.initialize?.()));
+    const initializedAdapters = Object.values(this.#adapters)
+      // Kick off initialization for every adapter, tolerating individual failures
+      .map((adapters) => Promise.resolve(adapters.initialize?.()));
 
     await Promise.allSettled(initializedCollectors);
     await Promise.allSettled(initializedAdapters);
 
+    // Forward every collector's emissions into the shared analytics subject
     for (const collector of Object.values(this.#collectors)) {
       const subscription = collector.subscribe({
         next: (event) => {
@@ -100,6 +107,7 @@ export class AnalyticsProvider
 
     const adapterSubscription = this.#analytics.subscribe({
       next: (event) => {
+        // Dispatch every emitted event to all registered adapters
         for (const adapter of Object.values(this.#adapters)) {
           adapter.registerAnalytic(event);
         }
@@ -114,7 +122,7 @@ export class AnalyticsProvider
    * @param event - The analytics event to track.
    */
   trackAnalytic(event: AnalyticsEvent): void {
-    // @TODO: Validate AnalyticsEvent includes name, value and attributes
+    // TODO(#5098): Validate AnalyticsEvent includes name, value and attributes
     this.#analytics.next(event);
   }
 
@@ -127,7 +135,7 @@ export class AnalyticsProvider
    */
   trackAnalytic$(analytic$: ObservableInput<AnalyticsEvent>): Disposable & Subscription {
     const subscription = from(analytic$)
-      // @TODO: Validate AnalyticsEvent includes name, value and attributes
+      // TODO(#5098): Validate AnalyticsEvent includes name, value and attributes
       .subscribe({
         next: (event) => {
           this.#analytics.next(event);

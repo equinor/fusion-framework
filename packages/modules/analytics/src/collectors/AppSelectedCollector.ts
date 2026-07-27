@@ -1,11 +1,8 @@
 import { map, type ObservableInput, pairwise } from 'rxjs';
 import type { IAnalyticsCollector } from './AnalyticsCollector.interface.js';
 import { BaseCollector, createSchema } from './BaseCollector.js';
-import {
-  type AppKeyType,
-  appKeySchema,
-  extractAppKeyMetadata,
-} from './utils/extractAppMetadata.js';
+import { type AppKeyType, appKeySchema } from './utils/extractAppMetadata.js';
+import { extractAppKeyMetadata } from './utils/extract-app-key-metadata.js';
 
 import type { AppModuleProvider } from '@equinor/fusion-framework-module-app';
 
@@ -43,22 +40,32 @@ export class AppSelectedCollector
     this.#appProvider = appProvider;
   }
 
+  /**
+   * Builds an observable that emits an analytics event each time the selected
+   * app changes, including the previous app's key metadata.
+   *
+   * @returns An observable input emitting the newly selected app's value and attributes.
+   */
   _initialize(): ObservableInput<{
     value: AppKeyType;
     attributes: { previous?: AppKeyType };
   }> {
-    const appSelected$ = this.#appProvider.current$.pipe(pairwise());
+    const appSelected$ = this.#appProvider.current$
+      // Pair each app-selection emission with the previously selected app
+      .pipe(pairwise());
 
-    const data$ = appSelected$.pipe(
-      map(([prev, next]) => {
-        return {
-          value: extractAppKeyMetadata(next),
-          attributes: {
-            previous: prev && extractAppKeyMetadata(prev),
-          },
-        };
-      }),
-    );
+    const data$ = appSelected$
+      // Map the [previous, next] pair into the analytics event shape
+      .pipe(
+        map(([prev, next]) => {
+          return {
+            value: extractAppKeyMetadata(next),
+            attributes: {
+              previous: prev && extractAppKeyMetadata(prev),
+            },
+          };
+        }),
+      );
 
     return data$;
   }
