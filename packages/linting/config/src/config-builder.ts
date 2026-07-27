@@ -13,6 +13,8 @@ export interface LoadedLintConfig {
   config: LintConfig;
   /** Custom rule implementations declared in the config file. */
   customRules: Rule[];
+  /** Glob patterns for files/directories excluded from linting entirely. */
+  ignorePatterns: string[];
 }
 
 /**
@@ -69,6 +71,13 @@ export class ConfigBuilder {
    * @default false
    */
   recommended = false;
+
+  /**
+   * Glob patterns for files/directories to exclude from linting entirely,
+   * e.g. `['**\/__tests__/**']`. Matched the same way as `.gitignore` entries.
+   * @default []
+   */
+  ignorePatterns: string[] = [];
 
   readonly #customRules: Map<string, Rule> = new Map();
   readonly #severityOverrides: Map<string, SeverityConfig> = new Map();
@@ -170,6 +179,7 @@ export class ConfigBuilder {
     return {
       config,
       customRules: [...this.#customRules.values()],
+      ignorePatterns: this.ignorePatterns,
     };
   }
 }

@@ -6,6 +6,14 @@ import {
   recommendedRules,
 } from '@equinor/fusion-framework-lint-config';
 
+/** Result of resolving a project's lint config into a ready-to-use engine. */
+export interface ConfiguredEngine {
+  /** The configured lint engine. */
+  engine: LintEngine;
+  /** Glob patterns for files/directories to exclude from linting, from the project config. */
+  ignorePatterns: string[];
+}
+
 /**
  * Builds a {@link LintEngine} for the `lint` and `changed` commands.
  *
@@ -17,9 +25,12 @@ import {
  * 3. `--rule <id>=<severity>` CLI overrides
  *
  * @param ruleOverrides - Raw `--rule` option values, e.g. `['require-tsdoc=off']`.
- * @returns A configured `LintEngine`, including any custom rules registered by the project config.
+ * @returns A configured `LintEngine` plus any `ignorePatterns` declared in the project config,
+ *   including any custom rules registered by the project config.
  */
-export async function createConfiguredEngine(ruleOverrides: string[] = []): Promise<LintEngine> {
+export async function createConfiguredEngine(
+  ruleOverrides: string[] = [],
+): Promise<ConfiguredEngine> {
   const loaded = await loadLintConfig({ base: recommendedConfig });
   // A project config may register custom rules alongside the recommended set
   const rules = loaded ? [...recommendedRules, ...loaded.customRules] : recommendedRules;
@@ -33,5 +44,9 @@ export async function createConfiguredEngine(ruleOverrides: string[] = []): Prom
     config[override.slice(0, eqIdx)] = override.slice(eqIdx + 1) as LintConfig[string];
   }
 
-  return new LintEngine(rules, config);
+  return {
+    engine: new LintEngine(rules, config),
+    ignorePatterns: loaded?.ignorePatterns ?? [],
+  };
 }
+

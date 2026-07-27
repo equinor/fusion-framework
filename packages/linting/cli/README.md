@@ -63,6 +63,21 @@ automatically. Pass `--skip-gitignore` to lint ignored files too:
 fusion-lint src --skip-gitignore
 ```
 
+A project `fusion-lint.config.*` / `.fusion-lintrc.*` file can also declare `ignorePatterns` to
+exclude files/directories from linting entirely (e.g. test fixtures), independent of `.gitignore`:
+
+```typescript
+// fusion-lint.config.ts
+import { defineConfig } from '@equinor/fusion-framework-lint-config';
+
+export default defineConfig({
+  ignorePatterns: ['**/__tests__/**'],
+});
+```
+
+See the [`@equinor/fusion-framework-lint-config` README](../config/README.md) for the full config
+file format, including the builder API's `ignorePatterns` property.
+
 ### `changed` — lint only git-changed files
 
 ```bash

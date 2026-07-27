@@ -62,7 +62,7 @@ async function runLint(patterns: string[], options: LintOptions): Promise<void> 
   const isCI = reporter === 'github-actions';
   const isMachineReadable = reporter === 'rdjsonl' || reporter === 'json';
 
-  const engine = await createConfiguredEngine(options.rule);
+  const { engine, ignorePatterns } = await createConfiguredEngine(options.rule);
   const spinner =
     isCI || isMachineReadable
       ? null
@@ -72,7 +72,8 @@ async function runLint(patterns: string[], options: LintOptions): Promise<void> 
     absolute: true,
     onlyFiles: true,
     gitignore: !options.skipGitignore,
-    ignore: ['**/node_modules/**', '**/*.d.ts'],
+    // Config-declared ignorePatterns are merged in alongside the built-in exclusions
+    ignore: ['**/node_modules/**', '**/*.d.ts', ...ignorePatterns],
   });
 
   // Guard: nothing to lint when no files match the provided patterns

@@ -16,4 +16,5 @@ export default function configure(builder: ConfigBuilder): void {
     severity: 'warn',
     check: (_source: string, _filePath: string) => [],
   });
+  builder.ignorePatterns = ['**/__tests__/**'];
 }

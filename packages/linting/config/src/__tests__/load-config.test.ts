@@ -30,6 +30,7 @@ describe('loadLintConfig', () => {
       expect(result).toEqual({
         config: { 'require-tsdoc': 'error', 'require-intent-comment': 'warn' },
         customRules: [],
+        ignorePatterns: [],
       });
     });
   });
@@ -41,6 +42,7 @@ describe('loadLintConfig', () => {
       expect(result).toEqual({
         config: { 'require-tsdoc': 'error', 'require-intent-comment': 'warn' },
         customRules: [],
+        ignorePatterns: [],
       });
     });
 
@@ -50,6 +52,7 @@ describe('loadLintConfig', () => {
       expect(result).toEqual({
         config: { 'require-tsdoc': 'error', 'require-intent-comment': 'warn' },
         customRules: [],
+        ignorePatterns: [],
       });
     });
   });
@@ -61,6 +64,7 @@ describe('loadLintConfig', () => {
       expect(result).toEqual({
         config: { 'require-tsdoc': 'error', 'require-intent-comment': 'warn' },
         customRules: [],
+        ignorePatterns: [],
       });
     });
 
@@ -75,6 +79,8 @@ describe('loadLintConfig', () => {
       expect(result?.customRules).toHaveLength(1);
       expect(result?.customRules[0].id).toBe('custom-fixture-rule');
       expect(result?.customRules[0].defaultSeverity).toBe('warn');
+      // ignorePatterns is passed through from the builder
+      expect(result?.ignorePatterns).toEqual(['**/__tests__/**']);
     });
 
     it('custom rule check function is callable', async () => {
@@ -104,6 +110,12 @@ describe('loadLintConfig', () => {
 
       expect(rule?.check('const x = 1;', 'test.ts')).toEqual([]);
     });
+
+    it('loads ignorePatterns from a rich config', async () => {
+      const result = await loadLintConfig({ cwd: fixture('js-rich') });
+
+      expect(result?.ignorePatterns).toEqual(['**/__tests__/**']);
+    });
   });
 
   describe('find-up', () => {
@@ -113,6 +125,7 @@ describe('loadLintConfig', () => {
       expect(result).toEqual({
         config: { 'require-tsdoc': 'error', 'require-intent-comment': 'warn' },
         customRules: [],
+        ignorePatterns: [],
       });
     });
 

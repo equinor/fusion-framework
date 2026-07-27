@@ -2,6 +2,7 @@ import { readFile, writeFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { resolve, extname, basename } from 'node:path';
 import { Command } from 'commander';
+import { globby } from 'globby';
 import ora from 'ora';
 import { simpleGit } from 'simple-git';
 import type { Diagnostic } from '@equinor/fusion-framework-lint-core';
@@ -108,6 +109,19 @@ async function resolveChangedFiles(options: ChangedOptions): Promise<string[]> {
   return changedTsFiles;
 }
 
+/**
+ * Drops any files matching a config-declared ignore pattern (e.g. `**\/__tests__/**`).
+ *
+ * @param files - Absolute file paths to filter.
+ * @param ignorePatterns - Glob patterns for files/directories to exclude.
+ * @returns `files` with ignored entries removed, or unchanged when there are no patterns.
+ */
+async function filterIgnored(files: string[], ignorePatterns: string[]): Promise<string[]> {
+  // No patterns configured — nothing to filter out
+  if (ignorePatterns.length === 0) return files;
+  return globby(files, { ignore: ignorePatterns, onlyFiles: true, absolute: true });
+}
+
 async function runChanged(options: ChangedOptions): Promise<void> {
   const reporter = resolveReporter(options.reporter, options.githubActions);
   const isCI = reporter === 'github-actions';
@@ -132,15 +146,24 @@ async function runChanged(options: ChangedOptions): Promise<void> {
     return;
   }
 
-  const engine = await createConfiguredEngine(options.rule);
+  const { engine, ignorePatterns } = await createConfiguredEngine(options.rule);
+  // Drop files excluded by the project config's ignorePatterns before linting
+  const lintableFiles = await filterIgnored(files, ignorePatterns);
+
+  // Guard: every changed file was excluded by ignorePatterns
+  if (lintableFiles.length === 0) {
+    spinner?.succeed(`No TypeScript files changed (${modeLabel})`);
+    return;
+  }
+
   const results: Array<{ file: string; diagnostics: Diagnostic[] }> = [];
   let scanned = 0;
 
   // Lint each file and accumulate results for display
-  for (const file of files) {
+  for (const file of lintableFiles) {
     scanned++;
     // Update spinner to show live progress through the file list
-    if (spinner) spinner.text = `Scanning [${scanned}/${files.length}] ${basename(file)}`;
+    if (spinner) spinner.text = `Scanning [${scanned}/${lintableFiles.length}] ${basename(file)}`;
     const source = await readFile(file, 'utf-8');
     const diagnostics = engine.lint(source, file);
     // Only store files that produced at least one diagnostic

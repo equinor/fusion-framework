@@ -13,6 +13,11 @@ export type FusionLintFileConfig =
       rules?: LintConfig;
       /** Custom rule implementations to register alongside built-in rules. */
       customRules?: Rule[];
+      /**
+       * Glob patterns for files/directories to exclude from linting entirely,
+       * e.g. `['**\/__tests__/**']`. Matched the same way as `.gitignore` entries.
+       */
+      ignorePatterns?: string[];
     };
 
 /** Factory function passed to {@link defineConfig}. Receives a {@link ConfigBuilder}. */

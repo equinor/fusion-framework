@@ -58,6 +58,22 @@ export default defineConfig({
 });
 ```
 
+To also exclude files from linting entirely, use the rich object form with `rules` and `ignorePatterns`:
+
+```typescript
+// fusion-lint.config.ts
+import { defineConfig } from '@equinor/fusion-framework-lint-config';
+
+export default defineConfig({
+  rules: {
+    'require-tsdoc': 'error',
+    'require-intent-comment': 'warn',
+  },
+  // Glob patterns for files/directories to exclude from linting entirely
+  ignorePatterns: ['**/__tests__/**', '**/*.generated.ts'],
+});
+```
+
 ### `defineConfig` — builder form
 
 Use the builder form to register custom rules or adjust built-in severities fluently:
@@ -92,6 +108,9 @@ export default defineConfig((args) => {
   args.configureRule('my-custom-rule', (rule) => {
     rule.severity = 'error';
   });
+
+  // exclude files/directories from linting entirely
+  args.ignorePatterns = ['**/__tests__/**'];
 });
 ```
 
@@ -131,6 +150,7 @@ const engine = new LintEngine(recommendedRules, {
 | `ConfigBuilder.addRule` | Register a pre-built or inline custom rule |
 | `ConfigBuilder.configureRule` | Override the severity of any rule by ID |
 | `ConfigBuilder.removeRule` | Disable a rule (built-in or custom) by ID |
+| `ConfigBuilder.ignorePatterns` | Glob patterns for files/directories to exclude from linting entirely |
 | `FusionLintFileConfig` | Type for the object config form |
 | `FusionLintConfigFactory` | Type for the factory config form |
 | `LoadedLintConfig` | Return type of `loadLintConfig` and `ConfigBuilder.resolve` |

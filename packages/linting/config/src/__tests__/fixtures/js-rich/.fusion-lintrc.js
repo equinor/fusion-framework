@@ -1,5 +1,5 @@
 // Rich object-format fixture (JS so esbuild cache key differs from .ts fixtures).
-// Tests that `normalise` correctly extracts `rules` and `customRules`.
+// Tests that `normalise` correctly extracts `rules`, `customRules`, and `ignorePatterns`.
 export default {
   rules: { 'require-tsdoc': 'error', 'require-intent-comment': 'warn' },
   customRules: [
@@ -9,4 +9,5 @@ export default {
       check: (_source, _filePath) => [],
     },
   ],
+  ignorePatterns: ['**/__tests__/**'],
 };

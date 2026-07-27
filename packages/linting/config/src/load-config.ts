@@ -90,21 +90,25 @@ async function resolveConfigFileUpwards(startDir: string, findUp: boolean): Prom
  */
 function isRichConfig(
   value: FusionLintFileConfig,
-): value is { rules?: LintConfig; customRules?: Rule[] } {
+): value is { rules?: LintConfig; customRules?: Rule[]; ignorePatterns?: string[] } {
   // Guard: flat configs have only string values; rich configs have object/array sub-keys
-  return 'rules' in value || 'customRules' in value;
+  return 'rules' in value || 'customRules' in value || 'ignorePatterns' in value;
 }
 
 /**
  * Normalises any supported file format to a {@link LoadedLintConfig}.
  */
 function normalise(raw: FusionLintFileConfig): LoadedLintConfig {
-  // Rich format: extract rules and customRules separately
+  // Rich format: extract rules, customRules, and ignorePatterns separately
   if (isRichConfig(raw)) {
-    return { config: raw.rules ?? {}, customRules: raw.customRules ?? [] };
+    return {
+      config: raw.rules ?? {},
+      customRules: raw.customRules ?? [],
+      ignorePatterns: raw.ignorePatterns ?? [],
+    };
   }
   // Flat format: the entire object is the severity map
-  return { config: raw as LintConfig, customRules: [] };
+  return { config: raw as LintConfig, customRules: [], ignorePatterns: [] };
 }
 
 /**
