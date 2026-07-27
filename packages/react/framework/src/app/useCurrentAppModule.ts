@@ -38,13 +38,17 @@ export const useCurrentAppModule = <
   complete: boolean;
 } => {
   const { modules, error, complete } = useCurrentAppModules();
-  const module =
-    modules === null
-      ? null
-      : modules === undefined
-        ? undefined
-        : // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          (modules[moduleKey as keyof typeof modules] as any);
+  const module = (() => {
+    if (modules === null) {
+      return null;
+    }
+    if (modules === undefined) {
+      return undefined;
+    }
+    // Module lookup by dynamic key can't be statically narrowed to the exact module type; cast to any.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return modules[moduleKey as keyof typeof modules] as any;
+  })();
   return { module, error, complete };
 };
 

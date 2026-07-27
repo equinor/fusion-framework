@@ -35,8 +35,10 @@ export const createLegacyApp = <TModules extends Array<AnyModule>>(
       const appProvider = fusion.modules.app;
       if (appProvider?.current) {
         const { config, manifest } = appProvider.current;
+        // Legacy app provider config/manifest predate the strict AppEnv shape; cast until legacy fusion-cli is updated.
         return creator(fusion, { config, manifest } as unknown as AppEnv);
       }
+      // No app provider available yet; pass an empty object cast to AppEnv as a placeholder.
       return creator(fusion, {} as unknown as AppEnv);
     }, [fusion]);
     return (

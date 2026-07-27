@@ -30,6 +30,7 @@ describe('reactRouterPlugin', () => {
 
   beforeEach(() => {
     vi.resetAllMocks();
+    // reactRouterPlugin() returns the base Vite Plugin type; cast to the concrete plugin type for test access to its hooks.
     plugin = reactRouterPlugin({ debug: false }) as unknown as ReactRouterPlugin;
     // Set root to the package root (parent of src)
     plugin.config({ root: path.resolve(__dirname, '../..') });

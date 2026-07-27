@@ -46,6 +46,7 @@ type RRComponent = NonNullable<ReactRouterRouteObject['Component']>;
 function wrapLoader(original: RRLoader): RRLoader {
   return function __FusionRouterLoader(args) {
     const fusion = (args.context as RouterContextProvider).get(routerContext);
+    // The original loader is typed with the framework-augmented args shape; cast to invoke it with the extended arg bag.
     return (original as unknown as LoaderFunction)({
       ...args,
       fusion,
@@ -57,6 +58,7 @@ function wrapLoader(original: RRLoader): RRLoader {
 function wrapAction(original: RRAction): RRAction {
   return function __FusionRouterAction(args) {
     const fusion = (args.context as RouterContextProvider).get(routerContext);
+    // The original action is typed with the framework-augmented args shape; cast to invoke it with the extended arg bag.
     return (original as unknown as ActionFunction)({
       ...args,
       fusion,
@@ -164,6 +166,8 @@ export function Router({
   const modules = useModules();
 
   const fusionRouterContext: FusionRouterContext = useMemo(() => {
+    // useModules() returns the generic Modules union; narrow it to the concrete
+    // instance type expected by consumers of the router context.
     return {
       context,
       modules: modules as unknown as ModulesInstanceType<Modules>,
@@ -176,6 +180,7 @@ export function Router({
   fusionContextRef.current = fusionRouterContext;
 
   const router = useMemo(() => {
+    // Narrow the generic modules instance to the shape known to include the navigation module.
     const { navigation } = modules as unknown as ModulesInstanceType<{
       navigation: NavigationModule;
     }>;

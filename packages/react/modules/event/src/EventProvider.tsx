@@ -6,9 +6,10 @@ import {
 import { useModule } from '@equinor/fusion-framework-react-module';
 import { createContext, useContext } from 'react';
 
-export const context = createContext<IEventModuleProvider>(
-  undefined as unknown as IEventModuleProvider,
-);
+// No default provider is available until a real module resolves; the context
+// consumer always calls useEventProvider(), which throws if still undefined.
+const defaultEventModuleProvider = undefined as unknown as IEventModuleProvider;
+export const context = createContext<IEventModuleProvider>(defaultEventModuleProvider);
 
 const useModulesEventProvider = (): IEventModuleProvider | undefined =>
   useModule<EventModule>(eventModuleKey);

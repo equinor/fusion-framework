@@ -81,6 +81,8 @@ export const createComponent =
   (fusion, env) =>
     lazy(async () => {
       const init = configureModules<TModules, TRef, TEnv>(configure);
+      // configureModules returns a generic modules instance; narrow it to the
+      // app-specific shape expected by consumers of this component.
       const modules = (await init({
         fusion,
         env,

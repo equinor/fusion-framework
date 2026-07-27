@@ -2,7 +2,7 @@ import type { FrameworkEvent, FrameworkEventInit } from '@equinor/fusion-framewo
 import type { HelpCenterOpenEventDetail } from './useHelpCenter';
 
 export { useHelpCenter } from './useHelpCenter';
-export type { HelpCenterOpenEventDetail };
+export type { HelpCenterOpenEventDetail } from './useHelpCenter';
 
 declare module '@equinor/fusion-framework-module-event' {
   interface FrameworkEventMap {
