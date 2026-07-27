@@ -15,7 +15,7 @@ export type { Fusion } from '@equinor/fusion-framework';
 export { FusionConfigurator } from '@equinor/fusion-framework';
 
 export { createFrameworkProvider } from './create-framework-provider';
-export { FrameworkProvider } from './context';
+export { FrameworkProvider } from './framework-provider';
 
 export { useFramework } from './useFramework';
 export { useFrameworkModule } from './useFrameworkModule';

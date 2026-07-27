@@ -8,7 +8,9 @@ import type { BookmarkWithoutData } from '@equinor/fusion-framework-module-bookm
 import { useCurrentUser } from '@equinor/fusion-framework-react/hooks';
 import { useCallback, useState } from 'react';
 import { delete_to_trash, share, edit, close, update } from '@equinor/eds-icons';
-import { filterEmptyGroups, sortByName, toHumanReadable } from '../../utils/utils';
+import { filterEmptyGroups } from '../../utils/utils';
+import { sortByName } from '../../utils/sort-by-name';
+import { toHumanReadable } from '../../utils/to-human-readable';
 import { useBookmarkComponentContext } from '../BookmarkProvider';
 import { from } from 'rxjs';
 

@@ -1,6 +1,5 @@
-import type { ContextItem, ContextModule } from '@equinor/fusion-framework-module-context';
-import { type IContextProvider, contextModuleKey } from '@equinor/fusion-framework-module-context';
-import { useModule } from '@equinor/fusion-framework-react-module';
+import type { ContextItem } from '@equinor/fusion-framework-module-context';
+import type { IContextProvider } from '@equinor/fusion-framework-module-context';
 import { useObservableState } from '@equinor/fusion-observable/react';
 import { useCallback, useMemo } from 'react';
 
@@ -22,13 +21,3 @@ export const useCurrentContext = (provider: IContextProvider) => {
   );
   return { currentContext, setCurrentContext };
 };
-
-/**
- * uses context provider from closes module provider
- */
-export const useModuleCurrentContext = () => {
-  const provider = useModule<ContextModule>(contextModuleKey);
-  return useCurrentContext(provider);
-};
-
-export default useModuleCurrentContext;

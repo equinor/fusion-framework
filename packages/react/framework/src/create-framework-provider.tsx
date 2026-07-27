@@ -3,7 +3,7 @@ import { lazy } from 'react';
 import initFusion from '@equinor/fusion-framework';
 import { FrameworkConfigurator } from '@equinor/fusion-framework';
 
-import { FrameworkProvider } from './context';
+import { FrameworkProvider } from './framework-provider';
 import type { AnyModule, ModulesInstanceType } from '@equinor/fusion-framework-module';
 import { ModuleProvider } from '@equinor/fusion-framework-react-module';
 

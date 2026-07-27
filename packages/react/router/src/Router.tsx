@@ -25,7 +25,9 @@ import type {
   RouterComponent,
   RouterContext,
 } from './types.js';
-import { FusionRouterContextProvider, routerContext, useRouterContext } from './context.js';
+import { routerContext } from './context.js';
+import { FusionRouterContextProvider } from './fusion-router-context-provider.js';
+import { useRouterContext } from './use-router-context.js';
 import React from 'react';
 
 // React Router's loader/action/component types as used internally.

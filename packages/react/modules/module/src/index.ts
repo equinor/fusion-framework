@@ -5,5 +5,7 @@ export type {
   ModulesInstance,
 } from '@equinor/fusion-framework-module';
 
-export { ModuleProvider, createModuleProvider } from './ModuleProvider.js';
-export { useModules, useModule } from './useModules.js';
+export { createModuleProvider } from './ModuleProvider.js';
+export { ModuleProvider } from './module-provider.js';
+export { useModules } from './useModules.js';
+export { useModule } from './useModule.js';

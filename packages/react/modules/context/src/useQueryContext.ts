@@ -1,9 +1,4 @@
-import {
-  type ContextModule,
-  contextModuleKey,
-  type IContextProvider,
-} from '@equinor/fusion-framework-module-context';
-import { useModule } from '@equinor/fusion-framework-react-module';
+import type { IContextProvider } from '@equinor/fusion-framework-module-context';
 import { useObservableState, useDebounce } from '@equinor/fusion-observable/react';
 import { useMemo } from 'react';
 
@@ -13,9 +8,4 @@ export const useQueryContext = (provider: IContextProvider, options?: { debounce
   const { idle, next, value$ } = useDebounce(searchFn, args);
   const { value } = useObservableState(value$);
   return { value, querying: !idle, query: next };
-};
-
-export const useModuleQueryContext = (options?: { debounce?: number }) => {
-  const provider = useModule<ContextModule>(contextModuleKey);
-  return useQueryContext(provider, options);
 };

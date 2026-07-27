@@ -14,7 +14,7 @@ import {
   type AnyModule,
 } from '@equinor/fusion-framework-module';
 
-import moduleContext from './context.js';
+import { ModuleProvider } from './module-provider.js';
 
 type ModuleProviderCreator = <
   TModules extends Array<AnyModule> = Array<AnyModule>,
@@ -76,7 +76,3 @@ export const createModuleProvider: ModuleProviderCreator = async <
   });
   return Component;
 };
-
-export const ModuleProvider = moduleContext.Provider;
-
-export default ModuleProvider;
