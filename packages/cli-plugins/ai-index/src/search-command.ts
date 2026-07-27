@@ -49,9 +49,12 @@ type CommandOptions = AiOptions & {
 const normalizeMetadata = (metadata: Record<string, unknown>): Record<string, unknown> => {
   const normalized = { ...metadata };
 
+  // Only Azure Search documents with an attributes array need flattening
   if (Array.isArray(normalized.attributes)) {
     const attributesObj: Record<string, unknown> = {};
+    // Convert each { key, value } pair into a flat map entry
     for (const attr of normalized.attributes) {
+      // Skip malformed attribute entries that don't match the expected shape
       if (
         typeof attr === 'object' &&
         attr !== null &&
@@ -134,30 +137,36 @@ const _command = createCommand('search')
     );
     const indexConfig = config.index ?? {};
 
+    // Fall back to the configured index name only if the user didn't pass one explicitly
     if (indexConfig.name && !opts.indexName?.trim()) {
       thisCommand.setOptionValue('indexName', indexConfig.name);
     }
+    // Fall back to the configured embed model only if the user didn't pass one explicitly
     if (indexConfig.model && !opts.embedModel?.trim()) {
       thisCommand.setOptionValue('embedModel', indexConfig.model);
     }
   })
   .action(async (query: string, options: CommandOptions) => {
+    // Surface progress in verbose mode before the (potentially slow) framework setup
     if (options.verbose) {
       console.log('🔍 Initializing framework...');
     }
 
     const framework = await setupFramework(options);
 
+    // Cannot search without knowing which index to query
     if (!options.indexName) {
       throw new Error('Index name is required');
     }
 
+    // Print the resolved search parameters in verbose mode
     if (options.verbose) {
       console.log('✅ Framework initialized successfully');
       console.log(`📇 Index: ${options.indexName}`);
       console.log(`🔎 Searching for: "${query}"`);
       console.log(`📊 Limit: ${options.limit}`);
       console.log(`🔍 Search type: ${options.searchType}`);
+      // Only show the filter line when a filter was actually supplied
       if (options.filter) {
         console.log(`🔧 Filter: ${options.filter}`);
       }
@@ -185,14 +194,18 @@ const _command = createCommand('search')
       const retriever = vectorStoreService.asRetriever(retrieverOptions);
       const results = await retriever.invoke(query);
 
+      // Defensively validate the retriever response shape before iterating it
       if (!results || !Array.isArray(results)) {
         throw new Error(
           `Invalid search results: expected array but got ${results === null ? 'null' : typeof results}`,
         );
       }
 
+      // JSON output mode prints each document as a structured object
       if (options.json) {
+        // Emit one JSON entry per matching document
         for (const doc of results) {
+          // Raw mode preserves Azure Search's native metadata structure
           if (options.raw) {
             console.log(inspect(doc, { depth: null, colors: true }));
           } else {
@@ -205,6 +218,7 @@ const _command = createCommand('search')
           }
         }
       } else {
+        // Nothing further to render when the search returned no matches
         if (results.length === 0) {
           console.log('❌ No results found');
           return;
@@ -212,6 +226,7 @@ const _command = createCommand('search')
 
         console.log(`✅ Found ${results.length} result${results.length !== 1 ? 's' : ''}:\n`);
 
+        // Render each matched document as human-readable text
         results.forEach((doc: Document, index: number) => {
           const processedMetadata = options.raw
             ? (doc.metadata as Record<string, unknown>)
@@ -230,8 +245,10 @@ const _command = createCommand('search')
           );
           console.log(`Source: ${source}`);
 
+          // Only print extra metadata fields in verbose mode
           if (options.verbose) {
             const { source: _, score: __, ...otherMetadata } = metadata;
+            // Skip the empty-object noise when there's no extra metadata to show
             if (Object.keys(otherMetadata).length > 0) {
               console.log(`Metadata:`, JSON.stringify(otherMetadata, null, 2));
             }
@@ -240,6 +257,7 @@ const _command = createCommand('search')
 
           const content = doc.pageContent;
           const maxLength = 500;
+          // Truncate long content so terminal output stays readable
           if (content.length > maxLength) {
             console.log(`${content.substring(0, maxLength)}...`);
             console.log(`\n[Content truncated - ${content.length} characters total]`);
@@ -255,6 +273,7 @@ const _command = createCommand('search')
       console.error(
         `❌ Search failed: ${error instanceof Error ? error.message : 'Unknown error'}`,
       );
+      // Print the stack trace in verbose mode to aid debugging
       if (options.verbose && error instanceof Error && error.stack) {
         console.error(error.stack);
       }

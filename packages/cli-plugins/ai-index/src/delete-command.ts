@@ -19,8 +19,11 @@ import { DeleteOptionsSchema, type DeleteOptions } from './delete-command.option
  *   sources nor a raw filter were provided.
  */
 function buildFilter(sources: string[], rawFilter?: string): string | undefined {
+  // Source-path filters take precedence over a raw filter to avoid broad deletions
   if (sources.length > 0) {
-    return sources.map((s) => `metadata/source eq '${s}'`).join(' or ');
+    // Build one OData clause per source path before combining them
+    const sourceClauses = sources.map((s) => `metadata/source eq '${s}'`);
+    return sourceClauses.join(' or ');
   }
   return rawFilter;
 }
@@ -79,9 +82,11 @@ const _command = createCommand('remove')
     );
     const indexConfig = config.index ?? {};
 
+    // Fall back to the configured index name only if the user didn't pass one explicitly
     if (indexConfig.name && !opts.indexName?.trim()) {
       thisCommand.setOptionValue('indexName', indexConfig.name);
     }
+    // Fall back to the configured embed model only if the user didn't pass one explicitly
     if (indexConfig.model && !opts.embedModel?.trim()) {
       thisCommand.setOptionValue('embedModel', indexConfig.model);
     }
@@ -90,14 +95,17 @@ const _command = createCommand('remove')
     const options = await DeleteOptionsSchema.parseAsync(commandOptions);
     const filterExpression = buildFilter(sources, options.filter);
 
+    // Refuse to run an unbounded delete when neither sources nor a filter were given
     if (!filterExpression) {
       throw new Error(
         'Nothing to delete. Provide source file paths as arguments or pass a --filter expression.',
       );
     }
 
+    // Show the user exactly what will be targeted before deleting
     if (sources.length > 0) {
       console.log(`\nTargeting ${sources.length} source path(s):\n`);
+      // List each source path so the user can verify the target set
       for (const src of sources.sort()) {
         console.log(`  ${src}`);
       }
@@ -105,6 +113,7 @@ const _command = createCommand('remove')
       console.log(`\nFilter: ${filterExpression}`);
     }
 
+    // Dry-run mode previews the filter without deleting anything
     if (options.dryRun) {
       console.log('\n🔍 Dry run — no documents were deleted.');
       console.log(`  Would apply filter: ${filterExpression}`);

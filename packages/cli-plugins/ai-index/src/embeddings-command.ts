@@ -68,9 +68,11 @@ const _command = createCommand('add')
     );
     const indexConfig = config.index ?? {};
 
+    // Fall back to the configured index name only if the user didn't pass one explicitly
     if (indexConfig.name && !opts.indexName?.trim()) {
       thisCommand.setOptionValue('indexName', indexConfig.name);
     }
+    // Fall back to the configured embed model only if the user didn't pass one explicitly
     if (indexConfig.model && !opts.embedModel?.trim()) {
       thisCommand.setOptionValue('embedModel', indexConfig.model);
     }

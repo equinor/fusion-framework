@@ -47,6 +47,7 @@ const _command = createCommand('create')
     });
 
     const indexConfig = config.index;
+    // Config must define a schema via defineIndexSchema() before an index can be created
     if (!indexConfig?.schema) {
       console.error(
         '❌ No schema defined in config. Add a `schema` property to `index` using defineIndexSchema().',
@@ -57,6 +58,7 @@ const _command = createCommand('create')
     // Resolve index name from config
     const indexName = indexConfig.name;
 
+    // Index name is required to know where to create/update the schema
     if (!indexName) {
       console.error('❌ Index name is required. Set `name` in the index config.');
       process.exit(1);
@@ -67,10 +69,14 @@ const _command = createCommand('create')
 
     // Guard against schema fields that collide with reserved base-schema names
     const reservedFieldNames = ['id', 'content', 'content_vector', 'metadata'] as const;
-    const conflictingSchemaFields = schemaFields
-      .map((field) => field.name)
-      .filter((name) => reservedFieldNames.includes(name as (typeof reservedFieldNames)[number]));
+    // Extract field names to check them against the reserved list
+    const schemaFieldNames = schemaFields.map((field) => field.name);
+    // Isolate the names that collide with reserved base-schema fields
+    const conflictingSchemaFields = schemaFieldNames.filter((name) =>
+      reservedFieldNames.includes(name as (typeof reservedFieldNames)[number]),
+    );
 
+    // Fail fast so the user can rename the offending schema fields before creating the index
     if (conflictingSchemaFields.length > 0) {
       const conflicts = [...new Set(conflictingSchemaFields)].sort().join(', ');
       console.error(
@@ -170,6 +176,7 @@ const _command = createCommand('create')
       },
     };
 
+    // Dry-run mode previews the schema without contacting the AI service
     if (commandOptions.dryRun) {
       console.log('📋 Index schema preview (dry-run):');
       console.log(JSON.stringify(fullSchema, null, 2));
@@ -186,6 +193,7 @@ const _command = createCommand('create')
     const scopes = service.scopes ?? service.defaultScopes ?? [];
     const token = await framework.auth.acquireAccessToken({ request: { scopes } });
 
+    // Cannot call the AI service without a valid access token
     if (!token) {
       console.error('❌ Failed to acquire access token for the AI service.');
       process.exit(1);
@@ -201,6 +209,7 @@ const _command = createCommand('create')
       body: JSON.stringify(fullSchema),
     });
 
+    // Surface the service error response so the user can diagnose the failure
     if (!response.ok) {
       const body = await response.text();
       console.error(`❌ Index creation failed (${response.status} ${response.statusText})`);
