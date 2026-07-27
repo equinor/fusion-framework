@@ -27,6 +27,15 @@ PersonCardElement;
 PersonListItemElement;
 PersonSelectElement;
 
+/**
+ * Wraps the `fwc-person-provider` web component, wiring the given `PersonResolver` into it
+ * once the underlying custom element is ready.
+ *
+ * @param props - Component props
+ * @param props.resolver - The resolver used to fetch person data, photos, and search results
+ * @param props.children - Elements rendered inside the person provider, typically person-related components
+ * @returns The rendered `fwc-person-provider` element wrapping the given children
+ */
 export const PeopleResolverComponent = (props: PropsWithChildren<{ resolver: PersonResolver }>) => {
   const { resolver, children } = props;
   const ref = useRef<PersonProviderElement | null>(null);

@@ -58,6 +58,10 @@ export type PersonControllerOptions = {
   fallbackImage?: Blob;
 };
 
+/**
+ * Default implementation of {@link IPersonController}, backed by a {@link PeopleApiClient} and
+ * a set of {@link Query} caches for people, searches, photos, suggestions, and resolves.
+ */
 export class PersonController implements IPersonController {
   #personQuery: Query<GetPersonResult, ResolverArgs<{ azureId: string }>>;
   #personSearchQuery: Query<PersonSearchResult, ResolverArgs<{ search: string }>>;
@@ -68,6 +72,11 @@ export class PersonController implements IPersonController {
   >;
   #personResolveQuery: Query<ResolvePersonApiResponse, ResolverArgs<{ resolveIds: string[] }>>;
 
+  /**
+   * @param client - The people API client used to fetch person data, photos, and search results
+   * @param options - Optional controller options, such as a fallback image for missing photos
+   * @throws Error if the photo request fails for a reason other than a fallback-eligible 404
+   */
   constructor(client: PeopleApiClient, options?: PersonControllerOptions) {
     const expire = 3 * 60 * 1000;
     this.#personQuery = new Query({
@@ -168,6 +177,9 @@ export class PersonController implements IPersonController {
    * Suggest persons matching the given search string.
    * Search string can be a part of display name, mail, upn or the full azureId.
    * If systemAccounts is true, it will also include system accounts in the result.
+   *
+   * @param args - The search string, whether to include system accounts, and an optional abort signal
+   * @returns An observable emitting the matching suggestions
    */
   public suggest(
     args: ResolverArgs<{ search: string; systemAccounts: boolean }>,
@@ -179,6 +191,9 @@ export class PersonController implements IPersonController {
 
   /**
    * Resolve person details for given identifiers, which can be a mix of azureIds and upns.
+   *
+   * @param args - The identifiers to resolve and an optional abort signal
+   * @returns An observable emitting the resolved person details
    */
   public resolve(
     args: ResolverArgs<{ resolveIds: string[] }>,
@@ -188,13 +203,27 @@ export class PersonController implements IPersonController {
     return this.#personResolveQuery.query({ resolveIds }, { signal }).pipe(queryValue);
   }
 
+  /**
+   * Search for persons matching the given search string.
+   *
+   * @param args - The search string and an optional abort signal
+   * @returns An observable emitting the search results
+   */
   public search(args: { search: string; signal?: AbortSignal }): Observable<PersonSearchResult> {
     const { search, signal } = args;
     // Unwrap the query result to just its value
     return this.#personSearchQuery.query({ search }, { signal }).pipe(queryValue);
   }
 
-  /** TODO why does this need to have data?!? */
+  /**
+   * Fetch the photo of a person, resolving by azureId when available, falling back to upn.
+   *
+   * TODO why does this need to have data?!?
+   *
+   * @param args - A matcher (azureId and/or upn) plus an optional abort signal
+   * @returns An observable emitting the object URL of the person's photo
+   * @throws Error if neither azureId nor upn is provided
+   */
   public getPhoto(args: ResolverArgs<MatcherArgs>): Observable<string> {
     const { azureId, upn, signal } = args;
 
@@ -207,6 +236,13 @@ export class PersonController implements IPersonController {
     throw Error('invalid args provided');
   }
 
+  /**
+   * Fetch full person details, resolving by azureId when available, falling back to upn.
+   *
+   * @param args - A matcher (azureId and/or upn) plus an optional abort signal
+   * @returns An observable emitting the person details
+   * @throws Error if neither azureId nor upn is provided
+   */
   public getPerson(args: ResolverArgs<MatcherArgs>): Observable<GetPersonResult> {
     const { azureId, upn, signal } = args;
     // Prefer resolving by azureId when available, falling back to upn
@@ -218,6 +254,13 @@ export class PersonController implements IPersonController {
     throw Error('invalid args provided');
   }
 
+  /**
+   * Fetch v2 person info, resolving by azureId when available, falling back to upn.
+   *
+   * @param args - A matcher (azureId and/or upn) plus an optional abort signal
+   * @returns An observable emitting the v2 person info
+   * @throws Error if neither azureId nor upn is provided
+   */
   public getPersonInfo(args: ResolverArgs<MatcherArgs>): Observable<ApiPerson<'v2'>> {
     const { azureId, upn, signal } = args;
     // Prefer resolving by azureId when available, falling back to upn
@@ -229,6 +272,13 @@ export class PersonController implements IPersonController {
     throw Error('invalid args provided');
   }
 
+  /**
+   * Resolve a full v4 person by upn, via cache and live lookup.
+   *
+   * @param upn - The person's upn
+   * @param signal - Optional abort signal
+   * @returns An observable emitting the resolved v4 person
+   */
   protected _getPersonByUpn(upn: string, signal?: AbortSignal): Observable<GetPersonResult> {
     const abort$ = signal ? fromEvent(signal, 'abort') : EMPTY;
     // Resolve the v2 person info by upn, then use its azureId to fetch the full v4 person
@@ -245,11 +295,25 @@ export class PersonController implements IPersonController {
     );
   }
 
+  /**
+   * Fetch a full v4 person by azureId.
+   *
+   * @param azureId - The person's azureId
+   * @param signal - Optional abort signal
+   * @returns An observable emitting the fetched v4 person
+   */
   public _getPersonByAzureId(azureId: string, signal?: AbortSignal): Observable<GetPersonResult> {
     // Unwrap the query result to just its value
     return this.#personQuery.query({ azureId }, { signal }).pipe(queryValue);
   }
 
+  /**
+   * Resolve v2 person info by azureId, via cache and live lookup.
+   *
+   * @param azureId - The person's azureId
+   * @param signal - Optional abort signal
+   * @returns An observable emitting the resolved v2 person info
+   */
   protected _getPersonInfoById(azureId: string, signal?: AbortSignal): Observable<ApiPerson<'v2'>> {
     const abort$ = signal ? fromEvent(signal, 'abort') : EMPTY;
     // Emit from caches first, then fall back to a live lookup, keeping only v2 persons
@@ -263,6 +327,13 @@ export class PersonController implements IPersonController {
     );
   }
 
+  /**
+   * Resolve v2 person info by upn, via cache and search-based lookup.
+   *
+   * @param upn - The person's upn
+   * @param signal - Optional abort signal
+   * @returns An observable emitting the resolved v2 person info
+   */
   protected _getPersonInfoByUpn(upn: string, signal?: AbortSignal): Observable<ApiPerson<'v2'>> {
     const matcher = personMatcher({ upn });
     const abort$ = signal ? fromEvent(signal, 'abort') : EMPTY;
@@ -283,6 +354,13 @@ export class PersonController implements IPersonController {
     );
   }
 
+  /**
+   * Fetch a person's photo by azureId as an object URL.
+   *
+   * @param azureId - The person's azureId
+   * @param signal - Optional abort signal
+   * @returns An observable emitting the photo's object URL
+   */
   protected _getPersonPhotoByAzureId(azureId: string, signal?: AbortSignal): Observable<string> {
     // Take just the first emission and convert the blob result to an object URL
     return this.#personPhotoQuery.query({ azureId }, { signal }).pipe(
@@ -291,6 +369,13 @@ export class PersonController implements IPersonController {
     );
   }
 
+  /**
+   * Fetch a person's photo by upn, resolving their azureId first.
+   *
+   * @param upn - The person's upn
+   * @param signal - Optional abort signal
+   * @returns An observable emitting the photo's object URL
+   */
   protected _getPersonPhotoByUpn(upn: string, signal?: AbortSignal) {
     // Take just the first emission, then fetch the photo using its resolved azureId
     return this._getPersonInfoByUpn(upn, signal).pipe(
@@ -299,6 +384,12 @@ export class PersonController implements IPersonController {
     );
   }
 
+  /**
+   * Search the person-query cache for a matching v4 person.
+   *
+   * @param args - A matcher (azureId and/or upn) used to find the cached entry
+   * @returns An observable emitting the matching cached v4 person, if any
+   */
   protected _personCache$(args: MatcherArgs): Observable<GetPersonResult> {
     const mather = personMatcher(args);
     // Search the person-query cache for the first matching v4 entry
@@ -314,6 +405,12 @@ export class PersonController implements IPersonController {
     );
   }
 
+  /**
+   * Search the search-query cache for a matching v2 person.
+   *
+   * @param args - A matcher (azureId and/or upn) used to find the cached entry
+   * @returns An observable emitting the matching cached v2 person, if any
+   */
   protected _queryCache$(args: MatcherArgs): Observable<ApiPerson<'v2'>> {
     const mather = personMatcher(args);
     // Search the search-query cache for the first matching v2 entry
