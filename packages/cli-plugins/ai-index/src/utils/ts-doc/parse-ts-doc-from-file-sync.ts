@@ -4,7 +4,7 @@ import { Project } from 'ts-morph';
 
 import type { SourceFile } from '../types.js';
 import type { ParseTsDocOptions, TypescriptDocument } from './types.js';
-import { isTypescriptFile } from './parser.js';
+import { isTypescriptFile } from './is-typescript-file.js';
 import { processSourceFile } from './process-source-file.js';
 
 /**
