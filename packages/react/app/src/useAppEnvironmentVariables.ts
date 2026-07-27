@@ -44,6 +44,7 @@ export const useAppEnvironmentVariables = <
   }
 
   const env$ = useMemo(() => {
+    // Extract just the environment slice of the app's config for consumers
     return app.getConfig().pipe(
       map((config) => {
         return config.environment as TEnvironmentVariables;

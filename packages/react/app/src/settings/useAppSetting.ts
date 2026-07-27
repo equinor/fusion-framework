@@ -69,6 +69,7 @@ export const useAppSetting = <
   }, [currentApp]);
 
   useLayoutEffect(() => {
+    // Narrow the settings stream down to just this specific setting's value
     const sub = currentApp?.settings$
       .pipe(map((settings) => (settings as TSettings)[prop]))
       .subscribe(subject);
