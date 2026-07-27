@@ -153,6 +153,7 @@ export class AppConfigurator<
    */
   protected _configureHttpClientsFromAppConfig() {
     const { endpoints = {} } = this.env.config ?? {};
+    // Register an HTTP client for each endpoint defined in the app configuration.
     for (const [key, { url, scopes }] of Object.entries(endpoints)) {
       this.configureHttpClient(key, {
         baseUri: url,
@@ -204,6 +205,7 @@ export class AppConfigurator<
       configure: async (config, ref) => {
         // Service from serviceDiscovery with potential session override.
         const service = await ref?.serviceDiscovery.resolveService(serviceName);
+        // Guard: service must resolve before the HTTP client can be configured.
         if (!service) {
           throw Error(`failed to configure service [${serviceName}]`);
         }
