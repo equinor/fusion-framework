@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { collectSuppressions, isSuppressed } from '../suppressions.js';
+import { collectSuppressions } from '../suppressions.js';
+import { isSuppressed } from '../is-suppressed.js';
 
 describe('collectSuppressions', () => {
   it('suppresses all rules on the next line for a bare disable-next-line comment', () => {

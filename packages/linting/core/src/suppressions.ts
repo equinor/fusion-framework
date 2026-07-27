@@ -6,6 +6,12 @@
 const SUPPRESSION_PATTERN = /fusion-lint-disable-(line|next-line)(?::?\s*([\w,\s-]*))?/;
 
 /**
+ * Lookup of suppressed line numbers to either `'all'` (every rule suppressed)
+ * or a `Set` of specifically suppressed rule ids.
+ */
+export type SuppressionMap = Map<number, 'all' | Set<string>>;
+
+/**
  * A suppression directive parsed from a single source line.
  */
 interface Suppression {
@@ -32,12 +38,26 @@ interface Suppression {
  */
 function parseSuppressionLine(lineText: string, lineNumber: number): Suppression | null {
   const match = SUPPRESSION_PATTERN.exec(lineText);
+  // No directive comment on this line — nothing to parse
   if (!match) return null;
   const [, scope, ruleList] = match;
   // An empty or whitespace-only rule list means "suppress every rule"
   const trimmed = ruleList?.trim();
-  const ruleIds = trimmed ? trimmed.split(',').map((id) => id.trim()) : null;
+  const ruleIds = trimmed ? splitRuleIds(trimmed) : null;
   return { line: lineNumber, scope: scope as 'line' | 'next-line', ruleIds };
+}
+
+/**
+ * Splits a comma-separated rule id list into individual, whitespace-trimmed ids.
+ *
+ * @param ruleList - Comma-separated rule ids, e.g. `"rule-a, rule-b"`.
+ * @returns The trimmed rule ids.
+ */
+function splitRuleIds(ruleList: string): string[] {
+  return ruleList
+    .split(',')
+    // Trim whitespace around each captured rule id
+    .map((id) => id.trim());
 }
 
 /**
@@ -48,21 +68,24 @@ function parseSuppressionLine(lineText: string, lineNumber: number): Suppression
  * @returns A map from suppressed line number to either `'all'` (every rule suppressed)
  *   or a `Set` of specifically suppressed rule ids.
  */
-export function collectSuppressions(source: string): Map<number, 'all' | Set<string>> {
-  const suppressedLines = new Map<number, 'all' | Set<string>>();
+export function collectSuppressions(source: string): SuppressionMap {
+  const suppressedLines: SuppressionMap = new Map();
   const lines = source.split('\n');
 
   // Scan every line for a suppression directive comment
   for (let i = 0; i < lines.length; i++) {
     const suppression = parseSuppressionLine(lines[i], i + 1);
+    // Not a directive line — move on to the next one
     if (!suppression) continue;
 
     const targetLine = suppression.scope === 'line' ? suppression.line : suppression.line + 1;
     const existing = suppressedLines.get(targetLine);
 
+    // A bare directive with no rule list suppresses every rule on the target line
     if (suppression.ruleIds === null) {
       // No rule ids specified — suppress everything on the target line
       suppressedLines.set(targetLine, 'all');
+      // Nothing left to merge — move on to the next line
       continue;
     }
     // Merge with any rule ids already suppressed on this line by another directive
@@ -71,23 +94,4 @@ export function collectSuppressions(source: string): Map<number, 'all' | Set<str
   }
 
   return suppressedLines;
-}
-
-/**
- * Determines whether a diagnostic on `line` for `ruleId` is suppressed by
- * a `fusion-lint-disable-line`/`fusion-lint-disable-next-line` comment.
- *
- * @param suppressions - The suppression map produced by {@link collectSuppressions}.
- * @param line - The 1-based line number of the diagnostic.
- * @param ruleId - The rule id that produced the diagnostic.
- * @returns `true` if the diagnostic should be dropped.
- */
-export function isSuppressed(
-  suppressions: Map<number, 'all' | Set<string>>,
-  line: number,
-  ruleId: string,
-): boolean {
-  const entry = suppressions.get(line);
-  if (!entry) return false;
-  return entry === 'all' || entry.has(ruleId);
 }

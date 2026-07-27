@@ -1,5 +1,6 @@
 import type { Rule, Diagnostic, LintConfig, Severity } from './types.js';
-import { collectSuppressions, isSuppressed } from './suppressions.js';
+import { collectSuppressions } from './suppressions.js';
+import { isSuppressed } from './is-suppressed.js';
 
 /**
  * Runs a set of {@link Rule|rules} against source text, applying config overrides.
