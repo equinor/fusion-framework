@@ -21,6 +21,7 @@ export const ImportBookmarkModal = () => {
 
   // Observe changes to current bookmark and check if it is already in bookmarks or favorites
   const newBookmark$ = useMemo(() => {
+    // Without a provider there is no bookmark data source to observe
     if (!provider) {
       return of(null);
     }
@@ -29,6 +30,7 @@ export const ImportBookmarkModal = () => {
       filter((bookmark) => !!bookmark),
       switchMap((bookmark) => {
         const checkBookmark = bookmark && bookmark.createdBy.id !== currentUser?.id;
+        // Only prompt to import bookmarks created by someone else
         if (!checkBookmark) {
           return of(null);
         }
@@ -42,6 +44,7 @@ export const ImportBookmarkModal = () => {
   const { value: newBookmark } = useObservableState(newBookmark$);
 
   useEffect(() => {
+    // Open the import dialog whenever a new importable bookmark is detected
     if (newBookmark) {
       setIsOpen(true);
     }
@@ -49,6 +52,7 @@ export const ImportBookmarkModal = () => {
 
   const onAddBookmarkFavorite = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
+      // Without a provider we cannot persist the favorite, so bail out
       if (!provider) {
         console.error('Provider not available');
         return;
@@ -62,6 +66,7 @@ export const ImportBookmarkModal = () => {
     [provider],
   );
 
+  // Nothing to import when there is no candidate bookmark
   if (!newBookmark) {
     return null;
   }
