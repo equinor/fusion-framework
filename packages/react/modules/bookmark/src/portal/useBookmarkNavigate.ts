@@ -30,22 +30,26 @@ export const useBookmarkNavigate = (args: { resolveAppPath: AppPathResolver }): 
         const appKey = e.detail?.appKey;
         const bookmarkContext = e.detail?.context;
 
+        // Without both an appKey and a bookmark context there is nowhere to navigate to
         if (!appKey || !bookmarkContext) {
           return;
         }
 
+        // Guard again in case appKey/bookmarkContext were narrowed above but re-checked below
         if (!appKey || !bookmarkContext) {
           return;
         }
 
         const pathname = args.resolveAppPath(appKey);
 
+        // Only navigate when the resolved path differs from the current location
         if (location.pathname !== pathname) {
           const hash = location.hash;
           const search = location.search ? removeBookmarkIdFromURL(location.search) : '';
           history.navigate({ pathname, search, hash });
         }
 
+        // Sync the current context to the bookmark's context when one is present
         if (bookmarkContext) {
           context.currentContext?.id !== bookmarkContext.id &&
             context.setCurrentContextByIdAsync(bookmarkContext.id);

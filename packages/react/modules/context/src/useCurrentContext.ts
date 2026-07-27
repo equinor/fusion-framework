@@ -10,6 +10,7 @@ export const useCurrentContext = (provider: IContextProvider) => {
   });
   const setCurrentContext = useCallback(
     (entry?: ContextItem | string | null) => {
+      // Clear the current context when no entry is provided
       if (!entry) {
         return provider.clearCurrentContext();
       } else if (typeof entry === 'string') {

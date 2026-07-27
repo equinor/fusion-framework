@@ -63,6 +63,7 @@ export const useBookmark = (args?: useBookmarkArgs): useBookmarkResult => {
   );
 
   useLayoutEffect(() => {
+    // Only register a payload generator cleanup when one was provided
     if (payloadGenerator) {
       return bookmarkProvider?.addPayloadGenerator(payloadGenerator);
     }
@@ -73,6 +74,7 @@ export const useBookmark = (args?: useBookmarkArgs): useBookmarkResult => {
    */
   const addBookmarkCreator = useCallback(
     (cb: BookmarkPayloadGenerator) => {
+      // Cannot register a payload generator without a bookmark provider
       if (bookmarkProvider) {
         return bookmarkProvider.addPayloadGenerator(cb);
       }
@@ -86,6 +88,7 @@ export const useBookmark = (args?: useBookmarkArgs): useBookmarkResult => {
    */
   const createBookmark = useCallback(
     <T extends BookmarkData>(args: BookmarkCreateArgs<T>): Promise<Bookmark<T>> => {
+      // Cannot create a bookmark without a bookmark provider
       if (bookmarkProvider) {
         return bookmarkProvider.createBookmarkAsync(args);
       }
@@ -102,6 +105,7 @@ export const useBookmark = (args?: useBookmarkArgs): useBookmarkResult => {
       bookmark: BookmarkUpdate<T> & { id: string },
       options?: BookmarkUpdateOptions,
     ): Promise<Bookmark<T> | undefined> => {
+      // Cannot update a bookmark without a bookmark provider
       if (bookmarkProvider) {
         const { id, ...updates } = bookmark;
         return await bookmarkProvider.updateBookmarkAsync(id, updates, options);

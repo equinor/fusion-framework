@@ -12,6 +12,7 @@ import { useModulesEventProvider } from './useModulesEventProvider';
 export const useEventProvider = (): IEventModuleProvider => {
   const provider = useContext(eventContext);
   const moduleProvider = useModulesEventProvider();
+  // Prefer the context-provided event provider, falling back to the module-scoped one
   if (provider) {
     return provider;
   } else if (moduleProvider) {

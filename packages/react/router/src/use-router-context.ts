@@ -26,6 +26,7 @@ import type { FusionRouterContext } from './types.js';
  */
 export function useRouterContext(): FusionRouterContext {
   const context = useContext(_routerContext);
+  // Fail fast when the hook is used outside of a RouterContextProvider
   if (!context) {
     throw new Error('useRouterContext must be used within a RouterContextProvider');
   }
