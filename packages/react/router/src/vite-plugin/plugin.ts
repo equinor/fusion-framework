@@ -93,6 +93,7 @@ function extractFilePaths(code: string): Set<string> {
 
   // Helper to add relative paths
   const addIfRelative = (path: string) => {
+    // Only track relative paths — bare package specifiers can't be resolved to a route file
     if (path && isRelativePath(path)) {
       filePaths.add(path);
     }
@@ -100,6 +101,7 @@ function extractFilePaths(code: string): Set<string> {
 
   // Match import.meta.resolve() patterns
   let match = IMPORT_META_RESOLVE_PATTERN.exec(code);
+  // Iterate every regex match; exec() advances lastIndex until it returns null
   while (match !== null) {
     addIfRelative(match[1]);
     match = IMPORT_META_RESOLVE_PATTERN.exec(code);
@@ -107,6 +109,7 @@ function extractFilePaths(code: string): Set<string> {
 
   // Match index() and layout() calls with single file path argument
   match = SINGLE_ARG_PATTERN.exec(code);
+  // Iterate every regex match; exec() advances lastIndex until it returns null
   while (match !== null) {
     addIfRelative(match[2]);
     match = SINGLE_ARG_PATTERN.exec(code);
@@ -114,6 +117,7 @@ function extractFilePaths(code: string): Set<string> {
 
   // Match layout() calls with import.meta.resolve() and children
   match = LAYOUT_WITH_RESOLVE_PATTERN.exec(code);
+  // Iterate every regex match; exec() advances lastIndex until it returns null
   while (match !== null) {
     addIfRelative(match[1]);
     match = LAYOUT_WITH_RESOLVE_PATTERN.exec(code);
@@ -121,6 +125,7 @@ function extractFilePaths(code: string): Set<string> {
 
   // Match layout() calls with file path string and children
   match = LAYOUT_WITH_CHILDREN_PATTERN.exec(code);
+  // Iterate every regex match; exec() advances lastIndex until it returns null
   while (match !== null) {
     addIfRelative(match[1]);
     match = LAYOUT_WITH_CHILDREN_PATTERN.exec(code);
@@ -128,6 +133,7 @@ function extractFilePaths(code: string): Set<string> {
 
   // Match route() calls with path and file path arguments
   match = ROUTE_PATTERN.exec(code);
+  // Iterate every regex match; exec() advances lastIndex until it returns null
   while (match !== null) {
     addIfRelative(match[1]);
     match = ROUTE_PATTERN.exec(code);
@@ -149,8 +155,10 @@ function resolveFilePath(filePath: string, baseDir: string): string | null {
 
   // Try common extensions, finally check without extension
   const extensions = ['.tsx', '.ts', '.jsx', '.js'];
+  // Try each extension in priority order until one resolves to an existing file
   for (const ext of extensions) {
     const pathWithExt = resolvedPath + ext;
+    // Stop at the first extension that resolves to a real file
     if (fs.existsSync(pathWithExt)) {
       return pathWithExt;
     }
@@ -183,7 +191,9 @@ function getAvailableExports(filePath: string, currentFileId: string, debug: boo
     const currentDir = path.dirname(currentFileId);
     const actualPath = resolveFilePath(filePath, currentDir);
 
+    // Bail out early if the referenced route file could not be located
     if (!actualPath) {
+      // Debug logging is opt-in to avoid noisy build output by default
       if (debug) {
         console.warn(
           `[fusion:react-router] File not found: ${filePath} (resolved from: ${currentFileId})`,
@@ -208,7 +218,9 @@ function getAvailableExports(filePath: string, currentFileId: string, debug: boo
       'HydrateFallback',
       'shouldRevalidate',
     ];
+    // Check each recognised export name individually, as both direct and re-export syntax are supported
     for (const name of exportNames) {
+      // Recognise the export whether it's declared directly or re-exported from another module
       if (
         fileContent.match(EXPORT_NAMED_PATTERN(name)) ||
         fileContent.match(EXPORT_REEXPORT_PATTERN(name))
@@ -217,6 +229,7 @@ function getAvailableExports(filePath: string, currentFileId: string, debug: boo
       }
     }
   } catch (error) {
+    // Swallow file-read errors so a single unreadable route file doesn't fail the whole build
     if (debug) {
       console.warn(`[fusion:react-router] Error reading file ${filePath}:`, error);
     }
@@ -242,30 +255,37 @@ function generateComponentName(filePath: string): string {
 function buildRouteProperties(imports: RouteImports): string {
   const properties: string[] = [];
 
+  // Only wire up a route object property when the route file actually has the matching export
   if (imports.availableExports.has('default')) {
     properties.push(`Component: ${imports.component}`);
   }
 
+  // Only wire up a route object property when the route file actually has the matching export
   if (imports.clientLoader) {
     properties.push(`loader: ${imports.clientLoader}`);
   }
 
+  // Only wire up a route object property when the route file actually has the matching export
   if (imports.action) {
     properties.push(`action: ${imports.action}`);
   }
 
+  // Only wire up a route object property when the route file actually has the matching export
   if (imports.handle) {
     properties.push(`handle: ${imports.handle}`);
   }
 
+  // Only wire up a route object property when the route file actually has the matching export
   if (imports.errorElement) {
     properties.push(`errorElement: ${imports.errorElement}`);
   }
 
+  // Only wire up a route object property when the route file actually has the matching export
   if (imports.hydrateFallback) {
     properties.push(`HydrateFallback: ${imports.hydrateFallback}`);
   }
 
+  // Only wire up a route object property when the route file actually has the matching export
   if (imports.shouldRevalidate) {
     properties.push(`shouldRevalidate: ${imports.shouldRevalidate}`);
   }
@@ -294,28 +314,36 @@ function generateImportStatements(
   fileToImports.forEach((imports, filePath) => {
     const importParts: string[] = [];
 
+    // Only import the destructured export alias when the route file actually has it
     if (imports.availableExports.has('default')) {
       importParts.push(`default as ${imports.component}`);
     }
+    // Only import the destructured export alias when the route file actually has it
     if (imports.clientLoader) {
       importParts.push(`clientLoader as ${imports.clientLoader}`);
     }
+    // Only import the destructured export alias when the route file actually has it
     if (imports.action) {
       importParts.push(`action as ${imports.action}`);
     }
+    // Only import the destructured export alias when the route file actually has it
     if (imports.handle) {
       importParts.push(`handle as ${imports.handle}`);
     }
+    // Only import the destructured export alias when the route file actually has it
     if (imports.errorElement) {
       importParts.push(`ErrorElement as ${imports.errorElement}`);
     }
+    // Only import the destructured export alias when the route file actually has it
     if (imports.hydrateFallback) {
       importParts.push(`HydrateFallback as ${imports.hydrateFallback}`);
     }
+    // Only import the destructured export alias when the route file actually has it
     if (imports.shouldRevalidate) {
       importParts.push(`shouldRevalidate as ${imports.shouldRevalidate}`);
     }
 
+    // Skip files that ended up with nothing to import (no recognised exports)
     if (importParts.length > 0) {
       importStatements.push(`import {\n    ${importParts.join(',\n    ')}\n} from '${filePath}';`);
     }
@@ -336,9 +364,13 @@ function findMatchingDelimiter(
   let count = 1;
   let i = startIndex + 1;
 
+  // Scan forward, tracking nesting depth until the matching delimiter closes it back to zero
   while (i < code.length && count > 0) {
+    // An opening delimiter increases nesting depth
     if (code[i] === openChar) count++;
+    // A closing delimiter decreases nesting depth
     if (code[i] === closeChar) count--;
+    // Depth returned to zero means we found the matching closing delimiter
     if (count === 0) return i;
     i++;
   }
@@ -363,15 +395,19 @@ function transformNestedCall(
   let result = code;
   let changed = true;
 
+  // Keep re-scanning until a full pass makes no further replacements (handles nested DSL calls)
   while (changed) {
     changed = false;
     // Use matchAll to collect matches for current iteration
     const matches = Array.from(result.matchAll(pattern));
 
+    // Process each match found in this pass
     for (const m of matches) {
       // Defensive check: ensure we have a valid index
       const startIndex = m.index ?? -1;
+      // Skip matches without a usable index; matchAll guarantees one, but guard defensively
       if (startIndex < 0) {
+        // Nothing usable to process for this match; move on to the next one
         continue;
       }
 
@@ -380,13 +416,17 @@ function transformNestedCall(
 
       // Find the opening paren of the function call (it's in the matched string)
       const openParenIndex = result.indexOf('(', startIndex);
+      // Skip this match if the call's opening paren can't be located
       if (openParenIndex === -1) {
+        // Malformed call syntax; move on to the next match
         continue;
       }
 
       // Find matching closing delimiter starting from the opening paren
       const delimiterEnd = findMatchingDelimiter(result, openParenIndex, '(', ')');
+      // Skip this match if the matching closing paren can't be located
       if (delimiterEnd === null) {
+        // Unbalanced delimiters; move on to the next match
         continue;
       }
 
@@ -395,17 +435,20 @@ function transformNestedCall(
 
       // Check if childrenContent still contains nested calls
       if (nestedPattern.test(childrenContent)) {
-        continue; // Skip, will be processed in next iteration
+        // Skip, will be processed in next iteration
+        continue;
       }
 
       const imports = fileToImports.get(filePath);
       const replacement = buildReplacement(filePath, childrenContent, imports);
 
+      // Apply the replacement and restart the scan only when the builder produced output
       if (replacement !== null) {
         const before = result.slice(0, startIndex);
         const after = result.slice(delimiterEnd + 1);
         result = before + replacement + after;
         changed = true;
+        // Restart the outer while loop from the beginning since the string layout changed
         break; // Restart from beginning
       }
     }
@@ -421,11 +464,13 @@ function wrapSingleRouteExports(code: string): string {
   let result = code;
   let match: RegExpExecArray | null = EXPORT_PATTERN.exec(result);
 
+  // Iterate every top-level `export const X = ...` in the file
   while (match !== null) {
     const valueStart = match.index + match[0].length;
 
     // Skip whitespace
     let i = valueStart;
+    // Advance past any whitespace between the `=` and the exported value
     while (i < result.length && /\s/.test(result[i])) {
       i++;
     }
@@ -433,12 +478,14 @@ function wrapSingleRouteExports(code: string): string {
     // Check if it starts with { (object)
     if (result[i] === '{') {
       const braceEnd = findMatchingDelimiter(result, i, '{', '}');
+      // Only proceed if the object literal's closing brace could be located
       if (braceEnd !== null) {
         const objectContent = result.slice(i, braceEnd + 1);
 
         // Check if it contains Component: (it's a route object)
         if (objectContent.includes('Component:')) {
           const beforeBrace = result.slice(valueStart, i).trim();
+          // Only wrap if the export isn't already an array literal
           if (!beforeBrace.startsWith('[')) {
             // Wrap in array
             const before = result.slice(0, valueStart);
@@ -447,6 +494,7 @@ function wrapSingleRouteExports(code: string): string {
             // Restart search
             EXPORT_PATTERN.lastIndex = 0;
             match = EXPORT_PATTERN.exec(result);
+            // Re-evaluate the loop condition against the freshly restarted regex state
             continue;
           }
         }
@@ -467,10 +515,12 @@ function transformPrefix(code: string): string {
   let result = code;
   let changed = true;
 
+  // Keep re-scanning until a full pass makes no further replacements (handles nested prefix calls)
   while (changed) {
     changed = false;
     let match: RegExpExecArray | null = PREFIX_PATTERN.exec(result);
 
+    // Process each prefix() call found in this pass
     while (match !== null) {
       const startIndex = match.index;
       const pathArg = match[1];
@@ -478,8 +528,10 @@ function transformPrefix(code: string): string {
 
       // Find matching closing bracket
       const arrayEnd = findMatchingDelimiter(result, arrayStart, '[', ']');
+      // Skip this match if the matching closing bracket can't be located
       if (arrayEnd === null) {
         match = PREFIX_PATTERN.exec(result);
+        // Malformed call syntax; move on to the next match
         continue;
       }
 
@@ -489,13 +541,16 @@ function transformPrefix(code: string): string {
       // Check if childrenContent still contains nested prefix calls
       if (/\bprefix\s*\(/.test(childrenContent)) {
         match = PREFIX_PATTERN.exec(result);
-        continue; // Skip, will be processed in next iteration
+        // Skip, will be processed in next iteration
+        continue;
       }
 
       // Find the closing paren after the array
       const callEnd = result.indexOf(')', arrayEnd);
+      // Skip this match if the call's closing paren can't be located
       if (callEnd === -1) {
         match = PREFIX_PATTERN.exec(result);
+        // Malformed call syntax; move on to the next match
         continue;
       }
 
@@ -504,6 +559,7 @@ function transformPrefix(code: string): string {
       const after = result.slice(callEnd + 1);
       result = `${before}{\n        path: ${pathArg},\n        children: [${childrenContent}]\n    }${after}`;
       changed = true;
+      // Restart the outer while loop from the beginning since the string layout changed
       break; // Restart from beginning
     }
   }
@@ -516,6 +572,7 @@ function transformPrefix(code: string): string {
  */
 function insertImports(code: string, importStatements: string[]): string {
   const imports = code.match(IMPORT_STATEMENT_PATTERN);
+  // Insert after the last existing import so generated imports don't break import ordering
   if (imports && imports.length > 0) {
     const lastImport = imports[imports.length - 1];
     const lastImportIndex = code.lastIndexOf(lastImport);
@@ -568,46 +625,51 @@ export const reactRouterPlugin = (options: ReactRouterPluginOptions = {}): Plugi
     config(config: UserConfig) {
       projectRoot = config.root ?? process.cwd();
 
-      if (debug) {
-        console.log('[fusion:react-router] Project root:', projectRoot);
-      }
-    },
-    transform(code, id) {
-      try {
-        // Skip files outside the project root or in node_modules
-        if (!projectRoot || !id.startsWith(projectRoot) || id.includes('node_modules')) {
-          return null;
-        }
-
-        // Check if the file contains DSL route imports
-        if (!code.match(ROUTE_IMPORT_PATTERN)) {
-          return null;
-        }
-
-        // Check if the file contains actual DSL route calls
-        if (!code.match(ROUTE_CALL_PATTERN)) {
-          if (debug) {
-            console.log(
-              '[fusion:react-router] File has DSL imports but no route calls, skipping transformation',
-            );
-          }
-          return null;
-        }
-
+        // Debug logging is opt-in to avoid noisy build output by default
         if (debug) {
-          console.log('[fusion:react-router] Transforming file:', id.replace(projectRoot, ''));
+          console.log('[fusion:react-router] Project root:', projectRoot);
         }
+      },
+      transform(code, id) {
+        try {
+          // Skip files outside the project root or in node_modules
+          if (!projectRoot || !id.startsWith(projectRoot) || id.includes('node_modules')) {
+            return null;
+          }
 
-        // Extract all file paths from DSL route calls
-        const filePaths = extractFilePaths(code);
+          // Check if the file contains DSL route imports
+          if (!code.match(ROUTE_IMPORT_PATTERN)) {
+            return null;
+          }
 
-        if (filePaths.size === 0) {
-          return null;
-        }
+          // Check if the file contains actual DSL route calls
+          if (!code.match(ROUTE_CALL_PATTERN)) {
+            // Debug logging is opt-in to avoid noisy build output by default
+            if (debug) {
+              console.log(
+                '[fusion:react-router] File has DSL imports but no route calls, skipping transformation',
+              );
+            }
+            return null;
+          }
+
+          // Debug logging is opt-in to avoid noisy build output by default
+          if (debug) {
+            console.log('[fusion:react-router] Transforming file:', id.replace(projectRoot, ''));
+          }
+
+          // Extract all file paths from DSL route calls
+          const filePaths = extractFilePaths(code);
+
+          // Nothing to transform if no DSL route calls reference a file
+          if (filePaths.size === 0) {
+            return null;
+          }
 
         // Generate unique variable names for each file's exports
         const fileToImports = new Map<string, RouteImports>();
 
+        // Resolve the recognised exports for every route file referenced in this module
         filePaths.forEach((filePath) => {
           const componentName = generateComponentName(filePath);
           const availableExports = getAvailableExports(filePath, id, debug);
@@ -644,6 +706,7 @@ export const reactRouterPlugin = (options: ReactRouterPluginOptions = {}): Plugi
         // Transform index() calls
         transformedCode = transformedCode.replace(INDEX_PATTERN, (match, filePath) => {
           const imports = fileToImports.get(filePath);
+          // Leave the call untouched if we never resolved exports for this file
           if (!imports) return match;
           const properties = buildRouteProperties(imports);
           return `{\n        index: true,\n        ${properties}\n    }`;
@@ -652,6 +715,7 @@ export const reactRouterPlugin = (options: ReactRouterPluginOptions = {}): Plugi
         // Transform layout() calls with single argument
         transformedCode = transformedCode.replace(LAYOUT_SINGLE_PATTERN, (match, filePath) => {
           const imports = fileToImports.get(filePath);
+          // Leave the call untouched if we never resolved exports for this file
           if (!imports) return match;
           const properties = buildRouteProperties(imports);
           return `{\n        ${properties}\n    }`;
@@ -663,6 +727,7 @@ export const reactRouterPlugin = (options: ReactRouterPluginOptions = {}): Plugi
           LAYOUT_NESTED_PATTERN,
           /\blayout\s*\(/,
           (_filePath, childrenContent, imports) => {
+            // Leave the call untouched if we never resolved exports for this file
             if (!imports) return null;
             const properties = buildRouteProperties(imports);
             return `{\n        ${properties},\n        children: ${childrenContent}\n    }`;
@@ -675,6 +740,7 @@ export const reactRouterPlugin = (options: ReactRouterPluginOptions = {}): Plugi
           ROUTE_WITH_PATH_PATTERN,
           (match, pathArg, filePath) => {
             const imports = fileToImports.get(filePath);
+            // Leave the call untouched if we never resolved exports for this file
             if (!imports) return match;
             const properties = buildRouteProperties(imports);
             return `{\n        path: ${pathArg},\n        ${properties}\n    }`;
