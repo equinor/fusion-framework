@@ -38,6 +38,26 @@ const labels$ = active$.pipe(map(p => p.name));
   it('passes: non-pipe member call — not flagged', () => {
     expect(lint(`arr.map(x => x + 1);`)).toHaveLength(0);
   });
+
+  it('passes: return_statement pipe with preceding comment', () => {
+    const source = `
+function build() {
+  return source$
+    // Debounce input and drop stale requests before each search call
+    .pipe(debounceTime(300), switchMap(search));
+}
+`;
+    expect(lint(source)).toHaveLength(0);
+  });
+
+  it('passes: inline chain comment immediately before .pipe()', () => {
+    const source = `
+const result$ = source$
+  // Debounce input and drop stale requests before each search call
+  .pipe(debounceTime(300), switchMap(search));
+`;
+    expect(lint(source)).toHaveLength(0);
+  });
 });
 
 // ── Failing cases ─────────────────────────────────────────────────────────────

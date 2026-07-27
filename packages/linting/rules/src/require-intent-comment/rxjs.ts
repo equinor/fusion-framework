@@ -43,6 +43,10 @@ function getStatementNode(node: Node): Node {
       // const/let declarations like `const x$ = obs$.pipe(...)`
       return current.parent.parent;
     }
+    // return statements like `return obs$.pipe(...)`
+    if (current.parent.type === 'return_statement') {
+      return current.parent;
+    }
     // Stop at block boundaries — don't climb past the containing scope
     if (current.parent.type === 'statement_block' || current.parent.type === 'program') {
       // Bail: hit a scope boundary before finding a statement anchor
@@ -51,6 +55,22 @@ function getStatementNode(node: Node): Node {
     current = current.parent;
   }
   return node;
+}
+
+/**
+ * Returns `true` when a `.pipe()` call is chained onto another expression
+ * (e.g. `obs$.pipe(...)`) and a comment is placed inline within the chain,
+ * immediately before the `.pipe()` call (e.g. `obs$\n  // why\n  .pipe(...)`).
+ *
+ * @param node - The `.pipe()` call expression to test.
+ * @returns `true` if an inline chain comment immediately precedes the call.
+ */
+function hasInlineChainComment(node: Node): boolean {
+  const callee = node.childForFieldName('function');
+  if (callee?.type !== 'member_expression') return false;
+  const object = callee.childForFieldName('object');
+  // A comment placed between the object and the method call satisfies the intent requirement
+  return object?.nextNamedSibling?.type === 'comment';
 }
 
 /**
@@ -66,8 +86,9 @@ function walkNode(node: Node, filePath: string, severity: Severity, out: Diagnos
   // Only report pipe calls that lack a preceding intent comment
   if (isPipeCall(node)) {
     const checkNode = getStatementNode(node);
-    // A comment immediately before the statement satisfies the intent requirement
-    if (checkNode.previousNamedSibling?.type !== 'comment') {
+    // A comment immediately before the statement, or an inline comment within
+    // the method chain immediately before this call, satisfies the intent requirement
+    if (checkNode.previousNamedSibling?.type !== 'comment' && !hasInlineChainComment(node)) {
       out.push({
         file: filePath,
         line: node.startPosition.row + 1,
