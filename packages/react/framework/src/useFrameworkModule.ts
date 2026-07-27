@@ -36,6 +36,7 @@ export const useFrameworkModule = <
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   const module = framework.modules[name];
+  // Warn when the requested module key does not resolve to a registered module
   if (!module) {
     console.warn(`the requested module [${module}] is not included in the framework instance`);
   }

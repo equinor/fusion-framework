@@ -18,6 +18,7 @@ import { useFramework } from '../useFramework';
  */
 export const useAppProvider = (): FusionModulesInstance<[AppModule]>['app'] => {
   const provider = useFramework<[AppModule]>().modules.app;
+  // Fail fast when the AppModule has not been configured on the framework
   if (!provider) {
     throw Error('Current framework does not have AppModule configured');
   }

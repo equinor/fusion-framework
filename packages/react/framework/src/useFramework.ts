@@ -26,10 +26,12 @@ import { context } from './context';
  */
 export const useFramework = <TModules extends Array<AnyModule> = []>(): Fusion<TModules> => {
   let framework = useContext(context);
+  // Warn loudly when the framework context is missing so integrators notice the misuse
   if (!framework) {
     console.warn('could not locate fusion in context!');
   }
   framework ??= window.Fusion;
+  // Surface an error when neither context nor the global fallback has the framework instance
   if (!framework) {
     console.error('Could not load framework, might not be initiated?');
   }

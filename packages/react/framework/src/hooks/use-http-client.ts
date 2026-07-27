@@ -25,6 +25,7 @@ export const useHttpClient = (name: FrameworkHttpClient): HttpClient => {
   const framework = useFramework();
 
   const client = useMemo(() => {
+    // Reuse an already-configured client for this key when one exists
     if (framework.modules.http.hasClient(name)) {
       return framework.modules.http.createClient(name);
     }

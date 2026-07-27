@@ -39,9 +39,11 @@ export const useCurrentAppModule = <
 } => {
   const { modules, error, complete } = useCurrentAppModules();
   const module = (() => {
+    // Preserve an explicit null (modules not applicable) distinct from undefined (not yet loaded)
     if (modules === null) {
       return null;
     }
+    // Modules are still loading; propagate undefined rather than throwing
     if (modules === undefined) {
       return undefined;
     }

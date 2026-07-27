@@ -32,6 +32,7 @@ export const useSignalR = <T>(
   topicId: string,
 ): ReturnType<typeof useProviderTopic<T>> => {
   const provider = useFramework<[SignalRModule]>().modules.signalR;
+  // Fail fast when the SignalRModule has not been configured on the framework
   if (!provider) {
     throw Error('SignalR is not configured, see @equinor/fusion-framework-react-module-signalr');
   }

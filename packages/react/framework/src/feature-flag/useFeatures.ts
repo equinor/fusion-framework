@@ -58,11 +58,18 @@ export const useFeatures = (
    */
   const { value: features, error } = useObservableState(
     useMemo(() => {
+      // Only compute the feature list when a provider is available; otherwise there's nothing to observe
       if (provider) {
         return provider?.features$.pipe(
           map((x) => {
             const values = Object.values(x);
-            return selector ? values.filter(selector) : values;
+            // Return everything when no selector is provided
+            if (!selector) {
+              return values;
+            }
+            // Apply the caller-provided selector to narrow down the feature list
+            const filtered = values.filter(selector);
+            return filtered;
           }),
         );
       }
@@ -79,6 +86,7 @@ export const useFeatures = (
    */
   const toggleFeature = useCallback(
     (key: string, enable?: boolean) => {
+      // Cannot toggle a feature without a provider to persist the change
       if (!provider) {
         throw new Error('Missing IFeatureFlagProvider.');
       }
