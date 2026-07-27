@@ -101,7 +101,7 @@ export const configureModules =
     )) as unknown as AppModulesInstance<TModules>;
 
     // Dispatch app modules loaded event for app lifecycle tracking
-    // TODO - remove check after fusion-cli is updated (app module is not enabled in fusion-cli)
+    // TODO(#5061): remove check after fusion-cli is updated (app module is not enabled in fusion-cli)
     if (args.env.manifest?.appKey) {
       modules.event.dispatchEvent('onAppModulesLoaded', {
         detail: { appKey: args.env.manifest.appKey, manifest: args.env.manifest, modules },

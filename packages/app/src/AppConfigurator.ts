@@ -86,7 +86,7 @@ export interface IAppConfigurator<
    *                  `baseUri` and `defaultScopes` are excluded because they are
    *                  resolved from service discovery.
    */
-  // TODO - rename
+  // TODO(#5060): rename
   useFrameworkServiceClient(
     serviceName: string,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
