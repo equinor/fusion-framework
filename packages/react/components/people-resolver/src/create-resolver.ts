@@ -33,6 +33,7 @@ export const createResolver = (controller: IPersonController): PersonResolver =>
         map((x) => {
           // Remap each result's azureUniqueId to azureId and cast to the public PersonInfo shape.
           const mapped = x.map((x) => {
+            // Controller result uses azureUniqueId; remap to azureId and cast to the public PersonInfo shape.
             return {
               ...x,
               azureId: x.azureUniqueId,
