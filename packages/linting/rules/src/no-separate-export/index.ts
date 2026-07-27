@@ -33,6 +33,7 @@ function isSeparateExport(node: Node): boolean {
  * @returns The local binding name, or `null` if none could be determined.
  */
 function importedLocalName(node: Node): string | null {
+  // Narrow to identifier children only, discarding punctuation/keyword tokens like `as`
   const identifiers = node.namedChildren.filter((c) => c?.type === 'identifier');
   // The local binding is always the last identifier: the only one when there's
   // no rename, or the one after `as` when there is
@@ -51,9 +52,13 @@ function collectImportedNames(root: Node): Set<string> {
 
   // Recursively find every import_statement in the file
   const visit = (node: Node): void => {
+    // Only import_statement nodes carry an import_clause worth inspecting
     if (node.type === 'import_statement') {
+      // Locate the clause holding the imported bindings (default/named/namespace)
       const clause = node.children.find((c) => c.type === 'import_clause');
+      // Each child of the clause represents one form of import binding
       for (const child of clause?.children ?? []) {
+        // A bare identifier child means a default import binding
         if (child.type === 'identifier') {
           // Bare default import, e.g. `import Foo from './x.js'`
           imported.add(child.text);
@@ -61,15 +66,18 @@ function collectImportedNames(root: Node): Set<string> {
           // `{ foo, type Bar, Baz as Qux }`
           for (const specifier of child.namedChildren) {
             const name = specifier ? importedLocalName(specifier) : null;
+            // Skip specifiers we couldn't resolve to a local name
             if (name) imported.add(name);
           }
         } else if (child.type === 'namespace_import') {
           // `* as NS`
           const name = importedLocalName(child);
+          // Skip namespace imports we couldn't resolve to a local name
           if (name) imported.add(name);
         }
       }
     }
+    // Descend into every child regardless of this node's type, to reach nested import statements
     for (const child of node.children) visit(child);
   };
 
@@ -108,7 +116,10 @@ function walkNode(
     });
     // Every specifier in this export clause re-exports an import — nothing to flag
     if (localSpecifiers.length > 0) {
-      const names = localSpecifiers.map((c) => c?.text ?? '').join(', ');
+      const names = localSpecifiers
+        // Render each flagged specifier's source text for the diagnostic message
+        .map((c) => c?.text ?? '')
+        .join(', ');
       out.push({
         file: filePath,
         line: node.startPosition.row + 1,

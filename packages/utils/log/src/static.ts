@@ -49,6 +49,7 @@ export enum LogLevel {
 const resolveDefaultLogLevel = (): LogLevel => {
   const envLogLevel = process.env.FUSION_LOG_LEVEL;
 
+  // Only attempt to parse the environment variable when it's actually set
   if (envLogLevel) {
     try {
       return resolveLogLevel(envLogLevel);
@@ -70,4 +71,6 @@ const resolveDefaultLogLevel = (): LogLevel => {
  *
  * @see {@link resolveDefaultLogLevel} for resolution rules.
  */
+// Deliberately co-located with the `LogLevel` enum it resolves a default for
+// fusion-lint-disable-next-line single-export-per-file
 export const defaultLogLevel = resolveDefaultLogLevel();

@@ -68,6 +68,7 @@ export abstract class Logger implements ILogger {
    * @returns An RxJS `Observable` of `{ lvl, msg }` log records.
    */
   public get log(): Observable<{ lvl: LogLevel; msg: unknown[] }> {
+    // Only pass through entries at or below the configured severity threshold
     return this._log$.pipe(filter((x) => this.level >= x.lvl));
   }
 
