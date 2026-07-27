@@ -187,12 +187,15 @@ export class FrameworkConfigurator<
     this.addConfig({
       module: auth,
       configure: (builder) => {
+        // Only override the default requiresAuth flag when the caller explicitly set one
         if (requiresAuth !== undefined) {
           builder.setRequiresAuth(!!requiresAuth);
         }
+        // A function argument configures the builder directly
         if (typeof cb_or_config === 'function') {
           cb_or_config(builder);
         }
+        // A plain object argument is applied as the MSAL client config
         if (typeof cb_or_config === 'object') {
           builder.setClientConfig(cb_or_config);
         }
