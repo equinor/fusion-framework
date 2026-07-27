@@ -38,6 +38,7 @@ export const CreateBookmarkModal = ({
 
   const createBookmark = useCallback(
     async (args: BookmarkCreateArgs<never>) => {
+      // Cannot create a bookmark without a provider to persist it
       if (!provider) {
         console.error('Provider not available');
         return;

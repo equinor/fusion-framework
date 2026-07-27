@@ -63,6 +63,7 @@ export const EditBookmarkModal = ({
 
   // set the state when the bookmark is loaded
   useEffect(() => {
+    // Only populate local state once the bookmark has actually loaded
     if (bookmark) {
       const { name, description, isShared } = bookmark;
       setState({ name, description, isShared });
@@ -80,6 +81,7 @@ export const EditBookmarkModal = ({
 
   const updateBookmark = useCallback(
     async (updates: BookmarkUpdate) => {
+      // Cannot update a bookmark without a provider to persist the change
       if (!provider) {
         console.error('Provider not available');
         return;
@@ -145,6 +147,7 @@ export const EditBookmarkModal = ({
             checked={state.isShared}
             onChange={(changeEvent: ChangeEvent<HTMLInputElement>) => {
               const isShared = changeEvent.target.checked;
+              // Copy the bookmark URL when the user shares it so it's easy to send along
               if (isShared) {
                 addBookmarkToClipboard(bookmarkId);
               }

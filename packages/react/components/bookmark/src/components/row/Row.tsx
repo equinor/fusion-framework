@@ -55,6 +55,7 @@ export const Row = ({ name, menuOptions, children, id, menuOpen, onMenuOpen }: R
     (e: React.MouseEvent) => {
       e.preventDefault();
       e.stopPropagation();
+      // Only attempt to set the current bookmark when a provider is available
       if (provider) {
         from(provider.setCurrentBookmark(id)).subscribe();
       }

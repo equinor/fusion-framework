@@ -39,6 +39,7 @@ export const SectionList = ({ bookmarkGroups }: SectionListProps) => {
 
   const createMenuOptions = useCallback(
     (bookmark: BookmarkWithoutData) => {
+      // Without a provider there are no actions that can be performed on the bookmark
       if (!provider) return [];
       const appKey = currentApp?.appKey;
       const bookmarkId = bookmark.id;
@@ -53,6 +54,7 @@ export const SectionList = ({ bookmarkGroups }: SectionListProps) => {
         Icon: <Icon name="share" />,
       };
 
+      // Only the bookmark owner is allowed to edit, update, remove, or share it
       if (isOwner) {
         const ownerOptions = [
           {
@@ -109,6 +111,7 @@ export const SectionList = ({ bookmarkGroups }: SectionListProps) => {
                 }),
               ).subscribe({
                 next(value) {
+                  // Copy the bookmark URL to the clipboard once it becomes shared
                   if (value.isShared) {
                     addBookmarkToClipboard(value.id);
                   }

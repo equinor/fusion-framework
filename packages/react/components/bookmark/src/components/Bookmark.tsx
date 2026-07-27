@@ -61,9 +61,11 @@ export const Bookmark = () => {
     useBookmarkGrouping(bookmarks);
 
   const content = useMemo(() => {
+    // Show the loading placeholder while bookmarks are still being fetched
     if (isLoading) {
       return <Loading />;
     }
+    // Show an empty-state message when there are no bookmark groups to display
     if (bookmarkGroups.length === 0) {
       return (
         <Message title="No Bookmarks" type="NoContent">

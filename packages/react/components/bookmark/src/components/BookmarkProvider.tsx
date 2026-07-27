@@ -55,6 +55,7 @@ export const BookmarkProvider = (props: PropsWithChildren<BookmarkProviderProps>
     setSnackbarContent('Bookmark url copied to clipboard');
   }, []);
 
+  // Render children without a live provider context when no provider is configured
   if (!provider) {
     return (
       <bookmarkProviderContext.Provider
