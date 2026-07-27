@@ -60,6 +60,7 @@ export const useFeatures = (
     useMemo(() => {
       // Only compute the feature list when a provider is available; otherwise there's nothing to observe
       if (provider) {
+        // Map the feature dictionary to a list, optionally narrowed by the caller-provided selector
         return provider?.features$.pipe(
           map((x) => {
             const values = Object.values(x);

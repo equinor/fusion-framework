@@ -49,6 +49,7 @@ export const useFeature = <T = unknown>(
   provider: IFeatureFlagProvider,
   key: string,
 ): UseFeatureResult<T> => {
+  // Narrow the features stream down to just the one matching feature by key
   const feature$ = useMemo(() => provider.features$.pipe(findFeature<T>(key)), [provider, key]);
   const { value: feature, error } = useObservableState(feature$ ?? EMPTY);
   const toggleFeature = useCallback(
