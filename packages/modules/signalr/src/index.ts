@@ -14,12 +14,13 @@
 
 export {
   ISignalRConfigurator,
-  SignalRConfigurator,
   SignalRConfig,
   SignalRHubConfig,
   SignalRModuleConfigBuilder,
   SignalRModuleConfigBuilderCallback,
 } from './SignalRModuleConfigurator';
+
+export { SignalRConfigurator } from './SignalRConfigurator';
 
 export { ISignalRProvider, SignalRModuleProvider } from './SignalRModuleProvider';
 

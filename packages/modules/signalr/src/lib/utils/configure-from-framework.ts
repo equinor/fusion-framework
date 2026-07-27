@@ -26,6 +26,7 @@ export const configureFromFramework = async (
     url: new URL(args.path, service.uri).toString(),
     options: {
       accessTokenFactory: async () => {
+        // Scopes are required to acquire a token for this service
         if (!service.scopes) {
           throw Error(
             `service [${service.name}] does not have authentication scopes, please configure an endpoint with scopes`,
@@ -34,6 +35,7 @@ export const configureFromFramework = async (
         const token = await authProvider.acquireAccessToken({
           request: { scopes: service.scopes ?? service.defaultScopes },
         });
+        // Fail loudly rather than connecting the hub without a valid token
         if (!token) {
           throw Error('failed to acquire access token');
         }

@@ -74,6 +74,7 @@ export function enableSignalR(
   name: string,
   optionsOrCallback: SignalRModuleConfigBuilderCallback | { service: string; path: string },
 ) {
+  // Callback form configures the hub directly against the resolved builder
   if (typeof optionsOrCallback === 'function') {
     configurator.addConfig({
       module,
