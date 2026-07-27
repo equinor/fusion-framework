@@ -42,7 +42,7 @@
   "dependencies": {
     "@equinor/fusion-framework-lint-config": "workspace:^",
     "@equinor/fusion-framework-lint-core": "workspace:^",
-    "chalk": "^5.6.0",
+    "chalk": "^6.0.0",
     "commander": "^15.0.0",
     "globby": "^16.2.1",
     "ora": "^9.0.0",
