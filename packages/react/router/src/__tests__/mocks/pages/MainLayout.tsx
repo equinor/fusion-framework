@@ -6,6 +6,11 @@ export const handle = {
   },
 };
 
+/**
+ * Mock layout used in router tests, rendering nested routes via `Outlet`.
+ *
+ * @returns The layout
+ */
 export default function MainLayout() {
   return (
     <div>

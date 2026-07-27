@@ -7,6 +7,11 @@ export const handle = {
   },
 };
 
+/**
+ * Mock dashboard page used in router tests.
+ *
+ * @returns The dashboard page
+ */
 export default function DashboardPage() {
   return <div>Dashboard Page</div>;
 }
