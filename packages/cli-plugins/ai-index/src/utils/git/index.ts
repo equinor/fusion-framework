@@ -7,7 +7,8 @@ export type {
 } from './types.js';
 
 // Re-export git client utilities
-export { resolveProjectRoot, getGit } from './git-client.js';
+export { resolveProjectRoot } from './resolve-project-root.js';
+export { getGit } from './git-client.js';
 
 // Re-export metadata functions
 export { extractGitMetadata } from './metadata.js';

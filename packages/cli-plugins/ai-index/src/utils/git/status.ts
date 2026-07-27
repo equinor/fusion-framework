@@ -1,4 +1,5 @@
-import { resolveProjectRoot, getGit } from './git-client.js';
+import { resolveProjectRoot } from './resolve-project-root.js';
+import { getGit } from './git-client.js';
 
 /**
  * Retrieves a summary of the current git working-tree status.
@@ -21,11 +22,13 @@ export const getGitStatus = async (
   unstagedFiles: number;
 }> => {
   const projectRoot = resolveProjectRoot(cwd);
+  // Status can only be reported when cwd is inside a git repository
   if (!projectRoot) {
     throw new Error('Not in a git repository');
   }
 
   const { git } = getGit(cwd) ?? {};
+  // Fail fast if the git client could not be created for this repository
   if (!git) {
     throw new Error('Failed to initialize git client');
   }

@@ -16,6 +16,7 @@ const generateGithubPermalink = (
   slug?: string,
 ): string | undefined => {
   const githubMatch = gitRemoteUrl.match(/github\.com[:/]([^/]+)\/([^/.]+)(?:\.git)?$/);
+  // Only GitHub-hosted remotes can be turned into a permalink URL
   if (githubMatch) {
     const [, owner, repo] = githubMatch;
     return `https://github.com/${owner}/${repo}/blob/${slug ?? 'main'}/${filePath}`;
@@ -34,6 +35,7 @@ const generateGithubPermalink = (
  */
 export const extractGitMetadata = async (filePath: string): Promise<GitMetadata | undefined> => {
   const { git, gitRepoPath: gitRepoRoot } = getGit(filePath) ?? {};
+  // No metadata can be extracted outside of a git repository
   if (!git || !gitRepoRoot) {
     return undefined;
   }

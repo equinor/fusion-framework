@@ -1,5 +1,6 @@
 import type { ChangedFile, FileChangeStatus, GitDiffOptions } from './types.js';
-import { resolveProjectRoot, getGit } from './git-client.js';
+import { resolveProjectRoot } from './resolve-project-root.js';
+import { getGit } from './git-client.js';
 
 /**
  * Returns a list of files changed between `baseRef` and HEAD.
