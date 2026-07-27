@@ -115,6 +115,10 @@ const executeApiCall = <TVersion extends AllowedVersions, TMethod extends keyof 
   };
 };
 
+// Aliased re-export: the generic type/function names (AllowedVersions, MethodArg, ...) are reused
+// across every endpoint file in this directory, so they cannot be exported inline under their
+// unique consumer-facing names.
+// fusion-lint-disable-next-line no-separate-export
 export {
   type AllowedVersions as CreateBookmarkVersion,
   type MethodArg as CreateBookmarkArg,
