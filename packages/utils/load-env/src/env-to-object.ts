@@ -47,9 +47,11 @@ export function envToObject<T extends Record<string, unknown>>(
   // biome-ignore lint/suspicious/noExplicitAny: We need to use `any` here to allow for dynamic key assignment.
   const result: any = {};
 
+  // Walk every environment variable and merge matching ones into the result
   for (const [key, value] of Object.entries(env)) {
     // Skip entries that do not start with the prefix
     if (!key.startsWith(prefix)) {
+      // Not a relevant key — move on to the next entry
       continue;
     }
 
@@ -60,14 +62,18 @@ export function envToObject<T extends Record<string, unknown>>(
     if (camelcase.includes(strippedKey)) {
       const camelKey = toCamelCase(strippedKey);
       result[camelKey as keyof T] = JSON.parse(value);
+      // Handled as a flat key — no further nesting needed for this entry
       continue;
     }
 
+    // Split the remaining key into nested segments, camelCasing each part
     const keys = strippedKey.split('_').map((part) => toCamelCase(part));
 
     let current = result;
+    // Descend into (or create) each nested level except the final leaf segment
     while (keys.length > 1) {
       const part = keys.shift();
+      // Guard against an impossible empty segment produced by the split above
       if (part === undefined) {
         throw new Error('Unexpected undefined value in keys array.');
       }
@@ -77,6 +83,7 @@ export function envToObject<T extends Record<string, unknown>>(
         throw new Error(`Conflict: Key "${part}" is defined as a flat key but is being nested.`);
       }
 
+      // Initialize the nested container if it doesn't already exist
       if (typeof current[part] !== 'object' || current[part] === null) {
         current[part] = {};
       }

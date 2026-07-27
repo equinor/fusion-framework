@@ -28,20 +28,25 @@ import { DEFAULT_ENV_PREFIX } from './static';
  * ```
  */
 export function objectToEnv(obj: object, options?: { prefix?: string }): Record<string, string> {
-  return Object.entries(obj).reduce((result, [key, value]) => {
-    const basePrefix = options?.prefix ?? DEFAULT_ENV_PREFIX;
-    // Convert camelCase to snake_case and uppercase
-    const snakeKey = key.replace(/([A-Z])/g, '_$1').toUpperCase();
+  // Flatten each entry into the accumulating result record
+  return (
+    Object.entries(obj)
+      // Merge every [key, value] pair into the accumulator, recursing for nested objects
+      .reduce((result, [key, value]) => {
+        const basePrefix = options?.prefix ?? DEFAULT_ENV_PREFIX;
+        // Convert camelCase to snake_case and uppercase
+        const snakeKey = key.replace(/([A-Z])/g, '_$1').toUpperCase();
 
-    const prefix = `${basePrefix.replace(/_$/, '')}_${snakeKey}`;
+        const prefix = `${basePrefix.replace(/_$/, '')}_${snakeKey}`;
 
-    if (value && typeof value === 'object' && !Array.isArray(value)) {
-      // Recursively flatten nested objects
-      return Object.assign(result, objectToEnv(value, { prefix }));
-    }
+        // Recursively flatten nested objects
+        if (value && typeof value === 'object' && !Array.isArray(value)) {
+          return Object.assign(result, objectToEnv(value, { prefix }));
+        }
 
-    return Object.assign(result, { [prefix]: String(value) });
-  }, {});
+        return Object.assign(result, { [prefix]: String(value) });
+      }, {})
+  );
 }
 
 export default objectToEnv;
