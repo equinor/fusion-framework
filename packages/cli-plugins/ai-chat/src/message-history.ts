@@ -39,7 +39,11 @@ export class MessageHistory {
     this.#summarise = summarise;
   }
 
-  /** Read-only snapshot of the current message history. */
+  /**
+   * Read-only snapshot of the current message history.
+   *
+   * @returns The current message history as a read-only array.
+   */
   get messages(): readonly ChatMessage[] {
     return this.#history;
   }
@@ -75,6 +79,7 @@ export class MessageHistory {
       const startIndex = hasSummary ? 1 : 0;
       const maxRemovable = this.#history.length - (hasSummary ? 2 : 1);
       const toRemove = Math.min(excess, Math.max(0, maxRemovable));
+      // Only splice when there is actually excess to remove.
       if (toRemove > 0) {
         this.#history.splice(startIndex, toRemove);
       }

@@ -91,6 +91,7 @@ const _command = createCommand('chat')
       .argParser(parseInt),
   )
   .action(async (options: CommandOptions) => {
+    // Enable verbose OpenAI logging when --debug is set.
     if (options.debug) {
       process.env.OPENAI_LOG = 'debug';
       options.verbose = true;
@@ -99,6 +100,7 @@ const _command = createCommand('chat')
     // Initialize the framework
     const framework = await setupFramework(options);
 
+    // Print startup diagnostics when --verbose is set.
     if (options.verbose) {
       console.log('✅ Framework initialized successfully');
       console.log('💬 Starting interactive chat...');
@@ -110,6 +112,7 @@ const _command = createCommand('chat')
       console.log('');
     }
 
+    // Guard: a chat model must be resolved before the chat service can be used.
     if (!options.chatModel) throw new Error('Chat model name is required');
 
     const chatService = framework.ai.useModel(options.chatModel);
@@ -136,7 +139,9 @@ const _command = createCommand('chat')
     ]);
 
     const messageHistory = new MessageHistory(options.historyLimit ?? 20, async (messages) => {
-      const conversationText = messages.map((m) => `${m.role}: ${m.content}`).join('\n');
+      // Flatten each message into a `role: content` line for the summary prompt.
+      const formattedLines = messages.map((m) => `${m.role}: ${m.content}`);
+      const conversationText = formattedLines.join('\n');
       const summaryPrompt = `Provide a concise summary of this conversation history, focusing on key topics and context:\n\n${conversationText}\n\nSummary:`;
       try {
         const raw = await chatService.invoke([{ role: 'user', content: summaryPrompt }]);
@@ -183,6 +188,7 @@ const _command = createCommand('chat')
         // Skip empty messages
         if (!userMessage) {
           console.log('Please enter a message\n');
+          // Re-prompt without sending an empty message to the chat chain.
           continue;
         }
 
@@ -190,6 +196,7 @@ const _command = createCommand('chat')
         if (userMessage.toLowerCase() === 'clear') {
           messageHistory.clear();
           console.log('\n🧹 Conversation history cleared!\n');
+          // 'clear' is a local command only — skip sending it to the chat chain.
           continue;
         }
 
@@ -199,6 +206,7 @@ const _command = createCommand('chat')
         console.log('\n🤖 AI Response:');
 
         try {
+          // Trace chain invocation details when --verbose is set.
           if (options.verbose) {
             console.log('🔍 Invoking chat chain...');
             console.log(`📝 Message history contains ${messageHistory.messages.length} messages`);
@@ -231,11 +239,13 @@ const _command = createCommand('chat')
 
           await messageHistory.add({ role: 'assistant', content: fullResponse });
         } catch (error) {
+          // Chain failures (e.g. model errors) are non-fatal — log and let the loop continue.
           console.error('\n❌ Chain error:', error);
           console.log('Falling back to basic chat...');
         }
         console.log('');
       } catch (error) {
+        // Keep the REPL alive on unexpected errors instead of crashing the process.
         console.error('\n❌ Error during chat:', error);
         console.log('');
       }
