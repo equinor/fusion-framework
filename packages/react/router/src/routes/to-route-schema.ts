@@ -40,6 +40,7 @@ export type RouteSchemaEntry =
  */
 function joinPaths(prefix: string, path: string | undefined): string {
   const joinedPath = [prefix.replace(/^\//, ''), path]
+    // Drop the undefined/empty segment so joining doesn't produce a stray slash
     .filter(Boolean)
     .join('/')
     .replace(/\/\//, '/')
@@ -62,12 +63,14 @@ function mergeSchemas(
 
   merged.description = routeSchema?.description ?? moduleSchema?.description;
 
+  // Route-level params take precedence over the module's own schema export
   if (routeSchema?.params !== undefined) {
     merged.params = routeSchema.params;
   } else if (moduleSchema?.params !== undefined) {
     merged.params = moduleSchema.params;
   }
 
+  // Route-level search params take precedence over the module's own schema export
   if (routeSchema?.search !== undefined) {
     merged.search = routeSchema.search;
   } else if (moduleSchema?.search !== undefined) {
@@ -106,6 +109,7 @@ async function loadSchemaFromFile(file: string): Promise<RouterSchema | undefine
   try {
     // Try to import directly first (works for compiled JS files)
     const module = await import(/* @vite-ignore */ importPath);
+    // Only a `handle` export shaped as an object can carry route schema metadata
     if (module.handle && typeof module.handle === 'object') {
       // Module can export handle as RouterHandle (with route property) or RouterSchema
       if ('route' in module.handle && typeof module.handle.route === 'object') {
@@ -123,6 +127,7 @@ async function loadSchemaFromFile(file: string): Promise<RouterSchema | undefine
         importPath,
         getLoaderConfig(importPath),
       );
+      // Only a `handle` export shaped as an object can carry route schema metadata
       if (module.handle && typeof module.handle === 'object') {
         // Module can export handle as RouterHandle (with route property) or RouterSchema
         if ('route' in module.handle && typeof module.handle.route === 'object') {
@@ -150,14 +155,17 @@ function schemaToOptions(schema: RouterSchema): RouteSchemaEntry[2] | undefined 
   const hasParams = schema.params && Object.keys(schema.params).length > 0;
   const hasSearch = schema.search && Object.keys(schema.search).length > 0;
 
+  // Skip emitting an options object entirely when neither params nor search are defined
   if (!hasParams && !hasSearch) {
     return undefined;
   }
 
   const options: RouteSchemaEntry[2] = {};
+  // Only include params in the emitted options when the schema actually defines them
   if (hasParams && schema.params) {
     options.params = schema.params;
   }
+  // Only include search in the emitted options when the schema actually defines it
   if (hasSearch && schema.search) {
     options.search = schema.search;
   }
@@ -204,9 +212,11 @@ function processRouteObjects(
 ): RouteSchemaEntry[] {
   const result: RouteSchemaEntry[] = [];
 
+  // Walk each route object at this level, resolving its full path and schema entry
   for (const routeObj of routeObjects) {
     // Determine the full path for this route
     let fullPath: string;
+    // Index routes inherit the parent path; path routes append their own segment
     if (routeObj.index) {
       fullPath = currentPath || '/';
     } else if (routeObj.path) {
@@ -219,6 +229,7 @@ function processRouteObjects(
     const hasChildren = routeObj.children && routeObj.children.length > 0;
     const schema = routeObj.handle?.route;
 
+    // Layout-only routes without a path/index are pure containers and shouldn't be emitted
     if (hasPathOrIndex) {
       // Only include routes that have a schema, or routes without children
       // Routes with children but no schema are just containers and shouldn't be included
@@ -251,7 +262,9 @@ async function processNodes(
 ): Promise<RouteSchemaEntry[]> {
   const result: RouteSchemaEntry[] = [];
 
+  // Walk each route node at this level, resolving its schema entry
   for (const node of nodes) {
+    // Only Route/IndexRoute nodes carry schema metadata worth including
     if (node instanceof Route || node instanceof IndexRoute) {
       const fullPath = joinPaths(currentPath, node instanceof Route ? node.path : '');
       // Route always extends BaseFileRoute, so it always has handle
@@ -290,6 +303,7 @@ async function processNodes(
 function isRouteObjectArray(nodes: unknown): nodes is RouteObject[] {
   return (
     Array.isArray(nodes) &&
+    // RouteObjects are plain objects without the discriminating 'kind' property RouteNodes have
     nodes.every((node) => typeof node === 'object' && node !== null && 'kind' in node === false)
   );
 }
@@ -357,6 +371,7 @@ function isRouteObjectArray(nodes: unknown): nodes is RouteObject[] {
 export async function toRouteSchema(
   nodes: RouteNode | RouteNode[] | RouteObject[],
 ): Promise<RouteSchemaEntry[]> {
+  // Plain RouteObject[] input (from React Router) uses a different traversal than RouteNode
   if (isRouteObjectArray(nodes)) {
     return processRouteObjects(nodes);
   }
