@@ -17,12 +17,12 @@ export {
 } from './portal-manifest.js';
 
 export {
-  loadPortalSchema,
   definePortalSchema,
   type PortalSchema,
   type PortalSchemaExport,
   type PortalSchemaFn,
 } from './load-portal-schema.js';
+export { loadPortalSchema } from './load-portal-schema-fn.js';
 
 export {
   definePortalConfig,

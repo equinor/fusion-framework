@@ -5,7 +5,8 @@ import {
   ProjectTemplateRepository,
   type GitClientProtocol,
 } from '../../../../bin/helpers/ProjectTemplateRepository.js';
-import { validateSafePath, safeRmSync } from '../../../../lib/utils/path-security.js';
+import { validateSafePath } from '../../../../lib/utils/path-security.js';
+import { safeRmSync } from '../../../../lib/utils/safe-rm-sync.js';
 import selectGitProtocol from './select-git-protocol.js';
 
 /**

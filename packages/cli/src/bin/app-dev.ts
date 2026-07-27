@@ -11,7 +11,8 @@ import { resolveProjectPackage } from './helpers/resolve-project-package.js';
 import { resolveAppManifest } from './helpers/resolve-app-manifest.js';
 
 import type { ConsoleLogger } from './utils/ConsoleLogger.js';
-import { createDevServer, type CreateDevServerOptions } from './utils/create-dev-server.js';
+import { createDevServer } from './utils/create-dev-server.js';
+import type { CreateDevServerOptions } from './utils/create-dev-server-config.js';
 
 import { readPackageUp } from 'read-package-up';
 import { dirname } from 'node:path';

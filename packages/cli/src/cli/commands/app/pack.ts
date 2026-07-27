@@ -2,7 +2,7 @@ import { createCommand } from 'commander';
 
 import { bundleApp, ConsoleLogger } from '@equinor/fusion-framework-cli/bin';
 
-export const DEFAULT_ARCHIVE = 'app-bundle.zip' as const;
+import { DEFAULT_ARCHIVE } from './default-archive.js';
 
 /**
  * CLI command: `pack`

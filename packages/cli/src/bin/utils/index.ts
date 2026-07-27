@@ -7,14 +7,16 @@
  *
  * @packageDocumentation
  */
-export { formatPath, formatByteSize } from './format.js';
+export { formatPath } from './format.js';
+export { formatByteSize } from './format-byte-size.js';
 export { default as chalk } from 'chalk';
 export { Spinner } from './spinner.js';
 export { ConsoleLogger } from './ConsoleLogger.js';
 export {
   createDevServerConfig,
-  createDevServer,
   type CreateDevServerOptions,
-} from './create-dev-server.js';
+} from './create-dev-server-config.js';
+export { createDevServer } from './create-dev-server.js';
 export { defaultHeaders } from './defaultHeaders.js';
-export { formatAuthError, formatTokenAcquisitionError } from './format-auth-error.js';
+export { formatAuthError } from './format-auth-error.js';
+export { formatTokenAcquisitionError } from './format-token-acquisition-error.js';

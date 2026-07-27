@@ -1,5 +1,5 @@
 import type { PackageJson } from 'type-fest';
-import { fetchLatestVersion } from '../../../../lib/utils/package-info.js';
+import { fetchLatestVersion } from '../../../../lib/utils/fetch-latest-version.js';
 import type { ConsoleLogger } from '@equinor/fusion-framework-cli/bin';
 
 /**

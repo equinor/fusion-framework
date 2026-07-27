@@ -6,7 +6,8 @@ import assert from 'node:assert';
 import { existsSync, mkdirSync, readFileSync } from 'node:fs';
 import { ProjectTemplate } from './ProjectTemplate.js';
 import { parseTemplatesManifest } from './parse-templates-manifest.js';
-import { validateSafePath, safeRmSync } from '../../lib/utils/path-security.js';
+import { validateSafePath } from '../../lib/utils/path-security.js';
+import { safeRmSync } from '../../lib/utils/safe-rm-sync.js';
 
 /**
  * Git protocol options for repository operations.

@@ -9,7 +9,8 @@ import type { RuntimeEnv } from '@equinor/fusion-framework-cli/lib';
 import { fileExistsSync } from '../lib/utils/file-exists.js';
 
 import type { ConsoleLogger } from './utils/index.js';
-import { createDevServer, type CreateDevServerOptions } from './utils/create-dev-server.js';
+import { createDevServer } from './utils/create-dev-server.js';
+import type { CreateDevServerOptions } from './utils/create-dev-server-config.js';
 
 import { resolveAppConfig } from './helpers/resolve-app-config.js';
 import { resolveProjectPackage } from './helpers/resolve-project-package.js';

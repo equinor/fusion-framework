@@ -1,7 +1,8 @@
 import type { PackageJson } from 'type-fest';
 import type { AppManifest } from '@equinor/fusion-framework-module-app';
 
-import { assert, assertObject } from '../utils/assert.js';
+import { assert } from '../utils/assert.js';
+import { assertObject } from '../utils/assert-object.js';
 import { resolveEntryPoint } from '../utils/resolve-source-entry-point.js';
 import { resolveRepoFromPackage } from '../utils/resolve-package-repo.js';
 import { resolveGitRemoteUrl } from '../utils/resolve-git-remote-url.js';

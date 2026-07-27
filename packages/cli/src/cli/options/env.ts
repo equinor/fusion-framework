@@ -20,9 +20,3 @@ export const createEnvOption = (options: { default?: FusionEnv; allowDev: boolea
     .default(options.default ?? resolveDefaultEnv(options.allowDev));
 };
 
-/**
- * Default environment option that allows the development environment.
- */
-export const envOption = createEnvOption({ allowDev: true });
-
-export default envOption;

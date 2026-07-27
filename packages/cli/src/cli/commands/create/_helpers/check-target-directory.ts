@@ -2,7 +2,8 @@ import { existsSync, readdirSync, rmSync } from 'node:fs';
 import inquirer from 'inquirer';
 import type { ConsoleLogger } from '@equinor/fusion-framework-cli/bin';
 import { assert } from '../../../../lib/utils/assert.js';
-import { validateSafePath, safeRmSync } from '../../../../lib/utils/path-security.js';
+import { validateSafePath } from '../../../../lib/utils/path-security.js';
+import { safeRmSync } from '../../../../lib/utils/safe-rm-sync.js';
 
 /**
  * Check if target directory exists and has content, then prompt user for action.

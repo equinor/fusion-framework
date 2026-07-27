@@ -1,11 +1,9 @@
 /**
- * Utility module for formatting paths and byte sizes in CLI output.
+ * Utility module for formatting paths in CLI output.
  */
 import { relative } from 'node:path';
-import { statSync } from 'node:fs';
 
 import chalk from 'chalk';
-import prettyBytes from 'pretty-bytes';
 
 /**
  * Formats a file path for CLI output, with optional relative path and styling.
@@ -22,28 +20,3 @@ import prettyBytes from 'pretty-bytes';
 export const formatPath = (path: string, opt?: { relative?: boolean; cwd?: string }) => {
   return chalk.blueBright(opt?.relative ? `./${relative(opt?.cwd ?? process.cwd(), path)}` : path);
 };
-
-/**
- * Formats a byte size value or file path into a human-readable string for CLI output.
- *
- * If the input is a string, it is treated as a file path and the file size is used.
- * If the input is a number, it is formatted directly.
- *
- * @param input - File path (string) or byte size (number).
- * @returns A formatted string representing the byte size, styled with chalk.yellowBright.
- *
- * @throws If the input is a string and the file does not exist.
- *
- * @example
- * formatByteSize(1024); // '1 kB'
- * formatByteSize('/path/to/file.zip'); // '2.3 MB'
- */
-export const formatByteSize = (input: string | number): string => {
-  // String input is treated as a file path — resolve its size on disk first
-  if (typeof input === 'string') {
-    return formatByteSize(statSync(input).size);
-  }
-  return chalk.yellowBright(prettyBytes(input));
-};
-
-export default chalk;

@@ -2,7 +2,7 @@ import { importConfig } from '@equinor/fusion-imports';
 
 import deepmerge from 'deepmerge';
 
-import { PortalManifestSchema } from './portal-manifest.schema.js';
+import { PortalManifestSchema } from './portal-manifest-schema.js';
 import type { RecursivePartial, RuntimeEnv } from '../types.js';
 import type { PortalManifest } from './portal-manifest.js';
 

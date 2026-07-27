@@ -1,6 +1,6 @@
 import { createCommand } from 'commander';
 
-import { DEFAULT_ARCHIVE } from './pack.js';
+import { DEFAULT_ARCHIVE } from './default-archive.js';
 
 import {
   initializeFramework,

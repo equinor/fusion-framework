@@ -6,7 +6,8 @@
 
 import chalk from 'chalk';
 
-import packCommand, { DEFAULT_ARCHIVE } from './pack.js';
+import packCommand from './pack.js';
+import { DEFAULT_ARCHIVE } from './default-archive.js';
 packCommand.alias('build-pack').hook('preAction', (thisCommand) => {
   // Only apply the deprecated-alias behavior when invoked via the old command name
   if (process.argv[3] === 'build-pack') {

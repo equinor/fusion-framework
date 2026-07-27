@@ -2,7 +2,8 @@ import type { PackageJson } from 'type-fest';
 
 import type { RuntimeEnv } from '@equinor/fusion-framework-cli/lib';
 
-import { assert, assertObject } from '../utils/assert.js';
+import { assert } from '../utils/assert.js';
+import { assertObject } from '../utils/assert-object.js';
 import { resolveAnnotations } from '../utils/resolve-annotations.js';
 import { resolveEntryPoint } from '../utils/resolve-source-entry-point.js';
 
@@ -11,7 +12,7 @@ import { resolveGitRemoteUrl } from '../utils/resolve-git-remote-url.js';
 import { resolveGitCommitSha } from '../utils/resolve-git-commit-sha.js';
 import { ASSET_EXTENSIONS } from '../static.js';
 import type { PortalManifest } from './portal-manifest.js';
-import { PortalManifestSchema } from './portal-manifest.schema.js';
+import { PortalManifestSchema } from './portal-manifest-schema.js';
 
 /**
  * Resolves the appropriate entry point for a portal based on the current runtime environment.
