@@ -140,6 +140,7 @@ describe('applySchema', () => {
       prepareAttributes: (attrs, doc) => {
         // Type-safe: attrs.tags is string[] | undefined
         attrs.tags ??= [];
+        // Only tag documents that live under a package directory
         if (doc.metadata.source.includes('packages/')) {
           attrs.tags.push('package');
         }

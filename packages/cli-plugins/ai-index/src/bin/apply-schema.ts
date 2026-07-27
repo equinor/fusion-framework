@@ -32,55 +32,61 @@ export function applySchema(
 
   const promotedKeys = new Set(Object.keys(schema.shape.shape as Record<string, unknown>));
 
-  return document$.pipe(
-    map((documents) =>
-      documents.map((document) => {
-        // Run typed attribute processor before schema resolution so the
-        // resolver receives fully enriched attributes
-        let enrichedDocument = document;
-        if (schema.prepareAttributes) {
-          const enrichedAttributes = schema.prepareAttributes(
-            (document.metadata.attributes ?? {}) as Record<string, unknown>,
-            document,
-          );
-          enrichedDocument = {
-            ...document,
+  return document$
+    // Resolve and validate promoted schema fields for each document batch
+    .pipe(
+      map((documents) =>
+        // Process each document in the batch individually
+        documents.map((document) => {
+          // Run typed attribute processor before schema resolution so the
+          // resolver receives fully enriched attributes
+          let enrichedDocument = document;
+          // Only run the attribute processor when the schema declares one
+          if (schema.prepareAttributes) {
+            const enrichedAttributes = schema.prepareAttributes(
+              (document.metadata.attributes ?? {}) as Record<string, unknown>,
+              document,
+            );
+            enrichedDocument = {
+              ...document,
+              metadata: {
+                ...document.metadata,
+                attributes: enrichedAttributes as Record<string, unknown>,
+              },
+            };
+          }
+
+          // Resolve promoted field values from the fully enriched document
+          const resolved = schema.resolve(enrichedDocument);
+
+          // Validate against the Zod shape — throws on invalid data with
+          // a clear error message pointing to the offending field
+          const validated = schema.shape.parse(resolved) as Record<string, unknown>;
+
+          // Remove promoted keys from attributes to avoid storing them
+          // in both top-level fields and the generic attributes array
+          const currentAttributes = (enrichedDocument.metadata.attributes ?? {}) as Record<
+            string,
+            unknown
+          >;
+          const remainingAttributes: Record<string, unknown> = {};
+          // Copy over only attributes that were not promoted to schema fields
+          for (const [key, value] of Object.entries(currentAttributes)) {
+            // Skip keys already promoted to schemaFields to avoid duplication
+            if (!promotedKeys.has(key)) {
+              remainingAttributes[key] = value;
+            }
+          }
+
+          return {
+            ...enrichedDocument,
             metadata: {
-              ...document.metadata,
-              attributes: enrichedAttributes as Record<string, unknown>,
+              ...enrichedDocument.metadata,
+              attributes: remainingAttributes,
+              schemaFields: validated,
             },
           };
-        }
-
-        // Resolve promoted field values from the fully enriched document
-        const resolved = schema.resolve(enrichedDocument);
-
-        // Validate against the Zod shape — throws on invalid data with
-        // a clear error message pointing to the offending field
-        const validated = schema.shape.parse(resolved) as Record<string, unknown>;
-
-        // Remove promoted keys from attributes to avoid storing them
-        // in both top-level fields and the generic attributes array
-        const currentAttributes = (enrichedDocument.metadata.attributes ?? {}) as Record<
-          string,
-          unknown
-        >;
-        const remainingAttributes: Record<string, unknown> = {};
-        for (const [key, value] of Object.entries(currentAttributes)) {
-          if (!promotedKeys.has(key)) {
-            remainingAttributes[key] = value;
-          }
-        }
-
-        return {
-          ...enrichedDocument,
-          metadata: {
-            ...enrichedDocument.metadata,
-            attributes: remainingAttributes,
-            schemaFields: validated,
-          },
-        };
-      }),
-    ),
-  );
+        }),
+      ),
+    );
 }
