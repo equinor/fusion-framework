@@ -44,6 +44,7 @@ function isIteratorCall(node: Node): boolean {
  */
 function hasInlineChainComment(node: Node): boolean {
   const callee = node.childForFieldName('function');
+  // Only member-expression calls (e.g. `x.map(...)`) can have an inline chain comment
   if (callee?.type !== 'member_expression') return false;
   const object = callee.childForFieldName('object');
   // A comment placed between the object and the method call satisfies the intent requirement

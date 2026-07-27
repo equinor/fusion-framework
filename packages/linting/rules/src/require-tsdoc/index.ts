@@ -111,6 +111,7 @@ function countDocableParams(paramsNode: Node | null): number {
   // comments (e.g. `// eslint-disable-next-line`) which tree-sitter surfaces
   // as named siblings inside the formal_parameters node
   const docableParams = paramsNode.namedChildren.filter((c) => {
+    // Skip inline comments tree-sitter surfaces as named siblings (not real parameters)
     if (c.type === 'comment') return false;
     const name = c.childForFieldName('name') ?? c.childForFieldName('pattern');
     return name?.text !== 'this';

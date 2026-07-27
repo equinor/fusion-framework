@@ -139,6 +139,7 @@ connection.onInitialize((params): InitializeResult => {
 
   // Read the runOn preference sent by the client at startup
   const initRunOn = params.initializationOptions?.runOn;
+  // Ignore unrecognised values and keep the current default
   if (initRunOn === 'change' || initRunOn === 'save') runOn = initRunOn;
 
   // Load config asynchronously; engine defaults to recommended until ready
@@ -164,6 +165,7 @@ connection.onDidChangeConfiguration((change) => {
     | Record<string, unknown>
     | undefined;
   const newRunOn = settings?.runOn;
+  // Ignore unrecognised values and keep the current setting
   if (newRunOn === 'change' || newRunOn === 'save') runOn = newRunOn;
 });
 
@@ -188,10 +190,12 @@ documents.onDidOpen(({ document }) => {
 });
 
 documents.onDidChangeContent(({ document }) => {
+  // Only re-lint on every keystroke when the client is configured for 'change' mode
   if (runOn === 'change') lintDocument(document);
 });
 
 documents.onDidSave(({ document }) => {
+  // Only re-lint on save when the client is configured for 'save' mode
   if (runOn === 'save') lintDocument(document);
 });
 

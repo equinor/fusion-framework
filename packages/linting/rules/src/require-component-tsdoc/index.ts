@@ -157,6 +157,7 @@ export const requireComponentTsDoc: Rule = {
 
     const out: Diagnostic[] = [];
     const tree = tsxParser.parse(source);
+    // A failed parse leaves nothing to walk
     if (!tree) return out;
     walkNode(tree.rootNode, filePath, severity ?? DEFAULT_SEVERITY, out);
     return out;

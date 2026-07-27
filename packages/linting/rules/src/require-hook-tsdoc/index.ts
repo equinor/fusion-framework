@@ -156,6 +156,7 @@ export const requireHookTsDoc: Rule = {
     // Use the TSX grammar for .tsx files so JSX inside the hook body parses correctly
     const parser = filePath.endsWith('.tsx') ? tsxParser : tsParser;
     const tree = parser.parse(source);
+    // A failed parse leaves nothing to walk
     if (!tree) return out;
     walkNode(tree.rootNode, filePath, severity ?? DEFAULT_SEVERITY, out);
     return out;

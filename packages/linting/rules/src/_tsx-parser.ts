@@ -17,6 +17,7 @@ const _require = createRequire(import.meta.url);
  * 3. `null` — fall back to per-package `require.resolve()` for each WASM file.
  */
 async function wasmDir(): Promise<string | null> {
+  // The VS Code extension sets this env var explicitly at spawn time
   if (process.env.FUSION_LINT_WASM_DIR) return process.env.FUSION_LINT_WASM_DIR;
   // Check for a wasm/ sibling of the running bundle file (bundled extension context)
   const sibling = join(dirname(fileURLToPath(import.meta.url)), 'wasm');
