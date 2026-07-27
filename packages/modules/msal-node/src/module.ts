@@ -33,12 +33,14 @@ export const module: MsalNodeModule = {
   initialize: async (args) => {
     const config = await args.config.createConfigAsync(args);
 
+    // Build the appropriate provider implementation for the configured auth mode
     switch (config.mode) {
       case 'token_only':
         return new AuthTokenProvider(config.accessToken);
 
       case 'interactive': {
         const { client, server } = config;
+        // Interactive mode requires a local server to receive the OAuth redirect
         if (!server) {
           throw new Error('Server configuration is required for interactive mode');
         }

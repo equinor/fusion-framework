@@ -3,7 +3,7 @@ import type { DeviceCodeRequest } from '@azure/msal-node';
 import type { AuthenticationResult, PublicClientApplication } from '@azure/msal-node';
 
 import { AuthProvider } from './AuthProvider.js';
-import { SilentTokenAcquisitionError } from './error.js';
+import { SilentTokenAcquisitionError } from './errors/silent-token-acquisition-error.js';
 
 /**
  * Authentication provider that uses the OAuth 2.0 device code flow.
@@ -64,6 +64,7 @@ export class AuthProviderDeviceCode extends AuthProvider {
   }): Promise<AuthenticationResult> {
     // Attempt silent acquisition first (uses cached account / refresh token)
     const account = await this.getAccount();
+    // Only attempt silent acquisition when a cached account is available
     if (account) {
       try {
         return await this._client.acquireTokenSilent({
@@ -81,6 +82,7 @@ export class AuthProviderDeviceCode extends AuthProvider {
         scopes: options.request.scopes,
         deviceCodeCallback: this.#deviceCodeCallback,
       });
+      // MSAL can resolve with an empty result even without throwing
       if (!result) {
         throw new SilentTokenAcquisitionError('Device code flow returned no result');
       }

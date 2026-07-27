@@ -1,6 +1,8 @@
 import type { AccountInfo, AuthenticationResult, PublicClientApplication } from '@azure/msal-node';
 
-import { AuthServerError, NoAccountsError, SilentTokenAcquisitionError } from './error.js';
+import { AuthServerError } from './errors/auth-server-error.js';
+import { NoAccountsError } from './errors/no-accounts-error.js';
+import { SilentTokenAcquisitionError } from './errors/silent-token-acquisition-error.js';
 
 import type { IAuthProvider } from './AuthProvider.interface.js';
 
@@ -21,6 +23,9 @@ import type { IAuthProvider } from './AuthProvider.interface.js';
  * acquisition logic. Ensure that any changes remain consistent with the interface contract.
  */
 export class AuthProvider implements IAuthProvider {
+  /**
+   * @param _client - The MSAL `PublicClientApplication` instance used for token operations.
+   */
   constructor(protected _client: PublicClientApplication) {}
 
   /**
@@ -72,6 +77,7 @@ export class AuthProvider implements IAuthProvider {
   public async logout() {
     const cache = this._client.getTokenCache();
     const accounts = await cache.getAllAccounts();
+    // Remove every cached account individually before clearing the whole cache
     for (const account of accounts) {
       await cache.removeAccount(account);
     }
@@ -98,6 +104,7 @@ export class AuthProvider implements IAuthProvider {
     request: { scopes: string[] };
   }): Promise<AuthenticationResult> {
     const account = await this.getAccount();
+    // Interactive login is not supported by this implementation; fail fast without an account
     if (!account) {
       throw new NoAccountsError('No accounts found in cache');
     }
