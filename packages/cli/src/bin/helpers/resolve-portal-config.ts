@@ -4,7 +4,8 @@ import type { RuntimeEnv } from '@equinor/fusion-framework-cli/lib';
 import { loadPortalConfig, type PortalConfig } from '@equinor/fusion-framework-cli/portal';
 
 import type { ConsoleLogger } from '../utils/index.js';
-import { chalk, formatPath } from '../utils/format.js';
+import chalk from 'chalk';
+import { formatPath } from '../utils/format.js';
 
 /**
  * Resolves the portal configuration based on the provided runtime environment and options.

@@ -62,6 +62,7 @@ export const checkApp = async (options: AppCheckOptions): Promise<boolean> => {
 
   let appKey: string;
 
+  // Two ways to resolve the app key: from a pre-built bundle artifact, or from local project files
   if (bundle) {
     // Artifact-based validation: extract app metadata from bundle
     try {
@@ -139,6 +140,7 @@ export const checkApp = async (options: AppCheckOptions): Promise<boolean> => {
     }
     // Surface actionable auth errors for 401/403 instead of a cryptic status code
     const authMessage = formatAuthError(response.status, `check registration for ${appKey}`);
+    // When an auth-related message was produced, report it and exit rather than throwing generically
     if (authMessage) {
       log?.fail('🔒', `Authentication/authorization error checking ${appKey}`);
       log?.error(authMessage);
@@ -149,6 +151,7 @@ export const checkApp = async (options: AppCheckOptions): Promise<boolean> => {
   } catch (err) {
     // Surface MSAL token acquisition failures with actionable guidance
     const tokenMsg = formatTokenAcquisitionError(err, `check registration for ${appKey}`);
+    // When a token-related message was produced, report it and exit rather than falling through
     if (tokenMsg) {
       log?.fail('🔒', `Token acquisition failed checking ${appKey}`);
       log?.error(tokenMsg);

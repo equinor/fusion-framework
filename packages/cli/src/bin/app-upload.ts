@@ -26,6 +26,7 @@ import {
 function handleUploadError(response: Response, name: string, log?: ConsoleLogger): never {
   // Auth errors get the full actionable treatment
   const authMsg = formatAuthError(response.status, `upload bundle for ${name}`);
+  // When an auth-related message was produced, report it and exit rather than falling through
   if (authMsg) {
     log?.fail('🔒', `Authentication/authorization error uploading ${name}`);
     log?.error(authMsg);
@@ -33,6 +34,7 @@ function handleUploadError(response: Response, name: string, log?: ConsoleLogger
   }
 
   let message: string;
+  // Map each known status code to a short, user-facing message
   switch (response.status) {
     case 409:
       message = `${response.status} - Version is already published, please generate a new release`;
@@ -145,6 +147,7 @@ export const uploadApplication = async (
       try {
         const { error } = await response.json();
         log?.debug('Error:', error);
+        // Surface the service's error message when the response body includes one
         if (error.message) {
           log?.warn(
             chalk.red(`🤯 error: ${error.code}\n`),
@@ -179,6 +182,7 @@ export const uploadApplication = async (
   } catch (error) {
     // Surface MSAL token acquisition failures with actionable guidance
     const tokenMsg = formatTokenAcquisitionError(error, `upload bundle for ${appKey}`);
+    // When a token-related message was produced, report it and exit rather than falling through
     if (tokenMsg) {
       log?.fail('🔒', `Token acquisition failed uploading ${appKey}`);
       log?.error(tokenMsg);

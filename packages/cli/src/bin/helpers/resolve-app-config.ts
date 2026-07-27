@@ -4,7 +4,8 @@ import type { RuntimeEnv } from '@equinor/fusion-framework-cli/lib';
 import { loadAppConfig, type ApiAppConfig } from '@equinor/fusion-framework-cli/app';
 
 import type { ConsoleLogger } from '../utils/ConsoleLogger.js';
-import { chalk, formatPath } from '../utils/format.js';
+import chalk from 'chalk';
+import { formatPath } from '../utils/format.js';
 
 /**
  * Resolves the application configuration based on the provided runtime environment and options.

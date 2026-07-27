@@ -1,14 +1,11 @@
 /**
  * Utility module for formatting paths and byte sizes in CLI output.
- * Exports chalk for consistent styling across CLI tools.
  */
 import { relative } from 'node:path';
 import { statSync } from 'node:fs';
 
 import chalk from 'chalk';
 import prettyBytes from 'pretty-bytes';
-
-export { chalk };
 
 /**
  * Formats a file path for CLI output, with optional relative path and styling.
@@ -42,6 +39,7 @@ export const formatPath = (path: string, opt?: { relative?: boolean; cwd?: strin
  * formatByteSize('/path/to/file.zip'); // '2.3 MB'
  */
 export const formatByteSize = (input: string | number): string => {
+  // String input is treated as a file path — resolve its size on disk first
   if (typeof input === 'string') {
     return formatByteSize(statSync(input).size);
   }

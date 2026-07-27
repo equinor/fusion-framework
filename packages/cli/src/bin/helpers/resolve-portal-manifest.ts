@@ -9,7 +9,8 @@ import {
 } from '@equinor/fusion-framework-cli/portal';
 
 import type { ConsoleLogger } from '../utils/index.js';
-import { chalk, formatPath } from '../utils/format.js';
+import chalk from 'chalk';
+import { formatPath } from '../utils/format.js';
 
 /**
  * Resolves the portal manifest for a given runtime environment and package.

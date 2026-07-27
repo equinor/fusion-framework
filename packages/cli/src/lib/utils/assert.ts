@@ -8,7 +8,7 @@ import { isGitDir } from './is-git-dir.js';
  * This provides consistent assertion handling throughout the codebase
  * with proper TypeScript type narrowing support.
  */
-export { assert, AssertionError };
+export { default as assert, AssertionError } from 'node:assert';
 
 /**
  * Asserts that the provided value is a valid number (not NaN).
@@ -19,6 +19,7 @@ export { assert, AssertionError };
  *
  * @param value - The value to check for being a valid number
  * @param message - Optional custom error message for assertion failure
+ * @returns Nothing; narrows `value` via the `asserts` return type. Throws on failure.
  * @throws {AssertionError} If value is NaN
  *
  * @example
@@ -70,6 +71,7 @@ export const assertFileExists = (value: unknown, message?: string): asserts valu
  *
  * @param value - The value to check for being an object
  * @param message - Optional custom error message or Error instance
+ * @returns Nothing; narrows `value` via the `asserts` return type. Throws on failure.
  * @throws {AssertionError} If value is not an object
  *
  * @example
@@ -103,10 +105,11 @@ function assertObjectEntryValue<P>(value: unknown, prop: P, message?: string): a
  * Asserts that an object contains the specified properties and that each property has a value.
  * Allows for custom assertion logic and pre-message prefixing.
  *
- * @typeParam T - The object type to check.
- * @typeParam P - The array of property keys to check on the object.
+ * @template T - The object type to check.
+ * @template P - The array of property keys to check on the object.
  * @param value - The object to check.
  * @param options - Optional settings for property keys, assertion function, and message prefix.
+ * @returns Nothing; narrows `value` via the `asserts` return type. Throws on failure.
  * @throws {AssertionError} If any property is missing or fails the assertion.
  */
 export function assertObjectEntries<T extends object, P extends Array<keyof T>>(
@@ -125,6 +128,7 @@ export function assertObjectEntries<T extends object, P extends Array<keyof T>>(
   const assertion: typeof assertObjectEntryValue<P> = options?.assertion ?? assertObjectEntryValue;
   // Use provided property list or all keys of the object.
   const props = options?.props ?? Object.keys(value);
+  // Validate each property individually so all failures reference the specific key
   for (const prop of props) {
     // Check that the property exists on the object.
     assert(prop in value, `${preMessage} to have property [${String(prop)}]`);

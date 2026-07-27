@@ -7,7 +7,8 @@
  *
  * @packageDocumentation
  */
-export { formatPath, formatByteSize, chalk } from './format.js';
+export { formatPath, formatByteSize } from './format.js';
+export { default as chalk } from 'chalk';
 export { Spinner } from './spinner.js';
 export { ConsoleLogger } from './ConsoleLogger.js';
 export {

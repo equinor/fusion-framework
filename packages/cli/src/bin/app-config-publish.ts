@@ -67,6 +67,7 @@ export const publishAppConfig = async (options: AppConfigPublishOptions) => {
   } catch (error) {
     // Handle known HTTP errors with specific log messages
     if (error instanceof HttpJsonResponseError) {
+      // Map each known status code to an actionable, user-facing message
       switch (error.response.status) {
         case 410:
           log?.fail(
@@ -81,6 +82,7 @@ export const publishAppConfig = async (options: AppConfigPublishOptions) => {
         case 401: {
           const authMsg = formatAuthError(error.response.status, `publish config for ${appKey}`);
           log?.fail('🔒', 'Authentication/authorization error publishing app config.');
+          // Include the detailed auth message when one was produced
           if (authMsg) {
             log?.error(authMsg);
           }
@@ -99,6 +101,7 @@ export const publishAppConfig = async (options: AppConfigPublishOptions) => {
     }
     // Surface MSAL token acquisition failures with actionable guidance
     const tokenMsg = formatTokenAcquisitionError(error, `publish config for ${appKey}`);
+    // When a token-related message was produced, report it and exit rather than falling through
     if (tokenMsg) {
       log?.fail('🔒', `Token acquisition failed publishing config for ${appKey}`);
       log?.error(tokenMsg);
