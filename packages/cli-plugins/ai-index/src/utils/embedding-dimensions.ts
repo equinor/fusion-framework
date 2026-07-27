@@ -26,8 +26,10 @@ const KNOWN_MODEL_DIMENSIONS: ReadonlyMap<string, number> = new Map([
  */
 export function resolveEmbeddingDimensions(model: string, configDimensions?: number): number {
   const known = KNOWN_MODEL_DIMENSIONS.get(model);
+  // Known models resolve directly from the lookup map.
   if (known !== undefined) return known;
 
+  // Unknown models fall back to an explicit dimensions override from config.
   if (configDimensions !== undefined) return configDimensions;
 
   const knownModels = [...KNOWN_MODEL_DIMENSIONS.keys()].join(', ');

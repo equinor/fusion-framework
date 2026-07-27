@@ -4,6 +4,9 @@ import type { Observable } from 'rxjs';
 
 /**
  * Executes the pipeline and tracks results.
+ *
+ * @param deleteRemovedFiles$ - Stream of file-deletion results, processed before additions.
+ * @param updateVectorStore$ - Stream of document-addition results.
  * @internal
  */
 export function executePipeline(
@@ -22,15 +25,21 @@ export function executePipeline(
     next: (result) => {
       // Track deleted files by relative path
       if (result.status === 'deleted') {
-        indexingResults.deleted.push(...result.files.map((file) => file.relativePath));
+        indexingResults.deleted.push(
+          ...result.files
+            // Reduce each deleted file entry down to its relative path for reporting.
+            .map((file) => file.relativePath),
+        );
       }
       // Track added documents with source and ID (one file can produce multiple IDs)
       else if (result.status === 'added') {
         indexingResults.added.push(
-          ...result.documents.map((document) => ({
-            source: document.metadata.source,
-            id: document.id,
-          })),
+          ...result.documents
+            // Reduce each added document down to its source path and id for reporting.
+            .map((document) => ({
+              source: document.metadata.source,
+              id: document.id,
+            })),
         );
       }
     },

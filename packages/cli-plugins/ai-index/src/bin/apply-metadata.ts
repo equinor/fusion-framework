@@ -12,6 +12,11 @@ export type MetadataProgressCallback = (source: string) => void;
 
 /**
  * Creates a stream that applies metadata to documents.
+ *
+ * @param document$ - Stream of document entries to enrich with metadata.
+ * @param indexConfig - Index configuration controlling git/package metadata resolution.
+ * @param onProgress - Optional callback invoked after each document is enriched.
+ * @returns A stream emitting enriched documents grouped by source entry.
  * @internal
  */
 export function applyMetadata(
@@ -32,62 +37,67 @@ export function applyMetadata(
    */
   const ENTRY_CONCURRENCY = 20;
 
-  return document$.pipe(
-    mergeMap((entry) => {
-      return from(entry.documents).pipe(
-        // Extract git metadata concurrently (capped to limit parallel git processes)
-        mergeMap(async (document): Promise<VectorStoreDocument> => {
-          const rootPath = document.metadata.rootPath ?? process.cwd();
-          const sourcePath = path.join(rootPath, document.metadata.source);
-          const gitMetadata =
-            document.metadata.source && indexConfig?.metadata?.resolveGit !== false
-              ? await extractGitMetadata(sourcePath)
-              : {};
+  return document$
+    // Enrich each document entry with git/package metadata and re-batch the results
+    .pipe(
+      mergeMap((entry) => {
+        return from(entry.documents)
+          // Extract git metadata concurrently (capped to limit parallel git processes)
+          .pipe(
+            mergeMap(async (document): Promise<VectorStoreDocument> => {
+              const rootPath = document.metadata.rootPath ?? process.cwd();
+              const sourcePath = path.join(rootPath, document.metadata.source);
+              const gitMetadata =
+                document.metadata.source && indexConfig?.metadata?.resolveGit !== false
+                  ? await extractGitMetadata(sourcePath)
+                  : {};
 
-          // Resolve package information if enabled
-          let packageMetadata = {};
-          if (shouldResolvePackage && document.metadata.source) {
-            packageMetadata = await resolvePackage(sourcePath)
-              .then((pkg) => {
-                return {
-                  pkg_name: pkg?.name,
-                  pkg_version: pkg?.version,
-                  pkg_keywords: pkg?.keywords,
-                };
-              })
-              .catch(() => ({}));
-          }
-          return {
-            ...document,
-            metadata: {
-              ...document.metadata,
-              attributes: {
-                ...document.metadata.attributes,
-                ...gitMetadata,
-                ...packageMetadata,
-              },
-            },
-          };
-        }, GIT_CONCURRENCY),
-        // Notify caller after each document is enriched
-        tap((document) => onProgress?.(document.metadata.source)),
-        // Apply custom attribute processor from config
-        map((document: VectorStoreDocument) => {
-          const attributeProcessor =
-            indexConfig?.metadata?.attributeProcessor ||
-            ((attributes: Record<string, unknown>, _document: VectorStoreDocument) => attributes);
-          const attributes = attributeProcessor(document.metadata.attributes ?? {}, document);
-          return {
-            ...document,
-            metadata: {
-              ...document.metadata,
-              attributes,
-            },
-          };
-        }),
-        // Group back by file for batch deletion in next step
-        toArray(),
-      );
-    }, ENTRY_CONCURRENCY),
-  );
+              // Resolve package information if enabled
+              let packageMetadata = {};
+              // Only attempt package resolution when explicitly enabled and a source path is present.
+              if (shouldResolvePackage && document.metadata.source) {
+                packageMetadata = await resolvePackage(sourcePath)
+                  .then((pkg) => {
+                    return {
+                      pkg_name: pkg?.name,
+                      pkg_version: pkg?.version,
+                      pkg_keywords: pkg?.keywords,
+                    };
+                  })
+                  .catch(() => ({}));
+              }
+              return {
+                ...document,
+                metadata: {
+                  ...document.metadata,
+                  attributes: {
+                    ...document.metadata.attributes,
+                    ...gitMetadata,
+                    ...packageMetadata,
+                  },
+                },
+              };
+            }, GIT_CONCURRENCY),
+            // Notify caller after each document is enriched
+            tap((document) => onProgress?.(document.metadata.source)),
+            // Apply custom attribute processor from config
+            map((document: VectorStoreDocument) => {
+              const attributeProcessor =
+                indexConfig?.metadata?.attributeProcessor ||
+                ((attributes: Record<string, unknown>, _document: VectorStoreDocument) =>
+                  attributes);
+              const attributes = attributeProcessor(document.metadata.attributes ?? {}, document);
+              return {
+                ...document,
+                metadata: {
+                  ...document.metadata,
+                  attributes,
+                },
+              };
+            }),
+            // Group back by file for batch deletion in next step
+            toArray(),
+          );
+      }, ENTRY_CONCURRENCY),
+    );
 }

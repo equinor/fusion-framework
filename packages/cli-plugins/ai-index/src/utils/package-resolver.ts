@@ -25,8 +25,10 @@ const packageMap = new Map<string, PackageJson>();
 export async function resolvePackage(filePath: string): Promise<PackageJson | undefined> {
   // Check cache: iterate through known package directories
   for (const packageRoot of packageMap.keys()) {
+    // A cached package root that is a prefix of filePath is the closest known package.
     if (filePath.startsWith(packageRoot)) {
       const packageJson = packageMap.get(packageRoot);
+      // Guard: satisfies TypeScript's strict Map#get return type despite the key check above.
       if (packageJson) {
         return packageJson;
       }
@@ -38,6 +40,7 @@ export async function resolvePackage(filePath: string): Promise<PackageJson | un
   const dirPath = dirname(filePath);
   const result = await readPackageUp({ cwd: dirPath, normalize: false });
 
+  // Cache the resolved package.json so future lookups under the same root are free.
   if (result) {
     // Cache using the package directory (where package.json is located)
     const packageDir = dirname(result.path);
