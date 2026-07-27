@@ -3,7 +3,7 @@ import { assert } from 'node:console';
 
 import type { SourceFile } from '../types.js';
 import type { MarkdownDocument } from './types.js';
-import { isMarkdownFile } from './parser.js';
+import { isMarkdownFile } from './is-markdown-file.js';
 import { parseMarkdown } from './parse-markdown.js';
 
 /**
