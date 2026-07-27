@@ -23,8 +23,9 @@ import { createCommand } from 'commander';
  * ```
  */
 export function registerAiPlugin(program: Command, command: Command): void {
-  // Create 'ai' command group if it doesn't exist
+  // Look up an existing 'ai' command group before creating a new one.
   let aiCommand = program.commands.find((cmd) => cmd.name() === 'ai');
+  // Create 'ai' command group if it doesn't exist
   if (!aiCommand) {
     aiCommand = createCommand('ai').description(
       'Commands for interacting with AI models and Azure OpenAI services',

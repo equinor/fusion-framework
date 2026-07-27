@@ -9,11 +9,8 @@
  * @packageDocumentation
  */
 
-export {
-  type FusionAIConfig,
-  type LoadFusionAIConfigOptions,
-  configureFusionAI,
-  loadFusionAIConfig,
-} from './config.js';
+export type { FusionAIConfig } from './fusion-ai-config.js';
+export { configureFusionAI } from './configure-fusion-ai.js';
+export { type LoadFusionAIConfigOptions, loadFusionAIConfig } from './config.js';
 export { setupFramework, type FrameworkInstance } from './setup-framework.js';
 export { registerAiPlugin } from './register.js';

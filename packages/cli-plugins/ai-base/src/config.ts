@@ -1,37 +1,5 @@
 import { importConfig } from '@equinor/fusion-imports';
-
-/**
- * Base configuration interface for Fusion AI operations.
- *
- * This interface serves as the base type for all Fusion AI configuration objects.
- * Implementations should extend this interface with specific configuration properties
- * relevant to their use case. The configuration is typically created using
- * `configureFusionAI` and loaded via `loadFusionAIConfig`.
- */
-export interface FusionAIConfig {
-  [key: string]: unknown;
-}
-
-/**
- * Configuration factory function for Fusion AI operations.
- *
- * This helper function provides type safety and consistency for creating AI configuration
- * functions. It accepts a function that returns configuration (either synchronously or
- * asynchronously) and returns it unchanged, providing a typed interface for consumers.
- *
- * @param fn - Function that returns Fusion AI configuration (sync or async)
- * @returns The same configuration function, typed for use with loadFusionAIConfig
- *
- * @example
- * ```ts
- * // fusion-ai.config.ts
- * export default configureFusionAI(async () => ({
- *   apiKey: process.env.OPENAI_API_KEY,
- *   deployment: 'gpt-4',
- * }));
- * ```
- */
-export const configureFusionAI = <T extends FusionAIConfig>(fn: () => Promise<T> | T) => fn;
+import type { FusionAIConfig } from './fusion-ai-config.js';
 
 /**
  * Options controlling how {@link loadFusionAIConfig} resolves and imports the
@@ -58,6 +26,7 @@ export interface LoadFusionAIConfigOptions {
  * The config file should export a function (via `configureFusionAI`) that returns
  * the configuration object. The function can be synchronous or asynchronous.
  *
+ * @template T - Shape of the resolved Fusion AI configuration object.
  * @param configPath - Path to the config file without extension (default: 'fusion-ai.config')
  * @param options - Optional parameters for loading the configuration
  * @returns Promise resolving to the loaded and executed configuration
@@ -86,6 +55,7 @@ export async function loadFusionAIConfig<T extends FusionAIConfig = FusionAIConf
 
   // Execute the configuration function (handles both sync and async)
   const configFn = result.config;
+  // Config files export a function via configureFusionAI; execute it to resolve the value.
   if (typeof configFn === 'function') {
     return await configFn();
   }
