@@ -62,6 +62,7 @@ export const processServices: ApiDataProcessor<FusionService[]> = (data, args) =
   const apiRoutes = [] as ApiRoute[];
   const apiServices = [] as FusionService[];
 
+  // Fail fast when the upstream response isn't the expected service-list shape
   if (!Array.isArray(data)) {
     throw new Error('Invalid data format');
   }
