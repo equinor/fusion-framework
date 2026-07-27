@@ -53,6 +53,21 @@ export const ContextSelector = (props: ContextSearchProps): JSX.Element | null =
   return (
     <div style={{ flex: 1, maxWidth: '480px' }}>
       <ContextProvider resolver={resolver}>
+        {/*
+         * TODO(equinor/fusion-core-tasks#1428): `ContextSearch` will default to browser
+         * top-layer rendering (`topLayer=true`) once `@equinor/fusion-react-context-selector`
+         * ^2.1.0 is released (equinor/fusion-react-components#3314), built on
+         * `@equinor/fusion-wc-searchable-dropdown` 4.2.0 (equinor/fusion-web-components#2368).
+         * Neither is published yet, so no prop change is made here. This component already
+         * passes through `ContextSearchProps` without setting `topLayer` explicitly, so it
+         * will pick up the new default automatically. Once both packages are published:
+         *   1. Bump `@equinor/fusion-react-context-selector` to `^2.1.0` here (and in
+         *      `packages/dev-portal/package.json`).
+         *   2. Run `pnpm install` to refresh `pnpm-lock.yaml`.
+         *   3. Add a changeset for the `portal-analytics` cookbook (and
+         *      `@equinor/fusion-framework-dev-portal`) describing the dependency bump.
+         *   4. Run `pnpm test && pnpm build && pnpm -w check`.
+         */}
         <ContextSearch
           id={contextSelectorId}
           placeholder={props.placeholder ?? 'Search for context'}
