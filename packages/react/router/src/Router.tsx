@@ -133,6 +133,8 @@ function normalizeRoutes(
  * @param context - Optional context object that will be available in route loaders and components via `fusion.context`
  * @param loader - Optional React element rendered while the router is initializing lazy routes
  *
+ * @returns The rendered router provider, or `null` while it is still initializing
+ *
  * @example
  * ```tsx
  * import { Router } from '@equinor/fusion-framework-react-router';
