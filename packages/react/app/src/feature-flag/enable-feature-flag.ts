@@ -65,7 +65,7 @@ export function enableFeatureFlag(
         return localFlag;
       });
       enableFeatureFlagging(configurator, async (builder) => {
-        // TODO: should unnamed application be allowed to use feature flags?
+        // TODO(#5086): should unnamed application be allowed to use feature flags?
         builder.addPlugin(
           createLocalStoragePlugin(localFlags, {
             name: (configurator as AppConfigurator).env?.manifest.appKey ?? undefined,

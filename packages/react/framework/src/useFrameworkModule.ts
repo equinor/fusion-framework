@@ -32,9 +32,9 @@ export const useFrameworkModule = <
   ? ModuleType<TType> | undefined
   : FusionModulesInstance[Extract<keyof FusionModulesInstance, TKey>] | undefined => {
   const framework = useFramework();
-  // TODO
+  // TODO(#5082): tighten generics so this indexed lookup no longer needs @ts-expect-error
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
+  // @ts-expect-error
   const module = framework.modules[name];
   // Warn when the requested module key does not resolve to a registered module
   if (!module) {

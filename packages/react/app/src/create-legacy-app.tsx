@@ -31,7 +31,7 @@ export const createLegacyApp = <TModules extends Array<AnyModule>>(
     const RenderComponent = useMemo(() => {
       const creator = createComponent(Component, configure);
       // @eikeland
-      // TODO - recheck when legacy fusion-cli is updated!
+      // TODO(#5084): recheck when legacy fusion-cli is updated!
       const appProvider = fusion.modules.app;
       // Use the real app config/manifest once the provider has resolved them
       if (appProvider?.current) {

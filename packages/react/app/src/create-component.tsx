@@ -96,7 +96,7 @@ export const createComponent =
         default: () => (
           <FrameworkProvider value={fusion}>
             <AppModuleProvider value={modules}>
-              {/* TODO */}
+              {/* TODO(#5083): tighten generics so Component no longer needs @ts-ignore */}
               {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment*/}
               {/* @ts-ignore */}
               <Component />

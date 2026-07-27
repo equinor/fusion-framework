@@ -25,7 +25,7 @@ export const useHttpClient = (name: string): IHttpClient => {
     }
     throw Error(`no configured client for key [${name}]`);
   }, [http, name]);
-  // TODO - abort on unmount?
+  // TODO(#5085): abort on unmount?
   return client;
 };
 
