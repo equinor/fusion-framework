@@ -34,10 +34,9 @@ export { pack } from './pack.js';
 export { ConsoleLogger } from './utils/ConsoleLogger.js';
 
 export {
-  initializeFramework,
-  configureFramework,
-  resolveDefaultEnv,
   type FusionFramework,
-  type FusionFrameworkSettings,
   FusionEnv,
 } from './framework.node.js';
+export { configureFramework, type FusionFrameworkSettings } from './configure-framework.js';
+export { resolveDefaultEnv } from './resolve-default-env.js';
+export { initializeFramework } from './initialize-framework.js';

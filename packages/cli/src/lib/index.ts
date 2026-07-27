@@ -12,11 +12,11 @@ export { resolvePackage, type ResolvedPackage } from './utils/resolve-package.js
 export { resolveEntryPoint } from './utils/resolve-source-entry-point.js';
 
 export {
-  loadDevServerConfig,
   defineDevServerConfig,
   type DevServerConfigExport,
   type DevServerConfigFn,
-} from './load-dev-server-config.js';
+} from './define-dev-server-config.js';
+export { loadDevServerConfig } from './load-dev-server-config.js';
 
 export {
   defineFusionCli,
@@ -27,4 +27,5 @@ export {
 
 // Legacy imports - these will be removed in the next major version
 // @todo - remove these imports, introduced in v11
-export { defineAppConfig, defineAppManifest } from './legacy.js';
+export { defineAppConfig } from './legacy.js';
+export { defineAppManifest } from './legacy-app-manifest.js';

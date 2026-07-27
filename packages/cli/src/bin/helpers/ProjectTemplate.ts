@@ -1,5 +1,6 @@
 import type { ConsoleLogger } from '@equinor/fusion-framework-cli/bin';
-import type { TemplateResource, TemplateItem } from './project-templates.schema.js';
+import type { TemplateResource } from './template-resource.schema.js';
+import type { TemplateItem } from './template-item.schema.js';
 import { copyFileSync, cpSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 

@@ -1,11 +1,9 @@
 import type { FetchRequest } from '@equinor/fusion-framework-module-http/client';
 import AdmZip from 'adm-zip';
 
-import {
-  initializeFramework,
-  type FusionEnv,
-  type FusionFrameworkSettings,
-} from './framework.node.js';
+import { initializeFramework } from './initialize-framework.js';
+import type { FusionEnv } from './framework.node.js';
+import type { FusionFrameworkSettings } from './configure-framework.js';
 
 import {
   defaultHeaders,

@@ -5,7 +5,7 @@ import type { ConsoleLogger } from '@equinor/fusion-framework-cli/bin';
 import assert from 'node:assert';
 import { existsSync, mkdirSync, readFileSync } from 'node:fs';
 import { ProjectTemplate } from './ProjectTemplate.js';
-import { parseTemplatesManifest } from './project-templates.schema.js';
+import { parseTemplatesManifest } from './parse-templates-manifest.js';
 import { validateSafePath, safeRmSync } from '../../lib/utils/path-security.js';
 
 /**
