@@ -1,3 +1,4 @@
+// biome-ignore-all lint/suspicious/noUnsafeDeclarationMerging: FrameworkEvent classes are intentionally merged with a constructible interface
 import type { ModuleInstance } from '@equinor/fusion-framework-module';
 import type { IEventModuleProvider } from './provider';
 
@@ -171,7 +172,6 @@ export interface FrameworkEvent<TInit extends FrameworkEventInit> {
  * @template TInit The type of the event details.
  * @template TType The type of the event type.
  */
-// biome-ignore lint/suspicious/noUnsafeDeclarationMerging: no other way to define a class with multiple signatures
 export class FrameworkEvent<
   TInit extends FrameworkEventInit = FrameworkEventInit,
   TType extends string = keyof FrameworkEventMap,
@@ -264,6 +264,7 @@ export class FrameworkEvent<
    * If the event is cancelable, this method sets the `canceled` property to `true`.
    */
   public preventDefault() {
+    // Only cancelable events can be canceled
     if (this.cancelable) {
       this.#canceled = true;
     }

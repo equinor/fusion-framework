@@ -28,11 +28,14 @@ export type FrameworkEventModuleLoadedEvent = FrameworkEvent<
  * When a parent module instance with an event provider is available, events
  * automatically bubble to it.
  */
+// Deliberately co-located with the `moduleKey` constant it references
+// fusion-lint-disable-next-line single-export-per-file
 export const module: EventModule = {
   name: moduleKey,
   configure: (ref?: Partial<ModulesInstanceType<[EventModule]>>) => {
     const configurator = {} as IEventModuleConfigurator;
     const parentProvider = ref?.event;
+    // Only wire up bubbling when a parent event provider actually exists
     if (parentProvider) {
       configurator.onBubble = async (e) => {
         await parentProvider.dispatchEvent(e);

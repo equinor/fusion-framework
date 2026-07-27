@@ -104,13 +104,16 @@ export class FrameworkEventDispatcher<TEvent extends IFrameworkEvent>
     // `TEvent` extends the base `Event` type with dispatcher-tracking fields that this
     // dispatcher itself attaches — cast through `unknown` to read/write them.
     const dispatchEvent = event as unknown as FrameworkDispatchEvent<TEvent>;
+    // Claim ownership of the event on first dispatch; detect re-entrant loops on repeat
     if (!dispatchEvent.dispatcher) {
       dispatchEvent.dispatcher = this;
     } else if (dispatchEvent.dispatcher === this) {
       throw Error('loop detected');
     }
 
+    // Invoke listeners sequentially, awaiting cancelable events so cancellation can take effect
     for (const dispatch of listeners) {
+      // Fire-and-forget non-cancelable dispatches; await cancelable ones so cancellation lands
       if (!event.cancelable) {
         dispatch(event);
       } else if (!event.canceled) {
@@ -118,6 +121,7 @@ export class FrameworkEventDispatcher<TEvent extends IFrameworkEvent>
       }
     }
 
+    // Only bubble the event onward when it's configured to do so
     if (event.bubbles) {
       try {
         await this.__onBubble?.(event);
