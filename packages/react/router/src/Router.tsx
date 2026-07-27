@@ -202,9 +202,12 @@ export function Router({
         // actions, and components — a common cause of blank pages.
         const mapped = { ...route } as ReactRouterRouteObject;
 
+        // Wrap the loader so fusion module context is available inside it
         if (mapped.loader) mapped.loader = wrapLoader(mapped.loader as RRLoader);
+        // Wrap the action so fusion module context is available inside it
         if (mapped.action) mapped.action = wrapAction(mapped.action as RRAction);
 
+        // Prefer an explicit errorElement over ErrorBoundary when both are somehow present
         if (route.errorElement) {
           // errorElement is typed as ComponentType in fusion's RouteObject (not ReactNode),
           // so we wrap it into a ReactElement for react-router to consume.
@@ -220,6 +223,7 @@ export function Router({
           (mapped as ReactRouterRouteObject).ErrorBoundary = undefined;
           mapped.hasErrorBoundary = true;
         }
+        // Wrap the Component so fusion module context is available inside it
         if (mapped.Component) {
           mapped.Component = wrapComponent(mapped.Component as RouterComponent);
         }
@@ -246,6 +250,7 @@ export function Router({
     return router.dispose.bind(router);
   }, [router]);
 
+  // Defer rendering children until the router instance has finished initializing
   if (initializedRouter !== router) {
     return loader ?? null;
   }
