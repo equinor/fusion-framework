@@ -2,4 +2,6 @@
 export type { TypescriptMetadata, TypescriptDocument, ParseTsDocOptions } from './types.js';
 
 // Re-export parser functions
-export { isTypescriptFile, parseTsDocSync, parseTsDocFromFileSync } from './parser.js';
+export { isTypescriptFile } from './parser.js';
+export { parseTsDocSync } from './parse-ts-doc-sync.js';
+export { parseTsDocFromFileSync } from './parse-ts-doc-from-file-sync.js';
