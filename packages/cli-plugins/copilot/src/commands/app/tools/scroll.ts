@@ -33,11 +33,13 @@ export function createScrollTool(context: AgentBrowserToolContext, defineTool: D
         amount?: number;
         target?: string;
       };
+      // A target ref overrides plain direction/amount scrolling
       if (target) {
         return context.invoke(['scrollintoview', target]);
       }
       const scrollDirection = direction ?? 'down';
       const command = ['scroll', scrollDirection];
+      // Only pass an explicit pixel amount when the caller provided one
       if (amount) command.push(String(amount));
       return context.invoke(command);
     },

@@ -28,11 +28,13 @@ import {
  */
 export async function runLogin(absAppPath: string, port: number, host: string): Promise<void> {
   const pkgJsonPath = join(absAppPath, 'package.json');
+  // Login needs a valid Fusion app directory; bail out clearly if this isn't one
   if (!existsSync(pkgJsonPath)) {
     console.error(`❌ No package.json found at ${absAppPath}`);
     process.exit(1);
   }
   const pkgJson = JSON.parse(readFileSync(pkgJsonPath, 'utf-8')) as { name?: string };
+  // The app name is required to resolve the appKey later
   if (!pkgJson.name) {
     console.error(`❌ package.json at ${absAppPath} has no "name" field`);
     process.exit(1);
@@ -51,6 +53,7 @@ export async function runLogin(absAppPath: string, port: number, host: string): 
 
   const serverUrl = `http://localhost:${port}`;
   const ready = await waitForServer(serverUrl, 60);
+  // Abort login when the dev server never comes up within the timeout
   if (!ready) {
     console.error('❌ Server failed to start within 60s');
     cleanup(serverProcess);
@@ -79,6 +82,7 @@ export async function runLogin(absAppPath: string, port: number, host: string): 
     300_000,
   );
 
+  // Report success or a soft timeout without failing the login flow
   if (initialized) {
     await sleep(2000);
     console.log('✅ Login complete — session saved.');

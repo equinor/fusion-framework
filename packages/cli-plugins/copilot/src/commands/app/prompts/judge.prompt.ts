@@ -19,6 +19,7 @@ function collectEvidence(outDir: string): string {
 
   // ── executions.jsonl ──
   const execPath = join(outDir, 'executions.jsonl');
+  // Fall back to a placeholder note when the executions log is missing
   if (existsSync(execPath)) {
     parts.push('### executions.jsonl', readFileSync(execPath, 'utf-8').trim());
   } else {
@@ -27,10 +28,13 @@ function collectEvidence(outDir: string): string {
 
   // ── evidence/ directory ──
   const evidenceDir = join(outDir, 'evidence');
+  // Only scan for evidence files when the directory actually exists
   if (existsSync(evidenceDir)) {
     const files = readdirSync(evidenceDir).sort();
+    // Inline readable text evidence; list binary evidence by name only
     for (const file of files) {
       const ext = extname(file).toLowerCase();
+      // Inline the content of readable text extensions; list other files by name only
       if (TEXT_EXTENSIONS.has(ext)) {
         const content = readFileSync(join(evidenceDir, file), 'utf-8').trim();
         parts.push(`### evidence/${file}`, content);

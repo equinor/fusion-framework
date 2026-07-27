@@ -1,4 +1,4 @@
-import { mkdirSync, writeFileSync } from 'node:fs';
+import { appendFileSync, mkdirSync } from 'node:fs';
 import { dirname, isAbsolute, join } from 'node:path';
 
 import type { DefineTool } from './types.js';
@@ -33,27 +33,27 @@ function resolveSafe(baseDir: string, input: string): string {
 }
 
 /**
- * Creates the write-file tool so the agent can save artifacts
- * (plan.json, verdict.json, etc.) to the run output directory.
+ * Creates the append-file tool so the agent can append lines
+ * to artifacts like executions.jsonl.
  *
  * @param baseDir - The run output directory that scopes all writes
  * @param defineTool - Copilot SDK helper used to declare tools
- * @returns Copilot tool definition for writing a file
+ * @returns Copilot tool definition for appending to a file
  */
-export function createWriteFileTool(baseDir: string, defineTool: DefineTool) {
-  return defineTool('write_file', {
+export function createAppendFileTool(baseDir: string, defineTool: DefineTool) {
+  return defineTool('append_file', {
     description:
-      'Write content to a file in the output directory. Creates parent directories as needed.',
+      'Append content to a file in the output directory. Creates the file if it does not exist.',
     parameters: {
       type: 'object' as const,
       properties: {
         path: {
           type: 'string',
-          description: 'File path relative to the output directory (e.g. "plan.json")',
+          description: 'File path relative to the output directory (e.g. "executions.jsonl")',
         },
         content: {
           type: 'string',
-          description: 'The full file content to write',
+          description: 'Content to append (a trailing newline is added automatically)',
         },
       },
       required: ['path', 'content'],
@@ -62,8 +62,8 @@ export function createWriteFileTool(baseDir: string, defineTool: DefineTool) {
       const { path, content } = args as { path: string; content: string };
       const resolved = resolveSafe(baseDir, path);
       mkdirSync(dirname(resolved), { recursive: true });
-      writeFileSync(resolved, content);
-      return `Wrote ${content.length} bytes to ${path}`;
+      appendFileSync(resolved, content.endsWith('\n') ? content : content + '\n');
+      return `Appended to ${path}`;
     },
   });
 }

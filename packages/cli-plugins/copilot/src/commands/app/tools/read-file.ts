@@ -34,6 +34,7 @@ function resolveSafe(baseDir: string, input: string): string {
         })()
     : input;
   const resolved = join(baseDir, relative);
+  // Reject any resolved path that escapes the allowed base directory
   if (!resolved.startsWith(baseDir)) {
     throw new Error(`Path escapes the output directory: ${input}`);
   }
@@ -72,6 +73,7 @@ export function createReadFileTool(baseDir: string, defineTool: DefineTool) {
       const { path } = args as { path: string };
       const resolved = resolveSafe(baseDir, path);
 
+      // Report a friendly message instead of throwing when the path doesn't exist
       if (!existsSync(resolved)) {
         return `File not found: ${path}`;
       }

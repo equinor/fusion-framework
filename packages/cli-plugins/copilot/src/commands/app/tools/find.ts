@@ -40,8 +40,11 @@ export function createFindTool(context: AgentBrowserToolContext, defineTool: Def
         fillValue?: string;
       };
       const command = ['find', by, value];
+      // Append optional refinements only when the caller actually provided them
       if (action) command.push(action);
+      // Attach the accessible-name filter when the caller supplied one
       if (name) command.push('--name', name);
+      // Attach the fill value when the action is 'fill'
       if (fillValue) command.push(fillValue);
       return context.invoke(command);
     },

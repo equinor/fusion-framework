@@ -25,7 +25,9 @@ function freePort(port: number): void {
     const pids = execSync(`lsof -ti tcp:${port}`, { encoding: 'utf-8' })
       .trim()
       .split('\n')
+      // Drop the empty string lsof emits when no matching process was found
       .filter(Boolean);
+    // Terminate each stale process bound to the port
     for (const pid of pids) {
       try {
         process.kill(parseInt(pid, 10), 'SIGTERM');
@@ -33,6 +35,7 @@ function freePort(port: number): void {
         // already dead
       }
     }
+    // Only log when we actually killed something
     if (pids.length) {
       console.log(`🔄 Killed stale process(es) on port ${port}: ${pids.join(', ')}`);
     }
@@ -63,11 +66,13 @@ export async function startAppServer(
   }
 
   const pkgJsonPath = join(absAppPath, 'package.json');
+  // Startup needs a valid Fusion app directory; bail out clearly if this isn't one
   if (!existsSync(pkgJsonPath)) {
     console.error(`❌ No package.json found at ${absAppPath}`);
     process.exit(1);
   }
   const pkgJson = JSON.parse(readFileSync(pkgJsonPath, 'utf-8')) as { name?: string };
+  // The app name is required to resolve the appKey later
   if (!pkgJson.name) {
     console.error(`❌ package.json at ${absAppPath} has no "name" field`);
     process.exit(1);
@@ -92,6 +97,7 @@ export async function startAppServer(
 
   const serverUrl = `http://localhost:${options.port}`;
   const ready = await waitForServer(serverUrl, 60);
+  // Abort startup when the dev server never comes up within the timeout
   if (!ready) {
     console.error('❌ Server failed to start within 60s');
     cleanup(serverProcess);

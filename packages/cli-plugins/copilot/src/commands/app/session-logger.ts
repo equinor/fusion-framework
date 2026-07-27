@@ -31,7 +31,9 @@ export function attachSessionLogger(
   let spinner: ReturnType<typeof ora> | null = null;
 
   function syncSpinner(): void {
+    // No pending tools means the spinner has nothing left to show
     if (pendingTools.size === 0) {
+      // Stop the spinner only if one was actually running
       if (spinner) {
         spinner.stop();
         spinner = null;
@@ -39,6 +41,7 @@ export function attachSessionLogger(
       return;
     }
     const text = [...pendingTools.values()].join(chalk.dim(' | '));
+    // Reuse the existing spinner instance rather than starting a second one
     if (spinner) {
       spinner.text = text;
     } else {
@@ -47,6 +50,7 @@ export function attachSessionLogger(
   }
 
   function pauseSpinner(): void {
+    // Only stop the spinner if one is actually running
     if (spinner) {
       spinner.stop();
       spinner = null;
@@ -61,6 +65,7 @@ export function attachSessionLogger(
   }
 
   session.on((event) => {
+    // Dispatch on the Copilot SDK session event type to render the right log line
     switch (event.type) {
       case 'tool.execution_start': {
         const { toolCallId, toolName, arguments: args } = event.data;
@@ -74,6 +79,7 @@ export function attachSessionLogger(
       }
       case 'tool.execution_complete': {
         const label = pendingTools.get(event.data.toolCallId);
+        // Only log completion for tools we actually tracked the start of
         if (label) {
           pendingTools.delete(event.data.toolCallId);
           logCompletion(label, event.data.success);
@@ -82,6 +88,7 @@ export function attachSessionLogger(
       }
       case 'external_tool.completed': {
         const label = pendingTools.get(event.data.requestId);
+        // Only log completion for tools we actually tracked the start of
         if (label) {
           pendingTools.delete(event.data.requestId);
           logCompletion(label, true);
@@ -95,9 +102,11 @@ export function attachSessionLogger(
         break;
       }
       case 'assistant.message': {
+        // Skip empty assistant messages (e.g. tool-only turns)
         if (event.data.content) {
           pauseSpinner();
           const formatted = tryFormatMessage(event.data.content);
+          // Prefer the structured plan/verdict/step-result rendering when recognised
           if (formatted) {
             console.log(formatted);
           } else {
@@ -119,6 +128,7 @@ export function attachSessionLogger(
       }
       case 'permission.completed': {
         const label = pendingTools.get(event.data.requestId);
+        // Only log completion for permissions we actually tracked the request of
         if (label) {
           const approved = event.data.result?.kind === 'approved';
           pendingTools.delete(event.data.requestId);
@@ -128,8 +138,10 @@ export function attachSessionLogger(
       }
       case 'session.tools_updated': {
         const negotiatedModel = event.data.model as string | undefined;
+        // Only log tooling info once the server has actually negotiated a model
         if (negotiatedModel) {
           console.log(chalk.dim(`💾  ${negotiatedModel}`));
+          // Warn the user when the server picked a different model than requested
           if (options?.requestedModel && negotiatedModel !== options.requestedModel) {
             console.log(
               chalk.yellow(
@@ -157,6 +169,7 @@ export function attachSessionLogger(
       }
       case 'session.info': {
         const { message } = event.data as { message?: string };
+        // Skip empty info events
         if (message) {
           pauseSpinner();
           console.log(chalk.dim(`ℹ️  ${message}`));
@@ -166,6 +179,7 @@ export function attachSessionLogger(
       }
       case 'assistant.intent': {
         const { intent } = event.data as { intent?: string };
+        // Skip empty intent events
         if (intent) {
           pauseSpinner();
           console.log(chalk.yellow(`🎯 ${intent}`));

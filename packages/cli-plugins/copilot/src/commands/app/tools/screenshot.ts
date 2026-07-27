@@ -26,15 +26,18 @@ function resolveScreenshotArtifactName(
   requestedPath: string | undefined,
   format: 'jpeg' | 'png',
 ): string | undefined {
+  // No requested path means the caller doesn't need a specific artifact name
   if (!requestedPath) return undefined;
   const fileName = basename(requestedPath);
   const currentExtension = extname(fileName).toLowerCase();
   const expectedExtension = format === 'jpeg' ? '.jpg' : '.png';
 
+  // The extension already matches the selected format; reuse it verbatim
   if (currentExtension === expectedExtension) {
     return fileName;
   }
 
+  // Swap a mismatched extension for the one that matches the selected format
   if (currentExtension.length > 0) {
     return `${fileName.slice(0, -currentExtension.length)}${expectedExtension}`;
   }
@@ -53,6 +56,7 @@ function resolveScreenshotDirectory(
   evidenceDir: string,
   requestedDirectory: string | undefined,
 ): string {
+  // No requested directory means the default evidence directory is used
   if (!requestedDirectory) {
     return evidenceDir;
   }
@@ -150,10 +154,12 @@ export function createScreenshotTool(context: AgentBrowserToolContext, defineToo
         screenshotDirectory,
       ];
 
+      // Overlay numbered element labels only when the model explicitly asked for it
       if (annotate) {
         command.push('--annotate');
       }
 
+      // JPEG quality only applies when the selected format is actually JPEG
       if (screenshotFormat === 'jpeg') {
         const screenshotQuality = Math.min(100, Math.max(0, quality ?? 60));
         command.push('--screenshot-quality', String(screenshotQuality));

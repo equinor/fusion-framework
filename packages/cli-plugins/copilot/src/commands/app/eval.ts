@@ -3,7 +3,8 @@ import { join } from 'node:path';
 
 import { ab, abErrorMessage } from '../../utils/index.js';
 import { createAgentBrowserTools } from './tools/index.js';
-import { createWriteFileTool, createAppendFileTool } from './tools/write-file.js';
+import { createWriteFileTool } from './tools/write-file.js';
+import { createAppendFileTool } from './tools/append-file.js';
 import { createReadFileTool } from './tools/read-file.js';
 import type { RuntimeExecutionContext } from './types.js';
 import type { CopilotSession, SessionConfig } from '@github/copilot-sdk';

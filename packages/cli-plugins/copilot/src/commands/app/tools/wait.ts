@@ -30,9 +30,13 @@ export function createWaitTool(context: AgentBrowserToolContext, defineTool: Def
         load?: string;
         timeout?: number;
       };
+      // Prefer whichever single wait condition the caller specified, in priority order
       if (text) return context.invoke(['wait', '--text', text], 60_000);
+      // Fall back to waiting on a page load state
       if (load) return context.invoke(['wait', '--load', load], 60_000);
+      // Fall back to waiting on a specific element/selector
       if (selector) return context.invoke(['wait', selector], 60_000);
+      // A plain timeout falls back to a bare delay instead of an invoke command
       if (timeout) {
         await new Promise((resolve) => setTimeout(resolve, timeout));
         return `Waited ${timeout}ms`;
