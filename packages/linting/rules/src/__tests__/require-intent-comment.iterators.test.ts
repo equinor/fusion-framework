@@ -48,6 +48,17 @@ const hasOverdue = items.some((item) => item.isOverdue);
 `;
     expect(lint(source)).toHaveLength(0);
   });
+
+  it('passes: chained map/filter with inline comments before each call', () => {
+    const source = `
+const conflictingSchemaFields = schemaFields
+  // extract field names to check them against the reserved list
+  .map((field) => field.name)
+  // isolate the names that collide with reserved base-schema fields
+  .filter((name) => reservedFieldNames.includes(name));
+`;
+    expect(lint(source)).toHaveLength(0);
+  });
 });
 
 // ── Fail cases ────────────────────────────────────────────────────────────────
@@ -109,5 +120,17 @@ list.forEach((item) => process(item));
 items.push(newItem);
 `;
     expect(lint(source)).toHaveLength(0);
+  });
+
+  it('edge: chained map without inline comment still fails', () => {
+    const source = `
+const ids = items
+  .map((item) => item.id)
+  // dedupe the resulting ids
+  .filter((id, i, arr) => arr.indexOf(id) === i);
+`;
+    const diagnostics = lint(source);
+    expect(diagnostics).toHaveLength(1);
+    expect(diagnostics[0].message).toContain('.map()');
   });
 });

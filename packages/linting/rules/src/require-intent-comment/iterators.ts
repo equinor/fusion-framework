@@ -35,6 +35,22 @@ function isIteratorCall(node: Node): boolean {
 }
 
 /**
+ * Returns `true` when an iterator call is chained onto another expression
+ * (e.g. `arr.map(...).filter(...)`) and a comment is placed inline within the
+ * chain, immediately before the method call (e.g. `arr\n  // why\n  .map(...)`).
+ *
+ * @param node - The iterator call expression to test.
+ * @returns `true` if an inline chain comment immediately precedes the call.
+ */
+function hasInlineChainComment(node: Node): boolean {
+  const callee = node.childForFieldName('function');
+  if (callee?.type !== 'member_expression') return false;
+  const object = callee.childForFieldName('object');
+  // A comment placed between the object and the method call satisfies the intent requirement
+  return object?.nextNamedSibling?.type === 'comment';
+}
+
+/**
  * Recursively visits every node in the AST and reports iterator method calls
  * that are not immediately preceded by an intent comment.
  *
@@ -59,8 +75,9 @@ function walkNode(node: Node, filePath: string, severity: Severity, out: Diagnos
       checkNode = node.parent.parent;
     }
 
-    // A comment immediately before the statement satisfies the intent requirement
-    if (checkNode.previousNamedSibling?.type !== 'comment') {
+    // A comment immediately before the statement, or an inline comment within
+    // the method chain immediately before this call, satisfies the intent requirement
+    if (checkNode.previousNamedSibling?.type !== 'comment' && !hasInlineChainComment(node)) {
       out.push({
         file: filePath,
         line: node.startPosition.row + 1,
