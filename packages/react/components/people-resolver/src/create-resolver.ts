@@ -30,15 +30,16 @@ export const createResolver = (controller: IPersonController): PersonResolver =>
   search(args) {
     return firstValueFrom(
       controller.search(args).pipe(
-        map((x) =>
-          x.map((x) => {
-            // Controller result uses azureUniqueId; remap to azureId and cast to the public PersonInfo shape.
+        map((x) => {
+          // Remap each result's azureUniqueId to azureId and cast to the public PersonInfo shape.
+          const mapped = x.map((x) => {
             return {
               ...x,
               azureId: x.azureUniqueId,
             } as unknown as PersonInfo;
-          }),
-        ),
+          });
+          return mapped;
+        }),
       ),
     );
   },

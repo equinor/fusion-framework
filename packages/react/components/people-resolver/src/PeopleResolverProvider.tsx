@@ -12,6 +12,7 @@ type PeopleResolverProviderProps = PropsWithChildren<{
 export const PeopleResolverProvider = (props: PeopleResolverProviderProps) => {
   const { children, options, fallback } = props;
   const services = useModule<ServicesModule>('services');
+  // Fail fast when the services module has not been registered on the framework
   if (!services) {
     throw Error('missing service module');
   }

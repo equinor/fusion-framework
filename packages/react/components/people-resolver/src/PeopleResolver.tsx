@@ -33,6 +33,7 @@ export const PeopleResolverComponent = (props: PropsWithChildren<{ resolver: Per
 
   // when the element is ready, set the resolver
   useEffect(() => {
+    // Only assign the resolver once the custom element ref has mounted
     if (ref.current && resolver) {
       ref.current.resolver = resolver;
     }
