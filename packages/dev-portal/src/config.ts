@@ -69,6 +69,7 @@ export const configure = async (config: FrameworkConfigurator) => {
   enableNavigation(config, {
     configure: (config) => {
       config.setTelemetry(async (args) => {
+        // Only provide telemetry when the telemetry module was actually enabled
         if (args.hasModule('telemetry')) {
           return await args.requireInstance('telemetry');
         }
@@ -85,8 +86,10 @@ export const configure = async (config: FrameworkConfigurator) => {
 
   enableAnalytics(config, (builder) => {
     builder.setAdapter('console', async (args) => {
+      // Only resolve the feature-flag-gated adapter when the featureFlag module is enabled
       if (args.hasModule('featureFlag')) {
         const featureFlagProvider = await args.requireInstance('featureFlag');
+        // Only log analytics to the console when the feature flag is explicitly enabled
         if (featureFlagProvider.getFeature('fusionLogAnalytics')?.enabled) {
           return new ConsoleAnalyticsAdapter();
         }

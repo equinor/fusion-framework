@@ -37,6 +37,7 @@ const generatePathname = (
   context?: IContextProvider,
   pathContextId?: string,
 ) => {
+  // Replace an existing context id segment in the url when one is present
   if (pathContextId) {
     // context id exists in the url, replace it with the new context id
     const pathname =
@@ -110,6 +111,7 @@ export const useAppContextNavigation = () => {
         /** context was cleared  */
         if (item === null) {
           console.debug('🌍 Portal:', 'current context was cleared, navigating to root');
+          // Prefer the app's own navigation instance when it exists
           if (appNavigation) {
             appNavigation.replace('/');
           } else {
