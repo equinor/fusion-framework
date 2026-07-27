@@ -12,24 +12,7 @@ import { AppManifestError } from '@equinor/fusion-framework-module-app/errors.js
 import { ErrorViewer } from './ErrorViewer';
 import type { AppModule } from '@equinor/fusion-framework-module-app';
 import EquinorLoader from './EquinorLoader';
-
-/**
- * URL search-parameter key used to specify an app version tag.
- *
- * When present in the URL as `?$tag=<value>`, the portal loads that
- * specific version of the application instead of the default.
- */
-export const TAG = '$tag';
-
-/**
- * Reads the application version tag from the current URL search parameters.
- *
- * @returns The tag string if the `$tag` search parameter is present, otherwise `null`.
- */
-export const getAppTagFromUrl = (): string | null => {
-  const url = new URL(window.location.href);
-  return url.searchParams.get(TAG);
-};
+import { getAppTagFromUrl } from './get-app-tag-from-url';
 
 /**
  * Loads, initializes, and mounts a Fusion application by its key.
@@ -51,7 +34,7 @@ export const AppLoader = (props: { readonly appKey: string }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<Error | undefined>();
 
-  // TODO change to `useCurrentApp`
+  // TODO(#5087): change to `useCurrentApp`
   /** observe and use the current selected application from framework */
   const { value: currentApp } = useObservableState(
     useMemo(() => fusion.modules.app.current$, [fusion.modules.app]),
@@ -60,6 +43,7 @@ export const AppLoader = (props: { readonly appKey: string }) => {
   useEffect(() => {
     const tag = getAppTagFromUrl();
 
+    // A `$tag` URL param takes precedence over the plain appKey
     if (tag) {
       fusion.modules.app.setCurrentApp({ appKey, tag });
       return;
@@ -90,6 +74,7 @@ export const AppLoader = (props: { readonly appKey: string }) => {
 
             /** create a 'private' element for the application */
             const el = document.createElement('div');
+            // Guard against rendering before the mounting ref has attached
             if (!ref.current) {
               throw Error('Missing application mounting point');
             }
@@ -120,7 +105,9 @@ export const AppLoader = (props: { readonly appKey: string }) => {
     return () => subscription.unsubscribe();
   }, [fusion, currentApp]);
 
+  // Render an error view when initialization or manifest resolution failed
   if (error) {
+    // Render a dedicated view for manifest-resolution failures
     if (error.cause instanceof AppManifestError) {
       return (
         <div>
