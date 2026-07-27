@@ -1,7 +1,12 @@
 import type { Rule, Diagnostic, LintConfig, Severity } from './types.js';
+import { collectSuppressions, isSuppressed } from './suppressions.js';
 
 /**
  * Runs a set of {@link Rule|rules} against source text, applying config overrides.
+ *
+ * Diagnostics can be suppressed inline with a `// fusion-lint-disable-line` or
+ * `// fusion-lint-disable-next-line` comment, optionally followed by a comma-separated
+ * list of rule ids to limit the suppression to (e.g. `// fusion-lint-disable-next-line no-separate-export`).
  *
  * @example
  * ```typescript
@@ -30,6 +35,8 @@ export class LintEngine {
    */
   lint(source: string, filePath: string): Diagnostic[] {
     const results: Diagnostic[] = [];
+    // Parse inline suppression comments once so every rule's diagnostics can be filtered against them
+    const suppressions = collectSuppressions(source);
 
     // Apply each active rule to the source file
     for (const rule of this.#rules.values()) {
@@ -43,6 +50,8 @@ export class LintEngine {
 
       // Collect diagnostics and stamp them with the resolved severity
       for (const diagnostic of rule.check(source, filePath)) {
+        // Drop diagnostics silenced by a fusion-lint-disable(-next-line) comment
+        if (isSuppressed(suppressions, diagnostic.line, rule.id)) continue;
         results.push({ ...diagnostic, severity });
       }
     }
