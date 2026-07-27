@@ -3,6 +3,12 @@ import type { IContextProvider } from '@equinor/fusion-framework-module-context'
 import { useObservableState } from '@equinor/fusion-observable/react';
 import { useCallback, useMemo } from 'react';
 
+/**
+ * Hook for observing and updating the framework's current context.
+ *
+ * @param provider - The context provider to observe and update
+ * @returns The current context and a setter that clears, sets by id, or sets it directly
+ */
 export const useCurrentContext = (provider: IContextProvider) => {
   const currentContext$ = useMemo(() => provider.currentContext$, [provider]);
   const { value: currentContext } = useObservableState(currentContext$, {
