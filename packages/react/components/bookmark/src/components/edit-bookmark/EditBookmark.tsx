@@ -32,6 +32,15 @@ const Styled = {
     `,
 };
 
+/**
+ * Modal for editing an existing bookmark.
+ *
+ * @param props - The component's props
+ * @param props.isOpen - Whether the modal is open
+ * @param props.onClose - Callback invoked to close the modal
+ * @param props.bookmarkId - The id of the bookmark to edit
+ * @returns The edit bookmark modal
+ */
 export const EditBookmarkModal = ({
   isOpen,
   onClose,

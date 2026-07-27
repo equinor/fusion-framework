@@ -52,6 +52,12 @@ type MessageProps = {
   readonly color?: string;
 };
 
+/**
+ * Displays a titled message with an icon matching its type.
+ *
+ * @param props - The component's props
+ * @returns The message
+ */
 export const Message = ({
   title,
   type = 'Info',

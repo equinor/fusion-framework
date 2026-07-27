@@ -9,6 +9,12 @@ type MenuProps = {
   readonly options: MenuOption[];
 };
 
+/**
+ * A dropdown menu of row actions anchored to a reference element.
+ *
+ * @param props - The component's props
+ * @returns The menu
+ */
 export const MoreMenu = ({ pRef, onClose, open, options }: MenuProps) => {
   return (
     <Menu open={open} anchorEl={pRef.current}>

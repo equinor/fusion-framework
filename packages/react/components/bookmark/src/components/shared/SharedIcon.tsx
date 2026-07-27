@@ -24,6 +24,12 @@ type SharedIconProps = {
   readonly createdById: string;
 };
 
+/**
+ * Displays a "shared by" indicator when a bookmark was created by another user.
+ *
+ * @param props - The component's props
+ * @returns The shared icon, or nothing when the current user created the bookmark
+ */
 export const SharedIcon = ({ createdBy, createdById }: SharedIconProps) => {
   const myId = useFramework().modules.auth.account?.localAccountId;
 

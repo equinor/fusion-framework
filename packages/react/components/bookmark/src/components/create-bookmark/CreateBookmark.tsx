@@ -14,6 +14,14 @@ const StyledContent = styled(Dialog.Content)`
     gap: 1rem;
 `;
 
+/**
+ * Modal for creating a new bookmark.
+ *
+ * @param props - The component's props
+ * @param props.isOpen - Whether the modal is open
+ * @param props.onClose - Callback invoked to close the modal
+ * @returns The create bookmark modal
+ */
 export const CreateBookmarkModal = ({
   isOpen,
   onClose,

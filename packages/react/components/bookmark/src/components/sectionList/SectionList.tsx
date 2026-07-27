@@ -26,6 +26,12 @@ type SectionListProps = {
   readonly bookmarkGroups: ReturnType<typeof useBookmarkGrouping>['bookmarkGroups'];
 };
 
+/**
+ * Renders bookmark groups as sections of rows with edit/share/delete actions.
+ *
+ * @param props - The component's props
+ * @returns The section list
+ */
 export const SectionList = ({ bookmarkGroups }: SectionListProps) => {
   // const { deleteBookmarkById, updateBookmark, removeBookmarkFavorite } = useBookmark();
 

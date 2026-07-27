@@ -10,6 +10,12 @@ const groupingModes: Record<GroupingKeys, (_item: BookmarkWithoutData) => string
   'Group by Context': (item: BookmarkWithoutData) => item?.context?.name ?? 'Unknown',
 } as const;
 
+/**
+ * Hook for grouping and searching bookmarks by app, creator, or context.
+ *
+ * @param bookmarks - The bookmarks to group and search
+ * @returns The grouped bookmarks along with the search text and grouping key state/setters
+ */
 export const useBookmarkGrouping = (bookmarks?: Bookmarks) => {
   const [searchText, setSearchText] = useState<string | null>(null);
 

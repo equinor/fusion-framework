@@ -19,6 +19,12 @@ const Styled = {
     `,
 };
 
+/**
+ * Search and grouping filter controls for the bookmark list.
+ *
+ * @param props - The component's props
+ * @returns The filter controls
+ */
 export const BookmarkFilter = ({
   searchText,
   setGroupBy,

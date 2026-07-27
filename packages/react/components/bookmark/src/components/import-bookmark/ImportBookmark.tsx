@@ -14,6 +14,11 @@ const Styled = {
     `,
 };
 
+/**
+ * Modal that prompts the user to import a bookmark shared via a `bookmarkId` URL parameter.
+ *
+ * @returns The import bookmark modal
+ */
 export const ImportBookmarkModal = () => {
   const [isOpen, setIsOpen] = useState(false);
 

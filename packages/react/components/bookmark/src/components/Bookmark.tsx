@@ -42,6 +42,11 @@ const Styled = {
     `,
 };
 
+/**
+ * Renders the list of bookmark sections and the current bookmark's loading/message state.
+ *
+ * @returns The bookmark list UI
+ */
 export const Bookmark = () => {
   const { provider } = useBookmarkComponentContext();
 

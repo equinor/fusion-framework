@@ -47,6 +47,12 @@ const Styled = {
     `,
 };
 
+/**
+ * A single bookmark row, with actions and click-to-set-current behavior.
+ *
+ * @param props - The component's props
+ * @returns The row
+ */
 export const Row = ({ name, menuOptions, children, id, menuOpen, onMenuOpen }: RowProps) => {
   const pRef = useRef<HTMLElement | null>(null);
   const { provider } = useBookmarkComponentContext();
