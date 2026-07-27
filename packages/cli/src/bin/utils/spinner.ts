@@ -22,6 +22,8 @@ export class Spinner {
 
   /**
    * Get the underlying ora instance for advanced usage.
+   *
+   * @returns The underlying ora spinner instance.
    */
   get ora(): Ora {
     return this.#ora;
@@ -30,6 +32,8 @@ export class Spinner {
   /**
    * Attach or detach spinner to native console output.
    * When enabled, console.log/info are redirected to spinner.info.
+   *
+   * @param value - `true` to redirect console output to the spinner, `false` to restore it.
    */
   set attachConsole(value: boolean) {
     // Only redirect console output while attaching; leave it alone when detaching
@@ -64,6 +68,8 @@ export class Spinner {
 
   /**
    * Get the current global spinner instance.
+   *
+   * @returns The current global Spinner instance.
    */
   static get Current(): Spinner {
     return _spinner;
@@ -71,6 +77,8 @@ export class Spinner {
 
   /**
    * Set the current global spinner instance.
+   *
+   * @param spinner - The Spinner instance to set as the global instance.
    */
   static set Current(spinner: Spinner) {
     _spinner = spinner;

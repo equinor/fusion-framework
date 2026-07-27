@@ -255,6 +255,11 @@ export class ProjectTemplateRepository {
     }
   }
 
+  /**
+   * Clones the repository into the configured base directory using a single branch.
+   *
+   * @throws Error if the clone operation fails.
+   */
   async _cloneRepo(): Promise<void> {
     try {
       this.#log?.debug('Cloning repo...', {
@@ -275,6 +280,12 @@ export class ProjectTemplateRepository {
     }
   }
 
+  /**
+   * Fetches and checks out the configured branch, pulling and hard-resetting
+   * if the local branch is behind its remote counterpart.
+   *
+   * @throws Error if fetching or checking out the branch fails.
+   */
   async _checkoutBranch(): Promise<void> {
     try {
       this.#log?.debug('Fetching repo...', { repo: this.repo, repoUrl: this.repoUrl });
@@ -294,6 +305,10 @@ export class ProjectTemplateRepository {
     }
   }
 
+  /**
+   * Registers stdout/stderr output handlers on the underlying git client so
+   * repository operations are logged via the configured logger.
+   */
   _setupOutputHandler(): void {
     this.#git.outputHandler((_command, stdout, stderr): void => {
       stdout.on('data', (data) => {

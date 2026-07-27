@@ -11,6 +11,7 @@ const SUPPORTED_PACKAGE_MANAGERS = ['npm', 'pnpm'];
  * @param packageManager - Package manager to use ('npm' or 'pnpm')
  * @param logger - Logger instance for output
  * @returns Promise resolving to the package manager name used
+ * @throws AssertionError if `packageManager` is not `npm` or `pnpm`; rethrows install failures.
  */
 export async function installPackageDependencies(
   targetDir: string,

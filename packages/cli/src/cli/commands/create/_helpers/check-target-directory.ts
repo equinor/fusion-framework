@@ -13,6 +13,7 @@ import { safeRmSync } from '../../../../lib/utils/safe-rm-sync.js';
  * @param clean - If true, automatically clean the directory without prompting
  * @param baseDir - Base directory for path validation (defaults to process.cwd())
  * @returns Promise resolving to true if should continue, false if should abort
+ * @throws AssertionError if `targetDir` is not a string.
  */
 export async function checkTargetDirectory(
   targetDir: string,

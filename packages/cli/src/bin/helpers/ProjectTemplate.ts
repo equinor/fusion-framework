@@ -26,6 +26,8 @@ export class ProjectTemplate {
   /**
    * The name of the template as defined in the manifest.
    * Used for template identification and selection.
+   *
+   * @returns The template name.
    */
   public get name(): string {
     return this.#item.name;
@@ -34,6 +36,8 @@ export class ProjectTemplate {
   /**
    * The description of the template as defined in the manifest.
    * Provides human-readable information about what the template creates.
+   *
+   * @returns The template description.
    */
   public get description(): string {
     return this.#item.description;
@@ -42,6 +46,8 @@ export class ProjectTemplate {
   /**
    * The resources included in this template.
    * Each resource defines a file or directory to be copied to the target.
+   *
+   * @returns The list of template resources.
    */
   public get resources(): TemplateResource[] {
     return this.#item.resources;

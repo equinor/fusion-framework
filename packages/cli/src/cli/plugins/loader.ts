@@ -6,15 +6,15 @@ import { pathToFileURL, fileURLToPath } from 'node:url';
 import { findUp } from 'find-up';
 import { readFileSync } from 'node:fs';
 import type { FusionCliConfig, FusionCliConfigExport } from '../../lib/fusion-cli-config.js';
+import type { FusionCliPlugin } from '../../lib/fusion-cli-config.js';
 
 /**
  * Attempts to load and register plugins from configuration files
  * Searches for fusion-cli.config.ts files using find-up from current directory and CLI package directory
  * @param program - The Commander program instance to register commands with
  * @returns Promise that resolves when plugin loading is complete
+ * @throws Error if a configured plugin package cannot be resolved.
  */
-import type { FusionCliPlugin } from '../../lib/fusion-cli-config.js';
-
 export async function loadPlugins(program: Command): Promise<void> {
   const allPlugins: FusionCliPlugin[] = [];
 

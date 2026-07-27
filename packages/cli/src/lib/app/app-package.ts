@@ -33,7 +33,12 @@ export function defineAppPackage(obj: AppPackageJson): AppPackageJson;
  */
 export function defineAppPackage(fn: DefinePackageFn): void;
 
-// Implementation for defineAppPackage, returns the input as-is.
+/**
+ * Implementation for `defineAppPackage`, returns the input as-is.
+ *
+ * @param fnOrObject - The application package object or a function returning it.
+ * @returns The same object or function, unchanged.
+ */
 export function defineAppPackage(fnOrObject: DefinePackageExporter): DefinePackageExporter {
   // This function is intentionally a passthrough for both object and function types.
   return fnOrObject;
