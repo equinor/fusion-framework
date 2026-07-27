@@ -23,6 +23,7 @@ export const useEventStream = <
 ): Observable<TData> => {
   const provider = useEventProvider();
   return useMemo(() => {
+    // Filter the event stream down to the requested key, then apply the caller's operator if given
     return provider.event$.pipe(filterEvent(key), operator ?? ((x) => x as Observable<TData>));
   }, [provider, key, operator]);
 };
