@@ -59,7 +59,7 @@ The provider manages modal state for creating, editing, and importing bookmarks.
 - **Filtering** — text search across bookmark names
 - **Grouping** — group bookmarks by app, creator, or other criteria
 - **Create modal** — form for creating new bookmarks
-- **Edit modal** — form for updating existing bookmarks
+- **Edit modal** — form for updating existing bookmarks with loading feedback while resolving the source app name
 - **Import modal** — import bookmarks shared via URL
 - **Clipboard sharing** — copy bookmark URL to clipboard
 

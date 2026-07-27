@@ -12,6 +12,7 @@ import { Button, Checkbox, Dialog, Input, Label, Textarea } from '@equinor/eds-c
 import styled from 'styled-components';
 
 import { useBookmarkComponentContext } from '../BookmarkProvider';
+import { AppNameField } from './AppNameField';
 
 const Styled = {
   Dialog: styled(Dialog)`
@@ -81,11 +82,15 @@ export const EditBookmarkModal = ({
 
   // TODO(#5091): this should be on the bookmark object
   const appProvider = useFrameworkModule<AppModule>('app');
-  const { value: appName } = useObservableState(
+  const { value: appName, error: appNameError } = useObservableState(
     useMemo(
       () => (bookmark && appProvider ? appProvider.getAppManifest(bookmark.appKey) : of(undefined)),
       [appProvider, bookmark],
     ),
+  );
+  // Only report a pending manifest request; missing providers and failed requests are not loading.
+  const isAppNameLoading = Boolean(
+    bookmark && appProvider && appName === undefined && appNameError === null,
   );
 
   const updateBookmark = useCallback(
@@ -146,8 +151,7 @@ export const EditBookmarkModal = ({
         </div>
         <div>
           <Label htmlFor="app" label="App" />
-          {/** TODO(#5092): show ghost while loading app name  */}
-          <Input readOnly={true} value={appName?.displayName || ''} />
+          <AppNameField displayName={appName?.displayName} isLoading={isAppNameLoading} />
         </div>
 
         <Styled.CheckboxWrapper>
