@@ -50,10 +50,10 @@ export const Bookmark = () => {
   );
 
   const { value: isLoading } = useObservableState(
-    useMemo(
-      () => (provider?.status$ || EMPTY).pipe(map((status) => !!status.has('fetch_bookmarks'))),
-      [provider],
-    ),
+    useMemo(() => {
+      // Derive a boolean loading flag from whether 'fetch_bookmarks' is an active status
+      return (provider?.status$ || EMPTY).pipe(map((status) => !!status.has('fetch_bookmarks')));
+    }, [provider]),
     { initial: true },
   );
 

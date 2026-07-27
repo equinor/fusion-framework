@@ -25,6 +25,7 @@ export const ImportBookmarkModal = () => {
     if (!provider) {
       return of(null);
     }
+    // Watch the current bookmark and resolve whether it should prompt an import
     return provider.currentBookmark$.pipe(
       // filter out null values, not interested in those
       filter((bookmark) => !!bookmark),
@@ -34,6 +35,7 @@ export const ImportBookmarkModal = () => {
         if (!checkBookmark) {
           return of(null);
         }
+        // Resolve to null once the bookmark is already a favorite, otherwise pass it through
         return from(provider.isBookmarkInFavorites(bookmark.id)).pipe(
           map((isFavorite) => (isFavorite ? null : bookmark)),
         );
