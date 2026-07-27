@@ -29,6 +29,7 @@ const personMatcher =
   (args: MatcherArgs) =>
   <T extends { azureUniqueId?: string; upn?: string }>(value: T): value is T => {
     const { azureId, upn } = args;
+    // Both identifiers must match when both are supplied to avoid a false-positive match
     if (azureId && upn) {
       return (
         value.upn?.toLocaleLowerCase() === upn.toLocaleLowerCase() &&
@@ -80,9 +81,11 @@ export class PersonController implements IPersonController {
             .pipe(
               map((result) => {
                 const { positions = [] } = result;
+                // Drop positions that have already expired so stale data isn't shown
+                const activePositions = positions.filter((x) => new Date(x.appliesTo) > new Date());
                 return {
                   ...result,
-                  positions: positions.filter((x) => new Date(x.appliesTo) > new Date()),
+                  positions: activePositions,
                 };
               }),
             );
@@ -110,6 +113,7 @@ export class PersonController implements IPersonController {
               return result.blob;
             }),
             catchError((err) => {
+              // Fall back to a placeholder image when the person genuinely has no photo
               if (
                 (err as Error).name === 'ApiProviderError' &&
                 (err as ApiProviderError).response?.status === 404 &&
@@ -130,6 +134,7 @@ export class PersonController implements IPersonController {
       client: {
         fn: ({ search, systemAccounts }, signal) => {
           const types = ['Person'];
+          // System accounts are opt-in since they're excluded from suggestions by default
           if (systemAccounts) {
             types.push('SystemAccount');
           }
@@ -188,6 +193,7 @@ export class PersonController implements IPersonController {
   public getPhoto(args: ResolverArgs<MatcherArgs>): Observable<string> {
     const { azureId, upn, signal } = args;
 
+    // Prefer resolving by azureId when available, falling back to upn
     if (azureId) {
       return this._getPersonPhotoByAzureId(azureId, signal);
     } else if (upn) {
@@ -198,6 +204,7 @@ export class PersonController implements IPersonController {
 
   public getPerson(args: ResolverArgs<MatcherArgs>): Observable<GetPersonResult> {
     const { azureId, upn, signal } = args;
+    // Prefer resolving by azureId when available, falling back to upn
     if (azureId) {
       return this._getPersonByAzureId(azureId, signal);
     } else if (upn) {
@@ -208,6 +215,7 @@ export class PersonController implements IPersonController {
 
   public getPersonInfo(args: ResolverArgs<MatcherArgs>): Observable<ApiPerson<'v2'>> {
     const { azureId, upn, signal } = args;
+    // Prefer resolving by azureId when available, falling back to upn
     if (azureId) {
       return this._getPersonInfoById(azureId, signal);
     } else if (upn) {
@@ -259,7 +267,11 @@ export class PersonController implements IPersonController {
       this._queryCache$({ upn }),
       this.#personSearchQuery.query({ search: upn }, { signal }).pipe(
         /** extract first match, should only be 0 or 1 */
-        map((x) => x.value.find(matcher)),
+        map((x) => {
+          // Narrow the search results down to the one entry matching this upn/azureId
+          const match = x.value.find(matcher);
+          return match;
+        }),
         /** type cast and end stream */
         find(isApiPerson('v2')),
       ),
@@ -288,7 +300,11 @@ export class PersonController implements IPersonController {
       /** make subscription cold */
       take(1),
       /** map out cached ApiPerson_v2 which matches upn  */
-      map((x) => Object.values(x).find((x) => mather(x.value))?.value),
+      map((x) => {
+        // Search each cached query result entry for the one matching this person
+        const match = Object.values(x).find((x) => mather(x.value));
+        return match?.value;
+      }),
       find(isApiPerson('v4')),
       filter(isApiPerson('v4')),
     );
@@ -303,7 +319,11 @@ export class PersonController implements IPersonController {
         /** expand cache records */
         return from(Object.values(entry)).pipe(
           /** find matching cache record item */
-          map((x) => x.value.find((x) => mather(x))),
+          map((x) => {
+            // Search each cached entry's results for the one matching this person
+            const match = x.value.find((x) => mather(x));
+            return match;
+          }),
           /** type cast and end stream */
           find(isApiPerson('v2')),
         );
