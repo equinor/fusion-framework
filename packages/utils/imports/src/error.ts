@@ -1,41 +1,5 @@
-/**
- * Error thrown when a file cannot be found on disk (e.g. ENOENT).
- *
- * Thrown by {@link processAccessError} when the underlying `fs` error code is
- * `ENOENT`. Callers can use `instanceof FileNotFoundError` to distinguish
- * "missing" from "permission denied" failures.
- *
- * @example
- * ```typescript
- * try {
- *   await resolveConfigFile('app.config');
- * } catch (error) {
- *   if (error instanceof FileNotFoundError) {
- *     console.error('Config file does not exist');
- *   }
- * }
- * ```
- */
-export class FileNotFoundError extends Error {
-  constructor(message: string, options?: ErrorOptions) {
-    super(message, options);
-    this.name = 'FileNotFoundError';
-  }
-}
-
-/**
- * Error thrown when a file exists but cannot be accessed (e.g. EACCES or EISDIR).
- *
- * Thrown by {@link processAccessError} for permission or path-type errors.
- * Callers can use `instanceof FileNotAccessibleError` to distinguish
- * access failures from missing-file failures.
- */
-export class FileNotAccessibleError extends Error {
-  constructor(message: string, options?: ErrorOptions) {
-    super(message, options);
-    this.name = 'FileNotAccessibleError';
-  }
-}
+import { FileNotAccessibleError } from './errors/file-not-accessible-error.js';
+import { FileNotFoundError } from './errors/file-not-found-error.js';
 
 /**
  * Converts a raw `fs` access error into a typed {@link FileNotFoundError},
@@ -46,6 +10,7 @@ export class FileNotAccessibleError extends Error {
  * @returns A typed error instance with the original error set as `cause`.
  */
 export const processAccessError = (error: unknown, path: string): Error => {
+  // Dispatch to the typed error matching the underlying errno code
   switch ((error as NodeJS.ErrnoException).code) {
     case 'ENOENT':
       return new FileNotFoundError(`File not found: ${path}`, { cause: error });

@@ -41,6 +41,7 @@ export const memfsPlugin: EsBuildPlugin = {
       // For ?raw imports (like markdown), use 'text' loader
       // Check if original path had ?raw query parameter
       const hasRawQuery = query === 'raw';
+      // ?raw imports should be returned as plain text, not parsed by the loader
       if (hasRawQuery) {
         return { contents, loader: 'text' };
       }
@@ -51,6 +52,7 @@ export const memfsPlugin: EsBuildPlugin = {
     });
 
     build.onEnd((result) => {
+      // Write each built output file into the in-memory filesystem
       for (const file of result.outputFiles ?? []) {
         const { path, contents } = file;
         vol.mkdirSync(dirname(path), { recursive: true });

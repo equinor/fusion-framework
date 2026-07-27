@@ -89,6 +89,7 @@ export async function importConfig<C extends ConfigContent, M extends EsmModule 
   const fileExt = path.extname(filePath);
 
   const config = await (async () => {
+    // Parse JSON directly; delegate anything else to the script importer
     switch (fileExt) {
       case '.json':
         return importJSON<C>(filePath);

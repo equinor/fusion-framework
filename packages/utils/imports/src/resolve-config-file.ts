@@ -1,7 +1,8 @@
 import { access } from 'node:fs/promises';
 import { resolve } from 'node:path';
 
-import { FileNotFoundError, processAccessError } from './error.js';
+import { processAccessError } from './error.js';
+import { FileNotFoundError } from './errors/file-not-found-error.js';
 
 const defaultExtensions = ['.ts', '.mjs', '.js', '.json'];
 
@@ -56,7 +57,9 @@ export async function resolveConfigFile(
 
   const suggestions = Array.isArray(baseName) ? baseName : [baseName];
 
+  // Try each candidate basename in order until one resolves
   for (const suggestion of suggestions) {
+    // Guard against empty/invalid entries in the basename list
     if (typeof suggestion !== 'string' || suggestion.length === 0) {
       throw new Error('baseName must be a non-empty string');
     }
@@ -65,11 +68,13 @@ export async function resolveConfigFile(
       return suggestion;
     } catch (err) {
       const error = processAccessError(err, suggestion);
+      // Any error other than "file not found" is unexpected — surface it immediately
       if (error instanceof FileNotFoundError === false) {
         // unless the error is a FileNotFoundError, rethrow the error
         throw error;
       }
     }
+    // Fall back to trying each configured extension for this basename
     for (const ext of extensions) {
       const filePath = resolve(baseDir, `${suggestion}${ext}`);
       try {
