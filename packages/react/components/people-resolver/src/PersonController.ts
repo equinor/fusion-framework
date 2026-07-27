@@ -218,7 +218,7 @@ export class PersonController implements IPersonController {
   /**
    * Fetch the photo of a person, resolving by azureId when available, falling back to upn.
    *
-   * TODO why does this need to have data?!?
+   * TODO(#5088): why does this need to have data?!?
    *
    * @param args - A matcher (azureId and/or upn) plus an optional abort signal
    * @returns An observable emitting the object URL of the person's photo
@@ -321,10 +321,7 @@ export class PersonController implements IPersonController {
       this._personCache$({ azureId }),
       this._queryCache$({ azureId }),
       this._getPersonByAzureId(azureId, signal),
-    ).pipe(
-      filter(isApiPerson('v2')),
-      takeUntil(abort$),
-    );
+    ).pipe(filter(isApiPerson('v2')), takeUntil(abort$));
   }
 
   /**

@@ -71,7 +71,7 @@ export const Row = ({ name, menuOptions, children, id, menuOpen, onMenuOpen }: R
 
   useOutsideClick(pRef.current, () => onMenuOpen(''));
 
-  // TODO: @noggling fix this
+  // TODO(#5093): fix accessibility (keyboard support) for this click handler
   return (
     /* eslint-disable-next-line styled-components-a11y/click-events-have-key-events, styled-components-a11y/no-static-element-interactions*/
     <Styled.ListItem onClick={onListItemClick}>

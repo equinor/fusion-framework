@@ -7,7 +7,6 @@ import { Button, Checkbox, Dialog, Input, Label, Textarea } from '@equinor/eds-c
 import styled from 'styled-components';
 import { from } from 'rxjs';
 
-// TODO
 const StyledContent = styled(Dialog.Content)`
     display: flex;
     flex-direction: column;
@@ -51,9 +50,9 @@ export const CreateBookmarkModal = ({
         console.error('Provider not available');
         return;
       }
-      // TODO: Show success message
-      // TODO: should this call onCreated, with the new bookmark?
-      // TODO: should current bookmark be updated?
+      // TODO(#5089): Show success message
+      // TODO(#5090): should this call onCreated, with the new bookmark?
+      // TODO(#5090): should current bookmark be updated?
       const sub = from(provider.createBookmark(args)).subscribe({
         next: (bookmark) => {
           console.debug('Bookmark created', bookmark);

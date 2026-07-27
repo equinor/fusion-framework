@@ -79,7 +79,7 @@ export const EditBookmarkModal = ({
     }
   }, [bookmark]);
 
-  // TODO - this should be on the bookmark object
+  // TODO(#5091): this should be on the bookmark object
   const appProvider = useFrameworkModule<AppModule>('app');
   const { value: appName } = useObservableState(
     useMemo(
@@ -110,8 +110,8 @@ export const EditBookmarkModal = ({
           onClose(false);
         },
       });
-      // TODO: Show success message
-      // TODO: should this call onUpdated, with the updated bookmark?
+      // TODO(#5089): Show success message
+      // TODO(#5090): should this call onUpdated, with the updated bookmark?
       onClose(false);
     },
     [onClose, provider, bookmarkId, updatePayload],
@@ -146,7 +146,7 @@ export const EditBookmarkModal = ({
         </div>
         <div>
           <Label htmlFor="app" label="App" />
-          {/** TODO - show ghost while loading app name  */}
+          {/** TODO(#5092): show ghost while loading app name  */}
           <Input readOnly={true} value={appName?.displayName || ''} />
         </div>
 

@@ -3,7 +3,7 @@ import type { useBookmarkGrouping } from '../../hooks';
 import { type MenuOption, Row } from '../row/Row';
 import { Section } from '../section/Section';
 import { SharedIcon } from '../shared/SharedIcon';
-// TODO - export from `@equinor/fusion-framework-react-module-bookmark`
+// TODO(#5094): export from `@equinor/fusion-framework-react-module-bookmark`
 import type { BookmarkWithoutData } from '@equinor/fusion-framework-module-bookmark';
 import { useCurrentUser } from '@equinor/fusion-framework-react/hooks';
 import { useCallback, useState } from 'react';
@@ -38,7 +38,7 @@ export const SectionList = ({ bookmarkGroups }: SectionListProps) => {
   const { provider, currentApp, showEditBookmark, addBookmarkToClipboard } =
     useBookmarkComponentContext();
 
-  // TODO - should be removed when bookmark has property for isOwner
+  // TODO(#5095): should be removed when bookmark has property for isOwner
   const user = useCurrentUser();
 
   const [isMenuByIdOpen, setIsMenuByIdOpen] = useState('');
@@ -75,7 +75,7 @@ export const SectionList = ({ bookmarkGroups }: SectionListProps) => {
             name: 'Update with current view',
             disabled: appKey !== bookmark.appKey,
             onClick: () => {
-              // TODO: add success and failure message
+              // TODO(#5089): add success and failure message
               from(
                 provider.updateBookmark(bookmark.id, undefined, {
                   excludePayloadGeneration: false,
@@ -95,7 +95,7 @@ export const SectionList = ({ bookmarkGroups }: SectionListProps) => {
             name: 'Remove',
             disabled: false,
             onClick: () => {
-              // TODO: add success and failure message
+              // TODO(#5089): add success and failure message
               from(provider.deleteBookmark(bookmark.id)).subscribe({
                 error(err) {
                   console.error('Failed to remove bookmark', err);
