@@ -38,6 +38,7 @@ export const useTrackFeature = () => {
    */
   const trackFeature = useCallback(
     (name: string, data?: AnyValueMap) => {
+      // Report to telemetry when analytics tracking is not available so the gap is visible
       if (!analyticsProvider) {
         telemetryProvider?.trackException({
           name: 'AnalyticsProviderNotFound',

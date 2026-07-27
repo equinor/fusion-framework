@@ -72,6 +72,7 @@ export const useAppSettings = <TSettings extends Record<string, unknown> = AppSe
 
   const setSettings = useCallback(
     (update: TSettings | UpdateSettingsFunction<TSettings>) => {
+      // Cannot persist settings updates without a current app to write them to
       if (!currentApp) {
         return onError?.(new Error('App is not available'));
       }

@@ -33,6 +33,7 @@ export const createLegacyApp = <TModules extends Array<AnyModule>>(
       // @eikeland
       // TODO - recheck when legacy fusion-cli is updated!
       const appProvider = fusion.modules.app;
+      // Use the real app config/manifest once the provider has resolved them
       if (appProvider?.current) {
         const { config, manifest } = appProvider.current;
         // Legacy app provider config/manifest predate the strict AppEnv shape; cast until legacy fusion-cli is updated.

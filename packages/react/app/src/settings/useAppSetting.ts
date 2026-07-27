@@ -81,6 +81,7 @@ export const useAppSetting = <
   // update function
   const setSetting = useCallback(
     (update: TSettings[TProp] | UpdateSettingFunction<TSettings[TProp]>) => {
+      // Cannot persist a setting update without a current app to write it to
       if (!currentApp) {
         return onError?.(new Error('App is not available'));
       }

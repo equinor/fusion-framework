@@ -38,6 +38,7 @@ export const useToken = (req: {
     msalProvider
       .acquireToken({ request: req })
       .then((result) => {
+        // Only update state when a token was actually acquired
         if (result) {
           setToken(result);
         }
