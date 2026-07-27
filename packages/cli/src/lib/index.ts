@@ -26,6 +26,6 @@ export {
 } from './fusion-cli-config.js';
 
 // Legacy imports - these will be removed in the next major version
-// @todo - remove these imports, introduced in v11
+// TODO(#5070): remove these imports, introduced in v11
 export { defineAppConfig } from './legacy.js';
 export { defineAppManifest } from './legacy-app-manifest.js';

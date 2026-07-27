@@ -28,7 +28,7 @@ export const mergeAppManifests = (
 ): AppManifest => {
   // Use lodash.mergeWith for deep merging of manifest objects
   const manifest = mergeWith(base, overrides) as AppManifest;
-  // TODO: Add assertions or schema validation here if needed
+  // TODO(#5077): Add assertions or schema validation here if needed
   return manifest;
 };
 

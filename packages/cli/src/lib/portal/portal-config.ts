@@ -17,7 +17,7 @@ import type { RuntimeEnv } from '@equinor/fusion-framework-cli/lib';
  * ```
  */
 
-export type PortalConfig = Record<string, unknown>; // TODO: Replace with a concrete type for portal config
+export type PortalConfig = Record<string, unknown>; // TODO(#5078): Replace with a concrete type for portal config
 
 /**
  * A function type for defining dynamic or static portal configuration.

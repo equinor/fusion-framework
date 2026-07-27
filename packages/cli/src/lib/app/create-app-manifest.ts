@@ -69,7 +69,7 @@ export const createAppManifestFromPackage = (
   const githubRepo = resolveRepoFromPackage(packageJson) ?? resolveGitRemoteUrl();
 
   // Normalize extensions to a leading-dot format expected by the asset matcher
-  // TODO: @jaysencpp, this is just 🫤, extensions should not require leading dot
+  // TODO(#5072): @jaysencpp, this is just 🫤, extensions should not require leading dot
   const allowedExtensions = ASSET_EXTENSIONS.map((ext) => `.${ext}`);
 
   // Return the manifest object, using satisfies for type safety

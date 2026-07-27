@@ -96,7 +96,7 @@ const createDevServerTemplate = (
       },
     ],
   },
-  // todo - deep merge with user config
+  // TODO(#5069): deep merge with user config
   ...overrides,
 });
 
@@ -178,7 +178,7 @@ const applyPortalRouting = (
 ) => {
   base.api.routes ??= [];
 
-  // @todo - might add correct tag handling later
+  // TODO(#5074): might add correct tag handling later
   const serviceName = 'portal-config';
 
   base.api.routes.push({
@@ -190,7 +190,7 @@ const applyPortalRouting = (
       res.end(JSON.stringify(manifest));
     },
   });
-  // @TODO - should config be allowed, dev-server.config could be used instead
+  // TODO(#5068): should config be allowed, dev-server.config could be used instead
   if (config) {
     base.api.routes.push({
       match: `/${serviceName}/portals/${manifest.name}{@:tag}/config`,
@@ -222,7 +222,7 @@ export const createDevServerConfig = (options: CreateDevServerOptions) => {
       processServices: (dataResponse, route) => {
         const { data, routes } = processServices(dataResponse, route);
         return {
-          // @todo - remove this when we have a real service discovery
+          // TODO(#5071): remove this when we have a real service discovery
           data: data.concat({
             key: 'portals',
             name: 'Portal Service - MOCK',

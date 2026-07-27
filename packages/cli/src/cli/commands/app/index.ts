@@ -12,7 +12,7 @@ import manifestCommand from './manifest.js';
 import publishCommand from './publish.js';
 import createAppCommand from '../create/app.js';
 
-// @todo - remove in next major version v12
+// TODO(#5073): remove in next major version v12
 import './alias.js';
 
 export const command = createCommand('app')

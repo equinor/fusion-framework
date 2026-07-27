@@ -39,7 +39,7 @@ export const loadDevServerConfig = async (
         if (typeof module.default === 'function') {
           const baseClone = { ...base }; // Clone base to avoid mutation
           overrides = await module.default(env, { base: baseClone });
-          // TODO: Add zod validation of the config for type safety
+          // TODO(#5075): Add zod validation of the config for type safety
         } else {
           overrides = module.default as RecursivePartial<DevServerOptions>;
         }

@@ -1,6 +1,6 @@
 import { createCommand } from 'commander';
 
-// @ts-expect-error - @todo - fix this import
+// @ts-expect-error - TODO(#5076): fix this import
 import Ajv2020 from 'ajv/dist/2020';
 
 import { importJSON } from '@equinor/fusion-imports';
