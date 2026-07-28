@@ -5,4 +5,4 @@
  * @remarks
  * Import from `@equinor/fusion-framework-module-telemetry/console-adapter`.
  */
-export { ConsoleAdapter, type ConsoleAdapterConfig, default } from './adapter.js';
+export { ConsoleAdapter, type ConsoleAdapterConfig, default } from './ConsoleAdapter.js';

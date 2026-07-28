@@ -8,8 +8,8 @@
  * The module augments the `TelemetryAdapters` interface so that consumers can
  * reference the adapter by the well-known `applicationInsights` key.
  */
-import type { ApplicationInsightsAdapter } from './adapter.js';
-export { ApplicationInsightsAdapter } from './adapter.js';
+import type { ApplicationInsightsAdapter } from './ApplicationInsightsAdapter.js';
+export { ApplicationInsightsAdapter } from './ApplicationInsightsAdapter.js';
 
 declare module '@equinor/fusion-framework-module-telemetry' {
   interface TelemetryAdapters {
