@@ -22,7 +22,7 @@ import type { WidgetModuleConfigBuilderCallback } from './WidgetModuleConfigurat
  * ```
  */
 export const enableWidgetModule = (
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: `IModulesConfigurator<any, any>` widens to accept a configurator for any concrete module set — `unknown` would break assignability of a real configurator instance to this parameter
   configurator: IModulesConfigurator<any, any>,
   builder?: WidgetModuleConfigBuilderCallback,
 ): void => {

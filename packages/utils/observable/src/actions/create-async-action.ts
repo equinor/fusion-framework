@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+// biome-ignore-all lint/suspicious/noExplicitAny: generic constraints mirror create-action.ts's ported redux-toolkit PrepareAction<any> dispatch pattern
 
 import { actionSuffixDivider, createAction } from './create-action';
 import {

@@ -50,6 +50,7 @@ export type PortalConfig = Record<string, unknown>; // TODO(#5078): Replace with
 export type PortalConfigFn = (
   config: PortalConfig,
   env: RuntimeEnv,
+  // biome-ignore lint/suspicious/noConfusingVoidType: `void` here relies on TypeScript's special-cased "void-returning callback accepts any return value" behavior — `undefined` would break assignability of config functions that return a `PortalConfig`
 ) => PortalConfig | Promise<PortalConfig | void> | void;
 
 /**

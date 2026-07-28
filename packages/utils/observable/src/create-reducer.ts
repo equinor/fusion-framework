@@ -7,7 +7,6 @@ import type { Action, ActionType, AnyAction, ExtractAction } from './actions/typ
 import type { ReducerWithInitialState } from './types/reducers';
 
 function freezeDraftable<T>(val: T) {
-  // biome-ignore lint/suspicious/noEmptyBlockStatements: This is a valid use case for an empty block statement
   return isDraftable(val) ? createNextState(val, () => {}) : val;
 }
 

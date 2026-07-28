@@ -11,6 +11,7 @@ import type { FetchRequest } from '../client';
  * @param request The input request to be processed.
  * @returns The transformed request, `void`, or a Promise that resolves to the transformed request or `void`.
  */
+// biome-ignore lint/suspicious/noConfusingVoidType: `void` here relies on TypeScript's special-cased "void-returning callback accepts any return value" behavior for process operators \u2014 `undefined` would break assignability of operator functions that return a transformed request
 export type ProcessOperator<T, R = T> = (request: T) => R | void | Promise<R | void>;
 
 /**

@@ -53,7 +53,7 @@ export class Topic<T> extends Observable<T> {
    * @param args - Arguments forwarded to `HubConnection.send()`
    * @throws {Error} When the hub connection has not been established yet
    */
-  public send(...args: any[]): void {
+  public send(...args: unknown[]): void {
     // A connection must have been established before sending is possible
     if (!this.connection) {
       throw new Error('No hub connection awaitable');
@@ -69,7 +69,7 @@ export class Topic<T> extends Observable<T> {
    * @returns Promise resolving with the server's response
    * @throws {Error} When the hub connection has not been established yet
    */
-  public invoke<T>(...args: any[]): Promise<T> {
+  public invoke<T>(...args: unknown[]): Promise<T> {
     // A connection must have been established before invoking is possible
     if (!this.connection) {
       throw new Error('No hub connection awaitable');

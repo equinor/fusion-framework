@@ -317,6 +317,7 @@ export type RedirectRequest = {
   sid?: string;
   account?: AccountInfo;
   redirectStartPage?: string;
+  // biome-ignore lint/suspicious/noConfusingVoidType: `void` here relies on TypeScript's special-cased "void-returning callback accepts any return value" behavior — `undefined` would break assignability of navigate functions that return a value/promise
   onRedirectNavigate?: (url: string) => boolean | void;
   authenticationScheme?: AuthenticationScheme;
   resourceRequestMethod?: string;
@@ -393,6 +394,7 @@ export type EndSessionRequest = {
   state?: string;
   logoutHint?: string;
   extraQueryParameters?: StringDict;
+  // biome-ignore lint/suspicious/noConfusingVoidType: `void` here relies on TypeScript's special-cased "void-returning callback accepts any return value" behavior — `undefined` would break assignability of navigate functions that return a value/promise
   onRedirectNavigate?: (url: string) => boolean | void;
 };
 

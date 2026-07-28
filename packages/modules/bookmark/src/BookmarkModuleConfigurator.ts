@@ -1,4 +1,4 @@
-import type { z, ZodError } from 'zod';
+import type { ZodError } from 'zod';
 
 import {
   BaseConfigBuilder,
@@ -268,7 +268,7 @@ export class BookmarkModuleConfigurator extends BaseConfigBuilder<BookmarkModule
    */
   protected async _createDefaultContextResolver(
     init: ConfigBuilderCallbackArgs,
-  ): Promise<BookmarkModuleConfig['resolve']['context'] | void> {
+  ): Promise<BookmarkModuleConfig['resolve']['context'] | undefined> {
     // Check if context module is available and use context provider if available
     if (init.hasModule('context')) {
       this.#log?.debug('Context module available, awaiting instance');
@@ -290,7 +290,7 @@ export class BookmarkModuleConfigurator extends BaseConfigBuilder<BookmarkModule
    */
   protected async _createDefaultApplicationResolver(
     init: ConfigBuilderCallbackArgs,
-  ): Promise<BookmarkModuleConfig['resolve']['application'] | void> {
+  ): Promise<BookmarkModuleConfig['resolve']['application'] | undefined> {
     // Check if app module is available and use app provider if available
     if (init.hasModule('app')) {
       this.#log?.debug('App module available, awaiting instance');
@@ -336,7 +336,7 @@ export class BookmarkModuleConfigurator extends BaseConfigBuilder<BookmarkModule
    */
   protected async _resolveEventProvider(
     init: ConfigBuilderCallbackArgs,
-  ): Promise<BookmarkModuleConfig['eventProvider'] | void> {
+  ): Promise<BookmarkModuleConfig['eventProvider'] | undefined> {
     // Check if event module is available
     if (init.hasModule('event')) {
       this.#log?.debug('Event module available, awaiting instance');
@@ -351,12 +351,12 @@ export class BookmarkModuleConfigurator extends BaseConfigBuilder<BookmarkModule
    */
   protected async _createDefaultClient(
     init: ConfigBuilderCallbackArgs,
-  ): Promise<BookmarkModuleConfig['client'] | void> {
+  ): Promise<BookmarkModuleConfig['client'] | undefined> {
     try {
       const apiProvider = await this._getServiceProvider(init);
       const api = await apiProvider.createBookmarksClient('json$');
       return new BookmarkClient(api);
-    } catch (err) {
+    } catch (_err) {
       this.#log?.warn('Failed to create bookmark api client');
     }
   }

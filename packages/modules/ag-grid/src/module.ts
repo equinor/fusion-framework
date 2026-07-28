@@ -79,7 +79,7 @@ export const module: AgGridModule = {
  * @param callback - Optional callback to customise the AG Grid configuration.
  */
 export const enableAgGrid = (
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: IModulesConfigurator<any, any> widens to accept a configurator for any concrete module set
   configurator: IModulesConfigurator<any, any>,
   callback?: AgGridBuilderCallback,
 ): void => {

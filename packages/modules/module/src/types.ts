@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+// biome-ignore-all lint/suspicious/noExplicitAny: `AnyModule`/`ref` widening and `infer`-position type extraction require real `any` bivariance — `unknown` would break assignability of concrete `Module<TKey, TType, TConfig, TDeps>` instances to these generic positions (TConfig appears contravariantly in `postConfigure`/`dispose`, so `unknown` upper bounds are unsatisfiable)
 
 import type SemanticVersion from './lib/SemanticVersion.js';
 import type { ObservableInput } from 'rxjs';
@@ -376,7 +376,6 @@ export type ModuleEvent = {
   message: string;
 
   /** Additional contextual data related to the event */
-  // biome-ignore lint/suspicious/noExplicitAny: any is used here to allow flexibility in the properties
   properties?: Record<string, any>;
 
   /** Error object if the event is related to a failure */

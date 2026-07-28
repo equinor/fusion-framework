@@ -72,15 +72,15 @@ const createActions = <TType, TArgs>() => ({
 
 export const actions = createActions();
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// biome-ignore lint/suspicious/noExplicitAny: default must be bivariant `any`; `unknown` breaks assignability of concrete `Actions<TType, TArgs>` streams to the default-typed generic
 export type ActionBuilder<TType = any, TArgs = any> = ReturnType<
   typeof createActions<TType, TArgs>
 >;
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// biome-ignore lint/suspicious/noExplicitAny: see ActionBuilder above
 export type ActionMap<TType = any, TArgs = any> = ActionInstanceMap<ActionBuilder<TType, TArgs>>;
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// biome-ignore lint/suspicious/noExplicitAny: see ActionBuilder above
 export type Actions<TType = any, TArgs = any> = ActionTypes<ActionMap<TType, TArgs>>;
 
 export default actions;

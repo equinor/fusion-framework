@@ -74,13 +74,13 @@ export interface QueryCacheEvents<TData = unknown, TArgs = unknown> {
   query_cache_entry_mutated: QueryCacheEvent<{
     previousValue: TData;
     newValue: TData;
-    mutation: any;
+    mutation: unknown;
   }>;
 
   /** Emitted when the cache is trimmed based on criteria */
   query_cache_trimmed: QueryCacheEvent<{
     removedKeys: string[];
-    criteria: { sort?: any; validate?: any; size?: number };
+    criteria: { sort?: unknown; validate?: unknown; size?: number };
   }>;
 
   /** Emitted when the cache is reset to its initial state */

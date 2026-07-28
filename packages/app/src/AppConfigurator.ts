@@ -89,7 +89,7 @@ export interface IAppConfigurator<
   // TODO(#5060): rename
   useFrameworkServiceClient(
     serviceName: string,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore lint/suspicious/noExplicitAny: `HttpClientOptions<any>` widens to accept options for any request payload type
     options?: Omit<HttpClientOptions<any>, 'baseUri' | 'defaultScopes'>,
   ): void;
 }
@@ -197,7 +197,7 @@ export class AppConfigurator<
    */
   public useFrameworkServiceClient(
     serviceName: string,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore lint/suspicious/noExplicitAny: `HttpClientOptions<any>` widens to accept options for any request payload type
     options?: Omit<HttpClientOptions<any>, 'baseUri' | 'defaultScopes'>,
   ): void {
     this.addConfig({

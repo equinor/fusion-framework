@@ -102,7 +102,7 @@ export const module: ServicesModule = {
  * ```
  */
 export const enableServices = (
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: IModulesConfigurator<any, any> widens to accept a configurator for any concrete module set
   config: IModulesConfigurator<any, any>,
 ): void => {
   config.addConfig({ module });

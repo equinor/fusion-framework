@@ -28,7 +28,7 @@ import type { BookmarkModuleConfigurator } from './BookmarkModuleConfigurator';
  * ```
  */
 export const enableBookmark = (
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: IModulesConfigurator<any> widens to accept a configurator for any concrete module set
   configurator: IModulesConfigurator<any>,
   callback?: (builder: BookmarkModuleConfigurator) => void | Promise<void>,
 ): void => {

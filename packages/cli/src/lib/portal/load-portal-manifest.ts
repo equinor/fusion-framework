@@ -17,6 +17,7 @@ import type { PortalManifest } from './define-portal-manifest.js';
 export type PortalManifestFn<T extends Partial<PortalManifest>> = (
   env: RuntimeEnv,
   args: { base: T },
+  // biome-ignore lint/suspicious/noConfusingVoidType: `void` here relies on TypeScript's special-cased "void-returning callback accepts any return value" behavior — `undefined` would break assignability of manifest functions that return a partial manifest
 ) => Promise<RecursivePartial<T> | void> | RecursivePartial<T> | void;
 
 /**

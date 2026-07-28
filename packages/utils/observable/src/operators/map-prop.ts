@@ -29,8 +29,7 @@ export const mapProp = <TObject extends Record<string, unknown>, TPath extends N
     return String(path)
       .split('.')
       .reduce(
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (cur: any, attr: string) => cur[attr],
+        (cur: unknown, attr: string) => (cur as Record<string, unknown>)[attr],
         obj,
       ) as NestedPropType<TObject, TPath>;
   });

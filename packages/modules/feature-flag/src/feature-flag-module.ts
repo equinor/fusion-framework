@@ -56,7 +56,7 @@ export const module: FeatureFlagModule = {
  * ```
  */
 export const enableFeatureFlagging = (
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: IModulesConfigurator<any, any> widens to accept a configurator for any concrete module set
   configurator: IModulesConfigurator<any, any>,
   callback?: FeatureFlagBuilderCallback,
 ): void => {

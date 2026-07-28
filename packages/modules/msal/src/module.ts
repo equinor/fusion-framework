@@ -106,7 +106,7 @@ export type AuthConfigFn<TRef = unknown> = (
  * ```
  */
 export const enableMSAL = (
-  // @biome-ignore lint/suspicious/noExplicitAny: must be any to support all module types
+  // biome-ignore lint/suspicious/noExplicitAny: must be any to support all module types
   configurator: IModulesConfigurator<any, any>,
   configure?: AuthConfigFn,
 ): void => {

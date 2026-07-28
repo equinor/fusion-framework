@@ -1,4 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+// biome-ignore-all lint/suspicious/noExplicitAny: ported redux-toolkit conditional-type dispatch logic (e.g. IsAny<T, ...>) requires real `any`, not `unknown`, to distinguish the two at the type level
+// biome-ignore-all lint/suspicious/noConfusingVoidType: `void` here is the ported redux-toolkit sentinel meaning "no payload type provided", distinct from `undefined` (see IfVoid in ts-helpers.ts) — replacing with `undefined` would change dispatch semantics
 /**
  * taken from https://github.com/reduxjs/redux-toolkit/tree/master/packages/toolkit/src
  */

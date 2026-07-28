@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 /**
  * Represents a single record in the query cache with generic types for the value and arguments.
  * @typeParam TType - The type of the value stored in the cache record.
@@ -81,6 +79,7 @@ export type QueryCacheState<TType = unknown, TArgs = unknown> = QueryCacheStateD
  * @returns A number that determines the order of the records; a negative number if `a` should come before `b`,
  * zero if they are considered equal, or a positive number if `a` should come after `b`.
  */
+// biome-ignore lint/suspicious/noExplicitAny: default must be bivariant `any`, not `unknown` — `unknown` breaks assignability when a concrete `CacheSortFn<TType, TArgs>` is used where the default-typed signature is expected (contravariant function parameter positions)
 export type CacheSortFn<TType = any, TArgs = any> = (
   a: QueryCacheRecord<TType, TArgs>,
   b: QueryCacheRecord<TType, TArgs>,

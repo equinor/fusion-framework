@@ -153,9 +153,10 @@ export interface ContextModuleConfig {
    * @returns An observable input emitting the initial context item, or void.
    */
   resolveInitialContext?: (args: {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore lint/suspicious/noExplicitAny: `AnyModuleInstance | any` intentionally widens to accept any module instance shape for `ref`
     ref?: AnyModuleInstance | any;
     modules: ModuleInstance;
+    // biome-ignore lint/suspicious/noConfusingVoidType: `void` here relies on TypeScript's special-cased "void-returning callback accepts any return value" behavior — `undefined` would break assignability of resolver functions that only conditionally emit a `ContextItem`
   }) => ObservableInput<ContextItem | void>;
 }
 
@@ -239,7 +240,7 @@ export class ContextModuleConfigurator implements IContextModuleConfigurator {
     // run each registered config builder in sequence, merging results into the accumulated config
     const config = await this.#configBuilders.reduce(
       async (cur, cb) => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // biome-ignore lint/suspicious/noExplicitAny: builder generics are erased here — `unknown` breaks assignability of the concrete `ContextConfigBuilder` instance passed to consumer callbacks
         const builder = new ContextConfigBuilder<any, any>(init, await cur);
         await Promise.resolve(cb(builder));
         // Merge this builder's config into the accumulator for the next iteration.

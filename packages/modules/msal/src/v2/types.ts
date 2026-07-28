@@ -289,6 +289,7 @@ export type RedirectRequest = Partial<
 > & {
   scopes: Array<string>;
   redirectStartPage?: string;
+  // biome-ignore lint/suspicious/noConfusingVoidType: `void` here relies on TypeScript's special-cased "void-returning callback accepts any return value" behavior — `undefined` would break assignability of navigate functions that return a value/promise
   onRedirectNavigate?: (url: string) => boolean | void;
   tokenBodyParameters?: StringDict;
 };
@@ -336,6 +337,7 @@ export type SsoSilentRequest = Partial<
  */
 export type EndSessionRequest = Partial<Omit<CommonEndSessionRequest, 'tokenQueryParameters'>> & {
   authority?: string;
+  // biome-ignore lint/suspicious/noConfusingVoidType: `void` here relies on TypeScript's special-cased "void-returning callback accepts any return value" behavior — `undefined` would break assignability of navigate functions that return a value/promise
   onRedirectNavigate?: (url: string) => boolean | void;
 };
 

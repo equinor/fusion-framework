@@ -13,7 +13,6 @@ import {
   distinctUntilChanged,
   filter,
   map,
-  merge,
   takeWhile,
   tap,
   throwIfEmpty,
@@ -268,7 +267,7 @@ const getQueueOperator = <TDataType, TQueryArguments>(
  */
 export class Query<
   TDataType,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: default must be bivariant `any`; `unknown` breaks assignability when a concrete `Query<TDataType, TQueryArguments>` is used where the default-typed class is expected
   TQueryArguments = any,
 > {
   /**

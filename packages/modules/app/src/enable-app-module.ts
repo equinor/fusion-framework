@@ -24,7 +24,7 @@ import type { AppConfigurator } from './AppConfigurator';
  * ```
  */
 export const enableAppModule = (
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: `IModulesConfigurator<any, any>` widens to accept a configurator for any concrete module set — `unknown` would break assignability of a real configurator instance to this parameter
   configurator: IModulesConfigurator<any, any>,
   callback?: (builder: AppConfigurator) => void | Promise<void>,
 ): void => {

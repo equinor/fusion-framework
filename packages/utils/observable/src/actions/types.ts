@@ -163,8 +163,7 @@ export type ActionType<T> = T extends ActionCreator
  */
 export type ActionBaseType<TAction extends Action> = TAction extends Action
   ? Extract<
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      TAction['type'] extends `${infer AName}::${infer ASuffix}` ? AName : TAction['type'],
+      TAction['type'] extends `${infer AName}::${infer _ASuffix}` ? AName : TAction['type'],
       string
     >
   : never;
@@ -181,7 +180,7 @@ export type ActionBaseType<TAction extends Action> = TAction extends Action
  * @returns The payload type of the `ActionInstance`, or `never` if it does not extend `PayloadAction<any>`.
  */
 export type ActionPayloadType<T> =
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: payload type is unknown until narrowed by the actual ActionInstance<T>
   ActionInstance<T> extends PayloadAction<any> ? ActionInstance<T>['payload'] : never;
 
 /**
@@ -207,8 +206,7 @@ export type ExtractAction<
  * @returns The original action type if it has the required suffix, or `never` if it does not.
  */
 export type ActionWithSuffix<TAction extends Action, Suffix extends string> = TAction extends Action
-  ? // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    TAction['type'] extends `${infer AName}::${infer ASuffix}`
+  ? TAction['type'] extends `${infer _AName}::${infer ASuffix}`
     ? ASuffix extends Suffix
       ? TAction
       : never

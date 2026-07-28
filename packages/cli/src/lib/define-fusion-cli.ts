@@ -53,6 +53,7 @@ export type FusionCliConfig = {
  */
 export type FusionCliConfigFn = (env?: {
   root?: string;
+  // biome-ignore lint/suspicious/noConfusingVoidType: `void` here relies on TypeScript's special-cased "void-returning callback accepts any return value" behavior — `undefined` would break assignability of config functions that return a `FusionCliConfig`
 }) => FusionCliConfig | Promise<FusionCliConfig | void> | void;
 
 /**

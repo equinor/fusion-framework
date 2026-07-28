@@ -86,7 +86,7 @@ export interface IMsalProvider {
   /**
    * Handle authentication redirect
    */
-  handleRedirect(): Promise<void | null>;
+  handleRedirect(): Promise<undefined | null>;
 
   /**
    * Create a proxy provider for version compatibility

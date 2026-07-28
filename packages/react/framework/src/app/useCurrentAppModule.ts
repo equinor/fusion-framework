@@ -48,7 +48,7 @@ export const useCurrentAppModule = <
       return undefined;
     }
     // Module lookup by dynamic key can't be statically narrowed to the exact module type; cast to any.
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore lint/suspicious/noExplicitAny: dynamic key lookup can't be statically narrowed to the exact module type
     return modules[moduleKey as keyof typeof modules] as any;
   })();
   return { module, error, complete };

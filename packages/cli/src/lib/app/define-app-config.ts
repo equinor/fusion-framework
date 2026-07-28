@@ -24,6 +24,7 @@ export { mergeAppConfig } from './merge-app-config.js';
 export type AppConfigFn = (
   env: RuntimeEnv,
   args: { base: ApiAppConfig },
+  // biome-ignore lint/suspicious/noConfusingVoidType: `void` here relies on TypeScript's special-cased "void-returning callback accepts any return value" behavior — `undefined` would break assignability of config functions that return a value
 ) => z.input<typeof ApiAppConfigSchema> | Promise<z.input<typeof ApiAppConfigSchema> | void> | void;
 
 /**

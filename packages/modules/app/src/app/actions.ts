@@ -77,7 +77,7 @@ const createActions = () => ({
     payload: id,
   })),
   /** App loading */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: module payload widens to accept any script module shape when set
   setModule: createAction('set_module', (module: any) => ({ payload: module })),
   importApp: createAsyncAction(
     'import_app',

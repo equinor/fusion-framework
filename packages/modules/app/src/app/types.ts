@@ -25,7 +25,7 @@ import type { Actions } from './actions';
  */
 export type AppBundleState<
   TConfig extends ConfigEnvironment = ConfigEnvironment,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: default must be bivariant `any`, not `unknown` — `unknown` breaks assignability when a concrete `AppBundleState<TConfig, TModules>` is used where the default-typed generic is expected
   TModules = any,
 > = {
   appKey: string;
@@ -46,6 +46,6 @@ export type AppBundleState<
  */
 export type AppBundleStateInitial<
   TConfig extends ConfigEnvironment = ConfigEnvironment,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: see AppBundleState above — default must be bivariant `any`
   TModules = any,
 > = Omit<AppBundleState<TConfig, TModules>, 'status'>;

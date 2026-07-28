@@ -10,5 +10,5 @@ import type { Fusion } from '@equinor/fusion-framework';
  *
  * @internal
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// biome-ignore lint/suspicious/noExplicitAny: `Fusion<any>` widens the context to accept a Fusion instance with any concrete module set
 export const context = createContext<Fusion<any> | null>(null);

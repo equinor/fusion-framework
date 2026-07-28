@@ -59,6 +59,7 @@ export type ContextConfigBuilderCallback = <TDeps extends Array<AnyModule> = []>
  */
 export class ContextConfigBuilder<
   TModules extends Array<AnyModule> = [],
+  // biome-ignore lint/suspicious/noExplicitAny: `ModuleInitializerArgs<any, any>` widens the constraint to accept initializer args for any configurator/module set \u2014 `unknown` breaks assignability of the concrete default type argument
   TInit extends ModuleInitializerArgs<any, any> = ModuleInitializerArgs<
     ContextModuleConfigurator,
     TModules
@@ -98,7 +99,10 @@ export class ContextConfigBuilder<
    * @param module - The key or name of the module to resolve.
    * @returns A promise that resolves to the requested module instance.
    */
-  requireInstance(module: string): Promise<any> {
+  requireInstance(
+    module: string,
+    // biome-ignore lint/suspicious/noExplicitAny: implementation signature must satisfy both overloads above (`Promise<ModuleType<...>>` and `Promise<T>`); `unknown` is not assignable to the generic `Promise<T>` overload
+  ): Promise<any> {
     return this.#init.requireInstance(module);
   }
 
@@ -212,7 +216,7 @@ export class ContextConfigBuilder<
     },
     expire = 1 * 60 * 1000,
   ): void {
-    this.config.client = {
+    const clientConfig: ContextModuleConfig['client'] = {
       get:
         typeof client.get === 'function'
           ? {
@@ -235,10 +239,10 @@ export class ContextConfigBuilder<
             }
           : client.query,
     };
+    this.config.client = clientConfig;
     // only override the related-context client config if one was provided
     if (client.related) {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      this.config.client!.related =
+      clientConfig.related =
         typeof client.related === 'function'
           ? {
               // TODO(#5118) - might cast to checksum

@@ -56,7 +56,7 @@ import { version } from './version.js';
  */
 export class FrameworkConfigurator<
   TModules extends Array<AnyModule> = [],
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: default must be bivariant `any`, not `unknown` \u2014 `unknown` breaks assignability when a concrete `FrameworkConfigurator<TModules, TRef>` is used where the default-typed class is expected
   TRef = any,
 > extends ModulesConfigurator<FusionModules<TModules>, TRef> {
   /**

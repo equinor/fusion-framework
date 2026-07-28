@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+// biome-ignore-all lint/suspicious/noExplicitAny: `BookmarkData = any` generic defaults must remain bivariant — `unknown` breaks assignability of concrete `Bookmark<T>`/`BookmarkPayloadGenerator<TData>` instances to the default-typed generic
 import type { Observable, ObservableInput } from 'rxjs';
 import type { Bookmark, BookmarkData, BookmarkWithoutData } from './types';
 import type { BookmarkNew, BookmarkUpdate } from './BookmarkClient.interface';
@@ -45,6 +45,7 @@ export type BookmarkUpdateOptions = {
 export type BookmarkPayloadGenerator<TData extends BookmarkData = any> = (
   payload?: Partial<TData> | null,
   initial?: Partial<TData> | null,
+  // biome-ignore lint/suspicious/noConfusingVoidType: `void` here relies on TypeScript's special-cased "void-returning callback accepts any return value" behavior for draft-mutating generators — `undefined` would break assignability of generators that only conditionally return a partial payload
 ) => Promise<Partial<TData> | void> | Partial<TData> | void;
 
 /**

@@ -8,8 +8,7 @@ import type { ObservableType } from '../types';
  *
  * @template TArgs - The argument tuple type.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type UseDebounceOptions<TArgs extends any[]> = {
+export type UseDebounceOptions<TArgs extends unknown[]> = {
   /**
    * Either a numeric millisecond delay, or a function returning an
    * `ObservableInput` that controls the debounce duration per invocation.
@@ -47,15 +46,14 @@ export type UseDebounceOptions<TArgs extends any[]> = {
  */
 export const useDebounce = <
   TFn extends (...args: TArgs) => TType,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: constraining to `unknown` breaks `ObservableType<TType>` inference below (TS resolves the conditional to `unknown` instead of the actual emitted type)
   TType extends ObservableInput<any> = ReturnType<TFn>,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  TArgs extends any[] = Parameters<TFn>,
+  TArgs extends unknown[] = Parameters<TFn>,
 >(
   fn: TFn,
   options: UseDebounceOptions<TArgs>,
 ): {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: matches the `TType` constraint above
   value$: Observable<TType extends ObservableInput<any> ? ObservableType<TType> : TType>;
   next: (...args: TArgs) => void;
   idle: boolean;
