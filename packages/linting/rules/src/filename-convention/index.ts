@@ -159,6 +159,23 @@ function basenameStem(filePath: string): string {
 }
 
 /**
+ * Returns the immediate parent directory's name, already kebab-case (directory
+ * names in this repo are kebab-case by convention), or `null` for a file with
+ * no meaningful parent segment (e.g. directly under `src`).
+ *
+ * @param filePath - Absolute or relative file path.
+ * @returns The parent directory's basename, or `null` if unavailable.
+ */
+function parentDirName(filePath: string): string | null {
+  const segments = filePath.split(/[/\\]/).filter(Boolean);
+  // Need at least [..., dir, file.ts] to have a meaningful parent directory
+  if (segments.length < 2) return null;
+  const dir = segments[segments.length - 2];
+  return dir === 'src' ? null : dir;
+}
+
+
+/**
  * Creates a `filename-convention` rule with the given options.
  *
  * Enforces that a file's name matches the naming convention of its single
@@ -241,7 +258,13 @@ export const filenameConvention: RuleDef = (options = {}) => {
       // first dot needs to match the export name; the category itself is unconstrained.
       const expectedKebab = toKebabCase(name);
       const [baseSegment] = stem.split('.');
-      if (baseSegment !== expectedKebab) {
+      // The immediate parent directory can act as an implicit namespace prefix
+      // (e.g. `require-intent-comment/flow.ts` exporting `requireIntentCommentFlow`
+      // — the directory name plus the filename together spell out the export).
+      // Accept either the bare match or the directory-prefixed match.
+      const dirKebab = parentDirName(filePath);
+      const namespacedKebab = dirKebab ? `${dirKebab}-${baseSegment}` : null;
+      if (baseSegment !== expectedKebab && namespacedKebab !== expectedKebab) {
         return [
           {
             file: filePath,

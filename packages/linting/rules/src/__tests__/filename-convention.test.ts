@@ -82,6 +82,11 @@ export const bar = () => {};
     const source = `export class Foo {}`;
     expect(lint(source, '/src/legacy.ts', rule)).toHaveLength(0);
   });
+
+  it('passes: parent directory acts as an implicit namespace prefix', () => {
+    const source = `export const requireIntentCommentFlow = () => {};`;
+    expect(lint(source, '/src/require-intent-comment/flow.ts')).toHaveLength(0);
+  });
 });
 
 // ── Failing cases ─────────────────────────────────────────────────────────────
@@ -128,5 +133,12 @@ describe('filename-convention — failing', () => {
     const diagnostics = lint(source, '/src/methods.ts');
     expect(diagnostics).toHaveLength(1);
     expect(diagnostics[0].message).toContain("rename the file to 'http-method.ts'");
+  });
+
+  it('fails: parent directory namespace prefix does not paper over an unrelated filename', () => {
+    const source = `export const requireIntentCommentFlow = () => {};`;
+    const diagnostics = lint(source, '/src/require-intent-comment/unrelated.ts');
+    expect(diagnostics).toHaveLength(1);
+    expect(diagnostics[0].message).toContain("rename the file to 'require-intent-comment-flow.ts'");
   });
 });
