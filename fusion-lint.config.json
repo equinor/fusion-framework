@@ -17,6 +17,7 @@
         "provider.ts",
         "client.ts",
         "client-msal.ts",
+        "route-factory.ts",
         "static.ts",
         "types.ts"
       ]

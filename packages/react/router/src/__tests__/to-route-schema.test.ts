@@ -3,7 +3,7 @@ import type { RouteObject } from '../types';
 
 import { toRouteSchema } from '../routes/to-route-schema';
 import { route } from '../routes/route-factory';
-import { prefix } from '../routes/prefix-route-factory';
+import { prefix } from '../routes/prefix';
 import {
   mockHomeRoute,
   mockProductRoute,

@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 
-import { _routerContext } from './router-context-internal.js';
+import { _routerContext } from './_router-context.js';
 
 import type { FusionRouterContext } from './types.js';
 

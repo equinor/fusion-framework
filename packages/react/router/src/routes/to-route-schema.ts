@@ -303,8 +303,9 @@ async function processNodes(
 function isRouteObjectArray(nodes: unknown): nodes is RouteObject[] {
   return (
     Array.isArray(nodes) &&
-    // RouteObjects are plain objects without the discriminating 'kind' property RouteNodes have
-    nodes.every((node) => typeof node === 'object' && node !== null && 'kind' in node === false)
+    nodes
+      // RouteObjects are plain objects without the discriminating 'kind' property RouteNodes have
+      .every((node) => typeof node === 'object' && node !== null && 'kind' in node === false)
   );
 }
 

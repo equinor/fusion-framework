@@ -1,4 +1,4 @@
-import { _routerContext } from './router-context-internal.js';
+import { _routerContext } from './_router-context.js';
 
 /**
  * React context provider that supplies {@link FusionRouterContext} to the component tree.
