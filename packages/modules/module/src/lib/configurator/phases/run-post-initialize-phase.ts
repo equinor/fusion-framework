@@ -4,7 +4,7 @@ import { EMPTY, from, lastValueFrom } from 'rxjs';
 import { catchError, defaultIfEmpty, filter, mergeMap, tap } from 'rxjs/operators';
 
 import { ModuleEventLevel, type AnyModule, type ModuleEvent } from '../../../types.js';
-import { ModuleConfiguratorEventName } from '../events.js';
+import { ModuleConfiguratorEventName } from '../module-configurator-event-name.js';
 
 /**
  * Context passed to the post-initialize lifecycle phase.
@@ -55,6 +55,7 @@ export async function runPostInitializePhase(
   // Run postInitialize hooks for modules that declare them. Failures are caught
   // per-module via catchError so one failure does not abort the others.
   const postInitialize$ = from(modules).pipe(
+    // Only process modules that define a postInitialize hook
     filter((module): module is Required<AnyModule> => !!module.postInitialize),
     tap((module) => {
       registerEvent({
@@ -69,6 +70,7 @@ export async function runPostInitializePhase(
     }),
     mergeMap((module) => {
       const postInitStart = performance.now();
+      // Emit completion/error events for this module's postInitialize call as it settles
       return from(
         module.postInitialize({
           ref,
@@ -123,6 +125,7 @@ export async function runPostInitializePhase(
     metric: postInitTime,
   });
 
+  // Skip the afterInit hooks entirely when none are registered
   if (!afterInit.length) {
     registerEvent({
       level: ModuleEventLevel.Debug,
@@ -136,31 +139,44 @@ export async function runPostInitializePhase(
   // Run all registered afterInit callbacks. These were added either by
   // addConfig's afterInit or via onInitialized on the configurator.
   try {
+    // Build a display string of registered hook names for the start event
+    const hookNames = afterInit
+      // Extract each hook's name, falling back for anonymous functions
+      .map((x) => x.name || 'anonymous')
+      .join(', ');
     registerEvent({
       level: ModuleEventLevel.Debug,
       name: ModuleConfiguratorEventName.PostInitializeHooks,
       message: `Executing post-initialize hooks [${afterInit.length}]`,
-      properties: { hooks: afterInit.map((x) => x.name || 'anonymous').join(', ') },
+      properties: { hooks: hookNames },
     });
     const afterInitStart = performance.now();
-    await Promise.allSettled(afterInit.map((x) => Promise.resolve(x(instance))));
+    await Promise.allSettled(
+      // Invoke every registered afterInit callback with the initialized module instance map
+      afterInit.map((x) => Promise.resolve(x(instance))),
+    );
     const afterInitTime = Math.round(performance.now() - afterInitStart);
     registerEvent({
       level: ModuleEventLevel.Debug,
       name: ModuleConfiguratorEventName.PostInitializeHooksComplete,
       message: `Post-initialize hooks completed in ${afterInitTime}ms`,
       properties: {
-        hooks: afterInit.map((x) => x.name || 'anonymous').join(', '),
+        hooks: hookNames,
         afterInitTime,
       },
       metric: afterInitTime,
     });
   } catch (err) {
+    // Build a display string of registered hook names for the error event
+    const hookNames = afterInit
+      // Extract each hook's name, falling back for anonymous functions
+      .map((x) => x.name || 'anonymous')
+      .join(', ');
     registerEvent({
       level: ModuleEventLevel.Warning,
       name: ModuleConfiguratorEventName.PostInitializeHooksError,
       message: 'Post-initialize hooks failed',
-      properties: { hooks: afterInit.map((x) => x.name || 'anonymous').join(', ') },
+      properties: { hooks: hookNames },
       error: err,
     });
   }

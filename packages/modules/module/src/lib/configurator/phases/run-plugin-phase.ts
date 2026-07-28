@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ModuleEventLevel, type ModuleEvent } from '../../../types.js';
 import type { FrameworkPluginCallback, FrameworkPluginTeardown } from '../../plugin/index.js';
-import { ModuleConfiguratorEventName } from '../events.js';
+import { ModuleConfiguratorEventName } from '../module-configurator-event-name.js';
 
 /**
  * Checks whether a plugin return value should be treated as dispose-time cleanup.
@@ -56,6 +56,7 @@ export interface PluginPhaseContext<TRef = unknown> {
  * @param modules - The initialized module instance map.
  * @param ref - Optional reference forwarded from module initialization.
  * @returns A promise resolving when all plugin callbacks have settled.
+ * @template TRef - Reference type forwarded to plugin callbacks.
  */
 export async function runPluginPhase<TRef = unknown>(
   ctx: PluginPhaseContext<TRef>,
@@ -64,6 +65,7 @@ export async function runPluginPhase<TRef = unknown>(
 ): Promise<void> {
   const { plugins, teardowns, registerEvent } = ctx;
 
+  // Skip the plugin phase entirely when no plugins were registered
   if (!plugins.length) return;
 
   registerEvent({
@@ -74,6 +76,7 @@ export async function runPluginPhase<TRef = unknown>(
   });
 
   const pluginRegistrations = await Promise.all(
+    // Run every plugin callback concurrently so one slow plugin cannot delay the others
     plugins.map(async (plugin) => {
       const pluginStart = performance.now();
       const name = plugin.name || 'anonymous';
@@ -101,7 +104,9 @@ export async function runPluginPhase<TRef = unknown>(
     }),
   );
 
+  // Queue every plugin teardown returned above so the dispose phase can invoke them later
   for (const teardown of pluginRegistrations) {
+    // Only queue teardowns for plugins that actually returned one
     if (teardown) {
       teardowns.push(teardown);
     }

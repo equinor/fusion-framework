@@ -3,13 +3,14 @@ import type { Subject } from 'rxjs';
 
 import { ModuleEventLevel, type AnyModule, type ModuleEvent } from '../../../types.js';
 import type { FrameworkPluginTeardown } from '../../plugin/index.js';
-import { ModuleConfiguratorEventName } from '../events.js';
+import { ModuleConfiguratorEventName } from '../module-configurator-event-name.js';
 
 function getPluginTeardownName(teardown: FrameworkPluginTeardown): string {
   return typeof teardown === 'function' ? teardown.name || 'anonymous' : 'dispose';
 }
 
 async function runPluginTeardown(teardown: FrameworkPluginTeardown): Promise<void> {
+  // Function-shaped teardowns are called directly; object-shaped ones expose a dispose() method
   if (typeof teardown === 'function') {
     await teardown();
     return;
@@ -63,6 +64,7 @@ export async function runDisposePhase(
     properties: { modules: Object.keys(instance).join(', ') },
   });
 
+  // Only run the plugin teardown sequence when plugins were actually registered
   if (pluginTeardowns.length) {
     registerEvent({
       level: ModuleEventLevel.Debug,
@@ -106,8 +108,11 @@ export async function runDisposePhase(
   // one bad teardown cannot leave other modules in an inconsistent state.
   await Promise.allSettled(
     modules
+      // Only process modules that define a dispose hook
       .filter((module) => !!module.dispose)
+      // Dispose each module that defines the hook
       .map(async (module) => {
+        // Narrow the type for TypeScript; the filter above already guarantees this
         if (!module.dispose) return;
         try {
           await module.dispose({

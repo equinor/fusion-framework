@@ -1,7 +1,7 @@
 import { coerce } from 'semver';
 import { Subscription, type TeardownLogic } from 'rxjs';
 
-import SemanticVersion from '../semantic-version.js';
+import SemanticVersion from '../SemanticVersion.js';
 
 import type { IModuleProvider } from './IModuleProvider.js';
 
@@ -63,6 +63,7 @@ export abstract class BaseModuleProvider<TConfig = unknown> implements IModulePr
       // where inherited properties are acceptable for instanceof checks
       'version' in instance &&
       'dispose' in instance;
+    // Only coerce version/dispose once the basic shape check has passed
     if (hasStructure) {
       const obj = instance as Record<string, unknown>;
       const version = coerce(String(obj.version));
@@ -75,6 +76,11 @@ export abstract class BaseModuleProvider<TConfig = unknown> implements IModulePr
   #version: SemanticVersion;
   #subscriptions: Subscription;
 
+  /**
+   * The resolved semantic version of this module provider.
+   *
+   * @returns The provider's semantic version.
+   */
   public get version() {
     return this.#version;
   }

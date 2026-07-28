@@ -227,6 +227,7 @@ export abstract class BaseConfigBuilder<TConfig extends object = Record<string, 
    * If a function is provided as `value_or_cb`, it will be used as a callback for deferred or computed configuration values.
    * Otherwise, the value is wrapped in an async function for consistency.
    *
+   * @template TTarget - The dot-path string representing the target property in the configuration.
    * @protected
    * @sealed
    */
@@ -245,6 +246,7 @@ export abstract class BaseConfigBuilder<TConfig extends object = Record<string, 
    *
    * @param target - The target path in the configuration to retrieve the callback for.
    * @returns The configuration builder callback for the specified target, or `undefined` if no callback is registered.
+   * @template TTarget - The dot-path string representing the target property in the configuration.
    * @protected
    * @sealed
    */
@@ -258,6 +260,7 @@ export abstract class BaseConfigBuilder<TConfig extends object = Record<string, 
    * Checks if the given target path exists in the configuration callbacks.
    * @param target - The target path to check.
    * @returns `true` if the target path exists in the configuration callbacks, `false` otherwise.
+   * @template TTarget - The dot-path string representing the target property in the configuration.
    * @protected
    * @sealed
    */
@@ -320,22 +323,25 @@ export abstract class BaseConfigBuilder<TConfig extends object = Record<string, 
     init: ConfigBuilderCallbackArgs,
     initial?: Partial<TConfig>,
   ): ObservableInput<Partial<TConfig>> {
+    // Execute every registered config callback and collect its target-value pair
     return from(Object.entries<ConfigBuilderCallback>(this.#configCallbacks)).pipe(
       // Transform each config callback into a target-value pair
       mergeMap(([target, cb]) =>
-        from(cb(init)).pipe(
-          // Filter out undefined values, mostly for void return types
-          filter((value) => value !== undefined),
-          // Map the value to a target-value pair
-          map((value) => ({ target, value })),
-          catchError((error) => {
-            console.error(
-              `Failed to execute config callback: ${cb.name} for attribute: '${target}'`,
-              error,
-            );
-            return EMPTY;
-          }),
-        ),
+        from(cb(init))
+          // Run the callback and shape its result into a target-value pair, skipping void results
+          .pipe(
+            // Filter out undefined values, mostly for void return types
+            filter((value) => value !== undefined),
+            // Map the value to a target-value pair
+            map((value) => ({ target, value })),
+            catchError((error) => {
+              console.error(
+                `Failed to execute config callback: ${cb.name} for attribute: '${target}'`,
+                error,
+              );
+              return EMPTY;
+            }),
+          ),
       ),
       // Reduce the target-value pairs into a single configuration object
       reduce(

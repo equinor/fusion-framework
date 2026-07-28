@@ -35,7 +35,7 @@ export type {
   ModulesType,
 } from './types.js';
 
-export { SemanticVersion } from './lib/semantic-version.js';
+export { SemanticVersion } from './lib/SemanticVersion.js';
 
 export type { IModuleProvider } from './lib/provider/IModuleProvider.js';
 
@@ -43,7 +43,7 @@ export type { DotPath, DotPathType, DotPathUnion } from './utils/dot-path.js';
 
 export { initializeModules } from './initialize-modules.js';
 
-export { ModuleConsoleLogger, IModuleConsoleLogger } from './logger.js';
+export { ModuleConsoleLogger, IModuleConsoleLogger } from './ModuleConsoleLogger.js';
 
 export { ModuleConfigBuilder } from './ModuleConfigBuilder.js';
 export {

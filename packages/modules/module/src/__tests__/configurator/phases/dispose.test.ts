@@ -3,8 +3,8 @@ import { Subject } from 'rxjs';
 import {
   runDisposePhase,
   type DisposePhaseContext,
-} from '../../../lib/configurator/phases/dispose.js';
-import { ModuleConfiguratorEventName } from '../../../lib/configurator/events.js';
+} from '../../../lib/configurator/phases/run-dispose-phase.js';
+import { ModuleConfiguratorEventName } from '../../../lib/configurator/module-configurator-event-name.js';
 import type { AnyModule, ModuleEvent } from '../../../types.js';
 
 function makeCtx(

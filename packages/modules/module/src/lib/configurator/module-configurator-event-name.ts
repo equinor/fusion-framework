@@ -1,5 +1,6 @@
-/** Shared base segment for module configurator lifecycle event names. */
-export const ModuleConfiguratorEventBaseName = 'ModuleConfigurator';
+import { ModuleConfiguratorEventBaseName } from './module-configurator-event-base-name.js';
+
+export { ModuleConfiguratorEventBaseName };
 
 /**
  * Event names emitted by `ModulesConfigurator` and its lifecycle phase helpers.

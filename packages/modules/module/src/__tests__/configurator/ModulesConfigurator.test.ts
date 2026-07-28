@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import type { AnyModule } from '../../types.js';
 import { ModulesConfigurator } from '../../lib/configurator/ModulesConfigurator.js';
-import { ModuleConfiguratorEventName } from '../../lib/configurator/events.js';
+import { ModuleConfiguratorEventName } from '../../lib/configurator/module-configurator-event-name.js';
 import { createPlugin } from '../../lib/plugin/index.js';
 import { createMockModule, createMinimalModule, collectEvents } from '../helpers.js';
 

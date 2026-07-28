@@ -1,4 +1,4 @@
-import type SemanticVersion from '../semantic-version.js';
+import type SemanticVersion from '../SemanticVersion.js';
 
 /**
  * Contract that every Fusion Framework module provider must satisfy.

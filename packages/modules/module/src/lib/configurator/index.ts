@@ -24,19 +24,21 @@ export type {
 export { createPlugin } from '../plugin/index.js';
 
 export { RequiredModuleTimeoutError } from './types.js';
-export { ModuleConfiguratorEventBaseName, ModuleConfiguratorEventName } from './events.js';
-export type { ModuleConfiguratorEventName as ModuleConfiguratorEventNameType } from './events.js';
+export {
+  ModuleConfiguratorEventBaseName,
+  ModuleConfiguratorEventName,
+} from './module-configurator-event-name.js';
+export type { ModuleConfiguratorEventName as ModuleConfiguratorEventNameType } from './module-configurator-event-name.js';
 
 export { ModulesConfigurator } from './ModulesConfigurator.js';
 
 // Phase functions are exported for testing and advanced subclass use cases.
 // Direct consumers should use ModulesConfigurator instead.
-export {
-  runConfigurePhase,
-  createModuleConfigs,
-  runPostConfigureHooks,
-} from './phases/configure.js';
-export { runInitializePhase, createRequireInstance } from './phases/initialize.js';
-export { runPostInitializePhase } from './phases/post-initialize.js';
-export { runPluginPhase } from './phases/plugin.js';
-export { runDisposePhase } from './phases/dispose.js';
+export { createModuleConfigs } from './phases/create-module-configs.js';
+export { runPostConfigureHooks } from './phases/run-post-configure-hooks.js';
+export { runConfigurePhase } from './phases/run-configure-phase.js';
+export { createRequireInstance } from './phases/create-require-instance.js';
+export { runInitializePhase } from './phases/run-initialize-phase.js';
+export { runPostInitializePhase } from './phases/run-post-initialize-phase.js';
+export { runPluginPhase } from './phases/run-plugin-phase.js';
+export { runDisposePhase } from './phases/run-dispose-phase.js';

@@ -38,10 +38,7 @@ export type ModulesConfiguratorConfigCallback<TRef> = (
  * timeout window.
  *
  * Indicates a circular dependency or a module that never resolves.
+ *
+ * @see {@link RequiredModuleTimeoutError}
  */
-export class RequiredModuleTimeoutError extends Error {
-  constructor() {
-    super('Module initialization timed out');
-    this.name = 'RequiredModuleTimeoutError';
-  }
-}
+export { RequiredModuleTimeoutError } from './RequiredModuleTimeoutError.js';

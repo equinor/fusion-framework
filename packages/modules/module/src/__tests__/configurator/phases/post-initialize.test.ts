@@ -2,8 +2,8 @@ import { describe, it, expect, vi } from 'vitest';
 import {
   runPostInitializePhase,
   type PostInitializePhaseContext,
-} from '../../../lib/configurator/phases/post-initialize.js';
-import { ModuleConfiguratorEventName } from '../../../lib/configurator/events.js';
+} from '../../../lib/configurator/phases/run-post-initialize-phase.js';
+import { ModuleConfiguratorEventName } from '../../../lib/configurator/module-configurator-event-name.js';
 import type { AnyModule, ModuleEvent } from '../../../types.js';
 
 function makeCtx(

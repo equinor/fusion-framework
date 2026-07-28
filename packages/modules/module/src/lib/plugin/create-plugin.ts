@@ -32,6 +32,7 @@ export function createPlugin<TModules extends Array<AnyModule>, TRef = unknown>(
 ): FrameworkPlugin<TModules, TRef> {
   const normalizedName = name.trim();
 
+  // Reject empty/whitespace-only names so lifecycle events always have a stable identifier
   if (!normalizedName) {
     throw new Error('Framework plugin name must be a non-empty string');
   }
