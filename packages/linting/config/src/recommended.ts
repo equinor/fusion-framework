@@ -15,6 +15,7 @@ import {
   singleExportPerFile,
   requireComponentTsDoc,
   requireHookTsDoc,
+  filenameConvention,
 } from '@equinor/fusion-framework-lint-rules';
 
 export { recommendedConfig } from './recommended-config.js';
@@ -40,4 +41,5 @@ export const recommendedRules: Rule[] = [
   singleExportPerFile(),
   requireComponentTsDoc(),
   requireHookTsDoc(),
+  filenameConvention(),
 ];

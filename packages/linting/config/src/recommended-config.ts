@@ -17,4 +17,5 @@ export const recommendedConfig: LintConfig = {
   'no-empty-catch': 'error',
   'no-separate-export': 'error',
   'single-export-per-file': 'warn',
+  'filename-convention': 'warn',
 };
