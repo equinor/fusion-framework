@@ -16,7 +16,8 @@
         "configurator.ts",
         "provider.ts",
         "client.ts",
-        "client-msal.ts"
+        "client-msal.ts",
+        "static.ts"
       ]
     }
   },
