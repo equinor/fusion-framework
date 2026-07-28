@@ -155,7 +155,11 @@ export class HttpClientConfigurator<TClient extends IHttpClient>
 {
   protected _clients: Record<string, HttpClientOptions<TClient>> = {};
 
-  /** Gets a shallow clone of all named client configurations. */
+  /**
+   * Gets a shallow clone of all named client configurations.
+   *
+   * @returns A shallow clone of the named client configurations.
+   */
   public get clients(): Record<string, HttpClientOptions<TClient>> {
     return { ...this._clients };
   }

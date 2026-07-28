@@ -4,7 +4,7 @@ import {
   createSseSelector,
   type ServerSentEvent,
   type SseSelectorOptions,
-} from '../selectors/sse-selector';
+} from '../selectors/create-sse-selector';
 
 /**
  * An operator function for handling Server-Sent Events (SSE) in an RxJS pipeline.
@@ -39,6 +39,8 @@ export const sseMap =
     options?: SseSelectorOptions<R>,
   ): OperatorFunction<T, ServerSentEvent<R>> =>
   (source) =>
-    source.pipe(switchMap(createSseSelector<R, T>(options)));
+    source
+      // parse each raw Response into a stream of typed server-sent events
+      .pipe(switchMap(createSseSelector<R, T>(options)));
 
 export default sseMap;

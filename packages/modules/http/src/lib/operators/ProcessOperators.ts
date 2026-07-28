@@ -32,6 +32,7 @@ export class ProcessOperators<T> implements IProcessOperators<T> {
    *                    It can be either an instance of IProcessOperators<T> or a record of string keys and ProcessOperator<T> values.
    */
   constructor(operators?: IProcessOperators<T> | Record<string, ProcessOperator<T>>) {
+    // accept either a raw operators record or another IProcessOperators instance to clone from
     if (operators && 'operators' in operators) {
       this._operators = { ...operators.operators };
     } else {
@@ -47,6 +48,7 @@ export class ProcessOperators<T> implements IProcessOperators<T> {
    * @throws Error if an operator with the same key already exists.
    */
   add(key: string, operator: ProcessOperator<T>): ProcessOperators<T> {
+    // guard against silently overwriting an existing operator under the same key
     if (Object.keys(this._operators).includes(key))
       throw Error(`Operator [${key}] already defined`);
     return this.set(key, operator);
@@ -94,17 +96,21 @@ export class ProcessOperators<T> implements IProcessOperators<T> {
     if (!operators.length) {
       return of(request);
     }
-    return from(Object.values(this._operators)).pipe(
-      mergeScan(
-        // resolve current operator and return result or previous if void
-        (value, operator) => Promise.resolve(operator(value)).then((x) => x ?? value),
-        // initial value
-        request,
-        // only allow concurrency of one operator
-        1,
-      ),
-      // output result of last operator
-      last(),
+    return (
+      from(Object.values(this._operators))
+        // feed the request through each operator sequentially, keeping the previous value when one returns void
+        .pipe(
+          mergeScan(
+            // resolve current operator and return result or previous if void
+            (value, operator) => Promise.resolve(operator(value)).then((x) => x ?? value),
+            // initial value
+            request,
+            // only allow concurrency of one operator
+            1,
+          ),
+          // output result of last operator
+          last(),
+        )
     );
   }
 }

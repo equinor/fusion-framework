@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { ServerSentEventResponseError } from '../src/errors.js';
+import { ServerSentEventResponseError } from '../src/errors/index.js';
 import { createSseSelector, type ServerSentEvent } from '../src/lib/selectors';
 import { of, lastValueFrom } from 'rxjs';
 import { concatMap, scan } from 'rxjs/operators';
@@ -12,9 +12,12 @@ function createMockResponse(
 ): Response {
   const body = new ReadableStream({
     start(controller) {
+      // feed each chunk to the stream, treating a null chunk as end-of-stream
       for (const chunk of bodyChunks) {
+        // a null chunk signals the mock stream should close early
         if (chunk === null) {
           controller.close();
+          // nothing left to enqueue once the stream is closed
           break;
         }
         controller.enqueue(chunk);
@@ -31,10 +34,12 @@ describe('createSseSelector', () => {
     const response = createMockResponse(chunks);
     const selector = createSseSelector();
     const events = await lastValueFrom(
-      of(response).pipe(
-        concatMap(selector),
-        scan((acc, event) => [...acc, event], [] as ServerSentEvent[]),
-      ),
+      of(response)
+        // parse the SSE stream into individual events and collect them into an array
+        .pipe(
+          concatMap(selector),
+          scan((acc, event) => [...acc, event], [] as ServerSentEvent[]),
+        ),
     );
     expect(events).toEqual([{ data: { key: 'value' } }]);
   });
@@ -76,10 +81,12 @@ describe('createSseSelector', () => {
     const response = createMockResponse(chunks);
     const selector = createSseSelector({ eventFilter: 'message' });
     const events = await lastValueFrom(
-      of(response).pipe(
-        concatMap(selector),
-        scan((acc, event) => [...acc, event], [] as ServerSentEvent[]),
-      ),
+      of(response)
+        // parse the SSE stream into individual events and collect them into an array
+        .pipe(
+          concatMap(selector),
+          scan((acc, event) => [...acc, event], [] as ServerSentEvent[]),
+        ),
     );
 
     expect(events).toEqual([{ event: 'message', data: { key: 'value' } }]);
@@ -95,10 +102,12 @@ describe('createSseSelector', () => {
     const response = createMockResponse(chunks);
     const selector = createSseSelector({ skipHeartbeats: true });
     const events = await lastValueFrom(
-      of(response).pipe(
-        concatMap(selector),
-        scan((acc, event) => [...acc, event], [] as ServerSentEvent[]),
-      ),
+      of(response)
+        // parse the SSE stream into individual events and collect them into an array
+        .pipe(
+          concatMap(selector),
+          scan((acc, event) => [...acc, event], [] as ServerSentEvent[]),
+        ),
     );
 
     expect(events).toEqual([{ data: { key: 'value' } }]);
@@ -114,10 +123,12 @@ describe('createSseSelector', () => {
     const selector = createSseSelector();
 
     const events = await lastValueFrom(
-      of(response).pipe(
-        concatMap(selector),
-        scan((acc, event) => [...acc, event], [] as ServerSentEvent[]),
-      ),
+      of(response)
+        // parse the SSE stream into individual events and collect them into an array
+        .pipe(
+          concatMap(selector),
+          scan((acc, event) => [...acc, event], [] as ServerSentEvent[]),
+        ),
     );
 
     expect(events).toEqual([{ data: { foo: 'value1' } }, { data: { bar: 'value2' } }]);
@@ -133,10 +144,12 @@ describe('createSseSelector', () => {
     const response = createMockResponse(chunks);
     const selector = createSseSelector({ abortSignal: abortController.signal });
     const eventsPromise = lastValueFrom(
-      of(response).pipe(
-        concatMap(selector),
-        scan((acc, event) => [...acc, event], [] as ServerSentEvent[]),
-      ),
+      of(response)
+        // parse the SSE stream into individual events and collect them into an array
+        .pipe(
+          concatMap(selector),
+          scan((acc, event) => [...acc, event], [] as ServerSentEvent[]),
+        ),
     );
 
     await new Promise((resolve) => setTimeout(resolve, 50));

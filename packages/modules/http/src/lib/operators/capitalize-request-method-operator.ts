@@ -1,4 +1,4 @@
-import { requestMethodCasing } from './fetch-request.schema';
+import { requestMethodCasing } from './fetch-request.schemas';
 import type { ProcessOperator } from './types';
 
 /**
@@ -14,7 +14,9 @@ export const capitalizeRequestMethodOperator =
 
     request.method = success ? data : request.method?.toUpperCase();
 
+    // surface schema validation issues as warnings when not running silently
     if (error && !options?.silent) {
+      // one warning per issue so callers can see exactly what failed to validate
       for (const e of error.issues) {
         console.warn(e.message);
       }

@@ -2,7 +2,7 @@ import { EMPTY, from, fromEvent, type Observable } from 'rxjs';
 import { finalize, takeUntil } from 'rxjs/operators';
 
 import type { ResponseSelector } from '../client/types.js';
-import { ServerSentEventResponseError } from '../../errors.js';
+import { ServerSentEventResponseError } from '../../errors/index.js';
 
 /**
  * A type representing a function that parses a string into a specific data type.
@@ -139,31 +139,41 @@ async function* readStream<TData>(
 
   const decoder = new TextDecoder();
 
+  // keep reading chunks from the stream until the reader signals completion
   while (true) {
     const { done, value } = await reader.read();
+    // the underlying stream has ended, nothing more to read
     if (done) {
+      // exit the read loop rather than yielding any further events
       break;
     }
 
     const text = decoder.decode(value, { stream: true });
     const events = parseEvents<TData>(text, { dataParser: options?.dataParser });
+    // a chunk may contain multiple complete SSE events, emit each in turn
     for (const event of events) {
+      // a retry directive reconfigures the reconnection delay rather than being a data event
       if (event.retry) {
         await new Promise((resolve) =>
           setTimeout(resolve, Number.parseInt(event.retry ?? '300', 10)),
         );
+        // nothing to yield for a retry-only event
         continue;
       }
+      // heartbeat filtering is opt-in via the skipHeartbeats option
       if (skipHeartbeats) {
         // Skip comment-based heartbeats (no event, data, or id)
         if (!event.event && !event.data && !event.id) {
+          // this event carries no payload, so treat it as a heartbeat and skip it
           continue;
         }
         // Skip named heartbeat events (e.g., event: heartbeat or event: ping)
         if (event.event && ['heartbeat', 'ping'].includes(event.event)) {
+          // an explicitly named heartbeat/ping event should also be skipped
           continue;
         }
       }
+      // only emit events that pass the caller-provided event type filter, if any
       if (!eventFilter || (event.event && eventFilter.includes(event.event))) {
         yield event as ServerSentEvent<TData>;
       }
@@ -225,36 +235,43 @@ export const createSseSelector = <TData = unknown, TResponse extends Response = 
   options?: SseSelectorOptions<TData>,
 ): SseSelector<TData, TResponse> => {
   return (response: TResponse): Observable<ServerSentEvent<TData>> => {
+    // an unsuccessful HTTP status means there is no valid SSE stream to read
     if (!response.ok) {
       throw new ServerSentEventResponseError(`HTTP error! Status: ${response.status}`, response);
     }
 
+    // a missing body means there is nothing to stream from
     if (!response.body) {
       throw new ServerSentEventResponseError('Response body is not readable', response);
     }
 
+    // guard against consuming a non-SSE response as if it were an event stream
     if (!response.headers.get('Content-Type')?.includes('text/event-stream')) {
       throw new ServerSentEventResponseError('Response is not a text/event-stream', response);
     }
 
     const reader = response.body.getReader();
 
-    return from(
-      readStream<TData>(reader, {
-        dataParser: options?.dataParser,
-        skipHeartbeats: options?.skipHeartbeats,
-        eventFilter: options?.eventFilter,
-      }),
-    ).pipe(
-      // Stop reading if the abort signal is triggered
-      takeUntil(options?.abortSignal ? fromEvent(options.abortSignal, 'abort') : EMPTY),
-      finalize(async () => {
-        // cancel just in case of a pre-mature exit
-        await reader.cancel().catch(() => {
-          /** ignore cancellation errors */
-        });
-        reader.releaseLock();
-      }),
+    return (
+      from(
+        readStream<TData>(reader, {
+          dataParser: options?.dataParser,
+          skipHeartbeats: options?.skipHeartbeats,
+          eventFilter: options?.eventFilter,
+        }),
+      )
+        // stop the stream on abort and always release the underlying reader when done
+        .pipe(
+          // Stop reading if the abort signal is triggered
+          takeUntil(options?.abortSignal ? fromEvent(options.abortSignal, 'abort') : EMPTY),
+          finalize(async () => {
+            // cancel just in case of a pre-mature exit
+            await reader.cancel().catch(() => {
+              /** ignore cancellation errors */
+            });
+            reader.releaseLock();
+          }),
+        )
     );
   };
 };

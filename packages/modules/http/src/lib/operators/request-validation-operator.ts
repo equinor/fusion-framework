@@ -1,7 +1,7 @@
 import type { z } from 'zod';
 import type { ProcessOperator } from './types';
 import type { FetchRequest } from '../client/types';
-import { fetchRequestSchema } from './fetch-request.schema';
+import { fetchRequestSchema } from './fetch-request.schemas';
 
 /**
  * Validates the given request using the `requestInitSchema`.
@@ -42,6 +42,7 @@ export const requestValidationOperator =
       const result = schema.parse(request) as T;
       return parse ? result : void 0;
     } catch (error) {
+      // re-throw so callers relying on `parse` can react to validation failures directly
       if (parse) {
         throw error;
       }

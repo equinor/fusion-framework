@@ -126,7 +126,11 @@ describe('sseMap', () => {
       },
     );
 
-    const events = await lastValueFrom(of(response).pipe(sseMap<{ key: string }>(), toArray()));
+    const events = await lastValueFrom(
+      of(response)
+        // parse the SSE stream and collect every emitted event into a single array
+        .pipe(sseMap<{ key: string }>(), toArray()),
+    );
 
     expect(events).toEqual([{ data: { key: 'value' } }]);
   });

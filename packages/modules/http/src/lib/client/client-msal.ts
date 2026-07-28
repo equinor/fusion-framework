@@ -55,6 +55,7 @@ export class HttpClientMsal<
    *
    * @overrides HttpClient.fetch$
    *
+   * @template T - The expected response type.
    * @param path - The path to the resource to fetch.
    * @param init - An optional `MsalFetchRequestInit` object that can include the `scopes` property.
    * @returns An `Observable` that emits the fetched resource.

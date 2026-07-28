@@ -1,4 +1,4 @@
-import { ProcessOperators } from './process-operators';
+import { ProcessOperators } from './ProcessOperators';
 import { requestOperatorHeader } from './request-operator-header';
 
 import type { FetchRequest } from '../client';
