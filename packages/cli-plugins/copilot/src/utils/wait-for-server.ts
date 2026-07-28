@@ -1,4 +1,4 @@
-import { sleep } from './sleep.js';
+import { sleep } from './helpers.js';
 
 /**
  * Polls a server URL until it responds with a non-5xx status or the

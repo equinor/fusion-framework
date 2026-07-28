@@ -1,9 +1,6 @@
 import { type Command, InvalidOptionArgumentError } from 'commander';
 
-import { tenantOption } from './tenant-option.js';
-import { clientOption } from './client-option.js';
-import { tokenOption } from './token-option.js';
-import { scopeOption } from './scope-option.js';
+import { tenantOption, clientOption, tokenOption, scopeOption } from './options.js';
 
 // UUID validation regex (v4 UUID format)
 const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;

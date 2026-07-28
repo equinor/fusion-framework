@@ -3,7 +3,7 @@ import { existsSync, readFileSync, rmSync } from 'node:fs';
 import { join } from 'node:path';
 import { homedir } from 'node:os';
 
-import { PROFILE_DIR } from './profile-dir.js';
+import { PROFILE_DIR } from './helpers.js';
 
 /** PID file written by the agent-browser daemon to track its own process. */
 const DAEMON_PID_FILE = join(homedir(), '.agent-browser', 'default.pid');

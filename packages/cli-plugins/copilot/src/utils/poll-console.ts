@@ -1,5 +1,5 @@
 import { ab } from './ab.js';
-import { sleep } from './sleep.js';
+import { sleep } from './helpers.js';
 
 /**
  * Polls the browser's console log output until a predicate returns `true`

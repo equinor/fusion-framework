@@ -268,10 +268,7 @@ export function createAction(type: string, prepareAction?: PrepareAction<any>): 
   return actionCreator;
 }
 
-export { actionSuffixDivider } from './action-suffix-divider';
-export { matchActionSuffix } from './match-action-suffix';
-export { getBaseType } from './get-base-type';
-export { getType } from './get-type';
+export { actionSuffixDivider, matchActionSuffix, getBaseType, getType } from './utils';
 
 // helper types for more readable typings
 

@@ -1,12 +1,14 @@
 import { type Command, InvalidOptionArgumentError } from 'commander';
-import { chatModelOption } from './chat-model-option.js';
-import { clientIdOption } from './client-id-option.js';
-import { debugOption } from './debug-option.js';
-import { embedModelOption } from './embed-model-option.js';
-import { envOption } from './env-option.js';
-import { indexNameOption } from './index-name-option.js';
-import { tenantIdOption } from './tenant-id-option.js';
-import { tokenOption } from './token-option.js';
+import {
+  chatModelOption,
+  clientIdOption,
+  debugOption,
+  embedModelOption,
+  envOption,
+  indexNameOption,
+  tenantIdOption,
+  tokenOption,
+} from './options.js';
 
 /**
  * Enhances a Commander command with Fusion AI options and validation.

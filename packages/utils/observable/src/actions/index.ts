@@ -21,7 +21,7 @@ export {
   type PayloadActionCreator,
 } from './create-action';
 
-export { getBaseType } from './get-base-type';
+export { getBaseType } from './utils.js';
 
 export {
   createAsyncAction,

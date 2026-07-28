@@ -1,11 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { actionSuffixDivider, createAction } from './create-action';
-import { isActionWithSuffix } from './is-action-with-suffix';
-import { isCompleteAction } from './is-complete-action';
-import { isFailureAction } from './is-failure-action';
-import { isRequestAction } from './is-request-action';
-import { isSuccessAction } from './is-success-action';
+import {
+  isActionWithSuffix,
+  isCompleteAction,
+  isFailureAction,
+  isRequestAction,
+  isSuccessAction,
+} from './predicates';
 import type { PayloadActionCreator } from './create-action';
 
 import type { PrepareAction } from './create-action';

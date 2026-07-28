@@ -2,7 +2,7 @@ import { execFileSync } from 'node:child_process';
 import { existsSync, unlinkSync } from 'node:fs';
 import { join } from 'node:path';
 
-import { PROFILE_DIR } from './profile-dir.js';
+import { PROFILE_DIR } from './helpers.js';
 
 /**
  * Runs an agent-browser command with the persistent Chrome profile.
