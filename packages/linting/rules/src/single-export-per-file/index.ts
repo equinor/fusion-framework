@@ -1,7 +1,7 @@
 import type { Node } from 'web-tree-sitter';
 import type { Diagnostic, Severity, RuleDef, LintContext } from '@equinor/fusion-framework-lint-core';
 import { createMatcher, resolveMatch } from '@equinor/fusion-framework-lint-core';
-import { tsParser } from '../_parser.js';
+import { tsParser } from '../ts-parser.js';
 
 const RULE_ID = 'single-export-per-file';
 const DEFAULT_SEVERITY: Severity = 'warn';

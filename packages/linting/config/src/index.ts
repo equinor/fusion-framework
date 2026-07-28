@@ -1,14 +1,14 @@
-export { recommendedRules, recommendedConfig } from './recommended.js';
+export { recommendedRules, recommendedConfig } from './recommended-rules.js';
 export {
   ConfigBuilder,
   type LoadedLintConfig,
   type CustomRuleDefinition,
   type MutableRuleConfig,
-} from './config-builder.js';
+} from './ConfigBuilder.js';
 export {
   defineConfig,
   type FusionLintFileConfig,
   type FusionLintConfigFactory,
   type RuleConfigEntry,
 } from './define-config.js';
-export { loadLintConfig, type LoadLintConfigOptions } from './load-config.js';
+export { loadLintConfig, type LoadLintConfigOptions } from './load-lint-config.js';

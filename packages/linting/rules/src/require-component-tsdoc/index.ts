@@ -1,7 +1,7 @@
 import type { Node } from 'web-tree-sitter';
 import type { Diagnostic, Severity, RuleDef, LintContext } from '@equinor/fusion-framework-lint-core';
 import { createMatcher, resolveMatch } from '@equinor/fusion-framework-lint-core';
-import { tsxParser } from '../_tsx-parser.js';
+import { tsxParser } from '../tsx-parser.js';
 
 const RULE_ID = 'require-component-tsdoc';
 const DEFAULT_SEVERITY: Severity = 'warn';

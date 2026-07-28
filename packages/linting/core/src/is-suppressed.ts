@@ -1,4 +1,4 @@
-import type { SuppressionMap } from './suppressions.js';
+import type { SuppressionMap } from './collect-suppressions.js';
 
 /**
  * Determines whether a diagnostic on `line` for `ruleId` is suppressed by

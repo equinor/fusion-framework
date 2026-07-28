@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { matchesBasenamePattern } from '../glob.js';
+import { matchesBasenamePattern } from '../matches-basename-pattern.js';
 
 describe('matchesBasenamePattern', () => {
   it('matches an exact basename with no wildcard', () => {

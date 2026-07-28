@@ -1,5 +1,5 @@
 import type { Rule, Diagnostic, LintConfig, Severity } from './types.js';
-import { collectSuppressions } from './suppressions.js';
+import { collectSuppressions } from './collect-suppressions.js';
 import { isSuppressed } from './is-suppressed.js';
 
 /**

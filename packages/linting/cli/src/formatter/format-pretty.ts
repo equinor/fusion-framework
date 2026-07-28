@@ -2,7 +2,7 @@ import { relative } from 'node:path';
 import chalk from 'chalk';
 import type { Diagnostic } from '@equinor/fusion-framework-lint-core';
 
-export { formatSummary } from './summary.js';
+export { formatSummary } from './format-summary.js';
 
 const ICON = { error: chalk.red('✖'), warn: chalk.yellow('⚠') } as const;
 const LABEL = { error: chalk.red.bold('error'), warn: chalk.yellow.bold('warn ') } as const;

@@ -4,8 +4,8 @@ import { parse as parseYaml } from 'yaml';
 import { importConfig, resolveConfigFile, FileNotFoundError } from '@equinor/fusion-imports';
 import type { LintConfig, Rule, MatcherFn } from '@equinor/fusion-framework-lint-core';
 import { createMatcher } from '@equinor/fusion-framework-lint-core';
-import { ConfigBuilder } from './config-builder.js';
-import type { LoadedLintConfig } from './config-builder.js';
+import { ConfigBuilder } from './ConfigBuilder.js';
+import type { LoadedLintConfig } from './ConfigBuilder.js';
 import type {
   FusionLintFileConfig,
   FusionLintConfigFactory,

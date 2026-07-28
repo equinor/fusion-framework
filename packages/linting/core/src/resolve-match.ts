@@ -1,9 +1,9 @@
 import type { Rule } from './types.js';
-import { createMatcher, type MatcherFn } from './matcher.js';
+import { createMatcher, type MatcherFn } from './create-matcher.js';
 
 /**
  * Declarative file-matching configuration accepted by every rule factory's
- * `options.match` (see {@link RuleOptions}). Mirrors {@link import('./matcher.js').createMatcher}'s
+ * `options.match` (see {@link RuleOptions}). Mirrors {@link import('./create-matcher.js').createMatcher}'s
  * `includePatterns`/`excludePatterns` shape, plus an escape hatch (`fn`) for
  * matching logic `include`/`exclude` basename globs can't express.
  *

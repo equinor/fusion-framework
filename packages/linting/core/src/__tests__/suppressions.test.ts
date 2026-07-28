@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { collectSuppressions } from '../suppressions.js';
+import { collectSuppressions } from '../collect-suppressions.js';
 import { isSuppressed } from '../is-suppressed.js';
 
 describe('collectSuppressions', () => {

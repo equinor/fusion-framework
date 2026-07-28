@@ -1,4 +1,4 @@
-import type { ConfigBuilder } from '../../../config-builder.js';
+import type { ConfigBuilder } from '../../../ConfigBuilder.js';
 
 /**
  * Builder factory fixture — exercises `recommended`, `configureRule`, and

@@ -3,7 +3,7 @@ import { fileURLToPath } from 'node:url';
 import { join, dirname } from 'node:path';
 import { mkdtemp, mkdir, writeFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
-import { loadLintConfig } from '../load-config.js';
+import { loadLintConfig } from '../load-lint-config.js';
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 

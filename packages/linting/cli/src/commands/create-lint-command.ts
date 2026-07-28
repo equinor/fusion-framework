@@ -12,7 +12,7 @@ import {
   formatJson,
   resolveReporter,
 } from '../formatter/index.js';
-import { createConfiguredEngine } from '../create-engine.js';
+import { createConfiguredEngine } from '../create-configured-engine.js';
 
 interface LintOptions {
   githubActions?: boolean;

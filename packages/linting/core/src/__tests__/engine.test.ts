@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { LintEngine } from '../engine.js';
-import { createMatcher } from '../matcher.js';
+import { LintEngine } from '../LintEngine.js';
+import { createMatcher } from '../create-matcher.js';
 import type { Rule, Diagnostic } from '../types.js';
 
 // ── Test doubles ─────────────────────────────────────────────────────────────

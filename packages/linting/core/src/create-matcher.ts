@@ -1,4 +1,4 @@
-import { matchesBasenamePattern } from './glob.js';
+import { matchesBasenamePattern } from './matches-basename-pattern.js';
 
 /**
  * A function deciding whether a rule's `check` should run for `filePath`.

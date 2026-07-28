@@ -1,8 +1,8 @@
-export { formatAnnotations } from './annotations.js';
-export { formatPretty, formatSummary } from './pretty.js';
-export { formatRdjsonl } from './rdjsonl.js';
-export { formatJson } from './json-report.js';
-export type { JsonReport } from './json-report.js';
+export { formatAnnotations } from './format-annotations.js';
+export { formatPretty, formatSummary } from './format-pretty.js';
+export { formatRdjsonl } from './format-rdjsonl.js';
+export { formatJson } from './format-json.js';
+export type { JsonReport } from './format-json.js';
 
 /**
  * Output reporter names supported by the CLI.

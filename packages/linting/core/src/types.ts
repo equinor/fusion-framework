@@ -59,7 +59,7 @@ export interface Rule {
    * `match` are always run.
    *
    * Rules that need path-based filtering typically build their default
-   * `match` from {@link import('./matcher.js').createMatcher}, while still
+   * `match` from {@link import('./create-matcher.js').createMatcher}, while still
    * honoring a factory `options.match` override via
    * {@link import('./resolve-match.js').resolveMatch}, so callers
    * can override the matching strategy entirely via config instead of being

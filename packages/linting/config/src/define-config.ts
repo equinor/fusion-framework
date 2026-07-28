@@ -1,5 +1,5 @@
 import type { Rule, LintConfig, SeverityConfig } from '@equinor/fusion-framework-lint-core';
-import type { ConfigBuilder } from './config-builder.js';
+import type { ConfigBuilder } from './ConfigBuilder.js';
 
 /**
  * Per-rule configuration entry accepted in the `rules` map of a

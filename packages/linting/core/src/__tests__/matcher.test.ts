@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { createMatcher } from '../matcher.js';
+import { createMatcher } from '../create-matcher.js';
 
 describe('createMatcher', () => {
   it('with no arguments, matches every file', () => {
