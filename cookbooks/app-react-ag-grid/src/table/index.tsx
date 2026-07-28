@@ -1,3 +1,3 @@
-export { defaultColDef } from './coldef';
-export { sideBar } from './sidebar';
-export { chartsData, type SalesData } from './chartsData';
+export { defaultColDef } from './default-col-def';
+export { sideBar } from './side-bar';
+export { chartsData, type SalesData } from './charts-data';

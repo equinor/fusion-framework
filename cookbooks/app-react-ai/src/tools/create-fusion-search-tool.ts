@@ -58,6 +58,7 @@ export function createFusionSearchTool(
 
       const results = await retriever.invoke(query);
 
+      // Give the model an explicit result when the index has no matching documents.
       if (!results || results.length === 0) {
         return `No results found for "${query}" in the ${indexName} index.`;
       }

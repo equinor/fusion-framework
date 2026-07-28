@@ -40,6 +40,10 @@ const Styled = {
   `,
 };
 
+/**
+ * Renders the application shell, navigation, and route outlet while showing loading state.
+ * @returns The shared layout for nested application routes.
+ */
 export default function Layout() {
   const { state: loadingState } = useNavigation();
 

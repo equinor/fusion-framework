@@ -14,7 +14,12 @@ export const handle = {
   },
 } as const satisfies RouterHandle;
 
-export async function clientLoader() {
+/**
+ * Throws a controlled error so the route error element can be demonstrated.
+ * @returns A promise that never resolves because the loader always throws.
+ * @throws {Error} Always, to exercise the route error boundary.
+ */
+export async function clientLoader(): Promise<never> {
   throw new Error('This is a test error to demonstrate error boundaries in the router');
 }
 
@@ -77,6 +82,11 @@ const Styled = {
   `,
 };
 
+/**
+ * Displays the loader error and offers retry or home navigation actions.
+ * @param error - Error supplied by the router for the failed route.
+ * @returns The route error presentation.
+ */
 export function ErrorElement({ error }: ErrorElementProps) {
   const navigate = useNavigate();
 
@@ -110,6 +120,10 @@ export function ErrorElement({ error }: ErrorElementProps) {
   );
 }
 
+/**
+ * Explains the route error test when the error boundary is not active.
+ * @returns The error-test page content.
+ */
 export default function ErrorTestPage() {
   return (
     <Styled.Container>

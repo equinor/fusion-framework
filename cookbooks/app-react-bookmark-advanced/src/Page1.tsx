@@ -1,5 +1,5 @@
 import { useId } from 'react';
-import { useBookmarkContext } from './Provider';
+import { useBookmarkContext } from './useBookmarkContext';
 
 export function Page1() {
   const dataId = useId();

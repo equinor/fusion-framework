@@ -29,11 +29,14 @@ function capitalizeFirstLetter(string: string): string {
 function convertGraphic(
   graphic: ContextItem['graphic'],
 ): Pick<ContextResultItem, 'graphic' | 'graphicType'> {
+  // Leave optional graphics unset when the source context has no graphic.
   if (graphic === undefined) {
     return {};
   }
 
+  // Classify string graphics as inline markup or EDS icon names.
   if (typeof graphic === 'string') {
+    // Treat markup-looking values as trusted inline HTML graphics.
     if (graphic.startsWith('<')) {
       return { graphicType: 'inline-html', graphic: graphic };
     }
@@ -42,6 +45,7 @@ function convertGraphic(
     return { graphicType, graphic: graphic };
   }
 
+  // Preserve SVG content as inline SVG so the selector can render it correctly.
   if (graphic.type === 'svg') {
     return {
       graphicType: 'inline-svg',
@@ -56,11 +60,14 @@ function convertGraphic(
 }
 
 function convertMeta(meta: ContextItem['meta']): Pick<ContextResultItem, 'metaType' | 'meta'> {
+  // Leave optional metadata unset when the source context has no metadata.
   if (meta === undefined) {
     return {};
   }
 
+  // Classify string metadata as inline markup or EDS labels.
   if (typeof meta === 'string') {
+    // Treat markup-looking values as trusted inline HTML metadata.
     if (meta.startsWith('<')) {
       return { metaType: 'inline-html', meta: meta };
     }
@@ -69,6 +76,7 @@ function convertMeta(meta: ContextItem['meta']): Pick<ContextResultItem, 'metaTy
     return { metaType, meta: meta };
   }
 
+  // Preserve SVG metadata as inline SVG so the selector can render its original shape.
   if (meta.type === 'svg') {
     return {
       metaType: 'inline-svg',
@@ -89,7 +97,9 @@ function convertMeta(meta: ContextItem['meta']): Pick<ContextResultItem, 'metaTy
  * @returns src mapped to ContextResult type
  */
 const mapper = (src: ContextItem<{ taskState?: string; state?: string }>[]): ContextResult => {
+  // Convert each context item into the result shape expected by ContextSearch.
   return src.map((i) => {
+    // Merge optional display metadata into the common result shape.
     const baseResult = {
       id: i.id,
       title: i.title,
@@ -102,11 +112,13 @@ const mapper = (src: ContextItem<{ taskState?: string; state?: string }>[]): Con
     const isEquinorTaskInactive = !!(
       i.value.taskState && i.value.taskState.toLowerCase() !== 'active'
     );
+    // Surface inactive task state as metadata so users can distinguish unavailable tasks.
     if (i.type.id === 'EquinorTask' && isEquinorTaskInactive) {
       baseResult.meta = i.value.taskState;
       baseResult.metaType = 'inline-html';
     }
 
+    // Normalize organization charts to the list icon and expose inactive state.
     if (i.type.id === 'OrgChart') {
       // Org charts should always have 'list' icon
       baseResult.graphic = 'list';
@@ -115,6 +127,7 @@ const mapper = (src: ContextItem<{ taskState?: string; state?: string }>[]): Con
 
       // Displays the org chart status if it is not 'active'
       const isOrgChartInactive = !!(i.value.state && i.value.state.toLowerCase() !== 'active');
+      // Surface inactive organization state as readable metadata.
       if (isOrgChartInactive) {
         baseResult.meta = capitalizeFirstLetter(i.value.state ?? '');
         baseResult.metaType = 'inline-html';
@@ -131,6 +144,7 @@ const mapper = (src: ContextItem<{ taskState?: string; state?: string }>[]): Con
  * @returns ContextResultItem
  */
 const singleItem = (props: Partial<ContextResultItem>): ContextResultItem => {
+  // Provide stable fallback fields for disabled status and error result rows.
   return Object.assign({ id: 'no-such-item', title: 'Change me' }, props);
 };
 
@@ -169,6 +183,7 @@ export const useContextResolver = (): {
   const onContextProviderChange = useCallback((modules: AppModulesInstance) => {
     /** try to get the context module from the app module instance */
     const contextProvider = (modules as AppModulesInstance<[ContextModule]>).context;
+    // Keep the resolver connected only while the current app exposes context support.
     if (contextProvider) {
       setProvider(contextProvider);
     } else {
@@ -193,10 +208,12 @@ export const useContextResolver = (): {
   );
 
   const processError = useCallback((err: Error): ContextResult => {
+    // Unwrap query-client errors so the underlying context error can be classified.
     if (err.name === 'QueryClientError') {
       return processError((err as QueryClientError).cause as Error);
     }
 
+    // Convert known context search failures into a disabled selector result.
     if (err.name === 'FusionContextSearchError') {
       const error = err as FusionContextSearchError;
       return [
@@ -229,10 +246,11 @@ export const useContextResolver = (): {
     (): ContextResolver | null =>
       provider && {
         searchQuery: async (search: string): Promise<ContextResult> => {
+          // Avoid querying the service until the search has enough characters to be useful.
           if (search.length < minLength) {
             return [
               singleItem({
-                // TODO - make as enum if used for checks, or type
+                // Keep this identifier stable if callers later need to distinguish validation results.
                 id: 'min-length',
                 title: `Type ${minLength - search.length} more chars to search`,
                 isDisabled: true,
@@ -240,15 +258,17 @@ export const useContextResolver = (): {
             ];
           }
           try {
+            // Transform service results and convert failures into displayable selector rows.
             return lastValueFrom(
-              provider.queryContext(search).pipe(
+              provider.queryContext(search)
+                .pipe(
                 map(mapper),
                 map((x) =>
                   x.length
                     ? x
                     : [
                         singleItem({
-                          // TODO - make as enum if used for checks, or type
+                          // Keep this identifier stable if callers later need to distinguish empty results.
                           id: 'no-results',
                           title: 'No results found',
                           graphic: 'info_circle',

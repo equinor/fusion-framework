@@ -34,6 +34,12 @@ export const handle = {
   },
 } as const satisfies RouterHandle;
 
+/**
+ * Loads a paginated user collection from the shared API context.
+ * @param request - Router request containing pagination search parameters.
+ * @param fusion - Fusion context containing the shared API.
+ * @returns Paginated users and pagination metadata.
+ */
 export async function clientLoader({ request, fusion }: LoaderFunctionArgs) {
   const url = new URL(request.url);
   const page = parseInt(url.searchParams.get('page') || '1', 10);
@@ -136,6 +142,7 @@ const Styled = {
 
 // Helper functions to get chip variants based on role and department
 const getRoleChipVariant = (role: string): 'active' | 'error' | undefined => {
+  // Map role names to the visual chip variants used in the user list.
   switch (role.toLowerCase()) {
     case 'developer':
       return 'active';
@@ -151,6 +158,7 @@ const getRoleChipVariant = (role: string): 'active' | 'error' | undefined => {
 };
 
 const getDepartmentChipVariant = (department: string): 'active' | 'error' | undefined => {
+  // Map department names to the visual chip variants used in the user list.
   switch (department.toLowerCase()) {
     case 'engineering':
       return 'active';
@@ -165,6 +173,11 @@ const getDepartmentChipVariant = (department: string): 'active' | 'error' | unde
   }
 };
 
+/**
+ * Renders the paginated users list and URL-backed pagination controls.
+ * @param props - Route props containing users and pagination metadata.
+ * @returns The users list page.
+ */
 export default function UsersPage(props: RouteComponentProps<UsersPageLoaderData>) {
   const { loaderData } = props;
   const [searchParams, setSearchParams] = useSearchParams();
@@ -200,6 +213,21 @@ export default function UsersPage(props: RouteComponentProps<UsersPageLoaderData
     newParams.delete('limit');
     setSearchParams(newParams);
   }, [searchParams, setSearchParams]);
+
+  // Build stable user cards before composing the surrounding page markup.
+  const userItems = users.map((user) => (
+    <Styled.UserItem key={user.id}>
+      <Styled.UserName variant="h3">{user.name}</Styled.UserName>
+      <Styled.UserEmail variant="body_short">{user.email}</Styled.UserEmail>
+      <Styled.UserChips>
+        <Chip variant={getRoleChipVariant(user.role)}>{user.role}</Chip>
+        <Chip variant={getDepartmentChipVariant(user.department)}>{user.department}</Chip>
+      </Styled.UserChips>
+      <Button variant="contained" as={Link} to={`/users/${user.id}`}>
+        View Profile
+      </Button>
+    </Styled.UserItem>
+  ));
 
   return (
     <div>
@@ -240,19 +268,7 @@ export default function UsersPage(props: RouteComponentProps<UsersPageLoaderData
       </Styled.Info>
 
       <Styled.UserList>
-        {users.map((user) => (
-          <Styled.UserItem key={user.id}>
-            <Styled.UserName variant="h3">{user.name}</Styled.UserName>
-            <Styled.UserEmail variant="body_short">{user.email}</Styled.UserEmail>
-            <Styled.UserChips>
-              <Chip variant={getRoleChipVariant(user.role)}>{user.role}</Chip>
-              <Chip variant={getDepartmentChipVariant(user.department)}>{user.department}</Chip>
-            </Styled.UserChips>
-            <Button variant="contained" as={Link} to={`/users/${user.id}`}>
-              View Profile
-            </Button>
-          </Styled.UserItem>
-        ))}
+        {userItems}
       </Styled.UserList>
 
       <Styled.Pagination>

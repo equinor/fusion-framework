@@ -15,6 +15,10 @@ const Styled = {
   `,
 };
 
+/**
+ * Renders the cookbook shell with tabs for the basic and chart-enabled AG Grid examples.
+ * @returns The cookbook application view.
+ */
 export const App = (): ReactElement => {
   // Tab state for switching between examples
   const [activeTab, setActiveTab] = useState<number | string>(0);

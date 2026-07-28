@@ -3,6 +3,11 @@ import { enableFeatureFlag } from '@equinor/fusion-framework-react-app/feature-f
 
 import { Feature } from './static';
 
+/**
+ * Registers the feature flags demonstrated by the cookbook application.
+ * @param appConfigurator - Application configurator receiving the feature-flag definitions.
+ * @returns Nothing; feature flags are registered on the configurator.
+ */
 export const configure: AppModuleInitiator = (appConfigurator) => {
   enableFeatureFlag(appConfigurator, [
     {

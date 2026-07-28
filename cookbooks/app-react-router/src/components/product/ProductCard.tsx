@@ -59,7 +59,9 @@ const Styled = {
 };
 
 /**
- * ProductCard component with hover effect for images
+ * Displays product summary information and links to the product detail route.
+ * @param product - Product data rendered by the card.
+ * @returns A product card with image, availability, rating, and detail link.
  */
 export function ProductCard({ product }: { product: Product }) {
   const [isHovered, setIsHovered] = useState(false);

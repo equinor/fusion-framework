@@ -15,6 +15,11 @@ const useStyles = makeStyles((theme) =>
   }),
 );
 
+/**
+ * Provides the centered page layout used by the styling cookbook.
+ * @param children - Content arranged inside the page layout.
+ * @returns A themed container element.
+ */
 export const Container = ({ children }: { children: ReactNode }) => {
   const classes = useStyles({});
 

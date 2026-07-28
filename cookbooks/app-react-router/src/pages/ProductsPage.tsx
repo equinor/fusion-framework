@@ -35,6 +35,11 @@ export const handle = {
   },
 } as const satisfies RouterHandle;
 
+/**
+ * Loads filtered products and categories from the shared API context.
+ * @param args - Router request and Fusion context arguments.
+ * @returns The products, categories, and active filter state.
+ */
 export async function clientLoader(args: LoaderFunctionArgs) {
   const { request, fusion } = args;
   const url = new URL(request.url);
@@ -54,6 +59,11 @@ export async function clientLoader(args: LoaderFunctionArgs) {
   return { products, categories, filter, sort, inStock, productCount };
 }
 
+/**
+ * Converts submitted product filters into route search parameters.
+ * @param request - Request containing the submitted filter form.
+ * @returns A redirect response to the filtered products route.
+ */
 export async function action({ request }: ActionFunctionArgs) {
   const formData = await request.formData();
   const filter = (formData.get('filter') as string)?.trim() || '';
@@ -62,12 +72,15 @@ export async function action({ request }: ActionFunctionArgs) {
 
   // Build search params
   const searchParams = new URLSearchParams();
+  // Include only explicitly selected filters in the route URL.
   if (filter) {
     searchParams.set('filter', filter);
   }
+  // Keep the default sort out of the URL so equivalent views share one location.
   if (sort && sort !== 'name-asc') {
     searchParams.set('sort', sort);
   }
+  // Add the stock constraint only when the checkbox is selected.
   if (inStock) {
     searchParams.set('inStock', 'true');
   }
@@ -77,6 +90,11 @@ export async function action({ request }: ActionFunctionArgs) {
   return redirect(queryString ? `.?${queryString}` : '.');
 }
 
+/**
+ * Renders the products catalogue with filtering, sorting, and result counts.
+ * @param props - Route props containing the loaded product data.
+ * @returns The products list page.
+ */
 export default function ProductsPage(props: RouteComponentProps<ProductsPageLoaderData>) {
   const { loaderData } = props;
   const { products, categories, filter, sort, inStock, productCount } = loaderData;

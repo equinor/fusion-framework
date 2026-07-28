@@ -1,5 +1,5 @@
 import { PersonCard } from '@equinor/fusion-react-person';
-import { FlexGrid } from '../Styled';
+import { FlexGrid } from '../flex-grid';
 
 /**
  * Renders a page with two `PersonCard` components, one with an `azureId` prop and one with a `upn` prop.
@@ -7,6 +7,11 @@ import { FlexGrid } from '../Styled';
  * The persons are fetched from the `PersonProvider` component, which are implemented in the host (application portal)
  *
  * In this example the `PersonCard` will request the profile photo from the `PersonProvider` by either the `azureId` or `upn`.
+ */
+/**
+ * Demonstrates person cards resolved by Azure ID and UPN.
+ *
+ * @returns The person card example page.
  */
 const CardPage = () => {
   return (

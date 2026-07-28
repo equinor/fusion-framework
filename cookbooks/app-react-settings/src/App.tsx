@@ -11,6 +11,10 @@ declare module '@equinor/fusion-framework-react-app/settings' {
   interface AppSettings extends MyAppSettings {}
 }
 
+/**
+ * Reads and updates the cookbook app's theme, size, and fancy display settings.
+ * @returns The interactive app-settings demonstration view.
+ */
 export const App = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);

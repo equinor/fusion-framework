@@ -7,6 +7,10 @@ import { useAppModule } from '@equinor/fusion-framework-react-app';
 import routes from './routes';
 import { Api } from './api';
 
+/**
+ * Provides React Query and the Fusion router with the shared API context.
+ * @returns The configured application router and development tools.
+ */
 export default function AppRouter() {
   const httpProvider = useAppModule('http');
   const [queryClient] = useState(() => new QueryClient());

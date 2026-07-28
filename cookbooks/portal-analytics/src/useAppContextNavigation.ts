@@ -37,10 +37,12 @@ const generatePathname = (
   context?: IContextProvider,
   pathContextId?: string,
 ) => {
+  // Reset navigation when the active context has been cleared.
   if (!item) {
     console.debug('🌍 Portal: no context item provided, navigating to root');
     return '/';
   }
+  // Replace an existing URL context id so the rest of the application path is preserved.
   if (pathContextId) {
     // context id exists in the url, replace it with the new context id
     const pathname =
@@ -69,7 +71,7 @@ const generatePathname = (
  * when current application changes, this hook will observe the application module instances.
  * If the module has Context and Navigation, this hook will navigate when the context changes
  */
-export const useAppContextNavigation = () => {
+export const useAppContextNavigation = (): void => {
   // use the framework navigation instance
   const navigation = useFrameworkModule<NavigationModule>('navigation');
 
@@ -86,6 +88,7 @@ export const useAppContextNavigation = () => {
     useCallback(
       (item: ContextItem | undefined | null) => {
         // sanity check, if the item or navigation is undefined, early return
+        // Ignore incomplete module state while the current application is initializing.
         if (item === undefined || navigation === undefined) {
           return;
         }
@@ -114,6 +117,7 @@ export const useAppContextNavigation = () => {
 
         // always navigate via the portal navigation to trigger the synthetic pop() workaround,
         // ensuring app routers that listen only for POP actions detect the URL change
+        // Route through portal navigation when the app owns a basename-aware navigator.
         if (appNavigation) {
           // resolve the full URL via the app navigation (includes app basename),
           // then hand it to the portal navigation which will not double-prefix when basename is empty

@@ -2,10 +2,12 @@ import { useCurrentBookmark } from '@equinor/fusion-framework-react-app/bookmark
 import { useCallback, useId, useLayoutEffect, useRef, useState } from 'react';
 
 export interface MyPayload {
+  [key: string]: unknown;
   title: string;
   data: string;
 }
 
+/** Renders an editable bookmark payload and the bookmark currently persisted by the app. */
 export const App = () => {
   const titleId = useId();
   const dataId = useId();

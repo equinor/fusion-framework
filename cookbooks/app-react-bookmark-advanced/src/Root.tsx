@@ -1,8 +1,9 @@
 import { Link, Outlet } from '@equinor/fusion-framework-react-router';
 import { Provider } from './Provider';
-import { BookmarkAppNavigation } from './BoomarkAppNavigation';
+import { BookmarkAppNavigation } from './BookmarkAppNavigation';
 import Create from './Create';
 
+/** Renders the provider-backed layout used by the advanced bookmark example. */
 export default function Root() {
   return (
     <Provider>

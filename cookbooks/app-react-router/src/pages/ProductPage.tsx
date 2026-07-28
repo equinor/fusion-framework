@@ -93,8 +93,17 @@ const Styled = {
   `,
 };
 
+/**
+ * Loads one product and preserves the requested detail view and review tab.
+ * @param params - Route parameters containing the product identifier.
+ * @param request - Request containing product view search parameters.
+ * @param fusion - Fusion context containing the shared product API.
+ * @returns Product data and the active detail view state.
+ * @throws {Response} When the product identifier is missing or the product cannot be loaded.
+ */
 export async function clientLoader({ params, request, fusion }: LoaderFunctionArgs) {
   const productId = params.id;
+  // Fail early because the detail route cannot identify a product without its path parameter.
   if (!productId) {
     throw new Response('Product ID is required', { status: 400 });
   }
@@ -115,6 +124,7 @@ export async function clientLoader({ params, request, fusion }: LoaderFunctionAr
       tab,
     };
   } catch (error) {
+    // Preserve the API's not-found condition as a route-level 404 response.
     if (error instanceof Error && error.message === 'Product not found') {
       throw new Response('Product not found', { status: 404 });
     }
@@ -128,6 +138,11 @@ type ProductPageLoaderData = {
   tab: string;
 };
 
+/**
+ * Renders product details and synchronizes the selected view and tab with URL search parameters.
+ * @param props - Route props containing the loaded product and display state.
+ * @returns The product detail page.
+ */
 export default function ProductPage(props: RouteComponentProps<ProductPageLoaderData>) {
   const { loaderData } = props;
   const [searchParams, setSearchParams] = useSearchParams();

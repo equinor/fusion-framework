@@ -25,6 +25,11 @@ export class Api {
   readonly people: PeopleApi;
   readonly user: UserApi;
 
+  /**
+   * Creates API clients that share React Query caching and the HTTP provider.
+   * @param queryClient - Query client used for request caching.
+   * @param httpProvider - Provider used to create resource-specific HTTP clients.
+   */
   constructor(queryClient: QueryClient, httpProvider: IHttpProvider) {
     this.product = new ProductApi(queryClient, httpProvider);
     this.people = new PeopleApi(queryClient, httpProvider);

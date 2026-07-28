@@ -27,6 +27,10 @@ const Styled = {
   `,
 };
 
+/**
+ * Demonstrates AG Grid charts using regional sales data and predefined chart actions.
+ * @returns The chart-enabled AG Grid example view.
+ */
 export const ChartsExample = (): ReactElement => {
   const gridRef = useRef<AgGridReact>(null);
 

@@ -19,19 +19,23 @@ const SYSTEM_PROMPT = [
   'Keep answers concise and informative. Use code examples from the index when available.',
 ].join(' ');
 
-import { createFusionSearchTool } from './tools/search-fusion-index';
+import { createFusionSearchTool } from './tools/create-fusion-search-tool';
 
 /**
  * Extracts text content from a model output chunk.
  */
 function extractText(content: string | Array<Record<string, unknown>>): string {
+  // Plain string chunks are already text, so return them as-is.
   if (typeof content === 'string') return content;
+  // Structured content is an array of blocks; only the text blocks are renderable here.
   if (Array.isArray(content)) {
     return content
+      // Keep only content blocks that the assistant can render as text.
       .filter(
         (c): c is { type: 'text'; text: string } =>
           typeof c === 'object' && 'type' in c && c.type === 'text',
       )
+      // Combine separate text blocks into the complete response delta.
       .map((c) => c.text)
       .join('');
   }
@@ -46,6 +50,7 @@ function extractText(content: string | Array<Record<string, unknown>>): string {
  * The model is bound with tools so it can call functions like `get_stock_price`.
  *
  * @param model - Azure OpenAI deployment name (defaults to the module default).
+ * @returns An assistant-ui runtime that sends messages through the Fusion AI provider.
  */
 export const useFusionAiRuntime = (model?: string) => {
   const ai = useModule<AIModule>('ai');
@@ -68,6 +73,7 @@ export const useFusionAiRuntime = (model?: string) => {
           indexName: 'fusion-framework-2026-04-21',
         });
         const tools = [frameworkSearchTool];
+        // Index tools by name so model tool calls can be dispatched without scanning the list.
         const toolMap = new Map<string, (typeof tools)[number]>(tools.map((t) => [t.name, t]));
 
         // Cast needed: pnpm may resolve separate @langchain/core copies for the cookbook
@@ -75,25 +81,33 @@ export const useFusionAiRuntime = (model?: string) => {
         // biome-ignore lint/suspicious/noExplicitAny: cross-package type boundary
         const modelWithTools = chatModel.bindTools(tools as any) as IModelRunnable;
 
+        // Convert assistant-ui messages into the LangChain message types expected by the model.
+        const convertedMessages = messages.map((m) => {
+          const text = m.content
+            // Ignore non-text parts because the configured model adapter accepts text only.
+            .filter((c): c is Extract<typeof c, { type: 'text' }> => c.type === 'text')
+            // Preserve line breaks between text parts from a single assistant-ui message.
+            .map((c) => c.text)
+            .join('\n');
+          return m.role === 'user' ? new HumanMessage(text) : new AIMessage(text);
+        });
+
         const langchainMessages: BaseMessage[] = [
           new SystemMessage(SYSTEM_PROMPT),
-          ...messages.map((m) => {
-            const text = m.content
-              .filter((c): c is Extract<typeof c, { type: 'text' }> => c.type === 'text')
-              .map((c) => c.text)
-              .join('\n');
-            return m.role === 'user' ? new HumanMessage(text) : new AIMessage(text);
-          }),
+          ...convertedMessages,
         ];
 
         /** Execute tool calls (non-streaming) until the model stops requesting tools. */
         let response = await modelWithTools.invoke(langchainMessages, { signal: abortSignal });
 
+        // Continue the exchange until the model returns a final response instead of another tool call.
         while (response.tool_calls && response.tool_calls.length > 0) {
           langchainMessages.push(new AIMessage(response));
 
+          // Resolve each requested tool call and append its result for the next model turn.
           for (const tc of response.tool_calls) {
             const fn = toolMap.get(tc.name);
+            // Return a readable fallback when the model requests a tool that is not configured.
             const result = fn ? await fn.invoke(tc.args) : `Unknown tool: ${tc.name}`;
             langchainMessages.push(
               new ToolMessage({ content: String(result), tool_call_id: tc.id ?? tc.name }),
@@ -106,8 +120,10 @@ export const useFusionAiRuntime = (model?: string) => {
         /** Stream the final text response token-by-token. */
         let text = '';
         const stream = await modelWithTools.stream(langchainMessages, { signal: abortSignal });
+        // Accumulate streamed chunks so the UI receives the complete text seen so far.
         for await (const chunk of stream) {
           const delta = extractText(chunk.content);
+          // Only yield when there's new text, since some chunks carry no text delta.
           if (delta) {
             text += delta;
             yield { content: [{ type: 'text' as const, text }] };

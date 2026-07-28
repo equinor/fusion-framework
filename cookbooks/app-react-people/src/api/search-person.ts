@@ -1,10 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
-
-import {
-  useHttpClient,
-  type HttpJsonResponseError,
-  type IHttpClient,
-} from '@equinor/fusion-framework-react-app/http';
+import type { IHttpClient } from '@equinor/fusion-framework-react-app/http';
 
 /**
  * Represents the response from a person search API.
@@ -107,75 +101,3 @@ export const searchPerson =
       },
     });
   };
-
-/**
- * Represents the result of a person search operation.
- *
- * @property persons - The array of search result persons.
- * @property error - Any error that occurred during the search operation.
- * @property isSearching - Indicates whether the search operation is currently in progress.
- */
-type useSearchPersonsResult = {
-  persons: ApiPersonSearchResultV2[];
-  error:
-    | HttpJsonResponseError<ValidationProblemDetails>
-    | HttpJsonResponseError<ProblemDetails>
-    | HttpJsonResponseError<unknown>
-    | null;
-  isSearching: boolean;
-};
-
-/**
- * A React hook that provides a search functionality for persons.
- *
- * @param search - The search term to use for the person search.
- * @returns An object containing the search results, any errors that occurred, and a boolean indicating if a search is currently in progress.
- */
-export const useSearchPersons = (search: string): useSearchPersonsResult => {
-  // Get the HTTP client for the 'people' domain
-  const httpClient = useHttpClient('people');
-
-  // State to hold the search results
-  const [persons, setPersons] = useState<ApiPersonSearchResultV2[]>([]);
-
-  // State to hold any errors that occur during the search
-  const [error, setError] = useState<HttpJsonResponseError | null>(null);
-
-  // State to track whether a search is currently in progress
-  const [isSearching, setIsSearching] = useState<boolean>(false);
-
-  // Create a memoized search client function
-  const searchClient = useMemo(() => searchPerson(httpClient), [httpClient]);
-
-  // Perform the search when the 'search' parameter changes
-  useEffect(() => {
-    // Reset any previous errors
-    setError(null);
-
-    // Only perform a search if the 'search' parameter is not empty
-    if (search) {
-      // Create an AbortController to cancel the search if needed
-      const abortController = new AbortController();
-
-      // Set the 'isSearching' state to true
-      setIsSearching(true);
-
-      // Call the searchClient function with the search term and the AbortSignal
-      searchClient(search, abortController.signal)
-        .then(setPersons) // Update the 'persons' state with the search results
-        .catch(setError) // Update the 'error' state with any errors
-        .finally(() => {
-          // Set the 'isSearching' state to false when the search is complete
-          setIsSearching(false);
-        });
-
-      // Return a cleanup function to cancel the search if the component is unmounted
-      return () => abortController.abort();
-    }
-    // If the 'search' parameter is empty, clear the 'persons' state
-    setPersons([]);
-  }, [search, searchClient]);
-
-  // Return the search results, any errors, and the 'isSearching' state
-  return { persons, error, isSearching };
-};

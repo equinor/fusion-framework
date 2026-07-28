@@ -5,6 +5,11 @@ type FusionLogoProps = Omit<SVGProps<SVGSVGElement>, 'viewBox'> & {
   readonly scale?: number;
 };
 
+/**
+ * Renders the Fusion mark as a scalable inline SVG.
+ * @param scale - Multiplier applied to the logo's rendered size.
+ * @param style - Additional SVG styles applied to the logo.
+ */
 export const FusionLogo = ({ scale = 1, style }: FusionLogoProps) => {
   const paint0Id = useId();
   const paint1Id = useId();

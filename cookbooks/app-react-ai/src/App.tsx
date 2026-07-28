@@ -110,6 +110,7 @@ const Thread = () => (
   </ThreadPrimitive.Root>
 );
 
+/** Renders the FusionBot assistant UI with a runtime connected to the Fusion AI module. */
 export const App = () => {
   const runtime = useFusionAiRuntime();
 

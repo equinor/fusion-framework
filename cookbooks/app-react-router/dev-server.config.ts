@@ -38,6 +38,7 @@ function generateProduct(id: number): Product {
  * Using a seed ensures consistent data across runs
  */
 function generateProducts(count: number = 100): Product[] {
+  // Create deterministic product records for each requested index.
   return Array.from({ length: count }).map((_, index) => generateProduct(index));
 }
 
@@ -80,6 +81,7 @@ function generateUser(id: number): User {
  * Using a seed ensures consistent data across runs
  */
 function generateUsers(count: number = 50): User[] {
+  // Create deterministic user records with one-based IDs for the mock API.
   return Array.from({ length: count }).map((_, index) => generateUser(index + 1));
 }
 
@@ -102,6 +104,7 @@ export default defineDevServerConfig(() => ({
         match: '/api/products/:id',
         middleware: (req, res) => {
           const productId = parseInt(req.params?.id as string, 10);
+          // Reject malformed IDs before generating a response for the requested product.
           if (Number.isNaN(productId) || productId < 0) {
             res.statusCode = 400;
             res.setHeader('Content-Type', 'application/json');
@@ -154,6 +157,7 @@ export default defineDevServerConfig(() => ({
         match: '/api/users/:id',
         middleware: (req, res) => {
           const userId = parseInt(req.params?.id as string, 10);
+          // Reject malformed IDs before generating a response for the requested user.
           if (Number.isNaN(userId) || userId < 1) {
             res.statusCode = 400;
             res.setHeader('Content-Type', 'application/json');

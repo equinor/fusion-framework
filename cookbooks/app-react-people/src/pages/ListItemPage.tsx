@@ -1,6 +1,6 @@
 import { PersonListItem } from '@equinor/fusion-react-person';
-import { FlexGridColumn } from '../Styled';
-import { useSearchPersons, type ApiPersonSearchResultV2 } from '../api/person-search';
+import { FlexGridColumn } from '../flex-grid-column';
+import { useSearchPersons, type ApiPersonSearchResultV2 } from '../api';
 
 const demoSearch = 'FOIT CON PDL';
 
@@ -62,7 +62,7 @@ const ListItemPage = () => {
     return <div>Fetching demo data for [{demoSearch}] ...</div>;
   }
 
-  // Render the list of persons
+  // Map each API result into the list-item data shape expected by the component.
   return (
     <>
       <h2>PersonListItems ({demoSearch})</h2>

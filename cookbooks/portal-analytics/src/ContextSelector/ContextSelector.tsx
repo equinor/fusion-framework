@@ -24,14 +24,18 @@ export const ContextSelector = (props: ContextSearchProps): JSX.Element | null =
   /** callback handler for context selector, when context is changed or cleared */
   const onContextSelect = useCallback(
     (e: Event | ContextSelectEvent) => {
+      // Ignore selector events until the current application exposes a context provider.
       if (provider) {
+        // Native select events need their typed detail payload before updating context.
         if (e.type === 'select') {
           // Native `select` events are dispatched as plain `Event`, so widen to the typed custom event
           const ev = e as unknown as ContextSelectEvent;
+          // Only select a context when the selector returned at least one result.
           if (ev.nativeEvent.detail.selected.length) {
             provider.contextClient.setCurrentContext(ev.nativeEvent.detail.selected[0].id);
           }
         } else {
+          // A non-select event represents an explicit request to clear the active context.
           provider.clearCurrentContext();
         }
       }
@@ -44,11 +48,13 @@ export const ContextSelector = (props: ContextSearchProps): JSX.Element | null =
    */
   const clearEvent = useMemo(() => new ContextClearEvent({ date: Date.now() }), []);
   useEffect(() => {
+    // Notify consumers when context disappeared outside the selector control.
     if (!selectedContextItem) {
       document.dispatchEvent(clearEvent);
     }
   }, [clearEvent, selectedContextItem]);
 
+  // Render nothing until the current application's resolver is available.
   if (!resolver) return null;
 
   return (

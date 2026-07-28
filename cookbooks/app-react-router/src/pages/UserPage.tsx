@@ -32,14 +32,23 @@ type UserPageLoaderData = {
   user: User;
 };
 
+/**
+ * Loads one user profile from the identifier in the route path.
+ * @param params - Route parameters containing the user identifier.
+ * @param fusion - Fusion context containing the shared user API.
+ * @returns The loaded user profile.
+ * @throws {Response} When the identifier is missing, invalid, or cannot be loaded.
+ */
 export async function clientLoader({
   params,
   fusion,
 }: LoaderFunctionArgs<{ id: string }>): Promise<UserPageLoaderData> {
+  // Fail early because the detail route cannot identify a user without its path parameter.
   if (!params.id) {
     throw new Response('User ID is required', { status: 400 });
   }
   const userId = parseInt(params.id, 10);
+  // Reject non-numeric path values before calling the users API.
   if (!Number.isFinite(userId)) {
     throw new Response('Invalid user ID', { status: 400 });
   }
@@ -51,6 +60,7 @@ export async function clientLoader({
     const user = await api.user.getUser(userId);
     return { user };
   } catch (error) {
+    // Preserve the API's not-found condition as a route-level 404 response.
     if (error instanceof Error && error.message === 'User not found') {
       throw new Response('User not found', { status: 404 });
     }
@@ -58,6 +68,11 @@ export async function clientLoader({
   }
 }
 
+/**
+ * Renders the selected user's profile details.
+ * @param props - Route props containing the loaded user.
+ * @returns The user detail page.
+ */
 export default function UserPage(props: RouteComponentProps<UserPageLoaderData>) {
   const { loaderData } = props;
   const { user } = loaderData;

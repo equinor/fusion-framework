@@ -1,6 +1,11 @@
 import type { IFeatureFlag } from '@equinor/fusion-framework-module-feature-flag';
 import { Switch, Typography } from '@equinor/eds-core-react';
 
+/**
+ * Renders one feature flag with its label, description, and toggle control.
+ * @param args - The flag data and callback used to change its enabled state.
+ * @returns A feature flag row suitable for a feature settings view.
+ */
 export const FeatureFlag = (args: { onToggle: () => void; flag: IFeatureFlag }) => {
   const { onToggle, flag } = args;
   return (

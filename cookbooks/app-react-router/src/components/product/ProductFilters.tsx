@@ -45,6 +45,13 @@ export function ProductFilters({ categories, filter, sort, inStock }: ProductFil
     submit(new FormData(), { method: 'post' });
   }, [submit]);
 
+  // Build category options from the API response before rendering the form.
+  const categoryOptions = categories.map((category) => (
+    <option key={category} value={category}>
+      {category.charAt(0).toUpperCase() + category.slice(1)}
+    </option>
+  ));
+
   return (
     <Styled.Filters
       ref={formRef}
@@ -55,11 +62,7 @@ export function ProductFilters({ categories, filter, sort, inStock }: ProductFil
       <Styled.FormGroup>
         <NativeSelect id="filter" name="filter" label="Category Filter" defaultValue={filter || ''}>
           <option value="">All Categories</option>
-          {categories.map((category) => (
-            <option key={category} value={category}>
-              {category.charAt(0).toUpperCase() + category.slice(1)}
-            </option>
-          ))}
+          {categoryOptions}
         </NativeSelect>
 
         <NativeSelect id="sort" name="sort" label="Sort By" defaultValue={sort || 'name-asc'}>

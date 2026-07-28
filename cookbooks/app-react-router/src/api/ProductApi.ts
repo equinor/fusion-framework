@@ -67,6 +67,11 @@ export class ProductApi {
     return client instanceof Promise ? await client : client;
   }
 
+  /**
+   * Creates a product API backed by shared query caching and HTTP access.
+   * @param queryClient - Query client used for request caching.
+   * @param httpProvider - Provider used to create the products HTTP client.
+   */
   constructor(queryClient: QueryClient, httpProvider: IHttpProvider) {
     this.#queryClient = queryClient;
     this.#httpProvider = httpProvider;
@@ -93,18 +98,23 @@ export class ProductApi {
 
     let filtered = [...allProducts];
 
-    // Apply category filter
+    // Narrow the cached catalog only when a category filter is selected.
     if (filter) {
-      filtered = filtered.filter((p) => p.category === filter);
+      filtered = filtered
+        // Keep only products matching the selected category.
+        .filter((p) => p.category === filter);
     }
 
-    // Apply in-stock filter
+    // Apply the stock constraint only when the caller requests available products.
     if (inStock) {
-      filtered = filtered.filter((p) => p.inStock);
+      filtered = filtered
+        // Keep only products currently available for purchase.
+        .filter((p) => p.inStock);
     }
 
     // Apply sorting
     filtered.sort((a, b) => {
+      // Map each supported sort option to its corresponding product comparison.
       switch (sort) {
         case 'price-asc':
           return a.price - b.price;
@@ -169,6 +179,7 @@ export class ProductApi {
    * @param productId - Optional product ID to invalidate specific cache entry
    */
   invalidateProduct(productId?: number): void {
+    // Target one product when an ID is supplied; otherwise clear all product details.
     if (productId) {
       this.#queryClient.invalidateQueries({
         queryKey: ['products', 'product', productId],

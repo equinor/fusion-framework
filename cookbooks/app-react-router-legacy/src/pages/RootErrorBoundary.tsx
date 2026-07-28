@@ -3,6 +3,7 @@ import type { ErrorElementProps } from '@equinor/fusion-framework-react-router';
 /**
  * Root-level error boundary — catches anything not handled by child routes.
  * Assigned as `ErrorBoundary` on the root route.
+ * @param error - Optional error supplied by the router.
  */
 export function RootErrorBoundary({ error }: Partial<ErrorElementProps>) {
   const message = error instanceof Error ? error.message : String(error);

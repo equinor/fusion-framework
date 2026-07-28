@@ -74,6 +74,11 @@ export class UserApi {
     return client instanceof Promise ? await client : client;
   }
 
+  /**
+   * Creates a user API backed by shared query caching and HTTP access.
+   * @param queryClient - Query client used for request caching.
+   * @param httpProvider - Provider used to create the users HTTP client.
+   */
   constructor(queryClient: QueryClient, httpProvider: IHttpProvider) {
     this.#queryClient = queryClient;
     this.#httpProvider = httpProvider;
@@ -92,7 +97,9 @@ export class UserApi {
       queryFn: async () => {
         const client = await this.getUsersHttpClient();
         const params = new URLSearchParams();
+        // Omit default pagination values to keep the request URL canonical.
         if (page > 1) params.set('page', page.toString());
+        // Omit the default page size for the same canonical URL behavior.
         if (limit !== 5) params.set('limit', limit.toString());
         const queryString = params.toString();
         const url = queryString ? `@fusion-api/api/users?${queryString}` : '@fusion-api/api/users';
@@ -132,6 +139,7 @@ export class UserApi {
    * @param userId - Optional user ID to invalidate specific cache entry
    */
   invalidateUser(userId?: number): void {
+    // Target one user when an ID is supplied; otherwise clear all user details.
     if (userId) {
       this.#queryClient.invalidateQueries({
         queryKey: ['users', 'user', userId],

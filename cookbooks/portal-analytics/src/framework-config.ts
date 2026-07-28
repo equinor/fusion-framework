@@ -66,6 +66,7 @@ export const frameworkConfig: PortalModuleInitiator = (configurator) => {
     });
 
     builder.setAdapter('fusion', async (args) => {
+      // Use the monitor service when service discovery can provide its HTTP client.
       if (args.hasModule('serviceDiscovery')) {
         const serviceDiscovery =
           await args.requireInstance<ServiceDiscoveryProvider>('serviceDiscovery');
@@ -101,6 +102,7 @@ export const frameworkConfig: PortalModuleInitiator = (configurator) => {
     builder.setCollector('click-test', async () => {
       const subject = new Subject<AnalyticsEvent>();
       window.addEventListener('click', (e) => {
+        // Track only the cookbook's explicit analytics test button.
         if ((e.target as HTMLButtonElement).id === 'button-trigger') {
           subject.next({
             name: 'window-clicker',

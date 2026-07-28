@@ -28,6 +28,13 @@ const useStyles = makeStyles(
   { name: 'Button' },
 );
 
+/**
+ * Renders a themed button with a selectable primary or secondary treatment.
+ * @param onClick - Callback invoked when the button is activated.
+ * @param type - Visual treatment used for the button background.
+ * @param children - Content displayed inside the button.
+ * @returns A styled button element.
+ */
 export const Button = ({
   onClick,
   type = 'secondary',

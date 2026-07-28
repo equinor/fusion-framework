@@ -18,6 +18,10 @@ export type RowDataType = {
   price: number;
 };
 
+/**
+ * Demonstrates an editable AG Grid table with predefined rows and an add-row action.
+ * @returns The basic AG Grid example view.
+ */
 export const BasicExample = (): ReactElement => {
   // Define the grid style
   const gridStyle = useMemo(() => ({ height: '400px', width: '100%' }), []);

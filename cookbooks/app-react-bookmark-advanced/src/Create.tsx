@@ -1,7 +1,9 @@
 import { useId } from 'react';
 import { useBookmark } from '@equinor/fusion-framework-react-app/bookmark';
-import { init, useBookmarkContext } from './Provider';
+import { init } from './init';
+import { useBookmarkContext } from './useBookmarkContext';
 
+/** Provides bookmark form controls and a list of bookmarks for the advanced example. */
 export const Create = () => {
   const nameId = useId();
   const descriptionId = useId();
@@ -11,6 +13,10 @@ export const Create = () => {
 
   const { bookmarks, updateBookmark, deleteBookmarkById, createBookmark, setCurrentBookmark } =
     useBookmark();
+
+  const cookbookBookmarks = bookmarks
+    // Limit the list to bookmarks created by this cookbook application.
+    .filter((b) => b.appKey === 'fusion-framework-cookbook-app-react-bookmark-advanced');
 
   return (
     <div
@@ -112,52 +118,51 @@ export const Create = () => {
             Clear Form
           </button>
           <div style={{ height: '600px', overflow: 'auto' }}>
-            {bookmarks
-              .filter((b) => b.appKey === 'fusion-framework-cookbook-app-react-bookmark-advanced')
-              .map((bookmark) => (
-                <div key={bookmark.id} style={{ display: 'flex' }}>
+            {cookbookBookmarks.map((bookmark) => (
+              <div key={bookmark.id} style={{ display: 'flex' }}>
+                <button
+                  type="button"
+                  style={{
+                    display: 'flex',
+                    textAlign: 'start',
+                    padding: '1rem',
+                  }}
+                  onClick={() => {
+                    setCurrentBookmark(bookmark.id);
+                  }}
+                >
+                  <div>
+                    <h4 style={{ margin: 0 }}>{bookmark.name}</h4>
+                    <p style={{ marginTop: '0.25rem' }}>{bookmark.description}</p>
+                    <p style={{ fontSize: '10px' }}>{bookmark.id}</p>
+                  </div>
+                </button>
+                <div>
                   <button
                     type="button"
-                    style={{
-                      display: 'flex',
-                      textAlign: 'start',
-                      padding: '1rem',
-                    }}
+                    style={{ display: 'flex' }}
                     onClick={() => {
-                      setCurrentBookmark(bookmark.id);
+                      deleteBookmarkById(bookmark.id);
                     }}
                   >
-                    <div>
-                      <h4 style={{ margin: 0 }}>{bookmark.name}</h4>
-                      <p style={{ marginTop: '0.25rem' }}>{bookmark.description}</p>
-                      <p style={{ fontSize: '10px' }}>{bookmark.id}</p>
-                    </div>
+                    x
                   </button>
-                  <div>
-                    <button
-                      type="button"
-                      style={{ display: 'flex' }}
-                      onClick={() => {
-                        deleteBookmarkById(bookmark.id);
-                      }}
-                    >
-                      x
-                    </button>
-                    <button
-                      type="button"
-                      style={{ display: 'flex' }}
-                      onClick={() => {
-                        updateBookmark({
-                          ...bookmark,
-                          ...state,
-                        });
-                      }}
-                    >
-                      u
-                    </button>
-                  </div>
+                  <button
+                    type="button"
+                    style={{ display: 'flex' }}
+                    onClick={() => {
+                      // Merge the current form values while retaining bookmark identity and metadata.
+                      updateBookmark({
+                        ...bookmark,
+                        ...state,
+                      });
+                    }}
+                  >
+                    u
+                  </button>
                 </div>
-              ))}
+              </div>
+            ))}
           </div>
         </div>
       </div>

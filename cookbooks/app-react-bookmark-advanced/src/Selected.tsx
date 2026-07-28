@@ -1,5 +1,6 @@
 import { useCurrentBookmark } from '@equinor/fusion-framework-react-app/bookmark';
 
+/** Displays the bookmark selected by the shared bookmark module. */
 export const Selected = () => {
   const { currentBookmark } = useCurrentBookmark();
 

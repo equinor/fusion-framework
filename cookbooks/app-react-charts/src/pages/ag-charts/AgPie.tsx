@@ -1,6 +1,6 @@
-import { marketShareData } from './Data';
+import { marketShareData } from './market-share-data';
 import { type ReactElement, useMemo } from 'react';
-import Styled from '../../App.style';
+import Styled from '../../styled';
 import type { AgChartOptions } from '@equinor/fusion-framework-react-ag-charts/community';
 import { AgCharts } from '@equinor/fusion-framework-react-ag-charts';
 
@@ -30,8 +30,12 @@ export const AgPie = (): ReactElement => {
         {
           type: 'pie',
           angleKey: 'share',
-          fills: marketShareData.map((d) => d.color),
-          strokes: marketShareData.map((d) => d.color),
+          fills: marketShareData
+            // Reuse the data colors so the pie segments and legend stay aligned.
+            .map((d) => d.color),
+          strokes: marketShareData
+            // Reuse the same palette for segment outlines to keep the chart cohesive.
+            .map((d) => d.color),
           title: {
             text: 'Platforms',
           },

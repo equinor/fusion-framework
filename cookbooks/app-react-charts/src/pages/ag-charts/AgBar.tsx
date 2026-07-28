@@ -1,6 +1,6 @@
-import { salesData } from './Data';
+import { salesData } from './sales-data';
 import { type ReactElement, useMemo } from 'react';
-import Styled from '../../App.style';
+import Styled from '../../styled';
 import type { AgChartOptions } from '@equinor/fusion-framework-react-ag-charts/community';
 import { AgCharts } from '@equinor/fusion-framework-react-ag-charts';
 

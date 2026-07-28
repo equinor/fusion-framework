@@ -29,6 +29,11 @@ type PeoplePageLoaderData = {
   searchTerm: string;
 };
 
+/**
+ * Loads people matching the search query through the shared API context.
+ * @param props - Router request and Fusion context arguments.
+ * @returns Search results and the active search term.
+ */
 export async function clientLoader(props: LoaderFunctionArgs) {
   const { fusion, request } = props;
   const url = new URL(request.url);
@@ -46,10 +51,16 @@ export async function clientLoader(props: LoaderFunctionArgs) {
   };
 }
 
+/**
+ * Validates the people search form and redirects to the query-bearing route URL.
+ * @param request - Request containing the submitted search form.
+ * @returns A validation result or redirect response.
+ */
 export async function action({ request }: ActionFunctionArgs) {
   const formData = await request.formData();
   const searchTerm = (formData.get('search') as string)?.trim() || '';
 
+  // Return validation feedback before redirecting an empty search submission.
   if (!searchTerm) {
     return { error: 'Search term is required' };
   }
@@ -150,6 +161,11 @@ const Styled = {
   `,
 };
 
+/**
+ * Shows a recoverable error state and clears the current search query.
+ * @param props - Router error props and Fusion navigation context.
+ * @returns The people route error presentation.
+ */
 export function ErrorElement(props: ErrorElementProps) {
   const { error, fusion } = props;
   const onClick = useCallback(() => {
@@ -180,6 +196,7 @@ export default function PeoplePage(
 
   const handleSearchChange = (value: string) => {
     // Update search params as user types (optional - can be removed if you prefer form submission only)
+    // Remove the query immediately when the user clears the search control.
     if (value === '') {
       const newParams = new URLSearchParams(searchParams);
       newParams.delete('search');

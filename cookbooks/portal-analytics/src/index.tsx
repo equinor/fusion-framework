@@ -7,7 +7,7 @@ import {
   type ComponentRenderArgs,
   frameworkConfig,
   type PortalModuleInitiator,
-} from './framworkConfig';
+} from './framework-config';
 import { Router } from './Router';
 
 const createPortal = <TRef extends Fusion = Fusion>(

@@ -37,14 +37,19 @@ export const LogReader = () => {
       const response = await fetch('/@fusion-api/logs');
       const text = await response.text();
       const allRecords = text
+        // Ignore blank lines so the parser only receives complete log entries.
         .split('\n')
+        // Remove empty records before validating newline-delimited JSON.
         .filter((line) => line.trim() !== '')
+        // Parse each newline-delimited entry before flattening its nested records.
         .map((line) => {
           return LogEntrySchema.parse(JSON.parse(line));
         })
         .reverse()
+        // Flatten resource records into the table's display order.
         .reduce((acc, records) => {
           const logRecords = records.resourceLogs?.[0]?.scopeLogs?.[0]?.logRecords;
+          // Only append valid record collections from parsed resource logs.
           if (Array.isArray(logRecords)) {
             acc.push(...logRecords);
           }
@@ -97,6 +102,7 @@ export const LogReader = () => {
           </tr>
         </thead>
         <tbody>
+          {/* Preserve newest-first ordering while rendering each log record. */}
           {records.map((logRecord) => {
             return (
               <tr key={uuid()}>

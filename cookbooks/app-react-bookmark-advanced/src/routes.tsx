@@ -3,7 +3,7 @@ import { Page2 } from './Page2';
 import { Link, Outlet, type RouteObject } from '@equinor/fusion-framework-react-router';
 import { Create } from './Create';
 import { Provider } from './Provider';
-import { BookmarkAppNavigation } from './BoomarkAppNavigation';
+import { BookmarkAppNavigation } from './BookmarkAppNavigation';
 import Selected from './Selected';
 
 export const routes: RouteObject[] = [

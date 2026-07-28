@@ -15,6 +15,7 @@ export type NavigationItem = {
  * @returns The joined path
  */
 function joinPaths(prefix: string, path: string | undefined): string {
+  // Preserve the parent path when an optional child segment is absent.
   if (!path) return prefix;
   return `${prefix.replace(/\/$/, '')}/${path.replace(/^\//, '')}`;
 }
@@ -27,15 +28,19 @@ function joinPaths(prefix: string, path: string | undefined): string {
 function extractNavigationItems(routes: RouteObject[], currentPath: string = ''): NavigationItem[] {
   const items: NavigationItem[] = [];
 
+  // Inspect each route so nested handles can contribute navigation entries.
   for (const route of routes) {
     // Determine the full path for this route
     let fullPath: string;
+    // Index routes inherit the parent URL because they render at that location.
     if (route.index) {
       // Index route renders at the parent path
       fullPath = currentPath || '/';
+    // Path routes extend the accumulated URL for nested navigation.
     } else if (route.path) {
       // For routes with a path, join current path with route path
       fullPath = joinPaths(currentPath, route.path);
+    // Layout routes without a path keep the current URL for their children.
     } else {
       // Route without path or index (layout route) renders at current path
       fullPath = currentPath || '/';
@@ -43,6 +48,7 @@ function extractNavigationItems(routes: RouteObject[], currentPath: string = '')
 
     // Check if handle has navigation metadata
     const handle = route.handle;
+    // Only routes with complete navigation metadata should appear in the sidebar.
     if (handle?.route?.title && handle?.route?.icon) {
       items.push({
         label: handle.route.title,
@@ -52,6 +58,7 @@ function extractNavigationItems(routes: RouteObject[], currentPath: string = '')
     }
 
     // Process children recursively
+    // Traverse nested routes so child pages are available in the same navigation list.
     if (route.children && route.children.length > 0) {
       const childItems = extractNavigationItems(route.children, fullPath);
       items.push(...childItems);
@@ -65,6 +72,11 @@ function extractNavigationItems(routes: RouteObject[], currentPath: string = '')
  * Hook to extract navigation items from route pages.
  * Works with RouteObject format (transformed by Vite plugin).
  * Handles are already available in the route objects, so no module loading is needed.
+ */
+/**
+ * Extracts sidebar navigation entries from a transformed route tree.
+ * @param pages - Route objects containing route handles and optional children.
+ * @returns Navigation items derived from the supplied route tree.
  */
 export function useNavigationItems(pages: RouteObject[]): NavigationItem[] {
   const [items, setItems] = useState<NavigationItem[]>([]);

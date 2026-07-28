@@ -1,5 +1,5 @@
 import { useEffect, useId } from 'react';
-import { useBookmarkContext } from './Provider';
+import { useBookmarkContext } from './useBookmarkContext';
 
 export function Page2() {
   const titleId = useId();

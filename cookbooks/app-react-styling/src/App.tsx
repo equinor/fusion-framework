@@ -2,6 +2,10 @@ import { ThemeProvider, theme } from '@equinor/fusion-react-styles';
 import { Container, Title, Card, Text, Button, Demo } from './components';
 import { useState } from 'react';
 
+/**
+ * Renders the interactive styling examples and stylesheet cleanup controls.
+ * @returns The cookbook's demonstration content.
+ */
 const AppContent = () => {
   const [buttonType, setButtonType] = useState<'primary' | 'secondary'>('secondary');
   const [showDemo, setShowDemo] = useState(false);
@@ -65,6 +69,10 @@ const AppContent = () => {
   );
 };
 
+/**
+ * Provides the Fusion theme to the styling demonstration application.
+ * @returns The themed styling cookbook application.
+ */
 export const App = () => {
   return (
     <ThemeProvider theme={theme}>
