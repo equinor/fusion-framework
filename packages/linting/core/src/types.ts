@@ -61,7 +61,7 @@ export interface Rule {
    * Rules that need path-based filtering typically build their default
    * `match` from {@link import('./matcher.js').createMatcher}, while still
    * honoring a factory `options.match` override via
-   * {@link import('./matcher.js').resolveMatch}, so callers
+   * {@link import('./resolve-match.js').resolveMatch}, so callers
    * can override the matching strategy entirely via config instead of being
    * limited to the rule's own pattern option.
    *

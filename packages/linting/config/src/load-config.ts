@@ -117,12 +117,15 @@ function splitRuleEntries(rules: Record<string, RuleConfigEntry>): {
 } {
   const config: LintConfig = {};
   const ruleMatchers: Record<string, MatcherFn> = {};
+  // walk every configured rule entry to split it into a severity and an optional matcher
   for (const [id, entry] of Object.entries(rules)) {
     // Bare severity shorthand, e.g. { "require-tsdoc": "error" }
     if (typeof entry === 'string') {
       config[id] = entry;
+      // bare severity entries have no include/exclude patterns to process
       continue;
     }
+    // record the severity when explicitly provided
     if (entry.severity) config[id] = entry.severity;
     // Only build a matcher when file-scoping was actually requested
     if (entry.includePattern || entry.excludePattern) {
