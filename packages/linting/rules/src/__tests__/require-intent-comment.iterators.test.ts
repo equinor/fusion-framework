@@ -59,6 +59,26 @@ const conflictingSchemaFields = schemaFields
 `;
     expect(lint(source)).toHaveLength(0);
   });
+
+  it('passes: comment above a return statement wrapping a bare map()', () => {
+    const source = `
+function toViewModels(items) {
+  // wrap each raw item in a view model
+  return items.map((item) => toViewModel(item));
+}
+`;
+    expect(lint(source)).toHaveLength(0);
+  });
+
+  it('passes: comment above a concise-arrow-body map()', () => {
+    const source = `
+export const toViewModels =
+  (items) =>
+    // wrap each raw item in a view model
+    items.map((item) => toViewModel(item));
+`;
+    expect(lint(source)).toHaveLength(0);
+  });
 });
 
 // ── Fail cases ────────────────────────────────────────────────────────────────
@@ -93,6 +113,15 @@ const active = users.filter((u) => u.active);
   it('fails: find with no preceding comment', () => {
     const source = `
 const match = items.find((item) => item.id === id);
+`;
+    expect(lint(source)).toHaveLength(1);
+  });
+
+  it('fails: return statement wrapping a bare map() with no preceding comment', () => {
+    const source = `
+function toViewModels(items) {
+  return items.map((item) => toViewModel(item));
+}
 `;
     expect(lint(source)).toHaveLength(1);
   });

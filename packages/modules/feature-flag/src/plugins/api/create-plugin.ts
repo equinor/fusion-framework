@@ -16,20 +16,17 @@ import { ApiPlugin } from './plugin';
 const defaultSelector: ApiResponseSelector = async (response: Response) => {
   const flags = (await response.json()) as IFeatureFlag[];
 
-  return (
-    flags
-      // wrap each raw flag in a FeatureFlag instance, forced read-only since it came from the API
-      .map((flag) => {
-        return new FeatureFlag(flag.key, {
-          enabled: !!flag.enabled,
-          value: flag.value,
-          title: flag.title,
-          description: flag.description,
-          source: flag.source,
-          readonly: true,
-        });
-      })
-  );
+  // wrap each raw flag in a FeatureFlag instance, forced read-only since it came from the API
+  return flags.map((flag) => {
+    return new FeatureFlag(flag.key, {
+      enabled: !!flag.enabled,
+      value: flag.value,
+      title: flag.title,
+      description: flag.description,
+      source: flag.source,
+      readonly: true,
+    });
+  });
 };
 
 /**
