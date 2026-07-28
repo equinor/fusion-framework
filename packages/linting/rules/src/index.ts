@@ -4,6 +4,7 @@ export {
   requireIntentCommentRxjs,
   requireIntentCommentBreakContinue,
   requireIntentCommentTypeAssertion,
+  requireIntentCommentObjectMerge,
 } from './require-intent-comment/index.js';
 export { requireTsDoc } from './require-tsdoc/index.js';
 export type { RequireTsDocOptions } from './require-tsdoc/index.js';

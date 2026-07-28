@@ -26,6 +26,7 @@ The language server is bundled inside the extension. Nothing extra to install.
 | `require-intent-comment/break-continue` | `warn` | `break` and `continue` must be preceded by a comment |
 | `require-intent-comment/rxjs` | `warn` | RxJS operator chains must be preceded by a comment |
 | `require-intent-comment/type-assertion` | `warn` | `as` casts and `!` non-null assertions must be preceded by a comment |
+| `require-intent-comment/object-merge` | `warn` | Multi-source `Object.assign()` calls and `{ ...a, ...b }`/`[...a, ...b]` spread merges must be preceded by a comment |
 | `require-tsdoc` | `warn` | Exported functions, classes, and interfaces must have TSDoc |
 | `require-component-tsdoc` | `warn` | Exported React components must have TSDoc |
 | `require-hook-tsdoc` | `warn` | Exported React hooks must have TSDoc |
