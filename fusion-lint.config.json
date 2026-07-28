@@ -4,8 +4,9 @@
       "excludePattern": [
         "index.ts",
         "index.tsx",
-        "*module.ts",
-        "*static.ts",
+        "module.ts",
+        "*-module.ts",
+        "static.ts",
         "*.schemas.ts"
       ]
     }
