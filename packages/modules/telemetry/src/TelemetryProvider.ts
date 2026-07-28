@@ -17,7 +17,7 @@ import {
   type TelemetryItemSchema,
 } from './schemas.js';
 import type { ITelemetryProvider } from './TelemetryProvider.interface.js';
-import { TelemetryErrorEvent, TelemetryEvent } from './events.js';
+import { TelemetryErrorEvent, TelemetryEvent } from './TelemetryEvent.js';
 import { Measurement } from './Measurement.js';
 import { mergeTelemetryItem } from './utils/merge-telemetry-item.js';
 import type { Modules, ModulesInstanceType } from '@equinor/fusion-framework-module';

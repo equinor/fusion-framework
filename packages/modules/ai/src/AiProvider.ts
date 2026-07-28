@@ -1,7 +1,7 @@
 import { BaseModuleProvider } from '@equinor/fusion-framework-module/provider';
 import type { IModel, IEmbed, IVectorStore } from './lib/types.js';
 import { version } from './version.js';
-import type { AIModuleConfig } from './AIConfigurator.js';
+import type { AIModuleConfig } from './AiConfigurator.js';
 import {
   FUSION_EMBED_STRATEGY_NAME,
   FUSION_INDEX_STRATEGY_NAME,

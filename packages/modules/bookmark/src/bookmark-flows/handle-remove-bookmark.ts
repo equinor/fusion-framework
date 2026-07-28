@@ -3,7 +3,7 @@ import { map, concatMap, filter } from 'rxjs/operators';
 
 import { type Flow, getBaseType } from '@equinor/fusion-observable';
 
-import { bookmarkActions as actions, type BookmarkActions } from '../BookmarkProvider.actions';
+import { bookmarkActions as actions, type BookmarkActions } from '../bookmark-actions';
 import type { IBookmarkClient } from '../BookmarkClient.interface';
 
 /**

@@ -12,7 +12,7 @@ import {
   type ObservableInput,
 } from 'rxjs';
 import { jsonSelector } from '@equinor/fusion-framework-module-http/selectors';
-import { ApiServices } from './api-schema';
+import { ApiServices } from './api-services';
 
 /**
  * Contract for a client that resolves service endpoints from a service

@@ -3,8 +3,8 @@ import { mergeMap } from 'rxjs/operators';
 
 import type { Flow } from '@equinor/fusion-observable';
 
-import type { BookmarkActions } from '../BookmarkProvider.actions';
-import type { BookmarkState } from '../BookmarkProvider.store';
+import type { BookmarkActions } from '../bookmark-actions';
+import type { BookmarkState } from '../create-bookmark-store';
 import type { IBookmarkClient } from '../BookmarkClient.interface';
 
 import { handleFetchBookmark } from './handle-fetch-bookmark';

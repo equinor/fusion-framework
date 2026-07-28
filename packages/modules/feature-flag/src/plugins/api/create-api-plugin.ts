@@ -1,8 +1,8 @@
 import type { ApiFeatureFlagPlugin, ApiResponseSelector } from './types';
 import { type IFeatureFlag, FeatureFlag } from '../../FeatureFlag';
 import type { FeatureFlagPluginConfigCallback } from '../../types';
-import { createApiPluginClient } from './create-client';
-import { ApiPlugin } from './plugin';
+import { createApiPluginClient } from './create-api-plugin-client';
+import { ApiPlugin } from './ApiPlugin';
 
 /**
  * Default selector that maps an HTTP JSON response to an array of

@@ -1,4 +1,4 @@
-import { UnsupportedApiVersion } from '../../errors';
+import { UnsupportedApiVersion } from '../../UnsupportedApiVersion';
 import { ApiVersion } from '../static';
 
 import type { ApiRequestArgs, SupportedApiVersion } from './types';

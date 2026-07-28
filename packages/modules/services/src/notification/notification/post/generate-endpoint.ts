@@ -1,4 +1,4 @@
-import { UnsupportedApiVersion } from '../../../errors';
+import { UnsupportedApiVersion } from '../../../UnsupportedApiVersion';
 import { ApiVersion } from '../..';
 
 import type { PostNotificationArgs } from './types';

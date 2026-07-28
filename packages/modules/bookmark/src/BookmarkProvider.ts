@@ -36,12 +36,12 @@ import type {
 } from './types';
 
 import type { BookmarkNew, BookmarkUpdate, IBookmarkClient } from './BookmarkClient.interface';
-import { type BookmarkActions, bookmarkActions } from './BookmarkProvider.actions';
+import { type BookmarkActions, bookmarkActions } from './bookmark-actions';
 import {
   type BookmarkState,
   createBookmarkStore,
   type BookmarkStore,
-} from './BookmarkProvider.store';
+} from './create-bookmark-store';
 import {
   activeBookmarkSelector,
   bookmarkSelector,
@@ -49,7 +49,7 @@ import {
   errorsSelector,
 } from './BookmarkProvider.selectors';
 
-import { type BookmarkFlowError, BookmarkProviderError } from './BookmarkProvider.error';
+import { type BookmarkFlowError, BookmarkProviderError } from './BookmarkFlowError';
 
 import type { BookmarkProviderEventMap } from './BookmarkProvider.events';
 import { version } from './version';

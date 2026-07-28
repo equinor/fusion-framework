@@ -1,4 +1,4 @@
-import type { WidgetErrorType } from '../errors.js';
+import type { WidgetErrorType } from '../WidgetManifestLoadError.js';
 
 /**
  * Error thrown when a widget script module cannot be dynamically imported.

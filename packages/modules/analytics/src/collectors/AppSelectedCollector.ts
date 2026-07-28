@@ -1,7 +1,7 @@
 import { map, type ObservableInput, pairwise } from 'rxjs';
 import type { IAnalyticsCollector } from './AnalyticsCollector.interface.js';
-import { BaseCollector, createSchema } from './BaseCollector.js';
-import { type AppKeyType, appKeySchema } from './utils/extractAppMetadata.js';
+import { BaseCollector, createSchema } from './create-schema.js';
+import { type AppKeyType, appKeySchema } from './utils/app-key-schema.js';
 import { extractAppKeyMetadata } from './utils/extract-app-key-metadata.js';
 
 import type { AppModuleProvider } from '@equinor/fusion-framework-module-app';

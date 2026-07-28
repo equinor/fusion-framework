@@ -3,9 +3,9 @@ import { throttleTime, groupBy, switchMap, map, catchError, filter, last } from 
 
 import type { Flow, Observable } from '@equinor/fusion-observable';
 
-import { bookmarkActions as actions, type BookmarkActions } from '../BookmarkProvider.actions';
+import { bookmarkActions as actions, type BookmarkActions } from '../bookmark-actions';
 import type { IBookmarkClient } from '../BookmarkClient.interface';
-import { BookmarkFlowError } from '../BookmarkProvider.error';
+import { BookmarkFlowError } from '../BookmarkFlowError';
 
 const defaultThrottleTime = 200;
 

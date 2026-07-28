@@ -1,8 +1,8 @@
 import type { AccountInfo, AuthenticationResult, PublicClientApplication } from '@azure/msal-node';
 
-import { AuthServerError } from './errors/auth-server-error.js';
-import { NoAccountsError } from './errors/no-accounts-error.js';
-import { SilentTokenAcquisitionError } from './errors/silent-token-acquisition-error.js';
+import { AuthServerError } from './errors/AuthServerError.js';
+import { NoAccountsError } from './errors/NoAccountsError.js';
+import { SilentTokenAcquisitionError } from './errors/SilentTokenAcquisitionError.js';
 
 import type { IAuthProvider } from './AuthProvider.interface.js';
 

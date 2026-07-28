@@ -3,9 +3,9 @@ import { concatMap, map, catchError, filter, last } from 'rxjs/operators';
 
 import type { Flow, Observable } from '@equinor/fusion-observable';
 
-import { bookmarkActions as actions, type BookmarkActions } from '../BookmarkProvider.actions';
+import { bookmarkActions as actions, type BookmarkActions } from '../bookmark-actions';
 import type { IBookmarkClient } from '../BookmarkClient.interface';
-import { BookmarkFlowError } from '../BookmarkProvider.error';
+import { BookmarkFlowError } from '../BookmarkFlowError';
 
 /**
  * Creates a flow for handling deleting bookmarks.

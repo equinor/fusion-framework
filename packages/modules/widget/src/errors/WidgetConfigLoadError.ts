@@ -1,4 +1,4 @@
-import type { WidgetErrorType } from '../errors.js';
+import type { WidgetErrorType } from '../WidgetManifestLoadError.js';
 
 /**
  * Error thrown when a widget configuration cannot be loaded from the backend API.

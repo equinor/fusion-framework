@@ -19,13 +19,13 @@ import type {
 
 import { version } from './version.js';
 
-import { createState } from './FeatureFlagProvider.state';
-import { actions } from './FeatureFlagProvider.actions';
+import { createState } from './create-state';
+import { actions } from './actions';
 
 import type { FeatureFlagConfig } from './types';
 import type { IFeatureFlag } from './FeatureFlag';
 import { normalizeFlags } from './utils/normalize-flags';
-import type { FeatureSelectorFn } from './utils/selectors';
+import type { FeatureSelectorFn } from './utils/filter-features';
 
 /**
  * Custom equality comparison for two feature flag snapshots.

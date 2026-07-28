@@ -20,7 +20,7 @@ import type {
   ConfigEnvironment,
 } from './types';
 import { AppBuildError, AppConfigError, AppManifestError, AppSettingsError } from './errors';
-import { AppConfigSelector } from './AppClient.Selectors';
+import { AppConfigSelector } from './AppConfigSelector';
 
 /**
  * Contract for an app service client that fetches application manifests,

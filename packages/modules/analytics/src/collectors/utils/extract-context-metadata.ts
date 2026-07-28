@@ -1,6 +1,6 @@
 import type { ContextItem } from '@equinor/fusion-framework-module-context';
 import type { z } from 'zod';
-import type { contextSchema } from './extractContextMetadata.js';
+import type { contextSchema } from './context-schema.js';
 
 /**
  * Extracts context metadata from a `ContextItem` for analytics events.

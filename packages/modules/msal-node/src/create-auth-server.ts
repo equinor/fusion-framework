@@ -2,8 +2,8 @@ import type { AuthenticationResult, PublicClientApplication } from '@azure/msal-
 import { createServer } from 'node:http';
 import URL from 'node:url';
 
-import { AuthServerError } from './errors/auth-server-error.js';
-import { AuthServerTimeoutError } from './errors/auth-server-timeout-error.js';
+import { AuthServerError } from './errors/AuthServerError.js';
+import { AuthServerTimeoutError } from './errors/AuthServerTimeoutError.js';
 
 const DEFAULT_SERVER_TIMEOUT = 300000 as const; // 5 minutes
 

@@ -11,7 +11,7 @@ import type {
   Path,
   To,
 } from './types';
-import type { Actions } from './state/history.actions';
+import type { Actions } from './state/actions';
 
 /**
  * A lightweight proxy that delegates every {@link History} operation to an

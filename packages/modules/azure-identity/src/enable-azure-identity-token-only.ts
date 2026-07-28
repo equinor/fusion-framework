@@ -1,5 +1,5 @@
 import type { IModulesConfigurator } from '@equinor/fusion-framework-module';
-import { enableAzureIdentityAuth } from './enable-module.js';
+import { enableAzureIdentityAuth } from './enable-azure-identity-auth.js';
 
 /**
  * Enables Azure Identity auth in `token_only` mode with a pre-obtained

@@ -1,6 +1,6 @@
 import { FlowSubject } from '@equinor/fusion-observable';
-import type { Actions } from './FeatureFlagProvider.actions';
-import { makeReducer } from './FeatureFlagProvider.reducer';
+import type { Actions } from './actions';
+import { makeReducer } from './make-reducer';
 import type { IFeatureFlag } from './FeatureFlag';
 
 /** Internal state shape for the feature-flag store. */

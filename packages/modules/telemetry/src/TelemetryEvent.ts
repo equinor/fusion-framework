@@ -2,7 +2,7 @@ import { FrameworkEvent, type FrameworkEventInit } from '@equinor/fusion-framewo
 
 import type { ITelemetryProvider } from './TelemetryProvider.interface.js';
 import type { TelemetryItem } from './types.js';
-import type { TelemetryErrorEvent } from './telemetry-error-event.js';
+import type { TelemetryErrorEvent } from './TelemetryErrorEvent.js';
 
 /**
  * Represents a telemetry event within the framework.
@@ -34,7 +34,7 @@ export class TelemetryEvent extends FrameworkEvent<
 
 // Re-exported from its own file to satisfy single-export-per-file while
 // preserving this file's existing public export surface.
-export { TelemetryErrorEvent } from './telemetry-error-event.js';
+export { TelemetryErrorEvent } from './TelemetryErrorEvent.js';
 
 declare module '@equinor/fusion-framework-module-event' {
   interface FrameworkEventMap {

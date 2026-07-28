@@ -1,6 +1,6 @@
 import { type To, type LocationState, type NavigationUpdate, Action } from './types';
 import { pathToString, resolvePath } from './utils';
-import { MemoryHistoryStack } from './MemoryStack';
+import { MemoryHistoryStack } from './MemoryHistoryStack';
 import { BaseHistory } from './BaseHistory';
 import { createHistoryReducer, createStore } from './state';
 

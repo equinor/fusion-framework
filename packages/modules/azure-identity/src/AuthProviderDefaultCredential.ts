@@ -1,6 +1,6 @@
 import { DefaultAzureCredential } from '@azure/identity';
 import type { IAuthProvider } from './AuthProvider.interface.js';
-import { NoCredentialError } from './errors.js';
+import { NoCredentialError } from './NoCredentialError.js';
 
 /**
  * Authentication provider backed by Azure Identity's `DefaultAzureCredential`.

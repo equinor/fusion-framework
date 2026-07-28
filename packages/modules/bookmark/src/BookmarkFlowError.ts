@@ -1,6 +1,6 @@
 import type { ActionWithSuffix } from '@equinor/fusion-observable';
 
-import type { BookmarkActions } from './BookmarkProvider.actions';
+import type { BookmarkActions } from './bookmark-actions';
 
 /**
  * Error thrown inside bookmark store flows (side-effect pipelines) when an

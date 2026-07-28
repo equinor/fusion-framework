@@ -57,5 +57,5 @@ export class WidgetManifestLoadError extends Error {
   }
 }
 
-export { WidgetConfigLoadError } from './errors/widget-config-load-error.js';
-export { WidgetScriptModuleError } from './errors/widget-script-module-error.js';
+export { WidgetConfigLoadError } from './errors/WidgetConfigLoadError.js';
+export { WidgetScriptModuleError } from './errors/WidgetScriptModuleError.js';

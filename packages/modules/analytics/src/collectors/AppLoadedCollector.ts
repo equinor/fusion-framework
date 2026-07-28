@@ -1,7 +1,7 @@
-import { BaseCollector, createSchema } from './BaseCollector.js';
+import { BaseCollector, createSchema } from './create-schema.js';
 import { type AppItemType, appSchema } from './utils/app-schema.js';
 import { extractAppMetadata } from './utils/extract-app-metadata.js';
-import { type ContextItemType, contextSchema } from './utils/extractContextMetadata.js';
+import { type ContextItemType, contextSchema } from './utils/context-schema.js';
 import { extractContextMetadata } from './utils/extract-context-metadata.js';
 import type { IAnalyticsCollector } from './AnalyticsCollector.interface.js';
 

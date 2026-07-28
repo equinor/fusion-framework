@@ -3,7 +3,7 @@ import {
   type FlowState,
   type ReducerWithInitialState,
 } from '@equinor/fusion-observable';
-import { actions, type Actions } from './history.actions';
+import { actions, type Actions } from './actions';
 import { flowCreators, createFlow, type HistoryFlowCreator } from './history.flows';
 import type { HistoryStack, LocationState } from '../types';
 

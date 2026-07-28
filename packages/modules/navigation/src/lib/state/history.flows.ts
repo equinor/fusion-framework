@@ -2,7 +2,7 @@ import { Observable, of, merge } from 'rxjs';
 import { concatMap, map, withLatestFrom } from 'rxjs/operators';
 import type { Flow } from '@equinor/fusion-observable';
 import { filterAction } from '@equinor/fusion-observable/operators';
-import { actions, type Actions } from './history.actions';
+import { actions, type Actions } from './actions';
 import { resolvePath } from '../utils';
 import { type Location, type LocationState, type HistoryStack, Action } from '../types';
 

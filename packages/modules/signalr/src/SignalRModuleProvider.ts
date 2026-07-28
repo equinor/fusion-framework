@@ -1,7 +1,7 @@
 import { HubConnectionBuilder, type HubConnection, AbortError } from '@microsoft/signalr';
 import { Observable, shareReplay } from 'rxjs';
 
-import type { SignalRConfig } from './SignalRModuleConfigurator';
+import type { SignalRConfig } from './SignalRModuleConfigBuilder';
 
 import { Topic } from './lib/Topic';
 

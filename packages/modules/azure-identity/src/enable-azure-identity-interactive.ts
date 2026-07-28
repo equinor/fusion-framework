@@ -1,6 +1,6 @@
 import type { IModulesConfigurator } from '@equinor/fusion-framework-module';
 import type { InteractiveAuthOptions } from './configurator.js';
-import { enableAzureIdentityAuth } from './enable-module.js';
+import { enableAzureIdentityAuth } from './enable-azure-identity-auth.js';
 
 /**
  * Enables Azure Identity auth in `interactive` mode with browser-based login

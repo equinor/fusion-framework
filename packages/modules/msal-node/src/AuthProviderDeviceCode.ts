@@ -3,7 +3,7 @@ import type { DeviceCodeRequest } from '@azure/msal-node';
 import type { AuthenticationResult, PublicClientApplication } from '@azure/msal-node';
 
 import { AuthProvider } from './AuthProvider.js';
-import { SilentTokenAcquisitionError } from './errors/silent-token-acquisition-error.js';
+import { SilentTokenAcquisitionError } from './errors/SilentTokenAcquisitionError.js';
 
 /**
  * Authentication provider that uses the OAuth 2.0 device code flow.

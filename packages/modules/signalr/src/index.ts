@@ -18,7 +18,7 @@ export {
   SignalRHubConfig,
   SignalRModuleConfigBuilder,
   SignalRModuleConfigBuilderCallback,
-} from './SignalRModuleConfigurator';
+} from './SignalRModuleConfigBuilder';
 
 export { SignalRConfigurator } from './SignalRConfigurator';
 

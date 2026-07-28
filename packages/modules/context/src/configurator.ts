@@ -8,7 +8,7 @@ import type {
 } from '@equinor/fusion-framework-module';
 import type { ServicesModule, IApiProvider } from '@equinor/fusion-framework-module-services';
 import type { NavigationModule } from '@equinor/fusion-framework-module-navigation';
-import { getContextSelector, queryContextSelector, relatedContextSelector } from './selectors';
+import { getContextSelector, queryContextSelector, relatedContextSelector } from './get-context-selector';
 import type { QueryCtorOptions } from '@equinor/fusion-query';
 import type {
   ContextFilterFn,

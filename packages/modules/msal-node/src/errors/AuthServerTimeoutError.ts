@@ -1,4 +1,4 @@
-import { AuthServerError } from './auth-server-error.js';
+import { AuthServerError } from './AuthServerError.js';
 
 /**
  * Error thrown when the authentication server times out waiting for a response.

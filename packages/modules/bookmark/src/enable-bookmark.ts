@@ -1,7 +1,7 @@
 import type { IModulesConfigurator } from '@equinor/fusion-framework-module';
 
 import { module } from './bookmark-module';
-import type { BookmarkModuleConfigurator } from './BookmarkConfigurator';
+import type { BookmarkModuleConfigurator } from './BookmarkModuleConfigurator';
 
 /**
  * Enables the bookmark module on a Fusion Framework module configurator.

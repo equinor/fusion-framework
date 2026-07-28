@@ -15,7 +15,7 @@ type IPersistence = Awaited<
   >
 >;
 import type { InteractiveAuthOptions } from './configurator.js';
-import { NoCredentialError } from './errors.js';
+import { NoCredentialError } from './NoCredentialError.js';
 
 /**
  * Authentication provider backed by Azure Identity's `InteractiveBrowserCredential`.

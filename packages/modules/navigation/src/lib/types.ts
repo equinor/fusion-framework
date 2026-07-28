@@ -1,5 +1,5 @@
 import type { Observable } from 'rxjs';
-import type { Actions } from './state/history.actions';
+import type { Actions } from './state/actions';
 
 /**
  * Actions represent the type of change to a location value.

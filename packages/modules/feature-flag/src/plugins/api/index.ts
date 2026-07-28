@@ -1,5 +1,5 @@
-export { ApiPlugin } from './plugin';
-export { createApiPlugin } from './create-plugin';
-export { createApiPluginClient } from './create-client';
+export { ApiPlugin } from './ApiPlugin';
+export { createApiPlugin } from './create-api-plugin';
+export { createApiPluginClient } from './create-api-plugin-client';
 
 export * from './types';

@@ -24,7 +24,8 @@
         "client-msal.ts",
         "route-factory.ts",
         "static.ts",
-        "types.ts"
+        "types.ts",
+        "enable-signalr.ts"
       ]
     }
   },

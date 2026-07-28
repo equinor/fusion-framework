@@ -3,8 +3,8 @@ import type { IAnalyticsCollector } from './AnalyticsCollector.interface.js';
 import type { IContextProvider } from '@equinor/fusion-framework-module-context';
 import type { AppModuleProvider } from '@equinor/fusion-framework-module-app';
 import { z } from 'zod';
-import { BaseCollector, createSchema } from './BaseCollector.js';
-import { type ContextItemType, contextSchema } from './utils/extractContextMetadata.js';
+import { BaseCollector, createSchema } from './create-schema.js';
+import { type ContextItemType, contextSchema } from './utils/context-schema.js';
 import { extractContextMetadata } from './utils/extract-context-metadata.js';
 
 /** Zod schema for the `context-selected` event (value + attributes). */

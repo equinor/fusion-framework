@@ -1,6 +1,6 @@
 import buildOdataQuery from 'odata-query';
 
-import { UnsupportedApiVersion } from '../../errors';
+import { UnsupportedApiVersion } from '../../UnsupportedApiVersion';
 
 import { ApiVersion } from '..';
 

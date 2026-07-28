@@ -9,7 +9,7 @@
  *
  * @packageDocumentation
  */
-export { BookmarkModuleConfigurator } from './BookmarkConfigurator';
+export { BookmarkModuleConfigurator } from './BookmarkModuleConfigurator';
 
 export type {
   IBookmarkClient,

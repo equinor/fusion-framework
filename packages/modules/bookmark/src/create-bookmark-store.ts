@@ -1,8 +1,8 @@
 import { FlowSubject, type ActionBaseType } from '@equinor/fusion-observable';
 
-import type { BookmarkActions } from './BookmarkProvider.actions';
-import type { BookmarkFlowError } from './BookmarkProvider.error';
-import { createBookmarkReducer } from './BookmarkProvider.reducer';
+import type { BookmarkActions } from './bookmark-actions';
+import type { BookmarkFlowError } from './BookmarkFlowError';
+import { createBookmarkReducer } from './create-bookmark-reducer';
 import { bookmarkApiFlows } from './bookmark-flows';
 import type { IBookmarkClient } from './BookmarkClient.interface';
 import type { Bookmark, BookmarkWithoutData } from './types';

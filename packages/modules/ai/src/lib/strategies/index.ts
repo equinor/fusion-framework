@@ -1,5 +1,5 @@
-export { fusionAiStrategy } from './create-fusion-strategy.js';
-export type { FusionAiStrategyFactory, FusionAiStrategyModules } from './create-fusion-strategy.js';
+export { fusionAiStrategy } from './fusion-ai-strategy.js';
+export type { FusionAiStrategyFactory, FusionAiStrategyModules } from './fusion-ai-strategy.js';
 
 export {
   FUSION_EMBED_STRATEGY_NAME,
@@ -16,11 +16,11 @@ export {
 
 // ── Deprecated aliases (old names without "Ai" infix) ──────────────────────
 /** @deprecated Use {@link fusionAiStrategy} instead. */
-export { fusionAiStrategy as createFusionStrategy } from './create-fusion-strategy.js';
+export { fusionAiStrategy as createFusionStrategy } from './fusion-ai-strategy.js';
 /** @deprecated Use {@link FusionAiStrategyFactory} instead. */
-export type { FusionAiStrategyFactory as FusionStrategyFactory } from './create-fusion-strategy.js';
+export type { FusionAiStrategyFactory as FusionStrategyFactory } from './fusion-ai-strategy.js';
 /** @deprecated Use {@link FusionAiStrategyModules} instead. */
-export type { FusionAiStrategyModules as FusionStrategyModules } from './create-fusion-strategy.js';
+export type { FusionAiStrategyModules as FusionStrategyModules } from './fusion-ai-strategy.js';
 /** @deprecated Use {@link createFusionAiModelStrategy} instead. */
 export { createFusionAiModelStrategy as createFusionModelStrategy } from './fusion-model.strategy.js';
 /** @deprecated Use {@link createFusionAiEmbedStrategy} instead. */

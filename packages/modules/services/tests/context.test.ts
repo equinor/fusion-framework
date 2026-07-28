@@ -5,7 +5,7 @@ import { BASE_URL } from './setup';
 import { ContextApiClient, ApiVersion } from '../src/context';
 
 import { HttpClient } from '@equinor/fusion-framework-module-http/client';
-import { UnsupportedApiVersion } from '../src/errors';
+import { UnsupportedApiVersion } from '../src/UnsupportedApiVersion';
 
 import { mockContextItem } from './mocks';
 

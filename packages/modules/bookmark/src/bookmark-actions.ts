@@ -8,7 +8,7 @@ import {
 import type { Bookmark, BookmarkData, BookmarkWithoutData, Bookmarks } from './types';
 
 import type { BookmarkNew, BookmarkUpdate, BookmarksFilter } from './BookmarkClient.interface';
-import type { BookmarkFlowError } from './BookmarkProvider.error';
+import type { BookmarkFlowError } from './BookmarkFlowError';
 
 /**
  * Represents the metadata associated with a bookmark action.

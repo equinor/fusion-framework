@@ -9,7 +9,7 @@ import { Query } from '@equinor/fusion-query';
 import type { GetWidgetParameters, WidgetConfig, WidgetManifest } from './types';
 
 import type { WidgetModuleConfig } from './WidgetModuleConfigurator';
-import { WidgetManifestLoadError, WidgetConfigLoadError } from './errors';
+import { WidgetManifestLoadError, WidgetConfigLoadError } from './WidgetManifestLoadError';
 import { Widget } from './Widget';
 
 /**

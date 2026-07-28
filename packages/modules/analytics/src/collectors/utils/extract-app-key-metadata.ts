@@ -1,6 +1,6 @@
 import type { CurrentApp } from '@equinor/fusion-framework-module-app';
 import type { z } from 'zod';
-import type { appKeySchema } from './extractAppMetadata.js';
+import type { appKeySchema } from './app-key-schema.js';
 
 /**
  * Extracts app-key metadata from a `CurrentApp` instance.
