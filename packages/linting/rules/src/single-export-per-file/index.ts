@@ -10,13 +10,14 @@ const DEFAULT_SEVERITY: Severity = 'warn';
  * Node child types that represent value (non-type) exports.
  * Type-only exports (`export type`, `export interface`) are excluded because
  * they carry no runtime weight and commonly accompany a value export.
+ * `enum_declaration` is excluded too — enums are commonly grouped with the
+ * related types they describe and shouldn't force a file split on their own.
  */
 const VALUE_EXPORT_CHILD_TYPES = new Set([
   'function_declaration',
   'class_declaration',
   'lexical_declaration', // const / let
   'variable_declaration', // var
-  'enum_declaration',
 ]);
 
 /**

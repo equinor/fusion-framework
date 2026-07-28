@@ -37,6 +37,22 @@ export { bar } from './other.js';
     expect(lint(source)).toHaveLength(0);
   });
 
+  it('passes: export type + export enum (enum does not count)', () => {
+    const source = `
+export type Config = { level: LogLevel };
+export enum LogLevel { Info, Error }
+`;
+    expect(lint(source)).toHaveLength(0);
+  });
+
+  it('passes: export enum + export const (enum does not count)', () => {
+    const source = `
+export enum LogLevel { Info, Error }
+export const DEFAULT_LEVEL = LogLevel.Info;
+`;
+    expect(lint(source)).toHaveLength(0);
+  });
+
   it('passes: multiple exports in index.ts (barrel)', () => {
     const source = `
 export function foo() {}
