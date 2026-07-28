@@ -63,6 +63,8 @@ export type ContextModule = Module<
  * @see ContextModuleConfigurator
  * @see ContextProvider
  */
+// Deliberately co-located with moduleKey for cohesion of the module definition
+// fusion-lint-disable-next-line single-export-per-file
 export const module: ContextModule = {
   name: moduleKey,
   configure: () => new ContextModuleConfigurator(),

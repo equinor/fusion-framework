@@ -16,7 +16,7 @@
  * @property graphic - Optional graphical representation, either as a string or an object containing type and content.
  * @property meta - Optional meta information, either as a string or an object containing type and content.
  *
- * @todo - convert to Zod schema for validation and type safety.
+ * @todo(#5122) - convert to Zod schema for validation and type safety.
  */
 export type ContextItem<TType extends Record<string, unknown> = Record<string, unknown>> = {
   id: string;

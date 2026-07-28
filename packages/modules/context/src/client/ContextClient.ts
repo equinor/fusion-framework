@@ -25,7 +25,7 @@ export type GetContextParameters = { id: string };
  * @template ContextItem The type of the context item managed by the client.
  * @extends Observable<ContextItem | null | undefined>
  *
- * @todo - should this have `undefined` as a valid value?
+ * @todo(#5116) - should this have `undefined` as a valid value?
  *
  * @example
  * ```typescript
@@ -70,6 +70,10 @@ export class ContextClient extends Observable<ContextItem | null | undefined> {
     return this.#client;
   }
 
+  /**
+   * Creates a new `ContextClient`.
+   * @param options - Query constructor options used to fetch a `ContextItem` by its ID.
+   */
   constructor(options: QueryCtorOptions<ContextItem, GetContextParameters>) {
     super((observer) => this.#currentContext$.subscribe(observer));
     this.#client = new Query(options);
@@ -85,10 +89,11 @@ export class ContextClient extends Observable<ContextItem | null | undefined> {
    * @param idOrItem - The context identifier (string), a `ContextItem`, or `null`. If omitted, the current context may be cleared.
    */
   public setCurrentContext(idOrItem?: string | ContextItem | null): void {
+    // resolve string identifiers to a context item before setting
     if (typeof idOrItem === 'string') {
-      // TODO - compare context
+      // TODO(#5117) - compare context
       this.resolveContext(idOrItem)
-        // TODO should this catch error?
+        // TODO(#5117) should this catch error?
         .pipe(catchError(() => EMPTY))
         .subscribe((value) => this.setCurrentContext(value));
       /** only add context if not match */
@@ -105,15 +110,21 @@ export class ContextClient extends Observable<ContextItem | null | undefined> {
    * @throws Rethrows the underlying error cause if present, otherwise throws the original error.
    */
   public resolveContext(id: string): Observable<ContextItem> {
-    return this.#client.query({ id }).pipe(
-      map((x) => x.value),
-      // unwrap error
-      catchError((err) => {
-        if (err.cause) {
-          throw err.cause;
-        }
-        throw err;
-      }),
+    return (
+      this.#client
+        .query({ id })
+        // unwrap the query result into the resolved context item
+        .pipe(
+          map((x) => x.value),
+          // unwrap error
+          catchError((err) => {
+            // unwrap the underlying cause so callers see the original error
+            if (err.cause) {
+              throw err.cause;
+            }
+            throw err;
+          }),
+        )
     );
   }
 
@@ -131,6 +142,9 @@ export class ContextClient extends Observable<ContextItem | null | undefined> {
     return fn(this.resolveContext(id));
   }
 
+  /**
+   * Disposes of the client, completing the internal current-context subject.
+   */
   public dispose(): void {
     this.#currentContext$.complete();
   }

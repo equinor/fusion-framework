@@ -17,6 +17,7 @@ export class FusionContextSearchError extends Error {
 
   /**
    * The title of the error.
+   * @returns The error title.
    */
   get title(): string {
     return this.#details.title;
@@ -24,6 +25,7 @@ export class FusionContextSearchError extends Error {
 
   /**
    * The description of the error, if available.
+   * @returns The error description, or `undefined` if none was provided.
    */
   get description(): string | undefined {
     return this.#details.description;

@@ -346,35 +346,64 @@ export class ContextProvider
 
   #contextQueue = new Subject<Observable<ContextItem<Record<string, unknown>>>>();
 
+  /**
+   * The underlying context client used to resolve and hold the current context item.
+   * @returns The internal {@link ContextClient} instance.
+   */
   public get contextClient() {
     return this.#contextClient;
   }
 
+  /**
+   * The query client used to search for context items.
+   * @returns The internal `Query` instance used by {@link queryContext}.
+   */
   public get queryClient() {
     return this.#contextQuery;
   }
 
+  /**
+   * Observable stream emitting the current context item.
+   * @returns Observable that emits the current `ContextItem`, `null`, or `undefined`.
+   */
   get currentContext$(): Observable<ContextItem | null | undefined> {
     return this.#contextClient.currentContext$;
   }
 
+  /**
+   * Snapshot of the current context item.
+   * @returns The current `ContextItem`, or `null`/`undefined` if not set.
+   */
   get currentContext(): ContextItem | undefined | null {
     return this.#contextClient.currentContext;
   }
 
-  /** @deprecated do not use, will be removed */
+  /**
+   * Sets the current context item.
+   * @deprecated do not use, will be removed
+   * @param context - The context item to set as current. Must not be `undefined`.
+   * @throws Error if `context` is `undefined`.
+   */
   set currentContext(context: ContextItem | null | undefined) {
     console.warn(
       '@deprecated',
       'ContextProvider.currentContext',
       'use setCurrentContextById|setCurrentContext|clearCurrentContext',
     );
+    // undefined is reserved to mean "not yet initialized", so it cannot be set explicitly
     if (context === undefined) {
       throw Error('not allowed to set current context as undefined undefined!');
     }
     this.setCurrentContextAsync(context);
   }
 
+  /**
+   * Creates a new instance of `ContextProvider`.
+   * @param args - Constructor arguments.
+   * @param args.config - The context module configuration.
+   * @param args.event - Optional event module instance for dispatching context change events.
+   * @param args.parentContext - Optional parent context provider. Deprecated, use {@link connectParentContext}.
+   */
   constructor(args: {
     config: ContextModuleConfig;
     event?: ModuleType<EventModule>;
@@ -385,6 +414,7 @@ export class ContextProvider
 
     super({ version, config });
 
+    // warn about deprecated parentContext constructor arg
     if (args.parentContext) {
       console.warn(
         '@deprecated',
@@ -398,14 +428,17 @@ export class ContextProvider
     if (config.resolveContext) {
       this.resolveContext = config.resolveContext?.bind(this);
     }
+    // override validateContext if configured
     if (config.validateContext) {
       this.validateContext = config.validateContext?.bind(this);
     }
 
+    // override extractContextIdFromPath if configured
     if (config.extractContextIdFromPath) {
       // @ts-expect-error
       this.extractContextIdFromPath = config.extractContextIdFromPath;
     }
+    // override generatePathFromContext if configured
     if (config.generatePathFromContext) {
       // @ts-expect-error
       this.generatePathFromContext = config.generatePathFromContext;
@@ -418,6 +451,7 @@ export class ContextProvider
     this.#contextClient = new ContextClient(config.client.get);
     this.#contextQuery = new Query(config.client.query);
 
+    // only create the related-context query when the config provides one
     if (config.client.related) {
       this.#contextRelated = new Query(config.client.related);
     }
@@ -436,10 +470,8 @@ export class ContextProvider
       this.#subscriptions.add(
         // observe current context changes
         this.currentContext$
-          .pipe(
-            // emit previous and next context
-            pairwise(),
-          )
+          // emit previous and next context together for change comparisons
+          .pipe(pairwise())
           .subscribe(([previous, next]) => {
             this.#event?.dispatchEvent('onCurrentContextChanged', {
               source: this,
@@ -494,12 +526,13 @@ export class ContextProvider
     provider: IContextProvider,
     opt?: { skipFirst: boolean },
   ): Subscription {
+    // build a stream of validated context changes from the parent provider
     const parentContext$ = provider.currentContext$.pipe(
       // do not set context if parent has not initialized
       filter((x): x is ContextItem | null => x !== undefined),
       filter((next, index) => {
         // skip first item if opt.skipFirst is true
-        // TODO: this is a bit hacky, should be handled in a better way
+        // TODO(#5121): this is a bit hacky, should be handled in a better way
         if (opt?.skipFirst && index <= 1) {
           console.debug('ContextProvider::connectParentContext', 'skipping first item', next);
           return false;
@@ -508,8 +541,8 @@ export class ContextProvider
         return this.currentContext?.id !== next?.id;
       }),
       switchMap(async (next) => {
+        // if parent context is null, just return
         if (!next) {
-          // if parent context is null, just return
           return { next };
         }
         // notify event observers that parent context is about to change and await for cancelation
@@ -524,15 +557,19 @@ export class ContextProvider
       filter((x) => !x.canceled),
       switchMap(({ next }) => {
         // set current context with validation and resolution
-        return this.setCurrentContext(next, {
-          validate: true,
-          resolve: true,
-        }).pipe(
-          catchError((err) => {
-            console.warn('ContextProvider::onParentContextChanged', 'setCurrentContext', err);
-            // do not emit any value if an error occurs
-            return EMPTY;
-          }),
+        return (
+          this.setCurrentContext(next, {
+            validate: true,
+            resolve: true,
+          })
+            // swallow errors so a failed context change doesn't break the parent subscription
+            .pipe(
+              catchError((err) => {
+                console.warn('ContextProvider::onParentContextChanged', 'setCurrentContext', err);
+                // do not emit any value if an error occurs
+                return EMPTY;
+              }),
+            )
         );
       }),
       catchError((err) => {
@@ -568,6 +605,7 @@ export class ContextProvider
         this.#contextClient
           // resolve context item by id
           .resolveContext(id)
+          // filter out invalid items and set as current context
           .pipe(
             // filter out invalid context items
             filter((item): item is ContextItem => !!item),
@@ -609,6 +647,11 @@ export class ContextProvider
    * If the observable is subscribe, unsubscribing __WILL__ abort the task and remove it from queue
    *
    * @param context context item which would be queue to set as current
+   * @param opt Optional settings.
+   * @param opt.validate Whether to validate the context item before setting it.
+   * @param opt.resolve Whether to attempt to resolve the context item if validation fails.
+   * @template T The type of the context item, which extends `ContextItem<Record<string, unknown>>` or can be `null`.
+   * @returns An observable that emits the context item once the queued task completes.
    */
   public setCurrentContext<T extends ContextItem<Record<string, unknown>> | null>(
     context: T,
@@ -620,6 +663,7 @@ export class ContextProvider
     // wrapper for returning an observable to the caller
     const subject$ = new Subject<T>();
 
+    // run the actual context-setting logic and relay results/errors to the caller's subject
     const task$ = this._setCurrentContext(context, opt).pipe(
       // send context item which was set to the caller
       tap((x) => subject$.next(x)),
@@ -639,6 +683,7 @@ export class ContextProvider
     // add task to internal queue
     this.#contextQueue.next(task$ as Observable<ContextItem<Record<string, unknown>>>);
 
+    // tear down the queued task if the caller unsubscribes
     return subject$.pipe(
       // if caller subscribes, unsubscribe should abort queue entry
       finalize(() => abort$.next(true)),
@@ -674,7 +719,7 @@ export class ContextProvider
    *    - Emit the context and complete the observable.
    *
    * @protected
-   * @typeParam T - The type of the context item, which extends `ContextItem<Record<string, unknown>>` or can be `null`.
+   * @template T - The type of the context item, which extends `ContextItem<Record<string, unknown>>` or can be `null`.
    * @param context - The new context to set.
    * @param opt - Optional settings:
    *   - `validate`: Whether to validate the context before setting.
@@ -708,6 +753,7 @@ export class ContextProvider
           // emit error and complete
           return subscriber.error(Error('failed to validate provided context'));
         }
+        // if resolve is enabled, attempt to resolve the invalid context before setting it
         if (opt.resolve) {
           // the recursive `_setCurrentContext` call below is re-entered with the already
           // validated/resolved context, so the generic `T` cast is safe here.
@@ -791,7 +837,7 @@ export class ContextProvider
    *
    * @see {@link setCurrentContext} for more details.
    *
-   * @typeParam T - The type of the context item, which extends `ContextItem<Record<string, unknown>>` or can be `null`.
+   * @template T - The type of the context item, which extends `ContextItem<Record<string, unknown>>` or can be `null`.
    * @param context - The context item to set as the current context, or `null` to clear it.
    * @param opt - Optional settings for context handling.
    * @param opt.validate - If `true`, validates the context before setting it.
@@ -815,6 +861,7 @@ export class ContextProvider
    *
    * @param search - The search string to filter context items.
    * @returns An Observable that emits an array of `ContextItem` objects matching the search criteria.
+   * @throws Re-throws the underlying cause of a `QueryClientError`, otherwise re-throws the original error.
    */
   public queryContext(search: string): Observable<Array<ContextItem>> {
     const query$ = this.queryClient
@@ -825,6 +872,7 @@ export class ContextProvider
           type: this.#contextType,
         }) as QueryContextParameters,
       )
+      // unwrap query-client errors and expose the underlying cause to subscribers
       .pipe(
         catchError((err) => {
           // if query client throws a QueryClientError, extract the cause and throw it
@@ -859,8 +907,14 @@ export class ContextProvider
    * @returns `true` if the context type is not set or if the item's type ID matches one of the allowed types (case-insensitive); otherwise, `false`.
    */
   public validateContext(item: ContextItem<Record<string, unknown>>): boolean {
+    // no context type configured means every context item is considered valid
     if (!this.#contextType) return true;
-    return this.#contextType.map((x) => x.toLowerCase()).includes(item.type.id.toLowerCase());
+    return (
+      this.#contextType
+        // normalize allowed types for a case-insensitive comparison
+        .map((x) => x.toLowerCase())
+        .includes(item.type.id.toLowerCase())
+    );
   }
 
   /**
@@ -883,7 +937,11 @@ export class ContextProvider
     // request related context items for the given context item with the same context type which the provider is configured with
     return this.relatedContexts({ item, filter: { type: this.#contextType } }).pipe(
       // filter out invalid context items
-      map((x) => x.filter((item) => this.validateContext(item))),
+      map((x) =>
+        x
+          // keep only context items that validate against the provider's context type
+          .filter((item) => this.validateContext(item)),
+      ),
       map((values) => {
         // related context should be resolved to a single context item
         const value = values.shift();
@@ -943,6 +1001,7 @@ export class ContextProvider
     return this.#contextRelated.query(args).pipe(
       map(({ value }) => value),
       catchError((err) => {
+        // unwrap the underlying cause so callers see the original error
         if (err.cause) {
           throw err.cause;
         }
