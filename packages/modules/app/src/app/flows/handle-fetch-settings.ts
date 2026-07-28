@@ -18,34 +18,33 @@ import type { AppBundleState } from '../types';
 export const handleFetchSettings =
   (provider: AppModuleProvider): Flow<Actions, AppBundleState> =>
   (action$) =>
-    action$
-      // only handle fetch settings request actions
-      .pipe(
-        filter(actions.fetchSettings.match),
-        // when request is received, abort any ongoing request and start new
-        switchMap(({ payload }) => {
-          const { appKey } = payload;
+    // only handle fetch settings request actions
+    action$.pipe(
+      filter(actions.fetchSettings.match),
+      // when request is received, abort any ongoing request and start new
+      switchMap(({ payload }) => {
+        const { appKey } = payload;
 
-          // fetch settings from provider
-          const subject = from(provider.getAppSettings(appKey)).pipe(
-            // filter out null values
-            filter((x) => !!x),
-            // allow multiple subscriptions
-            share(),
-          );
+        // fetch settings from provider
+        const subject = from(provider.getAppSettings(appKey)).pipe(
+          // filter out null values
+          filter((x) => !!x),
+          // allow multiple subscriptions
+          share(),
+        );
 
-          // first load settings and then dispatch success action
-          return concat(
-            subject.pipe(map((settings) => actions.setSettings(settings))),
-            subject.pipe(
-              last(),
-              map((settings) => actions.fetchSettings.success(settings)),
-            ),
-          ).pipe(
-            // catch any error and dispatch failure action
-            catchError((err) => {
-              return of(actions.fetchSettings.failure(err));
-            }),
-          );
-        }),
-      );
+        // first load settings and then dispatch success action
+        return concat(
+          subject.pipe(map((settings) => actions.setSettings(settings))),
+          subject.pipe(
+            last(),
+            map((settings) => actions.fetchSettings.success(settings)),
+          ),
+        ).pipe(
+          // catch any error and dispatch failure action
+          catchError((err) => {
+            return of(actions.fetchSettings.failure(err));
+          }),
+        );
+      }),
+    );

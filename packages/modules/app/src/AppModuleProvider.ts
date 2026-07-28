@@ -94,18 +94,15 @@ export class AppModuleProvider {
    * @returns An observable of the current active application.
    */
   get current$(): Observable<CurrentApp | null> {
-    return (
-      this.#current$
-        // dedupe emissions when the current app's key is unchanged
-        .pipe(
-          distinctUntilChanged((prev, next) => {
-            // compare by appKey when both are set, otherwise fall back to reference equality
-            if (prev && next) {
-              return prev.appKey === next.appKey;
-            }
-            return prev === next;
-          }),
-        )
+    // dedupe emissions when the current app's key is unchanged
+    return this.#current$.pipe(
+      distinctUntilChanged((prev, next) => {
+        // compare by appKey when both are set, otherwise fall back to reference equality
+        if (prev && next) {
+          return prev.appKey === next.appKey;
+        }
+        return prev === next;
+      }),
     );
   }
 

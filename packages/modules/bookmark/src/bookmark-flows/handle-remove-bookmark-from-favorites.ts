@@ -1,7 +1,7 @@
 import { of, from } from 'rxjs';
 import { concatMap, map, catchError, filter, last } from 'rxjs/operators';
 
-import { type Flow, type Observable } from '@equinor/fusion-observable';
+import type { Flow, Observable } from '@equinor/fusion-observable';
 
 import { bookmarkActions as actions, type BookmarkActions } from '../BookmarkProvider.actions';
 import type { IBookmarkClient } from '../BookmarkClient.interface';

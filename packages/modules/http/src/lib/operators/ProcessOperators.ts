@@ -96,21 +96,18 @@ export class ProcessOperators<T> implements IProcessOperators<T> {
     if (!operators.length) {
       return of(request);
     }
-    return (
-      from(Object.values(this._operators))
-        // feed the request through each operator sequentially, keeping the previous value when one returns void
-        .pipe(
-          mergeScan(
-            // resolve current operator and return result or previous if void
-            (value, operator) => Promise.resolve(operator(value)).then((x) => x ?? value),
-            // initial value
-            request,
-            // only allow concurrency of one operator
-            1,
-          ),
-          // output result of last operator
-          last(),
-        )
+    // feed the request through each operator sequentially, keeping the previous value when one returns void
+    return from(Object.values(this._operators)).pipe(
+      mergeScan(
+        // resolve current operator and return result or previous if void
+        (value, operator) => Promise.resolve(operator(value)).then((x) => x ?? value),
+        // initial value
+        request,
+        // only allow concurrency of one operator
+        1,
+      ),
+      // output result of last operator
+      last(),
     );
   }
 }

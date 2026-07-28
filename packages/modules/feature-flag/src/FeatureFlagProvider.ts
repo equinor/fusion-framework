@@ -181,17 +181,19 @@ export class FeatureFlagProvider
   public onFeatureToggle(
     cb: (detail: { features: IFeatureFlag<unknown>[] }) => void,
   ): VoidFunction {
+    // detect flags whose enabled state changed since the previous emission
     const subscription = this.features$
-      // detect flags whose enabled state changed since the previous emission
       .pipe(
         pairwise(),
         map(([previous, current]) => {
           const currentFeatures = Object.values(current);
-          return currentFeatures
-            // only keep flags whose enabled state actually changed since the previous emission
-            .filter((feature) => {
-              return feature.enabled !== previous[feature.key]?.enabled;
-            });
+          return (
+            currentFeatures
+              // only keep flags whose enabled state actually changed since the previous emission
+              .filter((feature) => {
+                return feature.enabled !== previous[feature.key]?.enabled;
+              })
+          );
         }),
         map((features) => ({ features })),
       )
@@ -274,9 +276,11 @@ export class FeatureFlagProvider
    * @returns The feature flags matching `selector`.
    */
   public getFeatures(selector: FeatureSelectorFn): Array<IFeatureFlag> {
-    return Object.values(this.features)
-      // delegate filtering entirely to the caller-supplied selector
-      .filter(selector);
+    return (
+      Object.values(this.features)
+        // delegate filtering entirely to the caller-supplied selector
+        .filter(selector)
+    );
   }
 }
 

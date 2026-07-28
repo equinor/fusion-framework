@@ -1,5 +1,14 @@
 import { of } from 'rxjs';
-import { throttleTime, groupBy, mergeMap, switchMap, map, catchError, filter, last } from 'rxjs/operators';
+import {
+  throttleTime,
+  groupBy,
+  mergeMap,
+  switchMap,
+  map,
+  catchError,
+  filter,
+  last,
+} from 'rxjs/operators';
 
 import { from } from 'rxjs';
 
@@ -30,9 +39,8 @@ export const handleFetchBookmark =
       // group requests by bookmark id so throttling only applies per-id
       groupBy((action) => action.payload),
       mergeMap((group) =>
-        group
-          // avoid flooding the API with repeated requests for the same bookmark
-          .pipe(throttleTime(defaultThrottleTime)),
+        // avoid flooding the API with repeated requests for the same bookmark
+        group.pipe(throttleTime(defaultThrottleTime)),
       ),
       switchMap((action) =>
         from(api.getBookmarkById(action.payload)).pipe(

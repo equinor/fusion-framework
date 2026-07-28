@@ -13,7 +13,6 @@ export { actionMapper, type ActionCalls } from './action-mapper.js';
 
 export {
   createAction,
-  getBaseType,
   type ActionCreatorWithNonInferrablePayload,
   type ActionCreatorWithoutPayload,
   type ActionCreatorWithPayload,
@@ -21,6 +20,8 @@ export {
   type ActionCreatorWithPreparedPayload,
   type PayloadActionCreator,
 } from './create-action';
+
+export { getBaseType } from './get-base-type';
 
 export {
   createAsyncAction,

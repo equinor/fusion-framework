@@ -280,12 +280,8 @@ export class App<
 
   /** @inheritdoc */
   get manifest$(): Observable<AppManifest> {
-    return (
-      this.#state
-        .select((state) => state.manifest)
-        // filter out null/undefined manifest states
-        .pipe(filterEmpty())
-    );
+    // filter out null/undefined manifest states
+    return this.#state.select((state) => state.manifest).pipe(filterEmpty());
   }
 
   /** @inheritdoc */
@@ -300,12 +296,8 @@ export class App<
 
   /** @inheritdoc */
   get modules$(): Observable<AppScriptModule> {
-    return (
-      this.#state
-        .select((state) => state.modules)
-        // filter out null/undefined module states
-        .pipe(filterEmpty())
-    );
+    // filter out null/undefined module states
+    return this.#state.select((state) => state.modules).pipe(filterEmpty());
   }
 
   /** @inheritdoc */
@@ -840,16 +832,13 @@ export class App<
         : // if settings are loaded, use current settings
           of(this.#state.value.settings);
 
-    return (
-      currentSettings$
-        // merge the current settings with the new value, then persist and return the updated property
-        .pipe(
-          map((settings) => ({ ...settings, [property]: value })),
-          // update settings
-          switchMap((settings) => this.updateSettings<T>(settings as T)),
-          // return the updated property
-          map((settings) => settings[property] as T[P]),
-        )
+    // merge the current settings with the new value, then persist and return the updated property
+    return currentSettings$.pipe(
+      map((settings) => ({ ...settings, [property]: value })),
+      // update settings
+      switchMap((settings) => this.updateSettings<T>(settings as T)),
+      // return the updated property
+      map((settings) => settings[property] as T[P]),
     );
   }
 

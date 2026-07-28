@@ -1,5 +1,5 @@
 import type { Observable, ObservableInput } from 'rxjs';
-import type { AnyAction } from './actions';
+import type { AnyAction } from '../actions/types.js';
 
 /**
  * A flow function (similar to a Redux-Observable epic) that receives an

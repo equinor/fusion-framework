@@ -16,6 +16,5 @@ import type { QueryQueueFn } from '../types';
 export const switchQueue: QueryQueueFn =
   (...args) =>
   (source$) =>
-    source$
-      // cancel the previous in-flight item whenever a new item arrives
-      .pipe(switchMap(...args));
+    // cancel the previous in-flight item whenever a new item arrives
+    source$.pipe(switchMap(...args));

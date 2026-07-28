@@ -24,18 +24,20 @@ export function createFileStream(
     return from(changedFiles);
   }
 
-  return from(
-    globbyStream(filePatterns, {
-      onlyFiles: true,
-      gitignore: true,
-      absolute: true,
-    }),
-  )
-    // Get git status concurrently, then flatten array results
-    .pipe(
-      mergeMap((path) => getFileStatus(path)),
-      concatMap((files) => from(files)),
-      // Share stream for multiple subscribers (removedFiles$ and indexFiles$)
-      shareReplay({ refCount: true }),
-    );
+  return (
+    from(
+      globbyStream(filePatterns, {
+        onlyFiles: true,
+        gitignore: true,
+        absolute: true,
+      }),
+    )
+      // Get git status concurrently, then flatten array results
+      .pipe(
+        mergeMap((path) => getFileStatus(path)),
+        concatMap((files) => from(files)),
+        // Share stream for multiple subscribers (removedFiles$ and indexFiles$)
+        shareReplay({ refCount: true }),
+      )
+  );
 }

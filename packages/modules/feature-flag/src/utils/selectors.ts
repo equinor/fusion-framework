@@ -37,12 +37,11 @@ export type Features = Record<string, IFeatureFlag>;
 export const filterFeatures =
   (selector: FeatureSelectorFn): OperatorFunction<Features, Array<IFeatureFlag>> =>
   (source$) =>
-    source$
-      // narrow the current features down to just those matching the selector
-      .pipe(
-        map((features) =>
-          Object.values(features)
-            // keep only the flags matching the selector
-            .filter(selector),
-        ),
-      );
+    // narrow the current features down to just those matching the selector
+    source$.pipe(
+      map((features) =>
+        Object.values(features)
+          // keep only the flags matching the selector
+          .filter(selector),
+      ),
+    );

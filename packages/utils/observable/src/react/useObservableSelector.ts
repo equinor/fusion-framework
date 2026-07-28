@@ -64,7 +64,7 @@ export function useObservableSelector<TType, TValue = unknown>(
   compare?: (x: TValue, y: TValue) => boolean,
 ): Observable<TValue>;
 
-/** Implementation of `useObservableSelector`. */
+/** @inheritdoc */
 export function useObservableSelector<
   TType extends Record<string, unknown>,
   TSelector extends NestedKeys<TType> | ((state: TType) => TValue),

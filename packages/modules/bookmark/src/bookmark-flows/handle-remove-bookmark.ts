@@ -30,14 +30,13 @@ export const handleRemoveBookmark =
     const dispatch$ = action$.pipe(
       filter(actions.removeBookmark.match),
       concatMap(({ payload: bookmarkId }) => {
-        return from(api.isBookmarkFavorite(bookmarkId))
-          // pick which action to dispatch based on the bookmark's favorite status
-          .pipe(
-            map((isFavorite) => {
-              const action = isFavorite ? actions.removeBookmarkAsFavourite : actions.deleteBookmark;
-              return action(bookmarkId);
-            }),
-          );
+        // pick which action to dispatch based on the bookmark's favorite status
+        return from(api.isBookmarkFavorite(bookmarkId)).pipe(
+          map((isFavorite) => {
+            const action = isFavorite ? actions.removeBookmarkAsFavourite : actions.deleteBookmark;
+            return action(bookmarkId);
+          }),
+        );
       }),
     );
 

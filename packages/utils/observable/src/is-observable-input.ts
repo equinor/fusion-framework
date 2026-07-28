@@ -19,8 +19,11 @@ import { isObservable, type ObservableInput } from 'rxjs';
 export function isObservableInput<T>(input: ObservableInput<T>): input is ObservableInput<T>;
 // biome-ignore lint/suspicious/noExplicitAny: Should allow any input type
 export function isObservableInput(input: any): input is ObservableInput<unknown>;
-// biome-ignore lint/suspicious/noExplicitAny: Should allow any input type
-export function isObservableInput(input: any): boolean {
+/** @inheritdoc */
+export function isObservableInput(
+  // biome-ignore lint/suspicious/noExplicitAny: Should allow any input type
+  input: any,
+): boolean {
   // Check for null or undefined
   if (input === null || input === undefined) {
     return false;

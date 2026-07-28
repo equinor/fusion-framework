@@ -84,27 +84,24 @@ export class QueryTask<TType, TArgs> extends Subject<QueryTaskCompleted<TType>> 
    * @returns A subscription to the job's result.
    */
   processJob(job: QueryClientJob<TType, TArgs>): Subscription {
-    return (
-      job
-        // map the job's completion into a QueryTaskCompleted record for subscribers
-        .pipe(
-          map((result) => {
-            const { key, uuid, created } = this;
-            return {
-              key,
-              uuid,
-              created,
-              status: 'complete',
-              transaction: job.transaction,
-              complete: result.completed,
-              value: result.value,
-            } satisfies QueryTaskCompleted<TType>;
-          }),
-          finalize(() => {
-            job.complete();
-          }),
-        )
-        .subscribe(this)
-    );
+    // map the job's completion into a QueryTaskCompleted record for subscribers
+    return job.pipe(
+        map((result) => {
+          const { key, uuid, created } = this;
+          return {
+            key,
+            uuid,
+            created,
+            status: 'complete',
+            transaction: job.transaction,
+            complete: result.completed,
+            value: result.value,
+          } satisfies QueryTaskCompleted<TType>;
+        }),
+        finalize(() => {
+          job.complete();
+        }),
+      )
+      .subscribe(this);
   }
 }

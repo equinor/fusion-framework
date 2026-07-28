@@ -225,15 +225,25 @@ export function createAction<PA extends PrepareAction<any>, T extends string = s
   prepareAction: PA,
 ): PayloadActionCreator<ReturnType<PA>['payload'], T, PA>;
 
-// eslint-disable-next-line @typescript-eslint/ban-types
+/**
+ * Creates the runtime action creator implementation shared by the overloads above.
+ *
+ * @param type - The action type to assign to created actions.
+ * @param prepareAction - An optional function that prepares payload, metadata, and errors.
+ * @returns A callable action creator with type and matching metadata.
+ * @throws {Error} When the prepare callback does not return an action object.
+ */
 export function createAction(type: string, prepareAction?: PrepareAction<any>): any {
   function actionCreator(...args: any[]) {
+    // Use the prepare callback when the caller needs custom payload construction.
     if (prepareAction) {
       const prepared = prepareAction(...args);
+      // Reject invalid prepare callbacks before reading their action fields.
       if (!prepared) {
         throw new Error('prepareAction did not return an object');
       }
 
+      // Merge optional metadata and error fields into the prepared action.
       return {
         type,
         payload: prepared.payload,
@@ -253,43 +263,10 @@ export function createAction(type: string, prepareAction?: PrepareAction<any>): 
   return actionCreator;
 }
 
-export const actionSuffixDivider = '::';
-
-export const matchActionSuffix = (suffix: string) => new RegExp(`${actionSuffixDivider}${suffix}$`);
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-type BaseType<T extends string> = T extends `${infer A}${typeof actionSuffixDivider}${infer R}`
-  ? A
-  : never;
-
-/**
- * Extracts the base type from an action type string.
- *
- * The action type string is expected to be in the format `${baseType}${actionSuffixDivider}${actionSuffix}`,
- * where `${actionSuffixDivider}` is a special character that separates the base type from the action suffix.
- *
- * This function returns the `baseType` part of the action type string.
- *
- * @param type - The action type string to extract the base type from.
- * @returns The base type of the action type string, or `never` if the input string does not match the expected format.
- */
-export function getBaseType<T extends string>(type: T): BaseType<T> {
-  return type.replace(matchActionSuffix('\\w+$'), '') as BaseType<T>;
-}
-
-/**
- * Returns the action type of the actions created by the passed
- * `createAction()`-generated action creator (arbitrary action creators
- * are not supported).
- *
- * @param action The action creator whose action type to get.
- * @returns The action type used by the action creator.
- *
- * @public
- */
-export function getType<T extends string>(actionCreator: PayloadActionCreator<any, T>): T {
-  return `${actionCreator}` as T;
-}
+export { actionSuffixDivider } from './action-suffix-divider';
+export { matchActionSuffix } from './match-action-suffix';
+export { getBaseType } from './get-base-type';
+export { getType } from './get-type';
 
 // helper types for more readable typings
 

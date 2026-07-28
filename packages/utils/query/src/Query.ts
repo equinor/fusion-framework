@@ -757,8 +757,8 @@ export class Query<
    * @returns A function that, when called, will unsubscribe the callback from further invalidation events.
    */
   onInvalidate(cb: (e: { detail: { item?: QueryCacheRecord } }) => void): VoidFunction {
+    // only forward cache-invalidation actions to the callback
     const subscription = this.#cache.action$
-      // only forward cache-invalidation actions to the callback
       .pipe(filterAction('cache/invalidate'))
       .subscribe((action) => cb({ detail: { item: action.meta.item } }));
     return () => subscription.unsubscribe();
@@ -780,8 +780,8 @@ export class Query<
       };
     }) => void,
   ): VoidFunction {
+    // only forward cache-mutation actions to the callback
     const subscription = this.#cache.action$
-      // only forward cache-mutation actions to the callback
       .pipe(filterAction('cache/mutate'))
       .subscribe((action) =>
         cb({ detail: { changes: action.payload, current: action.meta.item } }),

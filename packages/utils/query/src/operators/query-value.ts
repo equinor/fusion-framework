@@ -28,6 +28,5 @@ import type { Query } from '../Query';
 export const queryValue = <TType, TArgs>(
   source$: ReturnType<Query<TType, TArgs>['query']>,
 ): Observable<TType> =>
-  source$
-    // strip query metadata, keeping only the raw data value
-    .pipe(map((entry) => entry.value));
+  // strip query metadata, keeping only the raw data value
+  source$.pipe(map((entry) => entry.value));

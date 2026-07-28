@@ -76,6 +76,7 @@ export const useDebounce = <
 
   const value$ = useMemo(
     () =>
+      // Debounce queued calls, then invoke fn and track idle state around the async call
       queuer.pipe(
         debounceFn,
         tap(() => setIdle(false)),

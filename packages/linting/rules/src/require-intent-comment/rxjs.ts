@@ -48,6 +48,17 @@ function getStatementNode(node: Node): Node {
     if (current.parent.type === 'return_statement') {
       return current.parent;
     }
+    // A concise (expression-bodied) arrow function has no enclosing statement to climb
+    // to — e.g. `(source) => source.pipe(...)`. The call itself is the anchor, so a
+    // comment placed directly above it (its own previousNamedSibling) satisfies the rule.
+    // Note: web-tree-sitter returns fresh wrapper objects per accessor call, so nodes
+    // must be compared with `.equals()` rather than `===`.
+    if (
+      current.parent.type === 'arrow_function' &&
+      current.parent.childForFieldName('body')?.equals(current)
+    ) {
+      return current;
+    }
     // Stop at block boundaries — don't climb past the containing scope
     if (current.parent.type === 'statement_block' || current.parent.type === 'program') {
       // Bail: hit a scope boundary before finding a statement anchor

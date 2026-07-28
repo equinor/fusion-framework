@@ -1,7 +1,7 @@
 import { of, from } from 'rxjs';
 import { concatMap, map, catchError, filter, last } from 'rxjs/operators';
 
-import { type Flow, type Observable } from '@equinor/fusion-observable';
+import type { Flow, Observable } from '@equinor/fusion-observable';
 
 import { bookmarkActions as actions, type BookmarkActions } from '../BookmarkProvider.actions';
 import type { IBookmarkClient } from '../BookmarkClient.interface';
@@ -26,22 +26,21 @@ export const handleCreateBookmark =
     const flow$ = action$.pipe(
       filter(actions.createBookmark.match),
       concatMap((action) => {
-        return from(api.createBookmark(action.payload))
-          // wait for the final emission before mapping to a success/failure action
-          .pipe(
-            last(),
-            map((bookmark) => actions.createBookmark.success(bookmark, action.meta)),
-            catchError((error) =>
-              of(
-                actions.createBookmark.failure(
-                  new BookmarkFlowError('Failed to create new bookmark', action, {
-                    cause: error,
-                  }),
-                  action.meta,
-                ),
+        // wait for the final emission before mapping to a success/failure action
+        return from(api.createBookmark(action.payload)).pipe(
+          last(),
+          map((bookmark) => actions.createBookmark.success(bookmark, action.meta)),
+          catchError((error) =>
+            of(
+              actions.createBookmark.failure(
+                new BookmarkFlowError('Failed to create new bookmark', action, {
+                  cause: error,
+                }),
+                action.meta,
               ),
             ),
-          );
+          ),
+        );
       }),
     );
     return flow$;

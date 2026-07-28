@@ -32,6 +32,7 @@ export const switchMapAction =
     fn: (value: ExtractAction<TAction, TType>) => ObservableInput<TResult>,
   ): OperatorFunction<TAction, TResult> =>
   (source) =>
+    // Narrow the stream to the requested action type, then switch to the mapped observable
     source.pipe(filterAction(type), switchMap(fn));
 
 export default switchMapAction;

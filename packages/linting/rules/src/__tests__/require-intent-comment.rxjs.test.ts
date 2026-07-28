@@ -58,6 +58,17 @@ const result$ = source$
 `;
     expect(lint(source)).toHaveLength(0);
   });
+
+  it('passes: concise arrow-function body pipe with preceding comment', () => {
+    const source = `
+export const mapAction =
+  (type, fn) =>
+  (source) =>
+    // Narrow the stream to the requested action type, then map its payload
+    source.pipe(filterAction(type), map(fn));
+`;
+    expect(lint(source)).toHaveLength(0);
+  });
 });
 
 // ── Failing cases ─────────────────────────────────────────────────────────────
@@ -87,5 +98,15 @@ const b$ = y$.pipe(filter(isB));
   it('fails: default severity is warn', () => {
     const diags = lint(`source$.pipe(tap(log)).subscribe();`);
     expect(diags[0].severity).toBe('warn');
+  });
+
+  it('fails: concise arrow-function body pipe with no comment', () => {
+    const source = `
+export const mapAction =
+  (type, fn) =>
+  (source) =>
+    source.pipe(filterAction(type), map(fn));
+`;
+    expect(lint(source)).toHaveLength(1);
   });
 });

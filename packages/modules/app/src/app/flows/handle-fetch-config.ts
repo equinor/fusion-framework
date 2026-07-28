@@ -18,32 +18,31 @@ import type { AppBundleState } from '../types';
 export const handleFetchConfig =
   (provider: AppModuleProvider): Flow<Actions, AppBundleState> =>
   (action$) =>
-    action$
-      // only handle fetch config request actions
-      .pipe(
-        filter(actions.fetchConfig.match),
-        // when request is received, abort any ongoing request and start new
-        switchMap(({ payload }) => {
-          // TODO(#5127) - use the configUrl directly from the manifest
-          // fetch config from provider
-          const subject = from(provider.getAppConfig(payload.appKey, payload.build?.version)).pipe(
-            // filter out null values
-            filter((x) => !!x),
-            // allow multiple subscriptions
-            share(),
-          );
-          // first load config and then dispatch success action
-          return concat(
-            subject.pipe(map((config) => actions.setConfig(config))),
-            subject.pipe(
-              last(),
-              map((config) => actions.fetchConfig.success(config)),
-            ),
-          ).pipe(
-            // catch any error and dispatch failure action
-            catchError((err) => {
-              return of(actions.fetchConfig.failure(err));
-            }),
-          );
-        }),
-      );
+    // only handle fetch config request actions
+    action$.pipe(
+      filter(actions.fetchConfig.match),
+      // when request is received, abort any ongoing request and start new
+      switchMap(({ payload }) => {
+        // TODO(#5127) - use the configUrl directly from the manifest
+        // fetch config from provider
+        const subject = from(provider.getAppConfig(payload.appKey, payload.build?.version)).pipe(
+          // filter out null values
+          filter((x) => !!x),
+          // allow multiple subscriptions
+          share(),
+        );
+        // first load config and then dispatch success action
+        return concat(
+          subject.pipe(map((config) => actions.setConfig(config))),
+          subject.pipe(
+            last(),
+            map((config) => actions.fetchConfig.success(config)),
+          ),
+        ).pipe(
+          // catch any error and dispatch failure action
+          catchError((err) => {
+            return of(actions.fetchConfig.failure(err));
+          }),
+        );
+      }),
+    );

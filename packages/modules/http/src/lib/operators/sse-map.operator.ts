@@ -39,8 +39,7 @@ export const sseMap =
     options?: SseSelectorOptions<R>,
   ): OperatorFunction<T, ServerSentEvent<R>> =>
   (source) =>
-    source
-      // parse each raw Response into a stream of typed server-sent events
-      .pipe(switchMap(createSseSelector<R, T>(options)));
+    // parse each raw Response into a stream of typed server-sent events
+    source.pipe(switchMap(createSseSelector<R, T>(options)));
 
 export default sseMap;

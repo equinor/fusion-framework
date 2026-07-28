@@ -327,21 +327,20 @@ export abstract class BaseConfigBuilder<TConfig extends object = Record<string, 
     return from(Object.entries<ConfigBuilderCallback>(this.#configCallbacks)).pipe(
       // Transform each config callback into a target-value pair
       mergeMap(([target, cb]) =>
-        from(cb(init))
-          // Run the callback and shape its result into a target-value pair, skipping void results
-          .pipe(
-            // Filter out undefined values, mostly for void return types
-            filter((value) => value !== undefined),
-            // Map the value to a target-value pair
-            map((value) => ({ target, value })),
-            catchError((error) => {
-              console.error(
-                `Failed to execute config callback: ${cb.name} for attribute: '${target}'`,
-                error,
-              );
-              return EMPTY;
-            }),
-          ),
+        // Run the callback and shape its result into a target-value pair, skipping void results
+        from(cb(init)).pipe(
+          // Filter out undefined values, mostly for void return types
+          filter((value) => value !== undefined),
+          // Map the value to a target-value pair
+          map((value) => ({ target, value })),
+          catchError((error) => {
+            console.error(
+              `Failed to execute config callback: ${cb.name} for attribute: '${target}'`,
+              error,
+            );
+            return EMPTY;
+          }),
+        ),
       ),
       // Reduce the target-value pairs into a single configuration object
       reduce(

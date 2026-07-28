@@ -1,7 +1,7 @@
 import { of, from } from 'rxjs';
 import { concatMap, map, catchError, filter, last } from 'rxjs/operators';
 
-import { type Flow, type Observable } from '@equinor/fusion-observable';
+import type { Flow, Observable } from '@equinor/fusion-observable';
 
 import { bookmarkActions as actions, type BookmarkActions } from '../BookmarkProvider.actions';
 import type { IBookmarkClient } from '../BookmarkClient.interface';
@@ -27,22 +27,21 @@ export const handleUpdateBookmark =
       filter(actions.updateBookmark.match),
       concatMap((action) => {
         const { bookmarkId, updates } = action.payload;
-        return from(api.updateBookmark(bookmarkId, updates))
-          // wait for the final emission before mapping to a success/failure action
-          .pipe(
-            last(),
-            map((bookmark) => actions.updateBookmark.success(bookmark, action.meta)),
-            catchError((error) =>
-              of(
-                actions.updateBookmark.failure(
-                  new BookmarkFlowError('Failed to update bookmark', action, {
-                    cause: error,
-                  }),
-                  action.meta,
-                ),
+        // wait for the final emission before mapping to a success/failure action
+        return from(api.updateBookmark(bookmarkId, updates)).pipe(
+          last(),
+          map((bookmark) => actions.updateBookmark.success(bookmark, action.meta)),
+          catchError((error) =>
+            of(
+              actions.updateBookmark.failure(
+                new BookmarkFlowError('Failed to update bookmark', action, {
+                  cause: error,
+                }),
+                action.meta,
               ),
             ),
-          );
+          ),
+        );
       }),
     );
     return flow$;

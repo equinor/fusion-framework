@@ -19,7 +19,7 @@ import {
 } from 'rxjs/operators';
 import { filterAction } from './operators';
 
-import type { Action, ActionType, ExtractAction } from './types/actions';
+import type { Action, ActionType, ExtractAction } from './actions/types';
 import type { Flow, Effect } from './types/flow';
 import type { ReducerWithInitialState } from './types/reducers';
 
@@ -69,6 +69,7 @@ export class FlowSubject<S, A extends Action = Action> extends Observable<S> {
 
   /**
    * Observable stream of actions dispatched to the subject.
+   * @returns An observable of dispatched actions.
    */
   get action$(): Observable<A> {
     return this.#action.asObservable();
@@ -76,6 +77,7 @@ export class FlowSubject<S, A extends Action = Action> extends Observable<S> {
 
   /**
    * The current value of state.
+   * @returns The current state value.
    */
   get value(): S {
     return this.#state.value;
@@ -83,6 +85,7 @@ export class FlowSubject<S, A extends Action = Action> extends Observable<S> {
 
   /**
    * Flag to indicate if the observable is closed.
+   * @returns `true` if both the state and action subjects are closed.
    */
   get closed(): boolean {
     return this.#state.closed || this.#action.closed;
@@ -113,6 +116,7 @@ export class FlowSubject<S, A extends Action = Action> extends Observable<S> {
     });
     const initial = 'getInitialState' in reducer ? reducer.getInitialState() : (initialState as S);
     this.#state = new BehaviorSubject(initial);
+    // Reduce dispatched actions into state, skipping emissions that produce an unchanged value
     this.#action.pipe(scan(reducer, initial), distinctUntilChanged()).subscribe(this.#state);
     this.reset = () => this.#state.next(initial);
   }
@@ -134,6 +138,7 @@ export class FlowSubject<S, A extends Action = Action> extends Observable<S> {
   /**
    * Selects a derived state from the observable state and emits only when the selected state changes.
    *
+   * @template T - The derived state type returned by the selector.
    * @param selector - A function that takes the current state and returns a derived state.
    * @param comparator - An optional function that compares the previous and current derived states to determine if a change has occurred.
    * @returns An observable that emits the derived state whenever it changes.
@@ -142,6 +147,7 @@ export class FlowSubject<S, A extends Action = Action> extends Observable<S> {
     selector: (state: S) => T,
     comparator?: (previous: T, current: T) => boolean,
   ): Observable<T> {
+    // Derive and de-duplicate the selected value from the state stream
     return this.#state.pipe(map(selector), distinctUntilChanged(comparator));
   }
 
@@ -168,6 +174,7 @@ export class FlowSubject<S, A extends Action = Action> extends Observable<S> {
   /**
    * Adds an effect that listens for an array of action types and performs side effects.
    *
+   * @template TType - The union of action types to listen for.
    * @param actionType The array of action types to listen for.
    * @param cb The effect function to execute when one of the actions is dispatched.
    * @returns A subscription to the effect.
@@ -180,6 +187,7 @@ export class FlowSubject<S, A extends Action = Action> extends Observable<S> {
   /**
    * Adds an effect that listens for actions and performs side effects.
    *
+   * @template TType - The action type(s) to listen for.
    * @param actionTypeOrFn The type of action to listen for, an array of action types, or the effect function itself.
    * @param fn The effect function to execute when the action is dispatched, if the first parameter is an action type.
    * @returns A subscription to the effect.
@@ -188,6 +196,7 @@ export class FlowSubject<S, A extends Action = Action> extends Observable<S> {
     actionTypeOrFn: TType | Array<TType> | Effect<A, S>,
     fn?: Effect<ExtractAction<A, NoInfer<TType>>, S>,
   ): Subscription {
+    // Narrow the action stream to the requested action type(s), or use it as-is when a plain effect function was given
     const action$ =
       typeof actionTypeOrFn === 'function'
         ? this.action$
@@ -196,6 +205,7 @@ export class FlowSubject<S, A extends Action = Action> extends Observable<S> {
           : this.action$.pipe(filterAction(actionTypeOrFn));
 
     const mapper = (fn ? fn : actionTypeOrFn) as Effect<A, S>;
+    // Run the effect for each matching action, then filter and reschedule any resulting action
     return action$
       .pipe(
         mergeMap((action) =>
@@ -207,12 +217,14 @@ export class FlowSubject<S, A extends Action = Action> extends Observable<S> {
                 reject(err);
               }
             }),
-          ).pipe(
-            catchError((err) => {
-              console.warn('unhandled effect', err);
-              return EMPTY;
-            }),
-          ),
+          )
+            // Swallow effect errors so a single failing effect doesn't tear down the subscription
+            .pipe(
+              catchError((err) => {
+                console.warn('unhandled effect', err);
+                return EMPTY;
+              }),
+            ),
         ),
         filter((x): x is A => !!x),
         observeOn(asyncScheduler),
@@ -257,6 +269,7 @@ export class FlowSubject<S, A extends Action = Action> extends Observable<S> {
    */
   public addFlow(fn: Flow<A, S>): Subscription {
     const epic$ = fn(this.action$, this);
+    // Fail fast if the flow function forgot to return an observable
     if (!epic$) {
       throw new TypeError(
         `addEpic: one of the provided effects "${
@@ -264,8 +277,8 @@ export class FlowSubject<S, A extends Action = Action> extends Observable<S> {
         }" does not return a stream. Double check you're not missing a return statement!`,
       );
     }
-    return epic$
-      .pipe(
+    // Log and swallow flow errors so a single failing flow doesn't tear down the subject
+    return epic$.pipe(
         catchError((err) => {
           console.trace('unhandled exception, epic closed!', err);
           return EMPTY;

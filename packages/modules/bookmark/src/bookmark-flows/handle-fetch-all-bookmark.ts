@@ -1,7 +1,7 @@
 import { of, from } from 'rxjs';
 import { throttleTime, groupBy, switchMap, map, catchError, filter, last } from 'rxjs/operators';
 
-import { type Flow, type Observable } from '@equinor/fusion-observable';
+import type { Flow, Observable } from '@equinor/fusion-observable';
 
 import { bookmarkActions as actions, type BookmarkActions } from '../BookmarkProvider.actions';
 import type { IBookmarkClient } from '../BookmarkClient.interface';
@@ -28,9 +28,8 @@ export const handleFetchAllBookmark =
       // group requests by filter so throttling only applies per-filter
       groupBy((action) => JSON.stringify(action.payload)),
       switchMap((group) =>
-        group
-          // avoid flooding the API with repeated requests for the same filter
-          .pipe(throttleTime(defaultThrottleTime)),
+        // avoid flooding the API with repeated requests for the same filter
+        group.pipe(throttleTime(defaultThrottleTime)),
       ),
       switchMap((action) =>
         from(api.getAllBookmarks(action.payload)).pipe(

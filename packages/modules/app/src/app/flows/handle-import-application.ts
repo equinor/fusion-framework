@@ -16,23 +16,22 @@ import type { AppBundleState } from '../types';
 export const handleImportApplication =
   (provider: AppModuleProvider): Flow<Actions, AppBundleState> =>
   (action$) =>
-    action$
-      // only handle import script request actions
-      .pipe(
-        filter(actions.importApp.match),
-        // when request is received, abort any ongoing request and start new
-        switchMap(({ payload }) => {
-          // dynamically import the application script
-          return from(
-            import(
-              /* @vite-ignore */ /* webpackIgnore: true */
-              [provider.assetUri, payload].join('/').replace(/\/{2,}/g, '/')
-            ),
-          ).pipe(
-            // dispatch success action
-            map(actions.importApp.success),
-            // catch any error and dispatch failure action
-            catchError((err) => of(actions.importApp.failure(err))),
-          );
-        }),
-      );
+    // only handle import script request actions
+    action$.pipe(
+      filter(actions.importApp.match),
+      // when request is received, abort any ongoing request and start new
+      switchMap(({ payload }) => {
+        // dynamically import the application script
+        return from(
+          import(
+            /* @vite-ignore */ /* webpackIgnore: true */
+            [provider.assetUri, payload].join('/').replace(/\/{2,}/g, '/')
+          ),
+        ).pipe(
+          // dispatch success action
+          map(actions.importApp.success),
+          // catch any error and dispatch failure action
+          catchError((err) => of(actions.importApp.failure(err))),
+        );
+      }),
+    );

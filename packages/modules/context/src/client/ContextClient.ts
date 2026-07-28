@@ -92,8 +92,8 @@ export class ContextClient extends Observable<ContextItem | null | undefined> {
     // resolve string identifiers to a context item before setting
     if (typeof idOrItem === 'string') {
       // TODO(#5117) - compare context
+      // TODO(#5117) should this catch error?
       this.resolveContext(idOrItem)
-        // TODO(#5117) should this catch error?
         .pipe(catchError(() => EMPTY))
         .subscribe((value) => this.setCurrentContext(value));
       /** only add context if not match */
@@ -110,21 +110,17 @@ export class ContextClient extends Observable<ContextItem | null | undefined> {
    * @throws Rethrows the underlying error cause if present, otherwise throws the original error.
    */
   public resolveContext(id: string): Observable<ContextItem> {
-    return (
-      this.#client
-        .query({ id })
-        // unwrap the query result into the resolved context item
-        .pipe(
-          map((x) => x.value),
-          // unwrap error
-          catchError((err) => {
-            // unwrap the underlying cause so callers see the original error
-            if (err.cause) {
-              throw err.cause;
-            }
-            throw err;
-          }),
-        )
+    // unwrap the query result into the resolved context item
+    return this.#client.query({ id }).pipe(
+      map((x) => x.value),
+      // unwrap error
+      catchError((err) => {
+        // unwrap the underlying cause so callers see the original error
+        if (err.cause) {
+          throw err.cause;
+        }
+        throw err;
+      }),
     );
   }
 

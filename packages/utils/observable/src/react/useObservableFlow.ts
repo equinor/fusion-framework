@@ -38,7 +38,4 @@ export const useObservableFlow = <S, A extends Action = Action>(
   }, [subject, epic]);
 };
 
-/** @deprecated Renamed to {@link useObservableFlow} since 8.0.3. */
-export const useObservableEpic = useObservableFlow;
-
 export default useObservableFlow;

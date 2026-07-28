@@ -37,13 +37,13 @@ export function applyMetadata(
    */
   const ENTRY_CONCURRENCY = 20;
 
-  return document$
-    // Enrich each document entry with git/package metadata and re-batch the results
-    .pipe(
-      mergeMap((entry) => {
-        return from(entry.documents)
+  return (
+    document$
+      // Enrich each document entry with git/package metadata and re-batch the results
+      .pipe(
+        mergeMap((entry) => {
           // Extract git metadata concurrently (capped to limit parallel git processes)
-          .pipe(
+          return from(entry.documents).pipe(
             mergeMap(async (document): Promise<VectorStoreDocument> => {
               const rootPath = document.metadata.rootPath ?? process.cwd();
               const sourcePath = path.join(rootPath, document.metadata.source);
@@ -98,6 +98,7 @@ export function applyMetadata(
             // Group back by file for batch deletion in next step
             toArray(),
           );
-      }, ENTRY_CONCURRENCY),
-    );
+        }, ENTRY_CONCURRENCY),
+      )
+  );
 }

@@ -18,29 +18,22 @@ import type { AppBundleState } from '../types';
 export const handleUpdateSettings =
   (provider: AppModuleProvider): Flow<Actions, AppBundleState> =>
   (action$) => {
-    return (
-      action$
-        // only handle update settings request actions
-        .pipe(
-          filter(actions.updateSettings.match),
-          switchMap(({ payload }) => {
-            const { appKey, settings } = payload;
-            return (
-              provider
-                .updateAppSettings(appKey, settings)
-                // take the last value, then request updating of settings and dispatch success or failure
-                .pipe(
-                  last(),
-                  concatMap((updatedSettings) =>
-                    from([
-                      actions.setSettings(updatedSettings),
-                      actions.updateSettings.success(updatedSettings),
-                    ]),
-                  ),
-                  catchError((err) => of(actions.updateSettings.failure(err))),
-                )
-            );
-          }),
-        )
+    // only handle update settings request actions
+    return action$.pipe(
+      filter(actions.updateSettings.match),
+      switchMap(({ payload }) => {
+        const { appKey, settings } = payload;
+        // take the last value, then request updating of settings and dispatch success or failure
+        return provider.updateAppSettings(appKey, settings).pipe(
+          last(),
+          concatMap((updatedSettings) =>
+            from([
+              actions.setSettings(updatedSettings),
+              actions.updateSettings.success(updatedSettings),
+            ]),
+          ),
+          catchError((err) => of(actions.updateSettings.failure(err))),
+        );
+      }),
     );
   };

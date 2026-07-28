@@ -138,6 +138,32 @@ Do NOT add comments for:
 - `return arr.map(...)` can never be satisfied by a comment above the `return` — always hoist or break the chain.
 - `as unknown as Foo` double-casts require a preceding comment explaining *why* the cast is needed; this is `error` severity, not `warn`.
 
+#### RxJS `.pipe()` comment placement (preferred style)
+
+For `.pipe()` specifically (`require-intent-comment/rxjs`), prefer placing the comment **above the whole enclosing statement** with `receiver.pipe(...)` kept unsplit on one line, rather than splitting the chain to put the comment right before `.pipe(`:
+
+```typescript
+// unwrap the query result value
+return this.#query.query(args).pipe(map((res) => res.value));
+```
+
+This works when the comment sits directly above a `return` statement, a `const`/`let` declaration, or a concise arrow-function body — the rule climbs up to that anchor. It does **not** work when the `.pipe()` call is itself an argument to another call (e.g. `subscriber.add(x.pipe(...))`, `this.#subscription.add(x.pipe(...))`) or is inside a ternary branch — those require the inline chain-split style below.
+
+**Exception — keep the comment close when the receiver is long:** if the receiver expression spans multiple lines before `.pipe(` (e.g. a multi-line `.json$(url, { method, body, headers })` call), do NOT hoist the comment to the top of the statement — it ends up far from the `.pipe()` it explains. Keep the inline chain-split style instead:
+
+```typescript
+return this.#client
+  .json$<AppSettings>(`/persons/me/apps/${appKey}/settings`, {
+    method: 'PUT',
+    body: settings,
+    headers: { 'Api-Version': '1.0' },
+  })
+  // update the settings cache with the persisted value
+  .pipe(tap((value) => { /* ... */ }));
+```
+
+Rule of thumb: comment-above-statement (unsplit) for short/single-line receivers; inline chain-split (comment immediately before `.pipe(`) for long/multi-line receivers, so the comment stays adjacent to what it documents.
+
 ### TODO Comments
 Bare `// TODO - ...` comments are flagged by `no-todo-without-issue`. Every TODO must reference a tracking GitHub issue: `// TODO(#123): ...`. Never fabricate an issue number — create the issue first if one doesn't exist.
 

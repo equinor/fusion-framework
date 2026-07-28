@@ -96,9 +96,8 @@ export abstract class BaseCollector<
    * @returns Resolves once the source has been subscribed to.
    */
   initialize(): Promise<void> | void {
-    from(this._initialize())
-      // Shape each emission into the named/validated event before publishing
-      .pipe(
+    // Shape each emission into the named/validated event before publishing
+    from(this._initialize()).pipe(
         map(({ value, attributes }) => {
           return {
             name: this.#name,

@@ -27,6 +27,7 @@ export const mapProp = <TObject extends Record<string, unknown>, TPath extends N
   map((obj: TObject) => {
     return String(path)
       .split('.')
+      // Walk the dot-separated path segments, drilling into the object one property at a time
       .reduce(
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (cur: any, attr: string) => cur[attr],

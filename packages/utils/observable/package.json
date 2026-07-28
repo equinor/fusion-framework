@@ -22,8 +22,8 @@
       "types": "./dist/types/operators/index.d.ts"
     },
     "./actions": {
-      "import": "./dist/esm/actions.js",
-      "types": "./dist/types/actions.d.ts"
+      "import": "./dist/esm/actions/index.js",
+      "types": "./dist/types/actions/index.d.ts"
     },
     "./react": {
       "import": "./dist/esm/react/index.js",
@@ -42,7 +42,7 @@
         "dist/types/react/index.d.ts"
       ],
       "actions": [
-        "dist/types/actions.d.ts"
+        "dist/types/actions/index.d.ts"
       ]
     }
   },

@@ -15,6 +15,5 @@ import type { QueryQueueFn } from '../types';
 export const mergeQueue: QueryQueueFn =
   (...args) =>
   (source$) =>
-    source$
-      // process all queue items concurrently, without waiting for previous items to complete
-      .pipe(mergeMap(...args));
+    // process all queue items concurrently, without waiting for previous items to complete
+    source$.pipe(mergeMap(...args));

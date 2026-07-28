@@ -11,9 +11,8 @@ import type { QueryClientState } from './types';
  * @returns An Observable that emits execute actions for each request action.
  */
 export const handleRequests: Flow<Actions, QueryClientState> = (action$) =>
-  action$
-    // convert each incoming request action into an execute action for its transaction
-    .pipe(
-      filter(actions.request.match),
-      map((action) => actions.execute(action.meta.transaction)),
-    );
+  // convert each incoming request action into an execute action for its transaction
+  action$.pipe(
+    filter(actions.request.match),
+    map((action) => actions.execute(action.meta.transaction)),
+  );

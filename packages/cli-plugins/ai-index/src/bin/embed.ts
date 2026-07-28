@@ -307,22 +307,24 @@ function createFileStream$(
   // Respect .gitignore by default; configs targeting build artifacts can opt out.
   const gitignore = config.index?.gitignore ?? true;
 
-  return from(
-    globbyStream(filePatterns, {
-      ignore,
-      onlyFiles: true,
-      gitignore,
-      absolute: true,
-    }),
-  )
-    // Resolve git status for each matched file, then flatten to individual files
-    .pipe(
-      // Get git status concurrently (capped to avoid spawning too many git processes)
-      mergeMap((path) => getFileStatus(path), GIT_CONCURRENCY),
-      concatMap((files) => from(files)),
-      // Share stream for multiple subscribers (removedFiles$ and indexFiles$)
-      shareReplay({ refCount: true }),
-    );
+  return (
+    from(
+      globbyStream(filePatterns, {
+        ignore,
+        onlyFiles: true,
+        gitignore,
+        absolute: true,
+      }),
+    )
+      // Resolve git status for each matched file, then flatten to individual files
+      .pipe(
+        // Get git status concurrently (capped to avoid spawning too many git processes)
+        mergeMap((path) => getFileStatus(path), GIT_CONCURRENCY),
+        concatMap((files) => from(files)),
+        // Share stream for multiple subscribers (removedFiles$ and indexFiles$)
+        shareReplay({ refCount: true }),
+      )
+  );
 }
 
 /**
@@ -349,37 +351,36 @@ function createProcessedFilesStream$(
   ];
 
   let fileCount = 0;
-  return files$
-    // Resolve each file's project-relative path and filter by allowed patterns
-    .pipe(
-      map((file) => {
-        const { filepath, status } = file;
-        const projectRoot = resolveProjectRoot(filepath);
-        const relativePath = projectRoot ? relative(projectRoot, filepath) : filepath;
+  // Resolve each file's project-relative path and filter by allowed patterns
+  return files$.pipe(
+    map((file) => {
+      const { filepath, status } = file;
+      const projectRoot = resolveProjectRoot(filepath);
+      const relativePath = projectRoot ? relative(projectRoot, filepath) : filepath;
 
-        return {
-          path: filepath,
-          status,
-          projectRoot,
-          relativePath,
-        };
-      }),
-      filter((file) => {
-        const matches = multimatch(file.relativePath, allowedFilePatterns);
-        // Surface skipped files in debug output for troubleshooting pattern config
-        if (debug && matches.length === 0) {
-          console.debug('[debug] Skipped (no pattern match):', file.relativePath);
-        }
-        return matches.length > 0;
-      }),
-      tap((file) => {
-        fileCount++;
-        const label = file.status === 'removed' ? '🗑️' : '📄';
-        progress.update(LINE_PARSE, `${label} Parsing [${fileCount}] ${file.relativePath}`);
-      }),
-      // Share for multiple subscribers (removedFiles$, markdown$, typescript$)
-      shareReplay({ refCount: true }),
-    );
+      return {
+        path: filepath,
+        status,
+        projectRoot,
+        relativePath,
+      };
+    }),
+    filter((file) => {
+      const matches = multimatch(file.relativePath, allowedFilePatterns);
+      // Surface skipped files in debug output for troubleshooting pattern config
+      if (debug && matches.length === 0) {
+        console.debug('[debug] Skipped (no pattern match):', file.relativePath);
+      }
+      return matches.length > 0;
+    }),
+    tap((file) => {
+      fileCount++;
+      const label = file.status === 'removed' ? '🗑️' : '📄';
+      progress.update(LINE_PARSE, `${label} Parsing [${fileCount}] ${file.relativePath}`);
+    }),
+    // Share for multiple subscribers (removedFiles$, markdown$, typescript$)
+    shareReplay({ refCount: true }),
+  );
 }
 
 /**
@@ -531,56 +532,60 @@ function createEmbeddingStream$(
       if (debug) {
         console.debug(`[debug] Embedding batch of ${batch.length} documents`);
       }
-      return from(
-        embeddingService.embedDocuments(
-          batch
-            // Extract each document's page content for the embedding API call
-            .map((d) => d.pageContent),
-        ),
-      )
-        // Retry transient/rate-limit errors, then attach embeddings back onto each document
-        .pipe(
-        retry({
-          count: MAX_RETRIES,
-          delay: (error, retryIndex) => {
-            // Auth errors are terminal — abort immediately with actionable message
-            if (error?.name === 'NoAccountsError') {
-              console.error(
-                '\n🔒 Authentication expired. Run `ffc auth login` then retry with `--diff`.',
+      return (
+        from(
+          embeddingService.embedDocuments(
+            batch
+              // Extract each document's page content for the embedding API call
+              .map((d) => d.pageContent),
+          ),
+        )
+          // Retry transient/rate-limit errors, then attach embeddings back onto each document
+          .pipe(
+            retry({
+              count: MAX_RETRIES,
+              delay: (error, retryIndex) => {
+                // Auth errors are terminal — abort immediately with actionable message
+                if (error?.name === 'NoAccountsError') {
+                  console.error(
+                    '\n🔒 Authentication expired. Run `ffc auth login` then retry with `--diff`.',
+                  );
+                  throw error;
+                }
+
+                const retryAfterSec =
+                  error?.response?.headers?.get?.('retry-after') ??
+                  error?.responseHeaders?.['retry-after'];
+                const retryAfterMs = retryAfterSec ? Number(retryAfterSec) * 1000 : 0;
+
+                const backoffMs = 2 ** retryIndex * 1000;
+                const delayMs = Math.max(backoffMs, retryAfterMs);
+
+                console.warn(
+                  `\n⏳ Retry ${retryIndex}/${MAX_RETRIES} for batch of ${batch.length} in ${delayMs}ms`,
+                );
+                return timer(delayMs);
+              },
+            }),
+            map((allEmbeddings) => {
+              return (
+                batch
+                  // Re-attach the corresponding embedding onto each document in the batch
+                  .map((document, i) => {
+                    state.count++;
+                    const total = metadataState.done ? metadataState.count : 0;
+                    const pct = total > 0 ? ` ${Math.round((state.count / total) * 100)}%` : '';
+                    const denominator = total > 0 ? `/${total}` : '';
+                    progress.update(
+                      LINE_EMBED,
+                      `🧠 Embedding [${state.count}${denominator}]${pct} — ${document.metadata.source}`,
+                    );
+                    const metadata = { ...document.metadata, embedding: allEmbeddings[i] };
+                    return { ...document, metadata };
+                  })
               );
-              throw error;
-            }
-
-            const retryAfterSec =
-              error?.response?.headers?.get?.('retry-after') ??
-              error?.responseHeaders?.['retry-after'];
-            const retryAfterMs = retryAfterSec ? Number(retryAfterSec) * 1000 : 0;
-
-            const backoffMs = 2 ** retryIndex * 1000;
-            const delayMs = Math.max(backoffMs, retryAfterMs);
-
-            console.warn(
-              `\n⏳ Retry ${retryIndex}/${MAX_RETRIES} for batch of ${batch.length} in ${delayMs}ms`,
-            );
-            return timer(delayMs);
-          },
-        }),
-        map((allEmbeddings) => {
-          return batch
-            // Re-attach the corresponding embedding onto each document in the batch
-            .map((document, i) => {
-            state.count++;
-            const total = metadataState.done ? metadataState.count : 0;
-            const pct = total > 0 ? ` ${Math.round((state.count / total) * 100)}%` : '';
-            const denominator = total > 0 ? `/${total}` : '';
-            progress.update(
-              LINE_EMBED,
-              `🧠 Embedding [${state.count}${denominator}]${pct} — ${document.metadata.source}`,
-            );
-            const metadata = { ...document.metadata, embedding: allEmbeddings[i] };
-            return { ...document, metadata };
-          });
-        }),
+            }),
+          )
       );
     }, EMBED_BATCH_CONCURRENCY),
     finalize(() => {
@@ -606,9 +611,8 @@ function createUpsertStream$(
   options: CommandOptions,
   debug: boolean,
 ): Observable<UpdateVectorStoreResult> {
-  return embedding$
-    // Re-batch embedded documents into fixed-size groups for bulk upsert
-    .pipe(
+  // Re-batch embedded documents into fixed-size groups for bulk upsert
+  return embedding$.pipe(
     // Flatten file-level batches, then re-batch into groups of 20 for bulk upsert
     concatMap((documents) => from(documents)),
     bufferCount(20),

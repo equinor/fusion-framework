@@ -240,28 +240,24 @@ export class AppClient implements IAppClient {
    * @throws {AppBuildError} When the build metadata cannot be loaded.
    */
   getAppBuild(args: { appKey: string; tag?: string }): Observable<AppBuildManifest> {
-    return (
-      this.#build
-        .query(args)
-        // unwrap the build manifest and map errors to a typed AppBuildError
-        .pipe(
-          // unwrap the query result into the build manifest
-          map((res) => res.value as AppBuildManifest),
-          // map http/unknown errors into a typed AppBuildError
-          catchError((err) => {
-            const cause = err?.cause || err;
+    // unwrap the build manifest and map errors to a typed AppBuildError
+    return this.#build.query(args).pipe(
+      // unwrap the query result into the build manifest
+      map((res) => res.value as AppBuildManifest),
+      // map http/unknown errors into a typed AppBuildError
+      catchError((err) => {
+        const cause = err?.cause || err;
 
-            // rethrow already-typed errors as-is
-            if (cause instanceof AppBuildError) {
-              throw cause;
-            }
-            // map http errors to a typed AppBuildError
-            if (cause instanceof HttpJsonResponseError || cause instanceof HttpResponseError) {
-              throw AppBuildError.fromHttpResponse(cause.response, { cause });
-            }
-            throw new AppBuildError('unknown', 'failed to load build', { cause });
-          }),
-        )
+        // rethrow already-typed errors as-is
+        if (cause instanceof AppBuildError) {
+          throw cause;
+        }
+        // map http errors to a typed AppBuildError
+        if (cause instanceof HttpJsonResponseError || cause instanceof HttpResponseError) {
+          throw AppBuildError.fromHttpResponse(cause.response, { cause });
+        }
+        throw new AppBuildError('unknown', 'failed to load build', { cause });
+      }),
     );
   }
 
@@ -272,29 +268,25 @@ export class AppClient implements IAppClient {
    * @throws {AppManifestError} When the manifest cannot be loaded.
    */
   getAppManifest(args: { appKey: string; tag?: string }): Observable<AppManifest> {
-    return (
-      this.#manifest
-        .query(args)
-        // unwrap the manifest and map errors to a typed AppManifestError
-        .pipe(
-          queryValue,
-          // map http/unknown errors into a typed AppManifestError
-          catchError((err) => {
-            const cause = err?.cause || err;
+    // unwrap the manifest and map errors to a typed AppManifestError
+    return this.#manifest.query(args).pipe(
+      queryValue,
+      // map http/unknown errors into a typed AppManifestError
+      catchError((err) => {
+        const cause = err?.cause || err;
 
-            // rethrow already-typed errors as-is
-            if (cause instanceof AppManifestError) {
-              throw cause;
-            }
+        // rethrow already-typed errors as-is
+        if (cause instanceof AppManifestError) {
+          throw cause;
+        }
 
-            // map http errors to a typed AppManifestError
-            if (cause instanceof HttpJsonResponseError || cause instanceof HttpResponseError) {
-              throw AppManifestError.fromHttpResponse(cause.response, { cause });
-            }
+        // map http errors to a typed AppManifestError
+        if (cause instanceof HttpJsonResponseError || cause instanceof HttpResponseError) {
+          throw AppManifestError.fromHttpResponse(cause.response, { cause });
+        }
 
-            throw new AppManifestError('unknown', 'failed to load manifest', { cause });
-          }),
-        )
+        throw new AppManifestError('unknown', 'failed to load manifest', { cause });
+      }),
     );
   }
 
@@ -319,29 +311,25 @@ export class AppClient implements IAppClient {
     appKey: string;
     tag?: string;
   }): Observable<AppConfig<TType>> {
-    return (
-      this.#config
-        .query(args)
-        // unwrap the config and map errors to a typed AppConfigError
-        .pipe(
-          // unwrap the query result into the config
-          map((res) => res.value as AppConfig<TType>),
-          // map http/unknown errors into a typed AppConfigError
-          catchError((err) => {
-            /** handle both direct errors and errors wrapped in a `cause` property */
-            const cause = err?.cause || err;
+    // unwrap the config and map errors to a typed AppConfigError
+    return this.#config.query(args).pipe(
+      // unwrap the query result into the config
+      map((res) => res.value as AppConfig<TType>),
+      // map http/unknown errors into a typed AppConfigError
+      catchError((err) => {
+        /** handle both direct errors and errors wrapped in a `cause` property */
+        const cause = err?.cause || err;
 
-            // rethrow already-typed errors as-is
-            if (cause instanceof AppConfigError) {
-              throw cause;
-            }
-            // map http errors to a typed AppConfigError
-            if (cause instanceof HttpJsonResponseError || cause instanceof HttpResponseError) {
-              throw AppConfigError.fromHttpResponse(cause.response, { cause });
-            }
-            throw new AppConfigError('unknown', 'failed to load config', { cause });
-          }),
-        )
+        // rethrow already-typed errors as-is
+        if (cause instanceof AppConfigError) {
+          throw cause;
+        }
+        // map http errors to a typed AppConfigError
+        if (cause instanceof HttpJsonResponseError || cause instanceof HttpResponseError) {
+          throw AppConfigError.fromHttpResponse(cause.response, { cause });
+        }
+        throw new AppConfigError('unknown', 'failed to load config', { cause });
+      }),
     );
   }
 
@@ -352,28 +340,24 @@ export class AppClient implements IAppClient {
    * @throws {AppSettingsError} When settings cannot be loaded.
    */
   getAppSettings(args: { appKey: string }): Observable<AppSettings> {
-    return (
-      this.#settings
-        .query(args)
-        // unwrap the settings and map errors to a typed AppSettingsError
-        .pipe(
-          queryValue,
-          // map http/unknown errors into a typed AppSettingsError
-          catchError((err) => {
-            /** handle both direct errors and errors wrapped in a `cause` property */
-            const cause = err?.cause || err;
+    // unwrap the settings and map errors to a typed AppSettingsError
+    return this.#settings.query(args).pipe(
+      queryValue,
+      // map http/unknown errors into a typed AppSettingsError
+      catchError((err) => {
+        /** handle both direct errors and errors wrapped in a `cause` property */
+        const cause = err?.cause || err;
 
-            // rethrow already-typed errors as-is
-            if (cause instanceof AppSettingsError) {
-              throw cause;
-            }
-            // map http errors to a typed AppSettingsError
-            if (cause instanceof HttpJsonResponseError || cause instanceof HttpResponseError) {
-              throw AppSettingsError.fromHttpResponse(cause.response, { cause });
-            }
-            throw new AppSettingsError('unknown', 'failed to load settings', { cause });
-          }),
-        )
+        // rethrow already-typed errors as-is
+        if (cause instanceof AppSettingsError) {
+          throw cause;
+        }
+        // map http errors to a typed AppSettingsError
+        if (cause instanceof HttpJsonResponseError || cause instanceof HttpResponseError) {
+          throw AppSettingsError.fromHttpResponse(cause.response, { cause });
+        }
+        throw new AppSettingsError('unknown', 'failed to load settings', { cause });
+      }),
     );
   }
 
@@ -386,7 +370,6 @@ export class AppClient implements IAppClient {
     const { appKey, settings } = args;
     return (
       this.#client
-        // execute PUT request to update settings
         .json$<AppSettings>(`/persons/me/apps/${appKey}/settings`, {
           method: 'PUT',
           body: settings,

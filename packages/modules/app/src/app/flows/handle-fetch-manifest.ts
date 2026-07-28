@@ -18,37 +18,36 @@ import type { AppBundleState } from '../types';
 export const handleFetchManifest =
   (provider: AppModuleProvider): Flow<Actions, AppBundleState> =>
   (action$) =>
-    action$
-      // only handle fetch manifest request actions
-      .pipe(
-        filter(actions.fetchManifest.match),
-        // when request is received, abort any ongoing request and start new
-        switchMap((action) => {
-          const {
-            payload: { key, tag },
-            meta: { update },
-          } = action;
+    // only handle fetch manifest request actions
+    action$.pipe(
+      filter(actions.fetchManifest.match),
+      // when request is received, abort any ongoing request and start new
+      switchMap((action) => {
+        const {
+          payload: { key, tag },
+          meta: { update },
+        } = action;
 
-          // fetch manifest from provider
-          const subject = from(provider.getAppManifest(key, tag)).pipe(
-            // filter out null values
-            filter((x) => !!x),
-            // allow multiple subscriptions
-            share(),
-          );
+        // fetch manifest from provider
+        const subject = from(provider.getAppManifest(key, tag)).pipe(
+          // filter out null values
+          filter((x) => !!x),
+          // allow multiple subscriptions
+          share(),
+        );
 
-          // first load manifest and then dispatch success action
-          return concat(
-            subject.pipe(map((manifest) => actions.setManifest(manifest, update))),
-            subject.pipe(
-              last(),
-              map((manifest) => actions.fetchManifest.success(manifest)),
-            ),
-          ).pipe(
-            // catch any error and dispatch failure action
-            catchError((err) => {
-              return of(actions.fetchManifest.failure(err));
-            }),
-          );
-        }),
-      );
+        // first load manifest and then dispatch success action
+        return concat(
+          subject.pipe(map((manifest) => actions.setManifest(manifest, update))),
+          subject.pipe(
+            last(),
+            map((manifest) => actions.fetchManifest.success(manifest)),
+          ),
+        ).pipe(
+          // catch any error and dispatch failure action
+          catchError((err) => {
+            return of(actions.fetchManifest.failure(err));
+          }),
+        );
+      }),
+    );

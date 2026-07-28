@@ -208,6 +208,8 @@ export function useObservableState<TType, TError = unknown>(
  * @param subject - The observable to subscribe to. Must have a stable reference.
  * @param opt - Optional initial value and teardown callback.
  * @returns An object with `value`, `error`, and `complete` reflecting the latest observable state.
+ * @template S - The value type emitted by the observable.
+ * @template E - The error type the observable may emit.
  *
  * @example
  * ```tsx

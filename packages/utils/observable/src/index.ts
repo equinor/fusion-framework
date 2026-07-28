@@ -6,15 +6,16 @@
 export { castDraft } from 'immer';
 
 export * from './FlowSubject';
-export * from './ActionError';
+export * from './actions/ActionError';
 export * from './types';
 
 /** @deprecated use {@link FlowSubject} */
 export { FlowSubject as ReactiveObservable } from './FlowSubject';
 
-export { actionMapper, type ActionCalls } from './action-mapper';
+export { actionMapper, type ActionCalls } from './actions/action-mapper';
 
-export { createAction, getBaseType, type ActionCreatorWithPreparedPayload } from './create-action';
+export { createAction, type ActionCreatorWithPreparedPayload } from './actions/create-action';
+export { getBaseType } from './actions/get-base-type';
 
 export {
   createAsyncAction,
@@ -22,7 +23,7 @@ export {
   isCompleteAction,
   isFailureAction,
   isSuccessAction,
-} from './create-async-action';
+} from './actions/create-async-action';
 
 export { createReducer, ActionReducerMapBuilder } from './create-reducer';
 

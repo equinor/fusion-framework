@@ -21,16 +21,15 @@ export const findFeature = <T = unknown>(
       ? selector
       : (feature: IFeatureFlag): feature is IFeatureFlag<T> => feature.key === selector;
   return (source$) => {
-    return source$
-      // resolve to the single feature flag matching the selector, if any, and skip re-emits
-      .pipe(
-        map((features) =>
-          Object.values(features)
-            // look up the first flag matching the selector
-            .find(findFn),
-        ),
-        distinctUntilChanged(comparator),
-      );
+    // resolve to the single feature flag matching the selector, if any, and skip re-emits
+    return source$.pipe(
+      map((features) =>
+        Object.values(features)
+          // look up the first flag matching the selector
+          .find(findFn),
+      ),
+      distinctUntilChanged(comparator),
+    );
   };
 };
 

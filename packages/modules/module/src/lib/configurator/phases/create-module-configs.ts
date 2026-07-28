@@ -61,59 +61,58 @@ export async function createModuleConfigs<TRef>(
 ): Promise<any> {
   const { modules, afterConfiguration, afterInit, registerEvent } = ctx;
 
-  const config$ = from(modules)
-    // Run each module's configure factory concurrently and track timing/failures
-    .pipe(
-      mergeMap(async (module) => {
-        const configStart = performance.now();
-        try {
-          const configurator = await module.configure?.(ref);
-          const configLoadTime = Math.round(performance.now() - configStart);
-          registerEvent({
-            level: ModuleEventLevel.Debug,
-            name: ModuleConfiguratorEventName.ConfiguratorCreated,
-            message: `Configurator created for ${module.name} in ${configLoadTime}ms`,
-            properties: {
-              moduleName: module.name,
-              moduleVersion: module.version?.toString() || 'unknown',
-              configLoadTime,
-            },
-            metric: configLoadTime,
-          });
-          return { [module.name]: configurator };
-        } catch (err) {
-          registerEvent({
-            level: ModuleEventLevel.Error,
-            name: ModuleConfiguratorEventName.ConfiguratorFailed,
-            message: `Failed to create configurator for ${module.name}`,
-            properties: {
-              moduleName: module.name,
-              moduleVersion: module.version?.toString() || 'unknown',
-            },
-            metric: Math.round(performance.now() - configStart),
-            error: err,
-          });
-          throw err;
-        }
-      }),
-      reduce(
-        (acc, module) => {
-          // Merge each module's config object into the shared accumulator
-          const merged = Object.assign(acc, module);
-          return merged;
-        },
-        // Seed the config object with hooks so modules can register post-phase callbacks
-        // during their own configure factory (a common pattern for cross-module wiring).
-        {
-          onAfterConfiguration(cb: (config: any) => void | Promise<void>) {
-            afterConfiguration.push(cb);
+  // Run each module's configure factory concurrently and track timing/failures
+  const config$ = from(modules).pipe(
+    mergeMap(async (module) => {
+      const configStart = performance.now();
+      try {
+        const configurator = await module.configure?.(ref);
+        const configLoadTime = Math.round(performance.now() - configStart);
+        registerEvent({
+          level: ModuleEventLevel.Debug,
+          name: ModuleConfiguratorEventName.ConfiguratorCreated,
+          message: `Configurator created for ${module.name} in ${configLoadTime}ms`,
+          properties: {
+            moduleName: module.name,
+            moduleVersion: module.version?.toString() || 'unknown',
+            configLoadTime,
           },
-          onAfterInit(cb: (instance: any) => void | Promise<void>) {
-            afterInit.push(cb);
+          metric: configLoadTime,
+        });
+        return { [module.name]: configurator };
+      } catch (err) {
+        registerEvent({
+          level: ModuleEventLevel.Error,
+          name: ModuleConfiguratorEventName.ConfiguratorFailed,
+          message: `Failed to create configurator for ${module.name}`,
+          properties: {
+            moduleName: module.name,
+            moduleVersion: module.version?.toString() || 'unknown',
           },
+          metric: Math.round(performance.now() - configStart),
+          error: err,
+        });
+        throw err;
+      }
+    }),
+    reduce(
+      (acc, module) => {
+        // Merge each module's config object into the shared accumulator
+        const merged = Object.assign(acc, module);
+        return merged;
+      },
+      // Seed the config object with hooks so modules can register post-phase callbacks
+      // during their own configure factory (a common pattern for cross-module wiring).
+      {
+        onAfterConfiguration(cb: (config: any) => void | Promise<void>) {
+          afterConfiguration.push(cb);
         },
-      ),
-    );
+        onAfterInit(cb: (instance: any) => void | Promise<void>) {
+          afterInit.push(cb);
+        },
+      },
+    ),
+  );
 
   return lastValueFrom(config$);
 }

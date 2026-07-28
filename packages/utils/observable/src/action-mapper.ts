@@ -44,16 +44,19 @@ export const actionMapper = <T extends ActionDefinitions>(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   subject: { next: (action: ActionTypes<T>) => void },
 ): ActionCalls<T> =>
+  // Build dispatch functions while preserving the shape of nested action definitions.
   Object.entries(actions).reduce(
-    (cur, [prop, fnOrActions]) =>
-      Object.assign(cur, {
+    (cur, [prop, fnOrActions]) => {
+      // Add the mapped action to the accumulator without changing its reference.
+      return Object.assign(cur, {
         [prop]:
           typeof fnOrActions === 'function'
             ? /** if value is a function, call it 🤙🏻 */
               (...args: unknown[]) => subject.next(fnOrActions(...args) as ActionTypes<T>)
             : /** extract child actions */
               actionMapper(fnOrActions, subject),
-      }),
+      });
+    },
     {} as ActionCalls<T>,
   );
 

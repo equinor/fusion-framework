@@ -50,22 +50,20 @@ export class AppSelectedCollector
     value: AppKeyType;
     attributes: { previous?: AppKeyType };
   }> {
-    const appSelected$ = this.#appProvider.current$
-      // Pair each app-selection emission with the previously selected app
-      .pipe(pairwise());
+    // Pair each app-selection emission with the previously selected app
+    const appSelected$ = this.#appProvider.current$.pipe(pairwise());
 
-    const data$ = appSelected$
-      // Map the [previous, next] pair into the analytics event shape
-      .pipe(
-        map(([prev, next]) => {
-          return {
-            value: extractAppKeyMetadata(next),
-            attributes: {
-              previous: prev && extractAppKeyMetadata(prev),
-            },
-          };
-        }),
-      );
+    // Map the [previous, next] pair into the analytics event shape
+    const data$ = appSelected$.pipe(
+      map(([prev, next]) => {
+        return {
+          value: extractAppKeyMetadata(next),
+          attributes: {
+            previous: prev && extractAppKeyMetadata(prev),
+          },
+        };
+      }),
+    );
 
     return data$;
   }
