@@ -468,9 +468,7 @@ export enum LogLevel {
 /**
  * Callback to send the messages to
  */
-export interface ILoggerCallback {
-  (level: LogLevel, message: string, containsPii: boolean): void;
-}
+export type ILoggerCallback = (level: LogLevel, message: string, containsPii: boolean) => void;
 
 // ============================================================================
 // Event Types

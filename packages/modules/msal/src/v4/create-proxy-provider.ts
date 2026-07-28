@@ -23,6 +23,7 @@ export function createProxyProvider(provider: IMsalProvider): IMsalProvider {
   // Create passthrough proxy that only overrides msalVersion
   return new Proxy(provider, {
     get: (target: IMsalProvider, prop: keyof IMsalProvider) => {
+      // Passthrough every property except msalVersion, which reports V4 compatibility
       switch (prop) {
         case 'msalVersion': {
           // Report as V4 for compatibility tracking

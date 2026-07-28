@@ -28,10 +28,16 @@ import type { AccountInfo } from './types';
 export function createProxyClient(client: IMsalClient): IAuthClient {
   const proxy = new Proxy(client, {
     get: (target: IMsalClient, prop: keyof IAuthClient) => {
+      // Adapt each v4 client member to the v2-compatible shape expected by callers
       switch (prop) {
         case 'getAllAccounts': {
           return () => {
-            return target.getAllAccounts().map(mapAccountInfo);
+            return (
+              target
+                .getAllAccounts()
+                // Map each v4 account shape to its v2-compatible equivalent
+                .map(mapAccountInfo)
+            );
           };
         }
 
@@ -69,6 +75,7 @@ export function createProxyClient(client: IMsalClient): IAuthClient {
           return async () => {
             const result = await target.handleRedirectPromise();
 
+            // No redirect result means there's nothing pending to map
             if (!result) {
               return null;
             }
@@ -80,6 +87,7 @@ export function createProxyClient(client: IMsalClient): IAuthClient {
         case 'getActiveAccount': {
           return () => {
             const account = target.getActiveAccount();
+            // No active account means there's nothing to map
             if (!account) {
               return null;
             }

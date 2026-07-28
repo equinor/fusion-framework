@@ -15,6 +15,9 @@ import { createProxyProvider as createProxyProvider_v4 } from './v4/create-proxy
  * @param version - The target version string (e.g., '2.0.0', '4.0.0')
  * @returns A proxy provider compatible with the specified version
  *
+ * @template T - The provider interface type expected by the target version.
+ * @throws {Error} If the resolved version is not supported.
+ *
  * @example
  * ```typescript
  * const baseProvider = new MsalProvider(config);
@@ -28,6 +31,7 @@ export function createProxyProvider<T = IMsalProvider>(
   // Resolve the requested version to determine which proxy to create
   const { enumVersion } = resolveVersion(version);
 
+  // Build the version-appropriate proxy based on the resolved MSAL module version
   switch (enumVersion) {
     case MsalModuleVersion.V2:
       // Create v2-compatible proxy with legacy API adapters
@@ -39,6 +43,7 @@ export function createProxyProvider<T = IMsalProvider>(
       // Create transparent proxy for v5 - passes through to original provider
       return new Proxy(provider, {
         get: (target: IMsalProvider, prop: keyof IMsalProvider) => {
+          // Delegate every known property/method to the underlying provider
           switch (prop) {
             case 'version': {
               return target.version;

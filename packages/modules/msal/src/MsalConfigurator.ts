@@ -84,6 +84,7 @@ export class MsalConfigurator extends BaseConfigBuilder<MsalConfig> {
    * The MSAL module version being configured.
    *
    * @default Latest
+   * @returns The configured MSAL module version.
    */
   public get version(): string {
     return version;
@@ -100,6 +101,7 @@ export class MsalConfigurator extends BaseConfigBuilder<MsalConfig> {
     this._set('version', async () => this.version);
     // Auto-detect and integrate telemetry module if available
     this._set('telemetry.provider', async (args) => {
+      // Only resolve the telemetry instance when the telemetry module is registered
       if (args.hasModule('telemetry')) {
         const telemetry = await args.requireInstance('telemetry');
         return telemetry;
@@ -335,7 +337,7 @@ export class MsalConfigurator extends BaseConfigBuilder<MsalConfig> {
 
     // Auto-create client if config provided but no client instance
     // This allows users to provide configuration without manually instantiating the client
-    if (!config.client && !!this.#msalConfig) {
+    if (!config.client && this.#msalConfig) {
       const clientConfig = this.#msalConfig;
 
       config.telemetry.provider?.trackEvent({

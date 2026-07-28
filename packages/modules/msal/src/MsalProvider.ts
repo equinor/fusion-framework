@@ -67,6 +67,8 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
    * Default OAuth scopes used when the caller provides no scopes.
    *
    * Resolves to the app's Entra ID configured permissions via the `/.default` scope.
+   *
+   * @returns The default OAuth scopes derived from the configured client ID.
    */
   get defaultScopes(): string[] {
     const clientId = this.#client.clientId;
@@ -91,6 +93,8 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
    *
    * Provides access to the underlying MSAL PublicClientApplication for advanced use cases.
    * Prefer using provider methods for standard authentication operations.
+   *
+   * @returns The underlying MSAL client instance.
    */
   get client(): IMsalClient {
     return this.#client;
@@ -101,6 +105,8 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
    *
    * Returns the active account if a user is authenticated, or null if no user is logged in.
    * This is a shorthand for `client.getActiveAccount()`.
+   *
+   * @returns The currently authenticated account, or `null` if no user is logged in.
    */
   get account(): AccountInfo | null {
     return this.#client.getActiveAccount();
@@ -175,6 +181,8 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
    *
    * The provider will attempt automatic login with empty scopes if requiresAuth is true.
    * Apps should call acquireToken with actual scopes after initialization completes.
+   *
+   * @throws {Error} If auth code exchange requires a client ID but none is configured.
    */
   async initialize(): Promise<void> {
     // Guard: skip authentication when running inside MSAL's hidden iframe.
@@ -204,6 +212,7 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
         // Use MSAL's acquireTokenByCode to exchange backend auth code for tokens
         // This follows Microsoft's standard SPA Auth Code Flow pattern
         const clientId = this.#client.clientId;
+        // A client ID is required to build the default scope used for the auth code exchange
         if (!clientId) {
           throw new Error('Client ID is required for auth code exchange');
         }
@@ -248,6 +257,7 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
       // Priority 1: Check if returning from redirect-based authentication
       // This handles cases where user just completed a login/acquireToken via redirect
       const handleRedirectResult = await this.handleRedirect();
+      // A returned account means the user just completed a redirect-based login
       if (handleRedirectResult?.account) {
         // Successfully authenticated via redirect - set as active account
         // This means the user was redirected to Microsoft and came back authenticated
@@ -263,6 +273,7 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
         // Note: Using default scopes here as we don't know what scopes the app needs yet
         // App should call acquireToken with actual scopes after initialization
         const loginResult = await this.login({ request: { scopes: this.defaultScopes } });
+        // Only set the active account when the automatic login actually returned one
         if (loginResult?.account) {
           // Automatic login successful - set as active account
           this.#client.setActiveAccount(loginResult.account);
@@ -314,6 +325,8 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
    *
    * @remark Empty scopes are currently tracked as telemetry exceptions but execution continues for monitoring purposes.
    * This behavior will be changed to throw exceptions once sufficient metrics are collected.
+   *
+   * @throws {Error} Re-throws any error encountered during token acquisition after tracking it via telemetry.
    *
    * @example
    * ```typescript
@@ -371,6 +384,7 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
 
     // Handle empty scopes - currently monitoring for telemetry, will throw in future
     if (candidateScopes.length === 0) {
+      // Fall back to the client-id-derived default scope when one is available
       if (defaultScopes.length > 0) {
         this._trackEvent('acquireToken.missing-scope.defaulted', TelemetryLevel.Warning, {
           properties: { ...telemetryProperties, defaultScopes },
@@ -383,7 +397,7 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
           exception,
           properties: telemetryProperties,
         });
-        // TODO: throw exception when sufficient metrics are collected
+        // TODO(#5113): throw exception when sufficient metrics are collected
         // This allows us to monitor how often empty scopes are provided before enforcing validation
       }
     }
@@ -521,6 +535,7 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
       }
     }
 
+    // Perform interactive authentication based on specified behavior
     switch (behavior) {
       case 'popup':
         return await this.#client.loginPopup(request);
@@ -606,6 +621,7 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
   async handleRedirect(): Promise<AuthenticationResult | null> {
     // Process any pending redirect from authentication flow
     const result = await this.client.handleRedirectPromise();
+    // Only track/log when a redirect result is actually returned
     if (result) {
       // Track successful redirect completion for monitoring
       this._trackEvent('handleRedirect.success', TelemetryLevel.Information, {
@@ -631,6 +647,9 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
    * - Useful for gradual migration scenarios
    * - Version compatibility is tracked via telemetry
    * - Throws error if unsupported version is requested
+   *
+   * @template T - The provider interface type expected by the target version.
+   * @throws {Error} If the requested version cannot be resolved or the proxy fails to create.
    *
    * @example
    * ```typescript
