@@ -111,14 +111,22 @@ export class FeatureFlagProvider
   #state: ReturnType<typeof createState>;
   #event?: ModuleType<EventModule>;
 
+  /** @returns All currently registered feature flags, keyed by flag key. */
   get features(): Record<string, IFeatureFlag> {
     return this.#state.value.features;
   }
 
+  /** @returns Observable stream emitting the full feature-flag map whenever it changes. */
   get features$(): Observable<Record<string, IFeatureFlag>> {
+    // project the raw state down to just the features map
     return this.#state.pipe(map((x) => x.features));
   }
 
+  /**
+   * @param args - Provider dependencies.
+   * @param args.config - Resolved {@link FeatureFlagConfig} (initial flags and plugins).
+   * @param args.event - Optional event module used to dispatch toggle notifications.
+   */
   constructor(args: { config: FeatureFlagConfig; event?: ModuleType<EventModule> }) {
     const { config, event } = args;
 
@@ -131,11 +139,13 @@ export class FeatureFlagProvider
 
     /** connect all plugins */
     for (const plugin of Object.values(config.plugins)) {
+      // only plugins that expose a connect() hook need wiring up
       if (plugin.connect) {
         this._addTeardown(plugin.connect({ provider: this }));
       }
     }
 
+    // only dispatch toggle events when an event module was actually supplied
     if (event) {
       this._addTeardown(
         this.onFeatureToggle(({ features }) =>
@@ -145,24 +155,43 @@ export class FeatureFlagProvider
     }
   }
 
+  /**
+   * @param key - The feature flag key to check.
+   * @returns `true` if a flag with `key` is registered.
+   */
   public hasFeature(key: string): boolean {
     return key in this.features;
   }
 
+  /**
+   * Replaces the registered feature flags with `features`.
+   *
+   * @param features - The new set of feature flags.
+   */
   public setFeatures(features: Array<IFeatureFlag>): void {
     this.#state.next(actions.setFeatures(features));
   }
 
+  /**
+   * Subscribes to `enabled` changes on any feature flag.
+   *
+   * @param cb - Called with the flags whose `enabled` state changed.
+   * @returns A function that unsubscribes when invoked.
+   */
   public onFeatureToggle(
     cb: (detail: { features: IFeatureFlag<unknown>[] }) => void,
   ): VoidFunction {
     const subscription = this.features$
+      // detect flags whose enabled state changed since the previous emission
       .pipe(
         pairwise(),
         map(([previous, current]) => {
-          return Object.values(current).filter((feature) => {
-            return feature.enabled !== previous[feature.key]?.enabled;
-          });
+          const currentFeatures = Object.values(current);
+          return currentFeatures
+            // only keep flags whose enabled state actually changed since the previous emission
+            .filter((feature) => {
+              return feature.enabled !== previous[feature.key]?.enabled;
+            });
         }),
         map((features) => ({ features })),
       )
@@ -170,10 +199,21 @@ export class FeatureFlagProvider
     return this._addTeardown(subscription);
   }
 
+  /**
+   * Toggles a single feature flag.
+   *
+   * @param value - The flag key and desired enabled state.
+   */
   public async toggleFeature(value: { key: string; enabled: boolean }): Promise<void> {
     return this.toggleFeatures([value]);
   }
 
+  /**
+   * Toggles multiple feature flags, dispatching a cancelable event for each
+   * before applying it.
+   *
+   * @param values - The flag keys and desired enabled states to toggle.
+   */
   public async toggleFeatures(values: Array<{ key: string; enabled: boolean }>): Promise<void> {
     // get current features from the state
     const { features } = this.#state.value;
@@ -183,6 +223,7 @@ export class FeatureFlagProvider
       //  notify event observers that a feature is about to be toggled - parallel execution
       switchMap(async (value) => {
         const feature = features[value.key];
+        // skip flags that aren't registered, or that are marked readonly
         if (!feature) {
           console.warn(`toggling flag [${value.key}] which is not registered`);
           return;
@@ -199,6 +240,7 @@ export class FeatureFlagProvider
           },
           cancelable: true,
         });
+        // only apply the toggle if no observer canceled the event
         if (!event?.canceled) {
           return value;
         } else {
@@ -218,12 +260,23 @@ export class FeatureFlagProvider
     this.#state.next(actions.toggleFeatures(toggledFeatures));
   }
 
+  /**
+   * @param key - The feature flag key to look up.
+   * @template T - Type of the flag's payload value.
+   * @returns The flag if registered, otherwise `undefined`.
+   */
   public getFeature<T = unknown>(key: string): IFeatureFlag<T> | undefined {
     return this.features[key] as IFeatureFlag<T>;
   }
 
+  /**
+   * @param selector - Predicate used to filter the registered feature flags.
+   * @returns The feature flags matching `selector`.
+   */
   public getFeatures(selector: FeatureSelectorFn): Array<IFeatureFlag> {
-    return Object.values(this.features).filter(selector);
+    return Object.values(this.features)
+      // delegate filtering entirely to the caller-supplied selector
+      .filter(selector);
   }
 }
 

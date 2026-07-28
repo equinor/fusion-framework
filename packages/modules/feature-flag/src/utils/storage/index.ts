@@ -22,6 +22,7 @@ export const createStorage = <TType = unknown>(
   namespace: string,
   type: StorageType,
 ): StorageAdapter<TType> => {
+  // pick the backend based on the requested storage type
   switch (type) {
     case 'local':
       return new LocalStorageAdapter(namespace);

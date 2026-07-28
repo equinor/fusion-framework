@@ -16,16 +16,18 @@ import { ApiPlugin } from './plugin';
 const defaultSelector: ApiResponseSelector = async (response: Response) => {
   const flags = (await response.json()) as IFeatureFlag[];
 
-  return flags.map((flag) => {
-    return new FeatureFlag(flag.key, {
-      enabled: !!flag.enabled,
-      value: flag.value,
-      title: flag.title,
-      description: flag.description,
-      source: flag.source,
-      readonly: true,
+  return flags
+    // wrap each raw flag in a FeatureFlag instance, forced read-only since it came from the API
+    .map((flag) => {
+      return new FeatureFlag(flag.key, {
+        enabled: !!flag.enabled,
+        value: flag.value,
+        title: flag.title,
+        description: flag.description,
+        source: flag.source,
+        readonly: true,
+      });
     });
-  });
 };
 
 /**
@@ -56,6 +58,7 @@ export const createApiPlugin = (args: {
   return async (configArgs) => {
     const { httpClientName, path, selector = defaultSelector } = args;
 
+    // the http module is required to create the client below
     if (!configArgs.hasModule('http')) {
       throw Error('missing http module');
     }

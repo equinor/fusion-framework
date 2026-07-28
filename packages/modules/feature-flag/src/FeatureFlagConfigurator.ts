@@ -12,8 +12,8 @@ import type {
 import type { IFeatureFlag } from './FeatureFlag.js';
 import { createLocalStoragePlugin, createUrlPlugin } from './plugins/index.js';
 
-// TODO allow configurator to have array
-// TODO fix .dot type
+// TODO(#5141): allow configurator to have array
+// TODO(#5141): fix .dot type
 
 /**
  * Public interface for configuring the feature-flag module.
@@ -80,6 +80,14 @@ export class FeatureFlagConfigurator
     return this.addPlugin(createUrlPlugin(...args));
   }
 
+  /**
+   * Resolves the registered plugins and merges their initial feature flags
+   * into the final {@link FeatureFlagConfig}.
+   *
+   * @param config - Partial config supplied so far.
+   * @param init - Module initialisation arguments passed to each plugin.
+   * @returns An observable emitting the fully resolved {@link FeatureFlagConfig}.
+   */
   protected _processConfig(
     config: Partial<FeatureFlagConfig>,
     init: ConfigBuilderCallbackArgs,
@@ -113,7 +121,9 @@ export class FeatureFlagConfigurator
           filter((x) => !!x.initial),
           concatMap((x) => x.initial!()),
           reduce((acc, items) => {
+            // warn about (but keep) duplicate keys so plugin authors can spot ordering issues
             for (const key in items) {
+              // a later plugin's flag with the same key silently overrides an earlier one
               if (key in acc) {
                 console.warn('FeatureFlagConfigurator', `duplicate entry of ${key}`);
               }

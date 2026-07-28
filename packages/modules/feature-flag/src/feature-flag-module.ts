@@ -63,6 +63,7 @@ export const enableFeatureFlagging = (
   configurator.addConfig({
     module,
     configure: async (config) => {
+      // only invoke the caller-supplied setup callback when one was actually provided
       if (callback) {
         return Promise.resolve(callback(config));
       }

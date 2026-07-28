@@ -19,4 +19,4 @@ export {
   enableFeatureFlagging,
   type FeatureFlagModule,
   type FeatureFlagBuilderCallback,
-} from './FeatureFlagModule';
+} from './feature-flag-module';
