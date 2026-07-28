@@ -9,6 +9,15 @@
         "static.ts",
         "*.schemas.ts"
       ]
+    },
+    "filename-convention": {
+      "excludePattern": [
+        "module.ts",
+        "configurator.ts",
+        "provider.ts",
+        "client.ts",
+        "client-msal.ts"
+      ]
     }
   },
   "ignorePatterns": ["**/__tests__/**"]
