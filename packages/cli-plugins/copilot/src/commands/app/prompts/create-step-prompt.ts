@@ -10,7 +10,7 @@ import type { PlanStep, RuntimeExecutionContext } from '../types.js';
  * @param ctx - Runtime context with output directory and app URL
  * @returns The fully interpolated prompt string
  */
-export const createStepPrompt = (step: PlanStep, ctx: RuntimeExecutionContext): string => {
+export const createStepPrompt = (step: PlanStep, _ctx: RuntimeExecutionContext): string => {
   const slug = slugify(step.scenario);
   // Render each criterion with its expected pass/fail evidence for the prompt
   const criteriaBlock = step.criteria

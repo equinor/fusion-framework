@@ -355,7 +355,8 @@ export class Widget {
               },
             }),
           error: (err) => {
-            observer.error(err), this.#state.next(actions.initialize.failure(err));
+            observer.error(err);
+            this.#state.next(actions.initialize.failure(err));
           },
           complete: () => {
             this.#state.next(actions.initialize.success());

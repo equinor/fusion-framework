@@ -18,7 +18,7 @@ import type { DefineTool } from './types.js';
 function resolveSafe(baseDir: string, input: string): string {
   // If the model echoed the full absolute path from the prompt, strip the base prefix.
   const relative = isAbsolute(input)
-    ? input.startsWith(baseDir + '/') || input.startsWith(baseDir + '\\')
+    ? input.startsWith(`${baseDir}/`) || input.startsWith(`${baseDir}\\`)
       ? input.slice(baseDir.length + 1)
       : (() => {
           throw new Error(`Absolute path outside output directory: ${input}`);
@@ -62,7 +62,7 @@ export function createAppendFileTool(baseDir: string, defineTool: DefineTool) {
       const { path, content } = args as { path: string; content: string };
       const resolved = resolveSafe(baseDir, path);
       mkdirSync(dirname(resolved), { recursive: true });
-      appendFileSync(resolved, content.endsWith('\n') ? content : content + '\n');
+      appendFileSync(resolved, content.endsWith('\n') ? content : `${content}\n`);
       return `Appended to ${path}`;
     },
   });

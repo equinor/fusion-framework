@@ -7,7 +7,7 @@ import type { ShouldRevalidateFunctionArgs } from 'react-router';
  * @param args - The loader args
  * @returns The loaded user data
  */
-export async function clientLoader({ params, fusion }: LoaderFunctionArgs) {
+export async function clientLoader({ params, fusion: _fusion }: LoaderFunctionArgs) {
   return { userId: params.id, loaded: true };
 }
 
@@ -17,7 +17,7 @@ export async function clientLoader({ params, fusion }: LoaderFunctionArgs) {
  * @param props - The error element's props
  * @returns The error element
  */
-export function ErrorElement({ error, fusion }: ErrorElementProps) {
+export function ErrorElement({ error, fusion: _fusion }: ErrorElementProps) {
   return <div>Error: {error?.message}</div>;
 }
 

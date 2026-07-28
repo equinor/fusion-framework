@@ -22,7 +22,7 @@ export class HttpRequestHandler<T extends FetchRequest = FetchRequest> extends P
    */
   setHeader(key: string, value: string): HttpRequestHandler<T> {
     const operator = requestOperatorHeader<T>(key, value);
-    return this.set('header-' + key, operator) as HttpRequestHandler<T>;
+    return this.set(`header-${key}`, operator) as HttpRequestHandler<T>;
   }
 }
 

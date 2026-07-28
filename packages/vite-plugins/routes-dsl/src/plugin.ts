@@ -25,7 +25,7 @@ export type RoutesDslPluginOptions = {
 function transformImportMetaResolve(
   code: string,
   filePath: string,
-  root: string,
+  _root: string,
   routeFiles: Set<string>,
 ): string {
   const fileDir = dirname(filePath);
@@ -105,7 +105,7 @@ function transformImportMetaResolve(
 export const routesDslPlugin = (options: RoutesDslPluginOptions = {}): Plugin => {
   const { transformResolve = true } = options;
   let viteRoot: string | undefined;
-  let outDir: string | undefined;
+  let _outDir: string | undefined;
   const routeFiles = new Set<string>();
 
   return {
@@ -114,10 +114,10 @@ export const routesDslPlugin = (options: RoutesDslPluginOptions = {}): Plugin =>
     configResolved(config) {
       // Store the root directory for path resolution
       viteRoot = config.root;
-      outDir = config.build.outDir;
+      _outDir = config.build.outDir;
     },
     // Modify build config to include route files as entry points
-    config(config, { command }) {
+    config(_config, { command }) {
       // Route entry points are added later in buildStart, once collected
       if (command === 'build') {
         // We'll modify rollupOptions.input in buildStart after we've collected route files
@@ -188,11 +188,11 @@ export const routesDslPlugin = (options: RoutesDslPluginOptions = {}): Plugin =>
     options(opts) {
       // Add route files as additional entry points so Vite compiles them
       // In library mode with inlineDynamicImports: true, they'll be inlined into main bundle
-      if (opts.input && typeof opts.input === 'object' && !Array.isArray(opts.input)) {
+      if (viteRoot && opts.input && typeof opts.input === 'object' && !Array.isArray(opts.input)) {
         const input = opts.input as Record<string, string>;
         // Add each route file as an entry point
         for (const routeFile of routeFiles) {
-          const relativePath = relative(viteRoot!, routeFile)
+          const relativePath = relative(viteRoot, routeFile)
             .replace(/\.tsx?$/, '')
             .replace(/\//g, '-');
           input[`route-${relativePath}`] = routeFile;

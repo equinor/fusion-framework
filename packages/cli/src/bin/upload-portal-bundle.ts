@@ -141,7 +141,7 @@ export const uploadPortalBundle = async (opt: UploadPortalOptions) => {
             '\n',
           );
         }
-      } catch (e) {
+      } catch (_e) {
         log?.debug('Error:', response.statusText);
       }
 

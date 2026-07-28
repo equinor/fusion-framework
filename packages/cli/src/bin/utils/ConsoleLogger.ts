@@ -58,12 +58,14 @@ export class ConsoleLogger {
   fail(...args: string[]) {
     this.spinner.fail(...args);
   }
-  // biome-ignore lint/suspicious/noExplicitAny: same as original
   /**
    * Log an error message to the console.
    * @param args - Error message parts.
    */
-  error(...args: any[]) {
+  error(
+    // biome-ignore lint/suspicious/noExplicitAny: same as original
+    ...args: any[]
+  ) {
     console.log(...args);
   }
   /**
@@ -87,12 +89,14 @@ export class ConsoleLogger {
   log(...args: string[]) {
     this.spinner.info(...args);
   }
-  // biome-ignore lint/suspicious/noExplicitAny: same as original
   /**
    * Log debug messages if debugMode is enabled.
    * @param args - Debug message parts.
    */
-  debug(...args: any[]) {
+  debug(
+    // biome-ignore lint/suspicious/noExplicitAny: same as original
+    ...args: any[]
+  ) {
     // Debug output is opt-in to avoid noisy default logs
     if (this.debugMode) {
       console.debug(...args);

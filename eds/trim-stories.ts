@@ -62,7 +62,7 @@ for await (const file of glob.scan(dir)) {
   content = trimEmptyPropRows(content);
   content = trimEmptyLinks(content);
   content = collapseBlankLines(content);
-  content = content.trimEnd() + '\n';
+  content = `${content.trimEnd()}\n`;
 
   if (content.length !== before) {
     await Bun.write(path, content);

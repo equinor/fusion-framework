@@ -24,7 +24,7 @@ export const Framework = (args: { modules: ModulesInstanceType<[]> }) => {
         // 'fusion-framework-cookbook-app-react',
         'poc-portal',
       );
-      // @ts-ignore
+      // @ts-expect-error
       window.test = instance;
     });
   }, args.modules);

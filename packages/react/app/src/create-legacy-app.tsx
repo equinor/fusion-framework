@@ -27,7 +27,6 @@ export const createLegacyApp = <TModules extends Array<AnyModule>>(
 ) => {
   const LegacyComponent = () => {
     const fusion = useFramework<[AppModule]>();
-    // biome-ignore lint/correctness/useExhaustiveDependencies: this will soon be removed
     const RenderComponent = useMemo(() => {
       const creator = createComponent(Component, configure);
       // @eikeland

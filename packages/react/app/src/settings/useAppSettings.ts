@@ -63,8 +63,12 @@ export const useAppSettings = <TSettings extends Record<string, unknown> = AppSe
 
   // connect the subject to the current app settings stream
   useLayoutEffect(() => {
-    const sub = (currentApp?.settings$ as Observable<TSettings>).subscribe(subject);
-    return () => sub?.unsubscribe();
+    // Nothing to subscribe to until an app is resolved
+    if (!currentApp) {
+      return;
+    }
+    const sub = (currentApp.settings$ as Observable<TSettings>).subscribe(subject);
+    return () => sub.unsubscribe();
   }, [currentApp, subject]);
 
   // subscribe to the subject to get the latest settings

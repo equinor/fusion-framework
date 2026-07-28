@@ -1,7 +1,6 @@
 import type { IHttpClient } from '@equinor/fusion-framework-module-http';
 import { BaseModuleProvider } from '@equinor/fusion-framework-module/provider';
 import type { ClientMethod } from './types';
-import type { IApiConfigurator } from './configurator';
 
 import type { ApiClientFactory } from './types';
 import { version } from './version.js';
@@ -61,16 +60,6 @@ export interface IApiProvider<TClient extends IHttpClient = IHttpClient> {
    */
   createPeopleClient(): Promise<PeopleApiClient<TClient>>;
 }
-
-/**
- * Constructor arguments for {@link ApiProvider}.
- *
- * @template TClient - The underlying HTTP client type.
- */
-type ApiProviderCtorArgs<TClient extends IHttpClient = IHttpClient> = {
-  /** Factory function for creating named HTTP clients used by API sub-clients. */
-  createClient: ApiClientFactory<TClient>;
-};
 
 /**
  * Shape of the structured error response attached to an {@link ApiProviderError}.

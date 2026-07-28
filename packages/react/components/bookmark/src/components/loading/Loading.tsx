@@ -1,5 +1,4 @@
 import { CircularProgress } from '@equinor/eds-core-react';
-import React from 'react';
 
 /**
  * A centered loading spinner.

@@ -120,7 +120,7 @@ function resolveExport(node: Node): { name: string; kind: NamingKind } | null {
   const nameNode = declarator.childForFieldName('name');
   // Destructuring exports (e.g. `export const { Consumer, Provider } = ctx`) bind
   // multiple names at once — there's no single export name to file the module after.
-  if (!nameNode || nameNode.type !== 'identifier') return null;
+  if (nameNode?.type !== 'identifier') return null;
   const name = nameNode.text;
   // Guard: an empty identifier text has nothing to classify
   if (!name) return null;

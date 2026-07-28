@@ -1,7 +1,7 @@
-import { type ModulesInstance, type AnyModule } from '@equinor/fusion-framework-module';
-import { type AzureIdentityModule } from '@equinor/fusion-framework-module-azure-identity';
-import { type HttpModule } from '@equinor/fusion-framework-module-http';
-import { type ServiceDiscoveryModule } from '@equinor/fusion-framework-module-service-discovery';
+import type { ModulesInstance, AnyModule } from '@equinor/fusion-framework-module';
+import type { AzureIdentityModule } from '@equinor/fusion-framework-module-azure-identity';
+import type { HttpModule } from '@equinor/fusion-framework-module-http';
+import type { ServiceDiscoveryModule } from '@equinor/fusion-framework-module-service-discovery';
 
 // Define the module types used in the framework instance
 export type Modules = [AzureIdentityModule, HttpModule, ServiceDiscoveryModule];

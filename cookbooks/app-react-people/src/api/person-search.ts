@@ -70,7 +70,7 @@ export type ProblemDetails = {
   status?: number;
   detail?: string;
   instance?: string;
-  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+  // biome-ignore lint/suspicious/noExplicitAny: index signature must accept arbitrary problem-detail extension values
   [key: string]: any;
 };
 

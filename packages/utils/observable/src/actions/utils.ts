@@ -19,7 +19,7 @@ export const actionSuffixDivider = '::';
 export const matchActionSuffix = (suffix: string): RegExp =>
   new RegExp(`${actionSuffixDivider}${suffix}$`);
 
-type BaseType<T extends string> = T extends `${infer A}${typeof actionSuffixDivider}${infer R}`
+type BaseType<T extends string> = T extends `${infer A}${typeof actionSuffixDivider}${infer _R}`
   ? A
   : never;
 
@@ -41,7 +41,7 @@ export function getBaseType<T extends string>(type: T): BaseType<T> {
  * @param actionCreator - The action creator whose action type to get.
  * @returns The action type used by the action creator.
  */
-export function getType<T extends string>(actionCreator: PayloadActionCreator<any, T>): T {
+export function getType<T extends string>(actionCreator: PayloadActionCreator<unknown, T>): T {
   return `${actionCreator}` as T;
 }
 

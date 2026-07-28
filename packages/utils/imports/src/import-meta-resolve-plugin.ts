@@ -175,7 +175,7 @@ export const importMetaResolvePlugin = (): Plugin => {
         // Read and transform file if it contains import.meta.resolve
         const contents = await readFileSafe(args.path);
         // No content, or nothing to transform — leave the file untouched
-        if (!contents || !contents.includes('import.meta.resolve')) {
+        if (!contents?.includes('import.meta.resolve')) {
           return undefined;
         }
 

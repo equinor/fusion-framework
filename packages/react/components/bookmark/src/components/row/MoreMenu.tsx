@@ -16,25 +16,26 @@ type MenuProps = {
  * @returns The menu
  */
 export const MoreMenu = ({ pRef, onClose, open, options }: MenuProps) => {
+  // Render one menu item per configured row action
+  const items = options.map(({ onClick, name, disabled, Icon }) => (
+    <Menu.Item
+      disabled={disabled}
+      onClick={(e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        onClick();
+        onClose();
+      }}
+      key={name}
+    >
+      {Icon && Icon}
+      {name}
+    </Menu.Item>
+  ));
+
   return (
     <Menu open={open} anchorEl={pRef.current}>
-      {options.map(({ onClick, name, disabled, Icon }) => (
-        <Menu.Item
-          disabled={disabled}
-          onClick={(e) => {
-            e.stopPropagation();
-            e.preventDefault();
-            onClick();
-            onClose();
-          }}
-          key={name}
-        >
-          <>
-            {Icon && Icon}
-            {name}
-          </>
-        </Menu.Item>
-      ))}
+      {items}
     </Menu>
   );
 };

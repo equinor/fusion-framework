@@ -14,9 +14,9 @@
  Output:
    .tmp/skills/custom-rebase/<timestamp>-rebase-report.md
 */
-const fs = require('fs');
-const path = require('path');
-const cp = require('child_process');
+const fs = require('node:fs');
+const path = require('node:path');
+const cp = require('node:child_process');
 
 function run(cmd, args, opts = {}) {
   const res = cp.spawnSync(cmd, args, {

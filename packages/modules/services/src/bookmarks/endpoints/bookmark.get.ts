@@ -55,7 +55,7 @@ type MethodResult<
 /** utility function for generating http request initialization parameters  */
 const generateRequestParameters = <TResult, TVersion extends AvailableVersions>(
   version: TVersion,
-  args: z.infer<(typeof ArgSchema)[TVersion]>,
+  _args: z.infer<(typeof ArgSchema)[TVersion]>,
   init?: ClientRequestInit<IHttpClient, TResult>,
 ): ClientRequestInit<IHttpClient, TResult> => {
   // Select the response schema that matches the requested API version.

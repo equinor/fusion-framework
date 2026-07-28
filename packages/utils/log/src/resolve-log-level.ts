@@ -58,7 +58,7 @@ export const resolveLogLevel = (value: string | number): LogLevel => {
   // Numeric values (or numeric strings) are matched directly against known LogLevel values
   if (Object.values(LogLevel).includes(logLevel)) {
     return logLevel;
-  } else if (isNaN(logLevel)) {
+  } else if (Number.isNaN(logLevel)) {
     return resolveLogLevelFromString(value as string);
   }
 

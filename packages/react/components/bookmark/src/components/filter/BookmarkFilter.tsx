@@ -1,4 +1,4 @@
-import { Search, Autocomplete } from '@equinor/eds-core-react';
+import { Search, } from '@equinor/eds-core-react';
 import type { GroupingKeys } from '../../hooks/useBookmarkGrouping';
 
 import styled from 'styled-components';
@@ -11,7 +11,7 @@ type BookmarkFilterProps = {
   readonly groupBy: string;
 };
 
-const Styled = {
+const _Styled = {
   Root: styled.div`
         display: flex;
         align-items: center;
@@ -27,10 +27,10 @@ const Styled = {
  */
 export const BookmarkFilter = ({
   searchText,
-  setGroupBy,
+  setGroupBy: _setGroupBy,
   setSearchText,
-  groupingModes,
-  groupBy,
+  groupingModes: _groupingModes,
+  groupBy: _groupBy,
 }: BookmarkFilterProps) => {
   return (
     <Search

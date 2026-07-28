@@ -154,7 +154,7 @@ export const uploadApplication = async (
             '\n',
           );
         }
-      } catch (e) {
+      } catch (_e) {
         log?.debug('Error:', response.statusText);
       }
 

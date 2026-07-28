@@ -54,7 +54,7 @@ export const markdownPlugin = (options: MarkdownPluginOptions = {}): Plugin => {
           const content = readFileSync(filePath, 'utf-8');
           // Return the raw content as a default export
           return `export default ${JSON.stringify(content)};`;
-        } catch (error) {
+        } catch (_error) {
           // If file can't be read, return null to let other plugins handle it
           return null;
         }

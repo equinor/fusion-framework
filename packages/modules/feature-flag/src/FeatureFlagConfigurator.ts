@@ -46,7 +46,6 @@ export class FeatureFlagConfigurator
    * Array of feature flag plugin configuration callbacks.
    */
   #plugins: FeatureFlagPluginConfigCallback[] = [];
-  #flags: IFeatureFlag[] = [];
 
   /**
    * Registers a plugin configuration callback.
@@ -121,6 +120,7 @@ export class FeatureFlagConfigurator
         from(plugins.sort((a, b) => (a.order ?? 0) - (b.order ?? 0))).pipe(
           /** only get initial value from plugins that support functionality */
           filter((x) => !!x.initial),
+          // biome-ignore lint/style/noNonNullAssertion: narrowed by the filter above, but TS can't infer it through the RxJS pipe
           concatMap((x) => x.initial!()),
           reduce((acc, items) => {
             // warn about (but keep) duplicate keys so plugin authors can spot ordering issues
