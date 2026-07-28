@@ -45,7 +45,7 @@
     "@equinor/fusion-framework-react-router": "workspace:*",
     "@equinor/fusion-observable": "workspace:*",
     "@equinor/fusion-query": "workspace:*",
-    "@equinor/fusion-react-context-selector": "^2.0.1",
+    "@equinor/fusion-react-context-selector": "^2.0.7",
     "@equinor/fusion-react-progress-indicator": "^0.3.0",
     "@equinor/fusion-react-side-sheet": "^2.0.0",
     "@equinor/fusion-react-styles": "^2.1.0",
