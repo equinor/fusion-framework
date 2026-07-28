@@ -4,7 +4,7 @@ import { BaseModuleProvider } from '@equinor/fusion-framework-module/provider';
 import { version } from './version.js';
 
 import type { IEventModuleConfigurator } from './configurator';
-import { FrameworkEventDispatcher, type FrameworkEventHandler } from './dispatcher';
+import { FrameworkEventDispatcher, type FrameworkEventHandler } from './FrameworkEventDispatcher';
 
 import {
   type IFrameworkEvent,
@@ -12,7 +12,7 @@ import {
   type FrameworkEventInit,
   type FrameworkEventInitType,
   type FrameworkEventMap,
-} from './event';
+} from './FrameworkEvent';
 
 /**
  * Public contract for the event module provider.

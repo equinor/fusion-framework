@@ -1,5 +1,5 @@
 import { filter } from 'rxjs';
-import type { FrameworkEventMap, IFrameworkEvent } from './event';
+import type { FrameworkEventMap, IFrameworkEvent } from './FrameworkEvent';
 
 /**
  * Creates an RxJS `filter` operator that narrows the observable stream to a

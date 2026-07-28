@@ -1,4 +1,4 @@
-import type { FrameworkEvent } from './event';
+import type { FrameworkEvent } from './FrameworkEvent';
 
 /**
  * Configuration interface for the event module.

@@ -10,7 +10,7 @@
  *
  * @packageDocumentation
  */
-export { FrameworkEvent } from './event';
+export { FrameworkEvent } from './FrameworkEvent';
 export type {
   IFrameworkEvent,
   FrameworkEventDetail,
@@ -19,7 +19,7 @@ export type {
   FrameworkEventMap,
   FrameworkEventHandler,
   FrameworkEventInitType,
-} from './event';
+} from './FrameworkEvent';
 
 export { IEventModuleConfigurator } from './configurator';
 export { IEventModuleProvider, EventModuleProvider } from './provider';
