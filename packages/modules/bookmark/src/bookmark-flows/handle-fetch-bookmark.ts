@@ -43,6 +43,7 @@ export const handleFetchBookmark =
         group.pipe(throttleTime(defaultThrottleTime)),
       ),
       switchMap((action) =>
+        // Map the API call outcome to a success or failure action for this bookmark.
         from(api.getBookmarkById(action.payload)).pipe(
           last(),
           map((bookmark) => actions.fetchBookmark.success(bookmark, action.meta)),

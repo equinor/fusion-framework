@@ -37,6 +37,7 @@ export const mockContextItem = <V extends ApiVersion = ApiVersion.v1>(
 ): ApiContextEntity<V> => {
   const seed = stringToSeed(id);
   const faker = new Faker({ seed, locale: en });
+  // Generate fixture fields according to the requested context API version.
   switch (version) {
     case ApiVersion.v1:
       return {

@@ -45,9 +45,11 @@ export type ServicesModule = Module<
 const createDefaultClient =
   (http: IHttpClientProvider, serviceDiscovery?: ServiceDiscoveryProvider): ApiClientFactory =>
   async (name: string) => {
+    // Prefer explicitly configured clients before resolving services dynamically.
     if (http.hasClient(name)) {
       return http.createClient(name);
     }
+    // Use service discovery when the caller did not register a named client.
     if (serviceDiscovery) {
       return serviceDiscovery.createClient(name);
     }
@@ -66,6 +68,7 @@ export const module: ServicesModule = {
   configure: () => new ApiConfigurator(),
   initialize: async ({ ref, config, requireInstance, hasModule }) => {
     /** we can not create this callback within the configuration, since it might require other modules. */
+    // Resolve the default client factory only when configuration did not provide one.
     if (!config.createClient) {
       const http = await requireInstance('http');
       const serviceDiscovery: ServiceDiscoveryProvider | undefined = hasModule('serviceDiscovery')
@@ -76,6 +79,7 @@ export const module: ServicesModule = {
 
       config.createClient = createDefaultClient(http, serviceDiscovery);
     }
+    // Fail before provider construction so an unusable module cannot be registered.
     if (!config.createClient) {
       throw Error('missing configuration for creating API client');
     }

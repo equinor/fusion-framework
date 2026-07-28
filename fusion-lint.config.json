@@ -7,7 +7,11 @@
         "module.ts",
         "*-module.ts",
         "static.ts",
-        "*.schemas.ts"
+        "*.schemas.ts",
+        "utils.ts",
+        "setup.ts",
+        "selectors.ts",
+        "actions.ts"
       ]
     },
     "filename-convention": {

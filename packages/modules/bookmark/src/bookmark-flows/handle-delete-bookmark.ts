@@ -26,6 +26,7 @@ export const handleDeleteBookmark =
     const flow$ = action$.pipe(
       filter(actions.deleteBookmark.match),
       concatMap((action) =>
+        // Map the API call outcome to a success or failure action for this bookmark.
         from(api.deleteBookmark(action.payload)).pipe(
           last(),
           map(() => actions.deleteBookmark.success(action.payload, action.meta)),

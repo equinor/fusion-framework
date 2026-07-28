@@ -57,6 +57,7 @@ export class AuthProviderInteractiveBrowser implements IAuthProvider {
   ) {
     this.#authRecordPersistence = authRecordPersistence;
     this.#authRecord = authenticationRecord;
+    // Conditionally spread in a custom browser opener only when the caller provided one.
     this.#credential = new InteractiveBrowserCredential({
       tenantId: options.tenantId,
       clientId: options.clientId,

@@ -54,7 +54,9 @@ export const mergeTelemetryItem = (
   if (target.type && source.type && target.type !== source.type) {
     throw new Error('Mismatched telemetry item types.');
   }
+  // Combine both scopes and de-duplicate via a Set before flattening back to an array
   const scope = [...new Set([...(target.scope ?? []), ...(source.scope ?? [])])];
   const metadata = mergeMetadata(target.metadata, source.metadata);
+  // Source properties take precedence over target, with scope/metadata merged separately above
   return { ...target, ...source, scope, metadata } as TelemetryItem;
 };

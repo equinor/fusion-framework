@@ -49,6 +49,7 @@ export abstract class BaseHistory implements History {
   /**
    * Observable stream of navigation state changes.
    * Emits on all navigation events (push, replace, pop).
+   * @returns Observable of the current navigation update.
    */
   public get state$(): History['state$'] {
     return this.#state.subject.select((state) => state.current);
@@ -56,6 +57,7 @@ export abstract class BaseHistory implements History {
 
   /**
    * Observable stream of navigation actions.
+   * @returns Observable of navigation actions.
    */
   public get action$(): History['action$'] {
     return this.#state.subject.action$;
@@ -70,6 +72,7 @@ export abstract class BaseHistory implements History {
     return this.#state.subject.value.blockers.length > 0;
   }
 
+  /** @param state - Reactive history state backing this implementation. */
   protected constructor(state: HistoryState) {
     this.#state = state;
   }
@@ -117,6 +120,8 @@ export abstract class BaseHistory implements History {
 
   /**
    * Pushes a new location onto the history stack.
+   * @param to - Target path or partial path object.
+   * @param state - Optional state associated with the new location.
    */
   public push(to: To, state?: unknown): void {
     this.navigate(to, { state });
@@ -124,6 +129,8 @@ export abstract class BaseHistory implements History {
 
   /**
    * Replaces the current location in the history stack.
+   * @param to - Target path or partial path object.
+   * @param state - Optional state associated with the replacement location.
    */
   public replace(to: To, state?: unknown): void {
     this.navigate(to, { replace: true, state });
@@ -185,6 +192,7 @@ export abstract class BaseHistory implements History {
     return this._addTeardown(removeBlocker, { executeOnRemove: true });
   }
 
+  /** Triggers a POP action for the current history location. */
   public pop(): void {
     this.#state.subject.next(this.#state.actions.pop());
   }
@@ -225,6 +233,7 @@ export abstract class BaseHistory implements History {
   ): VoidFunction {
     this.#teardowns.add(teardown);
     return () => {
+      // Execute teardown callbacks immediately when callers explicitly request removal side effects.
       if (options?.executeOnRemove) {
         typeof teardown === 'function' ? teardown() : teardown.unsubscribe();
       }

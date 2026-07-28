@@ -97,7 +97,8 @@ export abstract class BaseCollector<
    */
   initialize(): Promise<void> | void {
     // Shape each emission into the named/validated event before publishing
-    from(this._initialize()).pipe(
+    from(this._initialize())
+      .pipe(
         map(({ value, attributes }) => {
           return {
             name: this.#name,

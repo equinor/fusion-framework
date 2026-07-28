@@ -35,7 +35,10 @@ export class NotificationApiClient<
   TMethod extends keyof ClientMethod<unknown> = keyof ClientMethod<unknown>,
   TClient extends IHttpClient = IHttpClient,
 > {
-  /** Returns the {@link ApiVersion} enum for version-constant access. */
+  /**
+   * Returns the {@link ApiVersion} enum for version-constant access.
+   * @returns The API version enum.
+   */
   get Version(): typeof ApiVersion {
     return ApiVersion;
   }
@@ -55,6 +58,7 @@ export class NotificationApiClient<
    * @template TVersion - The API version key.
    * @template TResult - The expected response type.
    * @param version - API version to use.
+   * @param args - Request arguments for listing notifications.
    * @returns All notifications matching the query.
    */
   public getAll<
@@ -74,6 +78,7 @@ export class NotificationApiClient<
    * @template TVersion - The API version key.
    * @template TResult - The expected response type.
    * @param version - API version to use.
+   * @param args - Request arguments for the notification lookup.
    * @returns The notification with the specified ID.
    */
   public getById<
@@ -93,6 +98,7 @@ export class NotificationApiClient<
    * @template TVersion - The API version key.
    * @template TResult - The expected response type.
    * @param version - API version to use.
+   * @param args - Request arguments for updating the notification.
    * @returns The updated notification.
    */
   public setSeenByUser<
@@ -112,6 +118,7 @@ export class NotificationApiClient<
    * @template TVersion - The API version key.
    * @template TResult - The expected response type.
    * @param version - API version to use.
+   * @param args - Request arguments for creating the notification.
    * @returns The created notification.
    */
   public create<
@@ -131,6 +138,7 @@ export class NotificationApiClient<
    * @template TVersion - The API version key.
    * @template TResult - The expected response type.
    * @param version - API version to use.
+   * @param args - Request arguments for deleting the notification.
    * @returns The deletion result.
    */
   public delete<
@@ -149,6 +157,7 @@ export class NotificationApiClient<
    * @template TVersion - The API version key.
    * @template TResult - The expected response type.
    * @param version - API version to use.
+   * @param args - Request arguments for reading notification settings.
    * @returns The user's notification settings.
    */
   public getSettings<
@@ -171,6 +180,7 @@ export class NotificationApiClient<
    * @template TVersion - The API version key.
    * @template TResult - The expected response type.
    * @param version - API version to use.
+   * @param args - Request arguments for updating notification settings.
    * @returns The updated notification settings.
    */
   public updateSettings<

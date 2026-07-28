@@ -27,6 +27,7 @@ export const handleAddBookmarkAsFavorite =
     const flow$ = action$.pipe(
       filter(actions.addBookmarkAsFavourite.match),
       concatMap((action) =>
+        // Map the API call outcome to a success or failure action for this bookmark.
         from(api.addBookmarkToFavorites(action.payload)).pipe(
           last(),
           map(() => actions.addBookmarkAsFavourite.success(action.payload, action.meta)),

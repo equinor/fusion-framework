@@ -30,6 +30,7 @@ export const bookmarkApiFlows = (api: IBookmarkClient): Flow<BookmarkActions, Bo
    * which can be used to update the application state.
    */
   return (actions$: Observable<BookmarkActions>, state$: Observable<BookmarkState>) =>
+    // Invoke every bookmark flow with the shared api client and merge their emissions.
     of(
       handleFetchBookmark,
       handleFetchBookmarkData,

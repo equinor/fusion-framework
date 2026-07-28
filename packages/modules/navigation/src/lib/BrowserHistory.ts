@@ -59,6 +59,7 @@ export class BrowserHistory extends BaseHistory {
     // Use provided stack or default to BrowserHistoryStack
     const Stack: StackConstructor = options.stack ?? BrowserHistoryStack;
     const browserWindow = options.window ?? document.defaultView;
+    // Fail fast without a window since the browser stack depends on the DOM history API.
     if (!browserWindow) {
       throw new Error('Window is required');
     }

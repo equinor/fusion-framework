@@ -9,12 +9,14 @@ import type { ResponseSelector } from '@equinor/fusion-framework-module-http/sel
  * @throws {HttpJsonResponseError} If the response is not successful, with the error message, response, and any additional data or cause.
  */
 export const statusSelector: ResponseSelector<boolean> = async (res) => {
+  // A successful response needs no further parsing, just signal success
   if (res.ok) {
     return true;
   }
   const message = `Failed to execute request. Status code: ${res.status}`;
   let cause: unknown;
   let data: unknown;
+  // Forbidden/not-found responses may carry a JSON error body worth surfacing on the thrown error
   switch (res.status) {
     case 403:
     case 404: {
@@ -36,9 +38,11 @@ export const statusSelector: ResponseSelector<boolean> = async (res) => {
  * @throws {HttpJsonResponseError} If the response is not successful and does not have a 404 status code, with the error message, response, and any additional data or cause.
  */
 export const headSelector: ResponseSelector<boolean> = async (res) => {
+  // A successful response confirms the resource exists
   if (res.ok) {
     return true;
   }
+  // A 404 is a valid "does not exist" outcome for a HEAD check, not an error
   if (res.status === 404) {
     return false;
   }

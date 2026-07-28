@@ -17,7 +17,7 @@ import {
   type ITelemetryProvider,
 } from '@equinor/fusion-framework-module-telemetry';
 import type { IEventModuleProvider } from '@equinor/fusion-framework-module-event';
-import { NavigatedEvent } from './events';
+import { NavigatedEvent } from './NavigatedEvent';
 import { pathToString } from './lib/utils';
 import type { BaseHistory } from './lib';
 
@@ -68,6 +68,7 @@ export class NavigationProvider
 
   /**
    * Observable stream of navigation state updates.
+   * @returns Observable of navigation updates.
    *
    * Emits localized paths (with basename removed) and filters to only
    * paths within the basename scope. Late subscribers receive the last
@@ -88,6 +89,7 @@ export class NavigationProvider
 
   /**
    * @deprecated Use `history` instead
+   * @returns The underlying `History` instance.
    */
   public get navigator(): History {
     this.#telemetry?.trackException({
@@ -101,6 +103,7 @@ export class NavigationProvider
 
   /**
    * Gets the underlying history instance.
+   * @returns The {@link History} instance used for navigation
    *
    * @returns The {@link History} instance used for navigation
    */

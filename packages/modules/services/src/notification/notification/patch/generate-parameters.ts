@@ -20,6 +20,7 @@ export const generateParameters = <
   const headers = new Headers();
   headers.append('content-type', 'application/json');
 
+  // Merge the generated PATCH request defaults with caller overrides.
   const requestParams: ClientRequestInit<TClient, TResult> = Object.assign(
     {},
     { method: 'PATCH', body: JSON.stringify(args), headers: headers },

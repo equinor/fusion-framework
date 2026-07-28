@@ -775,6 +775,7 @@ export class ContextProvider
               }),
               // resolve context
               switchMap((context) =>
+                // Pair the resolved context alongside the original for downstream consumers.
                 this.resolveContext(context).pipe(
                   map((resolved) => ({
                     context,

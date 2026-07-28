@@ -27,6 +27,7 @@ export const handleRemoveBookmarkFromFavorites =
       filter(actions.removeBookmarkAsFavourite.match),
       // use concatMap to prevent aborting the request if a new action is dispatched while the previous request is in flight
       concatMap((action) =>
+        // Map the API call outcome to a success or failure action for this bookmark.
         from(api.removeBookmarkFromFavorites(action.payload)).pipe(
           last(),
           map(() => actions.removeBookmarkAsFavourite.success(action.payload, action.meta)),

@@ -15,12 +15,14 @@ const handlers = [
   http.get(new URL('contexts', BASE_URL).toString(), (req) => {
     const url = new URL(req.request.url);
     const apiVersion = url.searchParams.get('api-version');
+    // Reject requests that omit the API version required by the fixture
     if (!apiVersion) {
       return HttpResponse.error();
     }
     return HttpResponse.json(
       new Array(10)
         .fill(null)
+        // Fabricate a page of context items for the requested API version
         .map((_, index) => mockContextItem(`context-item-${index}`, apiVersion as ApiVersion.v1)),
     );
   }),
@@ -28,11 +30,13 @@ const handlers = [
   // Mock GET /contexts/:id
   http.get(new URL('contexts/:id', BASE_URL).toString(), (req) => {
     const { id } = req.params;
+    // Reject malformed or missing path params rather than mocking an arbitrary item
     if (!id || typeof id !== 'string') {
       return HttpResponse.error();
     }
     const url = new URL(req.request.url);
     const apiVersion = url.searchParams.get('api-version');
+    // Reject requests that omit the API version required by the fixture
     if (!apiVersion) {
       return HttpResponse.error();
     }
@@ -42,17 +46,20 @@ const handlers = [
   // Mock GET /contexts/:id/relations
   http.get(new URL('contexts/:id/relations', BASE_URL).toString(), (req) => {
     const { id } = req.params;
+    // Reject malformed or missing path params rather than mocking arbitrary relations
     if (!id || typeof id !== 'string') {
       return HttpResponse.error();
     }
     const url = new URL(req.request.url);
     const apiVersion = url.searchParams.get('api-version');
+    // Reject requests that omit the API version required by the fixture
     if (!apiVersion) {
       return HttpResponse.error();
     }
     return HttpResponse.json(
       new Array(3)
         .fill(null)
+        // Fabricate a small page of related context items for the requested API version
         .map((_, index) =>
           mockContextItem(`context--related-item-${index}`, apiVersion as ApiVersion.v1),
         ),

@@ -37,7 +37,10 @@ export class ContextApiClient<
   TMethod extends keyof ClientMethod<unknown> = keyof ClientMethod<unknown>,
   TClient extends IHttpClient = IHttpClient,
 > {
-  /** Returns the {@link ApiVersion} enum for version-constant access. */
+  /**
+   * Returns the {@link ApiVersion} enum for version-constant access.
+   * @returns The API version enum.
+   */
   get Version(): typeof ApiVersion {
     return ApiVersion;
   }
@@ -57,6 +60,7 @@ export class ContextApiClient<
    * @template TVersion - The API version key (e.g. `'v1'`).
    * @template TResult - The expected response type.
    * @param version - API version to use.
+   * @param args - Request arguments for the context lookup.
    * @returns The context entity matching the provided arguments.
    */
   public get<
@@ -76,6 +80,7 @@ export class ContextApiClient<
    * @template TVersion - The API version key (e.g. `'v1'`).
    * @template TResult - The expected response type.
    * @param version - API version to use.
+   * @param args - Query arguments for the context search.
    * @returns An array of context entities matching the query.
    */
   public query<
@@ -95,6 +100,7 @@ export class ContextApiClient<
    * @template TVersion - The API version key (e.g. `'v1'`).
    * @template TResult - The expected response type.
    * @param version - API version to use.
+   * @param args - Request arguments for the related-context lookup.
    * @returns An array of related context entities.
    */
   public related<

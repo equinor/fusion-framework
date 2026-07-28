@@ -11,7 +11,7 @@ import type { ClientMethod, ExtractApiVersion, FilterAllowedApiVersions } from '
 
 import { extractVersion, schemaSelector } from '../../utils';
 import { ApiVersion } from '../api-version';
-import { ApiBookmarkSchema, ApiSourceSystem } from '../schemas';
+import { ApiBookmarkSchema, ApiSourceSystem } from '../bookmark.schemas';
 
 /** API version which this operation uses. */
 type AvailableVersions = ApiVersion.v1 | ApiVersion.v2;
@@ -25,26 +25,37 @@ type AllowedVersions = FilterAllowedApiVersions<AvailableVersions>;
  * @todo This function should be moved to a shared utility module.
  */
 const transformOdataFilter = (filter: Record<string, unknown>) => {
-  return Object.entries(filter)
-    .map(([key, value]) => {
-      if (value === null) {
-        return `${key} eq null`;
-      }
-      if (typeof value === 'string') {
-        return `${key} eq '${value}'`;
-      }
-      if (typeof value === 'boolean') {
-        return `${key} eq ${value}`;
-      }
-      if (typeof value === 'object') {
-        return Object.entries(value)
-          .map(([subKey, subValue]) => `${key}.${subKey} eq '${subValue}'`)
-          .join(' and ');
-      }
-      return undefined;
-    })
-    .filter((x) => !!x)
-    .join(' and ');
+  return (
+    Object.entries(filter)
+      // Convert each filter entry into the service's OData expression format.
+      .map(([key, value]) => {
+        // Preserve null comparisons because OData uses a distinct null operator.
+        if (value === null) {
+          return `${key} eq null`;
+        }
+        // Quote string values so the generated OData expression remains valid.
+        if (typeof value === 'string') {
+          return `${key} eq '${value}'`;
+        }
+        // Emit boolean literals without string quoting in OData expressions.
+        if (typeof value === 'boolean') {
+          return `${key} eq ${value}`;
+        }
+        // Expand nested filter objects into qualified property comparisons.
+        if (typeof value === 'object') {
+          return (
+            Object.entries(value)
+              // Convert nested properties into qualified OData comparisons.
+              .map(([subKey, subValue]) => `${key}.${subKey} eq '${subValue}'`)
+              .join(' and ')
+          );
+        }
+        return undefined;
+      })
+      // Remove unsupported filter values before joining the valid expressions.
+      .filter((x) => !!x)
+      .join(' and ')
+  );
 };
 
 const filterSchema_v1 = z
@@ -107,12 +118,14 @@ const generateRequestParameters = <TResult, TVersion extends AvailableVersions>(
   _args: z.infer<(typeof ArgSchema)[TVersion]>,
   init?: ClientRequestInit<IHttpClient, TResult>,
 ): ClientRequestInit<IHttpClient, TResult> => {
+  // Select the response schema that matches the requested API version.
   switch (version) {
     case ApiVersion.v1:
     case ApiVersion.v2: {
       const baseInit: FetchRequestInit<ApiResponse<ApiVersion.v1>, JsonRequest> = {
         selector: schemaSelector(ApiResponseSchema[version]),
       };
+      // Merge caller overrides on top of the generated version-specific defaults.
       return Object.assign({}, baseInit, init);
     }
   }
@@ -124,6 +137,7 @@ const generateApiPath = <TVersion extends AvailableVersions>(
   version: TVersion,
   args: z.infer<(typeof ArgSchema)[TVersion]>,
 ): string => {
+  // Build the endpoint path according to the requested API version.
   switch (version) {
     case ApiVersion.v1:
     case ApiVersion.v2: {

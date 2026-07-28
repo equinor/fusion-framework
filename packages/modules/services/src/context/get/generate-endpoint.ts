@@ -11,6 +11,7 @@ export const generateEndpoint = <TVersion extends string = keyof typeof ApiVersi
   args: GetContextArgs<TVersion>,
 ): string => {
   const apiVersion = ApiVersion[version as keyof typeof ApiVersion] ?? version;
+  // Reject API versions that this endpoint cannot serve.
   switch (apiVersion) {
     case ApiVersion.v2:
       throw new UnsupportedApiVersion(version);

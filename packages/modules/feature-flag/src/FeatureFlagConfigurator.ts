@@ -115,7 +115,9 @@ export class FeatureFlagConfigurator
      * Observable stream that emits the initial feature flags based on the plugins.
      */
     const initial$: Observable<IFeatureFlag[]> = plugins$.pipe(
+      // Sort plugins by order and only query those that provide an initial value.
       concatMap((plugins) =>
+        // Collect each plugin's initial flags in priority order, tracking key collisions.
         from(plugins.sort((a, b) => (a.order ?? 0) - (b.order ?? 0))).pipe(
           /** only get initial value from plugins that support functionality */
           filter((x) => !!x.initial),

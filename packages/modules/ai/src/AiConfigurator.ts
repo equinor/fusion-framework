@@ -56,6 +56,7 @@ export class AiConfigurator extends BaseConfigBuilder<AIModuleConfig> implements
     this._set(
       'strategies',
       (args: ConfigBuilderCallbackArgs): ObservableInput<Strategy[]> =>
+        // Resolve each registered strategy factory and collect the results into an array.
         from(this.#strategies).pipe(
           mergeMap((cb) => from(cb(args) as ObservableInput<Strategy>)),
           toArray(),

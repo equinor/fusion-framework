@@ -42,6 +42,7 @@ export const isApiPerson = <V extends keyof typeof ApiVersion>(version: V) => {
     }
     const attr = Object.keys(value as object);
     const requiredAttr = requiredApiPersonAttributes[ApiVersion[version]];
+    // Verify that every required attribute is present before narrowing the value.
     const result = requiredAttr.every((key) => attr.includes(key));
     return result;
   };

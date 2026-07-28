@@ -8,6 +8,7 @@ import { isSuccessAction } from '@equinor/fusion-observable/actions';
  * Used to determine where to insert/replace entries for REPLACE actions.
  */
 const findIndex = (state: LocationState) => {
+  // Locate the current entry by key rather than reference, since updates are cloned.
   return state.history.findIndex((update) => update.location.key === state.current.location.key);
 };
 
@@ -47,6 +48,7 @@ export const createHistoryReducer = (
       // and removes any forward history when not at the end
       if (update.action === 'REPLACE') {
         const currentIndex = findIndex(state);
+        // Only trim when the current entry is actually present in history.
         if (currentIndex !== -1) {
           // Remove all entries from current position onwards
           state.history.splice(currentIndex, state.history.length - currentIndex);
@@ -64,6 +66,7 @@ export const createHistoryReducer = (
     builder.addMatcher(
       () => true,
       (state) => {
+        // Trim only once history has actually grown past the configured cap.
         if (state.history.length > maxHistory) {
           // Keep only the most recent entries, removing oldest ones
           state.history = state.history.slice(-maxHistory);

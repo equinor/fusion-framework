@@ -11,6 +11,7 @@ export const generateEndpoint = <TVersion extends SupportedApiVersion>(
   args: ApiRequestArgs<TVersion>,
 ) => {
   const apiVersion = ApiVersion[version as keyof typeof ApiVersion] ?? version;
+  // Select the endpoint format supported by the requested people API version.
   switch (apiVersion) {
     case ApiVersion.v2: {
       const { search } = args;

@@ -20,6 +20,7 @@ export const generateParameters = <
   const headers = new Headers();
   headers.append('content-type', 'application/json');
 
+  // Merge the generated POST request defaults with caller overrides.
   const requestParams: ClientRequestInit<TClient, TResult> = Object.assign(
     {},
     { method: 'POST', body: JSON.stringify(args), headers: headers },

@@ -67,9 +67,11 @@ const parseNavigationConfig = (config: unknown): INavigationConfigurator => {
  * Extends BaseConfigBuilder to provide fluent configuration API with Zod validation.
  */
 export class NavigationConfigurator extends BaseConfigBuilder<INavigationConfigurator> {
+  /** Creates a navigation configurator with default history and event providers. */
   constructor() {
     super();
     this.setEventProvider(async (args) => {
+      // Only resolve the optional provider when the event module participates in this framework.
       if (args.hasModule('event')) {
         return await args.requireInstance('event');
       }
@@ -77,10 +79,12 @@ export class NavigationConfigurator extends BaseConfigBuilder<INavigationConfigu
     this.setHistory(
       async (args) => {
         const history = (args.ref as ModulesInstance<[NavigationModule]>)?.navigation?.history;
+        // Wrap supplied history so the module owns only the proxy lifecycle.
         if (history) {
           // Wrap the provided history in a ProxyHistory to ensure the module can manage its own teardowns without affecting the original instance.
           return new ProxyHistory(history);
         }
+        // Prefer browser history when a DOM is available, otherwise use memory history for SSR.
         if (typeof window !== 'undefined') {
           return createHistory('browser');
         }
@@ -92,8 +96,10 @@ export class NavigationConfigurator extends BaseConfigBuilder<INavigationConfigu
   }
   /**
    * @deprecated Use `setBasename()` method instead
+   * @param value - Deprecated basename value to configure.
    */
   public set basename(value: string | undefined) {
+    // Warn only during development so deprecated setters remain silent in production.
     if (process.env.NODE_ENV === 'development') {
       console.warn('NavigationConfigurator.basename', 'use setBasename() method instead');
     }
@@ -102,8 +108,10 @@ export class NavigationConfigurator extends BaseConfigBuilder<INavigationConfigu
 
   /**
    * @deprecated Use `setHistory()` method instead
+   * @param value - Deprecated history value to configure.
    */
   public set history(value: History | undefined) {
+    // Warn only during development so deprecated setters remain silent in production.
     if (process.env.NODE_ENV === 'development') {
       console.warn('NavigationConfigurator.history', 'use setHistory() method instead');
     }
@@ -149,14 +157,16 @@ export class NavigationConfigurator extends BaseConfigBuilder<INavigationConfigu
         : // Normalize a direct instance to a callback for consistent handling.
           async () => historyOrCallback;
 
+    // Proxying isolates teardown ownership when callers provide an existing history instance.
     if (proxy) {
       // Wrap each emitted history in a ProxyHistory so dispose only tears down
       // proxy-owned listeners/blockers, never the underlying history itself.
       this._set('history', (args) =>
-        from(resolve(args) as ObservableInput<History | undefined>).pipe(
-          map((history) => (history ? new ProxyHistory(history) : undefined)),
-        ),
+        from(resolve(args) as ObservableInput<History | undefined>)
+          // Transform each resolved history into an independently disposable proxy.
+          .pipe(map((history) => (history ? new ProxyHistory(history) : undefined))),
       );
+      // Direct histories are already owned by the navigation module and can be used unchanged.
     } else {
       this._set('history', resolve);
     }

@@ -23,10 +23,13 @@ import type {
  * ```
  */
 function buildOdataFilter(filterObj: RelatedContextOdataFilter): Record<string, unknown> {
+  // Fold filter entries into the OData object expected by the context API.
   return Object.keys(filterObj).reduce(
     (acc, key) => {
+      // Apply special OData syntax only to filter keys with custom semantics.
       switch (key) {
         case 'type':
+          // Omit empty type filters so the generated query remains meaningful.
           if (filterObj[key]?.length) {
             acc[key] = { in: filterObj[key] };
           }
@@ -53,22 +56,27 @@ function buildOdataFilter(filterObj: RelatedContextOdataFilter): Record<string, 
  * @returns An object representing the OData parameters.
  */
 function buildOdataObject(parameters: RelatedContextOdataParameters): Record<string, unknown> {
-  return Object.entries(parameters)
-    .filter(([_, value]) => !!value)
-    .reduce(
-      (acc, [key, value]) => {
-        switch (key) {
-          case 'filter':
-            acc[key] = buildOdataFilter(value as RelatedContextOdataFilter);
-            break;
-          default:
-            acc[key] = parameters[key as keyof typeof parameters];
-            break;
-        }
-        return acc;
-      },
-      {} as Record<string, unknown>,
-    );
+  return (
+    Object.entries(parameters)
+      // Exclude empty optional parameters before constructing the query object.
+      .filter(([_, value]) => !!value)
+      // Assemble the filtered entries into the final OData parameter object.
+      .reduce(
+        (acc, [key, value]) => {
+          // Transform the filter parameter while passing other values through.
+          switch (key) {
+            case 'filter':
+              acc[key] = buildOdataFilter(value as RelatedContextOdataFilter);
+              break;
+            default:
+              acc[key] = parameters[key as keyof typeof parameters];
+              break;
+          }
+          return acc;
+        },
+        {} as Record<string, unknown>,
+      )
+  );
 }
 
 /**
@@ -95,6 +103,7 @@ export const generateEndpoint = <TVersion extends string = keyof typeof ApiVersi
   args: RelatedContextArgs<TVersion>,
 ): string => {
   const apiVersion = ApiVersion[version as keyof typeof ApiVersion] ?? version;
+  // Reject API versions that this endpoint cannot serve.
   switch (apiVersion) {
     case ApiVersion.v2:
       throw new UnsupportedApiVersion(version);

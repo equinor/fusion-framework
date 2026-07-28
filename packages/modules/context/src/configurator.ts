@@ -8,7 +8,11 @@ import type {
 } from '@equinor/fusion-framework-module';
 import type { ServicesModule, IApiProvider } from '@equinor/fusion-framework-module-services';
 import type { NavigationModule } from '@equinor/fusion-framework-module-navigation';
-import { getContextSelector, queryContextSelector, relatedContextSelector } from './get-context-selector';
+import {
+  getContextSelector,
+  queryContextSelector,
+  relatedContextSelector,
+} from './get-context-selector';
 import type { QueryCtorOptions } from '@equinor/fusion-query';
 import type {
   ContextFilterFn,
@@ -238,6 +242,7 @@ export class ContextModuleConfigurator implements IContextModuleConfigurator {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const builder = new ContextConfigBuilder<any, any>(init, await cur);
         await Promise.resolve(cb(builder));
+        // Merge this builder's config into the accumulator for the next iteration.
         return Object.assign(cur, builder.config);
       },
       Promise.resolve({} as Partial<ContextModuleConfig>),

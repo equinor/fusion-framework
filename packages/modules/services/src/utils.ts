@@ -18,10 +18,13 @@ export const extractVersion = <
   apiVersions: TApiVersions,
   version: TVersion,
 ): ExtractApiVersion<TApiVersions, TVersion, TAllowedApiVersion> => {
+  // Prefer an exact key match (e.g. 'v1') over scanning the raw version values
   if (version in apiVersions) {
     return apiVersions[version] as ExtractApiVersion<TApiVersions, TVersion, TAllowedApiVersion>;
   }
+  // Fall back to treating `version` as a raw version value rather than a key
   const extractedVersion = Object.values(apiVersions).find((v) => v === version);
+  // Neither a key nor a raw version matched, so the caller passed an unsupported version
   if (!extractedVersion) {
     throw new Error(`Version ${version} is not supported`);
   }

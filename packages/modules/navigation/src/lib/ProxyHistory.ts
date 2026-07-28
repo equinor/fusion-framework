@@ -109,6 +109,7 @@ export class ProxyHistory implements History {
    * instance; otherwise this is a no-op.
    */
   pop(): void {
+    // Only BaseHistory implementations expose pop(); anything else is a no-op.
     if ('pop' in this.#target && typeof this.#target.pop === 'function') {
       (this.#target as BaseHistory).pop();
     }
