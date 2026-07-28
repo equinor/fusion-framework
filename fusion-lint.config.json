@@ -12,6 +12,11 @@
     },
     "filename-convention": {
       "excludePattern": [
+        "index.ts",
+        "index.tsx",
+        "index.mts",
+        "index.cts",
+        "*.d.ts",
         "module.ts",
         "configurator.ts",
         "provider.ts",
