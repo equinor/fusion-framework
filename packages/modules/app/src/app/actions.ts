@@ -29,7 +29,7 @@ const createActions = () => ({
   setManifest: createAction('set_manifest', (manifest: AppManifest, update?: boolean) => ({
     payload: manifest,
     meta: {
-      // TODO when updating
+      // TODO(#5129) when updating
       created: Date.now(),
       update,
     },

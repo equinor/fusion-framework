@@ -77,6 +77,8 @@ const ApiApplicationPersonSchema = z.object({
  * - `allowedExtensions`: An optional array of allowed extensions for the build.
  * - `uploadedBy`: An optional schema for the person who uploaded the build.
  */
+// Deliberately co-located with ApiApplicationPersonSchema, which it depends on
+// fusion-lint-disable-next-line single-export-per-file
 export const ApiApplicationBuildSchema = z.object({
   version: z.string(),
   entryPoint: z.string(),
@@ -118,6 +120,8 @@ export const ApiApplicationBuildSchema = z.object({
  * - `owners` (array of ApiApplicationPersonSchema | nullish): List of owner users for the application.
  * - `build` (ApiApplicationBuildSchema | nullish): Build details of the application.
  */
+// Deliberately co-located with ApiApplicationPersonSchema and ApiApplicationBuildSchema, which it depends on
+// fusion-lint-disable-next-line single-export-per-file
 export const ApiApplicationSchema = z.object({
   appKey: z.string(),
   displayName: z.string(),

@@ -31,6 +31,7 @@ export const enableAppModule = (
   configurator.addConfig({
     module,
     configure: async (configurator) => {
+      // apply the caller's configuration overrides, if provided
       if (callback) {
         Promise.resolve(callback(configurator));
       }

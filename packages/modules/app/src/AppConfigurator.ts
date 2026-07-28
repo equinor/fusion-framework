@@ -64,7 +64,13 @@ export class AppConfigurator
   defaultExpireTime = 1 * 60 * 1000;
 
   /**
+   * Creates the default HTTP client for the app service, preferring a pre-configured
+   * client from the http module and falling back to service discovery.
+   *
    * WARNING: this function will be remove in future
+   *
+   * @param init - Module initializer args providing access to the http and service discovery modules.
+   * @returns A promise resolving to the {@link IHttpClient} used to communicate with the app service.
    */
   protected async _createHttpClient(
     init: ModuleInitializerArgs<IAppConfigurator, [HttpModule, ServiceDiscoveryModule]>,
@@ -79,11 +85,16 @@ export class AppConfigurator
     /** load service discovery module */
     const serviceDiscovery = await init.requireInstance('serviceDiscovery');
 
-    // TODO - remove when refactor portal service!
+    // TODO(#5125) - remove when refactor portal service!
     /** resolve and create a client from discovery */
     return await serviceDiscovery.createClient(serviceName);
   }
 
+  /**
+   * Sets the app service client used to fetch manifests, configs, and settings.
+   * @param client_or_cb - A promise resolving to an {@link IAppClient}, or a callback
+   *   that receives module initializer args and returns one.
+   */
   public setClient(
     client_or_cb:
       | Promise<AppModuleConfig['client']>
@@ -93,16 +104,30 @@ export class AppConfigurator
     this._set('client', cb);
   }
 
-  // TODO - explain why, used in import of resources aka proxy url
+  /**
+   * Sets the base URI used to proxy-load application script bundles.
+   *
+   * TODO(#5132) - explain why, used in import of resources aka proxy url
+   *
+   * @param base_or_cb - A static URI string or a callback returning one.
+   */
   public setAssetUri(base_or_cb: string | ConfigBuilderCallback<string>) {
     const cb = typeof base_or_cb === 'string' ? async () => base_or_cb : base_or_cb;
     this._set('assetUri', cb);
   }
 
+  /**
+   * Builds the resolved {@link AppModuleConfig}, applying default client and asset URI
+   * when they haven't been explicitly configured.
+   * @param init - Module initializer args used to build the default client.
+   * @param initial - Optional initial partial configuration.
+   * @returns The resolved module config.
+   */
   protected _createConfig(
     init: ModuleInitializerArgs<IAppConfigurator, [HttpModule, ServiceDiscoveryModule]>,
     initial?: Partial<AppModuleConfig>,
   ) {
+    // fall back to a default client created via the http/service discovery modules
     if (!this._has('client')) {
       this.setClient(async () => {
         const httpClient = await this._createHttpClient(init);
@@ -111,6 +136,7 @@ export class AppConfigurator
       });
     }
 
+    // fall back to the default proxy asset uri
     if (!this._has('assetUri')) {
       this.setAssetUri('/apps-proxy');
     }

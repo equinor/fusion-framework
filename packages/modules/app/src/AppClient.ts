@@ -102,11 +102,11 @@ const ApplicationSchema = ApiApplicationSchema.transform((x): AppManifest => {
   const { category, ...props } = x;
   return {
     ...props,
-    // TODO: remove deprecated appKey
+    // TODO(#5124): remove deprecated appKey
     get key() {
       return props.appKey;
     },
-    // TODO: remove deprecated name
+    // TODO(#5124): remove deprecated name
     get name() {
       return props.displayName;
     },
@@ -139,6 +139,10 @@ export class AppClient implements IAppClient {
   #settings: Query<AppSettings, { appKey: string; settings?: AppSettings }>;
   #client: IHttpClient;
 
+  /**
+   * Creates a new {@link AppClient} backed by the given HTTP client.
+   * @param client - The HTTP client used to communicate with the Fusion app service API.
+   */
   constructor(client: IHttpClient) {
     this.#client = client;
 
@@ -229,85 +233,155 @@ export class AppClient implements IAppClient {
     });
   }
 
+  /**
+   * Fetches the build metadata for an application.
+   * @param args - Object containing the `appKey` and an optional version `tag`.
+   * @returns An observable that emits the resolved {@link AppBuildManifest}.
+   * @throws {AppBuildError} When the build metadata cannot be loaded.
+   */
   getAppBuild(args: { appKey: string; tag?: string }): Observable<AppBuildManifest> {
-    return this.#build.query(args).pipe(
-      map((res) => res.value as AppBuildManifest),
-      catchError((err) => {
-        const cause = err?.cause || err;
+    return (
+      this.#build
+        .query(args)
+        // unwrap the build manifest and map errors to a typed AppBuildError
+        .pipe(
+          // unwrap the query result into the build manifest
+          map((res) => res.value as AppBuildManifest),
+          // map http/unknown errors into a typed AppBuildError
+          catchError((err) => {
+            const cause = err?.cause || err;
 
-        if (cause instanceof AppBuildError) {
-          throw cause;
-        }
-        if (cause instanceof HttpJsonResponseError || cause instanceof HttpResponseError) {
-          throw AppBuildError.fromHttpResponse(cause.response, { cause });
-        }
-        throw new AppBuildError('unknown', 'failed to load build', { cause });
-      }),
+            // rethrow already-typed errors as-is
+            if (cause instanceof AppBuildError) {
+              throw cause;
+            }
+            // map http errors to a typed AppBuildError
+            if (cause instanceof HttpJsonResponseError || cause instanceof HttpResponseError) {
+              throw AppBuildError.fromHttpResponse(cause.response, { cause });
+            }
+            throw new AppBuildError('unknown', 'failed to load build', { cause });
+          }),
+        )
     );
   }
 
+  /**
+   * Fetches the manifest for a single application.
+   * @param args - Object containing the `appKey` and an optional version `tag`.
+   * @returns An observable that emits the resolved {@link AppManifest}.
+   * @throws {AppManifestError} When the manifest cannot be loaded.
+   */
   getAppManifest(args: { appKey: string; tag?: string }): Observable<AppManifest> {
-    return this.#manifest.query(args).pipe(
-      queryValue,
-      catchError((err) => {
-        const cause = err?.cause || err;
+    return (
+      this.#manifest
+        .query(args)
+        // unwrap the manifest and map errors to a typed AppManifestError
+        .pipe(
+          queryValue,
+          // map http/unknown errors into a typed AppManifestError
+          catchError((err) => {
+            const cause = err?.cause || err;
 
-        if (cause instanceof AppManifestError) {
-          throw cause;
-        }
+            // rethrow already-typed errors as-is
+            if (cause instanceof AppManifestError) {
+              throw cause;
+            }
 
-        if (cause instanceof HttpJsonResponseError || cause instanceof HttpResponseError) {
-          throw AppManifestError.fromHttpResponse(cause.response, { cause });
-        }
+            // map http errors to a typed AppManifestError
+            if (cause instanceof HttpJsonResponseError || cause instanceof HttpResponseError) {
+              throw AppManifestError.fromHttpResponse(cause.response, { cause });
+            }
 
-        throw new AppManifestError('unknown', 'failed to load manifest', { cause });
-      }),
+            throw new AppManifestError('unknown', 'failed to load manifest', { cause });
+          }),
+        )
     );
   }
 
+  /**
+   * Fetches manifests for all registered applications.
+   * @param args - Optional filter; set `filterByCurrentUser` to `true` to return only apps the authenticated user has access to.
+   * @returns An observable that emits an array of {@link AppManifest} objects.
+   */
   getAppManifests(args: { filterByCurrentUser?: boolean } | undefined): Observable<AppManifest[]> {
+    // unwrap the query result into the manifest array
     return this.#manifests.query(args).pipe(queryValue);
   }
 
+  /**
+   * Fetches the runtime configuration for an application.
+   * @template TType - Shape of the `environment` record in the returned config.
+   * @param args - Object containing the `appKey` and an optional version `tag`.
+   * @returns An observable that emits the resolved {@link AppConfig}.
+   * @throws {AppConfigError} When the configuration cannot be loaded.
+   */
   getAppConfig<TType extends ConfigEnvironment = ConfigEnvironment>(args: {
     appKey: string;
     tag?: string;
   }): Observable<AppConfig<TType>> {
-    return this.#config.query(args).pipe(
-      map((res) => res.value as AppConfig<TType>),
-      catchError((err) => {
-        /** handle both direct errors and errors wrapped in a `cause` property */
-        const cause = err?.cause || err;
+    return (
+      this.#config
+        .query(args)
+        // unwrap the config and map errors to a typed AppConfigError
+        .pipe(
+          // unwrap the query result into the config
+          map((res) => res.value as AppConfig<TType>),
+          // map http/unknown errors into a typed AppConfigError
+          catchError((err) => {
+            /** handle both direct errors and errors wrapped in a `cause` property */
+            const cause = err?.cause || err;
 
-        if (cause instanceof AppConfigError) {
-          throw cause;
-        }
-        if (cause instanceof HttpJsonResponseError || cause instanceof HttpResponseError) {
-          throw AppConfigError.fromHttpResponse(cause.response, { cause });
-        }
-        throw new AppConfigError('unknown', 'failed to load config', { cause });
-      }),
+            // rethrow already-typed errors as-is
+            if (cause instanceof AppConfigError) {
+              throw cause;
+            }
+            // map http errors to a typed AppConfigError
+            if (cause instanceof HttpJsonResponseError || cause instanceof HttpResponseError) {
+              throw AppConfigError.fromHttpResponse(cause.response, { cause });
+            }
+            throw new AppConfigError('unknown', 'failed to load config', { cause });
+          }),
+        )
     );
   }
 
+  /**
+   * Fetches per-user settings for an application.
+   * @param args - Object containing the `appKey`.
+   * @returns An observable that emits the {@link AppSettings} record.
+   * @throws {AppSettingsError} When settings cannot be loaded.
+   */
   getAppSettings(args: { appKey: string }): Observable<AppSettings> {
-    return this.#settings.query(args).pipe(
-      queryValue,
-      catchError((err) => {
-        /** handle both direct errors and errors wrapped in a `cause` property */
-        const cause = err?.cause || err;
+    return (
+      this.#settings
+        .query(args)
+        // unwrap the settings and map errors to a typed AppSettingsError
+        .pipe(
+          queryValue,
+          // map http/unknown errors into a typed AppSettingsError
+          catchError((err) => {
+            /** handle both direct errors and errors wrapped in a `cause` property */
+            const cause = err?.cause || err;
 
-        if (cause instanceof AppSettingsError) {
-          throw cause;
-        }
-        if (cause instanceof HttpJsonResponseError || cause instanceof HttpResponseError) {
-          throw AppSettingsError.fromHttpResponse(cause.response, { cause });
-        }
-        throw new AppSettingsError('unknown', 'failed to load settings', { cause });
-      }),
+            // rethrow already-typed errors as-is
+            if (cause instanceof AppSettingsError) {
+              throw cause;
+            }
+            // map http errors to a typed AppSettingsError
+            if (cause instanceof HttpJsonResponseError || cause instanceof HttpResponseError) {
+              throw AppSettingsError.fromHttpResponse(cause.response, { cause });
+            }
+            throw new AppSettingsError('unknown', 'failed to load settings', { cause });
+          }),
+        )
     );
   }
 
+  /**
+   * Persists updated per-user settings for an application via PUT.
+   * @param args - Object containing the `appKey` and the `settings` payload to save.
+   * @returns An observable that emits the persisted {@link AppSettings}.
+   */
   updateAppSettings(args: { appKey: string; settings: AppSettings }): Observable<AppSettings> {
     const { appKey, settings } = args;
     return (
@@ -320,6 +394,7 @@ export class AppClient implements IAppClient {
             'Api-Version': '1.0',
           },
         })
+        // update the settings cache with the persisted value
         .pipe(
           tap((value) => {
             // update cache with new settings
@@ -335,6 +410,9 @@ export class AppClient implements IAppClient {
     );
   }
 
+  /**
+   * Disposes of the client, completing all internal query streams.
+   */
   [Symbol.dispose]() {
     console.warn('AppClient disposed');
     this.#manifest.complete();
