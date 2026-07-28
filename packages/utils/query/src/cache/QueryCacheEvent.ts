@@ -1,4 +1,4 @@
-import type { IQueryEvent } from '../events';
+import type { IQueryEvent } from '../QueryEvent';
 
 /**
  * Base interface for QueryCache events.

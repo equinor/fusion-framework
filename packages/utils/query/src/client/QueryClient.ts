@@ -6,9 +6,11 @@ import { filterAction } from '@equinor/fusion-observable/operators';
 
 import actions, { type ActionMap, type Actions } from './actions';
 
-import { handleRequests, handleExecution, handleFailure } from './flows';
+import { handleRequests } from './handle-requests';
+import { handleExecution } from './handle-execution';
+import { handleFailure } from './handle-failure';
 import { QueryClientError } from './QueryClientError';
-import createReducer from './reducer';
+import createReducer from './create-reducer';
 
 import type {
   QueryClientState,
@@ -18,7 +20,11 @@ import type {
   QueryClientRequest,
 } from './types';
 import { QueryClientJob } from './QueryClientJob';
-import { QueryClientEvent, type QueryClientEventData, type QueryClientEvents } from './events';
+import {
+  QueryClientEvent,
+  type QueryClientEventData,
+  type QueryClientEvents,
+} from './QueryClientEvent';
 
 /**
  * Options for configuring the behavior of the `QueryClient`.
@@ -134,6 +140,7 @@ export class QueryClient<TType, TArgs> extends Observable<QueryClientState<TArgs
    * @returns {Observable<TType>} An Observable stream of successful results.
    */
   public get success$(): Observable<TType> {
+    // narrow the action stream down to successful execute actions and extract their payload
     return this.action$.pipe(
       filter(actions.execute.success.match),
       map(({ payload }) => payload as TType),
@@ -146,6 +153,7 @@ export class QueryClient<TType, TArgs> extends Observable<QueryClientState<TArgs
    * @returns {Observable<QueryClientError>} An Observable stream of query errors.
    */
   public get error$(): Observable<QueryClientError<TArgs>> {
+    // narrow the action stream down to client errors and wrap them as QueryClientError instances
     return this.action$.pipe(
       filterAction('client/error'),
       withLatestFrom(this.#state),
@@ -188,9 +196,9 @@ export class QueryClient<TType, TArgs> extends Observable<QueryClientState<TArgs
     // Add flows to handle different aspects of the query lifecycle.
     this.#subscription.add(this.#state.addFlow(handleRequests));
     this.#subscription.add(this.#state.addFlow(handleExecution(queryFn)));
-    this.#subscription.add(
-      this.#state.addFlow(handleFailure(Object.assign({ count: 0, delay: 0 }, options?.retry))),
-    );
+    // merge caller-provided retry options over the defaults
+    const retryOptions = Object.assign({ count: 0, delay: 0 }, options?.retry);
+    this.#subscription.add(this.#state.addFlow(handleFailure(retryOptions)));
 
     /**
      * Register effects to emit lifecycle events for different query actions.
@@ -254,6 +262,7 @@ export class QueryClient<TType, TArgs> extends Observable<QueryClientState<TArgs
    */
   public query(args: TArgs, opt?: Partial<QueryClientOptions>): QueryClientJob<TType, TArgs> {
     const job = new QueryClientJob(this, args, opt);
+    // share a single underlying job execution across all subscribers, replaying past emissions to late subscribers
     const job$ = job.pipe(
       share({ connector: () => new ReplaySubject(), resetOnRefCountZero: false }),
     );
@@ -298,7 +307,10 @@ export class QueryClient<TType, TArgs> extends Observable<QueryClientState<TArgs
    * @returns The request matching the reference, or `undefined` if not found.
    */
   public getRequestByRef(ref: string): QueryClientRequest<TArgs> | undefined {
-    return Object.values(this.#state.value).find((x) => x.ref === ref);
+    const requests = Object.values(this.#state.value);
+    // scan all tracked requests for the one matching the given ref
+    const match = requests.find((x) => x.ref === ref);
+    return match;
   }
 
   /**
@@ -309,6 +321,7 @@ export class QueryClient<TType, TArgs> extends Observable<QueryClientState<TArgs
    */
   public cancelTaskByRef(ref: string, reason?: string): void {
     const entry = this.getRequestByRef(ref);
+    // Only cancel when a matching request was actually found
     if (entry?.ref) {
       this.cancel(entry.transaction, reason);
     }
@@ -321,6 +334,7 @@ export class QueryClient<TType, TArgs> extends Observable<QueryClientState<TArgs
    * @param {string} [reason] The reason for cancellation.
    */
   public cancel(transaction?: string, reason?: string): void {
+    // No transaction targeted — cancel every tracked transaction
     if (!transaction) {
       // If no specific transaction is provided, iterate through all transactions
       // in the state and cancel each one, applying a generic cancellation reason.

@@ -36,6 +36,7 @@ export default function <TType, TArgs>(
           const { key, entry } = action.payload;
           const record = state[key];
 
+          // Update the existing entry in place, or create a new one if none exists yet
           if (record) {
             // If the record exists, update the timestamp and increment the update count.
             record.updated = Date.now();
@@ -62,8 +63,10 @@ export default function <TType, TArgs>(
         // Handles the 'invalidate' action to invalidate a cache record.
         .addCase(actions.invalidate, (state, action) => {
           const invalidKey = action.payload ? [action.payload] : Object.keys(state);
+          // Invalidate either the single targeted key, or every key when none was specified
           for (const key of invalidKey) {
             const entry = state[key];
+            // Only reset the timestamp when the record actually exists
             if (entry) {
               // reset the updated timestamp
               entry.updated = undefined;
@@ -74,6 +77,7 @@ export default function <TType, TArgs>(
         .addCase(actions.mutate, (state, action) => {
           const { key, value, updated } = action.payload;
           const record = state[key];
+          // Only apply the mutation when a record exists for this key
           if (record) {
             // Update the record with the new value and metadata.
             record.value = value as typeof record.value;
@@ -103,8 +107,10 @@ export default function <TType, TArgs>(
 
           // Remove keys that are not in the list of valid keys.
           if (currentKeys.length !== validKeys.length) {
+            // Walk all current keys and drop the ones that were trimmed away
             for (const key of currentKeys) {
               const validKeyIndex = validKeys.indexOf(key);
+              // The key survived trimming — remove it from the search list so later lookups are faster
               if (validKeyIndex !== -1) {
                 // If the key is valid, remove it from the search list.
                 validKeys.splice(validKeyIndex, 1);

@@ -47,9 +47,9 @@ export const createReducer = <TArgs = unknown>(initial: QueryClientState<TArgs> 
     builder.addCase(actions.execute, (state, action) => {
       // Locates the query entry in the state using the transaction ID provided in `action.payload`.
       const entry = state[action.payload];
+      // If the entry is found, logs the current timestamp to the `execution` array
+      // to indicate when the execution action was triggered.
       if (entry) {
-        // If the entry is found, logs the current timestamp to the `execution` array
-        // to indicate when the execution action was triggered.
         entry.execution.push(Date.now());
         // Updates the status of the entry to 'active' to reflect that the execution
         // process has started.
@@ -66,9 +66,9 @@ export const createReducer = <TArgs = unknown>(initial: QueryClientState<TArgs> 
     builder.addCase(actions.execute.failure, (state, action) => {
       // Locates the query entry in the state using the transaction ID provided in `action.meta`.
       const entry = state[action.meta.transaction];
+      // If the entry is found, the error information from `action.payload.error` is added to the `errors` array of the entry.
+      // This allows tracking of all errors that have occurred during the execution of the query.
       if (entry) {
-        // If the entry is found, the error information from `action.payload.error` is added to the `errors` array of the entry.
-        // This allows tracking of all errors that have occurred during the execution of the query.
         entry.errors.push(action.payload.error);
         // The status of the entry is updated to 'failed' to indicate that the query execution has encountered an error.
         entry.status = 'failed';

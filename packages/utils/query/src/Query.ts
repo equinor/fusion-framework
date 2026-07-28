@@ -39,7 +39,7 @@ import { concatQueue, mergeQueue, queryValue, switchQueue } from './operators';
 
 import { filterAction } from '@equinor/fusion-observable/operators';
 import { QueryTask } from './QueryTask';
-import { QueryEvent, type IQueryEvent, type QueryEvents } from './events';
+import { QueryEvent, type IQueryEvent, type QueryEvents } from './QueryEvent';
 
 /**
  * Defines the constructor options for a QueryClient object.
@@ -189,10 +189,12 @@ type QueueOperatorType = 'switch' | 'merge' | 'concat';
 const getQueueOperator = <TDataType, TQueryArguments>(
   type: QueueOperatorType | QueryQueueFn<TDataType, TQueryArguments> = 'switch',
 ): QueryQueueFn<TDataType, TQueryArguments> => {
+  // A custom queue function was provided, use it directly
   if (typeof type === 'function') {
     return type;
   }
   return (() => {
+    // Map the named operator type to its concrete implementation
     switch (type) {
       case 'concat':
         return concatQueue;
@@ -264,8 +266,11 @@ const getQueueOperator = <TDataType, TQueryArguments>(
  * @see {@link Query.invalidate} for more details on invalidating cache entries.
  * @see {@link QueueOperatorType} for more details on the available queue operators.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export class Query<TDataType, TQueryArguments = any> {
+export class Query<
+  TDataType,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  TQueryArguments = any,
+> {
   /**
    * Static utility that extracts the raw value from a query result Observable.
    *
@@ -329,17 +334,20 @@ export class Query<TDataType, TQueryArguments = any> {
 
   /**
    * A public getter for the client instance.
-   * TODO: Implement a proxy to control access to the client.
+   * TODO(#5144): Implement a proxy to control access to the client.
    * This proxy would allow for additional functionality or restrictions when accessing the client instance.
+   * @returns The internal `QueryClient` instance used to fetch data.
    */
   public get client(): QueryClient<TDataType, TQueryArguments> {
-    // TODO: Proxy
+    // TODO(#5144): Proxy
     return this.#client;
   }
 
   /**
    * Protected helper method to register events if an event observer is configured.
+   * @template TKey - The event type key, constrained to the keys of `QueryEvents`.
    * @param type - The event type
+   * @param key - The cache/query key the event relates to
    * @param data - The event data
    */
   protected _registerEvent<TKey extends keyof QueryEvents>(
@@ -352,11 +360,12 @@ export class Query<TDataType, TQueryArguments = any> {
 
   /**
    * A public getter for the cache instance.
-   * TODO: Implement a proxy to control access to the cache.
+   * TODO(#5144): Implement a proxy to control access to the cache.
    * This proxy would allow for additional functionality or restrictions when accessing the cache instance.
+   * @returns The internal `QueryCache` instance used to cache query results.
    */
   public get cache(): QueryCache<TDataType, TQueryArguments> {
-    // TODO: Proxy
+    // TODO(#5144): Proxy
     return this.#cache;
   }
 
@@ -434,6 +443,7 @@ export class Query<TDataType, TQueryArguments = any> {
 
     this.#subscription.add(
       this.#queue$
+        // register queued events, then apply the queue operator to the ongoing tasks
         .pipe(
           tap((key) => {
             this._registerEvent('query_queued', key);
@@ -593,9 +603,11 @@ export class Query<TDataType, TQueryArguments = any> {
     const { skipResolve, ...args } = opt || {};
     const fn = skipResolve ? firstValueFrom : lastValueFrom;
     return new Promise((resolve, reject) => {
+      // Reject the promise early if the caller aborts via the signal
       if (opt?.signal) {
         opt.signal.addEventListener('abort', () => reject(new Error('Query aborted')));
       }
+      // Throw if the query completes without emitting a value
       fn(this._query(payload, args).pipe(throwIfEmpty())).then(resolve, reject);
     });
   }
@@ -621,37 +633,39 @@ export class Query<TDataType, TQueryArguments = any> {
   ): Observable<QueryTaskCached<TDataType> | QueryTaskCompleted<TDataType>> {
     const key = this.#generateCacheKey(args);
     const original = this._query(args, options);
-    return new Observable<QueryTaskCached<TDataType> | QueryTaskCompleted<TDataType>>(
-      (subscriber) => {
-        subscriber.add(
-          original.subscribe({
-            next: subscriber.next.bind(subscriber),
-            error: subscriber.error.bind(subscriber),
-          }),
-        );
-        // Use the provided validation function or the default cache validator to determine if the cache entry is valid.
-        const validateCache = options?.cache?.validate || this.#validateCacheEntry;
+    const cacheAwareStream = new Observable<
+      QueryTaskCached<TDataType> | QueryTaskCompleted<TDataType>
+    >((subscriber) => {
+      subscriber.add(
+        original.subscribe({
+          next: subscriber.next.bind(subscriber),
+          error: subscriber.error.bind(subscriber),
+        }),
+      );
+      // Use the provided validation function or the default cache validator to determine if the cache entry is valid.
+      const validateCache = options?.cache?.validate || this.#validateCacheEntry;
 
-        // Subscribe to the cache state and filter for the specific cache entry based on the key.
-        subscriber.add(
-          this.cache.state$
-            .pipe(
-              filter((x) => key in x),
-              map(
-                (x) =>
-                  ({
-                    ...x[key],
-                    key,
-                    status: 'cache',
-                    hasValidCache: validateCache(x[key], args),
-                  }) satisfies QueryTaskCached<TDataType>,
-              ),
-            )
-            .subscribe(subscriber),
-        );
-      },
-    ).pipe(
-      // only emit when the transaction changes
+      // Subscribe to the cache state and filter for the specific cache entry based on the key.
+      subscriber.add(
+        this.cache.state$
+          // narrow the cache state stream down to just this key's entry
+          .pipe(
+            filter((x) => key in x),
+            map(
+              (x) =>
+                ({
+                  ...x[key],
+                  key,
+                  status: 'cache',
+                  hasValidCache: validateCache(x[key], args),
+                }) satisfies QueryTaskCached<TDataType>,
+            ),
+          )
+          .subscribe(subscriber),
+      );
+    });
+    // only emit when the transaction changes
+    return cacheAwareStream.pipe(
       distinctUntilChanged(
         (a, b) =>
           a.transaction === b.transaction &&
@@ -678,6 +692,9 @@ export class Query<TDataType, TQueryArguments = any> {
    *
    * @param args - The arguments that identify the specific cache entry to be mutated.
    * @param changes - A function that defines the changes to be applied to the cache entry.
+   * @param options - Optional settings; `allowCreation` controls whether a missing cache entry may be created.
+   * @returns A function that reverts the mutation when called.
+   * @throws {Error} When no cache entry exists for `args` and `options.allowCreation` is `undefined`.
    */
   public mutate(
     args: TQueryArguments,
@@ -685,7 +702,9 @@ export class Query<TDataType, TQueryArguments = any> {
     options?: { allowCreation?: boolean },
   ): VoidFunction {
     const key = this.#generateCacheKey(args);
+    // No existing cache entry for this key — decide whether to create one or fail
     if (key in this.cache.state === false) {
+      // No explicit allowCreation setting provided — fail closed rather than silently creating
       if (options?.allowCreation === undefined) {
         throw new Error(
           `Cannot mutate cache item with key ${key}: item not found and option "allowCreation" is false`,
@@ -739,6 +758,7 @@ export class Query<TDataType, TQueryArguments = any> {
    */
   onInvalidate(cb: (e: { detail: { item?: QueryCacheRecord } }) => void): VoidFunction {
     const subscription = this.#cache.action$
+      // only forward cache-invalidation actions to the callback
       .pipe(filterAction('cache/invalidate'))
       .subscribe((action) => cb({ detail: { item: action.meta.item } }));
     return () => subscription.unsubscribe();
@@ -761,6 +781,7 @@ export class Query<TDataType, TQueryArguments = any> {
     }) => void,
   ): VoidFunction {
     const subscription = this.#cache.action$
+      // only forward cache-mutation actions to the callback
       .pipe(filterAction('cache/mutate'))
       .subscribe((action) =>
         cb({ detail: { changes: action.payload, current: action.meta.item } }),
@@ -830,7 +851,9 @@ export class Query<TDataType, TQueryArguments = any> {
   ): Observable<QueryTaskCached<TDataType> | QueryTaskCompleted<TDataType>> {
     // Create a new Observable that represents the query task and will be returned to the caller.
     return new Observable((subscriber) => {
+      // Support cancellation via an AbortSignal
       if (options?.signal) {
+        // Already aborted before subscription — complete immediately without doing any work
         if (options?.signal.aborted) {
           this._registerEvent('query_aborted', key);
           return subscriber.complete();
@@ -872,6 +895,7 @@ export class Query<TDataType, TQueryArguments = any> {
         // is considered valid based on the validation logic.
         subscriber.next(record);
 
+        // Complete without fetching when the cache is valid, or invalid entries are intentionally suppressed
         if (hasValidCache || suppressInvalid) {
           this._registerEvent('query_completed', key, { data: cacheEntry.value, hasValidCache });
           // If the cache is valid, or if invalid cache entries should be suppressed (not re-fetched),
@@ -886,6 +910,7 @@ export class Query<TDataType, TQueryArguments = any> {
 
       // If the cache entry does not exist or is invalid, proceed to queue a new query request.
       const isExistingTask = key in this.#tasks;
+      // No task is already tracking this key — create one and register it before queuing
       if (!isExistingTask) {
         this.#tasks[key] = new QueryTask<TDataType, TQueryArguments>(key, args, options);
         this._registerEvent('query_job_created', key, {

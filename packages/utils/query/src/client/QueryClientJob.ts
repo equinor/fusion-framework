@@ -30,6 +30,9 @@ export class QueryClientJob<TType = unknown, TArgs = unknown>
     return this.#status$.value;
   }
 
+  /**
+   * An Observable stream of the job's status, emitting whenever the status changes.
+   */
   get status$() {
     return this.#status$.asObservable();
   }
@@ -193,8 +196,10 @@ export class QueryClientJob<TType = unknown, TArgs = unknown>
    * This method should be called to gracefully end a job that has finished its task.
    * It will also attempt to cancel the job with a completion reason, transitioning its status to 'canceled'
    * if it was in an 'active' state but hadn't yet completed.
+   * @param reason - Optional reason recorded for the completion/cancellation.
    */
   public complete(reason?: string) {
+    // Only cancel/complete when the job isn't already in a terminal state
     if (!this.closed) {
       this.cancel(reason ?? `job: ${this.transaction} was completed`);
     }
@@ -211,6 +216,9 @@ export class QueryClientJob<TType = unknown, TArgs = unknown>
     this.#client.cancel(transaction, reason ?? `job: ${transaction} was canceled`);
   }
 
+  /**
+   * Disposes of the job by completing it, releasing any held resources.
+   */
   [Symbol.dispose]() {
     this.complete();
   }

@@ -25,6 +25,13 @@ export interface IQueryEvent<TData = unknown> {
  * @template TData - The type of data payload carried by this event.
  */
 export class QueryEvent<TData = undefined> implements IQueryEvent<TData> {
+  /**
+   * Creates a new Query event.
+   *
+   * @param type - The specific event type identifier.
+   * @param key - The cache key associated with this event.
+   * @param data - Optional event-specific data payload.
+   */
   constructor(
     public readonly type: keyof QueryEvents,
     public readonly key: string,

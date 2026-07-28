@@ -8,8 +8,12 @@ import type { CacheSortFn, QueryCacheMutation, QueryCacheRecord } from './types'
  * @template TArgs The type of the arguments associated with the cache entry.
  * @returns An object containing the cache actions.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export default function createActions<TType = any, TArgs = any>() {
+function createActions<
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  TType = any,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  TArgs = any,
+>() {
   return {
     /**
      * Action to set a cache entry.

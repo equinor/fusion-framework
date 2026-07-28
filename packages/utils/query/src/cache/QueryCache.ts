@@ -9,7 +9,11 @@ import createReducer from './create-reducer';
 
 import type { QueryCacheMutation, QueryCacheRecord, QueryCacheStateData } from './types';
 import type { ActionMap, Actions } from './actions';
-import { QueryCacheEvent, type QueryCacheEventData, type QueryCacheEvents } from './events';
+import {
+  QueryCacheEvent,
+  type QueryCacheEventData,
+  type QueryCacheEvents,
+} from './QueryCacheEvent';
 
 /**
  * Defines the options used for trimming the query cache.
@@ -118,6 +122,7 @@ export class QueryCache<TType, TArgs> {
     const { trimming, initial } = args ?? {};
 
     this.#state = new FlowSubject(createReducer(actions, initial));
+    // Only wire up automatic trimming when a trimming policy was provided
     if (trimming) {
       this.#state.addEffect('cache/set', () => this.#state.next(actions.trim(trimming)));
     }
@@ -175,6 +180,7 @@ export class QueryCache<TType, TArgs> {
     const item = key ? this.#state.value[key] : undefined;
     this.#state.next(actions.invalidate(key, item));
 
+    // Only emit an event when a specific key was invalidated (not a full-cache clear)
     if (key) {
       this._registerEvent('query_cache_entry_invalidated', {
         key,
@@ -187,6 +193,8 @@ export class QueryCache<TType, TArgs> {
    * Mutates an item in the query cache by key.
    * @param {string} key - The key of the item to mutate.
    * @param {QueryCacheMutation | ((current: TType) => QueryCacheMutation)} changes - The changes to apply to the item.
+   * @returns A function that reverts the mutation, restoring the previous value.
+   * @throws {Error} When no cache entry exists for `key`.
    */
   public mutate(
     key: string,
@@ -194,6 +202,7 @@ export class QueryCache<TType, TArgs> {
   ): VoidFunction {
     const current = key in this.#state.value ? this.#state.value[key] : undefined;
 
+    // A missing entry cannot be mutated — mutation only ever updates existing entries
     if (!current) {
       throw new Error(`Cannot mutate cache item with key ${key}: item not found`);
     }
@@ -221,6 +230,7 @@ export class QueryCache<TType, TArgs> {
     this.#state.next(actions.trim(options));
     const afterKeys = new Set(Object.keys(this.#state.value));
 
+    // keys that existed before trimming but not after were the ones removed
     const removedKeys = Array.from(beforeKeys).filter((key) => !afterKeys.has(key));
 
     this._registerEvent('query_cache_trimmed', {
