@@ -33,7 +33,7 @@ export type BookmarkModule = Module<
   [EventModule, ServicesModule, AppModule, ContextModule]
 >;
 
-// TODO - remove when all framework uses log
+// TODO(#5134) - remove when all framework uses log
 const fallbackLogger: ILogger = new ConsoleLogger('BookmarkModule');
 
 /**

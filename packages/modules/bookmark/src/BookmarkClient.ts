@@ -82,6 +82,7 @@ export class BookmarkClient implements IBookmarkClient {
    * Constructs a new `BookmarkClient` instance with the provided `BookmarksApiClient`.
    *
    * @param api - The `BookmarksApiClient` instance to use for making API requests.
+   * @param options - Optional client options, such as the cache expiry time.
    */
   constructor(api: BookmarksApiClient<'json$'>, options?: { expire?: number }) {
     this.#api = api;
@@ -92,7 +93,10 @@ export class BookmarkClient implements IBookmarkClient {
     this.#queryBookmark = new Query({
       client: {
         fn: (args: { bookmarkId: string }) => {
-          return this.#api.get('v2', args).pipe(map(parseBookmarkWithoutPayload));
+          return this.#api
+            .get('v2', args)
+            // strip the payload from the fetched bookmark before caching
+            .pipe(map(parseBookmarkWithoutPayload));
         },
       },
       key: (args) => args.bookmarkId,
@@ -105,7 +109,14 @@ export class BookmarkClient implements IBookmarkClient {
         fn: (filter?: BookmarksFilter) => {
           return this.#api
             .query('v2', { filter })
-            .pipe(map((res) => res.map(parseBookmarkWithoutPayload)));
+            // strip the payload from each fetched bookmark before caching
+            .pipe(
+              map((res) =>
+                res
+                  // strip the payload field from each bookmark
+                  .map(parseBookmarkWithoutPayload),
+              ),
+            );
         },
       },
       key: (args) => JSON.stringify(args ?? ''),
@@ -115,7 +126,10 @@ export class BookmarkClient implements IBookmarkClient {
     this.#queryBookmarkData = new Query({
       client: {
         fn: (args: { bookmarkId: string }) => {
-          return this.#api.getPayload('v1', args).pipe(map((res) => res.payload));
+          return this.#api
+            .getPayload('v1', args)
+            // extract only the payload from the API response
+            .pipe(map((res) => res.payload));
         },
       },
       key: (args) => args.bookmarkId,
@@ -130,17 +144,26 @@ export class BookmarkClient implements IBookmarkClient {
 
   /** @inheritdoc */
   public getAllBookmarks(filter?: BookmarksFilter): ObservableInput<Bookmark[]> {
-    return this.#queryBookmarks.query(filter).pipe(map((res) => res.value as Bookmark[]));
+    return this.#queryBookmarks
+      .query(filter)
+      // unwrap the query result value
+      .pipe(map((res) => res.value as Bookmark[]));
   }
 
   /** @inheritdoc */
   public getBookmarkById(bookmarkId: string): ObservableInput<BookmarkWithoutData> {
-    return this.#queryBookmark.query({ bookmarkId }).pipe(map((res) => res.value));
+    return this.#queryBookmark
+      .query({ bookmarkId })
+      // unwrap the query result value
+      .pipe(map((res) => res.value));
   }
 
   /** @inheritdoc */
   public getBookmarkData<T extends BookmarkData>(bookmarkId: string): ObservableInput<T> {
-    return this.#queryBookmarkData.query({ bookmarkId }).pipe(map((res): T => res.value as T));
+    return this.#queryBookmarkData
+      .query({ bookmarkId })
+      // unwrap the query result value
+      .pipe(map((res): T => res.value as T));
   }
 
   /** @inheritdoc */
@@ -148,45 +171,53 @@ export class BookmarkClient implements IBookmarkClient {
     bookmarkId: string,
     data: T,
   ): ObservableInput<T> {
-    return this.#api.patch('v1', { bookmarkId, updates: { payload: data } }).pipe(
-      map((res) => res.payload as T),
-      tap((updatedData) => {
-        if (updatedData) {
-          this.#queryBookmarkData.mutate(
-            { bookmarkId },
-            { value: updatedData, updated: Date.now() },
-            { allowCreation: true },
-          );
-        }
-      }),
-    );
+    return this.#api
+      .patch('v1', { bookmarkId, updates: { payload: data } })
+      // update the payload cache once the mutation succeeds
+      .pipe(
+        map((res) => res.payload as T),
+        tap((updatedData) => {
+          // only update the cache when data was actually returned
+          if (updatedData) {
+            this.#queryBookmarkData.mutate(
+              { bookmarkId },
+              { value: updatedData, updated: Date.now() },
+              { allowCreation: true },
+            );
+          }
+        }),
+      );
   }
 
   /** @inheritdoc */
   public createBookmark<T extends BookmarkData>(
     newBookmark: BookmarkNew<T>,
   ): ObservableInput<Bookmark<T>> {
-    return this.#api.create('v1', newBookmark).pipe(
-      map((response) => parseBookmark<T>(response)),
-      /** update the bookmark cache */
-      tap((createdBookmark) => {
-        console.log('createdBookmark', createdBookmark);
-        const { payload, ...bookmark } = createdBookmark;
-        this.#queryBookmark.mutate(
-          { bookmarkId: bookmark.id },
-          { value: bookmark, updated: Date.now() },
-          { allowCreation: true },
-        );
-        if (payload) {
-          this.#queryBookmarkData.mutate(
+    return this.#api
+      .create('v1', newBookmark)
+      // parse the response and update caches once the bookmark is created
+      .pipe(
+        map((response) => parseBookmark<T>(response)),
+        /** update the bookmark cache */
+        tap((createdBookmark) => {
+          console.log('createdBookmark', createdBookmark);
+          const { payload, ...bookmark } = createdBookmark;
+          this.#queryBookmark.mutate(
             { bookmarkId: bookmark.id },
-            { value: payload, updated: Date.now() },
+            { value: bookmark, updated: Date.now() },
             { allowCreation: true },
           );
-        }
-        this.#queryBookmarks.invalidate();
-      }),
-    );
+          // only cache the payload if the created bookmark has one
+          if (payload) {
+            this.#queryBookmarkData.mutate(
+              { bookmarkId: bookmark.id },
+              { value: payload, updated: Date.now() },
+              { allowCreation: true },
+            );
+          }
+          this.#queryBookmarks.invalidate();
+        }),
+      );
   }
 
   /** @inheritdoc */
@@ -194,10 +225,13 @@ export class BookmarkClient implements IBookmarkClient {
     bookmarkId: string,
     updates: BookmarkUpdate<T>,
   ): ObservableInput<Bookmark<T>> {
-    const update$ = this.#api.patch('v1', { bookmarkId, updates: updates }).pipe(
-      map((response) => parseBookmark<T>(response)),
-      shareReplay(),
-    );
+    const update$ = this.#api
+      .patch('v1', { bookmarkId, updates: updates })
+      // parse the response and share it across the cache-update subscriptions below
+      .pipe(
+        map((response) => parseBookmark<T>(response)),
+        shareReplay(),
+      );
     return new Observable((subscriber) => {
       // update the query cache for the specific bookmark
       subscriber.add(
@@ -217,6 +251,7 @@ export class BookmarkClient implements IBookmarkClient {
       subscriber.add(
         update$.subscribe((updatedBookmark) => {
           const { payload } = updatedBookmark;
+          // only cache the payload when present, otherwise clear any stale cache entry
           if (payload) {
             this.#queryBookmarkData.mutate(
               {
@@ -255,6 +290,7 @@ export class BookmarkClient implements IBookmarkClient {
   public addBookmarkToFavorites(bookmarkId: string): ObservableInput<boolean> {
     return this.#api
       .addFavourite('v1', { bookmarkId })
+      // invalidate the bookmarks list cache once favorited
       .pipe(tap(() => this.#queryBookmarks.invalidate()));
   }
 
@@ -262,6 +298,7 @@ export class BookmarkClient implements IBookmarkClient {
   public removeBookmarkFromFavorites(bookmarkId: string): ObservableInput<boolean> {
     return this.#api
       .removeFavourite('v1', { bookmarkId })
+      // invalidate the bookmarks list cache once unfavorited
       .pipe(tap(() => this.#queryBookmarks.invalidate()));
   }
 

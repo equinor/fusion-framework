@@ -35,7 +35,7 @@ const defaultInitialState: BookmarkState = {
 /**
  * Creates a reducer for managing the state of bookmarks.
  *
- * @todo add fast-deep-equal to compare bookmarks
+ * @todo TODO(#5135) - add fast-deep-equal to compare bookmarks
  *
  * @param initialState - The initial state of the bookmarks.
  * @returns A reducer function for managing the bookmarks state.
@@ -46,31 +46,37 @@ export const createBookmarkReducer = (initialState?: Partial<BookmarkState>) =>
     (builder) => {
       builder
         .addCase(bookmarkActions.fetchBookmark.success, (state, action) => {
+          // only update the bookmark if it already exists in the store
           if (action.payload.id in state.bookmarks) {
             state.bookmarks[action.payload.id] = action.payload;
           }
         })
         .addCase(bookmarkActions.fetchBookmarkData.success, (state, action) => {
           const { bookmarkId, data } = action.payload;
+          // only apply the fetched data if it belongs to the current bookmark
           if (state.currentBookmark?.id === bookmarkId) {
             state.currentBookmark.payload = data;
           }
         })
         .addCase(bookmarkActions.fetchBookmarks.success, (state, action) => {
           // normalize the bookmarks array into a record
-          state.bookmarks = action.payload.reduce(
-            (acc, bookmark) => {
-              acc[bookmark.id] = bookmark;
-              return acc;
-            },
-            {} as Record<string, BookmarkWithoutData>,
-          );
+          state.bookmarks = action.payload
+            // build a lookup record keyed by bookmark id
+            .reduce(
+              (acc, bookmark) => {
+                acc[bookmark.id] = bookmark;
+                return acc;
+              },
+              {} as Record<string, BookmarkWithoutData>,
+            );
         })
         .addCase(bookmarkActions.setBookmark, (state, action) => {
           const bookmarkId = action.payload.id;
+          // only update the bookmark if it already exists in the store
           if (bookmarkId in state.bookmarks) {
             state.bookmarks[bookmarkId] = action.payload;
           }
+          // keep the current bookmark in sync if it's the one being set
           if (state.currentBookmark?.id === bookmarkId) {
             state.currentBookmark = action.payload;
           }

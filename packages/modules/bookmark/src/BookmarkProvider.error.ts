@@ -10,6 +10,13 @@ import type { BookmarkActions } from './BookmarkProvider.actions';
  * correlate errors back to specific operations.
  */
 export class BookmarkFlowError extends Error {
+  /**
+   * Constructs a new `BookmarkFlowError`.
+   *
+   * @param message - Human-readable error message.
+   * @param action - The request action that triggered the failed flow.
+   * @param options - Optional `ErrorOptions` (e.g. `cause`).
+   */
   constructor(
     message: string,
     /** The request action that triggered the failed flow. */
@@ -28,9 +35,4 @@ export class BookmarkFlowError extends Error {
  * Distinct from {@link BookmarkFlowError}, which is scoped to internal
  * store flow pipelines.
  */
-export class BookmarkProviderError extends Error {
-  constructor(message: string, options?: ErrorOptions) {
-    super(message, options);
-    this.name = 'BookmarkProviderError';
-  }
-}
+export { BookmarkProviderError } from './BookmarkProviderError';

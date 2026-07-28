@@ -45,6 +45,13 @@ export class BookmarkModuleConfigurator extends BaseConfigBuilder<BookmarkModule
   #log?: ILogger;
   defaultExpireTime = 1 * 60 * 1000; // Default expiration time for bookmarks
 
+  /**
+   * Constructs a new `BookmarkModuleConfigurator`.
+   *
+   * @param options - Optional configurator options.
+   * @param options.log - Logger instance inherited from the parent module, if any.
+   * @param options.ref - Reference to sibling module instances available during configuration.
+   */
   constructor(options?: { log?: ILogger; ref?: ModulesInstanceType<[BookmarkModule]> }) {
     super();
     const { log } = options ?? {};
@@ -64,6 +71,7 @@ export class BookmarkModuleConfigurator extends BaseConfigBuilder<BookmarkModule
    */
   public setLogLevel(level: LogLevel) {
     this._set('logLevel', async () => level);
+    // propagate the level to the configurator's own logger, if one is set
     if (this.#log) {
       this.#log.level = level;
     }
@@ -84,6 +92,7 @@ export class BookmarkModuleConfigurator extends BaseConfigBuilder<BookmarkModule
   public setClient(
     client: ConfigBuilderCallback<BookmarkModuleConfig['client']> | BookmarkModuleConfig['client'],
   ) {
+    // a callback receives the module initializer and resolves the client itself
     if (typeof client === 'function') {
       this._set('client', (init) => client(init));
     } else {
@@ -102,6 +111,7 @@ export class BookmarkModuleConfigurator extends BaseConfigBuilder<BookmarkModule
   public setParent(
     parent: ConfigBuilderCallback<BookmarkModuleConfig['parent']> | BookmarkModuleConfig['parent'],
   ) {
+    // a callback receives the module initializer and resolves the parent itself
     if (typeof parent === 'function') {
       this._set('parent', (init) => parent(init));
     } else {
@@ -128,6 +138,7 @@ export class BookmarkModuleConfigurator extends BaseConfigBuilder<BookmarkModule
       | ConfigBuilderCallback<BookmarkModuleConfig['sourceSystem']>
       | BookmarkModuleConfig['sourceSystem'],
   ) {
+    // a callback receives the module initializer and resolves the source system itself
     if (typeof sourceSystem === 'function') {
       this._set('sourceSystem', sourceSystem);
     } else {
@@ -167,6 +178,7 @@ export class BookmarkModuleConfigurator extends BaseConfigBuilder<BookmarkModule
 
   /**
    * Sets a filter for the bookmark module.
+   * @template TKey - The filter key being set.
    * @param key - The key of the filter to set.
    * @param value - The value to set for the filter.
    *
@@ -204,11 +216,13 @@ export class BookmarkModuleConfigurator extends BaseConfigBuilder<BookmarkModule
 
       // Check if parent and parent version compatible
       const parentModules = init.ref as ModulesInstanceType<[BookmarkModule]>;
+      // only use the parent module's bookmark provider if it's actually present
       if (parentModules && 'bookmark' in parentModules) {
         const parent = parentModules.bookmark;
         // `parent` is narrowed to `{ version: unknown }` by the `'version' in parent` check below,
         // so it must be cast through `unknown` to access `BookmarkProvider`-specific members.
         const parentProvider = parent as unknown as BookmarkProvider;
+        // only inherit from a parent whose version satisfies the minimum supported range
         if ('version' in parent && parentProvider.version.satisfies('>=2.0.0')) {
           this._set('parent', async () => parent);
         } else {
@@ -285,6 +299,7 @@ export class BookmarkModuleConfigurator extends BaseConfigBuilder<BookmarkModule
       this.#log?.debug('App provider available, creating application resolver');
       return async () => {
         const app = appProvider.current;
+        // only resolve the application if there is a currently loaded app
         if (app) {
           return {
             appKey: app.appKey,
@@ -297,6 +312,11 @@ export class BookmarkModuleConfigurator extends BaseConfigBuilder<BookmarkModule
     }
   }
 
+  /**
+   * @internal Resolves the {@link AppModuleProvider} for the bookmark module.
+   * @param init - The configuration initialization object.
+   * @returns A promise that resolves to the app module provider, or undefined if unavailable.
+   */
   protected async _resolveAppProvider(
     init: ConfigBuilderCallbackArgs,
   ): Promise<AppModuleProvider | undefined> {
@@ -345,6 +365,7 @@ export class BookmarkModuleConfigurator extends BaseConfigBuilder<BookmarkModule
    * @internal retrieves the service provider from the configuration initialization object.
    * @param init - The configuration initialization object.
    * @returns A promise that resolves to the service provider.
+   * @throws {Error} When no services module or parent service module is available.
    */
   protected async _getServiceProvider(init: ConfigBuilderCallbackArgs): Promise<IApiProvider> {
     // check if services module is available
@@ -357,6 +378,7 @@ export class BookmarkModuleConfigurator extends BaseConfigBuilder<BookmarkModule
 
     // check if parent has services module
     const parentServiceModule = (init.ref as ModulesInstanceType<[ServicesModule]>)?.services;
+    // reuse the parent's service module if one is available
     if (parentServiceModule) {
       return parentServiceModule;
     }
@@ -366,6 +388,13 @@ export class BookmarkModuleConfigurator extends BaseConfigBuilder<BookmarkModule
     throw Error('[BookmarkConfigurator] No service provider configures [ServicesModule] ');
   }
 
+  /**
+   * @internal Validates and normalizes the resolved config before it's returned from `build`.
+   * @param config - The partially-resolved bookmark module config.
+   * @param _init - The configuration initialization object (unused).
+   * @returns The validated {@link BookmarkModuleConfig}.
+   * @throws {ZodError} When the config fails schema validation.
+   */
   protected async _processConfig(
     config: Partial<BookmarkModuleConfig>,
     _init: ConfigBuilderCallbackArgs,

@@ -35,6 +35,7 @@ export const enableBookmark = (
   configurator.addConfig({
     module,
     configure: async (builder) => {
+      // run the caller-provided configuration callback, if any
       if (callback) {
         Promise.resolve(callback(builder));
       }

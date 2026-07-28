@@ -20,6 +20,8 @@ export const bookmarksSelector = (state: BookmarkState): Bookmark[] => {
  * @param id - The bookmark identifier to look up.
  * @returns The matching bookmark, or `undefined` if not found.
  */
+// tightly coupled group of store selectors
+// fusion-lint-disable-next-line single-export-per-file
 export const bookmarkSelector = <T extends BookmarkData>(
   state: BookmarkState,
   id: string,
@@ -34,6 +36,8 @@ export const bookmarkSelector = <T extends BookmarkData>(
  * @param state - The current bookmark store state.
  * @returns The active bookmark, `null` if explicitly cleared, or `undefined` if never set.
  */
+// tightly coupled group of store selectors
+// fusion-lint-disable-next-line single-export-per-file
 export const activeBookmarkSelector = <T extends BookmarkData>(
   state: BookmarkState,
 ): Bookmark<T> | null | undefined => {
@@ -46,6 +50,8 @@ export const activeBookmarkSelector = <T extends BookmarkData>(
  * @param state - The bookmark state.
  * @returns The status from the bookmark state.
  */
+// tightly coupled group of store selectors
+// fusion-lint-disable-next-line single-export-per-file
 export const statusSelector = (state: BookmarkState): BookmarkState['status'] => {
   return state.status;
 };
@@ -56,6 +62,8 @@ export const statusSelector = (state: BookmarkState): BookmarkState['status'] =>
  * @param state - The bookmark state.
  * @returns An array of bookmark flow errors.
  */
+// tightly coupled group of store selectors
+// fusion-lint-disable-next-line single-export-per-file
 export const errorsSelector = (state: BookmarkState): Array<BookmarkFlowError> => {
   return Object.values(state.errors);
 };
