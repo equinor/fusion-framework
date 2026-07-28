@@ -30,6 +30,7 @@ export const index = (file: string, schema?: RouterSchema) => new IndexRoute(fil
 
 export default index;
 
+export { IndexRoute } from './IndexRoute.js';
 export { LayoutRoute } from './LayoutRoute.js';
 export { layout } from './layout.js';
 export { PrefixRoute } from './PrefixRoute.js';
