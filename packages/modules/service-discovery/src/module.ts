@@ -45,8 +45,6 @@ export type ServiceDiscoveryModule = Module<
  * and consistent service resolution but means breaking changes in the
  * parent's client can affect child modules.
  */
-// Deliberately co-located with `moduleName`, `configureServiceDiscovery`, and `enableServiceDiscovery` below
-// fusion-lint-disable-next-line single-export-per-file
 export const module: ServiceDiscoveryModule = {
   name: moduleName,
   configure: () => new ServiceDiscoveryConfigurator(),
@@ -100,8 +98,6 @@ export const module: ServiceDiscoveryModule = {
  * };
  * ```
  */
-// Deliberately co-located with `module` above and `enableServiceDiscovery` below
-// fusion-lint-disable-next-line single-export-per-file
 export const configureServiceDiscovery = <TRef>(
   callback: (config: ServiceDiscoveryConfigurator) => Promise<void>,
 ): IModuleConfigurator<ServiceDiscoveryModule, TRef> => ({
@@ -135,8 +131,6 @@ export const configureServiceDiscovery = <TRef>(
  * });
  * ```
  */
-// Deliberately co-located with `module` and `configureServiceDiscovery` above
-// fusion-lint-disable-next-line single-export-per-file
 export const enableServiceDiscovery = (
   configurator: ModulesConfigurator<[HttpModule]>,
   callback?: (config: ServiceDiscoveryConfigurator) => Promise<void>,

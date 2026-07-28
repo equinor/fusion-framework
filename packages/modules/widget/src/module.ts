@@ -30,8 +30,6 @@ export type WidgetModule = Module<
  *   and returns a {@link WidgetModuleProvider}
  * - `dispose` — cleans up provider subscriptions
  */
-// Deliberately co-located with the `moduleKey`/`WidgetModule` type it describes
-// fusion-lint-disable-next-line single-export-per-file
 export const module: WidgetModule = {
   name: moduleKey,
   configure() {

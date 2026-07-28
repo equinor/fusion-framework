@@ -78,8 +78,6 @@ export const module: AgGridModule = {
  * @param configurator - The Fusion modules configurator to register the AG Grid module on.
  * @param callback - Optional callback to customise the AG Grid configuration.
  */
-// Deliberately co-located with the `module` descriptor it registers
-// fusion-lint-disable-next-line single-export-per-file
 export const enableAgGrid = (
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   configurator: IModulesConfigurator<any, any>,

@@ -105,8 +105,6 @@ export type AuthConfigFn<TRef = unknown> = (
  * });
  * ```
  */
-// Deliberately co-located with the `module` definition above
-// fusion-lint-disable-next-line single-export-per-file
 export const enableMSAL = (
   // @biome-ignore lint/suspicious/noExplicitAny: must be any to support all module types
   configurator: IModulesConfigurator<any, any>,
@@ -130,8 +128,6 @@ export const enableMSAL = (
  * });
  * ```
  */
-// Deliberately co-located with `module` and `enableMSAL` above
-// fusion-lint-disable-next-line single-export-per-file
 export const configureMsal = (configure: AuthConfigFn) => ({
   module,
   configure,

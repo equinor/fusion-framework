@@ -28,8 +28,6 @@ export type FrameworkEventModuleLoadedEvent = FrameworkEvent<
  * When a parent module instance with an event provider is available, events
  * automatically bubble to it.
  */
-// Deliberately co-located with the `moduleKey` constant it references
-// fusion-lint-disable-next-line single-export-per-file
 export const module: EventModule = {
   name: moduleKey,
   configure: (ref?: Partial<ModulesInstanceType<[EventModule]>>) => {

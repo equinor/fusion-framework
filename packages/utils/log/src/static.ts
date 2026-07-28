@@ -71,6 +71,4 @@ const resolveDefaultLogLevel = (): LogLevel => {
  *
  * @see {@link resolveDefaultLogLevel} for resolution rules.
  */
-// Deliberately co-located with the `LogLevel` enum it resolves a default for
-// fusion-lint-disable-next-line single-export-per-file
 export const defaultLogLevel = resolveDefaultLogLevel();

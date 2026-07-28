@@ -28,8 +28,6 @@ export const ModuleName = 'msal' as const;
  * const proxy = provider.createProxyProvider(MsalModuleVersion.V2);
  * ```
  */
-// Deliberately co-located with `ModuleName` above
-// fusion-lint-disable-next-line single-export-per-file
 export enum MsalModuleVersion {
   /** MSAL v2 compatibility version (legacy support) */
   V2 = 'v2',
