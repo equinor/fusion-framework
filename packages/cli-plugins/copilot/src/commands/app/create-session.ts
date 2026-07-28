@@ -45,6 +45,7 @@ export const createSession = async (options: SessionOptions): Promise<CopilotSes
     createAppendFileTool(ctx.outDir, defineTool),
   ];
 
+  // Combine built-in browser and file tools with any caller-supplied tools
   const tools = [
     ...createBrowserTools(defineTool, {
       cwd: ctx.outDir,

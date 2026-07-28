@@ -1,5 +1,10 @@
 import type { Node } from 'web-tree-sitter';
-import type { Diagnostic, Severity, RuleDef, LintContext } from '@equinor/fusion-framework-lint-core';
+import type {
+  Diagnostic,
+  Severity,
+  RuleDef,
+  LintContext,
+} from '@equinor/fusion-framework-lint-core';
 import { createMatcher, resolveMatch } from '@equinor/fusion-framework-lint-core';
 import { tsParser } from '../ts-parser.js';
 import { tsxParser } from '../tsx-parser.js';
@@ -79,23 +84,30 @@ function isFunctionLike(declarator: Node): boolean {
  * @returns The export's name and expected naming `kind`, or `null` if no name could be resolved.
  */
 function resolveExport(node: Node): { name: string; kind: NamingKind } | null {
+  // Find the single value-export child (class/function/enum/const declaration)
   const declaration = node.children.find((c) => VALUE_EXPORT_CHILD_TYPES.has(c.type));
+  // Guard: no recognised declaration child means this isn't a value export we can name
   if (!declaration) return null;
 
+  // Classes are named after their class identifier
   if (declaration.type === 'class_declaration') {
     const name = declaration.childForFieldName('name')?.text;
     return name ? { name, kind: 'class' } : null;
   }
 
+  // Function declarations are classified by naming shape below
   if (declaration.type === 'function_declaration') {
     const name = declaration.childForFieldName('name')?.text;
+    // Guard: an anonymous/unnamed function declaration has nothing to classify
     if (!name) return null;
     // classify by naming shape: hooks first (useXxx), then PascalCase components, else a plain function
     if (HOOK_NAME_RE.test(name)) return { name, kind: 'hook' };
+    // Fall back to PascalCase component naming when it isn't a hook
     if (PASCAL_CASE_RE.test(name)) return { name, kind: 'component' };
     return { name, kind: 'other' };
   }
 
+  // Enums are always classified as 'other'
   if (declaration.type === 'enum_declaration') {
     const name = declaration.childForFieldName('name')?.text;
     return name ? { name, kind: 'other' } : null;
@@ -103,16 +115,20 @@ function resolveExport(node: Node): { name: string; kind: NamingKind } | null {
 
   // lexical_declaration (const/let) or variable_declaration (var): inspect the first declarator
   const declarator = declaration.namedChildren.find((c) => c.type === 'variable_declarator');
+  // Guard: no variable_declarator means there's nothing to name this export after
   if (!declarator) return null;
   const nameNode = declarator.childForFieldName('name');
   // Destructuring exports (e.g. `export const { Consumer, Provider } = ctx`) bind
   // multiple names at once — there's no single export name to file the module after.
   if (!nameNode || nameNode.type !== 'identifier') return null;
   const name = nameNode.text;
+  // Guard: an empty identifier text has nothing to classify
   if (!name) return null;
   // only function-like initializers can be components/hooks; plain values are always "other"
   if (isFunctionLike(declarator)) {
+    // Hooks are checked first since useXxx names would also match PascalCase
     if (HOOK_NAME_RE.test(name)) return { name, kind: 'hook' };
+    // Fall back to PascalCase component naming when it isn't a hook
     if (PASCAL_CASE_RE.test(name)) return { name, kind: 'component' };
   }
   return { name, kind: 'other' };
@@ -167,13 +183,13 @@ function basenameStem(filePath: string): string {
  * @returns The parent directory's basename, or `null` if unavailable.
  */
 function parentDirName(filePath: string): string | null {
+  // Split into path segments, discarding empty entries from leading/trailing slashes
   const segments = filePath.split(/[/\\]/).filter(Boolean);
   // Need at least [..., dir, file.ts] to have a meaningful parent directory
   if (segments.length < 2) return null;
   const dir = segments[segments.length - 2];
   return dir === 'src' ? null : dir;
 }
-
 
 /**
  * Creates a `filename-convention` rule with the given options.
@@ -208,17 +224,20 @@ export const filenameConvention: RuleDef = (options = {}) => {
       // Guard: parse returns null for empty or unparseable source
       if (!tree) return [];
 
+      // Collect top-level exports so we can enforce a single-export naming match
       const valueExports = tree.rootNode.children.filter(isValueExport);
       // Skip barrels/multi-export files (single-export-per-file already flags those)
       // and files with no exported value (type-only modules, pure re-exports).
       if (valueExports.length !== 1) return [];
 
       const resolved = resolveExport(valueExports[0]);
+      // Guard: an unresolvable export shape (e.g. destructuring) has nothing to name-check
       if (!resolved) return [];
       const { name, kind } = resolved;
 
       const stem = basenameStem(filePath);
 
+      // Classes and components must be named after their export exactly
       if (kind === 'class' || kind === 'component') {
         // classes/components must be named after their export exactly, in PascalCase
         if (stem !== name) {
@@ -236,6 +255,7 @@ export const filenameConvention: RuleDef = (options = {}) => {
         return [];
       }
 
+      // Hooks must be named after the hook exactly
       if (kind === 'hook') {
         // hooks must be named after the hook exactly, e.g. useFoo.ts
         if (stem !== name) {
@@ -264,6 +284,7 @@ export const filenameConvention: RuleDef = (options = {}) => {
       // Accept either the bare match or the directory-prefixed match.
       const dirKebab = parentDirName(filePath);
       const namespacedKebab = dirKebab ? `${dirKebab}-${baseSegment}` : null;
+      // Flag a mismatch unless either the bare or directory-namespaced kebab form matches
       if (baseSegment !== expectedKebab && namespacedKebab !== expectedKebab) {
         return [
           {

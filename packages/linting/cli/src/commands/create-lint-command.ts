@@ -39,8 +39,8 @@ const SUPPORTED_EXTENSIONS = ['ts', 'tsx', 'mts', 'cts'];
  * (plain glob patterns, single files, or paths that don't exist) pass through unchanged.
  */
 async function expandPatterns(patterns: string[]): Promise<string[]> {
+  // Resolve each pattern to itself, or to a recursive glob if it's a directory
   return Promise.all(
-    // Resolve each pattern to itself, or to a recursive glob if it's a directory
     patterns.map(async (pattern) => {
       try {
         const stats = await stat(pattern);

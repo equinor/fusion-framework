@@ -7,4 +7,3 @@
 export const isMarkdownFile = (filePath: string): boolean => {
   return filePath.endsWith('.md') || filePath.endsWith('.mdx');
 };
-

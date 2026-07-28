@@ -166,6 +166,7 @@ export const resolveGithubAnnotations = (): GithubAnnotations => {
   if (process.env.GITHUB_EVENT_PATH) {
     try {
       const rawPayload = readFileSync(process.env.GITHUB_EVENT_PATH, 'utf8');
+      // Layer the parsed event payload fields onto the base annotations
       Object.assign(annotations, JSON.parse(rawPayload));
     } catch {
       // A malformed or unreadable event payload should not crash annotation resolution —

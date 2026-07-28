@@ -2,10 +2,10 @@ import { normalizePath, type Plugin } from 'vite';
 
 import { fileURLToPath } from 'node:url';
 
-import defaultTemplate from './html/index.html.js';
+import defaultTemplate from './html/html.js';
 
 import { objectToEnv } from './util/object-to-env.js';
-import { loadEnvironment } from './util/load-env.js';
+import { loadEnvironment } from './util/load-environment.js';
 
 import type { TemplateEnv, TemplateEnvFn } from './types.js';
 
@@ -144,6 +144,7 @@ export const plugin = <TEnv extends TemplateEnv = TemplateEnv>(
 
       log?.debug('plugin loaded environment\n', pluginEnv);
 
+      // Loaded env values override plugin-configured defaults
       const env = { ...pluginEnv, ...loadedEnv };
 
       log?.debug('plugin environment\n', env);

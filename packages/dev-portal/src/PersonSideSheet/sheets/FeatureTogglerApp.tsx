@@ -2,7 +2,7 @@ import { useCurrentAppFeatures } from '@equinor/fusion-framework-react/feature-f
 
 import { Typography, Switch } from '@equinor/eds-core-react';
 
-import { Styled } from './Styled';
+import { Styled } from './styled';
 
 /**
  * Feature toggle list for application-level feature flags.

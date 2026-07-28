@@ -9,7 +9,7 @@
 export type { RuntimeEnv } from './types.js';
 
 export { resolvePackage, type ResolvedPackage } from './utils/resolve-package.js';
-export { resolveEntryPoint } from './utils/resolve-source-entry-point-impl.js';
+export { resolveEntryPoint } from './utils/resolve-entry-point.js';
 
 export {
   defineDevServerConfig,
@@ -27,5 +27,5 @@ export {
 
 // Legacy imports - these will be removed in the next major version
 // TODO(#5070): remove these imports, introduced in v11
-export { defineAppConfig } from './define-app-config-legacy.js';
-export { defineAppManifest } from './define-app-manifest-legacy.js';
+export { defineAppConfig } from './define-app-config.js';
+export { defineAppManifest } from './define-app-manifest.js';

@@ -1,8 +1,8 @@
 import { access } from 'node:fs/promises';
 import { resolve } from 'node:path';
 
-import { processAccessError } from './error.js';
-import { FileNotFoundError } from './errors/file-not-found-error.js';
+import { processAccessError } from './process-access-error.js';
+import { FileNotFoundError } from './errors/FileNotFoundError.js';
 
 const defaultExtensions = ['.ts', '.mjs', '.js', '.json'];
 

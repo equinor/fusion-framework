@@ -9,7 +9,7 @@ import type {
 } from './types.js';
 import { createRouteMatcher } from './create-route-matcher.js';
 import { validateRoute } from './validate-route.js';
-import { InvalidRouteError } from './invalid-route-error.js';
+import { InvalidRouteError } from './InvalidRouteError.js';
 import { createResponseInterceptor } from './create-response-interceptor.js';
 
 /**

@@ -5,7 +5,7 @@ import type { RuntimeEnv } from '@equinor/fusion-framework-cli/lib';
 import { assert } from '../utils/assert.js';
 import { assertObject } from '../utils/assert-object.js';
 import { resolveAnnotations } from '../utils/resolve-annotations.js';
-import { resolveEntryPoint } from '../utils/resolve-source-entry-point-impl.js';
+import { resolveEntryPoint } from '../utils/resolve-entry-point.js';
 
 import { resolveRepoFromPackage } from '../utils/resolve-repo-from-package.js';
 import { resolveGitRemoteUrl } from '../utils/resolve-git-remote-url.js';

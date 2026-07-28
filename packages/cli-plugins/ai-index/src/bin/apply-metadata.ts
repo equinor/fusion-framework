@@ -66,6 +66,7 @@ export function applyMetadata(
                   })
                   .catch(() => ({}));
               }
+              // Merge git and package metadata into the document's existing attributes
               return {
                 ...document,
                 metadata: {

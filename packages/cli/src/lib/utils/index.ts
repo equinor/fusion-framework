@@ -7,7 +7,7 @@
  * @packageDocumentation
  */
 export { assert } from './assert.js';
-export { resolveEntryPoint } from './resolve-source-entry-point-impl.js';
+export { resolveEntryPoint } from './resolve-entry-point.js';
 export { resolvePackage, type ResolvedPackage } from './resolve-package.js';
 export { fileExistsSync } from './file-exists-sync.js';
 export { fileExists } from './file-exists.js';

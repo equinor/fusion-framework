@@ -1,7 +1,7 @@
 import type { Plugin } from 'vite';
 import type { ServerResponse } from 'node:http';
 
-import { type ProcessRouteOptions, processRoutes } from './process-route.js';
+import { type ProcessRouteOptions, processRoutes } from './process-routes.js';
 
 import type {
   ApiProxyHandler,
@@ -10,7 +10,7 @@ import type {
   NextFunction,
   PluginLogger,
 } from './types.js';
-import { DEFAULT_VALUES } from './constants.js';
+import { DEFAULT_VALUES } from './default-values.js';
 
 const pluginName = 'fusion:dev_server::api-proxy';
 
@@ -115,6 +115,7 @@ export function plugin(args: PluginArguments, options?: PluginOptions): Plugin {
       if (proxyHandler) {
         config.server ??= {};
         const proxyOptions = proxyHandler.createProxyOptions(config, env);
+        // Preserve any existing proxy entries while adding/overriding this plugin's route
         config.server.proxy = Object.assign({}, config.server.proxy, {
           [proxyHandler.route]: proxyOptions,
         });

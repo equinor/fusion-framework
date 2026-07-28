@@ -14,4 +14,3 @@ export const TemplateResourceFileSchema = z.object({
  * Type definitions derived from schemas
  */
 export type TemplateResourceFile = z.infer<typeof TemplateResourceFileSchema>;
-

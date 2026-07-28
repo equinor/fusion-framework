@@ -120,6 +120,7 @@ function convertMeta(meta: ContextItem['meta']): Pick<ContextResultItem, 'metaTy
 const mapper = (src: ContextItem<{ taskState?: string; state?: string }>[]): ContextResult => {
   // Map each raw context item to its ContextResultItem shape, applying per-type overrides
   return src.map((i) => {
+    // Layer the base fields with graphic and meta overrides derived from the item
     const baseResult = {
       id: i.id,
       title: i.title,
@@ -167,6 +168,7 @@ const mapper = (src: ContextItem<{ taskState?: string; state?: string }>[]): Con
  * @returns A complete `ContextResultItem` with defaults for `id` and `title`.
  */
 const singleItem = (props: Partial<ContextResultItem>): ContextResultItem => {
+  // Layer the caller-supplied props on top of the placeholder defaults
   return Object.assign({ id: 'no-such-item', title: 'Change me' }, props);
 };
 

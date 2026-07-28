@@ -29,7 +29,24 @@
         "route-factory.ts",
         "static.ts",
         "types.ts",
-        "enable-signalr.ts"
+        "enable-signalr.ts",
+        "main.ts",
+        "main.tsx",
+        "plugin.ts",
+        "build.ts",
+        "check.ts",
+        "config.ts",
+        "dev.ts",
+        "manifest.ts",
+        "pack.ts",
+        "publish.ts",
+        "serve.ts",
+        "tag.ts",
+        "upload.ts",
+        "login.ts",
+        "logout.ts",
+        "token.ts",
+        "schema.ts"
       ]
     }
   },

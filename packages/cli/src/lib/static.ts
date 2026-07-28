@@ -7,7 +7,8 @@
  * - **Fonts**: `woff2`, `woff`, `eot`, `ttf`, `otf`
  * - **Documents**: `pdf`, `md`, `txt`
  */
-export const ASSET_EXTENSIONS = [
+// Combine each category's extensions into a single flat lookup list
+const assetExtensions = [
   // Images
   ...['png', 'jpg', 'jpeg', 'gif', 'svg', 'ico', 'webp'],
   // Videos and audio
@@ -17,3 +18,5 @@ export const ASSET_EXTENSIONS = [
   // Documents
   ...['pdf', 'md', 'txt'],
 ] as const;
+
+export const ASSET_EXTENSIONS = assetExtensions;

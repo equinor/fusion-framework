@@ -10,6 +10,7 @@ import { useMemo } from 'react';
  * @returns The current query result, whether a query is in progress, and a function to trigger a new query
  */
 export const useQueryContext = (provider: IContextProvider, options?: { debounce?: number }) => {
+  // Layer caller-supplied options on top of the default debounce delay
   const args = Object.assign({}, { debounce: 500 }, options);
   const searchFn = useMemo(() => provider.queryContext.bind(provider), [provider]);
   const { idle, next, value$ } = useDebounce(searchFn, args);

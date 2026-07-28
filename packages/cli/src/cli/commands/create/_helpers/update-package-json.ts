@@ -69,6 +69,7 @@ export const updatePackageJson = async (
     // Apply property updates if provided
     if (options?.updates) {
       logger?.debug(`Applying updates: ${Object.keys(options.updates).join(', ')}`);
+      // Layer the requested updates on top of the current package.json contents
       updatedPackageJson = { ...updatedPackageJson, ...options.updates } as PackageJson;
     }
 

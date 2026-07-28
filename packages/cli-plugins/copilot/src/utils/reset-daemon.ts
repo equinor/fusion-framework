@@ -73,4 +73,3 @@ export function resetDaemon(): void {
     console.log('🔄 Cleared Session Storage (MSAL interaction flags)');
   }
 }
-

@@ -24,7 +24,7 @@ export {
 } from './import-config.js';
 export { resolveConfigFile, type ResolveConfigFileOptions } from './resolve-config-file.js';
 export { importMetaResolvePlugin as createImportMetaResolvePlugin } from './import-meta-resolve-plugin.js';
-export { rawMarkdownPlugin, type RawMarkdownPluginOptions } from './markdown-plugin.js';
+export { rawMarkdownPlugin, type RawMarkdownPluginOptions } from './raw-markdown-plugin.js';
 
-export { FileNotFoundError } from './errors/file-not-found-error.js';
-export { FileNotAccessibleError } from './errors/file-not-accessible-error.js';
+export { FileNotFoundError } from './errors/FileNotFoundError.js';
+export { FileNotAccessibleError } from './errors/FileNotAccessibleError.js';

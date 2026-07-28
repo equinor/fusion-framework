@@ -1,5 +1,5 @@
 import type { ApiRoute } from './types.js';
-import { InvalidRouteError } from './invalid-route-error.js';
+import { InvalidRouteError } from './InvalidRouteError.js';
 
 /**
  * Validates that an {@link ApiRoute} has the minimum required structure:

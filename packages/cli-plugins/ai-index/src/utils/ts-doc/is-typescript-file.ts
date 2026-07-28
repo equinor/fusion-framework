@@ -7,4 +7,3 @@
 export const isTypescriptFile = (filePath: string): boolean => {
   return filePath.endsWith('.ts') || filePath.endsWith('.tsx');
 };
-

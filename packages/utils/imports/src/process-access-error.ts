@@ -1,5 +1,5 @@
-import { FileNotAccessibleError } from './errors/file-not-accessible-error.js';
-import { FileNotFoundError } from './errors/file-not-found-error.js';
+import { FileNotAccessibleError } from './errors/FileNotAccessibleError.js';
+import { FileNotFoundError } from './errors/FileNotFoundError.js';
 
 /**
  * Converts a raw `fs` access error into a typed {@link FileNotFoundError},

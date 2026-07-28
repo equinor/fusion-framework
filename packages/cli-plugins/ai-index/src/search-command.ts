@@ -69,6 +69,7 @@ const normalizeMetadata = (metadata: Record<string, unknown>): Record<string, un
         }
       }
     }
+    // Flatten the normalized attribute map back onto the parent object
     Object.assign(normalized, attributesObj);
     delete normalized.attributes;
   }

@@ -19,9 +19,9 @@ PersonAvatarElement; // Register the custom element - prevent tree-shaking
 
 import { PersonSideSheet } from './PersonSideSheet';
 
-import { BookmarkSideSheet } from './BookMarkSideSheet';
+import { BookmarkSideSheet } from './BookmarkSideSheet';
 
-import { HeaderActions } from './Header.Actions';
+import { HeaderActions } from './HeaderActions';
 
 const Styled = {
   Title: styled.div`

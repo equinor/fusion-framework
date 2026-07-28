@@ -162,6 +162,7 @@ const _command = createCommand('create')
       },
     ];
 
+    // Combine the base fields with any additional caller-supplied fields
     const fullSchema = {
       name: indexName,
       fields: [...baseFields, ...schemaFields],

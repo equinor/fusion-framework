@@ -1,5 +1,10 @@
 import type { Node } from 'web-tree-sitter';
-import type { Diagnostic, Severity, RuleDef, LintContext } from '@equinor/fusion-framework-lint-core';
+import type {
+  Diagnostic,
+  Severity,
+  RuleDef,
+  LintContext,
+} from '@equinor/fusion-framework-lint-core';
 import { resolveMatch } from '@equinor/fusion-framework-lint-core';
 import { tsParser } from '../ts-parser.js';
 
@@ -74,6 +79,7 @@ function getStatementNode(node: Node): Node {
     }
     // Stop at block boundaries — don't climb past the containing scope
     if (current.parent.type === 'statement_block' || current.parent.type === 'program') {
+      // No further statement-level anchor exists within this scope
       break;
     }
     current = current.parent;

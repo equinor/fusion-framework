@@ -6,7 +6,7 @@ import type { Plugin as EsBuildPlugin, Loader } from 'esbuild';
 
 import { vol } from 'memfs';
 import { importMetaResolvePlugin } from '../src/import-meta-resolve-plugin';
-import { rawMarkdownPlugin } from '../src/markdown-plugin';
+import { rawMarkdownPlugin } from '../src/raw-markdown-plugin';
 
 export const memfsPlugin: EsBuildPlugin = {
   name: 'memfs',

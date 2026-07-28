@@ -17,10 +17,12 @@ describe('mapProp', () => {
     testScheduler.run((helpers) => {
       const { cold, expectObservable } = helpers;
       const subject = cold(marble, values);
+      // Verify mapProp extracts a single-level property
       expectObservable(subject.pipe(mapProp('foo'))).toBe(marble, {
         a: values.a.foo,
         b: values.b.foo,
       });
+      // Verify mapProp extracts a nested property via dot-path notation
       expectObservable(subject.pipe(mapProp('foo.bar'))).toBe(marble, {
         a: values.a.foo.bar,
         b: values.b.foo.bar,

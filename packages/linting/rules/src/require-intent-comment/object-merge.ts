@@ -1,5 +1,10 @@
 import type { Node } from 'web-tree-sitter';
-import type { Diagnostic, Severity, RuleDef, LintContext } from '@equinor/fusion-framework-lint-core';
+import type {
+  Diagnostic,
+  Severity,
+  RuleDef,
+  LintContext,
+} from '@equinor/fusion-framework-lint-core';
 import { resolveMatch } from '@equinor/fusion-framework-lint-core';
 import { tsParser } from '../ts-parser.js';
 
@@ -25,6 +30,7 @@ function isObjectAssignMerge(node: Node): boolean {
   if (callee?.type !== 'member_expression') return false;
   const objectNode = callee.childForFieldName('object');
   const propertyNode = callee.childForFieldName('property');
+  // Only flag calls that are specifically Object.assign, not other member calls
   if (objectNode?.text !== 'Object' || propertyNode?.text !== 'assign') return false;
   const argsNode = node.childForFieldName('arguments');
   // target + 1 or more sources means at least 2 arguments total
@@ -45,6 +51,7 @@ function isObjectAssignMerge(node: Node): boolean {
 function isMergeSpreadLiteral(node: Node): boolean {
   // Only object and array literals can contain spread elements
   if (node.type !== 'object' && node.type !== 'array') return false;
+  // Count spread elements to distinguish a multi-source merge from a single update spread
   const spreadCount = node.namedChildren.filter((c) => c?.type === 'spread_element').length;
   return spreadCount >= 2;
 }
@@ -79,6 +86,7 @@ function getStatementNode(node: Node): Node {
     }
     // Stop at block boundaries — don't climb past the containing scope
     if (current.parent.type === 'statement_block' || current.parent.type === 'program') {
+      // No further statement-level anchor exists within this scope
       break;
     }
     current = current.parent;
@@ -100,6 +108,7 @@ function walkNode(node: Node, filePath: string, severity: Severity, out: Diagnos
   // Only process the two merge shapes this rule cares about
   const isAssignMerge = isObjectAssignMerge(node);
   const isSpreadMerge = isMergeSpreadLiteral(node);
+  // Only report when the node matches one of the two merge shapes this rule cares about
   if (isAssignMerge || isSpreadMerge) {
     const checkNode = getStatementNode(node);
     // A comment immediately before the anchoring statement satisfies the intent requirement

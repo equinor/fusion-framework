@@ -30,11 +30,11 @@
  * @packageDocumentation
  */
 
-export { default, plugin, type PluginOptions, type PluginArguments } from './api-service-plugin.js';
+export { default, plugin, type PluginOptions, type PluginArguments } from './plugin.js';
 export { createRouteMatcher, type Matcher, type MatchResult } from './create-route-matcher.js';
 export { createProxyHandler, type ApiDataProcessor } from './create-proxy-handler.js';
 export { createResponseInterceptor } from './create-response-interceptor.js';
 
-export { DEFAULT_VALUES } from './constants.js';
+export { DEFAULT_VALUES } from './default-values.js';
 
 export * from './types.js';

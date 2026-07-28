@@ -3,7 +3,7 @@ import type { AppManifest } from '@equinor/fusion-framework-module-app';
 
 import { assert } from '../utils/assert.js';
 import { assertObject } from '../utils/assert-object.js';
-import { resolveEntryPoint } from '../utils/resolve-source-entry-point-impl.js';
+import { resolveEntryPoint } from '../utils/resolve-entry-point.js';
 import { resolveRepoFromPackage } from '../utils/resolve-repo-from-package.js';
 import { resolveGitRemoteUrl } from '../utils/resolve-git-remote-url.js';
 import { resolveGitCommitSha } from '../utils/resolve-git-commit-sha.js';

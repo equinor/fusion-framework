@@ -2,11 +2,11 @@ import { build, type BuildOptions } from 'esbuild';
 import { access } from 'node:fs/promises';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
-import { processAccessError } from './error.js';
+import { processAccessError } from './process-access-error.js';
 
 import { readPackageUp } from 'read-package-up';
 import { importMetaResolvePlugin } from './import-meta-resolve-plugin.js';
-import { rawMarkdownPlugin } from './markdown-plugin.js';
+import { rawMarkdownPlugin } from './raw-markdown-plugin.js';
 
 /**
  * Shape of an ESM module returned by {@link importScript}.
@@ -86,6 +86,7 @@ export const importScript = async <M extends EsmModule>(
     );
 
   try {
+    // Layer any caller-supplied esbuild options on top of the defaults
     const buildOptions = Object.assign(
       {
         // default options

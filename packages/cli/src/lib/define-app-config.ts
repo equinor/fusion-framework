@@ -23,4 +23,3 @@ export const defineAppConfig = (...args: Parameters<typeof _defineConfig>) => {
   // Forward the call to the new implementation
   return _defineConfig(...args);
 };
-

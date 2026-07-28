@@ -2,7 +2,7 @@ import { useFrameworkFeatures } from '@equinor/fusion-framework-react/feature-fl
 
 import { Typography, Switch } from '@equinor/eds-core-react';
 
-import { Styled } from './Styled';
+import { Styled } from './styled';
 
 /**
  * Feature toggle list for portal-level feature flags.

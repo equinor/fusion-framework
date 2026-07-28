@@ -217,6 +217,7 @@ export class ProjectTemplateRepository {
 
       // Create ProjectTemplate instances, combining global and template-specific resources
       const templateItems = manifest.templates.map((template) => {
+        // Combine the manifest-wide resources with this template's own resources
         const resources = [...(manifest.resources ?? []), ...template.resources];
         return new ProjectTemplate({ ...template, resources }, this.#baseDir, {
           logger: this.#log,
