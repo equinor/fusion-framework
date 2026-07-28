@@ -3,7 +3,7 @@ import { noEmptyCatch } from '../no-empty-catch/index.js';
 import type { Diagnostic } from '@equinor/fusion-framework-lint-core';
 
 function lint(source: string): Diagnostic[] {
-  return noEmptyCatch.check(source, 'fixture.ts');
+  return noEmptyCatch().check(source, { filePath: 'fixture.ts' });
 }
 
 // ── Passing cases ─────────────────────────────────────────────────────────────

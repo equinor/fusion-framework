@@ -1,3 +1,14 @@
 {
+  "rules": {
+    "single-export-per-file": {
+      "excludePattern": [
+        "index.ts",
+        "index.tsx",
+        "module.ts",
+        "static.ts",
+        "*.schemas.ts"
+      ]
+    }
+  },
   "ignorePatterns": ["**/__tests__/**"]
 }

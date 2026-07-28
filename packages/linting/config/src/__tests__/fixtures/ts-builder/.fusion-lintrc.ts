@@ -14,7 +14,7 @@ export default function configure(builder: ConfigBuilder): void {
   builder.addRule({
     id: 'custom-fixture-rule',
     severity: 'warn',
-    check: (_source: string, _filePath: string) => [],
+    check: (_source: string, _ctx: { filePath: string }) => [],
   });
   builder.ignorePatterns = ['**/__tests__/**'];
 }

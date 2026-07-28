@@ -1,5 +1,6 @@
 import type { Node } from 'web-tree-sitter';
-import type { Rule, Diagnostic, Severity } from '@equinor/fusion-framework-lint-core';
+import type { Diagnostic, Severity, RuleDef, RuleOptions, LintContext } from '@equinor/fusion-framework-lint-core';
+import { resolveMatch } from '@equinor/fusion-framework-lint-core';
 import { tsParser } from '../_parser.js';
 
 const RULE_ID = 'require-tsdoc';
@@ -342,7 +343,7 @@ function walkNode(
 /**
  * Options for the `require-tsdoc` rule.
  */
-export interface RequireTsDocOptions {
+export interface RequireTsDocOptions extends RuleOptions {
   /**
    * When `true` (default), only exported functions and methods in exported
    * classes require TSDoc.  Set to `false` to enforce TSDoc on all named
@@ -378,13 +379,16 @@ export interface RequireTsDocOptions {
  * export function getUserContext(contextId: string): UserContext | null { ... }
  * ```
  */
-export function createRequireTsDoc(options: RequireTsDocOptions = {}): Rule {
+export const requireTsDoc: RuleDef<RequireTsDocOptions> = (options = {}) => {
   const { exportedOnly = true, classScope = 'all' } = options;
   return {
     id: RULE_ID,
     defaultSeverity: DEFAULT_SEVERITY,
+    /** @inheritdoc Rule.match */
+    match: resolveMatch(options.match),
     /** @inheritdoc Rule.check */
-    check(source: string, filePath: string): Diagnostic[] {
+    check(source: string, ctx: LintContext): Diagnostic[] {
+      const { filePath } = ctx;
       const tree = tsParser.parse(source);
       // Guard: tsParser.parse returns null for empty or unparseable source
       if (!tree) return [];
@@ -393,10 +397,4 @@ export function createRequireTsDoc(options: RequireTsDocOptions = {}): Rule {
       return out;
     },
   };
-}
-
-/**
- * Pre-built `require-tsdoc` rule with default options (`exportedOnly: true`).
- * Suitable for direct use in a rule array without calling `createRequireTsDoc()`.
- */
-export const requireTsDoc: Rule = createRequireTsDoc();
+};

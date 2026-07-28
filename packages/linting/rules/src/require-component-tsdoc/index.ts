@@ -1,5 +1,6 @@
 import type { Node } from 'web-tree-sitter';
-import type { Rule, Diagnostic, Severity } from '@equinor/fusion-framework-lint-core';
+import type { Diagnostic, Severity, RuleDef, LintContext } from '@equinor/fusion-framework-lint-core';
+import { createMatcher, resolveMatch } from '@equinor/fusion-framework-lint-core';
 import { tsxParser } from '../_tsx-parser.js';
 
 const RULE_ID = 'require-component-tsdoc';
@@ -147,14 +148,18 @@ function walkNode(node: Node, filePath: string, severity: Severity, out: Diagnos
  * );
  * ```
  */
-export const requireComponentTsDoc: Rule = {
+export const requireComponentTsDoc: RuleDef = (options = {}) => ({
   id: RULE_ID,
   defaultSeverity: DEFAULT_SEVERITY,
+  /**
+   * Only applies to TSX files by default — plain .ts files have no JSX components.
+   * Overridable via `options.match`.
+   * @inheritdoc Rule.match
+   */
+  match: resolveMatch(options.match) ?? createMatcher(['*.tsx']),
   /** @inheritdoc Rule.check */
-  check(source: string, filePath: string, severity?: Severity): Diagnostic[] {
-    // This rule only applies to TSX files — plain .ts files have no JSX components
-    if (!filePath.endsWith('.tsx')) return [];
-
+  check(source: string, ctx: LintContext): Diagnostic[] {
+    const { filePath, severity } = ctx;
     const out: Diagnostic[] = [];
     const tree = tsxParser.parse(source);
     // A failed parse leaves nothing to walk
@@ -162,4 +167,4 @@ export const requireComponentTsDoc: Rule = {
     walkNode(tree.rootNode, filePath, severity ?? DEFAULT_SEVERITY, out);
     return out;
   },
-};
+});

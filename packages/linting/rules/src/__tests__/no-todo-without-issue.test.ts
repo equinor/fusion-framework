@@ -3,7 +3,7 @@ import { noTodoWithoutIssue } from '../no-todo-without-issue/index.js';
 import type { Diagnostic } from '@equinor/fusion-framework-lint-core';
 
 function lint(source: string): Diagnostic[] {
-  return noTodoWithoutIssue.check(source, 'fixture.ts');
+  return noTodoWithoutIssue().check(source, { filePath: 'fixture.ts' });
 }
 
 // ── Passing cases ─────────────────────────────────────────────────────────────

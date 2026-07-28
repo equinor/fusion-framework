@@ -2,10 +2,15 @@ import { access, readFile } from 'node:fs/promises';
 import { dirname, join, resolve as resolvePath } from 'node:path';
 import { parse as parseYaml } from 'yaml';
 import { importConfig, resolveConfigFile, FileNotFoundError } from '@equinor/fusion-imports';
-import type { LintConfig, Rule } from '@equinor/fusion-framework-lint-core';
+import type { LintConfig, Rule, MatcherFn } from '@equinor/fusion-framework-lint-core';
+import { createMatcher } from '@equinor/fusion-framework-lint-core';
 import { ConfigBuilder } from './config-builder.js';
 import type { LoadedLintConfig } from './config-builder.js';
-import type { FusionLintFileConfig, FusionLintConfigFactory } from './define-config.js';
+import type {
+  FusionLintFileConfig,
+  FusionLintConfigFactory,
+  RuleConfigEntry,
+} from './define-config.js';
 
 /** Config file basenames searched in order. */
 const CONFIG_BASENAMES = ['fusion-lint.config', '.fusion-lintrc'] as const;
@@ -88,11 +93,43 @@ async function resolveConfigFileUpwards(startDir: string, findUp: boolean): Prom
  * Returns `true` when `value` is the rich `{ rules?, customRules? }` object
  * format rather than a flat `LintConfig` map.
  */
-function isRichConfig(
-  value: FusionLintFileConfig,
-): value is { rules?: LintConfig; customRules?: Rule[]; ignorePatterns?: string[] } {
+function isRichConfig(value: FusionLintFileConfig): value is {
+  rules?: Record<string, RuleConfigEntry>;
+  customRules?: Rule[];
+  ignorePatterns?: string[];
+} {
   // Guard: flat configs have only string values; rich configs have object/array sub-keys
   return 'rules' in value || 'customRules' in value || 'ignorePatterns' in value;
+}
+
+/**
+ * Splits a rich config's `rules` map into a plain {@link LintConfig} severity
+ * map plus per-rule {@link MatcherFn} overrides built from any
+ * `includePattern` / `excludePattern` entries.
+ *
+ * @param rules - Per-rule entries, each either a bare severity or an object
+ *   combining `severity` with `includePattern`/`excludePattern`.
+ * @returns The extracted severity map and rule-matcher map.
+ */
+function splitRuleEntries(rules: Record<string, RuleConfigEntry>): {
+  config: LintConfig;
+  ruleMatchers: Record<string, MatcherFn>;
+} {
+  const config: LintConfig = {};
+  const ruleMatchers: Record<string, MatcherFn> = {};
+  for (const [id, entry] of Object.entries(rules)) {
+    // Bare severity shorthand, e.g. { "require-tsdoc": "error" }
+    if (typeof entry === 'string') {
+      config[id] = entry;
+      continue;
+    }
+    if (entry.severity) config[id] = entry.severity;
+    // Only build a matcher when file-scoping was actually requested
+    if (entry.includePattern || entry.excludePattern) {
+      ruleMatchers[id] = createMatcher(entry.includePattern ?? [], entry.excludePattern ?? []);
+    }
+  }
+  return { config, ruleMatchers };
 }
 
 /**
@@ -101,14 +138,16 @@ function isRichConfig(
 function normalise(raw: FusionLintFileConfig): LoadedLintConfig {
   // Rich format: extract rules, customRules, and ignorePatterns separately
   if (isRichConfig(raw)) {
+    const { config, ruleMatchers } = splitRuleEntries(raw.rules ?? {});
     return {
-      config: raw.rules ?? {},
+      config,
       customRules: raw.customRules ?? [],
       ignorePatterns: raw.ignorePatterns ?? [],
+      ruleMatchers,
     };
   }
   // Flat format: the entire object is the severity map
-  return { config: raw as LintConfig, customRules: [], ignorePatterns: [] };
+  return { config: raw as LintConfig, customRules: [], ignorePatterns: [], ruleMatchers: {} };
 }
 
 /**
@@ -123,7 +162,10 @@ function normalise(raw: FusionLintFileConfig): LoadedLintConfig {
  * `@equinor/fusion-imports`) and must use a **default export**.  They may use
  * either the flat or rich {@link FusionLintFileConfig} format.
  *
- * JSON and YAML configs support the flat severity map only.
+ * JSON and YAML configs support both the flat severity map and the rich
+ * `{ rules, customRules, ignorePatterns }` object format — except
+ * `customRules`, which requires actual `Rule` instances and so is only
+ * usable from a TypeScript/JavaScript config.
  *
  * @param options - Optional loader settings.
  * @returns The {@link LoadedLintConfig}, or `null` when no config file is found.

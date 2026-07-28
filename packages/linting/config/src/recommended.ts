@@ -20,20 +20,22 @@ export { recommendedConfig } from './recommended-config.js';
 
 /**
  * Ordered list of rules included in the `recommended` preset.
+ * Each rule module exports a factory (`RuleDef`) \u2014 called here with no options
+ * to build the default-configured `Rule` instance.
  */
 export const recommendedRules: Rule[] = [
-  requireIntentCommentFlow,
-  requireIntentCommentIterators,
-  requireIntentCommentRxjs,
-  requireIntentCommentBreakContinue,
-  requireIntentCommentTypeAssertion,
-  requireTsDoc,
-  requireNodeProtocol,
-  noClassComponents,
-  noTodoWithoutIssue,
-  noEmptyCatch,
-  noSeparateExport,
-  singleExportPerFile,
-  requireComponentTsDoc,
-  requireHookTsDoc,
+  requireIntentCommentFlow(),
+  requireIntentCommentIterators(),
+  requireIntentCommentRxjs(),
+  requireIntentCommentBreakContinue(),
+  requireIntentCommentTypeAssertion(),
+  requireTsDoc(),
+  requireNodeProtocol(),
+  noClassComponents(),
+  noTodoWithoutIssue(),
+  noEmptyCatch(),
+  noSeparateExport(),
+  singleExportPerFile(),
+  requireComponentTsDoc(),
+  requireHookTsDoc(),
 ];

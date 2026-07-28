@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { LintEngine } from '../engine.js';
+import { createMatcher } from '../matcher.js';
 import type { Rule, Diagnostic } from '../types.js';
 
 // ── Test doubles ─────────────────────────────────────────────────────────────
@@ -86,5 +87,41 @@ describe('LintEngine', () => {
     const rule = makeRule('quiet-rule', []);
     const engine = new LintEngine([rule]);
     expect(engine.lint('const x = 1;', 'test.ts')).toHaveLength(0);
+  });
+
+  it('skips check() when rule.match returns false', () => {
+    const rule: Rule = {
+      ...makeRule('test-rule', [makeDiagnostic()]),
+      match: () => false,
+    };
+    const engine = new LintEngine([rule]);
+    expect(engine.lint('', 'test.ts')).toHaveLength(0);
+  });
+
+  it('runs check() when rule.match returns true', () => {
+    const rule: Rule = {
+      ...makeRule('test-rule', [makeDiagnostic()]),
+      match: () => true,
+    };
+    const engine = new LintEngine([rule]);
+    expect(engine.lint('', 'test.ts')).toHaveLength(1);
+  });
+
+  it('skips check() when rule.match (built from createMatcher) matches the file basename', () => {
+    const rule: Rule = {
+      ...makeRule('test-rule', [makeDiagnostic()]),
+      match: createMatcher([], ['*.schemas.ts']),
+    };
+    const engine = new LintEngine([rule]);
+    expect(engine.lint('', '/src/bookmark.schemas.ts')).toHaveLength(0);
+  });
+
+  it('runs check() when rule.match (built from createMatcher) does not match the file basename', () => {
+    const rule: Rule = {
+      ...makeRule('test-rule', [makeDiagnostic()]),
+      match: createMatcher([], ['*.schemas.ts']),
+    };
+    const engine = new LintEngine([rule]);
+    expect(engine.lint('', '/src/bookmark.ts')).toHaveLength(1);
   });
 });

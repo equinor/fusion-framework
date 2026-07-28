@@ -1,9 +1,9 @@
 import { describe, it, expect } from 'vitest';
-import { requireTsDoc, createRequireTsDoc } from '../require-tsdoc/index.js';
+import { requireTsDoc } from '../require-tsdoc/index.js';
 import type { Diagnostic } from '@equinor/fusion-framework-lint-core';
 
 function lint(source: string): Diagnostic[] {
-  return requireTsDoc.check(source, 'fixture.ts');
+  return requireTsDoc().check(source, { filePath: 'fixture.ts' });
 }
 
 function _rules(diagnostics: Diagnostic[]): string[] {
@@ -259,24 +259,24 @@ class InternalService {
 
 describe('require-tsdoc — classScope option', () => {
   it('classScope=exported: skips non-exported class', () => {
-    const rule = createRequireTsDoc({ classScope: 'exported' });
+    const rule = requireTsDoc({ classScope: 'exported' });
     const source = `
 class InternalHelper {
   run(): void {}
 }
 `;
-    expect(rule.check(source, 'fixture.ts')).toHaveLength(0);
+    expect(rule.check(source, { filePath: 'fixture.ts' })).toHaveLength(0);
   });
 
   it('classScope=exported: still checks exported class', () => {
-    const rule = createRequireTsDoc({ classScope: 'exported' });
+    const rule = requireTsDoc({ classScope: 'exported' });
     const source = `
 export class PublicService {
   run(): void {}
 }
 `;
     // class decl + method both need TSDoc
-    expect(rule.check(source, 'fixture.ts').length).toBeGreaterThan(0);
+    expect(rule.check(source, { filePath: 'fixture.ts' }).length).toBeGreaterThan(0);
   });
 });
 

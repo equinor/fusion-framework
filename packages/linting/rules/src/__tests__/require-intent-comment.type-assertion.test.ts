@@ -3,7 +3,7 @@ import { requireIntentCommentTypeAssertion } from '../require-intent-comment/typ
 import type { Diagnostic } from '@equinor/fusion-framework-lint-core';
 
 function lint(source: string): Diagnostic[] {
-  return requireIntentCommentTypeAssertion.check(source, 'fixture.ts');
+  return requireIntentCommentTypeAssertion().check(source, { filePath: 'fixture.ts' });
 }
 
 // ── Passing cases ─────────────────────────────────────────────────────────────

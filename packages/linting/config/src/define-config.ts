@@ -1,5 +1,43 @@
-import type { Rule, LintConfig } from '@equinor/fusion-framework-lint-core';
+import type { Rule, LintConfig, SeverityConfig } from '@equinor/fusion-framework-lint-core';
 import type { ConfigBuilder } from './config-builder.js';
+
+/**
+ * Per-rule configuration entry accepted in the `rules` map of a
+ * {@link FusionLintFileConfig}. Either a bare severity string (the existing
+ * flat shorthand), or an object combining a severity with basename-pattern
+ * file scoping — applied via {@link import('@equinor/fusion-framework-lint-core').createMatcher}
+ * — so JSON/YAML configs can scope or exempt a rule by file without writing
+ * any TypeScript.
+ *
+ * @example Severity shorthand (unchanged behavior)
+ * ```json
+ * { "rules": { "require-tsdoc": "error" } }
+ * ```
+ * @example Severity plus file scoping
+ * ```json
+ * {
+ *   "rules": {
+ *     "single-export-per-file": { "excludePattern": ["module.ts", "*.schemas.ts"] }
+ *   }
+ * }
+ * ```
+ */
+export type RuleConfigEntry =
+  | SeverityConfig
+  | {
+      /** Severity override for this rule. Defaults to the rule's own default severity. */
+      severity?: SeverityConfig;
+      /**
+       * Glob-style basename patterns the file must match for this rule to
+       * run (only `*` is supported). An empty/omitted list matches every file.
+       */
+      includePattern?: string[];
+      /**
+       * Glob-style basename patterns for files to exempt from this rule
+       * (only `*` is supported). Takes precedence over `includePattern`.
+       */
+      excludePattern?: string[];
+    };
 
 /**
  * Shape of a `fusion-lint` configuration file when written as a plain object.
@@ -9,8 +47,8 @@ import type { ConfigBuilder } from './config-builder.js';
 export type FusionLintFileConfig =
   | LintConfig
   | {
-      /** Severity overrides, keyed by rule ID. */
-      rules?: LintConfig;
+      /** Severity and/or file-scoping overrides, keyed by rule ID. */
+      rules?: Record<string, RuleConfigEntry>;
       /** Custom rule implementations to register alongside built-in rules. */
       customRules?: Rule[];
       /**

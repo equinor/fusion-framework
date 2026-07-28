@@ -101,7 +101,7 @@ export default defineConfig((args) => {
   args.addRule({
     id: 'my-custom-rule',
     severity: 'warn',
-    check: (source, filePath) => [],
+    check: (source, ctx) => [],
   });
 
   // override the custom rule's severity after registration

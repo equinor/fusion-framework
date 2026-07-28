@@ -2,7 +2,9 @@ import type {
   Rule,
   Diagnostic,
   LintConfig,
+  LintContext,
   SeverityConfig,
+  MatcherFn,
 } from '@equinor/fusion-framework-lint-core';
 
 /**
@@ -15,6 +17,13 @@ export interface LoadedLintConfig {
   customRules: Rule[];
   /** Glob patterns for files/directories excluded from linting entirely. */
   ignorePatterns: string[];
+  /**
+   * Per-rule {@link MatcherFn} overrides built from `includePattern` /
+   * `excludePattern` entries in a rich `rules` config, keyed by rule ID.
+   * Applied by the caller (e.g. the CLI) by replacing the matching rule's
+   * `match` before constructing the `LintEngine`.
+   */
+  ruleMatchers: Record<string, MatcherFn>;
 }
 
 /**
@@ -31,10 +40,10 @@ export interface CustomRuleDefinition {
    * Analyses source text and returns zero or more diagnostics.
    *
    * @param source - Raw UTF-8 source text.
-   * @param filePath - Absolute path to the source file.
+   * @param ctx - Per-call context: file path plus engine-resolved metadata.
    * @returns Array of diagnostics found in the source.
    */
-  check(source: string, filePath: string): Diagnostic[];
+  check(source: string, ctx: LintContext): Diagnostic[];
 }
 
 /**
@@ -180,6 +189,9 @@ export class ConfigBuilder {
       config,
       customRules: [...this.#customRules.values()],
       ignorePatterns: this.ignorePatterns,
+      // Builder-style configs don't (yet) expose include/excludePattern scoping;
+      // that's only available in the rich object/JSON config format.
+      ruleMatchers: {},
     };
   }
 }

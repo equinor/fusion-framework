@@ -49,8 +49,11 @@ export class LintEngine {
       // Config override takes precedence; fall back to rule default
       const severity: Severity = (configuredSeverity as Severity) ?? rule.defaultSeverity;
 
+      // Skip parsing/analysing files the rule has opted out of via `match`
+      if (rule.match && !rule.match(filePath)) continue;
+
       // Collect diagnostics and stamp them with the resolved severity
-      for (const diagnostic of rule.check(source, filePath)) {
+      for (const diagnostic of rule.check(source, { filePath, severity })) {
         // Drop diagnostics silenced by a fusion-lint-disable(-next-line) comment
         if (isSuppressed(suppressions, diagnostic.line, rule.id)) continue;
         results.push({ ...diagnostic, severity });

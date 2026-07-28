@@ -1,5 +1,6 @@
 import type { Node } from 'web-tree-sitter';
-import type { Rule, Diagnostic, Severity } from '@equinor/fusion-framework-lint-core';
+import type { Diagnostic, Severity, RuleDef, LintContext } from '@equinor/fusion-framework-lint-core';
+import { resolveMatch } from '@equinor/fusion-framework-lint-core';
 import { tsParser } from '../_parser.js';
 
 const RULE_ID = 'require-intent-comment/iterators';
@@ -102,11 +103,14 @@ function walkNode(node: Node, filePath: string, severity: Severity, out: Diagnos
  *
  * Configure independently: `"require-intent-comment/iterators": "error"`
  */
-export const requireIntentCommentIterators: Rule = {
+export const requireIntentCommentIterators: RuleDef = (options = {}) => ({
   id: RULE_ID,
   defaultSeverity: DEFAULT_SEVERITY,
+  /** @inheritdoc Rule.match */
+  match: resolveMatch(options.match),
   /** @inheritdoc Rule.check */
-  check(source: string, filePath: string): Diagnostic[] {
+  check(source: string, ctx: LintContext): Diagnostic[] {
+    const { filePath } = ctx;
     const tree = tsParser.parse(source);
     // Guard: tsParser.parse returns null for empty or unparseable source
     if (!tree) return [];
@@ -114,4 +118,4 @@ export const requireIntentCommentIterators: Rule = {
     walkNode(tree.rootNode, filePath, DEFAULT_SEVERITY, out);
     return out;
   },
-};
+});

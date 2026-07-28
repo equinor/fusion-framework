@@ -3,7 +3,7 @@ import { requireIntentCommentIterators } from '../require-intent-comment/iterato
 import type { Diagnostic } from '@equinor/fusion-framework-lint-core';
 
 function lint(source: string): Diagnostic[] {
-  return requireIntentCommentIterators.check(source, 'fixture.ts');
+  return requireIntentCommentIterators().check(source, { filePath: 'fixture.ts' });
 }
 
 // ── Pass cases ────────────────────────────────────────────────────────────────

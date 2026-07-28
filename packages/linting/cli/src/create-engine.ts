@@ -24,6 +24,10 @@ export interface ConfiguredEngine {
  *    {@link loadLintConfig})
  * 3. `--rule <id>=<severity>` CLI overrides
  *
+ * A project config may also scope individual rules to a subset of files via
+ * `includePattern`/`excludePattern` (see {@link RuleConfigEntry}); those are
+ * applied here by replacing the matching rule's `match` before construction.
+ *
  * @param ruleOverrides - Raw `--rule` option values, e.g. `['require-tsdoc=off']`.
  * @returns A configured `LintEngine` plus any `ignorePatterns` declared in the project config,
  *   including any custom rules registered by the project config.
@@ -33,7 +37,13 @@ export async function createConfiguredEngine(
 ): Promise<ConfiguredEngine> {
   const loaded = await loadLintConfig({ base: recommendedConfig });
   // A project config may register custom rules alongside the recommended set
-  const rules = loaded ? [...recommendedRules, ...loaded.customRules] : recommendedRules;
+  const baseRules = loaded ? [...recommendedRules, ...loaded.customRules] : recommendedRules;
+  // Apply any includePattern/excludePattern file-scoping declared in the project
+  // config, overriding each matching rule's `match` entirely
+  const rules = baseRules.map((rule) => {
+    const matcherFn = loaded?.ruleMatchers[rule.id];
+    return matcherFn ? { ...rule, match: matcherFn } : rule;
+  });
   const config: LintConfig = { ...(loaded?.config ?? recommendedConfig) };
 
   // Process each --rule=id=severity argument, taking precedence over the project config

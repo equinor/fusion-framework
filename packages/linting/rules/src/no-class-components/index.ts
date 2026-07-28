@@ -1,5 +1,6 @@
 import type { Node } from 'web-tree-sitter';
-import type { Rule, Diagnostic, Severity } from '@equinor/fusion-framework-lint-core';
+import type { Diagnostic, Severity, RuleDef, LintContext } from '@equinor/fusion-framework-lint-core';
+import { createMatcher, resolveMatch } from '@equinor/fusion-framework-lint-core';
 import { tsParser } from '../_parser.js';
 
 const RULE_ID = 'no-class-components';
@@ -74,13 +75,17 @@ function walkNode(node: Node, filePath: string, severity: Severity, out: Diagnos
  * }
  * ```
  */
-export const noClassComponents: Rule = {
+export const noClassComponents: RuleDef = (options = {}) => ({
   id: RULE_ID,
   defaultSeverity: DEFAULT_SEVERITY,
+  /**
+   * Only applicable to React component files by default; overridable via `options.match`.
+   * @inheritdoc Rule.match
+   */
+  match: resolveMatch(options.match) ?? createMatcher(['*.tsx', '*.jsx']),
   /** @inheritdoc Rule.check */
-  check(source: string, filePath: string): Diagnostic[] {
-    // Only applicable to React component files
-    if (!filePath.endsWith('.tsx') && !filePath.endsWith('.jsx')) return [];
+  check(source: string, ctx: LintContext): Diagnostic[] {
+    const { filePath } = ctx;
     const tree = tsParser.parse(source);
     // Guard: tsParser.parse returns null for empty or unparseable source
     if (!tree) return [];
@@ -88,4 +93,4 @@ export const noClassComponents: Rule = {
     walkNode(tree.rootNode, filePath, DEFAULT_SEVERITY, out);
     return out;
   },
-};
+});

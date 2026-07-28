@@ -3,7 +3,7 @@ import { requireIntentCommentRxjs } from '../require-intent-comment/rxjs.js';
 import type { Diagnostic } from '@equinor/fusion-framework-lint-core';
 
 function lint(source: string): Diagnostic[] {
-  return requireIntentCommentRxjs.check(source, 'fixture.ts');
+  return requireIntentCommentRxjs().check(source, { filePath: 'fixture.ts' });
 }
 
 // ── Passing cases ─────────────────────────────────────────────────────────────

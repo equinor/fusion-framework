@@ -6,7 +6,7 @@ export default {
     {
       id: 'custom-fixture-rule',
       defaultSeverity: 'warn',
-      check: (_source, _filePath) => [],
+      check: (_source, _ctx) => [],
     },
   ],
   ignorePatterns: ['**/__tests__/**'],

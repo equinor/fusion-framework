@@ -9,5 +9,6 @@ export {
   defineConfig,
   type FusionLintFileConfig,
   type FusionLintConfigFactory,
+  type RuleConfigEntry,
 } from './define-config.js';
 export { loadLintConfig, type LoadLintConfigOptions } from './load-config.js';

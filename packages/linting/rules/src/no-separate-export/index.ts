@@ -1,5 +1,6 @@
 import type { Node } from 'web-tree-sitter';
-import type { Rule, Diagnostic, Severity } from '@equinor/fusion-framework-lint-core';
+import type { Diagnostic, Severity, RuleDef, LintContext } from '@equinor/fusion-framework-lint-core';
+import { resolveMatch } from '@equinor/fusion-framework-lint-core';
 import { tsParser } from '../_parser.js';
 
 const RULE_ID = 'no-separate-export';
@@ -163,22 +164,20 @@ function walkNode(
  *
  * @returns A configured `Rule` instance.
  */
-export function createNoSeparateExport(): Rule {
-  return {
-    id: RULE_ID,
-    defaultSeverity: DEFAULT_SEVERITY,
-    /** @inheritdoc Rule.check */
-    check(source: string, filePath: string): Diagnostic[] {
-      const tree = tsParser.parse(source);
-      // Guard: tsParser.parse returns null for empty or unparseable source
-      if (!tree) return [];
-      const out: Diagnostic[] = [];
-      const importedNames = collectImportedNames(tree.rootNode);
-      walkNode(tree.rootNode, filePath, DEFAULT_SEVERITY, importedNames, out);
-      return out;
-    },
-  };
-}
-
-/** Pre-built `no-separate-export` rule with default options. */
-export const noSeparateExport: Rule = createNoSeparateExport();
+export const noSeparateExport: RuleDef = (options = {}) => ({
+  id: RULE_ID,
+  defaultSeverity: DEFAULT_SEVERITY,
+  /** @inheritdoc Rule.match */
+  match: resolveMatch(options.match),
+  /** @inheritdoc Rule.check */
+  check(source: string, ctx: LintContext): Diagnostic[] {
+    const { filePath } = ctx;
+    const tree = tsParser.parse(source);
+    // Guard: tsParser.parse returns null for empty or unparseable source
+    if (!tree) return [];
+    const out: Diagnostic[] = [];
+    const importedNames = collectImportedNames(tree.rootNode);
+    walkNode(tree.rootNode, filePath, DEFAULT_SEVERITY, importedNames, out);
+    return out;
+  },
+});

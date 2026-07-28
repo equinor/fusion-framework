@@ -3,7 +3,7 @@ import { requireIntentCommentBreakContinue } from '../require-intent-comment/bre
 import type { Diagnostic } from '@equinor/fusion-framework-lint-core';
 
 function lint(source: string): Diagnostic[] {
-  return requireIntentCommentBreakContinue.check(source, 'fixture.ts');
+  return requireIntentCommentBreakContinue().check(source, { filePath: 'fixture.ts' });
 }
 
 // ── Passing cases ─────────────────────────────────────────────────────────────

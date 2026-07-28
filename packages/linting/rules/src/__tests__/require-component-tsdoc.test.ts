@@ -5,7 +5,10 @@ import { requireComponentTsDoc } from '../require-component-tsdoc/index.js';
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
 function lint(source: string, file = 'fixture.tsx'): Diagnostic[] {
-  return requireComponentTsDoc.check(source, file);
+  const rule = requireComponentTsDoc();
+  // mirror the engine: skip `check` entirely when `match` opts the file out
+  if (rule.match && !rule.match(file)) return [];
+  return rule.check(source, { filePath: file });
 }
 
 // ── Passing cases ─────────────────────────────────────────────────────────────
@@ -55,9 +58,7 @@ export const DEFAULT_CONFIG = { timeout: 5000 };
   });
 
   it('passes: ignored on .ts file regardless of PascalCase name', () => {
-    expect(
-      requireComponentTsDoc.check('export const Foo = () => null;', 'fixture.ts'),
-    ).toHaveLength(0);
+    expect(lint('export const Foo = () => null;', 'fixture.ts')).toHaveLength(0);
   });
 
   it('passes: @inheritdoc-style TSDoc is accepted', () => {
@@ -136,11 +137,10 @@ export const Panel = (): JSX.Element => <div />;
   });
 
   it('fails: severity can be overridden to error', () => {
-    const diags = requireComponentTsDoc.check(
-      'export const Card = (): JSX.Element => <div />;',
-      'fixture.tsx',
-      'error',
-    );
+    const diags = requireComponentTsDoc().check('export const Card = (): JSX.Element => <div />;', {
+      filePath: 'fixture.tsx',
+      severity: 'error',
+    });
     expect(diags[0].severity).toBe('error');
   });
 });
