@@ -21,6 +21,7 @@ export const mapConfiguratorEvents = (
   // biome-ignore lint/suspicious/noExplicitAny: must be any to support all module types
   configurator: IModulesConfigurator<any, any>,
 ): Observable<TelemetryItem> => {
+  // Map each configurator event into a standardized telemetry item shape
   return configurator.event$.pipe(
     map((event) => {
       const item = {
@@ -34,6 +35,7 @@ export const mapConfiguratorEvents = (
         scope: ['configuration'],
       } satisfies TelemetryItem;
 
+      // An event carrying an error is reported as a telemetry exception
       if (event.error) {
         return {
           ...item,
@@ -41,6 +43,7 @@ export const mapConfiguratorEvents = (
           exception: event.error as Error,
         };
       }
+      // An event carrying a metric value is reported as a telemetry metric
       if (event.metric) {
         return {
           ...item,

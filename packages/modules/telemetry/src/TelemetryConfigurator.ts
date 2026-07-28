@@ -53,6 +53,10 @@ export class TelemetryConfigurator
   #adaptersCallbacks: Record<string, ConfigBuilderCallback<ITelemetryAdapter>> = {};
   #metadata: Array<TelemetryConfig['metadata']> = [];
 
+  /**
+   * Creates a new `TelemetryConfigurator` and wires up the async adapter
+   * resolution and metadata merging pipelines used by `createConfigAsync`.
+   */
   constructor() {
     super();
 
@@ -60,22 +64,28 @@ export class TelemetryConfigurator
     this._set(
       'adapters',
       (args: ConfigBuilderCallbackArgs): ObservableInput<Record<string, ITelemetryAdapter>> => {
-        return from(Object.entries(this.#adaptersCallbacks)).pipe(
-          mergeMap(([identifier, adapterFn]) =>
-            from(adapterFn(args)).pipe(
-              filter((adapter): adapter is ITelemetryAdapter => !!adapter),
-              map((adapter) => [identifier, adapter] as const),
-            ),
-          ),
-          scan(
-            (acc, [identifier, adapter]) => {
-              acc[identifier] = adapter;
-              return acc;
-            },
-            {} as Record<string, ITelemetryAdapter>,
-          ),
-          defaultIfEmpty({}),
-          shareReplay({ bufferSize: 1, refCount: true }),
+        return (
+          from(Object.entries(this.#adaptersCallbacks))
+            // Resolve every adapter factory concurrently and merge them into a single record
+            .pipe(
+              mergeMap(([identifier, adapterFn]) =>
+                from(adapterFn(args))
+                  // Drop adapters whose factory resolved to a falsy value
+                  .pipe(
+                    filter((adapter): adapter is ITelemetryAdapter => !!adapter),
+                    map((adapter) => [identifier, adapter] as const),
+                  ),
+              ),
+              scan(
+                (acc, [identifier, adapter]) => {
+                  acc[identifier] = adapter;
+                  return acc;
+                },
+                {} as Record<string, ITelemetryAdapter>,
+              ),
+              defaultIfEmpty({}),
+              shareReplay({ bufferSize: 1, refCount: true }),
+            )
         );
       },
     );
@@ -84,18 +94,21 @@ export class TelemetryConfigurator
     this._set('metadata', async (): Promise<TelemetryConfig['metadata']> => {
       const metadataItems = this.#metadata;
       return (...args) =>
-        from(metadataItems).pipe(
-          concatMap((metadata) => toObservable(metadata, ...args)),
-          scan((acc, current) => mergeMetadata(acc, current) ?? {}, {}),
-          last(),
-          shareReplay({ bufferSize: 1, refCount: true }),
-        );
+        from(metadataItems)
+          // Merge every registered metadata source in order, emitting the final accumulated result
+          .pipe(
+            concatMap((metadata) => toObservable(metadata, ...args)),
+            scan((acc, current) => mergeMetadata(acc, current) ?? {}, {}),
+            last(),
+            shareReplay({ bufferSize: 1, refCount: true }),
+          );
     });
   }
 
   /**
    * Registers a telemetry adapter with the configurator.
    *
+   * @param identifier - The key used to register and later resolve this adapter.
    * @param adapter - The telemetry adapter to be added. The adapter's identifier is used as the key.
    * @returns The current instance of the configurator for method chaining.
    */
@@ -106,7 +119,8 @@ export class TelemetryConfigurator
   /**
    * Configures a telemetry adapter with the configurator.
    *
-   * @param adapter - A callback function that returns a telemetry adapter instance
+   * @param identifier - The key used to register and later resolve this adapter.
+   * @param adapterFn - A callback function that returns a telemetry adapter instance
    * @returns The current instance for method chaining
    */
   public configureAdapter(

@@ -69,12 +69,19 @@ export class TelemetryProvider
 
   #eventProvider: IEventModuleProvider | undefined;
 
+  /**
+   * Stream of every telemetry item tracked by this provider.
+   *
+   * @returns An observable emitting each tracked `TelemetryItem`.
+   */
   get items(): Observable<TelemetryItem> {
     return this.#items.asObservable();
   }
 
   /**
    * Returns true if the provider has been initialized.
+   *
+   * @returns `true` when {@link initialize} has completed, otherwise `false`.
    */
   get initialized(): boolean {
     return this.#initialized;
@@ -83,10 +90,22 @@ export class TelemetryProvider
   #metadata?: MetadataExtractor;
 
   #modules: ModulesInstanceType<Modules> | undefined;
+  /**
+   * Sets the resolved framework module instances used to resolve metadata.
+   *
+   * @param value - The resolved framework module instances.
+   */
   set modules(value: ModulesInstanceType<Modules>) {
     this.#modules = value;
   }
 
+  /**
+   * Creates a new `TelemetryProvider`.
+   *
+   * @param config - Resolved telemetry configuration (adapters, metadata, scope, filters).
+   * @param deps - Optional dependencies; supply an event module provider to dispatch
+   *   telemetry items as events.
+   */
   constructor(config: TelemetryConfig, deps?: { event?: IEventModuleProvider }) {
     super({ version, config });
 
@@ -161,6 +180,7 @@ export class TelemetryProvider
   protected async _initializeAdapters(): Promise<void> {
     // Initialize all adapters, do it in parallel
     const adapterEntries = Object.entries(this.#adapters);
+    // Kick off every adapter's initialize() concurrently
     const initializationPromises = adapterEntries.map(([_identifier, adapter]) =>
       adapter.initialize(),
     );
@@ -170,6 +190,7 @@ export class TelemetryProvider
 
     // Check each result and dispatch errors for failed initializations
     for (const [index, result] of results.entries()) {
+      // Only rejected adapters need an error dispatched; fulfilled ones need no action
       if (result.status === 'rejected') {
         const [identifier] = adapterEntries[index];
         this._dispatchError(
@@ -189,8 +210,10 @@ export class TelemetryProvider
    *
    * @returns Subscription to the telemetry item stream
    * @protected
+   * @throws {Error} When the provider has not been initialized yet.
    */
   protected _connectAdapters(): Subscription {
+    // Adapters can only be connected after the provider has completed initialization
     if (!this.#initialized) {
       throw new Error('TelemetryProvider is not initialized');
     }
@@ -247,6 +270,7 @@ export class TelemetryProvider
    * @protected
    */
   protected _dispatchEntityEvent(item: TelemetryItem): void {
+    // Only dispatch when an event provider is configured
     if (this.#eventProvider) {
       // Wrap the telemetry item in a TelemetryEvent and dispatch it
       this.#eventProvider.dispatchEvent(new TelemetryEvent(item, this));
@@ -260,6 +284,7 @@ export class TelemetryProvider
    * @protected
    */
   protected _dispatchError(error: Error): void {
+    // Only dispatch when an event provider is configured
     if (this.#eventProvider) {
       this.#eventProvider.dispatchEvent(new TelemetryErrorEvent(error, this));
     }
@@ -278,6 +303,7 @@ export class TelemetryProvider
    * });
    */
   public track(item: z.input<typeof TelemetryItemSchema>): void {
+    // Dispatch to the type-specific tracker so each item is validated with the right schema
     switch (item.type) {
       case TelemetryType.Event:
         this.trackEvent(item);
@@ -399,6 +425,7 @@ export class TelemetryProvider
    */
   public getAdapter(identifier: string): ITelemetryAdapter | undefined {
     const adapter = this.#adapters[identifier];
+    // Report a missing adapter as a telemetry exception rather than throwing
     if (!adapter) {
       this.trackException({
         name: 'TelemetryAdapterNotFound',

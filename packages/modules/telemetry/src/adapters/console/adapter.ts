@@ -56,6 +56,7 @@ export class ConsoleAdapter extends BaseTelemetryAdapter {
    * @returns CSS background color string
    */
   protected _generateTitleBackground(lvl: TelemetryLevel): string {
+    // Pick a background color matching the severity of this telemetry level
     switch (lvl) {
       case TelemetryLevel.Critical:
         return 'rgb(255, 0, 0)';
@@ -83,12 +84,12 @@ export class ConsoleAdapter extends BaseTelemetryAdapter {
    * @returns Formatted time string (ms, s, or m s format)
    */
   protected _formatMetric = (value: number): string => {
+    // Show milliseconds for values under 1 second
     if (value < 1000) {
-      // Show milliseconds for values under 1 second
       return `${Math.round(value)}ms`;
     }
+    // Show seconds with 1 decimal for values under 1 minute
     if (value < 60000) {
-      // Show seconds with 1 decimal for values under 1 minute
       return `${(value / 1000).toFixed(1)}s`;
     }
     // For longer durations, show minutes and seconds
@@ -134,6 +135,7 @@ export class ConsoleAdapter extends BaseTelemetryAdapter {
       scope,
     };
 
+    // Dispatch to the right console format based on the telemetry item's type
     switch (type) {
       case TelemetryType.Event:
         // Log events with base data
@@ -161,6 +163,7 @@ export class ConsoleAdapter extends BaseTelemetryAdapter {
    * @param msg - Additional message arguments to log
    */
   protected _log(lvl: TelemetryLevel, title: string, ...msg: unknown[]): void {
+    // Pick the console method matching this telemetry level's severity
     switch (lvl) {
       case TelemetryLevel.Critical:
       case TelemetryLevel.Error:

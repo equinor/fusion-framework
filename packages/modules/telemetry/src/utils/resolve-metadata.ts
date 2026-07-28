@@ -42,10 +42,13 @@ export const resolveMetadata = (
  * @param args - The arguments required by the metadata extractor, including the telemetry item.
  * @returns An Observable emitting the telemetry item with applied metadata, or an error telemetry item if resolution fails.
  */
+// Deliberately co-located with `resolveMetadata` above
+// fusion-lint-disable-next-line single-export-per-file
 export const applyMetadata = (
   metadata: MetadataExtractor,
   args: MetadataExtractorArgs,
 ): Observable<TelemetryItem> => {
+  // Resolve metadata, merge it into the item, and fall back to an error item on failure
   return resolveMetadata(metadata, args).pipe(
     defaultIfEmpty({}), // Ensure we always have an object to merge with
     first(), // Take the first emitted value from the metadata extractor

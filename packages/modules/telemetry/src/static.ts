@@ -32,6 +32,8 @@ export enum TelemetryLevel {
  * @property {TelemetryType.Metric} Metric - Represents a metric or measurement telemetry.
  * @property {TelemetryType.Custom} Custom - Represents a custom-defined telemetry type.
  */
+// Deliberately co-located with the other telemetry enums/constants below
+// fusion-lint-disable-next-line single-export-per-file
 export enum TelemetryType {
   Event = 'event',
   Exception = 'exception',
@@ -45,6 +47,8 @@ export enum TelemetryType {
  * - `Framework`: Telemetry related to the underlying framework.
  * - `Application`: Telemetry specific to the application layer.
  */
+// Deliberately co-located with the other telemetry enums/constants above/below
+// fusion-lint-disable-next-line single-export-per-file
 export enum TelemetryScope {
   Framework = 'framework',
   Application = 'application',
@@ -53,6 +57,8 @@ export enum TelemetryScope {
 /**
  * Standard telemetry item names for common error types.
  */
+// Deliberately co-located with the other telemetry enums/constants above
+// fusion-lint-disable-next-line single-export-per-file
 export const TelemetryItemNames = {
   /** Error name used when metadata extraction fails */
   MetadataError: 'TelemetryMetadataError',

@@ -48,9 +48,11 @@ export const enableTelemetry = (
   configurator.addConfig({
     module,
     configure: async (builder, ref) => {
+      // Attach configurator events to the telemetry builder only when opted in
       if (options?.attachConfiguratorEvents) {
         builder.attachItems(mapConfiguratorEvents(configurator));
       }
+      // Run the caller-supplied configure callback when one was provided
       if (options?.configure) {
         await Promise.resolve(options.configure(builder, ref));
       }

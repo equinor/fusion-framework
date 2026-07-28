@@ -54,10 +54,17 @@ export class ApplicationInsightsAdapter extends BaseTelemetryAdapter {
   readonly #client: ApplicationInsights;
   readonly #preFix?: string;
 
+  /**
+   * Creates a new `ApplicationInsightsAdapter`.
+   *
+   * @param args - Application Insights client configuration, including the
+   *   snippet, optional plugins, filter, and name prefix.
+   */
   constructor(args: ApplicationInsightsClientConfig) {
     super(args.filter);
     this.#client = new ApplicationInsights(args.snippet);
     this.#preFix = args.prefix;
+    // Register every configured plugin, tolerating individual plugin failures
     for (const plugin of args.plugins ?? []) {
       try {
         this.#client.addPlugin(plugin);
