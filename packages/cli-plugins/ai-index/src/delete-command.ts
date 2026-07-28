@@ -4,7 +4,7 @@ import { loadFusionAIConfig, setupFramework } from '@equinor/fusion-framework-cl
 import { withOptions as withAiOptions } from '@equinor/fusion-framework-cli-plugin-ai-base/command-options';
 import type { FusionAIConfigWithIndex } from './config.js';
 
-import { DeleteOptionsSchema, type DeleteOptions } from './delete-command.options.js';
+import { DeleteOptionsSchema, type DeleteOptions } from './delete-options-schema.js';
 
 /**
  * Builds an OData filter expression from source paths and/or a raw filter.

@@ -7,7 +7,7 @@ import {
 } from 'ts-morph';
 
 import type { TypescriptDocument, ParseTsDocOptions } from './types.js';
-import { nodeKinds } from './constants.js';
+import { nodeKinds } from './node-kinds.js';
 import { createTypescriptDocument } from './create-typescript-document.js';
 import { extractDocumentFromClassNode } from './extract-document-from-class-node.js';
 

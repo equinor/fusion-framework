@@ -3,13 +3,13 @@ import { join } from 'node:path';
 
 import { ab, abErrorMessage } from '../../utils/index.js';
 import { createAgentBrowserTools } from './tools/index.js';
-import { createWriteFileTool } from './tools/write-file.js';
-import { createAppendFileTool } from './tools/append-file.js';
-import { createReadFileTool } from './tools/read-file.js';
+import { createWriteFileTool } from './tools/create-write-file-tool.js';
+import { createAppendFileTool } from './tools/create-append-file-tool.js';
+import { createReadFileTool } from './tools/create-read-file-tool.js';
 import type { RuntimeExecutionContext } from './types.js';
 import type { CopilotSession, SessionConfig } from '@github/copilot-sdk';
-import { createSystemPrompt } from './prompts/system.prompt.js';
-import { createDevServerContext } from './prompts/system.dev-server.prompt.js';
+import { createSystemPrompt } from './prompts/create-system-prompt.js';
+import { createDevServerContext } from './prompts/create-dev-server-context.js';
 
 /**
  * Lazily imports the Copilot SDK to avoid module resolution errors at CLI startup.

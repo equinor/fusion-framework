@@ -2,18 +2,18 @@ import { createCommand } from 'commander';
 import { basename } from 'node:path';
 
 import { resetDaemon, cleanup, createRunDir } from '../../utils/index.js';
-import { runLogin } from './login.js';
+import { runLogin } from './run-login.js';
 import { resolveEvalCommandInput } from '../../resolve-eval-command-input.js';
 import { resolveEvalFiles } from '../../resolve-eval-files.js';
-import { createSession } from './eval.js';
-import { startAppServer } from './server.js';
-import { attachSessionLogger } from './session-logger.js';
+import { createSession } from './create-session.js';
+import { startAppServer } from './start-app-server.js';
+import { attachSessionLogger } from './attach-session-logger.js';
 import type { CopilotEvalOptions, Plan, Verdict } from './types.js';
 import { formatVerdict } from './format-verdict.js';
 import { existsSync, readFileSync } from 'node:fs';
-import { createPlanPrompt } from './prompts/plan.prompt.js';
-import { createStepPrompt } from './prompts/step.prompt.js';
-import { createJudgePrompt } from './prompts/judge.prompt.js';
+import { createPlanPrompt } from './prompts/create-plan-prompt.js';
+import { createStepPrompt } from './prompts/create-step-prompt.js';
+import { createJudgePrompt } from './prompts/create-judge-prompt.js';
 import chalk from 'chalk';
 
 /**

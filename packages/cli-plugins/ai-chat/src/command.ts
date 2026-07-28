@@ -9,7 +9,7 @@ import {
 import { createInterface } from 'node:readline';
 
 import { setupFramework } from '@equinor/fusion-framework-cli-plugin-ai-base';
-import { MessageHistory } from './message-history.js';
+import { MessageHistory } from './MessageHistory.js';
 import {
   RunnablePassthrough,
   RunnableSequence,

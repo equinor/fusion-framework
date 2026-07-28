@@ -1,5 +1,5 @@
 import type { Command } from 'commander';
-import { copilotCommand } from './commands/app/command.js';
+import { copilotCommand } from './commands/app/copilot-command.js';
 
 /**
  * Registers the `copilot` CLI plugin with the Fusion Framework CLI.

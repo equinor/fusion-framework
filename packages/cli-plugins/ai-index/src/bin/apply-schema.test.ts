@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { of, lastValueFrom } from 'rxjs';
 import type { VectorStoreDocument } from '@equinor/fusion-framework-module-ai/lib';
 
-import { defineIndexSchema } from '../schema.js';
+import { defineIndexSchema } from '../define-index-schema.js';
 import { applySchema } from './apply-schema.js';
 
 /** Helper to create a minimal VectorStoreDocument for testing. */

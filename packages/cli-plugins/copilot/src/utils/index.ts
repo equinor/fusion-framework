@@ -1,7 +1,7 @@
-export { ab } from './agent-browser.js';
+export { ab } from './ab.js';
 export { abErrorMessage } from './ab-error-message.js';
 export { PROFILE_DIR } from './profile-dir.js';
-export { resetDaemon } from './daemon.js';
+export { resetDaemon } from './reset-daemon.js';
 export { clearMsalInteraction } from './clear-msal-interaction.js';
 export { cleanup } from './cleanup.js';
 export { sleep } from './sleep.js';
@@ -9,4 +9,4 @@ export { stripAnsi } from './strip-ansi.js';
 export { createRunDir } from './create-run-dir.js';
 export { resolveAppKey } from './resolve-app-key.js';
 export { waitForServer } from './wait-for-server.js';
-export { pollConsole } from './browser-poll.js';
+export { pollConsole } from './poll-console.js';

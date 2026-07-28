@@ -1,4 +1,4 @@
-import { ab } from './agent-browser.js';
+import { ab } from './ab.js';
 
 /**
  * Clears the MSAL `interaction.status` flag from `sessionStorage` in the

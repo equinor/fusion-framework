@@ -20,7 +20,7 @@ import { getFileStatus, resolveProjectRoot } from '../utils/git/index.js';
 import { isTypescriptFile, parseTsDocFromFileSync } from '../utils/ts-doc/index.js';
 
 import { getDiff } from './get-diff.js';
-import { createDeleteRemovedFilesStream } from './delete-removed-files.js';
+import { createDeleteRemovedFilesStream } from './create-delete-removed-files-stream.js';
 import { applyMetadata } from './apply-metadata.js';
 import { applySchema } from './apply-schema.js';
 import type {
@@ -31,7 +31,7 @@ import type {
   UpdateVectorStoreResult,
 } from './types.js';
 import type { ChangedFile } from '../utils/git/index.js';
-import type { CommandOptions } from '../embeddings-command.options.js';
+import type { CommandOptions } from '../command-options-schema.js';
 import type { FusionAIConfigWithIndex } from '../config.js';
 import type { FrameworkInstance } from '@equinor/fusion-framework-cli-plugin-ai-base';
 import type { VectorStoreDocument } from '@equinor/fusion-framework-module-ai/lib';

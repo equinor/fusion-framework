@@ -1,6 +1,6 @@
 import { relative } from 'node:path';
 import type { GitMetadata } from './types.js';
-import { getGit } from './git-client.js';
+import { getGit } from './get-git.js';
 
 /**
  * Generate a GitHub permalink for a file

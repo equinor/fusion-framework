@@ -4,7 +4,7 @@ import { loadFusionAIConfig, setupFramework } from '@equinor/fusion-framework-cl
 import { withOptions as withAiOptions } from '@equinor/fusion-framework-cli-plugin-ai-base/command-options';
 
 import { embed } from './bin/embed.js';
-import { CommandOptionsSchema, type CommandOptions } from './embeddings-command.options.js';
+import { CommandOptionsSchema, type CommandOptions } from './command-options-schema.js';
 import type { FusionAIConfigWithIndex } from './config.js';
 
 /**

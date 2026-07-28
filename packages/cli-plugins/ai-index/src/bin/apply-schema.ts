@@ -1,7 +1,7 @@
 import { map } from 'rxjs';
 import type { Observable } from 'rxjs';
 import type { VectorStoreDocument } from '@equinor/fusion-framework-module-ai/lib';
-import type { IndexSchemaConfig } from '../schema.js';
+import type { IndexSchemaConfig } from '../define-index-schema.js';
 
 /**
  * Creates an RxJS operator that resolves promoted schema fields for each

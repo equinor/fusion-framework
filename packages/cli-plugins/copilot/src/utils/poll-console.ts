@@ -1,4 +1,4 @@
-import { ab } from './agent-browser.js';
+import { ab } from './ab.js';
 import { sleep } from './sleep.js';
 
 /**

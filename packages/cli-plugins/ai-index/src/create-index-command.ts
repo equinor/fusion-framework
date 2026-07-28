@@ -8,7 +8,7 @@ import {
 
 import type { FusionAIConfigWithIndex } from './config.js';
 import { zodToAzureFields } from './utils/zod-to-azure-fields.js';
-import { resolveEmbeddingDimensions } from './utils/embedding-dimensions.js';
+import { resolveEmbeddingDimensions } from './utils/resolve-embedding-dimensions.js';
 
 /**
  * CLI command: `ai index create`

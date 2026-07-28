@@ -3,7 +3,7 @@ import { from, mergeMap, map, tap, toArray } from 'rxjs';
 import type { Observable } from 'rxjs';
 import type { VectorStoreDocument } from '@equinor/fusion-framework-module-ai/lib';
 import { extractGitMetadata } from '../utils/git/index.js';
-import { resolvePackage } from '../utils/package-resolver.js';
+import { resolvePackage } from '../utils/resolve-package.js';
 import type { DocumentEntry } from './types.js';
 import type { FusionAIConfigWithIndex } from '../config.js';
 

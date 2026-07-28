@@ -1,5 +1,5 @@
 import { resolveProjectRoot } from './resolve-project-root.js';
-import { getGit } from './git-client.js';
+import { getGit } from './get-git.js';
 
 /**
  * Retrieves a summary of the current git working-tree status.

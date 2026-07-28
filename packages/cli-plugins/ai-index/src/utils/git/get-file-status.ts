@@ -1,6 +1,6 @@
 import { join, relative } from 'node:path';
 import type { ChangedFile } from './types.js';
-import { getGit } from './git-client.js';
+import { getGit } from './get-git.js';
 
 /**
  * Determines the git change status of a single file.
