@@ -26,6 +26,7 @@ export const createReducer = (value: WidgetStateInitial) =>
   makeReducer<WidgetState, Actions>({ ...value, status: new Set() } as WidgetState, (builder) =>
     builder
       .addCase(actions.setManifest, (state, action) => {
+        // Merge with existing state when caller requested an update, otherwise replace
         if (action.meta.update) {
           state.manifest = { ...state.manifest, ...action.payload };
         } else {

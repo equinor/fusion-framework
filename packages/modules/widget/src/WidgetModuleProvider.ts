@@ -143,6 +143,7 @@ export class WidgetModuleProvider implements IWidgetModuleProvider {
    * @param widgetKey - Widget identifier.
    * @param args - Optional version or tag selector.
    * @returns Observable emitting the {@link WidgetConfig}.
+   * @throws {WidgetManifestLoadError} When the underlying query fails.
    */
   protected _getWidgetConfig(
     widgetKey: GetWidgetParameters['widgetKey'],
@@ -150,7 +151,9 @@ export class WidgetModuleProvider implements IWidgetModuleProvider {
   ): Observable<WidgetConfig> {
     const client = new Query(this.#config.client.getWidgetConfig);
     this.#subscription.add(() => client.complete());
+    // Execute the query and handle errors
     return Query.extractQueryValue(
+      // Map any query failure to a typed `WidgetManifestLoadError`
       client.query({ widgetKey, args }).pipe(
         catchError((err) => {
           // Extract the cause since the error will be a `QueryError`
@@ -160,6 +163,7 @@ export class WidgetModuleProvider implements IWidgetModuleProvider {
           if (cause instanceof WidgetManifestLoadError) {
             throw cause;
           }
+          // Map HTTP failures to a `WidgetManifestLoadError` carrying the response
           if (cause instanceof HttpResponseError) {
             throw WidgetManifestLoadError.fromHttpResponse(cause.response, {
               cause,
@@ -181,6 +185,7 @@ export class WidgetModuleProvider implements IWidgetModuleProvider {
    * @param widgetKey - Widget identifier.
    * @param args - Optional version or tag selector.
    * @returns Observable emitting the {@link WidgetManifest}.
+   * @throws {WidgetConfigLoadError} When the underlying query fails.
    */
   protected _getWidget(
     widgetKey: GetWidgetParameters['widgetKey'],
@@ -192,6 +197,7 @@ export class WidgetModuleProvider implements IWidgetModuleProvider {
 
     // Execute the query and handle errors
     return Query.extractQueryValue(
+      // Map any query failure to a typed `WidgetConfigLoadError`
       client.query({ widgetKey, args }).pipe(
         catchError((err) => {
           // Extract the cause since the error will be a `QueryError`
@@ -201,6 +207,7 @@ export class WidgetModuleProvider implements IWidgetModuleProvider {
           if (cause instanceof WidgetConfigLoadError) {
             throw cause;
           }
+          // Map HTTP failures to a `WidgetConfigLoadError` carrying the response
           if (cause instanceof HttpResponseError) {
             throw WidgetConfigLoadError.fromHttpResponse(cause.response, { cause });
           }
