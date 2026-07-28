@@ -25,7 +25,7 @@ import { actions } from './actions';
 import type { FeatureFlagConfig } from './types';
 import type { IFeatureFlag } from './FeatureFlag';
 import { normalizeFlags } from './utils/normalize-flags';
-import type { FeatureSelectorFn } from './utils/filter-features';
+import type { FeatureSelectorFn } from './utils/selectors';
 
 /**
  * Custom equality comparison for two feature flag snapshots.

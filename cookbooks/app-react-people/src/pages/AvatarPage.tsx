@@ -1,5 +1,5 @@
 import { PersonAvatar } from '@equinor/fusion-react-person';
-import { FlexGrid } from '../Styled';
+import { FlexGrid } from '../flex-grid';
 
 /**
  * Renders a page with two `PersonAvatar` components, one using an Azure ID and one using an email address (UPN).

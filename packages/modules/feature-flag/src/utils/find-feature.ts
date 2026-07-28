@@ -1,7 +1,7 @@
 import { map, distinctUntilChanged } from 'rxjs/operators';
 import type { OperatorFunction } from 'rxjs';
 import type { IFeatureFlag } from '../FeatureFlag';
-import type { Features, FeatureComparator, FeatureSelector } from './filter-features';
+import type { Features, FeatureComparator, FeatureSelector } from './selectors';
 
 /**
  * Finds a feature flag based on the provided selector and comparator.
