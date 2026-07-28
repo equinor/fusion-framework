@@ -34,12 +34,12 @@ function convertGraphic(
   }
 
   if (typeof graphic === 'string') {
-    return {
-      graphicType: graphic.startsWith('<')
-        ? 'inline-html'
-        : ('eds' as unknown as ContextResultItem['graphicType']),
-      graphic: graphic,
-    };
+    if (graphic.startsWith('<')) {
+      return { graphicType: 'inline-html', graphic: graphic };
+    }
+    // 'eds' is not part of ContextItem['graphic'] but is a valid ContextResultItem graphicType
+    const graphicType = 'eds' as unknown as ContextResultItem['graphicType'];
+    return { graphicType, graphic: graphic };
   }
 
   if (graphic.type === 'svg') {
@@ -61,12 +61,12 @@ function convertMeta(meta: ContextItem['meta']): Pick<ContextResultItem, 'metaTy
   }
 
   if (typeof meta === 'string') {
-    return {
-      metaType: meta.startsWith('<')
-        ? 'inline-html'
-        : ('eds' as unknown as ContextResultItem['metaType']),
-      meta: meta,
-    };
+    if (meta.startsWith('<')) {
+      return { metaType: 'inline-html', meta: meta };
+    }
+    // 'eds' is not part of ContextItem['meta'] but is a valid ContextResultItem metaType
+    const metaType = 'eds' as unknown as ContextResultItem['metaType'];
+    return { metaType, meta: meta };
   }
 
   if (meta.type === 'svg') {
@@ -110,6 +110,7 @@ const mapper = (src: ContextItem<{ taskState?: string; state?: string }>[]): Con
     if (i.type.id === 'OrgChart') {
       // Org charts should always have 'list' icon
       baseResult.graphic = 'list';
+      // 'eds' is not part of ContextItem['graphic'] but is a valid ContextResultItem graphicType
       baseResult.graphicType = 'eds' as unknown as ContextResultItem['graphicType'];
 
       // Displays the org chart status if it is not 'active'

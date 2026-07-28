@@ -26,6 +26,7 @@ export const ContextSelector = (props: ContextSearchProps): JSX.Element | null =
     (e: Event | ContextSelectEvent) => {
       if (provider) {
         if (e.type === 'select') {
+          // Native `select` events are dispatched as plain `Event`, so widen to the typed custom event
           const ev = e as unknown as ContextSelectEvent;
           if (ev.nativeEvent.detail.selected.length) {
             provider.contextClient.setCurrentContext(ev.nativeEvent.detail.selected[0].id);
