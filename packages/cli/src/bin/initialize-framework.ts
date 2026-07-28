@@ -1,7 +1,7 @@
 import type { ModulesConfigurator, AnyModule } from '@equinor/fusion-framework-module';
 
 import { configureFramework, type FusionFrameworkSettings } from './configure-framework.js';
-import type { FusionFramework, Modules } from './framework.node.js';
+import type { FusionFramework, Modules } from './fusion-env.js';
 
 /**
  * Initializes the Fusion Framework with the provided settings.

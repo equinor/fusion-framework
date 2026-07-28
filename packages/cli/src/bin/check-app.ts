@@ -2,7 +2,7 @@ import type { FetchRequest } from '@equinor/fusion-framework-module-http/client'
 import AdmZip from 'adm-zip';
 
 import { initializeFramework } from './initialize-framework.js';
-import type { FusionEnv } from './framework.node.js';
+import type { FusionEnv } from './fusion-env.js';
 import type { FusionFrameworkSettings } from './configure-framework.js';
 
 import {

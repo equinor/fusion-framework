@@ -1,5 +1,5 @@
-import type { PackageInfo } from './package-info.js';
-import { fetchPackageInfo } from './package-info.js';
+import type { PackageInfo } from './fetch-package-info.js';
+import { fetchPackageInfo } from './fetch-package-info.js';
 
 /**
  * Fetches multiple packages' information in parallel for better performance.

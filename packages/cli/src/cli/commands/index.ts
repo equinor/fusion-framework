@@ -4,7 +4,7 @@ import authCommands from './auth/index.js';
 import createCommand from './create/index.js';
 import discoCommand from './disco/index.js';
 import portalCommand from './portal/index.js';
-import { loadPlugins } from '../plugins/loader.js';
+import { loadPlugins } from '../plugins/load-plugins.js';
 
 /**
  * Registers all built-in CLI commands and optional plugins on the Commander program.

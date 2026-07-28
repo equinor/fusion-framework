@@ -1,7 +1,7 @@
 import { HttpJsonResponseError } from '@equinor/fusion-framework-module-http/errors';
 import type { FetchRequest } from '@equinor/fusion-framework-module-http/client';
 
-import type { FusionFramework } from './framework.node.js';
+import type { FusionFramework } from './fusion-env.js';
 
 import {
   chalk,

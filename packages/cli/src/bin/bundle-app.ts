@@ -1,6 +1,6 @@
 import type { RuntimeEnv } from '@equinor/fusion-framework-cli/lib';
 
-import { buildApplication } from './app-build.js';
+import { buildApplication } from './build-application.js';
 import { pack } from './pack.js';
 
 import type { ConsoleLogger } from './utils/ConsoleLogger.js';

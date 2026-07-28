@@ -4,7 +4,7 @@ import { mergeConfig as mergeConfigVite } from 'vite';
 
 import type { RuntimeEnv } from '@equinor/fusion-framework-cli/lib';
 
-import { fileExistsSync } from '../lib/utils/file-exists.js';
+import { fileExistsSync } from '../lib/utils/file-exists-sync.js';
 
 import { resolveAppConfig } from './helpers/resolve-app-config.js';
 import { resolveProjectPackage } from './helpers/resolve-project-package.js';

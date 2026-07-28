@@ -10,7 +10,7 @@ import {
 
 import type { ConsoleLogger } from '../utils/index.js';
 import chalk from 'chalk';
-import { formatPath } from '../utils/format.js';
+import { formatPath } from '../utils/format-path.js';
 
 /**
  * Resolves the portal manifest for a given runtime environment and package.

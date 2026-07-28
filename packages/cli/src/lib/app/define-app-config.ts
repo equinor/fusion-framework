@@ -2,9 +2,9 @@ import type z from 'zod';
 
 import type { RuntimeEnv } from '@equinor/fusion-framework-cli/lib';
 
-import type { ApiAppConfig, ApiAppConfigSchema } from './schemas.js';
+import type { ApiAppConfig, ApiAppConfigSchema } from './api-app-config-schema.js';
 
-export type { ApiAppConfig as AppConfig } from './schemas.js';
+export type { ApiAppConfig as AppConfig } from './api-app-config-schema.js';
 
 export { mergeAppConfig } from './merge-app-config.js';
 

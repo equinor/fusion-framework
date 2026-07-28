@@ -8,7 +8,7 @@ export {
   type PortalManifestFn,
 } from './load-portal-manifest.js';
 
-export { createPortalManifestFromPackage } from './create-portal-manifest.js';
+export { createPortalManifestFromPackage } from './create-portal-manifest-from-package.js';
 
 /**
  * Utility to define a portal manifest function with proper typing.
@@ -37,7 +37,7 @@ export { PortalManifestSchema, PortalManifestSchemaType as PortalManifest } from
 export {
   PortalManifestBuildSchema,
   type PortalManifestBuildSchemaType as PortalManifestBuild,
-} from './portal-manifest.schema.js';
+} from './portal-manifest-build-schema.js';
 
 export { validatePortalManifest } from './validate-portal-manifest.js';
 

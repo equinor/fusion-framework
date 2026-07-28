@@ -1,5 +1,5 @@
 import { rmSync } from 'node:fs';
-import { validateSafePath } from './path-security.js';
+import { validateSafePath } from './validate-safe-path.js';
 
 /**
  * Safely removes a directory with path traversal protection.

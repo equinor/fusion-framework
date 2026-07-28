@@ -1,7 +1,7 @@
 import { assert } from '@equinor/fusion-framework-cli/utils';
-import type { AppPackageJson } from './app-package.js';
+import type { AppPackageJson } from './define-app-package.js';
 import { resolveAppKey } from './resolve-app-key.js';
-import { resolveEntryPoint } from './resolve-app-entry-point.js';
+import { resolveEntryPoint } from './resolve-app-entry-point-impl.js';
 
 /**
  * Asserts the validity of a given package by resolving its application key and entry point.

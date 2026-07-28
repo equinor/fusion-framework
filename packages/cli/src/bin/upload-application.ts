@@ -1,10 +1,10 @@
 import chalk from 'chalk';
 import AdmZip from 'adm-zip';
 
-import type { FusionFramework } from './framework.node.js';
+import type { FusionFramework } from './fusion-env.js';
 import type { FetchRequest } from '@equinor/fusion-framework-module-http/client';
 
-import { loadMetadata } from './helpers/load-bundle-metadata.js';
+import { loadMetadata } from './helpers/load-metadata.js';
 
 import {
   type ConsoleLogger,

@@ -1,7 +1,7 @@
 import { dirname } from 'node:path';
 import { readPackageUp, type NormalizeOptions as ResolveAppPackageOptions } from 'read-package-up';
 
-import type { AppPackageJson } from './app-package.js';
+import type { AppPackageJson } from './define-app-package.js';
 
 /**
  * Structure representing a resolved application package, including its path and root directory.

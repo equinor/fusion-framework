@@ -11,7 +11,7 @@ import { ConsoleLogger } from '@equinor/fusion-framework-cli/bin';
 
 import { writeFile } from '@equinor/fusion-framework-cli/utils';
 
-import { createEnvOption } from '../../options/env.js';
+import { createEnvOption } from '../../options/create-env-option.js';
 
 /**
  * CLI command: `schema`

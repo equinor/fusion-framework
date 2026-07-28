@@ -3,7 +3,7 @@ import { loadPortalSchema } from '@equinor/fusion-framework-cli/portal';
 import type { RuntimeEnv } from '@equinor/fusion-framework-cli/lib';
 
 import { pack } from './pack.js';
-import { buildPortal } from './portal-build.js';
+import { buildPortal } from './build-portal.js';
 
 import type { ConsoleLogger } from './utils/ConsoleLogger.js';
 

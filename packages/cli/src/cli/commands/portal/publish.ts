@@ -2,8 +2,8 @@ import { createCommand } from 'commander';
 
 import chalk from 'chalk';
 
-import { withAuthOptions } from '../../options/auth.js';
-import { createEnvOption } from '../../options/env.js';
+import { withAuthOptions } from '../../options/with-auth-options.js';
+import { createEnvOption } from '../../options/create-env-option.js';
 
 import {
   initializeFramework,

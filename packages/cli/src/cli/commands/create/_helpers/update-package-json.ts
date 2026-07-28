@@ -1,7 +1,7 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import type { PackageJson } from 'type-fest';
-import { resolvePackageJsonWorkspaceDependencies } from './resolve-workspace-dependencies.js';
+import { resolvePackageJsonWorkspaceDependencies } from './resolve-package-json-workspace-dependencies.js';
 import type { ConsoleLogger } from '@equinor/fusion-framework-cli/bin';
 
 /**

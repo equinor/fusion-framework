@@ -1,5 +1,5 @@
 import chalk from 'chalk';
-import { defineAppManifest as _defineManifest } from './app/app-manifest.js';
+import { defineAppManifest as _defineManifest } from './app/define-app-manifest.js';
 
 /**
  * @deprecated

@@ -8,8 +8,8 @@ import {
   publishPortalConfig,
 } from '@equinor/fusion-framework-cli/bin';
 
-import { createEnvOption } from '../../options/env.js';
-import { withAuthOptions } from '../../options/auth.js';
+import { createEnvOption } from '../../options/create-env-option.js';
+import { withAuthOptions } from '../../options/with-auth-options.js';
 
 /**
  * CLI command: `portal config`

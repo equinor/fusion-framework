@@ -10,7 +10,7 @@ import devCommand from './dev.js';
 import serveCommand from './serve.js';
 import manifestCommand from './manifest.js';
 import publishCommand from './publish.js';
-import createAppCommand from '../create/app.js';
+import createAppCommand from '../create/create-app-command.js';
 
 // TODO(#5073): remove in next major version v12
 import './alias.js';

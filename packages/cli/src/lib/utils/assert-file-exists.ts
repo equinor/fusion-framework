@@ -1,4 +1,4 @@
-import { fileExists } from './file-exists-async.js';
+import { fileExists } from './file-exists.js';
 import { assert } from './assert.js';
 
 /**

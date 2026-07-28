@@ -4,7 +4,7 @@ import { module as httpModule } from '@equinor/fusion-framework-module-http';
 import { enableServiceDiscovery } from '@equinor/fusion-framework-module-service-discovery';
 import isContinuousIntegration from 'is-ci';
 
-import { FusionEnv, type Modules } from './framework.node.js';
+import { FusionEnv, type Modules } from './fusion-env.js';
 
 // Default scope for Fusion service discovery
 const FUSION_SERVICE_SCOPE = ['5a842df8-3238-415d-b168-9f16a6a6031b/.default'];

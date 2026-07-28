@@ -6,7 +6,7 @@ import assert from 'node:assert';
 import { existsSync, mkdirSync, readFileSync } from 'node:fs';
 import { ProjectTemplate } from './ProjectTemplate.js';
 import { parseTemplatesManifest } from './parse-templates-manifest.js';
-import { validateSafePath } from '../../lib/utils/path-security.js';
+import { validateSafePath } from '../../lib/utils/validate-safe-path.js';
 import { safeRmSync } from '../../lib/utils/safe-rm-sync.js';
 
 /**

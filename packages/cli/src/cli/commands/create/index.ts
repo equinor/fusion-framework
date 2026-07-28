@@ -1,6 +1,6 @@
 import { createCommand } from 'commander';
 
-import createAppCommand from './app.js';
+import createAppCommand from './create-app-command.js';
 
 export const command = createCommand('create')
   .description('Create new Fusion applications and components from templates')

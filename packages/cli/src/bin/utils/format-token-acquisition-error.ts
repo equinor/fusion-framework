@@ -1,6 +1,6 @@
 import chalk from 'chalk';
 
-import { AUTH_ERROR_DOCS } from './auth-docs-url.js';
+import { AUTH_ERROR_DOCS } from './auth-error-docs.js';
 import { envTokenHint } from './env-token-hint.js';
 import { formatAuthError } from './format-auth-error.js';
 

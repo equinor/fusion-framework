@@ -2,7 +2,7 @@ import z from 'zod';
 import { importConfig, type ImportConfigResult } from '@equinor/fusion-imports';
 
 import type { RuntimeEnv } from '../types.js';
-import type { PortalConfig, PortalConfigFn } from './portal-config.js';
+import type { PortalConfig, PortalConfigFn } from './define-portal-config.js';
 
 /**
  * Represents the configuration export for a portal.

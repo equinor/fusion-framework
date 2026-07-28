@@ -1,4 +1,4 @@
-import { fileExistsSync } from './file-exists.js';
+import { fileExistsSync } from './file-exists-sync.js';
 import { resolve } from 'node:path';
 
 /**

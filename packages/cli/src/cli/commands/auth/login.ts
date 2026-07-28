@@ -4,7 +4,7 @@ import chalk from 'chalk';
 
 import { ConsoleLogger, initializeFramework } from '@equinor/fusion-framework-cli/bin';
 
-import { withAuthOptions } from '../../options/auth.js';
+import { withAuthOptions } from '../../options/with-auth-options.js';
 
 /**
  * Command to authenticate and log in to Fusion Framework using interactive browser-based authentication.

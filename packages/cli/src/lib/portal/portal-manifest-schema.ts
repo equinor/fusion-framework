@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { PortalManifestBuildSchema } from './portal-manifest.schema.js';
+import { PortalManifestBuildSchema } from './portal-manifest-build-schema.js';
 
 /**
  * Zod schema for validating the PortalManifest object.

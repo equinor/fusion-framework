@@ -2,7 +2,7 @@ import { createCommand } from 'commander';
 
 import { ConsoleLogger, initializeFramework } from '@equinor/fusion-framework-cli/bin';
 
-import { withAuthOptions } from '../../options/auth.js';
+import { withAuthOptions } from '../../options/with-auth-options.js';
 
 /**
  * CLI command: `logout`

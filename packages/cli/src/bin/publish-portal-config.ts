@@ -2,7 +2,7 @@ import { HttpJsonResponseError } from '@equinor/fusion-framework-module-http/err
 import type { FetchRequest } from '@equinor/fusion-framework-module-http/client';
 
 import { initializeFramework } from './initialize-framework.js';
-import type { FusionEnv } from './framework.node.js';
+import type { FusionEnv } from './fusion-env.js';
 import type { FusionFrameworkSettings } from './configure-framework.js';
 
 import {
@@ -14,7 +14,7 @@ import {
   formatTokenAcquisitionError,
 } from './utils/index.js';
 
-import { generatePortalConfig } from './portal-config.js';
+import { generatePortalConfig } from './generate-portal-config.js';
 
 /**
  * Options for publishing a portal configuration to the portal service.

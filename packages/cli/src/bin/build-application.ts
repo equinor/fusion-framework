@@ -11,7 +11,7 @@ import type { RuntimeEnv } from '@equinor/fusion-framework-cli/lib';
 import type { ConsoleLogger } from './utils/index.js';
 
 import { loadViteConfig } from './helpers/load-vite-config.js';
-import { loadAppManifest } from './app-manifest.js';
+import { loadAppManifest } from './load-app-manifest.js';
 
 /**
  * Options for building an application.

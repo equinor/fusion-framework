@@ -3,15 +3,15 @@ import type { AppManifest } from '@equinor/fusion-framework-module-app';
 
 import { assert } from '../utils/assert.js';
 import { assertObject } from '../utils/assert-object.js';
-import { resolveEntryPoint } from '../utils/resolve-source-entry-point.js';
-import { resolveRepoFromPackage } from '../utils/resolve-package-repo.js';
+import { resolveEntryPoint } from '../utils/resolve-source-entry-point-impl.js';
+import { resolveRepoFromPackage } from '../utils/resolve-repo-from-package.js';
 import { resolveGitRemoteUrl } from '../utils/resolve-git-remote-url.js';
 import { resolveGitCommitSha } from '../utils/resolve-git-commit-sha.js';
 import { resolveAnnotations } from '../utils/resolve-annotations.js';
 import { ASSET_EXTENSIONS } from '../static.js';
 
 import type { RuntimeEnv } from '../types.js';
-import { generateSnapshotVersion } from '../utils/snapshot.js';
+import { generateSnapshotVersion } from '../utils/generate-snapshot-version.js';
 
 /**
  * Resolves the entry point for the application based on the environment and package.json.

@@ -1,5 +1,5 @@
 import chalk from 'chalk';
-import { defineAppConfig as _defineConfig } from './app/app-config.js';
+import { defineAppConfig as _defineConfig } from './app/define-app-config.js';
 
 /**
  * @deprecated

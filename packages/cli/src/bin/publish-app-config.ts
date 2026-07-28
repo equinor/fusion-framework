@@ -1,7 +1,7 @@
 import { HttpJsonResponseError } from '@equinor/fusion-framework-module-http/errors';
 import type { FetchRequest } from '@equinor/fusion-framework-module-http/client';
 
-import type { FusionFramework } from './framework.node.js';
+import type { FusionFramework } from './fusion-env.js';
 
 import {
   formatPath,
@@ -11,7 +11,7 @@ import {
   formatTokenAcquisitionError,
 } from './utils/index.js';
 
-import type { ApiAppConfig } from '../lib/app/schemas.js';
+import type { ApiAppConfig } from '../lib/app/api-app-config-schema.js';
 
 /**
  * Options for publishing an application configuration to the app service.

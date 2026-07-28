@@ -1,6 +1,6 @@
 import isContinuousIntegration from 'is-ci';
 
-import { FusionEnv } from './framework.node.js';
+import { FusionEnv } from './fusion-env.js';
 
 /**
  * Resolves the default environment based on CI status and dev allowance.

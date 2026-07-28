@@ -1,13 +1,13 @@
 import { build as viteBuild } from 'vite';
 
 import { initializeFramework } from './initialize-framework.js';
-import type { FusionEnv } from './framework.node.js';
+import type { FusionEnv } from './fusion-env.js';
 import type { FusionFrameworkSettings } from './configure-framework.js';
 import { type ConsoleLogger, chalk } from './utils/index.js';
 
 import { loadViteConfig } from './helpers/load-vite-config.js';
 
-import { loadPortalManifest } from './portal-manifest.js';
+import { loadPortalManifest } from './load-portal-manifest.js';
 
 /**
  * Options for building a portal application using Vite.

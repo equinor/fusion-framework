@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { TemplateResourceFileSchema } from './project-templates.schema.js';
-import { TemplateResourceDirSchema } from './template-resource-dir.schema.js';
+import { TemplateResourceFileSchema } from './template-resource-file-schema.js';
+import { TemplateResourceDirSchema } from './template-resource-dir-schema.js';
 
 /**
  * Union schema for all template resource types.

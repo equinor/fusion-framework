@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { TemplateResourceSchema } from './template-resource.schema.js';
+import { TemplateResourceSchema } from './template-resource-schema.js';
 
 /**
  * Zod schema for a single template item.

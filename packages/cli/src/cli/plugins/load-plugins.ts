@@ -5,8 +5,8 @@ import { dirname, join } from 'node:path';
 import { pathToFileURL, fileURLToPath } from 'node:url';
 import { findUp } from 'find-up';
 import { readFileSync } from 'node:fs';
-import type { FusionCliConfig, FusionCliConfigExport } from '../../lib/fusion-cli-config.js';
-import type { FusionCliPlugin } from '../../lib/fusion-cli-config.js';
+import type { FusionCliConfig, FusionCliConfigExport } from '../../lib/define-fusion-cli.js';
+import type { FusionCliPlugin } from '../../lib/define-fusion-cli.js';
 
 /**
  * Attempts to load and register plugins from configuration files

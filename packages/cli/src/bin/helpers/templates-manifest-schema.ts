@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { TemplateItemSchema } from './template-item.schema.js';
-import { TemplateResourceSchema } from './template-resource.schema.js';
+import { TemplateItemSchema } from './template-item-schema.js';
+import { TemplateResourceSchema } from './template-resource-schema.js';
 
 /**
  * Zod schema for the complete templates manifest.

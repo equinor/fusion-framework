@@ -6,7 +6,7 @@ import { readPackageUp } from 'read-package-up';
 
 import type { RuntimeEnv } from '@equinor/fusion-framework-cli/lib';
 
-import { fileExistsSync } from '../lib/utils/file-exists.js';
+import { fileExistsSync } from '../lib/utils/file-exists-sync.js';
 
 import type { ConsoleLogger } from './utils/index.js';
 import { createDevServer } from './utils/create-dev-server.js';

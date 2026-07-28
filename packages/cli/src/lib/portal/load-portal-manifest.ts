@@ -4,7 +4,7 @@ import deepmerge from 'deepmerge';
 
 import { PortalManifestSchema } from './portal-manifest-schema.js';
 import type { RecursivePartial, RuntimeEnv } from '../types.js';
-import type { PortalManifest } from './portal-manifest.js';
+import type { PortalManifest } from './define-portal-manifest.js';
 
 /**
  * A function type for generating or modifying a portal manifest based on the runtime environment and provided arguments.

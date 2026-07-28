@@ -9,7 +9,7 @@
 export type { RuntimeEnv } from './types.js';
 
 export { resolvePackage, type ResolvedPackage } from './utils/resolve-package.js';
-export { resolveEntryPoint } from './utils/resolve-source-entry-point.js';
+export { resolveEntryPoint } from './utils/resolve-source-entry-point-impl.js';
 
 export {
   defineDevServerConfig,
@@ -23,9 +23,9 @@ export {
   type FusionCliConfig,
   type FusionCliConfigFn,
   type FusionCliConfigExport,
-} from './fusion-cli-config.js';
+} from './define-fusion-cli.js';
 
 // Legacy imports - these will be removed in the next major version
 // TODO(#5070): remove these imports, introduced in v11
-export { defineAppConfig } from './legacy.js';
-export { defineAppManifest } from './legacy-app-manifest.js';
+export { defineAppConfig } from './define-app-config-legacy.js';
+export { defineAppManifest } from './define-app-manifest-legacy.js';

@@ -3,7 +3,7 @@ import { createCommand } from 'commander';
 import { ConsoleLogger, initializeFramework } from '@equinor/fusion-framework-cli/bin';
 import { NoCredentialError } from '@equinor/fusion-framework-module-azure-identity';
 
-import { withAuthOptions } from '../../options/auth.js';
+import { withAuthOptions } from '../../options/with-auth-options.js';
 
 /**
  * CLI command: `token`

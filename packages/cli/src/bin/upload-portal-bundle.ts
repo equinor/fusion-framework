@@ -1,7 +1,7 @@
 import AdmZip from 'adm-zip';
 import type { FetchRequest } from '@equinor/fusion-framework-module-http/client';
 
-import type { FusionFramework } from './framework.node.js';
+import type { FusionFramework } from './fusion-env.js';
 import type { ConsoleLogger } from './utils/ConsoleLogger.js';
 import {
   chalk,
@@ -9,7 +9,7 @@ import {
   formatAuthError,
   formatTokenAcquisitionError,
 } from './utils/index.js';
-import { loadMetadata } from './helpers/load-bundle-metadata.js';
+import { loadMetadata } from './helpers/load-metadata.js';
 
 /**
  * Options for uploading a portal bundle to the portal service.

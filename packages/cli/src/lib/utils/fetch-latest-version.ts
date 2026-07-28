@@ -1,4 +1,4 @@
-import { fetchPackageInfo } from './package-info.js';
+import { fetchPackageInfo } from './fetch-package-info.js';
 
 /**
  * Fetches only the latest version of a package from npm registry.

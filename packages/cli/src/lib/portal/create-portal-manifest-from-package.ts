@@ -5,13 +5,13 @@ import type { RuntimeEnv } from '@equinor/fusion-framework-cli/lib';
 import { assert } from '../utils/assert.js';
 import { assertObject } from '../utils/assert-object.js';
 import { resolveAnnotations } from '../utils/resolve-annotations.js';
-import { resolveEntryPoint } from '../utils/resolve-source-entry-point.js';
+import { resolveEntryPoint } from '../utils/resolve-source-entry-point-impl.js';
 
-import { resolveRepoFromPackage } from '../utils/resolve-package-repo.js';
+import { resolveRepoFromPackage } from '../utils/resolve-repo-from-package.js';
 import { resolveGitRemoteUrl } from '../utils/resolve-git-remote-url.js';
 import { resolveGitCommitSha } from '../utils/resolve-git-commit-sha.js';
 import { ASSET_EXTENSIONS } from '../static.js';
-import type { PortalManifest } from './portal-manifest.js';
+import type { PortalManifest } from './define-portal-manifest.js';
 import { PortalManifestSchema } from './portal-manifest-schema.js';
 
 /**

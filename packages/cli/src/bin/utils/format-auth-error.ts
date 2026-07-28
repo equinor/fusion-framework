@@ -8,7 +8,7 @@
  */
 import chalk from 'chalk';
 
-import { AUTH_ERROR_DOCS } from './auth-docs-url.js';
+import { AUTH_ERROR_DOCS } from './auth-error-docs.js';
 import { envTokenHint } from './env-token-hint.js';
 
 const { AUTH_DOCS_URL, APP_DOCS_URL } = AUTH_ERROR_DOCS;

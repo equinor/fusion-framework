@@ -4,8 +4,8 @@ import type { AppManifest } from '@equinor/fusion-framework-module-app';
 
 import type { RuntimeEnv } from '../types.js';
 import type { RecursivePartial } from '../utils/types.js';
-import type { AppManifestFn } from './app-manifest.js';
-import mergeAppManifests from './merge-app-manifest.js';
+import type { AppManifestFn } from './define-app-manifest.js';
+import mergeAppManifests from './merge-app-manifests.js';
 
 /**
  * Represents the export type for an application manifest, which can either be

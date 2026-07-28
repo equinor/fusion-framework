@@ -6,7 +6,7 @@ import { writeFile } from 'node:fs/promises';
 
 import { ConsoleLogger, loadAppManifest } from '@equinor/fusion-framework-cli/bin';
 
-import { fileExistsSync } from '../../../lib/utils/file-exists.js';
+import { fileExistsSync } from '../../../lib/utils/file-exists-sync.js';
 
 /**
  * CLI command: `manifest`
