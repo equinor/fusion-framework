@@ -104,7 +104,11 @@ function resolveExport(node: Node): { name: string; kind: NamingKind } | null {
   // lexical_declaration (const/let) or variable_declaration (var): inspect the first declarator
   const declarator = declaration.namedChildren.find((c) => c.type === 'variable_declarator');
   if (!declarator) return null;
-  const name = declarator.childForFieldName('name')?.text;
+  const nameNode = declarator.childForFieldName('name');
+  // Destructuring exports (e.g. `export const { Consumer, Provider } = ctx`) bind
+  // multiple names at once — there's no single export name to file the module after.
+  if (!nameNode || nameNode.type !== 'identifier') return null;
+  const name = nameNode.text;
   if (!name) return null;
   // only function-like initializers can be components/hooks; plain values are always "other"
   if (isFunctionLike(declarator)) {
@@ -121,10 +125,25 @@ function resolveExport(node: Node): { name: string; kind: NamingKind } | null {
  * @returns The kebab-cased equivalent.
  */
 function toKebabCase(name: string): string {
-  return name
+  // Preserve a leading underscore verbatim — it's a deliberate "private/internal"
+  // naming marker (e.g. `_routerContext` backing an internal React context), not
+  // a word separator, so the expected filename keeps the same prefix.
+  const leadingUnderscore = /^_+/.exec(name)?.[0] ?? '';
+  const rest = name.slice(leadingUnderscore.length);
+
+  const kebab = rest
     .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
     .replace(/([A-Z]+)([A-Z][a-z])/g, '$1-$2')
-    .toLowerCase();
+    // SCREAMING_SNAKE_CASE constants (e.g. EVENT_NAME) use underscores as word
+    // separators instead of case changes — normalize those to hyphens too.
+    .replace(/_/g, '-')
+    .toLowerCase()
+    // Collapse runs of hyphens produced by adjacent underscores and strip any
+    // leading/trailing hyphen so the suggested filename is never malformed.
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '');
+
+  return `${leadingUnderscore}${kebab}`;
 }
 
 /**
