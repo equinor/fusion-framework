@@ -22,7 +22,7 @@ type AllowedVersions = FilterAllowedApiVersions<AvailableVersions>;
 /**
  * Schema transformer of the filter object to an OData filter string.
  *
- * @todo This function should be moved to a shared utility module.
+ * @todo(#5162) This function should be moved to a shared utility module.
  */
 const transformOdataFilter = (filter: Record<string, unknown>) => {
   return (

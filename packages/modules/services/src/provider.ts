@@ -157,7 +157,7 @@ export class ApiProvider<TClient extends IHttpClient = IHttpClient>
     method: TMethod,
   ): Promise<BookmarksApiClient<TMethod, TClient>> {
     const httpClient = await this._createClientFn('bookmarks');
-    // TODO: update when new ResponseOperator is available
+    // TODO(#5157): update when new ResponseOperator is available
     // will fail because 'HEAD' will return 404 when no bookmarks are found
     // httpClient.responseHandler.add('validate_api_request', validateResponse);
     return new BookmarksApiClient(httpClient, method);
