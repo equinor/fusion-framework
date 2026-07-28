@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { parse } from 'dotenv';
 import { type DotenvPopulateInput, expand } from 'dotenv-expand';
-import { DEFAULT_ENV_PREFIX } from './static';
+import { DEFAULT_ENV_PREFIX } from './default_env_prefix';
 
 /**
  * Resolve the ordered list of `.env` file paths for a given directory and mode.

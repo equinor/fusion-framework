@@ -1,4 +1,4 @@
-import { DEFAULT_ENV_PREFIX } from './static';
+import { DEFAULT_ENV_PREFIX } from './default_env_prefix';
 
 /**
  * Convert a nested JavaScript object into a flat record of environment variable entries.
@@ -41,10 +41,14 @@ export function objectToEnv(obj: object, options?: { prefix?: string }): Record<
 
         // Recursively flatten nested objects
         if (value && typeof value === 'object' && !Array.isArray(value)) {
-          return Object.assign(result, objectToEnv(value, { prefix }));
+          // Merge recursively flattened nested entries into the accumulator.
+          const mergedResult = Object.assign(result, objectToEnv(value, { prefix }));
+          return mergedResult;
         }
 
-        return Object.assign(result, { [prefix]: String(value) });
+        // Add the converted environment entry to the accumulator.
+        const mergedResult = Object.assign(result, { [prefix]: String(value) });
+        return mergedResult;
       }, {})
   );
 }
