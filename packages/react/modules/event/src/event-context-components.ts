@@ -1,3 +1,3 @@
-import { eventContext } from './eventContext.js';
+import { eventContext } from './event-context.js';
 
 export const { Consumer: EventConsumer, Provider: EventProvider } = eventContext;
