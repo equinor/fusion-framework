@@ -1,4 +1,4 @@
-import moduleContext from './context.js';
+import moduleContext from './module-context.js';
 
 export const ModuleProvider = moduleContext.Provider;
 

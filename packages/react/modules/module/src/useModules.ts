@@ -1,7 +1,7 @@
 import type { AnyModule, Modules, ModulesInstanceType } from '@equinor/fusion-framework-module';
 import { useContext } from 'react';
 
-import { moduleContext } from './context.js';
+import { moduleContext } from './module-context.js';
 
 /**
  * Hook for accessing module instances from the current context scope.
