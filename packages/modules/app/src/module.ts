@@ -19,8 +19,6 @@ export type AppModule = Module<typeof moduleKey, AppModuleProvider, AppConfigura
  * Responsible for loading applications, configurations and manifests.
  * @public
  */
-// Deliberately co-located with moduleKey, which it depends on
-// fusion-lint-disable-next-line single-export-per-file
 export const module: AppModule = {
   /**
    * The name of the module.
