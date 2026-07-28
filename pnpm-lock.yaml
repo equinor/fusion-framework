@@ -586,7 +586,7 @@ importers:
         version: link:../../packages/react/router
       '@equinor/fusion-react-person':
         specifier: ^2.0.15
-        version: 2.0.15(react@19.2.7)
+        version: 2.0.16(react@19.2.7)
       styled-components:
         specifier: ^6.3.11
         version: 6.4.4(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -3502,8 +3502,8 @@ packages:
     peerDependencies:
       react: ^18 || ^19
 
-  '@equinor/fusion-react-person@2.0.15':
-    resolution: {integrity: sha512-H5fJUsUFAQkAl9WfjmPR0WbU6yjHcwOx6n84+RB7fQTvXO253Tte/5W8gGzTO54jc9vs9UmeW/du1qpI2R/McQ==}
+  '@equinor/fusion-react-person@2.0.16':
+    resolution: {integrity: sha512-EkmPvbwFRgOT74hEzXdinM38f3YHeVOpRC7zGODuYXvkWta7i6k0BoFZWIHxd4T/oG6pJqhWKWyXDaFCfGwEJw==}
     peerDependencies:
       react: ^18 || ^19
 
@@ -12995,9 +12995,9 @@ snapshots:
       '@equinor/fusion-wc-date': 1.2.3
       react: 19.2.7
 
-  '@equinor/fusion-react-person@2.0.15(react@19.2.7)':
+  '@equinor/fusion-react-person@2.0.16(react@19.2.7)':
     dependencies:
-      '@equinor/fusion-react-utils': 3.0.6(react@19.2.7)
+      '@equinor/fusion-react-utils': 3.0.7(react@19.2.7)
       '@equinor/fusion-wc-people': 2.2.4
       '@equinor/fusion-wc-person': 3.5.5
       react: 19.2.7
