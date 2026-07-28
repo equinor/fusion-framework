@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { TemplatesManifestSchema, type TemplatesManifest } from './templates-manifest-schema.js';
+import { TemplatesManifestSchema, type TemplatesManifest } from './template.schemas.js';
 
 /**
  * Validates and parses a template manifest JSON string.
