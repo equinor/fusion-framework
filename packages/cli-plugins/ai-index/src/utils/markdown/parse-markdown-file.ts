@@ -25,13 +25,12 @@ export const parseMarkdownFile = async <
   assert(isMarkdownFile(file.path), `File ${file.path} is not a markdown or MDX file`);
   const content = readFileSync(file.path, 'utf8');
   const result = await parseMarkdown<T>(content, file.relativePath ?? file.path);
-  return result
-    // Enrich each parsed chunk with the file's project root for downstream path resolution
-    .map((document) => ({
-      ...document,
-      metadata: {
-        ...document.metadata,
-        rootPath: file.projectRoot,
-      },
-    }));
+  // Enrich each parsed chunk with the file's project root for downstream path resolution
+  return result.map((document) => ({
+    ...document,
+    metadata: {
+      ...document.metadata,
+      rootPath: file.projectRoot,
+    },
+  }));
 };

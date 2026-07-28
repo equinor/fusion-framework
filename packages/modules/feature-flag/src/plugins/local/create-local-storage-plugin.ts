@@ -34,10 +34,8 @@ export const createLocalStoragePlugin = (
   return async () => {
     const { name, type = 'local' } = options ?? {};
     // build the storage key prefix from a fixed 'FEATURES' segment plus the optional namespace
-    const namespace = ['FEATURES', name]
-      // drop the namespace segment entirely when none was provided
-      .filter((x) => !!x)
-      .join('_');
+    // drop the namespace segment entirely when none was provided
+    const namespace = ['FEATURES', name].filter((x) => !!x).join('_');
     const storage = createStorage(namespace, type);
     return {
       connect: ({ provider }) => {
@@ -48,17 +46,14 @@ export const createLocalStoragePlugin = (
       },
       initial: async () => {
         const storedItems = await storage.getItems();
-        return (
-          features
-            // hydrate each default flag's enabled state from the stored snapshot, if present
-            .map((feature) => {
-              const storedItem = storedItems[feature.key] as IFeatureFlag | undefined;
-              return {
-                ...feature,
-                enabled: storedItem ? storedItem.enabled : feature.enabled,
-              };
-            }) as IFeatureFlag[]
-        );
+        // hydrate each default flag's enabled state from the stored snapshot, if present
+        return features.map((feature) => {
+          const storedItem = storedItems[feature.key] as IFeatureFlag | undefined;
+          return {
+            ...feature,
+            enabled: storedItem ? storedItem.enabled : feature.enabled,
+          };
+        }) as IFeatureFlag[];
       },
     } satisfies FeatureFlagPlugin;
   };

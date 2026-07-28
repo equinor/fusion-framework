@@ -425,9 +425,8 @@ export class BookmarkProvider implements IBookmarkProvider {
     // return a function to remove the added payload generator
     return () => {
       this._log?.debug(`removing bookmark payload generator: ${fn.name}`);
-      this.#payloadGenerators = this.#payloadGenerators
-        // drop the matching generator reference from the registered list
-        .filter((g) => g !== fn);
+      // drop the matching generator reference from the registered list
+      this.#payloadGenerators = this.#payloadGenerators.filter((g) => g !== fn);
     };
   }
 

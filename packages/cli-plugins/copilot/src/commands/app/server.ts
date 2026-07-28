@@ -22,10 +22,10 @@ export interface AppServerResult {
  */
 function freePort(port: number): void {
   try {
+    // Drop the empty string lsof emits when no matching process was found
     const pids = execSync(`lsof -ti tcp:${port}`, { encoding: 'utf-8' })
       .trim()
       .split('\n')
-      // Drop the empty string lsof emits when no matching process was found
       .filter(Boolean);
     // Terminate each stale process bound to the port
     for (const pid of pids) {

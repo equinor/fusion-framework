@@ -63,10 +63,8 @@ export const getFileStatus = async (filePath: string): Promise<ChangedFile[]> =>
     try {
       // Get full git status to check for renames (only if needed)
       const statusOutput = await git.raw(['status', '--porcelain']);
-      const lines = statusOutput
-        .split('\n')
-        // Drop blank lines left by the trailing newline in git's output
-        .filter((line) => line.trim() !== '');
+      // Drop blank lines left by the trailing newline in git's output
+      const lines = statusOutput.split('\n').filter((line) => line.trim() !== '');
 
       // Scan every status line for a rename or copy that produced this file
       for (const line of lines) {

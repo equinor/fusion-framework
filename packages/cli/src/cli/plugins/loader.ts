@@ -57,14 +57,15 @@ export async function loadPlugins(program: Command): Promise<void> {
   ];
 
   const configFiles = await Promise.all(
-    // Find all fusion-cli.config.ts files (supports .ts, .js, .json extensions)
-    searchPaths.map(async (startPath) => {
-      const configFile = await findUp(
-        ['fusion-cli.config.ts', 'fusion-cli.config.js', 'fusion-cli.config.json'],
-        { cwd: dirname(startPath) },
-      );
-      return configFile;
-    }),
+    searchPaths
+      // Find all fusion-cli.config.ts files (supports .ts, .js, .json extensions)
+      .map(async (startPath) => {
+        const configFile = await findUp(
+          ['fusion-cli.config.ts', 'fusion-cli.config.js', 'fusion-cli.config.json'],
+          { cwd: dirname(startPath) },
+        );
+        return configFile;
+      }),
   );
 
   // Load configs from found files (deduplicate by path)

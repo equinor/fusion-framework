@@ -27,8 +27,8 @@ export function createDeleteRemovedFilesStream(
         return { files: [], filterExpression: null };
       }
       // Build OData filter: "metadata/source eq 'path1' or metadata/source eq 'path2'"
+      // Escape each removed file into an OData equality clause
       const filterExpression = files
-        // Escape each removed file into an OData equality clause
         .map((file) => `metadata/source eq '${file.relativePath}'`)
         .join(' or ');
       return { files, filterExpression };

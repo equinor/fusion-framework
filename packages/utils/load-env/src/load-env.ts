@@ -22,11 +22,8 @@ export function getEnvFilesForMode(envDir: string, mode?: string): string[] {
     envFileNames.push(`.env.${mode}`, `.env.${mode}.local`);
   }
   // Normalize each candidate file name into an absolute path
-  return (
-    envFileNames
-      // Build the final absolute path for each candidate file name
-      .map((file) => path.normalize(path.join(envDir, file)))
-  );
+  // Build the final absolute path for each candidate file name
+  return envFileNames.map((file) => path.normalize(path.join(envDir, file)));
 }
 
 /**

@@ -21,10 +21,10 @@ export const blobSelector: ResponseSelector = async <TResponse extends Response 
   }
 
   // Extract the filename from the 'content-disposition' header
+  // locate the segment carrying the filename directive; other directives (e.g. inline/attachment) are ignored
   const filename = response.headers
     .get('content-disposition')
     ?.split(';')
-    // locate the segment carrying the filename directive; other directives (e.g. inline/attachment) are ignored
     .find((n) => n.includes('filename='))
     ?.replace('filename=', '')
     ?.trim();

@@ -60,15 +60,14 @@ export const createBookmarkReducer = (initialState?: Partial<BookmarkState>) =>
         })
         .addCase(bookmarkActions.fetchBookmarks.success, (state, action) => {
           // normalize the bookmarks array into a record
-          state.bookmarks = action.payload
-            // build a lookup record keyed by bookmark id
-            .reduce(
-              (acc, bookmark) => {
-                acc[bookmark.id] = bookmark;
-                return acc;
-              },
-              {} as Record<string, BookmarkWithoutData>,
-            );
+          // build a lookup record keyed by bookmark id
+          state.bookmarks = action.payload.reduce(
+            (acc, bookmark) => {
+              acc[bookmark.id] = bookmark;
+              return acc;
+            },
+            {} as Record<string, BookmarkWithoutData>,
+          );
         })
         .addCase(bookmarkActions.setBookmark, (state, action) => {
           const bookmarkId = action.payload.id;

@@ -4,7 +4,7 @@ import {
   PersonProviderElement,
   PersonAvatarElement,
   PersonCardElement,
-  PersonResolver,
+  type PersonResolver,
   PersonListItemElement,
   PersonSelectElement,
 } from '@equinor/fusion-wc-person';

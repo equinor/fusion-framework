@@ -85,12 +85,8 @@ export class ConsoleLogger extends Logger {
    * @returns A chalk-formatted title string.
    */
   protected _formatTitle(_lvl: LogLevel): string {
-    const title = chalk.magenta(
-      [this.title, this.subtitle]
-        // Drop the subtitle when it's empty/undefined
-        .filter((x) => !!x)
-        .join(' - '),
-    );
+    // Drop the subtitle when it's empty/undefined
+    const title = chalk.magenta([this.title, this.subtitle].filter((x) => !!x).join(' - '));
     // Warnings and errors are rendered bold to stand out from regular log output
     switch (_lvl) {
       case LogLevel.Warning:

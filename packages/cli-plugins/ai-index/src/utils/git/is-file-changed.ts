@@ -16,7 +16,6 @@ export const isFileChanged = (filePath: string, changedFiles: ChangedFile[]): bo
     return true;
   }
 
-  return changedFiles
-    // A file is considered changed when its path matches any entry in the list
-    .some((file) => file.filepath === filePath);
+  // A file is considered changed when its path matches any entry in the list
+  return changedFiles.some((file) => file.filepath === filePath);
 };

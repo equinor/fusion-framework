@@ -909,12 +909,8 @@ export class ContextProvider
   public validateContext(item: ContextItem<Record<string, unknown>>): boolean {
     // no context type configured means every context item is considered valid
     if (!this.#contextType) return true;
-    return (
-      this.#contextType
-        // normalize allowed types for a case-insensitive comparison
-        .map((x) => x.toLowerCase())
-        .includes(item.type.id.toLowerCase())
-    );
+    // normalize allowed types for a case-insensitive comparison
+    return this.#contextType.map((x) => x.toLowerCase()).includes(item.type.id.toLowerCase());
   }
 
   /**
@@ -938,9 +934,8 @@ export class ContextProvider
     return this.relatedContexts({ item, filter: { type: this.#contextType } }).pipe(
       // filter out invalid context items
       map((x) =>
-        x
-          // keep only context items that validate against the provider's context type
-          .filter((item) => this.validateContext(item)),
+        // keep only context items that validate against the provider's context type
+        x.filter((item) => this.validateContext(item)),
       ),
       map((values) => {
         // related context should be resolved to a single context item

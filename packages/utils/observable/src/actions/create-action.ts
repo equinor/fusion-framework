@@ -4,7 +4,12 @@
  */
 
 import type { Action, PayloadAction } from './types';
-import type { IfMaybeUndefined, IfVoid, IsAny, IsUnknownOrNonInferrable } from '../types/ts-helpers';
+import type {
+  IfMaybeUndefined,
+  IfVoid,
+  IsAny,
+  IsUnknownOrNonInferrable,
+} from '../types/ts-helpers';
 
 /**
  * A "prepare" method to be used as the second parameter of `createAction`.

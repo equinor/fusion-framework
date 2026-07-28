@@ -625,46 +625,46 @@ export const reactRouterPlugin = (options: ReactRouterPluginOptions = {}): Plugi
     config(config: UserConfig) {
       projectRoot = config.root ?? process.cwd();
 
-        // Debug logging is opt-in to avoid noisy build output by default
-        if (debug) {
-          console.log('[fusion:react-router] Project root:', projectRoot);
+      // Debug logging is opt-in to avoid noisy build output by default
+      if (debug) {
+        console.log('[fusion:react-router] Project root:', projectRoot);
+      }
+    },
+    transform(code, id) {
+      try {
+        // Skip files outside the project root or in node_modules
+        if (!projectRoot || !id.startsWith(projectRoot) || id.includes('node_modules')) {
+          return null;
         }
-      },
-      transform(code, id) {
-        try {
-          // Skip files outside the project root or in node_modules
-          if (!projectRoot || !id.startsWith(projectRoot) || id.includes('node_modules')) {
-            return null;
-          }
 
-          // Check if the file contains DSL route imports
-          if (!code.match(ROUTE_IMPORT_PATTERN)) {
-            return null;
-          }
+        // Check if the file contains DSL route imports
+        if (!code.match(ROUTE_IMPORT_PATTERN)) {
+          return null;
+        }
 
-          // Check if the file contains actual DSL route calls
-          if (!code.match(ROUTE_CALL_PATTERN)) {
-            // Debug logging is opt-in to avoid noisy build output by default
-            if (debug) {
-              console.log(
-                '[fusion:react-router] File has DSL imports but no route calls, skipping transformation',
-              );
-            }
-            return null;
-          }
-
+        // Check if the file contains actual DSL route calls
+        if (!code.match(ROUTE_CALL_PATTERN)) {
           // Debug logging is opt-in to avoid noisy build output by default
           if (debug) {
-            console.log('[fusion:react-router] Transforming file:', id.replace(projectRoot, ''));
+            console.log(
+              '[fusion:react-router] File has DSL imports but no route calls, skipping transformation',
+            );
           }
+          return null;
+        }
 
-          // Extract all file paths from DSL route calls
-          const filePaths = extractFilePaths(code);
+        // Debug logging is opt-in to avoid noisy build output by default
+        if (debug) {
+          console.log('[fusion:react-router] Transforming file:', id.replace(projectRoot, ''));
+        }
 
-          // Nothing to transform if no DSL route calls reference a file
-          if (filePaths.size === 0) {
-            return null;
-          }
+        // Extract all file paths from DSL route calls
+        const filePaths = extractFilePaths(code);
+
+        // Nothing to transform if no DSL route calls reference a file
+        if (filePaths.size === 0) {
+          return null;
+        }
 
         // Generate unique variable names for each file's exports
         const fileToImports = new Map<string, RouteImports>();

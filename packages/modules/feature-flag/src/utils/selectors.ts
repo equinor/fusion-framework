@@ -40,8 +40,7 @@ export const filterFeatures =
     // narrow the current features down to just those matching the selector
     source$.pipe(
       map((features) =>
-        Object.values(features)
-          // keep only the flags matching the selector
-          .filter(selector),
+        // keep only the flags matching the selector
+        Object.values(features).filter(selector),
       ),
     );

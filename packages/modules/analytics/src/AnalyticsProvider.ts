@@ -84,12 +84,14 @@ export class AnalyticsProvider
    * @returns A promise that resolves when all adapters and collectors are initialised.
    */
   async initialize(): Promise<void> {
-    const initializedCollectors = Object.values(this.#collectors)
-      // Kick off initialization for every collector, tolerating individual failures
-      .map((collector) => Promise.resolve(collector.initialize?.()));
-    const initializedAdapters = Object.values(this.#adapters)
-      // Kick off initialization for every adapter, tolerating individual failures
-      .map((adapters) => Promise.resolve(adapters.initialize?.()));
+    // Kick off initialization for every collector, tolerating individual failures
+    const initializedCollectors = Object.values(this.#collectors).map((collector) =>
+      Promise.resolve(collector.initialize?.()),
+    );
+    // Kick off initialization for every adapter, tolerating individual failures
+    const initializedAdapters = Object.values(this.#adapters).map((adapters) =>
+      Promise.resolve(adapters.initialize?.()),
+    );
 
     await Promise.allSettled(initializedCollectors);
     await Promise.allSettled(initializedAdapters);

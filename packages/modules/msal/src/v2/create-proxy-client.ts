@@ -32,12 +32,8 @@ export function createProxyClient(client: IMsalClient): IAuthClient {
       switch (prop) {
         case 'getAllAccounts': {
           return () => {
-            return (
-              target
-                .getAllAccounts()
-                // Map each v4 account shape to its v2-compatible equivalent
-                .map(mapAccountInfo)
-            );
+            // Map each v4 account shape to its v2-compatible equivalent
+            return target.getAllAccounts().map(mapAccountInfo);
           };
         }
 

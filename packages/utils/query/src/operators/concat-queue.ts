@@ -12,7 +12,9 @@ import type { QueryQueueFn } from '../types';
  * @returns A function that takes an Observable stream of `QueryQueueItem` and returns an Observable
  *          stream where each item is processed in sequence by the provided callback.
  */
-export const concatQueue: QueryQueueFn = (...args) => (source$) => {
+export const concatQueue: QueryQueueFn =
+  (...args) =>
+  (source$) => {
     // process queue items one after another, waiting for each to complete before starting the next
     return source$.pipe(concatMap(...args));
-};
+  };

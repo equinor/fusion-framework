@@ -278,7 +278,8 @@ export class FlowSubject<S, A extends Action = Action> extends Observable<S> {
       );
     }
     // Log and swallow flow errors so a single failing flow doesn't tear down the subject
-    return epic$.pipe(
+    return epic$
+      .pipe(
         catchError((err) => {
           console.trace('unhandled exception, epic closed!', err);
           return EMPTY;

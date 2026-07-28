@@ -10,8 +10,8 @@ import { join, relative, resolve } from 'node:path';
  */
 export function createRunDir(title: string, baseDir?: string): string {
   const now = new Date();
+  // Zero-pad each time component so the directory name sorts and reads consistently
   const time = [now.getUTCHours(), now.getUTCMinutes(), now.getUTCSeconds()]
-    // Zero-pad each time component so the directory name sorts and reads consistently
     .map((n) => String(n).padStart(2, '0'))
     .join('');
   const ms = String(now.getUTCMilliseconds()).padStart(3, '0');

@@ -159,16 +159,15 @@ async function getToken(scopes: string[]): Promise<string> {
  * - The comparison is performed using fully resolved absolute URLs.
  */
 function getMatchingConfig(url: string): ResourceConfiguration | undefined {
-  return resourceConfigurations
-    // Find the first configured resource whose resolved base URL prefixes the request URL
-    .find((config) => {
-      const configUrl = new URL(
-        config.url,
-        config.url.startsWith('/') ? self.location.origin : undefined,
-      ).href;
-      const requestUrl = new URL(url, self.location.origin).href;
-      return requestUrl.startsWith(configUrl);
-    });
+  // Find the first configured resource whose resolved base URL prefixes the request URL
+  return resourceConfigurations.find((config) => {
+    const configUrl = new URL(
+      config.url,
+      config.url.startsWith('/') ? self.location.origin : undefined,
+    ).href;
+    const requestUrl = new URL(url, self.location.origin).href;
+    return requestUrl.startsWith(configUrl);
+  });
 }
 
 // Install event

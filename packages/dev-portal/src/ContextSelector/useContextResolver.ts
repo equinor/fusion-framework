@@ -118,48 +118,45 @@ function convertMeta(meta: ContextItem['meta']): Pick<ContextResultItem, 'metaTy
  * @returns Mapped array of `ContextResultItem` objects for the selector UI.
  */
 const mapper = (src: ContextItem<{ taskState?: string; state?: string }>[]): ContextResult => {
-  return src
-    // Map each raw context item to its ContextResultItem shape, applying per-type overrides
-    .map((i) => {
-      const baseResult = {
-        id: i.id,
-        title: i.title,
-        subTitle: i.subTitle ?? i.type.id,
-        ...convertGraphic(i.graphic),
-        ...convertMeta(i.meta),
-      };
+  // Map each raw context item to its ContextResultItem shape, applying per-type overrides
+  return src.map((i) => {
+    const baseResult = {
+      id: i.id,
+      title: i.title,
+      subTitle: i.subTitle ?? i.type.id,
+      ...convertGraphic(i.graphic),
+      ...convertMeta(i.meta),
+    };
 
-      // Displays the status of the EquinorTask if it is not 'active'
-      const isEquinorTaskInactive = !!(
-        i.value.taskState && i.value.taskState.toLowerCase() !== 'active'
-      );
-      // Only override the meta chip for EquinorTask items that are inactive
-      if (i.type.id === 'EquinorTask' && isEquinorTaskInactive) {
-        baseResult.meta = `<fwc-chip disabled variant="outlined" value="${i.value.taskState}" />`;
+    // Displays the status of the EquinorTask if it is not 'active'
+    const isEquinorTaskInactive = !!(
+      i.value.taskState && i.value.taskState.toLowerCase() !== 'active'
+    );
+    // Only override the meta chip for EquinorTask items that are inactive
+    if (i.type.id === 'EquinorTask' && isEquinorTaskInactive) {
+      baseResult.meta = `<fwc-chip disabled variant="outlined" value="${i.value.taskState}" />`;
+      baseResult.metaType = 'inline-html';
+    }
+
+    // OrgChart items always get a fixed icon plus an optional inactive-state chip
+    if (i.type.id === 'OrgChart') {
+      // Org charts should always have 'list' icon
+      baseResult.graphic = 'list';
+      // 'eds' isn't part of the ContextResultItem['graphicType'] union upstream, so cast explicitly
+      baseResult.graphicType = 'eds' as unknown as ContextResultItem['graphicType'];
+
+      // Displays the org chart status if it is not 'active'
+      const isOrgChartInactive = !!(i.value.state && i.value.state.toLowerCase() !== 'active');
+      // Only override the meta chip when the org chart is inactive
+      if (isOrgChartInactive) {
+        baseResult.meta = `<fwc-chip disabled variant="outlined" value="${capitalizeFirstLetter(i.value.state ?? '')}" />`;
         baseResult.metaType = 'inline-html';
       }
+    }
 
-      // OrgChart items always get a fixed icon plus an optional inactive-state chip
-      if (i.type.id === 'OrgChart') {
-        // Org charts should always have 'list' icon
-        baseResult.graphic = 'list';
-        // 'eds' isn't part of the ContextResultItem['graphicType'] union upstream, so cast explicitly
-        baseResult.graphicType = 'eds' as unknown as ContextResultItem['graphicType'];
-
-        // Displays the org chart status if it is not 'active'
-        const isOrgChartInactive = !!(i.value.state && i.value.state.toLowerCase() !== 'active');
-        // Only override the meta chip when the org chart is inactive
-        if (isOrgChartInactive) {
-          baseResult.meta = `<fwc-chip disabled variant="outlined" value="${capitalizeFirstLetter(i.value.state ?? '')}" />`;
-          baseResult.metaType = 'inline-html';
-        }
-      }
-
-      return baseResult;
-    });
+    return baseResult;
+  });
 };
-
-
 
 /**
  * Creates a single `ContextResultItem` with sensible defaults.

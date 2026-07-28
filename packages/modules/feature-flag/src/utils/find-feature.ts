@@ -24,9 +24,8 @@ export const findFeature = <T = unknown>(
     // resolve to the single feature flag matching the selector, if any, and skip re-emits
     return source$.pipe(
       map((features) =>
-        Object.values(features)
-          // look up the first flag matching the selector
-          .find(findFn),
+        // look up the first flag matching the selector
+        Object.values(features).find(findFn),
       ),
       distinctUntilChanged(comparator),
     );

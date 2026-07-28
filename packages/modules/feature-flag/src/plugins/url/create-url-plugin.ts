@@ -63,9 +63,8 @@ export const createUrlPlugin = (
     return {
       order: -1,
       initial: async () =>
-        features
-          // only pre-registered flag objects have a known initial state, keys are resolved later
-          .filter((x): x is IFeatureFlag => typeof x !== 'string'),
+        // only pre-registered flag objects have a known initial state, keys are resolved later
+        features.filter((x): x is IFeatureFlag => typeof x !== 'string'),
       connect(args: { provider: IFeatureFlagProvider }) {
         const { provider } = args;
 
@@ -81,9 +80,8 @@ export const createUrlPlugin = (
         const feature$ = provider.features$.pipe(
           map((x) => Object.values(x)),
           map((flags) =>
-            flags
-              // ignore flags not registered with this plugin instance
-              .filter((flag) => featureKeys.includes(flag.key)),
+            // ignore flags not registered with this plugin instance
+            flags.filter((flag) => featureKeys.includes(flag.key)),
           ),
         );
 
@@ -93,26 +91,23 @@ export const createUrlPlugin = (
           withLatestFrom(feature$),
           map(([path, flags]): Array<{ key: string; enabled: boolean }> => {
             const search = new URLSearchParams(path.search);
-            return (
-              flags
-                // only build entries for flags with a matching query parameter
-                .reduce(
-                  (acc, flag) => {
-                    const { key } = flag;
-                    // a present key means the URL is explicitly requesting a toggle
-                    if (search.has(key)) {
-                      const value = search.get(key);
-                      const enabled = isFeatureEnabled({
-                        feature: flag,
-                        value,
-                        path,
-                      });
-                      acc.push({ key, enabled });
-                    }
-                    return acc;
-                  },
-                  [] as Array<{ key: string; enabled: boolean }>,
-                )
+            // only build entries for flags with a matching query parameter
+            return flags.reduce(
+              (acc, flag) => {
+                const { key } = flag;
+                // a present key means the URL is explicitly requesting a toggle
+                if (search.has(key)) {
+                  const value = search.get(key);
+                  const enabled = isFeatureEnabled({
+                    feature: flag,
+                    value,
+                    path,
+                  });
+                  acc.push({ key, enabled });
+                }
+                return acc;
+              },
+              [] as Array<{ key: string; enabled: boolean }>,
             );
           }),
           takeUntil(teardown$),

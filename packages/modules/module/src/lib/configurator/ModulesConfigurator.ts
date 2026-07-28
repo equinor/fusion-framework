@@ -344,10 +344,8 @@ export class ModulesConfigurator<
     const configLoadTime = Math.round(performance.now() - configStart);
 
     // Build a comma-separated module name list for telemetry properties
-    const configModuleNames = this.modules
-      // Extract just the module names before joining into a display string
-      .map((m) => m.name)
-      .join(', ');
+    // Extract just the module names before joining into a display string
+    const configModuleNames = this.modules.map((m) => m.name).join(', ');
     this._registerEvent({
       level: ModuleEventLevel.Debug,
       name: ModuleConfiguratorEventName.InitializeConfigLoaded,
@@ -365,10 +363,8 @@ export class ModulesConfigurator<
     const instanceLoadTime = Math.round(performance.now() - instanceStart);
 
     // Build a comma-separated module name list for telemetry properties
-    const instanceModuleNames = this.modules
-      // Extract just the module names before joining into a display string
-      .map((m) => m.name)
-      .join(', ');
+    // Extract just the module names before joining into a display string
+    const instanceModuleNames = this.modules.map((m) => m.name).join(', ');
     this._registerEvent({
       level: ModuleEventLevel.Debug,
       name: ModuleConfiguratorEventName.InitializeInstanceInitialized,
@@ -383,10 +379,8 @@ export class ModulesConfigurator<
 
     const totalLoadTime = configLoadTime + instanceLoadTime;
     // Build a comma-separated module name list for telemetry properties
-    const totalModuleNames = this.modules
-      // Extract just the module names before joining into a display string
-      .map((m) => m.name)
-      .join(', ');
+    // Extract just the module names before joining into a display string
+    const totalModuleNames = this.modules.map((m) => m.name).join(', ');
     this._registerEvent({
       level: ModuleEventLevel.Information,
       name: ModuleConfiguratorEventName.Initialize,

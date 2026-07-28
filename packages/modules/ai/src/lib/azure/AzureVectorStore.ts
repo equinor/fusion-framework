@@ -109,9 +109,8 @@ export class AzureVectorStore extends BaseService<string, unknown[]> implements 
 
     // Standard LangChain path for backward compatibility
     const options: AddDocumentsOptions = {
-      ids: documents
-        // Default missing ids to an empty string so LangChain assigns one
-        .map((document) => document.id ?? ''),
+      // Default missing ids to an empty string so LangChain assigns one
+      ids: documents.map((document) => document.id ?? ''),
     };
     // Flatten custom metadata attributes into the shape LangChain expects
     const processedDocuments = documents.map((document) => {
@@ -256,11 +255,8 @@ export class AzureVectorStore extends BaseService<string, unknown[]> implements 
     );
 
     // The written documents keep their original ids, in the same order as input
-    return (
-      documents
-        // Extract just the id from each written document, preserving input order
-        .map((doc) => doc.id)
-    );
+    // Extract just the id from each written document, preserving input order
+    return documents.map((doc) => doc.id);
   }
 
   /**

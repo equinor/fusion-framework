@@ -69,7 +69,7 @@ export function createResponseInterceptor<
     req: IncomingRequest,
     res: ServerResponse,
   ): Promise<void> => {
-    // @ts-ignore
+    // @ts-expect-error
     logger?.debug(`intercepted response from ${req.originalUrl}`);
 
     const { headers, statusCode = 500 } = proxyRes;

@@ -39,8 +39,8 @@ export type RouteSchemaEntry =
  * @returns The joined path (with trailing slashes removed)
  */
 function joinPaths(prefix: string, path: string | undefined): string {
+  // Drop the undefined/empty segment so joining doesn't produce a stray slash
   const joinedPath = [prefix.replace(/^\//, ''), path]
-    // Drop the undefined/empty segment so joining doesn't produce a stray slash
     .filter(Boolean)
     .join('/')
     .replace(/\/\//, '/')

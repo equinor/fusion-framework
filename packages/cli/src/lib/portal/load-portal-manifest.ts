@@ -108,8 +108,8 @@ export const loadPortalManifest = async <T extends Partial<PortalManifest> = Por
   const validation = PortalManifestSchema.safeParse(manifest);
   // Fail fast with a readable error instead of returning an invalid manifest
   if (!validation.success) {
+    // Format each Zod issue as a single readable, semicolon-joined line
     const issueMessages = validation.error.issues
-      // Format each Zod issue as a single readable, semicolon-joined line
       .map((e) => `${e.path.join('.')}: ${e.message}`)
       .join('; ');
     throw new Error(`Invalid portal manifest: ${issueMessages}`);

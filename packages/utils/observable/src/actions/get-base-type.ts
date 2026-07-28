@@ -1,5 +1,5 @@
 import { matchActionSuffix } from './match-action-suffix';
-import { actionSuffixDivider } from './action-suffix-divider';
+import type { actionSuffixDivider } from './action-suffix-divider';
 
 type BaseType<T extends string> = T extends `${infer A}${typeof actionSuffixDivider}${infer R}`
   ? A

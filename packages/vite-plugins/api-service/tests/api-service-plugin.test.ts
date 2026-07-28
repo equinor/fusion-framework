@@ -126,12 +126,11 @@ describe('API Service Vite Plugin - Middleware Route', () => {
     const serviceProxyRoute = DEFAULT_VALUES.API_PATH;
 
     const setupMockServices = (number: number): Array<Service> => {
-      const mockServices: Array<Service> = Array.from({ length: number })
-        // Generate a batch of fake services with predictable names/uris
-        .map((_, index) => ({
-          name: `api_${index}`,
-          uri: `http://localhost:300${index}`,
-        }));
+      // Generate a batch of fake services with predictable names/uris
+      const mockServices: Array<Service> = Array.from({ length: number }).map((_, index) => ({
+        name: `api_${index}`,
+        uri: `http://localhost:300${index}`,
+      }));
 
       // set up mock service discovery
       nock(serviceDiscoveryUrl).get('/services').reply(200, mockServices);

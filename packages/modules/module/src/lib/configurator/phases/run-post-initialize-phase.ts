@@ -140,10 +140,8 @@ export async function runPostInitializePhase(
   // addConfig's afterInit or via onInitialized on the configurator.
   try {
     // Build a display string of registered hook names for the start event
-    const hookNames = afterInit
-      // Extract each hook's name, falling back for anonymous functions
-      .map((x) => x.name || 'anonymous')
-      .join(', ');
+    // Extract each hook's name, falling back for anonymous functions
+    const hookNames = afterInit.map((x) => x.name || 'anonymous').join(', ');
     registerEvent({
       level: ModuleEventLevel.Debug,
       name: ModuleConfiguratorEventName.PostInitializeHooks,
@@ -152,8 +150,9 @@ export async function runPostInitializePhase(
     });
     const afterInitStart = performance.now();
     await Promise.allSettled(
-      // Invoke every registered afterInit callback with the initialized module instance map
-      afterInit.map((x) => Promise.resolve(x(instance))),
+      afterInit
+        // Invoke every registered afterInit callback with the initialized module instance map
+        .map((x) => Promise.resolve(x(instance))),
     );
     const afterInitTime = Math.round(performance.now() - afterInitStart);
     registerEvent({
@@ -168,10 +167,8 @@ export async function runPostInitializePhase(
     });
   } catch (err) {
     // Build a display string of registered hook names for the error event
-    const hookNames = afterInit
-      // Extract each hook's name, falling back for anonymous functions
-      .map((x) => x.name || 'anonymous')
-      .join(', ');
+    // Extract each hook's name, falling back for anonymous functions
+    const hookNames = afterInit.map((x) => x.name || 'anonymous').join(', ');
     registerEvent({
       level: ModuleEventLevel.Warning,
       name: ModuleConfiguratorEventName.PostInitializeHooksError,

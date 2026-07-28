@@ -568,22 +568,19 @@ function createEmbeddingStream$(
               },
             }),
             map((allEmbeddings) => {
-              return (
-                batch
-                  // Re-attach the corresponding embedding onto each document in the batch
-                  .map((document, i) => {
-                    state.count++;
-                    const total = metadataState.done ? metadataState.count : 0;
-                    const pct = total > 0 ? ` ${Math.round((state.count / total) * 100)}%` : '';
-                    const denominator = total > 0 ? `/${total}` : '';
-                    progress.update(
-                      LINE_EMBED,
-                      `🧠 Embedding [${state.count}${denominator}]${pct} — ${document.metadata.source}`,
-                    );
-                    const metadata = { ...document.metadata, embedding: allEmbeddings[i] };
-                    return { ...document, metadata };
-                  })
-              );
+              // Re-attach the corresponding embedding onto each document in the batch
+              return batch.map((document, i) => {
+                state.count++;
+                const total = metadataState.done ? metadataState.count : 0;
+                const pct = total > 0 ? ` ${Math.round((state.count / total) * 100)}%` : '';
+                const denominator = total > 0 ? `/${total}` : '';
+                progress.update(
+                  LINE_EMBED,
+                  `🧠 Embedding [${state.count}${denominator}]${pct} — ${document.metadata.source}`,
+                );
+                const metadata = { ...document.metadata, embedding: allEmbeddings[i] };
+                return { ...document, metadata };
+              });
             }),
           )
       );
@@ -674,21 +671,17 @@ function runIndexingPipeline(
     next: (result) => {
       // Track deleted files by relative path
       if (result.status === 'deleted') {
-        indexingResults.deleted.push(
-          ...result.files
-            // Reduce each deleted file entry down to its relative path for reporting.
-            .map((file) => file.relativePath),
-        );
+        // Reduce each deleted file entry down to its relative path for reporting.
+        indexingResults.deleted.push(...result.files.map((file) => file.relativePath));
       }
       // Track added documents with source and ID (one file can produce multiple IDs)
       else if (result.status === 'added') {
+        // Reduce each added document down to its source path and id for reporting.
         indexingResults.added.push(
-          ...result.documents
-            // Reduce each added document down to its source path and id for reporting.
-            .map((document) => ({
-              source: document.metadata.source,
-              id: document.id,
-            })),
+          ...result.documents.map((document) => ({
+            source: document.metadata.source,
+            id: document.id,
+          })),
         );
         indexedCount += result.documents.length;
         // Use embeddedCount as denominator — only show % once embedding is done

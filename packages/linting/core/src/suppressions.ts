@@ -54,12 +54,8 @@ function parseSuppressionLine(lineText: string, lineNumber: number): Suppression
  * @returns The trimmed rule ids.
  */
 function splitRuleIds(ruleList: string): string[] {
-  return (
-    ruleList
-      .split(',')
-      // Trim whitespace around each captured rule id
-      .map((id) => id.trim())
-  );
+  // Trim whitespace around each captured rule id
+  return ruleList.split(',').map((id) => id.trim());
 }
 
 /**

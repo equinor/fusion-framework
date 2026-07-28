@@ -94,9 +94,8 @@ export const rawImportsPlugin = (options?: RawImportsPluginOptions): Plugin => {
    * @returns `true` when the path's extension matches a configured entry.
    */
   const matchesExtension = (filePath: string): boolean => {
-    return extensions
-      // Compare case-insensitively so `.SVG` and `.svg` are both matched
-      .some((ext) => path.extname(filePath) === ext.toLowerCase());
+    // Compare case-insensitively so `.SVG` and `.svg` are both matched
+    return extensions.some((ext) => path.extname(filePath) === ext.toLowerCase());
   };
   return {
     name: 'fusion-framework-vite-plugin-raw-imports',

@@ -10,9 +10,6 @@ import type { ContextItem } from './types';
  */
 export const queryContextSelector = async (response: Response): Promise<ContextItem[]> => {
   const result = (await response.json()) as QueryContextResponse<'v1'>;
-  return (
-    result
-      // parse each raw API entry into a ContextItem
-      .map(parseContextItem)
-  );
+  // parse each raw API entry into a ContextItem
+  return result.map(parseContextItem);
 };

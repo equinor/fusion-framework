@@ -28,11 +28,8 @@ function patternToRegExp(pattern: string): RegExp {
 export function matchesBasenamePattern(filePath: string, patterns: readonly string[]): boolean {
   const name = basename(filePath);
   // A pattern without a wildcard is matched as an exact basename for speed
-  return (
-    patterns
-      // check every pattern, matching wildcards as regex and everything else as an exact basename
-      .some((pattern) =>
-        pattern.includes('*') ? patternToRegExp(pattern).test(name) : pattern === name,
-      )
+  // check every pattern, matching wildcards as regex and everything else as an exact basename
+  return patterns.some((pattern) =>
+    pattern.includes('*') ? patternToRegExp(pattern).test(name) : pattern === name,
   );
 }

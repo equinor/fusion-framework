@@ -99,14 +99,11 @@ export class StorageAdapter<TType = unknown> implements IStorageAdapter<TType> {
    * @returns A record of all stored values in this namespace.
    */
   getItems<T = TType>(): Record<string, T> {
-    return (
-      this._getItems()
-        // collapse the namespaced entries into a single id -> value record
-        .reduce((acc, { id, value }) => {
-          // mutate and return the accumulator so it ends up keyed by each id
-          return Object.assign(acc, { [id]: value });
-        }, {})
-    );
+    // collapse the namespaced entries into a single id -> value record
+    return this._getItems().reduce((acc, { id, value }) => {
+      // mutate and return the accumulator so it ends up keyed by each id
+      return Object.assign(acc, { [id]: value });
+    }, {});
   }
 
   /**

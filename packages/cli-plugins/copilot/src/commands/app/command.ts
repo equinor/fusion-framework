@@ -76,10 +76,7 @@ const _appEvalCommand = createCommand('eval')
       ? [resolvedInput.evalFile]
       : resolveEvalFiles(absAppPath, options.eval);
     // Summarize which eval files were discovered before the run starts
-    const evalFileNames = evalFiles
-      // Reduce each resolved eval path down to just its filename for display
-      .map((f) => basename(f))
-      .join(', ');
+    const evalFileNames = evalFiles.map((f) => basename(f)).join(', ');
     console.log(`📋 Found ${evalFiles.length} eval(s): ${evalFileNames}`);
 
     // Start the app dev server (unless --url provides an already-running URL)

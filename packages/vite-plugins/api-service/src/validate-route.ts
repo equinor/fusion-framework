@@ -19,4 +19,3 @@ export function validateRoute(route: ApiRoute): void {
     throw new InvalidRouteError('Route must have middleware or proxy');
   }
 }
-

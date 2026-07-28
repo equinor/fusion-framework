@@ -105,8 +105,8 @@ export const createPortalManifestFromPackage = (
   const parsed = PortalManifestSchema.safeParse(manifest);
   // Fail fast with a readable error instead of returning an invalid manifest
   if (!parsed.success) {
+    // Format each Zod issue as a single readable line
     const details = parsed.error.issues
-      // Format each Zod issue as a single readable line
       .map((i) => `- ${i.path.join('.')}: ${i.message}`)
       .join('\n');
     throw new Error(['Invalid portal manifest generated from package.json:', details].join('\n'));

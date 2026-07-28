@@ -72,8 +72,9 @@ export async function runPostConfigureHooks<TRef>(
     });
     const postConfigHooksStart = performance.now();
     await Promise.allSettled(
-      // Invoke every registered afterConfiguration callback with the final config
-      afterConfiguration.map((x) => Promise.resolve(x(config))),
+      afterConfiguration
+        // Invoke every registered afterConfiguration callback with the final config
+        .map((x) => Promise.resolve(x(config))),
     );
     const postConfigHooksTime = Math.round(performance.now() - postConfigHooksStart);
     registerEvent({

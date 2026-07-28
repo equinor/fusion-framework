@@ -59,17 +59,16 @@ export const parseMarkdown = async <T extends Record<string, unknown> = Record<s
   source: string,
 ): Promise<MarkdownDocument<T>[]> => {
   const { content: markdownContent, data } = grayMatter(content);
-  const markdownAttributes = Object.entries(data)
-    // Prefix each frontmatter key with `md_` to namespace it in the document metadata
-    .reduce(
-      (acc, [key, value]) => {
-        acc[`md_${key}`] = value;
-        return acc;
-      },
-      {
-        type: 'markdown',
-      } as Record<string, unknown>,
-    );
+  // Prefix each frontmatter key with `md_` to namespace it in the document metadata
+  const markdownAttributes = Object.entries(data).reduce(
+    (acc, [key, value]) => {
+      acc[`md_${key}`] = value;
+      return acc;
+    },
+    {
+      type: 'markdown',
+    } as Record<string, unknown>,
+  );
   const textSplitter = new RecursiveCharacterTextSplitter(markdownConfig);
   const chunks = await textSplitter.splitText(markdownContent);
 
@@ -82,16 +81,18 @@ export const parseMarkdown = async <T extends Record<string, unknown> = Record<s
     return true;
   });
 
-  return validChunks
-    // Wrap each valid chunk into a vector-store-ready document
-    .map(
-      (chunk, _index): MarkdownDocument<T> => ({
-        id: generateChunkId(source, _index),
-        pageContent: chunk,
-        metadata: {
-          source,
-          attributes: markdownAttributes as MarkdownMetadata<T>['attributes'],
-        },
-      }),
-    );
+  return (
+    validChunks
+      // Wrap each valid chunk into a vector-store-ready document
+      .map(
+        (chunk, _index): MarkdownDocument<T> => ({
+          id: generateChunkId(source, _index),
+          pageContent: chunk,
+          metadata: {
+            source,
+            attributes: markdownAttributes as MarkdownMetadata<T>['attributes'],
+          },
+        }),
+      )
+  );
 };

@@ -1,5 +1,10 @@
 import type { Node } from 'web-tree-sitter';
-import type { Diagnostic, Severity, RuleDef, LintContext } from '@equinor/fusion-framework-lint-core';
+import type {
+  Diagnostic,
+  Severity,
+  RuleDef,
+  LintContext,
+} from '@equinor/fusion-framework-lint-core';
 import { resolveMatch } from '@equinor/fusion-framework-lint-core';
 import { tsParser } from '../_parser.js';
 
@@ -117,10 +122,8 @@ function walkNode(
     });
     // Every specifier in this export clause re-exports an import — nothing to flag
     if (localSpecifiers.length > 0) {
-      const names = localSpecifiers
-        // Render each flagged specifier's source text for the diagnostic message
-        .map((c) => c?.text ?? '')
-        .join(', ');
+      // Render each flagged specifier's source text for the diagnostic message
+      const names = localSpecifiers.map((c) => c?.text ?? '').join(', ');
       out.push({
         file: filePath,
         line: node.startPosition.row + 1,

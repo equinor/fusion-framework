@@ -172,14 +172,13 @@ function defaultCapabilities(
 export function zodToAzureFields(schema: z.ZodObject): AzureSearchField[] {
   const shape = schema.shape as Record<string, ZodType>;
 
-  return Object.entries(shape)
-    // Map each shape entry to its resolved Azure Search field definition
-    .map(([name, fieldSchema]) => {
-      // Unwrap wrapper types to reach the concrete type
-      const innerSchema = unwrapSchema(fieldSchema);
-      const edmType = zodToEdmType(innerSchema);
-      const capabilities = defaultCapabilities(edmType);
+  // Map each shape entry to its resolved Azure Search field definition
+  return Object.entries(shape).map(([name, fieldSchema]) => {
+    // Unwrap wrapper types to reach the concrete type
+    const innerSchema = unwrapSchema(fieldSchema);
+    const edmType = zodToEdmType(innerSchema);
+    const capabilities = defaultCapabilities(edmType);
 
-      return { name, type: edmType, ...capabilities };
-    });
+    return { name, type: edmType, ...capabilities };
+  });
 }

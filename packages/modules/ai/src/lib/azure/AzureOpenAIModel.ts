@@ -133,10 +133,7 @@ export class AzureOpenAIModel<
    * @returns Array of LangChain `ChatMessage` instances.
    */
   protected _prepareMessages(messages: ChatMessage[]): LangChainChatMessage[] {
-    return (
-      messages
-        // Convert each simple message object into a LangChain message instance
-        .map((x) => new LangChainChatMessage(x))
-    );
+    // Convert each simple message object into a LangChain message instance
+    return messages.map((x) => new LangChainChatMessage(x));
   }
 }

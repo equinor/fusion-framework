@@ -25,21 +25,17 @@ export function executePipeline(
     next: (result) => {
       // Track deleted files by relative path
       if (result.status === 'deleted') {
-        indexingResults.deleted.push(
-          ...result.files
-            // Reduce each deleted file entry down to its relative path for reporting.
-            .map((file) => file.relativePath),
-        );
+        // Reduce each deleted file entry down to its relative path for reporting.
+        indexingResults.deleted.push(...result.files.map((file) => file.relativePath));
       }
       // Track added documents with source and ID (one file can produce multiple IDs)
       else if (result.status === 'added') {
+        // Reduce each added document down to its source path and id for reporting.
         indexingResults.added.push(
-          ...result.documents
-            // Reduce each added document down to its source path and id for reporting.
-            .map((document) => ({
-              source: document.metadata.source,
-              id: document.id,
-            })),
+          ...result.documents.map((document) => ({
+            source: document.metadata.source,
+            id: document.id,
+          })),
         );
       }
     },

@@ -108,9 +108,8 @@ export class BookmarkClient implements IBookmarkClient {
           // strip the payload from each fetched bookmark before caching
           return this.#api.query('v2', { filter }).pipe(
             map((res) =>
-              res
-                // strip the payload field from each bookmark
-                .map(parseBookmarkWithoutPayload),
+              // strip the payload field from each bookmark
+              res.map(parseBookmarkWithoutPayload),
             ),
           );
         },

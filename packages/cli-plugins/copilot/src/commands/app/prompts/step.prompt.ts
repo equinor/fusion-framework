@@ -12,8 +12,8 @@ import type { PlanStep, RuntimeExecutionContext } from '../types.js';
  */
 export const createStepPrompt = (step: PlanStep, ctx: RuntimeExecutionContext): string => {
   const slug = slugify(step.scenario);
+  // Render each criterion with its expected pass/fail evidence for the prompt
   const criteriaBlock = step.criteria
-    // Render each criterion with its expected pass/fail evidence for the prompt
     .map((c, i) => `${i + 1}. ${c}\n   Pass: ${step.pass[i] ?? ''}\n   Fail: ${step.fail[i] ?? ''}`)
     .join('\n');
 

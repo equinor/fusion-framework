@@ -13,4 +13,3 @@ import type { FusionRouterContext } from './types.js';
  * parameter/prop that is automatically injected.
  */
 export const routerContext = createRouterContext<FusionRouterContext | undefined>(undefined);
-

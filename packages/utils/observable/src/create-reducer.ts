@@ -114,62 +114,60 @@ export function createReducer<S extends NotFunction, A extends Action = AnyActio
         .map(({ reducer }) => reducer),
     ];
     // Fall back to the default case reducer when nothing else matched this action
-    const hasMatchedReducer = caseReducers
-      // Check whether any slot actually holds a reducer
-      .filter((cr) => !!cr).length > 0;
+    // Check whether any slot actually holds a reducer
+    const hasMatchedReducer = caseReducers.filter((cr) => !!cr).length > 0;
     // Only substitute the default case when no case/matcher reducer actually matched
     if (finalDefaultCaseReducer && !hasMatchedReducer) {
       caseReducers = [finalDefaultCaseReducer];
     }
 
-    return caseReducers
-      // Run each matched case reducer against the previous state, producing the next state
-      .reduce((previousState, caseReducer): S => {
-        // Only transform state when a case reducer was matched for this slot
-        if (caseReducer) {
-          // Reuse an existing draft when already inside a `createNextState` call
-          if (isDraft(previousState)) {
-            // If it's already a draft, we must already be inside a `createNextState` call,
-            // likely because this is being wrapped in `createReducer`, `createSlice`, or nested
-            // inside an existing draft. It's safe to just pass the draft to the mutator.
-            const draft = previousState as Draft<S>; // We can assume this is already a draft
-            const result = caseReducer(draft, action);
+    // Run each matched case reducer against the previous state, producing the next state
+    return caseReducers.reduce((previousState, caseReducer): S => {
+      // Only transform state when a case reducer was matched for this slot
+      if (caseReducer) {
+        // Reuse an existing draft when already inside a `createNextState` call
+        if (isDraft(previousState)) {
+          // If it's already a draft, we must already be inside a `createNextState` call,
+          // likely because this is being wrapped in `createReducer`, `createSlice`, or nested
+          // inside an existing draft. It's safe to just pass the draft to the mutator.
+          const draft = previousState as Draft<S>; // We can assume this is already a draft
+          const result = caseReducer(draft, action);
 
-            // Treat an undefined result as "no change" rather than clearing the state
-            if (result === undefined) {
+          // Treat an undefined result as "no change" rather than clearing the state
+          if (result === undefined) {
+            return previousState;
+          }
+
+          return result as S;
+        } else if (!isDraftable(previousState)) {
+          // If state is not draftable (ex: a primitive, such as 0), we want to directly
+          // return the caseReducer func and not wrap it with produce.
+          const result = caseReducer(previousState as unknown as Draft<S>, action);
+
+          // Treat an undefined result as "no change", unless there's no previous state to fall back to
+          if (result === undefined) {
+            // A `null` previous state has nothing to fall back to, so undefined is legitimately "no change"
+            if (previousState === null) {
               return previousState;
             }
-
-            return result as S;
-          } else if (!isDraftable(previousState)) {
-            // If state is not draftable (ex: a primitive, such as 0), we want to directly
-            // return the caseReducer func and not wrap it with produce.
-            const result = caseReducer(previousState as unknown as Draft<S>, action);
-
-            // Treat an undefined result as "no change", unless there's no previous state to fall back to
-            if (result === undefined) {
-              // A `null` previous state has nothing to fall back to, so undefined is legitimately "no change"
-              if (previousState === null) {
-                return previousState;
-              }
-              throw Error('A case reducer on a non-draftable value must not return undefined');
-            }
-
-            return result as S;
-          } else {
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-            // createNextState() produces an Immutable<Draft<S>> rather
-            // than an Immutable<S>, and TypeScript cannot find out how to reconcile
-            // these two types.
-            return createNextState(previousState, (draft: Draft<S>) => {
-              return caseReducer(draft, action);
-            });
+            throw Error('A case reducer on a non-draftable value must not return undefined');
           }
-        }
 
-        return previousState;
-      }, state ?? getInitialState());
+          return result as S;
+        } else {
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-expect-error
+          // createNextState() produces an Immutable<Draft<S>> rather
+          // than an Immutable<S>, and TypeScript cannot find out how to reconcile
+          // these two types.
+          return createNextState(previousState, (draft: Draft<S>) => {
+            return caseReducer(draft, action);
+          });
+        }
+      }
+
+      return previousState;
+    }, state ?? getInitialState());
   }
 
   reducer.getInitialState = getInitialState;

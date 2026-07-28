@@ -30,8 +30,8 @@ export const resolveEntryPoint = (
   // Use provided files or default entry point files.
   const files = opt?.files ?? ENTRY_POINT_FILES;
   // Attempt to find the first file that exists in the directory.
+  // Resolve every candidate filename against the source directory first
   const entryPoint = files
-    // Resolve every candidate filename against the source directory first
     .map((file) => resolve(sourceDirectory, file))
     .find((file) => fileExistsSync(file));
 

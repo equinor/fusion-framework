@@ -37,10 +37,8 @@ export const getChangedFiles = async (options: GitDiffOptions): Promise<ChangedF
     // Get changes since baseRef with status (A=added, M=modified, D=deleted)
     try {
       const diffResult = await git.diff([`${baseRef}`, '--name-status']);
-      const lines = diffResult
-        .split('\n')
-        // Drop blank lines left by the trailing newline in git's output
-        .filter((line) => line.trim() !== '');
+      // Drop blank lines left by the trailing newline in git's output
+      const lines = diffResult.split('\n').filter((line) => line.trim() !== '');
 
       const changedFiles: ChangedFile[] = [];
 

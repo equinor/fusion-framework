@@ -232,17 +232,16 @@ export class ContextModuleConfigurator implements IContextModuleConfigurator {
   public async createConfig(
     init: ModuleInitializerArgs<IContextModuleConfigurator, [ServicesModule, NavigationModule]>,
   ): Promise<ContextModuleConfig> {
-    const config = await this.#configBuilders
-      // run each registered config builder in sequence, merging results into the accumulated config
-      .reduce(
-        async (cur, cb) => {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          const builder = new ContextConfigBuilder<any, any>(init, await cur);
-          await Promise.resolve(cb(builder));
-          return Object.assign(cur, builder.config);
-        },
-        Promise.resolve({} as Partial<ContextModuleConfig>),
-      );
+    // run each registered config builder in sequence, merging results into the accumulated config
+    const config = await this.#configBuilders.reduce(
+      async (cur, cb) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const builder = new ContextConfigBuilder<any, any>(init, await cur);
+        await Promise.resolve(cb(builder));
+        return Object.assign(cur, builder.config);
+      },
+      Promise.resolve({} as Partial<ContextModuleConfig>),
+    );
 
     config.resolveInitialContext ??= resolveInitialContext({
       path: {

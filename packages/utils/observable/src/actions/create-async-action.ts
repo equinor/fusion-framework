@@ -1,9 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import {
-  actionSuffixDivider,
-  createAction,
-} from './create-action';
+import { actionSuffixDivider, createAction } from './create-action';
 import { isActionWithSuffix } from './is-action-with-suffix';
 import { isCompleteAction } from './is-complete-action';
 import { isFailureAction } from './is-failure-action';

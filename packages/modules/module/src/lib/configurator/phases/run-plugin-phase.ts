@@ -76,32 +76,33 @@ export async function runPluginPhase<TRef = unknown>(
   });
 
   const pluginRegistrations = await Promise.all(
-    // Run every plugin callback concurrently so one slow plugin cannot delay the others
-    plugins.map(async (plugin) => {
-      const pluginStart = performance.now();
-      const name = plugin.name || 'anonymous';
-      try {
-        const teardown = await plugin({ modules, ref });
-        const pluginTime = Math.round(performance.now() - pluginStart);
-        registerEvent({
-          level: ModuleEventLevel.Debug,
-          name: ModuleConfiguratorEventName.PluginRegistered,
-          message: `Plugin ${name} registered in ${pluginTime}ms`,
-          properties: { name, pluginTime },
-          metric: pluginTime,
-        });
-        return isPluginTeardown(teardown) ? teardown : undefined;
-      } catch (err) {
-        registerEvent({
-          level: ModuleEventLevel.Warning,
-          name: ModuleConfiguratorEventName.PluginRegisterError,
-          message: `Plugin ${name} registration failed`,
-          properties: { name },
-          error: err,
-        });
-        return undefined;
-      }
-    }),
+    plugins
+      // Run every plugin callback concurrently so one slow plugin cannot delay the others
+      .map(async (plugin) => {
+        const pluginStart = performance.now();
+        const name = plugin.name || 'anonymous';
+        try {
+          const teardown = await plugin({ modules, ref });
+          const pluginTime = Math.round(performance.now() - pluginStart);
+          registerEvent({
+            level: ModuleEventLevel.Debug,
+            name: ModuleConfiguratorEventName.PluginRegistered,
+            message: `Plugin ${name} registered in ${pluginTime}ms`,
+            properties: { name, pluginTime },
+            metric: pluginTime,
+          });
+          return isPluginTeardown(teardown) ? teardown : undefined;
+        } catch (err) {
+          registerEvent({
+            level: ModuleEventLevel.Warning,
+            name: ModuleConfiguratorEventName.PluginRegisterError,
+            message: `Plugin ${name} registration failed`,
+            properties: { name },
+            error: err,
+          });
+          return undefined;
+        }
+      }),
   );
 
   // Queue every plugin teardown returned above so the dispose phase can invoke them later

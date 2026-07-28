@@ -46,9 +46,9 @@ export const extractDocumentFromNode = (
 
   // Handle VariableStatement (e.g., `export const bundleApp = ...`)
   if (kind === SyntaxKind.VariableStatement) {
+    // Variable statements may declare multiple bindings; find the actual declaration node
     const declaration = (node as VariableStatement)
       .getDeclarations()
-      // Variable statements may declare multiple bindings; find the actual declaration node
       .find((d) => d.getKind() === SyntaxKind.VariableDeclaration);
 
     // Skip malformed statements with no declaration
@@ -68,10 +68,9 @@ export const extractDocumentFromNode = (
       return null;
     }
 
-    // Get the TSDoc comment from the VariableStatement
+    // Get the TSDoc comment from the VariableStatement; only the block comment counts, not plain `//` or `/* */` comments
     const docCommentRange = node
       .getLeadingCommentRanges()
-      // Only the TSDoc block comment counts, not plain `//` or `/* */` comments
       .find((range) => range.getText().startsWith('/**'));
 
     // Skip undocumented statements — nothing to index
@@ -95,10 +94,9 @@ export const extractDocumentFromNode = (
   // Get name if node has one
   const nodeName = Node.hasName(node) ? node.getName() : 'missing_name_of_node';
 
-  // Find TSDoc comment (/** ... */)
+  // Find TSDoc comment (/** ... */); only the block comment counts, not plain `//` or `/* */` comments
   const docCommentRange = node
     .getLeadingCommentRanges()
-    // Only the TSDoc block comment counts, not plain `//` or `/* */` comments
     .find((range) => range.getText().startsWith('/**'));
 
   // Skip undocumented nodes — nothing to index

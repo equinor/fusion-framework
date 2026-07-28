@@ -187,13 +187,10 @@ export class FeatureFlagProvider
         pairwise(),
         map(([previous, current]) => {
           const currentFeatures = Object.values(current);
-          return (
-            currentFeatures
-              // only keep flags whose enabled state actually changed since the previous emission
-              .filter((feature) => {
-                return feature.enabled !== previous[feature.key]?.enabled;
-              })
-          );
+          // only keep flags whose enabled state actually changed since the previous emission
+          return currentFeatures.filter((feature) => {
+            return feature.enabled !== previous[feature.key]?.enabled;
+          });
         }),
         map((features) => ({ features })),
       )
@@ -276,11 +273,8 @@ export class FeatureFlagProvider
    * @returns The feature flags matching `selector`.
    */
   public getFeatures(selector: FeatureSelectorFn): Array<IFeatureFlag> {
-    return (
-      Object.values(this.features)
-        // delegate filtering entirely to the caller-supplied selector
-        .filter(selector)
-    );
+    // delegate filtering entirely to the caller-supplied selector
+    return Object.values(this.features).filter(selector);
   }
 }
 

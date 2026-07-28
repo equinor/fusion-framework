@@ -26,5 +26,4 @@ export const useModules = <
   TModules extends Array<AnyModule> | Record<string, AnyModule> = Modules,
 >(): ModulesInstanceType<TModules> => useContext(moduleContext) as ModulesInstanceType<TModules>;
 
-
 export default useModules;
