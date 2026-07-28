@@ -6,5 +6,5 @@
  *
  * @module
  */
-export { useCurrentUser } from './use-current-user';
-export { useHttpClient } from './use-http-client';
+export { useCurrentUser } from './useCurrentUser';
+export { useHttpClient } from './useHttpClient';
