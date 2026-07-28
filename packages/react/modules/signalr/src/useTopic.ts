@@ -1,7 +1,7 @@
 import { useModule } from '@equinor/fusion-framework-react-module';
 import { moduleKey } from '@equinor/fusion-framework-module-signalr';
 
-import { useSignalRProvider } from './use-signalr-provider';
+import { useSignalRProvider } from './useSignalRProvider';
 
 /**
  * Hook for connecting to a SignalR hub topic, resolving the provider from the framework automatically.
