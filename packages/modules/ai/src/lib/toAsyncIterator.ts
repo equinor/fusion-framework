@@ -21,17 +21,17 @@ export function toAsyncIterable<T>(observable: Observable<T>): AsyncIterable<T> 
       // Subscribe to the Observable
       const subscription = observable.subscribe({
         next(value) {
+          // Deliver directly to an already-waiting consumer, otherwise buffer for later
           if (resolveNext) {
-            // If there's a waiting consumer, resolve immediately
             resolveNext({ value, done: false });
             resolveNext = null;
           } else {
-            // Otherwise, queue the value
             queue.push({ value, done: false });
           }
         },
         error(err) {
           done = true;
+          // Reject the waiting consumer immediately if one exists
           if (rejectNext) {
             rejectNext(err);
             rejectNext = null;
@@ -39,6 +39,7 @@ export function toAsyncIterable<T>(observable: Observable<T>): AsyncIterable<T> 
         },
         complete() {
           done = true;
+          // Signal completion to an already-waiting consumer, otherwise buffer it
           if (resolveNext) {
             resolveNext({ value: undefined, done: true });
             resolveNext = null;
@@ -50,12 +51,12 @@ export function toAsyncIterable<T>(observable: Observable<T>): AsyncIterable<T> 
 
       return {
         async next(): Promise<IteratorResult<T>> {
+          // Return queued value if available
           if (queue.length > 0) {
-            // Return queued value if available
             return queue.shift() as IteratorResult<T>;
           }
+          // If Observable is complete, return done
           if (done) {
-            // If Observable is complete, return done
             return { value: undefined, done: true };
           }
           // Wait for the next value

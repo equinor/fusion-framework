@@ -83,9 +83,11 @@ export class AiProvider extends BaseModuleProvider<AIModuleConfig> implements IA
   /** {@inheritDoc IAiProvider.useModel} */
   public useModel(model: string = DEFAULT_MODEL, options?: { strategy?: string }): IModel {
     const strategyName = options?.strategy ?? FUSION_MODEL_STRATEGY_NAME;
+    // Locate the registered strategy matching the requested name and type
     const strategy = this.#strategies.find(
       (s): s is ModelStrategy => s.name === strategyName && s.type === STRATEGY_TYPE.MODEL,
     );
+    // Fail fast when the requested strategy was never registered
     if (!strategy) {
       throw new Error(`Model strategy "${strategyName}" not found in configuration`);
     }
@@ -95,9 +97,11 @@ export class AiProvider extends BaseModuleProvider<AIModuleConfig> implements IA
   /** {@inheritDoc IAiProvider.useEmbed} */
   public useEmbed(model: string = DEFAULT_EMBED_MODEL, options?: { strategy?: string }): IEmbed {
     const strategyName = options?.strategy ?? FUSION_EMBED_STRATEGY_NAME;
+    // Locate the registered strategy matching the requested name and type
     const strategy = this.#strategies.find(
       (s): s is EmbedStrategy => s.name === strategyName && s.type === STRATEGY_TYPE.EMBED,
     );
+    // Fail fast when the requested strategy was never registered
     if (!strategy) {
       throw new Error(`Embed strategy "${strategyName}" not found in configuration`);
     }
@@ -110,10 +114,12 @@ export class AiProvider extends BaseModuleProvider<AIModuleConfig> implements IA
     opts?: { embedModel?: string; strategy?: string },
   ): IVectorStore {
     const strategyName = opts?.strategy ?? FUSION_INDEX_STRATEGY_NAME;
+    // Locate the registered strategy matching the requested name and type
     const strategy = this.#strategies.find(
       (s): s is Extract<Strategy, { type: typeof STRATEGY_TYPE.INDEX }> =>
         s.name === strategyName && s.type === STRATEGY_TYPE.INDEX,
     );
+    // Fail fast when the requested strategy was never registered
     if (!strategy) {
       throw new Error(`Index strategy "${strategyName}" not found in configuration`);
     }

@@ -104,6 +104,7 @@ export class AzureOpenAiEmbed extends BaseService<string[], number[][]> implemen
    * @throws {ServiceError} When the underlying Azure OpenAI request fails.
    */
   public invoke$(documents: string[]): Observable<number[][]> {
+    // Wrap the embedding request and translate failures into a ServiceError
     return from(this.client.embedDocuments(documents)).pipe(
       catchError((error) => {
         throw new ServiceError(`Azure OpenAI embedding request failed`, {

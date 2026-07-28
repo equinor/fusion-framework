@@ -36,6 +36,7 @@ export const acquireFusionToken = async (
   auth: AuthProvider,
   service: Service,
 ): Promise<{ token: string; expiresOnTimestamp: number }> => {
+  // Scopes are required to request a token; fail fast if service discovery didn't provide them
   if (!service.scopes) {
     throw new Error(
       'The AI service entry in service discovery must include scopes for authentication. ' +
@@ -44,6 +45,7 @@ export const acquireFusionToken = async (
   }
 
   const result = await auth.acquireToken({ request: { scopes: service.scopes } });
+  // The provider returned no token — surface a clear configuration error
   if (!result) {
     throw new Error(
       'Failed to acquire access token for AI service. ' +

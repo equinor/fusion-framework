@@ -88,6 +88,8 @@ export class AiConfigurator extends BaseConfigBuilder<AIModuleConfig> implements
    * ```
    */
   addStrategy(strategy: Strategy | ConfigBuilderCallback<Strategy>): this {
+    // Lazy factories are stored as-is; eager instances are wrapped so both
+    // shapes resolve through the same async callback at build time.
     if (typeof strategy === 'function') {
       this.#strategies.push(strategy);
     } else {

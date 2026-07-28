@@ -34,6 +34,8 @@ const DEFAULT_EMBED_MODEL = 'text-embedding-3-large' as const;
  * const vector = await embedder.embedQuery('Fusion Framework documentation');
  * ```
  */
+// Deliberately co-located with `FUSION_EMBED_STRATEGY_NAME` above
+// fusion-lint-disable-next-line single-export-per-file
 export const createFusionAiEmbedStrategy = async (modules: {
   auth: AuthProvider;
   serviceDiscovery: IServiceDiscoveryProvider;

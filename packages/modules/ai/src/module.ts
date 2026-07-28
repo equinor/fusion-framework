@@ -24,6 +24,8 @@ export type AiModule = Module<AiModuleKey, IAiProvider, AiConfigurator>;
  * default strategies that use the service discovery and MSAL auth modules.
  * Register custom strategies with {@link IAIConfigurator.addStrategy}.
  */
+// Deliberately co-located with the `moduleKey`/`AiModule` type it describes
+// fusion-lint-disable-next-line single-export-per-file
 export const module: AiModule = {
   name: moduleKey,
   configure: () => new AiConfigurator(),
@@ -54,6 +56,8 @@ export const module: AiModule = {
  * };
  * ```
  */
+// Deliberately co-located with the `module` definition it configures
+// fusion-lint-disable-next-line single-export-per-file
 export const enableAI = <TRef = unknown>(
   // biome-ignore lint/suspicious/noExplicitAny: accepts any framework module configurator
   config: IModulesConfigurator<any, any>,
@@ -62,6 +66,7 @@ export const enableAI = <TRef = unknown>(
   config.addConfig({
     module,
     configure: (config, ref) => {
+      // Forward to the caller-supplied callback when one was provided
       if (configure) {
         configure(config, ref);
       }

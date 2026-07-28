@@ -72,12 +72,14 @@ export const fusionAiStrategy = <T extends Strategy = Strategy>(
       ? await args.requireInstance<IServiceDiscoveryProvider>('serviceDiscovery')
       : ref?.serviceDiscovery;
 
+    // Auth is required to acquire bearer tokens for the AI service
     if (!auth) {
       throw new Error(
         'Auth module is required to resolve AI service credentials. ' +
           'Ensure the auth module is added to the framework configuration.',
       );
     }
+    // Service discovery is required to resolve the AI service endpoint
     if (!serviceDiscovery) {
       throw new Error(
         'Service Discovery module is required to resolve AI service endpoint. ' +

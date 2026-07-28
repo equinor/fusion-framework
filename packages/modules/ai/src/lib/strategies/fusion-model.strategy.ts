@@ -31,6 +31,8 @@ const DEFAULT_API_VERSION = '2025-01-01-preview' as const;
  * const reply = await model.invoke('Summarise the quarterly report');
  * ```
  */
+// Deliberately co-located with `FUSION_MODEL_STRATEGY_NAME` above
+// fusion-lint-disable-next-line single-export-per-file
 export const createFusionAiModelStrategy = async (modules: {
   auth: AuthProvider;
   serviceDiscovery: IServiceDiscoveryProvider;
