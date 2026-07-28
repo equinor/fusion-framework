@@ -1,6 +1,6 @@
 import { EMPTY, map } from 'rxjs';
 import { useBookmarkGrouping } from '../hooks';
-import { BookmarkFilter } from './filter/Filter';
+import { BookmarkFilter } from './filter/BookmarkFilter';
 import { SectionList } from './sectionList/SectionList';
 import { useMemo } from 'react';
 
