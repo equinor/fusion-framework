@@ -2,6 +2,8 @@ import { map } from 'rxjs/operators';
 import type { OperatorFunction } from 'rxjs';
 import type { IFeatureFlag } from '../FeatureFlag';
 
+export { findFeature } from './find-feature';
+
 /**
  * Represents a function that selects a feature flag.
  * @template T - The type of the feature flag.

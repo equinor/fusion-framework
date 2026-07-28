@@ -8,6 +8,7 @@ export * from './provider';
 export * from './module';
 
 export * as Errors from './errors/index.js';
+export * from './errors/index.js';
 
 export type { IHttpClient, FetchResponse } from './lib/client';
 
