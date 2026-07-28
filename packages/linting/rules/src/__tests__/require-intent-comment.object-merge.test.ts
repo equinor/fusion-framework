@@ -33,8 +33,16 @@ const combined = [...listA, ...listB];
     expect(lint(source)).toHaveLength(0);
   });
 
-  it('passes: two-argument Object.assign() is a clone/patch, not flagged', () => {
-    expect(lint(`const copy = Object.assign({}, source);`)).toHaveLength(0);
+  it('passes: two-argument Object.assign() with preceding comment', () => {
+    const source = `
+// index each item by its own key for O(1) lookups later
+const indexed = items.reduce((acc, item) => Object.assign(acc, { [item.key]: item }), {});
+`;
+    expect(lint(source)).toHaveLength(0);
+  });
+
+  it('passes: no-op Object.assign() with a single target argument is not flagged', () => {
+    expect(lint(`const same = Object.assign(target);`)).toHaveLength(0);
   });
 
   it('passes: single spread with explicit property overrides is not flagged', () => {
@@ -74,6 +82,12 @@ describe('require-intent-comment/object-merge — failing', () => {
 
   it('fails: multi-spread array literal with no comment', () => {
     expect(lint(`const combined = [...listA, ...listB];`)).toHaveLength(1);
+  });
+
+  it('fails: single-source Object.assign() inside a reduce accumulator with no comment', () => {
+    const diags = lint(`items.reduce((acc, item) => Object.assign(acc, { [item.key]: item }), {});`);
+    expect(diags).toHaveLength(1);
+    expect(diags[0].message).toContain('Object.assign()');
   });
 
   it('fails: default severity is warn', () => {

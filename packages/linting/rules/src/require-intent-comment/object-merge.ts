@@ -8,14 +8,14 @@ const DEFAULT_SEVERITY: Severity = 'warn';
 
 /**
  * Returns `true` when `node` is an `Object.assign(target, ...sources)` call
- * merging **two or more** source objects into `target`.
+ * merging **one or more** source objects into `target`.
  *
- * Two-argument calls (`Object.assign({}, obj)` or `Object.assign(target, patch)`)
- * are treated as simple clones/patches and are intentionally not flagged —
- * only genuine multi-source merges need their intent documented.
+ * A bare `Object.assign(target)` with no sources is a no-op and is
+ * intentionally not flagged — every call that actually merges data needs
+ * its intent documented, regardless of how many sources it merges.
  *
  * @param node - AST node to test.
- * @returns `true` if this is a multi-source `Object.assign()` call.
+ * @returns `true` if this is an `Object.assign()` call with at least one source.
  */
 function isObjectAssignMerge(node: Node): boolean {
   // Only call expressions can be Object.assign() calls
@@ -27,8 +27,8 @@ function isObjectAssignMerge(node: Node): boolean {
   const propertyNode = callee.childForFieldName('property');
   if (objectNode?.text !== 'Object' || propertyNode?.text !== 'assign') return false;
   const argsNode = node.childForFieldName('arguments');
-  // target + 2 or more sources means at least 3 arguments total
-  return (argsNode?.namedChildren.length ?? 0) >= 3;
+  // target + 1 or more sources means at least 2 arguments total
+  return (argsNode?.namedChildren.length ?? 0) >= 2;
 }
 
 /**
@@ -125,14 +125,14 @@ function walkNode(node: Node, filePath: string, severity: Severity, out: Diagnos
 }
 
 /**
- * Requires every multi-source object merge — `Object.assign(target, a, b)` or
- * `{ ...a, ...b }` / `[...a, ...b]` — to be immediately preceded by a comment
- * that explains **why** the sources are being combined and, where relevant,
- * which source takes precedence.
+ * Requires every `Object.assign(target, ...sources)` call and every
+ * multi-source spread literal — `{ ...a, ...b }` / `[...a, ...b]` — to be
+ * immediately preceded by a comment that explains **why** the sources are
+ * being combined and, where relevant, which source takes precedence.
  *
- * Two-argument `Object.assign()` calls and single-spread-plus-overrides
- * literals (the common immutable-update pattern) are intentionally not
- * flagged, to avoid drowning out genuine multi-source merges.
+ * A no-op `Object.assign(target)` with no sources and single-spread-plus-overrides
+ * literals (the common immutable-update pattern, e.g. `{ ...state, x: true }`)
+ * are intentionally not flagged, to avoid drowning out genuine merges.
  *
  * Configure independently: `"require-intent-comment/object-merge": "error"`
  *
