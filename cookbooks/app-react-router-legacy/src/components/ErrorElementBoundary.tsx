@@ -1,24 +1,6 @@
 import type { ErrorElementProps } from '@equinor/fusion-framework-react-router';
 
 /**
- * Throws during loading so the route's errorElement handling can be demonstrated.
- * @returns A promise that never resolves because the loader always throws.
- * @throws {Error} Always, to exercise the legacy errorElement route.
- */
-export async function clientLoader(): Promise<never> {
-  throw new Error('Loader blew up — errorElement should catch this');
-}
-
-/**
- * Provides fallback content for the route whose loader always fails.
- * @returns The fallback route content, normally hidden by the error element.
- */
-export function ErrorElementPage() {
-  // This component never renders because clientLoader always throws.
-  return <p>This text should never appear.</p>;
-}
-
-/**
  * Passed as `errorElement: ErrorElementBoundary` on the route.
  *
  * The Fusion router wraps this component and injects `error` and `fusion` as

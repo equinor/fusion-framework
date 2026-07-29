@@ -2,43 +2,44 @@
   "rules": {
     "single-export-per-file": {
       "excludePattern": [
+        "*-module.ts",
+        "*.schemas.ts",
+        "actions.ts",
+        "helpers.ts",
         "index.ts",
         "index.tsx",
         "module.ts",
-        "*-module.ts",
-        "static.ts",
-        "*.schemas.ts",
-        "utils.ts",
-        "setup.ts",
-        "selectors.ts",
-        "actions.ts",
         "options.ts",
         "predicates.ts",
-        "helpers.ts",
-        "routes.ts"
+        "routes.ts",
+        "selectors.ts",
+        "setup.ts",
+        "static.ts",
+        "utils.ts"
       ]
     },
     "filename-convention": {
       "excludePattern": [
+        "*.command.ts",
+        "*.d.ts",
+        "client-msal.ts",
+        "client.ts",
+        "config.ts",
+        "configurator.ts",
+        "enable-signalr.ts",
         "index.ts",
         "index.tsx",
-        "index.mts",
-        "index.cts",
-        "*.d.ts",
-        "module.ts",
-        "configurator.ts",
-        "provider.ts",
-        "client.ts",
-        "client-msal.ts",
-        "route-factory.ts",
-        "static.ts",
-        "types.ts",
-        "enable-signalr.ts",
+        "layout.tsx",
         "main.ts",
         "main.tsx",
+        "module.ts",
         "plugin.ts",
-        "*.command.ts",
-        "layout.tsx"
+        "provider.ts",
+        "route-factory.ts",
+        "selectors.ts",
+        "static.ts",
+        "types.ts",
+        "utils.ts"
       ]
     }
   },

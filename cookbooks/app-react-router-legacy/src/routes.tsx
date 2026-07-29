@@ -6,7 +6,7 @@ import {
   ErrorElementPage,
   ErrorElementBoundary,
   clientLoader as errorElementLoader,
-} from './pages/ErrorElementPage';
+} from './components';
 import { ErrorBoundaryPage, ErrorBoundaryComponent } from './pages/ErrorBoundaryPage';
 import { RootErrorBoundary } from './pages/RootErrorBoundary';
 
