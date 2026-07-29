@@ -2,8 +2,8 @@ import { describe, it, expect } from 'vitest';
 import type { RouteObject } from '../types';
 
 import { toRouteSchema } from '../routes/to-route-schema';
-import { route } from '../routes/Route';
-import { prefix } from '../routes/PrefixRoute';
+import { route } from '../routes/route-factory';
+import { prefix } from '../routes/prefix';
 import {
   mockHomeRoute,
   mockProductRoute,

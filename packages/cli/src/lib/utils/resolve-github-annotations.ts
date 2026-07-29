@@ -148,6 +148,7 @@ export const resolveGithubAnnotations = (): GithubAnnotations => {
 
   // Construct a direct URL to the workflow run if all required parts are available
   let runUrl = 'unknown';
+  // Only build the URL when we have enough context to make it meaningful
   if (serverUrl && repository !== 'unknown' && runId !== 'unknown') {
     // Remove trailing slash from serverUrl if present, then build the run results URL
     runUrl = `${serverUrl.replace(/\/$/, '')}/${repository}/actions/runs/${runId}`;
@@ -165,8 +166,11 @@ export const resolveGithubAnnotations = (): GithubAnnotations => {
   if (process.env.GITHUB_EVENT_PATH) {
     try {
       const rawPayload = readFileSync(process.env.GITHUB_EVENT_PATH, 'utf8');
+      // Layer the parsed event payload fields onto the base annotations
       Object.assign(annotations, JSON.parse(rawPayload));
     } catch {
+      // A malformed or unreadable event payload should not crash annotation resolution —
+      // log and fall back to the base annotations collected above.
       console.error('Failed to parse GitHub event payload');
     }
   }

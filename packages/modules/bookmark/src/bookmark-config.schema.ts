@@ -48,6 +48,8 @@ export const bookmarkConfigSchema = z.object({
  * @returns A validated {@link BookmarkModuleConfig}.
  * @throws {ZodError} When validation fails.
  */
+// tightly coupled parse helper for the schema above
+// fusion-lint-disable-next-line single-export-per-file
 export const parseBookmarkConfig = (config: unknown): BookmarkModuleConfig => {
   return bookmarkConfigSchema.parse(config) as BookmarkModuleConfig;
 };

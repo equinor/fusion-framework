@@ -11,6 +11,11 @@ export const handle = {
   },
 };
 
+/**
+ * Mock product details page used in router tests.
+ *
+ * @returns The product page
+ */
 export default function ProductPage() {
   return <div>Product Page</div>;
 }

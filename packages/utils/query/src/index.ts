@@ -11,4 +11,4 @@ export * as operators from './operators';
 
 export { default, Query, QueryCtorOptions } from './Query';
 
-export { IQueryEvent, QueryEventMap, QueryEvent } from './events';
+export { IQueryEvent, QueryEventMap, QueryEvent } from './QueryEvent';

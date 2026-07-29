@@ -69,7 +69,11 @@ export class AzureOpenAIModel<
 {
   #client: AzureChatOpenAI;
 
-  /** The underlying LangChain `AzureChatOpenAI` instance. */
+  /**
+   * The underlying LangChain `AzureChatOpenAI` instance.
+   *
+   * @returns The configured `AzureChatOpenAI` client.
+   */
   get llm(): AzureChatOpenAI {
     return this.#client;
   }
@@ -116,6 +120,7 @@ export class AzureOpenAIModel<
    * @returns Observable emitting `AIMessageChunk` values as they arrive.
    */
   invoke$(messages: ModelInput): Observable<ModelOutput> {
+    // Adapt the async stream into an Observable, flattening each chunk as it arrives
     return from(this.#client.stream(messages)).pipe(
       concatMap((stream: ObservableInput<ModelOutput>) => from(stream)),
     );
@@ -128,6 +133,7 @@ export class AzureOpenAIModel<
    * @returns Array of LangChain `ChatMessage` instances.
    */
   protected _prepareMessages(messages: ChatMessage[]): LangChainChatMessage[] {
+    // Convert each simple message object into a LangChain message instance
     return messages.map((x) => new LangChainChatMessage(x));
   }
 }

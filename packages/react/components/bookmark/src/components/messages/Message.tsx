@@ -8,6 +8,7 @@ import { error_outlined, file_description } from '@equinor/eds-icons';
 export type PortalMessageType = 'Error' | 'Info' | 'Warning' | 'NoContent';
 
 const getMessageType = (type?: PortalMessageType) => {
+  // Map each message type to its icon and color; unknown types render nothing
   switch (type) {
     case 'Error':
       return { color: tokens.colors.interactive.danger__resting.hex, icon: error_outlined };
@@ -51,6 +52,12 @@ type MessageProps = {
   readonly color?: string;
 };
 
+/**
+ * Displays a titled message with an icon matching its type.
+ *
+ * @param props - The component's props
+ * @returns The message
+ */
 export const Message = ({
   title,
   type = 'Info',

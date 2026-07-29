@@ -63,8 +63,12 @@ export const useAppSettings = <TSettings extends Record<string, unknown> = AppSe
 
   // connect the subject to the current app settings stream
   useLayoutEffect(() => {
-    const sub = (currentApp?.settings$ as Observable<TSettings>).subscribe(subject);
-    return () => sub?.unsubscribe();
+    // Nothing to subscribe to until an app is resolved
+    if (!currentApp) {
+      return;
+    }
+    const sub = (currentApp.settings$ as Observable<TSettings>).subscribe(subject);
+    return () => sub.unsubscribe();
   }, [currentApp, subject]);
 
   // subscribe to the subject to get the latest settings
@@ -72,6 +76,7 @@ export const useAppSettings = <TSettings extends Record<string, unknown> = AppSe
 
   const setSettings = useCallback(
     (update: TSettings | UpdateSettingsFunction<TSettings>) => {
+      // Cannot persist settings updates without a current app to write them to
       if (!currentApp) {
         return onError?.(new Error('App is not available'));
       }

@@ -1,8 +1,8 @@
 import { defineConfig } from 'vite';
-import { fileURLToPath } from 'url';
+import { fileURLToPath } from 'node:url';
 import viteEnv from 'vite-plugin-environment'; // Import the 'viteEnv' function from the appropriate module
 
-import dns from 'dns';
+import dns from 'node:dns';
 dns.setDefaultResultOrder('verbatim');
 
 export default defineConfig({

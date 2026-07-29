@@ -1,17 +1,5 @@
 import type { ApiRoute } from './types.js';
-
-/**
- * Error thrown when an {@link ApiRoute} fails structural validation.
- *
- * Consumers can use `instanceof InvalidRouteError` to distinguish route
- * validation failures from other error types.
- */
-export class InvalidRouteError extends Error {
-  constructor(message: string, options?: ErrorOptions) {
-    super(message, options);
-    this.name = 'InvalidRouteError';
-  }
-}
+import { InvalidRouteError } from './InvalidRouteError.js';
 
 /**
  * Validates that an {@link ApiRoute} has the minimum required structure:
@@ -22,9 +10,11 @@ export class InvalidRouteError extends Error {
  * @throws {InvalidRouteError} When neither `middleware` nor `proxy` is defined.
  */
 export function validateRoute(route: ApiRoute): void {
+  // A route without a match pattern can never be selected for a request
   if (!route.match) {
     throw new InvalidRouteError('Route matcher is required');
   }
+  // A route with neither middleware nor proxy has no way to handle a request
   if (!route.middleware && !route.proxy) {
     throw new InvalidRouteError('Route must have middleware or proxy');
   }

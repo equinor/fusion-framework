@@ -20,6 +20,7 @@ import type WidgetModuleProvider from '../WidgetModuleProvider';
 export const handleFetchManifest =
   (provider: WidgetModuleProvider): Flow<Actions, WidgetState> =>
   (action$) =>
+    // React only to `fetchManifest` actions
     action$.pipe(
       filter(actions.fetchManifest.match),
       switchMap((action) => {
@@ -28,21 +29,30 @@ export const handleFetchManifest =
           meta: { update },
         } = action;
 
+        // Query the provider for the manifest, dropping falsy emissions, and share it
         const subject = from(provider.getWidgetManifest(key, args)).pipe(
           filter((x) => !!x),
           share(),
         );
-        return concat(
-          subject.pipe(map((manifest) => actions.setManifest(manifest, update))),
-          subject.pipe(
-            last(),
-            map((manifest) => actions.fetchManifest.success(manifest)),
-          ),
-        ).pipe(
-          catchError((err) => {
-            console.error(err, action.payload);
-            return of(actions.fetchManifest.failure(err));
-          }),
+        return (
+          concat(
+            subject
+              // Emit an intermediate `setManifest` for every value the query produces
+              .pipe(map((manifest) => actions.setManifest(manifest, update))),
+            subject
+              // Wait for the final emission and report it as the successful result
+              .pipe(
+                last(),
+                map((manifest) => actions.fetchManifest.success(manifest)),
+              ),
+          )
+            // Convert any error from the query/emission chain into a failure action
+            .pipe(
+              catchError((err) => {
+                console.error(err, action.payload);
+                return of(actions.fetchManifest.failure(err));
+              }),
+            )
         );
       }),
     );
@@ -55,26 +65,38 @@ export const handleFetchManifest =
  * @param provider - The widget module provider used for API queries.
  * @returns A `Flow` function for the widget state machine.
  */
+// Deliberately co-located with `handleFetchManifest` above
+// fusion-lint-disable-next-line single-export-per-file
 export const handleFetchConfig =
   (provider: WidgetModuleProvider): Flow<Actions, WidgetState> =>
   (action$) =>
+    // React only to `fetchConfig` actions
     action$.pipe(
       filter(actions.fetchConfig.match),
       switchMap(({ payload: { key, args } }) => {
+        // Query the provider for the config, dropping falsy emissions, and share it
         const subject = from(provider.getWidgetConfig(key, args)).pipe(
           filter((x) => !!x),
           share(),
         );
-        return concat(
-          subject.pipe(map((manifest) => actions.setConfig(manifest))),
-          subject.pipe(
-            last(),
-            map((manifest) => actions.fetchConfig.success(manifest)),
-          ),
-        ).pipe(
-          catchError((err) => {
-            return of(actions.fetchConfig.failure(err));
-          }),
+        return (
+          concat(
+            subject
+              // Emit an intermediate `setConfig` for every value the query produces
+              .pipe(map((manifest) => actions.setConfig(manifest))),
+            subject
+              // Wait for the final emission and report it as the successful result
+              .pipe(
+                last(),
+                map((manifest) => actions.fetchConfig.success(manifest)),
+              ),
+          )
+            // Convert any error from the query/emission chain into a failure action
+            .pipe(
+              catchError((err) => {
+                return of(actions.fetchConfig.failure(err));
+              }),
+            )
         );
       }),
     );
@@ -85,10 +107,14 @@ export const handleFetchConfig =
  *
  * @returns A `Flow` function for the widget state machine.
  */
+// Deliberately co-located with the other flow handlers above
+// fusion-lint-disable-next-line single-export-per-file
 export const handleImportWidget = (): Flow<Actions, WidgetState> => (action$) =>
+  // React only to `importWidget` actions
   action$.pipe(
     filter(actions.importWidget.match),
     switchMap(({ payload }) => {
+      // Dynamically import the widget's script entry point and report success/failure
       return from(import(/* @vite-ignore */ payload)).pipe(
         map(actions.importWidget.success),
         catchError((err) => of(actions.importWidget.failure(err))),

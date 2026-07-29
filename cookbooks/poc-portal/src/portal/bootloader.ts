@@ -42,6 +42,6 @@ configurator.addConfig(
   const el = document.getElementById('app');
   const ref = await configurator.initialize();
   const { render } = await importWithoutVite('../src/index.tsx');
-  // @ts-ignore
+  // @ts-expect-error
   render(el, ref);
 })();

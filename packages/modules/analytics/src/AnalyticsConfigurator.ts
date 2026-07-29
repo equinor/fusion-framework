@@ -35,6 +35,9 @@ export class AnalyticsConfigurator
   #collectorCallbacks: Record<string, ConfigBuilderCallback<IAnalyticsCollector>> = {};
   #adapterCallbacks: Record<string, ConfigBuilderCallback<IAnalyticsAdapter>> = {};
 
+  /**
+   * Registers the async resolvers for `collectors` and `adapters` config keys.
+   */
   constructor() {
     super();
 
@@ -42,8 +45,10 @@ export class AnalyticsConfigurator
     this._set(
       'collectors',
       (args: ConfigBuilderCallbackArgs): ObservableInput<Record<string, IAnalyticsCollector>> => {
+        // Resolve each collector factory and drop any that resolve to a falsy value
         return from(Object.entries(this.#collectorCallbacks)).pipe(
           mergeMap(([identifier, collectorFn]) =>
+            // Resolve the collector's own Promise/Observable factory result
             from(collectorFn(args)).pipe(
               filter((collector): collector is IAnalyticsCollector => !!collector),
               map((collector) => [identifier, collector] as const),
@@ -66,8 +71,10 @@ export class AnalyticsConfigurator
     this._set(
       'adapters',
       (args: ConfigBuilderCallbackArgs): ObservableInput<Record<string, IAnalyticsAdapter>> => {
+        // Resolve each adapter factory and drop any that resolve to a falsy value
         return from(Object.entries(this.#adapterCallbacks)).pipe(
           mergeMap(([identifier, adapterFn]) =>
+            // Resolve the adapter's own Promise/Observable factory result
             from(adapterFn(args)).pipe(
               filter((adapter): adapter is IAnalyticsAdapter => !!adapter),
               map((adapter) => [identifier, adapter] as const),

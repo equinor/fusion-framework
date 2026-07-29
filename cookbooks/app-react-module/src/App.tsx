@@ -1,5 +1,9 @@
 import { useModule } from '@equinor/fusion-framework-react-module';
 
+/**
+ * Displays values exposed by the cookbook's custom Fusion module.
+ * @returns The custom-module demonstration view.
+ */
 export const App = () => {
   const demoProvider = useModule('demo');
   return (

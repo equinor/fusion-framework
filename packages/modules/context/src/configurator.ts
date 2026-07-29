@@ -8,7 +8,11 @@ import type {
 } from '@equinor/fusion-framework-module';
 import type { ServicesModule, IApiProvider } from '@equinor/fusion-framework-module-services';
 import type { NavigationModule } from '@equinor/fusion-framework-module-navigation';
-import { getContextSelector, queryContextSelector, relatedContextSelector } from './selectors';
+import {
+  getContextSelector,
+  queryContextSelector,
+  relatedContextSelector,
+} from './get-context-selector';
 import type { QueryCtorOptions } from '@equinor/fusion-query';
 import type {
   ContextFilterFn,
@@ -149,9 +153,10 @@ export interface ContextModuleConfig {
    * @returns An observable input emitting the initial context item, or void.
    */
   resolveInitialContext?: (args: {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore lint/suspicious/noExplicitAny: `AnyModuleInstance | any` intentionally widens to accept any module instance shape for `ref`
     ref?: AnyModuleInstance | any;
     modules: ModuleInstance;
+    // biome-ignore lint/suspicious/noConfusingVoidType: `void` here relies on TypeScript's special-cased "void-returning callback accepts any return value" behavior — `undefined` would break assignability of resolver functions that only conditionally emit a `ContextItem`
   }) => ObservableInput<ContextItem | void>;
 }
 
@@ -206,10 +211,12 @@ export class ContextModuleConfigurator implements IContextModuleConfigurator {
   protected async _getServiceProvider(
     init: ModuleInitializerArgs<IContextModuleConfigurator, [ServicesModule]>,
   ): Promise<IApiProvider> {
+    // prefer the local services module instance if available
     if (init.hasModule('services')) {
       return init.requireInstance('services');
     }
     const parentServiceModule = (init.ref as ModulesInstanceType<[ServicesModule]>)?.services;
+    // fall back to the parent module's services instance
     if (!parentServiceModule) {
       throw Error('no service services provider configures [ServicesModule]');
     }
@@ -230,11 +237,13 @@ export class ContextModuleConfigurator implements IContextModuleConfigurator {
   public async createConfig(
     init: ModuleInitializerArgs<IContextModuleConfigurator, [ServicesModule, NavigationModule]>,
   ): Promise<ContextModuleConfig> {
+    // run each registered config builder in sequence, merging results into the accumulated config
     const config = await this.#configBuilders.reduce(
       async (cur, cb) => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // biome-ignore lint/suspicious/noExplicitAny: builder generics are erased here — `unknown` breaks assignability of the concrete `ContextConfigBuilder` instance passed to consumer callbacks
         const builder = new ContextConfigBuilder<any, any>(init, await cur);
         await Promise.resolve(cb(builder));
+        // Merge this builder's config into the accumulator for the next iteration.
         return Object.assign(cur, builder.config);
       },
       Promise.resolve({} as Partial<ContextModuleConfig>),
@@ -247,7 +256,7 @@ export class ContextModuleConfigurator implements IContextModuleConfigurator {
       },
     });
 
-    // TODO - make less lazy
+    // TODO(#5119) - make less lazy
     config.client ??= await (async (): Promise<ContextModuleConfig['client']> => {
       const apiProvider = await this._getServiceProvider(init);
       const contextClient = await apiProvider.createContextClient('json$');
@@ -263,7 +272,7 @@ export class ContextModuleConfigurator implements IContextModuleConfigurator {
           client: {
             fn: (query) => contextClient.query('v1', { query }, { selector: queryContextSelector }),
           },
-          // TODO - might cast to checksum
+          // TODO(#5118) - might cast to checksum
           key: (args) => JSON.stringify(args),
           expire: this.defaultExpireTime,
         },
@@ -277,7 +286,7 @@ export class ContextModuleConfigurator implements IContextModuleConfigurator {
               );
             },
           },
-          // TODO - might cast to checksum
+          // TODO(#5118) - might cast to checksum
           key: (args) => JSON.stringify(args),
           expire: this.defaultExpireTime,
         },

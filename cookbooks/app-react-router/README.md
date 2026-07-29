@@ -66,24 +66,24 @@ import { index, route, prefix } from "@equinor/fusion-framework-react-router/rou
 
 export const pages = [
   // Index route - renders at the root path '/'
-  index('./HomePage.tsx'),
+  index('./home.page.tsx'),
   
   // Prefix groups related routes under a common path
   prefix('products', [
     // Index route for /products
-    index('./ProductsPage.tsx'),
+    index('./products.page.tsx'),
     // Dynamic route for /products/:id
-    route(':id', './ProductPage.tsx'),
+    route(':id', './product.page.tsx'),
   ]),
   
   prefix('users', [
-    index('./UsersPage.tsx'),
-    route(':id', './UserPage.tsx'),
+    index('./users.page.tsx'),
+    route(':id', './user.page.tsx'),
   ]),
   
   prefix('pages', [
-    route('people', './PeoplePage.tsx'),
-    route('error-test', './ErrorTestPage.tsx'),
+    route('people', './people.page.tsx'),
+    route('error-test', './error-test.page.tsx'),
   ]),
 ];
 ```
@@ -141,7 +141,7 @@ export default function Root() {
 Creates an index route - the default route for a path segment.
 
 ```typescript
-index('./HomePage.tsx')
+index('./home.page.tsx')
 // Creates route at '/'
 ```
 
@@ -151,7 +151,7 @@ index('./HomePage.tsx')
 Creates a route with a specific path. Supports dynamic segments with `:paramName`.
 
 ```typescript
-route(':id', './ProductPage.tsx')
+route(':id', './product.page.tsx')
 // Creates route at '/products/:id' (when nested under prefix('products'))
 ```
 

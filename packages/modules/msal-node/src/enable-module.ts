@@ -22,7 +22,7 @@ import { module, type MsalNodeModule } from './module.js';
  * ```
  */
 export const enableModule = (
-  // biome-ignore lint/suspicious/noExplicitAny: @todo -remove when types sorted in provider interface
+  // biome-ignore lint/suspicious/noExplicitAny: TODO(#5097): remove when types sorted in provider interface
   configurator: IModulesConfigurator<any, any>,
   configure: IModuleConfigurator<MsalNodeModule>['configure'],
 ) => {

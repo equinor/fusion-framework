@@ -3,7 +3,7 @@ import { lazy } from 'react';
 import initFusion from '@equinor/fusion-framework';
 import { FrameworkConfigurator } from '@equinor/fusion-framework';
 
-import { FrameworkProvider } from './context';
+import { FrameworkProvider } from './framework-provider';
 import type { AnyModule, ModulesInstanceType } from '@equinor/fusion-framework-module';
 import { ModuleProvider } from '@equinor/fusion-framework-react-module';
 
@@ -49,7 +49,7 @@ import { ModuleProvider } from '@equinor/fusion-framework-react-module';
  */
 export const createFrameworkProvider = <
   TModules extends Array<AnyModule> = [],
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: default must be bivariant `any`, not `unknown` \u2014 `unknown` breaks assignability when a concrete `TRef` is passed where the default-typed generic is expected
   TRef extends ModulesInstanceType<[AnyModule]> = any,
 >(
   cb: (configurator: FrameworkConfigurator<TModules>, ref?: TRef) => void | Promise<void>,

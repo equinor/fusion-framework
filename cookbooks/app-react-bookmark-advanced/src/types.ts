@@ -1,4 +1,5 @@
 export interface MyBookmark {
+  [key: string]: unknown;
   page: string;
   title: string;
   data: string;

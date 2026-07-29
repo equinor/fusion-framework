@@ -14,21 +14,21 @@ export {
   type PortalManifest,
   type PortalManifestExport,
   type PortalManifestFn,
-} from './portal-manifest.js';
+} from './define-portal-manifest.js';
 
 export {
-  loadPortalSchema,
   definePortalSchema,
   type PortalSchema,
   type PortalSchemaExport,
   type PortalSchemaFn,
-} from './load-portal-schema.js';
+} from './define-portal-schema.js';
+export { loadPortalSchema } from './load-portal-schema.js';
 
 export {
   definePortalConfig,
   type PortalConfig,
   type PortalConfigFn,
-} from './portal-config.js';
+} from './define-portal-config.js';
 
 export {
   loadPortalConfig,

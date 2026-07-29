@@ -5,8 +5,9 @@ import type { ConsoleLogger } from '@equinor/fusion-framework-cli/bin';
 import assert from 'node:assert';
 import { existsSync, mkdirSync, readFileSync } from 'node:fs';
 import { ProjectTemplate } from './ProjectTemplate.js';
-import { parseTemplatesManifest } from './project-templates.schema.js';
-import { validateSafePath, safeRmSync } from '../../lib/utils/path-security.js';
+import { parseTemplatesManifest } from './parse-templates-manifest.js';
+import { validateSafePath } from '../../lib/utils/validate-safe-path.js';
+import { safeRmSync } from '../../lib/utils/safe-rm-sync.js';
 
 /**
  * Git protocol options for repository operations.
@@ -85,6 +86,7 @@ export class ProjectTemplateRepository {
    */
   public set branch(branch: string) {
     this.#branch = branch;
+    // Re-checkout immediately if the repository is already set up
     if (this.#initialized) {
       this._checkoutBranch();
     }
@@ -130,12 +132,14 @@ export class ProjectTemplateRepository {
    * @throws {Error} If repository initialization fails
    */
   async initialize(): Promise<void> {
+    // Avoid redundant clone/checkout work if already set up
     if (this.#initialized) {
       return;
     }
 
     try {
       this.#log?.debug('Checking if repository directory exists...', this.#baseDir);
+      // Create the base directory on first use
       if (!existsSync(this.#baseDir)) {
         this.#log?.info('Repository directory does not exist, creating...');
         mkdirSync(this.#baseDir, { recursive: true });
@@ -159,6 +163,7 @@ export class ProjectTemplateRepository {
 
       this.#log?.debug('Checking if repository is initialized...');
       const isRepo = await this.#git.checkIsRepo();
+      // Clone if this is a fresh directory, otherwise just checkout the branch
       if (!isRepo) {
         this.#log?.info('Git is not initialized, cloning repo...');
         await this._cloneRepo();
@@ -212,6 +217,7 @@ export class ProjectTemplateRepository {
 
       // Create ProjectTemplate instances, combining global and template-specific resources
       const templateItems = manifest.templates.map((template) => {
+        // Combine the manifest-wide resources with this template's own resources
         const resources = [...(manifest.resources ?? []), ...template.resources];
         return new ProjectTemplate({ ...template, resources }, this.#baseDir, {
           logger: this.#log,
@@ -250,6 +256,11 @@ export class ProjectTemplateRepository {
     }
   }
 
+  /**
+   * Clones the repository into the configured base directory using a single branch.
+   *
+   * @throws Error if the clone operation fails.
+   */
   async _cloneRepo(): Promise<void> {
     try {
       this.#log?.debug('Cloning repo...', {
@@ -270,12 +281,19 @@ export class ProjectTemplateRepository {
     }
   }
 
+  /**
+   * Fetches and checks out the configured branch, pulling and hard-resetting
+   * if the local branch is behind its remote counterpart.
+   *
+   * @throws Error if fetching or checking out the branch fails.
+   */
   async _checkoutBranch(): Promise<void> {
     try {
       this.#log?.debug('Fetching repo...', { repo: this.repo, repoUrl: this.repoUrl });
       await this.#git.fetch();
       this.#log?.debug('Checking out branch...', this.#branch);
       const response = await this.#git.checkout(this.#branch);
+      // Only pull/reset when the checked-out branch is behind its remote
       if (response.includes('branch is up to date')) {
         this.#log?.debug('Branch is up to date!');
       } else {
@@ -288,6 +306,10 @@ export class ProjectTemplateRepository {
     }
   }
 
+  /**
+   * Registers stdout/stderr output handlers on the underlying git client so
+   * repository operations are logged via the configured logger.
+   */
   _setupOutputHandler(): void {
     this.#git.outputHandler((_command, stdout, stderr): void => {
       stdout.on('data', (data) => {

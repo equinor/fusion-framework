@@ -3,11 +3,10 @@ import { produce as createNextState, isDraft, isDraftable } from 'immer';
 import type { Draft } from 'immer';
 
 import type { TypeGuard } from './types/ts-helpers';
-import type { Action, ActionType, AnyAction, ExtractAction } from './types/actions';
+import type { Action, ActionType, AnyAction, ExtractAction } from './actions/types';
 import type { ReducerWithInitialState } from './types/reducers';
 
 function freezeDraftable<T>(val: T) {
-  // biome-ignore lint/suspicious/noEmptyBlockStatements: This is a valid use case for an empty block statement
   return isDraftable(val) ? createNextState(val, () => {}) : val;
 }
 
@@ -86,6 +85,7 @@ export function createReducer<S extends NotFunction, A extends Action = AnyActio
   builderCallback: (builder: ActionReducerMapBuilder<S, A>) => void,
 ): ReducerWithInitialState<S, A>;
 
+/** @inheritdoc */
 export function createReducer<S extends NotFunction, A extends Action = AnyAction>(
   initialState: S | (() => S),
   mapOrBuilderCallback: (builder: ActionReducerMapBuilder<S, A>) => void,
@@ -95,6 +95,7 @@ export function createReducer<S extends NotFunction, A extends Action = AnyActio
 
   // Ensure the initial state gets frozen either way (if draftable)
   let getInitialState: () => S;
+  // A lazy initializer must be invoked before its result can be frozen
   if (isStateFunction(initialState)) {
     getInitialState = () => freezeDraftable(initialState());
   } else {
@@ -105,14 +106,25 @@ export function createReducer<S extends NotFunction, A extends Action = AnyActio
   function reducer(state: S, action: A): S {
     let caseReducers = [
       actionsMap[action.type],
-      ...finalActionMatchers.filter(({ matcher }) => matcher(action)).map(({ reducer }) => reducer),
+      ...finalActionMatchers
+        // Keep only matchers whose predicate matches this action
+        .filter(({ matcher }) => matcher(action))
+        // Extract just the matched reducers
+        .map(({ reducer }) => reducer),
     ];
-    if (finalDefaultCaseReducer && caseReducers.filter((cr) => !!cr).length === 0) {
+    // Fall back to the default case reducer when nothing else matched this action
+    // Check whether any slot actually holds a reducer
+    const hasMatchedReducer = caseReducers.filter((cr) => !!cr).length > 0;
+    // Only substitute the default case when no case/matcher reducer actually matched
+    if (finalDefaultCaseReducer && !hasMatchedReducer) {
       caseReducers = [finalDefaultCaseReducer];
     }
 
+    // Run each matched case reducer against the previous state, producing the next state
     return caseReducers.reduce((previousState, caseReducer): S => {
+      // Only transform state when a case reducer was matched for this slot
       if (caseReducer) {
+        // Reuse an existing draft when already inside a `createNextState` call
         if (isDraft(previousState)) {
           // If it's already a draft, we must already be inside a `createNextState` call,
           // likely because this is being wrapped in `createReducer`, `createSlice`, or nested
@@ -120,6 +132,7 @@ export function createReducer<S extends NotFunction, A extends Action = AnyActio
           const draft = previousState as Draft<S>; // We can assume this is already a draft
           const result = caseReducer(draft, action);
 
+          // Treat an undefined result as "no change" rather than clearing the state
           if (result === undefined) {
             return previousState;
           }
@@ -130,7 +143,9 @@ export function createReducer<S extends NotFunction, A extends Action = AnyActio
           // return the caseReducer func and not wrap it with produce.
           const result = caseReducer(previousState as unknown as Draft<S>, action);
 
+          // Treat an undefined result as "no change", unless there's no previous state to fall back to
           if (result === undefined) {
+            // A `null` previous state has nothing to fall back to, so undefined is legitimately "no change"
             if (previousState === null) {
               return previousState;
             }
@@ -140,7 +155,7 @@ export function createReducer<S extends NotFunction, A extends Action = AnyActio
           return result as S;
         } else {
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
+          // @ts-expect-error
           // createNextState() produces an Immutable<Draft<S>> rather
           // than an Immutable<S>, and TypeScript cannot find out how to reconcile
           // these two types.
@@ -230,7 +245,16 @@ export interface ActionReducerMapBuilder<State, Actions extends AnyAction = AnyA
   addDefaultCase(reducer: CaseReducer<State, AnyAction>): void;
 }
 
-export function executeReducerBuilderCallback<TState, TAction extends AnyAction>(
+/**
+ * Executes a reducer builder callback against a fresh {@link ActionReducerMapBuilder},
+ * collecting the case reducers, matchers, and default case it registered.
+ *
+ * @template TState - The reducer's state type.
+ * @template TAction - The union of actions the reducer handles.
+ * @param builderCallback - The callback passed to {@link createReducer} that registers cases via the builder.
+ * @returns A tuple of the action-to-reducer map, matcher list, and optional default case reducer.
+ */
+function executeReducerBuilderCallback<TState, TAction extends AnyAction>(
   builderCallback: (builder: ActionReducerMapBuilder<TState, TAction>) => void,
 ): [
   CaseReducers<TState, Record<string, TAction>>,
@@ -246,6 +270,7 @@ export function executeReducerBuilderCallback<TState, TAction extends AnyAction>
       typeOrActionCreator: string | TypedActionCreator<string>,
       reducer: CaseReducer<TState, Action>,
     ) {
+      // Skip these dev-only ordering checks in production builds to avoid the extra overhead
       if (process.env.NODE_ENV !== 'production') {
         /*
          * to keep the definition by the user in line with actual behavior,
@@ -257,6 +282,7 @@ export function executeReducerBuilderCallback<TState, TAction extends AnyAction>
             '`builder.addCase` should only be called before calling `builder.addMatcher`',
           );
         }
+        // A default case must always be registered last, after every specific case
         if (defaultCaseReducer) {
           throw new Error(
             '`builder.addCase` should only be called before calling `builder.addDefaultCase`',
@@ -265,6 +291,7 @@ export function executeReducerBuilderCallback<TState, TAction extends AnyAction>
       }
       const type =
         typeof typeOrActionCreator === 'string' ? typeOrActionCreator : typeOrActionCreator.type;
+      // Each action type may only be handled by a single case reducer
       if (type in actionsMap) {
         throw new Error('addCase cannot be called with two reducers for the same action type');
       }
@@ -275,7 +302,9 @@ export function executeReducerBuilderCallback<TState, TAction extends AnyAction>
       matcher: TypeGuard<A>,
       reducer: CaseReducer<TState, A extends AnyAction ? A : TAction>,
     ) {
+      // Skip this dev-only ordering check in production builds to avoid the extra overhead
       if (process.env.NODE_ENV !== 'production') {
+        // A default case must always be registered last, after every matcher
         if (defaultCaseReducer) {
           throw new Error(
             '`builder.addMatcher` should only be called before calling `builder.addDefaultCase`',
@@ -286,7 +315,9 @@ export function executeReducerBuilderCallback<TState, TAction extends AnyAction>
       return builder;
     },
     addDefaultCase(reducer: CaseReducer<TState, AnyAction>) {
+      // Skip this dev-only uniqueness check in production builds to avoid the extra overhead
       if (process.env.NODE_ENV !== 'production') {
+        // Only one default case reducer may be registered per builder
         if (defaultCaseReducer) {
           throw new Error('`builder.addDefaultCase` can only be called once');
         }

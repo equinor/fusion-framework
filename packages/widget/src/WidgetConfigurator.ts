@@ -2,7 +2,6 @@ import type { FusionModulesInstance } from '@equinor/fusion-framework';
 import {
   type AnyModule,
   type IModulesConfigurator,
-  ModuleConsoleLogger,
   ModulesConfigurator,
 } from '@equinor/fusion-framework-module';
 
@@ -160,6 +159,7 @@ export class WidgetConfigurator<
       module: http,
       configure: async (config, ref) => {
         const service = await ref?.serviceDiscovery.resolveService(serviceName);
+        // Fail fast when the parent runtime's service-discovery can't resolve the service
         if (!service) {
           throw Error(`failed to configure service [${serviceName}]`);
         }

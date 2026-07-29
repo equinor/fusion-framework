@@ -131,6 +131,7 @@ export class ServiceDiscoveryProvider
     opt?: Omit<HttpClientOptions, 'baseUri' | 'defaultScopes' | 'ctor'>,
   ): Promise<IHttpClient> {
     const service = await this.resolveService(name);
+    // A missing service configuration means the http client can't be constructed
     if (!service) {
       throw Error(`Could not load configuration of service [${name}]`);
     }

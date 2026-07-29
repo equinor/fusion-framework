@@ -77,15 +77,18 @@ export const module: HttpMsalModule = {
     requireInstance,
   }): Promise<HttpClientProvider<HttpClientMsal>> => {
     const httpProvider = new HttpClientProvider(config);
+    // wire up an MSAL bearer-token handler only when the auth module is registered
     if (hasModule('auth')) {
       const authProvider = await requireInstance('auth');
       httpProvider.defaultHttpRequestHandler.set('MSAL', async (request) => {
         const { scopes = [] } = request;
+        // only attempt to acquire a token when the request actually declares scopes
         if (scopes.length) {
-          /** TODO should be try catch, check caller for handling */
+          /** TODO(#5143): should be try catch, check caller for handling */
           const accessToken = await authProvider.acquireAccessToken({
             request: { scopes },
           });
+          // without a token there's nothing to attach, fall through to the default request
           if (accessToken) {
             const headers = new Headers(request.headers);
             headers.set('Authorization', `Bearer ${accessToken}`);

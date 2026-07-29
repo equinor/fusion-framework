@@ -63,6 +63,7 @@ export class WidgetModuleConfigurator extends BaseConfigBuilder<WidgetModuleConf
   private async _createHttpClient(clientId: string, init: ConfigBuilderCallbackArgs) {
     const http = await init.requireInstance('http');
 
+    // Reuse an already-registered client when one exists for this id
     if (http.hasClient(clientId)) {
       return http.createClient(clientId);
     } else {
@@ -86,6 +87,7 @@ export class WidgetModuleConfigurator extends BaseConfigBuilder<WidgetModuleConf
   ) {
     const httpClient = await this._createHttpClient('apps', _init);
 
+    // Only fall back to the default client when the caller hasn't set one
     if (!config.client) {
       config.client = createDefaultClient(httpClient);
     }

@@ -9,6 +9,11 @@ const useStyles = makeStyles((theme) =>
   }),
 );
 
+/**
+ * Renders themed body text for the styling cookbook examples.
+ * @param children - Text or inline content to display.
+ * @returns A styled paragraph element.
+ */
 export const Text = ({ children }: { children: ReactNode }) => {
   const classes = useStyles({});
 

@@ -51,7 +51,11 @@ export class Widget {
 
   #subscription = new Subscription();
 
-  /** Current snapshot of the widget's internal state (manifest, config, modules, status). */
+  /**
+   * Current snapshot of the widget's internal state (manifest, config, modules, status).
+   *
+   * @returns The current {@link WidgetState}.
+   */
   get state(): WidgetState {
     return this.#state.value;
   }
@@ -165,8 +169,10 @@ export class Widget {
    */
   public getManifest(force_refresh = false): Observable<WidgetManifest> {
     return new Observable((subscriber) => {
+      // Emit the cached manifest immediately if one is already available
       if (this.#state.value.manifest) {
         subscriber.next(this.#state.value.manifest);
+        // Skip the fetch below unless the caller explicitly asked to refresh
         if (!force_refresh) {
           return subscriber.complete();
         }
@@ -209,8 +215,10 @@ export class Widget {
   public getConfig(force_refresh = false): Observable<WidgetConfig> {
     return new Observable((subscriber) => {
       const currentValue = this.#state.value;
+      // Emit the cached config immediately if the manifest and config are already available
       if (currentValue.manifest && currentValue.config) {
         subscriber.next(currentValue.config);
+        // Skip the fetch below unless the caller explicitly asked to refresh
         if (!force_refresh) {
           return subscriber.complete();
         }
@@ -273,8 +281,10 @@ export class Widget {
    */
   public getWidgetModule(force_refresh = false): Observable<WidgetScriptModule> {
     return new Observable((subscriber) => {
+      // Emit the cached script module immediately if one is already available
       if (this.#state.value.modules) {
         subscriber.next(this.#state.value.modules);
+        // Skip the import below unless the caller explicitly asked to refresh
         if (!force_refresh) {
           return subscriber.complete();
         }
@@ -345,7 +355,8 @@ export class Widget {
               },
             }),
           error: (err) => {
-            observer.error(err), this.#state.next(actions.initialize.failure(err));
+            observer.error(err);
+            this.#state.next(actions.initialize.failure(err));
           },
           complete: () => {
             this.#state.next(actions.initialize.success());

@@ -33,6 +33,7 @@ export function useAppModule<
   ? ModuleType<TType>
   : AppModulesInstance[Extract<keyof AppModulesInstance, TKey>] {
   const appModule = useAppModules()[module as keyof AppModulesInstance];
+  // Fail fast when the requested module was not registered on the app scope
   if (!appModule) {
     throw Error(`the requested module [${module}] is not included in the app scope`);
   }

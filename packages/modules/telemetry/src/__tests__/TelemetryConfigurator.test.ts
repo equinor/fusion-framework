@@ -7,7 +7,7 @@ import { lastValueFrom } from 'rxjs';
 import { applyMetadata } from '../utils/resolve-metadata.js';
 import { TelemetryLevel, TelemetryType } from '../static.js';
 
-function createAdapter(id: string): ITelemetryAdapter {
+function createAdapter(_id: string): ITelemetryAdapter {
   return {
     processItem: vi.fn(),
     initialize: vi.fn(),

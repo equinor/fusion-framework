@@ -26,6 +26,10 @@ const useStyles = makeStyles(
   { name: 'Demo' },
 );
 
+/**
+ * Demonstrates stylesheet creation and cleanup when a component mounts and unmounts.
+ * @returns The stylesheet lifecycle demonstration content.
+ */
 export const Demo = () => {
   const classes = useStyles({});
 

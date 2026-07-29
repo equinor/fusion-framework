@@ -24,6 +24,7 @@ export async function installDependencies(
     },
   ]);
 
+  // Respect the user's choice to skip installation
   if (!installDeps) {
     logger.debug('Skipping dependency installation');
     return { installed: false };

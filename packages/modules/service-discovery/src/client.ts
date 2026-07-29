@@ -12,7 +12,7 @@ import {
   type ObservableInput,
 } from 'rxjs';
 import { jsonSelector } from '@equinor/fusion-framework-module-http/selectors';
-import { ApiServices } from './api-schema';
+import { ApiServices } from './api-services';
 
 /**
  * Contract for a client that resolves service endpoints from a service
@@ -88,7 +88,9 @@ const serviceResponseSelector = (
     map((value) => ApiServices.default([]).parse(value)),
   );
 
+  // Only apply a transform pipeline when the caller supplied one
   if (postProcess) {
+    // Apply the caller-supplied operator (e.g. session overrides) before emitting
     return result$.pipe(postProcess);
   }
 
@@ -148,7 +150,9 @@ export class ServiceDiscoveryClient implements IServiceDiscoveryClient {
   /** {@inheritDoc IServiceDiscoveryClient.resolveService} */
   public async resolveService(key: string, allow_cache?: boolean): Promise<Service> {
     const services = await this.resolveServices(allow_cache);
+    // Locate the service matching the requested key
     const service = services.find((s) => s.key === key);
+    // Fail loudly when the requested key doesn't resolve to a known service
     if (!service) {
       throw Error(`Failed to resolve service, invalid key [${key}]`);
     }

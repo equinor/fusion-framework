@@ -12,5 +12,5 @@
 
 export { default as options } from './options.js';
 export { withOptions } from './with-options.js';
-export { AiOptionsSchema, type AiOptionsType } from './schema.js';
+export { AiOptionsSchema, type AiOptionsType } from './ai-options-schema.js';
 export type { AiOptions } from './types.js';

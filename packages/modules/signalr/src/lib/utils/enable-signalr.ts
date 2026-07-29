@@ -1,5 +1,5 @@
 import type { IModulesConfigurator } from '@equinor/fusion-framework-module';
-import type { SignalRModuleConfigBuilderCallback } from '../../SignalRModuleConfigurator';
+import type { SignalRModuleConfigBuilderCallback } from '../../SignalRModuleConfigBuilder';
 import { module } from '../../SignalRModule';
 import { configureFromFramework } from './configure-from-framework';
 
@@ -15,7 +15,7 @@ export interface enableSignalR {
    * @param cb - Builder callback for manual hub configuration
    */
   (
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore lint/suspicious/noExplicitAny: IModulesConfigurator<any, any> widens to accept a configurator for any concrete module set
     configurator: IModulesConfigurator<any, any>,
     name: string,
     cb: SignalRModuleConfigBuilderCallback,
@@ -29,7 +29,7 @@ export interface enableSignalR {
    * @param options - Service name and path used to resolve the hub endpoint
    */
   (
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore lint/suspicious/noExplicitAny: IModulesConfigurator<any, any> widens to accept a configurator for any concrete module set
     configurator: IModulesConfigurator<any, any>,
     name: string,
     options: { service: string; path: string },
@@ -69,11 +69,12 @@ export interface enableSignalR {
  * ```
  */
 export function enableSignalR(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: IModulesConfigurator<any, any> widens to accept a configurator for any concrete module set
   configurator: IModulesConfigurator<any, any>,
   name: string,
   optionsOrCallback: SignalRModuleConfigBuilderCallback | { service: string; path: string },
 ) {
+  // Callback form configures the hub directly against the resolved builder
   if (typeof optionsOrCallback === 'function') {
     configurator.addConfig({
       module,

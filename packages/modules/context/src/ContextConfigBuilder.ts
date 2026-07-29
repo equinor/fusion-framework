@@ -52,19 +52,25 @@ export type ContextConfigBuilderCallback = <TDeps extends Array<AnyModule> = []>
  * - The builder pattern allows chaining configuration methods for clarity and convenience.
  * - The `requireInstance` method enables asynchronous retrieval of module instances by name.
  *
- * @todo - this should extend the BaseConfigBuilder
+ * @todo(#5120) - this should extend the BaseConfigBuilder
  *
  * @see ContextModuleConfig
  * @see ModuleInitializerArgs
  */
 export class ContextConfigBuilder<
   TModules extends Array<AnyModule> = [],
+  // biome-ignore lint/suspicious/noExplicitAny: `ModuleInitializerArgs<any, any>` widens the constraint to accept initializer args for any configurator/module set \u2014 `unknown` breaks assignability of the concrete default type argument
   TInit extends ModuleInitializerArgs<any, any> = ModuleInitializerArgs<
     ContextModuleConfigurator,
     TModules
   >,
 > {
   #init: TInit;
+  /**
+   * Creates a new `ContextConfigBuilder`.
+   * @param init - Module initializer arguments used to resolve module instances.
+   * @param config - The partial context module config to build upon.
+   */
   constructor(
     init: TInit,
     public config: Partial<ContextModuleConfig> = {},
@@ -72,13 +78,31 @@ export class ContextConfigBuilder<
     this.#init = init;
   }
 
+  /**
+   * Requires a module instance by its registered key.
+   * @param module - The key of the module to resolve.
+   * @returns A promise that resolves to the requested module instance.
+   */
   requireInstance<TKey extends string = Extract<keyof Modules, string>>(
     module: TKey,
   ): Promise<ModuleType<Modules[TKey]>>;
 
+  /**
+   * Requires a module instance by name.
+   * @param module - The name of the module to resolve.
+   * @returns A promise that resolves to the requested module instance.
+   */
   requireInstance<T>(module: string): Promise<T>;
 
-  requireInstance(module: string): Promise<any> {
+  /**
+   * Requires a module instance by key or name.
+   * @param module - The key or name of the module to resolve.
+   * @returns A promise that resolves to the requested module instance.
+   */
+  requireInstance(
+    module: string,
+    // biome-ignore lint/suspicious/noExplicitAny: implementation signature must satisfy both overloads above (`Promise<ModuleType<...>>` and `Promise<T>`); `unknown` is not assignable to the generic `Promise<T>` overload
+  ): Promise<any> {
     return this.#init.requireInstance(module);
   }
 
@@ -192,7 +216,7 @@ export class ContextConfigBuilder<
     },
     expire = 1 * 60 * 1000,
   ): void {
-    this.config.client = {
+    const clientConfig: ContextModuleConfig['client'] = {
       get:
         typeof client.get === 'function'
           ? {
@@ -206,7 +230,7 @@ export class ContextConfigBuilder<
       query:
         typeof client.query === 'function'
           ? {
-              // TODO - might cast to checksum
+              // TODO(#5118) - might cast to checksum
               key: (args) => JSON.stringify(args),
               client: {
                 fn: client.query,
@@ -215,12 +239,13 @@ export class ContextConfigBuilder<
             }
           : client.query,
     };
+    this.config.client = clientConfig;
+    // only override the related-context client config if one was provided
     if (client.related) {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      this.config.client!.related =
+      clientConfig.related =
         typeof client.related === 'function'
           ? {
-              // TODO - might cast to checksum
+              // TODO(#5118) - might cast to checksum
               key: (args) => JSON.stringify(args),
               client: {
                 fn: client.related,

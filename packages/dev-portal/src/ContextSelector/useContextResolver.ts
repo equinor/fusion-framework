@@ -43,19 +43,22 @@ function capitalizeFirstLetter(string: string): string {
 function convertGraphic(
   graphic: ContextItem['graphic'],
 ): Pick<ContextResultItem, 'graphic' | 'graphicType'> {
+  // No graphic provided means nothing to render
   if (graphic === undefined) {
     return {};
   }
 
+  // A string graphic is either an inline SVG/HTML markup or an EDS icon name
   if (typeof graphic === 'string') {
+    // EDS icon names aren't part of the ContextResultItem['graphicType'] union upstream, so cast explicitly
+    const edsGraphicType = 'eds' as unknown as ContextResultItem['graphicType'];
     return {
-      graphicType: graphic.startsWith('<')
-        ? 'inline-html'
-        : ('eds' as unknown as ContextResultItem['graphicType']),
+      graphicType: graphic.startsWith('<') ? 'inline-html' : edsGraphicType,
       graphic: graphic,
     };
   }
 
+  // A structured SVG graphic object maps directly to the inline-svg type
   if (graphic.type === 'svg') {
     return {
       graphicType: 'inline-svg',
@@ -76,19 +79,22 @@ function convertGraphic(
  * @returns An object with `meta` and `metaType` properties, or an empty object.
  */
 function convertMeta(meta: ContextItem['meta']): Pick<ContextResultItem, 'metaType' | 'meta'> {
+  // No meta provided means nothing to render
   if (meta === undefined) {
     return {};
   }
 
+  // A string meta is either an inline SVG/HTML markup or an EDS icon name
   if (typeof meta === 'string') {
+    // EDS icon names aren't part of the ContextResultItem['metaType'] union upstream, so cast explicitly
+    const edsMetaType = 'eds' as unknown as ContextResultItem['metaType'];
     return {
-      metaType: meta.startsWith('<')
-        ? 'inline-html'
-        : ('eds' as unknown as ContextResultItem['metaType']),
+      metaType: meta.startsWith('<') ? 'inline-html' : edsMetaType,
       meta: meta,
     };
   }
 
+  // A structured SVG meta object maps directly to the inline-svg type
   if (meta.type === 'svg') {
     return {
       metaType: 'inline-svg',
@@ -112,7 +118,9 @@ function convertMeta(meta: ContextItem['meta']): Pick<ContextResultItem, 'metaTy
  * @returns Mapped array of `ContextResultItem` objects for the selector UI.
  */
 const mapper = (src: ContextItem<{ taskState?: string; state?: string }>[]): ContextResult => {
+  // Map each raw context item to its ContextResultItem shape, applying per-type overrides
   return src.map((i) => {
+    // Layer the base fields with graphic and meta overrides derived from the item
     const baseResult = {
       id: i.id,
       title: i.title,
@@ -125,18 +133,22 @@ const mapper = (src: ContextItem<{ taskState?: string; state?: string }>[]): Con
     const isEquinorTaskInactive = !!(
       i.value.taskState && i.value.taskState.toLowerCase() !== 'active'
     );
+    // Only override the meta chip for EquinorTask items that are inactive
     if (i.type.id === 'EquinorTask' && isEquinorTaskInactive) {
       baseResult.meta = `<fwc-chip disabled variant="outlined" value="${i.value.taskState}" />`;
       baseResult.metaType = 'inline-html';
     }
 
+    // OrgChart items always get a fixed icon plus an optional inactive-state chip
     if (i.type.id === 'OrgChart') {
       // Org charts should always have 'list' icon
       baseResult.graphic = 'list';
+      // 'eds' isn't part of the ContextResultItem['graphicType'] union upstream, so cast explicitly
       baseResult.graphicType = 'eds' as unknown as ContextResultItem['graphicType'];
 
       // Displays the org chart status if it is not 'active'
       const isOrgChartInactive = !!(i.value.state && i.value.state.toLowerCase() !== 'active');
+      // Only override the meta chip when the org chart is inactive
       if (isOrgChartInactive) {
         baseResult.meta = `<fwc-chip disabled variant="outlined" value="${capitalizeFirstLetter(i.value.state ?? '')}" />`;
         baseResult.metaType = 'inline-html';
@@ -156,6 +168,7 @@ const mapper = (src: ContextItem<{ taskState?: string; state?: string }>[]): Con
  * @returns A complete `ContextResultItem` with defaults for `id` and `title`.
  */
 const singleItem = (props: Partial<ContextResultItem>): ContextResultItem => {
+  // Layer the caller-supplied props on top of the placeholder defaults
   return Object.assign({ id: 'no-such-item', title: 'Change me' }, props);
 };
 
@@ -200,6 +213,7 @@ export const useContextResolver = (): {
   const onContextProviderChange = useCallback((modules: AppModulesInstance) => {
     /** try to get the context module from the app module instance */
     const contextProvider = (modules as AppModulesInstance<[ContextModule]>).context;
+    // Only set a provider when the loaded app actually exposes a context module
     if (contextProvider) {
       setProvider(contextProvider);
     } else {
@@ -224,10 +238,12 @@ export const useContextResolver = (): {
   );
 
   const processError = useCallback((err: Error): ContextResult => {
+    // Unwrap query-client errors to get at the underlying cause
     if (err.name === 'QueryClientError') {
       return processError((err as QueryClientError).cause as Error);
     }
 
+    // Render context-search errors with their own title/description
     if (err.name === 'FusionContextSearchError') {
       const error = err as FusionContextSearchError;
       return [
@@ -260,10 +276,11 @@ export const useContextResolver = (): {
     (): ContextResolver | null =>
       provider && {
         searchQuery: async (search: string): Promise<ContextResult> => {
+          // Avoid firing a search query until the minimum character threshold is met
           if (search.length < minLength) {
             return [
               singleItem({
-                // TODO - make as enum if used for checks, or type
+                // TODO(#5064): make as enum if used for checks, or type
                 id: 'min-length',
                 title: `Type ${minLength - search.length} more chars to search`,
                 isDisabled: true,
@@ -271,34 +288,37 @@ export const useContextResolver = (): {
             ];
           }
           try {
+            const query$ = provider.queryContext(search);
             return lastValueFrom(
-              provider.queryContext(search).pipe(
-                map(mapper),
-                map((x) =>
-                  x.length
-                    ? x
-                    : [
-                        singleItem({
-                          // TODO - make as enum if used for checks, or type
-                          id: 'no-results',
-                          title: 'No results found',
-                          graphic: 'info_circle',
-                          isDisabled: true,
-                        }),
-                      ],
-                ),
-                /** handle failures */
-                catchError((err) => {
-                  console.error(
-                    'PORTAL::ContextResolver',
-                    `failed to resolve context for query ${search}`,
-                    err,
-                    err.cause,
-                  );
+              query$
+                // Run the raw query results through the mapper, falling back to a no-results placeholder
+                .pipe(
+                  map(mapper),
+                  map((x) =>
+                    x.length
+                      ? x
+                      : [
+                          singleItem({
+                            // TODO(#5064): make as enum if used for checks, or type
+                            id: 'no-results',
+                            title: 'No results found',
+                            graphic: 'info_circle',
+                            isDisabled: true,
+                          }),
+                        ],
+                  ),
+                  /** handle failures */
+                  catchError((err) => {
+                    console.error(
+                      'PORTAL::ContextResolver',
+                      `failed to resolve context for query ${search}`,
+                      err,
+                      err.cause,
+                    );
 
-                  return of(processError(err));
-                }),
-              ),
+                    return of(processError(err));
+                  }),
+                ),
             );
             /** this should NEVER happen! */
           } catch (e) {

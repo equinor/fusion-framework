@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useState } from 'react';
 import {
   PeoplePicker,
   PeopleViewer,
@@ -25,6 +25,11 @@ const resolvePeople = [
   '000248d4-bb4f-4056-a9ac-9a0dd855cbd4',
 ];
 
+/**
+ * Demonstrates resolving, selecting, and viewing people with the people concept components.
+ *
+ * @returns The people picker and viewer example page.
+ */
 export const PeopleConceptPage = () => {
   const [selected, setSelected] = useState<PersonInfo[]>([]);
 
@@ -33,7 +38,10 @@ export const PeopleConceptPage = () => {
   }, []);
 
   const handlePersonRemoved = useCallback((event: PersonRemovedEvent) => {
-    setSelected((prev) => prev.filter((p) => p.azureId !== event.detail.azureId));
+    setSelected((prev) => {
+      // Remove only the person represented by the removal event.
+      return prev.filter((person) => person.azureId !== event.detail.azureId);
+    });
   }, []);
 
   return (

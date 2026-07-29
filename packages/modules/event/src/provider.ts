@@ -4,7 +4,7 @@ import { BaseModuleProvider } from '@equinor/fusion-framework-module/provider';
 import { version } from './version.js';
 
 import type { IEventModuleConfigurator } from './configurator';
-import { FrameworkEventDispatcher, type FrameworkEventHandler } from './dispatcher';
+import { FrameworkEventDispatcher, type FrameworkEventHandler } from './FrameworkEventDispatcher';
 
 import {
   type IFrameworkEvent,
@@ -12,7 +12,7 @@ import {
   type FrameworkEventInit,
   type FrameworkEventInitType,
   type FrameworkEventMap,
-} from './event';
+} from './FrameworkEvent';
 
 /**
  * Public contract for the event module provider.
@@ -173,6 +173,7 @@ export class EventModuleProvider
    * ```
    */
   public addEventListener(type: string, handler: FrameworkEventHandler): VoidFunction {
+    // Refuse to register new listeners once the provider has been disposed
     if (this.closed) {
       throw Error('Cannot listen to events when provider is closed!');
     }
@@ -197,7 +198,9 @@ export class EventModuleProvider
     typeOrEvent: string | FrameworkEvent,
     init?: FrameworkEventInit,
   ): Promise<FrameworkEvent> {
+    // A string type requires the caller to supply init options to construct the event
     if (typeof typeOrEvent === 'string') {
+      // `init` is required to construct a new `FrameworkEvent` from a type string
       if (!init) {
         throw Error('invalid arguments, missing [FrameworkEventInit]');
       }
@@ -216,6 +219,7 @@ export class EventModuleProvider
    * @throws {Error} When the provider has been disposed.
    */
   protected async _dispatchEvent(event: FrameworkEvent): Promise<FrameworkEvent> {
+    // Refuse to dispatch events once the provider has been disposed
     if (this.closed) {
       throw Error('Cannot dispatch events when provider is closed!');
     }
@@ -224,7 +228,9 @@ export class EventModuleProvider
 
     try {
       const listeners = this.__listeners
+        // Resolve only the handlers registered for this event's type
         .filter((listener) => listener.type === event.type)
+        // Extract just the handler functions to invoke
         .map(({ handler }) => handler);
       await this.__dispatcher.dispatch(event, listeners);
     } catch (err) {

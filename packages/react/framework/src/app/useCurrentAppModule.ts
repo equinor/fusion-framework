@@ -38,13 +38,19 @@ export const useCurrentAppModule = <
   complete: boolean;
 } => {
   const { modules, error, complete } = useCurrentAppModules();
-  const module =
-    modules === null
-      ? null
-      : modules === undefined
-        ? undefined
-        : // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          (modules[moduleKey as keyof typeof modules] as any);
+  const module = (() => {
+    // Preserve an explicit null (modules not applicable) distinct from undefined (not yet loaded)
+    if (modules === null) {
+      return null;
+    }
+    // Modules are still loading; propagate undefined rather than throwing
+    if (modules === undefined) {
+      return undefined;
+    }
+    // Module lookup by dynamic key can't be statically narrowed to the exact module type; cast to any.
+    // biome-ignore lint/suspicious/noExplicitAny: dynamic key lookup can't be statically narrowed to the exact module type
+    return modules[moduleKey as keyof typeof modules] as any;
+  })();
   return { module, error, complete };
 };
 

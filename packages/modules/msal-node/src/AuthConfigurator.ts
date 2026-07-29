@@ -22,6 +22,9 @@ import type { AuthConfig } from './AuthConfigurator.interface.js';
  * Ensure changes are reflected in the interface and validated in `_processConfig`.
  */
 export class AuthConfigurator extends BaseConfigBuilder<AuthConfig> {
+  /**
+   * Creates the builder with the `interactive` authentication mode as the default.
+   */
   constructor() {
     super();
     this.setMode('interactive');
@@ -148,6 +151,7 @@ export class AuthConfigurator extends BaseConfigBuilder<AuthConfig> {
    * @throws Error if required properties are missing or invalid for the selected mode.
    */
   async _processConfig(config: AuthConfig): Promise<AuthConfig> {
+    // Validate the required properties for the selected authentication mode
     switch (config.mode) {
       case 'interactive': {
         // Interactive mode requires a valid MSAL client instance

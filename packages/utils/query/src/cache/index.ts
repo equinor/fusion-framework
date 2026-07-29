@@ -1,3 +1,3 @@
 export { default, QueryCache } from './QueryCache';
-export { QueryCacheEvent } from './events';
+export { QueryCacheEvent } from './QueryCacheEvent';
 export * from './types';

@@ -25,11 +25,11 @@ export const mapProp = <TObject extends Record<string, unknown>, TPath extends N
   path: TPath,
 ): OperatorFunction<TObject, NestedPropType<TObject, TPath>> =>
   map((obj: TObject) => {
+    // Walk the dot-separated path segments, drilling into the object one property at a time
     return String(path)
       .split('.')
       .reduce(
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (cur: any, attr: string) => cur[attr],
+        (cur: unknown, attr: string) => (cur as Record<string, unknown>)[attr],
         obj,
       ) as NestedPropType<TObject, TPath>;
   });

@@ -56,11 +56,17 @@ export const bookmarkWithDataSchema = <
   T extends BookmarkData = BookmarkData,
   S extends z.ZodSchema<T> = z.ZodSchema<T>,
 >(
-  schema: S = z.record(z.string(), z.unknown()).or(z.string()).optional() as unknown as S,
-) =>
-  bookmarkSchema.extend({
-    payload: schema,
+  schema?: S,
+) => {
+  // No payload schema was supplied — fall back to accepting any JSON-serializable value.
+  // The generic constraint `S extends z.ZodSchema<T>` can't express this default directly,
+  // so the fallback schema must be cast through `unknown` to satisfy `S`.
+  const payloadSchema =
+    schema ?? (z.record(z.string(), z.unknown()).or(z.string()).optional() as unknown as S);
+  return bookmarkSchema.extend({
+    payload: payloadSchema,
   });
+};
 
 /**
  * Parses an unknown value into a typed {@link Bookmark} using {@link bookmarkWithDataSchema}.

@@ -22,6 +22,7 @@ export async function cleanupTemplateFiles(
 ): Promise<void> {
   // If cleanup flag is provided, use it directly without prompting
   if (cleanup !== undefined) {
+    // Honor the explicit flag value without prompting the user
     if (cleanup) {
       await repo.cleanup();
     } else {

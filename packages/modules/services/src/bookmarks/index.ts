@@ -14,5 +14,5 @@
 
 export { BookmarksApiClient, default } from './client';
 export { ApiVersion } from './api-version';
-export * from './schemas';
+export * from './bookmark.schemas';
 export type * from './types';

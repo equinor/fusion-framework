@@ -1,4 +1,4 @@
-import { UnsupportedApiVersion } from '../../../errors';
+import { UnsupportedApiVersion } from '../../../UnsupportedApiVersion';
 import { ApiVersion } from '../..';
 
 import type { GetNotificationsArgs } from './types';
@@ -11,6 +11,7 @@ export const generateEndpoint = <TVersion extends string = keyof typeof ApiVersi
   args: GetNotificationsArgs<TVersion>,
 ): string => {
   const apiVersion = ApiVersion[version as keyof typeof ApiVersion] ?? version;
+  // Select the endpoint format supported by the requested notification API version.
   switch (apiVersion) {
     case ApiVersion.v2:
       throw new UnsupportedApiVersion(version);

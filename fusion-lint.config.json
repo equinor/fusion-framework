@@ -1,0 +1,47 @@
+{
+  "rules": {
+    "single-export-per-file": {
+      "excludePattern": [
+        "*-module.ts",
+        "*.schemas.ts",
+        "actions.ts",
+        "helpers.ts",
+        "index.ts",
+        "index.tsx",
+        "module.ts",
+        "options.ts",
+        "predicates.ts",
+        "routes.ts",
+        "selectors.ts",
+        "setup.ts",
+        "static.ts",
+        "utils.ts"
+      ]
+    },
+    "filename-convention": {
+      "excludePattern": [
+        "*.command.ts",
+        "*.d.ts",
+        "client-msal.ts",
+        "client.ts",
+        "config.ts",
+        "configurator.ts",
+        "enable-signalr.ts",
+        "index.ts",
+        "index.tsx",
+        "layout.tsx",
+        "main.ts",
+        "main.tsx",
+        "module.ts",
+        "plugin.ts",
+        "provider.ts",
+        "route-factory.ts",
+        "selectors.ts",
+        "static.ts",
+        "types.ts",
+        "utils.ts"
+      ]
+    }
+  },
+  "ignorePatterns": ["**/__tests__/**"]
+}

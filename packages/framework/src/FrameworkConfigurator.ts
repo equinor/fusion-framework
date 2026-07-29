@@ -56,7 +56,7 @@ import { version } from './version.js';
  */
 export class FrameworkConfigurator<
   TModules extends Array<AnyModule> = [],
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: default must be bivariant `any`, not `unknown` \u2014 `unknown` breaks assignability when a concrete `FrameworkConfigurator<TModules, TRef>` is used where the default-typed class is expected
   TRef = any,
 > extends ModulesConfigurator<FusionModules<TModules>, TRef> {
   /**
@@ -187,12 +187,15 @@ export class FrameworkConfigurator<
     this.addConfig({
       module: auth,
       configure: (builder) => {
+        // Only override the default requiresAuth flag when the caller explicitly set one
         if (requiresAuth !== undefined) {
           builder.setRequiresAuth(!!requiresAuth);
         }
+        // A function argument configures the builder directly
         if (typeof cb_or_config === 'function') {
           cb_or_config(builder);
         }
+        // A plain object argument is applied as the MSAL client config
         if (typeof cb_or_config === 'object') {
           builder.setClientConfig(cb_or_config);
         }

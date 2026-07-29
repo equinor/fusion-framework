@@ -29,8 +29,9 @@ export const createReducer = (value: AppBundleStateInitial) =>
       builder
         // update or set manifest
         .addCase(actions.setManifest, (state, action) => {
-          // TODO: after legacy is removed, remove the update flag
+          // TODO(#5131): after legacy is removed, remove the update flag
           if (action.meta.update) {
+            // Merge onto the existing manifest so partial updates don't clobber other fields.
             state.manifest = Object.assign(state.manifest ?? {}, action.payload);
           } else {
             state.manifest = action.payload;

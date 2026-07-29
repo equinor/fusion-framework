@@ -30,6 +30,8 @@ export const resolveContextFromParent: ContextModuleConfig['resolveInitialContex
  * @param options - Optional configuration for resolving the context path.
  * @returns A function that accepts the module's reference and modules, and returns an Observable of the resolved initial context.
  */
+// Deliberately co-located with resolveContextFromParent, which it composes with
+// fusion-lint-disable-next-line single-export-per-file
 export const resolveInitialContext =
   (options?: {
     path?: ContextPathResolveArgs;

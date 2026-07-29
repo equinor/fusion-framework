@@ -2,10 +2,10 @@ import { normalizePath, type Plugin } from 'vite';
 
 import { fileURLToPath } from 'node:url';
 
-import defaultTemplate from './html/index.html.js';
+import defaultTemplate from './html/html.js';
 
 import { objectToEnv } from './util/object-to-env.js';
-import { loadEnvironment } from './util/load-env.js';
+import { loadEnvironment } from './util/load-environment.js';
 
 import type { TemplateEnv, TemplateEnvFn } from './types.js';
 
@@ -144,12 +144,14 @@ export const plugin = <TEnv extends TemplateEnv = TemplateEnv>(
 
       log?.debug('plugin loaded environment\n', pluginEnv);
 
+      // Loaded env values override plugin-configured defaults
       const env = { ...pluginEnv, ...loadedEnv };
 
       log?.debug('plugin environment\n', env);
 
       // define environment variables
       config.define ??= {};
+      // Convert each env entry into a valid JS expression for Vite's config.define
       for (const [key, value] of Object.entries(env)) {
         // All values must be valid JavaScript expressions for Vite's config.define
         // Try to parse as JSON first (handles booleans, numbers, objects, arrays)

@@ -1,11 +1,3 @@
-import {
-  Route as ReactRouterRoute,
-  Routes as ReactRouterRoutes,
-  MemoryRouter as ReactRouterMemoryRouter,
-  RouterProvider as ReactRouterRouterProvider,
-  createMemoryRouter as reactRouterCreateMemoryRouter,
-} from 'react-router';
-
 export type {
   MemoryRouterProps,
   RouterProviderProps,
@@ -21,7 +13,7 @@ export type {
  *
  * @deprecated Interop export. This will be removed in a future major version.
  */
-export const MemoryRouter: typeof ReactRouterMemoryRouter = ReactRouterMemoryRouter;
+export { MemoryRouter } from 'react-router';
 
 /**
  * Interop re-export of `RouterProvider` from `react-router`.
@@ -32,7 +24,7 @@ export const MemoryRouter: typeof ReactRouterMemoryRouter = ReactRouterMemoryRou
  *
  * @deprecated Interop export. This will be removed in a future major version.
  */
-export const RouterProvider: typeof ReactRouterRouterProvider = ReactRouterRouterProvider;
+export { RouterProvider } from 'react-router';
 
 /**
  * Interop re-export of `createMemoryRouter` from `react-router`.
@@ -44,8 +36,7 @@ export const RouterProvider: typeof ReactRouterRouterProvider = ReactRouterRoute
  *
  * @deprecated Interop export. This will be removed in a future major version.
  */
-export const createMemoryRouter: typeof reactRouterCreateMemoryRouter =
-  reactRouterCreateMemoryRouter;
+export { createMemoryRouter } from 'react-router';
 
 /**
  * Interop re-export of `Routes` from `react-router`.
@@ -57,7 +48,7 @@ export const createMemoryRouter: typeof reactRouterCreateMemoryRouter =
  * Use the Fusion DSL (`Route`, `IndexRoute`, `LayoutRoute`) or a
  * `RouteObject` array passed to `<Router>` instead.
  */
-export const Routes: typeof ReactRouterRoutes = ReactRouterRoutes;
+export { Routes } from 'react-router';
 
 /**
  * Interop re-export of `Route` from `react-router`.
@@ -69,4 +60,4 @@ export const Routes: typeof ReactRouterRoutes = ReactRouterRoutes;
  * Use the Fusion DSL (`Route`, `IndexRoute`, `LayoutRoute`) or a
  * `RouteObject` array passed to `<Router>` instead.
  */
-export const Route: typeof ReactRouterRoute = ReactRouterRoute;
+export { Route } from 'react-router';

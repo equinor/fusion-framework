@@ -43,12 +43,15 @@ function transformImportMetaResolve(code: string, baseDir: string): string {
  */
 function getLoader(filePath: string): 'ts' | 'tsx' | 'js' | 'jsx' | undefined {
   const ext = path.extname(filePath);
+  // TSX/JSX share the loader family, distinguished only by the JSX transform flavor
   if (ext === '.tsx' || ext === '.jsx') {
     return ext === '.tsx' ? 'tsx' : 'jsx';
   }
+  // TypeScript and its module variant both use the 'ts' loader
   if (ext === '.ts' || ext === '.mts') {
     return 'ts';
   }
+  // Plain JavaScript and its module variant both use the 'js' loader
   if (ext === '.js' || ext === '.mjs') {
     return 'js';
   }
@@ -86,7 +89,9 @@ async function collectOutputFiles(
 
   // Collect from outputFiles (write: false case - files in memory)
   if (result.outputFiles) {
+    // Inspect every emitted output file for JS/MJS content
     for (const outputFile of result.outputFiles) {
+      // Only bundled JS output needs the import.meta.resolve transform
       if (outputFile.path.endsWith('.js') || outputFile.path.endsWith('.mjs')) {
         files.push({ path: outputFile.path, text: outputFile.text });
         processedPaths.add(outputFile.path);
@@ -96,17 +101,22 @@ async function collectOutputFiles(
 
   // Collect from metafile (write: true case - files on disk)
   if (result.metafile?.outputs) {
+    // Inspect every output path recorded in the metafile
     for (const outputPath of Object.keys(result.metafile.outputs)) {
+      // Already collected from outputFiles above — avoid double-processing
       if (processedPaths.has(outputPath)) {
+        // Skip re-adding a path already collected from outputFiles
         continue;
       }
 
+      // Only bundled JS output needs the import.meta.resolve transform
       if (outputPath.endsWith('.js') || outputPath.endsWith('.mjs')) {
         const absolutePath = path.isAbsolute(outputPath)
           ? outputPath
           : path.resolve(process.cwd(), outputPath);
 
         const text = (await readFileSafe(absolutePath)) ?? (await readFileSafe(outputPath));
+        // Skip files that could not be read from either candidate path
         if (text) {
           files.push({ path: absolutePath, text });
         }
@@ -164,11 +174,13 @@ export const importMetaResolvePlugin = (): Plugin => {
 
         // Read and transform file if it contains import.meta.resolve
         const contents = await readFileSafe(args.path);
-        if (!contents || !contents.includes('import.meta.resolve')) {
+        // No content, or nothing to transform — leave the file untouched
+        if (!contents?.includes('import.meta.resolve')) {
           return undefined;
         }
 
         const transformedContents = transformImportMetaResolve(contents, path.dirname(args.path));
+        // Nothing changed — defer to esbuild's default loading
         if (transformedContents === contents) {
           return undefined;
         }
@@ -179,6 +191,7 @@ export const importMetaResolvePlugin = (): Plugin => {
 
       // Transform bundled output files
       build.onEnd(async (result) => {
+        // Nothing was tracked as the entry point — no files to post-process
         if (!entryPointDir) {
           return;
         }
@@ -186,16 +199,22 @@ export const importMetaResolvePlugin = (): Plugin => {
         const files = await collectOutputFiles(result);
         const fs = await import('node:fs/promises');
 
+        // Rewrite every collected output file that still contains import.meta.resolve
         for (const file of files) {
+          // Skip files with nothing to transform
           if (!file.text.includes('import.meta.resolve')) {
+            // Nothing to transform in this file — move on to the next one
             continue;
           }
 
           const transformedText = transformImportMetaResolve(file.text, entryPointDir);
+          // Only write back when the transform actually changed the content
           if (transformedText !== file.text) {
             try {
               await fs.writeFile(file.path, transformedText, 'utf-8');
             } catch (error) {
+              // Failing to write one transformed output file must not abort the whole build —
+              // log and continue processing the remaining files.
               console.warn(`Failed to write transformed output to ${file.path}:`, error);
             }
           }

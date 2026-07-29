@@ -70,6 +70,7 @@ interface UserDetailProps {
 
 // Helper functions to get chip variants based on role and department
 const getRoleChipVariant = (role: string): 'active' | 'error' | undefined => {
+  // Map role names to the visual chip variants used in the profile header.
   switch (role.toLowerCase()) {
     case 'developer':
       return 'active';
@@ -85,6 +86,7 @@ const getRoleChipVariant = (role: string): 'active' | 'error' | undefined => {
 };
 
 const getDepartmentChipVariant = (department: string): 'active' | 'error' | undefined => {
+  // Map department names to the visual chip variants used in the profile header.
   switch (department.toLowerCase()) {
     case 'engineering':
       return 'active';

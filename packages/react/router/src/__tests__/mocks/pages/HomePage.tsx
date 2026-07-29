@@ -4,6 +4,11 @@ export const handle = {
   },
 };
 
+/**
+ * Mock home page used in router tests.
+ *
+ * @returns The home page
+ */
 export default function HomePage() {
   return <div>Home Page</div>;
 }

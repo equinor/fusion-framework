@@ -1,6 +1,6 @@
 // ConsoleLogger provides a unified interface for logging and spinner-based feedback in CLI tools.
 // It wraps a Spinner instance and exposes methods for different log levels and progress reporting.
-import { Spinner } from './spinner.js';
+import { Spinner } from './Spinner.js';
 
 /**
  * ConsoleLogger is a utility class for logging progress, status, and debug information in CLI applications.
@@ -62,8 +62,10 @@ export class ConsoleLogger {
    * Log an error message to the console.
    * @param args - Error message parts.
    */
-  // biome-ignore lint/suspicious/noExplicitAny: same as original
-  error(...args: any[]) {
+  error(
+    // biome-ignore lint/suspicious/noExplicitAny: same as original
+    ...args: any[]
+  ) {
     console.log(...args);
   }
   /**
@@ -91,8 +93,11 @@ export class ConsoleLogger {
    * Log debug messages if debugMode is enabled.
    * @param args - Debug message parts.
    */
-  // biome-ignore lint/suspicious/noExplicitAny: same as original
-  debug(...args: any[]) {
+  debug(
+    // biome-ignore lint/suspicious/noExplicitAny: same as original
+    ...args: any[]
+  ) {
+    // Debug output is opt-in to avoid noisy default logs
     if (this.debugMode) {
       console.debug(...args);
     }

@@ -29,6 +29,7 @@ export const PersonSideSheet = ({ azureId, isOpen, onClose }: PersonSideSheetPro
   const [currentSheet, setCurrentSheet] = useState<string>('landing');
 
   const Component = useMemo(() => {
+    // Pick the sub-sheet component matching the currently navigated-to sheet
     switch (currentSheet) {
       case 'features':
         return FeatureSheetContent;

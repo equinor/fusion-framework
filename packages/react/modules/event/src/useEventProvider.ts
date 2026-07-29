@@ -2,7 +2,7 @@ import { useContext } from 'react';
 
 import type { IEventModuleProvider } from '@equinor/fusion-framework-module-event';
 
-import { eventContext } from './eventContext';
+import { eventContext } from './event-context';
 import { useModulesEventProvider } from './useModulesEventProvider';
 
 /**
@@ -12,6 +12,7 @@ import { useModulesEventProvider } from './useModulesEventProvider';
 export const useEventProvider = (): IEventModuleProvider => {
   const provider = useContext(eventContext);
   const moduleProvider = useModulesEventProvider();
+  // Prefer the context-provided event provider, falling back to the module-scoped one
   if (provider) {
     return provider;
   } else if (moduleProvider) {

@@ -10,8 +10,8 @@ import type { ResponseSelector, BlobResult } from '../client/types';
 export const blobSelector: ResponseSelector = async <TResponse extends Response = Response>(
   response: TResponse,
 ): Promise<BlobResult> => {
+  // treat any non-2xx response as a failure rather than attempting to read its body
   if (!response.ok) {
-    // Throw an error if the network response is not successful
     throw new Error('network response was not OK');
   }
 
@@ -21,6 +21,7 @@ export const blobSelector: ResponseSelector = async <TResponse extends Response 
   }
 
   // Extract the filename from the 'content-disposition' header
+  // locate the segment carrying the filename directive; other directives (e.g. inline/attachment) are ignored
   const filename = response.headers
     .get('content-disposition')
     ?.split(';')
@@ -32,7 +33,7 @@ export const blobSelector: ResponseSelector = async <TResponse extends Response 
     // Convert the response to a Blob and return the filename and Blob
     const blob = await response.blob();
     return { filename, blob };
-  } catch (err) {
+  } catch (_err) {
     // Throw an error if there's a problem parsing the response
     throw Error('failed to parse response');
   }

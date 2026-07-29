@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 /**
  * Returns `True` if `T` is `any`, otherwise returns `False`.
  *
@@ -24,6 +22,7 @@ export type IfMaybeUndefined<P, True, False> = [undefined] extends [P] ? True : 
 /**
  * Conditional type: resolves to `True` if `P` is `void`, otherwise `False`.
  */
+// biome-ignore lint/suspicious/noConfusingVoidType: this tuple genuinely needs to check for the `void` type itself, not signal an accidental void return
 export type IfVoid<P, True, False> = [void] extends [P] ? True : False;
 
 /**
@@ -34,7 +33,7 @@ export type IsUnknownOrNonInferrable<T, True, False> = IsUnknown<T, True, False>
 /**
  * A type predicate function signature for narrowing values to type `T`.
  */
-export type TypeGuard<T> = (value: any) => value is T;
+export type TypeGuard<T> = (value: unknown) => value is T;
 
 /**
  * Utility type that excludes function types from `T`.

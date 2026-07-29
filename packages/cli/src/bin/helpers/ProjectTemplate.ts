@@ -1,5 +1,5 @@
 import type { ConsoleLogger } from '@equinor/fusion-framework-cli/bin';
-import type { TemplateResource, TemplateItem } from './project-templates.schema.js';
+import type { TemplateResource, TemplateItem } from './template.schemas.js';
 import { copyFileSync, cpSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 
@@ -25,6 +25,8 @@ export class ProjectTemplate {
   /**
    * The name of the template as defined in the manifest.
    * Used for template identification and selection.
+   *
+   * @returns The template name.
    */
   public get name(): string {
     return this.#item.name;
@@ -33,6 +35,8 @@ export class ProjectTemplate {
   /**
    * The description of the template as defined in the manifest.
    * Provides human-readable information about what the template creates.
+   *
+   * @returns The template description.
    */
   public get description(): string {
     return this.#item.description;
@@ -41,6 +45,8 @@ export class ProjectTemplate {
   /**
    * The resources included in this template.
    * Each resource defines a file or directory to be copied to the target.
+   *
+   * @returns The list of template resources.
    */
   public get resources(): TemplateResource[] {
     return this.#item.resources;
@@ -89,6 +95,7 @@ export class ProjectTemplate {
       // Verify source exists before attempting to copy
       if (!existsSync(sourcePath)) {
         this.#logger?.warn(`Source resource does not exist, skipping: ${sourcePath}`);
+        // Skip this resource entirely rather than failing the whole copy
         continue;
       }
 

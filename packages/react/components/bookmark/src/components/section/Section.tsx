@@ -42,6 +42,12 @@ type SectionProps = {
   readonly name: string;
   readonly children: ReactNode;
 };
+/**
+ * A collapsible section with a named header and its contents.
+ *
+ * @param props - The component's props
+ * @returns The section
+ */
 export const Section = ({ children, name }: SectionProps) => {
   const [isExpanded, setIsExpanded] = useState(true);
 

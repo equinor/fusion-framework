@@ -47,6 +47,7 @@ export function enableFeatureFlag(
     | Array<IFeatureFlag<unknown> & { allowUrl?: boolean | undefined }>
     | FeatureFlagBuilderCallback,
 ): void {
+  // Dispatch based on whether the caller passed an array of flags or a builder callback
   switch (typeof flags_cb) {
     case 'function': {
       enableFeatureFlagging(configurator, flags_cb);
@@ -54,15 +55,17 @@ export function enableFeatureFlag(
     }
     case 'object': {
       const urlFlags: IFeatureFlag[] = [];
+      // Split out flags marked allowUrl so they can be registered with the URL plugin
       const localFlags = (flags_cb ?? []).map((flag) => {
         const { allowUrl, ...localFlag } = flag;
+        // Track allowUrl flags separately; they still get registered locally too
         if (allowUrl) {
           urlFlags.push(flag);
         }
         return localFlag;
       });
       enableFeatureFlagging(configurator, async (builder) => {
-        // TODO: should unnamed application be allowed to use feature flags?
+        // TODO(#5086): should unnamed application be allowed to use feature flags?
         builder.addPlugin(
           createLocalStoragePlugin(localFlags, {
             name: (configurator as AppConfigurator).env?.manifest.appKey ?? undefined,

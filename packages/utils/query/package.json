@@ -26,8 +26,8 @@
       "types": "./dist/types/client/index.d.ts"
     },
     "./operators": {
-      "import": "./dist/esm/operators.js",
-      "types": "./dist/types/operators.d.ts"
+      "import": "./dist/esm/operators/index.js",
+      "types": "./dist/types/operators/index.d.ts"
     },
     "./react": {
       "import": "./dist/esm/react/index.js",
@@ -46,7 +46,7 @@
         "dist/types/client/index.d.ts"
       ],
       "operators": [
-        "dist/types/operators.d.ts"
+        "dist/types/operators/index.d.ts"
       ],
       "react": [
         "dist/types/react/index.d.ts"

@@ -31,12 +31,15 @@ import { version as latestVersionString } from '../version';
 function mapVersionToEnumVersion(version: string | SemVer): MsalModuleVersion {
   console.log('Resolving version:', version);
   const coercedVersion = semver.coerce(version);
+  // An uncoercible version string cannot be mapped to a module version
   if (!coercedVersion) {
     throw new Error(`Invalid version: ${version}`);
   }
+  // Versions before 4.0.0 (including 2.x) map to the v2-compatible module version
   if (semver.satisfies(coercedVersion, '<4.0.0')) {
     return MsalModuleVersion.V2;
   }
+  // Versions before 7.0.0 (4.x and 5.x/6.x) map to the v4-compatible module version
   if (semver.satisfies(coercedVersion, '<7.0.0')) {
     return MsalModuleVersion.V4;
   }
@@ -113,6 +116,7 @@ export function resolveVersion(version?: string | SemVer): ResolvedVersion {
     wantedVersion = latestVersion;
   }
 
+  // Warn when the requested major version trails the latest major version
   if (wantedVersion.major < latestVersion.major) {
     const majorBehindVersionWarning = new VersionError(
       `Requested major version ${wantedVersion.major} is behind the latest major version ${latestVersion.major}`,

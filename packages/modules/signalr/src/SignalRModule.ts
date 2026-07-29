@@ -1,5 +1,6 @@
 import type { Module } from '@equinor/fusion-framework-module';
-import { type ISignalRConfigurator, SignalRConfigurator } from './SignalRModuleConfigurator';
+import type { ISignalRConfigurator } from './SignalRModuleConfigBuilder';
+import { SignalRConfigurator } from './SignalRConfigurator';
 
 import { type ISignalRProvider, SignalRModuleProvider } from './SignalRModuleProvider';
 
@@ -33,6 +34,8 @@ export type SignalRModule = Module<SignalRModuleKey, ISignalRProvider, ISignalRC
  * configurator.addConfig({ module: signalR });
  * ```
  */
+// Deliberately co-located with the `moduleKey` constant it references
+// fusion-lint-disable-next-line single-export-per-file
 export const module: SignalRModule = {
   name: moduleKey,
   configure: () => new SignalRConfigurator(),

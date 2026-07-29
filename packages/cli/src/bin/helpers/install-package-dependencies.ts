@@ -11,6 +11,7 @@ const SUPPORTED_PACKAGE_MANAGERS = ['npm', 'pnpm'];
  * @param packageManager - Package manager to use ('npm' or 'pnpm')
  * @param logger - Logger instance for output
  * @returns Promise resolving to the package manager name used
+ * @throws AssertionError if `packageManager` is not `npm` or `pnpm`; rethrows install failures.
  */
 export async function installPackageDependencies(
   targetDir: string,
@@ -36,6 +37,7 @@ export async function installPackageDependencies(
     logger?.succeed('Dependencies installed successfully!');
     return packageManager;
   } catch (error) {
+    // Surface non-zero exit codes from the package manager as a clearer error
     if (error instanceof ExecaError && error.exitCode !== 0) {
       logger?.error(`${packageManager} install failed with exit code ${error.exitCode}`);
       throw new Error(`${packageManager} install failed with exit code ${error.exitCode}`);

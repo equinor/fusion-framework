@@ -57,6 +57,7 @@ export class ServiceDiscoveryConfigurator extends BaseConfigBuilder<ServiceDisco
     init: ConfigBuilderCallbackArgs,
     initial?: Partial<ServiceDiscoveryConfig> | undefined,
   ): Promise<ServiceDiscoveryConfig> {
+    // The service discovery client depends on the http module being registered
     if (!init.hasModule('http')) {
       throw new Error('http module is required');
     }
@@ -65,6 +66,7 @@ export class ServiceDiscoveryConfigurator extends BaseConfigBuilder<ServiceDisco
     if (!this._has('discoveryClient')) {
       // check if http module has a client with key 'service_discovery'
       const httpProvider = await init.requireInstance('http');
+      // Auto-configure only when a matching http client has actually been registered
       if (httpProvider.hasClient('service_discovery')) {
         this.configureServiceDiscoveryClientByClientKey('service_discovery');
       }
@@ -86,6 +88,7 @@ export class ServiceDiscoveryConfigurator extends BaseConfigBuilder<ServiceDisco
     config: Partial<ServiceDiscoveryConfig>,
     init: ConfigBuilderCallbackArgs,
   ): ObservableInput<ServiceDiscoveryConfig> {
+    // A discovery client is mandatory before the config can be considered complete
     if (!config.discoveryClient) {
       throw new Error('discoveryClient is required, please configure it');
     }
@@ -149,6 +152,7 @@ export class ServiceDiscoveryConfigurator extends BaseConfigBuilder<ServiceDisco
   ): void {
     this.setServiceDiscoveryClient(async (args) => {
       const { httpClient, endpoint } = (await lastValueFrom(from(configCallback(args)))) ?? {};
+      // Only construct the client when the factory actually returned an http client
       if (httpClient) {
         return new ServiceDiscoveryClient({
           http: httpClient,
@@ -169,7 +173,9 @@ export class ServiceDiscoveryConfigurator extends BaseConfigBuilder<ServiceDisco
               const sessionOverrides: Record<string, { url: string; scopes: string[] }> =
                 JSON.parse(storage.getItem('overriddenServiceDiscoveryUrls') || '{}');
 
+              // Apply each session override onto the service matching its key
               for (const [key, { url, scopes }] of Object.entries(sessionOverrides)) {
+                // Locate the service this override applies to
                 const service = input.find((service) => service.key === key);
 
                 // If the service can be found, override the values with the values
@@ -181,6 +187,8 @@ export class ServiceDiscoveryConfigurator extends BaseConfigBuilder<ServiceDisco
                 }
               }
             } catch (e) {
+              // Malformed or missing session storage overrides are not fatal — fall back to
+              // the unmodified input and just log for visibility.
               console.error(
                 'Failed to JSON parse session overrides: "overriddenServiceDiscoveryUrls"',
                 e,

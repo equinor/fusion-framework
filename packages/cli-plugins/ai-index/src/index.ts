@@ -1,15 +1,15 @@
 import type { Command } from 'commander';
 import { createCommand } from 'commander';
 import { registerAiPlugin as registerAiPluginBase } from '@equinor/fusion-framework-cli-plugin-ai-base';
-import { command as addCommand } from './embeddings-command.js';
+import { command as addCommand } from './command.js';
 import { deleteCommand as removeCommand } from './delete-command.js';
 import { searchCommand } from './search-command.js';
 import { embedCommand } from './embed-command.js';
-import { createIndexCommand } from './create-command.js';
+import { createIndexCommand } from './create-index-command.js';
 import { deleteIndexCommand } from './delete-index-command.js';
 
 export { FusionAIConfigWithIndex, IndexConfig } from './config.js';
-export { defineIndexSchema, IndexSchemaConfig } from './schema.js';
+export { defineIndexSchema, IndexSchemaConfig } from './define-index-schema.js';
 
 /**
  * Parent command for the `ai index` group.

@@ -3,12 +3,14 @@ import type { useBookmarkGrouping } from '../../hooks';
 import { type MenuOption, Row } from '../row/Row';
 import { Section } from '../section/Section';
 import { SharedIcon } from '../shared/SharedIcon';
-// TODO - export from `@equinor/fusion-framework-react-module-bookmark`
+// TODO(#5094): export from `@equinor/fusion-framework-react-module-bookmark`
 import type { BookmarkWithoutData } from '@equinor/fusion-framework-module-bookmark';
 import { useCurrentUser } from '@equinor/fusion-framework-react/hooks';
 import { useCallback, useState } from 'react';
 import { delete_to_trash, share, edit, close, update } from '@equinor/eds-icons';
-import { filterEmptyGroups, sortByName, toHumanReadable } from '../../utils/utils';
+import { filterEmptyGroups } from '../../utils/filter-empty-groups';
+import { sortByName } from '../../utils/sort-by-name';
+import { toHumanReadable } from '../../utils/to-human-readable';
 import { useBookmarkComponentContext } from '../BookmarkProvider';
 import { from } from 'rxjs';
 
@@ -24,19 +26,26 @@ type SectionListProps = {
   readonly bookmarkGroups: ReturnType<typeof useBookmarkGrouping>['bookmarkGroups'];
 };
 
+/**
+ * Renders bookmark groups as sections of rows with edit/share/delete actions.
+ *
+ * @param props - The component's props
+ * @returns The section list
+ */
 export const SectionList = ({ bookmarkGroups }: SectionListProps) => {
   // const { deleteBookmarkById, updateBookmark, removeBookmarkFavorite } = useBookmark();
 
   const { provider, currentApp, showEditBookmark, addBookmarkToClipboard } =
     useBookmarkComponentContext();
 
-  // TODO - should be removed when bookmark has property for isOwner
+  // TODO(#5095): should be removed when bookmark has property for isOwner
   const user = useCurrentUser();
 
   const [isMenuByIdOpen, setIsMenuByIdOpen] = useState('');
 
   const createMenuOptions = useCallback(
     (bookmark: BookmarkWithoutData) => {
+      // Without a provider there are no actions that can be performed on the bookmark
       if (!provider) return [];
       const appKey = currentApp?.appKey;
       const bookmarkId = bookmark.id;
@@ -51,6 +60,7 @@ export const SectionList = ({ bookmarkGroups }: SectionListProps) => {
         Icon: <Icon name="share" />,
       };
 
+      // Only the bookmark owner is allowed to edit, update, remove, or share it
       if (isOwner) {
         const ownerOptions = [
           {
@@ -65,7 +75,7 @@ export const SectionList = ({ bookmarkGroups }: SectionListProps) => {
             name: 'Update with current view',
             disabled: appKey !== bookmark.appKey,
             onClick: () => {
-              // TODO: add success and failure message
+              // TODO(#5089): add success and failure message
               from(
                 provider.updateBookmark(bookmark.id, undefined, {
                   excludePayloadGeneration: false,
@@ -85,7 +95,7 @@ export const SectionList = ({ bookmarkGroups }: SectionListProps) => {
             name: 'Remove',
             disabled: false,
             onClick: () => {
-              // TODO: add success and failure message
+              // TODO(#5089): add success and failure message
               from(provider.deleteBookmark(bookmark.id)).subscribe({
                 error(err) {
                   console.error('Failed to remove bookmark', err);
@@ -107,6 +117,7 @@ export const SectionList = ({ bookmarkGroups }: SectionListProps) => {
                 }),
               ).subscribe({
                 next(value) {
+                  // Copy the bookmark URL to the clipboard once it becomes shared
                   if (value.isShared) {
                     addBookmarkToClipboard(value.id);
                   }

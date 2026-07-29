@@ -1,8 +1,11 @@
 import { createOption } from 'commander';
 
-// Default Fusion AAD identifiers (same defaults as the CLI's auth options)
+// Default Fusion AAD tenant ID (same default as the CLI's auth options)
 const DEFAULT_TENANT_ID = '3aa4a235-b6e2-48d5-9195-7fcf05b459b0' as const;
+
+// Default Fusion AAD client ID (same default as the CLI's auth options)
 const DEFAULT_CLIENT_ID = 'a318b8e1-0295-4e17-98d5-35f67dfeba14' as const;
+
 const DEFAULT_MODEL_CHAT = 'gpt-5.1-chat' as const;
 const DEFAULT_MODEL_EMBED = 'text-embedding-3-large' as const;
 
@@ -56,6 +59,13 @@ export const debugOption = createOption('-d, --debug', 'Enable debug mode for ve
   .env('RUNNER_DEBUG')
   .default(false);
 
+/**
+ * Aggregated Commander option definitions for Fusion AI CLI commands.
+ *
+ * @remarks
+ * Individual options are defined above and re-exported here for convenient
+ * access as a single object.
+ */
 export default {
   envOption,
   tokenOption,

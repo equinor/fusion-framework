@@ -50,12 +50,12 @@ export type ApiPerson_v4<TExpand extends Array<ApiPersonExpandProps_v4> = []> = 
   preferredContactMail?: string;
   accountType?: ApiProfileAccountType;
 
-  // TODO is this default
+  // TODO(#5159): is this default
   invitationStatus?: ApiInvitationStatus;
   accountClassification?: ApiAccountClassification;
   managerAzureUniqueId?: string;
 
-  // TODO is this default
+  // TODO(#5159): is this default
   linkedAccounts?: Array<ApiProfileAccountLink>;
 } & /** expanded */ Partial<ApiPersonExpandMap_v4> & {
     /** Provided */

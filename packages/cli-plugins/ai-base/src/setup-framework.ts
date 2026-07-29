@@ -32,6 +32,7 @@ export const setupFramework = async (options: AiOptions): Promise<FusionFramewor
 
   const env = (options.env as FusionEnv) ?? FusionEnv.ContinuesIntegration;
 
+  // Surface resolved environment and auth mode when debug logging is enabled.
   if (debug) {
     console.debug('[debug] Environment:', env);
     console.debug('[debug] Auth mode:', options.token ? 'static-token' : 'azure-identity');
@@ -39,6 +40,7 @@ export const setupFramework = async (options: AiOptions): Promise<FusionFramewor
 
   /** Initialise the framework, resolve the AI service, and pre-cache tokens. */
   const initAndSetup = async (): Promise<FusionFramework<[AIModule]>> => {
+    // Trace framework initialization start when debug logging is enabled.
     if (debug) console.debug('[debug] Initializing framework with AI module…');
 
     const framework = await initializeFramework<[AIModule]>({ env, auth }, (configurator) => {
@@ -50,6 +52,7 @@ export const setupFramework = async (options: AiOptions): Promise<FusionFramewor
     const service = await framework.serviceDiscovery.resolveService('ai');
     const scopes = service.scopes ?? service.defaultScopes ?? [];
 
+    // Surface resolved service URL and scopes when debug logging is enabled.
     if (debug) {
       console.debug('[debug] AI service URL:', service.uri);
       console.debug('[debug] AI service scopes:', scopes);
@@ -58,8 +61,10 @@ export const setupFramework = async (options: AiOptions): Promise<FusionFramewor
     // Pre-cache a token for the AI service scopes so strategy callbacks
     // don't attempt (and fail) a silent acquisition later.
     const token = await framework.auth.acquireAccessToken({ request: { scopes } });
+    // Guard: acquireAccessToken can resolve falsy when the token cache is empty.
     if (!token) throw new Error('Failed to acquire access token for the AI service.');
 
+    // Trace successful token acquisition when debug logging is enabled.
     if (debug) console.debug('[debug] Token acquired successfully');
 
     return framework;

@@ -1,7 +1,7 @@
-import { actionMapper } from './action-mapper';
+import { actionMapper } from './actions/action-mapper';
 import { type ActionReducerMapBuilder, createReducer } from './create-reducer';
 import { FlowSubject } from './FlowSubject';
-import type { ActionDefinitions, ActionTypes } from './types/actions';
+import type { ActionDefinitions, ActionTypes } from './actions/types';
 import type { ReducerWithInitialState } from './types/reducers';
 
 /**

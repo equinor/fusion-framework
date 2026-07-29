@@ -1,39 +1,6 @@
 import { DefaultAzureCredential } from '@azure/identity';
 import type { IAuthProvider } from './AuthProvider.interface.js';
-import { NoCredentialError } from './errors.js';
-
-// Stored as a Promise so concurrent callers await the same registration
-// and the plugin is never registered twice.
-let pluginRegistrationPromise: Promise<void> | null = null;
-
-/**
- * Lazily registers the Azure Identity cache persistence plugin on first use.
- *
- * Deferred to avoid loading `keytar` (a native C++ addon) at import time,
- * which would fail in CI environments where the prebuilt binary is unavailable
- * (e.g. `ERR_DLOPEN_FAILED`). Concurrent callers share the same Promise so
- * the plugin is registered exactly once even under parallel invocation.
- */
-export function ensureCachePersistencePlugin(): Promise<void> {
-  pluginRegistrationPromise ??= (async () => {
-    const { useIdentityPlugin } = await import('@azure/identity');
-    let cachePersistencePlugin: Parameters<typeof useIdentityPlugin>[0];
-    try {
-      ({ cachePersistencePlugin } = await import('@azure/identity-cache-persistence'));
-    } catch (cause) {
-      pluginRegistrationPromise = null; // allow retry after transient failures
-      throw new Error(
-        'Failed to load @azure/identity-cache-persistence. ' +
-          'Token cache persistence requires a native module (keytar/libsecret) that is only ' +
-          'available in interactive desktop environments. Install the optional dependency or ' +
-          'use a non-caching auth mode.',
-        { cause },
-      );
-    }
-    useIdentityPlugin(cachePersistencePlugin);
-  })();
-  return pluginRegistrationPromise;
-}
+import { NoCredentialError } from './NoCredentialError.js';
 
 /**
  * Authentication provider backed by Azure Identity's `DefaultAzureCredential`.
@@ -56,12 +23,17 @@ export function ensureCachePersistencePlugin(): Promise<void> {
 export class AuthProviderDefaultCredential implements IAuthProvider {
   readonly #credential: DefaultAzureCredential;
 
+  /**
+   * Creates the provider, initializing the underlying `DefaultAzureCredential` chain.
+   */
   constructor() {
     this.#credential = new DefaultAzureCredential();
   }
 
   /**
    * Not supported — credentials are resolved from the environment.
+   * @param _options - Unused; login is not supported in this mode.
+   * @returns Never resolves; always throws.
    * @throws {Error} Always.
    */
   async login(_options: { request: { scopes: string[] } }): Promise<never> {
@@ -70,6 +42,7 @@ export class AuthProviderDefaultCredential implements IAuthProvider {
 
   /**
    * Not supported — there is no session to clear.
+   * @returns Never resolves; always throws.
    * @throws {Error} Always.
    */
   async logout(): Promise<never> {
@@ -87,6 +60,7 @@ export class AuthProviderDefaultCredential implements IAuthProvider {
     request: { scopes: string[] };
   }): Promise<{ accessToken: string; expiresOn: Date | null } | null> {
     const tokenResponse = await this.#credential.getToken(options.request.scopes);
+    // The credential chain resolved but returned no usable token
     if (!tokenResponse) {
       throw new NoCredentialError(
         'DefaultAzureCredential returned no token. Verify that Azure credentials are available in the environment.',
@@ -107,6 +81,7 @@ export class AuthProviderDefaultCredential implements IAuthProvider {
    */
   async acquireAccessToken(options: { request: { scopes: string[] } }): Promise<string> {
     const result = await this.acquireToken(options);
+    // acquireToken returns null when the credential chain yields no token
     if (!result) {
       throw new NoCredentialError(
         'DefaultAzureCredential returned no token. Verify that Azure credentials are available in the environment.',

@@ -12,6 +12,10 @@ import { bar_chart } from '@equinor/eds-icons';
 
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
+/**
+ * Renders a quarterly revenue bar chart with a matching chart icon and legend.
+ * @returns The rendered revenue bar chart.
+ */
 export const BarChart = () => {
   const data = {
     labels: ['Q1', 'Q2', 'Q3', 'Q4'],

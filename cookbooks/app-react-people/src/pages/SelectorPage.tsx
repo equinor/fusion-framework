@@ -59,12 +59,18 @@ const reducer = createReducer(initial, (builder) => {
   builder.addCase(actions.clear, () => {});
 });
 
+/**
+ * Demonstrates standard and controlled person selectors with reducer-backed selection state.
+ *
+ * @returns The person selector example page.
+ */
 const SelectorPage = () => {
   /** Init reducer */
   const [selected, dispatch] = useReducer(reducer, reducer.getInitialState());
 
   const selectPersonCallback = useCallback((e: PersonSelectEvent) => {
     const { selected: sel } = e.nativeEvent.detail;
+    // Ignore deselection events because this callback records newly selected people.
     if (sel) {
       console.log('Selecting =>', sel);
       dispatch(actions.add(sel));
@@ -104,18 +110,20 @@ const SelectorPage = () => {
               padding: 0,
             }}
           >
-            {Object.values(selected).map((person) => (
-              <li key={person.azureId}>
-                <PersonListItem dataSource={person}>
-                  <Button
-                    variant="ghost_icon"
-                    onClick={() => dispatch(actions.remove(person.azureId))}
-                  >
-                    <Icon name="delete_to_trash" />
-                  </Button>
-                </PersonListItem>
-              </li>
-            ))}
+            {Object.values(selected)
+              // Render the selected people with an action for removing each entry.
+              .map((person) => (
+                <li key={person.azureId}>
+                  <PersonListItem dataSource={person}>
+                    <Button
+                      variant="ghost_icon"
+                      onClick={() => dispatch(actions.remove(person.azureId))}
+                    >
+                      <Icon name="delete_to_trash" />
+                    </Button>
+                  </PersonListItem>
+                </li>
+              ))}
           </ul>
         </Story>
       </section>

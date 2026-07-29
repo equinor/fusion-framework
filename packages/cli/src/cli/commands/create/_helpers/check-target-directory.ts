@@ -1,8 +1,9 @@
-import { existsSync, readdirSync, rmSync } from 'node:fs';
+import { existsSync, readdirSync } from 'node:fs';
 import inquirer from 'inquirer';
 import type { ConsoleLogger } from '@equinor/fusion-framework-cli/bin';
 import { assert } from '../../../../lib/utils/assert.js';
-import { validateSafePath, safeRmSync } from '../../../../lib/utils/path-security.js';
+import { validateSafePath } from '../../../../lib/utils/validate-safe-path.js';
+import { safeRmSync } from '../../../../lib/utils/safe-rm-sync.js';
 
 /**
  * Check if target directory exists and has content, then prompt user for action.
@@ -12,6 +13,7 @@ import { validateSafePath, safeRmSync } from '../../../../lib/utils/path-securit
  * @param clean - If true, automatically clean the directory without prompting
  * @param baseDir - Base directory for path validation (defaults to process.cwd())
  * @returns Promise resolving to true if should continue, false if should abort
+ * @throws AssertionError if `targetDir` is not a string.
  */
 export async function checkTargetDirectory(
   targetDir: string,
@@ -34,6 +36,7 @@ export async function checkTargetDirectory(
     return false; // Return false to abort the operation instead of throwing
   }
 
+  // Nothing to check if the directory doesn't exist yet
   if (!existsSync(validatedTargetDir)) {
     logger.debug(`Target directory does not exist: ${validatedTargetDir}`);
     return true;
@@ -41,6 +44,7 @@ export async function checkTargetDirectory(
 
   try {
     const contents = readdirSync(validatedTargetDir);
+    // An empty directory needs no conflict handling
     if (contents.length === 0) {
       logger.debug(`Target directory is empty: ${validatedTargetDir}`);
       return true;
@@ -54,6 +58,7 @@ export async function checkTargetDirectory(
       contents.slice(0, 10).join(', ') + (contents.length > 10 ? '...' : ''),
     );
 
+    // Skip the interactive prompt entirely when --clean was requested
     if (clean) {
       // Clean flag is set, automatically clean the directory
       logger.info('Cleaning target directory (--clean flag)...');
@@ -95,11 +100,13 @@ export async function checkTargetDirectory(
         },
       ]);
 
+      // User chose to cancel — signal the caller to stop
       if (action === 'abort') {
         logger.info('Operation cancelled by user.');
         return false;
       }
 
+      // User chose to wipe the directory before continuing
       if (action === 'clean') {
         logger.info('Cleaning target directory...');
         try {

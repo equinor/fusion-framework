@@ -31,6 +31,13 @@ type QueryClientErrorType = 'error' | 'abort';
  */
 export class QueryClientError<TArgs = unknown> extends Error {
   public readonly request?: QueryClientRequest;
+
+  /**
+   * Creates a new `QueryClientError`.
+   *
+   * @param type - Whether this error represents a standard failure or an aborted request.
+   * @param args - The error message, optional underlying cause, and optional request context.
+   */
   constructor(
     public type: QueryClientErrorType,
     args: {

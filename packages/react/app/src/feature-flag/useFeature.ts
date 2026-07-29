@@ -56,13 +56,21 @@ export const useFeature = <T = unknown>(
       app: appProvider.features$,
     }).pipe(
       map(({ framework, app }) => {
-        return { ...framework, ...app };
+        // Application feature flags override framework defaults with the same key.
+        const mergedFeatureFlags = { ...framework, ...app };
+        return mergedFeatureFlags;
       }),
     );
   }, [appProvider, frameworkProvider]);
 
   /** find feature flag by the provided key */
-  const feature$ = useMemo(() => features$.pipe(findFeature<T>(key)), [features$, key]);
+  const feature$ = useMemo(
+    () =>
+      features$
+        // Narrow the merged stream down to the requested feature key.
+        .pipe(findFeature<T>(key)),
+    [features$, key],
+  );
 
   const { value: feature, error } = useObservableState(feature$ ?? EMPTY);
 

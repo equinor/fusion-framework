@@ -15,6 +15,11 @@ const useStyles = makeStyles(
   { name: 'Card' },
 );
 
+/**
+ * Wraps related demonstration content in an elevated themed panel.
+ * @param children - Content displayed inside the panel.
+ * @returns A styled card element.
+ */
 export const Card = ({ children }: { children: ReactNode }) => {
   const classes = useStyles({});
   return <div className={classes.card}>{children}</div>;

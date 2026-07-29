@@ -15,6 +15,7 @@ export const defaultManifestEndpointBuilder =
   (params: GetWidgetParameters) => {
     const { widgetKey, args } = params;
     const { type, value } = args ?? {};
+    // Route versioned/tagged lookups differently from the unversioned default
     switch (type) {
       case 'tag':
       case 'version':
@@ -33,12 +34,14 @@ export const defaultManifestEndpointBuilder =
  * @param apiVersion - API version string appended as a query parameter.
  * @returns A function that maps {@link GetWidgetParameters} to a URL path.
  */
+// Deliberately co-located with `defaultManifestEndpointBuilder` above
+// fusion-lint-disable-next-line single-export-per-file
 export const defaultConfigEndpointBuilder =
   (apiVersion: string): WidgetEndpointBuilder =>
   (params: GetWidgetParameters) => {
     const { widgetKey, args } = params;
     const { type, value } = args ?? {};
-    // Todo Align endpoints with backend when its done!
+    // TODO(#5099): Align endpoints with backend when its done!
     switch (type) {
       case 'tag':
       case 'version':
@@ -59,6 +62,8 @@ export const defaultConfigEndpointBuilder =
  *   `apps` service-discovery key).
  * @returns A fully configured `IClient`.
  */
+// Deliberately co-located with the endpoint builders it composes
+// fusion-lint-disable-next-line single-export-per-file
 export const createDefaultClient = (httpClient: IHttpClient): IClient => {
   const apiVersion = '1.0-preview';
   return {

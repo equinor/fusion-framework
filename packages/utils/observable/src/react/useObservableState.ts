@@ -107,6 +107,7 @@ function resolveInitialValue<TType>(
  * @returns `true` when the dependency lists are equivalent.
  */
 function areDependenciesEqual(previous: DependencyList | null, next: DependencyList): boolean {
+  // Compare lengths first, then each entry with Object.is to avoid unnecessary resubscription
   return (
     previous !== null &&
     previous.length === next.length &&
@@ -208,6 +209,8 @@ export function useObservableState<TType, TError = unknown>(
  * @param subject - The observable to subscribe to. Must have a stable reference.
  * @param opt - Optional initial value and teardown callback.
  * @returns An object with `value`, `error`, and `complete` reflecting the latest observable state.
+ * @template S - The value type emitted by the observable.
+ * @template E - The error type the observable may emit.
  *
  * @example
  * ```tsx
@@ -263,12 +266,14 @@ export function useObservableState<S, E = unknown>(
 
   useLayoutEffect(() => {
     const subscriptionDeps = deps ?? [subject];
+    // Skip resubscribing when the dependency list hasn't actually changed
     if (areDependenciesEqual(depsRef.current, subscriptionDeps)) {
       return;
     }
 
     depsRef.current = subscriptionDeps;
 
+    // Tear down any prior subscription before creating a new one
     if (subscribedRef.current) {
       subscribedRef.current.unsubscribe();
     }
@@ -299,6 +304,7 @@ export function useObservableState<S, E = unknown>(
 
   const onStoreChange = useCallback(
     (cb: VoidFunction) => {
+      // Only notify React when the exposed snapshot fields actually change
       const subscription: Subscription = stream
         .pipe(distinctUntilChanged(areObservableStateSnapshotsEqual))
         .subscribe(cb);

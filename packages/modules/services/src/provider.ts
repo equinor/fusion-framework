@@ -1,7 +1,6 @@
 import type { IHttpClient } from '@equinor/fusion-framework-module-http';
 import { BaseModuleProvider } from '@equinor/fusion-framework-module/provider';
 import type { ClientMethod } from './types';
-import type { IApiConfigurator } from './configurator';
 
 import type { ApiClientFactory } from './types';
 import { version } from './version.js';
@@ -9,7 +8,9 @@ import { ContextApiClient } from './context';
 import BookmarksApiClient from './bookmarks/client';
 import { NotificationApiClient } from './notification';
 import { PeopleApiClient } from './people/client';
+import { ApiProviderError } from './ApiProviderError';
 
+export { ApiProviderError } from './ApiProviderError';
 /**
  * Public interface for the services module provider.
  *
@@ -61,65 +62,14 @@ export interface IApiProvider<TClient extends IHttpClient = IHttpClient> {
 }
 
 /**
- * Constructor arguments for {@link ApiProvider}.
- *
- * @template TClient - The underlying HTTP client type.
- */
-type ApiProviderCtorArgs<TClient extends IHttpClient = IHttpClient> = {
-  /** Factory function for creating named HTTP clients used by API sub-clients. */
-  createClient: ApiClientFactory<TClient>;
-};
-
-/**
  * Shape of the structured error response attached to an {@link ApiProviderError}.
  */
-type ApiProviderErrorResponse = {
-  type: ResponseType;
-  status: number;
-  statusText: string;
-  headers: Headers;
-  url: string;
-  data: unknown;
-};
-
-/**
- * Error thrown when an API response indicates a non-OK HTTP status.
- *
- * Contains the full {@link ApiProviderErrorResponse} (status, headers, body)
- * so callers can inspect the failure details.
- *
- * @example
- * ```ts
- * try {
- *   await provider.createNotificationClient('json');
- * } catch (err) {
- *   if (err instanceof ApiProviderError) {
- *     console.error(err.response.status, err.response.data);
- *   }
- * }
- * ```
- */
-export class ApiProviderError extends Error {
-  /** Structured HTTP response data associated with this error. */
-  readonly response: ApiProviderErrorResponse;
-
-  /**
-   * @param msg - Human-readable error message.
-   * @param response - The parsed HTTP response details.
-   * @param options - Standard `ErrorOptions` (e.g. `cause`).
-   */
-  constructor(msg: string, response: ApiProviderErrorResponse, options?: ErrorOptions) {
-    super(msg, options);
-    this.response = response;
-    this.name = 'ApiProviderError';
-  }
-}
-
 /**
  * Validates that an HTTP response has an OK status.
  * Throws an {@link ApiProviderError} with parsed body data when the response is not OK.
  */
 const validateResponse = async (response: Response) => {
+  // Ignore successful responses because only failures need structured parsing.
   if (!response.ok) {
     const { headers, status, statusText, type, url, bodyUsed } = response;
     const isJson = headers.get('content-type')?.match(/application\/(\w*)?[+]?json/);
@@ -159,11 +109,24 @@ export class ApiProvider<TClient extends IHttpClient = IHttpClient>
   implements IApiProvider<TClient>
 {
   protected _createClientFn: ApiClientFactory<TClient>;
+
+  /**
+   * Creates a services provider from an HTTP client factory.
+   *
+   * @param config - Provider configuration containing the client factory.
+   */
   constructor(config: ApiProviderConfig<TClient>) {
     super({ version, config });
     this._createClientFn = config.createClient;
   }
 
+  /**
+   * Creates a typed notification API client and attaches response validation.
+   *
+   * @template TMethod - The client execution method.
+   * @param method - The execution method to use for requests.
+   * @returns A configured notification API client.
+   */
   public async createNotificationClient<TMethod extends keyof ClientMethod>(
     method: TMethod,
   ): Promise<NotificationApiClient<TMethod, TClient>> {
@@ -172,16 +135,30 @@ export class ApiProvider<TClient extends IHttpClient = IHttpClient>
     return new NotificationApiClient(httpClient, method);
   }
 
+  /**
+   * Creates a typed bookmarks API client.
+   *
+   * @template TMethod - The client execution method.
+   * @param method - The execution method to use for requests.
+   * @returns A configured bookmarks API client.
+   */
   public async createBookmarksClient<TMethod extends keyof ClientMethod>(
     method: TMethod,
   ): Promise<BookmarksApiClient<TMethod, TClient>> {
     const httpClient = await this._createClientFn('bookmarks');
-    // TODO: update when new ResponseOperator is available
+    // TODO(#5157): update when new ResponseOperator is available
     // will fail because 'HEAD' will return 404 when no bookmarks are found
     // httpClient.responseHandler.add('validate_api_request', validateResponse);
     return new BookmarksApiClient(httpClient, method);
   }
 
+  /**
+   * Creates a typed context API client and attaches response validation.
+   *
+   * @template TMethod - The client execution method.
+   * @param method - The execution method to use for requests.
+   * @returns A configured context API client.
+   */
   public async createContextClient<TMethod extends keyof ClientMethod>(
     method: TMethod,
   ): Promise<ContextApiClient<TMethod, TClient>> {
@@ -189,6 +166,12 @@ export class ApiProvider<TClient extends IHttpClient = IHttpClient>
     httpClient.responseHandler.add('validate_api_request', validateResponse);
     return new ContextApiClient(httpClient, method);
   }
+
+  /**
+   * Creates a typed people API client and attaches response validation.
+   *
+   * @returns A configured people API client.
+   */
   public async createPeopleClient(): Promise<PeopleApiClient<TClient>> {
     const httpClient = await this._createClientFn('people');
     httpClient.responseHandler.add('validate_api_request', validateResponse);

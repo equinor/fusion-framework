@@ -1,3 +1,6 @@
+/**
+ * Renders the cookbook's centered full-viewport greeting view.
+ */
 export const App = () => {
   return (
     <div

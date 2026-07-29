@@ -23,10 +23,13 @@ import type { WidgetStateInitial, WidgetState } from '../types';
  * @returns A reducer function compatible with `FlowSubject`.
  */
 export const createReducer = (value: WidgetStateInitial) =>
+  // Seed the reducer's initial state with an empty in-progress status set.
   makeReducer<WidgetState, Actions>({ ...value, status: new Set() } as WidgetState, (builder) =>
     builder
       .addCase(actions.setManifest, (state, action) => {
+        // Merge with existing state when caller requested an update, otherwise replace
         if (action.meta.update) {
+          // Shallow-merge the new payload over the existing manifest fields.
           state.manifest = { ...state.manifest, ...action.payload };
         } else {
           state.manifest = action.payload;

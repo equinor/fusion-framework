@@ -23,6 +23,7 @@ export type ResolvedPackage = {
  */
 export const resolvePackage = async (options?: ResolvePackageOptions): Promise<ResolvedPackage> => {
   const pkg = await readPackageUp({ ...options, normalize: false });
+  // No package.json means there's nothing valid to resolve
   if (!pkg) {
     throw new Error('failed to find package.json');
   }

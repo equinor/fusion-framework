@@ -1,7 +1,13 @@
 import type { Node } from 'web-tree-sitter';
-import type { Rule, Diagnostic, Severity } from '@equinor/fusion-framework-lint-core';
-import { tsParser } from '../_parser.js';
-import { tsxParser } from '../_tsx-parser.js';
+import type {
+  Diagnostic,
+  Severity,
+  RuleDef,
+  LintContext,
+} from '@equinor/fusion-framework-lint-core';
+import { resolveMatch } from '@equinor/fusion-framework-lint-core';
+import { tsParser } from '../ts-parser.js';
+import { tsxParser } from '../tsx-parser.js';
 
 const RULE_ID = 'require-hook-tsdoc';
 const DEFAULT_SEVERITY: Severity = 'warn';
@@ -147,17 +153,21 @@ function walkNode(node: Node, filePath: string, severity: Severity, out: Diagnos
  * };
  * ```
  */
-export const requireHookTsDoc: Rule = {
+export const requireHookTsDoc: RuleDef = (options = {}) => ({
   id: RULE_ID,
   defaultSeverity: DEFAULT_SEVERITY,
+  /** @inheritdoc Rule.match */
+  match: resolveMatch(options.match),
   /** @inheritdoc Rule.check */
-  check(source: string, filePath: string, severity?: Severity): Diagnostic[] {
+  check(source: string, ctx: LintContext): Diagnostic[] {
+    const { filePath, severity } = ctx;
     const out: Diagnostic[] = [];
     // Use the TSX grammar for .tsx files so JSX inside the hook body parses correctly
     const parser = filePath.endsWith('.tsx') ? tsxParser : tsParser;
     const tree = parser.parse(source);
+    // A failed parse leaves nothing to walk
     if (!tree) return out;
     walkNode(tree.rootNode, filePath, severity ?? DEFAULT_SEVERITY, out);
     return out;
   },
-};
+});

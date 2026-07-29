@@ -24,6 +24,7 @@ export type VectorStoreDocumentAttribute<
 export const convertObjectToAttributes = <T extends Record<string, unknown>>(
   object: T,
 ): VectorStoreDocumentAttribute<T> => {
+  // Flatten each entry into a `{ key, value }` pair, stringifying non-string values
   return Object.entries(object).map(([key, value]) => ({
     key: key as keyof T,
     value: typeof value === 'string' ? value : JSON.stringify(value),

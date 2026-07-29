@@ -9,8 +9,8 @@
       "types": "./dist/types/index.d.ts"
     },
     "./errors.js": {
-      "import": "./dist/esm/errors.js",
-      "types": "./dist/types/errors.d.ts"
+      "import": "./dist/esm/errors/index.js",
+      "types": "./dist/types/errors/index.d.ts"
     },
     "./utils": {
       "import": "./dist/esm/utils/index.js",
@@ -25,7 +25,7 @@
         "dist/types/index.d.ts"
       ],
       "errors.js": [
-        "dist/types/errors.d.ts"
+        "dist/types/errors/index.d.ts"
       ],
       "utils": [
         "dist/types/utils/index.d.ts"

@@ -1,0 +1,150 @@
+import { HttpJsonResponseError } from '@equinor/fusion-framework-module-http/errors';
+import type { FetchRequest } from '@equinor/fusion-framework-module-http/client';
+
+import { initializeFramework } from './initialize-framework.js';
+import type { FusionEnv } from './fusion-env.js';
+import type { FusionFrameworkSettings } from './configure-framework.js';
+
+import {
+  formatPath,
+  chalk,
+  type ConsoleLogger,
+  defaultHeaders,
+  formatAuthError,
+  formatTokenAcquisitionError,
+} from './utils/index.js';
+
+import { generatePortalConfig } from './generate-portal-config.js';
+
+/**
+ * Options for publishing a portal configuration to the portal service.
+ *
+ * @property config - Optional path to a custom portal config file.
+ * @property portal - Portal identification with name and version.
+ * @property environment - The target Fusion environment (excludes Development).
+ * @property auth - Authentication settings for the Fusion Framework.
+ * @property debug - Enable debug mode for verbose logging.
+ * @property log - Optional logger for outputting progress and debug information.
+ */
+type PortalConfigPublishOptions = {
+  config?: string;
+  portal: {
+    name: string;
+    version: string;
+  };
+  environment: Exclude<FusionEnv, FusionEnv.Development>;
+  auth: FusionFrameworkSettings['auth'];
+  debug?: boolean;
+  log?: ConsoleLogger | null;
+};
+
+/**
+ * Publishes the portal configuration to the portal store for a specific build version.
+ *
+ * This function generates the portal config, loads the manifest, initializes the Fusion Framework,
+ * and sends the config to the portal service. Handles and logs errors for common failure scenarios.
+ *
+ * @param options - Options for config, manifest, environment, authentication, and logging.
+ * @returns A promise that resolves when publishing is complete.
+ * @throws If the build version is missing or publishing fails.
+ * @public
+ */
+export const publishPortalConfig = async (options: PortalConfigPublishOptions) => {
+  const { log, portal } = options;
+
+  // Generate the portal config using provided options and environment
+  const { config: portalConfig } = await generatePortalConfig({
+    log,
+    config: options.config,
+    env: { environment: options.environment },
+  });
+
+  log?.start('Initializing Fusion Framework...');
+  // Initialize the Fusion Framework with the provided environment and authentication
+  const framework = await initializeFramework({
+    env: options.environment,
+    auth: options.auth,
+  });
+  log?.succeed('Initialized Fusion Framework');
+
+  // Create a client for the 'portals' service — inside try/catch to
+  // handle token acquisition failures (e.g. expired refresh tokens).
+  try {
+    const portalClient = await framework.serviceDiscovery.createClient('portals');
+    // Subscribe to outgoing requests for logging and debugging
+    portalClient.request$.subscribe((request: FetchRequest) => {
+      log?.debug('Request:', request);
+      log?.info('🌎', 'Executing request to:', formatPath(request.uri));
+    });
+
+    log?.start('Publishing portal config');
+    log?.info('Using environment:', chalk.redBright(options.environment));
+    // Send a PUT request to publish the portal config for the specific build version
+    const response = await portalClient.json(`/portals/${portal.name}@${portal.version}/config`, {
+      method: 'PUT',
+      body: portalConfig,
+      headers: defaultHeaders,
+    });
+    log?.debug('Response:', response);
+    log?.succeed('Published portal config');
+  } catch (error) {
+    // Handle known HTTP errors with specific log messages
+    if (error instanceof HttpJsonResponseError) {
+      // Map known HTTP status codes to actionable log messages
+      switch (error.response.status) {
+        case 410:
+          log?.fail(
+            '🤬',
+            `Portal ${portal.name} is deleted from portals-service. Please check the portal key and try again.`,
+          );
+          break;
+        case 404:
+          log?.fail(
+            '🤬',
+            `Portal ${portal.name} not found. Please check the portal key and try again.`,
+          );
+          break;
+        case 403: // falls through
+        case 401: {
+          const authMsg = formatAuthError(
+            error.response.status,
+            `publish config for portal ${portal.name}`,
+          );
+          log?.fail('🔒', 'Authentication/authorization error publishing portal config.');
+          // Only print the formatted message if one was resolved
+          if (authMsg) {
+            log?.error(authMsg);
+          }
+          process.exit(1);
+          break;
+        }
+        default:
+          log?.fail(
+            '🤬',
+            'Failed to publish portal config.',
+            `Status code: ${error.response.status}`,
+            `Message: ${error.response.statusText}`,
+          );
+          break;
+      }
+    }
+    // Surface MSAL token acquisition failures with actionable guidance
+    const tokenMsg = formatTokenAcquisitionError(error, `publish config for portal ${portal.name}`);
+    // Only print the formatted message if a token-acquisition failure was resolved
+    if (tokenMsg) {
+      log?.fail('🔒', `Token acquisition failed publishing config for ${portal.name}`);
+      log?.error(tokenMsg);
+      process.exit(1);
+    }
+    // Unknown error — log message only, no stack trace
+    log?.fail(
+      '🤬',
+      'Failed to publish portal config:',
+      error instanceof Error ? error.message : String(error),
+    );
+    process.exit(1);
+  }
+};
+
+// Export as default for compatibility with import patterns
+export default publishPortalConfig;

@@ -1,5 +1,9 @@
 import { Apploader } from '@equinor/fusion-framework-react-app/apploader';
 
+/**
+ * Renders a cookbook page that loads a configured Fusion application.
+ * @returns The app-loader demonstration view.
+ */
 export const App = () => {
   return (
     <div>

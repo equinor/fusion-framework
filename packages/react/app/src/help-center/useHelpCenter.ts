@@ -1,6 +1,8 @@
 import { useCallback } from 'react';
 import useAppModule from '../useAppModule';
 
+import { EVENT_NAME } from './event-name.js';
+
 type HelpCenterEventDetailBase<
   T extends string,
   V extends Record<string, unknown> = Record<string, unknown>,
@@ -34,8 +36,6 @@ export type HelpCenterOpenEventDetail =
   | OpenFaqsDetail
   | OpenSearchDetail
   | OpenGovernanceDetail;
-
-export const EVENT_NAME = '@Portal::FusionHelp::open';
 
 /**
  * Interface for requesting help features.

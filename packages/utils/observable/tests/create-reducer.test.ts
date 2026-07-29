@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { createReducer } from '../src/create-reducer';
-import type { AnyAction, PayloadAction } from '../src/types/actions';
+import type { AnyAction } from '../src/types/actions';
 
 describe('createReducer', () => {
   it('should create a reducer function', () => {

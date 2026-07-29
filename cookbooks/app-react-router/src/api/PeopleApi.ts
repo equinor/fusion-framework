@@ -31,6 +31,11 @@ export class PeopleApi {
     return client instanceof Promise ? await client : client;
   }
 
+  /**
+   * Creates a people API backed by shared query caching and HTTP access.
+   * @param queryClient - Query client used for request caching.
+   * @param httpProvider - Provider used to create the people HTTP client.
+   */
   constructor(queryClient: QueryClient, httpProvider: IHttpProvider) {
     this.#queryClient = queryClient;
     this.#httpProvider = httpProvider;
@@ -42,6 +47,7 @@ export class PeopleApi {
    * @returns Promise resolving to an array of person search results
    */
   async searchPeople(searchTerm: string): Promise<PersonSearchResult[]> {
+    // Avoid a network request when the search form has no meaningful query.
     if (!searchTerm.trim()) {
       return [];
     }
@@ -84,6 +90,7 @@ export class PeopleApi {
    * @param searchTerm - Optional search term to invalidate specific cache entry
    */
   invalidateSearch(searchTerm?: string): void {
+    // Target one search entry when a term is supplied; otherwise clear the search namespace.
     if (searchTerm) {
       this.#queryClient.invalidateQueries({
         queryKey: ['people', 'search', searchTerm],
@@ -100,6 +107,7 @@ export class PeopleApi {
    * @param userId - Optional user ID to invalidate specific cache entry
    */
   invalidatePerson(userId?: string): void {
+    // Target one person when an ID is supplied; otherwise clear all person details.
     if (userId) {
       this.#queryClient.invalidateQueries({
         queryKey: ['people', 'person', userId],

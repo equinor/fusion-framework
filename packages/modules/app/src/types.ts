@@ -12,7 +12,7 @@ import type IApp from './app';
 export type ConfigEnvironment = Record<string, unknown>;
 export type { AppConfig } from './AppConfig';
 
-// biome-ignore lint/suspicious/noExplicitAny: TODO - needs proper type definition
+// biome-ignore lint/suspicious/noExplicitAny: TODO(#5123) - needs proper type definition
 type Fusion = any;
 
 /**

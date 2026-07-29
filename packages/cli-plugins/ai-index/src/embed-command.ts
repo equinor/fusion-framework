@@ -33,12 +33,9 @@ export const embedCommand = withAiOptions(
       const vector = await embedder.embedQuery(text);
 
       console.log(`Dimensions: ${vector.length}`);
-      console.log(
-        `Vector (first 8): [${vector
-          .slice(0, 8)
-          .map((v) => v.toFixed(6))
-          .join(', ')}, ...]`,
-      );
+      // Format the first 8 vector components for a readable preview
+      const previewValues = vector.slice(0, 8).map((v) => v.toFixed(6));
+      console.log(`Vector (first 8): [${previewValues.join(', ')}, ...]`);
     }),
   { includeEmbedding: true },
 );

@@ -29,7 +29,7 @@ const createActions = () => ({
   setManifest: createAction('set_manifest', (manifest: AppManifest, update?: boolean) => ({
     payload: manifest,
     meta: {
-      // TODO when updating
+      // TODO(#5129) when updating
       created: Date.now(),
       update,
     },
@@ -77,7 +77,7 @@ const createActions = () => ({
     payload: id,
   })),
   /** App loading */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: module payload widens to accept any script module shape when set
   setModule: createAction('set_module', (module: any) => ({ payload: module })),
   importApp: createAsyncAction(
     'import_app',

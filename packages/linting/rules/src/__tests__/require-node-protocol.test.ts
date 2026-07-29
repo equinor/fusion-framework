@@ -3,7 +3,7 @@ import { requireNodeProtocol } from '../require-node-protocol/index.js';
 import type { Diagnostic } from '@equinor/fusion-framework-lint-core';
 
 function lint(source: string): Diagnostic[] {
-  return requireNodeProtocol.check(source, 'fixture.ts');
+  return requireNodeProtocol().check(source, { filePath: 'fixture.ts' });
 }
 
 // ── Passing cases ─────────────────────────────────────────────────────────────

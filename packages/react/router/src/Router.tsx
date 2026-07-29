@@ -25,7 +25,9 @@ import type {
   RouterComponent,
   RouterContext,
 } from './types.js';
-import { FusionRouterContextProvider, routerContext, useRouterContext } from './context.js';
+import { routerContext } from './router-context.js';
+import { FusionRouterContextProvider } from './fusion-router-context-provider.js';
+import { useRouterContext } from './useRouterContext.js';
 import React from 'react';
 
 // React Router's loader/action/component types as used internally.
@@ -46,6 +48,7 @@ type RRComponent = NonNullable<ReactRouterRouteObject['Component']>;
 function wrapLoader(original: RRLoader): RRLoader {
   return function __FusionRouterLoader(args) {
     const fusion = (args.context as RouterContextProvider).get(routerContext);
+    // The original loader is typed with the framework-augmented args shape; cast to invoke it with the extended arg bag.
     return (original as unknown as LoaderFunction)({
       ...args,
       fusion,
@@ -57,6 +60,7 @@ function wrapLoader(original: RRLoader): RRLoader {
 function wrapAction(original: RRAction): RRAction {
   return function __FusionRouterAction(args) {
     const fusion = (args.context as RouterContextProvider).get(routerContext);
+    // The original action is typed with the framework-augmented args shape; cast to invoke it with the extended arg bag.
     return (original as unknown as ActionFunction)({
       ...args,
       fusion,
@@ -129,6 +133,8 @@ function normalizeRoutes(
  * @param context - Optional context object that will be available in route loaders and components via `fusion.context`
  * @param loader - Optional React element rendered while the router is initializing lazy routes
  *
+ * @returns The rendered router provider, or `null` while it is still initializing
+ *
  * @example
  * ```tsx
  * import { Router } from '@equinor/fusion-framework-react-router';
@@ -164,6 +170,8 @@ export function Router({
   const modules = useModules();
 
   const fusionRouterContext: FusionRouterContext = useMemo(() => {
+    // useModules() returns the generic Modules union; narrow it to the concrete
+    // instance type expected by consumers of the router context.
     return {
       context,
       modules: modules as unknown as ModulesInstanceType<Modules>,
@@ -176,6 +184,7 @@ export function Router({
   fusionContextRef.current = fusionRouterContext;
 
   const router = useMemo(() => {
+    // Narrow the generic modules instance to the shape known to include the navigation module.
     const { navigation } = modules as unknown as ModulesInstanceType<{
       navigation: NavigationModule;
     }>;
@@ -195,9 +204,12 @@ export function Router({
         // actions, and components — a common cause of blank pages.
         const mapped = { ...route } as ReactRouterRouteObject;
 
+        // Wrap the loader so fusion module context is available inside it
         if (mapped.loader) mapped.loader = wrapLoader(mapped.loader as RRLoader);
+        // Wrap the action so fusion module context is available inside it
         if (mapped.action) mapped.action = wrapAction(mapped.action as RRAction);
 
+        // Prefer an explicit errorElement over ErrorBoundary when both are somehow present
         if (route.errorElement) {
           // errorElement is typed as ComponentType in fusion's RouteObject (not ReactNode),
           // so we wrap it into a ReactElement for react-router to consume.
@@ -213,6 +225,7 @@ export function Router({
           (mapped as ReactRouterRouteObject).ErrorBoundary = undefined;
           mapped.hasErrorBoundary = true;
         }
+        // Wrap the Component so fusion module context is available inside it
         if (mapped.Component) {
           mapped.Component = wrapComponent(mapped.Component as RouterComponent);
         }
@@ -239,6 +252,7 @@ export function Router({
     return router.dispose.bind(router);
   }, [router]);
 
+  // Defer rendering children until the router instance has finished initializing
   if (initializedRouter !== router) {
     return loader ?? null;
   }

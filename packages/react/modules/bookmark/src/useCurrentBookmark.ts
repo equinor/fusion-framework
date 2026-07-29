@@ -42,6 +42,7 @@ export const useCurrentBookmark = <TData extends BookmarkData>(
   );
 
   const setCurrentBookmark = useMemo(() => {
+    // Fail fast when no bookmark provider is available to perform the change
     if (!provider) {
       throw new Error('No bookmark provider found');
     }
@@ -52,6 +53,7 @@ export const useCurrentBookmark = <TData extends BookmarkData>(
   }, [provider]);
 
   useLayoutEffect(() => {
+    // Only register a payload generator cleanup when both a provider and a generator are available
     if (provider && payloadGenerator) {
       return provider.addPayloadGenerator(payloadGenerator);
     }

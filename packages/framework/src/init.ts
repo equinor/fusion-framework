@@ -49,6 +49,7 @@ export const init = async <TModules extends Array<AnyModule>, TRef extends objec
   window.Fusion = fusion as unknown as Fusion;
   modules.event.dispatchEvent('onFrameworkLoaded', { detail: fusion });
 
+  // The generic TModules type is erased on the plain object above; restore it for the return type
   return fusion as unknown as Fusion<TModules>;
 };
 

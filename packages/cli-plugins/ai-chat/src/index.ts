@@ -1,6 +1,6 @@
 import type { Command } from 'commander';
 import { registerAiPlugin } from '@equinor/fusion-framework-cli-plugin-ai-base';
-import { command as chatCommand } from './chat.js';
+import { command as chatCommand } from './command.js';
 
 /**
  * Registers the `ai chat` CLI plugin command with the Fusion Framework CLI program.

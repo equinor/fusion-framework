@@ -1,3 +1,6 @@
+/**
+ * Displays the introductory content for the CLI demo portal.
+ */
 export const Portal = () => {
   return (
     <div

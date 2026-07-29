@@ -86,10 +86,10 @@ export interface IAppConfigurator<
    *                  `baseUri` and `defaultScopes` are excluded because they are
    *                  resolved from service discovery.
    */
-  // TODO - rename
+  // TODO(#5060): rename
   useFrameworkServiceClient(
     serviceName: string,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore lint/suspicious/noExplicitAny: `HttpClientOptions<any>` widens to accept options for any request payload type
     options?: Omit<HttpClientOptions<any>, 'baseUri' | 'defaultScopes'>,
   ): void;
 }
@@ -153,6 +153,7 @@ export class AppConfigurator<
    */
   protected _configureHttpClientsFromAppConfig() {
     const { endpoints = {} } = this.env.config ?? {};
+    // Register an HTTP client for each endpoint defined in the app configuration.
     for (const [key, { url, scopes }] of Object.entries(endpoints)) {
       this.configureHttpClient(key, {
         baseUri: url,
@@ -196,7 +197,7 @@ export class AppConfigurator<
    */
   public useFrameworkServiceClient(
     serviceName: string,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore lint/suspicious/noExplicitAny: `HttpClientOptions<any>` widens to accept options for any request payload type
     options?: Omit<HttpClientOptions<any>, 'baseUri' | 'defaultScopes'>,
   ): void {
     this.addConfig({
@@ -204,6 +205,7 @@ export class AppConfigurator<
       configure: async (config, ref) => {
         // Service from serviceDiscovery with potential session override.
         const service = await ref?.serviceDiscovery.resolveService(serviceName);
+        // Guard: service must resolve before the HTTP client can be configured.
         if (!service) {
           throw Error(`failed to configure service [${serviceName}]`);
         }

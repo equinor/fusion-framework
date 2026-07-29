@@ -37,7 +37,7 @@ export function useObservable<S, A extends Action = Action>(
   reducer: ReducerWithInitialState<S, A>,
 ): FlowSubject<S, A>;
 
-// Implementation
+/** @inheritdoc */
 export function useObservable<S, A extends Action = Action>(
   reducer: Reducer<S, A> | ReducerWithInitialState<S, A>,
   initial?: S,

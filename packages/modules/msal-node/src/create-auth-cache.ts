@@ -72,6 +72,8 @@ export const createPersistenceCache = async (tenantId: string, clientId: string)
  * @param clientId - The Azure AD client/application ID.
  * @returns A promise that resolves when the cache has been successfully cleared.
  */
+// Deliberately co-located with `createPersistenceCache` above, which it wraps
+// fusion-lint-disable-next-line single-export-per-file
 export const clearPersistenceCache = async (tenantId: string, clientId: string): Promise<void> => {
   const cache = await createPersistenceCache(tenantId, clientId);
   await cache.delete();
@@ -86,6 +88,8 @@ export const clearPersistenceCache = async (tenantId: string, clientId: string):
  * @param clientId - The Azure AD client/application ID.
  * @returns A promise that resolves to an instance of `PersistenceCachePlugin`.
  */
+// Deliberately co-located with `createPersistenceCache` above, which it wraps
+// fusion-lint-disable-next-line single-export-per-file
 export const createPersistenceCachePlugin = async (tenantId: string, clientId: string) => {
   const { PersistenceCachePlugin } = await importMsalNodeExtensions();
   return new PersistenceCachePlugin(await createPersistenceCache(tenantId, clientId));

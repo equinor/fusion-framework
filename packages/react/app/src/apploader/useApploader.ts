@@ -73,6 +73,7 @@ export const useApploader = ({
 
         try {
           const render = script.renderApp ?? script.default;
+          // Prefer the modern renderApp export, falling back to the default export
           if (render) {
             return render(appRef.current, {
               fusion,

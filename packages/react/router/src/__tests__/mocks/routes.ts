@@ -1,9 +1,9 @@
 import { fileURLToPath } from 'node:url';
 
-import { route } from '../../routes/Route';
-import { index } from '../../routes/IndexRoute';
-import { layout } from '../../routes/LayoutRoute';
-import { prefix } from '../../routes/PrefixRoute';
+import { route } from '../../routes/route-factory';
+import { index } from '../../routes/index';
+import { layout } from '../../routes/layout';
+import { prefix } from '../../routes/prefix';
 
 import type { RouteNode } from '../../types';
 

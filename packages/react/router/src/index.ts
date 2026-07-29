@@ -1,5 +1,7 @@
 export { Router } from './Router.js';
-export { FusionRouterContextProvider, routerContext, useRouterContext } from './context.js';
+export { routerContext } from './router-context.js';
+export { FusionRouterContextProvider } from './fusion-router-context-provider.js';
+export { useRouterContext } from './useRouterContext.js';
 export type { RouteSchemaEntry } from './routes/to-route-schema.js';
 export type {
   ActionFunction,

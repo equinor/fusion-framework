@@ -69,6 +69,7 @@ export const useAppSetting = <
   }, [currentApp]);
 
   useLayoutEffect(() => {
+    // Narrow the settings stream down to just this specific setting's value
     const sub = currentApp?.settings$
       .pipe(map((settings) => (settings as TSettings)[prop]))
       .subscribe(subject);
@@ -81,6 +82,7 @@ export const useAppSetting = <
   // update function
   const setSetting = useCallback(
     (update: TSettings[TProp] | UpdateSettingFunction<TSettings[TProp]>) => {
+      // Cannot persist a setting update without a current app to write it to
       if (!currentApp) {
         return onError?.(new Error('App is not available'));
       }

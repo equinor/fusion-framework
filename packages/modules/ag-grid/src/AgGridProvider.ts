@@ -64,6 +64,7 @@ export class AgGridProvider implements IAgGridProvider {
   protected _init(): void {
     applyThemeShim();
 
+    // License key is optional — AG Grid falls back to its community/trial behavior without one
     if (this.licenseKey) {
       LicenseManager.setLicenseKey(this.licenseKey);
     }
@@ -71,6 +72,7 @@ export class AgGridProvider implements IAgGridProvider {
       theme: this._config.theme?.(),
     });
 
+    // Only register modules when explicitly configured, to avoid overriding globally registered modules
     if (this._config.modules) {
       ModuleRegistry.registerModules(this._config.modules);
     }

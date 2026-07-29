@@ -23,6 +23,7 @@ export const Apploader = ({ appKey }: ApploaderProps): ReactElement => {
   const { loading, error, appRef } = useApploader({ appKey });
 
   useEffect(() => {
+    // Wait until both the wrapper element and the loaded app element are available
     if (!refWrapp.current || !appRef.current) {
       return;
     }
@@ -30,9 +31,11 @@ export const Apploader = ({ appKey }: ApploaderProps): ReactElement => {
     refWrapp.current.appendChild(appRef.current);
   }, [appRef.current]);
 
+  // Show a loading placeholder while the app is being fetched and initialized
   if (loading) {
     return <div>Loading {appKey}</div>;
   }
+  // Surface the load error instead of rendering the app
   if (error) {
     return (
       <div>

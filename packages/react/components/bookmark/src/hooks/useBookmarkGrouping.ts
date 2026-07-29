@@ -10,6 +10,12 @@ const groupingModes: Record<GroupingKeys, (_item: BookmarkWithoutData) => string
   'Group by Context': (item: BookmarkWithoutData) => item?.context?.name ?? 'Unknown',
 } as const;
 
+/**
+ * Hook for grouping and searching bookmarks by app, creator, or context.
+ *
+ * @param bookmarks - The bookmarks to group and search
+ * @returns The grouped bookmarks along with the search text and grouping key state/setters
+ */
 export const useBookmarkGrouping = (bookmarks?: Bookmarks) => {
   const [searchText, setSearchText] = useState<string | null>(null);
 
@@ -33,22 +39,27 @@ const groupBy = <T>(
   searchText: string | null,
   field: keyof T,
 ) => {
-  return (
-    array
-      ?.map(getKey)
-      .filter((v, i, a) => a.indexOf(v) === i)
-      .map((groupingProperty) => ({
-        groupingProperty,
-        values: array
-          .filter((s) => getKey(s) === groupingProperty)
-          .filter((s) => {
-            const fieldData = s[field];
-            if (typeof fieldData === 'string' && searchText) {
-              return fieldData.includes(searchText);
-            }
+  // Treat a missing array as an empty one so downstream calls are safe
+  const items = array ?? [];
+  // Collect the key for every item
+  const keys = items.map(getKey);
+  // Deduplicate to get the unique set of group keys, preserving first-seen order
+  const uniqueKeys = keys.filter((v, i, a) => a.indexOf(v) === i);
+  // Build a group entry for each unique key
+  const groups = uniqueKeys.map((groupingProperty) => {
+    // Only include values in this group whose key matches
+    const matchingValues = array.filter((s) => getKey(s) === groupingProperty);
+    // Then narrow those matches down by the search-text filter
+    const values = matchingValues.filter((s) => {
+      const fieldData = s[field];
+      // Only apply search-text filtering to string fields
+      if (typeof fieldData === 'string' && searchText) {
+        return fieldData.includes(searchText);
+      }
 
-            return true;
-          }),
-      })) ?? []
-  );
+      return true;
+    });
+    return { groupingProperty, values };
+  });
+  return groups;
 };

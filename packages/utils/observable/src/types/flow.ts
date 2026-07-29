@@ -1,5 +1,5 @@
 import type { Observable, ObservableInput } from 'rxjs';
-import type { AnyAction } from './actions';
+import type { AnyAction } from '../actions/types.js';
 
 /**
  * A flow function (similar to a Redux-Observable epic) that receives an
@@ -27,4 +27,5 @@ export type Flow<TAction extends AnyAction, TState = unknown> = (
 export type Effect<TAction extends AnyAction, TState = unknown> = (
   action: TAction,
   state: TState,
-) => ObservableInput<TAction | void> | TAction | void;
+  // biome-ignore lint/suspicious/noConfusingVoidType: `void` here relies on TypeScript's special-cased "void-returning callback accepts any return value" behavior for `addEffect` callbacks — `undefined` breaks assignability of effect functions that return an `ObservableInput`/`TAction` (see FlowSubject.addEffect regression)
+) => ObservableInput<TAction | undefined> | TAction | void;

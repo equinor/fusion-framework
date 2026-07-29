@@ -23,6 +23,12 @@ export interface useEventHandler<
   (key: string, cb: FrameworkEventHandler<TType>): void;
 }
 
+/**
+ * Hook for subscribing to framework events.
+ *
+ * @param name - Name of the event to subscribe to
+ * @param cb - Callback invoked with the event when it is dispatched
+ */
 export const useEventHandler: useEventHandler = <
   TType extends FrameworkEvent = FrameworkEvent,
   TKey extends string = keyof FrameworkEventMap,

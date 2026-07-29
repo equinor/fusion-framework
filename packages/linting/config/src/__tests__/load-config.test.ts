@@ -3,7 +3,7 @@ import { fileURLToPath } from 'node:url';
 import { join, dirname } from 'node:path';
 import { mkdtemp, mkdir, writeFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
-import { loadLintConfig } from '../load-config.js';
+import { loadLintConfig } from '../load-lint-config.js';
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -18,9 +18,18 @@ function fixture(name: string): string {
 
 describe('loadLintConfig', () => {
   it('returns null when the directory contains no config file', async () => {
-    const result = await loadLintConfig({ cwd: fixture('no-config') });
+    // Use an isolated tmp tree (with its own .git boundary marker) rather than a
+    // fixture nested inside this repo, so this test doesn't pick up the real
+    // repo's root fusion-lint.config.json when findUp walks upward.
+    const tmpRoot = await mkdtemp(join(tmpdir(), 'fusion-lint-no-config-'));
+    try {
+      await writeFile(join(tmpRoot, '.git'), 'gitdir: /elsewhere\n');
+      const result = await loadLintConfig({ cwd: tmpRoot });
 
-    expect(result).toBeNull();
+      expect(result).toBeNull();
+    } finally {
+      await rm(tmpRoot, { recursive: true, force: true });
+    }
   });
 
   describe('JSON config', () => {
@@ -30,7 +39,31 @@ describe('loadLintConfig', () => {
       expect(result).toEqual({
         config: { 'require-tsdoc': 'error', 'require-intent-comment': 'warn' },
         customRules: [],
+        ignorePatterns: [],
+        ruleMatchers: {},
       });
+    });
+
+    it('loads per-rule severity plus includePattern/excludePattern from a rich fusion-lint.config.json', async () => {
+      const result = await loadLintConfig({ cwd: fixture('json-rich-matchers') });
+
+      expect(result?.config).toEqual({
+        'require-tsdoc': 'error',
+        'single-export-per-file': 'warn',
+      });
+      expect(Object.keys(result?.ruleMatchers ?? {})).toEqual([
+        'single-export-per-file',
+        'no-class-components',
+      ]);
+      // excludePattern-only: matches everything except the excluded basenames
+      const singleExportMatcher = result?.ruleMatchers['single-export-per-file'];
+      expect(singleExportMatcher?.('/src/module.ts')).toBe(false);
+      expect(singleExportMatcher?.('/src/bookmark.schemas.ts')).toBe(false);
+      expect(singleExportMatcher?.('/src/user.ts')).toBe(true);
+      // includePattern-only: only matches the included basenames
+      const noClassComponentsMatcher = result?.ruleMatchers['no-class-components'];
+      expect(noClassComponentsMatcher?.('/src/Component.tsx')).toBe(true);
+      expect(noClassComponentsMatcher?.('/src/util.ts')).toBe(false);
     });
   });
 
@@ -41,6 +74,8 @@ describe('loadLintConfig', () => {
       expect(result).toEqual({
         config: { 'require-tsdoc': 'error', 'require-intent-comment': 'warn' },
         customRules: [],
+        ignorePatterns: [],
+        ruleMatchers: {},
       });
     });
 
@@ -50,6 +85,8 @@ describe('loadLintConfig', () => {
       expect(result).toEqual({
         config: { 'require-tsdoc': 'error', 'require-intent-comment': 'warn' },
         customRules: [],
+        ignorePatterns: [],
+        ruleMatchers: {},
       });
     });
   });
@@ -61,6 +98,8 @@ describe('loadLintConfig', () => {
       expect(result).toEqual({
         config: { 'require-tsdoc': 'error', 'require-intent-comment': 'warn' },
         customRules: [],
+        ignorePatterns: [],
+        ruleMatchers: {},
       });
     });
 
@@ -75,13 +114,15 @@ describe('loadLintConfig', () => {
       expect(result?.customRules).toHaveLength(1);
       expect(result?.customRules[0].id).toBe('custom-fixture-rule');
       expect(result?.customRules[0].defaultSeverity).toBe('warn');
+      // ignorePatterns is passed through from the builder
+      expect(result?.ignorePatterns).toEqual(['**/__tests__/**']);
     });
 
     it('custom rule check function is callable', async () => {
       const result = await loadLintConfig({ cwd: fixture('ts-builder'), base: {} });
       const [rule] = result?.customRules ?? [];
 
-      expect(rule?.check('const x = 1;', 'test.ts')).toEqual([]);
+      expect(rule?.check('const x = 1;', { filePath: 'test.ts' })).toEqual([]);
     });
   });
 
@@ -102,7 +143,13 @@ describe('loadLintConfig', () => {
       const result = await loadLintConfig({ cwd: fixture('js-rich') });
       const [rule] = result?.customRules ?? [];
 
-      expect(rule?.check('const x = 1;', 'test.ts')).toEqual([]);
+      expect(rule?.check('const x = 1;', { filePath: 'test.ts' })).toEqual([]);
+    });
+
+    it('loads ignorePatterns from a rich config', async () => {
+      const result = await loadLintConfig({ cwd: fixture('js-rich') });
+
+      expect(result?.ignorePatterns).toEqual(['**/__tests__/**']);
     });
   });
 
@@ -113,6 +160,8 @@ describe('loadLintConfig', () => {
       expect(result).toEqual({
         config: { 'require-tsdoc': 'error', 'require-intent-comment': 'warn' },
         customRules: [],
+        ignorePatterns: [],
+        ruleMatchers: {},
       });
     });
 

@@ -19,12 +19,13 @@ import { useModule } from '@equinor/fusion-framework-react-module';
 export const useHttpClient = (name: string): IHttpClient => {
   const http = useModule<HttpMsalModule>('http');
   const client = useMemo(() => {
+    // Reuse an already-configured client for this key when one exists
     if (http.hasClient(name)) {
       return http.createClient(name);
     }
     throw Error(`no configured client for key [${name}]`);
   }, [http, name]);
-  // TODO - abort on unmount?
+  // TODO(#5085): abort on unmount?
   return client;
 };
 

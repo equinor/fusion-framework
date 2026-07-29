@@ -9,15 +9,8 @@ import type {
 import { type FlowSubject, Observable } from '@equinor/fusion-observable';
 
 import type { AppModuleProvider } from '../AppModuleProvider';
-import {
-  combineLatest,
-  of,
-  type OperatorFunction,
-  Subscription,
-  firstValueFrom,
-  lastValueFrom,
-} from 'rxjs';
-import { defaultIfEmpty, filter, last, map, switchMap } from 'rxjs/operators';
+import { combineLatest, of, Subscription, firstValueFrom, lastValueFrom } from 'rxjs';
+import { defaultIfEmpty, last, map, switchMap } from 'rxjs/operators';
 
 import type { EventModule } from '@equinor/fusion-framework-module-event';
 import type { AnyModule, ModuleType } from '@equinor/fusion-framework-module';
@@ -27,17 +20,11 @@ import type { AppBundleState, AppBundleStateInitial } from './types';
 
 import isEqual from 'fast-deep-equal';
 
+import { filterEmpty } from './filter-empty';
+
 import './events';
 
-/**
- * RxJS operator that filters out `null` and `undefined` emissions.
- *
- * @template T - The non-nullable value type.
- * @returns An operator that only passes through non-nullable values.
- */
-export function filterEmpty<T>(): OperatorFunction<T | null | undefined, T> {
-  return filter((value): value is T => value !== undefined && value !== null);
-}
+export { filterEmpty } from './filter-empty';
 
 /**
  * Public interface for a single loaded Fusion application.
@@ -269,6 +256,7 @@ export type AppInitializeResult = {
   config: AppConfig;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 /**
  * Concrete implementation of {@link IApp}.
  *
@@ -276,11 +264,11 @@ export type AppInitializeResult = {
  * manifest fetching, config loading, settings management, and script import. Dispatches
  * lifecycle events through the {@link EventModule} when available.
  *
+ * TODO(#5130): streams should be made distinct until changed from state.
+ *
  * @template TEnv - Shape of the environment configuration record.
  * @template TModules - Additional framework modules the app depends on.
  */
-// TODO make streams distinct until changed from state
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export class App<
   TEnv extends ConfigEnvironment = ConfigEnvironment,
   TModules extends Array<AnyModule> | unknown = unknown,
@@ -290,76 +278,110 @@ export class App<
 
   //#region === streams ===
 
+  /** @inheritdoc */
   get manifest$(): Observable<AppManifest> {
+    // filter out null/undefined manifest states
     return this.#state.select((state) => state.manifest).pipe(filterEmpty());
   }
 
+  /** @inheritdoc */
   get config$(): Observable<AppConfig<TEnv>> {
-    return this.#state
-      .select((state) => state.config as AppConfig<TEnv>, isEqual)
-      .pipe(filterEmpty());
+    return (
+      this.#state
+        .select((state) => state.config as AppConfig<TEnv>, isEqual)
+        // filter out null/undefined config states
+        .pipe(filterEmpty())
+    );
   }
 
+  /** @inheritdoc */
   get modules$(): Observable<AppScriptModule> {
+    // filter out null/undefined module states
     return this.#state.select((state) => state.modules).pipe(filterEmpty());
   }
 
+  /** @inheritdoc */
   get instance$(): Observable<AppModulesInstance<TModules>> {
-    return this.#state
-      .select((state) => state.instance as AppModulesInstance<TModules>)
-      .pipe(filterEmpty());
+    return (
+      this.#state
+        .select((state) => state.instance as AppModulesInstance<TModules>)
+        // filter out null/undefined instance states
+        .pipe(filterEmpty())
+    );
   }
 
+  /** @inheritdoc */
   get settings$(): Observable<AppSettings> {
     return new Observable<AppSettings>((subscriber) => {
       this.#state.next(actions.fetchSettings(this.appKey));
       subscriber.add(
         this.#state
           .select((state) => state.settings, isEqual)
+          // filter out null/undefined settings and fall back to the default empty settings
           .pipe(filterEmpty(), defaultIfEmpty(fallbackSettings))
           .subscribe(subscriber),
       );
     });
   }
 
+  /** @inheritdoc */
   get status$(): Observable<AppBundleState['status']> {
     return this.#state.select((state) => state.status);
   }
 
   //#endregion
 
+  /** @inheritdoc */
   get state(): Readonly<AppBundleState> {
-    // todo deep-freeze
+    // TODO(#5133) deep-freeze
     return Object.freeze(this.#state.value) as Readonly<AppBundleState>;
   }
 
+  /** @inheritdoc */
   get appKey(): string {
     return this.#state.value.appKey;
   }
+  /**
+   * The tag (version) this app instance was loaded with, if any.
+   * @returns The tag string, or `undefined` if none was specified.
+   */
   get tag(): string | undefined {
     return this.#state.value.tag;
   }
 
+  /** @inheritdoc */
   get manifest(): Readonly<AppManifest> | undefined {
     return this.state.manifest;
   }
 
+  /** @inheritdoc */
   get manifestAsync(): Promise<Readonly<AppManifest>> {
     return firstValueFrom(this.manifest$);
   }
 
+  /** @inheritdoc */
   get config(): AppConfig<TEnv> | undefined {
     return this.state.config as AppConfig<TEnv>;
   }
 
+  /**
+   * Retrieves the configuration asynchronously.
+   * @returns A promise that resolves to the {@link AppConfig}.
+   */
   get configAsync(): Promise<AppConfig<TEnv>> {
     return firstValueFrom(this.config$);
   }
 
+  /** @inheritdoc */
   get instance(): AppModulesInstance<TModules> | undefined {
     return this.#state.value.instance as AppModulesInstance<TModules>;
   }
 
+  /**
+   * Creates a new {@link App} instance and starts its internal state machine.
+   * @param value - Initial app bundle state (appKey, tag, and any pre-loaded data).
+   * @param args - The owning {@link AppModuleProvider} and an optional event module for lifecycle events.
+   */
   constructor(
     value: AppBundleStateInitial,
     args: {
@@ -378,6 +400,7 @@ export class App<
     // create a tear down handler for the application
     const subscriptions = new Subscription();
 
+    // only wire up event listeners when an event module is provided
     if (event) {
       // when app is disposed, dispatch event to notify listeners
       subscriptions.add(() => {
@@ -398,6 +421,7 @@ export class App<
 
     this.dispose = () => {
       subscriptions?.unsubscribe();
+      // tear down modules of application, if an instance was loaded
       if (this.#state.value.instance) {
         // tear down modules of application
         this.#state.value.instance.dispose();
@@ -576,6 +600,7 @@ export class App<
     });
   }
 
+  /** @inheritdoc */
   public initialize(): Observable<AppInitializeResult> {
     return new Observable((subscriber) => {
       // dispatch initialize action to indicate that the application is initializing
@@ -605,8 +630,9 @@ export class App<
     });
   }
 
+  /** @inheritdoc */
   public loadConfig() {
-    // TODO - shit fix
+    // TODO(#5126) - shit fix
     (this.manifest ? of(this.manifest) : this.getManifest()).subscribe({
       next: (manifest) => {
         this.#state.next(actions.fetchConfig(manifest));
@@ -614,16 +640,24 @@ export class App<
     });
   }
 
+  /** @inheritdoc */
   public loadManifest(update?: boolean) {
     this.#state.next(actions.fetchManifest(this.appKey, this.tag, update));
   }
 
+  /**
+   * Replaces or merges the current manifest with a new one.
+   * @param manifest - The manifest to apply.
+   * @param replace - When `false` (default), merges into the existing manifest; when omitted, behaves the same.
+   */
   public updateManifest(manifest: AppManifest, replace?: false) {
     this.#state.next(actions.setManifest(manifest, !replace));
   }
 
+  /** @inheritdoc */
   public async loadAppModule(allow_cache = true) {
     const manifest = await this.getManifestAsync(allow_cache);
+    // only import the app module if the manifest declares an entry point
     if (manifest.build?.entryPoint) {
       this.#state.next(actions.importApp(manifest.build.entryPoint));
     } else {
@@ -633,11 +667,14 @@ export class App<
     }
   }
 
+  /** @inheritdoc */
   public getConfig(force_refresh = false): Observable<AppConfig> {
     return new Observable((subscriber) => {
+      // emit the cached config immediately, if one is already loaded
       if (this.#state.value.config) {
         // emit current config to the subscriber
         subscriber.next(this.#state.value.config);
+        // complete the stream unless a forced refresh was requested
         if (!force_refresh) {
           // since we have the config and no force refresh, complete the stream
           return subscriber.complete();
@@ -679,17 +716,21 @@ export class App<
     });
   }
 
+  /** @inheritdoc */
   public getConfigAsync(allow_cache = true): Promise<AppConfig> {
     // when allow_cache is true, use first emitted value, otherwise use last emitted value
     const operator = allow_cache ? firstValueFrom : lastValueFrom;
     return operator(this.getConfig(!allow_cache));
   }
 
+  /** @inheritdoc */
   public getSettings<T extends AppSettings>(force_refresh = false): Observable<T> {
     return new Observable<T>((subscriber) => {
+      // emit the cached settings immediately, if already loaded
       if (this.#state.value.settings) {
         // emit current settings to the subscriber
         subscriber.next(this.#state.value.settings as T);
+        // complete the stream unless a forced refresh was requested
         if (!force_refresh) {
           // since we have the settings and no force refresh, complete the stream
           return subscriber.complete();
@@ -731,12 +772,14 @@ export class App<
     });
   }
 
+  /** @inheritdoc */
   public getSettingsAsync<T extends AppSettings>(allow_cache = true): Promise<T> {
     // when allow_cache is true, use first emitted value, otherwise use last emitted value
     const operator = allow_cache ? firstValueFrom : lastValueFrom;
     return operator(this.getSettings<T>(!allow_cache));
   }
 
+  /** @inheritdoc */
   public updateSettings<T extends AppSettings>(settings: T): Observable<T> {
     return new Observable((subscriber) => {
       subscriber.add(
@@ -770,10 +813,12 @@ export class App<
     });
   }
 
+  /** @inheritdoc */
   public updateSettingsAsync<T extends AppSettings>(settings: T): Promise<T> {
     return lastValueFrom(this.updateSettings(settings));
   }
 
+  /** @inheritdoc */
   public updateSetting<T extends AppSettings, P extends keyof T>(
     property: P,
     value: T[P],
@@ -781,12 +826,14 @@ export class App<
     const currentSettings$ =
       this.#state.value.settings === undefined
         ? // if settings are not loaded, fetch settings
-          this.getSettings().pipe(last())
+          this.getSettings()
+            // take the last emitted value
+            .pipe(last())
         : // if settings are loaded, use current settings
           of(this.#state.value.settings);
 
+    // merge the current settings with the new value, then persist and return the updated property
     return currentSettings$.pipe(
-      // merge current settings with new value
       map((settings) => ({ ...settings, [property]: value })),
       // update settings
       switchMap((settings) => this.updateSettings<T>(settings as T)),
@@ -795,6 +842,7 @@ export class App<
     );
   }
 
+  /** @inheritdoc */
   public updateSettingAsync<T extends AppSettings, P extends keyof T>(
     property: P,
     value: T[P],
@@ -802,11 +850,14 @@ export class App<
     return lastValueFrom(this.updateSetting<T, P>(property, value));
   }
 
+  /** @inheritdoc */
   public getManifest(force_refresh = false): Observable<AppManifest> {
     return new Observable((subscriber) => {
+      // emit the cached manifest immediately, if already loaded
       if (this.#state.value.manifest) {
         // emit current manifest to the subscriber
         subscriber.next(this.#state.value.manifest);
+        // complete the stream unless a forced refresh was requested
         if (!force_refresh) {
           // since we have the manifest and no force refresh, complete the stream
           return subscriber.complete();
@@ -846,17 +897,21 @@ export class App<
     });
   }
 
+  /** @inheritdoc */
   public getManifestAsync(allow_cache = true): Promise<AppManifest> {
     // when allow_cache is true, use first emitted value, otherwise use last emitted value
     const operator = allow_cache ? firstValueFrom : lastValueFrom;
     return operator(this.getManifest(!allow_cache));
   }
 
+  /** @inheritdoc */
   public getAppModule(force_refresh = false): Observable<AppScriptModule> {
     return new Observable((subscriber) => {
+      // emit the cached module immediately, if already loaded
       if (this.#state.value.modules) {
         // emit current value to the subscriber
         subscriber.next(this.#state.value.modules);
+        // complete the stream unless a forced refresh was requested
         if (!force_refresh) {
           // complete if no force refresh
           return subscriber.complete();
@@ -898,8 +953,9 @@ export class App<
       subscriber.add(
         // fetch application latest manifest and request loading of the application script
         this.getManifest().subscribe((manifest) => {
+          // only import the app module if the manifest declares an entry point
           if (manifest.build?.entryPoint) {
-            // TODO - this should come from backend
+            // TODO(#5128) - this should come from backend
             const assetPath =
               manifest.build.assetPath ?? [manifest.appKey, manifest.build.version].join('@');
             // dispatch import_app action to load the application script
@@ -914,6 +970,7 @@ export class App<
     });
   }
 
+  /** @inheritdoc */
   public getAppModuleAsync(allow_cache = true): Promise<AppScriptModule> {
     // when allow_cache is true, use first emitted value, otherwise use last emitted value
     const operator = allow_cache ? firstValueFrom : lastValueFrom;

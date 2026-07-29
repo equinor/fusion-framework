@@ -47,6 +47,12 @@ const Styled = {
     `,
 };
 
+/**
+ * A single bookmark row, with actions and click-to-set-current behavior.
+ *
+ * @param props - The component's props
+ * @returns The row
+ */
 export const Row = ({ name, menuOptions, children, id, menuOpen, onMenuOpen }: RowProps) => {
   const pRef = useRef<HTMLElement | null>(null);
   const { provider } = useBookmarkComponentContext();
@@ -55,6 +61,7 @@ export const Row = ({ name, menuOptions, children, id, menuOpen, onMenuOpen }: R
     (e: React.MouseEvent) => {
       e.preventDefault();
       e.stopPropagation();
+      // Only attempt to set the current bookmark when a provider is available
       if (provider) {
         from(provider.setCurrentBookmark(id)).subscribe();
       }
@@ -64,7 +71,7 @@ export const Row = ({ name, menuOptions, children, id, menuOpen, onMenuOpen }: R
 
   useOutsideClick(pRef.current, () => onMenuOpen(''));
 
-  // TODO: @noggling fix this
+  // TODO(#5093): fix accessibility (keyboard support) for this click handler
   return (
     /* eslint-disable-next-line styled-components-a11y/click-events-have-key-events, styled-components-a11y/no-static-element-interactions*/
     <Styled.ListItem onClick={onListItemClick}>

@@ -1,1 +1,1 @@
-export { mockContextItem } from './get-context-item';
+export { mockContextItem } from './mock-context-item';

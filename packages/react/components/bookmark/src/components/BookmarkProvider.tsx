@@ -33,9 +33,24 @@ type BookmarkProviderProps = {
   readonly currentUser?: BookmarkUser;
 };
 
+/**
+ * Hook for accessing the bookmark component context provided by `BookmarkProvider`.
+ *
+ * @returns The current bookmark provider state
+ */
 export const useBookmarkComponentContext = () =>
   useContext(bookmarkProviderContext) as ProviderState;
 
+/**
+ * Provides bookmark state and modals (create/edit/import) to descendant bookmark components.
+ *
+ * @param props - The provider's props
+ * @param props.provider - The bookmark provider used to fetch/manage bookmarks
+ * @param props.currentApp - The app the bookmarks belong to
+ * @param props.currentUser - The current user, used to determine bookmark ownership
+ * @param props.children - The descendant components that can access the bookmark context
+ * @returns The provider with its context and modals
+ */
 export const BookmarkProvider = (props: PropsWithChildren<BookmarkProviderProps>) => {
   const { provider, currentApp, currentUser, children } = props;
 
@@ -55,6 +70,7 @@ export const BookmarkProvider = (props: PropsWithChildren<BookmarkProviderProps>
     setSnackbarContent('Bookmark url copied to clipboard');
   }, []);
 
+  // Render children without a live provider context when no provider is configured
   if (!provider) {
     return (
       <bookmarkProviderContext.Provider

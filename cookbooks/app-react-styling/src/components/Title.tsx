@@ -10,6 +10,11 @@ const useStyles = makeStyles((theme) =>
   }),
 );
 
+/**
+ * Renders the primary themed heading for a cookbook section.
+ * @param children - Heading content to display.
+ * @returns A styled level-one heading element.
+ */
 export const Title = ({ children }: { children: ReactNode }) => {
   const classes = useStyles({});
 

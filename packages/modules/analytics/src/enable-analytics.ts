@@ -35,6 +35,7 @@ export const enableAnalytics = (
   configurator.addConfig({
     module,
     configure: async (builder) => {
+      // Only invoke the callback when one was supplied by the caller
       if (callback) {
         await Promise.resolve(callback(builder));
       }

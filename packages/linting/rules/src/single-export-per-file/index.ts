@@ -1,7 +1,12 @@
-import { basename } from 'node:path';
 import type { Node } from 'web-tree-sitter';
-import type { Rule, Diagnostic, Severity } from '@equinor/fusion-framework-lint-core';
-import { tsParser } from '../_parser.js';
+import type {
+  Diagnostic,
+  Severity,
+  RuleDef,
+  LintContext,
+} from '@equinor/fusion-framework-lint-core';
+import { createMatcher, resolveMatch } from '@equinor/fusion-framework-lint-core';
+import { tsParser } from '../ts-parser.js';
 
 const RULE_ID = 'single-export-per-file';
 const DEFAULT_SEVERITY: Severity = 'warn';
@@ -10,13 +15,14 @@ const DEFAULT_SEVERITY: Severity = 'warn';
  * Node child types that represent value (non-type) exports.
  * Type-only exports (`export type`, `export interface`) are excluded because
  * they carry no runtime weight and commonly accompany a value export.
+ * `enum_declaration` is excluded too — enums are commonly grouped with the
+ * related types they describe and shouldn't force a file split on their own.
  */
 const VALUE_EXPORT_CHILD_TYPES = new Set([
   'function_declaration',
   'class_declaration',
   'lexical_declaration', // const / let
   'variable_declaration', // var
-  'enum_declaration',
 ]);
 
 /**
@@ -37,16 +43,12 @@ function isValueExport(node: Node): boolean {
 }
 
 /**
- * Options for the `single-export-per-file` rule.
+ * Basename patterns exempted from this rule by default when `options.match`
+ * is not provided. Barrel files legitimately re-export many symbols.
+ * If `options.match` overrides this, the implementer must re-add any of
+ * these patterns they still want exempted — the default list is not merged in.
  */
-export interface SingleExportPerFileOptions {
-  /**
-   * Glob-style base-name patterns for files that are allowed to have multiple
-   * exports (e.g. barrel / index files).
-   * Default: `['index.ts', 'index.tsx', 'index.mts', 'index.cts']`.
-   */
-  allowMultipleIn?: string[];
-}
+const DEFAULT_EXCLUDE = ['index.ts', 'index.tsx', 'index.mts', 'index.cts'];
 
 /**
  * Creates a `single-export-per-file` rule with the given options.
@@ -54,17 +56,22 @@ export interface SingleExportPerFileOptions {
  * @param options - Rule configuration options.
  * @returns A configured `Rule` instance.
  */
-export function createSingleExportPerFile(options: SingleExportPerFileOptions = {}): Rule {
-  const { allowMultipleIn = ['index.ts', 'index.tsx', 'index.mts', 'index.cts'] } = options;
+export const singleExportPerFile: RuleDef = (options = {}) => {
+  const match = resolveMatch(options.match) ?? createMatcher([], DEFAULT_EXCLUDE);
 
   return {
     id: RULE_ID,
     defaultSeverity: DEFAULT_SEVERITY,
+    /**
+     * Barrel files (`index.ts`, etc.) are exempt by default. Delegates to
+     * `match` so the engine skips calling `check` for them entirely, and
+     * callers can override the matching strategy via `options.match`.
+     * @inheritdoc Rule.match
+     */
+    match,
     /** @inheritdoc Rule.check */
-    check(source: string, filePath: string): Diagnostic[] {
-      // Barrel files are explicitly allowed to have many exports
-      if (allowMultipleIn.includes(basename(filePath))) return [];
-
+    check(source: string, ctx: LintContext): Diagnostic[] {
+      const { filePath } = ctx;
       const tree = tsParser.parse(source);
       // Guard: tsParser.parse returns null for empty or unparseable source
       if (!tree) return [];
@@ -100,7 +107,7 @@ export function createSingleExportPerFile(options: SingleExportPerFileOptions = 
       return violations;
     },
   };
-}
+};
 
 /** @param n - Ordinal number. @returns Ordinal suffix (`st`, `nd`, `rd`, `th`). */
 function nth(n: number): string {
@@ -110,6 +117,3 @@ function nth(n: number): string {
   const suffixes: Record<number, string> = { 1: 'st', 2: 'nd', 3: 'rd' };
   return suffixes[n % 10] ?? 'th';
 }
-
-/** Pre-built `single-export-per-file` rule with default options. */
-export const singleExportPerFile: Rule = createSingleExportPerFile();

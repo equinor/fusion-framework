@@ -64,6 +64,10 @@ type AuthProviderOptions = {
 export class AuthProviderInteractive extends AuthProvider {
   #options: AuthProviderOptions;
 
+  /**
+   * @param client - The MSAL `PublicClientApplication` instance used for token operations.
+   * @param options - Interactive login options, including local server configuration.
+   */
   constructor(client: PublicClientApplication, options: AuthProviderOptions) {
     super(client);
     this.#options = options;
@@ -131,6 +135,7 @@ export class AuthProviderInteractive extends AuthProvider {
     request: { scopes: string[] };
   }): Promise<AuthenticationResult> {
     const { scopes } = options.request ?? { scopes: [] };
+    // No cached account — fall back to an interactive login flow
     if ((await this.getAccount()) === null) {
       return this.login({ request: { scopes } });
     }

@@ -155,7 +155,11 @@ export class HttpClientConfigurator<TClient extends IHttpClient>
 {
   protected _clients: Record<string, HttpClientOptions<TClient>> = {};
 
-  /** Gets a shallow clone of all named client configurations. */
+  /**
+   * Gets a shallow clone of all named client configurations.
+   *
+   * @returns A shallow clone of the named client configurations.
+   */
   public get clients(): Record<string, HttpClientOptions<TClient>> {
     return { ...this._clients };
   }
@@ -191,6 +195,8 @@ export class HttpClientConfigurator<TClient extends IHttpClient>
   ): HttpClientConfigurator<TClient> {
     const argFn = typeof args === 'string' ? ({ baseUri: args } as HttpClientOptions<T>) : args;
     const options = typeof argFn === 'function' ? { onCreate: argFn } : argFn;
+    // `options` is `HttpClientOptions<T>` (this call's generic), but `_clients` is keyed by the
+    // configurator's own `TClient` — callers are expected to keep the two in sync.
     this._clients[name] = {
       ...this._clients[name],
       ...(options as unknown as HttpClientOptions<TClient>),

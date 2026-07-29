@@ -51,6 +51,7 @@ function isSSHPrivateKey(filename: string): boolean {
 
   // Check for standard naming patterns
   const isStandardName = filename.startsWith('id_');
+  // Match common private-key file extensions (e.g. .pem, .key)
   const hasPrivateKeyExtension = PRIVATE_KEY_EXTENSIONS.some((ext) => filename.endsWith(ext));
   const hasServiceKeySuffix = PRIVATE_KEY_PATTERN.test(filename);
 
@@ -65,12 +66,14 @@ function isSSHPrivateKey(filename: string): boolean {
 function checkSSHKeys(logger?: ConsoleLogger): boolean {
   try {
     const sshDir = join(homedir(), '.ssh');
+    // No .ssh directory means there's nothing to scan for keys
     if (!existsSync(sshDir)) {
       return false;
     }
 
     // Use withFileTypes for better performance and stop on first match
     for (const dirent of readdirSync(sshDir, { withFileTypes: true })) {
+      // Only regular files matching known private-key patterns count as a hit
       if (dirent.isFile() && isSSHPrivateKey(dirent.name)) {
         logger?.debug('SSH private key detected in .ssh directory');
         return true;
@@ -117,6 +120,7 @@ export async function selectGitProtocol(
   // Check for SSH configuration in order of preference
   const hasSSHConfig = checkGitSSHConfig() || checkSSHKeys(logger);
 
+  // Only log detection results when SSH configuration was actually found
   if (hasSSHConfig) {
     logger?.debug('SSH configuration detected');
   }

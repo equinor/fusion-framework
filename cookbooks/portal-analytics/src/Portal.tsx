@@ -13,6 +13,9 @@ const Styled = {
   `,
 };
 
+/**
+ * Presents analytics demonstrations, navigation links, and the event log reader.
+ */
 export const Portal = () => {
   return (
     <Styled.Wrapper>

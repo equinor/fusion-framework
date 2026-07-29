@@ -16,6 +16,7 @@ export const mergeAppConfig = <T extends AppConfig>(base: T, overrides: Partial<
   // if scopes are provided in overrides, use the new scopes
   return deepmerge(base, overrides, {
     customMerge: (key) => {
+      // Replace (rather than deep-merge) scopes so overrides fully control the array
       if (key === 'scopes') {
         return (_target, source) => {
           // If scopes are provided in overrides, replace the base scopes with the new ones

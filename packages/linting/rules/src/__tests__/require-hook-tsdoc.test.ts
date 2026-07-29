@@ -5,11 +5,11 @@ import { requireHookTsDoc } from '../require-hook-tsdoc/index.js';
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
 function lintTs(source: string): Diagnostic[] {
-  return requireHookTsDoc.check(source, 'fixture.ts');
+  return requireHookTsDoc().check(source, { filePath: 'fixture.ts' });
 }
 
 function lintTsx(source: string): Diagnostic[] {
-  return requireHookTsDoc.check(source, 'fixture.tsx');
+  return requireHookTsDoc().check(source, { filePath: 'fixture.tsx' });
 }
 
 // ── Passing cases ─────────────────────────────────────────────────────────────
@@ -147,11 +147,10 @@ export const useData = (): void => {};
   });
 
   it('fails: severity can be overridden to error', () => {
-    const diags = requireHookTsDoc.check(
-      'export const useData = (): void => {};',
-      'fixture.ts',
-      'error',
-    );
+    const diags = requireHookTsDoc().check('export const useData = (): void => {};', {
+      filePath: 'fixture.ts',
+      severity: 'error',
+    });
     expect(diags[0].severity).toBe('error');
   });
 });

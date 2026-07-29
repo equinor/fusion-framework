@@ -1,4 +1,4 @@
-import { AppRouter } from './Router';
+import { AppRouter } from './AppRouter';
 import { styled } from 'styled-components';
 
 const Styled = {
@@ -22,6 +22,11 @@ const Styled = {
     `,
 };
 
+/**
+ * Renders the people component cookbook inside the application shell.
+ *
+ * @returns The styled application shell containing the cookbook router.
+ */
 export const App = () => {
   return (
     <Styled.Root>

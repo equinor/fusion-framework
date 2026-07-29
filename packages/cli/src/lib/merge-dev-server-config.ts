@@ -18,14 +18,17 @@ const keyedArrayMerger = <TType extends Record<string, unknown>>(
   target: Array<TType>,
   source: Array<TType>,
 ): Array<TType> => {
+  // Index source records by key for O(1) lookup during the merge below
   const sourceRecords = source.reduce(
     (acc, item) => Object.assign(acc, { [String(item[key])]: item }),
     {} as TType,
   );
+  // Index target records by key so source entries can override matching keys
   const targetRecords = target.reduce(
     (acc, item) => Object.assign(acc, { [String(item[key])]: item }),
     {} as TType,
   );
+  // Overlay source records onto target records so source entries win on matching keys
   const mergedRecords = { ...targetRecords, ...sourceRecords };
   return Object.values(mergedRecords) as Array<TType>;
 };
@@ -55,6 +58,7 @@ export const mergeDevServerConfig = (
       if (typeof entry === 'object' && 'match' in entry && 'middleware' in entry) {
         return keyedArrayMerger('match', target, source);
       }
+      // Deduplicate the combined target and source entries
       return [...new Set([...target, ...source])];
     },
   }) as DevServerOptions;

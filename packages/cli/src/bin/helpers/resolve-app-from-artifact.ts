@@ -1,5 +1,5 @@
 import type AdmZip from 'adm-zip';
-import { type BundleMetadata, loadMetadata } from './load-bundle-metadata.js';
+import { type BundleMetadata, loadMetadata } from './load-metadata.js';
 
 /**
  * Resolves complete application information from a bundle artifact.

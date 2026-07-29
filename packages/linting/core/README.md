@@ -8,7 +8,9 @@ This package provides the foundational building blocks for the Fusion lint syste
 
 - **`Diagnostic`** — a single lint finding with file, line, col, rule, message, and severity.
 - **`Rule`** — interface that all lint rules implement.
+- **`LintContext`** — per-call context (`filePath`, resolved `severity`) passed to `Rule.check`.
 - **`LintEngine`** — orchestrates rule execution and applies per-rule severity config.
+- **`RuleDef`** / **`resolveMatch`** — factory type and helper for building rules with a configurable `options.match`.
 
 ## Usage
 
@@ -19,8 +21,8 @@ import type { Rule } from '@equinor/fusion-framework-lint-core';
 const myRule: Rule = {
   id: 'my-rule',
   defaultSeverity: 'warn',
-  check(source, filePath) {
-    // return Diagnostic[]
+  check(source, ctx) {
+    // ctx.filePath, ctx.severity — return Diagnostic[]
     return [];
   },
 };

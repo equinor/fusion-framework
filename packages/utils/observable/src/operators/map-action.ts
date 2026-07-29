@@ -31,4 +31,5 @@ export const mapAction =
     fn: (value: ExtractAction<TAction, TType>) => TResult,
   ): OperatorFunction<ExtractAction<TAction, TType>, TResult> =>
   (source: Observable<TAction>) =>
+    // Narrow the stream to the requested action type, then map its payload with the given projector
     source.pipe(filterAction(type), map(fn));

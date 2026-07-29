@@ -66,6 +66,7 @@ export const pack = async (pkg: PackageInfo, options?: Options): Promise<AdmZip>
 
   // Add any additional content provided in options
   if (options?.content) {
+    // Write each provided content entry directly into the archive
     for (const [name, data] of Object.entries(options.content)) {
       bundle.addFile(name, Buffer.from(data));
       log?.info('📄', formatPath(name, { relative: true }));
@@ -78,6 +79,7 @@ export const pack = async (pkg: PackageInfo, options?: Options): Promise<AdmZip>
   for (const file of addFiles.concat(pkg.packageJson.files ?? [])) {
     const filePath = resolve(pkgPath, file);
     const fileDir = dirname(filePath.replace(pkgPath, ''));
+    // Only bundle files that actually exist on disk
     if (fileExistsSync(filePath)) {
       bundle.addLocalFile(filePath, fileDir);
       log?.info('📄', formatPath(filePath, { relative: true }));

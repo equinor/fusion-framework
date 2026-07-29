@@ -5,7 +5,8 @@ import {
   ProjectTemplateRepository,
   type GitClientProtocol,
 } from '../../../../bin/helpers/ProjectTemplateRepository.js';
-import { validateSafePath, safeRmSync } from '../../../../lib/utils/path-security.js';
+import { validateSafePath } from '../../../../lib/utils/validate-safe-path.js';
+import { safeRmSync } from '../../../../lib/utils/safe-rm-sync.js';
 import selectGitProtocol from './select-git-protocol.js';
 
 /**
@@ -41,6 +42,7 @@ export async function setupRepository(
   const repoDir = resolve(tmpdir(), 'ffc', 'repo', templateRepoName);
   logger.debug(`Repo dir: ${repoDir}`);
 
+  // Wipe any existing clone before setting up a fresh one
   if (clean) {
     logger.debug(`Removing repo dir: ${repoDir}`);
     // Use safeRmSync for recursive directory removal with path validation

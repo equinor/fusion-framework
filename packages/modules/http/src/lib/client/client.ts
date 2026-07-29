@@ -17,12 +17,12 @@ import type {
   StreamResponse,
 } from './types';
 
-import { HttpResponseError } from '../../errors';
+import { HttpResponseError } from '../../errors/index.js';
 import {
   createSseSelector,
   type ServerSentEvent,
   type SseSelectorOptions,
-} from '../selectors/sse-selector';
+} from '../selectors/create-sse-selector';
 
 /**
  * Configuration options for creating an `HttpClient` instance.
@@ -78,6 +78,7 @@ export class HttpClient<
 
   /**
    * A stream of requests that are about to be executed.
+   * @returns An `Observable` that emits each request before it is executed.
    */
   public get request$(): Observable<TRequest> {
     return this._request$.asObservable();
@@ -85,11 +86,17 @@ export class HttpClient<
 
   /**
    * A stream of responses that have been received.
+   * @returns An `Observable` that emits each response as it is received.
    */
   public get response$(): Observable<TResponse> {
     return this._response$.asObservable();
   }
 
+  /**
+   * Creates a new `HttpClient`.
+   * @param uri - The base URI used to resolve relative request paths.
+   * @param options - Optional request and response handlers.
+   */
   constructor(
     public uri: string,
     options?: Partial<HttpClientCreateOptions<TRequest, TResponse>>,
@@ -112,6 +119,7 @@ export class HttpClient<
   /**
    * Fetches data from the specified path and returns a stream response.
    *
+   * @template T - The expected shape of the fetched data.
    * @param path - The path to fetch data from.
    * @param args - Optional request initialization options, including a custom selector function.
    * @returns A stream response containing the fetched data.
@@ -126,6 +134,7 @@ export class HttpClient<
   /**
    * Fetches data from the specified path and returns a Promise containing the fetched data.
    *
+   * @template T - The expected shape of the fetched data.
    * @param path - The path to fetch data from.
    * @param args - Optional request initialization options, including a custom selector function.
    * @returns A Promise containing the fetched data.
@@ -137,7 +146,13 @@ export class HttpClient<
     return firstValueFrom(this.fetch$<T>(path, args));
   }
 
-  /** @deprecated */
+  /**
+   * @deprecated Use {@link fetch} instead.
+   * @template T - The expected shape of the fetched data.
+   * @param path - The path to fetch data from.
+   * @param args - Optional request initialization options, including a custom selector function.
+   * @returns A Promise containing the fetched data.
+   */
   public fetchAsync<T = TResponse>(
     path: string,
     args?: FetchRequestInit<T, TRequest, TResponse>,
@@ -148,6 +163,7 @@ export class HttpClient<
   /**
    * Fetches data from the specified path and returns a stream response containing the data in JSON format.
    *
+   * @template T - The expected shape of the parsed JSON data.
    * @param path - The path to fetch the data from.
    * @param args - Optional request initialization options, including a custom selector function and request body.
    *   - `body`: The request body, which will be automatically serialized to JSON if it's an object.
@@ -175,6 +191,7 @@ export class HttpClient<
   /**
    * Fetches data from the specified path and returns a Promise containing the fetched data in JSON format.
    *
+   * @template T - The expected shape of the parsed JSON data.
    * @param path - The path to fetch the data from.
    * @param args - Optional request initialization options, including a custom selector function and request body.
    *   - `body`: The request body, which will be automatically serialized to JSON if it's an object.
@@ -192,6 +209,7 @@ export class HttpClient<
   /**
    * Fetches a blob resource from the specified path and returns a stream response.
    *
+   * @template T - The expected shape of the fetched blob data.
    * @param path - The path to the blob resource.
    * @param args - Optional request initialization options, including a custom selector function.
    * @returns A stream response containing the fetched blob data.
@@ -216,6 +234,7 @@ export class HttpClient<
   /**
    * Fetches a blob from the specified path and returns a Promise that resolves to the blob result.
    *
+   * @template T - The expected shape of the fetched blob data.
    * @param path - The path to fetch the blob from.
    * @param args - Optional arguments for the fetch request, including request body, headers, and response type.
    * @returns A Promise that resolves to the blob result.
@@ -272,7 +291,13 @@ export class HttpClient<
     >);
   }
 
-  /** @deprecated */
+  /**
+   * @deprecated Use {@link json} instead.
+   * @template T - The expected shape of the parsed JSON data.
+   * @param path - The path to fetch the data from.
+   * @param args - Optional request initialization options, including a custom selector function and request body.
+   * @returns A Promise containing the fetched data in JSON format.
+   */
   public jsonAsync<T = unknown>(
     path: string,
     args?: FetchRequestInit<T, JsonRequest<TRequest>, TResponse>,
@@ -283,6 +308,8 @@ export class HttpClient<
   /**
    * Executes an HTTP request using the specified method and path.
    *
+   * @template T - The expected shape of the result.
+   * @template TMethod - The name of the `IHttpClient` method to invoke.
    * @param method - The HTTP method to use for the request, such as 'fetch', 'json', or 'blob'.
    * @param path - The path to the resource to fetch.
    * @param init - Optional request initialization options, including request body, headers, and response type.
@@ -308,9 +335,12 @@ export class HttpClient<
   /**
    * Fetches data from the specified path and returns an Observable that emits the response.
    *
+   * @template T - The expected shape of the emitted data.
    * @param path - The path to fetch the data from.
    * @param args - Optional arguments for the fetch request, including a response selector function, request body, headers, and response type.
    * @returns {Observable<T>} An Observable that emits the response data.
+   *
+   * @throws {HttpResponseError} When the optional `selector` throws while transforming the response.
    *
    * This method handles the following steps:
    * 1. Resolves the full URL by combining the base URI and the provided path.
@@ -325,6 +355,9 @@ export class HttpClient<
     args?: FetchRequestInit<T, TRequest, TResponse>,
   ): Observable<T> {
     const { selector, ...options } = args || {};
+    // `fromFetch` yields the raw fetch `Response`, but `responseHandler.process()` (called via
+    // `_prepareResponse`) expects the pipeline's generic `TResponse` shape — cast through
+    // `unknown` since the two are only compatible after that processing step.
     const response$ = of({
       ...options,
       path,
@@ -343,6 +376,7 @@ export class HttpClient<
 
       /** execute selector */
       switchMap((response) => {
+        // only run the selector when one was provided; otherwise pass the response through untouched
         if (selector) {
           try {
             return selector(response);
@@ -361,6 +395,8 @@ export class HttpClient<
       /** cancel request on abort signal */
       takeUntil(this._abort$),
     );
+    // The pipe above resolves to the per-call generic `T` (via the optional `selector`), but
+    // the observable's static type tracks the class-level `TResponse` — cast to the caller's `T`.
     return response$ as unknown as Observable<T>;
   }
 

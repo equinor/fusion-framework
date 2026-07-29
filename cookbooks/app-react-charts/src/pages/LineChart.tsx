@@ -11,6 +11,10 @@ import {
 
 ChartJS.register(LineElement, PointElement, CategoryScale, LinearScale, Tooltip, Legend);
 
+/**
+ * Renders a weekday site-visit line chart with filled points and tooltips.
+ * @returns The rendered site-visit line chart.
+ */
 export const LineChart = () => {
   const data = {
     labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],

@@ -1,5 +1,9 @@
 import { Link } from '@equinor/fusion-framework-react-router';
 
+/**
+ * Explains the legacy route-object examples and links to their demonstrations.
+ * @returns The legacy router cookbook home page.
+ */
 export function HomePage() {
   return (
     <div>

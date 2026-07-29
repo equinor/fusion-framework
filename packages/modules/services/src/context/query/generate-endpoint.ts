@@ -1,6 +1,6 @@
 import buildOdataQuery from 'odata-query';
 
-import { UnsupportedApiVersion } from '../../errors';
+import { UnsupportedApiVersion } from '../../UnsupportedApiVersion';
 
 import { ApiVersion } from '..';
 
@@ -27,10 +27,13 @@ import type {
  * ```
  */
 function buildOdataFilter(filterObj: QueryContextOdataFilter) {
+  // Fold filter entries into the OData object expected by the context API.
   return Object.keys(filterObj).reduce(
     (acc, key) => {
+      // Apply special OData syntax only to filter keys with custom semantics.
       switch (key) {
         case 'type':
+          // Omit empty type filters so the generated query remains meaningful.
           if (filterObj[key]?.length) {
             acc[key] = { in: filterObj[key] };
           }
@@ -55,22 +58,27 @@ function buildOdataFilter(filterObj: QueryContextOdataFilter) {
  * @returns An OData object constructed from the provided parameters.
  */
 function buildOdataObject(parameters: QueryContextOdataParameters) {
-  return Object.entries(parameters)
-    .filter(([_, value]) => !!value)
-    .reduce(
-      (acc, [key, value]) => {
-        switch (key) {
-          case 'filter':
-            acc[key] = buildOdataFilter(value as QueryContextOdataFilter);
-            break;
-          default:
-            acc[key] = parameters[key as keyof typeof parameters];
-            break;
-        }
-        return acc;
-      },
-      {} as Record<string, unknown>,
-    );
+  return (
+    Object.entries(parameters)
+      // Exclude empty optional parameters before constructing the query object.
+      .filter(([_, value]) => !!value)
+      // Assemble the filtered entries into the final OData parameter object.
+      .reduce(
+        (acc, [key, value]) => {
+          // Transform the filter parameter while passing other values through.
+          switch (key) {
+            case 'filter':
+              acc[key] = buildOdataFilter(value as QueryContextOdataFilter);
+              break;
+            default:
+              acc[key] = parameters[key as keyof typeof parameters];
+              break;
+          }
+          return acc;
+        },
+        {} as Record<string, unknown>,
+      )
+  );
 }
 
 /**
@@ -97,6 +105,7 @@ export const generateEndpoint = <TVersion extends string = keyof typeof ApiVersi
   args: QueryContextArgs<TVersion>,
 ): string => {
   const apiVersion = ApiVersion[version as keyof typeof ApiVersion] ?? version;
+  // Reject API versions that this endpoint cannot serve.
   switch (apiVersion) {
     case ApiVersion.v2:
       throw new UnsupportedApiVersion(version);
@@ -104,6 +113,7 @@ export const generateEndpoint = <TVersion extends string = keyof typeof ApiVersi
       const { query, includeDeleted } = args as QueryContextArgs<'v1'>;
       const params = new URLSearchParams(createSearchParameters(query));
       params.append('api-version', apiVersion);
+      // Add the optional flag only when the caller explicitly requested deleted contexts.
       if (includeDeleted) {
         params.append('includeDeleted', 'true');
       }

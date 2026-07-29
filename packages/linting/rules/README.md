@@ -30,16 +30,25 @@ if (user.isAuthenticated) {
 
 ## Extending
 
-Implement the `Rule` interface from `@equinor/fusion-framework-lint-core` and add your rule to the exports:
+Every rule module exports a `RuleDef` factory — a function that accepts an optional `options`
+object (including a uniform `options.match` for overriding which files the rule applies to) and
+returns a configured `Rule`. Call the factory (even with no arguments) to get a usable `Rule`
+instance:
 
 ```typescript
-import type { Rule } from '@equinor/fusion-framework-lint-core';
+import type { Diagnostic, RuleDef } from '@equinor/fusion-framework-lint-core';
+import { resolveMatch } from '@equinor/fusion-framework-lint-core';
 
-export const myRule: Rule = {
+export const myRule: RuleDef = (options = {}) => ({
   id: 'my-rule',
   defaultSeverity: 'warn',
-  check(source, filePath) {
+  match: resolveMatch(options.match),
+  check(source, ctx) {
     return [];
   },
-};
+});
+
+// usage
+import { myRule } from './my-rule/index.js';
+const rule = myRule({ match: { exclude: ['*.generated.ts'] } });
 ```

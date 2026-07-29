@@ -31,8 +31,10 @@ export async function selectTemplate(
   assert(Array.isArray(templates), 'Templates must be an array');
   assert(templates.length > 0, 'No templates available');
 
+  // Collect template names for validating a pre-selected template
   const templateNames = templates.map((t) => t.name);
 
+  // Skip the interactive prompt entirely when a template was pre-selected
   if (preSelectedTemplate) {
     assert(typeof preSelectedTemplate === 'string', 'Pre-selected template must be a string');
     assert(
@@ -42,25 +44,30 @@ export async function selectTemplate(
 
     logger?.debug(`Using pre-selected template: ${preSelectedTemplate}`);
 
+    // Look up the full template object matching the pre-selected name
     const selectedTemplate = templates.find((t) => t.name === preSelectedTemplate);
     assert(selectedTemplate, 'Pre-selected template not found');
     return selectedTemplate;
   }
 
+  // Skip the prompt when there's only a single template to choose from
   if (templates.length === 1) {
     logger?.debug(`Using single template: ${templates[0].name}`);
     return templates[0];
   }
+
+  // Build one selectable choice per available template
+  const templateChoices = templates.map((template) => ({
+    name: `${template.name} - ${template.description}`,
+    value: template,
+  }));
 
   const { selectedTemplate } = await inquirer.prompt([
     {
       type: 'select',
       name: 'selectedTemplate',
       message: '🎨 Please select a template:',
-      choices: templates.map((template) => ({
-        name: `${template.name} - ${template.description}`,
-        value: template,
-      })),
+      choices: templateChoices,
       pageSize: 10,
       loop: false,
     },

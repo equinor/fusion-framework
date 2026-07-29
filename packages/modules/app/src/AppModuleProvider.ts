@@ -45,6 +45,7 @@ export class AppModuleProvider {
   /**
    * Shallow-compares two app manifests by JSON serialization.
    *
+   * @template T - The manifest type being compared.
    * @param a - First manifest to compare.
    * @param b - Second manifest to compare.
    * @returns `true` if the serialized manifests are identical.
@@ -65,6 +66,7 @@ export class AppModuleProvider {
 
   /**
    * Get module version
+   * @returns The module's semantic version.
    */
   get version(): SemanticVersion {
     return new SemanticVersion(version);
@@ -76,6 +78,8 @@ export class AppModuleProvider {
    * - `undefined` – no application has been set yet.
    * - `null` – the current application was explicitly cleared.
    * - `App` – an active application instance.
+   *
+   * @returns The current active application, `null` if cleared, or `undefined` if never set.
    */
   get current(): CurrentApp | null | undefined {
     return this.#current$.value;
@@ -86,10 +90,14 @@ export class AppModuleProvider {
    *
    * Emits are deduplicated by `appKey`; re-setting the same app does not trigger
    * a new emission.
+   *
+   * @returns An observable of the current active application.
    */
   get current$(): Observable<CurrentApp | null> {
+    // dedupe emissions when the current app's key is unchanged
     return this.#current$.pipe(
       distinctUntilChanged((prev, next) => {
+        // compare by appKey when both are set, otherwise fall back to reference equality
         if (prev && next) {
           return prev.appKey === next.appKey;
         }
@@ -116,6 +124,7 @@ export class AppModuleProvider {
 
     this.#subscription.add(
       this.current$
+        // dispatch a lifecycle event whenever the current app changes
         .pipe(
           pairwise(),
           takeWhile(() => !!event),
@@ -130,6 +139,7 @@ export class AppModuleProvider {
 
     this.#subscription.add(
       this.#current$
+        // dispose the previous app once it has been replaced
         .pipe(
           pairwise(),
           map(([previous]) => previous),
@@ -164,6 +174,7 @@ export class AppModuleProvider {
   /**
    * fetch all applications
    * @deprecated use `getAppManifests` instead
+   * @returns An observable that emits an array of {@link AppManifest} objects.
    */
   public getAllAppManifests(): Observable<AppManifest[]> {
     return this.getAppManifests();
@@ -214,12 +225,14 @@ export class AppModuleProvider {
    * @param appKeyOrApp - Application key, app reference, or an existing `IApp` instance.
    */
   public setCurrentApp(appKeyOrApp: string | IApp | AppReference): void {
+    // a plain string is treated as an appKey to create a new App from
     if (typeof appKeyOrApp === 'string') {
       const newApp = new App({ appKey: appKeyOrApp }, { provider: this, event: this.#event });
       this.#current$.next(newApp as CurrentApp);
       return;
     }
 
+    // an object with appKey and tag is treated as an AppReference to create a new App from
     if (appKeyOrApp.appKey && 'tag' in appKeyOrApp) {
       const newApp = new App(
         { appKey: appKeyOrApp.appKey, tag: appKeyOrApp.tag },
@@ -242,6 +255,7 @@ export class AppModuleProvider {
 
   /**
    * Base URI used for proxying application script imports.
+   * @returns The configured asset base URI.
    */
   public get assetUri(): string {
     return this.#appBaseUri;
@@ -250,6 +264,8 @@ export class AppModuleProvider {
   /**
    * This should not be used, only for legacy creation backdoor
    * @deprecated
+   * @param value - The initial app bundle state to construct the app from.
+   * @returns The newly created {@link App} instance.
    */
   public createApp(value: AppBundleStateInitial): App {
     console.warn('AppModuleProvider.createApp is deprecated and should not be used.');

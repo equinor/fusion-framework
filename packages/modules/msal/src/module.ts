@@ -45,6 +45,7 @@ export const module: MsalModule = {
     // Priority 2: Check if provider exists in parent module (proxy compatibility)
     // This allows child applications to reuse parent's authentication provider
     const hostProvider = init.ref?.auth;
+    // Reuse the parent's provider (via a version-compatible proxy) when available
     if (hostProvider) {
       try {
         const proxyProvider = hostProvider.createProxyProvider(config.version);
@@ -52,7 +53,7 @@ export const module: MsalModule = {
       } catch (error) {
         console.error('MsalModule::Failed to create proxy provider', error);
         // Fallback to host provider to prevent app breakage during migration
-        // TODO: Consider throwing error instead once all apps are migrated to v4
+        // TODO(#5114): Consider throwing error instead once all apps are migrated to v4
         return hostProvider;
       }
     }
@@ -105,7 +106,7 @@ export type AuthConfigFn<TRef = unknown> = (
  * ```
  */
 export const enableMSAL = (
-  // @biome-ignore lint/suspicious/noExplicitAny: must be any to support all module types
+  // biome-ignore lint/suspicious/noExplicitAny: must be any to support all module types
   configurator: IModulesConfigurator<any, any>,
   configure?: AuthConfigFn,
 ): void => {

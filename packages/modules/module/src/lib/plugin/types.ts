@@ -82,12 +82,9 @@ export interface FrameworkPluginArgs<TModules extends Array<AnyModule>, TRef = u
  * configurator.registerPlugin(contextTelemetryPlugin);
  * ```
  */
-export interface FrameworkPlugin<TModules extends Array<AnyModule>, TRef = unknown> {
-  /** Runs the plugin after modules are initialized. */
-  (
-    args: FrameworkPluginArgs<TModules, TRef>,
-  ): FrameworkPluginRegistration | Promise<FrameworkPluginRegistration>;
-}
+export type FrameworkPlugin<TModules extends Array<AnyModule>, TRef = unknown> = (
+  args: FrameworkPluginArgs<TModules, TRef>,
+) => FrameworkPluginRegistration | Promise<FrameworkPluginRegistration>;
 
 /**
  * Developer-facing callback used by {@link createPlugin}.

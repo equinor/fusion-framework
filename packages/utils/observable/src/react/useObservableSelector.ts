@@ -16,6 +16,8 @@ const selectorFn = <
   compare?: (x: TValue, y: TValue) => boolean,
 ): Observable<TValue> => {
   const selectorFn = typeof selector === 'function' ? map(selector) : mapProp(selector);
+  // `map`/`mapProp` both return an `OperatorFunction`, but their generic parameters can't be
+  // unified across the `TSelector` union — cast through `unknown` to the resolved shape.
   return subject.pipe(
     selectorFn as unknown as OperatorFunction<TType, TValue>,
     distinctUntilChanged(compare),
@@ -62,7 +64,7 @@ export function useObservableSelector<TType, TValue = unknown>(
   compare?: (x: TValue, y: TValue) => boolean,
 ): Observable<TValue>;
 
-/** Implementation of `useObservableSelector`. */
+/** @inheritdoc */
 export function useObservableSelector<
   TType extends Record<string, unknown>,
   TSelector extends NestedKeys<TType> | ((state: TType) => TValue),

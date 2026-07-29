@@ -17,7 +17,7 @@ export { ProxyHistory } from './ProxyHistory';
 // History stacks
 export { BrowserHistoryStack } from './BrowserHistoryStack';
 export { BrowserHistoryHashStack as HashHistoryStack } from './BrowserHistoryHashStack';
-export { MemoryHistoryStack } from './MemoryStack';
+export { MemoryHistoryStack } from './MemoryHistoryStack';
 
 // Types
 export type {

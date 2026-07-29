@@ -5,7 +5,8 @@ import { loadAppManifest, createAppManifestFromPackage } from '@equinor/fusion-f
 import type { RuntimeEnv, ResolvedPackage } from '@equinor/fusion-framework-cli/lib';
 
 import type { ConsoleLogger } from '../utils/index.js';
-import { chalk, formatPath } from '../utils/format.js';
+import chalk from 'chalk';
+import { formatPath } from '../utils/format-path.js';
 
 /**
  * Resolves the application manifest for a given package and environment.
@@ -40,12 +41,14 @@ export const resolveAppManifest = async (
       file: options?.manifestPath,
     });
 
+    // The manifest is unusable for serving/building without build info
     if (!manifest.build) {
       throw new Error(
         `Application manifest for ${manifest.appKey} does not contain build information, please check the manifest file.`,
       );
     }
 
+    // Only set assetPath when not building for production
     if (env.command === 'serve') {
       // Only set assetPath when not building for production
       // This helps with local development and preview environments
@@ -58,6 +61,7 @@ export const resolveAppManifest = async (
   } catch (err) {
     // Handle missing manifest file scenario.
     if (err instanceof FileNotFoundError) {
+      // Distinguish an explicitly-requested missing file from the default-lookup case
       if (options?.manifestPath) {
         // Manifest file was explicitly requested but not found.
         const error = new Error(

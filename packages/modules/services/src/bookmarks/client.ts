@@ -131,6 +131,7 @@ export class BookmarksApiClient<
    * @template TResponse - The type of the result of the `getBookmark` function
    * @param version - The API version to use
    * @param args - Additional parameters to pass to the `getBookmark` function
+   * @param init - Optional request initialization options.
    * @returns The result of the `getBookmark` function
    */
   public get<TVersion extends GetBookmarkVersion, TResponse = GetBookmarkResponse<TVersion>>(
@@ -149,6 +150,7 @@ export class BookmarksApiClient<
    * @template TResult - The type of the result of the `getBookmarkPayload` function.
    * @param version - The API version to use for the bookmark payload.
    * @param args - The arguments to pass to the `getBookmarkPayload` function.
+   * @param init - Optional request initialization options.
    * @returns The result of the `getBookmarkPayload` function.
    */
   public getPayload<
@@ -189,6 +191,7 @@ export class BookmarksApiClient<
    * @template TResponse - The type of the result of the `patchBookmark` function
    * @param version - The API version to use
    * @param args - The parameters to pass to the `patchBookmark` function
+   * @param init - Optional request initialization options.
    * @returns The result of the `patchBookmark` function
    */
   public patch<TVersion extends PatchBookmarkVersion, TResponse = PatchBookmarkResponse<TVersion>>(
@@ -207,6 +210,7 @@ export class BookmarksApiClient<
    * @template TResult - The type of the result of the `postBookmark` function
    * @param version - The API version to use
    * @param request - The parameters to pass to the `postBookmark` function
+   * @param init - Optional request initialization options.
    * @returns The result of creating the bookmark
    */
   public create<
@@ -228,6 +232,7 @@ export class BookmarksApiClient<
    * @template TResponse - The type of the result of the `deleteBookmark` function.
    * @param version - The version of the delete bookmark API to use.
    * @param args - The arguments to pass to the `deleteBookmark` function.
+   * @param init - Optional request initialization options.
    * @returns The result of the delete bookmark operation.
    */
   public delete<
@@ -249,6 +254,7 @@ export class BookmarksApiClient<
    * @template TResult - The type of the result of the `verifyBookmarkFavorite` function.
    * @param version - The API version to use.
    * @param args - The arguments to pass to the `HeadBookmarkFavoriteFn` function.
+   * @param init - Optional request initialization options.
    * @returns The result of the `HeadBookmarksFavoriteResult` function.
    */
   public isFavorite<
@@ -270,6 +276,7 @@ export class BookmarksApiClient<
    * @template TResponse - The type of the result of the `addBookmarkFavorite` function.
    * @param version - The API version to use.
    * @param args - The parameters to pass to the `PostBookmarkFavoriteFn` function.
+   * @param init - Optional request initialization options.
    * @returns The result of adding the bookmark to the user's favorites.
    */
   public addFavourite<
@@ -291,6 +298,7 @@ export class BookmarksApiClient<
    * @template TResult - The type of the result of the `deleteBookmarkFavorite` function.
    * @param version - The API version to use for the request.
    * @param request - The parameters to pass to the `deleteBookmarkFavorite` function.
+   * @param init - Optional request initialization options.
    * @returns The result of the `deleteBookmarkFavorite` function.
    */
   public removeFavourite<

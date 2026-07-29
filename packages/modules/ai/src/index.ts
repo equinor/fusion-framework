@@ -24,13 +24,13 @@
  */
 
 // Core module components
-export { AiConfigurator as AIConfigurator } from './AIConfigurator.js';
-export { AiProvider as AIProvider } from './AIProvider.js';
+export { AiConfigurator as AIConfigurator } from './AiConfigurator.js';
+export { AiProvider as AIProvider } from './AiProvider.js';
 export { module, enableAI } from './module.js';
 
 // Essential types for consumers
 export type { AIModuleConfig, IAIConfigurator } from './AIConfigurator.interface.js';
-export type { IAiProvider as IAIProvider } from './AIProvider.js';
+export type { IAiProvider as IAIProvider } from './AiProvider.js';
 export type { AiModule as AIModule, AiModuleKey as AIModuleKey } from './module.js';
 export { AIError } from './AIError.js';
 

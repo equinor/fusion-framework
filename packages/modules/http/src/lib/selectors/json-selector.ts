@@ -1,5 +1,5 @@
 import type { ResponseSelector } from '../client/types';
-import { HttpJsonResponseError } from '../../errors';
+import { HttpJsonResponseError } from '../../errors/index.js';
 
 /**
  * Asynchronously parses the JSON data from a given HTTP response.

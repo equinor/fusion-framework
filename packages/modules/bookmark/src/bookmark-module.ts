@@ -8,7 +8,7 @@ import type { ServicesModule } from '@equinor/fusion-framework-module-services';
 import type { AppModule } from '@equinor/fusion-framework-module-app';
 import type { ContextModule } from '@equinor/fusion-framework-module-context';
 import { BookmarkProvider } from './BookmarkProvider';
-import { BookmarkModuleConfigurator } from './BookmarkConfigurator';
+import { BookmarkModuleConfigurator } from './BookmarkModuleConfigurator';
 import { ConsoleLogger, type ILogger } from '@equinor/fusion-log';
 import { lastValueFrom } from 'rxjs';
 import { version } from './version';
@@ -33,7 +33,7 @@ export type BookmarkModule = Module<
   [EventModule, ServicesModule, AppModule, ContextModule]
 >;
 
-// TODO - remove when all framework uses log
+// TODO(#5134) - remove when all framework uses log
 const fallbackLogger: ILogger = new ConsoleLogger('BookmarkModule');
 
 /**

@@ -65,6 +65,7 @@ function getScopeKey(scopes: string[]): string {
  */
 function isTokenValid(scopes: string[]): boolean {
   const scopeKey = getScopeKey(scopes);
+  // No cached entry at all means there's nothing to validate
   if (!tokenCache.has(scopeKey)) {
     return false;
   }
@@ -99,6 +100,7 @@ async function requestTokenFromClient(scopes: string[]): Promise<Token> {
   const messageChannel = new MessageChannel();
   const token = await new Promise<Token>((resolve, reject) => {
     messageChannel.port1.onmessage = (event) => {
+      // Reject when the client reports it couldn't provide a token
       if (event.data.error) {
         reject(event.data.error);
       }
@@ -107,6 +109,7 @@ async function requestTokenFromClient(scopes: string[]): Promise<Token> {
     clients[0].postMessage({ type: 'GET_TOKEN', scopes }, [messageChannel.port2]);
   });
 
+  // A resolved but empty response means the client didn't actually return a token
   if (!token) {
     throw new Error('No token received');
   }
@@ -132,6 +135,7 @@ async function getToken(scopes: string[]): Promise<string> {
   }
   const scopeKey = getScopeKey(scopes);
   const { accessToken } = tokenCache.get(scopeKey) || {};
+  // A missing accessToken here means the client failed to provide a usable token
   if (!accessToken) {
     throw new Error('No access token found');
   }
@@ -155,6 +159,7 @@ async function getToken(scopes: string[]): Promise<string> {
  * - The comparison is performed using fully resolved absolute URLs.
  */
 function getMatchingConfig(url: string): ResourceConfiguration | undefined {
+  // Find the first configured resource whose resolved base URL prefixes the request URL
   return resourceConfigurations.find((config) => {
     const configUrl = new URL(
       config.url,
@@ -178,6 +183,7 @@ self.addEventListener('activate', (event: ExtendableEvent) => {
 // Handle configuration from main thread
 self.addEventListener('message', async (event: ExtendableMessageEvent) => {
   const { type, config } = event.data;
+  // Only the INIT_CONFIG message carries resource configuration to apply
   if (type === 'INIT_CONFIG') {
     resourceConfigurations = config as ResourceConfiguration[];
 

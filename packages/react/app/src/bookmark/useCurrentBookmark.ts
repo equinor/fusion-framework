@@ -29,6 +29,7 @@ export const useCurrentBookmark = <TData extends BookmarkData>(
   const { currentApp } = useCurrentApp();
   const appBookmarkProvider = useAppModules<[BookmarkModule]>().bookmark;
   const frameworkBookmarkProvider = useFrameworkModule<BookmarkModule>('bookmark');
+  // Warn about the deprecated fallback to the framework-scoped bookmark provider
   if (!appBookmarkProvider) {
     console.warn(
       '@deprecation',

@@ -4,9 +4,9 @@ import type {
   ModuleConfigType,
 } from '@equinor/fusion-framework-module';
 
-import { AiConfigurator } from './AIConfigurator.js';
-import { AiProvider } from './AIProvider.js';
-import type { IAiProvider } from './AIProvider.js';
+import { AiConfigurator } from './AiConfigurator.js';
+import { AiProvider } from './AiProvider.js';
+import type { IAiProvider } from './AiProvider.js';
 
 /** Module key used to register the AI module in the Fusion Framework module map. */
 export type AiModuleKey = 'ai';
@@ -62,6 +62,7 @@ export const enableAI = <TRef = unknown>(
   config.addConfig({
     module,
     configure: (config, ref) => {
+      // Forward to the caller-supplied callback when one was provided
       if (configure) {
         configure(config, ref);
       }

@@ -2,9 +2,9 @@ import { importConfig } from '@equinor/fusion-imports';
 
 import deepmerge from 'deepmerge';
 
-import { PortalManifestSchema } from './portal-manifest.schema.js';
+import { PortalManifestSchema } from './portal-manifest-schema.js';
 import type { RecursivePartial, RuntimeEnv } from '../types.js';
-import type { PortalManifest } from './portal-manifest.js';
+import type { PortalManifest } from './define-portal-manifest.js';
 
 /**
  * A function type for generating or modifying a portal manifest based on the runtime environment and provided arguments.
@@ -17,6 +17,7 @@ import type { PortalManifest } from './portal-manifest.js';
 export type PortalManifestFn<T extends Partial<PortalManifest>> = (
   env: RuntimeEnv,
   args: { base: T },
+  // biome-ignore lint/suspicious/noConfusingVoidType: `void` here relies on TypeScript's special-cased "void-returning callback accepts any return value" behavior — `undefined` would break assignability of manifest functions that return a partial manifest
 ) => Promise<RecursivePartial<T> | void> | RecursivePartial<T> | void;
 
 /**
@@ -106,10 +107,13 @@ export const loadPortalManifest = async <T extends Partial<PortalManifest> = Por
   // Validate the manifest before returning using the PortalManifestSchema (Zod)
   const manifest = importResult.config as T;
   const validation = PortalManifestSchema.safeParse(manifest);
+  // Fail fast with a readable error instead of returning an invalid manifest
   if (!validation.success) {
-    throw new Error(
-      `Invalid portal manifest: ${validation.error.issues.map((e) => `${e.path.join('.')}: ${e.message}`).join('; ')}`,
-    );
+    // Format each Zod issue as a single readable, semicolon-joined line
+    const issueMessages = validation.error.issues
+      .map((e) => `${e.path.join('.')}: ${e.message}`)
+      .join('; ');
+    throw new Error(`Invalid portal manifest: ${issueMessages}`);
   }
   return {
     manifest,

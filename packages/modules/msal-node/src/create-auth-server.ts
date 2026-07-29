@@ -2,7 +2,8 @@ import type { AuthenticationResult, PublicClientApplication } from '@azure/msal-
 import { createServer } from 'node:http';
 import URL from 'node:url';
 
-import { AuthServerError, AuthServerTimeoutError } from './error.js';
+import { AuthServerError } from './errors/AuthServerError.js';
+import { AuthServerTimeoutError } from './errors/AuthServerTimeoutError.js';
 
 const DEFAULT_SERVER_TIMEOUT = 300000 as const; // 5 minutes
 
@@ -54,6 +55,7 @@ export const createAuthServer = (
     const server = createServer(async (req, res) => {
       // Parse the URL and extract the query parameters from the redirect
       const query = URL.parse(req.url ?? '', true).query;
+      // Fail the exchange when the redirect did not include an authorization code
       if (!query.code) {
         // If no authorization code is present, return an error to the browser and reject the promise
         const error = new AuthServerError('No authorization code received');

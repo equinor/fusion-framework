@@ -42,6 +42,8 @@ export const module: WidgetModule = {
     return new WidgetModuleProvider({ config, event });
   },
   dispose: (args) => {
+    // `args.instance` is typed as the generic module instance, but the module descriptor
+    // guarantees it was created as a `WidgetModuleProvider` — safe to cast for disposal.
     (args.instance as unknown as WidgetModuleProvider).dispose();
   },
 };

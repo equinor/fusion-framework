@@ -18,6 +18,7 @@ import { resolveHashLocation, resolvePath, pathToString } from './utils';
 export class BrowserHistoryHashStack extends BrowserHistoryStack {
   /**
    * Gets the current location from window.location.hash.
+   * @returns The current hash-derived navigation location.
    */
   public get current(): Readonly<Location> {
     return resolveHashLocation(this._window);

@@ -1,9 +1,15 @@
 import { describe, it, expect } from 'vitest';
-import { singleExportPerFile, createSingleExportPerFile } from '../single-export-per-file/index.js';
-import type { Diagnostic } from '@equinor/fusion-framework-lint-core';
+import { singleExportPerFile } from '../single-export-per-file/index.js';
+import type { Diagnostic, Rule } from '@equinor/fusion-framework-lint-core';
 
-function lint(source: string, file = 'fixture.ts'): Diagnostic[] {
-  return singleExportPerFile.check(source, file);
+function lint(
+  source: string,
+  file = 'fixture.ts',
+  rule: Rule = singleExportPerFile(),
+): Diagnostic[] {
+  // mirror the engine: skip `check` entirely when `match` opts the file out
+  if (rule.match && !rule.match(file)) return [];
+  return rule.check(source, { filePath: file });
 }
 
 // ── Passing cases ─────────────────────────────────────────────────────────────
@@ -35,6 +41,22 @@ export { bar } from './other.js';
     expect(lint(source)).toHaveLength(0);
   });
 
+  it('passes: export type + export enum (enum does not count)', () => {
+    const source = `
+export type Config = { level: LogLevel };
+export enum LogLevel { Info, Error }
+`;
+    expect(lint(source)).toHaveLength(0);
+  });
+
+  it('passes: export enum + export const (enum does not count)', () => {
+    const source = `
+export enum LogLevel { Info, Error }
+export const DEFAULT_LEVEL = LogLevel.Info;
+`;
+    expect(lint(source)).toHaveLength(0);
+  });
+
   it('passes: multiple exports in index.ts (barrel)', () => {
     const source = `
 export function foo() {}
@@ -45,12 +67,54 @@ export const baz = 1;
   });
 
   it('passes: multiple exports in custom-allowed file', () => {
-    const rule = createSingleExportPerFile({ allowMultipleIn: ['barrel.ts'] });
+    const rule = singleExportPerFile({ match: { exclude: ['barrel.ts'] } });
     const source = `
 export function foo() {}
 export function bar() {}
 `;
-    expect(rule.check(source, '/src/barrel.ts')).toHaveLength(0);
+    expect(lint(source, '/src/barrel.ts', rule)).toHaveLength(0);
+  });
+
+  it('passes: multiple exports matching a glob-style exclude pattern', () => {
+    const rule = singleExportPerFile({ match: { exclude: ['*.schemas.ts'] } });
+    const source = `
+export const fooSchema = {};
+export const barSchema = {};
+`;
+    expect(lint(source, '/src/bookmark.schemas.ts', rule)).toHaveLength(0);
+  });
+
+  it('passes: multiple exports matching a glob-style suffix pattern', () => {
+    const rule = singleExportPerFile({ match: { exclude: ['*-module.ts'] } });
+    const source = `
+export const module = {};
+export const enableModule = () => {};
+`;
+    expect(lint(source, '/src/bookmark-module.ts', rule)).toHaveLength(0);
+  });
+
+  it('fails: glob-style pattern does not match a non-conforming basename', () => {
+    const rule = singleExportPerFile({ match: { exclude: ['*.schemas.ts'] } });
+    const source = `
+export const fooSchema = {};
+export const barSchema = {};
+`;
+    expect(lint(source, '/src/bookmark.schema.ts', rule)).toHaveLength(1);
+  });
+
+  it('passes: custom match.fn overrides match.exclude entirely', () => {
+    const rule = singleExportPerFile({
+      match: {
+        exclude: ['*.schemas.ts'],
+        fn: (filePath: string) => !filePath.endsWith('.generated.ts'),
+      },
+    });
+    const source = `
+export function foo() {}
+export function bar() {}
+`;
+    // '.generated.ts' isn't in the exclude list, but the custom fn exempts it
+    expect(lint(source, '/src/fixture.generated.ts', rule)).toHaveLength(0);
   });
 });
 

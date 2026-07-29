@@ -1,11 +1,11 @@
 import { describe, it, expect, vi } from 'vitest';
 import {
-  runConfigurePhase,
   createModuleConfigs,
-  runPostConfigureHooks,
   type ConfigurePhaseContext,
-} from '../../../lib/configurator/phases/configure.js';
-import { ModuleConfiguratorEventName } from '../../../lib/configurator/events.js';
+} from '../../../lib/configurator/phases/create-module-configs.js';
+import { runPostConfigureHooks } from '../../../lib/configurator/phases/run-post-configure-hooks.js';
+import { runConfigurePhase } from '../../../lib/configurator/phases/run-configure-phase.js';
+import { ModuleConfiguratorEventName } from '../../../lib/configurator/module-configurator-event-name.js';
 import type { AnyModule, ModuleEvent } from '../../../types.js';
 
 function makeCtx(

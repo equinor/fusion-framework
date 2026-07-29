@@ -27,6 +27,22 @@ export interface Diagnostic {
 }
 
 /**
+ * Per-call context passed to {@link Rule.check}, bundling the file identity
+ * and engine-resolved metadata a rule needs during analysis.
+ *
+ * The engine always re-stamps the final {@link Diagnostic.severity} after
+ * `check` returns, so `severity` here is informational — rules may use it
+ * to annotate diagnostics as they're created, but callers should not rely
+ * on it being the last word.
+ */
+export interface LintContext {
+  /** Absolute file path being linted (used to populate {@link Diagnostic.file}). */
+  filePath: string;
+  /** Effective severity resolved by the engine (config override or the rule's `defaultSeverity`). */
+  severity?: Severity;
+}
+
+/**
  * A lint rule that analyses source text and emits diagnostics.
  *
  * Rules are stateless — a single instance may be reused across files.
@@ -37,13 +53,29 @@ export interface Rule {
   /** Severity used when the consumer config has no explicit override. */
   readonly defaultSeverity: Severity;
   /**
+   * Optional pre-filter deciding whether {@link Rule.check} should run at all
+   * for a given file. Use this to exempt files by path/basename (e.g. barrels,
+   * co-located schema/module files) without parsing source. Rules without a
+   * `match` are always run.
+   *
+   * Rules that need path-based filtering typically build their default
+   * `match` from {@link import('./create-matcher.js').createMatcher}, while still
+   * honoring a factory `options.match` override via
+   * {@link import('./resolve-match.js').resolveMatch}, so callers
+   * can override the matching strategy entirely via config instead of being
+   * limited to the rule's own pattern option.
+   *
+   * @param filePath  Absolute file path being considered for linting.
+   * @returns `true` if `check` should run for this file; `false` to skip it entirely.
+   */
+  match?(filePath: string): boolean;
+  /**
    * Analyse `source` and return zero or more diagnostics.
    *
    * @param source  Raw UTF-8 source text of the file.
-   * @param filePath  Absolute file path (used to populate {@link Diagnostic.file}).
-   * @param severity  Optional per-call severity override.
+   * @param ctx  Per-call context: file path plus engine-resolved metadata.
    */
-  check(source: string, filePath: string, severity?: Severity): Diagnostic[];
+  check(source: string, ctx: LintContext): Diagnostic[];
 }
 
 /**

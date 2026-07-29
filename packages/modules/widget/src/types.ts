@@ -4,7 +4,7 @@ import type { HttpModule } from '@equinor/fusion-framework-module-http';
 import type { ServiceDiscoveryModule } from '@equinor/fusion-framework-module-service-discovery';
 import type { QueryCtorOptions } from '@equinor/fusion-query';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// biome-ignore lint/suspicious/noExplicitAny: `Fusion` is a placeholder widening type for the framework instance shape used across widget script modules
 type Fusion = any;
 
 /**
@@ -178,7 +178,7 @@ export type WidgetModulesInstance<TModules extends Array<AnyModule> | unknown = 
  *
  * @template TModules - Custom module types.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// biome-ignore lint/suspicious/noExplicitAny: default must be bivariant `any`, not `unknown` — `unknown` breaks assignability when a concrete `WidgetState<TModules>` is used where the default-typed generic is expected
 export type WidgetState<TModules = any> = {
   /** Widget name (lookup key). */
   name: string;

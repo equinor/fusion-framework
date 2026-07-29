@@ -44,6 +44,7 @@ export const enableBookmark = (config: IAppConfigurator): void => {
       initialize(args) {
         // get the bookmark provider from the ref (portal)
         const provider = args.ref?.bookmark;
+        // Bail out early if the portal did not expose a bookmark provider.
         if (!provider) {
           console.error('Bookmark provider not found');
           return {};
@@ -51,6 +52,7 @@ export const enableBookmark = (config: IAppConfigurator): void => {
         // create a proxy to intercept the addPayloadGenerator method
         return new Proxy(provider, {
           get(target, prop) {
+            // Intercept specific property access to wrap bookmark lifecycle management.
             switch (prop) {
               case 'addPayloadGenerator':
                 return (generator: BookmarkPayloadGenerator) => {
@@ -82,6 +84,7 @@ export const enableBookmark = (config: IAppConfigurator): void => {
         });
       },
       dispose() {
+        // Run all registered cleanup functions to prevent memory leaks on module disposal.
         for (const teardown of cleanupFunctions) {
           teardown();
         }

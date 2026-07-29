@@ -49,7 +49,9 @@ const Root = () => {
 /**
  * Route component that extracts the `appKey` parameter and delegates to {@link AppLoader}.
  */
-// eslint-disable-next-line react/no-multi-comp
+/**
+ * Renders the application shell and nested application route outlet.
+ */
 const AppRoute = () => {
   const { appKey } = useParams();
   return appKey ? <AppLoader appKey={appKey} /> : null;
@@ -75,7 +77,9 @@ const routes = [
  * Renders the application via `FusionRouter`. Observes context changes through
  * {@link useAppContextNavigation} to keep the URL in sync.
  */
-// eslint-disable-next-line react/no-multi-comp
+/**
+ * Provides portal analytics routing and synchronizes context navigation.
+ */
 export const Router = () => {
   // observe the context changes and navigate when the context changes
   useAppContextNavigation();

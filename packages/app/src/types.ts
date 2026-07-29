@@ -141,4 +141,5 @@ export type AppModuleInitArgs<TRef extends Fusion = Fusion, TEnv = AppEnv> = {
 export type AppRenderFn<TFusion extends Fusion = Fusion, TEnv = AppEnv> = (
   el: HTMLHtmlElement,
   args: ComponentRenderArgs<TFusion, TEnv>,
+  // biome-ignore lint/suspicious/noConfusingVoidType: `void` here relies on TypeScript's special-cased "void-returning callback accepts any return value" behavior \u2014 `undefined` would break assignability of render functions that return a cleanup function
 ) => VoidFunction | void;

@@ -1,7 +1,7 @@
 import type { IModulesConfigurator } from '@equinor/fusion-framework-module';
 
 import { module } from './bookmark-module';
-import type { BookmarkModuleConfigurator } from './BookmarkConfigurator';
+import type { BookmarkModuleConfigurator } from './BookmarkModuleConfigurator';
 
 /**
  * Enables the bookmark module on a Fusion Framework module configurator.
@@ -28,13 +28,14 @@ import type { BookmarkModuleConfigurator } from './BookmarkConfigurator';
  * ```
  */
 export const enableBookmark = (
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: IModulesConfigurator<any> widens to accept a configurator for any concrete module set
   configurator: IModulesConfigurator<any>,
   callback?: (builder: BookmarkModuleConfigurator) => void | Promise<void>,
 ): void => {
   configurator.addConfig({
     module,
     configure: async (builder) => {
+      // run the caller-provided configuration callback, if any
       if (callback) {
         Promise.resolve(callback(builder));
       }

@@ -11,8 +11,8 @@
  * // → ffc app changed --staged
  * ```
  */
-export { createLintCommand } from './commands/lint.js';
-export { createChangedCommand } from './commands/changed.js';
+export { createLintCommand } from './commands/create-lint-command.js';
+export { createChangedCommand } from './commands/create-changed-command.js';
 export { LintEngine } from '@equinor/fusion-framework-lint-core';
 export type { Diagnostic, Rule, Severity, LintConfig } from '@equinor/fusion-framework-lint-core';
 export { recommendedRules, recommendedConfig } from '@equinor/fusion-framework-lint-config';

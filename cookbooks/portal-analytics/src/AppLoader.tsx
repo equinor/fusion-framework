@@ -31,7 +31,7 @@ export const AppLoader = (props: { readonly appKey: string }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<Error | undefined>();
 
-  // TODO change to `useCurrentApp`
+  // Keep the observable source aligned with the framework's selected application.
   /** observe and use the current selected application from framework */
   const { value: currentApp } = useObservableState(
     useMemo(() => fusion.modules.app.current$, [fusion.modules.app]),
@@ -64,6 +64,7 @@ export const AppLoader = (props: { readonly appKey: string }) => {
 
             /** create a 'private' element for the application */
             const el = document.createElement('div');
+            // Do not render an application when its portal mounting point is unavailable.
             if (!ref.current) {
               throw Error('Missing application mounting point');
             }
@@ -94,7 +95,10 @@ export const AppLoader = (props: { readonly appKey: string }) => {
     return () => subscription.unsubscribe();
   }, [fusion, currentApp]);
 
+  // Render the manifest-specific diagnostic when application metadata failed to load.
   if (error) {
+    // Distinguish manifest failures so users receive the relevant error details.
+    // Distinguish manifest failures so users receive the relevant error details.
     if (error.cause instanceof AppManifestError) {
       return (
         <div>

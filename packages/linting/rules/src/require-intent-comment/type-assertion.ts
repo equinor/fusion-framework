@@ -1,6 +1,12 @@
 import type { Node } from 'web-tree-sitter';
-import type { Rule, Diagnostic, Severity } from '@equinor/fusion-framework-lint-core';
-import { tsParser } from '../_parser.js';
+import type {
+  Diagnostic,
+  Severity,
+  RuleDef,
+  LintContext,
+} from '@equinor/fusion-framework-lint-core';
+import { resolveMatch } from '@equinor/fusion-framework-lint-core';
+import { tsParser } from '../ts-parser.js';
 
 const RULE_ID = 'require-intent-comment/type-assertion';
 const DEFAULT_SEVERITY: Severity = 'error';
@@ -127,11 +133,14 @@ function walkNode(node: Node, filePath: string, severity: Severity, out: Diagnos
  * const value = (input as any).field;                      // ← no comment
  * ```
  */
-export const requireIntentCommentTypeAssertion: Rule = {
+export const requireIntentCommentTypeAssertion: RuleDef = (options = {}) => ({
   id: RULE_ID,
   defaultSeverity: DEFAULT_SEVERITY,
+  /** @inheritdoc Rule.match */
+  match: resolveMatch(options.match),
   /** @inheritdoc Rule.check */
-  check(source: string, filePath: string): Diagnostic[] {
+  check(source: string, ctx: LintContext): Diagnostic[] {
+    const { filePath } = ctx;
     const tree = tsParser.parse(source);
     // Guard: tsParser.parse returns null for empty or unparseable source
     if (!tree) return [];
@@ -139,4 +148,4 @@ export const requireIntentCommentTypeAssertion: Rule = {
     walkNode(tree.rootNode, filePath, DEFAULT_SEVERITY, out);
     return out;
   },
-};
+});

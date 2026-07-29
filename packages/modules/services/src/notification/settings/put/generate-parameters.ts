@@ -22,6 +22,7 @@ export const generateParameters = <
   const headers = new Headers();
   headers.append('content-type', 'application/json');
 
+  // Merge the generated settings request defaults with caller overrides.
   const requestParams: ClientRequestInit<TClient, TResult> = Object.assign(
     {},
     { method: 'PUT', body: JSON.stringify(args), headers: headers },

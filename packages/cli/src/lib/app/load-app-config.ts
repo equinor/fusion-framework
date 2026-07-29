@@ -1,9 +1,9 @@
 import { importConfig, type ImportConfigResult } from '@equinor/fusion-imports';
 
-import { type ApiAppConfig, ApiAppConfigSchema } from './schemas.js';
+import { type ApiAppConfig, ApiAppConfigSchema } from './api-app-config-schema.js';
 
 import type { RuntimeEnv } from '../types.js';
-import type { AppConfigFn } from './app-config.js';
+import type { AppConfigFn } from './define-app-config.js';
 
 /**
  * Represents the configuration export for an application.

@@ -3,7 +3,7 @@ import { requireIntentCommentFlow } from '../require-intent-comment/flow.js';
 import type { Diagnostic } from '@equinor/fusion-framework-lint-core';
 
 function lint(source: string): Diagnostic[] {
-  return requireIntentCommentFlow.check(source, 'fixture.ts');
+  return requireIntentCommentFlow().check(source, { filePath: 'fixture.ts' });
 }
 
 function lineNumbers(diagnostics: Diagnostic[]): number[] {

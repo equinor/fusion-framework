@@ -130,3 +130,48 @@ Do NOT add comments for:
 - What the syntax does or what a variable name already says
 - Redundant information already in TSDoc
 
+`fusion-lint`'s `require-intent-comment` checks each control-flow node for an immediately preceding comment (`previousNamedSibling?.type === "comment"`). This means:
+- **Each iterator/`.pipe()` call in a chain needs its own comment**, not just the first one: `.filter().map()` needs a comment before `.filter(` AND before `.map(`.
+- **Each sibling `if` in a row needs its own comment.** A comment before the first of several back-to-back guard clauses does not cover the second/third — their `previousNamedSibling` is the prior `if`, not the comment.
+- When an iterator/`.pipe()` call is itself an argument to another call (e.g. `expect(arr.map(...))`), place the comment as the first line inside the outer call's parens — do not break the chain.
+- When an iterator/`.pipe()` call is nested two levels deep (e.g. `lastValueFrom(x.pipe(...))`, or inside a ternary branch), hoist the inner expression into its own `const` first, then use the broken-chain comment style (`value\n  // why\n  .pipe(...)`) or place the comment above the new `const`.
+- `return arr.map(...)` can never be satisfied by a comment above the `return` — always hoist or break the chain.
+- `as unknown as Foo` double-casts require a preceding comment explaining *why* the cast is needed; this is `error` severity, not `warn`.
+
+#### RxJS `.pipe()` comment placement (preferred style)
+
+For `.pipe()` specifically (`require-intent-comment/rxjs`), prefer placing the comment **above the whole enclosing statement** with `receiver.pipe(...)` kept unsplit on one line, rather than splitting the chain to put the comment right before `.pipe(`:
+
+```typescript
+// unwrap the query result value
+return this.#query.query(args).pipe(map((res) => res.value));
+```
+
+This works when the comment sits directly above a `return` statement, a `const`/`let` declaration, or a concise arrow-function body — the rule climbs up to that anchor. It does **not** work when the `.pipe()` call is itself an argument to another call (e.g. `subscriber.add(x.pipe(...))`, `this.#subscription.add(x.pipe(...))`) or is inside a ternary branch — those require the inline chain-split style below.
+
+**Exception — keep the comment close when the receiver is long:** if the receiver expression spans multiple lines before `.pipe(` (e.g. a multi-line `.json$(url, { method, body, headers })` call), do NOT hoist the comment to the top of the statement — it ends up far from the `.pipe()` it explains. Keep the inline chain-split style instead:
+
+```typescript
+return this.#client
+  .json$<AppSettings>(`/persons/me/apps/${appKey}/settings`, {
+    method: 'PUT',
+    body: settings,
+    headers: { 'Api-Version': '1.0' },
+  })
+  // update the settings cache with the persisted value
+  .pipe(tap((value) => { /* ... */ }));
+```
+
+Rule of thumb: comment-above-statement (unsplit) for short/single-line receivers; inline chain-split (comment immediately before `.pipe(`) for long/multi-line receivers, so the comment stays adjacent to what it documents.
+
+### TODO Comments
+Bare `// TODO - ...` comments are flagged by `no-todo-without-issue`. Every TODO must reference a tracking GitHub issue: `// TODO(#123): ...`. Never fabricate an issue number — create the issue first if one doesn't exist.
+
+### Filename Conventions
+`fusion-lint`'s `filename-convention` and `single-export-per-file` rules expect one value export per file, named to match:
+- **Classes and PascalCase-named components** (`class Foo`, `export const Foo = () => ...`): filename must equal the export name exactly, e.g. `HttpResponseError.ts`, `UserCard.tsx`.
+- **Hooks** (`useXxx`): filename must equal the hook name exactly, e.g. `useFeatureFlag.ts`.
+- **Everything else** (plain functions, consts, enums): filename must be the kebab-case form of the export name, e.g. `capitalizeRequestMethod` → `capitalize-request-method.ts`. A trailing dotted category suffix is allowed, e.g. `sse.operator.ts`, `my-foo.schema.ts` — only the segment before the first dot needs to match.
+- Barrels (`index.ts`) are exempt and may have multiple exports.
+- If a file needs a second export (e.g. an `Error` subclass alongside the function that throws it), extract it into its own file rather than suppressing the rule.
+

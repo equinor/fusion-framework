@@ -8,8 +8,8 @@ import type { CacheSortFn, QueryCacheMutation, QueryCacheRecord } from './types'
  * @template TArgs The type of the arguments associated with the cache entry.
  * @returns An object containing the cache actions.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export default function createActions<TType = any, TArgs = any>() {
+// biome-ignore lint/suspicious/noExplicitAny: default must be bivariant `any`; `unknown` breaks assignability of concrete `Actions<TType, TArgs>` streams (e.g. in `Observable<Actions<TType, TArgs>>` subscriptions) to the default-typed generic
+function createActions<TType = any, TArgs = any>() {
   return {
     /**
      * Action to set a cache entry.
@@ -90,7 +90,7 @@ export default function createActions<TType = any, TArgs = any>() {
  * @template TType The type of the value being cached.
  * @template TArgs The type of the arguments associated with the cache entry.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// biome-ignore lint/suspicious/noExplicitAny: see createActions above
 export type ActionBuilder<TType = any, TArgs = any> = ReturnType<
   typeof createActions<TType, TArgs>
 >;
@@ -106,7 +106,7 @@ export const actions = createActions();
  * @template TType The type of the value being cached.
  * @template TArgs The type of the arguments associated with the cache entry.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// biome-ignore lint/suspicious/noExplicitAny: see createActions above
 export type ActionMap<TType = any, TArgs = any> = ActionInstanceMap<ActionBuilder<TType, TArgs>>;
 
 /**
@@ -115,5 +115,5 @@ export type ActionMap<TType = any, TArgs = any> = ActionInstanceMap<ActionBuilde
  * @template TType The type of the value being cached.
  * @template TArgs The type of the arguments associated with the cache entry.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// biome-ignore lint/suspicious/noExplicitAny: see createActions above
 export type Actions<TType = any, TArgs = any> = ActionTypes<ActionMap<TType, TArgs>>;

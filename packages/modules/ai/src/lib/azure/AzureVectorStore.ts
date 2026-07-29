@@ -98,6 +98,7 @@ export class AzureVectorStore extends BaseService<string, unknown[]> implements 
    * @returns Promise resolving to the IDs of the stored documents.
    */
   public async addDocuments(documents: VectorStoreDocument[]): Promise<string[]> {
+    // Any document carrying schema-promoted fields routes through the direct-write path
     const hasSchemaFields = documents.some((doc) => doc.metadata.schemaFields);
 
     // Bypass LangChain when schema-promoted fields are present so they
@@ -108,8 +109,10 @@ export class AzureVectorStore extends BaseService<string, unknown[]> implements 
 
     // Standard LangChain path for backward compatibility
     const options: AddDocumentsOptions = {
+      // Default missing ids to an empty string so LangChain assigns one
       ids: documents.map((document) => document.id ?? ''),
     };
+    // Flatten custom metadata attributes into the shape LangChain expects
     const processedDocuments = documents.map((document) => {
       const attributes = document.metadata.attributes
         ? convertObjectToAttributes(document.metadata.attributes)
@@ -151,12 +154,15 @@ export class AzureVectorStore extends BaseService<string, unknown[]> implements 
    *
    * @param documents - Documents with `metadata.schemaFields` populated.
    * @returns Promise resolving to the IDs of the stored documents.
+   * @throws {AIError} When a document's `metadata.embedding` is present but malformed
+   *   (not an array, or contains non-finite values).
    */
   private async addDocumentsWithSchemaFields(documents: VectorStoreDocument[]): Promise<string[]> {
     // Resolve embeddings per-document: reuse pre-computed ones and only
     // call the embedding service for documents that lack them, avoiding
     // unnecessary API calls when batches are partially pre-computed.
     const missingIndices: number[] = [];
+    // Reuse pre-computed embeddings where present, marking the rest for batch computation
     const vectors: number[][] = documents.map((doc, index) => {
       const embedding = doc.metadata.embedding;
 
@@ -180,7 +186,11 @@ export class AzureVectorStore extends BaseService<string, unknown[]> implements 
       }
 
       // Guard against NaN / Infinity values that Azure Search would reject
-      if (!embedding.every((value) => typeof value === 'number' && Number.isFinite(value))) {
+      if (
+        !embedding
+          // Every dimension must be a finite number for Azure Search to accept it
+          .every((value) => typeof value === 'number' && Number.isFinite(value))
+      ) {
         throw new AIError(
           `Invalid embedding for document "${doc.id}": expected a non-empty array of finite numbers.`,
         );
@@ -191,8 +201,10 @@ export class AzureVectorStore extends BaseService<string, unknown[]> implements 
 
     // Compute embeddings only for the documents that were missing them
     if (missingIndices.length > 0) {
+      // Only the texts lacking a pre-computed embedding need to be sent to the service
       const textsToEmbed = missingIndices.map((i) => documents[i].pageContent);
       const computed = await this.vectorStore.embeddings.embedDocuments(textsToEmbed);
+      // Write each computed embedding back into its original document position
       for (let j = 0; j < missingIndices.length; j++) {
         vectors[missingIndices[j]] = computed[j];
       }
@@ -207,8 +219,11 @@ export class AzureVectorStore extends BaseService<string, unknown[]> implements 
       // Strip reserved base-schema keys to prevent schema-promoted fields
       // from accidentally overwriting `id`, `content`, etc.
       const safeSchemaFields: Record<string, unknown> = {};
+      // Only promote schema fields when the document actually carries them
       if (doc.metadata.schemaFields) {
+        // Copy each schema field over, skipping any that collide with reserved keys
         for (const [key, value] of Object.entries(doc.metadata.schemaFields)) {
+          // Reserved keys must never be overwritten by promoted schema fields
           if (!AzureVectorStore.RESERVED_FIELDS.has(key)) {
             safeSchemaFields[key] = value;
           }
@@ -239,6 +254,8 @@ export class AzureVectorStore extends BaseService<string, unknown[]> implements 
       entities as Parameters<typeof client.mergeOrUploadDocuments>[0],
     );
 
+    // The written documents keep their original ids, in the same order as input
+    // Extract just the id from each written document, preserving input order
     return documents.map((doc) => doc.id);
   }
 
@@ -256,6 +273,7 @@ export class AzureVectorStore extends BaseService<string, unknown[]> implements 
    * Search for documents synchronously
    * @param query - Search query string
    * @returns Promise resolving to array of search results
+   * @throws {AIError} When the underlying similarity search request fails.
    */
   async invoke(query: string): Promise<unknown[]> {
     try {
@@ -274,6 +292,7 @@ export class AzureVectorStore extends BaseService<string, unknown[]> implements 
    * @returns Observable stream of search results
    */
   invoke$(query: string): Observable<unknown[]> {
+    // Run the search and flatten each result array into individual emissions
     return from(this.invoke(query)).pipe(
       concatMap((results: unknown[]) => from(results)),
       map((result) => [result]),

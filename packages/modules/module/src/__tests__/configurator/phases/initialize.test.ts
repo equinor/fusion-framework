@@ -1,11 +1,11 @@
 import { describe, it, expect, vi } from 'vitest';
 import { BehaviorSubject } from 'rxjs';
 import {
-  runInitializePhase,
   createRequireInstance,
   type InitializePhaseContext,
-} from '../../../lib/configurator/phases/initialize.js';
-import { ModuleConfiguratorEventName } from '../../../lib/configurator/events.js';
+} from '../../../lib/configurator/phases/create-require-instance.js';
+import { runInitializePhase } from '../../../lib/configurator/phases/run-initialize-phase.js';
+import { ModuleConfiguratorEventName } from '../../../lib/configurator/module-configurator-event-name.js';
 import type { AnyModule, ModuleEvent } from '../../../types.js';
 
 function makeCtx(

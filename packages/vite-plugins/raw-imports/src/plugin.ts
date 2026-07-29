@@ -94,6 +94,7 @@ export const rawImportsPlugin = (options?: RawImportsPluginOptions): Plugin => {
    * @returns `true` when the path's extension matches a configured entry.
    */
   const matchesExtension = (filePath: string): boolean => {
+    // Compare case-insensitively so `.SVG` and `.svg` are both matched
     return extensions.some((ext) => path.extname(filePath) === ext.toLowerCase());
   };
   return {
@@ -114,6 +115,7 @@ export const rawImportsPlugin = (options?: RawImportsPluginOptions): Plugin => {
         }
         // Resolve the path relative to the importer if it's a relative path
         let resolvedPath: string;
+        // An absolute filePath needs no further resolution beyond normalization
         if (path.isAbsolute(filePath)) {
           resolvedPath = path.normalize(filePath);
         } else if (importer) {
@@ -160,10 +162,10 @@ export const rawImportsPlugin = (options?: RawImportsPluginOptions): Plugin => {
           // Read the file content
           const content = readFileSync(resolvedPath, 'utf-8');
 
+          // During build, emit as a separate asset so the content is
+          // not inlined into the main bundle. Vite 8's import-analysis
+          // parser chokes on very long string literals in served bundles.
           if (isBuild) {
-            // During build, emit as a separate asset so the content is
-            // not inlined into the main bundle. Vite 8's import-analysis
-            // parser chokes on very long string literals in served bundles.
             const basename = path.basename(resolvedPath);
             const name = assetDir ? `${assetDir}/${basename}` : basename;
             const refId = this.emitFile({

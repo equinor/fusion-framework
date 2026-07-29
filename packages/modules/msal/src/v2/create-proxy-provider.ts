@@ -13,6 +13,7 @@ import { MsalModuleVersion } from '../static';
  * @returns True if the request is in v4 format (has a `request` property with `scopes` and `account`)
  */
 function isRequestV4(req: unknown): req is AcquireTokenOptions {
+  // Non-object/null values can never match the v4 request shape
   if (typeof req !== 'object' || req === null) {
     return false;
   }
@@ -48,6 +49,7 @@ export function createProxyProvider(provider: IMsalProvider): IMsalProvider_v2 {
   // Use Proxy to intercept property access and provide v2-compatible implementations
   const proxy = new Proxy(provider, {
     get: (target: IMsalProvider, prop: keyof IMsalProvider_v2) => {
+      // Adapt each v4 provider member to the v2-compatible shape expected by callers
       switch (prop) {
         case 'version': {
           return provider.version;
@@ -62,6 +64,7 @@ export function createProxyProvider(provider: IMsalProvider): IMsalProvider_v2 {
         case 'defaultClient': {
           // Deprecated property - redirect to client with warning
           console.warn('defaultClient is deprecated, use client instead');
+          // Same v2-compatible client wrapper as the `client` case above.
           return v2Client as unknown as IMsalProvider_v2['defaultClient'];
         }
         case 'defaultAccount': {
@@ -156,6 +159,7 @@ export function createProxyProvider(provider: IMsalProvider): IMsalProvider_v2 {
           };
         }
         default: {
+          // The proxy is awaited in some contexts, so `then` must resolve to undefined
           if (prop === 'then') {
             return undefined;
           }

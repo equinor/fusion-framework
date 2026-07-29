@@ -1,23 +1,23 @@
-import { createClickTool } from './click.js';
-import { createErrorsTool } from './errors.js';
-import { createFillTool } from './fill.js';
-import { createFindTool } from './find.js';
-import { createGetUrlTool } from './get-url.js';
-import { createGoBackTool } from './go-back.js';
-import { createHoverTool } from './hover.js';
-import { createNavigateTool } from './navigate.js';
-import { createPressKeyTool } from './press-key.js';
-import { createReloadTool } from './reload.js';
-import { createEvalJsTool } from './eval-js.js';
-import { createGetStylesTool } from './get-styles.js';
-import { AgentBrowserToolRegistry } from './registry.js';
-import { createScreenshotTool } from './screenshot.js';
-import { createScrollTool } from './scroll.js';
-import { createSelectTool } from './select.js';
-import { createSnapshotTool } from './snapshot.js';
-import { createTypeTextTool } from './type-text.js';
+import { createClickTool } from './create-click-tool.js';
+import { createErrorsTool } from './create-errors-tool.js';
+import { createFillTool } from './create-fill-tool.js';
+import { createFindTool } from './create-find-tool.js';
+import { createGetUrlTool } from './create-get-url-tool.js';
+import { createGoBackTool } from './create-go-back-tool.js';
+import { createHoverTool } from './create-hover-tool.js';
+import { createNavigateTool } from './create-navigate-tool.js';
+import { createPressKeyTool } from './create-press-key-tool.js';
+import { createReloadTool } from './create-reload-tool.js';
+import { createEvalJsTool } from './create-eval-js-tool.js';
+import { createGetStylesTool } from './create-get-styles-tool.js';
+import { AgentBrowserToolRegistry } from './AgentBrowserToolRegistry.js';
+import { createScreenshotTool } from './create-screenshot-tool.js';
+import { createScrollTool } from './create-scroll-tool.js';
+import { createSelectTool } from './create-select-tool.js';
+import { createSnapshotTool } from './create-snapshot-tool.js';
+import { createTypeTextTool } from './create-type-text-tool.js';
 import type { AgentBrowserToolContext, AgentBrowserToolList, DefineTool } from './types.js';
-import { createWaitTool } from './wait.js';
+import { createWaitTool } from './create-wait-tool.js';
 
 /**
  * Creates the full set of Copilot browser tools for an eval session.

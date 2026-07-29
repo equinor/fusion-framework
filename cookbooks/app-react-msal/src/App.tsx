@@ -6,6 +6,10 @@ import {
 } from '@equinor/fusion-framework-react-app/msal';
 import { useEffect, useMemo, useState } from 'react';
 
+/**
+ * Displays the signed-in account and tokens resolved through the MSAL hooks.
+ * @returns The MSAL authentication demonstration view.
+ */
 export const App = () => {
   /**
    * Retrieves the current user account.

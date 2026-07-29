@@ -78,17 +78,22 @@ function unwrapSchema(schema: ZodType): ZodType {
  * @throws {Error} When the Zod type cannot be mapped to an Azure EDM type.
  */
 function zodToEdmType(schema: ZodType): AzureEdmType {
+  // Strings and enums both map to a plain searchable/filterable string field
   if (schema instanceof ZodString || schema instanceof ZodEnum) {
     return 'Edm.String';
   }
+  // Numbers are stored as double to cover both int and float inputs
   if (schema instanceof ZodNumber) {
     return 'Edm.Double';
   }
+  // Booleans map directly to Azure's boolean EDM type
   if (schema instanceof ZodBoolean) {
     return 'Edm.Boolean';
   }
+  // Arrays are only supported for string elements — map to a string collection
   if (schema instanceof ZodArray) {
     const elementSchema = unwrapSchema(schema.element as ZodType);
+    // Only string (or enum) array elements are representable as an Azure string collection
     if (elementSchema instanceof ZodString || elementSchema instanceof ZodEnum) {
       return 'Collection(Edm.String)';
     }
@@ -114,6 +119,7 @@ function zodToEdmType(schema: ZodType): AzureEdmType {
 function defaultCapabilities(
   edmType: AzureEdmType,
 ): Pick<AzureSearchField, 'filterable' | 'sortable' | 'facetable' | 'searchable'> {
+  // Capabilities vary by EDM type: strings facet, numbers sort, everything filters
   switch (edmType) {
     case 'Edm.String':
       return { filterable: true, sortable: false, facetable: true, searchable: false };
@@ -166,6 +172,7 @@ function defaultCapabilities(
 export function zodToAzureFields(schema: z.ZodObject): AzureSearchField[] {
   const shape = schema.shape as Record<string, ZodType>;
 
+  // Map each shape entry to its resolved Azure Search field definition
   return Object.entries(shape).map(([name, fieldSchema]) => {
     // Unwrap wrapper types to reach the concrete type
     const innerSchema = unwrapSchema(fieldSchema);

@@ -1,6 +1,12 @@
 import type { Node } from 'web-tree-sitter';
-import type { Rule, Diagnostic, Severity } from '@equinor/fusion-framework-lint-core';
-import { tsParser } from '../_parser.js';
+import type {
+  Diagnostic,
+  Severity,
+  RuleDef,
+  LintContext,
+} from '@equinor/fusion-framework-lint-core';
+import { resolveMatch } from '@equinor/fusion-framework-lint-core';
+import { tsParser } from '../ts-parser.js';
 
 const RULE_ID = 'require-intent-comment/iterators';
 const DEFAULT_SEVERITY: Severity = 'warn';
@@ -35,6 +41,70 @@ function isIteratorCall(node: Node): boolean {
 }
 
 /**
+ * Climbs the parent chain to find the enclosing statement node for an
+ * iterator call, mirroring the anchor logic used by the `rxjs` intent-comment
+ * rule so `return`, `const`/`let`, and bare-expression statements are all
+ * recognised as valid comment anchors.
+ *
+ * @param node - The iterator call expression to find an anchor for.
+ * @returns The enclosing statement node, or `node` itself if none was found.
+ */
+function getStatementNode(node: Node): Node {
+  let current: Node = node;
+  // Climb the parent chain to find the enclosing statement node
+  while (current.parent) {
+    // expression_statement is the statement-level anchor for bare iterator calls
+    if (current.parent.type === 'expression_statement') {
+      return current.parent;
+    }
+    // Also handle const/let assignment statements like `const ids = items.map(...)`
+    if (
+      current.parent.type === 'variable_declarator' &&
+      current.parent.parent?.type === 'lexical_declaration'
+    ) {
+      return current.parent.parent;
+    }
+    // return statements like `return items.map(...)`
+    if (current.parent.type === 'return_statement') {
+      return current.parent;
+    }
+    // A concise (expression-bodied) arrow function has no enclosing statement to climb
+    // to — e.g. `(items) => items.map(...)`. The call itself is the anchor, so a
+    // comment placed directly above it (its own previousNamedSibling) satisfies the rule.
+    if (
+      current.parent.type === 'arrow_function' &&
+      current.parent.childForFieldName('body')?.equals(current)
+    ) {
+      return current;
+    }
+    // Stop at block boundaries — don't climb past the containing scope
+    if (current.parent.type === 'statement_block' || current.parent.type === 'program') {
+      // No further statement-level anchor exists within this scope
+      break;
+    }
+    current = current.parent;
+  }
+  return node;
+}
+
+/**
+ * Returns `true` when an iterator call is chained onto another expression
+ * (e.g. `arr.map(...).filter(...)`) and a comment is placed inline within the
+ * chain, immediately before the method call (e.g. `arr\n  // why\n  .map(...)`).
+ *
+ * @param node - The iterator call expression to test.
+ * @returns `true` if an inline chain comment immediately precedes the call.
+ */
+function hasInlineChainComment(node: Node): boolean {
+  const callee = node.childForFieldName('function');
+  // Only member-expression calls (e.g. `x.map(...)`) can have an inline chain comment
+  if (callee?.type !== 'member_expression') return false;
+  const object = callee.childForFieldName('object');
+  // A comment placed between the object and the method call satisfies the intent requirement
+  return object?.nextNamedSibling?.type === 'comment';
+}
+
+/**
  * Recursively visits every node in the AST and reports iterator method calls
  * that are not immediately preceded by an intent comment.
  *
@@ -47,20 +117,11 @@ function walkNode(node: Node, filePath: string, severity: Severity, out: Diagnos
   // Only process iterator call expressions
   if (isIteratorCall(node)) {
     // The intent comment must precede the enclosing *statement*, not the call expression itself
-    let checkNode: Node = node;
-    // expression_statement wraps bare iterator calls like `arr.forEach(...)`
-    if (node.parent?.type === 'expression_statement') {
-      checkNode = node.parent;
-    } else if (
-      node.parent?.type === 'variable_declarator' &&
-      node.parent.parent?.type === 'lexical_declaration'
-    ) {
-      // const/let declarations like `const x = arr.map(...)`
-      checkNode = node.parent.parent;
-    }
+    const checkNode = getStatementNode(node);
 
-    // A comment immediately before the statement satisfies the intent requirement
-    if (checkNode.previousNamedSibling?.type !== 'comment') {
+    // A comment immediately before the statement, or an inline comment within
+    // the method chain immediately before this call, satisfies the intent requirement
+    if (checkNode.previousNamedSibling?.type !== 'comment' && !hasInlineChainComment(node)) {
       out.push({
         file: filePath,
         line: node.startPosition.row + 1,
@@ -84,11 +145,14 @@ function walkNode(node: Node, filePath: string, severity: Severity, out: Diagnos
  *
  * Configure independently: `"require-intent-comment/iterators": "error"`
  */
-export const requireIntentCommentIterators: Rule = {
+export const requireIntentCommentIterators: RuleDef = (options = {}) => ({
   id: RULE_ID,
   defaultSeverity: DEFAULT_SEVERITY,
+  /** @inheritdoc Rule.match */
+  match: resolveMatch(options.match),
   /** @inheritdoc Rule.check */
-  check(source: string, filePath: string): Diagnostic[] {
+  check(source: string, ctx: LintContext): Diagnostic[] {
+    const { filePath } = ctx;
     const tree = tsParser.parse(source);
     // Guard: tsParser.parse returns null for empty or unparseable source
     if (!tree) return [];
@@ -96,4 +160,4 @@ export const requireIntentCommentIterators: Rule = {
     walkNode(tree.rootNode, filePath, DEFAULT_SEVERITY, out);
     return out;
   },
-};
+});

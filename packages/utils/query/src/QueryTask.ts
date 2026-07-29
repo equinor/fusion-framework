@@ -46,6 +46,7 @@ export class QueryTask<TType, TArgs> extends Subject<QueryTaskCompleted<TType>> 
   #created: number = Date.now();
   /**
    * Gets the creation timestamp of the query task.
+   * @returns The Unix timestamp (in milliseconds) when the task was created.
    */
   get created(): number {
     return this.#created;
@@ -54,6 +55,7 @@ export class QueryTask<TType, TArgs> extends Subject<QueryTaskCompleted<TType>> 
   #uuid: string = generateGUID();
   /**
    * Gets the unique identifier of the query task.
+   * @returns The task's generated UUID.
    */
   get uuid(): string {
     return this.#uuid;
@@ -82,6 +84,7 @@ export class QueryTask<TType, TArgs> extends Subject<QueryTaskCompleted<TType>> 
    * @returns A subscription to the job's result.
    */
   processJob(job: QueryClientJob<TType, TArgs>): Subscription {
+    // map the job's completion into a QueryTaskCompleted record for subscribers
     return job
       .pipe(
         map((result) => {

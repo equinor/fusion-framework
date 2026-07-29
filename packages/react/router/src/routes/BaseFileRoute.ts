@@ -44,6 +44,7 @@ export abstract class BaseFileRoute extends BaseRoute implements RouteFileNode {
    * @returns `true` if `node` is an instance of `BaseFileRoute` or structurally conforms to {@link RouteFileNode}.
    */
   static isFileRoute(node: unknown): node is BaseFileRoute {
+    // A direct instance is always a file route
     if (node instanceof BaseFileRoute) {
       return true;
     }

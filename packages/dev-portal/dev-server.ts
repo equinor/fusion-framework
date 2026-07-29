@@ -10,15 +10,19 @@ const tenantId = process.env.FUSION_MSAL_TENANT_ID;
 const serviceDiscoveryUrl = process.env.FUSION_SERVICE_DISCOVERY_URL;
 const serviceScopes = JSON.parse(process.env.FUSION_SERVICE_SCOPE || '[]') as string[];
 
+// Fail fast when any required MSAL/service-discovery env var is missing
 if (!clientId) {
   throw new Error('FUSION_MSAL_CLIENT_ID is not set');
 }
+// tenantId is equally required for MSAL configuration
 if (!tenantId) {
   throw new Error('FUSION_MSAL_TENANT_ID is not set');
 }
+// Service discovery URL is required to resolve backend service URIs
 if (!serviceDiscoveryUrl) {
   throw new Error('SERVICE_DISCOVERY_URL is not set');
 }
+// At least one service scope must be configured for auth requests
 if (serviceScopes.length === 0) {
   throw new Error('SERVICE_SCOPES is not set');
 }

@@ -113,13 +113,16 @@ describe('zodToAzureFields', () => {
     const fields = zodToAzureFields(schema);
 
     expect(fields).toHaveLength(4);
-    expect(fields.map((f) => f.name)).toEqual(['pkg_name', 'type', 'tags', 'source_dir']);
-    expect(fields.map((f) => f.type)).toEqual([
-      'Edm.String',
-      'Edm.String',
-      'Collection(Edm.String)',
-      'Edm.String',
-    ]);
+    // Verify field order and names match the schema's declaration order
+    expect(
+      // Extract just the field names for comparison
+      fields.map((f) => f.name),
+    ).toEqual(['pkg_name', 'type', 'tags', 'source_dir']);
+    // Verify each field resolved to its expected Azure EDM type
+    expect(
+      // Extract just the field types for comparison
+      fields.map((f) => f.type),
+    ).toEqual(['Edm.String', 'Edm.String', 'Collection(Edm.String)', 'Edm.String']);
   });
 
   it('throws for unsupported Zod types (z.object)', () => {

@@ -6,7 +6,9 @@
  * @returns The same object, deeply frozen.
  */
 const deepFreeze = <T extends Record<string, unknown>>(obj: T): T => {
+  // recursively freeze any nested, unfrozen object properties
   for (const property of Object.keys(obj)) {
+    // only descend into unfrozen object properties
     if (
       typeof obj[property] === 'object' &&
       obj[property] !== null &&
@@ -59,18 +61,24 @@ export class AppConfig<TEnvironment extends ConfigEnvironment = ConfigEnvironmen
 
   /**
    * The environment configuration for the application.
+   * @returns The frozen environment configuration.
    */
   get environment(): TEnvironment {
     return this.#environment;
   }
 
   /**
-   * The configuration endpoints for the application,.
+   * The configuration endpoints for the application.
+   * @returns The frozen map of configuration endpoints.
    */
   get endpoints(): Record<string, ConfigEndPoint> {
     return this.#endpoints;
   }
 
+  /**
+   * Creates a new {@link AppConfig}, deep-freezing the provided environment and endpoints.
+   * @param config - The environment and endpoints to initialize the configuration with.
+   */
   constructor(config: {
     environment?: TEnvironment | null;
     endpoints?: Record<string, ConfigEndPoint>;

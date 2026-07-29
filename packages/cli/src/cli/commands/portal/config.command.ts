@@ -1,0 +1,135 @@
+import { createCommand } from 'commander';
+
+import chalk from 'chalk';
+
+import {
+  ConsoleLogger,
+  generatePortalConfig,
+  publishPortalConfig,
+} from '@equinor/fusion-framework-cli/bin';
+
+import { createEnvOption } from '../../options/create-env-option.js';
+import { withAuthOptions } from '../../options/with-auth-options.js';
+
+/**
+ * CLI command: `portal config`
+ *
+ * Generates and/or publishes the portal configuration for Fusion portals.
+ *
+ * Features:
+ * - Outputs the generated config to stdout or a file.
+ * - Use --publish to upload the config to the Fusion portal registry.
+ * - Options [token, tenant, client, config, identifier, env, output] are only relevant when --publish is used.
+ * - Option [--env] cannot be set to dev when --publish is used.
+ *
+ * Usage:
+ *   $ ffc portal config --identifier <portal@version> [options]
+ *
+ * Options:
+ *   --debug                      Enable debug mode for verbose logging
+ *   --silent                     Silent mode, suppresses output except errors
+ *   --publish                    Publish config to Fusion portal registry
+ *   --identifier <name@version>  Identifier of the portal, example my-portal@1.2.3 (required with --publish)
+ *   -o, --output <stdout|path>   Output to stdout or a file (default: stdout)
+ *   <config>                     Path to the portal config file (e.g., portal.config[.env]?.[ts,js,json])
+ *   --env <env>                  Target environment
+ *
+ * Examples:
+ *   $ ffc portal config --identifier my-portal@1.2.3 -o stdout portal.config.ts
+ *   $ ffc portal config --identifier my-portal@1.2.3 -o ./dist/portal.config.json portal.config.prod.ts
+ *   $ ffc portal config --publish --env prod --identifier my-portal@1.2.3 portal.config.ts
+ *
+ * @see generatePortalConfig, publishPortalConfig for implementation details
+ */
+export const command = withAuthOptions(
+  createCommand('config')
+    .description('Generate or publish the Fusion portal configuration file.')
+    .addHelpText(
+      'after',
+      [
+        '',
+        'By default, outputs the generated config object to stdout or a file. Use --publish to upload the config to the Fusion portal registry.',
+        '- Options [--token, --tenantId, --clientId, --manifest] are only relevant when --publish is used.',
+        '- Option [-e, --env] cannot be set to "dev" when --publish is used.',
+        '',
+        'Note:',
+        '- If not `portal.config(.$ENV)?.[ts|js|json]` is found it will fallback to generate a default config (empty object)',
+        '- If not `portal.manifest(.$ENV)?.[ts|js|json]` is found it will fallback to generate a default manifest',
+        '',
+        'Examples:',
+        '  $ ffc portal config app.config.ts',
+        '  $ ffc portal config portal.config.prod.ts --output ./dist/portal.config.json',
+        '  $ ffc portal config portal.manifest.prod.ts --silent > ./dist/portal.config.json',
+        '  $ ffc portal config --publish --manifest portal.manifest.ts --env prod',
+        '  $ ffc portal config --env prod my-custom.config.ts',
+      ].join('\n'),
+    )
+    .option('--debug', 'Enable debug mode for verbose logging', !!process.env.RUNNER_DEBUG)
+    .option('--silent', 'Silent mode, suppresses output except errors')
+    .option(
+      '--publish <name@version>',
+      'Publish config to Fusion portal registry, Identifier of the portal, example my-portal@1.2.3',
+    )
+    .addOption(createEnvOption({ allowDev: true }))
+    .option(
+      '-o, --output <stdout|path>',
+      'Output the result to stdout or a file (ignored with --publish, default: stdout)',
+      'stdout',
+    )
+    .argument(
+      '[config]',
+      'Path to the portal config file (e.g., portal.config[.env]?.[ts,js,json])',
+    )
+    .action(async (config, options) => {
+      const log = options.silent
+        ? null
+        : new ConsoleLogger('portal:config', { debug: !!options.debug });
+
+      // Validate env for publish (no dev allowed)
+      if (options.publish) {
+        const [name, version] = options.publish.split('@') || [];
+        // Both name and version segments are required for a valid portal identifier
+        if (!name || !version) {
+          log?.fail('🤪', 'Portal identifier is required when using', chalk.blue('--publish'));
+          log?.info('Example: fusion-framework-cli portal config --publish my-portal@1.2.3');
+          process.exit(1);
+        }
+        // The dev environment is not a valid publish target
+        if (options.env === 'dev') {
+          log?.fail(
+            '🤪',
+            chalk.blue('--env'),
+            'cannot be "dev" when',
+            chalk.blue('--publish'),
+            ' is used',
+          );
+          process.exit(1);
+        }
+        return publishPortalConfig({
+          config: options.config,
+          portal: {
+            name,
+            version,
+          },
+          environment: options.env,
+          auth: 'token' in options ? { token: options.token } : options,
+          debug: options.debug,
+        });
+      }
+
+      // Generate config
+      const { config: portalConfig } = await generatePortalConfig({
+        log,
+        config,
+        env: { environment: options.env },
+        output: options.output === 'stdout' ? undefined : options.output,
+      });
+
+      // Print to stdout only when explicitly requested (default output mode)
+      if (options.output === 'stdout') {
+        console.log(JSON.stringify(portalConfig, null, 2));
+      }
+    }),
+);
+
+export default command;

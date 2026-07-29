@@ -11,13 +11,16 @@ import { LogLevel } from './static.js';
  * @throws {Error} If `key` is not a string or does not match any `LogLevel` member.
  */
 const resolveLogLevelFromString = (key: string): LogLevel => {
+  // Guard against non-string input reaching the case-insensitive lookup below
   if (typeof key !== 'string') {
     throw new Error('Expected LogLevel key to be a string.');
   }
 
   const keyLowerCase = key.toLowerCase();
+  // Match the key against LogLevel member names case-insensitively
   const logLevelKey = Object.keys(LogLevel).find((x) => x.toLowerCase() === keyLowerCase);
 
+  // No member name matched — the key doesn't map to any known log level
   if (!logLevelKey) {
     throw new Error(`Failed to parse LogLevel from string: ${key}.`);
   }
@@ -52,9 +55,10 @@ const resolveLogLevelFromString = (key: string): LogLevel => {
 export const resolveLogLevel = (value: string | number): LogLevel => {
   const logLevel = Number(value);
 
+  // Numeric values (or numeric strings) are matched directly against known LogLevel values
   if (Object.values(LogLevel).includes(logLevel)) {
     return logLevel;
-  } else if (isNaN(logLevel)) {
+  } else if (Number.isNaN(logLevel)) {
     return resolveLogLevelFromString(value as string);
   }
 

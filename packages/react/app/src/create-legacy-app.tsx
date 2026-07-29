@@ -27,16 +27,18 @@ export const createLegacyApp = <TModules extends Array<AnyModule>>(
 ) => {
   const LegacyComponent = () => {
     const fusion = useFramework<[AppModule]>();
-    // biome-ignore lint/correctness/useExhaustiveDependencies: this will soon be removed
     const RenderComponent = useMemo(() => {
       const creator = createComponent(Component, configure);
       // @eikeland
-      // TODO - recheck when legacy fusion-cli is updated!
+      // TODO(#5084): recheck when legacy fusion-cli is updated!
       const appProvider = fusion.modules.app;
+      // Use the real app config/manifest once the provider has resolved them
       if (appProvider?.current) {
         const { config, manifest } = appProvider.current;
+        // Legacy app provider config/manifest predate the strict AppEnv shape; cast until legacy fusion-cli is updated.
         return creator(fusion, { config, manifest } as unknown as AppEnv);
       }
+      // No app provider available yet; pass an empty object cast to AppEnv as a placeholder.
       return creator(fusion, {} as unknown as AppEnv);
     }, [fusion]);
     return (

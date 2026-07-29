@@ -29,7 +29,9 @@ export const useAppSettingsStatus = (app: IApp | null, hooks?: AppSettingsStatus
   const { onLoading, onUpdating } = hooks ?? {};
 
   useLayoutEffect(() => {
+    // Only subscribe once both an app and an onLoading callback are available
     if (app && onLoading) {
+      // Derive a boolean loading flag from whether 'fetch_settings' is an active status
       const subscription = app.status$
         .pipe(map((status) => status.has('fetch_settings')))
         .subscribe(onLoading);
@@ -38,7 +40,9 @@ export const useAppSettingsStatus = (app: IApp | null, hooks?: AppSettingsStatus
   }, [app, onLoading]);
 
   useLayoutEffect(() => {
+    // Only subscribe once both an app and an onUpdating callback are available
     if (app && onUpdating) {
+      // Derive a boolean updating flag from whether 'update_settings' is an active status
       const subscription = app.status$
         .pipe(map((status) => status.has('update_settings')))
         .subscribe(onUpdating);

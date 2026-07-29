@@ -41,23 +41,29 @@ export const withOptions = (
   command.addOption(clientIdOption);
   command.addOption(debugOption);
 
+  // Optional options are only added when the corresponding feature flag is set.
   if (args?.includeChat) command.addOption(chatModelOption);
+  // Embed option is opt-in via includeEmbedding.
   if (args?.includeEmbedding) command.addOption(embedModelOption);
+  // Search option is opt-in via includeSearch.
   if (args?.includeSearch) command.addOption(indexNameOption);
 
   command.hook('preAction', (thisCommand) => {
     const opts = thisCommand.opts();
 
+    // Enforce chat model presence when the chat option was requested.
     if (args?.includeChat && !opts.chatModel?.trim()) {
       throw new InvalidOptionArgumentError(
         'Chat model name is required. Provide --chat-model or set FUSION_AI_CHAT_MODEL.',
       );
     }
+    // Enforce embed model presence when the embedding option was requested.
     if (args?.includeEmbedding && !opts.embedModel?.trim()) {
       throw new InvalidOptionArgumentError(
         'Embedding model name is required. Provide --embed-model or set FUSION_AI_EMBED_MODEL.',
       );
     }
+    // Enforce index name presence when the search option was requested.
     if (args?.includeSearch && !opts.indexName?.trim()) {
       throw new InvalidOptionArgumentError(
         'Index name is required. Provide --index-name or set FUSION_AI_INDEX_NAME.',

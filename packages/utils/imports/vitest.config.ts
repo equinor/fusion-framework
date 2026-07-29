@@ -9,7 +9,7 @@ export default defineProject({
     environment: 'node',
     include: ['tests/**/*.test.ts'],
     name: `${name}@${version}`,
-    setupFiles: ['./tests/setup.ts'],
+    setupFiles: ['./tests/memfs-plugin.ts'],
   },
   resolve: {
     alias: {

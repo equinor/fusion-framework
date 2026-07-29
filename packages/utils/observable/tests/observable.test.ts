@@ -18,7 +18,6 @@ describe('createReducer', () => {
       expect(isObservableInput(of(true))).toBe(true);
       expect(isObservableInput(from(Promise.resolve(true)))).toBe(true);
       expect(isObservableInput(new Subject())).toBe(true);
-      // biome-ignore lint/suspicious/noEmptyBlockStatements: only test
       expect(isObservableInput(new Observable(() => {}))).toBe(true);
     });
 
@@ -35,15 +34,11 @@ describe('createReducer', () => {
     });
 
     it('should return false for function', () => {
-      // biome-ignore lint/suspicious/noEmptyBlockStatements: <explanation>
       expect(isObservableInput(() => {})).toBe(false);
-      // biome-ignore lint/suspicious/noEmptyBlockStatements: <explanation>
       expect(isObservableInput(async () => {})).toBe(false);
-      // biome-ignore lint/complexity/useArrowFunction: <explanation>
-      // biome-ignore lint/suspicious/noEmptyBlockStatements: <explanation>
+      // biome-ignore lint/complexity/useArrowFunction: testing detection of a plain function expression, not just arrow functions
       expect(isObservableInput(function () {})).toBe(false);
-      // biome-ignore lint/complexity/useArrowFunction: <explanation>
-      // biome-ignore lint/suspicious/noEmptyBlockStatements: <explanation>
+      // biome-ignore lint/complexity/useArrowFunction: testing detection of a plain async function expression, not just arrow functions
       expect(isObservableInput(async function () {})).toBe(false);
     });
   });

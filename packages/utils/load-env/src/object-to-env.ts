@@ -28,6 +28,8 @@ import { DEFAULT_ENV_PREFIX } from './static';
  * ```
  */
 export function objectToEnv(obj: object, options?: { prefix?: string }): Record<string, string> {
+  // Flatten each entry into the accumulating result record
+  // Merge every [key, value] pair into the accumulator, recursing for nested objects
   return Object.entries(obj).reduce((result, [key, value]) => {
     const basePrefix = options?.prefix ?? DEFAULT_ENV_PREFIX;
     // Convert camelCase to snake_case and uppercase
@@ -35,12 +37,16 @@ export function objectToEnv(obj: object, options?: { prefix?: string }): Record<
 
     const prefix = `${basePrefix.replace(/_$/, '')}_${snakeKey}`;
 
+    // Recursively flatten nested objects
     if (value && typeof value === 'object' && !Array.isArray(value)) {
-      // Recursively flatten nested objects
-      return Object.assign(result, objectToEnv(value, { prefix }));
+      // Merge recursively flattened nested entries into the accumulator.
+      const mergedResult = Object.assign(result, objectToEnv(value, { prefix }));
+      return mergedResult;
     }
 
-    return Object.assign(result, { [prefix]: String(value) });
+    // Add the converted environment entry to the accumulator.
+    const mergedResult = Object.assign(result, { [prefix]: String(value) });
+    return mergedResult;
   }, {});
 }
 

@@ -9,8 +9,8 @@
  Run from repo root:
    node .agents/skills/custom-rebase/scripts/align-pre-initial-versions.cjs
 */
-const fs = require('fs');
-const path = require('path');
+const fs = require('node:fs');
+const path = require('node:path');
 // No git integration required
 
 function readJson(file) {
@@ -18,7 +18,7 @@ function readJson(file) {
 }
 
 function writeJson(file, data) {
-  fs.writeFileSync(file, JSON.stringify(data, null, 2) + '\n', 'utf8');
+  fs.writeFileSync(file, `${JSON.stringify(data, null, 2)}\n`, 'utf8');
 }
 
 function isIgnoredDir(name) {
@@ -69,12 +69,7 @@ function main() {
   }
 
   const pre = readJson(prePath);
-  if (
-    !pre ||
-    pre.mode !== 'pre' ||
-    !pre.initialVersions ||
-    typeof pre.initialVersions !== 'object'
-  ) {
+  if (pre?.mode !== 'pre' || !pre.initialVersions || typeof pre.initialVersions !== 'object') {
     console.error('Invalid pre.json: expected { mode: "pre", initialVersions: { ... } }');
     process.exit(1);
   }

@@ -1,6 +1,6 @@
 import { type To, type LocationState, type NavigationUpdate, Action } from './types';
 import { pathToString, resolvePath } from './utils';
-import { MemoryHistoryStack } from './MemoryStack';
+import { MemoryHistoryStack } from './MemoryHistoryStack';
 import { BaseHistory } from './BaseHistory';
 import { createHistoryReducer, createStore } from './state';
 
@@ -40,6 +40,7 @@ export type MemoryHistoryOptions = {
  * - **Node.js** — any environment without browser history APIs
  */
 export class MemoryHistory extends BaseHistory {
+  /** @param options - Optional initial location and history entries. */
   public constructor(options?: MemoryHistoryOptions) {
     const { initialLocation, initialHistory } = options ?? {};
     const initial = initialLocation ?? defaultInitialLocation;
@@ -65,6 +66,8 @@ export class MemoryHistory extends BaseHistory {
 
   /**
    * Creates a URL object for a given path using memory:// origin.
+   * @param to - Target path or partial path object.
+   * @returns URL resolved against memory://.
    */
   public createURL(to: To): URL {
     const path = pathToString(resolvePath(to));

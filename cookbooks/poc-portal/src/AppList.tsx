@@ -1,5 +1,8 @@
 import { useApps } from '@equinor/fusion-framework-react/app';
 
+/**
+ * Renders the names of applications currently available to the portal.
+ */
 export const AppList = () => {
   const { apps } = useApps();
   return (

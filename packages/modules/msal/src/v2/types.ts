@@ -5,6 +5,8 @@
  * from MSAL v2.38.4 to maintain backward compatibility while using MSAL v4 implementation.
  */
 
+import type { Logger } from './Logger.js';
+
 // ============================================================================
 // Basic Types
 // ============================================================================
@@ -287,6 +289,7 @@ export type RedirectRequest = Partial<
 > & {
   scopes: Array<string>;
   redirectStartPage?: string;
+  // biome-ignore lint/suspicious/noConfusingVoidType: `void` here relies on TypeScript's special-cased "void-returning callback accepts any return value" behavior — `undefined` would break assignability of navigate functions that return a value/promise
   onRedirectNavigate?: (url: string) => boolean | void;
   tokenBodyParameters?: StringDict;
 };
@@ -334,6 +337,7 @@ export type SsoSilentRequest = Partial<
  */
 export type EndSessionRequest = Partial<Omit<CommonEndSessionRequest, 'tokenQueryParameters'>> & {
   authority?: string;
+  // biome-ignore lint/suspicious/noConfusingVoidType: `void` here relies on TypeScript's special-cased "void-returning callback accepts any return value" behavior — `undefined` would break assignability of navigate functions that return a value/promise
   onRedirectNavigate?: (url: string) => boolean | void;
 };
 
@@ -390,9 +394,7 @@ export enum LogLevel {
 /**
  * Callback to send the messages to
  */
-export interface ILoggerCallback {
-  (level: LogLevel, message: string, containsPii: boolean): void;
-}
+export type ILoggerCallback = (level: LogLevel, message: string, containsPii: boolean) => void;
 
 /**
  * Options for logger messages
@@ -404,161 +406,9 @@ export type LoggerOptions = {
   correlationId?: string;
 };
 
-/**
- * Class which facilitates logging of messages to a specific place
- */
-export class Logger {
-  // Correlation ID for request, usually set by user.
-  private correlationId: string;
-
-  // Current log level, defaults to info.
-  private level: LogLevel = LogLevel.Info;
-
-  // Boolean describing whether PII logging is allowed.
-  private piiLoggingEnabled: boolean;
-
-  // Callback to send messages to.
-  private localCallback: ILoggerCallback;
-
-  // Package name implementing this logger
-  private packageName: string;
-
-  // Package version implementing this logger
-  private packageVersion: string;
-
-  constructor(loggerOptions: LoggerOptions, packageName?: string, packageVersion?: string) {
-    const defaultLoggerCallback = () => {
-      return;
-    };
-    const setLoggerOptions = loggerOptions || Logger.createDefaultLoggerOptions();
-    this.localCallback = setLoggerOptions.loggerCallback || defaultLoggerCallback;
-    this.piiLoggingEnabled = setLoggerOptions.piiLoggingEnabled || false;
-    this.level =
-      typeof setLoggerOptions.logLevel === 'number' ? setLoggerOptions.logLevel : LogLevel.Info;
-    this.correlationId = setLoggerOptions.correlationId || '';
-    this.packageName = packageName || '';
-    this.packageVersion = packageVersion || '';
-  }
-
-  private static createDefaultLoggerOptions(): LoggerOptions {
-    return {
-      loggerCallback: () => {
-        // allow users to not set loggerCallback
-      },
-      piiLoggingEnabled: false,
-      logLevel: LogLevel.Info,
-    };
-  }
-
-  /**
-   * Create new Logger with existing configurations.
-   */
-  public clone(packageName: string, packageVersion: string, correlationId?: string): Logger {
-    return new Logger(
-      {
-        loggerCallback: this.localCallback,
-        piiLoggingEnabled: this.piiLoggingEnabled,
-        logLevel: this.level,
-        correlationId: correlationId || this.correlationId,
-      },
-      packageName,
-      packageVersion,
-    );
-  }
-
-  /**
-   * Logs error messages.
-   */
-  error(message: string, correlationId?: string): void {
-    this.logMessage(message, {
-      logLevel: LogLevel.Error,
-      containsPii: false,
-      correlationId: correlationId || '',
-    });
-  }
-
-  /**
-   * Logs warning messages.
-   */
-  warning(message: string, correlationId?: string): void {
-    this.logMessage(message, {
-      logLevel: LogLevel.Warning,
-      containsPii: false,
-      correlationId: correlationId || '',
-    });
-  }
-
-  /**
-   * Logs info messages.
-   */
-  info(message: string, correlationId?: string): void {
-    this.logMessage(message, {
-      logLevel: LogLevel.Info,
-      containsPii: false,
-      correlationId: correlationId || '',
-    });
-  }
-
-  /**
-   * Logs verbose messages.
-   */
-  verbose(message: string, correlationId?: string): void {
-    this.logMessage(message, {
-      logLevel: LogLevel.Verbose,
-      containsPii: false,
-      correlationId: correlationId || '',
-    });
-  }
-
-  /**
-   * Logs trace messages.
-   */
-  trace(message: string, correlationId?: string): void {
-    this.logMessage(message, {
-      logLevel: LogLevel.Trace,
-      containsPii: false,
-      correlationId: correlationId || '',
-    });
-  }
-
-  /**
-   * Returns whether PII Logging is enabled or not.
-   */
-  isPiiLoggingEnabled(): boolean {
-    return this.piiLoggingEnabled || false;
-  }
-
-  private logMessage(
-    logMessage: string,
-    options: {
-      logLevel: LogLevel;
-      containsPii: boolean;
-      correlationId: string;
-    },
-  ): void {
-    if (options.logLevel > this.level || (!this.piiLoggingEnabled && options.containsPii)) {
-      return;
-    }
-    const timestamp = new Date().toUTCString();
-
-    // Add correlationId to logs if set, correlationId provided on log messages take precedence
-    const logHeader = `[${timestamp}] : [${options.correlationId || this.correlationId || ''}]`;
-
-    const log = `${logHeader} : ${this.packageName}@${
-      this.packageVersion
-    } : ${LogLevel[options.logLevel]} - ${logMessage}`;
-    this.executeCallback(options.logLevel, log, options.containsPii || false);
-  }
-
-  /**
-   * Execute callback with message.
-   */
-  executeCallback(level: LogLevel, message: string, containsPii: boolean): void {
-    if (this.localCallback) {
-      this.localCallback(level, message, containsPii);
-    }
-  }
-}
+// Re-exported from its own file to satisfy single-export-per-file while
+// preserving this file's existing public export surface.
+export { Logger } from './Logger.js';
 
 // ============================================================================
 // Performance Types

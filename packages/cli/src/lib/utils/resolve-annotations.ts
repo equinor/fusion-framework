@@ -47,6 +47,7 @@ export type ReleaseAnnotations = {
  * for tag/release events. Only branch refs should populate the manifest branch annotation.
  */
 const resolveGithubBranch = (ref?: string): string | undefined => {
+  // Tag/release refs (refs/tags/...) should not populate the branch annotation
   if (!ref?.startsWith('refs/heads/')) {
     return undefined;
   }
@@ -94,6 +95,7 @@ export const resolveAnnotations = (): ReleaseAnnotations => {
       sender_avatar_url: annotation.sender?.avatar_url,
     } satisfies ReleaseAnnotations;
 
+    // Pull request events carry the head branch/commit, not the base ref
     if (annotation.pull_request) {
       return {
         ...baseAnnotations,
@@ -103,6 +105,7 @@ export const resolveAnnotations = (): ReleaseAnnotations => {
       } satisfies ReleaseAnnotations;
     }
 
+    // Release events carry a tag rather than a branch
     if (annotation.release) {
       return {
         ...baseAnnotations,

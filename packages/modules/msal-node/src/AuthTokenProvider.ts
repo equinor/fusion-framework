@@ -14,6 +14,10 @@ import type { IAuthProvider } from './AuthProvider.interface.js';
  */
 export class AuthTokenProvider implements IAuthProvider {
   #accessToken: string;
+
+  /**
+   * @param token - The pre-obtained access token to serve for all token requests.
+   */
   constructor(token: string) {
     this.#accessToken = token;
   }
@@ -24,6 +28,8 @@ export class AuthTokenProvider implements IAuthProvider {
    * This provider is designed for scenarios where authentication is handled externally
    * and a static token is supplied. Login flows are not possible in this context.
    *
+   * @param _options - Unused; login is not supported in token-only mode.
+   * @returns Never resolves; always throws.
    * @throws Error Always throws to indicate login is not supported.
    */
   login(_options: { request: { scopes: string[] } }): Promise<AuthenticationResult> {

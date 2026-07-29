@@ -16,6 +16,7 @@ export const mergeMetadata = (
   source?: TelemetryItem['metadata'],
   target?: TelemetryItem['metadata'],
 ): TelemetryItem['metadata'] => {
+  // Nothing to merge when neither side has metadata
   if (!source && !target) {
     return undefined;
   }
@@ -39,17 +40,23 @@ export const mergeMetadata = (
  *
  * @internal
  */
+// Deliberately co-located with `mergeMetadata` above
+// fusion-lint-disable-next-line single-export-per-file
 export const mergeTelemetryItem = (
   target: Partial<TelemetryItem>,
   source: Partial<TelemetryItem>,
 ): TelemetryItem => {
+  // Both arguments are required to produce a valid merged telemetry item
   if (!target || !source) {
     throw new Error('Both target and source must be defined for merging telemetry items.');
   }
+  // A type mismatch would produce an inconsistent telemetry item, so fail fast
   if (target.type && source.type && target.type !== source.type) {
     throw new Error('Mismatched telemetry item types.');
   }
+  // Combine both scopes and de-duplicate via a Set before flattening back to an array
   const scope = [...new Set([...(target.scope ?? []), ...(source.scope ?? [])])];
   const metadata = mergeMetadata(target.metadata, source.metadata);
+  // Source properties take precedence over target, with scope/metadata merged separately above
   return { ...target, ...source, scope, metadata } as TelemetryItem;
 };

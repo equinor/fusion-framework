@@ -12,8 +12,8 @@ import type {
 import type { IFeatureFlag } from './FeatureFlag.js';
 import { createLocalStoragePlugin, createUrlPlugin } from './plugins/index.js';
 
-// TODO allow configurator to have array
-// TODO fix .dot type
+// TODO(#5141): allow configurator to have array
+// TODO(#5141): fix .dot type
 
 /**
  * Public interface for configuring the feature-flag module.
@@ -46,7 +46,6 @@ export class FeatureFlagConfigurator
    * Array of feature flag plugin configuration callbacks.
    */
   #plugins: FeatureFlagPluginConfigCallback[] = [];
-  #flags: IFeatureFlag[] = [];
 
   /**
    * Registers a plugin configuration callback.
@@ -80,6 +79,14 @@ export class FeatureFlagConfigurator
     return this.addPlugin(createUrlPlugin(...args));
   }
 
+  /**
+   * Resolves the registered plugins and merges their initial feature flags
+   * into the final {@link FeatureFlagConfig}.
+   *
+   * @param config - Partial config supplied so far.
+   * @param init - Module initialisation arguments passed to each plugin.
+   * @returns An observable emitting the fully resolved {@link FeatureFlagConfig}.
+   */
   protected _processConfig(
     config: Partial<FeatureFlagConfig>,
     init: ConfigBuilderCallbackArgs,
@@ -107,13 +114,18 @@ export class FeatureFlagConfigurator
      * Observable stream that emits the initial feature flags based on the plugins.
      */
     const initial$: Observable<IFeatureFlag[]> = plugins$.pipe(
+      // Sort plugins by order and only query those that provide an initial value.
       concatMap((plugins) =>
+        // Collect each plugin's initial flags in priority order, tracking key collisions.
         from(plugins.sort((a, b) => (a.order ?? 0) - (b.order ?? 0))).pipe(
           /** only get initial value from plugins that support functionality */
           filter((x) => !!x.initial),
+          // biome-ignore lint/style/noNonNullAssertion: narrowed by the filter above, but TS can't infer it through the RxJS pipe
           concatMap((x) => x.initial!()),
           reduce((acc, items) => {
+            // warn about (but keep) duplicate keys so plugin authors can spot ordering issues
             for (const key in items) {
+              // a later plugin's flag with the same key silently overrides an earlier one
               if (key in acc) {
                 console.warn('FeatureFlagConfigurator', `duplicate entry of ${key}`);
               }

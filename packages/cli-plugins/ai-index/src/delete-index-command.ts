@@ -54,6 +54,7 @@ const _command = createCommand('delete')
   ) {
     const indexName = commandOptions.name?.trim();
 
+    // Cannot proceed without knowing which index to delete
     if (!indexName) {
       console.error('❌ Index name is required. Set `name` in the index config or pass --name.');
       process.exit(1);
@@ -73,6 +74,7 @@ const _command = createCommand('delete')
       });
       rl.close();
 
+      // Abort unless the user re-typed the exact index name
       if (answer.trim() !== indexName) {
         console.log('❌ Confirmation did not match. Aborting.');
         process.exit(1);
@@ -85,6 +87,7 @@ const _command = createCommand('delete')
     const scopes = service.scopes ?? service.defaultScopes ?? [];
     const token = await framework.auth.acquireAccessToken({ request: { scopes } });
 
+    // Cannot call the AI service without a valid access token
     if (!token) {
       console.error('❌ Failed to acquire access token for the AI service.');
       process.exit(1);
@@ -104,6 +107,7 @@ const _command = createCommand('delete')
       process.exit(1);
     }
 
+    // Surface the service error response so the user can diagnose the failure
     if (!response.ok) {
       const body = await response.text();
       console.error(`❌ Index deletion failed (${response.status} ${response.statusText})`);

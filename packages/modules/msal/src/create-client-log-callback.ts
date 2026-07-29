@@ -32,6 +32,7 @@ const parseMsalMessage = (message: string) => {
     /^\[([^\]]+)\]\s*:\s*\[([^\]]*)\]\s*:\s*([^:]+)\s*:\s*(\w+)\s*-\s*([^-]+)\s*-\s*(.*)$/,
   );
 
+  // A structured match means we can extract package/component/message parts
   if (match) {
     const [, _timestamp, _correlationId, packageInfo, _logLevel, component, logMessage] = match;
     return {

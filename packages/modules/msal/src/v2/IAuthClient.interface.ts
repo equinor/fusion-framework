@@ -97,7 +97,7 @@ export interface IAuthClient extends IPublicClientApplication {
     options?: AuthRequest,
     behavior?: AuthBehavior,
     silent?: boolean,
-  ): Promise<AuthenticationResult | void>;
+  ): Promise<AuthenticationResult | undefined>;
 
   /**
    * Acquire access token with optional silent authentication fallback
@@ -110,5 +110,5 @@ export interface IAuthClient extends IPublicClientApplication {
     options?: AuthRequest,
     behavior?: AuthBehavior,
     silent?: boolean,
-  ): Promise<AuthenticationResult | void>;
+  ): Promise<AuthenticationResult | undefined>;
 }

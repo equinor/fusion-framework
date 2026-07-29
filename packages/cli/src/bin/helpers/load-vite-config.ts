@@ -27,6 +27,7 @@ export const loadViteConfig = async (env: RuntimeEnv, pkg: ResolvedPackage) => {
   const outFile = packageJson.main ?? packageJson.module ?? './dist/bundle.js';
   const entrypoint = resolveEntryPoint(root);
 
+  // Additional output-path guards only matter for production builds
   if (env.command === 'build') {
     // Prevent output directory from being the project root
     if (dirname(outFile) === root) {
@@ -63,7 +64,7 @@ export const loadViteConfig = async (env: RuntimeEnv, pkg: ResolvedPackage) => {
         // Set environment variables for the build
         'process.env.NODE_ENV': JSON.stringify(env.mode),
         'process.env.NODE_DEBUG': env.mode !== 'production',
-        // todo - remove in future update
+        // TODO(#5079): remove in future update
         'process.env.FUSION_LOG_LEVEL': env.mode === 'production' ? 1 : 3,
       },
       build: {
@@ -75,7 +76,7 @@ export const loadViteConfig = async (env: RuntimeEnv, pkg: ResolvedPackage) => {
         },
         emptyOutDir: true,
       },
-      // @todo - custom logger
+      // TODO(#5080): custom logger
     } satisfies UserConfig,
     localViteConfig ?? {},
   );

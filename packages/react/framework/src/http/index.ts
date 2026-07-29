@@ -8,6 +8,6 @@
  *
  * @module
  */
-export { useHttpClient as useFrameworkHttpClient } from '../hooks/use-http-client';
+export { useHttpClient as useFrameworkHttpClient } from '../hooks/useHttpClient';
 
 export * from '@equinor/fusion-framework-react-module-http';

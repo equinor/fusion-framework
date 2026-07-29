@@ -2,6 +2,10 @@ import { SideBar, type SidebarLinkProps } from '@equinor/eds-core-react';
 import { home, bar_chart, timeline, pie_chart } from '@equinor/eds-icons';
 import { useNavigate, useLocation } from '@equinor/fusion-framework-react-router';
 
+/**
+ * Renders the sidebar links for the cookbook's standard and AG chart pages.
+ * @returns The chart cookbook navigation sidebar.
+ */
 export const Navigation = () => {
   const navigate = useNavigate();
   const currentLocation = useLocation();
@@ -56,6 +60,7 @@ export const Navigation = () => {
     <SideBar open>
       <SideBar.Content>
         <SideBar.Toggle />
+        {/* Render each primary destination from the shared menu model. */}
         {menuItems.map((menuItem) => (
           <div key={menuItem.label}>
             <SideBar.Link
@@ -68,15 +73,17 @@ export const Navigation = () => {
           </div>
         ))}
         <SideBar.Accordion label="AG Charts" icon={pie_chart} isExpanded={true}>
-          {agChartItems.map((item) => (
-            <div key={item.label}>
-              <SideBar.AccordionItem
-                label={item.label}
-                onClick={item.onClick}
-                active={item.active}
-              />
-            </div>
-          ))}
+          {agChartItems
+            // Render the AG chart destinations from their shared navigation model.
+            .map((item) => (
+              <div key={item.label}>
+                <SideBar.AccordionItem
+                  label={item.label}
+                  onClick={item.onClick}
+                  active={item.active}
+                />
+              </div>
+            ))}
         </SideBar.Accordion>
       </SideBar.Content>
     </SideBar>

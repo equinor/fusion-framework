@@ -56,6 +56,7 @@ export class Measurement implements IMeasurement {
    */
   public clone(resetOptions: ResetOptions = {}): Measurement {
     const clonedMeasurement = new Measurement(this.#provider, this.#data);
+    // Preserve the original start time when requested, otherwise the clone starts fresh
     if (resetOptions.preserveStartTime) {
       clonedMeasurement.#startTime = this.#startTime;
     }
@@ -71,6 +72,7 @@ export class Measurement implements IMeasurement {
    * Resets the measured flag and, unless `preserveStartTime` is true, updates the start time to the current performance time.
    */
   public reset(options?: ResetOptions) {
+    // Keep the existing start time when preserving, otherwise restart the clock
     if (!options?.preserveStartTime) {
       this.#startTime = performance.now();
     }
@@ -86,6 +88,7 @@ export class Measurement implements IMeasurement {
    * @param options - Optional measurement options.
    * @param options.markAsMeasured - If true, marks this measurement as completed.
    * @param options.resetStartTime - If true, resets the start time after measuring.
+   * @returns The elapsed duration in milliseconds since the last start time.
    */
   public measure(data?: MeasurementData, options?: MeasureOptions): number {
     const measuredData = mergeTelemetryItem(this.#data, data ?? {});
@@ -94,9 +97,11 @@ export class Measurement implements IMeasurement {
       ...measuredData,
       value: duration,
     });
+    // Mark as measured only when explicitly requested by the caller
     if (options?.markAsMeasured) {
       this.#measured = true;
     }
+    // Restart the clock only when explicitly requested by the caller
     if (options?.resetStartTime) {
       this.#startTime = performance.now();
     }
@@ -106,7 +111,7 @@ export class Measurement implements IMeasurement {
   /**
    * Resolves a given promise, measures the result using the provided options, and returns the resolved value.
    *
-   * @typeParam T - The type of the resolved value from the promise.
+   * @template T - The type of the resolved value from the promise.
    * @param promise - The promise to resolve.
    * @param options - Optional configuration for resolving and measuring:
    *   - `data`: A value or a function that receives the resolved result and returns measurement data.
@@ -125,7 +130,7 @@ export class Measurement implements IMeasurement {
    * The function `fn` can return either a value of type `T` or a Promise of type `T`.
    * Optionally, resolution options can be provided.
    *
-   * @typeParam T - The return type of the function to execute.
+   * @template T - The return type of the function to execute.
    * @param fn - A function that returns a value or a Promise to be resolved.
    * @param options - Optional resolution options to customize the resolve behavior.
    * @returns A Promise that resolves to the result of the executed function.
@@ -144,6 +149,7 @@ export class Measurement implements IMeasurement {
    * @see https://github.com/tc39/proposal-explicit-resource-management
    */
   [Symbol.dispose]() {
+    // Ensure a measurement is always taken before the instance is discarded
     if (!this.#measured) {
       try {
         this.measure();

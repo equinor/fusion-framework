@@ -7,7 +7,7 @@ import type {
   PluginLogger,
   IncomingRequest,
 } from './types.js';
-import { DEFAULT_VALUES } from './constants.js';
+import { DEFAULT_VALUES } from './default-values.js';
 import { createResponseInterceptor } from './create-response-interceptor.js';
 import type { Connect } from 'vite';
 

@@ -59,15 +59,17 @@ export const configureWidgetModules =
    */
   async (args: WidgetRenderArgs<TRef, TEnv>): Promise<WidgetModulesInstance<TModules>> => {
     const configurator = new WidgetConfigurator<TModules, TRef['modules']>();
+    // Allow callers to register modules/config before initialization runs
     if (cb) {
       await Promise.resolve(cb(configurator, args));
     }
+    // The generic TModules type is erased through initialize(); restore it for the return type
     const modules = (await configurator.initialize(
       args.fusion.modules,
-      // TODO
+      // TODO(#5062): pass a `ref` argument here, mirroring AppConfigurator.initialize()
     )) as unknown as WidgetModulesInstance<TModules>;
 
-    // TODO - fire event when widget is loaded
+    // TODO(#5063): fire event when widget is loaded
     // if (args.env.manifest?.key) {
     //     modules.event.dispatchEvent('onAppModulesLoaded', {
     //         detail: { appKey: args.env.manifest.key, modules },

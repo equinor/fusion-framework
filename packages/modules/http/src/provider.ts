@@ -9,14 +9,7 @@ import type { IHttpRequestHandler } from './lib/operators';
 import type { IHttpClient } from './lib/client';
 import { BaseModuleProvider } from '@equinor/fusion-framework-module/provider';
 import { version } from './version';
-
-/**
- * Thrown when `createClient(name)` is called with an unknown client key.
- *
- * This is only used when the provided string is neither a registered client name
- * nor an absolute `http:` or `https:` URL.
- */
-export class ClientNotFoundException extends Error {}
+import { ClientNotFoundException } from './errors/index.js';
 
 /**
  * Creates fresh HTTP client instances from named or ad-hoc configuration.
@@ -105,6 +98,10 @@ export class HttpClientProvider<TClient extends IHttpClient = IHttpClient>
     return this.config.defaultHttpRequestHandler;
   }
 
+  /**
+   * Creates a new `HttpClientProvider`.
+   * @param config - The configurator providing client definitions and defaults.
+   */
   constructor(protected config: IHttpClientConfigurator<TClient>) {
     super({
       version,
@@ -149,6 +146,7 @@ export class HttpClientProvider<TClient extends IHttpClient = IHttpClient>
     } = config as HttpClientOptions<TClient>;
     const options = { requestHandler, responseHandler };
     const instance = new ctor(baseUri || '', options) as TClient;
+    // attach the resolved default scopes onto the instance without overwriting other own properties
     Object.assign(instance, { defaultScopes });
     onCreate?.(instance as TClient);
     return instance as TClient;
@@ -157,6 +155,7 @@ export class HttpClientProvider<TClient extends IHttpClient = IHttpClient>
   /**
    * Creates a client instance and returns it as the requested custom client type.
    *
+   * @template T - The custom `HttpClient` implementation type to cast the created instance to.
    * @param key - The key of the pre-configured HTTP client to create.
    * @returns The created HTTP client instance, cast to the specified type `T`.
    *
@@ -167,6 +166,8 @@ export class HttpClientProvider<TClient extends IHttpClient = IHttpClient>
    * is configured to use a different implementation.
    */
   public createCustomClient<T extends HttpClient>(key: string): T {
+    // `createClient` always returns the provider's configured `HttpClient` implementation —
+    // cast through `unknown` to hand back the caller-requested implementation type `T`.
     return this.createClient(key) as unknown as T;
   }
 
@@ -179,15 +180,20 @@ export class HttpClientProvider<TClient extends IHttpClient = IHttpClient>
    *
    * @param keyOrConfig - The key or configuration object for the HTTP client.
    * @returns The resolved HTTP client configuration.
+   * @throws {ClientNotFoundException} When `keyOrConfig` is a string that is neither a registered
+   * client key nor a URL-like value.
    */
   protected _resolveConfig(
     keyOrConfig: string | HttpClientOptions<TClient>,
   ): HttpClientOptions<TClient> {
+    // a string may reference a registered client key or an ad-hoc URL; anything else is used as-is
     if (typeof keyOrConfig === 'string') {
       const config = this.config.clients[keyOrConfig];
+      // an absolute http(s) URL can be used directly as an ad-hoc baseUri
       if (!config && isURL(keyOrConfig)) {
         return { baseUri: keyOrConfig };
       } else if (!config && looksLikeURL(keyOrConfig)) {
+        // recover from a missing protocol instead of failing outright, but warn so it can be fixed
         console.warn(
           `[HttpClientProvider] "${keyOrConfig}" looks like a URL but is missing the http:// or https:// protocol. ` +
             `Treating it as "https://${keyOrConfig}". ` +

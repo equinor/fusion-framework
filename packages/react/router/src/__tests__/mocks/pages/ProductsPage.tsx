@@ -8,6 +8,11 @@ export const handle = {
   },
 };
 
+/**
+ * Mock product list page used in router tests.
+ *
+ * @returns The products page
+ */
 export default function ProductsPage() {
   return <div>Products Page</div>;
 }

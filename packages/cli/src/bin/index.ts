@@ -8,36 +8,35 @@
  *
  * @packageDocumentation
  */
-export { buildApplication } from './app-build.js';
-export { bundleApp } from './app-pack.js';
-export { generateApplicationConfig } from './app-config.js';
-export { publishAppConfig } from './app-config-publish.js';
-export { startAppDevServer } from './app-dev.js';
-export { serveApplication, type ServeApplicationOptions } from './app-serve.js';
-export { checkApp } from './app-check.js';
-export { loadAppManifest } from './app-manifest.js';
-export { uploadApplication } from './app-upload.js';
-export { tagApplication } from './app-tag.js';
+export { buildApplication } from './build-application.js';
+export { bundleApp } from './bundle-app.js';
+export { generateApplicationConfig } from './generate-application-config.js';
+export { publishAppConfig } from './publish-app-config.js';
+export { startAppDevServer } from './start-app-dev-server.js';
+export { serveApplication, type ServeApplicationOptions } from './serve-application.js';
+export { checkApp } from './check-app.js';
+export { loadAppManifest } from './load-app-manifest.js';
+export { uploadApplication } from './upload-application.js';
+export { tagApplication } from './tag-application.js';
 
-export { startPortalDevServer } from './portal-dev.js';
-export { servePortal, type ServePortalOptions } from './portal-serve.js';
-export { buildPortal } from './portal-build.js';
-export { bundlePortal } from './portal-pack.js';
-export { loadPortalManifest } from './portal-manifest.js';
-export { generatePortalConfig } from './portal-config.js';
-export { publishPortalConfig } from './portal-config-publish.js';
-export { uploadPortalBundle, type UploadPortalOptions } from './portal-upload.js';
-export { tagPortal } from './portal-tag.js';
+export { startPortalDevServer } from './start-portal-dev-server.js';
+export { servePortal, type ServePortalOptions } from './serve-portal.js';
+export { buildPortal } from './build-portal.js';
+export { bundlePortal } from './bundle-portal.js';
+export { loadPortalManifest } from './load-portal-manifest.js';
+export { generatePortalConfig } from './generate-portal-config.js';
+export { publishPortalConfig } from './publish-portal-config.js';
+export { uploadPortalBundle, type UploadPortalOptions } from './upload-portal-bundle.js';
+export { tagPortal } from './tag-portal.js';
 
 export { pack } from './pack.js';
 
 export { ConsoleLogger } from './utils/ConsoleLogger.js';
 
 export {
-  initializeFramework,
-  configureFramework,
-  resolveDefaultEnv,
   type FusionFramework,
-  type FusionFrameworkSettings,
   FusionEnv,
-} from './framework.node.js';
+} from './fusion-env.js';
+export { configureFramework, type FusionFrameworkSettings } from './configure-framework.js';
+export { resolveDefaultEnv } from './resolve-default-env.js';
+export { initializeFramework } from './initialize-framework.js';

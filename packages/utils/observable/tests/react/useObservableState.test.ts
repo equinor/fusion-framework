@@ -43,6 +43,7 @@ describe('useObservableState', () => {
   });
 
   it('should prioritize explicit initial value over stateful observable value', () => {
+    // Make the plain Subject satisfy StatefulObservable by adding a `value` property
     const subject: Subject<number> & StatefulObservable<number> = Object.assign(
       new Subject<number>(),
       { value: 0 },

@@ -30,9 +30,14 @@ export const ContextSelector = (props: ContextSearchProps): ReactElement | null 
   /** callback handler for context selector, when context is changed or cleared */
   const onContextSelect = useCallback(
     (e: Event | ContextSelectEvent) => {
+      // Only react to selection/clear events when a provider is available to update
       if (provider) {
+        // 'select' carries a chosen context item; anything else means the selector was cleared
         if (e.type === 'select') {
+          // The 'select' event's `Event` type doesn't reflect the CustomEvent detail payload
+          // dispatched by the underlying context-selector element, so a cast is required here.
           const ev = e as unknown as ContextSelectEvent;
+          // Only set a new context when the user actually chose an item
           if (ev.nativeEvent.detail.selected.length) {
             provider.contextClient.setCurrentContext(ev.nativeEvent.detail.selected[0].id);
           }
@@ -49,11 +54,13 @@ export const ContextSelector = (props: ContextSearchProps): ReactElement | null 
    */
   const clearEvent = useMemo(() => new ContextClearEvent({ date: Date.now() }), []);
   useEffect(() => {
+    // Notify listeners only when the context was cleared outside this selector
     if (!selectedContextItem) {
       document.dispatchEvent(clearEvent);
     }
   }, [clearEvent, selectedContextItem]);
 
+  // Nothing to render until a context resolver has been resolved
   if (!resolver) return null;
 
   return (

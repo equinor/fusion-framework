@@ -33,12 +33,8 @@ export { NavigationProvider } from './NavigationProvider';
 
 export { createHistory } from './lib/create-history';
 
-export {
-  NavigateEvent,
-  NavigatedEvent,
-  type NavigateEventDetail,
-  type NavigatedEventDetail,
-} from './events';
+export { NavigateEvent, type NavigateEventDetail } from './NavigateEvent';
+export { NavigatedEvent, type NavigatedEventDetail } from './NavigatedEvent';
 
 export type {
   Path,

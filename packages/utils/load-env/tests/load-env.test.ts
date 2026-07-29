@@ -22,17 +22,21 @@ describe('loadEnv', () => {
       path.join(envDir, `.env.${mode}.local`),
     ];
 
+    // Only the mocked stat call cares whether the fake file "exists" — casting the
+    // minimal stub through `any` avoids reproducing the full `fs.Stats` shape.
     mockFs.statSync.mockImplementation((filePath) =>
       // biome-ignore lint/suspicious/noExplicitAny: test only
       envFiles.includes(String(filePath)) ? ({ isFile: () => true } as any) : undefined,
     );
 
     mockFs.readFileSync.mockImplementation((filePath) => {
+      // Base .env file provides the first two variables
       if (filePath === path.join(envDir, '.env')) {
         return [`${DEFAULT_ENV_PREFIX}_VAR=value1`, `${DEFAULT_ENV_PREFIX}_VAR_2=value2`].join(
           '\n',
         );
       }
+      // Mode-specific .env file provides an additional override variable
       if (filePath === path.join(envDir, `.env.${mode}`)) {
         return `${DEFAULT_ENV_PREFIX}_VAR_3=value3`;
       }

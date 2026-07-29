@@ -1,6 +1,6 @@
 export { jsonSelector } from './json-selector';
 export { blobSelector } from './blob-selector';
-export { createSseSelector } from './sse-selector';
+export { createSseSelector } from './create-sse-selector';
 
 export type { ResponseSelector } from '../client/types';
 export type {
@@ -8,4 +8,4 @@ export type {
   ServerSentEvent,
   SseSelector,
   SseSelectorOptions,
-} from './sse-selector';
+} from './create-sse-selector';

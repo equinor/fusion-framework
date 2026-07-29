@@ -46,6 +46,7 @@ export class ConsoleLogger extends Logger {
     super();
     // Route filtered log entries to the matching console method
     this.log.subscribe(({ lvl, msg }) => {
+      // Dispatch to the console method matching this entry's severity
       switch (lvl) {
         case LogLevel.Debug:
           console.debug(...msg);
@@ -84,7 +85,9 @@ export class ConsoleLogger extends Logger {
    * @returns A chalk-formatted title string.
    */
   protected _formatTitle(_lvl: LogLevel): string {
+    // Drop the subtitle when it's empty/undefined
     const title = chalk.magenta([this.title, this.subtitle].filter((x) => !!x).join(' - '));
+    // Warnings and errors are rendered bold to stand out from regular log output
     switch (_lvl) {
       case LogLevel.Warning:
       case LogLevel.Error:

@@ -17,9 +17,12 @@ import { DEFAULT_ENV_PREFIX } from './static';
  */
 export function getEnvFilesForMode(envDir: string, mode?: string): string[] {
   const envFileNames = ['.env', '.env.local'];
+  // Mode-specific files only apply when a mode was explicitly provided
   if (mode) {
     envFileNames.push(`.env.${mode}`, `.env.${mode}.local`);
   }
+  // Normalize each candidate file name into an absolute path
+  // Build the final absolute path for each candidate file name
   return envFileNames.map((file) => path.normalize(path.join(envDir, file)));
 }
 
@@ -59,6 +62,8 @@ export function getEnvFilesForMode(envDir: string, mode?: string): string[] {
  * const custom = loadEnv({ mode: 'production', prefixes: 'MY_APP', envDir: './config' });
  * ```
  */
+// Deliberately co-located with `getEnvFilesForMode` above, which it depends on
+// fusion-lint-disable-next-line single-export-per-file
 export const loadEnv = (options: {
   envDir?: string;
   mode?: string;
@@ -66,6 +71,7 @@ export const loadEnv = (options: {
 }): Record<string, string> => {
   const { mode, envDir, prefixes = DEFAULT_ENV_PREFIX } = options;
 
+  // "local" is reserved for the `.local` file suffix and cannot double as a mode name
   if (mode === 'local') {
     throw new Error(
       `"local" cannot be used as a mode name because it conflicts with the .local postfix for .env files.`,
@@ -77,6 +83,7 @@ export const loadEnv = (options: {
 
   const parsed = Object.fromEntries(
     envFiles.flatMap((filePath) => {
+      // Skip files that don't exist on disk
       if (!fs.statSync(filePath, { throwIfNoEntry: false })) {
         return [];
       }
@@ -92,7 +99,11 @@ export const loadEnv = (options: {
 
   // only keys that start with prefix are exposed to client
   for (const [key, value] of Object.entries(parsed)) {
-    if (envPrefix.some((prefix) => key.startsWith(prefix))) {
+    // Keep only keys matching one of the configured prefixes
+    if (
+      // Check every configured prefix for a match
+      envPrefix.some((prefix) => key.startsWith(prefix))
+    ) {
       env[key] = value;
     }
   }
@@ -100,7 +111,11 @@ export const loadEnv = (options: {
   // check if there are actual env variables starting with the prefix
   // these are typically provided inline and should be prioritized
   for (const key in process.env) {
-    if (envPrefix.some((prefix) => key.startsWith(prefix))) {
+    // Inline process.env values override file-based values for matching prefixes
+    if (
+      // Check every configured prefix for a match
+      envPrefix.some((prefix) => key.startsWith(prefix))
+    ) {
       env[key] = process.env[key] as string;
     }
   }

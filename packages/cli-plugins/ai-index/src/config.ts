@@ -1,6 +1,6 @@
 import type { VectorStoreDocument } from '@equinor/fusion-framework-module-ai/lib';
 import type { FusionAIConfig } from '@equinor/fusion-framework-cli-plugin-ai-base';
-import type { IndexSchemaConfig } from './schema.js';
+import type { IndexSchemaConfig } from './define-index-schema.js';
 
 /**
  * Index-specific configuration for Fusion AI document indexing operations.

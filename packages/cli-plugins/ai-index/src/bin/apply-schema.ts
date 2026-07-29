@@ -1,7 +1,7 @@
 import { map } from 'rxjs';
 import type { Observable } from 'rxjs';
 import type { VectorStoreDocument } from '@equinor/fusion-framework-module-ai/lib';
-import type { IndexSchemaConfig } from '../schema.js';
+import type { IndexSchemaConfig } from '../define-index-schema.js';
 
 /**
  * Creates an RxJS operator that resolves promoted schema fields for each
@@ -32,12 +32,15 @@ export function applySchema(
 
   const promotedKeys = new Set(Object.keys(schema.shape.shape as Record<string, unknown>));
 
+  // Resolve and validate promoted schema fields for each document batch
   return document$.pipe(
     map((documents) =>
+      // Process each document in the batch individually
       documents.map((document) => {
         // Run typed attribute processor before schema resolution so the
         // resolver receives fully enriched attributes
         let enrichedDocument = document;
+        // Only run the attribute processor when the schema declares one
         if (schema.prepareAttributes) {
           const enrichedAttributes = schema.prepareAttributes(
             (document.metadata.attributes ?? {}) as Record<string, unknown>,
@@ -66,7 +69,9 @@ export function applySchema(
           unknown
         >;
         const remainingAttributes: Record<string, unknown> = {};
+        // Copy over only attributes that were not promoted to schema fields
         for (const [key, value] of Object.entries(currentAttributes)) {
+          // Skip keys already promoted to schemaFields to avoid duplication
           if (!promotedKeys.has(key)) {
             remainingAttributes[key] = value;
           }

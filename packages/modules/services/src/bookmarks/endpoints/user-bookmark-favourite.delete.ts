@@ -51,15 +51,17 @@ type MethodResult<
 /** utility function for generating http request initialization parameters  */
 const generateRequestParameters = <TResult, TVersion extends AvailableVersions>(
   version: TVersion,
-  args: z.infer<(typeof ArgSchema)[TVersion]>,
+  _args: z.infer<(typeof ArgSchema)[TVersion]>,
   init?: ClientRequestInit<IHttpClient, TResult>,
 ): ClientRequestInit<IHttpClient, TResult> => {
+  // Select the response schema that matches the requested API version.
   switch (version) {
     case ApiVersion.v1: {
       const baseInit: FetchRequestInit<ApiResponse<ApiVersion.v1>, JsonRequest> = {
         method: 'DELETE',
         selector: statusSelector,
       };
+      // Merge caller overrides on top of the generated version-specific defaults.
       return Object.assign({}, baseInit, init);
     }
   }
@@ -71,6 +73,7 @@ const generateApiPath = <TVersion extends AvailableVersions>(
   version: TVersion,
   args: z.infer<(typeof ArgSchema)[TVersion]>,
 ): string => {
+  // Build the endpoint path according to the requested API version.
   switch (version) {
     case ApiVersion.v1: {
       const params = new URLSearchParams();
@@ -104,6 +107,10 @@ const executeApiCall = <TVersion extends AllowedVersions, TMethod extends keyof 
   };
 };
 
+// Aliased re-export: the generic type/function names (AllowedVersions, MethodArg, ...) are reused
+// across every endpoint file in this directory, so they cannot be exported inline under their
+// unique consumer-facing names.
+// fusion-lint-disable-next-line no-separate-export
 export {
   type AllowedVersions as RemoveBookmarkFavouriteVersion,
   type MethodArg as RemoveBookmarkFavouriteArgs,

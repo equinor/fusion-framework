@@ -3,11 +3,15 @@ import { noClassComponents } from '../no-class-components/index.js';
 import type { Diagnostic } from '@equinor/fusion-framework-lint-core';
 
 function lintTsx(source: string): Diagnostic[] {
-  return noClassComponents.check(source, 'fixture.tsx');
+  return noClassComponents().check(source, { filePath: 'fixture.tsx' });
 }
 
 function lintTs(source: string): Diagnostic[] {
-  return noClassComponents.check(source, 'fixture.ts');
+  const rule = noClassComponents();
+  const file = 'fixture.ts';
+  // mirror the engine: skip `check` entirely when `match` opts the file out
+  if (rule.match && !rule.match(file)) return [];
+  return rule.check(source, { filePath: file });
 }
 
 // ── Passing cases ─────────────────────────────────────────────────────────────

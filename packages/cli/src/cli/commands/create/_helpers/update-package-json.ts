@@ -1,7 +1,7 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import type { PackageJson } from 'type-fest';
-import { resolvePackageJsonWorkspaceDependencies } from './resolve-workspace-dependencies.js';
+import { resolvePackageJsonWorkspaceDependencies } from './resolve-package-json-workspace-dependencies.js';
 import type { ConsoleLogger } from '@equinor/fusion-framework-cli/bin';
 
 /**
@@ -69,12 +69,14 @@ export const updatePackageJson = async (
     // Apply property updates if provided
     if (options?.updates) {
       logger?.debug(`Applying updates: ${Object.keys(options.updates).join(', ')}`);
+      // Layer the requested updates on top of the current package.json contents
       updatedPackageJson = { ...updatedPackageJson, ...options.updates } as PackageJson;
     }
 
     // Check if there are actual changes to avoid unnecessary file writes
     const hasChanges = JSON.stringify(originalPackageJson) !== JSON.stringify(updatedPackageJson);
 
+    // Avoid an unnecessary disk write when nothing actually changed
     if (hasChanges) {
       logger?.debug('Writing updated package.json to disk');
       // Use JSON.stringify with 2-space indentation to maintain readable formatting

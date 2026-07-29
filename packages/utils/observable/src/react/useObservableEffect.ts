@@ -41,6 +41,13 @@ export function useObservableEffect<S, A extends Action = Action>(
  * **Important:** The effect may return a new action, which will be dispatched back
  * into the subject. Be careful to avoid infinite loops.
  *
+ * @template S - The state type.
+ * @template A - The action type.
+ * @template TType - The action type string, when filtering to a single action type.
+ * @param subject - The `FlowSubject` to attach the effect to.
+ * @param effectOrType - Either the effect function (for all actions) or an action type string to filter by.
+ * @param effect - The effect function invoked for the filtered action type, when `effectOrType` is a type string.
+ *
  * @example
  * ```tsx
  * useObservableEffect(subject, 'fetchUser', (action, state) => {

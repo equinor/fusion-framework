@@ -48,11 +48,11 @@ export type DynamicInputValue<T, TArgs extends any[] = []> =
  * // Primitive
  * toObservable(42).subscribe(x => console.log(x)); // 42
  */
-// biome-ignore lint/suspicious/noExplicitAny: must be any to allow any type of input
-export function toObservable<T, TArgs extends any[]>(
-  input: DynamicInputValue<T, TArgs>,
-  ...args: TArgs
-): Observable<T> {
+export function toObservable<
+  T,
+  // biome-ignore lint/suspicious/noExplicitAny: must be any to allow any type of input
+  TArgs extends any[],
+>(input: DynamicInputValue<T, TArgs>, ...args: TArgs): Observable<T> {
   // If input is already an ObservableInput (Observable, Promise, Iterable, etc), use RxJS 'from' to convert it
   if (isObservableInput(input)) {
     return from(input as ObservableInput<T>);

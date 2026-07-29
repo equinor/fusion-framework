@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { lastValueFrom } from 'rxjs';
 
-import { ClientNotFoundException, HttpClientProvider } from '../src';
+import { Errors, HttpClientProvider } from '../src';
 import { HttpClientConfigurator } from '../src/configurator';
 import { HttpClient, HttpClientMsal } from '../src/lib';
 import { HttpResponseHandler } from '../src/lib/operators';
@@ -99,7 +99,7 @@ describe('HttpClient', () => {
 
   it('should throw when a configured client cannot be found', () => {
     expect(() => provider.createClient('missing-client')).toThrowError(
-      new ClientNotFoundException('No registered http client for key [missing-client]'),
+      new Errors.ClientNotFoundException('No registered http client for key [missing-client]'),
     );
   });
 

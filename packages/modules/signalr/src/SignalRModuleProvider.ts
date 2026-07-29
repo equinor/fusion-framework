@@ -1,7 +1,7 @@
 import { HubConnectionBuilder, type HubConnection, AbortError } from '@microsoft/signalr';
 import { Observable, shareReplay } from 'rxjs';
 
-import type { SignalRConfig } from './SignalRModuleConfigurator';
+import type { SignalRConfig } from './SignalRModuleConfigBuilder';
 
 import { Topic } from './lib/Topic';
 
@@ -81,10 +81,12 @@ export class SignalRModuleProvider implements ISignalRProvider {
   protected _createHubConnection(hubId: string): Observable<HubConnection> {
     const LOG_LEVEL_CRITICAL = 5;
 
+    // Reuse an already-established connection observable for this hub
     if (hubId in this.#hubConnections) {
       return this.#hubConnections[hubId];
     }
     const config = this.#config.hubs[hubId];
+    // Fail loudly when the hub was never registered with the configurator
     if (!config) {
       throw Error(`could not find any configuration for hub [${hubId}]`);
     }
@@ -106,6 +108,7 @@ export class SignalRModuleProvider implements ISignalRProvider {
           observer.next(connection);
         })
         .catch((error: unknown) => {
+          // Swallow expected teardown aborts; re-throw anything else
           if (error instanceof AbortError) {
             // AbortError is expected during teardown — safe to ignore
           } else {
@@ -121,14 +124,16 @@ export class SignalRModuleProvider implements ISignalRProvider {
       };
 
       return teardown;
-    }).pipe(
-      shareReplay({
-        /** only emit last connection when new subscriber connects */
-        bufferSize: 1,
-        /** when no subscribers, teardown observable */
-        refCount: true,
-      }),
-    );
+    })
+      // Share a single connection across subscribers and tear it down when unused
+      .pipe(
+        shareReplay({
+          /** only emit last connection when new subscriber connects */
+          bufferSize: 1,
+          /** when no subscribers, teardown observable */
+          refCount: true,
+        }),
+      );
 
     return this.#hubConnections[hubId];
   }

@@ -9,6 +9,7 @@ export const recommendedConfig: LintConfig = {
   'require-intent-comment/rxjs': 'warn',
   'require-intent-comment/break-continue': 'warn',
   'require-intent-comment/type-assertion': 'error',
+  'require-intent-comment/object-merge': 'warn',
   'require-tsdoc': 'warn',
   'require-node-protocol': 'error',
   'no-class-components': 'error',
@@ -16,4 +17,5 @@ export const recommendedConfig: LintConfig = {
   'no-empty-catch': 'error',
   'no-separate-export': 'error',
   'single-export-per-file': 'warn',
+  'filename-convention': 'warn',
 };

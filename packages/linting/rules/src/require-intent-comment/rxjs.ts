@@ -1,6 +1,12 @@
 import type { Node } from 'web-tree-sitter';
-import type { Rule, Diagnostic, Severity } from '@equinor/fusion-framework-lint-core';
-import { tsParser } from '../_parser.js';
+import type {
+  Diagnostic,
+  Severity,
+  RuleDef,
+  LintContext,
+} from '@equinor/fusion-framework-lint-core';
+import { resolveMatch } from '@equinor/fusion-framework-lint-core';
+import { tsParser } from '../ts-parser.js';
 
 const RULE_ID = 'require-intent-comment/rxjs';
 const DEFAULT_SEVERITY: Severity = 'warn';
@@ -43,6 +49,21 @@ function getStatementNode(node: Node): Node {
       // const/let declarations like `const x$ = obs$.pipe(...)`
       return current.parent.parent;
     }
+    // return statements like `return obs$.pipe(...)`
+    if (current.parent.type === 'return_statement') {
+      return current.parent;
+    }
+    // A concise (expression-bodied) arrow function has no enclosing statement to climb
+    // to — e.g. `(source) => source.pipe(...)`. The call itself is the anchor, so a
+    // comment placed directly above it (its own previousNamedSibling) satisfies the rule.
+    // Note: web-tree-sitter returns fresh wrapper objects per accessor call, so nodes
+    // must be compared with `.equals()` rather than `===`.
+    if (
+      current.parent.type === 'arrow_function' &&
+      current.parent.childForFieldName('body')?.equals(current)
+    ) {
+      return current;
+    }
     // Stop at block boundaries — don't climb past the containing scope
     if (current.parent.type === 'statement_block' || current.parent.type === 'program') {
       // Bail: hit a scope boundary before finding a statement anchor
@@ -51,6 +72,23 @@ function getStatementNode(node: Node): Node {
     current = current.parent;
   }
   return node;
+}
+
+/**
+ * Returns `true` when a `.pipe()` call is chained onto another expression
+ * (e.g. `obs$.pipe(...)`) and a comment is placed inline within the chain,
+ * immediately before the `.pipe()` call (e.g. `obs$\n  // why\n  .pipe(...)`).
+ *
+ * @param node - The `.pipe()` call expression to test.
+ * @returns `true` if an inline chain comment immediately precedes the call.
+ */
+function hasInlineChainComment(node: Node): boolean {
+  const callee = node.childForFieldName('function');
+  // Only member-expression calls (e.g. `obs$.pipe(...)`) can have an inline chain comment
+  if (callee?.type !== 'member_expression') return false;
+  const object = callee.childForFieldName('object');
+  // A comment placed between the object and the method call satisfies the intent requirement
+  return object?.nextNamedSibling?.type === 'comment';
 }
 
 /**
@@ -66,8 +104,9 @@ function walkNode(node: Node, filePath: string, severity: Severity, out: Diagnos
   // Only report pipe calls that lack a preceding intent comment
   if (isPipeCall(node)) {
     const checkNode = getStatementNode(node);
-    // A comment immediately before the statement satisfies the intent requirement
-    if (checkNode.previousNamedSibling?.type !== 'comment') {
+    // A comment immediately before the statement, or an inline comment within
+    // the method chain immediately before this call, satisfies the intent requirement
+    if (checkNode.previousNamedSibling?.type !== 'comment' && !hasInlineChainComment(node)) {
       out.push({
         file: filePath,
         line: node.startPosition.row + 1,
@@ -106,11 +145,14 @@ function walkNode(node: Node, filePath: string, severity: Severity, out: Diagnos
  * const result$ = input$.pipe(debounceTime(300), switchMap(search));
  * ```
  */
-export const requireIntentCommentRxjs: Rule = {
+export const requireIntentCommentRxjs: RuleDef = (options = {}) => ({
   id: RULE_ID,
   defaultSeverity: DEFAULT_SEVERITY,
+  /** @inheritdoc Rule.match */
+  match: resolveMatch(options.match),
   /** @inheritdoc Rule.check */
-  check(source: string, filePath: string): Diagnostic[] {
+  check(source: string, ctx: LintContext): Diagnostic[] {
+    const { filePath } = ctx;
     const tree = tsParser.parse(source);
     // Guard: tsParser.parse returns null for empty or unparseable source
     if (!tree) return [];
@@ -118,4 +160,4 @@ export const requireIntentCommentRxjs: Rule = {
     walkNode(tree.rootNode, filePath, DEFAULT_SEVERITY, out);
     return out;
   },
-};
+});

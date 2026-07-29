@@ -59,6 +59,7 @@ describe('Query query', () => {
   it('should handle errors', async () => {
     // Mock a function that always throws an error when called
     const fn = vi.fn((arg: string) => {
+      // Only the first call throws, so retries/subsequent calls succeed
       if (fn.mock.calls.length === 1) {
         throw Error('error');
       }

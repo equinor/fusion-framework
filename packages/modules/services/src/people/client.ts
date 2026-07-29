@@ -52,7 +52,10 @@ export class PeopleApiClient<
   // TMethod extends keyof ClientMethod<unknown> = keyof ClientMethod<unknown>,
   TClient extends IHttpClient = IHttpClient,
 > {
-  /** Returns the {@link ApiVersion} enum for version-constant access. */
+  /**
+   * Returns the {@link ApiVersion} enum for version-constant access.
+   * @returns The API version enum.
+   */
   get Version(): typeof ApiVersion {
     return ApiVersion;
   }

@@ -4,7 +4,8 @@ import type { RuntimeEnv } from '@equinor/fusion-framework-cli/lib';
 import { loadAppConfig, type ApiAppConfig } from '@equinor/fusion-framework-cli/app';
 
 import type { ConsoleLogger } from '../utils/ConsoleLogger.js';
-import { chalk, formatPath } from '../utils/format.js';
+import chalk from 'chalk';
+import { formatPath } from '../utils/format-path.js';
 
 /**
  * Resolves the application configuration based on the provided runtime environment and options.
@@ -36,6 +37,7 @@ export const resolveAppConfig = async (
   } catch (err) {
     // Handle missing config file error
     if (err instanceof FileNotFoundError) {
+      // Distinguish an explicitly-requested missing file from the default-lookup case
       if (options.config) {
         // Warn if a specific config file was requested but not found
         log?.warn(

@@ -3,3 +3,4 @@ export { requireIntentCommentIterators } from './iterators.js';
 export { requireIntentCommentRxjs } from './rxjs.js';
 export { requireIntentCommentBreakContinue } from './break-continue.js';
 export { requireIntentCommentTypeAssertion } from './type-assertion.js';
+export { requireIntentCommentObjectMerge } from './object-merge.js';

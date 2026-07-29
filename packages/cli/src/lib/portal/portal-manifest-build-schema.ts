@@ -1,0 +1,79 @@
+import { z } from 'zod';
+/**
+ * Zod schema for validating the build section of the PortalManifest object.
+ *
+ * This schema defines the structure and types for the build metadata used in the portal manifest.
+ *
+ * @remarks
+ * - Maintainers: Update this schema if the build contract changes.
+ * - This schema is the canonical source for portal build validation and structure.
+ */
+export const PortalManifestBuildSchema = z.object({
+  // Main entry point for the portal (required)
+  templateEntry: z
+    .string({ message: 'templateEntry must be a string' })
+    .describe('Main entry point for the portal'),
+  // Schema file for portal validation (required)
+  schemaEntry: z
+    .string({ message: 'schemaEntry must be a string' })
+    .describe('Schema file for portal validation'),
+  // Asset path for dev/preview builds (optional)
+  assetPath: z
+    .string({ message: 'assetPath must be a string' })
+    .optional()
+    .describe('Asset path for dev/preview builds'),
+  // GitHub repo URL or local git remote (optional)
+  githubRepo: z
+    .string({ message: 'githubRepo must be a string' })
+    .optional()
+    .describe('GitHub repo URL or local git remote'),
+  // Version from package.json (required)
+  version: z.string({ message: 'version must be a string' }).describe('Version from package.json'),
+  // Current build timestamp (ISO8601, required)
+  timestamp: z
+    .string({ message: 'timestamp must be a string' })
+    .describe('Current build timestamp (ISO8601)'),
+  // Current git commit SHA (required)
+  commitSha: z.string({ message: 'commitSha must be a string' }).describe('Current git commit SHA'),
+  // Optional build annotations (key-value pairs)
+  // Accepts Record<string, string | null | undefined> and removes undefined values
+  // while preserving explicit null values from input
+  annotations: z
+    .record(z.string(), z.string().nullish())
+    .optional()
+    .transform((rec) => {
+      // Nothing to normalize when annotations weren't provided at all
+      if (!rec) {
+        return undefined;
+      }
+      // Drop keys explicitly set to undefined, keeping explicit nulls
+      const definedEntries = Object.entries(rec).filter(([, value]) => value !== undefined);
+      return Object.fromEntries(definedEntries);
+    })
+    .describe('Optional build annotations'),
+  // Optional project homepage
+  projectPage: z
+    .string({ message: 'projectPage must be a string' })
+    .optional()
+    .describe('Optional project homepage'),
+  // List of allowed asset extensions (with leading dot, required)
+  allowedExtensions: z
+    .array(z.string({ message: 'Each allowed extension must be a string' }), {
+      message: 'allowedExtensions must be an array of strings',
+    })
+    .describe('List of allowed asset extensions (with leading dot)'),
+  // Optional schema for the portal (record of unknown values)
+  schema: z.record(z.string(), z.unknown()).optional().describe('Optional schema for the portal'),
+  // Optional configuration for the portal (record of unknown values)
+  config: z
+    .record(z.string(), z.unknown())
+    .optional()
+    .describe('Optional configuration for the portal'),
+});
+
+/**
+ * Type representing the validated build section of the PortalManifest.
+ *
+ * This type is inferred from the build Zod schema and should be used for build-specific logic.
+ */
+export type PortalManifestBuildSchemaType = z.infer<typeof PortalManifestBuildSchema>;

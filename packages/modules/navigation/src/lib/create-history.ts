@@ -33,6 +33,7 @@ export const createHistory = <T extends keyof HistoryCtorMap>(
   type: T,
   ...args: Parameters<HistoryCtorMap[T]>
 ): ReturnType<HistoryCtorMap[T]> => {
+  // Dispatch to the history implementation matching the requested type.
   switch (type) {
     case 'memory':
       return new MemoryHistory(...(args as [MemoryHistoryOptions])) as ReturnType<

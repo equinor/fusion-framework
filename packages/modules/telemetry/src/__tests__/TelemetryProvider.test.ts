@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { TelemetryProvider } from '../TelemetryProvider.js';
 import { TelemetryType } from '../static.js';
-import { TelemetryEvent, TelemetryErrorEvent } from '../events.js';
+import { TelemetryEvent, TelemetryErrorEvent } from '../TelemetryEvent.js';
 import type { TelemetryConfig } from '../TelemetryConfigurator.interface.js';
 import type { ITelemetryAdapter } from '../TelemetryAdapter.js';
 import type { IEventModuleProvider } from '@equinor/fusion-framework-module-event';

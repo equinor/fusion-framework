@@ -1,0 +1,12 @@
+{
+  "rules": {
+    "require-tsdoc": "error",
+    "single-export-per-file": {
+      "severity": "warn",
+      "excludePattern": ["module.ts", "*.schemas.ts"]
+    },
+    "no-class-components": {
+      "includePattern": ["*.tsx", "*.jsx"]
+    }
+  }
+}

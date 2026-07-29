@@ -1,7 +1,7 @@
 import { lastValueFrom } from 'rxjs';
 import { Runnable, type RunnableInterface, type RunnableConfig } from '@langchain/core/runnables';
 import type { IService } from './types.js';
-import { toAsyncIterable } from './toAsyncIterator.js';
+import { toAsyncIterable } from './to-async-iterable.js';
 
 /**
  * Abstract base class for Fusion AI services.

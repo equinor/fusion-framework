@@ -47,6 +47,7 @@ export const enableNavigation = <TRef = unknown>(
   configurator.addConfig({
     module,
     configure(config, ref) {
+      // A string shortcut sets the basename directly; otherwise defer to the caller's configure callback.
       if (typeof basenameOrOptions === 'string') {
         config.setBasename(basenameOrOptions);
       } else if (typeof basenameOrOptions === 'object' && 'configure' in basenameOrOptions) {

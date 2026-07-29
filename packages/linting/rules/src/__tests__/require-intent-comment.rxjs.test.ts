@@ -3,7 +3,7 @@ import { requireIntentCommentRxjs } from '../require-intent-comment/rxjs.js';
 import type { Diagnostic } from '@equinor/fusion-framework-lint-core';
 
 function lint(source: string): Diagnostic[] {
-  return requireIntentCommentRxjs.check(source, 'fixture.ts');
+  return requireIntentCommentRxjs().check(source, { filePath: 'fixture.ts' });
 }
 
 // ── Passing cases ─────────────────────────────────────────────────────────────
@@ -38,6 +38,37 @@ const labels$ = active$.pipe(map(p => p.name));
   it('passes: non-pipe member call — not flagged', () => {
     expect(lint(`arr.map(x => x + 1);`)).toHaveLength(0);
   });
+
+  it('passes: return_statement pipe with preceding comment', () => {
+    const source = `
+function build() {
+  return source$
+    // Debounce input and drop stale requests before each search call
+    .pipe(debounceTime(300), switchMap(search));
+}
+`;
+    expect(lint(source)).toHaveLength(0);
+  });
+
+  it('passes: inline chain comment immediately before .pipe()', () => {
+    const source = `
+const result$ = source$
+  // Debounce input and drop stale requests before each search call
+  .pipe(debounceTime(300), switchMap(search));
+`;
+    expect(lint(source)).toHaveLength(0);
+  });
+
+  it('passes: concise arrow-function body pipe with preceding comment', () => {
+    const source = `
+export const mapAction =
+  (type, fn) =>
+  (source) =>
+    // Narrow the stream to the requested action type, then map its payload
+    source.pipe(filterAction(type), map(fn));
+`;
+    expect(lint(source)).toHaveLength(0);
+  });
 });
 
 // ── Failing cases ─────────────────────────────────────────────────────────────
@@ -67,5 +98,15 @@ const b$ = y$.pipe(filter(isB));
   it('fails: default severity is warn', () => {
     const diags = lint(`source$.pipe(tap(log)).subscribe();`);
     expect(diags[0].severity).toBe('warn');
+  });
+
+  it('fails: concise arrow-function body pipe with no comment', () => {
+    const source = `
+export const mapAction =
+  (type, fn) =>
+  (source) =>
+    source.pipe(filterAction(type), map(fn));
+`;
+    expect(lint(source)).toHaveLength(1);
   });
 });

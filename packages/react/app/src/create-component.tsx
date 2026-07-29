@@ -81,6 +81,8 @@ export const createComponent =
   (fusion, env) =>
     lazy(async () => {
       const init = configureModules<TModules, TRef, TEnv>(configure);
+      // configureModules returns a generic modules instance; narrow it to the
+      // app-specific shape expected by consumers of this component.
       const modules = (await init({
         fusion,
         env,
@@ -94,7 +96,7 @@ export const createComponent =
         default: () => (
           <FrameworkProvider value={fusion}>
             <AppModuleProvider value={modules}>
-              {/* TODO */}
+              {/* TODO(#5083): tighten generics so Component no longer needs @ts-ignore */}
               {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment*/}
               {/* @ts-ignore */}
               <Component />

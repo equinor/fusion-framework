@@ -1,4 +1,4 @@
-import type { ConfigBuilder } from '../../../config-builder.js';
+import type { ConfigBuilder } from '../../../ConfigBuilder.js';
 
 /**
  * Builder factory fixture — exercises `recommended`, `configureRule`, and
@@ -14,6 +14,7 @@ export default function configure(builder: ConfigBuilder): void {
   builder.addRule({
     id: 'custom-fixture-rule',
     severity: 'warn',
-    check: (_source: string, _filePath: string) => [],
+    check: (_source: string, _ctx: { filePath: string }) => [],
   });
+  builder.ignorePatterns = ['**/__tests__/**'];
 }

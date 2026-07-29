@@ -145,11 +145,14 @@ export class MsalClient extends PublicClientApplication implements IMsalClient {
    * - **Redirect**: Navigates browser to Microsoft login page. Returns `void` because the browser
    *   navigates to a new page. After redirect completes, the result will be available via
    *   `handleRedirectPromise()` when the app loads on the new page.
+   *
+   * @throws {Error} If an invalid `options.behavior` value is provided.
    */
   async login(options: Required<LoginOptions>): Promise<LoginResult> {
     // Attempt silent authentication first if enabled
     // This provides better UX by avoiding unnecessary popups/redirects
     if (options.silent) {
+      // Warn early when neither an account nor login hint is available for silent SSO
       if (!options.request.account && !options.request.loginHint) {
         this.getLogger().warning(
           'No account or login hint provided, please provide an account or login hint in the request',
@@ -216,6 +219,7 @@ export class MsalClient extends PublicClientApplication implements IMsalClient {
    * ```
    */
   async logout(options?: LogoutOptions): Promise<void> {
+    // Warn when no account was supplied since the active account will be used instead
     if (!options?.account) {
       this.getLogger().warning(
         'No account available for logout, please provide an account in the options',
@@ -253,14 +257,18 @@ export class MsalClient extends PublicClientApplication implements IMsalClient {
    *
    * The default silent behavior is determined by presence of account in the request.
    * This provides optimal UX by minimizing unnecessary user interactions.
+   *
+   * @throws {Error} If no `request` is provided in `options`.
    */
   async acquireToken(options: AcquireTokenOptions): Promise<AcquireTokenResult> {
     const { behavior = 'redirect', silent = !!options.request?.account, request } = options;
 
+    // A request is required to know which scopes/account to acquire a token for
     if (!request) {
       throw new Error('No request provided, please provide a request in the options');
     }
 
+    // Warn when no scopes are requested, since MSAL requires at least one scope
     if (request.scopes.length === 0) {
       this.getLogger().warning(
         'No scopes provided, please provide scopes in the request option, see options.request for more information.',
@@ -271,6 +279,7 @@ export class MsalClient extends PublicClientApplication implements IMsalClient {
     // Attempt silent token acquisition first
     // This fetches from cache or uses refresh token without user interaction
     if (silent) {
+      // Only silent-acquire when an account is available to look up cached tokens for
       if (request.account) {
         try {
           this.getLogger().verbose(

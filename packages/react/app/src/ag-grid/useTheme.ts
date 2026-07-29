@@ -12,6 +12,7 @@ import type { Theme } from '@equinor/fusion-framework-module-ag-grid/themes';
 export const useTheme = (): Theme => {
   const agGrid = useAppModule<AgGridModule>('agGrid');
 
+  // Fail fast when the AG Grid module has not been registered on the app
   if (!agGrid) {
     throw new Error('agGrid module is not available');
   }

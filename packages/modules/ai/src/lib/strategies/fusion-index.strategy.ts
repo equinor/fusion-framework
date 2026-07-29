@@ -92,6 +92,8 @@ function createSearchClient(
  * const results = await store.invoke('quarterly earnings summary');
  * ```
  */
+// Deliberately co-located with `FUSION_INDEX_STRATEGY_NAME` above
+// fusion-lint-disable-next-line single-export-per-file
 export const createFusionAiIndexStrategy = async (modules: {
   auth: AuthProvider;
   serviceDiscovery: IServiceDiscoveryProvider;

@@ -7,6 +7,7 @@ import {
 export const configure: AppModuleInitiator = (configurator) => {
   enableContext(configurator, async (builder) => {
     builder.setContextFilter((items) => {
+      // Surface the intentional custom error when context search returns nothing.
       if (items.length === 0) {
         throw new FusionContextSearchError({
           title: 'This is a custom error',

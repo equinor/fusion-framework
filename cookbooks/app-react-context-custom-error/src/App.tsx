@@ -1,3 +1,7 @@
+/**
+ * Explains that the custom context error is demonstrated by the configured app.
+ * @returns The custom-error demonstration view.
+ */
 export const App = () => {
   return (
     <section>

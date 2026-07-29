@@ -49,6 +49,7 @@ export enum LogLevel {
 const resolveDefaultLogLevel = (): LogLevel => {
   const envLogLevel = process.env.FUSION_LOG_LEVEL;
 
+  // Only attempt to parse the environment variable when it's actually set
   if (envLogLevel) {
     try {
       return resolveLogLevel(envLogLevel);

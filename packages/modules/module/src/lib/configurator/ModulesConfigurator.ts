@@ -21,13 +21,13 @@ import type {
 } from './types.js';
 import type { FrameworkPluginCallback, FrameworkPluginTeardown } from '../plugin/index.js';
 
-import { runConfigurePhase } from './phases/configure.js';
-import { runInitializePhase } from './phases/initialize.js';
-import { runPostInitializePhase } from './phases/post-initialize.js';
-import { runPluginPhase } from './phases/plugin.js';
-import { runDisposePhase } from './phases/dispose.js';
+import { runConfigurePhase } from './phases/run-configure-phase.js';
+import { runInitializePhase } from './phases/run-initialize-phase.js';
+import { runPostInitializePhase } from './phases/run-post-initialize-phase.js';
+import { runPluginPhase } from './phases/run-plugin-phase.js';
+import { runDisposePhase } from './phases/run-dispose-phase.js';
 import { version } from '../../version.js';
-import { ModuleConfiguratorEventName } from './events.js';
+import { ModuleConfiguratorEventName } from './module-configurator-event-name.js';
 
 /**
  * Core orchestrator that drives the module lifecycle in Fusion Framework.
@@ -84,6 +84,11 @@ export class ModulesConfigurator<
    */
   static readonly className: string = 'ModulesConfigurator';
 
+  /**
+   * The current package version of the module configurator.
+   *
+   * @returns The semantic version string.
+   */
   get version(): string {
     return version;
   }
@@ -95,6 +100,12 @@ export class ModulesConfigurator<
   // Memory bound: ~24 KB at ~240 bytes/event × 100 events.
   #event$: ReplaySubject<ModuleEvent> = new ReplaySubject<ModuleEvent>(100);
 
+  /**
+   * Stream of lifecycle events emitted while modules are configured, initialized,
+   * and disposed.
+   *
+   * @returns An observable of {@link ModuleEvent} entries.
+   */
   public get event$(): IModulesConfigurator<TModules, TRef>['event$'] {
     return this.#event$.asObservable();
   }
@@ -184,6 +195,7 @@ export class ModulesConfigurator<
    * @param configs - One or more module configurator descriptors.
    */
   public configure(...configs: Array<IModuleConfigurator<AnyModule, TRef>>): void {
+    // Delegate each descriptor to addConfig so registration logic stays in one place
     for (const x of configs) {
       this.addConfig(x);
     }
@@ -198,6 +210,7 @@ export class ModulesConfigurator<
    *
    * @param config - The module configurator descriptor to register.
    * @template T - The module type being registered.
+   * @template TConfig - The resolved configuration type for the module.
    */
   public addConfig<T extends AnyModule, TConfig = ModuleConfigType<T>>(
     config: IModuleConfigurator<T, TRef, TConfig>,
@@ -218,7 +231,9 @@ export class ModulesConfigurator<
     });
     // Register each optional callback into its corresponding lifecycle phase array
     if (configure) this._configs.push((cfg, ref) => configure(cfg[module.name], ref));
+    // Register the afterConfig callback, if provided
     if (afterConfig) this._afterConfiguration.push((cfg) => afterConfig(cfg[module.name]));
+    // Register the afterInit callback, if provided
     if (afterInit) this._afterInit.push((instances) => afterInit(instances[module.name]));
   }
 
@@ -319,6 +334,7 @@ export class ModulesConfigurator<
    * @param ref - Optional reference forwarded to all module lifecycle hooks.
    * @returns A promise resolving to the sealed, initialized module instance.
    * @template T - Additional modules to merge into the instance type.
+   * @template R - The reference type, narrowed to `TRef`.
    */
   public async initialize<T, R extends TRef = TRef>(
     ref?: R,
@@ -327,12 +343,15 @@ export class ModulesConfigurator<
     const config = await this._configure<T, R>(ref);
     const configLoadTime = Math.round(performance.now() - configStart);
 
+    // Build a comma-separated module name list for telemetry properties
+    // Extract just the module names before joining into a display string
+    const configModuleNames = this.modules.map((m) => m.name).join(', ');
     this._registerEvent({
       level: ModuleEventLevel.Debug,
       name: ModuleConfiguratorEventName.InitializeConfigLoaded,
       message: `Modules configured in ${configLoadTime}ms`,
       properties: {
-        modules: this.modules.map((m) => m.name).join(', '),
+        modules: configModuleNames,
         count: this.modules.length,
         loadTime: configLoadTime,
       },
@@ -343,12 +362,15 @@ export class ModulesConfigurator<
     const instance = await this._initialize<T, R>(config, ref);
     const instanceLoadTime = Math.round(performance.now() - instanceStart);
 
+    // Build a comma-separated module name list for telemetry properties
+    // Extract just the module names before joining into a display string
+    const instanceModuleNames = this.modules.map((m) => m.name).join(', ');
     this._registerEvent({
       level: ModuleEventLevel.Debug,
       name: ModuleConfiguratorEventName.InitializeInstanceInitialized,
       message: `Modules initialized in ${instanceLoadTime}ms`,
       properties: {
-        modules: this.modules.map((m) => m.name).join(', '),
+        modules: instanceModuleNames,
         count: this.modules.length,
         loadTime: instanceLoadTime,
       },
@@ -356,12 +378,15 @@ export class ModulesConfigurator<
     });
 
     const totalLoadTime = configLoadTime + instanceLoadTime;
+    // Build a comma-separated module name list for telemetry properties
+    // Extract just the module names before joining into a display string
+    const totalModuleNames = this.modules.map((m) => m.name).join(', ');
     this._registerEvent({
       level: ModuleEventLevel.Information,
       name: ModuleConfiguratorEventName.Initialize,
       message: `initialize in ${totalLoadTime}ms`,
       properties: {
-        modules: this.modules.map((m) => m.name).join(', '),
+        modules: totalModuleNames,
         configLoadTime,
         instanceLoadTime,
         totalLoadTime,
@@ -371,6 +396,8 @@ export class ModulesConfigurator<
 
     await this._postInitialize<T, R>(instance, ref);
 
+    // `instance` is the freshly built module instance record, which is structurally compatible
+    // with `ModulesInstance<TModules>` but not nominally assignable across the generic params.
     const modules = Object.seal(
       Object.assign({}, instance, {
         dispose: () => this.dispose(instance as unknown as ModulesInstance<TModules>),
@@ -410,6 +437,8 @@ export class ModulesConfigurator<
    *
    * @param ref - Optional reference forwarded to module configure factories.
    * @returns A promise resolving to the merged module config map.
+   * @template T - Additional modules to merge into the instance type.
+   * @template R - The reference type, narrowed to `TRef`.
    * @protected
    */
   protected async _configure<T, R extends TRef = TRef>(
@@ -438,6 +467,8 @@ export class ModulesConfigurator<
    * @param config - The merged module config map from the configure phase.
    * @param ref - Optional reference forwarded to each module's `initialize` call.
    * @returns A promise resolving to the sealed map of initialized module providers.
+   * @template T - Additional modules to merge into the instance type.
+   * @template R - The reference type. Defaults to `TRef`.
    * @protected
    */
   protected async _initialize<T, R = TRef>(
@@ -464,6 +495,8 @@ export class ModulesConfigurator<
    *
    * @param instance - The sealed module instance from the initialize phase.
    * @param ref - Optional reference forwarded to each module's `postInitialize` call.
+   * @template T - Additional modules to merge into the instance type.
+   * @template R - The reference type. Defaults to `TRef`.
    * @protected
    */
   protected async _postInitialize<T, R = TRef>(
@@ -491,6 +524,8 @@ export class ModulesConfigurator<
    *
    * @param instance - The sealed module instance from the initialize phase.
    * @param ref - Optional reference forwarded to each plugin callback.
+   * @template T - Additional modules to merge into the instance type.
+   * @template R - The reference type, narrowed to `TRef`.
    * @protected
    */
   protected async _registerPlugins<T, R extends TRef = TRef>(

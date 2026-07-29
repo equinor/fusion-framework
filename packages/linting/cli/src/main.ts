@@ -1,6 +1,6 @@
 import { Command } from 'commander';
-import { createLintCommand } from './commands/lint.js';
-import { createChangedCommand } from './commands/changed.js';
+import { createLintCommand } from './commands/create-lint-command.js';
+import { createChangedCommand } from './commands/create-changed-command.js';
 
 /**
  * Run the standalone `fusion-lint` binary.

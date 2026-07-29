@@ -1,9 +1,7 @@
 import type { Module } from '@equinor/fusion-framework-module';
 import { AzureIdentityAuthConfigurator, type AzureIdentityAuthConfig } from './configurator.js';
-import {
-  AuthProviderDefaultCredential,
-  ensureCachePersistencePlugin,
-} from './AuthProviderDefaultCredential.js';
+import { AuthProviderDefaultCredential } from './AuthProviderDefaultCredential.js';
+import { ensureCachePersistencePlugin } from './ensure-cache-persistence-plugin.js';
 import { AuthProviderInteractiveBrowser } from './AuthProviderInteractiveBrowser.js';
 import { AuthProviderTokenOnly } from './AuthProviderTokenOnly.js';
 import type { IAuthProvider } from './AuthProvider.interface.js';
@@ -30,6 +28,7 @@ export const module: AzureIdentityModule = {
   initialize: async (args) => {
     const config: AzureIdentityAuthConfig = await args.config.createConfigAsync(args);
 
+    // Build the appropriate provider implementation for the configured auth mode
     switch (config.mode) {
       case 'interactive':
         // Register the cache persistence plugin lazily — only interactive mode

@@ -3,7 +3,7 @@ import { useMemo } from 'react';
 import type { Observable, OperatorFunction } from 'rxjs';
 
 import { type FrameworkEventMap, filterEvent } from '@equinor/fusion-framework-module-event';
-import { useEventProvider } from './EventProvider';
+import { useEventProvider } from './useEventProvider';
 
 export type EventStream<TKey extends keyof FrameworkEventMap = keyof FrameworkEventMap> =
   Observable<FrameworkEventMap[TKey]>;
@@ -23,6 +23,7 @@ export const useEventStream = <
 ): Observable<TData> => {
   const provider = useEventProvider();
   return useMemo(() => {
+    // Filter the event stream down to the requested key, then apply the caller's operator if given
     return provider.event$.pipe(filterEvent(key), operator ?? ((x) => x as Observable<TData>));
   }, [provider, key, operator]);
 };

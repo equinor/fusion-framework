@@ -1,6 +1,6 @@
 import type { Observable } from 'rxjs';
 
-export * from './actions';
+export * from '../actions/types.js';
 export * from './flow';
 export * from './observable';
 export * from './reducers';

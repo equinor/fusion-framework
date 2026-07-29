@@ -9,7 +9,7 @@
  */
 export * from '@equinor/fusion-framework-module-event';
 
-export { EventConsumer, EventProvider } from './eventContext';
+export { EventConsumer, EventProvider } from './event-context-components';
 
 export { useEventProvider } from './useEventProvider';
 export { useModulesEventProvider } from './useModulesEventProvider';

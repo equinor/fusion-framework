@@ -1,0 +1,155 @@
+import { HttpJsonResponseError } from '@equinor/fusion-framework-module-http/errors';
+import type { FetchRequest } from '@equinor/fusion-framework-module-http/client';
+
+import type { FusionFramework } from '@equinor/fusion-framework-cli/bin';
+
+import {
+  type ConsoleLogger,
+  formatPath,
+  chalk,
+  defaultHeaders,
+  formatAuthError,
+  formatTokenAcquisitionError,
+} from './utils/index.js';
+
+/**
+ * Options for tagging an application version in the app service.
+ *
+ * This interface defines the required and optional parameters for the
+ * {@link tagApplication} function, including the tag type, application key,
+ * version, framework instance, and logger.
+ *
+ * @property tag - The tag to apply to the application version (e.g., 'latest' or 'preview').
+ * @property appKey - The unique key identifying the application.
+ * @property version - The version of the application to tag.
+ * @property framework - The FusionFramework instance used for service discovery and requests.
+ * @property log - Optional logger for outputting progress and debug information.
+ *
+ * @public
+ */
+export type TagApplicationOptions = {
+  tag: string;
+  appKey: string;
+  version: string;
+  framework: FusionFramework;
+  log?: ConsoleLogger | null;
+};
+
+/**
+ * Tags an application version in the app service with a specified tag (e.g., 'latest', 'preview'
+ * or pr-1234).
+ *
+ * This function validates input, creates a client for the app service, and sends a tag request.
+ * It provides detailed logging and error handling for common failure scenarios.
+ *
+ * @param options - Tag, app key, version, framework instance, and logger.
+ * @returns The result of the tag operation from the app service.
+ * @throws If the tag, app key, or version is invalid, or if the tag operation fails.
+ * @public
+ */
+export const tagApplication = async (options: TagApplicationOptions) => {
+  const { tag, appKey, version, framework, log } = options;
+
+  // Validate tag value - ensure it's a non-empty string
+  if (!tag || typeof tag !== 'string' || tag.trim().length === 0) {
+    log?.fail('🤪', 'Tag must be a non-empty string.');
+    process.exit(1);
+  }
+
+  // Validate tag value - ensure only a-z, A-Z, 0-9, "." and "-"
+  if (!/^[a-zA-Z0-9.-]+$/.test(tag)) {
+    log?.fail('🤪', 'Invalid tag. Use "latest", "preview" or string [a-z, A-Z, 0-9, ".", "-"].');
+    process.exit(1);
+  }
+
+  // Validate app key
+  if (!appKey) {
+    log?.fail('🤪', 'Application key is required.');
+    process.exit(1);
+  }
+  // Validate version
+  if (!version) {
+    log?.fail('🤪', 'Version is required.');
+    process.exit(1);
+  }
+
+  // Create a client for the 'apps' service — inside try/catch to
+  // handle token acquisition failures (e.g. expired refresh tokens).
+  try {
+    const appClient = await framework.serviceDiscovery.createClient('apps');
+    // Subscribe to outgoing requests for logging and debugging
+    appClient.request$.subscribe((request: FetchRequest) => {
+      log?.debug('Request:', request);
+      log?.info('🌎', 'Executing request to:', formatPath(request.uri));
+    });
+
+    log?.start('Publishing application config');
+    // Send a PUT request to tag the application version
+    const result = await appClient.json(`/apps/${appKey}/tags/${tag}`, {
+      method: 'PUT',
+      body: { version },
+      headers: defaultHeaders,
+    });
+    log?.debug('Response:', result);
+    log?.succeed(
+      'Tagged application successfully',
+      chalk.greenBright(`${appKey}@${version} - ${tag}`),
+    );
+    return result;
+  } catch (error) {
+    // Handle known HTTP errors with specific log messages
+    if (error instanceof HttpJsonResponseError) {
+      // Map known HTTP status codes to actionable log messages
+      switch (error.response.status) {
+        case 410:
+          log?.fail(
+            '🤬',
+            `App ${appKey} is deleted from apps-service. Please check the app key and try again.`,
+          );
+          break;
+        case 404:
+          log?.fail('🤬', `App ${appKey} not found. Please check the app key and try again.`);
+          break;
+        case 403: // falls through
+        case 401: {
+          const authMsg = formatAuthError(error.response.status, `tag ${appKey}@${version}`);
+          log?.fail('🔒', 'Authentication/authorization error tagging application.');
+          // Only print the formatted message if one was resolved
+          if (authMsg) {
+            log?.error(authMsg);
+          }
+          process.exit(1);
+          break;
+        }
+        default:
+          log?.fail(
+            '🤬',
+            'Failed to tag application',
+            `Status code: ${error.response.status}`,
+            `Error: ${error.message}`,
+          );
+          break;
+      }
+    }
+    // Surface MSAL token acquisition failures with actionable guidance
+    const tokenMsg = formatTokenAcquisitionError(error, `tag ${appKey}@${version}`);
+    // Only print the formatted message if a token-acquisition failure was resolved
+    if (tokenMsg) {
+      log?.fail('🔒', `Token acquisition failed tagging ${appKey}@${version}`);
+      log?.error(tokenMsg);
+      process.exit(1);
+    }
+    // Unknown error — log message only, no stack trace
+    log?.fail(
+      '🤬',
+      'Failed to tag application:',
+      error instanceof Error ? error.message : String(error),
+    );
+    // Exit with non-zero code — do not rethrow, to avoid a second
+    // ugly error dump in the calling publish command's .catch() handler.
+    process.exit(1);
+  }
+};
+
+// Export as default for compatibility with import patterns
+export default tagApplication;

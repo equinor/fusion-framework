@@ -1,5 +1,5 @@
 import type { Module, ModuleInstance, ModulesInstanceType } from '@equinor/fusion-framework-module';
-import type { FrameworkEvent, FrameworkEventInit } from './event';
+import type { FrameworkEvent, FrameworkEventInit } from './FrameworkEvent';
 import type { IEventModuleConfigurator } from './configurator';
 import { EventModuleProvider, type IEventModuleProvider } from './provider';
 
@@ -33,6 +33,7 @@ export const module: EventModule = {
   configure: (ref?: Partial<ModulesInstanceType<[EventModule]>>) => {
     const configurator = {} as IEventModuleConfigurator;
     const parentProvider = ref?.event;
+    // Only wire up bubbling when a parent event provider actually exists
     if (parentProvider) {
       configurator.onBubble = async (e) => {
         await parentProvider.dispatchEvent(e);

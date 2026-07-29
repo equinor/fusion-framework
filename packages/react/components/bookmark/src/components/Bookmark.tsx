@@ -1,6 +1,6 @@
 import { EMPTY, map } from 'rxjs';
 import { useBookmarkGrouping } from '../hooks';
-import { BookmarkFilter } from './filter/Filter';
+import { BookmarkFilter } from './filter/BookmarkFilter';
 import { SectionList } from './sectionList/SectionList';
 import { useMemo } from 'react';
 
@@ -42,6 +42,11 @@ const Styled = {
     `,
 };
 
+/**
+ * Renders the list of bookmark sections and the current bookmark's loading/message state.
+ *
+ * @returns The bookmark list UI
+ */
 export const Bookmark = () => {
   const { provider } = useBookmarkComponentContext();
 
@@ -50,10 +55,10 @@ export const Bookmark = () => {
   );
 
   const { value: isLoading } = useObservableState(
-    useMemo(
-      () => (provider?.status$ || EMPTY).pipe(map((status) => !!status.has('fetch_bookmarks'))),
-      [provider],
-    ),
+    useMemo(() => {
+      // Derive a boolean loading flag from whether 'fetch_bookmarks' is an active status
+      return (provider?.status$ || EMPTY).pipe(map((status) => !!status.has('fetch_bookmarks')));
+    }, [provider]),
     { initial: true },
   );
 
@@ -61,9 +66,11 @@ export const Bookmark = () => {
     useBookmarkGrouping(bookmarks);
 
   const content = useMemo(() => {
+    // Show the loading placeholder while bookmarks are still being fetched
     if (isLoading) {
       return <Loading />;
     }
+    // Show an empty-state message when there are no bookmark groups to display
     if (bookmarkGroups.length === 0) {
       return (
         <Message title="No Bookmarks" type="NoContent">

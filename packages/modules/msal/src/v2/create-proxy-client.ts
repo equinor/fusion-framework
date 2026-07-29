@@ -28,9 +28,11 @@ import type { AccountInfo } from './types';
 export function createProxyClient(client: IMsalClient): IAuthClient {
   const proxy = new Proxy(client, {
     get: (target: IMsalClient, prop: keyof IAuthClient) => {
+      // Adapt each v4 client member to the v2-compatible shape expected by callers
       switch (prop) {
         case 'getAllAccounts': {
           return () => {
+            // Map each v4 account shape to its v2-compatible equivalent
             return target.getAllAccounts().map(mapAccountInfo);
           };
         }
@@ -69,6 +71,7 @@ export function createProxyClient(client: IMsalClient): IAuthClient {
           return async () => {
             const result = await target.handleRedirectPromise();
 
+            // No redirect result means there's nothing pending to map
             if (!result) {
               return null;
             }
@@ -80,6 +83,7 @@ export function createProxyClient(client: IMsalClient): IAuthClient {
         case 'getActiveAccount': {
           return () => {
             const account = target.getActiveAccount();
+            // No active account means there's nothing to map
             if (!account) {
               return null;
             }
@@ -185,5 +189,7 @@ export function createProxyClient(client: IMsalClient): IAuthClient {
     },
   });
 
+  // The Proxy handler above implements every member of `IAuthClient` at runtime via its `get`
+  // trap, but TypeScript can't verify a `Proxy<T>` satisfies `T` structurally.
   return proxy as unknown as IAuthClient;
 }
