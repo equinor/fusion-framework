@@ -2,7 +2,11 @@ import { describe, it, expect } from 'vitest';
 import { singleExportPerFile } from '../single-export-per-file/index.js';
 import type { Diagnostic, Rule } from '@equinor/fusion-framework-lint-core';
 
-function lint(source: string, file = 'fixture.ts', rule: Rule = singleExportPerFile()): Diagnostic[] {
+function lint(
+  source: string,
+  file = 'fixture.ts',
+  rule: Rule = singleExportPerFile(),
+): Diagnostic[] {
   // mirror the engine: skip `check` entirely when `match` opts the file out
   if (rule.match && !rule.match(file)) return [];
   return rule.check(source, { filePath: file });

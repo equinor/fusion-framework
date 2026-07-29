@@ -36,11 +36,11 @@ function extractNavigationItems(routes: RouteObject[], currentPath: string = '')
     if (route.index) {
       // Index route renders at the parent path
       fullPath = currentPath || '/';
-    // Path routes extend the accumulated URL for nested navigation.
+      // Path routes extend the accumulated URL for nested navigation.
     } else if (route.path) {
       // For routes with a path, join current path with route path
       fullPath = joinPaths(currentPath, route.path);
-    // Layout routes without a path keep the current URL for their children.
+      // Layout routes without a path keep the current URL for their children.
     } else {
       // Route without path or index (layout route) renders at current path
       fullPath = currentPath || '/';

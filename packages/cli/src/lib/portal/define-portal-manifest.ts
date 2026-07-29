@@ -33,11 +33,13 @@ export { createPortalManifestFromPackage } from './create-portal-manifest-from-p
 export const definePortalManifest = <T extends PortalManifestSchemaType>(fn: PortalManifestFn<T>) =>
   fn;
 
-export { PortalManifestSchema, PortalManifestSchemaType as PortalManifest } from './portal-manifest-schema.js';
+export {
+  PortalManifestSchema,
+  PortalManifestSchemaType as PortalManifest,
+} from './portal-manifest-schema.js';
 export {
   PortalManifestBuildSchema,
   type PortalManifestBuildSchemaType as PortalManifestBuild,
 } from './portal-manifest-build-schema.js';
 
 export { validatePortalManifest } from './validate-portal-manifest.js';
-

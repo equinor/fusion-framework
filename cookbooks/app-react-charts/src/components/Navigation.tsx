@@ -83,7 +83,7 @@ export const Navigation = () => {
                   active={item.active}
                 />
               </div>
-          ))}
+            ))}
         </SideBar.Accordion>
       </SideBar.Content>
     </SideBar>

@@ -107,4 +107,3 @@ export async function fetchPackageInfo(
     );
   }
 }
-

@@ -1,7 +1,11 @@
 import type { AppManifest } from '@equinor/fusion-framework-module-app';
 import type { ApiAppConfig } from '@equinor/fusion-framework-module-app/schemas.js';
 
-import { processServices, type DevServerOptions, type FusionTemplateEnv } from '@equinor/fusion-framework-dev-server';
+import {
+  processServices,
+  type DevServerOptions,
+  type FusionTemplateEnv,
+} from '@equinor/fusion-framework-dev-server';
 
 /**
  * PortalManifest describes the minimal structure required for a portal manifest.

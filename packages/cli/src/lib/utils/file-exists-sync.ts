@@ -32,4 +32,3 @@ export const fileExistsSync = (file: string, options?: Options) => {
     return false;
   }
 };
-

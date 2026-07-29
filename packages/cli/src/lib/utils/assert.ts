@@ -5,5 +5,3 @@
  * with proper TypeScript type narrowing support.
  */
 export { default as assert, AssertionError } from 'node:assert';
-
-

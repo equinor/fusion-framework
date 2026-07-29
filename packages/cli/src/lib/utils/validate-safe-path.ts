@@ -44,4 +44,3 @@ export function validateSafePath(targetPath: string, baseDir?: string): string {
 
   return resolvedPath;
 }
-

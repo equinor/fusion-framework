@@ -77,4 +77,3 @@ export const PortalManifestBuildSchema = z.object({
  * This type is inferred from the build Zod schema and should be used for build-specific logic.
  */
 export type PortalManifestBuildSchemaType = z.infer<typeof PortalManifestBuildSchema>;
-

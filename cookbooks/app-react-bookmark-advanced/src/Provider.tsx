@@ -2,13 +2,7 @@ import { useCurrentBookmark } from '@equinor/fusion-framework-react-module-bookm
 
 import { useBookmark } from '@equinor/fusion-framework-react-app/bookmark';
 
-import {
-  type FC,
-  type PropsWithChildren,
-  useCallback,
-  useEffect,
-  useState,
-} from 'react';
+import { type FC, type PropsWithChildren, useCallback, useEffect, useState } from 'react';
 
 import { Context } from './context';
 import { init } from './init';

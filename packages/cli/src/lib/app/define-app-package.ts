@@ -43,4 +43,3 @@ export function defineAppPackage(fnOrObject: DefinePackageExporter): DefinePacka
   // This function is intentionally a passthrough for both object and function types.
   return fnOrObject;
 }
-

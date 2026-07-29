@@ -19,4 +19,3 @@ export const createEnvOption = (options: { default?: FusionEnv; allowDev: boolea
     .env('FUSION_ENV')
     .default(options.default ?? resolveDefaultEnv(options.allowDev));
 };
-

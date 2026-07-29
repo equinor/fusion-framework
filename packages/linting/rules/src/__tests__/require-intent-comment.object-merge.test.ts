@@ -85,7 +85,9 @@ describe('require-intent-comment/object-merge — failing', () => {
   });
 
   it('fails: single-source Object.assign() inside a reduce accumulator with no comment', () => {
-    const diags = lint(`items.reduce((acc, item) => Object.assign(acc, { [item.key]: item }), {});`);
+    const diags = lint(
+      `items.reduce((acc, item) => Object.assign(acc, { [item.key]: item }), {});`,
+    );
     expect(diags).toHaveLength(1);
     expect(diags[0].message).toContain('Object.assign()');
   });

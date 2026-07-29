@@ -46,9 +46,7 @@ export const FeatureFlags = () => {
       >
         Feature Flags
       </Typography>
-      <div style={{ display: 'flex', flexFlow: 'column', padding: '1rem' }}>
-        {featureRows}
-      </div>
+      <div style={{ display: 'flex', flexFlow: 'column', padding: '1rem' }}>{featureRows}</div>
     </div>
   );
 };

@@ -44,4 +44,3 @@ export function getBaseType<T extends string>(type: T): BaseType<T> {
 export function getType<T extends string>(actionCreator: PayloadActionCreator<unknown, T>): T {
   return `${actionCreator}` as T;
 }
-

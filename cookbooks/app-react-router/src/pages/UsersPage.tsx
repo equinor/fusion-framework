@@ -267,9 +267,7 @@ export default function UsersPage(props: RouteComponentProps<UsersPageLoaderData
         )}
       </Styled.Info>
 
-      <Styled.UserList>
-        {userItems}
-      </Styled.UserList>
+      <Styled.UserList>{userItems}</Styled.UserList>
 
       <Styled.Pagination>
         <Button variant="outlined" onClick={() => goToPage(page - 1)} disabled={!hasPrev}>

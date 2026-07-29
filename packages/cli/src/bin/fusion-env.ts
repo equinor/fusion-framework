@@ -25,4 +25,3 @@ export enum FusionEnv {
   Production = 'fprd',
   Development = 'dev',
 }
-

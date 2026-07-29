@@ -260,8 +260,7 @@ export const useContextResolver = (): {
           try {
             // Transform service results and convert failures into displayable selector rows.
             return lastValueFrom(
-              provider.queryContext(search)
-                .pipe(
+              provider.queryContext(search).pipe(
                 map(mapper),
                 map((x) =>
                   x.length

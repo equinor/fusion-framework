@@ -26,4 +26,3 @@ export type PortalSchemaExport<T extends PortalSchema> = T | PortalSchemaFn<T>;
  * @returns The provided schema function.
  */
 export const definePortalSchema = <T extends PortalSchema>(fn: PortalSchemaFn<T>) => fn;
-

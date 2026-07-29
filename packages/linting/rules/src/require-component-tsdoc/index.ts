@@ -1,5 +1,10 @@
 import type { Node } from 'web-tree-sitter';
-import type { Diagnostic, Severity, RuleDef, LintContext } from '@equinor/fusion-framework-lint-core';
+import type {
+  Diagnostic,
+  Severity,
+  RuleDef,
+  LintContext,
+} from '@equinor/fusion-framework-lint-core';
 import { createMatcher, resolveMatch } from '@equinor/fusion-framework-lint-core';
 import { tsxParser } from '../tsx-parser.js';
 

@@ -29,15 +29,17 @@ function extractText(content: string | Array<Record<string, unknown>>): string {
   if (typeof content === 'string') return content;
   // Structured content is an array of blocks; only the text blocks are renderable here.
   if (Array.isArray(content)) {
-    return content
-      // Keep only content blocks that the assistant can render as text.
-      .filter(
-        (c): c is { type: 'text'; text: string } =>
-          typeof c === 'object' && 'type' in c && c.type === 'text',
-      )
-      // Combine separate text blocks into the complete response delta.
-      .map((c) => c.text)
-      .join('');
+    return (
+      content
+        // Keep only content blocks that the assistant can render as text.
+        .filter(
+          (c): c is { type: 'text'; text: string } =>
+            typeof c === 'object' && 'type' in c && c.type === 'text',
+        )
+        // Combine separate text blocks into the complete response delta.
+        .map((c) => c.text)
+        .join('')
+    );
   }
   return '';
 }

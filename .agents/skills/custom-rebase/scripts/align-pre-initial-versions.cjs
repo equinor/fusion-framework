@@ -69,11 +69,7 @@ function main() {
   }
 
   const pre = readJson(prePath);
-  if (
-    pre?.mode !== 'pre' ||
-    !pre.initialVersions ||
-    typeof pre.initialVersions !== 'object'
-  ) {
+  if (pre?.mode !== 'pre' || !pre.initialVersions || typeof pre.initialVersions !== 'object') {
     console.error('Invalid pre.json: expected { mode: "pre", initialVersions: { ... } }');
     process.exit(1);
   }

@@ -1,6 +1,9 @@
 import { useEffect, useMemo, useState } from 'react';
 
-import { useHttpClient, type HttpJsonResponseError } from '@equinor/fusion-framework-react-app/http';
+import {
+  useHttpClient,
+  type HttpJsonResponseError,
+} from '@equinor/fusion-framework-react-app/http';
 
 import {
   type ApiPersonSearchResultV2,

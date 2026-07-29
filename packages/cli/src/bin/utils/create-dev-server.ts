@@ -2,7 +2,10 @@ import type { Plugin } from 'vite';
 
 import { loadDevServerConfig, type RuntimeEnv } from '@equinor/fusion-framework-cli/lib';
 
-import { createDevServer as createDevServerFn, type UserConfig } from '@equinor/fusion-framework-dev-server';
+import {
+  createDevServer as createDevServerFn,
+  type UserConfig,
+} from '@equinor/fusion-framework-dev-server';
 
 import type { ConsoleLogger } from './ConsoleLogger.js';
 import { normalizeDevServerConfig } from './normalize-dev-server-config.js';
@@ -69,4 +72,3 @@ export const createDevServer = async (
     return createDevServerFn(baseConfig, overrides);
   }
 };
-

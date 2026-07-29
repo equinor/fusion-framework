@@ -1,4 +1,4 @@
-import { Search, } from '@equinor/eds-core-react';
+import { Search } from '@equinor/eds-core-react';
 import type { GroupingKeys } from '../../hooks/useBookmarkGrouping';
 
 import styled from 'styled-components';

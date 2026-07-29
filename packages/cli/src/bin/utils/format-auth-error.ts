@@ -115,4 +115,3 @@ export function formatAuthError(status: number, context: string): string | undef
       return undefined;
   }
 }
-
