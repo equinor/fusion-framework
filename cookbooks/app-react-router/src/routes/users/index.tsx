@@ -9,7 +9,7 @@ import { Button, Chip, Typography } from '@equinor/eds-core-react';
 import { work_outline } from '@equinor/eds-icons';
 import { tokens } from '@equinor/eds-tokens';
 import styled from 'styled-components';
-import type { User } from '../api/UserApi';
+import type { User } from '../../api/UserApi';
 
 type UsersPageLoaderData = {
   users: User[];

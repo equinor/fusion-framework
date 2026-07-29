@@ -239,14 +239,38 @@ function getAvailableExports(filePath: string, currentFileId: string, debug: boo
 }
 
 /**
- * Generates a PascalCase component name from a file path
+ * Generates a unique PascalCase component name from a route file path.
+ *
+ * Supports two file-naming conventions:
+ * - Suffix-based (e.g. `home.page.tsx`): `-`, `_`, and `.` are treated as word
+ *   separators, producing `HomePage`.
+ * - Directory-based (Qwik-style fs-routing, e.g. `products/[id]/index.tsx`):
+ *   when the basename is literally `index`, the name is instead derived from
+ *   its directory path (bracketed dynamic segments have their brackets
+ *   stripped), so every route's `index.tsx` resolves to a distinct
+ *   identifier (e.g. `ProductsId`) instead of colliding on the literal
+ *   basename `index`. Non-`index` basenames are used as-is, regardless of
+ *   how deeply nested the file is.
  */
 function generateComponentName(filePath: string): string {
-  const baseName = path.basename(filePath, path.extname(filePath));
-  return (
-    baseName.charAt(0).toUpperCase() +
-    baseName.slice(1).replace(/[-_](.)/g, (_, c) => c.toUpperCase())
-  );
+  const withoutExt = filePath.replace(/\.[^./]+$/, '');
+  // Drop the extension and any "." / ".." segments so only meaningful path parts remain.
+  const segments = withoutExt.split('/').filter((segment) => segment && segment !== '.' && segment !== '..');
+  const last = segments[segments.length - 1] ?? 'index';
+
+  // Only fold in ancestor directory segments when the basename itself carries no
+  // naming information (i.e. it's a bare "index" file); otherwise use it as-is.
+  const nameSegments = last.toLowerCase() === 'index' && segments.length > 1 ? segments.slice(0, -1) : [last];
+
+  // Strip dynamic-segment brackets and convert each path segment to PascalCase before joining.
+  return nameSegments
+    .map((segment) =>
+      segment
+        .replace(/[[\]]/g, '')
+        .replace(/[-_.](.)/g, (_, c: string) => c.toUpperCase())
+        .replace(/^(.)/, (c) => c.toUpperCase()),
+    )
+    .join('');
 }
 
 /**

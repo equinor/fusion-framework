@@ -6,8 +6,8 @@ import type {
 } from '@equinor/fusion-framework-react-router';
 import { tokens } from '@equinor/eds-tokens';
 import styled from 'styled-components';
-import { UserDetail } from '../components/user/UserDetail';
-import type { User } from '../api/UserApi';
+import { UserDetail } from '../../../components/user/UserDetail';
+import type { User } from '../../../api/UserApi';
 
 export const handle = {
   route: {

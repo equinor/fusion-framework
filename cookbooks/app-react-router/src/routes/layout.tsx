@@ -1,9 +1,9 @@
 import { Outlet, useNavigation } from '@equinor/fusion-framework-react-router';
 import { tokens } from '@equinor/eds-tokens';
 import { Paper, Typography } from '@equinor/eds-core-react';
-import Navigation from './components/Navigation';
-import RouterDebugToolbar from './components/RouterDebugToolbar';
-import Loader from './components/Loader';
+import Navigation from '../components/Navigation';
+import RouterDebugToolbar from '../components/RouterDebugToolbar';
+import Loader from '../components/Loader';
 import styled from 'styled-components';
 
 const Styled = {

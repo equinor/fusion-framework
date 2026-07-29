@@ -5,9 +5,9 @@ import type {
   RouteComponentProps,
   RouterHandle,
 } from '@equinor/fusion-framework-react-router';
-import type { Product } from '../api/ProductApi';
-import { ProductFilters } from '../components/product/ProductFilters';
-import { ProductList } from '../components/product/ProductList';
+import type { Product } from '../../api/ProductApi';
+import { ProductFilters } from '../../components/product/ProductFilters';
+import { ProductList } from '../../components/product/ProductList';
 import { Typography } from '@equinor/eds-core-react';
 import { tokens } from '@equinor/eds-tokens';
 import { shopping_card } from '@equinor/eds-icons';

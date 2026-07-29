@@ -2,7 +2,7 @@ import { SideBar, type SidebarLinkProps } from '@equinor/eds-core-react';
 import { useNavigate, useLocation } from '@equinor/fusion-framework-react-router';
 import type { RouteObject } from '@equinor/fusion-framework-react-router';
 import { useNavigationItems } from '../hooks/useNavigationItems';
-import { pages } from '../pages';
+import { pages } from '../routes/routes';
 
 /**
  * Renders sidebar links for the current route tree and navigates on selection.

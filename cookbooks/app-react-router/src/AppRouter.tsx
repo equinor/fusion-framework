@@ -4,7 +4,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { Router } from '@equinor/fusion-framework-react-router';
 import { useAppModule } from '@equinor/fusion-framework-react-app';
 
-import routes from './routes';
+import routes from './routes/routes';
 import { Api } from './api';
 
 /**

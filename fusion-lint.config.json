@@ -14,7 +14,8 @@
         "actions.ts",
         "options.ts",
         "predicates.ts",
-        "helpers.ts"
+        "helpers.ts",
+        "routes.ts"
       ]
     },
     "filename-convention": {
@@ -36,7 +37,8 @@
         "main.ts",
         "main.tsx",
         "plugin.ts",
-        "*.command.ts"
+        "*.command.ts",
+        "layout.tsx"
       ]
     }
   },

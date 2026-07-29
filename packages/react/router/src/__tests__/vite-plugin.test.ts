@@ -148,4 +148,32 @@ describe('reactRouterPlugin', () => {
     // Normalize whitespace for comparison
     expect(normalizeCode(transformResult)).toBe(normalizeCode(expected));
   });
+
+  it('should generate distinct identifiers for directory-based (fs-routing) index.tsx files under different parent directories', () => {
+    const inputCode = [
+      `import { prefix, index, route } from '@equinor/fusion-framework-react-router/routes';`,
+      `export const routes = [`,
+      `  prefix('products', [`,
+      `    index('./mocks/fs-routes/products/index.tsx'),`,
+      `    route(':id', './mocks/fs-routes/products/[id]/index.tsx')`,
+      `  ]),`,
+      `  prefix('users', [`,
+      `    index('./mocks/fs-routes/users/index.tsx'),`,
+      `    route(':id', './mocks/fs-routes/users/[id]/index.tsx')`,
+      `  ]),`,
+      `];`,
+    ].join('\n');
+
+    const transformResult = plugin.transform(inputCode, testFileId);
+
+    expect(transformResult).toBeDefined();
+    expect(transformResult).not.toBeNull();
+
+    // Every "index.tsx" file must resolve to a distinct identifier derived from its
+    // directory path, not collide on the literal basename "index".
+    expect(transformResult).toContain('default as MocksFsRoutesProducts,');
+    expect(transformResult).toContain('default as MocksFsRoutesProductsId,');
+    expect(transformResult).toContain('default as MocksFsRoutesUsers,');
+    expect(transformResult).toContain('default as MocksFsRoutesUsersId,');
+  });
 });
