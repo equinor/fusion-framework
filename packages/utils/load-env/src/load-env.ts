@@ -101,9 +101,8 @@ export const loadEnv = (options: {
   for (const [key, value] of Object.entries(parsed)) {
     // Keep only keys matching one of the configured prefixes
     if (
-      envPrefix
-        // Check every configured prefix for a match
-        .some((prefix) => key.startsWith(prefix))
+      // Check every configured prefix for a match
+      envPrefix.some((prefix) => key.startsWith(prefix))
     ) {
       env[key] = value;
     }
@@ -114,9 +113,8 @@ export const loadEnv = (options: {
   for (const key in process.env) {
     // Inline process.env values override file-based values for matching prefixes
     if (
-      envPrefix
-        // Check every configured prefix for a match
-        .some((prefix) => key.startsWith(prefix))
+      // Check every configured prefix for a match
+      envPrefix.some((prefix) => key.startsWith(prefix))
     ) {
       env[key] = process.env[key] as string;
     }
