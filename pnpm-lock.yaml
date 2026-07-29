@@ -1231,10 +1231,10 @@ importers:
         version: 3.36.0
       tree-sitter:
         specifier: ^0.25.0
-        version: 0.25.0
+        version: 0.25.1
       tree-sitter-typescript:
         specifier: ^0.23.2
-        version: 0.23.2(tree-sitter@0.25.0)
+        version: 0.23.2(tree-sitter@0.25.1)
       ts-morph:
         specifier: ^28.0.0
         version: 28.0.0
@@ -1544,7 +1544,7 @@ importers:
         version: link:../core
       tree-sitter-typescript:
         specifier: ^0.23.2
-        version: 0.23.2(tree-sitter@0.25.0)
+        version: 0.23.2(tree-sitter@0.25.1)
       web-tree-sitter:
         specifier: ^0.26.11
         version: 0.26.11
@@ -9764,6 +9764,10 @@ packages:
     resolution: {integrity: sha512-/bRZty2mXUIFY/xU5HLvveNHlswNJej+RnxBjOMkidWfwZzgTbPG1E3K5TOxRLOR+5hX7bSofy8yf1hZevMS8A==}
     engines: {node: ^18 || ^20 || >= 21}
 
+  node-addon-api@8.9.0:
+    resolution: {integrity: sha512-ekZMeaaIzSQTSpr7X2X3iJM7lTzgnx8ahAG9pJfT/7+14mlEM8ZYQ9cgCDvSSRbReFK0oHli3WrZdCiRsgAT9Q==}
+    engines: {node: ^18 || ^20 || >= 21}
+
   node-fetch@2.7.0:
     resolution: {integrity: sha512-c4FRfUm/dbcWZ7U+1Wq0AwCyFL+3nt2bEw05wfxSz+DWpWsitgmSgYmy2dQdWyKC1694ELPqMs/YzUSNozLt8A==}
     engines: {node: 4.x || >=6.0.0}
@@ -10997,8 +11001,8 @@ packages:
       tree-sitter:
         optional: true
 
-  tree-sitter@0.25.0:
-    resolution: {integrity: sha512-PGZZzFW63eElZJDe/b/R/LbsjDDYJa5UEjLZJB59RQsMX+fo0j54fqBPn1MGKav/QNa0JR0zBiVaikYDWCj5KQ==}
+  tree-sitter@0.25.1:
+    resolution: {integrity: sha512-mrcEdkYtHfrK1A6fs3O6FxkBo0Qig5XUXqHhxUOQu0bmPo00QF4XaSx4edpazdHwxnSCjlGKGgIqWdaN4dvTLA==}
 
   trim-lines@3.0.1:
     resolution: {integrity: sha512-kRj8B+YHZCc9kQYdWfJB2/oUl9rA99qbowYYBtr4ui4mZyAQ2JpvVBd/6U2YloATfqBhBTSMhTpgBHtU0Mf3Rg==}
@@ -19315,6 +19319,8 @@ snapshots:
 
   node-addon-api@8.5.0: {}
 
+  node-addon-api@8.9.0: {}
+
   node-fetch@2.7.0:
     dependencies:
       whatwg-url: 5.0.0
@@ -20677,24 +20683,24 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
-  tree-sitter-javascript@0.23.1(tree-sitter@0.25.0):
+  tree-sitter-javascript@0.23.1(tree-sitter@0.25.1):
     dependencies:
       node-addon-api: 8.5.0
       node-gyp-build: 4.8.4
     optionalDependencies:
-      tree-sitter: 0.25.0
+      tree-sitter: 0.25.1
 
-  tree-sitter-typescript@0.23.2(tree-sitter@0.25.0):
+  tree-sitter-typescript@0.23.2(tree-sitter@0.25.1):
     dependencies:
       node-addon-api: 8.5.0
       node-gyp-build: 4.8.4
-      tree-sitter-javascript: 0.23.1(tree-sitter@0.25.0)
+      tree-sitter-javascript: 0.23.1(tree-sitter@0.25.1)
     optionalDependencies:
-      tree-sitter: 0.25.0
+      tree-sitter: 0.25.1
 
-  tree-sitter@0.25.0:
+  tree-sitter@0.25.1:
     dependencies:
-      node-addon-api: 8.5.0
+      node-addon-api: 8.9.0
       node-gyp-build: 4.8.4
 
   trim-lines@3.0.1: {}
