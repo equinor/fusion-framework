@@ -36,20 +36,7 @@
         "main.ts",
         "main.tsx",
         "plugin.ts",
-        "build.ts",
-        "check.ts",
-        "config.ts",
-        "dev.ts",
-        "manifest.ts",
-        "pack.ts",
-        "publish.ts",
-        "serve.ts",
-        "tag.ts",
-        "upload.ts",
-        "login.ts",
-        "logout.ts",
-        "token.ts",
-        "schema.ts"
+        "*.command.ts"
       ]
     }
   },

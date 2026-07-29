@@ -1,15 +1,15 @@
 import { createCommand } from 'commander';
 
-import devCommand from './dev.js';
-import serveCommand from './serve.js';
-import manifestCommand from './manifest.js';
-import schemaCommand from './schema.js';
-import buildCommand from './build.js';
-import packCommand from './pack.js';
-import uploadCommand from './upload.js';
-import tagCommand from './tag.js';
-import publishCommand from './publish.js';
-import configCommand from './config.js';
+import devCommand from './dev.command.js';
+import serveCommand from './serve.command.js';
+import manifestCommand from './manifest.command.js';
+import schemaCommand from './schema.command.js';
+import buildCommand from './build.command.js';
+import packCommand from './pack.command.js';
+import uploadCommand from './upload.command.js';
+import tagCommand from './tag.command.js';
+import publishCommand from './publish.command.js';
+import configCommand from './config.command.js';
 
 export const command = createCommand('portal')
   .description('Develop and deploy portal templates')

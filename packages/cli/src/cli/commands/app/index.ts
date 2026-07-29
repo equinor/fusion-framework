@@ -1,15 +1,15 @@
 import { createCommand } from 'commander';
 
-import buildCommand from './build.js';
-import packCommand from './pack.js';
-import checkCommand from './check.js';
-import uploadCommand from './upload.js';
-import configCommand from './config.js';
-import tagCommand from './tag.js';
-import devCommand from './dev.js';
-import serveCommand from './serve.js';
-import manifestCommand from './manifest.js';
-import publishCommand from './publish.js';
+import buildCommand from './build.command.js';
+import packCommand from './pack.command.js';
+import checkCommand from './check.command.js';
+import uploadCommand from './upload.command.js';
+import configCommand from './config.command.js';
+import tagCommand from './tag.command.js';
+import devCommand from './dev.command.js';
+import serveCommand from './serve.command.js';
+import manifestCommand from './manifest.command.js';
+import publishCommand from './publish.command.js';
 import createAppCommand from '../create/create-app-command.js';
 
 // TODO(#5073): remove in next major version v12

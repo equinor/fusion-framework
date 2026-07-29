@@ -6,7 +6,7 @@
 
 import chalk from 'chalk';
 
-import packCommand from './pack.js';
+import packCommand from './pack.command.js';
 import { DEFAULT_ARCHIVE } from './default-archive.js';
 packCommand.alias('build-pack').hook('preAction', (thisCommand) => {
   // Only apply the deprecated-alias behavior when invoked via the old command name
@@ -21,7 +21,7 @@ packCommand.alias('build-pack').hook('preAction', (thisCommand) => {
   }
 });
 
-import uploadCommand from './upload.js';
+import uploadCommand from './upload.command.js';
 uploadCommand.alias('build-upload').hook('preAction', (thisCommand) => {
   // Only apply the deprecated-alias behavior when invoked via the old command name
   if (process.argv[3] === 'build-upload') {
@@ -39,7 +39,7 @@ uploadCommand.alias('build-upload').hook('preAction', (thisCommand) => {
   }
 });
 
-import manifestCommand from './manifest.js';
+import manifestCommand from './manifest.command.js';
 manifestCommand.alias('build-manifest').hook('preAction', () => {
   // Only apply the deprecated-alias behavior when invoked via the old command name
   if (process.argv[3] === 'build-manifest') {
@@ -51,7 +51,7 @@ manifestCommand.alias('build-manifest').hook('preAction', () => {
   }
 });
 
-import publishCommand from './publish.js';
+import publishCommand from './publish.command.js';
 publishCommand.alias('build-publish').hook('preAction', (thisCommand) => {
   // Only warn when invoked via the old command name
   if (process.argv[3] === 'build-publish') {

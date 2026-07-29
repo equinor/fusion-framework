@@ -1,8 +1,8 @@
 import { Command } from 'commander';
 
-import loginCommand from './login.js';
-import logoutCommand from './logout.js';
-import tokenCommand from './token.js';
+import loginCommand from './login.command.js';
+import logoutCommand from './logout.command.js';
+import tokenCommand from './token.command.js';
 
 export const command = new Command('auth')
   .description('Authenticate with Fusion Framework CLI')
