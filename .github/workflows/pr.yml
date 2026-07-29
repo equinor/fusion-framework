@@ -90,6 +90,9 @@ jobs:
           reporter: ${{ steps.reporter.outputs.value }}
           level: error
 
+      - name: Build fusion-lint
+        run: pnpm build:lint
+
       - name: Fusion lint
         env:
           REVIEWDOG_GITHUB_API_TOKEN: ${{ github.token }}
