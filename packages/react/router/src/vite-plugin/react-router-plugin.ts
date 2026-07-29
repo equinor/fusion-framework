@@ -255,12 +255,15 @@ function getAvailableExports(filePath: string, currentFileId: string, debug: boo
 function generateComponentName(filePath: string): string {
   const withoutExt = filePath.replace(/\.[^./]+$/, '');
   // Drop the extension and any "." / ".." segments so only meaningful path parts remain.
-  const segments = withoutExt.split('/').filter((segment) => segment && segment !== '.' && segment !== '..');
+  const segments = withoutExt
+    .split('/')
+    .filter((segment) => segment && segment !== '.' && segment !== '..');
   const last = segments[segments.length - 1] ?? 'index';
 
   // Only fold in ancestor directory segments when the basename itself carries no
   // naming information (i.e. it's a bare "index" file); otherwise use it as-is.
-  const nameSegments = last.toLowerCase() === 'index' && segments.length > 1 ? segments.slice(0, -1) : [last];
+  const nameSegments =
+    last.toLowerCase() === 'index' && segments.length > 1 ? segments.slice(0, -1) : [last];
 
   // Strip dynamic-segment brackets and convert each path segment to PascalCase before joining.
   return nameSegments
