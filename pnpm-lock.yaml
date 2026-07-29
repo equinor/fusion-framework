@@ -96,7 +96,7 @@ importers:
         version: 7.0.2
       vitest:
         specifier: ^4.1.0
-        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@24.12.2)(@vitest/coverage-v8@4.1.4)(happy-dom@20.11.1)(jsdom@29.1.1)(msw@2.14.6(@types/node@24.12.2)(typescript@7.0.2))(vite@8.1.5(@types/node@24.12.2)(esbuild@0.28.1)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.22.5))
+        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@24.12.2)(@vitest/coverage-v8@4.1.4)(happy-dom@20.11.1)(jsdom@30.0.1)(msw@2.14.6(@types/node@24.12.2)(typescript@7.0.2))(vite@8.1.5(@types/node@24.12.2)(esbuild@0.28.1)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.22.5))
 
   cookbooks/app-react:
     devDependencies:
@@ -1121,7 +1121,7 @@ importers:
         version: 7.0.2
       vitest:
         specifier: ^4.1.0
-        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@26.1.1)(@vitest/coverage-v8@4.1.4)(happy-dom@20.11.1)(jsdom@29.1.1)(msw@2.14.6(@types/node@26.1.1)(typescript@7.0.2))(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.22.5))
+        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@26.1.1)(@vitest/coverage-v8@4.1.4)(happy-dom@20.11.1)(jsdom@30.0.1)(msw@2.14.6(@types/node@26.1.1)(typescript@7.0.2))(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.22.5))
 
   packages/cli-plugins/ai-base:
     dependencies:
@@ -1149,7 +1149,7 @@ importers:
         version: 7.0.2
       vitest:
         specifier: ^4.1.0
-        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@26.1.1)(@vitest/coverage-v8@4.1.4)(happy-dom@20.11.1)(jsdom@29.1.1)(msw@2.14.6(@types/node@26.1.1)(typescript@7.0.2))(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.22.5))
+        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@26.1.1)(@vitest/coverage-v8@4.1.4)(happy-dom@20.11.1)(jsdom@30.0.1)(msw@2.14.6(@types/node@26.1.1)(typescript@7.0.2))(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.22.5))
 
   packages/cli-plugins/ai-chat:
     dependencies:
@@ -1180,7 +1180,7 @@ importers:
         version: 7.0.2
       vitest:
         specifier: ^4.1.0
-        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@26.1.1)(@vitest/coverage-v8@4.1.4)(happy-dom@20.11.1)(jsdom@29.1.1)(msw@2.14.6(@types/node@26.1.1)(typescript@7.0.2))(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.22.5))
+        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@26.1.1)(@vitest/coverage-v8@4.1.4)(happy-dom@20.11.1)(jsdom@30.0.1)(msw@2.14.6(@types/node@26.1.1)(typescript@7.0.2))(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.22.5))
 
   packages/cli-plugins/ai-index:
     dependencies:
@@ -1250,7 +1250,7 @@ importers:
         version: 7.0.2
       vitest:
         specifier: ^4.1.0
-        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@26.1.1)(@vitest/coverage-v8@4.1.4)(happy-dom@20.11.1)(jsdom@29.1.1)(msw@2.14.6(@types/node@26.1.1)(typescript@7.0.2))(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.22.5))
+        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@26.1.1)(@vitest/coverage-v8@4.1.4)(happy-dom@20.11.1)(jsdom@30.0.1)(msw@2.14.6(@types/node@26.1.1)(typescript@7.0.2))(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.22.5))
 
   packages/cli-plugins/copilot:
     dependencies:
@@ -1420,7 +1420,7 @@ importers:
         version: 8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.22.5)
       vitest:
         specifier: ^4.1.0
-        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@26.1.1)(@vitest/coverage-v8@4.1.4)(happy-dom@20.11.1)(jsdom@29.1.1)(msw@2.14.6(@types/node@26.1.1)(typescript@7.0.2))(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.22.5))
+        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@26.1.1)(@vitest/coverage-v8@4.1.4)(happy-dom@20.11.1)(jsdom@30.0.1)(msw@2.14.6(@types/node@26.1.1)(typescript@7.0.2))(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.22.5))
 
   packages/framework:
     dependencies:
@@ -1457,7 +1457,7 @@ importers:
         version: 7.0.2
       vitest:
         specifier: ^4.1.0
-        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@26.1.1)(@vitest/coverage-v8@4.1.4)(happy-dom@20.11.1)(jsdom@29.1.1)(msw@2.14.6(@types/node@26.1.1)(typescript@7.0.2))(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.22.5))
+        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@26.1.1)(@vitest/coverage-v8@4.1.4)(happy-dom@20.11.1)(jsdom@30.0.1)(msw@2.14.6(@types/node@26.1.1)(typescript@7.0.2))(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.22.5))
 
   packages/linting/cli:
     dependencies:
@@ -1513,7 +1513,7 @@ importers:
         version: 7.0.2
       vitest:
         specifier: ^4.1.0
-        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@26.1.1)(@vitest/coverage-v8@4.1.4)(happy-dom@20.11.1)(jsdom@29.1.1)(msw@2.14.6(@types/node@26.1.1)(typescript@7.0.2))(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.22.5))
+        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@26.1.1)(@vitest/coverage-v8@4.1.4)(happy-dom@20.11.1)(jsdom@30.0.1)(msw@2.14.6(@types/node@26.1.1)(typescript@7.0.2))(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.22.5))
 
   packages/linting/lsp:
     dependencies:
@@ -1554,7 +1554,7 @@ importers:
         version: 7.0.2
       vitest:
         specifier: ^4.1.0
-        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@26.1.1)(@vitest/coverage-v8@4.1.4)(happy-dom@20.11.1)(jsdom@29.1.1)(msw@2.14.6(@types/node@26.1.1)(typescript@7.0.2))(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.22.5))
+        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@26.1.1)(@vitest/coverage-v8@4.1.4)(happy-dom@20.11.1)(jsdom@30.0.1)(msw@2.14.6(@types/node@26.1.1)(typescript@7.0.2))(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.22.5))
 
   packages/linting/vscode:
     dependencies:
@@ -1600,7 +1600,7 @@ importers:
     dependencies:
       '@langchain/community':
         specifier: ^1.1.8
-        version: 1.1.29(@azure/search-documents@13.0.0)(@langchain/core@1.1.49(@opentelemetry/api@1.9.1)(openai@6.39.0(ws@8.21.1)(zod@4.4.3))(ws@8.21.1))(@opentelemetry/api@1.9.1)(cheerio@1.2.0)(d3-dsv@3.0.1)(ignore@7.0.6)(jsdom@29.1.1)(jsonwebtoken@9.0.3)(lodash@4.18.1)(openai@6.39.0(ws@8.21.1)(zod@4.4.3))(ws@8.21.1)
+        version: 1.1.29(@azure/search-documents@13.0.0)(@langchain/core@1.1.49(@opentelemetry/api@1.9.1)(openai@6.39.0(ws@8.21.1)(zod@4.4.3))(ws@8.21.1))(@opentelemetry/api@1.9.1)(cheerio@1.2.0)(d3-dsv@3.0.1)(ignore@7.0.6)(jsdom@30.0.1)(jsonwebtoken@9.0.3)(lodash@4.18.1)(openai@6.39.0(ws@8.21.1)(zod@4.4.3))(ws@8.21.1)
       '@langchain/core':
         specifier: ^1.0.1
         version: 1.1.49(@opentelemetry/api@1.9.1)(openai@6.39.0(ws@8.21.1)(zod@4.4.3))(ws@8.21.1)
@@ -1637,7 +1637,7 @@ importers:
         version: 7.0.2
       vitest:
         specifier: ^4.1.0
-        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@26.1.1)(@vitest/coverage-v8@4.1.4)(happy-dom@20.11.1)(jsdom@29.1.1)(msw@2.14.6(@types/node@26.1.1)(typescript@7.0.2))(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.22.5))
+        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@26.1.1)(@vitest/coverage-v8@4.1.4)(happy-dom@20.11.1)(jsdom@30.0.1)(msw@2.14.6(@types/node@26.1.1)(typescript@7.0.2))(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.22.5))
 
   packages/modules/analytics:
     dependencies:
@@ -1695,7 +1695,7 @@ importers:
         version: 7.0.2
       vitest:
         specifier: ^4.1.0
-        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@26.1.1)(@vitest/coverage-v8@4.1.4)(happy-dom@20.11.1)(jsdom@29.1.1)(msw@2.14.6(@types/node@26.1.1)(typescript@7.0.2))(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.22.5))
+        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@26.1.1)(@vitest/coverage-v8@4.1.4)(happy-dom@20.11.1)(jsdom@30.0.1)(msw@2.14.6(@types/node@26.1.1)(typescript@7.0.2))(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.22.5))
 
   packages/modules/app:
     dependencies:
@@ -1901,7 +1901,7 @@ importers:
         version: 7.0.2
       vitest:
         specifier: ^4.1.0
-        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@26.1.1)(@vitest/coverage-v8@4.1.4)(happy-dom@20.11.1)(jsdom@29.1.1)(msw@2.14.6(@types/node@26.1.1)(typescript@7.0.2))(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.22.5))
+        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@26.1.1)(@vitest/coverage-v8@4.1.4)(happy-dom@20.11.1)(jsdom@30.0.1)(msw@2.14.6(@types/node@26.1.1)(typescript@7.0.2))(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.22.5))
 
   packages/modules/module:
     dependencies:
@@ -1920,7 +1920,7 @@ importers:
         version: 7.0.2
       vitest:
         specifier: ^4.1.0
-        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@26.1.1)(@vitest/coverage-v8@4.1.4)(happy-dom@20.11.1)(jsdom@29.1.1)(msw@2.14.6(@types/node@26.1.1)(typescript@7.0.2))(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.22.5))
+        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@26.1.1)(@vitest/coverage-v8@4.1.4)(happy-dom@20.11.1)(jsdom@30.0.1)(msw@2.14.6(@types/node@26.1.1)(typescript@7.0.2))(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.22.5))
 
   packages/modules/msal:
     dependencies:
@@ -1992,8 +1992,8 @@ importers:
         specifier: workspace:^
         version: link:../../utils/observable
       jsdom:
-        specifier: ^29.0.2
-        version: 29.1.1
+        specifier: ^30.0.1
+        version: 30.0.1
       rxjs:
         specifier: ^7.8.1
         version: 7.8.2
@@ -2002,7 +2002,7 @@ importers:
         version: 7.0.2
       vitest:
         specifier: ^4.1.0
-        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@26.1.1)(@vitest/coverage-v8@4.1.4)(happy-dom@20.11.1)(jsdom@29.1.1)(msw@2.14.6(@types/node@26.1.1)(typescript@7.0.2))(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.22.5))
+        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@26.1.1)(@vitest/coverage-v8@4.1.4)(happy-dom@20.11.1)(jsdom@30.0.1)(msw@2.14.6(@types/node@26.1.1)(typescript@7.0.2))(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.22.5))
 
   packages/modules/service-discovery:
     dependencies:
@@ -2055,7 +2055,7 @@ importers:
         version: 7.0.2
       vitest:
         specifier: ^4.1.0
-        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@26.1.1)(@vitest/coverage-v8@4.1.4)(happy-dom@20.11.1)(jsdom@29.1.1)(msw@2.14.6(@types/node@26.1.1)(typescript@7.0.2))(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.22.5))
+        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@26.1.1)(@vitest/coverage-v8@4.1.4)(happy-dom@20.11.1)(jsdom@30.0.1)(msw@2.14.6(@types/node@26.1.1)(typescript@7.0.2))(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.22.5))
 
   packages/modules/signalr:
     dependencies:
@@ -2108,7 +2108,7 @@ importers:
         version: 7.0.2
       vitest:
         specifier: ^4.1.0
-        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@26.1.1)(@vitest/coverage-v8@4.1.4)(happy-dom@20.11.1)(jsdom@29.1.1)(msw@2.14.6(@types/node@26.1.1)(typescript@7.0.2))(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.22.5))
+        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@26.1.1)(@vitest/coverage-v8@4.1.4)(happy-dom@20.11.1)(jsdom@30.0.1)(msw@2.14.6(@types/node@26.1.1)(typescript@7.0.2))(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.22.5))
 
   packages/modules/widget:
     dependencies:
@@ -2259,7 +2259,7 @@ importers:
         version: 7.0.2
       vitest:
         specifier: ^4.1.0
-        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@26.1.1)(@vitest/coverage-v8@4.1.4)(happy-dom@20.11.1)(jsdom@29.1.1)(msw@2.14.6(@types/node@26.1.1)(typescript@7.0.2))(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.22.5))
+        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@26.1.1)(@vitest/coverage-v8@4.1.4)(happy-dom@20.11.1)(jsdom@30.0.1)(msw@2.14.6(@types/node@26.1.1)(typescript@7.0.2))(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.22.5))
 
   packages/react/components/bookmark:
     dependencies:
@@ -2607,7 +2607,7 @@ importers:
         version: 8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.22.5)
       vitest:
         specifier: ^4.1.0
-        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@26.1.1)(@vitest/coverage-v8@4.1.4)(happy-dom@20.11.1)(jsdom@29.1.1)(msw@2.14.6(@types/node@26.1.1)(typescript@7.0.2))(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.22.5))
+        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@26.1.1)(@vitest/coverage-v8@4.1.4)(happy-dom@20.11.1)(jsdom@30.0.1)(msw@2.14.6(@types/node@26.1.1)(typescript@7.0.2))(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.22.5))
 
   packages/utils/imports:
     dependencies:
@@ -2632,7 +2632,7 @@ importers:
         version: 4.6.0
       vitest:
         specifier: ^4.1.0
-        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@26.1.1)(@vitest/coverage-v8@4.1.4)(happy-dom@20.11.1)(jsdom@29.1.1)(msw@2.14.6(@types/node@26.1.1)(typescript@7.0.2))(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.22.5))
+        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@26.1.1)(@vitest/coverage-v8@4.1.4)(happy-dom@20.11.1)(jsdom@30.0.1)(msw@2.14.6(@types/node@26.1.1)(typescript@7.0.2))(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.22.5))
 
   packages/utils/load-env:
     dependencies:
@@ -2648,7 +2648,7 @@ importers:
         version: 7.0.2
       vitest:
         specifier: ^4.1.0
-        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@26.1.1)(@vitest/coverage-v8@4.1.4)(happy-dom@20.11.1)(jsdom@29.1.1)(msw@2.14.6(@types/node@26.1.1)(typescript@7.0.2))(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.22.5))
+        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@26.1.1)(@vitest/coverage-v8@4.1.4)(happy-dom@20.11.1)(jsdom@30.0.1)(msw@2.14.6(@types/node@26.1.1)(typescript@7.0.2))(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.22.5))
 
   packages/utils/log:
     dependencies:
@@ -2664,7 +2664,7 @@ importers:
         version: 7.0.2
       vitest:
         specifier: ^4.1.0
-        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@26.1.1)(@vitest/coverage-v8@4.1.4)(happy-dom@20.11.1)(jsdom@29.1.1)(msw@2.14.6(@types/node@26.1.1)(typescript@7.0.2))(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.22.5))
+        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@26.1.1)(@vitest/coverage-v8@4.1.4)(happy-dom@20.11.1)(jsdom@30.0.1)(msw@2.14.6(@types/node@26.1.1)(typescript@7.0.2))(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.22.5))
 
   packages/utils/observable:
     dependencies:
@@ -2701,7 +2701,7 @@ importers:
         version: 7.0.2
       vitest:
         specifier: ^4.1.0
-        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@26.1.1)(@vitest/coverage-v8@4.1.4)(happy-dom@20.11.1)(jsdom@29.1.1)(msw@2.14.6(@types/node@26.1.1)(typescript@7.0.2))(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.22.5))
+        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@26.1.1)(@vitest/coverage-v8@4.1.4)(happy-dom@20.11.1)(jsdom@30.0.1)(msw@2.14.6(@types/node@26.1.1)(typescript@7.0.2))(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.22.5))
 
   packages/utils/query:
     dependencies:
@@ -2732,7 +2732,7 @@ importers:
         version: 7.0.2
       vitest:
         specifier: ^4.1.0
-        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@26.1.1)(@vitest/coverage-v8@4.1.4)(happy-dom@20.11.1)(jsdom@29.1.1)(msw@2.14.6(@types/node@26.1.1)(typescript@7.0.2))(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.22.5))
+        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@26.1.1)(@vitest/coverage-v8@4.1.4)(happy-dom@20.11.1)(jsdom@30.0.1)(msw@2.14.6(@types/node@26.1.1)(typescript@7.0.2))(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.22.5))
 
   packages/vite-plugins/api-service:
     dependencies:
@@ -2760,7 +2760,7 @@ importers:
         version: 8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.22.5)
       vitest:
         specifier: ^4.1.0
-        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@26.1.1)(@vitest/coverage-v8@4.1.4)(happy-dom@20.11.1)(jsdom@29.1.1)(msw@2.14.6(@types/node@26.1.1)(typescript@7.0.2))(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.22.5))
+        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@26.1.1)(@vitest/coverage-v8@4.1.4)(happy-dom@20.11.1)(jsdom@30.0.1)(msw@2.14.6(@types/node@26.1.1)(typescript@7.0.2))(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.22.5))
 
   packages/vite-plugins/markdown:
     devDependencies:
@@ -2793,7 +2793,7 @@ importers:
         version: 8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.22.5)
       vitest:
         specifier: ^4.1.0
-        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@26.1.1)(@vitest/coverage-v8@4.1.4)(happy-dom@20.11.1)(jsdom@29.1.1)(msw@2.14.6(@types/node@26.1.1)(typescript@7.0.2))(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.22.5))
+        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@26.1.1)(@vitest/coverage-v8@4.1.4)(happy-dom@20.11.1)(jsdom@30.0.1)(msw@2.14.6(@types/node@26.1.1)(typescript@7.0.2))(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.22.5))
 
   packages/vite-plugins/routes-dsl:
     devDependencies:
@@ -2919,20 +2919,13 @@ packages:
   '@antfu/install-pkg@1.1.0':
     resolution: {integrity: sha512-MGQsmw10ZyI+EJo45CdSER4zEb+p31LpDAFp2Z3gkSd1yqVZGi0Ebx++YTEMonJy4oChEMLsxZ64j8FH6sSqtQ==}
 
-  '@asamuzakjp/css-color@5.1.11':
-    resolution: {integrity: sha512-KVw6qIiCTUQhByfTd78h2yD1/00waTmm9uy/R7Ck/ctUyAPj+AEDLkQIdJW0T8+qGgj3j5bpNKK7Q3G+LedJWg==}
-    engines: {node: ^20.19.0 || ^22.12.0 || >=24.0.0}
+  '@asamuzakjp/css-color@6.0.5':
+    resolution: {integrity: sha512-mbhpPMmnw/kwW19aRNmSUl1QzLbdGo1SCuE49BT98MNwqF6zaHb3o2owssFc/PEO/4t2UjqtCNwocuDtJornzA==}
+    engines: {node: ^22.13.0 || >=24.0.0}
 
-  '@asamuzakjp/dom-selector@7.1.1':
-    resolution: {integrity: sha512-67RZDnYRc8H/8MLDgQCDE//zoqVFwajkepHZgmXrbwybzXOEwOWGPYGmALYl9J2DOLfFPPs6kKCqmbzV895hTQ==}
-    engines: {node: ^20.19.0 || ^22.12.0 || >=24.0.0}
-
-  '@asamuzakjp/generational-cache@1.0.1':
-    resolution: {integrity: sha512-wajfB8KqzMCN2KGNFdLkReeHncd0AslUSrvHVvvYWuU8ghncRJoA50kT3zP9MVL0+9g4/67H+cdvBskj9THPzg==}
-    engines: {node: ^20.19.0 || ^22.12.0 || >=24.0.0}
-
-  '@asamuzakjp/nwsapi@2.3.9':
-    resolution: {integrity: sha512-n8GuYSrI9bF7FFZ/SjhwevlHc8xaVlb/7HmHelnc/PZXBD2ZR49NnN9sMMuDdEGPeeRQ5d0hqlSlEpgCX3Wl0Q==}
+  '@asamuzakjp/dom-selector@8.3.0':
+    resolution: {integrity: sha512-UJLfKXBhrc8i1vH2eJXuYQMwlsLKWFw3O+CPqXSuVEiikeAim3UgrfWX0k4tA/X8cRFM8iZ7OaqBokFGbYusdg==}
+    engines: {node: ^22.13.0 || >=24.0.0}
 
   '@assistant-ui/core@0.3.0':
     resolution: {integrity: sha512-NnD9OryKzM8k74OTRznMOwhEUpWWdIFxX8yg3k6SSPEc2KqlID3WzaTMt/NvWPZMy+CFTfgFS6PpEmF80umyZg==}
@@ -3417,19 +3410,19 @@ packages:
   '@chevrotain/types@11.1.2':
     resolution: {integrity: sha512-U+HFai5+zmJCkK86QsaJtoITlboZHBqrVketcO2ROv865xfCMSFpELQoz1GkX5GzME8pTa+3kbKrZHQtI0gdbw==}
 
-  '@csstools/color-helpers@6.0.2':
-    resolution: {integrity: sha512-LMGQLS9EuADloEFkcTBR3BwV/CGHV7zyDxVRtVDTwdI2Ca4it0CCVTT9wCkxSgokjE5Ho41hEPgb8OEUwoXr6Q==}
+  '@csstools/color-helpers@6.1.0':
+    resolution: {integrity: sha512-064IFJdjTfUqnjpCVpMOdbr8FLQBhinbZj6yRv2An2E41O/pLEXqfFRWqGq/SxlE5PEUYTlvWsG2r8MswAVvkg==}
     engines: {node: '>=20.19.0'}
 
-  '@csstools/css-calc@3.2.0':
-    resolution: {integrity: sha512-bR9e6o2BDB12jzN/gIbjHa5wLJ4UjD1CB9pM7ehlc0ddk6EBz+yYS1EV2MF55/HUxrHcB/hehAyt5vhsA3hx7w==}
+  '@csstools/css-calc@3.3.0':
+    resolution: {integrity: sha512-c5ihYsPkdG6JCkU2zTMm4+k6r7RXuGxtWYhu5DHMIiF1FHzrfmHL5so11AoFpUv/tu61xfcmT4AmKoFfMPoqdQ==}
     engines: {node: '>=20.19.0'}
     peerDependencies:
       '@csstools/css-parser-algorithms': ^4.0.0
       '@csstools/css-tokenizer': ^4.0.0
 
-  '@csstools/css-color-parser@4.1.0':
-    resolution: {integrity: sha512-U0KhLYmy2GVj6q4T3WaAe6NPuFYCPQoE3b0dRGxejWDgcPp8TP7S5rVdM5ZrFaqu4N67X8YaPBw14dQSYx3IyQ==}
+  '@csstools/css-color-parser@4.1.10':
+    resolution: {integrity: sha512-UZhQLIUyJaaMepqehrCODwCg2KW25vFvLWBmqYFaPclYvvxzj/sG8LBOhBFCp11i9uE7t1EyS+RAoV9tztPFyw==}
     engines: {node: '>=20.19.0'}
     peerDependencies:
       '@csstools/css-parser-algorithms': ^4.0.0
@@ -3441,8 +3434,8 @@ packages:
     peerDependencies:
       '@csstools/css-tokenizer': ^4.0.0
 
-  '@csstools/css-syntax-patches-for-csstree@1.1.3':
-    resolution: {integrity: sha512-SH60bMfrRCJF3morcdk57WklujF4Jr/EsQUzqkarfHXEFcAR1gg7fS/chAE922Sehgzc1/+Tz5H3Ypa1HiEKrg==}
+  '@csstools/css-syntax-patches-for-csstree@1.1.7':
+    resolution: {integrity: sha512-fQ+05118eQS1cofO3aJpB5efgpBZMvIzwr/sbC8kDLVA5XLG8q1kJV5yzrUAI1f7lvhPnm8fgIjzFB8/O/5Dig==}
     peerDependencies:
       css-tree: ^3.2.1
     peerDependenciesMeta:
@@ -3932,8 +3925,8 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@exodus/bytes@1.15.0':
-    resolution: {integrity: sha512-UY0nlA+feH81UGSHv92sLEPLCeZFjXOuHhrIo0HQydScuQc8s0A7kL/UdgwgDq8g8ilksmuoF35YVTNphV2aBQ==}
+  '@exodus/bytes@1.15.1':
+    resolution: {integrity: sha512-S6mL0yNB/Abt9Ei4tq8gDhcczc4S3+vQ4ra7vxnAf+YHC02srtqxKKZghx2Dq6p0e66THKwR6r8N6P95wEty7Q==}
     engines: {node: ^20.19.0 || ^22.12.0 || >=24.0.0}
     peerDependencies:
       '@noble/hashes': ^1.8.0 || ^2.0.0
@@ -9166,11 +9159,11 @@ packages:
     resolution: {integrity: sha512-1td788aAnnZ5qs7V2QIRl1owjtYpbKt749Y3xauqQgwIIGF/xXWz1wMTEBx5O3LK3lXLVuqXPdPxj2BoFHaW9Q==}
     hasBin: true
 
-  jsdom@29.1.1:
-    resolution: {integrity: sha512-ECi4Fi2f7BdJtUKTflYRTiaMxIB0O6zfR1fX0GXpUrf6flp8QIYn1UT20YQqdSOfk2dfkCwS8LAFoJDEppNK5Q==}
-    engines: {node: ^20.19.0 || ^22.13.0 || >=24.0.0}
+  jsdom@30.0.1:
+    resolution: {integrity: sha512-52v7mUVUfNQVYYqE1lcdaymWL0njO7lTLUog6ZvW2U5KsbiLk/GnZlVJ+qx0xfNJZ6Gn+KSpPNE52vurbxZwrA==}
+    engines: {node: ^22.22.2 || ^24.15.0 || >=26.0.0}
     peerDependencies:
-      canvas: ^3.0.0
+      canvas: ^3.2.3
     peerDependenciesMeta:
       canvas:
         optional: true
@@ -9456,12 +9449,12 @@ packages:
   lru-cache@10.4.3:
     resolution: {integrity: sha512-JNAzZcXrCt42VGLuYz0zfAzDfAvJWW6AfYlDBQyDV5DClI2m5sAmK+OIO7s59XfsRsWHp02jAJrRadPRGTt6SQ==}
 
-  lru-cache@11.3.5:
-    resolution: {integrity: sha512-NxVFwLAnrd9i7KUBxC4DrUhmgjzOs+1Qm50D3oF1/oL+r1NpZ4gA7xvG0/zJ8evR7zIKn4vLf7qTNduWFtCrRw==}
-    engines: {node: 20 || >=22}
-
   lru-cache@11.4.0:
     resolution: {integrity: sha512-W+R+kFL4HgVxONq2bhXPi3bGpzGe/yEhVOp233qw9wCRtgncJ15P3bC+e4zZMu4Cq7d+WAJjXGW0uUkifhcatA==}
+    engines: {node: 20 || >=22}
+
+  lru-cache@11.5.2:
+    resolution: {integrity: sha512-4pfM1Ff0x50o0tQwb5ucw/RzNyD0/YJME6IVcStalZuMWxdt3sR3huStTtxz4PUmvZfRguvDejasvQ2kifR11g==}
     engines: {node: 20 || >=22}
 
   lru-cache@5.1.1:
@@ -10932,8 +10925,15 @@ packages:
   tldts-core@7.0.30:
     resolution: {integrity: sha512-uiHN8PIB1VmWyS98eZYja4xzlYqeFZVjb4OuYlJQnZAuJhMw4PbKQOKgHKhBdJR3FE/t5mUQ1Kd80++B+qhD1Q==}
 
+  tldts-core@7.4.9:
+    resolution: {integrity: sha512-DxKfPBI52p2msTEu7MPhdpdDTBhhVQg1a/8PjQckeyAvO13eMYElX545grIp6nnTGIMZlRvFZPvFhvI/WIz2Vg==}
+
   tldts@7.0.30:
     resolution: {integrity: sha512-ELrFxuqsDdHUwoh0XxDbxuLD3Wnz49Z57IFvTtvWy1hJdcMZjXLIuonjilCiWHlT2GbE4Wlv1wKVTzDFnXH1aw==}
+    hasBin: true
+
+  tldts@7.4.9:
+    resolution: {integrity: sha512-3kZ8wQQ/k5DrChD4X4FVvr2D7E5uoRgAqkPyLpSCGUvqOvqu+JEdr3mwMUaVWb+vMHZaKhF5fp2PBigKsui7hA==}
     hasBin: true
 
   tmp@0.2.7:
@@ -10950,6 +10950,10 @@ packages:
 
   tough-cookie@6.0.1:
     resolution: {integrity: sha512-LktZQb3IeoUWB9lqR5EWTHgW/VTITCXg4D21M+lvybRVdylLrRMnqaIONLVb5mav8vM19m44HIcGq4qASeu2Qw==}
+    engines: {node: '>=16'}
+
+  tough-cookie@6.0.2:
+    resolution: {integrity: sha512-exgYmnmL/sJpR3upZfXG5PoatXQii55xAiXGXzY+sROLZ/Y+SLcp9PgJNI9Vz37HpQ74WvDcLT8eqm+kV3FzrA==}
     engines: {node: '>=16'}
 
   tr46@0.0.3:
@@ -11072,6 +11076,10 @@ packages:
   undici@7.28.0:
     resolution: {integrity: sha512-cRZYrTDwWznlnRiPjggAGxZXanty6M8RV1ff8Wm4LWXBp7/IG8v5DnOm74DtUBp9OONpK75YlPnIjQqX0dBDtA==}
     engines: {node: '>=20.18.1'}
+
+  undici@8.9.0:
+    resolution: {integrity: sha512-aWZpUj7XoGonMClx4gdDRfgBjqeA+F473aDmROQQbM9n6PRfK/u1q/a0X4wMTgcHfT8H6fpbt98PFuDUwFg2YA==}
+    engines: {node: '>=22.19.0'}
 
   unicorn-magic@0.1.0:
     resolution: {integrity: sha512-lRfVq8fE8gz6QMBuDM6a+LO3IAzTi05H6gCVaUpir2E1Rwpo4ZUog45KpNXKC/Mn3Yb9UDuHumeFTo9iV/D9FQ==}
@@ -11628,6 +11636,10 @@ packages:
     resolution: {integrity: sha512-1to4zXBxmXHV3IiSSEInrreIlu02vUOvrhxJJH5vcxYTBDAx51cqZiKdyTxlecdKNSjj8EcxGBxNf6Vg+945gw==}
     engines: {node: ^20.19.0 || ^22.12.0 || >=24.0.0}
 
+  whatwg-url@17.1.0:
+    resolution: {integrity: sha512-3GeworPmc2ZfEEHP7lEbUfBX/L75wdEsi0rLNhXcXxnoN5jyq0SL5gCy06SGW2cyTIZdTvWIDQNQoza++vKeaw==}
+    engines: {node: ^22.14.0 || >=24.0.0}
+
   whatwg-url@5.0.0:
     resolution: {integrity: sha512-saE57nupxk6v3HY35+jzBwYa0rKSy0XR8JSxZPwgLr7ys0IBzhGviA1/TUGJLmSVqs8pb9AnvICXEuOHLprYTw==}
 
@@ -11785,25 +11797,20 @@ snapshots:
       package-manager-detector: 1.8.0
       tinyexec: 1.2.4
 
-  '@asamuzakjp/css-color@5.1.11':
+  '@asamuzakjp/css-color@6.0.5':
     dependencies:
-      '@asamuzakjp/generational-cache': 1.0.1
-      '@csstools/css-calc': 3.2.0(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0)
-      '@csstools/css-color-parser': 4.1.0(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0)
+      '@csstools/css-calc': 3.3.0(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0)
+      '@csstools/css-color-parser': 4.1.10(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0)
       '@csstools/css-parser-algorithms': 4.0.0(@csstools/css-tokenizer@4.0.0)
       '@csstools/css-tokenizer': 4.0.0
+      lru-cache: 11.5.2
 
-  '@asamuzakjp/dom-selector@7.1.1':
+  '@asamuzakjp/dom-selector@8.3.0':
     dependencies:
-      '@asamuzakjp/generational-cache': 1.0.1
-      '@asamuzakjp/nwsapi': 2.3.9
       bidi-js: 1.0.3
       css-tree: 3.2.1
       is-potential-custom-element-name: 1.0.1
-
-  '@asamuzakjp/generational-cache@1.0.1': {}
-
-  '@asamuzakjp/nwsapi@2.3.9': {}
+      lru-cache: 11.5.2
 
   '@assistant-ui/core@0.3.0(@assistant-ui/store@0.3.0(@assistant-ui/tap@0.9.7(@types/react@19.2.17)(react@19.2.7))(@types/react@19.2.17)(react@19.2.7))(@assistant-ui/tap@0.9.7(@types/react@19.2.17)(react@19.2.7))(@types/react@19.2.17)(assistant-cloud@0.1.37)(react@19.2.7)(zustand@5.0.14(@types/react@19.2.17)(immer@11.1.15)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)))':
     dependencies:
@@ -12505,17 +12512,17 @@ snapshots:
 
   '@chevrotain/types@11.1.2': {}
 
-  '@csstools/color-helpers@6.0.2': {}
+  '@csstools/color-helpers@6.1.0': {}
 
-  '@csstools/css-calc@3.2.0(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0)':
+  '@csstools/css-calc@3.3.0(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0)':
     dependencies:
       '@csstools/css-parser-algorithms': 4.0.0(@csstools/css-tokenizer@4.0.0)
       '@csstools/css-tokenizer': 4.0.0
 
-  '@csstools/css-color-parser@4.1.0(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0)':
+  '@csstools/css-color-parser@4.1.10(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0)':
     dependencies:
-      '@csstools/color-helpers': 6.0.2
-      '@csstools/css-calc': 3.2.0(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0)
+      '@csstools/color-helpers': 6.1.0
+      '@csstools/css-calc': 3.3.0(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0)
       '@csstools/css-parser-algorithms': 4.0.0(@csstools/css-tokenizer@4.0.0)
       '@csstools/css-tokenizer': 4.0.0
 
@@ -12523,7 +12530,7 @@ snapshots:
     dependencies:
       '@csstools/css-tokenizer': 4.0.0
 
-  '@csstools/css-syntax-patches-for-csstree@1.1.3(css-tree@3.2.1)':
+  '@csstools/css-syntax-patches-for-csstree@1.1.7(css-tree@3.2.1)':
     optionalDependencies:
       css-tree: 3.2.1
 
@@ -13018,7 +13025,7 @@ snapshots:
   '@esbuild/win32-x64@0.28.1':
     optional: true
 
-  '@exodus/bytes@1.15.0': {}
+  '@exodus/bytes@1.15.1': {}
 
   '@faker-js/faker@10.5.0': {}
 
@@ -13515,7 +13522,7 @@ snapshots:
       - openai
       - ws
 
-  '@langchain/community@1.1.29(@azure/search-documents@13.0.0)(@langchain/core@1.1.49(@opentelemetry/api@1.9.1)(openai@6.39.0(ws@8.21.1)(zod@4.4.3))(ws@8.21.1))(@opentelemetry/api@1.9.1)(cheerio@1.2.0)(d3-dsv@3.0.1)(ignore@7.0.6)(jsdom@29.1.1)(jsonwebtoken@9.0.3)(lodash@4.18.1)(openai@6.39.0(ws@8.21.1)(zod@4.4.3))(ws@8.21.1)':
+  '@langchain/community@1.1.29(@azure/search-documents@13.0.0)(@langchain/core@1.1.49(@opentelemetry/api@1.9.1)(openai@6.39.0(ws@8.21.1)(zod@4.4.3))(ws@8.21.1))(@opentelemetry/api@1.9.1)(cheerio@1.2.0)(d3-dsv@3.0.1)(ignore@7.0.6)(jsdom@30.0.1)(jsonwebtoken@9.0.3)(lodash@4.18.1)(openai@6.39.0(ws@8.21.1)(zod@4.4.3))(ws@8.21.1)':
     dependencies:
       '@langchain/classic': 1.0.34(@langchain/core@1.1.49(@opentelemetry/api@1.9.1)(openai@6.39.0(ws@8.21.1)(zod@4.4.3))(ws@8.21.1))(@opentelemetry/api@1.9.1)(cheerio@1.2.0)(openai@6.39.0(ws@8.21.1)(zod@4.4.3))(ws@8.21.1)
       '@langchain/core': 1.1.49(@opentelemetry/api@1.9.1)(openai@6.39.0(ws@8.21.1)(zod@4.4.3))(ws@8.21.1)
@@ -13533,7 +13540,7 @@ snapshots:
       cheerio: 1.2.0
       d3-dsv: 3.0.1
       ignore: 7.0.6
-      jsdom: 29.1.1
+      jsdom: 30.0.1
       jsonwebtoken: 9.0.3
       lodash: 4.18.1
       ws: 8.21.1
@@ -16139,7 +16146,7 @@ snapshots:
       obug: 2.1.1
       std-env: 4.0.0
       tinyrainbow: 3.1.0
-      vitest: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@26.1.1)(@vitest/coverage-v8@4.1.4)(happy-dom@20.11.1)(jsdom@29.1.1)(msw@2.14.6(@types/node@26.1.1)(typescript@7.0.2))(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.22.5))
+      vitest: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@26.1.1)(@vitest/coverage-v8@4.1.4)(happy-dom@20.11.1)(jsdom@30.0.1)(msw@2.14.6(@types/node@26.1.1)(typescript@7.0.2))(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.22.5))
 
   '@vitest/expect@4.1.4':
     dependencies:
@@ -18227,11 +18234,11 @@ snapshots:
 
   hosted-git-info@9.0.3:
     dependencies:
-      lru-cache: 11.4.0
+      lru-cache: 11.5.2
 
   html-encoding-sniffer@6.0.0:
     dependencies:
-      '@exodus/bytes': 1.15.0
+      '@exodus/bytes': 1.15.1
     transitivePeerDependencies:
       - '@noble/hashes'
 
@@ -18461,28 +18468,28 @@ snapshots:
     dependencies:
       argparse: 2.0.1
 
-  jsdom@29.1.1:
+  jsdom@30.0.1:
     dependencies:
-      '@asamuzakjp/css-color': 5.1.11
-      '@asamuzakjp/dom-selector': 7.1.1
+      '@asamuzakjp/css-color': 6.0.5
+      '@asamuzakjp/dom-selector': 8.3.0
       '@bramus/specificity': 2.4.2
-      '@csstools/css-syntax-patches-for-csstree': 1.1.3(css-tree@3.2.1)
-      '@exodus/bytes': 1.15.0
+      '@csstools/css-syntax-patches-for-csstree': 1.1.7(css-tree@3.2.1)
+      '@exodus/bytes': 1.15.1
       css-tree: 3.2.1
       data-urls: 7.0.0
       decimal.js: 10.6.0
       html-encoding-sniffer: 6.0.0
       is-potential-custom-element-name: 1.0.1
-      lru-cache: 11.3.5
+      lru-cache: 11.5.2
       parse5: 8.0.1
       saxes: 6.0.0
       symbol-tree: 3.2.4
-      tough-cookie: 6.0.1
-      undici: 7.28.0
+      tough-cookie: 6.0.2
+      undici: 8.9.0
       w3c-xmlserializer: 5.0.0
       webidl-conversions: 8.0.1
       whatwg-mimetype: 5.0.0
-      whatwg-url: 16.0.1
+      whatwg-url: 17.1.0
       xml-name-validator: 5.0.0
     transitivePeerDependencies:
       - '@noble/hashes'
@@ -18801,9 +18808,9 @@ snapshots:
 
   lru-cache@10.4.3: {}
 
-  lru-cache@11.3.5: {}
-
   lru-cache@11.4.0: {}
+
+  lru-cache@11.5.2: {}
 
   lru-cache@5.1.1:
     dependencies:
@@ -19513,7 +19520,7 @@ snapshots:
 
   path-scurry@2.0.2:
     dependencies:
-      lru-cache: 11.4.0
+      lru-cache: 11.5.2
       minipass: 7.1.3
 
   path-to-regexp@6.3.0: {}
@@ -20604,9 +20611,15 @@ snapshots:
 
   tldts-core@7.0.30: {}
 
+  tldts-core@7.4.9: {}
+
   tldts@7.0.30:
     dependencies:
       tldts-core: 7.0.30
+
+  tldts@7.4.9:
+    dependencies:
+      tldts-core: 7.4.9
 
   tmp@0.2.7: {}
 
@@ -20624,6 +20637,10 @@ snapshots:
   tough-cookie@6.0.1:
     dependencies:
       tldts: 7.0.30
+
+  tough-cookie@6.0.2:
+    dependencies:
+      tldts: 7.4.9
 
   tr46@0.0.3: {}
 
@@ -20747,6 +20764,8 @@ snapshots:
   undici-types@8.3.0: {}
 
   undici@7.28.0: {}
+
+  undici@8.9.0: {}
 
   unicorn-magic@0.1.0: {}
 
@@ -20997,7 +21016,7 @@ snapshots:
       terser: 5.46.0
       tsx: 4.22.5
 
-  vitest@4.1.4(@opentelemetry/api@1.9.1)(@types/node@24.12.2)(@vitest/coverage-v8@4.1.4)(happy-dom@20.11.1)(jsdom@29.1.1)(msw@2.14.6(@types/node@24.12.2)(typescript@7.0.2))(vite@8.1.5(@types/node@24.12.2)(esbuild@0.28.1)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.22.5)):
+  vitest@4.1.4(@opentelemetry/api@1.9.1)(@types/node@24.12.2)(@vitest/coverage-v8@4.1.4)(happy-dom@20.11.1)(jsdom@30.0.1)(msw@2.14.6(@types/node@24.12.2)(typescript@7.0.2))(vite@8.1.5(@types/node@24.12.2)(esbuild@0.28.1)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.22.5)):
     dependencies:
       '@vitest/expect': 4.1.4
       '@vitest/mocker': 4.1.4(msw@2.14.6(@types/node@24.12.2)(typescript@7.0.2))(vite@8.1.5(@types/node@24.12.2)(esbuild@0.28.1)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.22.5))
@@ -21024,11 +21043,11 @@ snapshots:
       '@types/node': 24.12.2
       '@vitest/coverage-v8': 4.1.4(vitest@4.1.4)
       happy-dom: 20.11.1
-      jsdom: 29.1.1
+      jsdom: 30.0.1
     transitivePeerDependencies:
       - msw
 
-  vitest@4.1.4(@opentelemetry/api@1.9.1)(@types/node@26.1.1)(@vitest/coverage-v8@4.1.4)(happy-dom@20.11.1)(jsdom@29.1.1)(msw@2.14.6(@types/node@26.1.1)(typescript@7.0.2))(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.22.5)):
+  vitest@4.1.4(@opentelemetry/api@1.9.1)(@types/node@26.1.1)(@vitest/coverage-v8@4.1.4)(happy-dom@20.11.1)(jsdom@30.0.1)(msw@2.14.6(@types/node@26.1.1)(typescript@7.0.2))(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.22.5)):
     dependencies:
       '@vitest/expect': 4.1.4
       '@vitest/mocker': 4.1.4(msw@2.14.6(@types/node@26.1.1)(typescript@7.0.2))(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(tsx@4.22.5))
@@ -21055,7 +21074,7 @@ snapshots:
       '@types/node': 26.1.1
       '@vitest/coverage-v8': 4.1.4(vitest@4.1.4)
       happy-dom: 20.11.1
-      jsdom: 29.1.1
+      jsdom: 30.0.1
     transitivePeerDependencies:
       - msw
 
@@ -21306,7 +21325,15 @@ snapshots:
 
   whatwg-url@16.0.1:
     dependencies:
-      '@exodus/bytes': 1.15.0
+      '@exodus/bytes': 1.15.1
+      tr46: 6.0.0
+      webidl-conversions: 8.0.1
+    transitivePeerDependencies:
+      - '@noble/hashes'
+
+  whatwg-url@17.1.0:
+    dependencies:
+      '@exodus/bytes': 1.15.1
       tr46: 6.0.0
       webidl-conversions: 8.0.1
     transitivePeerDependencies:
