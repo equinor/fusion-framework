@@ -6,7 +6,7 @@ import {
   TextDocumentSyncKind,
   DiagnosticSeverity,
   type Diagnostic,
-} from 'vscode-languageserver/node.js';
+} from 'vscode-languageserver/node';
 import { TextDocument } from 'vscode-languageserver-textdocument';
 import { fileURLToPath } from 'node:url';
 import { LintEngine } from '@equinor/fusion-framework-lint-core';
