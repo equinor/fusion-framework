@@ -42,7 +42,7 @@
   "dependencies": {
     "@equinor/fusion-framework-lint-config": "workspace:^",
     "@equinor/fusion-framework-lint-core": "workspace:^",
-    "vscode-languageserver": "^9.0.1",
+    "vscode-languageserver": "^10.1.0",
     "vscode-languageserver-textdocument": "^1.0.12"
   },
   "devDependencies": {
