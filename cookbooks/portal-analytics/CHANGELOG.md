@@ -1,5 +1,87 @@
 # portal-analytics
 
+## 0.4.43
+
+### Patch Changes
+
+- 80c3e4a: Internal: resolve `fusion-lint` warnings (`single-export-per-file`). Split `schema.ts` into dedicated `log-entry-schema.ts` and `log-record-schema.ts` modules, and updated `useAppContextNavigation.ts` accordingly. No behavior change.
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+  - @equinor/fusion-framework-app@11.0.11
+  - @equinor/fusion-framework-cli@15.2.1
+  - @equinor/fusion-framework@8.0.11
+  - @equinor/fusion-framework-module-analytics@3.0.2
+  - @equinor/fusion-framework-module-app@8.0.3
+  - @equinor/fusion-framework-module-bookmark@4.0.3
+  - @equinor/fusion-framework-module-context@8.0.1
+  - @equinor/fusion-framework-module-service-discovery@10.0.2
+  - @equinor/fusion-framework-react-app@12.0.3
+  - @equinor/fusion-framework-react@8.0.1
+  - @equinor/fusion-observable@9.1.1
+  - @equinor/fusion-query@7.0.2
+  - @equinor/fusion-framework-module-navigation@7.0.5
+  - @equinor/fusion-framework-react-router@2.3.1
+
 ## 0.4.42
 
 ### Patch Changes

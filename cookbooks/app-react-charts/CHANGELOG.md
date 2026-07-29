@@ -1,5 +1,11 @@
 # Change Log
 
+## 2.0.4
+
+### Patch Changes
+
+- 80c3e4a: Internal: resolve `fusion-lint` warnings (`single-export-per-file`, `require-intent-comment`). Extracted chart data into dedicated `market-share-data.ts`, `sales-data.ts`, and `temperature-data.ts` modules and split styling into `styled.ts`. No behavior change.
+
 ## 2.0.3
 
 ### Patch Changes

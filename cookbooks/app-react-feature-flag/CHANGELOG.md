@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-cookbook-app-react-feature-flag
 
+## 2.0.4
+
+### Patch Changes
+
+- 80c3e4a: Internal: resolve `fusion-lint` warnings (`require-intent-comment`, `require-tsdoc`) across `FeatureFlag.tsx`, `FeatureFlags.tsx`, `config.ts`, and `useFeatureLogger.ts`. No behavior change.
+
 ## 2.0.3
 
 ### Patch Changes

@@ -1,5 +1,17 @@
 # Change Log
 
+## 8.0.1
+
+### Patch Changes
+
+- 80c3e4a: Internal: resolve `noExplicitAny` Biome warnings in the framework React context, `createFrameworkProvider`'s `TRef` generic default, and `useCurrentAppModule`'s dynamic module-key lookup, using explanatory `biome-ignore` comments. No public API or behavior change.
+- 80c3e4a: Internal: Reference tracking issues #5082 and #5085 in TODO comments, resolving `fusion-lint` `no-todo-without-issue` warnings.
+- 80c3e4a: Internal: align framework hook filenames with their exports while preserving public entrypoints; no public API changes.
+- 80c3e4a: Internal: add intent comments to `.pipe()` operator chains in `useFeature.ts` and `useFeatures.ts` to satisfy the `require-intent-comment/rxjs` lint rule. No functional change.
+- 80c3e4a: Internal: add missing intent comments for `as`/`as unknown as` type assertions and inline separate re-exports at their definition site, per `fusion-lint`'s `require-intent-comment/type-assertion` and `no-separate-export` rules. No behavior changes.
+- 80c3e4a: Internal: add intent comments to control-flow statements and iterator calls across several hooks to satisfy the `require-intent-comment/flow` and `require-intent-comment/iterators` lint rules. No functional change.
+- 80c3e4a: Internal: split multi-export files into one export per file and convert pure interop re-exports to `export { X } from 'y'` syntax, per `fusion-lint`'s `single-export-per-file` rule. Also removed `modules/event/src/EventProvider.tsx`, a fully dead duplicate of `eventContext.ts`/`useEventProvider.ts`/`useModulesEventProvider.ts` with no remaining consumers. No behavior changes.
+
 ## 8.0.0
 
 ### Major Changes

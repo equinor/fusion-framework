@@ -1,5 +1,19 @@
 # @equinor/fusion-framework-react-components-people-provider
 
+## 2.0.4
+
+### Patch Changes
+
+- 80c3e4a: Internal: resolve `fusion-lint` `no-todo-without-issue` warning by referencing tracking issue #5088.
+- 80c3e4a: Internal: align source filenames with their exports (`PeopleResolver.tsx` → `PeopleResolverComponent.tsx`, `makeResolver.tsx` → `make-resolver.tsx`) while preserving existing public entrypoints; no public API changes.
+- 80c3e4a: Internal: add intent comments to `.pipe()` operator chains in `PersonController.ts` and `create-resolver.ts`, replacing several non-functional placeholder comments with meaningful ones, to satisfy the `require-intent-comment/rxjs` lint rule. No functional change.
+- 80c3e4a: Internal: add missing TSDoc comments to `PeopleResolverComponent`, `PeopleResolverProvider`, and to the `PersonController` class, its constructor, and its public/protected methods, to satisfy the `require-tsdoc`/`require-component-tsdoc` lint rules. No functional change.
+- 80c3e4a: Internal: add intent comments to control-flow statements and iterator calls in `PeopleResolver.tsx`, `PeopleResolverProvider.tsx`, and `create-resolver.ts` to satisfy the `require-intent-comment/flow` and `require-intent-comment/iterators` lint rules. No functional change.
+- 80c3e4a: Internal: added intent comments to control-flow and RxJS iterator constructs
+  in `PersonController.ts`, satisfying the `require-intent-comment` lint rule.
+  No behavior change.
+- 80c3e4a: Internal: add missing intent comments for `as`/`as unknown as` type assertions and inline separate re-exports at their definition site, per `fusion-lint`'s `require-intent-comment/type-assertion` and `no-separate-export` rules. No behavior changes.
+
 ## 2.0.3
 
 ### Patch Changes

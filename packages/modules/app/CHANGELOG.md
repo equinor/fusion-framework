@@ -1,5 +1,18 @@
 # Change Log
 
+## 8.0.3
+
+### Patch Changes
+
+- 80c3e4a: Internal: resolve `noExplicitAny` Biome warnings in `enableAppModule`'s configurator widening, `AppBundleState`/`AppBundleStateInitial`'s `TModules` generic default, and the `setModule` action creator, using explanatory `biome-ignore` comments. No public API or behavior change.
+- 80c3e4a: Internal: add a required fusion-lint intent comment explaining an `as unknown as AppModuleProvider` cast in the module's `dispose` hook. No behavior change.
+- 80c3e4a: Internal: Resolve fusion-lint warnings across the module — added missing TSDoc comments (including `@inheritdoc` for `IApp` interface implementations), added intent comments for control-flow and RxJS `.pipe()` chains, and referenced tracking issues for existing TODOs (#5123-#5133).
+
+  Split multi-export files into one-symbol-per-file modules for maintainability: `errors.ts` into `errors/*.ts`, `app/flows.ts` into `app/flows/*.ts`, and extracted the `filterEmpty` operator from `app/App.ts` into `app/filter-empty.ts` (re-exported from `App.ts` for backwards compatibility).
+
+- 80c3e4a: Internal: renamed 45 source files across these packages to comply with the `filename-convention` lint rule (e.g. `AIConfigurator.ts` → `AiConfigurator.ts`, `BookmarkProvider.actions.ts` → `bookmark-actions.ts`, `errors/app-build-error.ts` → `errors/AppBuildError.ts`, `plugins/api/plugin.ts` → `plugins/api/ApiPlugin.ts`, `errors.ts` → `UnsupportedApiVersion.ts`, etc.). Also added `enable-signalr.ts` to the `filename-convention` exclude list since the suggested rename would incorrectly split the "SignalR" brand name. No public API changes.
+- 80c3e4a: Internal: added missing intent comments ahead of non-obvious control flow, RxJS `.pipe()` chains, iterator calls, and multi-source object merges to comply with the `require-intent-comment` and `require-tsdoc` lint rules. Also removed dead duplicate files left over from an earlier refactor in `navigation` (`events.ts`, `navigated-event.ts`, `history.flows.ts` — all fully superseded by their split replacements) and renamed `bookmarks/schemas.ts` to `bookmarks/bookmark.schemas.ts` in `services` to match the `*.schemas.ts` filename convention. No public API changes.
+
 ## 8.0.2
 
 ### Patch Changes

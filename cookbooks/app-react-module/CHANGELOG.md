@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.0.1
+
+### Patch Changes
+
+- 80c3e4a: Internal: resolve `fusion-lint` warnings (`require-intent-comment`, `require-tsdoc`) across `App.tsx` and the `modules/demo` configurator/provider. No behavior change.
+
 ## 1.0.0
 
 ### Major Changes

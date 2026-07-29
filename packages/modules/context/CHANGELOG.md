@@ -1,5 +1,20 @@
 # Change Log
 
+## 8.0.1
+
+### Patch Changes
+
+- 80c3e4a: Internal: resolve `noExplicitAny`/`noConfusingVoidType` Biome warnings in `ContextConfigBuilder` and `ContextModuleConfigurator`'s `resolveInitialContext` callback type, using explanatory `biome-ignore` comments for load-bearing `any`/`void` usages. No public API or behavior change.
+- 80c3e4a: Internal: move `FusionContextSearchError` into `src/errors/FusionContextSearchError.ts` with an `errors/index.ts` barrel, resolving a `filename-convention` lint violation; no public API changes.
+- 80c3e4a: Internal: add a required fusion-lint intent comment explaining an `as unknown as T` cast in `ContextProvider`. No behavior change.
+- 80c3e4a: Resolve fusion-lint warnings: add missing TSDoc (constructors, getters, setters, overload implementations, `@throws`/`@template` tags), add intent comments above control-flow and RxJS/iterator chains, and split multi-export files to satisfy `single-export-per-file`.
+  - Split `selectors.ts` into `query-context-selector.ts` and `related-context-selector.ts` (re-exported from `selectors.ts`), and extracted `parseContextItem` into `parse-context-item.ts`.
+  - Split `extractContextIdFromPath` out of `utils/resolve-context-from-path.ts` into `utils/extract-context-id-from-path.ts` (re-exported from the original file).
+  - Deferred work items are now tracked as GitHub issues #5115–#5122.
+
+- 80c3e4a: Internal: renamed 45 source files across these packages to comply with the `filename-convention` lint rule (e.g. `AIConfigurator.ts` → `AiConfigurator.ts`, `BookmarkProvider.actions.ts` → `bookmark-actions.ts`, `errors/app-build-error.ts` → `errors/AppBuildError.ts`, `plugins/api/plugin.ts` → `plugins/api/ApiPlugin.ts`, `errors.ts` → `UnsupportedApiVersion.ts`, etc.). Also added `enable-signalr.ts` to the `filename-convention` exclude list since the suggested rename would incorrectly split the "SignalR" brand name. No public API changes.
+- 80c3e4a: Internal: added missing intent comments ahead of non-obvious control flow, RxJS `.pipe()` chains, iterator calls, and multi-source object merges to comply with the `require-intent-comment` and `require-tsdoc` lint rules. Also removed dead duplicate files left over from an earlier refactor in `navigation` (`events.ts`, `navigated-event.ts`, `history.flows.ts` — all fully superseded by their split replacements) and renamed `bookmarks/schemas.ts` to `bookmarks/bookmark.schemas.ts` in `services` to match the `*.schemas.ts` filename convention. No public API changes.
+
 ## 8.0.0
 
 ### Major Changes

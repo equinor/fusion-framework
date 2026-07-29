@@ -1,5 +1,48 @@
 # Change Log
 
+## 16.0.3
+
+### Patch Changes
+
+- 80c3e4a: Internal: resolve `noExplicitAny` Biome warnings in `enableWidgetModule`, `WidgetState`/`Fusion` widening types, and the `setModule` action creator, using explanatory `biome-ignore` comments for load-bearing `any` defaults. No public API or behavior change.
+- 80c3e4a: Internal: resolve fusion-lint warnings across the widget module.
+  - Added intent comments above control-flow (`if`/`switch`) blocks and RxJS `.pipe()` chains that were missing them.
+  - Added missing `@returns`/`@throws` TSDoc tags on the `Widget.state` getter and `WidgetModuleProvider`'s internal query methods.
+  - Split `WidgetConfigLoadError` and `WidgetScriptModuleError` out of `errors.ts` into their own files (re-exported from `errors.ts` to preserve the public `errors.js` subpath export), satisfying `single-export-per-file` while preserving existing TSDoc.
+  - Suppressed `single-export-per-file` for co-located helper consts (`module`, `defaultConfigEndpointBuilder`, `createDefaultClient`, `handleFetchConfig`, `handleImportWidget`) that aren't checked by `require-tsdoc`.
+  - Replaced the ad-hoc `Todo` comment in `utils.ts` with a reference to [#5099](https://github.com/equinor/fusion-framework/issues/5099).
+
+  No public API changes.
+
+- 80c3e4a: Internal: add a required fusion-lint intent comment explaining an `as unknown as WidgetModuleProvider` cast in the module's `dispose` hook. No behavior change.
+- 80c3e4a: Internal: renamed 45 source files across these packages to comply with the `filename-convention` lint rule (e.g. `AIConfigurator.ts` → `AiConfigurator.ts`, `BookmarkProvider.actions.ts` → `bookmark-actions.ts`, `errors/app-build-error.ts` → `errors/AppBuildError.ts`, `plugins/api/plugin.ts` → `plugins/api/ApiPlugin.ts`, `errors.ts` → `UnsupportedApiVersion.ts`, etc.). Also added `enable-signalr.ts` to the `filename-convention` exclude list since the suggested rename would incorrectly split the "SignalR" brand name. No public API changes.
+- 80c3e4a: Internal: added missing intent comments ahead of non-obvious control flow, RxJS `.pipe()` chains, iterator calls, and multi-source object merges to comply with the `require-intent-comment` and `require-tsdoc` lint rules. Also removed dead duplicate files left over from an earlier refactor in `navigation` (`events.ts`, `navigated-event.ts`, `history.flows.ts` — all fully superseded by their split replacements) and renamed `bookmarks/schemas.ts` to `bookmarks/bookmark.schemas.ts` in `services` to match the `*.schemas.ts` filename convention. No public API changes.
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+  - @equinor/fusion-framework-module-event@6.0.1
+  - @equinor/fusion-framework-module-http@8.0.4
+  - @equinor/fusion-framework-module-service-discovery@10.0.2
+  - @equinor/fusion-framework-module@6.1.1
+  - @equinor/fusion-observable@9.1.1
+  - @equinor/fusion-query@7.0.2
+
 ## 16.0.2
 
 ### Patch Changes

@@ -1,5 +1,15 @@
 # @equinor/fusion-framework-cli-plugin-copilot
 
+## 2.0.3
+
+### Patch Changes
+
+- 80c3e4a: Internal: Consolidate five single-export utility files under `src/utils/` into `helpers.ts` to reduce file fragmentation. No change to the public API.
+- 80c3e4a: Internal: added a missing intent comment for array-spread logic; no public API changes.
+- 80c3e4a: Internal: add clarifying intent comments and split `eval-resolve.ts`, `utils/agent-browser.ts`, `utils/process.ts`, `utils/server.ts`, `utils/daemon.ts`, and `commands/app/format.ts` into single-export modules re-exported from the existing barrels; no public API or behavior changes.
+- 80c3e4a: Internal: add clarifying intent comments throughout `commands/app/**` and split `tools/write-file.ts`'s `createAppendFileTool` into its own `tools/append-file.ts` module; no public API or behavior changes.
+- 80c3e4a: Internal: renamed 53 source files across `ai-base`, `ai-chat`, `ai-index`, and `copilot` to comply with the `filename-convention` lint rule (e.g. `config.ts` → `load-fusion-ai-config.ts`, `tools/write-file.ts` → `tools/create-write-file-tool.ts`, `prompts/plan.prompt.ts` → `prompts/create-plan-prompt.ts`). No public API changes.
+
 ## 2.0.2
 
 ### Patch Changes

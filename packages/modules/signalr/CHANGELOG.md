@@ -1,5 +1,13 @@
 # Change Log
 
+## 13.0.1
+
+### Patch Changes
+
+- 80c3e4a: Internal: resolve `noExplicitAny` Biome warnings in `enableSignalR`'s `IModulesConfigurator<any, any>` overloads (via `biome-ignore`), and safely tighten `Topic`'s `send`/`invoke` rest parameters from `any[]` to `unknown[]` since they are only forwarded to the underlying hub connection call. No public API or behavior change.
+- 80c3e4a: Internal: resolve `fusion-lint` warnings (`require-intent-comment`, `require-tsdoc`, `single-export-per-file`, `no-todo-without-issue`). Split `SignalRConfigurator` into its own file, removed stale `eslint-disable` comments (repo uses Biome), and referenced tracking issue #5096 for a `BaseConfigBuilder` migration TODO.
+- 80c3e4a: Internal: renamed 45 source files across these packages to comply with the `filename-convention` lint rule (e.g. `AIConfigurator.ts` → `AiConfigurator.ts`, `BookmarkProvider.actions.ts` → `bookmark-actions.ts`, `errors/app-build-error.ts` → `errors/AppBuildError.ts`, `plugins/api/plugin.ts` → `plugins/api/ApiPlugin.ts`, `errors.ts` → `UnsupportedApiVersion.ts`, etc.). Also added `enable-signalr.ts` to the `filename-convention` exclude list since the suggested rename would incorrectly split the "SignalR" brand name. No public API changes.
+
 ## 13.0.0
 
 ### Patch Changes

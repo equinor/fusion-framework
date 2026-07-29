@@ -1,5 +1,12 @@
 # Change Log
 
+## 4.0.3
+
+### Patch Changes
+
+- 80c3e4a: Internal: align source filenames with their exports (`use-signalr-provider.ts` → `useSignalRProvider.ts`, `use-signalr.ts` → `useTopic.ts`) while preserving existing public entrypoints; no public API changes.
+- 80c3e4a: Internal: add missing TSDoc comments to `useSignalRProvider` and `useTopic` to satisfy the `require-hook-tsdoc` lint rule. No functional change.
+
 ## 4.0.2
 
 ### Patch Changes

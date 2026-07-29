@@ -1,5 +1,15 @@
 # @equinor/fusion-framework-module-feature-flag
 
+## 2.0.2
+
+### Patch Changes
+
+- 80c3e4a: Internal: resolve `noExplicitAny` Biome warning in `enableFeatureFlagging`'s `IModulesConfigurator<any, any>` widening via an explanatory `biome-ignore` comment. No public API or behavior change.
+- 80c3e4a: Internal: fix the `./selectors` subpath export missing `findFeature` (it was moved to its own file in a previous lint cleanup but never re-exported). No breaking change — `findFeature` is available from `@equinor/fusion-framework-module-feature-flag/selectors` again.
+- 80c3e4a: Resolve fusion-lint warnings across the module: added missing TSDoc, added intent comments for control-flow and iterator/RxJS chains, and split `utils/selectors.ts`'s `findFeature` into its own file to satisfy `single-export-per-file`. `FeatureFlagModule.ts` was renamed to `feature-flag-module.ts` to match the repo's `*-module.ts` naming convention (no behavioral change).
+- 80c3e4a: Internal: renamed 45 source files across these packages to comply with the `filename-convention` lint rule (e.g. `AIConfigurator.ts` → `AiConfigurator.ts`, `BookmarkProvider.actions.ts` → `bookmark-actions.ts`, `errors/app-build-error.ts` → `errors/AppBuildError.ts`, `plugins/api/plugin.ts` → `plugins/api/ApiPlugin.ts`, `errors.ts` → `UnsupportedApiVersion.ts`, etc.). Also added `enable-signalr.ts` to the `filename-convention` exclude list since the suggested rename would incorrectly split the "SignalR" brand name. No public API changes.
+- 80c3e4a: Internal: added missing intent comments ahead of non-obvious control flow, RxJS `.pipe()` chains, iterator calls, and multi-source object merges to comply with the `require-intent-comment` and `require-tsdoc` lint rules. Also removed dead duplicate files left over from an earlier refactor in `navigation` (`events.ts`, `navigated-event.ts`, `history.flows.ts` — all fully superseded by their split replacements) and renamed `bookmarks/schemas.ts` to `bookmarks/bookmark.schemas.ts` in `services` to match the `*.schemas.ts` filename convention. No public API changes.
+
 ## 2.0.1
 
 ### Patch Changes

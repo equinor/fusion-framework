@@ -1,5 +1,13 @@
 # @equinor/fusion-imports
 
+## 2.0.1
+
+### Patch Changes
+
+- 80c3e4a: Internal: renamed several source files to align with filename conventions and added a missing intent comment for object-merge logic; no public API changes.
+- 80c3e4a: Internal: add a required fusion-lint comment explaining why a write failure for one transformed output file is logged and swallowed rather than aborting the build, and add an intent comment for an `as unknown as string` test cast. No behavior change.
+- 80c3e4a: Internal: resolve `fusion-lint` warnings (`require-intent-comment`, `single-export-per-file`). Split `FileNotFoundError` and `FileNotAccessibleError` out of `error.ts` into individual files under `errors/` to resolve `single-export-per-file` without conflicting with TSDoc adjacency, and added intent comments to control-flow blocks (`if`/`for`/`switch`/`continue`) across `error.ts`, `import-config.ts`, `import-meta-resolve-plugin.ts`, `import-script.ts`, `resolve-config-file.ts`, and `tests/setup.ts`.
+
 ## 2.0.0
 
 ### Major Changes

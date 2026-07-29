@@ -1,5 +1,12 @@
 # Change Log
 
+## 6.0.1
+
+### Patch Changes
+
+- 80c3e4a: Internal: add intent comments to control-flow statements across `useBookmark.ts`, `useCurrentBookmark.ts`, and `useBookmarkNavigate.ts` to satisfy the `require-intent-comment/flow` lint rule. No functional change.
+- 80c3e4a: Internal: add missing TSDoc comment to `useHasBookmark` to satisfy the `require-hook-tsdoc` lint rule. No functional change.
+
 ## 6.0.0
 
 ### Major Changes

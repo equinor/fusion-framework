@@ -1,5 +1,33 @@
 # @equinor/fusion-framework-vite-plugin-spa
 
+## 4.0.14
+
+### Patch Changes
+
+- 80c3e4a: Internal: renamed several source files to align with filename conventions and added a missing intent comment for object-merge logic; no public API changes.
+- 80c3e4a: Internal: added intent comments to satisfy `fusion-lint` rules (control-flow, iterator/rxjs chains, TSDoc `@template` tags, and single-export-per-file), and referenced tracking issues (#5065, #5066) for pre-existing TODO comments. `InvalidRouteError` was moved to its own module (`invalid-route-error.ts`) in `api-service` to satisfy `single-export-per-file`. No behavior changes.
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+  - @equinor/fusion-framework-module-http@8.0.4
+  - @equinor/fusion-framework-module-msal@10.0.2
+  - @equinor/fusion-framework-module-service-discovery@10.0.2
+  - @equinor/fusion-framework-module@6.1.1
+  - @equinor/fusion-framework-module-telemetry@7.0.1
+
 ## 4.0.13
 
 ### Patch Changes

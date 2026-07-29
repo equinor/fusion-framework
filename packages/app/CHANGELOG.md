@@ -1,5 +1,41 @@
 # Change Log
 
+## 11.0.11
+
+### Patch Changes
+
+- 80c3e4a: Internal: reference tracking issues (#5060, #5061) in existing TODO comments to satisfy fusion-lint's `no-todo-without-issue` rule; no behavior changes.
+- 80c3e4a: Internal: resolve `noExplicitAny`/`noConfusingVoidType` Biome warnings in `AppConfigurator.useFrameworkServiceClient`'s options widening and the `AppRenderFn` callback return-type union, using explanatory `biome-ignore` comments. No public API or behavior change.
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+  - @equinor/fusion-framework@8.0.11
+  - @equinor/fusion-framework-module-app@8.0.3
+  - @equinor/fusion-framework-module-event@6.0.1
+  - @equinor/fusion-framework-module-http@8.0.4
+  - @equinor/fusion-framework-module-msal@10.0.2
+  - @equinor/fusion-framework-module@6.1.1
+  - @equinor/fusion-framework-module-telemetry@7.0.1
+
 ## 11.0.10
 
 ### Patch Changes

@@ -1,5 +1,62 @@
 # poc-portal
 
+## 1.1.90
+
+### Patch Changes
+
+- 80c3e4a: Internal: resolve `fusion-lint` warnings across `AppList.tsx`, `Framework.tsx`, and `portal/bootloader.ts`; minor `vite.config.server.ts` adjustment. No behavior change.
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+  - @equinor/fusion-framework-cli@15.2.1
+  - @equinor/fusion-framework@8.0.11
+  - @equinor/fusion-framework-module-app@8.0.3
+  - @equinor/fusion-framework-module-http@8.0.4
+  - @equinor/fusion-framework-module-msal@10.0.2
+  - @equinor/fusion-framework-module-service-discovery@10.0.2
+  - @equinor/fusion-framework-module@6.1.1
+  - @equinor/fusion-framework-react-app@12.0.3
+  - @equinor/fusion-framework-react@8.0.1
+
 ## 1.1.89
 
 ### Patch Changes

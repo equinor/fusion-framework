@@ -1,5 +1,25 @@
 # @equinor/fusion-framework-react-router
 
+## 2.3.1
+
+### Patch Changes
+
+- 80c3e4a: Internal: align router source filenames with their exports while preserving existing public entrypoints; no public API changes.
+- 80c3e4a: Fix a regression from the `routes/index.ts` filename-alignment refactor where the `IndexRoute` class was no longer re-exported from `@equinor/fusion-framework-react-router/routes`.
+- 80c3e4a: Internal: added intent comments to all control-flow constructs (if/while/for,
+  break/continue) in the react-router Vite plugin, satisfying the
+  `require-intent-comment` lint rule. No behavior change.
+- 80c3e4a: Internal: add intent comment to the `BaseFileRoute.isFileRoute` and `useRouterContext` control-flow statements to satisfy the `require-intent-comment/flow` lint rule. No functional change.
+- 80c3e4a: Internal: add intent comments to control-flow statements in `Router.tsx` to satisfy the `require-intent-comment/flow` lint rule. No functional change.
+- 80c3e4a: Internal: added intent comments to control-flow constructs (if/for, `.every()`)
+  in `to-route-schema.ts`, satisfying the `require-intent-comment` lint rule. No
+  behavior change.
+- 80c3e4a: Internal: add missing `@returns` tag to the `Router` component's TSDoc to satisfy the `require-tsdoc` lint rule. No functional change.
+- 80c3e4a: Internal: add missing TSDoc comments to the router test-mock page components (`AboutPage`, `DashboardPage`, `HomePage`, `MainLayout`, `PostsPage`, `ProductPage`, `ProductsPage`, `UserPage`, `UsersPage`, `UserDetailPage`, `clientLoader`, `ErrorElement`, `HydrateFallback`, `shouldRevalidate`) to satisfy the `require-component-tsdoc` lint rule. No functional change.
+- 80c3e4a: Internal: Remove dead `src/routes/route-factories.ts` barrel file left over from the fusion-lint filename-convention cleanup. It had zero importers and was never wired into the package's public entry point. No change to the public API.
+- 80c3e4a: Internal: add missing intent comments for `as`/`as unknown as` type assertions and inline separate re-exports at their definition site, per `fusion-lint`'s `require-intent-comment/type-assertion` and `no-separate-export` rules. No behavior changes.
+- 80c3e4a: Internal: split multi-export files into one export per file and convert pure interop re-exports to `export { X } from 'y'` syntax, per `fusion-lint`'s `single-export-per-file` rule. Also removed `modules/event/src/EventProvider.tsx`, a fully dead duplicate of `eventContext.ts`/`useEventProvider.ts`/`useModulesEventProvider.ts` with no remaining consumers. No behavior changes.
+
 ## 2.3.0
 
 ### Minor Changes

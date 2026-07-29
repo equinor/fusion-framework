@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-cookbook-app-react-styling
 
+## 1.1.1
+
+### Patch Changes
+
+- 80c3e4a: Internal: resolve `fusion-lint` warnings across `Demo.tsx`, `Text.tsx`, `Title.tsx`, and `config.ts`. No behavior change.
+
 ## 1.1.0
 
 ### Minor Changes

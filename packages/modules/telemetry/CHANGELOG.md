@@ -1,5 +1,31 @@
 # Change Log
 
+## 7.0.1
+
+### Patch Changes
+
+- 80c3e4a: Internal: resolve fusion-lint warnings across the package — added missing TSDoc (`@returns`, `@param`, `@throws`, `@template`) on public APIs, added intent comments above control-flow and RxJS `.pipe()` chains, and split `parseTelemetryItem` and `TelemetryErrorEvent` into their own files to satisfy the single-export-per-file rule. No public behavior changes; `parseTelemetryItem` remains available from `@equinor/fusion-framework-module-telemetry/schemas` and `TelemetryErrorEvent` remains available from the package root.
+
+  The `initialize()` TODO for surfacing init-time telemetry items now references https://github.com/equinor/fusion-framework/issues/5112.
+
+- 80c3e4a: Internal: added an `@example` to each `parseTelemetryItem` overload (event, exception, metric, custom) instead of only on the implementation signature, since TypeScript only emits overload-signature TSDoc to `.d.ts` — the implementation's example was previously invisible in the published types and editor hover. No behavior change.
+- 80c3e4a: Internal: renamed 3 source files to comply with the `filename-convention` lint rule (`history.reducer.ts` → `create-history-reducer.ts`, and the two `adapter.ts` files in telemetry → `ApplicationInsightsAdapter.ts`/`ConsoleAdapter.ts`). No public API changes.
+- 80c3e4a: Internal: renamed 45 source files across these packages to comply with the `filename-convention` lint rule (e.g. `AIConfigurator.ts` → `AiConfigurator.ts`, `BookmarkProvider.actions.ts` → `bookmark-actions.ts`, `errors/app-build-error.ts` → `errors/AppBuildError.ts`, `plugins/api/plugin.ts` → `plugins/api/ApiPlugin.ts`, `errors.ts` → `UnsupportedApiVersion.ts`, etc.). Also added `enable-signalr.ts` to the `filename-convention` exclude list since the suggested rename would incorrectly split the "SignalR" brand name. No public API changes.
+- 80c3e4a: Internal: added missing intent comments ahead of non-obvious control flow, RxJS `.pipe()` chains, iterator calls, and multi-source object merges to comply with the `require-intent-comment` and `require-tsdoc` lint rules. Also removed dead duplicate files left over from an earlier refactor in `navigation` (`events.ts`, `navigated-event.ts`, `history.flows.ts` — all fully superseded by their split replacements) and renamed `bookmarks/schemas.ts` to `bookmarks/bookmark.schemas.ts` in `services` to match the `*.schemas.ts` filename convention. No public API changes.
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+  - @equinor/fusion-framework-module-event@6.0.1
+  - @equinor/fusion-framework-module@6.1.1
+  - @equinor/fusion-observable@9.1.1
+
 ## 7.0.0
 
 ### Patch Changes

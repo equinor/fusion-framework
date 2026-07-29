@@ -1,5 +1,14 @@
 # Change Log
 
+## 7.0.2
+
+### Patch Changes
+
+- 80c3e4a: Internal: added a missing intent comment for object-merge logic; no public API changes.
+- 80c3e4a: Internal: add intent comment to the `useCurrentContext` control-flow statement to satisfy the `require-intent-comment/flow` lint rule. No functional change.
+- 80c3e4a: Internal: add missing TSDoc comments to `useCurrentContext`, `useModuleQueryContext`, and `useQueryContext` to satisfy the `require-hook-tsdoc` lint rule. No functional change.
+- 80c3e4a: Internal: split multi-export files into one export per file and convert pure interop re-exports to `export { X } from 'y'` syntax, per `fusion-lint`'s `single-export-per-file` rule. Also removed `modules/event/src/EventProvider.tsx`, a fully dead duplicate of `eventContext.ts`/`useEventProvider.ts`/`useModulesEventProvider.ts` with no remaining consumers. No behavior changes.
+
 ## 7.0.1
 
 ### Patch Changes

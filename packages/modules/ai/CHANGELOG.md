@@ -1,5 +1,19 @@
 # @equinor/fusion-framework-module-ai
 
+## 6.0.2
+
+### Patch Changes
+
+- 80c3e4a: Internal: resolve fusion-lint warnings across the AI module.
+  - Added intent comments above control-flow (`if`/`for`) blocks, iterator calls (`.map()`, `.some()`, `.every()`, `.find()`), and RxJS `.pipe()` chains that were missing them.
+  - Added missing `@returns` TSDoc on `AzureOpenAIModel.llm`, and `@throws` on `AzureVectorStore.addDocumentsWithSchemaFields`/`invoke`.
+  - Suppressed `single-export-per-file` for co-located helper consts (`module`, `enableAI`, and the three `createFusionAi*Strategy` factories) that aren't checked by `require-tsdoc`.
+
+  No public API changes.
+
+- 80c3e4a: Internal: renamed 45 source files across these packages to comply with the `filename-convention` lint rule (e.g. `AIConfigurator.ts` → `AiConfigurator.ts`, `BookmarkProvider.actions.ts` → `bookmark-actions.ts`, `errors/app-build-error.ts` → `errors/AppBuildError.ts`, `plugins/api/plugin.ts` → `plugins/api/ApiPlugin.ts`, `errors.ts` → `UnsupportedApiVersion.ts`, etc.). Also added `enable-signalr.ts` to the `filename-convention` exclude list since the suggested rename would incorrectly split the "SignalR" brand name. No public API changes.
+- 80c3e4a: Internal: added missing intent comments ahead of non-obvious control flow, RxJS `.pipe()` chains, iterator calls, and multi-source object merges to comply with the `require-intent-comment` and `require-tsdoc` lint rules. Also removed dead duplicate files left over from an earlier refactor in `navigation` (`events.ts`, `navigated-event.ts`, `history.flows.ts` — all fully superseded by their split replacements) and renamed `bookmarks/schemas.ts` to `bookmarks/bookmark.schemas.ts` in `services` to match the `*.schemas.ts` filename convention. No public API changes.
+
 ## 6.0.1
 
 ### Patch Changes

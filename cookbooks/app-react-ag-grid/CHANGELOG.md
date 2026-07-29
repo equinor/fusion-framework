@@ -1,5 +1,13 @@
 # Change Log
 
+## 2.0.10
+
+### Patch Changes
+
+- 80c3e4a: Internal: resolve `fusion-lint` warnings (`require-intent-comment`, `filename-convention`). Renamed `table/sidebar.tsx` to `table/side-bar.tsx` and added missing intent comments in `BasicExample.tsx`/`ChartsExample.tsx`. No behavior change.
+- Updated dependencies [80c3e4a]
+  - @equinor/fusion-framework-react-ag-grid@37.0.1
+
 ## 2.0.9
 
 ### Patch Changes

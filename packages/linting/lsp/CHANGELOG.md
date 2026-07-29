@@ -1,5 +1,20 @@
 # @equinor/fusion-framework-lint-lsp
 
+## 0.2.1
+
+### Patch Changes
+
+- 80c3e4a: Internal: add clarifying intent comments to satisfy fusion-lint's own `require-intent-comment/flow` rule; no behavior changes.
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+  - @equinor/fusion-framework-lint-config@1.0.0
+  - @equinor/fusion-framework-lint-core@1.0.0
+
 ## 0.2.0
 
 ### Minor Changes

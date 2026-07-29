@@ -1,5 +1,24 @@
 # Change Log
 
+## 8.0.4
+
+### Patch Changes
+
+- 80c3e4a: Internal: resolve `noConfusingVoidType` Biome warning on the `ProcessOperator` callback type with an explanatory `biome-ignore` comment, since the `| void` relies on TypeScript's void-callback leniency for operator functions that don't transform the request. No public API or behavior change.
+- 80c3e4a: Internal: add required fusion-lint intent comments explaining `as unknown as T` casts in the HTTP client configurator, provider, and low-level fetch client. No behavior change.
+- 80c3e4a: Internal: resolve remaining `fusion-lint` warnings across the module (TSDoc, intent comments, `no-todo-without-issue`). Also reorganizes the error classes into `src/errors/` (one class per file, `HttpResponseError.ts`, `HttpJsonResponseError.ts`, `ServerSentEventResponseError.ts`, `ClientNotFoundException.ts`) and additionally exposes them as an `Errors` namespace:
+
+  ```typescript
+  // Still works, unchanged
+  import { ClientNotFoundException } from '@equinor/fusion-framework-module-http';
+
+  // New alternative
+  import { Errors } from '@equinor/fusion-framework-module-http';
+  new Errors.ClientNotFoundException(...);
+  ```
+
+  The existing named exports and the `./errors` subpath export (`dist/esm/errors/index.js` / `dist/types/errors/index.d.ts`) both continue to work — no breaking change for consumers.
+
 ## 8.0.3
 
 ### Patch Changes

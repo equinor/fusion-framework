@@ -1,5 +1,51 @@
 # Change Log
 
+## 12.0.3
+
+### Patch Changes
+
+- 80c3e4a: Internal: Reference tracking issues #5083, #5084, and #5086 in TODO comments, resolving `fusion-lint` `no-todo-without-issue` warnings.
+- 80c3e4a: Internal: add intent comments to control-flow statements (`if`/`switch`/`.map()`) across several files to satisfy the `require-intent-comment/flow` and `require-intent-comment/iterators` lint rules. No functional change.
+- 80c3e4a: Internal: add missing intent comments for `useFeature`'s object-merge and rxjs pipe operations.
+- 80c3e4a: Internal: add intent comments to `.pipe()` operator chains in `useAppEnvironmentVariables.ts`, `useAppSetting.ts`, and `useAppSettingsStatus.ts` to satisfy the `require-intent-comment/rxjs` lint rule. No functional change.
+- 80c3e4a: Internal: remove a stray `eslint-disable-next-line` comment (repo uses Biome, not ESLint) that was breaking TSDoc adjacency for `useBookmark`, replacing the unused generic with Biome's `_`-prefix convention, to satisfy the `require-hook-tsdoc` lint rule. No functional change.
+- 80c3e4a: Internal: add missing intent comments for `as`/`as unknown as` type assertions and inline separate re-exports at their definition site, per `fusion-lint`'s `require-intent-comment/type-assertion` and `no-separate-export` rules. No behavior changes.
+- 80c3e4a: Internal: split multi-export files into one export per file and convert pure interop re-exports to `export { X } from 'y'` syntax, per `fusion-lint`'s `single-export-per-file` rule. Also removed `modules/event/src/EventProvider.tsx`, a fully dead duplicate of `eventContext.ts`/`useEventProvider.ts`/`useModulesEventProvider.ts` with no remaining consumers. No behavior changes.
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+  - @equinor/fusion-framework-app@11.0.11
+  - @equinor/fusion-framework-module-app@8.0.3
+  - @equinor/fusion-framework-module-http@8.0.4
+  - @equinor/fusion-framework-module@6.1.1
+  - @equinor/fusion-framework-react-module-http@11.0.1
+  - @equinor/fusion-framework-react@8.0.1
+  - @equinor/fusion-framework-module-navigation@7.0.5
+  - @equinor/fusion-framework-react-module@4.0.2
+
 ## 12.0.2
 
 ### Patch Changes

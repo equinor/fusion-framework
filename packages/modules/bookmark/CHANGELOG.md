@@ -1,5 +1,18 @@
 # Change Log
 
+## 4.0.3
+
+### Patch Changes
+
+- 80c3e4a: Internal: resolve `noExplicitAny`/`noConfusingVoidType` Biome warnings in `enableBookmark`'s configurator widening, `BookmarkCreateArgs`/`BookmarkPayloadGenerator`'s generic defaults, and safely tighten `BookmarkModuleConfigurator`'s internal resolver method return types from `| void` to `| undefined`. No public API or behavior change.
+- 80c3e4a: Internal: add required fusion-lint intent comments explaining `as unknown as T` casts in `BookmarkConfigurator` and `BookmarkProvider`. `bookmarkWithDataSchema`'s `schema` parameter is now optional instead of defaulted, to allow the default schema's cast to be documented with an intent comment; behavior is unchanged for all callers, which never pass a `schema` argument.
+- 80c3e4a: Internal: Resolve fusion-lint warnings across the module — added missing TSDoc `@throws`/`@template` tags and fixed stale parameter/return docs on `BookmarkProvider`'s public API, added intent comments for control-flow and RxJS `.pipe()` chains, and extracted `BookmarkProviderError` into its own file (re-exported from `BookmarkProvider.error.ts` for backwards compatibility).
+
+  Split the 421-line `BookmarkProvider.flows.ts` into one-handler-per-file modules under `bookmark-flows/*.ts` for maintainability.
+
+- 80c3e4a: Internal: renamed 45 source files across these packages to comply with the `filename-convention` lint rule (e.g. `AIConfigurator.ts` → `AiConfigurator.ts`, `BookmarkProvider.actions.ts` → `bookmark-actions.ts`, `errors/app-build-error.ts` → `errors/AppBuildError.ts`, `plugins/api/plugin.ts` → `plugins/api/ApiPlugin.ts`, `errors.ts` → `UnsupportedApiVersion.ts`, etc.). Also added `enable-signalr.ts` to the `filename-convention` exclude list since the suggested rename would incorrectly split the "SignalR" brand name. No public API changes.
+- 80c3e4a: Internal: added missing intent comments ahead of non-obvious control flow, RxJS `.pipe()` chains, iterator calls, and multi-source object merges to comply with the `require-intent-comment` and `require-tsdoc` lint rules. Also removed dead duplicate files left over from an earlier refactor in `navigation` (`events.ts`, `navigated-event.ts`, `history.flows.ts` — all fully superseded by their split replacements) and renamed `bookmarks/schemas.ts` to `bookmarks/bookmark.schemas.ts` in `services` to match the `*.schemas.ts` filename convention. No public API changes.
+
 ## 4.0.2
 
 ### Patch Changes

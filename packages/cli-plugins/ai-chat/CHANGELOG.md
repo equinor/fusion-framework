@@ -1,5 +1,22 @@
 # @equinor/fusion-framework-cli-plugin-ai-chat
 
+## 3.0.6
+
+### Patch Changes
+
+- 80c3e4a: Internal: renamed 53 source files across `ai-base`, `ai-chat`, `ai-index`, and `copilot` to comply with the `filename-convention` lint rule (e.g. `config.ts` → `load-fusion-ai-config.ts`, `tools/write-file.ts` → `tools/create-write-file-tool.ts`, `prompts/plan.prompt.ts` → `prompts/create-plan-prompt.ts`). No public API changes.
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+  - @equinor/fusion-framework-cli-plugin-ai-base@4.0.6
+  - @equinor/fusion-framework-module-ai@6.0.2
+  - @equinor/fusion-framework-module@6.1.1
+
 ## 3.0.5
 
 ### Patch Changes

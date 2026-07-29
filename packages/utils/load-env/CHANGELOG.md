@@ -1,5 +1,13 @@
 # @equinor/fusion-load-env
 
+## 2.0.2
+
+### Patch Changes
+
+- 80c3e4a: Internal: resolve fusion-lint diagnostics in the environment loading utilities without changing the public API.
+- 80c3e4a: Internal: add a required fusion-lint intent comment explaining an `as any` cast used in a test mock. No behavior change.
+- 80c3e4a: Internal: resolve `fusion-lint` warnings (`require-intent-comment`, `single-export-per-file`) by adding intent comments to control-flow blocks, loops, and iterator chains, and co-locating `loadEnv` with `getEnvFilesForMode`.
+
 ## 2.0.1
 
 ### Patch Changes

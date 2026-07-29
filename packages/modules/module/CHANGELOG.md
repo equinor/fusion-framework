@@ -1,5 +1,16 @@
 # Change Log
 
+## 6.1.1
+
+### Patch Changes
+
+- 80c3e4a: Internal: resolve `noExplicitAny` Biome warnings in core module system types (`AnyModule`, `ref` widening, `infer`-position type extraction) with a file-level `biome-ignore-all` explaining why `unknown` is unsatisfiable given `TConfig`/`TType`'s contravariant use elsewhere in the interface. Converts the single-call-signature `FrameworkPlugin` interface to a function type to satisfy `useShorthandFunctionType`. No public API or behavior change.
+- 80c3e4a: Internal: resolved all fusion-lint diagnostics in `@equinor/fusion-framework-module` (TSDoc completeness, intent comments for control flow/iterators/rxjs pipelines, and single-export-per-file/filename-convention violations). Several internal files were split and/or renamed for clarity (e.g. `logger.ts` -> `ConsoleLogger.ts`/`ModuleConsoleLogger.ts`, `semantic-version.ts` -> `SemanticVersion.ts`, and the configurator lifecycle phase files were split so each phase function lives in its own module). All public exports from the package entrypoint are unchanged — no breaking changes for consumers.
+
+  Fixes: https://github.com/equinor/fusion-framework/issues/5145, https://github.com/equinor/fusion-framework/issues/5146
+
+- 80c3e4a: Internal: add a required fusion-lint intent comment explaining an `as unknown as ModulesInstance<TModules>` cast in `ModulesConfigurator`. No behavior change.
+
 ## 6.1.0
 
 ### Minor Changes

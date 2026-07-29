@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-cookbook-app-react-environment-variables
 
+## 2.0.2
+
+### Patch Changes
+
+- 80c3e4a: Internal: resolve `fusion-lint` warnings in `App.tsx`. No behavior change.
+
 ## 2.0.1
 
 ### Patch Changes

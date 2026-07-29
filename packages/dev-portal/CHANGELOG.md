@@ -1,5 +1,93 @@
 # @equinor/fusion-framework-dev-portal
 
+## 8.0.1
+
+### Patch Changes
+
+- 80c3e4a: Internal: remove duplicate git-tracked files that differed only in filename casing (`BookMarkSideSheet.tsx`/`BookmarkSideSheet.tsx` and `PersonSideSheet/sheets/Styled.tsx`/`styled.tsx`). Both pairs had identical content; only the casing actually referenced by imports is kept. This was invisible on case-insensitive filesystems but broke builds on case-sensitive ones (`TS1149`). No behavior change.
+- 80c3e4a: Internal: renamed several source files to align with filename conventions and added a missing intent comment for object-merge logic; no public API changes.
+- 80c3e4a: Internal: added intent comments to satisfy `fusion-lint` rules (control-flow, iterator/rxjs chains, and type-assertion casts) and referenced tracking issues (#5064) for pre-existing TODO comments. No behavior changes.
+- 80c3e4a: Internal: add a required fusion-lint intent comment explaining an `as unknown as ContextSelectEvent` cast in `ContextSelector`. No behavior change.
+- 80c3e4a: Internal: resolve `fusion-lint` warnings (intent comments on control flow, component TSDoc, and single-export-per-file) with no behavioral changes.
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+  - @equinor/fusion-framework-app@11.0.11
+  - @equinor/fusion-framework-dev-server@2.0.15
+  - @equinor/fusion-framework@8.0.11
+  - @equinor/fusion-framework-module-ag-grid@37.0.1
+  - @equinor/fusion-framework-module-analytics@3.0.2
+  - @equinor/fusion-framework-module-app@8.0.3
+  - @equinor/fusion-framework-module-bookmark@4.0.3
+  - @equinor/fusion-framework-module-context@8.0.1
+  - @equinor/fusion-framework-module-feature-flag@2.0.2
+  - @equinor/fusion-framework-module-services@8.0.2
+  - @equinor/fusion-framework-react-components-bookmark@2.0.2
+  - @equinor/fusion-framework-react-components-people-provider@2.0.4
+  - @equinor/fusion-framework-react@8.0.1
+  - @equinor/fusion-observable@9.1.1
+  - @equinor/fusion-query@7.0.2
+  - @equinor/fusion-framework-module-navigation@7.0.5
+  - @equinor/fusion-framework-module-telemetry@7.0.1
+  - @equinor/fusion-framework-react-module-bookmark@6.0.1
+
 ## 8.0.0
 
 ### Patch Changes

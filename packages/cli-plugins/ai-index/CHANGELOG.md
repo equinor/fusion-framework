@@ -1,5 +1,37 @@
 # @equinor/fusion-framework-cli-plugin-ai-index
 
+## 3.0.7
+
+### Patch Changes
+
+- 80c3e4a: Internal: added missing intent comments for object-merge logic; no public API changes.
+- 80c3e4a: Fix `getChangedFiles` to correctly handle renamed files in `--diff` mode. Previously, renamed files (`git diff --name-status` status `R###`) were silently skipped, so renamed files were never picked up for re-indexing. Renames are now treated as a removal of the old path plus an addition of the new path.
+- 80c3e4a: Internal: add clarifying intent comments to control-flow and array-transform logic in the `create`, `delete`, `delete-index`, `embed`, `embeddings`, and `search` CLI commands; no public API or behavior changes.
+- 80c3e4a: Internal: add clarifying intent comments in `utils/git/metadata.ts` and `utils/git/status.ts`, and split `utils/git/git-client.ts` so `resolveProjectRoot` moves into its own `resolve-project-root.ts` module alongside the single-export `getGit` in `git-client.ts`, re-exported from the existing barrel; no public API or behavior changes.
+- 80c3e4a: Internal: add clarifying intent comments and split `utils/git/file-changes.ts` into single-export `get-changed-files.ts`, `get-file-status.ts`, and `is-file-changed.ts` modules, re-exported from the existing barrel; no public API or behavior changes.
+- 80c3e4a: Internal: add clarifying intent comments in `zod-to-azure-fields`, and split `utils/markdown/parser.ts` into single-export `parse-markdown.ts` and `parse-markdown-file.ts` modules re-exported from the existing barrel; no public API or behavior changes.
+- 80c3e4a: Internal: add clarifying intent comments to control-flow, iterator, and RxJS pipeline logic in `apply-metadata`, `file-stream`, `execute-pipeline`, `embedding-dimensions`, `package-resolver`, and `get-diff`; no public API or behavior changes.
+- 80c3e4a: Internal: add clarifying intent comments to control-flow logic in `apply-schema` and `delete-removed-files`; no public API or behavior changes.
+- 80c3e4a: Internal: add clarifying intent comments and split `utils/ts-doc/extractors.ts` into single-export `create-typescript-document.ts`, `extract-document-from-class-node.ts`, `extract-document-from-node.ts`, and `process-source-file.ts` modules; rename `utils/ts-doc/parser.ts` to `is-typescript-file.ts` to match its single export, re-exported from the existing barrel; no public API or behavior changes.
+- 80c3e4a: Internal: split the monolithic `embed()` bin function into focused helper functions (file streaming, parsing, metadata, embedding, and upserting stages) for readability and maintainability; no public API or behavior changes.
+- 80c3e4a: Internal: Remove dead `src/bin/create-file-stream.ts` left over from the fusion-lint file-splitting cleanup. Its `createFileStream` export had zero importers and was superseded by the actively-used, diverged local `createFileStream$` in `embed.ts`. No change to CLI behavior.
+- 80c3e4a: Internal: renamed 53 source files across `ai-base`, `ai-chat`, `ai-index`, and `copilot` to comply with the `filename-convention` lint rule (e.g. `config.ts` → `load-fusion-ai-config.ts`, `tools/write-file.ts` → `tools/create-write-file-tool.ts`, `prompts/plan.prompt.ts` → `prompts/create-plan-prompt.ts`). No public API changes.
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+  - @equinor/fusion-framework-cli-plugin-ai-base@4.0.6
+  - @equinor/fusion-framework-module-ai@6.0.2
+  - @equinor/fusion-framework-module@6.1.1
+  - @equinor/fusion-imports@2.0.1
+
 ## 3.0.6
 
 ### Patch Changes

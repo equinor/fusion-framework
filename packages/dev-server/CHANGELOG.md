@@ -1,5 +1,18 @@
 # @equinor/fusion-framework-dev-server
 
+## 2.0.15
+
+### Patch Changes
+
+- 80c3e4a: Internal: add a clarifying intent comment to satisfy fusion-lint; no behavior changes.
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+  - @equinor/fusion-log@2.0.1
+  - @equinor/fusion-framework-vite-plugin-api-service@2.0.4
+  - @equinor/fusion-framework-vite-plugin-spa@4.0.14
+
 ## 2.0.14
 
 ### Patch Changes

@@ -1,5 +1,45 @@
 # Change Log
 
+## 15.2.1
+
+### Patch Changes
+
+- 80c3e4a: Internal: Consolidate single-export CLI auth option files under `src/cli/options/` into `options.ts`, and remove the unused `envOption` export left over from a prior file split. No change to the public API or CLI behavior.
+- 80c3e4a: Internal: renamed ~50 source files under `packages/cli/src` to comply with the `filename-convention` lint rule (e.g. `app-build.ts` → `build-application.ts`, `app-config.ts` → `define-app-config.ts`). Also fixed two latent self-import bugs uncovered during the rename (`load-portal-schema.ts` and `load-app-manifest.ts` each importing a type from themselves instead of their sibling module). No public API changes.
+- 80c3e4a: Internal: fix fusion-lint ERROR-severity findings in the CLI package — added missing intent
+  comments around dangerous `as unknown as T` type assertions, replaced a silently-swallowed
+  empty catch block with an explanatory comment, and removed separate `export { ... }`
+  statements in favor of inline/re-export exports (`assert.ts`, `format.ts`). Also removed a
+  roundabout `chalk` re-export chain in `format.ts`/`utils/index.ts` in favor of importing
+  `chalk` directly where it's used. No public API or behavior changes.
+- 80c3e4a: Internal: added missing intent comments ahead of control-flow blocks, loops, and array iterator calls (`.map`/`.filter`) across the CLI source to satisfy `fusion-lint`'s `require-intent-comment` rules. No behavior changes.
+- 80c3e4a: Internal: reference tracking issues in TODO comments (`TODO(#123):` format) per `fusion-lint`'s `no-todo-without-issue` rule. `packages/cli` is now fully clean of `fusion-lint` warnings and errors. No behavior changes.
+- 80c3e4a: Internal: Remove dead code left over from the fusion-lint file-splitting cleanup — `src/lib/app/assert-package.ts`, `resolve-app-package.ts`, `resolve-entry-point.ts`, and `src/lib/utils/assert-file-exists.ts`, `assert-git-repository.ts`, `assert-number.ts`, `assert-object-entries.ts`, `fetch-multiple-package-info.ts` had zero importers and were not exported from any package entry point. Also consolidate the `src/bin/helpers/template-*-schema.ts` cluster (5 tiny mutually-referencing zod schema files) into a single `template.schemas.ts`. No change to the public API or CLI behavior.
+- 80c3e4a: Internal: renamed CLI command implementation files to a `*.command.ts` naming convention (e.g. `tag.ts` -> `tag.command.ts`) across `app`, `portal`, and `auth` command groups, replacing a long list of per-file `filename-convention` lint exceptions with a single `*.command.ts` exclude pattern. No behavior change.
+- 80c3e4a: Internal: add missing TSDoc `@returns`/`@throws` tags and fix TSDoc-comment placement (where a stray line comment or import statement separated the doc block from its declaration) to satisfy `fusion-lint`'s `require-tsdoc` rule. No behavior changes.
+- 80c3e4a: Internal: split remaining multi-export modules across `bin/utils`, `cli/options`, `lib/app`, `lib/portal`, and `lib/utils` (including `create-dev-server.ts`, `format.ts`, `format-auth-error.ts`, `auth.ts`, `env.ts`, `assert.ts`, `file-exists.ts`, `package-info.ts`, `path-security.ts`, `app-package.ts`, `load-portal-schema.ts`, `portal-manifest.schema.ts`, `portal-manifest.ts`, `pack.ts`) into one-export-per-file modules to satisfy `fusion-lint`'s `single-export-per-file` rule. Public API surface is unchanged — all symbols are still re-exported from the same barrels/subpaths.
+- 80c3e4a: Internal: split several multi-export modules (`framework.node.ts`, `legacy.ts`, `load-dev-server-config.ts`, `project-templates.schema.ts`) into one-export-per-file modules to satisfy `fusion-lint`'s `single-export-per-file` rule. Public API surface (`@equinor/fusion-framework-cli/bin` and `@equinor/fusion-framework-cli/lib`) is unchanged — all symbols are still re-exported from the same barrels.
+- 80c3e4a: Internal: resolve `noConfusingVoidType` Biome warnings on `AppConfigFn`, `FusionCliConfigFn`, `PortalConfigFn`, and `PortalManifestFn`'s callback return-type unions, using explanatory `biome-ignore` comments since the `| void` relies on TypeScript's void-callback leniency. No public API or behavior change.
+- 80c3e4a: Internal: renamed several source files to align with filename conventions and added missing intent comments for object-merge and array-spread logic; no public API changes.
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+  - @equinor/fusion-framework-dev-portal@8.0.1
+  - @equinor/fusion-framework-dev-server@2.0.15
+  - @equinor/fusion-framework-module-azure-identity@0.2.2
+  - @equinor/fusion-imports@2.0.1
+  - @equinor/fusion-framework-vite-plugin-raw-imports@2.0.1
+
 ## 15.2.0
 
 ### Minor Changes

@@ -1,5 +1,11 @@
 # fusion-ts-lint-vscode
 
+## 0.2.2
+
+### Patch Changes
+
+- 80c3e4a: Internal: minor `README.md` update. No behavior change.
+
 ## 0.2.1
 
 ### Patch Changes
