@@ -1,5 +1,14 @@
 # Change Log
 
+## 9.1.1
+
+### Patch Changes
+
+- 80c3e4a: Internal: resolve `noExplicitAny`/`noConfusingVoidType` Biome warnings across action creators, the `Effect`/`Flow` RxJS types, `useDebounce`, `map-prop`, and internal TS helper types. Generic defaults that must remain bivariant `any` (e.g. `TType = any` on `createAction`/`createAsyncAction`) and callback-return `void` unions relying on TypeScript's void-callback leniency are suppressed with explanatory `biome-ignore` comments instead of being loosened to `unknown`/`undefined`, since doing so broke downstream package builds. No public API or behavior change.
+- 80c3e4a: Internal: split `useObservableInputState` and `useObservableLayoutSubscription` into their own modules and added missing intent comments and TSDoc; no public API changes.
+- 80c3e4a: Internal: add required fusion-lint intent comments explaining `as unknown as T` casts in `createAsyncAction` and `useObservableSelector`. No behavior change.
+- 80c3e4a: Internal: Consolidate the nine single-export action helper files under `src/actions/` into `utils.ts` (type/suffix helpers) and `predicates.ts` (lifecycle predicates) to reduce file fragmentation. No change to the public API.
+
 ## 9.1.0
 
 ### Minor Changes

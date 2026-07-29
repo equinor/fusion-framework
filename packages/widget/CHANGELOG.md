@@ -1,5 +1,11 @@
 # Change Log
 
+## 2.0.3
+
+### Patch Changes
+
+- 80c3e4a: Internal: add clarifying intent comments and reference tracking issues (#5062, #5063) in existing TODO comments to satisfy fusion-lint; no behavior changes.
+
 ## 2.0.2
 
 ### Patch Changes

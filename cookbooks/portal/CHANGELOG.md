@@ -1,5 +1,24 @@
 # portal
 
+## 0.1.75
+
+### Patch Changes
+
+- 80c3e4a: Internal: resolve `fusion-lint` warnings in `Portal.tsx`. No behavior change.
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+  - @equinor/fusion-framework-cli@15.2.1
+
 ## 0.1.74
 
 ### Patch Changes

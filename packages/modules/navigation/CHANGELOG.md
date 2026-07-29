@@ -1,5 +1,15 @@
 # Change Log
 
+## 7.0.5
+
+### Patch Changes
+
+- 80c3e4a: Internal: add a required fusion-lint intent comment explaining an `as unknown as History` cast in `NavigationProvider`. No behavior change.
+- 80c3e4a: Internal: added a tracking issue reference to the `@remix-run/router` removal TODO comment per fusion-lint's `no-todo-without-issue` rule; no public API changes.
+- 80c3e4a: Internal: renamed 3 source files to comply with the `filename-convention` lint rule (`history.reducer.ts` → `create-history-reducer.ts`, and the two `adapter.ts` files in telemetry → `ApplicationInsightsAdapter.ts`/`ConsoleAdapter.ts`). No public API changes.
+- 80c3e4a: Internal: renamed 45 source files across these packages to comply with the `filename-convention` lint rule (e.g. `AIConfigurator.ts` → `AiConfigurator.ts`, `BookmarkProvider.actions.ts` → `bookmark-actions.ts`, `errors/app-build-error.ts` → `errors/AppBuildError.ts`, `plugins/api/plugin.ts` → `plugins/api/ApiPlugin.ts`, `errors.ts` → `UnsupportedApiVersion.ts`, etc.). Also added `enable-signalr.ts` to the `filename-convention` exclude list since the suggested rename would incorrectly split the "SignalR" brand name. No public API changes.
+- 80c3e4a: Internal: added missing intent comments ahead of non-obvious control flow, RxJS `.pipe()` chains, iterator calls, and multi-source object merges to comply with the `require-intent-comment` and `require-tsdoc` lint rules. Also removed dead duplicate files left over from an earlier refactor in `navigation` (`events.ts`, `navigated-event.ts`, `history.flows.ts` — all fully superseded by their split replacements) and renamed `bookmarks/schemas.ts` to `bookmarks/bookmark.schemas.ts` in `services` to match the `*.schemas.ts` filename convention. No public API changes.
+
 ## 7.0.4
 
 ### Patch Changes

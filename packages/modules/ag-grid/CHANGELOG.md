@@ -1,5 +1,12 @@
 # Change Log
 
+## 37.0.1
+
+### Patch Changes
+
+- 80c3e4a: Internal: resolve `noExplicitAny` Biome warning in `enableAgGrid`'s `IModulesConfigurator<any, any>` widening via an explanatory `biome-ignore` comment. No public API or behavior change.
+- 80c3e4a: Internal: Add intent comments for control-flow and iterator usage, reference a tracking issue for a deferred telemetry TODO, and suppress `single-export-per-file` for deliberately co-located module/theme helper exports, resolving all `fusion-lint` warnings in this package.
+
 ## 37.0.0
 
 ### Major Changes

@@ -1,5 +1,13 @@
 # Change Log
 
+## 7.0.2
+
+### Patch Changes
+
+- 80c3e4a: Internal: resolve `noExplicitAny`/`noConfusingVoidType` Biome warnings across `Query`, cache/client action creators, cache types, and `QueryCacheEvent`. Generic defaults that must remain bivariant `any` (`CacheSortFn`, `ActionBuilder`/`ActionMap`/`Actions`, `Query`'s `TQueryArguments`) are suppressed with explanatory `biome-ignore` comments rather than loosened to `unknown`, since that broke cross-file assignability within the package. Event payload fields (`mutation`, `criteria.sort`/`validate`) were safely tightened from `any` to `unknown`. No public API or behavior change.
+- 80c3e4a: Internal: add a required fusion-lint intent comment explaining an `as unknown as QueryClientJob<TType, TArgs>` cast in `QueryClient.query`. No behavior change.
+- 80c3e4a: Internal: resolve remaining `fusion-lint` warnings across the package (TSDoc, intent comments, `filename-convention`, `single-export-per-file`). Renames `src/events.ts` → `src/QueryEvent.ts`, `src/cache/events.ts` → `src/cache/QueryCacheEvent.ts`, and `src/client/events.ts` → `src/client/QueryClientEvent.ts`. Splits `src/operators.ts` into a directory (`src/operators/{concat-queue,merge-queue,switch-queue,query-value}.ts` + barrel `index.ts`) and `src/client/flows.ts` into `src/client/{handle-requests,handle-execution,handle-failure}.ts`. Renames `src/client/reducer.ts` → `src/client/create-reducer.ts`. No public API or behavior change.
+
 ## 7.0.1
 
 ### Patch Changes

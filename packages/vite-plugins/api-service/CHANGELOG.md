@@ -1,5 +1,12 @@
 # @equinor/fusion-framework-vite-plugin-api-service
 
+## 2.0.4
+
+### Patch Changes
+
+- 80c3e4a: Internal: renamed several source files to align with filename conventions and added a missing intent comment for object-merge logic; no public API changes.
+- 80c3e4a: Internal: added intent comments to satisfy `fusion-lint` rules (control-flow, iterator/rxjs chains, TSDoc `@template` tags, and single-export-per-file), and referenced tracking issues (#5065, #5066) for pre-existing TODO comments. `InvalidRouteError` was moved to its own module (`invalid-route-error.ts`) in `api-service` to satisfy `single-export-per-file`. No behavior changes.
+
 ## 2.0.3
 
 ### Patch Changes

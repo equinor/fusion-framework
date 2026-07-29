@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-cookbook-app-react-context-custom-error
 
+## 5.0.5
+
+### Patch Changes
+
+- 80c3e4a: Internal: resolve `fusion-lint` warnings in `App.tsx` and `config.ts`. No behavior change.
+
 ## 5.0.4
 
 ### Patch Changes

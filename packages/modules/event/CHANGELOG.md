@@ -1,5 +1,13 @@
 # Change Log
 
+## 6.0.1
+
+### Patch Changes
+
+- 80c3e4a: Internal: resolve `fusion-lint` warnings (intent comments on control flow and iterator chains, single-export-per-file) with no behavioral changes.
+- 80c3e4a: Internal: resolve fusion-lint filename diagnostics without changing the event module public API.
+- 80c3e4a: Internal: add a required fusion-lint intent comment explaining an `as unknown as FrameworkDispatchEvent<TEvent>` cast in the event dispatcher. No behavior change.
+
 ## 6.0.0
 
 ### Major Changes

@@ -1,5 +1,17 @@
 # Change Log
 
+## 2.0.2
+
+### Patch Changes
+
+- 80c3e4a: Internal: resolve `fusion-lint` `no-todo-without-issue` warnings by referencing tracking issues (#5089-#5095) and removing a stale empty TODO.
+- 80c3e4a: Internal: align bookmark source filenames with their exported symbols; no public API changes.
+- 80c3e4a: Internal: add intent comments to control-flow statements and iterator calls across bookmark UI components and hooks to satisfy the `require-intent-comment/flow` and `require-intent-comment/iterators` lint rules. No functional change.
+- 80c3e4a: Internal: add intent comments to control-flow statements in `ImportBookmark.tsx` to satisfy the `require-intent-comment/flow` lint rule. No functional change.
+- 80c3e4a: Internal: add intent comments to `.pipe()` operator chains in `Bookmark.tsx` and `ImportBookmark.tsx` to satisfy the `require-intent-comment/rxjs` lint rule. No functional change.
+- 80c3e4a: Internal: add missing TSDoc comments to `Bookmark`, `BookmarkProvider`, `useBookmarkComponentContext`, `useBookmarkGrouping`, `CreateBookmarkModal`, `EditBookmarkModal`, `BookmarkFilter`, `ImportBookmarkModal`, `Loading`, `Message`, `Section`, `MoreMenu`, `Row`, `SectionList`, and `SharedIcon` to satisfy the `require-component-tsdoc`/`require-hook-tsdoc` lint rules. No functional change.
+- 80c3e4a: Internal: split multi-export files into one export per file and convert pure interop re-exports to `export { X } from 'y'` syntax, per `fusion-lint`'s `single-export-per-file` rule. Also removed `modules/event/src/EventProvider.tsx`, a fully dead duplicate of `eventContext.ts`/`useEventProvider.ts`/`useModulesEventProvider.ts` with no remaining consumers. No behavior changes.
+
 ## 2.0.1
 
 ### Patch Changes

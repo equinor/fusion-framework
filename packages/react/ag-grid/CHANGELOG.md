@@ -1,5 +1,14 @@
 # @equinor/fusion-framework-react-ag-grid
 
+## 37.0.1
+
+### Patch Changes
+
+- 80c3e4a: Internal: add intent comment to the `useTheme` control-flow guard to satisfy the `require-intent-comment/flow` lint rule. No functional change.
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+  - @equinor/fusion-framework-module-ag-grid@37.0.1
+
 ## 37.0.0
 
 ### Major Changes

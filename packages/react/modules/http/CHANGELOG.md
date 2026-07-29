@@ -1,5 +1,12 @@
 # Change Log
 
+## 11.0.1
+
+### Patch Changes
+
+- 80c3e4a: Internal: Reference tracking issue #5085 in a TODO comment, resolving a `fusion-lint` `no-todo-without-issue` warning.
+- 80c3e4a: Internal: add intent comment to the `useHttpClient` control-flow statement to satisfy the `require-intent-comment/flow` lint rule. No functional change.
+
 ## 11.0.0
 
 ### Major Changes

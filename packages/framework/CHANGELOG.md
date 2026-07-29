@@ -1,5 +1,47 @@
 # Change Log
 
+## 8.0.11
+
+### Patch Changes
+
+- 80c3e4a: Internal: add clarifying intent comments to satisfy fusion-lint; no behavior changes.
+- 80c3e4a: Internal: resolve `noExplicitAny` Biome warning on `FrameworkConfigurator`'s `TRef` generic default with an explanatory `biome-ignore` comment (the default must remain bivariant `any`). No public API or behavior change.
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+  - @equinor/fusion-framework-module-context@8.0.1
+  - @equinor/fusion-framework-module-event@6.0.1
+  - @equinor/fusion-framework-module-http@8.0.4
+  - @equinor/fusion-framework-module-msal@10.0.2
+  - @equinor/fusion-framework-module-service-discovery@10.0.2
+  - @equinor/fusion-framework-module-services@8.0.2
+  - @equinor/fusion-framework-module@6.1.1
+  - @equinor/fusion-framework-module-telemetry@7.0.1
+
 ## 8.0.10
 
 ### Patch Changes

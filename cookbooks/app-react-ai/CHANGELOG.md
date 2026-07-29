@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-cookbook-app-react-ai
 
+## 0.0.3
+
+### Patch Changes
+
+- 80c3e4a: Internal: resolve `fusion-lint` warnings (`filename-convention`, `require-intent-comment`). Renamed `fusion-index.ts` to `create-fusion-search-tool.ts` and clarified control-flow comments in `useFusionAiRuntime.ts`. No behavior change.
+
 ## 0.0.2
 
 ### Patch Changes

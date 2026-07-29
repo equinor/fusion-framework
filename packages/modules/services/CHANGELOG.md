@@ -1,5 +1,16 @@
 # Change Log
 
+## 8.0.2
+
+### Patch Changes
+
+- 80c3e4a: Internal: resolve `noExplicitAny` Biome warning in `enableServices`'s `IModulesConfigurator<any, any>` widening via an explanatory `biome-ignore` comment. No public API or behavior change.
+- 80c3e4a: Internal: suppress a `no-separate-export` fusion-lint false positive on the intentionally-aliased re-export in `user-bookmark-favourite.post.ts`; no public API changes.
+- 80c3e4a: Internal: suppress `no-separate-export` fusion-lint diagnostics on the remaining bookmark endpoint files, matching the pattern already applied to `user-bookmark-favourite.post.ts`. These files intentionally alias shared generic type/function names (`AllowedVersions`, `MethodArg`, ...) to unique consumer-facing export names, which cannot be expressed as an inline export.
+- 80c3e4a: Internal: added tracking issue references to remaining TODO comments per fusion-lint's `no-todo-without-issue` rule; no public API changes.
+- 80c3e4a: Internal: renamed 45 source files across these packages to comply with the `filename-convention` lint rule (e.g. `AIConfigurator.ts` → `AiConfigurator.ts`, `BookmarkProvider.actions.ts` → `bookmark-actions.ts`, `errors/app-build-error.ts` → `errors/AppBuildError.ts`, `plugins/api/plugin.ts` → `plugins/api/ApiPlugin.ts`, `errors.ts` → `UnsupportedApiVersion.ts`, etc.). Also added `enable-signalr.ts` to the `filename-convention` exclude list since the suggested rename would incorrectly split the "SignalR" brand name. No public API changes.
+- 80c3e4a: Internal: added missing intent comments ahead of non-obvious control flow, RxJS `.pipe()` chains, iterator calls, and multi-source object merges to comply with the `require-intent-comment` and `require-tsdoc` lint rules. Also removed dead duplicate files left over from an earlier refactor in `navigation` (`events.ts`, `navigated-event.ts`, `history.flows.ts` — all fully superseded by their split replacements) and renamed `bookmarks/schemas.ts` to `bookmarks/bookmark.schemas.ts` in `services` to match the `*.schemas.ts` filename convention. No public API changes.
+
 ## 8.0.1
 
 ### Patch Changes

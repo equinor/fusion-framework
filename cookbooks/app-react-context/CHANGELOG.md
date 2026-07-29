@@ -1,5 +1,11 @@
 # Change Log
 
+## 5.0.5
+
+### Patch Changes
+
+- 80c3e4a: Internal: resolve `fusion-lint` warnings in `App.tsx` and `useRelatedContext.ts`. No behavior change.
+
 ## 5.0.4
 
 ### Patch Changes

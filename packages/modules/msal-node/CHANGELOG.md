@@ -1,5 +1,13 @@
 # @equinor/fusion-framework-module-msal-node
 
+## 4.1.3
+
+### Patch Changes
+
+- 80c3e4a: Internal: resolve `fusion-lint` warnings (`require-intent-comment`, `require-tsdoc`, `single-export-per-file`, `no-todo-without-issue`). Split the error class hierarchy in `error.ts` into individual files under `errors/` to resolve `single-export-per-file` without conflicting with TSDoc adjacency, added missing constructor/`@param`/`@returns` TSDoc, added intent comments to control-flow blocks, and referenced tracking issue #5097 for a `noExplicitAny` TODO.
+- 80c3e4a: Internal: restore the `./error` subpath export. It broke when `error.ts` was split into individual files under `errors/` for `single-export-per-file` compliance without keeping a re-export at the original path. `error.ts` is now a barrel re-exporting `AuthServerError`, `AuthServerTimeoutError`, `NoAccountsError`, and `SilentTokenAcquisitionError` — no breaking change.
+- 80c3e4a: Internal: renamed 45 source files across these packages to comply with the `filename-convention` lint rule (e.g. `AIConfigurator.ts` → `AiConfigurator.ts`, `BookmarkProvider.actions.ts` → `bookmark-actions.ts`, `errors/app-build-error.ts` → `errors/AppBuildError.ts`, `plugins/api/plugin.ts` → `plugins/api/ApiPlugin.ts`, `errors.ts` → `UnsupportedApiVersion.ts`, etc.). Also added `enable-signalr.ts` to the `filename-convention` exclude list since the suggested rename would incorrectly split the "SignalR" brand name. No public API changes.
+
 ## 4.1.2
 
 ### Patch Changes

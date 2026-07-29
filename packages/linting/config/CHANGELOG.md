@@ -1,5 +1,68 @@
 # @equinor/fusion-framework-lint-config
 
+## 1.0.0
+
+### Major Changes
+
+- 80c3e4a: `CustomRuleDefinition.check` (used by `ConfigBuilder.addRule` and `defineConfig`'s builder form) now follows `@equinor/fusion-framework-lint-core`'s `check(source, ctx: LintContext)` signature instead of `check(source, filePath)`.
+
+  ```typescript
+  // Before
+  args.addRule({
+    id: "my-rule",
+    severity: "warn",
+    check: (source, filePath) => [],
+  });
+
+  // After
+  args.addRule({ id: "my-rule", severity: "warn", check: (source, ctx) => [] });
+  ```
+
+  `recommendedRules` is unaffected — it still exports resolved `Rule[]` instances (each built-in factory is called internally).
+
+### Minor Changes
+
+- 80c3e4a: Add the new `filename-convention` rule to `recommendedRules`/`recommendedConfig` at `warn` severity.
+- 80c3e4a: Add `ignorePatterns` config option to exclude files/directories from linting entirely, independent of `.gitignore`.
+
+  ```typescript
+  // fusion-lint.config.ts
+  import { defineConfig } from "@equinor/fusion-framework-lint-config";
+
+  export default defineConfig({
+    ignorePatterns: ["**/__tests__/**"],
+  });
+  ```
+
+  Also available on the builder form via `builder.ignorePatterns = [...]`. Both the `fusion-lint lint` and `fusion-lint changed` CLI commands now honor this option.
+
+- 80c3e4a: Add `require-intent-comment/object-merge` rule, enabled by default in the `recommended` config at `warn` severity.
+
+  The rule flags multi-source object merges that are missing an intent comment:
+  - `Object.assign(target, ...sources)` calls with one or more source arguments.
+  - Object or array literals spreading two or more sources, e.g. `{ ...a, ...b }` or `[...a, ...b]`.
+
+  A no-op `Object.assign(target)` call (no sources) and single-spread-plus-overrides literals (the common immutable-update pattern, e.g. `{ ...state, enabled: true }`) are intentionally not flagged, so the rule only fires where a merge actually happens and key precedence matters.
+
+### Patch Changes
+
+- 80c3e4a: Internal: renamed source files to comply with the `filename-convention` lint rule (files renamed to match their primary named export, e.g. `engine.ts` → `LintEngine.ts`, `glob.ts` → `matches-basename-pattern.ts`). No public API changes.
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+  - @equinor/fusion-framework-lint-rules@1.0.0
+  - @equinor/fusion-framework-lint-core@1.0.0
+
 ## 0.2.0
 
 ### Minor Changes

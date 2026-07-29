@@ -1,5 +1,47 @@
 # @equinor/fusion-framework-module-analytics
 
+## 3.0.2
+
+### Patch Changes
+
+- 80c3e4a: Internal: resolve fusion-lint warnings across the analytics module.
+  - Added intent comments above control-flow and RxJS `.pipe()` chains that were missing them.
+  - Added missing constructor and method TSDoc (including `@param`/`@returns` tags).
+  - Split `extractAppMetadata.ts` and `extractContextMetadata.ts` so each export lives in its own file, satisfying the `single-export-per-file` rule while preserving existing TSDoc.
+  - Replaced ad-hoc `@TODO` comments in `AnalyticsProvider` with references to [#5098](https://github.com/equinor/fusion-framework/issues/5098).
+
+  No public API changes.
+
+- 80c3e4a: Internal: renamed 45 source files across these packages to comply with the `filename-convention` lint rule (e.g. `AIConfigurator.ts` → `AiConfigurator.ts`, `BookmarkProvider.actions.ts` → `bookmark-actions.ts`, `errors/app-build-error.ts` → `errors/AppBuildError.ts`, `plugins/api/plugin.ts` → `plugins/api/ApiPlugin.ts`, `errors.ts` → `UnsupportedApiVersion.ts`, etc.). Also added `enable-signalr.ts` to the `filename-convention` exclude list since the suggested rename would incorrectly split the "SignalR" brand name. No public API changes.
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+- Updated dependencies [80c3e4a]
+  - @equinor/fusion-framework-module-app@8.0.3
+  - @equinor/fusion-framework-module-context@8.0.1
+  - @equinor/fusion-framework-module-event@6.0.1
+  - @equinor/fusion-framework-module-http@8.0.4
+  - @equinor/fusion-framework-module@6.1.1
+  - @equinor/fusion-observable@9.1.1
+
 ## 3.0.1
 
 ### Patch Changes
