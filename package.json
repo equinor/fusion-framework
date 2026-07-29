@@ -76,7 +76,7 @@
     "typescript": "^7.0.2",
     "vitest": "^4.1.0",
     "@types/node": "^24.0.3",
-    "chalk": "^5.6.0"
+    "chalk": "^6.0.0"
   },
   "peerDependencies": {
     "typescript": ">=4.8"
