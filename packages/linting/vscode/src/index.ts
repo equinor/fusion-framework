@@ -76,7 +76,8 @@ export function activate(context: ExtensionContext): void {
     initializationOptions: () => ({
       runOn: workspace.getConfiguration('fusion-ts-lint').get<string>('runOn') ?? 'change',
     }),
-    traceOutputChannel: window.createOutputChannel('Fusion TS Lint (LSP trace)'),
+    // vscode-languageclient 10 requires a LogOutputChannel (the `log: true` overload) for traceOutputChannel
+    traceOutputChannel: window.createOutputChannel('Fusion TS Lint (LSP trace)', { log: true }),
   };
 
   client = new LanguageClient('fusion-ts-lint', 'Fusion TS Lint', serverOptions, clientOptions);
