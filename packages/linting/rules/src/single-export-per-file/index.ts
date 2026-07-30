@@ -4,6 +4,7 @@ import type {
   Severity,
   RuleDef,
   LintContext,
+  MatcherFn,
 } from '@equinor/fusion-framework-lint-core';
 import { createMatcher, resolveMatch } from '@equinor/fusion-framework-lint-core';
 import { tsParser } from '../ts-parser.js';
@@ -43,10 +44,54 @@ function isValueExport(node: Node): boolean {
 }
 
 /**
- * Basename patterns exempted from this rule by default when `options.match`
- * is not provided. Barrel files legitimately re-export many symbols.
- * If `options.match` overrides this, the implementer must re-add any of
- * these patterns they still want exempted — the default list is not merged in.
+ * Returns `true` when a value export is `export default class ... {}` — the
+ * `@fusionElement` custom-element registration pattern's defining statement.
+ *
+ * @param node - A value-exporting `export_statement` AST node.
+ * @returns `true` if the statement is a default class export.
+ */
+function isDefaultClassExport(node: Node): boolean {
+  // A default export has a `default` keyword child
+  const hasDefaultKeyword = node.children.some((c) => c.type === 'default');
+  // ...and its declaration child is a class
+  const hasClassChild = node.children.some((c) => c.type === 'class_declaration');
+  return hasDefaultKeyword && hasClassChild;
+}
+
+/**
+ * Returns `true` when a value export is a top-level `const`/`let`/`var`
+ * declaration (as opposed to a function/class declaration).
+ *
+ * @param node - A value-exporting `export_statement` AST node.
+ * @returns `true` if the statement declares a const/let/var binding.
+ */
+function isConstOrLetExport(node: Node): boolean {
+  // const/let use lexical_declaration, var uses variable_declaration
+  return node.children.some((c) => c.type === 'lexical_declaration' || c.type === 'variable_declaration');
+}
+
+/**
+ * Filters `exports` down to the set that actually competes for the
+ * one-symbol budget: when a default class export (the `@fusionElement`
+ * registration pattern) is present, its companion const/let declarations
+ * (e.g. a `tag` string) are dropped since they only parameterize it.
+ *
+ * @param exports - All top-level value exports collected from a file.
+ * @returns The subset of `exports` that count toward the rule's limit.
+ */
+function competingExports(exports: readonly Node[]): Node[] {
+  // Whether the file has the @fusionElement default class registration pattern
+  const hasDefaultClassExport = exports.some(isDefaultClassExport);
+  // No default class export means every export competes as-is
+  if (!hasDefaultClassExport) return [...exports];
+  // Drop const/let companions so only the default class export remains
+  return exports.filter((node) => !isConstOrLetExport(node));
+}
+
+/**
+ * Basename patterns exempted from this rule, always applied in addition to
+ * any `options.match` override. Barrel files legitimately re-export many
+ * symbols, so they stay exempt regardless of how callers configure matching.
  */
 const DEFAULT_EXCLUDE = ['index.ts', 'index.tsx', 'index.mts', 'index.cts'];
 
@@ -57,15 +102,20 @@ const DEFAULT_EXCLUDE = ['index.ts', 'index.tsx', 'index.mts', 'index.cts'];
  * @returns A configured `Rule` instance.
  */
 export const singleExportPerFile: RuleDef = (options = {}) => {
-  const match = resolveMatch(options.match) ?? createMatcher([], DEFAULT_EXCLUDE);
+  const barrelMatch = createMatcher([], DEFAULT_EXCLUDE);
+  const overrideMatch = resolveMatch(options.match);
+  // Barrel files stay exempt even when `options.match` overrides the default matcher
+  const match: MatcherFn = overrideMatch
+    ? (filePath) => barrelMatch(filePath) && overrideMatch(filePath)
+    : barrelMatch;
 
   return {
     id: RULE_ID,
     defaultSeverity: DEFAULT_SEVERITY,
     /**
-     * Barrel files (`index.ts`, etc.) are exempt by default. Delegates to
+     * Barrel files (`index.ts`, etc.) are always exempt. Delegates to
      * `match` so the engine skips calling `check` for them entirely, and
-     * callers can override the matching strategy via `options.match`.
+     * callers can further narrow (not widen) matching via `options.match`.
      * @inheritdoc Rule.match
      */
     match,
@@ -76,12 +126,14 @@ export const singleExportPerFile: RuleDef = (options = {}) => {
       // Guard: tsParser.parse returns null for empty or unparseable source
       if (!tree) return [];
 
-      const valueExports: Node[] = [];
+      const allExports: Node[] = [];
       // Collect all top-level value export statements
       for (const child of tree.rootNode.children) {
         // Collect each top-level child that is a value export
-        if (isValueExport(child)) valueExports.push(child);
+        if (isValueExport(child)) allExports.push(child);
       }
+
+      const valueExports = competingExports(allExports);
 
       // Only flag when more than one value export exists
       if (valueExports.length <= 1) return [];

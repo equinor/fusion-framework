@@ -116,6 +116,36 @@ export function bar() {}
     // '.generated.ts' isn't in the exclude list, but the custom fn exempts it
     expect(lint(source, '/src/fixture.generated.ts', rule)).toHaveLength(0);
   });
+
+  it('passes: index.ts stays exempt even when options.match overrides the matcher', () => {
+    const rule = singleExportPerFile({ match: { exclude: ['barrel.ts'] } });
+    const source = `
+export function foo() {}
+export function bar() {}
+`;
+    expect(lint(source, '/src/index.ts', rule)).toHaveLength(0);
+  });
+
+  it('passes: export class Foo + export default Foo (default re-export, not a 2nd export)', () => {
+    const source = `
+export class Foo {}
+export default Foo;
+`;
+    expect(lint(source)).toHaveLength(0);
+  });
+
+  it('passes: companion const + export default class (fusionElement registration pattern)', () => {
+    const source = `
+import { fusionElement } from '@equinor/fusion-wc-core';
+import ButtonElement from './ButtonElement';
+
+export const tag = 'fwc-button';
+
+@fusionElement(tag)
+export default class _ extends ButtonElement {}
+`;
+    expect(lint(source)).toHaveLength(0);
+  });
 });
 
 // ── Failing cases ─────────────────────────────────────────────────────────────
@@ -150,5 +180,18 @@ export const DEFAULT_OPTIONS = {};
     const diags = lint(source);
     expect(diags).toHaveLength(1);
     expect(diags[0]?.message).toContain('DEFAULT_OPTIONS');
+  });
+
+  it('fails: companion const + export default class + a genuinely competing export', () => {
+    const source = `
+export const tag = 'fwc-button';
+export function helper() {}
+
+export default class _ {}
+`;
+    // the const is exempted, but 'helper' still genuinely competes with the default class
+    const diags = lint(source);
+    expect(diags).toHaveLength(1);
+    expect(diags[0]?.message).toContain('_');
   });
 });
