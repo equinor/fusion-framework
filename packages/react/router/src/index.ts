@@ -39,6 +39,8 @@ export {
   type PathParam,
   type SetURLSearchParams,
   useActionData,
+  useBeforeUnload,
+  useBlocker,
   useFormAction,
   useLocation,
   useLoaderData,
