@@ -67,7 +67,9 @@ function isDefaultClassExport(node: Node): boolean {
  */
 function isConstOrLetExport(node: Node): boolean {
   // const/let use lexical_declaration, var uses variable_declaration
-  return node.children.some((c) => c.type === 'lexical_declaration' || c.type === 'variable_declaration');
+  return node.children.some(
+    (c) => c.type === 'lexical_declaration' || c.type === 'variable_declaration',
+  );
 }
 
 /**
