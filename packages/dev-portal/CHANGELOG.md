@@ -1,5 +1,17 @@
 # @equinor/fusion-framework-dev-portal
 
+## 8.0.2
+
+### Patch Changes
+
+- Updated dependencies [987b53f]
+- Updated dependencies [6cca3e0]
+- Updated dependencies [efad984]
+  - @equinor/fusion-framework-module-navigation@7.0.6
+  - @equinor/fusion-framework-module-analytics@3.0.3
+  - @equinor/fusion-framework-react-components-bookmark@2.0.3
+  - @equinor/fusion-framework-dev-server@2.0.16
+
 ## 8.0.1
 
 ### Patch Changes

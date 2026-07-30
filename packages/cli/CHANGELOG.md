@@ -1,5 +1,16 @@
 # Change Log
 
+## 15.2.2
+
+### Patch Changes
+
+- 3dcaae6: Internal: bump `chalk` from `5.6.2` to `6.0.0`. No API changes affect this repo's usage; chalk 6 raises its own Node.js requirement to `>=22`, already satisfied by this repo's `>=24` engines requirement.
+- 642c3b2: Internal: bump `execa` from `9.6.1` to `10.0.0`. Fixed a breaking change where subprocesses returned by `execa()` are no longer `ChildProcess`-augmented — Node.js-specific methods like `.unref()` are now accessed via `subprocess.nodeChildProcess`.
+- Updated dependencies [ceaf26a]
+  - @equinor/fusion-imports@2.0.2
+  - @equinor/fusion-framework-dev-server@2.0.16
+  - @equinor/fusion-framework-dev-portal@8.0.2
+
 ## 15.2.1
 
 ### Patch Changes

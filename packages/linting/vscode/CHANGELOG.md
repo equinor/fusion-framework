@@ -1,5 +1,11 @@
 # fusion-ts-lint-vscode
 
+## 0.2.3
+
+### Patch Changes
+
+- c4b42f7: Internal: bump `vscode-languageclient` from `9.0.1` to `10.1.0`. Fixes a type error caused by the new version requiring a `LogOutputChannel` for `traceOutputChannel` — now created via `window.createOutputChannel(name, { log: true })`.
+
 ## 0.2.2
 
 ### Patch Changes

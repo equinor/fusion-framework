@@ -1,5 +1,12 @@
 # @equinor/fusion-framework-vite-plugin-markdown
 
+## 1.1.2
+
+### Patch Changes
+
+- ff4a488: Internal: bump `typescript` from `5.9.3` to `7.0.2`, matching the version already used across the rest of the monorepo.
+- da8b281: Internal: bump `vite` from `7.3.6` to `8.1.5` and widen the `vite` peer dependency to `^7.0.0 || ^8.0.0`, matching the rest of the vite-plugins packages.
+
 ## 1.1.1
 
 ### Patch Changes
