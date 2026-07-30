@@ -16,4 +16,6 @@ export { noSeparateExport } from './no-separate-export/index.js';
 export { singleExportPerFile } from './single-export-per-file/index.js';
 export { requireComponentTsDoc } from './require-component-tsdoc/index.js';
 export { requireHookTsDoc } from './require-hook-tsdoc/index.js';
+export { requirePropertyTsDoc } from './require-property-tsdoc/index.js';
+export type { RequirePropertyTsDocOptions } from './require-property-tsdoc/index.js';
 export { filenameConvention } from './filename-convention/index.js';
