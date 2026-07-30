@@ -28,6 +28,12 @@ updates:
         patterns:
           - "@langchain/*"
           - "langchain"
+      react-router:
+        applies-to: version-updates
+        patterns:
+          - "react-router"
+          - "react-router-dom"
+          - "@react-router/*"
       vuepress:
         applies-to: version-updates
         patterns:
