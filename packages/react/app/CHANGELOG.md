@@ -1,5 +1,12 @@
 # Change Log
 
+## 12.0.4
+
+### Patch Changes
+
+- Updated dependencies [987b53f]
+  - @equinor/fusion-framework-module-navigation@7.0.6
+
 ## 12.0.3
 
 ### Patch Changes

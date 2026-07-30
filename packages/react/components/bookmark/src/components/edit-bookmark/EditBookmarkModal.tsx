@@ -152,7 +152,11 @@ export const EditBookmarkModal = ({
         </div>
         <div>
           <Label htmlFor={appId} label="App" />
-          <AppNameField id={appId} displayName={appName?.displayName} isLoading={isAppNameLoading} />
+          <AppNameField
+            id={appId}
+            displayName={appName?.displayName}
+            isLoading={isAppNameLoading}
+          />
         </div>
 
         <Styled.CheckboxWrapper>

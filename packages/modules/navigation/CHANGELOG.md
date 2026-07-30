@@ -1,5 +1,11 @@
 # Change Log
 
+## 7.0.6
+
+### Patch Changes
+
+- 987b53f: Internal: bump `jsdom` from `29.1.1` to `30.0.1`, matching the Node.js versions supported by CI.
+
 ## 7.0.5
 
 ### Patch Changes

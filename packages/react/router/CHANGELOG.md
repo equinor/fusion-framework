@@ -1,5 +1,19 @@
 # @equinor/fusion-framework-react-router
 
+## 2.4.0
+
+### Minor Changes
+
+- 7dfc60e: Re-export `useBlocker` and `useBeforeUnload` from `react-router` so consumers migrating from `react-router-dom` don't need a direct dependency on `react-router` for these hooks.
+
+  Thanks @edmondbaloku
+
+  Closes: https://github.com/equinor/fusion/issues/888
+
+### Patch Changes
+
+- ceaf26a: Bump `react-router` (and `@react-router/dev`) from `^7.13.1` to `^7.18.0` to pick up several upstream security fixes, including a denial-of-service via inefficient route matching and open-redirect/protocol-validation issues. No API changes required for consumers.
+
 ## 2.3.1
 
 ### Patch Changes

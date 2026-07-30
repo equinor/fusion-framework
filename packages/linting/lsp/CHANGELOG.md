@@ -1,5 +1,12 @@
 # @equinor/fusion-framework-lint-lsp
 
+## 0.2.2
+
+### Patch Changes
+
+- 3ef8739: Internal: bump `esbuild` from `0.25.12` to `0.28.1`.
+- 3590018: Internal: bump `vscode-languageserver` from `9.0.1` to `10.1.0`. Fixes a broken import caused by the package dropping the `/node.js` export subpath in favor of `/node` (no extension) — updated `src/server.ts` accordingly.
+
 ## 0.2.1
 
 ### Patch Changes

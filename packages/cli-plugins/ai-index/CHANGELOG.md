@@ -1,5 +1,13 @@
 # @equinor/fusion-framework-cli-plugin-ai-index
 
+## 3.0.8
+
+### Patch Changes
+
+- Updated dependencies [ceaf26a]
+  - @equinor/fusion-imports@2.0.2
+  - @equinor/fusion-framework-cli-plugin-ai-base@4.0.7
+
 ## 3.0.7
 
 ### Patch Changes

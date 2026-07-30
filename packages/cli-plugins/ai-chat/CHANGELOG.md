@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-cli-plugin-ai-chat
 
+## 3.0.7
+
+### Patch Changes
+
+- @equinor/fusion-framework-cli-plugin-ai-base@4.0.7
+
 ## 3.0.6
 
 ### Patch Changes

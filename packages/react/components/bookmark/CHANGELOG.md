@@ -1,5 +1,11 @@
 # Change Log
 
+## 2.0.3
+
+### Patch Changes
+
+- efad984: Show accessible loading feedback for the app name while the edit bookmark modal resolves its app manifest.
+
 ## 2.0.2
 
 ### Patch Changes
