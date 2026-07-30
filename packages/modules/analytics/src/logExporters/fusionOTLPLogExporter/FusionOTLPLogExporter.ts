@@ -1,9 +1,10 @@
 import type { LogRecordExporter, ReadableLogRecord } from '@opentelemetry/sdk-logs';
 
-import { JsonLogsSerializer } from '@opentelemetry/otlp-transformer';
+import { JsonLogsSerializer, LogsExporterMetricsHelper } from '@opentelemetry/otlp-transformer';
 
 import {
   createOtlpNetworkExportDelegate,
+  ExporterMetrics,
   OTLPExporterBase,
   type OtlpSharedConfiguration,
 } from '@opentelemetry/otlp-exporter-base';
@@ -56,6 +57,13 @@ export class FusionOTLPLogExporter
       createOtlpNetworkExportDelegate(
         getSharedConfigurationDefaults(),
         JsonLogsSerializer,
+        new ExporterMetrics({
+          componentType: 'fusion_otlp_http_log_exporter',
+          metricsHelper: LogsExporterMetricsHelper,
+          url: undefined,
+          meterProvider: undefined,
+          responseAttributesFromError: () => ({}),
+        }),
         new HttpClientExporterTransport(httpClient),
       ),
     );
