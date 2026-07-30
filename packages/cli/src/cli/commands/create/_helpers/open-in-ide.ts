@@ -91,7 +91,8 @@ export async function openInIDE(
       });
 
       // Unref the child process to allow CLI to exit while IDE continues running
-      child.unref();
+      // execa 10 moved Node.js-specific ChildProcess methods onto `nodeChildProcess`
+      child.nodeChildProcess.unref();
 
       // Handle process errors
       child.catch((error: { exitCode?: number; message: string }) => {
