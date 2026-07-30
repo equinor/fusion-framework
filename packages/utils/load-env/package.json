@@ -44,7 +44,7 @@
   },
   "dependencies": {
     "dotenv": "^17.3.1",
-    "dotenv-expand": "^13.0.0"
+    "dotenv-expand": "^1000.0.0"
   },
   "devDependencies": {
     "typescript": "^7.0.2",
