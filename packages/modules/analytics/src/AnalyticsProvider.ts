@@ -24,6 +24,7 @@ class DisposableSubscription extends Subscription {
     super(subscription.unsubscribe);
   }
 
+  /** TC39 `Disposable` protocol support, delegating to `unsubscribe()`. */
   [Symbol.dispose] = () => {
     this.unsubscribe();
   };

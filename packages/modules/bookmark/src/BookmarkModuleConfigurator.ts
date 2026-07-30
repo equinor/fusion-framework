@@ -43,7 +43,8 @@ const parseInitialBookmarkConfigConfig = (initial?: unknown): BookmarkModuleConf
  */
 export class BookmarkModuleConfigurator extends BaseConfigBuilder<BookmarkModuleConfig> {
   #log?: ILogger;
-  defaultExpireTime = 1 * 60 * 1000; // Default expiration time for bookmarks
+  /** Default expiration time, in milliseconds, for bookmarks. */
+  defaultExpireTime = 1 * 60 * 1000;
 
   /**
    * Constructs a new `BookmarkModuleConfigurator`.

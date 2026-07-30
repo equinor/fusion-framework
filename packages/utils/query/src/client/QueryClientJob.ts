@@ -54,6 +54,7 @@ export class QueryClientJob<TType = unknown, TArgs = unknown>
     return this.#transaction;
   }
 
+  /** Timestamp, in milliseconds since epoch, when this job was created. */
   public readonly created: number = Date.now();
 
   /**

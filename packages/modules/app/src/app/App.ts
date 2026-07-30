@@ -977,6 +977,7 @@ export class App<
     return operator(this.getAppModule(!allow_cache));
   }
 
+  /** Releases resources held by this app instance. */
   public dispose: VoidFunction;
 }
 

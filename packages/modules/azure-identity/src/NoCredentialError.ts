@@ -6,5 +6,6 @@
  * failure without relying on brittle string matching.
  */
 export class NoCredentialError extends Error {
+  /** Discriminant used to identify this error type. */
   override readonly name = 'NoCredentialError';
 }

@@ -12,6 +12,7 @@ export class HttpJsonResponseError<
   TResponse = Response,
 > extends HttpResponseError<TResponse> {
   static Name = 'HttpJsonResponseError';
+  /** The parsed JSON data associated with the error response, if any. */
   public readonly data?: TType;
 
   /**

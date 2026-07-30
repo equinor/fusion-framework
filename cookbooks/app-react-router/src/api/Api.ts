@@ -21,8 +21,11 @@ interface IHttpProvider {
  * Uses React Query for caching and request deduplication
  */
 export class Api {
+  /** Product-related API client. */
   readonly product: ProductApi;
+  /** People-related API client. */
   readonly people: PeopleApi;
+  /** User-related API client. */
   readonly user: UserApi;
 
   /**

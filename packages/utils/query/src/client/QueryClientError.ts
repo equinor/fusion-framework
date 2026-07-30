@@ -30,6 +30,7 @@ type QueryClientErrorType = 'error' | 'abort';
  * ```
  */
 export class QueryClientError<TArgs = unknown> extends Error {
+  /** The request that was being processed when this error occurred, if any. */
   public readonly request?: QueryClientRequest;
 
   /**

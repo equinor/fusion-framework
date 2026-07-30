@@ -78,6 +78,7 @@ export class FeatureFlag<T = unknown> implements IFeatureFlag {
     return !!this._options.readonly;
   }
 
+  /** Marks this instance as immerable so `immer` can produce structural clones. */
   [immerable] = true;
 
   /**
