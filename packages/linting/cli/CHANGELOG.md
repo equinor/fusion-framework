@@ -1,5 +1,13 @@
 # @equinor/fusion-lint
 
+## 0.3.2
+
+### Patch Changes
+
+- 19e0636: Internal: add missing TypeScript project `references` between the linting packages (`lint-core`, `lint-rules`, `lint-config`, `fusion-lint`, `lint-lsp`).
+
+  Without these references, `tsc -b` couldn't resolve `@equinor/fusion-framework-lint-core`/`lint-config` types when a package was built in isolation (as happens during `npm publish`'s `prepack` step), causing the previous release's publish to fail partway through.
+
 ## 0.3.1
 
 ### Patch Changes
