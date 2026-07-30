@@ -61,6 +61,7 @@ export const EditBookmarkModal = ({
 
   const nameId = useId();
   const descriptionId = useId();
+  const appId = useId();
 
   const [updatePayload, setUpdatePayload] = useState(false);
 
@@ -150,8 +151,8 @@ export const EditBookmarkModal = ({
           />
         </div>
         <div>
-          <Label htmlFor="app" label="App" />
-          <AppNameField displayName={appName?.displayName} isLoading={isAppNameLoading} />
+          <Label htmlFor={appId} label="App" />
+          <AppNameField id={appId} displayName={appName?.displayName} isLoading={isAppNameLoading} />
         </div>
 
         <Styled.CheckboxWrapper>

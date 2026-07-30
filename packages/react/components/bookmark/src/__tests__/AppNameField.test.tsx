@@ -5,10 +5,11 @@ import { AppNameField } from '../components/edit-bookmark/AppNameField';
 
 describe('AppNameField', () => {
   it('shows an accessible progress indicator while the manifest is loading', () => {
-    const field = AppNameField({ isLoading: true });
+    const field = AppNameField({ id: 'app', isLoading: true });
     const loadingIndicator = field.props.rightAdornments;
 
     expect(field.type).toBe(Input);
+    expect(field.props.id).toBe('app');
     expect(field.props['aria-busy']).toBe(true);
     expect(isValidElement(loadingIndicator)).toBe(true);
 
@@ -26,6 +27,7 @@ describe('AppNameField', () => {
 
   it('shows the resolved display name without a progress indicator', () => {
     const field = AppNameField({
+      id: 'app',
       displayName: 'My app',
       isLoading: false,
     });

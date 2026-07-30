@@ -7,14 +7,16 @@ import { Input, Progress } from '@equinor/eds-core-react';
  * @returns A read-only app name field with an accessible loading indicator when needed.
  */
 export const AppNameField = ({
+  id,
   displayName,
   isLoading,
 }: {
+  readonly id: string;
   readonly displayName?: string;
   readonly isLoading: boolean;
 }) => (
   <Input
-    id="app"
+    id={id}
     readOnly={true}
     value={displayName ?? ''}
     aria-busy={isLoading}
