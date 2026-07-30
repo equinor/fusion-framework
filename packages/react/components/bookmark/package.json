@@ -12,7 +12,8 @@
   "types": "./dist/types/index.d.ts",
   "scripts": {
     "build": "tsc -b",
-    "prepack": "pnpm build"
+    "prepack": "pnpm build",
+    "test": "vitest --run"
   },
   "keywords": [],
   "author": "",
@@ -42,7 +43,8 @@
     "@types/react": "^19.2.7",
     "react": "^19.2.1",
     "styled-components": "^6.3.11",
-    "typescript": "^7.0.2"
+    "typescript": "^7.0.2",
+    "vitest": "^4.1.0"
   },
   "peerDependencies": {
     "@equinor/eds-core-react": "^2.0.0",
