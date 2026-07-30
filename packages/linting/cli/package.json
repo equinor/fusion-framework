@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-lint",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "CLI for running Fusion lint rules on TypeScript source files",
   "keywords": [
     "equinor",
