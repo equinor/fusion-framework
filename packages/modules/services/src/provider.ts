@@ -108,6 +108,7 @@ export class ApiProvider<TClient extends IHttpClient = IHttpClient>
   extends BaseModuleProvider<ApiProviderConfig<TClient>>
   implements IApiProvider<TClient>
 {
+  /** Factory used to create the underlying HTTP client for this provider. */
   protected _createClientFn: ApiClientFactory<TClient>;
 
   /**

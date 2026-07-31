@@ -59,6 +59,7 @@ export class AppConfigurator
   extends BaseConfigBuilder<AppModuleConfig>
   implements IAppConfigurator
 {
+  /** Default cache expiration time, in milliseconds, for the app service client. */
   defaultExpireTime = 1 * 60 * 1000;
 
   /**

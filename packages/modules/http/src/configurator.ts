@@ -153,6 +153,7 @@ export interface IHttpClientConfigurator<TClient extends IHttpClient = IHttpClie
 export class HttpClientConfigurator<TClient extends IHttpClient>
   implements IHttpClientConfigurator<TClient>
 {
+  /** Named client configurations keyed by client name. */
   protected _clients: Record<string, HttpClientOptions<TClient>> = {};
 
   /**
