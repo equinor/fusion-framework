@@ -23,7 +23,9 @@ export function resolveAdapter(
   for (const entry of adapters) {
     const adapter = typeof entry === 'function' ? entry(ctx) : entry.canHandle(ctx) ? entry : null;
     // Return the first adapter that can handle this context
-    if (adapter) return adapter;
+    if (adapter) {
+      return adapter;
+    }
   }
   return null;
 }

@@ -35,14 +35,21 @@ export function handlePushModeGuard(
 
   // Resolve the active context and adapter — both are required to fall back.
   const activeContext = appModules.context.currentContext;
+
   // No active context to fall back to — nothing to do.
-  if (!activeContext) return;
+  if (!activeContext) {
+    return;
+  }
+  
   const adapter = resolveAdapter(
     { appKey, appContext: appModules.context, routingStrategy, currentURL },
     deps.config.adapters,
   );
+
   // No adapter matched — plugin is not responsible for this app's URL shape.
-  if (!adapter) return;
+  if (!adapter) {
+    return;
+  }
 
   log(`URL guard: URL has context [${urlContextId}] for [${appKey}] — setting context from URL`);
 

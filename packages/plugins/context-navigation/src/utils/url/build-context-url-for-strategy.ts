@@ -39,7 +39,11 @@ export const buildContextUrlForStrategy = (
 
   // Path routing embeds the context id directly in the URL structure
   const match = parseAppRoute(path);
+
   // Path is not a recognised app route — return it unchanged
-  if (!match) return path;
+  if (!match) {
+    return path;
+  } 
+  
   return buildAppRoute(match.appKey, contextId ?? undefined);
 };

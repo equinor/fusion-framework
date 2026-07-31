@@ -39,11 +39,18 @@ export const parseAppRoute = (pathname: string): AppRouteMatch | undefined => {
 
   const normalized = pathname.replace(/\/+$/, '') || '/';
   const result = APP_ROUTE_PATTERN.exec({ pathname: normalized });
+  
   // Pathname does not match the /apps/:appKey pattern
-  if (!result) return undefined;
+  if (!result) {
+    return undefined;
+  }
+
   const { appKey, contextId, rest } = result.pathname.groups;
+
   // Guard against an empty appKey capture group (malformed pattern match)
-  if (!appKey) return undefined;
+  if (!appKey) {
+    return undefined;
+  }
   return {
     appKey,
     contextId: contextId || undefined,

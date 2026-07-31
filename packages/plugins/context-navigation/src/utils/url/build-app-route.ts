@@ -8,13 +8,13 @@
  * @returns The constructed app route path string.
  */
 export const buildAppRoute = (appKey: string, contextId?: string, rest?: string): string => {
-  let path = `/apps/${appKey}`;
+  let path = [`/apps/${appKey}`];
 
   // Context segment is optional — omitted when no context is actively selected
-  if (contextId) path += `/${contextId}`;
+  if (contextId) path.push(`${contextId}`);
 
   // Preserve any sub-route depth that exists beyond the context segment
-  if (rest) path += `/${rest}`;
+  if (rest) path.push(`${rest}`);
 
-  return path;
+  return path.join('/');
 };

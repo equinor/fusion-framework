@@ -29,14 +29,21 @@ export function handleReplaceModeGuard(
 
   // Resolve the active context and adapter for re-encoding.
   const activeContext = appModules.context.currentContext;
+  
   // No active context to re-encode — nothing to correct.
-  if (!activeContext) return;
+  if (!activeContext) {
+    return;
+  }
+
   const adapter = resolveAdapter(
     { appKey, appContext: appModules.context, routingStrategy, currentURL },
     deps.config.adapters,
   );
+
   // No adapter matched — plugin is not responsible for this app's URL shape.
-  if (!adapter) return;
+  if (!adapter) {
+    return;
+  }
 
   log(`URL guard: context missing from URL, re-applying for [${appKey}]`);
   // Always replace when correcting URL drift. The URL has no context segment
