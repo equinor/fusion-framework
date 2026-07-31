@@ -70,6 +70,33 @@ class MyButton {
 `;
     expect(lint(source, 'fixture.ts', rule)).toHaveLength(0);
   });
+
+  it('passes: documented decorated getter accessor', () => {
+    const source = `
+class MyButton {
+  /**
+   * @deprecated use \`variant="contained"\` instead.
+   * @returns true when \`variant\` is \`contained\`
+   */
+  @property({ type: Boolean, reflect: true })
+  get raised(): boolean {
+    return this.variant === 'contained';
+  }
+}
+`;
+    expect(lint(source)).toHaveLength(0);
+  });
+
+  it('passes: undecorated getter accessor without TSDoc', () => {
+    const source = `
+class MyButton {
+  get raised(): boolean {
+    return this.variant === 'contained';
+  }
+}
+`;
+    expect(lint(source)).toHaveLength(0);
+  });
 });
 
 describe('require-property-tsdoc — failing', () => {
@@ -123,5 +150,19 @@ class MyButton {
 }
 `;
     expect(lint(source)).toHaveLength(1);
+  });
+
+  it('fails: undocumented decorated getter accessor', () => {
+    const source = `
+class MyButton {
+  @property({ type: Boolean, reflect: true })
+  get raised(): boolean {
+    return this.variant === 'contained';
+  }
+}
+`;
+    const diagnostics = lint(source);
+    expect(diagnostics).toHaveLength(1);
+    expect(diagnostics[0].message).toContain("'raised'");
   });
 });

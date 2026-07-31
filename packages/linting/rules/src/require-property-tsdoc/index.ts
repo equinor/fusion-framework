@@ -21,16 +21,16 @@ function isTsDoc(text: string): boolean {
 }
 
 /**
- * Returns `true` when the field has an `accessibility_modifier` of `private`,
- * or uses the `#name` private-field syntax. Truly private fields carry no
- * public API surface, so they're exempt from this rule.
+ * Returns `true` when a class member has an `accessibility_modifier` of
+ * `private`, or uses the `#name` private-field syntax. Truly private members
+ * carry no public API surface, so they're exempt from this rule.
  *
- * @param node - A `public_field_definition` node.
- * @returns `true` if the field is private.
+ * @param node - A `public_field_definition` or `method_definition` node.
+ * @returns `true` if the member is private.
  */
-function isPrivateField(node: Node): boolean {
+function isPrivateMember(node: Node): boolean {
   const nameNode = node.childForFieldName('name');
-  // `#name` fields parse as private_property_identifier regardless of modifiers
+  // `#name` members parse as private_property_identifier regardless of modifiers
   if (nameNode?.type === 'private_property_identifier') return true;
   // Check for an explicit `private` accessibility modifier
   return node.children.some(
@@ -39,16 +39,52 @@ function isPrivateField(node: Node): boolean {
 }
 
 /**
- * Returns `true` when the field declares a `static` modifier. Static fields
+ * Returns `true` when the member declares a `static` modifier. Static members
  * are commonly used for framework wiring (e.g. Lit's `static styles`) rather
  * than instance-level public API, so they're exempt by default.
  *
- * @param node - A `public_field_definition` node.
- * @returns `true` if the field is static.
+ * @param node - A `public_field_definition` or `method_definition` node.
+ * @returns `true` if the member is static.
  */
-function isStaticField(node: Node): boolean {
+function isStaticMember(node: Node): boolean {
   // Check for a `static` keyword child
   return node.children.some((c) => c.type === 'static');
+}
+
+/**
+ * Returns `true` when `node` is a `get`/`set` accessor `method_definition`.
+ *
+ * @param node - A `method_definition` node.
+ * @returns `true` if the method is a getter or setter.
+ */
+function isAccessor(node: Node): boolean {
+  return node.children[0]?.type === 'get' || node.children[0]?.type === 'set';
+}
+
+/**
+ * Returns `true` when `node` is directly preceded by a `decorator` node
+ * (e.g. Lit's `@property()` / `@state()` applied to a `get`/`set` accessor).
+ * Unlike fields, an accessor's decorator is a sibling in `class_body` rather
+ * than a child of the `method_definition` itself.
+ *
+ * @param node - A `method_definition` node.
+ * @returns `true` if the accessor carries a leading decorator.
+ */
+function isDecoratedAccessor(node: Node): boolean {
+  return node.previousNamedSibling?.type === 'decorator';
+}
+
+/**
+ * Resolves the node that should carry the leading TSDoc comment. For fields,
+ * this is the field node itself (decorators live inside it). For a decorated
+ * accessor, the decorator sits between the comment and the method, so the
+ * anchor is the decorator instead.
+ *
+ * @param node - A `public_field_definition` or `method_definition` node.
+ * @returns The node whose `previousNamedSibling` should be the TSDoc comment.
+ */
+function resolveCommentAnchor(node: Node): Node {
+  return node.previousNamedSibling?.type === 'decorator' ? node.previousNamedSibling : node;
 }
 
 /**
@@ -63,19 +99,18 @@ function isExportedClass(node: Node): boolean {
 }
 
 /**
- * Checks a single `public_field_definition` node for a preceding TSDoc
- * comment. Decorators (e.g. Lit's `@property()` / `@state()`) live inside
- * the field node itself, so the anchor for the comment is the field node.
+ * Checks a single `public_field_definition` or decorated accessor
+ * `method_definition` node for a preceding TSDoc comment.
  *
- * @param node - The `public_field_definition` node to inspect.
+ * @param node - The field or accessor node to inspect.
  * @param filePath - Source file path included in diagnostic output.
  * @param severity - Severity level for the emitted diagnostic.
  * @param out - Accumulator array for collected diagnostics.
  */
 function checkFieldNode(node: Node, filePath: string, severity: Severity, out: Diagnostic[]): void {
-  const prev = node.previousNamedSibling;
+  const prev = resolveCommentAnchor(node).previousNamedSibling;
   const name = node.childForFieldName('name')?.text ?? '(unknown)';
-  // Require a TSDoc comment immediately preceding the field declaration
+  // Require a TSDoc comment immediately preceding the declaration (or its decorator)
   if (prev?.type !== 'comment' || !isTsDoc(prev.text)) {
     out.push({
       file: filePath,
@@ -105,15 +140,19 @@ function walkNode(
   out: Diagnostic[],
   classScope: 'all' | 'exported',
 ): void {
-  // Only inspect class field declarations; recurse into everything else
-  if (node.type === 'public_field_definition') {
+  // Inspect class field declarations and decorated get/set accessors; recurse into everything else
+  const isFieldNode = node.type === 'public_field_definition';
+  const isDecoratedAccessorNode =
+    node.type === 'method_definition' && isAccessor(node) && isDecoratedAccessor(node);
+  // Only fields and decorated accessors carry a documentable public API surface
+  if (isFieldNode || isDecoratedAccessorNode) {
     const classBody = node.parent;
     const classDecl = classBody?.type === 'class_body' ? classBody.parent : null;
     const inScope =
       classDecl?.type === 'class_declaration' &&
       (classScope === 'all' || isExportedClass(classDecl));
-    // Skip private and static fields — neither carries public instance API surface
-    if (inScope && !isPrivateField(node) && !isStaticField(node)) {
+    // Skip private and static members — neither carries public instance API surface
+    if (inScope && !isPrivateMember(node) && !isStaticMember(node)) {
       checkFieldNode(node, filePath, severity, out);
     }
   }
@@ -137,8 +176,9 @@ export interface RequirePropertyTsDocOptions extends RuleOptions {
 
 /**
  * Requires class field (property) declarations to have a TSDoc block
- * comment — including Lit's `@property()` / `@state()` decorated fields,
- * which form the public API surface of a web component.
+ * comment — including Lit's `@property()` / `@state()` decorated fields
+ * and decorated `get`/`set` accessor pairs, which form the public API
+ * surface of a web component. Undecorated accessors are not checked.
  *
  * `private` fields (both the `private` modifier and `#name` syntax) and
  * `static` fields are exempt — they carry no instance-level public API.
