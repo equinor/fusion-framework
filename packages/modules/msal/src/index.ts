@@ -37,6 +37,12 @@ export type { IMsalProvider } from './MsalProvider.interface';
 export type { IMsalClient } from './MsalClient.interface';
 export { MsalClient, type MsalClientConfig } from './MsalClient';
 
+/**
+ * Required to implement {@link IMsalProvider}, whose `msalVersion` member is
+ * typed as this enum.
+ */
+export { MsalModuleVersion } from './static';
+
 export type { AccountInfo, AuthenticationResult } from './types';
 
 export { default } from './module';

@@ -1,68 +1,23 @@
-import z from 'zod';
-import { BaseConfigBuilder } from '@equinor/fusion-framework-module';
-import semver from 'semver';
-import type { IMsalProvider } from './MsalProvider.interface';
 import {
-  TelemetryLevel,
-  type ITelemetryProvider,
-} from '@equinor/fusion-framework-module-telemetry';
+  BaseConfigBuilder,
+  type ConfigBuilderCallbackArgs,
+} from '@equinor/fusion-framework-module';
+import { TelemetryLevel } from '@equinor/fusion-framework-module-telemetry';
+import { CacheLookupPolicy, LogLevel } from '@azure/msal-browser';
+
+import type { ITelemetryProvider } from '@equinor/fusion-framework-module-telemetry';
+import type { IMsalProvider } from './MsalProvider.interface';
 import { MsalClient, type MsalClientConfig, type IMsalClient } from './MsalClient';
 import { createClientLogCallback } from './create-client-log-callback';
-import { CacheLookupPolicy, LogLevel } from '@azure/msal-browser';
 import { version } from './version';
+import { MsalConfigSchema, type MsalConfig } from './msal-config-schema';
 
-/**
- * Zod schema for telemetry configuration validation.
- *
- * @internal
- */
-const TelemetryConfigSchema = z.object({
-  provider: z.custom<ITelemetryProvider>().optional(),
-  metadata: z.record(z.string(), z.unknown()).optional().default({
-    module: 'msal',
-    version,
-  }),
-  scope: z.array(z.string()).optional().default(['framework', 'authentication']),
-});
-
-/**
- * Telemetry configuration for MSAL module.
- *
- * This configuration controls how authentication events are tracked and logged
- * through the framework's telemetry system.
- */
-export type TelemetryConfig = z.infer<typeof TelemetryConfigSchema>;
-
-/**
- * Zod schema for MSAL module configuration validation.
- *
- * @internal
- */
-const MsalConfigSchema = z.object({
-  client: z.custom<IMsalClient>().optional(),
-  provider: z.custom<IMsalProvider>().optional(),
-  requiresAuth: z.boolean().optional(),
-  redirectUri: z.string().optional(),
-  loginHint: z.string().optional(),
-  authCode: z.string().optional(),
-  cacheLookupPolicy: z
-    .custom<CacheLookupPolicy>(
-      (val) =>
-        typeof val === 'number' &&
-        Object.values(CacheLookupPolicy).includes(val as CacheLookupPolicy),
-    )
-    .optional(),
-  version: z.string().transform((x: string) => String(semver.coerce(x))),
-  telemetry: TelemetryConfigSchema,
-});
-
-/**
- * Complete configuration object for MSAL authentication module.
- *
- * This type represents the full configuration including client setup, authentication
- * requirements, telemetry, and version information.
- */
-export type MsalConfig = z.infer<typeof MsalConfigSchema>;
+export {
+  MsalConfigSchema,
+  type MsalConfig,
+  type MsalConfigExtension,
+} from './msal-config-schema';
+export { TelemetryConfigSchema, type TelemetryConfig } from './telemetry-config-schema';
 
 /**
  * Configuration builder for MSAL v4 authentication module.
@@ -79,6 +34,7 @@ export type MsalConfig = z.infer<typeof MsalConfigSchema>;
  */
 export class MsalConfigurator extends BaseConfigBuilder<MsalConfig> {
   #msalConfig?: MsalClientConfig;
+  #client?: IMsalClient;
 
   /**
    * The MSAL module version being configured.
@@ -107,6 +63,9 @@ export class MsalConfigurator extends BaseConfigBuilder<MsalConfig> {
         return telemetry;
       }
     });
+    // Always resolve the configured client instance through the builder.
+    // This keeps the client getter live and avoids re-registering the same config key.
+    this._set('client', async () => this.#client);
     // Default cache lookup policy to AccessTokenAndRefreshToken to avoid iframe fallback delays
     this._set('cacheLookupPolicy', async () => CacheLookupPolicy.AccessTokenAndRefreshToken);
   }
@@ -134,6 +93,23 @@ export class MsalConfigurator extends BaseConfigBuilder<MsalConfig> {
   setClientConfig(config?: MsalClientConfig): this {
     this.#msalConfig = config;
     return this;
+  }
+
+  /**
+   * Returns the client configuration declared through
+   * {@link MsalConfigurator.setClientConfig | setClientConfig}, if any.
+   *
+   * @remarks
+   * This is the configuration as declared, not the resolved one a client is
+   * built from — see
+   * {@link MsalConfigurator._createClientConfig | _createClientConfig} for that.
+   * Reading it is how a subclass can tell "nothing was declared" apart from
+   * "declared, and here it is", without re-deriving that from a resolved value.
+   *
+   * @returns The declared client configuration, or `undefined` when none was declared.
+   */
+  public getClientConfig(): MsalClientConfig | undefined {
+    return this.#msalConfig;
   }
 
   /**
@@ -274,8 +250,21 @@ export class MsalConfigurator extends BaseConfigBuilder<MsalConfig> {
    * ```
    */
   setClient(client: IMsalClient): this {
-    this._set('client', async () => client);
+    this.#client = client;
     return this;
+  }
+
+  /**
+   * Returns the currently configured MSAL client, if one has been set.
+   *
+   * @remarks
+   * This is useful in tests when a mock client has been provided and the test
+   * wants to adjust its state after it has been assigned to the configurator.
+   *
+   * @returns The configured client, or `undefined` when none has been set.
+   */
+  public getClient(): IMsalClient | undefined {
+    return this.#client;
   }
 
   /**
@@ -328,72 +317,170 @@ export class MsalConfigurator extends BaseConfigBuilder<MsalConfig> {
   /**
    * Processes and validates the configuration.
    *
-   * @param config - Raw configuration object
+   * @param rawConfig - Raw configuration object
+   * @param init - The builder arguments, carrying the host reference when hoisted
    * @returns Processed and validated configuration
    */
-  async _processConfig(rawConfig: MsalConfig): Promise<MsalConfig> {
+  async _processConfig(
+    rawConfig: MsalConfig,
+    init?: ConfigBuilderCallbackArgs,
+  ): Promise<MsalConfig> {
     // Validate and coerce configuration using Zod schema
     const config = await MsalConfigSchema.parseAsync(rawConfig);
 
-    // Auto-create client if config provided but no client instance
+    // Auto-create client if no client instance was supplied
     // This allows users to provide configuration without manually instantiating the client
-    if (!config.client && this.#msalConfig) {
-      const clientConfig = this.#msalConfig;
-
-      config.telemetry.provider?.trackEvent({
-        name: 'module-msal.configurator._processConfig.creating-client',
-        level: TelemetryLevel.Debug,
-        scope: config.telemetry.scope,
-        metadata: { ...config.telemetry.metadata, clientConfig },
-      });
-
-      // Auto-generate authority URL from tenant ID if not explicitly provided
-      // This simplifies configuration for most common cases
-      if (!clientConfig.auth.authority && clientConfig.auth.tenantId) {
-        clientConfig.auth.authority = `https://login.microsoftonline.com/${clientConfig.auth.tenantId}`;
-      }
-
-      // Set default cache location to localStorage for browser environments
-      // MSAL supports sessionStorage as well, but localStorage is the standard for persistent auth
-      if (!clientConfig.cache) {
-        clientConfig.cache = { cacheLocation: 'localStorage' };
-      }
-
-      // Integrate framework telemetry with MSAL logging system
-      // This allows MSAL events to flow through the framework's telemetry pipeline
-      if (!clientConfig.system?.loggerOptions && config.telemetry?.provider) {
-        const { provider, metadata, scope } = config.telemetry;
-
-        provider.trackEvent({
-          name: 'module-msal.configurator._processConfig.client-telemetry-connected',
-          level: TelemetryLevel.Debug,
-          scope,
-          metadata,
-        });
-
-        clientConfig.system = {
-          ...clientConfig.system,
-          loggerOptions: {
-            // Only log PII in development to protect user privacy in production
-            piiLoggingEnabled: process.env.NODE_ENV === 'development',
-            // Bridge MSAL log events to framework telemetry system
-            loggerCallback: createClientLogCallback(provider, metadata, [...scope, '3rd-party']),
-            // Use Warning level by default - captures errors and warnings without being verbose
-            logLevel: LogLevel.Warning,
-            // Preserve any user-provided logger options (allows customization)
-            ...clientConfig.system?.loggerOptions,
-          },
-        };
-      }
-      // Apply silent cache lookup policy if configured
-      if (config.cacheLookupPolicy !== undefined) {
-        clientConfig.cacheLookupPolicy = config.cacheLookupPolicy;
-      }
-
-      // Instantiate MSAL client with fully configured options
-      config.client = new MsalClient(clientConfig);
+    // A hoisted module authenticates through the host's provider, so any client built here
+    // would be discarded — gate it here rather than in `_createClient`, so a substituted
+    // client (see `MsalMockConfigurator`) cannot shadow the host's signed-in user
+    if (!config.client && !this._isHoisted(init)) {
+      config.client = await this._createClient(config, init);
     }
 
     return config;
+  }
+
+  /**
+   * Creates the client to authenticate through, when none was supplied.
+   *
+   * @remarks
+   * Called by {@link MsalConfigurator._processConfig | _processConfig} only when
+   * no client was set, so a client supplied through
+   * {@link MsalConfigurator.setClient | setClient} always wins. It is likewise
+   * not called when the module is hoisted onto a host application's provider —
+   * see {@link MsalConfigurator._isHoisted | _isHoisted}.
+   *
+   * This is the seam for authenticating through something other than Entra ID.
+   * Overriding it replaces only the client, leaving the builder, the schema
+   * validation and `MsalProvider` untouched — which is how
+   * `MsalMockConfigurator` substitutes an in-process client for tests.
+   *
+   * An override normally builds from
+   * {@link MsalConfigurator._createClientConfig | _createClientConfig}, so it
+   * receives the same fully-resolved {@link MsalClientConfig} the real client is
+   * built from rather than re-deriving it.
+   *
+   * Returning `undefined` is legitimate and means "there is nothing to build a
+   * client from", which leaves the module without one.
+   *
+   * @param config - The validated configuration the client is built from.
+   * @param init - The builder arguments, carrying the host reference when hoisted.
+   * @returns The client, or `undefined` when there is nothing to build one from.
+   */
+  protected async _createClient(
+    config: MsalConfig,
+    _init?: ConfigBuilderCallbackArgs,
+  ): Promise<IMsalClient | undefined> {
+    const clientConfig = this._createClientConfig(config);
+    // A client can be omitted for a hoisted module or an intentionally incomplete setup.
+    if (!clientConfig) {
+      return undefined;
+    }
+
+    // Instantiate MSAL client with fully configured options
+    return new MsalClient(clientConfig);
+  }
+
+  /**
+   * Whether this module is hoisted onto a host application's authentication.
+   *
+   * @remarks
+   * When an application runs inside a host — a portal loading an app, or an app
+   * loading a widget — the module initializer returns a proxy of the host's
+   * provider instead of building its own (see the host-provider branch of the
+   * module initializer). A client built during configuration would therefore be
+   * constructed and immediately discarded.
+   *
+   * Detecting this during configuration lets the configurator skip building a
+   * client entirely, which matters most for substituted clients: a mock client
+   * built here would otherwise silently shadow the host's real signed-in user.
+   *
+   * @param init - The builder arguments, carrying the host reference when hoisted.
+   * @returns `true` when a host provider will be used instead of a locally built client.
+   */
+  protected _isHoisted(init?: ConfigBuilderCallbackArgs): boolean {
+    return !!(init?.ref as { auth?: IMsalProvider } | undefined)?.auth;
+  }
+
+  /**
+   * Resolves the full MSAL client configuration to build a client from.
+   *
+   * @remarks
+   * Applies the defaults a client is expected to be built with — authority
+   * derived from the tenant, cache location, telemetry-backed logging and the
+   * configured cache lookup policy.
+   *
+   * Kept separate from {@link MsalConfigurator._createClient | _createClient} so
+   * that substituting the client does not also mean re-implementing this
+   * resolution. `MsalMockConfigurator` relies on it to hand its mock client the
+   * very same configuration the real client would have received.
+   *
+   * @param config - The validated configuration.
+   * @returns The client configuration, or `undefined` when none was declared.
+   */
+  protected _createClientConfig(config: MsalConfig): MsalClientConfig | undefined {
+    const declared = this.#msalConfig;
+    // Do not construct a client when configuration has not supplied client settings.
+    if (!declared) {
+      return undefined;
+    }
+
+    config.telemetry.provider?.trackEvent({
+      name: 'module-msal.configurator._processConfig.creating-client',
+      level: TelemetryLevel.Debug,
+      scope: config.telemetry.scope,
+      metadata: { ...config.telemetry.metadata, clientConfig: declared },
+    });
+
+    // Copied rather than enriched in place, so the object a caller passed to
+    // `setClientConfig` is never rewritten behind its back — a caller may well
+    // be reusing or asserting on it
+    const clientConfig: MsalClientConfig = {
+      ...declared,
+      auth: { ...declared.auth },
+      // Default to localStorage: MSAL supports sessionStorage too, but
+      // localStorage is the standard for persistent auth in browsers
+      cache: declared.cache ?? { cacheLocation: 'localStorage' },
+    };
+
+    // Auto-generate authority URL from tenant ID if not explicitly provided
+    // This simplifies configuration for most common cases
+    if (!clientConfig.auth.authority && clientConfig.auth.tenantId) {
+      clientConfig.auth.authority = `https://login.microsoftonline.com/${clientConfig.auth.tenantId}`;
+    }
+
+    // Integrate framework telemetry with MSAL logging system
+    // This allows MSAL events to flow through the framework's telemetry pipeline
+    if (!clientConfig.system?.loggerOptions && config.telemetry?.provider) {
+      const { provider, metadata, scope } = config.telemetry;
+
+      provider.trackEvent({
+        name: 'module-msal.configurator._processConfig.client-telemetry-connected',
+        level: TelemetryLevel.Debug,
+        scope,
+        metadata,
+      });
+
+      clientConfig.system = {
+        ...clientConfig.system,
+        loggerOptions: {
+          // Only log PII in development to protect user privacy in production
+          piiLoggingEnabled: process.env.NODE_ENV === 'development',
+          // Bridge MSAL log events to framework telemetry system
+          loggerCallback: createClientLogCallback(provider, metadata, [...scope, '3rd-party']),
+          // Use Warning level by default - captures errors and warnings without being verbose
+          logLevel: LogLevel.Warning,
+          // Preserve any user-provided logger options (allows customization)
+          ...clientConfig.system?.loggerOptions,
+        },
+      };
+    }
+
+    // Apply silent cache lookup policy if configured
+    if (config.cacheLookupPolicy !== undefined) {
+      clientConfig.cacheLookupPolicy = config.cacheLookupPolicy;
+    }
+
+    return clientConfig;
   }
 }

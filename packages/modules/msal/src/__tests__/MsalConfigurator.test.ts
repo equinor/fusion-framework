@@ -20,6 +20,23 @@ const createInitialConfig = (): Pick<MsalConfig, 'telemetry'> => ({
 });
 
 describe('MsalConfigurator', () => {
+  it('enriches a copy, leaving the declared client configuration untouched', async () => {
+    // A caller may reuse or assert on the object it passed, and the defaults
+    // applied here are derived — rewriting it behind their back is not ours to do
+    const declared = { auth: { clientId: 'my-app', tenantId: 'my-tenant' } };
+    const configurator = new MsalConfigurator();
+
+    configurator.setClientConfig(declared);
+
+    const config = await configurator.createConfigAsync(
+      createConfigCallbackArgs(),
+      createInitialConfig(),
+    );
+
+    expect(declared).toEqual({ auth: { clientId: 'my-app', tenantId: 'my-tenant' } });
+    expect(config.client?.tenantId).toBe('my-tenant');
+  });
+
   it('setAuthCode should normalize surrounding whitespace', async () => {
     const configurator = new MsalConfigurator();
 
@@ -72,6 +89,95 @@ describe('MsalConfigurator', () => {
     );
 
     expect(config.client).toBeUndefined();
+  });
+
+  describe('_createClient', () => {
+    it('builds from the same resolved client config the real client would get', async () => {
+      // The mock relies on this: substituting the client must not also mean
+      // re-implementing authority, cache and telemetry resolution
+      const received: unknown[] = [];
+      class CustomConfigurator extends MsalConfigurator {
+        protected override async _createClient(config: MsalConfig): Promise<IMsalClient> {
+          received.push(this._createClientConfig(config));
+          return createClient();
+        }
+      }
+
+      const configurator = new CustomConfigurator();
+      configurator.setClientConfig({ auth: { clientId: 'client-id', tenantId: 'tenant-id' } });
+
+      await configurator.createConfigAsync(createConfigCallbackArgs(), createInitialConfig());
+
+      expect(received).toEqual([
+        expect.objectContaining({
+          auth: expect.objectContaining({
+            clientId: 'client-id',
+            // derived by the configurator, not by the caller
+            authority: 'https://login.microsoftonline.com/tenant-id',
+          }),
+          cache: { cacheLocation: 'localStorage' },
+        }),
+      ]);
+    });
+
+    it('supplies the client when none was set', async () => {
+      const client = createClient();
+      class CustomConfigurator extends MsalConfigurator {
+        protected override async _createClient(): Promise<IMsalClient> {
+          return client;
+        }
+      }
+
+      const config = await new CustomConfigurator().createConfigAsync(
+        createConfigCallbackArgs(),
+        createInitialConfig(),
+      );
+
+      expect(config.client).toBe(client);
+    });
+
+    it('is not consulted when a client was set, so setClient always wins', async () => {
+      const own = createClient();
+      const createOther = vi.fn().mockResolvedValue(createClient());
+      class CustomConfigurator extends MsalConfigurator {
+        protected override _createClient(): Promise<IMsalClient> {
+          return createOther();
+        }
+      }
+
+      const configurator = new CustomConfigurator();
+      configurator.setClient(own);
+
+      const config = await configurator.createConfigAsync(
+        createConfigCallbackArgs(),
+        createInitialConfig(),
+      );
+
+      expect(config.client).toBe(own);
+      expect(createOther).not.toHaveBeenCalled();
+    });
+
+    it('is not consulted when hoisted, so a host provider is never shadowed', async () => {
+      // A hoisted module authenticates through the host's provider, so anything
+      // built here would be discarded — or worse, shadow the host's user
+      const createOther = vi.fn().mockResolvedValue(createClient());
+      class CustomConfigurator extends MsalConfigurator {
+        protected override _createClient(): Promise<IMsalClient> {
+          return createOther();
+        }
+      }
+
+      const configurator = new CustomConfigurator();
+      configurator.setClientConfig({ auth: { clientId: 'client-id', tenantId: 'tenant-id' } });
+
+      const config = await configurator.createConfigAsync(
+        { ...createConfigCallbackArgs(), ref: { auth: {} } },
+        createInitialConfig(),
+      );
+
+      expect(config.client).toBeUndefined();
+      expect(createOther).not.toHaveBeenCalled();
+    });
   });
 
   describe('cacheLookupPolicy', () => {
