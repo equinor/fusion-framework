@@ -45,52 +45,52 @@ Format: `package name` → path → role.
 
 | Package | Path | Role |
 | --- | --- | --- |
-| `@equinor/fusion-framework-module-ag-grid` | `modules/ag-grid` | AG Grid integration |
-| `@equinor/fusion-framework-module-ai` | `modules/ai` | AI/LLM integration |
-| `@equinor/fusion-framework-module-analytics` | `modules/analytics` | OpenTelemetry analytics |
-| `@equinor/fusion-framework-module-app` | `modules/app` | App loading and manifests |
-| `@equinor/fusion-framework-module-azure-identity` | `modules/azure-identity` | Azure Identity auth (ambient, interactive, static token) |
-| `@equinor/fusion-framework-module-bookmark` | `modules/bookmark` | Bookmark state and payload resolution |
-| `@equinor/fusion-framework-module-context` | `modules/context` | Context selection and resolution |
-| `@equinor/fusion-framework-module-event` | `modules/event` | Framework event bus |
-| `@equinor/fusion-framework-module-feature-flag` | `modules/feature-flag` | Feature flags |
-| `@equinor/fusion-framework-module-http` | `modules/http` | HTTP clients, selectors, handlers |
-| `@equinor/fusion-framework-module-msal` | `modules/msal` | MSAL browser auth |
-| `@equinor/fusion-framework-module-msal-node` | `modules/msal-node` | MSAL Node auth with encrypted token storage |
-| `@equinor/fusion-framework-module-navigation` | `modules/navigation` | Navigation on React Router 7 |
-| `@equinor/fusion-framework-module-service-discovery` | `modules/service-discovery` | Service discovery |
-| `@equinor/fusion-framework-module-services` | `modules/services` | Typed Fusion service clients |
-| `@equinor/fusion-framework-module-signalr` | `modules/signalr` | SignalR transport |
-| `@equinor/fusion-framework-module-telemetry` | `modules/telemetry` | Microsoft telemetry |
-| `@equinor/fusion-framework-module-widget` | `modules/widget` | Widget loading |
+| `@equinor/fusion-framework-module-ag-grid` | `packages/modules/ag-grid` | AG Grid integration |
+| `@equinor/fusion-framework-module-ai` | `packages/modules/ai` | AI/LLM integration |
+| `@equinor/fusion-framework-module-analytics` | `packages/modules/analytics` | OpenTelemetry analytics |
+| `@equinor/fusion-framework-module-app` | `packages/modules/app` | App loading and manifests |
+| `@equinor/fusion-framework-module-azure-identity` | `packages/modules/azure-identity` | Azure Identity auth (ambient, interactive, static token) |
+| `@equinor/fusion-framework-module-bookmark` | `packages/modules/bookmark` | Bookmark state and payload resolution |
+| `@equinor/fusion-framework-module-context` | `packages/modules/context` | Context selection and resolution |
+| `@equinor/fusion-framework-module-event` | `packages/modules/event` | Framework event bus |
+| `@equinor/fusion-framework-module-feature-flag` | `packages/modules/feature-flag` | Feature flags |
+| `@equinor/fusion-framework-module-http` | `packages/modules/http` | HTTP clients, selectors, handlers |
+| `@equinor/fusion-framework-module-msal` | `packages/modules/msal` | MSAL browser auth |
+| `@equinor/fusion-framework-module-msal-node` | `packages/modules/msal-node` | MSAL Node auth with encrypted token storage |
+| `@equinor/fusion-framework-module-navigation` | `packages/modules/navigation` | Navigation on React Router 7 |
+| `@equinor/fusion-framework-module-service-discovery` | `packages/modules/service-discovery` | Service discovery |
+| `@equinor/fusion-framework-module-services` | `packages/modules/services` | Typed Fusion service clients |
+| `@equinor/fusion-framework-module-signalr` | `packages/modules/signalr` | SignalR transport |
+| `@equinor/fusion-framework-module-telemetry` | `packages/modules/telemetry` | Microsoft telemetry |
+| `@equinor/fusion-framework-module-widget` | `packages/modules/widget` | Widget loading |
 
 ### React (`packages/react/*`)
 
 | Package | Path | Role |
 | --- | --- | --- |
-| `@equinor/fusion-framework-react` | `react/framework` | React framework provider and root hooks |
-| `@equinor/fusion-framework-react-app` | `react/app` | React application host |
-| `@equinor/fusion-framework-react-module` | `react/modules/module` | Hooks for consuming modules |
-| `@equinor/fusion-framework-react-module-bookmark` | `react/modules/bookmark` | Bookmark hooks |
-| `@equinor/fusion-framework-react-module-context` | `react/modules/context` | Context hooks |
-| `@equinor/fusion-framework-react-module-event` | `react/modules/event` | Event hooks |
-| `@equinor/fusion-framework-react-module-http` | `react/modules/http` | HTTP hooks |
-| `@equinor/fusion-framework-react-module-signalr` | `react/modules/signalr` | SignalR hooks |
-| `@equinor/fusion-framework-react-router` | `react/router` | Type-safe route DSL for React Router v7 |
-| `@equinor/fusion-framework-react-ag-grid` | `react/ag-grid` | AG Grid React bindings |
-| `@equinor/fusion-framework-react-ag-charts` | `react/ag-charts` | AG Charts React bindings |
-| `@equinor/fusion-framework-react-components-bookmark` | `react/components/bookmark` | Bookmark UI components |
-| `@equinor/fusion-framework-react-components-people-provider` | `react/components/people-resolver` | People resolver components |
+| `@equinor/fusion-framework-react` | `packages/react/framework` | React framework provider and root hooks |
+| `@equinor/fusion-framework-react-app` | `packages/react/app` | React application host |
+| `@equinor/fusion-framework-react-module` | `packages/react/modules/module` | Hooks for consuming modules |
+| `@equinor/fusion-framework-react-module-bookmark` | `packages/react/modules/bookmark` | Bookmark hooks |
+| `@equinor/fusion-framework-react-module-context` | `packages/react/modules/context` | Context hooks |
+| `@equinor/fusion-framework-react-module-event` | `packages/react/modules/event` | Event hooks |
+| `@equinor/fusion-framework-react-module-http` | `packages/react/modules/http` | HTTP hooks |
+| `@equinor/fusion-framework-react-module-signalr` | `packages/react/modules/signalr` | SignalR hooks |
+| `@equinor/fusion-framework-react-router` | `packages/react/router` | Type-safe route DSL for React Router v7 |
+| `@equinor/fusion-framework-react-ag-grid` | `packages/react/ag-grid` | AG Grid React bindings |
+| `@equinor/fusion-framework-react-ag-charts` | `packages/react/ag-charts` | AG Charts React bindings |
+| `@equinor/fusion-framework-react-components-bookmark` | `packages/react/components/bookmark` | Bookmark UI components |
+| `@equinor/fusion-framework-react-components-people-provider` | `packages/react/components/people-resolver` | People resolver components |
 
 ### Utils (`packages/utils/*`)
 
 | Package | Path | Role |
 | --- | --- | --- |
-| `@equinor/fusion-observable` | `utils/observable` | RxJS-based observable primitives and state |
-| `@equinor/fusion-query` | `utils/query` | Reactive fetching and caching |
-| `@equinor/fusion-log` | `utils/log` | Logging utilities |
-| `@equinor/fusion-imports` | `utils/imports` | Import resolution helpers |
-| `@equinor/fusion-load-env` | `utils/load-env` | `.env` loading |
+| `@equinor/fusion-observable` | `packages/utils/observable` | RxJS-based observable primitives and state |
+| `@equinor/fusion-query` | `packages/utils/query` | Reactive fetching and caching |
+| `@equinor/fusion-log` | `packages/utils/log` | Logging utilities |
+| `@equinor/fusion-imports` | `packages/utils/imports` | Import resolution helpers |
+| `@equinor/fusion-load-env` | `packages/utils/load-env` | `.env` loading |
 
 ### CLI and tooling
 
@@ -99,31 +99,31 @@ Format: `package name` → path → role.
 | `@equinor/fusion-framework-cli` | `packages/cli` | `ffc` CLI (build, dev, ai index, app tooling) |
 | `@equinor/fusion-framework-dev-server` | `packages/dev-server` | Local dev server |
 | `@equinor/fusion-framework-dev-portal` | `packages/dev-portal` | Local portal shell for app development |
-| `@equinor/fusion-framework-cli-plugin-ai-base` | `cli-plugins/ai-base` | Shared AI plugin base |
-| `@equinor/fusion-framework-cli-plugin-ai-chat` | `cli-plugins/ai-chat` | Interactive AI chat command |
-| `@equinor/fusion-framework-cli-plugin-ai-index` | `cli-plugins/ai-index` | Embedding and chunking for the retrieval index |
-| `@equinor/fusion-framework-cli-plugin-copilot` | `cli-plugins/copilot` | Copilot SDK evaluation plugin |
+| `@equinor/fusion-framework-cli-plugin-ai-base` | `packages/cli-plugins/ai-base` | Shared AI plugin base |
+| `@equinor/fusion-framework-cli-plugin-ai-chat` | `packages/cli-plugins/ai-chat` | Interactive AI chat command |
+| `@equinor/fusion-framework-cli-plugin-ai-index` | `packages/cli-plugins/ai-index` | Embedding and chunking for the retrieval index |
+| `@equinor/fusion-framework-cli-plugin-copilot` | `packages/cli-plugins/copilot` | Copilot SDK evaluation plugin |
 
 ### Vite plugins (`packages/vite-plugins/*`)
 
 | Package | Path | Role |
 | --- | --- | --- |
-| `@equinor/fusion-framework-vite-plugin-spa` | `vite-plugins/spa` | SPA build/dev plugin |
-| `@equinor/fusion-framework-vite-plugin-api-service` | `vite-plugins/api-service` | Service-discovery proxy and mocking |
-| `@equinor/fusion-framework-vite-plugin-markdown` | `vite-plugins/markdown` | Markdown `?raw` imports |
-| `@equinor/fusion-framework-vite-plugin-raw-imports` | `vite-plugins/raw-imports` | Generic `?raw` imports |
-| `@equinor/fusion-framework-vite-plugin-routes-dsl` | `vite-plugins/routes-dsl` | `import.meta.resolve()` transform for route DSL |
+| `@equinor/fusion-framework-vite-plugin-spa` | `packages/vite-plugins/spa` | SPA build/dev plugin |
+| `@equinor/fusion-framework-vite-plugin-api-service` | `packages/vite-plugins/api-service` | Service-discovery proxy and mocking |
+| `@equinor/fusion-framework-vite-plugin-markdown` | `packages/vite-plugins/markdown` | Markdown `?raw` imports |
+| `@equinor/fusion-framework-vite-plugin-raw-imports` | `packages/vite-plugins/raw-imports` | Generic `?raw` imports |
+| `@equinor/fusion-framework-vite-plugin-routes-dsl` | `packages/vite-plugins/routes-dsl` | `import.meta.resolve()` transform for route DSL |
 
 ### Linting (`packages/linting/*`)
 
 | Package | Path | Role |
 | --- | --- | --- |
-| `@equinor/fusion-lint` | `linting/cli` | `fusion-lint` CLI |
-| `@equinor/fusion-framework-lint-core` | `linting/core` | Rule engine and diagnostic types |
-| `@equinor/fusion-framework-lint-rules` | `linting/rules` | tree-sitter powered Fusion rules |
-| `@equinor/fusion-framework-lint-config` | `linting/config` | Recommended presets |
-| `@equinor/fusion-framework-lint-lsp` | `linting/lsp` | Language server |
-| `fusion-ts-lint-vscode` | `linting/vscode` | VS Code extension |
+| `@equinor/fusion-lint` | `packages/linting/cli` | `fusion-lint` CLI |
+| `@equinor/fusion-framework-lint-core` | `packages/linting/core` | Rule engine and diagnostic types |
+| `@equinor/fusion-framework-lint-rules` | `packages/linting/rules` | tree-sitter powered Fusion rules |
+| `@equinor/fusion-framework-lint-config` | `packages/linting/config` | Recommended presets |
+| `@equinor/fusion-framework-lint-lsp` | `packages/linting/lsp` | Language server |
+| `fusion-ts-lint-vscode` | `packages/linting/vscode` | VS Code extension |
 
 > Linting packages have TypeScript project `references` between them. When adding a
 > cross-package import inside `packages/linting/*`, add the matching `references`
@@ -181,7 +181,7 @@ Use this table instead of searching. "Start here" is the first file to open.
 | Build all | `pnpm build` |
 | Build only affected | `pnpm build:affected` |
 | Test | `pnpm test` |
-| Test one project | `npx vitest run --project '<name>'` |
+| Test one project | `pnpm exec vitest run --project '<glob>'` |
 | Lint (Biome) | `pnpm lint:biome` |
 | Lint (Fusion rules) | `pnpm lint:fusion` |
 | Fusion lint on changed files | `pnpm exec fusion-lint changed --against origin/main` |
