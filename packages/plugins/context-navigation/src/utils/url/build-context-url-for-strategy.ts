@@ -43,7 +43,7 @@ export const buildContextUrlForStrategy = (
   // Path is not a recognised app route — return it unchanged
   if (!match) {
     return path;
-  } 
-  
+  }
+
   return buildAppRoute(match.appKey, contextId ?? undefined);
 };

@@ -1,3 +1,4 @@
+import { normalizePath } from '../../helpers';
 /**
  * URLPattern for the standard Fusion portal app route:
  *
@@ -37,9 +38,9 @@ export const parseAppRoute = (pathname: string): AppRouteMatch | undefined => {
     pathname = `/${pathname}`;
   }
 
-  const normalized = pathname.replace(/\/+$/, '') || '/';
+  const normalized = normalizePath(pathname);
   const result = APP_ROUTE_PATTERN.exec({ pathname: normalized });
-  
+
   // Pathname does not match the /apps/:appKey pattern
   if (!result) {
     return undefined;

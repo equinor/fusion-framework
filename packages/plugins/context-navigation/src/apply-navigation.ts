@@ -11,7 +11,7 @@ import type {
   ContextNavigationSkippedDetail,
 } from './types';
 import type { ContextNavigationEventSource } from './create-context-navigation-plugin';
-import { normalizePath } from './helpers';
+import { normalizePathFromURL } from './helpers';
 
 /**
  * Set of normalized paths that the plugin itself has navigated to.
@@ -118,7 +118,7 @@ export async function applyNavigation(
   // Step 2: Compare normalized paths to avoid redundant navigations.
   // This prevents a replace() call when the URL is already correct, which
   // would otherwise create a spurious history entry in some browsers.
-  if (normalizePath(targetURL) === normalizePath(currentURL)) {
+  if (normalizePathFromURL(targetURL) === normalizePathFromURL(currentURL)) {
     event.dispatchEvent('onContextNavigationSkipped', {
       detail: { appKey, reason: 'url-matches' } as ContextNavigationSkippedDetail,
       source: eventSource,
@@ -156,7 +156,7 @@ export async function applyNavigation(
 
       // Step 4: Record the token BEFORE navigating so the guard sees it
       // on the resulting state$ emission and skips re-processing.
-      ownNavTokens.add(normalizePath(targetURL));
+      ownNavTokens.add(normalizePathFromURL(targetURL));
       navigation.navigate(targetURL, navOptionsOverride ?? config.navigationOptions);
 
       // Post-navigation bookkeeping: notify listeners and invoke callback.

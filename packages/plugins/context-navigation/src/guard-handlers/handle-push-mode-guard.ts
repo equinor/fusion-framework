@@ -40,7 +40,7 @@ export function handlePushModeGuard(
   if (!activeContext) {
     return;
   }
-  
+
   const adapter = resolveAdapter(
     { appKey, appContext: appModules.context, routingStrategy, currentURL },
     deps.config.adapters,

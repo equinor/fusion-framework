@@ -108,8 +108,8 @@ export function createContextNavigationPlugin(args: ContextNavigationPluginArgs)
         startWith(null),
         pairwise(),
         map(([prev, entry]) => ({
-          entry: entry!,
-          isAppSwitch: prev != null && prev.appKey !== entry!.appKey,
+          entry: entry as typeof entry & {},
+          isAppSwitch: prev != null && prev.appKey !== (entry as typeof entry & {}).appKey,
         })),
       )
       .subscribe(({ entry, isAppSwitch }) => {

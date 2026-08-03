@@ -29,7 +29,7 @@ export function handleReplaceModeGuard(
 
   // Resolve the active context and adapter for re-encoding.
   const activeContext = appModules.context.currentContext;
-  
+
   // No active context to re-encode — nothing to correct.
   if (!activeContext) {
     return;

@@ -8,7 +8,7 @@ import type {
 } from './types';
 import type { ContextNavigationEventSource } from './create-context-navigation-plugin';
 import type { ReconcilerSourceEntry } from './sources/types';
-import { getCurrentURL, normalizePath, resolveAdapter, stripQueryParams } from './helpers';
+import { getCurrentURL, normalizePathFromURL, resolveAdapter, stripQueryParams } from './helpers';
 import { applyNavigation, type ApplyNavigationDeps } from './apply-navigation';
 
 /** Dependencies required by {@link reconcile}. */
@@ -74,8 +74,8 @@ export function reconcile(
     const targetURL = new URL(targetPath, config.origin);
 
     // Only navigate if the target path differs from current path
-    if (normalizePath(targetURL) !== normalizePath(currentURL)) {
-      ownNavTokens.add(normalizePath(targetURL));
+    if (normalizePathFromURL(targetURL) !== normalizePathFromURL(currentURL)) {
+      ownNavTokens.add(normalizePathFromURL(targetURL));
       navigation.navigate(targetURL, config.navigationOptions);
       log(`Null context → navigated to [${targetPath}] for [${appKey}]`);
     }

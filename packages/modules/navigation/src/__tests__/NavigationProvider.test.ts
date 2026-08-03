@@ -99,7 +99,7 @@ describe('NavigationProvider', () => {
     it('should handle pathological input efficiently (ReDoS protection)', () => {
       // Create a string with many consecutive slashes to test performance
       // This would cause ReDoS with certain regex patterns
-      const manySlashes = '/apps' + '/'.repeat(10000) + 'my-app';
+      const manySlashes = `/apps/${'/'.repeat(10000)}my-app`;
 
       const startTime = Date.now();
       const provider = new NavigationProvider({
@@ -117,7 +117,7 @@ describe('NavigationProvider', () => {
     it('should handle pathological trailing slashes efficiently (ReDoS protection)', () => {
       // Create a string with many trailing slashes
       // The /\/+$/ regex pattern would cause ReDoS with this input
-      const manyTrailingSlashes = '/apps/my-app' + '/'.repeat(10000);
+      const manyTrailingSlashes = `/apps/my-app${'/'.repeat(10000)}`;
 
       const startTime = Date.now();
       const provider = new NavigationProvider({
@@ -150,9 +150,13 @@ describe('NavigationProvider', () => {
       });
 
       // All paths should be in scope
+      // biome-ignore lint/suspicious/noExplicitAny: Allow usage of 'any' in test files for mocking purposes
       expect((provider as any)._isWithinBasenameScope('/')).toBe(true);
+      // biome-ignore lint/suspicious/noExplicitAny: Allow usage of 'any' in test files for mocking purposes
       expect((provider as any)._isWithinBasenameScope('/apps')).toBe(true);
+      // biome-ignore lint/suspicious/noExplicitAny: Allow usage of 'any' in test files for mocking purposes
       expect((provider as any)._isWithinBasenameScope('/apps/my-app')).toBe(true);
+      // biome-ignore lint/suspicious/noExplicitAny: Allow usage of 'any' in test files for mocking purposes
       expect((provider as any)._isWithinBasenameScope('/apps/my-app/users')).toBe(true);
 
       provider.dispose();
@@ -165,18 +169,25 @@ describe('NavigationProvider', () => {
       });
 
       // Exact match should be in scope
+      // biome-ignore lint/suspicious/noExplicitAny: Allow usage of 'any' in test files for mocking purposes
       expect((provider as any)._isWithinBasenameScope('/apps/my-app')).toBe(true);
 
       // Paths starting with basename/ should be in scope
+      // biome-ignore lint/suspicious/noExplicitAny: Allow usage of 'any' in test files for mocking purposes
       expect((provider as any)._isWithinBasenameScope('/apps/my-app/')).toBe(true);
+      // biome-ignore lint/suspicious/noExplicitAny: Allow usage of 'any' in test files for mocking purposes
       expect((provider as any)._isWithinBasenameScope('/apps/my-app/users')).toBe(true);
 
       // Similar but different path should NOT be in scope (path boundary check)
+      // biome-ignore lint/suspicious/noExplicitAny: Allow usage of 'any' in test files for mocking purposes
       expect((provider as any)._isWithinBasenameScope('/apps/my-app-other')).toBe(false);
+      // biome-ignore lint/suspicious/noExplicitAny: Allow usage of 'any' in test files for mocking purposes
       expect((provider as any)._isWithinBasenameScope('/apps/my-app-other/users')).toBe(false);
 
       // Completely different paths should NOT be in scope
+      // biome-ignore lint/suspicious/noExplicitAny: Allow usage of 'any' in test files for mocking purposes
       expect((provider as any)._isWithinBasenameScope('/other')).toBe(false);
+      // biome-ignore lint/suspicious/noExplicitAny: Allow usage of 'any' in test files for mocking purposes
       expect((provider as any)._isWithinBasenameScope('/')).toBe(false);
 
       provider.dispose();
@@ -189,7 +200,9 @@ describe('NavigationProvider', () => {
       });
 
       // Pathname with consecutive slashes should be normalized
+      // biome-ignore lint/suspicious/noExplicitAny: Allow usage of 'any' in test files for mocking purposes
       expect((provider as any)._isWithinBasenameScope('/apps//my-app')).toBe(true);
+      // biome-ignore lint/suspicious/noExplicitAny: Allow usage of 'any' in test files for mocking purposes
       expect((provider as any)._isWithinBasenameScope('/apps/my-app//users')).toBe(true);
 
       provider.dispose();
@@ -205,11 +218,13 @@ describe('NavigationProvider', () => {
 
       // Exact match should become '/'
       expect(
+        // biome-ignore lint/suspicious/noExplicitAny: Allow usage of 'any' in test files for mocking purposes
         (provider as any)._localizePath({ pathname: '/apps/my-app', search: '', hash: '' }),
       ).toEqual({ pathname: '/', search: '', hash: '' });
 
       // Path with basename prefix should have it stripped
       expect(
+        // biome-ignore lint/suspicious/noExplicitAny: Allow usage of 'any' in test files for mocking purposes
         (provider as any)._localizePath({
           pathname: '/apps/my-app/users',
           search: '?q=test',
@@ -227,6 +242,7 @@ describe('NavigationProvider', () => {
       });
 
       // Path that starts similarly but isn't a real match should not be stripped
+      // biome-ignore lint/suspicious/noExplicitAny: Allow usage of 'any' in test files for mocking purposes
       const result = (provider as any)._localizePath({
         pathname: '/apps/my-app-other/users',
         search: '',
@@ -246,12 +262,14 @@ describe('NavigationProvider', () => {
       });
 
       // With no basename, paths should be returned normalized
+      // biome-ignore lint/suspicious/noExplicitAny: Allow usage of 'any' in test files for mocking purposes
       expect((provider as any)._localizePath({ pathname: '/', search: '', hash: '' })).toEqual({
         pathname: '/',
         search: '',
         hash: '',
       });
 
+      // biome-ignore lint/suspicious/noExplicitAny: Allow usage of 'any' in test files for mocking purposes
       expect((provider as any)._localizePath({ pathname: '/apps', search: '', hash: '' })).toEqual({
         pathname: '/apps',
         search: '',
@@ -259,6 +277,7 @@ describe('NavigationProvider', () => {
       });
 
       expect(
+        // biome-ignore lint/suspicious/noExplicitAny: Allow usage of 'any' in test files for mocking purposes
         (provider as any)._localizePath({ pathname: '/apps/my-app', search: '', hash: '' }),
       ).toEqual({ pathname: '/apps/my-app', search: '', hash: '' });
 
@@ -273,6 +292,7 @@ describe('NavigationProvider', () => {
 
       // Consecutive slashes should be collapsed
       expect(
+        // biome-ignore lint/suspicious/noExplicitAny: Allow usage of 'any' in test files for mocking purposes
         (provider as any)._localizePath({ pathname: '/apps//my-app//users', search: '', hash: '' }),
       ).toEqual({ pathname: '/users', search: '', hash: '' });
 

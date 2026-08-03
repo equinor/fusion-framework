@@ -1,4 +1,4 @@
-import { normalizePath } from '../helpers';
+import { normalizePathFromURL } from '../helpers';
 import type { OwnNavigationTokens } from '../apply-navigation';
 
 /**
@@ -20,8 +20,8 @@ import type { OwnNavigationTokens } from '../apply-navigation';
  * @returns `true` if this navigation was plugin-initiated (caller should bail).
  */
 export function consumeOwnNavToken(currentURL: URL, ownNavTokens: OwnNavigationTokens): boolean {
-  const normalized = normalizePath(currentURL);
-  
+  const normalized = normalizePathFromURL(currentURL);
+
   // Token present — this navigation was plugin-initiated; consume it and signal the caller to bail.
   if (ownNavTokens.has(normalized)) {
     ownNavTokens.delete(normalized);
