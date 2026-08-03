@@ -13,6 +13,10 @@
       "import": "./dist/esm/lib/client/index.js",
       "types": "./dist/types/lib/client/index.d.ts"
     },
+    "./mock": {
+      "import": "./dist/esm/mock/index.js",
+      "types": "./dist/types/mock/index.d.ts"
+    },
     "./operators": {
       "import": "./dist/esm/lib/operators/index.js",
       "types": "./dist/types/lib/operators/index.d.ts"
@@ -33,6 +37,9 @@
       ],
       "client": [
         "dist/types/lib/client/index.d.ts"
+      ],
+      "mock": [
+        "dist/types/mock/index.d.ts"
       ],
       "operators": [
         "dist/types/lib/operators/index.d.ts"

@@ -368,7 +368,7 @@ export class HttpClient<
       /** push request to event buss */
       tap((x) => this._request$.next(x)),
       /** execute request */
-      switchMap(({ uri, path: _path, ...init }) => fromFetch(uri, init)),
+      switchMap(({ uri, path: _path, ...init }) => this._performFetch(uri, init)),
       /** prepare response, allow extensions to modify response  */
       switchMap((x) => this._prepareResponse(x as unknown as TResponse)),
       /** push response to event buss */
@@ -398,6 +398,24 @@ export class HttpClient<
     // The pipe above resolves to the per-call generic `T` (via the optional `selector`), but
     // the observable's static type tracks the class-level `TResponse` — cast to the caller's `T`.
     return response$ as unknown as Observable<T>;
+  }
+
+  /**
+   * Performs the actual network call for a prepared request.
+   *
+   * @remarks
+   * Isolated from {@link _fetch$} so a test double can replace only this step —
+   * matching a request against registered route handlers instead of reaching
+   * the network — while everything around it (request preparation, the
+   * response pipeline, abort handling) runs unchanged. See
+   * `@equinor/fusion-framework-module-http/mock`.
+   *
+   * @param uri - The fully resolved URL for the request.
+   * @param init - The prepared `fetch` request options.
+   * @returns An observable of the raw `Response`, ahead of {@link _prepareResponse}.
+   */
+  protected _performFetch(uri: string, init: RequestInit): ObservableInput<Response> {
+    return fromFetch(uri, init);
   }
 
   /**
