@@ -19,6 +19,18 @@ import type {
   IModulesConfigurator,
   ModulesConfiguratorConfigCallback,
 } from './types.js';
+
+type QualifiedConfigCallback<TRef> = ModulesConfiguratorConfigCallback<TRef> & {
+  moduleName?: string;
+};
+
+type QualifiedPostConfigCallback = ((config: any) => void | Promise<void>) & {
+  moduleName?: string;
+};
+
+type QualifiedPostInitCallback = ((instance: any) => void | Promise<void>) & {
+  moduleName?: string;
+};
 import type { FrameworkPluginCallback, FrameworkPluginTeardown } from '../plugin/index.js';
 
 import { runConfigurePhase } from './phases/run-configure-phase.js';
@@ -115,7 +127,7 @@ export class ModulesConfigurator<
    * Each entry is added by {@link addConfig} when a `configure` callback is provided.
    * @protected
    */
-  protected _configs: Array<ModulesConfiguratorConfigCallback<TRef>> = [];
+  protected _configs: Array<QualifiedConfigCallback<TRef>> = [];
 
   /**
    * Registered post-configure callbacks.
@@ -128,7 +140,7 @@ export class ModulesConfigurator<
    * inspects the config shape itself, it only forwards it at call time.
    * @protected
    */
-  protected _afterConfiguration: Array<(config: any) => void | Promise<void>> = [];
+  protected _afterConfiguration: Array<QualifiedPostConfigCallback> = [];
 
   /**
    * Registered post-initialize callbacks.
@@ -139,7 +151,7 @@ export class ModulesConfigurator<
    * internal dispatch; concrete instance types are known at registration but not stored.
    * @protected
    */
-  protected _afterInit: Array<(instance: any) => void | Promise<void>> = [];
+  protected _afterInit: Array<QualifiedPostInitCallback> = [];
 
   /**
    * Registered plugin callbacks.
@@ -174,7 +186,38 @@ export class ModulesConfigurator<
    * @param modules - Optional array of module descriptors to pre-register.
    */
   constructor(modules?: Array<AnyModule>) {
-    this._modules = new Set(modules);
+    this._modules = new Set(modules ? this._dedupeModulesByName(modules) : []);
+  }
+
+  /**
+   * Keeps the last registration for each module name.
+   *
+   * @param modules - Module descriptors to deduplicate.
+   * @returns The deduplicated module descriptors.
+   */
+  private _dedupeModulesByName(modules: Array<AnyModule>): Array<AnyModule> {
+    const lastByName = new Map<string, AnyModule>();
+    // Iterate in registration order so later descriptors intentionally override earlier ones.
+    for (const module of modules) {
+      lastByName.set(module.name, module);
+    }
+    return Array.from(lastByName.values());
+  }
+
+  /**
+   * Removes lifecycle callbacks belonging to a replaced module.
+   *
+   * @param moduleName - Name of the module whose callbacks are removed.
+   */
+  private _removeModuleCallbacks(moduleName: string): void {
+    // Remove callbacks from each lifecycle phase so replaced modules cannot run stale behavior.
+    this._configs = this._configs.filter((callback) => callback.moduleName !== moduleName);
+    // Keep cleanup callbacks aligned with the module replacement.
+    this._afterConfiguration = this._afterConfiguration.filter(
+      (callback) => callback.moduleName !== moduleName,
+    );
+    // Remove initialization callbacks as well, preventing the old module from being initialized.
+    this._afterInit = this._afterInit.filter((callback) => callback.moduleName !== moduleName);
   }
 
   /**
@@ -204,6 +247,9 @@ export class ModulesConfigurator<
   /**
    * Registers a single module configurator.
    *
+   * If a module with the same `name` was already registered, the previous
+   * registration is replaced so the last added module wins.
+   *
    * Adds the module to the known module set and registers the optional
    * `configure`, `afterConfig`, and `afterInit` callbacks into their
    * respective lifecycle phase arrays.
@@ -216,7 +262,23 @@ export class ModulesConfigurator<
     config: IModuleConfigurator<T, TRef, TConfig>,
   ): void {
     const { module, afterConfig, afterInit, configure } = config;
-    this._modules.add(module);
+    // Find an existing descriptor so re-registering a name can replace all of its lifecycle hooks.
+    const existingModule = Array.from(this._modules).find((m) => m.name === module.name);
+
+    // Re-registration must remove old callbacks before installing the replacement.
+    if (existingModule) {
+      this._removeModuleCallbacks(module.name);
+      // Replace the descriptor only when the caller supplied a different object.
+      if (existingModule !== module) {
+        const modules = Array.from(this._modules)
+          // Preserve every descriptor while substituting the newly registered module.
+          .map((m) => (m.name === module.name ? module : m));
+        this._modules = new Set(modules);
+      }
+    } else {
+      this._modules.add(module);
+    }
+
     this._registerEvent({
       level: ModuleEventLevel.Debug,
       name: ModuleConfiguratorEventName.ModuleConfigAdded,
@@ -229,12 +291,30 @@ export class ModulesConfigurator<
         afterInit: !!afterInit,
       },
     });
-    // Register each optional callback into its corresponding lifecycle phase array
-    if (configure) this._configs.push((cfg, ref) => configure(cfg[module.name], ref));
-    // Register the afterConfig callback, if provided
-    if (afterConfig) this._afterConfiguration.push((cfg) => afterConfig(cfg[module.name]));
-    // Register the afterInit callback, if provided
-    if (afterInit) this._afterInit.push((instances) => afterInit(instances[module.name]));
+    // Register each optional callback into its corresponding lifecycle phase array.
+    // When the same module name is re-registered, previous callbacks are removed
+    // so the latest configuration wins.
+    if (configure) {
+      const callback = ((cfg, ref) =>
+        configure(cfg[module.name], ref)) as QualifiedConfigCallback<TRef>;
+      callback.moduleName = module.name;
+      this._configs.push(callback);
+    }
+
+    // Register the afterConfig callback, if provided.
+    if (afterConfig) {
+      const callback = ((cfg) => afterConfig(cfg[module.name])) as QualifiedPostConfigCallback;
+      callback.moduleName = module.name;
+      this._afterConfiguration.push(callback);
+    }
+
+    // Register the afterInit callback, if provided.
+    if (afterInit) {
+      const callback = ((instances) =>
+        afterInit(instances[module.name])) as QualifiedPostInitCallback;
+      callback.moduleName = module.name;
+      this._afterInit.push(callback);
+    }
   }
 
   /**

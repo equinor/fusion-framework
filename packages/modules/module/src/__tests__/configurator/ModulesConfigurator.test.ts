@@ -24,6 +24,51 @@ describe('ModulesConfigurator', () => {
       expect(configurator.modules.filter((m) => m === mod)).toHaveLength(1);
     });
 
+    it('replaces a previously registered module with the same name', () => {
+      const configurator = new ModulesConfigurator();
+      const original = createMockModule('alpha');
+      const replacement = createMockModule('alpha');
+      configurator.addConfig({ module: original });
+      configurator.addConfig({ module: replacement });
+
+      expect(configurator.modules).toHaveLength(1);
+      expect(configurator.modules[0]).toBe(replacement);
+    });
+
+    it('replaces previous module callbacks when the same module name is registered again', async () => {
+      const configurator = new ModulesConfigurator();
+      const original = createMockModule('alpha');
+      const replacement = createMockModule('alpha');
+      const configureSpy = vi.fn();
+      const configureSpy2 = vi.fn();
+      const afterConfigSpy = vi.fn();
+      const afterConfigSpy2 = vi.fn();
+      const afterInitSpy = vi.fn();
+      const afterInitSpy2 = vi.fn();
+
+      configurator.addConfig({
+        module: original,
+        configure: configureSpy,
+        afterConfig: afterConfigSpy,
+        afterInit: afterInitSpy,
+      });
+      configurator.addConfig({
+        module: replacement,
+        configure: configureSpy2,
+        afterConfig: afterConfigSpy2,
+        afterInit: afterInitSpy2,
+      });
+
+      await configurator.initialize();
+
+      expect(configureSpy).not.toHaveBeenCalled();
+      expect(configureSpy2).toHaveBeenCalledOnce();
+      expect(afterConfigSpy).not.toHaveBeenCalled();
+      expect(afterConfigSpy2).toHaveBeenCalledOnce();
+      expect(afterInitSpy).not.toHaveBeenCalled();
+      expect(afterInitSpy2).toHaveBeenCalledOnce();
+    });
+
     it('wires configure callback into the configure phase', async () => {
       const configurator = new ModulesConfigurator();
       const mod = createMockModule('alpha', { x: 1 });
