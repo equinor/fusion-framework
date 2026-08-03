@@ -13,7 +13,7 @@ search to rediscover it.
 
 | Path | Contains | Published? |
 | --- | --- | --- |
-| `packages/*` | Framework libraries (60 packages) | Yes, via Changesets |
+| `packages/*` | Framework libraries (61 packages) | Yes, via Changesets |
 | `cookbooks/*` | Runnable example apps and portals | Yes (versioned, but examples) |
 | `eds-content/`, `eds/` | EDS design-system content and token tooling | No |
 | `vue-press/` | Documentation site | Partly |
@@ -98,6 +98,7 @@ Format: `package name` → path → role.
 | `@equinor/fusion-log` | `packages/utils/log` | Logging utilities |
 | `@equinor/fusion-imports` | `packages/utils/imports` | Import resolution helpers |
 | `@equinor/fusion-load-env` | `packages/utils/load-env` | `.env` loading |
+| `@equinor/fusion-openapi-mock` | `packages/utils/openapi-mock` | Fakes OpenAPI 3 responses from a parsed spec document |
 
 ### CLI and tooling
 
