@@ -12,6 +12,7 @@ import { version } from './version';
 
 import type { Service } from './types';
 import type { ServiceDiscoveryConfig } from './configurator';
+import type { IServiceDiscoveryClient } from './client';
 
 /**
  * Public API surface of the Service Discovery provider.
@@ -88,6 +89,15 @@ export interface IServiceDiscoveryProvider {
 
   /** The resolved service discovery configuration. */
   readonly config: ServiceDiscoveryConfig;
+
+  /**
+   * The client this provider resolves services through.
+   *
+   * @remarks
+   * Mirrors `MsalProvider.client`. Exposed so a test can spy on resolution with
+   * its own test runner without reaching into {@link IServiceDiscoveryProvider.config | config}.
+   */
+  readonly client: IServiceDiscoveryClient;
 }
 
 /**
@@ -113,6 +123,11 @@ export class ServiceDiscoveryProvider
       version,
       config,
     });
+  }
+
+  /** {@inheritDoc IServiceDiscoveryProvider.client} */
+  public get client(): IServiceDiscoveryClient {
+    return this.config.discoveryClient;
   }
 
   /** {@inheritDoc IServiceDiscoveryProvider.resolveServices} */
