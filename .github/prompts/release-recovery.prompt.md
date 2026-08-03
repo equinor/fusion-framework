@@ -15,7 +15,7 @@ Use when the `ci` workflow tagged packages but some never reached npm, or when
 git fetch --tags && git tag --points-at origin/main
 
 # Ask the registry what actually exists
-npm view <package-name> version
+pnpm view <package-name> version
 ```
 
 Build the list of packages that have a git tag but return `404` from the registry.

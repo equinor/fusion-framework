@@ -18,10 +18,10 @@ applyTo: "**/*.{test,spec}.{ts,tsx}"
 
 Vitest, everywhere. Prefer writing the failing test first.
 
-Run a single project rather than the whole workspace:
+Run a single project rather than the whole workspace. Project names are `<package-name>@<version>`, so filter with a glob:
 
 ```bash
-npx vitest run --project '<project-name>'
+pnpm exec vitest run --project '*lint-core*'
 ```
 
 `pnpm --filter <pkg> test` fails with "No projects were found" — the workspace defines
