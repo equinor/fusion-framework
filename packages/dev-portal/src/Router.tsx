@@ -18,11 +18,14 @@ const Styled = {
     `,
   Head: styled.section`
         grid-area: head;
+        z-index: 2;
     `,
   Main: styled.section`
         grid-area: main;
+        --header-height: 48px;
         overflow: auto;
         position: relative;
+        z-index: 1;
         max-width: 100%;
         display: grid;
     `,
