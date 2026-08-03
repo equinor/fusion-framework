@@ -1012,7 +1012,7 @@ importers:
         version: 17.4.2
       execa:
         specifier: ^10.0.0
-        version: 10.0.0
+        version: 10.0.1
       find-up:
         specifier: ^8.0.0
         version: 8.0.0
@@ -8399,8 +8399,8 @@ packages:
     resolution: {integrity: sha512-IzUmBGPR3+oUG9dUeXynyNmf91/3zUSJg1lCktzKw47OXuhco54U3r9B7O4XX+Rb1Itm9OZ2b0RkTs10bICOxA==}
     engines: {node: '>=12.0.0'}
 
-  execa@10.0.0:
-    resolution: {integrity: sha512-Cxl6MKxB1dr1H0FHmiizJ+lavKF7pV+fcDZFyqMB8d5m7qUPm/OtZYcD5vPWePKxSnTQ57KuBd9mtdZ3oNCvyQ==}
+  execa@10.0.1:
+    resolution: {integrity: sha512-ge98qjkRK4IB7tL7Ju/6qmm5LHoH1eEMt5FNZrz3f4UIYhF28lggX20z3FaX1sgc67msLEn0N0BscOs29iuwyw==}
     engines: {node: '>=22'}
 
   exit-hook@2.2.1:
@@ -11583,8 +11583,8 @@ packages:
     resolution: {integrity: sha512-4LCcse/U2MHZ63HAJVE+v71o7yOdIe4cZ70Wpf8D/IyjDKYQLV5GD46B+hSTjJsvV5PztjvHoU580EftxjDZFQ==}
     engines: {node: '>=12.20'}
 
-  yoctocolors@2.1.2:
-    resolution: {integrity: sha512-CzhO+pFNo8ajLM2d2IW/R93ipy99LWjtwblvC1RsoSUMZgyLbYFr221TnSNT7GjGdYui6P459mw9JH/g/zW2ug==}
+  yoctocolors@2.2.0:
+    resolution: {integrity: sha512-xYqdZFUK/VYazNl/oCDYN+3WloWQwMfZxBoiNt6qNyk+xfOdi598muWE42rNZFp1kNOiqW936q5RhUdnpqElSg==}
     engines: {node: '>=18'}
 
   zod@4.4.3:
@@ -17605,7 +17605,7 @@ snapshots:
 
   eventsource@2.0.2: {}
 
-  execa@10.0.0:
+  execa@10.0.1:
     dependencies:
       '@sindresorhus/merge-streams': 4.0.0
       figures: 6.1.0
@@ -17614,12 +17614,11 @@ snapshots:
       is-plain-obj: 4.1.0
       is-stream: 4.0.1
       npm-run-path: 6.0.0
-      path-key: 4.0.0
       pretty-ms: 9.3.0
       signal-exit: 4.1.0
       strip-final-newline: 4.0.0
       which-command: 0.1.0
-      yoctocolors: 2.1.2
+      yoctocolors: 2.2.0
 
   exit-hook@2.2.1: {}
 
@@ -18556,7 +18555,7 @@ snapshots:
   log-symbols@7.0.1:
     dependencies:
       is-unicode-supported: 2.1.0
-      yoctocolors: 2.1.2
+      yoctocolors: 2.2.0
 
   longest-streak@3.1.0: {}
 
@@ -21237,7 +21236,7 @@ snapshots:
 
   yocto-queue@1.2.2: {}
 
-  yoctocolors@2.1.2: {}
+  yoctocolors@2.2.0: {}
 
   zod@4.4.3: {}
 
