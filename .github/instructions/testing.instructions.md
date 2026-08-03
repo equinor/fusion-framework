@@ -15,94 +15,41 @@ applyTo: "**/*.{test,spec}.{ts,tsx}"
 - **Location**: Co-locate tests as `*.test.ts(x)` or under `__tests__` next to the code.
 
 ## Testing Framework
-- Use **Vitest** for all tests
-- Follow **TDD approach**: Write tests first (RED), implement (GREEN), refactor
 
-## Test Structure
+Vitest, everywhere. Prefer writing the failing test first.
 
-### Basic Test Pattern
-```typescript
-import { describe, it, expect, vi } from 'vitest';
+Run a single project rather than the whole workspace. Project names are `<package-name>@<version>`, so filter with a glob:
 
-describe('FeatureName', () => {
-  it('should do something', () => {
-    // Arrange
-    const input = 'test';
-    
-    // Act
-    const result = functionUnderTest(input);
-    
-    // Assert
-    expect(result).toBe(expected);
-  });
-});
+```bash
+pnpm exec vitest run --project '*lint-core*'
 ```
 
-## Test Requirements
+`pnpm --filter <pkg> test` fails with "No projects were found" — the workspace defines
+projects centrally in `vitest.config.ts`.
 
-### Coverage
-- Test all public APIs
-- Test error scenarios and edge cases
-- Test boundary conditions
-- Test async operations
+## Coverage Expectations
 
-### Mocking
-- Mock external dependencies in unit tests
-- Use `vi.mock()` for module mocking
-- Use `vi.fn()` for function mocking
-- Use real dependencies in integration tests
+Every new exported function, module, or component needs at least:
 
-### Error Testing
-```typescript
-it('should throw error when input is invalid', () => {
-  expect(() => {
-    functionUnderTest(invalidInput);
-  }).toThrow('Expected error message');
-});
-```
+- one happy path
+- one error or edge case, including async rejection where relevant
 
-### Async Testing
-```typescript
-it('should handle async operations', async () => {
-  const result = await asyncFunction();
-  expect(result).toBeDefined();
-});
-```
+Test observable behavior — inputs, outputs, and side effects — not implementation details.
 
 ## Test File Organization
-- Place test files next to source: `src/feature.ts` → `src/feature.test.ts`
-- Or in `__tests__` directory: `src/__tests__/feature.test.ts`
-- Use `.test.ts` or `.spec.ts` extension
 
-## Mocking Patterns
+Co-locate as `src/feature.test.ts` next to `src/feature.ts`, or under `src/__tests__/`.
+Both `.test.ts` and `.spec.ts` are recognised.
 
-### Mock Node.js Modules
-```typescript
-import { vi } from 'vitest';
+## Mocking
 
-vi.mock('node:fs', () => ({
-  existsSync: vi.fn(),
-  readFileSync: vi.fn(),
-}));
-```
+- `vi.mock()` for modules, `vi.fn()` for functions.
+- Mock external dependencies in unit tests; use real dependencies in integration tests.
+- When mocking a framework package, mock only the exports under test:
 
-### Mock External Dependencies
 ```typescript
 vi.mock('@equinor/fusion-framework', () => ({
   Framework: vi.fn(),
 }));
 ```
-
-## Test Best Practices
-- Keep tests focused and isolated
-- Use descriptive test names
-- Test behavior, not implementation
-- Clean up after tests (if needed)
-- Avoid testing implementation details
-
-## Integration Tests
-- Use real dependencies when possible
-- Test actual workflows end-to-end
-- Test error handling in real scenarios
-- Verify external integrations work correctly
 

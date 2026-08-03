@@ -19,14 +19,18 @@ applyTo: "packages/**/*.{ts,tsx,json}"
 ### Directory Structure
 ```
 packages/
-├── app/           # Application framework
-├── framework/     # Core framework
+├── app/           # Application host runtime
+├── framework/     # Framework composition root
+├── widget/        # Widget host runtime
 ├── modules/       # Framework modules (packages/modules/*/)
 ├── react/         # React integrations (packages/react/*/)
 ├── utils/         # Utility packages (packages/utils/*/)
-├── cli/           # CLI tools
+├── cli/           # `ffc` CLI
+├── cli-plugins/   # CLI plugins (packages/cli-plugins/*/)
+├── linting/       # `fusion-lint` engine, rules, CLI, LSP
 ├── dev-server/    # Development server
-└── vite-plugins/  # Vite plugins
+├── dev-portal/    # Local portal shell
+└── vite-plugins/  # Vite plugins (packages/vite-plugins/*/)
 ```
 
 ### Package Structure
@@ -39,34 +43,21 @@ All packages MUST follow this structure:
 
 ### Import Patterns
 
-#### Framework Packages
+Always import across packages by scoped package name, never by relative path:
+
 ```typescript
 import { Framework } from "@equinor/fusion-framework";
-import { Module } from "@equinor/fusion-framework-module";
 import { HttpModule } from "@equinor/fusion-framework-module-http";
-```
-
-#### React Packages
-```typescript
-import { ReactFramework } from "@equinor/fusion-framework-react";
 import { useFramework } from "@equinor/fusion-framework-react";
-```
-
-#### Utility Packages
-```typescript
-import { Observable } from "@equinor/fusion-observable";
 import { Query } from "@equinor/fusion-query";
 ```
 
-### Cross-Package Dependencies
-```json
-{
-  "dependencies": {
-    "@equinor/fusion-framework": "workspace:^",
-    "@equinor/fusion-framework-module-http": "workspace:^"
-  }
-}
-```
+Declare the corresponding dependency as `"workspace:^"` in `package.json`. The `workspace:`
+protocol never appears in source code.
+
+When you add a workspace dependency, add the matching `references` entry to the package's
+`tsconfig.json`. `prepack` builds each package in isolation during publish, so a missing
+reference passes a full local build and fails the release.
 
 ### Creating New Packages
 1. Create directory: `packages/{category}/{package-name}/`
@@ -87,13 +78,8 @@ Modules follow specific patterns:
 - Framework packages: `@equinor/fusion-framework-*`
 - Modules: `@equinor/fusion-framework-module-*`
 - React packages: `@equinor/fusion-framework-react-*`
+- Vite plugins: `@equinor/fusion-framework-vite-plugin-*`
 - Utils: `@equinor/fusion-*`
-- Vite plugins: `fusion-framework-vite-plugin-*`
 
-### Never Do
-- ❌ Use relative imports for monorepo packages
-- ❌ Use `workspace:` protocol in source code
-- ❌ Create packages without README.md
-- ❌ Skip TypeScript configuration
-- ❌ Use `npm` or `yarn` commands
+The full package list lives in `CODEMAP.md`. Consult it instead of listing directories.
 

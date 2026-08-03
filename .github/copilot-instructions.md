@@ -1,102 +1,40 @@
-## GitHub Copilot / AI Instructions for Fusion Framework
+# Copilot instructions — Fusion Framework
 
-### Project context
+Full agent guide: [`AGENTS.md`](../AGENTS.md). Repository map: [`CODEMAP.md`](../CODEMAP.md).
 
-Fusion Framework is a **TypeScript monorepo** for building modular enterprise applications.
+This file carries only what must apply to **every** request. Everything else lives in
+`.github/instructions/*.md` and attaches automatically through its `applyTo` glob.
 
-- **Language**: Strict TypeScript (no `any` for new code)
-- **UI**: React (function components only)
-- **Tests**: Vitest
-- **Monorepo**: Multiple `packages/*` libraries with shared modules and utils
-- **Tooling**: `pnpm` only, Biome for lint/format, Changesets for versioning
+## Before you search
 
-Always assume you are working in a **library-style monorepo** where each package is a published artifact.
+Escalation order — stop as soon as you can act:
 
----
+1. `CODEMAP.md` — package map, task routing, commands
+2. Fusion MCP retrieval index (`fusion-framework`, `fusion-docs`, `eds`)
+3. Targeted `grep` on a path the code map gave you
+4. Workspace-wide semantic search
 
-### Instruction hierarchy
+Never start at step 4. Never repeat a search whose results you already have.
 
-When deciding which rules to follow, apply them in this order:
+## Non-negotiables
 
-1. **Most specific `.github/instructions/*.md` file whose `applyTo` matches the file you are editing**
-2. **Global code rules** from `code-generation.instructions.md` and `monorepo-structure.instructions.md`
-3. **Repository contributing docs** in `contributing/` (self-review, conventional commits, etc.)
+- **`pnpm` only.** Never `npm` or `yarn`.
+- **No `any`** in new TypeScript. Explicit return types on exported symbols.
+- **Scoped imports** (`@equinor/fusion-framework-*`). Never cross-package relative imports.
+  `workspace:^` belongs in `package.json`, never in source.
+- **TSDoc** on every exported function, class, and component — it is indexed for retrieval.
+- **React function components only**; loading and error states handled explicitly.
+- **Vitest**, co-located, covering happy path, error path, and async behavior.
+- **Changeset required** for any change to `packages/*` or `cookbooks/*`.
+- **Comments explain _why_**, never restate the code.
 
-If instructions ever conflict:
+## Reviewing a pull request
 
-- Prefer the **most specific file-based instruction** (for example, React + Testing rules for `*.test.tsx`).
-- Do **not** create new global rules in this file; instead, follow the relevant instruction file.
+Review **the diff**, not the repository. Rules:
+[`code-review.instructions.md`](instructions/code-review.instructions.md).
 
----
+## Rule precedence
 
-### Instruction files (single source of truth)
-
-Fusion Framework uses file-based AI instructions under `.github/instructions/`. These files are the **single source of truth** for how AI should generate code and handle workflows:
-
-- **Code generation** → `./.github/instructions/code-generation.instructions.md`  
-  TypeScript standards, TSDoc, error handling, import patterns, `pnpm` usage.
-- **Documentation** → `./.github/instructions/documentation.instructions.md`  
-  README, docs, and cookbook writing for developers and retrieval-driven code generation.
-- **Monorepo structure** → `./.github/instructions/monorepo-structure.instructions.md`  
-  Package layout, naming, cross-package imports, `workspace:^` dependencies.
-- **Changesets** → `./.github/instructions/changesets.instructions.md`  
-  When and how to create changesets, choose bump types, and write consumer-facing summaries.
-- **Workflow contributions** → `./.github/instructions/workflow-contribution.instructions.md`  
-  Cross-cutting rules for workflow-driven code changes, commits, validation, changesets, and pull requests.
-- **Skills** → `./.github/instructions/skills.instructions.md`  
-  How repository-local skills are handled as read-only catalog content during repo greenkeeping, with repo-owned `custom-*` overlays when needed.
-- **Testing** → `./.github/instructions/testing.instructions.md`  
-  Vitest patterns, mocking, coverage expectations, async/error testing.
-- **Pull requests** → `./.github/instructions/pull-requests.instructions.md`  
-  PR templates, commit conventions, review flow, and pre‑PR checks.
-- **React** → `./.github/instructions/react.instructions.md`  
-  Component, hook, provider, observable, and styling patterns for React.
-- **Dependabot PRs** → `./.github/instructions/dependabot-pr.instructions.md`  
-  **⚠️ MANDATORY**: When handling ANY Dependabot PR, you MUST read this entire instruction file first. It contains mandatory steps including posting comments using `gh pr comment -F <file>.md`. Do not skip steps.
-
-Each instruction file declares an `applyTo` glob so tools like Copilot/Cursor can automatically apply the right rules for the files you are editing.
-
----
-
-### Quick-start workflow for AI agents
-
-When you receive a task, follow this workflow:
-
-1. **Identify file type and location**
-   - `*.tsx` or React UI → follow **React Rules** (and **Testing Rules** for `*.test.tsx`).
-   - `packages/**` TypeScript code → follow **Monorepo Structure Rules** + **Code Generation Rules**.
-  - `README.md`, docs markdown, or cookbooks → follow **Documentation Rules**.
-   - `.changeset/*.md` → follow **Changeset Rules**.
-  - `.agents/skills/**` → follow **Skills Rules** and treat imported catalog entries as read-only unless the user explicitly asks to change them; prefer repo-owned `custom-*` overlays for local divergence.
-   - PR / changeset / Dependabot tasks → follow the corresponding instructions file.
-
-2. **Apply core global rules**
-  - Use **strict TypeScript** (no `any`), explicit return types, and **TSDoc for all public APIs and components**.
-  - Treat **TSDoc, READMEs, docs, and cookbooks as indexed retrieval assets** used by RAG and code-generation workflows. Write them for developer clarity and semantic recall.
-   - Use **scoped imports** like `@equinor/fusion-framework-*`, never relative imports between packages.
-   - Use **`pnpm` only** for scripts and dependencies; never `npm` or `yarn`.
-
-3. **Generate or edit code**
-   - Prefer **small, focused functions**, descriptive names, and clear error messages.
-   - Add **inline comments** only for non-obvious logic, assumptions, or workarounds.
-   - For React, use **function components only**, handle **loading and error states explicitly**, and follow patterns in `react.instructions.md`.
-
-4. **Consider changesets and PR impact**
-   - If a change affects a published package or documentation, **follow Changeset Rules**.
-  - If a workflow or prompt will create commits, changesets, or PRs, **follow Workflow Contribution Rules**.
-   - When preparing a PR, follow **Pull Request Rules** and conventional commits.
-
----
-
-### Core principles (summary)
-
-- **Readability and maintainability first**: Prefer simple, obvious solutions over cleverness; follow `code-generation.instructions.md`.
-- **Strict TypeScript + TSDoc**: All exported functions, classes, and components must be well-typed and documented.
-- **Documentation is retrieval infrastructure**: TSDoc, READMEs, docs, and cookbooks are indexed for retrieval and code generation, so optimize for human clarity and semantic hit rate.
-- **React function components only**: No class components; handle loading and error states; follow `react.instructions.md`.
-- **Tests with Vitest**: Co-locate tests, cover success, error, and async behavior; follow `testing.instructions.md`.
-- **Monorepo discipline**: Treat each `packages/*` project as a versioned library; obey naming and import rules in `monorepo-structure.instructions.md`.
-- **Tooling compliance**: Use `pnpm`, Biome, Changesets, and the PR template for consumer-facing changes.
-
-When in doubt, **prefer looking up and following the relevant `.github/instructions/*.md` file rather than adding new rules here**.
+The most specific `applyTo` wins. Do not add new global rules to this file — put them in
+the matching instruction file, and update [`AGENTS.md`](../AGENTS.md) if routing changes.
 

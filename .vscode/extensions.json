@@ -1,0 +1,12 @@
+{
+  "recommendations": [
+    "biomejs.biome",
+    "equinor-fusion.fusion-ts-lint-vscode",
+    "github.copilot",
+    "github.copilot-chat",
+    "vitest.explorer",
+    "github.vscode-github-actions",
+    "streetsidesoftware.code-spell-checker"
+  ],
+  "unwantedRecommendations": ["dbaeumer.vscode-eslint", "esbenp.prettier-vscode"]
+}
