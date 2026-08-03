@@ -193,12 +193,19 @@ See [Server-Sent Events](docs/server-sent-events.md) for `sse$()` usage, event f
 
 Native fetch errors can still surface as well, including abort and network failures.
 
+## Testing
+
+Import from `@equinor/fusion-framework-module-http/mock` to answer requests from registered route handlers instead of the network, with adapters for `openapi-backend`-style handlers and `@equinor/fusion-openapi-mock`.
+
+See [Testing](docs/testing.md) for the middleware contract, `enableHttpMock`, and both adapters.
+
 ## Advanced Guides
 
 - [Client Configuration](docs/client-configuration.md): named clients, `configureHttpClient`, `configureHttp`, `onCreate`, custom client classes, and ad-hoc clients
 - [Observable Patterns](docs/observable-patterns.md): `fetch$`, `json$`, `request$`, `response$`, cancellation, and RxJS composition
 - [Selectors and Handlers](docs/selectors-and-handlers.md): `jsonSelector`, `blobSelector`, request handlers, response handlers, and built-in operators
 - [Server-Sent Events](docs/server-sent-events.md): `sse$`, `createSseSelector`, `sseMap`, event filtering, heartbeats, and abort behavior
+- [Testing](docs/testing.md): `enableHttpMock`, the middleware contract, and the `fromExpressStyleHandler`/`fromOpenApiMock` adapters
 
 ## Things To Remember
 
