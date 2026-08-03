@@ -6,10 +6,8 @@ name: Copilot setup steps
 
 on:
   # Validate this file whenever it changes, so a broken setup is caught here
-  # rather than silently degrading every Copilot session.
-  push:
-    paths:
-      - .github/workflows/copilot-setup-steps.yml
+  # rather than silently degrading every Copilot session. `pull_request` only —
+  # adding `push` double-runs the job for same-repo branches.
   pull_request:
     paths:
       - .github/workflows/copilot-setup-steps.yml
