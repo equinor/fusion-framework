@@ -16,6 +16,10 @@
     "./v4": {
       "import": "./dist/esm/v4/index.js",
       "types": "./dist/types/v4/index.d.ts"
+    },
+    "./mock": {
+      "import": "./dist/esm/mock/index.js",
+      "types": "./dist/types/mock/index.d.ts"
     }
   },
   "typesVersions": {
@@ -28,6 +32,9 @@
       ],
       "v4": [
         "dist/types/v4/index.d.ts"
+      ],
+      "mock": [
+        "dist/types/mock/index.d.ts"
       ]
     }
   },
