@@ -30,12 +30,12 @@ export type DotPath<TObject, Depth extends any[] = [1, 2, 3, 4, 5]> = Depth exte
       TObject extends any[]
       ? `${number}` | `${number}.${DotPath<TObject[number], Rest>}`
       : {
-          [Key in keyof Required<TObject> & string]: TObject[Key] extends object
-            ?
-                | `${Key}`
-                | (TObject[Key] extends null | undefined
-                    ? never
-                    : `${Key}.${DotPath<NonNullable<TObject[Key]>, Rest>}`)
+          // `NonNullable` because an optional property is `T | undefined`, which
+          // does not extend `object` — without it, nothing under an optional
+          // branch of a configuration is reachable. `DotPathType` already
+          // resolves such paths, so the two agree only when this does too.
+          [Key in keyof Required<TObject> & string]: NonNullable<TObject[Key]> extends object
+            ? `${Key}` | `${Key}.${DotPath<NonNullable<TObject[Key]>, Rest>}`
             : `${Key}`;
         }[keyof Required<TObject> & string]
     : never
