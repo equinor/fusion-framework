@@ -94,6 +94,35 @@ The framework ships with the following modules enabled by default:
 - **`@equinor/fusion-framework-module-context`** — application / project context selection
 - **`@equinor/fusion-framework-module-telemetry`** — telemetry, logging, and metadata
 
+## Testing
+
+Import from `@equinor/fusion-framework/mock` to initialize the framework in a test without credentials, without network access and without configuration.
+
+```typescript
+import { mockFramework } from '@equinor/fusion-framework/mock';
+
+const fusion = await mockFramework((configurator) => {
+  configurator.msal.setAccount({ name: 'Ada Lovelace' });
+  configurator.serviceDiscovery.setBaseUri('http://localhost:6669');
+});
+
+const token = await fusion.modules.auth.acquireAccessToken();
+const apps = await fusion.modules.serviceDiscovery.resolveService('apps');
+```
+
+The **real** configure → initialize pipeline runs with the **real** built-in modules; only the boundaries that leave the process — the MSAL client and the service discovery client — are substituted. Module wiring, configuration validation and lifecycle hooks therefore behave as they do in production, so a test still catches wiring mistakes.
+
+The entry point has **no test-runner dependency**, and ships no mocking API of its own — spying on an individual call is your test runner's job.
+
+## Documentation
+
+| Guide | Covers |
+| --- | --- |
+| [Testing](./docs/testing.md) | Choosing the user, signed-out tests, composing the service registry, spying, and configuring as an application does |
+| [Testing — design](./docs/testing-design.md) | What is substituted and why, where mocks live, determinism, and test-runner support |
+| [Testing — adding a mock for another module](./docs/testing-extending.md) | Giving your own module a test double, and which framework modules are not covered yet |
+| [Testing — API](./docs/testing-api.md) | Every mock export and the package that owns it |
+
 ## Further reading
 
 📚 [Full documentation](https://equinor.github.io/fusion-framework/)
