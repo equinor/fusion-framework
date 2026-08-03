@@ -113,7 +113,10 @@ packages/linting/cli/bin/fusion-lint
 # TernJS port file
 .tern-port
 
-.vscode
+# Personal editor state stays local, but shared extension recommendations ship.
+# Requires `.vscode/*` rather than `.vscode` so git descends far enough to see the negation.
+.vscode/*
+!.vscode/extensions.json
 .idea/
 
 tmp/

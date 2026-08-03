@@ -11,75 +11,39 @@ applyTo: "**/*.{tsx,jsx}"
 - **Components**: Function components only, no `any`, always add TSDoc for components and props. User-facing components must include `@example`.
 - **Hooks**: Prefix with `use`, return objects/tuples, and document intent, params, returns, generics, errors, and usage for user-facing hooks.
 - **State & UX**: Resolve decision logic, transforms, and derived values before markup. JSX should render prepared values, and loading/error states should use early returns.
-- **Imports**: Use scoped framework imports (e.g. `@equinor/fusion-framework-react-*`), never cross-package relative imports.
 - **Styling**: Use `styled-components` with a `Styled` object and descriptive names.
-- **Testing**: Use Vitest + React Testing Library; also follow `testing.instructions.md` for general testing rules.
 
 ## Component Patterns
 
-### Function Components Only
-- **ALWAYS** use function components (never class components)
-- Use arrow functions or function declarations
-- Export components as named exports
-- Move business logic, data transforms, and non-trivial decisions out of markup and into named values or helpers before `return`
+### Components And Props
 
-```typescript
-/**
- * User profile component that displays user information and settings
- * @param user - The user object containing profile data
- * @param onUpdate - Callback function called when user updates their profile
- * @param isLoading - Whether the component is in a loading state
- */
-export function UserProfile({
-  user,
-  onUpdate,
-  isLoading
-}: UserProfileProps) {
-  // implementation
-}
-```
-
-### Component Props
-- Define props using TypeScript interfaces (prefer `interface` over `type`)
-- Use `PropsWithChildren` from React when component accepts children
-- Destructure props in function signature
-- Provide default values using default parameters
+- Function components only, exported as named exports. No class components.
+- Props as a TypeScript `interface`, destructured in the signature, defaults via default
+  parameters. Use `PropsWithChildren` when the component accepts children.
+- Every component needs TSDoc covering its intent, its usage context, and each prop.
+  User-facing or complex components also need `@example`.
 
 ### Intent Before Markup
-- Resolve filters, maps, reduces, labels, flags, and handler composition before JSX
-- Keep JSX focused on composition and simple presentational branching
-- If a render path needs non-trivial `map`, `filter`, `reduce`, or conditional logic, move it into a named value or helper first
-- Prefer early returns for loading, error, empty, and access-denied states
 
-```typescript
-import type { PropsWithChildren } from 'react';
+`fusion-lint` enforces this, and it is the rule most often missed:
 
-interface UserProfileProps {
-  user: User;
-  onUpdate: (user: User) => void;
-  isLoading?: boolean;
-}
-
-export function UserProfile({ user, onUpdate, isLoading = false }: UserProfileProps) {
-  // implementation
-}
-```
-
-### TSDoc for Components
-**ALL components MUST have TSDoc comments** describing:
-- The component's primary intent and usage context
-- Each prop parameter
-- Return value (if applicable)
-- `@example` for user-facing or complex components
+- Resolve filters, maps, reduces, labels, flags, and handler composition *before* the `return`.
+- JSX renders prepared values and simple presentational branching — nothing else.
+- Use early returns for loading, error, empty, and access-denied states.
 
 ```typescript
 /**
- * Bookmark component that displays and manages user bookmarks
- * @param groupBy - Grouping mode for bookmarks ('date' | 'category' | 'none')
- * @param onBookmarkClick - Callback when bookmark is clicked
+ * Displays a user's profile and lets them edit it.
+ * @param user - Profile data to render.
+ * @param onUpdate - Called with the edited user when the form is submitted.
+ * @param isLoading - Renders the loading state instead of the form.
  */
-export function Bookmark({ groupBy, onBookmarkClick }: BookmarkProps) {
-  // implementation
+export function UserProfile({ user, onUpdate, isLoading = false }: UserProfileProps) {
+  if (isLoading) return <Loading />;
+
+  const displayName = formatDisplayName(user);
+
+  return <ProfileForm name={displayName} onSubmit={onUpdate} />;
 }
 ```
 
@@ -114,35 +78,16 @@ export function useAppModule<TType extends AnyModule, TKey extends string>(
 ```
 
 ### Framework Hooks
-- Use `useFramework` from `@equinor/fusion-framework-react` to access framework
-- Use `useModule` from `@equinor/fusion-framework-react-module` to access modules
-- Use `useAppModule` from `@equinor/fusion-framework-react-app` for app-scoped modules
 
-```typescript
-import { useFramework } from '@equinor/fusion-framework-react';
-import { useModule } from '@equinor/fusion-framework-react-module';
-import { useAppModule } from '@equinor/fusion-framework-react-app';
-
-export function MyComponent() {
-  const framework = useFramework();
-  const httpModule = useModule('http');
-  const appModule = useAppModule('my-module');
-  // ...
-}
-```
+- `useFramework` from `@equinor/fusion-framework-react` — the framework instance
+- `useModule` from `@equinor/fusion-framework-react-module` — a configured module
+- `useAppModule` from `@equinor/fusion-framework-react-app` — an app-scoped module
 
 ### Hook Dependencies
-- Always include all dependencies in dependency arrays
-- Use `useMemo` and `useCallback` to prevent unnecessary re-renders
-- Document why dependencies are excluded if using `biome-ignore`
+
+Dependency arrays are exhaustive. When one deliberately is not, say why:
 
 ```typescript
-// ✅ Good: All dependencies included
-useEffect(() => {
-  // effect
-}, [dependency1, dependency2]);
-
-// ✅ Good: Documented exclusion
 // biome-ignore lint/correctness/useExhaustiveDependencies: should dispose when new instance is provided
 useEffect(() => dispose, [instance]);
 ```
@@ -155,8 +100,7 @@ useEffect(() => dispose, [instance]);
 - Wrap lazy providers in `Suspense` with fallback
 
 ```typescript
-import { lazy } from 'react';
-import { Suspense } from 'react';
+import { lazy, Suspense } from 'react';
 
 export const createModuleProvider = async (configurator, modules) => {
   const Component = lazy(async () => {
@@ -234,36 +178,10 @@ export function BookmarkComponent() {
 
 ## State Management
 
-### Local State
-- Use `useState` for simple local state
-- Use `useReducer` for complex state logic
-- Prefer derived state over storing redundant state
-
-### Loading States
-- Always handle loading states explicitly
-- Show loading indicators during async operations
-- Handle error states appropriately
-
-```typescript
-export function DataComponent() {
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
-  const [data, setData] = useState<Data | null>(null);
-
-  useEffect(() => {
-    fetchData()
-      .then(setData)
-      .catch(setError)
-      .finally(() => setIsLoading(false));
-  }, []);
-
-  if (isLoading) return <Loading />;
-  if (error) return <ErrorDisplay error={error} />;
-  if (!data) return <NoData />;
-
-  return <DataDisplay data={data} />;
-}
-```
+- `useState` for simple state, `useReducer` for complex transitions, derived values over
+  redundant stored state.
+- Loading and error states are never implicit. Resolve them with early returns before
+  rendering content.
 
 ## Styling
 
@@ -302,57 +220,17 @@ export function Component() {
 
 ## Error Handling
 
-### Error Boundaries
-- Use error boundaries for component tree error handling
-- Provide fallback UI for errors
-- Log errors appropriately
-
-### Hook Error Handling
-- Throw errors from hooks when required context is missing
-- Provide clear error messages
-- Use error boundaries to catch hook errors
-
-```typescript
-export function useModule<T>(key: string): T {
-  const modules = useModules();
-  const module = modules[key];
-  if (!module) {
-    throw Error(`the requested module [${key}] is not included in the app scope`);
-  }
-  return module;
-}
-```
+- Hooks that require context throw when it is missing, with a message naming the missing
+  provider or module. The `useModules` example above is the canonical shape.
+- Wrap component trees in an error boundary with a fallback UI.
 
 ## Performance
 
-### Memoization
-- Use `useMemo` for expensive computations
-- Use `useCallback` for stable function references
-- Avoid premature optimization
-
-```typescript
-const expensiveValue = useMemo(() => {
-  return computeExpensiveValue(dependency);
-}, [dependency]);
-
-const stableCallback = useCallback((value: string) => {
-  handleValue(value);
-}, [/* dependencies */]);
-```
-
-### Component Optimization
-- Use `React.memo` for components that re-render frequently
-- Only optimize when performance issues are identified
-- Profile before optimizing
+- `useMemo` for expensive computations, `useCallback` for references passed to memoized children.
+- Reach for `React.memo` only after profiling shows a real problem.
 
 ## Import Patterns
 
-### React Imports
-- Import React types explicitly: `import type { ReactNode, PropsWithChildren } from 'react'`
-- Use named imports for hooks: `import { useState, useEffect, useMemo } from 'react'`
-- Import `lazy` and `Suspense` when needed
-
-### Framework Imports
 ```typescript
 // Framework
 import { useFramework } from '@equinor/fusion-framework-react';
@@ -367,71 +245,8 @@ import { useAppModule } from '@equinor/fusion-framework-react-app';
 import { useObservableState } from '@equinor/fusion-observable/react';
 ```
 
-## Testing React Components
+## Testing
 
-- Test component rendering and user interactions
-- Mock framework hooks and providers
-- Test error states and loading states
-- Use React Testing Library patterns
-
-```typescript
-import { render, screen } from '@testing-library/react';
-import { describe, it, expect, vi } from 'vitest';
-
-vi.mock('@equinor/fusion-framework-react', () => ({
-  useFramework: vi.fn(),
-}));
-
-describe('Component', () => {
-  it('should render correctly', () => {
-    render(<Component />);
-    expect(screen.getByText('Expected Text')).toBeInTheDocument();
-  });
-});
-```
-
-## Common Patterns
-
-### Conditional Rendering
-```typescript
-// ✅ Good: Clear conditional rendering
-{isLoading ? <Loading /> : <Content data={data} />}
-
-// ✅ Good: Early returns for loading/error states
-if (isLoading) return <Loading />;
-if (error) return <ErrorDisplay error={error} />;
-return <Content data={data} />;
-```
-
-### Lists and Keys
-```typescript
-{items.map((item) => (
-  <ItemComponent key={item.id} item={item} />
-))}
-```
-
-### Event Handlers
-```typescript
-// ✅ Good: Inline handlers for simple cases
-<button onClick={() => handleClick(id)}>Click</button>
-
-// ✅ Good: useCallback for complex handlers
-const handleClick = useCallback((id: string) => {
-  // complex logic
-}, [dependencies]);
-
-<button onClick={() => handleClick(id)}>Click</button>
-```
-
-## Never Do
-
-- ❌ Use class components
-- ❌ Use `any` type for props
-- ❌ Skip TSDoc comments for components
-- ❌ Create components without proper TypeScript types
-- ❌ Use relative imports for framework packages
-- ❌ Forget to handle loading and error states
-- ❌ Create hooks without `use` prefix
-- ❌ Use `useEffect` without dependency array
-- ❌ Mutate state directly (always use setState)
+Vitest plus React Testing Library. Mock framework hooks and providers, and cover the loading
+and error branches — see `testing.instructions.md`.
 

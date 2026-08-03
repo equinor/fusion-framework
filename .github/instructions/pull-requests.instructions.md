@@ -7,7 +7,7 @@ name: Pull Request Rules
 
 ## TL;DR (for AI agents)
 
-- **Before PR**: Ensure `pnpm test && pnpm build && pnpm -w check` pass, changesets exist for consumer-facing or docs changes, and intent-focused docs/TSDoc/comments are updated.
+- **Before PR**: Ensure `pnpm test && pnpm build && pnpm lint` pass, changesets exist for consumer-facing or docs changes, and intent-focused docs/TSDoc/comments are updated.
 - **Template**: Always use `.github/PULL_REQUEST_TEMPLATE.md`; fill all sections, describe current vs. new behavior, and clearly call out breaking changes.
 - **Commits**: Use Conventional Commits for titles and commit messages (e.g. `feat(module-http): add retry logic`).
 - **Content**: Do not list changed files in the PR body (GitHub already shows them); focus on motivation, intent, behavior changes, invariants, and risk/impact.
@@ -17,7 +17,7 @@ name: Pull Request Rules
 ## PR Creation
 
 ### Before Creating PR
-- [ ] All local checks pass: `pnpm test && pnpm build && pnpm -w check`
+- [ ] All local checks pass: `pnpm test && pnpm build && pnpm lint`
 - [ ] Changeset created if change affects consumers
 - [ ] Code follows project standards
 - [ ] Tests written and passing

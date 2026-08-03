@@ -1,0 +1,39 @@
+name: Copilot setup steps
+
+# Pre-provisions the Copilot coding agent's ephemeral environment so an assigned
+# issue does not spend its session on `pnpm install` and a cold package build.
+# The job name MUST stay `copilot-setup-steps` — GitHub matches it by name.
+
+on:
+  # Validate this file whenever it changes, so a broken setup is caught here
+  # rather than silently degrading every Copilot session.
+  push:
+    paths:
+      - .github/workflows/copilot-setup-steps.yml
+  pull_request:
+    paths:
+      - .github/workflows/copilot-setup-steps.yml
+  workflow_dispatch:
+
+jobs:
+  copilot-setup-steps:
+    name: Prepare Fusion Framework workspace
+    runs-on: ubuntu-latest
+    # Copilot supplies its own token for repository access; this job only reads code.
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Setup node and install deps
+        uses: ./.github/actions/node-setup
+
+      # Cross-package type resolution relies on built `dist` output. Without this,
+      # the agent's first `tsc`/`vitest` run fails on unresolved workspace imports.
+      - name: Build packages
+        run: pnpm build:packages
+
+      # `fusion-lint` runs from built dist, not source — build it up front so the
+      # agent can lint its own changes without discovering this dependency first.
+      - name: Build lint tooling
+        run: pnpm build:lint

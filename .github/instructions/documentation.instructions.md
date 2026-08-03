@@ -1,7 +1,7 @@
 ---
 description: Rules for writing repository documentation used by developers and retrieval-driven code generation
 name: Documentation Rules
-applyTo: "**/*.md"
+applyTo: "packages/**/*.md, cookbooks/**/*.md, vue-press/**/*.md, eds-content/**/*.md, README.md"
 ---
 
 # Documentation Rules
@@ -17,12 +17,9 @@ applyTo: "**/*.md"
 
 ## Scope
 
-These rules matter most for:
-
-- package `README.md` files
-- published docs under docs-style folders
-- cookbooks and task guides
-- consumer-facing markdown that will be indexed and reused by code-generation workflows
+These rules apply to consumer-facing markdown only — package `README.md` files, published
+docs, and cookbooks. They deliberately do **not** apply to repo-internal markdown such as
+changesets, agent instructions, or contributor notes.
 
 In this repository, all of the following are treated as retrieval assets:
 

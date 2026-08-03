@@ -8,45 +8,11 @@ name: Workflow Contribution Rules
 ## TL;DR (for AI agents)
 
 - Use these rules when a workflow, prompt, or automation step can change code, create commits, write changesets, or open or update pull requests.
-- Apply the matching repository instruction files for the files being changed.
+- Apply the matching repository instruction files for the files being changed — see the routing table in `AGENTS.md`.
 - Use Conventional Commits.
 - Make an explicit changeset decision.
-- Run targeted checks first, then `pnpm test && pnpm build && pnpm -w check` unless repository context or maintainer guidance explicitly narrows the required set.
+- Run targeted checks first, then `pnpm test && pnpm build && pnpm lint` unless repository context or maintainer guidance explicitly narrows the required set.
 - Use `.github/PULL_REQUEST_TEMPLATE.md` and open pull requests as draft first.
-
-## Source of truth
-
-These files remain authoritative. Workflow documents should point to them instead of rephrasing them independently:
-
-- `.github/instructions/code-generation.instructions.md`
-- `.github/instructions/monorepo-structure.instructions.md`
-- `.github/instructions/react.instructions.md`
-- `.github/instructions/testing.instructions.md`
-- `.github/instructions/changesets.instructions.md`
-- `.github/instructions/pull-requests.instructions.md`
-
-## Apply the matching repository rules
-
-- `**/*.{ts,tsx}` -> code generation rules
-- `packages/**/*.{ts,tsx,json}` -> monorepo structure rules
-- `**/*.{tsx,jsx}` -> React rules
-- `**/*.{test,spec}.{ts,tsx}` -> testing rules
-- `.changeset/**/*.md` -> changeset rules
-
-## Implementation guardrails
-
-- No `any` in new code.
-- Add explicit return types for exported APIs.
-- Add TSDoc to exported functions, classes, and components.
-- Use `node:` built-ins and scoped package imports.
-- Never use cross-package relative imports or `workspace:` protocols in source code.
-- React changes must use function components and explicit loading and error handling.
-- New public behavior should get happy-path and error or edge-case coverage.
-
-## Commit rules
-
-- Use Conventional Commit messages.
-- Keep commits focused and traceable to one change or reviewer concern when practical.
 
 ## Changeset decision
 
@@ -60,7 +26,7 @@ These files remain authoritative. Workflow documents should point to them instea
 ## Validation contract
 
 - Run targeted checks first.
-- Before PR-ready handoff or re-review, run `pnpm test && pnpm build && pnpm -w check` unless the repository context or maintainer explicitly narrows the required set.
+- Before PR-ready handoff or re-review, run `pnpm test && pnpm build && pnpm lint` unless the repository context or maintainer explicitly narrows the required set.
 - If the validation set is narrowed, report exactly what ran and what was skipped.
 
 ## Pull request contract

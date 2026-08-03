@@ -8,25 +8,21 @@ applyTo: "**/*.{ts,tsx}"
 
 ## TL;DR (for AI agents)
 
-- **Types**: No `any` for new code; explicit return types for all exported functions; prefer `interface` for object shapes.
-- **Docs**: Every declared function/class/component and named arrow function must have TSDoc that captures intent. Treat TSDoc as part of the repository retrieval corpus used for RAG and code generation. Include `@param` for every parameter, `@returns` for non-void functions, `@template` for generics, `@throws` for thrown errors, and `@example` for user-facing APIs.
+The global non-negotiables (no `any`, explicit return types, scoped imports, `pnpm`) live in
+`.github/copilot-instructions.md`. This file covers what is specific to writing TypeScript here:
+
+- **Docs**: Every declared function, class, component, and named arrow function needs TSDoc that captures intent. TSDoc is indexed for retrieval, so write it for semantic search as well as for humans. Include `@param` for every parameter, `@returns` for non-void functions, `@template` for generics, `@throws` for thrown errors, and `@example` for user-facing APIs.
 - **Errors**: Throw clear, contextual error messages; never silently swallow failures.
-- **Imports**: Use scoped imports and `node:` protocol for Node built-ins; never use `workspace:` or cross-package relative imports.
 - **Comments**: Add inline intent comments for iterator blocks, decision gates, RxJS operator chains, assumptions, and workarounds. Explain why the block exists, not what the syntax does.
-- **Tooling**: Use `pnpm` for all commands and `workspace:^` for monorepo dependencies; follow `monorepo-structure.instructions.md` for package layout/imports.
+- **Node built-ins**: Always use the `node:` protocol (`node:fs`, `node:path`).
+- **Filenames**: One value export per file, named to match. See below.
 
 ## Core Principles
 
 ### Readability First
 - Write clear, self-explanatory code over clever optimizations
 - Prefer names and structure that communicate intent, but do not omit comments when control-flow or data-flow intent would otherwise be lost
-- Prioritize maintainability and clarity
-
-### TypeScript Standards
-- Use strict type checking (no `any`, use proper types)
-- Prefer interfaces over types for object shapes
-- Use explicit return types for public functions
-- Always use `node:` protocol for Node.js built-ins (e.g., `node:fs`, `node:path`)
+- Prefer `interface` over `type` for object shapes
 
 ### TSDoc Requirements
 **ALL declared functions, named arrow functions, classes, hooks, and components MUST have TSDoc comments.**
@@ -94,30 +90,6 @@ if (!existsSync(filePath)) {
 }
 ```
 
-### Import Patterns
-- Always use scoped package names: `@equinor/fusion-framework`
-- Use specific named imports when possible
-- Import types explicitly: `import type { Config } from '...'`
-- Never use relative imports for monorepo packages
-- Never use `workspace:` protocol in source code
-
-### React Components
-- Use function components (no class components)
-- Add TSDoc comments for all component props
-- Use proper TypeScript types for props
-- Resolve decision logic and data transforms before JSX so markup renders prepared values
-- Handle loading and error states explicitly
-
-### Testing Requirements
-- Test error scenarios and edge cases
-- Mock external dependencies in unit tests
-- Use Vitest for all tests
-
-### Package Manager
-- **ALWAYS use `pnpm`** - never `npm` or `yarn`
-- Use `workspace:^` for monorepo dependencies
-- Run commands: `pnpm install`, `pnpm build`, `pnpm test`
-
 ### Inline Comments
 Add intent comments for:
 - Iterator blocks such as `for`, `forEach`, `map`, `filter`, and `reduce`
@@ -130,39 +102,25 @@ Do NOT add comments for:
 - What the syntax does or what a variable name already says
 - Redundant information already in TSDoc
 
-`fusion-lint`'s `require-intent-comment` checks each control-flow node for an immediately preceding comment (`previousNamedSibling?.type === "comment"`). This means:
-- **Each iterator/`.pipe()` call in a chain needs its own comment**, not just the first one: `.filter().map()` needs a comment before `.filter(` AND before `.map(`.
-- **Each sibling `if` in a row needs its own comment.** A comment before the first of several back-to-back guard clauses does not cover the second/third — their `previousNamedSibling` is the prior `if`, not the comment.
-- When an iterator/`.pipe()` call is itself an argument to another call (e.g. `expect(arr.map(...))`), place the comment as the first line inside the outer call's parens — do not break the chain.
-- When an iterator/`.pipe()` call is nested two levels deep (e.g. `lastValueFrom(x.pipe(...))`, or inside a ternary branch), hoist the inner expression into its own `const` first, then use the broken-chain comment style (`value\n  // why\n  .pipe(...)`) or place the comment above the new `const`.
-- `return arr.map(...)` can never be satisfied by a comment above the `return` — always hoist or break the chain.
-- `as unknown as Foo` double-casts require a preceding comment explaining *why* the cast is needed; this is `error` severity, not `warn`.
+`fusion-lint`'s `require-intent-comment` checks each control-flow node for an *immediately
+preceding* comment, so placement is structural rather than visual:
 
-#### RxJS `.pipe()` comment placement (preferred style)
+- Every iterator or `.pipe()` call in a chain needs its own comment — `.filter().map()` needs two.
+- Every sibling `if` in a row needs its own comment.
+- `as unknown as Foo` double-casts need a comment explaining *why*. This one is `error` severity.
 
-For `.pipe()` specifically (`require-intent-comment/rxjs`), prefer placing the comment **above the whole enclosing statement** with `receiver.pipe(...)` kept unsplit on one line, rather than splitting the chain to put the comment right before `.pipe(`:
+Two placements are recognised: above the enclosing statement, or inline between the receiver
+and the call. Prefer above-the-statement for short receivers, inline when the receiver spans
+multiple lines so the comment stays next to what it explains:
 
 ```typescript
 // unwrap the query result value
 return this.#query.query(args).pipe(map((res) => res.value));
 ```
 
-This works when the comment sits directly above a `return` statement, a `const`/`let` declaration, or a concise arrow-function body — the rule climbs up to that anchor. It does **not** work when the `.pipe()` call is itself an argument to another call (e.g. `subscriber.add(x.pipe(...))`, `this.#subscription.add(x.pipe(...))`) or is inside a ternary branch — those require the inline chain-split style below.
-
-**Exception — keep the comment close when the receiver is long:** if the receiver expression spans multiple lines before `.pipe(` (e.g. a multi-line `.json$(url, { method, body, headers })` call), do NOT hoist the comment to the top of the statement — it ends up far from the `.pipe()` it explains. Keep the inline chain-split style instead:
-
-```typescript
-return this.#client
-  .json$<AppSettings>(`/persons/me/apps/${appKey}/settings`, {
-    method: 'PUT',
-    body: settings,
-    headers: { 'Api-Version': '1.0' },
-  })
-  // update the settings cache with the persisted value
-  .pipe(tap((value) => { /* ... */ }));
-```
-
-Rule of thumb: comment-above-statement (unsplit) for short/single-line receivers; inline chain-split (comment immediately before `.pipe(`) for long/multi-line receivers, so the comment stays adjacent to what it documents.
+When a diagnostic resists an obvious fix — nested calls, ternary branches, JSX expression
+containers, spread elements — see `contributing/fusion-lint.md` for the placements that
+actually anchor.
 
 ### TODO Comments
 Bare `// TODO - ...` comments are flagged by `no-todo-without-issue`. Every TODO must reference a tracking GitHub issue: `// TODO(#123): ...`. Never fabricate an issue number — create the issue first if one doesn't exist.
