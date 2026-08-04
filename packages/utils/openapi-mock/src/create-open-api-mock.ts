@@ -3,6 +3,8 @@ import { dereferenceSchema } from './dereference-schema';
 import { generateMockFromSchema } from './generate-mock-from-schema';
 
 import type {
+  FieldFakerFn,
+  FieldFakerMap,
   OpenApiDocumentLike,
   OpenApiMock,
   OpenApiMockOptions,
@@ -49,10 +51,7 @@ function compilePath(pathTemplate: string): { pattern: RegExp; paramNames: strin
 }
 
 /** Reads the response body schema (if any) declared for `code` in `responses`. */
-function schemaForCode(
-  responses: Record<string, unknown>,
-  code: string,
-): unknown {
+function schemaForCode(responses: Record<string, unknown>, code: string): unknown {
   const response = responses[code] as Record<string, unknown> | undefined;
   const content = response?.content as Record<string, unknown> | undefined;
   const media = content?.['application/json'] as Record<string, unknown> | undefined;
@@ -108,7 +107,14 @@ function buildOperationEntry(
   const { status, schema } = pickSuccessResponse(
     operation?.responses as Record<string, unknown> | undefined,
   );
-  return { method: method.toUpperCase(), operationId, paramNames, pattern, responseSchema: schema, status };
+  return {
+    method: method.toUpperCase(),
+    operationId,
+    paramNames,
+    pattern,
+    responseSchema: schema,
+    status,
+  };
 }
 
 /**
@@ -127,11 +133,13 @@ function buildOperations(document: OpenApiDocumentLike): OperationEntry[] {
     // Each path template expands into up to one entry per routable HTTP method.
     .flatMap(([pathTemplate, pathItem]) => {
       const { pattern, paramNames } = compilePath(pathTemplate);
-      return ROUTABLE_METHODS
-        // Build only the methods this path item actually declares an operation for.
-        .map((method) => buildOperationEntry(pathItem, method, pattern, paramNames))
-        // Drop the methods this path item did not declare an operation for.
-        .filter((entry): entry is OperationEntry => entry !== undefined);
+      return (
+        ROUTABLE_METHODS
+          // Build only the methods this path item actually declares an operation for.
+          .map((method) => buildOperationEntry(pathItem, method, pattern, paramNames))
+          // Drop the methods this path item did not declare an operation for.
+          .filter((entry): entry is OperationEntry => entry !== undefined)
+      );
     });
   return entries.sort(bySpecificity);
 }
@@ -161,7 +169,25 @@ function matchOperation(
     .find((candidate): candidate is { entry: OperationEntry; match: RegExpExecArray } =>
       Boolean(candidate.match),
     );
-  return match && { entry: match.entry, params: paramsFromMatch(match.entry.paramNames, match.match) };
+  // No candidate's pattern matched this path at all.
+  if (!match) return undefined;
+  return { entry: match.entry, params: paramsFromMatch(match.entry.paramNames, match.match) };
+}
+
+/**
+ * Fakes `responseSchema`: field-annotating and dereferencing it against
+ * `fieldFakerMap` when the caller configured field overrides, otherwise
+ * just resolving its `$ref`s.
+ */
+function resolveResponseSchema(
+  responseSchema: unknown,
+  document: OpenApiDocumentLike,
+  fieldFakerMap: FieldFakerMap | undefined,
+): { schema: unknown; customFakers?: Record<string, FieldFakerFn> } {
+  // Field fakers additionally track which model/path each node was reached through,
+  // so the heavier walk only runs when the caller actually configured field overrides.
+  if (fieldFakerMap) return applyFieldFakers(responseSchema, document, fieldFakerMap);
+  return { schema: dereferenceSchema(responseSchema, document) };
 }
 
 /**
@@ -177,7 +203,9 @@ function resolveMatchedResponse(
 ): Promise<OpenApiMockResponse> {
   // No override registered for this operation: the generated baseline is the response as-is.
   if (!override) return fakeOperation(entry);
-  return Promise.resolve(override({ ...context, mockResponseForOperation: () => fakeOperation(entry) }));
+  return Promise.resolve(
+    override({ ...context, mockResponseForOperation: () => fakeOperation(entry) }),
+  );
 }
 
 /**
@@ -229,9 +257,12 @@ export function createOpenApiMock(
   async function fakeOperation(entry: OperationEntry): Promise<OpenApiMockResponse> {
     // Operations without a response schema still need their declared status represented.
     if (!entry.responseSchema) return { status: entry.status, mock: undefined };
-    const { schema, customFakers } = options.fields
-      ? applyFieldFakers(entry.responseSchema, document, options.fields)
-      : { schema: dereferenceSchema(entry.responseSchema, document), customFakers: undefined };
+
+    const { schema, customFakers } = resolveResponseSchema(
+      entry.responseSchema,
+      document,
+      options.fields,
+    );
     return {
       status: entry.status,
       mock: await generateMockFromSchema(schema, { seed: options.seed, customFakers }),
