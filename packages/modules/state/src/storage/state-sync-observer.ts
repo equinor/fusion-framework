@@ -2,7 +2,7 @@ import { fromEvent, merge, type Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import type { AllowedValue } from '../types.js';
 import type { StorageItem } from './types.js';
-import { StateSyncEvent, type StateSyncEventType } from 'src/events/index.js';
+import { StateSyncEvent, type StateSyncEventType } from '../events/index.js';
 
 /**
  * Observes PouchDB synchronization events and converts them into standardized state sync events.

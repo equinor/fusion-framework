@@ -6,7 +6,6 @@
     "outDir": "dist/esm",
     "rootDir": "src",
     "declarationDir": "./dist/types",
-    "baseUrl": ".",
     "paths": {
       "@equinor/fusion-framework-module-state/storage": ["./src/storage"]
     }

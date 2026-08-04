@@ -120,7 +120,7 @@ export const configureModules =
         detail: { appKey: args.env.manifest.appKey, manifest: args.env.manifest, modules },
       });
     }
+    return modules;
   };
-};
 
 export default configureModules;
