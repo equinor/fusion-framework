@@ -43,11 +43,18 @@ export async function fetchOpenApiDocument(
   const text = await response.text();
   // a strict JSON parse first, since YAML's looser grammar would otherwise silently accept
   // a malformed JSON document instead of surfacing the mistake
+  let parsed: unknown;
   try {
-    return JSON.parse(text) as OpenApiDocumentLike;
+    parsed = JSON.parse(text);
   } catch {
-    return parseYaml(text) as OpenApiDocumentLike;
+    parsed = parseYaml(text);
   }
+  // A valid OpenAPI document is always an object; a bare scalar/array is not one, however
+  // validly it parsed, and would otherwise surface as a confusing failure deep in createOpenApiMock.
+  if (parsed === null || typeof parsed !== 'object' || Array.isArray(parsed)) {
+    throw new Error(`Expected the document at ${url} to parse to an object, got ${typeof parsed}.`);
+  }
+  return parsed as OpenApiDocumentLike;
 }
 
 export default fetchOpenApiDocument;

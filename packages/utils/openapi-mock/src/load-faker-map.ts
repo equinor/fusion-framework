@@ -13,6 +13,27 @@ export interface LoadFakerMapOptions {
 }
 
 /**
+ * A `.yml`/`.yaml` sidecar can only hold {@link FakerPath} strings (no
+ * functions), so this rejects anything else with a message naming the file.
+ */
+function assertFieldFakerMap(value: unknown, path: string): FieldFakerMap {
+  // YAML can parse to a bare scalar or array, neither of which is a valid faker map.
+  if (value === null || typeof value !== 'object' || Array.isArray(value)) {
+    throw new Error(`Expected ${path} to parse to a plain object of faker-path strings.`);
+  }
+  // A .yml/.yaml sidecar can only express string paths, never a real function.
+  for (const [key, entry] of Object.entries(value)) {
+    // A non-string entry (number, boolean, nested object, ...) would break `applyFieldFakers` later.
+    if (typeof entry !== 'string') {
+      throw new Error(
+        `Expected ${path} field "${key}" to be a faker-path string, got ${typeof entry}.`,
+      );
+    }
+  }
+  return value as FieldFakerMap;
+}
+
+/**
  * Loads a {@link FieldFakerMap} sidecar file describing per-model faker
  * overrides, so a spec's own `openapi.json`/`.yaml` never has to be edited —
  * or even owned — just to steer how its models are faked.
@@ -59,7 +80,8 @@ export async function loadFakerMap(
   // YAML sidecars are parsed directly because they are data-only formats.
   if (extension === '.yml' || extension === '.yaml') {
     const path = isAbsolute(source) ? source : join(options.baseDir ?? process.cwd(), source);
-    return parseYaml(await readFile(path, 'utf-8'));
+    const parsed: unknown = parseYaml(await readFile(path, 'utf-8'));
+    return assertFieldFakerMap(parsed, path);
   }
 
   // .json, .ts, .js, .mjs (or no extension) resolve through `importConfig`'s own
@@ -69,5 +91,4 @@ export async function loadFakerMap(
   const { config } = await importConfig<FieldFakerMap>(basename, { baseDir: options.baseDir });
   return config;
 }
-
 export default loadFakerMap;

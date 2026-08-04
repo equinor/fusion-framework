@@ -1,3 +1,20 @@
+/** Walks a JSON pointer (`#/a/b/c`) against `document`, returning `undefined` if any segment is missing. */
+function resolvePointer(document: unknown, ref: string): unknown {
+  const segments = ref.slice(2).split('/');
+  // Decode each pointer segment before using it as an object key.
+  const path = segments.map((segment) =>
+    decodeURIComponent(segment.replace(/~1/g, '/').replace(/~0/g, '~')),
+  );
+  let current: unknown = document;
+  // Follow the pointer one segment at a time to locate the referenced value.
+  for (const segment of path) {
+    // Stop when a pointer walks into a scalar or null value.
+    if (current == null || typeof current !== 'object') return undefined;
+    current = (current as Record<string, unknown>)[segment];
+  }
+  return current;
+}
+
 /**
  * Resolves every `$ref` JSON pointer in `schema` against `document`,
  * replacing `{ $ref: '#/a/b' }` with the value it points to.
@@ -50,22 +67,4 @@ export function dereferenceSchema(
   }
   return schema;
 }
-
-/** Walks a JSON pointer (`#/a/b/c`) against `document`, returning `undefined` if any segment is missing. */
-function resolvePointer(document: unknown, ref: string): unknown {
-  const segments = ref.slice(2).split('/');
-  // Decode each pointer segment before using it as an object key.
-  const path = segments.map((segment) =>
-    decodeURIComponent(segment.replace(/~1/g, '/').replace(/~0/g, '~')),
-  );
-  let current: unknown = document;
-  // Follow the pointer one segment at a time to locate the referenced value.
-  for (const segment of path) {
-    // Stop when a pointer walks into a scalar or null value.
-    if (current == null || typeof current !== 'object') return undefined;
-    current = (current as Record<string, unknown>)[segment];
-  }
-  return current;
-}
-
 export default dereferenceSchema;

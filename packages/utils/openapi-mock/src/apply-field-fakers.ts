@@ -13,36 +13,10 @@ export interface ApplyFieldFakersResult {
 }
 
 /**
- * Dereferences `schema` the same way {@link dereferenceSchema} does, while
- * additionally tracking which named component schema (`$ref` target) and
- * field path each node was reached through, and annotating any node whose
- * `"<ModelName>.<field>"` key matches an entry in `fakerMap`.
- *
- * @remarks
- * Entering a `$ref` resets the tracked field path to `[]` under the ref's own
- * name — so a field is addressed as `"User.address.city"` only while
- * `address` is an inline (non-`$ref`) object nested directly under `User`;
- * once `address` is itself a named component schema (e.g. `Address`), its
- * fields are addressed as `"Address.city"` instead. Function-valued entries
- * cannot be inlined as a schema keyword directly, so each is assigned a
- * synthetic `__custom.<n>` key and collected into {@link ApplyFieldFakersResult.customFakers}
- * for the caller to merge into the faker facade at generation time.
- *
- * @param schema - The schema (or sub-schema) to dereference and annotate.
- * @param document - The full document `$ref` pointers are resolved against.
- * @param fakerMap - The field overrides to annotate matching nodes with.
- * @returns The annotated schema and function-valued faker overrides.
+ * Recursively dereferences `node`, tracking the named component schema
+ * (`modelName`) and field `path` each node was reached through so
+ * {@link annotate} can match it against `fakerMap`.
  */
-export function applyFieldFakers(
-  schema: unknown,
-  document: unknown,
-  fakerMap: FieldFakerMap,
-): ApplyFieldFakersResult {
-  const customFakers: Record<string, FieldFakerFn> = {};
-  const annotated = walk(schema, document, undefined, [], fakerMap, customFakers, new Set());
-  return { schema: annotated, customFakers };
-}
-
 function walk(
   node: unknown,
   document: unknown,
@@ -82,22 +56,14 @@ function walk(
   for (const [key, value] of Object.entries(record)) {
     // Properties need special handling to attach the matching faker annotation.
     if (key === 'properties' && properties && typeof properties === 'object') {
-      result[key] = Object.fromEntries(
-        Object.entries(properties as Record<string, unknown>)
-          // Keep each property's name in the path used to find its override.
-          .map(([propName, propSchema]) => {
-            const propPath = [...path, propName];
-            const walked = walk(
-              propSchema,
-              document,
-              modelName,
-              propPath,
-              fakerMap,
-              customFakers,
-              seen,
-            );
-            return [propName, annotate(walked, modelName, propPath, fakerMap, customFakers)];
-          }),
+      result[key] = walkProperties(
+        properties as Record<string, unknown>,
+        document,
+        modelName,
+        path,
+        fakerMap,
+        customFakers,
+        seen,
       );
       // Avoid traversing properties a second time through the generic branch.
       continue;
@@ -105,6 +71,27 @@ function walk(
     result[key] = walk(value, document, modelName, path, fakerMap, customFakers, seen);
   }
   return result;
+}
+
+/** Walks and annotates every entry of a schema's `properties` map, keying each by its own field path. */
+function walkProperties(
+  properties: Record<string, unknown>,
+  document: unknown,
+  modelName: string | undefined,
+  path: readonly string[],
+  fakerMap: FieldFakerMap,
+  customFakers: Record<string, FieldFakerFn>,
+  seen: ReadonlySet<string>,
+): Record<string, unknown> {
+  return Object.fromEntries(
+    Object.entries(properties)
+      // Keep each property's name in the path used to find its override.
+      .map(([propName, propSchema]) => {
+        const propPath = [...path, propName];
+        const walked = walk(propSchema, document, modelName, propPath, fakerMap, customFakers, seen);
+        return [propName, annotate(walked, modelName, propPath, fakerMap, customFakers)];
+      }),
+  );
 }
 
 /** Adds a `faker: "..."` keyword to `schema` if `"<modelName>.<path>"` matches an entry in `fakerMap`. */
@@ -150,4 +137,34 @@ function resolvePointer(document: unknown, ref: string): unknown {
   return current;
 }
 
+/**
+ * Dereferences `schema` the same way {@link dereferenceSchema} does, while
+ * additionally tracking which named component schema (`$ref` target) and
+ * field path each node was reached through, and annotating any node whose
+ * `"<ModelName>.<field>"` key matches an entry in `fakerMap`.
+ *
+ * @remarks
+ * Entering a `$ref` resets the tracked field path to `[]` under the ref's own
+ * name — so a field is addressed as `"User.address.city"` only while
+ * `address` is an inline (non-`$ref`) object nested directly under `User`;
+ * once `address` is itself a named component schema (e.g. `Address`), its
+ * fields are addressed as `"Address.city"` instead. Function-valued entries
+ * cannot be inlined as a schema keyword directly, so each is assigned a
+ * synthetic `__custom.<n>` key and collected into {@link ApplyFieldFakersResult.customFakers}
+ * for the caller to merge into the faker facade at generation time.
+ *
+ * @param schema - The schema (or sub-schema) to dereference and annotate.
+ * @param document - The full document `$ref` pointers are resolved against.
+ * @param fakerMap - The field overrides to annotate matching nodes with.
+ * @returns The annotated schema and function-valued faker overrides.
+ */
+export function applyFieldFakers(
+  schema: unknown,
+  document: unknown,
+  fakerMap: FieldFakerMap,
+): ApplyFieldFakersResult {
+  const customFakers: Record<string, FieldFakerFn> = {};
+  const annotated = walk(schema, document, undefined, [], fakerMap, customFakers, new Set());
+  return { schema: annotated, customFakers };
+}
 export default applyFieldFakers;
