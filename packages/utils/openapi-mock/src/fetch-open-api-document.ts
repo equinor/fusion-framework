@@ -13,6 +13,23 @@ export interface FetchOpenApiDocumentOptions {
 }
 
 /**
+ * Parses `text` as JSON, falling back to YAML.
+ *
+ * @remarks
+ * A strict JSON parse is tried first, since YAML's looser grammar would
+ * otherwise silently accept a malformed JSON document instead of surfacing
+ * the mistake.
+ */
+function parseDocumentText(text: string): unknown {
+  try {
+    return JSON.parse(text);
+  } catch {
+    // Not valid JSON: fall back to YAML, which is a superset grammar of JSON.
+    return parseYaml(text);
+  }
+}
+
+/**
  * Fetches and parses an OpenAPI document straight from wherever it's
  * published — JSON or YAML — so nothing needs downloading and committing to
  * the repository just to fake responses against it.
@@ -41,14 +58,7 @@ export async function fetchOpenApiDocument(
     );
   }
   const text = await response.text();
-  // a strict JSON parse first, since YAML's looser grammar would otherwise silently accept
-  // a malformed JSON document instead of surfacing the mistake
-  let parsed: unknown;
-  try {
-    parsed = JSON.parse(text);
-  } catch {
-    parsed = parseYaml(text);
-  }
+  const parsed = parseDocumentText(text);
   // A valid OpenAPI document is always an object; a bare scalar/array is not one, however
   // validly it parsed, and would otherwise surface as a confusing failure deep in createOpenApiMock.
   if (parsed === null || typeof parsed !== 'object' || Array.isArray(parsed)) {
