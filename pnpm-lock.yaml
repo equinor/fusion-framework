@@ -788,8 +788,8 @@ importers:
         specifier: workspace:^
         version: link:../../packages/modules/event
       '@equinor/fusion-framework-module-navigation':
-        specifier: ^5.0.3
-        version: 5.0.3(@equinor/fusion-framework-module@packages+modules+module)(rxjs@7.8.2)
+        specifier: workspace:^
+        version: link:../../packages/modules/navigation
       '@equinor/fusion-framework-module-state':
         specifier: workspace:^
         version: link:../../packages/modules/state
@@ -3673,12 +3673,6 @@ packages:
       react: ^18 || ^19
       react-dom: ^18 || ^19
       styled-components: ^6
-
-  '@equinor/fusion-framework-module-navigation@5.0.3':
-    resolution: {integrity: sha512-1egp86EYPmhBXj0zovBOwQ7387eJVlIgzRlsdtjjJqVJM/bNyuS3rtqnYe1ErorHjBZAJydD4a8RkilJ7OBuHw==}
-    peerDependencies:
-      '@equinor/fusion-framework-module': ^4.4.2
-      rxjs: ^7.0.0
 
   '@equinor/fusion-imports@2.0.2':
     resolution: {integrity: sha512-kqH6vWCBbfAUyZD+/czmMyGs61QLbXHOzgVupx/Vov/JC6Px3dhJkUTuM3Kk901+DeKrsEib+TaMYD8i03DxWg==}
@@ -13132,12 +13126,6 @@ snapshots:
       react: 19.2.8
       react-dom: 19.2.8(react@19.2.8)
       styled-components: 6.4.4(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
-
-  '@equinor/fusion-framework-module-navigation@5.0.3(@equinor/fusion-framework-module@packages+modules+module)(rxjs@7.8.2)':
-    dependencies:
-      '@equinor/fusion-framework-module': link:packages/modules/module
-      '@remix-run/router': 1.23.3
-      rxjs: 7.8.2
 
   '@equinor/fusion-imports@2.0.2':
     dependencies:
