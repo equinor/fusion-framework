@@ -224,10 +224,13 @@ self.addEventListener('fetch', (event: FetchEvent) => {
 
       // fetch the request with the modified url and headers, preserving the original HTTP method and body
       // This ensures OPTIONS, PATCH, DELETE and other methods are forwarded correctly
+      // `cache` is forwarded explicitly - otherwise callers requesting `no-store` (e.g. polling
+      // endpoints) would silently fall back to the default HTTP cache once re-fetched here.
       return fetch(url, {
         method: request.method,
         headers: requestHeaders,
         body: body || undefined,
+        cache: request.cache,
       });
     };
     event.respondWith(handleRequest());
