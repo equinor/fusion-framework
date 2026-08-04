@@ -103,13 +103,13 @@ function processesRoute(
   proxyServer.on('proxyReq', (proxyReq, req: IncomingRequest) => {
     // Set the original request URL
     logger?.info(
-      `Proxying ${req.originalUrl} -> ${proxyReq.protocol}//${proxyReq.host}${proxyReq.path}`,
+      `Proxying ${req.method} ${req.originalUrl} -> ${proxyReq.protocol}//${proxyReq.host}${proxyReq.path}`,
     );
   });
 
   proxyServer.on('proxyRes', (proxyRes, req: IncomingRequest) => {
     const { headers, statusMessage, statusCode = 500 } = proxyRes;
-    const message = `Received response for ${req.originalUrl} -> ${statusCode} ${statusMessage}`;
+    const message = `Received response for ${req.method} ${req.originalUrl} -> ${statusCode} ${statusMessage}`;
 
     res.writeHead(statusCode, {
       ...headers,
