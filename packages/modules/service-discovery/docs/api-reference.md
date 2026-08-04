@@ -27,3 +27,4 @@ type Service = {
   overridden?: boolean; // True when session-overridden
   defaultScopes: string[]; // @deprecated — use `scopes`
 };
+```
