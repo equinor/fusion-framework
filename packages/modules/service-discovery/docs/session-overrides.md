@@ -1,7 +1,5 @@
 # Session Overrides
 
-## Session Overrides
-
 > [!TIP]
 > Session overrides let you redirect services to local or staging URLs during development without touching application config.
 

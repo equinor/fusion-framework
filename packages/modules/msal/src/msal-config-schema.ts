@@ -30,7 +30,16 @@ export const MsalConfigSchema = z.object({
         Object.values(CacheLookupPolicy).includes(val as CacheLookupPolicy),
     )
     .optional(),
-  version: z.string().transform((x: string) => String(semver.coerce(x))),
+  version: z.string().transform((value, ctx) => {
+    const coerced = semver.coerce(value);
+    // `semver.coerce` returns `null` for an unparseable version; without this guard it
+    // would silently become the literal string "null" instead of failing validation.
+    if (!coerced) {
+      ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Invalid MSAL module version' });
+      return z.NEVER;
+    }
+    return coerced.version;
+  }),
   telemetry: TelemetryConfigSchema,
 });
 

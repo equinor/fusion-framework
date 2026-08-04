@@ -66,7 +66,7 @@ const base64Url = (value: string): string => {
  * ```typescript
  * const token = createMockToken({ name: 'Test User', scp: 'Files.Read' });
  * const [, payload] = token.split('.');
- * JSON.parse(atob(payload)).name; // 'Test User'
+ * JSON.parse(decodeJwtSegment(payload)).name; // 'Test User'
  * ```
  */
 export const createMockToken = (claims: MockTokenClaims = {}): string => {

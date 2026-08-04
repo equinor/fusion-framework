@@ -23,6 +23,21 @@ interface RegisteredMiddleware {
 }
 
 /**
+ * Tests `url` against a match constraint.
+ *
+ * @remarks
+ * A `g`/`y` `RegExp` is stateful — `.test()` advances its `lastIndex`, so the
+ * same registration would match on one call and silently miss on the next.
+ * Resetting `lastIndex` first keeps a registered pattern reusable across requests.
+ */
+function matchesUrl(match: string | RegExp, url: string): boolean {
+  // A plain substring constraint has no statefulness to reset.
+  if (typeof match === 'string') return url.includes(match);
+  match.lastIndex = 0;
+  return match.test(url);
+}
+
+/**
  * Runs a chain of middleware against requests and answers them without
  * reaching the network.
  *
@@ -161,13 +176,9 @@ export class HttpMockRouter {
       // Skip handlers registered for another HTTP method.
       if (registered.method && registered.method !== method) continue;
       // Only apply URL matching when the registration specifies a URL constraint.
-      if (registered.match !== undefined) {
-        const matched =
-          typeof registered.match === 'string'
-            ? url.includes(registered.match)
-            : registered.match.test(url);
+      if (registered.match !== undefined && !matchesUrl(registered.match, url)) {
         // Continue searching when this handler's URL constraint does not match.
-        if (!matched) continue;
+        continue;
       }
       // clone the request so one middleware reading the body (e.g. `.json()`) does not
       // exhaust it for the next middleware in the chain
