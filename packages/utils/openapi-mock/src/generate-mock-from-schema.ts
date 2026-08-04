@@ -1,4 +1,4 @@
-import { faker } from '@faker-js/faker';
+import { Faker, en } from '@faker-js/faker';
 import { generate } from 'json-schema-faker';
 
 import type { FieldFakerFn } from './types';
@@ -35,14 +35,15 @@ export async function generateMockFromSchema(
   schema: unknown,
   options: GenerateMockFromSchemaOptions = {},
 ): Promise<unknown> {
-  // `json-schema-faker`'s `seed` option only drives its own PRNG; `faker`-extension
-  // values come from the faker singleton, so it needs seeding separately for the
-  // same call to be reproducible end-to-end
-  if (options.seed !== undefined) faker.seed(options.seed);
+  // A fresh instance per call, rather than seeding the `faker` singleton, so concurrent
+  // calls with different seeds cannot race each other through shared global state.
+  const localFaker = new Faker({ locale: [en] });
+  // Only a caller-supplied seed makes output deterministic; otherwise this instance stays random.
+  if (options.seed !== undefined) localFaker.seed(options.seed);
   return generate(schema as Parameters<typeof generate>[0], {
     // `__custom` is a synthetic namespace `applyFieldFakers` points function-valued
     // field overrides at, resolved by the same dotted-path lookup as a real faker path
-    extensions: { faker: { ...faker, __custom: options.customFakers ?? {} } },
+    extensions: { faker: { ...localFaker, __custom: options.customFakers ?? {} } },
     seed: options.seed,
     // fake every optional property too, so a consumer sees the whole schema shape rather
     // than a coin-flip subset of it on every run
@@ -50,5 +51,4 @@ export async function generateMockFromSchema(
     useDefaultValue: true,
   });
 }
-
 export default generateMockFromSchema;
