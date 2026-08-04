@@ -88,7 +88,15 @@ function walkProperties(
       // Keep each property's name in the path used to find its override.
       .map(([propName, propSchema]) => {
         const propPath = [...path, propName];
-        const walked = walk(propSchema, document, modelName, propPath, fakerMap, customFakers, seen);
+        const walked = walk(
+          propSchema,
+          document,
+          modelName,
+          propPath,
+          fakerMap,
+          customFakers,
+          seen,
+        );
         return [propName, annotate(walked, modelName, propPath, fakerMap, customFakers)];
       }),
   );
@@ -127,14 +135,12 @@ function resolvePointer(document: unknown, ref: string): unknown {
   const path = segments.map((segment) =>
     decodeURIComponent(segment.replace(/~1/g, '/').replace(/~0/g, '~')),
   );
-  let current: unknown = document;
   // Follow each pointer segment until the target is found or the path becomes invalid.
-  for (const segment of path) {
+  return path.reduce<unknown>((current, segment) => {
     // A non-object cannot contain another pointer segment.
     if (current == null || typeof current !== 'object') return undefined;
-    current = (current as Record<string, unknown>)[segment];
-  }
-  return current;
+    return (current as Record<string, unknown>)[segment];
+  }, document);
 }
 
 /**

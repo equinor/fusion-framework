@@ -5,14 +5,12 @@ function resolvePointer(document: unknown, ref: string): unknown {
   const path = segments.map((segment) =>
     decodeURIComponent(segment.replace(/~1/g, '/').replace(/~0/g, '~')),
   );
-  let current: unknown = document;
   // Follow the pointer one segment at a time to locate the referenced value.
-  for (const segment of path) {
+  return path.reduce<unknown>((current, segment) => {
     // Stop when a pointer walks into a scalar or null value.
     if (current == null || typeof current !== 'object') return undefined;
-    current = (current as Record<string, unknown>)[segment];
-  }
-  return current;
+    return (current as Record<string, unknown>)[segment];
+  }, document);
 }
 
 /**
