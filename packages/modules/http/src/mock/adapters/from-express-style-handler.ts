@@ -69,7 +69,8 @@ export function fromExpressStyleHandler<TRequest = ExpressStyleRequest>(
   return async (request) => {
     const req = await toRequest(request);
     const res = new MockExpressResponse();
-    handleRequest(req, res);
+    // Await so a rejecting async handler surfaces here instead of as an unhandled rejection.
+    await handleRequest(req, res);
     return res.done;
   };
 }
