@@ -61,6 +61,7 @@ Format: `package name` → path → role.
 | `@equinor/fusion-framework-module-service-discovery` | `packages/modules/service-discovery` | Service discovery |
 | `@equinor/fusion-framework-module-services` | `packages/modules/services` | Typed Fusion service clients |
 | `@equinor/fusion-framework-module-signalr` | `packages/modules/signalr` | SignalR transport |
+| `@equinor/fusion-framework-module-state` | `packages/modules/state` | Replicated/persisted app state (PouchDB-backed sync) |
 | `@equinor/fusion-framework-module-telemetry` | `packages/modules/telemetry` | Microsoft telemetry |
 | `@equinor/fusion-framework-module-widget` | `packages/modules/widget` | Widget loading |
 
@@ -141,8 +142,9 @@ Format: `package name` → path → role.
 `app-react-bookmark`, `app-react-bookmark-advanced`, `app-react-charts`, `app-react-context`,
 `app-react-context-custom-error`, `app-react-environment-variables`, `app-react-feature-flag`,
 `app-react-module`, `app-react-msal`, `app-react-observable`, `app-react-people`,
-`app-react-router`, `app-react-router-legacy`, `app-react-settings`, `app-react-styling`,
-`app-vanilla`, `poc-portal`, `portal`, `portal-analytics`.
+`app-react-router`, `app-react-router-legacy`, `app-react-settings`, `app-react-state`,
+`app-react-state-replication`, `app-react-styling`, `app-vanilla`, `poc-portal`, `portal`,
+`portal-analytics`.
 
 Package name pattern: `@equinor/fusion-framework-cookbook-<folder>`.
 
