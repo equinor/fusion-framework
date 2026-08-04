@@ -7,6 +7,7 @@ interface TodoListItemProps {
   onRemove?: (id: string) => void;
 }
 
+/** Renders one task item and its available actions. */
 export const TodoListItem: React.FC<TodoListItemProps> = ({ todo, isLast, onToggle, onRemove }) => (
   <li
     style={{

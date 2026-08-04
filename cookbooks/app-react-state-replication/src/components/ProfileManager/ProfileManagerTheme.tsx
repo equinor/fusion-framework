@@ -3,6 +3,7 @@ export interface ProfileManagerThemeProps {
   onToggle: () => void;
 }
 
+/** Renders the profile theme toggle. */
 export const ProfileManagerTheme: React.FC<ProfileManagerThemeProps> = ({ theme, onToggle }) => {
   return (
     <div style={{ marginBottom: '16px' }}>

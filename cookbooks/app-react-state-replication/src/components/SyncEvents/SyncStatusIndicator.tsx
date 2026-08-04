@@ -9,6 +9,7 @@ interface SyncStatusIndicatorProps {
 }
 
 const getStatusColor = (type: SyncEvent['type'] | unknown) => {
+  // Map synchronization event types to the indicator palette.
   switch (type) {
     case 'active':
     case 'change':
@@ -24,6 +25,7 @@ const getStatusColor = (type: SyncEvent['type'] | unknown) => {
 };
 
 const getStatusText = (type: SyncEvent['type'] | unknown) => {
+  // Map synchronization event types to reader-friendly labels.
   switch (type) {
     case 'active':
       return 'Syncing...';
@@ -41,6 +43,7 @@ const getStatusText = (type: SyncEvent['type'] | unknown) => {
 };
 
 const getSizeConfig = (size: 'small' | 'medium' | 'large') => {
+  // Keep the indicator dimensions consistent across display sizes.
   switch (size) {
     case 'small':
       return { dotSize: 8, gap: '6px' };
@@ -51,6 +54,7 @@ const getSizeConfig = (size: 'small' | 'medium' | 'large') => {
   }
 };
 
+/** Displays the current synchronization status. */
 export const SyncStatusIndicator: React.FC<SyncStatusIndicatorProps> = ({
   event,
   size = 'medium',

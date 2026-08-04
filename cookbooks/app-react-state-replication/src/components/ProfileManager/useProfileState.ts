@@ -1,9 +1,10 @@
 import { useCallback, useState } from 'react';
 import { useAppState } from '@equinor/fusion-framework-react-app/state';
 import type { UserProfile } from '../../types';
-import type { ProfileAction } from './profileActions';
-import { createProfileReducer } from './profileReducer';
+import type { ProfileAction } from './profile-actions';
+import { createProfileReducer } from './create-profile-reducer';
 
+/** Connects the profile reducer to replicated application state. */
 export const useProfileState = (): [UserProfile | undefined, (action: ProfileAction) => void] => {
   const [profileReducer] = useState(() => createProfileReducer());
   const [profile, setProfile] = useAppState<UserProfile>('user.profile', {

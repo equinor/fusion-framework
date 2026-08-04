@@ -30,10 +30,17 @@ export class StateErrorEvent<T extends StorageError = StorageError> extends Fram
     Error: 'onState.error',
   } as const;
 
+  /**
+   * Determines whether an unknown value is a state error event.
+   * @param event - Value to inspect.
+   * @returns Whether the value is a state error event.
+   */
   static is(event: unknown): event is StateErrorEvent {
+    // Accept actual event instances before checking structurally compatible values.
     if (event instanceof StateErrorEvent) {
       return true;
     }
+    // Support events crossing package or serialization boundaries.
     if (typeof event === 'object' && event !== null) {
       const eventObj = event as Record<PropertyKey, unknown>;
       return eventObj.type === StateErrorEvent.Type.Error && 'detail' in eventObj;
@@ -41,6 +48,10 @@ export class StateErrorEvent<T extends StorageError = StorageError> extends Fram
     return false;
   }
 
+  /**
+   * Creates a state error event from initialization details.
+   * @param args - Initialization details for the error event.
+   */
   constructor(args: StateErrorEventInit<T>) {
     super(StateErrorEvent.Type.Error, args);
   }

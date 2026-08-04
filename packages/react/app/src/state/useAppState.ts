@@ -98,22 +98,22 @@ interface UseAppStateOptions<T extends AllowedValue> {
  * @example
  * **Array State:**
  * ```tsx
- * function TodoList() {
- *   const [todos, setTodos] = useAppState<string[]>('todos', { defaultValue: [] });
+ * function TaskList() {
+ *   const [tasks, setTasks] = useAppState<string[]>('tasks', { defaultValue: [] });
  *
- *   const addTodo = (text: string) => {
- *     setTodos(prev => [...(prev || []), text]);
+ *   const addTask = (text: string) => {
+ *     setTasks(prev => [...(prev || []), text]);
  *   };
  *
- *   const removeTodo = (index: number) => {
- *     setTodos(prev => prev?.filter((_, i) => i !== index));
+ *   const removeTask = (index: number) => {
+ *     setTasks(prev => prev?.filter((_, i) => i !== index));
  *   };
  *
  *   return (
  *     <ul>
- *       {todos?.map((todo, index) => (
- *         <li key={index} onClick={() => removeTodo(index)}>
- *           {todo}
+ *       {tasks?.map((task, index) => (
+ *         <li key={index} onClick={() => removeTask(index)}>
+ *           {task}
  *         </li>
  *       ))}
  *     </ul>
@@ -173,7 +173,9 @@ export const useAppState = <T extends AllowedValue = AllowedValue>(
   key: string,
   options?: UseAppStateOptions<T>,
 ): [T | undefined, (action: SetStateAction<T | undefined>) => void] => {
+  // Restrict development-only key validation to avoid production overhead.
   if (process.env.NODE_ENV === 'development') {
+    // Warn early when callers provide a key that cannot identify persisted state.
     if (!key || typeof key !== 'string') {
       console.warn('useAppState: key must be a non-empty string');
     }
@@ -182,7 +184,9 @@ export const useAppState = <T extends AllowedValue = AllowedValue>(
   // Capture the initial key value and ensure it never changes
   const initialKey = useRef(key);
 
+  // Warn about key changes only in development because the hook intentionally keeps its initial key.
   if (process.env.NODE_ENV === 'development') {
+    // Surface an unstable key while preserving the original storage identity.
     if (initialKey.current !== key) {
       console.warn(
         `useAppState: key changed from "${initialKey.current}" to "${key}". The key should remain constant across re-renders. Using initial key: "${initialKey.current}"`,
@@ -237,6 +241,7 @@ export const useAppState = <T extends AllowedValue = AllowedValue>(
   const value = useSyncExternalStore(
     (callback) => {
       const subscription = value$
+        // Transform state emissions into the snapshot updates expected by React.
         .pipe(
           // skip the initial value, since we don`t want to emit anything before the app state provider has initialized
           skip(1),
@@ -264,6 +269,7 @@ export const useAppState = <T extends AllowedValue = AllowedValue>(
       // Handle both direct values and updater functions (like React's useState)
       const value = typeof action === 'function' ? action(value$.value) : action;
 
+      // Remove undefined values from storage while updating subscribers immediately.
       if (value === undefined) {
         // undefined means "delete from storage" - update local state first for immediate UI feedback
         value$.next(undefined);

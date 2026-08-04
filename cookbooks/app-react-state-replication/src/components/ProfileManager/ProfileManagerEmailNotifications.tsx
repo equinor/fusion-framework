@@ -3,6 +3,7 @@ export interface ProfileManagerEmailNotificationsProps {
   onToggle: () => void;
 }
 
+/** Renders the email notification preference. */
 export const ProfileManagerEmailNotifications: React.FC<ProfileManagerEmailNotificationsProps> = ({
   emailNotifications,
   onToggle,

@@ -5,6 +5,7 @@ export interface ProfileManagerLanguageProps {
   onUpdate: (language: UserPreferences['language']) => void;
 }
 
+/** Renders the profile language selector. */
 export const ProfileManagerLanguage: React.FC<ProfileManagerLanguageProps> = ({
   language,
   onUpdate,

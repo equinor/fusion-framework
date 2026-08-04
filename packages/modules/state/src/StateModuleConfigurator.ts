@@ -7,7 +7,8 @@ import {
 } from '@equinor/fusion-framework-module';
 
 import type { IStorage } from './storage/index.js';
-import { validateStateModuleConfig, type StateModuleConfig } from './StateModuleConfig.js';
+import type { StateModuleConfig } from './StateModuleConfig.js';
+import { validateStateModuleConfig } from './validate-state-module-config.js';
 
 /**
  * Interface for configuring the state module.
@@ -22,6 +23,7 @@ export interface IStateModuleConfigurator {
   setStorage(storage_configuration: IStorage | ConfigBuilderCallback<IStorage>): void;
 }
 
+/** Builds and validates configuration for the state module. */
 export class StateModuleConfigurator
   extends BaseConfigBuilder<StateModuleConfig>
   implements IStateModuleConfigurator
@@ -36,14 +38,24 @@ export class StateModuleConfigurator
     this._set('storage', storage_configuration);
   }
 
+  /**
+   * Resolves and validates the state module configuration.
+   *
+   * @param config - The partial configuration accumulated by the builder.
+   * @param _init - Module initialization context used by deferred callbacks.
+   * @returns The validated state module configuration.
+   * @throws {Error} When storage configuration is missing or invalid.
+   */
   protected async _processConfig(
     config: Partial<Record<string, unknown>>,
     _init: ConfigBuilderCallbackArgs,
   ): Promise<StateModuleConfig> {
+    // Fail early so storage initialization cannot proceed without a backend.
     if (!config.storage) {
       throw new Error('Storage configuration is required');
     }
 
+    // Reject malformed storage implementations before the base builder resolves callbacks.
     if (!validateStateModuleConfig(config)) {
       throw new Error('Invalid state module configuration');
     }

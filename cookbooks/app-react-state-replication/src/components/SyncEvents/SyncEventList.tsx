@@ -10,6 +10,7 @@ interface SyncEventListProps {
   maxHeight?: string;
 }
 
+/** Lists recent synchronization events. */
 export const SyncEventList: React.FC<SyncEventListProps> = ({
   maxEvents = 10,
   maxHeight = '200px',

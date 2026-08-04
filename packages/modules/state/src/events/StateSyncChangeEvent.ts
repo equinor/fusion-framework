@@ -32,10 +32,17 @@ export class StateSyncChangeEvent<T extends AllowedValue = AllowedValue> extends
 > {
   static readonly Type = 'onStateSync.change' as const;
 
+  /**
+   * Determines whether an unknown value is a state synchronization change event.
+   * @param event - Value to inspect.
+   * @returns Whether the value is a state synchronization change event.
+   */
   static is(event: unknown): event is StateSyncChangeEvent {
+    // Accept actual event instances before checking structurally compatible values.
     if (event instanceof StateSyncChangeEvent) {
       return true;
     }
+    // Support events crossing package or serialization boundaries.
     if (typeof event === 'object' && event !== null) {
       const eventObj = event as Record<PropertyKey, unknown>;
       return eventObj.type === StateSyncChangeEvent.Type && 'detail' in eventObj;

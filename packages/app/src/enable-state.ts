@@ -19,9 +19,8 @@ const APP_DB_NAME = 'app_state';
  *
  * @see {@link https://github.com/equinor/fusion-framework/blob/main/packages/modules/state/README.md | State Module Documentation} for comprehensive usage examples and API reference.
  *
- * @typeParam M - Array of modules to be configured.
- * @typeParam R - The fusion modules instance type.
- * @typeParam E - The application environment type.
+ * @template M - Array of modules to be configured.
+ * @template R - The fusion modules instance type.
  * @param configurator - The application configurator to enable state management on.
  *
  * @example

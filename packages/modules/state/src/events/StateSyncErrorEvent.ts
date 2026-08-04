@@ -45,11 +45,18 @@ export type StateSyncErrorEventInit = FrameworkEventInit<{
 export class StateSyncErrorEvent extends FrameworkEvent<StateSyncErrorEventInit> {
   static readonly Type = 'onStateSync.error' as const;
 
+  /**
+   * Determines whether an unknown value is a state synchronization error event.
+   * @param event - Value to inspect.
+   * @returns Whether the value is a state synchronization error event.
+   */
   static is(event: unknown): event is StateSyncErrorEvent {
+    // Accept actual event instances before checking structurally compatible values.
     if (event instanceof StateSyncErrorEvent) {
       return true;
     }
 
+    // Support events crossing package or serialization boundaries.
     if (typeof event === 'object' && event !== null) {
       const eventObj = event as Record<PropertyKey, unknown>;
       return eventObj.type === StateSyncErrorEvent.Type && 'detail' in eventObj;

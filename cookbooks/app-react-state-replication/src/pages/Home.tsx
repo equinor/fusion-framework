@@ -2,6 +2,7 @@ import { useAppState } from '@equinor/fusion-framework-react-app/state';
 import { TodoList } from '../components/Todo';
 import type { TodoList as TodoItemsList } from '../components/Todo/types';
 
+/** Demonstrates replicated task state in the cookbook home page. */
 export const Home = () => {
   const [todos] = useAppState<TodoItemsList>('todos', {
     defaultValue: {

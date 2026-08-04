@@ -37,10 +37,17 @@ export class StateSyncStatusEvent<
   T extends AllowedValue = AllowedValue,
 > extends FrameworkEvent<StateSyncStatusEventInit> {
   static readonly Type = 'onStateSync.status';
+  /**
+   * Determines whether an unknown value is a state synchronization status event.
+   * @param event - Value to inspect.
+   * @returns Whether the value is a state synchronization status event.
+   */
   static is(event: unknown): event is StateSyncStatusEvent {
+    // Accept actual event instances before checking structurally compatible values.
     if (event instanceof StateSyncStatusEvent) {
       return true;
     }
+    // Support events crossing package or serialization boundaries.
     if (typeof event === 'object' && event !== null) {
       const eventObj = event as Record<PropertyKey, unknown>;
       return eventObj.type === StateSyncStatusEvent.Type && 'detail' in eventObj;

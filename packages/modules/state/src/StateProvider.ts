@@ -62,6 +62,7 @@ export class StateProvider<TType extends AllowedValue = AllowedValue>
    * Creates a new StateProvider instance.
    *
    * @param config - Configuration object containing the storage implementation
+  * @param modules - Optional module collection used to dispatch state events
    */
   constructor(config: StateModuleConfig, modules?: ModulesInstance<[EventModule]>) {
     // Initialize base module provider with config and version
@@ -119,6 +120,7 @@ export class StateProvider<TType extends AllowedValue = AllowedValue>
     // Storage does not support bulk put operation, need to put items individually
     // This fallback ensures compatibility with storage adapters that only support single operations
     const results = [];
+    // Fall back to serial operations when the adapter lacks bulk support.
     for (const item of items) {
       results.push(await this.#storage.putItem(item));
     }
@@ -159,6 +161,7 @@ export class StateProvider<TType extends AllowedValue = AllowedValue>
     // Storage does not support bulk remove operation, need to remove items individually
     // This fallback ensures compatibility with storage adapters that only support single operations
     const results = [];
+    // Preserve compatibility with storage adapters that only remove one item at a time.
     for (const item of keys) {
       results.push(await this.#storage.removeItem(item));
     }
@@ -224,6 +227,7 @@ export class StateProvider<TType extends AllowedValue = AllowedValue>
       filter((e) => e.detail.key === key),
       // Transform the event into the item state (null for deletions, item for others)
       map((e) => {
+        // Represent deletions as null so observers can remove the item from their view.
         if (StateChangeEvent.Deleted.is(e)) {
           return null; // Item was deleted
         }
@@ -233,9 +237,16 @@ export class StateProvider<TType extends AllowedValue = AllowedValue>
 
     // Combine initial state with real-time changes
     // mergeMap ensures changes are applied to the initial item, startWith emits initial value first
-    return initial$.pipe(
-      mergeMap((item) => changes$.pipe(startWith(item), distinctUntilChanged(isEqual))),
-    );
+    // Apply live changes only after the initial item has been loaded.
+    return initial$
+      // Apply live changes only after the initial item has been loaded.
+      .pipe(
+        mergeMap((item) =>
+          changes$
+            // Seed each live stream with the item loaded from storage.
+            .pipe(startWith(item), distinctUntilChanged(isEqual)),
+        ),
+      );
   }
 
   /**
@@ -260,9 +271,12 @@ export class StateProvider<TType extends AllowedValue = AllowedValue>
 
     // Combine initial collection with real-time changes to any items
     // applyStateChangeEvents handles creating, updating, and deleting items in the collection
-    return initial$.pipe(
-      mergeMap(applyStateChangeEvents<T>(this.#storage.events$ as Observable<StateEventType<T>>)),
-    );
+    // Apply live changes to the initial collection without mutating its source array.
+    return initial$
+      // Apply live changes to the initial collection without mutating its source array.
+      .pipe(
+        mergeMap(applyStateChangeEvents<T>(this.#storage.events$ as Observable<StateEventType<T>>)),
+      );
   }
 
   /**
@@ -327,8 +341,9 @@ export class StateProvider<TType extends AllowedValue = AllowedValue>
 function applyStateChangeEvents<T extends AllowedValue = AllowedValue>(
   source$: Observable<StateEventType<T>>,
 ): (initial: StateItem<T>[]) => Observable<StateItem<T>[]> {
-  return <T extends AllowedValue = AllowedValue>(initial: StateItem<T>[] = []) =>
-    source$.pipe(
+  return <T extends AllowedValue = AllowedValue>(initial: StateItem<T>[] = []) => {
+    // Subscribe to state changes and reduce them into the current item collection.
+    const stateChanges$ = source$.pipe(
       // Filter to only state change events (ignore operation events)
       filter(StateChangeEvent.is),
       // Accumulate changes using scan operator, starting with the initial array
@@ -337,6 +352,7 @@ function applyStateChangeEvents<T extends AllowedValue = AllowedValue>(
           detail: { key, item },
         } = event;
 
+        // Remove deleted entries before considering updates or inserts.
         if (StateChangeEvent.Deleted.is(event)) {
           // Remove the item with the deleted key from the array
           return acc.filter((i) => i.key !== key);
@@ -345,8 +361,10 @@ function applyStateChangeEvents<T extends AllowedValue = AllowedValue>(
         // Find existing item by key
         const idx = acc.findIndex((i) => i.key === key);
 
+        // Update an existing entry only when its key is already present.
         if (idx > -1) {
           // Item exists - check if it actually changed to avoid unnecessary updates
+          // Preserve the existing array when the event does not change its value.
           if (isEqual(acc[idx], item)) {
             // No change, return original array to maintain reference stability
             return acc;
@@ -365,6 +383,8 @@ function applyStateChangeEvents<T extends AllowedValue = AllowedValue>(
       // Only emit when the array actually changes (deep equality check)
       distinctUntilChanged(isEqual),
     );
+    return stateChanges$;
+  };
 }
 
 export default StateProvider;

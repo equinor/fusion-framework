@@ -2,6 +2,7 @@ export interface ProfileManagerLastModifiedProps {
   lastModified: string;
 }
 
+/** Displays when the profile was last changed. */
 export const ProfileManagerLastModified: React.FC<ProfileManagerLastModifiedProps> = ({
   lastModified,
 }) => {

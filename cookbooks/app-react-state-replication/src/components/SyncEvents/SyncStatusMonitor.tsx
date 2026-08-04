@@ -3,6 +3,7 @@ import { useSyncEvents } from './useSyncEvents';
 import { SyncStatusIndicator } from './SyncStatusIndicator';
 import { SyncEventList } from './SyncEventList';
 
+/** Displays the latest synchronization status and event history. */
 export const SyncStatusMonitor = (props: { height: string }) => {
   const [lastEvent] = useSyncEvents(1);
 

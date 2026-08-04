@@ -30,10 +30,17 @@ export type StateOperationEventSuccessInit = FrameworkEventInit<{
  */
 export class StateOperationSuccessEvent extends FrameworkEvent<StateOperationEventSuccessInit> {
   static readonly Type = 'onStateOperation.success' as const;
+  /**
+   * Determines whether an unknown value is a successful state operation event.
+   * @param event - Value to inspect.
+   * @returns Whether the value is a successful state operation event.
+   */
   static is(event: unknown): event is StateOperationSuccessEvent {
+    // Accept actual event instances before checking structurally compatible values.
     if (event instanceof StateOperationSuccessEvent) {
       return true;
     }
+    // Support events crossing package or serialization boundaries.
     if (typeof event === 'object' && event !== null) {
       const eventObj = event as Record<PropertyKey, unknown>;
       return eventObj.type === StateOperationSuccessEvent.Type && 'detail' in eventObj;

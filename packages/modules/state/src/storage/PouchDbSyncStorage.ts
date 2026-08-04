@@ -1,5 +1,5 @@
 import type { StateEventType } from '../events/index.js';
-import { observePouchDbSync } from './observe-pouchdb-sync.js';
+import { observePouchDbSync } from './observe-pouch-db-sync.js';
 import { PouchDbStorage, type PouchDbStorageOptions } from './PouchDbStorage.js';
 import type { AllowedValue } from '../types.js';
 
@@ -15,11 +15,15 @@ type PouchDbSyncStorageOptions = {
   syncOptions: PouchDB.Replication.SyncOptions;
 };
 
-// biome-ignore lint/correctness/noUnusedVariables: intentionally internal — not yet tested or integrated into the public API
+/** PouchDB storage adapter that synchronizes a local database with a remote database. */
 class PouchDbSyncStorage extends PouchDbStorage {
   #remoteDb: PouchDB.Database;
   #syncOptions: PouchDB.Replication.SyncOptions;
 
+  /**
+   * Creates a synchronized storage adapter.
+   * @param options - Local, remote, and replication configuration.
+   */
   constructor(options: PouchDbSyncStorageOptions) {
     super(options.localDb.name_or_instance, options.localDb.options);
     this.#remoteDb =
@@ -29,11 +33,18 @@ class PouchDbSyncStorage extends PouchDbStorage {
     this.#syncOptions = options.syncOptions;
   }
 
+  /** Initializes local storage and starts synchronization. */
   protected _initialize(): void {
     super._initialize();
     this.sync();
   }
 
+  /**
+   * Starts synchronization with the configured remote database.
+   * @template T - State value type.
+   * @param options - Optional replication overrides.
+   * @returns The active PouchDB synchronization handle.
+   */
   public sync<T extends AllowedValue = AllowedValue>(
     options?: PouchDB.Replication.SyncOptions,
   ): PouchDB.Replication.Sync<{ value: T }> {
@@ -43,6 +54,13 @@ class PouchDbSyncStorage extends PouchDbStorage {
     );
   }
 
+  /**
+   * Creates and observes a PouchDB bidirectional replication stream.
+   * @template T - State value type.
+   * @param target - Remote database to synchronize with.
+   * @param options - Optional replication settings.
+   * @returns The active PouchDB synchronization handle.
+   */
   protected _sync<T extends AllowedValue = AllowedValue>(
     target: PouchDB.Database<{ value: T }>,
     options?: PouchDB.Replication.SyncOptions,

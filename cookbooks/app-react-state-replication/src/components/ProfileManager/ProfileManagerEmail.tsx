@@ -3,6 +3,7 @@ export interface ProfileManagerEmailProps {
   onUpdate: (email: string) => void;
 }
 
+/** Renders the profile email field. */
 export const ProfileManagerEmail: React.FC<ProfileManagerEmailProps> = ({ email, onUpdate }) => {
   return (
     <div style={{ marginBottom: '16px' }}>

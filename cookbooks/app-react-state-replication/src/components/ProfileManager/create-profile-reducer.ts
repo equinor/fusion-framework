@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createReducer } from '@equinor/fusion-observable';
-import { profileActions } from './profileActions';
+import { profileActions } from './profile-actions';
 import type { UserProfile } from '../../types';
 
 const defaultProfile: UserProfile = {

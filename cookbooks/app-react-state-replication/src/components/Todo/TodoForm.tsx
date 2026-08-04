@@ -2,6 +2,7 @@ interface TodoFormProps {
   onAdd: (title: string) => void;
 }
 
+/** Provides a form for adding a task item. */
 export const TodoForm: React.FC<TodoFormProps> = ({ onAdd }) => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

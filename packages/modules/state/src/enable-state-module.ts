@@ -1,6 +1,6 @@
 import type { AnyModule, IModulesConfigurator } from '@equinor/fusion-framework-module';
 import type { IStateModuleConfigurator } from './StateModuleConfigurator.js';
-import { module } from './StateModule.js';
+import { module } from './module.js';
 
 /**
  * Enables the state module within the provided modules configurator.

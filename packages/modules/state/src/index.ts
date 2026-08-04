@@ -6,7 +6,11 @@ export { StateModuleConfigurator } from './StateModuleConfigurator.js';
 
 export { enableStateModule } from './enable-state-module.js';
 
-export { StateModule, module, module as default } from './StateModule.js';
+export { StateModule } from './StateModule.js';
+export { name } from './name.js';
+export { module, module as default } from './module.js';
+export { StateModuleConfigSchema } from './state-module-config-schema.js';
+export { validateStateModuleConfig } from './validate-state-module-config.js';
 
 export {
   StateChangeEvent,
@@ -18,8 +22,8 @@ export {
   type StateSyncEventType,
 } from './events/index.js';
 
-export { observePouchDbSync } from './storage/observe-pouchdb-sync.js';
-export { observePouchDbChange } from './storage/observe-pouchdb-change.js';
+export { observePouchDbSync } from './storage/observe-pouch-db-sync.js';
+export { observePouchDbChange } from './storage/observe-pouch-db-change.js';
 
 export {
   AllowedValue,

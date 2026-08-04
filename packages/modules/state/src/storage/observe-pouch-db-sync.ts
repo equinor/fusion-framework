@@ -17,7 +17,7 @@ import { StateSyncEvent, type StateSyncEventType } from '../events/index.js';
  *
  * @example
  * ```typescript
- * import { observePouchDbSync } from './state-sync-observer';
+ * import { observePouchDbSync } from './observe-pouch-db-sync';
  * import { StateSyncEvent } from '../events';
  *
  * // Set up PouchDB sync
@@ -77,7 +77,10 @@ export function observePouchDbSync<T extends AllowedValue = AllowedValue>(
   const parse_replication_result = (
     change: PouchDB.Replication.ReplicationResult<{ value: T }>,
   ) => ({
-    items: change.docs.map(parse_docs),
+    // Convert replicated documents to the storage item shape expected by state events.
+    items: change.docs
+      // Convert replicated documents to the storage item shape expected by state events.
+      .map(parse_docs),
     item_written: change.docs_written,
     item_read: change.docs_read,
     items_write_failures: change.doc_write_failures,

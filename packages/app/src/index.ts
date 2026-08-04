@@ -22,12 +22,13 @@ export * from './types';
 
 export { configureModules, default } from './configure-modules';
 
-export { AppConfiguratorError } from './error';
+export { AppConfiguratorError } from './AppConfiguratorError';
 
 export {
   AppModulesConfiguredEvent,
-  AppModulesInitializedEvent,
-} from './events';
+} from './AppModulesConfiguredEvent';
+
+export { AppModulesInitializedEvent } from './AppModulesInitializedEvent';
 
 /**
  * @deprecated Use {@link configureModules} instead. This alias will be removed in a future major version.

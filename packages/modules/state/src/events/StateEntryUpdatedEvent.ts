@@ -39,10 +39,17 @@ export class StateEntryUpdatedEvent<T extends AllowedValue = AllowedValue> exten
 > {
   static readonly Type = 'onState.updated';
 
+  /**
+   * Determines whether an unknown value is a state entry updated event.
+   * @param event - Value to inspect.
+   * @returns Whether the value is a state entry updated event.
+   */
   static is(event: unknown): event is StateEntryUpdatedEvent {
+    // Accept actual event instances before checking structurally compatible values.
     if (event instanceof StateEntryUpdatedEvent) {
       return true;
     }
+    // Support events crossing package or serialization boundaries.
     if (typeof event === 'object' && event !== null) {
       const eventObj = event as Record<PropertyKey, unknown>;
       return eventObj.type === StateEntryUpdatedEvent.Type && 'detail' in eventObj;

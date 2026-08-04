@@ -6,7 +6,7 @@ import { ProfileManagerLastModified } from './ProfileManagerLastModified';
 import { ProfileManagerPushNotifications } from './ProfileManagerPushNotifications';
 import { ProfileManagerLanguage } from './ProfileManagerLanguage';
 import { useProfileState } from './useProfileState';
-import profileActions from './profileActions';
+import profileActions from './profile-actions';
 
 /**
  * Simple Profile Manager demonstrating CouchDB state replication
@@ -14,6 +14,7 @@ import profileActions from './profileActions';
 export const ProfileManager: React.FC = () => {
   const [profile, dispatch] = useProfileState();
 
+  // Wait for the replicated profile state before rendering editable fields.
   if (!profile) {
     return <div>Loading profile...</div>;
   }

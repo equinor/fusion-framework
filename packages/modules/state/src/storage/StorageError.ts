@@ -17,10 +17,16 @@ export interface StorageErrorOptions extends ErrorOptions {
   context?: Record<string, unknown>;
 }
 
+/** Represents a storage operation failure with optional contextual metadata. */
 export class StorageError extends Error {
   /** Additional context information about the error */
   public readonly context?: Record<string, unknown>;
 
+  /**
+   * Creates a storage error.
+   * @param message - Human-readable failure message.
+   * @param options - Optional cause and contextual metadata.
+   */
   constructor(message: string, options?: StorageErrorOptions) {
     super(message, options);
     this.name = 'StorageError';

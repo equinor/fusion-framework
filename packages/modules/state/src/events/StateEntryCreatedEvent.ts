@@ -39,10 +39,17 @@ export class StateEntryCreatedEvent<T extends AllowedValue = AllowedValue> exten
 > {
   static readonly Type = 'onState.created';
 
+  /**
+   * Determines whether an unknown value is a state entry created event.
+   * @param event - Value to inspect.
+   * @returns Whether the value is a state entry created event.
+   */
   static is(event: unknown): event is StateEntryCreatedEvent {
+    // Accept actual event instances before checking structurally compatible values.
     if (event instanceof StateEntryCreatedEvent) {
       return true;
     }
+    // Support events crossing package or serialization boundaries.
     if (typeof event === 'object' && event !== null) {
       const eventObj = event as Record<PropertyKey, unknown>;
       return eventObj.type === StateEntryCreatedEvent.Type && 'detail' in eventObj;

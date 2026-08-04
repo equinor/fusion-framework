@@ -14,7 +14,7 @@ import type {
 import { StorageError } from './StorageError.js';
 
 import { StateOperationEvent, type StateEventType } from '../events/index.js';
-import { observePouchDbChange } from './observe-pouchdb-change.js';
+import { observePouchDbChange } from './observe-pouch-db-change.js';
 
 const STORAGE_KEY_SEPARATOR = '::';
 
@@ -96,6 +96,9 @@ export class PouchDbStorage implements IStorage, Disposable {
   /**
    * Static factory method for creating PouchDB instances.
    * Useful for testing or when you need to configure the database before creating storage.
+    * @param name - Database name.
+    * @param options - PouchDB database options.
+    * @returns A configured PouchDB database instance.
    */
   public static CreateDb(
     name: string,
@@ -104,6 +107,10 @@ export class PouchDbStorage implements IStorage, Disposable {
     return new PouchDB(name, options);
   }
 
+  /**
+   * Returns the underlying PouchDB database for subclasses.
+   * @returns The underlying PouchDB database.
+   */
   protected get _db(): PouchDB.Database {
     return this.#db;
   }
@@ -132,6 +139,11 @@ export class PouchDbStorage implements IStorage, Disposable {
     return this.#events.asObservable();
   }
 
+  /**
+   * Registers a cleanup operation and returns its deregistration function.
+   * @param fn - Cleanup callback or subscription to register.
+   * @returns A function that removes the cleanup operation.
+   */
   protected _addTeardown(fn: VoidFunction | SubscriptionLike): VoidFunction {
     const teardown = () => {
       typeof fn === 'function' ? fn() : fn.unsubscribe();
@@ -140,6 +152,10 @@ export class PouchDbStorage implements IStorage, Disposable {
     return () => this.#teardown.splice(this.#teardown.indexOf(teardown), 1);
   }
 
+  /**
+   * Emits a storage event to all active observers.
+   * @param event - Event to publish.
+   */
   protected _emitEvent(event: StateEventType): void {
     this.#events.next(event);
   }
@@ -213,7 +229,7 @@ export class PouchDbStorage implements IStorage, Disposable {
     // Store the key prefix for namespacing (undefined if not provided)
     this.#key_prefix = key_prefix;
 
-    // todo: events should be ReplaySubject, option for retention count.
+    // A replayable event stream may be introduced when retention requirements are defined.
 
     // Create new PouchDB instance if a string is provided, otherwise use existing instance
     if (typeof name_or_instance === 'string') {
@@ -258,6 +274,7 @@ export class PouchDbStorage implements IStorage, Disposable {
     }
   }
 
+  /** Starts the live PouchDB change feed used to emit state events. */
   protected _initialize(): void {
     // Subscribe to live changes in the PouchDB database
     // This creates a persistent connection that will emit events for any future changes
@@ -424,6 +441,7 @@ export class PouchDbStorage implements IStorage, Disposable {
       );
       return result;
     } catch (e) {
+      // Treat a missing document as an ordinary null lookup result.
       if ((e as PouchDB.Core.Error).status === 404) {
         const result = null;
         this.#events.next(
@@ -819,6 +837,7 @@ export class PouchDbStorage implements IStorage, Disposable {
    * @template T - Value type stored in documents
    * @param args - Query options including docs inclusion and pagination
    * @returns PouchDB AllDocsResponse with typed document values
+  * @throws {StorageError} When the database query fails.
    */
   protected async _allItems<T extends AllowedValue>(args?: {
     include_docs?: boolean;
@@ -878,6 +897,7 @@ export class PouchDbStorage implements IStorage, Disposable {
    * @protected
    * @param args - Arguments to pass to PouchDB's bulkDocs method
    * @returns Array of normalized StorageResult objects
+  * @throws {StorageError} When the bulk operation fails.
    */
   protected async _executeBulk(
     ...args: Parameters<PouchDB.Database['bulkDocs']>
@@ -1088,8 +1108,19 @@ export class PouchDbStorage implements IStorage, Disposable {
       const results = await this._executeBulk(documents);
 
       // Calculate success/failure statistics for monitoring
-      const successCount = results.filter((r) => r.status === 'success').length;
-      const errorCount = results.filter((r) => r.status === 'error').length;
+      // Report separate counts so callers can monitor partial restore failures.
+      // Count outcomes separately so restore metrics expose partial failures.
+      let successCount = 0;
+      let errorCount = 0;
+      // Inspect every result because a bulk restore can partially succeed.
+      for (const result of results) {
+        // Classify each operation result for the restore summary.
+        if (result.status === 'success') {
+          successCount += 1;
+        } else {
+          errorCount += 1;
+        }
+      }
 
       // Emit success event with detailed restoration statistics
       this.#events.next(

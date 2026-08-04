@@ -5,6 +5,7 @@ import { SyncStatusMonitor } from '../components/SyncEvents/SyncStatusMonitor';
 import { SideBar } from '@equinor/eds-core-react';
 import { home, settings, offline_document } from '@equinor/eds-icons';
 
+/** Provides the cookbook navigation and sync monitor shell. */
 export const Root = () => {
   const currentLocation = useLocation();
   return (

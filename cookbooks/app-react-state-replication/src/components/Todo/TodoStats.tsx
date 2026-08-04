@@ -5,8 +5,11 @@ interface TodoStatsProps {
   onClearCompleted: () => void;
 }
 
+/** Summarizes active and completed task counts. */
 export const TodoStats: React.FC<TodoStatsProps> = ({ items, onClearCompleted }) => {
+  // Count active items for the summary shown above the list.
   const activeCount = items.filter((item) => !item.completed).length;
+  // Count completed items to show progress and enable clearing them.
   const completedCount = items.filter((item) => item.completed).length;
   return (
     <div style={{ marginBottom: '16px', fontSize: '14px', color: '#666' }}>

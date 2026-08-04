@@ -7,6 +7,7 @@ interface TodoListProps {
   onRemove?: (id: string) => void;
 }
 
+/** Renders the current task items or an empty-state message. */
 export const TodoList: React.FC<TodoListProps> = ({ items, onToggle, onRemove }) => (
   <div style={{ border: '1px solid #e0e0e0', borderRadius: '8px', overflow: 'hidden' }}>
     {items.length === 0 ? (

@@ -3,6 +3,7 @@ export interface ProfileManagerNameProps {
   onUpdate: (name: string) => void;
 }
 
+/** Renders the profile name field. */
 export const ProfileManagerName: React.FC<ProfileManagerNameProps> = ({ name, onUpdate }) => {
   return (
     <div style={{ marginBottom: '16px' }}>

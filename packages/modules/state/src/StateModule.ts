@@ -7,11 +7,7 @@ import {
 
 import type { IStateProvider } from './StateProvider.interface.js';
 import StateProvider from './StateProvider.js';
-
-/**
- * The name of the state module.
- */
-export const name = 'state';
+import { name } from './name.js';
 
 /**
  * Represents a module for managing application state within the Fusion framework.
@@ -34,19 +30,3 @@ export type StateModule = Module<typeof name, IStateProvider, IStateModuleConfig
  * @property {() => StateModuleConfigurator} configure - Returns a new instance of the state module configurator.
  * @property {(init: any) => Promise<StateProvider>} initialize - Asynchronously initializes the state provider using the configuration.
  */
-export const module: StateModule = {
-  name,
-  configure: () => new StateModuleConfigurator(),
-  initialize: async (init) => {
-    const config = await (init.config as StateModuleConfigurator).createConfigAsync(init);
-    const provider = new StateProvider(config);
-    await provider.initialize();
-    return provider;
-  },
-};
-
-declare module '@equinor/fusion-framework-module' {
-  interface Modules {
-    state: StateModule;
-  }
-}

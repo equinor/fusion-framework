@@ -19,7 +19,7 @@ import {
 } from './AppConfigurator';
 
 import type { AppModulesInstance, AppModuleInitiator, AppEnv, AppModuleInitArgs } from './types';
-import { AppConfiguratorError } from './error';
+import { AppConfiguratorError } from './AppConfiguratorError';
 
 /**
  * Create an application module initializer for a Fusion application.

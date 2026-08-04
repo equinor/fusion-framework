@@ -28,10 +28,17 @@ export type StateOperationEventFailureInit = FrameworkEventInit<{
  */
 export class StateOperationFailureEvent extends FrameworkEvent<StateOperationEventFailureInit> {
   static readonly Type = 'onStateOperation.failure' as const;
+  /**
+   * Determines whether an unknown value is a failed state operation event.
+   * @param event - Value to inspect.
+   * @returns Whether the value is a failed state operation event.
+   */
   static is(event: unknown): event is StateOperationFailureEvent {
+    // Accept actual event instances before checking structurally compatible values.
     if (event instanceof StateOperationFailureEvent) {
       return true;
     }
+    // Support events crossing package or serialization boundaries.
     if (typeof event === 'object' && event !== null) {
       const eventObj = event as Record<PropertyKey, unknown>;
       return eventObj.type === StateOperationFailureEvent.Type && 'detail' in eventObj;

@@ -41,10 +41,17 @@ export class StateSyncCompleteEvent<T extends AllowedValue = AllowedValue> exten
   StateSyncCompleteEventInit<T>
 > {
   static readonly Type = 'onStateSync.complete' as const;
+  /**
+   * Determines whether an unknown value is a completed state synchronization event.
+   * @param event - Value to inspect.
+   * @returns Whether the value is a completed state synchronization event.
+   */
   static is(event: unknown): event is StateSyncCompleteEvent {
+    // Accept actual event instances before checking structurally compatible values.
     if (event instanceof StateSyncCompleteEvent) {
       return true;
     }
+    // Support events crossing package or serialization boundaries.
     if (typeof event === 'object' && event !== null) {
       const eventObj = event as Record<PropertyKey, unknown>;
       return eventObj.type === StateSyncCompleteEvent.Type && 'detail' in eventObj;

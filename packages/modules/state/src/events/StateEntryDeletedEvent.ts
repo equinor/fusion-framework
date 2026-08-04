@@ -39,10 +39,17 @@ export class StateEntryDeletedEvent<T extends AllowedValue = AllowedValue> exten
 > {
   static readonly Type = 'onState.deleted';
 
+  /**
+   * Determines whether an unknown value is a state entry deleted event.
+   * @param event - Value to inspect.
+   * @returns Whether the value is a state entry deleted event.
+   */
   static is(event: unknown): event is StateEntryDeletedEvent {
+    // Accept actual event instances before checking structurally compatible values.
     if (event instanceof StateEntryDeletedEvent) {
       return true;
     }
+    // Support events crossing package or serialization boundaries.
     if (typeof event === 'object' && event !== null) {
       const eventObj = event as Record<PropertyKey, unknown>;
       return eventObj.type === StateEntryDeletedEvent.Type && 'detail' in eventObj;

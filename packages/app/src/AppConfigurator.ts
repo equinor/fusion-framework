@@ -17,8 +17,8 @@ import http, {
 import auth from '@equinor/fusion-framework-module-msal';
 
 import type { AppEnv, AppModules } from './types';
-import { AppModulesConfiguredEvent } from './events';
-import { AppConfiguratorError } from './error';
+import { AppModulesConfiguredEvent } from './AppModulesConfiguredEvent';
+import { AppConfiguratorError } from './AppConfiguratorError';
 import { deepClone, deepFreeze, type DeepImmutable } from './utils';
 
 /**
@@ -180,6 +180,8 @@ export class AppConfigurator<
    * The immutable application manifest.
    *
    * Deeply frozen at construction time to prevent accidental mutations.
+    *
+    * @returns The deeply immutable application manifest.
    */
   get manifest(): DeepImmutable<AppEnv['manifest']> {
     return this.#manifest;

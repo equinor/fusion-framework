@@ -3,6 +3,7 @@ export interface ProfileManagerPushNotificationsProps {
   onToggle: () => void;
 }
 
+/** Renders the push notification preference. */
 export const ProfileManagerPushNotifications: React.FC<ProfileManagerPushNotificationsProps> = ({
   pushNotifications,
   onToggle,

@@ -9,14 +9,14 @@ import { useCallback } from 'react';
 import { v4 as uuid } from 'uuid';
 
 /**
- * TodoListManager - Demonstrates state replication with real-world data
+ * Manages replicated task state with real-world data.
  *
- * This component shows how complex application state (a todo list)
+ * This component shows how complex application state (a task list)
  * can be synchronized between the local app and remote CouchDB.
  * Changes made here will be replicated to other instances of the app.
  *
  * Features:
- * - Add/remove/toggle todo items
+ * - Add/remove/toggle task items
  * - Persistent state across sessions
  * - Real-time sync with other app instances
  * - Optimistic updates with automatic conflict resolution
@@ -31,6 +31,7 @@ export const TodoListManager = () => {
 
   const addTodo = useCallback(
     (title: string) => {
+      // Ignore empty submissions so the replicated list never stores blank items.
       if (!title.trim()) return;
 
       const newTodo: TodoItem = {
@@ -59,11 +60,14 @@ export const TodoListManager = () => {
   const toggleTodo = useCallback(
     (id: string) => {
       setTodoList((prev) => {
+        // A missing state value means there is nothing to toggle.
         if (!prev) return prev;
 
         return {
           ...prev,
-          items: prev.items.map((item) =>
+          items: prev.items
+            // Update only the selected item while preserving the list order.
+            .map((item) =>
             item.id === id
               ? { ...item, completed: !item.completed, updatedAt: new Date().toISOString() }
               : item,
@@ -78,11 +82,14 @@ export const TodoListManager = () => {
   const removeTodo = useCallback(
     (id: string) => {
       setTodoList((prev) => {
+        // A missing state value means there is nothing to remove.
         if (!prev) return prev;
 
         return {
           ...prev,
-          items: prev.items.filter((item) => item.id !== id),
+          items: prev.items
+            // Remove the selected item from the replicated list.
+            .filter((item) => item.id !== id),
           lastModified: new Date().toISOString(),
         };
       });
@@ -92,11 +99,14 @@ export const TodoListManager = () => {
 
   const clearCompleted = useCallback(() => {
     setTodoList((prev) => {
+      // A missing state value means there are no completed items to clear.
       if (!prev) return prev;
 
       return {
         ...prev,
-        items: prev.items.filter((item) => !item.completed),
+        items: prev.items
+          // Keep active items and discard only completed items.
+          .filter((item) => !item.completed),
         lastModified: new Date().toISOString(),
       };
     });
