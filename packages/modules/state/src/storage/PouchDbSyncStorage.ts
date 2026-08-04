@@ -1,3 +1,5 @@
+import PouchDB from 'pouchdb';
+
 import type { StateEventType } from '../events/index.js';
 import { observePouchDbSync } from './observe-pouch-db-sync.js';
 import { PouchDbStorage, type PouchDbStorageOptions } from './PouchDbStorage.js';
@@ -19,6 +21,9 @@ type PouchDbSyncStorageOptions = {
 export class PouchDbSyncStorage extends PouchDbStorage {
   #remoteDb: PouchDB.Database;
   #syncOptions: PouchDB.Replication.SyncOptions;
+  // With a continuous (`live: true`) sync started once from `_initialize()`, this only guards
+  // a caller who calls the public `sync()` a second time while one is still active.
+  #activeSync: PouchDB.Replication.Sync<{ value: AllowedValue }> | undefined;
 
   /**
    * Creates a synchronized storage adapter.
@@ -65,6 +70,14 @@ export class PouchDbSyncStorage extends PouchDbStorage {
     target: PouchDB.Database<{ value: T }>,
     options?: PouchDB.Replication.SyncOptions,
   ): PouchDB.Replication.Sync<{ value: T }> {
+    // A second call while one is already active would otherwise fight over the same
+    // checkpoint doc - just hand back the existing handle instead of starting another.
+    if (this.#activeSync) {
+      // safe: `#activeSync` is only ever assigned a `Sync<{ value: AllowedValue }>` cast
+      // from this same generic method, so `T` always matches what's actually stored.
+      return this.#activeSync as unknown as PouchDB.Replication.Sync<{ value: T }>;
+    }
+
     // Apply default options for reliable sync behavior
     const { live = true, retry = true, heartbeat = 10000, timeout = 30000 } = options ?? {};
 
@@ -75,6 +88,7 @@ export class PouchDbSyncStorage extends PouchDbStorage {
       heartbeat, // Send heartbeat to detect connection issues
       timeout, // Connection timeout
     });
+    this.#activeSync = sync as PouchDB.Replication.Sync<{ value: AllowedValue }>;
 
     // Register cleanup function to prevent memory leaks
     this._addTeardown(() => sync.cancel());
@@ -92,7 +106,13 @@ export class PouchDbSyncStorage extends PouchDbStorage {
     });
 
     // Clean up sync subscription when sync completes
-    sync.on('complete', () => subscription.unsubscribe());
+    sync.on('complete', () => {
+      subscription.unsubscribe();
+      // only clear the handle if it's still this sync - a newer one may have replaced it
+      if (this.#activeSync === sync) {
+        this.#activeSync = undefined;
+      }
+    });
 
     // Register cleanup function to prevent memory leaks
     this._addTeardown(subscription);

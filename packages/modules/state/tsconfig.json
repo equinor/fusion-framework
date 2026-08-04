@@ -18,6 +18,12 @@
     },
     {
       "path": "../event"
+    },
+    {
+      "path": "../http"
+    },
+    {
+      "path": "../service-discovery"
     }
   ]
 }

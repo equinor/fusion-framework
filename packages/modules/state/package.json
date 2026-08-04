@@ -63,6 +63,7 @@
     "@equinor/fusion-framework-module-event": "workspace:^",
     "@equinor/fusion-framework-module-http": "workspace:^",
     "@equinor/fusion-framework-module-navigation": "workspace:^",
+    "@equinor/fusion-framework-module-service-discovery": "workspace:^",
     "@types/pouchdb": "^6.4.2",
     "@types/uuid": "^10.0.0",
     "fake-indexeddb": "^6.2.0",

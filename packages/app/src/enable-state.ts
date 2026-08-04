@@ -1,32 +1,33 @@
 import { enableStateModule } from '@equinor/fusion-framework-module-state';
-import { PouchDbStorage } from '@equinor/fusion-framework-module-state/storage';
+import type { IStateModuleConfigurator } from '@equinor/fusion-framework-module-state';
 import type { IAppConfigurator } from './AppConfigurator';
 import type { AnyModule } from '@equinor/fusion-framework-module';
 import type { FusionModulesInstance } from '@equinor/fusion-framework';
 
-// Application-specific database name for state management
-const APP_DB_NAME = 'app_state';
-
 /**
  * Enables state management for the application with persistent storage.
  *
- * This function configures the application to support state management with automatic
- * persistence across browser sessions. The state will be uniquely scoped to your application.
+ * This is a thin, app-scoped convenience wrapper around `enableStateModule` — it registers
+ * the state module on the app's configurator so app code can reach it via the app namespace,
+ * and scopes the module's default storage to this app's own `manifest.appKey` (so unrelated
+ * apps or widgets hosted alongside it never share its state). The state module resolves a
+ * local PouchDB database, optionally synced with the Fusion App State backend when service
+ * discovery and auth are configured; call `setStorage` on the configurator to override it.
  *
- * @warning Storage is NOT encrypted. Do not store sensitive data such as passwords, tokens,
- * personal information, or any data that requires security protection.
+ * @warning Local storage is NOT encrypted. Do not store sensitive data such as passwords,
+ * tokens, personal information, or any data that requires security protection.
  *
  * @see {@link https://github.com/equinor/fusion-framework/blob/main/packages/modules/state/README.md | State Module Documentation} for comprehensive usage examples and API reference.
  *
  * @template M - Array of modules to be configured.
  * @template R - The fusion modules instance type.
  * @param configurator - The application configurator to enable state management on.
+ * @param configure - Optional config callback, receiving the module's `IStateModuleConfigurator`.
  *
  * @example
  * ```typescript
  * import { enableState } from '@equinor/fusion-framework-app';
  *
- * // Enable state management in your app configurator
  * export const configure = (configurator) => {
  *   enableState(configurator);
  * };
@@ -39,14 +40,10 @@ const APP_DB_NAME = 'app_state';
  */
 export function enableState<M extends AnyModule[], R extends FusionModulesInstance>(
   configurator: IAppConfigurator<M, R>,
+  configure?: (builder: IStateModuleConfigurator) => void | Promise<void>,
 ): void {
-  // Leverage the core state module with custom storage configuration
-  enableStateModule(configurator, (config) => {
-    // Use PouchDB with app-specific key prefix to ensure state isolation
-    // The key_prefix prevents state collision between different apps using the same database
-    const storage = new PouchDbStorage(APP_DB_NAME, { key_prefix: configurator.manifest.appKey });
-
-    // Register the storage adapter with the state module configuration
-    config.setStorage(storage);
+  enableStateModule(configurator, async (builder) => {
+    builder.setName(configurator.manifest.appKey);
+    await configure?.(builder);
   });
 }

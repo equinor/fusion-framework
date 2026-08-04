@@ -12,7 +12,8 @@ const IStorageSchema = z.object({
   putItems: z.function().optional(),
   removeItem: z.function(),
   removeItems: z.function().optional(),
-  events$: z.function(),
+  // `events$` is an Observable property, not a callable - just require it to be present.
+  events$: z.custom((value) => value != null),
   [Symbol.dispose]: z.function(),
 });
 

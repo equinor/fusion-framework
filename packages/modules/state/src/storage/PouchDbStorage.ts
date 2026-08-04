@@ -72,7 +72,7 @@ function isPouchDbError(
  * const storage = new PouchDbStorage('app-db', { key_prefix: 'tenant-1' });
  * await storage.initialize();
  *
- * storage.events$().subscribe(event => console.log(event.type));
+ * storage.events$.subscribe(event => console.log(event.type));
  * await storage.putItem({ key: 'config', value: { theme: 'dark' } });
  * ```
  *
@@ -92,6 +92,10 @@ export class PouchDbStorage implements IStorage, Disposable {
   // Array of cleanup functions to call when the instance is disposed
   // Ensures proper resource cleanup and prevents memory leaks
   #teardown: Array<VoidFunction> = [this.#events.complete.bind(this.#events)];
+
+  // Guards `initialize()` so a caller re-invoking it (the public method is documented as
+  // safe to call repeatedly) can't pile up duplicate change-feed subscriptions or syncs.
+  #initialized = false;
 
   /**
    * Static factory method for creating PouchDB instances.
@@ -125,7 +129,7 @@ export class PouchDbStorage implements IStorage, Disposable {
    *
    * @example
    * ```typescript
-   * storage.events$()
+   * storage.events$
    *   .pipe(filter(event => event.type?.startsWith('onStorageChange')))
    *   .subscribe(event => handleChange(event.detail.item));
    * ```
@@ -257,6 +261,11 @@ export class PouchDbStorage implements IStorage, Disposable {
    * - Call `allItems()` to get existing data
    */
   public async initialize(): Promise<void> {
+    // subsequent calls are a no-op, per this method's documented idempotency contract.
+    if (this.#initialized) {
+      return;
+    }
+    this.#initialized = true;
     try {
       this._initialize();
     } catch (error) {

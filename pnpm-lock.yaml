@@ -2241,6 +2241,9 @@ importers:
       '@equinor/fusion-framework-module-navigation':
         specifier: workspace:^
         version: link:../navigation
+      '@equinor/fusion-framework-module-service-discovery':
+        specifier: workspace:^
+        version: link:../service-discovery
       '@types/pouchdb':
         specifier: ^6.4.2
         version: 6.4.2
