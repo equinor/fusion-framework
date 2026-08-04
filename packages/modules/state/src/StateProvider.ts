@@ -62,7 +62,7 @@ export class StateProvider<TType extends AllowedValue = AllowedValue>
    * Creates a new StateProvider instance.
    *
    * @param config - Configuration object containing the storage implementation
-  * @param modules - Optional module collection used to dispatch state events
+   * @param modules - Optional module collection used to dispatch state events
    */
   constructor(config: StateModuleConfig, modules?: ModulesInstance<[EventModule]>) {
     // Initialize base module provider with config and version
@@ -238,15 +238,17 @@ export class StateProvider<TType extends AllowedValue = AllowedValue>
     // Combine initial state with real-time changes
     // mergeMap ensures changes are applied to the initial item, startWith emits initial value first
     // Apply live changes only after the initial item has been loaded.
-    return initial$
-      // Apply live changes only after the initial item has been loaded.
-      .pipe(
-        mergeMap((item) =>
-          changes$
-            // Seed each live stream with the item loaded from storage.
-            .pipe(startWith(item), distinctUntilChanged(isEqual)),
-        ),
-      );
+    return (
+      initial$
+        // Apply live changes only after the initial item has been loaded.
+        .pipe(
+          mergeMap((item) =>
+            changes$
+              // Seed each live stream with the item loaded from storage.
+              .pipe(startWith(item), distinctUntilChanged(isEqual)),
+          ),
+        )
+    );
   }
 
   /**
@@ -272,11 +274,15 @@ export class StateProvider<TType extends AllowedValue = AllowedValue>
     // Combine initial collection with real-time changes to any items
     // applyStateChangeEvents handles creating, updating, and deleting items in the collection
     // Apply live changes to the initial collection without mutating its source array.
-    return initial$
-      // Apply live changes to the initial collection without mutating its source array.
-      .pipe(
-        mergeMap(applyStateChangeEvents<T>(this.#storage.events$ as Observable<StateEventType<T>>)),
-      );
+    return (
+      initial$
+        // Apply live changes to the initial collection without mutating its source array.
+        .pipe(
+          mergeMap(
+            applyStateChangeEvents<T>(this.#storage.events$ as Observable<StateEventType<T>>),
+          ),
+        )
+    );
   }
 
   /**

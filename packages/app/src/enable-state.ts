@@ -3,7 +3,6 @@ import { PouchDbStorage } from '@equinor/fusion-framework-module-state/storage';
 import type { IAppConfigurator } from './AppConfigurator';
 import type { AnyModule } from '@equinor/fusion-framework-module';
 import type { FusionModulesInstance } from '@equinor/fusion-framework';
-import type { AppEnv } from './types';
 
 // Application-specific database name for state management
 const APP_DB_NAME = 'app_state';

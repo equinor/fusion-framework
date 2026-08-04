@@ -1,4 +1,4 @@
-import type { AnyModule, IModulesConfigurator } from '@equinor/fusion-framework-module';
+import type { AnyModule } from '@equinor/fusion-framework-module';
 import type { IAppConfigurator } from '@equinor/fusion-framework-react-app';
 
 import type { StateWithReplicaConfigurator } from './configurator';

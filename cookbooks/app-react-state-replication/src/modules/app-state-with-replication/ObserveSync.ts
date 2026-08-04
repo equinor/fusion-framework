@@ -37,14 +37,14 @@ export function ObserveSync<T extends {}>(
 
     // Register every replication callback so consumers receive a complete event history.
     for (const [key, handler] of Object.entries(handlers)) {
-      // @ts-ignore
+      // @ts-expect-error
       sync.on(key, handler);
     }
 
     return () => {
       // Remove every callback when the observable subscription is disposed.
       for (const [key, handler] of Object.entries(handlers)) {
-        // @ts-ignore
+        // @ts-expect-error
         sync.off(key, handler);
       }
     };

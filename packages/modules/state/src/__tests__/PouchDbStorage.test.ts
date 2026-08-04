@@ -22,7 +22,7 @@ describe('PouchDbStorage', () => {
       if (deletions.length > 0) {
         await db.bulkDocs(deletions);
       }
-    } catch (error) {
+    } catch {
       // Ignore cleanup errors
     }
 

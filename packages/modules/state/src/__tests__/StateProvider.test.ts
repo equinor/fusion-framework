@@ -58,7 +58,7 @@ describe('StateProvider', () => {
         }
         return items.map((item) => ({ status: 'success', key: item.key }));
       });
-      // @ts-ignore - mock implementation
+      // @ts-expect-error - mock implementation
       storage.putItems = mock_putItems;
       await expect(provider.storeItems(items)).resolves.toEqual([
         { status: 'success', key: items[0].key },
@@ -95,7 +95,7 @@ describe('StateProvider', () => {
         delete storage.items[item.key];
         return Promise.resolve({ status: 'success', key: item.key });
       });
-      // @ts-ignore - mock implementation
+      // @ts-expect-error - mock implementation
       storage.removeItem = mock_removeItem;
       await expect(provider.removeItems(items)).resolves.toEqual([
         { status: 'success', key: items[0].key },
@@ -117,7 +117,7 @@ describe('StateProvider', () => {
         }
         return items.map((item) => ({ status: 'success', key: item.key }));
       });
-      // @ts-ignore - mock implementation
+      // @ts-expect-error - mock implementation
       storage.removeItems = mock_removeItems;
       await expect(provider.removeItems(items)).resolves.toEqual([
         { status: 'success', key: items[0].key },
@@ -326,7 +326,7 @@ describe('StateProvider', () => {
         { status: 'success', key: 'foo' },
         { status: 'success', key: 'bar' },
       ]);
-      // @ts-ignore - mock implementation
+      // @ts-expect-error - mock implementation
       storage.clear = mockClear;
 
       const result = await provider.clear();

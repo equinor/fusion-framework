@@ -1,4 +1,4 @@
-import { from, lastValueFrom, type ObservableInput } from 'rxjs';
+import { from, lastValueFrom } from 'rxjs';
 
 import {
   BaseConfigBuilder,

@@ -4,13 +4,10 @@
 
 import { FrameworkEvent, type FrameworkEventInit } from '@equinor/fusion-framework-module-event';
 
-import type { AllowedValue } from '../types.js';
 import type { StateSyncStatus } from '../storage/types.js';
 
 /**
  * Initialization parameters for sync status events.
- *
- * @template T - The type of data being synced
  */
 export type StateSyncStatusEventInit = FrameworkEventInit<{
   /** Unique identifier for the sync session */
@@ -22,8 +19,6 @@ export type StateSyncStatusEventInit = FrameworkEventInit<{
 /**
  * Event dispatched when the sync operation status changes (e.g., becomes active or paused).
  *
- * @template T - The type of data being synced
- *
  * @example
  * ```typescript
  * eventBus.on('onStateSync.status', (event) => {
@@ -33,9 +28,7 @@ export type StateSyncStatusEventInit = FrameworkEventInit<{
  * });
  * ```
  */
-export class StateSyncStatusEvent<
-  T extends AllowedValue = AllowedValue,
-> extends FrameworkEvent<StateSyncStatusEventInit> {
+export class StateSyncStatusEvent extends FrameworkEvent<StateSyncStatusEventInit> {
   static readonly Type = 'onStateSync.status';
   /**
    * Determines whether an unknown value is a state synchronization status event.

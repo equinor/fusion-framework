@@ -180,8 +180,8 @@ export class AppConfigurator<
    * The immutable application manifest.
    *
    * Deeply frozen at construction time to prevent accidental mutations.
-    *
-    * @returns The deeply immutable application manifest.
+   *
+   * @returns The deeply immutable application manifest.
    */
   get manifest(): DeepImmutable<AppEnv['manifest']> {
     return this.#manifest;

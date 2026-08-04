@@ -12,14 +12,9 @@ import {
   type MetadataExtractor,
 } from '@equinor/fusion-framework-module-telemetry';
 
-import {
-  AppConfigurator,
-  type IAppConfigurator,
-  type AppConfiguratorConstructor,
-} from './AppConfigurator';
+import { AppConfigurator } from './AppConfigurator';
 
-import type { AppModulesInstance, AppModuleInitiator, AppEnv, AppModuleInitArgs } from './types';
-import { AppConfiguratorError } from './AppConfiguratorError';
+import type { AppModulesInstance, AppModuleInitiator, AppEnv } from './types';
 
 /**
  * Create an application module initializer for a Fusion application.

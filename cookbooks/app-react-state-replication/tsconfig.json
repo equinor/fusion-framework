@@ -6,7 +6,10 @@
     "jsx": "react-jsx",
     "baseUrl": "./src"
   },
-  "references": [{ "path": "../../packages/modules/state" }],
+  "references": [
+    { "path": "../../packages/modules/state" },
+    { "path": "../../packages/react/router" }
+  ],
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]
 }

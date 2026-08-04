@@ -1,7 +1,5 @@
 import { Typography } from '@equinor/eds-core-react';
 
-import type { SyncEvent } from '../../modules/app-state-with-replication';
-
 import { SyncStatusIndicator } from './SyncStatusIndicator';
 import { useSyncEvents } from './useSyncEvents';
 
@@ -28,7 +26,7 @@ export const SyncEventList: React.FC<SyncEventListProps> = ({
             .reverse()
             .map((event, index) => (
               <div
-                key={`${event.timestamp}-${index}`}
+                key={event.id}
                 style={{
                   display: 'flex',
                   alignItems: 'center',

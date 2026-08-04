@@ -1,13 +1,9 @@
 import type { Module } from '@equinor/fusion-framework-module';
 
-import {
-  StateModuleConfigurator,
-  type IStateModuleConfigurator,
-} from './StateModuleConfigurator.js';
+import type { IStateModuleConfigurator } from './StateModuleConfigurator.js';
 
 import type { IStateProvider } from './StateProvider.interface.js';
-import StateProvider from './StateProvider.js';
-import { name } from './name.js';
+import type { name } from './name.js';
 
 /**
  * Represents a module for managing application state within the Fusion framework.

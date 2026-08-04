@@ -68,10 +68,10 @@ export const TodoListManager = () => {
           items: prev.items
             // Update only the selected item while preserving the list order.
             .map((item) =>
-            item.id === id
-              ? { ...item, completed: !item.completed, updatedAt: new Date().toISOString() }
-              : item,
-          ),
+              item.id === id
+                ? { ...item, completed: !item.completed, updatedAt: new Date().toISOString() }
+                : item,
+            ),
           lastModified: new Date().toISOString(),
         };
       });

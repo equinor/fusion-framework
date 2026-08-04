@@ -24,9 +24,7 @@ export { configureModules, default } from './configure-modules';
 
 export { AppConfiguratorError } from './AppConfiguratorError';
 
-export {
-  AppModulesConfiguredEvent,
-} from './AppModulesConfiguredEvent';
+export { AppModulesConfiguredEvent } from './AppModulesConfiguredEvent';
 
 export { AppModulesInitializedEvent } from './AppModulesInitializedEvent';
 

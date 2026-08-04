@@ -96,9 +96,9 @@ export class PouchDbStorage implements IStorage, Disposable {
   /**
    * Static factory method for creating PouchDB instances.
    * Useful for testing or when you need to configure the database before creating storage.
-    * @param name - Database name.
-    * @param options - PouchDB database options.
-    * @returns A configured PouchDB database instance.
+   * @param name - Database name.
+   * @param options - PouchDB database options.
+   * @returns A configured PouchDB database instance.
    */
   public static CreateDb(
     name: string,
@@ -837,7 +837,7 @@ export class PouchDbStorage implements IStorage, Disposable {
    * @template T - Value type stored in documents
    * @param args - Query options including docs inclusion and pagination
    * @returns PouchDB AllDocsResponse with typed document values
-  * @throws {StorageError} When the database query fails.
+   * @throws {StorageError} When the database query fails.
    */
   protected async _allItems<T extends AllowedValue>(args?: {
     include_docs?: boolean;
@@ -897,7 +897,7 @@ export class PouchDbStorage implements IStorage, Disposable {
    * @protected
    * @param args - Arguments to pass to PouchDB's bulkDocs method
    * @returns Array of normalized StorageResult objects
-  * @throws {StorageError} When the bulk operation fails.
+   * @throws {StorageError} When the bulk operation fails.
    */
   protected async _executeBulk(
     ...args: Parameters<PouchDB.Database['bulkDocs']>

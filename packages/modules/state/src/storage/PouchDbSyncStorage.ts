@@ -16,7 +16,7 @@ type PouchDbSyncStorageOptions = {
 };
 
 /** PouchDB storage adapter that synchronizes a local database with a remote database. */
-class PouchDbSyncStorage extends PouchDbStorage {
+export class PouchDbSyncStorage extends PouchDbStorage {
   #remoteDb: PouchDB.Database;
   #syncOptions: PouchDB.Replication.SyncOptions;
 
