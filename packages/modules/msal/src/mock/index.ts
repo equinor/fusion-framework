@@ -26,3 +26,4 @@ export { createMsalMockClient } from './create-msal-mock-client';
 export { MsalMockConfigurator } from './MsalMockConfigurator';
 export { enableMsalMock, msalMockModule, type AuthConfigMockFn } from './module';
 export { createMockToken, type MockTokenClaims } from './create-mock-token';
+export { decodeJwtSegment } from './decode-jwt-segment';

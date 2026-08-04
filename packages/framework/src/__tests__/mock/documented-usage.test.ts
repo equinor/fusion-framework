@@ -1,5 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
+import { decodeJwtSegment } from '@equinor/fusion-framework-module-msal/mock';
+
 import { init } from '../../init.js';
 import { createMockService, FrameworkMockConfigurator, mockFramework } from '../../mock/index.js';
 
@@ -71,7 +73,7 @@ describe('documented usage', () => {
     });
 
     const token = await fusion.modules.auth.acquireAccessToken();
-    const claims = JSON.parse(atob(token?.split('.')[1] ?? ''));
+    const claims = JSON.parse(decodeJwtSegment(token?.split('.')[1] ?? ''));
 
     // MsalProvider — not the mock — turns "no scopes requested" into `${clientId}/.default`
     expect(claims.scp).toBe('my-app/.default');
