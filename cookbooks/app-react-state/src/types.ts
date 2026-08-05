@@ -1,8 +1,7 @@
 /**
- * Type definitions for the State Replication Cookbook
+ * Shared type definitions for the cookbook's Profile example. Sync status types don't live here -
+ * they come from the framework itself, see `useStateSyncEvents` and `StateSyncEventType`.
  */
-
-export type SyncStatus = 'online' | 'offline' | 'syncing' | 'error';
 
 export type UserProfile = {
   id: string;
@@ -19,12 +18,4 @@ export type UserPreferences = {
     email: boolean;
     push: boolean;
   };
-};
-
-export type ReplicationSettings = {
-  url: string;
-  username?: string;
-  password?: string;
-  live: boolean;
-  retry: boolean;
 };

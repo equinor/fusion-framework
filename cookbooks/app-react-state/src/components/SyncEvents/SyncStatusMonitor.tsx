@@ -7,7 +7,6 @@ import { SyncEventList } from './SyncEventList';
 /** Displays the latest synchronization status and event history. */
 export const SyncStatusMonitor = (props: { height: string }) => {
   const events = useStateSyncEvents(20);
-  console.log('SyncStatusMonitor events:', events);
   const lastEvent = events.at(-1);
 
   return (

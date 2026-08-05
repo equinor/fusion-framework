@@ -154,10 +154,12 @@ The fundamentals of `useAppState` - a boolean, a string, and an optional value w
 
 ### 2. Profile Manager
 
-- **User profile data** - name, email, preferences
-- **Reducer pattern** - manage complex state transitions
-- **Real-time updates** - changes sync across browser tabs when CouchDB replication is enabled
-- **Conflict resolution** - last-write-wins strategy
+- **Object state** - a single `useAppState` key holding a nested profile (name, email,
+  preferences)
+- **Immutable updates** - every field spreads the previous profile and overwrites just its part,
+  no reducer or action-creator library required
+- **Real-time updates** - changes sync across browser tabs and devices when CouchDB replication is
+  enabled
 
 ### 3. Sync Status Monitor
 
@@ -170,9 +172,9 @@ events (see [Observing Sync Events](#observing-sync-events)):
 
 ### 4. Todo List
 
-- **CRUD operations** - create, read, update, delete todos
-- **Optimistic updates** - instant UI feedback
-- **Conflict resolution** - handles concurrent edits
+- **Array state** - a list nested inside an object, added to, updated in place, and filtered with
+  plain array methods (`map`, `filter`)
+- **Optimistic updates** - instant UI feedback, persisted (and replicated) in the background
 
 ## 🔧 Advanced Configuration
 

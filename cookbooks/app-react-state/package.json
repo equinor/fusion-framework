@@ -25,7 +25,6 @@
     "@equinor/fusion-framework-module-state": "workspace:^",
     "@equinor/fusion-framework-react-app": "workspace:^",
     "@equinor/fusion-framework-react-router": "workspace:^",
-    "@equinor/fusion-observable": "workspace:^",
     "@types/pouchdb": "^6.4.2",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",

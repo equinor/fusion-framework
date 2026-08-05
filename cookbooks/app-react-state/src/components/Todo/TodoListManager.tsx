@@ -9,17 +9,12 @@ import { useCallback } from 'react';
 import { v4 as uuid } from 'uuid';
 
 /**
- * Manages replicated task state with real-world data.
+ * Demonstrates `useAppState` with an *array* inside an object - the most realistic shape for
+ * real app data, where a list needs to be added to, updated in place, and filtered.
  *
- * This component shows how complex application state (a task list)
- * can be synchronized between the local app and remote CouchDB.
- * Changes made here will be replicated to other instances of the app.
- *
- * Features:
- * - Add/remove/toggle task items
- * - Persistent state across sessions
- * - Real-time sync with other app instances
- * - Optimistic updates with automatic conflict resolution
+ * Persisted the same way as the simpler examples in `Basics.tsx`: to local storage by default,
+ * or to CouchDB - and therefore to every other open tab/device - when replication is configured
+ * (see `src/config.ts`).
  */
 export const TodoListManager = () => {
   const [todoList, setTodoList] = useAppState<TodoList>('todos', {
@@ -42,17 +37,10 @@ export const TodoListManager = () => {
         updatedAt: new Date().toISOString(),
       };
 
-      setTodoList((prev) => {
-        const items = [...(prev?.items || []), newTodo];
-        console.log('Adding todo:', newTodo);
-        console.log('Previous todo list:', prev);
-        console.log('Updated todo list:', items);
-        return {
-          items,
-          foo: 'bar',
-          lastModified: new Date().toISOString(),
-        };
-      });
+      setTodoList((prev) => ({
+        items: [...(prev?.items ?? []), newTodo],
+        lastModified: new Date().toISOString(),
+      }));
     },
     [setTodoList],
   );
@@ -114,10 +102,10 @@ export const TodoListManager = () => {
 
   return (
     <div style={{ marginBottom: '32px' }}>
-      <h2>📝 Replicated Todo List</h2>
+      <h2>📝 Todo List</h2>
       <p>
-        Add todos below. Changes are automatically synced with CouchDB and will appear in other
-        instances of this app in real-time.
+        Add todos below - they persist across page reloads, and sync to every other open tab or
+        device once CouchDB replication is configured (see <code>src/config.ts</code>).
       </p>
 
       <TodoForm onAdd={addTodo} />

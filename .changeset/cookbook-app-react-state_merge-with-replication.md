@@ -20,3 +20,9 @@ Merged the `app-react-state` and `app-react-state-replication` cookbooks into on
 - The `SyncStatusMonitor`/`SyncEventList`/`SyncStatusIndicator` components now consume the
   framework's `useStateSyncEvents` hook (`@equinor/fusion-framework-react-app/state`) instead of a
   cookbook-local hook/Context reimplementation of the same subscription logic.
+- Simplified `ProfileManager` from 10 files (a `@equinor/fusion-observable` reducer, action
+  creators, and seven single-field presentational components) down to a single component using
+  plain `useAppState` + immutable object spreads, matching the pattern already used by the
+  `Basics` and `Todos` pages - and dropped the now-unused `@equinor/fusion-observable` dependency.
+- Removed leftover debug `console.log`s and dead types (`SyncStatus`, `ReplicationSettings`) left
+  over from the pre-merge, hand-rolled sync implementation.

@@ -1,10 +1,11 @@
 import Router from './Router';
 
 /**
- * Main App component for the State Replication Cookbook
+ * Main App component for the Fusion Framework state module cookbook.
  *
- * This application demonstrates how to sync state between a React app
- * and a CouchDB database using the Fusion Framework state module.
+ * Demonstrates `useAppState` for persistent, cross-component-synced app state - by default
+ * backed by local storage, or optionally by CouchDB replication (see `src/config.ts`) so state
+ * syncs across browser tabs, devices, and sessions.
  */
 export const App = () => {
   return <Router />;

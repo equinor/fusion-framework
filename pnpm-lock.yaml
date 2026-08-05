@@ -763,9 +763,6 @@ importers:
       '@equinor/fusion-framework-react-router':
         specifier: workspace:^
         version: link:../../packages/react/router
-      '@equinor/fusion-observable':
-        specifier: workspace:^
-        version: link:../../packages/utils/observable
       '@types/pouchdb':
         specifier: ^6.4.2
         version: 6.4.2
