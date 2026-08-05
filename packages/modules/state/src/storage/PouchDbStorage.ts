@@ -1,7 +1,7 @@
 import PouchDB from 'pouchdb';
 import { type Observable, Subject, type SubscriptionLike } from 'rxjs';
 
-import type { AllowedValue } from '@equinor/fusion-framework-module-state';
+import type { AllowedValue } from '../types.js';
 
 import type { StorageItem, StorageResult } from './types.js';
 

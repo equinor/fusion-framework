@@ -1,6 +1,7 @@
 import type { Observable } from 'rxjs';
 
-import type { AllowedValue, StateEventType } from '@equinor/fusion-framework-module-state';
+import type { AllowedValue } from '../types.js';
+import type { StateEventType } from '../events/index.js';
 
 import type { StorageItem, StorageResult } from './types.js';
 

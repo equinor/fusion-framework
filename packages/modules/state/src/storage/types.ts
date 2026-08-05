@@ -1,4 +1,4 @@
-import type { AllowedValue } from '@equinor/fusion-framework-module-state';
+import type { AllowedValue } from '../types.js';
 import type { StorageError } from './StorageError.js';
 
 /**

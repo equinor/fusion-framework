@@ -3,7 +3,7 @@
  */
 
 import { FrameworkEvent, type FrameworkEventInit } from '@equinor/fusion-framework-module-event';
-import type { AllowedValue } from '@equinor/fusion-framework-module-state';
+import type { AllowedValue } from '../types.js';
 import type { StorageItem } from '../storage/types.js';
 
 /**

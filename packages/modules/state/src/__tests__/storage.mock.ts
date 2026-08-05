@@ -1,4 +1,4 @@
-import type { AllowedValue } from '@equinor/fusion-framework-module-state';
+import type { AllowedValue } from '../types.js';
 import { type Observable, Subject } from 'rxjs';
 
 import type {
@@ -76,11 +76,11 @@ export class MockStorage implements IStorage {
     // Remove item from storage using destructuring to get both the removed item and remaining items
     const { [item.key]: removed, ...rest } = this.items;
     this.items = rest;
-    // Emit deletion event with the removed item (if it existed)
-    this.#events.next(
-      new StateChangeEvent.Deleted({ detail: { key: removed.key, item: removed } }),
-    );
-    return Promise.resolve({ status: 'success', key: removed.key });
+    // Only emit a deletion event when the key actually existed.
+    if (removed) {
+      this.#events.next(new StateChangeEvent.Deleted({ detail: { key: item.key, item: removed } }));
+    }
+    return Promise.resolve({ status: 'success', key: item.key });
   }
 
   item<T extends AllowedValue>(key: string): Promise<StorageItem<T> | null> {
