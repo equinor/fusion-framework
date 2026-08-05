@@ -125,7 +125,7 @@ interface UseAppStateOptions<T extends AllowedValue> {
  * **Clearing State:**
  * ```tsx
  * function DataManager() {
- *   const [data, setData] = useAppState<any[]>('cache.data');
+ *   const [data, setData] = useAppState<unknown[]>('cache.data');
  *
  *   const clearCache = () => {
  *     // Setting to undefined removes the item from storage completely
@@ -164,7 +164,6 @@ interface UseAppStateOptions<T extends AllowedValue> {
  *
  *   return <div>...</div>;
  * }
- * ```
  * ```
  *
  * @since 6.3.0
@@ -243,7 +242,7 @@ export const useAppState = <T extends AllowedValue = AllowedValue>(
       const subscription = value$
         // Transform state emissions into the snapshot updates expected by React.
         .pipe(
-          // skip the initial value, since we don`t want to emit anything before the app state provider has initialized
+          // skip the initial value, since we don't want to emit anything before the app state provider has initialized
           skip(1),
           // Apply default value logic consistently with snapshot function
           map((value) => (value === undefined ? options?.defaultValue : value)),
