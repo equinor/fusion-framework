@@ -453,8 +453,7 @@ The state module supports various value types through the `AllowedValue` type:
 - `number`
 - `boolean`
 - `Array<unknown>`
-- `Record<string | symbol | number, unknown>`
-- `Set<unknown>`
+- `Record<string, unknown>`
 - `null`
 - `undefined`
 

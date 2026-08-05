@@ -1,8 +1,7 @@
 export type AllowedValue =
   | string
   | Array<unknown>
-  | Record<string | symbol | number, unknown>
-  | Set<unknown>
+  | Record<string, unknown>
   | number
   | boolean
   | undefined
