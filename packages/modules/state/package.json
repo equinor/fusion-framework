@@ -73,6 +73,6 @@
     "happy-dom": "^20.8.9",
     "pouchdb-adapter-idb": "^9.0.0",
     "typescript": "^5.8.2",
-    "vitest": "^2.0.5"
+    "vitest": "^3.2.6"
   }
 }

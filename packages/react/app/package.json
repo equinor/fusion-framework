@@ -164,7 +164,7 @@
     "react-dom": "^19.2.1",
     "rxjs": "^7.8.1",
     "typescript": "^7.0.2",
-    "vitest": "^4.1.0"
+    "vitest": "^3.2.6"
   },
   "peerDependencies": {
     "@equinor/fusion-framework-module-msal": "workspace:^",
