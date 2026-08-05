@@ -95,7 +95,7 @@ export async function createModuleConfigs<TRef>(
         throw err;
       }
     }),
-    reduce<Record<string, any>, Record<string, any>>(
+    reduce<Record<string, unknown>, Record<string, unknown>>(
       (acc, module) => {
         // Merge each module's config object into the shared accumulator
         const merged = Object.assign(acc, module);
