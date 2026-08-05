@@ -37,12 +37,12 @@ export const useStateSyncEvents = (limit: number): StateSyncEventType[] => {
 
   useLayoutEffect(() => {
     // Narrow the shared event stream down to the sync-related events this hook exposes.
-    const subscription = eventProvider.event$
-      .pipe(filter(StateSyncEvent.is))
-      .subscribe((event) => {
-        const next = [...event$.getValue(), event];
-        event$.next(next.length > limitRef.current ? next.slice(-limitRef.current) : next);
-      });
+    const subscription = eventProvider.event$.pipe(filter(StateSyncEvent.is)).subscribe((event) => {
+      const next = [...event$.getValue(), event];
+      // Clamp to 0 so `slice(-0)` (a no-op, unlike `slice(-1)`) can't retain the whole log.
+      const limit = Math.max(0, limitRef.current);
+      event$.next(limit === 0 ? [] : next.length > limit ? next.slice(-limit) : next);
+    });
     return () => subscription.unsubscribe();
   }, [eventProvider, event$]);
 

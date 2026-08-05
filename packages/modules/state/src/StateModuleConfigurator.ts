@@ -118,4 +118,3 @@ export class StateModuleConfigurator
 }
 
 export default StateModuleConfigurator;
-

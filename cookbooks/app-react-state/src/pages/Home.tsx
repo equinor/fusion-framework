@@ -15,9 +15,9 @@ export const Home = () => {
     <div style={{ maxWidth: '800px', margin: '0 auto', padding: '20px' }}>
       <h1>🔄 Fusion Framework State Cookbook</h1>
       <p>
-        This cookbook demonstrates the Fusion Framework state module - useAppState works with
-        zero configuration out of the box, and can optionally be upgraded to real-time replication
-        with a local CouchDB instance.
+        This cookbook demonstrates the Fusion Framework state module - useAppState works with zero
+        configuration out of the box, and can optionally be upgraded to real-time replication with a
+        local CouchDB instance.
       </p>
       <p>
         New to <code>useAppState</code>? Start with the <Link to="/basics">Basics</Link> page for

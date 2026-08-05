@@ -29,7 +29,12 @@ export const SyncEventList: React.FC<SyncEventListProps> = ({ events, maxHeight 
                 borderBottom: index < latestFirst.length - 1 ? '1px solid #E9ECEF' : 'none',
               }}
             >
-              <SyncStatusIndicator event={event} size="small" showText={true} showTimestamp={true} />
+              <SyncStatusIndicator
+                event={event}
+                size="small"
+                showText={true}
+                showTimestamp={true}
+              />
             </div>
           ))
         ) : (
@@ -41,4 +46,3 @@ export const SyncEventList: React.FC<SyncEventListProps> = ({ events, maxHeight 
     </div>
   );
 };
-

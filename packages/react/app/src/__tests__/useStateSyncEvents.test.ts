@@ -34,7 +34,9 @@ describe('useStateSyncEvents', () => {
 
     act(() => {
       event$.next(new StateSyncEvent.Status({ detail: { status: 'active' } }));
-      event$.next(new StateSyncEvent.Error({ detail: { error: new Error('boom'), type: 'error' } }));
+      event$.next(
+        new StateSyncEvent.Error({ detail: { error: new Error('boom'), type: 'error' } }),
+      );
     });
 
     expect(result.current).toHaveLength(1);

@@ -34,4 +34,3 @@ export const SyncStatusMonitor = (props: { height: string }) => {
 };
 
 export default SyncStatusMonitor;
-
