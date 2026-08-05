@@ -71,8 +71,7 @@ export type StateSyncEventType<T extends AllowedValue = AllowedValue> =
   | StateSyncChangeEvent<T>
   | StateSyncCompleteEvent<T>
   | StateSyncErrorEvent
-  | StateSyncStatusEvent
-  | StateErrorEvent;
+  | StateSyncStatusEvent;
 
 /**
  * Union type representing all possible state operation events.
