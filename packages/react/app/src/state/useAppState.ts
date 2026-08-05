@@ -228,7 +228,7 @@ export const useAppState = <T extends AllowedValue = AllowedValue>(
     return () => {
       subscription.unsubscribe();
     };
-  }, [stateProvider.observeItem, value$]);
+  }, [stateProvider, value$]);
 
   // Helper function to get the current value, falling back to the default if necessary
   const getValue = useCallback(
@@ -266,8 +266,10 @@ export const useAppState = <T extends AllowedValue = AllowedValue>(
   // If persistence fails, the state provider will emit the old value, reverting the update.
   const setValue = useCallback(
     (action: SetStateAction<T | undefined>) => {
-      // Handle both direct values and updater functions (like React's useState)
-      const value = typeof action === 'function' ? action(value$.value) : action;
+      // Handle both direct values and updater functions (like React's useState).
+      // Apply the same defaulting as the snapshot so updaters never see a bare `undefined`
+      // when a `defaultValue` was provided.
+      const value = typeof action === 'function' ? action(getValue(value$.value)) : action;
 
       // Remove undefined values from storage while updating subscribers immediately.
       if (value === undefined) {
@@ -289,7 +291,7 @@ export const useAppState = <T extends AllowedValue = AllowedValue>(
           });
       }
     },
-    [stateProvider, value$],
+    [stateProvider, value$, getValue],
   );
 
   return [value, setValue];
