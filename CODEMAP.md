@@ -13,7 +13,7 @@ search to rediscover it.
 
 | Path | Contains | Published? |
 | --- | --- | --- |
-| `packages/*` | Framework libraries (59 packages) | Yes, via Changesets |
+| `packages/*` | Framework libraries (60 packages) | Yes, via Changesets |
 | `cookbooks/*` | Runnable example apps and portals | Yes (versioned, but examples) |
 | `eds-content/`, `eds/` | EDS design-system content and token tooling | No |
 | `vue-press/` | Documentation site | Partly |
