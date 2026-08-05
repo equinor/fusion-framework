@@ -12,7 +12,7 @@
     },
     "./events": {
       "import": "./dist/esm/events/index.js",
-      "types": "./dist/types/storeventsage/index.d.ts"
+      "types": "./dist/types/events/index.d.ts"
     },
     "./storage": {
       "import": "./dist/esm/storage/index.js",
@@ -25,6 +25,9 @@
     "*": {
       ".": [
         "dist/types/index.d.ts"
+      ],
+      "events": [
+        "dist/types/events/index.d.ts"
       ],
       "storage": [
         "dist/types/storage/index.d.ts"
