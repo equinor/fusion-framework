@@ -1,5 +1,14 @@
 # @equinor/fusion-framework-module-analytics
 
+## 3.0.4
+
+### Patch Changes
+
+- de2b4fb: Added missing TSDoc comments on class fields flagged by the new `require-property-tsdoc` fusion-lint rule.
+- Updated dependencies [de2b4fb]
+  - @equinor/fusion-framework-module-app@8.0.4
+  - @equinor/fusion-framework-module-http@8.0.5
+
 ## 3.0.3
 
 ### Patch Changes

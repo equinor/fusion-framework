@@ -33,9 +33,7 @@ function isPrivateMember(node: Node): boolean {
   // `#name` members parse as private_property_identifier regardless of modifiers
   if (nameNode?.type === 'private_property_identifier') return true;
   // Check for an explicit `private` accessibility modifier
-  return node.children.some(
-    (c) => c.type === 'accessibility_modifier' && c.text === 'private',
-  );
+  return node.children.some((c) => c.type === 'accessibility_modifier' && c.text === 'private');
 }
 
 /**

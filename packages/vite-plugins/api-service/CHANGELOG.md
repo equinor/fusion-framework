@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-vite-plugin-api-service
 
+## 2.0.5
+
+### Patch Changes
+
+- 12071a3: Include the HTTP request method in proxy request/response log messages, so multiple requests to the same URL (e.g. `GET` vs `POST`) can be distinguished in dev-server logs.
+
 ## 2.0.4
 
 ### Patch Changes

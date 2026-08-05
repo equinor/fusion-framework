@@ -1,5 +1,13 @@
 # @equinor/fusion-framework-vite-plugin-spa
 
+## 4.0.15
+
+### Patch Changes
+
+- 6a3080a: Forward the original request's `cache` mode when the service worker re-fetches a proxied request. Previously a caller requesting `cache: 'no-store'` (e.g. a polling endpoint) would silently fall back to the default HTTP cache once passed through the service worker.
+- Updated dependencies [de2b4fb]
+  - @equinor/fusion-framework-module-http@8.0.5
+
 ## 4.0.14
 
 ### Patch Changes

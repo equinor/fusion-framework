@@ -1,5 +1,13 @@
 # Change Log
 
+## 16.0.4
+
+### Patch Changes
+
+- Updated dependencies [de2b4fb]
+  - @equinor/fusion-framework-module-http@8.0.5
+  - @equinor/fusion-query@7.0.3
+
 ## 16.0.3
 
 ### Patch Changes

@@ -1,5 +1,21 @@
 # @equinor/fusion-framework-dev-portal
 
+## 8.0.3
+
+### Patch Changes
+
+- f7d2666: Match `app-portal` stacking behaviour.
+- Updated dependencies [de2b4fb]
+  - @equinor/fusion-framework-module-app@8.0.4
+  - @equinor/fusion-framework-module-analytics@3.0.4
+  - @equinor/fusion-framework-module-bookmark@4.0.4
+  - @equinor/fusion-framework-module-feature-flag@2.0.3
+  - @equinor/fusion-framework-module-services@8.0.3
+  - @equinor/fusion-query@7.0.3
+  - @equinor/fusion-framework-app@11.0.12
+  - @equinor/fusion-framework@8.0.12
+  - @equinor/fusion-framework-dev-server@2.0.17
+
 ## 8.0.2
 
 ### Patch Changes
