@@ -80,14 +80,6 @@ export default sidebar({
           text: 'React Applications',
           children: [
             {
-              text: 'Basic React App',
-              link: 'react-app-basic.md',
-            },
-            {
-              text: 'MSAL Authentication',
-              link: 'react-app-msal.md',
-            },
-            {
               text: 'AG Grid',
               link: 'react-app-ag-grid.md',
             },
@@ -100,11 +92,15 @@ export default sidebar({
               link: 'react-app-assets.md',
             },
             {
+              text: 'Basic React App',
+              link: 'react-app-basic.md',
+            },
+            {
               text: 'Bookmarks',
               link: 'react-app-bookmark.md',
             },
             {
-              text: 'Advanced Bookmarks',
+              text: 'Bookmarks Advanced',
               link: 'react-app-bookmark-advanced.md',
             },
             {
@@ -120,6 +116,10 @@ export default sidebar({
               link: 'react-app-context-custom-error.md',
             },
             {
+              text: 'Custom Modules',
+              link: 'react-app-module.md',
+            },
+            {
               text: 'Environment Variables',
               link: 'react-app-environment-variables.md',
             },
@@ -128,8 +128,8 @@ export default sidebar({
               link: 'react-app-feature-flag.md',
             },
             {
-              text: 'Custom Modules',
-              link: 'react-app-module.md',
+              text: 'MSAL Authentication',
+              link: 'react-app-msal.md',
             },
             {
               text: 'People Service',
@@ -143,15 +143,15 @@ export default sidebar({
               text: 'Settings',
               link: 'react-app-settings.md',
             },
+            {
+              text: 'State',
+              link: 'react-app-state.md',
+            },
           ],
         },
         {
           text: 'Other Examples',
           children: [
-            {
-              text: 'Vanilla JavaScript',
-              link: 'app-vanilla.md',
-            },
             {
               text: 'Portal',
               link: 'app-portal.md',
@@ -159,6 +159,10 @@ export default sidebar({
             {
               text: 'Portal Analytics',
               link: 'portal-analytics.md',
+            },
+            {
+              text: 'Vanilla JavaScript',
+              link: 'app-vanilla.md',
             },
           ],
         },
@@ -272,72 +276,61 @@ export default sidebar({
     },
   ],
   '/modules/': [
-    '',
     {
-      text: 'Module System',
-      prefix: 'module/',
+      text: 'Core Concepts',
       link: 'module/',
       children: [
         {
+          text: 'Intro',
+          link: '',
+        },
+        {
           text: 'Concepts',
-          link: 'docs/concepts.md',
+          link: 'module/docs/concepts.md',
         },
         {
           text: 'Lifecycle',
-          link: 'docs/lifecycle.md',
+          link: 'module/docs/lifecycle.md',
         },
         {
           text: 'Configuration',
-          link: 'docs/configuration.md',
+          link: 'module/docs/configuration.md',
         },
         {
           text: 'Cross-Module Dependencies',
-          link: 'docs/cross-module-deps.md',
+          link: 'module/docs/cross-module-deps.md',
         },
         {
           text: 'Events',
-          link: 'docs/events.md',
+          link: 'module/docs/events.md',
         },
         {
           text: 'Authoring Modules',
-          link: 'docs/authoring-modules.md',
+          link: 'module/docs/authoring-modules.md',
         },
         {
           text: 'Common Mistakes',
-          link: 'docs/common-mistakes.md',
+          link: 'module/docs/common-mistakes.md',
         },
       ],
     },
+    'ag-grid/',
     {
-      text: 'HTTP',
-      link: 'http/',
+      text: 'Analytics',
+      prefix: 'analytics/',
+      link: 'analytics/',
       children: [
         {
-          text: 'Overview',
-          link: 'http/',
+          text: 'module',
+          link: 'README.md',
         },
         {
-          text: 'Client Configuration',
-          link: 'http/docs/client-configuration.md',
-        },
-        {
-          text: 'Observable Patterns',
-          link: 'http/docs/observable-patterns.md',
-        },
-        {
-          text: 'Selectors And Handlers',
-          link: 'http/docs/selectors-and-handlers.md',
-        },
-        {
-          text: 'Server-Sent Events',
-          link: 'http/docs/server-sent-events.md',
+          text: 'React',
+          link: 'react.md',
         },
       ],
     },
-    {
-      text: 'Context',
-      link: 'context/',
-    },
+    'app/',
     {
       text: 'Authentication',
       prefix: 'auth/',
@@ -356,7 +349,14 @@ export default sidebar({
         },
       ],
     },
-    'app/',
+    {
+      text: 'Bookmark',
+      link: 'bookmark/',
+    },
+    {
+      text: 'Context',
+      link: 'context/',
+    },
     {
       text: 'Event',
       prefix: 'event/',
@@ -387,10 +387,33 @@ export default sidebar({
         },
       ],
     },
+    {
+      text: 'HTTP',
+      link: 'http/',
+      children: [
+        {
+          text: 'Overview',
+          link: 'http/',
+        },
+        {
+          text: 'Client Configuration',
+          link: 'http/docs/client-configuration.md',
+        },
+        {
+          text: 'Observable Patterns',
+          link: 'http/docs/observable-patterns.md',
+        },
+        {
+          text: 'Selectors And Handlers',
+          link: 'http/docs/selectors-and-handlers.md',
+        },
+        {
+          text: 'Server-Sent Events',
+          link: 'http/docs/server-sent-events.md',
+        },
+      ],
+    },
     'navigation/',
-    'bookmark/',
-    'ag-grid/',
-    'widget/',
     {
       text: 'React',
       prefix: 'react/',
@@ -421,25 +444,6 @@ export default sidebar({
       link: 'service-discovery/',
     },
     {
-      text: 'Telemetry',
-      link: 'telemetry/',
-    },
-    {
-      text: 'Analytics',
-      prefix: 'analytics/',
-      link: 'analytics/',
-      children: [
-        {
-          text: 'module',
-          link: 'README.md',
-        },
-        {
-          text: 'React',
-          link: 'react.md',
-        },
-      ],
-    },
-    {
       text: 'Services',
       prefix: 'services/',
       link: 'services/',
@@ -458,6 +462,41 @@ export default sidebar({
         },
       ],
     },
+    {
+      text: 'State',
+      link: 'state/',
+      children: [
+        {
+          text: 'Overview',
+          link: 'state/',
+        },
+        {
+          text: 'Usage & Error Handling',
+          link: 'state/docs/usage.md',
+        },
+        {
+          text: 'Storage',
+          link: 'state/docs/storage.md',
+        },
+        {
+          text: 'Events',
+          link: 'state/docs/events.md',
+        },
+        {
+          text: 'API Reference',
+          link: 'state/docs/api-reference.md',
+        },
+        {
+          text: 'Performance',
+          link: 'state/docs/performance.md',
+        },
+      ],
+    },
+    {
+      text: 'Telemetry',
+      link: 'telemetry/',
+    },
+    'widget/',
   ],
   '/plugins/': [
     '',
