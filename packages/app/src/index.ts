@@ -16,11 +16,17 @@
  * sub-path export.
  */
 
-export { AppConfigurator, IAppConfigurator } from './AppConfigurator';
+export { AppConfigurator, IAppConfigurator, AppConfiguratorConstructor } from './AppConfigurator';
 
 export * from './types';
 
 export { configureModules, default } from './configure-modules';
+
+export { AppConfiguratorError } from './AppConfiguratorError';
+
+export { AppModulesConfiguredEvent } from './AppModulesConfiguredEvent';
+
+export { AppModulesInitializedEvent } from './AppModulesInitializedEvent';
 
 /**
  * @deprecated Use {@link configureModules} instead. This alias will be removed in a future major version.

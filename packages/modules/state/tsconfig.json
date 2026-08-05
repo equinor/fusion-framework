@@ -1,0 +1,29 @@
+{
+  "extends": "../../../tsconfig.base.json",
+  "compilerOptions": {
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "outDir": "dist/esm",
+    "rootDir": "src",
+    "declarationDir": "./dist/types",
+    "paths": {
+      "@equinor/fusion-framework-module-state/storage": ["./src/storage"]
+    }
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "lib", "src/__tests__"],
+  "references": [
+    {
+      "path": "../module"
+    },
+    {
+      "path": "../event"
+    },
+    {
+      "path": "../http"
+    },
+    {
+      "path": "../service-discovery"
+    }
+  ]
+}

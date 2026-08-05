@@ -41,6 +41,7 @@ Our React cookbooks demonstrate how to build applications using the Fusion Frame
 - **[People Service](react-app-people.md)** - People search and person component integration
 - **[Router](react-app-router.md)** - Client-side routing and navigation
 - **[Settings](react-app-settings.md)** - Application settings management
+- **[State](react-app-state.md)** - Persistent, cross-component state with `useAppState`, including CouchDB replication
 
 ### Other Examples
 
