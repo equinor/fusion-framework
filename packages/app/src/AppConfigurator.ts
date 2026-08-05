@@ -114,7 +114,7 @@ export interface IAppConfigurator<
  * Configurator that bootstraps default Fusion application modules and provides
  * helper methods for HTTP client and service-discovery setup.
  *
- * `AppConfigurator` is created internally by {\@link configureModules}. It registers
+ * `AppConfigurator` is created internally by {@link configureModules}. It registers
  * the `event`, `http`, and `msal` (auth) modules by default and reads any HTTP
  * endpoints declared in the application's environment config.
  *
