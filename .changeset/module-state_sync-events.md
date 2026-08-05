@@ -36,3 +36,5 @@ Comprehensive event architecture for type-safe state management:
 - **Storage Interface**: Extensible storage backends with sync capabilities
 - **Type Safety**: Comprehensive TypeScript definitions
 - **Memory Management**: Proper cleanup and disposal patterns
+- Storage and sync events are dispatched through the app's `event` module, so `onStateSync.*`
+  listeners registered via `useAppModule('event').addEventListener(...)` actually fire.

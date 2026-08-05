@@ -29,7 +29,7 @@ import { BaseModuleProvider } from '@equinor/fusion-framework-module/provider';
 import { version } from './version.js';
 
 import isEqual from 'fast-deep-equal';
-import type { ModulesInstance, ModuleType } from '@equinor/fusion-framework-module';
+import type { ModuleType } from '@equinor/fusion-framework-module';
 import type { EventModule } from '@equinor/fusion-framework-module-event';
 
 /**
@@ -62,14 +62,14 @@ export class StateProvider<TType extends AllowedValue = AllowedValue>
    * Creates a new StateProvider instance.
    *
    * @param config - Configuration object containing the storage implementation
-   * @param modules - Optional module collection used to dispatch state events
+   * @param deps - Optional peer-module dependencies, e.g. the resolved `event` module used to dispatch state events
    */
-  constructor(config: StateModuleConfig, modules?: ModulesInstance<[EventModule]>) {
+  constructor(config: StateModuleConfig, deps?: { event?: ModuleType<EventModule> }) {
     // Initialize base module provider with config and version
     super({ config, version });
     // Store reference to the underlying storage implementation
     this.#storage = config.storage;
-    this.#event = modules?.event;
+    this.#event = deps?.event;
   }
 
   /**

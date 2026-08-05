@@ -742,48 +742,12 @@ importers:
       '@equinor/eds-core-react':
         specifier: ^2.3.7
         version: 2.6.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(styled-components@6.4.4(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
-      '@equinor/fusion-framework-cli':
-        specifier: workspace:^
-        version: link:../../packages/cli
-      '@equinor/fusion-framework-module-state':
-        specifier: workspace:^
-        version: link:../../packages/modules/state
-      '@equinor/fusion-framework-react-app':
-        specifier: workspace:^
-        version: link:../../packages/react/app
-      '@equinor/fusion-observable':
-        specifier: workspace:^
-        version: link:../../packages/utils/observable
-      '@types/react':
-        specifier: ^19.2.7
-        version: 19.2.18
-      '@types/react-dom':
-        specifier: ^19.2.3
-        version: 19.2.4(@types/react@19.2.18)
-      react:
-        specifier: ^19.2.1
-        version: 19.2.8
-      react-dom:
-        specifier: ^19.2.1
-        version: 19.2.8(react@19.2.8)
-      typescript:
-        specifier: ^7.0.2
-        version: 7.0.2
-
-  cookbooks/app-react-state-replication:
-    dependencies:
-      '@equinor/eds-core-react':
-        specifier: ^2.3.7
-        version: 2.6.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(styled-components@6.4.4(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
       '@equinor/eds-icons':
         specifier: ^1.3.0
         version: 1.5.1
       '@equinor/fusion-framework-cli':
         specifier: workspace:^
         version: link:../../packages/cli
-      '@equinor/fusion-framework-module':
-        specifier: workspace:^
-        version: link:../../packages/modules/module
       '@equinor/fusion-framework-module-event':
         specifier: workspace:^
         version: link:../../packages/modules/event
@@ -2456,6 +2420,9 @@ importers:
       '@equinor/fusion-observable':
         specifier: workspace:*
         version: link:../../utils/observable
+      '@testing-library/react':
+        specifier: ^16.0.0
+        version: 16.3.2(@testing-library/dom@10.4.1)(@types/react-dom@19.2.4(@types/react@19.2.18))(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@types/react':
         specifier: ^19.2.7
         version: 19.2.18

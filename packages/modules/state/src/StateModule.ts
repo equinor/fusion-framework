@@ -1,4 +1,5 @@
 import type { Module } from '@equinor/fusion-framework-module';
+import type { EventModule } from '@equinor/fusion-framework-module-event';
 
 import type { IStateModuleConfigurator } from './StateModuleConfigurator.js';
 
@@ -11,10 +12,17 @@ import type { name } from './name.js';
  * @typeParam name - The name of the module.
  * @typeParam IStateProvider - The interface for the state provider implementation.
  * @typeParam IStateModuleConfigurator - The interface for configuring the state module.
+ * @typeParam EventModule - Optional peer dependency; when present, storage/sync events are
+ * dispatched through it.
  *
  * @see Module
  */
-export type StateModule = Module<typeof name, IStateProvider, IStateModuleConfigurator>;
+export type StateModule = Module<
+  typeof name,
+  IStateProvider,
+  IStateModuleConfigurator,
+  [EventModule]
+>;
 
 /**
  * Represents the State module definition for the Fusion framework.
