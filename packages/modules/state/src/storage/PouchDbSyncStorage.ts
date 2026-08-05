@@ -78,15 +78,23 @@ export class PouchDbSyncStorage extends PouchDbStorage {
       return this.#activeSync as unknown as PouchDB.Replication.Sync<{ value: T }>;
     }
 
-    // Apply default options for reliable sync behavior
-    const { live = true, retry = true, heartbeat = 10000, timeout = 30000 } = options ?? {};
+    // Layer defaults under caller options so any other `SyncOptions` field (filter, since,
+    // batches_limit, etc.) still reaches PouchDB unmodified.
+    const {
+      live = true, // Keep sync active indefinitely
+      retry = true, // Automatically retry on failures
+      heartbeat = 10000, // Send heartbeat to detect connection issues
+      timeout = 30000, // Connection timeout
+      ...rest
+    } = options ?? {};
 
     // Create bidirectional sync with target database
     const sync = this._db.sync<{ value: T }>(target, {
-      live, // Keep sync active indefinitely
-      retry, // Automatically retry on failures
-      heartbeat, // Send heartbeat to detect connection issues
-      timeout, // Connection timeout
+      ...rest,
+      live,
+      retry,
+      heartbeat,
+      timeout,
     });
     this.#activeSync = sync as PouchDB.Replication.Sync<{ value: AllowedValue }>;
 
