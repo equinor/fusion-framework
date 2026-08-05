@@ -146,7 +146,7 @@ export const configure: ModuleInitiator = (appConfigurator) => {
 ```
 
 > [!CAUTION]
-> The state management module is a powerful tool, but it`s important to know the potential pitfalls and limitations when using it in your application. The state management is global and can lead to unexpected behavior if not used carefully.
+> The state management module is a powerful tool, but it's important to know the potential pitfalls and limitations when using it in your application. The state management is global and can lead to unexpected behavior if not used carefully.
 >
 > __example 1:__ If you have multiple components that rely on the same state, updating the state in one component can cause re-renders in all components that use that state, potentially leading to performance issues.
 >
