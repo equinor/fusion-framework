@@ -1,5 +1,14 @@
 # Change Log
 
+## 11.0.12
+
+### Patch Changes
+
+- Updated dependencies [de2b4fb]
+  - @equinor/fusion-framework-module-app@8.0.4
+  - @equinor/fusion-framework-module-http@8.0.5
+  - @equinor/fusion-framework@8.0.12
+
 ## 11.0.11
 
 ### Patch Changes

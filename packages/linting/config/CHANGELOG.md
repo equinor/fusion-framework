@@ -1,5 +1,17 @@
 # @equinor/fusion-framework-lint-config
 
+## 1.1.0
+
+### Minor Changes
+
+- de2b4fb: Add `require-property-tsdoc` rule: requires class field (property) declarations — including Lit's `@property()` / `@state()` decorated fields — to have a preceding TSDoc block comment. `private`/`#name` and `static` fields are exempt. Included in the `recommended` rule preset.
+
+### Patch Changes
+
+- Updated dependencies [43183d8]
+- Updated dependencies [de2b4fb]
+  - @equinor/fusion-framework-lint-rules@1.1.0
+
 ## 1.0.1
 
 ### Patch Changes

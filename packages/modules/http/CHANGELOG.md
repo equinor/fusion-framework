@@ -1,5 +1,11 @@
 # Change Log
 
+## 8.0.5
+
+### Patch Changes
+
+- de2b4fb: Added missing TSDoc comments on class fields flagged by the new `require-property-tsdoc` fusion-lint rule.
+
 ## 8.0.4
 
 ### Patch Changes

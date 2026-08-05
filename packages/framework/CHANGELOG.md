@@ -1,5 +1,13 @@
 # Change Log
 
+## 8.0.12
+
+### Patch Changes
+
+- Updated dependencies [de2b4fb]
+  - @equinor/fusion-framework-module-http@8.0.5
+  - @equinor/fusion-framework-module-services@8.0.3
+
 ## 8.0.11
 
 ### Patch Changes
