@@ -65,11 +65,22 @@ describe('AppState', () => {
       expect(result).toMatchObject({ wiped: true });
       expect(httpClientWatcher).toHaveBeenCalledWith(
         `/persons/me?api-version=${ApiVersion.v1}`,
-        expect.objectContaining({
-          method: 'DELETE',
-          headers: { 'X-Confirm-Wipe': 'true' },
-        }),
+        expect.objectContaining({ method: 'DELETE' }),
       );
+      const [, init] = httpClientWatcher.mock.calls.at(-1) ?? [];
+      expect(new Headers(init?.headers).get('X-Confirm-Wipe')).toBe('true');
+    });
+
+    it('preserves caller headers without stripping the confirmation header', async () => {
+      const result = await appStateClient.wipeAllMyState('v1', {
+        headers: { 'X-Custom': 'yes' },
+      });
+
+      expect(result).toMatchObject({ wiped: true });
+      const [, init] = httpClientWatcher.mock.calls.at(-1) ?? [];
+      const headers = new Headers(init?.headers);
+      expect(headers.get('X-Custom')).toBe('yes');
+      expect(headers.get('X-Confirm-Wipe')).toBe('true');
     });
   });
 
@@ -118,22 +129,25 @@ describe('AppState', () => {
       expect(result).toMatchObject({ wiped: true });
       expect(httpClientWatcher).toHaveBeenCalledWith(
         `/admin/apps/my-app?api-version=${ApiVersion.v1}`,
-        expect.objectContaining({
-          method: 'DELETE',
-          headers: { 'X-Confirm-Wipe': 'true' },
-        }),
+        expect.objectContaining({ method: 'DELETE' }),
       );
+      const [, init] = httpClientWatcher.mock.calls.at(-1) ?? [];
+      expect(new Headers(init?.headers).get('X-Confirm-Wipe')).toBe('true');
     });
 
-    it('rejects when the API rejects a missing confirmation header', async () => {
-      // Simulate the upstream API rejecting the request when the confirmation header is stripped
-      await expect(
-        appStateClient.wipeAllAppUsersState(
-          'v1',
-          { appKey: 'my-app' },
-          { headers: {} as unknown as HeadersInit },
-        ),
-      ).rejects.toBeTruthy();
+    it('preserves caller headers without stripping the confirmation header', async () => {
+      // The caller's own headers must survive alongside the mandatory confirmation header, not replace it.
+      const result = await appStateClient.wipeAllAppUsersState(
+        'v1',
+        { appKey: 'my-app' },
+        { headers: { 'X-Custom': 'yes' } },
+      );
+
+      expect(result).toMatchObject({ wiped: true });
+      const [, init] = httpClientWatcher.mock.calls.at(-1) ?? [];
+      const headers = new Headers(init?.headers);
+      expect(headers.get('X-Custom')).toBe('yes');
+      expect(headers.get('X-Confirm-Wipe')).toBe('true');
     });
   });
 });

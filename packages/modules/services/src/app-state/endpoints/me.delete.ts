@@ -49,14 +49,15 @@ const generateRequestParameters = <TResult, TVersion extends AvailableVersions>(
   // Select the response schema that matches the requested API version.
   switch (version) {
     case ApiVersion.v1: {
-      // The API requires an explicit opt-in header before it will perform a full GDPR erasure.
       const baseInit: FetchRequestInit<ApiResponse<ApiVersion.v1>, JsonRequest> = {
         method: 'DELETE',
-        headers: { 'X-Confirm-Wipe': 'true' },
         selector: schemaSelector(ApiResponseSchema[version]),
       };
-      // Merge caller overrides on top of the generated version-specific defaults.
-      return Object.assign({}, baseInit, init);
+      // Preserve caller headers, but force the API's required confirmation header last so it can't be stripped.
+      const headers = new Headers(init?.headers);
+      headers.set('X-Confirm-Wipe', 'true');
+      // Merge caller overrides on top of the generated defaults, with the confirmation header applied last.
+      return Object.assign({}, baseInit, init, { headers });
     }
   }
   throw Error(`Unknown API version: ${version}`);

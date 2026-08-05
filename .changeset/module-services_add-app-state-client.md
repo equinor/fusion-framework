@@ -8,9 +8,9 @@ The client follows the same versioned method pattern as `bookmarks`/`context`/`n
 
 ```typescript
 import { AppStateApiClient } from '@equinor/fusion-framework-module-services/app-state';
-import { HttpClient } from '@equinor/fusion-framework-module-http';
+import { HttpClient } from '@equinor/fusion-framework-module-http/client';
 
-const httpClient = new HttpClient({ baseUri: 'https://app-state-api.example.com/' });
+const httpClient = new HttpClient('https://app-state-api.example.com/');
 const client = new AppStateApiClient(httpClient, 'json');
 
 const apps = await client.listMyApps('v1');

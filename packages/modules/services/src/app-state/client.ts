@@ -72,16 +72,16 @@ import {
  * @example
  * ```typescript
  * import { AppStateApiClient } from '@equinor/fusion-framework-module-services/app-state';
- * import { HttpClient } from '@equinor/fusion-framework-module-http';
+ * import { HttpClient } from '@equinor/fusion-framework-module-http/client';
  *
- * const httpClient = new HttpClient({ baseUri: 'https://my-app-state-api.com/' });
+ * const httpClient = new HttpClient('https://my-app-state-api.com/');
  * const client = new AppStateApiClient(httpClient, 'json');
  *
  * const apps = await client.listMyApps('v1');
  * await client.wipeMyAppState('v1', { appKey: 'my-app' });
  * ```
  *
- * @template TMethod - The client method to use for the request, defaults to 'json'.
+ * @template TMethod - The client method to use for the request.
  * @template TClient - The HTTP client to use for executing the request.
  */
 export class AppStateApiClient<
