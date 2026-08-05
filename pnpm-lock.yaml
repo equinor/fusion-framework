@@ -12,10 +12,10 @@ overrides:
   js-yaml@>=3.0.0 <3.15.0: 3.15.0
   js-yaml@>=4.0.0 <4.3.0: 4.3.0
   qs@<=6.15.1: 6.15.2
-  undici@>=7.0.0 <7.28.0: 7.28.0
+  undici@>=7.0.0 <7.29.0: 7.29.0
   undici@>=8.0.0 <8.5.0: 8.5.0
   ws@>=7.0.0 <7.5.11: 7.5.11
-  brace-expansion@>=2.0.0 <2.1.2: 2.1.2
+  brace-expansion@>=2.0.0 <2.1.4: 2.1.4
   brace-expansion@>=3.0.0 <=5.0.7: 5.0.8
   dompurify@>=3.1.3 <=3.4.11: 3.4.12
   follow-redirects@<=1.15.11: 1.16.0
@@ -29,9 +29,9 @@ overrides:
   path-to-regexp@>=8.0.0 <8.4.0: 8.4.0
   serialize-javascript@<=7.0.4: 7.0.5
   yaml@>=2.0.0 <2.8.3: 2.8.3
-  postcss@>=8.0.0 <=8.5.17: 8.5.18
+  postcss@>=8.0.0 <=8.5.22: 8.5.23
   valibot@<=1.4.1: 1.4.2
-  fast-uri@>=3.0.0 <=3.1.3: 3.1.4
+  fast-uri@>=3.0.0 <=3.1.4: 3.1.5
   '@babel/core@<=7.29.0': 7.29.6
   esbuild@>=0.27.3 <0.28.1: 0.28.1
   zod: 4.4.3
@@ -2187,7 +2187,7 @@ importers:
         specifier: ^7.8.1
         version: 7.8.2
       uuid:
-        specifier: ^11.0.3
+        specifier: ^11.1.1
         version: 11.1.1
       zod:
         specifier: 4.4.3
@@ -7713,7 +7713,7 @@ packages:
     engines: {node: ^10 || ^12 || >=14}
     hasBin: true
     peerDependencies:
-      postcss: 8.5.18
+      postcss: 8.5.23
 
   azure-devops-node-api@12.5.0:
     resolution: {integrity: sha512-R5eFskGvOm3U/GzeAuxRkUsAl0hrAwGgWn6zAd2KrZmrEhWZVqLew4OOupbQlXUuojUzpGtq62SmdhJ06N88og==}
@@ -7773,8 +7773,8 @@ packages:
   boundary@2.0.0:
     resolution: {integrity: sha512-rJKn5ooC9u8q13IMCrW0RSp31pxBCHE3y9V/tp3TdWSLf8Em3p6Di4NBpfzbJge9YjjFEsD0RtFEjtvHL5VyEA==}
 
-  brace-expansion@2.1.2:
-    resolution: {integrity: sha512-w5JZcKgdhDOgOwm8H+KgbosopHMuGcl6qbulwjtz3SM7I7P3yW1eAjzMPLrIE+NQ9vjgANKHWeMHnrT0OXW1oA==}
+  brace-expansion@2.1.4:
+    resolution: {integrity: sha512-hGfVzPxthbf3+2yjg/RBs60cB0FhqBS/zvdV/4wn4/BmN0bNMMHPc4V/BbFieqf1TKAGGAHnY4eSjajCl0f2Xg==}
 
   brace-expansion@5.0.9:
     resolution: {integrity: sha512-ScQ4IuvIEF1TMlP7Zt+vjJ//9zlPb2SDcxWxM3bk8s6t6GGdJ7KO1dCcTidOPJKePW30LE/2cT7wCyPho9/Wxg==}
@@ -8524,8 +8524,8 @@ packages:
   fast-string-width@3.0.2:
     resolution: {integrity: sha512-gX8LrtNEI5hq8DVUfRQMbr5lpaS4nMIWV+7XEbXk2b8kiQIizgnlr12B4dA3ZEx3308ze0O4Q1R+cHts8kyUJg==}
 
-  fast-uri@3.1.4:
-    resolution: {integrity: sha512-8JnbkQ4juDyvYs4mgFGQqg4yCYtFDtUtmp2QIQq11ZZe5CFQ5wcqm1rqDgAh/QdMySuBnPzMUiJUNZG5N/AiQw==}
+  fast-uri@3.1.5:
+    resolution: {integrity: sha512-gHwA1O9LDIcKunMKhObS/HimwtehO1nPUECKAu5TpKgaO19fcWEl4bliWe1jWxVFvIXztJjjQ4L8XQ1EU9f7Jw==}
 
   fast-wrap-ansi@0.2.2:
     resolution: {integrity: sha512-7F2Fl+TjRSenLqlU3UjSH0iyqopqoZIu7eZVpEirP2g1GtWa2G/ecEmBdgz31+Mxr+ELclgg6sokpSFIQiZ02Q==}
@@ -10081,7 +10081,7 @@ packages:
     engines: {node: '>= 18'}
     peerDependencies:
       jiti: '>=1.21.0'
-      postcss: 8.5.18
+      postcss: 8.5.23
       tsx: ^4.8.1
       yaml: 2.8.3
     peerDependenciesMeta:
@@ -10097,8 +10097,8 @@ packages:
   postcss-value-parser@4.2.0:
     resolution: {integrity: sha512-1NNCs6uurfkVbeXG4S8JFT9t19m45ICnif8zWLd5oPSZ50QnwMfK+H3jv408d4jw/7Bttv5axS5IiHoLaVNHeQ==}
 
-  postcss@8.5.18:
-    resolution: {integrity: sha512-xdB1oSLHbz1vRWgCDalrCqEFTWzFlhqFC5tIHLMOSUIjhm3XXQ1qrFy8S/ESr1JYRRXqM3c1QFiMZUJdUTqyMQ==}
+  postcss@8.5.23:
+    resolution: {integrity: sha512-g50586zr4bZmwFiTlflMu8E0bDTb5I5gertgwAKmsdUlTQIhZtunzUlD1WSzwcVWPoAVpsrA6vlfCD7oXvRwgg==}
     engines: {node: ^10 || ^12 || >=14}
 
   postcss@8.5.25:
@@ -11145,8 +11145,8 @@ packages:
   undici-types@7.18.2:
     resolution: {integrity: sha512-AsuCzffGHJybSaRrmr5eHr81mwJU3kjw6M+uprWvCXiNeN9SOGwQ3Jn8jb8m3Z6izVgknn1R0FTCEAP2QrLY/w==}
 
-  undici@7.28.0:
-    resolution: {integrity: sha512-cRZYrTDwWznlnRiPjggAGxZXanty6M8RV1ff8Wm4LWXBp7/IG8v5DnOm74DtUBp9OONpK75YlPnIjQqX0dBDtA==}
+  undici@7.29.0:
+    resolution: {integrity: sha512-IDxfleLmmbSskfWSUATiN1nfn2rDuvnMOqb5CWR92iIfojA0Ud+ulOAAEQ57LPr9rWmsreUyf5lwyao+7GNNVw==}
     engines: {node: '>=20.18.1'}
 
   undici@8.10.0:
@@ -16357,7 +16357,7 @@ snapshots:
       '@vue/shared': 3.5.35
       estree-walker: 2.0.2
       magic-string: 0.30.21
-      postcss: 8.5.18
+      postcss: 8.5.23
       source-map-js: 1.2.1
 
   '@vue/compiler-sfc@3.5.40':
@@ -16369,7 +16369,7 @@ snapshots:
       '@vue/shared': 3.5.40
       estree-walker: 2.0.2
       magic-string: 0.30.21
-      postcss: 8.5.25
+      postcss: 8.5.23
       source-map-js: 1.2.1
 
   '@vue/compiler-ssr@3.5.35':
@@ -16451,10 +16451,10 @@ snapshots:
       '@vuepress/core': 2.0.0-rc.31(@vue/compiler-sfc@3.5.40)(esbuild@0.28.1)(rolldown@1.2.2)(rollup@4.62.4)(typescript@7.0.2)(vite@8.2.0(@types/node@25.5.0)(esbuild@0.28.1)(sass-embedded@1.100.0)(sass@1.100.0)(terser@5.49.1)(tsx@4.23.5))
       '@vuepress/shared': 2.0.0-rc.31
       '@vuepress/utils': 2.0.0-rc.31
-      autoprefixer: 10.5.4(postcss@8.5.25)
+      autoprefixer: 10.5.4(postcss@8.5.23)
       connect-history-api-fallback: 2.0.0
-      postcss: 8.5.25
-      postcss-load-config: 6.0.1(postcss@8.5.25)(tsx@4.23.5)
+      postcss: 8.5.23
+      postcss-load-config: 6.0.1(postcss@8.5.23)(tsx@4.23.5)
       rolldown: 1.2.2
       vite: 8.2.0(@types/node@25.5.0)(esbuild@0.28.1)(sass-embedded@1.100.0)(sass@1.100.0)(terser@5.49.1)(tsx@4.23.5)
       vue: 3.5.40(typescript@7.0.2)
@@ -17119,7 +17119,7 @@ snapshots:
   ajv@8.18.0:
     dependencies:
       fast-deep-equal: 3.1.3
-      fast-uri: 3.1.4
+      fast-uri: 3.1.5
       json-schema-traverse: 1.0.0
       require-from-string: 2.0.2
 
@@ -17199,13 +17199,13 @@ snapshots:
 
   asynckit@0.4.0: {}
 
-  autoprefixer@10.5.4(postcss@8.5.25):
+  autoprefixer@10.5.4(postcss@8.5.23):
     dependencies:
       browserslist: 4.28.7
       caniuse-lite: 1.0.30001806
       fraction.js: 5.3.4
       picocolors: 1.1.1
-      postcss: 8.5.25
+      postcss: 8.5.23
       postcss-value-parser: 4.2.0
 
   azure-devops-node-api@12.5.0:
@@ -17263,7 +17263,7 @@ snapshots:
 
   boundary@2.0.0: {}
 
-  brace-expansion@2.1.2:
+  brace-expansion@2.1.4:
     dependencies:
       balanced-match: 1.0.2
 
@@ -17382,7 +17382,7 @@ snapshots:
       parse5: 7.3.0
       parse5-htmlparser2-tree-adapter: 7.1.0
       parse5-parser-stream: 7.1.2
-      undici: 7.28.0
+      undici: 7.29.0
       whatwg-mimetype: 4.0.0
 
   chokidar@4.0.3:
@@ -18002,7 +18002,7 @@ snapshots:
     dependencies:
       fast-string-truncated-width: 3.0.3
 
-  fast-uri@3.1.4: {}
+  fast-uri@3.1.5: {}
 
   fast-wrap-ansi@0.2.2:
     dependencies:
@@ -19366,7 +19366,7 @@ snapshots:
 
   minimatch@5.1.8:
     dependencies:
-      brace-expansion: 2.1.2
+      brace-expansion: 2.1.4
 
   minimist@1.2.8: {}
 
@@ -19847,16 +19847,16 @@ snapshots:
       path-data-parser: 0.1.0
       points-on-curve: 0.2.0
 
-  postcss-load-config@6.0.1(postcss@8.5.25)(tsx@4.23.5):
+  postcss-load-config@6.0.1(postcss@8.5.23)(tsx@4.23.5):
     dependencies:
       lilconfig: 3.1.3
     optionalDependencies:
-      postcss: 8.5.25
+      postcss: 8.5.23
       tsx: 4.23.5
 
   postcss-value-parser@4.2.0: {}
 
-  postcss@8.5.18:
+  postcss@8.5.23:
     dependencies:
       nanoid: 3.3.17
       picocolors: 1.1.1
@@ -21083,7 +21083,7 @@ snapshots:
 
   undici-types@7.18.2: {}
 
-  undici@7.28.0: {}
+  undici@7.29.0: {}
 
   undici@8.10.0: {}
 
@@ -21285,7 +21285,7 @@ snapshots:
       esbuild: 0.28.1
       fdir: 6.5.0(picomatch@4.0.5)
       picomatch: 4.0.5
-      postcss: 8.5.18
+      postcss: 8.5.23
       rollup: 4.62.4
       tinyglobby: 0.2.17
     optionalDependencies:
@@ -21302,7 +21302,7 @@ snapshots:
       esbuild: 0.28.1
       fdir: 6.5.0(picomatch@4.0.5)
       picomatch: 4.0.5
-      postcss: 8.5.18
+      postcss: 8.5.23
       rollup: 4.62.4
       tinyglobby: 0.2.17
     optionalDependencies:
