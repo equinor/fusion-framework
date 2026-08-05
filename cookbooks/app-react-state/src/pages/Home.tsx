@@ -1,3 +1,4 @@
+import { Link } from '@equinor/fusion-framework-react-router';
 import { useAppState } from '@equinor/fusion-framework-react-app/state';
 import { TodoList } from '../components/Todo';
 import type { TodoList as TodoItemsList } from '../components/Todo/types';
@@ -12,10 +13,15 @@ export const Home = () => {
   });
   return (
     <div style={{ maxWidth: '800px', margin: '0 auto', padding: '20px' }}>
-      <h1>🔄 CouchDB State Replication Cookbook</h1>
+      <h1>🔄 Fusion Framework State Cookbook</h1>
       <p>
-        This cookbook demonstrates real-time state synchronization between your React app and a
-        local CouchDB instance using the Fusion Framework state module.
+        This cookbook demonstrates the Fusion Framework state module - useAppState works with
+        zero configuration out of the box, and can optionally be upgraded to real-time replication
+        with a local CouchDB instance.
+      </p>
+      <p>
+        New to <code>useAppState</code>? Start with the <Link to="/basics">Basics</Link> page for
+        plain boolean, string, and optional state before exploring replication below.
       </p>
 
       <div
@@ -26,19 +32,22 @@ export const Home = () => {
           borderRadius: '8px',
         }}
       >
-        <h3>🐳 Quick Start</h3>
+        <h3>🐳 Try the CouchDB Replication Demo</h3>
         <ol style={{ margin: '8px 0' }}>
           <li>
-            Start CouchDB: <code>pnpm couchdb:up</code>
+            Start CouchDB: <code>pnpm couchdb:start</code>
+          </li>
+          <li>
+            Copy <code>.env.example</code> to <code>.env</code>, then restart <code>pnpm dev</code>
           </li>
           <li>
             Access CouchDB UI:{' '}
             <a href="http://localhost:5984/_utils" target="_blank" rel="noopener noreferrer">
               http://localhost:5984/_utils
-            </a>
+            </a>{' '}
+            (admin / admin)
           </li>
-          <li>Login with: admin / password</li>
-          <li>Make changes below and watch them sync!</li>
+          <li>Make changes below, open another tab, and watch them sync!</li>
         </ol>
       </div>
 

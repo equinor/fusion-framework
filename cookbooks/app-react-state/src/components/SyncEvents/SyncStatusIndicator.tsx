@@ -1,16 +1,32 @@
 import { Typography } from '@equinor/eds-core-react';
-import type { SyncEvent } from '../../modules/app-state-with-replication';
+import { StateSyncEvent, type StateSyncEventType } from '@equinor/fusion-framework-react-app/state';
 
 interface SyncStatusIndicatorProps {
-  event?: SyncEvent;
+  event?: StateSyncEventType;
   size?: 'small' | 'medium' | 'large';
   showText?: boolean;
   showTimestamp?: boolean;
 }
 
-const getStatusColor = (type: SyncEvent['type'] | unknown) => {
-  // Map synchronization event types to the indicator palette.
-  switch (type) {
+type SyncStatusKind = 'active' | 'paused' | 'change' | 'complete' | 'error' | 'offline';
+
+const getStatusKind = (event?: StateSyncEventType): SyncStatusKind => {
+  // No event has arrived yet - either sync hasn't started, or replication isn't configured.
+  if (!event) return 'offline';
+  // Status events carry the raw active/paused replication state in their detail.
+  if (StateSyncEvent.Status.is(event)) {
+    return event.detail.status === 'unknown' ? 'offline' : event.detail.status;
+  }
+  // Every other sync event kind maps 1:1 to an indicator label.
+  if (StateSyncEvent.Change.is(event)) return 'change';
+  // Any remaining sync event kind is either a completion or an error.
+  if (StateSyncEvent.Complete.is(event)) return 'complete';
+  return 'error';
+};
+
+const getStatusColor = (kind: SyncStatusKind) => {
+  // Map synchronization status kinds to the indicator palette.
+  switch (kind) {
     case 'active':
     case 'change':
       return '#007BFF'; // Blue for syncing
@@ -24,9 +40,9 @@ const getStatusColor = (type: SyncEvent['type'] | unknown) => {
   }
 };
 
-const getStatusText = (type: SyncEvent['type'] | unknown) => {
-  // Map synchronization event types to reader-friendly labels.
-  switch (type) {
+const getStatusText = (kind: SyncStatusKind) => {
+  // Map synchronization status kinds to reader-friendly labels.
+  switch (kind) {
     case 'active':
       return 'Syncing...';
     case 'paused':
@@ -62,7 +78,7 @@ export const SyncStatusIndicator: React.FC<SyncStatusIndicatorProps> = ({
   showTimestamp = true,
 }) => {
   const { dotSize, gap } = getSizeConfig(size);
-  const type = event?.type || 'offline';
+  const kind = getStatusKind(event);
 
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap }}>
@@ -71,18 +87,18 @@ export const SyncStatusIndicator: React.FC<SyncStatusIndicatorProps> = ({
           width: `${dotSize}px`,
           height: `${dotSize}px`,
           borderRadius: '50%',
-          backgroundColor: getStatusColor(type),
+          backgroundColor: getStatusColor(kind),
           flexShrink: 0,
         }}
       />
       {showText && (
         <Typography variant={size === 'small' ? 'body_short' : undefined}>
-          {getStatusText(type)}
+          {getStatusText(kind)}
         </Typography>
       )}
       {showTimestamp && event && (
         <Typography variant="caption" style={{ color: '#6C757D' }}>
-          {new Date(event.timestamp).toLocaleTimeString()}
+          {new Date(event.created).toLocaleTimeString()}
         </Typography>
       )}
     </div>

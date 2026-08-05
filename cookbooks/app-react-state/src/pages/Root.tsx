@@ -3,7 +3,7 @@ import { Link, Outlet, useLocation } from '@equinor/fusion-framework-react-route
 import { SyncStatusMonitor } from '../components/SyncEvents/SyncStatusMonitor';
 
 import { SideBar } from '@equinor/eds-core-react';
-import { home, settings, offline_document } from '@equinor/eds-icons';
+import { home, school, settings, offline_document } from '@equinor/eds-icons';
 
 /** Provides the cookbook navigation and sync monitor shell. */
 export const Root = () => {
@@ -19,6 +19,13 @@ export const Root = () => {
               to="/"
               label="home"
               active={currentLocation.pathname === '/'}
+            />
+            <SideBar.Link
+              icon={school}
+              as={Link}
+              to="/basics"
+              label="basics"
+              active={currentLocation.pathname === '/basics'}
             />
             <SideBar.Link
               icon={settings}

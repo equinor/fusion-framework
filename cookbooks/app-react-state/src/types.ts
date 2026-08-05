@@ -1,22 +1,30 @@
 /**
- * Shared TypeScript types for the State Module Cookbook
+ * Type definitions for the State Replication Cookbook
  */
 
-/**
- * User profile data structure demonstrating object state management
- */
+export type SyncStatus = 'online' | 'offline' | 'syncing' | 'error';
+
 export type UserProfile = {
-  /** User's display name */
+  id: string;
   name: string;
-  /** User's age in years */
-  age: number;
-  /** UI theme preference */
-  theme: 'light' | 'dark';
-  /** Whether the user is currently active */
-  isActive: boolean;
+  email: string;
+  preferences: UserPreferences;
+  lastModified: string;
 };
 
-/**
- * Supported language options for the application
- */
-export type Language = 'en' | 'no' | 'es';
+export type UserPreferences = {
+  theme: 'light' | 'dark';
+  language: 'en' | 'no' | 'da' | 'sv';
+  notifications: {
+    email: boolean;
+    push: boolean;
+  };
+};
+
+export type ReplicationSettings = {
+  url: string;
+  username?: string;
+  password?: string;
+  live: boolean;
+  retry: boolean;
+};

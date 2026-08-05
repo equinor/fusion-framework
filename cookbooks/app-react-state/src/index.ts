@@ -3,8 +3,8 @@ import { createRoot } from 'react-dom/client';
 
 import { type ComponentRenderArgs, makeComponent } from '@equinor/fusion-framework-react-app';
 
-import configure from './config';
-import App from './App';
+import { configure } from './config';
+import { App } from './App';
 
 /**
  * State Module Cookbook Entry Point

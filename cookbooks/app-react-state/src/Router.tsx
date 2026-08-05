@@ -1,6 +1,6 @@
 import { Router as FusionRouter, type RouteObject } from '@equinor/fusion-framework-react-router';
 
-import { Home, Profile, Root, Todo } from './pages';
+import { Basics, Home, Profile, Root, Todo } from './pages';
 
 const routes: RouteObject[] = [
   {
@@ -10,6 +10,10 @@ const routes: RouteObject[] = [
       {
         index: true,
         element: <Home />,
+      },
+      {
+        path: 'basics/*',
+        element: <Basics />,
       },
       {
         path: 'profile/*',

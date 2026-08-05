@@ -143,7 +143,7 @@ Format: `package name` → path → role.
 `app-react-context-custom-error`, `app-react-environment-variables`, `app-react-feature-flag`,
 `app-react-module`, `app-react-msal`, `app-react-observable`, `app-react-people`,
 `app-react-router`, `app-react-router-legacy`, `app-react-settings`, `app-react-state`,
-`app-react-state-replication`, `app-react-styling`, `app-vanilla`, `poc-portal`, `portal`,
+`app-react-styling`, `app-vanilla`, `poc-portal`, `portal`,
 `portal-analytics`.
 
 Package name pattern: `@equinor/fusion-framework-cookbook-<folder>`.

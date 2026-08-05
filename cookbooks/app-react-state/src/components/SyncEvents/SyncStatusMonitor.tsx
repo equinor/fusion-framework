@@ -1,11 +1,14 @@
 import { Paper, Typography } from '@equinor/eds-core-react';
-import { useSyncEvents } from './useSyncEvents';
+import { useStateSyncEvents } from '@equinor/fusion-framework-react-app/state';
+
 import { SyncStatusIndicator } from './SyncStatusIndicator';
 import { SyncEventList } from './SyncEventList';
 
 /** Displays the latest synchronization status and event history. */
 export const SyncStatusMonitor = (props: { height: string }) => {
-  const [lastEvent] = useSyncEvents(1);
+  const events = useStateSyncEvents(20);
+  console.log('SyncStatusMonitor events:', events);
+  const lastEvent = events.at(-1);
 
   return (
     <Paper elevation="sticky" style={{ height: props.height, padding: '1rem' }}>
@@ -26,7 +29,10 @@ export const SyncStatusMonitor = (props: { height: string }) => {
       </div>
 
       {/* Event Log */}
-      <SyncEventList maxEvents={20} />
+      <SyncEventList events={events} />
     </Paper>
   );
 };
+
+export default SyncStatusMonitor;
+
