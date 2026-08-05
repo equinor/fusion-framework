@@ -1,10 +1,10 @@
 # @equinor/fusion-framework-module-services
 
-Typed API service clients for the Fusion Framework. Provides factory-based access to platform backend services (bookmarks, context, notification, people) with versioned endpoints, automatic HTTP client resolution, and response validation.
+Typed API service clients for the Fusion Framework. Provides factory-based access to platform backend services (app state, bookmarks, context, notification, people) with versioned endpoints, automatic HTTP client resolution, and response validation.
 
 ## Features
 
-- **Domain-specific API clients** — `BookmarksApiClient`, `ContextApiClient`, `NotificationApiClient`, `PeopleApiClient`
+- **Domain-specific API clients** — `AppStateApiClient`, `BookmarksApiClient`, `ContextApiClient`, `NotificationApiClient`, `PeopleApiClient`
 - **Versioned endpoints** — each service exposes version-aware methods (e.g. `v1`, `v2`, `v4`) with type-safe request/response shapes
 - **Dual consumption patterns** — every endpoint supports both `Promise` (`json`) and observable (`json$`) return types
 - **Automatic HTTP client resolution** — resolves named clients through the HTTP module, falling back to service-discovery
@@ -53,6 +53,11 @@ export const configure = (configurator) => {
 Access the services provider at runtime to create domain clients:
 
 ```ts
+// App State
+const appState = await provider.services.createAppStateClient('json');
+const apps = await appState.listMyApps('v1');
+await appState.wipeMyAppState('v1', { appKey: 'my-app' });
+
 // Bookmarks
 const bookmarks = await provider.services.createBookmarksClient('json');
 const allBookmarks = await bookmarks.query('v1');
@@ -96,6 +101,7 @@ const photo = await people.photo('v2', 'blob', { azureId: 'azure-unique-id' });
 
 | Client | Import path | Services |
 |---|---|---|
+| `AppStateApiClient` | `@equinor/fusion-framework-module-services/app-state` | Get/wipe own app state, admin get/wipe per-user or per-app state |
 | `BookmarksApiClient` | `@equinor/fusion-framework-module-services/bookmarks` | CRUD bookmarks, favourites |
 | `ContextApiClient` | `@equinor/fusion-framework-module-services/context` | Get, query, related contexts |
 | `NotificationApiClient` | `@equinor/fusion-framework-module-services/notification` | CRUD notifications, settings |
