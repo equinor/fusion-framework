@@ -24,6 +24,7 @@ import type {
   FrameworkEventInit,
 } from '@equinor/fusion-framework-module-event';
 import Query from '@equinor/fusion-query';
+import type { SemVer } from 'semver';
 
 /**
  * Interface representing a provider for managing and interacting with context items within an application.
@@ -296,6 +297,13 @@ export interface IContextProvider {
    * @returns path for the context item
    */
   generatePathFromContext?: (context: ContextItem, path: string) => string | undefined;
+  /**
+   * The version of the context provider.
+   *
+   * @remarks
+   * This property represents the version of the context provider, which can be a string or a SemVer object.
+   */
+  readonly version: string | SemVer;
 }
 
 /**
@@ -435,12 +443,12 @@ export class ContextProvider
 
     // override extractContextIdFromPath if configured
     if (config.extractContextIdFromPath) {
-      // @ts-expect-error
+      // @ts-expect-error - this is to avoid breaking change, the signature will be updated in future major release
       this.extractContextIdFromPath = config.extractContextIdFromPath;
     }
     // override generatePathFromContext if configured
     if (config.generatePathFromContext) {
-      // @ts-expect-error
+      // @ts-expect-error - this is to avoid breaking change, the signature will be updated in future major release
       this.generatePathFromContext = config.generatePathFromContext;
     }
 

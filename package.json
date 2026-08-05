@@ -40,6 +40,7 @@
     "lint:fusion": "pnpm build:lint && pnpm lint:fusion:packages && pnpm lint:fusion:cookbooks",
     "lint:fusion:packages": "fusion-lint lint packages",
     "lint:fusion:cookbooks": "fusion-lint lint cookbooks",
+    "lint:fusion:plugins": "fusion-lint lint packages/plugins",
     "lint:staged": "biome lint --staged",
     "verify:agent-context": "node .github/scripts/verify-agent-context.mjs",
     "format": "biome format",

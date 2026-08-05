@@ -13,7 +13,7 @@ search to rediscover it.
 
 | Path | Contains | Published? |
 | --- | --- | --- |
-| `packages/*` | Framework libraries (58 packages) | Yes, via Changesets |
+| `packages/*` | Framework libraries (59 packages) | Yes, via Changesets |
 | `cookbooks/*` | Runnable example apps and portals | Yes (versioned, but examples) |
 | `eds-content/`, `eds/` | EDS design-system content and token tooling | No |
 | `vue-press/` | Documentation site | Partly |
@@ -82,7 +82,13 @@ Format: `package name` → path → role.
 | `@equinor/fusion-framework-react-components-bookmark` | `packages/react/components/bookmark` | Bookmark UI components |
 | `@equinor/fusion-framework-react-components-people-provider` | `packages/react/components/people-resolver` | People resolver components |
 
-### Utils (`packages/utils/*`)
+### Plugins (`packages/plugins/*`)i
+
+| Package | Path | Role |
+| --- | --- | --- |
+| `@equinor/fusion-framework-plugin-context-navigation` | `packages/plugins/context-navigation` | Plugin for context-based navigation handling |
+
+## Utils (`packages/utils/*`)
 
 | Package | Path | Role |
 | --- | --- | --- |

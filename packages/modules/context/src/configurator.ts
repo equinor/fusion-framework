@@ -249,12 +249,7 @@ export class ContextModuleConfigurator implements IContextModuleConfigurator {
       Promise.resolve({} as Partial<ContextModuleConfig>),
     );
 
-    config.resolveInitialContext ??= resolveInitialContext({
-      path: {
-        extract: config.extractContextIdFromPath,
-        validate: config.extractContextIdFromPath ? () => true : undefined,
-      },
-    });
+    config.resolveInitialContext ??= resolveInitialContext();
 
     // TODO(#5119) - make less lazy
     config.client ??= await (async (): Promise<ContextModuleConfig['client']> => {

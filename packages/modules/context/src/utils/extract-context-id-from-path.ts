@@ -11,6 +11,12 @@ const matchGUID =
  * ```ts
  * const path = '/apps/context/7fd97952-7fe6-409b-a6dc-292dbf0e50d7?dsadasdas#example';
  * const contextId = extractContextIdFromPath(path); // '7fd97952-7fe6-409b-a6dc-292dbf0e50d7'
+ *
+ * // Custom matcher for numeric IDs
+ * extractContextIdFromPath('/projects/42/details', /^\d+$/);  // '42'
+ *
+ * // No match
+ * extractContextIdFromPath('/apps/my-app/settings'); // undefined
  * ```
  *
  * @param path string - the path to extract the context id from
@@ -21,7 +27,10 @@ export const extractContextIdFromPath = (
   path: string,
   matcher: RegExp = matchGUID,
 ): string | undefined =>
+  //
   path
+    // remove query-string and hash fragments before segment matching
+    .split(/[?#]/)[0]
     // remove leading slashes
     .replace(/^\/+/, '')
     // split path by slashes

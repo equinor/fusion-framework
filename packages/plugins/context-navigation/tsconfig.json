@@ -1,0 +1,19 @@
+{
+  "extends": "../../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "dist/esm",
+    "rootDir": "src",
+    "declarationDir": "./dist/types",
+    "declaration": true,
+    "declarationMap": true
+  },
+  "references": [
+    { "path": "../../modules/module" },
+    { "path": "../../modules/app" },
+    { "path": "../../modules/context" },
+    { "path": "../../modules/event" },
+    { "path": "../../modules/navigation" }
+  ],
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
+}

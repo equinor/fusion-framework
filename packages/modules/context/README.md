@@ -127,6 +127,76 @@ enableContext(configurator, (builder) => {
 | `setResolveInitialContext(fn)` | Override initial context resolution (default uses `extractContextIdFromPath` → `resolveContextFromPath`) |
 | `setContextClient(client)` | Custom get/query/related clients |
 
+## Context Routing in the URL
+
+The portal keeps the active context synchronized with the browser URL automatically
+via the `@equinor/fusion-framework-plugin-context-navigation` plugin. As an app
+developer, you control **how** context appears in your URL by declaring a routing
+strategy in your app manifest.
+
+### Declare a routing strategy
+
+Set `contextRouting` in your manifest's `build.options`:
+
+```jsonc
+// app.manifest.config.ts
+{
+  "build": {
+    "options": {
+      "contextRouting": "query"
+    }
+  }
+}
+```
+
+| Value | URL Shape | When to Use |
+|---|---|---|
+| `'path'` (or omitted) | `/apps/{appKey}/{contextId}/sub-route` | Default — simple apps without complex path routing |
+| `'query'` | `/apps/{appKey}/route?$contextId={id}` | Apps with nested routes that would conflict with a context path segment |
+
+Apps with custom URL shapes should omit `contextRouting` and register custom hooks instead (see below).
+
+> [!NOTE]
+> When `contextRouting` is not set (or set to `null`), the portal defaults to the
+> **path adapter** which encodes context as a path segment after the app key.
+> If your app also registers custom hooks (`setContextPathExtractor` /
+> `setContextPathGenerator`), the custom adapter takes priority over the path
+> adapter regardless of the `contextRouting` value.
+
+### Custom URL shapes
+
+If your app uses a non-standard URL layout for context (e.g. `/route-a/{contextId}`),
+register custom hooks instead of (or in addition to) declaring `contextRouting`:
+
+```ts
+enableContext(configurator, (builder) => {
+  builder.setContextType(['ProjectMaster']);
+
+  // Tell the portal how to find the context id in your URL
+  builder.setContextPathExtractor((path) => {
+    const segments = path.split('/').filter(Boolean);
+    return segments[1]; // e.g. /route-a/{contextId}
+  });
+
+  // Tell the portal how to build a URL with context
+  builder.setContextPathGenerator((context, path) => {
+    const segments = path.split('/').filter(Boolean);
+    const route = segments[0] ?? '';
+    return `/${route}/${context.id}`;
+  });
+});
+```
+
+When these hooks are registered, the portal's custom adapter uses them automatically —
+no `contextRouting` declaration needed in the manifest.
+
+### How it works (for reference)
+
+The portal's context-navigation plugin reads `contextRouting` from your app's
+manifest at runtime and selects the appropriate URL adapter. You don't install
+or configure the plugin yourself — the portal handles it. Your app only needs to
+declare its preference.
+
 ## Events
 
 The context module dispatches events via the `@equinor/fusion-framework-module-event` system. All events are scoped to the `ContextProvider` source.
