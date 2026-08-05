@@ -29,7 +29,7 @@ pnpm add @equinor/fusion-framework-app
 ## Quick Start
 ```typescript
 import type { AppModuleInitiator } from '@equinor/fusion-framework-app';
-import { enableState } from '@equinor/fusion-framework-app/state';
+import { enableState } from '@equinor/fusion-framework-app/enable-state';
 
 const configure: AppModuleInitiator = (configurator) => {
     enableState(configurator);
