@@ -1,5 +1,15 @@
 # Change Log
 
+## 15.2.4
+
+### Patch Changes
+
+- 0d9d876: Internal: bump transitive dependencies bundled into these packages' build output via `pnpm.overrides` — `undici` (`<7.29.0`), `brace-expansion` (`<2.1.4`), `fast-uri` (`<3.1.5`), and `postcss` (`<=8.5.22`) — to resolve Dependabot security alerts. These packages bundle their dependency tree (rollup/vite build) and are therefore always changesetted for dependency changes, even when only the root lockfile resolution moves.
+- Updated dependencies [1b9d026]
+- Updated dependencies [0d9d876]
+  - @equinor/fusion-framework-dev-portal@9.0.0
+  - @equinor/fusion-framework-dev-server@2.0.18
+
 ## 15.2.3
 
 ### Patch Changes

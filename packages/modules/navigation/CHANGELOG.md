@@ -1,5 +1,23 @@
 # Change Log
 
+## 7.0.7
+
+### Patch Changes
+
+- 1b9d026: Fix basename boundary matching and trailing-slash handling.
+
+  - `normalizePathname` no longer strips trailing slashes — only collapses consecutive slashes. Trailing slash is now preserved as part of the path identity.
+  - `_isWithinBasenameScope` uses a path-boundary check (`pathname === basename || pathname.startsWith(basename + '/')`) to prevent false positives from apps with overlapping name prefixes (e.g. `/apps/my-app` no longer matches `/apps/my-app-other/foo`).
+  - `_localizePath` falls back to `'/'` when the basename-stripped pathname is empty.
+
+- 1b9d026: **Security Fix**: Replaced regex-based pathname normalization with iterative approach to prevent potential ReDoS (Regular Expression Denial of Service) vulnerability when processing user-controlled basename values.
+
+  The `normalizePathname` function now uses a simple character-by-character scan instead of `/\/+/g` regex, ensuring O(n) linear time complexity even with pathological input containing thousands of consecutive slashes.
+
+  This addresses CodeQL security alert: "Polynomial regular expression used on uncontrolled data"
+
+  Related: #4751
+
 ## 7.0.6
 
 ### Patch Changes

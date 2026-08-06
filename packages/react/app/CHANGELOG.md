@@ -1,5 +1,57 @@
 # Change Log
 
+## 13.0.0
+
+### Minor Changes
+
+- b92698d: Add state management support to `@equinor/fusion-framework-react-app/state`:
+
+  - `enableAppState` - configures the app to use `@equinor/fusion-framework-module-state`, with
+    app-scoped storage key prefixing to prevent state collisions between apps.
+  - `useAppState` - a persistent, cross-component-synchronized alternative to `useState`, backed by
+    the state module's storage.
+  - `useStateSyncEvents` - subscribes to the app's `onStateSync.status`/`.change`/`.complete`/`.error`
+    events (dispatched when storage is configured for replication, e.g. `PouchDbSyncStorage`) and
+    returns the most recent events, oldest first, bounded to a given `limit`. Also re-exports
+    `StateSyncEvent` and `StateSyncEventType` from `@equinor/fusion-framework-module-state` for
+    convenience.
+
+  ```typescript
+  import { enableAppState } from "@equinor/fusion-framework-react-app/state";
+
+  export const configure = (configurator) => {
+    enableAppState(configurator);
+  };
+  ```
+
+  ```typescript
+  import {
+    useAppState,
+    useStateSyncEvents,
+  } from "@equinor/fusion-framework-react-app/state";
+
+  const [count, setCount] = useAppState("counter", { defaultValue: 0 });
+  const events = useStateSyncEvents(20);
+  ```
+
+  Requires the optional peer dependency `@equinor/fusion-framework-module-state`.
+
+### Patch Changes
+
+- Updated dependencies [b92698d]
+- Updated dependencies [1b9d026]
+- Updated dependencies [1b9d026]
+- Updated dependencies [0d6ef3a]
+- Updated dependencies [020d9e5]
+- Updated dependencies [0d9d876]
+- Updated dependencies [05586e7]
+- Updated dependencies [b92698d]
+- Updated dependencies [b92698d]
+  - @equinor/fusion-framework-app@12.0.0
+  - @equinor/fusion-framework-module-navigation@7.0.7
+  - @equinor/fusion-framework-module-state@1.0.0
+  - @equinor/fusion-framework-module@6.1.2
+
 ## 12.0.5
 
 ### Patch Changes
