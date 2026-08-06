@@ -71,6 +71,10 @@ export class PouchDbSyncStorage extends PouchDbStorage {
   // scheduled pulling first - otherwise it would start a second, competing continuous pull/push
   // alongside them instead of replacing them.
   #stopNonLivePull: VoidFunction | undefined;
+  // Set only while `_pullOnce` has a one-shot pull in flight, so `#stopNonLivePull` can cancel
+  // it too - otherwise a `sync()` call arriving mid-pull would run bidirectional sync alongside
+  // that pull instead of replacing it, until the pull completes or the watchdog forces it closed.
+  #cancelActivePull: VoidFunction | undefined;
 
   /**
    * Creates a synchronized storage adapter.
@@ -99,6 +103,7 @@ export class PouchDbSyncStorage extends PouchDbStorage {
       this.#stopNonLivePull = () => {
         push.cancel();
         stopScheduledPulling();
+        this.#cancelActivePull?.();
       };
     }
   }
@@ -283,14 +288,6 @@ export class PouchDbSyncStorage extends PouchDbStorage {
       value: doc.value,
     })).subscribe({ next: (event) => this._emitEvent(event as StateEventType) });
 
-    // Registered so disposing storage while this pull is mid-flight cancels its request,
-    // listeners, and watchdog instead of leaving them running past the storage's own lifetime.
-    // Deregistered in `finish()` below - `_pullOnce` runs repeatedly for the life of the
-    // storage, so leaving these registered past each pull's own completion would leak one
-    // teardown entry per poll.
-    const removePullTeardown = this._addTeardown(() => pull.cancel());
-    const removeSubscriptionTeardown = this._addTeardown(subscription);
-
     return new Promise((resolve) => {
       let settled = false;
       const finish = (error?: unknown) => {
@@ -303,6 +300,7 @@ export class PouchDbSyncStorage extends PouchDbStorage {
         removePullTeardown();
         removeSubscriptionTeardown();
         this.#pullInFlight = false;
+        this.#cancelActivePull = undefined;
         // Only the rejection branch passes an error - 'complete'/'error' already emitted
         // their own onStateSync.error via observePouchDbReplicate, and the watchdog's forced
         // cancel isn't itself an error worth surfacing again.
@@ -313,6 +311,23 @@ export class PouchDbSyncStorage extends PouchDbStorage {
         }
         resolve();
       };
+
+      // Registered so disposing storage - or `sync()` superseding non-'live' mode - while this
+      // pull is mid-flight runs the same cleanup `finish()` does (clearing the watchdog and
+      // direct listeners below) instead of just cancelling and leaving them alive until the
+      // watchdog fires on its own, possibly after the storage has already been disposed.
+      // Deregistered inside `finish()` - `_pullOnce` runs repeatedly for the life of the storage,
+      // so leaving these registered past each pull's own completion would leak one entry per poll.
+      const removePullTeardown = this._addTeardown(() => {
+        pull.cancel();
+        finish();
+      });
+      const removeSubscriptionTeardown = this._addTeardown(subscription);
+      this.#cancelActivePull = () => {
+        pull.cancel();
+        finish();
+      };
+
       pull.on('complete', () => finish());
       pull.on('error', () => finish());
 
