@@ -100,7 +100,7 @@ describe('PouchDbSyncStorage', () => {
       // the exact failure mode the watchdog exists to recover from.
       const cancel = vi.fn();
       // biome-ignore lint/suspicious/noThenProperty: mocking PouchDB's Replication, which is genuinely thenable.
-      const hungReplication = { on: vi.fn(), then: vi.fn(), cancel };
+      const hungReplication = { on: vi.fn(), removeListener: vi.fn(), then: vi.fn(), cancel };
       const replicateFrom = vi
         .spyOn(localDb.replicate, 'from')
         .mockReturnValue(hungReplication as unknown as ReturnType<typeof localDb.replicate.from>);

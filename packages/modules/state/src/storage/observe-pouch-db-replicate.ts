@@ -29,7 +29,8 @@ export function observePouchDbReplicate<T extends AllowedValue = AllowedValue>(
   parse_docs: (doc: PouchDB.Core.ExistingDocument<{ value: T }>) => StorageItem<T>,
 ): Observable<StateSyncEventType<T>> {
   const parse_replication_result = (change: PouchDB.Replication.ReplicationResult<{ value: T }>) => ({
-    items: change.docs
+    // A cancelled (e.g. watchdog-forced) replication fires 'complete' with no `docs` at all.
+    items: (change.docs ?? [])
       // Convert replicated documents to the storage item shape expected by state events.
       .map((doc) => parse_docs(doc)),
     item_written: change.docs_written,
