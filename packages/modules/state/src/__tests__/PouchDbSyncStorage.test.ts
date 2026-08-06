@@ -208,9 +208,9 @@ describe('PouchDbSyncStorage', () => {
     it('does not cancel a pull that keeps making progress, only one that goes fully silent', async () => {
       vi.useFakeTimers();
       const cancel = vi.fn();
-      const handlers: Record<string, Array<() => void>> = {};
+      const handlers: Record<string, Array<(change: { docs: unknown[] }) => void>> = {};
       const replication = {
-        on: vi.fn((event: string, handler: () => void) => {
+        on: vi.fn((event: string, handler: (change: { docs: unknown[] }) => void) => {
           if (!handlers[event]) handlers[event] = [];
           handlers[event].push(handler);
         }),
@@ -240,7 +240,9 @@ describe('PouchDbSyncStorage', () => {
         await vi.advanceTimersByTimeAsync(5000);
         expect(cancel).not.toHaveBeenCalled();
         handlers.change?.forEach((handler) => {
-          handler();
+          // PouchDB's real 'change' event always carries a result object - observePouchDbReplicate
+          // (via onChange, also registered on this mock) reads `.docs` off it directly.
+          handler({ docs: [] });
         });
       }
 
@@ -256,13 +258,32 @@ describe('PouchDbSyncStorage', () => {
 
   describe('public sync()', () => {
     it('stops the live push and scheduled pulling before starting a bidirectional sync, instead of running both', async () => {
+      // Fully mocked (push, pull, and sync) so this test never depends on real PouchDB I/O or
+      // has a genuine live sync connection outlive the test - only the teardown wiring is asserted.
+      vi.useFakeTimers();
       const pushCancel = vi.fn();
       const replicateTo = vi.spyOn(localDb.replicate, 'to').mockReturnValue({
         on: vi.fn(),
         removeListener: vi.fn(),
         cancel: pushCancel,
       } as unknown as ReturnType<typeof localDb.replicate.to>);
-      const replicateFrom = vi.spyOn(localDb.replicate, 'from');
+
+      const pullReplication = {
+        on: vi.fn(),
+        removeListener: vi.fn(),
+        // Settles the initial pull immediately, so it never blocks the upcoming sync() call.
+        // biome-ignore lint/suspicious/noThenProperty: mocking PouchDB's Replication, which is genuinely thenable.
+        then: vi.fn((onFulfilled: () => void) => onFulfilled()),
+        cancel: vi.fn(),
+      };
+      const replicateFrom = vi
+        .spyOn(localDb.replicate, 'from')
+        .mockReturnValue(pullReplication as unknown as ReturnType<typeof localDb.replicate.from>);
+
+      const sync = { on: vi.fn(), cancel: vi.fn() };
+      const dbSync = vi
+        .spyOn(localDb, 'sync')
+        .mockReturnValue(sync as unknown as ReturnType<typeof localDb.sync>);
 
       const storage = new PouchDbSyncStorage({
         localDb: { name_or_instance: localDb },
@@ -272,20 +293,23 @@ describe('PouchDbSyncStorage', () => {
       });
 
       await storage.initialize();
-      const pullCallsBeforeSync = replicateFrom.mock.calls.length;
+      expect(replicateFrom).toHaveBeenCalledTimes(1); // the always-runs initial pull
 
       storage.sync();
       // The explicit sync() call replaces the non-live scaffolding it superseded, not join it.
       expect(pushCancel).toHaveBeenCalledTimes(1);
+      expect(dbSync).toHaveBeenCalledTimes(1);
 
       // Several scheduled-interval ticks worth of time pass - if the schedule weren't actually
       // stopped, this would keep calling replicate.from alongside the new bidirectional sync.
-      await new Promise((resolve) => setTimeout(resolve, 100));
-      expect(replicateFrom.mock.calls.length).toBe(pullCallsBeforeSync);
+      await vi.advanceTimersByTimeAsync(100);
+      expect(replicateFrom).toHaveBeenCalledTimes(1);
 
       storage[Symbol.dispose]();
       replicateTo.mockRestore();
       replicateFrom.mockRestore();
+      dbSync.mockRestore();
+      vi.useRealTimers();
     });
   });
 });
