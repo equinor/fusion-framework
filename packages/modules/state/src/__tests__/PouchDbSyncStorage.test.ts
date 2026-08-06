@@ -109,9 +109,9 @@ describe('PouchDbSyncStorage', () => {
       // itself - deterministic, instead of racing real PouchDB I/O against the interval timer.
       const fakeReplications: Array<{ complete: () => void }> = [];
       const replicateFrom = vi.spyOn(localDb.replicate, 'from').mockImplementation(() => {
-        const handlers: Record<string, Array<() => void>> = {};
+        const handlers: Record<string, Array<(change: { docs: unknown[] }) => void>> = {};
         const replication = {
-          on: vi.fn((event: string, handler: () => void) => {
+          on: vi.fn((event: string, handler: (change: { docs: unknown[] }) => void) => {
             if (!handlers[event]) handlers[event] = [];
             handlers[event].push(handler);
           }),
@@ -122,8 +122,10 @@ describe('PouchDbSyncStorage', () => {
         };
         fakeReplications.push({
           complete: () => {
+            // PouchDB's real 'complete' event always carries a result object - onComplete
+            // (observe-pouch-db-replicate.ts) reads `.docs` off it directly.
             handlers.complete?.forEach((handler) => {
-              handler();
+              handler({ docs: [] });
             });
           },
         });
