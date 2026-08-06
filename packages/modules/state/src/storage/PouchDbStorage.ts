@@ -1168,9 +1168,11 @@ export class PouchDbStorage implements IStorage, Disposable {
    * Cancels change feeds, completes event subjects, and closes connections.
    */
   [Symbol.dispose](): void {
-    // Execute all registered cleanup functions in reverse order
-    // This ensures dependencies are cleaned up in the correct sequence
-    for (const teardown of this.#teardown) {
+    // Snapshot-and-clear rather than iterate `this.#teardown` directly - a teardown can itself
+    // deregister other entries (e.g. `_pullOnce`'s `finish()` removing its own and a sibling
+    // registration), and splicing the array mid-iteration would skip whatever shifted into the
+    // index the iterator already passed.
+    for (const teardown of this.#teardown.splice(0)) {
       teardown();
     }
   }
