@@ -41,7 +41,7 @@ describe('PouchDbSyncStorage', () => {
       storage[Symbol.dispose]();
     });
 
-    it("surfaces a remote-only write via a scheduled pull, without needing a continuous pull connection", async () => {
+    it('surfaces a remote-only write via a scheduled pull, without needing a continuous pull connection', async () => {
       const storage = new PouchDbSyncStorage({
         localDb: { name_or_instance: localDb },
         remoteDb: { name_or_instance: remoteDb },
@@ -89,6 +89,70 @@ describe('PouchDbSyncStorage', () => {
       );
 
       subscription.unsubscribe();
+      storage[Symbol.dispose]();
+    });
+  });
+
+  describe('pull.mode "visible-interval"', () => {
+    const setVisibility = (state: DocumentVisibilityState) => {
+      Object.defineProperty(document, 'visibilityState', { value: state, configurable: true });
+      document.dispatchEvent(new Event('visibilitychange'));
+    };
+
+    afterEach(() => {
+      // Other describe blocks in this file assume a visible tab by default.
+      setVisibility('visible');
+    });
+
+    it('skips interval ticks while hidden, then pulls exactly once on returning to visible', async () => {
+      // Captures each replication's registered handlers so the test can drive 'complete'
+      // itself - deterministic, instead of racing real PouchDB I/O against the interval timer.
+      const fakeReplications: Array<{ complete: () => void }> = [];
+      const replicateFrom = vi.spyOn(localDb.replicate, 'from').mockImplementation(() => {
+        const handlers: Record<string, Array<() => void>> = {};
+        const replication = {
+          on: vi.fn((event: string, handler: () => void) => {
+            if (!handlers[event]) handlers[event] = [];
+            handlers[event].push(handler);
+          }),
+          removeListener: vi.fn(),
+          // biome-ignore lint/suspicious/noThenProperty: mocking PouchDB's Replication, which is genuinely thenable.
+          then: vi.fn(),
+          cancel: vi.fn(),
+        };
+        fakeReplications.push({
+          complete: () => {
+            handlers.complete?.forEach((handler) => {
+              handler();
+            });
+          },
+        });
+        return replication as unknown as ReturnType<typeof localDb.replicate.from>;
+      });
+
+      setVisibility('hidden');
+      const storage = new PouchDbSyncStorage({
+        localDb: { name_or_instance: localDb },
+        remoteDb: { name_or_instance: remoteDb },
+        syncOptions: {},
+        pull: { mode: 'visible-interval', intervalMs: 20, refreshOnFocus: true },
+      });
+
+      await storage.initialize();
+      expect(replicateFrom).toHaveBeenCalledTimes(1); // the always-runs initial pull
+
+      // Several interval ticks pass while hidden - the schedule should skip every one of them.
+      await new Promise((resolve) => setTimeout(resolve, 100));
+      expect(replicateFrom).toHaveBeenCalledTimes(1);
+
+      // Release the initial pull, so the upcoming focus trigger isn't skipped as already in flight.
+      fakeReplications[0].complete();
+
+      setVisibility('visible');
+      // Returning to visible triggers exactly one catch-up pull, not one per missed tick.
+      expect(replicateFrom).toHaveBeenCalledTimes(2);
+
+      replicateFrom.mockRestore();
       storage[Symbol.dispose]();
     });
   });
