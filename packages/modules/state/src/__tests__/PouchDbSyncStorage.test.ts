@@ -280,7 +280,7 @@ describe('PouchDbSyncStorage', () => {
         .spyOn(localDb.replicate, 'from')
         .mockReturnValue(pullReplication as unknown as ReturnType<typeof localDb.replicate.from>);
 
-      const sync = { on: vi.fn(), cancel: vi.fn() };
+      const sync = { on: vi.fn(), removeListener: vi.fn(), cancel: vi.fn() };
       const dbSync = vi
         .spyOn(localDb, 'sync')
         .mockReturnValue(sync as unknown as ReturnType<typeof localDb.sync>);
