@@ -312,4 +312,40 @@ describe('PouchDbSyncStorage', () => {
       vi.useRealTimers();
     });
   });
+
+  describe('disposal', () => {
+    it('stops the scheduled pull interval even when disposed while a pull is still in flight', async () => {
+      vi.useFakeTimers();
+      // Never fires 'complete'/'error' and never settles its thenable, so it's still "in
+      // flight" - and its teardown callback still registered - at the moment of disposal.
+      const cancel = vi.fn();
+      // biome-ignore lint/suspicious/noThenProperty: mocking PouchDB's Replication, which is genuinely thenable.
+      const hungReplication = { on: vi.fn(), removeListener: vi.fn(), then: vi.fn(), cancel };
+      const replicateFrom = vi
+        .spyOn(localDb.replicate, 'from')
+        .mockReturnValue(hungReplication as unknown as ReturnType<typeof localDb.replicate.from>);
+
+      const storage = new PouchDbSyncStorage({
+        localDb: { name_or_instance: localDb },
+        remoteDb: { name_or_instance: remoteDb },
+        syncOptions: {},
+        pull: { mode: 'interval', intervalMs: 1000, refreshOnFocus: false },
+      });
+
+      await storage.initialize();
+      expect(replicateFrom).toHaveBeenCalledTimes(1); // the initial pull, still in flight
+
+      // Disposing while a pull is in flight runs its teardown (cancel + finish) mid-iteration
+      // over the same teardown collection the interval's own `clearInterval` teardown lives in -
+      // if that iteration skipped an entry, the interval would keep firing after this.
+      storage[Symbol.dispose]();
+      expect(cancel).toHaveBeenCalledTimes(1);
+
+      await vi.advanceTimersByTimeAsync(5000);
+      expect(replicateFrom).toHaveBeenCalledTimes(1);
+
+      replicateFrom.mockRestore();
+      vi.useRealTimers();
+    });
+  });
 });
