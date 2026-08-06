@@ -186,14 +186,19 @@ export class PouchDbSyncStorage extends PouchDbStorage {
    * @template T - State value type.
    * @returns The live push replication handle.
    */
-  protected _startLivePush<T extends AllowedValue = AllowedValue>(): PouchDB.Replication.Replication<{
+  protected _startLivePush<
+    T extends AllowedValue = AllowedValue,
+  >(): PouchDB.Replication.Replication<{
     value: T;
   }> {
-    const push = this._db.replicate.to<{ value: T }>(this.#remoteDb as PouchDB.Database<{ value: T }>, {
-      ...this.#syncOptions,
-      live: true,
-      retry: this.#syncOptions.retry ?? true,
-    });
+    const push = this._db.replicate.to<{ value: T }>(
+      this.#remoteDb as PouchDB.Database<{ value: T }>,
+      {
+        ...this.#syncOptions,
+        live: true,
+        retry: this.#syncOptions.retry ?? true,
+      },
+    );
 
     const subscription = observePouchDbReplicate<T>(push, 'push', (doc) => ({
       _id: doc._id,
@@ -228,19 +233,24 @@ export class PouchDbSyncStorage extends PouchDbStorage {
       return Promise.resolve();
     }
     this.#pullInFlight = true;
-    this._emitEvent(new StateSyncEvent.Poll({ detail: { trigger, skipped: false } }) as StateEventType);
+    this._emitEvent(
+      new StateSyncEvent.Poll({ detail: { trigger, skipped: false } }) as StateEventType,
+    );
 
     let pull: PouchDB.Replication.Replication<{ value: T }>;
     try {
-      pull = this._db.replicate.from<{ value: T }>(this.#remoteDb as PouchDB.Database<{ value: T }>, {
-        ...this.#syncOptions,
-        live: false,
-        retry: false,
-        // Guarantees 'complete'/'error' fires even against a backend that never answers a
-        // one-shot request - otherwise a single hung poll would wedge #pullInFlight forever,
-        // silently turning every later timer/focus trigger into a no-op skip.
-        timeout: this.#syncOptions.timeout ?? 30000,
-      });
+      pull = this._db.replicate.from<{ value: T }>(
+        this.#remoteDb as PouchDB.Database<{ value: T }>,
+        {
+          ...this.#syncOptions,
+          live: false,
+          retry: false,
+          // Guarantees 'complete'/'error' fires even against a backend that never answers a
+          // one-shot request - otherwise a single hung poll would wedge #pullInFlight forever,
+          // silently turning every later timer/focus trigger into a no-op skip.
+          timeout: this.#syncOptions.timeout ?? 30000,
+        },
+      );
     } catch (error) {
       console.error('[state] failed to start one-shot pull replication', error);
       // A synchronous throw here (bad remote config, custom fetch misuse, etc.) would
@@ -259,31 +269,55 @@ export class PouchDbSyncStorage extends PouchDbStorage {
       value: doc.value,
     })).subscribe({ next: (event) => this._emitEvent(event as StateEventType) });
 
+    // Registered so disposing storage while this pull is mid-flight cancels its request,
+    // listeners, and watchdog instead of leaving them running past the storage's own lifetime.
+    // Deregistered in `finish()` below - `_pullOnce` runs repeatedly for the life of the
+    // storage, so leaving these registered past each pull's own completion would leak one
+    // teardown entry per poll.
+    const removePullTeardown = this._addTeardown(() => pull.cancel());
+    const removeSubscriptionTeardown = this._addTeardown(subscription);
+
     return new Promise((resolve) => {
       let settled = false;
-      const finish = () => {
+      const finish = (error?: unknown) => {
         // 'complete'/'error' can both fire in some PouchDB versions, and the watchdog/promise
         // fallbacks below can race with either - only unblock once, whichever gets here first.
         if (settled) return;
         settled = true;
         clearTimeout(watchdog);
         subscription.unsubscribe();
+        removePullTeardown();
+        removeSubscriptionTeardown();
         this.#pullInFlight = false;
+        // Only the rejection branch passes an error - 'complete'/'error' already emitted
+        // their own onStateSync.error via observePouchDbReplicate, and the watchdog's forced
+        // cancel isn't itself an error worth surfacing again.
+        if (error !== undefined) {
+          this._emitEvent(
+            new StateSyncEvent.Error({ detail: { type: 'error', error } }) as StateEventType,
+          );
+        }
         resolve();
       };
-      pull.on('complete', finish);
-      pull.on('error', finish);
+      pull.on('complete', () => finish());
+      pull.on('error', () => finish());
 
       // `Replication` is also thenable (it resolves/rejects the same way `db.sync()`'s
       // `.then()` does) - a fallback for when the 'complete'/'error' *events* themselves
       // don't fire, which has been observed to happen even though the underlying requests succeed.
-      pull.then(finish, finish);
+      // A rejection reaching here (rather than the 'error' event above) would otherwise surface
+      // as a silent no-op - report it as an onStateSync.error instead of discarding the reason.
+      pull.then(
+        () => finish(),
+        (error) => finish(error),
+      );
 
       // PouchDB's own `timeout` option only bounds the underlying `_changes` request, not the
       // full replication (checkpoint read/write, `_revs_diff`, `_bulk_get`) - observed in practice
       // to never emit 'complete'/'error' at all in some cases, wedging #pullInFlight forever.
       // This watchdog guarantees forward progress regardless of where PouchDB got stuck.
-      const watchdogMs = (typeof this.#syncOptions.timeout === 'number' ? this.#syncOptions.timeout : 30000) + 5000;
+      const watchdogMs =
+        (typeof this.#syncOptions.timeout === 'number' ? this.#syncOptions.timeout : 30000) + 5000;
       const watchdog = setTimeout(() => {
         pull.cancel();
         finish();
@@ -310,7 +344,11 @@ export class PouchDbSyncStorage extends PouchDbStorage {
     const timer = setInterval(() => {
       // A backgrounded tab has no user waiting on fresh data - skip the tick rather than
       // hold a connection open for it, and let the visibilitychange catch-up handle it instead.
-      if (!pauseWhenHidden || typeof document === 'undefined' || document.visibilityState === 'visible') {
+      if (
+        !pauseWhenHidden ||
+        typeof document === 'undefined' ||
+        document.visibilityState === 'visible'
+      ) {
         run('interval');
       }
     }, intervalMs);
