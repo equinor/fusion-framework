@@ -199,6 +199,21 @@ export class PouchDbSyncStorage extends PouchDbStorage {
   }
 
   /**
+   * Merges the top-level sync options with PouchDB's own direction-specific override
+   * (`syncOptions.push`/`syncOptions.pull`), the same way `db.sync()` applies them internally.
+   * Used by `_startLivePush`/`_pullOnce`, which replace `db.sync()` with separate
+   * `replicate.to`/`replicate.from` calls in non-'live' pull modes and would otherwise silently
+   * drop a caller's per-direction filter, query params, or timeout.
+   * @param direction - Which override to layer on top of the shared options.
+   * @returns Effective options for a single-direction `replicate.to`/`replicate.from` call.
+   */
+  #effectiveReplicateOptions(direction: 'push' | 'pull'): PouchDB.Replication.ReplicateOptions {
+    const { push, pull, ...shared } = this.#syncOptions;
+    // Direction override layered last, matching db.sync()'s own precedence.
+    return { ...shared, ...(direction === 'push' ? push : pull) };
+  }
+
+  /**
    * Starts a continuous, live push replication (local to remote only). Used instead of
    * `sync()` when `pull.mode` is `'interval'`, so local writes still replicate out immediately
    * without keeping a matching continuous pull connection open.
@@ -210,12 +225,13 @@ export class PouchDbSyncStorage extends PouchDbStorage {
   >(): PouchDB.Replication.Replication<{
     value: T;
   }> {
+    const pushOptions = this.#effectiveReplicateOptions('push');
     const push = this._db.replicate.to<{ value: T }>(
       this.#remoteDb as PouchDB.Database<{ value: T }>,
       {
-        ...this.#syncOptions,
+        ...pushOptions,
         live: true,
-        retry: this.#syncOptions.retry ?? true,
+        retry: pushOptions.retry ?? true,
       },
     );
 
@@ -257,17 +273,19 @@ export class PouchDbSyncStorage extends PouchDbStorage {
     );
 
     let pull: PouchDB.Replication.Replication<{ value: T }>;
+    const pullOptions = this.#effectiveReplicateOptions('pull');
+    const pullTimeout = pullOptions.timeout ?? 30000;
     try {
       pull = this._db.replicate.from<{ value: T }>(
         this.#remoteDb as PouchDB.Database<{ value: T }>,
         {
-          ...this.#syncOptions,
+          ...pullOptions,
           live: false,
           retry: false,
           // Guarantees 'complete'/'error' fires even against a backend that never answers a
           // one-shot request - otherwise a single hung poll would wedge #pullInFlight forever,
           // silently turning every later timer/focus trigger into a no-op skip.
-          timeout: this.#syncOptions.timeout ?? 30000,
+          timeout: pullTimeout,
         },
       );
     } catch (error) {
@@ -347,10 +365,13 @@ export class PouchDbSyncStorage extends PouchDbStorage {
       // This is an inactivity watchdog, not a total-duration deadline - it's rearmed on every
       // 'change' batch, so a healthy multi-batch pull can run indefinitely as long as it keeps
       // making progress; only a replication that goes fully silent gets force-cancelled.
-      const watchdogMs =
-        (typeof this.#syncOptions.timeout === 'number' ? this.#syncOptions.timeout : 30000) + 5000;
+      const watchdogMs = (typeof pullTimeout === 'number' ? pullTimeout : 30000) + 5000;
       let watchdog: ReturnType<typeof setTimeout>;
       const armWatchdog = () => {
+        // A 'change' event already dispatching when `finish()` runs elsewhere in the same tick
+        // (e.g. a subscriber disposing the storage synchronously) would otherwise revive the
+        // watchdog right after cleanup cleared it - once settled, this must stay a no-op.
+        if (settled) return;
         clearTimeout(watchdog);
         watchdog = setTimeout(() => {
           pull.cancel();
