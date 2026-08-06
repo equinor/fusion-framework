@@ -1,5 +1,5 @@
 ---
-"@equinor/fusion-framework-module-state": minor
+"@equinor/fusion-framework-module-state": major
 ---
 
 Add a `pull` option to `PouchDbSyncStorage` for controlling how remote changes are pulled during sync, switch the default storage created by `createDefaultStorage()` to use it, and expose `createDefaultStorage` itself so callers can reuse it with custom overrides.
@@ -31,4 +31,34 @@ import { createDefaultStorage } from '@equinor/fusion-framework-module-state/def
 
 config.setStorage((args) => createDefaultStorage(appKey, args, { intervalMs: 10000 }));
 ```
+
+**Breaking change:** the scheduled pull dispatches a new `onStateSync.poll` event, added to the
+exported `StateSyncEventType`/`StateSyncEvent` union. Consumers with an exhaustive `switch`/`if`
+chain over `StateSyncEventType` (e.g. a `default: assertNever(event)` branch) need a new case for
+`StateSyncEvent.Poll`/`event.type === 'onStateSync.poll'`, or that check will fail to compile
+after upgrading:
+
+```typescript
+// Before: exhaustive over 4 members
+switch (event.type) {
+  case 'onStateSync.change': /* ... */ break;
+  case 'onStateSync.complete': /* ... */ break;
+  case 'onStateSync.error': /* ... */ break;
+  case 'onStateSync.status': /* ... */ break;
+  default: assertNever(event);
+}
+
+// After: add the new member
+switch (event.type) {
+  case 'onStateSync.change': /* ... */ break;
+  case 'onStateSync.complete': /* ... */ break;
+  case 'onStateSync.error': /* ... */ break;
+  case 'onStateSync.status': /* ... */ break;
+  case 'onStateSync.poll': /* ... */ break;
+  default: assertNever(event);
+}
+```
+
+Consumers that switch over a narrower type, or that only inspect specific event kinds (e.g. via
+`StateSyncEvent.Change.is(event)`), are unaffected.
 
