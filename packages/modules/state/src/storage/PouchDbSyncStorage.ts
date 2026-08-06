@@ -67,6 +67,10 @@ export class PouchDbSyncStorage extends PouchDbStorage {
   // Guards `_schedulePulling()` the same way `#activeSync` guards `sync()` - a running
   // one-shot pull must finish before the next interval/focus trigger starts another.
   #pullInFlight = false;
+  // Set only in non-'live' mode, so an explicit `sync()` call can tear down the live push and
+  // scheduled pulling first - otherwise it would start a second, competing continuous pull/push
+  // alongside them instead of replacing them.
+  #stopNonLivePull: VoidFunction | undefined;
 
   /**
    * Creates a synchronized storage adapter.
@@ -90,8 +94,12 @@ export class PouchDbSyncStorage extends PouchDbStorage {
     if ((this.#pull.mode ?? PullMode.Live) === PullMode.Live) {
       this.sync();
     } else {
-      this._startLivePush();
-      this._schedulePulling();
+      const push = this._startLivePush();
+      const stopScheduledPulling = this._schedulePulling();
+      this.#stopNonLivePull = () => {
+        push.cancel();
+        stopScheduledPulling();
+      };
     }
   }
 
@@ -128,6 +136,12 @@ export class PouchDbSyncStorage extends PouchDbStorage {
       // from this same generic method, so `T` always matches what's actually stored.
       return this.#activeSync as unknown as PouchDB.Replication.Sync<{ value: T }>;
     }
+
+    // An explicit `sync()` call while running in a non-'live' pull mode would otherwise start
+    // a second, competing continuous pull alongside the live push and scheduled one-shot pulls
+    // already in charge of replication - stop them first so this sync replaces, not duplicates.
+    this.#stopNonLivePull?.();
+    this.#stopNonLivePull = undefined;
 
     // Layer defaults under caller options so any other `SyncOptions` field (filter, since,
     // batches_limit, etc.) still reaches PouchDB unmodified.
@@ -315,13 +329,21 @@ export class PouchDbSyncStorage extends PouchDbStorage {
       // PouchDB's own `timeout` option only bounds the underlying `_changes` request, not the
       // full replication (checkpoint read/write, `_revs_diff`, `_bulk_get`) - observed in practice
       // to never emit 'complete'/'error' at all in some cases, wedging #pullInFlight forever.
-      // This watchdog guarantees forward progress regardless of where PouchDB got stuck.
+      // This is an inactivity watchdog, not a total-duration deadline - it's rearmed on every
+      // 'change' batch, so a healthy multi-batch pull can run indefinitely as long as it keeps
+      // making progress; only a replication that goes fully silent gets force-cancelled.
       const watchdogMs =
         (typeof this.#syncOptions.timeout === 'number' ? this.#syncOptions.timeout : 30000) + 5000;
-      const watchdog = setTimeout(() => {
-        pull.cancel();
-        finish();
-      }, watchdogMs);
+      let watchdog: ReturnType<typeof setTimeout>;
+      const armWatchdog = () => {
+        clearTimeout(watchdog);
+        watchdog = setTimeout(() => {
+          pull.cancel();
+          finish();
+        }, watchdogMs);
+      };
+      armWatchdog();
+      pull.on('change', armWatchdog);
     });
   }
 
@@ -330,8 +352,9 @@ export class PouchDbSyncStorage extends PouchDbStorage {
    * pull, then one every `pull.intervalMs` (default 60s) - skipping the tick while the tab is
    * hidden when `mode` is `'visible-interval'` - plus an extra catch-up pull whenever it becomes
    * visible again, when `pull.refreshOnFocus` isn't disabled. Cleaned up automatically on dispose.
+   * @returns A function that stops the schedule immediately, ahead of storage disposal.
    */
-  protected _schedulePulling(): void {
+  protected _schedulePulling(): VoidFunction {
     const intervalMs = this.#pull.intervalMs ?? DEFAULT_PULL_INTERVAL_MS;
     const pauseWhenHidden = this.#pull.mode === PullMode.VisibleInterval;
     const run = (trigger: StateSyncPollTrigger) => {
@@ -352,7 +375,7 @@ export class PouchDbSyncStorage extends PouchDbStorage {
         run('interval');
       }
     }, intervalMs);
-    this._addTeardown(() => clearInterval(timer));
+    const removeTimerTeardown = this._addTeardown(() => clearInterval(timer));
 
     // Skip entirely outside a DOM environment (e.g. SSR) where there's no tab to focus.
     if ((this.#pull.refreshOnFocus ?? true) && typeof document !== 'undefined') {
@@ -367,7 +390,21 @@ export class PouchDbSyncStorage extends PouchDbStorage {
         }
       };
       document.addEventListener('visibilitychange', onVisibilityChange);
-      this._addTeardown(() => document.removeEventListener('visibilitychange', onVisibilityChange));
+      const removeVisibilityTeardown = this._addTeardown(() =>
+        document.removeEventListener('visibilitychange', onVisibilityChange),
+      );
+
+      return () => {
+        clearInterval(timer);
+        removeTimerTeardown();
+        document.removeEventListener('visibilitychange', onVisibilityChange);
+        removeVisibilityTeardown();
+      };
     }
+
+    return () => {
+      clearInterval(timer);
+      removeTimerTeardown();
+    };
   }
 }
