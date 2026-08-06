@@ -1,5 +1,15 @@
 # Change Log
 
+## 8.0.13
+
+### Patch Changes
+
+- Updated dependencies [1b9d026]
+- Updated dependencies [b92698d]
+  - @equinor/fusion-framework-module-context@8.0.2
+  - @equinor/fusion-framework-module@6.1.2
+  - @equinor/fusion-framework-module-telemetry@7.0.2
+
 ## 8.0.12
 
 ### Patch Changes

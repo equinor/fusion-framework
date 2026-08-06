@@ -1,5 +1,12 @@
 # Change Log
 
+## 2.0.11
+
+### Patch Changes
+
+- Updated dependencies [b92698d]
+  - @equinor/fusion-framework-react-app@13.0.0
+
 ## 2.0.10
 
 ### Patch Changes

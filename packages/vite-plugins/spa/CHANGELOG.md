@@ -1,5 +1,13 @@
 # @equinor/fusion-framework-vite-plugin-spa
 
+## 4.0.16
+
+### Patch Changes
+
+- Updated dependencies [b92698d]
+  - @equinor/fusion-framework-module@6.1.2
+  - @equinor/fusion-framework-module-telemetry@7.0.2
+
 ## 4.0.15
 
 ### Patch Changes
