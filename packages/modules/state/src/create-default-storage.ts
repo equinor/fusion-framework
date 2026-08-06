@@ -14,7 +14,7 @@ import type {
 } from '@equinor/fusion-framework-module-service-discovery';
 
 import { PouchDbStorage, PouchDbSyncStorage } from './storage/index.js';
-import type { IStorage } from './storage/index.js';
+import type { IStorage, PouchDbSyncPullOptions } from './storage/index.js';
 
 /** Local PouchDB database name used when no `setStorage` was configured. */
 const DEFAULT_DB_NAME = 'app_state';
@@ -100,8 +100,10 @@ async function resolveHttpClientProvider(
  * Default {@link IStorage} used by the state module when the consumer never calls
  * `setStorage`, scoped to the `name` set via `setName`. Builds a local PouchDB database
  * and, when a `serviceDiscovery` module is available (locally or on the hosting `ref`
- * instance), upgrades it to two-way sync with the Fusion App State backend (a per-user
- * CouchDB reverse proxy resolved under the `app-state` service key).
+ * instance), upgrades it to sync with the Fusion App State backend (a per-user CouchDB
+ * reverse proxy resolved under the `app-state` service key): local writes push live, and
+ * remote changes are pulled once a minute and on tab focus rather than over a continuous
+ * live connection - see `PouchDbSyncStorage`'s `pull` option.
  *
  * @remarks
  * The Fusion App State backend's published OpenAPI spec only documents its management
@@ -115,12 +117,15 @@ async function resolveHttpClientProvider(
  * @param name - The caller-supplied identity (e.g. app key) used to scope local keys
  * and the remote sync path. Required so unrelated callers never share state.
  * @param init - Module resolution context, used to discover `serviceDiscovery` and `http`.
+ * @param pull - Overrides for the default pull scheduling (e.g. a shorter `intervalMs` for
+ * local preview/testing) - merged over the production default, not replacing it wholesale.
  * @returns The resolved default storage.
  * @throws Never - internal resolution failures are caught and result in a local-only fallback.
  */
 export async function createDefaultStorage(
   name: string,
   init: ConfigBuilderCallbackArgs,
+  pull?: PouchDbSyncPullOptions,
 ): Promise<IStorage> {
   const serviceDiscovery = await resolveServiceDiscovery(init);
   // Sync can't be resolved without service discovery; fall back to local-only storage.
@@ -155,10 +160,14 @@ export async function createDefaultStorage(
         // GET/PUT existence-check dance, which the passthrough answers with 400.
         options: { fetch: createHttpClientFetch(httpClient), skip_setup: true },
       },
-      // continuous replication - PouchDB owns reconnect/backoff for its whole lifetime,
-      // rather than us restarting it on focus/online triggers and never letting a batch's
-      // checkpoint persist.
+      // base options shared by push and the one-shot pulls below - `live`/`retry` apply
+      // as-is to the (always-live) push, `_pullOnce` overrides `live: false, retry: false`.
       syncOptions: { live: true, retry: true },
+      // At production user counts, a continuous pull connection per idle tab is a lot of
+      // concurrently open sockets for a direction that's rarely needed in real time - push
+      // stays live so local writes are never delayed, pull just polls instead, and pauses
+      // entirely while the tab is hidden.
+      pull: { mode: 'visible-interval', refreshOnFocus: true, ...pull },
     });
   } catch (error) {
     // The `app-state` service may not be registered (e.g. in local/dev environments) -

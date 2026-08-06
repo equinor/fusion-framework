@@ -10,6 +10,7 @@ import { StateOperationSuccessEvent } from './StateOperationSuccessEvent.js';
 import { StateSyncChangeEvent } from './StateSyncChangeEvent.js';
 import { StateSyncCompleteEvent } from './StateSyncCompleteEvent.js';
 import { StateSyncErrorEvent } from './StateSyncErrorEvent.js';
+import { StateSyncPollEvent } from './StateSyncPollEvent.js';
 import { StateSyncStatusEvent } from './StateSyncStatusEvent.js';
 import type { StateErrorEvent } from './StateErrorEvent.js';
 
@@ -51,18 +52,21 @@ export const StateSyncEvent = {
   Complete: StateSyncCompleteEvent,
   Error: StateSyncErrorEvent,
   Status: StateSyncStatusEvent,
+  Poll: StateSyncPollEvent,
   is: (
     event: unknown,
   ): event is
     | StateSyncChangeEvent
     | StateSyncCompleteEvent
     | StateSyncErrorEvent
-    | StateSyncStatusEvent => {
+    | StateSyncStatusEvent
+    | StateSyncPollEvent => {
     return (
       StateSyncChangeEvent.is(event) ||
       StateSyncCompleteEvent.is(event) ||
       StateSyncErrorEvent.is(event) ||
-      StateSyncStatusEvent.is(event)
+      StateSyncStatusEvent.is(event) ||
+      StateSyncPollEvent.is(event)
     );
   },
 } as const;
@@ -71,7 +75,8 @@ export type StateSyncEventType<T extends AllowedValue = AllowedValue> =
   | StateSyncChangeEvent<T>
   | StateSyncCompleteEvent<T>
   | StateSyncErrorEvent
-  | StateSyncStatusEvent;
+  | StateSyncStatusEvent
+  | StateSyncPollEvent;
 
 /**
  * Union type representing all possible state operation events.

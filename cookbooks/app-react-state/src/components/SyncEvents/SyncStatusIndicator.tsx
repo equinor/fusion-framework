@@ -8,7 +8,7 @@ interface SyncStatusIndicatorProps {
   showTimestamp?: boolean;
 }
 
-type SyncStatusKind = 'active' | 'paused' | 'change' | 'complete' | 'error' | 'offline';
+type SyncStatusKind = 'active' | 'paused' | 'change' | 'complete' | 'poll' | 'error' | 'offline';
 
 const getStatusKind = (event?: StateSyncEventType): SyncStatusKind => {
   // No event has arrived yet - either sync hasn't started, or replication isn't configured.
@@ -19,8 +19,11 @@ const getStatusKind = (event?: StateSyncEventType): SyncStatusKind => {
   }
   // Every other sync event kind maps 1:1 to an indicator label.
   if (StateSyncEvent.Change.is(event)) return 'change';
-  // Any remaining sync event kind is either a completion or an error.
+  // A completed replication batch, whether or not anything actually changed.
   if (StateSyncEvent.Complete.is(event)) return 'complete';
+  // Interval-mode polling (timer/focus/initial) - distinct from an actual error.
+  if (StateSyncEvent.Poll.is(event)) return 'poll';
+  // Any remaining sync event kind is an error.
   return 'error';
 };
 
@@ -29,6 +32,7 @@ const getStatusColor = (kind: SyncStatusKind) => {
   switch (kind) {
     case 'active':
     case 'change':
+    case 'poll':
       return '#007BFF'; // Blue for syncing
     case 'paused':
     case 'complete':
@@ -49,6 +53,8 @@ const getStatusText = (kind: SyncStatusKind) => {
       return 'Up to date';
     case 'change':
       return 'Changes detected';
+    case 'poll':
+      return 'Polling...';
     case 'error':
       return 'Sync error';
     case 'complete':
