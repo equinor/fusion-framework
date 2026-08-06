@@ -72,6 +72,7 @@ a sync session is active.
 | `StateSyncCompleteEvent` | `onStateSync.complete` | `result` (`{ push?, pull? }`), optional `id` |
 | `StateSyncErrorEvent` | `onStateSync.error` | `error`, `type` (`'error' \| 'denied'`), optional `id` |
 | `StateSyncStatusEvent` | `onStateSync.status` | `status`, optional `id` |
+| `StateSyncPollEvent` | `onStateSync.poll` | `trigger` (`'initial' \| 'interval' \| 'focus'`), `skipped`, optional `id` |
 
 ```typescript
 modules.event.addEventListener('onStateSync.error', (event) => {
@@ -81,9 +82,15 @@ modules.event.addEventListener('onStateSync.error', (event) => {
 modules.event.addEventListener('onStateSync.status', (event) => {
   console.log('Sync status:', event.status);
 });
+
+// Dispatched by PouchDbSyncStorage's non-'live' pull modes ('interval'/'visible-interval') on
+// the initial pull, each interval tick, and each focus catch-up - even when nothing changed.
+modules.event.addEventListener('onStateSync.poll', (event) => {
+  console.log('Polled for changes:', event.trigger, 'skipped:', event.skipped);
+});
 ```
 
-Use `StateSyncEvent.is(event)` to match any of the four sync events at once, e.g. for a single
+Use `StateSyncEvent.is(event)` to match any of the five sync events at once, e.g. for a single
 telemetry hook that logs all sync activity.
 
 ## Operation events
