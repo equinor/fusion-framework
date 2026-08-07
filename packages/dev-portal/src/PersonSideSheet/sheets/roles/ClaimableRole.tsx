@@ -213,7 +213,7 @@ export const ClaimableRole = ({ assignment, onChange }: ClaimableRoleProps): Rea
               Cancel
             </Button>
             <Button variant="contained" disabled={isPending} onClick={() => void activateRole()}>
-              {isPending ? <CircularProgress size={20} /> : 'Activate'}
+              {isPending ? <CircularProgress size={24} /> : 'Activate'}
             </Button>
           </Styled.Actions>
         </Styled.Form>
