@@ -1,6 +1,6 @@
 import { Divider, Icon, Button } from '@equinor/eds-core-react';
-import { bandage, category, work_outline, security } from '@equinor/eds-icons';
-Icon.add({ bandage, category, work_outline, security });
+import { bandage, category, work_outline, security, verified_user } from '@equinor/eds-icons';
+Icon.add({ bandage, category, work_outline, security, verified_user });
 
 import type { SheetContentProps } from './types';
 
@@ -31,6 +31,12 @@ export const LandingSheetContent = ({ azureId, navigate }: SheetContentProps) =>
           <Button variant="ghost" onClick={() => navigate('features')}>
             <Icon name="category" />
             My Features
+          </Button>
+        </BtnListItem>
+        <BtnListItem>
+          <Button variant="ghost" onClick={() => navigate('roles')}>
+            <Icon name="verified_user" />
+            My Roles
           </Button>
         </BtnListItem>
       </BtnList>
