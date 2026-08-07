@@ -1,4 +1,4 @@
-import { TodoListManager } from '../components/Todo';
+import { TodoListManager } from '../../components/Todo';
 
 /** Demonstrates a replicated task list. */
 export const Todo = () => {
