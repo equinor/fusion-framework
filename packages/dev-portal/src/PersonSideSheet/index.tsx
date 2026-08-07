@@ -5,7 +5,7 @@ PersonListItem;
 
 import { Divider } from '@equinor/eds-core-react';
 
-import { LandingSheetContent, FeatureSheetContent } from './sheets';
+import { LandingSheetContent, FeatureSheetContent, RolesSheetContent } from './sheets';
 
 /** Props for the {@link PersonSideSheet} component. */
 type PersonSideSheetProps = {
@@ -33,6 +33,8 @@ export const PersonSideSheet = ({ azureId, isOpen, onClose }: PersonSideSheetPro
     switch (currentSheet) {
       case 'features':
         return FeatureSheetContent;
+      case 'roles':
+        return RolesSheetContent;
       default:
         return LandingSheetContent;
     }
