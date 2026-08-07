@@ -10,7 +10,7 @@ import {
 import { arrow_back, verified_user } from '@equinor/eds-icons';
 import { useFramework } from '@equinor/fusion-framework-react';
 import { useCurrentUser } from '@equinor/fusion-framework-react/hooks';
-import { useEffect, useState } from 'react';
+import { type ReactElement, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 
 import type { SheetContentProps } from '../types';
@@ -47,7 +47,7 @@ const Styled = {
  * @param props.navigate - Navigates back to the person side sheet landing page.
  * @returns A tabbed role overview with loading, error, and empty states.
  */
-export const RolesSheetContent = ({ navigate }: SheetContentProps) => {
+export const RolesSheetContent = ({ navigate }: SheetContentProps): ReactElement => {
   const framework = useFramework();
   const user = useCurrentUser();
   const [tab, setTab] = useState(0);
@@ -55,6 +55,16 @@ export const RolesSheetContent = ({ navigate }: SheetContentProps) => {
   const [permanentRoles, setPermanentRoles] = useState<PermanentRoleAssignment[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string>();
+  const [loadAttempt, setLoadAttempt] = useState(0);
+  const latestLoadAttempt = useRef(loadAttempt);
+  latestLoadAttempt.current = loadAttempt;
+
+  /** Starts a fresh role request after a retrieval failure. */
+  const handleRetry = (): void => {
+    setError(undefined);
+    setIsLoading(true);
+    setLoadAttempt((attempt) => attempt + 1);
+  };
 
   /**
    * Replaces a changed assignment after activation or deactivation succeeds.
@@ -71,6 +81,7 @@ export const RolesSheetContent = ({ navigate }: SheetContentProps) => {
 
   useEffect(() => {
     let isActive = true;
+    const currentLoadAttempt = loadAttempt;
 
     /** Loads both role collections together so the tabs represent one consistent snapshot. */
     const loadRoles = async (): Promise<void> => {
@@ -90,19 +101,19 @@ export const RolesSheetContent = ({ navigate }: SheetContentProps) => {
         ]);
 
         // Ignore a completed request after the side sheet content has unmounted.
-        if (isActive) {
+        if (isActive && latestLoadAttempt.current === currentLoadAttempt) {
           setClaimableRoles(claimable);
           setPermanentRoles(permanent);
           setError(undefined);
         }
       } catch (cause) {
         // Keep transport details out of the side sheet while preserving a useful retry direction.
-        if (isActive) {
+        if (isActive && latestLoadAttempt.current === currentLoadAttempt) {
           setError(cause instanceof Error ? cause.message : 'Failed to load roles.');
         }
       } finally {
         // Avoid updating state when navigation unmounts this sheet during a request.
-        if (isActive) {
+        if (isActive && latestLoadAttempt.current === currentLoadAttempt) {
           setIsLoading(false);
         }
       }
@@ -113,7 +124,7 @@ export const RolesSheetContent = ({ navigate }: SheetContentProps) => {
     return () => {
       isActive = false;
     };
-  }, [framework, user?.localAccountId]);
+  }, [framework, user?.localAccountId, loadAttempt]);
 
   // Prepare role rows before markup so the tab panels only render presentation state.
   const claimableItems = claimableRoles.map((assignment) => (
@@ -154,9 +165,14 @@ export const RolesSheetContent = ({ navigate }: SheetContentProps) => {
         {isLoading ? (
           <CircularProgress aria-label="Loading roles" />
         ) : error ? (
-          <Banner>
-            <Banner.Message>{error}</Banner.Message>
-          </Banner>
+          <>
+            <Banner>
+              <Banner.Message>{error}</Banner.Message>
+            </Banner>
+            <Button variant="outlined" onClick={handleRetry}>
+              Retry
+            </Button>
+          </>
         ) : (
           <Tabs activeTab={tab} onChange={(index) => setTab(Number(index))}>
             <Tabs.List>

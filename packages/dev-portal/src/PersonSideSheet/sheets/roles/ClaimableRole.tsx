@@ -10,7 +10,7 @@ import {
 } from '@equinor/eds-core-react';
 import { useFramework } from '@equinor/fusion-framework-react';
 import { useCurrentUser } from '@equinor/fusion-framework-react/hooks';
-import type { ChangeEvent } from 'react';
+import type { ChangeEvent, ReactElement } from 'react';
 import { useState } from 'react';
 import styled from 'styled-components';
 
@@ -63,7 +63,7 @@ const Styled = {
  * @param props.onChange - Reports successful activation state changes to the parent tab.
  * @returns A role row with activation controls.
  */
-export const ClaimableRole = ({ assignment, onChange }: ClaimableRoleProps) => {
+export const ClaimableRole = ({ assignment, onChange }: ClaimableRoleProps): ReactElement => {
   const framework = useFramework();
   const user = useCurrentUser();
   const [isClaiming, setIsClaiming] = useState(false);

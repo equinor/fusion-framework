@@ -4,4 +4,4 @@
 
 Add claimable and permanent role tabs to the person side sheet, including activation and deactivation controls for claimable roles.
 
-Related isue #5230
+Related issue #5230

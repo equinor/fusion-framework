@@ -4,9 +4,9 @@ import { name, version } from './package.json';
 
 export default defineProject({
   test: {
-    include: ['src/**/*.test.ts'],
+    include: ['src/**/*.test.{ts,tsx}'],
     name: `${name}@${version}`,
-    environment: 'node',
+    environment: 'happy-dom',
     globals: true,
   },
 });
