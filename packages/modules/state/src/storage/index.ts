@@ -1,6 +1,6 @@
 export { PouchDbStorage, type PouchDbStorageOptions } from './PouchDbStorage.js';
 
-export { PouchDbSyncStorage } from './PouchDbSyncStorage.js';
+export { PouchDbSyncStorage, type PouchDbSyncPullOptions } from './PouchDbSyncStorage.js';
 
 export { StorageError } from './StorageError.js';
 

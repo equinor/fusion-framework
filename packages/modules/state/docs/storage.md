@@ -80,6 +80,54 @@ enableStateModule(configurator, async (builder) => {
 - **`filter`**: Apply custom filters to replicate only specific documents
 - **`since`**: Start replication from a specific sequence number
 
+## Configurable Pull Scheduling with PouchDbSyncStorage
+
+`PouchDbSyncStorage` wraps a local/remote database pair and starts replication for you. By
+default it behaves like the `db.sync()` example above: a single continuous, bidirectional
+connection. A production app with many idle tabs open at once, though, rarely needs pulled
+changes in real time - the `pull` option lets push stay live (so local writes are never
+delayed) while pull is scheduled instead of continuous:
+
+```typescript
+import { PouchDbSyncStorage } from '@equinor/fusion-framework-module-state/storage';
+
+const storage = new PouchDbSyncStorage({
+  localDb: { name_or_instance: 'my-app-state' },
+  remoteDb: { name_or_instance: 'http://localhost:5984/my-app-state' },
+  syncOptions: { retry: true },
+  // Push stays live; pull runs once now, then every 60s, and again whenever the tab regains focus.
+  pull: { mode: 'interval', intervalMs: 60000, refreshOnFocus: true },
+});
+```
+
+`pull.mode` options:
+- **`'live'`** (default): unchanged - a single continuous bidirectional `db.sync()` connection.
+- **`'interval'`**: keeps push live via `db.replicate.to`, and replaces the live pull with
+  one-shot `db.replicate.from` calls run on `pull.intervalMs` (default `60000`) and, unless
+  `pull.refreshOnFocus: false`, whenever the document becomes visible again - regardless of
+  whether the tab is currently visible.
+- **`'visible-interval'`**: the same as `'interval'`, except the timer tick is skipped entirely
+  while the tab is hidden (via the Page Visibility API) - a backgrounded tab has no user
+  waiting on fresh data, so there's no reason to hold a connection open or make a request for it.
+
+A scheduled pull dispatches an `onStateSync.poll` event (with `{ trigger, skipped }`) each time
+it runs or is skipped because a previous pull is still in flight - see
+[Monitoring Sync Progress](#monitoring-sync-progress) below.
+
+### Default Storage
+
+`@equinor/fusion-framework-module-state/default-storage` exports `createDefaultStorage`, the
+factory the framework itself uses to resolve service discovery, auth, and the per-user CouchDB
+proxy into a `PouchDbSyncStorage`. It defaults to `pull: { mode: 'visible-interval',
+refreshOnFocus: true }` (a 60s `intervalMs`). Call it directly to reuse that resolution with a
+different `pull` schedule instead of reimplementing it:
+
+```typescript
+import { createDefaultStorage } from '@equinor/fusion-framework-module-state/default-storage';
+
+config.setStorage((args) => createDefaultStorage(appKey, args, { intervalMs: 10000 }));
+```
+
 ## Monitoring Sync Progress
 
 The state module provides comprehensive sync event monitoring through RxJS observables:

@@ -18,6 +18,10 @@
       "import": "./dist/esm/storage/index.js",
       "types": "./dist/types/storage/index.d.ts"
     },
+    "./default-storage": {
+      "import": "./dist/esm/create-default-storage.js",
+      "types": "./dist/types/create-default-storage.d.ts"
+    },
     "./package.json": "./package.json",
     "./README.md": "./README.md"
   },
@@ -31,6 +35,9 @@
       ],
       "storage": [
         "dist/types/storage/index.d.ts"
+      ],
+      "default-storage": [
+        "dist/types/create-default-storage.d.ts"
       ]
     }
   },
