@@ -66,6 +66,10 @@
       "import": "./dist/esm/people/person-photo/index.js",
       "types": "./dist/types/people/person-photo/index.d.ts"
     },
+    "./app-state": {
+      "import": "./dist/esm/app-state/index.js",
+      "types": "./dist/types/app-state/index.d.ts"
+    },
     "./errors": {
       "import": "./dist/esm/errors.js",
       "types": "./dist/types/errors.d.ts"
@@ -118,6 +122,9 @@
       ],
       "people/photo": [
         "./dist/types/people/person-photo/index.d.ts"
+      ],
+      "app-state": [
+        "./dist/types/app-state/index.d.ts"
       ],
       "errors": [
         "./dist/types/errors.d.ts"

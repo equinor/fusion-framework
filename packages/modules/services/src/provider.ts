@@ -8,6 +8,7 @@ import { ContextApiClient } from './context';
 import BookmarksApiClient from './bookmarks/client';
 import { NotificationApiClient } from './notification';
 import { PeopleApiClient } from './people/client';
+import { AppStateApiClient } from './app-state/client';
 import { ApiProviderError } from './ApiProviderError';
 
 export { ApiProviderError } from './ApiProviderError';
@@ -59,6 +60,17 @@ export interface IApiProvider<TClient extends IHttpClient = IHttpClient> {
    * @returns A configured {@link PeopleApiClient} instance.
    */
   createPeopleClient(): Promise<PeopleApiClient<TClient>>;
+
+  /**
+   * Creates a typed client for the App State API.
+   *
+   * @template TMethod - The client execution method (`'json'` or `'json$'`).
+   * @param method - The execution method to use for requests.
+   * @returns A configured {@link AppStateApiClient} instance.
+   */
+  createAppStateClient<TMethod extends keyof ClientMethod>(
+    method: TMethod,
+  ): Promise<AppStateApiClient<TMethod, TClient>>;
 }
 
 /**
@@ -177,5 +189,20 @@ export class ApiProvider<TClient extends IHttpClient = IHttpClient>
     const httpClient = await this._createClientFn('people');
     httpClient.responseHandler.add('validate_api_request', validateResponse);
     return new PeopleApiClient(httpClient);
+  }
+
+  /**
+   * Creates a typed App State API client and attaches response validation.
+   *
+   * @template TMethod - The client execution method.
+   * @param method - The execution method to use for requests.
+   * @returns A configured App State API client.
+   */
+  public async createAppStateClient<TMethod extends keyof ClientMethod>(
+    method: TMethod,
+  ): Promise<AppStateApiClient<TMethod, TClient>> {
+    const httpClient = await this._createClientFn('app-state');
+    httpClient.responseHandler.add('validate_api_request', validateResponse);
+    return new AppStateApiClient(httpClient, method);
   }
 }
