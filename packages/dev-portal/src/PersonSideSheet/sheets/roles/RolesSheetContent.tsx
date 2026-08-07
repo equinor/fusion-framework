@@ -83,6 +83,10 @@ export const RolesSheetContent = ({ navigate }: SheetContentProps): ReactElement
     let isActive = true;
     const currentLoadAttempt = loadAttempt;
 
+    // Hide assignments from the previous account before resolving the next role snapshot.
+    setIsLoading(true);
+    setError(undefined);
+
     /** Loads both role collections together so the tabs represent one consistent snapshot. */
     const loadRoles = async (): Promise<void> => {
       // A Roles V2 account identifier is required before either endpoint can be queried.
