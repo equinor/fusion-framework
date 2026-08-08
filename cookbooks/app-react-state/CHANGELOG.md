@@ -1,5 +1,15 @@
 # @equinor/fusion-framework-cookbook-app-react-state
 
+## 1.0.1
+
+### Patch Changes
+
+- 46f53ca: `SyncStatusIndicator` now recognizes the `onStateSync.poll` event kind, and the cookbook's default (non-`FUSION_SPA_COUCHDB_URL`) storage now overrides `pull.intervalMs` to 10s via `createDefaultStorage`, so a scheduled pull is visible while previewing the cookbook instead of waiting on the framework's 60s production default.
+- fd873c7: Internal: migrate routing to the Fusion route DSL (`layout`/`index`/`route` from `@equinor/fusion-framework-react-router/routes`), matching the pattern demonstrated in the router cookbook. Also fix the sidebar active-link check to match sub-paths (e.g. `/todos/*`) instead of only the exact page path.
+- Updated dependencies [46f53ca]
+  - @equinor/fusion-framework-module-state@2.0.0
+  - @equinor/fusion-framework-react-app@14.0.0
+
 ## 1.0.0
 
 ### Major Changes
