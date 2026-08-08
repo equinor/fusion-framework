@@ -1,4 +1,4 @@
-import { ProfileManager } from '../components/ProfileManager';
+import { ProfileManager } from '../../components/ProfileManager';
 
 /** Demonstrates replicated profile state. */
 export const Profile = () => {

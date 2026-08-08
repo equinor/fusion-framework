@@ -5,6 +5,10 @@ import { SyncStatusMonitor } from '../components/SyncEvents/SyncStatusMonitor';
 import { SideBar } from '@equinor/eds-core-react';
 import { home, school, settings, offline_document } from '@equinor/eds-icons';
 
+// A route is active on an exact match or on any of its `/*` sub-paths.
+const isActive = (pathname: string, path: string) =>
+  pathname === path || pathname.startsWith(`${path}/`);
+
 /** Provides the cookbook navigation and sync monitor shell. */
 export const Root = () => {
   const currentLocation = useLocation();
@@ -25,21 +29,21 @@ export const Root = () => {
               as={Link}
               to="/basics"
               label="basics"
-              active={currentLocation.pathname === '/basics'}
+              active={isActive(currentLocation.pathname, '/basics')}
             />
             <SideBar.Link
               icon={settings}
               as={Link}
               to="/profile"
               label="profile"
-              active={currentLocation.pathname === '/profile'}
+              active={isActive(currentLocation.pathname, '/profile')}
             />
             <SideBar.Link
               icon={offline_document}
               as={Link}
               to="/todos"
               label="todos"
-              active={currentLocation.pathname === '/todos'}
+              active={isActive(currentLocation.pathname, '/todos')}
             />
           </SideBar>
         </div>
