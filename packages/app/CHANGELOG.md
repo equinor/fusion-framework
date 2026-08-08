@@ -1,5 +1,13 @@
 # Change Log
 
+## 13.0.0
+
+### Patch Changes
+
+- Updated dependencies [46f53ca]
+  - @equinor/fusion-framework-module-state@2.0.0
+  - @equinor/fusion-framework@8.0.14
+
 ## 12.0.0
 
 ### Minor Changes

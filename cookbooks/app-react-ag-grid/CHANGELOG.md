@@ -1,5 +1,11 @@
 # Change Log
 
+## 2.0.12
+
+### Patch Changes
+
+- @equinor/fusion-framework-react-app@14.0.0
+
 ## 2.0.11
 
 ### Patch Changes

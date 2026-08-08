@@ -1,5 +1,14 @@
 # portal-analytics
 
+## 0.4.47
+
+### Patch Changes
+
+- @equinor/fusion-framework@8.0.14
+- @equinor/fusion-framework-app@13.0.0
+- @equinor/fusion-framework-react-app@14.0.0
+- @equinor/fusion-framework-cli@15.2.5
+
 ## 0.4.46
 
 ### Patch Changes
