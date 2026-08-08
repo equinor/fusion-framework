@@ -3,7 +3,7 @@ import { type Observable, Subject } from 'rxjs';
 import { BaseModuleProvider } from '@equinor/fusion-framework-module/provider';
 import { version } from './version.js';
 
-import type { IEventModuleConfigurator } from './configurator';
+import type { EventModuleConfig } from './EventModuleConfigurator';
 import { FrameworkEventDispatcher, type FrameworkEventHandler } from './FrameworkEventDispatcher';
 
 import {
@@ -23,7 +23,8 @@ import {
  */
 export interface IEventModuleProvider {
   /** Observable stream of all dispatched events, useful for logging or analysis.
-   * Subscribers receive read-only copies and cannot call `preventDefault`.
+   * Events are emitted after listeners and the bubble hook have run, so calling
+   * `preventDefault`/`stopPropagation` on them at this point has no effect.
    */
   readonly event$: Observable<IFrameworkEvent>;
 
@@ -64,7 +65,7 @@ export interface IEventModuleProvider {
   dispatchEvent<TType extends keyof FrameworkEventMap>(
     type: TType,
     args: FrameworkEventInitType<FrameworkEventMap[TType]>,
-  ): Promise<FrameworkEvent>;
+  ): Promise<FrameworkEventMap[TType]>;
 
   /**
    * Dispatches an event with an arbitrary name and typed payload.
@@ -87,9 +88,7 @@ export interface IEventModuleProvider {
    * @param event - The event instance to dispatch.
    * @returns The same event after all listeners have run.
    */
-  dispatchEvent<TType extends IFrameworkEvent = FrameworkEvent>(
-    event: TType,
-  ): Promise<FrameworkEvent>;
+  dispatchEvent<TType extends IFrameworkEvent = FrameworkEvent>(event: TType): Promise<TType>;
 
   /** Disposes the provider, completing `event$` and removing all listeners. */
   dispose: VoidFunction;
@@ -106,7 +105,7 @@ export interface IEventModuleProvider {
  * the observable stream.
  */
 export class EventModuleProvider
-  extends BaseModuleProvider<IEventModuleConfigurator>
+  extends BaseModuleProvider<EventModuleConfig>
   implements IEventModuleProvider
 {
   private __listeners: Array<{
@@ -121,9 +120,9 @@ export class EventModuleProvider
   /**
    * Observable stream of all events dispatched through this provider.
    *
-   * Subscribers receive events after dispatch but **cannot** call
-   * `preventDefault` or `stopPropagation` — use `addEventListener` for
-   * side-effect-capable handling.
+   * Events are emitted after listeners and the bubble hook have run, so
+   * `preventDefault`/`stopPropagation` calls at this point have no effect —
+   * use `addEventListener` for side-effect-capable handling.
    *
    * @returns An observable of framework events.
    */
@@ -141,7 +140,7 @@ export class EventModuleProvider
    *
    * @param config - Configuration with optional `onDispatch` and `onBubble` hooks.
    */
-  constructor(config: IEventModuleConfigurator) {
+  constructor(config: EventModuleConfig) {
     super({ version, config });
     this.__dispatcher = new FrameworkEventDispatcher({
       onDispatch: config.onDispatch,
@@ -224,17 +223,17 @@ export class EventModuleProvider
       throw Error('Cannot dispatch events when provider is closed!');
     }
 
-    this.__event$.next(event);
+    const listeners = this.__listeners
+      // Resolve only the handlers registered for this event's type
+      .filter((listener) => listener.type === event.type)
+      // Extract just the handler functions to invoke
+      .map(({ handler }) => handler);
 
     try {
-      const listeners = this.__listeners
-        // Resolve only the handlers registered for this event's type
-        .filter((listener) => listener.type === event.type)
-        // Extract just the handler functions to invoke
-        .map(({ handler }) => handler);
       await this.__dispatcher.dispatch(event, listeners);
-    } catch (err) {
-      throw err as Error;
+    } finally {
+      // publish to event$ only after listeners have run, matching the documented order
+      this.__event$.next(event);
     }
     return event;
   }
