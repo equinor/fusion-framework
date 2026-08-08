@@ -38,7 +38,8 @@ describe('waitForEvent', () => {
 
     const promise = waitForEvent(
       provider,
-      (e: IFrameworkEvent) => e.type === 'myFeature.saved' && (e.detail as { id: number }).id === 42,
+      (e: IFrameworkEvent) =>
+        e.type === 'myFeature.saved' && (e.detail as { id: number }).id === 42,
     );
     // Non-matching dispatch — should not resolve yet.
     await provider.dispatchEvent('myFeature.saved', { detail: { id: 1 } });
@@ -77,7 +78,9 @@ describe('waitForEvent', () => {
     const controller = new AbortController();
     controller.abort();
 
-    await expect(waitForEvent(provider, 'myFeature.saved', { signal: controller.signal })).rejects.toThrow();
+    await expect(
+      waitForEvent(provider, 'myFeature.saved', { signal: controller.signal }),
+    ).rejects.toThrow();
     provider.dispose();
   });
 

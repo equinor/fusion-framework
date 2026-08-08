@@ -88,9 +88,7 @@ export interface IEventModuleProvider {
    * @param event - The event instance to dispatch.
    * @returns The same event after all listeners have run.
    */
-  dispatchEvent<TType extends IFrameworkEvent = FrameworkEvent>(
-    event: TType,
-  ): Promise<TType>;
+  dispatchEvent<TType extends IFrameworkEvent = FrameworkEvent>(event: TType): Promise<TType>;
 
   /** Disposes the provider, completing `event$` and removing all listeners. */
   dispose: VoidFunction;
