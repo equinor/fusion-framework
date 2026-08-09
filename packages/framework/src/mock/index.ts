@@ -15,6 +15,11 @@
  * This entry point is test-runner agnostic: it contains no dependency on Vitest
  * or any other test framework, so the same helpers work under any runner.
  *
+ * Fixture generators with realistic fake data (e.g. `createContextItems`) live
+ * on each module's own `/mock/fixtures` entry point instead of here, since they
+ * pull in an extra dependency ({@link https://fakerjs.dev/ | faker}) that
+ * plain configurator mocking doesn't need.
+ *
  * @packageDocumentation
  */
 
@@ -47,3 +52,11 @@ export {
   type MockService,
   type ServiceDiscoveryMockClientOptions,
 } from '@equinor/fusion-framework-module-service-discovery/mock';
+
+export {
+  enableContextMock,
+  contextMockModule,
+  ContextMockConfigurator,
+  type ContextMockConfigFn,
+  type ContextResolverFn,
+} from '@equinor/fusion-framework-module-context/mock';

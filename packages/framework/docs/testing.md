@@ -25,6 +25,8 @@ Modules whose boundary is mocked expose their mock configurator directly, so a t
 | --- | --- |
 | `msal` | `MsalMockConfigurator` |
 | `serviceDiscovery` | `ServiceDiscoveryMockConfigurator` |
+| `http` | `HttpMockConfigurator` |
+| `context` | `ContextMockConfigurator` |
 
 ```typescript
 const fusion = await mockFramework((configurator) => {
@@ -96,6 +98,20 @@ By default an undeclared service resolves to a synthesised entry rather than thr
 
 > [!WARNING]
 > Built-in modules resolve services **while the framework starts** — the context module resolves `context`, for example. Combining `setResolveUnknownServices(false)` with a `setServices` registry that omits them fails initialization rather than the assertion you were writing. Either keep synthesis on, or declare every service the framework itself needs.
+
+## Seeding context
+
+```typescript
+const fusion = await mockFramework((configurator) => {
+  configurator.context.setCurrentContext({ id: 'project-42', type: { id: 'ProjectMaster' }, value: {} });
+});
+
+fusion.modules.context.currentContext; // the seeded item
+```
+
+`configurator.context` is a `ContextMockConfigurator` — a small, context-domain vocabulary (`setCurrentContext`, `setContexts`, `addContext`, `setRelatedContexts`) covers seeding a known item with no HTTP mock and no service-discovery mock required. `setResolver` is the escape hatch for a custom resolution need the friendly methods do not cover. Real `ContextProvider` behaviour — `validateContext`, `resolveContext`, parent-context propagation — still runs against the seeded data in both.
+
+This is one of two ways to fake context data: seeding an item directly (above) substitutes only the data source, with no transport involved. Mocking the context API's HTTP responses instead, through `.http`, exercises the real `ContextModuleConfigurator`/services/HTTP pipeline — reach for that when the test needs to cover that pipeline itself, optionally paired with `fromOpenApiMock` for faker-generated data straight from context's OpenAPI spec.
 
 ## Mocking an individual call
 
