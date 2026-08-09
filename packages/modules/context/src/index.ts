@@ -11,11 +11,9 @@
  * @packageDocumentation
  */
 
-export {
-  ContextModuleConfigurator,
-  IContextModuleConfigurator,
-  ContextModuleConfig,
-} from './configurator';
+export { ContextModuleConfigurator } from './ContextModuleConfigurator';
+export type { IContextModuleConfigurator } from './ContextModuleConfigurator.interface';
+export type { ContextModuleConfig } from './ContextModuleConfig';
 
 export { IContextProvider, ContextProvider } from './ContextProvider';
 

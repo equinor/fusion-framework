@@ -10,7 +10,7 @@ import {
   tap,
 } from 'rxjs/operators';
 
-import type { ContextModuleConfig } from './configurator';
+import type { ContextModuleConfig } from './ContextModuleConfig';
 
 import { BaseModuleProvider } from '@equinor/fusion-framework-module/provider';
 import { version } from './version.js';
