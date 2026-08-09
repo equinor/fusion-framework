@@ -88,15 +88,18 @@ export function waitForEvent(
 
     const source$ = applyEventMatcher(provider, matcher);
     let timer: ReturnType<typeof setTimeout> | undefined;
+    // Declared before subscribing so `complete`/`error` can reach it even when
+    // the source is already closed and fires synchronously during `subscribe`.
+    let sub: ReturnType<typeof source$.subscribe> | undefined;
 
     const cleanup = (err?: unknown) => {
       clearTimeout(timer);
-      sub.unsubscribe();
+      sub?.unsubscribe();
       // Only reject when cleanup was triggered by an error, not a resolved match.
       if (err !== undefined) reject(err);
     };
 
-    const sub = source$.subscribe({
+    sub = source$.subscribe({
       next: (event) => {
         cleanup();
         resolve(event);
@@ -109,7 +112,7 @@ export function waitForEvent(
     // Only arm a timeout when the caller opted in.
     if (ms !== undefined) {
       timer = setTimeout(() => {
-        sub.unsubscribe();
+        sub?.unsubscribe();
         reject(new Error(`waitForEvent timed out after ${ms}ms`));
       }, ms);
     }
@@ -119,7 +122,7 @@ export function waitForEvent(
       signal.addEventListener(
         'abort',
         () => {
-          sub.unsubscribe();
+          sub?.unsubscribe();
           clearTimeout(timer);
           reject(signal.reason ?? new DOMException('Aborted', 'AbortError'));
         },

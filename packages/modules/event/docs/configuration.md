@@ -71,10 +71,12 @@ modules.event.addEventListener('myFeature', (event) => {
 
 ## Custom event classes
 
-For behavior beyond a typed `detail`, subclass `FrameworkEvent` directly:
+For behavior beyond a typed `detail`, subclass `FrameworkEvent` directly. Its first generic is a
+{@link FrameworkEventInit}, not the payload type itself — wrap `detail`/`source` in
+`FrameworkEventInit`, and pass the event name as the second generic:
 
 ```ts
-class MyEvent extends FrameworkEvent<MyPayload, MySource> {
+class MyEvent extends FrameworkEvent<FrameworkEventInit<MyPayload, MySource>, 'onMyEvent'> {
   constructor(readonly obj: MyObj, init: FrameworkEventInit<MyPayload, MySource>) {
     super('onMyEvent', init);
   }

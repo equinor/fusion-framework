@@ -72,7 +72,10 @@ modules.event.addEventListener('myEvent', (event) => {
 });
 ```
 
-> **Important:** When dispatching a `cancelable` event you **must** `await` the `dispatchEvent` call. Firing without `await` means `preventDefault()` calls from listeners will not be respected.
+> **Note:** The dispatcher `await`s each cancelable listener internally, so `preventDefault()`
+> calls are always respected in listener order — even if the caller doesn't `await` the
+> `dispatchEvent` call. `await` is only needed when the caller must inspect the resolved
+> event (e.g. `event.canceled`) or wait for dispatch to fully complete.
 
 ## Bubbling
 
@@ -96,7 +99,4 @@ await modules.event.dispatchEvent('myEvent', {
   detail: data,
   canBubble: false,
 });
-```
-
-
 ```
