@@ -41,9 +41,12 @@ Resolves with the first matching event — immediately if one was already record
 // Rejects after 1000ms if the event never fires
 const event = await recorder.waitForAnalytic('button-click', { timeout: 1000 });
 
-// Rejects immediately when the signal aborts
+// Rejects as soon as the signal aborts
 const controller = new AbortController();
-const event = await recorder.waitForAnalytic('button-click', { signal: controller.signal });
+const pending = recorder.waitForAnalytic('button-click', { signal: controller.signal });
+controller.abort();
+
+await expect(pending).rejects.toThrow();
 ```
 
 ## Using a bespoke `ModulesConfigurator`
@@ -54,6 +57,7 @@ const event = await recorder.waitForAnalytic('button-click', { signal: controlle
 import { ModulesConfigurator } from '@equinor/fusion-framework-module';
 import { enableAnalytics } from '@equinor/fusion-framework-module-analytics';
 import { MockAnalyticsAdapter } from '@equinor/fusion-framework-module-analytics/mock';
+import type { IAnalyticsProvider } from '@equinor/fusion-framework-module-analytics';
 
 const recorder = new MockAnalyticsAdapter();
 const configurator = new ModulesConfigurator([]);
@@ -62,7 +66,10 @@ enableAnalytics(configurator, (builder) => {
   builder.setAdapter('mock', async () => recorder);
 });
 
-const { analytics } = await configurator.initialize();
+// enableAnalytics only registers the module at runtime, so `initialize()` isn't
+// statically typed with an `analytics` property — cast to the real provider type.
+const instances = await configurator.initialize();
+const { analytics } = instances as unknown as { analytics: IAnalyticsProvider };
 analytics.trackAnalytic({ name: 'button-click', value: 'save' });
 
 expect(recorder.getAnalytics('button-click')).toHaveLength(1);
