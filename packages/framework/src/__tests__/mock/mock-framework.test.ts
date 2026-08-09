@@ -183,6 +183,18 @@ describe('FrameworkMockConfigurator', () => {
     expect(configurator.context).toBeDefined();
   });
 
+  it('seeds the initial context through the context module, so `.context` backs the real module', async () => {
+    const fusion = await mockFramework((configurator) => {
+      configurator.context.setCurrentContext({
+        id: 'my-ctx',
+        type: { id: 'ProjectMaster' },
+        value: {},
+      });
+    });
+
+    expect(fusion.modules.context.currentContext).toMatchObject({ id: 'my-ctx' });
+  });
+
   it('exposes the same telemetry configurator the telemetry module is built from', () => {
     const configurator = new FrameworkMockConfigurator();
 
