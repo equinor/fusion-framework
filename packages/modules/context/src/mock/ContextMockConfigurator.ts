@@ -30,8 +30,11 @@ export type ContextResolverFn = (id: string) => ContextItem | undefined;
  * - **Friendly layer** — {@link setCurrentContext}, {@link setContexts},
  *   {@link addContext}, {@link setRelatedContexts} — a small, context-domain
  *   vocabulary for the common case: seed a known item, get it back.
- * - **Escape hatch** — {@link setResolver} — a raw resolution function for a
- *   custom `resolveContext` strategy or a shape the friendly layer did not cover.
+ * - **Escape hatch** — {@link setResolver} — a raw id-lookup function for a
+ *   custom id-based resolution strategy or a shape the friendly layer did not
+ *   cover. Only replaces id-based lookup (used by `setCurrentContextById` and
+ *   the initial context); it does not affect related-context resolution by
+ *   item, which always goes through {@link setRelatedContexts} instead.
  *
  * Seeding the initial context (via {@link setCurrentContext}) overrides
  * `resolveInitialContext` directly with the seeded item, so a test never needs
@@ -184,12 +187,15 @@ export class ContextMockConfigurator extends ContextModuleConfigurator {
   }
 
   /**
-   * Escape hatch: overrides context resolution directly.
+   * Escape hatch: overrides id-based context resolution directly.
    *
    * @remarks
-   * For a custom `resolveContext` strategy or a shape the friendly seeding
-   * methods above did not cover — reaching for this means they were already
-   * tried and did not fit.
+   * For a custom id-lookup strategy or a shape the friendly seeding methods
+   * above did not cover — reaching for this means they were already tried
+   * and did not fit. Only replaces lookup by id (used by
+   * `setCurrentContextById` and the seeded initial context) — related-context
+   * resolution by item always goes through {@link setRelatedContexts} instead,
+   * regardless of this setting.
    *
    * @param fn - Resolves a context item by id, or returns `undefined` if none matches.
    * @returns This configurator, for chaining.
