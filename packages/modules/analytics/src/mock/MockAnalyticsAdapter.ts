@@ -123,6 +123,11 @@ export class MockAnalyticsAdapter<T extends AnalyticsEvent = AnalyticsEvent>
           cleanup();
           resolve(event);
         },
+        // A throwing predicate matcher surfaces here instead of hanging the promise forever.
+        error: (err) => {
+          cleanup();
+          reject(err);
+        },
         complete: () => {
           cleanup();
           reject(new Error('MockAnalyticsAdapter disposed before a matching event was recorded'));

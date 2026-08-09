@@ -103,6 +103,18 @@ describe('MockAnalyticsAdapter', () => {
     await expect(promise).rejects.toThrow('disposed before a matching event was recorded');
   });
 
+  it('rejects instead of hanging when a predicate matcher throws on a future event', async () => {
+    const adapter = new MockAnalyticsAdapter();
+    const boom = new Error('predicate boom');
+
+    const promise = adapter.waitForAnalytic(() => {
+      throw boom;
+    });
+    adapter.registerAnalytic(createEvent('button-click'));
+
+    await expect(promise).rejects.toThrow(boom);
+  });
+
   it('does not interfere with events recorded by another adapter instance', () => {
     const adapterA = new MockAnalyticsAdapter();
     const adapterB = new MockAnalyticsAdapter();
