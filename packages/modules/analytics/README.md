@@ -22,6 +22,7 @@ When a collector emits an event it is delivered to **every** registered adapter.
 | `@equinor/fusion-framework-module-analytics/adapters` | `ConsoleAnalyticsAdapter`, `FusionAnalyticsAdapter`, `IAnalyticsAdapter` |
 | `@equinor/fusion-framework-module-analytics/collectors` | `ContextSelectedCollector`, `AppSelectedCollector`, `AppLoadedCollector`, `IAnalyticsCollector` |
 | `@equinor/fusion-framework-module-analytics/logExporters` | `OTLPLogExporter`, `FusionOTLPLogExporter` |
+| `@equinor/fusion-framework-module-analytics/mock` | `MockAnalyticsAdapter` — record tracked events for test assertions |
 
 ## Quick Start
 
@@ -266,3 +267,35 @@ const configure = (configurator: IModulesConfigurator<any, any>) => {
   });
 }
 ```
+
+## Testing
+
+Use `MockAnalyticsAdapter` from `@equinor/fusion-framework-module-analytics/mock`
+to assert on tracked analytics events without exporting them to a real backend.
+Register it like any other adapter via `setAdapter`, then query or await
+recorded events from your test:
+
+```typescript
+import { enableAnalytics } from '@equinor/fusion-framework-module-analytics';
+import { MockAnalyticsAdapter } from '@equinor/fusion-framework-module-analytics/mock';
+
+const recorder = new MockAnalyticsAdapter();
+
+enableAnalytics(configurator, (builder) => {
+  builder.setAdapter('mock', async () => recorder);
+});
+
+// ... exercise the app under test, then assert:
+const event = await recorder.waitForAnalytic('button-click');
+expect(event.attributes?.section).toBe('header');
+
+// or synchronously inspect everything recorded so far:
+expect(recorder.getAnalytics('page-view')).toHaveLength(1);
+```
+
+`getAnalytics(matcher?)` returns recorded events synchronously, filtered by an
+event name, an array of names, or a predicate — omit the matcher to get every
+recorded event. `waitForAnalytic(matcher, options?)` resolves with the first
+matching event, resolving immediately if one was already recorded, or waiting
+for a future one; it supports an optional `timeout` (ms) and `signal`
+(`AbortSignal`), and rejects if the adapter is disposed before a match occurs.
