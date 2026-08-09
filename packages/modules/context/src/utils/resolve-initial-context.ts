@@ -1,6 +1,6 @@
 import type { ModulesInstance } from '@equinor/fusion-framework-module';
 import type { ContextModule } from '../module';
-import type { ContextModuleConfig } from '../configurator';
+import type { ContextModuleConfig } from '../ContextModuleConfig';
 import { concat, EMPTY, first, of } from 'rxjs';
 import resolveContextFromPath, { type ContextPathResolveArgs } from './resolve-context-from-path';
 import type { NavigationModule } from '@equinor/fusion-framework-module-navigation';
