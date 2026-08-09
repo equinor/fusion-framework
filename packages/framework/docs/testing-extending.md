@@ -62,7 +62,7 @@ class AppMockConfigurator extends FrameworkMockConfigurator<[InvoiceModule]> {
 
 ## What is not covered yet
 
-`.services`, `.context` and `.telemetry` are already reachable on `FrameworkMockConfigurator` — their `configure` factories take no `ref`, so they were safe to pin the same way `.msal` and `.serviceDiscovery` are. What is missing is a test double behind them: none of the three modules has a `src/mock/` folder yet, so anything issuing an actual request through them still reaches the network. Adding one means creating that folder in **that module**, then pinning its mock configurator with `_pin` and exposing it with `_getConfig` on `FrameworkMockConfigurator`, replacing the real module descriptor pinned there today.
+`.services` and `.telemetry` are already reachable on `FrameworkMockConfigurator` — their `configure` factories take no `ref`, so they were safe to pin the same way `.msal` and `.serviceDiscovery` are. What is missing is a test double behind them: neither module has a `src/mock/` folder yet, so anything issuing an actual request through them still reaches the network. Adding one means creating that folder in **that module**, then pinning its mock configurator with `_pin` and exposing it with `_getConfig` on `FrameworkMockConfigurator`, replacing the real module descriptor pinned there today.
 
 `event` is not pinned at all, deliberately: its `configure` factory reads `ref` to wire event bubbling to a parent event provider when `FrameworkMockConfigurator` is hoisted inside a host framework. Pinning would call `configure()` with `ref` always `undefined`, silently breaking that bubbling — so it is left to build the normal way, from the module system's own configure phase, where `ref` is actually known.
 
@@ -84,3 +84,21 @@ Route handlers are Fetch-standard middleware — `(request: Request) => Response
 - **`fromOpenApiMock`** — adapts an `@equinor/fusion-openapi-mock` instance (`createOpenApiMock(document)`), so a real `openapi.json`/`openapi.yaml` fakes every response with no handlers written at all until an edge case needs overriding.
 
 All three are exported from `@equinor/fusion-framework-module-http/mock`.
+
+## `.context`
+
+`.context` is backed by `ContextMockConfigurator` (`@equinor/fusion-framework-module-context/mock`): context items live in an in-memory pool instead of a real context API, so a test needs no HTTP mock and no service-discovery mock to seed a known item.
+
+```typescript
+configurator.context.setCurrentContext({ id: 'my-ctx', type: { id: 'ProjectMaster' }, value: {} });
+
+fusion.modules.context.currentContext; // the seeded item, resolved on startup
+```
+
+Real `ContextProvider` behaviour — `validateContext`, `resolveContext`, parent-context propagation — still runs against the seeded data; only the data source is substituted. Two layers cover different needs:
+
+- **`setCurrentContext`/`setContexts`/`addContext`/`setRelatedContexts`** — a friendly, context-domain vocabulary for the common case: seed a known item, get it back.
+- **`setResolver`** — an escape hatch for a custom `resolveContext` strategy or a shape the friendly layer did not anticipate.
+
+Seeding a context item this way is one of two ways to fake context in a test — the other is mocking the context API's HTTP responses directly (with `.http`, optionally paired with `fromOpenApiMock`), which exercises the real `ContextModuleConfigurator`/services/HTTP pipeline instead of substituting it. Reach for `.context` to seed one known item with no transport involved; reach for `.http` when the test needs to cover that pipeline itself.
+
