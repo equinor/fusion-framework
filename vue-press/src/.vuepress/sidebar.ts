@@ -453,6 +453,22 @@ export default sidebar({
           text: 'React',
           link: 'react.md',
         },
+        {
+          text: 'Adapters',
+          link: 'docs/adapters.md',
+        },
+        {
+          text: 'Collectors',
+          link: 'docs/collectors.md',
+        },
+        {
+          text: 'Tracking Events Manually',
+          link: 'docs/tracking-events.md',
+        },
+        {
+          text: 'Testing',
+          link: 'docs/testing.md',
+        },
       ],
     },
     {
