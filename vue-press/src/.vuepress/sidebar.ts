@@ -337,6 +337,24 @@ export default sidebar({
     {
       text: 'Context',
       link: 'context/',
+      children: [
+        {
+          text: 'Overview',
+          link: 'context/',
+        },
+        {
+          text: 'Data model',
+          link: 'context/docs/data-model.md',
+        },
+        {
+          text: 'Lifecycle',
+          link: 'context/docs/lifecycle.md',
+        },
+        {
+          text: 'Recipes',
+          link: 'context/docs/recipes.md',
+        },
+      ],
     },
     {
       text: 'Authentication',

@@ -19,13 +19,36 @@ Use this module when your application or portal needs to:
 > **Portal developers** will use `@equinor/fusion-framework-react/context`
 > for the same purpose at the portal level.
 
+## How it fits together
+
+A context module instance never lives in isolation. It depends on the
+`@equinor/fusion-framework-module-services` module for its default HTTP client, optionally
+uses `@equinor/fusion-framework-module-event` to dispatch and listen for context change events,
+and optionally reads the current URL through `@equinor/fusion-framework-module-navigation` to
+resolve a context from the path. None of these need manual setup — `enableContext` requires
+only `services`; `event` and `navigation` are picked up automatically when present.
+
+The module is also **hierarchy-aware by default**: when a Portal and an App both enable
+context, the App's instance automatically connects to the Portal's and mirrors its context —
+no wiring required beyond enabling the module on both sides. See
+[Lifecycle](docs/lifecycle.md#parentchild-propagation) for exactly how that sync works, and
+when it can be overridden or disabled.
+
+## Documentation
+
+| Topic | Description |
+|---|---|
+| [Data model](docs/data-model.md) | The shape of a `ContextItem`, how context types relate to each other, and query/related parameters |
+| [Lifecycle](docs/lifecycle.md) | `setCurrentContext`'s validate/resolve decision flow, automatic initial-context resolution on startup, and parent/child context propagation |
+| [Recipes](docs/recipes.md) | OData query parameters, path rewriting, accepting a family of context types, and custom search errors |
+
 ## Key concepts
 
 | Concept | Description |
 |---|---|
 | **ContextItem** | A typed record representing a single context entity (project, facility, etc.). |
 | **ContextProvider** | Runtime service exposing query, set, validate, resolve, and event APIs. |
-| **ContextConfigBuilder** | Fluent builder for configuring context types, filters, clients, and hooks. |
+| **ContextModuleConfigurator** | Fluent builder for configuring context types, filters, clients, and hooks. |
 | **enableContext** | Helper that registers the module on a modules configurator. |
 | **Context resolution** | Automatic lookup of related context items when a context type does not match the configured types. |
 | **Parent connection** | Bi-directional sync between a parent portal context and a child app context. |
@@ -66,7 +89,7 @@ modules.context.clearCurrentContext();
 
 ## Configuration
 
-All configuration flows through `enableContext` → `ContextConfigBuilder`:
+All configuration flows through `enableContext` → `ContextModuleConfigurator`:
 
 ```ts
 enableContext(configurator, (builder) => {
@@ -164,6 +187,25 @@ try {
 }
 ```
 
+## Testing
+
+`@equinor/fusion-framework-module-context/mock` provides `enableContextMock`, a purpose-built test double backed by an in-memory pool of seeded context items — no context API, no HTTP mock, and no service-discovery mock required. Real `ContextProvider` behaviour (`validateContext`, `resolveContext`, parent-context propagation) still runs against the seeded data; only the data source is substituted.
+
+```ts
+import { enableContextMock } from '@equinor/fusion-framework-module-context/mock';
+
+enableContextMock(configurator, (mock) => {
+  mock.setCurrentContext({ id: 'my-ctx', type: { id: 'ProjectMaster' }, value: {} });
+});
+```
+
+- **Friendly layer** — `setCurrentContext`, `setContexts`, `addContext`, `setRelatedContexts` — a context-domain vocabulary for the common case: seed a known item, get it back.
+- **Escape hatch** — `setResolver` — a raw resolution function for a custom `resolveContext` strategy or a shape the friendly layer did not cover.
+
+When used with `@equinor/fusion-framework/mock`, `FrameworkMockConfigurator.context` returns this same configurator, so seeding happens directly through `configurator.context` with no callback needed.
+
+This is one of two ways to fake context data in tests. The other is mocking the context API's HTTP responses directly (with `@equinor/fusion-framework-module-http/mock`, optionally paired with `@equinor/fusion-openapi-mock`'s `fromOpenApiMock` for faker-generated data straight from context's OpenAPI spec) — which exercises the real `ContextModuleConfigurator`/services/HTTP pipeline instead of substituting it. Reach for `enableContextMock` to seed one known item with no transport involved; reach for the HTTP mock when a test needs to cover that pipeline itself. Fixture generators for realistic seeded data (`createContextItemFactory`, `createContextItems`) are available from `@equinor/fusion-framework-module-context/mock/fixtures`.
+
 ## Utilities
 
 Additional helpers are available from `@equinor/fusion-framework-module-context/utils`:
@@ -182,4 +224,6 @@ Additional helpers are available from `@equinor/fusion-framework-module-context/
 | `@equinor/fusion-framework-module-context` | Main entry — module, provider, configurator, types |
 | `@equinor/fusion-framework-module-context/errors.js` | `FusionContextSearchError` |
 | `@equinor/fusion-framework-module-context/utils` | Utility functions for path resolution and enablement |
+| `@equinor/fusion-framework-module-context/mock` | `enableContextMock`, `ContextMockConfigurator` — in-memory test double |
+| `@equinor/fusion-framework-module-context/mock/fixtures` | Fixture factories for generating seeded context items |
 
