@@ -1,8 +1,9 @@
 import type { AnyModule } from '@equinor/fusion-framework-module';
 
-import contextModule, {
-  type ContextModuleConfigurator,
-} from '@equinor/fusion-framework-module-context';
+import {
+  contextMockModule,
+  type ContextMockConfigurator,
+} from '@equinor/fusion-framework-module-context/mock';
 import {
   httpMockModule,
   type HttpMockConfigurator,
@@ -37,11 +38,11 @@ import { FrameworkConfigurator } from '../FrameworkConfigurator.js';
  * reaches it directly instead of registering a callback to receive it. `http`
  * answers registered route handlers instead of the network — see `.http` and
  * `enableHttpMock`'s adapters for `openapi-backend`-style backends or an
- * `@equinor/fusion-openapi-mock` document. `services`, `context` and
- * `telemetry` are not backed by test doubles yet, so calls through their
- * configurators still reach the network — but the configurators themselves
- * are reachable the same way `.msal` is, since their `configure` factories
- * take no `ref` and so lose nothing by being pinned early.
+ * `@equinor/fusion-openapi-mock` document. `services` and `telemetry` are not
+ * backed by test doubles yet, so calls through their configurators still reach
+ * the network — but the configurators themselves are reachable the same way
+ * `.msal` is, since their `configure` factories take no `ref` and so lose
+ * nothing by being pinned early.
  *
  * `event` is deliberately not pinned: its `configure` factory reads `ref` to
  * wire bubbling to a parent event provider when this configurator is hoisted
@@ -88,7 +89,7 @@ export class FrameworkMockConfigurator<
     this._pin(serviceDiscoveryMockModule);
     this._pin(httpMockModule);
     this._pin(servicesModule);
-    this._pin(contextModule);
+    this._pin(contextMockModule);
     this._pin(telemetryModule);
   }
 
@@ -218,12 +219,13 @@ export class FrameworkMockConfigurator<
    * Configures context resolution.
    *
    * @remarks
-   * The real configurator — `context` has no test double yet.
+   * The same {@link ContextMockConfigurator} the context module is configured
+   * from, so seeding an item here is what `fusion.modules.context` resolves.
    *
-   * @returns The real context module configurator.
+   * @returns The context mock configurator.
    */
-  public get context(): ContextModuleConfigurator {
-    return this._getConfig<ContextModuleConfigurator>(contextModule.name);
+  public get context(): ContextMockConfigurator {
+    return this._getConfig<ContextMockConfigurator>(contextMockModule.name);
   }
 
   /**
