@@ -1,13 +1,14 @@
 import type { Module, ModuleInstance, ModulesInstanceType } from '@equinor/fusion-framework-module';
 import type { FrameworkEvent, FrameworkEventInit } from './FrameworkEvent';
-import type { IEventModuleConfigurator } from './configurator';
-import { EventModuleProvider, type IEventModuleProvider } from './provider';
+import { EventModuleConfigurator } from './EventModuleConfigurator';
+import { EventModuleProvider, type IEventModuleProvider } from './EventModuleProvider';
 
 /** Module key used to identify the event module in the Fusion module system. */
 export const moduleKey = 'event';
 
 /** Type alias for the event module definition. */
-export type EventModule = Module<typeof moduleKey, IEventModuleProvider, IEventModuleConfigurator>;
+export type EventModule = Module<typeof moduleKey, IEventModuleProvider, EventModuleConfigurator>;
+
 
 /**
  * Event type dispatched when all framework modules have finished loading.
@@ -31,17 +32,17 @@ export type FrameworkEventModuleLoadedEvent = FrameworkEvent<
 export const module: EventModule = {
   name: moduleKey,
   configure: (ref?: Partial<ModulesInstanceType<[EventModule]>>) => {
-    const configurator = {} as IEventModuleConfigurator;
+    const configurator = new EventModuleConfigurator();
     const parentProvider = ref?.event;
     // Only wire up bubbling when a parent event provider actually exists
     if (parentProvider) {
-      configurator.onBubble = async (e) => {
+      configurator.setOnBubble(async (e) => {
         await parentProvider.dispatchEvent(e);
-      };
+      });
     }
     return configurator;
   },
-  initialize: ({ config }) => new EventModuleProvider(config),
+  initialize: async (init) => new EventModuleProvider(await init.config.createConfigAsync(init)),
   postInitialize: async ({ instance, modules }) => {
     instance.dispatchEvent('onModulesLoaded', { detail: modules, source: instance });
   },

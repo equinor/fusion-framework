@@ -367,8 +367,20 @@ export default sidebar({
           link: 'README.md',
         },
         {
-          text: 'React',
-          link: 'react.md',
+          text: 'Configuration',
+          link: 'docs/configuration.md',
+        },
+        {
+          text: 'Observable Patterns',
+          link: 'docs/observable-patterns.md',
+        },
+        {
+          text: 'Lifecycle',
+          link: 'docs/lifecycle.md',
+        },
+        {
+          text: 'Testing',
+          link: 'docs/testing.md',
         },
       ],
     },
@@ -413,6 +425,10 @@ export default sidebar({
               link: 'interop.md',
             },
           ],
+        },
+        {
+          text: 'Event',
+          link: 'event/',
         },
       ],
     },
