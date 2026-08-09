@@ -453,6 +453,10 @@ export default sidebar({
           text: 'React',
           link: 'react.md',
         },
+        {
+          text: 'Testing',
+          link: 'docs/testing.md',
+        },
       ],
     },
     {
