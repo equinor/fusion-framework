@@ -4,7 +4,7 @@ import type {
 } from '@equinor/fusion-framework-module-services/context';
 import type { GetContextResponse } from '@equinor/fusion-framework-module-services/context/get';
 
-import type { ContextItem, ContextItemType } from './types';
+import type { ContextItem, ContextItemType } from '../types';
 
 /**
  * Parses the context type from the response of the GetContext API.

@@ -6,7 +6,10 @@ import type { EventModule } from '@equinor/fusion-framework-module-event';
 import type { ServicesModule } from '@equinor/fusion-framework-module-services';
 import type { NavigationModule } from '@equinor/fusion-framework-module-navigation';
 
-import { type IContextModuleConfigurator, ContextModuleConfigurator } from './configurator';
+import {
+  type IContextModuleConfigurator,
+  ContextModuleConfigurator,
+} from './ContextModuleConfigurator';
 import { type IContextProvider, ContextProvider } from './ContextProvider';
 import type { ContextItem } from './types';
 
@@ -68,7 +71,7 @@ export const module: ContextModule = {
   configure: () => new ContextModuleConfigurator(),
   initialize: async function (args) {
     // create config from configurator
-    const config = await (args.config as ContextModuleConfigurator).createConfig(args);
+    const config = await (args.config as ContextModuleConfigurator).createConfigAsync(args);
 
     // get event module if available
     const event = args.hasModule('event') ? await args.requireInstance('event') : undefined;
