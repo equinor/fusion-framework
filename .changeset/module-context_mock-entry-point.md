@@ -1,8 +1,19 @@
 ---
-"@equinor/fusion-framework-module-context": minor
+"@equinor/fusion-framework-module-context": major
 ---
 
 Add `./mock` and `./mock/fixtures` subpaths for seeding context in tests without a real context API.
+
+**BREAKING CHANGE:** `ContextModuleConfigurator` now extends `BaseConfigBuilder` (aligning with `module-event`, `module-http`, `module-msal`, and `module-service-discovery`). Its public `createConfig` method now returns `Observable<ContextModuleConfig>` instead of `Promise<ContextModuleConfig>`. Code calling `await configurator.createConfig(init)` directly should switch to `createConfigAsync`, which keeps the previous Promise-based behavior:
+
+```typescript
+// Before
+const config = await configurator.createConfig(init);
+// After
+const config = await configurator.createConfigAsync(init);
+```
+
+No other public export changes as part of this refactor.
 
 `./mock` exports `enableContextMock` and `ContextMockConfigurator` — a `ContextModuleConfigurator` backed by an in-memory pool instead of a real client. Only the data source is substituted; `validateContext`, `resolveContext`, and parent-context propagation all still run through the real `ContextProvider`:
 
