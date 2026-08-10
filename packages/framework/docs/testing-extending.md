@@ -101,4 +101,3 @@ Real `ContextProvider` behaviour — `validateContext`, `resolveContext`, parent
 - **`setResolver`** — an escape hatch for a custom `resolveContext` strategy or a shape the friendly layer did not anticipate.
 
 Seeding a context item this way is one of two ways to fake context in a test — the other is mocking the context API's HTTP responses directly (with `.http`, optionally paired with `fromOpenApiMock`), which exercises the real `ContextModuleConfigurator`/services/HTTP pipeline instead of substituting it. Reach for `.context` to seed one known item with no transport involved; reach for `.http` when the test needs to cover that pipeline itself.
-
