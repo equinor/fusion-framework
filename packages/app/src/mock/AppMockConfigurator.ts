@@ -1,6 +1,10 @@
 import type { FusionModulesInstance } from '@equinor/fusion-framework';
 
-import type { AnyModule, IModuleConfigurator, ModuleConfigType } from '@equinor/fusion-framework-module';
+import type {
+  AnyModule,
+  IModuleConfigurator,
+  ModuleConfigType,
+} from '@equinor/fusion-framework-module';
 
 import http, { type IHttpClientConfigurator } from '@equinor/fusion-framework-module-http';
 import {
