@@ -34,7 +34,7 @@ const initializePortalWith = () =>
   });
 
 describe('AppModuleProvider', () => {
-  it('fetches the manifest through the portal\'s own http client once a current app is set', async () => {
+  it("fetches the manifest through the portal's own http client once a current app is set", async () => {
     const fusion = await initializePortalWith();
 
     fusion.modules.app.setCurrentApp('test-app');

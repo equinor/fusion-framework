@@ -44,7 +44,9 @@ describe('mockApp', () => {
       // matches against the full resolved URL, so the host is part of the match to keep this
       // from also answering a different client's request
       configurator.http.addMiddleware(async (uri, init, next) =>
-        uri === 'https://portal-api.fusion.test/items' ? Response.json([{ id: 1 }]) : next(uri, init),
+        uri === 'https://portal-api.fusion.test/items'
+          ? Response.json([{ id: 1 }])
+          : next(uri, init),
       );
     }, env);
 

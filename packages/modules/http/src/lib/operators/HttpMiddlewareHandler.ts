@@ -45,7 +45,8 @@ export class HttpMiddlewareHandler implements IHttpMiddlewareHandler {
   process(uri: string, init: RequestInit, terminal: HttpMiddlewareNext): Observable<Response> {
     // wrap outward-in so the first-registered middleware is outermost, matching a conventional middleware chain
     const chain = this.#middleware.reduceRight<HttpMiddlewareNext>(
-      (next, middleware) => (nextUri, nextInit) => middleware(nextUri, nextInit, (u, i) => toPromise(next(u, i))),
+      (next, middleware) => (nextUri, nextInit) =>
+        middleware(nextUri, nextInit, (u, i) => toPromise(next(u, i))),
       terminal,
     );
     const result = chain(uri, init);
