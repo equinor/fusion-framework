@@ -1,8 +1,9 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import type { Module } from '@equinor/fusion-framework-module';
 import { enableMsalMock } from '@equinor/fusion-framework-module-msal/mock';
 import { enableServiceDiscoveryMock } from '@equinor/fusion-framework-module-service-discovery/mock';
+import { TelemetryLevel } from '@equinor/fusion-framework-module-telemetry';
 
 import { FrameworkConfigurator } from '../../FrameworkConfigurator.js';
 import { init } from '../../init.js';
@@ -199,6 +200,23 @@ describe('FrameworkMockConfigurator', () => {
     const configurator = new FrameworkMockConfigurator();
 
     expect(configurator.telemetry).toBeDefined();
+  });
+
+  it('collects a tracked event through the telemetry mock adapter, reaching no real endpoint', async () => {
+    let mockConfigurator: FrameworkMockConfigurator | undefined;
+    const fusion = await mockFramework((configurator) => {
+      mockConfigurator = configurator;
+    });
+
+    fusion.modules.telemetry.trackEvent({
+      name: 'button-click',
+      level: TelemetryLevel.Information,
+      scope: [],
+    });
+
+    await vi.waitFor(() => {
+      expect(mockConfigurator?.telemetry.adapter.getItems('button-click')).toHaveLength(1);
+    });
   });
 
   it('lets a module supplied through TModules get the same kind of accessor as msal and serviceDiscovery', async () => {

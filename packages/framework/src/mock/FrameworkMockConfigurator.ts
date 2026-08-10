@@ -17,9 +17,10 @@ import {
   type ServiceDiscoveryMockConfigurator,
 } from '@equinor/fusion-framework-module-service-discovery/mock';
 import servicesModule, { type IApiConfigurator } from '@equinor/fusion-framework-module-services';
-import telemetryModule, {
-  type ITelemetryConfigurator,
-} from '@equinor/fusion-framework-module-telemetry';
+import {
+  telemetryMockModule,
+  type TelemetryMockConfigurator,
+} from '@equinor/fusion-framework-module-telemetry/mock';
 
 import { FrameworkConfigurator } from '../FrameworkConfigurator.js';
 
@@ -38,11 +39,10 @@ import { FrameworkConfigurator } from '../FrameworkConfigurator.js';
  * reaches it directly instead of registering a callback to receive it. `http`
  * answers registered route handlers instead of the network — see `.http` and
  * `enableHttpMock`'s adapters for `openapi-backend`-style backends or an
- * `@equinor/fusion-openapi-mock` document. `services` and `telemetry` are not
- * backed by test doubles yet, so calls through their configurators still reach
- * the network — but the configurators themselves are reachable the same way
- * `.msal` is, since their `configure` factories take no `ref` and so lose
- * nothing by being pinned early.
+ * `@equinor/fusion-openapi-mock` document. `services` is not backed by a test
+ * double yet, so calls through its configurator still reach the network — but
+ * the configurator itself is reachable the same way `.msal` is, since its
+ * `configure` factory takes no `ref` and so loses nothing by being pinned early.
  *
  * `event` is deliberately not pinned: its `configure` factory reads `ref` to
  * wire bubbling to a parent event provider when this configurator is hoisted
@@ -90,7 +90,7 @@ export class FrameworkMockConfigurator<
     this._pin(httpMockModule);
     this._pin(servicesModule);
     this._pin(contextMockModule);
-    this._pin(telemetryModule);
+    this._pin(telemetryMockModule);
   }
 
   /**
@@ -232,12 +232,14 @@ export class FrameworkMockConfigurator<
    * Configures telemetry.
    *
    * @remarks
-   * The real configurator — `telemetry` has no test double yet.
+   * The same {@link TelemetryMockConfigurator} the telemetry module is
+   * configured from, so a tracked event or measurement can be read back from
+   * its adapter instead of reaching Application Insights.
    *
-   * @returns The real telemetry configurator.
+   * @returns The telemetry mock configurator.
    */
-  public get telemetry(): ITelemetryConfigurator {
-    return this._getConfig<ITelemetryConfigurator>(telemetryModule.name);
+  public get telemetry(): TelemetryMockConfigurator {
+    return this._getConfig<TelemetryMockConfigurator>(telemetryMockModule.name);
   }
 
   /**
