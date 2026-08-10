@@ -28,8 +28,9 @@ const stripPayload = (bookmark: Bookmark): BookmarkWithoutData => {
  * Checks whether a seeded bookmark matches the given {@link BookmarksFilter}.
  *
  * @remarks
- * Only `appKey` and `contextId` are checked, mirroring the two fields the real
- * `BookmarkProvider` actually resolves and passes through as a filter.
+ * `appKey`, `contextId`, and `sourceSystem` are checked, mirroring what the real
+ * `BookmarkProvider` resolves and passes through as a filter (`BookmarkProvider.getAllBookmarks`
+ * always includes `sourceSystem`, so it must be matched even though it's rarely set explicitly).
  *
  * @param bookmark - The seeded bookmark to test.
  * @param filter - The filter to match against, if any.
@@ -42,6 +43,16 @@ const matchesFilter = (bookmark: Bookmark, filter?: BookmarksFilter): boolean =>
   if (filter.appKey && bookmark.appKey !== filter.appKey) return false;
   // a contextId constraint excludes bookmarks attributed to a different context
   if (filter.contextId && bookmark.context?.id !== filter.contextId) return false;
+  // a sourceSystem constraint excludes bookmarks attributed to a different source system
+  if (filter.sourceSystem) {
+    const { identifier, name, subSystem } = filter.sourceSystem;
+    // an identifier constraint excludes bookmarks attributed to a different source system identifier
+    if (identifier && bookmark.sourceSystem?.identifier !== identifier) return false;
+    // a name constraint excludes bookmarks attributed to a different source system name
+    if (name !== undefined && bookmark.sourceSystem?.name !== name) return false;
+    // a subSystem constraint excludes bookmarks attributed to a different source sub-system
+    if (subSystem !== undefined && bookmark.sourceSystem?.subSystem !== subSystem) return false;
+  }
   return true;
 };
 
@@ -127,15 +138,23 @@ export class BookmarkMockClient implements IBookmarkClient {
   }
 
   /**
-   * Returns every seeded bookmark that matches `filter`.
+   * Returns every seeded bookmark that matches `filter`, without its payload.
+   *
+   * @remarks
+   * The real client strips payloads from list results (see `BookmarkClient.getAllBookmarks`),
+   * so the mock does the same here even though the interface's declared return type is `Bookmark[]`.
    *
    * @param filter - Optional constraints to narrow the returned bookmarks.
-   * @returns The matching bookmarks.
+   * @returns The matching bookmarks, without their payloads.
    */
   public getAllBookmarks(filter?: BookmarksFilter): ObservableInput<Array<Bookmark>> {
-    return resultOf(() =>
-      // only appKey/contextId are checked, mirroring what BookmarkProvider resolves
-      Array.from(this.#bookmarks.values()).filter((bookmark) => matchesFilter(bookmark, filter)),
+    return resultOf(
+      () =>
+        Array.from(this.#bookmarks.values())
+          // only bookmarks matching every constraint in `filter` are returned
+          .filter((bookmark) => matchesFilter(bookmark, filter))
+          // list results never include payloads, mirroring the real client
+          .map(stripPayload) as Array<Bookmark>,
     );
   }
 
@@ -265,6 +284,8 @@ export class BookmarkMockClient implements IBookmarkClient {
       const updated: Bookmark<T> = {
         ...existing,
         ...updates,
+        // `payload: null` clears data on a BookmarkUpdate, so normalize it to `undefined` like setBookmarkData does
+        payload: updates.payload === null ? undefined : (updates.payload ?? existing.payload),
         updated: new Date(),
         updatedBy: mockUser,
       } as Bookmark<T>;
