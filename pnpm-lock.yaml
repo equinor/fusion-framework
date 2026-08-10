@@ -2044,7 +2044,7 @@ importers:
     dependencies:
       '@azure/msal-node':
         specifier: ^5.0.2
-        version: 5.4.3
+        version: 5.5.0
       '@equinor/fusion-framework-module':
         specifier: workspace:^
         version: link:../module
@@ -3243,6 +3243,10 @@ packages:
 
   '@azure/msal-node@5.4.3':
     resolution: {integrity: sha512-tumCMmzrRhKmTbYQg/7OlfbrIKcKaf8Ed0Fw3suUpRT3owFYljznVgxcfHe8RycQXY9uyROGiLD1GjhpF45AwA==}
+    engines: {node: '>=20'}
+
+  '@azure/msal-node@5.5.0':
+    resolution: {integrity: sha512-A/2WIsuH0vsC6JVkkafjS4kHpi2LDR4AzDT0kJ+oIRtXYeYtvGQ2pwN2X88thQPhSek+82ela3MprsKXWQRrhQ==}
     engines: {node: '>=20'}
 
   '@azure/search-documents@13.0.0':
@@ -12317,8 +12321,7 @@ snapshots:
 
   '@azure/msal-common@16.11.3': {}
 
-  '@azure/msal-common@16.12.0':
-    optional: true
+  '@azure/msal-common@16.12.0': {}
 
   '@azure/msal-node-extensions@5.3.5':
     dependencies:
@@ -12333,6 +12336,11 @@ snapshots:
   '@azure/msal-node@5.4.3':
     dependencies:
       '@azure/msal-common': 16.11.3
+      jsonwebtoken: 9.0.3
+
+  '@azure/msal-node@5.5.0':
+    dependencies:
+      '@azure/msal-common': 16.12.0
       jsonwebtoken: 9.0.3
 
   '@azure/search-documents@13.0.0':
