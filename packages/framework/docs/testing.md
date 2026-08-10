@@ -25,7 +25,7 @@ Modules whose boundary is mocked expose their mock configurator directly, so a t
 | --- | --- |
 | `msal` | `MsalMockConfigurator` |
 | `serviceDiscovery` | `ServiceDiscoveryMockConfigurator` |
-| `http` | `HttpMockConfigurator` |
+| `http` | `IHttpClientConfigurator` (the real configurator — see [`.http`](testing-extending.md#http)) |
 | `context` | `ContextMockConfigurator` |
 | `telemetry` | `TelemetryMockConfigurator` |
 
@@ -112,7 +112,7 @@ fusion.modules.context.currentContext; // the seeded item
 
 `configurator.context` is a `ContextMockConfigurator` — a small, context-domain vocabulary (`setCurrentContext`, `setContexts`, `addContext`, `setRelatedContexts`) covers seeding a known item with no HTTP mock and no service-discovery mock required. `setResolver` is the escape hatch for a custom resolution need the friendly methods do not cover. Real `ContextProvider` behaviour — `validateContext`, `resolveContext`, parent-context propagation — still runs against the seeded data in both.
 
-This is one of two ways to fake context data: seeding an item directly (above) substitutes only the data source, with no transport involved. Mocking the context API's HTTP responses instead, through `.http`, exercises the real `ContextModuleConfigurator`/services/HTTP pipeline — reach for that when the test needs to cover that pipeline itself, optionally paired with `fromOpenApiMock` for faker-generated data straight from context's OpenAPI spec.
+This is one of two ways to fake context data: seeding an item directly (above) substitutes only the data source, with no transport involved. Mocking the context API's HTTP responses instead, through `.http`, exercises the real `ContextModuleConfigurator`/services/HTTP pipeline — reach for that when the test needs to cover that pipeline itself, optionally paired with `createOpenApiMockMiddleware` for faker-generated data straight from context's OpenAPI spec.
 
 ## Mocking an individual call
 
