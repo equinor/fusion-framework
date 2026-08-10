@@ -1,6 +1,6 @@
-import type { HttpMiddleware } from '../../lib/operators/types';
+import type { HttpMiddleware } from '../lib/operators/types';
 
-import { resolveOpenApiMockResponse, type OpenApiMockLike } from './open-api-mock-response';
+import { resolveOpenApiMockResponse, type OpenApiMockLike } from './resolve-open-api-mock-response';
 
 /**
  * Adapts an `OpenApiMock` into an {@link HttpMiddleware}, so
@@ -28,7 +28,11 @@ import { resolveOpenApiMockResponse, type OpenApiMockLike } from './open-api-moc
  */
 export function createOpenApiMockMiddleware(openApiMock: OpenApiMockLike): HttpMiddleware {
   return async (uri, init, next) => {
-    const response = await resolveOpenApiMockResponse(openApiMock, init.method ?? 'GET', new URL(uri));
+    const response = await resolveOpenApiMockResponse(
+      openApiMock,
+      init.method ?? 'GET',
+      new URL(uri),
+    );
     return response ?? next(uri, init);
   };
 }

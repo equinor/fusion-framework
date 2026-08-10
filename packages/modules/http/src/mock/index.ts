@@ -16,10 +16,11 @@
  * @packageDocumentation
  */
 
-export { createOpenApiMockMiddleware, type OpenApiMockLike } from './adapters';
+export { createOpenApiMockMiddleware } from './create-open-api-mock-middleware';
+export type { OpenApiMockLike } from './resolve-open-api-mock-response';
 export {
   createRouterMiddleware,
   type MockRouteHandler,
   type MockRouteMatch,
   type IMockRouterBuilder,
-} from './adapters';
+} from './create-router-middleware';
