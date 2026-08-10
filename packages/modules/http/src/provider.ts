@@ -5,7 +5,7 @@ import type {
   IHttpClientConfigurator,
 } from './configurator';
 
-import type { IHttpRequestHandler } from './lib/operators';
+import type { IHttpMiddlewareHandler, IHttpRequestHandler } from './lib/operators';
 import type { IHttpClient } from './lib/client';
 import { BaseModuleProvider } from '@equinor/fusion-framework-module/provider';
 import { version } from './version';
@@ -23,6 +23,12 @@ export interface IHttpClientProvider<TClient extends IHttpClient = IHttpClient> 
    * This handler is responsible for executing HTTP requests using the configured HttpClient.
    */
   readonly defaultHttpRequestHandler: IHttpRequestHandler<HttpClientRequestInitType<TClient>>;
+
+  /**
+   * The default middleware chain used by the HttpClientProvider, wrapping the network call
+   * for every client it creates unless a client overrides it with its own `middlewareHandler`.
+   */
+  readonly defaultHttpMiddlewareHandler: IHttpMiddlewareHandler;
 
   /**
    * Checks if a client is configured with the given key.
@@ -99,6 +105,14 @@ export class HttpClientProvider<TClient extends IHttpClient = IHttpClient>
   }
 
   /**
+   * Gets the default middleware chain for the HTTP client provider.
+   * @returns The default middleware chain.
+   */
+  get defaultHttpMiddlewareHandler(): IHttpMiddlewareHandler {
+    return this.config.defaultHttpMiddlewareHandler;
+  }
+
+  /**
    * Creates a new `HttpClientProvider`.
    * @param config - The configurator providing client definitions and defaults.
    */
@@ -143,8 +157,9 @@ export class HttpClientProvider<TClient extends IHttpClient = IHttpClient>
       ctor = this.config.defaultHttpClientCtor,
       requestHandler = this.defaultHttpRequestHandler,
       responseHandler,
+      middlewareHandler = this.defaultHttpMiddlewareHandler,
     } = config as HttpClientOptions<TClient>;
-    const options = { requestHandler, responseHandler };
+    const options = { requestHandler, responseHandler, middlewareHandler };
     const instance = new ctor(baseUri || '', options) as TClient;
     // attach the resolved default scopes onto the instance without overwriting other own properties
     Object.assign(instance, { defaultScopes });

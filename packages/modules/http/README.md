@@ -195,9 +195,9 @@ Native fetch errors can still surface as well, including abort and network failu
 
 ## Testing
 
-Import from `@equinor/fusion-framework-module-http/mock` to answer requests from registered route handlers instead of the network, with adapters for `openapi-backend`-style handlers and `@equinor/fusion-openapi-mock`.
+Register a short-circuiting middleware through `configurator.http.addMiddleware(...)` to answer requests without touching the network — no separate mock client or configurator is needed. `createOpenApiMockMiddleware` (`@equinor/fusion-framework-module-http/mock`) adapts an `@equinor/fusion-openapi-mock` instance into one for faking an entire OpenAPI document.
 
-See [Testing](docs/testing.md) for the middleware contract, `enableHttpMock`, and both adapters.
+See [Testing](docs/testing.md) for the middleware contract and `createOpenApiMockMiddleware`.
 
 ## Advanced Guides
 
@@ -205,7 +205,7 @@ See [Testing](docs/testing.md) for the middleware contract, `enableHttpMock`, an
 - [Observable Patterns](docs/observable-patterns.md): `fetch$`, `json$`, `request$`, `response$`, cancellation, and RxJS composition
 - [Selectors and Handlers](docs/selectors-and-handlers.md): `jsonSelector`, `blobSelector`, request handlers, response handlers, and built-in operators
 - [Server-Sent Events](docs/server-sent-events.md): `sse$`, `createSseSelector`, `sseMap`, event filtering, heartbeats, and abort behavior
-- [Testing](docs/testing.md): `enableHttpMock`, the middleware contract, and the `fromExpressStyleHandler`/`fromOpenApiMock` adapters
+- [Testing](docs/testing.md): the middleware contract, `addMiddleware`, and `createOpenApiMockMiddleware`
 
 ## Things To Remember
 
