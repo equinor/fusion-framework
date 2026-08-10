@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import { createOpenApiMockMiddleware } from '../../src/mock/adapters/open-api-mock-middleware';
+import { createOpenApiMockMiddleware } from '../../src/mock/create-open-api-mock-middleware';
 
 describe('createOpenApiMockMiddleware', () => {
   it('answers a matching request without calling next', async () => {
@@ -37,7 +37,11 @@ describe('createOpenApiMockMiddleware', () => {
     const resolve = vi.fn(async () => undefined);
     const middleware = createOpenApiMockMiddleware({ resolve });
 
-    await middleware('http://localhost/pets/1', {}, vi.fn(async () => Response.json(null)));
+    await middleware(
+      'http://localhost/pets/1',
+      {},
+      vi.fn(async () => Response.json(null)),
+    );
 
     expect(resolve).toHaveBeenCalledWith(
       expect.objectContaining({ method: 'GET', path: '/pets/1' }),
@@ -49,11 +53,7 @@ describe('createOpenApiMockMiddleware', () => {
       resolve: async ({ query }) => ({ status: 200, mock: query }),
     });
 
-    const response = await middleware(
-      'http://localhost/items?page=2',
-      { method: 'GET' },
-      vi.fn(),
-    );
+    const response = await middleware('http://localhost/items?page=2', { method: 'GET' }, vi.fn());
 
     expect(response instanceof Response ? await response.json() : undefined).toEqual({
       page: '2',
