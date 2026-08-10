@@ -109,10 +109,15 @@ export class MockTelemetryAdapter extends BaseTelemetryAdapter {
       // Declared before subscribing so `complete` can reach it even when the
       // adapter is already disposed and fires synchronously during `subscribe`.
       let sub: Subscription | undefined;
+      // Named so `cleanup` can remove it directly instead of relying only on
+      // `{ once: true }`, which only removes it once it has actually fired.
+      let onAbort: (() => void) | undefined;
 
       const cleanup = () => {
         clearTimeout(timer);
         sub?.unsubscribe();
+        // Only registered when a signal was passed, and only once even if cleanup runs twice.
+        if (onAbort) signal?.removeEventListener('abort', onAbort);
       };
 
       // Only forward items accepted by the matcher to the subscriber below.
@@ -132,6 +137,11 @@ export class MockTelemetryAdapter extends BaseTelemetryAdapter {
         },
       });
 
+      // An adapter already disposed before this call completes the subscription
+      // synchronously above, settling the promise \u2014 arming a timeout or abort
+      // listener below would then leak resources tied to an already-settled promise.
+      if (sub.closed) return;
+
       // Only arm a timeout when the caller opted in.
       if (ms !== undefined) {
         timer = setTimeout(() => {
@@ -142,14 +152,11 @@ export class MockTelemetryAdapter extends BaseTelemetryAdapter {
 
       // Only wire abort handling when the caller passed a signal.
       if (signal) {
-        signal.addEventListener(
-          'abort',
-          () => {
-            cleanup();
-            reject(signal.reason ?? new DOMException('Aborted', 'AbortError'));
-          },
-          { once: true },
-        );
+        onAbort = () => {
+          cleanup();
+          reject(signal.reason ?? new DOMException('Aborted', 'AbortError'));
+        };
+        signal.addEventListener('abort', onAbort, { once: true });
       }
     });
   }
