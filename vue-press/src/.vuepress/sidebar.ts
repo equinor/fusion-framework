@@ -457,6 +457,10 @@ export default sidebar({
           text: 'Server-Sent Events',
           link: 'http/docs/server-sent-events.md',
         },
+        {
+          text: 'Testing',
+          link: 'http/docs/testing.md',
+        },
       ],
     },
     'navigation/',
