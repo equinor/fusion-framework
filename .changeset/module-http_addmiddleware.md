@@ -1,5 +1,5 @@
 ---
-"@equinor/fusion-framework-module-http": minor
+"@equinor/fusion-framework-module-http": major
 ---
 
 Replace the `@equinor/fusion-framework-module-http/mock` entry point's router-based mock (`enableHttpMock`, `HttpMockConfigurator`, `HttpMockRouter`) with `addMiddleware` on the real `HttpClientConfigurator`, so answering a request in a test no longer means swapping out a separate configurator.
