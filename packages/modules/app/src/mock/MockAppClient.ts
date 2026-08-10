@@ -48,7 +48,7 @@ export class MockAppClient extends AppClient {
    * @returns An observable of the resolved {@link AppManifest}.
    */
   override getAppManifest(args: { appKey: string; tag?: string }): Observable<AppManifest> {
-    return args.appKey === this.#manifest.appKey && !args.tag
+    return args.appKey === this.#manifest.appKey && args.tag === undefined
       ? of(this.#manifest)
       : super.getAppManifest(args);
   }
@@ -66,8 +66,8 @@ export class MockAppClient extends AppClient {
     tag?: string;
   }): Observable<AppConfig<TType>> {
     // config is fetched against the manifest's own build version, not an explicit override tag,
-    // so a matching tag is treated the same as no tag at all
-    const isOwnTag = !args.tag || args.tag === this.#manifest.build?.version;
+    // so a matching tag is treated the same as an absent one -- an explicit empty string is not
+    const isOwnTag = args.tag === undefined || args.tag === this.#manifest.build?.version;
     return args.appKey === this.#manifest.appKey && isOwnTag && this.#config
       ? of(this.#config as AppConfig<TType>)
       : super.getAppConfig(args);
