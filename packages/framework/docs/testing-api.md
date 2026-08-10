@@ -16,11 +16,8 @@
 | `ServiceDiscoveryMockClient(options?)` | `-module-service-discovery/mock` | Build the in-memory discovery client on its own |
 | `defaultServiceDiscoveryMockServices` | `-module-service-discovery/mock` | Baseline services a Fusion app resolves at start-up |
 | `createMockService(service, baseUri?)` | `-module-service-discovery/mock` | Expand a sparse service declaration into a full `Service` |
-| `enableHttpMock(configurator, configure?)` | `-module-http/mock` | Register the HTTP module with a route-handler-backed client |
-| `httpMockModule` | `-module-http/mock` | The HTTP module with a mock client, for manual registration |
-| `HttpMockConfigurator` | `-module-http/mock` | `HttpClientConfigurator` backed by a route-handler router (`configureClient`, `get`/`post`/`put`/`patch`/`delete`, `use`, `on`) |
-| `fromExpressStyleHandler(handler)` | `-module-http/mock` | Adapt an Express-style `(req, res)` handler (or `openapi-backend`) into route middleware |
-| `fromOpenApiMock(mock)` | `-module-http/mock` | Adapt an `@equinor/fusion-openapi-mock` instance into route middleware |
+| `configureHttp(configure)` | `-module-http` | Build a module config that pairs `configureClient`/`configureHttpClient` and `addMiddleware` for `configurator.addConfig(...)` — the real module, no mock client |
+| `createOpenApiMockMiddleware(mock)` | `-module-http/mock` | Adapt an `@equinor/fusion-openapi-mock` instance into an `HttpMiddleware`, for use with `configurator.http.addMiddleware(...)` |
 | `enableContextMock(configurator, configure?)` | `-module-context/mock` | Register the context module with an in-memory seeded pool |
 | `contextMockModule` | `-module-context/mock` | The context module with a mock client, for manual registration |
 | `ContextMockConfigurator` | `-module-context/mock` | `ContextModuleConfigurator` backed by in-memory context items (`setCurrentContext`, `setContexts`, `addContext`, `setRelatedContexts`, `setResolver`) |

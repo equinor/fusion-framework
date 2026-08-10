@@ -68,22 +68,21 @@ class AppMockConfigurator extends FrameworkMockConfigurator<[InvoiceModule]> {
 
 ## `.http`
 
-`.http` is backed by `HttpMockConfigurator` (`@equinor/fusion-framework-module-http/mock`): every named client it builds answers requests from registered route handlers instead of the network, so a test needs no locally running server.
+`.http` is the real `HttpClientConfigurator` built from `@equinor/fusion-framework-module-http` — there is no separate mock client. Register a short-circuiting middleware through `addMiddleware` to answer requests without touching the network:
 
 ```typescript
 configurator.http.configureClient('catalog', { baseUri: 'https://api.example.com' });
-configurator.http.get('/items', () => Response.json([{ id: 1 }]));
+configurator.http.addMiddleware(async (uri, init, next) =>
+  uri === 'https://api.example.com/items' ? Response.json([{ id: 1 }]) : next(uri, init),
+);
 
 const items = await fusion.modules.http.createClient('catalog').json('/items');
 ```
 
-Route handlers are Fetch-standard middleware — `(request: Request) => Response | undefined | Promise<...>` — matched in registration order, with `undefined` falling through to the next one. Three ways to fill that seam:
+A middleware is `(uri, init, next) => Response | Promise<Response> | Observable<Response>` — return a `Response` to answer the request, or call and return `next(uri, init)` to fall through to whichever middleware (or the real network call) is registered next. Two ways to fill that seam:
 
-- **`.get`/`.post`/`.put`/`.patch`/`.delete`/`.on`** — hand-rolled handlers for a handful of routes.
-- **`fromExpressStyleHandler`** — adapts an Express-style `(req, res)` handler (or a whole framework built from them, like `openapi-backend`) into middleware, so `.use(fromExpressStyleHandler(api.handleRequest))` drops it straight in.
-- **`fromOpenApiMock`** — adapts an `@equinor/fusion-openapi-mock` instance (`createOpenApiMock(document)`), so a real `openapi.json`/`openapi.yaml` fakes every response with no handlers written at all until an edge case needs overriding.
-
-All three are exported from `@equinor/fusion-framework-module-http/mock`.
+- **`addMiddleware`** — a hand-rolled middleware for a handful of routes, as above.
+- **`createOpenApiMockMiddleware`** (`@equinor/fusion-framework-module-http/mock`) — adapts an `@equinor/fusion-openapi-mock` instance (`createOpenApiMock(document)`), so a real `openapi.json`/`openapi.yaml` fakes every response with no handlers written at all until an edge case needs overriding.
 
 ## `.context`
 
@@ -100,4 +99,4 @@ Real `ContextProvider` behaviour — `validateContext`, `resolveContext`, parent
 - **`setCurrentContext`/`setContexts`/`addContext`/`setRelatedContexts`** — a friendly, context-domain vocabulary for the common case: seed a known item, get it back.
 - **`setResolver`** — an escape hatch for a custom `resolveContext` strategy or a shape the friendly layer did not anticipate.
 
-Seeding a context item this way is one of two ways to fake context in a test — the other is mocking the context API's HTTP responses directly (with `.http`, optionally paired with `fromOpenApiMock`), which exercises the real `ContextModuleConfigurator`/services/HTTP pipeline instead of substituting it. Reach for `.context` to seed one known item with no transport involved; reach for `.http` when the test needs to cover that pipeline itself.
+Seeding a context item this way is one of two ways to fake context in a test — the other is mocking the context API's HTTP responses directly (with `.http`, optionally paired with `createOpenApiMockMiddleware`), which exercises the real `ContextModuleConfigurator`/services/HTTP pipeline instead of substituting it. Reach for `.context` to seed one known item with no transport involved; reach for `.http` when the test needs to cover that pipeline itself.
