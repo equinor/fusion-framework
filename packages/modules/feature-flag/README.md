@@ -107,6 +107,28 @@ builder.addPlugin(
 | `filterFeatures` | RxJS operator that filters an observable feature map by a selector function. |
 | `findFeature` | RxJS operator that emits a single flag matching a key or predicate. |
 
+### Mock exports (`@equinor/fusion-framework-module-feature-flag/mock`)
+
+| Export | Description |
+| --- | --- |
+| `enableFeatureFlagMock` | Registers the module with an in-memory `FeatureFlagMockConfigurator` instead of a real plugin. |
+| `featureFlagMockModule` | Module descriptor for manual registration. |
+| `FeatureFlagMockConfigurator` | Builder with `addFeature`/`setFeatures` for seeding flags in-memory. |
+
+## Testing
+
+Import from `@equinor/fusion-framework-module-feature-flag/mock` to seed flags in-memory instead of depending on `localStorage` or the URL. The real `FeatureFlagProvider`, toggling, and subscriptions still run — only the flag source is substituted.
+
+```ts
+import { enableFeatureFlagMock } from '@equinor/fusion-framework-module-feature-flag/mock';
+
+enableFeatureFlagMock(configurator, (mock) => {
+  mock.addFeature({ key: 'my-flag', enabled: true });
+});
+```
+
+No flags are assumed by default — a test that seeds nothing gets an empty `features` object, matching the real module's zero-plugin behaviour.
+
 ## Configuration
 
 The module is configured through `enableFeatureFlagging(configurator, callback)`. Inside the callback you receive an `IFeatureFlagConfigurator` builder with the following methods:
