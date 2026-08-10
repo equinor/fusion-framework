@@ -22,15 +22,19 @@ export type AppMockConfigureFn<
 ) => void | Promise<void>;
 
 /**
- * Runs an application's module pipeline with no real network access, from
- * either the parent framework or the app's own `http`/`msal` registrations.
+ * Runs an application's module pipeline with no real credentials required,
+ * from either the parent framework or the app's own `http`/`msal`
+ * registrations.
  *
  * @remarks
  * The real `AppConfigurator` pipeline is run — the real module set, the real
  * configuration pipeline and the real lifecycle. Only the boundaries that
- * would need credentials or network access are substituted, so a test
- * exercises the wiring an application actually depends on rather than a
- * reimplementation of it.
+ * would need credentials are substituted by default; the `http` module is
+ * the real `HttpClientConfigurator`, so a registered client only avoids the
+ * network for requests a middleware short-circuits with a response — a
+ * client with no matching middleware, or a middleware that calls `next`,
+ * still reaches the real network. A test exercises the wiring an
+ * application actually depends on rather than a reimplementation of it.
  *
  * The configurator passed to `cb` is an {@link AppMockConfigurator}, which *is*
  * an `AppConfigurator`. `useFrameworkServiceClient`, `configureHttpClient` and
