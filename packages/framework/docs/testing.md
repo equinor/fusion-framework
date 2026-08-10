@@ -27,6 +27,7 @@ Modules whose boundary is mocked expose their mock configurator directly, so a t
 | `serviceDiscovery` | `ServiceDiscoveryMockConfigurator` |
 | `http` | `HttpMockConfigurator` |
 | `context` | `ContextMockConfigurator` |
+| `telemetry` | `TelemetryMockConfigurator` |
 
 ```typescript
 const fusion = await mockFramework((configurator) => {
