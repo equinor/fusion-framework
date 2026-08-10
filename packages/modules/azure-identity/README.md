@@ -113,6 +113,35 @@ await framework.auth.logout();
 
 Returns a pre-obtained token string. `login()` and `logout()` throw.
 
+## Testing
+
+`token_only` mode already avoids real Azure AD traffic, but it is rigid: a single
+fixed token, no expiry simulation, and `login`/`logout` always throw. For tests
+that need to exercise sign-in, sign-out, or token-refresh/expiry logic, use
+`MockAuthProvider` from the `/mock` subpath instead:
+
+```typescript
+import { enableAuthMock } from '@equinor/fusion-framework-module-azure-identity/mock';
+
+// default identity, already signed in
+const auth = enableAuthMock(configurator);
+
+// or seed the identity/state up front
+enableAuthMock(configurator, (auth) => {
+  auth.setAccount({ username: 'ada@equinor.com', signedOut: true });
+});
+
+// drive login/logout and inspect the resulting tokens directly
+await auth.login({ request: { scopes: ['User.Read'] } });
+const token = await auth.acquireAccessToken({ request: { scopes: ['User.Read'] } });
+
+// simulate an expired token, to exercise a consuming application's refresh path
+auth.setExpiresOn(new Date(Date.now() - 1000));
+```
+
+`MockAuthProvider` registers exactly like any other `IAuthProvider` implementation
+— no special-cased wiring — and makes no real `@azure/identity` network calls.
+
 ## Token cache persistence
 
 The module registers `cachePersistencePlugin` from `@azure/identity-cache-persistence` at load time, enabling encrypted OS-level token caching:
@@ -167,3 +196,12 @@ enableAzureIdentityAuth(configurator, (builder) => {
 | `IAuthProvider` | Auth provider interface |
 | `AzureIdentityModule` | Module type for generic parameters |
 | `azureIdentityModule` | Raw module definition |
+
+### `/mock` subpath
+
+| Export | Description |
+|---|---|
+| `MockAuthProvider` | Configurable `IAuthProvider` test double — `login`/`logout` work, token and expiry are settable |
+| `MockAuthProviderOptions` | Constructor options for `MockAuthProvider` |
+| `enableAuthMock` | Registers a `MockAuthProvider` as the `'auth'` module and returns it |
+| `createAuthMockModule` | Builds the mock module descriptor for a given `MockAuthProvider` |
