@@ -93,4 +93,13 @@ describe('enableFeatureFlagMock', () => {
     ).resolves.toBeUndefined();
     expect(provider.hasFeature('missing')).toBe(false);
   });
+
+  it('awaits an async configure callback before initialize resolves, so seeding is present on the built provider', async () => {
+    const provider = await initializeMockWith(async (mock) => {
+      await Promise.resolve();
+      mock.addFeature({ key: 'async-flag', enabled: true });
+    });
+
+    expect(provider.getFeature('async-flag')?.enabled).toBe(true);
+  });
 });
