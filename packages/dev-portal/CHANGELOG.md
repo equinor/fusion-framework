@@ -1,5 +1,20 @@
 # @equinor/fusion-framework-dev-portal
 
+## 10.0.0
+
+### Minor Changes
+
+- 4d64a3e: Add claimable and permanent role tabs to the person side sheet, including activation and deactivation controls for claimable roles.
+
+  Related issue #5230
+
+### Patch Changes
+
+- Updated dependencies [c9d7bd4]
+  - @equinor/fusion-framework-module-services@8.1.0
+  - @equinor/fusion-framework@8.0.14
+  - @equinor/fusion-framework-app@13.0.0
+
 ## 9.0.0
 
 ### Patch Changes
