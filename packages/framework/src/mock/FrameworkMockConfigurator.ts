@@ -4,10 +4,7 @@ import {
   contextMockModule,
   type ContextMockConfigurator,
 } from '@equinor/fusion-framework-module-context/mock';
-import {
-  httpMockModule,
-  type HttpMockConfigurator,
-} from '@equinor/fusion-framework-module-http/mock';
+import { module as httpModule, type IHttpClientConfigurator } from '@equinor/fusion-framework-module-http';
 import {
   msalMockModule,
   type MsalMockConfigurator,
@@ -37,10 +34,12 @@ import { FrameworkConfigurator } from '../FrameworkConfigurator.js';
  *
  * Every built-in module exposes its own configurator as a property, so a test
  * reaches it directly instead of registering a callback to receive it. `http`
- * answers registered route handlers instead of the network — see `.http` and
- * `enableHttpMock`'s adapters for `openapi-backend`-style backends or an
- * `@equinor/fusion-openapi-mock` document. `services` is not backed by a test
- * double yet, so calls through its configurator still reach the network — but
+ * is the real configurator — fake a response by registering a
+ * short-circuiting middleware through `.http.addMiddleware(...)` instead of
+ * swapping the module out; see `@equinor/fusion-framework-module-http/mock`'s
+ * `createOpenApiMockMiddleware` for faking a whole `@equinor/fusion-openapi-mock`
+ * document that way. `services` is not backed by a test double yet either, so
+ * calls through its configurator still reach the network — but
  * the configurator itself is reachable the same way `.msal` is, since its
  * `configure` factory takes no `ref` and so loses nothing by being pinned early.
  *
@@ -87,7 +86,7 @@ export class FrameworkMockConfigurator<
     // already registered, whether or not a test ever touches the accessor.
     this._pin(msalMockModule);
     this._pin(serviceDiscoveryMockModule);
-    this._pin(httpMockModule);
+    this._pin(httpModule);
     this._pin(servicesModule);
     this._pin(contextMockModule);
     this._pin(telemetryMockModule);
@@ -193,14 +192,15 @@ export class FrameworkMockConfigurator<
    * Configures the HTTP module's named clients.
    *
    * @remarks
-   * The same {@link HttpMockConfigurator} the HTTP module is configured from,
-   * so every client it builds answers requests from registered route handlers
-   * instead of the network — no locally running server needed.
+   * The same {@link IHttpClientConfigurator} the HTTP module is configured
+   * from — the real one, not a test double. Register a short-circuiting
+   * {@link HttpMiddleware} through `addMiddleware` to answer from that
+   * instead of the network.
    *
-   * @returns The HTTP mock configurator.
+   * @returns The real HTTP configurator.
    */
-  public get http(): HttpMockConfigurator {
-    return this._getConfig<HttpMockConfigurator>(httpMockModule.name);
+  public get http(): IHttpClientConfigurator {
+    return this._getConfig<IHttpClientConfigurator>(httpModule.name);
   }
 
   /**
