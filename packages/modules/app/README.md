@@ -117,6 +117,36 @@ All API requests map HTTP status codes to typed error classes:
 
 Each error includes a `type` property (`'not_found'`, `'unauthorized'`, `'deleted'`, or `'unknown'`) for programmatic handling.
 
+## Testing
+
+Import from `@equinor/fusion-framework-module-app/mock` to serve one app's manifest
+and config locally instead of contacting the app service. The real `AppClient`
+still backs every other request — other app keys, tagged requests, builds,
+settings — so pointing `setClient` at a different http client or service
+discovery registry keeps working unchanged.
+
+```ts
+import { MockAppClient } from '@equinor/fusion-framework-module-app/mock';
+
+enableAppModule(configurator, (builder) => {
+  builder.setClient(async ({ requireInstance }) => {
+    const http = await requireInstance('http');
+    return new MockAppClient(http.createClient('apps'), manifest, config);
+  });
+});
+```
+
+`getAppManifest` only resolves locally for `manifest.appKey` with no `tag` at
+all. `getAppConfig` resolves for `manifest.appKey` when `tag` is either absent
+or equal to the manifest's own `build.version` — the same tag `App` requests
+when loading config for the manifest it already resolved. Any other app key,
+tag, or the wrong request falls through to the real client.
+
+> [!NOTE]
+> `@equinor/fusion-framework-app/mock`'s `mockAppModules` builds on top of this
+> class and is usually the simpler entry point for testing an application —
+> see its [Testing](../../app/docs/testing.md) guide.
+
 ## Main Exports
 
 | Export               | Description                                      |
@@ -128,3 +158,4 @@ Each error includes a `type` property (`'not_found'`, `'unauthorized'`, `'delete
 | `AppConfig`          | Immutable app configuration (env + endpoints)     |
 | `App` / `IApp`       | Application instance with reactive state          |
 | `AppModule`          | Module definition for the framework               |
+| `MockAppClient`      | Test double serving one app's manifest and config locally (`/mock`) |
