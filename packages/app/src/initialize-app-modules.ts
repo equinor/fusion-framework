@@ -41,7 +41,9 @@ export async function initializeAppModules<
   >,
 >(
   configurator: TConfigurator,
-  cb: ((configurator: TConfigurator, args: { fusion: TRef; env: TEnv }) => void | Promise<void>) | undefined,
+  cb:
+    | ((configurator: TConfigurator, args: { fusion: TRef; env: TEnv }) => void | Promise<void>)
+    | undefined,
   args: { fusion: TRef; env: TEnv },
 ): Promise<AppModulesInstance<TModules>> {
   const { fusion } = args;

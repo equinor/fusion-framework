@@ -62,9 +62,7 @@ describe('AppMockConfigurator', () => {
     enableTelemetry(configurator);
     const modules = await configurator.initialize();
 
-    await expect(modules.http.createClient('catalog').json('/items')).resolves.toEqual([
-      { id: 1 },
-    ]);
+    await expect(modules.http.createClient('catalog').json('/items')).resolves.toEqual([{ id: 1 }]);
   });
 
   it('exposes the same msal configurator the auth module is built from', async () => {

@@ -6,7 +6,11 @@ import { HttpMiddlewareHandler, HttpRequestHandler, HttpResponseHandler } from '
 import { blobSelector, jsonSelector } from '../selectors';
 
 import type { Observable, ObservableInput } from 'rxjs';
-import type { IHttpMiddlewareHandler, IHttpRequestHandler, IHttpResponseHandler } from '../operators';
+import type {
+  IHttpMiddlewareHandler,
+  IHttpRequestHandler,
+  IHttpResponseHandler,
+} from '../operators';
 import type {
   BlobResult,
   FetchRequest,
