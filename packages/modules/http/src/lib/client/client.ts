@@ -2,11 +2,11 @@ import { firstValueFrom, of, Subject } from 'rxjs';
 import { switchMap, takeUntil, tap } from 'rxjs/operators';
 import { fromFetch } from 'rxjs/fetch';
 
-import { HttpRequestHandler, HttpResponseHandler } from '../operators';
+import { HttpMiddlewareHandler, HttpRequestHandler, HttpResponseHandler } from '../operators';
 import { blobSelector, jsonSelector } from '../selectors';
 
 import type { Observable, ObservableInput } from 'rxjs';
-import type { IHttpRequestHandler, IHttpResponseHandler } from '../operators';
+import type { IHttpMiddlewareHandler, IHttpRequestHandler, IHttpResponseHandler } from '../operators';
 import type {
   BlobResult,
   FetchRequest,
@@ -38,6 +38,7 @@ export type HttpClientCreateOptions<
 > = {
   requestHandler: IHttpRequestHandler<TRequest>;
   responseHandler: IHttpResponseHandler<TResponse>;
+  middlewareHandler: IHttpMiddlewareHandler;
 };
 
 /** Base http client for executing requests */
@@ -57,6 +58,13 @@ export class HttpClient<
    * This property is part of the `HttpClientCreateOptions` configuration object used to create an `HttpClient` instance.
    */
   public readonly responseHandler: IHttpResponseHandler<TResponse>;
+
+  /**
+   * Middleware wrapping the network call, for cross-cutting concerns such as retries,
+   * caching, or telemetry. This property is part of the `HttpClientCreateOptions`
+   * configuration object used to create an `HttpClient` instance.
+   */
+  public readonly middlewareHandler: IHttpMiddlewareHandler;
 
   /**
    * A stream of requests that are about to be executed.
@@ -103,6 +111,7 @@ export class HttpClient<
   ) {
     this.requestHandler = new HttpRequestHandler<TRequest>(options?.requestHandler);
     this.responseHandler = new HttpResponseHandler<TResponse>(options?.responseHandler);
+    this.middlewareHandler = new HttpMiddlewareHandler(options?.middlewareHandler);
     this._init();
   }
 
@@ -367,8 +376,10 @@ export class HttpClient<
       switchMap((x) => this._prepareRequest(x)),
       /** push request to event buss */
       tap((x) => this._request$.next(x)),
-      /** execute request */
-      switchMap(({ uri, path: _path, ...init }) => this._performFetch(uri, init)),
+      /** execute request through registered middleware, terminating at _performFetch */
+      switchMap(({ uri, path: _path, ...init }) =>
+        this.middlewareHandler.process(uri, init, (u, i) => this._performFetch(u, i)),
+      ),
       /** prepare response, allow extensions to modify response  */
       switchMap((x) => this._prepareResponse(x as unknown as TResponse)),
       /** push response to event buss */
