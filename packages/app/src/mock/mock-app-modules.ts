@@ -89,7 +89,8 @@ export async function mockAppModules<
   // whatever URI service discovery is currently configured to resolve `'apps'` to, so a test
   // exercises the same portal wiring a real parent framework would provide.
   const resolvedFusion: Fusion =
-    fusion ?? (await mockFramework<[AppModule]>((configurator) => enableAppManifestMock(configurator, env)));
+    fusion ??
+    (await mockFramework<[AppModule]>((configurator) => enableAppManifestMock(configurator, env)));
   const configurator = new AppMockConfigurator<TModules, Fusion['modules'], TEnv>(env);
   // Cast is safe: `initializeAppModules` returns the exact module instance produced by
   // `configurator`, which was constructed with this same `TModules`. TypeScript widens

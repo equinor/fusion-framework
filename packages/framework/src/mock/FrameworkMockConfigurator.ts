@@ -4,7 +4,10 @@ import {
   contextMockModule,
   type ContextMockConfigurator,
 } from '@equinor/fusion-framework-module-context/mock';
-import { module as httpModule, type IHttpClientConfigurator } from '@equinor/fusion-framework-module-http';
+import {
+  module as httpModule,
+  type IHttpClientConfigurator,
+} from '@equinor/fusion-framework-module-http';
 import {
   msalMockModule,
   type MsalMockConfigurator,
