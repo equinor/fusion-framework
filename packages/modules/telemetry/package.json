@@ -21,6 +21,10 @@
       "import": "./dist/esm/adapters/index.js",
       "types": "./dist/types/adapters/index.d.ts"
     },
+    "./mock": {
+      "import": "./dist/esm/mock/index.js",
+      "types": "./dist/types/mock/index.d.ts"
+    },
     "./application-insights-adapter": {
       "import": "./dist/esm/adapters/application-insights/index.js",
       "types": "./dist/types/adapters/application-insights/index.d.ts"
