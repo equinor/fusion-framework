@@ -1,29 +1,25 @@
 /**
- * Test doubles for the HTTP module.
+ * Testing utilities for the HTTP module.
  *
  * @remarks
- * Imported from `@equinor/fusion-framework-module-http/mock`, so the mock ships
- * and versions with the implementation it stands in for.
+ * Imported from `@equinor/fusion-framework-module-http/mock`, so testing
+ * utilities ship and version with the implementation they stand in for.
  *
- * The mock replaces only the network call each client makes — everything
- * around it (request preparation, MSAL scope handling, the response
- * pipeline) is the real `HttpClientMsal`, so a test still exercises how the
- * application builds and uses its clients, not just canned data.
+ * There is no separate mock client or configurator here — register a
+ * short-circuiting `HttpMiddleware` through `configurator.http.addMiddleware(...)`
+ * on the real `HttpClientConfigurator` instead, so app config never has to
+ * branch on whether it's under test. See {@link createOpenApiMockMiddleware}
+ * for faking a whole OpenAPI document's operations that way.
  *
  * This entry point has no dependency on any test runner.
  *
  * @packageDocumentation
  */
 
-export { HttpMockRouter, type HttpMockMiddleware } from './HttpMockRouter';
-export { createHttpClientMockCtor } from './create-http-client-mock-ctor';
-export { HttpMockConfigurator } from './HttpMockConfigurator';
-export { enableHttpMock, httpMockModule, type HttpConfigMockFn } from './module';
+export { createOpenApiMockMiddleware, type OpenApiMockLike } from './adapters';
 export {
-  fromExpressStyleHandler,
-  type ExpressStyleRequest,
-  MockExpressResponse,
-  type ExpressStyleResponse,
-  fromOpenApiMock,
-  type OpenApiMockLike,
+  createRouterMiddleware,
+  type MockRouteHandler,
+  type MockRouteMatch,
+  type IMockRouterBuilder,
 } from './adapters';

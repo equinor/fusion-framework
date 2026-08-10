@@ -1,137 +1,62 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
-import { fromExpressStyleHandler } from '../../src/mock/adapters/from-express-style-handler';
-import { MockExpressResponse } from '../../src/mock/adapters/MockExpressResponse';
-import { fromOpenApiMock } from '../../src/mock/adapters/from-open-api-mock';
+import { createOpenApiMockMiddleware } from '../../src/mock/adapters/open-api-mock-middleware';
 
-describe('MockExpressResponse', () => {
-  it('resolves done from .json()', async () => {
-    const res = new MockExpressResponse();
-    res.status(201).json({ id: 1 });
-
-    const response = await res.done;
-
-    expect(response.status).toBe(201);
-    expect(response.headers.get('content-type')).toBe('application/json');
-    expect(await response.json()).toEqual({ id: 1 });
-  });
-
-  it('resolves done from .send() with a string body, defaulting to a text content-type', async () => {
-    const res = new MockExpressResponse();
-    res.send('plain text');
-
-    const response = await res.done;
-
-    expect(await response.text()).toBe('plain text');
-    expect(response.headers.get('content-type')).toBe('text/plain;charset=UTF-8');
-  });
-
-  it('resolves done from .send() with a non-string body as JSON', async () => {
-    const res = new MockExpressResponse();
-    res.send({ ok: true });
-
-    const response = await res.done;
-
-    expect(await response.json()).toEqual({ ok: true });
-  });
-
-  it('resolves done from .end() with no body', async () => {
-    const res = new MockExpressResponse();
-    res.status(204).end();
-
-    const response = await res.done;
-
-    expect(response.status).toBe(204);
-    expect(await response.text()).toBe('');
-  });
-
-  it('ignores a second terminal call, keeping the first response', async () => {
-    const res = new MockExpressResponse();
-    res.json({ first: true });
-    res.json({ second: true });
-
-    expect(await (await res.done).json()).toEqual({ first: true });
-  });
-});
-
-describe('fromExpressStyleHandler', () => {
-  it('maps a Request into { method, path, query, headers, body } for the handler', async () => {
-    const middleware = fromExpressStyleHandler((req, res) => {
-      res.status(200).json(req);
-    });
-
-    const response = await middleware(
-      new Request('http://localhost/items/1?verbose=true', {
-        headers: { 'x-test': 'yes' },
-      }),
-    );
-
-    expect(await response?.json()).toEqual(
-      expect.objectContaining({
-        method: 'GET',
-        path: '/items/1',
-        query: { verbose: 'true' },
-        headers: expect.objectContaining({ 'x-test': 'yes' }),
-      }),
-    );
-  });
-
-  it('parses a JSON request body before handing it to the handler', async () => {
-    const middleware = fromExpressStyleHandler((req, res) => {
-      res.status(200).json({ received: req.body });
-    });
-
-    const response = await middleware(
-      new Request('http://localhost/items', {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ name: 'foo' }),
-      }),
-    );
-
-    expect(await response?.json()).toEqual({ received: { name: 'foo' } });
-  });
-
-  it('answers with whatever status/body the handler sets on the response', async () => {
-    const middleware = fromExpressStyleHandler((_req, res) => {
-      res.status(404).json({ message: 'not found' });
-    });
-
-    const response = await middleware(new Request('http://localhost/missing'));
-
-    expect(response?.status).toBe(404);
-    expect(await response?.json()).toEqual({ message: 'not found' });
-  });
-});
-
-describe('fromOpenApiMock', () => {
-  it('resolves a matching request into a JSON Response from the OpenApiMock', async () => {
-    const middleware = fromOpenApiMock({
+describe('createOpenApiMockMiddleware', () => {
+  it('answers a matching request without calling next', async () => {
+    const middleware = createOpenApiMockMiddleware({
       resolve: async ({ method, path }) =>
         method === 'GET' && path === '/pets/1'
           ? { status: 200, mock: { id: '1', name: 'Rex' } }
           : undefined,
     });
+    const next = vi.fn();
 
-    const response = await middleware(new Request('http://localhost/pets/1'));
+    const response = await middleware('http://localhost/pets/1', { method: 'GET' }, next);
 
-    expect(response?.status).toBe(200);
-    expect(await response?.json()).toEqual({ id: '1', name: 'Rex' });
+    expect(response instanceof Response ? response.status : undefined).toBe(200);
+    expect(response instanceof Response ? await response.json() : undefined).toEqual({
+      id: '1',
+      name: 'Rex',
+    });
+    expect(next).not.toHaveBeenCalled();
   });
 
-  it('declines (returns undefined) when the OpenApiMock has no matching operation', async () => {
-    const middleware = fromOpenApiMock({ resolve: async () => undefined });
+  it('falls through to next when the OpenApiMock has no matching operation', async () => {
+    const middleware = createOpenApiMockMiddleware({ resolve: async () => undefined });
+    const fallback = Response.json({ ok: true });
+    const next = vi.fn(async () => fallback);
 
-    await expect(middleware(new Request('http://localhost/unknown'))).resolves.toBeUndefined();
+    const response = await middleware('http://localhost/unknown', { method: 'GET' }, next);
+
+    expect(next).toHaveBeenCalledWith('http://localhost/unknown', { method: 'GET' });
+    expect(response).toBe(fallback);
+  });
+
+  it('defaults to GET when init has no method', async () => {
+    const resolve = vi.fn(async () => undefined);
+    const middleware = createOpenApiMockMiddleware({ resolve });
+
+    await middleware('http://localhost/pets/1', {}, vi.fn(async () => Response.json(null)));
+
+    expect(resolve).toHaveBeenCalledWith(
+      expect.objectContaining({ method: 'GET', path: '/pets/1' }),
+    );
   });
 
   it('forwards query parameters to resolve()', async () => {
-    const middleware = fromOpenApiMock({
+    const middleware = createOpenApiMockMiddleware({
       resolve: async ({ query }) => ({ status: 200, mock: query }),
     });
 
-    const response = await middleware(new Request('http://localhost/items?page=2'));
+    const response = await middleware(
+      'http://localhost/items?page=2',
+      { method: 'GET' },
+      vi.fn(),
+    );
 
-    expect(await response?.json()).toEqual({ page: '2' });
+    expect(response instanceof Response ? await response.json() : undefined).toEqual({
+      page: '2',
+    });
   });
 });
