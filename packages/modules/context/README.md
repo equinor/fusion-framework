@@ -274,7 +274,7 @@ enableContextMock(configurator, (mock) => {
 
 When used with `@equinor/fusion-framework/mock`, `FrameworkMockConfigurator.context` returns this same configurator, so seeding happens directly through `configurator.context` with no callback needed.
 
-This is one of two ways to fake context data in tests. The other is mocking the context API's HTTP responses directly (with `@equinor/fusion-framework-module-http/mock`, optionally paired with `@equinor/fusion-openapi-mock`'s `fromOpenApiMock` for faker-generated data straight from context's OpenAPI spec) — which exercises the real `ContextModuleConfigurator`/services/HTTP pipeline instead of substituting it. Reach for `enableContextMock` to seed one known item with no transport involved; reach for the HTTP mock when a test needs to cover that pipeline itself. Fixture generators for realistic seeded data (`createContextItemFactory`, `createContextItems`) are available from `@equinor/fusion-framework-module-context/mock/fixtures`.
+This is one of two ways to fake context data in tests. The other is mocking the context API's HTTP responses directly (with `configurator.http.addMiddleware(...)`, optionally paired with `@equinor/fusion-framework-module-http/mock`'s `createOpenApiMockMiddleware` for faker-generated data straight from context's OpenAPI spec) — which exercises the real `ContextModuleConfigurator`/services/HTTP pipeline instead of substituting it. Reach for `enableContextMock` to seed one known item with no transport involved; reach for the HTTP middleware when a test needs to cover that pipeline itself. Fixture generators for realistic seeded data (`createContextItemFactory`, `createContextItems`) are available from `@equinor/fusion-framework-module-context/mock/fixtures`.
 
 ## Utilities
 

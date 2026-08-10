@@ -5,7 +5,8 @@ import {
   ModulesConfigurator,
   type ConfigBuilderCallbackArgs,
 } from '@equinor/fusion-framework-module';
-import { enableHttpMock } from '@equinor/fusion-framework-module-http/mock';
+import { configureHttp } from '@equinor/fusion-framework-module-http';
+import { createRouterMiddleware } from '@equinor/fusion-framework-module-http/mock';
 import type { IApiProvider } from '@equinor/fusion-framework-module-services';
 import { enableServices } from '@equinor/fusion-framework-module-services';
 import type { QueryCtorOptions } from '@equinor/fusion-query';
@@ -90,14 +91,20 @@ const initializeContextWith = async (
   configure?: (builder: IContextModuleConfigurator) => void,
 ): Promise<ContextProvider> => {
   const configurator = new ModulesConfigurator([]);
-  enableHttpMock(configurator, (http) => {
-    http.configureClient('context', { baseUri: 'https://context.example.com' });
-    // order matters: `/relations` and bare `/contexts/` must be checked before the
-    // single-id route, since a request for either would also match its pattern
-    http.get(/\/relations\?/, () => Response.json([createRawContextEntity({ id: 'ctx-3' })]));
-    http.get(/\/contexts\/\?/, () => Response.json([createRawContextEntity({ id: 'ctx-2' })]));
-    http.get(/\/contexts\/[^/]+\/\?/, () => Response.json(createRawContextEntity()));
-  });
+  configurator.addConfig(
+    configureHttp((http) => {
+      http.configureClient('context', { baseUri: 'https://context.example.com' });
+      http.addMiddleware(
+        createRouterMiddleware('https://context.example.com', (router) => {
+          router.get('/contexts/:id/relations', () =>
+            Response.json([createRawContextEntity({ id: 'ctx-3' })]),
+          );
+          router.get('/contexts', () => Response.json([createRawContextEntity({ id: 'ctx-2' })]));
+          router.get('/contexts/:id', () => Response.json(createRawContextEntity()));
+        }),
+      );
+    }),
+  );
   enableServices(configurator);
   configurator.addConfig({ module: contextModule, configure });
   const instances = await configurator.initialize();
