@@ -1,4 +1,4 @@
-import type { IModulesConfigurator, Module } from '@equinor/fusion-framework-module';
+import type { AnyModule, IModulesConfigurator, Module } from '@equinor/fusion-framework-module';
 
 import type { IAuthProvider } from '../AuthProvider.interface.js';
 
@@ -46,6 +46,8 @@ export type AuthMockConfigFn<TRef = unknown> = (auth: MockAuthProvider, ref?: TR
  * @param configure - Optional callback to seed the identity, token, or expiry.
  * @returns The {@link MockAuthProvider} instance, for calling `login`/`logout`
  *   or its setters directly, in addition to whatever `configure` already did.
+ * @template TModules - The array of module descriptors managed by `configurator`.
+ * @template TRef - Reference type forwarded to `configure`, inferred from `configurator`.
  *
  * @example
  * ```typescript
@@ -56,10 +58,12 @@ export type AuthMockConfigFn<TRef = unknown> = (auth: MockAuthProvider, ref?: TR
  * await auth.login({ request: { scopes: ['User.Read'] } });
  * ```
  */
-export const enableAuthMock = (
-  // biome-ignore lint/suspicious/noExplicitAny: must be any to support all module types
-  configurator: IModulesConfigurator<any, any>,
-  configure?: AuthMockConfigFn,
+export const enableAuthMock = <
+  TModules extends Array<AnyModule> = Array<AnyModule>,
+  TRef = unknown,
+>(
+  configurator: IModulesConfigurator<TModules, TRef>,
+  configure?: AuthMockConfigFn<TRef>,
 ): MockAuthProvider => {
   const auth = new MockAuthProvider();
   configurator.addConfig({ module: createAuthMockModule(auth), configure });
