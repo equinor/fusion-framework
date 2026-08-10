@@ -10,7 +10,16 @@ Add a purpose-built mock, exported from a new `/mock` subpath (`@equinor/fusion-
 import { enableBookmarkMock } from '@equinor/fusion-framework-module-bookmark/mock';
 
 enableBookmarkMock(configurator, (builder) => {
-  builder.setBookmarks([{ id: 'bookmark-1', name: 'My Bookmark', appKey: 'my-app', payload: {} }]);
+  builder.setBookmarks([
+    {
+      id: 'bookmark-1',
+      name: 'My Bookmark',
+      appKey: 'my-app',
+      payload: {},
+      created: new Date(),
+      createdBy: { id: 'mock-user', name: 'Mock User' },
+    },
+  ]);
   builder.setCurrentBookmark('bookmark-1');
   builder.setFavorite('bookmark-1', true);
 });
