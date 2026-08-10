@@ -165,6 +165,12 @@ describe('enableBookmarkMock', () => {
     expect(updated.name).toBe('Renamed');
   });
 
+  it('surfaces a missing bookmark as an observable error through the real fetch flow', async () => {
+    const provider = await initializeMockWith();
+
+    await expect(firstValue(provider.getBookmark('missing-bookmark'))).rejects.toThrow();
+  });
+
   it('deletes a bookmark through the real delete flow', async () => {
     const seeded = createBookmark();
     const provider = await initializeMockWith((builder) => {
