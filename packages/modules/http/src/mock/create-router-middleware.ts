@@ -1,4 +1,4 @@
-import type { HttpMiddleware } from '../../lib/operators/types';
+import type { HttpMiddleware } from '../lib/operators/types';
 
 /**
  * A route match handed to a {@link MockRouteHandler} once its pattern has matched a request.
@@ -61,11 +61,14 @@ function compilePath(path: string): { regexp: RegExp; keys: string[] } {
   const pattern = path
     .split('/')
     // each segment either captures a path parameter or must match literally
-    .map((segment) =>
-      segment.startsWith(':')
-        ? (keys.push(segment.slice(1)), '([^/]+)')
-        : segment.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'),
-    )
+    .map((segment) => {
+      // only `:name` segments become capture groups; everything else must match literally
+      if (!segment.startsWith(':')) {
+        return segment.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      }
+      keys.push(segment.slice(1));
+      return '([^/]+)';
+    })
     .join('/');
   return { regexp: new RegExp(`^${pattern}/?$`), keys };
 }
@@ -138,9 +141,12 @@ export function createRouterMiddleware(
 
     // first registered route whose method and pattern both match wins
     for (const route of routes) {
+      // a route registered for a specific method never answers a request for another method
       if (route.method && route.method !== method) continue;
       const match = route.regexp.exec(pathname);
+      // pattern didn't match this pathname at all — try the next registered route
       if (!match) continue;
+      // capture groups are positional, in the same order `compilePath` recorded their names
       const params = Object.fromEntries(route.keys.map((key, i) => [key, match[i + 1]]));
       return route.handler({ params, url, request: new Request(uri, init) });
     }

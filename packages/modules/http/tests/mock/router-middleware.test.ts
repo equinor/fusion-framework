@@ -2,7 +2,7 @@ import { firstValueFrom, from } from 'rxjs';
 import type { ObservableInput } from 'rxjs';
 import { describe, expect, it } from 'vitest';
 
-import { createRouterMiddleware } from '../../src/mock/adapters/router-middleware';
+import { createRouterMiddleware } from '../../src/mock/create-router-middleware';
 
 const next = async (): Promise<Response> => new Response(null, { status: 599 });
 
@@ -16,7 +16,9 @@ describe('createRouterMiddleware', () => {
       router.get('/items', () => Response.json([{ id: 1 }]));
     });
 
-    const response = await toResponse(middleware('https://api.example.com/items', { method: 'GET' }, next));
+    const response = await toResponse(
+      middleware('https://api.example.com/items', { method: 'GET' }, next),
+    );
 
     await expect(response.json()).resolves.toEqual([{ id: 1 }]);
   });
@@ -50,7 +52,9 @@ describe('createRouterMiddleware', () => {
       router.get('/items', () => Response.json([]));
     });
 
-    const response = await toResponse(middleware('https://api.example.com/items', { method: 'POST' }, next));
+    const response = await toResponse(
+      middleware('https://api.example.com/items', { method: 'POST' }, next),
+    );
 
     expect(response.status).toBe(599);
   });
@@ -60,7 +64,9 @@ describe('createRouterMiddleware', () => {
       router.get('/items', () => Response.json([]));
     });
 
-    const response = await toResponse(middleware('https://other.example.com/items', { method: 'GET' }, next));
+    const response = await toResponse(
+      middleware('https://other.example.com/items', { method: 'GET' }, next),
+    );
 
     expect(response.status).toBe(599);
   });
@@ -84,7 +90,9 @@ describe('createRouterMiddleware', () => {
       router.get('/items/:id', () => Response.json({ from: 'second' }));
     });
 
-    const response = await toResponse(middleware('https://api.example.com/items/1', { method: 'GET' }, next));
+    const response = await toResponse(
+      middleware('https://api.example.com/items/1', { method: 'GET' }, next),
+    );
 
     await expect(response.json()).resolves.toEqual({ from: 'first' });
   });
@@ -94,7 +102,9 @@ describe('createRouterMiddleware', () => {
       router.on(undefined, '/items', () => Response.json({ ok: true }));
     });
 
-    const response = await toResponse(middleware('https://api.example.com/items', { method: 'DELETE' }, next));
+    const response = await toResponse(
+      middleware('https://api.example.com/items', { method: 'DELETE' }, next),
+    );
 
     await expect(response.json()).resolves.toEqual({ ok: true });
   });
@@ -116,7 +126,9 @@ describe('createRouterMiddleware', () => {
       router.get('/items', () => Response.json({ ok: true }));
     });
 
-    const response = await toResponse(middleware('https://api.example.com/v1/items', { method: 'GET' }, next));
+    const response = await toResponse(
+      middleware('https://api.example.com/v1/items', { method: 'GET' }, next),
+    );
 
     await expect(response.json()).resolves.toEqual({ ok: true });
   });
