@@ -26,6 +26,8 @@ export {
 
 export { AppClient, type IAppClient } from './AppClient';
 
+export { AppConfig } from './AppConfig';
+
 export { AppModuleProvider } from './AppModuleProvider';
 
 export { IApp } from './app/App';
