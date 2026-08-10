@@ -137,15 +137,20 @@ export class BookmarkMockConfigurator extends BookmarkModuleConfigurator {
       this.setParent(parent as IBookmarkProvider);
     }
 
-    // no app module means the real default resolver would resolve to `undefined`,
-    // which fails the required `resolve.application` schema field
-    if (!this._has('resolve.application') && !init.hasModule('app')) {
+    // no app module means the real default resolver would resolve to `undefined`, which fails
+    // the required `resolve.application` schema field — but `initial.resolve.application` may
+    // already carry a resolver inherited from a parent config, which must not be overwritten
+    if (
+      !this._has('resolve.application') &&
+      !initial?.resolve?.application &&
+      !init.hasModule('app')
+    ) {
       this.setApplicationResolver(async () => mockApplicationResolver);
     }
 
-    // no context module means the real default resolver would resolve to `undefined`,
-    // which fails the required `resolve.context` schema field
-    if (!this._has('resolve.context') && !init.hasModule('context')) {
+    // no context module means the real default resolver would resolve to `undefined`, which
+    // fails the required `resolve.context` schema field — same inherited-config caveat as above
+    if (!this._has('resolve.context') && !initial?.resolve?.context && !init.hasModule('context')) {
       this.setContextResolver(async () => mockContextResolver);
     }
 
