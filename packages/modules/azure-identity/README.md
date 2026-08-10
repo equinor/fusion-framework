@@ -123,11 +123,8 @@ that need to exercise sign-in, sign-out, or token-refresh/expiry logic, use
 ```typescript
 import { enableAuthMock } from '@equinor/fusion-framework-module-azure-identity/mock';
 
-// default identity, already signed in
-const auth = enableAuthMock(configurator);
-
-// or seed the identity/state up front
-enableAuthMock(configurator, (auth) => {
+// seed the identity/state up front; omit the callback for a default, already-signed-in identity
+const auth = enableAuthMock(configurator, (auth) => {
   auth.setAccount({ username: 'ada@equinor.com', signedOut: true });
 });
 
