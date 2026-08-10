@@ -1,12 +1,9 @@
 import type { Fusion } from '@equinor/fusion-framework';
 import type { AnyModule } from '@equinor/fusion-framework-module';
-import {
-  enableTelemetry,
-  type MetadataExtractor,
-} from '@equinor/fusion-framework-module-telemetry';
 
 import { AppConfigurator } from './AppConfigurator';
 import type { AppModulesInstance, AppModuleInitiator, AppEnv } from './types';
+import { initializeAppModules } from './initialize-app-modules';
 
 /**
  * Create an application module initializer for a Fusion application.
@@ -58,56 +55,9 @@ export const configureModules =
    * @returns The fully initialized application module instance.
    */
   async (args: { fusion: TRef; env: TEnv }): Promise<AppModulesInstance<TModules>> => {
-    const { fusion } = args;
-
     // Create app configurator
     const configurator = new AppConfigurator<TModules, TRef['modules'], TEnv>(args.env);
-
-    // Extract telemetry metadata from app manifest for tracking and debugging
-    const metadataExtractor: MetadataExtractor = () => {
-      return {
-        fusion: {
-          type: 'app-telemetry',
-          app: {
-            key: args.env.manifest?.appKey || 'unknown-app',
-            version: args.env.manifest?.build?.version || 'unknown-version',
-          },
-        },
-      };
-    };
-
-    // Enable telemetry collection for module configuration events
-    // attachConfiguratorEvents automatically prefixes events with configurator class name
-    enableTelemetry(configurator, {
-      attachConfiguratorEvents: true,
-      configure: (builder) => {
-        builder.setMetadata(metadataExtractor);
-        builder.setParent(fusion.modules.telemetry);
-        // Scope telemetry to 'app' level for app-specific event filtering
-        builder.setDefaultScope(['app']);
-      },
-    });
-
-    // Allow user configuration callback to run before module initialization
-    if (cb) {
-      await Promise.resolve(cb(configurator, args));
-    }
-    // Type cast is safe because AppConfigurator.initialize() returns the exact module
-    // instance that was registered and configured above. The intermediate 'unknown'
-    // cast is necessary due to TypeScript's generic inference limitations with the
-    // configurator's initialization chain, but the runtime value is guaranteed to match.
-    const modules: AppModulesInstance<TModules> = (await configurator.initialize(
-      args.fusion.modules,
-    )) as unknown as AppModulesInstance<TModules>;
-
-    // Dispatch app modules loaded event for app lifecycle tracking
-    // TODO(#5061): remove check after fusion-cli is updated (app module is not enabled in fusion-cli)
-    if (args.env.manifest?.appKey) {
-      modules.event.dispatchEvent('onAppModulesLoaded', {
-        detail: { appKey: args.env.manifest.appKey, manifest: args.env.manifest, modules },
-      });
-    }
-    return modules;
+    return initializeAppModules(configurator, cb, args);
   };
 
 export default configureModules;

@@ -9,6 +9,14 @@ single `configureModules` call.
 > **Most Fusion apps should use `@equinor/fusion-framework-react-app` instead.**
 > This lower-level package is for framework-agnostic or advanced scenarios.
 
+## Documentation
+
+| Topic | Description |
+|---|---|
+| [Configure HTTP Clients](docs/http-clients.md) | Named clients from app config, service discovery, and explicit registration, plus resolution priority |
+| [Enable Bookmarks](docs/bookmarks.md) | Registering the bookmark module via `enableBookmark` |
+| [Testing](docs/testing.md) | The `/mock` entry point: `mockAppModules`, `AppMockConfigurator`, and `enableAppManifestMock` |
+
 ## Installation
 
 ```sh
@@ -43,6 +51,7 @@ const modules = await initialize({ fusion, env });
 | `AppModuleInitiator` | Callback signature accepted by `configureModules` for user-supplied setup. |
 | `AppEnv` | Environment descriptor containing the app manifest, config, and optional basename. |
 | `enableBookmark` | Helper to enable the bookmark module (import from `@equinor/fusion-framework-app/enable-bookmark`). |
+| `mockAppModules` | Runs the real module pipeline against deterministic fakes for tests (import from `@equinor/fusion-framework-app/mock`). |
 
 ## API Surface
 
@@ -63,40 +72,13 @@ giving you access to:
 |---|---|
 | `@equinor/fusion-framework-app` | `configureModules`, `AppConfigurator`, `IAppConfigurator`, all type aliases |
 | `@equinor/fusion-framework-app/enable-bookmark` | `enableBookmark` function |
+| `@equinor/fusion-framework-app/mock` | `mockAppModules`, `AppMockConfigurator`, `enableAppManifestMock` |
 
 ## Configure HTTP Clients
 
-The `AppConfigurator` can register named HTTP clients from several sources.
-You retrieve a client at runtime with `framework.modules.http.createClient(name)`.
-
-### From Application Config (auto-registration)
-
-Endpoints defined in `app.config.<env>.ts` are **automatically registered as
-named HTTP clients** when the `AppConfigurator` is created — no extra code
-needed in `config.ts`.
-
-```ts
-// app.config.ts
-import { defineAppConfig } from '@equinor/fusion-framework-cli/app';
-
-export default defineAppConfig(() => ({
-  endpoints: {
-    schedule: {
-      url: 'https://schedule-api.example.com',
-      scopes: ['api://schedule-id/.default'],
-    },
-  },
-}));
-```
-
-After initialization, use the client directly:
-
-```ts
-const client = framework.modules.http.createClient('schedule');
-const data = await client.json('/items');
-```
-
-### Via Service Discovery
+The `AppConfigurator` can register named HTTP clients from several sources —
+application config endpoints, service discovery, or explicit registration —
+and you retrieve one at runtime with `framework.modules.http.createClient(name)`.
 
 ```ts
 const initialize = configureModules((configurator) => {
@@ -104,37 +86,9 @@ const initialize = configureModules((configurator) => {
 });
 ```
 
-### Explicit Registration
-
-Use `configureHttpClient` in `config.ts` when the endpoint is **not** in
-`app.config.ts`, or when you need custom transport behavior such as headers,
-response guards, or a custom client class.
-
-```ts
-configurator.configureHttpClient('custom-api', {
-  baseUri: 'https://custom.api.example.com',
-  defaultScopes: ['api://custom-id/.default'],
-  onCreate: (client) => {
-    client.requestHandler.setHeader('X-Source', 'portal');
-  },
-});
-```
-
-### Resolution Priority
-
-When the same client name is configured in more than one place, the
-highest-priority source wins:
-
-| Priority | Source | Example |
-|----------|--------|---------|
-| 1 (highest) | **Session overrides** | User-specific URL / scopes set at runtime via `sessionStorage` |
-| 2 | **Application config endpoints** | `endpoints` in `app.config.ts` |
-| 3 | **Service-discovery registry** | Resolved via `useFrameworkServiceClient` |
-| 4 (lowest) | **Explicit registration** | `configureHttpClient(name, options)` in `config.ts` |
-
-This means an endpoint defined in `app.config.ts` will override a
-`configureHttpClient` call for the same name, and a session override will
-override both.
+See [Configure HTTP Clients](docs/http-clients.md) for auto-registration from
+`app.config.ts`, explicit registration, and resolution priority when a client
+is configured in more than one place.
 
 ## Enable Bookmarks
 
@@ -144,7 +98,6 @@ The bookmark module allows applications to save and restore application state.
 > `@equinor/fusion-framework-module-bookmark` directly.
 
 ```ts
-import { configureModules } from '@equinor/fusion-framework-app';
 import { enableBookmark } from '@equinor/fusion-framework-app/enable-bookmark';
 
 const initialize = configureModules((configurator) => {
@@ -152,8 +105,25 @@ const initialize = configureModules((configurator) => {
 });
 ```
 
-Payload generators registered through the bookmark module are automatically
-cleaned up when the module is disposed.
+See [Enable Bookmarks](docs/bookmarks.md) for payload generator cleanup behavior.
+
+## Testing
+
+Import from `@equinor/fusion-framework-app/mock` to run an application's real
+module pipeline in tests — the real `event`/`http`/`msal` modules, the real
+`AppConfigurator` configuration pipeline, and real lifecycle — while only the
+boundaries that reach outside the process are substituted with deterministic
+fakes. This entry point has no dependency on Vitest or any other test runner.
+
+```ts
+import { mockAppModules } from '@equinor/fusion-framework-app/mock';
+
+const manifest = { appKey: 'my-app', displayName: 'My App', description: 'My app', type: 'standalone' } as const;
+const modules = await mockAppModules(undefined, { manifest });
+```
+
+See [Testing](docs/testing.md) for `AppMockConfigurator`, `enableAppManifestMock`,
+and customizing the mocked parent's service discovery.
 
 ## Types
 
