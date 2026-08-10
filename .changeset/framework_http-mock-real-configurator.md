@@ -1,5 +1,5 @@
 ---
-"@equinor/fusion-framework": minor
+"@equinor/fusion-framework": major
 ---
 
 `FrameworkMockConfigurator.http` now returns the real `IHttpClientConfigurator` instead of a mock-specific one — fake a response by registering a short-circuiting middleware through `.http.addMiddleware(...)` instead of swapping the module out:
