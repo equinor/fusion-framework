@@ -23,7 +23,8 @@ instance) around a `ModuleProvider` (the app's own modules).
 `renderAppHook` and `renderAppComponent` build that nesting for you, using
 `mockFramework` (`@equinor/fusion-framework/mock`) and `mockAppModules`
 (`@equinor/fusion-framework-app/mock`) — the **real** `event`/`http`/`msal` module
-pipeline, with only the network boundary faked. This means:
+pipeline. Only requests a seeded middleware answers are faked; a request with no
+matching middleware still reaches the real network. This means:
 
 - MSAL signs in a default "Test User" with zero configuration — `useAccessToken`/`useToken`
   resolve a real, structurally-valid (unsigned) JWT out of the box.
@@ -167,6 +168,23 @@ test('mounts the child app once its script loads', async () => {
   // the loading state renders synchronously, before the script's dynamic import resolves
   expect(container.textContent).toContain('Loading child-app');
   await waitFor(() => expect(container.textContent).toContain('mounted: child-app'));
+});
+
+test('surfaces the load error instead of throwing when the script fails to import', async () => {
+  const manifest: AppManifest = {
+    appKey: 'broken-app',
+    displayName: 'Broken App',
+    description: 'An application whose build entry point does not exist',
+    type: 'standalone',
+    build: { version: '1.0.0', entryPoint: 'does-not-exist.ts', assetPath: '' },
+  };
+  const fusion = await mockFramework<[AppModule]>((configurator) =>
+    enableAppManifestMock(configurator, { manifest }, someFixturesUri),
+  );
+
+  const { container } = await renderAppComponent(<Apploader appKey="broken-app" />, { fusion });
+
+  await waitFor(() => expect(container.textContent).toContain('Error loading broken-app'));
 });
 ```
 
