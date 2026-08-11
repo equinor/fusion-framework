@@ -20,8 +20,18 @@ const env = {
   },
 };
 
-const project: ContextItem = { id: 'ctx-1', title: 'My project', type: { id: 'ProjectMaster' }, value: {} };
-const facility: ContextItem = { id: 'ctx-2', title: 'My facility', type: { id: 'Facility' }, value: {} };
+const project: ContextItem = {
+  id: 'ctx-1',
+  title: 'My project',
+  type: { id: 'ProjectMaster' },
+  value: {},
+};
+const facility: ContextItem = {
+  id: 'ctx-2',
+  title: 'My facility',
+  type: { id: 'Facility' },
+  value: {},
+};
 
 describe('useCurrentContext', () => {
   it('resolves the context item selected on startup from the app-scoped context module', async () => {
