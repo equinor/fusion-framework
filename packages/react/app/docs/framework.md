@@ -31,11 +31,11 @@ Use this when your app hasn't configured its own context module but still needs 
 ```ts
 function useFrameworkCurrentContext(): {
   currentContext: ContextItem | undefined;
-  setCurrentContext: (entry?: ContextItem | string | null) => void;
+  setCurrentContext: (entry?: ContextItem | string | null) => void | Promise<ContextItem | null>;
 };
 ```
 
-**Returns:** An object with `currentContext` (the portal's active context, or `undefined` if none is selected) and `setCurrentContext` to change it.
+**Returns:** An object with `currentContext` (the portal's active context, or `undefined` if none is selected) and `setCurrentContext` to change it. Clearing (no argument or `null`) returns `void`; setting by `id` or by item returns a `Promise` that resolves once the switch completes.
 
 **Example:**
 
