@@ -116,7 +116,7 @@ const TokenInfo = () => {
   return (
     <div>
       <p>Access Token: {token.accessToken.substring(0, 20)}...</p>
-      <p>Expires: {new Date(token.expiresOn).toLocaleString()}</p>
+      <p>Expires: {token.expiresOn?.toLocaleString() ?? 'unknown'}</p>
       <p>Token Type: {token.tokenType}</p>
       <p>Scope: {token.scopes.join(', ')}</p>
     </div>
@@ -134,8 +134,8 @@ const TokenInfo = () => {
 
 **Note:** The `AuthenticationResult` type includes:
 - `accessToken: string`
-- `account: AccountInfo`
-- `expiresOn: Date`
+- `account: AccountInfo | null`
+- `expiresOn: Date | null`
 - `tokenType: string`
 - `scopes: string[]`
 - And more...

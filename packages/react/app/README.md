@@ -25,7 +25,7 @@ pnpm add @equinor/fusion-framework-react-app
 import type { AppModuleInitiator } from '@equinor/fusion-framework-react-app';
 
 export const configure: AppModuleInitiator = (configurator) => {
-  configurator.http.configureClient('my-api', {
+  configurator.configureHttpClient('my-api', {
     baseUri: 'https://api.example.com',
     defaultScopes: ['api://my-api/.default'],
   });
@@ -433,7 +433,7 @@ Application configuration is done via a callback passed to `renderApp` (or `make
 ```ts
 const configure: AppModuleInitiator = (configurator) => {
   // HTTP clients
-  configurator.http.configureClient('my-api', { baseUri: '...' });
+  configurator.configureHttpClient('my-api', { baseUri: '...' });
 
   // Feature flags
   enableFeatureFlag(configurator, [{ key: 'beta', title: 'Beta' }]);
