@@ -10,6 +10,7 @@ import type { Bookmark, BookmarkModule } from '@equinor/fusion-framework-module-
 
 import { useCurrentBookmark } from '../bookmark/useCurrentBookmark';
 import { renderAppHook } from '../testing/render-app-hook';
+import { useAppModules } from '../useAppModules';
 
 const env = {
   manifest: {
@@ -62,11 +63,20 @@ describe('useCurrentBookmark', () => {
         builder.setCurrentBookmark(bookmark.id);
       });
 
-    const { result } = await renderAppHook(() => useCurrentBookmark(), { env, fusion, configure });
+    const { result } = await renderAppHook(
+      () => ({
+        bookmark: useCurrentBookmark(),
+        // unfiltered provider state, so we can tell the seeded bookmark actually
+        // resolved rather than the filter trivially matching a still-pending value
+        provider: useAppModules<[BookmarkModule]>().bookmark,
+      }),
+      { env, fusion, configure },
+    );
 
-    // give the app-scoped bookmark provider a chance to resolve before asserting it stays hidden
-    await waitFor(() => expect(result.current).toBeDefined());
-    expect(result.current.currentBookmark).toBeNull();
+    await waitFor(() =>
+      expect(result.current.provider.currentBookmark).toMatchObject({ id: bookmark.id }),
+    );
+    expect(result.current.bookmark.currentBookmark).toBeNull();
   });
 
   it('falls back to the framework-scoped bookmark provider, warning about the deprecation', async () => {
