@@ -68,6 +68,10 @@
     "./routing": {
       "types": "./dist/types/routing/index.d.ts",
       "import": "./dist/esm/routing/index.js"
+    },
+    "./testing": {
+      "types": "./dist/types/testing/index.d.ts",
+      "import": "./dist/esm/testing/index.js"
     }
   },
   "typesVersions": {
@@ -116,6 +120,9 @@
       ],
       "routing": [
         "dist/types/routing/index.d.ts"
+      ],
+      "testing": [
+        "dist/types/testing/index.d.ts"
       ]
     }
   },
@@ -136,6 +143,7 @@
     "directory": "packages/react"
   },
   "dependencies": {
+    "@equinor/fusion-framework": "workspace:*",
     "@equinor/fusion-framework-app": "workspace:*",
     "@equinor/fusion-framework-module": "workspace:*",
     "@equinor/fusion-framework-module-app": "workspace:*",
@@ -170,6 +178,7 @@
     "@equinor/fusion-framework-module-msal": "workspace:^",
     "@equinor/fusion-framework-module-state": "workspace:^",
     "@equinor/fusion-framework-react-router": "workspace:^",
+    "@testing-library/react": "^16.0.0",
     "@types/react": "^18.0.0 || ^19.0.0",
     "react": "^18.0.0 || ^19.0.0",
     "react-dom": "^18.0.0 || ^19.0.0",
@@ -207,6 +216,9 @@
       "optional": true
     },
     "@equinor/fusion-framework-react-router": {
+      "optional": true
+    },
+    "@testing-library/react": {
       "optional": true
     }
   }
