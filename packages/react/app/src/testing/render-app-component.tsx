@@ -53,7 +53,6 @@ export interface RenderAppComponentOptions<
  * from `mockAppModules`, `@equinor/fusion-framework-app/mock`). See {@link renderAppHook}
  * for the equivalent helper when testing a hook in isolation, rather than a component.
  *
- * @template Result - Unused; retained for parity with `RenderResult`'s generic shape.
  * @template TModules - Module descriptors beyond the default set.
  * @template TEnv - The application environment descriptor.
  * @param ui - The component to render.
@@ -73,10 +72,7 @@ export interface RenderAppComponentOptions<
 export async function renderAppComponent<
   TModules extends Array<AnyModule> | unknown = unknown,
   TEnv extends AppEnv = AppEnv,
->(
-  ui: ReactElement,
-  options?: RenderAppComponentOptions<TModules, TEnv>,
-): Promise<RenderResult> {
+>(ui: ReactElement, options?: RenderAppComponentOptions<TModules, TEnv>): Promise<RenderResult> {
   const { configure, env, fusion: providedFusion, ...renderOptions } = options ?? {};
   const resolvedEnv = env ?? ({ manifest: defaultManifest } as TEnv);
   // Built explicitly (rather than left to `mockAppModules`'s own default) so the same
