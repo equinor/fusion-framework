@@ -39,8 +39,9 @@ export function enableAppManifestMock<TEnv extends AppEnv>(
   assetUri?: string,
 ): void {
   enableAppModule(configurator, (builder) => {
-    // only override the default asset base when the caller supplies one
-    if (assetUri) {
+    // only override the default asset base when the caller supplies one; an
+    // explicit empty string is meaningful (selects a root-relative script path)
+    if (assetUri !== undefined) {
       builder.setAssetUri(assetUri);
     }
     builder.setClient(async ({ requireInstance }) => {
@@ -49,7 +50,11 @@ export function enableAppManifestMock<TEnv extends AppEnv>(
         ? http.createClient('apps')
         : await (await requireInstance('serviceDiscovery')).createClient('apps');
       // fall back to a trivial config so `App.initialize()` can resolve without a caller-supplied one
-      return new MockAppClient(client, env.manifest, env.config ?? new AppConfig<ConfigEnvironment>({ environment: {} }));
+      return new MockAppClient(
+        client,
+        env.manifest,
+        env.config ?? new AppConfig<ConfigEnvironment>({ environment: {} }),
+      );
     });
   });
 }
