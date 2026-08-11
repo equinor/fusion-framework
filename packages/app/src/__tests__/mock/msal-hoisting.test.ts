@@ -31,13 +31,15 @@ describe('msal hoisting', () => {
 
   it('surfaces the parent’s acquisition failures instead of falling back to its own client', async () => {
     const fusion = await mockFramework();
-    vi.spyOn(fusion.modules.auth, 'acquireToken').mockRejectedValue(new Error('acquisition failed'));
+    vi.spyOn(fusion.modules.auth, 'acquireToken').mockRejectedValue(
+      new Error('acquisition failed'),
+    );
 
     const modules = await mockAppModules(undefined, env, fusion);
 
-    await expect(
-      modules.auth.acquireToken({ request: { scopes: ['User.Read'] } }),
-    ).rejects.toThrow('acquisition failed');
+    await expect(modules.auth.acquireToken({ request: { scopes: ['User.Read'] } })).rejects.toThrow(
+      'acquisition failed',
+    );
   });
 
   it('reflects the parent’s signed-in account rather than signing in its own', async () => {
