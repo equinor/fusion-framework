@@ -1,6 +1,7 @@
 import type { FrameworkMockConfigurator } from '@equinor/fusion-framework/mock';
-import { enableAppModule, type AppModule } from '@equinor/fusion-framework-module-app';
+import { AppConfig, enableAppModule, type AppModule } from '@equinor/fusion-framework-module-app';
 import { MockAppClient } from '@equinor/fusion-framework-module-app/mock';
+import type { ConfigEnvironment } from '@equinor/fusion-framework-module-app';
 
 import type { AppEnv } from '../types.js';
 
@@ -20,6 +21,7 @@ import type { AppEnv } from '../types.js';
  *
  * @param configurator - The parent framework's mock configurator, with `app` in its module set.
  * @param env - The application environment whose manifest (and optional config) should be served.
+ * @param assetUri - Overrides the base URI a loaded app's script is imported from.
  * @template TEnv - The application environment descriptor.
  *
  * @example Custom service discovery, same manifest resolution
@@ -34,14 +36,20 @@ import type { AppEnv } from '../types.js';
 export function enableAppManifestMock<TEnv extends AppEnv>(
   configurator: FrameworkMockConfigurator<[AppModule]>,
   env: TEnv,
+  assetUri?: string,
 ): void {
   enableAppModule(configurator, (builder) => {
+    // only override the default asset base when the caller supplies one
+    if (assetUri) {
+      builder.setAssetUri(assetUri);
+    }
     builder.setClient(async ({ requireInstance }) => {
       const http = await requireInstance('http');
       const client = http.hasClient('apps')
         ? http.createClient('apps')
         : await (await requireInstance('serviceDiscovery')).createClient('apps');
-      return new MockAppClient(client, env.manifest, env.config);
+      // fall back to a trivial config so `App.initialize()` can resolve without a caller-supplied one
+      return new MockAppClient(client, env.manifest, env.config ?? new AppConfig<ConfigEnvironment>({ environment: {} }));
     });
   });
 }
