@@ -164,6 +164,26 @@ const EnvInfo = () => {
 };
 ```
 
+### Testing a hook
+
+> **Note:** Requires `@testing-library/react` (optional peer dependency).
+
+`renderAppHook` renders a hook inside a real, mock-backed application module scope — a
+`FrameworkProvider` and `ModuleProvider` wired the same way `renderApp` wires them in
+production, just with the network boundary faked (via `@equinor/fusion-framework-app/mock`).
+
+```tsx
+import { renderAppHook } from '@equinor/fusion-framework-react-app/testing';
+import { waitFor } from '@testing-library/react';
+import { useAccessToken } from '@equinor/fusion-framework-react-app/msal';
+
+test('resolves an access token', async () => {
+  const { result } = await renderAppHook(() => useAccessToken({ scopes: ['User.Read'] }));
+  await waitFor(() => expect(result.current.pending).toBe(false));
+  expect(result.current.token).toBeDefined();
+});
+```
+
 ## API Reference
 
 ### Core exports (main entry-point)
@@ -196,6 +216,7 @@ const EnvInfo = () => {
 | `/apploader` | `Apploader`, `useApploader` |
 | `/framework` | `useFramework`, `useCurrentUser`, `useFrameworkHttpClient` |
 | `/widget` | Widget entry-point |
+| `/testing` | `renderAppHook` — pre-wrapped `renderHook` for testing app-scoped hooks |
 
 ## Configuration
 
