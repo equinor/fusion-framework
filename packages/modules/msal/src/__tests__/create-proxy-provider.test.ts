@@ -14,7 +14,9 @@ type MockMsalClient = {
 
 const createClient = (): MockMsalClient => {
   const acquireToken = vi.fn(async () => ({ accessToken: 'v4-token' }) as AuthenticationResult);
-  const handleRedirectPromise = vi.fn(async () => ({ accessToken: 'redirect-token' }) as AuthenticationResult);
+  const handleRedirectPromise = vi.fn(
+    async () => ({ accessToken: 'redirect-token' }) as AuthenticationResult,
+  );
 
   return {
     client: {

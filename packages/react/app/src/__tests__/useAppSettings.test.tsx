@@ -73,9 +73,7 @@ describe('useAppSettings', () => {
     );
 
     expect(result.current[0]).toMatchObject({ theme: 'light', layout: 'list' });
-    await waitFor(() =>
-      expect(result.current[0]).toMatchObject({ theme: 'dark', layout: 'grid' }),
-    );
+    await waitFor(() => expect(result.current[0]).toMatchObject({ theme: 'dark', layout: 'grid' }));
   });
 
   it('persists an updated settings object and notifies onUpdated', async () => {
@@ -111,9 +109,7 @@ describe('useAppSettings', () => {
       result.current[1]((current) => ({ theme: current?.theme ?? 'dark', layout: 'list' }));
     });
 
-    await waitFor(() =>
-      expect(result.current[0]).toMatchObject({ theme: 'dark', layout: 'list' }),
-    );
+    await waitFor(() => expect(result.current[0]).toMatchObject({ theme: 'dark', layout: 'list' }));
   });
 
   it('surfaces a persistence failure through onError instead of throwing', async () => {
