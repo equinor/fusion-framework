@@ -8,7 +8,7 @@ import { renderAppHook } from '../testing/render-app-hook';
 
 describe('useToken', () => {
   it('resolves a full AuthenticationResult from the app scope’s real, mock-backed auth module', async () => {
-    const { result } = await renderAppHook(() => useToken({ scopes: ['User.Read'] }));
+    const { result, unmount } = await renderAppHook(() => useToken({ scopes: ['User.Read'] }));
 
     expect(result.current.pending).toBe(true);
     expect(result.current.token).toBeUndefined();
@@ -20,6 +20,10 @@ describe('useToken', () => {
     // a structurally valid JWT has three dot-separated segments
     expect(result.current.token?.accessToken.split('.')).toHaveLength(3);
     expect(result.current.token?.account).toMatchObject({ username: 'test.user@equinor.com' });
+
+    // unmount before the next test's environment tears down, so no acquisition
+    // effect can flush a state update against an already-destroyed `window`
+    unmount();
   });
 
   it('surfaces an acquisition error instead of throwing', async () => {
@@ -30,11 +34,15 @@ describe('useToken', () => {
       new Error('acquisition failed'),
     );
 
-    const { result } = await renderAppHook(() => useToken({ scopes: ['User.Read'] }), { fusion });
+    const { result, unmount } = await renderAppHook(() => useToken({ scopes: ['User.Read'] }), {
+      fusion,
+    });
 
     await waitFor(() => expect(result.current.pending).toBe(false));
 
     expect(result.current.token).toBeUndefined();
     expect(result.current.error).toBeInstanceOf(Error);
+
+    unmount();
   });
 });
