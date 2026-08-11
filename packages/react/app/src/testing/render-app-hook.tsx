@@ -52,7 +52,8 @@ export interface RenderAppHookOptions<
  * `createComponent` uses in production — a `FrameworkProvider` (the parent Fusion
  * instance, from `mockFramework`) around a `ModuleProvider` (this app's own modules,
  * from `mockAppModules`, `@equinor/fusion-framework-app/mock`) — the real
- * `event`/`http`/`msal` module pipeline, with only the network boundary faked. Use this
+ * `event`/`http`/`msal` module pipeline. Only requests a seeded middleware answers are
+ * faked; a request with no matching middleware still reaches the real network. Use this
  * for any hook that reads from the application module scope or the parent framework
  * (e.g. `useAppModule`, `useAccessToken`, `useFramework`), instead of hand-wiring
  * `mockFramework`, `mockAppModules`, `FrameworkProvider` and `ModuleProvider` in every test.

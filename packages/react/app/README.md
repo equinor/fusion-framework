@@ -170,7 +170,9 @@ const EnvInfo = () => {
 
 `renderAppHook` renders a hook inside a real, mock-backed application module scope — a
 `FrameworkProvider` and `ModuleProvider` wired the same way `renderApp` wires them in
-production, just with the network boundary faked (via `@equinor/fusion-framework-app/mock`).
+production, just with the network boundary faked for requests a seeded middleware answers
+(via `@equinor/fusion-framework-app/mock`) — an unmatched request still reaches the real
+network.
 
 ```tsx
 import { renderAppHook } from '@equinor/fusion-framework-react-app/testing';
@@ -216,7 +218,7 @@ test('resolves an access token', async () => {
 | `/apploader` | `Apploader`, `useApploader` |
 | `/framework` | `useFramework`, `useCurrentUser`, `useFrameworkHttpClient` |
 | `/widget` | Widget entry-point |
-| `/testing` | `renderAppHook` — pre-wrapped `renderHook` for testing app-scoped hooks |
+| `/testing` | `renderAppHook`, `renderAppComponent` — pre-wrapped `renderHook`/`render` for testing app-scoped hooks and components |
 
 ## Configuration
 
