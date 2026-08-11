@@ -2251,6 +2251,9 @@ importers:
       '@equinor/fusion-framework-module-bookmark':
         specifier: workspace:*
         version: link:../../modules/bookmark
+      '@equinor/fusion-framework-module-context':
+        specifier: workspace:*
+        version: link:../../modules/context
       '@equinor/fusion-framework-module-event':
         specifier: workspace:*
         version: link:../../modules/event
