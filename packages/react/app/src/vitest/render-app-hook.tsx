@@ -1,23 +1,12 @@
-import { renderHook } from '@testing-library/react';
-import type { RenderHookOptions, RenderHookResult } from '@testing-library/react';
+import { renderHook } from 'vitest-browser-react';
+import type { RenderHookOptions, RenderHookResult } from 'vitest-browser-react';
 
-import { mockAppModules, enableAppManifestMock } from '@equinor/fusion-framework-app/mock';
 import type { AppMockConfigureFn } from '@equinor/fusion-framework-app/mock';
-import type { AppEnv } from '@equinor/fusion-framework-app';
+import type { AppEnv, AppModulesInstance } from '@equinor/fusion-framework-app';
 import type { Fusion } from '@equinor/fusion-framework';
-import { mockFramework } from '@equinor/fusion-framework/mock';
 import type { AnyModule } from '@equinor/fusion-framework-module';
-import type { AppModule } from '@equinor/fusion-framework-module-app';
-import { FrameworkProvider } from '@equinor/fusion-framework-react';
-import { ModuleProvider } from '@equinor/fusion-framework-react-module';
 
-/** Manifest used when a test does not care about its own app identity. */
-const defaultManifest: AppEnv['manifest'] = {
-  appKey: 'test-app',
-  displayName: 'Test App',
-  description: 'A test application',
-  type: 'standalone',
-};
+import { resolveAppScope, createAppScopeWrapper } from './scope';
 
 /**
  * Options for {@link renderAppHook}.
@@ -45,10 +34,41 @@ export interface RenderAppHookOptions<
 }
 
 /**
+ * The result of {@link renderAppHook}: the `vitest-browser-react` `renderHook` result,
+ * plus the resolved application module scope and its parent Fusion instance.
+ *
+ * @template Result - The value returned by the rendered hook.
+ * @template Props - The props accepted by the rendered hook.
+ * @template TModules - Module descriptors beyond the default set.
+ */
+export interface RenderAppHookResult<
+  Result,
+  Props,
+  TModules extends Array<AnyModule> | unknown = unknown,
+> extends RenderHookResult<Result, Props> {
+  /**
+   * The Fusion instances backing the rendered hook, nested under this single key so
+   * `vitest-browser-react`'s own `RenderHookResult` fields stay free to evolve without
+   * ever colliding with it.
+   */
+  fusion: {
+    /** The parent Fusion instance the hook's `FrameworkProvider` was given. */
+    framework: Fusion;
+    /**
+     * The resolved application module instance backing the rendered hook — the same
+     * instance a real app would read via `useAppModule`/`useAppModules`. Drive a module
+     * not returned by the hook itself (e.g. `fusion.app.context.setCurrentContextByIdAsync(id)`)
+     * to exercise a state change after the initial render.
+     */
+    app: AppModulesInstance<TModules>;
+  };
+}
+
+/**
  * Renders a hook inside a real, mock-backed application module scope.
  *
  * @remarks
- * Wraps `@testing-library/react`'s `renderHook` with the same provider nesting
+ * Wraps `vitest-browser-react`'s `renderHook` with the same provider nesting
  * `createComponent` uses in production — a `FrameworkProvider` (the parent Fusion
  * instance, from `mockFramework`) around a `ModuleProvider` (this app's own modules,
  * from `mockAppModules`, `@equinor/fusion-framework-app/mock`) — the real
@@ -65,12 +85,12 @@ export interface RenderAppHookOptions<
  * @param render - The hook to render, receiving `initialProps`.
  * @param options - A `configure` callback and `env` for `mockAppModules`, plus any other
  *   `renderHook` option.
- * @returns The `renderHook` result, once the mocked application module scope resolves.
+ * @returns The `renderHook` result plus `fusion.framework` and `fusion.app`, once the mocked application module scope resolves.
  *
  * @example
  * ```tsx
  * const { result } = await renderAppHook(() => useAccessToken({ scopes: ['User.Read'] }));
- * await waitFor(() => expect(result.current.pending).toBe(false));
+ * await vi.waitFor(() => expect(result.current.pending).toBe(false));
  * ```
  *
  * @example Sign in a named user
@@ -96,28 +116,20 @@ export async function renderAppHook<
   TModules extends Array<AnyModule> | unknown = unknown,
   TEnv extends AppEnv = AppEnv,
 >(
-  render: (initialProps: Props) => Result,
+  render: (initialProps?: Props) => Result,
   options?: RenderAppHookOptions<TModules, TEnv, Props>,
-): Promise<RenderHookResult<Result, Props>> {
+): Promise<RenderAppHookResult<Result, Props, TModules>> {
   const { configure, env, fusion: providedFusion, ...renderHookOptions } = options ?? {};
-  const resolvedEnv = env ?? ({ manifest: defaultManifest } as TEnv);
-  // Built explicitly (rather than left to `mockAppModules`'s own default) so the same
-  // instance can also be handed to `FrameworkProvider` below — mirroring `createComponent`'s
-  // `enableAppManifestMock` + `mockAppModules(cb, env, fusion)` composition.
-  const fusion =
-    providedFusion ??
-    (await mockFramework<[AppModule]>((configurator) =>
-      enableAppManifestMock(configurator, resolvedEnv),
-    ));
-  const modules = await mockAppModules(configure, resolvedEnv, fusion);
-  return renderHook(render, {
-    ...renderHookOptions,
-    wrapper: ({ children }) => (
-      <FrameworkProvider value={fusion}>
-        <ModuleProvider value={modules}>{children}</ModuleProvider>
-      </FrameworkProvider>
-    ),
+  const { framework, app } = await resolveAppScope<TModules, TEnv>({
+    configure,
+    env,
+    fusion: providedFusion,
   });
+  const result = await renderHook(render, {
+    ...renderHookOptions,
+    wrapper: createAppScopeWrapper<TModules>({ framework, app }),
+  });
+  return { ...result, fusion: { framework, app } };
 }
 
 export default renderAppHook;

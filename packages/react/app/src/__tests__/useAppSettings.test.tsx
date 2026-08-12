@@ -1,4 +1,4 @@
-import { act, waitFor } from '@testing-library/react';
+import { act } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 
 import { mockFramework } from '@equinor/fusion-framework/mock';
@@ -7,7 +7,7 @@ import type { AppModule } from '@equinor/fusion-framework-module-app';
 import { createRouterMiddleware } from '@equinor/fusion-framework-module-http/mock';
 
 import { useAppSettings } from '../settings/useAppSettings';
-import { renderAppHook } from '../testing/render-app-hook';
+import { renderAppHook } from '../vitest/render-app-hook';
 
 const env = {
   manifest: {
@@ -61,7 +61,9 @@ describe('useAppSettings', () => {
 
     const { result } = await renderAppHook(() => useAppSettings<TestSettings>(), { env, fusion });
 
-    await waitFor(() => expect(result.current[0]).toMatchObject({ theme: 'dark', layout: 'grid' }));
+    await vi.waitFor(() =>
+      expect(result.current[0]).toMatchObject({ theme: 'dark', layout: 'grid' }),
+    );
   });
 
   it('falls back to the default value until the persisted settings resolve', async () => {
@@ -73,7 +75,9 @@ describe('useAppSettings', () => {
     );
 
     expect(result.current[0]).toMatchObject({ theme: 'light', layout: 'list' });
-    await waitFor(() => expect(result.current[0]).toMatchObject({ theme: 'dark', layout: 'grid' }));
+    await vi.waitFor(() =>
+      expect(result.current[0]).toMatchObject({ theme: 'dark', layout: 'grid' }),
+    );
   });
 
   it('persists an updated settings object and notifies onUpdated', async () => {
@@ -85,16 +89,18 @@ describe('useAppSettings', () => {
       { env, fusion },
     );
 
-    await waitFor(() => expect(result.current[0]).toMatchObject({ theme: 'dark', layout: 'grid' }));
+    await vi.waitFor(() =>
+      expect(result.current[0]).toMatchObject({ theme: 'dark', layout: 'grid' }),
+    );
 
     act(() => {
       result.current[1]({ theme: 'light', layout: 'grid' });
     });
 
-    await waitFor(() =>
+    await vi.waitFor(() =>
       expect(result.current[0]).toMatchObject({ theme: 'light', layout: 'grid' }),
     );
-    await waitFor(() => expect(onUpdated).toHaveBeenCalled());
+    await vi.waitFor(() => expect(onUpdated).toHaveBeenCalled());
   });
 
   it('resolves the next settings object from the previous one when given an updater function', async () => {
@@ -102,14 +108,18 @@ describe('useAppSettings', () => {
 
     const { result } = await renderAppHook(() => useAppSettings<TestSettings>(), { env, fusion });
 
-    await waitFor(() => expect(result.current[0]).toMatchObject({ theme: 'dark', layout: 'grid' }));
+    await vi.waitFor(() =>
+      expect(result.current[0]).toMatchObject({ theme: 'dark', layout: 'grid' }),
+    );
 
     act(() => {
       // `current` is typed as possibly undefined even though it's already resolved by this point
       result.current[1]((current) => ({ theme: current?.theme ?? 'dark', layout: 'list' }));
     });
 
-    await waitFor(() => expect(result.current[0]).toMatchObject({ theme: 'dark', layout: 'list' }));
+    await vi.waitFor(() =>
+      expect(result.current[0]).toMatchObject({ theme: 'dark', layout: 'list' }),
+    );
   });
 
   it('surfaces a persistence failure through onError instead of throwing', async () => {
@@ -124,12 +134,14 @@ describe('useAppSettings', () => {
       { env, fusion },
     );
 
-    await waitFor(() => expect(result.current[0]).toMatchObject({ theme: 'dark', layout: 'grid' }));
+    await vi.waitFor(() =>
+      expect(result.current[0]).toMatchObject({ theme: 'dark', layout: 'grid' }),
+    );
 
     act(() => {
       result.current[1]({ theme: 'light', layout: 'grid' });
     });
 
-    await waitFor(() => expect(onError).toHaveBeenCalledWith(expect.any(Error)));
+    await vi.waitFor(() => expect(onError).toHaveBeenCalledWith(expect.any(Error)));
   });
 });

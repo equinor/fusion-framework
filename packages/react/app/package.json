@@ -69,9 +69,9 @@
       "types": "./dist/types/routing/index.d.ts",
       "import": "./dist/esm/routing/index.js"
     },
-    "./testing": {
-      "types": "./dist/types/testing/index.d.ts",
-      "import": "./dist/esm/testing/index.js"
+    "./vitest": {
+      "types": "./dist/types/vitest/index.d.ts",
+      "import": "./dist/esm/vitest/index.js"
     }
   },
   "typesVersions": {
@@ -121,8 +121,8 @@
       "routing": [
         "dist/types/routing/index.d.ts"
       ],
-      "testing": [
-        "dist/types/testing/index.d.ts"
+      "vitest": [
+        "dist/types/vitest/index.d.ts"
       ]
     }
   },
@@ -156,10 +156,10 @@
   "devDependencies": {
     "@equinor/fusion-framework-module-ag-grid": "workspace:*",
     "@equinor/fusion-framework-module-analytics": "workspace:*",
-    "@equinor/fusion-framework-module-event": "workspace:*",
-    "@equinor/fusion-framework-module-feature-flag": "workspace:*",
     "@equinor/fusion-framework-module-bookmark": "workspace:*",
     "@equinor/fusion-framework-module-context": "workspace:*",
+    "@equinor/fusion-framework-module-event": "workspace:*",
+    "@equinor/fusion-framework-module-feature-flag": "workspace:*",
     "@equinor/fusion-framework-module-msal": "workspace:*",
     "@equinor/fusion-framework-module-state": "workspace:^",
     "@equinor/fusion-framework-module-telemetry": "workspace:*",
@@ -167,25 +167,26 @@
     "@equinor/fusion-framework-react-module-context": "workspace:*",
     "@equinor/fusion-framework-react-router": "workspace:*",
     "@equinor/fusion-observable": "workspace:*",
-    "@testing-library/react": "^16.0.0",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
-    "happy-dom": "^20.8.4",
+    "@vitest/browser-playwright": "^4.1.0",
+    "playwright": "^1.62.1",
     "react": "^19.2.1",
     "react-dom": "^19.2.1",
     "rxjs": "^7.8.1",
     "typescript": "^7.0.2",
-    "vitest": "^4.1.0"
+    "vitest": "^4.1.10",
+    "vitest-browser-react": "^2.2.0"
   },
   "peerDependencies": {
     "@equinor/fusion-framework-module-msal": "workspace:^",
     "@equinor/fusion-framework-module-state": "workspace:^",
     "@equinor/fusion-framework-react-router": "workspace:^",
-    "@testing-library/react": "^16.0.0",
     "@types/react": "^18.0.0 || ^19.0.0",
     "react": "^18.0.0 || ^19.0.0",
     "react-dom": "^18.0.0 || ^19.0.0",
-    "rxjs": "^7.0.0"
+    "rxjs": "^7.0.0",
+    "vitest-browser-react": "^2.2.0"
   },
   "peerDependenciesMeta": {
     "@equinor/fusion-framework-react-module-ag-grid": {
@@ -221,7 +222,7 @@
     "@equinor/fusion-framework-react-router": {
       "optional": true
     },
-    "@testing-library/react": {
+    "vitest-browser-react": {
       "optional": true
     }
   }

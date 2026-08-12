@@ -505,7 +505,6 @@ export class ContextProvider
         .pipe(
           // resolve context item from queue
           switchMap((next) => next),
-          tap((x) => console.debug('ContextProvider::#contextQueue', x)),
         )
         .subscribe((context) => {
           // set context from resolved context item from queue

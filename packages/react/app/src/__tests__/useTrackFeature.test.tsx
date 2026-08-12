@@ -8,7 +8,7 @@ import { MockAnalyticsAdapter } from '@equinor/fusion-framework-module-analytics
 import type { MockTelemetryAdapter } from '@equinor/fusion-framework-module-telemetry/mock';
 
 import { useTrackFeature } from '../analytics/useTrackFeature';
-import { renderAppHook } from '../testing/render-app-hook';
+import { renderAppHook } from '../vitest/render-app-hook';
 
 const env = {
   manifest: {
