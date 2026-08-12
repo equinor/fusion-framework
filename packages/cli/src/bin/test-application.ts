@@ -102,6 +102,7 @@ const APP_TEST_CONFIG_FILENAME = '.ffc-app-test.vitest.config.mjs';
  * @returns The absolute path to the config file, or `undefined` if none of the candidates exist.
  */
 const resolveVitestConfigFile = (root: string): string | undefined =>
+  // first candidate that exists on disk wins; callers only need the winner's absolute path
   VITEST_CONFIG_CANDIDATES.map((file) => resolve(root, file)).find((file) => existsSync(file));
 
 /**
