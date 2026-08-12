@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { firstValueFrom, skip } from 'rxjs';
 import { MemoryHistory } from '../lib/MemoryHistory';
+import { Action } from '../lib/types';
 
 describe('MemoryHistory', () => {
   let history: MemoryHistory;
@@ -22,13 +23,15 @@ describe('MemoryHistory', () => {
     it('should initialize with custom initial location', () => {
       const customHistory = new MemoryHistory({
         initialLocation: {
-          action: 'POP',
+          delta: 0,
+          action: Action.Pop,
           location: {
             pathname: '/custom',
             search: '',
             hash: '',
             key: 'custom-key',
             state: { test: 'value' },
+            unstable_mask: undefined,
           },
         },
       });
@@ -46,6 +49,7 @@ describe('MemoryHistory', () => {
       const initialPathname = window.location.pathname;
       const initialHash = window.location.hash;
 
+      // skip the replayed current value; wait for the update from the push below
       const updatePromise = firstValueFrom(history.state$.pipe(skip(1)));
       history.push('/about', { test: 'test' });
       await updatePromise;
@@ -62,6 +66,7 @@ describe('MemoryHistory', () => {
       const initialPathname = window.location.pathname;
       const initialHash = window.location.hash;
 
+      // skip the replayed current value; wait for the update from the replace below
       const updatePromise = firstValueFrom(history.state$.pipe(skip(1)));
       history.replace('/profile', { userId: 123 });
       await updatePromise;
@@ -77,14 +82,17 @@ describe('MemoryHistory', () => {
     it('should maintain in-memory history stack', async () => {
       // Push multiple entries
       history.push('/page1', { page: 1 });
+      // skip the replayed current value; wait for the update from the push above
       await firstValueFrom(history.state$.pipe(skip(1)));
       expect(history.location.pathname).toBe('/page1');
 
       history.push('/page2', { page: 2 });
+      // skip the replayed current value; wait for the update from the push above
       await firstValueFrom(history.state$.pipe(skip(1)));
       expect(history.location.pathname).toBe('/page2');
 
       history.push('/page3', { page: 3 });
+      // skip the replayed current value; wait for the update from the push above
       await firstValueFrom(history.state$.pipe(skip(1)));
       expect(history.location.pathname).toBe('/page3');
 
@@ -115,6 +123,7 @@ describe('MemoryHistory', () => {
 
     it('should clamp go() to history bounds', async () => {
       history.push('/page1');
+      // skip the replayed current value; wait for the update from the push above
       await firstValueFrom(history.state$.pipe(skip(1)));
       expect(history.location.pathname).toBe('/page1');
 
@@ -156,6 +165,7 @@ describe('MemoryHistory', () => {
 
   describe('state$ observable', () => {
     it('should emit state updates on navigation', async () => {
+      // skip the replayed current value; wait for the update from the push below
       const updatePromise = firstValueFrom(history.state$.pipe(skip(1)));
       history.push('/test', { data: 'test' });
       const update = await updatePromise;
@@ -167,13 +177,16 @@ describe('MemoryHistory', () => {
 
     it('should emit state updates on go()', async () => {
       history.push('/page1');
+      // skip the replayed current value; wait for the update from the push above
       await firstValueFrom(history.state$.pipe(skip(1)));
       expect(history.location.pathname).toBe('/page1');
 
       history.push('/page2');
+      // skip the replayed current value; wait for the update from the push above
       await firstValueFrom(history.state$.pipe(skip(1)));
       expect(history.location.pathname).toBe('/page2');
 
+      // skip the replayed current value; wait for the update from the go() below
       const goPromise = firstValueFrom(history.state$.pipe(skip(1)));
       history.go(-1);
       const update = await goPromise;
