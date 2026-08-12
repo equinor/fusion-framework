@@ -1159,7 +1159,7 @@ importers:
         specifier: ^7.7.1
         version: 7.8.0
       '@vitest/coverage-v8':
-        specifier: ^4.0.18
+        specifier: ^4.1.10
         version: 4.1.10(vitest@4.1.10)
       adm-zip:
         specifier: ^0.6.0
@@ -1192,7 +1192,7 @@ importers:
         specifier: ^7.0.2
         version: 7.0.2
       vitest:
-        specifier: ^4.1.0
+        specifier: ^4.1.10
         version: 4.1.10(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(@vitest/coverage-v8@4.1.10)(esbuild@0.28.1)(happy-dom@20.8.9)(jsdom@30.0.1)(msw@2.15.0(@types/node@24.13.3)(typescript@7.0.2))(sass-embedded@1.100.0)(sass@1.100.0)(terser@5.49.1)(tsx@4.23.12)(yaml@2.9.0)
 
   packages/cli-plugins/ai-base:
