@@ -1,10 +1,9 @@
 import { describe, expect, it, vi } from 'vitest';
-import { waitFor } from '@testing-library/react';
 
 import { mockFramework } from '@equinor/fusion-framework/mock';
 
 import { useAccessToken } from '../msal/useAccessToken';
-import { renderAppHook } from '../testing/render-app-hook';
+import { renderAppHook } from '../vitest/render-app-hook';
 
 describe('useAccessToken', () => {
   it('resolves an access token from the app scope’s real, mock-backed auth module', async () => {
@@ -14,10 +13,9 @@ describe('useAccessToken', () => {
       useAccessToken({ scopes: ['User.Read'] }),
     );
 
-    expect(result.current.pending).toBe(true);
-    expect(result.current.token).toBeUndefined();
-
-    await waitFor(() => expect(result.current.pending).toBe(false));
+    // `renderAppHook` awaits the render, and the mock resolves near-instantly,
+    // so the pending state may have already settled by the time we can observe it
+    await vi.waitFor(() => expect(result.current.pending).toBe(false));
 
     expect(result.current.error).toBeNull();
     // a structurally valid JWT has three dot-separated segments
@@ -25,7 +23,7 @@ describe('useAccessToken', () => {
 
     // unmount before the next test's environment tears down, so no acquisition
     // effect can flush a state update against an already-destroyed `window`
-    unmount();
+    await unmount();
   });
 
   it('surfaces an acquisition error instead of throwing', async () => {
@@ -43,11 +41,11 @@ describe('useAccessToken', () => {
       },
     );
 
-    await waitFor(() => expect(result.current.pending).toBe(false));
+    await vi.waitFor(() => expect(result.current.pending).toBe(false));
 
     expect(result.current.token).toBeUndefined();
     expect(result.current.error).toBeInstanceOf(Error);
 
-    unmount();
+    await unmount();
   });
 });
