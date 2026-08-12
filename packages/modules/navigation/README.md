@@ -124,6 +124,39 @@ const unblock = navigation.history.block((transition) => {
 });
 ```
 
+## Testing
+
+Import from `@equinor/fusion-framework-module-navigation/mock` to force in-memory history in a test, regardless of `window`. The real `NavigationConfigurator`, `NavigationProvider`, basename localization, and navigate/push/replace flows still run — only the history's origin (browser vs. memory) is substituted.
+
+```ts
+import { enableNavigationMock } from '@equinor/fusion-framework-module-navigation/mock';
+
+enableNavigationMock(configurator, {
+  configure: (config) => {
+    config.setBasename('/apps/my-app');
+    config.setInitialLocation('/users/42');
+  },
+});
+```
+
+A test environment (jsdom/happy-dom) always defines `window`, which is exactly what makes `NavigationConfigurator`'s default fall back to real browser history. `enableNavigationMock` forces `MemoryHistory` unconditionally, so a test's navigation state never touches — or leaks from — the real document location.
+
+`setInitialLocation` seeds the location the memory history starts at, so a test can assert against a specific route without an initial `navigate()` call:
+
+```ts
+enableNavigationMock(configurator, {
+  configure: (config) => config.setInitialLocation('/users/42?tab=info'),
+});
+```
+
+The string shortcut for a basename-only setup works the same as `enableNavigation`:
+
+```ts
+enableNavigationMock(configurator, '/apps/my-app');
+```
+
+`NavigationMockConfigurator` extends `NavigationConfigurator` directly, so the whole builder API — `setHistory`, telemetry, event provider — stays available; an explicit `setHistory()` call still replaces the mock history outright.
+
 ## API Reference
 
 ### Functions

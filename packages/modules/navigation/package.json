@@ -17,6 +17,10 @@
     "./utils": {
       "import": "./dist/esm/utils/index.js",
       "types": "./dist/types/utils/index.d.ts"
+    },
+    "./mock": {
+      "import": "./dist/esm/mock/index.js",
+      "types": "./dist/types/mock/index.d.ts"
     }
   },
   "scripts": {
