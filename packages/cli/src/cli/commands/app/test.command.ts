@@ -44,7 +44,10 @@ export const command = createCommand('test')
   .option('--debug', 'Enable debug mode', !!process.env.RUNNER_DEBUG)
   .option('--manifest <path>', 'Path to the app manifest file (app.manifest[.env]?.[ts,js,json])')
   .option('--config <path>', 'Path to the app config file (app.config[.env]?.[ts,js,json])')
-  .option('--configure <path>', "Path to the app's module-configurator file (default: src/config.*)")
+  .option(
+    '--configure <path>',
+    "Path to the app's module-configurator file (default: src/config.*)",
+  )
   .option('--watch', 'Re-run tests on file changes instead of exiting after one run', false)
   .action(async (options) => {
     const log = new ConsoleLogger('app:test', { debug: options.debug });
