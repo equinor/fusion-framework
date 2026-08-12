@@ -1,4 +1,5 @@
 import { ModulesConfigurator } from '@equinor/fusion-framework-module';
+import { firstValueFrom, take, toArray } from 'rxjs';
 import { describe, expect, it } from 'vitest';
 
 import { module as realModule } from '../../module';
@@ -68,13 +69,20 @@ describe('enableNavigationMock', () => {
     // A test environment (jsdom/happy-dom) always defines `window`, which is exactly
     // what makes NavigationConfigurator's default fall back to real browser history.
     expect(typeof window).not.toBe('undefined');
-    window.history.pushState({}, '', '/somewhere-else');
 
-    const provider = await initializeMockWith();
+    const originalUrl = window.location.href;
+    // replaceState avoids adding a stack entry; restored in `finally` so this
+    // test doesn't leak document-location state into tests that run after it.
+    window.history.replaceState({}, '', '/somewhere-else');
+    try {
+      const provider = await initializeMockWith();
 
-    // Unaffected by the real document location - proof the history is in-memory.
-    // (NavigationProvider normalizes the root path to '', not '/'.)
-    expect(provider.path.pathname).toBe('');
+      // Unaffected by the real document location - proof the history is in-memory.
+      // (NavigationProvider normalizes the root path to '', not '/'.)
+      expect(provider.path.pathname).toBe('');
+    } finally {
+      window.history.replaceState({}, '', originalUrl);
+    }
   });
 
   it('replaces a navigation module that is already registered', async () => {
@@ -108,5 +116,19 @@ describe('enableNavigationMock', () => {
 
     expect(provider.path.pathname).toBe('/users/42');
     expect(provider.path.search).toBe('?tab=info');
+  });
+
+  it('scopes setInitialLocation() under a basename set beforehand, like navigate()/push()/replace()', async () => {
+    const provider = await initializeMockWith((configurator) => {
+      configurator.setBasename('/apps/my-app');
+      configurator.setInitialLocation('/users/42');
+    });
+
+    expect(provider.basename).toBe('/apps/my-app');
+    // localized path stays basename-relative ...
+    expect(provider.path.pathname).toBe('/users/42');
+    // ... while the seeded route is actually within the basename's scope on state$.
+    const [update] = await firstValueFrom(provider.state$.pipe(take(1), toArray()));
+    expect(update.location.pathname).toBe('/apps/my-app/users/42');
   });
 });
