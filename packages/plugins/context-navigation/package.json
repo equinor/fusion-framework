@@ -25,7 +25,8 @@
   },
   "scripts": {
     "build": "tsc -b",
-    "test": "vitest run"
+    "test": "vitest run",
+    "prepack": "pnpm build"
   },
   "peerDependencies": {
     "@equinor/fusion-framework-module": "workspace:^",
