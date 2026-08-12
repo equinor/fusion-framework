@@ -84,6 +84,6 @@
     "@equinor/fusion-framework-module-msal": "workspace:^",
     "@equinor/fusion-framework-module-service-discovery": "workspace:^",
     "typescript": "^7.0.2",
-    "vitest": "^4.1.0"
+    "vitest": "^4.1.10"
   }
 }

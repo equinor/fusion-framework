@@ -151,7 +151,7 @@
     "@faker-js/faker": "^10.1.0",
     "msw": "^2.7.3",
     "typescript": "^7.0.2",
-    "vitest": "^4.1.0"
+    "vitest": "^4.1.10"
   },
   "peerDependencies": {
     "@equinor/fusion-framework-module": "workspace:^",

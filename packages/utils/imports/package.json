@@ -51,6 +51,6 @@
     "memfs": "^4.17.0",
     "typescript": "^7.0.2",
     "unionfs": "^4.5.4",
-    "vitest": "^4.1.0"
+    "vitest": "^4.1.10"
   }
 }

@@ -62,7 +62,7 @@
   "devDependencies": {
     "@types/semver": "^7.7.1",
     "typescript": "^7.0.2",
-    "vitest": "^4.1.0"
+    "vitest": "^4.1.10"
   },
   "peerDependencies": {
     "@types/semver": "^7.0.0"
