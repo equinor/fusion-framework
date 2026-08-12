@@ -8,6 +8,7 @@ import configCommand from './config.command.js';
 import tagCommand from './tag.command.js';
 import devCommand from './dev.command.js';
 import serveCommand from './serve.command.js';
+import testCommand from './test.command.js';
 import manifestCommand from './manifest.command.js';
 import publishCommand from './publish.command.js';
 import createAppCommand from '../create/create-app-command.js';
@@ -48,6 +49,7 @@ export const command = createCommand('app')
   .addCommand(tagCommand)
   .addCommand(devCommand)
   .addCommand(serveCommand)
+  .addCommand(testCommand)
   .addCommand(manifestCommand)
   .addCommand(publishCommand)
   .addCommand(createAppCommand('create'));
