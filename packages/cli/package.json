@@ -47,6 +47,10 @@
       "types": "./dist/types/lib/dev-server.d.ts",
       "import": "./dist/esm/lib/dev-server.js"
     },
+    "./vitest": {
+      "types": "./dist/types/lib/vitest/index.d.ts",
+      "import": "./dist/esm/lib/vitest/index.js"
+    },
     "./bin": {
       "types": "./dist/types/bin/index.d.ts",
       "import": "./bin/build/bin.mjs"
@@ -76,6 +80,9 @@
       ],
       "dev-server": [
         "dist/types/lib/dev-server.d.ts"
+      ],
+      "vitest": [
+        "dist/types/lib/vitest/index.d.ts"
       ],
       "bin": [
         "dist/types/bin/index.d.ts"
@@ -139,7 +146,7 @@
     "@types/adm-zip": "^0.5.0",
     "@types/normalize-package-data": "^2.4.4",
     "@types/semver": "^7.7.1",
-    "@vitest/coverage-v8": "^4.0.18",
+    "@vitest/coverage-v8": "^4.1.10",
     "adm-zip": "^0.6.0",
     "ajv": "^8.17.1",
     "is-ci": "^4.1.0",
@@ -150,7 +157,7 @@
     "rxjs": "^7.8.1",
     "type-fest": "^5.0.0",
     "typescript": "^7.0.2",
-    "vitest": "^4.1.0"
+    "vitest": "^4.1.10"
   },
   "peerDependenciesMeta": {
     "typescript": {
