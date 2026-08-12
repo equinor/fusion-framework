@@ -9,7 +9,6 @@ export const moduleKey = 'event';
 /** Type alias for the event module definition. */
 export type EventModule = Module<typeof moduleKey, IEventModuleProvider, EventModuleConfigurator>;
 
-
 /**
  * Event type dispatched when all framework modules have finished loading.
  *

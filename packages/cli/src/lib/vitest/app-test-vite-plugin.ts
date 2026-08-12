@@ -91,7 +91,9 @@ const resolveConfigureModulePath = (cwd: string, file?: string): string | undefi
     return resolved;
   }
   // first candidate that exists wins; none existing is a valid "no configurator" state
-  const found = DEFAULT_CONFIGURE_CANDIDATES.find((candidate) => existsSync(resolve(cwd, candidate)));
+  const found = DEFAULT_CONFIGURE_CANDIDATES.find((candidate) =>
+    existsSync(resolve(cwd, candidate)),
+  );
   return found ? resolve(cwd, found) : undefined;
 };
 
