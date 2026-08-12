@@ -6,7 +6,7 @@ scope using `renderAppHook` and `renderAppComponent`.
 **Import:**
 
 ```ts
-import { renderAppHook, renderAppComponent } from '@equinor/fusion-framework-react-app/testing';
+import { renderAppHook, renderAppComponent } from '@equinor/fusion-framework-react-app/vitest';
 ```
 
 > [!IMPORTANT]
@@ -52,7 +52,7 @@ function renderAppHook<Result, Props = undefined, TModules = unknown, TEnv exten
     env?: TEnv;
     fusion?: Fusion;
   } & Omit<RenderHookOptions<Props>, 'wrapper'>,
-): Promise<RenderHookResult<Result, Props>>;
+): Promise<RenderHookResult<Result, Props> & { fusion: { framework: Fusion; app: AppModulesInstance<TModules> } }>;
 ```
 
 | Option      | Description                                                                                                        |
@@ -61,12 +61,14 @@ function renderAppHook<Result, Props = undefined, TModules = unknown, TEnv exten
 | `env`       | The application environment (manifest); defaults to a generic standalone `test-app`                                |
 | `fusion`    | The parent Fusion instance; defaults to a fresh `mockFramework` instance serving this app's own manifest           |
 
-Any other `renderHook` option (e.g. `initialProps`) is forwarded as-is.
+Any other `renderHook` option (e.g. `initialProps`) is forwarded as-is. The result carries the
+usual `renderHook` return values (`result`, `rerender`, `unmount`) plus `modules` and `fusion` —
+the same instances the hook rendered against — for driving a module the hook itself doesn't return.
 
 ### Basic Usage
 
 ```tsx
-import { renderAppHook } from '@equinor/fusion-framework-react-app/testing';
+import { renderAppHook } from '@equinor/fusion-framework-react-app/vitest';
 import { waitFor } from '@testing-library/react';
 import { useAccessToken } from '@equinor/fusion-framework-react-app/msal';
 
@@ -82,7 +84,7 @@ test('resolves an access token', async () => {
 Pass `configure` to reach the msal mock's builder before the hook renders:
 
 ```tsx
-import { renderAppHook } from '@equinor/fusion-framework-react-app/testing';
+import { renderAppHook } from '@equinor/fusion-framework-react-app/vitest';
 import { useCurrentAccount } from '@equinor/fusion-framework-react-app/msal';
 
 test('reads the configured account', async () => {
@@ -103,7 +105,7 @@ calls:
 import { mockFramework } from '@equinor/fusion-framework/mock';
 import { enableAppManifestMock } from '@equinor/fusion-framework-app/mock';
 import type { AppModule } from '@equinor/fusion-framework-module-app';
-import { renderAppHook } from '@equinor/fusion-framework-react-app/testing';
+import { renderAppHook } from '@equinor/fusion-framework-react-app/vitest';
 import { useAccessToken } from '@equinor/fusion-framework-react-app/msal';
 import { useCurrentAccount } from '@equinor/fusion-framework-react-app/msal';
 
@@ -135,11 +137,34 @@ function renderAppComponent<TModules = unknown, TEnv extends AppEnv = AppEnv>(
     env?: TEnv;
     fusion?: Fusion;
   } & Omit<RenderOptions, 'wrapper'>,
-): Promise<RenderResult>;
+): Promise<RenderResult & { fusion: { framework: Fusion; app: AppModulesInstance<TModules> } }>;
 ```
 
 Options are the same shape as `renderAppHook`'s — `configure`, `env`, `fusion` — plus any
-other `@testing-library/react` `render` option.
+other `@testing-library/react` `render` option. The result carries the usual `render` return
+values (`getByText`, `container`, `unmount`, ...) plus `fusion` — nested rather than spread
+directly onto the result, so `@testing-library/react`'s own return shape stays free to evolve
+without ever colliding with it. `fusion.app` is the same application module instance the
+rendered component reads through `useAppModule`/`useAppModules`, and `fusion.framework` is the
+parent Fusion instance. Drive a module directly through `fusion.app` to exercise a state
+change after the initial render, without hand-wiring `mockAppModules`/`ModuleProvider`:
+
+```tsx
+import { enableContextMock } from '@equinor/fusion-framework-module-context/mock';
+import type { ContextModule } from '@equinor/fusion-framework-module-context';
+import { act, waitFor } from '@testing-library/react';
+import { renderAppComponent } from '@equinor/fusion-framework-react-app/vitest';
+
+test('reacts when the current context switches', async () => {
+  const { getByText, fusion } = await renderAppComponent<[ContextModule]>(<App />, {
+    configure: (configurator) =>
+      enableContextMock(configurator, (mock) => mock.setCurrentContext(projectA)),
+  });
+
+  await act(() => fusion.app.context.setCurrentContextByIdAsync(projectB.id));
+  await waitFor(() => expect(getByText(/project-b/)).toBeInTheDocument());
+});
+```
 
 ### Example: Asserting Loading and Error States
 
@@ -148,7 +173,7 @@ import { waitFor } from '@testing-library/react';
 import { mockFramework } from '@equinor/fusion-framework/mock';
 import { enableAppManifestMock } from '@equinor/fusion-framework-app/mock';
 import type { AppManifest, AppModule } from '@equinor/fusion-framework-module-app';
-import { renderAppComponent } from '@equinor/fusion-framework-react-app/testing';
+import { renderAppComponent } from '@equinor/fusion-framework-react-app/vitest';
 import { Apploader } from '@equinor/fusion-framework-react-app/apploader';
 
 test('mounts the child app once its script loads', async () => {

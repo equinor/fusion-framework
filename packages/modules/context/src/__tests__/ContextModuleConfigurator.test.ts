@@ -309,4 +309,15 @@ describe('ContextProvider through the real module system (http mocked at the net
 
     expect(resolved.id).toBe('ctx-3');
   });
+
+  it('resolves silently, without warning, when there is no initial context to resolve', async () => {
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+    const provider = await initializeContextWith();
+
+    expect(provider.currentContext).toBeUndefined();
+    expect(warnSpy).not.toHaveBeenCalled();
+
+    warnSpy.mockRestore();
+  });
 });

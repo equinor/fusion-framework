@@ -1,5 +1,4 @@
 import { describe, expect, it, vi } from 'vitest';
-import { waitFor } from '@testing-library/react';
 
 import { mockFramework } from '@equinor/fusion-framework/mock';
 import { enableAppManifestMock } from '@equinor/fusion-framework-app/mock';
@@ -9,7 +8,7 @@ import { enableBookmarkMock } from '@equinor/fusion-framework-module-bookmark/mo
 import type { Bookmark, BookmarkModule } from '@equinor/fusion-framework-module-bookmark';
 
 import { useCurrentBookmark } from '../bookmark/useCurrentBookmark';
-import { renderAppHook } from '../testing/render-app-hook';
+import { renderAppHook } from '../vitest/render-app-hook';
 import { useAppModules } from '../useAppModules';
 
 const env = {
@@ -47,7 +46,9 @@ describe('useCurrentBookmark', () => {
 
     const { result } = await renderAppHook(() => useCurrentBookmark(), { env, fusion, configure });
 
-    await waitFor(() => expect(result.current.currentBookmark).toMatchObject({ id: bookmark.id }));
+    await vi.waitFor(() =>
+      expect(result.current.currentBookmark).toMatchObject({ id: bookmark.id }),
+    );
   });
 
   it('hides the current bookmark once it belongs to a different app', async () => {
@@ -73,7 +74,7 @@ describe('useCurrentBookmark', () => {
       { env, fusion, configure },
     );
 
-    await waitFor(() =>
+    await vi.waitFor(() =>
       expect(result.current.provider.currentBookmark).toMatchObject({ id: bookmark.id }),
     );
     expect(result.current.bookmark.currentBookmark).toBeNull();
@@ -94,7 +95,9 @@ describe('useCurrentBookmark', () => {
 
     const { result } = await renderAppHook(() => useCurrentBookmark(), { env, fusion });
 
-    await waitFor(() => expect(result.current.currentBookmark).toMatchObject({ id: bookmark.id }));
+    await vi.waitFor(() =>
+      expect(result.current.currentBookmark).toMatchObject({ id: bookmark.id }),
+    );
     expect(warnSpy).toHaveBeenCalledWith(
       '@deprecation',
       expect.stringContaining('has not enabled bookmarks'),

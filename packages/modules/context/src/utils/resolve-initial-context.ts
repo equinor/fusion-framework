@@ -49,7 +49,10 @@ export const resolveInitialContext =
     return concat(
       pathname ? pathResolver(pathname) : EMPTY,
       resolveContextFromParent({ ref, modules }),
-    ).pipe(first());
+    ).pipe(
+      // having no initial context is valid; a default avoids first() throwing EmptyError for it
+      first(undefined, undefined),
+    );
   };
 
 export default resolveInitialContext;

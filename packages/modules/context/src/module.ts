@@ -5,6 +5,11 @@ import type { Module, ModulesInstance } from '@equinor/fusion-framework-module';
 import type { EventModule } from '@equinor/fusion-framework-module-event';
 import type { ServicesModule } from '@equinor/fusion-framework-module-services';
 import type { NavigationModule } from '@equinor/fusion-framework-module-navigation';
+import {
+  TelemetryLevel,
+  TelemetryScope,
+  type TelemetryModule,
+} from '@equinor/fusion-framework-module-telemetry';
 
 import {
   type IContextModuleConfigurator,
@@ -34,7 +39,7 @@ export const moduleKey: ContextModuleKey = 'context';
  * @typeParam ContextModuleKey - The unique key identifying the context module.
  * @typeParam IContextProvider - The provider interface for context-related services.
  * @typeParam IContextModuleConfigurator - The configurator interface for customizing the context module.
- * @typeParam [ServicesModule, EventModule, NavigationModule] - The tuple of dependent modules required by the context module.
+ * @typeParam [ServicesModule, EventModule, NavigationModule, TelemetryModule] - The tuple of dependent modules required by the context module.
  *
  * @see Module
  */
@@ -42,7 +47,7 @@ export type ContextModule = Module<
   ContextModuleKey,
   IContextProvider,
   IContextModuleConfigurator,
-  [ServicesModule, EventModule, NavigationModule]
+  [ServicesModule, EventModule, NavigationModule, TelemetryModule]
 >;
 
 /**
@@ -76,11 +81,16 @@ export const module: ContextModule = {
     // get event module if available
     const event = args.hasModule('event') ? await args.requireInstance('event') : undefined;
 
+    // get telemetry module if available, for tracking context resolution outcomes
+    const telemetry = args.hasModule('telemetry')
+      ? await args.requireInstance('telemetry')
+      : undefined;
+
     // get parent context provider if available
     const parentProvider = (args.ref as ModulesInstance<[ContextModule]>)?.context;
 
-    // create context provider
-    const provider = new ContextProvider({ config, event, parentContext: parentProvider });
+    // create context provider; parent context is wired up later via connectParentContext, not the deprecated ctor arg
+    const provider = new ContextProvider({ config, event });
 
     // create subscription for disposing the provider
     const subscription = new Subscription(() => provider.dispose());
@@ -109,27 +119,34 @@ export const module: ContextModule = {
           resolveInitialContext$
             .pipe(
               catchError((err) => {
-                console.warn(
-                  'ContextModule.postInitialize',
-                  'failed to resolve initial context',
-                  err,
-                );
+                telemetry?.trackException({
+                  name: 'Context::postInitialize.resolveInitialContext',
+                  exception: err instanceof Error ? err : new Error(String(err)),
+                  level: TelemetryLevel.Warning,
+                  scope: ['context', TelemetryScope.Framework],
+                });
                 // failed to resolve initial context, complete immediately
                 return EMPTY;
               }),
             )
             .subscribe({
               next: (item) => {
-                console.debug(
-                  'ContextModule.postInitialize',
-                  `initial context was resolved to [${item ? item.id : 'none'}]`,
-                  item,
-                );
+                telemetry?.trackEvent({
+                  name: 'Context::postInitialize.initialContextResolved',
+                  level: TelemetryLevel.Debug,
+                  scope: ['context', TelemetryScope.Framework],
+                  properties: { contextId: item ? item.id : 'none' },
+                });
               },
               complete: () => {
                 // connect parent context if available when stream completes
                 if (config.connectParentContext !== false && parentProvider) {
                   provider.connectParentContext(parentProvider);
+                  telemetry?.trackEvent({
+                    name: 'Context::postInitialize.parentContextConnected',
+                    level: TelemetryLevel.Debug,
+                    scope: ['context', TelemetryScope.Framework],
+                  });
                 }
                 subscriber.complete();
               },
