@@ -1,6 +1,7 @@
 import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 
+import { FileNotFoundError } from '@equinor/fusion-imports';
 import type { Plugin } from 'vite';
 
 import { resolveAppTestEnv, type ResolveAppTestEnvOptions } from './resolve-app-test-env.js';
@@ -47,10 +48,12 @@ export const appTestVitePlugin = (options?: AppTestVitePluginOptions): Plugin =>
     resolveId(id) {
       // claim only our two virtual specifiers, leave everything else to the normal resolvers
       if (id === ENV_MODULE_ID) return RESOLVED_ENV_MODULE_ID;
+      // second virtual specifier, same rule as above
       if (id === CONFIGURE_MODULE_ID) return RESOLVED_CONFIGURE_MODULE_ID;
       return null;
     },
     async load(id) {
+      // serves manifest/config resolved lazily here, not at plugin-creation time, so options.cwd changes between test runs are respected
       if (id === RESOLVED_ENV_MODULE_ID) {
         const { manifest, config } = await resolveAppTestEnv(options);
         return [
@@ -58,8 +61,8 @@ export const appTestVitePlugin = (options?: AppTestVitePluginOptions): Plugin =>
           `export const config = ${JSON.stringify(config)};`,
         ].join('\n');
       }
+      // no conventional module means the app registers no extra modules, same as omitting `configure` from `makeComponent`
       if (id === RESOLVED_CONFIGURE_MODULE_ID) {
-        // no conventional module means the app registers no extra modules, same as omitting `configure` from `makeComponent`
         return configureModulePath
           ? `export { default as configure } from ${JSON.stringify(configureModulePath)};`
           : 'export const configure = undefined;';
@@ -72,10 +75,23 @@ export const appTestVitePlugin = (options?: AppTestVitePluginOptions): Plugin =>
 /**
  * Resolves the app's module-configurator file: the explicit `file` if given, otherwise the
  * first existing candidate in {@link DEFAULT_CONFIGURE_CANDIDATES}.
+ *
+ * @throws {@link FileNotFoundError} If an explicitly requested `file` does not exist — unlike
+ * the convention-based lookup, a typo here should fail loudly instead of silently running the
+ * test suite without the application's modules.
  */
 const resolveConfigureModulePath = (cwd: string, file?: string): string | undefined => {
-  const candidates = file ? [file] : DEFAULT_CONFIGURE_CANDIDATES;
-  const found = candidates.find((candidate) => existsSync(resolve(cwd, candidate)));
+  // an explicit path is a user request, not a convention lookup, so a typo must fail loudly
+  if (file) {
+    const resolved = resolve(cwd, file);
+    // fail fast rather than silently falling back to "no configurator"
+    if (!existsSync(resolved)) {
+      throw new FileNotFoundError(`Configure module not found: ${resolved}`);
+    }
+    return resolved;
+  }
+  // first candidate that exists wins; none existing is a valid "no configurator" state
+  const found = DEFAULT_CONFIGURE_CANDIDATES.find((candidate) => existsSync(resolve(cwd, candidate)));
   return found ? resolve(cwd, found) : undefined;
 };
 
