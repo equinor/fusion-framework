@@ -72,6 +72,7 @@
     "@equinor/fusion-framework-module-http": "workspace:^",
     "@equinor/fusion-framework-module-navigation": "workspace:^",
     "@equinor/fusion-framework-module-services": "workspace:^",
+    "@equinor/fusion-framework-module-telemetry": "workspace:^",
     "@faker-js/faker": "^10.1.0",
     "rxjs": "^7.8.1",
     "typescript": "^7.0.2"

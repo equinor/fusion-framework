@@ -175,7 +175,7 @@ production, just with the network boundary faked for requests a seeded middlewar
 network.
 
 ```tsx
-import { renderAppHook } from '@equinor/fusion-framework-react-app/testing';
+import { renderAppHook } from '@equinor/fusion-framework-react-app/vitest';
 import { waitFor } from '@testing-library/react';
 import { useAccessToken } from '@equinor/fusion-framework-react-app/msal';
 
@@ -218,7 +218,7 @@ test('resolves an access token', async () => {
 | `/apploader` | `Apploader`, `useApploader` |
 | `/framework` | `useFramework`, `useCurrentUser`, `useFrameworkHttpClient` |
 | `/widget` | Widget entry-point |
-| `/testing` | `renderAppHook`, `renderAppComponent` — pre-wrapped `renderHook`/`render` for testing app-scoped hooks and components |
+| `/vitest` | `renderAppHook`, `renderAppComponent` — pre-wrapped `renderHook`/`render` for testing app-scoped hooks and components |
 
 ## Configuration
 

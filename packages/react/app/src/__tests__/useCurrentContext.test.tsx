@@ -1,5 +1,5 @@
-import { act, waitFor } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { act } from 'react';
+import { describe, expect, it, vi } from 'vitest';
 
 import { mockFramework } from '@equinor/fusion-framework/mock';
 import { enableAppManifestMock } from '@equinor/fusion-framework-app/mock';
@@ -9,7 +9,7 @@ import { enableContextMock } from '@equinor/fusion-framework-module-context/mock
 import type { ContextItem, ContextModule } from '@equinor/fusion-framework-module-context';
 
 import { useCurrentContext } from '../context/useCurrentContext';
-import { renderAppHook } from '../testing/render-app-hook';
+import { renderAppHook } from '../vitest/render-app-hook';
 
 const env = {
   manifest: {
@@ -45,7 +45,7 @@ describe('useCurrentContext', () => {
 
     const { result } = await renderAppHook(() => useCurrentContext(), { env, fusion, configure });
 
-    await waitFor(() => expect(result.current.currentContext).toMatchObject({ id: project.id }));
+    await vi.waitFor(() => expect(result.current.currentContext).toMatchObject({ id: project.id }));
   });
 
   it('switches the current context when setCurrentContext is called with another seeded item', async () => {
@@ -59,12 +59,14 @@ describe('useCurrentContext', () => {
       });
 
     const { result } = await renderAppHook(() => useCurrentContext(), { env, fusion, configure });
-    await waitFor(() => expect(result.current.currentContext).toMatchObject({ id: project.id }));
+    await vi.waitFor(() => expect(result.current.currentContext).toMatchObject({ id: project.id }));
 
     await act(async () => {
       await result.current.setCurrentContext(facility.id);
     });
 
-    await waitFor(() => expect(result.current.currentContext).toMatchObject({ id: facility.id }));
+    await vi.waitFor(() =>
+      expect(result.current.currentContext).toMatchObject({ id: facility.id }),
+    );
   });
 });

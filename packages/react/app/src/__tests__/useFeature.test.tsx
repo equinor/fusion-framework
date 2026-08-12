@@ -1,5 +1,5 @@
-import { act, waitFor } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { act } from 'react';
+import { describe, expect, it, vi } from 'vitest';
 
 import { mockFramework } from '@equinor/fusion-framework/mock';
 import { enableAppManifestMock } from '@equinor/fusion-framework-app/mock';
@@ -9,7 +9,7 @@ import { enableFeatureFlagMock } from '@equinor/fusion-framework-module-feature-
 import type { FeatureFlagModule } from '@equinor/fusion-framework-module-feature-flag';
 
 import { useFeature } from '../feature-flag/useFeature';
-import { renderAppHook } from '../testing/render-app-hook';
+import { renderAppHook } from '../vitest/render-app-hook';
 
 const env = {
   manifest: {
@@ -37,7 +37,7 @@ describe('useFeature', () => {
       configure,
     });
 
-    await waitFor(() => expect(result.current.feature?.enabled).toBe(true));
+    await vi.waitFor(() => expect(result.current.feature?.enabled).toBe(true));
   });
 
   it('lets an app-scoped flag override a framework-scoped flag with the same key', async () => {
@@ -59,7 +59,7 @@ describe('useFeature', () => {
       configure,
     });
 
-    await waitFor(() => expect(result.current.feature?.enabled).toBe(true));
+    await vi.waitFor(() => expect(result.current.feature?.enabled).toBe(true));
   });
 
   it('exposes a framework-only flag through the merged stream when the app has not seeded it', async () => {
@@ -79,7 +79,7 @@ describe('useFeature', () => {
       configure,
     });
 
-    await waitFor(() => expect(result.current.feature?.enabled).toBe(true));
+    await vi.waitFor(() => expect(result.current.feature?.enabled).toBe(true));
   });
 
   it('inverts the current value when toggleFeature is called without an explicit value', async () => {
@@ -93,12 +93,12 @@ describe('useFeature', () => {
     };
 
     const { result } = await renderAppHook(() => useFeature('my-flag'), { env, fusion, configure });
-    await waitFor(() => expect(result.current.feature?.enabled).toBe(false));
+    await vi.waitFor(() => expect(result.current.feature?.enabled).toBe(false));
 
     act(() => {
       result.current.toggleFeature();
     });
 
-    await waitFor(() => expect(result.current.feature?.enabled).toBe(true));
+    await vi.waitFor(() => expect(result.current.feature?.enabled).toBe(true));
   });
 });

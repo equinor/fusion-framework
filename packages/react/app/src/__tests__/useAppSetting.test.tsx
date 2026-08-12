@@ -1,4 +1,4 @@
-import { act, waitFor } from '@testing-library/react';
+import { act } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 
 import { mockFramework } from '@equinor/fusion-framework/mock';
@@ -7,7 +7,7 @@ import type { AppModule } from '@equinor/fusion-framework-module-app';
 import { createRouterMiddleware } from '@equinor/fusion-framework-module-http/mock';
 
 import { useAppSetting } from '../settings/useAppSetting';
-import { renderAppHook } from '../testing/render-app-hook';
+import { renderAppHook } from '../vitest/render-app-hook';
 
 const env = {
   manifest: {
@@ -59,7 +59,7 @@ describe('useAppSetting', () => {
       { env, fusion },
     );
 
-    await waitFor(() => expect(result.current[0]).toBe('dark'));
+    await vi.waitFor(() => expect(result.current[0]).toBe('dark'));
   });
 
   it('falls back to the default value until the persisted settings resolve', async () => {
@@ -71,7 +71,7 @@ describe('useAppSetting', () => {
     );
 
     expect(result.current[0]).toBe('light');
-    await waitFor(() => expect(result.current[0]).toBe('dark'));
+    await vi.waitFor(() => expect(result.current[0]).toBe('dark'));
   });
 
   it('persists an updated value and notifies onUpdated', async () => {
@@ -83,14 +83,14 @@ describe('useAppSetting', () => {
       { env, fusion },
     );
 
-    await waitFor(() => expect(result.current[0]).toBe('dark'));
+    await vi.waitFor(() => expect(result.current[0]).toBe('dark'));
 
     act(() => {
       result.current[1]('light');
     });
 
-    await waitFor(() => expect(result.current[0]).toBe('light'));
-    await waitFor(() => expect(onUpdated).toHaveBeenCalled());
+    await vi.waitFor(() => expect(result.current[0]).toBe('light'));
+    await vi.waitFor(() => expect(onUpdated).toHaveBeenCalled());
   });
 
   it('resolves the next value from the previous one when given an updater function', async () => {
@@ -101,13 +101,13 @@ describe('useAppSetting', () => {
       { env, fusion },
     );
 
-    await waitFor(() => expect(result.current[0]).toBe(1));
+    await vi.waitFor(() => expect(result.current[0]).toBe(1));
 
     act(() => {
       result.current[1]((current) => (current ?? 0) + 1);
     });
 
-    await waitFor(() => expect(result.current[0]).toBe(2));
+    await vi.waitFor(() => expect(result.current[0]).toBe(2));
   });
 
   it('surfaces a persistence failure through onError instead of throwing', async () => {
@@ -122,12 +122,12 @@ describe('useAppSetting', () => {
       { env, fusion },
     );
 
-    await waitFor(() => expect(result.current[0]).toBe('dark'));
+    await vi.waitFor(() => expect(result.current[0]).toBe('dark'));
 
     act(() => {
       result.current[1]('light');
     });
 
-    await waitFor(() => expect(onError).toHaveBeenCalledWith(expect.any(Error)));
+    await vi.waitFor(() => expect(onError).toHaveBeenCalledWith(expect.any(Error)));
   });
 });
