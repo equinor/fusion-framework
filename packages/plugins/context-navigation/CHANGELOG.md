@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-plugin-context-navigation
 
+## 0.1.1
+
+### Patch Changes
+
+- f6e9814: Internal: build the package before `prepack` so packed and published artifacts always include fresh generated output.
+
 ## 0.1.0
 
 ### Minor Changes
