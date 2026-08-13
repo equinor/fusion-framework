@@ -14,15 +14,16 @@ import { defaultAppEnv, resolveFusion, createAppScopeWrapper } from './scope';
  *
  * @remarks
  * An alternative to {@link renderAppComponent}/{@link renderAppHook} for a test file whose
- * cases share one mocked scope: `env`/`configure` become suite-level concerns, overridden
- * once per file (or per `describe` block) with `testApp.extend(...)`, rather than an
- * options object repeated on every call. `fusion`/`app` resolve lazily — a test that only
- * destructures `app` never pays for rendering anything, and one that only destructures
- * `render`/`renderHook` gets the same mocked scope wired in automatically.
+ * cases share seeded fixture defaults: `env`/`configure` become suite-level concerns,
+ * overridden once per file (or per `describe` block) with `testApp.extend(...)`, rather than
+ * an options object repeated on every call. `fusion`/`app` are still instantiated fresh per
+ * test — only the seeded defaults are shared, not state between tests. They also resolve
+ * lazily: a test that only destructures `app` never pays for rendering anything, and one
+ * that only destructures `render`/`renderHook` gets the same fixture wiring automatically.
  *
  * Both entry points stay supported: reach for `renderAppComponent`/`renderAppHook` for a
  * one-off test whose configuration is not shared by the rest of the file; reach for
- * `testApp` when several cases in a file share one seeded scope.
+ * `testApp` when several cases in a file share one set of seeded fixture defaults.
  *
  * @example
  * ```tsx
