@@ -12,7 +12,7 @@ import type { AppModuleInitiator } from '@equinor/fusion-framework-react-app';
  */
 export const configure: AppModuleInitiator = (configurator, _env) => {
   /** print render environment arguments */
-  //console.log('configuring application', env);
+  // console.log('configuring application', env); // silenced: keeps Vitest output clean
 
   /** callback when configurations is created */
   configurator.onConfigured((_config) => {
