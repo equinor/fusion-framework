@@ -1,0 +1,56 @@
+import { expect, vi } from 'vitest';
+import { testWithRouter } from '../__tests__/test-with-router';
+
+import { Navigation } from './Navigation';
+
+testWithRouter('renders a sidebar link for each top-level page', async ({ render }) => {
+  window.history.pushState(null, '', '/');
+
+  const { getByText, unmount } = await render(<Navigation />);
+
+  await expect.element(getByText('Home')).toBeInTheDocument();
+  await expect.element(getByText('Products')).toBeInTheDocument();
+  await expect.element(getByText('Users')).toBeInTheDocument();
+  await expect.element(getByText('People')).toBeInTheDocument();
+
+  await unmount();
+});
+
+testWithRouter('navigating to a page updates the URL', async ({ render }) => {
+  window.history.pushState(null, '', '/');
+
+  const { getByText, unmount } = await render(<Navigation />);
+
+  await getByText('Products').click();
+
+  expect(window.location.pathname).toBe('/products');
+
+  await unmount();
+});
+
+testWithRouter('the active link swaps when navigating to a different page', async ({ render }) => {
+  window.history.pushState(null, '', '/');
+
+  const { getByText, unmount } = await render(<Navigation />);
+
+  // active state is only reflected as a styled-components color, not a DOM attribute
+  const colorOf = (label: string) => getComputedStyle(getByText(label).element()).color;
+
+  // navigate via the router's own click handler first, so its internal location is
+  // guaranteed to be in sync with the URL rather than relying on the initial pushState above
+  await getByText('Home').click();
+  await vi.waitFor(() => expect(window.location.pathname).toBe('/'));
+
+  // Users is never navigated to in this test, so its color is a stable "inactive" reference
+  const inactiveColor = colorOf('Users');
+  expect(colorOf('Home')).not.toBe(inactiveColor);
+  expect(colorOf('Products')).toBe(inactiveColor);
+
+  await getByText('Products').click();
+  await vi.waitFor(() => expect(window.location.pathname).toBe('/products'));
+
+  expect(colorOf('Home')).toBe(inactiveColor);
+  expect(colorOf('Products')).not.toBe(inactiveColor);
+
+  await unmount();
+});

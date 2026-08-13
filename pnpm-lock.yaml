@@ -720,6 +720,9 @@ importers:
       '@equinor/eds-tokens':
         specifier: ^2.2.0
         version: 2.3.2
+      '@equinor/fusion-framework-app':
+        specifier: workspace:^
+        version: link:../../packages/app
       '@equinor/fusion-framework-cli':
         specifier: workspace:^
         version: link:../../packages/cli
@@ -729,6 +732,9 @@ importers:
       '@equinor/fusion-framework-module-event':
         specifier: workspace:^
         version: link:../../packages/modules/event
+      '@equinor/fusion-framework-module-http':
+        specifier: workspace:^
+        version: link:../../packages/modules/http
       '@equinor/fusion-framework-module-navigation':
         specifier: workspace:^
         version: link:../../packages/modules/navigation
@@ -738,6 +744,15 @@ importers:
       '@equinor/fusion-framework-react-router':
         specifier: workspace:^
         version: link:../../packages/react/router
+      '@equinor/fusion-framework-vite-plugin-raw-imports':
+        specifier: workspace:^
+        version: link:../../packages/vite-plugins/raw-imports
+      '@equinor/fusion-framework-vitest-plugin-react-app':
+        specifier: workspace:^
+        version: link:../../packages/vitest-plugin/react-app
+      '@equinor/fusion-openapi-mock':
+        specifier: workspace:^
+        version: link:../../packages/utils/openapi-mock
       '@equinor/fusion-react-side-sheet':
         specifier: ^2.0.0
         version: 2.0.8(@equinor/eds-core-react@2.6.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(styled-components@6.5.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8)))(@equinor/eds-icons@1.5.1)(@equinor/eds-tokens@2.3.2)(react-dom@19.2.8(react@19.2.8))(react-is@18.3.1)(react@19.2.8)(styled-components@6.5.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
@@ -753,6 +768,12 @@ importers:
       '@types/react-dom':
         specifier: ^19.2.3
         version: 19.2.4(@types/react@19.2.18)
+      '@vitest/browser-playwright':
+        specifier: ^4.1.0
+        version: 4.1.10(msw@2.15.0(@types/node@26.1.2)(typescript@7.0.2))(playwright@1.62.1)(vite@8.2.0(@types/node@26.1.2)(esbuild@0.28.1)(sass-embedded@1.100.0)(sass@1.100.0)(terser@5.46.0)(tsx@4.23.1))(vitest@4.1.10)
+      playwright:
+        specifier: ^1.62.1
+        version: 1.62.1
       react:
         specifier: ^19.2.1
         version: 19.2.8
@@ -762,6 +783,12 @@ importers:
       typescript:
         specifier: ^7.0.2
         version: 7.0.2
+      vitest:
+        specifier: ^4.1.10
+        version: 4.1.10(@opentelemetry/api@1.9.1)(@types/node@26.1.2)(@vitest/browser-playwright@4.1.10)(@vitest/coverage-v8@4.1.10)(esbuild@0.28.1)(happy-dom@20.11.1)(jsdom@30.0.1)(msw@2.15.0(@types/node@26.1.2)(typescript@7.0.2))(sass-embedded@1.100.0)(sass@1.100.0)(terser@5.46.0)(tsx@4.23.1)
+      vitest-browser-react:
+        specifier: ^2.2.0
+        version: 2.2.0(@types/react-dom@19.2.4(@types/react@19.2.18))(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vitest@4.1.10)
 
   cookbooks/app-react-router-legacy:
     devDependencies:

@@ -2,7 +2,7 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "rootDir": "src",
-
+    "noEmit": true,
     "jsx": "react-jsx"
   },
   "references": [
@@ -17,8 +17,20 @@
     },
     {
       "path": "../../packages/react/router"
+    },
+    {
+      "path": "../../packages/vitest-plugin/react-app"
+    },
+    {
+      "path": "../../packages/app"
+    },
+    {
+      "path": "../../packages/modules/http"
+    },
+    {
+      "path": "../../packages/utils/openapi-mock"
     }
   ],
   "include": ["src/**/*", "src/types/**/*"],
-  "exclude": ["node_modules", "lib"]
+  "exclude": ["node_modules", "lib", "src/**/*.{test,spec}.{ts,tsx}"]
 }
