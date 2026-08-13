@@ -10,21 +10,21 @@ import {
   type RenderAppComponentResult,
 } from './render-app-component';
 
-// resolved at test-time by `ffc app test`'s Vite plugin (@equinor/fusion-framework-cli/testing);
+// resolved at test-time by `appTestVitePlugin` (@equinor/fusion-framework-vitest-plugin-react-app);
 // see virtual-modules.d.ts for the ambient module declarations
 import { manifest, config } from 'virtual:fusion-app-test-env';
 import { configure } from 'virtual:fusion-app-test-configure';
 
 /**
  * Renders a component inside the application's own module scope for use in plain `describe`/`it`
- * tests, using the manifest, config, and module-configurator `ffc app test` resolved for this
- * application — no per-test wiring, and no custom `test` fixture required.
+ * tests, using the manifest, config, and module-configurator resolved for this application — no
+ * per-test wiring, and no custom `test` fixture required.
  *
  * @remarks
- * Only works when the test file is run via `ffc app test` (see
- * `@equinor/fusion-framework-cli/testing`'s `appTestVitePlugin`), which registers the virtual
- * modules backing the resolved `env`/`configure`. Running the same test file through a plain
- * `vitest` invocation that doesn't register the plugin fails to resolve those imports.
+ * Requires `appTestVitePlugin` (`@equinor/fusion-framework-vitest-plugin-react-app`) registered in
+ * your `vitest.config.ts` `plugins`, which serves the virtual modules backing the resolved
+ * `env`/`configure`. Running the same test file without the plugin registered fails to resolve
+ * those imports.
  *
  * Pass `env` or `configure` in `options` to override the resolved values for a single render.
  *
@@ -35,7 +35,7 @@ import { configure } from 'virtual:fusion-app-test-configure';
  * @example
  * ```tsx
  * import { describe, expect, it } from 'vitest';
- * import { render } from '@equinor/fusion-framework-react-app/vitest';
+ * import { render } from '@equinor/fusion-framework-vitest-plugin-react-app/test';
  * import { App } from '../App';
  *
  * describe('App', () => {

@@ -125,7 +125,11 @@ jobs:
       - name: Check if build failed
         if: steps.build.outcome == 'failure'
         run: exit 1
-      
+
+      - name: Install Playwright browsers
+        # required for @equinor/fusion-framework-react-app and @equinor/fusion-framework-vitest-plugin-react-app's Vitest Browser Mode tests
+        run: pnpm exec playwright install --with-deps chromium
+
       - name: Create Test Report
         run: pnpm test run
 

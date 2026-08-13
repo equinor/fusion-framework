@@ -2,6 +2,7 @@
   "name": "@equinor/fusion-framework-react-app",
   "version": "14.0.1",
   "description": "",
+  "type": "module",
   "main": "./dist/esm/index.js",
   "types": "./dist/types/index.d.ts",
   "exports": {
@@ -68,10 +69,6 @@
     "./routing": {
       "types": "./dist/types/routing/index.d.ts",
       "import": "./dist/esm/routing/index.js"
-    },
-    "./vitest": {
-      "types": "./dist/types/vitest/index.d.ts",
-      "import": "./dist/esm/vitest/index.js"
     }
   },
   "typesVersions": {
@@ -120,9 +117,6 @@
       ],
       "routing": [
         "dist/types/routing/index.d.ts"
-      ],
-      "vitest": [
-        "dist/types/vitest/index.d.ts"
       ]
     }
   },
@@ -166,6 +160,7 @@
     "@equinor/fusion-framework-react-module-bookmark": "workspace:*",
     "@equinor/fusion-framework-react-module-context": "workspace:*",
     "@equinor/fusion-framework-react-router": "workspace:*",
+    "@equinor/fusion-framework-vitest-plugin-react-app": "workspace:*",
     "@equinor/fusion-observable": "workspace:*",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",

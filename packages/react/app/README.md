@@ -372,27 +372,12 @@ const EnvInfo = () => {
 };
 ```
 
-### Testing a hook
+### Testing
 
-> **Note:** Requires `@testing-library/react` (optional peer dependency).
-
-`renderAppHook` renders a hook inside a real, mock-backed application module scope — a
-`FrameworkProvider` and `ModuleProvider` wired the same way `renderApp` wires them in
-production, just with the network boundary faked for requests a seeded middleware answers
-(via `@equinor/fusion-framework-app/mock`) — an unmatched request still reaches the real
-network.
-
-```tsx
-import { renderAppHook } from '@equinor/fusion-framework-react-app/vitest';
-import { waitFor } from '@testing-library/react';
-import { useAccessToken } from '@equinor/fusion-framework-react-app/msal';
-
-test('resolves an access token', async () => {
-  const { result } = await renderAppHook(() => useAccessToken({ scopes: ['User.Read'] }));
-  await waitFor(() => expect(result.current.pending).toBe(false));
-  expect(result.current.token).toBeDefined();
-});
-```
+Testing utilities (`renderAppHook`, `renderAppComponent`, `testApp`, and a Vitest plugin
+resolving an app's own manifest/config as virtual modules) have moved to their own package,
+[`@equinor/fusion-framework-vitest-plugin-react-app`](../../vitest-plugin/react-app/README.md) —
+see that package's README for usage.
 
 ## API Reference
 
@@ -426,7 +411,6 @@ test('resolves an access token', async () => {
 | `/apploader` | `Apploader`, `useApploader` |
 | `/framework` | `useFramework`, `useCurrentUser`, `useFrameworkHttpClient` |
 | `/widget` | Widget entry-point |
-| `/vitest` | `renderAppHook`, `renderAppComponent` — pre-wrapped `renderHook`/`render` for testing app-scoped hooks and components |
 
 ## Configuration
 

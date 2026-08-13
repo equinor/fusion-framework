@@ -7,7 +7,7 @@ import type { AppModule } from '@equinor/fusion-framework-module-app';
 import useAppModule from '../useAppModule';
 import { useHelpCenter } from '../help-center/useHelpCenter';
 import { EVENT_NAME } from '../help-center/event-name.js';
-import { renderAppHook } from '../vitest/render-app-hook';
+import { renderAppHook } from '@equinor/fusion-framework-vitest-plugin-react-app/test';
 
 const env = {
   manifest: {

@@ -119,12 +119,20 @@ export const module: ContextModule = {
           resolveInitialContext$
             .pipe(
               catchError((err) => {
-                telemetry?.trackException({
-                  name: 'Context::postInitialize.resolveInitialContext',
-                  exception: err instanceof Error ? err : new Error(String(err)),
-                  level: TelemetryLevel.Warning,
-                  scope: ['context', TelemetryScope.Framework],
-                });
+                const exception = err instanceof Error ? err : new Error(String(err));
+                // report through telemetry when available, otherwise fall back to console.warn below
+                if (telemetry) {
+                  telemetry.trackException({
+                    name: 'Context::postInitialize.resolveInitialContext',
+                    exception,
+                    level: TelemetryLevel.Warning,
+                    scope: ['context', TelemetryScope.Framework],
+                  });
+                } else {
+                  // no telemetry module registered - fall back to a visible warning so a
+                  // genuine resolution failure isn't silently swallowed
+                  console.warn('Context::postInitialize.resolveInitialContext', exception);
+                }
                 // failed to resolve initial context, complete immediately
                 return EMPTY;
               }),

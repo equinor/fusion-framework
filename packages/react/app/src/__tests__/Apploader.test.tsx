@@ -5,7 +5,7 @@ import { enableAppManifestMock } from '@equinor/fusion-framework-app/mock';
 import type { AppManifest, AppModule } from '@equinor/fusion-framework-module-app';
 
 import { Apploader } from '../apploader/Apploader';
-import { renderAppComponent } from '../vitest/render-app-component';
+import { renderAppComponent } from '@equinor/fusion-framework-vitest-plugin-react-app/test';
 
 // resolved from this test file rather than hardcoded, so it survives a package move
 const fixturesUri = new URL('./fixtures', import.meta.url).pathname;

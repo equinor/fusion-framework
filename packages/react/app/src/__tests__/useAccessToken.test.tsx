@@ -3,7 +3,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { mockFramework } from '@equinor/fusion-framework/mock';
 
 import { useAccessToken } from '../msal/useAccessToken';
-import { renderAppHook } from '../vitest/render-app-hook';
+import { renderAppHook } from '@equinor/fusion-framework-vitest-plugin-react-app/test';
 
 describe('useAccessToken', () => {
   it('resolves an access token from the app scope’s real, mock-backed auth module', async () => {

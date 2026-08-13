@@ -1,26 +1,27 @@
 ---
-"@equinor/fusion-framework-react-app": minor
+"@equinor/fusion-framework-react-app": major
 ---
 
-Add `renderAppComponent` to the `/vitest` entry-point, a component-level counterpart to `renderAppHook` for testing components (not just hooks) against a real, mock-backed application module scope.
+Remove the `./vitest` entry-point. `renderAppComponent` — a component-level counterpart to `renderAppHook` for testing components (not just hooks) against a real, mock-backed application module scope, built on `vitest-browser-react` instead of `@testing-library/react` — now lives in a separate package, `@equinor/fusion-framework-vitest-plugin-react-app`.
 
 ```tsx
-import { renderAppComponent } from '@equinor/fusion-framework-react-app/vitest';
-import { waitFor } from '@testing-library/react';
+import { renderAppComponent } from '@equinor/fusion-framework-vitest-plugin-react-app';
 import { Apploader } from '../apploader/Apploader';
 
-const { container } = await renderAppComponent(<Apploader appKey="child-app" />);
-await waitFor(() => expect(container.textContent).toContain('mounted'));
+const screen = await renderAppComponent(<Apploader appKey="child-app" />);
+await expect.element(screen.getByText('mounted')).toBeVisible();
 ```
 
-`renderAppComponent` wraps `@testing-library/react`'s `render` with the same `FrameworkProvider` + `ModuleProvider` nesting `renderAppHook` uses, backed by `mockFramework` and `mockAppModules` (`@equinor/fusion-framework-app/mock`), so tests can render a real component tree without hand-wiring those mocks.
+`renderAppComponent` wraps `vitest-browser-react`'s `render` with the same `FrameworkProvider` + `ModuleProvider` nesting `renderAppHook` uses, backed by `mockFramework` and `mockAppModules` (`@equinor/fusion-framework-app/mock`), so tests can render a real component tree without hand-wiring those mocks.
 
-The result also carries a nested `app` object (`app.modules`, `app.fusion`) — nested rather than spread directly onto the result so `@testing-library/react`'s own return shape stays free to evolve without ever colliding with it — so a test can drive a module directly after the initial render and assert the component re-renders, instead of hand-wiring `mockAppModules`/`ModuleProvider` itself to reach the same instance:
+The result also carries a nested `fusion` object (`fusion.framework`, `fusion.app`) — nested rather than spread directly onto the result so `vitest-browser-react`'s own return shape stays free to evolve without ever colliding with it — so a test can drive a module directly after the initial render and assert the component re-renders, instead of hand-wiring `mockAppModules`/`ModuleProvider` itself to reach the same instance:
 
 ```tsx
-const { getByText, app } = await renderAppComponent<[ContextModule]>(<App />, {
+const { getByText, fusion } = await renderAppComponent<[ContextModule]>(<App />, {
   configure: (configurator) => enableContextMock(configurator, (mock) => mock.setCurrentContext(projectA)),
 });
-await act(() => app.modules.context.setCurrentContextByIdAsync(projectB.id));
-await waitFor(() => expect(getByText(/project-b/)).toBeInTheDocument());
+await act(() => fusion.app.context.setCurrentContextByIdAsync(projectB.id));
+await expect.element(getByText(/project-b/)).toBeVisible();
 ```
+
+**Breaking change:** the `./vitest` entry-point is removed with no compatibility shim. Migrate by installing `@equinor/fusion-framework-vitest-plugin-react-app` and importing `renderAppComponent` from it instead, and replacing `@testing-library/react`'s `render`/`waitFor`/`act` with `vitest-browser-react`/`vitest`'s equivalents.

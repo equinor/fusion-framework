@@ -320,4 +320,21 @@ describe('ContextProvider through the real module system (http mocked at the net
 
     warnSpy.mockRestore();
   });
+
+  it('warns (rather than silently swallowing the error) when the resolver throws and no telemetry module is registered', async () => {
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const resolverError = new Error('boom');
+
+    const provider = await initializeContextWith((builder) => {
+      builder.setResolveInitialContext(() => Promise.reject(resolverError));
+    });
+
+    expect(provider.currentContext).toBeUndefined();
+    expect(warnSpy).toHaveBeenCalledWith(
+      'Context::postInitialize.resolveInitialContext',
+      resolverError,
+    );
+
+    warnSpy.mockRestore();
+  });
 });
