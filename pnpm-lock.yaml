@@ -35,6 +35,7 @@ overrides:
   '@babel/core@<=7.29.0': 7.29.6
   esbuild@>=0.27.3 <0.28.1: 0.28.1
   zod: 4.4.3
+  read-pkg@10.0.0: 10.1.0
 
 patchedDependencies:
   vscode-jsonrpc@8.2.1:
@@ -10377,8 +10378,8 @@ packages:
     resolution: {integrity: sha512-Q5hMVBYur/eQNWDdbF4/Wqqr9Bjvtrw2kjGxxBbKLbx8bVCL8gcArjTy8zDUuLGQicftpMuU0riQNcAsbtOVsw==}
     engines: {node: '>=20'}
 
-  read-pkg@10.0.0:
-    resolution: {integrity: sha512-A70UlgfNdKI5NSvTTfHzLQj7NJRpJ4mT5tGafkllJ4wh71oYuGm/pzphHcmW4s35iox56KSK721AihodoXSc/A==}
+  read-pkg@10.1.0:
+    resolution: {integrity: sha512-I8g2lArQiP78ll51UeMZojewtYgIRCKCWqZEgOO8c/uefTI+XDXvCSXu3+YNUaTNvZzobrL5+SqHjBrByRRTdg==}
     engines: {node: '>=20'}
 
   read-pkg@9.0.1:
@@ -20162,16 +20163,16 @@ snapshots:
   read-package-up@12.0.0:
     dependencies:
       find-up-simple: 1.0.1
-      read-pkg: 10.0.0
+      read-pkg: 10.1.0
       type-fest: 5.8.0
 
-  read-pkg@10.0.0:
+  read-pkg@10.1.0:
     dependencies:
       '@types/normalize-package-data': 2.4.4
       normalize-package-data: 8.0.0
       parse-json: 8.3.0
       type-fest: 5.8.0
-      unicorn-magic: 0.3.0
+      unicorn-magic: 0.4.0
 
   read-pkg@9.0.1:
     dependencies:

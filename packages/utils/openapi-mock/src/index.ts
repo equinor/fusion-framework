@@ -14,6 +14,13 @@
  * mock router, `openapi-backend`, Express, or a hand-rolled server equally
  * easily.
  *
+ * @remarks
+ * Everything this entry point exports is safe for a browser (or browser-mode Vitest) runtime.
+ * `loadFakerMap` reads from the filesystem and shells out to `esbuild` to load a `.ts`/`.js`
+ * sidecar, so it lives at the separate `@equinor/fusion-openapi-mock/node` entry point instead —
+ * importing it here would pull `node:fs`/esbuild into every consumer's bundle, including ones
+ * that only ever call {@link createOpenApiMock} with an already-built `fields` map.
+ *
  * @packageDocumentation
  */
 
@@ -25,7 +32,6 @@ export {
   generateMockFromSchema,
   type GenerateMockFromSchemaOptions,
 } from './generate-mock-from-schema';
-export { loadFakerMap, type LoadFakerMapOptions } from './load-faker-map';
 export type {
   FakerPath,
   FieldFakerContext,
