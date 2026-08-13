@@ -1,6 +1,6 @@
 import { useFeature } from '@equinor/fusion-framework-react-app/feature-flag';
 
-import { Feature } from './static';
+import { Feature } from '../static';
 
 import { Switch, Typography } from '@equinor/eds-core-react';
 
@@ -28,7 +28,7 @@ export const FeatureFlags = () => {
           </Typography>
         </div>
         <Switch
-          checked={feature.enabled}
+          checked={!!feature.enabled}
           disabled={feature.readonly}
           onChange={() => toggleFeature()}
         />

@@ -18,7 +18,7 @@ export const FeatureFlag = (args: { onToggle: () => void; flag: IFeatureFlag }) 
           {flag.description}
         </Typography>
       </div>
-      <Switch checked={flag.enabled} disabled={flag.readonly} onChange={() => onToggle()} />
+      <Switch checked={!!flag.enabled} disabled={flag.readonly} onChange={() => onToggle()} />
     </div>
   );
 };
