@@ -29,6 +29,9 @@
     },
     {
       "path": "../../packages/utils/openapi-mock"
+    },
+    {
+      "path": "../../packages/vite-plugins/raw-imports"
     }
   ],
   "include": ["src/**/*", "src/types/**/*"],
