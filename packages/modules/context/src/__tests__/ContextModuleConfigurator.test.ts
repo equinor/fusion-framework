@@ -9,6 +9,8 @@ import { configureHttp } from '@equinor/fusion-framework-module-http';
 import { createRouterMiddleware } from '@equinor/fusion-framework-module-http/mock';
 import type { IApiProvider } from '@equinor/fusion-framework-module-services';
 import { enableServices } from '@equinor/fusion-framework-module-services';
+import { enableTelemetryMock, MockTelemetryAdapter } from '@equinor/fusion-framework-module-telemetry/mock';
+import { TelemetryLevel, TelemetryScope } from '@equinor/fusion-framework-module-telemetry';
 import type { QueryCtorOptions } from '@equinor/fusion-query';
 
 import {
@@ -87,10 +89,7 @@ const invoke = <TResult, TArgs>(
  * everything above it, including HTTP request/response handling, the services API
  * client, the context selectors, and `ContextProvider`, runs unmocked.
  */
-const initializeContextWith = async (
-  configure?: (builder: IContextModuleConfigurator) => void,
-): Promise<ContextProvider> => {
-  const configurator = new ModulesConfigurator([]);
+const addContextHttp = (configurator: ModulesConfigurator<[]>): void => {
   configurator.addConfig(
     configureHttp((http) => {
       http.configureClient('context', { baseUri: 'https://context.example.com' });
@@ -105,11 +104,40 @@ const initializeContextWith = async (
       );
     }),
   );
+};
+
+const initializeContextWith = async (
+  configure?: (builder: IContextModuleConfigurator) => void,
+): Promise<ContextProvider> => {
+  const configurator = new ModulesConfigurator([]);
+  addContextHttp(configurator);
   enableServices(configurator);
   configurator.addConfig({ module: contextModule, configure });
   const instances = await configurator.initialize();
   // the configurator's generic instance map doesn't know about the context module by name
   return (instances as unknown as { context: ContextProvider }).context;
+};
+
+/**
+ * Same as {@link initializeContextWith}, but with a recording telemetry adapter registered, so
+ * a test can assert on `Context::postInitialize.*` events/exceptions tracked through it instead
+ * of the no-telemetry `console.warn` fallback.
+ */
+const initializeContextWithTelemetry = async (
+  configure?: (builder: IContextModuleConfigurator) => void,
+): Promise<{ provider: ContextProvider; adapter: MockTelemetryAdapter }> => {
+  const configurator = new ModulesConfigurator([]);
+  addContextHttp(configurator);
+  enableServices(configurator);
+  const adapter = new MockTelemetryAdapter();
+  enableTelemetryMock(configurator, (builder) => builder.setAdapter('mock', adapter));
+  configurator.addConfig({ module: contextModule, configure });
+  const instances = await configurator.initialize();
+  return {
+    // the configurator's generic instance map doesn't know about the context module by name
+    provider: (instances as unknown as { context: ContextProvider }).context,
+    adapter,
+  };
 };
 
 describe('ContextModuleConfigurator', () => {
@@ -185,6 +213,7 @@ describe('ContextModuleConfigurator', () => {
       const configurator = new ContextModuleConfigurator();
       configurator.addConfigBuilder((builder) => {
         builder.setContextType(['ProjectMaster']);
+        // keep only active context items
         builder.setContextFilter((items) => items.filter((i) => i.isActive));
         builder.setContextClient(createMockClient());
       });
@@ -336,5 +365,45 @@ describe('ContextProvider through the real module system (http mocked at the net
     );
 
     warnSpy.mockRestore();
+  });
+
+  it('tracks the resolver error through telemetry (rather than console.warn) when a telemetry module is registered', async () => {
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const resolverError = new Error('boom');
+
+    const { provider, adapter } = await initializeContextWithTelemetry((builder) => {
+      builder.setResolveInitialContext(() => Promise.reject(resolverError));
+    });
+
+    expect(provider.currentContext).toBeUndefined();
+    expect(warnSpy).not.toHaveBeenCalled();
+
+    const [item] = adapter.getItems('Context::postInitialize.resolveInitialContext');
+    expect(item).toMatchObject({
+      name: 'Context::postInitialize.resolveInitialContext',
+      exception: resolverError,
+      level: TelemetryLevel.Warning,
+      scope: ['context', TelemetryScope.Framework],
+    });
+
+    warnSpy.mockRestore();
+  });
+
+  it('tracks a resolved initial context as a telemetry event', async () => {
+    const { provider, adapter } = await initializeContextWithTelemetry((builder) => {
+      builder.setResolveInitialContext(() =>
+        Promise.resolve({ id: 'ctx-1', type: { id: 'ProjectMaster' }, value: {} }),
+      );
+    });
+
+    expect(provider.currentContext?.id).toBe('ctx-1');
+
+    const [item] = adapter.getItems('Context::postInitialize.initialContextResolved');
+    expect(item).toMatchObject({
+      name: 'Context::postInitialize.initialContextResolved',
+      level: TelemetryLevel.Debug,
+      scope: ['context', TelemetryScope.Framework],
+      properties: { contextId: 'ctx-1' },
+    });
   });
 });
