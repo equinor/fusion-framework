@@ -81,12 +81,16 @@
   },
   "peerDependencies": {
     "@equinor/fusion-framework-module": "workspace:^",
+    "@equinor/fusion-framework-module-telemetry": "workspace:^",
     "@faker-js/faker": "^10.1.0",
     "@types/semver": "^7.0.0",
     "semver": "^7.0.0",
     "rxjs": "^7.0.0"
   },
   "peerDependenciesMeta": {
+    "@equinor/fusion-framework-module-telemetry": {
+      "optional": true
+    },
     "@faker-js/faker": {
       "optional": true
     }
