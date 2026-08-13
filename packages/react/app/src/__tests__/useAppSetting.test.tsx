@@ -7,7 +7,7 @@ import type { AppModule } from '@equinor/fusion-framework-module-app';
 import { createRouterMiddleware } from '@equinor/fusion-framework-module-http/mock';
 
 import { useAppSetting } from '../settings/useAppSetting';
-import { renderAppHook } from '../vitest/render-app-hook';
+import { renderAppHook } from '@equinor/fusion-framework-vitest-plugin-react-app/test';
 
 const env = {
   manifest: {

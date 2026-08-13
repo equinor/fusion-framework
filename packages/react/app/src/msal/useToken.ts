@@ -35,8 +35,10 @@ export const useToken = (req: {
 
   // `req` is typically a fresh object literal each render; key the effect on its
   // scopes' content instead of identity, so it doesn't re-run (and reset `pending`
-  // to `true` forever) every time the caller re-renders.
-  const scopesKey = req.scopes.join(',');
+  // to `true` forever) every time the caller re-renders. `JSON.stringify` (rather than
+  // `.join(',')`) keeps scopes with different array boundaries (e.g. `['a,b']` vs.
+  // `['a', 'b']`) from colliding on the same key.
+  const scopesKey = JSON.stringify(req.scopes);
   const reqRef = useRef(req);
   reqRef.current = req;
 

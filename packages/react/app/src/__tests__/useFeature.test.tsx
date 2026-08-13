@@ -9,7 +9,7 @@ import { enableFeatureFlagMock } from '@equinor/fusion-framework-module-feature-
 import type { FeatureFlagModule } from '@equinor/fusion-framework-module-feature-flag';
 
 import { useFeature } from '../feature-flag/useFeature';
-import { renderAppHook } from '../vitest/render-app-hook';
+import { renderAppHook } from '@equinor/fusion-framework-vitest-plugin-react-app/test';
 
 const env = {
   manifest: {

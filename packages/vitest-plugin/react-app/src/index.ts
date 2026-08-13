@@ -18,30 +18,46 @@ const DEFAULT_CONFIGURE_CANDIDATES = ['src/config.ts', 'src/config.tsx', 'src/co
  */
 export type AppTestVitePluginOptions = ResolveAppTestEnvOptions & {
   /**
-   * Path (relative to `cwd`) to the app's module-configurator export, mirroring the `configure`
-   * argument passed to `makeComponent` in the app's own entry point. Defaults to the first of
-   * `src/config.ts`, `src/config.tsx`, `src/config.js` that exists.
+   * Path (relative to `entrypoint`) to the app's module-configurator export, mirroring the
+   * `configure` argument passed to `makeComponent` in the app's own entry point. Defaults to the
+   * first of `src/config.ts`, `src/config.tsx`, `src/config.js` that exists.
+   *
+   * @remarks
+   * Unlike `manifest`/`config`, this can't be an inline function: it's live application code
+   * (with its own imports and closures) re-exported as-is into the test bundle rather than
+   * JSON-serialized data, so Vite needs a real file on disk to resolve and transform.
    */
-  configureModule?: string;
+  configure?: string;
 };
 
 /**
- * Vite plugin backing `ffc app test`: serves the application's manifest/config (resolved the
- * same way `ffc app build`/`ffc app dev` do) and its own module-configurator export as virtual
- * modules, so `@equinor/fusion-framework-react-app/vitest`'s `test` needs no per-test
+ * Vite plugin serving an application's manifest/config (resolved the same way `ffc app build`/
+ * `ffc app dev` do) and its own module-configurator export as virtual modules, so
+ * `@equinor/fusion-framework-vitest-plugin-react-app/test`'s `test`/`render` need no per-test
  * `env`/`configure` wiring.
  *
  * @remarks
+ * A plain Vite plugin — Vitest configs are Vite configs, so this registers directly in your
+ * own `vitest.config.ts`, no CLI command required:
+ * ```ts
+ * import { defineConfig } from 'vitest/config';
+ * import { appTestVitePlugin } from '@equinor/fusion-framework-vitest-plugin-react-app';
+ *
+ * export default defineConfig({
+ *   plugins: [appTestVitePlugin()],
+ *   // ...your own browser-mode config
+ * });
+ * ```
  * Exposes two virtual modules: `virtual:fusion-app-test-env` (`manifest`/`config`, as JSON) and
  * `virtual:fusion-app-test-configure` (a re-export of the resolved `configure` module, or
  * `undefined` if none exists). Not intended to be imported directly by application code.
  *
- * @param options - Resolution options; `cwd` defaults to the current working directory.
+ * @param options - Resolution options; `entrypoint` defaults to the current working directory.
  * @returns A Vite plugin instance.
  */
 export const appTestVitePlugin = (options?: AppTestVitePluginOptions): Plugin => {
-  const cwd = options?.cwd ?? process.cwd();
-  const configureModulePath = resolveConfigureModulePath(cwd, options?.configureModule);
+  const cwd = options?.entrypoint ?? process.cwd();
+  const configureModulePath = resolveConfigureModulePath(cwd, options?.configure);
 
   return {
     name: 'fusion:app-test',
@@ -53,7 +69,7 @@ export const appTestVitePlugin = (options?: AppTestVitePluginOptions): Plugin =>
       return null;
     },
     async load(id) {
-      // serves manifest/config resolved lazily here, not at plugin-creation time, so options.cwd changes between test runs are respected
+      // serves manifest/config resolved lazily here, not at plugin-creation time, so options.entrypoint changes between test runs are respected
       if (id === RESOLVED_ENV_MODULE_ID) {
         const { manifest, config } = await resolveAppTestEnv(options);
         return [

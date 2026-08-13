@@ -13,7 +13,7 @@ search to rediscover it.
 
 | Path | Contains | Published? |
 | --- | --- | --- |
-| `packages/*` | Framework libraries (59 packages) | Yes, via Changesets |
+| `packages/*` | Framework libraries (60 packages) | Yes, via Changesets |
 | `cookbooks/*` | Runnable example apps and portals | Yes (versioned, but examples) |
 | `eds-content/`, `eds/` | EDS design-system content and token tooling | No |
 | `vue-press/` | Documentation site | Partly |
@@ -129,6 +129,12 @@ Format: `package name` → path → role.
 > Linting packages have TypeScript project `references` between them. When adding a
 > cross-package import inside `packages/linting/*`, add the matching `references`
 > entry to `tsconfig.json` or isolated `prepack` builds will fail during publish.
+
+### Vitest plugins (`packages/vitest-plugin/*`)
+
+| Package | Path | Role |
+| --- | --- | --- |
+| `@equinor/fusion-framework-vitest-plugin-react-app` | `packages/vitest-plugin/react-app` | Vite plugin and Vitest helpers (`renderAppComponent`, `renderAppHook`, `testApp`) for testing React apps in a real, mock-backed application module scope |
 
 ### Cookbooks (`cookbooks/*`)
 
