@@ -2,7 +2,7 @@
 "@equinor/fusion-framework-react-app": major
 ---
 
-Remove the `./vitest` entry-point. `renderAppComponent` — a component-level counterpart to `renderAppHook` for testing components (not just hooks) against a real, mock-backed application module scope, built on `vitest-browser-react` instead of `@testing-library/react` — now lives in a separate package, `@equinor/fusion-framework-vitest-plugin-react-app`.
+Remove the `./vitest` entry-point. `renderAppComponent` — a component-level counterpart to `renderAppHook` for testing components (not just hooks) against a real, mock-backed application module scope, built on `vitest-browser-react` instead of the legacy DOM renderer — now lives in a separate package, `@equinor/fusion-framework-vitest-plugin-react-app`.
 
 ```tsx
 import { renderAppComponent } from '@equinor/fusion-framework-vitest-plugin-react-app';
@@ -24,4 +24,4 @@ await act(() => fusion.app.context.setCurrentContextByIdAsync(projectB.id));
 await expect.element(getByText(/project-b/)).toBeVisible();
 ```
 
-**Breaking change:** the `./vitest` entry-point is removed with no compatibility shim. Migrate by installing `@equinor/fusion-framework-vitest-plugin-react-app` and importing `renderAppComponent` from it instead, and replacing `@testing-library/react`'s `render`/`waitFor`/`act` with `vitest-browser-react`/`vitest`'s equivalents.
+**Breaking change:** the `./vitest` entry-point is removed with no compatibility shim. Migrate by installing `@equinor/fusion-framework-vitest-plugin-react-app`, importing `renderAppComponent` from it, and using `vitest-browser-react`/`vitest` for `render`, waiting, and React updates.
