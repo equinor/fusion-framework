@@ -36,6 +36,13 @@ export const userLocations = [
 ] as const;
 
 /**
+ * Fixed reference date for `faker.date.past()` calls: seeding faker alone only makes the
+ * pseudo-random offset deterministic, not the result, since `date.past()` defaults to `now`
+ * as its reference date. Fixing the reference date keeps generated dates stable across days.
+ */
+export const fakerRefDate = new Date('2025-01-01T00:00:00.000Z');
+
+/**
  * Generates one deterministic product from its numeric identifier.
  * @param id - The product's identifier, also used as the faker seed.
  * @returns A seeded product, stable across processes and test runs.
@@ -86,7 +93,7 @@ export function generateUser(id: number): User {
     department,
     phone: `+47 ${faker.string.numeric(3)} ${faker.string.numeric(2)} ${faker.string.numeric(3)}`,
     location,
-    joinDate: faker.date.past({ years: 5 }).toISOString().split('T')[0],
+    joinDate: faker.date.past({ years: 5, refDate: fakerRefDate }).toISOString().split('T')[0],
   };
 }
 

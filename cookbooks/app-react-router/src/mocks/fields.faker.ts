@@ -1,6 +1,12 @@
 import { faker } from '@faker-js/faker';
 import type { FieldFakerMap } from '@equinor/fusion-openapi-mock';
-import { productCategories, userRoles, userDepartments, userLocations } from './generators';
+import {
+  productCategories,
+  userRoles,
+  userDepartments,
+  userLocations,
+  fakerRefDate,
+} from './generators';
 
 /**
  * Field-level fakers for the `Product`/`User` schemas in {@link ./openapi.json}, reusing the
@@ -24,5 +30,6 @@ export default {
   'User.phone': () =>
     `+47 ${faker.string.numeric(3)} ${faker.string.numeric(2)} ${faker.string.numeric(3)}`,
   'User.location': () => faker.helpers.arrayElement(userLocations),
-  'User.joinDate': () => faker.date.past({ years: 5 }).toISOString().split('T')[0],
+  'User.joinDate': () =>
+    faker.date.past({ years: 5, refDate: fakerRefDate }).toISOString().split('T')[0],
 } satisfies FieldFakerMap;
