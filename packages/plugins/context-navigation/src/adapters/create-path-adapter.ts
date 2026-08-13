@@ -41,9 +41,14 @@ export function createPathAdapter(): ContextNavigationAdapter {
      * Accepts apps with explicit `'path'` strategy or no declared strategy
      * (the path adapter serves as the system-wide default fallback).
      */
-    canHandle({ appContext, routingStrategy }: AdapterResolutionContext): boolean {
+    canHandle({ appContext, routingStrategy, currentURL }: AdapterResolutionContext): boolean {
       // Custom generators mean the app owns its URL shape — the custom adapter handles it, not us
       if (hasCustomContextGenerators(appContext)) {
+        return false;
+      }
+
+      // Not an app route (e.g. portal chrome) — nothing for this adapter to encode context into
+      if (!parseAppRoute(currentURL.pathname)) {
         return false;
       }
 

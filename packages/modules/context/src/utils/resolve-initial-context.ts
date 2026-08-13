@@ -34,7 +34,7 @@ export const resolveContextFromParent: ContextModuleConfig['resolveInitialContex
 // Deliberately co-located with resolveContextFromParent, which it composes with
 // fusion-lint-disable-next-line single-export-per-file
 export const resolveInitialContext =
-  (options: {
+  (options?: {
     path?: ContextPathResolveArgs;
   }): Required<ContextModuleConfig>['resolveInitialContext'] =>
   ({ ref, modules }) => {
