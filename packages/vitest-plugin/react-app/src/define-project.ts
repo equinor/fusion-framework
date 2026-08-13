@@ -56,6 +56,10 @@ export const defineProject = (override?: AppTestConfigOverride): UserWorkspaceCo
         instances: [{ browser: 'chromium' }],
       },
     },
+    // pre-transforms all source up front so deps only reached via lazy/code-split imports
+    // (e.g. route components) are discovered before the first test request, not mid-run —
+    // the latter forces Vite to reload the page and fails the in-flight test file import
+    server: { warmup: { clientFiles: ['src/**/*.{ts,tsx}'] } },
   };
   // a function replaces the config outright; a plain object deep-merges onto it via Vite's own mergeConfig
   const resolved =
