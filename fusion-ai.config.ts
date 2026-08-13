@@ -24,8 +24,15 @@ export default {
       // one-liner TSDoc chunks and pollute search results for "http client" queries
       '!packages/modules/services/src/**/generate-parameters.ts',
       '!packages/modules/services/src/**/endpoints/**',
+      // Test files aren't consumer-facing API surface and pollute cookbook search results
+      '!cookbooks/**/__tests__/**',
+      '!cookbooks/**/*.{test,spec}.{ts,tsx}',
     ],
-    rawPatterns: ['cookbooks/**/*.{ts,tsx}'],
+    rawPatterns: [
+      'cookbooks/**/*.{ts,tsx}',
+      '!cookbooks/**/__tests__/**',
+      '!cookbooks/**/*.{test,spec}.{ts,tsx}',
+    ],
 
     // Promoted fields — top-level Azure AI Search fields for direct filtering
     // without the `any()` OData operator (see fusion-core-tasks#1011)
