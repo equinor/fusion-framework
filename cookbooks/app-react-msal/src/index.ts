@@ -3,14 +3,13 @@ import { createRoot } from 'react-dom/client';
 
 import { type ComponentRenderArgs, makeComponent } from '@equinor/fusion-framework-react-app';
 
-import configure from './config';
 import App from './App';
 
 /** create a render component */
 const appComponent = createElement(App);
 
 /** create React render root component */
-const createApp = (args: ComponentRenderArgs) => makeComponent(appComponent, args, configure);
+const createApp = (args: ComponentRenderArgs) => makeComponent(appComponent, args);
 
 /** Render function */
 export const renderApp = (el: HTMLElement, args: ComponentRenderArgs) => {
