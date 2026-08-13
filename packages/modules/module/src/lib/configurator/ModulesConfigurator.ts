@@ -265,11 +265,15 @@ export class ModulesConfigurator<
     // Find an existing descriptor so re-registering a name can replace all of its lifecycle hooks.
     const existingModule = Array.from(this._modules).find((m) => m.name === module.name);
 
-    // Re-registration must remove old callbacks before installing the replacement.
+    // Only handle replacement/dedupe when a descriptor is already registered under this name.
     if (existingModule) {
-      this._removeModuleCallbacks(module.name);
-      // Replace the descriptor only when the caller supplied a different object.
+      // Only a genuinely different descriptor for this name is a replacement that must
+      // discard the old callbacks. Re-registering the SAME descriptor object (as helpers
+      // like `configureHttpClient`/`useFrameworkServiceClient` do on every call, since they
+      // all share one module singleton) must stay additive so multiple calls can register
+      // multiple named clients without clobbering each other.
       if (existingModule !== module) {
+        this._removeModuleCallbacks(module.name);
         const modules = Array.from(this._modules)
           // Preserve every descriptor while substituting the newly registered module.
           .map((m) => (m.name === module.name ? module : m));
