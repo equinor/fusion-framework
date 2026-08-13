@@ -17,9 +17,10 @@ Use this package when you need to:
 - **Test against the application's own manifest, config, and module-configurator** — the same
   resolution pipeline `ffc app build`/`ffc app dev` use, served as virtual modules by
   `appTestVitePlugin`.
-- **Share one mocked scope across a test file** — `testApp`, a `vitest` `test` extended with
-  `env`/`configure`/`app`/`render`/`renderHook` fixtures, instead of repeating options on every
-  call.
+- **Share seeded fixture defaults across a test file** — `testApp`, a `vitest` `test` extended
+  with `env`/`configure`/`app`/`render`/`renderHook` fixtures, instead of repeating options on
+  every call. Each test still gets its own fresh `fusion`/`app` instances; only the seeded
+  defaults are shared, not state between tests.
 
 ## Installation
 
@@ -84,6 +85,7 @@ export default defineConfig({
 Then use the pre-seeded `test` fixture — no per-test `env`/`configure` wiring:
 
 ```tsx
+import { expect } from 'vitest';
 import { test } from '@equinor/fusion-framework-vitest-plugin-react-app/test';
 import { App } from '../App';
 
