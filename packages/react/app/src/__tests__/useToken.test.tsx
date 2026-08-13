@@ -43,4 +43,29 @@ describe('useToken', () => {
 
     await unmount();
   });
+
+  it('only re-acquires the token when the scopes\u2019 contents change, not on every re-render', async () => {
+    const fusion = await mockFramework();
+    const acquireToken = vi.spyOn(fusion.modules.auth, 'acquireToken');
+
+    const { result, rerender, unmount } = await renderAppHook(
+      (props) => useToken(props),
+      { initialProps: { scopes: ['User.Read'] }, fusion },
+    );
+
+    await vi.waitFor(() => expect(result.current.pending).toBe(false));
+    expect(acquireToken).toHaveBeenCalledTimes(1);
+
+    // a fresh array literal with the same contents must not trigger a re-acquisition
+    await rerender({ scopes: ['User.Read'] });
+    await vi.waitFor(() => expect(result.current.pending).toBe(false));
+    expect(acquireToken).toHaveBeenCalledTimes(1);
+
+    // changed scope contents must trigger a second acquisition
+    await rerender({ scopes: ['User.Read', 'Mail.Read'] });
+    await vi.waitFor(() => expect(result.current.pending).toBe(false));
+    expect(acquireToken).toHaveBeenCalledTimes(2);
+
+    await unmount();
+  });
 });
