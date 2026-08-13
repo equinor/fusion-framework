@@ -112,12 +112,23 @@ const mock = createOpenApiMock(openapi, {
 
 A nested (inline, non-`$ref`) field dots further — `'User.address.city'`. Once a nested field is itself a named component schema, its own fields key off *that* schema's name instead (`'Address.city'`, not `'User.address.city'`), since that's the model a real `$ref` in the spec actually points at.
 
-Build the map in code, or load it from a **sidecar file** with `loadFakerMap` — so the mapping lives next to your tests instead of inside the spec:
+Build the map in code, or load it from a **sidecar file** with `loadFakerMap` — so the mapping lives next to your tests instead of inside the spec. `loadFakerMap` reads from disk and, for a `.ts`/`.js` sidecar, shells out to `esbuild`, so it lives at the separate `@equinor/fusion-openapi-mock/node` entry point — importing it from there instead of the main entry point keeps `node:fs`/esbuild out of a browser (or browser-mode Vitest) bundle that only ever calls `createOpenApiMock` with an already-built map:
 
 ```ts
-import { createOpenApiMock, loadFakerMap } from '@equinor/fusion-openapi-mock';
+import { createOpenApiMock } from '@equinor/fusion-openapi-mock';
+import { loadFakerMap } from '@equinor/fusion-openapi-mock/node';
 
 const fields = await loadFakerMap('./fields.faker.ts');
+const mock = createOpenApiMock(openapi, { fields });
+```
+
+In a browser (or browser-mode Vitest) test, import the sidecar file directly instead — it's a
+plain ESM module once it holds no Node-only code:
+
+```ts
+import { createOpenApiMock } from '@equinor/fusion-openapi-mock';
+import fields from './fields.faker';
+
 const mock = createOpenApiMock(openapi, { fields });
 ```
 
@@ -152,8 +163,8 @@ export default {
 | `fetchOpenApiDocument(url, options?)` | Fetches and parses a JSON or YAML OpenAPI document from a URL. |
 | `dereferenceSchema(schema, document)` | Inlines every `$ref` JSON pointer in a schema against a document. |
 | `generateMockFromSchema(schema, options?)` | Fakes one value from an already-dereferenced schema. `options.seed` makes it repeatable. |
-| `loadFakerMap(source, options?)` | Loads a `FieldFakerMap` from a `.json`/`.yml`/`.yaml`/`.ts`/`.js` sidecar file, or returns an already-built map as-is. |
 | `applyFieldFakers(schema, document, fields)` | Dereferences a schema while annotating fields matched by a `FieldFakerMap`; used internally by `createOpenApiMock`'s `fields` option. |
+| `loadFakerMap(source, options?)` (from `@equinor/fusion-openapi-mock/node`) | Loads a `FieldFakerMap` from a `.json`/`.yml`/`.yaml`/`.ts`/`.js` sidecar file, or returns an already-built map as-is. Node-only — see the sidecar-file section above. |
 
 ## Notes
 
