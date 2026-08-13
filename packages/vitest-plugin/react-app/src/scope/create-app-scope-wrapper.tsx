@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import type { ReactElement, ReactNode } from 'react';
 
 import { FrameworkProvider } from '@equinor/fusion-framework-react';
 import { ModuleProvider } from '@equinor/fusion-framework-react-module';
@@ -17,7 +17,7 @@ import type { AppScope } from './resolve-app-scope';
 export function createAppScopeWrapper<TModules extends Array<AnyModule> | unknown = unknown>({
   framework,
   app,
-}: AppScope<TModules>) {
+}: AppScope<TModules>): (props: { children: ReactNode }) => ReactElement {
   return ({ children }: { children: ReactNode }) => (
     <FrameworkProvider value={framework}>
       <ModuleProvider value={app}>{children}</ModuleProvider>

@@ -47,10 +47,6 @@
       "types": "./dist/types/lib/dev-server.d.ts",
       "import": "./dist/esm/lib/dev-server.js"
     },
-    "./vitest": {
-      "types": "./dist/types/lib/vitest/index.d.ts",
-      "import": "./dist/esm/lib/vitest/index.js"
-    },
     "./bin": {
       "types": "./dist/types/bin/index.d.ts",
       "import": "./bin/build/bin.mjs"
@@ -80,9 +76,6 @@
       ],
       "dev-server": [
         "dist/types/lib/dev-server.d.ts"
-      ],
-      "vitest": [
-        "dist/types/lib/vitest/index.d.ts"
       ],
       "bin": [
         "dist/types/bin/index.d.ts"

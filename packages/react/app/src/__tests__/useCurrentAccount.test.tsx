@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { useCurrentAccount } from '../msal/useCurrentAccount';
-import { renderAppHook } from '../vitest/render-app-hook';
+import { renderAppHook } from '@equinor/fusion-framework-vitest-plugin-react-app/test';
 
 describe('useCurrentAccount', () => {
   it('returns the default mock user signed in by the app scope’s auth module', async () => {
