@@ -180,8 +180,7 @@
     "@types/react": "^18.0.0 || ^19.0.0",
     "react": "^18.0.0 || ^19.0.0",
     "react-dom": "^18.0.0 || ^19.0.0",
-    "rxjs": "^7.0.0",
-    "vitest-browser-react": "^2.2.0"
+    "rxjs": "^7.0.0"
   },
   "peerDependenciesMeta": {
     "@equinor/fusion-framework-react-module-ag-grid": {
@@ -215,9 +214,6 @@
       "optional": true
     },
     "@equinor/fusion-framework-react-router": {
-      "optional": true
-    },
-    "vitest-browser-react": {
       "optional": true
     }
   }
