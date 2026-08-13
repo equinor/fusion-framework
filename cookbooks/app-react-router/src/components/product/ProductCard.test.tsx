@@ -8,25 +8,33 @@ import { generateProduct } from '../../mocks/generators';
 // Same generator + seed the dev server and API mock use, so the fixture stays in sync with the real shape.
 const baseProduct: Product = generateProduct(42);
 
-testWithRouter('renders product details and a link to the product detail route', async ({ render }) => {
-  const { getByText, getByRole, unmount } = await render(<ProductCard product={baseProduct} />);
+testWithRouter(
+  'renders product details and a link to the product detail route',
+  async ({ render }) => {
+    const { getByText, getByRole, unmount } = await render(<ProductCard product={baseProduct} />);
 
-  await expect.element(getByText(baseProduct.name)).toBeInTheDocument();
-  await expect.element(getByText(baseProduct.category)).toBeInTheDocument();
-  await expect.element(getByText(`$${baseProduct.price}`)).toBeInTheDocument();
-  await expect.element(getByText(/✓ in stock/i)).toBeInTheDocument();
+    await expect.element(getByText(baseProduct.name)).toBeInTheDocument();
+    await expect.element(getByText(baseProduct.category)).toBeInTheDocument();
+    await expect.element(getByText(`$${baseProduct.price}`)).toBeInTheDocument();
+    await expect.element(getByText(/✓ in stock/i)).toBeInTheDocument();
 
-  const link = getByRole('link', { name: /view details/i });
-  await expect.element(link).toHaveAttribute('href', `${window.location.origin}/products/${baseProduct.id}`);
+    const link = getByRole('link', { name: /view details/i });
+    await expect
+      .element(link)
+      .toHaveAttribute('href', `${window.location.origin}/products/${baseProduct.id}`);
 
-  await unmount();
-});
+    await unmount();
+  },
+);
 
-testWithRouter('shows an out-of-stock badge when the product is not in stock', async ({ render }) => {
-  const product: Product = { ...baseProduct, inStock: false };
-  const { getByText, unmount } = await render(<ProductCard product={product} />);
+testWithRouter(
+  'shows an out-of-stock badge when the product is not in stock',
+  async ({ render }) => {
+    const product: Product = { ...baseProduct, inStock: false };
+    const { getByText, unmount } = await render(<ProductCard product={product} />);
 
-  await expect.element(getByText(/✗ out of stock/i)).toBeInTheDocument();
+    await expect.element(getByText(/✗ out of stock/i)).toBeInTheDocument();
 
-  await unmount();
-});
+    await unmount();
+  },
+);

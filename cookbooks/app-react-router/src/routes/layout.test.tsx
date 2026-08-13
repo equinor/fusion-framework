@@ -5,10 +5,16 @@ import type { RouteObject } from '@equinor/fusion-framework-react-router';
 
 import Layout from './layout';
 
-test('renders the header, sidebar navigation, and the matched child route content', async ({ render }) => {
+test('renders the header, sidebar navigation, and the matched child route content', async ({
+  render,
+}) => {
   window.history.pushState(null, '', '/');
   const routes: RouteObject[] = [
-    { path: '/', Component: Layout, children: [{ index: true, Component: () => <div>Home content</div> }] },
+    {
+      path: '/',
+      Component: Layout,
+      children: [{ index: true, Component: () => <div>Home content</div> }],
+    },
   ];
 
   const { getByRole, getByTitle, getByText, unmount } = await render(<Router routes={routes} />);
