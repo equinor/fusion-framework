@@ -23,9 +23,7 @@ test('navigates to a route nested under prefix() and renders it', async ({ rende
 
   // error-test's loader always throws, so the router's error boundary is what renders here,
   // not the route's default-exported component.
-  await expect
-    .element(getByRole('heading', { name: /error encountered/i }))
-    .toBeInTheDocument();
+  await expect.element(getByRole('heading', { name: /error encountered/i })).toBeInTheDocument();
   await expect
     .element(getByText(/this is a test error to demonstrate error boundaries/i).first())
     .toBeInTheDocument();
@@ -46,9 +44,7 @@ test('navigation module navigates the app to a new route', async ({ render, app 
 
   // error-test's loader always throws, so the router's error boundary is what renders here,
   // not the route's default-exported component.
-  await expect
-    .element(getByRole('heading', { name: /error encountered/i }))
-    .toBeInTheDocument();
+  await expect.element(getByRole('heading', { name: /error encountered/i })).toBeInTheDocument();
   expect(window.location.pathname).toBe('/pages/error-test');
 
   await unmount();

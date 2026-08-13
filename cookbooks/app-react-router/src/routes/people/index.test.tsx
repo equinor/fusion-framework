@@ -33,21 +33,30 @@ testWithRouter('renders matching people for a search term', async ({ render }) =
   await unmount();
 });
 
-testWithRouter('shows a no-results state when the search term matches nobody', async ({ render }) => {
-  const props = createRouteProps({ persons: [], searchTerm: 'nobody' });
-  const { getByText, unmount } = await render(<PeoplePage {...props} />);
+testWithRouter(
+  'shows a no-results state when the search term matches nobody',
+  async ({ render }) => {
+    const props = createRouteProps({ persons: [], searchTerm: 'nobody' });
+    const { getByText, unmount } = await render(<PeoplePage {...props} />);
 
-  await expect.element(getByText(/no results found for "nobody"/i)).toBeInTheDocument();
-  await expect.element(getByText('No Results', { exact: true })).toBeInTheDocument();
+    await expect.element(getByText(/no results found for "nobody"/i)).toBeInTheDocument();
+    await expect.element(getByText('No Results', { exact: true })).toBeInTheDocument();
 
-  await unmount();
-});
+    await unmount();
+  },
+);
 
-testWithRouter('renders the action error message when the search submission failed validation', async ({ render }) => {
-  const props = createRouteProps({ persons: [], searchTerm: '' }, { error: 'Search term is required' });
-  const { getByText, unmount } = await render(<PeoplePage {...props} />);
+testWithRouter(
+  'renders the action error message when the search submission failed validation',
+  async ({ render }) => {
+    const props = createRouteProps(
+      { persons: [], searchTerm: '' },
+      { error: 'Search term is required' },
+    );
+    const { getByText, unmount } = await render(<PeoplePage {...props} />);
 
-  await expect.element(getByText('Search term is required')).toBeInTheDocument();
+    await expect.element(getByText('Search term is required')).toBeInTheDocument();
 
-  await unmount();
-});
+    await unmount();
+  },
+);

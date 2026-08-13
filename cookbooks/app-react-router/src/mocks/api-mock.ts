@@ -1,7 +1,13 @@
 import { createOpenApiMock } from '@equinor/fusion-openapi-mock';
 import openapi from './openapi.json' with { type: 'json' };
 import fields from './fields.faker';
-import { productCategories, generateProduct, generateProducts, generateUser, generateUsers } from './generators';
+import {
+  productCategories,
+  generateProduct,
+  generateProducts,
+  generateUser,
+  generateUsers,
+} from './generators';
 
 /**
  * Fakes the cookbook's products/users endpoints straight from {@link ./openapi.json}, so a test

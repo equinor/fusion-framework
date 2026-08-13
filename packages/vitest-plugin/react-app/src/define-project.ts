@@ -1,5 +1,9 @@
 import { playwright } from '@vitest/browser-playwright';
-import { defineProject as defineVitestProject, mergeConfig, type UserWorkspaceConfig } from 'vitest/config';
+import {
+  defineProject as defineVitestProject,
+  mergeConfig,
+  type UserWorkspaceConfig,
+} from 'vitest/config';
 
 import { appTestVitePlugin } from './index.js';
 

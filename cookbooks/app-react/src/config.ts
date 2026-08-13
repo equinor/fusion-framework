@@ -10,17 +10,17 @@ import type { AppModuleInitiator } from '@equinor/fusion-framework-react-app';
  *
  * @see {@link https://github.com/equinor/fusion-framework/blob/main/packages/modules/http/docs/client-configuration.md | HTTP client configuration}
  */
-export const configure: AppModuleInitiator = (configurator, env) => {
+export const configure: AppModuleInitiator = (configurator, _env) => {
   /** print render environment arguments */
   //console.log('configuring application', env);
 
   /** callback when configurations is created */
-  configurator.onConfigured((config) => {
+  configurator.onConfigured((_config) => {
     // console.log('application config created', config);
   });
 
   /** callback when the application modules has initialized */
-  configurator.onInitialized((instance) => {
+  configurator.onInitialized((_instance) => {
     // console.log('application config initialized', instance);
   });
 };
