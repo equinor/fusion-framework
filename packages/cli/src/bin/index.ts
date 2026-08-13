@@ -18,7 +18,6 @@ export { checkApp } from './check-app.js';
 export { loadAppManifest } from './load-app-manifest.js';
 export { uploadApplication } from './upload-application.js';
 export { tagApplication } from './tag-application.js';
-export { testApplication, type TestApplicationOptions } from './test-application.js';
 
 export { startPortalDevServer } from './start-portal-dev-server.js';
 export { servePortal, type ServePortalOptions } from './serve-portal.js';

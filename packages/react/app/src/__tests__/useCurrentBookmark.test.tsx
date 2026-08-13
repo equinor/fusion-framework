@@ -8,7 +8,7 @@ import { enableBookmarkMock } from '@equinor/fusion-framework-module-bookmark/mo
 import type { Bookmark, BookmarkModule } from '@equinor/fusion-framework-module-bookmark';
 
 import { useCurrentBookmark } from '../bookmark/useCurrentBookmark';
-import { renderAppHook } from '../vitest/render-app-hook';
+import { renderAppHook } from '@equinor/fusion-framework-vitest-plugin-react-app/test';
 import { useAppModules } from '../useAppModules';
 
 const env = {

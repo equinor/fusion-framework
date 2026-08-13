@@ -9,7 +9,7 @@ import { enableContextMock } from '@equinor/fusion-framework-module-context/mock
 import type { ContextItem, ContextModule } from '@equinor/fusion-framework-module-context';
 
 import { useCurrentContext } from '../context/useCurrentContext';
-import { renderAppHook } from '../vitest/render-app-hook';
+import { renderAppHook } from '@equinor/fusion-framework-vitest-plugin-react-app/test';
 
 const env = {
   manifest: {
