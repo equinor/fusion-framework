@@ -11,6 +11,10 @@
     "./test": {
       "types": "./dist/types/app-test.d.ts",
       "import": "./dist/esm/app-test.js"
+    },
+    "./config": {
+      "types": "./dist/types/define-project.d.ts",
+      "import": "./dist/esm/define-project.js"
     }
   },
   "types": "dist/types/index.d.ts",
@@ -18,6 +22,9 @@
     "*": {
       "test": [
         "dist/types/app-test.d.ts"
+      ],
+      "config": [
+        "dist/types/define-project.d.ts"
       ]
     }
   },
@@ -69,6 +76,8 @@
   },
   "peerDependencies": {
     "@types/react": "^18.0.0 || ^19.0.0",
+    "@vitest/browser-playwright": "^4.0.0",
+    "playwright": "^1.0.0",
     "react": "^18.0.0 || ^19.0.0",
     "react-dom": "^18.0.0 || ^19.0.0",
     "rxjs": "^7.0.0",

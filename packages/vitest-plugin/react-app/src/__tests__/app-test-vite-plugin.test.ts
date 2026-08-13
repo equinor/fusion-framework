@@ -8,6 +8,7 @@ import { appTestVitePlugin } from '../index.js';
 
 type ResolveIdHook = (id: string) => string | null | undefined;
 type LoadHook = (id: string) => string | null | undefined | Promise<string | null | undefined>;
+type ConfigResolvedHook = (config: { root: string }) => void;
 
 describe('appTestVitePlugin', () => {
   let dir: string;
@@ -52,6 +53,22 @@ describe('appTestVitePlugin', () => {
     const source = await load('\0virtual:fusion-app-test-configure');
 
     expect(source).toBe('export const configure = undefined;');
+  });
+
+  it('resolves the app from the Vitest project root when no entrypoint is provided', async () => {
+    await mkdir(join(dir, 'src'), { recursive: true });
+    await writeFile(join(dir, 'src', 'index.ts'), 'export {};');
+    await writeFile(join(dir, 'src', 'config.ts'), 'export default () => undefined;');
+    const plugin = appTestVitePlugin();
+    const configResolved = plugin.configResolved as ConfigResolvedHook;
+    const load = plugin.load as LoadHook;
+
+    configResolved({ root: dir });
+
+    expect(await load('\0virtual:fusion-app-test-env')).toContain('"appKey":"my-app"');
+    expect(await load('\0virtual:fusion-app-test-configure')).toBe(
+      `export { default as configure } from ${JSON.stringify(join(dir, 'src', 'config.ts'))};`,
+    );
   });
 
   it('re-exports the default candidate config file as the configure virtual module', async () => {

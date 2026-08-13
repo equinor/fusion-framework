@@ -308,7 +308,7 @@ export as virtual modules, so the `/test` entry-point's `test`/`render` need no 
 
 ```ts
 appTestVitePlugin({
-  entrypoint?: string; // defaults to process.cwd()
+  entrypoint?: string; // defaults to the resolved Vite/Vitest project root
   manifest?: string | AppManifestFn;
   config?: string | AppConfigFn;
   configure?: string; // defaults to the first of src/config.ts, src/config.tsx, src/config.js
