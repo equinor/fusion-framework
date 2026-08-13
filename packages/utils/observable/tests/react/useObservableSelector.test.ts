@@ -1,16 +1,16 @@
 import { useState, useEffect, useCallback } from 'react';
 import { BehaviorSubject, Subject } from 'rxjs';
 
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
-import { renderHook, waitFor } from '@testing-library/react';
+import { renderHook } from 'vitest-browser-react';
 
 import { useObservableSelector } from '../../src/react';
 
 describe('useObservableSelector', () => {
   it('should create an observable selector by path', async () => {
     const subject = new BehaviorSubject({ foo: { bar: 'initial' } });
-    const { result } = renderHook(() => {
+    const { result } = await renderHook(() => {
       const [value, setValue] = useState('');
       const selectedValue$ = useObservableSelector(subject, 'foo.bar');
       useEffect(() => {
@@ -25,7 +25,7 @@ describe('useObservableSelector', () => {
 
     subject.next({ foo: { bar: 'test' } });
 
-    await waitFor(() => {
+    await vi.waitFor(() => {
       expect(result.current.value).toBe('test');
       expect(result.current.value).toBe(subject.value.foo.bar);
     });
@@ -34,7 +34,7 @@ describe('useObservableSelector', () => {
   it('should create an observable selector by callback', async () => {
     type TestState = { foo: string };
     const subject = new Subject<TestState>();
-    const { result } = renderHook(() => {
+    const { result } = await renderHook(() => {
       const [value, setValue] = useState('');
       const selectedValue$ = useObservableSelector(
         subject,
@@ -51,7 +51,7 @@ describe('useObservableSelector', () => {
 
     subject.next({ foo: 'bar' });
 
-    await waitFor(() => {
+    await vi.waitFor(() => {
       expect(result.current.value).to.equal('bar');
     });
   });

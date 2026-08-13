@@ -1,4 +1,4 @@
-import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { cleanup, render } from 'vitest-browser-react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { ClaimableRole } from './ClaimableRole';
@@ -43,12 +43,12 @@ describe('ClaimableRole', () => {
     const json = vi.fn();
     mocks.createClient.mockResolvedValue({ json });
 
-    render(<ClaimableRole assignment={assignment} onChange={vi.fn()} />);
+    const screen = await render(<ClaimableRole assignment={assignment} onChange={vi.fn()} />);
 
-    fireEvent.click(screen.getByLabelText('Activate Developer role'));
-    fireEvent.click(screen.getByRole('button', { name: 'Activate' }));
+    await screen.getByLabelText('Activate Developer role').click();
+    await screen.getByRole('button', { name: 'Activate' }).click();
 
-    expect(await screen.findByText('Reason is required.')).toBeTruthy();
+    await expect.element(screen.getByText('Reason is required.')).toBeVisible();
     expect(json).not.toHaveBeenCalled();
   });
 
@@ -57,15 +57,13 @@ describe('ClaimableRole', () => {
     const onChange = vi.fn();
     mocks.createClient.mockResolvedValue({ json });
 
-    render(<ClaimableRole assignment={assignment} onChange={onChange} />);
+    const screen = await render(<ClaimableRole assignment={assignment} onChange={onChange} />);
 
-    fireEvent.click(screen.getByLabelText('Activate Developer role'));
-    fireEvent.change(screen.getByLabelText('Reason for activation'), {
-      target: { value: 'Testing role-dependent behavior' },
-    });
-    fireEvent.click(screen.getByRole('button', { name: 'Activate' }));
+    await screen.getByLabelText('Activate Developer role').click();
+    await screen.getByLabelText('Reason for activation').fill('Testing role-dependent behavior');
+    await screen.getByRole('button', { name: 'Activate' }).click();
 
-    await waitFor(() =>
+    await vi.waitFor(() =>
       expect(onChange).toHaveBeenCalledWith({
         ...assignment,
         isActive: true,

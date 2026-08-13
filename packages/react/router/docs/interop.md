@@ -28,11 +28,11 @@ import {
 An in-memory router that never touches browser history. Use it to wrap a single component in a unit test or to embed an isolated widget that must not affect the host page URL.
 
 ```tsx
-import { render } from '@testing-library/react';
+import { render } from 'vitest-browser-react';
 import { MemoryRouter } from '@equinor/fusion-framework-react-router/interop';
 import { MyComponent } from './MyComponent';
 
-render(
+await render(
   <MemoryRouter initialEntries={['/items/42']}>
     <MyComponent />
   </MemoryRouter>,
@@ -44,7 +44,7 @@ render(
 Use when your component depends on loaders, actions, or nested routes. `createMemoryRouter` builds a full router instance backed by in-memory history; `RouterProvider` mounts it.
 
 ```tsx
-import { render } from '@testing-library/react';
+import { render } from 'vitest-browser-react';
 import {
   createMemoryRouter,
   RouterProvider,
@@ -61,7 +61,7 @@ const router = createMemoryRouter(
   { initialEntries: ['/items/42'] },
 );
 
-render(<RouterProvider router={router} />);
+await render(<RouterProvider router={router} />);
 ```
 
 ### `Routes` and `Route`
