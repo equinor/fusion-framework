@@ -1,5 +1,11 @@
 # Change Log
 
+## 13.0.1
+
+### Patch Changes
+
+- @equinor/fusion-framework@8.0.15
+
 ## 13.0.0
 
 ### Patch Changes

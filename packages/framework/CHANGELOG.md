@@ -1,5 +1,12 @@
 # Change Log
 
+## 8.0.15
+
+### Patch Changes
+
+- Updated dependencies [73bfe52]
+  - @equinor/fusion-framework-module-context@8.0.3
+
 ## 8.0.14
 
 ### Patch Changes

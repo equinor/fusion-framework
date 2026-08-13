@@ -1,5 +1,17 @@
 # @equinor/fusion-framework-dev-portal
 
+## 10.0.2
+
+### Patch Changes
+
+- Updated dependencies [73bfe52]
+- Updated dependencies [73bfe52]
+  - @equinor/fusion-framework-module-context@8.0.3
+  - @equinor/fusion-framework-plugin-context-navigation@0.1.2
+  - @equinor/fusion-framework@8.0.15
+  - @equinor/fusion-framework-module-analytics@3.0.6
+  - @equinor/fusion-framework-app@13.0.1
+
 ## 10.0.1
 
 ### Patch Changes
