@@ -127,8 +127,10 @@ jobs:
         run: exit 1
 
       - name: Install Playwright browsers
-        # required for @equinor/fusion-framework-react-app and @equinor/fusion-framework-vitest-plugin-react-app's Vitest Browser Mode tests
-        run: pnpm exec playwright install --with-deps chromium
+        # `playwright` isn't a root dependency, so `pnpm exec` needs a --filter into a package that
+        # has it (react-app, vitest-plugin-react-app); the installed browser cache is shared, so
+        # this covers both packages' Vitest Browser Mode tests
+        run: pnpm --filter @equinor/fusion-framework-vitest-plugin-react-app exec playwright install --with-deps chromium
 
       - name: Create Test Report
         run: pnpm test run
