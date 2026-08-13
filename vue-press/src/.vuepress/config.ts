@@ -1,6 +1,6 @@
-import { defineUserConfig } from '@vuepress/cli';
+import { defineUserConfig } from 'vuepress/cli';
 import { viteBundler } from '@vuepress/bundler-vite';
-import { getDirname, path } from '@vuepress/utils';
+import { getDirname, path } from 'vuepress/utils';
 import { registerComponentsPlugin } from '@vuepress/plugin-register-components';
 
 const __dirname = getDirname(import.meta.url);
@@ -36,10 +36,6 @@ export default defineUserConfig({
     }),
   ],
   markdown: {
-    gfm: true,
-    code: {
-      lineNumbers: false,
-    },
     importCode: {
       handleImportPath: (str) => {
         return str
