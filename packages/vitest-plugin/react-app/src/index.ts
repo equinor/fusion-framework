@@ -56,11 +56,19 @@ export type AppTestVitePluginOptions = ResolveAppTestEnvOptions & {
  * @returns A Vite plugin instance.
  */
 export const appTestVitePlugin = (options?: AppTestVitePluginOptions): Plugin => {
-  const cwd = options?.entrypoint ?? process.cwd();
-  const configureModulePath = resolveConfigureModulePath(cwd, options?.configure);
+  const explicitEntrypoint = options?.entrypoint;
+  let entrypoint = explicitEntrypoint;
+  let configureModulePath = explicitEntrypoint
+    ? resolveConfigureModulePath(explicitEntrypoint, options?.configure)
+    : undefined;
 
   return {
     name: 'fusion:app-test',
+    configResolved(config) {
+      // Vitest resolves each workspace project's root from its config file, which identifies the app containing src/index.ts.
+      entrypoint ??= config.root;
+      configureModulePath ??= resolveConfigureModulePath(entrypoint, options?.configure);
+    },
     resolveId(id) {
       // claim only our two virtual specifiers, leave everything else to the normal resolvers
       if (id === ENV_MODULE_ID) return RESOLVED_ENV_MODULE_ID;
@@ -71,7 +79,7 @@ export const appTestVitePlugin = (options?: AppTestVitePluginOptions): Plugin =>
     async load(id) {
       // serves manifest/config resolved lazily here, not at plugin-creation time, so options.entrypoint changes between test runs are respected
       if (id === RESOLVED_ENV_MODULE_ID) {
-        const { manifest, config } = await resolveAppTestEnv(options);
+        const { manifest, config } = await resolveAppTestEnv({ ...options, entrypoint });
         return [
           `export const manifest = ${JSON.stringify(manifest)};`,
           `export const config = ${JSON.stringify(config)};`,
