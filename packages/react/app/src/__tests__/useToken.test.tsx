@@ -48,10 +48,10 @@ describe('useToken', () => {
     const fusion = await mockFramework();
     const acquireToken = vi.spyOn(fusion.modules.auth, 'acquireToken');
 
-    const { result, rerender, unmount } = await renderAppHook(
-      (props) => useToken(props),
-      { initialProps: { scopes: ['User.Read'] }, fusion },
-    );
+    const { result, rerender, unmount } = await renderAppHook((props) => useToken(props), {
+      initialProps: { scopes: ['User.Read'] },
+      fusion,
+    });
 
     await vi.waitFor(() => expect(result.current.pending).toBe(false));
     expect(acquireToken).toHaveBeenCalledTimes(1);
