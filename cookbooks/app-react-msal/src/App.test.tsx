@@ -5,9 +5,10 @@ import { test } from '@equinor/fusion-framework-vitest-plugin-react-app/test';
 import { App } from './App';
 
 /**
- * Composes the cookbook's real `configure` with a named mock account, instead of
- * the msal mock's default "Test User" — signed in before the msal provider
- * initializes, so the provider's own start-up path observes it.
+ * Sets a named mock account instead of the msal mock's default "Test User" —
+ * signed in before the msal provider initializes, so the provider's own
+ * start-up path observes it. The cookbook registers no `configure` of its own,
+ * so this is the test's entire configuration, not a composition with one.
  */
 const withMockAccount =
   (account: { name: string; username?: string }): AppMockConfigureFn =>
