@@ -5,7 +5,9 @@ import { home, work_outline } from '@equinor/eds-icons';
 
 import { useNavigationItems } from './useNavigationItems';
 
-test('returns a navigation item for each route with a title and icon in its handle', async ({ renderHook }) => {
+test('returns a navigation item for each route with a title and icon in its handle', async ({
+  renderHook,
+}) => {
   const routes: RouteObject[] = [
     { path: '/', handle: { route: { title: 'Home', icon: home } } },
     { path: '/users', handle: { route: { title: 'Users', icon: work_outline } } },
@@ -37,7 +39,9 @@ test('joins nested child paths onto their parent route path', async ({ renderHoo
     {
       path: '/products',
       handle: { route: { title: 'Products', icon: home } },
-      children: [{ path: ':id', handle: { route: { title: 'Product Detail', icon: work_outline } } }],
+      children: [
+        { path: ':id', handle: { route: { title: 'Product Detail', icon: work_outline } } },
+      ],
     },
   ];
 

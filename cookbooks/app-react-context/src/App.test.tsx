@@ -2,10 +2,7 @@ import { test } from '@equinor/fusion-framework-vitest-plugin-react-app/test';
 import type { AppModulesInstance } from '@equinor/fusion-framework-react-app';
 import { mockFramework } from '@equinor/fusion-framework/mock';
 import type { FusionModulesInstance } from '@equinor/fusion-framework';
-import {
-  enableAppManifestMock,
-  type AppMockConfigureFn,
-} from '@equinor/fusion-framework-app/mock';
+import { enableAppManifestMock, type AppMockConfigureFn } from '@equinor/fusion-framework-app/mock';
 import type { AppModule } from '@equinor/fusion-framework-module-app';
 import { enableContextMock } from '@equinor/fusion-framework-module-context/mock';
 import type { ContextItem, ContextModule } from '@equinor/fusion-framework-react-module-context';
@@ -15,16 +12,32 @@ import { describe, expect, vi } from 'vitest';
 import { App } from './App';
 import { configure } from './config';
 
-const project: ContextItem = { id: 'project-a', type: { id: 'ProjectMaster' }, value: {}, title: 'Project A' };
-const facility: ContextItem = { id: 'facility-a', type: { id: 'Facility' }, value: {}, title: 'Facility A' };
-const discipline: ContextItem = { id: 'discipline-a', type: { id: 'Discipline' }, value: {}, title: 'Discipline A' };
+const project: ContextItem = {
+  id: 'project-a',
+  type: { id: 'ProjectMaster' },
+  value: {},
+  title: 'Project A',
+};
+const facility: ContextItem = {
+  id: 'facility-a',
+  type: { id: 'Facility' },
+  value: {},
+  title: 'Facility A',
+};
+const discipline: ContextItem = {
+  id: 'discipline-a',
+  type: { id: 'Discipline' },
+  value: {},
+  title: 'Discipline A',
+};
 
 /**
  * Composes the cookbook's real `configure` with `enableContextMock`, which
  * replaces the real context module `enableContext` just registered — seeding
  * known context items without a fake router or network mock.
  */
-const withSeededContext = (seed: Parameters<typeof enableContextMock>[1]): AppMockConfigureFn =>
+const withSeededContext =
+  (seed: Parameters<typeof enableContextMock>[1]): AppMockConfigureFn =>
   (configurator, args) => {
     configure(configurator, args);
     enableContextMock(configurator, seed);
@@ -34,7 +47,9 @@ const withSeededContext = (seed: Parameters<typeof enableContextMock>[1]): AppMo
 
 // --- tests ---
 
-test('renders the current and related context sections once the app configuration has initialized', async ({ render }) => {
+test('renders the current and related context sections once the app configuration has initialized', async ({
+  render,
+}) => {
   const { getByRole, unmount } = await render(<App />);
 
   await expect.element(getByRole('heading', { name: /current context/i })).toBeInTheDocument();
@@ -147,4 +162,3 @@ describe('with a parent framework context', () => {
     await unmount();
   });
 });
-

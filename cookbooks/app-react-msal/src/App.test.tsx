@@ -9,12 +9,11 @@ import { App } from './App';
  * the msal mock's default "Test User" — signed in before the msal provider
  * initializes, so the provider's own start-up path observes it.
  */
-const withMockAccount = (account: {
-  name: string;
-  username?: string;
-}): AppMockConfigureFn => (configurator) => {
-  configurator.msal.setAccount(account);
-};
+const withMockAccount =
+  (account: { name: string; username?: string }): AppMockConfigureFn =>
+  (configurator) => {
+    configurator.msal.setAccount(account);
+  };
 
 // --- tests ---
 
