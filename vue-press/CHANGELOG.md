@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-docs
 
+## 0.4.20
+
+### Patch Changes
+
+- 876e6ca: Fix the documentation site failing to render because VuePress client data was loaded from duplicate runtime instances.
+
 ## 0.4.19
 
 ### Patch Changes
