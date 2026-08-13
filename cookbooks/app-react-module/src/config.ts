@@ -6,8 +6,8 @@ export const configure: AppModuleInitiator<[DemoModule]> = (configurator) => {
     module: demoModule,
     configure(configBuilder) {
       configBuilder.setFoo(async () => 'https://foo.bar');
-      /** disable to see default process */
-      configBuilder.setBar(() => 69);
+      /** comment out to see the configurator's delayed default (bar: 5) instead */
+      configBuilder.setBar(async () => 69);
     },
   });
 };
