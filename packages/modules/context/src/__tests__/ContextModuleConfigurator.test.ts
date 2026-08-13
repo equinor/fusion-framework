@@ -9,7 +9,10 @@ import { configureHttp } from '@equinor/fusion-framework-module-http';
 import { createRouterMiddleware } from '@equinor/fusion-framework-module-http/mock';
 import type { IApiProvider } from '@equinor/fusion-framework-module-services';
 import { enableServices } from '@equinor/fusion-framework-module-services';
-import { enableTelemetryMock, MockTelemetryAdapter } from '@equinor/fusion-framework-module-telemetry/mock';
+import {
+  enableTelemetryMock,
+  MockTelemetryAdapter,
+} from '@equinor/fusion-framework-module-telemetry/mock';
 import { TelemetryLevel, TelemetryScope } from '@equinor/fusion-framework-module-telemetry';
 import type { QueryCtorOptions } from '@equinor/fusion-query';
 
