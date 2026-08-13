@@ -18,6 +18,10 @@
     ".": {
       "import": "./dist/esm/index.js",
       "types": "./dist/types/index.d.ts"
+    },
+    "./node": {
+      "import": "./dist/esm/node.js",
+      "types": "./dist/types/node.d.ts"
     }
   },
   "types": "dist/types/index.d.ts",
