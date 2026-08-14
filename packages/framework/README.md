@@ -118,6 +118,7 @@ The entry point has **no test-runner dependency**, and ships no mocking API of i
 
 | Guide | Covers |
 | --- | --- |
+| [Choosing a testing layer](./docs/testing-choosing-a-layer.md) | Which import to use for React app, framework, module, HTTP, and runner-level tests |
 | [Testing](./docs/testing.md) | Choosing the user, signed-out tests, composing the service registry, spying, and configuring as an application does |
 | [Testing — design](./docs/testing-design.md) | What is substituted and why, where mocks live, determinism, and test-runner support |
 | [Testing — adding a mock for another module](./docs/testing-extending.md) | Giving your own module a test double, and which framework modules are not covered yet |

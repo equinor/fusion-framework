@@ -209,12 +209,12 @@ import { Something } from '@equinor/package-name';
 
 ## API Reference
 
-- [Detailed API docs](docs/api.md)
-- [Configuration options](docs/config.md)
+- Detailed API docs: `docs/api.md`
+- Configuration options: `docs/config.md`
 
 ## Migration Guide
 
-See [migration guide](docs/migration-v1-to-v2.md) for breaking changes.
+Link to `docs/migration-v1-to-v2.md` when a package has breaking changes.
 ```
 
 #### Feature Documentation

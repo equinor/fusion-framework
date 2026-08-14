@@ -19,4 +19,8 @@ Highlights:
 - `appTestVitePlugin` — a Vite plugin resolving an application's own manifest, config, and module-configurator (the same pipeline `ffc app build`/`ffc app dev` use) as virtual modules.
 - A `/test` entry-point exporting `test`/`render`, pre-seeded from the resolved manifest/config/configure once `appTestVitePlugin` is registered — no per-test `env`/`configure` wiring.
 
+Package documentation provides task-focused guides for setup, configuration, advanced fixtures,
+module mocks, and troubleshooting so npm, GitHub, and retrieval clients use the same canonical
+source as the VuePress site.
+
 This replaces `@equinor/fusion-framework-react-app`'s removed `./vitest` entry-point; see that package's changelog for migration notes.

@@ -1485,6 +1485,9 @@ importers:
       '@equinor/eds-tokens':
         specifier: ^2.2.0
         version: 2.3.2
+      '@equinor/eds-utils':
+        specifier: ^2.2.1
+        version: 2.2.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(styled-components@6.5.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
       '@equinor/fusion-framework':
         specifier: workspace:*
         version: link:../framework
@@ -1539,9 +1542,6 @@ importers:
       '@equinor/fusion-framework-react-router':
         specifier: workspace:*
         version: link:../react/router
-      '@equinor/fusion-framework-vitest-plugin-react-app':
-        specifier: workspace:*
-        version: link:../vitest-plugin/react-app
       '@equinor/fusion-observable':
         specifier: workspace:*
         version: link:../utils/observable
@@ -2602,6 +2602,9 @@ importers:
       '@equinor/fusion-observable':
         specifier: workspace:*
         version: link:../../utils/observable
+      '@remix-run/router':
+        specifier: ^1.23.3
+        version: 1.23.3
       '@types/react':
         specifier: ^19.2.7
         version: 19.2.18
@@ -3053,9 +3056,6 @@ importers:
         specifier: ^14.0.0
         version: 14.0.1
     devDependencies:
-      '@equinor/fusion-framework-vitest-plugin-react-app':
-        specifier: workspace:*
-        version: link:../../vitest-plugin/react-app
       '@types/react':
         specifier: ^19.2.7
         version: 19.2.18
@@ -3356,6 +3356,9 @@ importers:
       typescript:
         specifier: ^7.0.2
         version: 7.0.2
+      vitest:
+        specifier: ^4.1.10
+        version: 4.1.10(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(@vitest/browser-playwright@4.1.10)(@vitest/coverage-v8@4.1.10)(esbuild@0.28.1)(happy-dom@20.8.9)(jsdom@30.0.1)(msw@2.15.0(@types/node@24.13.3)(typescript@7.0.2))(sass-embedded@1.100.0)(sass@1.100.0)(terser@5.49.1)(tsx@4.23.12)
       vue:
         specifier: ^3.5.25
         version: 3.5.41(typescript@7.0.2)

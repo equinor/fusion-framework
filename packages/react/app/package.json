@@ -162,6 +162,7 @@
     "@equinor/fusion-framework-react-router": "workspace:*",
     "@equinor/fusion-framework-vitest-plugin-react-app": "workspace:*",
     "@equinor/fusion-observable": "workspace:*",
+    "@remix-run/router": "^1.23.3",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
     "@vitest/browser-playwright": "^4.1.0",

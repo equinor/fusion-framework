@@ -74,5 +74,5 @@ const [uri, init] = middleware.mock.calls[0];
 expect(init.method ?? 'GET').toBe('GET');
 ```
 
-See [`@equinor/fusion-framework/mock`](../../framework/docs/testing-extending.md) to mock every
+See [`@equinor/fusion-framework/mock`](../../../framework/docs/testing-extending.md) to mock every
 framework boundary at once.

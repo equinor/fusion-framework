@@ -45,30 +45,15 @@ See [Linting](linting.md) for setting up [Biome](https://biomejs.dev/) and [Fusi
 
 ## Testing
 
-Fusion Framework packages are tested with [Vitest](https://vitest.dev/), and it's the recommended test runner for Fusion apps too — it shares config format with Vite, so no separate transform setup is needed.
+Fusion Framework uses [Vitest](https://vitest.dev/) and provides a thin integration for
+testing React apps in Vitest Browser Mode. The integration initializes the real application
+module scope and deterministic Fusion boundaries; Vitest continues to own the runner,
+assertions, hooks, configuration, and general-purpose mocking.
 
-```sh
-pnpm add -D vitest
-```
-
-```ts
-// vitest.config.ts
-import { defineConfig } from 'vitest/config';
-
-export default defineConfig({
-  test: {
-    environment: 'jsdom', // for React components
-    coverage: {
-      reporter: ['text', 'json-summary', 'json'],
-    },
-  },
-});
-```
-
-```sh
-pnpm exec vitest        # watch mode
-pnpm exec vitest run     # single run, e.g. in CI
-```
+See [Testing Fusion apps](testing/) for choosing a test layer and
+[Getting started with app tests](testing/getting-started.md) for the browser configuration,
+first passing test, and CI command. Use the official [Vitest documentation](https://vitest.dev/guide/)
+for runner features that are not Fusion-specific.
 
 ## Editor
 

@@ -236,6 +236,13 @@ enableBookmark(configurator, (builder) => {
 
 Import from `@equinor/fusion-framework-module-bookmark/mock` to seed bookmarks in-process instead of calling a real API. The real `BookmarkModuleConfigurator`, `BookmarkProvider`, and store flows still run — only `IBookmarkClient` is substituted with an in-memory implementation.
 
+### Defaults
+
+- The in-memory client starts with no bookmarks or favorites.
+- No current bookmark is selected unless `setCurrentBookmark` names a seeded bookmark.
+- Create, update, delete, and favorite operations mutate the in-memory client through the real provider flows.
+- Without real `app` or `context` modules, deterministic fallback resolvers satisfy the bookmark config schema.
+
 ```ts
 import { enableBookmarkMock } from '@equinor/fusion-framework-module-bookmark/mock';
 

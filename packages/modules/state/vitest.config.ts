@@ -5,6 +5,10 @@ import { name, version } from './package.json';
 
 // Define and export the Vitest project configuration
 export default defineProject({
+  resolve: {
+    // Tests use fake-indexeddb; loading PouchDB's Node entry would require a native leveldown binary.
+    alias: { pouchdb: 'pouchdb/lib/index-browser.es.js' },
+  },
   // Specify ESBuild options
   esbuild: {
     target: 'es2022', // Set the JavaScript target version for ESBuild
