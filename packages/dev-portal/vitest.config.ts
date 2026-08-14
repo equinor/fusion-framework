@@ -16,7 +16,7 @@ export default defineProject({
       'vitest-browser-react',
     ],
   },
-  server: { warmup: { clientFiles: ['src/**/*.{ts,tsx}'] } },
+  server: { warmup: { clientFiles: ['src/PersonSideSheet/sheets/roles/**/*.{ts,tsx}'] } },
   test: {
     include: ['src/**/*.test.{ts,tsx}'],
     name: `${name}@${version}`,
