@@ -38,7 +38,7 @@
   "dependencies": {
     "@equinor/fusion-framework-lint-core": "workspace:^",
     "@equinor/fusion-framework-lint-rules": "workspace:^",
-    "@equinor/fusion-imports": "^2.0.0",
+    "@equinor/fusion-imports": "workspace:^",
     "yaml": "^2.9.0"
   },
   "devDependencies": {
