@@ -17,7 +17,7 @@ When initializing sub modules (app) the framework is provided as an reference.
 
   - [module-event](event/)
   - [module-http](http/)
-  - [module-msal](msal/)
+  - [module-msal](auth/msal/)
   - [module-service-discovery](service-discovery/)
   - [module-telemetry](telemetry/)
 
@@ -27,10 +27,10 @@ When initializing sub modules (app) the framework is provided as an reference.
 
 An app can configure the default modules, but also add and configure additional modules.
 
-  - [module-app-config](app-config/)
+  - [module-app](app/)
   - [module-event](event/)
   - [module-http](http/)
-  - [module-msal](msal/)
+  - [module-msal](auth/msal/)
   - [module-service-discovery](service-discovery/)
 
 ### Modules

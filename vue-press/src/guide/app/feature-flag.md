@@ -26,7 +26,7 @@ Feature flags allows the application to provide functionality which can be enabl
 ## Usage
 
 [see cookbook example](https://github.com/equinor/fusion-framework/tree/main/cookbooks/app-react-feature-flag)
-@[code](@cookbooks/app-react-feature-flag/src/FeatureFlags.tsx)
+@[code](@cookbooks/app-react-feature-flag/src/components/FeatureFlags.tsx)
 
 > [!TIP]
 > the `readOnly` attribute will disable toggling of a feature

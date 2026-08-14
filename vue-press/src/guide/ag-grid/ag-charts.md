@@ -10,6 +10,6 @@ tag:
   - chart-js
 ---
 
-This guide covers AG Charts integration for Fusion Framework. For Chart.js usage, see the [Charts cookbook](/fusion-framework/cookbooks/react-app-charts).
+This guide covers AG Charts integration for Fusion Framework. For Chart.js usage, see the [Charts cookbook](../../cookbooks/react-app-charts.md).
 
 <!-- @include: ../../../../packages/react/ag-charts/README.md -->
