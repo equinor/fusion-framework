@@ -437,9 +437,6 @@ importers:
       '@equinor/fusion-framework-vitest-plugin-react-app':
         specifier: workspace:^
         version: link:../../packages/vitest-plugin/react-app
-      '@remix-run/router':
-        specifier: ^1.23.3
-        version: 1.23.3
       '@vitest/browser-playwright':
         specifier: ^4.1.0
         version: 4.1.10(msw@2.15.0(@types/node@24.13.3)(typescript@7.0.2))(playwright@1.62.1)(vite@8.2.1(@types/node@24.13.3)(esbuild@0.28.1)(sass-embedded@1.100.0)(sass@1.100.0)(terser@5.49.1)(tsx@4.23.12))(vitest@4.1.10)
@@ -780,9 +777,6 @@ importers:
       '@faker-js/faker':
         specifier: ^10.1.0
         version: 10.5.0
-      '@remix-run/router':
-        specifier: ^1.23.3
-        version: 1.23.3
       '@tanstack/react-query-devtools':
         specifier: ^5.90.2
         version: 5.101.4(@tanstack/react-query@5.101.4(react@19.2.8))(react@19.2.8)
@@ -2105,7 +2099,7 @@ importers:
         version: 7.0.2
       vitest:
         specifier: ^3.2.7
-        version: 3.2.7(@types/debug@4.1.13)(@types/node@24.13.3)(@vitest/browser@4.1.10(msw@2.15.0(@types/node@24.13.3)(typescript@7.0.2))(vite@8.2.1(@types/node@24.13.3)(esbuild@0.28.1)(sass-embedded@1.100.0)(sass@1.100.0)(terser@5.49.1)(tsx@4.23.12))(vitest@4.1.10))(happy-dom@20.8.9)(jsdom@30.0.1)(lightningcss@1.33.0)(msw@2.15.0(@types/node@24.13.3)(typescript@7.0.2))(sass-embedded@1.100.0)(sass@1.100.0)(terser@5.49.1)(tsx@4.23.12)
+        version: 3.2.7(@types/debug@4.1.13)(@types/node@24.13.3)(@vitest/browser@4.1.10)(happy-dom@20.8.9)(jsdom@30.0.1)(lightningcss@1.33.0)(msw@2.15.0(@types/node@24.13.3)(typescript@7.0.2))(sass-embedded@1.100.0)(sass@1.100.0)(terser@5.49.1)(tsx@4.23.12)
 
   packages/modules/feature-flag:
     dependencies:
@@ -21832,7 +21826,7 @@ snapshots:
       '@types/react': 19.2.18
       '@types/react-dom': 19.2.4(@types/react@19.2.18)
 
-  vitest@3.2.7(@types/debug@4.1.13)(@types/node@24.13.3)(@vitest/browser@4.1.10(msw@2.15.0(@types/node@24.13.3)(typescript@7.0.2))(vite@8.2.1(@types/node@24.13.3)(esbuild@0.28.1)(sass-embedded@1.100.0)(sass@1.100.0)(terser@5.49.1)(tsx@4.23.12))(vitest@4.1.10))(happy-dom@20.8.9)(jsdom@30.0.1)(lightningcss@1.33.0)(msw@2.15.0(@types/node@24.13.3)(typescript@7.0.2))(sass-embedded@1.100.0)(sass@1.100.0)(terser@5.49.1)(tsx@4.23.12):
+  vitest@3.2.7(@types/debug@4.1.13)(@types/node@24.13.3)(@vitest/browser@4.1.10)(happy-dom@20.8.9)(jsdom@30.0.1)(lightningcss@1.33.0)(msw@2.15.0(@types/node@24.13.3)(typescript@7.0.2))(sass-embedded@1.100.0)(sass@1.100.0)(terser@5.49.1)(tsx@4.23.12):
     dependencies:
       '@types/chai': 5.2.3
       '@vitest/expect': 3.2.7
