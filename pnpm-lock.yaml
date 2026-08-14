@@ -1711,8 +1711,8 @@ importers:
         specifier: workspace:^
         version: link:../rules
       '@equinor/fusion-imports':
-        specifier: ^2.0.0
-        version: 2.0.2
+        specifier: workspace:^
+        version: link:../../utils/imports
       yaml:
         specifier: ^2.9.0
         version: 2.9.0
@@ -3866,9 +3866,6 @@ packages:
       react: ^18 || ^19
       react-dom: ^18 || ^19
       styled-components: ^6
-
-  '@equinor/fusion-imports@2.0.2':
-    resolution: {integrity: sha512-kqH6vWCBbfAUyZD+/czmMyGs61QLbXHOzgVupx/Vov/JC6Px3dhJkUTuM3Kk901+DeKrsEib+TaMYD8i03DxWg==}
 
   '@equinor/fusion-react-context-selector@2.0.9':
     resolution: {integrity: sha512-6KH5kzV3x8Rw+B7gnIiIkhfTFv08jMIBA5/E+nJQgWfN9v4wcJr++ioTMbjvMN7HE4QTE1IeOVfdcc+LL30ylA==}
@@ -13085,11 +13082,6 @@ snapshots:
       react: 19.2.8
       react-dom: 19.2.8(react@19.2.8)
       styled-components: 6.5.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
-
-  '@equinor/fusion-imports@2.0.2':
-    dependencies:
-      esbuild: 0.28.1
-      read-package-up: 12.0.0
 
   '@equinor/fusion-react-context-selector@2.0.9(react@19.2.8)(styled-components@6.5.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8))':
     dependencies:

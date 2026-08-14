@@ -7,5 +7,9 @@
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules"],
-  "references": [{ "path": "../core" }, { "path": "../rules" }]
+  "references": [
+    { "path": "../core" },
+    { "path": "../rules" },
+    { "path": "../../utils/imports" }
+  ]
 }
