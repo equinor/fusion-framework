@@ -4,9 +4,9 @@ The `/test` entry point extends Vitest's test context with `env`, `configure`, `
 `render`, and `renderHook`. Fixture declarations are reusable, while each test receives fresh
 framework and app module instances.
 
-Use Vitest's [Test Context](https://vitest.dev/guide/test-context) documentation for fixture
-scope, cleanup, and override mechanics. This guide covers the Fusion fixture values and
-selection rules.
+This guide covers composing and overriding those six Fusion fixture values; see Vitest's own
+[Test Context](https://vitest.dev/guide/test-context) documentation for fixture scope, cleanup,
+and the general `test.extend`/`test.override` mechanics Fusion builds on.
 
 ## Choose a rendering API
 
@@ -46,6 +46,67 @@ export const test = baseTest.extend('configure', ({ configure }) => (configurato
 Composing the original `configure` fixture preserves the application's production module
 configuration. See [Module mocks](module-mocks.md) for authentication, context, bookmark,
 feature-flag, HTTP, analytics, and telemetry boundaries.
+
+`.extend(...)` returns a new, separately exported `test` — reach for it when several test
+*files* need the same fixture default. Within one file, prefer `test.override(...)` (below):
+it replaces a fixture in place, so every test in that file keeps importing the same `test`.
+
+## Override a fixture for one test or a `describe` block
+
+`test.override('name', ...)` replaces a fixture's resolved value without creating a new `test`
+export. Called at the top of a `describe` block, the override applies to every test inside it
+and does not leak to sibling blocks or other files — each `describe` starts from the file's
+base `test` again. Called at the top of the file (outside any `describe`), it applies to every
+test in that file.
+
+```tsx
+import { test } from '@equinor/fusion-framework-vitest-plugin-react-app/test';
+import { enableContextMock } from '@equinor/fusion-framework-module-context/mock';
+import { describe } from 'vitest';
+
+import { configure } from '../config'; // the app's own, real module configurator
+
+const project = { id: 'project-a', title: 'Project A', type: { id: 'ProjectMaster' }, value: {} };
+
+describe('with an initial project', () => {
+  test.override('configure', { injected: true }, () => (configurator, args) => {
+    configure(configurator, args); // compose the app's real configure, same as `.extend`
+    enableContextMock(configurator, (mock) => mock.setCurrentContext(project));
+  });
+
+  test('displays the initial context the app resolves on startup', async ({ render }) => {
+    const { getByText } = await render(<App />);
+    await expect.element(getByText(/project-a/)).toBeInTheDocument();
+  });
+});
+```
+
+`fusion` itself can be overridden the same way, when a case needs a differently configured
+parent framework instance rather than a change to the app's own `configure`:
+
+```tsx
+describe('with a parent framework context', () => {
+  test.override('fusion', async ({ env }) =>
+    mockFramework<[AppModule, ContextModule]>((configurator) => {
+      enableAppManifestMock(configurator, env);
+      enableContextMock(configurator, (mock) => mock.setCurrentContext(project));
+    }),
+  );
+
+  test('mirrors the context the parent sets', async ({ render, fusion }) => {
+    /* ... */
+  });
+});
+```
+
+The `{ injected: true }` option matches the fixture's original declaration (see
+`test-app.tsx`/`test.tsx`); it is not required for `.override(...)` itself, but keeping it
+consistent avoids re-deriving whether the base fixture accepts a config-injected value. See
+the [React context cookbook](../../../../cookbooks/app-react-context/src/App.test.tsx) and
+[feature-flag cookbook](../../../../cookbooks/app-react-feature-flag/src/components/FeatureFlags.test.tsx)
+for full working examples, and Vitest's own
+[Test Context](https://vitest.dev/guide/test-context) guide for fixture scope and cleanup
+mechanics beyond what Fusion adds.
 
 ## Supply a custom parent framework
 
