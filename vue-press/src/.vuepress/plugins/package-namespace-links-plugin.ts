@@ -14,6 +14,10 @@ export interface NamespaceRouteMaps {
   sourceByRoute: Readonly<Record<string, string>>;
 }
 
+interface NamespaceRenderEnvironment {
+  filePathRelative?: string;
+}
+
 /**
  * Resolves a VuePress source Markdown path to its public route.
  * @param sourcePath - Path relative to the VuePress source directory.
@@ -110,7 +114,6 @@ export const createNamespaceRouteMap = (
           const sourceAlias = `/${targetSource}${linkPath.endsWith('/') ? '/' : ''}`;
           return [
             [aliasRoute, targetRoute] as const,
-            [publicLink, targetRoute] as const,
             [sourceAlias.replace(/\.md$/, '.html'), targetRoute] as const,
           ];
         });
@@ -128,20 +131,32 @@ export const createNamespaceRouteMap = (
  * @param href - Link target before or after VuePress base-path processing.
  * @param routeMap - Repository namespace paths mapped to public routes.
  * @param base - Configured VuePress deployment base.
+ * @param currentRoute - Public route of the page containing a relative link.
  * @returns The mapped public URL, or the original URL when no wrapper publishes the target.
  */
 export const rewriteNamespaceHref = (
   href: string,
   routeMaps: NamespaceRouteMaps,
   base: string,
+  currentRoute?: string,
 ): string => {
+  // External and protocol-relative URLs must never be interpreted as repository namespaces.
+  if (/^(?:[a-z][a-z\d+.-]*:|\/\/)/i.test(href)) {
+    return href;
+  }
   const suffixIndex = href.search(/[?#]/);
   const pathname = suffixIndex === -1 ? href : href.slice(0, suffixIndex);
   const suffix = suffixIndex === -1 ? '' : href.slice(suffixIndex);
   const normalizedBase = base.endsWith('/') ? base.slice(0, -1) : base;
   const publicPath = pathname.startsWith(base) ? pathname.slice(normalizedBase.length) : pathname;
+  const scopedPublicPath =
+    currentRoute && !publicPath.startsWith('/')
+      ? new URL(publicPath.replace(/\.md$/, '.html'), `https://docs.test${currentRoute}`).pathname
+      : undefined;
   const aliasedRoute =
-    routeMaps.aliases[publicPath] ?? routeMaps.aliases[publicPath.replace(/\.md$/, '.html')];
+    (scopedPublicPath ? routeMaps.aliases[scopedPublicPath] : undefined) ??
+    routeMaps.aliases[publicPath] ??
+    routeMaps.aliases[publicPath.replace(/\.md$/, '.html')];
   // Resolve paths that the include plugin interpreted relative to the public wrapper.
   if (aliasedRoute) {
     return `${pathname.startsWith(base) ? normalizedBase : ''}${aliasedRoute}${suffix}`;
@@ -175,7 +190,7 @@ export const packageNamespaceLinksPlugin = (repoRoot: string): Plugin => (app) =
     name: 'package-namespace-links',
     extendsPage: (page) => {
       page.links = page.links.map((link) => {
-        const mappedHref = rewriteNamespaceHref(link.raw, routeMaps, app.options.base);
+        const mappedHref = rewriteNamespaceHref(link.raw, routeMaps, app.options.base, page.path);
         // Preserve links that do not target a published repository namespace.
         if (mappedHref === link.raw) {
           return link;
@@ -204,16 +219,21 @@ export const packageNamespaceLinksPlugin = (repoRoot: string): Plugin => (app) =
       markdown.renderer.rules.link_open = (tokens, index, options, env, renderer): string => {
         const token = tokens[index];
         const href = token.attrGet('href');
+        const filePathRelative = (env as NamespaceRenderEnvironment).filePathRelative;
+        const currentRoute = filePathRelative ? resolvePageRoute(filePathRelative) : undefined;
         // Rewrite the token when this plugin runs after the include path resolver.
         if (href) {
-          token.attrSet('href', rewriteNamespaceHref(href, routeMaps, app.options.base));
+          token.attrSet(
+            'href',
+            rewriteNamespaceHref(href, routeMaps, app.options.base, currentRoute),
+          );
         }
         const renderedLink = originalLinkOpen(tokens, index, options, env, renderer);
         // Rewrite rendered attributes when the include path resolver wraps this renderer later.
         return renderedLink.replace(
           renderedLinkPattern,
           (_match, prefix: string, value: string, suffix: string) =>
-            `${prefix}${rewriteNamespaceHref(value, routeMaps, app.options.base)}${suffix}`,
+            `${prefix}${rewriteNamespaceHref(value, routeMaps, app.options.base, currentRoute)}${suffix}`,
         );
       };
     },

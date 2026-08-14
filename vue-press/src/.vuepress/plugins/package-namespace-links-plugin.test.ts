@@ -71,8 +71,8 @@ describe('createNamespaceRouteMap', () => {
 
     expect(routeMaps.exact['packages/example/README.md']).toBe('/guide/example.html');
     expect(routeMaps.exact['packages/example/docs/details.md']).toBe('/guide/details.html');
-    expect(routeMaps.aliases['docs/details.html']).toBe('/guide/details.html');
-    expect(routeMaps.aliases['docs/']).toBe('/guide/example.html');
+    expect(routeMaps.aliases['/guide/docs/details.html']).toBe('/guide/details.html');
+    expect(routeMaps.aliases['/guide/docs/']).toBe('/guide/example.html');
   });
 
   it('does not map a missing child document to its package overview', () => {
@@ -88,7 +88,35 @@ describe('createNamespaceRouteMap', () => {
 
     const routeMaps = createNamespaceRouteMap(sourceDir, repoRoot);
 
-    expect(routeMaps.aliases['docs/does-not-exist.html']).toBeUndefined();
+    expect(routeMaps.aliases['/guide/docs/does-not-exist.html']).toBeUndefined();
+  });
+
+  it('scopes identical relative links to their owning wrapper routes', () => {
+    const { repoRoot, sourceDir } = createRepositoryFixture();
+    // Each package uses the same relative link text but owns a different target document.
+    for (const name of ['msal', 'service-discovery']) {
+      writeFixture(
+        path.join(repoRoot, `packages/${name}/README.md`),
+        '[Testing](./docs/testing.md)\n',
+      );
+      writeFixture(path.join(repoRoot, `packages/${name}/docs/testing.md`), `# ${name}\n`);
+      writeFixture(
+        path.join(sourceDir, `${name}/README.md`),
+        `<!-- @include: ../../../packages/${name}/README.md -->\n`,
+      );
+      writeFixture(
+        path.join(sourceDir, `${name}/testing.md`),
+        `<!-- @include: ../../../packages/${name}/docs/testing.md -->\n`,
+      );
+    }
+
+    const routeMaps = createNamespaceRouteMap(sourceDir, repoRoot);
+
+    expect(routeMaps.aliases['/msal/docs/testing.html']).toBe('/msal/testing.html');
+    expect(routeMaps.aliases['/service-discovery/docs/testing.html']).toBe(
+      '/service-discovery/testing.html',
+    );
+    expect(routeMaps.aliases['./docs/testing.html']).toBeUndefined();
   });
 });
 
@@ -120,5 +148,32 @@ describe('rewriteNamespaceHref', () => {
     expect(rewriteNamespaceHref('https://vitest.dev/', routeMaps, '/fusion-framework/')).toBe(
       'https://vitest.dev/',
     );
+  });
+
+  it('never rewrites external URLs containing repository namespace segments', () => {
+    const externalUrl =
+      'https://github.com/org/repo/blob/main/packages/example/docs/testing.md#setup';
+
+    expect(rewriteNamespaceHref(externalUrl, routeMaps, '/fusion-framework/')).toBe(externalUrl);
+    expect(
+      rewriteNamespaceHref('//cdn.example.com/packages/example/docs/testing.md', routeMaps, '/'),
+    ).toBe('//cdn.example.com/packages/example/docs/testing.md');
+  });
+
+  it('resolves relative aliases against the current wrapper route', () => {
+    const scopedMaps: NamespaceRouteMaps = {
+      exact: {},
+      aliases: { '/modules/msal/docs/testing.html': '/modules/msal/testing.html' },
+      sourceByRoute: {},
+    };
+
+    expect(
+      rewriteNamespaceHref(
+        './docs/testing.md',
+        scopedMaps,
+        '/fusion-framework/',
+        '/modules/msal/',
+      ),
+    ).toBe('/modules/msal/testing.html');
   });
 });
