@@ -26,19 +26,76 @@ concurrency:
 jobs:
   build:
     runs-on: fusion-gh-runner-fusion-framework
+    outputs:
+      preview-path: ${{ steps.preview-path.outputs.value }}
     steps:
       - uses: actions/checkout@v7
-      - uses: ./.github/actions/build-docs
+        with:
+          fetch-depth: 0
+
+      - name: Determine preview path
+        if: ${{ inputs.preview || github.ref != 'refs/heads/main' }}
+        id: preview-path
+        shell: bash
+        run: echo "value=$(printf '%s' "$GITHUB_REF_NAME" | sed 's#[^A-Za-z0-9._-]#-#g')" >> "$GITHUB_OUTPUT"
+
+      - name: Build documentation
+        if: ${{ !inputs.preview && github.ref == 'refs/heads/main' }}
+        uses: ./.github/actions/build-docs
+
+      - name: Build preview
+        if: ${{ inputs.preview || github.ref != 'refs/heads/main' }}
+        uses: ./.github/actions/build-docs
+        env:
+          VUEPRESS_BASE: /fusion-framework/previews/${{ steps.preview-path.outputs.value }}/
+        with:
+          upload-artifact: false
+
+      - name: Preserve preview output
+        if: ${{ inputs.preview || github.ref != 'refs/heads/main' }}
+        shell: bash
+        run: |
+          mkdir -p "$RUNNER_TEMP/docs-preview"
+          cp -R vue-press/dist/. "$RUNNER_TEMP/docs-preview/"
+
+      - name: Checkout main
+        if: ${{ inputs.preview || github.ref != 'refs/heads/main' }}
+        uses: actions/checkout@v7
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Build production documentation
+        if: ${{ inputs.preview || github.ref != 'refs/heads/main' }}
+        uses: ./.github/actions/build-docs
+        with:
+          upload-artifact: false
+
+      - name: Add preview to production output
+        if: ${{ inputs.preview || github.ref != 'refs/heads/main' }}
+        shell: bash
+        run: |
+          mkdir -p "vue-press/dist/previews/${{ steps.preview-path.outputs.value }}"
+          cp -R "$RUNNER_TEMP/docs-preview/." "vue-press/dist/previews/${{ steps.preview-path.outputs.value }}/"
+
+      - name: Upload Pages artifact
+        if: ${{ inputs.preview || github.ref != 'refs/heads/main' }}
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: ./vue-press/dist
 
   deploy:
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      url: ${{ (inputs.preview || github.ref != 'refs/heads/main') && format('{0}previews/{1}/', steps.deployment.outputs.page_url, needs.build.outputs.preview-path) || steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     needs: build
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v5
-        with:
-          preview: ${{ inputs.preview || github.ref != 'refs/heads/main' }}
+
+      - name: Publish preview URL
+        if: ${{ inputs.preview || github.ref != 'refs/heads/main' }}
+        shell: bash
+        run: echo "### [Open docs preview](${{ steps.deployment.outputs.page_url }}previews/${{ needs.build.outputs.preview-path }}/)" >> "$GITHUB_STEP_SUMMARY"
