@@ -261,6 +261,14 @@ try {
 
 `@equinor/fusion-framework-module-context/mock` provides `enableContextMock`, a purpose-built test double backed by an in-memory pool of seeded context items — no context API, no HTTP mock, and no service-discovery mock required. Real `ContextProvider` behaviour (`validateContext`, `resolveContext`, parent-context propagation) still runs against the seeded data; only the data source is substituted.
 
+### Defaults
+
+- The context pool starts empty and no current context is selected.
+- Querying the empty pool returns no items.
+- Looking up an unseeded id throws an error that names the id and the seeding methods.
+- Related-context lookup uses the seeded pool, excludes the source item, and filters by the requested type.
+- `setCurrentContext` both seeds the item and selects it for initial app resolution; `setContexts` only seeds items.
+
 ```ts
 import { enableContextMock } from '@equinor/fusion-framework-module-context/mock';
 
@@ -275,6 +283,30 @@ enableContextMock(configurator, (mock) => {
 When used with `@equinor/fusion-framework/mock`, `FrameworkMockConfigurator.context` returns this same configurator, so seeding happens directly through `configurator.context` with no callback needed.
 
 This is one of two ways to fake context data in tests. The other is mocking the context API's HTTP responses directly (with `configurator.http.addMiddleware(...)`, optionally paired with `@equinor/fusion-framework-module-http/mock`'s `createOpenApiMockMiddleware` for faker-generated data straight from context's OpenAPI spec) — which exercises the real `ContextModuleConfigurator`/services/HTTP pipeline instead of substituting it. Reach for `enableContextMock` to seed one known item with no transport involved; reach for the HTTP middleware when a test needs to cover that pipeline itself. Fixture generators for realistic seeded data (`createContextItemFactory`, `createContextItems`) are available from `@equinor/fusion-framework-module-context/mock/fixtures`.
+
+### Generate deterministic context fixtures
+
+The optional `/mock/fixtures` entry point uses `@faker-js/faker` to produce realistic but
+repeatable titles and readable ids. Install Faker only when importing this entry point.
+
+```ts
+import { enableContextMock } from '@equinor/fusion-framework-module-context/mock';
+import { createContextItems } from '@equinor/fusion-framework-module-context/mock/fixtures';
+
+const [project, contract] = createContextItems([
+  { type: 'ProjectMaster' },
+  { type: 'Contract', parentTypeIds: ['ProjectMaster'] },
+]);
+
+enableContextMock(configurator, (mock) => {
+  mock.setContexts([project, contract]);
+  mock.setCurrentContext(project);
+});
+```
+
+Use `createContextItemFactory(prefix?)` for sequential fixtures of one type. Use
+`createContextItems` for multiple types and parent/child type metadata. Generated values are
+deterministic per id; use `setRelatedContexts` when relations must differ per specific item.
 
 ## Utilities
 

@@ -127,7 +127,12 @@ enableFeatureFlagMock(configurator, (mock) => {
 });
 ```
 
-No flags are assumed by default — a test that seeds nothing gets an empty `features` object, matching the real module's zero-plugin behaviour.
+### Defaults
+
+No flags are assumed by default. A test that seeds nothing gets an empty `features` object,
+matching the real module's zero-plugin behavior. `setFeatures` seeds several flags and
+`addFeature` adds or replaces one flag by key. Toggling still runs through the real
+`FeatureFlagProvider`; the mock substitutes only the initial flag source.
 
 ## Configuration
 

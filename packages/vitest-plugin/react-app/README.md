@@ -25,10 +25,24 @@ Use this package when you need to:
 ## Installation
 
 ```sh
-pnpm add -D @equinor/fusion-framework-vitest-plugin-react-app
+pnpm add -D vitest playwright @vitest/browser-playwright vitest-browser-react \
+  @equinor/fusion-framework-vitest-plugin-react-app
+pnpm exec playwright install chromium
 ```
 
-Peer dependencies: `vite`, `vitest`, `vitest-browser-react`, `react`, `react-dom`, `rxjs`.
+React, React DOM, RxJS, and Vite are peer dependencies normally supplied by the app.
+
+## Documentation
+
+| Task | Guide |
+| --- | --- |
+| Understand the package and choose a subject | [Overview](docs/overview.md) |
+| Install, configure, and run the first app test | [Getting started](docs/getting-started.md) |
+| Override Vitest defaults or resolve non-standard app files | [Configuration](docs/configuration.md) |
+| Compose fixtures, explicit render options, and app lifecycle tests | [Advanced usage](docs/advanced.md) |
+| Diagnose setup, browser, app-resolution, and network failures | [Troubleshooting](docs/troubleshooting.md) |
+| Seed authentication, context, bookmarks, feature flags, HTTP, analytics, and telemetry | [Module mocks](docs/module-mocks.md) |
+| Choose between app, framework, module, HTTP, and runner-level tests | [Choose a testing layer](../../framework/docs/testing-choosing-a-layer.md) |
 
 ## Overview
 
@@ -64,22 +78,18 @@ entry-point's `test`/`render` when several cases in a file share one seeded scop
 - **`@equinor/fusion-framework-vitest-plugin-react-app/test`** — `test`, `render`. Require
   `appTestVitePlugin` registered in `vitest.config.ts`; `env`/`configure` are resolved
   automatically from the application's own manifest, config, and module-configurator.
+- **`@equinor/fusion-framework-vitest-plugin-react-app/config`** — `defineProject`. Registers
+  `appTestVitePlugin`, headless Playwright/Chromium, test-file inclusion, and lazy-import
+  warmup while accepting ordinary Vitest configuration overrides.
 
 ## Quick start
 
-Register the plugin in your app's `vitest.config.ts`:
+Use the browser-ready project config in your app's `vitest.config.ts`:
 
 ```ts
-import { defineConfig } from 'vitest/config';
-import { playwright } from '@vitest/browser-playwright';
-import { appTestVitePlugin } from '@equinor/fusion-framework-vitest-plugin-react-app';
+import { defineProject } from '@equinor/fusion-framework-vitest-plugin-react-app/config';
 
-export default defineConfig({
-  plugins: [appTestVitePlugin()],
-  test: {
-    browser: { enabled: true, provider: playwright(), instances: [{ browser: 'chromium' }] },
-  },
-});
+export default defineProject();
 ```
 
 Then use the pre-seeded `test` fixture — no per-test `env`/`configure` wiring:
