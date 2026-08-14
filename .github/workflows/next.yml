@@ -7,8 +7,10 @@ on:
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 permissions:
-  contents: write
-  pull-requests: write
+  contents: write      # Required for creating changesets branch and pushing changes
+  packages: write      # Required for publishing to npm registry
+  id-token: write      # Required for OIDC token generation
+  pull-requests: write # Required for changesets action to create PRs
 
 jobs:
   check-pre-release:
@@ -63,6 +65,9 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Configure git user (trigger actor)
+        uses: ./.github/actions/config-git-user
+
       - name: Setup node and install deps
         uses: ./.github/actions/node-setup
         with:
@@ -73,6 +78,7 @@ jobs:
         uses: changesets/action@v1
         with:
           title: '🤖 Bip Bop - Fusion Framework Pre-Release'
+          setupGitUser: false
           version: pnpm changeset:version
           publish: pnpm publish -r --no-git-checks --report-summary --tag ${{ needs.check-pre-release.outputs.tag }}
         env:
