@@ -22,6 +22,8 @@ The default project registers `appTestVitePlugin()` and configures:
 - Vitest Browser Mode enabled
 - the Playwright provider with one Chromium instance
 - headless browser execution
+- a `1024x768` default viewport, matching a typical low-resolution Citrix session rather than
+  Vitest's own mobile-sized default
 - Vite warmup for `src/**/*.{ts,tsx}` to discover lazy imports before tests run
 
 ## Merge ordinary Vitest options
@@ -35,7 +37,8 @@ import { name, version } from './package.json' with { type: 'json' };
 export default defineProject({
   test: {
     name: `${name}@${version}`,
-    browser: { viewport: { width: 1280, height: 720 } },
+    // opt into a wider viewport for an app that only needs to support desktop
+    browser: { viewport: { width: 1920, height: 1080 } },
   },
 });
 ```
