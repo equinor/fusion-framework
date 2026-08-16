@@ -4,13 +4,13 @@
  * taken from https://github.com/reduxjs/redux-toolkit/tree/master/packages/toolkit/src
  */
 
-import type { Action, PayloadAction } from './types';
+import type { Action, PayloadAction } from './types.js';
 import type {
   IfMaybeUndefined,
   IfVoid,
   IsAny,
   IsUnknownOrNonInferrable,
-} from '../types/ts-helpers';
+} from '../types/ts-helpers.js';
 
 /**
  * A "prepare" method to be used as the second parameter of `createAction`.
@@ -269,7 +269,7 @@ export function createAction(type: string, prepareAction?: PrepareAction<any>): 
   return actionCreator;
 }
 
-export { actionSuffixDivider, matchActionSuffix, getBaseType, getType } from './utils';
+export { actionSuffixDivider, matchActionSuffix, getBaseType, getType } from './utils.js';
 
 // helper types for more readable typings
 

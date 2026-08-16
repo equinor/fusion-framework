@@ -6,7 +6,7 @@
  *
  * @module actions
  */
-export * from './ActionError';
+export * from './ActionError.js';
 export * from './types.js';
 
 export { actionMapper, type ActionCalls } from './action-mapper.js';
@@ -19,7 +19,7 @@ export {
   type ActionCreatorWithOptionalPayload,
   type ActionCreatorWithPreparedPayload,
   type PayloadActionCreator,
-} from './create-action';
+} from './create-action.js';
 
 export { getBaseType } from './utils.js';
 
@@ -29,4 +29,4 @@ export {
   isCompleteAction,
   isFailureAction,
   isSuccessAction,
-} from './create-async-action';
+} from './create-async-action.js';

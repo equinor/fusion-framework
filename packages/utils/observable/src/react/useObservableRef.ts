@@ -1,7 +1,7 @@
 import { useCallback, useRef } from 'react';
 import type { BehaviorSubject } from 'rxjs';
-import { useObservableLayoutSubscription } from './useObservableLayoutSubscription';
-import type { Observable } from '../types';
+import { useObservableLayoutSubscription } from './useObservableLayoutSubscription.js';
+import type { Observable } from '../types/index.js';
 
 /**
  * React hook that keeps a `ref` synchronised with the latest value from an

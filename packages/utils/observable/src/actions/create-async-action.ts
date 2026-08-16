@@ -1,16 +1,16 @@
 // biome-ignore-all lint/suspicious/noExplicitAny: generic constraints mirror create-action.ts's ported redux-toolkit PrepareAction<any> dispatch pattern
 
-import { actionSuffixDivider, createAction } from './create-action';
+import { actionSuffixDivider, createAction } from './create-action.js';
 import {
   isActionWithSuffix,
   isCompleteAction,
   isFailureAction,
   isRequestAction,
   isSuccessAction,
-} from './predicates';
-import type { PayloadActionCreator } from './create-action';
+} from './predicates.js';
+import type { PayloadActionCreator } from './create-action.js';
 
-import type { PrepareAction } from './create-action';
+import type { PrepareAction } from './create-action.js';
 
 /**
  * Creates an async action creator that produces request, success, and optionally failure sub-actions.

@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useState } from 'react';
 import { from, type Observable, type ObservableInput, Subject } from 'rxjs';
 import { debounce, debounceTime, switchMap, tap } from 'rxjs/operators';
-import type { ObservableType } from '../types';
+import type { ObservableType } from '../types/index.js';
 
 /**
  * Options for the {@link useDebounce} hook.

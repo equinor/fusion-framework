@@ -1,7 +1,7 @@
 import { from, of } from 'rxjs';
 import type { ObservableInput, Observable } from 'rxjs';
 
-import { isObservableInput } from './is-observable-input';
+import { isObservableInput } from './is-observable-input.js';
 
 /**
  * Represents a value that can be:
