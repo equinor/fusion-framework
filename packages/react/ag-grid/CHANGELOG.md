@@ -1,5 +1,25 @@
 # @equinor/fusion-framework-react-ag-grid
 
+## 37.1.0-next.1
+
+### Minor Changes
+
+- e13cfa4: Re-export `suppressAgGridLicenseBanner` from a new `/testing` subpath (`@equinor/fusion-framework-react-ag-grid/testing`), forwarding to `@equinor/fusion-framework-module-ag-grid/testing`.
+
+  ```typescript
+  // src/test/setupTests.ts
+  import { suppressAgGridLicenseBanner } from "@equinor/fusion-framework-react-ag-grid/testing";
+
+  suppressAgGridLicenseBanner();
+  ```
+
+  Apps already depending on `@equinor/fusion-framework-react-ag-grid` no longer need a direct dependency on `@equinor/fusion-framework-module-ag-grid` just to reach this test helper.
+
+### Patch Changes
+
+- Updated dependencies [e13cfa4]
+  - @equinor/fusion-framework-module-ag-grid@37.1.0-next.1
+
 ## 37.0.2-next.0
 
 ### Patch Changes

@@ -1,5 +1,14 @@
 # Change Log
 
+## 2.0.13-next.1
+
+### Patch Changes
+
+- Updated dependencies [e13cfa4]
+- Updated dependencies [e13cfa4]
+  - @equinor/fusion-framework-react-ag-grid@37.1.0-next.1
+  - @equinor/fusion-framework-react-app@15.0.0-next.1
+
 ## 2.0.13-next.0
 
 ### Patch Changes
