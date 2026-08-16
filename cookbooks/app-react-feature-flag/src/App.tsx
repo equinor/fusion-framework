@@ -1,5 +1,5 @@
-import { useFeatureLogger } from './useFeatureLogger';
-import { FeatureFlags } from './FeatureFlags';
+import { useFeatureLogger } from './hooks/useFeatureLogger';
+import { FeatureFlags } from './components';
 
 /**
  * Composes feature-flag event logging with the feature list demonstration.

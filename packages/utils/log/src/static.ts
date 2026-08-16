@@ -47,7 +47,9 @@ export enum LogLevel {
  * @returns The resolved {@link LogLevel}.
  */
 const resolveDefaultLogLevel = (): LogLevel => {
-  const envLogLevel = process.env.FUSION_LOG_LEVEL;
+  // `process` is unavailable in real browser environments (e.g. Vitest Browser Mode)
+  const env = typeof process !== 'undefined' ? process.env : undefined;
+  const envLogLevel = env?.FUSION_LOG_LEVEL;
 
   // Only attempt to parse the environment variable when it's actually set
   if (envLogLevel) {
@@ -55,7 +57,7 @@ const resolveDefaultLogLevel = (): LogLevel => {
       return resolveLogLevel(envLogLevel);
     } catch {
       // Unparsable value — degrade gracefully based on environment
-      return process.env.NODE_ENV === 'development' ? LogLevel.Debug : LogLevel.Error;
+      return env?.NODE_ENV === 'development' ? LogLevel.Debug : LogLevel.Error;
     }
   }
 

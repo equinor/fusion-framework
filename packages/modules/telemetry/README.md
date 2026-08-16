@@ -122,6 +122,36 @@ enableTelemetry(configurator, {
 | `/application-insights-adapter` | `ApplicationInsightsAdapter` | Microsoft Application Insights adapter. |
 | `/schemas` | `parseTelemetryItem`, schema objects | Zod schemas and a parser for telemetry items. |
 | `/utils` | `mapConfiguratorEvents`, `mergeTelemetryItem`, `applyMetadata` | Internal helpers for metadata merging and event mapping. |
+| `/mock` | `enableTelemetryMock`, `MockTelemetryAdapter` | In-process telemetry recorder for deterministic tests. |
+
+## Testing
+
+Import from `@equinor/fusion-framework-module-telemetry/mock` to record telemetry in-process
+while retaining the real telemetry provider, validation, metadata, scopes, filters, and event
+integration.
+
+### Defaults
+
+`TelemetryMockConfigurator` registers one fresh, empty `MockTelemetryAdapter` under the
+`mock` adapter id. Nothing is exported to a backend unless the test registers another adapter.
+Each configurator owns its recorder, so recorded items are not shared across test instances.
+
+```ts
+import { enableTelemetryMock } from '@equinor/fusion-framework-module-telemetry/mock';
+
+let recorder;
+enableTelemetryMock(configurator, (builder) => {
+  recorder = builder.adapter;
+});
+
+const item = await recorder.waitForItem('button-click');
+expect(item.properties?.section).toBe('header');
+```
+
+`MockTelemetryAdapter.getItems(matcher?)` returns recorded items synchronously.
+`waitForItem(matcher, options?)` waits for an existing or future match and accepts a timeout
+or `AbortSignal`. `TelemetryMockConfigurator` and `telemetryMockModule` are also exported for
+manual composition.
 
 ## Configuration
 

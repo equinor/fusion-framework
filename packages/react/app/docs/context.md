@@ -29,11 +29,13 @@ Returns the currently selected context from the application-scoped context modul
 ```ts
 function useCurrentContext(): {
   currentContext: ContextItem | null | undefined;
-  setCurrentContext: (context?: ContextItem | string | null) => void;
+  setCurrentContext: (context?: ContextItem | string | null) => void | Promise<ContextItem | null>;
 };
 ```
 
 **Returns:** An object with the current context (`ContextItem | null | undefined`) and a setter to change it.
+
+`setCurrentContext` clears the context when called with no argument (or `null`), resolves an item by `id` when given a `string`, or sets the given `ContextItem` directly. Clearing returns `void`; setting by `id` or by item returns a `Promise` that resolves once the switch completes — `await` it when you need to know the new context has taken effect (e.g. before navigating).
 
 ### Example
 

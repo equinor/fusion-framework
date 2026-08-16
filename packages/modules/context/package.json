@@ -16,6 +16,14 @@
       "import": "./dist/esm/utils/index.js",
       "types": "./dist/types/utils/index.d.ts"
     },
+    "./mock": {
+      "import": "./dist/esm/mock/index.js",
+      "types": "./dist/types/mock/index.d.ts"
+    },
+    "./mock/fixtures": {
+      "import": "./dist/esm/mock/fixtures/index.js",
+      "types": "./dist/types/mock/fixtures/index.d.ts"
+    },
     "./package.json": "./package.json"
   },
   "types": "./dist/types/index.d.ts",
@@ -29,11 +37,18 @@
       ],
       "utils": [
         "dist/types/utils/index.d.ts"
+      ],
+      "mock": [
+        "dist/types/mock/index.d.ts"
+      ],
+      "mock/fixtures": [
+        "dist/types/mock/fixtures/index.d.ts"
       ]
     }
   },
   "scripts": {
     "build": "tsc -b",
+    "test": "vitest run",
     "prepack": "pnpm build"
   },
   "keywords": [],
@@ -54,8 +69,11 @@
   "devDependencies": {
     "@equinor/fusion-framework-module": "workspace:^",
     "@equinor/fusion-framework-module-event": "workspace:^",
+    "@equinor/fusion-framework-module-http": "workspace:^",
     "@equinor/fusion-framework-module-navigation": "workspace:^",
     "@equinor/fusion-framework-module-services": "workspace:^",
+    "@equinor/fusion-framework-module-telemetry": "workspace:^",
+    "@faker-js/faker": "^10.1.0",
     "rxjs": "^7.8.1",
     "typescript": "^7.0.2",
     "@types/semver": "^7.0.0",
@@ -63,8 +81,18 @@
   },
   "peerDependencies": {
     "@equinor/fusion-framework-module": "workspace:^",
+    "@equinor/fusion-framework-module-telemetry": "workspace:^",
+    "@faker-js/faker": "^10.1.0",
     "@types/semver": "^7.0.0",
     "semver": "^7.0.0",
     "rxjs": "^7.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@equinor/fusion-framework-module-telemetry": {
+      "optional": true
+    },
+    "@faker-js/faker": {
+      "optional": true
+    }
   }
 }

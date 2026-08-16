@@ -9,10 +9,25 @@
     ".": {
       "import": "./dist/esm/index.js",
       "types": "./dist/types/index.d.ts"
+    },
+    "./mock": {
+      "import": "./dist/esm/mock/index.js",
+      "types": "./dist/types/mock/index.d.ts"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      ".": [
+        "dist/types/index.d.ts"
+      ],
+      "mock": [
+        "dist/types/mock/index.d.ts"
+      ]
     }
   },
   "scripts": {
     "build": "tsc -b",
+    "test": "vitest run",
     "prepack": "pnpm build"
   },
   "keywords": [
@@ -43,6 +58,7 @@
     "@azure/msal-node-extensions": "^5.1.4"
   },
   "devDependencies": {
-    "typescript": "^7.0.2"
+    "typescript": "^7.0.2",
+    "vitest": "^4.1.10"
   }
 }
