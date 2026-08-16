@@ -69,6 +69,26 @@
     "./routing": {
       "types": "./dist/types/routing/index.d.ts",
       "import": "./dist/esm/routing/index.js"
+    },
+    "./ag-grid": {
+      "types": "./dist/types/ag-grid/react.d.ts",
+      "import": "./dist/esm/ag-grid/react.js"
+    },
+    "./ag-grid/community": {
+      "types": "./dist/types/ag-grid/community.d.ts",
+      "import": "./dist/esm/ag-grid/community.js"
+    },
+    "./ag-grid/enterprise": {
+      "types": "./dist/types/ag-grid/enterprise.d.ts",
+      "import": "./dist/esm/ag-grid/enterprise.js"
+    },
+    "./ag-grid/theme": {
+      "types": "./dist/types/ag-grid/theme.d.ts",
+      "import": "./dist/esm/ag-grid/theme.js"
+    },
+    "./ag-grid/testing": {
+      "types": "./dist/types/ag-grid/testing.d.ts",
+      "import": "./dist/esm/ag-grid/testing.js"
     }
   },
   "typesVersions": {
@@ -117,6 +137,21 @@
       ],
       "routing": [
         "dist/types/routing/index.d.ts"
+      ],
+      "ag-grid": [
+        "dist/types/ag-grid/react.d.ts"
+      ],
+      "ag-grid/community": [
+        "dist/types/ag-grid/community.d.ts"
+      ],
+      "ag-grid/enterprise": [
+        "dist/types/ag-grid/enterprise.d.ts"
+      ],
+      "ag-grid/theme": [
+        "dist/types/ag-grid/theme.d.ts"
+      ],
+      "ag-grid/testing": [
+        "dist/types/ag-grid/testing.d.ts"
       ]
     }
   },
@@ -149,6 +184,7 @@
   },
   "devDependencies": {
     "@equinor/fusion-framework-module-ag-grid": "workspace:*",
+    "@equinor/fusion-framework-react-ag-grid": "workspace:*",
     "@equinor/fusion-framework-module-analytics": "workspace:*",
     "@equinor/fusion-framework-module-bookmark": "workspace:*",
     "@equinor/fusion-framework-module-context": "workspace:*",
@@ -175,6 +211,8 @@
     "vitest-browser-react": "^2.2.0"
   },
   "peerDependencies": {
+    "@equinor/fusion-framework-module-ag-grid": "workspace:^",
+    "@equinor/fusion-framework-react-ag-grid": "workspace:^",
     "@equinor/fusion-framework-module-msal": "workspace:^",
     "@equinor/fusion-framework-module-state": "workspace:^",
     "@equinor/fusion-framework-react-router": "workspace:^",
@@ -184,6 +222,12 @@
     "rxjs": "^7.0.0"
   },
   "peerDependenciesMeta": {
+    "@equinor/fusion-framework-module-ag-grid": {
+      "optional": true
+    },
+    "@equinor/fusion-framework-react-ag-grid": {
+      "optional": true
+    },
     "@equinor/fusion-framework-react-module-ag-grid": {
       "optional": true
     },

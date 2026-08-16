@@ -162,6 +162,17 @@ enableAgGrid(configurator, (builder) => {
 > [@equinor/fusion-framework-react-ag-charts](../ag-charts/README.md)
 > for standalone chart usage.
 
+## Testing
+
+Without a license key, AG Grid Enterprise logs a "License Key Not Found" banner through `console.error` on every grid mount. Call `suppressAgGridLicenseBanner` once from your test setup file to filter just that banner:
+
+```ts
+// src/test/setupTests.ts
+import { suppressAgGridLicenseBanner } from '@equinor/fusion-framework-react-ag-grid/testing';
+
+suppressAgGridLicenseBanner();
+```
+
 ## Upgrade Guides
 
 ### Upgrading to v35
