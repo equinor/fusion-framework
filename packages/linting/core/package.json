@@ -34,8 +34,7 @@
   "scripts": {
     "build": "tsc -b",
     "prepack": "pnpm build",
-    "test": "vitest",
-    "test:coverage": "vitest --coverage"
+    "test": "vitest"
   },
   "devDependencies": {
     "typescript": "^7.0.2",

@@ -65,9 +65,7 @@
     "lint:fix": "eslint --ext .ts,.tsx,.js src/ --fix",
     "prepack": "pnpm build",
     "test": "vitest",
-    "test:report": "vitest --report",
-    "test:coverage": "vitest run --coverage",
-    "test:coverage:all": "vitest run --coverage.enabled --coverage.all"
+    "test:report": "vitest --report"
   },
   "bugs": {
     "url": "https://github.com/equinor/fusion-framework/issues"
