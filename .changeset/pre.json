@@ -157,6 +157,7 @@
     "react_fix-usemodule-warning",
     "service-discovery-mock-entry-point",
     "service-discovery-provider-client",
+    "vitest-plugin-react-app_default-viewport",
     "vitest-plugin-react-app_define-project",
     "vitest-plugin-react-app_document-override",
     "vitest-plugin-react-app_initial-release",
