@@ -87,3 +87,4 @@ fail or answer every request they expect.
 - [Add a mock for a custom module](testing-extending.md)
 - [Application module testing](../../app/docs/testing.md)
 - [HTTP testing](../../modules/http/docs/testing.md)
+- [Migrate an existing app to Fusion Vitest](../../vitest-plugin/react-app/docs/migrating-an-existing-app.md)

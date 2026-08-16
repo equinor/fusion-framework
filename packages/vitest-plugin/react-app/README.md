@@ -42,6 +42,8 @@ React, React DOM, RxJS, and Vite are peer dependencies normally supplied by the 
 | Compose fixtures, explicit render options, and app lifecycle tests | [Advanced usage](docs/advanced.md) |
 | Diagnose setup, browser, app-resolution, and network failures | [Troubleshooting](docs/troubleshooting.md) |
 | Seed authentication, context, bookmarks, feature flags, HTTP, analytics, and telemetry | [Module mocks](docs/module-mocks.md) |
+| Understand the Browser Mode default or choose another renderer | [Why Browser Mode is the default](docs/why-browser-mode.md) |
+| Move an existing `@testing-library/react`/jsdom suite onto this package | [Migrate an existing app](docs/migrating-an-existing-app.md) |
 | Choose between app, framework, module, HTTP, and runner-level tests | [Choose a testing layer](../../framework/docs/testing-choosing-a-layer.md) |
 
 ## Overview

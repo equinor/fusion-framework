@@ -35,6 +35,8 @@ Vitest, and run one deterministic app test without credentials, a portal, or bac
 - [Compose fixtures and explicit render options](advanced.md)
 - [Seed Fusion module dependencies](module-mocks.md)
 - [Troubleshoot browser, app-resolution, and network failures](troubleshooting.md)
+- [Understand the Browser Mode default or choose another renderer](why-browser-mode.md)
+- [Migrate an existing app from Testing Library and DOM emulation](migrating-an-existing-app.md)
 - [Choose between app, framework, module, and HTTP testing](../../../framework/docs/testing-choosing-a-layer.md)
 
 Use the official Vitest documentation for generic runner concepts:
