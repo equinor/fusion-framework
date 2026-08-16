@@ -1,5 +1,13 @@
 # Change Log
 
+## 2.0.5-next.0
+
+### Patch Changes
+
+- Updated dependencies [e8aae1f]
+  - @equinor/fusion-framework-react-ag-grid@37.0.2-next.0
+  - @equinor/fusion-framework-react-router@2.4.1-next.0
+
 ## 2.0.4
 
 ### Patch Changes
