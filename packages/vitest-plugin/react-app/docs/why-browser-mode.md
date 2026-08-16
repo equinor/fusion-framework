@@ -25,13 +25,22 @@ they do not need browser behavior.
   [Module mocks](module-mocks.md), while the actual module configuration, lifecycle, providers,
   and rendering behavior still run.
 - **Browser fidelity:** Chromium provides real layout, `ResizeObserver`, custom elements, and
-  Shadow DOM. This can remove DOM polyfills and component replacements that only exist because
-  `happy-dom` or `jsdom` cannot provide the required browser behavior.
+  Shadow DOM — behavior `happy-dom` and `jsdom` only approximate.
 
-A real browser does not remove every test workaround. AG Grid license messages and Lit dev-mode
-warnings can still occur in Chromium. Component mocks may also be useful because they simplify
-focused tests. Remove a workaround only after running the affected test against the real
-component.
+> [!WARNING]
+> A DOM-emulation gap is usually patched one of two ways: a polyfill standing in for the missing
+> browser API, or a component replacement that avoids exercising it at all. Both are test-only
+> code with no equivalent in production, and both defeat the point of the test: a polyfill can
+> drift from real browser behavior unnoticed, and a mocked component only proves the *mock*
+> renders correctly, never the real one. A passing test built on either can still fail — or
+> silently lie — against the real component. Treat every DOM-emulation workaround as debt to
+> remove, not a pattern to reach for.
+
+A real browser does not eliminate every workaround: AG Grid license messages and Lit dev-mode
+warnings are console noise from real Chromium runs, not DOM-emulation gaps, and suppressing them
+carries none of the risk above (see [Module mocks](module-mocks.md) for the supported way to
+seed module state instead of replacing a component). Remove a DOM-emulation-only workaround only
+after confirming the affected test still passes against the real component in Browser Mode.
 
 ## Choose a different runtime
 
@@ -57,6 +66,12 @@ export default defineProject({
 See [Configuration](configuration.md) for the complete `defineProject` behavior.
 
 ### Use happy-dom or jsdom
+
+> [!CAUTION]
+> Rendering with `happy-dom` or `jsdom` reintroduces the DOM-emulation tradeoff above: any gap
+> between the emulation and a real browser has to be closed with a polyfill or a component
+> replacement, not fixed. Only take this path for a component or hook that provably does not
+> need browser fidelity — otherwise stay in Browser Mode.
 
 The Fusion module setup does not depend on Browser Mode. Build the same provider tree and pass it
 to another renderer. The example below uses `@testing-library/react` on `happy-dom`:
