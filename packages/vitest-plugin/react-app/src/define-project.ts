@@ -26,7 +26,9 @@ export type AppTestConfigOverride =
  * Drop-in replacement for Vitest's own `defineProject` — same `export default`, just pre-wired.
  * Playwright/`chromium` is only the *default* — pass `override` to change or replace anything
  * (e.g. `test.name`, or swap `test.browser.provider` for a different `@vitest/browser-*`
- * provider) without hand-rolling `appTestVitePlugin`'s own wiring.
+ * provider) without hand-rolling `appTestVitePlugin`'s own wiring. The default `1024x768`
+ * viewport matches a typical low-resolution Citrix session rather than Vitest's own
+ * mobile-sized default; pass `test.browser.viewport` to use a different size.
  *
  * @example
  * ```ts
@@ -57,6 +59,9 @@ export const defineProject = (override?: AppTestConfigOverride): UserWorkspaceCo
         enabled: true,
         provider: playwright(),
         headless: true,
+        // most users run the app through Citrix at a low, fixed resolution rather than a
+        // resizable desktop window — default to that instead of Vitest's own mobile-sized viewport
+        viewport: { width: 1024, height: 768 },
         instances: [{ browser: 'chromium' }],
       },
     },
