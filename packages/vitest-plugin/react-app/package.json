@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework-vitest-plugin-react-app",
-  "version": "0.2.0-next.1",
+  "version": "0.2.0-next.2",
   "description": "Vite plugin resolving an application's manifest, config, and module-configurator as virtual modules for testing.",
   "type": "module",
   "exports": {
