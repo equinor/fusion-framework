@@ -187,7 +187,7 @@ pnpm build:docs && echo "✅ Docs build successful"
 
 ### Writing Documentation
 
-#### README.md Template
+#### `README.md` Template
 ```md
 # Package Name
 

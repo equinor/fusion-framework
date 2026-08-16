@@ -174,6 +174,6 @@ describe('rewriteNamespaceHref', () => {
         '/fusion-framework/',
         '/modules/msal/',
       ),
-    ).toBe('/modules/msal/testing.html');
+    ).toBe('/fusion-framework/modules/msal/testing.html');
   });
 });
