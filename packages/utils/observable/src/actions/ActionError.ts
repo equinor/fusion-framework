@@ -1,4 +1,4 @@
-import type { Action } from './types';
+import type { Action } from './types.js';
 
 /**
  * An error class that wraps a causal error together with the action that triggered it.

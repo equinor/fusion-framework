@@ -1,6 +1,6 @@
-import { useObservableSelector } from './useObservableSelector';
-import { useObservableState } from './useObservableState';
-import type { Observable } from '../types';
+import { useObservableSelector } from './useObservableSelector.js';
+import { useObservableState } from './useObservableState.js';
+import type { Observable } from '../types/index.js';
 
 /**
  * @deprecated Use `useObservableState(useObservableSelector(...))` instead (since ^8.1).

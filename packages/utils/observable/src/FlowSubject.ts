@@ -17,11 +17,11 @@ import {
   observeOn,
   scan,
 } from 'rxjs/operators';
-import { filterAction } from './operators';
+import { filterAction } from './operators/index.js';
 
-import type { Action, ActionType, ExtractAction } from './actions/types';
-import type { Flow, Effect } from './types/flow';
-import type { ReducerWithInitialState } from './types/reducers';
+import type { Action, ActionType, ExtractAction } from './actions/types.js';
+import type { Flow, Effect } from './types/flow.js';
+import type { ReducerWithInitialState } from './types/reducers.js';
 
 /**
  * A specialized Observable that maintains internal state mutated by dispatching actions.

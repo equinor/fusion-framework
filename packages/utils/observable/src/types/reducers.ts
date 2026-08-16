@@ -1,5 +1,5 @@
 import type { Action, AnyAction } from '../actions/types.js';
-import type { NotFunction } from './ts-helpers';
+import type { NotFunction } from './ts-helpers.js';
 
 /**
  * A pure function that takes a previous state and an action, and returns

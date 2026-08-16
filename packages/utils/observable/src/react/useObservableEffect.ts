@@ -1,6 +1,6 @@
 import { useLayoutEffect, useState } from 'react';
-import type { FlowSubject } from '../FlowSubject';
-import type { Action, Effect, ActionType, ExtractAction } from '../types';
+import type { FlowSubject } from '../FlowSubject.js';
+import type { Action, Effect, ActionType, ExtractAction } from '../types/index.js';
 
 /**
  * React hook that attaches a side-effect to a {@link FlowSubject}, filtered

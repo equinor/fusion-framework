@@ -5,17 +5,17 @@
 
 export { castDraft } from 'immer';
 
-export * from './FlowSubject';
-export * from './actions/ActionError';
-export * from './types';
+export * from './FlowSubject.js';
+export * from './actions/ActionError.js';
+export * from './types/index.js';
 
 /** @deprecated use {@link FlowSubject} */
-export { FlowSubject as ReactiveObservable } from './FlowSubject';
+export { FlowSubject as ReactiveObservable } from './FlowSubject.js';
 
-export { actionMapper, type ActionCalls } from './actions/action-mapper';
+export { actionMapper, type ActionCalls } from './actions/action-mapper.js';
 
-export { createAction, type ActionCreatorWithPreparedPayload } from './actions/create-action';
-export { getBaseType } from './actions/utils';
+export { createAction, type ActionCreatorWithPreparedPayload } from './actions/create-action.js';
+export { getBaseType } from './actions/utils.js';
 
 export {
   createAsyncAction,
@@ -23,12 +23,12 @@ export {
   isCompleteAction,
   isFailureAction,
   isSuccessAction,
-} from './actions/create-async-action';
+} from './actions/create-async-action.js';
 
-export { createReducer, ActionReducerMapBuilder } from './create-reducer';
+export { createReducer, ActionReducerMapBuilder } from './create-reducer.js';
 
-export { createState, type FlowState } from './create-state';
+export { createState, type FlowState } from './create-state.js';
 
-export { isObservableInput } from './is-observable-input';
+export { isObservableInput } from './is-observable-input.js';
 
-export { toObservable, type DynamicInputValue } from './to-observable';
+export { toObservable, type DynamicInputValue } from './to-observable.js';
