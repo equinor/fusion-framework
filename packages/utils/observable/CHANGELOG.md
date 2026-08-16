@@ -323,7 +323,7 @@
 
 ### Patch Changes
 
-- [`7f4a381`](https://github.com/equinor/fusion-framework/commit/7f4a381ee3594a8cc1c77f0c13c1ba70223d8bf1) Thanks [@odinr](https://github.com/odinr)! - added react-dom in dev deps since `@testing-library/react` hadd peer deps to React 19, which crashed tests
+- [`7f4a381`](https://github.com/equinor/fusion-framework/commit/7f4a381ee3594a8cc1c77f0c13c1ba70223d8bf1) Thanks [@odinr](https://github.com/odinr)! - added react-dom in dev deps because the previous React test renderer's React 19 peer dependencies crashed tests
 
 ## 8.4.3
 
@@ -477,15 +477,15 @@
 
 ### Patch Changes
 
-- [#2204](https://github.com/equinor/fusion-framework/pull/2204) [`72f48ec`](https://github.com/equinor/fusion-framework/commit/72f48eccc7262f6c419c60cc32f0dc829601ceab) Thanks [@odinr](https://github.com/odinr)! - Updated `@testing-library/react` dev dependency from `^14.2.0` to `^15.0.0`.
+- [#2204](https://github.com/equinor/fusion-framework/pull/2204) [`72f48ec`](https://github.com/equinor/fusion-framework/commit/72f48eccc7262f6c419c60cc32f0dc829601ceab) Thanks [@odinr](https://github.com/odinr)! - Updated the previous React test renderer dev dependency from `^14.2.0` to `^15.0.0`.
 
   This is a patch bump because it only updates a dev dependency, which does not affect the public API or functionality of the `@equinor/fusion-framework-observable` package. Consumers of this package do not need to make any changes.
 
-  The `@testing-library/react` library is used internally for unit testing React components. Updating to the latest version ensures we have the latest testing utilities and improvements.
+  The dependency was used internally for unit testing React components. Updating to the latest version ensured the tests used its latest utilities and improvements.
 
-  Highlights from the `@testing-library/react` v15.0.0 changelog:
+  Highlights from that renderer's v15.0.0 changelog:
   - Minimum supported Node.js version is 18.0
-  - New version of `@testing-library/dom` changes various roles. Check out the [changed types](https://github.com/testing-library/dom-testing-library/releases/tag/v10.0.0) if you are using `ByRole` queries.
+  - Its DOM query dependency changed various roles and `ByRole` query types.
 
 ## 8.3.0
 

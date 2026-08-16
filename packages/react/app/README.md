@@ -25,7 +25,7 @@ pnpm add @equinor/fusion-framework-react-app
 import type { AppModuleInitiator } from '@equinor/fusion-framework-react-app';
 
 export const configure: AppModuleInitiator = (configurator) => {
-  configurator.http.configureClient('my-api', {
+  configurator.configureHttpClient('my-api', {
     baseUri: 'https://api.example.com',
     defaultScopes: ['api://my-api/.default'],
   });
@@ -372,6 +372,13 @@ const EnvInfo = () => {
 };
 ```
 
+### Testing
+
+Testing utilities (`renderAppHook`, `renderAppComponent`, `testApp`, and a Vitest plugin
+resolving an app's own manifest/config as virtual modules) have moved to their own package,
+[`@equinor/fusion-framework-vitest-plugin-react-app`](../../vitest-plugin/react-app/README.md) —
+see that package's README for usage.
+
 ## API Reference
 
 ### Core exports (main entry-point)
@@ -412,7 +419,7 @@ Application configuration is done via a callback passed to `renderApp` (or `make
 ```ts
 const configure: AppModuleInitiator = (configurator) => {
   // HTTP clients
-  configurator.http.configureClient('my-api', { baseUri: '...' });
+  configurator.configureHttpClient('my-api', { baseUri: '...' });
 
   // Feature flags
   enableFeatureFlag(configurator, [{ key: 'beta', title: 'Beta' }]);

@@ -49,6 +49,74 @@ export default sidebar({
       link: '/guide/linting.md',
     },
     {
+      text: 'Testing',
+      prefix: '/guide/testing/',
+      children: [
+        {
+          text: 'Overview',
+          link: '',
+        },
+        {
+          text: 'Getting started',
+          link: 'getting-started.md',
+        },
+        {
+          text: 'Configuration',
+          link: 'configuration.md',
+        },
+        {
+          text: 'Advanced',
+          link: 'advanced.md',
+        },
+        {
+          text: 'Mocking',
+          link: 'mocking/',
+        },
+        {
+          text: 'Troubleshooting',
+          link: 'troubleshooting.md',
+        },
+        {
+          text: 'References',
+          prefix: 'reference/',
+          children: [
+            {
+              text: 'Choose a testing layer',
+              link: 'choosing-a-layer.md',
+            },
+            {
+              text: 'Framework',
+              link: 'framework.md',
+            },
+            {
+              text: 'Framework design',
+              link: 'framework-design.md',
+            },
+            {
+              text: 'Framework API',
+              link: 'framework-api.md',
+            },
+            {
+              text: 'App',
+              link: 'app.md',
+            },
+            {
+              text: 'Extending framework mocks',
+              link: 'testing-extending.md',
+            },
+            {
+              text: 'Vitest plugin',
+              link: 'vitest-plugin.md',
+            },
+            {
+              text: 'OpenAPI mock',
+              link: 'openapi-mock.md',
+            },
+          ],
+        },
+      ],
+    },
+    {
       text: 'Setup',
       link: '/guide/setup.md',
     },
@@ -270,6 +338,14 @@ export default sidebar({
               text: 'Documentation',
               link: 'documentation.md',
             },
+            {
+              text: 'Repository guide',
+              link: 'repository.md',
+            },
+            {
+              text: 'Code of Conduct',
+              link: 'code-of-conduct.md',
+            },
           ],
         },
       ],
@@ -328,6 +404,22 @@ export default sidebar({
           text: 'React',
           link: 'react.md',
         },
+        {
+          text: 'Adapters',
+          link: 'docs/adapters.md',
+        },
+        {
+          text: 'Collectors',
+          link: 'docs/collectors.md',
+        },
+        {
+          text: 'Tracking Events Manually',
+          link: 'docs/tracking-events.md',
+        },
+        {
+          text: 'Testing',
+          link: 'docs/testing.md',
+        },
       ],
     },
     'app/',
@@ -337,7 +429,38 @@ export default sidebar({
       children: [
         {
           text: 'Browser',
+          prefix: 'msal/',
           link: 'msal/',
+          children: [
+            {
+              text: 'Overview',
+              link: '',
+            },
+            {
+              text: 'Testing',
+              link: 'docs/testing.md',
+            },
+            {
+              text: 'API reference',
+              link: 'docs/api-reference.md',
+            },
+            {
+              text: 'Auth code flow',
+              link: 'docs/auth-code-flow.md',
+            },
+            {
+              text: 'Version management',
+              link: 'docs/version-management.md',
+            },
+            {
+              text: 'Migration v2 to v4',
+              link: 'docs/migration-v2-to-v4.md',
+            },
+            {
+              text: 'Troubleshooting',
+              link: 'docs/troubleshooting.md',
+            },
+          ],
         },
         {
           text: 'NodeJS (Azure Identity)',
@@ -356,6 +479,28 @@ export default sidebar({
     {
       text: 'Context',
       link: 'context/',
+      children: [
+        {
+          text: 'Overview',
+          link: 'context/',
+        },
+        {
+          text: 'Data model',
+          link: 'context/docs/data-model.md',
+        },
+        {
+          text: 'Lifecycle',
+          link: 'context/docs/lifecycle.md',
+        },
+        {
+          text: 'Recipes',
+          link: 'context/docs/recipes.md',
+        },
+        {
+          text: 'Testing',
+          link: 'context/#testing',
+        },
+      ],
     },
     {
       text: 'Event',
@@ -367,8 +512,20 @@ export default sidebar({
           link: 'README.md',
         },
         {
-          text: 'React',
-          link: 'react.md',
+          text: 'Configuration',
+          link: 'docs/configuration.md',
+        },
+        {
+          text: 'Observable Patterns',
+          link: 'docs/observable-patterns.md',
+        },
+        {
+          text: 'Lifecycle',
+          link: 'docs/lifecycle.md',
+        },
+        {
+          text: 'Testing',
+          link: 'docs/testing.md',
         },
       ],
     },
@@ -411,6 +568,10 @@ export default sidebar({
           text: 'Server-Sent Events',
           link: 'http/docs/server-sent-events.md',
         },
+        {
+          text: 'Testing',
+          link: 'http/docs/testing.md',
+        },
       ],
     },
     'navigation/',
@@ -437,11 +598,38 @@ export default sidebar({
             },
           ],
         },
+        {
+          text: 'Event',
+          link: 'event/',
+        },
       ],
     },
     {
       text: 'Service Discovery',
+      prefix: 'service-discovery/',
       link: 'service-discovery/',
+      children: [
+        {
+          text: 'Overview',
+          link: '',
+        },
+        {
+          text: 'Testing',
+          link: 'docs/testing.md',
+        },
+        {
+          text: 'Configuration',
+          link: 'docs/configuration.md',
+        },
+        {
+          text: 'Session overrides',
+          link: 'docs/session-overrides.md',
+        },
+        {
+          text: 'API reference',
+          link: 'docs/api-reference.md',
+        },
+      ],
     },
     {
       text: 'Services',

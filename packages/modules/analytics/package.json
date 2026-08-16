@@ -20,6 +20,10 @@
     "./logExporters": {
       "import": "./dist/esm/logExporters/index.js",
       "types": "./dist/types/logExporters/index.d.ts"
+    },
+    "./mock": {
+      "import": "./dist/esm/mock/index.js",
+      "types": "./dist/types/mock/index.d.ts"
     }
   },
   "types": "dist/types/index.d.ts",
@@ -63,7 +67,7 @@
   "devDependencies": {
     "@equinor/fusion-observable": "workspace:^",
     "typescript": "^7.0.2",
-    "vitest": "^4.1.0"
+    "vitest": "^4.1.10"
   },
   "peerDependencies": {
     "@equinor/fusion-observable": "workspace:*"

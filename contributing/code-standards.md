@@ -560,6 +560,6 @@ export class AuthenticationError extends Error {
 ## Related Documentation
 
 - [TSDoc Best Practices](https://tsdoc.org/)
-- [Conventional Commits](contributing/conventional-commits.md)
-- [Development Setup](contributing/development.md)
-- [Code Review Guidelines](contributing/reviewing.md)
+- [Conventional Commits](conventional-commits.md)
+- [Development Setup](development.md)
+- [Code Review Guidelines](reviewing.md)

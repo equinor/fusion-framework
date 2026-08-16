@@ -2,6 +2,7 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "rootDir": "src",
+    "noEmit": true,
     "jsx": "react-jsx"
   },
   "references": [
@@ -9,12 +10,18 @@
       "path": "../../packages/react/app"
     },
     {
+      "path": "../../packages/vitest-plugin/react-app"
+    },
+    {
       "path": "../../packages/cli"
     },
     {
       "path": "../../packages/modules/feature-flag"
+    },
+    {
+      "path": "../../packages/framework"
     }
   ],
   "include": ["src/**/*"],
-  "exclude": ["node_modules", "lib"]
+  "exclude": ["node_modules", "lib", "src/__tests__/**/*"]
 }

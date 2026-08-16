@@ -22,6 +22,10 @@
     },
     "./app/*.js": {
       "import": "./dist/esm/app/*.js"
+    },
+    "./mock": {
+      "import": "./dist/esm/mock/index.js",
+      "types": "./dist/types/mock/index.d.ts"
     }
   },
   "types": "dist/types/index.d.ts",
@@ -41,11 +45,15 @@
       ],
       "app/*.js": [
         "dist/types/app/*.d.ts"
+      ],
+      "mock": [
+        "dist/types/mock/index.d.ts"
       ]
     }
   },
   "scripts": {
     "build": "tsc -b",
+    "test": "vitest run",
     "prepack": "pnpm build"
   },
   "keywords": [],
@@ -69,11 +77,13 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@equinor/fusion-framework": "workspace:^",
     "@equinor/fusion-framework-module": "workspace:^",
     "@equinor/fusion-framework-module-event": "workspace:^",
     "@equinor/fusion-framework-module-http": "workspace:^",
     "@equinor/fusion-framework-module-msal": "workspace:^",
     "@equinor/fusion-framework-module-service-discovery": "workspace:^",
-    "typescript": "^7.0.2"
+    "typescript": "^7.0.2",
+    "vitest": "^4.1.10"
   }
 }

@@ -69,7 +69,6 @@
   },
   "homepage": "https://github.com/equinor/fusion-framwork#readme",
   "devDependencies": {
-    "@equinor/fusion-lint": "workspace:^",
     "@biomejs/biome": "2.5.8",
     "@changesets/changelog-github": "^1.0.0",
     "@changesets/cli": "^3.0.0",
@@ -77,9 +76,7 @@
     "tslib": "^2.6.1",
     "turbo": "^2.5.6",
     "typescript": "^7.0.2",
-    "vitest": "^4.1.0",
-    "@types/node": "^24.0.3",
-    "chalk": "^6.0.0"
+    "vitest": "^4.1.10"
   },
   "peerDependencies": {
     "typescript": ">=4.8"

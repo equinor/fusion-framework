@@ -1,12 +1,16 @@
-import { firstValueFrom, of, Subject } from 'rxjs';
-import { switchMap, takeUntil, tap } from 'rxjs/operators';
+import { finalize, firstValueFrom, of, Subject } from 'rxjs';
+import { switchMap, take, takeUntil, tap } from 'rxjs/operators';
 import { fromFetch } from 'rxjs/fetch';
 
-import { HttpRequestHandler, HttpResponseHandler } from '../operators';
+import { HttpMiddlewareHandler, HttpRequestHandler, HttpResponseHandler } from '../operators';
 import { blobSelector, jsonSelector } from '../selectors';
 
 import type { Observable, ObservableInput } from 'rxjs';
-import type { IHttpRequestHandler, IHttpResponseHandler } from '../operators';
+import type {
+  IHttpMiddlewareHandler,
+  IHttpRequestHandler,
+  IHttpResponseHandler,
+} from '../operators';
 import type {
   BlobResult,
   FetchRequest,
@@ -38,6 +42,7 @@ export type HttpClientCreateOptions<
 > = {
   requestHandler: IHttpRequestHandler<TRequest>;
   responseHandler: IHttpResponseHandler<TResponse>;
+  middlewareHandler: IHttpMiddlewareHandler;
 };
 
 /** Base http client for executing requests */
@@ -57,6 +62,13 @@ export class HttpClient<
    * This property is part of the `HttpClientCreateOptions` configuration object used to create an `HttpClient` instance.
    */
   public readonly responseHandler: IHttpResponseHandler<TResponse>;
+
+  /**
+   * Middleware wrapping the network call, for cross-cutting concerns such as retries,
+   * caching, or telemetry. This property is part of the `HttpClientCreateOptions`
+   * configuration object used to create an `HttpClient` instance.
+   */
+  public readonly middlewareHandler: IHttpMiddlewareHandler;
 
   /**
    * A stream of requests that are about to be executed.
@@ -103,6 +115,7 @@ export class HttpClient<
   ) {
     this.requestHandler = new HttpRequestHandler<TRequest>(options?.requestHandler);
     this.responseHandler = new HttpResponseHandler<TResponse>(options?.responseHandler);
+    this.middlewareHandler = new HttpMiddlewareHandler(options?.middlewareHandler);
     this._init();
   }
 
@@ -326,7 +339,9 @@ export class HttpClient<
   /**
    * Aborts any ongoing HTTP requests made by this `IHttpClient` instance.
    * This will trigger the `takeUntil` operator in the `_fetch$` method,
-   * causing any in-flight requests to be cancelled.
+   * causing any in-flight requests to be cancelled, and abort the
+   * per-request `AbortSignal` passed through to `_performFetch`, so the
+   * underlying network call is cancelled even behind registered middleware.
    */
   public abort(): void {
     this._abort$.next();
@@ -355,11 +370,26 @@ export class HttpClient<
     args?: FetchRequestInit<T, TRequest, TResponse>,
   ): Observable<T> {
     const { selector, ...options } = args || {};
+    // A registered middleware's `next(...)` resolves through a `Promise` (see
+    // `HttpMiddlewareHandler`), which `firstValueFrom` fulfils via its own independent
+    // subscription to `_performFetch` — one the `takeUntil(this._abort$)` below never reaches,
+    // since it sits outside the subscription tree that `takeUntil` tears down. Combining this
+    // controller's signal into the request `init` lets `_performFetch` (`fromFetch` by default)
+    // abort the underlying network call directly, regardless of whether middleware severed the
+    // RxJS teardown chain.
+    const abortController = new AbortController();
+    // abort only fires once per request; the subscription is torn down in `finalize` below
+    const abort = this._abort$.pipe(take(1)).subscribe(() => abortController.abort());
+    const callerSignal = (options as RequestInit).signal;
+    const signal = callerSignal
+      ? AbortSignal.any([callerSignal, abortController.signal])
+      : abortController.signal;
     // `fromFetch` yields the raw fetch `Response`, but `responseHandler.process()` (called via
     // `_prepareResponse`) expects the pipeline's generic `TResponse` shape — cast through
     // `unknown` since the two are only compatible after that processing step.
     const response$ = of({
       ...options,
+      signal,
       path,
       uri: this._resolveUrl(path),
     } as TRequest).pipe(
@@ -367,8 +397,10 @@ export class HttpClient<
       switchMap((x) => this._prepareRequest(x)),
       /** push request to event buss */
       tap((x) => this._request$.next(x)),
-      /** execute request */
-      switchMap(({ uri, path: _path, ...init }) => fromFetch(uri, init)),
+      /** execute request through registered middleware, terminating at _performFetch */
+      switchMap(({ uri, path: _path, ...init }) =>
+        this.middlewareHandler.process(uri, init, (u, i) => this._performFetch(u, i)),
+      ),
       /** prepare response, allow extensions to modify response  */
       switchMap((x) => this._prepareResponse(x as unknown as TResponse)),
       /** push response to event buss */
@@ -394,10 +426,30 @@ export class HttpClient<
       }),
       /** cancel request on abort signal */
       takeUntil(this._abort$),
+      /** the abort signal subscription only ever fires once; tear it down once this request settles either way */
+      finalize(() => abort.unsubscribe()),
     );
     // The pipe above resolves to the per-call generic `T` (via the optional `selector`), but
     // the observable's static type tracks the class-level `TResponse` — cast to the caller's `T`.
     return response$ as unknown as Observable<T>;
+  }
+
+  /**
+   * Performs the actual network call for a prepared request.
+   *
+   * @remarks
+   * Isolated from {@link _fetch$} so a test double can replace only this step —
+   * matching a request against registered route handlers instead of reaching
+   * the network — while everything around it (request preparation, the
+   * response pipeline, abort handling) runs unchanged. See
+   * `@equinor/fusion-framework-module-http/mock`.
+   *
+   * @param uri - The fully resolved URL for the request.
+   * @param init - The prepared `fetch` request options.
+   * @returns An observable of the raw `Response`, ahead of {@link _prepareResponse}.
+   */
+  protected _performFetch(uri: string, init: RequestInit): ObservableInput<Response> {
+    return fromFetch(uri, init);
   }
 
   /**

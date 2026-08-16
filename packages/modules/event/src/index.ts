@@ -21,10 +21,16 @@ export type {
   FrameworkEventInitType,
 } from './FrameworkEvent';
 
-export { IEventModuleConfigurator } from './configurator';
-export { IEventModuleProvider, EventModuleProvider } from './provider';
+import type { EventModuleConfig } from './EventModuleConfigurator';
+
+export { EventModuleConfig, EventModuleConfigurator } from './EventModuleConfigurator';
+
+/** @deprecated Since 6.1.0. Use {@link EventModuleConfig} instead. */
+export type IEventModuleConfigurator = EventModuleConfig;
+
+export { IEventModuleProvider, EventModuleProvider } from './EventModuleProvider';
 export { EventModule, moduleKey as eventModuleKey } from './module';
 
-export { filterEvent } from './filter-event';
+export { filterEvent } from './operators/filter-event';
 
 export { default } from './module';

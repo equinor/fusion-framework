@@ -1,5 +1,3 @@
-[![License: ISC](https://img.shields.io/badge/License-ISC-blue.svg)](./LICENSE)
-
 A state management module for the Fusion Framework that provides a reactive, type-safe way to store, retrieve, and observe state items with optional persistence.
 
 ## Features
@@ -109,16 +107,4 @@ custom `IStorage` implementations.
 - [Events](docs/events.md): state change, sync, and operation events dispatched through the `event` module
 - [API Reference](docs/api-reference.md): supported value types, and the full `StateProvider`, `StateItem`, and result-type reference
 - [Performance](docs/performance.md): prefix filtering, batching, and sync tuning tips
-
-## Development
-
-This package is part of the [Fusion Framework monorepo](https://github.com/equinor/fusion-framework).
-
-### Contributing
-
-We welcome contributions! Please see our [contributing guidelines](../../CONTRIBUTING.md) for details on:
-- Code style and formatting
-- Testing requirements
-- Pull request process
-- Release process
 

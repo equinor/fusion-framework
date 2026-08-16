@@ -2,21 +2,21 @@ import { describe, it, expect, vi } from 'vitest';
 
 import { BehaviorSubject, Subject } from 'rxjs';
 
-import { act, renderHook } from '@testing-library/react';
+import { renderHook } from 'vitest-browser-react';
 
 import { useObservableState } from '../../src/react';
 import type { StatefulObservable } from '../../src/types';
 
 describe('useObservableState', () => {
-  it('should sync state with an Observable', () => {
+  it('should sync state with an Observable', async () => {
     const subject = new Subject<number>();
-    const { result } = renderHook(() => useObservableState(subject));
+    const { act, result } = await renderHook(() => useObservableState(subject));
 
     expect(result.current.value).toBeUndefined();
     expect(result.current.error).toBeNull();
     expect(result.current.complete).toBe(false);
 
-    act(() => {
+    await act(() => {
       subject.next(1);
     });
 
@@ -25,15 +25,15 @@ describe('useObservableState', () => {
     expect(result.current.complete).toBe(false);
   });
 
-  it('should sync state with a Stateful Observable', () => {
+  it('should sync state with a Stateful Observable', async () => {
     const subject = new BehaviorSubject(0);
-    const { result } = renderHook(() => useObservableState(subject));
+    const { act, result } = await renderHook(() => useObservableState(subject));
 
     expect(result.current.value).toBe(0);
     expect(result.current.error).toBeNull();
     expect(result.current.complete).toBe(false);
 
-    act(() => {
+    await act(() => {
       subject.next(1);
     });
 
@@ -42,14 +42,14 @@ describe('useObservableState', () => {
     expect(result.current.complete).toBe(false);
   });
 
-  it('should prioritize explicit initial value over stateful observable value', () => {
+  it('should prioritize explicit initial value over stateful observable value', async () => {
     // Make the plain Subject satisfy StatefulObservable by adding a `value` property
     const subject: Subject<number> & StatefulObservable<number> = Object.assign(
       new Subject<number>(),
       { value: 0 },
     );
 
-    const { result } = renderHook(() =>
+    const { act, result } = await renderHook(() =>
       useObservableState(subject, {
         initial: 42,
       }),
@@ -59,16 +59,16 @@ describe('useObservableState', () => {
     expect(result.current.error).toBeNull();
     expect(result.current.complete).toBe(false);
 
-    act(() => {
+    await act(() => {
       subject.next(1);
     });
 
     expect(result.current.value).toBe(1);
   });
 
-  it('should use provided initial value for a non-stateful observable', () => {
+  it('should use provided initial value for a non-stateful observable', async () => {
     const subject = new Subject<number>();
-    const { result } = renderHook(() =>
+    const { result } = await renderHook(() =>
       useObservableState(subject, {
         initial: 42,
       }),
@@ -79,12 +79,12 @@ describe('useObservableState', () => {
     expect(result.current.complete).toBe(false);
   });
 
-  it('should expose error state when observable errors', () => {
+  it('should expose error state when observable errors', async () => {
     const subject = new Subject<number>();
-    const { result } = renderHook(() => useObservableState(subject));
+    const { act, result } = await renderHook(() => useObservableState(subject));
     const error = new Error('observable failed');
 
-    act(() => {
+    await act(() => {
       subject.error(error);
     });
 
@@ -92,11 +92,11 @@ describe('useObservableState', () => {
     expect(result.current.complete).toBe(false);
   });
 
-  it('should expose completion state when observable completes', () => {
+  it('should expose completion state when observable completes', async () => {
     const subject = new Subject<number>();
-    const { result } = renderHook(() => useObservableState(subject));
+    const { act, result } = await renderHook(() => useObservableState(subject));
 
-    act(() => {
+    await act(() => {
       subject.complete();
     });
 
@@ -104,58 +104,58 @@ describe('useObservableState', () => {
     expect(result.current.error).toBeNull();
   });
 
-  it('should invoke teardown when unsubscribing', () => {
+  it('should invoke teardown when unsubscribing', async () => {
     const subject = new Subject<number>();
     const teardown = vi.fn();
-    const { unmount } = renderHook(() => useObservableState(subject, { teardown }));
+    const { unmount } = await renderHook(() => useObservableState(subject, { teardown }));
 
-    unmount();
+    await unmount();
 
     expect(teardown).toHaveBeenCalledTimes(1);
   });
 
   describe('store stability', () => {
-    it('should not recreate the store when a non-memoized complex initial object is passed on every render', () => {
+    it('should not recreate the store when a non-memoized complex initial object is passed on every render', async () => {
       const subject = new Subject<{ id: number }>();
 
       // Spy on Subject.subscribe to count store creations — each new store subscribes once.
       const subscribeSpy = vi.spyOn(subject, 'subscribe');
 
-      const { rerender } = renderHook(() =>
+      const { rerender } = await renderHook(() =>
         useObservableState(subject, {
           // Intentionally non-memoized: a new object reference on every render.
           initial: { id: 0 },
         }),
       );
 
-      rerender();
-      rerender();
-      rerender();
+      await rerender();
+      await rerender();
+      await rerender();
 
       // The store should have been created once regardless of how many times the
       // component re-renders with a different initial object reference.
       expect(subscribeSpy).toHaveBeenCalledTimes(1);
     });
 
-    it('should not recreate the store when a non-memoized teardown function is passed on every render', () => {
+    it('should not recreate the store when a non-memoized teardown function is passed on every render', async () => {
       const subject = new Subject<number>();
       const subscribeSpy = vi.spyOn(subject, 'subscribe');
 
-      const { rerender } = renderHook(() =>
+      const { rerender } = await renderHook(() =>
         useObservableState(subject, {
           // Intentionally non-memoized: a new arrow function on every render.
           teardown: () => {},
         }),
       );
 
-      rerender();
-      rerender();
-      rerender();
+      await rerender();
+      await rerender();
+      await rerender();
 
       expect(subscribeSpy).toHaveBeenCalledTimes(1);
     });
 
-    it('should recreate the store when the subject reference changes', () => {
+    it('should recreate the store when the subject reference changes', async () => {
       const subjectA = new BehaviorSubject(1);
       const subjectB = new BehaviorSubject(2);
 
@@ -163,44 +163,44 @@ describe('useObservableState', () => {
       const spyB = vi.spyOn(subjectB, 'subscribe');
 
       let activeSubject = subjectA as BehaviorSubject<number>;
-      const { result, rerender } = renderHook(() => useObservableState(activeSubject));
+      const { result, rerender } = await renderHook(() => useObservableState(activeSubject));
 
       expect(result.current.value).toBe(1);
 
       activeSubject = subjectB;
-      rerender();
+      await rerender();
 
       expect(result.current.value).toBe(2);
       expect(spyA).toHaveBeenCalledTimes(1);
       expect(spyB).toHaveBeenCalledTimes(1);
     });
 
-    it('should keep the mounted initial value until the new subject emits', () => {
+    it('should keep the mounted initial value until the new subject emits', async () => {
       const subjectA = new Subject<{ label: string }>();
       const subjectB = new Subject<{ label: string }>();
 
       let activeSubject = subjectA as Subject<{ label: string }>;
       const initialValue = { label: 'first' };
 
-      const { result, rerender } = renderHook(() =>
+      const { act, result, rerender } = await renderHook(() =>
         useObservableState(activeSubject, { initial: initialValue }),
       );
 
       expect(result.current.value).toEqual({ label: 'first' });
 
       activeSubject = subjectB;
-      rerender();
+      await rerender();
 
       expect(result.current.value).toEqual({ label: 'first' });
 
-      act(() => {
+      await act(() => {
         subjectB.next({ label: 'second' });
       });
 
       expect(result.current.value).toEqual({ label: 'second' });
     });
 
-    it('should keep the first subject when deps is empty', () => {
+    it('should keep the first subject when deps is empty', async () => {
       const subjectA = new Subject<number>();
       const subjectB = new Subject<number>();
 
@@ -208,20 +208,20 @@ describe('useObservableState', () => {
       const spyB = vi.spyOn(subjectB, 'subscribe');
 
       let activeSubject = subjectA as Subject<number>;
-      const { result, rerender } = renderHook(() =>
+      const { act, result, rerender } = await renderHook(() =>
         useObservableState(activeSubject, { deps: [] }),
       );
 
       activeSubject = subjectB;
-      rerender();
+      await rerender();
 
-      act(() => {
+      await act(() => {
         subjectB.next(2);
       });
 
       expect(result.current.value).toBeUndefined();
 
-      act(() => {
+      await act(() => {
         subjectA.next(1);
       });
 
@@ -230,7 +230,7 @@ describe('useObservableState', () => {
       expect(spyB).not.toHaveBeenCalled();
     });
 
-    it('should recreate the subscription when custom deps change', () => {
+    it('should recreate the subscription when custom deps change', async () => {
       const subjectA = new Subject<number>();
       const subjectB = new Subject<number>();
 
@@ -240,14 +240,14 @@ describe('useObservableState', () => {
       let activeSubject = subjectA as Subject<number>;
       let subscriptionKey = 'a';
 
-      const { result, rerender } = renderHook(() =>
+      const { act, result, rerender } = await renderHook(() =>
         useObservableState(activeSubject, { deps: [subscriptionKey] }),
       );
 
       activeSubject = subjectB;
-      rerender();
+      await rerender();
 
-      act(() => {
+      await act(() => {
         subjectB.next(2);
       });
 
@@ -256,9 +256,9 @@ describe('useObservableState', () => {
       expect(spyB).not.toHaveBeenCalled();
 
       subscriptionKey = 'b';
-      rerender();
+      await rerender();
 
-      act(() => {
+      await act(() => {
         subjectB.next(2);
       });
 

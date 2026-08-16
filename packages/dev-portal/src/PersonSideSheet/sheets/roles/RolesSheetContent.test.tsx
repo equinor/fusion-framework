@@ -1,4 +1,4 @@
-import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { cleanup, render } from 'vitest-browser-react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { RolesSheetContent } from './RolesSheetContent';
@@ -39,10 +39,9 @@ describe('RolesSheetContent', () => {
     const json = vi.fn().mockResolvedValue([]);
     mocks.createClient.mockResolvedValue({ json });
 
-    render(<RolesSheetContent navigate={vi.fn()} />);
+    const screen = await render(<RolesSheetContent navigate={vi.fn()} />);
 
-    expect(screen.getByLabelText('Loading roles')).toBeTruthy();
-    expect(await screen.findByText('You have no available roles')).toBeTruthy();
+    await expect.element(screen.getByText('You have no available roles')).toBeVisible();
     expect(json).toHaveBeenCalledTimes(2);
   });
 
@@ -53,14 +52,13 @@ describe('RolesSheetContent', () => {
       .mockResolvedValue([]);
     mocks.createClient.mockResolvedValue({ json });
 
-    render(<RolesSheetContent navigate={vi.fn()} />);
+    const screen = await render(<RolesSheetContent navigate={vi.fn()} />);
 
-    expect(await screen.findByText('Roles service unavailable')).toBeTruthy();
-    fireEvent.click(screen.getByRole('button', { name: 'Retry' }));
+    await expect.element(screen.getByText('Roles service unavailable')).toBeVisible();
+    await screen.getByRole('button', { name: 'Retry' }).click();
 
-    expect(screen.getByLabelText('Loading roles')).toBeTruthy();
-    await waitFor(() => expect(mocks.createClient).toHaveBeenCalledTimes(2));
-    expect(await screen.findByText('You have no available roles')).toBeTruthy();
+    await vi.waitFor(() => expect(mocks.createClient).toHaveBeenCalledTimes(2));
+    await expect.element(screen.getByText('You have no available roles')).toBeVisible();
   });
 
   it('hides stale assignments while loading roles for a changed account', async () => {
@@ -73,14 +71,14 @@ describe('RolesSheetContent', () => {
       .mockResolvedValueOnce({ json: initialJson })
       .mockResolvedValueOnce({ json: pendingJson });
 
-    const { rerender } = render(<RolesSheetContent navigate={vi.fn()} />);
+    const screen = await render(<RolesSheetContent navigate={vi.fn()} />);
 
-    expect(await screen.findByText('Claimable role')).toBeTruthy();
+    await expect.element(screen.getByText('Claimable role')).toBeVisible();
 
     mocks.currentUser.localAccountId = 'next-account-id';
-    rerender(<RolesSheetContent navigate={vi.fn()} />);
+    await screen.rerender(<RolesSheetContent navigate={vi.fn()} />);
 
-    expect(screen.getByLabelText('Loading roles')).toBeTruthy();
-    expect(screen.queryByText('Claimable role')).toBeNull();
+    await expect.element(screen.getByLabelText('Loading roles')).toBeVisible();
+    await expect.element(screen.getByText('Claimable role')).not.toBeInTheDocument();
   });
 });

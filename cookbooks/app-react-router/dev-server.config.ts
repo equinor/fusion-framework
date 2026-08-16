@@ -1,89 +1,11 @@
 import { defineDevServerConfig } from '@equinor/fusion-framework-cli/dev-server';
-import { faker } from '@faker-js/faker';
-import type { Product } from './src/api/ProductApi';
-import type { User } from './src/api/UserApi';
-
-const productCategories = [
-  'electronics',
-  'furniture',
-  'clothing',
-  'books',
-  'sports',
-  'home',
-  'toys',
-];
-
-/**
- * Generate a single product
- */
-function generateProduct(id: number): Product {
-  faker.seed(id);
-  const category = faker.helpers.arrayElement(productCategories);
-
-  return {
-    id,
-    name: faker.commerce.productName(),
-    category,
-    price: parseFloat(faker.commerce.price({ min: 10, max: 2000, dec: 2 })),
-    description: faker.commerce.productDescription(),
-    inStock: faker.datatype.boolean({ probability: 0.8 }),
-    reviews: faker.number.int({ min: 0, max: 500 }),
-    rating: parseFloat(faker.number.float({ min: 3.0, max: 5.0, fractionDigits: 1 }).toFixed(1)),
-    image: faker.image.url({ width: 300, height: 175 }),
-  };
-}
-
-/**
- * Generate mock products using Faker.js
- * Using a seed ensures consistent data across runs
- */
-function generateProducts(count: number = 100): Product[] {
-  // Create deterministic product records for each requested index.
-  return Array.from({ length: count }).map((_, index) => generateProduct(index));
-}
-
-/**
- * Generate a single user
- */
-function generateUser(id: number): User {
-  faker.seed(id + 1000); // Use different seed range than products
-  const role = faker.helpers.arrayElement(['Developer', 'Designer', 'Manager', 'Analyst']);
-  const department = faker.helpers.arrayElement(['Engineering', 'Design', 'Operations', 'Finance']);
-  const location = faker.helpers.arrayElement([
-    'Oslo',
-    'Bergen',
-    'Trondheim',
-    'Stavanger',
-    'Tromsø',
-    'Kristiansand',
-    'Ålesund',
-    'Bodø',
-    'Drammen',
-    'Sandnes',
-    'Fredrikstad',
-    'Tønsberg',
-  ]);
-
-  return {
-    id,
-    name: faker.person.fullName(),
-    email: faker.internet.email().toLowerCase(),
-    role,
-    department,
-    phone: `+47 ${faker.string.numeric(3)} ${faker.string.numeric(2)} ${faker.string.numeric(3)}`,
-    location,
-    joinDate: faker.date.past({ years: 5 }).toISOString().split('T')[0],
-  };
-}
-
-/**
- * Generate mock users using Faker.js
- * Using a seed ensures consistent data across runs
- */
-function generateUsers(count: number = 50): User[] {
-  // Create deterministic user records with one-based IDs for the mock API.
-  return Array.from({ length: count }).map((_, index) => generateUser(index + 1));
-}
+import {
+  productCategories,
+  generateProduct,
+  generateProducts,
+  generateUser,
+  generateUsers,
+} from './src/mocks/generators';
 
 export default defineDevServerConfig(() => ({
   spa: {

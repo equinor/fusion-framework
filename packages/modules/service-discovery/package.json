@@ -7,12 +7,27 @@
     ".": {
       "types": "./dist/types/index.d.ts",
       "import": "./dist/esm/index.js"
+    },
+    "./mock": {
+      "types": "./dist/types/mock/index.d.ts",
+      "import": "./dist/esm/mock/index.js"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      ".": [
+        "dist/types/index.d.ts"
+      ],
+      "mock": [
+        "dist/types/mock/index.d.ts"
+      ]
     }
   },
   "types": "dist/types/index.d.ts",
   "scripts": {
     "build": "tsc -b",
-    "prepack": "pnpm build"
+    "prepack": "pnpm build",
+    "test": "vitest"
   },
   "keywords": [],
   "author": "",
