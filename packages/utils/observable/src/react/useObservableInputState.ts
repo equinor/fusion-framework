@@ -1,6 +1,6 @@
 import type { ObservableInput } from 'rxjs';
-import { useObservableState, type ObservableStateReturnType } from './useObservableState';
-import { useObservableInput } from './useObservableInput';
+import { useObservableState, type ObservableStateReturnType } from './useObservableState.js';
+import { useObservableInput } from './useObservableInput.js';
 
 /**
  * React hook that subscribes to an `ObservableInput` and tracks its latest

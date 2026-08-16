@@ -1,14 +1,14 @@
 import type { Observable } from 'rxjs';
 
 export * from '../actions/types.js';
-export * from './flow';
-export * from './observable';
-export * from './reducers';
+export * from './flow.js';
+export * from './observable.js';
+export * from './reducers.js';
 
-export type { NestedKeys, NestedPropType } from './ts-helpers';
+export type { NestedKeys, NestedPropType } from './ts-helpers.js';
 
 /** @deprecated Use {@link Flow} instead. */
-export { Flow as Epic } from './flow';
+export { Flow as Epic } from './flow.js';
 
 /**
  * Extracts the value type `U` from `Observable<U>`.
