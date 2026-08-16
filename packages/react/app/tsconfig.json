@@ -22,6 +22,9 @@
       "path": "../router"
     },
     {
+      "path": "../ag-grid"
+    },
+    {
       "path": "../../modules/analytics"
     },
     {
