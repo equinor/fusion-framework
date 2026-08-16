@@ -45,8 +45,13 @@ export const init = async <TModules extends Array<AnyModule>, TRef extends objec
   const fusion = {
     modules,
   };
-  // Expose globally so portal shells and widgets can access the running instance
-  window.Fusion = fusion as unknown as Fusion;
+  // Expose globally so portal shells and widgets can access the running instance.
+  // Guarded because the framework must also initialize where no DOM exists, such as
+  // a test runner or a server-side render.
+  if (typeof window !== 'undefined') {
+    // Global exposure predates strict typing on `Window.Fusion`; the shape is guaranteed by this function's own construction above
+    window.Fusion = fusion as unknown as Fusion;
+  }
   modules.event.dispatchEvent('onFrameworkLoaded', { detail: fusion });
 
   // The generic TModules type is erased on the plain object above; restore it for the return type

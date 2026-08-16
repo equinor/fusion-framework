@@ -160,7 +160,7 @@ const MyComponent = () => {
 upload this config to the application admin under `configs`
 > in the future the `config.endpoint` attribute in app admin will support scopes
 
-[read more about authentication](./authentication.md)
+[read more about authentication](docs/msal.md)
 
 ```json
 // config.ENV.json

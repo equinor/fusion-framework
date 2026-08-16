@@ -193,12 +193,19 @@ See [Server-Sent Events](docs/server-sent-events.md) for `sse$()` usage, event f
 
 Native fetch errors can still surface as well, including abort and network failures.
 
+## Testing
+
+Register a short-circuiting middleware through `configurator.http.addMiddleware(...)` to answer requests without touching the network — no separate mock client or configurator is needed. `createOpenApiMockMiddleware` (`@equinor/fusion-framework-module-http/mock`) adapts an `@equinor/fusion-openapi-mock` instance into one for faking an entire OpenAPI document.
+
+See [Testing](docs/testing.md) for the middleware contract and `createOpenApiMockMiddleware`.
+
 ## Advanced Guides
 
 - [Client Configuration](docs/client-configuration.md): named clients, `configureHttpClient`, `configureHttp`, `onCreate`, custom client classes, and ad-hoc clients
 - [Observable Patterns](docs/observable-patterns.md): `fetch$`, `json$`, `request$`, `response$`, cancellation, and RxJS composition
 - [Selectors and Handlers](docs/selectors-and-handlers.md): `jsonSelector`, `blobSelector`, request handlers, response handlers, and built-in operators
 - [Server-Sent Events](docs/server-sent-events.md): `sse$`, `createSseSelector`, `sseMap`, event filtering, heartbeats, and abort behavior
+- [Testing](docs/testing.md): the middleware contract, `addMiddleware`, and `createOpenApiMockMiddleware`
 
 ## Things To Remember
 

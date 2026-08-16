@@ -57,6 +57,10 @@ typings/
 # Optional eslint cache
 .eslintcache
 
+# Vitest browser mode failure screenshots
+__screenshots__/
+.vitest-attachments/
+
 # Microbundle cache
 .rpt2_cache/
 .rts2_cache_cjs/

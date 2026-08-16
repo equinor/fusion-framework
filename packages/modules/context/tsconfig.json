@@ -19,7 +19,13 @@
       "path": "../event"
     },
     {
+      "path": "../http"
+    },
+    {
       "path": "../services"
+    },
+    {
+      "path": "../telemetry"
     }
   ],
   "include": ["src/**/*"],
