@@ -158,6 +158,21 @@ Registers the AG Grid module. The optional callback receives an `IAgGridConfigur
 
 Themes configured in a parent scope (portal) are automatically inherited by child scopes (applications). The module clones inherited themes via `createThemeFromTheme` to avoid `instanceof` mismatches across module-federation boundaries.
 
+## Testing
+
+Without a license key, AG Grid Enterprise logs a "License Key Not Found" banner through `console.error` on every grid mount, which is expected in tests but buries real assertion failures in the reporter output.
+Call `suppressAgGridLicenseBanner` once from your test setup file to filter just that banner:
+
+```ts
+// src/test/setupTests.ts
+import { suppressAgGridLicenseBanner } from '@equinor/fusion-framework-module-ag-grid/testing';
+
+suppressAgGridLicenseBanner();
+```
+
+> [!TIP]
+> This only hides the banner in tests. To remove it from a running application, configure a real license key via `enableAgGrid`/`setLicenseKey` instead.
+
 ## Migration from AG Grid 32 to 33
 
 AG Grid 33 consolidated all feature modules into single `ag-grid-community` and `ag-grid-enterprise` packages. Key changes:
