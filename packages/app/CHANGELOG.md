@@ -1,5 +1,12 @@
 # Change Log
 
+## 14.0.0-next.1
+
+### Patch Changes
+
+- @equinor/fusion-framework-module-telemetry@8.0.0-next.1
+- @equinor/fusion-framework@8.1.0-next.1
+
 ## 14.0.0-next.0
 
 ### Minor Changes
