@@ -25,6 +25,10 @@
       "import": "./dist/esm/themes.js",
       "types": "./dist/types/themes.d.ts"
     },
+    "./testing": {
+      "import": "./dist/esm/testing.js",
+      "types": "./dist/types/testing.d.ts"
+    },
     "./package.json": "./package.json",
     "./README.md": "./README.md"
   },
@@ -44,6 +48,9 @@
       ],
       "themes": [
         "dist/types/themes.d.ts"
+      ],
+      "testing": [
+        "dist/types/testing.d.ts"
       ]
     }
   },
