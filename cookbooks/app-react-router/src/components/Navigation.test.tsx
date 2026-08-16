@@ -43,14 +43,19 @@ testWithRouter('the active link swaps when navigating to a different page', asyn
 
   // Users is never navigated to in this test, so its color is a stable "inactive" reference
   const inactiveColor = colorOf('Users');
-  expect(colorOf('Home')).not.toBe(inactiveColor);
-  expect(colorOf('Products')).toBe(inactiveColor);
+  await vi.waitFor(() => {
+    expect(colorOf('Home')).not.toBe(inactiveColor);
+    expect(colorOf('Products')).toBe(inactiveColor);
+  });
 
   await getByText('Products').click();
-  await vi.waitFor(() => expect(window.location.pathname).toBe('/products'));
 
-  expect(colorOf('Home')).toBe(inactiveColor);
-  expect(colorOf('Products')).not.toBe(inactiveColor);
+  // the URL changes synchronously on click, so styling lags at least one render behind it —
+  // retry on the color itself rather than on the pathname, which would resolve too early
+  await vi.waitFor(() => {
+    expect(colorOf('Home')).toBe(inactiveColor);
+    expect(colorOf('Products')).not.toBe(inactiveColor);
+  });
 
   await unmount();
 });
