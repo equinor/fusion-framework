@@ -147,6 +147,7 @@
     "msal-mock-entry-point",
     "msal-mock-set-account",
     "msal_remove-debug-log",
+    "observable_fix-esm-import-extensions",
     "openapi-mock_initial-release",
     "react-ag-grid_suppress-license-banner-testing",
     "react-app_ag-grid-subpaths",
