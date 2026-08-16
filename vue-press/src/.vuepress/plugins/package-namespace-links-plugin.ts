@@ -102,10 +102,12 @@ export const createNamespaceRouteMap = (
             .relative(repoRoot, targetPath)
             .split(path.sep)
             .join('/');
+          // A directory with its own README publishes there; otherwise it aggregates into the
+          // linking wrapper's own page.
           const targetRoute =
             exact[targetSource] ??
             (existsSync(targetPath) && statSync(targetPath).isDirectory()
-              ? wrapperRoute
+              ? (exact[`${targetSource}/README.md`] ?? wrapperRoute)
               : undefined);
           // Missing files remain visible to link validation instead of falling back to a parent page.
           if (!targetRoute) {
@@ -165,6 +167,17 @@ export const rewriteNamespaceHref = (
   // fixes hrefs VuePress left unresolved (still plain <a>, so base won't double up).
   if (aliasedRoute) {
     return `${normalizedBase}${aliasedRoute}${suffix}`;
+  }
+  // Hand-authored absolute links to a real page are missing only the deployment base —
+  // VuePress treats a base-less absolute path as external regardless of its extension.
+  const knownRoute = [
+    publicPath,
+    `${publicPath}.html`,
+    publicPath.replace(/\.md$/, '.html'),
+    `${publicPath}/`,
+  ].find((candidate) => routeMaps.sourceByRoute[candidate] !== undefined);
+  if (knownRoute) {
+    return `${normalizedBase}${knownRoute}${suffix}`;
   }
   const namespaceMatch = pathname.match(/(?:^|\/)(packages|cookbooks)\/(.+)$/);
   // Ordinary relative and external links are outside this plugin's namespace contract.
