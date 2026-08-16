@@ -1,5 +1,11 @@
 # Change Log
 
+## 2.0.2-next.0
+
+### Patch Changes
+
+- 2836e0b: Internal: add Vitest coverage for the `App` component, covering the default signed-in mock user, overriding `configure` with a custom mock account, and resolving/rendering an access token for the portal service scopes; wire the cookbook into the root Vitest project list. Also removes the unused demo `src/config.ts` (dev-only console logging, no functional impact) — the cookbook registers no module `configure` of its own, so tests configure the mock account directly instead of composing with one.
+
 ## 2.0.1
 
 ### Patch Changes
