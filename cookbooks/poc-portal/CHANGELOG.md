@@ -1,5 +1,47 @@
 # poc-portal
 
+## 1.1.97-next.0
+
+### Patch Changes
+
+- Updated dependencies [e8aae1f]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+  - @equinor/fusion-framework@8.1.0-next.0
+  - @equinor/fusion-framework-cli@15.2.8-next.0
+  - @equinor/fusion-framework-module@6.1.3-next.0
+  - @equinor/fusion-framework-module-app@8.1.0-next.0
+  - @equinor/fusion-framework-module-http@8.1.0-next.0
+  - @equinor/fusion-framework-module-msal@11.0.0-next.0
+  - @equinor/fusion-framework-module-service-discovery@10.1.0-next.0
+  - @equinor/fusion-framework-react@9.0.0-next.0
+  - @equinor/fusion-framework-react-app@15.0.0-next.0
+
 ## 1.1.96
 
 ### Patch Changes

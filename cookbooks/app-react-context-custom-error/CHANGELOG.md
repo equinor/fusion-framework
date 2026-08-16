@@ -1,5 +1,19 @@
 # @equinor/fusion-framework-cookbook-app-react-context-custom-error
 
+## 5.0.8-next.0
+
+### Patch Changes
+
+- Updated dependencies [e8aae1f]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+  - @equinor/fusion-framework-cli@15.2.8-next.0
+  - @equinor/fusion-framework-react-app@15.0.0-next.0
+  - @equinor/fusion-framework-react-module-context@7.0.3-next.0
+  - @equinor/fusion-observable@9.1.2-next.0
+
 ## 5.0.7
 
 ### Patch Changes

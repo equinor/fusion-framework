@@ -1,5 +1,41 @@
 # Change Log
 
+## 6.1.3-next.0
+
+### Patch Changes
+
+- e8aae1f: Internal: publish every package on the `next` pre-release tag so the whole framework can be installed as a coherent set.
+
+  Packages without their own changes are bumped only to receive a `-next.N` version and the `next` dist-tag on npm. Install with:
+
+  ```bash
+  pnpm add @equinor/fusion-framework-react-app@next
+  ```
+
+- 2836e0b: Fix `DotPath` skipping over optional object properties, which made anything beneath them unreachable from `BaseConfigBuilder._set`.
+
+  An optional property is typed `T | undefined`, which does not extend `object`, so the path union stopped at the property itself: given `{ foo?: { bar: string } }`, `'foo'` was allowed but `'foo.bar'` was not. `DotPathType` already unwrapped such properties with `NonNullable`, so the two disagreed — a path it could resolve was one `_set` refused.
+
+  `DotPath` now unwraps the same way. This only widens the accepted union, so existing calls are unaffected.
+
+- 2836e0b: Ensure module re-registration replaces prior `configure`, `afterConfig`, and `afterInit` callbacks for modules with the same name. This prevents stale callback execution when mock modules like `enableMsalMock` override a real module registration.
+- 2836e0b: Fix `ModulesConfigurator.addConfig` discarding previously registered `configure`/`afterConfig`/`afterInit` callbacks whenever it was called again for the same module name — even when the module descriptor itself was the exact same object.
+
+  This broke any config function that registered more than one named client against a shared module singleton, for example calling `configureHttpClient`/`useFrameworkServiceClient` more than once from `@equinor/fusion-framework-module-http`:
+
+  ```typescript
+  configurator.configureHttpClient("products", { baseUri });
+  configurator.configureHttpClient("users", { baseUri });
+  ```
+
+  Previously, only the **last** call's client was actually registered; earlier ones threw `No registered http client for key [products]` at `createClient()` time, with no error at configuration time. `addConfig` now only discards previous callbacks when a genuinely different module descriptor replaces the old one for that name — re-registering the same descriptor (as these helpers do) stays additive, so multiple named clients register correctly.
+
+- 2836e0b: Fix a bug in the module configurator that caused configurator phases (configure / post-initialize / dispose) to run out of order or skip post-configure hooks in certain initialization paths.
+
+  This ensures module configuration and plugin hooks run reliably during module initialization, preventing missed setup steps for consumer modules.
+
+  Fixes: restores correct configurator phase ordering and prevents lost initialization for modules that rely on post-configure hooks.
+
 ## 6.1.2
 
 ### Patch Changes

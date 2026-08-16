@@ -1,5 +1,66 @@
 # @equinor/fusion-framework-module-analytics
 
+## 3.1.0-next.0
+
+### Minor Changes
+
+- 2836e0b: Add `MockAnalyticsAdapter` and `./mock` subpath for asserting on tracked analytics events in tests.
+
+  ```ts
+  import { enableAnalytics } from "@equinor/fusion-framework-module-analytics";
+  import { MockAnalyticsAdapter } from "@equinor/fusion-framework-module-analytics/mock";
+
+  const recorder = new MockAnalyticsAdapter();
+
+  enableAnalytics(configurator, (builder) => {
+    builder.setAdapter("mock", async () => recorder);
+  });
+
+  // ... exercise the app under test, then assert:
+  const event = await recorder.waitForAnalytic("button-click");
+  expect(event.attributes?.section).toBe("header");
+  ```
+
+  ### `getAnalytics(matcher?)`
+
+  Returns recorded events synchronously, filtered by an event name, an array of names, or a predicate. Omit the matcher to get every recorded event.
+
+  ### `waitForAnalytic(matcher, options?)`
+
+  Resolves with the first matching event, resolving immediately if one was already recorded, or waiting for a future one. Supports an optional `timeout` (ms) and `AbortSignal` so a test cannot hang indefinitely, and rejects if the adapter is disposed before a match occurs.
+
+### Patch Changes
+
+- e8aae1f: Internal: publish every package on the `next` pre-release tag so the whole framework can be installed as a coherent set.
+
+  Packages without their own changes are bumped only to receive a `-next.N` version and the `next` dist-tag on npm. Install with:
+
+  ```bash
+  pnpm add @equinor/fusion-framework-react-app@next
+  ```
+
+- Updated dependencies [e8aae1f]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+  - @equinor/fusion-framework-module@6.1.3-next.0
+  - @equinor/fusion-framework-module-app@8.1.0-next.0
+  - @equinor/fusion-framework-module-context@9.0.0-next.0
+  - @equinor/fusion-framework-module-event@6.1.0-next.0
+  - @equinor/fusion-framework-module-http@8.1.0-next.0
+  - @equinor/fusion-observable@9.1.2-next.0
+
 ## 3.0.6
 
 ### Patch Changes

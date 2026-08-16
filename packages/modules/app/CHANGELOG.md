@@ -1,5 +1,41 @@
 # Change Log
 
+## 8.1.0-next.0
+
+### Minor Changes
+
+- 2836e0b: Add `MockAppClient`, exported from a new `./mock` subpath, so a test can serve one app's own manifest and config locally instead of contacting the app service.
+
+  ```ts
+  import { MockAppClient } from "@equinor/fusion-framework-module-app/mock";
+
+  enableAppModule(configurator, (builder) => {
+    builder.setClient(async ({ requireInstance }) => {
+      const http = await requireInstance("http");
+      return new MockAppClient(http.createClient("apps"), manifest, config);
+    });
+  });
+  ```
+
+  `getAppManifest` only resolves locally for `manifest.appKey` with no `tag` at all. `getAppConfig` resolves for `manifest.appKey` when `tag` is either absent or equal to the manifest's own `build.version` — the same tag `App` requests when loading config for the manifest it already resolved. Every other request — other app keys, tagged requests, builds, settings — still goes through the real `AppClient` it wraps, so pointing service discovery at a different registry or a real local mock server keeps working unchanged.
+
+  Also export `AppConfig` as a value from the package root (previously type-only), so a test can construct one directly with `new AppConfig({ environment, endpoints })`.
+
+### Patch Changes
+
+- e8aae1f: Internal: publish every package on the `next` pre-release tag so the whole framework can be installed as a coherent set.
+
+  Packages without their own changes are bumped only to receive a `-next.N` version and the `next` dist-tag on npm. Install with:
+
+  ```bash
+  pnpm add @equinor/fusion-framework-react-app@next
+  ```
+
+- Updated dependencies [e8aae1f]
+- Updated dependencies [2836e0b]
+  - @equinor/fusion-observable@9.1.2-next.0
+  - @equinor/fusion-query@7.0.4-next.0
+
 ## 8.0.4
 
 ### Patch Changes

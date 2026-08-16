@@ -1,5 +1,168 @@
 # Change Log
 
+## 11.0.0-next.0
+
+### Minor Changes
+
+- 2836e0b: Move the MSAL configuration schema into `MsalConfig.schema.ts` and add `MsalConfigExtension`, an extension point for variants of this module.
+
+  `MsalConfig` is now the schema's inferred type intersected with `MsalConfigExtension`, an empty interface a variant merges its own configuration into:
+
+  ```typescript
+  declare module "@equinor/fusion-framework-module-msal" {
+    interface MsalConfigExtension {
+      mock?: { account?: MsalMockUser };
+    }
+  }
+  ```
+
+  `BaseConfigBuilder._set` derives its target from `MsalConfig`, so before this a key the type did not know about could only be set by casting past the builder. Making the configurator generic over its configuration cannot solve that: a dot-path union over an unresolved type parameter defers, which takes every existing literal path down with it.
+
+  The schema is unchanged and still describes exactly what reaches `MsalProvider` — it strips anything merged in, so an extension carries a declaration across the builder and stops there. `MsalConfigSchema`, `TelemetryConfigSchema` and their types are re-exported from `MsalConfigurator` as before.
+
+- 2836e0b: Extract client construction from `MsalConfigurator._processConfig` into overridable seams.
+
+  `_processConfig` now only decides _whether_ a client is needed; `protected _createClient(config, init)` decides _what_ to build, and `protected _createClientConfig(config)` resolves the `MsalClientConfig` it is built from — authority derived from the tenant, cache location, telemetry-backed logging and cache lookup policy included.
+
+  Behaviour is unchanged for consumers: the client is still auto-created from `setClientConfig`, and a client supplied through `setClient` still wins, because `_createClient` is consulted only when no client was set.
+
+  This gives a supported seam for authenticating through something other than Entra ID:
+
+  ```typescript
+  class MyConfigurator extends MsalConfigurator {
+    protected override async _createClient(
+      config: MsalConfig,
+    ): Promise<IMsalClient> {
+      // same fully resolved configuration the real client is built from
+      return new MyOwnMsalClient(this._createClientConfig(config));
+    }
+  }
+  ```
+
+  Overriding it replaces only the client, leaving the builder, the schema validation and `MsalProvider` untouched.
+
+  No client is built when the module is hoisted onto a host application's provider — an app running inside a portal authenticates through the host, so a client built during configuration would be discarded, or worse, shadow the host's signed-in user. `protected _isHoisted(init)` exposes that decision to subclasses.
+
+  Also adds `getClientConfig()`, the counterpart to `setClientConfig`, so a subclass can tell "nothing was declared" apart from "declared, and here it is".
+
+  `_createClientConfig` applies its defaults to a copy of the declared configuration, not the object itself, so a caller reusing or asserting on it never sees it rewritten, and a shared constant can be used as a default without one configurator's client contaminating the next.
+
+- 2836e0b: Give `MsalMockClient` a real account cache, so its account APIs agree with each other and with MSAL.
+
+  Previously the client held a single nullable account, which made its surface inconsistent: `getAccount(filter)` ignored the filter, `getAllAccounts()` reported an account even after one had only been made active, and signing out merely blanked a field.
+
+  The client now keeps a cache keyed by `homeAccountId` alongside an active account, matching MSAL:
+
+  - `getAccount(filter)` matches on `homeAccountId`, `localAccountId`, `username` and `tenantId`.
+  - `getAllAccounts()` returns everything cached.
+  - Signing in adds the account and activates it; signing out removes it, rather than leaving a stale entry behind.
+  - `setUser` replaces the session, so declaring a second user never leaves two accounts cached.
+
+  `setActiveAccount` deliberately departs from MSAL in one respect: an account that was never issued by a sign-in is accepted and added to the cache. That makes swapping the user between tests a single line, without rebuilding the framework:
+
+  ```typescript
+  beforeEach(() => {
+    fusion.modules.auth.client.setActiveAccount(account);
+  });
+  ```
+
+- 2836e0b: Added a `./mock` entry point so applications can run against the auth module without credentials or network access.
+
+  ```ts
+  import {
+    enableMsalMock,
+    createMsalMockClient,
+  } from "@equinor/fusion-framework-module-msal/mock";
+
+  // default mock user
+  enableMsalMock(configurator);
+
+  // or a specific one
+  enableMsalMock(configurator, (builder) => {
+    builder.setAccount({ name: "Ada Lovelace" });
+  });
+  ```
+
+  Only the MSAL **client** is substituted. `MsalMockClient` resolves tokens in-process and takes the same `MsalClientConfig` as the real `MsalClient`, so `setClientConfig` means the same thing whether a test runs against Entra ID or in-process. `MsalMockConfigurator` builds it through the `_createClient` seam, and `msalMockModule` differs from the real module in its `configure` alone — `initialize` is the production one, untouched, so `MsalProvider`, schema validation and the whole start-up path run exactly as they do in production. `IMsalProvider` and `MsalConfigurator` are untouched.
+
+  The same client works with the plain module, without the mock module:
+
+  ```ts
+  enableMSAL(configurator, (builder) =>
+    builder.setClient(
+      createMsalMockClient(
+        { auth: { clientId: "my-app" } },
+        { name: "Ada Lovelace" },
+      ),
+    ),
+  );
+  ```
+
+  Tokens are structurally valid, unsigned JWTs and are identical between runs. They are not cryptographically valid and are rejected by any real service.
+
+  Exports `enableMsalMock`, `msalMockModule`, `MsalMockConfigurator`, `MsalMockClient`, `createMsalMockClient` and `createMockToken`. The entry point has no test-runner dependency.
+
+- 2836e0b: Add `setAccount` to `MsalMockConfigurator`, so a test declares the signed-in user on the builder instead of baking it into a client.
+
+  ```typescript
+  enableMsalMock(configurator, (builder) => {
+    builder.setAccount({ name: "Ada Lovelace", username: "ada@equinor.com" });
+  });
+  ```
+
+  It takes an object, `null` when nobody is signed in, or an ordinary `ConfigBuilderCallback` resolving either:
+
+  ```typescript
+  builder.setAccount(null);
+  builder.setAccount(async ({ hasModule }) => ({
+    name: hasModule("app") ? "App User" : "Portal User",
+  }));
+  ```
+
+  The callback is the builder's own type rather than a bespoke one, so it is handed the same arguments every other configuration callback receives and is resolved by the same machinery.
+
+  `null` and `{ signedOut: true }` both start without a session, and differ in what a later login resolves to: `null` forgets the identity, `signedOut` keeps it. A declared `null` is a declaration in its own right, so it overrides the default signed-in user — only an absent declaration means the test said nothing.
+
+  `setAccount` writes to `mock.account` on the configuration rather than to a field on the builder, so the user travels the ordinary builder pipeline: a callback is resolved by `_buildConfig` with the same arguments every other configuration callback receives, and the result is on the raw configuration before validation. The schema strips the key, so nothing about a test reaches `MsalProvider` — the branch exists purely to carry the declaration across the builder. `MsalMockConfig` is exported for code that reads it.
+
+  `setAccount` records configuration only — the user is signed in on the client as it is built, so it may be declared at any point before initialization and the last declaration wins. Keeping the user off `MsalClientConfig` is what lets `MsalMockClient` take the same argument the real `MsalClient` takes: a client is configured with _what it talks to_, never with _who is signed in_.
+
+  Because the user is in place before `MsalProvider.initialize()` runs, the provider's own start-up path acts on it. Pairing `{ signedOut: true }` with `setRequiresAuth(true)` therefore exercises the real automatic login, rather than a state assigned after initialization had already finished.
+
+  Because who is signed in is session state rather than client configuration, the user is applied to whichever client the module ends up authenticating through — wherever that client was built. When the module is hoisted onto a host application's provider, no client is built here, so the user is signed in on the _host's_ client instead. Without that, a declaration made in an application's test would silently do nothing precisely when the application is being tested inside a portal. The session is shared, so the host sees the same user, as it does in production; when the host does not authenticate through a mock client the declaration throws rather than failing quietly.
+
+  `setClient` replaces the client, but not the rule: a mock client supplied that way receives the declared user too.
+
+### Patch Changes
+
+- e8aae1f: Internal: publish every package on the `next` pre-release tag so the whole framework can be installed as a coherent set.
+
+  Packages without their own changes are bumped only to receive a `-next.N` version and the `next` dist-tag on npm. Install with:
+
+  ```bash
+  pnpm add @equinor/fusion-framework-react-app@next
+  ```
+
+- 2836e0b: Restructure documentation so each README is an entry point rather than a manual.
+
+  Long-form content moved into per-package `docs/` folders, matching the convention already used by `@equinor/fusion-framework-module` and `@equinor/fusion-framework-module-http`. Each README now keeps the elevator pitch, the shortest working example and a documentation table linking to the rest.
+
+  - **msal** — `docs/api-reference.md`, `docs/auth-code-flow.md`, `docs/testing.md`, `docs/version-management.md`, `docs/migration-v2-to-v4.md`, `docs/troubleshooting.md`. The README also gained the top-level heading it was missing.
+  - **service-discovery** — `docs/configuration.md`, `docs/testing.md`, `docs/session-overrides.md`, `docs/api-reference.md`.
+  - **framework** — `docs/testing-choosing-a-layer.md`, `docs/testing.md`, `docs/testing-design.md`, `docs/testing-extending.md`, `docs/testing-api.md`.
+
+  Both module READMEs now document their `/mock` entry point, which was previously undocumented, and state that spying on an individual call is the test runner's job rather than something these packages provide.
+
+- 2836e0b: Remove a stray `console.log` left in `resolveVersion`'s minor-version-mismatch warning path.
+- Updated dependencies [e8aae1f]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+  - @equinor/fusion-framework-module@6.1.3-next.0
+  - @equinor/fusion-framework-module-telemetry@8.0.0-next.0
+
 ## 10.0.2
 
 ### Patch Changes

@@ -1,5 +1,27 @@
 # @equinor/fusion-framework-module-state
 
+## 2.0.1-next.0
+
+### Patch Changes
+
+- e8aae1f: Internal: publish every package on the `next` pre-release tag so the whole framework can be installed as a coherent set.
+
+  Packages without their own changes are bumped only to receive a `-next.N` version and the `next` dist-tag on npm. Install with:
+
+  ```bash
+  pnpm add @equinor/fusion-framework-react-app@next
+  ```
+
+- 2836e0b: Remove monorepo-level license and contribution boilerplate from the state module README.
+- Updated dependencies [e8aae1f]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+  - @equinor/fusion-framework-module@6.1.3-next.0
+  - @equinor/fusion-observable@9.1.2-next.0
+
 ## 2.0.0
 
 ### Major Changes
