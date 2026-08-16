@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-openapi-mock",
-  "version": "0.1.0",
+  "version": "0.2.0-next.0",
   "description": "Fakes OpenAPI 3 responses straight from a spec, so testing an API-shaped client needs no hand-written mock data until an edge case needs overriding",
   "keywords": [
     "openapi",

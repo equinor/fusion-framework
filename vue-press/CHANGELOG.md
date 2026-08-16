@@ -1,5 +1,30 @@
 # @equinor/fusion-framework-docs
 
+## 0.4.21-next.0
+
+### Patch Changes
+
+- 2836e0b: Add the analytics module's `docs/` pages (`adapters.md`, `collectors.md`, `tracking-events.md`,
+  `testing.md`) to the vue-press site, matching the `event`/`http`/`module` `docs/` convention:
+  `README.md` is slimmed to an overview, entry points, and a documentation table, and the new
+  `analytics/docs/*.md` pages `@include` the package's own docs instead of duplicating content.
+  The sidebar is updated to match.
+- 2836e0b: Align the context module's vue-press documentation with its `docs/` folder: `README.md` now `@include`s the package's own README, and new `docs/{data-model,lifecycle,recipes}.md` pages `@include` the package's own docs pages, matching the `event`/`http` module pattern. The sidebar gains an "Overview"/"Data model"/"Lifecycle"/"Recipes" breakdown for Context, replacing the previous flat link.
+- 2836e0b: Align the event module's vue-press documentation with its `docs/` folder: `README.md` and the
+  new `docs/{configuration,observable-patterns,lifecycle,testing}.md` pages now `@include` the
+  package's own docs instead of duplicating content, matching the `http`/`module` pattern.
+
+  The event module's React bindings page moves from `event/react.md` to `react/event/README.md`,
+  alongside `react/router/`, and is now an `@include` of `@equinor/fusion-framework-react-module-event`'s
+  README. The sidebar is updated to match.
+
+- 2836e0b: Add the missing `telemetry` row (`TelemetryMockConfigurator`) to the accessor table in the framework's testing.md guide, left out when the telemetry mock was originally documented.
+- 2836e0b: Add a "Testing" page to the HTTP module's vue-press docs, `@include`ing the package's own `docs/testing.md`, and add the corresponding sidebar entry.
+- 2836e0b: Update React Router interop test examples to use the supported Vitest browser renderer.
+- 2836e0b: Add a journey-oriented guide for testing Fusion React apps with Vitest, including browser setup, app fixtures, deterministic platform mocks, advanced composition, and links to maintained module references and runnable cookbooks.
+
+  Fixes: https://github.com/equinor/fusion-core-tasks/issues/1762
+
 ## 0.4.20
 
 ### Patch Changes

@@ -1,5 +1,60 @@
 # @equinor/fusion-framework-dev-portal
 
+## 11.0.0-next.0
+
+### Patch Changes
+
+- e8aae1f: Internal: publish every package on the `next` pre-release tag so the whole framework can be installed as a coherent set.
+
+  Packages without their own changes are bumped only to receive a `-next.N` version and the `next` dist-tag on npm. Install with:
+
+  ```bash
+  pnpm add @equinor/fusion-framework-react-app@next
+  ```
+
+- 2836e0b: Internal: migrate React component tests to the Fusion Vitest browser project and remove the legacy DOM test renderer.
+- Updated dependencies [e8aae1f]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+  - @equinor/fusion-framework@8.1.0-next.0
+  - @equinor/fusion-framework-app@14.0.0-next.0
+  - @equinor/fusion-framework-dev-server@2.0.19-next.0
+  - @equinor/fusion-framework-module-ag-grid@37.0.2-next.0
+  - @equinor/fusion-framework-module-analytics@3.1.0-next.0
+  - @equinor/fusion-framework-module-app@8.1.0-next.0
+  - @equinor/fusion-framework-module-bookmark@4.1.0-next.0
+  - @equinor/fusion-framework-module-context@9.0.0-next.0
+  - @equinor/fusion-framework-module-feature-flag@2.1.0-next.0
+  - @equinor/fusion-framework-module-navigation@7.0.8-next.0
+  - @equinor/fusion-framework-module-services@8.1.1-next.0
+  - @equinor/fusion-framework-module-telemetry@8.0.0-next.0
+  - @equinor/fusion-framework-plugin-context-navigation@1.0.0-next.0
+  - @equinor/fusion-framework-react@9.0.0-next.0
+  - @equinor/fusion-framework-react-components-bookmark@2.0.4-next.0
+  - @equinor/fusion-framework-react-components-people-provider@2.0.5-next.0
+  - @equinor/fusion-framework-react-module-bookmark@7.0.0-next.0
+  - @equinor/fusion-observable@9.1.2-next.0
+  - @equinor/fusion-query@7.0.4-next.0
+
 ## 10.0.2
 
 ### Patch Changes

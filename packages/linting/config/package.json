@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework-lint-config",
-  "version": "1.1.0",
+  "version": "1.1.1-next.0",
   "description": "Recommended Fusion lint configuration and rule presets",
   "keywords": [
     "equinor",

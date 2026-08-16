@@ -1,5 +1,11 @@
 # Change Log
 
+## 5.0.2-next.0
+
+### Patch Changes
+
+- 2836e0b: Internal: add Vitest coverage for the `App` component and wire the cookbook into the root Vitest project list. Also silences `src/config.ts`'s demo lifecycle `console.log` calls (kept as commented-out examples) so they don't clutter Vitest output; no other runtime changes.
+
 ## 5.0.1
 
 ### Patch Changes

@@ -1,5 +1,44 @@
 # @equinor/fusion-framework-module-feature-flag
 
+## 2.1.0-next.0
+
+### Minor Changes
+
+- 2836e0b: Add a purpose-built mock, exported from a new `/mock` subpath (`@equinor/fusion-framework-module-feature-flag/mock`).
+
+  `enableFeatureFlagMock` swaps in an in-memory flag pool behind the real `FeatureFlagConfigurator`, `FeatureFlagProvider`, and toggle flows — `toggleFeature`, `toggleFeatures`, and `features$` all reach the seeded flags through the real provider logic, not a stand-in. `FeatureFlagMockConfigurator` adds `addFeature` and `setFeatures` for seeding state, replacing the `localStorage`/URL-toggle sources a real app would otherwise depend on:
+
+  ```typescript
+  import { enableFeatureFlagMock } from "@equinor/fusion-framework-module-feature-flag/mock";
+
+  enableFeatureFlagMock(configurator, (mock) => {
+    mock.addFeature({ key: "my-flag", enabled: true });
+  });
+  ```
+
+  No flags are assumed by default — a test that seeds nothing gets an empty `features` object, matching the real module's zero-plugin behaviour.
+
+  Related: equinor/fusion-core-tasks#1707.
+
+### Patch Changes
+
+- e8aae1f: Internal: publish every package on the `next` pre-release tag so the whole framework can be installed as a coherent set.
+
+  Packages without their own changes are bumped only to receive a `-next.N` version and the `next` dist-tag on npm. Install with:
+
+  ```bash
+  pnpm add @equinor/fusion-framework-react-app@next
+  ```
+
+- Updated dependencies [e8aae1f]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+  - @equinor/fusion-framework-module@6.1.3-next.0
+  - @equinor/fusion-observable@9.1.2-next.0
+
 ## 2.0.3
 
 ### Patch Changes

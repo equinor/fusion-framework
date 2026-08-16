@@ -1,5 +1,18 @@
 # Change Log
 
+## 2.0.13-next.0
+
+### Patch Changes
+
+- Updated dependencies [e8aae1f]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+  - @equinor/fusion-framework-cli@15.2.8-next.0
+  - @equinor/fusion-framework-react-ag-charts@15.0.1-next.0
+  - @equinor/fusion-framework-react-ag-grid@37.0.2-next.0
+  - @equinor/fusion-framework-react-app@15.0.0-next.0
+
 ## 2.0.12
 
 ### Patch Changes

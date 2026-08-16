@@ -1,5 +1,24 @@
 # @equinor/fusion-framework-react-components-people-provider
 
+## 2.0.5-next.0
+
+### Patch Changes
+
+- e8aae1f: Internal: publish every package on the `next` pre-release tag so the whole framework can be installed as a coherent set.
+
+  Packages without their own changes are bumped only to receive a `-next.N` version and the `next` dist-tag on npm. Install with:
+
+  ```bash
+  pnpm add @equinor/fusion-framework-react-app@next
+  ```
+
+- Updated dependencies [e8aae1f]
+- Updated dependencies [2836e0b]
+  - @equinor/fusion-framework-module-services@8.1.1-next.0
+  - @equinor/fusion-framework-react@9.0.0-next.0
+  - @equinor/fusion-framework-react-module@4.0.3-next.0
+  - @equinor/fusion-query@7.0.4-next.0
+
 ## 2.0.4
 
 ### Patch Changes

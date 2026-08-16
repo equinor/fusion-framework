@@ -1,5 +1,68 @@
 # Change Log
 
+## 15.0.0-next.0
+
+### Patch Changes
+
+- e8aae1f: Internal: publish every package on the `next` pre-release tag so the whole framework can be installed as a coherent set.
+
+  Packages without their own changes are bumped only to receive a `-next.N` version and the `next` dist-tag on npm. Install with:
+
+  ```bash
+  pnpm add @equinor/fusion-framework-react-app@next
+  ```
+
+- 2836e0b: Fix documentation accuracy issues found while adding hook test coverage:
+
+  - The README and a deprecated `createComponent` example showed `configurator.http.configureClient(...)` for registering an app's HTTP client. That property only exists on the test/mock configurator (`AppMockConfigurator`) — real app configuration must use `configurator.configureHttpClient(...)` from `IAppConfigurator`. Both examples now use the correct API.
+  - `docs/context.md` and `docs/framework.md` documented `setCurrentContext`/`useFrameworkCurrentContext`'s setter as returning `void`. It actually returns `void | Promise<ContextItem | null>` — `void` when clearing the context, a `Promise` when setting by id or by item — and can be awaited to know when the switch completes.
+  - `docs/msal.md` documented `AuthenticationResult.account`/`expiresOn` as non-nullable; both are actually nullable (`AccountInfo | null`, `Date | null`), and the `useToken` example has been updated to guard against a `null` `expiresOn`.
+  - `docs/bookmark.md` now documents `useCurrentBookmark`'s deprecated fallback to the framework-scoped bookmark provider (and the `@deprecation` console warning it logs) when an app hasn't called `enableBookmark`.
+
+- 2836e0b: Remove `docs/testing.md` and replace the README's testing section with a pointer to `@equinor/fusion-framework-vitest-plugin-react-app`, now that `renderAppHook`, `renderAppComponent`, `testApp`, and the `appTestVitePlugin` Vite plugin live in that separate package instead of this one. Both described the old `./vitest` entry-point as requiring a legacy DOM test renderer and returning a top-level `modules` field, which no longer applies now that the helpers are built on `vitest-browser-react` and return a nested `fusion: { framework, app }` object. The README's API-reference table no longer lists a `/vitest` entry-point.
+- 2836e0b: Document the supported `renderAppHook` and `renderAppComponent` testing helpers so app teams can verify app-scoped hooks and components against a real, mock-backed application module scope.
+
+  Closes equinor/fusion-core-tasks#1716.
+
+- Updated dependencies [e8aae1f]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+- Updated dependencies [2836e0b]
+  - @equinor/fusion-framework@8.1.0-next.0
+  - @equinor/fusion-framework-app@14.0.0-next.0
+  - @equinor/fusion-framework-module@6.1.3-next.0
+  - @equinor/fusion-framework-module-app@8.1.0-next.0
+  - @equinor/fusion-framework-module-http@8.1.0-next.0
+  - @equinor/fusion-framework-module-msal@11.0.0-next.0
+  - @equinor/fusion-framework-module-navigation@7.0.8-next.0
+  - @equinor/fusion-framework-module-state@2.0.1-next.0
+  - @equinor/fusion-framework-react@9.0.0-next.0
+  - @equinor/fusion-framework-react-module@4.0.3-next.0
+  - @equinor/fusion-framework-react-module-http@12.0.0-next.0
+  - @equinor/fusion-framework-react-router@2.4.1-next.0
+
 ## 14.0.1
 
 ### Patch Changes
