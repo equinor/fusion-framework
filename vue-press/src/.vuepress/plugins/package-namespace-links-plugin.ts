@@ -6,7 +6,9 @@ const includePattern = /<!--\s*@include:\s*([^\s#]+\.md)(?:#[^\s]+)?\s*-->/g;
 const codeImportPattern = /@\[code[^\]]*\]\(([^)]+)\)/g;
 const moduleBadgePattern = /<ModuleBadge\s+module="([^"]+)"[^>]*\/>/g;
 const markdownLinkPattern = /\]\(([^)\s]+)(?:\s+"[^"]*")?\)/g;
-const renderedLinkPattern = /((?:href|to)=")([^"]+)(")/g;
+// Matches only raw <a href>, never `<RouteLink to>` — the latter is already a
+// resolved, base-less route that vue-router prefixes with base at runtime.
+const renderedLinkPattern = /(<a\s[^>]*\bhref=")([^"]+)(")/g;
 
 export interface NamespaceRouteMaps {
   exact: Readonly<Record<string, string>>;
@@ -158,8 +160,11 @@ export const rewriteNamespaceHref = (
     routeMaps.aliases[publicPath] ??
     routeMaps.aliases[publicPath.replace(/\.md$/, '.html')];
   // Resolve paths that the include plugin interpreted relative to the public wrapper.
+  // Always base-prefix the result: on the pre-render pass this lets VuePress's own
+  // resolver recognize the target as an internal route; on the post-render pass it
+  // fixes hrefs VuePress left unresolved (still plain <a>, so base won't double up).
   if (aliasedRoute) {
-    return `${pathname.startsWith(base) ? normalizedBase : ''}${aliasedRoute}${suffix}`;
+    return `${normalizedBase}${aliasedRoute}${suffix}`;
   }
   const namespaceMatch = pathname.match(/(?:^|\/)(packages|cookbooks)\/(.+)$/);
   // Ordinary relative and external links are outside this plugin's namespace contract.
@@ -175,8 +180,7 @@ export const rewriteNamespaceHref = (
   if (!route) {
     return href;
   }
-  const mappedPath = pathname.startsWith(base) ? `${normalizedBase}${route}` : route;
-  return `${mappedPath}${suffix}`;
+  return `${normalizedBase}${route}${suffix}`;
 };
 
 /**
@@ -229,7 +233,9 @@ export const packageNamespaceLinksPlugin = (repoRoot: string): Plugin => (app) =
           );
         }
         const renderedLink = originalLinkOpen(tokens, index, options, env, renderer);
-        // Rewrite rendered attributes when the include path resolver wraps this renderer later.
+        // Only rewrite plain <a href> output. `<RouteLink to>` is already a resolved,
+        // base-less internal route that vue-router prefixes with base at runtime;
+        // rewriting it here would bake the base into the route and break navigation.
         return renderedLink.replace(
           renderedLinkPattern,
           (_match, prefix: string, value: string, suffix: string) =>
