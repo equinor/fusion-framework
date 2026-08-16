@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { FlowSubject } from '../FlowSubject';
+import { FlowSubject } from '../FlowSubject.js';
 
-import type { Action, Reducer, ReducerWithInitialState } from '../types';
+import type { Action, Reducer, ReducerWithInitialState } from '../types/index.js';
 
 /**
  * React hook that creates and memoises a {@link FlowSubject} from a reducer and

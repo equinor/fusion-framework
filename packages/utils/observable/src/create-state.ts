@@ -1,8 +1,8 @@
-import { actionMapper } from './actions/action-mapper';
-import { type ActionReducerMapBuilder, createReducer } from './create-reducer';
-import { FlowSubject } from './FlowSubject';
-import type { ActionDefinitions, ActionTypes } from './actions/types';
-import type { ReducerWithInitialState } from './types/reducers';
+import { actionMapper } from './actions/action-mapper.js';
+import { type ActionReducerMapBuilder, createReducer } from './create-reducer.js';
+import { FlowSubject } from './FlowSubject.js';
+import type { ActionDefinitions, ActionTypes } from './actions/types.js';
+import type { ReducerWithInitialState } from './types/reducers.js';
 
 /**
  * Describes the output of {@link createState}: a `FlowSubject`, the original

@@ -1,6 +1,6 @@
 import { type OperatorFunction, type ObservableInput, switchMap } from 'rxjs';
-import { filterAction } from './filter-action';
-import type { Action, ActionType, ExtractAction } from '../types';
+import { filterAction } from './filter-action.js';
+import type { Action, ActionType, ExtractAction } from '../types/index.js';
 
 /**
  * RxJS operator that filters an action stream by type and `switchMap`s

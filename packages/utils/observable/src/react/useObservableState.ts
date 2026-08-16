@@ -8,7 +8,7 @@ import {
 } from 'react';
 import { BehaviorSubject, type Subscription } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
-import type { Observable, StatefulObservable } from '../types';
+import type { Observable, StatefulObservable } from '../types/index.js';
 
 /**
  * Options for {@link useObservableState}.

@@ -1,10 +1,10 @@
 import { useMemo } from 'react';
-import type { Observable } from '../types';
+import type { Observable } from '../types/index.js';
 import { distinctUntilChanged, map } from 'rxjs/operators';
 import type { OperatorFunction } from 'rxjs';
 
-import type { NestedKeys, NestedPropType } from '../types';
-import { mapProp } from '../operators';
+import type { NestedKeys, NestedPropType } from '../types/index.js';
+import { mapProp } from '../operators/index.js';
 
 const selectorFn = <
   TType extends Record<string, unknown>,

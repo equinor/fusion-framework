@@ -1,7 +1,7 @@
 import type { OperatorFunction } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
-import type { Action, ActionType, ExtractAction, TypeConstant } from '../types';
+import type { Action, ActionType, ExtractAction, TypeConstant } from '../types/index.js';
 
 /**
  * RxJS operator that filters an action stream to only emit actions matching
