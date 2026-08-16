@@ -10,7 +10,7 @@ import {
   tap,
 } from 'rxjs/operators';
 
-import type { ContextModuleConfig } from './configurator';
+import type { ContextModuleConfig } from './ContextModuleConfig';
 
 import { BaseModuleProvider } from '@equinor/fusion-framework-module/provider';
 import { version } from './version.js';
@@ -505,7 +505,6 @@ export class ContextProvider
         .pipe(
           // resolve context item from queue
           switchMap((next) => next),
-          tap((x) => console.debug('ContextProvider::#contextQueue', x)),
         )
         .subscribe((context) => {
           // set context from resolved context item from queue

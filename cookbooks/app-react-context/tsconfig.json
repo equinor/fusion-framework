@@ -7,15 +7,30 @@
   },
   "references": [
     {
+      "path": "../../packages/framework"
+    },
+    {
+      "path": "../../packages/app"
+    },
+    {
+      "path": "../../packages/modules/app"
+    },
+    {
       "path": "../../packages/react/app"
     },
     {
+      "path": "../../packages/vitest-plugin/react-app"
+    },
+    {
       "path": "../../packages/react/modules/context"
+    },
+    {
+      "path": "../../packages/modules/context"
     },
     {
       "path": "../../packages/cli"
     }
   ],
   "include": ["src/**/*"],
-  "exclude": ["node_modules", "lib"]
+  "exclude": ["node_modules", "lib", "src/__tests__/**/*"]
 }

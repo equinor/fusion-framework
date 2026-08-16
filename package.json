@@ -47,7 +47,6 @@
     "format:staged": "biome format --staged",
     "test": "vitest --run",
     "test:watch": "vitest --watch",
-    "test:coverage": "vitest run --coverage",
     "test:build": "docker build -f alpine.Dockerfile -t fusion_framework:test .",
     "changeset:version": "pnpm changeset version && pnpm install --lockfile-only && pnpm biome format --fix",
     "changeset:publish": "pnpm changeset tag && pnpm publish -r",
@@ -66,19 +65,18 @@
   },
   "homepage": "https://github.com/equinor/fusion-framwork#readme",
   "devDependencies": {
-    "@equinor/fusion-lint": "workspace:^",
     "@biomejs/biome": "2.5.8",
     "@changesets/changelog-github": "0.7.0",
     "@changesets/cli": "^2.26.2",
-    "@vitest/coverage-v8": "^4.0.18",
+    "@equinor/fusion-lint": "workspace:^",
+    "@types/node": "^24.0.3",
     "agent-browser": "^0.33.1",
+    "chalk": "^6.0.0",
     "happy-dom": "^20.8.4",
     "tslib": "^2.6.1",
     "turbo": "^2.5.6",
     "typescript": "^7.0.2",
-    "vitest": "^4.1.0",
-    "@types/node": "^24.0.3",
-    "chalk": "^6.0.0"
+    "vitest": "^4.1.10"
   },
   "peerDependencies": {
     "typescript": ">=4.8"
@@ -124,7 +122,8 @@
       "fast-uri@>=3.0.0 <=3.1.4": "3.1.5",
       "@babel/core@<=7.29.0": "7.29.6",
       "esbuild@>=0.27.3 <0.28.1": "0.28.1",
-      "zod": "4.4.3"
+      "zod": "4.4.3",
+      "read-pkg@10.0.0": "10.1.0"
     }
   },
   "dependencies": {

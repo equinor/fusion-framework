@@ -2,6 +2,7 @@
   "name": "@equinor/fusion-framework-react-app",
   "version": "14.0.1",
   "description": "",
+  "type": "module",
   "main": "./dist/esm/index.js",
   "types": "./dist/types/index.d.ts",
   "exports": {
@@ -136,6 +137,7 @@
     "directory": "packages/react"
   },
   "dependencies": {
+    "@equinor/fusion-framework": "workspace:*",
     "@equinor/fusion-framework-app": "workspace:*",
     "@equinor/fusion-framework-module": "workspace:*",
     "@equinor/fusion-framework-module-app": "workspace:*",
@@ -148,23 +150,29 @@
   "devDependencies": {
     "@equinor/fusion-framework-module-ag-grid": "workspace:*",
     "@equinor/fusion-framework-module-analytics": "workspace:*",
+    "@equinor/fusion-framework-module-bookmark": "workspace:*",
+    "@equinor/fusion-framework-module-context": "workspace:*",
     "@equinor/fusion-framework-module-event": "workspace:*",
     "@equinor/fusion-framework-module-feature-flag": "workspace:*",
     "@equinor/fusion-framework-module-msal": "workspace:*",
     "@equinor/fusion-framework-module-state": "workspace:^",
+    "@equinor/fusion-framework-module-telemetry": "workspace:*",
     "@equinor/fusion-framework-react-module-bookmark": "workspace:*",
     "@equinor/fusion-framework-react-module-context": "workspace:*",
     "@equinor/fusion-framework-react-router": "workspace:*",
+    "@equinor/fusion-framework-vitest-plugin-react-app": "workspace:*",
     "@equinor/fusion-observable": "workspace:*",
-    "@testing-library/react": "^16.0.0",
+    "@remix-run/router": "^1.23.3",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
-    "happy-dom": "^20.8.4",
+    "@vitest/browser-playwright": "^4.1.0",
+    "playwright": "^1.62.1",
     "react": "^19.2.1",
     "react-dom": "^19.2.1",
     "rxjs": "^7.8.1",
     "typescript": "^7.0.2",
-    "vitest": "^4.1.0"
+    "vitest": "^4.1.10",
+    "vitest-browser-react": "^2.2.0"
   },
   "peerDependencies": {
     "@equinor/fusion-framework-module-msal": "workspace:^",

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import type { AuthenticationResult } from '@equinor/fusion-framework-module-msal';
 
@@ -32,11 +32,22 @@ export const useToken = (req: {
   const [token, setToken] = useState<AuthenticationResult | undefined>(undefined);
   const [pending, setPending] = useState<boolean>(false);
   const [error, setError] = useState<unknown>(null);
+
+  // `req` is typically a fresh object literal each render; key the effect on its
+  // scopes' content instead of identity, so it doesn't re-run (and reset `pending`
+  // to `true` forever) every time the caller re-renders. `JSON.stringify` (rather than
+  // `.join(',')`) keeps scopes with different array boundaries (e.g. `['a,b']` vs.
+  // `['a', 'b']`) from colliding on the same key.
+  const scopesKey = JSON.stringify(req.scopes);
+  const reqRef = useRef(req);
+  reqRef.current = req;
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: scopesKey is a re-run trigger, not read in the body
   useEffect(() => {
     setPending(true);
     setToken(undefined);
     msalProvider
-      .acquireToken({ request: req })
+      .acquireToken({ request: reqRef.current })
       .then((result) => {
         // Only update state when a token was actually acquired
         if (result) {
@@ -45,7 +56,7 @@ export const useToken = (req: {
       })
       .catch(setError)
       .finally(() => setPending(false));
-  }, [msalProvider, req]);
+  }, [msalProvider, scopesKey]);
   return { token, pending, error };
 };
 

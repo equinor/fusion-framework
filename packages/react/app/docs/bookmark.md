@@ -78,6 +78,13 @@ const MyApp = () => {
 };
 ```
 
+> [!WARNING]
+> If your app has **not** called `enableBookmark`, `useCurrentBookmark` falls back to the
+> portal's framework-scoped bookmark provider and logs a `@deprecation` console warning
+> (`"application has not enabled bookmarks, this will not work in the future"`). This
+> fallback is deprecated and will be removed — always call `enableBookmark` in apps that
+> use bookmarks.
+
 ## useBookmark (Deprecated)
 
 > [!CAUTION]

@@ -38,7 +38,7 @@ export const useFrameworkModule = <
   const module = framework.modules[name];
   // Warn when the requested module key does not resolve to a registered module
   if (!module) {
-    console.warn(`the requested module [${module}] is not included in the framework instance`);
+    console.warn(`the requested module [${name}] is not included in the framework instance`);
   }
   return module;
 };

@@ -34,11 +34,10 @@
   "scripts": {
     "build": "tsc -b",
     "prepack": "pnpm build",
-    "test": "vitest",
-    "test:coverage": "vitest --coverage"
+    "test": "vitest"
   },
   "devDependencies": {
     "typescript": "^7.0.2",
-    "vitest": "^4.1.0"
+    "vitest": "^4.1.10"
   }
 }

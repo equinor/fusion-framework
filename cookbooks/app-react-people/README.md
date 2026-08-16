@@ -67,4 +67,4 @@ The cookbook provides examples of how to consume endpoints from the Fusion Peopl
 
 ## Related Documentation
 
-See the [guide for getting started](../README.md#getting-started) for general cookbook setup instructions.
+See the [cookbook contribution guide](../../contributing/cookbooks.md) for general setup instructions.

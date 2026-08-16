@@ -2,7 +2,7 @@ import { defineProject } from 'vitest/config';
 
 import { fileURLToPath } from 'node:url';
 
-import { name, version } from './package.json';
+import { name, version } from './package.json' with { type: 'json' };
 
 export default defineProject({
   test: {

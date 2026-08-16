@@ -41,7 +41,7 @@ export type ComponentRenderer<TFusion extends Fusion = Fusion, TEnv = AppEnv> = 
  * @example
  * ```tsx
  * const configCallback: AppConfigurator = (configurator) => {
- *  configurator.http.configureClient(
+ *  configurator.configureHttpClient(
  *     'bar', {
  *       baseUri: 'https://somewhere-test.com',
  *       defaultScopes: ['foo/.default']

@@ -232,6 +232,48 @@ enableBookmark(configurator, (builder) => {
 });
 ```
 
+## Testing
+
+Import from `@equinor/fusion-framework-module-bookmark/mock` to seed bookmarks in-process instead of calling a real API. The real `BookmarkModuleConfigurator`, `BookmarkProvider`, and store flows still run — only `IBookmarkClient` is substituted with an in-memory implementation.
+
+### Defaults
+
+- The in-memory client starts with no bookmarks or favorites.
+- No current bookmark is selected unless `setCurrentBookmark` names a seeded bookmark.
+- Create, update, delete, and favorite operations mutate the in-memory client through the real provider flows.
+- Without real `app` or `context` modules, deterministic fallback resolvers satisfy the bookmark config schema.
+
+```ts
+import { enableBookmarkMock } from '@equinor/fusion-framework-module-bookmark/mock';
+
+enableBookmarkMock(configurator, (builder) => {
+  builder.setBookmarks([
+    {
+      id: 'bookmark-1',
+      name: 'My Bookmark',
+      appKey: 'my-app',
+      payload: {},
+      created: new Date(),
+      createdBy: { id: 'mock-user', name: 'Mock User' },
+    },
+  ]);
+  builder.setCurrentBookmark('bookmark-1');
+  builder.setFavorite('bookmark-1', true);
+});
+```
+
+`setBookmarks` seeds the bookmarks `getAllBookmarks`/`getBookmarkById`/`getBookmarkData` resolve. `setCurrentBookmark` declares which seeded bookmark `currentBookmark`/`currentBookmark$` report as active on initialization. `setFavorite` seeds `isBookmarkInFavorites`. Create, update, delete, and favourite calls all reach the in-memory client through the real flows — nothing is stubbed out.
+
+The whole real builder API stays available, including `setClient`, so an explicit call to it still replaces the mock client outright:
+
+```ts
+enableBookmarkMock(configurator, (builder) => {
+  builder.setClient(myOwnBookmarkClient);
+});
+```
+
+If no real `app` or `context` module is registered alongside the mock, `resolve.application`/`resolve.context` fall back to trivial resolvers automatically, since the module's config schema requires both. Registering a real `app`/`context` module still wins.
+
 ## Error Handling
 
 The module exposes two error classes:

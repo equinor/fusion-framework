@@ -13,6 +13,9 @@
       "path": "../../app"
     },
     {
+      "path": "../../framework"
+    },
+    {
       "path": "../framework"
     },
     {

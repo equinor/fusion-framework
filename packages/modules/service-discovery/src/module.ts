@@ -99,7 +99,7 @@ export const module: ServiceDiscoveryModule = {
  * ```
  */
 export const configureServiceDiscovery = <TRef>(
-  callback: (config: ServiceDiscoveryConfigurator) => Promise<void>,
+  callback: (config: ServiceDiscoveryConfigurator) => void | Promise<void>,
 ): IModuleConfigurator<ServiceDiscoveryModule, TRef> => ({
   module,
   configure: (config: ServiceDiscoveryConfigurator) => callback(config),
@@ -115,8 +115,9 @@ export const configureServiceDiscovery = <TRef>(
  *
  * @param configurator - The modules configurator to register the module on.
  *   Must already include {@link HttpModule}.
- * @param callback - Optional async callback receiving a
- *   {@link ServiceDiscoveryConfigurator} for advanced setup.
+ * @param callback - Optional callback receiving a
+ *   {@link ServiceDiscoveryConfigurator} for advanced setup. May be synchronous
+ *   or asynchronous.
  *
  * @example
  * ```typescript
@@ -133,7 +134,7 @@ export const configureServiceDiscovery = <TRef>(
  */
 export const enableServiceDiscovery = (
   configurator: ModulesConfigurator<[HttpModule]>,
-  callback?: (config: ServiceDiscoveryConfigurator) => Promise<void>,
+  callback?: (config: ServiceDiscoveryConfigurator) => void | Promise<void>,
 ): void => {
   configurator.addConfig(configureServiceDiscovery(callback ?? (() => Promise.resolve())));
 };

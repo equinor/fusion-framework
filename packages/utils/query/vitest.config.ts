@@ -1,7 +1,7 @@
 import { defineProject } from 'vitest/config';
 
 // Importing package name and version from package.json
-import { name, version } from './package.json';
+import { name, version } from './package.json' with { type: 'json' };
 
 // Define and export the Vitest project configuration
 export default defineProject({

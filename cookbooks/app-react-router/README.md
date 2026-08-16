@@ -899,6 +899,8 @@ src/
 ├── Router.tsx              # Router component with context
 ├── routes.ts               # Route definitions using layout
 ├── Root.tsx                # Main layout component
+├── mocks/                  # Seeded generators + OpenAPI mock for dev server and tests
+├── __tests__/              # Shared test fixtures (testWithRouter, testWithApiMock, createRouteProps)
 ├── components/
 │   ├── Navigation.tsx      # Navigation sidebar
 │   ├── Loader.tsx          # Loading indicator
@@ -923,6 +925,94 @@ src/
 5. **Search parameters** are ideal for optional state like filters and pagination
 6. **Error boundaries** provide built-in error handling
 7. **Router context** enables sharing services across routes
+
+## Testing
+
+This cookbook has three layers of Vitest coverage, from cheapest/most isolated to most
+realistic. Pick the cheapest layer that still exercises what you care about.
+
+### Component and page tests — `testWithRouter`
+
+Most page and component tests don't need the app's full route tree, just router context for
+`useNavigate`/`useLocation`/`Link`/`Form`. [`testWithRouter`](src/__tests__/test-with-router.tsx)
+extends the base `render` fixture (from `@equinor/fusion-framework-vitest-plugin-react-app/test`)
+to mount the given element under a mock `Router` whose only route matches every path:
+
+```tsx
+import { testWithRouter } from '../__tests__/test-with-router';
+import { Navigation } from './Navigation';
+
+testWithRouter('renders a sidebar link for each top-level page', async ({ render }) => {
+  const { getByText } = await render(<Navigation />);
+  await expect.element(getByText('Home')).toBeInTheDocument();
+});
+```
+
+### Route page tests — `createRouteProps`
+
+Route page components (`src/routes/**/index.tsx`) only read `loaderData`/`actionData` — their
+`clientLoader`/`action` functions are what read `fusion`, and those aren't exercised by a
+direct component render. [`createRouteProps`](src/__tests__/create-route-props.ts) builds the
+`RouteComponentProps` a route expects, bypassing the loader/action pipeline entirely:
+
+```tsx
+import { createRouteProps } from '../../__tests__/create-route-props';
+import ProductsPage from './index';
+
+const props = createRouteProps({ products, categories: [], filter: null, sort: 'name-asc', inStock: false, productCount: products.length });
+const { getByText } = await render(<ProductsPage {...props} />);
+```
+
+### Seeded fixture data — `src/mocks/generators.ts`
+
+Rather than hand-writing `Product`/`User` literals in every test, build fixtures from the same
+seeded Faker.js generators the dev server and the OpenAPI mock use:
+`generateProduct(id)`/`generateProducts(count)`/`generateUser(id)`/`generateUsers(count)`. Each
+generator calls `faker.seed(id)` before generating, so the same `id` always produces the same
+object — assertions can reference generated fields (`products[0].name`) instead of hardcoding
+Faker's output, and stay realistic without drifting from the `Product`/`User` shape. Override a
+specific field when a test needs a particular state:
+
+```typescript
+import { generateProduct } from '../../mocks/generators';
+
+const outOfStock = { ...generateProduct(2), inStock: false };
+```
+
+### Full-router integration tests — `testWithApiMock`
+
+Some behavior (navigation between routes, a loader actually resolving through the app's real
+`src/config.ts` HTTP client setup) is only worth trusting end-to-end. `src/mocks/` wires up
+[`@equinor/fusion-openapi-mock`](../../packages/utils/openapi-mock/README.md) against this
+cookbook's API contract:
+
+- `src/mocks/openapi.json` — an OpenAPI 3.0 document describing the `products`/`users`/`categories` endpoints.
+- `src/mocks/fields.faker.ts` — a `FieldFakerMap` sidecar reusing the same category/role/location arrays as `generators.ts`, so faked fields stay consistent with the rest of the mock data.
+- `src/mocks/api-mock.ts` — `createOpenApiMock(openapi, { seed: 42, fields })`, with `.register(operationId, handler)` overrides backed by `generateProducts`/`generateUsers` (including real pagination for `listUsers`).
+
+[`testWithApiMock`](src/__tests__/test-with-api-mock.ts) extends the `configure` fixture to run
+the app's real `config.ts` first, then attach the mock as HTTP middleware via
+`configurator.http.addMiddleware(createOpenApiMockMiddleware(apiMock))` — so a `clientLoader`
+reaches its route component with realistic, seeded data instead of the router's error boundary,
+without the app needing to branch on whether it's under test:
+
+```tsx
+import { testWithApiMock } from '../__tests__/test-with-api-mock';
+import App from '../App';
+
+testWithApiMock('renders the loaded product catalogue', async ({ render, app }) => {
+  window.history.pushState(null, '', '/');
+  const { getByTitle, getByText, unmount } = await render(<App />);
+  await getByTitle('Products').click();
+  await expect.element(getByText(/showing \d+ of \d+ products/i)).toBeInTheDocument();
+  await unmount();
+});
+```
+
+**Gotcha:** `createOpenApiMockMiddleware` resolves against `url.pathname` only, so the OpenAPI
+document's `paths` must match the exact pathname the client requests — including any dev-only
+proxy prefix like `/@fusion-api/` (this cookbook uses `@equinor/fusion-framework-vite-plugin-api-service`
+for its dev server, so `'@fusion-api/api/products'` resolves to `/@fusion-api/api/products`).
 
 ## Next Steps
 

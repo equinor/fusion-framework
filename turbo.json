@@ -4,7 +4,8 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": ["dist/**"],
+      "env": ["VUEPRESS_BASE"],
+      "outputs": ["dist/**", "bin/build/**"],
       "cache": true
     }
   }
