@@ -70,7 +70,7 @@ jobs:
 
       - name: Create Release Pull Request or Publish to npm
         id: changesets
-        uses: changesets/action@v1
+        uses: changesets/action@v2
         with:
           title: '🤖 Bip Bop - Fusion Framework Pre-Release'
           version: pnpm changeset:version

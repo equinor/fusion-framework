@@ -47,7 +47,7 @@ jobs:
       # This step requires write permissions to create releases and publish packages
       - name: Create Release Pull Request or Publish to npm
         id: changesets
-        uses: changesets/action@v1
+        uses: changesets/action@v2
         with:
           title: '🤖 Bip Bop - Fusion Framework Release'
           createGithubReleases: true
