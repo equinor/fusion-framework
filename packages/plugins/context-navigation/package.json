@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework-plugin-context-navigation",
-  "version": "0.1.2",
+  "version": "1.0.0",
   "description": "Adapter-based context-to-URL reconciler for Fusion Framework portals",
   "type": "module",
   "module": "./dist/esm/index.js",
