@@ -113,7 +113,7 @@ export function createContextNavigationPlugin(args: ContextNavigationPluginArgs)
         })),
       )
       .subscribe(({ entry, isAppSwitch }) => {
-        reconcile(entry, deps, { isAppSwitch });
+        reconcile(entry, deps, { isAppSwitch, requireValidContext: config.requireValidContext });
       }),
   );
 

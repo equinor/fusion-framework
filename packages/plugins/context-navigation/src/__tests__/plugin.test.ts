@@ -80,6 +80,7 @@ function createHarness(configOverrides: Partial<ContextNavigationConfig> = {}): 
     adapters: [makeAdapter()],
     enableUrlGuard: false,
     debug: false,
+    requireValidContext: false,
     sourceFactory: () => source$,
     navigationOptions: { replace: true },
     ...configOverrides,
@@ -247,6 +248,24 @@ describe('createContextNavigationPlugin', () => {
           }),
         );
       });
+    });
+
+    it('skips with invalid-app-context when config.requireValidContext is true and validation fails', () => {
+      harness = createHarness({ requireValidContext: true });
+      // Test double — validateContext must be consulted when requireValidContext is enabled
+      const appModules = {
+        context: { currentContext: null, validateContext: () => false },
+      } as unknown as AppModulesInstance<[ContextModule]>;
+
+      harness.source$.next({ appKey: 'my-app', appModules, contextState: makeContext('ctx-1') });
+
+      expect(harness.event.dispatchEvent).toHaveBeenCalledWith(
+        'onContextNavigationSkipped',
+        expect.objectContaining({
+          detail: { appKey: 'my-app', reason: 'invalid-app-context' },
+        }),
+      );
+      expect(harness.navigation.navigate).not.toHaveBeenCalled();
     });
   });
 
@@ -457,6 +476,7 @@ describe('createContextNavigationPlugin', () => {
         adapters: [adapter],
         enableUrlGuard: true,
         debug: false,
+        requireValidContext: false,
         sourceFactory: () => EMPTY,
         navigationOptions: { replace: false },
       };
@@ -515,6 +535,7 @@ describe('createContextNavigationPlugin', () => {
         adapters: [adapter],
         enableUrlGuard: true,
         debug: false,
+        requireValidContext: false,
         sourceFactory: () => EMPTY,
         navigationOptions: { replace: false },
       };
@@ -576,6 +597,7 @@ describe('createContextNavigationPlugin', () => {
         adapters: [adapter],
         enableUrlGuard: true,
         debug: false,
+        requireValidContext: false,
         sourceFactory: () => EMPTY,
         navigationOptions: { replace: true },
       };
@@ -632,6 +654,7 @@ describe('createContextNavigationPlugin', () => {
         adapters: [adapter],
         enableUrlGuard: true,
         debug: false,
+        requireValidContext: false,
         sourceFactory: () => EMPTY,
         navigationOptions: { replace: true },
       };
