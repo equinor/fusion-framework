@@ -169,6 +169,22 @@ export class ContextNavigationConfigurator {
   }
 
   /**
+   * Set whether navigation requires a valid context, as reported by the
+   * app's context module.
+   *
+   * When `true`, the app's context module validates the context state before
+   * it is encoded into the URL. If validation fails, navigation is skipped.
+   *
+   * @default false
+   * @param enabled - Whether navigation requires a valid context.
+   * @returns The configurator instance for chaining.
+   */
+  setRequireValidContext(enabled: boolean): this {
+    this.#config.requireValidContext = enabled;
+    return this;
+  }
+
+  /**
    * Builds the resolved plugin configuration from the registered options.
    *
    * @returns The resolved configuration used by the context-navigation plugin.
@@ -195,6 +211,7 @@ export class ContextNavigationConfigurator {
       resolveInitialContext:
         this.#config.resolveInitialContext ?? resolveContextFromUrl(adapters, origin),
       adapters,
+      requireValidContext: this.#config.requireValidContext ?? false,
     };
   }
 }

@@ -46,6 +46,7 @@ function makeDeps(overrides: Partial<ApplyNavigationDeps> = {}): ApplyNavigation
       adapters: [],
       enableUrlGuard: false,
       debug: false,
+      requireValidContext: false,
       sourceFactory: () => ({ subscribe: vi.fn() }) as never,
       navigationOptions: { replace: true },
     },

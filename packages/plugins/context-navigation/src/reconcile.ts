@@ -33,6 +33,17 @@ export interface ReconcileOptions {
    * @default false
    */
   isAppSwitch?: boolean;
+
+  /**
+   * Whether navigation requires a valid context, as reported by the app's
+   * context module.
+   *
+   * When `true`, the app's context module validates the context state before
+   * it is encoded into the URL. If validation fails, navigation is skipped.
+   *
+   * @default false
+   */
+  requireValidContext?: boolean;
 }
 
 /**
@@ -88,6 +99,17 @@ export function reconcile(
   if (!appContext) {
     return;
   }
+
+  // Validate the context state against the app's context module, if a valid context is required. If validation fails, skip navigation.
+  if (options.requireValidContext && contextState && !appContext.validateContext(contextState)) {
+    event.dispatchEvent('onContextNavigationSkipped', {
+      detail: { appKey, reason: 'invalid-app-context' } as ContextNavigationSkippedDetail,
+      source: eventSource,
+    });
+    log(`Context invalid for [${appKey}] — skipping navigation.`);
+    return;
+  }
+
   const currentURL = getCurrentURL(navigation, config.origin);
 
   // On app switch, strip all query params so nothing leaks from the

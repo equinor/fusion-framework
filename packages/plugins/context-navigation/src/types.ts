@@ -54,7 +54,13 @@ export interface ContextNavigationAdapterResolvedDetail {
 /** Fired when reconciliation skips. */
 export interface ContextNavigationSkippedDetail {
   appKey: string;
-  reason: 'url-matches' | 'no-context' | 'no-adapter' | 'encode-returned-null' | 'canceled';
+  reason:
+    | 'url-matches'
+    | 'no-context'
+    | 'no-adapter'
+    | 'encode-returned-null'
+    | 'canceled'
+    | 'invalid-app-context';
 }
 
 // ─── Configuration ──────────────────────────────────────────────────
@@ -90,6 +96,19 @@ export interface ContextNavigationConfig {
    * @default false
    */
   debug: boolean;
+
+  /**
+   * Whether navigation requires a valid context, as reported by the app's
+   * context module.
+   * When `true`, the app's context module validates the context state before
+   * it is encoded into the URL. If validation fails, navigation is skipped.
+   *
+   * Optional so existing object literals of this publicly exported type keep
+   * compiling — `undefined` is treated the same as `false`.
+   *
+   * @default false
+   */
+  requireValidContext?: boolean;
 
   /**
    * Optional side-effect hook called after navigation completes.

@@ -43,6 +43,7 @@ function makeDeps(overrides: Partial<ReconcileDeps> = {}): ReconcileDeps {
       adapters: [makeAdapter()],
       enableUrlGuard: false,
       debug: false,
+      requireValidContext: false,
       sourceFactory: () => ({ subscribe: vi.fn() }) as never,
       navigationOptions: { replace: true },
     },
@@ -124,6 +125,74 @@ describe('reconcile', () => {
       'onContextNavigationSkipped',
       expect.objectContaining({ detail: { appKey: 'my-app', reason: 'no-adapter' } }),
     );
+  });
+
+  describe('requireValidContext', () => {
+    it('dispatches invalid-app-context skip and does not navigate when validation fails', () => {
+      const invalidAppModules = {
+        context: { currentContext: null, validateContext: () => false },
+      } as unknown as AppModulesInstance<[ContextModule]>;
+      deps = makeDeps();
+
+      const entry: ReconcilerSourceEntry = {
+        appKey: 'my-app',
+        appModules: invalidAppModules,
+        contextState: makeContext('ctx-1'),
+      };
+
+      reconcile(entry, deps, { requireValidContext: true });
+
+      expect(deps.event.dispatchEvent).toHaveBeenCalledWith(
+        'onContextNavigationSkipped',
+        expect.objectContaining({ detail: { appKey: 'my-app', reason: 'invalid-app-context' } }),
+      );
+      expect(deps.navigation.navigate).not.toHaveBeenCalled();
+    });
+
+    it('navigates when validation passes', async () => {
+      const validAppModules = {
+        context: { currentContext: null, validateContext: () => true },
+      } as unknown as AppModulesInstance<[ContextModule]>;
+      deps = makeDeps();
+
+      const entry: ReconcilerSourceEntry = {
+        appKey: 'my-app',
+        appModules: validAppModules,
+        contextState: makeContext('ctx-1'),
+      };
+
+      reconcile(entry, deps, { requireValidContext: true });
+
+      await vi.waitFor(() => {
+        expect(deps.navigation.navigate).toHaveBeenCalledWith(
+          expect.objectContaining({ pathname: '/apps/my-app/ctx-1' }),
+          { replace: true },
+        );
+      });
+    });
+
+    it('skips validation and navigates when the option is not enabled', async () => {
+      const invalidAppModules = {
+        context: { currentContext: null, validateContext: () => false },
+      } as unknown as AppModulesInstance<[ContextModule]>;
+      deps = makeDeps();
+
+      const entry: ReconcilerSourceEntry = {
+        appKey: 'my-app',
+        appModules: invalidAppModules,
+        contextState: makeContext('ctx-1'),
+      };
+
+      // requireValidContext option omitted — validateContext should never be consulted
+      reconcile(entry, deps);
+
+      await vi.waitFor(() => {
+        expect(deps.navigation.navigate).toHaveBeenCalledWith(
+          expect.objectContaining({ pathname: '/apps/my-app/ctx-1' }),
+          { replace: true },
+        );
+      });
+    });
   });
 
   it('dispatches adapter-resolved event and triggers navigation', async () => {
