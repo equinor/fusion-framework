@@ -205,6 +205,7 @@ enableContextNavigation(configurator, (builder) => {
 | `setUrlGuard(enabled)` | `true` | Re-sync context if an external navigation drops it from the URL. With `replace: false`, back/forward navigations update context from the URL instead of overwriting it. |
 | `setDebug(enabled)` | `false` | Enable verbose `console.debug` output. |
 | `setNullContextUrl(urlOrFn)` | — | Function (or static string) that returns the URL to navigate to when context is cleared. Receives `{ appKey, currentURL }`. |
+| `setRequireValidContext(enabled)` | `false` | Validate the context against the app's context module (`validateContext`) before navigating. If validation fails, navigation is skipped. |
 | `setNavigationOptions(options)` | `{ replace: true }` | Options passed to `navigation.navigate()` during URL updates. Set `{ replace: false }` to push history entries — back/forward will then sync context from the URL rather than re-asserting the active context. |
 | `setOnTransition(fn)` | — | Side-effect hook called after each successful navigation. |
 | `setSourceFactory(factory)` | `createAppFirstSource()` | Observable source factory that drives the reconciler. |
@@ -229,6 +230,7 @@ The `onContextNavigationSkipped` event includes a `reason` field:
 | `'url-matches'` | Target URL already matches the current URL |
 | `'no-context'` | Context is `undefined` (still initializing) |
 | `'no-adapter'` | No adapter could handle the current app |
+| `'invalid-app-context'` | `setRequireValidContext(true)` is set and the app's context module rejected the context |
 | `'encode-returned-null'` | Adapter's `encode()` returned `null` |
 | `'canceled'` | A listener called `preventDefault()` on the navigate event |
 
