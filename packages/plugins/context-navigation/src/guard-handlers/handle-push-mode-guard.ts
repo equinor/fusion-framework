@@ -1,6 +1,7 @@
 import { applyNavigation } from '../apply-navigation';
 import { resolveAdapter } from '../helpers';
 
+import type { ContextNavigationSkippedDetail } from '../types';
 import type { GuardTickPayload } from './guard-tick-payload';
 import type { GuardTickDeps } from './guard-tick-deps';
 
@@ -31,7 +32,7 @@ export function handlePushModeGuard(
   deps: GuardTickDeps,
 ): void {
   const { appKey, appModules, routingStrategy } = payload;
-  const { context, log } = deps;
+  const { context, event, eventSource, config, log } = deps;
 
   // Resolve the active context and adapter — both are required to fall back.
   const activeContext = appModules.context.currentContext;
@@ -56,6 +57,16 @@ export function handlePushModeGuard(
   // Attempt to set context from the URL-decoded ID.
   // On failure (e.g. context deleted), fall back to re-encoding the active context.
   context.setCurrentContextByIdAsync(urlContextId).catch(() => {
+    // Mirror reconcile's validation gate: an invalid active context must not
+    // be re-encoded into the URL as a fallback.
+    if (config.requireValidContext && !appModules.context.validateContext(activeContext)) {
+      event.dispatchEvent('onContextNavigationSkipped', {
+        detail: { appKey, reason: 'invalid-app-context' } as ContextNavigationSkippedDetail,
+        source: eventSource,
+      });
+      log(`URL guard: context invalid for [${appKey}] — skipping fallback re-assert.`);
+      return;
+    }
     applyNavigation({ appKey, appModules, adapter, context: activeContext, currentURL }, deps);
   });
 }

@@ -103,9 +103,12 @@ export interface ContextNavigationConfig {
    * When `true`, the app's context module validates the context state before
    * it is encoded into the URL. If validation fails, navigation is skipped.
    *
+   * Optional so existing object literals of this publicly exported type keep
+   * compiling — `undefined` is treated the same as `false`.
+   *
    * @default false
    */
-  requireValidContext: boolean;
+  requireValidContext?: boolean;
 
   /**
    * Optional side-effect hook called after navigation completes.

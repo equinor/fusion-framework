@@ -1,6 +1,7 @@
 import { applyNavigation } from '../apply-navigation';
 import { resolveAdapter } from '../helpers';
 
+import type { ContextNavigationSkippedDetail } from '../types';
 import type { GuardTickPayload } from './guard-tick-payload';
 import type { GuardTickDeps } from './guard-tick-deps';
 
@@ -25,13 +26,24 @@ export function handleReplaceModeGuard(
   deps: GuardTickDeps,
 ): void {
   const { appKey, appModules, routingStrategy } = payload;
-  const { log } = deps;
+  const { event, eventSource, config, log } = deps;
 
   // Resolve the active context and adapter for re-encoding.
   const activeContext = appModules.context.currentContext;
 
   // No active context to re-encode — nothing to correct.
   if (!activeContext) {
+    return;
+  }
+
+  // Mirror reconcile's validation gate: an invalid context must not be
+  // re-encoded into the URL just because the guard detected drift.
+  if (config.requireValidContext && !appModules.context.validateContext(activeContext)) {
+    event.dispatchEvent('onContextNavigationSkipped', {
+      detail: { appKey, reason: 'invalid-app-context' } as ContextNavigationSkippedDetail,
+      source: eventSource,
+    });
+    log(`URL guard: context invalid for [${appKey}] — skipping re-assert.`);
     return;
   }
 
