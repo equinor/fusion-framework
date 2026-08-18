@@ -96,11 +96,15 @@
     "app_mock-entry-point",
     "context_telemetry-optional-peer",
     "cookbook-app-react-context_add-app-test",
+    "cookbook-app-react-context_rename-configure-fixture",
     "cookbook-app-react-feature-flag_add-app-test",
     "cookbook-app-react-module_add-app-test",
+    "cookbook-app-react-module_rename-configure-fixture",
     "cookbook-app-react-msal_add-app-test",
+    "cookbook-app-react-msal_rename-configure-fixture",
     "cookbook-app-react-people_fix-doc-link",
     "cookbook-app-react-router_openapi-mock-fixture",
+    "cookbook-app-react-router_rename-configure-fixture",
     "cookbook-app-react_add-app-test",
     "dev-portal_migrate-browser-tests",
     "docs-restructure",
@@ -163,6 +167,7 @@
     "vitest-plugin-react-app_document-override",
     "vitest-plugin-react-app_initial-release",
     "vitest-plugin-react-app_migration-guide",
+    "vitest-plugin-react-app_rename-configure-fixtures",
     "vitest-plugin-react-app_why-browser-mode"
   ]
 }
