@@ -302,8 +302,12 @@ Seed a module for every test in a suite:
 
 ```tsx
 describe('with a seeded context module', () => {
-  const test = testApp.extend('configureApp', { injected: true }, () =>
-    (configurator) => enableContextMock(configurator, (mock) => mock.setCurrentContext(projectA)),
+  const test = testApp.extend(
+    'configureApp',
+    { injected: true },
+    (): AppMockConfigureFn =>
+      (configurator) =>
+        enableContextMock(configurator, (mock) => mock.setCurrentContext(projectA)),
   );
 
   test('starts on the seeded context', async ({ render }) => {
