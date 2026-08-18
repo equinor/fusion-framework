@@ -8,14 +8,20 @@ describe('createPathAdapter', () => {
   const adapter = createPathAdapter();
 
   it('drops the context segment and sub-route when context becomes null', () => {
-    const currentURL = new URL(`/apps/my-app/${CONTEXT_ID}/settings/general`, 'https://example.com');
+    const currentURL = new URL(
+      `/apps/my-app/${CONTEXT_ID}/settings/general`,
+      'https://example.com',
+    );
     const result = adapter.encode({ context: null, currentURL });
 
     expect(result?.pathname).toBe('/apps/my-app');
   });
 
   it('preserves the sub-route when swapping to a new context', () => {
-    const currentURL = new URL(`/apps/my-app/${CONTEXT_ID}/settings/general`, 'https://example.com');
+    const currentURL = new URL(
+      `/apps/my-app/${CONTEXT_ID}/settings/general`,
+      'https://example.com',
+    );
     const result = adapter.encode({
       context: { id: 'new-context-id' } as never,
       currentURL,

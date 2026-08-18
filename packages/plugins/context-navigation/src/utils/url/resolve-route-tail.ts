@@ -12,7 +12,9 @@ import type { AppRouteMatch } from './parse-app-route';
  * @param match - The `contextId`/`rest` segments from `parseAppRoute`.
  * @returns The full sub-route tail, or `undefined` when there is none.
  */
-export const resolveRouteTail = (match: Pick<AppRouteMatch, 'contextId' | 'rest'>): string | undefined => {
+export const resolveRouteTail = (
+  match: Pick<AppRouteMatch, 'contextId' | 'rest'>,
+): string | undefined => {
   // A UUID in this slot is a real context id — the tail is just whatever follows it
   if (match.contextId && UUID_PATTERN.test(match.contextId)) {
     return match.rest;
