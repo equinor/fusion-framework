@@ -43,7 +43,7 @@ const withSeededContext =
     enableContextMock(configurator, seed);
   };
 
-// --- test setup: each variant seeds a different context scenario via the `configure` fixture ---
+// --- test setup: each variant seeds a different context scenario via the `configureApp` fixture ---
 
 // --- tests ---
 
@@ -59,7 +59,7 @@ test('renders the current and related context sections once the app configuratio
 });
 
 describe('with an initial project', () => {
-  test.override('configure', { injected: true }, () =>
+  test.override('configureApp', { injected: true }, () =>
     withSeededContext((mock) => {
       mock.setCurrentContext(project);
     }),
@@ -75,7 +75,7 @@ describe('with an initial project', () => {
 });
 
 describe('with related contexts', () => {
-  test.override('configure', { injected: true }, () =>
+  test.override('configureApp', { injected: true }, () =>
     withSeededContext((mock) => {
       // a realistic pool: related items are a different type than the current context, never the same
       mock.setContexts([project, facility, discipline]);
@@ -98,7 +98,7 @@ describe('with related contexts', () => {
 });
 
 describe('when the app context changes', () => {
-  test.override('configure', { injected: true }, () =>
+  test.override('configureApp', { injected: true }, () =>
     withSeededContext((mock) => {
       mock.setContexts([project, facility]);
       mock.setCurrentContext(project);
@@ -129,14 +129,14 @@ describe('when the app context changes', () => {
 
 describe('with a parent framework context', () => {
   // the app mirrors the parent's context, while its local mock pool resolves mirrored items without a network request
-  test.override('configure', { injected: true }, () =>
+  test.override('configureApp', { injected: true }, () =>
     withSeededContext((mock) => {
       mock.setContexts([project, facility]);
     }),
   );
-  test.override('fusion', async ({ env }) =>
+  test.override('fusion', async ({ appEnv }) =>
     mockFramework<[AppModule, ContextModule]>((configurator) => {
-      enableAppManifestMock(configurator, env);
+      enableAppManifestMock(configurator, appEnv);
       enableContextMock(configurator, (mock) => {
         mock.setContexts([project, facility]);
         mock.setCurrentContext(project);

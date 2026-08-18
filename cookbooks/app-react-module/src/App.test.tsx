@@ -33,7 +33,7 @@ test("renders the demo module's resolved foo/bar values", async ({ render }) => 
 });
 
 describe('with an overridden demo configuration', () => {
-  test.override('configure', { injected: true }, () => withDemoConfig('https://example.com', 7));
+  test.override('configureApp', { injected: true }, () => withDemoConfig('https://example.com', 7));
 
   test('renders the overridden foo/bar values instead of the app defaults', async ({ render }) => {
     const { getByText, unmount } = await render(<App />);

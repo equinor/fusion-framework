@@ -26,7 +26,7 @@ Browser Mode by providing its own renderer. See
 | `@testing-library/react`'s `render`/`renderHook`/`waitFor`/`act`, on `jsdom` or `happy-dom` | `vitest-browser-react`'s `render`/`renderHook` and `vitest`'s `waitFor`/`act`, on real Chromium (Vitest Browser Mode) |
 | `vi.mock('@equinor/fusion-framework-react/hooks', ...)`, `vi.mock('.../feature-flag', ...)`, and similar hand-rolled Fusion hook mocks | The owning module's `enable*Mock` from its own `/mock` entry point. See [Module mocks](module-mocks.md) |
 | A hand-written mock HTTP server (MirageJS, `msw/node`, `nock`) answering every backend call | `configurator.http.addMiddleware(...)` with a hand-written `HttpMiddleware`, or `createRouterMiddleware` for several routes under one base URI. See [HTTP testing](../../../modules/http/docs/testing.md) |
-| A hand-rolled test wrapper composing a router, context providers, and error boundaries around every render | `test.extend(...)` fixtures stacked on the base `render`/`configure` fixtures. See [Compose a router and a domain fixture](#compose-a-router-and-a-domain-fixture) below |
+| A hand-rolled test wrapper composing a router, context providers, and error boundaries around every render | `test.extend(...)` fixtures stacked on the base `render`/`configureApp` fixtures. See [Compose a router and a domain fixture](#compose-a-router-and-a-domain-fixture) below |
 | Synchronous assertions (`expect(screen.getByText(...))`) | Browser locators and `await expect.element(screen.getByText(...)).toBeVisible()` |
 
 ## Step 1: install Browser Mode dependencies
@@ -71,8 +71,8 @@ bookmark modules:
 +import { enableFeatureFlagMock } from '@equinor/fusion-framework-module-feature-flag/mock';
 +import { test as baseTest } from '@equinor/fusion-framework-vitest-plugin-react-app/test';
 +
-+export const test = baseTest.extend('configure', ({ configure }) => (configurator, args) => {
-+  configure?.(configurator, args);
++export const test = baseTest.extend('configureApp', ({ configureApp }) => (configurator, args) => {
++  configureApp?.(configurator, args);
 +  configurator.msal.setAccount(null); // was: useCurrentUser returning undefined
 +  enableFeatureFlagMock(configurator, (mock) => mock.addFeature({ key: 'new-search', enabled: true }));
 +});
@@ -113,7 +113,7 @@ Use `createRouterMiddleware` for a mock server that handles several routes under
 +});
 ```
 
-Register the result with `configurator.http.addMiddleware(activityRoutes)` inside a `configure`
+Register the result with `configurator.http.addMiddleware(activityRoutes)` inside a `configureApp`
 fixture (see step 4). Port one route file at a time. Each ported file is independently testable.
 An unported route can fall through to the real network, so keep the old interceptor
 for tests that have not migrated yet or add a final fail-closed middleware; do not rely on a
@@ -128,7 +128,7 @@ router for the base URI used by the real client.
 ## Compose a router and a domain fixture
 
 Use a `render` extension for JSX wrappers such as routers and app-owned React providers. Use a
-`configure` extension for Fusion module state. Stack both extensions when a test needs both:
+`configureApp` extension for Fusion module state. Stack both extensions when a test needs both:
 
 ```tsx
 import type { ReactElement } from 'react';
@@ -143,9 +143,9 @@ const testWithRouter = baseTest.extend('render', () => (ui: ReactElement) => {
   return baseTest.render(<Router routes={routes} />);
 });
 
-// The domain fixture uses the same shape as any other `configure` extension.
-export const test = testWithRouter.extend('configure', ({ configure }) => (configurator, args) => {
-  configure?.(configurator, args);
+// The domain fixture uses the same shape as any other `configureApp` extension.
+export const test = testWithRouter.extend('configureApp', ({ configureApp }) => (configurator, args) => {
+  configureApp?.(configurator, args);
   enableContextMock(configurator, (mock) => mock.setCurrentContext(projectA));
 });
 ```
@@ -153,7 +153,7 @@ export const test = testWithRouter.extend('configure', ({ configure }) => (confi
 A test importing this `test` gets both the router wrapper and seeded Fusion context.
 
 Keep app-owned React providers, such as authorization, schema, or snackbar providers, in the
-`render` extension. Move only Fusion module state to `configure` and `enable*Mock`.
+`render` extension. Move only Fusion module state to `configureApp` and `enable*Mock`.
 
 ## Step 4: update renders and assertions
 
