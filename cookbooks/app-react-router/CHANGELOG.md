@@ -1,5 +1,11 @@
 # Change Log
 
+## 5.0.4-next.1
+
+### Patch Changes
+
+- b3d46e0: Internal: update the test suite for `@equinor/fusion-framework-vitest-plugin-react-app`'s `configure`→`configureApp` fixture rename; no behavior changes.
+
 ## 5.0.4-next.0
 
 ### Patch Changes
