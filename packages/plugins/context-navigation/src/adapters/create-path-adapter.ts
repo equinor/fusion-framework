@@ -5,6 +5,7 @@ import { stripContextQueryParam } from '../utils/url/strip-context-query-param';
 import { parseAppRoute } from '../utils/url/parse-app-route';
 import { UUID_PATTERN } from '../constants';
 import { buildAppRoute } from '../utils/url/build-app-route';
+import { resolveRouteTail } from '../utils/url/resolve-route-tail';
 
 /**
  * Path adapter — encodes context identity as the first path segment after
@@ -68,11 +69,11 @@ export function createPathAdapter(): ContextNavigationAdapter {
     /**
      * Encode context into the URL as a path segment.
      *
-     * - **Null context:** removes the context segment to produce a bare app route.
-     * - **Active context:** places/replaces the context id as the segment after the app key.
-     *
-     * Sub-routes after the context segment are intentionally dropped — a context
-     * change resets the app to its root view to avoid landing in an invalid state.
+     * - **Null context:** removes the context segment and drops any sub-route,
+     *   resetting the app to its root view — there's no valid context to resolve
+     *   the sub-route against.
+     * - **Active context:** places/replaces the context id as the segment after
+     *   the app key, preserving the existing sub-route.
      */
     encode({ context, currentURL }: { context: ContextItem | null; currentURL: URL }): URL | null {
       const match = parseAppRoute(currentURL.pathname);
@@ -80,7 +81,9 @@ export function createPathAdapter(): ContextNavigationAdapter {
       if (!match) return null;
 
       const targetPath =
-        context === null ? buildAppRoute(match.appKey) : buildAppRoute(match.appKey, context.id);
+        context === null
+          ? buildAppRoute(match.appKey)
+          : buildAppRoute(match.appKey, context.id, resolveRouteTail(match));
 
       const url = new URL(targetPath, currentURL.origin);
       url.search = currentURL.search;
