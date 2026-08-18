@@ -92,8 +92,6 @@ jobs:
     needs: release-pkg
     if: needs.release-pkg.outputs.published == 'true'
     uses: ./.github/workflows/generate-docs.yml
-    with:
-      preview: true
     secrets: inherit
 
 
