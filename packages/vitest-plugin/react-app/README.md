@@ -18,7 +18,7 @@ Use this package when you need to:
   resolution pipeline `ffc app build`/`ffc app dev` use, served as virtual modules by
   `appTestVitePlugin`.
 - **Share seeded fixture defaults across a test file** — `testApp`, a `vitest` `test` extended
-  with `env`/`configure`/`app`/`render`/`renderHook` fixtures, instead of repeating options on
+  with `env`/`configureApp`/`app`/`render`/`renderHook` fixtures, instead of repeating options on
   every call. Each test still gets its own fresh `fusion`/`app` instances; only the seeded
   defaults are shared, not state between tests.
 
@@ -78,7 +78,7 @@ entry-point's `test`/`render` when several cases in a file share one seeded scop
   `renderAppComponent`, `renderAppHook`, `testApp`. No app-specific resolution; you pass
   `env`/`configure` yourself.
 - **`@equinor/fusion-framework-vitest-plugin-react-app/test`** — `test`, `render`. Require
-  `appTestVitePlugin` registered in `vitest.config.ts`; `env`/`configure` are resolved
+  `appTestVitePlugin` registered in `vitest.config.ts`; `env`/`configureApp` are resolved
   automatically from the application's own manifest, config, and module-configurator.
 - **`@equinor/fusion-framework-vitest-plugin-react-app/config`** — `defineProject`. Registers
   `appTestVitePlugin`, headless Playwright/Chromium, test-file inclusion, and lazy-import
@@ -94,7 +94,7 @@ import { defineProject } from '@equinor/fusion-framework-vitest-plugin-react-app
 export default defineProject();
 ```
 
-Then use the pre-seeded `test` fixture — no per-test `env`/`configure` wiring:
+Then use the pre-seeded `test` fixture — no per-test `env`/`configureApp` wiring:
 
 ```tsx
 import { expect } from 'vitest';
@@ -280,7 +280,7 @@ test('mounts the child app once its script loads', async () => {
 
 `vitest`'s `test`, extended with an application module scope fixture — an alternative to
 `renderAppComponent`/`renderAppHook` for a test file whose cases share one mocked scope:
-`env`/`configure` become suite-level concerns, overridden once per file (or per `describe`
+`env`/`configureApp` become suite-level concerns, overridden once per file (or per `describe`
 block) with `testApp.extend(...)`, rather than an options object repeated on every call.
 `fusion`/`app` resolve lazily — a test that only destructures `app` never pays for rendering
 anything, and one that only destructures `render`/`renderHook` gets the same mocked scope
@@ -299,7 +299,7 @@ Seed a module for every test in a suite:
 
 ```tsx
 describe('with a seeded context module', () => {
-  const test = testApp.extend('configure', { injected: true }, () =>
+  const test = testApp.extend('configureApp', { injected: true }, () =>
     (configurator) => enableContextMock(configurator, (mock) => mock.setCurrentContext(projectA)),
   );
 
@@ -316,7 +316,7 @@ A plain Vite plugin — Vitest configs are Vite configs, so this registers direc
 `vitest.config.ts`, no CLI command required. It serves an application's manifest/config
 (resolved the same way `ffc app build`/`ffc app dev` do) and its own module-configurator
 export as virtual modules, so the `/test` entry-point's `test`/`render` need no per-test
-`env`/`configure` wiring.
+`env`/`configureApp` wiring.
 
 ```ts
 appTestVitePlugin({

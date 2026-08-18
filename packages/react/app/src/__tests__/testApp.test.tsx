@@ -33,7 +33,7 @@ describe('testApp', () => {
 
   describe('with a seeded context module', () => {
     const test = testApp.extend(
-      'configure',
+      'configureApp',
       { injected: true },
       () => (configurator) =>
         enableContextMock(configurator, (mock) => mock.setCurrentContext(projectA)),

@@ -64,7 +64,7 @@ export type ResolveAppTestEnvOptions = {
  *
  * const test = testApp
  *   .extend('env', { injected: true }, () => resolveAppTestEnv())
- *   .extend('configure', { injected: true }, () => configure);
+ *   .extend('configureApp', { injected: true }, () => configure);
  * ```
  */
 export const resolveAppTestEnv = async (

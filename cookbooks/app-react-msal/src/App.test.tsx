@@ -7,7 +7,7 @@ import { App } from './App';
 /**
  * Sets a named mock account instead of the msal mock's default "Test User" —
  * signed in before the msal provider initializes, so the provider's own
- * start-up path observes it. The cookbook registers no `configure` of its own,
+ * start-up path observes it. The cookbook registers no `configureApp` of its own,
  * so this is the test's entire configuration, not a composition with one.
  */
 const withMockAccount =
@@ -33,7 +33,7 @@ test('renders the default signed-in mock user once the app configuration has ini
 });
 
 describe('with a configured account', () => {
-  test.override('configure', { injected: true }, () =>
+  test.override('configureApp', { injected: true }, () =>
     withMockAccount({ name: 'Ada Lovelace', username: 'ada@equinor.com' }),
   );
 
