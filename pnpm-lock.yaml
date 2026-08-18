@@ -3268,6 +3268,9 @@ importers:
       '@equinor/fusion-framework-module-app':
         specifier: workspace:*
         version: link:../../modules/app
+      '@equinor/fusion-framework-module-navigation':
+        specifier: workspace:*
+        version: link:../../modules/navigation
       '@equinor/fusion-framework-react':
         specifier: workspace:*
         version: link:../../react/framework

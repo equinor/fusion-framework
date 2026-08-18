@@ -40,7 +40,7 @@ export async function resolveAppScope<
 }): Promise<AppScope<TModules>> {
   const { configure, env, fusion: providedFusion } = options ?? {};
   const resolvedEnv = env ?? (defaultAppEnv as TEnv);
-  const framework = await resolveFusion(resolvedEnv, providedFusion);
+  const framework = await resolveFusion({ env: resolvedEnv, fusion: providedFusion });
   const app = await mockAppModules(configure, resolvedEnv, framework);
   return { framework, app };
 }

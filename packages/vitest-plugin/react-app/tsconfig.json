@@ -15,6 +15,7 @@
     { "path": "../../app" },
     { "path": "../../modules/module" },
     { "path": "../../modules/app" },
+    { "path": "../../modules/navigation" },
     { "path": "../../react/framework" },
     { "path": "../../react/modules/module" },
     { "path": "../../utils/imports" }
