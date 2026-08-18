@@ -52,8 +52,12 @@ import { defaultAppEnv, resolveFusion, createAppScopeWrapper } from './scope';
  * @example Seed a module for every test in a suite
  * ```tsx
  * describe('with a seeded context module', () => {
- *   const test = testApp.extend('configureApp', { injected: true }, () =>
- *     (configurator) => enableContextMock(configurator, (mock) => mock.setCurrentContext(projectA)),
+ *   const test = testApp.extend(
+ *     'configureApp',
+ *     { injected: true },
+ *     (): AppMockConfigureFn =>
+ *       (configurator) =>
+ *         enableContextMock(configurator, (mock) => mock.setCurrentContext(projectA)),
  *   );
  *
  *   test('starts on the seeded context', async ({ render }) => {
@@ -63,16 +67,44 @@ import { defaultAppEnv, resolveFusion, createAppScopeWrapper } from './scope';
  * });
  * ```
  *
+ * @example Type `app`'s registered modules for consumers
+ * ```tsx
+ * // `configureApp`'s `TModules` generic only types that callback's own `configurator` parameter.
+ * // `app`'s type was already fixed (to `unknown`) when the base `testApp` chain defined it, so a
+ * // later `configureApp` override does not retroactively change what `app` is typed as. Re-extend
+ * // `app` too, with the same `TModules`, to get a typed `app.navigation` in tests.
+ * const test = testApp
+ *   .extend(
+ *     'configureApp',
+ *     { injected: true },
+ *     ({ configureApp }): AppMockConfigureFn<[NavigationModule]> =>
+ *       async (configurator, args) => {
+ *         await configureApp?.(configurator, args);
+ *         enableNavigation(configurator, '/app');
+ *       },
+ *   )
+ *   .extend('app', ({ configureApp, appEnv, fusion }) =>
+ *     mockAppModules<[NavigationModule], AppEnv>(configureApp, appEnv as AppEnv, fusion),
+ *   );
+ *
+ * test('exposes the navigation module', async ({ app }) => {
+ *   expect(app.navigation).toBeDefined();
+ * });
+ * ```
+ *
  * @example Extend the parent framework mock with an application module
  * ```tsx
- * const test = testApp.extend('configureFusion', { injected: true }, () =>
- *   (configurator) => {
- *     enableFeatureFlagMock(configurator);
- *     configurator.serviceDiscovery.addServices([
- *       { key: 'people', uri: baseUrl('people') },
- *       { key: 'context', uri: baseUrl('context') },
- *     ]);
- *   },
+ * const test = testApp.extend(
+ *   'configureFusion',
+ *   { injected: true },
+ *   (): FrameworkMockConfigureFn<[AppModule, NavigationModule]> =>
+ *     (configurator) => {
+ *       enableFeatureFlagMock(configurator);
+ *       configurator.serviceDiscovery.addServices([
+ *         { key: 'people', uri: baseUrl('people') },
+ *         { key: 'context', uri: baseUrl('context') },
+ *       ]);
+ *     },
  * );
  * ```
  */
