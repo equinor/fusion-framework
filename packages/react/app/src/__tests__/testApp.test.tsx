@@ -3,6 +3,9 @@ import { describe, expect } from 'vitest';
 import { enableContextMock } from '@equinor/fusion-framework-module-context/mock';
 import type { ContextItem } from '@equinor/fusion-framework-module-context';
 import { useCurrentContext } from '@equinor/fusion-framework-react-app/context';
+import { useFramework } from '@equinor/fusion-framework-react';
+import { createHistory, enableNavigation } from '@equinor/fusion-framework-module-navigation';
+import type { NavigationModule } from '@equinor/fusion-framework-module-navigation';
 
 import { testApp } from '@equinor/fusion-framework-vitest-plugin-react-app/test';
 
@@ -42,6 +45,32 @@ describe('testApp', () => {
     test('starts on the seeded context', async ({ render }) => {
       const screen = await render(<CurrentContext />);
       await expect.element(screen.getByText(projectA.title as string)).toBeVisible();
+    });
+  });
+
+  describe('with a configured parent framework', () => {
+    const NavigationLocation = () => {
+      const { navigation } = useFramework<[NavigationModule]>().modules;
+      return <p>{navigation.history.location.pathname}</p>;
+    };
+
+    // pushed on the history instance itself, before it's handed to the framework configurator,
+    // so a passing assertion also proves `configureFusion` ran ahead of framework initialization
+    const history = createHistory('memory');
+    history.push('/configured-by-configure-fusion');
+
+    const test = testApp.extend(
+      'configureFusion',
+      { injected: true },
+      () => (configurator) =>
+        enableNavigation(configurator, { configure: (config) => config.setHistory(history) }),
+    );
+
+    test('resolves the fusion instance with the configured navigation history', async ({
+      render,
+    }) => {
+      const screen = await render(<NavigationLocation />);
+      await expect.element(screen.getByText('/configured-by-configure-fusion')).toBeVisible();
     });
   });
 });

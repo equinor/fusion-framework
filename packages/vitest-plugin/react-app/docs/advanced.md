@@ -15,7 +15,7 @@ and the general `test.extend`/`test.override` mechanics Fusion builds on.
 | `test` from `/test` | The app's manifest, config, and module configurator should resolve automatically |
 | `render` from `/test` | A standard `describe` or `it` block needs the automatically resolved app scope |
 | `renderAppHook` | A hook needs an app scope with explicitly supplied options |
-| `renderAppComponent` | A component needs explicit `env`, `configureApp`, or parent `fusion` options |
+| `renderAppComponent` | A component needs explicit `env`, `configure`, or parent `fusion` options |
 | `testApp` | A reusable fixture should not depend on Vite's automatic app-file resolution |
 
 All Fusion rendering APIs initialize modules asynchronously and must be awaited. The lower
