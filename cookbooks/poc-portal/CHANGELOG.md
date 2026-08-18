@@ -1,5 +1,11 @@
 # poc-portal
 
+## 1.1.98
+
+### Patch Changes
+
+- @equinor/fusion-framework-cli@15.2.9
+
 ## 1.1.97
 
 ### Patch Changes
