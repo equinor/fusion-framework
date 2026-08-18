@@ -1,6 +1,6 @@
 # Advanced Fusion app testing
 
-The `/test` entry point extends Vitest's test context with `env`, `configureApp`, `configureFusion`,
+The `/test` entry point extends Vitest's test context with `appEnv`, `configureApp`, `configureFusion`,
 `fusion`, `app`, `render`, and `renderHook`. Fixture declarations are reusable, while each test
 receives fresh framework and app module instances.
 
@@ -55,6 +55,22 @@ feature-flag, HTTP, analytics, and telemetry boundaries.
 *files* need the same fixture default. Within one file, prefer `test.override(...)` (below):
 it replaces a fixture in place, so every test in that file keeps importing the same `test`.
 
+## Fake an endpoint URL with `mergeEnvConfig`
+
+`appEnv`'s `config` is an `AppConfig` instance — its `environment`/`endpoints` live behind
+private fields exposed only through getters, so `{ ...appEnv.config, endpoints: {...} }` copies
+nothing and silently drops the rest of the config. Use `mergeEnvConfig` to fake one endpoint's
+URL (e.g. the app's real backend, resolved from `app.config.ts`) while keeping every other
+endpoint and environment variable intact:
+
+```tsx
+import { mergeEnvConfig, test as baseTest } from '@equinor/fusion-framework-vitest-plugin-react-app/test';
+
+export const test = baseTest.extend('appEnv', ({ appEnv }) =>
+  mergeEnvConfig(appEnv, { endpoints: { 'cpr-api': { url: backendBaseUrl } } }),
+);
+```
+
 ## Override a fixture for one test or a `describe` block
 
 `test.override('name', ...)` replaces a fixture's resolved value without creating a new `test`
@@ -95,9 +111,9 @@ parent framework instance rather than a change to the app's own `configureApp`:
 
 ```tsx
 describe('with a parent framework context', () => {
-  test.override('fusion', async ({ env }) =>
+  test.override('fusion', async ({ appEnv }) =>
     mockFramework<[AppModule, ContextModule]>((configurator) => {
-      enableAppManifestMock(configurator, env);
+      enableAppManifestMock(configurator, appEnv);
       enableContextMock(configurator, (mock) => mock.setCurrentContext(project));
     }),
   );

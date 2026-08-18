@@ -46,11 +46,11 @@ export type ResolveAppTestEnvOptions = {
  * back to an empty config if none exists.
  *
  * @remarks
- * Intended to seed `@equinor/fusion-framework-vitest-plugin-react-app/test`'s `testApp` `env` fixture, so
+ * Intended to seed `@equinor/fusion-framework-vitest-plugin-react-app/test`'s `testApp` `appEnv` fixture, so
  * a test suite exercises the application's real manifest/config instead of a hand-maintained
  * duplicate. Anything a specific test still needs faked (a missing endpoint, a different
- * `appKey`) can be layered on top with `testApp.extend('env', ...)` or a per-test
- * `test.override('env', ...)`.
+ * `appKey`) can be layered on top with `testApp.extend('appEnv', ...)` or a per-test
+ * `test.override('appEnv', ...)`.
  *
  * @param options - Resolution options; `entrypoint` defaults to the current working directory.
  * @returns The resolved application manifest and config.
@@ -63,7 +63,7 @@ export type ResolveAppTestEnvOptions = {
  * import { configure } from '../config';
  *
  * const test = testApp
- *   .extend('env', { injected: true }, () => resolveAppTestEnv())
+ *   .extend('appEnv', { injected: true }, () => resolveAppTestEnv())
  *   .extend('configureApp', { injected: true }, () => configure);
  * ```
  */

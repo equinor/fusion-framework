@@ -17,7 +17,7 @@ import { defaultAppEnv, resolveFusion, createAppScopeWrapper } from './scope';
  *
  * @remarks
  * An alternative to {@link renderAppComponent}/{@link renderAppHook} for a test file whose
- * cases share seeded fixture defaults: `env`/`configureApp` become suite-level concerns,
+ * cases share seeded fixture defaults: `appEnv`/`configureApp` become suite-level concerns,
  * overridden once per file (or per `describe` block) with `testApp.extend(...)`, rather than
  * an options object repeated on every call. `fusion`/`app` are still instantiated fresh per
  * test — only the seeded defaults are shared, not state between tests. They also resolve
@@ -77,7 +77,7 @@ import { defaultAppEnv, resolveFusion, createAppScopeWrapper } from './scope';
  * ```
  */
 export const testApp = baseTest
-  .extend('env', { injected: true }, defaultAppEnv)
+  .extend('appEnv', { injected: true }, defaultAppEnv)
   // `test.extend`'s plain-`value` overload rejects function types (ambiguous with the
   // resolver-`fn` overload), so a function-typed fixture default must go through `fn` instead.
   .extend('configureApp', { injected: true }, () => undefined as AppMockConfigureFn | undefined)
@@ -92,11 +92,11 @@ export const testApp = baseTest
   // IMPORTANT: `.override('fusion', ...)` replaces this resolver entirely, so `configureFusion`
   // is never called — reach for `configureFusion` to extend the base mock, `fusion` only to
   // replace it outright (e.g. with a fully custom or non-mocked instance).
-  .extend('fusion', async ({ env, configureFusion }) =>
-    resolveFusion({ env, configure: configureFusion }),
+  .extend('fusion', async ({ appEnv, configureFusion }) =>
+    resolveFusion({ env: appEnv, configure: configureFusion }),
   )
-  .extend('app', async ({ configureApp, env, fusion }) =>
-    mockAppModules<unknown, AppEnv>(configureApp, env as AppEnv, fusion),
+  .extend('app', async ({ configureApp, appEnv, fusion }) =>
+    mockAppModules<unknown, AppEnv>(configureApp, appEnv as AppEnv, fusion),
   )
   .extend('render', ({ fusion, app }) => {
     const wrapper = createAppScopeWrapper({ framework: fusion, app });

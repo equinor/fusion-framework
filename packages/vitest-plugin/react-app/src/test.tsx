@@ -15,7 +15,7 @@ import { configure as configureApp } from 'virtual:fusion-app-test-configure';
  * Running the same test file without the plugin registered fails to resolve those imports.
  *
  * Per-test mocking still works exactly like the base `testApp`: `.extend('configureApp', ...)` or
- * a per-case `test.override('env', ...)` layers on top of the resolved values.
+ * a per-case `test.override('appEnv', ...)` layers on top of the resolved values.
  *
  * @remarks `.override('configureApp', ...)` replaces the app's real `configure`
  * This fixture's default value *is* the app's real `src/config.ts` `configure` export.
@@ -36,7 +36,7 @@ import { configure as configureApp } from 'virtual:fusion-app-test-configure';
  * ```
  */
 export const test = baseTestApp
-  .extend('env', { injected: true }, { manifest, config })
+  .extend('appEnv', { injected: true }, { manifest, config })
   .extend('configureApp', { injected: true }, () => configureApp);
 
 export default test;

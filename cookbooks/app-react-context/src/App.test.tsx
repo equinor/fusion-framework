@@ -134,9 +134,9 @@ describe('with a parent framework context', () => {
       mock.setContexts([project, facility]);
     }),
   );
-  test.override('fusion', async ({ env }) =>
+  test.override('fusion', async ({ appEnv }) =>
     mockFramework<[AppModule, ContextModule]>((configurator) => {
-      enableAppManifestMock(configurator, env);
+      enableAppManifestMock(configurator, appEnv);
       enableContextMock(configurator, (mock) => {
         mock.setContexts([project, facility]);
         mock.setCurrentContext(project);
