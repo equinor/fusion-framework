@@ -4,4 +4,5 @@ export { buildAppRoute } from './build-app-route';
 export { CONTEXT_QUERY_PARAM_KEY, UUID_PATTERN } from '../../constants';
 export { stripContextQueryParam } from './strip-context-query-param';
 export { resolveContextIdFromUrl } from './resolve-context-id-from-url';
+export { resolveRouteTail } from './resolve-route-tail';
 export { buildContextUrlForStrategy } from './build-context-url-for-strategy';

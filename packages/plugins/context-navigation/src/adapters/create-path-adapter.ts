@@ -5,6 +5,7 @@ import { stripContextQueryParam } from '../utils/url/strip-context-query-param';
 import { parseAppRoute } from '../utils/url/parse-app-route';
 import { UUID_PATTERN } from '../constants';
 import { buildAppRoute } from '../utils/url/build-app-route';
+import { resolveRouteTail } from '../utils/url/resolve-route-tail';
 
 /**
  * Path adapter — encodes context identity as the first path segment after
@@ -82,7 +83,7 @@ export function createPathAdapter(): ContextNavigationAdapter {
       const targetPath =
         context === null
           ? buildAppRoute(match.appKey)
-          : buildAppRoute(match.appKey, context.id, match.rest);
+          : buildAppRoute(match.appKey, context.id, resolveRouteTail(match));
 
       const url = new URL(targetPath, currentURL.origin);
       url.search = currentURL.search;
