@@ -9,6 +9,7 @@ export {
   type RenderAppComponentResult,
 } from './render-app-component';
 export { testApp } from './test-app';
+export { mergeEnvConfig, type MergeEnvConfigOverrides } from './merge-env-config.js';
 export type { AppMockConfigureFn } from '@equinor/fusion-framework-app/mock';
 
 // `test`/`render` import virtual modules only served once `appTestVitePlugin`

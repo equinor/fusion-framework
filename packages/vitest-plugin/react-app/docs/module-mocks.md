@@ -93,8 +93,8 @@ const project = {
   value: {},
 };
 
-export const test = baseTest.extend('configure', ({ configure }) => (configurator, args) => {
-  configure?.(configurator, args);
+export const test = baseTest.extend('configureApp', ({ configureApp }) => (configurator, args) => {
+  configureApp?.(configurator, args);
   configurator.msal.setAccount({ name: 'Ada Lovelace' });
   enableContextMock(configurator, (mock) => mock.setCurrentContext(project));
   enableFeatureFlagMock(configurator, (mock) => {

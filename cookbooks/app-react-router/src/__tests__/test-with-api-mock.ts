@@ -23,9 +23,9 @@ import { apiMock } from '../mocks/api-mock';
  * });
  * ```
  */
-export const testWithApiMock = baseTest.extend('configure', ({ configure }) => {
+export const testWithApiMock = baseTest.extend('configureApp', ({ configureApp }) => {
   const withApiMock: AppMockConfigureFn = (configurator, args) => {
-    configure?.(configurator, args);
+    configureApp?.(configurator, args);
     configurator.http.addMiddleware(createOpenApiMockMiddleware(apiMock));
   };
   return withApiMock;

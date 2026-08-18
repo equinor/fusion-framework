@@ -6,6 +6,9 @@ import type { RenderOptions, RenderHookOptions } from 'vitest-browser-react';
 import { mockAppModules } from '@equinor/fusion-framework-app/mock';
 import type { AppMockConfigureFn } from '@equinor/fusion-framework-app/mock';
 import type { AppEnv } from '@equinor/fusion-framework-app';
+import type { AppModule } from '@equinor/fusion-framework-module-app';
+import type { NavigationModule } from '@equinor/fusion-framework-module-navigation';
+import type { FrameworkMockConfigureFn } from '@equinor/fusion-framework/mock';
 
 import { defaultAppEnv, resolveFusion, createAppScopeWrapper } from './scope';
 
@@ -14,7 +17,7 @@ import { defaultAppEnv, resolveFusion, createAppScopeWrapper } from './scope';
  *
  * @remarks
  * An alternative to {@link renderAppComponent}/{@link renderAppHook} for a test file whose
- * cases share seeded fixture defaults: `env`/`configure` become suite-level concerns,
+ * cases share seeded fixture defaults: `appEnv`/`configureApp` become suite-level concerns,
  * overridden once per file (or per `describe` block) with `testApp.extend(...)`, rather than
  * an options object repeated on every call. `fusion`/`app` are still instantiated fresh per
  * test — only the seeded defaults are shared, not state between tests. They also resolve
@@ -24,6 +27,19 @@ import { defaultAppEnv, resolveFusion, createAppScopeWrapper } from './scope';
  * Both entry points stay supported: reach for `renderAppComponent`/`renderAppHook` for a
  * one-off test whose configuration is not shared by the rest of the file; reach for
  * `testApp` when several cases in a file share one set of seeded fixture defaults.
+ *
+ * @remarks `configureApp`/`configureFusion` default to `undefined` here
+ * Unlike `@equinor/fusion-framework-vitest-plugin-react-app/test`'s `test`, this `testApp` does
+ * not resolve the app's real `src/config.ts` — it requires `appTestVitePlugin`'s Vite virtual
+ * modules to load that file as live code, which `testApp` (no Vite dependency) cannot do. Extend
+ * `test` from `/test` instead when a suite needs to compose with the app's real configuration.
+ *
+ * @remarks Overriding `fusion` bypasses `configureFusion`
+ * `fusion` and `configureFusion` are not independent: `fusion`'s default resolver is what
+ * calls `configureFusion`. `.override('fusion', ...)` replaces that resolver outright, so a
+ * `configureFusion` override on the same test/suite is silently never called. Use
+ * `configureFusion` to extend the base framework mock; use `fusion` only to replace it
+ * entirely (e.g. with a fully custom or non-mocked instance).
  *
  * @example
  * ```tsx
@@ -36,7 +52,7 @@ import { defaultAppEnv, resolveFusion, createAppScopeWrapper } from './scope';
  * @example Seed a module for every test in a suite
  * ```tsx
  * describe('with a seeded context module', () => {
- *   const test = testApp.extend('configure', { injected: true }, () =>
+ *   const test = testApp.extend('configureApp', { injected: true }, () =>
  *     (configurator) => enableContextMock(configurator, (mock) => mock.setCurrentContext(projectA)),
  *   );
  *
@@ -46,15 +62,41 @@ import { defaultAppEnv, resolveFusion, createAppScopeWrapper } from './scope';
  *   });
  * });
  * ```
+ *
+ * @example Extend the parent framework mock with an application module
+ * ```tsx
+ * const test = testApp.extend('configureFusion', { injected: true }, () =>
+ *   (configurator) => {
+ *     enableFeatureFlagMock(configurator);
+ *     configurator.serviceDiscovery.addServices([
+ *       { key: 'people', uri: baseUrl('people') },
+ *       { key: 'context', uri: baseUrl('context') },
+ *     ]);
+ *   },
+ * );
+ * ```
  */
 export const testApp = baseTest
-  .extend('env', { injected: true }, defaultAppEnv)
+  .extend('appEnv', { injected: true }, defaultAppEnv)
   // `test.extend`'s plain-`value` overload rejects function types (ambiguous with the
   // resolver-`fn` overload), so a function-typed fixture default must go through `fn` instead.
-  .extend('configure', { injected: true }, () => undefined as AppMockConfigureFn | undefined)
-  .extend('fusion', async ({ env }) => resolveFusion(env))
-  .extend('app', async ({ configure, env, fusion }) =>
-    mockAppModules<unknown, AppEnv>(configure, env as AppEnv, fusion),
+  .extend('configureApp', { injected: true }, () => undefined as AppMockConfigureFn | undefined)
+  // Runs after the built-in app manifest/navigation setup, so a test can register extra
+  // framework modules, service discovery entries, or call `enableNavigation` again to
+  // override the history, without reimplementing the base setup.
+  .extend(
+    'configureFusion',
+    { injected: true },
+    () => undefined as FrameworkMockConfigureFn<[AppModule, NavigationModule]> | undefined,
+  )
+  // IMPORTANT: `.override('fusion', ...)` replaces this resolver entirely, so `configureFusion`
+  // is never called — reach for `configureFusion` to extend the base mock, `fusion` only to
+  // replace it outright (e.g. with a fully custom or non-mocked instance).
+  .extend('fusion', async ({ appEnv, configureFusion }) =>
+    resolveFusion({ env: appEnv, configure: configureFusion }),
+  )
+  .extend('app', async ({ configureApp, appEnv, fusion }) =>
+    mockAppModules<unknown, AppEnv>(configureApp, appEnv as AppEnv, fusion),
   )
   .extend('render', ({ fusion, app }) => {
     const wrapper = createAppScopeWrapper({ framework: fusion, app });
