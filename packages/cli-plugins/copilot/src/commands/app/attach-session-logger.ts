@@ -1,9 +1,30 @@
 import chalk from 'chalk';
 import ora from 'ora';
 
-import type { CopilotSession } from '@github/copilot-sdk';
+import type { CopilotSession, JsonValue } from '@github/copilot-sdk';
 
 import { tryFormatMessage } from './try-format-message.js';
+
+/**
+ * Extracts the first string-valued property found among `keys` on a tool-call's
+ * JSON arguments, narrowing the untyped `JsonValue` union to its object branch first.
+ * @param value - The tool-call arguments to inspect, as reported by the Copilot SDK
+ * @param keys - Property names to check, in priority order
+ * @returns The first matching string value, or `undefined` if none match
+ */
+function firstStringProp(value: JsonValue | undefined, keys: string[]): string | undefined {
+  // Primitives and arrays have no named properties to read
+  if (typeof value !== 'object' || value === null || Array.isArray(value)) {
+    return undefined;
+  }
+  // Return the first key present with a string value, in caller-specified priority order
+  for (const key of keys) {
+    const prop = value[key];
+    // Skip non-string values (numbers, nested objects, etc.) rather than stringifying them
+    if (typeof prop === 'string') return prop;
+  }
+  return undefined;
+}
 
 const TOOL_ICONS: Record<string, string> = {
   browser_screenshot: '📷',
@@ -69,7 +90,7 @@ export function attachSessionLogger(
     switch (event.type) {
       case 'tool.execution_start': {
         const { toolCallId, toolName, arguments: args } = event.data;
-        const detail = args?.url ?? args?.path ?? args?.load ?? args?.selector;
+        const detail = firstStringProp(args, ['url', 'path', 'load', 'selector']);
         const icon = TOOL_ICONS[toolName] ?? '🔧';
         const label =
           typeof detail === 'string' ? `${icon} ${toolName} (${detail})` : `${icon} ${toolName}`;
