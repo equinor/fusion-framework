@@ -92,7 +92,7 @@ export default defineProject({
       instances: [{ browser: 'chromium' }],
     },
   },
-  server: { warmup: { clientFiles: ['src/**/*.{ts,tsx}'] } },
+  server: { warmup: { clientFiles: ['src/**/*.{ts,tsx}', '!src/**/*.d.ts'] } },
 });
 ```
 
