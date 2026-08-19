@@ -50,6 +50,15 @@ jobs:
       - name: Setup node and install deps
         uses: ./.github/actions/node-setup
 
+      # pnpm 11 stopped expanding ${NPM_TOKEN}-style placeholders from a repo's
+      # .npmrc (GHSA-3qhv-2rgh-x77r), so auth has to be written via `pnpm config
+      # set` at runtime instead of relying on env-var substitution in .npmrc.
+      - name: Configure npm registry auth
+        shell: bash
+        run: pnpm config set '//registry.npmjs.org/:_authToken' "${NPM_TOKEN}"
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+
       # Process changesets: create version PR or publish packages to npm
       # This step requires write permissions to create releases and publish packages
       - name: Create Release Pull Request or Publish to npm
