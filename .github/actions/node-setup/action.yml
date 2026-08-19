@@ -2,7 +2,7 @@ name: Setup Node
 description: General setup of node
 inputs:
   node-version:
-    default: 24
+    default: 26
   save-cache:
     description: Whether to save the pnpm store cache on main (still restored either way)
     default: 'true'
@@ -12,10 +12,10 @@ runs:
   steps:
 
     - name: Setup pnpm
-      uses: pnpm/action-setup@v5
+      uses: pnpm/action-setup@v6
 
     - name: Setup Node.js
-      uses: actions/setup-node@v6
+      uses: actions/setup-node@v7
       with:
         node-version: ${{ inputs.node-version }}
 
@@ -28,7 +28,7 @@ runs:
     # hash doesn't match exactly, so PRs reuse main's store instead of
     # installing from scratch.
     - name: Restore pnpm store
-      uses: actions/cache/restore@v4
+      uses: actions/cache/restore@v6
       with:
         path: ${{ steps.pnpm-store.outputs.path }}
         key: pnpm-store-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
@@ -68,7 +68,7 @@ runs:
     # save, so open PRs stop each spawning their own throwaway ~700MB entry.
     - name: Save pnpm store
       if: github.ref == 'refs/heads/main' && inputs.save-cache == 'true'
-      uses: actions/cache/save@v4
+      uses: actions/cache/save@v6
       with:
         path: ${{ steps.pnpm-store.outputs.path }}
         key: pnpm-store-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
