@@ -2019,7 +2019,7 @@ importers:
     dependencies:
       '@azure/msal-browser':
         specifier: ^5.0.2
-        version: 5.17.3
+        version: 5.18.0
     devDependencies:
       '@equinor/fusion-framework-module':
         specifier: workspace:^
@@ -3224,6 +3224,10 @@ packages:
 
   '@azure/msal-browser@5.17.3':
     resolution: {integrity: sha512-qMabD7Xrm/UgRhs+/IVyCTZRjUl8Qb+uGsRrCkaKNWsiTwRaeyStJbChE7/ySNTNYtiWo7khfF7vUDd0wGMnLw==}
+    engines: {node: '>=0.8.0'}
+
+  '@azure/msal-browser@5.18.0':
+    resolution: {integrity: sha512-SPTeHYZghdEdRddJzNjhH+CI5MSQtquNYwGJnYXfOHIBRXCmrWimBS85OhwXpXFIlrCtNTbBPm5mPAWRNEoktA==}
     engines: {node: '>=0.8.0'}
 
   '@azure/msal-common@16.11.3':
@@ -12318,6 +12322,10 @@ snapshots:
   '@azure/msal-browser@5.17.3':
     dependencies:
       '@azure/msal-common': 16.11.3
+
+  '@azure/msal-browser@5.18.0':
+    dependencies:
+      '@azure/msal-common': 16.12.0
 
   '@azure/msal-common@16.11.3': {}
 
