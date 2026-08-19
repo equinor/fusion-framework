@@ -37,9 +37,12 @@ const normalizePathname = (path: string): string => {
   let result = '';
   let lastWasSlash = false;
 
+  // Walk each character once to collapse runs of slashes in a single pass
   for (let i = 0; i < path.length; i++) {
     const char = path[i];
+    // Only slashes need de-duplication; every other character passes through
     if (char === '/') {
+      // Keep the first slash of a run, drop the rest
       if (!lastWasSlash) {
         result += char;
         lastWasSlash = true;
@@ -67,6 +70,7 @@ const normalizePathname = (path: string): string => {
 const stripTrailingSlashes = (path: string): string => {
   // Use iterative approach to avoid ReDoS vulnerability
   let endIndex = path.length;
+  // Shrink endIndex past every trailing slash
   while (endIndex > 0 && path[endIndex - 1] === '/') {
     endIndex--;
   }
