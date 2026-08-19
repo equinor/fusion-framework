@@ -16,7 +16,7 @@ on:
 jobs:
   copilot-setup-steps:
     name: Prepare Fusion Framework workspace
-    runs-on: ubuntu-latest
+    runs-on: fusion-gh-runner-fusion-framework
     # Copilot supplies its own token for repository access; this job only reads code.
     permissions:
       contents: read
