@@ -105,6 +105,14 @@ jobs:
             echo "reason=Incremental indexing from $last_indexed" >> "$GITHUB_OUTPUT"
           fi
 
+      # fusion-gh-runner-fusion-framework's image doesn't ship the az CLI,
+      # which azure/login@v3 shells out to (tracked with infra).
+      - name: Ensure az CLI is installed
+        run: |
+          if ! command -v az >/dev/null 2>&1; then
+            curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+          fi
+
       - name: Azure login (OIDC)
         uses: azure/login@v3.0.1
         with:
