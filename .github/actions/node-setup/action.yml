@@ -3,6 +3,9 @@ description: General setup of node
 inputs:
   node-version:
     default: 24
+  save-cache:
+    description: Whether to save the pnpm store cache on main (still restored either way)
+    default: 'true'
 
 runs:
   using: composite
@@ -47,7 +50,7 @@ runs:
     # Only main writes new cache entries — PRs restore-and-reuse but never
     # save, so open PRs stop each spawning their own throwaway ~700MB entry.
     - name: Save pnpm store
-      if: github.ref == 'refs/heads/main'
+      if: github.ref == 'refs/heads/main' && inputs.save-cache == 'true'
       uses: actions/cache/save@v4
       with:
         path: ${{ steps.pnpm-store.outputs.path }}
