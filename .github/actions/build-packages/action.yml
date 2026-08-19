@@ -1,19 +1,14 @@
 name: Build code base
-Description: TODO
+description: Builds all workspace packages, or only those affected relative to the PR base branch
 
 inputs:
   only-affected:
+    description: When true, builds only packages affected since github.base_ref instead of everything
     default: false
 
 runs:
   using: composite
   steps:
-    # - name: pre-compile
-    #   shell: bash
-    #   run: |
-    #     pnpm build:cli
-    #     pnpm link ./packages/cli
-
     - name: Build project [all]
       if: ${{ inputs.only-affected == 'false' }}
       shell: bash
@@ -22,4 +17,4 @@ runs:
     - name: Build project [affected]
       if: ${{ inputs.only-affected == 'true' }}
       shell: bash
-      run: pnpm turbo run build --continue --filter=...[origin/${{ github.base_ref }}]
+      run: pnpm turbo run build --continue --affected

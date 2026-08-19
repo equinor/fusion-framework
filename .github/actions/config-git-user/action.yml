@@ -1,4 +1,5 @@
 name: configure git user
+description: Sets the git committer identity to github-actions[bot] for commits made by workflows
 
 runs:
   using: composite

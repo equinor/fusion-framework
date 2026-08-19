@@ -25,7 +25,7 @@ permissions:
 jobs:
   code-quality:
     name: Check Code
-    runs-on: ubuntu-latest
+    runs-on: fusion-gh-runner-fusion-framework
     env:
       REVIEWDOG_GITHUB_API_TOKEN: ${{ github.token }}
     steps:
@@ -51,8 +51,6 @@ jobs:
       
       - name: Setup node and install deps
         uses: ./.github/actions/node-setup
-        with:
-          turbo-cache: true
 
       - uses: reviewdog/action-setup@v1
 
@@ -109,7 +107,7 @@ jobs:
         continue-on-error: true
         uses: ./.github/actions/build-packages
         with: 
-          only-affected: false
+          only-affected: true
 
       - name: process-build-log
         run: node process-turbo-build-log.cjs > tsc-build.log
@@ -127,7 +125,7 @@ jobs:
         run: exit 1
       
       - name: Create Test Report
-        run: pnpm test run
+        run: pnpm test:affected
 
       - name: Create Test Coverage
         id: test-coverage  

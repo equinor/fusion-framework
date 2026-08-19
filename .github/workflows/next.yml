@@ -54,7 +54,7 @@ jobs:
     name: Version or publish pre-release of packages
     needs: check-pre-release
     if: needs.check-pre-release.outputs.should-run == 'true'
-    runs-on: ubuntu-latest
+    runs-on: fusion-gh-runner-fusion-framework
     outputs:
       published: ${{ steps.changesets.outputs.published }}
       hasChangesets: ${{ steps.changesets.outputs.hasChangesets }}
@@ -65,8 +65,6 @@ jobs:
 
       - name: Setup node and install deps
         uses: ./.github/actions/node-setup
-        with:
-          turbo-cache: false
 
       - name: Create Release Pull Request or Publish to npm
         id: changesets
