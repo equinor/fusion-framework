@@ -42,9 +42,9 @@ jobs:
 
       # fusion-gh-runner-fusion-framework's image doesn't ship gh (tracked with
       # infra); install it until the runner image is patched.
-      - name: Ensure gh CLI is installed
+      - name: Setup fusion runner
         continue-on-error: true
-        uses: ./.github/actions/ensure-gh-cli
+        uses: ./.github/actions/setup-fusion-runner
 
       # Install dependencies and setup Node.js environment
       - name: Setup node and install deps

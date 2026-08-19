@@ -1,0 +1,26 @@
+name: setup fusion runner
+description: Installs tooling missing from fusion-gh-runner-fusion-framework's image (tracked with infra)
+
+runs:
+  using: composite
+  steps:
+    - name: Ensure gh CLI is installed
+      shell: bash
+      run: |
+        if ! command -v gh >/dev/null 2>&1; then
+          curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
+          sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg
+          echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
+          sudo apt-get update
+          sudo apt-get install -y gh
+        fi
+
+    # pnpm's standalone binary (installed via pnpm/action-setup) is linked
+    # against libatomic, which this runner's image doesn't ship.
+    - name: Ensure libatomic is installed
+      shell: bash
+      run: |
+        if ! ldconfig -p | grep -q libatomic.so.1; then
+          sudo apt-get update
+          sudo apt-get install -y libatomic1
+        fi
