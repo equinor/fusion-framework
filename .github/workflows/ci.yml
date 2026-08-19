@@ -125,8 +125,6 @@ jobs:
 
       - name: Setup node and install deps
         uses: ./.github/actions/node-setup
-        with:
-          save-cache: 'false'
 
       # allowBuilds disables this by default (pnpm-workspace.yaml) since it's
       # only needed here; vsce needs the native signing binary to publish.

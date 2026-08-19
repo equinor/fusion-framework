@@ -1,0 +1,86 @@
+name: Prime pnpm store cache
+
+# Saving the pnpm store cache used to happen inside every job that called
+# node-setup, so any push to main that triggered more than one workflow
+# raced to save the same cache key. Do it once, here, decoupled from CI.
+on:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  # Only the latest push's lockfile matters for the cache, so a superseded
+  # run for an older commit is wasted work — cancel it instead of queuing.
+  cancel-in-progress: true
+
+permissions:
+  actions: write # Required to delete stale pnpm-store caches
+  contents: read
+
+jobs:
+  prime-cache:
+    name: Save pnpm store cache
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 26
+
+      - name: Get pnpm store path
+        id: pnpm-store
+        run: echo "path=$(pnpm store path --silent)" >> "$GITHUB_OUTPUT"
+
+      - name: Check for an existing exact-match cache
+        id: pnpm-store-restore
+        uses: actions/cache/restore@v6
+        with:
+          path: ${{ steps.pnpm-store.outputs.path }}
+          key: pnpm-store-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+          lookup-only: true
+
+      - name: Install dependencies
+        if: steps.pnpm-store-restore.outputs.cache-hit != 'true'
+        run: pnpm install --frozen-lockfile
+
+      # Cache keys are immutable, so every lockfile change saves a brand-new
+      # store on top of the previous one and old package versions never get
+      # dropped. Pruning here keeps the saved cache scoped to what this
+      # lockfile actually needs instead of growing unbounded.
+      - name: Prune pnpm store
+        if: steps.pnpm-store-restore.outputs.cache-hit != 'true'
+        run: pnpm store prune
+
+      - name: Save pnpm store
+        if: steps.pnpm-store-restore.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v6
+        with:
+          path: ${{ steps.pnpm-store.outputs.path }}
+          key: pnpm-store-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+
+      # Cache keys are immutable, so every save creates a brand-new entry
+      # instead of replacing the previous one — old pnpm-store entries for
+      # main never get evicted by anything but GitHub's 10GB LRU quota.
+      # Delete them here, keeping a couple of recent fallbacks so an
+      # in-flight workflow always finds a cache to restore from.
+      - name: Delete stale pnpm store caches
+        if: steps.pnpm-store-restore.outputs.cache-hit != 'true'
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          currentKey="pnpm-store-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}"
+          cacheIds=$(gh cache list --repo "${{ github.repository }}" --ref refs/heads/main \
+            --key "pnpm-store-${{ runner.os }}-" --limit 100 \
+            --json id,key,createdAt \
+            --jq "sort_by(.createdAt) | reverse | .[2:] | .[] | select(.key != \"$currentKey\") | .id")
+          for id in $cacheIds; do
+            echo "Deleting stale pnpm store cache $id"
+            gh cache delete "$id" --repo "${{ github.repository }}" || true
+          done

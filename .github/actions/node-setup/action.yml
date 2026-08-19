@@ -3,9 +3,6 @@ description: General setup of node
 inputs:
   node-version:
     default: 26
-  save-cache:
-    description: Whether to save the pnpm store cache on main (still restored either way)
-    default: 'true'
 
 runs:
   using: composite
@@ -26,9 +23,9 @@ runs:
 
     # Restore-keys fall back to the closest prior store even when the lockfile
     # hash doesn't match exactly, so PRs reuse main's store instead of
-    # installing from scratch.
+    # installing from scratch. Saving/pruning the cache is done separately by
+    # the prime-pnpm-cache workflow on push to main, not on every job here.
     - name: Restore pnpm store
-      id: pnpm-store-restore
       uses: actions/cache/restore@v6
       with:
         path: ${{ steps.pnpm-store.outputs.path }}
@@ -40,44 +37,3 @@ runs:
       shell: bash
       run: pnpm install --frozen-lockfile
 
-    # Cache keys are immutable, so every lockfile change saves a brand-new
-    # store on top of the previous one and old package versions never get
-    # dropped. Pruning here keeps the saved cache scoped to what this
-    # lockfile actually needs instead of growing unbounded.
-    - name: Prune pnpm store
-      shell: bash
-      run: pnpm store prune
-
-    # Only main writes new cache entries — PRs restore-and-reuse but never
-    # save, so open PRs stop each spawning their own throwaway ~700MB entry.
-    # cache-hit == exact key match already restored, so skip the save outright
-    # instead of letting every concurrent main job queue up on the same save lock.
-    - name: Save pnpm store
-      if: github.ref == 'refs/heads/main' && inputs.save-cache == 'true' && steps.pnpm-store-restore.outputs.cache-hit != 'true'
-      continue-on-error: true
-      uses: actions/cache/save@v6
-      with:
-        path: ${{ steps.pnpm-store.outputs.path }}
-        key: pnpm-store-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
-
-    # Cache keys are immutable, so every save creates a brand-new entry
-    # instead of replacing the previous one — old pnpm-store entries for main
-    # never get evicted by anything but GitHub's 10GB LRU quota. Delete them
-    # only after the new save succeeds, keeping a couple of recent fallbacks
-    # so an in-flight workflow always finds a cache to restore from.
-    - name: Delete stale pnpm store caches
-      if: github.ref == 'refs/heads/main' && inputs.save-cache == 'true'
-      continue-on-error: true
-      shell: bash
-      env:
-        GH_TOKEN: ${{ github.token }}
-      run: |
-        currentKey="pnpm-store-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}"
-        cacheIds=$(gh cache list --repo "${{ github.repository }}" --ref refs/heads/main \
-          --key "pnpm-store-${{ runner.os }}-" --limit 100 \
-          --json id,key,createdAt \
-          --jq "sort_by(.createdAt) | reverse | .[2:] | .[] | select(.key != \"$currentKey\") | .id")
-        for id in $cacheIds; do
-          echo "Deleting stale pnpm store cache $id"
-          gh cache delete "$id" --repo "${{ github.repository }}" || true
-        done
