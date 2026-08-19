@@ -26,6 +26,7 @@ jobs:
       packages: write      # Required for publishing to npm registry
       id-token: write      # Required for OIDC token generation
       pull-requests: write # Required for changesets action to create PRs
+      actions: write       # Required to delete stale pnpm-store caches
     outputs:
       published: ${{ steps.changesets.outputs.published }}
       has-changesets: ${{ steps.changesets.outputs.has-changesets }}

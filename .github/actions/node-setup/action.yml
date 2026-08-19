@@ -47,6 +47,22 @@ runs:
       shell: bash
       run: pnpm store prune
 
+    # Cache keys are immutable, so every save creates a brand-new entry
+    # instead of replacing the previous one — old pnpm-store entries for main
+    # never get evicted by anything but GitHub's 10GB LRU quota. Delete them
+    # here so main only ever carries the one store it actually needs.
+    - name: Delete stale pnpm store caches
+      if: github.ref == 'refs/heads/main' && inputs.save-cache == 'true'
+      shell: bash
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        cacheIds=$(gh cache list --repo "${{ github.repository }}" --ref refs/heads/main --key "pnpm-store-${{ runner.os }}-" --limit 100 --json id --jq '.[].id')
+        for id in $cacheIds; do
+          echo "Deleting stale pnpm store cache $id"
+          gh cache delete "$id" --repo "${{ github.repository }}" || true
+        done
+
     # Only main writes new cache entries — PRs restore-and-reuse but never
     # save, so open PRs stop each spawning their own throwaway ~700MB entry.
     - name: Save pnpm store
