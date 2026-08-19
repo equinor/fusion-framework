@@ -15,8 +15,22 @@ runs:
       uses: actions/setup-node@v6
       with:
         node-version: ${{ inputs.node-version }}
-        cache: 'pnpm'
 
+    - name: Get pnpm store path
+      id: pnpm-store
+      shell: bash
+      run: echo "path=$(pnpm store path --silent)" >> "$GITHUB_OUTPUT"
+
+    # Restore-keys fall back to the closest prior store even when the lockfile
+    # hash doesn't match exactly, so PRs reuse main's store instead of
+    # installing from scratch.
+    - name: Restore pnpm store
+      uses: actions/cache/restore@v4
+      with:
+        path: ${{ steps.pnpm-store.outputs.path }}
+        key: pnpm-store-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+        restore-keys: |
+          pnpm-store-${{ runner.os }}-
 
     - name: Install dependencies
       shell: bash
@@ -29,3 +43,12 @@ runs:
     - name: Prune pnpm store
       shell: bash
       run: pnpm store prune
+
+    # Only main writes new cache entries — PRs restore-and-reuse but never
+    # save, so open PRs stop each spawning their own throwaway ~700MB entry.
+    - name: Save pnpm store
+      if: github.ref == 'refs/heads/main'
+      uses: actions/cache/save@v4
+      with:
+        path: ${{ steps.pnpm-store.outputs.path }}
+        key: pnpm-store-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
