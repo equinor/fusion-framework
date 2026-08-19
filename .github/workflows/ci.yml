@@ -19,7 +19,7 @@ permissions:
 jobs:
   release-pkg:
     name: Version or publish packages
-    runs-on: ubuntu-latest
+    runs-on: fusion-gh-runner-fusion-framework
     # Job-specific permissions for package publishing
     permissions:
       contents: write      # Required for creating releases and pushing changes
