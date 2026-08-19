@@ -1,5 +1,12 @@
 # @equinor/fusion-framework-dev-portal
 
+## 11.0.1
+
+### Patch Changes
+
+- Updated dependencies [d64448c]
+  - @equinor/fusion-framework-plugin-context-navigation@1.0.1
+
 ## 11.0.0
 
 ### Patch Changes
