@@ -39,7 +39,13 @@ jobs:
       # Configure git user for commits made by the workflow
       - name: Configure git user (trigger actor) 
         uses: ./.github/actions/config-git-user
-      
+
+      # fusion-gh-runner-fusion-framework's image doesn't ship gh (tracked with
+      # infra); install it until the runner image is patched.
+      - name: Ensure gh CLI is installed
+        continue-on-error: true
+        uses: ./.github/actions/ensure-gh-cli
+
       # Install dependencies and setup Node.js environment
       - name: Setup node and install deps
         uses: ./.github/actions/node-setup
@@ -57,11 +63,6 @@ jobs:
           publish-script: pnpm changeset:publish
         env:
           NPM_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
-
-      - name: Ensure gh CLI is installed
-        if: steps.changesets.outputs.published == 'false' && steps.changesets.outputs['pr-number']
-        continue-on-error: true
-        uses: ./.github/actions/ensure-gh-cli
 
       - name: convert Changeset PR to draft
         if: steps.changesets.outputs.published == 'false' && steps.changesets.outputs['pr-number']
