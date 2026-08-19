@@ -28,6 +28,7 @@ runs:
     # hash doesn't match exactly, so PRs reuse main's store instead of
     # installing from scratch.
     - name: Restore pnpm store
+      id: pnpm-store-restore
       uses: actions/cache/restore@v6
       with:
         path: ${{ steps.pnpm-store.outputs.path }}
@@ -49,8 +50,11 @@ runs:
 
     # Only main writes new cache entries — PRs restore-and-reuse but never
     # save, so open PRs stop each spawning their own throwaway ~700MB entry.
+    # cache-hit == exact key match already restored, so skip the save outright
+    # instead of letting every concurrent main job queue up on the same save lock.
     - name: Save pnpm store
-      if: github.ref == 'refs/heads/main' && inputs.save-cache == 'true'
+      if: github.ref == 'refs/heads/main' && inputs.save-cache == 'true' && steps.pnpm-store-restore.outputs.cache-hit != 'true'
+      continue-on-error: true
       uses: actions/cache/save@v6
       with:
         path: ${{ steps.pnpm-store.outputs.path }}
