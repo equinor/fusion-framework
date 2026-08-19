@@ -47,15 +47,32 @@ overrides:
   zod: 4.4.3
 
 allowBuilds:
-  '@azure/msal-node-extensions': true
-  '@parcel/watcher': true
-  '@vscode/vsce-sign': true
-  agent-browser: true
-  esbuild: true
-  keytar: true
-  koffi: true
-  leveldown: true
-  msw: true
-  tree-sitter: true
-  tree-sitter-javascript: true
-  tree-sitter-typescript: true
+  # only used by AuthProviderInteractiveBrowser's OS-level token cache, a
+  # dynamic import with its own error message when unavailable — not hit by
+  # any CI workflow (they authenticate via OIDC, not interactive browser auth).
+  '@azure/msal-node-extensions': false
+  # only needed for `pnpm build:docs` (sass-embedded's file watcher); vuepress
+  # falls back to its default watcher without it.
+  '@parcel/watcher': false
+  # only needed to sign/package the fusion-lint vscode extension (rare, manual).
+  '@vscode/vsce-sign': false
+  # postinstall downloads a native binary from GitHub on every install; only the
+  # copilot cli-plugin needs it, so its own prepack rebuilds it explicitly instead.
+  agent-browser: false
+  # vite/vitest/tsc all build correctly without esbuild's own install script;
+  # the platform-specific @esbuild/* optional package supplies the binary.
+  esbuild: false
+  # native credential-cache addon for interactive local auth; not needed in CI
+  # or by default. Run `pnpm rebuild keytar` if you need it locally.
+  keytar: false
+  # native install script (@github/copilot-sdk's only dependent); rebuilt in that
+  # plugin's prepack instead of on every install.
+  koffi: false
+  # pouchdb/leveldown's native binding is already unavailable on macOS arm64
+  # regardless of this setting; not worth building on every install elsewhere.
+  leveldown: false
+  msw: false
+  # fusion-lint works fine without these; it doesn't require the native binding.
+  tree-sitter: false
+  tree-sitter-javascript: false
+  tree-sitter-typescript: false

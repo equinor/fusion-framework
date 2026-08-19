@@ -21,7 +21,7 @@
   "scripts": {
     "build": "tsc -b",
     "build:types": "tsc -b",
-    "prepack": "pnpm build"
+    "prepack": "pnpm rebuild agent-browser koffi && pnpm build"
   },
   "keywords": [
     "fusion-framework",

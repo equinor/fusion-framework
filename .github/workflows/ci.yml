@@ -101,6 +101,16 @@ jobs:
       - name: Setup node and install deps
         if: steps.check.outputs.should-publish == 'true'
         uses: ./.github/actions/node-setup
+        with:
+          save-cache: 'false'
+
+      # allowBuilds disables this by default (pnpm-workspace.yaml) since it's
+      # only needed here; vsce needs the native signing binary to publish.
+      # keytar isn't needed: --azure-credential uses OIDC, not the PAT/keytar
+      # credential store that `vsce login` would use.
+      - name: Build vsce-sign signing binary
+        if: steps.check.outputs.should-publish == 'true'
+        run: pnpm rebuild @vscode/vsce-sign
 
       # Build the extension and its workspace dependencies (lsp, rules, core)
       # in the correct order — vsce does not run the "prepack" build hook.
