@@ -616,7 +616,7 @@ importers:
     dependencies:
       '@equinor/fusion-wc-markdown':
         specifier: ^1.5.0
-        version: 1.5.1
+        version: 1.6.4
       '@tanstack/react-query':
         specifier: ^5.90.10
         version: 5.101.4(react@19.2.8)
@@ -3722,8 +3722,8 @@ packages:
   '@equinor/fusion-wc-list@1.2.4':
     resolution: {integrity: sha512-LZGutrmjYsCOZltX2GGMqdGoTlSNwPScl+Bi9PvFkQwmZbs3BIEycKUnlxM8X9+ylSj5wrprf5uzyA36qHcGoA==}
 
-  '@equinor/fusion-wc-markdown@1.5.1':
-    resolution: {integrity: sha512-fH/vU+JOqN9z7RWofvnmbRTBxWxfQFWdjWmWweyyxVMbzmZf9rKMgVswwTngWr7InEGXtA+iYkkRSeVDJX7gBw==}
+  '@equinor/fusion-wc-markdown@1.6.4':
+    resolution: {integrity: sha512-atFOYLsr55kSQX4bqci9Z6t6m3htvjIdIoXkS8O85tW7kKr/b3f4CXYg/EutOAUqIKkFhb5+pIZMhGODipMFOg==}
 
   '@equinor/fusion-wc-people@2.2.4':
     resolution: {integrity: sha512-17CS6qmRiBEvMd7cjJpQm44pTQAEhDa+5T10n7pU9Or+cOx6LnxjwwPj4jeAmcncru2EmHF0bh6NAwinZuHDEg==}
@@ -9720,8 +9720,8 @@ packages:
     engines: {node: '>= 20'}
     hasBin: true
 
-  marked@17.0.6:
-    resolution: {integrity: sha512-gB0gkNafnonOw0obSTEGZTT86IuhILt2Wfx0mWH/1Au83kybTayroZ/V6nS25mN7u8ASy+5fMhgB3XPNrOZdmA==}
+  marked@18.0.9:
+    resolution: {integrity: sha512-/Sa4qiiHZxf0/FQdBBowr9q4r10krCwMvpK48FUBdXdUXScDxiQGR9zCPrFgRVR5LU3iySOiIjy09ZQvADir1w==}
     engines: {node: '>= 20'}
     hasBin: true
 
@@ -10363,8 +10363,8 @@ packages:
   property-information@7.2.0:
     resolution: {integrity: sha512-IAtzIB6sUiWaJYrX9smp3V46pBGbBeLFRGdh25kg1334VcBlD8HzhPeNIWQH9zhGmo2itIe25EHt9dQP7G5hmg==}
 
-  prosemirror-commands@1.7.1:
-    resolution: {integrity: sha512-rT7qZnQtx5c0/y/KlYaGvtG411S97UaL6gdp6RIZ23DLHanMYLyfGBV5DtSnZdthQql7W+lEVbpSfwtO8T+L2w==}
+  prosemirror-commands@1.7.2:
+    resolution: {integrity: sha512-q6Q6szxqdu9Xd6EcdKsqXghu5nQdZTpB4Q9yd04WRc7/jt763e/rT60Owh0L1GYY+T46o5rD+9lEN36dZS43tw==}
 
   prosemirror-history@1.5.0:
     resolution: {integrity: sha512-zlzTiH01eKA55UAf1MEjtssJeHnGxO0j4K4Dpx+gnmX9n+SHNlDqI2oO1Kv1iPN5B1dm5fsljCfqKF9nFL6HRg==}
@@ -12898,15 +12898,15 @@ snapshots:
       '@material/mwc-list': 0.27.0
       lit: 3.3.3
 
-  '@equinor/fusion-wc-markdown@1.5.1':
+  '@equinor/fusion-wc-markdown@1.6.4':
     dependencies:
       '@equinor/fusion-wc-core': 2.0.3
       '@equinor/fusion-wc-icon': 2.4.4
       '@equinor/fusion-web-theme': 0.1.10
-      lit: 3.3.2
-      marked: 17.0.6
+      lit: 3.3.3
+      marked: 18.0.9
       prismjs: 1.30.0
-      prosemirror-commands: 1.7.1
+      prosemirror-commands: 1.7.2
       prosemirror-history: 1.5.0
       prosemirror-inputrules: 1.5.1
       prosemirror-keymap: 1.2.3
@@ -19150,7 +19150,7 @@ snapshots:
 
   marked@16.4.2: {}
 
-  marked@17.0.6: {}
+  marked@18.0.9: {}
 
   math-expression-evaluator@2.0.7: {}
 
@@ -19946,7 +19946,7 @@ snapshots:
 
   property-information@7.2.0: {}
 
-  prosemirror-commands@1.7.1:
+  prosemirror-commands@1.7.2:
     dependencies:
       prosemirror-model: 1.25.11
       prosemirror-state: 1.4.4
