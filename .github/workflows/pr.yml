@@ -28,26 +28,19 @@ jobs:
     runs-on: fusion-gh-runner-fusion-framework
     env:
       REVIEWDOG_GITHUB_API_TOKEN: ${{ github.token }}
+      REVIEWDOG_REPORTER: ${{ (github.event.pull_request.draft && 'github-pr-check') || 'github-pr-review' }}
+      CHECKOUT_FETCH_DEPTH: ${{ (github.actor != 'dependabot[bot]' && '0') || '1' }}
     steps:
-      - name: Determin reporter type
-        uses: haya14busa/action-cond@v1
-        id: reporter
-        with:
-          cond: ${{ github.event.pull_request.draft }}
-          if_true: "github-pr-check"
-          if_false: "github-pr-review"
-
-      - name: Determine Checkout Depth
-        uses: haya14busa/action-cond@v1
-        id: fetch-depth
-        with:
-          cond: ${{ github.actor != 'dependabot[bot]' }}
-          if_true: '0' 
-          if_false: '1'
       - uses: actions/checkout@v7
         with:
           ref: "${{ github.event.pull_request.head.sha }}"
-          fetch-depth: ${{ steps.fetch-depth.outputs.value }}
+          fetch-depth: ${{ env.CHECKOUT_FETCH_DEPTH }}
+
+      # fusion-gh-runner-fusion-framework's image doesn't ship gh (tracked with
+      # infra); install it until the runner image is patched.
+      - name: Setup fusion runner
+        continue-on-error: true
+        uses: ./.github/actions/setup-fusion-runner
       
       - name: Setup node and install deps
         uses: ./.github/actions/node-setup
@@ -85,7 +78,7 @@ jobs:
         uses: mongolyy/reviewdog-action-biome@v2
         with:
           github_token: ${{ github.token }}
-          reporter: ${{ steps.reporter.outputs.value }}
+          reporter: ${{ env.REVIEWDOG_REPORTER }}
           level: error
 
       - name: Build fusion-lint
@@ -99,7 +92,7 @@ jobs:
             | reviewdog \
                 -name="fusion-lint" \
                 -f=rdjsonl \
-                -reporter=${{ steps.reporter.outputs.value }} \
+                -reporter=${{ env.REVIEWDOG_REPORTER }} \
                 -fail-level=error
           
       - name: Build affected packages
@@ -118,7 +111,7 @@ jobs:
           path: tsc-build.log
           
       - name: Review build log
-        run: cat tsc-build.log | reviewdog -name=tsc -f=tsc -reporter=${{ steps.reporter.outputs.value }} -fail-level=error
+        run: cat tsc-build.log | reviewdog -name=tsc -f=tsc -reporter=${{ env.REVIEWDOG_REPORTER }} -fail-level=error
 
       - name: Check if build failed
         if: steps.build.outcome == 'failure'
