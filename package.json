@@ -54,7 +54,7 @@
     "test:coverage": "vitest run --coverage",
     "test:build": "docker build -f alpine.Dockerfile -t fusion_framework:test .",
     "changeset:version": "pnpm changeset version && pnpm install --lockfile-only && pnpm biome format --fix",
-    "changeset:publish": "pnpm changeset tag && pnpm publish -r",
+    "changeset:publish": "pnpm changeset git-tag && pnpm publish -r",
     "changeset:publish:next": "pnpm publish -r --tag next --no-git-checks --report-summary"
   },
   "repository": "git+https://github.com/equinor/fusion-framework.git",
@@ -72,8 +72,8 @@
   "devDependencies": {
     "@equinor/fusion-lint": "workspace:^",
     "@biomejs/biome": "2.5.8",
-    "@changesets/changelog-github": "0.7.0",
-    "@changesets/cli": "^2.26.2",
+    "@changesets/changelog-github": "^1.0.0",
+    "@changesets/cli": "^3.0.0",
     "@vitest/coverage-v8": "^4.0.18",
     "agent-browser": "^0.34.0",
     "happy-dom": "^20.8.4",

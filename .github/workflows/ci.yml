@@ -28,7 +28,7 @@ jobs:
       pull-requests: write # Required for changesets action to create PRs
     outputs:
       published: ${{ steps.changesets.outputs.published }}
-      hasChangesets: ${{ steps.changesets.outputs.hasChangesets }}
+      has-changesets: ${{ steps.changesets.outputs.has-changesets }}
     steps:
       # Checkout repository with full history for changeset processing
       - uses: actions/checkout@v7
@@ -47,21 +47,20 @@ jobs:
       # This step requires write permissions to create releases and publish packages
       - name: Create Release Pull Request or Publish to npm
         id: changesets
-        uses: changesets/action@v1
+        uses: changesets/action@v2
         with:
-          title: '🤖 Bip Bop - Fusion Framework Release'
-          createGithubReleases: true
-          setupGitUser: false
-          version: pnpm changeset:version
-          publish: pnpm changeset:publish
+          github-token: ${{ github.token }}
+          pr-title: '🤖 Bip Bop - Fusion Framework Release'
+          create-github-releases: true
+          version-script: pnpm changeset:version
+          publish-script: pnpm changeset:publish
         env:
-          GITHUB_TOKEN: ${{ github.token }}
           NPM_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
 
       # Convert changeset PR to draft to prevent accidental merging
       - name: convert Changeset PR to draft
-        if: steps.changesets.outputs.published == 'false' && steps.changesets.outputs.pullRequestNumber
-        run: gh pr ready ${{ steps.changesets.outputs.pullRequestNumber }} --undo
+        if: steps.changesets.outputs.published == 'false' && steps.changesets.outputs['pr-number']
+        run: gh pr ready ${{ steps.changesets.outputs['pr-number'] }} --undo
         env:
           GH_TOKEN: ${{ github.token }}
 
@@ -69,8 +68,8 @@ jobs:
   #
   # The extension's package.json is "private" (it ships via the Marketplace,
   # not npm). `privatePackages.tag: true` (.changeset/config.json) makes
-  # `changeset tag` create a git tag for it anyway on release. Rather than
-  # relying on changesets/action's `publishedPackages` output (which parses
+  # `changeset git-tag` create a git tag for it anyway on release. Rather than
+  # relying on changesets/action's `published-packages` output (which parses
   # "New tag:" lines from that command's stdout — an implementation detail),
   # we check directly whether that tag now points at *this* commit, i.e.
   # whether this push is the exact release commit that bumped the extension.

@@ -15,10 +15,12 @@ runs:
     - name: Configure git user
       uses: ./.github/actions/config-git-user
 
-    # Applies pending changesets so docs build against the versions they'll ship with
+    # Applies pending changesets so docs build against the versions they'll ship with.
+    # @changesets/cli v3 exits 1 (not 0) when there are no unreleased changesets, which
+    # is expected here on most main pushes after a release — treat it as a no-op.
     - name: Generate version
       shell: bash
-      run: pnpm changeset version
+      run: pnpm changeset version || true
       env:
         GITHUB_TOKEN: ${{ github.token }}
 
