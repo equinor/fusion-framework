@@ -1,0 +1,39 @@
+name: Cleanup PR caches
+
+# Actions cache entries are scoped to the ref that created them and are never
+# deleted automatically when a PR branch goes away, so they keep consuming
+# the repo's 10GB quota until GitHub's LRU eviction forces it out - which
+# stalls the *next* cache save while eviction runs. Purge a PR's caches as
+# soon as it closes so the quota reflects only active branches.
+on:
+  pull_request:
+    types:
+      - closed
+
+permissions:
+  actions: write
+  contents: read
+
+jobs:
+  cleanup:
+    name: Delete caches for closed PR
+    runs-on: ubuntu-latest
+    steps:
+      - name: Delete caches
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          BRANCH: refs/pull/${{ github.event.pull_request.number }}/merge
+        run: |
+          echo "Fetching caches for $BRANCH"
+          cacheKeys=$(gh cache list --repo "$REPO" --ref "$BRANCH" --limit 100 --json id --jq '.[].id')
+
+          if [ -z "$cacheKeys" ]; then
+            echo "No caches found for $BRANCH"
+            exit 0
+          fi
+
+          for id in $cacheKeys; do
+            echo "Deleting cache $id"
+            gh cache delete "$id" --repo "$REPO" || true
+          done
