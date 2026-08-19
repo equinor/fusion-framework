@@ -73,7 +73,7 @@
     "@equinor/fusion-lint": "workspace:^",
     "@biomejs/biome": "2.5.8",
     "@changesets/changelog-github": "0.7.0",
-    "@changesets/cli": "^2.26.2",
+    "@changesets/cli": "^3.0.0",
     "@vitest/coverage-v8": "^4.0.18",
     "agent-browser": "^0.34.0",
     "happy-dom": "^20.8.4",
