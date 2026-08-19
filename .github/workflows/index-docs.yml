@@ -35,7 +35,7 @@ jobs:
   index-docs:
     name: Index documentation
     environment: ${{ inputs.environment }}
-    runs-on: ubuntu-latest
+    runs-on: fusion-gh-runner-fusion-framework
     permissions:
       contents: write
       id-token: write
