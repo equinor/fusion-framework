@@ -72,6 +72,9 @@ importers:
       '@types/node':
         specifier: ^26.2.0
         version: 26.2.0
+      chalk:
+        specifier: ^6.0.0
+        version: 6.0.0
       happy-dom:
         specifier: ^20.8.4
         version: 20.11.6
