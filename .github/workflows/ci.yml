@@ -96,7 +96,7 @@ jobs:
       - name: Check for a new release tag at this commit
         id: check
         run: |
-          VERSION=$(node -p "require('./packages/linting/vscode/package.json').version")
+          VERSION=$(jq -r '.version' packages/linting/vscode/package.json)
           TAG="fusion-ts-lint-vscode@${VERSION}"
           TAG_SHA=$(git rev-list -n 1 "$TAG" 2>/dev/null || echo "")
           if [ "$TAG_SHA" = "$GITHUB_SHA" ]; then
