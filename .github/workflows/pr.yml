@@ -51,8 +51,6 @@ jobs:
       
       - name: Setup node and install deps
         uses: ./.github/actions/node-setup
-        with:
-          turbo-cache: false
 
       - uses: reviewdog/action-setup@v1
 
