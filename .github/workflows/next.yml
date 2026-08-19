@@ -77,8 +77,11 @@ jobs:
         env:
           NPM_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
 
+      # fusion-gh-runner-fusion-framework's image doesn't ship gh (tracked with
+      # infra). Non-blocking: worst case the changeset PR stays open/ready.
       - name: convert Changeset PR to draft
         if: steps.changesets.outputs.published == 'false' && steps.changesets.outputs['pr-number']
+        continue-on-error: true
         run: gh pr ready ${{ steps.changesets.outputs['pr-number'] }} --undo
         env:
           GH_TOKEN: ${{ github.token }}
