@@ -1,5 +1,11 @@
 # Change Log
 
+## 37.0.2
+
+### Patch Changes
+
+- 3d22882: Internal: bump `ag-grid-community` and `ag-grid-enterprise` from `~36.0.1` to `~36.1.0`.
+
 ## 37.0.1
 
 ### Patch Changes

@@ -1,5 +1,13 @@
 # @equinor/fusion-framework-react-ag-grid
 
+## 37.0.2
+
+### Patch Changes
+
+- 3d22882: Internal: bump `ag-grid-community`, `ag-grid-enterprise`, and `ag-grid-react` from `~36.0.1` to `~36.1.0`.
+- Updated dependencies [3d22882]
+  - @equinor/fusion-framework-module-ag-grid@37.0.2
+
 ## 37.0.1
 
 ### Patch Changes

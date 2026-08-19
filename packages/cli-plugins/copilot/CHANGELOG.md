@@ -1,5 +1,13 @@
 # @equinor/fusion-framework-cli-plugin-copilot
 
+## 2.0.5
+
+### Patch Changes
+
+- 6efb63e: Internal: stop running `agent-browser`'s and `koffi`'s native-binary install scripts on every `pnpm install`. Both now build explicitly in this package's `prepack` script, so publishing still bundles the binaries but everyday installs no longer download them.
+- 6efb63e: Fix a build failure caused by `@github/copilot-sdk`'s stricter `JsonValue` typing on tool-call `arguments`. Tool-call detail extraction (`url`/`path`/`load`/`selector`) now narrows the union type before reading properties instead of relying on unchecked optional chaining.
+- 6efb63e: Internal: move the `agent-browser` dependency from the repo root into this package, where it is actually used, instead of the workspace root `devDependencies`.
+
 ## 2.0.4
 
 ### Patch Changes

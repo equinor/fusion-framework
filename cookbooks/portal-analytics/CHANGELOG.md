@@ -1,5 +1,21 @@
 # portal-analytics
 
+## 0.4.52
+
+### Patch Changes
+
+- f0a9ddf: Replace the deprecated `@equinor/fusion-react-progress-indicator` dependency with EDS's
+  `Progress.Star` (`@equinor/eds-core-react`) in `EquinorLoader`. The loading text is now
+  rendered as a visible `Typography` caption alongside an `aria-label` on the spinner,
+  matching EDS's own accessible loading-indicator pattern.
+- Updated dependencies [4a00a7a]
+  - @equinor/fusion-framework-module-app@8.0.5
+  - @equinor/fusion-framework-module-navigation@7.0.8
+  - @equinor/fusion-framework-react-app@14.0.2
+  - @equinor/fusion-framework-app@13.0.2
+  - @equinor/fusion-framework-cli@15.2.10
+  - @equinor/fusion-framework-module-analytics@3.0.7
+
 ## 0.4.51
 
 ### Patch Changes

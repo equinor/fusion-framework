@@ -1,5 +1,11 @@
 # Change Log
 
+## 8.0.5
+
+### Patch Changes
+
+- 4a00a7a: Internal: address fusion-lint warnings — mark `FrameworkOptionsSchema` as intentionally co-located per the file's existing convention, and add intent comments to `NavigationProvider`'s path-normalization loops.
+
 ## 8.0.4
 
 ### Patch Changes
