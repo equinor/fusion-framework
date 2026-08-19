@@ -53,7 +53,7 @@ jobs:
       - name: Setup node and install deps
         uses: ./.github/actions/node-setup
         with:
-          node-version: 24
+          node-version: 26
 
       # fusion-ai.config.ts imports the plugin directly via node, so it needs
       # dist built before this — turbo's task-level dependsOn only covers the
