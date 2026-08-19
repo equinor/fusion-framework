@@ -50,10 +50,19 @@
     "rxjs": "^7.8.2"
   },
   "peerDependencies": {
-    "@equinor/fusion-framework-cli": "workspace:^"
+    "@equinor/fusion-framework-cli": "^15.2.9"
   },
   "devDependencies": {
-    "@equinor/fusion-framework-cli": "workspace:^",
+    "@equinor/fusion-framework-cli": "^15.2.9",
     "typescript": "^7.0.2"
+  },
+  "pnpm": {
+    "patchedDependencies": {
+      "vscode-jsonrpc@8.2.1": "patches/vscode-jsonrpc@8.2.1.patch"
+    },
+    "neverBuiltDependencies": [
+      "agent-browser",
+      "koffi"
+    ]
   }
 }
