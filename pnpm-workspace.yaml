@@ -3,9 +3,6 @@ packages:
   - cookbooks/*
   - vue-press
 
-onlyBuiltDependencies:
-  - keytar
-
 # @changesets/cli and @changesets/write were published <24h ago (still inside pnpm 11's
 # default minimumReleaseAge window) but are already-vetted devDependency-only build tooling
 # from the changesets v2->v3 migration (PR #5337) — exempt them so installs aren't blocked.
@@ -50,7 +47,7 @@ overrides:
 
 allowBuilds:
   '@azure/msal-node-extensions': true
-  '@parcel/watcher': set this to true or false
+  '@parcel/watcher': true
   '@vscode/vsce-sign': true
   agent-browser: true
   esbuild: true
