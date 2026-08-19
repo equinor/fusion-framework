@@ -7,6 +7,9 @@
       "outputs": ["dist/**"],
       "cache": true
     },
+    "test": {
+      "dependsOn": ["^test"]
+    },
     "//#preindex:eds": {
       "inputs": ["eds/Dockerfile", "eds/*.ts"],
       "outputs": ["eds/out/**"],
