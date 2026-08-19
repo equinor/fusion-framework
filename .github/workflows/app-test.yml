@@ -15,7 +15,7 @@ on:
 
 jobs:
   publish_application:
-    runs-on: fusion-gh-runner-fusion-framework
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
 

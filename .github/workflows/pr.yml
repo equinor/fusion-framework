@@ -25,7 +25,7 @@ permissions:
 jobs:
   code-quality:
     name: Check Code
-    runs-on: fusion-gh-runner-fusion-framework
+    runs-on: ubuntu-latest
     env:
       REVIEWDOG_GITHUB_API_TOKEN: ${{ github.token }}
     steps:
