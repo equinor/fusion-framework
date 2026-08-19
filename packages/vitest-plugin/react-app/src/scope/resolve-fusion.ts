@@ -1,11 +1,14 @@
 import type { AppEnv } from '@equinor/fusion-framework-app';
 import type { Fusion } from '@equinor/fusion-framework';
-import { mockFramework, type FrameworkMockConfigureFn } from '@equinor/fusion-framework/mock';
+import {
+  mockFramework,
+  type FrameworkMockConfigureFn,
+  type FrameworkMockConfigurator,
+} from '@equinor/fusion-framework/mock';
 import { enableAppManifestMock } from '@equinor/fusion-framework-app/mock';
 import type { AppModule } from '@equinor/fusion-framework-module-app';
 import { enableNavigation, createHistory } from '@equinor/fusion-framework-module-navigation';
 import type { NavigationModule } from '@equinor/fusion-framework-module-navigation';
-import type { IModulesConfigurator } from '@equinor/fusion-framework-module';
 
 import { defaultAppEnv } from './default-app-env';
 
@@ -14,13 +17,24 @@ import { defaultAppEnv } from './default-app-env';
  * optional peer dependency — is actually installed, so apps that don't use feature flags aren't
  * forced to install a module they never reference.
  */
-// biome-ignore lint/suspicious/noExplicitAny: must accept any configurator shape, mirrors enableFeatureFlagMock's own signature
-async function enableFeatureFlagMockIfAvailable(configurator: IModulesConfigurator<any, any>): Promise<void> {
+async function enableFeatureFlagMockIfAvailable(
+  configurator: FrameworkMockConfigurator<[AppModule, NavigationModule]>,
+): Promise<void> {
   try {
-    const { enableFeatureFlagMock } = await import('@equinor/fusion-framework-module-feature-flag/mock');
+    const { enableFeatureFlagMock } = await import(
+      '@equinor/fusion-framework-module-feature-flag/mock'
+    );
     enableFeatureFlagMock(configurator);
-  } catch {
-    // not installed — nothing to mock
+  } catch (error) {
+    // re-throw anything other than the optional peer being missing, so a real
+    // registration failure isn't silently swallowed
+    if (
+      error instanceof Error &&
+      (error.message.includes('Cannot find module') || error.message.includes('MODULE_NOT_FOUND'))
+    ) {
+      return;
+    }
+    throw error;
   }
 }
 
