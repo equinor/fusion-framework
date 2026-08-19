@@ -48,6 +48,7 @@ git rebase origin/main
 | `pnpm-lock.yaml` | Regenerate with `pnpm install`, then `git add pnpm-lock.yaml` |
 | Version Packages `package.json` | Keep main with `git checkout --ours "packages/*/package.json"`, then stage |
 | Version Packages `CHANGELOG.md` | Keep main with `git checkout --ours "packages/*/CHANGELOG.md"`, then stage |
+| `.changeset/pre/*.md` (Changesets v3 pre mode) | Resolve manually like any other changeset content conflict, preserve both sides' entries when in doubt |
 | Source files | Resolve manually, preserve user intent, stage resolved files |
 
 Then continue:
@@ -56,11 +57,15 @@ Then continue:
 git rebase --continue
 ```
 
-4. If `.changeset/pre.json` exists, align pre-release baselines:
+4. If `.changeset/pre.json` exists, packages bumped on `main` since `next` diverged won't automatically get a `next`-tagged release. Changesets v3 no longer tracks a baseline in `pre.json.initialVersions` (removed/unused upstream) — instead, create one consolidated changeset covering every package whose version increased on `main` during the rebase, so they pick up a `next` pre-release bump:
 
 ```bash
-node .agents/skills/custom-rebase/scripts/align-pre-initial-versions.cjs
+pnpm changeset status --verbose
 ```
+
+Compare against the rebase diff to find packages whose `package.json` version increased purely from `main`'s own "Version Packages" commits, then add one `.changeset/*.md` file listing all of them (patch bump, "Internal: rebase `next` onto `main`..." message). Do not resurrect the old `align-pre-initial-versions.cjs` baseline script — it edits a `pre.json` field Changesets v3 no longer reads.
+
+Running `pnpm changeset status` (or `changeset version`) also auto-migrates `pre.json` to the v3 layout the first time it's called after upgrading past v3: previously-consumed pre-release changesets move from `.changeset/*.md` into `.changeset/pre/*.md`. This is expected, documented, one-time behavior — commit it as its own step rather than reverting it.
 
 5. Check the local result against the remote branch:
 
