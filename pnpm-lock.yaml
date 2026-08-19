@@ -3281,6 +3281,9 @@ importers:
         specifier: workspace:*
         version: link:../../utils/imports
     devDependencies:
+      '@equinor/fusion-framework-module-feature-flag':
+        specifier: workspace:*
+        version: link:../../modules/feature-flag
       '@types/react':
         specifier: ^19.2.7
         version: 19.2.18
