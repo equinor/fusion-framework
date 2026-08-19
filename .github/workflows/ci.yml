@@ -58,8 +58,11 @@ jobs:
         env:
           NPM_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
 
-      # fusion-gh-runner-fusion-framework's image doesn't ship gh (tracked with
-      # infra). Non-blocking: worst case the changeset PR stays open/ready.
+      - name: Ensure gh CLI is installed
+        if: steps.changesets.outputs.published == 'false' && steps.changesets.outputs['pr-number']
+        continue-on-error: true
+        uses: ./.github/actions/ensure-gh-cli
+
       - name: convert Changeset PR to draft
         if: steps.changesets.outputs.published == 'false' && steps.changesets.outputs['pr-number']
         continue-on-error: true
