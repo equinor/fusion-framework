@@ -110,8 +110,9 @@ Format: `package name` → path → role.
 | `@equinor/fusion-framework-cli-plugin-ai-chat` | `packages/cli-plugins/ai-chat` | Interactive AI chat command |
 | `@equinor/fusion-framework-cli-plugin-ai-index` | `packages/cli-plugins/ai-index` | Embedding and chunking for the retrieval index |
 
-`packages/cli-plugins/copilot` (Copilot SDK evaluation plugin) is **excluded from the pnpm
-workspace** (`!packages/cli-plugins/copilot` in `pnpm-workspace.yaml`) — its `@github/copilot-sdk`
+`@equinor/fusion-framework-cli-plugin-copilot` (`packages/cli-plugins/copilot`, Copilot SDK
+evaluation plugin) is **excluded from the pnpm workspace**
+(`!packages/cli-plugins/copilot` in `pnpm-workspace.yaml`) — its `@github/copilot-sdk`
 dependency pulls in a native CLI binary (~300-400MB) that every workspace install and CI cache
 would otherwise pay for. It has its own `package.json` and is installed/built standalone
 (`cd packages/cli-plugins/copilot && pnpm install && pnpm build`); it is not versioned or
