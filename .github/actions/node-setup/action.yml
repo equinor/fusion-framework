@@ -11,6 +11,16 @@ runs:
   using: composite
   steps:
 
+    # pnpm's standalone binary is linked against libatomic, which this
+    # runner's image doesn't ship (tracked with infra).
+    - name: Ensure libatomic is installed
+      shell: bash
+      run: |
+        if ! ldconfig -p | grep -q libatomic.so.1; then
+          sudo apt-get update
+          sudo apt-get install -y libatomic1
+        fi
+
     - name: Setup pnpm
       uses: pnpm/action-setup@v6
 
