@@ -226,3 +226,63 @@ graph TD
 - **pnpm** as the workspace package manager
 - **agent-browser** installed globally or available on `PATH`
 - **GitHub Copilot** access in VS Code, because the SDK authenticates through the GitHub Copilot extension
+
+## Standalone install
+
+> [!IMPORTANT]
+> This package is deliberately excluded from the repo's pnpm workspace (see
+> [`CODEMAP.md`](../../../CODEMAP.md)). Its `@github/copilot-sdk` dependency pulls in
+> ~400MB of platform-specific native CLI binaries via `optionalDependencies`, which
+> would otherwise bloat the shared root `pnpm-lock.yaml` and CI pnpm-store cache for
+> every package in the monorepo.
+
+It has its own install and build, run from its own directory:
+
+```bash
+cd packages/cli-plugins/copilot
+pnpm install
+pnpm build
+```
+
+`pnpm install` here resolves against the repo's shared local pnpm content-addressable
+store, so there's no extra disk cost if you've already installed the root workspace —
+but it produces its own `node_modules` and is not tracked in the root lockfile. The
+`vscode-jsonrpc` patch and the `agent-browser`/`koffi` build-script exclusions this
+package needs are declared locally in its own `package.json` under `"pnpm"`, not in the
+root `pnpm-workspace.yaml`.
+
+> [!NOTE]
+> `fusion-cli.config.ts` loads this plugin optionally (via `Promise.allSettled`), so
+> the rest of the repo's `ffc` CLI works whether or not this package has been
+> installed/built.
+
+## Publishing
+
+> [!IMPORTANT]
+> This package is outside the repo's pnpm workspace, so it is **not** versioned or
+> published through Changesets or the root `ci.yml` `release-pkg` job. There is no
+> automated release workflow — publish it manually from its own directory.
+
+1. Add a new entry at the top of [`CHANGELOG.md`](./CHANGELOG.md), above the previous
+   version, following the existing Changesets-style format:
+
+   ```markdown
+   ## <new-version>
+
+   ### Patch Changes
+
+   - Describe the change here.
+   ```
+
+2. Bump the version and publish:
+
+   ```bash
+   cd packages/cli-plugins/copilot
+   pnpm version <patch|minor|major>
+   pnpm install    # refresh its own lockfile-less node_modules after the bump
+   pnpm build
+   pnpm publish --access public
+   ```
+
+3. Commit `package.json`, `CHANGELOG.md`, and any source changes together, then push
+   the commit and tag yourself — nothing does this automatically.
