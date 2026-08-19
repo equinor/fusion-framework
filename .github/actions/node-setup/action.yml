@@ -21,3 +21,11 @@ runs:
     - name: Install dependencies
       shell: bash
       run: pnpm install --frozen-lockfile
+
+    # Cache keys are immutable, so every lockfile change saves a brand-new
+    # store on top of the previous one and old package versions never get
+    # dropped. Pruning here keeps the saved cache scoped to what this
+    # lockfile actually needs instead of growing unbounded.
+    - name: Prune pnpm store
+      shell: bash
+      run: pnpm store prune
