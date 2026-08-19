@@ -127,13 +127,4 @@ jobs:
       - name: Create Test Report
         run: pnpm test run
 
-      - name: Create Test Coverage
-        id: test-coverage  
-        if: ${{ ! github.event.pull_request.draft }}
-        run: pnpm test:coverage
-
-      - name: Publish test coverage
-        if: ${{ steps.test-coverage.conclusion == 'success' }}
-        uses: davelosert/vitest-coverage-report-action@v2.12.2
-
   

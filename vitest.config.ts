@@ -6,8 +6,5 @@ export default defineConfig({
       ? ['default', 'github-actions']
       : [['default', { summary: false }]],
     silent: !process.env.GITHUB_ACTIONS,
-    coverage: {
-      reporter: ['text', 'json-summary', 'json'],
-    },
   },
 });
