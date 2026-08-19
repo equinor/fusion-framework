@@ -17,5 +17,5 @@
     }
   },
   "include": ["packages/**/src/**/*.ts", "packages/**/src/**/*.tsx"],
-  "exclude": ["node_modules", "dist", "lib", "*.spec.ts", "packages/cli-plugins/copilot"]
+  "exclude": ["node_modules", "dist", "lib", "*.spec.ts"]
 }
