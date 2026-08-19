@@ -66,9 +66,15 @@ importers:
       '@changesets/cli':
         specifier: ^3.0.0
         version: 3.0.1
+      '@equinor/fusion-lint':
+        specifier: workspace:^
+        version: link:packages/linting/cli
       '@types/node':
         specifier: ^26.2.0
         version: 26.2.0
+      chalk:
+        specifier: ^6.0.0
+        version: 6.0.0
       happy-dom:
         specifier: ^20.8.4
         version: 20.8.9
@@ -16512,7 +16518,7 @@ snapshots:
 
   '@types/node-fetch@2.6.13':
     dependencies:
-      '@types/node': 24.13.3
+      '@types/node': 26.2.0
       form-data: 4.0.6
 
   '@types/node@18.19.130':
@@ -16656,7 +16662,7 @@ snapshots:
 
   '@types/set-cookie-parser@2.4.10':
     dependencies:
-      '@types/node': 24.13.3
+      '@types/node': 26.2.0
 
   '@types/statuses@2.0.6': {}
 
