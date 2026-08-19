@@ -55,6 +55,12 @@ jobs:
         with:
           node-version: 24
 
+      # fusion-ai.config.ts imports the plugin directly via node, so it needs
+      # dist built before this — turbo's task-level dependsOn only covers the
+      # later `ffc` invocations, not this raw `node -e` import.
+      - name: Build CLI and AI index plugin
+        run: pnpm exec turbo build --filter=@equinor/fusion-framework-cli-plugin-ai-index...
+
       - name: Resolve index config
         id: index
         run: |
