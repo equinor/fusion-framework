@@ -125,7 +125,7 @@ jobs:
         run: exit 1
       
       - name: Create Test Report
-        run: pnpm test:affected
+        run: pnpm test run
 
       - name: Create Test Coverage
         id: test-coverage  
