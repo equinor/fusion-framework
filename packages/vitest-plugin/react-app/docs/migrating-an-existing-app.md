@@ -178,6 +178,11 @@ aren't Fusion-specific.
 Review polyfills and component replacements that may only exist for `jsdom` or `happy-dom`.
 Remove one workaround at a time and run the affected tests against the real component.
 
+A common one: a no-op `window.ResizeObserver` stub carried over from `jsdom`/`happy-dom` setup.
+Real Chromium doesn't need the stub, but leaving it in place silently breaks any component that
+measures itself through `ResizeObserver` before rendering — for example a virtualized popover
+list. Remove the stub rather than porting it.
+
 Do not remove unrelated suppressions automatically. AG Grid license messages, Lit dev-mode
 warnings, network behavior, and app-specific test doubles may still apply in Browser Mode.
 
