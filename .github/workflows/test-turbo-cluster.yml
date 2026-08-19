@@ -1,0 +1,33 @@
+name: Test Turbo on Fusion Cluster
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  turbo-build:
+    name: Turbo build on self-hosted runner
+    runs-on: fusion-gh-runner-fusion-framework
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Setup node and install deps
+        uses: ./.github/actions/node-setup
+        with:
+          # disabled to isolate remote-cache behavior from the GH Actions .turbo cache
+          turbo-cache: false
+
+      - name: Turbo build
+        run: pnpm build --summarize
+
+      - name: Verify remote cache usage
+        run: |
+          summary=$(find .turbo/runs -name '*.json' -newer turbo.json | head -n1)
+          if [ -z "$summary" ]; then
+            echo "::error::No turbo run summary found"
+            exit 1
+          fi
+          echo "Cache sources found:"
+          jq -r '.tasks[].cache.source' "$summary" | sort | uniq -c
