@@ -47,23 +47,6 @@ runs:
       shell: bash
       run: pnpm store prune
 
-    # Cache keys are immutable, so every save creates a brand-new entry
-    # instead of replacing the previous one — old pnpm-store entries for main
-    # never get evicted by anything but GitHub's 10GB LRU quota. Delete them
-    # here so main only ever carries the one store it actually needs.
-    - name: Delete stale pnpm store caches
-      if: github.ref == 'refs/heads/main' && inputs.save-cache == 'true'
-      continue-on-error: true
-      shell: bash
-      env:
-        GH_TOKEN: ${{ github.token }}
-      run: |
-        cacheIds=$(gh cache list --repo "${{ github.repository }}" --ref refs/heads/main --key "pnpm-store-${{ runner.os }}-" --limit 100 --json id --jq '.[].id')
-        for id in $cacheIds; do
-          echo "Deleting stale pnpm store cache $id"
-          gh cache delete "$id" --repo "${{ github.repository }}" || true
-        done
-
     # Only main writes new cache entries — PRs restore-and-reuse but never
     # save, so open PRs stop each spawning their own throwaway ~700MB entry.
     - name: Save pnpm store
@@ -72,3 +55,25 @@ runs:
       with:
         path: ${{ steps.pnpm-store.outputs.path }}
         key: pnpm-store-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+
+    # Cache keys are immutable, so every save creates a brand-new entry
+    # instead of replacing the previous one — old pnpm-store entries for main
+    # never get evicted by anything but GitHub's 10GB LRU quota. Delete them
+    # only after the new save succeeds, keeping a couple of recent fallbacks
+    # so an in-flight workflow always finds a cache to restore from.
+    - name: Delete stale pnpm store caches
+      if: github.ref == 'refs/heads/main' && inputs.save-cache == 'true'
+      continue-on-error: true
+      shell: bash
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        currentKey="pnpm-store-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}"
+        cacheIds=$(gh cache list --repo "${{ github.repository }}" --ref refs/heads/main \
+          --key "pnpm-store-${{ runner.os }}-" --limit 100 \
+          --json id,key,createdAt \
+          --jq "sort_by(.createdAt) | reverse | .[2:] | .[] | select(.key != \"$currentKey\") | .id")
+        for id in $cacheIds; do
+          echo "Deleting stale pnpm store cache $id"
+          gh cache delete "$id" --repo "${{ github.repository }}" || true
+        done
