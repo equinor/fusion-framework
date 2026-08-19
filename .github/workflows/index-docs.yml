@@ -44,16 +44,16 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v6.0.10
+      # fusion-gh-runner-fusion-framework's image doesn't ship gh or libatomic
+      # (needed by pnpm's standalone binary); tracked with infra.
+      - name: Setup fusion runner
+        continue-on-error: true
+        uses: ./.github/actions/setup-fusion-runner
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v7
+      - name: Setup node and install deps
+        uses: ./.github/actions/node-setup
         with:
           node-version: 24
-
-      - name: Install dependencies
-        run: pnpm install
 
       - name: Resolve index config
         id: index
