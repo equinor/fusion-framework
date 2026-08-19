@@ -2,11 +2,6 @@ packages:
   - packages/**
   - cookbooks/*
   - vue-press
-  # Standalone tool, not part of the release train: pulls in @github/copilot-sdk's
-  # native CLI binary + agent-browser (~400MB), which every workspace install and
-  # CI cache would otherwise pay for even when nobody touches it. Install and build
-  # it separately from packages/cli-plugins/copilot.
-  - '!packages/cli-plugins/copilot'
 
 # @changesets/cli and @changesets/write were published <24h ago (still inside pnpm 11's
 # default minimumReleaseAge window) but are already-vetted devDependency-only build tooling
@@ -15,7 +10,8 @@ minimumReleaseAgeExclude:
   - '@changesets/cli'
   - '@changesets/write'
 
-patchedDependencies: {}
+patchedDependencies:
+  vscode-jsonrpc@8.2.1: patches/vscode-jsonrpc@8.2.1.patch
 
 overrides:
   form-data@>=4.0.0 <4.0.6: 4.0.6
