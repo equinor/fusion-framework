@@ -11,18 +11,15 @@ runs:
   using: composite
   steps:
 
-    # npm 11's allowScripts policy blocks @pnpm/exe's preinstall script
-    # (which sets up its bundled binary) since it isn't in an approved list,
-    # leaving a broken binary that then fails on the missing libatomic above.
-    - name: Setup pnpm
-      uses: pnpm/action-setup@v6
-      env:
-        NPM_CONFIG_ALLOW_SCRIPTS: '@pnpm/exe'
-
     - name: Setup Node.js
       uses: actions/setup-node@v7
       with:
         node-version: ${{ inputs.node-version }}
+
+    - name: Setup pnpm
+      uses: pnpm/action-setup@v6
+      env:
+        NPM_CONFIG_ALLOW_SCRIPTS: '@pnpm/exe'
 
     - name: Get pnpm store path
       id: pnpm-store
