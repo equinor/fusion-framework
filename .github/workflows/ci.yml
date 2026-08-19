@@ -77,7 +77,7 @@ jobs:
   publish-vscode-extension:
     name: Publish VS Code extension to Marketplace
     needs: release-pkg
-    runs-on: ubuntu-latest
+    runs-on: fusion-gh-runner-fusion-framework
     environment: vs-marketplace
     permissions:
       contents: read
