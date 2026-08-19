@@ -8,7 +8,6 @@ import Layout from './layout';
 test('renders the header, sidebar navigation, and the matched child route content', async ({
   render,
 }) => {
-  window.history.pushState(null, '', '/');
   const routes: RouteObject[] = [
     {
       path: '/',
@@ -32,7 +31,6 @@ test('renders the loader while a navigation is pending, then the outlet once it 
   render,
   app,
 }) => {
-  window.history.pushState(null, '', '/');
   // held open until the assertion below has observed the loading state
   let resolveLoader = (_value?: unknown) => {};
   const pendingLoad = new Promise((resolve) => {

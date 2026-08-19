@@ -18,6 +18,9 @@ resolve the app, or behaves differently in Vitest Browser Mode.
 | The app starts signed in unexpectedly | The MSAL mock defaults to `Test User` | Set `configurator.msal.setAccount(null)` before rendering |
 | State configured in one test is missing in another | Framework and app fixtures are test-scoped | Seed the required state per test or publish reusable fixture declarations with `test.extend` |
 | `vi.spyOn` fails on an imported module in Browser Mode | Native ESM module namespace objects are sealed | Use `vi.mock('./module.js', { spy: true })` as documented by Vitest Browser Mode |
+| A `<Router>` route with a catch-all or parameterized `path` never renders; every query on it times out | The navigation module's current location does not match that path yet | Push the target location through the navigation module (`app.modules.navigation.push(path)`) before rendering, not after |
+| A virtualized list or popover (for example an EDS `Autocomplete` built on `@tanstack/react-virtual`) never renders its rows | `window.ResizeObserver` was stubbed as a no-op in test setup | Remove the stub; real Chromium's `ResizeObserver` is required for virtualized layout to measure correctly |
+| `test.each` runs but a fixture in its per-case callback is `undefined` | `test.each` does not forward `test.extend` fixture context to each case | Use Vitest's `test.for` instead, which does receive fixture context |
 
 ## Verify the project wiring
 

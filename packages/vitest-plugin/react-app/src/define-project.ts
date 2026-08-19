@@ -68,13 +68,15 @@ export const defineProject = (override?: AppTestConfigOverride): UserWorkspaceCo
     // pre-transforms all source up front so deps only reached via lazy/code-split imports
     // (e.g. route components) are discovered before the first test request, not mid-run —
     // the latter forces Vite to reload the page and fails the in-flight test file import
-    server: { warmup: { clientFiles: ['src/**/*.{ts,tsx}'] } },
+    // `.d.ts` files are excluded: a CJS-style declaration file (e.g. one using `export =`)
+    // fails the warmup scan when loaded as ESM
+    server: { warmup: { clientFiles: ['src/**/*.{ts,tsx}', '!src/**/*.d.ts'] } },
     // same reasoning as `server.warmup` above, but for the esbuild dep scanner: without this,
     // its default entry detection can miss code-split route files entirely, so a package only
     // ever imported from one of those (e.g. react-router's own deps) is discovered mid-run
     // instead of up front — statically crawling every source file (which esbuild's scanner
     // follows through dynamic imports too) avoids that with no per-package name needed
-    optimizeDeps: { entries: ['src/**/*.{ts,tsx}'] },
+    optimizeDeps: { entries: ['src/**/*.{ts,tsx}', '!src/**/*.d.ts'] },
   };
   // a function replaces the config outright; a plain object deep-merges onto it via Vite's own mergeConfig
   const resolved =

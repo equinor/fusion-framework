@@ -19,9 +19,7 @@ testWithRouter(
     await expect.element(getByText(/✓ in stock/i)).toBeInTheDocument();
 
     const link = getByRole('link', { name: /view details/i });
-    await expect
-      .element(link)
-      .toHaveAttribute('href', `${window.location.origin}/products/${baseProduct.id}`);
+    await expect.element(link).toHaveAttribute('href', expect.stringContaining(`/products/${baseProduct.id}`));
 
     await unmount();
   },

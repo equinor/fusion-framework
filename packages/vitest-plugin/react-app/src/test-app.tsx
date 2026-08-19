@@ -99,7 +99,9 @@ import { defaultAppEnv, resolveFusion, createAppScopeWrapper } from './scope';
  *   { injected: true },
  *   (): FrameworkMockConfigureFn<[AppModule, NavigationModule]> =>
  *     (configurator) => {
- *       enableFeatureFlagMock(configurator);
+ *       // seed a specific flag rather than merely enabling the mock — that's already the
+ *       // default when the optional feature-flag peer dependency is installed
+ *       enableFeatureFlagMock(configurator, (mock) => mock.addFeature({ key: 'new-search', enabled: true }));
  *       configurator.serviceDiscovery.addServices([
  *         { key: 'people', uri: baseUrl('people') },
  *         { key: 'context', uri: baseUrl('context') },
@@ -113,9 +115,9 @@ export const testApp = baseTest
   // `test.extend`'s plain-`value` overload rejects function types (ambiguous with the
   // resolver-`fn` overload), so a function-typed fixture default must go through `fn` instead.
   .extend('configureApp', { injected: true }, () => undefined as AppMockConfigureFn | undefined)
-  // Runs after the built-in app manifest/navigation setup, so a test can register extra
-  // framework modules, service discovery entries, or call `enableNavigation` again to
-  // override the history, without reimplementing the base setup.
+  // Runs after the built-in app manifest/navigation/feature-flag setup, so a test can register
+  // extra framework modules, service discovery entries, or call `enableNavigation`/
+  // `enableFeatureFlagMock` again to override either, without reimplementing the base setup.
   .extend(
     'configureFusion',
     { injected: true },

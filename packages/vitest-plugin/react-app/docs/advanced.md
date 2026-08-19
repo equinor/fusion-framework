@@ -147,15 +147,20 @@ when the custom parent must serve the app's manifest and config. Use
 ## Extend the parent framework mock with `configureFusion`
 
 `fusion` (built by [`resolveFusion`](../src/scope/resolve-fusion.ts)) always carries a mocked
-`app` module (serving this app's manifest) and a `navigation` module with real browser history,
-matching Browser Mode. `configureFusion` runs on the same configurator afterwards, so a test can
-register extra framework-level modules or override that setup, without reimplementing it:
+`app` module (serving this app's manifest) and a `navigation` module with in-memory history, so
+tests don't leak URL/history state between runs. It also mocks the `featureFlag` module — with
+no flags enabled, so `useFeature` needs no `localStorage` or URL seeding — but only when
+`@equinor/fusion-framework-module-feature-flag` (an optional peer dependency) is actually
+installed; apps that don't use feature flags aren't forced to add it. `configureFusion` runs on
+the same configurator afterwards, so a test can register extra framework-level modules or
+override that setup, without reimplementing it:
 
 ```tsx
 import { enableFeatureFlagMock } from '@equinor/fusion-framework-module-feature-flag/mock';
 
 const test = baseTest.extend('configureFusion', { injected: true }, () => (configurator) => {
-  enableFeatureFlagMock(configurator);
+  // seed a specific flag rather than merely enabling the mock — that's already the default
+  enableFeatureFlagMock(configurator, (mock) => mock.addFeature({ key: 'new-search', enabled: true }));
   configurator.serviceDiscovery.addServices([{ key: 'people', uri: baseUrl('people') }]);
 });
 ```
@@ -172,7 +177,7 @@ import { enableNavigation, createHistory } from '@equinor/fusion-framework-modul
 
 test.override('configureFusion', { injected: true }, () => (configurator) =>
   enableNavigation(configurator, {
-    configure: (config) => config.setHistory(createHistory('memory')),
+    configure: (config) => config.setHistory(createHistory('browser')),
   }),
 );
 ```

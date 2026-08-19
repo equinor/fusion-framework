@@ -26,7 +26,7 @@ testWithRouter('renders the loaded product in the details view', async ({ render
   await expect.element(getByText(/✓ in stock/i)).toBeInTheDocument();
 
   const backLink = getByRole('link', { name: /back to products/i });
-  await expect.element(backLink).toHaveAttribute('href', `${window.location.origin}/products`);
+  await expect.element(backLink).toHaveAttribute('href', expect.stringContaining('/products'));
 
   await unmount();
 });
