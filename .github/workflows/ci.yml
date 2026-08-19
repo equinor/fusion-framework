@@ -71,8 +71,6 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
 
-  # Publish the Fusion TS Lint VS Code extension to the Marketplace.
-  #
   # The extension's package.json is "private" (it ships via the Marketplace,
   # not npm). `privatePackages.tag: true` (.changeset/config.json) makes
   # `changeset git-tag` create a git tag for it anyway on release. Rather than
@@ -80,14 +78,19 @@ jobs:
   # "New tag:" lines from that command's stdout — an implementation detail),
   # we check directly whether that tag now points at *this* commit, i.e.
   # whether this push is the exact release commit that bumped the extension.
-  publish-vscode-extension:
-    name: Publish VS Code extension to Marketplace
+  #
+  # This runs as its own job (instead of a step inside publish-vscode-extension)
+  # so that job can be gated with a job-level `if` — a per-step `if` still
+  # leaves the job green when every step is skipped, masking the fact that
+  # nothing was published.
+  check-vscode-release:
+    name: Check for VS Code extension release tag
     needs: release-pkg
     runs-on: fusion-gh-runner-fusion-framework
-    environment: vs-marketplace
     permissions:
       contents: read
-      id-token: write  # Required for OIDC login to Azure (Marketplace publish)
+    outputs:
+      should-publish: ${{ steps.check.outputs.should-publish }}
     steps:
       - uses: actions/checkout@v7
         with:
@@ -105,8 +108,22 @@ jobs:
             echo "should-publish=false" >> "$GITHUB_OUTPUT"
           fi
 
+  # Publish the Fusion TS Lint VS Code extension to the Marketplace.
+  publish-vscode-extension:
+    name: Publish VS Code extension to Marketplace
+    needs: check-vscode-release
+    if: needs.check-vscode-release.outputs.should-publish == 'true'
+    runs-on: fusion-gh-runner-fusion-framework
+    environment: vs-marketplace
+    permissions:
+      contents: read
+      id-token: write  # Required for OIDC login to Azure (Marketplace publish)
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
       - name: Setup node and install deps
-        if: steps.check.outputs.should-publish == 'true'
         uses: ./.github/actions/node-setup
         with:
           save-cache: 'false'
@@ -116,7 +133,6 @@ jobs:
       # keytar isn't needed: --azure-credential uses OIDC, not the PAT/keytar
       # credential store that `vsce login` would use.
       - name: Build vsce-sign signing binary
-        if: steps.check.outputs.should-publish == 'true'
         run: pnpm rebuild @vscode/vsce-sign
 
       # Build the extension and its workspace dependencies (lsp, rules, core)
@@ -124,11 +140,9 @@ jobs:
       # The trailing "..." is required so turbo includes fusion-ts-lint-vscode's
       # dependencies in the run, not just the extension package itself.
       - name: Build extension
-        if: steps.check.outputs.should-publish == 'true'
         run: pnpm turbo build --filter=fusion-ts-lint-vscode...
 
       - name: Azure login (Marketplace publisher identity)
-        if: steps.check.outputs.should-publish == 'true'
         uses: azure/login@f5d393ae46f8fde4be8b75f32e3fc50e654ad0ca
         with:
           client-id: ${{ vars.AZURE_CLIENT_ID }}
@@ -136,7 +150,6 @@ jobs:
           allow-no-subscriptions: true
 
       - name: Publish to VS Code Marketplace
-        if: steps.check.outputs.should-publish == 'true'
         working-directory: packages/linting/vscode
         run: pnpm exec vsce publish --no-dependencies --azure-credential
 
