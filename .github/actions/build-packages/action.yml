@@ -15,12 +15,13 @@ runs:
       run: pnpm build --continue
 
     # Checkout pins `ref` to the PR head SHA, so it only fetches that commit's
-    # history — `main` never becomes a resolvable ref locally, which breaks
-    # turbo's `--affected` merge-base lookup unless we fetch it explicitly.
+    # history — `main` never becomes a resolvable ref locally. `git fetch`
+    # alone only populates FETCH_HEAD, so fetch straight into a local branch
+    # ref, which is what turbo's merge-base lookup requires.
     - name: Fetch main for affected detection
       if: ${{ inputs.only-affected == 'true' }}
       shell: bash
-      run: git fetch origin main
+      run: git fetch origin main:main
 
     - name: Build project [affected]
       if: ${{ inputs.only-affected == 'true' }}
