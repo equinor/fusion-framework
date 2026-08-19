@@ -70,6 +70,8 @@ const ApiApplicationPersonSchema = z.object({
  * at runtime without requiring them to be declared here. Add known properties
  * to this schema as they are introduced.
  */
+// Deliberately co-located with ApiApplicationBuildSchema, which depends on it
+// fusion-lint-disable-next-line single-export-per-file
 export const FrameworkOptionsSchema = z
   .object({
     contextRouting: z
