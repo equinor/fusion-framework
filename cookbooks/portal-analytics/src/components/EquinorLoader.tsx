@@ -1,12 +1,14 @@
 import type React from 'react';
-import { StarProgress } from '@equinor/fusion-react-progress-indicator';
+import { Progress, Typography } from '@equinor/eds-core-react';
 import styled from 'styled-components';
 
 const Styled = {
   Wrapper: styled.div`
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
+    gap: 1rem;
     width: 100vw;
     height: 100vh;
     overflow: hidden;
@@ -22,7 +24,9 @@ export const EquinorLoader = ({
 }: React.PropsWithChildren<{ readonly text: string }>): JSX.Element => {
   return (
     <Styled.Wrapper>
-      <StarProgress text={text}>{children}</StarProgress>
+      <Progress.Star aria-label={text} />
+      <Typography aria-hidden="true">{text}</Typography>
+      {children}
     </Styled.Wrapper>
   );
 };
