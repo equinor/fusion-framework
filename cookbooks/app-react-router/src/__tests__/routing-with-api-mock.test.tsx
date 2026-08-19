@@ -9,7 +9,6 @@ import App from '../App';
 testWithApiMock(
   'navigates to Products and renders the loaded, seeded catalogue',
   async ({ render }) => {
-    window.history.pushState(null, '', '/');
     const { getByTitle, getByText, unmount } = await render(<App />);
 
     await getByTitle('Products').click();
@@ -23,7 +22,6 @@ testWithApiMock(
 testWithApiMock(
   'navigates to a product detail route and renders the loaded product',
   async ({ render, app }) => {
-    window.history.pushState(null, '', '/');
     const { getByText, unmount } = await render(<App />);
 
     app.navigation.navigate('/products/1');
@@ -37,7 +35,6 @@ testWithApiMock(
 testWithApiMock(
   'navigates to Users and renders the loaded, seeded directory',
   async ({ render }) => {
-    window.history.pushState(null, '', '/');
     const { getByTitle, getByText, unmount } = await render(<App />);
 
     await getByTitle('Users').click();

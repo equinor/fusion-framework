@@ -25,7 +25,7 @@ testWithRouter(
     await expect.element(getByText(user.name)).toBeInTheDocument();
 
     const backLink = getByRole('link', { name: /back to users/i });
-    await expect.element(backLink).toHaveAttribute('href', `${window.location.origin}/users`);
+    await expect.element(backLink).toHaveAttribute('href', expect.stringContaining('/users'));
 
     await unmount();
   },

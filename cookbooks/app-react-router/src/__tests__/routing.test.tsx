@@ -32,20 +32,16 @@ test('navigates to a route nested under prefix() and renders it', async ({ rende
 });
 
 test('navigation module navigates the app to a new route', async ({ render, app }) => {
-  // the browser page (and its history) is shared across tests in this file, so start from a
-  // known location rather than assuming this is the first test to touch it
-  window.history.pushState(null, '', '/');
-
   const { getByRole, unmount } = await render(<App />);
 
-  expect(window.location.pathname).toBe('/');
+  expect(app.navigation.path.pathname).toBe('/');
 
   app.navigation.navigate('/pages/error-test');
 
   // error-test's loader always throws, so the router's error boundary is what renders here,
   // not the route's default-exported component.
   await expect.element(getByRole('heading', { name: /error encountered/i })).toBeInTheDocument();
-  expect(window.location.pathname).toBe('/pages/error-test');
+  expect(app.navigation.path.pathname).toBe('/pages/error-test');
 
   await unmount();
 });
