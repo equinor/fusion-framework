@@ -3267,9 +3267,6 @@ importers:
       '@equinor/fusion-framework-module-app':
         specifier: workspace:*
         version: link:../../modules/app
-      '@equinor/fusion-framework-module-feature-flag':
-        specifier: workspace:*
-        version: link:../../modules/feature-flag
       '@equinor/fusion-framework-module-navigation':
         specifier: workspace:*
         version: link:../../modules/navigation
@@ -3283,6 +3280,9 @@ importers:
         specifier: workspace:*
         version: link:../../utils/imports
     devDependencies:
+      '@equinor/fusion-framework-module-feature-flag':
+        specifier: workspace:*
+        version: link:../../modules/feature-flag
       '@types/react':
         specifier: ^19.2.7
         version: 19.2.18
