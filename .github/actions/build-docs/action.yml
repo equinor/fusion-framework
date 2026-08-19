@@ -1,7 +1,9 @@
 name: Build documents
+description: Bumps versions and builds the vue-press documentation site
 
 inputs:
   upload-artifact:
+    description: Whether to upload the built site as a GitHub Pages artifact
     default: true
 
 runs:
@@ -13,6 +15,7 @@ runs:
     - name: Configure git user
       uses: ./.github/actions/config-git-user
 
+    # Applies pending changesets so docs build against the versions they'll ship with
     - name: Generate version
       shell: bash
       run: pnpm changeset version
@@ -28,4 +31,3 @@ runs:
       uses: actions/upload-pages-artifact@v4
       with:
         path: ./vue-press/dist
-    
