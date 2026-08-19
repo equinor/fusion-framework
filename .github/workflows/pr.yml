@@ -107,7 +107,7 @@ jobs:
         continue-on-error: true
         uses: ./.github/actions/build-packages
         with: 
-          only-affected: false
+          only-affected: true
 
       - name: process-build-log
         run: node process-turbo-build-log.cjs > tsc-build.log

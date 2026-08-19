@@ -52,10 +52,8 @@ jobs:
         with:
           node-version: 24
 
-      - name: Install dependencies and build CLI
-        run: |
-          pnpm install
-          pnpm build:cli
+      - name: Install dependencies
+        run: pnpm install
 
       - name: Resolve index config
         id: index
@@ -111,7 +109,7 @@ jobs:
       - name: Ensure index exists
         env:
           FUSION_ENV: ${{ vars.FUSION_ENV }}
-        run: pnpm exec ffc ai index create --env "$FUSION_ENV" --config ./fusion-ai.config.ts
+        run: pnpm exec turbo run index:docs:create
 
       - name: Index docs to Azure AI Search
         timeout-minutes: 30
@@ -122,15 +120,16 @@ jobs:
         run: |
           set -euo pipefail
 
+          # turbo builds the CLI on demand via the index:docs:<mode> task's dependsOn
           if [[ "$MODE" == "clean" ]]; then
             echo "::notice::Running clean rebuild — all existing embeddings will be deleted first"
-            pnpm exec ffc ai index add --clean --env "$FUSION_ENV" --config ./fusion-ai.config.ts
+            pnpm exec turbo run index:docs:clean
           elif [[ "$MODE" == "diff" ]]; then
             echo "::notice::Running incremental indexing from base ref ${BASE_REF}"
-            pnpm exec ffc ai index add --diff --base-ref "$BASE_REF" --env "$FUSION_ENV" --config ./fusion-ai.config.ts
+            pnpm exec turbo run index:docs:diff
           else
             echo "::notice::Running full indexing (no safe base ref available)"
-            pnpm exec ffc ai index add --env "$FUSION_ENV" --config ./fusion-ai.config.ts
+            pnpm exec turbo run index:docs:full
           fi
 
       - name: Configure git user

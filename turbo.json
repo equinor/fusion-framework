@@ -1,11 +1,48 @@
 {
-  "$schema": "https://turbo.build/schema.json",
+  "$schema": "https://turborepo.dev/schema.json",
   "globalPassThroughEnv": ["GITHUB_ACTIONS"],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
       "outputs": ["dist/**"],
       "cache": true
+    },
+    "//#preindex:eds": {
+      "inputs": ["eds/Dockerfile", "eds/*.ts"],
+      "outputs": ["eds/out/**"],
+      "cache": true
+    },
+    "//#index:eds": {
+      "dependsOn": ["@equinor/fusion-framework-cli#build", "//#preindex:eds"],
+      "cache": false
+    },
+    "//#index:packages": {
+      "dependsOn": ["@equinor/fusion-framework-cli#build"],
+      "cache": false
+    },
+    "//#index:cookbooks": {
+      "dependsOn": ["@equinor/fusion-framework-cli#build"],
+      "cache": false
+    },
+    "//#index:docs:create": {
+      "dependsOn": ["@equinor/fusion-framework-cli#build"],
+      "cache": false,
+      "passThroughEnv": ["FUSION_ENV"]
+    },
+    "//#index:docs:clean": {
+      "dependsOn": ["@equinor/fusion-framework-cli#build"],
+      "cache": false,
+      "passThroughEnv": ["FUSION_ENV"]
+    },
+    "//#index:docs:full": {
+      "dependsOn": ["@equinor/fusion-framework-cli#build"],
+      "cache": false,
+      "passThroughEnv": ["FUSION_ENV"]
+    },
+    "//#index:docs:diff": {
+      "dependsOn": ["@equinor/fusion-framework-cli#build"],
+      "cache": false,
+      "passThroughEnv": ["FUSION_ENV", "BASE_REF"]
     }
   }
 }
