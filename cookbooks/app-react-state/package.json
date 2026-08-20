@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework-cookbook-app-react-state",
-  "version": "1.0.2-next.0",
+  "version": "1.0.2-next.1",
   "description": "A comprehensive cookbook demonstrating the Fusion Framework state module - from basic useAppState usage to CouchDB replication with PouchDB.",
   "private": true,
   "type": "module",
