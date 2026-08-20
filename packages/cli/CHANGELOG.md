@@ -1,5 +1,13 @@
 # Change Log
 
+## 15.2.11-next.0
+
+### Patch Changes
+
+- c8008e3: Internal: rebase `next` onto `main`, syncing in already-published stable releases so they carry a `next` pre-release tag.
+- Updated dependencies [c8008e3]
+  - @equinor/fusion-framework-dev-portal@11.0.3-next.0
+
 ## 15.2.10
 
 ### Patch Changes

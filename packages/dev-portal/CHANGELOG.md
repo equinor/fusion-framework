@@ -1,5 +1,25 @@
 # @equinor/fusion-framework-dev-portal
 
+## 11.0.3-next.0
+
+### Patch Changes
+
+- c8008e3: Internal: rebase `next` onto `main`, syncing in already-published stable releases so they carry a `next` pre-release tag.
+- Updated dependencies [c8008e3]
+  - @equinor/fusion-framework-app@13.0.3-next.0
+  - @equinor/fusion-framework-module-ag-grid@37.0.3-next.0
+  - @equinor/fusion-framework-module-analytics@3.0.8-next.0
+  - @equinor/fusion-framework-module-app@8.0.6-next.0
+  - @equinor/fusion-framework-module-navigation@7.0.9-next.0
+  - @equinor/fusion-framework-plugin-context-navigation@1.0.2-next.0
+  - @equinor/fusion-framework-module-bookmark@4.1.0-next.0
+  - @equinor/fusion-framework-react-components-bookmark@2.0.4-next.0
+  - @equinor/fusion-framework-react-components-people-provider@2.0.5-next.0
+  - @equinor/fusion-framework-react@9.0.0-next.0
+  - @equinor/fusion-framework-module-context@9.0.0-next.0
+  - @equinor/fusion-framework-module-feature-flag@2.1.0-next.0
+  - @equinor/fusion-framework-react-module-bookmark@7.0.0-next.0
+
 ## 11.0.2
 
 ### Patch Changes

@@ -1,5 +1,16 @@
 # poc-portal
 
+## 1.1.100-next.0
+
+### Patch Changes
+
+- c8008e3: Internal: rebase `next` onto `main`, syncing in already-published stable releases so they carry a `next` pre-release tag.
+- Updated dependencies [c8008e3]
+  - @equinor/fusion-framework-cli@15.2.11-next.0
+  - @equinor/fusion-framework-module-app@8.0.6-next.0
+  - @equinor/fusion-framework-react-app@14.0.3-next.0
+  - @equinor/fusion-framework-react@9.0.0-next.0
+
 ## 1.1.99
 
 ### Patch Changes

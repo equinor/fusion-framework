@@ -1,5 +1,14 @@
 # Change Log
 
+## 5.0.8-next.2
+
+### Patch Changes
+
+- Updated dependencies [c8008e3]
+  - @equinor/fusion-framework-cli@15.2.11-next.0
+  - @equinor/fusion-framework-module-navigation@7.0.9-next.0
+  - @equinor/fusion-framework-react-app@14.0.3-next.0
+
 ## 5.0.8-next.1
 
 ### Patch Changes
