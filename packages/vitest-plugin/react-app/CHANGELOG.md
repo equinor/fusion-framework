@@ -1,5 +1,34 @@
 # @equinor/fusion-framework-vitest-plugin-react-app
 
+## 1.0.0-next.5
+
+### Minor Changes
+
+- 1813f8a: `resolveFusion` (and both the `/test` fixtures and `testApp`) now enable the feature-flag
+  mock by default, with no flags enabled, so `useFeature` needs no `localStorage` or URL
+  seeding in tests.
+  
+  `@equinor/fusion-framework-module-feature-flag` is an optional peer dependency: the mock is
+  only wired up when the package is actually installed, so apps that don't use feature flags
+  aren't forced to add it. Install it to get the default mock; call `enableFeatureFlagMock`
+  again inside `configureFusion` to seed specific flags.
+
+### Patch Changes
+
+- 1813f8a: Exclude `.d.ts` files from the default `server.warmup.clientFiles` and `optimizeDeps.entries`
+  globs in `defineProject`. Previously, an app shipping a CJS-style declaration file (for example
+  one using `export =`) failed the Vite warmup scan, since it was loaded as ESM.
+- 1813f8a: Revert the mocked framework's default navigation history from browser history back to in-memory
+  history. Browser history leaked URL/history state between tests; `configureFusion`/`enableNavigation`
+  can still opt back into browser history for a test that specifically needs it.
+- Updated dependencies [c8008e3]
+  - @equinor/fusion-framework-app@13.0.3-next.0
+  - @equinor/fusion-framework-cli@15.2.11-next.0
+  - @equinor/fusion-framework-module-app@8.0.6-next.0
+  - @equinor/fusion-framework-module-navigation@7.0.9-next.0
+  - @equinor/fusion-framework-react@9.0.0-next.0
+  - @equinor/fusion-framework-module-feature-flag@2.1.0-next.0
+
 ## 1.0.0-next.4
 
 ### Major Changes

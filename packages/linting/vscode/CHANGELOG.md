@@ -1,5 +1,11 @@
 # fusion-ts-lint-vscode
 
+## 0.2.4-next.0
+
+### Patch Changes
+
+- c8008e3: Internal: rebase `next` onto `main`, syncing in already-published stable releases so they carry a `next` pre-release tag.
+
 ## 0.2.3
 
 ### Patch Changes
