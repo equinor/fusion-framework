@@ -1,20 +1,22 @@
 import chalk from 'chalk';
 import ora from 'ora';
 
-import type { CopilotSession, JsonValue } from '@github/copilot-sdk';
+import type { CopilotSession } from '@github/copilot-sdk';
 
 import { tryFormatMessage } from './try-format-message.js';
 
 /**
  * Extracts the first string-valued property found among `keys` on a tool-call's
- * JSON arguments, narrowing the untyped `JsonValue` union to its object branch first.
- * @param value - The tool-call arguments to inspect, as reported by the Copilot SDK
+ * arguments record, as reported by the Copilot SDK.
+ * @param value - The tool-call arguments to inspect
  * @param keys - Property names to check, in priority order
  * @returns The first matching string value, or `undefined` if none match
  */
-function firstStringProp(value: JsonValue | undefined, keys: string[]): string | undefined {
-  // Primitives and arrays have no named properties to read
-  if (typeof value !== 'object' || value === null || Array.isArray(value)) {
+function firstStringProp(
+  value: Record<string, unknown> | undefined,
+  keys: string[],
+): string | undefined {
+  if (value === undefined) {
     return undefined;
   }
   // Return the first key present with a string value, in caller-specified priority order
