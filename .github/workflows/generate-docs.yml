@@ -24,6 +24,10 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Setup fusion runner
+        continue-on-error: true
+        uses: ./.github/actions/setup-fusion-runner
+
       # single source of truth for preview-vs-production, reused by every step below and by deploy
       - name: Determine preview mode
         id: mode
