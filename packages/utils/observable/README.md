@@ -140,6 +140,7 @@ action$.pipe(switchMapAction('search', (a) => fetchResults(a.payload))).subscrib
 | `actionMapper(actions, subject)` | Binds action creators to a subject as dispatch functions |
 | `ActionError` | Error class linking an action to a causal error |
 | `ActionReducerMapBuilder` | Builder interface for defining case reducers |
+| `enableMapSet()` | Enables Immer support for drafting `Map` and `Set` values |
 | `isObservableInput(input)` | Type guard for RxJS `ObservableInput` values |
 | `toObservable(input, ...args)` | Converts values/functions/promises to `Observable` |
 
