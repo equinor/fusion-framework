@@ -2299,7 +2299,7 @@ importers:
     dependencies:
       '@remix-run/router':
         specifier: ^1.23.0
-        version: 1.23.3
+        version: 1.23.4
       uuid:
         specifier: ^14.0.0
         version: 14.0.2
@@ -6833,8 +6833,8 @@ packages:
   '@remix-run/node-fetch-server@0.13.3':
     resolution: {integrity: sha512-UfjOXed/DQteaM5VyTfqTeGpHwyL2J5aoRGY6cydip4tt1ehNNeSwuXCC7AEGE0RWBs/7bgKxYkL/B/+UDe4AA==}
 
-  '@remix-run/router@1.23.3':
-    resolution: {integrity: sha512-4An71tdz9X8+3sI4Qqqd2LWd9vS39J7sqd9EU4Scw7TJE/qB10Flv/UuqbPVgfQV9XoK8Np6jNquZitnZq5i+Q==}
+  '@remix-run/router@1.23.4':
+    resolution: {integrity: sha512-q7j5geK7xs3UJSdm9/iytUNclBnLmYx1EnSeCFXHPeutdqgIMeFeHtUZgS3EhlKxdBEAu8OwtJCwmLrEzpSs7Q==}
     engines: {node: '>=14.0.0'}
 
   '@rolldown/binding-android-arm-eabi@1.2.5':
@@ -16415,7 +16415,7 @@ snapshots:
 
   '@remix-run/node-fetch-server@0.13.3': {}
 
-  '@remix-run/router@1.23.3': {}
+  '@remix-run/router@1.23.4': {}
 
   '@rolldown/binding-android-arm-eabi@1.2.5':
     optional: true
