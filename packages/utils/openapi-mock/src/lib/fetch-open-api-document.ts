@@ -1,6 +1,6 @@
 import { parse as parseYaml } from 'yaml';
 
-import type { OpenApiDocumentLike } from './types';
+import type { OpenApiDocumentLike } from '../types.js';
 
 /** Options for {@link fetchOpenApiDocument}. */
 export interface FetchOpenApiDocumentOptions {

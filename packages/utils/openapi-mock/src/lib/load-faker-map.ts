@@ -4,7 +4,7 @@ import { extname, isAbsolute, join } from 'node:path';
 import { importConfig } from '@equinor/fusion-imports';
 import { parse as parseYaml } from 'yaml';
 
-import type { FieldFakerMap } from './types';
+import type { FieldFakerMap } from '../types.js';
 
 /** Options for {@link loadFakerMap}. */
 export interface LoadFakerMapOptions {

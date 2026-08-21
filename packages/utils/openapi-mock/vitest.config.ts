@@ -7,7 +7,7 @@ import { name, version } from './package.json' with { type: 'json' };
 export default defineProject({
   test: {
     environment: 'node',
-    include: ['tests/**/*.test.ts'],
+    include: ['src/__tests__/**/*.test.ts'],
     name: `${name}@${version}`,
   },
   resolve: {

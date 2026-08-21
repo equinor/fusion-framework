@@ -1,4 +1,10 @@
-import type { FieldFakerFn, FieldFakerMap } from './types';
+import type { Faker } from '@faker-js/faker';
+
+import type { FieldFakerMap } from '../types.js';
+import { resolvePointer } from '../utils/resolve-pointer.js';
+
+/** A {@link FieldFakerFn} with its model/path context already captured, awaiting only the seeded `faker` instance `generateMockFromSchema` creates. */
+type PendingFieldFaker = (faker: Faker) => unknown;
 
 /** What {@link applyFieldFakers} returns. */
 export interface ApplyFieldFakersResult {
@@ -9,7 +15,62 @@ export interface ApplyFieldFakersResult {
    * `faker: "__custom.<key>"` path {@link schema} was annotated with — merge
    * this into `generateMockFromSchema`'s faker facade so those keys resolve.
    */
-  customFakers: Record<string, FieldFakerFn>;
+  customFakers: Record<string, PendingFieldFaker>;
+}
+
+/** Adds a `faker: "..."` keyword to `schema` if `"<modelName>.<path>"` matches an entry in `fakerMap`. */
+function annotate(
+  schema: unknown,
+  modelName: string | undefined,
+  path: readonly string[],
+  fakerMap: FieldFakerMap,
+  customFakers: Record<string, PendingFieldFaker>,
+): unknown {
+  // Without a model name there is no stable key against which to match an override.
+  if (!modelName) return schema;
+  const value = fakerMap[`${modelName}.${path.join('.')}`];
+  // An absent map entry means the schema should retain its original shape.
+  if (value === undefined) return schema;
+
+  const base = schema && typeof schema === 'object' ? (schema as Record<string, unknown>) : {};
+  // Functions must be registered separately because schema keywords only hold strings.
+  if (typeof value === 'function') {
+    const fakerKey = `field$${Object.keys(customFakers).length}`;
+    // the field's own model/path context is captured here; only the seeded faker instance
+    // is still missing, supplied later once generateMockFromSchema creates one
+    customFakers[fakerKey] = (faker) => value({ modelName, path, faker });
+    return { ...base, faker: `__custom.${fakerKey}` };
+  }
+  return { ...base, faker: value };
+}
+
+/** Walks and annotates every entry of a schema's `properties` map, keying each by its own field path. */
+function walkProperties(
+  properties: Record<string, unknown>,
+  document: unknown,
+  modelName: string | undefined,
+  path: readonly string[],
+  fakerMap: FieldFakerMap,
+  customFakers: Record<string, PendingFieldFaker>,
+  seen: ReadonlySet<string>,
+): Record<string, unknown> {
+  return Object.fromEntries(
+    Object.entries(properties)
+      // Keep each property's name in the path used to find its override.
+      .map(([propName, propSchema]) => {
+        const propPath = [...path, propName];
+        const walked = walk(
+          propSchema,
+          document,
+          modelName,
+          propPath,
+          fakerMap,
+          customFakers,
+          seen,
+        );
+        return [propName, annotate(walked, modelName, propPath, fakerMap, customFakers)];
+      }),
+  );
 }
 
 /**
@@ -23,7 +84,7 @@ function walk(
   modelName: string | undefined,
   path: readonly string[],
   fakerMap: FieldFakerMap,
-  customFakers: Record<string, FieldFakerFn>,
+  customFakers: Record<string, PendingFieldFaker>,
   seen: ReadonlySet<string>,
 ): unknown {
   // Arrays require recursive traversal to preserve every nested schema item.
@@ -73,76 +134,6 @@ function walk(
   return result;
 }
 
-/** Walks and annotates every entry of a schema's `properties` map, keying each by its own field path. */
-function walkProperties(
-  properties: Record<string, unknown>,
-  document: unknown,
-  modelName: string | undefined,
-  path: readonly string[],
-  fakerMap: FieldFakerMap,
-  customFakers: Record<string, FieldFakerFn>,
-  seen: ReadonlySet<string>,
-): Record<string, unknown> {
-  return Object.fromEntries(
-    Object.entries(properties)
-      // Keep each property's name in the path used to find its override.
-      .map(([propName, propSchema]) => {
-        const propPath = [...path, propName];
-        const walked = walk(
-          propSchema,
-          document,
-          modelName,
-          propPath,
-          fakerMap,
-          customFakers,
-          seen,
-        );
-        return [propName, annotate(walked, modelName, propPath, fakerMap, customFakers)];
-      }),
-  );
-}
-
-/** Adds a `faker: "..."` keyword to `schema` if `"<modelName>.<path>"` matches an entry in `fakerMap`. */
-function annotate(
-  schema: unknown,
-  modelName: string | undefined,
-  path: readonly string[],
-  fakerMap: FieldFakerMap,
-  customFakers: Record<string, FieldFakerFn>,
-): unknown {
-  // Without a model name there is no stable key against which to match an override.
-  if (!modelName) return schema;
-  const value = fakerMap[`${modelName}.${path.join('.')}`];
-  // An absent map entry means the schema should retain its original shape.
-  if (value === undefined) return schema;
-
-  const base = schema && typeof schema === 'object' ? (schema as Record<string, unknown>) : {};
-  // Functions must be registered separately because schema keywords only hold strings.
-  if (typeof value === 'function') {
-    const fakerKey = `field$${Object.keys(customFakers).length}`;
-    // json-schema-faker calls a resolved faker-path function with no arguments, so the
-    // field's own model/path context is captured in this closure instead
-    customFakers[fakerKey] = () => value({ modelName, path });
-    return { ...base, faker: `__custom.${fakerKey}` };
-  }
-  return { ...base, faker: value };
-}
-
-/** Walks a JSON pointer (`#/a/b/c`) against `document`, returning `undefined` if any segment is missing. */
-function resolvePointer(document: unknown, ref: string): unknown {
-  const segments = ref.slice(2).split('/');
-  // Decode each pointer segment before using it as an object key.
-  const path = segments.map((segment) =>
-    decodeURIComponent(segment.replace(/~1/g, '/').replace(/~0/g, '~')),
-  );
-  // Follow each pointer segment until the target is found or the path becomes invalid.
-  return path.reduce<unknown>((current, segment) => {
-    // A non-object cannot contain another pointer segment.
-    if (current == null || typeof current !== 'object') return undefined;
-    return (current as Record<string, unknown>)[segment];
-  }, document);
-}
-
 /**
  * Dereferences `schema` the same way {@link dereferenceSchema} does, while
  * additionally tracking which named component schema (`$ref` target) and
@@ -169,7 +160,7 @@ export function applyFieldFakers(
   document: unknown,
   fakerMap: FieldFakerMap,
 ): ApplyFieldFakersResult {
-  const customFakers: Record<string, FieldFakerFn> = {};
+  const customFakers: Record<string, PendingFieldFaker> = {};
   const annotated = walk(schema, document, undefined, [], fakerMap, customFakers, new Set());
   return { schema: annotated, customFakers };
 }

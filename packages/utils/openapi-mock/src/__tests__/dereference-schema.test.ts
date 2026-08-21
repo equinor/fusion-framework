@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { dereferenceSchema } from '../src/dereference-schema';
+import { dereferenceSchema } from '../lib/dereference-schema.js';
 
 describe('dereferenceSchema', () => {
   const document = {

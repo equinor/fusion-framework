@@ -110,6 +110,17 @@ const mock = createOpenApiMock(openapi, {
 });
 ```
 
+A function is called with `{ modelName, path, faker }` — `faker` is the same seeded `@faker-js/faker` instance generating the rest of the response, so a custom field faker stays deterministic under `options.seed` too, instead of reaching for its own unseeded `@faker-js/faker` import:
+
+```ts
+const mock = createOpenApiMock(openapi, {
+  seed: 42,
+  fields: {
+    'User.id': ({ faker }) => faker.string.uuid(),
+  },
+});
+```
+
 A nested (inline, non-`$ref`) field dots further — `'User.address.city'`. Once a nested field is itself a named component schema, its own fields key off *that* schema's name instead (`'Address.city'`, not `'User.address.city'`), since that's the model a real `$ref` in the spec actually points at.
 
 Build the map in code, or load it from a **sidecar file** with `loadFakerMap` — so the mapping lives next to your tests instead of inside the spec. `loadFakerMap` reads from disk and, for a `.ts`/`.js` sidecar, shells out to `esbuild`, so it lives at the separate `@equinor/fusion-openapi-mock/node` entry point — importing it from there instead of the main entry point keeps `node:fs`/esbuild out of a browser (or browser-mode Vitest) bundle that only ever calls `createOpenApiMock` with an already-built map:
@@ -146,7 +157,7 @@ import type { FieldFakerMap } from '@equinor/fusion-openapi-mock';
 
 export default {
   'User.email': 'internet.email',
-  'User.id': ({ path }) => `usr_${path.join('-')}`,
+  'User.id': ({ faker, path }) => `usr_${path.join('-')}_${faker.string.uuid()}`,
 } satisfies FieldFakerMap;
 ```
 
