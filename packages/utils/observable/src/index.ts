@@ -3,7 +3,7 @@
  * @module
  */
 
-export { castDraft } from 'immer';
+export { castDraft, enableMapSet } from 'immer';
 
 export * from './FlowSubject';
 export * from './actions/ActionError';
