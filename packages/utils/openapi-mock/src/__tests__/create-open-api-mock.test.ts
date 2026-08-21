@@ -1,7 +1,11 @@
 import { describe, expect, it } from 'vitest';
 
-import { createOpenApiMock } from '../src/create-open-api-mock';
-import type { OpenApiDocumentLike } from '../src/types';
+import { createOpenApiMock } from '../lib/create-open-api-mock/create-open-api-mock.js';
+import type {
+  FieldFakerContext,
+  OpenApiDocumentLike,
+  OpenApiMockOverrideContext,
+} from '../types.js';
 
 const petstore: OpenApiDocumentLike = {
   openapi: '3.0.0',
@@ -206,7 +210,7 @@ describe('createOpenApiMock', () => {
     it('fakes a matched field from a custom function, receiving its model and path', async () => {
       const mock = createOpenApiMock(petstoreWithAddress, {
         fields: {
-          'Pet.id': ({ modelName, path }) => `${modelName}:${path.join('.')}`,
+          'Pet.id': ({ modelName, path }: FieldFakerContext) => `${modelName}:${path.join('.')}`,
         },
       });
 
@@ -230,7 +234,10 @@ describe('createOpenApiMock', () => {
     it('lets an override replace the faked response, given at construction', async () => {
       const mock = createOpenApiMock(petstore, {
         overrides: {
-          getPetById: ({ params }) => ({ status: 200, mock: { id: params.petId, name: 'Rex' } }),
+          getPetById: ({ params }: OpenApiMockOverrideContext) => ({
+            status: 200,
+            mock: { id: params.petId, name: 'Rex' },
+          }),
         },
       });
 
@@ -242,7 +249,7 @@ describe('createOpenApiMock', () => {
     it('lets an override build on top of the generated baseline', async () => {
       const mock = createOpenApiMock(petstore, {
         overrides: {
-          getPetById: async ({ params, mockResponseForOperation }) => {
+          getPetById: async ({ params, mockResponseForOperation }: OpenApiMockOverrideContext) => {
             const baseline = await mockResponseForOperation();
             return { ...baseline, mock: { ...(baseline.mock as object), id: params.petId } };
           },

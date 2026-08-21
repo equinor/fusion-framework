@@ -1,3 +1,5 @@
+import type { Faker } from '@faker-js/faker';
+
 /**
  * A parsed OpenAPI (3.x) document.
  *
@@ -77,6 +79,8 @@ export interface FieldFakerContext {
   modelName: string;
   /** The dotted path of the field within `modelName` (e.g. `['address', 'city']`). */
   path: readonly string[];
+  /** The same seeded `@faker-js/faker` instance generating the rest of the response, so a custom field faker stays deterministic under `OpenApiMockOptions.seed` too. */
+  faker: Faker;
 }
 
 /**
@@ -180,4 +184,14 @@ export interface OpenApiMock {
    * @throws {Error} If no operation with this `operationId` exists in the document.
    */
   register(operationId: string, handler: OpenApiMockOverride): void;
+}
+
+/** One routable OpenAPI operation, indexed by {@link createOpenApiMock} for request matching. */
+export interface OperationEntry {
+  method: string;
+  operationId: string;
+  paramNames: string[];
+  pattern: RegExp;
+  responseSchema?: unknown;
+  status: number;
 }

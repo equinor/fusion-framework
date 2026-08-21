@@ -3,7 +3,8 @@ import { fileURLToPath } from 'node:url';
 
 import { describe, expect, it } from 'vitest';
 
-import { loadFakerMap } from '../src/load-faker-map';
+import { loadFakerMap } from '../lib/load-faker-map.js';
+import type { FieldFakerFn } from '../types.js';
 
 const fixturesDir = join(fileURLToPath(new URL('.', import.meta.url)), 'fixtures');
 
@@ -32,9 +33,10 @@ describe('loadFakerMap', () => {
     expect(map['User.email']).toBe('internet.email');
     expect(typeof map['User.id']).toBe('function');
     expect(
-      (map['User.id'] as (context: { modelName: string; path: string[] }) => unknown)({
+      (map['User.id'] as FieldFakerFn)({
         modelName: 'User',
         path: ['id'],
+        faker: undefined as never,
       }),
     ).toBe('User:id');
   });

@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import { fetchOpenApiDocument } from '../src/fetch-open-api-document';
+import { fetchOpenApiDocument } from '../lib/fetch-open-api-document.js';
 
 const jsonResponse = (body: string, init: ResponseInit = {}) =>
   new Response(body, { status: 200, ...init });
