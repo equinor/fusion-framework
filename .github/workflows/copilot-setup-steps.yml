@@ -23,6 +23,12 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
+      # fusion-gh-runner-fusion-framework's image doesn't ship gh (tracked with
+      # infra); install it until the runner image is patched.
+      - name: Setup fusion runner
+        continue-on-error: true
+        uses: ./.github/actions/setup-fusion-runner
+
       - name: Setup node and install deps
         uses: ./.github/actions/node-setup
 
