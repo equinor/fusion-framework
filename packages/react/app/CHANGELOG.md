@@ -1,5 +1,11 @@
 # Change Log
 
+## 14.0.3
+
+### Patch Changes
+
+- @equinor/fusion-framework-app@13.0.3
+
 ## 14.0.2
 
 ### Patch Changes
