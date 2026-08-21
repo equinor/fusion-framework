@@ -12,4 +12,4 @@
  * @packageDocumentation
  */
 
-export { loadFakerMap, type LoadFakerMapOptions } from './load-faker-map';
+export { loadFakerMap, type LoadFakerMapOptions } from './lib/load-faker-map.js';

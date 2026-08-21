@@ -30,7 +30,8 @@
   },
   "files": [
     "dist",
-    "src"
+    "src",
+    "!src/__tests__"
   ],
   "publishConfig": {
     "access": "public"

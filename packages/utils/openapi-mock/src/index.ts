@@ -24,14 +24,17 @@
  * @packageDocumentation
  */
 
-export { applyFieldFakers, type ApplyFieldFakersResult } from './apply-field-fakers';
-export { createOpenApiMock } from './create-open-api-mock';
-export { dereferenceSchema } from './dereference-schema';
-export { fetchOpenApiDocument, type FetchOpenApiDocumentOptions } from './fetch-open-api-document';
+export { applyFieldFakers, type ApplyFieldFakersResult } from './lib/apply-field-fakers.js';
+export { createOpenApiMock } from './lib/create-open-api-mock/create-open-api-mock.js';
+export { dereferenceSchema } from './lib/dereference-schema.js';
+export {
+  fetchOpenApiDocument,
+  type FetchOpenApiDocumentOptions,
+} from './lib/fetch-open-api-document.js';
 export {
   generateMockFromSchema,
   type GenerateMockFromSchemaOptions,
-} from './generate-mock-from-schema';
+} from './lib/generate-mock-from-schema.js';
 export type {
   FakerPath,
   FieldFakerContext,
@@ -46,4 +49,4 @@ export type {
   OpenApiMockRequest,
   OpenApiMockResolution,
   OpenApiMockResponse,
-} from './types';
+} from './types.js';
