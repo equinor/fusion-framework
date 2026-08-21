@@ -1,5 +1,13 @@
 # poc-portal
 
+## 1.1.100
+
+### Patch Changes
+
+- @equinor/fusion-framework-react-app@14.0.3
+  - @equinor/fusion-framework-cli@15.2.11
+  - @equinor/fusion-framework@8.0.16
+
 ## 1.1.99
 
 ### Patch Changes

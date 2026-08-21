@@ -1,5 +1,11 @@
 # Change Log
 
+## 9.2.0
+
+### Minor Changes
+
+- 6b449ae: Expose Immer's `enableMapSet` from `@equinor/fusion-observable` so consumers can enable Map and Set support without importing from `immer` directly.
+
 ## 9.1.1
 
 ### Patch Changes

@@ -1,6 +1,6 @@
 {
   "name": "poc-portal",
-  "version": "1.1.99",
+  "version": "1.1.100",
   "description": "",
   "main": "src/index.tsx",
   "private": true,
