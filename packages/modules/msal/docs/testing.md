@@ -69,6 +69,24 @@ The user is in place **before** `MsalProvider.initialize()` runs, so the provide
 
 `setClient` replaces the client, but not the rule: the declared user is signed in on whichever client the module authenticates through, so a mock client supplied that way receives it too.
 
+## Returning an exact token
+
+Most tests only care who is signed in and let the mock fabricate a token from that user's fields. When a backend mock validates the token itself — specific claims, an audience, or a signature — it needs to see the exact token it expects instead:
+
+```typescript
+enableMsalMock(configurator, (builder) => {
+  builder.setToken(token);
+});
+```
+
+`setToken` also signs in the user the token's claims describe, via `createMockUserFromToken` — so `acquireAccessToken` returns this token, and the account APIs agree with it. Pass `true` as the second argument to keep a separately declared account instead:
+
+```typescript
+enableMsalMock(configurator, (builder) => {
+  builder.setAccount({ name: 'Ada Lovelace' }).setToken(token, true);
+});
+```
+
 | Option | Default | Purpose |
 | --- | --- | --- |
 | `name` | `Test User` | Display name |
