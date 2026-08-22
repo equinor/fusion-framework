@@ -9,6 +9,7 @@ import type { MsalClientConfig } from '../MsalClient';
 import { MsalConfigurator, type MsalConfig } from '../MsalConfigurator';
 
 import { MsalMockClient, type MsalMockUser } from './MsalMockClient';
+import { createMockUserFromToken } from './create-mock-user-from-token';
 
 /**
  * Declares the mock's own branch of the MSAL configuration.
@@ -31,6 +32,11 @@ declare module '../msal-config-schema' {
        * `null` when nobody is signed in.
        */
       account?: MsalMockUser | null;
+      /**
+       * The token to return verbatim instead of one generated from the
+       * signed-in user's fields.
+       */
+      token?: string;
     };
   }
 }
@@ -135,14 +141,70 @@ export class MsalMockConfigurator extends MsalConfigurator {
   }
 
   /**
-   * Signs the declared user in on the client the module authenticates through.
+   * Declares the token to return, independent of who is signed in.
    *
    * @remarks
-   * Deliberately not done while the client is built: that would assume the scope
-   * declaring the user is the scope building the client, which is exactly what
-   * is not true when an application is tested inside a portal. The host built
-   * that client, in a scope this builder never sees, so the client has to be
-   * located rather than assumed.
+   * Use this when a backend mock validates its own tokens (specific claims, an
+   * audience, or a signature) — the client then returns this token verbatim
+   * instead of fabricating one from the signed-in user's fields.
+   *
+   * @param token - A JWT (e.g. from `createMockToken`, or issued by an external mock).
+   * @param skipResolve - When `true`, override only the token and leave an account
+   * declared through {@link setAccount} untouched. Defaults to `false`, which also signs
+   * in the user described by the token's claims, via {@link createMockUserFromToken}.
+   * @returns The builder, for chaining.
+   *
+   * @example Sign in as whoever the token names
+   * ```typescript
+   * builder.setToken(token);
+   * ```
+   *
+   * @example Keep a separately declared account, but return this exact token
+   * ```typescript
+   * builder.setAccount({ name: 'Ada Lovelace' }).setToken(token, true);
+   * ```
+   */
+  public setToken(token: string, skipResolve = false): this {
+    this._set('mock.token', token);
+    // skipResolve defaults to false - most callers want the token's claims to name who is signed in
+    if (!skipResolve) {
+      this.setAccount(createMockUserFromToken(token));
+    }
+    return this;
+  }
+
+  /**
+   * Resolves the client the module authenticates through, wherever it was built.
+   *
+   * @remarks
+   * Shared by {@link setAccount} and {@link setToken} application: neither can
+   * assume the scope declaring mock state is the scope that built the client,
+   * which is exactly what is not true when an application is tested inside a
+   * portal. The host built that client, in a scope this builder never sees, so
+   * the client has to be located rather than assumed.
+   *
+   * @param config - The validated configuration, carrying the client when one was built.
+   * @param init - The builder arguments, carrying the host reference when hoisted.
+   * @param action - Describes what could not be applied, for the thrown error.
+   * @returns The resolved mock client.
+   * @throws When the resolved client is not a {@link MsalMockClient}.
+   */
+  #getClient(config: MsalConfig, init: ConfigBuilderCallbackArgs | undefined, action: string): MsalMockClient {
+    const host = (init?.ref as { auth?: IMsalProvider } | undefined)?.auth;
+    const client = config.client ?? host?.client;
+
+    // Reject a real client because mock state cannot be applied to it.
+    if (!(client instanceof MsalMockClient)) {
+      throw new Error(
+        `MsalMockConfigurator: cannot ${action}, because this module does not authenticate through a mock client. Declare it where that client is configured instead.`,
+      );
+    }
+
+    return client;
+  }
+
+  /**
+   * Signs the declared user in on the client the module authenticates through.
    *
    * @param account - The user to sign in, or `null` when nobody is.
    * @param config - The validated configuration, carrying the client when one was built.
@@ -154,17 +216,7 @@ export class MsalMockConfigurator extends MsalConfigurator {
     config: MsalConfig,
     init?: ConfigBuilderCallbackArgs,
   ): void {
-    const host = (init?.ref as { auth?: IMsalProvider } | undefined)?.auth;
-    const client = config.client ?? host?.client;
-
-    // Reject a real client because mock account state cannot be applied to it.
-    if (!(client instanceof MsalMockClient)) {
-      throw new Error(
-        'MsalMockConfigurator: cannot sign a user in, because this module does not authenticate through a mock client. Declare the user where that client is configured instead.',
-      );
-    }
-
-    client.setUser(account);
+    this.#getClient(config, init, 'sign a user in').setUser(account);
   }
 
   /**
@@ -209,6 +261,14 @@ export class MsalMockConfigurator extends MsalConfigurator {
     // Apply even null because null explicitly requests a signed-out mock state.
     if (account !== undefined) {
       this.#signIn(account, config, init);
+    }
+
+    // Applied after the account so a token declared alongside `skipResolve: true`
+    // overrides whatever `setUser` above just fabricated.
+    const token = rawConfig.mock?.token;
+    // absent means the test declared no token override; leave the client generating its own
+    if (token !== undefined) {
+      this.#getClient(config, init, 'set a token').setToken(token);
     }
 
     return config;
