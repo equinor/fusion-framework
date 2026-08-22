@@ -88,6 +88,7 @@ export class MsalMockClient implements IMsalClient {
   };
   #cache = new Map<string, AccountInfo>();
   #activeAccountId: string | null = null;
+  #token: string | null = null;
 
   /**
    * The account currently signed in, or `null`.
@@ -550,6 +551,21 @@ export class MsalMockClient implements IMsalClient {
   }
 
   /**
+   * Overrides the token returned by future results, independent of who is signed in.
+   *
+   * @remarks
+   * Use this when a backend mock validates its own tokens (specific claims, an
+   * audience, or a signature) — supplying the exact token here means that
+   * backend sees the token it issued, rather than a mock-shaped substitute this
+   * client would otherwise fabricate from the signed-in user's fields.
+   *
+   * @param token - The token to return verbatim, or `null` to resume generating one.
+   */
+  public setToken(token: string | null): void {
+    this.#token = token;
+  }
+
+  /**
    * Creates the one account represented by this mock's configured identity.
    * @returns An MSAL-shaped account for the configured user.
    */
@@ -571,14 +587,17 @@ export class MsalMockClient implements IMsalClient {
    */
   #createResult(scopes?: string[]): AuthenticationResult {
     const granted = scopes?.length ? scopes : this.#user.scopes;
-    const token = createMockToken({
-      name: this.#user.name,
-      preferred_username: this.#user.username,
-      oid: this.#user.userId,
-      tid: this.#user.tenantId,
-      aud: this.#user.clientId,
-      scp: granted.join(' '),
-    });
+    // a caller-supplied token is sent verbatim so a backend mock validating it sees what it expects
+    const token =
+      this.#token ??
+      createMockToken({
+        name: this.#user.name,
+        preferred_username: this.#user.username,
+        oid: this.#user.userId,
+        tid: this.#user.tenantId,
+        aud: this.#user.clientId,
+        scp: granted.join(' '),
+      });
 
     // Object shape matches AuthenticationResult's fields consumers rely on; the real
     // type also carries browser-only fields (e.g. `familyId`) this mock intentionally omits
