@@ -189,7 +189,11 @@ export class MsalMockConfigurator extends MsalConfigurator {
    * @returns The resolved mock client.
    * @throws When the resolved client is not a {@link MsalMockClient}.
    */
-  #getClient(config: MsalConfig, init: ConfigBuilderCallbackArgs | undefined, action: string): MsalMockClient {
+  #getClient(
+    config: MsalConfig,
+    init: ConfigBuilderCallbackArgs | undefined,
+    action: string,
+  ): MsalMockClient {
     const host = (init?.ref as { auth?: IMsalProvider } | undefined)?.auth;
     const client = config.client ?? host?.client;
 
