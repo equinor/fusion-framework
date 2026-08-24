@@ -1,4 +1,4 @@
-import { createServer } from 'node:http';
+import { createServer, request as httpRequest } from 'node:http';
 import { fileURLToPath } from 'node:url';
 
 import { afterEach, describe, expect, it } from 'vitest';
@@ -43,10 +43,26 @@ describe('createMockServer', () => {
     const { url } = await server.start();
     const port = new URL(url).port;
 
-    const response = await fetch(`http://pet-store.localhost:${port}/pets/1`);
+    const response = await new Promise<{ status: number; body: unknown }>((resolve, reject) => {
+      const request = httpRequest(`${url}/pets/1`, {
+        headers: { host: `pet-store.localhost:${port}` },
+      });
+      request.on('response', (incoming) => {
+        let body = '';
+        incoming.setEncoding('utf8');
+        incoming.on('data', (chunk: string) => {
+          body += chunk;
+        });
+        incoming.on('end', () => {
+          resolve({ status: incoming.statusCode ?? 0, body: JSON.parse(body) });
+        });
+      });
+      request.on('error', reject);
+      request.end();
+    });
 
     expect(response.status).toBe(200);
-    await expect(response.json()).resolves.toMatchObject({ id: expect.any(String) });
+    expect(response.body).toMatchObject({ id: expect.any(String) });
   });
 
   it('lets a later use() layer override an earlier one by service key', async () => {
