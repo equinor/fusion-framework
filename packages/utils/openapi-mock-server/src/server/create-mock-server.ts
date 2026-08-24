@@ -118,6 +118,10 @@ export function createMockServer(options: CreateMockServerOptions = {}): MockSer
     },
 
     async start(options = {}) {
+      // A second start() would create an orphaned second HTTP server that close() could never reach.
+      if (httpServer) {
+        throw new Error('start() was already called on this MockServerHandle; call close() first.');
+      }
       await ensureResolved();
       const server = createServer(requestListener);
       httpServer = server;
