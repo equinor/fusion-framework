@@ -12,6 +12,7 @@ import type { IMsalProvider } from '../../MsalProvider.interface';
 import { enableMSAL, module as realModule } from '../../module';
 import {
   MsalMockClient,
+  createMockToken,
   createMsalMockClient,
   enableMsalMock,
   msalMockModule,
@@ -424,6 +425,74 @@ describe('MsalMockClient', () => {
     const result = await client.acquireToken({ request: { scopes: ['X'] } });
 
     expect(result?.accessToken).toBe('mock-token');
+  });
+
+  it('returns a token set directly on the client verbatim', async () => {
+    const client = new MsalMockClient(clientConfig());
+    const token = createMockToken({ name: 'Direct Token' });
+
+    client.setToken(token);
+    const result = await client.acquireToken({ request: { scopes: ['X'] } });
+
+    expect(result?.accessToken).toBe(token);
+    expect(result?.idToken).toBe(token);
+  });
+
+  it('resumes generating tokens once setToken(null) clears the override', async () => {
+    const client = new MsalMockClient(clientConfig());
+    const token = createMockToken({ name: 'Direct Token' });
+    client.setToken(token);
+
+    client.setToken(null);
+    const result = await client.acquireToken({ request: { scopes: ['X'] } });
+
+    expect(result?.accessToken).not.toBe(token);
+  });
+});
+
+describe('MsalMockConfigurator.setToken', () => {
+  it('returns the exact token instead of one generated from the account', async () => {
+    const token = createMockToken({ name: 'Token User' });
+    const provider = await initializeMockWith((builder) => builder.setToken(token));
+
+    const result = await provider.client.acquireToken({ request: { scopes: ['X'] } });
+
+    expect(result?.accessToken).toBe(token);
+    expect(result?.idToken).toBe(token);
+  });
+
+  it('signs in the account named by the token claims by default', async () => {
+    const token = createMockToken({
+      name: 'Token User',
+      preferred_username: 'token.user@equinor.com',
+    });
+    const provider = await initializeMockWith((builder) => builder.setToken(token));
+
+    expect(provider.account?.name).toBe('Token User');
+    expect(provider.account?.username).toBe('token.user@equinor.com');
+  });
+
+  it('keeps a separately declared account when skipResolve is true', async () => {
+    // skipResolve overrides only the returned token, leaving setAccount's declaration alone
+    const token = createMockToken({ name: 'Token User' });
+    const provider = await initializeMockWith((builder) => {
+      builder.setAccount({ name: 'Ada Lovelace' });
+      builder.setToken(token, true);
+    });
+
+    expect(provider.account?.name).toBe('Ada Lovelace');
+    const result = await provider.client.acquireToken({ request: { scopes: ['X'] } });
+    expect(result?.accessToken).toBe(token);
+  });
+
+  it('resumes generating tokens once setToken(null) is called on the client', async () => {
+    const token = createMockToken({ name: 'Token User' });
+    const provider = await initializeMockWith((builder) => builder.setToken(token));
+
+    (provider.client as MsalMockClient).setToken(null);
+    const result = await provider.client.acquireToken({ request: { scopes: ['X'] } });
+
+    expect(result?.accessToken).not.toBe(token);
   });
 });
 
