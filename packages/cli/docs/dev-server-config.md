@@ -415,3 +415,16 @@ export default {
 > [!WARNING]
 > Only use when working with non-standard environments. The default Fusion service discovery endpoint is usually correct.
 
+### Local Mock Server
+
+To point service discovery at a local mock server (e.g. `ffc mock-server`) without a
+`dev-server.config.ts` override, use `ffc app dev --mock`:
+
+```sh
+ffc app dev --mock                        # defaults to http://localhost:4010
+ffc app dev --mock http://localhost:5010  # custom mock server origin
+```
+
+`--mock` sets `api.serviceDiscoveryUrl` to `<endpoint>/@fusion-mock/discovery`. A
+`dev-server.config.ts` override for `api.serviceDiscoveryUrl` still takes precedence over it.
+

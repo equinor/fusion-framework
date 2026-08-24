@@ -1285,7 +1285,7 @@ importers:
         version: 4.4.3
     devDependencies:
       '@equinor/fusion-framework-cli-plugin-mock-server':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../cli-plugins/mock-server
       '@equinor/fusion-framework-module':
         specifier: workspace:*

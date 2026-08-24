@@ -54,6 +54,12 @@ export interface StartAppDevServerOptions {
    * Host for the development server (optional, defaults to 'localhost').
    */
   host?: string;
+
+  /**
+   * Origin of a local mock server (e.g. `http://localhost:4010`) to use for API service
+   * discovery instead of the default CI environment (optional).
+   */
+  mock?: string;
 }
 
 /**
@@ -137,6 +143,7 @@ export const startAppDevServer = async (options?: StartAppDevServerOptions) => {
       manifest: appManifest,
       config: appConfig,
     },
+    mock: options?.mock,
   };
   // If a local portal entry point is found, add it to the config
   if (templateEntry) {

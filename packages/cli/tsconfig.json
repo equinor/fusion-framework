@@ -40,6 +40,9 @@
     },
     {
       "path": "../vite-plugins/raw-imports"
+    },
+    {
+      "path": "../cli-plugins/mock-server"
     }
   ],
   "include": ["src/**/*", "types/*"],
