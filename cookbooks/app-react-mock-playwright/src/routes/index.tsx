@@ -1,4 +1,5 @@
 import type { RouterHandle } from '@equinor/fusion-framework-react-router';
+import type { ReactElement } from 'react';
 
 import { Greeting } from '../components/Greeting';
 import { PersonName } from '../components/PersonName';
@@ -11,8 +12,10 @@ export const handle = {
 
 /**
  * Index route — renders the mocked greeting and person name at the layout's root path.
+ *
+ * @returns The greeting and person name elements.
  */
-export default function Index() {
+export default function Index(): ReactElement {
   return (
     <>
       <Greeting />

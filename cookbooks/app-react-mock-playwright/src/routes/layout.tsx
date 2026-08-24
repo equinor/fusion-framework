@@ -1,9 +1,13 @@
 import { Outlet } from '@equinor/fusion-framework-react-router';
 
+import type { ReactElement } from 'react';
+
 /**
  * Shared page shell for all routes — the router renders matched child routes into the `Outlet`.
+ *
+ * @returns The page shell element.
  */
-export default function Layout() {
+export default function Layout(): ReactElement {
   return (
     <div
       style={{

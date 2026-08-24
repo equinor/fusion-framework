@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type ReactElement } from 'react';
 
 import { useHttpClient } from '@equinor/fusion-framework-react-app/http';
 
@@ -10,7 +10,7 @@ interface GreetingResponse {
  * Fetches and renders a greeting from the `my-api` service discovered through the mock server
  * (see `mocks/my-api.openapi.json`).
  */
-export const Greeting = () => {
+export const Greeting = (): ReactElement => {
   const client = useHttpClient('my-api');
   const [greeting, setGreeting] = useState<string>('Loading…');
 

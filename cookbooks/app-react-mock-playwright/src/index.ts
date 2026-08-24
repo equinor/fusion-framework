@@ -17,7 +17,7 @@ const appComponent = createElement(Router, { routes });
 const createApp = (args: ComponentRenderArgs) => makeComponent(appComponent, args, configure);
 
 /** Render function */
-export const renderApp = (el: HTMLElement, args: ComponentRenderArgs) => {
+export const renderApp = (el: HTMLElement, args: ComponentRenderArgs): (() => void) => {
   /** make render element */
   const app = createApp(args);
 

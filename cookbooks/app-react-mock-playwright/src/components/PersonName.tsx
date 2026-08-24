@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type ReactElement } from 'react';
 
 import { useHttpClient } from '@equinor/fusion-framework-react-app/http';
 
@@ -10,7 +10,7 @@ interface Person {
  * Fetches and renders a person's name from the bundled `people` service, overridden by
  * `mocks/people.overrides.ts`.
  */
-export const PersonName = () => {
+export const PersonName = (): ReactElement => {
   const client = useHttpClient('people');
   const [personName, setPersonName] = useState<string>('Loading…');
 
