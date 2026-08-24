@@ -176,6 +176,8 @@ fusionSpaPlugin({
       clientId: 'my-client-id',
       redirectUri: 'https://my-app.com/auth-callback',
       requiresAuth: 'true',
+      mock: 'true', // (Optional) Use mock authentication for CI/Playwright
+      mockToken: '<token>', // (Optional) JWT that identifies the mock user
     },
 
     // Service Worker configuration for API proxying and authentication
@@ -238,11 +240,8 @@ Configures Azure AD authentication via the Microsoft Authentication Library (MSA
 - `clientId` — Application (client) ID registered in Azure AD
 - `redirectUri` — URL to redirect to after authentication
 - `requiresAuth` _(optional, string)_ — When `'true'`, automatically prompts for login on first load
-
-- `tenantId` — Azure AD tenant identifier
-- `clientId` — Application (client) ID registered in Azure AD
-- `redirectUri` — URL to redirect to after authentication
-- `requiresAuth` _(optional, string)_ — When `'true'`, automatically prompts for login on first load
+- `mock` _(optional, string)_ — When `'true'`, uses mock authentication instead of Entra ID
+- `mockToken` _(optional, string)_ — JWT used as-is to identify and authenticate the mock user
 
 ### Service Worker
 
@@ -395,6 +394,10 @@ FUSION_SPA_MSAL_TENANT_ID=my-tenant-id
 FUSION_SPA_MSAL_CLIENT_ID=my-client-id
 FUSION_SPA_MSAL_REDIRECT_URI=https://my-app.com/auth-callback
 FUSION_SPA_MSAL_REQUIRES_AUTH=true
+# Set to skip Entra ID and sign in a mock user instead — for CI/Playwright runs
+FUSION_SPA_MSAL_MOCK=true
+# Optional: a mock JWT whose claims (name, preferred_username, oid, tid, scp) name the signed-in user
+FUSION_SPA_MSAL_MOCK_TOKEN=eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0....
 
 # Telemetry
 FUSION_SPA_TELEMETRY_CONSOLE_LEVEL=2
@@ -408,6 +411,47 @@ FUSION_SPA_SERVICE_WORKER_RESOURCES=[{"url":"/app-proxy","rewrite":"/@fusion-api
 
 > [!IMPORTANT]
 > The `.env` file must be in the project root (or the directory specified by Vite's `envDir`). Values from `.env` files override matching values from `generateTemplateEnv`.
+
+## Running Against a Mock Client (CI / Playwright)
+
+Setting `FUSION_SPA_MSAL_MOCK=true` swaps the real MSAL client for
+`@equinor/fusion-framework-module-msal/mock`, which signs in a default mock user with no
+Entra ID redirects, popups, or network calls. This is the recommended way to run the dev
+server headlessly in GitHub Actions or a Playwright suite.
+
+```sh
+FUSION_SPA_MSAL_MOCK=true
+```
+
+By default the mock signs in a generic `Test User`. To control who that user is, set
+`FUSION_SPA_MSAL_MOCK_TOKEN` to a JWT — generate one with `createMockToken` from
+`@equinor/fusion-framework-module-msal/mock`, or use one issued by your backend's own mock —
+and its `name`, `preferred_username`, `oid`, `tid`, and `scp` claims name the signed-in user:
+
+```ts
+import { createMockToken } from '@equinor/fusion-framework-module-msal/mock';
+
+const token = createMockToken({
+  name: 'Ada Lovelace',
+  preferred_username: 'ada.lovelace@equinor.com',
+  oid: 'ada-object-id',
+  scp: 'user_impersonation',
+});
+```
+
+```sh
+FUSION_SPA_MSAL_MOCK_TOKEN=<token>
+```
+
+The token itself is also sent as-is as the access/id token — it is not regenerated — so a
+backend mock that validates its own tokens (specific claims, audience, or signature) sees
+exactly the token it issued.
+
+Mocking authentication does not mock the rest of the API surface — service discovery and
+any backend calls the portal makes still hit real URLs unless you also override them. Use
+the dev server's `api.routes`/`api.processServices` options (see the
+[`@equinor/fusion-framework-dev-server`](../../dev-server/README.md) docs) to intercept
+those requests with fixture responses.
 
 ## Advanced Customization
 
