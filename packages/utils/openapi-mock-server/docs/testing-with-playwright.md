@@ -12,7 +12,7 @@ sequenceDiagram
 
     Test->>Mock: POST /@fusion-mock/context/getContext<br/>{ status: 404, mock: {...} }
     Test->>App: page.goto('/some-page')
-    App->>Mock: GET context.localhost:4010/getContext
+    App->>Mock: GET context.localhost:4010/contexts/{id}
     Mock-->>App: 404 { error: "not found" }
     Test->>Mock: POST /@fusion-mock/reset
 ```
