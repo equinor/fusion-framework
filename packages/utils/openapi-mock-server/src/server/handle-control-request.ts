@@ -65,13 +65,22 @@ export async function handleControlRequest(
       sendJson(res, 404, { error: `No mocked service registered for "${serviceKey}"` });
       return;
     }
-    const body = (await readJsonBody(req)) as MockOverride | undefined;
-    // The override body must carry the "mock" field the schema requires.
-    if (!body || !('mock' in body)) {
-      sendJson(res, 400, { error: 'Expected a JSON body with a "mock" field.' });
+    const body = await readJsonBody(req);
+    // The override body must be a plain object carrying "mock", with an integer "status" if present.
+    if (
+      !body ||
+      typeof body !== 'object' ||
+      Array.isArray(body) ||
+      !('mock' in body) ||
+      ('status' in body && !Number.isInteger((body as { status?: unknown }).status))
+    ) {
+      sendJson(res, 400, {
+        error:
+          'Expected a JSON body with a "mock" field and, if present, an integer "status" field.',
+      });
       return;
     }
-    handle.override(serviceKey, operationId, body);
+    handle.override(serviceKey, operationId, body as MockOverride);
     sendJson(res, 200, { status: 'registered' });
     return;
   }
