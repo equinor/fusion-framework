@@ -95,8 +95,10 @@ export async function loadServiceOverrides(
 
   // .json, .ts, .js, .mjs (or no extension) resolve through `importConfig`'s own extension probing.
   const basename = source.replace(/\.(json|ts|mjs|js)$/i, '');
-  const { config } = await importConfig<ServiceOverrides>(basename, { baseDir: options.baseDir });
-  return config;
+  const { config, path } = await importConfig<ServiceOverrides>(basename, {
+    baseDir: options.baseDir,
+  });
+  return assertServiceOverrides(config, path);
 }
 
 export default loadServiceOverrides;
