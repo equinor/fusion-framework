@@ -112,6 +112,10 @@ export default sidebar({
               text: 'OpenAPI mock',
               link: 'openapi-mock.md',
             },
+            {
+              text: 'Mock server',
+              link: 'mock-server.md',
+            },
           ],
         },
       ],
@@ -200,6 +204,10 @@ export default sidebar({
               link: 'react-app-msal.md',
             },
             {
+              text: 'Mock Server with Playwright',
+              link: 'react-app-mock-playwright.md',
+            },
+            {
               text: 'People Service',
               link: 'react-app-people.md',
             },
@@ -208,12 +216,20 @@ export default sidebar({
               link: 'react-app-router.md',
             },
             {
+              text: 'Legacy Router',
+              link: 'react-app-router-legacy.md',
+            },
+            {
               text: 'Settings',
               link: 'react-app-settings.md',
             },
             {
               text: 'State',
               link: 'react-app-state.md',
+            },
+            {
+              text: 'Styling',
+              link: 'react-app-styling.md',
             },
           ],
         },
@@ -227,6 +243,10 @@ export default sidebar({
             {
               text: 'Portal Analytics',
               link: 'portal-analytics.md',
+            },
+            {
+              text: 'PoC Portal',
+              link: 'poc-portal.md',
             },
             {
               text: 'Vanilla JavaScript',
