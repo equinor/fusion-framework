@@ -13,7 +13,7 @@ search to rediscover it.
 
 | Path | Contains | Published? |
 | --- | --- | --- |
-| `packages/*` | Framework libraries (62 packages) | Yes, via Changesets |
+| `packages/*` | Framework libraries (64 packages) | Yes, via Changesets |
 | `cookbooks/*` | Runnable example apps and portals | Yes (versioned, but examples) |
 | `eds-content/`, `eds/` | EDS design-system content and token tooling | No |
 | `vue-press/` | Documentation site | Partly |
@@ -99,6 +99,7 @@ Format: `package name` → path → role.
 | `@equinor/fusion-imports` | `packages/utils/imports` | Import resolution helpers |
 | `@equinor/fusion-load-env` | `packages/utils/load-env` | `.env` loading |
 | `@equinor/fusion-openapi-mock` | `packages/utils/openapi-mock` | Fakes OpenAPI 3 responses from a parsed spec document |
+| `@equinor/fusion-openapi-mock-server` | `packages/utils/openapi-mock-server` | Standalone HTTP server for `@equinor/fusion-openapi-mock`, addressable by tests (e.g. Playwright) |
 
 ### CLI and tooling
 
@@ -111,6 +112,7 @@ Format: `package name` → path → role.
 | `@equinor/fusion-framework-cli-plugin-ai-chat` | `packages/cli-plugins/ai-chat` | Interactive AI chat command |
 | `@equinor/fusion-framework-cli-plugin-ai-index` | `packages/cli-plugins/ai-index` | Embedding and chunking for the retrieval index |
 | `@equinor/fusion-framework-cli-plugin-copilot` | `packages/cli-plugins/copilot` | Copilot SDK evaluation plugin |
+| `@equinor/fusion-framework-cli-plugin-mock-server` | `packages/cli-plugins/mock-server` | Adds `ffc mock-server`, wrapping `@equinor/fusion-openapi-mock-server` |
 
 ### Vite plugins (`packages/vite-plugins/*`)
 
@@ -148,9 +150,9 @@ Format: `package name` → path → role.
 `app-react`, `app-react-ag-grid`, `app-react-ai`, `app-react-apploader`, `app-react-assets`,
 `app-react-bookmark`, `app-react-bookmark-advanced`, `app-react-charts`, `app-react-context`,
 `app-react-context-custom-error`, `app-react-environment-variables`, `app-react-feature-flag`,
-`app-react-module`, `app-react-msal`, `app-react-observable`, `app-react-people`,
-`app-react-router`, `app-react-router-legacy`, `app-react-settings`, `app-react-state`,
-`app-react-styling`, `app-vanilla`, `poc-portal`, `portal`,
+`app-react-mock-playwright`, `app-react-module`, `app-react-msal`, `app-react-observable`,
+`app-react-people`, `app-react-router`, `app-react-router-legacy`, `app-react-settings`,
+`app-react-state`, `app-react-styling`, `app-vanilla`, `poc-portal`, `portal`,
 `portal-analytics`.
 
 Package name pattern: `@equinor/fusion-framework-cookbook-<folder>`.

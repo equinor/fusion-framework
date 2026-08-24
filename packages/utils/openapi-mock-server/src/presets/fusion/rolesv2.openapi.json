@@ -1,0 +1,125 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Fusion Roles V2 API (mock)",
+    "version": "1.0.0",
+    "description": "Backs the dev portal's PersonSideSheet roles feature (see packages/dev-portal/src/PersonSideSheet/sheets/roles/RolesApi.ts)."
+  },
+  "paths": {
+    "/accounts/{accountId}/consolidated-claimable-role-assignments": {
+      "get": {
+        "operationId": "getConsolidatedClaimableRoleAssignments",
+        "parameters": [
+          { "name": "accountId", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Claimable role assignments for the account.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/ClaimableRoleAssignment" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/accounts/{accountId}/consolidated-role-assignments": {
+      "get": {
+        "operationId": "getConsolidatedRoleAssignments",
+        "parameters": [
+          { "name": "accountId", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Permanent role assignments for the account.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/PermanentRoleAssignment" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/accounts/{accountId}/claimable-role-assignments/{roleId}/activate": {
+      "post": {
+        "operationId": "activateClaimableRoleAssignment",
+        "parameters": [
+          { "name": "accountId", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "roleId", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "The role was activated.",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ActivationResult" } }
+            }
+          }
+        }
+      }
+    },
+    "/accounts/{accountId}/claimable-role-assignments/{roleId}/deactivate": {
+      "post": {
+        "operationId": "deactivateClaimableRoleAssignment",
+        "parameters": [
+          { "name": "accountId", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "roleId", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": { "204": { "description": "The role was deactivated." } }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "RoleDefinition": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string", "faker": "hacker.noun" },
+          "displayName": { "type": "string", "faker": "person.jobTitle" },
+          "description": { "type": "string", "faker": "lorem.sentence" }
+        }
+      },
+      "RoleScope": {
+        "type": "object",
+        "properties": {
+          "isGlobal": { "type": "boolean" },
+          "value": { "type": "string", "nullable": true, "faker": "commerce.department" }
+        }
+      },
+      "ClaimableRoleAssignment": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "claimableRole": { "$ref": "#/components/schemas/RoleDefinition" },
+          "isActive": { "type": "boolean" },
+          "activeTo": { "type": "string", "format": "date-time", "nullable": true },
+          "validFrom": { "type": "string", "format": "date-time", "nullable": true },
+          "validTo": { "type": "string", "format": "date-time", "nullable": true }
+        }
+      },
+      "PermanentRoleAssignment": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "role": { "$ref": "#/components/schemas/RoleDefinition" },
+          "scope": { "$ref": "#/components/schemas/RoleScope", "nullable": true },
+          "validFrom": { "type": "string", "format": "date-time", "nullable": true },
+          "validTo": { "type": "string", "format": "date-time", "nullable": true }
+        }
+      },
+      "ActivationResult": {
+        "type": "object",
+        "properties": {
+          "activeToDate": { "type": "string", "format": "date-time" }
+        }
+      }
+    }
+  }
+}

@@ -7,7 +7,14 @@
   },
   "files": {
     "ignoreUnknown": false,
-    "includes": ["**", "!turbo", "!**/vue-press/src/.vuepress", "!package.json", "!pnpm-lock.yaml"]
+    "includes": [
+      "**",
+      "!turbo",
+      "!**/vue-press/src/.vuepress",
+      "!package.json",
+      "!pnpm-lock.yaml",
+      "!**/openapi-mock-server/src/__tests__/fixtures/broken/**"
+    ]
   },
   "formatter": {
     "enabled": true,

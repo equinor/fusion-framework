@@ -1,0 +1,91 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Fusion Context API (mock)",
+    "version": "1.0.0",
+    "description": "Bundled Fusion baseline preset — backported from cookbooks/app-react/mocks/context.openapi.json."
+  },
+  "paths": {
+    "/contexts": {
+      "get": {
+        "operationId": "queryContexts",
+        "parameters": [
+          { "name": "$search", "in": "query", "schema": { "type": "string" } },
+          { "name": "api-version", "in": "query", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Contexts matching the query.",
+            "content": {
+              "application/json": {
+                "schema": { "type": "array", "items": { "$ref": "#/components/schemas/Context" } }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/contexts/{id}": {
+      "get": {
+        "operationId": "getContext",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "api-version", "in": "query", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "A single context entity.",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/Context" } }
+            }
+          }
+        }
+      }
+    },
+    "/contexts/{id}/relations": {
+      "get": {
+        "operationId": "getRelatedContexts",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "api-version", "in": "query", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Contexts related to the given context entity.",
+            "content": {
+              "application/json": {
+                "schema": { "type": "array", "items": { "$ref": "#/components/schemas/Context" } }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ContextType": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "faker": "string.alphanumeric" },
+          "name": { "type": "string", "faker": "commerce.department" }
+        }
+      },
+      "Context": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "externalId": { "type": "string", "nullable": true },
+          "source": { "type": "string", "nullable": true },
+          "type": { "$ref": "#/components/schemas/ContextType" },
+          "value": { "type": "object", "nullable": true },
+          "title": { "type": "string", "faker": "commerce.productName" },
+          "isActive": { "type": "boolean" },
+          "isDeleted": { "type": "boolean" },
+          "created": { "type": "string", "format": "date-time" },
+          "updated": { "type": "string", "format": "date-time", "nullable": true }
+        }
+      }
+    }
+  }
+}
