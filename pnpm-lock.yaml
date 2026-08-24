@@ -1520,7 +1520,7 @@ importers:
   packages/cli-plugins/mock-server:
     dependencies:
       '@equinor/fusion-openapi-mock-server':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../../utils/openapi-mock-server
       commander:
         specifier: ^15.0.0

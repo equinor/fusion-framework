@@ -1,0 +1,53 @@
+{
+  "name": "@equinor/fusion-framework-cli-plugin-mock-server",
+  "version": "0.1.0-next.0",
+  "description": "Fusion Framework CLI plugin adding `ffc mock-server`, serving @equinor/fusion-openapi-mock fakes over HTTP",
+  "main": "dist/esm/index.js",
+  "type": "module",
+  "types": "dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "types": "./dist/types/index.d.ts"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      ".": [
+        "dist/types/index.d.ts"
+      ]
+    }
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "build:types": "tsc -b",
+    "watch": "tsc -b --watch",
+    "prepack": "pnpm build",
+    "test": "vitest"
+  },
+  "keywords": [
+    "fusion-framework",
+    "cli",
+    "plugin",
+    "openapi",
+    "mock"
+  ],
+  "author": "",
+  "license": "ISC",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/equinor/fusion-framework.git",
+    "directory": "packages/cli-plugins/mock-server"
+  },
+  "dependencies": {
+    "@equinor/fusion-openapi-mock-server": "workspace:^",
+    "commander": "^15.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^7.0.2",
+    "vitest": "^4.1.10"
+  }
+}
