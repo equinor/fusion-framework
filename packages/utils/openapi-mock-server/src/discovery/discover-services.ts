@@ -14,6 +14,7 @@ const SPEC_SUFFIXES = ['.openapi.json', '.openapi.yaml', '.openapi.yml'];
 const OVERRIDES_SUFFIXES = [
   '.overrides.ts',
   '.overrides.js',
+  '.overrides.mjs',
   '.overrides.json',
   '.overrides.yaml',
   '.overrides.yml',
