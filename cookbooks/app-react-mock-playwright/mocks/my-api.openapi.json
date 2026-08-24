@@ -1,0 +1,36 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Cookbook API (mock)",
+    "version": "1.0.0",
+    "description": "Demonstrates a self-authored service served by `ffc mock-server`, layered on top of the bundled `fusion` preset."
+  },
+  "paths": {
+    "/greeting": {
+      "get": {
+        "operationId": "getGreeting",
+        "responses": {
+          "200": {
+            "description": "A greeting message.",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Greeting" }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Greeting": {
+        "type": "object",
+        "properties": {
+          "message": { "type": "string", "faker": "Lorem.sentence" }
+        },
+        "required": ["message"]
+      }
+    }
+  }
+}

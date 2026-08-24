@@ -584,15 +584,9 @@ importers:
       '@equinor/fusion-framework-react-app':
         specifier: workspace:^
         version: link:../../packages/react/app
-      '@equinor/fusion-framework-react-module':
-        specifier: workspace:^
-        version: link:../../packages/react/modules/module
       '@equinor/fusion-framework-react-router':
         specifier: workspace:^
         version: link:../../packages/react/router
-      '@equinor/fusion-openapi-mock':
-        specifier: workspace:^
-        version: link:../../packages/utils/openapi-mock
       '@equinor/fusion-openapi-mock-server':
         specifier: workspace:^
         version: link:../../packages/utils/openapi-mock-server
@@ -608,9 +602,6 @@ importers:
       concurrently:
         specifier: ^10.0.5
         version: 10.0.5
-      playwright:
-        specifier: ^1.62.1
-        version: 1.62.1
       react:
         specifier: ^19.2.1
         version: 19.2.8
