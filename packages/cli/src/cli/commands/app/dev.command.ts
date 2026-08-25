@@ -11,7 +11,7 @@ const DEFAULT_MOCK_ENDPOINT = 'http://localhost:4010';
  *
  * Features:
  * - Launches the development server for your application.
- * - Supports custom manifest/config files, runtime environment, and port selection.
+ * - Supports custom manifest/config files and port selection.
  * - Debug mode available for verbose logging.
  * - Automatic loading of dev-server.config.ts for API mocking and customization.
  *
@@ -22,7 +22,6 @@ const DEFAULT_MOCK_ENDPOINT = 'http://localhost:4010';
  *   --debug              Enable debug mode
  *   --manifest <path>    Path to the app manifest file (app.manifest[.env]?.[ts,js,json])
  *   --config <path>      Path to the app config file (app.config[.env]?.[ts,js,json])
- *   --env <environment>  Runtime environment for the dev server (default: local)
  *   --port <port>        Port for the development server (default: 3000)
  *   --host <host>        Host for the development server (default: localhost)
  *   --mock [endpoint]    Point API service discovery at a local mock server (default: http://localhost:4010)
@@ -66,7 +65,6 @@ export const command = createCommand('dev')
   .option('--debug', 'Enable debug mode', !!process.env.RUNNER_DEBUG)
   .option('--manifest <path>', 'Path to the app manifest file (app.manifest[.env]?.[ts,js,json])')
   .option('--config <path>', 'Path to the app config file (app.config[.env]?.[ts,js,json])')
-  .option('--env <environment>', 'Runtime environment for the dev server', 'local')
   .option('--port <port>', 'Port for the development server', '3000')
   .option('--host <host>', 'Host for the development server')
   .option(
@@ -84,7 +82,6 @@ export const command = createCommand('dev')
       log,
       manifest: options.manifest,
       config: options.config,
-      env: { environment: options.env },
       port: options.port,
       host: options.host,
       mock,

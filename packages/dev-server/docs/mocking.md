@@ -72,7 +72,7 @@ behavior should change.
 
 ```sh
 ffc mock-server
-ffc app dev --env dev
+ffc app dev
 ```
 
 Normal development fetches real discovery and overlays discovery-visible local definitions by
@@ -82,7 +82,7 @@ service key. Use this when most real backends remain useful.
 
 ```sh
 ffc mock-server
-ffc app dev --env dev --mock http://localhost:4010
+ffc app dev --mock http://localhost:4010
 ```
 
 `--mock` points application discovery at the standalone server. The mock server never fetches real
@@ -117,7 +117,7 @@ application-owned API URL that production configuration supplies directly.
 
 Register that URL through the app's environment-specific `endpoints` configuration. The
 [HTTP-client guide](../../app/docs/http-clients.md#mock-an-application-config-endpoint-locally)
-contains the complete `app.config.dev.ts` recipe and restart caveat.
+contains the complete `app.config.local.ts` recipe and restart caveat.
 
 ## Configure shared defaults
 

@@ -2,7 +2,8 @@
 "@equinor/fusion-framework-cli": minor
 ---
 
-Add a built-in `ffc mock-server` command and a `--mock [endpoint]` flag to `ffc app dev`.
+Add a built-in `ffc mock-server` command and a `--mock [endpoint]` flag to `ffc app dev` and
+`ffc app serve`.
 
 `ffc mock-server` delegates to `@equinor/fusion-framework-cli-plugin-mock-server` when installed
 and otherwise prints an installation hint. Explicit `mockServerPlugin()` configuration remains
@@ -14,10 +15,14 @@ override — `ffc app dev --mock` defaults to `http://localhost:4010`, or pass a
 with `ffc app dev --mock http://localhost:5010`. An existing `dev-server.config.ts` override for
 `api.serviceDiscoveryUrl` still takes precedence.
 
+`ffc app serve --mock` applies the same isolated discovery and mock authentication to a built
+application preview. The application must be built first. Both development commands resolve the
+`local` environment; select other files explicitly with `--manifest` and `--config`.
+
 Normal `ffc app dev` discovers local `<name>.mock.ts` modules and overlays discovery-visible
 definitions onto remote service discovery. In `--mock` mode, discovery comes exclusively from the
-manually started mock server. Environment-specific app config files such as `app.config.dev.ts`
-are also selected correctly when `--env dev` is supplied.
+manually started mock server. Local endpoint overrides can be supplied through
+`app.config.local.ts`.
 
 `--mock` also enables the in-process MSAL mock (`spa.templateEnv.msal.mock`), so a mocked API
 is usable end-to-end without a real Entra ID sign-in.

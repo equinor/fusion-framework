@@ -62,10 +62,10 @@ Keep the mock server running, then choose one app-development mode in another te
 
 ```sh
 # Keep real discovery and overlay selected local definitions
-ffc app dev --env dev
+ffc app dev
 
 # Use only bundled presets and local mock definitions
-ffc app dev --env dev --mock http://localhost:4010
+ffc app dev --mock http://localhost:4010
 ```
 
 The standalone server uses only configured presets and local modules. `--mock` therefore gives an

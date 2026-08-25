@@ -2,6 +2,8 @@ import { createCommand } from 'commander';
 
 import { ConsoleLogger, serveApplication } from '@equinor/fusion-framework-cli/bin';
 
+const DEFAULT_MOCK_ENDPOINT = 'http://localhost:4010';
+
 /**
  * CLI command: `serve`
  *
@@ -17,6 +19,7 @@ import { ConsoleLogger, serveApplication } from '@equinor/fusion-framework-cli/b
  *   $ ffc app serve
  *   $ ffc app serve --port 5000
  *   $ ffc app serve --dir ./dist --host 0.0.0.0
+ *   $ ffc app serve --mock
  *
  * Options:
  *   --port <port>        Port for the preview server (default: 4173)
@@ -53,6 +56,7 @@ export const command = createCommand('serve')
       '  $ ffc app serve --port 5000',
       '  $ ffc app serve --dir ./dist --host 0.0.0.0',
       '  $ ffc app serve --manifest app.manifest.prod.ts --config app.config.prod.ts',
+      '  $ ffc app serve --mock',
     ].join('\n'),
   )
   .option('--port <port>', 'Port for the preview server', '4173')
@@ -60,6 +64,10 @@ export const command = createCommand('serve')
   .option('--dir <directory>', 'Directory to serve (default: detected from build config)')
   .option('--manifest <path>', 'Path to the app manifest file')
   .option('--config <path>', 'Path to the app config file')
+  .option(
+    '--mock [endpoint]',
+    `Point API service discovery at a local mock server, e.g. one started with "ffc mock-server" (default endpoint: ${DEFAULT_MOCK_ENDPOINT})`,
+  )
   .option('-d, --debug', 'Enable debug mode for verbose logging', false)
   .action(async (options) => {
     const log = new ConsoleLogger('app:serve', { debug: options.debug });
@@ -71,6 +79,8 @@ export const command = createCommand('serve')
       process.exit(1);
     }
 
+    const mock = options.mock === true ? DEFAULT_MOCK_ENDPOINT : options.mock;
+
     await serveApplication({
       log,
       manifest: options.manifest,
@@ -79,6 +89,7 @@ export const command = createCommand('serve')
       port,
       host: options.host,
       debug: options.debug,
+      mock,
     });
   });
 

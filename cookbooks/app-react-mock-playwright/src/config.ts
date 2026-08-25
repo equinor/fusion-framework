@@ -4,7 +4,7 @@ import type { AppModuleInitiator } from '@equinor/fusion-framework-react-app';
 /**
  * Application module configuration.
  *
- * `my-api` is a custom endpoint supplied by `app.config.dev.ts`, so it does not need a
+ * `my-api` is a custom endpoint supplied by `app.config.local.ts`, so it does not need a
  * service-discovery client registration.
  *
  * `people` is the bundled `fusion` preset's own service. `mocks/people.mock.ts` merges

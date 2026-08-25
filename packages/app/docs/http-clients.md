@@ -50,7 +50,7 @@ export default defineService({
 Point the development environment at the service's `<key>.localhost` origin:
 
 ```ts
-// app.config.dev.ts
+// app.config.local.ts
 import { defineAppConfig } from '@equinor/fusion-framework-cli/app';
 
 export default defineAppConfig(() => ({
@@ -66,7 +66,7 @@ Start both foreground processes:
 
 ```sh
 ffc mock-server
-ffc app dev --env dev
+ffc app dev
 ```
 
 `serviceDiscovery: false` keeps `my-api` out of discovery while the mock server continues serving

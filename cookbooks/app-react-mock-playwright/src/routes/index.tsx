@@ -13,7 +13,7 @@ export const handle = {
 } as const satisfies RouterHandle;
 
 /**
- * Demonstrates a direct-only app-owned API whose URL comes from `app.config.dev.ts`.
+ * Demonstrates a direct-only app-owned API whose URL comes from `app.config.local.ts`.
  *
  * `mocks/my-api.mock.ts` serves the API but uses `serviceDiscovery: false`, so the app configures
  * the client endpoint explicitly instead of registering a framework service client.
@@ -21,7 +21,7 @@ export const handle = {
  * @returns The direct-only service explanation and its loading, error, or resolved response.
  *
  * @example
- * Navigate to the cookbook root while `ffc mock-server` and `ffc app dev --env dev --mock` run.
+ * Navigate to the cookbook root while `ffc mock-server` and `ffc app dev --mock` run.
  */
 export default function DirectOnlyServicePage(): ReactElement {
   const client = useHttpClient('my-api');

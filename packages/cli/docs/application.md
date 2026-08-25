@@ -217,7 +217,7 @@ export default defineAppConfig((env, args) => {
 
 > [!TIP]
 > To mock an app-owned `endpoints` client locally, use a `serviceDiscovery: false` executable
-> service and point `app.config.dev.ts` at `http://<key>.localhost:4010`. See
+> service and point `app.config.local.ts` at `http://<key>.localhost:4010`. See
 > [Mock an application-config endpoint locally](../../app/docs/http-clients.md#mock-an-application-config-endpoint-locally).
 > This direct workflow needs no `/@fusion-api` route or handwritten mock middleware. Restart
 > `ffc app dev` after changing `app.config.<env>.ts`.
@@ -421,7 +421,6 @@ Start your application in development mode with hot reloading and environment-sp
 | `--debug`           | Enable debug mode for verbose logging.                              | `false`           |
 | `--manifest <path>` | Path to the app manifest file (`app.manifest[.env]?.[ts,js,json]`). | `app.manifest.ts` |
 | `--config <path>`   | Path to the app config file (`app.config[.env]?.[ts,js,json]`).     | `app.config.ts`   |
-| `--env <env>`       | Runtime environment for the dev server.                             | `local`           |
 | `--port <port>`     | Port for the development server.                                    | `3000`            |
 
 **Usage:**
@@ -453,6 +452,7 @@ The `serve` command serves your built application through the dev-portal, simila
 | `--dir <directory>` | Directory to serve (default: detected from build config).          |                   |
 | `--manifest <path>` | Path to the app manifest file (`app.manifest[.env]?.[ts,js,json]`). | `app.manifest.ts` |
 | `--config <path>`   | Path to the app config file (`app.config[.env]?.[ts,js,json]`).     | `app.config.ts`   |
+| `--mock [endpoint]` | Use isolated service discovery and mock authentication from a manually started mock server. | `http://localhost:4010` |
 | `-d`, `--debug`     | Enable debug mode for verbose logging.                              | `false`           |
 
 **Usage:**
@@ -466,6 +466,7 @@ pnpm fusion-framework-cli app serve
 pnpm fusion-framework-cli app serve --port 5000
 pnpm fusion-framework-cli app serve --dir ./dist --host 0.0.0.0
 pnpm fusion-framework-cli app serve --manifest app.manifest.prod.ts --config app.config.prod.ts
+ffc app serve --mock
 ```
 
 > [!IMPORTANT]
@@ -474,6 +475,11 @@ pnpm fusion-framework-cli app serve --manifest app.manifest.prod.ts --config app
 > **Build Directory Detection**: The build directory is automatically detected from your Vite configuration. If you need to serve a different directory, use the `--dir` option.
 >
 > **Preview Environment**: The serve command uses production mode and marks the environment as preview, so the manifest uses the compiled entry point from your build output.
+
+> [!TIP]
+> Start `ffc mock-server` in another foreground terminal before using `--mock`. The `serve`
+> command does not own or start that process. Both `app dev` and `app serve` resolve the `local`
+> environment; pass explicit `--manifest` or `--config` paths when another file is needed.
 
 ### Publish
 

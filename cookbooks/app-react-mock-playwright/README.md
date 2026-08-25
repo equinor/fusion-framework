@@ -9,8 +9,8 @@ Most cookbooks show a framework feature in isolation. This one shows the integra
 pieces of Fusion Framework tooling: `@equinor/fusion-framework-cli-plugin-mock-server`'s
 `ffc mock-server` command (a standalone mock HTTP server, see
 [`packages/cli-plugins/mock-server`](../../packages/cli-plugins/mock-server)) and Playwright's
-`webServer` option, which starts both the mock server and the app's dev server before the test
-run and tears them down after.
+`webServer` option, which builds the application, starts both the mock server and the preview
+server, and tears the servers down after the test run.
 
 ## How it works
 
@@ -24,20 +24,20 @@ run and tears them down after.
   there before release.
 - [`mocks/my-api.mock.ts`](mocks/my-api.mock.ts) defines `my-api`, imports its OpenAPI schema,
   and uses `serviceDiscovery: false` to keep this custom service out of discovery.
-- [`app.config.dev.ts`](app.config.dev.ts) configures `my-api` directly at
+- [`app.config.local.ts`](app.config.local.ts) configures `my-api` directly at
   `http://my-api.localhost:4010` for both normal and `--mock` development.
-- `ffc app dev --env dev --mock http://localhost:4010` loads `app.config.dev.ts` by convention
-  and points service discovery at the mock server. The
-  dev server automatically creates local proxy routes for the bundled services.
+- `ffc app serve --mock http://localhost:4010` serves the production build, resolves
+  `app.config.local.ts`, and points service discovery at the mock server. The
+  preview server automatically creates local proxy routes for the bundled services.
 - [`src/routes/index.tsx`](src/routes/index.tsx),
   [`src/routes/people/index.tsx`](src/routes/people/index.tsx), and
   [`src/routes/aurora/index.tsx`](src/routes/aurora/index.tsx) give each service lifecycle
   scenario its own page. The direct-only scenario is the root index; named pages live in their own
   directories. Each page calls `useHttpClient()` directly so its explanation and the framework
   integration agents should reproduce live together in one retrieval-friendly file.
-- [`playwright.config.ts`](playwright.config.ts) starts `pnpm mock:server` (`ffc mock-server`)
-  and `pnpm mock:dev` (`ffc app dev --env dev --mock`) as Playwright `webServer` entries, then runs the
-  specs under [`playwright/`](playwright) against the real running app.
+- [`playwright.config.ts`](playwright.config.ts) starts `ffc mock-server` and runs `ffc app build`
+  followed by `ffc app serve --mock` as Playwright `webServer` entries, then runs the
+  specs under [`playwright/`](playwright) against the built app.
 
 ## Running it
 
@@ -49,7 +49,9 @@ To run the pieces individually while developing:
 
 ```sh
 pnpm mock:server   # ffc mock-server ./mocks --port 4010
-pnpm mock:dev      # ffc app dev --env dev --mock http://localhost:4010, in another terminal
+pnpm mock:dev      # ffc app dev --mock http://localhost:4010, in another terminal
+ffc app build
+ffc app serve --mock http://localhost:4010  # in another terminal
 ```
 
 Or start both processes together with `pnpm dev:mock`.
@@ -65,14 +67,16 @@ It does not start `ffc mock-server`; unreachable local service URIs remain unrea
 - **`ffc mock-server`** serves any directory of `<name>.mock.ts` service modules over HTTP,
   independent of Vite or the dev server — see the plugin's own
   [README](../../packages/cli-plugins/mock-server/README.md) for the full command reference.
-- **`ffc app dev --mock`** uses the mock server's discovery endpoint and generates the dev-server
-  proxy routes automatically, so the app needs no custom `dev-server.config.ts`. This mode ignores
-  normal-dev definitions and uses only mock-server presets plus local `defineService` modules.
+- **`ffc app dev --mock` and `ffc app serve --mock`** use the mock server's discovery endpoint and
+  generate proxy routes automatically, so the app needs no custom `dev-server.config.ts`. These
+  modes ignore normal discovery and use only mock-server presets plus local `defineService`
+  modules. `app serve` requires an existing build; Playwright runs `ffc app build` before starting
+  the preview server.
 - **`defineService`** controls mock-server behavior and whether a service is advertised. Plain
   `ffc app dev` points visible definitions at the manually started mock server;
   `'merge'` overrides an existing entry, `'new'` adds a pre-production service and rejects key
   collisions, `'replace'` deliberately replaces a complete definition, and `false` keeps a
-  genuinely custom endpoint like `my-api` direct-only because `app.config.dev.ts` supplies its URL.
+  genuinely custom endpoint like `my-api` direct-only because `app.config.local.ts` supplies its URL.
 - **`defineService`** keeps a service's schema, `components`, declarative `routes`, and
   `middleware` in one module. `serviceDiscovery: 'replace'` defines a complete service;
   `serviceDiscovery: 'merge'` inherits an earlier service schema. A declarative route remains
