@@ -108,6 +108,6 @@ describe('createMockServerCommand', () => {
 
     expect(mocks.discoverServices).toHaveBeenCalledWith('mocks');
     expect(mocks.createMockServer).toHaveBeenCalledWith({ seed: undefined });
-    expect(mocks.start).toHaveBeenCalledWith({ port: undefined, host: 'localhost' });
+    expect(mocks.start).toHaveBeenCalledWith({ port: 4010, host: 'localhost' });
   });
 });

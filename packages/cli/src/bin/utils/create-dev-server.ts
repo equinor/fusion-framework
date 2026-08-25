@@ -1,15 +1,25 @@
+import { resolve } from 'node:path';
+
 import type { Plugin } from 'vite';
 
 import { loadDevServerConfig, type RuntimeEnv } from '@equinor/fusion-framework-cli/lib';
 
 import {
   createDevServer as createDevServerFn,
+  type DevServerOptions,
   type UserConfig,
 } from '@equinor/fusion-framework-dev-server';
+import type { DevServerMockOptions } from '@equinor/fusion-framework-cli-plugin-mock-server';
 
 import type { ConsoleLogger } from './ConsoleLogger.js';
+import { applyDevServerMocks } from './apply-dev-server-mocks.js';
 import { normalizeDevServerConfig } from './normalize-dev-server-config.js';
 import { createDevServerConfig, type CreateDevServerOptions } from './create-dev-server-config.js';
+import { discoverDevServerMocks } from './discover-dev-server-mocks.js';
+
+interface MockAwareDevServerOptions extends DevServerOptions {
+  mockServer?: DevServerMockOptions;
+}
 
 /**
  * Creates a Vite plugin that watches the dev-server.config.ts file and restarts the server when it changes.
@@ -51,24 +61,36 @@ export const createDevServer = async (
   const baseConfig = createDevServerConfig(options);
   log?.debug('\nBase dev server config:', normalizeDevServerConfig(baseConfig));
   log?.debug('\nCreating dev server with overrides:', overrides);
+  let config: MockAwareDevServerOptions = baseConfig;
+  let configWatcherPlugin: Plugin | undefined;
   try {
-    const { path, config } = await loadDevServerConfig(env, baseConfig);
+    const loaded = await loadDevServerConfig(env, baseConfig);
+    config = loaded.config;
+    const { path } = loaded;
     log?.debug(`\nLoaded dev server config from ${path}`);
     log?.debug('\nLoaded dev server config:', normalizeDevServerConfig(config));
 
     // Add plugin to watch the config file and restart on changes
-    const configWatcherPlugin = createDevServerConfigWatcherPlugin(path, log);
-    const mergedOverrides = {
-      ...overrides,
-      plugins: [...(overrides?.plugins ?? []), configWatcherPlugin],
-    };
-
-    return createDevServerFn(config, mergedOverrides);
+    configWatcherPlugin = createDevServerConfigWatcherPlugin(path, log);
   } catch (error) {
     log?.warn(
       '\nFailed to load dev server config:',
       error instanceof Error ? error.message : String(error),
     );
-    return createDevServerFn(baseConfig, overrides);
   }
+
+  // Normal dev augments real discovery; --mock relies only on the manually started mock server.
+  if (!options.mock) {
+    const mocksPath = resolve(env.root ?? process.cwd(), config.mockServer?.path ?? 'mocks');
+    const mocks = await discoverDevServerMocks(mocksPath, config.mockServer?.port ?? 4010);
+    config = applyDevServerMocks(config, mocks);
+  }
+
+  const mergedOverrides = configWatcherPlugin
+    ? {
+        ...overrides,
+        plugins: [...(overrides?.plugins ?? []), configWatcherPlugin],
+      }
+    : overrides;
+  return createDevServerFn(config, mergedOverrides);
 };

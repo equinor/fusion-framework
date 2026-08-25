@@ -14,5 +14,10 @@ override — `ffc app dev --mock` defaults to `http://localhost:4010`, or pass a
 with `ffc app dev --mock http://localhost:5010`. An existing `dev-server.config.ts` override for
 `api.serviceDiscoveryUrl` still takes precedence.
 
+Normal `ffc app dev` discovers local `<name>.mock.ts` modules and overlays discovery-visible
+definitions onto remote service discovery. In `--mock` mode, discovery comes exclusively from the
+manually started mock server. Environment-specific app config files such as `app.config.dev.ts`
+are also selected correctly when `--env dev` is supplied.
+
 `--mock` also enables the in-process MSAL mock (`spa.templateEnv.msal.mock`), so a mocked API
 is usable end-to-end without a real Entra ID sign-in.

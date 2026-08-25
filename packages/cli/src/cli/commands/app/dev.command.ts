@@ -84,7 +84,7 @@ export const command = createCommand('dev')
       log,
       manifest: options.manifest,
       config: options.config,
-      env: options.env,
+      env: { environment: options.env },
       port: options.port,
       host: options.host,
       mock,

@@ -120,7 +120,7 @@ ffc mock-server [dirs...] [options]
 | --- | --- |
 | `[dirs...]` | Directories of `<name>.mock.ts` modules in ascending precedence. Later definitions are resolved by service key and discovery mode. |
 | `--preset <name>` | Bundled preset layered before local directories. Repeatable; defaults to `fusion`. The first explicit flag replaces the default. |
-| `--port <port>` | Listening port. Uses config, then plugin defaults, then an OS-assigned port. |
+| `--port <port>` | Listening port. Uses config, then plugin defaults, then `4010`. |
 | `--host <host>` | Bind hostname. Uses config, then plugin defaults, then `localhost`. |
 | `--seed <seed>` | Deterministic seed for generated OpenAPI responses. Without a seed, generated values are random. |
 

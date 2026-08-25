@@ -23,7 +23,7 @@ export interface MockServerCommandDefaults {
   path?: string;
   /** Bundled preset(s) to apply when `--preset` isn't given at all. Defaults to `['fusion']`. */
   preset?: string[];
-  /** Port to listen on when `--port` isn't given. Defaults to an OS-assigned free port. */
+  /** Port to listen on when `--port` isn't given. Defaults to `4010`. */
   port?: number;
   /** Hostname to bind to when `--host` isn't given. Defaults to `'localhost'`. */
   host?: string;
@@ -83,7 +83,7 @@ export function createMockServerCommand(defaults: MockServerCommandDefaults = {}
     .addOption(
       createOption(
         '--port <port>',
-        `port to listen on (default: config or ${defaults.port ?? 'OS-assigned'})`,
+        `port to listen on (default: config or ${defaults.port ?? 4010})`,
       ).argParser(Number),
     )
     .addOption(createOption('--host <host>', 'hostname to bind to (default: config or localhost)'))
@@ -110,7 +110,7 @@ export function createMockServerCommand(defaults: MockServerCommandDefaults = {}
       for (const definitions of definitionGroups) server.use(definitions);
 
       const { url } = await server.start({
-        port: options.port ?? config.port ?? defaults.port,
+        port: options.port ?? config.port ?? defaults.port ?? 4010,
         host: options.host ?? config.host ?? defaults.host ?? 'localhost',
       });
       console.log(`mock server listening at ${url}`);

@@ -31,7 +31,7 @@ export interface StartAppDevServerOptions {
   /**
    * Runtime environment settings for the dev server (optional).
    */
-  env?: RuntimeEnv;
+  env?: Partial<RuntimeEnv>;
   /**
    * Path to the application manifest file (optional).
    */
