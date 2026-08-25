@@ -1,0 +1,37 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Aurora Forecast API",
+    "version": "1.0.0",
+    "description": "Fictional pre-production service that will be registered in Fusion service discovery before release."
+  },
+  "paths": {
+    "/forecast": {
+      "get": {
+        "operationId": "getAuroraForecast",
+        "responses": {
+          "200": {
+            "description": "Current fictional aurora forecast.",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/AuroraForecast" }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AuroraForecast": {
+        "type": "object",
+        "required": ["location", "activity"],
+        "properties": {
+          "location": { "type": "string" },
+          "activity": { "type": "string" }
+        }
+      }
+    }
+  }
+}

@@ -14,20 +14,29 @@ run and tears them down after.
 
 ## How it works
 
-- [`mocks/my-api.openapi.json`](mocks/my-api.openapi.json) declares a single `GET /greeting`
-  operation. [`mocks/my-api.overrides.ts`](mocks/my-api.overrides.ts) pins its `message` field
-  to a fixed string via a `components` field-faker override, so the test has something
-  deterministic to assert on.
-- `ffc app dev --mock http://localhost:4010` points service discovery at the mock server. The
-  dev server automatically creates local proxy routes for both `my-api` and the bundled services.
-- [`mocks/people.overrides.ts`](mocks/people.overrides.ts) pins `people`'s (the bundled `fusion`
-  preset's) `getPerson` response via a static `paths` override, without a local
-  `people.openapi.json` — see `mergeServiceDefinitions` in `@equinor/fusion-openapi-mock-server`.
-- [`src/routes/index.tsx`](src/routes/index.tsx) fetches a greeting from the `my-api` client and
-  a person from the `people` client (both via `useHttpClient()`, from
-  `@equinor/fusion-framework-react-app/http`) and renders the responses.
+- [`mocks/people.mock.ts`](mocks/people.mock.ts) overrides an existing service-discovery entry
+  with `serviceDiscovery: 'merge'`, inheriting the bundled `people` schema while replacing its
+  `getPerson` response.
+- [`mocks/aurora-api.mock.ts`](mocks/aurora-api.mock.ts) temporarily adds the fictional
+  pre-production `aurora-api` service with `serviceDiscovery: 'new'`, its own
+  [`aurora-api.openapi.json`](mocks/aurora-api.openapi.json) schema, and deterministic component
+  values. It is absent from real service discovery during development, but must be registered
+  there before release.
+- [`mocks/my-api.mock.ts`](mocks/my-api.mock.ts) defines `my-api`, imports its OpenAPI schema,
+  and uses `serviceDiscovery: false` to keep this custom service out of discovery.
+- [`app.config.dev.ts`](app.config.dev.ts) configures `my-api` directly at
+  `http://my-api.localhost:4010` for both normal and `--mock` development.
+- `ffc app dev --env dev --mock http://localhost:4010` loads `app.config.dev.ts` by convention
+  and points service discovery at the mock server. The
+  dev server automatically creates local proxy routes for the bundled services.
+- [`src/routes/index.tsx`](src/routes/index.tsx),
+  [`src/routes/people/index.tsx`](src/routes/people/index.tsx), and
+  [`src/routes/aurora/index.tsx`](src/routes/aurora/index.tsx) give each service lifecycle
+  scenario its own page. The direct-only scenario is the root index; named pages live in their own
+  directories. Each page calls `useHttpClient()` directly so its explanation and the framework
+  integration agents should reproduce live together in one retrieval-friendly file.
 - [`playwright.config.ts`](playwright.config.ts) starts `pnpm mock:server` (`ffc mock-server`)
-  and `pnpm mock:dev` (`ffc app dev --mock`) as Playwright `webServer` entries, then runs the
+  and `pnpm mock:dev` (`ffc app dev --env dev --mock`) as Playwright `webServer` entries, then runs the
   specs under [`playwright/`](playwright) against the real running app.
 
 ## Running it
@@ -40,25 +49,37 @@ To run the pieces individually while developing:
 
 ```sh
 pnpm mock:server   # ffc mock-server ./mocks --port 4010
-pnpm mock:dev      # ffc app dev --mock http://localhost:4010, in another terminal
+pnpm mock:dev      # ffc app dev --env dev --mock http://localhost:4010, in another terminal
 ```
 
 Or start both processes together with `pnpm dev:mock`.
 
+For normal development with real service discovery plus selected local services, manually start
+`pnpm mock:server`, then run `pnpm dev` in another terminal. Plain `ffc app dev` discovers
+`*.mock.ts` files under `mockServer.path` (default `mocks`) and merges visible `defineService`
+entries into real discovery by key.
+It does not start `ffc mock-server`; unreachable local service URIs remain unreachable.
+
 ## Key concepts
 
-- **`ffc mock-server`** serves any directory of `<service>.openapi.json` specs over HTTP,
+- **`ffc mock-server`** serves any directory of `<name>.mock.ts` service modules over HTTP,
   independent of Vite or the dev server — see the plugin's own
   [README](../../packages/cli-plugins/mock-server/README.md) for the full command reference.
 - **`ffc app dev --mock`** uses the mock server's discovery endpoint and generates the dev-server
-  proxy routes automatically, so the app needs no custom `dev-server.config.ts`.
-- **`<service>.overrides.ts`** sidecars let a mock pin specific fields (`components`) or whole
-  operation responses (`paths`) to fixed or computed values instead of the OpenAPI schema's
-  random fake, which is what makes this cookbook's Playwright assertions deterministic. A
-  `paths` override still stays overridable at runtime via `/@fusion-mock/:service/:operationId`
+  proxy routes automatically, so the app needs no custom `dev-server.config.ts`. This mode ignores
+  normal-dev definitions and uses only mock-server presets plus local `defineService` modules.
+- **`defineService`** controls mock-server behavior and whether a service is advertised. Plain
+  `ffc app dev` points visible definitions at the manually started mock server;
+  `'merge'` overrides an existing entry, `'new'` adds a pre-production service and rejects key
+  collisions, `'replace'` deliberately replaces a complete definition, and `false` keeps a
+  genuinely custom endpoint like `my-api` direct-only because `app.config.dev.ts` supplies its URL.
+- **`defineService`** keeps a service's schema, `components`, declarative `routes`, and
+  `middleware` in one module. `serviceDiscovery: 'replace'` defines a complete service;
+  `serviceDiscovery: 'merge'` inherits an earlier service schema. A declarative route remains
+  overridable at runtime via `/@fusion-mock/:service/:operationId`
   (see
-  [`playwright/playwright-override.spec.ts`](playwright/playwright-override.spec.ts)); a
-  `middleware` override always wins over the generated mock, even against a runtime override.
+  [`playwright/playwright-override.spec.ts`](playwright/playwright-override.spec.ts)), while
+  `middleware` always wins over the generated mock and runtime override.
 - **Playwright's `webServer`** array starts and stops each process for the whole test run — do
   not start `ffc mock-server` yourself in the background; it is designed to run in the
   foreground and shut down on `SIGINT`/`SIGTERM`.

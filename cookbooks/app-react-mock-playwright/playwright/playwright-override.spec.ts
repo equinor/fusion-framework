@@ -2,6 +2,7 @@ import { expect, test } from '@playwright/test';
 
 const MOCK_SERVER_URL = 'http://localhost:4010';
 const APP_PATH = '/apps/fusion-framework-cookbook-app-react-mock-playwright';
+const PEOPLE_PATH = `${APP_PATH}/people`;
 
 test('overrides mocked responses directly from Playwright, then resets them', async ({
   page,
@@ -17,8 +18,12 @@ test('overrides mocked responses directly from Playwright, then resets them', as
 
   try {
     await page.goto(APP_PATH);
-    await expect(page.getByTestId('greeting')).toHaveText('Overridden from a Playwright test!');
-    await expect(page.getByTestId('person-name')).toHaveText('Overridden Person');
+    await expect(page.getByTestId('greeting')).toHaveText(
+      'Response: Overridden from a Playwright test!',
+    );
+
+    await page.goto(PEOPLE_PATH);
+    await expect(page.getByTestId('person-name')).toHaveText('Response: Overridden Person');
   } finally {
     await request.post(`${MOCK_SERVER_URL}/@fusion-mock/reset`);
   }

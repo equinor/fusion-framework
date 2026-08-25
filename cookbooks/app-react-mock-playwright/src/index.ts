@@ -3,12 +3,16 @@ import { createRoot } from 'react-dom/client';
 
 import { type ComponentRenderArgs, makeComponent } from '@equinor/fusion-framework-react-app';
 import { Router } from '@equinor/fusion-framework-react-router';
-import { index, layout } from '@equinor/fusion-framework-react-router/routes';
+import { index, layout, route } from '@equinor/fusion-framework-react-router/routes';
 
 import configure from './config';
 
-/** route tree: a shared layout wrapping the index route (`src/routes/index.tsx`) */
-const routes = layout('./routes/layout.tsx', [index('./routes/index.tsx')]);
+/** Route tree with one page for each mock-service ownership and discovery scenario. */
+const routes = layout('./routes/layout.tsx', [
+  index('./routes/index.tsx'),
+  route('people', './routes/people/index.tsx'),
+  route('aurora', './routes/aurora/index.tsx'),
+]);
 
 /** create a render component */
 const appComponent = createElement(Router, { routes });

@@ -26,6 +26,7 @@
     }
   ],
   "include": [
+    "app.config.dev.ts",
     "src/**/*",
     "playwright.config.ts",
     "playwright/**/*",

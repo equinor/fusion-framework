@@ -15,11 +15,11 @@ Reject results that confuse dev-server configuration with runtime module configu
 
 ## How to mock API responses in local development
 
-- must mention `processServices` from `@equinor/fusion-framework-dev-server` for custom service processing
-- must show adding mock services via `api.processServices` callback that returns `data` and `routes`
-- must show a custom `routes` entry with `match` pattern and `middleware` function
-- should show concatenating mock services onto the discovered services array
-- should show the middleware signature with `(req, res)` for handling mock responses
+- must mention executable `<name>.mock.ts` modules created with `defineService`
+- must show how `serviceDiscovery: 'merge'`, `'new'`, or `'replace'` makes a local definition visible
+- should mention that normal `ffc app dev` derives local proxy services from visible `defineService` modules and merges them by key into real discovery
+- must state that `ffc app dev --mock <origin>` ignores normal-dev definitions and uses only the manually started mock server's presets and local `defineService` modules
+- must not claim that `ffc app dev` automatically starts `ffc mock-server`
 
 ## How to configure API proxying and custom routes
 

@@ -1,25 +1,49 @@
 import type { RouterHandle } from '@equinor/fusion-framework-react-router';
-import type { ReactElement } from 'react';
+import { useHttpClient } from '@equinor/fusion-framework-react-app/http';
+import { useEffect, useState, type ReactElement } from 'react';
 
-import { Greeting } from '../components/Greeting';
-import { PersonName } from '../components/PersonName';
+interface GreetingResponse {
+  message: string;
+}
 
 export const handle = {
   route: {
-    description: 'Renders a greeting and a person name, both served by the mock server.',
+    description: 'Demonstrates an app-owned API configured without service discovery.',
   },
 } as const satisfies RouterHandle;
 
 /**
- * Index route — renders the mocked greeting and person name at the layout's root path.
+ * Demonstrates a direct-only app-owned API whose URL comes from `app.config.dev.ts`.
  *
- * @returns The greeting and person name elements.
+ * `mocks/my-api.mock.ts` serves the API but uses `serviceDiscovery: false`, so the app configures
+ * the client endpoint explicitly instead of registering a framework service client.
+ *
+ * @returns The direct-only service explanation and its loading, error, or resolved response.
+ *
+ * @example
+ * Navigate to the cookbook root while `ffc mock-server` and `ffc app dev --env dev --mock` run.
  */
-export default function Index(): ReactElement {
+export default function DirectOnlyServicePage(): ReactElement {
+  const client = useHttpClient('my-api');
+  const [greeting, setGreeting] = useState<string>('Loading...');
+
+  useEffect(() => {
+    const controller = new AbortController();
+    client
+      .json<GreetingResponse>('/greeting', { signal: controller.signal })
+      .then(({ message }) => setGreeting(message))
+      .catch(() => setGreeting('Failed to load greeting'));
+    return () => controller.abort();
+  }, [client]);
+
   return (
-    <>
-      <Greeting />
-      <PersonName />
-    </>
+    <section>
+      <h2>Direct-only app service</h2>
+      <p>
+        This app owns the service URL. The mock supplies its OpenAPI behavior but deliberately stays
+        out of service discovery.
+      </p>
+      <p data-testid="greeting">Response: {greeting}</p>
+    </section>
   );
 }

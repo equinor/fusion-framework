@@ -1,11 +1,11 @@
 import { expect, test } from '@playwright/test';
 
-const APP_PATH = '/apps/fusion-framework-cookbook-app-react-mock-playwright';
+const PEOPLE_PATH = '/apps/fusion-framework-cookbook-app-react-mock-playwright/people';
 
-test('renders a person name overridden by a mocks/people.overrides.ts sidecar', async ({
+test('renders a person name merged by mocks/people.mock.ts', async ({
   page,
 }) => {
-  await page.goto(APP_PATH);
+  await page.goto(PEOPLE_PATH);
 
-  await expect(page.getByTestId('person-name')).toHaveText('Turanga Leela');
+  await expect(page.getByTestId('person-name')).toHaveText('Response: Jane Doe');
 });

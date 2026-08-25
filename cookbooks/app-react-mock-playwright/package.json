@@ -7,9 +7,9 @@
   "main": "dist/main.js",
   "scripts": {
     "build": "ffc app build",
-    "dev": "ffc app dev",
+    "dev": "ffc app dev --env dev",
     "dev:mock": "concurrently -k 'pnpm mock:server' 'pnpm mock:dev'",
-    "mock:dev": "ffc app dev --mock http://localhost:4010",
+    "mock:dev": "ffc app dev --env dev --mock http://localhost:4010",
     "mock:server": "ffc mock-server ./mocks --port 4010",
     "test": "pnpm test",
     "test:mock": "playwright test"
