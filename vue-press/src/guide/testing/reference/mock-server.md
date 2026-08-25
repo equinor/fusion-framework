@@ -10,5 +10,3 @@ tag:
 ---
 
 <!-- @include: ../../../../../packages/utils/openapi-mock-server/docs/getting-started.md -->
-
-<!-- @include: ../../../../../packages/utils/openapi-mock-server/docs/testing-with-playwright.md -->

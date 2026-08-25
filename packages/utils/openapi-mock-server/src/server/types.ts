@@ -6,6 +6,14 @@ import type { ServiceMockDefinition } from '../discovery/discover-services.js';
 /** A registered mock source: an already-resolved definition group, a bundled preset name (e.g. `'fusion'`), or a directory to scan. */
 export type MockSource = ServiceMockDefinition[] | string;
 
+/** One locally generated service-discovery entry. */
+export interface ServiceDiscoveryEntry {
+  /** Service key resolved by Fusion Framework endpoint configuration. */
+  key: string;
+  /** Absolute service base URL. */
+  uri: string;
+}
+
 /** Options for {@link createMockServer}. */
 export interface CreateMockServerOptions {
   /** Seeds every service's faked responses, so the same document/fields/seed always fake the same values. */

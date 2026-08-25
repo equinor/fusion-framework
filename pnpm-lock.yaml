@@ -1510,6 +1510,12 @@ importers:
 
   packages/cli-plugins/mock-server:
     dependencies:
+      '@equinor/fusion-framework-dev-server':
+        specifier: workspace:^
+        version: link:../../dev-server
+      '@equinor/fusion-imports':
+        specifier: workspace:^
+        version: link:../../utils/imports
       '@equinor/fusion-openapi-mock-server':
         specifier: workspace:^
         version: link:../../utils/openapi-mock-server

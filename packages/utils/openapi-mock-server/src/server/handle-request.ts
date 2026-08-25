@@ -22,6 +22,16 @@ export async function handleRequest(
 ): Promise<void> {
   const url = new URL(req.url ?? '/', 'http://localhost');
   const method = (req.method ?? 'GET').toUpperCase();
+  // Direct-only services run on a different localhost origin than the browser app.
+  res.setHeader('access-control-allow-origin', '*');
+  res.setHeader('access-control-allow-methods', 'GET, HEAD, POST, PUT, PATCH, DELETE, OPTIONS');
+  res.setHeader('access-control-allow-headers', '*');
+  // Preflight only negotiates access; it must not invoke a mock operation.
+  if (method === 'OPTIONS') {
+    res.writeHead(204);
+    res.end();
+    return;
+  }
   // Empty segments (from leading/trailing/double slashes) don't identify a route.
   const segments = url.pathname.split('/').filter(Boolean);
 

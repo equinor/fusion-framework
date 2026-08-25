@@ -26,6 +26,28 @@ describe('createMockServer', () => {
     await expect(response.json()).resolves.toMatchObject({ id: expect.any(String) });
   });
 
+  it('serves a declarative route from a discovered defineService module', async () => {
+    server = createMockServer().use(fixturesDir);
+    const { url } = await server.start();
+
+    const response = await fetch(`${url}/pet-store/pets`);
+
+    expect(response.status).toBe(202);
+    await expect(response.json()).resolves.toEqual([
+      { id: 'route-pet', name: 'Declarative route' },
+    ]);
+  });
+
+  it('serves middleware from a discovered defineService module', async () => {
+    server = createMockServer().use(fixturesDir);
+    const { url } = await server.start();
+
+    const response = await fetch(`${url}/pet-store/middleware`);
+
+    expect(response.status).toBe(203);
+    await expect(response.json()).resolves.toEqual({ source: 'middleware' });
+  });
+
   it('serves a discovery response listing each service at its own <key>.localhost origin', async () => {
     server = createMockServer().use(fixturesDir);
     const { url } = await server.start();
@@ -63,6 +85,23 @@ describe('createMockServer', () => {
 
     expect(response.status).toBe(200);
     expect(response.body).toMatchObject({ id: expect.any(String) });
+  });
+
+  it('allows browser requests to a service on its own <key>.localhost origin', async () => {
+    server = createMockServer().use(fixturesDir);
+    const { url } = await server.start();
+
+    const preflight = await fetch(`${url}/pet-store/pets/1`, {
+      method: 'OPTIONS',
+      headers: { origin: 'http://localhost:3000' },
+    });
+    const response = await fetch(`${url}/pet-store/pets/1`, {
+      headers: { origin: 'http://localhost:3000' },
+    });
+
+    expect(preflight.status).toBe(204);
+    expect(preflight.headers.get('access-control-allow-methods')).toContain('GET');
+    expect(response.headers.get('access-control-allow-origin')).toBe('*');
   });
 
   it('lets a later use() layer override an earlier one by service key', async () => {

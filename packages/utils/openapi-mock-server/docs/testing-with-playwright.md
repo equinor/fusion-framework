@@ -50,9 +50,9 @@ matching service's own mock:
 
 | Route | Method | Purpose |
 | --- | --- | --- |
-| `/@fusion-mock/discovery` | `GET` | Service-discovery response: each service's `key` and its own `http://<key>.localhost:<port>` origin — one origin per service, the same shape a real service-discovery response has, so it proxies through `@equinor/fusion-framework-dev-server`'s default `processServices` without overrides. |
+| `/@fusion-mock/discovery` | `GET` | Service-discovery response for each discovery-visible service: its `key` and `http://<key>.localhost:<port>` origin. Direct-only definitions using `serviceDiscovery: false` remain routable but are omitted. |
 | `/@fusion-mock/health` | `GET` | `200 OK` once the server is ready. |
-| `/@fusion-mock/reset` | `POST` | Discards runtime operation overrides and rebuilds each source-defined baseline, including static `paths` sidecar overrides. |
+| `/@fusion-mock/reset` | `POST` | Discards runtime operation overrides and rebuilds each source-defined baseline, including declarative `defineService` routes. |
 | `/@fusion-mock/:service/:operationId` | `POST` | Registers a one-off override for that operation; body is `{ status?: number, mock: unknown }`. |
 | `http://<service>.localhost:<port>/*` | any | Resolved against that service's middleware first, then its OpenAPI mock, using its discovered origin. |
 | `/:service/*` | any | Same service-relative behavior, for embedding without relying on `*.localhost` DNS resolution. |
@@ -63,5 +63,5 @@ unexpected handler failures return `500` with an error body.
 
 Avoid naming a service `@fusion-mock` — that segment is always routed to the control plane
 first, so a service with that exact key would be unreachable. `health`, `discovery`, and `reset`
-are only reserved as subpaths *under* `/@fusion-mock/`; a service named e.g. `health` is still
+are only reserved as paths *under* `/@fusion-mock/`; a service named e.g. `health` is still
 reachable at `/health/*` or `health.localhost`.

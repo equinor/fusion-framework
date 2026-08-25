@@ -12,13 +12,13 @@ function resolveOperationId(
   // No matching operation, or one with no operationId: this override can't be resolved.
   if (!operationId) {
     throw new Error(
-      `Service "${definition.key}" has no "${method.toUpperCase()} ${path}" operation with an "operationId" to override — check its "<key>.overrides.*" sidecar's "paths" against the OpenAPI document's own "paths".`,
+      `Service "${definition.key}" has no "${method.toUpperCase()} ${path}" operation with an "operationId" to override — check its defineService "routes" against the OpenAPI schema's "paths".`,
     );
   }
   return operationId;
 }
 
-/** Registers `definition.paths` (from a `<key>.overrides.*` sidecar) on a freshly built mock. */
+/** Registers a service module's declarative routes on a freshly built mock. */
 function applyStaticRoutes(mock: OpenApiMock, definition: ServiceMockDefinition): void {
   // Walk every overridden path, one at a time.
   for (const [path, methods] of Object.entries(definition.paths ?? {})) {
@@ -40,13 +40,12 @@ function applyStaticRoutes(mock: OpenApiMock, definition: ServiceMockDefinition)
 }
 
 /**
- * Builds the `OpenApiMock` a service starts (or resets back to) — with any static
- * `<key>.overrides.*` route overrides already applied, so they behave as this service's
+ * Builds the `OpenApiMock` a service starts (or resets back to) with declarative
+ * `defineService` routes already applied, so they behave as this service's
  * baseline rather than something a test has to (re-)register at runtime.
  *
  * @param definition - The service's discovered mock definition. Must have already been
- *   merged (via `mergeServiceDefinitions`) so its `document` is resolved — a fields-only
- *   definition passed here directly is a caller bug, not a runtime possibility.
+ *   merged (via `mergeServiceDefinitions`) so an inherited `document` is resolved.
  * @param seed - The mock server's own seed (see `CreateMockServerOptions`), applied uniformly to every service.
  * @returns A new `OpenApiMock` for `definition`, with its static routes (if any) applied.
  * @throws {Error} If `definition.document` is missing, or a `paths` override names a path/method the document doesn't declare an `operationId` for.

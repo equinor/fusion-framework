@@ -1,29 +1,35 @@
 # Getting started
 
-A `mocks/` directory of OpenAPI specs is all this package needs — it scans the directory, fakes a
-response for every operation in each spec, and serves the result over HTTP. There's no build step
-and no dev-server involved, so the same mocks work whether you're developing locally, running a
-Playwright suite, or embedding the server inside something else entirely.
+<!-- cspell:words rolesv -->
 
-## Write your first spec
+A `mocks/` directory of `<name>.mock.ts` modules is all this package needs. Each module defines
+one service and imports the OpenAPI schema used to fake its responses. The same mocks work for
+local development, Playwright, or an embedded server.
 
-Add one `<service>.openapi.{json,yaml,yml}` file per service you want to mock. The file name
-becomes both the service's key and its mount path:
+## Define your first service
+
+Add one `<name>.mock.ts` module per service:
 
 ```
 mocks/
+  context.mock.ts
   context.openapi.json
-  context.overrides.ts    # optional — fields, static paths, or middleware
-  people.openapi.json
 ```
 
-`context.openapi.json` becomes the `context` service, reachable at `/context` (or
-`context.localhost:<port>` — see [Testing with Playwright](testing-with-playwright.md) for the
-full route reference). A `context.overrides.{ts,js,json,yaml,yml}` sidecar next to it can supply
-field-level faker overrides under `components` and static operation responses under `paths`.
-TypeScript and JavaScript sidecars can also export functions and register `middleware`; JSON and
-YAML sidecars are data-only. A minimal spec only needs enough paths for the operations your app
-actually calls because the server fakes response bodies from each response schema.
+```ts
+import schema from './context.openapi.json' with { type: 'json' };
+import { defineService } from '@equinor/fusion-openapi-mock-server/discovery';
+
+export default defineService({
+  key: 'context',
+  serviceDiscovery: 'replace',
+  schema,
+  components: { Context: { title: () => 'Local context' } },
+});
+```
+
+The service is reachable at `/context` or `context.localhost:<port>`. `routes` declares fixed or
+function-backed operation responses, and `middleware` registers request-aware routes.
 
 ## Start the server
 
@@ -36,7 +42,7 @@ pnpm exec fusion-mock --preset=fusion ./mocks --port 4010
 
 | Argument/Option | Description |
 | --- | --- |
-| `[dirs...]` | Directories of OpenAPI specs to serve, in ascending precedence — a later directory's services replace an earlier one's by key. |
+| `[dirs...]` | Directories of `<name>.mock.ts` modules, in ascending precedence. |
 | `--preset=<name>` | Bundled preset to layer in (e.g. `--preset=fusion`); repeatable. |
 | `--port <port>` | Port to listen on (default: OS-assigned). |
 | `--seed <seed>` | Seeds every service's faked responses, so the same document/fields/seed always fake the same values (default: unseeded/random). |
@@ -45,8 +51,8 @@ When no directory or preset is supplied, the CLI uses `./mocks`. The CLI binds t
 use the programmatic `start({ host })` option when another bind address is required.
 
 Runs in the foreground and shuts down on `SIGINT`/`SIGTERM` — pair it with Playwright's
-`webServer` (or `concurrently`), rather than backgrounding it yourself, so nothing owns a process
-it isn't also responsible for stopping.
+`webServer` (or `concurrently`), rather than running it in the background yourself, so nothing
+owns a process it isn't also responsible for stopping.
 
 Or start it from your own code — this mirrors Mock Service Worker's
 `setupServer()`/`server.use()`: register sources, then start once.
@@ -81,23 +87,24 @@ const server = createMockServer().use('fusion').use('./mocks');
 
 ## Layering directories
 
-Call `use()` once per source, in ascending precedence — whatever you register last wins. A later
-source's service fully replaces an earlier one with the same key, so an app only needs to provide
-specs for the services it actually wants to override:
+Call `use()` once per source, in ascending precedence. Later sources are resolved according to each
+service's discovery mode: `replace` replaces an earlier same-key service, while `merge` inherits
+and customizes the earlier definition without copying its schema:
 
 ```mermaid
 flowchart LR
     A["use('fusion')<br/>baseline preset"] --> C[Merged service set]
-    B["use('./mocks')<br/>app's own specs"] --> C
-    C -->|"same key ⇒ later wins"| D["context, people, ...<br/>app's specs replace the baseline"]
+    B["use('./mocks')<br/>app mock modules"] --> C
+    C -->|"replace or merge by key"| D["resolved local services"]
 ```
 
-This also makes it easy to compose multiple teams' specs, or layer a shared platform directory
+This also makes it easy to compose multiple teams' mocks, or layer a shared platform directory
 underneath an app-specific one, without either side needing to know about the other.
 
-A lone `<service>.overrides.*` sidecar without a matching local OpenAPI document is the exception:
-its `components`, `paths`, and `middleware` are merged onto the nearest earlier same-key service.
-This lets an app customize a bundled preset without copying its OpenAPI document.
+A module with `serviceDiscovery: 'merge'` may omit `schema`; its `components`, `routes`, and
+`middleware` merge onto the nearest earlier same-key service. Startup fails when no earlier
+local or preset definition exists. The standalone mock server never fetches upstream service
+discovery.
 
 ## Choose an override mechanism
 
@@ -106,9 +113,9 @@ Use the narrowest mechanism that expresses the behavior you need:
 | Mechanism | Use it for | Runtime override behavior |
 | --- | --- | --- |
 | OpenAPI schemas | Generated baseline responses for normal service operations. | Can be replaced by operation ID. |
-| `components` in `<service>.overrides.*` | Field faker values or faker functions. | Feeds the generated baseline. |
-| `paths` in `<service>.overrides.*` | Static or function-backed operation responses. | Becomes the reset baseline and can still be replaced by operation ID. |
-| `middleware` in a TS/JS sidecar or `createService()` | Custom routes or request-aware behavior outside the OpenAPI operation model. | Runs before generated mocks, so runtime operation overrides do not replace it. |
+| `defineService.components` | Field faker values or faker functions. | Feeds the generated baseline. |
+| `defineService.routes` | Static or function-backed operation responses. | Becomes the reset baseline and can still be replaced by operation ID. |
+| `defineService.middleware` | Custom routes or request-aware behavior outside the OpenAPI operation model. | Runs before generated mocks, so runtime operation overrides do not replace it. |
 
 Programmatic middleware receives a service-relative URL for both `/<service>/*` and
 `<service>.localhost/*` requests. The context includes the parsed JSON body and the server-level

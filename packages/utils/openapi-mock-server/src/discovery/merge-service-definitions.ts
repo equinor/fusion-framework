@@ -18,15 +18,8 @@ function mergePaths(
 
 /**
  * Merges several groups of {@link ServiceMockDefinition}s into one, in
- * ascending precedence — a service key present in more than one group is
- * fully replaced by its definition in the *later* group, never merged
- * field-by-field.
- *
- * The one exception is a **fields-only** definition (no `document`, e.g. from
- * a lone `<key>.overrides.*` sidecar — see {@link discoverServices}):
- * its `fields`/`paths` are merged onto the nearest earlier definition for that key
- * instead, so an app can override a preset's fields or routes without duplicating
- * its whole spec.
+ * ascending precedence. A later `serviceDiscovery: 'merge'` definition merges
+ * onto the earlier definition for its key; other later definitions replace it.
  *
  * @remarks
  * This is what lets a shared baseline (e.g. {@link fusionPreset}) sit
@@ -36,7 +29,7 @@ function mergePaths(
  *
  * @param groups - Definition groups, lowest precedence first.
  * @returns One definition per service key, each from its highest-precedence group.
- * @throws {Error} If a fields-only definition's key has no earlier definition to apply its fields to.
+ * @throws {Error} If a merge has no earlier definition or a complete definition has no schema.
  *
  * @example
  * ```typescript
@@ -51,24 +44,36 @@ export function mergeServiceDefinitions(
   for (const group of groups) {
     // A later group's definitions are applied in order, one key at a time.
     for (const definition of group) {
-      // A definition with its own document always fully replaces an earlier one for this key.
-      if (definition.document) {
+      const existing = byKey.get(definition.key);
+      // New definitions guard pre-production services against accidentally shadowing a registered service.
+      if (definition.serviceDiscovery === 'new' && existing) {
+        throw new Error(
+          `Mock service "${definition.key}" is marked as new but an earlier definition already exists.`,
+        );
+      }
+      // Complete direct and replacement definitions own their full runtime behavior.
+      if (definition.serviceDiscovery !== 'merge') {
+        // A complete definition cannot generate responses without a schema.
+        if (!definition.document) {
+          throw new Error(`Mock service "${definition.key}" must provide a schema.`);
+        }
         byKey.set(definition.key, definition);
-        // Already handled: skip the fields-only merge branch below.
+        // Replacement modes do not inherit any behavior from an earlier layer.
         continue;
       }
 
-      // Fields-only: merge onto whichever definition already supplies the schema.
-      const existing = byKey.get(definition.key);
-      // No earlier definition to apply these fields to — this override is unresolvable.
+      // Merge definitions inherit the earlier service and replace only behavior they explicitly provide.
+      // No earlier definition means there is no schema or behavior to inherit.
       if (!existing) {
         throw new Error(
-          `Fields-only override for service "${definition.key}" has no earlier definition to apply its fields to — add a "<key>.openapi.*" spec, or register a source (e.g. a preset) that provides one before this one.`,
+          `Mock service override "${definition.key}" has no earlier definition to merge with.`,
         );
       }
-      // Keep the existing document; the later group's fields/paths/router win over the existing ones per-key.
+      // Preserve inherited behavior while merging maps and allowing an explicitly supplied schema/router to win.
       byKey.set(definition.key, {
         ...existing,
+        ...definition,
+        document: definition.document ?? existing.document,
         fields: { ...existing.fields, ...definition.fields },
         paths: mergePaths(existing.paths, definition.paths),
         router: definition.router ?? existing.router,

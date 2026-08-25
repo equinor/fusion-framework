@@ -3,7 +3,7 @@ import type { FieldFakerMap, FieldFakerValue } from '@equinor/fusion-openapi-moc
 /**
  * Flattens a `components`-shaped override map into a flat `FieldFakerMap` (`"Model.field"` keys).
  *
- * @param components - A `<key>.overrides.*` sidecar's `components` map, keyed by model then field name.
+ * @param components - A service module's `components` map, keyed by model then field name.
  * @returns The flattened `FieldFakerMap`, or `undefined` when `components` was omitted.
  */
 export function flattenSchemaOverrides(

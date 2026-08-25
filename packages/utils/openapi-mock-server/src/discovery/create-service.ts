@@ -14,8 +14,7 @@ export interface ServiceBuilder extends ServiceMockDefinition {
 /**
  * Builds a {@link ServiceMockDefinition} inline in code, with chainable `withFields`/`middleware`
  * (see {@link ServiceBuilder}) — for a field faker or route that can't live in the document's own
- * inline `faker: "..."` schema keyword or static `paths` override, without needing a separate
- * `<key>.overrides.*` sidecar file.
+ * inline `faker: "..."` schema keyword or static route response.
  *
  * @param key - The mock server's routing key for this service, and its service-discovery `key`.
  * @param document - The parsed OpenAPI document, ready for `createOpenApiMock`.

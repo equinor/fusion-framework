@@ -116,6 +116,10 @@ export default sidebar({
               text: 'Mock server',
               link: 'mock-server.md',
             },
+            {
+              text: 'Mock server with Playwright',
+              link: 'mock-server-playwright.md',
+            },
           ],
         },
       ],

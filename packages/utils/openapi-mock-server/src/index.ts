@@ -20,5 +20,6 @@ export {
   type MockOverride,
   type MockServerHandle,
   type MockSource,
+  type ServiceDiscoveryEntry,
   type StartOptions,
 } from './server/index.js';

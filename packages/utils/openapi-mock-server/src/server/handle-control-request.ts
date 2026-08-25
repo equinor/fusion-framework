@@ -1,8 +1,13 @@
 import type { IncomingMessage, ServerResponse } from 'node:http';
 
 import { readJsonBody } from './read-json-body.js';
+import { resolveServiceDiscovery } from './resolve-service-discovery.js';
 import { sendJson } from './send-json.js';
-import type { MockOverride, MockServerHandle, ServiceState } from './types.js';
+import type {
+  MockOverride,
+  MockServerHandle,
+  ServiceState,
+} from './types.js';
 
 /**
  * Handles a request under the reserved `/@fusion-mock/*` control-plane prefix.
@@ -38,12 +43,11 @@ export async function handleControlRequest(
   // GET /@fusion-mock/discovery
   if (first === 'discovery' && method === 'GET') {
     const port = new URL(`http://${req.headers.host}`).port;
-    // each service gets its own `<key>.localhost` origin, like a real service-discovery entry,
-    // instead of a shared origin with a `/<key>` path prefix a real backend wouldn't expect
-    const discovered = Array.from(services.keys(), (key) => ({
-      key,
-      uri: `http://${key}.localhost:${port}`,
-    }));
+    // Resolve discovery exclusively from the predefined and local mock definitions.
+    const discovered = resolveServiceDiscovery(
+      Array.from(services.values(), (state) => state.definition),
+      port,
+    );
     sendJson(res, 200, discovered);
     return;
   }

@@ -4,5 +4,6 @@ export type {
   MockOverride,
   MockServerHandle,
   MockSource,
+  ServiceDiscoveryEntry,
   StartOptions,
 } from './types.js';
