@@ -122,8 +122,8 @@ jobs:
         # has it; the installed browser cache is shared across packages.
         run: pnpm --filter @equinor/fusion-framework-vitest-plugin-react-app exec playwright install --with-deps chromium
 
-      - name: Run mock Playwright tests
-        run: pnpm --filter @equinor/fusion-framework-cookbook-app-react-mock-playwright test:mock
+      - name: Run cookbook Playwright tests
+        run: pnpm --filter './cookbooks/**' --if-present test:playwright
 
       - name: Create Test Report
         run: pnpm test run

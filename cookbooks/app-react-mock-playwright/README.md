@@ -42,7 +42,7 @@ server, and tears the servers down after the test run.
 ## Running it
 
 ```sh
-pnpm --filter @equinor/fusion-framework-cookbook-app-react-mock-playwright test:mock
+pnpm --filter @equinor/fusion-framework-cookbook-app-react-mock-playwright test
 ```
 
 To run the pieces individually while developing:
