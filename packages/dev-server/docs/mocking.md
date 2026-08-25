@@ -17,6 +17,87 @@ The recommended application workflow has three parts:
 > `api.routes` and `api.processServices` for advanced server infrastructure and discovery
 > transformations that are not service mocks.
 
+## Migrate existing dev-server configuration
+
+Migrate one service at a time. Move behavior owned by a backend service into
+`mocks/<service>.mock.ts`; keep host-level behavior in `dev-server.config.ts`.
+
+| Existing configuration | New location | Use when |
+| --- | --- | --- |
+| `api.processServices` adds or redirects one service | `serviceDiscovery` in `<service>.mock.ts` | The change exists only to make that service available locally. |
+| `api.routes` returns a mocked OpenAPI operation | `routes` in `<service>.mock.ts` | The path and method belong to the service's OpenAPI contract. |
+| `api.routes` implements request-aware service behavior | `middleware` in `<service>.mock.ts` | The behavior needs request headers, parameters, or a parsed body. |
+| Schema faker overrides | `components` in `<service>.mock.ts` | Generated OpenAPI responses need deterministic field values. |
+| Filtering or rewriting real discovery for the whole host | Keep `api.processServices` | The transformation is infrastructure behavior rather than a service mock. |
+| Dev-server health checks or other host-owned endpoints | Keep `api.routes` | The route belongs to the local host, not to one backend service. |
+
+For example, a legacy configuration might replace the generated proxy route for an existing
+`inventory` service with a local response:
+
+```typescript
+// dev-server.config.ts
+import { defineDevServerConfig, processServices } from '@equinor/fusion-framework-cli/dev-server';
+
+export default defineDevServerConfig(() => ({
+  api: {
+    processServices: (services, args) => {
+      const processed = processServices(services, args);
+      return {
+        ...processed,
+        routes: [
+          ...processed.routes.filter((route) => route.match !== '/inventory/api*sub'),
+          {
+            match: '/inventory/api*sub',
+            middleware: (_request, response) => {
+              response.setHeader('content-type', 'application/json');
+              response.end(JSON.stringify([{ id: 'local-item', name: 'Local item' }]));
+            },
+          },
+        ],
+      };
+    },
+  },
+}));
+```
+
+Move that service-owned response into an executable mock module. Paths in `routes` are relative to
+the service and must match an operation in its OpenAPI document:
+
+```typescript
+// mocks/inventory.mock.ts
+import { defineService } from '@equinor/fusion-openapi-mock-server/discovery';
+
+export default defineService({
+  key: 'inventory',
+  serviceDiscovery: 'merge',
+  routes: {
+    '/items': {
+      get: {
+        mock: [{ id: 'local-item', name: 'Local item' }],
+      },
+    },
+  },
+});
+```
+
+`'merge'` is appropriate because `inventory` already exists in real discovery or the selected
+preset. The module inherits that service's OpenAPI schema. Use `'new'` with a `schema` for a
+pre-production service, `'replace'` with a `schema` to replace an earlier definition completely,
+or `false` with a `schema` for a direct-only endpoint.
+
+Complete the migration:
+
+1. Install `@equinor/fusion-framework-cli-plugin-mock-server` and
+   `@equinor/fusion-openapi-mock-server` as development dependencies.
+2. Start `ffc mock-server` in a foreground terminal.
+3. Run `ffc app dev` to combine real discovery with local definitions, or use
+   `ffc app dev --mock http://localhost:4010` for an isolated environment.
+4. Verify the migrated service, then remove only its old `api.routes` and `api.processServices`
+   branches. Leave unrelated host-level configuration in place.
+
+During an incremental migration, migrated and legacy services can coexist. Do not define the same
+service behavior in both places; route precedence can hide which implementation handled a request.
+
 ## Install and start the mock server
 
 ```sh

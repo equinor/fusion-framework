@@ -7,7 +7,9 @@ mock-server defaults.
 > [!IMPORTANT]
 > Define mocked service behavior in `mocks/<service>.mock.ts` with `defineService`. Do not handwrite
 > service mocks as `api.routes` or inject them with `api.processServices`; those are low-level
-> extension points for server-owned behavior and discovery transformations.
+> extension points for server-owned behavior and discovery transformations. Follow
+> [Migrate existing dev-server configuration](../../dev-server/docs/mocking.md#migrate-existing-dev-server-configuration)
+> to move existing mocks without discarding unrelated host configuration.
 
 > [!NOTE]
 > Basic server options like `port`, `host`, and `open` are configured via CLI flags or Vite configuration, not through `dev-server.config.ts`.
@@ -24,7 +26,9 @@ The default dev-server configuration works for most applications, but you may wa
 ## Getting Started
 
 Most applications need no `dev-server.config.ts`. To mock a backend, start with the
-[mock-service guide](../../dev-server/docs/mocking.md) and create `mocks/<service>.mock.ts`.
+[mock-service guide](../../dev-server/docs/mocking.md) and create `mocks/<service>.mock.ts`. Existing
+applications can follow the guide's
+[migration steps](../../dev-server/docs/mocking.md#migrate-existing-dev-server-configuration).
 
 Create `dev-server.config.ts` only when the application needs shared server settings. Start with
 object configuration:
