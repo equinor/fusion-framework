@@ -287,8 +287,28 @@ export default sidebar({
               link: 'dev-server.md',
             },
             {
+              text: 'Getting started',
+              link: 'dev-server/getting-started.md',
+            },
+            {
               text: 'Configuration',
-              link: 'dev-server-config.md',
+              link: 'dev-server/configuration.md',
+            },
+            {
+              text: 'Mock services',
+              link: 'dev-server/mocking.md',
+            },
+            {
+              text: 'Mock server command',
+              link: 'dev-server/mock-server.md',
+            },
+            {
+              text: 'Advanced',
+              link: 'dev-server/advanced.md',
+            },
+            {
+              text: 'Troubleshooting',
+              link: 'dev-server/troubleshooting.md',
             },
           ],
         },

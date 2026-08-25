@@ -1,494 +1,104 @@
-# Fusion Framework Dev Server
+# @equinor/fusion-framework-dev-server
 
-A powerful development server for Fusion Framework applications, built on Vite with integrated service discovery, API proxying, and portal support.
+Development server primitives for Fusion Framework applications. The package combines Vite,
+React Fast Refresh, SPA environment injection, Fusion service discovery, and local API proxying.
 
-## Features
+> [!TIP]
+> Most application developers should start with `ffc app dev`. Use this package directly when you
+> are building framework tooling, a custom development command, or a Vite integration that needs
+> control over server creation.
 
-- 🚀 **Fast Development**: Powered by Vite for lightning-fast HMR and builds
-- 🔗 **Service Discovery**: Automatic API service discovery and proxying
-- 🏠 **Portal Support**: Built-in portal development with manifest loading
-- 🔧 **API Mocking**: Easy mocking and overriding of API responses
-- 📊 **Telemetry**: Integrated logging and debugging capabilities
-- ⚙️ **Flexible Configuration**: Extensive customization options
+## Choose your entry point
 
-## Quick Start
+| Goal | Start here |
+| --- | --- |
+| Run a Fusion application locally | `ffc app dev` from `@equinor/fusion-framework-cli` |
+| Create and start a configured Vite server | `createDevServer(options, overrides?)` |
+| Generate Vite configuration without starting a server | `createDevServerConfig(options, overrides?)` |
+| Customize service discovery proxy routes | `processServices(data, args)` |
+| Develop against local OpenAPI mocks | [`@equinor/fusion-framework-cli-plugin-mock-server`](../cli-plugins/mock-server/README.md) |
 
-Here's the minimal setup to get a Fusion Framework dev server running:
+## Quick start
+
+```sh
+pnpm add -D @equinor/fusion-framework-dev-server vite
+```
 
 ```typescript
 import { createDevServer } from '@equinor/fusion-framework-dev-server';
 
-const devServer = await createDevServer({
-  spa: {
-    templateEnv: {
-      portal: {
-        id: '@equinor/fusion-framework-dev-portal',
-      },
-      title: 'My Fusion App',
-      serviceDiscovery: {
-        url: 'https://service-discovery.example.com',
-        scopes: ['api://example.com/user_impersonation'],
-      },
-      msal: {
-        clientId: 'your-client-id',
-        tenantId: 'your-tenant-id',
-        redirectUri: '/authentication/login-callback',
-        requiresAuth: 'true',
-      },
-    },
-  },
-  api: {
-    serviceDiscoveryUrl: 'https://service-discovery.example.com',
-  },
-});
-
-await devServer.listen();
-devServer.printUrls();
-```
-
-If you only need the Vite configuration object without starting the server, use `createDevServerConfig(options, overrides?)` instead. This returns a `UserConfig` that you can pass to Vite directly or merge with other configurations.
-
-## Configuration
-
-The dev server accepts a configuration object with the following structure:
-
-### SPA Configuration
-
-Configure the Single Page Application environment and template generation:
-
-```typescript
-{
-  spa: {
-    templateEnv: {
-      // Portal configuration
-      portal: {
-        id: 'your-portal-id', // Portal identifier
-      },
-
-      // Application title
-      title: 'My Application',
-
-      // Service discovery settings (SPA-side — tells the browser where to find services)
-      // The API-side counterpart is `api.serviceDiscoveryUrl` which sets up server-side proxying.
-      // During development you can redirect individual services to local URLs by storing
-      // overrides in sessionStorage under the key "overriddenServiceDiscoveryUrls".
-      serviceDiscovery: {
-        url: 'https://service-discovery.example.com',
-        scopes: ['scope1', 'scope2'],
-      },
-
-      // Authentication configuration
-      msal: {
-        clientId: 'your-client-id',
-        tenantId: 'your-tenant-id',
-        redirectUri: '/authentication/login-callback',
-        requiresAuth: 'true', // or 'false'
-      },
-
-      // Optional telemetry configuration (browser console logging)
-      telemetry: {
-        consoleLevel: 1, // 0=Debug, 1=Information, 2=Warning, 3=Error, 4=Critical
-      },
-
-      // Optional service worker configuration
-      serviceWorker: {
-        resources: [
-          {
-            url: '/api',
-            rewrite: '/api-v1',
-            scopes: ['api://example.com/user_impersonation'],
-          },
-        ],
-      },
-    },
-  },
-}
-```
-
-### API Configuration
-
-Configure API proxying and service discovery:
-
-```typescript
-{
-  api: {
-    // Required: Service discovery endpoint
-    serviceDiscoveryUrl: 'https://service-discovery.example.com',
-
-    // Optional: Custom service processing
-    // Takes an array of FusionService objects ({ key, uri, name }) from discovery
-    // and returns { data: FusionService[], routes: ApiRoute[] } with proxy routes.
-    processServices: (services, route) => {
-      // Process and return services with routes
-      return processServices(services, route);
-    },
-
-    // Optional: Additional API routes
-    routes: [
-      {
-        match: '/api/custom/*',
-        middleware: (req, res) => {
-          // Custom middleware logic
-          res.end(JSON.stringify({ custom: 'response' }));
-        },
-      },
-    ],
-  },
-}
-```
-
-### Logging Configuration
-
-Configure CLI/server-side logging levels and custom loggers:
-
-```typescript
-{
-  log: {
-    // Optional: CLI log level (0=None, 1=Error, 2=Warning, 3=Info, 4=Debug)
-    level: 3, // Default is Info level
-
-    // Optional: Custom logger instance
-    logger: new ConsoleLogger('my-dev-server'),
-  },
-}
-```
-
-> [!NOTE]
-> **Telemetry vs CLI Logging**: The `telemetry.consoleLevel` controls logging output in the browser console (visible to end users), while `log.level` controls server-side logging in the terminal/command line (visible to developers). These use different logging systems with different level mappings.
-
-### Main Functions
-
-#### `createDevServer(options, overrides?)`
-
-Creates and configures a development server instance.
-
-**Parameters:**
-- `options` (`DevServerOptions`): Configuration object for the dev server
-- `overrides` (`UserConfig`): Optional Vite configuration overrides
-
-**Returns:** `Promise<ViteDevServer>` - Configured Vite development server
-
-**Example:**
-```typescript
-const devServer = await createDevServer(config);
-await devServer.listen();
-```
-
-#### `createDevServerConfig(options, overrides?)`
-
-Creates a Vite configuration object for the dev server.
-
-**Parameters:**
-- `options` (`DevServerOptions`): Configuration object for the dev server
-- `overrides` (`UserConfig`): Optional Vite configuration overrides
-
-**Returns:** `UserConfig` - Vite configuration object
-
-### Utility Functions
-
-#### `processServices(data, args)`
-
-Processes service discovery data and generates proxy routes.
-
-**Parameters:**
-- `data` (`FusionService[]`): Array of services from service discovery
-- `args.route` (`string`): Base route for proxying
-- `args.request` (`IncomingMessage`): HTTP request object
-
-**Returns:** Object with processed services and routes
-
-### Types
-
-#### `DevServerOptions<TEnv>`
-
-Configuration options for the development server.
-
-```typescript
-type DevServerOptions<TEnv extends Partial<FusionTemplateEnv>> = {
-  spa?: {
-    templateEnv: TEnv | TemplateEnvFn<TEnv>;
-  };
-  api: {
-    serviceDiscoveryUrl: string;
-    processServices?: ApiDataProcessor<FusionService[]>;
-    routes?: ApiRoute[];
-  };
-  log?: {
-    level?: number;
-    logger?: ConsoleLogger;
-  };
-};
-```
-
-#### `FusionService`
-
-Represents a service in the Fusion ecosystem.
-
-```typescript
-type FusionService = {
-  key: string;    // Service identifier
-  uri: string;    // Service endpoint URL
-  name: string;   // Human-readable service name
-};
-```
-
-## Examples
-
-### Basic Portal Development
-
-```typescript
-import { createDevServer } from '@equinor/fusion-framework-dev-server';
-
-const devServer = await createDevServer({
+const server = await createDevServer({
   spa: {
     templateEnv: {
       portal: { id: 'my-portal' },
-      title: 'My Portal',
+      title: 'My application',
       serviceDiscovery: {
         url: 'https://service-discovery.example.com',
         scopes: ['api://example.com/user_impersonation'],
       },
       msal: {
-        clientId: process.env.CLIENT_ID!,
-        tenantId: process.env.TENANT_ID!,
+        clientId: 'client-id',
+        tenantId: 'tenant-id',
         redirectUri: '/authentication/login-callback',
         requiresAuth: 'true',
       },
     },
   },
-  api: {
-    serviceDiscoveryUrl: 'https://service-discovery.example.com',
-  },
+  api: { serviceDiscoveryUrl: 'https://service-discovery.example.com' },
 });
 
-await devServer.listen();
+await server.listen();
+server.printUrls();
 ```
 
-### Adding Mock Services
+The browser receives `spa.templateEnv`. The Node development server uses
+`api.serviceDiscoveryUrl` to fetch service definitions and create same-origin proxy routes. These
+two URLs often point to the same endpoint, but they serve different consumers.
 
-```typescript
-import { createDevServer, processServices } from '@equinor/fusion-framework-dev-server';
+Continue with [Getting started](docs/getting-started.md) for the complete mental model.
 
-const devServer = await createDevServer({
-  spa: { /* ... spa config ... */ },
-  api: {
-    serviceDiscoveryUrl: 'https://service-discovery.example.com',
-    processServices: (data, route) => {
-      const { data: services, routes } = processServices(data, route);
+## Mock APIs locally
 
-      // Add mock services
-      return {
-        data: services.concat({
-          key: 'mock-api',
-          name: 'Mock API Service',
-          uri: '/mock-api',
-        }),
-        routes: routes.concat({
-          match: '/mock-api/*',
-          middleware: (req, res) => {
-            res.setHeader('Content-Type', 'application/json');
-            res.end(JSON.stringify({ mock: 'data' }));
-          },
-        }),
-      };
-    },
-  },
-});
+Install the optional mock-server plugin when a backend is unavailable, unstable, or needs
+deterministic responses:
+
+```sh
+pnpm add -D @equinor/fusion-framework-cli-plugin-mock-server
+ffc mock-server ./mocks --port 4010
 ```
 
-### Custom Vite Configuration
+> [!IMPORTANT]
+> `ffc mock-server` is a standalone foreground process. Installing the plugin does not start it
+> with `ffc app dev`; the developer or test runner owns its lifecycle.
 
-```typescript
-import { createDevServer } from '@equinor/fusion-framework-dev-server';
-import { defineConfig } from 'vite';
+The plugin adds typed `mockServer` settings to `DevServerOptions` only when its types are imported,
+keeping this base package independent of optional mocking tools.
 
-const devServer = await createDevServer(
-  { /* ... dev server config ... */ },
-  defineConfig({
-    server: {
-      port: 3001,
-      host: '0.0.0.0',
-    },
-    define: {
-      __DEV__: true,
-    },
-  })
-);
-```
+See [Develop with mock services](docs/mocking.md) for normal development overlays, isolated
+`--mock` mode, direct-only services, and executable `<name>.mock.ts` modules.
 
+## Learn in order
 
-## Troubleshooting
+1. [Getting started](docs/getting-started.md) explains the server lifecycle and smallest useful setup.
+2. [Configure the dev server](docs/configuration.md) covers SPA environment, API proxying, and logging.
+3. [Develop with mock services](docs/mocking.md) shows the recommended optional mocking workflow.
+4. [Advanced usage](docs/advanced.md) covers service processing, routes, Vite overrides, and extension interfaces.
+5. [Troubleshooting](docs/troubleshooting.md) maps common symptoms to the responsible configuration.
 
-### Common Issues
+## Public API
 
-#### "Cannot find module '@equinor/fusion-framework-dev-server'"
+- `createDevServer` creates a configured `ViteDevServer`. Call `listen()` yourself.
+- `createDevServerConfig` returns a Vite `UserConfig` for another tool to consume.
+- `processServices` rewrites discovered service URIs through the local proxy and returns routes.
+- `DevServerOptions<TEnv>` configures SPA injection, API discovery, and logging. It is an interface so optional plugins can augment it.
+- `FusionService` describes a backend using `key`, `uri`, `name`, and optional OAuth `scopes`.
 
-**Solution:** Make sure the package is installed and you're using the correct import path.
+## Requirements and boundaries
 
-```bash
-pnpm add -D @equinor/fusion-framework-dev-server
-```
-
-#### Service Discovery Connection Failed
-
-**Problem:** The dev server can't connect to the service discovery endpoint.
-
-**Solutions:**
-1. Check that `serviceDiscoveryUrl` is correct and accessible
-2. Verify network connectivity to the service discovery endpoint
-3. Check for authentication requirements
-
-#### Portal Manifest Not Loading
-
-**Problem:** Portal configuration isn't loading properly.
-
-**Solutions:**
-1. Verify the portal ID is correct in the `spa.templateEnv.portal.id` field
-2. Check that the portal service is available and responding
-3. Ensure proper authentication is configured
-
-#### API Routes Not Working
-
-**Problem:** Custom API routes or service proxying isn't functioning.
-
-**Solutions:**
-1. Check the `routes` configuration in the `api` section
-2. Verify route patterns match the expected request paths
-3. Ensure middleware functions are properly implemented
-4. Check for conflicts with existing routes
-
-#### Authentication Issues
-
-**Problem:** MSAL authentication isn't working.
-
-**Solutions:**
-1. Verify `clientId` and `tenantId` are correct
-2. Check that `redirectUri` matches your application configuration
-3. Ensure the required scopes are properly configured
-4. Check browser console for authentication errors
-
-### Debug Logging
-
-Enable debug logging to troubleshoot issues:
-
-#### CLI/Server-Side Debug Logging
-```typescript
-const devServer = await createDevServer({
-  // ... config
-  log: {
-    level: 4, // Debug level (0=None, 1=Error, 2=Warning, 3=Info, 4=Debug)
-  },
-});
-```
-
-#### Browser Console Telemetry Logging
-```typescript
-{
-  spa: {
-    templateEnv: {
-      // ... other config
-      telemetry: {
-        consoleLevel: 0, // Debug level (0=Debug, 1=Information, 2=Warning, 3=Error, 4=Critical)
-      },
-    },
-  },
-}
-```
-
-## Advanced Usage
-
-### Custom Service Processing
-
-For advanced service discovery manipulation:
-
-```typescript
-import { createDevServer, processServices } from '@equinor/fusion-framework-dev-server';
-
-const devServer = await createDevServer({
-  api: {
-    serviceDiscoveryUrl: 'https://service-discovery.example.com',
-    processServices: (services, route) => {
-      const { data, routes } = processServices(services, route);
-
-      // Filter out development-only services in production
-      const filteredData = data.filter(service =>
-        process.env.NODE_ENV !== 'production' || !service.key.includes('dev')
-      );
-
-      // Add custom routes for specific services
-      const customRoutes = routes.map(route => ({
-        ...route,
-        // Add custom headers or modify proxy behavior
-      }));
-
-      return { data: filteredData, routes: customRoutes };
-    },
-  },
-});
-```
-
-### Integration with Build Tools
-
-The dev server works seamlessly with the Fusion Framework CLI:
-
-```bash
-# Use with CLI for automatic configuration
-npx @equinor/fusion-framework-cli app dev
-
-# Or portal development
-npx @equinor/fusion-framework-cli portal dev
-```
-
-### Custom Plugins
-
-Extend the dev server with custom Vite plugins:
-
-```typescript
-import { createDevServer } from '@equinor/fusion-framework-dev-server';
-import myCustomPlugin from 'my-custom-vite-plugin';
-
-const devServer = await createDevServer(
-  { /* ... config ... */ },
-  {
-    plugins: [myCustomPlugin()],
-  }
-);
-```
-
-## Migration Guide
-
-### From Direct Vite Usage
-
-If you're migrating from a direct Vite setup:
-
-1. Replace your Vite configuration with the dev server configuration
-2. Move service discovery logic to the `api.processServices` function
-3. Configure portal settings in `spa.templateEnv`
-4. Update your start script to use `createDevServer`
-
-**Before:**
-```typescript
-// vite.config.ts
-export default defineConfig({
-  plugins: [react(), /* other plugins */],
-  server: {
-    proxy: { /* proxy config */ },
-  },
-});
-```
-
-**After:**
-```typescript
-import { createDevServer } from '@equinor/fusion-framework-dev-server';
-
-const devServer = await createDevServer({
-  // Move your config here
-});
-```
-
-## Contributing
-
-This package is part of the Fusion Framework monorepo. See the main [contributing guide](../../CONTRIBUTING.md) for details.
+- Vite 7 or 8 is required as a peer dependency.
+- `api.serviceDiscoveryUrl` is required by the low-level API.
+- The package configures development; it does not build or publish applications.
+- Mock-server installation and process lifecycle are optional and external to this package.
 
 ## License
 
