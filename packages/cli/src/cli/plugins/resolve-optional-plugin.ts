@@ -23,10 +23,10 @@ export async function resolveOptionalPlugin(
     );
     // The package resolved but its default export isn't a factory: a real bug in that package,
     // not the "package not installed" case the install-hint fallback exists for.
-    if (mod.default !== undefined && typeof mod.default !== 'function') {
+    if (typeof mod.default !== 'function') {
       throw new Error(`Expected "${packageName}"'s default export to be a factory function.`);
     }
-    return typeof mod.default === 'function' ? mod.default() : null;
+    return mod.default();
   } catch (error) {
     // The optional package itself is absent; let the caller register its install-hint fallback.
     if (isModuleNotFoundError(error, packageName)) {
