@@ -39,7 +39,7 @@ const DEFAULT_MOCK_ENDPOINT = 'http://localhost:4010';
  *   $ ffc app dev --mock http://localhost:5010
  *
  * @see startAppDevServer for implementation details
- * @see dev-server-config.md for configuration options
+ * @see {@link https://equinor.github.io/fusion-framework/cli/docs/dev-server/configuration.html | Dev server configuration guide}
  */
 export const command = createCommand('dev')
   .description('Start the application in development mode.')
@@ -59,7 +59,7 @@ export const command = createCommand('dev')
       '  $ ffc app dev --mock',
       '  $ ffc app dev --mock http://localhost:5010',
       '',
-      'See https://equinor.github.io/fusion-framework/cli/docs/dev-server-config.html for configuration options.',
+      'See https://equinor.github.io/fusion-framework/cli/docs/dev-server/configuration.html for configuration options.',
     ].join('\n'),
   )
   .option('--debug', 'Enable debug mode', !!process.env.RUNNER_DEBUG)

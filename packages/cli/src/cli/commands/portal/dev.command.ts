@@ -31,7 +31,7 @@ import { ConsoleLogger, startPortalDevServer } from '@equinor/fusion-framework-c
  *   $ ffc portal dev --debug
  *
  * @see startPortalDevServer for implementation details
- * @see dev-server-config.md for configuration options
+ * @see {@link https://equinor.github.io/fusion-framework/cli/docs/dev-server/configuration.html | Dev server configuration guide}
  */
 export const command = createCommand('dev')
   .description('Start a local development server for the Fusion portal.')
@@ -48,7 +48,7 @@ export const command = createCommand('dev')
       '  $ ffc portal dev --port 4000',
       '  $ ffc portal dev --debug',
       '',
-      'See https://equinor.github.io/fusion-framework/cli/docs/dev-server-config.html for configuration options.',
+      'See https://equinor.github.io/fusion-framework/cli/docs/dev-server/configuration.html for configuration options.',
     ].join('\n'),
   )
   .option('--debug', 'Enable debug mode', !!process.env.RUNNER_DEBUG)
