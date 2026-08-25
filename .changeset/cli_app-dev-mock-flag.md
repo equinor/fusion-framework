@@ -16,8 +16,9 @@ with `ffc app dev --mock http://localhost:5010`. An existing `dev-server.config.
 `api.serviceDiscoveryUrl` still takes precedence.
 
 `ffc app serve --mock` applies the same isolated discovery and mock authentication to a built
-application preview. The application must be built first. Both development commands resolve the
-`local` environment; select other files explicitly with `--manifest` and `--config`.
+application preview. The application must be built first and resolves the `local` environment.
+`ffc app dev --mock` preserves `--env`, which defaults to `local`; explicit `--manifest` and
+`--config` paths remain supported.
 
 Normal `ffc app dev` discovers local `<name>.mock.ts` modules and overlays discovery-visible
 definitions onto remote service discovery. In `--mock` mode, discovery comes exclusively from the
