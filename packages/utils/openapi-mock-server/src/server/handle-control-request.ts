@@ -3,11 +3,7 @@ import type { IncomingMessage, ServerResponse } from 'node:http';
 import { readJsonBody } from './read-json-body.js';
 import { resolveServiceDiscovery } from './resolve-service-discovery.js';
 import { sendJson } from './send-json.js';
-import type {
-  MockOverride,
-  MockServerHandle,
-  ServiceState,
-} from './types.js';
+import type { MockOverride, MockServerHandle, ServiceState } from './types.js';
 
 /**
  * Handles a request under the reserved `/@fusion-mock/*` control-plane prefix.

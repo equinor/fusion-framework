@@ -34,9 +34,7 @@ describe('defineService', () => {
   });
 
   it('keeps optional merge state absent for a direct-only schema', () => {
-    expect(
-      defineService({ key: 'people', serviceDiscovery: false, schema }),
-    ).toEqual({
+    expect(defineService({ key: 'people', serviceDiscovery: false, schema })).toEqual({
       key: 'people',
       serviceDiscovery: false,
       document: schema,

@@ -26,10 +26,7 @@ describe('mergeServiceDefinitions', () => {
 
   it('rejects a new service when an earlier definition already owns its key', () => {
     expect(() =>
-      mergeServiceDefinitions(
-        [service('people', 'replace')],
-        [service('people', 'new')],
-      ),
+      mergeServiceDefinitions([service('people', 'replace')], [service('people', 'new')]),
     ).toThrow('marked as new but an earlier definition already exists');
   });
 });

@@ -1,7 +1,4 @@
-import type {
-  FieldFakerValue,
-  OpenApiDocumentLike,
-} from '@equinor/fusion-openapi-mock';
+import type { FieldFakerValue, OpenApiDocumentLike } from '@equinor/fusion-openapi-mock';
 
 import { createRouter, type Router } from './create-router.js';
 import type { ServiceMockDefinition } from './discover-services.js';

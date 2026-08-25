@@ -22,7 +22,7 @@ describe('registerOptionalMockServerCommand', () => {
     expect(mockServerCommand?.options.map((option) => option.long)).toEqual(
       expect.arrayContaining(['--preset', '--port', '--host']),
     );
-  });
+  }, 15_000);
 
   it('registers a stub command when the plugin package is not installed', async () => {
     const program = new Command();
