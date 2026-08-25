@@ -20,7 +20,13 @@ const appComponent = createElement(Router, { routes });
 /** create React render root component */
 const createApp = (args: ComponentRenderArgs) => makeComponent(appComponent, args, configure);
 
-/** Render function */
+/**
+ * Mounts the mock-service cookbook application into a host element.
+ *
+ * @param el - DOM element that will own the React root.
+ * @param args - Fusion component render arguments passed through application configuration.
+ * @returns A teardown callback that unmounts the React root from the host element.
+ */
 export const renderApp = (el: HTMLElement, args: ComponentRenderArgs): (() => void) => {
   /** make render element */
   const app = createApp(args);

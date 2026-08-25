@@ -145,7 +145,8 @@ export function createMockServer(options: CreateMockServerOptions = {}): MockSer
           server.listen(options.port ?? 0, host);
         });
         const address = server.address() as AddressInfo;
-        url = `http://${host}:${address.port}`;
+        const urlHost = host.includes(':') ? `[${host}]` : host;
+        url = `http://${urlHost}:${address.port}`;
         return { url };
       } catch (error) {
         // A failed server never became owned by the returned handle.

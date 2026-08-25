@@ -39,7 +39,8 @@ export async function handleRequest(
   // Direct-only services run on a different localhost origin than the browser app.
   res.setHeader('access-control-allow-origin', '*');
   res.setHeader('access-control-allow-methods', 'GET, HEAD, POST, PUT, PATCH, DELETE, OPTIONS');
-  res.setHeader('access-control-allow-headers', '*');
+  const requestedHeaders = req.headers['access-control-request-headers'];
+  res.setHeader('access-control-allow-headers', requestedHeaders ?? 'authorization, content-type');
   // A CORS preflight only negotiates access; ordinary OPTIONS requests still target mock operations.
   if (isCorsPreflightRequest(method, req)) {
     res.writeHead(204);

@@ -96,6 +96,7 @@ describe('createMockServer', () => {
       headers: {
         origin: 'http://localhost:3000',
         'access-control-request-method': 'GET',
+        'access-control-request-headers': 'authorization, content-type',
       },
     });
     const response = await fetch(`${url}/pet-store/pets/1`, {
@@ -104,6 +105,9 @@ describe('createMockServer', () => {
 
     expect(preflight.status).toBe(204);
     expect(preflight.headers.get('access-control-allow-methods')).toContain('GET');
+    expect(preflight.headers.get('access-control-allow-headers')).toBe(
+      'authorization, content-type',
+    );
     expect(response.headers.get('access-control-allow-origin')).toBe('*');
   });
 
@@ -279,6 +283,14 @@ describe('createMockServer', () => {
 
     await expect(server.start()).rejects.toThrow('start() was already called');
     await expect(firstStart).resolves.toMatchObject({ url: expect.stringMatching(/^http:\/\//) });
+  });
+
+  it('returns a valid URL when listening on an IPv6 host', async () => {
+    server = createMockServer().use(fixturesDir);
+
+    const { url } = await server.start({ host: '::1' });
+
+    expect(new URL(url).hostname).toBe('[::1]');
   });
 
   it('allows close() to be called repeatedly', async () => {

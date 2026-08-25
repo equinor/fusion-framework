@@ -124,7 +124,7 @@ export type FusionTemplateEnv = {
      * instead of Entra ID — no credentials, redirects, or network calls.
      * Intended for CI/Playwright runs against the dev server.
      */
-    mock?: string;
+    mock?: string | boolean;
     /**
      * A mock JWT (e.g. from `createMockToken`) whose payload claims (`name`,
      * `preferred_username`, `oid`, `tid`, `scp`) become the signed-in mock

@@ -8,7 +8,9 @@ import { createDevServerConfig } from './create-dev-server-config.js';
  * @param config - Configuration returned by {@link createDevServerConfig}.
  * @returns The generated MSAL mock flag.
  */
-const getMsalMock = (config: ReturnType<typeof createDevServerConfig>): string | undefined => {
+const getMsalMock = (
+  config: ReturnType<typeof createDevServerConfig>,
+): string | boolean | undefined => {
   const templateEnv = config.spa?.templateEnv;
   // This factory always emits an object; fail clearly if that contract changes.
   if (!templateEnv || typeof templateEnv === 'function') {

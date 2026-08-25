@@ -65,11 +65,13 @@ the service and must match an operation in its OpenAPI document:
 
 ```typescript
 // mocks/inventory.mock.ts
+import schema from './inventory.openapi.json' with { type: 'json' };
 import { defineService } from '@equinor/fusion-openapi-mock-server/discovery';
 
 export default defineService({
   key: 'inventory',
-  serviceDiscovery: 'merge',
+  serviceDiscovery: 'replace',
+  schema,
   routes: {
     '/items': {
       get: {
@@ -80,10 +82,11 @@ export default defineService({
 });
 ```
 
-`'merge'` is appropriate because `inventory` already exists in real discovery or the selected
-preset. The module inherits that service's OpenAPI schema. Use `'new'` with a `schema` for a
-pre-production service, `'replace'` with a `schema` to replace an earlier definition completely,
-or `false` with a `schema` for a direct-only endpoint.
+`'replace'` is appropriate because the module carries a complete schema and deliberately replaces
+the real discovery entry during normal development or a same-key preset in isolated mode. Use
+`'merge'` only when a selected preset or earlier local mock layer already supplies the service and
+schema; the standalone mock server never inherits schemas from remote discovery. Use `'new'` with
+a `schema` for a pre-production service, or `false` with a `schema` for a direct-only endpoint.
 
 Complete the migration:
 
@@ -144,8 +147,8 @@ The module keeps service ownership, schema, deterministic fields, routes, and mi
 retrieval-friendly place.
 
 This example uses `'new'` because `inventory` is not registered yet; startup fails if the key later
-appears in real discovery. Use `'merge'` when the service already exists and only selected local
-behavior should change.
+appears in real discovery. Use `'merge'` only when a selected preset or earlier local mock layer
+already provides the service schema and only selected local behavior should change.
 
 ## Choose the development mode
 
@@ -182,7 +185,7 @@ so app-specific behavior can override the baseline.
 
 | Mode | Developer scenario |
 | --- | --- |
-| `'merge'` | Override selected behavior of an existing discovered or preset service while inheriting its schema. |
+| `'merge'` | Override selected behavior of a service supplied by a selected preset or earlier local mock layer while inheriting its schema. Remote discovery alone is not a merge source. |
 | `'new'` | Add a pre-production service expected to enter real discovery before release. Definition resolution fails if the key already exists in discovery or an earlier mock layer. |
 | `'replace'` | Supply a complete local definition and deliberately replace an earlier same-key definition. |
 | `false` | Serve an app-owned endpoint without advertising it through discovery. Configure its `<key>.localhost` mock URL directly in environment-specific app config. |
