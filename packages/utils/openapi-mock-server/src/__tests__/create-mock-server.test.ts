@@ -93,7 +93,10 @@ describe('createMockServer', () => {
 
     const preflight = await fetch(`${url}/pet-store/pets/1`, {
       method: 'OPTIONS',
-      headers: { origin: 'http://localhost:3000' },
+      headers: {
+        origin: 'http://localhost:3000',
+        'access-control-request-method': 'GET',
+      },
     });
     const response = await fetch(`${url}/pet-store/pets/1`, {
       headers: { origin: 'http://localhost:3000' },
@@ -102,6 +105,33 @@ describe('createMockServer', () => {
     expect(preflight.status).toBe(204);
     expect(preflight.headers.get('access-control-allow-methods')).toContain('GET');
     expect(response.headers.get('access-control-allow-origin')).toBe('*');
+  });
+
+  it('routes an ordinary OPTIONS request to its OpenAPI operation', async () => {
+    const document = {
+      openapi: '3.0.0',
+      info: { title: 'Options', version: '1' },
+      paths: {
+        '/capabilities': {
+          options: {
+            operationId: 'getCapabilities',
+            responses: {
+              '200': {
+                content: {
+                  'application/json': { schema: { type: 'object' } },
+                },
+              },
+            },
+          },
+        },
+      },
+    };
+    server = createMockServer().use([createService('options-service', document)]);
+    const { url } = await server.start();
+
+    const response = await fetch(`${url}/options-service/capabilities`, { method: 'OPTIONS' });
+
+    expect(response.status).toBe(200);
   });
 
   it('lets a later use() layer override an earlier one by service key', async () => {
@@ -134,6 +164,20 @@ describe('createMockServer', () => {
 
     const resetResponse = await fetch(`${url}/pet-store/pets/1`);
     expect(resetResponse.status).toBe(200);
+  });
+
+  it.each([99, 600])('rejects an override with invalid HTTP status %i', async (status) => {
+    server = createMockServer().use(fixturesDir);
+    const { url } = await server.start();
+
+    const response = await fetch(`${url}/@fusion-mock/pet-store/getPetById`, {
+      method: 'POST',
+      body: JSON.stringify({ status, mock: { error: 'invalid override' } }),
+    });
+
+    expect(response.status).toBe(400);
+    const unchanged = await fetch(`${url}/pet-store/pets/1`);
+    expect(unchanged.status).toBe(200);
   });
 
   it('responds 404 for a request to an unregistered service', async () => {
@@ -226,6 +270,15 @@ describe('createMockServer', () => {
         occupyingServer.close((error) => (error ? reject(error) : resolve())),
       );
     }
+  });
+
+  it('rejects a concurrent start() call', async () => {
+    server = createMockServer().use(fixturesDir);
+
+    const firstStart = server.start();
+
+    await expect(server.start()).rejects.toThrow('start() was already called');
+    await expect(firstStart).resolves.toMatchObject({ url: expect.stringMatching(/^http:\/\//) });
   });
 
   it('allows close() to be called repeatedly', async () => {

@@ -61,6 +61,7 @@ export function createMockServer(options: CreateMockServerOptions = {}): MockSer
   let services: Map<string, ServiceState> | undefined;
   let resolving: Promise<Map<string, ServiceState>> | undefined;
   let httpServer: ReturnType<typeof createServer> | undefined;
+  let starting = false;
   let url: string | undefined;
 
   /** Resolves every registered source exactly once, memoizing the in-flight promise so concurrent callers share it. */
@@ -118,16 +119,16 @@ export function createMockServer(options: CreateMockServerOptions = {}): MockSer
     },
 
     async start(options = {}) {
-      // A second start() would create an orphaned second HTTP server that close() could never reach.
-      if (httpServer) {
+      // Concurrent or repeated starts would create an orphaned HTTP server that close() could never reach.
+      if (httpServer || starting) {
         throw new Error('start() was already called on this MockServerHandle; call close() first.');
       }
-      await ensureResolved();
-      const server = createServer(requestListener);
-      httpServer = server;
-
-      const host = options.host ?? 'localhost';
+      starting = true;
       try {
+        await ensureResolved();
+        const server = createServer(requestListener);
+        httpServer = server;
+        const host = options.host ?? 'localhost';
         await new Promise<void>((resolve, reject) => {
           /** Removes the temporary error listener after the server starts successfully. */
           const handleListening = (): void => {
@@ -143,14 +144,16 @@ export function createMockServer(options: CreateMockServerOptions = {}): MockSer
           server.once('listening', handleListening);
           server.listen(options.port ?? 0, host);
         });
+        const address = server.address() as AddressInfo;
+        url = `http://${host}:${address.port}`;
+        return { url };
       } catch (error) {
         // A failed server never became owned by the returned handle.
         httpServer = undefined;
         throw error;
+      } finally {
+        starting = false;
       }
-      const address = server.address() as AddressInfo;
-      url = `http://${host}:${address.port}`;
-      return { url };
     },
 
     requestListener,

@@ -6,6 +6,36 @@ import { sendJson } from './send-json.js';
 import type { MockOverride, MockServerHandle, ServiceState } from './types.js';
 
 /**
+ * Checks whether a value is a standard HTTP status code.
+ *
+ * @param value - The status value supplied by the caller.
+ * @returns Whether the value is an integer from 100 through 599.
+ */
+function isHttpStatusCode(value: unknown): value is number {
+  // Status codes must be numeric values.
+  if (typeof value !== 'number') return false;
+  // Fractional numbers are not valid status codes.
+  if (!Number.isInteger(value)) return false;
+  return value >= 100 && value <= 599;
+}
+
+/**
+ * Validates the control-plane payload before registering a mock override.
+ *
+ * @param value - The parsed request body.
+ * @returns Whether the body contains a mock and an optional valid HTTP status.
+ */
+function isMockOverride(value: unknown): value is MockOverride {
+  // Override payloads must be JSON objects rather than null, arrays, or primitive values.
+  if (value === null || typeof value !== 'object' || Array.isArray(value)) return false;
+  // A response body is required even when the caller only wants to change its status.
+  if (!('mock' in value)) return false;
+  // Omitting status preserves the generated response's original status code.
+  if (!('status' in value)) return true;
+  return isHttpStatusCode(value.status);
+}
+
+/**
  * Handles a request under the reserved `/@fusion-mock/*` control-plane prefix.
  *
  * @remarks
@@ -66,21 +96,15 @@ export async function handleControlRequest(
       return;
     }
     const body = await readJsonBody(req);
-    // The override body must be a plain object carrying "mock", with an integer "status" if present.
-    if (
-      !body ||
-      typeof body !== 'object' ||
-      Array.isArray(body) ||
-      !('mock' in body) ||
-      ('status' in body && !Number.isInteger((body as { status?: unknown }).status))
-    ) {
+    // Invalid status codes would poison the override and make ServerResponse.writeHead() throw later.
+    if (!isMockOverride(body)) {
       sendJson(res, 400, {
         error:
-          'Expected a JSON body with a "mock" field and, if present, an integer "status" field.',
+          'Expected a JSON body with a "mock" field and, if present, an HTTP "status" from 100 to 599.',
       });
       return;
     }
-    handle.override(serviceKey, operationId, body as MockOverride);
+    handle.override(serviceKey, operationId, body);
     sendJson(res, 200, { status: 'registered' });
     return;
   }

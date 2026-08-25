@@ -5,6 +5,20 @@ import { handleServiceRequest } from './handle-service-request.js';
 import type { MockServerHandle, ServiceState } from './types.js';
 
 /**
+ * Checks whether a request is negotiating CORS access rather than invoking an OPTIONS operation.
+ *
+ * @param method - The normalized HTTP method.
+ * @param request - The incoming HTTP request.
+ * @returns Whether the request carries the method and headers required for a CORS preflight.
+ */
+function isCorsPreflightRequest(method: string, request: IncomingMessage): boolean {
+  // Only OPTIONS requests can be CORS preflights.
+  if (method !== 'OPTIONS') return false;
+  const { origin, 'access-control-request-method': requestedMethod } = request.headers;
+  return origin !== undefined && requestedMethod !== undefined;
+}
+
+/**
  * Routes one incoming request to the control plane or a service's mock.
  *
  * @param handle - The `reset`/`override` implementation control-plane routes delegate to.
@@ -26,8 +40,8 @@ export async function handleRequest(
   res.setHeader('access-control-allow-origin', '*');
   res.setHeader('access-control-allow-methods', 'GET, HEAD, POST, PUT, PATCH, DELETE, OPTIONS');
   res.setHeader('access-control-allow-headers', '*');
-  // Preflight only negotiates access; it must not invoke a mock operation.
-  if (method === 'OPTIONS') {
+  // A CORS preflight only negotiates access; ordinary OPTIONS requests still target mock operations.
+  if (isCorsPreflightRequest(method, req)) {
     res.writeHead(204);
     res.end();
     return;

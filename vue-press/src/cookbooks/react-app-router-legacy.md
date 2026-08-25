@@ -13,5 +13,5 @@ This cookbook demonstrates the manual `RouteObject[]` routing approach supported
 migrated to the route DSL. It includes examples of `errorElement`, React Router v7
 `ErrorBoundary`, nested routes, and loader errors.
 
-- [Route configuration](../../../cookbooks/app-react-router-legacy/src/routes.tsx)
-- [Application entry point](../../../cookbooks/app-react-router-legacy/src/index.ts)
+- [Route configuration](https://github.com/equinor/fusion-framework/blob/main/cookbooks/app-react-router-legacy/src/routes.tsx)
+- [Application entry point](https://github.com/equinor/fusion-framework/blob/main/cookbooks/app-react-router-legacy/src/index.ts)
