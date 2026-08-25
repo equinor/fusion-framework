@@ -34,6 +34,15 @@ Reject results that confuse dev-server configuration with runtime module configu
 - must recommend `false` for an app-owned endpoint whose URL is supplied directly by environment-specific app configuration
 - must state that `serviceDiscovery: false` keeps the service routable on the mock server but omits it from the mock discovery response
 
+## How to mock an application-config endpoint without service discovery
+
+- must define the service in `mocks/<name>.mock.ts` with `serviceDiscovery: false`
+- must configure the same key under `endpoints` in `app.config.<env>.ts`
+- must use the direct `http://<key>.localhost:<mock-port>` URL
+- must mention manually starting `ffc mock-server` and restarting `ffc app dev` after application-config changes
+- must state that `ffc app dev --mock` controls service discovery and does not automatically rewrite app-owned `endpoints`
+- must not require an `/@fusion-api` proxy route, handwritten `api.routes`, or `api.processServices`
+
 ## How to configure API proxying and custom routes
 
 - must mention `api.serviceDiscoveryUrl` as the required service discovery endpoint

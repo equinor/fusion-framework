@@ -216,6 +216,13 @@ export default defineAppConfig((env, args) => {
 > Endpoints defined here are **automatically registered as named HTTP clients** when the application initializes. You do not need to call `configureHttpClient(name, ...)` in `config.ts` for these endpoints — they are ready to use via `framework.modules.http.createClient('my-end-point')`. See the [HTTP client configuration docs](../../modules/http/docs/client-configuration.md) for details.
 
 > [!TIP]
+> To mock an app-owned `endpoints` client locally, use a `serviceDiscovery: false` executable
+> service and point `app.config.dev.ts` at `http://<key>.localhost:4010`. See
+> [Mock an application-config endpoint locally](../../app/docs/http-clients.md#mock-an-application-config-endpoint-locally).
+> This direct workflow needs no `/@fusion-api` route or handwritten mock middleware. Restart
+> `ffc app dev` after changing `app.config.<env>.ts`.
+
+> [!TIP]
 > In `endpoints` you can also override Service Discovery urls. This might be useful when you are
 > testing in a PR-environment.
 >

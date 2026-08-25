@@ -115,6 +115,10 @@ For example, a service with key `my-api` and `serviceDiscovery: false` is still 
 `http://my-api.localhost:4010`; it is simply absent from `/@fusion-mock/discovery`. This mirrors an
 application-owned API URL that production configuration supplies directly.
 
+Register that URL through the app's environment-specific `endpoints` configuration. The
+[HTTP-client guide](../../app/docs/http-clients.md#mock-an-application-config-endpoint-locally)
+contains the complete `app.config.dev.ts` recipe and restart caveat.
+
 ## Configure shared defaults
 
 ```typescript
