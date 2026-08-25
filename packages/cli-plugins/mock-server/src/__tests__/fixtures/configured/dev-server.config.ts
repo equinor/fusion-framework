@@ -1,11 +1,10 @@
-export default (
-  _env: { root: string },
-  { base: _base }: { base: { api: { serviceDiscoveryUrl: string } } },
-) => ({
+import { defineDevServerConfig } from '@equinor/fusion-framework-cli';
+
+export default defineDevServerConfig((env) => ({
   mockServer: {
-    path: 'api-mocks',
+    path: `${env.environment}-api-mocks`,
     port: 4010,
     host: '127.0.0.1',
     seed: 42,
   },
-});
+}));

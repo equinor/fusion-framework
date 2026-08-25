@@ -9,7 +9,7 @@ describe('loadMockServerConfig', () => {
     const root = fileURLToPath(new URL('./fixtures/configured', import.meta.url));
 
     await expect(loadMockServerConfig(root)).resolves.toEqual({
-      path: 'api-mocks',
+      path: 'local-api-mocks',
       port: 4010,
       host: '127.0.0.1',
       seed: 42,

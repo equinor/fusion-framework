@@ -15,7 +15,7 @@ interface DevServerConfigModule extends EsmModule {
   default?:
     | DevServerConfigOverrides
     | ((
-        env: { command: 'serve'; mode: string; root: string },
+        env: { command: 'serve'; environment: 'local'; mode: string; root: string },
         args: { base: DevServerOptions },
       ) => DevServerConfigOverrides | Promise<DevServerConfigOverrides | undefined> | undefined);
 }
@@ -45,13 +45,14 @@ export async function loadMockServerConfig(root: string): Promise<ResolvedMockSe
             // Factory configs may derive settings from the supplied base configuration.
             if (typeof exported === 'function') {
               return (
-                (await exported({ command: 'serve', mode: 'development', root }, { base })) ?? {}
+                (await exported(
+                  { command: 'serve', environment: 'local', mode: 'development', root },
+                  { base },
+                )) ?? {}
               );
             }
             return exported ?? {};
           },
-          // Repeated command runs must not reuse a stale bundled config URL.
-          esBuildOptions: { write: false },
         },
       },
     );
