@@ -4,11 +4,24 @@ Use `@equinor/fusion-framework-cli-plugin-mock-server` when a Fusion application
 deterministic, or not-yet-deployed backend. The plugin adds `ffc mock-server`; it does not change
 the base dev-server runtime or start a background process automatically.
 
+The recommended application workflow has three parts:
+
+1. Create `mocks/<service>.mock.ts` with `defineService`.
+2. Run `ffc mock-server` in a foreground terminal.
+3. Run `ffc app dev` for real discovery plus local overrides, or `ffc app dev --mock` for an
+  isolated mock environment.
+
+> [!IMPORTANT]
+> Keep service mock behavior in `<service>.mock.ts`, not `dev-server.config.ts`. The executable
+> module is reusable by local development, Playwright, and the programmatic mock server. Reserve
+> `api.routes` and `api.processServices` for advanced server infrastructure and discovery
+> transformations that are not service mocks.
+
 ## Install and start the mock server
 
 ```sh
 pnpm add -D @equinor/fusion-framework-cli-plugin-mock-server
-ffc mock-server ./mocks --port 4010
+ffc mock-server
 ```
 
 > [!IMPORTANT]
@@ -38,7 +51,7 @@ import { defineService } from '@equinor/fusion-openapi-mock-server/discovery';
 
 export default defineService({
   key: 'inventory',
-  serviceDiscovery: 'replace',
+  serviceDiscovery: 'new',
   schema,
   components: {
     InventoryItem: { name: () => 'Local item' },
@@ -49,12 +62,16 @@ export default defineService({
 The module keeps service ownership, schema, deterministic fields, routes, and middleware in one
 retrieval-friendly place.
 
+This example uses `'new'` because `inventory` is not registered yet; startup fails if the key later
+appears in real discovery. Use `'merge'` when the service already exists and only selected local
+behavior should change.
+
 ## Choose the development mode
 
 ### Combine real discovery with selected local services
 
 ```sh
-ffc mock-server ./mocks --port 4010
+ffc mock-server
 ffc app dev --env dev
 ```
 
@@ -64,7 +81,7 @@ service key. Use this when most real backends remain useful.
 ### Use only predefined and local mocks
 
 ```sh
-ffc mock-server ./mocks --port 4010
+ffc mock-server
 ffc app dev --env dev --mock http://localhost:4010
 ```
 

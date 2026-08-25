@@ -47,7 +47,7 @@ system assigns a free port.
 | Import | Purpose |
 | --- | --- |
 | `@equinor/fusion-openapi-mock-server` | `createMockServer` and its server option/handle types. |
-| `@equinor/fusion-openapi-mock-server/discovery` | Discover or construct services with `discoverServices`, `createService`, `createRouter`, and override loaders. |
+| `@equinor/fusion-openapi-mock-server/discovery` | Define executable `<name>.mock.ts` modules with `defineService`, or use lower-level `discoverServices`, `createService`, and `createRouter` APIs. |
 | `@equinor/fusion-openapi-mock-server/presets` | Registry of bundled preset loaders. |
 | `@equinor/fusion-openapi-mock-server/presets/fusion` | `fusionPreset` and its individual service definitions. |
 

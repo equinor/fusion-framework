@@ -3,6 +3,11 @@
 Use these extension points after the default discovery proxy and SPA environment work. Most
 applications do not need custom service processing.
 
+> [!IMPORTANT]
+> These are not the primary service-mocking APIs. Define application mocks in
+> `mocks/<service>.mock.ts` with `defineService`; use `processServices` only when a host must
+> transform real discovery independently of mock behavior.
+
 ## Transform discovered services
 
 Call `processServices(data, args)` first, then transform its result. This preserves standard local

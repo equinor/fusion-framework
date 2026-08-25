@@ -32,10 +32,18 @@ controls browser configuration and does not replace the API option.
 The mock server is separate. Confirm `ffc mock-server` is running and
 `/@fusion-mock/health` responds.
 
+Confirm the source file matches `mocks/<service>.mock.ts` and default-exports a `defineService(...)`
+result. The service key in that module must match the key requested by the application.
+
 Normal `ffc app dev` overlays only discovery-visible definitions. Definitions using
 `serviceDiscovery: false` must be configured directly in app config, for example with a
 `http://<key>.localhost:4010` URL. In `--mock` mode, confirm the application uses the same origin
 and port as the manually started server.
+
+If a definition using `serviceDiscovery: 'new'` reports a collision, real discovery or an earlier
+mock layer already owns that key. Do not change it to `'replace'` just to hide the error: remove the
+temporary pre-production mock after registration, or use `'merge'` when the intent is to override
+selected behavior of the existing service.
 
 ## Authentication fails
 

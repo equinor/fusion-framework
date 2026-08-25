@@ -80,8 +80,10 @@ const options = {
 };
 ```
 
-Prefer the [mock-server plugin](mocking.md) for OpenAPI-backed local services. Reserve `api.routes`
-for server-owned behavior that is not a service mock.
+Prefer executable `mocks/<service>.mock.ts` modules from the
+[mock-server guide](mocking.md) for local services. Reserve `api.routes` for server-owned behavior
+that is not a service mock; do not reproduce OpenAPI operations as handwritten dev-server
+middleware.
 
 ## Configure terminal logging
 

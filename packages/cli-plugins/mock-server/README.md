@@ -30,7 +30,7 @@ import { defineService } from '@equinor/fusion-openapi-mock-server/discovery';
 
 export default defineService({
   key: 'inventory',
-  serviceDiscovery: 'replace',
+  serviceDiscovery: 'new',
   schema,
   components: {
     InventoryItem: { name: () => 'Local item' },
@@ -38,14 +38,18 @@ export default defineService({
 });
 ```
 
-`'replace'` supplies a complete local service. See
+This file is the service mock. Do not duplicate the service in `dev-server.config.ts` with
+`api.routes` or `api.processServices`; those low-level hooks are not required for the normal mock
+workflow.
+
+`'new'` models a pre-production service and rejects collisions if the key becomes registered. See
 [Choose a discovery mode](../../dev-server/docs/mocking.md#choose-a-discovery-mode) for existing
 services, pre-production services, and direct-only app endpoints.
 
 Start the server manually:
 
 ```sh
-ffc mock-server ./mocks --port 4010
+ffc mock-server
 ```
 
 Installing the package makes the command available through the Fusion CLI. If the plugin is not

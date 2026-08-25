@@ -16,10 +16,23 @@ Reject results that confuse dev-server configuration with runtime module configu
 ## How to mock API responses in local development
 
 - must mention executable `<name>.mock.ts` modules created with `defineService`
+- must include a copyable `mocks/<name>.mock.ts` example with `key`, `serviceDiscovery`, and either `schema`, `routes`, or `components`
+- must state that service mock behavior belongs in the executable module rather than handwritten `api.routes` or `api.processServices` configuration
 - must show how `serviceDiscovery: 'merge'`, `'new'`, or `'replace'` makes a local definition visible
+- must mention manually starting `ffc mock-server` as a foreground process
 - should mention that normal `ffc app dev` derives local proxy services from visible `defineService` modules and merges them by key into real discovery
 - must state that `ffc app dev --mock <origin>` ignores normal-dev definitions and uses only the manually started mock server's presets and local `defineService` modules
 - must not claim that `ffc app dev` automatically starts `ffc mock-server`
+- must not present `api.routes` or `api.processServices` as the recommended way to mock a service
+
+## How to choose a mock service discovery mode
+
+- must recommend `'merge'` for changing selected behavior of an existing discovered or preset service while inheriting its schema
+- must recommend `'new'` for a temporary pre-production service that is expected to enter real discovery before release
+- must state that `'new'` fails on a same-key collision instead of shadowing a registered service
+- must recommend `'replace'` for a complete local definition that intentionally replaces an earlier mock layer
+- must recommend `false` for an app-owned endpoint whose URL is supplied directly by environment-specific app configuration
+- must state that `serviceDiscovery: false` keeps the service routable on the mock server but omits it from the mock discovery response
 
 ## How to configure API proxying and custom routes
 

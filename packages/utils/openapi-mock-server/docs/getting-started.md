@@ -6,6 +6,12 @@ A `mocks/` directory of `<name>.mock.ts` modules is all this package needs. Each
 one service and imports the OpenAPI schema used to fake its responses. The same mocks work for
 local development, Playwright, or an embedded server.
 
+> [!TIP]
+> Fusion application developers should install
+> `@equinor/fusion-framework-cli-plugin-mock-server`, run `ffc mock-server`, and connect with
+> `ffc app dev` or `ffc app dev --mock`. The programmatic APIs below are for test harnesses and
+> hosts that need to own the HTTP server lifecycle directly.
+
 ## Define your first service
 
 Add one `<name>.mock.ts` module per service:

@@ -180,6 +180,15 @@ export default defineDevServerConfig((env, { base }) => ({
 }));
 ```
 
+### Local mock services (`mocks/<service>.mock.ts`)
+
+Use executable service modules instead of handwritten routes in `dev-server.config.ts`. Install
+`@equinor/fusion-framework-cli-plugin-mock-server`, define each service with `defineService`, and
+run `ffc mock-server` in a separate foreground terminal.
+
+See [Develop with mock services](../dev-server/docs/mocking.md) for normal discovery overlays,
+isolated `--mock` development, and discovery modes.
+
 ### CLI plugins (`fusion-cli.config.ts`)
 
 ```ts
