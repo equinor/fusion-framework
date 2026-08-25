@@ -1,6 +1,9 @@
 import { createCommand, createOption, type Command } from 'commander';
 
 import { createMockServer } from '@equinor/fusion-openapi-mock-server';
+import { discoverServices } from '@equinor/fusion-openapi-mock-server/discovery';
+
+import { loadMockServerConfig } from './load-mock-server-config.js';
 
 /** Option values for `ffc mock-server`. */
 interface MockServerCommandOptions {
@@ -9,13 +12,15 @@ interface MockServerCommandOptions {
   /** Port to listen on; `undefined` lets the OS assign a free one. */
   port?: number;
   /** Hostname to bind to. */
-  host: string;
+  host?: string;
   /** Seeds every service's faked responses, if given. */
   seed?: number;
 }
 
 /** Overrides for `ffc mock-server`'s own built-in defaults, set by whoever registers the plugin. */
 export interface MockServerCommandDefaults {
+  /** Mock-module directory used when no positional directory or config path is supplied. */
+  path?: string;
   /** Bundled preset(s) to apply when `--preset` isn't given at all. Defaults to `['fusion']`. */
   preset?: string[];
   /** Port to listen on when `--port` isn't given. Defaults to an OS-assigned free port. */
@@ -29,8 +34,8 @@ export interface MockServerCommandDefaults {
 /**
  * Builds the `ffc mock-server` command definition.
  *
- * Serves every service discovered from one or more directories of OpenAPI
- * specs (plus any bundled presets) over HTTP, using
+ * Serves every service discovered from one or more directories of `<name>.mock.ts`
+ * modules (plus any bundled presets) over HTTP, using
  * `@equinor/fusion-openapi-mock-server`'s `createMockServer`. Presets and
  * directories are both layered in ascending precedence — a later `--preset`
  * or directory replaces an earlier one's services by key — with every
@@ -49,7 +54,7 @@ export interface MockServerCommandDefaults {
  * dies with whatever started it (e.g. Playwright's `webServer`) rather than
  * lingering as an orphaned process.
  *
- * @param defaults - Overrides for the command's own built-in `--preset`/`--port`/`--host` defaults.
+ * @param defaults - Overrides for the command's own built-in path, preset, port, host, and seed defaults.
  * @returns A fresh `Command` instance — a factory rather than a shared singleton, since
  * Commander stores parsed option values on the `Command` instance itself.
  *
@@ -63,10 +68,8 @@ export function createMockServerCommand(defaults: MockServerCommandDefaults = {}
   const defaultPresets: string[] = defaults.preset ?? ['fusion'];
 
   return createCommand('mock-server')
-    .description(
-      'Serve OpenAPI-fake responses over HTTP, from bundled presets and/or directories of specs',
-    )
-    .argument('[dirs...]', 'directories of OpenAPI specs to serve, in ascending precedence')
+    .description('Serve OpenAPI-fake responses over HTTP, from bundled presets and/or mock modules')
+    .argument('[dirs...]', 'directories of <name>.mock.ts modules, in ascending precedence')
     .addOption(
       createOption(
         '--preset <name>',
@@ -80,30 +83,36 @@ export function createMockServerCommand(defaults: MockServerCommandDefaults = {}
     .addOption(
       createOption(
         '--port <port>',
-        `port to listen on (default: ${defaults.port ?? 'OS-assigned'})`,
-      )
-        .default(defaults.port)
-        .argParser(Number),
+        `port to listen on (default: config or ${defaults.port ?? 'OS-assigned'})`,
+      ).argParser(Number),
     )
-    .addOption(
-      createOption('--host <host>', 'hostname to bind to').default(defaults.host ?? 'localhost'),
-    )
+    .addOption(createOption('--host <host>', 'hostname to bind to (default: config or localhost)'))
     .addOption(
       createOption(
         '--seed <seed>',
         `seeds every service's faked responses, for reproducible output (default: ${defaults.seed ?? 'unseeded/random'})`,
-      )
-        .default(defaults.seed)
-        .argParser(Number),
+      ).argParser(Number),
     )
     .action(async (dirs: string[], options: MockServerCommandOptions) => {
-      const server = createMockServer({ seed: options.seed });
+      const config = await loadMockServerConfig(process.cwd());
+      const sourceDirs = dirs.length ? dirs : [config.path ?? defaults.path ?? 'mocks'];
+      const definitionGroups = await Promise.all(
+        sourceDirs
+          // Resolve every configured layer before startup so discovery requirements are known.
+          .map((dir) => discoverServices(dir)),
+      );
+      const server = createMockServer({
+        seed: options.seed ?? config.seed ?? defaults.seed,
+      });
       // presets always apply before directories, regardless of flag position on the command line
       for (const preset of options.preset) server.use(preset);
-      // directories are the highest-precedence layer, applied after every preset
-      for (const dir of dirs) server.use(dir);
+      // Resolved directory groups are the highest-precedence layers, applied after every preset.
+      for (const definitions of definitionGroups) server.use(definitions);
 
-      const { url } = await server.start({ port: options.port, host: options.host });
+      const { url } = await server.start({
+        port: options.port ?? config.port ?? defaults.port,
+        host: options.host ?? config.host ?? defaults.host ?? 'localhost',
+      });
       console.log(`mock server listening at ${url}`);
 
       const shutdown = (): void => {

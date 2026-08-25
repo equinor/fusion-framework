@@ -1,9 +1,20 @@
 import { Command } from 'commander';
 import { describe, expect, it } from 'vitest';
 
-import mockServerPlugin from './index.js';
+import type { DevServerOptions } from '@equinor/fusion-framework-dev-server';
+
+import mockServerPlugin from '../index.js';
 
 describe('mockServerPlugin', () => {
+  it('augments DevServerOptions with mock-server configuration', () => {
+    const config: DevServerOptions = {
+      api: { serviceDiscoveryUrl: 'https://discovery.example.com' },
+      mockServer: { path: 'api-mocks', port: 4010, seed: 42 },
+    };
+
+    expect(config.mockServer).toEqual({ path: 'api-mocks', port: 4010, seed: 42 });
+  });
+
   it('registers a top-level "mock-server" command', () => {
     const program = new Command();
 
@@ -53,7 +64,7 @@ describe('mockServerPlugin', () => {
     expect(mockServerCommand?.opts().preset).toEqual(['other']);
   });
 
-  it('applies caller-provided defaults for preset, port, and host', () => {
+  it('applies caller-provided preset defaults during option parsing', () => {
     const program = new Command();
     mockServerPlugin({ preset: ['other'], port: 4010, host: '0.0.0.0' })(program);
     // locate the command this plugin registered, by name
@@ -61,7 +72,7 @@ describe('mockServerPlugin', () => {
 
     mockServerCommand?.parseOptions([]);
 
-    expect(mockServerCommand?.opts()).toEqual({ preset: ['other'], port: 4010, host: '0.0.0.0' });
+    expect(mockServerCommand?.opts()).toEqual({ preset: ['other'] });
   });
 
   it('lets an explicit flag override a caller-provided default', () => {

@@ -6,6 +6,10 @@ import {
 } from './create-mock-server-command.js';
 
 export type { MockServerCommandDefaults };
+export type {
+  DevServerMockOptions,
+  MockServerDevServerOptions,
+} from './dev-server-options.js';
 
 /**
  * Creates the `ffc mock-server` CLI plugin, for a `fusion-cli.config.ts`'s `plugins` array.

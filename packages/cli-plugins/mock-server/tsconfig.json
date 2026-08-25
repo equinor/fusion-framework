@@ -12,6 +12,12 @@
   },
   "references": [
     {
+      "path": "../../dev-server"
+    },
+    {
+      "path": "../../utils/imports"
+    },
+    {
       "path": "../../utils/openapi-mock-server"
     }
   ],
