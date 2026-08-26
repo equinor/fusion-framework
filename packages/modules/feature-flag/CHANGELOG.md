@@ -1,5 +1,12 @@
 # @equinor/fusion-framework-module-feature-flag
 
+## 2.1.0-next.1
+
+### Patch Changes
+
+- 09a9bcc: Use the supported navigation `history` API in the URL feature-flag plugin, avoiding deprecated
+  `navigator` telemetry warnings when applications connect the plugin.
+
 ## 2.1.0-next.0
 
 ### Minor Changes

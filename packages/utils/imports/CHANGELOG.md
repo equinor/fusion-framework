@@ -1,5 +1,12 @@
 # @equinor/fusion-imports
 
+## 2.0.3-next.1
+
+### Patch Changes
+
+- 09a9bcc: Prevent imported scripts with the same basename in different directories from sharing an esbuild
+  cache artifact.
+
 ## 2.0.3-next.0
 
 ### Patch Changes

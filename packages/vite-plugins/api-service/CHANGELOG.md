@@ -1,5 +1,12 @@
 # @equinor/fusion-framework-vite-plugin-api-service
 
+## 2.0.6-next.1
+
+### Patch Changes
+
+- 09a9bcc: Clarify that Fusion application service mocks should use executable `<service>.mock.ts` modules,
+  while API plugin routes are low-level hooks for server-owned development behavior.
+
 ## 2.0.6-next.0
 
 ### Patch Changes

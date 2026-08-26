@@ -1,5 +1,22 @@
 # @equinor/fusion-framework-dev-server
 
+## 2.1.0-next.2
+
+### Minor Changes
+
+- 09a9bcc: Expose `DevServerOptions` as an interface so optional development tooling can add typed
+  configuration through TypeScript module augmentation.
+
+### Patch Changes
+
+- 09a9bcc: Proxy mock services advertised through `<service>.localhost` via plain `localhost` while preserving
+  the service-key path. This avoids `ENOTFOUND` failures on Linux runners without changing normal
+  upstream service proxying.
+- Updated dependencies [09a9bcc]
+- Updated dependencies [09a9bcc]
+  - @equinor/fusion-framework-vite-plugin-api-service@2.0.6-next.1
+  - @equinor/fusion-framework-vite-plugin-spa@4.1.0-next.2
+
 ## 2.0.19-next.1
 
 ### Patch Changes

@@ -1,5 +1,13 @@
 # Change Log
 
+## 13.0.3-next.1
+
+### Patch Changes
+
+- Updated dependencies [53d5e4c]
+  - @equinor/fusion-framework-module-msal@11.0.0-next.1
+  - @equinor/fusion-framework@8.1.0-next.2
+
 ## 13.0.3-next.0
 
 ### Patch Changes
