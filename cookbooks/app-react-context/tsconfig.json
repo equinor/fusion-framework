@@ -1,9 +1,9 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "rootDir": "src",
+    "rootDir": ".",
     "noEmit": true,
-    "jsx": "react-jsxdev"
+    "jsx": "react-jsx"
   },
   "references": [
     {
@@ -29,8 +29,14 @@
     },
     {
       "path": "../../packages/cli"
+    },
+    {
+      "path": "../../packages/cli-plugins/mock-server"
+    },
+    {
+      "path": "../../packages/utils/openapi-mock-server"
     }
   ],
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "playwright.config.ts", "playwright/**/*", "mocks/**/*.ts"],
   "exclude": ["node_modules", "lib", "src/__tests__/**/*"]
 }
