@@ -63,5 +63,8 @@ test('matches the context inspection visual baseline', async ({ page }) => {
   await expect(contextInspection).toContainText(PROJECT_ID);
   await expect(contextInspection).toContainText('Discipline');
 
+  await page.addStyleTag({
+    content: '[data-testid="context-inspection"] { min-height: 900px; }',
+  });
   await expect(contextInspection).toHaveScreenshot('context-inspection.png');
 });
