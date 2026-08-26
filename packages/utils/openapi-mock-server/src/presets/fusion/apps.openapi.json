@@ -1,0 +1,88 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Fusion App Service API (mock)",
+    "version": "1.0.0",
+    "description": "Bundled Fusion baseline preset — a generic app-service mock. Dev servers serving their own app locally still need to override that one app's own manifest/build/config via their own routes (see cookbooks/app-react/dev-server.config.ts)."
+  },
+  "paths": {
+    "/persons/me/apps": {
+      "get": {
+        "operationId": "listMyApps",
+        "parameters": [{ "name": "api-version", "in": "query", "schema": { "type": "string" } }],
+        "responses": {
+          "200": {
+            "description": "Apps available to the current user.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/AppManifest" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/apps/{appKey}": {
+      "get": {
+        "operationId": "getApp",
+        "parameters": [
+          { "name": "appKey", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "api-version", "in": "query", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "The manifest for the given app.",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/AppManifest" } }
+            }
+          }
+        }
+      }
+    },
+    "/apps/{appKey}/builds/{version}": {
+      "get": {
+        "operationId": "getAppBuild",
+        "parameters": [
+          { "name": "appKey", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "version", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "api-version", "in": "query", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Build metadata for the given app version.",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/AppBuildManifest" } }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AppBuildManifest": {
+        "type": "object",
+        "properties": {
+          "version": { "type": "string", "faker": "system.semver" },
+          "entryPoint": { "type": "string" },
+          "assetPath": { "type": "string" },
+          "timestamp": { "type": "string", "format": "date-time" },
+          "commitSha": { "type": "string", "faker": "git.commitSha" }
+        }
+      },
+      "AppManifest": {
+        "type": "object",
+        "properties": {
+          "appKey": { "type": "string", "faker": "string.alpha" },
+          "displayName": { "type": "string", "faker": "commerce.productName" },
+          "description": { "type": "string", "faker": "lorem.sentence" },
+          "type": { "type": "string", "enum": ["app", "external"] },
+          "build": { "$ref": "#/components/schemas/AppBuildManifest" }
+        }
+      }
+    }
+  }
+}

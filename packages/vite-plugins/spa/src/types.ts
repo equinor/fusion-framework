@@ -119,6 +119,18 @@ export type FusionTemplateEnv = {
      * on initial load.
      */
     requiresAuth: string;
+    /**
+     * When `'true'`, authentication is served by an in-process mock client
+     * instead of Entra ID — no credentials, redirects, or network calls.
+     * Intended for CI/Playwright runs against the dev server.
+     */
+    mock?: string | boolean;
+    /**
+     * A mock JWT (e.g. from `createMockToken`) whose payload claims (`name`,
+     * `preferred_username`, `oid`, `tid`, `scp`) become the signed-in mock
+     * user. Only read when {@link mock} is set; ignored otherwise.
+     */
+    mockToken?: string;
   };
 
   /** Service worker resource interception configuration. */

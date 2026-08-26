@@ -1,0 +1,140 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Fusion App State API (mock)",
+    "version": "1.0.0",
+    "description": "Bundled Fusion baseline preset — backported from cookbooks/app-react/mocks/app-state.openapi.json."
+  },
+  "paths": {
+    "/persons/me/apps": {
+      "get": {
+        "operationId": "listMyApps",
+        "parameters": [{ "name": "api-version", "in": "query", "schema": { "type": "string" } }],
+        "responses": {
+          "200": {
+            "description": "Apps holding state for the current user.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/AppStateSummary" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/persons/me/apps/{appKey}": {
+      "get": {
+        "operationId": "getMyAppState",
+        "parameters": [
+          { "name": "appKey", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "api-version", "in": "query", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "The current user's state info for the given app.",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/AppStateSummary" } }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "wipeMyAppState",
+        "parameters": [
+          { "name": "appKey", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "api-version", "in": "query", "schema": { "type": "string" } }
+        ],
+        "responses": { "204": { "description": "The user's state for the app was wiped." } }
+      }
+    },
+    "/persons/me": {
+      "delete": {
+        "operationId": "wipeAllMyState",
+        "parameters": [{ "name": "api-version", "in": "query", "schema": { "type": "string" } }],
+        "responses": { "204": { "description": "All of the user's state was wiped." } }
+      }
+    },
+    "/admin/apps/{appKey}/users": {
+      "get": {
+        "operationId": "listAppUsers",
+        "parameters": [
+          { "name": "appKey", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "api-version", "in": "query", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Users holding state for the given app.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/UserAppState" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/apps/{appKey}/users/{userId}": {
+      "get": {
+        "operationId": "getUserAppState",
+        "parameters": [
+          { "name": "appKey", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "userId", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "api-version", "in": "query", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "A specific user's state info for the given app.",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/UserAppState" } }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "wipeUserAppState",
+        "parameters": [
+          { "name": "appKey", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "userId", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "api-version", "in": "query", "schema": { "type": "string" } }
+        ],
+        "responses": { "204": { "description": "The user's state for the app was wiped." } }
+      }
+    },
+    "/admin/apps/{appKey}": {
+      "delete": {
+        "operationId": "wipeAllAppUsersState",
+        "parameters": [
+          { "name": "appKey", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "api-version", "in": "query", "schema": { "type": "string" } }
+        ],
+        "responses": { "204": { "description": "All users' state for the app was wiped." } }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AppStateSummary": {
+        "type": "object",
+        "properties": {
+          "appKey": { "type": "string" },
+          "documentCount": { "type": "integer", "minimum": 0 },
+          "size": { "type": "integer", "minimum": 0 }
+        }
+      },
+      "UserAppState": {
+        "type": "object",
+        "properties": {
+          "userId": { "type": "string", "format": "uuid" },
+          "documentCount": { "type": "integer", "minimum": 0 },
+          "size": { "type": "integer", "minimum": 0 }
+        }
+      }
+    }
+  }
+}

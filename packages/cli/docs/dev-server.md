@@ -12,7 +12,7 @@ The Fusion Framework dev-server is your complete local development solution for 
 
 🛠️ **Flexible Configuration** - Easy setup for both applications and portals with environment-specific overrides
 
-📝 **Configurable Development** - Optional `dev-server.config.ts` file for API mocking, service discovery customization, and environment variable overrides
+📝 **Executable Service Mocks** - Reusable `mocks/<service>.mock.ts` modules for local development and browser tests
 
 ## Quick Start
 
@@ -30,11 +30,17 @@ The dev-server automatically detects your project type, loads configuration file
 
 For detailed information about configuring the dev-server, see [Dev Server Configuration](dev-server-config.md).
 
-The dev-server automatically loads configuration from a `dev-server.config.ts` file in your project root, allowing you to customize API mocking, service discovery, and development environment settings without modifying your application code.
+The dev server automatically discovers executable `mocks/<service>.mock.ts` modules. Define service
+behavior there with `defineService`, run `ffc mock-server` in a foreground terminal, and use
+`ffc app dev` for real discovery plus local overrides or `ffc app dev --mock` for an isolated mock
+environment. See [Develop with mock services](../../dev-server/docs/mocking.md).
+
+Use `dev-server.config.ts` for SPA environment values, logging, discovery endpoints, and shared
+mock-server defaults. It is not the recommended place to handwrite service routes.
 
 ## Key Features
 
-- **Service Discovery Integration** - Automatically connects to Fusion service discovery and enables local API mocking
+- **Service Discovery Integration** - Connects to real discovery and overlays visible executable mock modules by service key
 - **Template Generation** - Dynamic HTML template generation with environment variable injection
 - **API Proxying** - Seamless API integration with request/response transformation capabilities
 - **Portal Support** - Full portal development with manifest loading and configuration management
@@ -92,7 +98,7 @@ flowchart TD
 - **Role**: API service discovery and request handling
 - **Responsibilities**:
   - Proxies requests to Fusion service discovery endpoints
-  - Enables local API mocking and development overrides
+  - Proxies discovered services and advanced server-owned development routes
   - Manages dynamic route mapping for discovered services
   - Provides request/response transformation capabilities
 
@@ -156,7 +162,9 @@ This workflow ensures that developers have immediate access to a fully functiona
 
 ## Service Discovery
 
-The API plugin (`@equinor/fusion-framework-vite-plugin-api-service`) acts as an intelligent proxy that intercepts and enriches service discovery requests, enabling flexible service integration and local development capabilities. This plugin transforms the development server into a sophisticated service gateway that can dynamically modify service endpoints, inject mock services, and provide seamless integration between local development and production services.
+The API plugin (`@equinor/fusion-framework-vite-plugin-api-service`) proxies discovered services
+through the local origin. During normal app development, the CLI overlays discovery-visible
+`mocks/<service>.mock.ts` definitions by key before the API plugin creates those proxy routes.
 
 ### Service Discovery Sequence
 
@@ -180,59 +188,40 @@ sequenceDiagram
 2. **Plugin Interception**: The API plugin intercepts this request before it reaches the external service
 3. **Proxy to Fusion**: The plugin forwards the request to the actual Fusion service discovery endpoint
 4. **Response Interception**: When the response returns, the plugin intercepts it before sending it back to the user
-5. **Service Enrichment**: The plugin enriches the response by:
-   - Adding mock services for local development
-   - Altering service endpoints for testing
-   - Injecting additional metadata or configuration
-   - Modifying service capabilities or scopes
-6. **Enhanced Response**: The user receives an enriched list of services that may include both real and mock services
+5. **Service Processing**: The plugin rewrites service URIs to local proxy routes.
+6. **Response**: The browser receives the processed service list and calls back through the dev server.
 
-## Mocking
+## Mocking services
 
-The API plugin implements a **middleware pattern** that creates dynamic processing routes for mocking API responses during development. While these middleware routes can handle various request processing tasks, their primary purpose is to provide mock data when backend services aren't available or when you need to test specific scenarios without hitting real APIs.
+Application mocks are executable service modules, not dev-server middleware declarations:
+
+```text
+mocks/
+  inventory.mock.ts
+  inventory.openapi.json
+```
+
+`defineService` keeps the service key, discovery intent, OpenAPI schema, deterministic component
+values, operation routes, and request-aware middleware together. The same module works in local
+development and browser tests.
 
 ```mermaid
-sequenceDiagram
-    participant DevServer as Dev Server
-    participant Middleware as Middleware
-    participant MockData as Mock Data
-    participant Browser
-
-    DevServer->>Middleware: Initialize middleware stack
-    
-    Browser->>DevServer: Execute API request
-    DevServer->>Middleware: Route through middleware
-    Middleware->>Middleware: Process request
-    Middleware->>MockData: Fetch mock data
-    MockData->>Middleware: Return mock response
-    Middleware->>DevServer: Return processed response
-    DevServer->>Browser: Return mock data
+flowchart LR
+    A["mocks/inventory.mock.ts"] --> B["ffc mock-server"]
+    B --> C["inventory.localhost:4010"]
+    B --> D["/@fusion-mock/discovery"]
+    E["ffc app dev"] --> F["real discovery + visible local modules"]
+    G["ffc app dev --mock"] --> H["preset + local modules only"]
+    F --> C
+    H --> C
 ```
 
-1. **Middleware Initialization**: The dev-server initializes the middleware stack with configured routes and processing rules
-2. **Request Interception**: API requests from the browser are routed through the middleware layer
-3. **Request Processing**: The middleware processes the request according to its configured rules and logic
-4. **Data Resolution**: The middleware fetches appropriate data (mock or real) based on the request and configuration
-5. **Response Processing**: The middleware processes and transforms the response before returning it
-6. **Response Delivery**: The processed response is returned to the browser through the dev-server
+The mock server is a standalone foreground process and never fetches remote discovery. Plain
+`ffc app dev` still uses real discovery and overlays visible local definitions. `ffc app dev
+--mock` points discovery at the standalone server and is intentionally isolated.
 
-#### Usage Example
-
-```typescript
-import type { MiddlewareRoute } from '@equinor/fusion-framework-vite-plugin-api-service';
-
-const mockDataRoute: MiddlewareRoute = {
-  match: '/api/users',
-  middleware: (req, res, next) => {
-    // Return mock data for users endpoint
-    res.setHeader('Content-Type', 'application/json');
-    res.end(JSON.stringify([
-      { id: 1, name: 'John Doe' },
-      { id: 2, name: 'Jane Smith' }
-    ]));
-  }
-};
-```
+See [Develop with mock services](../../dev-server/docs/mocking.md) for a copyable module and
+discovery-mode guidance.
 
 ## Re-Routing requests
 

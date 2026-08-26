@@ -16,6 +16,7 @@ function firstStringProp(
   value: Record<string, unknown> | undefined,
   keys: string[],
 ): string | undefined {
+  // Missing tool-call arguments cannot contain a matching property.
   if (value === undefined) {
     return undefined;
   }
