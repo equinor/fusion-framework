@@ -443,6 +443,80 @@ const token = createMockToken({
 FUSION_SPA_MSAL_MOCK_TOKEN=<token>
 ```
 
+### Generate a mock user and update `.env`
+
+> [!WARNING]
+> The script below writes `FUSION_SPA_MSAL_MOCK=true` to the project-root `.env`. This is
+> persistent configuration: the application remains locked to mock authentication across restarts
+> until the variable is removed or set to `false`. `ffc app dev --mock` and
+> `ffc app serve --mock` already enable mock authentication for that command, so do not persist
+> `FUSION_SPA_MSAL_MOCK=true` merely to use those CLI flags. Never deploy an environment file that
+> enables mock authentication.
+
+Run the following from the application root. The application needs
+`@equinor/fusion-framework-module-msal` as a direct development dependency so the Node.js script
+can import `createMockToken` when pnpm uses strict dependency resolution:
+
+```sh
+pnpm add --save-dev @equinor/fusion-framework-module-msal
+```
+
+Create `scripts/set-mock-user.mjs`. The script creates the project-root `.env` when it does not
+exist. When `.env` already exists, it preserves comments and unrelated variables while replacing
+the existing mock-auth values or appending them when absent:
+
+```js
+#!/usr/bin/env node
+
+import { readFile, writeFile } from 'node:fs/promises';
+import { createMockToken } from '@equinor/fusion-framework-module-msal/mock';
+
+const envFile = new URL('../.env', import.meta.url);
+const token = createMockToken({
+  name: 'Ada Lovelace',
+  preferred_username: 'ada.lovelace@equinor.com',
+  oid: 'ada-object-id',
+  scp: 'user_impersonation',
+});
+
+let contents = await readFile(envFile, 'utf8').catch((error) => {
+  if (error.code === 'ENOENT') return '';
+  throw error;
+});
+
+const updates = {
+  FUSION_SPA_MSAL_MOCK: 'true',
+  FUSION_SPA_MSAL_MOCK_TOKEN: token,
+};
+
+for (const [key, value] of Object.entries(updates)) {
+  const line = `${key}=${value}`;
+  const existing = new RegExp(`^${key}=.*$`, 'm');
+  if (existing.test(contents)) {
+    contents = contents.replace(existing, line);
+  } else {
+    const separator = contents.length > 0 && !contents.endsWith('\n') ? '\n' : '';
+    contents = `${contents}${separator}${line}\n`;
+  }
+}
+
+await writeFile(envFile, contents);
+console.log('Updated .env with the mock user token.');
+```
+
+Make the script executable and run it:
+
+```sh
+chmod +x scripts/set-mock-user.mjs
+./scripts/set-mock-user.mjs
+```
+
+Restart the Vite or Fusion Framework development server after updating `.env`. To return to real
+Entra ID authentication, remove both `FUSION_SPA_MSAL_MOCK` and `FUSION_SPA_MSAL_MOCK_TOKEN` from
+`.env` (or set `FUSION_SPA_MSAL_MOCK=false`), then restart the server again. The generated JWT is
+deterministic and unsigned; use it only with the in-process MSAL mock and mocked backend services,
+never as a credential for a real service.
+
 The token itself is also sent as-is as the access/id token — it is not regenerated — so a
 backend mock that validates its own tokens (specific claims, audience, or signature) sees
 exactly the token it issued.

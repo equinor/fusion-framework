@@ -168,6 +168,12 @@ import { createMockToken } from '@equinor/fusion-framework-module-msal/mock';
 const token = createMockToken({ oid: 'fusion-mock-user' });
 ```
 
+To use a generated token as the signed-in user for `ffc app dev --mock`, `ffc app serve --mock`,
+or a Vite SPA, see
+[Generate a mock user and update `.env`](../../../vite-plugins/spa/README.md#generate-a-mock-user-and-update-env).
+That workflow documents persistent mock-auth configuration, identity claims, and custom `scp`
+token scopes.
+
 ## Exports
 
 | Export | Purpose |
