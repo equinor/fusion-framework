@@ -10,7 +10,7 @@ export const App = () => {
   // const { value: relatedContext } = useRelatedContext(['EquinorTask']);
   const { value: relatedContext } = useRelatedContext();
   return (
-    <>
+    <main data-testid="context-inspection">
       <section>
         <h3>Current Context:</h3>
         <pre>{JSON.stringify(currentContext, null, 4)}</pre>
@@ -19,7 +19,7 @@ export const App = () => {
         <h3>Related Context:</h3>
         <pre>{JSON.stringify(relatedContext, null, 4)}</pre>
       </section>
-    </>
+    </main>
   );
 };
 
