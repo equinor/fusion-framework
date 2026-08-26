@@ -11,7 +11,7 @@
     "dev": "fusion-framework-cli app dev",
     "dev:mock": "concurrently -k 'pnpm mock:server' 'pnpm mock:dev'",
     "mock:dev": "ffc app dev --mock http://localhost:4011",
-    "mock:server": "ffc mock-server --preset=fusion ./mocks --port 4011",
+    "mock:server": "ffc mock-server --preset=fusion ./mocks --port 4011 --seed 42",
     "test": "vitest --run",
     "test:playwright": "playwright test"
   },
