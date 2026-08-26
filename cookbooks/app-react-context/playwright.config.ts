@@ -20,8 +20,7 @@ export default defineConfig({
       reuseExistingServer: !process.env.CI,
     },
     {
-      command:
-        'ffc app build && ffc app serve --port 3010 --mock http://localhost:4011',
+      command: 'ffc app build && ffc app serve --port 3010 --mock http://localhost:4011',
       port: 3010,
       timeout: 120_000,
       reuseExistingServer: !process.env.CI,

@@ -63,7 +63,11 @@ const createContext = (id: string, type: string): ContextEntity => {
  * @param params - Path parameters for the matched context operation.
  * @returns The matching context response, or a not-found response for an unknown ID.
  */
-const getContext = ({ params }: { params: Record<string, string> }): { status: number; mock: unknown } => {
+const getContext = ({
+  params,
+}: {
+  params: Record<string, string>;
+}): { status: number; mock: unknown } => {
   // Reject malformed IDs because they cannot provide a valid deterministic UUID seed.
   if (!UUID_PATTERN.test(params.id)) {
     return { status: 404, mock: { message: `Context ${params.id} was not found` } };
