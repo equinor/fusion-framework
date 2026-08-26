@@ -58,6 +58,20 @@ test('renders the current and related context sections once the app configuratio
   await unmount();
 });
 
+test('leaves both context sections empty when no context is selected', async ({ render }) => {
+  const { getByRole, unmount } = await render(<App />);
+
+  const currentContext = getByRole('heading', { name: /current context/i }).element()
+    .nextElementSibling as HTMLElement;
+  const relatedContext = getByRole('heading', { name: /related context/i }).element()
+    .nextElementSibling as HTMLElement;
+
+  expect(currentContext.textContent).toBe('');
+  expect(relatedContext.textContent).toBe('');
+
+  await unmount();
+});
+
 describe('with an initial project', () => {
   test.override('configureApp', { injected: true }, () =>
     withSeededContext((mock) => {
