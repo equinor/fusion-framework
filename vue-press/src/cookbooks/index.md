@@ -38,16 +38,20 @@ Our React cookbooks demonstrate how to build applications using the Fusion Frame
 - **[Environment Variables](react-app-environment-variables.md)** - Configuration management with environment variables
 - **[Feature Flags](react-app-feature-flag.md)** - Feature toggle implementation
 - **[Custom Modules](react-app-module.md)** - Creating and integrating custom modules
+- **[Mock Server with Playwright](react-app-mock-playwright.md)** - End-to-end tests against `ffc mock-server`
 - **[People Service](react-app-people.md)** - People search and person component integration
 - **[Router](react-app-router.md)** - Client-side routing and navigation
+- **[Legacy Router](react-app-router-legacy.md)** - Manual `RouteObject[]` routing and route error boundaries
 - **[Settings](react-app-settings.md)** - Application settings management
 - **[State](react-app-state.md)** - Persistent, cross-component state with `useAppState`, including CouchDB replication
+- **[Styling](react-app-styling.md)** - Theme-based CSS-in-JS styling with `@equinor/fusion-react-styles`
 
 ### Other Examples
 
 - **[Vanilla JavaScript](app-vanilla.md)** - Framework usage without React
 - **[Portal](app-portal.md)** - Portal framework demonstration
 - **[Portal analytics](portal-analytics.md)** - Portal framework with analytics module demonstration
+- **[PoC Portal](poc-portal.md)** - Portal proof of concept and development patterns
 
 ## Getting Started
 

@@ -50,6 +50,10 @@ export interface ServeApplicationOptions {
    * Enable debug mode for verbose logging.
    */
   debug?: boolean;
+  /**
+   * Origin of a local mock server to use for isolated service discovery and mock authentication.
+   */
+  mock?: string;
 }
 
 /**
@@ -91,7 +95,7 @@ export const serveApplication = async (options?: ServeApplicationOptions) => {
   // Set isPreview: true so manifest uses compiled entry point
   const env: RuntimeEnv = {
     root: pkg.root,
-    environment: 'local', // Always use 'local' for serve server
+    environment: 'local',
     mode: 'production', // Use production mode for built files
     command: 'serve', // Command is 'serve' for preview
     isPreview: true, // Mark as preview so manifest uses compiled entry point
@@ -162,6 +166,7 @@ export const serveApplication = async (options?: ServeApplicationOptions) => {
       manifest: appManifest,
       config: appConfig,
     },
+    mock: options?.mock,
   };
   // If a local portal entry point is found, add it to the config
   if (templateEntry) {

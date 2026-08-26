@@ -75,14 +75,22 @@ export const processServices: ApiDataProcessor<FusionService[]> = (data, args) =
     const serviceUrl = new URL(`${route}/${service.key}`, request.headers.referer);
     apiServices.push({ ...service, uri: String(serviceUrl) });
 
-    // add the proxy route
+    // Add the proxy route for this service.
     const url = new URL(service.uri);
+    const usesLocalhostSubdomain = url.hostname.endsWith('.localhost');
+    // Node does not resolve localhost subdomains consistently across operating systems. The mock
+    // server also accepts /<service>/* on plain localhost, so proxy through that portable address.
+    if (usesLocalhostSubdomain) {
+      url.hostname = 'localhost';
+    }
     apiRoutes.push({
       match: `/${service.key}${url.pathname}*sub`,
-      proxy: {
-        target: url.origin,
-        rewrite: (path) => path.replace(`/${service.key}`, ''),
-      },
+      proxy: usesLocalhostSubdomain
+        ? { target: url.origin }
+        : {
+            target: url.origin,
+            rewrite: (path) => path.replace(`/${service.key}`, ''),
+          },
     });
   }
   return { data: apiServices, routes: apiRoutes };

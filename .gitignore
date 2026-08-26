@@ -61,6 +61,12 @@ typings/
 __screenshots__/
 .vitest-attachments/
 
+# Playwright run artifacts (traces, screenshots, videos, .last-run.json)
+test-results/
+.results/
+playwright-report/
+blob-report/
+
 # Microbundle cache
 .rpt2_cache/
 .rts2_cache_cjs/

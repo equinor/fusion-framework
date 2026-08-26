@@ -1,0 +1,26 @@
+{
+  "extends": "../../../tsconfig.base.json",
+  "compilerOptions": {
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "outDir": "dist/esm",
+    "rootDir": "src",
+    "declarationDir": "./dist/types",
+    "paths": {
+      "*": ["./*"]
+    }
+  },
+  "references": [
+    {
+      "path": "../../dev-server"
+    },
+    {
+      "path": "../../utils/imports"
+    },
+    {
+      "path": "../../utils/openapi-mock-server"
+    }
+  ],
+  "include": ["src/**/*"],
+  "exclude": ["node_modules"]
+}

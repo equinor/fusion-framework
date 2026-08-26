@@ -1,0 +1,36 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": ".",
+    "noEmit": true,
+    "jsx": "react-jsx"
+  },
+  "references": [
+    {
+      "path": "../../packages/react/app"
+    },
+    {
+      "path": "../../packages/react/router"
+    },
+    {
+      "path": "../../packages/cli"
+    },
+    {
+      "path": "../../packages/cli-plugins/mock-server"
+    },
+    {
+      "path": "../../packages/modules/navigation"
+    },
+    {
+      "path": "../../packages/utils/openapi-mock-server"
+    }
+  ],
+  "include": [
+    "app.config.local.ts",
+    "src/**/*",
+    "playwright.config.ts",
+    "playwright/**/*",
+    "mocks/**/*.ts"
+  ],
+  "exclude": ["node_modules", "lib"]
+}

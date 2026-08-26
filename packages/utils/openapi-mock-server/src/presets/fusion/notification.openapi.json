@@ -1,0 +1,188 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Fusion Notification API (mock)",
+    "version": "1.0.0",
+    "description": "Bundled Fusion baseline preset — backported from cookbooks/app-react/mocks/notification.openapi.json."
+  },
+  "paths": {
+    "/person/{userId}/notifications": {
+      "get": {
+        "operationId": "listNotifications",
+        "parameters": [
+          { "name": "userId", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "api-version", "in": "query", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "The user's notifications.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Notification" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "createNotification",
+        "parameters": [
+          { "name": "userId", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "api-version", "in": "query", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "The created notification.",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/Notification" } }
+            }
+          }
+        }
+      }
+    },
+    "/notification/{id}": {
+      "get": {
+        "operationId": "getNotification",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "api-version", "in": "query", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "A single notification.",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/Notification" } }
+            }
+          }
+        }
+      },
+      "patch": {
+        "operationId": "markNotificationSeen",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "api-version", "in": "query", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "The updated notification.",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/Notification" } }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "deleteNotification",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "api-version", "in": "query", "schema": { "type": "string" } }
+        ],
+        "responses": { "204": { "description": "The notification was deleted." } }
+      }
+    },
+    "/person/{userId}/notifications/settings": {
+      "get": {
+        "operationId": "getNotificationSettings",
+        "parameters": [
+          { "name": "userId", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "api-version", "in": "query", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "The user's notification settings.",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/NotificationSettings" }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "operationId": "updateNotificationSettings",
+        "parameters": [
+          { "name": "userId", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "api-version", "in": "query", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "The updated notification settings.",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/NotificationSettings" }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "SourceSystem": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "subSystem": { "type": "string" },
+          "identifier": { "type": "string" }
+        }
+      },
+      "CreatedByApplication": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "title": { "type": "string", "faker": "commerce.productName" }
+        }
+      },
+      "CreatedBy": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "name": { "type": "string", "faker": "person.fullName" },
+          "jobTitle": { "type": "string", "faker": "person.jobTitle" },
+          "mail": { "type": "string", "faker": "internet.email" },
+          "accountType": {
+            "type": "string",
+            "enum": ["Employee", "Consultant", "External", "Application", "Local"]
+          }
+        }
+      },
+      "Notification": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "appKey": { "type": "string" },
+          "emailPriority": { "type": "integer", "minimum": 0, "maximum": 2 },
+          "fallbackHtml": { "type": "string", "faker": "lorem.paragraph" },
+          "targetAzureUniqueId": { "type": "string", "format": "uuid" },
+          "title": { "type": "string", "faker": "lorem.sentence" },
+          "card": { "type": "string" },
+          "created": { "type": "string", "format": "date-time" },
+          "createdBy": { "$ref": "#/components/schemas/CreatedBy" },
+          "createdByApplication": { "$ref": "#/components/schemas/CreatedByApplication" },
+          "seenByUser": { "type": "boolean" },
+          "seen": { "type": "string", "format": "date-time" },
+          "sourceSystem": { "$ref": "#/components/schemas/SourceSystem" }
+        }
+      },
+      "AppConfig": {
+        "type": "object",
+        "properties": {
+          "appKey": { "type": "string" },
+          "enabled": { "type": "boolean" }
+        }
+      },
+      "NotificationSettings": {
+        "type": "object",
+        "properties": {
+          "email": { "type": "boolean" },
+          "delayInMinutes": { "type": "integer", "minimum": 0, "maximum": 60 },
+          "appConfig": { "type": "array", "items": { "$ref": "#/components/schemas/AppConfig" } }
+        }
+      }
+    }
+  }
+}

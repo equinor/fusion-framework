@@ -112,6 +112,14 @@ export default sidebar({
               text: 'OpenAPI mock',
               link: 'openapi-mock.md',
             },
+            {
+              text: 'Mock server',
+              link: 'mock-server.md',
+            },
+            {
+              text: 'Mock server with Playwright',
+              link: 'mock-server-playwright.md',
+            },
           ],
         },
       ],
@@ -200,6 +208,10 @@ export default sidebar({
               link: 'react-app-msal.md',
             },
             {
+              text: 'Mock Server with Playwright',
+              link: 'react-app-mock-playwright.md',
+            },
+            {
               text: 'People Service',
               link: 'react-app-people.md',
             },
@@ -208,12 +220,20 @@ export default sidebar({
               link: 'react-app-router.md',
             },
             {
+              text: 'Legacy Router',
+              link: 'react-app-router-legacy.md',
+            },
+            {
               text: 'Settings',
               link: 'react-app-settings.md',
             },
             {
               text: 'State',
               link: 'react-app-state.md',
+            },
+            {
+              text: 'Styling',
+              link: 'react-app-styling.md',
             },
           ],
         },
@@ -227,6 +247,10 @@ export default sidebar({
             {
               text: 'Portal Analytics',
               link: 'portal-analytics.md',
+            },
+            {
+              text: 'PoC Portal',
+              link: 'poc-portal.md',
             },
             {
               text: 'Vanilla JavaScript',
@@ -267,8 +291,28 @@ export default sidebar({
               link: 'dev-server.md',
             },
             {
+              text: 'Getting started',
+              link: 'dev-server/getting-started.md',
+            },
+            {
               text: 'Configuration',
-              link: 'dev-server-config.md',
+              link: 'dev-server/configuration.md',
+            },
+            {
+              text: 'Mock services',
+              link: 'dev-server/mocking.md',
+            },
+            {
+              text: 'Mock server command',
+              link: 'dev-server/mock-server.md',
+            },
+            {
+              text: 'Advanced',
+              link: 'dev-server/advanced.md',
+            },
+            {
+              text: 'Troubleshooting',
+              link: 'dev-server/troubleshooting.md',
             },
           ],
         },

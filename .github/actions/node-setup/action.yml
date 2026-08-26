@@ -2,7 +2,7 @@ name: Setup Node
 description: General setup of node
 inputs:
   node-version:
-    default: 26
+    default: 24
 
 runs:
   using: composite

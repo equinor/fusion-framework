@@ -1,7 +1,7 @@
 ---
 title: Framework CLI - Dev Server
-description: 
+description: Run Fusion applications locally or create a Fusion-aware Vite development server.
 category: CLI
 ---
 
-<!-- @include: ../../../../packages/cli/docs/dev-server.md -->
+<!-- @include: ../../../../packages/dev-server/README.md -->

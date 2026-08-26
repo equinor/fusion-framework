@@ -15,6 +15,7 @@ import {
 import { ConsoleAdapter } from '@equinor/fusion-framework-module-telemetry/console-adapter';
 
 import { createPortalEntryPoint } from './create-portal-entry-point.js';
+import { isEnabledEnvValue } from './is-enabled-env-value.js';
 import { registerServiceWorker } from './register-service-worker.js';
 
 import { version } from '../version.js';
@@ -54,18 +55,31 @@ enableServiceDiscovery(configurator, async (builder) => {
   builder.configureServiceDiscoveryClientByClientKey('service_discovery');
 });
 
-// setup authentication
-enableMSAL(configurator, (builder) => {
-  builder.setClientConfig({
-    auth: {
-      clientId: import.meta.env.FUSION_SPA_MSAL_CLIENT_ID,
-      tenantId: import.meta.env.FUSION_SPA_MSAL_TENANT_ID,
-      redirectUri: import.meta.env.FUSION_SPA_MSAL_REDIRECT_URI,
-    },
-  });
+// Avoid interactive Entra ID authentication when the SPA runs in CI or Playwright.
+if (isEnabledEnvValue(import.meta.env.FUSION_SPA_MSAL_MOCK)) {
+  const { enableMsalMock } = await import('@equinor/fusion-framework-module-msal/mock');
 
-  builder.setRequiresAuth(Boolean(import.meta.env.FUSION_SPA_MSAL_REQUIRES_AUTH));
-});
+  const mockToken = import.meta.env.FUSION_SPA_MSAL_MOCK_TOKEN;
+
+  enableMsalMock(configurator, (builder) => {
+    // Preserve the mock client's default identity when no backend-specific token is configured.
+    if (!mockToken) return;
+
+    builder.setToken(mockToken);
+  });
+} else {
+  enableMSAL(configurator, (builder) => {
+    builder.setClientConfig({
+      auth: {
+        clientId: import.meta.env.FUSION_SPA_MSAL_CLIENT_ID,
+        tenantId: import.meta.env.FUSION_SPA_MSAL_TENANT_ID,
+        redirectUri: import.meta.env.FUSION_SPA_MSAL_REDIRECT_URI,
+      },
+    });
+
+    builder.setRequiresAuth(isEnabledEnvValue(import.meta.env.FUSION_SPA_MSAL_REQUIRES_AUTH));
+  });
+}
 
 enableTelemetry(configurator, {
   attachConfiguratorEvents: true,

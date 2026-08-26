@@ -43,6 +43,8 @@ export type CreateDevServerOptions = {
     manifest: AppManifest;
     config?: ApiAppConfig;
   };
+  /** Origin of a local mock server (e.g. `http://localhost:4010`) to use for service discovery. */
+  mock?: string;
   // server?: DevServerOptions['server'];
 };
 
@@ -50,10 +52,12 @@ export type CreateDevServerOptions = {
  * Creates a Fusion dev server template environment, merging with user overrides.
  *
  * @param overrides - Partial template environment to override defaults.
+ * @param mock - Origin of a local mock server, if `--mock` was used; also swaps auth for the in-process MSAL mock so the mocked API is usable end-to-end.
  * @returns The dev server template environment without the 'bootstrap' property.
  */
 const createDevServerTemplate = (
   overrides?: Partial<FusionTemplateEnv>,
+  mock?: string,
 ): Omit<FusionTemplateEnv, 'bootstrap'> => ({
   portal: {
     id: '@equinor/fusion-framework-dev-portal',
@@ -68,6 +72,8 @@ const createDevServerTemplate = (
     tenantId: '3aa4a235-b6e2-48d5-9195-7fcf05b459b0',
     redirectUri: '/authentication/login-callback',
     requiresAuth: 'true',
+    // `--mock` also swaps auth for the in-process MSAL mock, so the mocked API is usable without a real Entra ID sign-in
+    ...(mock ? { mock: 'true' } : {}),
   },
   serviceWorker: {
     // default proxies
@@ -218,11 +224,13 @@ const applyPortalRouting = (
 export const createDevServerConfig = (options: CreateDevServerOptions) => {
   const config: DevServerOptions = {
     spa: {
-      templateEnv: createDevServerTemplate(options.template),
+      templateEnv: createDevServerTemplate(options.template, options.mock),
     },
     api: {
-      serviceDiscoveryUrl:
-        'https://discovery.fusion.equinor.com/service-registry/environments/ci/services/',
+      // when `--mock` is set, point service discovery at the local mock server instead of the CI environment
+      serviceDiscoveryUrl: options.mock
+        ? new URL('/@fusion-mock/discovery', options.mock).href
+        : 'https://discovery.fusion.equinor.com/service-registry/environments/ci/services/',
       processServices: (dataResponse, route) => {
         const { data, routes } = processServices(dataResponse, route);
         return {
