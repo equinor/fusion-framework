@@ -279,6 +279,10 @@ export default sidebar({
           link: 'docs/application.md',
         },
         {
+          text: 'Vite SPA Plugin',
+          link: 'docs/vite-spa.md',
+        },
+        {
           text: 'Portal',
           link: 'docs/portal.md',
         },

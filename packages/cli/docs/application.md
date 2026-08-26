@@ -479,7 +479,10 @@ ffc app serve --mock
 > [!TIP]
 > Start `ffc mock-server` in another foreground terminal before using `--mock`. The `serve`
 > command does not own or start that process. Both `app dev` and `app serve` resolve the `local`
-> environment; pass explicit `--manifest` or `--config` paths when another file is needed.
+> environment; pass explicit `--manifest` or `--config` paths when another file is needed. Mock
+> authentication signs in as `Test User` by default; see
+> [Generate a mock user and update `.env`](../../vite-plugins/spa/README.md#generate-a-mock-user-and-update-env)
+> to customize identity claims and token scopes.
 
 ### Publish
 

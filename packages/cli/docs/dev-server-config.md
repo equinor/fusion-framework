@@ -420,6 +420,9 @@ ffc app dev --mock                        # bundled presets plus local modules o
 
 `--mock` sets `api.serviceDiscoveryUrl` to `<endpoint>/@fusion-mock/discovery`. A
 `dev-server.config.ts` override for `api.serviceDiscoveryUrl` still takes precedence over it.
+The mode also enables mock authentication with `Test User`; see
+[Generate a mock user and update `.env`](../../vite-plugins/spa/README.md#generate-a-mock-user-and-update-env)
+to set identity claims and space-separated `scp` token scopes.
 
 Use `dev-server.config.ts` only to share mock-server defaults such as a nonstandard path or port:
 

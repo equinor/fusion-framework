@@ -149,7 +149,9 @@ ffc app dev --mock http://localhost:4010
 
 This rewrites the app's service-discovery URL to the mock server's `/@fusion-mock/discovery`
 endpoint, so every framework module that resolves a service by key transparently gets the mock's
-origin instead of the real one.
+origin instead of the real one. The CLI also enables mock authentication with `Test User`; see
+[Generate a mock user and update `.env`](../../../vite-plugins/spa/README.md#generate-a-mock-user-and-update-env)
+to customize identity claims and token scopes.
 [`@equinor/fusion-framework-cli-plugin-mock-server`](../../../cli-plugins/mock-server/README.md)
 wraps the same server as `ffc mock-server`, so you don't need a separate binary installed either.
 
