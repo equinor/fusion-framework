@@ -1,5 +1,15 @@
 # Change Log
 
+## 5.0.8-next.3
+
+### Patch Changes
+
+- ac098c1: Add deterministic Context API mocks, a `dev:mock` command, and Playwright browser coverage for
+  current and related contexts, including a visual regression baseline. Expand the Vitest suite with
+  empty-state and `useRelatedContext` hook coverage.
+- Updated dependencies [09a9bcc]
+  - @equinor/fusion-framework-cli@15.3.0-next.1
+
 ## 5.0.8-next.2
 
 ### Patch Changes

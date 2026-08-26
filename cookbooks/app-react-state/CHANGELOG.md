@@ -1,5 +1,12 @@
 # @equinor/fusion-framework-cookbook-app-react-state
 
+## 1.0.2-next.2
+
+### Patch Changes
+
+- Updated dependencies [09a9bcc]
+  - @equinor/fusion-framework-cli@15.3.0-next.1
+
 ## 1.0.2-next.1
 
 ### Patch Changes
