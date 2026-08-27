@@ -1,0 +1,63 @@
+{
+  "name": "@equinor/fusion-services",
+  "version": "0.1.0",
+  "description": "Tree-shakeable, function-based clients for Fusion platform services",
+  "keywords": [
+    "equinor",
+    "fusion",
+    "services",
+    "roles",
+    "api"
+  ],
+  "license": "ISC",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    "./roles": {
+      "import": "./dist/esm/roles/index.js",
+      "types": "./dist/types/roles/index.d.ts"
+    },
+    "./roles/v1/openapi.json": "./src/roles/v1/openapi.json",
+    "./package.json": "./package.json"
+  },
+  "typesVersions": {
+    "*": {
+      "roles": [
+        "./dist/types/roles/index.d.ts"
+      ],
+      "roles/v1/openapi.json": [
+        "./src/roles/v1/openapi.json"
+      ]
+    }
+  },
+  "files": [
+    "dist",
+    "docs",
+    "src"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/equinor/fusion-framework.git",
+    "directory": "packages/services"
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "prepack": "pnpm build",
+    "test": "vitest",
+    "check:openapi": "node scripts/check-openapi.ts"
+  },
+  "dependencies": {
+    "zod": "^4.4.3"
+  },
+  "peerDependencies": {
+    "@equinor/fusion-framework-module-http": "workspace:^"
+  },
+  "devDependencies": {
+    "@equinor/fusion-framework-module-http": "workspace:^",
+    "typescript": "^7.0.2",
+    "vitest": "^4.1.0"
+  }
+}
