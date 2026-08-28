@@ -94,17 +94,17 @@ describe('Roles V2 schema enforcement', () => {
   describe('argument schemas', () => {
     it('rejects empty mapping and assignment lists for batch mutation requests', () => {
       expect(AddRoleAccessRoleRequestSchemaV1.safeParse({}).success).toBe(false);
-      expect(
-        AddRoleAccessRoleRequestSchemaV1.safeParse({ accessRoleMappings: [] }).success,
-      ).toBe(false);
+      expect(AddRoleAccessRoleRequestSchemaV1.safeParse({ accessRoleMappings: [] }).success).toBe(
+        false,
+      );
       expect(AddClaimableRoleAccessRoleRequestSchemaV1.safeParse({}).success).toBe(false);
       expect(
         AddClaimableRoleAccessRoleRequestSchemaV1.safeParse({ accessRoleMappings: [] }).success,
       ).toBe(false);
       expect(DeleteRoleAssignmentsRequestSchemaV1.safeParse({}).success).toBe(false);
-      expect(DeleteRoleAssignmentsRequestSchemaV1.safeParse({ roleAssignmentIds: [] }).success).toBe(
-        false,
-      );
+      expect(
+        DeleteRoleAssignmentsRequestSchemaV1.safeParse({ roleAssignmentIds: [] }).success,
+      ).toBe(false);
     });
 
     it('rejects a query option outside the contract bounds before any request', () => {
