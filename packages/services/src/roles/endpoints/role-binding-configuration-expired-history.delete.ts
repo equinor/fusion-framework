@@ -95,8 +95,7 @@ type PurgeExpiredRoleBindingConfigurationHistoryArg<
 type PurgeExpiredRoleBindingConfigurationHistoryResult<
   TVersion extends PurgeExpiredRoleBindingConfigurationHistoryVersion,
   TMethod extends ClientMethodType = 'json',
-  TResult = PurgeExpiredRoleBindingConfigurationHistoryResponse<TVersion>,
-> = ClientMethod<TResult>[TMethod];
+> = ClientMethod<PurgeExpiredRoleBindingConfigurationHistoryResponse<TVersion>>[TMethod];
 
 /** Builds the request init for the resolved version, including its response-schema selector. */
 const generateRequestParameters = <TResult, TVersion extends AvailableVersions>(
@@ -195,19 +194,19 @@ const purgeExpiredRoleBindingConfigurationHistory = <
 ) => {
   type MethodVersion = ExtractApiVersion<TVersion>;
   const apiVersion = extractVersion(ApiVersion, version);
-  return <
-    TResponse = PurgeExpiredRoleBindingConfigurationHistoryResponse<MethodVersion>,
-    TResult = PurgeExpiredRoleBindingConfigurationHistoryResult<MethodVersion, TMethod, TResponse>,
-  >(
+  return (
     input?: PurgeExpiredRoleBindingConfigurationHistoryArg<MethodVersion>,
-    init?: ClientRequestInit<IHttpClient, TResponse>,
-  ): TResult => {
+    init?: ClientRequestInit<
+      IHttpClient,
+      PurgeExpiredRoleBindingConfigurationHistoryResponse<MethodVersion>
+    >,
+  ): PurgeExpiredRoleBindingConfigurationHistoryResult<MethodVersion, TMethod> => {
     // The operation has no required arguments, so an omitted argument object parses as empty.
     const args = parseVersionedArgs(VersionContract, apiVersion, input ?? {});
     return client[method](
       generateApiPath(apiVersion, args),
       generateRequestParameters(apiVersion, args, init),
-    ) as TResult;
+    ) as PurgeExpiredRoleBindingConfigurationHistoryResult<MethodVersion, TMethod>;
   };
 };
 

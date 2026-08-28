@@ -96,8 +96,7 @@ type GetClaimableRoleAssignmentArg<TVersion extends GetClaimableRoleAssignmentVe
 type GetClaimableRoleAssignmentResult<
   TVersion extends GetClaimableRoleAssignmentVersion,
   TMethod extends ClientMethodType = 'json',
-  TResult = GetClaimableRoleAssignmentResponse<TVersion>,
-> = ClientMethod<TResult>[TMethod];
+> = ClientMethod<GetClaimableRoleAssignmentResponse<TVersion>>[TMethod];
 
 /** Builds the request init for the resolved version, including its response-schema selector. */
 const generateRequestParameters = <TResult, TVersion extends AvailableVersions>(
@@ -190,18 +189,15 @@ const getClaimableRoleAssignment = <
 ) => {
   type MethodVersion = ExtractApiVersion<TVersion>;
   const apiVersion = extractVersion(ApiVersion, version);
-  return <
-    TResponse = GetClaimableRoleAssignmentResponse<MethodVersion>,
-    TResult = GetClaimableRoleAssignmentResult<MethodVersion, TMethod, TResponse>,
-  >(
+  return (
     input: GetClaimableRoleAssignmentArg<MethodVersion>,
-    init?: ClientRequestInit<IHttpClient, TResponse>,
-  ): TResult => {
+    init?: ClientRequestInit<IHttpClient, GetClaimableRoleAssignmentResponse<MethodVersion>>,
+  ): GetClaimableRoleAssignmentResult<MethodVersion, TMethod> => {
     const args = parseVersionedArgs(VersionContract, apiVersion, input);
     return client[method](
       generateApiPath(apiVersion, args),
       generateRequestParameters(apiVersion, args, init),
-    ) as TResult;
+    ) as GetClaimableRoleAssignmentResult<MethodVersion, TMethod>;
   };
 };
 

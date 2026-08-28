@@ -95,8 +95,7 @@ type GetRoleBindingConfigurationArg<TVersion extends GetRoleBindingConfiguration
 type GetRoleBindingConfigurationResult<
   TVersion extends GetRoleBindingConfigurationVersion,
   TMethod extends ClientMethodType = 'json',
-  TResult = GetRoleBindingConfigurationResponse<TVersion>,
-> = ClientMethod<TResult>[TMethod];
+> = ClientMethod<GetRoleBindingConfigurationResponse<TVersion>>[TMethod];
 
 /** Builds the request init for the resolved version, including its response-schema selector. */
 const generateRequestParameters = <TResult, TVersion extends AvailableVersions>(
@@ -192,18 +191,15 @@ const getRoleBindingConfiguration = <
 ) => {
   type MethodVersion = ExtractApiVersion<TVersion>;
   const apiVersion = extractVersion(ApiVersion, version);
-  return <
-    TResponse = GetRoleBindingConfigurationResponse<MethodVersion>,
-    TResult = GetRoleBindingConfigurationResult<MethodVersion, TMethod, TResponse>,
-  >(
+  return (
     input: GetRoleBindingConfigurationArg<MethodVersion>,
-    init?: ClientRequestInit<IHttpClient, TResponse>,
-  ): TResult => {
+    init?: ClientRequestInit<IHttpClient, GetRoleBindingConfigurationResponse<MethodVersion>>,
+  ): GetRoleBindingConfigurationResult<MethodVersion, TMethod> => {
     const args = parseVersionedArgs(VersionContract, apiVersion, input);
     return client[method](
       generateApiPath(apiVersion, args),
       generateRequestParameters(apiVersion, args, init),
-    ) as TResult;
+    ) as GetRoleBindingConfigurationResult<MethodVersion, TMethod>;
   };
 };
 

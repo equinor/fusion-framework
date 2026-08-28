@@ -88,8 +88,7 @@ type DeleteSystemArg<TVersion extends DeleteSystemVersion> = VersionedArgs<
 type DeleteSystemResult<
   TVersion extends DeleteSystemVersion,
   TMethod extends ClientMethodType = 'json',
-  TResult = DeleteSystemResponse<TVersion>,
-> = ClientMethod<TResult>[TMethod];
+> = ClientMethod<DeleteSystemResponse<TVersion>>[TMethod];
 
 /** Builds the request init for the resolved version, including its response-schema selector. */
 const generateRequestParameters = <TResult, TVersion extends AvailableVersions>(
@@ -181,18 +180,15 @@ const deleteSystem = <
 ) => {
   type MethodVersion = ExtractApiVersion<TVersion>;
   const apiVersion = extractVersion(ApiVersion, version);
-  return <
-    TResponse = DeleteSystemResponse<MethodVersion>,
-    TResult = DeleteSystemResult<MethodVersion, TMethod, TResponse>,
-  >(
+  return (
     input: DeleteSystemArg<MethodVersion>,
-    init?: ClientRequestInit<IHttpClient, TResponse>,
-  ): TResult => {
+    init?: ClientRequestInit<IHttpClient, DeleteSystemResponse<MethodVersion>>,
+  ): DeleteSystemResult<MethodVersion, TMethod> => {
     const args = parseVersionedArgs(VersionContract, apiVersion, input);
     return client[method](
       generateApiPath(apiVersion, args),
       generateRequestParameters(apiVersion, args, init),
-    ) as TResult;
+    ) as DeleteSystemResult<MethodVersion, TMethod>;
   };
 };
 

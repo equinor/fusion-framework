@@ -92,8 +92,7 @@ type DeleteSystemAccessRoleArg<TVersion extends DeleteSystemAccessRoleVersion> =
 type DeleteSystemAccessRoleResult<
   TVersion extends DeleteSystemAccessRoleVersion,
   TMethod extends ClientMethodType = 'json',
-  TResult = DeleteSystemAccessRoleResponse<TVersion>,
-> = ClientMethod<TResult>[TMethod];
+> = ClientMethod<DeleteSystemAccessRoleResponse<TVersion>>[TMethod];
 
 /** Builds the request init for the resolved version, including its response-schema selector. */
 const generateRequestParameters = <TResult, TVersion extends AvailableVersions>(
@@ -192,18 +191,15 @@ const deleteSystemAccessRole = <
 ) => {
   type MethodVersion = ExtractApiVersion<TVersion>;
   const apiVersion = extractVersion(ApiVersion, version);
-  return <
-    TResponse = DeleteSystemAccessRoleResponse<MethodVersion>,
-    TResult = DeleteSystemAccessRoleResult<MethodVersion, TMethod, TResponse>,
-  >(
+  return (
     input: DeleteSystemAccessRoleArg<MethodVersion>,
-    init?: ClientRequestInit<IHttpClient, TResponse>,
-  ): TResult => {
+    init?: ClientRequestInit<IHttpClient, DeleteSystemAccessRoleResponse<MethodVersion>>,
+  ): DeleteSystemAccessRoleResult<MethodVersion, TMethod> => {
     const args = parseVersionedArgs(VersionContract, apiVersion, input);
     return client[method](
       generateApiPath(apiVersion, args),
       generateRequestParameters(apiVersion, args, init),
-    ) as TResult;
+    ) as DeleteSystemAccessRoleResult<MethodVersion, TMethod>;
   };
 };
 

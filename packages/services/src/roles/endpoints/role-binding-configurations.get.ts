@@ -98,8 +98,7 @@ type ListRoleBindingConfigurationsArg<TVersion extends ListRoleBindingConfigurat
 type ListRoleBindingConfigurationsResult<
   TVersion extends ListRoleBindingConfigurationsVersion,
   TMethod extends ClientMethodType = 'json',
-  TResult = ListRoleBindingConfigurationsResponse<TVersion>,
-> = ClientMethod<TResult>[TMethod];
+> = ClientMethod<ListRoleBindingConfigurationsResponse<TVersion>>[TMethod];
 
 /** Builds the request init for the resolved version, including its response-schema selector. */
 const generateRequestParameters = <TResult, TVersion extends AvailableVersions>(
@@ -195,19 +194,16 @@ const listRoleBindingConfigurations = <
 ) => {
   type MethodVersion = ExtractApiVersion<TVersion>;
   const apiVersion = extractVersion(ApiVersion, version);
-  return <
-    TResponse = ListRoleBindingConfigurationsResponse<MethodVersion>,
-    TResult = ListRoleBindingConfigurationsResult<MethodVersion, TMethod, TResponse>,
-  >(
+  return (
     input?: ListRoleBindingConfigurationsArg<MethodVersion>,
-    init?: ClientRequestInit<IHttpClient, TResponse>,
-  ): TResult => {
+    init?: ClientRequestInit<IHttpClient, ListRoleBindingConfigurationsResponse<MethodVersion>>,
+  ): ListRoleBindingConfigurationsResult<MethodVersion, TMethod> => {
     // The operation has no required arguments, so an omitted argument object parses as empty.
     const args = parseVersionedArgs(VersionContract, apiVersion, input ?? {});
     return client[method](
       generateApiPath(apiVersion, args),
       generateRequestParameters(apiVersion, args, init),
-    ) as TResult;
+    ) as ListRoleBindingConfigurationsResult<MethodVersion, TMethod>;
   };
 };
 

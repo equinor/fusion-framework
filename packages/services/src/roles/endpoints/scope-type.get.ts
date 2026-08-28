@@ -90,8 +90,7 @@ type GetScopeTypeArg<TVersion extends GetScopeTypeVersion> = VersionedArgs<
 type GetScopeTypeResult<
   TVersion extends GetScopeTypeVersion,
   TMethod extends ClientMethodType = 'json',
-  TResult = GetScopeTypeResponse<TVersion>,
-> = ClientMethod<TResult>[TMethod];
+> = ClientMethod<GetScopeTypeResponse<TVersion>>[TMethod];
 
 /** Builds the request init for the resolved version, including its response-schema selector. */
 const generateRequestParameters = <TResult, TVersion extends AvailableVersions>(
@@ -177,18 +176,15 @@ const getScopeType = <
 ) => {
   type MethodVersion = ExtractApiVersion<TVersion>;
   const apiVersion = extractVersion(ApiVersion, version);
-  return <
-    TResponse = GetScopeTypeResponse<MethodVersion>,
-    TResult = GetScopeTypeResult<MethodVersion, TMethod, TResponse>,
-  >(
+  return (
     input: GetScopeTypeArg<MethodVersion>,
-    init?: ClientRequestInit<IHttpClient, TResponse>,
-  ): TResult => {
+    init?: ClientRequestInit<IHttpClient, GetScopeTypeResponse<MethodVersion>>,
+  ): GetScopeTypeResult<MethodVersion, TMethod> => {
     const args = parseVersionedArgs(VersionContract, apiVersion, input);
     return client[method](
       generateApiPath(apiVersion, args),
       generateRequestParameters(apiVersion, args, init),
-    ) as TResult;
+    ) as GetScopeTypeResult<MethodVersion, TMethod>;
   };
 };
 

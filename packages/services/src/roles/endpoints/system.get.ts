@@ -90,8 +90,7 @@ type GetSystemArg<TVersion extends GetSystemVersion> = VersionedArgs<
 type GetSystemResult<
   TVersion extends GetSystemVersion,
   TMethod extends ClientMethodType = 'json',
-  TResult = GetSystemResponse<TVersion>,
-> = ClientMethod<TResult>[TMethod];
+> = ClientMethod<GetSystemResponse<TVersion>>[TMethod];
 
 /** Builds the request init for the resolved version, including its response-schema selector. */
 const generateRequestParameters = <TResult, TVersion extends AvailableVersions>(
@@ -172,18 +171,15 @@ const getSystem = <TVersion extends GetSystemVersion, TMethod extends ClientMeth
 ) => {
   type MethodVersion = ExtractApiVersion<TVersion>;
   const apiVersion = extractVersion(ApiVersion, version);
-  return <
-    TResponse = GetSystemResponse<MethodVersion>,
-    TResult = GetSystemResult<MethodVersion, TMethod, TResponse>,
-  >(
+  return (
     input: GetSystemArg<MethodVersion>,
-    init?: ClientRequestInit<IHttpClient, TResponse>,
-  ): TResult => {
+    init?: ClientRequestInit<IHttpClient, GetSystemResponse<MethodVersion>>,
+  ): GetSystemResult<MethodVersion, TMethod> => {
     const args = parseVersionedArgs(VersionContract, apiVersion, input);
     return client[method](
       generateApiPath(apiVersion, args),
       generateRequestParameters(apiVersion, args, init),
-    ) as TResult;
+    ) as GetSystemResult<MethodVersion, TMethod>;
   };
 };
 

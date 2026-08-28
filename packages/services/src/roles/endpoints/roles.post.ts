@@ -91,8 +91,7 @@ type CreateRoleArg<TVersion extends CreateRoleVersion> = VersionedArgs<
 type CreateRoleResult<
   TVersion extends CreateRoleVersion,
   TMethod extends ClientMethodType = 'json',
-  TResult = CreateRoleResponse<TVersion>,
-> = ClientMethod<TResult>[TMethod];
+> = ClientMethod<CreateRoleResponse<TVersion>>[TMethod];
 
 /** Builds the request init for the resolved version, including its response-schema selector. */
 const generateRequestParameters = <TResult, TVersion extends AvailableVersions>(
@@ -187,19 +186,16 @@ const createRole = <TVersion extends CreateRoleVersion, TMethod extends ClientMe
 ) => {
   type MethodVersion = ExtractApiVersion<TVersion>;
   const apiVersion = extractVersion(ApiVersion, version);
-  return <
-    TResponse = CreateRoleResponse<MethodVersion>,
-    TResult = CreateRoleResult<MethodVersion, TMethod, TResponse>,
-  >(
+  return (
     input?: CreateRoleArg<MethodVersion>,
-    init?: ClientRequestInit<IHttpClient, TResponse>,
-  ): TResult => {
+    init?: ClientRequestInit<IHttpClient, CreateRoleResponse<MethodVersion>>,
+  ): CreateRoleResult<MethodVersion, TMethod> => {
     // The operation has no required arguments, so an omitted argument object parses as empty.
     const args = parseVersionedArgs(VersionContract, apiVersion, input ?? {});
     return client[method](
       generateApiPath(apiVersion, args),
       generateRequestParameters(apiVersion, args, init),
-    ) as TResult;
+    ) as CreateRoleResult<MethodVersion, TMethod>;
   };
 };
 

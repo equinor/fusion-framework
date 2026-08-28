@@ -98,8 +98,7 @@ type UpdateSystemAccessRoleArg<TVersion extends UpdateSystemAccessRoleVersion> =
 type UpdateSystemAccessRoleResult<
   TVersion extends UpdateSystemAccessRoleVersion,
   TMethod extends ClientMethodType = 'json',
-  TResult = UpdateSystemAccessRoleResponse<TVersion>,
-> = ClientMethod<TResult>[TMethod];
+> = ClientMethod<UpdateSystemAccessRoleResponse<TVersion>>[TMethod];
 
 /** Builds the request init for the resolved version, including its response-schema selector. */
 const generateRequestParameters = <TResult, TVersion extends AvailableVersions>(
@@ -203,18 +202,15 @@ const updateSystemAccessRole = <
 ) => {
   type MethodVersion = ExtractApiVersion<TVersion>;
   const apiVersion = extractVersion(ApiVersion, version);
-  return <
-    TResponse = UpdateSystemAccessRoleResponse<MethodVersion>,
-    TResult = UpdateSystemAccessRoleResult<MethodVersion, TMethod, TResponse>,
-  >(
+  return (
     input: UpdateSystemAccessRoleArg<MethodVersion>,
-    init?: ClientRequestInit<IHttpClient, TResponse>,
-  ): TResult => {
+    init?: ClientRequestInit<IHttpClient, UpdateSystemAccessRoleResponse<MethodVersion>>,
+  ): UpdateSystemAccessRoleResult<MethodVersion, TMethod> => {
     const args = parseVersionedArgs(VersionContract, apiVersion, input);
     return client[method](
       generateApiPath(apiVersion, args),
       generateRequestParameters(apiVersion, args, init),
-    ) as TResult;
+    ) as UpdateSystemAccessRoleResult<MethodVersion, TMethod>;
   };
 };
 

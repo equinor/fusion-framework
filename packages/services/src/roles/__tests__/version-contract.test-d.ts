@@ -55,6 +55,13 @@ describe('version-coupled endpoint typing', () => {
       .toEqualTypeOf<CreateRoleArg<'1.0'> | undefined>();
   });
 
+  it('rejects caller-supplied response generics while preserving method result typing', () => {
+    // @ts-expect-error - the response type is fixed by the selected API version.
+    createRole('v1', client)<string>();
+    expectTypeOf(createRole('v1', client)()).toEqualTypeOf<Promise<ApiRoleV1>>();
+    expectTypeOf(createRole('v1', client, 'json$')()).toEqualTypeOf<StreamResponse<ApiRoleV1>>();
+  });
+
   it('infers the same response from a version key, a version value, and the enum member', () => {
     expectTypeOf<GetRoleResponse<'v1'>>().toEqualTypeOf<ApiRoleV1>();
     expectTypeOf<GetRoleResponse<'1.0'>>().toEqualTypeOf<GetRoleResponse<'v1'>>();

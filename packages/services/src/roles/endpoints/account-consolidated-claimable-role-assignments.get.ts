@@ -104,8 +104,7 @@ type ListAccountConsolidatedClaimableRoleAssignmentsArg<
 type ListAccountConsolidatedClaimableRoleAssignmentsResult<
   TVersion extends ListAccountConsolidatedClaimableRoleAssignmentsVersion,
   TMethod extends ClientMethodType = 'json',
-  TResult = ListAccountConsolidatedClaimableRoleAssignmentsResponse<TVersion>,
-> = ClientMethod<TResult>[TMethod];
+> = ClientMethod<ListAccountConsolidatedClaimableRoleAssignmentsResponse<TVersion>>[TMethod];
 
 /** Builds the request init for the resolved version, including its response-schema selector. */
 const generateRequestParameters = <TResult, TVersion extends AvailableVersions>(
@@ -205,22 +204,18 @@ const listAccountConsolidatedClaimableRoleAssignments = <
 ) => {
   type MethodVersion = ExtractApiVersion<TVersion>;
   const apiVersion = extractVersion(ApiVersion, version);
-  return <
-    TResponse = ListAccountConsolidatedClaimableRoleAssignmentsResponse<MethodVersion>,
-    TResult = ListAccountConsolidatedClaimableRoleAssignmentsResult<
-      MethodVersion,
-      TMethod,
-      TResponse
-    >,
-  >(
+  return (
     input: ListAccountConsolidatedClaimableRoleAssignmentsArg<MethodVersion>,
-    init?: ClientRequestInit<IHttpClient, TResponse>,
-  ): TResult => {
+    init?: ClientRequestInit<
+      IHttpClient,
+      ListAccountConsolidatedClaimableRoleAssignmentsResponse<MethodVersion>
+    >,
+  ): ListAccountConsolidatedClaimableRoleAssignmentsResult<MethodVersion, TMethod> => {
     const args = parseVersionedArgs(VersionContract, apiVersion, input);
     return client[method](
       generateApiPath(apiVersion, args),
       generateRequestParameters(apiVersion, args, init),
-    ) as TResult;
+    ) as ListAccountConsolidatedClaimableRoleAssignmentsResult<MethodVersion, TMethod>;
   };
 };
 

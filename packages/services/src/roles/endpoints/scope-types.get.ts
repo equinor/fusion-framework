@@ -85,8 +85,7 @@ type ListScopeTypesArg<TVersion extends ListScopeTypesVersion> = VersionedArgs<
 type ListScopeTypesResult<
   TVersion extends ListScopeTypesVersion,
   TMethod extends ClientMethodType = 'json',
-  TResult = ListScopeTypesResponse<TVersion>,
-> = ClientMethod<TResult>[TMethod];
+> = ClientMethod<ListScopeTypesResponse<TVersion>>[TMethod];
 
 /** Builds the request init for the resolved version, including its response-schema selector. */
 const generateRequestParameters = <TResult, TVersion extends AvailableVersions>(
@@ -171,19 +170,16 @@ const listScopeTypes = <
 ) => {
   type MethodVersion = ExtractApiVersion<TVersion>;
   const apiVersion = extractVersion(ApiVersion, version);
-  return <
-    TResponse = ListScopeTypesResponse<MethodVersion>,
-    TResult = ListScopeTypesResult<MethodVersion, TMethod, TResponse>,
-  >(
+  return (
     input?: ListScopeTypesArg<MethodVersion>,
-    init?: ClientRequestInit<IHttpClient, TResponse>,
-  ): TResult => {
+    init?: ClientRequestInit<IHttpClient, ListScopeTypesResponse<MethodVersion>>,
+  ): ListScopeTypesResult<MethodVersion, TMethod> => {
     // The operation has no required arguments, so an omitted argument object parses as empty.
     const args = parseVersionedArgs(VersionContract, apiVersion, input ?? {});
     return client[method](
       generateApiPath(apiVersion, args),
       generateRequestParameters(apiVersion, args, init),
-    ) as TResult;
+    ) as ListScopeTypesResult<MethodVersion, TMethod>;
   };
 };
 

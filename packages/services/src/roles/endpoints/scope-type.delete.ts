@@ -90,8 +90,7 @@ type DeleteScopeTypeArg<TVersion extends DeleteScopeTypeVersion> = VersionedArgs
 type DeleteScopeTypeResult<
   TVersion extends DeleteScopeTypeVersion,
   TMethod extends ClientMethodType = 'json',
-  TResult = DeleteScopeTypeResponse<TVersion>,
-> = ClientMethod<TResult>[TMethod];
+> = ClientMethod<DeleteScopeTypeResponse<TVersion>>[TMethod];
 
 /** Builds the request init for the resolved version, including its response-schema selector. */
 const generateRequestParameters = <TResult, TVersion extends AvailableVersions>(
@@ -184,18 +183,15 @@ const deleteScopeType = <
 ) => {
   type MethodVersion = ExtractApiVersion<TVersion>;
   const apiVersion = extractVersion(ApiVersion, version);
-  return <
-    TResponse = DeleteScopeTypeResponse<MethodVersion>,
-    TResult = DeleteScopeTypeResult<MethodVersion, TMethod, TResponse>,
-  >(
+  return (
     input: DeleteScopeTypeArg<MethodVersion>,
-    init?: ClientRequestInit<IHttpClient, TResponse>,
-  ): TResult => {
+    init?: ClientRequestInit<IHttpClient, DeleteScopeTypeResponse<MethodVersion>>,
+  ): DeleteScopeTypeResult<MethodVersion, TMethod> => {
     const args = parseVersionedArgs(VersionContract, apiVersion, input);
     return client[method](
       generateApiPath(apiVersion, args),
       generateRequestParameters(apiVersion, args, init),
-    ) as TResult;
+    ) as DeleteScopeTypeResult<MethodVersion, TMethod>;
   };
 };
 

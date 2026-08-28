@@ -89,8 +89,7 @@ type DeleteRoleBindingConfigurationArg<TVersion extends DeleteRoleBindingConfigu
 type DeleteRoleBindingConfigurationResult<
   TVersion extends DeleteRoleBindingConfigurationVersion,
   TMethod extends ClientMethodType = 'json',
-  TResult = DeleteRoleBindingConfigurationResponse<TVersion>,
-> = ClientMethod<TResult>[TMethod];
+> = ClientMethod<DeleteRoleBindingConfigurationResponse<TVersion>>[TMethod];
 
 /** Builds the request init for the resolved version, including its response-schema selector. */
 const generateRequestParameters = <TResult, TVersion extends AvailableVersions>(
@@ -186,18 +185,15 @@ const deleteRoleBindingConfiguration = <
 ) => {
   type MethodVersion = ExtractApiVersion<TVersion>;
   const apiVersion = extractVersion(ApiVersion, version);
-  return <
-    TResponse = DeleteRoleBindingConfigurationResponse<MethodVersion>,
-    TResult = DeleteRoleBindingConfigurationResult<MethodVersion, TMethod, TResponse>,
-  >(
+  return (
     input: DeleteRoleBindingConfigurationArg<MethodVersion>,
-    init?: ClientRequestInit<IHttpClient, TResponse>,
-  ): TResult => {
+    init?: ClientRequestInit<IHttpClient, DeleteRoleBindingConfigurationResponse<MethodVersion>>,
+  ): DeleteRoleBindingConfigurationResult<MethodVersion, TMethod> => {
     const args = parseVersionedArgs(VersionContract, apiVersion, input);
     return client[method](
       generateApiPath(apiVersion, args),
       generateRequestParameters(apiVersion, args, init),
-    ) as TResult;
+    ) as DeleteRoleBindingConfigurationResult<MethodVersion, TMethod>;
   };
 };
 

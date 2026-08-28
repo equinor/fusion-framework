@@ -105,8 +105,7 @@ type ListRoleBindingConfigurationNotificationsArg<
 type ListRoleBindingConfigurationNotificationsResult<
   TVersion extends ListRoleBindingConfigurationNotificationsVersion,
   TMethod extends ClientMethodType = 'json',
-  TResult = ListRoleBindingConfigurationNotificationsResponse<TVersion>,
-> = ClientMethod<TResult>[TMethod];
+> = ClientMethod<ListRoleBindingConfigurationNotificationsResponse<TVersion>>[TMethod];
 
 /** Builds the request init for the resolved version, including its response-schema selector. */
 const generateRequestParameters = <TResult, TVersion extends AvailableVersions>(
@@ -207,18 +206,18 @@ const listRoleBindingConfigurationNotifications = <
 ) => {
   type MethodVersion = ExtractApiVersion<TVersion>;
   const apiVersion = extractVersion(ApiVersion, version);
-  return <
-    TResponse = ListRoleBindingConfigurationNotificationsResponse<MethodVersion>,
-    TResult = ListRoleBindingConfigurationNotificationsResult<MethodVersion, TMethod, TResponse>,
-  >(
+  return (
     input: ListRoleBindingConfigurationNotificationsArg<MethodVersion>,
-    init?: ClientRequestInit<IHttpClient, TResponse>,
-  ): TResult => {
+    init?: ClientRequestInit<
+      IHttpClient,
+      ListRoleBindingConfigurationNotificationsResponse<MethodVersion>
+    >,
+  ): ListRoleBindingConfigurationNotificationsResult<MethodVersion, TMethod> => {
     const args = parseVersionedArgs(VersionContract, apiVersion, input);
     return client[method](
       generateApiPath(apiVersion, args),
       generateRequestParameters(apiVersion, args, init),
-    ) as TResult;
+    ) as ListRoleBindingConfigurationNotificationsResult<MethodVersion, TMethod>;
   };
 };
 
