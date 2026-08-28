@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 
 import {
+  createRoleBindingConfiguration,
   createRole,
   deleteRole,
   getRole,
@@ -11,7 +12,10 @@ import {
   updateRole,
 } from '..';
 import { ApiRoleSchemaV1 } from '../v1/schemas/api-role-schema-v1';
+import { AddClaimableRoleAccessRoleRequestSchemaV1 } from '../v1/schemas/add-claimable-role-access-role-request-schema-v1';
+import { AddRoleAccessRoleRequestSchemaV1 } from '../v1/schemas/add-role-access-role-request-schema-v1';
 import { apiPagedCollectionSchemaV1 } from '../v1/schemas/api-paged-collection-schema-v1';
+import { DeleteRoleAssignmentsRequestSchemaV1 } from '../v1/schemas/delete-role-assignments-request-schema-v1';
 
 import { createTestClient, type TestClient } from '../../__tests__/fixtures/create-test-client';
 
@@ -77,9 +81,32 @@ describe('Roles V2 schema enforcement', () => {
       );
       await expect(selector(jsonResponse({ value: [VALID_ROLE] }))).rejects.toThrowError();
     });
+
+    it('accepts the empty 201 response for a created role binding configuration', async () => {
+      await createRoleBindingConfiguration('v1', testClient.client)({ identifier: 'binding-1' });
+
+      await expect(
+        selectorOf(testClient)(new Response(null, { status: 201 })),
+      ).resolves.toBeUndefined();
+    });
   });
 
   describe('argument schemas', () => {
+    it('rejects empty mapping and assignment lists for batch mutation requests', () => {
+      expect(AddRoleAccessRoleRequestSchemaV1.safeParse({}).success).toBe(false);
+      expect(
+        AddRoleAccessRoleRequestSchemaV1.safeParse({ accessRoleMappings: [] }).success,
+      ).toBe(false);
+      expect(AddClaimableRoleAccessRoleRequestSchemaV1.safeParse({}).success).toBe(false);
+      expect(
+        AddClaimableRoleAccessRoleRequestSchemaV1.safeParse({ accessRoleMappings: [] }).success,
+      ).toBe(false);
+      expect(DeleteRoleAssignmentsRequestSchemaV1.safeParse({}).success).toBe(false);
+      expect(DeleteRoleAssignmentsRequestSchemaV1.safeParse({ roleAssignmentIds: [] }).success).toBe(
+        false,
+      );
+    });
+
     it('rejects a query option outside the contract bounds before any request', () => {
       expect(() => listRoles('v1', testClient.client)({ top: 500 })).toThrowError();
       expect(() => listRoles('v1', testClient.client)({ skip: -1 })).toThrowError();

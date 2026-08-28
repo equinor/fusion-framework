@@ -42,8 +42,8 @@ const PATH_PARAM_VALUES: Record<string, string> = {
  */
 const BODY_FIELD_VALUES: Record<string, Record<string, unknown>> = {
   activateClaimableRoleAssignment: { reason: 'incident response' },
-  addClaimableRoleAccessRoles: { accessRoleIdentifier: 'writer' },
-  addRoleAccessRoles: { accessRoleIdentifier: 'writer' },
+  addClaimableRoleAccessRoles: { accessRoleMappings: [{ accessRoleIdentifier: 'writer' }] },
+  addRoleAccessRoles: { accessRoleMappings: [{ accessRoleIdentifier: 'writer' }] },
   assignClaimableRole: { accountIdentifier: 'user@example.com' },
   assignRole: { accountIdentifier: 'user@example.com' },
   assignSystemAccessRole: { accountIdentifier: 'user@example.com' },

@@ -7,7 +7,7 @@ export const AddClaimableRoleAccessRoleRequestSchemaV1 = z
     /** Access role mappings to add. The API requires at least one. */
     accessRoleMappings: z
       .array(AccessRoleMappingSchemaV1)
-      .optional()
+      .min(1, 'accessRoleMappings requires at least one access role mapping')
       .describe('Access role mappings to add. The API requires at least one.'),
   })
   .describe('The body of an add-claimable-role-access-roles request.');

@@ -42,7 +42,7 @@ export const extractVersion = <
   version: TVersion,
 ): ExtractApiVersion<TApiVersions, TVersion> => {
   // Prefer an exact key match (e.g. 'v1') over scanning the raw version values
-  if (version in apiVersions) {
+  if (Object.hasOwn(apiVersions, version)) {
     return apiVersions[version] as ExtractApiVersion<TApiVersions, TVersion>;
   }
   // Fall back to treating `version` as a raw version value rather than a key
@@ -76,6 +76,23 @@ export const schemaSelector =
   <Output>(schema: z.ZodSchema<Output>): ResponseSelector<Output> =>
   async (response: FetchResponse<unknown>) =>
     schema.parse(await jsonSelector(response));
+
+/**
+ * Validates an empty successful response without attempting to parse a JSON body.
+ *
+ * Use this selector for endpoints whose contract specifies an empty body with a success status
+ * other than `204 No Content`; `jsonSelector` only skips parsing for 204 responses.
+ *
+ * @param response - HTTP response whose success status must be validated.
+ * @returns A promise that resolves to `undefined` after a successful response.
+ * @throws {HttpJsonResponseError} When an unsuccessful response cannot be parsed as JSON.
+ */
+export const emptyResponseSelector: ResponseSelector<void> = async (
+  response: FetchResponse<unknown>,
+): Promise<void> => {
+  // Preserve the HTTP module's structured error handling while successful empty responses skip JSON parsing.
+  if (!response.ok) await jsonSelector(response);
+};
 
 /**
  * Parses caller input with the argument schema a version contract publishes for `version`.

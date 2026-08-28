@@ -6,8 +6,8 @@ export const DeleteRoleAssignmentsRequestSchemaV1 = z
     /** IDs of role assignments to delete. The API accepts between one and 100. */
     roleAssignmentIds: z
       .array(z.string())
+      .min(1, 'roleAssignmentIds requires at least one role assignment ID')
       .max(100, 'roleAssignmentIds accepts at most 100 role assignment IDs')
-      .optional()
       .describe('IDs of role assignments to delete. The API accepts between one and 100.'),
   })
   .describe('The body of a batch delete-role-assignments request.');

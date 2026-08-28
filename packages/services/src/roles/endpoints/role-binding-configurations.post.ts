@@ -18,7 +18,7 @@ import type {
   VersionedResponse,
 } from '../types';
 
-import { extractVersion, parseVersionedArgs, versionedResponseSelector } from '../../utils';
+import { emptyResponseSelector, extractVersion, parseVersionedArgs } from '../../utils';
 import { ApiVersion } from '../static';
 import { CreateRoleBindingConfigurationRequestSchemaV1 } from '../v1/schemas/create-role-binding-configuration-request-schema-v1';
 
@@ -53,7 +53,7 @@ const VersionContract = {
       .describe(
         'Arguments for POST /role-binding-configurations (createRoleBindingConfiguration v1.0).',
       ),
-    /** Response published by version 1.0. The operation answers `204 No Content`. */
+    /** Response published by version 1.0. The operation answers `201 Created` without a body. */
     response: z.void(),
   },
 } as const satisfies ApiVersionContract;
@@ -109,7 +109,7 @@ const generateRequestParameters = <TResult, TVersion extends AvailableVersions>(
         JsonRequest
       > = {
         method: 'POST',
-        selector: versionedResponseSelector(VersionContract, version),
+        selector: emptyResponseSelector,
         body,
       };
       // Apply the caller-supplied `init` first, then the generated defaults, so the

@@ -1,8 +1,9 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, expectTypeOf, it, vi } from 'vitest';
 
 import { HttpClient, type StreamResponse } from '@equinor/fusion-framework-module-http/client';
 
 import { getRole, listRoles } from '..';
+import type { ApiRoleV1 } from '../v1/types';
 
 import { BASE_URL } from '../../__tests__/fixtures/base-url';
 
@@ -45,6 +46,15 @@ describe('client method selection', () => {
 
     expect(role).toMatchObject(VALID_ROLE);
     expect(fetchMock).toHaveBeenCalledOnce();
+  });
+
+  it('derives the selected method result from the role response schema', () => {
+    expectTypeOf(getRole('v1', client)({ roleIdentifier: 'role-1' })).toEqualTypeOf<
+      Promise<ApiRoleV1>
+    >();
+    expectTypeOf(getRole('v1', client, 'json$')({ roleIdentifier: 'role-1' })).toEqualTypeOf<
+      StreamResponse<ApiRoleV1>
+    >();
   });
 
   it("defaults to the 'json' method when none is supplied", async () => {

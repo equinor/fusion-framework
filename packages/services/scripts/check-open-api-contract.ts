@@ -149,17 +149,29 @@ const readSnapshot = (version: OpenApiVersionConfig): unknown => {
 const contractEntries = (
   document: OpenApiDocument,
 ): Record<keyof OpenApiDiff, Map<string, JsonValue>> => {
-  const operations = new Map<string, JsonValue>();
-  const fields = new Map<string, JsonValue>();
-  // One path template may publish several operations, so both levels are walked.
-  for (const [path, item] of Object.entries(document.paths)) {
-    // Only the known verbs are operations; `parameters` and `summary` are not.
-    for (const method of METHODS) {
-      const operation = item[method];
-      // A path item only defines the verbs it publishes.
-      if (operation !== undefined) operations.set(`${method.toUpperCase()} ${path}`, operation);
-    }
-  }
+  const pathEntries = Object.entries(document.paths);
+  const operations = new Map<string, JsonValue>(
+    // One path template may publish several operations, so every path contributes its methods.
+    pathEntries.flatMap(([path, item]) =>
+      // Only known verbs are operations; `parameters` and `summary` remain contract fields.
+      METHODS.filter((method) => item[method] !== undefined)
+        // Each published operation has a stable verb-and-path name in drift reports.
+        .map<[string, JsonValue]>((method) => [
+          `${method.toUpperCase()} ${path}`,
+          item[method] as JsonValue,
+        ]),
+    ),
+  );
+  const fields = new Map<string, JsonValue>(
+    // Path-item metadata applies to every operation at its path, so contract drift must retain it.
+    pathEntries.flatMap(([path, item]) =>
+      // Method entries are represented above; retain every other path-item field here.
+      Object.entries(item)
+        .filter(([key]) => !METHODS.includes(key as (typeof METHODS)[number]))
+        // Prefixing with the path avoids collisions between identically named path-item fields.
+        .map<[string, JsonValue]>(([key, value]) => [`paths.${path}.${key}`, value]),
+    ),
+  );
   // Every remaining top-level field is compared as one subtree.
   for (const [key, value] of Object.entries(document)) {
     // Paths and components are reported per entry instead.

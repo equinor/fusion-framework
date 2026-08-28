@@ -111,6 +111,16 @@ describe('checkOpenApiContract when the contract drifted', () => {
     expect(report.output).toContain('~ changed info');
   });
 
+  it('reports path-item metadata changes separately from operation changes', async () => {
+    const report = await check((document) => {
+      document.paths['/roles']['x-contract-source'] = 'generated';
+      return document;
+    });
+
+    expect(report.results[0]?.diff.fields.added).toEqual(['paths./roles.x-contract-source']);
+    expect(report.results[0]?.diff.operations).toEqual({ added: [], removed: [], changed: [] });
+  });
+
   it('reports a changed security scheme without flagging every schema', async () => {
     const report = await check((document) => {
       // biome-ignore lint/style/noNonNullAssertion: the fixture always defines components
