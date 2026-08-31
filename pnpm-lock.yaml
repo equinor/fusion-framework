@@ -2042,7 +2042,7 @@ importers:
     dependencies:
       '@azure/identity':
         specifier: ^4.9.1
-        version: 4.13.1(supports-color@10.2.2)
+        version: 4.13.2
       '@equinor/fusion-framework-module':
         specifier: workspace:^
         version: link:../module
@@ -3586,6 +3586,10 @@ packages:
     resolution: {integrity: sha512-JjQWO6akOck45PH/XBrxzsQGAiKrfFl4m5iggJ0ItMIz5omRufOXWpqCPpdjKN3vKDzlSUvFjaMb7Zwf0gvAdA==}
     engines: {node: '>=22.0.0'}
 
+  '@azure/core-process@1.0.0':
+    resolution: {integrity: sha512-/shnJ+ooO8WPxDhPEeI/2oRQuubn16gZ6CvlbpWbEswZfzwI9tI/sMAHmF3x1LuQ9yZYXfLW3TjzGMLEC5blKg==}
+    engines: {node: '>=22.0.0'}
+
   '@azure/core-rest-pipeline@1.25.0':
     resolution: {integrity: sha512-bMs8ekJLjX8wPV+9IPBges1SLPyuDtE9g5gLDWOpxzKcoOFQnpLGkbcT1tdw3FaAmDS1gnPmMmJ6y/T5B96kIA==}
     engines: {node: '>=22.0.0'}
@@ -3606,6 +3610,10 @@ packages:
     resolution: {integrity: sha512-5C/2WD5Vb1lHnZS16dNQRPMjN6oV/Upba+C9nBIs15PmOi6A3ZGs4Lr2u60zw4S04gi+u3cEXiqTVP7M4Pz3kw==}
     engines: {node: '>=20.0.0'}
 
+  '@azure/identity@4.13.2':
+    resolution: {integrity: sha512-NXL2/pCJctLxgw8bvrwwgge743kEq8LBT+O1pmV0vyUwetzFPH9auP6jhkU/cgZCPPtWoewAe3ncaGCgPo07fA==}
+    engines: {node: '>=22.0.0'}
+
   '@azure/logger@1.4.0':
     resolution: {integrity: sha512-rbAE25KUfjU/s3XHUdJgceoCP5dEOpMx85J04kF+QMdta73XkuG9JGHHinch+XIoKpBdqljin+KqURpJriSzLA==}
     engines: {node: '>=22.0.0'}
@@ -3614,12 +3622,20 @@ packages:
     resolution: {integrity: sha512-qMabD7Xrm/UgRhs+/IVyCTZRjUl8Qb+uGsRrCkaKNWsiTwRaeyStJbChE7/ySNTNYtiWo7khfF7vUDd0wGMnLw==}
     engines: {node: '>=0.8.0'}
 
+  '@azure/msal-browser@5.19.0':
+    resolution: {integrity: sha512-DHe9iRcyByGJuLPkl0K31a1JjOdRY2zX38Q07mQpSbR8zOj1EIgsWfTXhSQVyyijUxlcofVy/br7qWJbrMwVXQ==}
+    engines: {node: '>=0.8.0'}
+
   '@azure/msal-common@16.11.3':
     resolution: {integrity: sha512-VeXOW+t3Rdd9XGX6lVyIg3DhtjMR1JD8ARKcsnGbJFUWwAmF3sHL7GwZc/ZjEUfHESResAonETRYCuG06OBT7A==}
     engines: {node: '>=0.8.0'}
 
   '@azure/msal-common@16.12.0':
     resolution: {integrity: sha512-hgLgfRdbG2AmhXPygebf1KYJEvse86+ZZLWufdiTKaGRYEUqOzHdlf6AS1IiuUCHWbynkgbHc451jSNkbfhWlg==}
+    engines: {node: '>=0.8.0'}
+
+  '@azure/msal-common@16.13.0':
+    resolution: {integrity: sha512-rOAy0KUcyBbdwVJ+f3uPpthXatFLLZN+/KWAsTLzk1aB23Xl9DRmmXYwSvBFOZyXj4jUQQ5FKxxRkhAFW1fOow==}
     engines: {node: '>=0.8.0'}
 
   '@azure/msal-node-extensions@5.3.5':
@@ -3631,6 +3647,10 @@ packages:
 
   '@azure/msal-node@5.4.3':
     resolution: {integrity: sha512-tumCMmzrRhKmTbYQg/7OlfbrIKcKaf8Ed0Fw3suUpRT3owFYljznVgxcfHe8RycQXY9uyROGiLD1GjhpF45AwA==}
+    engines: {node: '>=20'}
+
+  '@azure/msal-node@5.6.0':
+    resolution: {integrity: sha512-uFY9NxrWHw8PwZx7gAX6PDn+9vdfS05+levc/kwkx77IkjfaldnQbbcQzzDIZ5Hq5Zdr6/z92oAIoRWKp6MnOA==}
     engines: {node: '>=20'}
 
   '@azure/search-documents@13.0.0':
@@ -9299,6 +9319,10 @@ packages:
     resolution: {integrity: sha512-H9LMLr5zwIbSxrmvikGuI/5KGhZ8E2zH3stkMgM5LpOWDutGM2JZaj460Udnf1a+946zc7YBgrqEWwbk7zHvGw==}
     engines: {node: '>=18'}
 
+  default-browser@5.5.1:
+    resolution: {integrity: sha512-m1pAzaJgZ/gssEqlOhJkPJp8Xly7QyW6xcrkUa2KKcDeDSEMP7X8xipU3snUcfisTQx0w1AGae+9UtJSfVnXGw==}
+    engines: {node: '>=18'}
+
   deferred-leveldown@5.3.0:
     resolution: {integrity: sha512-a59VOT+oDy7vtAbLRCZwWgxu2BaCfd5Hk7wxJd48ei7I+nsg8Orlb9CLG0PMZienk9BSUKgeAqkO2+Lw+1+Ukw==}
     engines: {node: '>=6'}
@@ -13215,6 +13239,8 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  '@azure/core-process@1.0.0': {}
+
   '@azure/core-rest-pipeline@1.25.0(supports-color@10.2.2)':
     dependencies:
       '@azure/abort-controller': 2.2.0
@@ -13242,7 +13268,7 @@ snapshots:
   '@azure/identity-cache-persistence@1.3.0':
     dependencies:
       '@azure/core-auth': 1.11.0(supports-color@10.2.2)
-      '@azure/identity': 4.13.1(supports-color@10.2.2)
+      '@azure/identity': 4.13.2
       '@azure/msal-node': 5.4.3
       '@azure/msal-node-extensions': 5.3.5
       keytar: 7.9.0
@@ -13267,6 +13293,23 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  '@azure/identity@4.13.2':
+    dependencies:
+      '@azure/abort-controller': 2.2.0
+      '@azure/core-auth': 1.11.0(supports-color@10.2.2)
+      '@azure/core-client': 1.11.0(supports-color@10.2.2)
+      '@azure/core-process': 1.0.0
+      '@azure/core-rest-pipeline': 1.25.0(supports-color@10.2.2)
+      '@azure/core-tracing': 1.4.0
+      '@azure/core-util': 1.14.0(supports-color@10.2.2)
+      '@azure/logger': 1.4.0(supports-color@10.2.2)
+      '@azure/msal-browser': 5.19.0
+      '@azure/msal-node': 5.6.0
+      open: 10.2.0
+      tslib: 2.8.1
+    transitivePeerDependencies:
+      - supports-color
+
   '@azure/logger@1.4.0(supports-color@10.2.2)':
     dependencies:
       '@typespec/ts-http-runtime': 0.3.8(supports-color@10.2.2)
@@ -13278,10 +13321,16 @@ snapshots:
     dependencies:
       '@azure/msal-common': 16.11.3
 
+  '@azure/msal-browser@5.19.0':
+    dependencies:
+      '@azure/msal-common': 16.13.0
+
   '@azure/msal-common@16.11.3': {}
 
   '@azure/msal-common@16.12.0':
     optional: true
+
+  '@azure/msal-common@16.13.0': {}
 
   '@azure/msal-node-extensions@5.3.5':
     dependencies:
@@ -13296,6 +13345,11 @@ snapshots:
   '@azure/msal-node@5.4.3':
     dependencies:
       '@azure/msal-common': 16.11.3
+      jsonwebtoken: 9.0.3
+
+  '@azure/msal-node@5.6.0':
+    dependencies:
+      '@azure/msal-common': 16.13.0
       jsonwebtoken: 9.0.3
 
   '@azure/search-documents@13.0.0(supports-color@10.2.2)':
@@ -19354,6 +19408,11 @@ snapshots:
       bundle-name: 4.1.0
       default-browser-id: 5.0.1
 
+  default-browser@5.5.1:
+    dependencies:
+      bundle-name: 4.1.0
+      default-browser-id: 5.0.1
+
   deferred-leveldown@5.3.0:
     dependencies:
       abstract-leveldown: 6.2.3
@@ -21195,7 +21254,7 @@ snapshots:
 
   open@10.2.0:
     dependencies:
-      default-browser: 5.5.0
+      default-browser: 5.5.1
       define-lazy-prop: 3.0.0
       is-inside-container: 1.0.0
       wsl-utils: 0.1.0
