@@ -32,6 +32,9 @@
     "typescript"
   ],
   "license": "ISC",
+  "files": [
+    "dist"
+  ],
   "publishConfig": {
     "access": "public"
   },

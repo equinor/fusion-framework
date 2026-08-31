@@ -45,6 +45,9 @@
   ],
   "author": "odin.rochmann@gmail.com",
   "license": "ISC",
+  "files": [
+    "dist"
+  ],
   "publishConfig": {
     "access": "public"
   },

@@ -29,9 +29,7 @@
     "dist": "dist"
   },
   "files": [
-    "dist",
-    "src",
-    "!src/__tests__"
+    "dist"
   ],
   "publishConfig": {
     "access": "public"

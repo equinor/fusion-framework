@@ -21,6 +21,9 @@
   "description": "Utils for initializing and consuming fusion framework modules",
   "author": "odin.rochmann@gmail.com",
   "license": "ISC",
+  "files": [
+    "dist"
+  ],
   "publishConfig": {
     "access": "public"
   },

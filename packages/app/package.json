@@ -55,6 +55,9 @@
     "url": "https://github.com/odinr"
   },
   "license": "ISC",
+  "files": [
+    "dist"
+  ],
   "publishConfig": {
     "access": "public"
   },

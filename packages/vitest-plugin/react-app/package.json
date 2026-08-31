@@ -48,6 +48,9 @@
     "testing"
   ],
   "license": "ISC",
+  "files": [
+    "dist"
+  ],
   "publishConfig": {
     "access": "public"
   },
