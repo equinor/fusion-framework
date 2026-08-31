@@ -1,4 +1,5 @@
 {
+  "preset": "strict",
   "rules": {
     "single-export-per-file": {
       "excludePattern": [

@@ -1,21 +1,6 @@
-import type { LintConfig } from '@equinor/fusion-framework-lint-core';
+import { defaultConfig } from './default-config.js';
 
 /**
- * Severity overrides for the `recommended` preset.
+ * Backwards-compatible alias for the loose {@link defaultConfig} preset.
  */
-export const recommendedConfig: LintConfig = {
-  'require-intent-comment/flow': 'warn',
-  'require-intent-comment/iterators': 'warn',
-  'require-intent-comment/rxjs': 'warn',
-  'require-intent-comment/break-continue': 'warn',
-  'require-intent-comment/type-assertion': 'error',
-  'require-intent-comment/object-merge': 'warn',
-  'require-tsdoc': 'warn',
-  'require-node-protocol': 'error',
-  'no-class-components': 'error',
-  'no-todo-without-issue': 'warn',
-  'no-empty-catch': 'error',
-  'no-separate-export': 'error',
-  'single-export-per-file': 'warn',
-  'filename-convention': 'warn',
-};
+export const recommendedConfig = defaultConfig;

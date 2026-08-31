@@ -4,6 +4,7 @@ import { join, dirname } from 'node:path';
 import { mkdtemp, mkdir, writeFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { loadLintConfig } from '../load-lint-config.js';
+import { balancedConfig } from '../balanced-config.js';
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -51,6 +52,7 @@ describe('loadLintConfig', () => {
         'require-tsdoc': 'error',
         'single-export-per-file': 'warn',
       });
+
       expect(Object.keys(result?.ruleMatchers ?? {})).toEqual([
         'single-export-per-file',
         'no-class-components',
@@ -64,6 +66,31 @@ describe('loadLintConfig', () => {
       const noClassComponentsMatcher = result?.ruleMatchers['no-class-components'];
       expect(noClassComponentsMatcher?.('/src/Component.tsx')).toBe(true);
       expect(noClassComponentsMatcher?.('/src/util.ts')).toBe(false);
+    });
+
+    it('loads a preset before applying per-rule overrides', async () => {
+      const result = await loadLintConfig({ cwd: fixture('json-preset') });
+
+      expect(result?.config).toEqual({
+        ...balancedConfig,
+        'require-tsdoc': 'error',
+      });
+    });
+
+    it('rejects an unknown preset', async () => {
+      await expect(loadLintConfig({ cwd: fixture('json-invalid-preset') })).rejects.toThrow(
+        'Unknown Fusion lint preset: maximum',
+      );
+    });
+
+    it('layers a rich config over the provided default base', async () => {
+      const base = { 'require-tsdoc': 'off', 'no-empty-catch': 'error' } as const;
+      const result = await loadLintConfig({ cwd: fixture('json-rich-matchers'), base });
+
+      expect(result?.config).toMatchObject({
+        'require-tsdoc': 'error',
+        'no-empty-catch': 'error',
+      });
     });
   });
 

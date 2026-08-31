@@ -11,6 +11,8 @@ import type {
   FusionLintConfigFactory,
   RuleConfigEntry,
 } from './define-config.js';
+import { resolvePresetConfig } from './resolve-preset-config.js';
+import type { LintPreset } from './lint-preset.js';
 
 /** Config file basenames searched in order. */
 const CONFIG_BASENAMES = ['fusion-lint.config', '.fusion-lintrc'] as const;
@@ -94,12 +96,15 @@ async function resolveConfigFileUpwards(startDir: string, findUp: boolean): Prom
  * format rather than a flat `LintConfig` map.
  */
 function isRichConfig(value: FusionLintFileConfig): value is {
+  preset?: LintPreset;
   rules?: Record<string, RuleConfigEntry>;
   customRules?: Rule[];
   ignorePatterns?: string[];
 } {
-  // Guard: flat configs have only string values; rich configs have object/array sub-keys
-  return 'rules' in value || 'customRules' in value || 'ignorePatterns' in value;
+  // Guard: rich configs are identified by reserved top-level keys (preset/rules/customRules/ignorePatterns); flat configs are plain severity maps
+  return (
+    'preset' in value || 'rules' in value || 'customRules' in value || 'ignorePatterns' in value
+  );
 }
 
 /**
@@ -138,19 +143,28 @@ function splitRuleEntries(rules: Record<string, RuleConfigEntry>): {
 /**
  * Normalises any supported file format to a {@link LoadedLintConfig}.
  */
-function normalise(raw: FusionLintFileConfig): LoadedLintConfig {
+function normalise(raw: FusionLintFileConfig, base: LintConfig): LoadedLintConfig {
   // Rich format: extract rules, customRules, and ignorePatterns separately
   if (isRichConfig(raw)) {
     const { config, ruleMatchers } = splitRuleEntries(raw.rules ?? {});
+    // The selected preset or caller base establishes defaults before project overrides.
     return {
-      config,
+      config: {
+        ...(raw.preset ? resolvePresetConfig(raw.preset) : base),
+        ...config,
+      },
       customRules: raw.customRules ?? [],
       ignorePatterns: raw.ignorePatterns ?? [],
       ruleMatchers,
     };
   }
   // Flat format: the entire object is the severity map
-  return { config: raw as LintConfig, customRules: [], ignorePatterns: [], ruleMatchers: {} };
+  return {
+    config: { ...base, ...(raw as LintConfig) },
+    customRules: [],
+    ignorePatterns: [],
+    ruleMatchers: {},
+  };
 }
 
 /**
@@ -195,7 +209,7 @@ export async function loadLintConfig(
     const raw = await readFile(filePath, 'utf-8');
     // Guard: empty or comment-only YAML files parse to null — treat as empty config
     const parsed = (parseYaml(raw) ?? {}) as FusionLintFileConfig;
-    return normalise(parsed);
+    return normalise(parsed, options.base ?? {});
   }
 
   // Delegate TS / JS / JSON loading to fusion-imports (esbuild-backed)
@@ -208,5 +222,5 @@ export async function loadLintConfig(
     await rawExport(builder);
     return builder.resolve(options.base ?? {});
   }
-  return normalise(rawExport);
+  return normalise(rawExport, options.base ?? {});
 }

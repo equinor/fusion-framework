@@ -20,6 +20,9 @@ import {
 } from '@equinor/fusion-framework-lint-rules';
 
 export { recommendedConfig } from './recommended-config.js';
+export { defaultConfig } from './default-config.js';
+export { balancedConfig } from './balanced-config.js';
+export { strictConfig } from './strict-config.js';
 
 /**
  * Ordered list of rules included in the `recommended` preset.

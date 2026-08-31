@@ -1,10 +1,10 @@
 # @equinor/fusion-framework-lint-config
 
-Recommended Fusion lint configuration — a curated set of rules, default severities, a config-file loader, and a fluent `ConfigBuilder` API for extending the linter with custom rules.
+Fusion lint configuration provides loose, balanced, and strict severity presets, a config-file loader, and a fluent `ConfigBuilder` API for extending the linter with custom rules.
 
 ## When to use this package
 
-- You want the recommended rule preset with the engine in `@equinor/fusion-framework-lint-core`.
+- You want a preset matched to application, reusable component, or critical framework code.
 - You want to load and resolve a project-level config file (`fusion-lint.config.ts`, `.fusion-lintrc.json`, etc.).
 - You want a `defineConfig` helper for type-safe config files.
 - You want to register custom rules or adjust built-in severities programmatically.
@@ -17,6 +17,42 @@ import { recommendedRules, recommendedConfig } from '@equinor/fusion-framework-l
 
 const engine = new LintEngine(recommendedRules, recommendedConfig);
 const diagnostics = engine.lint(source, filePath);
+```
+
+`recommendedConfig` is a backwards-compatible alias for `defaultConfig`.
+
+## Choose a preset
+
+| Preset | Intended use | Behavior |
+|---|---|---|
+| `default` | Application code | Loose by design. Enforces correctness rules such as `no-empty-catch`; warns when exported functions, hooks, or components lack TSDoc or a TODO lacks an issue reference; and leaves intent and file-structure rules off. |
+| `balanced` | Reusable components and public APIs | Keeps correctness rules strict and reports public API documentation and structural conventions as warnings. |
+| `strict` | Fusion Framework and other critical libraries | Enforces intent comments, TSDoc, and maintainability conventions as errors. |
+
+Select a preset in a rich JSON, YAML, JavaScript, or TypeScript config:
+
+```json
+{
+  "preset": "balanced",
+  "rules": {
+    "require-tsdoc": "error"
+  }
+}
+```
+
+The `rules` map is applied after the preset, so projects can tune individual rules. With no
+project config, Fusion lint uses the loose `default` preset.
+
+For direct engine construction, import the corresponding severity map:
+
+```typescript
+import {
+  balancedConfig,
+  recommendedRules,
+} from '@equinor/fusion-framework-lint-config';
+import { LintEngine } from '@equinor/fusion-framework-lint-core';
+
+const engine = new LintEngine(recommendedRules, balancedConfig);
 ```
 
 ## Config files
@@ -142,7 +178,11 @@ const engine = new LintEngine(recommendedRules, {
 | Export | Description |
 |---|---|
 | `recommendedRules` | Array of built-in `Rule` objects |
-| `recommendedConfig` | Default severity map for all built-in rules |
+| `defaultConfig` | Loose severity map used by default for application code |
+| `balancedConfig` | Medium-strictness severity map for reusable public code |
+| `strictConfig` | Strict severity map for critical framework code |
+| `recommendedConfig` | Backwards-compatible alias for `defaultConfig` |
+| `LintPreset` | Built-in preset name: `default`, `balanced`, or `strict` |
 | `defineConfig(config)` | Type helper — object form |
 | `defineConfig(factory)` | Type helper — builder form |
 | `loadLintConfig(options?)` | Finds and resolves the nearest config file |
