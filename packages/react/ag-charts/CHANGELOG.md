@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-react-ag-charts
 
+## 15.0.2
+
+### Patch Changes
+
+- f663b46: Internal: promote packages already published on the `next` prerelease channel to their stable versions.
+
 ## 15.0.1
 
 ### Patch Changes

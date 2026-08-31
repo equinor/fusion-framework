@@ -1,5 +1,47 @@
 # portal-analytics
 
+## 0.4.54
+
+### Patch Changes
+
+- Updated dependencies [f663b46]
+- Updated dependencies [f663b46]
+- Updated dependencies [f663b46]
+- Updated dependencies [f663b46]
+- Updated dependencies [f663b46]
+- Updated dependencies [f663b46]
+- Updated dependencies [f663b46]
+- Updated dependencies [f663b46]
+- Updated dependencies [f663b46]
+- Updated dependencies [f663b46]
+- Updated dependencies [f663b46]
+- Updated dependencies [f663b46]
+- Updated dependencies [f663b46]
+- Updated dependencies [f663b46]
+- Updated dependencies [f663b46]
+- Updated dependencies [f663b46]
+- Updated dependencies [f663b46]
+- Updated dependencies [f663b46]
+- Updated dependencies [f663b46]
+- Updated dependencies [f663b46]
+- Updated dependencies [f663b46]
+- Updated dependencies [f663b46]
+- Updated dependencies [f663b46]
+  - @equinor/fusion-framework-app@13.1.0
+  - @equinor/fusion-framework-cli@15.3.0
+  - @equinor/fusion-framework@8.1.0
+  - @equinor/fusion-framework-module-service-discovery@10.1.0
+  - @equinor/fusion-observable@9.2.1
+  - @equinor/fusion-framework-module-analytics@3.1.0
+  - @equinor/fusion-framework-module-app@8.1.0
+  - @equinor/fusion-framework-module-bookmark@4.1.0
+  - @equinor/fusion-framework-module-context@9.0.0
+  - @equinor/fusion-framework-module-navigation@7.0.9
+  - @equinor/fusion-framework-react-router@2.4.1
+  - @equinor/fusion-query@7.0.4
+  - @equinor/fusion-framework-react-app@14.1.0
+  - @equinor/fusion-framework-react@9.0.0
+
 ## 0.4.53
 
 ### Patch Changes

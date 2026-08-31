@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-module-ai
 
+## 7.0.0
+
+### Patch Changes
+
+- f663b46: Internal: promote packages already published on the `next` prerelease channel to their stable versions.
+
 ## 6.0.2
 
 ### Patch Changes

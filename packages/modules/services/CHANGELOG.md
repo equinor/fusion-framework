@@ -1,5 +1,11 @@
 # Change Log
 
+## 8.1.1
+
+### Patch Changes
+
+- f663b46: Internal: promote packages already published on the `next` prerelease channel to their stable versions.
+
 ## 8.1.0
 
 ### Minor Changes

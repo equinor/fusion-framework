@@ -1,5 +1,15 @@
 # Change Log
 
+## 9.0.0
+
+### Patch Changes
+
+- f663b46: Fix `useFrameworkModule`'s console warning to name the actually-requested module key instead of always printing `undefined`.
+- Updated dependencies [f663b46]
+- Updated dependencies [f663b46]
+- Updated dependencies [f663b46]
+  - @equinor/fusion-framework@8.1.0
+
 ## 8.0.1
 
 ### Patch Changes

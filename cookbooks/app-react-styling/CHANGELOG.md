@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-cookbook-app-react-styling
 
+## 1.1.2
+
+### Patch Changes
+
+- f663b46: Internal: promote packages already published on the `next` prerelease channel to their stable versions.
+
 ## 1.1.1
 
 ### Patch Changes

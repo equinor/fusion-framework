@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-react-router
 
+## 2.4.1
+
+### Patch Changes
+
+- f663b46: Internal: promote packages already published on the `next` prerelease channel to their stable versions.
+
 ## 2.4.0
 
 ### Minor Changes

@@ -1,5 +1,21 @@
 # @equinor/fusion-framework-cookbook-app-react-state
 
+## 1.0.2
+
+### Patch Changes
+
+- f663b46: Internal: promote packages already published on the `next` prerelease channel to their stable versions.
+- Updated dependencies [f663b46]
+- Updated dependencies [f663b46]
+- Updated dependencies [f663b46]
+- Updated dependencies [f663b46]
+- Updated dependencies [f663b46]
+- Updated dependencies [f663b46]
+- Updated dependencies [f663b46]
+  - @equinor/fusion-framework-cli@15.3.0
+  - @equinor/fusion-framework-module-event@6.1.0
+  - @equinor/fusion-framework-react-app@14.1.0
+
 ## 1.0.1
 
 ### Patch Changes

@@ -1,5 +1,18 @@
 # @equinor/fusion-framework-cookbook-app-react-context-custom-error
 
+## 5.0.8
+
+### Patch Changes
+
+- f663b46: Internal: promote packages already published on the `next` prerelease channel to their stable versions.
+- Updated dependencies [f663b46]
+- Updated dependencies [f663b46]
+- Updated dependencies [f663b46]
+- Updated dependencies [f663b46]
+- Updated dependencies [f663b46]
+  - @equinor/fusion-framework-cli@15.3.0
+  - @equinor/fusion-framework-react-app@14.1.0
+
 ## 5.0.7
 
 ### Patch Changes

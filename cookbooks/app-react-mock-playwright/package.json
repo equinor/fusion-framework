@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework-cookbook-app-react-mock-playwright",
-  "version": "0.0.2-next.0",
+  "version": "0.0.2",
   "description": "Cookbook for testing a Fusion Framework app with Playwright and ffc mock-server",
   "private": true,
   "type": "module",

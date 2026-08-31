@@ -1,5 +1,13 @@
 # Change Log
 
+## 7.0.0
+
+### Patch Changes
+
+- f663b46: Internal: promote packages already published on the `next` prerelease channel to their stable versions.
+- Updated dependencies [f663b46]
+  - @equinor/fusion-framework-module-bookmark@4.1.0
+
 ## 6.0.1
 
 ### Patch Changes

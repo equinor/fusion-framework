@@ -1,5 +1,11 @@
 # @equinor/fusion-lint
 
+## 0.3.3
+
+### Patch Changes
+
+- f663b46: Internal: promote packages already published on the `next` prerelease channel to their stable versions.
+
 ## 0.3.2
 
 ### Patch Changes

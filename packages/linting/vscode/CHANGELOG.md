@@ -1,5 +1,11 @@
 # fusion-ts-lint-vscode
 
+## 0.2.4
+
+### Patch Changes
+
+- f663b46: Internal: promote packages already published on the `next` prerelease channel to their stable versions.
+
 ## 0.2.3
 
 ### Patch Changes

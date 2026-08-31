@@ -1,5 +1,11 @@
 # @equinor/fusion-log
 
+## 2.0.3
+
+### Patch Changes
+
+- f663b46: Guard the `process.env` access used to detect the current log level so it no longer throws in environments without a Node-style `process` global (e.g. Vitest Browser Mode).
+
 ## 2.0.2
 
 ### Patch Changes

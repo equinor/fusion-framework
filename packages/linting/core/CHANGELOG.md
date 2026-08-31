@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-lint-core
 
+## 1.0.1
+
+### Patch Changes
+
+- f663b46: Internal: promote packages already published on the `next` prerelease channel to their stable versions.
+
 ## 1.0.0
 
 ### Major Changes

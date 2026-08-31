@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-cookbook-app-react-ai
 
+## 0.0.4
+
+### Patch Changes
+
+- f663b46: Internal: promote packages already published on the `next` prerelease channel to their stable versions.
+
 ## 0.0.3
 
 ### Patch Changes

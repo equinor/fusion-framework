@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-module-state
 
+## 2.0.2
+
+### Patch Changes
+
+- f663b46: Remove monorepo-level license and contribution boilerplate from the state module README.
+
 ## 2.0.1
 
 ### Patch Changes
