@@ -101,7 +101,7 @@ function isRichConfig(value: FusionLintFileConfig): value is {
   customRules?: Rule[];
   ignorePatterns?: string[];
 } {
-  // Guard: flat configs have only string values; rich configs have object/array sub-keys
+  // Guard: rich configs are identified by reserved top-level keys (preset/rules/customRules/ignorePatterns); flat configs are plain severity maps
   return (
     'preset' in value || 'rules' in value || 'customRules' in value || 'ignorePatterns' in value
   );
