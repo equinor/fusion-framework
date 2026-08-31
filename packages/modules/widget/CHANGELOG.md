@@ -1,5 +1,29 @@
 # Change Log
 
+## 16.0.7
+
+### Patch Changes
+
+- Updated dependencies [f663b46]
+- Updated dependencies [f663b46]
+- Updated dependencies [f663b46]
+- Updated dependencies [f663b46]
+- Updated dependencies [f663b46]
+- Updated dependencies [f663b46]
+- Updated dependencies [f663b46]
+- Updated dependencies [f663b46]
+- Updated dependencies [f663b46]
+- Updated dependencies [f663b46]
+- Updated dependencies [f663b46]
+- Updated dependencies [f663b46]
+- Updated dependencies [f663b46]
+  - @equinor/fusion-framework-module-service-discovery@10.1.0
+  - @equinor/fusion-observable@9.2.1
+  - @equinor/fusion-framework-module-event@6.1.0
+  - @equinor/fusion-framework-module-http@8.1.0
+  - @equinor/fusion-framework-module@6.1.3
+  - @equinor/fusion-query@7.0.4
+
 ## 16.0.6
 
 ### Patch Changes

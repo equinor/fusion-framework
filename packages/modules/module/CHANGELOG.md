@@ -1,5 +1,32 @@
 # Change Log
 
+## 6.1.3
+
+### Patch Changes
+
+- f663b46: Fix `ModulesConfigurator.addConfig` re-registration semantics for a module name that is already registered.
+  
+  Previously, re-registering the same module name always discarded the module's prior `configure`/`afterConfig`/`afterInit` callbacks outright — even when the exact same module descriptor was passed again. This broke any config function that registered more than one named client against a shared module singleton, for example calling `configureHttpClient`/`useFrameworkServiceClient` more than once from `@equinor/fusion-framework-module-http`:
+  
+  ```typescript
+  configurator.configureHttpClient('products', { baseUri });
+  configurator.configureHttpClient('users', { baseUri });
+  ```
+  
+  Only the **last** call's client was actually registered; earlier ones threw `No registered http client for key [products]` at `createClient()` time, with no error at configuration time.
+  
+  `addConfig` now distinguishes the two cases: re-registering the exact same module descriptor for a name stays **additive** (prior callbacks are kept, and the new ones run alongside them), so multiple named clients registered this way all work correctly. Re-registering a **genuinely different** module descriptor for the same name still **replaces** the prior `configure`/`afterConfig`/`afterInit` callbacks outright, preventing stale callback execution — the case mock modules like `enableMsalMock` rely on when overriding a real module registration.
+- f663b46: Fix a bug in the module configurator that caused configurator phases (configure / post-initialize / dispose) to run out of order or skip post-configure hooks in certain initialization paths.
+  
+  This ensures module configuration and plugin hooks run reliably during module initialization, preventing missed setup steps for consumer modules.
+  
+  Fixes: restores correct configurator phase ordering and prevents lost initialization for modules that rely on post-configure hooks.
+- f663b46: Fix `DotPath` skipping over optional object properties, which made anything beneath them unreachable from `BaseConfigBuilder._set`.
+  
+  An optional property is typed `T | undefined`, which does not extend `object`, so the path union stopped at the property itself: given `{ foo?: { bar: string } }`, `'foo'` was allowed but `'foo.bar'` was not. `DotPathType` already unwrapped such properties with `NonNullable`, so the two disagreed — a path it could resolve was one `_set` refused.
+  
+  `DotPath` now unwraps the same way. This only widens the accepted union, so existing calls are unaffected.
+
 ## 6.1.2
 
 ### Patch Changes

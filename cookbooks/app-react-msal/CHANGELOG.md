@@ -1,5 +1,13 @@
 # Change Log
 
+## 2.0.2
+
+### Patch Changes
+
+- f663b46: Internal: add Vitest coverage for the `App` component, covering the default signed-in mock user, overriding `configure` with a custom mock account, and resolving/rendering an access token for the portal service scopes; wire the cookbook into the root Vitest project list. Also removes the unused demo `src/config.ts` (dev-only console logging, no functional impact) — the cookbook registers no module `configure` of its own, so tests configure the mock account directly instead of composing with one.
+- f663b46: Internal: update the test suite for `@equinor/fusion-framework-vitest-plugin-react-app`'s
+  `configure`→`configureApp` fixture rename; no behavior changes.
+
 ## 2.0.1
 
 ### Patch Changes

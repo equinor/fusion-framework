@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-react-components-people-provider
 
+## 2.0.5
+
+### Patch Changes
+
+- f663b46: Internal: promote packages already published on the `next` prerelease channel to their stable versions.
+
 ## 2.0.4
 
 ### Patch Changes

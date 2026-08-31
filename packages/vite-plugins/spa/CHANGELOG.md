@@ -1,5 +1,42 @@
 # @equinor/fusion-framework-vite-plugin-spa
 
+## 4.1.0
+
+### Minor Changes
+
+- f663b46: Add `FUSION_SPA_MSAL_MOCK` environment variable. When set to `true`, the generated bootstrap
+  script signs in through `@equinor/fusion-framework-module-msal/mock` instead of the real MSAL
+  client, so the dev server can run without Entra ID credentials, redirects, or network calls.
+  Intended for CI and Playwright runs against the dev server. The mock client is lazily
+  imported, so it is not loaded at runtime unless the flag is enabled.
+  
+  Also add `FUSION_SPA_MSAL_MOCK_TOKEN`, an optional companion variable read only when
+  `FUSION_SPA_MSAL_MOCK` is set. Provide a JWT (e.g. from `createMockToken`, or one issued by a
+  team's backend mock) and its `name`, `preferred_username`, `oid`, `tid`, and `scp` claims name
+  the signed-in mock user. The token itself is also sent verbatim as the access/id token, so a
+  backend mock that validates the token sees exactly what was configured, not a regenerated one.
+
+### Patch Changes
+
+- Updated dependencies [f663b46]
+- Updated dependencies [f663b46]
+- Updated dependencies [f663b46]
+- Updated dependencies [f663b46]
+- Updated dependencies [f663b46]
+- Updated dependencies [f663b46]
+- Updated dependencies [f663b46]
+- Updated dependencies [f663b46]
+- Updated dependencies [f663b46]
+- Updated dependencies [f663b46]
+- Updated dependencies [f663b46]
+- Updated dependencies [f663b46]
+- Updated dependencies [f663b46]
+  - @equinor/fusion-framework-module-service-discovery@10.1.0
+  - @equinor/fusion-framework-module-msal@11.0.0
+  - @equinor/fusion-framework-module-http@8.1.0
+  - @equinor/fusion-framework-module-telemetry@7.1.0
+  - @equinor/fusion-framework-module@6.1.3
+
 ## 4.0.17
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-vite-plugin-markdown
 
+## 1.1.3
+
+### Patch Changes
+
+- f663b46: Internal: promote packages already published on the `next` prerelease channel to their stable versions.
+
 ## 1.1.2
 
 ### Patch Changes

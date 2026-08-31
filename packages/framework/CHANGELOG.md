@@ -1,5 +1,114 @@
 # Change Log
 
+## 8.1.0
+
+### Minor Changes
+
+- f663b46: Restructure documentation so each README is an entry point rather than a manual.
+  
+  Long-form content moved into per-package `docs/` folders, matching the convention already used by `@equinor/fusion-framework-module` and `@equinor/fusion-framework-module-http`. Each README now keeps the elevator pitch, the shortest working example and a documentation table linking to the rest.
+  
+  - **msal** — `docs/api-reference.md`, `docs/auth-code-flow.md`, `docs/testing.md`, `docs/version-management.md`, `docs/migration-v2-to-v4.md`, `docs/troubleshooting.md`. The README also gained the top-level heading it was missing.
+  - **service-discovery** — `docs/configuration.md`, `docs/testing.md`, `docs/session-overrides.md`, `docs/api-reference.md`.
+  - **framework** — `docs/testing-choosing-a-layer.md`, `docs/testing.md`, `docs/testing-design.md`, `docs/testing-extending.md`, `docs/testing-api.md`.
+  
+  Both module READMEs now document their `/mock` entry point, which was previously undocumented, and state that spying on an individual call is the test runner's job rather than something these packages provide.
+- f663b46: Add a `./mock` entry point for initializing the framework in a test.
+  
+  ```typescript
+  import { mockFramework } from '@equinor/fusion-framework/mock';
+  
+  const fusion = await mockFramework((configurator) => {
+    configurator.msal.setAccount({ name: 'Ada Lovelace' });
+    configurator.serviceDiscovery.setBaseUri('http://localhost:6669');
+    configurator.serviceDiscovery.addService({ key: 'my-api' });
+  });
+  ```
+  
+  `mockFramework` runs the real configure → initialize pipeline with the real built-in modules and
+  substitutes only the boundaries that leave the process. It takes a single callback receiving a
+  `FrameworkMockConfigurator`, which **is** a `FrameworkConfigurator`, so every `enableX` helper an
+  application already uses — including its own — accepts it unchanged.
+  
+  `FrameworkMockConfigurator` exposes an accessor per module whose test boundary is mocked, all
+  reachable synchronously via a new `_pin`/`_getConfig` primitive any module (built-in or
+  application-defined) can reuse:
+  
+  ```typescript
+  class AppMockConfigurator extends FrameworkMockConfigurator<[InvoiceModule]> {
+    constructor() {
+      super();
+      this._pin(invoiceMockModule);
+    }
+    get invoices(): InvoiceMockConfigurator {
+      return this._getConfig('invoices');
+    }
+  }
+  ```
+  
+  - `.msal` / `.serviceDiscovery` — unchanged in behavior, now built on `_pin`/`_getConfig` themselves.
+  - `.http` — backed by the real `IHttpClientConfigurator`; fake a response with
+    `configurator.http.addMiddleware(...)` instead of swapping the module out. See
+    `@equinor/fusion-framework-module-http`'s `addMiddleware` changeset for the full API.
+  - `.context` — backed by `ContextMockConfigurator` (`@equinor/fusion-framework-module-context/mock`);
+    context resolution in tests no longer performs real I/O. **Type change:** `.context` now returns
+    `ContextMockConfigurator` (extends `ContextModuleConfigurator`) — seed data with
+    `setCurrentContext`/`setContexts`/`addContext`/`setRelatedContexts`/`setResolver` instead of
+    configuring a real client.
+  - `.telemetry` — backed by `TelemetryMockConfigurator`
+    (`@equinor/fusion-framework-module-telemetry/mock`); tracked telemetry no longer reaches
+    Application Insights or any real endpoint. **Type change:** `.telemetry` now returns
+    `TelemetryMockConfigurator` (extends the real `TelemetryConfigurator`) — read tracked items back
+    through `.telemetry.adapter` (`getItems`/`waitForItem`) instead of asserting against a real backend.
+  - `.services` — reachable the same way, though it still performs real I/O (no test double yet).
+  
+  `event` is intentionally left out: its `configure` factory reads `ref` to wire event bubbling to a
+  parent event provider when `FrameworkMockConfigurator` is hoisted inside a host framework, and
+  pinning it would silently disable that bubbling.
+  
+  `docs/testing.md`, `docs/testing-extending.md` and `docs/testing-api.md` describe both mocking
+  strategies now available for context and telemetry: the in-memory mock configurators above, and
+  mocking the real API/adapter boundary directly for tests that need the full pipeline.
+  
+  The entry point owns no mock logic of its own — each module exports its own test double from its
+  own `./mock` entry point, and this one composes the built-in set.
+
+### Patch Changes
+
+- f663b46: `init` no longer throws when no DOM is present.
+  
+  The running instance is published as `window.Fusion` for portal shells and widgets. That assignment was unguarded, so initializing the framework anywhere without a `window` — a test runner using the `node` environment, or a server-side render — failed with `ReferenceError: window is not defined`.
+  
+  The assignment is now skipped when `window` is undefined. Browser behaviour is unchanged.
+- Updated dependencies [f663b46]
+- Updated dependencies [f663b46]
+- Updated dependencies [f663b46]
+- Updated dependencies [f663b46]
+- Updated dependencies [f663b46]
+- Updated dependencies [f663b46]
+- Updated dependencies [f663b46]
+- Updated dependencies [f663b46]
+- Updated dependencies [f663b46]
+- Updated dependencies [f663b46]
+- Updated dependencies [f663b46]
+- Updated dependencies [f663b46]
+- Updated dependencies [f663b46]
+- Updated dependencies [f663b46]
+- Updated dependencies [f663b46]
+- Updated dependencies [f663b46]
+- Updated dependencies [f663b46]
+- Updated dependencies [f663b46]
+- Updated dependencies [f663b46]
+- Updated dependencies [f663b46]
+  - @equinor/fusion-framework-module-service-discovery@10.1.0
+  - @equinor/fusion-framework-module-msal@11.0.0
+  - @equinor/fusion-framework-module-context@9.0.0
+  - @equinor/fusion-framework-module-event@6.1.0
+  - @equinor/fusion-framework-module-http@8.1.0
+  - @equinor/fusion-framework-module-telemetry@7.1.0
+  - @equinor/fusion-framework-module@6.1.3
+  - @equinor/fusion-framework-module-services@8.1.1
+
 ## 8.0.16
 
 ### Patch Changes

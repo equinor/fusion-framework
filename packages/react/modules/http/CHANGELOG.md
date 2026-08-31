@@ -1,5 +1,11 @@
 # Change Log
 
+## 12.0.0
+
+### Patch Changes
+
+- f663b46: Internal: promote packages already published on the `next` prerelease channel to their stable versions.
+
 ## 11.0.1
 
 ### Patch Changes

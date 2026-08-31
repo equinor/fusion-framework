@@ -1,5 +1,13 @@
 # Change Log
 
+## 2.0.5
+
+### Patch Changes
+
+- f663b46: Internal: promote packages already published on the `next` prerelease channel to their stable versions.
+- Updated dependencies [f663b46]
+  - @equinor/fusion-framework-react-ag-grid@37.1.0
+
 ## 2.0.4
 
 ### Patch Changes
