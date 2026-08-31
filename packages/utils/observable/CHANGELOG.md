@@ -1,5 +1,19 @@
 # Change Log
 
+## 9.2.1
+
+### Patch Changes
+
+- d333151: Internal: publish every package on the `next` pre-release tag so the whole framework can be installed as a coherent set.
+  
+  Packages without their own changes are bumped only to receive a `-next.N` version and the `next` dist-tag on npm. Install with:
+  
+  ```bash
+  pnpm add @equinor/fusion-framework-react-app@next
+  ```
+- 18ee1cb: Internal: migrate active React hook tests to the Fusion Vitest browser project and remove excluded legacy hook tests.
+- 4c15885: Fix relative import/export specifiers in the published ESM output missing file extensions (e.g. `./operators` instead of `./operators/index.js`). This broke strict Node.js ESM resolution for consumers not using a bundler (e.g. `vitest` running against `node_modules` directly), producing errors like `Cannot find module '.../operators'`.
+
 ## 9.2.0
 
 ### Minor Changes

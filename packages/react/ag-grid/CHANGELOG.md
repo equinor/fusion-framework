@@ -1,5 +1,35 @@
 # @equinor/fusion-framework-react-ag-grid
 
+## 37.1.0
+
+### Minor Changes
+
+- 7e45369: Re-export `suppressAgGridLicenseBanner` from a new `/testing` subpath (`@equinor/fusion-framework-react-ag-grid/testing`), forwarding to `@equinor/fusion-framework-module-ag-grid/testing`.
+  
+  ```typescript
+  // src/test/setupTests.ts
+  import { suppressAgGridLicenseBanner } from '@equinor/fusion-framework-react-ag-grid/testing';
+  
+  suppressAgGridLicenseBanner();
+  ```
+  
+  Apps already depending on `@equinor/fusion-framework-react-ag-grid` no longer need a direct dependency on `@equinor/fusion-framework-module-ag-grid` just to reach this test helper.
+
+### Patch Changes
+
+- d333151: Internal: publish every package on the `next` pre-release tag so the whole framework can be installed as a coherent set.
+  
+  Packages without their own changes are bumped only to receive a `-next.N` version and the `next` dist-tag on npm. Install with:
+  
+  ```bash
+  pnpm add @equinor/fusion-framework-react-app@next
+  ```
+- 2899c8a: Internal: rebase `next` onto `main`, syncing in already-published stable releases so they carry a `next` pre-release tag.
+- Updated dependencies [d333151]
+- Updated dependencies [7e45369]
+- Updated dependencies [2899c8a]
+  - @equinor/fusion-framework-module-ag-grid@37.1.0
+
 ## 37.0.3-next.0
 
 ### Patch Changes

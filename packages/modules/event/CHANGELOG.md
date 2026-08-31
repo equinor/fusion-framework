@@ -1,5 +1,88 @@
 # Change Log
 
+## 6.1.0
+
+### Minor Changes
+
+- 18ee1cb: Add `EventModuleConfigurator`, a `BaseConfigBuilder`-based configurator with fluent
+  `setOnDispatch`/`setOnBubble` setters, replacing direct property assignment on the config
+  object.
+  
+  ```ts
+  // Before (still works, but deprecated)
+  config.event.onDispatch = (event) => { ... };
+  delete config.event.onBubble;
+  
+  // After
+  configurator.setOnDispatch((event) => { ... });
+  configurator.setOnBubble(undefined);
+  ```
+  
+  `IEventModuleConfigurator` is renamed to `EventModuleConfig` and converted from an `interface`
+  to a `type`. `IEventModuleConfigurator` is kept as a deprecated type alias for backward
+  compatibility.
+  
+  Also narrows the `dispatchEvent` return type for registered {@link FrameworkEventMap} keys and
+  pre-constructed event instances, so callers get back the specific event type instead of the
+  generic `FrameworkEvent`.
+  
+  **Deprecated (since 6.1.0), no migration required yet:**
+  - `EventModuleConfigurator#onDispatch`/`#onBubble` property assignment — use `setOnDispatch`/`setOnBubble`.
+  - `IEventModuleConfigurator` type — use `EventModuleConfig`.
+- 18ee1cb: Add `waitForEvent` and `watchEvents` helper utilities and `./operators` subpath.
+  
+  **New subpath exports:**
+  
+  ```ts
+  import { filterEvent } from '@equinor/fusion-framework-module-event/operators';
+  import { waitForEvent, watchEvents } from '@equinor/fusion-framework-module-event/utils';
+  ```
+  
+  ### `waitForEvent(provider, matcher, options?)`
+  
+  Resolves with the next event matching `matcher`. Accepts a single event type string (uses the type-scoped `filterEvent` path and preserves type narrowing), an array of type strings, or a predicate function. Supports an optional `timeout` (ms) and `AbortSignal` so a test cannot hang indefinitely.
+  
+  ```ts
+  // Single type — typed result
+  const event = await waitForEvent(provider, 'onModulesLoaded');
+  
+  // Array of types
+  const event = await waitForEvent(provider, ['myFeature.saved', 'myFeature.updated']);
+  
+  // Predicate matching on payload
+  const event = await waitForEvent(provider, (e) => e.detail?.id === 1);
+  
+  // With timeout
+  const event = await waitForEvent(provider, 'myFeature.saved', { timeout: 1000 });
+  ```
+  
+  ### `watchEvents(provider, matcher)`
+  
+  Collects all events matching `matcher` into an array. Only matching events are ever stored — a high volume of non-matching dispatches does not cause unbounded memory growth. Returns a handle with `events`, `lastEvent(type?)`, and `dispose()`.
+  
+  ```ts
+  const handle = watchEvents(provider, ['myFeature.saved', 'myFeature.deleted']);
+  // ... run code under test ...
+  expect(handle.lastEvent('myFeature.saved')?.detail).toEqual({ id: 1 });
+  handle.dispose();
+  ```
+  
+  ### `./operators` subpath
+  
+  `filterEvent` is now also exported from `@equinor/fusion-framework-module-event/operators`. The existing root export is preserved — no migration required for current consumers.
+  
+  Resolves [equinor/fusion-core-tasks#1656](https://github.com/equinor/fusion-core-tasks/issues/1656).
+
+### Patch Changes
+
+- d333151: Internal: publish every package on the `next` pre-release tag so the whole framework can be installed as a coherent set.
+  
+  Packages without their own changes are bumped only to receive a `-next.N` version and the `next` dist-tag on npm. Install with:
+  
+  ```bash
+  pnpm add @equinor/fusion-framework-react-app@next
+  ```
+
 ## 6.1.0-next.0
 
 ### Minor Changes

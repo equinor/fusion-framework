@@ -1,5 +1,26 @@
 # @equinor/fusion-framework-cookbook-app-react-feature-flag
 
+## 2.0.7
+
+### Patch Changes
+
+- 18ee1cb: Internal: add Vitest coverage for the `FeatureFlag`/`FeatureFlags` components (moved into `src/components/`, with `useFeatureLogger` moved into `src/hooks/`) and wire the cookbook into the root Vitest project list; no runtime changes.
+- Updated dependencies [d333151]
+- Updated dependencies [bd43eca]
+- Updated dependencies [bd43eca]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [7e45369]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [2899c8a]
+  - @equinor/fusion-framework-cli@15.3.0
+  - @equinor/fusion-framework-module-feature-flag@2.1.0
+  - @equinor/fusion-framework-module-http@8.1.0
+  - @equinor/fusion-framework-react-app@14.1.0
+
 ## 2.0.7-next.2
 
 ### Patch Changes

@@ -1,5 +1,23 @@
 # Change Log
 
+## 5.0.4
+
+### Patch Changes
+
+- 18ee1cb: Add an OpenAPI-mock–backed test fixture (`testWithApiMock`) for full-router integration tests, so route/loader tests get deterministic, schema-shaped mock API responses instead of hand-written fixtures.
+  
+  - `src/mocks/generators.ts`: seeded Faker.js generators shared by the dev server and the test mock (extracted from `dev-server.config.ts`, which now imports them instead of duplicating the logic).
+  - `src/mocks/openapi.json`: OpenAPI document describing the products/users API contract.
+  - `src/mocks/fields.faker.ts`: a sidecar `FieldFakerMap` demonstrating field-level fake data overrides.
+  - `src/mocks/api-mock.ts`: builds an `OpenApiMock` (`@equinor/fusion-openapi-mock`) with per-operation overrides backed by the shared generators, including real pagination for `listUsers`.
+  - `src/__tests__/test-with-api-mock.ts` + `src/__tests__/routing-with-api-mock.test.tsx`: a `configure` fixture extension wiring the mock in via `configurator.http.addMiddleware(createOpenApiMockMiddleware(...))`, and 3 full-router tests navigating to `/products`, `/products/:id`, and `/users`.
+- b242ee8: Internal: update the test suite for `@equinor/fusion-framework-vitest-plugin-react-app`'s `configure`→`configureApp` fixture rename; no behavior changes.
+- 1ab9eac: Tests no longer read or seed `window.location`/`window.history`. Now that
+  `resolveFusion` defaults navigation to in-memory history, real browser
+  location never reflects the app's navigation state — assertions read
+  `app.navigation.path.pathname` instead, and link `href` assertions match on
+  path rather than full origin.
+
 ## 5.0.4-next.2
 
 ### Patch Changes

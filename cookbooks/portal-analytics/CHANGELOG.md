@@ -1,5 +1,54 @@
 # portal-analytics
 
+## 0.4.54
+
+### Patch Changes
+
+- 2899c8a: Internal: rebase `next` onto `main`, syncing in already-published stable releases so they carry a `next` pre-release tag.
+- Updated dependencies [d333151]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [bd43eca]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [4c15885]
+- Updated dependencies [7e45369]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [2899c8a]
+  - @equinor/fusion-framework@8.1.0
+  - @equinor/fusion-framework-app@13.1.0
+  - @equinor/fusion-framework-cli@15.3.0
+  - @equinor/fusion-framework-module-analytics@3.1.0
+  - @equinor/fusion-framework-module-app@8.1.0
+  - @equinor/fusion-framework-module-bookmark@4.1.0
+  - @equinor/fusion-framework-module-context@9.0.0
+  - @equinor/fusion-framework-module-navigation@7.0.9
+  - @equinor/fusion-framework-module-service-discovery@10.1.0
+  - @equinor/fusion-framework-react@9.0.0
+  - @equinor/fusion-framework-react-app@14.1.0
+  - @equinor/fusion-framework-react-router@2.4.1
+  - @equinor/fusion-observable@9.2.1
+  - @equinor/fusion-query@7.0.4
+
 ## 0.4.53
 
 ### Patch Changes

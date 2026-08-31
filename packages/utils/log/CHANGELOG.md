@@ -1,5 +1,18 @@
 # @equinor/fusion-log
 
+## 2.0.3
+
+### Patch Changes
+
+- d333151: Internal: publish every package on the `next` pre-release tag so the whole framework can be installed as a coherent set.
+  
+  Packages without their own changes are bumped only to receive a `-next.N` version and the `next` dist-tag on npm. Install with:
+  
+  ```bash
+  pnpm add @equinor/fusion-framework-react-app@next
+  ```
+- 18ee1cb: Guard the `process.env` access used to detect the current log level so it no longer throws in environments without a Node-style `process` global (e.g. Vitest Browser Mode).
+
 ## 2.0.3-next.0
 
 ### Patch Changes

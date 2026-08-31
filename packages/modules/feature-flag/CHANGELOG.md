@@ -1,5 +1,37 @@
 # @equinor/fusion-framework-module-feature-flag
 
+## 2.1.0
+
+### Minor Changes
+
+- 18ee1cb: Add a purpose-built mock, exported from a new `/mock` subpath (`@equinor/fusion-framework-module-feature-flag/mock`).
+  
+  `enableFeatureFlagMock` swaps in an in-memory flag pool behind the real `FeatureFlagConfigurator`, `FeatureFlagProvider`, and toggle flows — `toggleFeature`, `toggleFeatures`, and `features$` all reach the seeded flags through the real provider logic, not a stand-in. `FeatureFlagMockConfigurator` adds `addFeature` and `setFeatures` for seeding state, replacing the `localStorage`/URL-toggle sources a real app would otherwise depend on:
+  
+  ```typescript
+  import { enableFeatureFlagMock } from '@equinor/fusion-framework-module-feature-flag/mock';
+  
+  enableFeatureFlagMock(configurator, (mock) => {
+    mock.addFeature({ key: 'my-flag', enabled: true });
+  });
+  ```
+  
+  No flags are assumed by default — a test that seeds nothing gets an empty `features` object, matching the real module's zero-plugin behaviour.
+  
+  Related: equinor/fusion-core-tasks#1707.
+
+### Patch Changes
+
+- d333151: Internal: publish every package on the `next` pre-release tag so the whole framework can be installed as a coherent set.
+  
+  Packages without their own changes are bumped only to receive a `-next.N` version and the `next` dist-tag on npm. Install with:
+  
+  ```bash
+  pnpm add @equinor/fusion-framework-react-app@next
+  ```
+- bd43eca: Use the supported navigation `history` API in the URL feature-flag plugin, avoiding deprecated
+  `navigator` telemetry warnings when applications connect the plugin.
+
 ## 2.1.0-next.1
 
 ### Patch Changes

@@ -1,5 +1,32 @@
 # @equinor/fusion-framework-dev-server
 
+## 2.1.0
+
+### Minor Changes
+
+- bd43eca: Expose `DevServerOptions` as an interface so optional development tooling can add typed
+  configuration through TypeScript module augmentation.
+
+### Patch Changes
+
+- d333151: Internal: publish every package on the `next` pre-release tag so the whole framework can be installed as a coherent set.
+  
+  Packages without their own changes are bumped only to receive a `-next.N` version and the `next` dist-tag on npm. Install with:
+  
+  ```bash
+  pnpm add @equinor/fusion-framework-react-app@next
+  ```
+- bd43eca: Proxy mock services advertised through `<service>.localhost` via plain `localhost` while preserving
+  the service-key path. This avoids `ENOTFOUND` failures on Linux runners without changing normal
+  upstream service proxying.
+- Updated dependencies [d333151]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [bd43eca]
+- Updated dependencies [bd43eca]
+  - @equinor/fusion-framework-vite-plugin-api-service@2.0.6
+  - @equinor/fusion-framework-vite-plugin-spa@4.1.0
+  - @equinor/fusion-log@2.0.3
+
 ## 2.0.19
 
 ### Patch Changes

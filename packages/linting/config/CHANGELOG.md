@@ -1,5 +1,20 @@
 # @equinor/fusion-framework-lint-config
 
+## 1.1.1
+
+### Patch Changes
+
+- d333151: Internal: publish every package on the `next` pre-release tag so the whole framework can be installed as a coherent set.
+  
+  Packages without their own changes are bumped only to receive a `-next.N` version and the `next` dist-tag on npm. Install with:
+  
+  ```bash
+  pnpm add @equinor/fusion-framework-react-app@next
+  ```
+- d333151: Internal: depend on `@equinor/fusion-imports` through the `workspace:^` protocol instead of a registry range.
+  
+  The registry range was rewritten to an unpublished pre-release version during `changeset version`, which broke installs on the `next` branch.
+
 ## 1.1.1-next.0
 
 ### Patch Changes

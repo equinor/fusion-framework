@@ -1,5 +1,23 @@
 # Change Log
 
+## 2.0.14
+
+### Patch Changes
+
+- 2899c8a: Internal: rebase `next` onto `main`, syncing in already-published stable releases so they carry a `next` pre-release tag.
+- Updated dependencies [d333151]
+- Updated dependencies [bd43eca]
+- Updated dependencies [7e45369]
+- Updated dependencies [7e45369]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [2899c8a]
+  - @equinor/fusion-framework-cli@15.3.0
+  - @equinor/fusion-framework-react-ag-charts@15.0.2
+  - @equinor/fusion-framework-react-ag-grid@37.1.0
+  - @equinor/fusion-framework-react-app@14.1.0
+
 ## 2.0.14-next.1
 
 ### Patch Changes

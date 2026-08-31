@@ -1,5 +1,179 @@
 # Change Log
 
+## 8.1.0
+
+### Minor Changes
+
+- 18ee1cb: Restructure documentation so each README is an entry point rather than a manual.
+  
+  Long-form content moved into per-package `docs/` folders, matching the convention already used by `@equinor/fusion-framework-module` and `@equinor/fusion-framework-module-http`. Each README now keeps the elevator pitch, the shortest working example and a documentation table linking to the rest.
+  
+  - **msal** — `docs/api-reference.md`, `docs/auth-code-flow.md`, `docs/testing.md`, `docs/version-management.md`, `docs/migration-v2-to-v4.md`, `docs/troubleshooting.md`. The README also gained the top-level heading it was missing.
+  - **service-discovery** — `docs/configuration.md`, `docs/testing.md`, `docs/session-overrides.md`, `docs/api-reference.md`.
+  - **framework** — `docs/testing-choosing-a-layer.md`, `docs/testing.md`, `docs/testing-design.md`, `docs/testing-extending.md`, `docs/testing-api.md`.
+  
+  Both module READMEs now document their `/mock` entry point, which was previously undocumented, and state that spying on an individual call is the test runner's job rather than something these packages provide.
+- 18ee1cb: `FrameworkMockConfigurator.context` is now backed by `ContextMockConfigurator` from `@equinor/fusion-framework-module-context/mock` instead of the real `ContextModuleConfigurator` — context resolution in tests no longer performs real I/O:
+  
+  ```typescript
+  const configurator = new FrameworkMockConfigurator();
+  configurator.context.setCurrentContext({ id: 'my-ctx', type: { id: 'ProjectMaster' }, value: {} });
+  
+  const fusion = await init(configurator);
+  ```
+  
+  This changes the type returned by `.context` from `ContextModuleConfigurator` to `ContextMockConfigurator` (which extends it) — code relying on `.context` being exactly `ContextModuleConfigurator` should switch to seeding data through the new mock methods (`setCurrentContext`, `setContexts`, `addContext`, `setRelatedContexts`, `setResolver`) instead of configuring a real client.
+  
+  `docs/testing.md`, `docs/testing-extending.md` and `docs/testing-api.md` are updated to describe both mocking strategies now available for context: the in-memory `ContextMockConfigurator` above, and mocking the context API's HTTP responses directly for tests that need to exercise the real configurator/services/HTTP pipeline.
+- 18ee1cb: Add `_pin` and `_getConfig` to `FrameworkMockConfigurator`, so a module supplied through `TModules` can get the same kind of named accessor `.msal` and `.serviceDiscovery` already have.
+  
+  Previously that pinning was hand-written twice, once per built-in mock, with no way for anything else to do the same. A subclass now reuses it directly:
+  
+  ```typescript
+  class AppMockConfigurator extends FrameworkMockConfigurator<[InvoiceModule]> {
+    constructor() {
+      super();
+      this._pin(invoiceMockModule);
+    }
+  
+    get invoices(): InvoiceMockConfigurator {
+      return this._getConfig('invoices');
+    }
+  }
+  ```
+  
+  `_pin(module)` replaces the module's own `configure` factory with one that always returns the same instance, and registers it — pinning it before initialization runs is what lets a test reach the accessor synchronously and have it be the configurator the module is actually built from. `_getConfig(name)` looks that instance up by the module's name, throwing if nothing was pinned for it.
+  
+  `.msal` and `.serviceDiscovery` are unchanged for consumers; they are now built from `_pin`/`_getConfig` themselves rather than from two private fields.
+- 18ee1cb: Add `.services`, `.context` and `.telemetry` accessors to `FrameworkMockConfigurator`, alongside the existing `.msal`, `.serviceDiscovery` and `.http`.
+  
+  These three modules have no test double yet, so anything read through `.services`, `.context` or `.telemetry` still performs real I/O — but their configurators are now reachable synchronously the same way `.msal` and `.serviceDiscovery` already are, since none of their `configure` factories depend on `ref`:
+  
+  ```typescript
+  const configurator = new FrameworkMockConfigurator();
+  configurator.services.configureClient('my-api', { baseUri: 'http://localhost:6669' });
+  
+  const fusion = await init(configurator);
+  ```
+  
+  `event` is intentionally left out: its `configure` factory reads `ref` to wire event bubbling to a parent event provider when `FrameworkMockConfigurator` is hoisted inside a host framework, and pinning it would call `configure()` with `ref` always `undefined` — silently disabling that bubbling.
+- 18ee1cb: Add a `./mock` entry point for initializing the framework in a test.
+  
+  ```typescript
+  import { mockFramework } from '@equinor/fusion-framework/mock';
+  
+  const fusion = await mockFramework();
+  ```
+  
+  `mockFramework` runs the real configure → initialize pipeline with the real built-in modules and substitutes only the boundaries that leave the process — the MSAL client and the service discovery client. Module wiring, configuration validation and lifecycle hooks behave as they do in production, so a test still catches wiring mistakes that a hand-built replacement for the module graph would hide.
+  
+  It takes a single callback receiving a `FrameworkMockConfigurator`, which **is** a `FrameworkConfigurator`. Modules whose boundary is mocked expose their own configurator as a property, so a test configures them without registering a callback:
+  
+  ```typescript
+  const fusion = await mockFramework((configurator) => {
+    configurator.msal.setAccount({ name: 'Ada Lovelace' });
+    configurator.serviceDiscovery.setBaseUri('http://localhost:6669');
+    configurator.serviceDiscovery.addService({ key: 'my-api' });
+  });
+  ```
+  
+  Because it is a real configurator, every `enableX` helper an application already uses accepts it unchanged — including the ones a team writes for their own modules. Those modules can be passed as a type argument so they are typed on the configurator *and* on the resulting `fusion.modules` without a cast:
+  
+  ```typescript
+  const fusion = await mockFramework<[InvoiceModule]>((configurator) => {
+    enableInvoicesMock(configurator, { total: 42 });
+  });
+  
+  await fusion.modules.invoices.getInvoice('inv-1'); // typed
+  ```
+  
+  `FrameworkMockConfigurator` is also exported for tests that need to hold on to the configurator and call `init` themselves.
+  
+  The entry point owns no mock logic. Each module exports its own test double from its own `./mock` entry point, and this one composes the built-in set; an application module follows the same pattern and plugs in without any support from this package. It has no test-runner dependency and provides no mocking API, because replacing an individual call belongs to your test runner.
+- 18ee1cb: `FrameworkMockConfigurator.telemetry` is now backed by `TelemetryMockConfigurator` from `@equinor/fusion-framework-module-telemetry/mock` instead of the real `TelemetryConfigurator` — telemetry tracked through a mocked framework instance no longer reaches Application Insights or any real endpoint:
+  
+  ```typescript
+  import { filter } from 'rxjs';
+  
+  const fusion = await mockFramework();
+  
+  fusion.modules.telemetry.items
+    .pipe(filter((item) => item.name === 'button-click'))
+    .subscribe((item) => {
+      // ...
+    });
+  
+  fusion.modules.telemetry.trackEvent({ name: 'button-click' });
+  ```
+  
+  A test can register its own adapter alongside the mock's default one, the same way `enableTelemetry` already does:
+  
+  ```typescript
+  const myAdapter: ITelemetryAdapter = { processItem: (item) => forwardSomewhere(item) };
+  const fusion = await mockFramework((configurator) => {
+    configurator.telemetry.setAdapter('my-adapter', myAdapter);
+  });
+  ```
+  
+  This changes the type returned by `.telemetry` from `ITelemetryConfigurator` to `TelemetryMockConfigurator` (which extends the real `TelemetryConfigurator`) — code relying on `.telemetry` being exactly the real configurator should read tracked items back through `.telemetry.adapter` (`getItems`/`waitForItem`) instead of asserting against a real telemetry backend.
+- 18ee1cb: Add a `.http` accessor to `FrameworkMockConfigurator`, backed by the real `IHttpClientConfigurator` — fake a response by registering a short-circuiting middleware through `.http.addMiddleware(...)` instead of swapping the module out:
+  
+  ```ts
+  const configurator = new FrameworkMockConfigurator();
+  configurator.http.addMiddleware(async (uri, init, next) =>
+    uri === 'https://api.example.com/items' ? Response.json([{ id: 1 }]) : next(uri, init),
+  );
+  ```
+  
+  See `@equinor/fusion-framework-module-http`'s `addMiddleware` changeset for the full API.
+
+### Patch Changes
+
+- d333151: Internal: publish every package on the `next` pre-release tag so the whole framework can be installed as a coherent set.
+  
+  Packages without their own changes are bumped only to receive a `-next.N` version and the `next` dist-tag on npm. Install with:
+  
+  ```bash
+  pnpm add @equinor/fusion-framework-react-app@next
+  ```
+- 18ee1cb: `init` no longer throws when no DOM is present.
+  
+  The running instance is published as `window.Fusion` for portal shells and widgets. That assignment was unguarded, so initializing the framework anywhere without a `window` — a test runner using the `node` environment, or a server-side render — failed with `ReferenceError: window is not defined`.
+  
+  The assignment is now skipped when `window` is undefined. Browser behaviour is unchanged.
+- Updated dependencies [d333151]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [60f34f8]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [18ee1cb]
+  - @equinor/fusion-framework-module@6.1.3
+  - @equinor/fusion-framework-module-context@9.0.0
+  - @equinor/fusion-framework-module-event@6.1.0
+  - @equinor/fusion-framework-module-http@8.1.0
+  - @equinor/fusion-framework-module-msal@11.0.0
+  - @equinor/fusion-framework-module-service-discovery@10.1.0
+  - @equinor/fusion-framework-module-services@8.1.1
+  - @equinor/fusion-framework-module-telemetry@7.1.0
+
 ## 8.0.16
 
 ### Patch Changes

@@ -1,5 +1,19 @@
 # @equinor/fusion-framework-module-state
 
+## 2.0.2
+
+### Patch Changes
+
+- d333151: Internal: publish every package on the `next` pre-release tag so the whole framework can be installed as a coherent set.
+  
+  Packages without their own changes are bumped only to receive a `-next.N` version and the `next` dist-tag on npm. Install with:
+  
+  ```bash
+  pnpm add @equinor/fusion-framework-react-app@next
+  ```
+- 18ee1cb: Remove monorepo-level license and contribution boilerplate from the state module README.
+- 2899c8a: Internal: rebase `next` onto `main`, syncing in already-published stable releases so they carry a `next` pre-release tag.
+
 ## 2.0.2-next.0
 
 ### Patch Changes

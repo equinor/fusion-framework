@@ -1,5 +1,19 @@
 # @equinor/fusion-imports
 
+## 2.0.3
+
+### Patch Changes
+
+- d333151: Internal: publish every package on the `next` pre-release tag so the whole framework can be installed as a coherent set.
+  
+  Packages without their own changes are bumped only to receive a `-next.N` version and the `next` dist-tag on npm. Install with:
+  
+  ```bash
+  pnpm add @equinor/fusion-framework-react-app@next
+  ```
+- bd43eca: Prevent imported scripts with the same basename in different directories from sharing an esbuild
+  cache artifact.
+
 ## 2.0.3-next.1
 
 ### Patch Changes

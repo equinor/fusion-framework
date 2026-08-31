@@ -1,5 +1,11 @@
 # Change Log
 
+## 5.0.7
+
+### Patch Changes
+
+- 18ee1cb: Point the People cookbook to the maintained cookbook contribution guide.
+
 ## 5.0.7-next.1
 
 ### Patch Changes

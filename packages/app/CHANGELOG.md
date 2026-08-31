@@ -1,5 +1,68 @@
 # Change Log
 
+## 13.1.0
+
+### Minor Changes
+
+- 18ee1cb: `enableAppManifestMock` accepts an optional third `assetUri` argument, overriding the base URI a loaded app's script is imported from — useful for tests that dynamically import a real fixture script. `env.config` is now optional; when omitted, a trivial `AppConfig` is used so `App.initialize()` can still resolve.
+- 18ee1cb: Add a `./mock` entry point: `mockAppModules` runs an application's real module pipeline — the real `event`/`http`/`msal` modules, the real `AppConfigurator` configuration pipeline and real lifecycle — against a mocked parent Fusion instance, so a test exercises the wiring an application actually depends on instead of a reimplementation of it.
+  
+  ```ts
+  import { mockAppModules } from '@equinor/fusion-framework-app/mock';
+  
+  const manifest = { appKey: 'my-app', displayName: 'My App', description: 'My app', type: 'standalone' } as const;
+  const modules = await mockAppModules(undefined, { manifest });
+  ```
+  
+  `enableAppManifestMock` registers the `app` module on a parent `mockFramework` configurator, serving an app's own manifest and config while delegating every other request to whatever service discovery (or a pre-configured http client) would really resolve. `mockAppModules` uses it to build its zero-configuration default parent; call it directly when a test needs to customize `serviceDiscovery` first.
+  
+  Restructured `README.md` into an entry point pointing at `docs/http-clients.md`, `docs/bookmarks.md` and `docs/testing.md`, matching the convention already used by `@equinor/fusion-framework-module-http` and `@equinor/fusion-framework-module-msal`.
+
+### Patch Changes
+
+- d333151: Internal: publish every package on the `next` pre-release tag so the whole framework can be installed as a coherent set.
+  
+  Packages without their own changes are bumped only to receive a `-next.N` version and the `next` dist-tag on npm. Install with:
+  
+  ```bash
+  pnpm add @equinor/fusion-framework-react-app@next
+  ```
+- 2899c8a: Internal: rebase `next` onto `main`, syncing in already-published stable releases so they carry a `next` pre-release tag.
+- Updated dependencies [d333151]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [60f34f8]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [2899c8a]
+  - @equinor/fusion-framework@8.1.0
+  - @equinor/fusion-framework-module@6.1.3
+  - @equinor/fusion-framework-module-app@8.1.0
+  - @equinor/fusion-framework-module-event@6.1.0
+  - @equinor/fusion-framework-module-http@8.1.0
+  - @equinor/fusion-framework-module-msal@11.0.0
+  - @equinor/fusion-framework-module-telemetry@7.1.0
+
 ## 13.0.3
 
 ### Patch Changes

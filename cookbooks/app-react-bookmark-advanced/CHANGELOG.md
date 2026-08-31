@@ -1,5 +1,7 @@
 # Change Log
 
+## 5.0.4
+
 ## 5.0.4-next.0
 
 ### Patch Changes

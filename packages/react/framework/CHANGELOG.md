@@ -1,5 +1,28 @@
 # Change Log
 
+## 9.0.0
+
+### Patch Changes
+
+- d333151: Internal: publish every package on the `next` pre-release tag so the whole framework can be installed as a coherent set.
+  
+  Packages without their own changes are bumped only to receive a `-next.N` version and the `next` dist-tag on npm. Install with:
+  
+  ```bash
+  pnpm add @equinor/fusion-framework-react-app@next
+  ```
+- 18ee1cb: Fix `useFrameworkModule`'s console warning to name the actually-requested module key instead of always printing `undefined`.
+- Updated dependencies [d333151]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [18ee1cb]
+  - @equinor/fusion-framework@8.1.0
+
 ## 9.0.0-next.0
 
 ### Patch Changes

@@ -1,5 +1,37 @@
 # Change Log
 
+## 16.0.7
+
+### Patch Changes
+
+- d333151: Internal: publish every package on the `next` pre-release tag so the whole framework can be installed as a coherent set.
+  
+  Packages without their own changes are bumped only to receive a `-next.N` version and the `next` dist-tag on npm. Install with:
+  
+  ```bash
+  pnpm add @equinor/fusion-framework-react-app@next
+  ```
+- Updated dependencies [d333151]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [4c15885]
+- Updated dependencies [18ee1cb]
+- Updated dependencies [18ee1cb]
+  - @equinor/fusion-framework-module@6.1.3
+  - @equinor/fusion-framework-module-event@6.1.0
+  - @equinor/fusion-framework-module-http@8.1.0
+  - @equinor/fusion-framework-module-service-discovery@10.1.0
+  - @equinor/fusion-observable@9.2.1
+  - @equinor/fusion-query@7.0.4
+
 ## 16.0.6
 
 ### Patch Changes

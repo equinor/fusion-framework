@@ -1,5 +1,15 @@
 # portal
 
+## 0.1.86
+
+### Patch Changes
+
+- 2899c8a: Internal: rebase `next` onto `main`, syncing in already-published stable releases so they carry a `next` pre-release tag.
+- Updated dependencies [d333151]
+- Updated dependencies [bd43eca]
+- Updated dependencies [2899c8a]
+  - @equinor/fusion-framework-cli@15.3.0
+
 ## 0.1.85
 
 ### Patch Changes
