@@ -1,5 +1,15 @@
 # @equinor/fusion-framework-lint-config
 
+## 1.2.0
+
+### Minor Changes
+
+- 5f244a1: Add `default`, `balanced`, and `strict` Fusion lint presets. The implicit default is intentionally loose for application code but still warns when exported functions, hooks, or components lack TSDoc and when TODOs lack issue references, while reusable public code can select `balanced` and critical framework code can select `strict`.
+
+### Patch Changes
+
+- d04e564: Internal: restrict published package contents to compiled distribution files and required runtime artifacts so editor tooling does not load workspace TypeScript configurations from dependencies.
+
 ## 1.1.1
 
 ### Patch Changes

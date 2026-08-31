@@ -1,5 +1,15 @@
 # @equinor/fusion-framework-cli-plugin-ai-chat
 
+## 3.0.10
+
+### Patch Changes
+
+- d04e564: Internal: restrict published package contents to compiled distribution files and required runtime artifacts so editor tooling does not load workspace TypeScript configurations from dependencies.
+- Updated dependencies [d04e564]
+  - @equinor/fusion-framework-cli-plugin-ai-base@4.0.10
+  - @equinor/fusion-framework-module-ai@7.0.1
+  - @equinor/fusion-framework-module@6.1.4
+
 ## 3.0.9
 
 ### Patch Changes

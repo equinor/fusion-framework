@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework-lint-core",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Core types and engine for Fusion Framework linting",
   "keywords": [
     "equinor",

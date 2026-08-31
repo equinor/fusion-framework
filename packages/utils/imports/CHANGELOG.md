@@ -1,5 +1,11 @@
 # @equinor/fusion-imports
 
+## 2.0.4
+
+### Patch Changes
+
+- d04e564: Internal: restrict published package contents to compiled distribution files and required runtime artifacts so editor tooling does not load workspace TypeScript configurations from dependencies.
+
 ## 2.0.3
 
 ### Patch Changes

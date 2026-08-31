@@ -1,5 +1,17 @@
 # Change Log
 
+## 15.3.1
+
+### Patch Changes
+
+- d04e564: Internal: restrict published package contents to compiled distribution files and required runtime artifacts so editor tooling does not load workspace TypeScript configurations from dependencies.
+- Updated dependencies [d04e564]
+  - @equinor/fusion-framework-dev-portal@11.0.5
+  - @equinor/fusion-framework-dev-server@2.1.1
+  - @equinor/fusion-framework-module-azure-identity@0.3.1
+  - @equinor/fusion-imports@2.0.4
+  - @equinor/fusion-framework-vite-plugin-raw-imports@2.0.3
+
 ## 15.3.0
 
 ### Minor Changes

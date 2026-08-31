@@ -1,5 +1,15 @@
 # @equinor/fusion-framework-dev-server
 
+## 2.1.1
+
+### Patch Changes
+
+- d04e564: Internal: restrict published package contents to compiled distribution files and required runtime artifacts so editor tooling does not load workspace TypeScript configurations from dependencies.
+- Updated dependencies [d04e564]
+  - @equinor/fusion-log@2.0.4
+  - @equinor/fusion-framework-vite-plugin-api-service@2.0.7
+  - @equinor/fusion-framework-vite-plugin-spa@4.1.1
+
 ## 2.1.0
 
 ### Minor Changes

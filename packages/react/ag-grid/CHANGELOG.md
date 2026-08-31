@@ -1,5 +1,13 @@
 # @equinor/fusion-framework-react-ag-grid
 
+## 37.1.1
+
+### Patch Changes
+
+- d04e564: Internal: restrict published package contents to compiled distribution files and required runtime artifacts so editor tooling does not load workspace TypeScript configurations from dependencies.
+- Updated dependencies [d04e564]
+  - @equinor/fusion-framework-module-ag-grid@37.1.1
+
 ## 37.1.0
 
 ### Minor Changes
