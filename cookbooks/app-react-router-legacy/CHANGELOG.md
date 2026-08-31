@@ -1,11 +1,5 @@
 # @equinor/fusion-framework-cookbook-app-react-router-legacy
 
-## 1.0.3-next.0
-
-### Patch Changes
-
-- c8008e3: Internal: rebase `next` onto `main`, syncing in already-published stable releases so they carry a `next` pre-release tag.
-
 ## 1.0.2
 
 ### Patch Changes

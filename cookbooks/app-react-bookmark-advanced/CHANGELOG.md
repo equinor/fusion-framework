@@ -1,12 +1,5 @@
 # Change Log
 
-## 5.0.4-next.0
-
-### Patch Changes
-
-- Updated dependencies [e8aae1f]
-  - @equinor/fusion-framework-react-router@2.4.1-next.0
-
 ## 5.0.3
 
 ### Patch Changes

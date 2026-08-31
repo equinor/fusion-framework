@@ -1,11 +1,5 @@
 # @equinor/fusion-framework-cookbook-app-react-styling
 
-## 1.1.2-next.0
-
-### Patch Changes
-
-- c8008e3: Internal: rebase `next` onto `main`, syncing in already-published stable releases so they carry a `next` pre-release tag.
-
 ## 1.1.1
 
 ### Patch Changes

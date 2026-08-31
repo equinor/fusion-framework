@@ -1,35 +1,5 @@
 # @equinor/fusion-framework-module-ai
 
-## 7.0.0-next.0
-
-### Patch Changes
-
-- e8aae1f: Internal: publish every package on the `next` pre-release tag so the whole framework can be installed as a coherent set.
-
-  Packages without their own changes are bumped only to receive a `-next.N` version and the `next` dist-tag on npm. Install with:
-
-  ```bash
-  pnpm add @equinor/fusion-framework-react-app@next
-  ```
-
-- Updated dependencies [e8aae1f]
-- Updated dependencies [2836e0b]
-- Updated dependencies [2836e0b]
-- Updated dependencies [2836e0b]
-- Updated dependencies [2836e0b]
-- Updated dependencies [2836e0b]
-- Updated dependencies [2836e0b]
-- Updated dependencies [2836e0b]
-- Updated dependencies [2836e0b]
-- Updated dependencies [2836e0b]
-- Updated dependencies [2836e0b]
-- Updated dependencies [2836e0b]
-- Updated dependencies [2836e0b]
-- Updated dependencies [2836e0b]
-  - @equinor/fusion-framework-module@6.1.3-next.0
-  - @equinor/fusion-framework-module-msal@11.0.0-next.0
-  - @equinor/fusion-framework-module-service-discovery@10.1.0-next.0
-
 ## 6.0.2
 
 ### Patch Changes

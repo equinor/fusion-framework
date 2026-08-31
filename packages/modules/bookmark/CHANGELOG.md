@@ -1,58 +1,5 @@
 # Change Log
 
-## 4.1.0-next.0
-
-### Minor Changes
-
-- 2836e0b: Add a purpose-built mock, exported from a new `/mock` subpath (`@equinor/fusion-framework-module-bookmark/mock`).
-
-  `enableBookmarkMock` swaps in an in-memory `IBookmarkClient` behind the real `BookmarkModuleConfigurator`, `BookmarkProvider`, and store flows — create, update, delete, and favourite calls all reach the mock client through the real flow logic, not a stand-in. `BookmarkMockConfigurator` adds a bookmark-domain vocabulary for seeding state:
-
-  ```typescript
-  import { enableBookmarkMock } from "@equinor/fusion-framework-module-bookmark/mock";
-
-  enableBookmarkMock(configurator, (builder) => {
-    builder.setBookmarks([
-      {
-        id: "bookmark-1",
-        name: "My Bookmark",
-        appKey: "my-app",
-        payload: {},
-        created: new Date(),
-        createdBy: { id: "mock-user", name: "Mock User" },
-      },
-    ]);
-    builder.setCurrentBookmark("bookmark-1");
-    builder.setFavorite("bookmark-1", true);
-  });
-  ```
-
-  The whole real builder API stays available, including `setClient`, so an explicit call to it still replaces the mock client outright. When no real `app`/`context` module is registered alongside the mock, `resolve.application`/`resolve.context` fall back to trivial resolvers automatically, since the module's config schema requires both.
-
-  Related: equinor/fusion-core-tasks#1667.
-
-### Patch Changes
-
-- e8aae1f: Internal: publish every package on the `next` pre-release tag so the whole framework can be installed as a coherent set.
-
-  Packages without their own changes are bumped only to receive a `-next.N` version and the `next` dist-tag on npm. Install with:
-
-  ```bash
-  pnpm add @equinor/fusion-framework-react-app@next
-  ```
-
-- Updated dependencies [e8aae1f]
-- Updated dependencies [2836e0b]
-- Updated dependencies [2836e0b]
-- Updated dependencies [2836e0b]
-- Updated dependencies [2836e0b]
-- Updated dependencies [2836e0b]
-- Updated dependencies [2836e0b]
-  - @equinor/fusion-framework-module@6.1.3-next.0
-  - @equinor/fusion-log@2.0.3-next.0
-  - @equinor/fusion-observable@9.1.2-next.0
-  - @equinor/fusion-query@7.0.4-next.0
-
 ## 4.0.4
 
 ### Patch Changes

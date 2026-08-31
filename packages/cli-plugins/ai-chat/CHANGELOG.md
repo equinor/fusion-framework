@@ -1,43 +1,5 @@
 # @equinor/fusion-framework-cli-plugin-ai-chat
 
-## 3.0.9-next.2
-
-### Patch Changes
-
-- Updated dependencies [09a9bcc]
-  - @equinor/fusion-framework-cli@15.3.0-next.1
-  - @equinor/fusion-framework-cli-plugin-ai-base@4.0.9-next.2
-
-## 3.0.9-next.1
-
-### Patch Changes
-
-- Updated dependencies [c8008e3]
-  - @equinor/fusion-framework-cli@15.2.11-next.0
-  - @equinor/fusion-framework-cli-plugin-ai-base@4.0.9-next.1
-
-## 3.0.9-next.0
-
-### Patch Changes
-
-- e8aae1f: Internal: publish every package on the `next` pre-release tag so the whole framework can be installed as a coherent set.
-
-  Packages without their own changes are bumped only to receive a `-next.N` version and the `next` dist-tag on npm. Install with:
-
-  ```bash
-  pnpm add @equinor/fusion-framework-react-app@next
-  ```
-
-- Updated dependencies [e8aae1f]
-- Updated dependencies [2836e0b]
-- Updated dependencies [2836e0b]
-- Updated dependencies [2836e0b]
-- Updated dependencies [2836e0b]
-  - @equinor/fusion-framework-cli@15.2.8-next.0
-  - @equinor/fusion-framework-cli-plugin-ai-base@4.0.9-next.0
-  - @equinor/fusion-framework-module@6.1.3-next.0
-  - @equinor/fusion-framework-module-ai@7.0.0-next.0
-
 ## 3.0.8
 
 ### Patch Changes

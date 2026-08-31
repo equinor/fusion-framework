@@ -1,23 +1,5 @@
 # Change Log
 
-## 7.0.4-next.0
-
-### Patch Changes
-
-- e8aae1f: Internal: publish every package on the `next` pre-release tag so the whole framework can be installed as a coherent set.
-
-  Packages without their own changes are bumped only to receive a `-next.N` version and the `next` dist-tag on npm. Install with:
-
-  ```bash
-  pnpm add @equinor/fusion-framework-react-app@next
-  ```
-
-- Updated dependencies [e8aae1f]
-- Updated dependencies [2836e0b]
-- Updated dependencies [2836e0b]
-  - @equinor/fusion-log@2.0.3-next.0
-  - @equinor/fusion-observable@9.1.2-next.0
-
 ## 7.0.3
 
 ### Patch Changes
@@ -392,8 +374,12 @@
 - [#2313](https://github.com/equinor/fusion-framework/pull/2313) [`5e20ce1`](https://github.com/equinor/fusion-framework/commit/5e20ce17af709f0443b7110bfc952ff8d8d81dee) Thanks [@odinr](https://github.com/odinr)! - A new public method `generateCacheKey` has been added to the `Query` class. This method allows users to generate a cache key based on provided query arguments, which can be useful for advanced caching scenarios or debugging.
 
   ```typescript
-  const query = new Query<YourDataType, YourArgsType>({/* ... */});
-  const args = {/* your query arguments */};
+  const query = new Query<YourDataType, YourArgsType>({
+    /* ... */
+  });
+  const args = {
+    /* your query arguments */
+  };
   const cacheKey = query.generateCacheKey(args);
   console.log("Generated cache key:", cacheKey);
   ```
@@ -405,7 +391,9 @@
   You can now specify whether to allow the creation of a new cache entry if it doesn't exist when performing a mutation.
 
   ```ts
-  const query = new Query<YourDataType, YourArgsType>({/* ... */});
+  const query = new Query<YourDataType, YourArgsType>({
+    /* ... */
+  });
 
   // Mutate existing cache entry or create a new one if it doesn't exist
   query.mutate(args, (prevState) => ({ ...prevState, newProperty: "value" }), {
@@ -527,7 +515,9 @@
   ```typescript
   import { Query } from "@equinor/fusion-query";
 
-  const query = new Query({/* query options */});
+  const query = new Query({
+    /* query options */
+  });
 
   const persistentQuery$ = query.persistentQuery({ id: "123" });
 

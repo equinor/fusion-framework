@@ -1,21 +1,5 @@
 # Change Log
 
-## 5.0.7-next.1
-
-### Patch Changes
-
-- Updated dependencies [c8008e3]
-  - @equinor/fusion-framework-module-navigation@7.0.9-next.0
-
-## 5.0.7-next.0
-
-### Patch Changes
-
-- 2836e0b: Point the People cookbook to the maintained cookbook contribution guide.
-- Updated dependencies [e8aae1f]
-  - @equinor/fusion-framework-module-navigation@7.0.8-next.0
-  - @equinor/fusion-framework-react-router@2.4.1-next.0
-
 ## 5.0.6
 
 ### Patch Changes

@@ -1,17 +1,5 @@
 # @equinor/fusion-framework-vite-plugin-raw-imports
 
-## 2.0.2-next.0
-
-### Patch Changes
-
-- e8aae1f: Internal: publish every package on the `next` pre-release tag so the whole framework can be installed as a coherent set.
-
-  Packages without their own changes are bumped only to receive a `-next.N` version and the `next` dist-tag on npm. Install with:
-
-  ```bash
-  pnpm add @equinor/fusion-framework-react-app@next
-  ```
-
 ## 2.0.1
 
 ### Patch Changes

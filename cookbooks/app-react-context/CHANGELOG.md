@@ -1,46 +1,5 @@
 # Change Log
 
-## 5.0.8-next.3
-
-### Patch Changes
-
-- ac098c1: Add deterministic Context API mocks, a `dev:mock` command, and Playwright browser coverage for
-  current and related contexts, including a visual regression baseline. Expand the Vitest suite with
-  empty-state and `useRelatedContext` hook coverage.
-- Updated dependencies [09a9bcc]
-  - @equinor/fusion-framework-cli@15.3.0-next.1
-
-## 5.0.8-next.2
-
-### Patch Changes
-
-- Updated dependencies [c8008e3]
-  - @equinor/fusion-framework-cli@15.2.11-next.0
-  - @equinor/fusion-framework-module-navigation@7.0.9-next.0
-  - @equinor/fusion-framework-react-app@14.0.3-next.0
-
-## 5.0.8-next.1
-
-### Patch Changes
-
-- b3d46e0: Internal: update the test suite for `@equinor/fusion-framework-vitest-plugin-react-app`'s `configure`→`configureApp` and `env`→`appEnv` fixture renames; no behavior changes.
-
-## 5.0.8-next.0
-
-### Patch Changes
-
-- 2836e0b: Internal: add Vitest coverage for the `App` component, rendering it through the cookbook's real `configure` via the plugin's `render` fixture; no runtime changes. Coverage includes the seeded initial context on startup, the related-context items resolved for it (excluding the current item itself), switching to a different context via the app's own context module ref (the fixture's `app`), and the related-context section updating along with it.
-- Updated dependencies [e8aae1f]
-- Updated dependencies [2836e0b]
-- Updated dependencies [2836e0b]
-- Updated dependencies [2836e0b]
-- Updated dependencies [2836e0b]
-  - @equinor/fusion-framework-cli@15.2.8-next.0
-  - @equinor/fusion-framework-module-navigation@7.0.8-next.0
-  - @equinor/fusion-framework-react-app@15.0.0-next.0
-  - @equinor/fusion-framework-react-module-context@7.0.3-next.0
-  - @equinor/fusion-observable@9.1.2-next.0
-
 ## 5.0.7
 
 ### Patch Changes
