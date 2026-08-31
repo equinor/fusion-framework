@@ -10,7 +10,9 @@ describe('resolveFusion', () => {
   });
 
   it('enables the parent feature-flag mock for an app that declares feature flags', async () => {
-    const fusion = await resolveFusion({ mockFeatureFlag: true });
+    const fusion = await resolveFusion({
+      runtimeDependencies: ['@equinor/fusion-framework-module-feature-flag'],
+    });
 
     expect('featureFlag' in fusion.modules).toBe(true);
   });

@@ -109,7 +109,7 @@ import { defaultAppEnv, resolveFusion, createAppScopeWrapper } from './scope';
  */
 export const testApp = baseTest
   .extend('appEnv', { injected: true }, defaultAppEnv)
-  .extend('mockFeatureFlag', { injected: true }, false)
+  .extend('runtimeDependencies', { injected: true }, [] as Array<string>)
   // `test.extend`'s plain-`value` overload rejects function types (ambiguous with the
   // resolver-`fn` overload), so a function-typed fixture default must go through `fn` instead.
   .extend('configureApp', { injected: true }, () => undefined as AppMockConfigureFn | undefined)
@@ -123,8 +123,8 @@ export const testApp = baseTest
   // IMPORTANT: `.override('fusion', ...)` replaces this resolver entirely, so `configureFusion`
   // is never called — reach for `configureFusion` to extend the base mock, `fusion` only to
   // replace it outright (e.g. with a fully custom or non-mocked instance).
-  .extend('fusion', async ({ appEnv, configureFusion, mockFeatureFlag }) =>
-    resolveFusion({ env: appEnv, configure: configureFusion, mockFeatureFlag }),
+  .extend('fusion', async ({ appEnv, configureFusion, runtimeDependencies }) =>
+    resolveFusion({ env: appEnv, configure: configureFusion, runtimeDependencies }),
   )
   .extend('app', async ({ configureApp, appEnv, fusion }) =>
     mockAppModules<unknown, AppEnv>(configureApp, appEnv as AppEnv, fusion),

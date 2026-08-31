@@ -44,7 +44,7 @@ describe('appTestVitePlugin', () => {
 
     expect(source).toContain('"appKey":"my-app"');
     expect(source).toContain('export const config = {"environment":{}};');
-    expect(source).toContain('export const usesFeatureFlag = false;');
+    expect(source).toContain('export const runtimeDependencies = [];');
   });
 
   it('exposes whether the application declares feature flags', async () => {
@@ -61,7 +61,9 @@ describe('appTestVitePlugin', () => {
 
     const source = await load('\0virtual:fusion-app-test-env');
 
-    expect(source).toContain('export const usesFeatureFlag = true;');
+    expect(source).toContain(
+      'export const runtimeDependencies = ["@equinor/fusion-framework-module-feature-flag"];',
+    );
   });
 
   it('serves an undefined configure export when no config file exists', async () => {

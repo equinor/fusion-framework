@@ -22,7 +22,7 @@ describe('resolveAppTestEnv', () => {
   });
 
   it('falls back to a package-derived manifest and an empty config with no local files', async () => {
-    const { manifest, config, usesFeatureFlag } = await resolveAppTestEnv({ entrypoint: dir });
+    const { manifest, config, runtimeDependencies } = await resolveAppTestEnv({ entrypoint: dir });
 
     expect(manifest).toMatchObject({
       appKey: 'my-app',
@@ -31,7 +31,7 @@ describe('resolveAppTestEnv', () => {
       type: 'standalone',
     });
     expect(config).toEqual({ environment: {} });
-    expect(usesFeatureFlag).toBe(false);
+    expect(runtimeDependencies).toEqual([]);
   });
 
   it('detects feature flags from the application runtime dependencies', async () => {
@@ -44,9 +44,9 @@ describe('resolveAppTestEnv', () => {
       }),
     );
 
-    const { usesFeatureFlag } = await resolveAppTestEnv({ entrypoint: dir });
+    const { runtimeDependencies } = await resolveAppTestEnv({ entrypoint: dir });
 
-    expect(usesFeatureFlag).toBe(true);
+    expect(runtimeDependencies).toContain('@equinor/fusion-framework-module-feature-flag');
   });
 
   it('merges a local app.manifest.ts and app.config.ts, same as ffc app build', async () => {
