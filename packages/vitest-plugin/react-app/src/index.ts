@@ -48,9 +48,10 @@ export type AppTestVitePluginOptions = ResolveAppTestEnvOptions & {
  *   // ...your own browser-mode config
  * });
  * ```
- * Exposes two virtual modules: `virtual:fusion-app-test-env` (`manifest`/`config`, as JSON) and
- * `virtual:fusion-app-test-configure` (a re-export of the resolved `configure` module, or
- * `undefined` if none exists). Not intended to be imported directly by application code.
+ * Exposes two virtual modules: `virtual:fusion-app-test-env`
+ * (`manifest`/`config`/`runtimeDependencies`, as JSON) and `virtual:fusion-app-test-configure`
+ * (a re-export of the resolved `configure` module, or `undefined` if none exists). Not intended
+ * to be imported directly by application code.
  *
  * @param options - Resolution options; `entrypoint` defaults to the current working directory.
  * @returns A Vite plugin instance.
