@@ -117,6 +117,15 @@ jobs:
         if: steps.build.outcome == 'failure'
         run: exit 1
 
+      # These tests run for every PR, so their workspace dependencies must exist
+      # even when the affected build legitimately skips both cookbooks.
+      - name: Build CLI and cookbook Playwright prerequisites
+        run: |
+          pnpm build:cli
+          pnpm turbo build \
+            --filter @equinor/fusion-framework-cookbook-app-react-context... \
+            --filter @equinor/fusion-framework-cookbook-app-react-mock-playwright...
+
       - name: Install Playwright browsers
         # `playwright` isn't a root dependency, so `pnpm exec` needs a --filter into a package that
         # has it; the installed browser cache is shared across packages.
