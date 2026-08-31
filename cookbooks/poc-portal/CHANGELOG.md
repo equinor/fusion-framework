@@ -1,5 +1,20 @@
 # poc-portal
 
+## 1.1.102
+
+### Patch Changes
+
+- Updated dependencies [d04e564]
+  - @equinor/fusion-framework-cli@15.3.1
+  - @equinor/fusion-framework@8.1.1
+  - @equinor/fusion-framework-module-app@8.1.1
+  - @equinor/fusion-framework-module-http@8.1.1
+  - @equinor/fusion-framework-module@6.1.4
+  - @equinor/fusion-framework-module-msal@11.0.1
+  - @equinor/fusion-framework-module-service-discovery@10.1.1
+  - @equinor/fusion-framework-react-app@14.1.1
+  - @equinor/fusion-framework-react@9.0.1
+
 ## 1.1.101
 
 ### Patch Changes

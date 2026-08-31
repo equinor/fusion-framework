@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-module-msal-node
 
+## 4.2.1
+
+### Patch Changes
+
+- d04e564: Internal: restrict published package contents to compiled distribution files and required runtime artifacts so editor tooling does not load workspace TypeScript configurations from dependencies.
+
 ## 4.2.0
 
 ### Minor Changes

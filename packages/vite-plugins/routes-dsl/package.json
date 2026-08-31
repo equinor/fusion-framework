@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework-vite-plugin-routes-dsl",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Vite plugin for transforming import.meta.resolve() calls in route DSL files",
   "type": "module",
   "types": "dist/types/index.d.ts",

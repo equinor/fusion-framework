@@ -1,5 +1,18 @@
 # Change Log
 
+## 16.0.8
+
+### Patch Changes
+
+- d04e564: Internal: restrict published package contents to compiled distribution files and required runtime artifacts so editor tooling does not load workspace TypeScript configurations from dependencies.
+- Updated dependencies [d04e564]
+  - @equinor/fusion-framework-module-event@6.1.1
+  - @equinor/fusion-framework-module-http@8.1.1
+  - @equinor/fusion-framework-module@6.1.4
+  - @equinor/fusion-framework-module-service-discovery@10.1.1
+  - @equinor/fusion-observable@9.2.2
+  - @equinor/fusion-query@7.0.5
+
 ## 16.0.7
 
 ### Patch Changes

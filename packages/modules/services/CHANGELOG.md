@@ -1,5 +1,11 @@
 # Change Log
 
+## 8.1.2
+
+### Patch Changes
+
+- d04e564: Internal: restrict published package contents to compiled distribution files and required runtime artifacts so editor tooling does not load workspace TypeScript configurations from dependencies.
+
 ## 8.1.1
 
 ### Patch Changes

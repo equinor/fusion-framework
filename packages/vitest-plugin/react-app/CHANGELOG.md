@@ -1,5 +1,24 @@
 # @equinor/fusion-framework-vitest-plugin-react-app
 
+## 1.0.1
+
+### Patch Changes
+
+- d48a913: Install the feature-flag and telemetry framework modules with the React app Vitest plugin so applications do not need to declare them separately to run tests. The plugin automatically enables the parent feature-flag mock only when the application declares the feature-flag module as a runtime dependency.
+- d04e564: Internal: restrict published package contents to compiled distribution files and required runtime artifacts so editor tooling does not load workspace TypeScript configurations from dependencies.
+- Updated dependencies [d04e564]
+  - @equinor/fusion-framework-app@13.1.1
+  - @equinor/fusion-framework-cli@15.3.1
+  - @equinor/fusion-framework@8.1.1
+  - @equinor/fusion-framework-module-app@8.1.1
+  - @equinor/fusion-framework-module-feature-flag@2.1.1
+  - @equinor/fusion-framework-module@6.1.4
+  - @equinor/fusion-framework-module-navigation@7.0.10
+  - @equinor/fusion-framework-module-telemetry@7.1.1
+  - @equinor/fusion-framework-react@9.0.1
+  - @equinor/fusion-framework-react-module@4.0.4
+  - @equinor/fusion-imports@2.0.4
+
 ## 1.0.0
 
 ### Minor Changes
