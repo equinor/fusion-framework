@@ -1633,7 +1633,7 @@ importers:
         version: 2.1.8(react@19.2.8)(styled-components@6.5.1(css-to-react-native@3.2.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
       '@equinor/fusion-wc-chip':
         specifier: ^1.2.2
-        version: 1.3.3
+        version: 1.3.4
       '@equinor/fusion-wc-person':
         specifier: ^3.5.5
         version: 3.5.5
@@ -4115,6 +4115,9 @@ packages:
   '@equinor/fusion-wc-chip@1.3.3':
     resolution: {integrity: sha512-3PPsoTB/kwFB/eANgfoT8XOFQ/W5dZJe79UOuLlsze9PDNLrVpHe1lVAx2+hsK2YWvNltNOoI6Y+tJpBtg1ESQ==}
 
+  '@equinor/fusion-wc-chip@1.3.4':
+    resolution: {integrity: sha512-KqXE92S7NNhrQ/WPHKW+arl+HN4+yecPqqe8afBHwGr2ywCUQ/xGRtvSeq5bPvMuDgjsa7yb3Otc6OcsrWbZsg==}
+
   '@equinor/fusion-wc-core@2.0.3':
     resolution: {integrity: sha512-o52mbfI8ck1bJMfC+y3Hf4eyS7dJv1i/8C/bSv9cMRDRz6CgiKxrTzQhXSAFCDwm8tSQ3zQyB8EPKivyTx4KFA==}
 
@@ -4129,6 +4132,9 @@ packages:
 
   '@equinor/fusion-wc-icon@2.4.3':
     resolution: {integrity: sha512-WilkaItpH4SPezMMDAJUJoPD/vG6wTHgUo3dgUkczKOWWPow1XKh5L9WkCkoLI2As5m9dAyb2fMIaljTZpfz0g==}
+
+  '@equinor/fusion-wc-icon@2.4.4':
+    resolution: {integrity: sha512-GdnFe3WwRWIVZ9hyPh8I+95Wj+Ri3FFjASc9Ej7115P2ISf4JoL2zKnk+YnbqSLP9wpqOPaxt0k3laDTBPSoTQ==}
 
   '@equinor/fusion-wc-list@1.2.3':
     resolution: {integrity: sha512-QRGtbAQeNsSHadTp+gn6K2NNn18czbyPe1Rt0Cuuy9jfpNKZFDFxTGX2vWpM38qRpaIjezqPh1ZEzzjlGj8SdQ==}
@@ -4150,6 +4156,9 @@ packages:
 
   '@equinor/fusion-wc-ripple@1.2.3':
     resolution: {integrity: sha512-QEcPFQcguYH1kFe8cJMqIj6XZhlBt9wkALU03FvFmI8ozruDL8Ha4BxMU/xALrYwscLayOvYZliFTYVVFqpJLg==}
+
+  '@equinor/fusion-wc-ripple@1.2.4':
+    resolution: {integrity: sha512-Ie3SG5MmmkHO8RcgQ39cfCtLDqsNBeNHTqJwi8yfiNZJqU9kq2IzXp+tqxbQJaM4fz08xI1okfMX7IUlzWo6Hg==}
 
   '@equinor/fusion-wc-searchable-dropdown@4.1.3':
     resolution: {integrity: sha512-ciNW+BqiYpZkGgieJ6Mei5mb+a06p6nyx1d6YN2PzEEPVVpntm9jvwivrNjsflGHxA3CuQecBaJsrTzWabhZOQ==}
@@ -5391,6 +5400,9 @@ packages:
 
   '@lit-labs/ssr-dom-shim@1.5.1':
     resolution: {integrity: sha512-Aou5UdlSpr5whQe8AA/bZG0jMj96CoJIWbGfZ91qieWu5AWUMKw8VR/pAkQkJYvBNhmCcWnZlyyk5oze8JIqYA==}
+
+  '@lit-labs/ssr-dom-shim@1.6.0':
+    resolution: {integrity: sha512-VHb0ALPMTlgKjM6yIxxoQNnpKyUKLD04VzeQdsiXkMqkvYlAHxq9glGLmgbb889/1GsohSOAjvQYoiBppXFqrQ==}
 
   '@lit-labs/task@3.1.0':
     resolution: {integrity: sha512-zMlcUtZeHDT83IiT2+CJBSoFvWDLnPEezhOCgqjxW4DmRHlbgd7jdft97T6dw4S4RvIETfI7OOyvubCV/EzTlg==}
@@ -10366,6 +10378,9 @@ packages:
   lit-html@3.3.2:
     resolution: {integrity: sha512-Qy9hU88zcmaxBXcc10ZpdK7cOLXvXpRoBxERdtqV9QOrfpMZZ6pSYP91LhpPtap3sFMUiL7Tw2RImbe0Al2/kw==}
 
+  lit-html@3.3.3:
+    resolution: {integrity: sha512-el8M6jK2o3RXBnrSHX3ZKrsN8zEV63pSExTO1wYJz7QndGYZ8353e2a5PPX+qHe2aGayfnchQmkAojaWAREOIA==}
+
   lit@2.8.0:
     resolution: {integrity: sha512-4Sc3OFX9QHOJaHbmTMk28SYgVxLN3ePDjg7hofEft2zWlehFL3LiAuapWc4U/kYwMYJSh2hTCPZ6/LIC7ii0MA==}
 
@@ -13848,6 +13863,14 @@ snapshots:
       '@equinor/fusion-web-theme': 0.1.10
       lit: 3.3.2
 
+  '@equinor/fusion-wc-chip@1.3.4':
+    dependencies:
+      '@equinor/fusion-wc-core': 2.0.3
+      '@equinor/fusion-wc-icon': 2.4.4
+      '@equinor/fusion-wc-ripple': 1.2.4
+      '@equinor/fusion-web-theme': 0.1.10
+      lit: 3.3.3
+
   '@equinor/fusion-wc-core@2.0.3': {}
 
   '@equinor/fusion-wc-date@1.2.3':
@@ -13875,6 +13898,12 @@ snapshots:
       '@equinor/eds-icons': 1.5.1
       '@equinor/fusion-wc-core': 2.0.3
       lit: 3.3.2
+
+  '@equinor/fusion-wc-icon@2.4.4':
+    dependencies:
+      '@equinor/eds-icons': 1.5.1
+      '@equinor/fusion-wc-core': 2.0.3
+      lit: 3.3.3
 
   '@equinor/fusion-wc-list@1.2.3':
     dependencies:
@@ -13956,6 +13985,12 @@ snapshots:
       '@equinor/fusion-wc-core': 2.0.3
       '@material/mwc-ripple': 0.27.0
       lit: 3.3.2
+
+  '@equinor/fusion-wc-ripple@1.2.4':
+    dependencies:
+      '@equinor/fusion-wc-core': 2.0.3
+      '@material/mwc-ripple': 0.27.0
+      lit: 3.3.3
 
   '@equinor/fusion-wc-searchable-dropdown@4.1.3':
     dependencies:
@@ -14763,6 +14798,8 @@ snapshots:
 
   '@lit-labs/ssr-dom-shim@1.5.1': {}
 
+  '@lit-labs/ssr-dom-shim@1.6.0': {}
+
   '@lit-labs/task@3.1.0':
     dependencies:
       '@lit/task': 1.0.3
@@ -14773,7 +14810,7 @@ snapshots:
 
   '@lit/reactive-element@1.6.3':
     dependencies:
-      '@lit-labs/ssr-dom-shim': 1.5.1
+      '@lit-labs/ssr-dom-shim': 1.6.0
 
   '@lit/reactive-element@2.1.2':
     dependencies:
@@ -20582,7 +20619,7 @@ snapshots:
 
   lit-element@3.3.3:
     dependencies:
-      '@lit-labs/ssr-dom-shim': 1.5.1
+      '@lit-labs/ssr-dom-shim': 1.6.0
       '@lit/reactive-element': 1.6.3
       lit-html: 2.8.0
 
@@ -20597,6 +20634,10 @@ snapshots:
       '@types/trusted-types': 2.0.7
 
   lit-html@3.3.2:
+    dependencies:
+      '@types/trusted-types': 2.0.7
+
+  lit-html@3.3.3:
     dependencies:
       '@types/trusted-types': 2.0.7
 
@@ -20616,7 +20657,7 @@ snapshots:
     dependencies:
       '@lit/reactive-element': 2.1.2
       lit-element: 4.2.2
-      lit-html: 3.3.2
+      lit-html: 3.3.3
 
   load-esm@1.0.3: {}
 
