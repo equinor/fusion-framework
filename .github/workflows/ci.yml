@@ -59,6 +59,9 @@ jobs:
         env:
           NPM_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
 
+      - name: Verify package exports
+        run: pnpm verify:package-exports
+
       # Process changesets: create version PR or publish packages to npm
       # This step requires write permissions to create releases and publish packages
       - name: Create Release Pull Request or Publish to npm

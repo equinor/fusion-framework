@@ -43,6 +43,9 @@
   ],
   "author": "",
   "license": "ISC",
+  "files": [
+    "dist"
+  ],
   "publishConfig": {
     "access": "public"
   },

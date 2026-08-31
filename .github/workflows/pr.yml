@@ -94,6 +94,9 @@ jobs:
                 -f=rdjsonl \
                 -reporter=${{ env.REVIEWDOG_REPORTER }} \
                 -fail-level=error
+
+      - name: Verify package exports
+        run: pnpm verify:package-exports
           
       - name: Build affected packages
         id: build
