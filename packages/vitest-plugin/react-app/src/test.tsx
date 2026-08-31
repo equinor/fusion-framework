@@ -2,7 +2,7 @@ import { testApp as baseTestApp } from './test-app';
 
 // resolved at test-time by `appTestVitePlugin` (@equinor/fusion-framework-vitest-plugin-react-app);
 // see virtual-modules.d.ts for the ambient module declarations
-import { manifest, config } from 'virtual:fusion-app-test-env';
+import { manifest, config, usesFeatureFlag } from 'virtual:fusion-app-test-env';
 import { configure as configureApp } from 'virtual:fusion-app-test-configure';
 
 /**
@@ -37,6 +37,7 @@ import { configure as configureApp } from 'virtual:fusion-app-test-configure';
  */
 export const test = baseTestApp
   .extend('appEnv', { injected: true }, { manifest, config })
+  .extend('mockFeatureFlag', { injected: true }, usesFeatureFlag)
   .extend('configureApp', { injected: true }, () => configureApp);
 
 export default test;

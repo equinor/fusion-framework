@@ -79,10 +79,14 @@ export const appTestVitePlugin = (options?: AppTestVitePluginOptions): Plugin =>
     async load(id) {
       // serves manifest/config resolved lazily here, not at plugin-creation time, so options.entrypoint changes between test runs are respected
       if (id === RESOLVED_ENV_MODULE_ID) {
-        const { manifest, config } = await resolveAppTestEnv({ ...options, entrypoint });
+        const { manifest, config, usesFeatureFlag } = await resolveAppTestEnv({
+          ...options,
+          entrypoint,
+        });
         return [
           `export const manifest = ${JSON.stringify(manifest)};`,
           `export const config = ${JSON.stringify(config)};`,
+          `export const usesFeatureFlag = ${JSON.stringify(usesFeatureFlag)};`,
         ].join('\n');
       }
       // no conventional module means the app registers no extra modules, same as omitting `configure` from `makeComponent`

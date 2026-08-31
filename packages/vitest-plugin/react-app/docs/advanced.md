@@ -150,10 +150,12 @@ when the custom parent must serve the app's manifest and config. Use
 `app` module (serving this app's manifest) and a `navigation` module with in-memory history, so
 tests don't leak URL/history state between runs. The plugin installs the feature-flag and
 telemetry framework modules needed by app test bundles, so applications do not need to declare
-them separately. The application's real `configure` callback still controls whether feature
-flags are enabled in the app scope; app teams do not register feature flags in the parent Fusion
-scope for tests. `configureFusion` runs on the parent configurator afterwards, so a test can
-register framework-level services or override navigation without reimplementing the base setup:
+them separately for tests. When the application's `package.json` declares
+`@equinor/fusion-framework-module-feature-flag`, the plugin automatically enables the in-memory
+feature-flag mock in the parent Fusion scope; app teams do not add it through `configureFusion`.
+The application's real `configure` callback still controls the app-scope feature flags.
+`configureFusion` runs on the parent configurator afterwards, so a test can register
+framework-level services or override navigation without reimplementing the base setup:
 
 ```tsx
 const test = baseTest.extend('configureFusion', { injected: true }, () => (configurator) => {

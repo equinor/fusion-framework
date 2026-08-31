@@ -13,12 +13,16 @@ import {
 } from '@equinor/fusion-framework-cli/app';
 import { resolvePackage } from '@equinor/fusion-framework-cli/utils';
 
+const FEATURE_FLAG_PACKAGE = '@equinor/fusion-framework-module-feature-flag';
+
 /**
  * The application manifest and config resolved for a test run.
  */
 export type AppTestEnv = {
   manifest: AppManifest;
   config: ApiAppConfig;
+  /** Whether the application declares the feature-flag module as a runtime dependency. */
+  usesFeatureFlag: boolean;
 };
 
 /**
@@ -53,7 +57,7 @@ export type ResolveAppTestEnvOptions = {
  * `test.override('appEnv', ...)`.
  *
  * @param options - Resolution options; `entrypoint` defaults to the current working directory.
- * @returns The resolved application manifest and config.
+ * @returns The resolved application manifest, config, and module capabilities.
  * @throws If no `package.json` can be found from `entrypoint` upward, or an explicitly requested
  * `manifest`/`config` file does not exist.
  * @example
@@ -79,7 +83,14 @@ export const resolveAppTestEnv = async (
     resolveConfig(env, options?.config),
   ]);
 
-  return { manifest, config };
+  const { dependencies, optionalDependencies, peerDependencies } = pkg.packageJson;
+  const usesFeatureFlag = Boolean(
+    dependencies?.[FEATURE_FLAG_PACKAGE] ??
+      optionalDependencies?.[FEATURE_FLAG_PACKAGE] ??
+      peerDependencies?.[FEATURE_FLAG_PACKAGE],
+  );
+
+  return { manifest, config, usesFeatureFlag };
 };
 
 /**

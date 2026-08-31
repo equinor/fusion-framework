@@ -3,6 +3,7 @@ declare module 'virtual:fusion-app-test-env' {
 
   export const manifest: AppEnv['manifest'];
   export const config: AppEnv['config'];
+  export const usesFeatureFlag: boolean;
 }
 
 declare module 'virtual:fusion-app-test-configure' {
