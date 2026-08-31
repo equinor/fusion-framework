@@ -1,5 +1,6 @@
 import type { Rule, LintConfig, SeverityConfig } from '@equinor/fusion-framework-lint-core';
 import type { ConfigBuilder } from './ConfigBuilder.js';
+import type { LintPreset } from './lint-preset.js';
 
 /**
  * Per-rule configuration entry accepted in the `rules` map of a
@@ -47,6 +48,8 @@ export type RuleConfigEntry =
 export type FusionLintFileConfig =
   | LintConfig
   | {
+      /** Built-in severity preset used before applying `rules` overrides. */
+      preset?: LintPreset;
       /** Severity and/or file-scoping overrides, keyed by rule ID. */
       rules?: Record<string, RuleConfigEntry>;
       /** Custom rule implementations to register alongside built-in rules. */

@@ -1,0 +1,6 @@
+{
+  "preset": "balanced",
+  "rules": {
+    "require-tsdoc": "error"
+  }
+}

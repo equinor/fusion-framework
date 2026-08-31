@@ -1,4 +1,11 @@
-export { recommendedRules, recommendedConfig } from './recommended-rules.js';
+export {
+  recommendedRules,
+  recommendedConfig,
+  defaultConfig,
+  balancedConfig,
+  strictConfig,
+} from './recommended-rules.js';
+export type { LintPreset } from './lint-preset.js';
 export {
   ConfigBuilder,
   type LoadedLintConfig,
