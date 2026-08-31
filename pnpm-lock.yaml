@@ -969,7 +969,7 @@ importers:
         version: 7.0.2
       uuid:
         specifier: ^14.0.0
-        version: 14.0.1
+        version: 14.0.2
 
   cookbooks/app-react-styling:
     devDependencies:
@@ -1163,7 +1163,7 @@ importers:
         version: 6.5.3(css-to-react-native@3.2.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       uuid:
         specifier: ^14.0.0
-        version: 14.0.1
+        version: 14.0.2
       zod:
         specifier: 4.4.3
         version: 4.4.3
@@ -1974,7 +1974,7 @@ importers:
         version: 7.8.2
       uuid:
         specifier: ^14.0.0
-        version: 14.0.1
+        version: 14.0.2
       zod:
         specifier: 4.4.3
         version: 4.4.3
@@ -2008,7 +2008,7 @@ importers:
         version: 7.8.2
       uuid:
         specifier: ^14.0.0
-        version: 14.0.1
+        version: 14.0.2
       zod:
         specifier: 4.4.3
         version: 4.4.3
@@ -2086,7 +2086,7 @@ importers:
         version: 7.8.2
       uuid:
         specifier: ^14.0.0
-        version: 14.0.1
+        version: 14.0.2
     devDependencies:
       '@equinor/fusion-framework-module-app':
         specifier: workspace:^
@@ -2188,7 +2188,7 @@ importers:
         version: 7.8.2
       uuid:
         specifier: ^14.0.0
-        version: 14.0.1
+        version: 14.0.2
     devDependencies:
       '@equinor/fusion-framework-module-event':
         specifier: workspace:^
@@ -2302,7 +2302,7 @@ importers:
         version: 1.23.3
       uuid:
         specifier: ^14.0.0
-        version: 14.0.1
+        version: 14.0.2
       zod:
         specifier: 4.4.3
         version: 4.4.3
@@ -2432,7 +2432,7 @@ importers:
         version: 7.8.2
       uuid:
         specifier: ^14.0.1
-        version: 14.0.1
+        version: 14.0.2
       zod:
         specifier: 4.4.3
         version: 4.4.3
@@ -3140,7 +3140,7 @@ importers:
         version: 7.8.2
       uuid:
         specifier: ^14.0.0
-        version: 14.0.1
+        version: 14.0.2
     devDependencies:
       '@types/react':
         specifier: ^19.2.7
@@ -3227,7 +3227,7 @@ importers:
         version: 7.8.2
       uuid:
         specifier: ^14.0.0
-        version: 14.0.1
+        version: 14.0.2
     devDependencies:
       '@types/react':
         specifier: ^19.2.7
@@ -12334,6 +12334,10 @@ packages:
     resolution: {integrity: sha512-6ZxzVpzDXDa3bJWaHilVayA+BH/1zmxCJoVgvmqJnid/gPoKHxUrS/aC/T6LGQtNHT+XHG9fXPJB4d+IrU30Ew==}
     hasBin: true
 
+  uuid@14.0.2:
+    resolution: {integrity: sha512-xZe/16rV4aa+HGSOCiY2YeLT1OybRLrrkL/Rqaq7p7GMVXjFh+6wN4oMYgjFmnSnhY8t6Xpdl2l9qmnHYuMHwQ==}
+    hasBin: true
+
   valibot@1.4.2:
     resolution: {integrity: sha512-gjdCvJ6d3RyHAneqxMYMW9QMCwYMb3jpOO0IyHZV1bnRHFBHrX3VkIILt5XYR0WhwHiH7Mty8ovuPZ/O3gamrg==}
     peerDependencies:
@@ -13978,7 +13982,7 @@ snapshots:
       '@lit-labs/task': 3.1.0
       '@types/uuid': 11.0.0
       lit: 3.3.2
-      uuid: 14.0.1
+      uuid: 14.0.2
 
   '@equinor/fusion-wc-skeleton@2.2.3':
     dependencies:
@@ -22883,6 +22887,8 @@ snapshots:
   uuid@11.1.1: {}
 
   uuid@14.0.1: {}
+
+  uuid@14.0.2: {}
 
   valibot@1.4.2(typescript@7.0.2):
     optionalDependencies:
