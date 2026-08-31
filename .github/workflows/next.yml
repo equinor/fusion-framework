@@ -73,6 +73,9 @@ jobs:
         env:
           NPM_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
 
+      - name: Verify package exports
+        run: pnpm verify:package-exports
+
       - name: Create Release Pull Request or Publish to npm
         id: changesets
         uses: changesets/action@v2
@@ -102,6 +105,5 @@ jobs:
     if: needs.release-pkg.outputs.published == 'true'
     uses: ./.github/workflows/generate-docs.yml
     secrets: inherit
-
 
 
