@@ -19,6 +19,8 @@ import { resolvePackage } from '@equinor/fusion-framework-cli/utils';
 export type AppTestEnv = {
   manifest: AppManifest;
   config: ApiAppConfig;
+  /** Package names declared by the application as runtime dependencies. */
+  runtimeDependencies: Array<string>;
 };
 
 /**
@@ -53,7 +55,7 @@ export type ResolveAppTestEnvOptions = {
  * `test.override('appEnv', ...)`.
  *
  * @param options - Resolution options; `entrypoint` defaults to the current working directory.
- * @returns The resolved application manifest and config.
+ * @returns The resolved application manifest, config, and module capabilities.
  * @throws If no `package.json` can be found from `entrypoint` upward, or an explicitly requested
  * `manifest`/`config` file does not exist.
  * @example
@@ -79,7 +81,14 @@ export const resolveAppTestEnv = async (
     resolveConfig(env, options?.config),
   ]);
 
-  return { manifest, config };
+  // Merge every runtime dependency category so module mock selection follows package ownership.
+  const runtimeDependencies = Object.keys({
+    ...pkg.packageJson.peerDependencies,
+    ...pkg.packageJson.optionalDependencies,
+    ...pkg.packageJson.dependencies,
+  });
+
+  return { manifest, config, runtimeDependencies };
 };
 
 /**

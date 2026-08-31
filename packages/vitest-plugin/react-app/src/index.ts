@@ -48,9 +48,10 @@ export type AppTestVitePluginOptions = ResolveAppTestEnvOptions & {
  *   // ...your own browser-mode config
  * });
  * ```
- * Exposes two virtual modules: `virtual:fusion-app-test-env` (`manifest`/`config`, as JSON) and
- * `virtual:fusion-app-test-configure` (a re-export of the resolved `configure` module, or
- * `undefined` if none exists). Not intended to be imported directly by application code.
+ * Exposes two virtual modules: `virtual:fusion-app-test-env`
+ * (`manifest`/`config`/`runtimeDependencies`, as JSON) and `virtual:fusion-app-test-configure`
+ * (a re-export of the resolved `configure` module, or `undefined` if none exists). Not intended
+ * to be imported directly by application code.
  *
  * @param options - Resolution options; `entrypoint` defaults to the current working directory.
  * @returns A Vite plugin instance.
@@ -79,10 +80,14 @@ export const appTestVitePlugin = (options?: AppTestVitePluginOptions): Plugin =>
     async load(id) {
       // serves manifest/config resolved lazily here, not at plugin-creation time, so options.entrypoint changes between test runs are respected
       if (id === RESOLVED_ENV_MODULE_ID) {
-        const { manifest, config } = await resolveAppTestEnv({ ...options, entrypoint });
+        const { manifest, config, runtimeDependencies } = await resolveAppTestEnv({
+          ...options,
+          entrypoint,
+        });
         return [
           `export const manifest = ${JSON.stringify(manifest)};`,
           `export const config = ${JSON.stringify(config)};`,
+          `export const runtimeDependencies = ${JSON.stringify(runtimeDependencies)};`,
         ].join('\n');
       }
       // no conventional module means the app registers no extra modules, same as omitting `configure` from `makeComponent`
