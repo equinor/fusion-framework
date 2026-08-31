@@ -148,26 +148,22 @@ when the custom parent must serve the app's manifest and config. Use
 
 `fusion` (built by [`resolveFusion`](../src/scope/resolve-fusion.ts)) always carries a mocked
 `app` module (serving this app's manifest) and a `navigation` module with in-memory history, so
-tests don't leak URL/history state between runs. It also mocks the `featureFlag` module — with
-no flags enabled, so `useFeature` needs no `localStorage` or URL seeding — but only when
-`@equinor/fusion-framework-module-feature-flag` (an optional peer dependency) is actually
-installed; apps that don't use feature flags aren't forced to add it. `configureFusion` runs on
-the same configurator afterwards, so a test can register extra framework-level modules or
-override that setup, without reimplementing it:
+tests don't leak URL/history state between runs. The plugin installs the feature-flag and
+telemetry framework modules needed by app test bundles, so applications do not need to declare
+them separately. The application's real `configure` callback still controls whether feature
+flags are enabled in the app scope; app teams do not register feature flags in the parent Fusion
+scope for tests. `configureFusion` runs on the parent configurator afterwards, so a test can
+register framework-level services or override navigation without reimplementing the base setup:
 
 ```tsx
-import { enableFeatureFlagMock } from '@equinor/fusion-framework-module-feature-flag/mock';
-
 const test = baseTest.extend('configureFusion', { injected: true }, () => (configurator) => {
-  // seed a specific flag rather than merely enabling the mock — that's already the default
-  enableFeatureFlagMock(configurator, (mock) => mock.addFeature({ key: 'new-search', enabled: true }));
   configurator.serviceDiscovery.addServices([{ key: 'people', uri: baseUrl('people') }]);
 });
 ```
 
 Note this is a **framework-scope** module set, distinct from the app-scope one `configureApp`
-seeds. A typical app registers its own `navigation` module independently, inside its own
-`config.ts`'s `configure` callback (what `configureApp` composes with) — so overriding history
+seeds. A typical app registers its own feature-flag and navigation modules independently, inside
+its own `config.ts`'s `configure` callback (what `configureApp` composes with) — so overriding history
 through `configureFusion` only affects framework-scope consumers, such as
 `useFramework<[NavigationModule]>().modules.navigation` or `useBookmarkNavigate`, not a
 rendered app's own router:

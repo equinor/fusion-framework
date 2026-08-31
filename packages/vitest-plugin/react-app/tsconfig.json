@@ -17,6 +17,7 @@
     { "path": "../../modules/app" },
     { "path": "../../modules/navigation" },
     { "path": "../../modules/feature-flag" },
+    { "path": "../../modules/telemetry" },
     { "path": "../../react/framework" },
     { "path": "../../react/modules/module" },
     { "path": "../../utils/imports" }

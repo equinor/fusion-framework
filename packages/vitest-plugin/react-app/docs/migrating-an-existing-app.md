@@ -57,8 +57,8 @@ the browser mid-test. See [Configuration](configuration.md) for overriding any o
 
 The `/test` entry point initializes the real module pipeline. This removes most `vi.mock`
 implementations for hooks such as `useCurrentUser`, `useFeature`, and `useHttpClient`. The
-default setup includes a signed-in `Test User` and initialized feature-flag, context, and
-bookmark modules:
+default setup includes a signed-in `Test User`; enable feature-flag, context, and bookmark mocks
+explicitly when the test needs them:
 
 ```diff
 -vi.mock('@equinor/fusion-framework-react/hooks', async (importOriginal) => ({
