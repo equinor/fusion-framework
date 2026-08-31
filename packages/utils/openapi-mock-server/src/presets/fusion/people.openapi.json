@@ -1,0 +1,184 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Fusion People API (mock)",
+    "version": "1.0.0",
+    "description": "Bundled Fusion baseline preset — backported from cookbooks/app-react/mocks/people.openapi.json."
+  },
+  "paths": {
+    "/persons/{azureId}": {
+      "get": {
+        "operationId": "getPerson",
+        "parameters": [
+          { "name": "azureId", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "api-version", "in": "query", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "A single person's details.",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/Person" } }
+            }
+          }
+        }
+      }
+    },
+    "/persons": {
+      "get": {
+        "operationId": "queryPersons",
+        "parameters": [
+          { "name": "search", "in": "query", "schema": { "type": "string" } },
+          { "name": "api-version", "in": "query", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Persons matching the search query.",
+            "content": {
+              "application/json": {
+                "schema": { "type": "array", "items": { "$ref": "#/components/schemas/Person" } }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/people-picker/resolve": {
+      "post": {
+        "operationId": "resolvePeoplePickerIdentifiers",
+        "parameters": [{ "name": "api-version", "in": "query", "schema": { "type": "string" } }],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "identifiers": { "type": "array", "items": { "type": "string" } }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Resolved people-picker identifiers.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/ResolvedIdentifier" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/people-picker/suggestions": {
+      "post": {
+        "operationId": "suggestPeoplePickerAccounts",
+        "parameters": [{ "name": "api-version", "in": "query", "schema": { "type": "string" } }],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "queryString": { "type": "string" },
+                  "types": { "type": "array", "items": { "type": "string" } }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Suggested people-picker accounts matching the query.",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/SuggestionResult" } }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "SuggestionAccount": {
+        "type": "object",
+        "properties": {
+          "azureUniqueId": { "type": "string", "format": "uuid" },
+          "name": { "type": "string", "faker": "person.fullName" },
+          "accountType": { "type": "string", "enum": ["Person", "SystemAccount"] },
+          "accountLabel": { "type": "string", "faker": "person.jobTitle" },
+          "avatarColor": { "type": "string", "faker": "color.rgb" },
+          "avatarUrl": { "type": "string" },
+          "isExpired": { "type": "boolean" },
+          "person": {
+            "type": "object",
+            "properties": {
+              "accountType": {
+                "type": "string",
+                "enum": ["Employee", "Consultant", "Enterprise", "External"]
+              },
+              "jobTitle": { "type": "string", "faker": "person.jobTitle" },
+              "department": { "type": "string", "faker": "commerce.department" },
+              "fullDepartment": { "type": "string", "faker": "commerce.department" },
+              "employeeNumber": { "type": "string", "faker": "string.numeric" },
+              "employeeType": { "type": "string", "enum": ["primary", "secondary"] },
+              "managerAzureUniqueId": { "type": "string", "format": "uuid" },
+              "mail": { "type": "string", "faker": "internet.email" },
+              "preferredMail": { "type": "string", "nullable": true, "default": null },
+              "upn": { "type": "string", "faker": "internet.email" },
+              "mobilePhone": { "type": "string", "faker": "phone.number" }
+            }
+          }
+        }
+      },
+      "SuggestionResult": {
+        "type": "object",
+        "properties": {
+          "totalCount": { "type": "integer", "minimum": 1, "maximum": 500 },
+          "count": { "type": "integer", "minimum": 1, "maximum": 10 },
+          "@nextPage": { "type": "string", "nullable": true, "default": null },
+          "value": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/SuggestionAccount" }
+          }
+        }
+      },
+      "ResolvedIdentifier": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean", "default": true },
+          "statusCode": { "type": "integer", "default": 200 },
+          "errorMessage": { "type": "string", "nullable": true, "default": null },
+          "identifier": { "type": "string", "format": "uuid" },
+          "account": { "$ref": "#/components/schemas/SuggestionAccount" }
+        }
+      },
+      "Person": {
+        "type": "object",
+        "properties": {
+          "azureUniqueId": { "type": "string", "format": "uuid" },
+          "mail": { "type": "string", "faker": "internet.email" },
+          "name": { "type": "string", "faker": "person.fullName" },
+          "jobTitle": { "type": "string", "faker": "person.jobTitle" },
+          "department": { "type": "string", "faker": "commerce.department" },
+          "mobilePhone": { "type": "string", "faker": "phone.number" },
+          "officeLocation": { "type": "string", "faker": "location.city" },
+          "upn": { "type": "string", "faker": "internet.email" },
+          "accountType": {
+            "type": "string",
+            "enum": ["Employee", "Consultant", "External", "Application", "Local"]
+          },
+          "invitationStatus": { "type": "string", "enum": ["Accepted", "Pending", "NotSent"] },
+          "accountClassification": {
+            "type": "string",
+            "enum": ["Unclassified", "Internal", "External"]
+          },
+          "managerAzureUniqueId": { "type": "string", "format": "uuid" }
+        }
+      }
+    }
+  }
+}

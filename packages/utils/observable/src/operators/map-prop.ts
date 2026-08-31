@@ -1,7 +1,7 @@
 import type { OperatorFunction } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import type { NestedKeys, NestedPropType } from '../types';
+import type { NestedKeys, NestedPropType } from '../types/index.js';
 
 /**
  * RxJS operator that extracts a nested property from emitted objects using

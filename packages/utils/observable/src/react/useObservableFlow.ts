@@ -1,6 +1,6 @@
 import { useLayoutEffect } from 'react';
-import type { FlowSubject } from '../FlowSubject';
-import type { Action, Flow } from '../types';
+import type { FlowSubject } from '../FlowSubject.js';
+import type { Action, Flow } from '../types/index.js';
 /**
  * React hook that attaches a flow (epic-style function) to a {@link FlowSubject}.
  *

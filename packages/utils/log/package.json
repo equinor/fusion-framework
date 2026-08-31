@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-log",
-  "version": "2.0.2",
+  "version": "2.0.3-next.0",
   "description": "Log utils for Fusion front-end development",
   "keywords": [
     "equinor",
@@ -35,8 +35,7 @@
   "scripts": {
     "build": "tsc -b",
     "prepack": "pnpm build",
-    "test": "vitest",
-    "test:coverage": "vitest --coverage"
+    "test": "vitest"
   },
   "bugs": {
     "url": "https://github.com/equinor/fusion-framework/issues"
@@ -47,7 +46,7 @@
   },
   "devDependencies": {
     "typescript": "^7.0.2",
-    "vitest": "^4.1.0"
+    "vitest": "^4.1.10"
   },
   "peerDependencies": {
     "chalk": ">=5",

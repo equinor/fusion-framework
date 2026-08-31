@@ -49,6 +49,82 @@ export default sidebar({
       link: '/guide/linting.md',
     },
     {
+      text: 'Testing',
+      prefix: '/guide/testing/',
+      children: [
+        {
+          text: 'Overview',
+          link: '',
+        },
+        {
+          text: 'Getting started',
+          link: 'getting-started.md',
+        },
+        {
+          text: 'Configuration',
+          link: 'configuration.md',
+        },
+        {
+          text: 'Advanced',
+          link: 'advanced.md',
+        },
+        {
+          text: 'Mocking',
+          link: 'mocking/',
+        },
+        {
+          text: 'Troubleshooting',
+          link: 'troubleshooting.md',
+        },
+        {
+          text: 'References',
+          prefix: 'reference/',
+          children: [
+            {
+              text: 'Choose a testing layer',
+              link: 'choosing-a-layer.md',
+            },
+            {
+              text: 'Framework',
+              link: 'framework.md',
+            },
+            {
+              text: 'Framework design',
+              link: 'framework-design.md',
+            },
+            {
+              text: 'Framework API',
+              link: 'framework-api.md',
+            },
+            {
+              text: 'App',
+              link: 'app.md',
+            },
+            {
+              text: 'Extending framework mocks',
+              link: 'testing-extending.md',
+            },
+            {
+              text: 'Vitest plugin',
+              link: 'vitest-plugin.md',
+            },
+            {
+              text: 'OpenAPI mock',
+              link: 'openapi-mock.md',
+            },
+            {
+              text: 'Mock server',
+              link: 'mock-server.md',
+            },
+            {
+              text: 'Mock server with Playwright',
+              link: 'mock-server-playwright.md',
+            },
+          ],
+        },
+      ],
+    },
+    {
       text: 'Setup',
       link: '/guide/setup.md',
     },
@@ -132,6 +208,10 @@ export default sidebar({
               link: 'react-app-msal.md',
             },
             {
+              text: 'Mock Server with Playwright',
+              link: 'react-app-mock-playwright.md',
+            },
+            {
               text: 'People Service',
               link: 'react-app-people.md',
             },
@@ -140,12 +220,20 @@ export default sidebar({
               link: 'react-app-router.md',
             },
             {
+              text: 'Legacy Router',
+              link: 'react-app-router-legacy.md',
+            },
+            {
               text: 'Settings',
               link: 'react-app-settings.md',
             },
             {
               text: 'State',
               link: 'react-app-state.md',
+            },
+            {
+              text: 'Styling',
+              link: 'react-app-styling.md',
             },
           ],
         },
@@ -159,6 +247,10 @@ export default sidebar({
             {
               text: 'Portal Analytics',
               link: 'portal-analytics.md',
+            },
+            {
+              text: 'PoC Portal',
+              link: 'poc-portal.md',
             },
             {
               text: 'Vanilla JavaScript',
@@ -187,6 +279,10 @@ export default sidebar({
           link: 'docs/application.md',
         },
         {
+          text: 'Vite SPA Plugin',
+          link: 'docs/vite-spa.md',
+        },
+        {
           text: 'Portal',
           link: 'docs/portal.md',
         },
@@ -199,8 +295,28 @@ export default sidebar({
               link: 'dev-server.md',
             },
             {
+              text: 'Getting started',
+              link: 'dev-server/getting-started.md',
+            },
+            {
               text: 'Configuration',
-              link: 'dev-server-config.md',
+              link: 'dev-server/configuration.md',
+            },
+            {
+              text: 'Mock services',
+              link: 'dev-server/mocking.md',
+            },
+            {
+              text: 'Mock server command',
+              link: 'dev-server/mock-server.md',
+            },
+            {
+              text: 'Advanced',
+              link: 'dev-server/advanced.md',
+            },
+            {
+              text: 'Troubleshooting',
+              link: 'dev-server/troubleshooting.md',
             },
           ],
         },
@@ -270,6 +386,14 @@ export default sidebar({
               text: 'Documentation',
               link: 'documentation.md',
             },
+            {
+              text: 'Repository guide',
+              link: 'repository.md',
+            },
+            {
+              text: 'Code of Conduct',
+              link: 'code-of-conduct.md',
+            },
           ],
         },
       ],
@@ -328,6 +452,22 @@ export default sidebar({
           text: 'React',
           link: 'react.md',
         },
+        {
+          text: 'Adapters',
+          link: 'docs/adapters.md',
+        },
+        {
+          text: 'Collectors',
+          link: 'docs/collectors.md',
+        },
+        {
+          text: 'Tracking Events Manually',
+          link: 'docs/tracking-events.md',
+        },
+        {
+          text: 'Testing',
+          link: 'docs/testing.md',
+        },
       ],
     },
     'app/',
@@ -337,7 +477,38 @@ export default sidebar({
       children: [
         {
           text: 'Browser',
+          prefix: 'msal/',
           link: 'msal/',
+          children: [
+            {
+              text: 'Overview',
+              link: '',
+            },
+            {
+              text: 'Testing',
+              link: 'docs/testing.md',
+            },
+            {
+              text: 'API reference',
+              link: 'docs/api-reference.md',
+            },
+            {
+              text: 'Auth code flow',
+              link: 'docs/auth-code-flow.md',
+            },
+            {
+              text: 'Version management',
+              link: 'docs/version-management.md',
+            },
+            {
+              text: 'Migration v2 to v4',
+              link: 'docs/migration-v2-to-v4.md',
+            },
+            {
+              text: 'Troubleshooting',
+              link: 'docs/troubleshooting.md',
+            },
+          ],
         },
         {
           text: 'NodeJS (Azure Identity)',
@@ -356,6 +527,28 @@ export default sidebar({
     {
       text: 'Context',
       link: 'context/',
+      children: [
+        {
+          text: 'Overview',
+          link: 'context/',
+        },
+        {
+          text: 'Data model',
+          link: 'context/docs/data-model.md',
+        },
+        {
+          text: 'Lifecycle',
+          link: 'context/docs/lifecycle.md',
+        },
+        {
+          text: 'Recipes',
+          link: 'context/docs/recipes.md',
+        },
+        {
+          text: 'Testing',
+          link: 'context/#testing',
+        },
+      ],
     },
     {
       text: 'Event',
@@ -367,8 +560,20 @@ export default sidebar({
           link: 'README.md',
         },
         {
-          text: 'React',
-          link: 'react.md',
+          text: 'Configuration',
+          link: 'docs/configuration.md',
+        },
+        {
+          text: 'Observable Patterns',
+          link: 'docs/observable-patterns.md',
+        },
+        {
+          text: 'Lifecycle',
+          link: 'docs/lifecycle.md',
+        },
+        {
+          text: 'Testing',
+          link: 'docs/testing.md',
         },
       ],
     },
@@ -411,6 +616,10 @@ export default sidebar({
           text: 'Server-Sent Events',
           link: 'http/docs/server-sent-events.md',
         },
+        {
+          text: 'Testing',
+          link: 'http/docs/testing.md',
+        },
       ],
     },
     'navigation/',
@@ -437,11 +646,38 @@ export default sidebar({
             },
           ],
         },
+        {
+          text: 'Event',
+          link: 'event/',
+        },
       ],
     },
     {
       text: 'Service Discovery',
+      prefix: 'service-discovery/',
       link: 'service-discovery/',
+      children: [
+        {
+          text: 'Overview',
+          link: '',
+        },
+        {
+          text: 'Testing',
+          link: 'docs/testing.md',
+        },
+        {
+          text: 'Configuration',
+          link: 'docs/configuration.md',
+        },
+        {
+          text: 'Session overrides',
+          link: 'docs/session-overrides.md',
+        },
+        {
+          text: 'API reference',
+          link: 'docs/api-reference.md',
+        },
+      ],
     },
     {
       text: 'Services',

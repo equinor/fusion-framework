@@ -1,4 +1,15 @@
-The dev-server supports optional configuration through a `dev-server.config.ts` file in your project root. This allows you to customize how your application interacts with the Fusion Framework during development.
+# Configure `ffc app dev`
+
+The dev server supports optional configuration through a `dev-server.config.ts` file in your
+project root. Use it for SPA environment values, service-discovery endpoints, logging, and shared
+mock-server defaults.
+
+> [!IMPORTANT]
+> Define mocked service behavior in `mocks/<service>.mock.ts` with `defineService`. Do not handwrite
+> service mocks as `api.routes` or inject them with `api.processServices`; those are low-level
+> extension points for server-owned behavior and discovery transformations. Follow
+> [Migrate existing dev-server configuration](../../dev-server/docs/mocking.md#migrate-existing-dev-server-configuration)
+> to move existing mocks without discarding unrelated host configuration.
 
 > [!NOTE]
 > Basic server options like `port`, `host`, and `open` are configured via CLI flags or Vite configuration, not through `dev-server.config.ts`.
@@ -7,24 +18,24 @@ The dev-server supports optional configuration through a `dev-server.config.ts` 
 
 The default dev-server configuration works for most applications, but you may want to customize it when:
 
-- **Testing API integrations**: Mock services or override API responses during development
+- **Configuring mock discovery**: Set shared mock directory, host, port, or seed defaults
 - **Debugging service discovery**: Filter or modify discovered services for testing
 - **Customizing the development environment**: Adjust template variables, CLI logging, or browser console logging
 - **Isolating development scenarios**: Configure different behaviors for different development stages
 
 ## Getting Started
 
-Create a `dev-server.config.ts` file in your project root. Start simple with object configuration:
+Most applications need no `dev-server.config.ts`. To mock a backend, start with the
+[mock-service guide](../../dev-server/docs/mocking.md) and create `mocks/<service>.mock.ts`. Existing
+applications can follow the guide's
+[migration steps](../../dev-server/docs/mocking.md#migrate-existing-dev-server-configuration).
+
+Create `dev-server.config.ts` only when the application needs shared server settings. Start with
+object configuration:
 
 ```typescript
-// Simple object configuration
 export default {
-  api: {
-    routes: [{
-      match: '/my-api/test',
-      middleware: (req, res) => res.end('OK')
-    }]
-  }
+  log: { level: 4 },
 };
 ```
 
@@ -35,15 +46,10 @@ import { defineDevServerConfig } from '@equinor/fusion-framework-cli';
 
 export default defineDevServerConfig(({ base }) => {
   // Access to base config and environment for advanced logic
-  const isLocalDev = process.env.USER === 'your-username'; // Example condition
+  const isDebug = process.env.DEBUG === 'true';
 
   return {
-    api: {
-      routes: [
-        // Different routes based on conditions
-        isLocalDev && { match: '/api/local-dev', middleware: localHandler }
-      ].filter(Boolean) // Remove falsy values
-    }
+    log: { level: isDebug ? 4 : base.log?.level },
   };
 });
 ```
@@ -58,22 +64,9 @@ For full TypeScript support and intellisense, import the configuration types:
 ```typescript
 import { defineDevServerConfig, type DevServerConfig } from '@equinor/fusion-framework-cli';
 
-// Fully typed configuration
 export default defineDevServerConfig(({ base }): DevServerConfig => ({
   ...base,
-  api: {
-    ...base.api,
-    routes: [
-      {
-        match: '/api/users',
-        middleware: (req, res) => {
-          // req and res are properly typed
-          res.setHeader('Content-Type', 'application/json');
-          res.end(JSON.stringify([]));
-        }
-      }
-    ]
-  }
+  log: { level: 4 },
 }));
 ```
 
@@ -88,8 +81,9 @@ The dev-server configuration supports these main areas:
 
 | Area | Purpose | Common Use Cases |
 |------|---------|------------------|
-| `api.routes` | Mock API endpoints | Testing UI without backend, error scenarios |
-| `api.processServices` | Modify service discovery | Add mock services, override endpoints |
+| `mockServer` | Shared mock-server defaults | Mock directory, host, port, deterministic seed |
+| `api.routes` | Add server-owned endpoints | Health checks or infrastructure callbacks |
+| `api.processServices` | Modify processed discovery | Advanced filtering or URI transformation |
 | `api.serviceDiscoveryUrl` | Change discovery endpoint | Custom/dev environments |
 | `spa.templateEnv` | Override Fusion config | Portal settings, MSAL config, telemetry |
 | `log` | Control CLI logging verbosity | Debug dev-server issues, reduce terminal noise |
@@ -103,13 +97,6 @@ Just export the properties you want to override:
 
 ```typescript
 export default {
-  // Only override what you need to change
-  api: {
-    routes: [{
-      match: '/api/users',
-      middleware: (req, res) => res.end(JSON.stringify([]))
-    }]
-  },
   spa: {
     templateEnv: {
       telemetry: { consoleLevel: 0 } // Only override telemetry
@@ -127,12 +114,7 @@ Use functions when you need conditional logic or access to runtime values:
 export default defineDevServerConfig(({ base }) => {
   // You have access to base config and runtime environment
   return {
-    api: {
-      routes: [
-        // Your routes automatically merge with any existing ones
-        { match: '/api/test', middleware: testHandler }
-      ]
-    }
+    log: { level: process.env.DEBUG === 'true' ? 4 : base.log?.level },
   };
 });
 ```
@@ -163,85 +145,51 @@ routes: [{ match: '/api/users', middleware: yourHandler }]
 ### I Need To...
 | I want to... | Configuration | Example |
 |--------------|---------------|---------|
-| Mock an API endpoint | `api.routes` | `routes: [{ match: '/api/users', middleware: (req, res) => res.end('[]') }]` |
-| Add a mock service | `api.processServices` | Add services to the service discovery response |
+| Mock a service | `mocks/<service>.mock.ts` | Use `defineService` and run `ffc mock-server` |
+| Configure mock defaults | `mockServer` | Set `path`, `host`, `port`, or `seed` |
+| Transform real discovery | `api.processServices` | Advanced: filter or rewrite processed services |
 | Override MSAL config | `spa.templateEnv.msal` | `msal: { clientId: 'dev-client-id' }` |
 | Change telemetry logging | `spa.templateEnv.telemetry` | `telemetry: { consoleLevel: 0 }` |
 | Reduce CLI noise | `log.level` | `log: { level: 2 }` |
 
 ## Essential Configurations
 
-### API Mocking
+### Mock services with executable modules
 
-**When you need it**: Your application depends on backend services that aren't available during development, or you want to test specific API responses without hitting real services.
+When a backend is unavailable or needs deterministic responses, install the optional mock-server
+plugin and create one executable module per service:
 
-**How it works**: Add custom routes that intercept API calls and return mock data.
-
-```typescript
-export default defineDevServerConfig(() => ({
-  api: {
-    routes: [
-      {
-        match: '/api/users',
-        middleware: (req, res) => {
-          res.setHeader('Content-Type', 'application/json');
-          res.end(JSON.stringify([
-            { id: 1, name: 'John Doe', role: 'developer' },
-            { id: 2, name: 'Jane Smith', role: 'designer' }
-          ]));
-        }
-      },
-      // Mock error responses
-      {
-        match: '/api/users/404',
-        middleware: (req, res) => {
-          res.statusCode = 404;
-          res.end(JSON.stringify({ error: 'User not found' }));
-        }
-      }
-    ]
-  }
-}));
+```sh
+pnpm add -D @equinor/fusion-framework-cli-plugin-mock-server
 ```
 
-**Benefits**: Develop UI components and user flows without backend dependencies. Test error handling scenarios easily.
-
-### Service Discovery Customization
-
-**When you need it**: You're developing against a service that doesn't exist yet in the remote service discovery, or you want to override service endpoints for local development.
-
-**How it works**: Add mock services to the service discovery response that your application can use during development.
-
 ```typescript
-export default defineDevServerConfig(() => ({
-  api: {
-    processServices: (dataResponse) => {
-      const { data, routes } = dataResponse;
+// mocks/inventory.mock.ts
+import schema from './inventory.openapi.json' with { type: 'json' };
+import { defineService } from '@equinor/fusion-openapi-mock-server/discovery';
 
-      // Add mock services for development
-      const mockServices = [
-        {
-          key: 'my-new-service',
-          name: 'My New Service (Mock)',
-          uri: '/api/mock-service' // This will be proxied by the dev server
-        },
-        {
-          key: 'beta-feature-api',
-          name: 'Beta Feature API (Mock)',
-          uri: 'https://beta-api.example.com'
-        }
-      ];
-
-      return {
-        data: [...data, ...mockServices],
-        routes
-      };
-    }
-  }
-}));
+export default defineService({
+  key: 'inventory',
+  serviceDiscovery: 'new',
+  schema,
+  components: {
+    InventoryItem: { name: () => 'Local item' },
+  },
+});
 ```
 
-**Benefits**: Develop against planned services before they're deployed. Test integration scenarios with mock endpoints.
+Run the standalone mock server in one terminal and the app in another:
+
+```sh
+ffc mock-server
+ffc app dev
+```
+
+Normal development keeps real discovery and overlays discovery-visible local modules by key. Use
+`ffc app dev --mock` when the app should resolve only bundled presets and local mock modules.
+
+See [Develop with mock services](../../dev-server/docs/mocking.md) for discovery modes and complete
+examples.
 
 ### Template Environment Variables
 
@@ -391,8 +339,10 @@ export default {
 - Check for TypeScript errors in config file
 
 ### Services Not Appearing
-- Ensure `processServices` returns `{ data: Service[], routes: Route[] }`
-- Verify you're not accidentally filtering out needed services
+- Confirm the mock server is running at `http://localhost:4010`.
+- Confirm the file matches `mocks/<service>.mock.ts` and default-exports `defineService(...)`.
+- Confirm `serviceDiscovery` is not `false` when the framework must resolve the service by key.
+- In `--mock` mode, include every required service through a bundled preset or local module.
 
 ### Template Variables Not Available
 - Variables are injected as `import.meta.env.FUSION_SPA_*`
@@ -414,4 +364,74 @@ export default {
 
 > [!WARNING]
 > Only use when working with non-standard environments. The default Fusion service discovery endpoint is usually correct.
+
+### Transform service discovery and add custom routes
+
+Use `api.processServices` when the dev server must filter or transform the processed service
+discovery response. Call the default `processServices` helper first to preserve local URI rewriting
+and generated proxy routes. Use `api.routes` for server-owned endpoints that do not represent a
+mocked service:
+
+```typescript
+import { defineDevServerConfig } from '@equinor/fusion-framework-cli';
+import { processServices } from '@equinor/fusion-framework-dev-server';
+
+export default defineDevServerConfig(() => ({
+  api: {
+    processServices: (data, args) => {
+      const processed = processServices(data, args);
+      return {
+        ...processed,
+        data: processed.data.filter((service) => service.key !== 'deprecated-service'),
+      };
+    },
+    routes: [
+      {
+        match: '/health',
+        middleware: (_request, response) => {
+          response.setHeader('content-type', 'application/json');
+          response.end(JSON.stringify({ status: 'ready' }));
+        },
+      },
+    ],
+  },
+}));
+```
+
+Defining `api.processServices` replaces the default processing entry point. Omit the helper call
+only when the host intentionally owns all service URI rewriting and proxy-route generation. Route
+entries are merged by `match`, and a route from `dev-server.config.ts` replaces a base route with
+the same path.
+
+These extension points remain available for custom hosts and infrastructure. Define application
+service behavior in `mocks/<service>.mock.ts` so discovery metadata, OpenAPI operations, and mock
+responses stay in one executable module.
+
+### Local mock server
+
+The recommended workflow needs no `api.routes` or `api.processServices` configuration. Start the
+foreground mock server, then choose normal overlay or isolated development:
+
+```sh
+ffc mock-server
+ffc app dev                               # real discovery plus visible local modules
+ffc app dev --mock                        # bundled presets plus local modules only
+```
+
+`--mock` sets `api.serviceDiscoveryUrl` to `<endpoint>/@fusion-mock/discovery`. A
+`dev-server.config.ts` override for `api.serviceDiscoveryUrl` still takes precedence over it.
+The mode also enables mock authentication with `Test User`; see
+[Generate a mock user and update `.env`](../../vite-plugins/spa/README.md#generate-a-mock-user-and-update-env)
+to set identity claims and space-separated `scp` token scopes.
+
+Use `dev-server.config.ts` only to share mock-server defaults such as a nonstandard path or port:
+
+```typescript
+import type {} from '@equinor/fusion-framework-cli-plugin-mock-server';
+import { defineDevServerConfig } from '@equinor/fusion-framework-cli';
+
+export default defineDevServerConfig(() => ({
+  mockServer: { path: 'mocks', port: 4010, seed: 42 },
+}));
+```
 

@@ -29,7 +29,6 @@ import { version as latestVersionString } from '../version';
  * ```
  */
 function mapVersionToEnumVersion(version: string | SemVer): MsalModuleVersion {
-  console.log('Resolving version:', version);
   const coercedVersion = semver.coerce(version);
   // An uncoercible version string cannot be mapped to a module version
   if (!coercedVersion) {

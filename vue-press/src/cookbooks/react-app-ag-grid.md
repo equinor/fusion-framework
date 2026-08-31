@@ -9,6 +9,6 @@ tag:
 ---
 
 For detailed information about AG Grid integration, see the [AG Grid Module Documentation](/fusion-framework/modules/ag-grid/).
-If you need integrated charting, see the [Charts Documentation](/fusion-framework/guide/app/charts).
+If you need integrated charting, see the [Charts Documentation](../guide/ag-grid/ag-charts.md).
 
 <!-- @include: ../../../cookbooks/app-react-ag-grid/README.md -->

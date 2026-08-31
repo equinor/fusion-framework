@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework-react-ag-grid",
-  "version": "37.0.2",
+  "version": "37.0.3-next.0",
   "description": "Fusion module for using AG Grid",
   "main": "dist/esm/index.js",
   "types": "dist/types/index.d.ts",
@@ -25,6 +25,10 @@
       "import": "./dist/esm/themes.js",
       "types": "./dist/types/themes.d.ts"
     },
+    "./testing": {
+      "import": "./dist/esm/testing.js",
+      "types": "./dist/types/testing.d.ts"
+    },
     "./package.json": "./package.json",
     "./README.md": "./README.md"
   },
@@ -44,6 +48,9 @@
       ],
       "themes": [
         "dist/types/themes.d.ts"
+      ],
+      "testing": [
+        "dist/types/testing.d.ts"
       ]
     }
   },

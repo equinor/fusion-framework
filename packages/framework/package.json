@@ -8,6 +8,10 @@
     ".": {
       "import": "./dist/esm/index.js",
       "types": "./dist/types/index.d.ts"
+    },
+    "./mock": {
+      "import": "./dist/esm/mock/index.js",
+      "types": "./dist/types/mock/index.d.ts"
     }
   },
   "scripts": {
@@ -18,7 +22,9 @@
   "keywords": [
     "fusion",
     "fusion-framework",
-    "utility"
+    "utility",
+    "testing",
+    "mock"
   ],
   "homepage": "https://equinor.github.io/fusion-framework/",
   "author": {
@@ -48,6 +54,6 @@
   },
   "devDependencies": {
     "typescript": "^7.0.2",
-    "vitest": "^4.1.0"
+    "vitest": "^4.1.10"
   }
 }

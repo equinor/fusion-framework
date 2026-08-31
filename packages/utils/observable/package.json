@@ -2,6 +2,7 @@
   "name": "@equinor/fusion-observable",
   "version": "9.2.0",
   "description": "WIP",
+  "type": "module",
   "keywords": [
     "observable",
     "react",
@@ -64,9 +65,7 @@
     "lint:fix": "eslint --ext .ts,.tsx,.js src/ --fix",
     "prepack": "pnpm build",
     "test": "vitest",
-    "test:report": "vitest --report",
-    "test:coverage": "vitest run --coverage",
-    "test:coverage:all": "vitest run --coverage.enabled --coverage.all"
+    "test:report": "vitest --report"
   },
   "bugs": {
     "url": "https://github.com/equinor/fusion-framework/issues"
@@ -77,14 +76,14 @@
     "uuid": "^14.0.0"
   },
   "devDependencies": {
-    "@testing-library/dom": "^10.0.0",
-    "@testing-library/react": "^16.0.0",
     "@types/react": "^19.2.7",
-    "happy-dom": "^20.8.4",
+    "@vitest/browser-playwright": "^4.1.0",
+    "playwright": "^1.62.1",
     "react": "^19.2.1",
     "react-dom": "^19.2.1",
     "typescript": "^7.0.2",
-    "vitest": "^4.1.0"
+    "vitest": "^4.1.10",
+    "vitest-browser-react": "^2.2.0"
   },
   "peerDependencies": {
     "@types/react": "^18.0.0 || ^19.0.0",

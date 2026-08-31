@@ -1,4 +1,4 @@
-import type { ActionCreator, ActionDefinitions, ActionTypes } from './types';
+import type { ActionCreator, ActionDefinitions, ActionTypes } from './types.js';
 
 /**
  * A mapped type that converts {@link ActionDefinitions} into an object of

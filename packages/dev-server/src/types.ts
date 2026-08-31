@@ -70,35 +70,36 @@ export { UserConfig as DevServerOverrides } from 'vite';
  * };
  * ```
  */
-export type DevServerOptions<TEnv extends Partial<FusionTemplateEnv> = Partial<FusionTemplateEnv>> =
-  {
-    /** SPA template settings. When provided, the dev server injects these values into the HTML template at serve time. */
-    spa?: {
-      /** Static environment object or factory function that produces it on each request. */
-      templateEnv: TEnv | TemplateEnvFn<TEnv>;
-    };
-    api: {
-      /**
-       * The URL of the service discovery proxy endpoint.
-       */
-      serviceDiscoveryUrl: string;
-
-      /**
-       * Route mapper for processing service discovery data.
-       */
-      processServices?: ApiDataProcessor<FusionService[]>;
-
-      /**
-       * Additional routes to be added to the API service proxy.
-       * @remarks used for overriding proxy responses and mocking services.
-       */
-      routes?: ApiRoute[];
-    };
-    /** Server-side (CLI) logging configuration. */
-    log?: {
-      /** Log verbosity: 0 = None, 1 = Error, 2 = Warning, 3 = Info, 4 = Debug. Defaults to Info (3). */
-      level?: number;
-      /** Custom logger instance. When omitted a default {@link ConsoleLogger} is created. */
-      logger?: ConsoleLogger;
-    };
+export interface DevServerOptions<
+  TEnv extends Partial<FusionTemplateEnv> = Partial<FusionTemplateEnv>,
+> {
+  /** SPA template settings. When provided, the dev server injects these values into the HTML template at serve time. */
+  spa?: {
+    /** Static environment object or factory function that produces it on each request. */
+    templateEnv: TEnv | TemplateEnvFn<TEnv>;
   };
+  api: {
+    /**
+     * The URL of the service discovery proxy endpoint.
+     */
+    serviceDiscoveryUrl: string;
+
+    /**
+     * Route mapper for processing service discovery data.
+     */
+    processServices?: ApiDataProcessor<FusionService[]>;
+
+    /**
+     * Additional routes to be added to the API service proxy.
+     * @remarks used for overriding proxy responses and mocking services.
+     */
+    routes?: ApiRoute[];
+  };
+  /** Server-side (CLI) logging configuration. */
+  log?: {
+    /** Log verbosity: 0 = None, 1 = Error, 2 = Warning, 3 = Info, 4 = Debug. Defaults to Info (3). */
+    level?: number;
+    /** Custom logger instance. When omitted a default {@link ConsoleLogger} is created. */
+    logger?: ConsoleLogger;
+  };
+}

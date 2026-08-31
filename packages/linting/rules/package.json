@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework-lint-rules",
-  "version": "1.1.0",
+  "version": "1.1.1-next.0",
   "description": "Fusion-specific lint rules powered by tree-sitter",
   "keywords": [
     "equinor",
@@ -35,8 +35,7 @@
   "scripts": {
     "build": "tsc -b",
     "prepack": "pnpm build",
-    "test": "vitest",
-    "test:coverage": "vitest --coverage"
+    "test": "vitest"
   },
   "dependencies": {
     "@equinor/fusion-framework-lint-core": "workspace:^",
@@ -45,6 +44,6 @@
   },
   "devDependencies": {
     "typescript": "^7.0.2",
-    "vitest": "^4.1.0"
+    "vitest": "^4.1.10"
   }
 }

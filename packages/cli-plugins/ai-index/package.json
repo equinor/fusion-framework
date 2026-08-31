@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework-cli-plugin-ai-index",
-  "version": "3.0.9",
+  "version": "3.0.10-next.2",
   "description": "AI indexing plugin for Fusion Framework CLI providing document embedding and chunking utilities",
   "main": "dist/esm/index.js",
   "type": "module",
@@ -71,6 +71,6 @@
   "devDependencies": {
     "@equinor/fusion-framework-cli": "workspace:^",
     "typescript": "^7.0.2",
-    "vitest": "^4.1.0"
+    "vitest": "^4.1.10"
   }
 }

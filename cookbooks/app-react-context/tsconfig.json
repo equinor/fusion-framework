@@ -1,21 +1,42 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "rootDir": "src",
+    "rootDir": ".",
     "noEmit": true,
-    "jsx": "react-jsxdev"
+    "jsx": "react-jsx"
   },
   "references": [
     {
+      "path": "../../packages/framework"
+    },
+    {
+      "path": "../../packages/app"
+    },
+    {
+      "path": "../../packages/modules/app"
+    },
+    {
       "path": "../../packages/react/app"
+    },
+    {
+      "path": "../../packages/vitest-plugin/react-app"
     },
     {
       "path": "../../packages/react/modules/context"
     },
     {
+      "path": "../../packages/modules/context"
+    },
+    {
       "path": "../../packages/cli"
+    },
+    {
+      "path": "../../packages/cli-plugins/mock-server"
+    },
+    {
+      "path": "../../packages/utils/openapi-mock-server"
     }
   ],
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "lib"]
+  "include": ["src/**/*", "playwright.config.ts", "playwright/**/*", "mocks/**/*.ts"],
+  "exclude": ["node_modules", "lib", "src/__tests__/**/*"]
 }

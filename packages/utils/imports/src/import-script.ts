@@ -1,6 +1,7 @@
 import { build, type BuildOptions } from 'esbuild';
 import { access } from 'node:fs/promises';
 import path from 'node:path';
+import { createHash } from 'node:crypto';
 import { pathToFileURL } from 'node:url';
 import { processAccessError } from './process-access-error.js';
 
@@ -82,7 +83,7 @@ export const importScript = async <M extends EsmModule>(
     path.join(
       packageLocalPath,
       'node_modules/.cache/esbuild',
-      `${path.basename(sourceFile)}.esbuild.js`,
+      `${path.basename(sourceFile)}.${createHash('sha256').update(sourceFile).digest('hex').slice(0, 12)}.esbuild.js`,
     );
 
   try {

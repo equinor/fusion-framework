@@ -21,5 +21,6 @@ import { assert } from './assert.js';
  */
 export function assertObject(value: object, message?: string | Error): asserts value {
   // typeof null is 'object', so this does not exclude null values
-  assert(typeof value === 'object', message);
+  // normalize to `Error | undefined` to match the `node:assert` overload
+  assert(typeof value === 'object', typeof message === 'string' ? new Error(message) : message);
 }

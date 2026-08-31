@@ -1,0 +1,63 @@
+{
+  "name": "@equinor/fusion-openapi-mock",
+  "version": "0.2.0-next.1",
+  "description": "Fakes OpenAPI 3 responses straight from a spec, so testing an API-shaped client needs no hand-written mock data until an edge case needs overriding",
+  "keywords": [
+    "openapi",
+    "mock",
+    "faker",
+    "testing",
+    "typescript",
+    "equinor",
+    "fusion"
+  ],
+  "license": "ISC",
+  "type": "module",
+  "main": "dist/esm/index.js",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "types": "./dist/types/index.d.ts"
+    },
+    "./node": {
+      "import": "./dist/esm/node.js",
+      "types": "./dist/types/node.d.ts"
+    }
+  },
+  "types": "dist/types/index.d.ts",
+  "directories": {
+    "dist": "dist"
+  },
+  "files": [
+    "dist",
+    "src",
+    "!src/__tests__"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/equinor/fusion-framework.git",
+    "directory": "packages/utils/openapi-mock"
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "prepack": "pnpm build",
+    "test": "vitest",
+    "test:run": "vitest --run"
+  },
+  "bugs": {
+    "url": "https://github.com/equinor/fusion-framework/issues"
+  },
+  "dependencies": {
+    "@equinor/fusion-imports": "workspace:^",
+    "@faker-js/faker": "^10.1.0",
+    "json-schema-faker": "^0.6.3",
+    "yaml": "^2.9.0"
+  },
+  "devDependencies": {
+    "typescript": "^7.0.2",
+    "vitest": "^4.1.10"
+  }
+}

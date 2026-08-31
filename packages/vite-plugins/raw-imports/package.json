@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework-vite-plugin-raw-imports",
-  "version": "2.0.1",
+  "version": "2.0.2-next.0",
   "description": "Vite plugin for handling ?raw imports",
   "type": "module",
   "exports": {
@@ -36,6 +36,6 @@
   "devDependencies": {
     "typescript": "^7.0.2",
     "vite": "^8.0.0",
-    "vitest": "^4.1.0"
+    "vitest": "^4.1.10"
   }
 }

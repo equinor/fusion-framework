@@ -50,7 +50,7 @@ export const createUrlPlugin = (
   const featureKeys = features.map((x) => (typeof x === 'string' ? x : x.key));
 
   return async (configArgs) => {
-    // this plugin listens to the navigator, so it cannot work without it
+    // this plugin listens to navigation history, so it cannot work without it
     if (!configArgs.hasModule('navigation')) {
       throw Error('missing navigation module');
     }
@@ -85,7 +85,7 @@ export const createUrlPlugin = (
           ),
         );
 
-        /** Observes path changes of the navigator and toggles feature flags */
+        /** Observes navigation path changes and toggles feature flags */
         const change$ = path$.pipe(
           filter((path) => path !== undefined),
           withLatestFrom(feature$),
@@ -120,7 +120,7 @@ export const createUrlPlugin = (
 
         /** subscribe to navigation events  */
         subscription.add(
-          navigation.navigator.listen((e) => {
+          navigation.history.listen((e) => {
             path$.next(e.location);
           }),
         );

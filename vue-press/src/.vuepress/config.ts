@@ -10,6 +10,7 @@ const __repoRoot = path.resolve(__dirname, '../../../');
 const { description, name, version } = require('../../../package.json');
 
 import theme from './theme.js';
+import { packageNamespaceLinksPlugin } from './plugins/package-namespace-links-plugin.js';
 
 export default defineUserConfig({
   base: (process.env.VUEPRESS_BASE ?? '/fusion-framework/') as '/' | `/${string}/`,
@@ -28,6 +29,7 @@ export default defineUserConfig({
     vuePluginOptions: {},
   }),
   plugins: [
+    packageNamespaceLinksPlugin(__repoRoot),
     registerComponentsPlugin({
       components: {
         ModuleBadge: path.resolve(__dirname, './components/ModuleBadge.vue'),

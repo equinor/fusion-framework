@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework-react-components-bookmark",
-  "version": "2.0.3",
+  "version": "2.0.4-next.0",
   "description": "",
   "main": "dist/esm/index.js",
   "exports": {
@@ -44,7 +44,7 @@
     "react": "^19.2.1",
     "styled-components": "^6.3.11",
     "typescript": "^7.0.2",
-    "vitest": "^4.1.0"
+    "vitest": "^4.1.10"
   },
   "peerDependencies": {
     "@equinor/eds-core-react": "^2.0.0",

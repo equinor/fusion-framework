@@ -1,12 +1,18 @@
 # @equinor/fusion-framework-vite-plugin-api-service
 
-Vite plugin for proxying service discovery requests and mocking API endpoints during Fusion Framework application development.
+Vite plugin for proxying service discovery requests and adding server-owned routes during Fusion
+Framework application development.
+
+> [!TIP]
+> Application service mocks belong in executable `mocks/<service>.mock.ts` modules created with
+> `defineService`. See the [mock-service guide](../../dev-server/docs/mocking.md). Use this package's
+> route API directly only when building development infrastructure or a custom Vite integration.
 
 Use this plugin when you need to:
 
 - **Integrate with service discovery** — proxy requests to a remote discovery endpoint and remap service URLs to local routes the dev-server can manage.
-- **Mock API responses** — define middleware routes that return test or static data without touching application code.
-- **Intercept and transform responses** — modify proxy response payloads before they reach the client (normalise data, inject metadata, etc.).
+- **Add server-owned responses** — define middleware routes for health checks, callbacks, or custom host behavior.
+- **Intercept and transform responses** — modify proxy response payloads before they reach the client (normalize data, inject metadata, etc.).
 
 The plugin is designed for the Fusion Framework Dev Server ecosystem but works in any Vite project.
 
@@ -162,9 +168,16 @@ const proxyHandler = createProxyHandler(
 apiServicePlugin({ proxyHandler });
 ```
 
-### Mock API Requests
+### Add server-owned routes
 
-Define middleware routes to return mocked responses without a real backend:
+Define middleware routes for endpoints owned by the development host, such as health checks and
+infrastructure callbacks:
+
+> [!IMPORTANT]
+> Fusion application service mocks should use executable `mocks/<service>.mock.ts` modules with
+> `defineService`, not handwritten API-plugin routes. See the
+> [mock-service guide](../../dev-server/docs/mocking.md). Use this low-level route API when the
+> endpoint is not a discoverable service mock.
 
 ```ts
 apiServicePlugin({
@@ -188,9 +201,10 @@ apiServicePlugin({
 });
 ```
 
-### Combining Proxy and Mock Routes
+### Combine proxy and custom routes
 
-You can supply both `proxyHandler` and `routes`. Custom routes are evaluated first, so mocks take priority over proxied services:
+You can supply both `proxyHandler` and `routes`. Custom routes are evaluated before proxied
+services:
 
 ```ts
 apiServicePlugin({

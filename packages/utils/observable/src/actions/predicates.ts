@@ -1,5 +1,5 @@
-import type { Action, ActionWithSuffix, AnyAction } from './types';
-import { matchActionSuffix } from './utils';
+import type { Action, ActionWithSuffix, AnyAction } from './types.js';
+import { matchActionSuffix } from './utils.js';
 
 /**
  * Checks whether an action type ends with a specific lifecycle suffix.

@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-query",
-  "version": "7.0.3",
+  "version": "7.0.4-next.0",
   "description": "Reactive data fetching and caching library with observable streams and comprehensive event system",
   "keywords": [
     "observable",
@@ -84,7 +84,7 @@
     "@types/react": "^19.2.7",
     "react": "^19.2.1",
     "typescript": "^7.0.2",
-    "vitest": "^4.1.0"
+    "vitest": "^4.1.10"
   },
   "peerDependencies": {
     "@types/react": "^18.0.0 || ^19.0.0",

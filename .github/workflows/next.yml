@@ -2,13 +2,15 @@ name: Fusion Framework Pre-Release
 
 on:
   push:
-    branches-ignore:
-      - main
+    branches:
+      - next
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 permissions:
-  contents: write
-  pull-requests: write
+  contents: write      # Required for creating changesets branch and pushing changes
+  packages: write      # Required for publishing to npm registry
+  id-token: write      # Required for OIDC token generation
+  pull-requests: write # Required for changesets action to create PRs
 
 jobs:
   check-pre-release:
@@ -20,23 +22,12 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - name: Check if branch targets main and pre-release configuration
+      - name: Check pre-release configuration
         id: check
         run: |
-          # Check if branch has a PR targeting main
-          BRANCH_NAME="${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}"
-          PR_COUNT=$(gh pr list --base main --head "$BRANCH_NAME" --state open --json number --jq 'length')
-          if [ "$PR_COUNT" -eq 0 ]; then
-            echo "should-run=false" >> $GITHUB_OUTPUT
-            echo "::notice::Pre-release skipped: No open pull request targeting main found for branch '$BRANCH_NAME'."
-            exit 0
-          fi
-          echo "Found PR targeting main for branch '$BRANCH_NAME'"
-          
-          # Check for pre-release configuration
           if [ ! -f ".changeset/pre.json" ]; then
             echo "should-run=false" >> $GITHUB_OUTPUT
-            echo "::notice::Pre-release skipped: .changeset/pre.json not found. This is expected for non-pre-release branches."
+            echo "::notice::Pre-release skipped: .changeset/pre.json not found, run 'pnpm changeset pre enter <tag>' to enable pre-release mode."
             exit 0
           fi
           TAG=$(node -p "require('./.changeset/pre.json').tag")
@@ -47,8 +38,6 @@ jobs:
           echo "should-run=true" >> $GITHUB_OUTPUT
           echo "tag=$TAG" >> $GITHUB_OUTPUT
           echo "Using tag from pre.json: $TAG"
-        env:
-          GH_TOKEN: ${{ github.token }}
 
   release-pkg:
     name: Version or publish pre-release of packages
@@ -68,6 +57,9 @@ jobs:
       - name: Setup fusion runner
         continue-on-error: true
         uses: ./.github/actions/setup-fusion-runner
+
+      - name: Configure git user (trigger actor)
+        uses: ./.github/actions/config-git-user
 
       - name: Setup node and install deps
         uses: ./.github/actions/node-setup
@@ -98,6 +90,18 @@ jobs:
         run: gh pr ready ${{ steps.changesets.outputs['pr-number'] }} --undo
         env:
           GH_TOKEN: ${{ github.token }}
+
+  # Publish a branch-scoped documentation preview whenever a pre-release is published
+  documentation-preview:
+    name: Documentation preview
+    permissions:
+      contents: read   # Required to read repository contents
+      pages: write     # Required to deploy to GitHub Pages
+      id-token: write  # Required for OIDC token generation
+    needs: release-pkg
+    if: needs.release-pkg.outputs.published == 'true'
+    uses: ./.github/workflows/generate-docs.yml
+    secrets: inherit
 
 
 

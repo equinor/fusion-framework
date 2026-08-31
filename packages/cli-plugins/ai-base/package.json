@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework-cli-plugin-ai-base",
-  "version": "4.0.8",
+  "version": "4.0.9-next.2",
   "description": "Base AI plugin package for Fusion Framework CLI",
   "type": "module",
   "main": "dist/esm/index.js",
@@ -61,6 +61,6 @@
   "devDependencies": {
     "@equinor/fusion-framework-cli": "workspace:^",
     "typescript": "^7.0.2",
-    "vitest": "^4.1.0"
+    "vitest": "^4.1.10"
   }
 }

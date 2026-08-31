@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework-vite-plugin-api-service",
-  "version": "2.0.5",
+  "version": "2.0.6-next.1",
   "description": "Vite plugin for proxying service discovery and mocking",
   "type": "module",
   "exports": {
@@ -45,6 +45,6 @@
     "nock": "^14.0.1",
     "typescript": "^7.0.2",
     "vite": "^8.0.0",
-    "vitest": "^4.1.0"
+    "vitest": "^4.1.10"
   }
 }

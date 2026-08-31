@@ -1,11 +1,17 @@
 import {
   capitalizeRequestMethodOperator,
   requestValidationOperator,
+  HttpMiddlewareHandler,
   HttpRequestHandler,
 } from './lib/operators';
 
 import type { FetchRequest, IHttpClient } from './lib/client';
-import type { IHttpRequestHandler, IHttpResponseHandler } from './lib/operators';
+import type {
+  HttpMiddleware,
+  IHttpMiddlewareHandler,
+  IHttpRequestHandler,
+  IHttpResponseHandler,
+} from './lib/operators';
 
 /**
  * Represents the options for constructing an `IHttpClient` instance.
@@ -64,6 +70,13 @@ export interface HttpClientOptions<TClient extends IHttpClient = IHttpClient> {
 
   /** The response handler to be used by the `IHttpClient` instance. */
   responseHandler?: IHttpResponseHandler<HttpClientResponseType<TClient>>;
+
+  /**
+   * Middleware wrapping the network call, overriding {@link HttpClientConfigurator.addMiddleware}
+   * for this client only. Rarely needed — most middleware belongs on the configurator so it
+   * applies to every client, and still runs the same way against a mocked client in tests.
+   */
+  middlewareHandler?: IHttpMiddlewareHandler;
 }
 
 /**
@@ -97,6 +110,24 @@ export interface IHttpClientConfigurator<TClient extends IHttpClient = IHttpClie
   readonly clients: Record<string, HttpClientOptions<TClient>>;
   readonly defaultHttpClientCtor: HttpClientConstructor<TClient>;
   readonly defaultHttpRequestHandler: IHttpRequestHandler<HttpClientRequestInitType<TClient>>;
+  readonly defaultHttpMiddlewareHandler: IHttpMiddlewareHandler;
+
+  /**
+   * Registers middleware wrapping the network call for every client this configurator builds —
+   * retries, caching, telemetry, circuit breaking. Register it wherever the app configures its
+   * real HTTP clients; because it wraps `_performFetch` rather than replacing it, the same
+   * registration still runs, unaltered, against a mocked client in tests.
+   * @param middleware - The middleware to register.
+   * @returns The configurator so registrations can be chained.
+   * @example
+   * ```ts
+   * configurator.http.addMiddleware(async (uri, init, next) => {
+   *   const response = await next(uri, init);
+   *   return response.ok ? response : next(uri, init);
+   * });
+   * ```
+   */
+  addMiddleware(middleware: HttpMiddleware): IHttpClientConfigurator<TClient>;
 
   /**
    * Registers or updates a named client configuration.
@@ -176,6 +207,9 @@ export class HttpClientConfigurator<TClient extends IHttpClient>
     'request-validation': requestValidationOperator(),
   });
 
+  /** Default middleware chain cloned into each created client instance. */
+  readonly defaultHttpMiddlewareHandler: IHttpMiddlewareHandler = new HttpMiddlewareHandler();
+
   /**
    * Creates a configurator with the default client constructor.
    * @param client - The default client constructor used when `ctor` is not configured per client.
@@ -187,6 +221,12 @@ export class HttpClientConfigurator<TClient extends IHttpClient>
   /** @inheritdoc */
   hasClient(name: string): boolean {
     return Object.keys(this._clients).includes(name);
+  }
+
+  /** @inheritdoc */
+  addMiddleware(middleware: HttpMiddleware): HttpClientConfigurator<TClient> {
+    this.defaultHttpMiddlewareHandler.use(middleware);
+    return this;
   }
 
   /** @inheritdoc */

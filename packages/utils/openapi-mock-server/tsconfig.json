@@ -1,0 +1,21 @@
+{
+  "extends": "../../../tsconfig.base.json",
+  "compilerOptions": {
+    "module": "NodeNext",
+    "moduleResolution": "nodenext",
+    "resolveJsonModule": true,
+    "outDir": "dist/esm",
+    "rootDir": "src",
+    "declarationDir": "./dist/types"
+  },
+  "references": [
+    {
+      "path": "../openapi-mock"
+    },
+    {
+      "path": "../imports"
+    }
+  ],
+  "include": ["src/**/*", "src/**/*.json"],
+  "exclude": ["node_modules", "dist", "src/__tests__"]
+}

@@ -1,0 +1,178 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Fusion Bookmarks API (mock)",
+    "version": "1.0.0",
+    "description": "Bundled Fusion baseline preset — backported from cookbooks/app-react/mocks/bookmarks.openapi.json."
+  },
+  "paths": {
+    "/persons/me/bookmarks": {
+      "get": {
+        "operationId": "listMyBookmarks",
+        "parameters": [
+          { "name": "$filter", "in": "query", "schema": { "type": "string" } },
+          { "name": "api-version", "in": "query", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "The current user's bookmarks.",
+            "content": {
+              "application/json": {
+                "schema": { "type": "array", "items": { "$ref": "#/components/schemas/Bookmark" } }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/bookmarks": {
+      "post": {
+        "operationId": "createBookmark",
+        "parameters": [{ "name": "api-version", "in": "query", "schema": { "type": "string" } }],
+        "responses": {
+          "200": {
+            "description": "The created bookmark.",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/Bookmark" } }
+            }
+          }
+        }
+      }
+    },
+    "/bookmarks/{bookmarkId}": {
+      "get": {
+        "operationId": "getBookmark",
+        "parameters": [
+          { "name": "bookmarkId", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "api-version", "in": "query", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "A single bookmark.",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/Bookmark" } }
+            }
+          }
+        }
+      },
+      "patch": {
+        "operationId": "updateBookmark",
+        "parameters": [
+          { "name": "bookmarkId", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "api-version", "in": "query", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "The updated bookmark.",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/Bookmark" } }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "deleteBookmark",
+        "parameters": [
+          { "name": "bookmarkId", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "api-version", "in": "query", "schema": { "type": "string" } }
+        ],
+        "responses": { "204": { "description": "The bookmark was deleted." } }
+      }
+    },
+    "/bookmarks/{bookmarkId}/apply": {
+      "get": {
+        "operationId": "getBookmarkPayload",
+        "parameters": [
+          { "name": "bookmarkId", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "api-version", "in": "query", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "The bookmark's stored application payload.",
+            "content": { "application/json": { "schema": { "type": "object" } } }
+          }
+        }
+      }
+    },
+    "/persons/me/bookmarks/favourites": {
+      "post": {
+        "operationId": "addBookmarkFavourite",
+        "parameters": [{ "name": "api-version", "in": "query", "schema": { "type": "string" } }],
+        "responses": { "204": { "description": "The bookmark was added to favourites." } }
+      }
+    },
+    "/persons/me/bookmarks/favourites/{bookmarkId}": {
+      "head": {
+        "operationId": "isBookmarkFavourite",
+        "parameters": [
+          { "name": "bookmarkId", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "api-version", "in": "query", "schema": { "type": "string" } }
+        ],
+        "responses": { "204": { "description": "The bookmark is a favourite." } }
+      },
+      "delete": {
+        "operationId": "removeBookmarkFavourite",
+        "parameters": [
+          { "name": "bookmarkId", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "api-version", "in": "query", "schema": { "type": "string" } }
+        ],
+        "responses": { "204": { "description": "The bookmark was removed from favourites." } }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Person": {
+        "type": "object",
+        "properties": {
+          "azureUniqueId": { "type": "string", "format": "uuid" },
+          "name": { "type": "string", "faker": "person.fullName" },
+          "mail": { "type": "string", "faker": "internet.email" },
+          "phoneNumber": { "type": "string", "faker": "phone.number" },
+          "jobTitle": { "type": "string", "nullable": true, "faker": "person.jobTitle" },
+          "accountType": {
+            "type": "string",
+            "enum": ["Employee", "Consultant", "External", "Application", "Local"]
+          },
+          "accountClassification": {
+            "type": "string",
+            "enum": ["Unclassified", "Internal", "External"],
+            "nullable": true
+          }
+        }
+      },
+      "SourceSystem": {
+        "type": "object",
+        "properties": {
+          "identifier": { "type": "string" },
+          "name": { "type": "string", "nullable": true },
+          "subSystem": { "type": "string", "nullable": true }
+        }
+      },
+      "FusionContext": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "name": { "type": "string", "nullable": true },
+          "type": { "type": "string", "nullable": true }
+        }
+      },
+      "Bookmark": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "name": { "type": "string", "faker": "commerce.productName" },
+          "appKey": { "type": "string" },
+          "description": { "type": "string", "faker": "lorem.sentence" },
+          "isShared": { "type": "boolean" },
+          "context": { "$ref": "#/components/schemas/FusionContext" },
+          "createdBy": { "$ref": "#/components/schemas/Person" },
+          "updatedBy": { "$ref": "#/components/schemas/Person" },
+          "created": { "type": "string", "format": "date-time" },
+          "updated": { "type": "string", "format": "date-time" },
+          "sourceSystem": { "$ref": "#/components/schemas/SourceSystem" }
+        }
+      }
+    }
+  }
+}

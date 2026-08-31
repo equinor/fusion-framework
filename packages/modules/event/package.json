@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework-module-event",
-  "version": "6.0.1",
+  "version": "6.1.0-next.0",
   "description": "Fusion module for events",
   "main": "./dist/esm/index.js",
   "module": "./dist/esm/index.js",
@@ -9,18 +9,33 @@
     ".": {
       "import": "./dist/esm/index.js",
       "types": "./dist/types/index.d.ts"
+    },
+    "./operators": {
+      "import": "./dist/esm/operators/index.js",
+      "types": "./dist/types/operators/index.d.ts"
+    },
+    "./utils": {
+      "import": "./dist/esm/utils/index.js",
+      "types": "./dist/types/utils/index.d.ts"
     }
   },
   "typesVersions": {
     "*": {
       ".": [
         "dist/types/index.d.ts"
+      ],
+      "operators": [
+        "dist/types/operators/index.d.ts"
+      ],
+      "utils": [
+        "dist/types/utils/index.d.ts"
       ]
     }
   },
   "scripts": {
     "build": "tsc -b",
-    "prepack": "pnpm build"
+    "prepack": "pnpm build",
+    "test": "vitest run"
   },
   "keywords": [
     "config"
@@ -40,6 +55,7 @@
   },
   "devDependencies": {
     "rxjs": "^7.8.1",
-    "typescript": "^7.0.2"
+    "typescript": "^7.0.2",
+    "vitest": "^3.2.7"
   }
 }

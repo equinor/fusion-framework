@@ -24,6 +24,73 @@ describe('ModulesConfigurator', () => {
       expect(configurator.modules.filter((m) => m === mod)).toHaveLength(1);
     });
 
+    it('replaces a previously registered module with the same name', () => {
+      const configurator = new ModulesConfigurator();
+      const original = createMockModule('alpha');
+      const replacement = createMockModule('alpha');
+      configurator.addConfig({ module: original });
+      configurator.addConfig({ module: replacement });
+
+      expect(configurator.modules).toHaveLength(1);
+      expect(configurator.modules[0]).toBe(replacement);
+    });
+
+    it('replaces previous module callbacks when the same module name is registered again', async () => {
+      const configurator = new ModulesConfigurator();
+      const original = createMockModule('alpha');
+      const replacement = createMockModule('alpha');
+      const configureSpy = vi.fn();
+      const configureSpy2 = vi.fn();
+      const afterConfigSpy = vi.fn();
+      const afterConfigSpy2 = vi.fn();
+      const afterInitSpy = vi.fn();
+      const afterInitSpy2 = vi.fn();
+
+      configurator.addConfig({
+        module: original,
+        configure: configureSpy,
+        afterConfig: afterConfigSpy,
+        afterInit: afterInitSpy,
+      });
+      configurator.addConfig({
+        module: replacement,
+        configure: configureSpy2,
+        afterConfig: afterConfigSpy2,
+        afterInit: afterInitSpy2,
+      });
+
+      await configurator.initialize();
+
+      expect(configureSpy).not.toHaveBeenCalled();
+      expect(configureSpy2).toHaveBeenCalledOnce();
+      expect(afterConfigSpy).not.toHaveBeenCalled();
+      expect(afterConfigSpy2).toHaveBeenCalledOnce();
+      expect(afterInitSpy).not.toHaveBeenCalled();
+      expect(afterInitSpy2).toHaveBeenCalledOnce();
+    });
+
+    it('keeps all callbacks additive when the same module descriptor is registered multiple times', async () => {
+      // Regression test: helpers like `configureHttpClient`/`useFrameworkServiceClient` share
+      // one module singleton and call `addConfig` once per named client. Re-registering the
+      // SAME descriptor object must not discard previously queued configure callbacks.
+      const configurator = new ModulesConfigurator();
+      const mod = createMockModule('alpha');
+      const configureSpy1 = vi.fn();
+      const configureSpy2 = vi.fn();
+      const configureSpy3 = vi.fn();
+
+      configurator.addConfig({ module: mod, configure: configureSpy1 });
+      configurator.addConfig({ module: mod, configure: configureSpy2 });
+      configurator.addConfig({ module: mod, configure: configureSpy3 });
+
+      await configurator.initialize();
+
+      expect(configureSpy1).toHaveBeenCalledOnce();
+      expect(configureSpy2).toHaveBeenCalledOnce();
+      expect(configureSpy3).toHaveBeenCalledOnce();
+      expect(configurator.modules.filter((m) => m === mod)).toHaveLength(1);
+    });
+
     it('wires configure callback into the configure phase', async () => {
       const configurator = new ModulesConfigurator();
       const mod = createMockModule('alpha', { x: 1 });

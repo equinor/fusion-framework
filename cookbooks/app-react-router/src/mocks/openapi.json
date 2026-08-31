@@ -1,0 +1,184 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "app-react-router cookbook API",
+    "version": "1.0.0",
+    "description": "Products and users endpoints proxied through @fusion-api in dev, faked through @equinor/fusion-openapi-mock in tests."
+  },
+  "paths": {
+    "/@fusion-api/api/products": {
+      "get": {
+        "operationId": "listProducts",
+        "responses": {
+          "200": {
+            "description": "A page of the product catalogue.",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ProductsResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/@fusion-api/api/products/{id}": {
+      "get": {
+        "operationId": "getProductById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "One product.",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Product" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/@fusion-api/api/categories": {
+      "get": {
+        "operationId": "listCategories",
+        "responses": {
+          "200": {
+            "description": "Every product category.",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/CategoriesResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/@fusion-api/api/users": {
+      "get": {
+        "operationId": "listUsers",
+        "responses": {
+          "200": {
+            "description": "A page of the user directory.",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/UsersResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/@fusion-api/api/users/{id}": {
+      "get": {
+        "operationId": "getUserById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "One user.",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/User" }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Product": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "category",
+          "price",
+          "description",
+          "inStock",
+          "reviews",
+          "rating",
+          "image"
+        ],
+        "properties": {
+          "id": { "type": "integer" },
+          "name": { "type": "string" },
+          "category": { "type": "string" },
+          "price": { "type": "number" },
+          "description": { "type": "string" },
+          "inStock": { "type": "boolean" },
+          "reviews": { "type": "integer" },
+          "rating": { "type": "number" },
+          "image": { "type": "string" }
+        }
+      },
+      "ProductsResponse": {
+        "type": "object",
+        "required": ["products"],
+        "properties": {
+          "products": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/Product" },
+            "minItems": 2,
+            "maxItems": 2
+          }
+        }
+      },
+      "CategoriesResponse": {
+        "type": "object",
+        "required": ["categories"],
+        "properties": {
+          "categories": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      },
+      "User": {
+        "type": "object",
+        "required": ["id", "name", "email", "role", "department", "phone", "location", "joinDate"],
+        "properties": {
+          "id": { "type": "integer" },
+          "name": { "type": "string" },
+          "email": { "type": "string" },
+          "role": { "type": "string" },
+          "department": { "type": "string" },
+          "phone": { "type": "string" },
+          "location": { "type": "string" },
+          "joinDate": { "type": "string" }
+        }
+      },
+      "UsersResponse": {
+        "type": "object",
+        "required": ["users", "page", "limit", "total", "totalPages", "hasNext", "hasPrev"],
+        "properties": {
+          "users": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/User" },
+            "minItems": 2,
+            "maxItems": 2
+          },
+          "page": { "type": "integer" },
+          "limit": { "type": "integer" },
+          "total": { "type": "integer" },
+          "totalPages": { "type": "integer" },
+          "hasNext": { "type": "boolean" },
+          "hasPrev": { "type": "boolean" }
+        }
+      }
+    }
+  }
+}

@@ -1,4 +1,4 @@
-import type { PayloadActionCreator } from './create-action';
+import type { PayloadActionCreator } from './create-action.js';
 
 /**
  * Internal helper utilities for constructing and inspecting Redux-style

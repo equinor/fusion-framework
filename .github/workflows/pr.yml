@@ -116,7 +116,15 @@ jobs:
       - name: Check if build failed
         if: steps.build.outcome == 'failure'
         run: exit 1
-      
+
+      - name: Install Playwright browsers
+        # `playwright` isn't a root dependency, so `pnpm exec` needs a --filter into a package that
+        # has it; the installed browser cache is shared across packages.
+        run: pnpm --filter @equinor/fusion-framework-vitest-plugin-react-app exec playwright install --with-deps chromium
+
+      - name: Run cookbook Playwright tests
+        run: pnpm --filter './cookbooks/**' --if-present test:playwright
+
       - name: Create Test Report
         run: pnpm test run
 

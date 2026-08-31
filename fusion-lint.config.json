@@ -5,6 +5,7 @@
         "*-module.ts",
         "*.schemas.ts",
         "actions.ts",
+        "generators.ts",
         "helpers.ts",
         "index.ts",
         "index.tsx",

@@ -9,6 +9,7 @@
       "@equinor/fusion-framework-react-*": ["./packages/react/*/src"],
       "@equinor/fusion-framework-module": ["./packages/modules/module/src"],
       "@equinor/fusion-framework-module-*": ["./packages/modules/*/src"],
+      "@equinor/fusion-framework-vitest-plugin-*": ["./packages/vitest-plugin/*/src"],
       "@equinor/fusion-framework-*": ["./packages/*/src"],
       "@equinor/fusion-framework": ["./packages/framework/src"],
       "fusion-framework-vite-plugin-*": ["./packages/vite-plugins/*/src"],

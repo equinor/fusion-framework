@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework-module-http",
-  "version": "8.0.5",
+  "version": "8.1.0-next.0",
   "description": "",
   "main": "dist/esm/index.js",
   "types": "dist/types/index.d.ts",
@@ -12,6 +12,10 @@
     "./client": {
       "import": "./dist/esm/lib/client/index.js",
       "types": "./dist/types/lib/client/index.d.ts"
+    },
+    "./mock": {
+      "import": "./dist/esm/mock/index.js",
+      "types": "./dist/types/mock/index.d.ts"
     },
     "./operators": {
       "import": "./dist/esm/lib/operators/index.js",
@@ -33,6 +37,9 @@
       ],
       "client": [
         "dist/types/lib/client/index.d.ts"
+      ],
+      "mock": [
+        "dist/types/mock/index.d.ts"
       ],
       "operators": [
         "dist/types/lib/operators/index.d.ts"
@@ -69,6 +76,6 @@
   },
   "devDependencies": {
     "typescript": "^7.0.2",
-    "vitest": "^4.1.0"
+    "vitest": "^4.1.10"
   }
 }

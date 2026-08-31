@@ -2,9 +2,9 @@ import { produce as createNextState, isDraft, isDraftable } from 'immer';
 
 import type { Draft } from 'immer';
 
-import type { TypeGuard } from './types/ts-helpers';
-import type { Action, ActionType, AnyAction, ExtractAction } from './actions/types';
-import type { ReducerWithInitialState } from './types/reducers';
+import type { TypeGuard } from './types/ts-helpers.js';
+import type { Action, ActionType, AnyAction, ExtractAction } from './actions/types.js';
+import type { ReducerWithInitialState } from './types/reducers.js';
 
 function freezeDraftable<T>(val: T) {
   return isDraftable(val) ? createNextState(val, () => {}) : val;

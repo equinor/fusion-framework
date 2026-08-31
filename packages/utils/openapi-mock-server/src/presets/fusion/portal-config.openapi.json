@@ -1,0 +1,87 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Fusion Portal Config API (mock)",
+    "version": "1.0.0",
+    "description": "Bundled Fusion baseline preset — a generic portal-config-service mock. Dev servers serving their own portal locally still need to override that one portal's own manifest/config via their own routes (see cookbooks/app-react/dev-server.config.ts)."
+  },
+  "paths": {
+    "/portals": {
+      "get": {
+        "operationId": "listPortals",
+        "parameters": [{ "name": "api-version", "in": "query", "schema": { "type": "string" } }],
+        "responses": {
+          "200": {
+            "description": "Registered portals.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/PortalManifest" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/portals/{name}": {
+      "get": {
+        "operationId": "getPortal",
+        "parameters": [
+          { "name": "name", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "api-version", "in": "query", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "The manifest for the given portal.",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/PortalManifest" } }
+            }
+          }
+        }
+      }
+    },
+    "/portals/{name}/config": {
+      "get": {
+        "operationId": "getPortalConfig",
+        "parameters": [
+          { "name": "name", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "api-version", "in": "query", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Configuration for the given portal.",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/PortalConfig" } }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "PortalManifest": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string", "faker": "commerce.department" },
+          "build": {
+            "type": "object",
+            "properties": {
+              "templateEntry": { "type": "string" },
+              "assetPath": { "type": "string" }
+            }
+          }
+        }
+      },
+      "PortalConfig": {
+        "type": "object",
+        "properties": {
+          "title": { "type": "string", "faker": "company.name" },
+          "logoUrl": { "type": "string", "faker": "image.url" }
+        }
+      }
+    }
+  }
+}

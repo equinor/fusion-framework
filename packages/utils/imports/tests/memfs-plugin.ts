@@ -8,6 +8,30 @@ import { vol } from 'memfs';
 import { importMetaResolvePlugin } from '../src/import-meta-resolve-plugin';
 import { rawMarkdownPlugin } from '../src/raw-markdown-plugin';
 
+vi.mock('node:fs/promises', () => ({
+  access: vol.promises.access,
+  readFile: vol.promises.readFile,
+  default: vol.promises,
+}));
+
+vi.mock('../src/import-script', async (importOriginal) => {
+  const original = (await importOriginal()) as typeof import('../src/import-script');
+  const importScript = (path, options) => {
+    const plugins = [memfsPlugin].concat(
+      options?.plugins ?? [rawMarkdownPlugin(), importMetaResolvePlugin()],
+    );
+    return original.importScript(path, {
+      ...options,
+      plugins,
+      write: false,
+    });
+  };
+  return {
+    importScript,
+    default: importScript,
+  };
+});
+
 export const memfsPlugin: EsBuildPlugin = {
   name: 'memfs',
   setup(build) {
@@ -63,30 +87,6 @@ export const memfsPlugin: EsBuildPlugin = {
 };
 
 beforeAll(() => {
-  vi.mock('node:fs/promises', () => ({
-    access: vol.promises.access,
-    readFile: vol.promises.readFile,
-    default: vol.promises,
-  }));
-
-  vi.mock('../src/import-script', async (importOriginal) => {
-    const original = (await importOriginal()) as typeof import('../src/import-script');
-    const importScript = (path, options) => {
-      const plugins = [memfsPlugin].concat(
-        options?.plugins ?? [rawMarkdownPlugin(), importMetaResolvePlugin()],
-      );
-      return original.importScript(path, {
-        ...options,
-        plugins,
-        write: false,
-      });
-    };
-    return {
-      importScript,
-      default: importScript,
-    };
-  });
-
   vi.spyOn(process, 'cwd').mockReturnValue('/usr/local/project-1');
 });
 

@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework-lint-core",
-  "version": "1.0.0",
+  "version": "1.0.1-next.0",
   "description": "Core types and engine for Fusion Framework linting",
   "keywords": [
     "equinor",
@@ -34,11 +34,10 @@
   "scripts": {
     "build": "tsc -b",
     "prepack": "pnpm build",
-    "test": "vitest",
-    "test:coverage": "vitest --coverage"
+    "test": "vitest"
   },
   "devDependencies": {
     "typescript": "^7.0.2",
-    "vitest": "^4.1.0"
+    "vitest": "^4.1.10"
   }
 }
