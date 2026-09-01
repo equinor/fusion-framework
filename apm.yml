@@ -1,0 +1,16 @@
+name: fusion-framework
+version: 1.0.0
+description: Fusion Framework developer agent configuration
+author: Equinor Fusion
+# Which agent platforms to deploy to.
+# Resolution order: --target flag > this field > auto-detect from filesystem.
+# Accepted values: agent-skills, antigravity, claude, codex, copilot, cursor, gemini, grok-build, kiro, opencode, windsurf
+targets:
+  - copilot
+dependencies:
+  apm:
+    - equinor/fusion-skills/apm/fusion-developer#v1.6.1
+    - equinor/fusion-skills/skills/fusion-skill-authoring#v1.6.1
+  mcp: []
+includes: auto
+scripts: {}

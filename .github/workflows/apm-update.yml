@@ -1,0 +1,136 @@
+name: Update APM dependencies
+
+on:
+  schedule:
+    - cron: '0 8 * * 1'
+  workflow_dispatch:
+
+concurrency:
+  group: apm-update
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update:
+    name: Update Fusion developer profile
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Resolve latest Fusion Skills release
+        id: release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          latest_tag="$(gh api repos/equinor/fusion-skills/releases/latest --jq '.tag_name')"
+          if [[ ! "$latest_tag" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "::error::Unexpected Fusion Skills release tag: $latest_tag"
+            exit 1
+          fi
+
+          current_tag="$(
+            sed -nE \
+              's|.*equinor/fusion-skills/apm/fusion-developer#(v[0-9]+\.[0-9]+\.[0-9]+).*|\1|p' \
+              apm.yml
+          )"
+          if [[ -z "$current_tag" ]]; then
+            echo "::error::Could not find the Fusion developer release tag in apm.yml"
+            exit 1
+          fi
+
+          reference_count="$(grep -c 'equinor/fusion-skills/' apm.yml)"
+          reference_tags="$(
+            sed -nE \
+              's|.*equinor/fusion-skills/[^[:space:]]+#(v[0-9]+\.[0-9]+\.[0-9]+).*|\1|p' \
+              apm.yml
+          )"
+          resolved_count="$(printf '%s\n' "$reference_tags" | grep -c '^v')"
+          if [[ "$reference_count" -eq 0 || "$resolved_count" -ne "$reference_count" ]]; then
+            echo "::error::Every Fusion Skills dependency must use a semantic release tag"
+            exit 1
+          fi
+
+          echo "current=$current_tag" >> "$GITHUB_OUTPUT"
+          echo "latest=$latest_tag" >> "$GITHUB_OUTPUT"
+          if printf '%s\n' "$reference_tags" | grep -Fvxq "$latest_tag"; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Update Fusion Skills release pins
+        if: steps.release.outputs.changed == 'true'
+        env:
+          LATEST_TAG: ${{ steps.release.outputs.latest }}
+        run: |
+          reference_count="$(
+            grep -Ec 'equinor/fusion-skills/.+#v[0-9]+\.[0-9]+\.[0-9]+' apm.yml
+          )"
+          if [[ "$reference_count" -eq 0 ]]; then
+            echo "::error::No Fusion Skills release references found in apm.yml"
+            exit 1
+          fi
+
+          sed -i -E \
+            "s|(equinor/fusion-skills/[^[:space:]]+)#v[0-9]+\.[0-9]+\.[0-9]+|\1#${LATEST_TAG}|g" \
+            apm.yml
+
+          updated_count="$(grep -Fc "#${LATEST_TAG}" apm.yml)"
+          if [[ "$updated_count" -ne "$reference_count" ]]; then
+            echo "::error::Not all Fusion Skills release references were updated"
+            exit 1
+          fi
+
+      - name: Update APM installation
+        if: steps.release.outputs.changed == 'true'
+        uses: microsoft/apm-action@v1
+        with:
+          update: 'true'
+          target: copilot
+
+      - name: Validate APM installation
+        if: steps.release.outputs.changed == 'true'
+        run: |
+          apm audit --ci --no-policy
+          node .github/scripts/verify-agent-context.mjs
+
+      - name: Open update pull request
+        if: steps.release.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@v8
+        with:
+          branch: automation/apm-update
+          delete-branch: true
+          draft: true
+          commit-message: >-
+            chore(agent): update APM dependencies
+          title: >-
+            chore(agent): update APM dependencies to ${{ steps.release.outputs.latest }}
+          body: |
+            ## Why
+
+            Updates the repository's Fusion developer agent configuration from
+            `${{ steps.release.outputs.current }}` to `${{ steps.release.outputs.latest }}`.
+
+            ## Intended behavior / invariants
+
+            - Keep all `equinor/fusion-skills` dependencies on one release.
+            - Regenerate the APM lockfile and deployed agent configuration together.
+            - Preserve repository-owned `custom-*` skills.
+
+            ## Breaking changes
+
+            No breaking changes are expected. Review the upstream Fusion Skills release
+            and the generated agent configuration before merging.
+
+            ## How to review/test
+
+            - Review changes to `apm.yml`, `apm.lock.yaml`, and deployed agent files.
+            - Confirm `apm audit --ci --no-policy` passed.
+            - Confirm `node .github/scripts/verify-agent-context.mjs` passed.
+
+            ## Related issues
+
+            Automated weekly APM dependency update.

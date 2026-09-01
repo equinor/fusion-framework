@@ -127,6 +127,7 @@ packages/linting/cli/bin/fusion-lint
 # Requires `.vscode/*` rather than `.vscode` so git descends far enough to see the negation.
 .vscode/*
 !.vscode/extensions.json
+!.vscode/mcp.json
 .idea/
 
 tmp/
@@ -156,3 +157,6 @@ eds/out
 
 .assistant
 .planning
+
+# APM dependencies
+apm_modules/

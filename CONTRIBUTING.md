@@ -42,7 +42,9 @@ Scan through our [existing issues](https://github.com/equinor/fusion-framework/i
 
 2. Install or update to **Node.js**, at the version specified in `.node-version`. For more information, see [the development guide](contributing/development.md).
 
-3. Create a working branch and start with your changes!
+3. If you use GitHub Copilot for development, install the repository's locked agent configuration by following the [agent tooling guide](contributing/agent-tooling.md).
+
+4. Create a working branch and start with your changes!
 
 #### Non-negotiable code standards
 
