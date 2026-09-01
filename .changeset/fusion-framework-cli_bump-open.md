@@ -1,0 +1,5 @@
+---
+"@equinor/fusion-framework-cli": patch
+---
+
+Internal: bump `open` from `11.0.0` to `11.0.1`.
