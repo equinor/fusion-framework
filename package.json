@@ -71,7 +71,7 @@
   "homepage": "https://github.com/equinor/fusion-framwork#readme",
   "devDependencies": {
     "@equinor/fusion-lint": "workspace:^",
-    "@biomejs/biome": "2.5.10",
+    "@biomejs/biome": "2.5.11",
     "@changesets/changelog-github": "^1.0.0",
     "@changesets/cli": "^3.0.0",
     "@types/node": "^26.2.0",
