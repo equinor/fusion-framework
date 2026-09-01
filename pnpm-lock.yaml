@@ -1044,7 +1044,7 @@ importers:
         version: link:../../packages/react/app
       '@vitejs/plugin-react':
         specifier: ^6.0.1
-        version: 6.0.5(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.1)(sass-embedded@1.103.1)(sass@1.103.1)(terser@5.49.1)(tsx@4.23.12))
+        version: 6.1.1(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.1)(sass-embedded@1.103.1)(sass@1.103.1)(terser@5.49.1)(tsx@4.23.12))
       is-mergeable-object:
         specifier: ^1.1.1
         version: 1.1.1
@@ -1648,7 +1648,7 @@ importers:
         version: 7.8.0
       '@vitejs/plugin-react':
         specifier: ^6.0.1
-        version: 6.0.5(vite@8.2.2(@types/node@24.13.3)(esbuild@0.28.1)(sass-embedded@1.103.1)(sass@1.103.1)(terser@5.49.1)(tsx@4.23.12))
+        version: 6.1.1(vite@8.2.2(@types/node@24.13.3)(esbuild@0.28.1)(sass-embedded@1.103.1)(sass@1.103.1)(terser@5.49.1)(tsx@4.23.12))
       '@vitest/browser-playwright':
         specifier: ^4.1.0
         version: 4.1.11(msw@2.15.0(@types/node@26.4.0)(typescript@7.0.2))(playwright@1.62.1)(vite@8.2.2(@types/node@24.13.3)(esbuild@0.28.1)(sass-embedded@1.103.1)(sass@1.103.1)(terser@5.49.1)(tsx@4.23.12))(vitest@4.1.11)
@@ -1702,7 +1702,7 @@ importers:
         version: link:../utils/log
       '@vitejs/plugin-react':
         specifier: ^6.0.1
-        version: 6.0.5(vite@8.2.2(@types/node@24.13.3)(esbuild@0.28.1)(sass-embedded@1.103.1)(sass@1.103.1)(terser@5.49.1)(tsx@4.23.12))
+        version: 6.1.1(vite@8.2.2(@types/node@24.13.3)(esbuild@0.28.1)(sass-embedded@1.103.1)(sass@1.103.1)(terser@5.49.1)(tsx@4.23.12))
     devDependencies:
       typescript:
         specifier: ^7.0.2
@@ -4595,26 +4595,8 @@ packages:
       '@types/node':
         optional: true
 
-  '@inquirer/confirm@6.1.1':
-    resolution: {integrity: sha512-eb8DBZcz/2qHWQda4rk2JiQk5h9QV/cVHi1yjt0f69WFZMRFn0sJTye3EAP8icut8UDMjQPsaH5KbcOogefrFQ==}
-    engines: {node: '>=23.5.0 || ^22.13.0 || ^20.17.0'}
-    peerDependencies:
-      '@types/node': '>=18'
-    peerDependenciesMeta:
-      '@types/node':
-        optional: true
-
   '@inquirer/confirm@6.3.0':
     resolution: {integrity: sha512-pZHXJImFtERmSNMBHcjwuz8Ck5vEFEYNUZnwbb8aJpjHv/TwGuFErNxF2Hp8+V+pNJs2EYPMlyWscvFEqO9jOQ==}
-    engines: {node: '>=23.5.0 || ^22.13.0 || ^20.17.0'}
-    peerDependencies:
-      '@types/node': '>=18'
-    peerDependenciesMeta:
-      '@types/node':
-        optional: true
-
-  '@inquirer/core@11.2.1':
-    resolution: {integrity: sha512-Qd6GJT1yVyrZZCfN8W2qKF5ApmqryXRhRKCuip8h01x2w/esJQ2XIYc6f9abMIHgKQdBfFTSOdbHRLAhuM09UA==}
     engines: {node: '>=23.5.0 || ^22.13.0 || ^20.17.0'}
     peerDependencies:
       '@types/node': '>=18'
@@ -4657,10 +4639,6 @@ packages:
     peerDependenciesMeta:
       '@types/node':
         optional: true
-
-  '@inquirer/figures@2.0.7':
-    resolution: {integrity: sha512-aJ8TBPOGB6f/2qziPfElISTCEd5XOYTFckA2SGjhNmiKzfK/u4ot3v0DUzGVdUnKjN10EqnnEPck36BkyfLnJw==}
-    engines: {node: '>=23.5.0 || ^22.13.0 || ^20.17.0'}
 
   '@inquirer/figures@2.0.8':
     resolution: {integrity: sha512-tApbon79GM9ry56ja/Ud3SY2CL4TQsao9fIwDQbgTeNY55025GdMzQ2+UdegV/lx51VNGUB59M0v0nMpybYY4Q==}
@@ -4722,15 +4700,6 @@ packages:
 
   '@inquirer/select@5.2.3':
     resolution: {integrity: sha512-KuRTodDa6xBXX2noIpjuitpX/QT7Sfav7dIZ/OfUY54Hxg95nrGoshSzxx6Ey7qqLbImKdiGkSDt7KjPXjQgmA==}
-    engines: {node: '>=23.5.0 || ^22.13.0 || ^20.17.0'}
-    peerDependencies:
-      '@types/node': '>=18'
-    peerDependenciesMeta:
-      '@types/node':
-        optional: true
-
-  '@inquirer/type@4.0.7':
-    resolution: {integrity: sha512-t28inv14nMQ1PhKpsJPY+kEs/c00qzeCOS2gTNRyTjG5d6qsVA2fItxW4hkvGZ5lvanGLdtCzVIx5dwdRpN1+g==}
     engines: {node: '>=23.5.0 || ^22.13.0 || ^20.17.0'}
     peerDependencies:
       '@types/node': '>=18'
@@ -8017,17 +7986,20 @@ packages:
   '@upsetjs/venn.js@2.0.0':
     resolution: {integrity: sha512-WbBhLrooyePuQ1VZxrJjtLvTc4NVfpOyKx0sKqioq9bX1C1m7Jgykkn8gLrtwumBioXIqam8DLxp88Adbue6Hw==}
 
-  '@vitejs/plugin-react@6.0.5':
-    resolution: {integrity: sha512-BOVzne/NL162sMdResB25mUv+vWMF5NoAjNf09TeGlE7ZpszZWSD3winycicLJw72yeVsoCn/2kOhEuCvEShMA==}
+  '@vitejs/plugin-react@6.1.1':
+    resolution: {integrity: sha512-yxLaQV9gkhS8ezJqCM6+ndU7mDY6gqAg75NQ+0IjwEI8IYOmQCgkRwHKVSfWXW076DsqMo0Dk+0FK1U+M5RgFw==}
     engines: {node: ^20.19.0 || >=22.12.0}
     peerDependencies:
       '@rolldown/plugin-babel': ^0.1.7 || ^0.2.0
       babel-plugin-react-compiler: ^1.0.0
+      oxc-transform-react: ^0.145.0
       vite: ^8.0.0
     peerDependenciesMeta:
       '@rolldown/plugin-babel':
         optional: true
       babel-plugin-react-compiler:
+        optional: true
+      oxc-transform-react:
         optional: true
 
   '@vitejs/plugin-vue@6.0.8':
@@ -14279,21 +14251,6 @@ snapshots:
     optionalDependencies:
       '@types/node': 26.2.0
 
-  '@inquirer/confirm@6.1.1(@types/node@26.2.0)':
-    dependencies:
-      '@inquirer/core': 11.2.1(@types/node@26.2.0)
-      '@inquirer/type': 4.0.7(@types/node@26.2.0)
-    optionalDependencies:
-      '@types/node': 26.2.0
-    optional: true
-
-  '@inquirer/confirm@6.1.1(@types/node@26.4.0)':
-    dependencies:
-      '@inquirer/core': 11.2.1(@types/node@26.4.0)
-      '@inquirer/type': 4.0.7(@types/node@26.4.0)
-    optionalDependencies:
-      '@types/node': 26.4.0
-
   '@inquirer/confirm@6.3.0(@types/node@26.2.0)':
     dependencies:
       '@inquirer/core': 12.0.1(@types/node@26.2.0)
@@ -14301,28 +14258,10 @@ snapshots:
     optionalDependencies:
       '@types/node': 26.2.0
 
-  '@inquirer/core@11.2.1(@types/node@26.2.0)':
+  '@inquirer/confirm@6.3.0(@types/node@26.4.0)':
     dependencies:
-      '@inquirer/ansi': 2.0.7
-      '@inquirer/figures': 2.0.7
-      '@inquirer/type': 4.0.7(@types/node@26.2.0)
-      cli-width: 4.1.0
-      fast-wrap-ansi: 0.2.2
-      mute-stream: 3.0.0
-      signal-exit: 4.1.0
-    optionalDependencies:
-      '@types/node': 26.2.0
-    optional: true
-
-  '@inquirer/core@11.2.1(@types/node@26.4.0)':
-    dependencies:
-      '@inquirer/ansi': 2.0.7
-      '@inquirer/figures': 2.0.7
-      '@inquirer/type': 4.0.7(@types/node@26.4.0)
-      cli-width: 4.1.0
-      fast-wrap-ansi: 0.2.2
-      mute-stream: 3.0.0
-      signal-exit: 4.1.0
+      '@inquirer/core': 12.0.1(@types/node@26.4.0)
+      '@inquirer/type': 4.1.0(@types/node@26.4.0)
     optionalDependencies:
       '@types/node': 26.4.0
 
@@ -14337,6 +14276,18 @@ snapshots:
       signal-exit: 4.1.0
     optionalDependencies:
       '@types/node': 26.2.0
+
+  '@inquirer/core@12.0.1(@types/node@26.4.0)':
+    dependencies:
+      '@inquirer/ansi': 2.0.7
+      '@inquirer/figures': 2.0.8
+      '@inquirer/type': 4.1.0(@types/node@26.4.0)
+      cli-width: 4.1.0
+      fast-wrap-ansi: 0.2.2
+      mute-stream: 3.0.0
+      signal-exit: 4.1.0
+    optionalDependencies:
+      '@types/node': 26.4.0
 
   '@inquirer/editor@5.3.1(@types/node@26.2.0)':
     dependencies:
@@ -14359,8 +14310,6 @@ snapshots:
       iconv-lite: 0.7.3
     optionalDependencies:
       '@types/node': 26.2.0
-
-  '@inquirer/figures@2.0.7': {}
 
   '@inquirer/figures@2.0.8': {}
 
@@ -14425,18 +14374,13 @@ snapshots:
     optionalDependencies:
       '@types/node': 26.2.0
 
-  '@inquirer/type@4.0.7(@types/node@26.2.0)':
-    optionalDependencies:
-      '@types/node': 26.2.0
-    optional: true
-
-  '@inquirer/type@4.0.7(@types/node@26.4.0)':
-    optionalDependencies:
-      '@types/node': 26.4.0
-
   '@inquirer/type@4.1.0(@types/node@26.2.0)':
     optionalDependencies:
       '@types/node': 26.2.0
+
+  '@inquirer/type@4.1.0(@types/node@26.4.0)':
+    optionalDependencies:
+      '@types/node': 26.4.0
 
   '@internationalized/date@3.12.3':
     dependencies:
@@ -17431,12 +17375,12 @@ snapshots:
       d3-selection: 3.0.0
       d3-transition: 3.0.1(d3-selection@3.0.0)
 
-  '@vitejs/plugin-react@6.0.5(vite@8.2.2(@types/node@24.13.3)(esbuild@0.28.1)(sass-embedded@1.103.1)(sass@1.103.1)(terser@5.49.1)(tsx@4.23.12))':
+  '@vitejs/plugin-react@6.1.1(vite@8.2.2(@types/node@24.13.3)(esbuild@0.28.1)(sass-embedded@1.103.1)(sass@1.103.1)(terser@5.49.1)(tsx@4.23.12))':
     dependencies:
       '@rolldown/pluginutils': 1.0.1
       vite: 8.2.2(@types/node@24.13.3)(esbuild@0.28.1)(sass-embedded@1.103.1)(sass@1.103.1)(terser@5.49.1)(tsx@4.23.12)
 
-  '@vitejs/plugin-react@6.0.5(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.1)(sass-embedded@1.103.1)(sass@1.103.1)(terser@5.49.1)(tsx@4.23.12))':
+  '@vitejs/plugin-react@6.1.1(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.1)(sass-embedded@1.103.1)(sass@1.103.1)(terser@5.49.1)(tsx@4.23.12))':
     dependencies:
       '@rolldown/pluginutils': 1.0.1
       vite: 8.2.2(@types/node@26.2.0)(esbuild@0.28.1)(sass-embedded@1.103.1)(sass@1.103.1)(terser@5.49.1)(tsx@4.23.12)
@@ -21121,7 +21065,7 @@ snapshots:
 
   msw@2.15.0(@types/node@26.2.0)(typescript@7.0.2):
     dependencies:
-      '@inquirer/confirm': 6.1.1(@types/node@26.2.0)
+      '@inquirer/confirm': 6.3.0(@types/node@26.2.0)
       '@mswjs/interceptors': 0.41.3
       '@open-draft/deferred-promise': 3.0.0
       '@types/statuses': 2.0.6
@@ -21147,7 +21091,7 @@ snapshots:
 
   msw@2.15.0(@types/node@26.4.0)(typescript@7.0.2):
     dependencies:
-      '@inquirer/confirm': 6.1.1(@types/node@26.4.0)
+      '@inquirer/confirm': 6.3.0(@types/node@26.4.0)
       '@mswjs/interceptors': 0.41.3
       '@open-draft/deferred-promise': 3.0.0
       '@types/statuses': 2.0.6
