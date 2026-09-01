@@ -1,7 +1,7 @@
 import chalk from 'chalk';
 import ora from 'ora';
 
-import type { CopilotSession } from '@github/copilot-sdk';
+import type { CopilotSession, JsonValue } from '@github/copilot-sdk';
 
 import { tryFormatMessage } from './try-format-message.js';
 
@@ -12,12 +12,10 @@ import { tryFormatMessage } from './try-format-message.js';
  * @param keys - Property names to check, in priority order
  * @returns The first matching string value, or `undefined` if none match
  */
-function firstStringProp(
-  value: Record<string, unknown> | undefined,
-  keys: string[],
-): string | undefined {
-  // Missing tool-call arguments cannot contain a matching property.
-  if (value === undefined) {
+function firstStringProp(value: JsonValue | undefined, keys: string[]): string | undefined {
+  // Only object-shaped arguments can carry named properties; primitives,
+  // arrays, and missing arguments cannot match a key lookup.
+  if (typeof value !== 'object' || value === null || Array.isArray(value)) {
     return undefined;
   }
   // Return the first key present with a string value, in caller-specified priority order
