@@ -437,7 +437,7 @@ importers:
         version: link:../../packages/utils/openapi-mock-server
       '@faker-js/faker':
         specifier: ^10.1.0
-        version: 10.5.0
+        version: 10.6.0
       '@playwright/test':
         specifier: ^1.62.1
         version: 1.62.1
@@ -825,7 +825,7 @@ importers:
         version: 2.0.8(@equinor/eds-core-react@2.6.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(styled-components@6.5.3(css-to-react-native@3.2.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)))(@equinor/eds-icons@1.5.1)(@equinor/eds-tokens@2.3.2)(react-dom@19.2.8(react@19.2.8))(react-is@18.3.1)(react@19.2.8)(styled-components@6.5.3(css-to-react-native@3.2.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
       '@faker-js/faker':
         specifier: ^10.1.0
-        version: 10.5.0
+        version: 10.6.0
       '@tanstack/react-query-devtools':
         specifier: ^5.90.2
         version: 5.102.8(@tanstack/react-query@5.102.8(react@19.2.8))(react@19.2.8)
@@ -2142,7 +2142,7 @@ importers:
         version: link:../telemetry
       '@faker-js/faker':
         specifier: ^10.1.0
-        version: 10.5.0
+        version: 10.6.0
       '@types/semver':
         specifier: ^7.0.0
         version: 7.8.0
@@ -2374,7 +2374,7 @@ importers:
         version: link:../service-discovery
       '@faker-js/faker':
         specifier: ^10.1.0
-        version: 10.5.0
+        version: 10.6.0
       msw:
         specifier: ^2.7.3
         version: 2.15.0(@types/node@26.4.0)(typescript@7.0.2)
@@ -3174,7 +3174,7 @@ importers:
         version: link:../imports
       '@faker-js/faker':
         specifier: ^10.1.0
-        version: 10.5.0
+        version: 10.6.0
       json-schema-faker:
         specifier: ^0.6.3
         version: 0.6.3
@@ -3199,7 +3199,7 @@ importers:
         version: link:../openapi-mock
       '@faker-js/faker':
         specifier: ^10.1.0
-        version: 10.5.0
+        version: 10.6.0
       yaml:
         specifier: ^2.9.0
         version: 2.9.0
@@ -4496,8 +4496,8 @@ packages:
       '@noble/hashes':
         optional: true
 
-  '@faker-js/faker@10.5.0':
-    resolution: {integrity: sha512-bsxD8WLS5lIj7aaoCx1YJkktqYj5vlBUE6HWzu2Q51ksrGJ0H737ECCKlFU7Yf8Br45z9t99frBp/J7kzbMPAg==}
+  '@faker-js/faker@10.6.0':
+    resolution: {integrity: sha512-3RQHgEtvL1Frl/d1cSreo7qhJ3Gk1OdNUai/CtZ8G+wYeRQnJih3s9xJ9/kgYekPQRdwgh0HXRPqMlzWGwivIQ==}
     engines: {node: ^20.19.0 || ^22.13.0 || ^23.5.0 || >=24.0.0, npm: '>=10'}
 
   '@floating-ui/core@1.8.0':
@@ -14189,7 +14189,7 @@ snapshots:
 
   '@exodus/bytes@1.15.1': {}
 
-  '@faker-js/faker@10.5.0': {}
+  '@faker-js/faker@10.6.0': {}
 
   '@floating-ui/core@1.8.0':
     dependencies:
