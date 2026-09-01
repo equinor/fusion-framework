@@ -2690,7 +2690,7 @@ importers:
         version: link:../../utils/observable
       '@remix-run/router':
         specifier: ^1.23.3
-        version: 1.23.3
+        version: 1.23.4
       '@types/react':
         specifier: ^19.2.7
         version: 19.2.18
