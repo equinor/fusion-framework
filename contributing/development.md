@@ -41,6 +41,7 @@ Once you've installed Node.js and pnpm, open Terminal and run the following:
   - 🗂️ Utils - _collection of utilities_
 
 ## READMEs:
+- [agent-tooling](./agent-tooling.md)
 - [code-standards](./code-standards.md)
 - [self-review](./self-review.md)
 - [cookbooks](./cookbooks.md)

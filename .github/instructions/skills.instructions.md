@@ -8,7 +8,7 @@ applyTo: ".agents/skills/**/*.md"
 
 ## TL;DR (for AI agents)
 
-- `.agents/skills/**` is treated as read-only catalog content unless the user explicitly asks you to modify it.
+- APM-managed content under `.agents/skills/**` is read-only; use `apm.yml` and `apm.lock.yaml` to identify its source and version.
 - Repo-owned skills belong under `.agents/skills/**`; do not add new repository skills under `.github/skills/**`.
 - Do not edit repository-local skill files as part of routine repo greenkeeping or policy cleanup.
 - Fix policy drift in `.github/instructions/*.md`, prompts, or adjacent repo documentation instead of patching the skill catalog.
@@ -19,13 +19,16 @@ applyTo: ".agents/skills/**/*.md"
 ## Source of truth
 
 Repository contribution policy lives in `.github/instructions/*.md`.
-The `.agents/skills/**` catalog should be treated as imported or mirrored workflow content unless the user explicitly asks to work on that catalog.
+The `apm.lock.yaml` deployment ledger identifies imported skills and their owners.
+Treat those deployed files as generated copies. Skills absent from that ledger, including
+repository-owned `custom-*` skills, may be changed only when the user explicitly asks to
+work on the skill catalog.
 
 ## Default handling for `.agents/skills/**`
 
 When you are working near the skill catalog:
 
-1. Treat `.agents/skills/**` as read-only unless the user explicitly requests a skill-catalog change.
+1. Check `apm.lock.yaml` before editing a skill. Never edit an APM-managed deployed copy directly.
 2. Put new repo-owned skills under `.agents/skills/**`, not `.github/skills/**`.
 3. Put shared repo contribution rules in `.github/instructions/*.md`, not in skill files.
 4. When a workflow or prompt needs shared mutation policy, reference `.github/instructions/workflow-contribution.instructions.md`.
@@ -35,6 +38,7 @@ When you are working near the skill catalog:
 ## Greenkeeping guidance
 
 - If a new repository-wide workflow rule is needed, add or update a `.github/instructions/*.md` file first.
+- Change imported skill versions through `apm.yml`; do not use `npx skills` or recreate `skills-lock.json`.
 - Prefer prompt, instruction, or documentation fixes over direct skill-catalog edits.
 - When repo behavior must diverge from an imported skill in a repeatable way, add a repo-owned `custom-<repo-skill>` instead of patching the imported skill.
 - If the user explicitly asks to update a skill, keep the change minimal and avoid duplicating repo policy that already exists elsewhere.
