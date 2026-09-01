@@ -70,7 +70,7 @@
     "pouchdb": "^9.0.0",
     "rxjs": "^7.8.1",
     "uuid": "^14.0.1",
-    "zod": "^3.23.8"
+    "zod": "^4.5.4"
   },
   "devDependencies": {
     "@equinor/fusion-framework-module-event": "workspace:^",
