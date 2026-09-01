@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-module-state
 
+## 2.0.4
+
+### Patch Changes
+
+- d91fde3: Internal: bump `zod` from 4.4.3 to 4.5.4.
+
 ## 2.0.3
 
 ### Patch Changes

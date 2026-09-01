@@ -1,5 +1,23 @@
 # Change Log
 
+## 15.3.2
+
+### Patch Changes
+
+- 086fec5: Internal: bump `open` from `11.0.1` to `11.0.2`.
+- 98ff08c: Internal: bump `inquirer` from `14.0.2` to `14.2.0`.
+- 9fc39ae: Internal: bump `open` from `11.0.0` to `11.0.1`.
+- b5c6737: Internal: bump `pretty-bytes` from `7.1.1` to `7.1.2`.
+- 3acf1f7: Internal: bump `rollup` from `4.62.5` to `4.63.1`.
+- Updated dependencies [02473c5]
+- Updated dependencies [9ae5d8b]
+- Updated dependencies [63a2f54]
+- Updated dependencies [e66ec44]
+- Updated dependencies [63a2f54]
+  - @equinor/fusion-framework-module-azure-identity@0.3.2
+  - @equinor/fusion-framework-dev-portal@11.0.6
+  - @equinor/fusion-framework-dev-server@2.1.2
+
 ## 15.3.1
 
 ### Patch Changes

@@ -1,5 +1,12 @@
 # @equinor/fusion-framework-cookbook-app-react-ai
 
+## 0.0.5
+
+### Patch Changes
+
+- dd9d118: Internal: bump `@assistant-ui/react` from `0.15.16` to `0.15.17`.
+- 6ceda71: Internal: bump `@assistant-ui/react-markdown` from `0.14.12` to `0.14.13`.
+
 ## 0.0.4
 
 ### Patch Changes

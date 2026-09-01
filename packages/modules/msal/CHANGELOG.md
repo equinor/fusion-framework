@@ -1,5 +1,11 @@
 # Change Log
 
+## 11.0.2
+
+### Patch Changes
+
+- 86346d6: Internal: bump `@azure/msal-browser` from 5.17.3 to 5.20.0.
+
 ## 11.0.1
 
 ### Patch Changes

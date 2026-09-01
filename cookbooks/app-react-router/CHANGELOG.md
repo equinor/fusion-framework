@@ -1,5 +1,15 @@
 # Change Log
 
+## 5.0.5
+
+### Patch Changes
+
+- 9859239: Internal: bump `@faker-js/faker` from `10.5.0` to `10.6.0`.
+- 9084b4c: Internal: bump `@equinor/fusion-wc-markdown` from `1.5.1` to `1.6.4`.
+- 9ae5d8b: Internal: bump `styled-components` from `6.5.1` to `6.5.3`.
+- 9084b4c: Internal: bump `@tanstack/react-query` from `5.101.4` to `5.102.8`.
+- 9c7f5eb: Internal: bump `@tanstack/react-query-devtools` from `5.101.4` to `5.102.8`.
+
 ## 5.0.4
 
 ### Patch Changes

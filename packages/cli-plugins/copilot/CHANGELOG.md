@@ -1,5 +1,12 @@
 # @equinor/fusion-framework-cli-plugin-copilot
 
+## 2.0.8
+
+### Patch Changes
+
+- 107cdc9: Internal: bump `@github/copilot-sdk` from `1.0.9` to `1.0.11` and adapt `firstStringProp` to the SDK's re-typed `ToolExecutionStartData.arguments` (now `JsonValue` instead of a plain index-signature object).
+- 9fbe226: Internal: bump `agent-browser` from `0.34.0` to `0.35.1`.
+
 ## 2.0.7
 
 ### Patch Changes

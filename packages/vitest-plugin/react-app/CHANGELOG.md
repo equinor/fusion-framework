@@ -1,5 +1,18 @@
 # @equinor/fusion-framework-vitest-plugin-react-app
 
+## 1.0.2
+
+### Patch Changes
+
+- Updated dependencies [086fec5]
+- Updated dependencies [98ff08c]
+- Updated dependencies [9fc39ae]
+- Updated dependencies [b5c6737]
+- Updated dependencies [3acf1f7]
+  - @equinor/fusion-framework-cli@15.3.2
+  - @equinor/fusion-framework-app@13.1.2
+  - @equinor/fusion-framework@8.1.2
+
 ## 1.0.1
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # Change Log
 
+## 5.0.9
+
+### Patch Changes
+
+- 9859239: Internal: bump `@faker-js/faker` from `10.5.0` to `10.6.0`.
+
 ## 5.0.8
 
 ### Patch Changes

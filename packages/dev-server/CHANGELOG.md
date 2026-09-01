@@ -1,5 +1,12 @@
 # @equinor/fusion-framework-dev-server
 
+## 2.1.2
+
+### Patch Changes
+
+- 63a2f54: Internal: bump `@vitejs/plugin-react` from `6.0.5` to `6.1.1`.
+- @equinor/fusion-framework-vite-plugin-spa@4.1.2
+
 ## 2.1.1
 
 ### Patch Changes

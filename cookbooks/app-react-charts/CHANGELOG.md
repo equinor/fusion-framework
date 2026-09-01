@@ -1,5 +1,12 @@
 # Change Log
 
+## 2.0.6
+
+### Patch Changes
+
+- 9ae5d8b: Internal: bump `styled-components` from `6.5.1` to `6.5.3`.
+- 0a183d8: Internal: bump `ag-charts-community` and `ag-charts-react` from `14.0.2` to `14.1.0`.
+
 ## 2.0.5
 
 ### Patch Changes

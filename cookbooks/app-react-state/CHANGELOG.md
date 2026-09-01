@@ -1,5 +1,12 @@
 # @equinor/fusion-framework-cookbook-app-react-state
 
+## 1.0.3
+
+### Patch Changes
+
+- 9ae5d8b: Internal: bump `styled-components` from `6.5.1` to `6.5.3`.
+- 72874ef: Internal: bump `uuid` from `14.0.1` to `14.0.2`.
+
 ## 1.0.2
 
 ### Patch Changes

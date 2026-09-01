@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-module-azure-identity
 
+## 0.3.2
+
+### Patch Changes
+
+- 02473c5: Internal: bump `@azure/msal-node-extensions` from `5.4.0` to `5.5.0`.
+
 ## 0.3.1
 
 ### Patch Changes
