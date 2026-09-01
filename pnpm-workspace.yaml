@@ -44,7 +44,7 @@ overrides:
   '@babel/core@<=7.29.0': 7.29.6
   esbuild@>=0.27.3 <0.28.1: 0.28.1
   uuid@<11.1.1: 11.1.1
-  zod: 4.4.3
+  zod: 4.5.4
 
 allowBuilds:
   # only used by AuthProviderInteractiveBrowser's OS-level token cache, a
