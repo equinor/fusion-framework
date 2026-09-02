@@ -1,4 +1,5 @@
 import { HttpClient } from '@equinor/fusion-framework-module-http/client';
+import type { IHttpClient } from '@equinor/fusion-framework-module-http';
 import { describe, expect, it, vi } from 'vitest';
 
 import { RolesClient } from '../RolesClient.js';
@@ -14,12 +15,51 @@ const createHttpClient = () => {
   return { httpClient, json };
 };
 
+/**
+ * Creates and initializes a Roles client for an account resolver.
+ *
+ * @param httpClient - HTTP client used by the Roles transport.
+ * @param resolveCurrentAccountIdentifier - Resolver read before every account-scoped operation.
+ * @returns Initialized Roles client.
+ */
+const createRolesClient = (
+  httpClient: HttpClient,
+  resolveCurrentAccountIdentifier: () => string | Promise<string>,
+): RolesClient => {
+  const client = new RolesClient(httpClient, resolveCurrentAccountIdentifier);
+  client.initialize({ resolveCurrentAccountIdentifier });
+  return client;
+};
+
+/**
+ * Test subclass that exposes protected Roles client extension seams.
+ */
+class TestRolesClient extends RolesClient {
+  /**
+   * Resolves the account through the protected client lifecycle method.
+   *
+   * @returns Current account identifier.
+   */
+  public resolveAccountIdentifier(): Promise<string> {
+    return this._getCurrentAccountIdentifier();
+  }
+
+  /**
+   * Exposes the inherited HTTP transport for subclass verification.
+   *
+   * @returns HTTP client supplied to the base constructor.
+   */
+  public getHttpClient(): IHttpClient {
+    return this.httpClient;
+  }
+}
+
 describe('RolesClient', () => {
   it('gets active roles for the scoped account', async () => {
     const { httpClient, json } = createHttpClient();
     const activeRoles = [{ systemName: 'Fusion', accessRoleName: 'Reader' }];
     json.mockResolvedValue(activeRoles);
-    const client = new RolesClient(httpClient, 'account/id');
+    const client = createRolesClient(httpClient, () => 'account/id');
 
     await expect(client.getActiveRoles()).resolves.toEqual(activeRoles);
 
@@ -33,7 +73,7 @@ describe('RolesClient', () => {
     const { httpClient, json } = createHttpClient();
     const claimableRoles = [{ id: 'claimable-role' }];
     json.mockResolvedValue(claimableRoles);
-    const client = new RolesClient(httpClient, 'account-id');
+    const client = createRolesClient(httpClient, () => 'account-id');
 
     await expect(client.getClaimableRoles()).resolves.toEqual(claimableRoles);
     expect(json).toHaveBeenCalledWith(
@@ -46,7 +86,7 @@ describe('RolesClient', () => {
     const { httpClient, json } = createHttpClient();
     const activation = { id: 'activation-id', activeToDate: '2026-09-02T14:00:00Z' };
     json.mockResolvedValue(activation);
-    const client = new RolesClient(httpClient, 'account-id');
+    const client = createRolesClient(httpClient, () => 'account-id');
 
     await expect(
       client.claimRole({
@@ -71,7 +111,7 @@ describe('RolesClient', () => {
   it('propagates request failures from Roles V2', async () => {
     const { httpClient, json } = createHttpClient();
     json.mockRejectedValue(new Error('request failed'));
-    const client = new RolesClient(httpClient, 'account-id');
+    const client = createRolesClient(httpClient, () => 'account-id');
 
     await expect(client.getActiveRoles()).rejects.toThrow('request failed');
   });
@@ -88,7 +128,7 @@ describe('RolesClient', () => {
         },
       ],
     });
-    const client = new RolesClient(httpClient, 'account-id');
+    const client = createRolesClient(httpClient, () => 'account-id');
 
     await expect(client.canClaimAccessRole('Reports.Read')).resolves.toBe(true);
     await expect(client.canClaimAccessRole('Reports.Write')).resolves.toBe(false);
@@ -104,7 +144,7 @@ describe('RolesClient', () => {
       nextPage: '/accounts/account-id/claimable-role-assignments?page=2',
       value: [],
     });
-    const client = new RolesClient(httpClient, 'account-id');
+    const client = createRolesClient(httpClient, () => 'account-id');
 
     await expect(client.canClaimAccessRole('Reports.Read')).rejects.toThrow(
       'Roles V2 returned incomplete claimable role assignments while checking claim eligibility.',
@@ -134,7 +174,7 @@ describe('RolesClient', () => {
       .mockResolvedValueOnce(activeRoles)
       .mockResolvedValueOnce(claimableRoles)
       .mockResolvedValueOnce(claimability);
-    const client = new RolesClient(httpClient, 'account-id');
+    const client = createRolesClient(httpClient, () => 'account-id');
 
     await Promise.all([client.getActiveRoles(), client.getActiveRoles()]);
     await Promise.all([client.getClaimableRoles(), client.getClaimableRoles()]);
@@ -158,7 +198,7 @@ describe('RolesClient', () => {
     json.mockResolvedValue(activeRoles);
     let now = Date.now();
     const dateNow = vi.spyOn(Date, 'now').mockImplementation(() => now);
-    const client = new RolesClient(httpClient, 'account-id');
+    const client = createRolesClient(httpClient, () => 'account-id');
 
     await client.getActiveRoles();
     await client.getActiveRoles();
@@ -190,7 +230,7 @@ describe('RolesClient', () => {
       .mockResolvedValueOnce(claimableRoles)
       .mockResolvedValueOnce(claimability)
       .mockRejectedValueOnce(new Error('claim failed'));
-    const client = new RolesClient(httpClient, 'account-id');
+    const client = createRolesClient(httpClient, () => 'account-id');
 
     await client.getActiveRoles();
     await client.getClaimableRoles();
@@ -201,5 +241,51 @@ describe('RolesClient', () => {
     await client.getClaimableRoles();
     await client.canClaimAccessRole('Reports.Read');
     expect(json).toHaveBeenCalledTimes(4);
+  });
+
+  it('uses the account resolver supplied to the constructor', async () => {
+    const { httpClient, json } = createHttpClient();
+    json.mockResolvedValue([]);
+    const client = new RolesClient(httpClient, () => 'constructor-account');
+
+    await client.getActiveRoles();
+
+    expect(json.mock.calls[0][0]).toContain('/accounts/constructor-account/');
+  });
+
+  it('uses the current account resolver supplied during initialization', async () => {
+    const { httpClient, json } = createHttpClient();
+    json.mockResolvedValue([]);
+    const client = new RolesClient(httpClient, () => 'constructor-account');
+    client.initialize({ resolveCurrentAccountIdentifier: () => 'initialized-account' });
+
+    await client.getActiveRoles();
+
+    expect(json.mock.calls[0][0]).toContain('/accounts/initialized-account/');
+  });
+
+  it('exposes account resolution and transport to extending mock clients', async () => {
+    const { httpClient } = createHttpClient();
+    const client = new TestRolesClient(httpClient, () => 'mock-account');
+
+    await expect(client.resolveAccountIdentifier()).resolves.toBe('mock-account');
+    expect(client.getHttpClient()).toBe(httpClient);
+  });
+
+  it('resolves the current account for each operation and isolates cached data by account', async () => {
+    const { httpClient, json } = createHttpClient();
+    let currentAccountIdentifier = 'account-a';
+    json.mockResolvedValue([]);
+    const client = createRolesClient(httpClient, () => currentAccountIdentifier);
+
+    await client.getActiveRoles();
+    currentAccountIdentifier = 'account-b';
+    await client.getActiveRoles();
+    currentAccountIdentifier = 'account-a';
+    await client.getActiveRoles();
+
+    expect(json).toHaveBeenCalledTimes(2);
+    expect(json.mock.calls[0][0]).toContain('/accounts/account-a/');
+    expect(json.mock.calls[1][0]).toContain('/accounts/account-b/');
   });
 });

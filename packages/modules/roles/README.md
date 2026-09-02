@@ -4,8 +4,11 @@
 typed Fusion Framework module. Use it when a host, portal, or application needs authenticated
 RolesV2 requests without resolving service discovery or constructing an HTTP client itself.
 
-The module resolves the `rolesv2` service, uses the service scopes with the framework HTTP and
-authentication modules, and exposes account-scoped role operations directly through the roles provider.
+During configuration, `RolesModuleConfigurator` creates its default client by resolving the
+`rolesv2` service. An app-scoped service discovery provider takes precedence; otherwise the
+configurator uses `ref.serviceDiscovery` inherited from the parent framework. During module
+initialization, the client receives a current-account resolver and then reads the selected
+authentication account for every operation. Account identifiers remain internal to the module.
 When the event and telemetry modules are enabled, the provider also reports operation outcomes.
 
 ## Enable Roles V2 and require roles during initialization
@@ -31,9 +34,12 @@ without a configuration callback, when initialization should not enforce an acce
 Multiple `requireRoles` calls accumulate requirements. The method also accepts a builder callback
 when the required roles depend on configuration context.
 
-Applications and portal modules can call `enableRoles` without repeating host client
-configuration. When a parent framework already has a roles provider, the child reuses that
-provider and still checks its own configured role requirements during initialization.
+Applications and portal modules can call `enableRoles` without configuring their own service
+discovery. `RolesModuleConfigurator` creates a local default client through inherited
+`ref.serviceDiscovery`, and module initialization creates a local `RolesProvider`.
+
+After provider construction, module initialization verifies the configured requirements with
+`RolesProvider.hasRole(requiredRoles, { assert: true, required: true })` before returning it.
 
 ## Show active and claimable roles
 
@@ -45,7 +51,9 @@ const [activeRoles, claimableRoles] = await Promise.all([
   framework.modules.roles.getClaimableRoles(),
 ]);
 
-const canReadReports = await framework.modules.roles.hasRole('Reports.Read');
+const canReadReports = await framework.modules.roles.hasRole(['Reports.Read'], {
+  required: true,
+});
 const canClaimReportReader = await framework.modules.roles.canClaimAccessRole('Reports.Read');
 ```
 
@@ -53,7 +61,7 @@ const canClaimReportReader = await framework.modules.roles.canClaimAccessRole('R
 whether activating any claimable role would grant the requested access-role name.
 
 Request and response validation errors from `@equinor/fusion-services` and HTTP request errors
-are propagated to the caller.
+are preserved as the `cause` of a `RolesError`.
 
 The built-in client caches active roles, claimable roles, and claim-eligibility results for one
 minute through `@equinor/fusion-query`. Concurrent matching reads share the same request.
@@ -97,7 +105,47 @@ enableRoles(configurator, (builder) => {
 
 `RolesModuleConfigurator.setClient` accepts either an `IRolesClient` instance or a builder callback
 that resolves one during configuration. It bypasses service discovery for hosts that create their
-own account-scoped client, test environments, and custom transports.
+own client, test environments, and custom transports.
+
+Module initialization calls `IRolesClient.initialize` for custom and built-in clients.
+`RolesClientInitializeOptions.resolveCurrentAccountIdentifier` returns the account selected when
+the operation executes. Custom clients should retain that resolver and call it per operation rather
+than storing one account identifier during initialization. This keeps account changes current and
+prevents one account's role data from being used for another account.
+
+Direct `RolesClient` construction also requires an account resolver as its second argument:
+
+```ts
+const client = new RolesClient(httpClient, resolveCurrentAccountIdentifier);
+```
+
+When the client is supplied through `RolesModuleConfigurator.setClient`, `module.initialize` calls
+`client.initialize` with the framework resolver before constructing the provider. Custom and mock
+clients can extend `RolesClient`; its transport, account resolver, query resources, and request
+helpers are protected extension points.
 
 This module supports role-aware user interfaces. A trusted backend must still enforce
 authorization for protected operations.
+
+## Handle Roles errors
+
+Every provider failure extends `RolesError`. Use `RolesError.is(error)` to narrow an unknown thrown
+value without parsing its message:
+
+```ts
+import { RolesError } from '@equinor/fusion-framework-module-roles/errors';
+
+try {
+  await framework.modules.roles.claimRole({ roleId: claimableRoleId });
+} catch (error) {
+  if (RolesError.is(error)) {
+    reportRolesFailure(error);
+  }
+}
+```
+
+- `RequiredRolesError` reports missing bootstrap roles and missing active account requirements.
+- `ClaimRoleError` reports claim cancellation, event dispatch, and Roles V2 activation failures.
+- `RolesError` reports other provider, configuration, client, and request failures.
+
+Wrapped service and transport errors remain available through `error.cause`.

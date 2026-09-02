@@ -1,7 +1,9 @@
+import { RolesError } from './RolesError.js';
+
 /**
  * Error thrown when required Roles V2 access roles prevent module bootstrap.
  */
-export class RequiredRolesError extends Error {
+export class RequiredRolesError extends RolesError {
   /**
    * Creates a required-role bootstrap error.
    *
