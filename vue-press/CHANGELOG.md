@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-docs
 
+## 0.4.22
+
+### Patch Changes
+
+- 54d0d20: Document the supported middleware router request methods, including the new `patch` and `options` shorthands.
+
 ## 0.4.21
 
 ### Patch Changes
