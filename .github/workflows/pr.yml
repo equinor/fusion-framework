@@ -193,3 +193,24 @@ jobs:
           pnpm turbo run test:playwright --affected \
             --filter @equinor/fusion-framework-cookbook-app-react-context \
             --filter @equinor/fusion-framework-cookbook-app-react-mock-playwright
+
+  required-check:
+    name: Check Code
+    if: always()
+    needs:
+      - code-quality
+      - build
+      - unit-tests
+      - cookbook-tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify all PR checks passed
+        env:
+          JOB_RESULTS: ${{ toJSON(needs) }}
+        run: |
+          failures=$(jq -r 'to_entries[] | select(.value.result != "success") | "\(.key): \(.value.result)"' <<< "$JOB_RESULTS")
+          if [[ -n "$failures" ]]; then
+            echo "Required PR checks did not pass:"
+            echo "$failures"
+            exit 1
+          fi
