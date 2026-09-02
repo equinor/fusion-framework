@@ -171,7 +171,8 @@ Format: `package name` → path → role.
 `app-react`, `app-react-ag-grid`, `app-react-ai`, `app-react-apploader`, `app-react-assets`,
 `app-react-bookmark`, `app-react-bookmark-advanced`, `app-react-charts`, `app-react-context`,
 `app-react-context-custom-error`, `app-react-environment-variables`, `app-react-feature-flag`,
-`app-react-mock-playwright`, `app-react-module`, `app-react-msal`, `app-react-observable`,
+`app-react-layout`, `app-react-mock-playwright`, `app-react-module`, `app-react-msal`,
+`app-react-observable`,
 `app-react-people`, `app-react-router`, `app-react-router-legacy`, `app-react-settings`,
 `app-react-state`, `app-react-styling`, `app-vanilla`, `poc-portal`, `portal`,
 `portal-analytics`.
