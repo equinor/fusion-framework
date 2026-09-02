@@ -43,7 +43,6 @@ jobs:
         with:
           path: ${{ steps.pnpm-store.outputs.path }}
           key: pnpm-store-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
-          lookup-only: true
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile --prefer-offline
