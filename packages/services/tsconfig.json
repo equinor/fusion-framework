@@ -1,0 +1,19 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "dist/esm",
+    "rootDir": "src",
+    "declarationDir": "./dist/types",
+
+    "paths": {
+      "@equinor/fusion-services/*": ["./*"]
+    }
+  },
+  "references": [
+    {
+      "path": "../modules/http"
+    }
+  ],
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist", "**/__tests__/**"]
+}

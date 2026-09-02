@@ -13,7 +13,7 @@ search to rediscover it.
 
 | Path | Contains | Published? |
 | --- | --- | --- |
-| `packages/*` | Framework libraries (64 packages) | Yes, via Changesets |
+| `packages/*` | Framework libraries (65 packages) | Yes, via Changesets |
 | `cookbooks/*` | Runnable example apps and portals | Yes (versioned, but examples) |
 | `eds-content/`, `eds/` | EDS design-system content and token tooling | No |
 | `vue-press/` | Documentation site | Partly |
@@ -64,6 +64,27 @@ Format: `package name` → path → role.
 | `@equinor/fusion-framework-module-state` | `packages/modules/state` | Replicated/persisted app state (PouchDB-backed sync) |
 | `@equinor/fusion-framework-module-telemetry` | `packages/modules/telemetry` | Microsoft telemetry |
 | `@equinor/fusion-framework-module-widget` | `packages/modules/widget` | Widget loading |
+
+### Services (`packages/services`)
+
+| Package | Path | Role |
+| --- | --- | --- |
+| `@equinor/fusion-services` | `packages/services` | Tree-shakeable function-based API clients (Roles V2), version-scoped Zod schemas |
+
+> Endpoints are standalone functions, not client classes, and reusable schemas are
+> version-scoped (`src/roles/v1/schemas/*`, exported as `…V1`). The Zod schemas are the single
+> source of truth: model types such as `ApiRoleV1` are `z.infer` of their schema, and no
+> handwritten API interfaces exist. A version key (`'v1'`) and
+> its concrete value (`'1.0'`) resolve identically; an unsupported version throws before
+> the HTTP client is invoked.
+>
+> The complete published contract is snapshotted in `packages/services/src/roles/v1/openapi.json`
+> and published as the `roles/v1/openapi.json` subpath of `@equinor/fusion-services`.
+> The subpath is versioned by the API version, independent of the package version.
+> `check:openapi roles` diffs it against the live service; snapshot updates are reviewed and applied manually
+> it — both need network access and are deliberately outside `pnpm test`/`build`/`lint`.
+> Consumer service guides live in `packages/services/docs/`; package extension and manual
+> synchronization procedures live in `packages/services/CONTRIBUTING.md`.
 
 ### React (`packages/react/*`)
 
@@ -166,6 +187,9 @@ Use this table instead of searching. "Start here" is the first file to open.
 | Task | Start here |
 | --- | --- |
 | Add or change an HTTP client | `packages/modules/http/src` |
+| Call a Fusion platform API (Roles V2) from an app | `packages/services/src/roles` |
+| Add or change a Fusion service endpoint function | `packages/services/src/roles/endpoints`, schemas in `packages/services/src/roles/v1/schemas` |
+| Check a Fusion service contract for drift | `packages/services/scripts`, snapshot in `packages/services/src/roles/v1/openapi.json` |
 | Change auth behavior | `packages/modules/msal/src`, `packages/modules/azure-identity/src` |
 | Change routing or route DSL | `packages/react/router/src`, `packages/modules/navigation/src` |
 | Change module registration/init | `packages/modules/module/src` |

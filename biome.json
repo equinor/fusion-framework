@@ -13,7 +13,8 @@
       "!**/vue-press/src/.vuepress",
       "!package.json",
       "!pnpm-lock.yaml",
-      "!**/openapi-mock-server/src/__tests__/fixtures/broken"
+      "!**/openapi-mock-server/src/__tests__/fixtures/broken",
+      "!**/openapi.json"
     ]
   },
   "formatter": {

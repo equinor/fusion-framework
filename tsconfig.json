@@ -13,6 +13,7 @@
       "@equinor/fusion-framework-*": ["./packages/*/src"],
       "@equinor/fusion-framework": ["./packages/framework/src"],
       "fusion-framework-vite-plugin-*": ["./packages/vite-plugins/*/src"],
+      "@equinor/fusion-services/*": ["./packages/services/src/*"],
       "@equinor/fusion-observable": ["./packages/utils/observable/src"],
       "@equinor/fusion-query": ["./packages/utils/query/src"]
     }

@@ -1,0 +1,24 @@
+{
+  "openapi": "3.1.1",
+  "info": { "title": "Fixture API", "version": "1.0" },
+  "servers": [{ "url": "https://example.test/" }],
+  "security": [{ "oauth2": [] }],
+  "tags": [{ "name": "Roles" }],
+  "paths": {
+    "/roles": {
+      "parameters": [{ "name": "api-version", "in": "query" }],
+      "get": { "summary": "List roles", "responses": { "200": { "description": "ok" } } },
+      "post": { "summary": "Create role", "responses": { "201": { "description": "created" } } }
+    },
+    "/roles/{roleIdentifier}": {
+      "get": { "summary": "Get role", "responses": { "200": { "description": "ok" } } }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ApiRole": { "type": "object", "properties": { "id": { "type": "string" } } },
+      "ApiScopeType": { "type": "object" }
+    },
+    "securitySchemes": { "oauth2": { "type": "oauth2" } }
+  }
+}
