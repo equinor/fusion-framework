@@ -11,6 +11,8 @@ import {
 } from '@equinor/fusion-services/roles';
 import { lastValueFrom } from 'rxjs';
 
+import { RolesError } from './errors/RolesError.js';
+
 const ROLES_CACHE_EXPIRY_MS = 60_000;
 
 /**
@@ -26,9 +28,38 @@ export interface ClaimRoleInput {
 }
 
 /**
+ * Resolves the account selected by the current authentication state.
+ */
+export type RolesAccountResolver = () => string | Promise<string>;
+
+/**
+ * Runtime dependencies supplied when a Roles client is initialized.
+ */
+export interface RolesClientInitializeOptions {
+  /**
+   * Resolves the account selected by the current authentication state.
+   *
+   * @returns The current Fusion account identifier.
+   */
+  resolveCurrentAccountIdentifier: RolesAccountResolver;
+}
+
+interface ClaimableAccessRoleQueryArgs {
+  accountIdentifier: string;
+  accessRoleName: string;
+}
+
+/**
  * Typed client contract for executing functions from `@equinor/fusion-services/roles`.
  */
 export interface IRolesClient {
+  /**
+   * Initializes account resolution before role operations are used.
+   *
+   * @param options - Runtime dependencies used by account-scoped operations.
+   */
+  initialize(options: RolesClientInitializeOptions): void | Promise<void>;
+
   /**
    * Gets the account's currently active access roles.
    *
@@ -66,75 +97,97 @@ export interface IRolesClient {
 }
 
 /**
- * Executes typed Roles V2 endpoint functions through one authenticated framework HTTP client.
+ * Executes typed Roles V2 endpoint functions for the account resolved by each operation.
+ *
+ * Transport, account resolution, query resources, and request helpers are protected so test and
+ * custom clients can extend the built-in behavior without duplicating its lifecycle.
  */
 export class RolesClient implements IRolesClient {
-  private readonly activeRolesQuery: Query<ApiAccountActiveAccessRoleAssignmentV1[], void>;
-  private readonly claimableRolesQuery: Query<ApiConsolidatedClaimableRoleAssignmentV1[], void>;
-  private readonly claimableAccessRoleQuery: Query<boolean, string>;
+  /** Account-isolated cache for active access-role assignments. */
+  protected readonly activeRolesQuery: Query<ApiAccountActiveAccessRoleAssignmentV1[], string>;
+  /** Account-isolated cache for consolidated claimable-role assignments. */
+  protected readonly claimableRolesQuery: Query<ApiConsolidatedClaimableRoleAssignmentV1[], string>;
+  /** Account and access-role isolated cache for claim eligibility. */
+  protected readonly claimableAccessRoleQuery: Query<boolean, ClaimableAccessRoleQueryArgs>;
 
   /**
-   * Creates an account-scoped Roles V2 client.
+   * Creates a Roles V2 client with an account resolver for direct and configured usage.
    *
    * @param httpClient - Service-discovery-backed framework HTTP client.
-   * @param accountIdentifier - Fusion account identifier used by all client operations.
+   * @param accountResolver - Resolves the account selected when each operation executes.
    */
   constructor(
-    private readonly httpClient: IHttpClient,
-    private readonly accountIdentifier: string,
+    /** HTTP transport used by Roles V2 request functions. */
+    protected readonly httpClient: IHttpClient,
+    /** Resolver called before every account-scoped operation. */
+    protected accountResolver: RolesAccountResolver,
   ) {
     this.activeRolesQuery = new Query({
       client: {
-        fn: () =>
+        fn: (accountIdentifier) =>
           listAccountActiveAccessRoleAssignments(
             'v1',
             this.httpClient,
           )({
-            accountIdentifier: this.accountIdentifier,
+            accountIdentifier,
           }),
       },
-      key: () => 'active-roles',
+      // Account-scoped keys prevent a signed-in account change from reusing another account's data.
+      key: (accountIdentifier) => accountIdentifier,
       expire: ROLES_CACHE_EXPIRY_MS,
     });
     this.claimableRolesQuery = new Query({
       client: {
-        fn: () =>
+        fn: (accountIdentifier) =>
           listAccountConsolidatedClaimableRoleAssignments(
             'v1',
             this.httpClient,
           )({
-            accountIdentifier: this.accountIdentifier,
+            accountIdentifier,
           }),
       },
-      key: () => 'claimable-roles',
+      // Account-scoped keys preserve independent claimable-role caches across account changes.
+      key: (accountIdentifier) => accountIdentifier,
       expire: ROLES_CACHE_EXPIRY_MS,
     });
     this.claimableAccessRoleQuery = new Query({
       client: {
-        fn: (accessRoleName) => this.fetchCanClaimAccessRole(accessRoleName),
+        fn: (args) => this._fetchCanClaimAccessRole(args),
       },
-      key: (accessRoleName) => accessRoleName,
+      // Both values define claim eligibility and must participate in cache identity.
+      key: ({ accountIdentifier, accessRoleName }) =>
+        JSON.stringify([accountIdentifier, accessRoleName]),
       expire: ROLES_CACHE_EXPIRY_MS,
     });
   }
 
+  /** {@inheritDoc IRolesClient.initialize} */
+  public initialize(options: RolesClientInitializeOptions): void {
+    this.accountResolver = options.resolveCurrentAccountIdentifier;
+  }
+
   /** {@inheritDoc IRolesClient.getActiveRoles} */
-  public getActiveRoles(): Promise<ApiAccountActiveAccessRoleAssignmentV1[]> {
-    return lastValueFrom(Query.extractQueryValue(this.activeRolesQuery.query()));
+  public async getActiveRoles(): Promise<ApiAccountActiveAccessRoleAssignmentV1[]> {
+    const accountIdentifier = await this._getCurrentAccountIdentifier();
+    return lastValueFrom(Query.extractQueryValue(this.activeRolesQuery.query(accountIdentifier)));
   }
 
   /** {@inheritDoc IRolesClient.getClaimableRoles} */
-  public getClaimableRoles(): Promise<ApiConsolidatedClaimableRoleAssignmentV1[]> {
-    return lastValueFrom(Query.extractQueryValue(this.claimableRolesQuery.query()));
+  public async getClaimableRoles(): Promise<ApiConsolidatedClaimableRoleAssignmentV1[]> {
+    const accountIdentifier = await this._getCurrentAccountIdentifier();
+    return lastValueFrom(
+      Query.extractQueryValue(this.claimableRolesQuery.query(accountIdentifier)),
+    );
   }
 
   /** {@inheritDoc IRolesClient.claimRole} */
   public async claimRole(input: ClaimRoleInput): Promise<ApiClaimableRoleAssignmentActivationV1> {
+    const accountIdentifier = await this._getCurrentAccountIdentifier();
     const activation = await activateClaimableRoleAssignment(
       'v1',
       this.httpClient,
     )({
-      accountIdentifier: this.accountIdentifier,
+      accountIdentifier,
       claimableRoleAssignmentId: input.roleId,
       reason: input.reason,
       hours: input.hours,
@@ -146,9 +199,12 @@ export class RolesClient implements IRolesClient {
   }
 
   /** {@inheritDoc IRolesClient.canClaimAccessRole} */
-  public canClaimAccessRole(accessRoleName: string): Promise<boolean> {
+  public async canClaimAccessRole(accessRoleName: string): Promise<boolean> {
+    const accountIdentifier = await this._getCurrentAccountIdentifier();
     return lastValueFrom(
-      Query.extractQueryValue(this.claimableAccessRoleQuery.query(accessRoleName)),
+      Query.extractQueryValue(
+        this.claimableAccessRoleQuery.query({ accountIdentifier, accessRoleName }),
+      ),
     );
   }
 
@@ -160,18 +216,36 @@ export class RolesClient implements IRolesClient {
   }
 
   /**
+   * Resolves and validates the account identifier for the current operation.
+   *
+   * @returns Current non-empty Fusion account identifier.
+   * @throws {Error} When the client is not initialized or the resolver returns an empty identifier.
+   */
+  protected async _getCurrentAccountIdentifier(): Promise<string> {
+    const accountIdentifier = await this.accountResolver();
+    // Empty identifiers would produce an account collection request instead of an account request.
+    if (!accountIdentifier.trim()) {
+      throw new RolesError('Roles client account resolver returned an empty account identifier.');
+    }
+    return accountIdentifier;
+  }
+
+  /**
    * Loads expanded claimable-role mappings to evaluate one access role.
    *
-   * @param accessRoleName - Exact access-role name to find in expanded mappings.
+   * @param args - Current account identifier and exact access-role name to evaluate.
    * @returns True when the account can claim a role that grants the access role.
    * @throws {Error} When the service returns an unfollowable continuation.
    */
-  private async fetchCanClaimAccessRole(accessRoleName: string): Promise<boolean> {
+  protected async _fetchCanClaimAccessRole({
+    accountIdentifier,
+    accessRoleName,
+  }: ClaimableAccessRoleQueryArgs): Promise<boolean> {
     const assignments = await listAccountClaimableRoleAssignments(
       'v1',
       this.httpClient,
     )({
-      accountIdentifier: this.accountIdentifier,
+      accountIdentifier,
       expand: 'accessRoleMappings',
     });
     // Stop after the first claimable role that can grant the requested access role.
@@ -187,7 +261,7 @@ export class RolesClient implements IRolesClient {
     }
     // The endpoint exposes no skip/top inputs, so a continuation cannot be followed safely.
     if (assignments.nextPage) {
-      throw new Error(
+      throw new RolesError(
         'Roles V2 returned incomplete claimable role assignments while checking claim eligibility.',
       );
     }

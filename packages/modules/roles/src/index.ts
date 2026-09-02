@@ -7,14 +7,16 @@
 export {
   type ClaimRoleInput,
   type IRolesClient,
+  type RolesAccountResolver,
   RolesClient,
+  type RolesClientInitializeOptions,
 } from './RolesClient.js';
 export {
   type IRolesModuleConfigurator,
   RolesModuleConfigurator,
 } from './RolesModuleConfigurator.js';
 export { RoleClaimEvent, type RoleClaimEventInit } from './RoleClaimEvent.js';
-export { RequiredRolesError } from './RequiredRolesError.js';
+export { ClaimRoleError, RequiredRolesError, RolesError } from './errors/index.js';
 export { type IRolesProvider, RolesProvider } from './RolesProvider.js';
 export type { RolesModuleConfig } from './types.js';
 export {

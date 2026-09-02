@@ -2701,6 +2701,9 @@ importers:
       '@equinor/fusion-framework-module-msal':
         specifier: workspace:*
         version: link:../../modules/msal
+      '@equinor/fusion-framework-module-roles':
+        specifier: workspace:^
+        version: link:../../modules/roles
       '@equinor/fusion-framework-module-state':
         specifier: workspace:^
         version: link:../../modules/state

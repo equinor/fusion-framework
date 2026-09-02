@@ -3,10 +3,65 @@ import {
   type ConfigBuilderCallback,
   type ConfigBuilderCallbackArgs,
 } from '@equinor/fusion-framework-module';
-import { from, lastValueFrom, type ObservableInput } from 'rxjs';
+import type { IServiceDiscoveryProvider } from '@equinor/fusion-framework-module-service-discovery';
+import { from, lastValueFrom } from 'rxjs';
 
-import type { IRolesClient } from './RolesClient.js';
+import {
+  type IRolesClient,
+  type RolesAccountResolver,
+  RolesClient,
+  type RolesClientInitializeOptions,
+} from './RolesClient.js';
+import { RequiredRolesError } from './errors/RequiredRolesError.js';
+import { RolesError } from './errors/RolesError.js';
 import type { RolesModuleConfig } from './types.js';
+
+const ROLES_SERVICE_KEY = 'rolesv2';
+
+interface ActiveAccountProvider {
+  account: {
+    localAccountId: string;
+  } | null;
+}
+
+/**
+ * Determines whether authentication exposes the active Fusion account needed for role checks.
+ *
+ * @param value - Authentication provider resolved from the module registry.
+ * @returns True when the provider exposes an active-account property.
+ */
+const isActiveAccountProvider = (value: unknown): value is ActiveAccountProvider => {
+  return !!value && typeof value === 'object' && 'account' in value;
+};
+
+/**
+ * Determines whether a value can create service-discovery-backed HTTP clients.
+ *
+ * @param value - Local or parent module instance to inspect.
+ * @returns True when the value implements the required service discovery operation.
+ */
+const isServiceDiscoveryProvider = (value: unknown): value is IServiceDiscoveryProvider => {
+  return (
+    !!value &&
+    typeof value === 'object' &&
+    'createClient' in value &&
+    typeof value.createClient === 'function'
+  );
+};
+
+/**
+ * Resolves an inherited service discovery provider from a parent module registry.
+ *
+ * @param value - Parent module registry supplied during child configuration.
+ * @returns Parent service discovery provider when available.
+ */
+const getParentServiceDiscovery = (value: unknown): IServiceDiscoveryProvider | undefined => {
+  // Parent registries are unknown at the generic builder boundary and must be narrowed structurally.
+  if (!value || typeof value !== 'object' || !('serviceDiscovery' in value)) {
+    return undefined;
+  }
+  return isServiceDiscoveryProvider(value.serviceDiscovery) ? value.serviceDiscovery : undefined;
+};
 
 /**
  * Configurator contract for the Fusion Framework Roles V2 module.
@@ -88,7 +143,7 @@ export class RolesModuleConfigurator
         typeof source === 'function' ? await lastValueFrom(from(source(args))) : source;
       // A builder must provide role names so bootstrap cannot silently lose configured requirements.
       if (!resolved) {
-        throw new Error('Required roles builder must return an array of role names.');
+        throw new RequiredRolesError('Required roles builder must return an array of role names.');
       }
       // Merge each normalized source while retaining first-seen ordering.
       for (const role of this.normalizeRoles(resolved)) {
@@ -112,7 +167,7 @@ export class RolesModuleConfigurator
       const normalized = role.trim();
       // An empty role can never match a Roles V2 access-role assignment.
       if (!normalized) {
-        throw new Error('Required role names must be non-empty strings.');
+        throw new RequiredRolesError('Required role names must be non-empty strings.');
       }
       normalizedRoles.push(normalized);
     }
@@ -124,21 +179,92 @@ export class RolesModuleConfigurator
    *
    * @param config - Partial configuration assembled by the base builder.
    * @param args - Module initialization context supplied to configuration callbacks.
-   * @returns Finalized Roles module configuration.
+   * @returns Finalized Roles module configuration with a client ready for module initialization.
    * @throws {Error} When deferred client or required role configuration could not be resolved.
    */
-  protected _processConfig(
+  protected async _processConfig(
     config: Partial<RolesModuleConfig>,
     args: ConfigBuilderCallbackArgs,
-  ): ObservableInput<RolesModuleConfig> {
+  ): Promise<RolesModuleConfig> {
     // The base builder omits values from failed callbacks, which must not trigger another client path.
     if (this.clientConfigured && config.client === undefined) {
-      throw new Error('Failed to resolve configured Roles client.');
+      throw new RolesError('Failed to resolve configured Roles client.');
     }
     // Required roles always have a default builder, so an omitted value means that builder failed.
     if (config.requiredRoles === undefined) {
-      throw new Error('Failed to resolve required role configuration.');
+      throw new RequiredRolesError('Failed to resolve required role configuration.');
     }
-    return super._processConfig(config, args);
+    const accountResolver = this._createAccountIdentifierResolver(args);
+    const client = config.client ?? (await this._createDefaultClient(args, accountResolver));
+    return { requiredRoles: config.requiredRoles, accountResolver, client };
+  }
+
+  /**
+   * Creates the built-in Roles client when configuration did not supply one.
+   *
+   * @param args - Module initialization context used to resolve service discovery.
+   * @param accountResolver - Resolves the current account for client operations.
+   * @returns Service-discovery-backed Roles client.
+   * @throws {Error} When service discovery is not available.
+   */
+  protected async _createDefaultClient(
+    args: ConfigBuilderCallbackArgs,
+    accountResolver: RolesAccountResolver,
+  ): Promise<IRolesClient> {
+    const serviceDiscovery = await this._resolveServiceDiscovery(args);
+    const httpClient = await serviceDiscovery.createClient(ROLES_SERVICE_KEY);
+    return new RolesClient(httpClient, accountResolver);
+  }
+
+  /**
+   * Resolves service discovery from the local module scope or its parent framework.
+   *
+   * @param args - Module context containing local and parent module providers.
+   * @returns Service discovery provider used to create the default Roles client.
+   * @throws {Error} When neither scope exposes service discovery.
+   */
+  protected async _resolveServiceDiscovery(
+    args: ConfigBuilderCallbackArgs,
+  ): Promise<IServiceDiscoveryProvider> {
+    // An explicitly configured app provider takes precedence over inherited host discovery.
+    if (args.hasModule('serviceDiscovery')) {
+      return args.requireInstance('serviceDiscovery');
+    }
+    const parentServiceDiscovery = getParentServiceDiscovery(args.ref);
+    // Most apps inherit service discovery from the parent framework instead of configuring it.
+    if (parentServiceDiscovery) {
+      return parentServiceDiscovery;
+    }
+    throw new RolesError(
+      'Roles module requires the serviceDiscovery module or a configured client.',
+    );
+  }
+
+  /**
+   * Creates a resolver that reads the account selected when each client operation executes.
+   *
+   * @param args - Module context used to resolve the authentication provider.
+   * @returns Current-account resolver supplied to the Roles client.
+   * @throws {RequiredRolesError} When the returned resolver cannot resolve an active account.
+   */
+  protected _createAccountIdentifierResolver(
+    args: ConfigBuilderCallbackArgs,
+  ): RolesClientInitializeOptions['resolveCurrentAccountIdentifier'] {
+    return async () => {
+      // Resolve authentication lazily so module setup does not require a selected account.
+      if (!args.hasModule('auth')) {
+        throw new RequiredRolesError(
+          'Roles module requires an active authenticated account to resolve Roles V2 data.',
+        );
+      }
+      const auth = await args.requireInstance('auth');
+      // Read account state per operation so switching accounts does not require rebuilding the module.
+      if (!isActiveAccountProvider(auth) || !auth.account?.localAccountId) {
+        throw new RequiredRolesError(
+          'Roles module requires an active authenticated account to resolve Roles V2 data.',
+        );
+      }
+      return auth.account.localAccountId;
+    };
   }
 }

@@ -1,10 +1,18 @@
 import type { ConfigBuilderCallbackArgs } from '@equinor/fusion-framework-module';
+import { HttpClient } from '@equinor/fusion-framework-module-http/client';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
+import { RolesClient } from '../RolesClient.js';
 import { RolesModuleConfigurator } from '../RolesModuleConfigurator.js';
 
+const inheritedHttpClient = new HttpClient('https://roles.example.test');
 const configBuilderArgs: ConfigBuilderCallbackArgs = {
   config: {},
+  ref: {
+    serviceDiscovery: {
+      createClient: async () => inheritedHttpClient,
+    },
+  },
   hasModule: () => false,
   requireInstance: () => Promise.reject(new Error('No modules are available in this test.')),
 };
@@ -19,7 +27,7 @@ describe('RolesModuleConfigurator', () => {
 
     configurator.requireRoles([' Reports.Read ', 'Reports.Read', 'Reports.Export']);
 
-    await expect(configurator.createConfigAsync(configBuilderArgs)).resolves.toEqual({
+    await expect(configurator.createConfigAsync(configBuilderArgs)).resolves.toMatchObject({
       requiredRoles: ['Reports.Read', 'Reports.Export'],
     });
   });
@@ -37,9 +45,58 @@ describe('RolesModuleConfigurator', () => {
     configurator.requireRoles(['Reports.Read']);
     configurator.requireRoles(async () => [' Reports.Export ', 'Reports.Read']);
 
-    await expect(configurator.createConfigAsync(configBuilderArgs)).resolves.toEqual({
+    await expect(configurator.createConfigAsync(configBuilderArgs)).resolves.toMatchObject({
       requiredRoles: ['Reports.Read', 'Reports.Export'],
     });
+  });
+
+  it('creates but does not initialize the default client during configuration', async () => {
+    const configurator = new RolesModuleConfigurator();
+    const httpClient = new HttpClient('https://roles.example.test');
+    const initialize = vi.spyOn(RolesClient.prototype, 'initialize');
+    const serviceDiscovery = {
+      createClient: vi.fn(async () => httpClient),
+    };
+    const parentServiceDiscovery = {
+      createClient: vi.fn(async () => httpClient),
+    };
+    const auth = {
+      account: { localAccountId: 'account-id' },
+    };
+    const requireInstance = vi.fn(async (name: string) => {
+      return name === 'serviceDiscovery' ? serviceDiscovery : auth;
+    }) as unknown as ConfigBuilderCallbackArgs['requireInstance'];
+
+    const config = await configurator.createConfigAsync({
+      config: {},
+      ref: { serviceDiscovery: parentServiceDiscovery },
+      hasModule: (name: string) => name === 'serviceDiscovery' || name === 'auth',
+      requireInstance,
+    });
+
+    expect(config.client).toBeInstanceOf(RolesClient);
+    expect(serviceDiscovery.createClient).toHaveBeenCalledWith('rolesv2');
+    expect(parentServiceDiscovery.createClient).not.toHaveBeenCalled();
+    expect(config.accountResolver).toEqual(expect.any(Function));
+    expect(initialize).not.toHaveBeenCalled();
+  });
+
+  it('creates the default client with parent service discovery when the app has none', async () => {
+    const configurator = new RolesModuleConfigurator();
+    const httpClient = new HttpClient('https://roles.example.test');
+    const serviceDiscovery = {
+      createClient: vi.fn(async () => httpClient),
+    };
+
+    const config = await configurator.createConfigAsync({
+      config: {},
+      ref: { serviceDiscovery },
+      hasModule: () => false,
+      requireInstance: () => Promise.reject(new Error('No local modules are available.')),
+    });
+
+    expect(config.client).toBeInstanceOf(RolesClient);
+    expect(serviceDiscovery.createClient).toHaveBeenCalledWith('rolesv2');
   });
 
   it.each([

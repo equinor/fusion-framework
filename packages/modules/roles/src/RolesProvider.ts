@@ -10,9 +10,11 @@ import type {
   ApiConsolidatedClaimableRoleAssignmentV1,
 } from '@equinor/fusion-services/roles';
 
+import { ClaimRoleError } from './errors/ClaimRoleError.js';
+import { RequiredRolesError } from './errors/RequiredRolesError.js';
 import type { ClaimRoleInput, IRolesClient } from './RolesClient.js';
 import { RoleClaimEvent } from './RoleClaimEvent.js';
-import type { RolesModuleConfig } from './types.js';
+import { RolesError } from './errors/RolesError.js';
 import { version } from './version.js';
 
 /**
@@ -27,7 +29,7 @@ type RolesProviderOperation =
 /**
  * Final provider configuration containing the client resolved during module setup.
  */
-interface RolesProviderConfig extends RolesModuleConfig {
+interface RolesProviderConfig {
   client: IRolesClient;
 }
 
@@ -53,6 +55,16 @@ interface RolesProviderDependencies {
 }
 
 /**
+ * Controls how {@link IRolesProvider.hasRole} evaluates requested access roles.
+ */
+export interface HasRoleOptions {
+  /** Throws {@link RequiredRolesError} instead of returning `false` when the check fails. */
+  assert?: boolean;
+  /** Requires every requested role when true; otherwise any requested role satisfies the check. */
+  required?: boolean;
+}
+
+/**
  * Consumer-facing API for reading and claiming Roles V2 assignments.
  *
  * The framework exposes this provider as `framework.modules.roles`. Account identifiers are
@@ -70,7 +82,7 @@ export interface IRolesProvider {
    * {@link IRolesProvider.hasRole | hasRole} when only a boolean access-role check is needed.
    *
    * @returns Active access-role assignments for the account resolved by authentication.
-   * @throws Roles V2 request and response-validation errors.
+   * @throws {RolesError} When the Roles V2 request or response validation fails.
    */
   getActiveRoles(): Promise<ApiAccountActiveAccessRoleAssignmentV1[]>;
 
@@ -78,7 +90,7 @@ export interface IRolesProvider {
    * Gets the roles the authenticated account is eligible to claim.
    *
    * @returns Consolidated claimable-role assignments for rendering claimable-role choices.
-   * @throws Roles V2 request and response-validation errors.
+   * @throws {RolesError} When the Roles V2 request or response validation fails.
    */
   getClaimableRoles(): Promise<ApiConsolidatedClaimableRoleAssignmentV1[]>;
 
@@ -90,21 +102,23 @@ export interface IRolesProvider {
    *
    * @param input - Claimable assignment identifier, reason, and requested duration.
    * @returns Activation metadata returned by Roles V2.
-   * @throws {Error} When a listener cancels the pre-claim event.
-   * @throws Roles V2 request and response-validation errors.
+   * @throws {ClaimRoleError} When cancellation, event dispatch, or activation fails.
    */
   claimRole(input: ClaimRoleInput): Promise<ApiClaimableRoleAssignmentActivationV1>;
 
   /**
-   * Checks whether an access role is active for the authenticated account.
+   * Checks whether requested access roles are active for the authenticated account.
    *
-   * Empty names return `false` without a request. Matching is exact and case-sensitive.
+   * Matching is exact and case-sensitive. Empty arrays return the all-role identity when
+   * `required` is true and `false` otherwise, without making a request.
    *
-   * @param role - Exact Roles V2 access-role name to match.
-   * @returns True when the active account has an assignment with the requested role name.
-   * @throws Roles V2 request and response-validation errors.
+   * @param roles - Exact Roles V2 access-role names to match.
+   * @param options - Whether to assert the result and require all requested roles.
+   * @returns True when the configured any-role or all-role condition is satisfied.
+   * @throws {RequiredRolesError} When assertion is enabled and the role condition is not satisfied.
+   * @throws {RolesError} When the Roles V2 request or response validation fails.
    */
-  hasRole(role: string): Promise<boolean>;
+  hasRole(roles: readonly string[], options: HasRoleOptions): Promise<boolean>;
 
   /**
    * Checks whether the authenticated account can claim a role that grants an access role.
@@ -114,7 +128,7 @@ export interface IRolesProvider {
    *
    * @param accessRoleName - Exact Roles V2 access-role name to match in claimable mappings.
    * @returns True when a claimable role grants the requested access role.
-   * @throws Roles V2 request and response-validation errors, including incomplete mapping results.
+   * @throws {RolesError} When request, validation, or claim-eligibility evaluation fails.
    */
   canClaimAccessRole(accessRoleName: string): Promise<boolean>;
 
@@ -130,7 +144,7 @@ export interface IRolesProvider {
  * Default {@link IRolesProvider} implementation exposed by the Fusion Framework Roles module.
  *
  * `RolesProvider` is the main API applications consume through `framework.modules.roles`. It
- * delegates transport work to an initialized account-scoped client while handling claim
+ * delegates transport work to an initialized client that resolves the current account while handling claim
  * cancellation events, telemetry, and client resource disposal.
  *
  * @remarks
@@ -151,7 +165,7 @@ export interface IRolesProvider {
  *   roles.getClaimableRoles(),
  * ]);
  *
- * if (await roles.hasRole('Reports.Read')) {
+ * if (await roles.hasRole(['Reports.Read'], { required: true })) {
  *   renderReports();
  * }
  *
@@ -164,12 +178,15 @@ export interface IRolesProvider {
  * }
  * ```
  */
-export class RolesProvider extends BaseModuleProvider<RolesModuleConfig> implements IRolesProvider {
+export class RolesProvider
+  extends BaseModuleProvider<RolesProviderConfig>
+  implements IRolesProvider
+{
   private readonly client: IRolesClient;
   private readonly dependencies: RolesProviderDependencies;
 
   /**
-   * Creates a Roles provider around a client finalized during configuration or module initialization.
+   * Creates a Roles provider around a client initialized during module initialization.
    *
    * @param config - Resolved configuration containing the initialized client.
    * @param dependencies - Optional event and telemetry providers resolved by the module.
@@ -194,30 +211,77 @@ export class RolesProvider extends BaseModuleProvider<RolesModuleConfig> impleme
   /** {@inheritDoc IRolesProvider.claimRole} */
   public async claimRole(input: ClaimRoleInput): Promise<ApiClaimableRoleAssignmentActivationV1> {
     return this.executeOperation('claimRole', async () => {
-      const claimEvent = await this.dependencies.event?.dispatchEvent(
-        new RoleClaimEvent({
-          source: this,
-          detail: input,
-        }),
-      );
-      // Cancellation prevents the irreversible activation request from reaching Roles V2.
-      if (claimEvent?.canceled) {
-        throw new Error('Role claim was canceled by an event listener.');
+      try {
+        const claimEvent = await this.dependencies.event?.dispatchEvent(
+          new RoleClaimEvent({
+            source: this,
+            detail: input,
+          }),
+        );
+        // Cancellation prevents the irreversible activation request from reaching Roles V2.
+        if (claimEvent?.canceled) {
+          throw new ClaimRoleError('Role claim was canceled by an event listener.');
+        }
+        return await this.client.claimRole(input);
+      } catch (error) {
+        // Preserve an intentional cancellation while classifying all other claim failures.
+        if (error instanceof ClaimRoleError) {
+          throw error;
+        }
+        throw new ClaimRoleError('Failed to claim role.', { cause: error });
       }
-      return this.client.claimRole(input);
     });
   }
 
   /** {@inheritDoc IRolesProvider.hasRole} */
-  public async hasRole(role: string): Promise<boolean> {
-    const normalizedRole = role.trim();
-    // Empty role names cannot identify an access role and should not trigger a network request.
-    if (!normalizedRole) {
-      return false;
+  public async hasRole(roles: readonly string[], options: HasRoleOptions): Promise<boolean> {
+    const normalizedRoles = new Set<string>();
+    // Normalize and deduplicate once so matching and assertion details use stable identifiers.
+    for (const role of roles) {
+      const normalizedRole = role.trim();
+      // Empty names cannot identify an access role.
+      if (normalizedRole) {
+        normalizedRoles.add(normalizedRole);
+      }
+    }
+    // Preserve expected any/all identities without loading account state for an empty request.
+    if (normalizedRoles.size === 0) {
+      const hasRole = options.required === true;
+      // An asserted any-role check cannot be satisfied without at least one role name.
+      if (!hasRole && options.assert) {
+        throw new RequiredRolesError('Roles module bootstrap denied. No roles were provided.', []);
+      }
+      return hasRole;
     }
     const activeRoles = await this.getActiveRoles();
+    const activeRoleNames = new Set<string>();
+    // Only explicit access-role names can satisfy a requested role.
+    for (const assignment of activeRoles) {
+      // Incomplete service records cannot satisfy exact role-name checks.
+      if (assignment.accessRoleName) {
+        activeRoleNames.add(assignment.accessRoleName);
+      }
+    }
+    const missingRoles: string[] = [];
+    // Collect every missing role so assertion failures report the complete unmet condition.
+    for (const role of normalizedRoles) {
+      // Exact, case-sensitive identifiers are intentionally not normalized beyond whitespace.
+      if (!activeRoleNames.has(role)) {
+        missingRoles.push(role);
+      }
+    }
     // Roles V2 access-role names are identifiers, so matching remains exact and case-sensitive.
-    return activeRoles.some((assignment) => assignment.accessRoleName === normalizedRole);
+    const hasRole = options.required
+      ? missingRoles.length === 0
+      : missingRoles.length < normalizedRoles.size;
+    // Assertion mode converts a failed predicate into the domain error used during bootstrap.
+    if (!hasRole && options.assert) {
+      throw new RequiredRolesError(
+        `Roles module bootstrap denied. Missing required roles: ${missingRoles.join(', ')}.`,
+        missingRoles,
+      );
+    }
+    return hasRole;
   }
 
   /** {@inheritDoc IRolesProvider.canClaimAccessRole} */
@@ -239,7 +303,7 @@ export class RolesProvider extends BaseModuleProvider<RolesModuleConfig> impleme
    * @param operation - Stable operation name used for telemetry.
    * @param execute - Client request and related event dispatch.
    * @returns The operation result.
-   * @throws The original client or event error after recording failure telemetry.
+   * @throws {RolesError} The classified operation error after recording failure telemetry.
    */
   private async executeOperation<TResult>(
     operation: RolesProviderOperation,
@@ -255,7 +319,9 @@ export class RolesProvider extends BaseModuleProvider<RolesModuleConfig> impleme
       });
       return result;
     } catch (error) {
-      const exception = error instanceof Error ? error : new Error(String(error));
+      const exception = RolesError.is(error)
+        ? error
+        : new RolesError(`Roles operation '${operation}' failed.`, { cause: error });
       this.dependencies.telemetry?.trackException({
         name: `RolesProvider.${operation}`,
         exception,
@@ -263,7 +329,7 @@ export class RolesProvider extends BaseModuleProvider<RolesModuleConfig> impleme
         scope: ['roles', TelemetryScope.Framework],
         properties: { outcome: 'failure' },
       });
-      throw error;
+      throw exception;
     }
   }
 }
