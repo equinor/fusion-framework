@@ -1,6 +1,6 @@
 import type { ReactElement } from 'react';
 import { Page } from '@equinor/fusion-react-layout';
-import { Styled } from '../Styled';
+import { Styled } from '../styled';
 
 /** Renders the long-form landing page for the layout cookbook. */
 export const HomePage = (): ReactElement => {

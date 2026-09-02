@@ -1,6 +1,6 @@
 import type { ReactElement } from 'react';
 import { Page } from '@equinor/fusion-react-layout';
-import { Styled } from '../Styled';
+import { Styled } from '../styled';
 
 /** Renders saved destinations for the layout cookbook. */
 export const FavouritesPage = (): ReactElement => (
