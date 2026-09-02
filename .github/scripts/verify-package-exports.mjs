@@ -23,7 +23,10 @@ const publishExceptions = new Map([
   ],
   ['@equinor/fusion-framework-lint-lsp', ['bin/fusion-lint-server.mjs', 'dist']],
   ['@equinor/fusion-lint', ['bin/fusion-lint.mjs', 'dist']],
-  ['@equinor/fusion-services', ['dist', 'docs', 'src/roles/v1/openapi.json']],
+  [
+    '@equinor/fusion-services',
+    ['dist', 'docs', 'src/apps/v1/openapi.json', 'src/roles/v1/openapi.json'],
+  ],
 ]);
 
 const problems = [];

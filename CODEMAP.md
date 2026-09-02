@@ -69,20 +69,23 @@ Format: `package name` → path → role.
 
 | Package | Path | Role |
 | --- | --- | --- |
-| `@equinor/fusion-services` | `packages/services` | Tree-shakeable function-based API clients (Roles V2), version-scoped Zod schemas |
+| `@equinor/fusion-services` | `packages/services` | Tree-shakeable function-based API clients (Apps, Roles V2), version-scoped Zod schemas and OpenAPI snapshots |
 
 > Endpoints are standalone functions, not client classes, and reusable schemas are
-> version-scoped (`src/roles/v1/schemas/*`, exported as `…V1`). The Zod schemas are the single
+> version-scoped (`src/<service>/v1/schemas/*`, exported as `…V1`). The Zod schemas are the single
 > source of truth: model types such as `ApiRoleV1` are `z.infer` of their schema, and no
 > handwritten API interfaces exist. A version key (`'v1'`) and
 > its concrete value (`'1.0'`) resolve identically; an unsupported version throws before
 > the HTTP client is invoked.
 >
-> The complete published contract is snapshotted in `packages/services/src/roles/v1/openapi.json`
-> and published as the `roles/v1/openapi.json` subpath of `@equinor/fusion-services`.
+> Complete published contracts are snapshotted in
+> `packages/services/src/apps/v1/openapi.json` and
+> `packages/services/src/roles/v1/openapi.json`, then published as versioned JSON subpaths of
+> `@equinor/fusion-services`; each is the contract its client is generated from.
 > The subpath is versioned by the API version, independent of the package version.
-> `check:openapi roles` diffs it against the live service; snapshot updates are reviewed and applied manually
-> it — both need network access and are deliberately outside `pnpm test`/`build`/`lint`.
+> `check:openapi <service>` diffs a snapshot against the live service; snapshot updates are
+> reviewed and applied manually. The checks need network access and are deliberately outside
+> `pnpm test`/`build`/`lint`.
 > Consumer service guides live in `packages/services/docs/`; package extension and manual
 > synchronization procedures live in `packages/services/CONTRIBUTING.md`.
 

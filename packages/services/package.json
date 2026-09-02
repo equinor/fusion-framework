@@ -13,6 +13,11 @@
   "type": "module",
   "sideEffects": false,
   "exports": {
+    "./apps": {
+      "import": "./dist/esm/apps/index.js",
+      "types": "./dist/types/apps/index.d.ts"
+    },
+    "./apps/v1/openapi.json": "./src/apps/v1/openapi.json",
     "./roles": {
       "import": "./dist/esm/roles/index.js",
       "types": "./dist/types/roles/index.d.ts"
@@ -22,6 +27,12 @@
   },
   "typesVersions": {
     "*": {
+      "apps": [
+        "./dist/types/apps/index.d.ts"
+      ],
+      "apps/v1/openapi.json": [
+        "./src/apps/v1/openapi.json"
+      ],
       "roles": [
         "./dist/types/roles/index.d.ts"
       ],
@@ -33,6 +44,7 @@
   "files": [
     "dist",
     "docs",
+    "src/apps/v1/openapi.json",
     "src/roles/v1/openapi.json"
   ],
   "publishConfig": {

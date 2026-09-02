@@ -34,6 +34,19 @@ export type OpenApiServiceConfig = {
 /** Every service the check covers, keyed by the name passed on the command line. */
 export const OPENAPI_SERVICES: readonly OpenApiServiceConfig[] = [
   {
+    name: 'apps',
+    label: 'Fusion Apps API',
+    versions: [
+      {
+        key: 'v1',
+        apiVersion: '1.0',
+        url: 'https://apps.ci.api.fusion-dev.net/openapi/api-v1.json',
+        snapshotPath: 'src/apps/v1/openapi.json',
+        sourceDirs: ['src/apps/endpoints', 'src/apps/v1/schemas'],
+      },
+    ],
+  },
+  {
     name: 'roles',
     label: 'Fusion Roles V2 API',
     versions: [
