@@ -121,6 +121,9 @@ jobs:
       - name: Setup node and install deps
         uses: ./.github/actions/node-setup
 
+      - name: Build Vitest configuration
+        run: pnpm turbo build --filter @equinor/fusion-framework-vitest-plugin-react-app...
+
       - name: Get Playwright version
         id: playwright
         run: |
