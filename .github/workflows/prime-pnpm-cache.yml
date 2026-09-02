@@ -46,8 +46,48 @@ jobs:
           lookup-only: true
 
       - name: Install dependencies
-        if: steps.pnpm-store-restore.outputs.cache-hit != 'true'
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --frozen-lockfile --prefer-offline
+
+      - name: Get Playwright version
+        id: playwright
+        run: |
+          version=$(pnpm --filter @equinor/fusion-framework-vitest-plugin-react-app exec playwright --version)
+          echo "version=${version#Version }" >> "$GITHUB_OUTPUT"
+
+      - name: Check for an existing Playwright browser cache
+        id: playwright-restore
+        uses: actions/cache/restore@v6
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ runner.arch }}-${{ steps.playwright.outputs.version }}
+          lookup-only: true
+
+      - name: Install Playwright Chromium
+        if: steps.playwright-restore.outputs.cache-hit != 'true'
+        run: pnpm --filter @equinor/fusion-framework-vitest-plugin-react-app exec playwright install chromium
+
+      - name: Save Playwright browser cache
+        if: steps.playwright-restore.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v6
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ runner.arch }}-${{ steps.playwright.outputs.version }}
+
+      - name: Delete stale Playwright browser caches
+        if: steps.playwright-restore.outputs.cache-hit != 'true'
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          currentKey="playwright-${{ runner.os }}-${{ runner.arch }}-${{ steps.playwright.outputs.version }}"
+          cacheIds=$(gh cache list --repo "${{ github.repository }}" --ref refs/heads/main \
+            --key "playwright-${{ runner.os }}-${{ runner.arch }}-" --limit 100 \
+            --json id,key,createdAt \
+            --jq "sort_by(.createdAt) | reverse | .[2:] | .[] | select(.key != \"$currentKey\") | .id")
+          for id in $cacheIds; do
+            echo "Deleting stale Playwright browser cache $id"
+            gh cache delete "$id" --repo "${{ github.repository }}" || true
+          done
 
       # Cache keys are immutable, so every lockfile change saves a brand-new
       # store on top of the previous one and old package versions never get
