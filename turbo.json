@@ -8,6 +8,10 @@
       "outputs": ["dist/**", "bin/build/**"],
       "cache": true
     },
+    "test:playwright": {
+      "dependsOn": ["^build", "@equinor/fusion-framework-cli-plugin-ai-index#build"],
+      "cache": false
+    },
     "//#preindex:eds": {
       "inputs": ["eds/Dockerfile", "eds/*.ts"],
       "outputs": ["eds/out/**"],

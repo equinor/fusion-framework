@@ -42,6 +42,10 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Setup fusion runner
+        continue-on-error: true
+        uses: ./.github/actions/setup-fusion-runner
+
       - name: Configure git user (trigger actor) 
         uses: ./.github/actions/config-git-user
         

@@ -108,6 +108,10 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Setup fusion runner
+        continue-on-error: true
+        uses: ./.github/actions/setup-fusion-runner
+
       - name: Check for a new release tag at this commit
         id: check
         run: |
@@ -193,4 +197,3 @@ jobs:
     with:
       environment: docs
     secrets: inherit
-

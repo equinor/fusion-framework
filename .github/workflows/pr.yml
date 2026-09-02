@@ -1,8 +1,8 @@
 name: PR
 
-on: 
-  pull_request:  
-    types: 
+on:
+  pull_request:
+    types:
       - ready_for_review
       - opened
       - reopened
@@ -15,64 +15,33 @@ concurrency:
   group: pr-${{ github.event.pull_request.id }}
   cancel-in-progress: true
 
-
 permissions:
+  checks: write
   contents: read
-  pages: write
-  id-token: write
   pull-requests: write
-  
+
+env:
+  REVIEWDOG_GITHUB_API_TOKEN: ${{ github.token }}
+  REVIEWDOG_REPORTER: ${{ (github.event.pull_request.draft && 'github-pr-check') || 'github-pr-review' }}
+
 jobs:
   code-quality:
-    name: Check Code
+    name: Code quality
     runs-on: fusion-gh-runner-fusion-framework
-    env:
-      REVIEWDOG_GITHUB_API_TOKEN: ${{ github.token }}
-      REVIEWDOG_REPORTER: ${{ (github.event.pull_request.draft && 'github-pr-check') || 'github-pr-review' }}
-      CHECKOUT_FETCH_DEPTH: ${{ (github.actor != 'dependabot[bot]' && '0') || '1' }}
     steps:
       - uses: actions/checkout@v7
         with:
-          ref: "${{ github.event.pull_request.head.sha }}"
-          fetch-depth: ${{ env.CHECKOUT_FETCH_DEPTH }}
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
 
-      # fusion-gh-runner-fusion-framework's image doesn't ship gh (tracked with
-      # infra); install it until the runner image is patched.
       - name: Setup fusion runner
         continue-on-error: true
         uses: ./.github/actions/setup-fusion-runner
-      
+
       - name: Setup node and install deps
         uses: ./.github/actions/node-setup
 
       - uses: reviewdog/action-setup@v1
-
-      - name: Delete GitHub Actions comments
-        uses: actions/github-script@v9
-        with:
-          script: |
-            const { data: comments } = await github.rest.issues.listComments({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: context.issue.number,
-            });
-            
-            // Delete all GitHub Actions bot comments (they will be regenerated)
-            const githubActionsComments = comments.filter(comment => 
-              comment.user && comment.user.login === 'github-actions[bot]'
-            );
-            
-            console.log(`Found ${githubActionsComments.length} GitHub Actions comments to delete`);
-            
-            await Promise.all(
-              githubActionsComments.map(comment =>
-                github.rest.issues.deleteComment({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  comment_id: comment.id,
-                })
-              )
-            );
 
       - name: Lint source files
         uses: mongolyy/reviewdog-action-biome@v2
@@ -85,8 +54,6 @@ jobs:
         run: pnpm build:lint
 
       - name: Fusion lint
-        env:
-          REVIEWDOG_GITHUB_API_TOKEN: ${{ github.token }}
         run: |
           pnpm exec fusion-lint changed --reporter=rdjsonl \
             | reviewdog \
@@ -97,47 +64,158 @@ jobs:
 
       - name: Verify package exports
         run: pnpm verify:package-exports
-          
+
+  build:
+    name: Build affected packages
+    runs-on: fusion-gh-runner-fusion-framework
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - name: Setup fusion runner
+        continue-on-error: true
+        uses: ./.github/actions/setup-fusion-runner
+
+      - name: Setup node and install deps
+        uses: ./.github/actions/node-setup
+
+      - uses: reviewdog/action-setup@v1
+
       - name: Build affected packages
         id: build
         continue-on-error: true
         uses: ./.github/actions/build-packages
-        with: 
+        with:
           only-affected: true
 
-      - name: process-build-log
+      - name: Process build log
         run: node process-turbo-build-log.cjs > tsc-build.log
 
-      - name: upload build log
+      - name: Upload build log
         uses: actions/upload-artifact@v7
         with:
           path: tsc-build.log
-          
+
       - name: Review build log
-        run: cat tsc-build.log | reviewdog -name=tsc -f=tsc -reporter=${{ env.REVIEWDOG_REPORTER }} -fail-level=error
+        run: reviewdog -name=tsc -f=tsc -reporter=${{ env.REVIEWDOG_REPORTER }} -fail-level=error < tsc-build.log
 
       - name: Check if build failed
         if: steps.build.outcome == 'failure'
         run: exit 1
 
-      # These tests run for every PR, so their workspace dependencies must exist
-      # even when the affected build legitimately skips both cookbooks.
-      - name: Build CLI and cookbook Playwright prerequisites
-        run: |
-          pnpm build:cli
-          pnpm turbo build \
-            --filter @equinor/fusion-framework-cookbook-app-react-context... \
-            --filter @equinor/fusion-framework-cookbook-app-react-mock-playwright...
+  unit-tests:
+    name: Unit tests
+    runs-on: fusion-gh-runner-fusion-framework
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 1
 
-      - name: Install Playwright browsers
-        # `playwright` isn't a root dependency, so `pnpm exec` needs a --filter into a package that
-        # has it; the installed browser cache is shared across packages.
+      - name: Setup fusion runner
+        continue-on-error: true
+        uses: ./.github/actions/setup-fusion-runner
+
+      - name: Setup node and install deps
+        uses: ./.github/actions/node-setup
+
+      - name: Build test dependencies
+        run: |
+          pnpm turbo build \
+            --filter @equinor/fusion-framework-vitest-plugin-react-app... \
+            --filter @equinor/fusion-framework-react-app...
+
+      - name: Get Playwright version
+        id: playwright
+        run: |
+          version=$(pnpm --filter @equinor/fusion-framework-vitest-plugin-react-app exec playwright --version)
+          echo "version=${version#Version }" >> "$GITHUB_OUTPUT"
+
+      - name: Restore Playwright browsers
+        uses: actions/cache/restore@v6
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-fusion-v1-${{ runner.os }}-${{ runner.arch }}-${{ steps.playwright.outputs.version }}
+
+      - name: Install Playwright Chromium
+        run: pnpm --filter @equinor/fusion-framework-vitest-plugin-react-app exec playwright install --with-deps chromium
+
+      - name: Run unit tests
+        run: pnpm test
+
+  cookbook-tests:
+    name: Cookbook Playwright tests
+    runs-on: fusion-gh-runner-fusion-framework
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - name: Setup fusion runner
+        continue-on-error: true
+        uses: ./.github/actions/setup-fusion-runner
+
+      - name: Setup node and install deps
+        uses: ./.github/actions/node-setup
+
+      - name: Fetch main for affected detection
+        run: git fetch origin main:main
+
+      - name: Check for affected cookbook tests
+        id: affected
+        run: |
+          taskCount=$(pnpm turbo run test:playwright --affected \
+            --filter @equinor/fusion-framework-cookbook-app-react-context \
+            --filter @equinor/fusion-framework-cookbook-app-react-mock-playwright \
+            --dry=json \
+            | jq '[.tasks[] | select(.task == "test:playwright" and .command != "<NONEXISTENT>")] | length')
+          echo "task-count=$taskCount" >> "$GITHUB_OUTPUT"
+
+      - name: Get Playwright version
+        if: steps.affected.outputs.task-count != '0'
+        id: playwright
+        run: |
+          version=$(pnpm --filter @equinor/fusion-framework-vitest-plugin-react-app exec playwright --version)
+          echo "version=${version#Version }" >> "$GITHUB_OUTPUT"
+
+      - name: Restore Playwright browsers
+        if: steps.affected.outputs.task-count != '0'
+        uses: actions/cache/restore@v6
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-fusion-v1-${{ runner.os }}-${{ runner.arch }}-${{ steps.playwright.outputs.version }}
+
+      - name: Install Playwright Chromium
+        if: steps.affected.outputs.task-count != '0'
         run: pnpm --filter @equinor/fusion-framework-vitest-plugin-react-app exec playwright install --with-deps chromium
 
       - name: Run cookbook Playwright tests
-        run: pnpm --filter './cookbooks/**' --if-present test:playwright
+        if: steps.affected.outputs.task-count != '0'
+        run: |
+          pnpm turbo run test:playwright --affected \
+            --filter @equinor/fusion-framework-cookbook-app-react-context \
+            --filter @equinor/fusion-framework-cookbook-app-react-mock-playwright
 
-      - name: Create Test Report
-        run: pnpm test run
-
-  
+  required-check:
+    name: Check Code
+    if: always()
+    needs:
+      - code-quality
+      - build
+      - unit-tests
+      - cookbook-tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify all PR checks passed
+        env:
+          JOB_RESULTS: ${{ toJSON(needs) }}
+        run: |
+          failures=$(jq -r 'to_entries[] | select(.value.result != "success") | "\(.key): \(.value.result)"' <<< "$JOB_RESULTS")
+          if [[ -n "$failures" ]]; then
+            echo "Required PR checks did not pass:"
+            echo "$failures"
+            exit 1
+          fi
