@@ -149,3 +149,60 @@ try {
 - `RolesError` reports other provider, configuration, client, and request failures.
 
 Wrapped service and transport errors remain available through `error.cause`.
+
+## Test the module
+
+Choose the boundary the test needs to exercise.
+
+### Static provider data
+
+Use the `/mock` entry point for component and application tests that need known role lists without
+HTTP, authentication, or service discovery. It runs the production module initializer and provider
+with a static internal client:
+
+```ts
+import { enableRolesMock } from '@equinor/fusion-framework-module-roles/mock';
+
+enableRolesMock(configurator, (mock) => {
+  mock
+    .setActiveRoles([{ systemName: 'Reports', accessRoleName: 'Reports.Read' }])
+    .setClaimableRoles([{ id: 'assignment-id', claimableRole: { id: 'role-id' } }])
+    .requireRoles(['Reports.Read']);
+});
+```
+
+Consumers still receive the production `RolesProvider`. Override a provider operation with the
+test runner when a test needs behavior beyond static reads:
+
+```ts
+vi.spyOn(framework.modules.roles, 'claimRole').mockResolvedValue({
+  id: 'activation-id',
+});
+```
+
+`RolesMockConfigurator` retains `requireRoles` and `setClient`. Supply a custom client through
+`setClient` only when the test needs full control of the client lifecycle.
+
+### Real client with generated HTTP responses
+
+Use the normal Roles module when the test needs to cover `RolesClient` request paths, account
+resolution, response validation, or caching. The Fusion OpenAPI mock server includes the `rolesv2`
+contract and generates responses for its operations:
+
+```bash
+pnpm exec fusion-mock --preset=fusion --port 4010
+```
+
+Point the test framework's service discovery endpoint at
+`http://localhost:4010/@fusion-mock/discovery`, then enable Roles normally:
+
+```ts
+import { enableRoles } from '@equinor/fusion-framework-module-roles';
+
+enableRoles(configurator);
+```
+
+The normal `RolesModuleConfigurator` resolves `rolesv2` from that discovery response and creates the
+real `RolesClient`; only the HTTP backend is mocked. Use the mock server control API to override an
+operation for an error or edge case, and reset it between tests. See
+`@equinor/fusion-openapi-mock-server` for server lifecycle and override APIs.

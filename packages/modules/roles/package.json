@@ -15,6 +15,10 @@
       "import": "./dist/esm/errors/index.js",
       "types": "./dist/types/errors/index.d.ts"
     },
+    "./mock": {
+      "import": "./dist/esm/mock/index.js",
+      "types": "./dist/types/mock/index.d.ts"
+    },
     "./package.json": "./package.json",
     "./README.md": "./README.md"
   },
@@ -25,6 +29,9 @@
       ],
       "errors": [
         "dist/types/errors/index.d.ts"
+      ],
+      "mock": [
+        "dist/types/mock/index.d.ts"
       ]
     }
   },
