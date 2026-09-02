@@ -33,7 +33,9 @@ export interface Router {
   get(path: string, handler: RouteHandler): void;
   post(path: string, handler: RouteHandler): void;
   put(path: string, handler: RouteHandler): void;
+  patch(path: string, handler: RouteHandler): void;
   delete(path: string, handler: RouteHandler): void;
+  options(path: string, handler: RouteHandler): void;
   /**
    * Attempts to handle `req`; returns `true` if a registered route matched (and `res` was
    * written to).
@@ -72,7 +74,9 @@ export function createRouter(): Router {
     get: (path, handler) => register('GET', path, handler),
     post: (path, handler) => register('POST', path, handler),
     put: (path, handler) => register('PUT', path, handler),
+    patch: (path, handler) => register('PATCH', path, handler),
     delete: (path, handler) => register('DELETE', path, handler),
+    options: (path, handler) => register('OPTIONS', path, handler),
     async handle(req, res, seed) {
       const pathname = new URL(req.url ?? '/', 'http://localhost').pathname;
       const handler = routes.get(`${req.method} ${pathname}`);
