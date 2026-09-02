@@ -9,7 +9,7 @@
       "cache": true
     },
     "test:playwright": {
-      "dependsOn": ["^build"],
+      "dependsOn": ["^build", "@equinor/fusion-framework-cli-plugin-ai-index#build"],
       "cache": false
     },
     "//#preindex:eds": {
