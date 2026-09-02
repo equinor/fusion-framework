@@ -56,7 +56,7 @@ Load the file whose `applyTo` matches your target. Do not load the rest.
 | `**/*.md` | `.github/instructions/documentation.instructions.md` |
 | `.changeset/**` | `.github/instructions/changesets.instructions.md` |
 | A pull request | `.github/instructions/pull-requests.instructions.md` |
-| A code review | `.github/instructions/code-review.instructions.md` |
+| A code review | `.agents/skills/custom-code-review/SKILL.md` (loads the canonical review instructions) |
 | A Dependabot PR | `.github/instructions/dependabot-pr.instructions.md` (**mandatory, in full**) |
 | `.agents/skills/**` | `.github/instructions/skills.instructions.md` |
 | A workflow-driven commit or PR | `.github/instructions/workflow-contribution.instructions.md` |
