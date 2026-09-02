@@ -28,16 +28,12 @@ env:
 jobs:
   code-quality:
     name: Code quality
-    runs-on: fusion-gh-runner-fusion-framework
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
         with:
           ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: ${{ env.CHECKOUT_FETCH_DEPTH }}
-
-      - name: Setup fusion runner
-        continue-on-error: true
-        uses: ./.github/actions/setup-fusion-runner
 
       - name: Setup node and install deps
         uses: ./.github/actions/node-setup
@@ -68,16 +64,12 @@ jobs:
 
   build:
     name: Build affected packages
-    runs-on: fusion-gh-runner-fusion-framework
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
         with:
           ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: ${{ env.CHECKOUT_FETCH_DEPTH }}
-
-      - name: Setup fusion runner
-        continue-on-error: true
-        uses: ./.github/actions/setup-fusion-runner
 
       - name: Setup node and install deps
         uses: ./.github/actions/node-setup
@@ -108,16 +100,12 @@ jobs:
 
   unit-tests:
     name: Unit tests
-    runs-on: fusion-gh-runner-fusion-framework
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
         with:
           ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 1
-
-      - name: Setup fusion runner
-        continue-on-error: true
-        uses: ./.github/actions/setup-fusion-runner
 
       - name: Setup node and install deps
         uses: ./.github/actions/node-setup
@@ -142,16 +130,12 @@ jobs:
 
   cookbook-tests:
     name: Cookbook Playwright tests
-    runs-on: fusion-gh-runner-fusion-framework
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
         with:
           ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: ${{ env.CHECKOUT_FETCH_DEPTH }}
-
-      - name: Setup fusion runner
-        continue-on-error: true
-        uses: ./.github/actions/setup-fusion-runner
 
       - name: Setup node and install deps
         uses: ./.github/actions/node-setup
