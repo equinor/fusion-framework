@@ -9,6 +9,9 @@ packages:
 minimumReleaseAgeExclude:
   - '@changesets/cli'
   - '@changesets/write'
+  - '@equinor/fusion-react-layout@0.1.2'
+  - '@equinor/fusion-wc-layout@0.1.2'
+  - '@equinor/fusion-wc-page@0.1.2'
 
 patchedDependencies:
   vscode-jsonrpc@8.2.1: patches/vscode-jsonrpc@8.2.1.patch

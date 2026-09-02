@@ -590,16 +590,28 @@ importers:
       '@equinor/eds-core-react':
         specifier: ^2.6.1
         version: 2.6.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(styled-components@6.5.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
+      '@equinor/fusion-framework-react-ag-grid':
+        specifier: workspace:*
+        version: link:../../packages/react/ag-grid
       '@equinor/fusion-react-layout':
-        specifier: 0.0.1-beta.2
-        version: 0.0.1-beta.2(react@19.2.8)
+        specifier: ^0.1.2
+        version: 0.1.2(react@19.2.8)
+      styled-components:
+        specifier: ^6.4.2
+        version: 6.5.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
     devDependencies:
       '@equinor/fusion-framework-cli':
         specifier: workspace:^
         version: link:../../packages/cli
+      '@equinor/fusion-framework-module-navigation':
+        specifier: workspace:^
+        version: link:../../packages/modules/navigation
       '@equinor/fusion-framework-react-app':
         specifier: workspace:^
         version: link:../../packages/react/app
+      '@equinor/fusion-framework-react-router':
+        specifier: workspace:^
+        version: link:../../packages/react/router
       '@types/react':
         specifier: ^19.2.7
         version: 19.2.18
@@ -4072,8 +4084,8 @@ packages:
     peerDependencies:
       react: ^18 || ^19
 
-  '@equinor/fusion-react-layout@0.0.1-beta.2':
-    resolution: {integrity: sha512-BKn4rWSJk0BqaKVZbn3uGo87OfHsWvkRbdSgNlWQCu6L55Higm3Gtlsr4SD03GxrB8PNMtL0uJ+y8jp5EOIj+w==}
+  '@equinor/fusion-react-layout@0.1.2':
+    resolution: {integrity: sha512-UNjJRP5mTB0wTjFo2BqXjiv9anlnYUOXMhzzuL3mB6hYPIjUlDd/MQCUHhrtkr2CQXK4oFlF8aS02EPxsDDATA==}
     peerDependencies:
       react: ^18 || ^19
 
@@ -4112,11 +4124,6 @@ packages:
     peerDependencies:
       react: ^17.0.0 || ^18.0.0
 
-  '@equinor/fusion-react-utils@3.0.6':
-    resolution: {integrity: sha512-UdWO/+Dy3ItJut+Hvm5pBhMsA1zeaF/lu2pPDweKfzWWA2UCcoUdexzGlctCeKjyLz9JDF3zdNU4gP3mLEEo2w==}
-    peerDependencies:
-      react: ^18 || ^19
-
   '@equinor/fusion-react-utils@3.0.7':
     resolution: {integrity: sha512-EqFK+u7to5qpWw4qrLtUawaq0HczTrKfARHPTh+QZWhO8FZzWm16bMyDxs3h7ZxNsTRCpyAnJ8KzKWMeHRtZdQ==}
     peerDependencies:
@@ -4146,8 +4153,8 @@ packages:
   '@equinor/fusion-wc-icon@2.4.4':
     resolution: {integrity: sha512-GdnFe3WwRWIVZ9hyPh8I+95Wj+Ri3FFjASc9Ej7115P2ISf4JoL2zKnk+YnbqSLP9wpqOPaxt0k3laDTBPSoTQ==}
 
-  '@equinor/fusion-wc-layout@0.0.1-beta.2':
-    resolution: {integrity: sha512-NBGwEjg3f+Egfq9HHo/f93yKmYmvLaIVzAhHzwzFtgAz4sRXl3UmLObLg3HCezJvrnl81QCHC3mkBplUTrmuxQ==}
+  '@equinor/fusion-wc-layout@0.1.2':
+    resolution: {integrity: sha512-Dqu0VWW5l6bmvVuEKxchAOIVFDc0sGSxk0owd/NObDwQDxnmt22or19tb3x9e+ln2DM6GsgJxX5DEwOlbJ9Z6g==}
 
   '@equinor/fusion-wc-list@1.2.4':
     resolution: {integrity: sha512-LZGutrmjYsCOZltX2GGMqdGoTlSNwPScl+Bi9PvFkQwmZbs3BIEycKUnlxM8X9+ylSj5wrprf5uzyA36qHcGoA==}
@@ -4155,8 +4162,8 @@ packages:
   '@equinor/fusion-wc-markdown@1.6.4':
     resolution: {integrity: sha512-atFOYLsr55kSQX4bqci9Z6t6m3htvjIdIoXkS8O85tW7kKr/b3f4CXYg/EutOAUqIKkFhb5+pIZMhGODipMFOg==}
 
-  '@equinor/fusion-wc-page@0.0.1-beta.0':
-    resolution: {integrity: sha512-mBMzdyuncUhbFal2oHF/h8ALwQo3eGkaCOVUsKedhu4D4Mb/jrdGcMnuvdKtOWDVP/zVsVFeGlEPB6QYKPKxtw==}
+  '@equinor/fusion-wc-page@0.1.2':
+    resolution: {integrity: sha512-DvI2l6SyZwbErdO+1U6rT/f91Xi7hEpRBaRaRjh/cA0temlWzdjIxwQXwsEE5e5cZhtHQTATTjTf12PWQkUIxg==}
 
   '@equinor/fusion-wc-people@2.2.5':
     resolution: {integrity: sha512-bcsrgHQuYTXV5jh5njbWim6+qbdi/3XCYmx5FgDlFiByrpMmEx2jfLaXJqB6/hiMSlsY1qYVlApYSZYSVmp0EQ==}
@@ -10107,8 +10114,8 @@ packages:
     resolution: {integrity: sha512-1TGiQiJVRQ3NPmZH6sx5Cfnmg6GQm9jvC1ch4TK511NjSJvjzKLzn5pPfZRNZkRPZP0HqCioSndqH8v2nRaWVQ==}
     hasBin: true
 
-  markdown-it@14.3.0:
-    resolution: {integrity: sha512-RCEsPjR+sr0x+AuYp601tKTkgFG4YEPLCzHST3cQ/fhlJkqAkz1L2/Qbp1j9qw5SBwQHFBoW8+hoN5xssOF0Tw==}
+  markdown-it@14.3.1:
+    resolution: {integrity: sha512-4Ej49aYTDFIQ+uBkfX8GBvJGccoARxxPep+7aWTs55ozbjQJpW9M26Fe53vnGgvLeVzva/amzjQQaQu9w0vMhA==}
     hasBin: true
 
   marked@16.4.2:
@@ -11660,6 +11667,7 @@ packages:
   tsconfck@3.1.6:
     resolution: {integrity: sha512-ks6Vjr/jEw0P1gmOVwutM3B7fWxoWBL2KRDb1JfqGVawBmO5UsvmWOQFGHBPl5yxYz4eERr19E6L7NMv+Fej4w==}
     engines: {node: ^18 || >=20}
+    deprecated: unmaintained
     hasBin: true
     peerDependencies:
       typescript: ^5.0.0
@@ -13206,11 +13214,10 @@ snapshots:
       '@equinor/fusion-wc-date': 1.2.4
       react: 19.2.8
 
-  '@equinor/fusion-react-layout@0.0.1-beta.2(react@19.2.8)':
+  '@equinor/fusion-react-layout@0.1.2(react@19.2.8)':
     dependencies:
-      '@equinor/fusion-react-utils': 3.0.6(react@19.2.8)
-      '@equinor/fusion-wc-layout': 0.0.1-beta.2
-      '@equinor/fusion-wc-page': 0.0.1-beta.0
+      '@equinor/fusion-wc-layout': 0.1.2
+      '@equinor/fusion-wc-page': 0.1.2
       react: 19.2.8
 
   '@equinor/fusion-react-person@2.0.16(react@19.2.8)':
@@ -13266,11 +13273,6 @@ snapshots:
       styled-components: 6.5.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
 
   '@equinor/fusion-react-utils@2.2.3(react@19.2.8)':
-    dependencies:
-      date-fns: 4.4.0
-      react: 19.2.8
-
-  '@equinor/fusion-react-utils@3.0.6(react@19.2.8)':
     dependencies:
       date-fns: 4.4.0
       react: 19.2.8
@@ -13333,7 +13335,7 @@ snapshots:
       '@equinor/fusion-wc-core': 2.0.3
       lit: 3.3.3
 
-  '@equinor/fusion-wc-layout@0.0.1-beta.2':
+  '@equinor/fusion-wc-layout@0.1.2':
     dependencies:
       '@equinor/fusion-wc-core': 2.0.3
       '@equinor/fusion-web-theme': 0.1.10
@@ -13370,7 +13372,7 @@ snapshots:
       prosemirror-transform: 1.12.0
       prosemirror-view: 1.42.3
 
-  '@equinor/fusion-wc-page@0.0.1-beta.0':
+  '@equinor/fusion-wc-page@0.1.2':
     dependencies:
       '@equinor/fusion-wc-core': 2.0.3
       '@equinor/fusion-web-theme': 0.1.10
@@ -17175,8 +17177,8 @@ snapshots:
       '@types/markdown-it-emoji': 3.0.1
       '@vuepress/shared': 2.0.0-rc.31
       '@vuepress/utils': 2.0.0-rc.31(supports-color@10.2.2)
-      markdown-it: 14.3.0
-      markdown-it-anchor: 9.2.1(@types/markdown-it@14.2.0)(markdown-it@14.3.0)
+      markdown-it: 14.3.1
+      markdown-it-anchor: 9.2.1(@types/markdown-it@14.2.0)(markdown-it@14.3.1)
       markdown-it-emoji: 3.1.0
       mdurl: 2.1.0
     transitivePeerDependencies:
@@ -19601,10 +19603,10 @@ snapshots:
     dependencies:
       '@jridgewell/sourcemap-codec': 1.6.0
 
-  markdown-it-anchor@9.2.1(@types/markdown-it@14.2.0)(markdown-it@14.3.0):
+  markdown-it-anchor@9.2.1(@types/markdown-it@14.2.0)(markdown-it@14.3.1):
     dependencies:
       '@types/markdown-it': 14.2.0
-      markdown-it: 14.3.0
+      markdown-it: 14.3.1
 
   markdown-it-cjk-friendly@2.0.3(@types/markdown-it@14.2.0)(markdown-it@14.2.0):
     dependencies:
@@ -19624,7 +19626,7 @@ snapshots:
       punycode.js: 2.3.1
       uc.micro: 2.1.0
 
-  markdown-it@14.3.0:
+  markdown-it@14.3.1:
     dependencies:
       argparse: 2.0.1
       entities: 4.5.0

@@ -15,7 +15,9 @@
   "license": "ISC",
   "devDependencies": {
     "@equinor/fusion-framework-cli": "workspace:^",
+    "@equinor/fusion-framework-module-navigation": "workspace:^",
     "@equinor/fusion-framework-react-app": "workspace:^",
+    "@equinor/fusion-framework-react-router": "workspace:^",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
     "react": "^19.2.1",
@@ -24,6 +26,8 @@
   },
   "dependencies": {
     "@equinor/eds-core-react": "^2.6.1",
-    "@equinor/fusion-react-layout": "0.0.1-beta.2"
+    "@equinor/fusion-framework-react-ag-grid": "workspace:*",
+    "@equinor/fusion-react-layout": "^0.1.2",
+    "styled-components": "^6.4.2"
   }
 }
