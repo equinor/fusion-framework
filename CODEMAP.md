@@ -58,6 +58,7 @@ Format: `package name` → path → role.
 | `@equinor/fusion-framework-module-msal` | `packages/modules/msal` | MSAL browser auth |
 | `@equinor/fusion-framework-module-msal-node` | `packages/modules/msal-node` | MSAL Node auth with encrypted token storage |
 | `@equinor/fusion-framework-module-navigation` | `packages/modules/navigation` | Navigation on React Router 7 |
+| `@equinor/fusion-framework-module-roles` | `packages/modules/roles` | Active roles, claimable roles, and role claiming |
 | `@equinor/fusion-framework-module-service-discovery` | `packages/modules/service-discovery` | Service discovery |
 | `@equinor/fusion-framework-module-services` | `packages/modules/services` | Typed Fusion service clients |
 | `@equinor/fusion-framework-module-signalr` | `packages/modules/signalr` | SignalR transport |

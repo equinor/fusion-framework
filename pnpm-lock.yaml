@@ -2332,6 +2332,43 @@ importers:
         specifier: ^4.1.10
         version: 4.1.11(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(@vitest/browser-playwright@4.1.11)(@vitest/coverage-v8@4.1.11)(happy-dom@20.12.0)(jsdom@30.0.1)(msw@2.15.0(@types/node@26.4.0)(typescript@7.0.2))(vite@8.2.2(@types/node@26.4.0)(esbuild@0.28.1)(sass-embedded@1.103.1)(sass@1.103.1)(terser@5.49.1)(tsx@4.23.13))
 
+  packages/modules/roles:
+    dependencies:
+      '@equinor/fusion-framework-module':
+        specifier: workspace:^
+        version: link:../module
+      '@equinor/fusion-framework-module-event':
+        specifier: workspace:^
+        version: link:../event
+      '@equinor/fusion-framework-module-http':
+        specifier: workspace:^
+        version: link:../http
+      '@equinor/fusion-framework-module-msal':
+        specifier: workspace:^
+        version: link:../msal
+      '@equinor/fusion-framework-module-service-discovery':
+        specifier: workspace:^
+        version: link:../service-discovery
+      '@equinor/fusion-framework-module-telemetry':
+        specifier: workspace:^
+        version: link:../telemetry
+      '@equinor/fusion-query':
+        specifier: workspace:^
+        version: link:../../utils/query
+      '@equinor/fusion-services':
+        specifier: workspace:^
+        version: link:../../services
+      rxjs:
+        specifier: ^7.8.1
+        version: 7.8.2
+    devDependencies:
+      typescript:
+        specifier: ^7.0.2
+        version: 7.0.2
+      vitest:
+        specifier: ^4.1.10
+        version: 4.1.11(@opentelemetry/api@1.9.1)(@types/node@26.4.0)(@vitest/browser-playwright@4.1.11)(@vitest/coverage-v8@4.1.11)(happy-dom@20.12.0)(jsdom@30.0.1)(msw@2.15.0(@types/node@26.4.0)(typescript@7.0.2))(vite@8.2.2(@types/node@26.4.0)(esbuild@0.28.1)(sass-embedded@1.103.1)(sass@1.103.1)(terser@5.49.1)(tsx@4.23.12))
+
   packages/modules/service-discovery:
     dependencies:
       '@equinor/fusion-framework-module':
