@@ -1,4 +1,5 @@
 import type { ReactElement } from 'react';
+import { Typography } from '@equinor/eds-core-react';
 import { Page } from '@equinor/fusion-react-layout';
 import { AgGridReact } from '@equinor/fusion-framework-react-ag-grid';
 import type { ColDef } from '@equinor/fusion-framework-react-ag-grid/community';
@@ -152,13 +153,19 @@ export const HistoryPage = (): ReactElement => (
   <Page>
     <Page.Header>
       <Styled.Wrapper>
-        <h1>Portal history</h1>
+        <Typography group="heading" variant="h1">
+          Portal history
+        </Typography>
       </Styled.Wrapper>
     </Page.Header>
     <Page.Main>
       <Styled.Wrapper>
-        <h2>Recent interdimensional trips</h2>
-        <p>Morty recovered the episode log before Rick could clear the portal history.</p>
+        <Typography group="heading" variant="h2">
+          Recent interdimensional trips
+        </Typography>
+        <Typography group="paragraph" variant="body_long">
+          Morty recovered the episode log before Rick could clear the portal history.
+        </Typography>
         <Styled.Grid>
           <AgGridReact<Episode>
             rowData={episodes}
