@@ -6,7 +6,9 @@ name: Cleanup PR caches
 # stalls the *next* cache save while eviction runs. Purge a PR's caches as
 # soon as it closes so the quota reflects only active branches.
 on:
-  workflow_call:
+  pull_request:
+    types:
+      - closed
 
 permissions:
   actions: write

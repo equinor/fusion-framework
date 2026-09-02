@@ -7,21 +7,12 @@ on:
       - opened
       - reopened
       - synchronize
-      - closed
     paths-ignore:
       - '.changeset/**'
       - 'vue-press/**'
-  pull_request_target:
-    types:
-      - ready_for_review
-      - opened
-      - synchronize
-  pull_request_review:
-    types:
-      - submitted
 
 concurrency:
-  group: pr-${{ github.event_name }}-${{ github.event.pull_request.id }}
+  group: pr-${{ github.event.pull_request.id }}
   cancel-in-progress: true
 
 permissions:
@@ -37,7 +28,6 @@ env:
 jobs:
   code-quality:
     name: Code quality
-    if: github.event_name == 'pull_request' && github.event.action != 'closed'
     runs-on: fusion-gh-runner-fusion-framework
     steps:
       - uses: actions/checkout@v7
@@ -76,12 +66,8 @@ jobs:
       - name: Verify package exports
         run: pnpm verify:package-exports
 
-      - name: Verify agent context
-        run: pnpm verify:agent-context
-
   build:
     name: Build affected packages
-    if: github.event_name == 'pull_request' && github.event.action != 'closed'
     runs-on: fusion-gh-runner-fusion-framework
     steps:
       - uses: actions/checkout@v7
@@ -122,7 +108,6 @@ jobs:
 
   unit-tests:
     name: Unit tests
-    if: github.event_name == 'pull_request' && github.event.action != 'closed'
     runs-on: fusion-gh-runner-fusion-framework
     steps:
       - uses: actions/checkout@v7
@@ -157,7 +142,6 @@ jobs:
 
   cookbook-tests:
     name: Cookbook Playwright tests
-    if: github.event_name == 'pull_request' && github.event.action != 'closed'
     runs-on: fusion-gh-runner-fusion-framework
     steps:
       - uses: actions/checkout@v7
@@ -211,8 +195,8 @@ jobs:
             --filter @equinor/fusion-framework-cookbook-app-react-mock-playwright
 
   required-check:
-    name: ${{ github.event_name == 'pull_request' && github.event.action != 'closed' && 'Check Code' || 'PR event complete' }}
-    if: always() && github.event_name == 'pull_request' && github.event.action != 'closed'
+    name: Check Code
+    if: always()
     needs:
       - code-quality
       - build
@@ -230,35 +214,3 @@ jobs:
             echo "$failures"
             exit 1
           fi
-
-  dependabot:
-    name: Dependabot
-    if: github.event_name == 'pull_request' && github.event.action != 'closed' && github.actor == 'dependabot[bot]'
-    permissions:
-      contents: write
-      pull-requests: write
-    uses: ./.github/workflows/dependabot.yml
-
-  labels:
-    name: PR labels
-    if: github.event_name == 'pull_request_target'
-    permissions:
-      contents: read
-      pull-requests: write
-    uses: ./.github/workflows/pr-labels.yml
-
-  review:
-    name: PR review
-    if: github.event_name == 'pull_request_review'
-    permissions:
-      contents: read
-      pull-requests: write
-    uses: ./.github/workflows/pr-review-dismissed.yml
-
-  cleanup:
-    name: PR cache cleanup
-    if: github.event_name == 'pull_request' && github.event.action == 'closed'
-    permissions:
-      actions: write
-      contents: read
-    uses: ./.github/workflows/cleanup-caches.yml

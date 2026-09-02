@@ -1,12 +1,15 @@
 name: Prime pnpm store cache
 
-# Called by the Release workflow after a push to main so cache priming remains
-# part of the release pipeline instead of creating another Actions run.
+# Saving the pnpm store cache used to happen inside every job that called
+# node-setup, so any push to main that triggered more than one workflow
+# raced to save the same cache key. Do it once, here, decoupled from CI.
 on:
-  workflow_call:
+  push:
+    branches:
+      - main
 
 concurrency:
-  group: prime-pnpm-cache-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}
   # Only the latest push's lockfile matters for the cache, so a superseded
   # run for an older commit is wasted work — cancel it instead of queuing.
   cancel-in-progress: true

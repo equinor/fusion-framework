@@ -1,9 +1,11 @@
 name: Fusion Framework Pre-Release
 
 on:
-  workflow_call:
+  push:
+    branches:
+      - next
 
-concurrency: next-release-${{ github.ref }}
+concurrency: ${{ github.workflow }}-${{ github.ref }}
 permissions:
   contents: write      # Required for creating changesets branch and pushing changes
   packages: write      # Required for publishing to npm registry
@@ -103,3 +105,5 @@ jobs:
     if: needs.release-pkg.outputs.published == 'true'
     uses: ./.github/workflows/generate-docs.yml
     secrets: inherit
+
+
