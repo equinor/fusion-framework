@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-openapi-mock-server",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Standalone HTTP server that serves @equinor/fusion-openapi-mock fakes from a directory of OpenAPI specs, addressable directly by tests (e.g. Playwright) as well as local dev",
   "keywords": [
     "openapi",

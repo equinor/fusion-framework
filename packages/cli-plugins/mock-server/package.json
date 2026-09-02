@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework-cli-plugin-mock-server",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Fusion Framework CLI plugin adding `ffc mock-server`, serving @equinor/fusion-openapi-mock fakes over HTTP",
   "main": "dist/esm/index.js",
   "type": "module",

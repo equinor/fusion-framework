@@ -1,5 +1,11 @@
 # @equinor/fusion-openapi-mock-server
 
+## 0.2.0
+
+### Minor Changes
+
+- 54d0d20: Add `patch` and `options` middleware router shorthands for mocking PATCH and OPTIONS requests.
+
 ## 0.1.1
 
 ### Patch Changes
