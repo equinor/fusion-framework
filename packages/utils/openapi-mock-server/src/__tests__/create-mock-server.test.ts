@@ -138,6 +138,41 @@ describe('createMockServer', () => {
     expect(response.status).toBe(200);
   });
 
+  it('supports PATCH and OPTIONS middleware route shorthands', async () => {
+    const document = {
+      openapi: '3.0.0',
+      info: { title: 'Middleware methods', version: '1' },
+      paths: {},
+    };
+    const service = createService('middleware-methods', document).middleware((router) => {
+      router.patch('/resource', (_req, res, { body }) => {
+        res.json({ method: 'PATCH', body });
+      });
+      router.options('/resource', (_req, res) => {
+        res.statusCode = 204;
+        res.end();
+      });
+    });
+    server = createMockServer().use([service]);
+    const { url } = await server.start();
+
+    const patchResponse = await fetch(`${url}/middleware-methods/resource`, {
+      method: 'PATCH',
+      body: JSON.stringify({ enabled: true }),
+      headers: { 'content-type': 'application/json' },
+    });
+    const optionsResponse = await fetch(`${url}/middleware-methods/resource`, {
+      method: 'OPTIONS',
+    });
+
+    expect(patchResponse.status).toBe(200);
+    await expect(patchResponse.json()).resolves.toEqual({
+      method: 'PATCH',
+      body: { enabled: true },
+    });
+    expect(optionsResponse.status).toBe(204);
+  });
+
   it('lets a later use() layer override an earlier one by service key', async () => {
     const overridesDir = fileURLToPath(new URL('./fixtures/overrides', import.meta.url));
     server = createMockServer().use(fixturesDir).use(overridesDir);

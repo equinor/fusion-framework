@@ -139,6 +139,9 @@ const people = createService('people', peopleDocument).middleware((router) => {
 const server = createMockServer({ seed: 42 }).use([people]);
 ```
 
+The middleware router supports `get`, `post`, `put`, `patch`, `delete`, and `options` request
+methods with exact service-relative path matching.
+
 ## Point your app at it
 
 For a Fusion app running through `@equinor/fusion-framework-cli`, use `ffc app dev --mock`:
