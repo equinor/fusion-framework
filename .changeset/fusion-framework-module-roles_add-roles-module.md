@@ -9,6 +9,7 @@ client and module initialization supplies its current-account resolver. The prov
 typed, cancelable role-claim event before activation and records privacy-safe operation telemetry
 when those modules are enabled. Built-in reads use account-isolated Fusion Query caching and
 refresh after a successful claim. Typed Roles, required-role, and claim errors support reliable
-consumer error handling.
+consumer error handling. A `/mock` entry point seeds in-memory role and claim data while exercising
+the production initializer and provider.
 
 Closes #5449
