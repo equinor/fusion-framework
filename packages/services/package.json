@@ -33,7 +33,7 @@
   "files": [
     "dist",
     "docs",
-    "src"
+    "src/roles/v1/openapi.json"
   ],
   "publishConfig": {
     "access": "public"
