@@ -1,4 +1,7 @@
 import type { AppModuleInitiator } from '@equinor/fusion-framework-react-app';
+import { enableNavigation } from '@equinor/fusion-framework-module-navigation';
+import { enableAgGrid } from '@equinor/fusion-framework-react-ag-grid';
+import { AllCommunityModule } from '@equinor/fusion-framework-react-ag-grid/community';
 
 /**
  * Application module configuration.
@@ -11,6 +14,11 @@ import type { AppModuleInitiator } from '@equinor/fusion-framework-react-app';
  * @see {@link https://github.com/equinor/fusion-framework/blob/main/packages/modules/http/docs/client-configuration.md | HTTP client configuration}
  */
 export const configure: AppModuleInitiator = (configurator, env) => {
+  enableNavigation(configurator, env.env.basename);
+  enableAgGrid(configurator, (builder) => {
+    builder.setModules([AllCommunityModule]);
+  });
+
   /** print render environment arguments */
   console.log('configuring application', env);
 
