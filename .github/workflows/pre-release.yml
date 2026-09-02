@@ -14,18 +14,12 @@ permissions:
   # Required for generating GITHUB_TOKEN used by changeset operations
   id-token: write    
 
-on: 
-  workflow_dispatch:
-    inputs:
-      tag:
-        description: 'Release tag (PR)' 
-        default: 'beta'    
-        required: true
-  workflow_call: 
+on:
+  workflow_call:
     inputs:
       tag:
         type: string
-        description: 'Release tag (PR)' 
+        description: 'Release tag (PR)'
         required: true
 
 

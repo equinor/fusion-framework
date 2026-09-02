@@ -1,10 +1,6 @@
 name: pr labels
 on:
-  pull_request_target:
-    types: 
-      - ready_for_review
-      - opened 
-      - synchronize
+  workflow_call:
 
 permissions: read-all
 

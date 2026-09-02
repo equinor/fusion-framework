@@ -1,9 +1,34 @@
-name: ci
+name: Release
 
 on:
   push:
     branches:
       - main
+      - next
+  workflow_dispatch:
+    inputs:
+      operation:
+        description: Release operation to run
+        type: choice
+        options:
+          - snapshot
+          - generate-docs
+          - index-docs
+        default: snapshot
+        required: true
+      tag:
+        description: Snapshot release tag
+        default: beta
+        required: false
+      environment:
+        description: Documentation indexing environment
+        default: docs
+        required: false
+      clean_embeddings:
+        description: Rebuild all documentation embeddings
+        type: boolean
+        default: false
+        required: false
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
@@ -17,8 +42,63 @@ permissions:
   id-token: write  # Required for OIDC token generation
 
 jobs:
+  prime-cache:
+    name: Prime pnpm and Playwright caches
+    if: github.event_name == 'push' && github.ref_name == 'main'
+    permissions:
+      actions: write
+      contents: read
+    uses: ./.github/workflows/prime-pnpm-cache.yml
+
+  pre-release-line:
+    name: Publish next pre-release
+    if: github.event_name == 'push' && github.ref_name == 'next'
+    permissions:
+      contents: write
+      packages: write
+      id-token: write
+      pull-requests: write
+    uses: ./.github/workflows/next.yml
+    secrets: inherit
+
+  snapshot:
+    name: Publish snapshot
+    if: github.event_name == 'workflow_dispatch' && inputs.operation == 'snapshot'
+    permissions:
+      contents: write
+      packages: write
+      id-token: write
+      pull-requests: write
+    uses: ./.github/workflows/pre-release.yml
+    with:
+      tag: ${{ inputs.tag }}
+    secrets: inherit
+
+  generate-docs:
+    name: Generate documentation
+    if: github.event_name == 'workflow_dispatch' && inputs.operation == 'generate-docs'
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    uses: ./.github/workflows/generate-docs.yml
+    secrets: inherit
+
+  manual-index-docs:
+    name: Index documentation
+    if: github.event_name == 'workflow_dispatch' && inputs.operation == 'index-docs'
+    permissions:
+      contents: write
+      id-token: write
+    uses: ./.github/workflows/index-docs.yml
+    with:
+      environment: ${{ inputs.environment }}
+      clean_embeddings: ${{ inputs.clean_embeddings }}
+    secrets: inherit
+
   release-pkg:
     name: Version or publish packages
+    if: github.event_name == 'push' && github.ref_name == 'main'
     runs-on: fusion-gh-runner-fusion-framework
     # Job-specific permissions for package publishing
     permissions:

@@ -12,18 +12,6 @@ on:
         type: boolean
         default: false
         required: false
-  workflow_dispatch:
-    inputs:
-      environment:
-        description: GitHub environment containing the indexing configuration
-        type: string
-        required: true
-      clean_embeddings:
-        description: Force full rebuild and delete all embeddings
-        type: boolean
-        default: false
-        required: false
-
 concurrency:
   group: index-docs-${{ inputs.environment }}
   cancel-in-progress: false
