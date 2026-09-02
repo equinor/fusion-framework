@@ -21,12 +21,18 @@ permissions:
 jobs:
   prime-cache:
     name: Save pnpm store cache
-    runs-on: ubuntu-latest
+    runs-on: fusion-gh-runner-fusion-framework
     steps:
       - uses: actions/checkout@v7
 
+      - name: Setup fusion runner
+        continue-on-error: true
+        uses: ./.github/actions/setup-fusion-runner
+
       - name: Setup pnpm
         uses: pnpm/action-setup@v6
+        with:
+          version: 11.22.0
 
       - name: Setup Node.js
         uses: actions/setup-node@v7
@@ -42,7 +48,7 @@ jobs:
         uses: actions/cache/restore@v6
         with:
           path: ${{ steps.pnpm-store.outputs.path }}
-          key: pnpm-store-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+          key: pnpm-store-fusion-v1-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile --prefer-offline
@@ -58,7 +64,7 @@ jobs:
         uses: actions/cache/restore@v6
         with:
           path: ~/.cache/ms-playwright
-          key: playwright-${{ runner.os }}-${{ runner.arch }}-${{ steps.playwright.outputs.version }}
+          key: playwright-fusion-v1-${{ runner.os }}-${{ runner.arch }}-${{ steps.playwright.outputs.version }}
           lookup-only: true
 
       - name: Install Playwright Chromium
@@ -70,7 +76,7 @@ jobs:
         uses: actions/cache/save@v6
         with:
           path: ~/.cache/ms-playwright
-          key: playwright-${{ runner.os }}-${{ runner.arch }}-${{ steps.playwright.outputs.version }}
+          key: playwright-fusion-v1-${{ runner.os }}-${{ runner.arch }}-${{ steps.playwright.outputs.version }}
 
       - name: Delete stale Playwright browser caches
         if: steps.playwright-restore.outputs.cache-hit != 'true'
@@ -78,9 +84,9 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          currentKey="playwright-${{ runner.os }}-${{ runner.arch }}-${{ steps.playwright.outputs.version }}"
+          currentKey="playwright-fusion-v1-${{ runner.os }}-${{ runner.arch }}-${{ steps.playwright.outputs.version }}"
           cacheIds=$(gh cache list --repo "${{ github.repository }}" --ref refs/heads/main \
-            --key "playwright-${{ runner.os }}-${{ runner.arch }}-" --limit 100 \
+            --key "playwright-fusion-v1-${{ runner.os }}-${{ runner.arch }}-" --limit 100 \
             --json id,key,createdAt \
             --jq "sort_by(.createdAt) | reverse | .[2:] | .[] | select(.key != \"$currentKey\") | .id")
           for id in $cacheIds; do
@@ -101,7 +107,7 @@ jobs:
         uses: actions/cache/save@v6
         with:
           path: ${{ steps.pnpm-store.outputs.path }}
-          key: pnpm-store-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+          key: pnpm-store-fusion-v1-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
 
       # Cache keys are immutable, so every save creates a brand-new entry
       # instead of replacing the previous one — old pnpm-store entries for
@@ -114,9 +120,9 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          currentKey="pnpm-store-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}"
+          currentKey="pnpm-store-fusion-v1-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}"
           cacheIds=$(gh cache list --repo "${{ github.repository }}" --ref refs/heads/main \
-            --key "pnpm-store-${{ runner.os }}-" --limit 100 \
+            --key "pnpm-store-fusion-v1-${{ runner.os }}-" --limit 100 \
             --json id,key,createdAt \
             --jq "sort_by(.createdAt) | reverse | .[2:] | .[] | select(.key != \"$currentKey\") | .id")
           for id in $cacheIds; do
