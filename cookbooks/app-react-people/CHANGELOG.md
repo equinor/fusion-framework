@@ -1,5 +1,11 @@
 # Change Log
 
+## 5.0.8
+
+### Patch Changes
+
+- 9ae5d8b: Internal: bump `styled-components` from `6.5.1` to `6.5.3`.
+
 ## 5.0.7
 
 ### Patch Changes

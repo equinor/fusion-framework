@@ -1,5 +1,13 @@
 # @equinor/fusion-framework-module-msal-node
 
+## 4.2.2
+
+### Patch Changes
+
+- 02473c5: Internal: bump `@azure/msal-node-extensions` from `5.4.0` to `5.5.0`.
+- 086fec5: Internal: bump `open` from `11.0.1` to `11.0.2`.
+- f87f4d5: Internal: bump `@azure/msal-node` from 5.6.0 to 6.0.0.
+
 ## 4.2.1
 
 ### Patch Changes

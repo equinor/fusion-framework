@@ -1,5 +1,21 @@
 # portal-analytics
 
+## 0.4.56
+
+### Patch Changes
+
+- 9ae5d8b: Internal: bump `styled-components` from `6.5.1` to `6.5.3`.
+- 72874ef: Internal: bump `uuid` from `14.0.1` to `14.0.2`.
+- Updated dependencies [086fec5]
+- Updated dependencies [98ff08c]
+- Updated dependencies [9fc39ae]
+- Updated dependencies [b5c6737]
+- Updated dependencies [3acf1f7]
+  - @equinor/fusion-framework-cli@15.3.2
+  - @equinor/fusion-framework-app@13.1.2
+  - @equinor/fusion-framework@8.1.2
+  - @equinor/fusion-framework-react-app@14.1.2
+
 ## 0.4.55
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-cookbook-app-react-styling
 
+## 1.1.3
+
+### Patch Changes
+
+- 9ae5d8b: Internal: bump `styled-components` from `6.5.1` to `6.5.3`.
+
 ## 1.1.2
 
 ### Patch Changes

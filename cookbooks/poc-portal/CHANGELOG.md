@@ -1,5 +1,21 @@
 # poc-portal
 
+## 1.1.103
+
+### Patch Changes
+
+- 63a2f54: Internal: bump `@vitejs/plugin-react` from `6.0.5` to `6.1.1`.
+- Updated dependencies [086fec5]
+- Updated dependencies [98ff08c]
+- Updated dependencies [9fc39ae]
+- Updated dependencies [b5c6737]
+- Updated dependencies [3acf1f7]
+- Updated dependencies [86346d6]
+  - @equinor/fusion-framework-cli@15.3.2
+  - @equinor/fusion-framework-module-msal@11.0.2
+  - @equinor/fusion-framework@8.1.2
+  - @equinor/fusion-framework-react-app@14.1.2
+
 ## 1.1.102
 
 ### Patch Changes

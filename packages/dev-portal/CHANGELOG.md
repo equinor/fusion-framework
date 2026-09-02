@@ -1,5 +1,17 @@
 # @equinor/fusion-framework-dev-portal
 
+## 11.0.6
+
+### Patch Changes
+
+- 9ae5d8b: Internal: bump `styled-components` from `6.5.1` to `6.5.3`.
+- 63a2f54: Internal: bump `@vitejs/plugin-react` from `6.0.5` to `6.1.1`.
+- e66ec44: Internal: bump `@equinor/fusion-wc-chip` from `1.3.3` to `1.3.4`.
+- Updated dependencies [63a2f54]
+  - @equinor/fusion-framework-dev-server@2.1.2
+  - @equinor/fusion-framework-app@13.1.2
+  - @equinor/fusion-framework@8.1.2
+
 ## 11.0.5
 
 ### Patch Changes
