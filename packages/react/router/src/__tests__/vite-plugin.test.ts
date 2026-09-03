@@ -176,4 +176,17 @@ describe('reactRouterPlugin', () => {
     expect(transformResult).toContain('default as MocksFsRoutesUsers,');
     expect(transformResult).toContain('default as MocksFsRoutesUsersId,');
   });
+
+  it('should transform Vite module IDs when the Windows project root uses backslashes', () => {
+    plugin.config({ root: String.raw`C:\workspace\app` });
+    const inputCode = [
+      `import { route } from '@equinor/fusion-framework-react-router/routes';`,
+      `export const routes = route('home', './pages/HomePage.tsx');`,
+    ].join('\n');
+
+    const transformResult = plugin.transform(inputCode, 'C:/workspace/app/src/routes.ts');
+
+    expect(transformResult).not.toBeNull();
+    expect(transformResult).toContain(`path: 'home'`);
+  });
 });

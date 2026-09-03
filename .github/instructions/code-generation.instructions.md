@@ -15,6 +15,7 @@ The global non-negotiables (no `any`, explicit return types, scoped imports, `pn
 - **Errors**: Throw clear, contextual error messages; never silently swallow failures.
 - **Comments**: Add inline intent comments for iterator blocks, decision gates, RxJS operator chains, assumptions, and workarounds. Explain why the block exists, not what the syntax does.
 - **Node built-ins**: Always use the `node:` protocol (`node:fs`, `node:path`).
+- **Cross-platform paths**: Normalize paths at filesystem/tooling boundaries, emit module specifiers with `/`, and test path logic with Windows-shaped input.
 - **Filenames**: One value export per file, named to match. See below.
 
 ## Core Principles
@@ -90,6 +91,17 @@ if (!existsSync(filePath)) {
 }
 ```
 
+#### Cross-Platform Path Handling
+- Use `node:path` for filesystem resolution, but do not emit `path.join()` results as import
+  specifiers. JavaScript and TypeScript module specifiers must use `/` separators.
+- Normalize filesystem paths and tool-provided module IDs to the same separator form before
+  comparing them. Vite and similar tools can provide `/`-separated IDs on Windows while
+  `process.cwd()` and configured roots still contain `\`.
+- Check directory containment at path-segment boundaries; a bare `startsWith(root)` also matches
+  sibling paths such as `/workspace/app-copy`.
+- When code resolves, compares, transforms, or generates paths, add regression coverage for both
+  POSIX and Windows-shaped inputs even if CI runs on only one operating system.
+
 ### Inline Comments
 Add intent comments for:
 - Iterator blocks such as `for`, `forEach`, `map`, `filter`, and `reduce`
@@ -132,4 +144,3 @@ Bare `// TODO - ...` comments are flagged by `no-todo-without-issue`. Every TODO
 - **Everything else** (plain functions, consts, enums): filename must be the kebab-case form of the export name, e.g. `capitalizeRequestMethod` → `capitalize-request-method.ts`. A trailing dotted category suffix is allowed, e.g. `sse.operator.ts`, `my-foo.schema.ts` — only the segment before the first dot needs to match.
 - Barrels (`index.ts`) are exempt and may have multiple exports.
 - If a file needs a second export (e.g. an `Error` subclass alongside the function that throws it), extract it into its own file rather than suppressing the rule.
-

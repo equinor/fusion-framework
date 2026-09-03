@@ -86,6 +86,16 @@ function isRelativePath(filePath: string): boolean {
 }
 
 /**
+ * Normalizes filesystem separators for comparison with Vite module IDs.
+ *
+ * @param filePath - A filesystem path or Vite module ID.
+ * @returns The path with POSIX separators.
+ */
+function normalizePathSeparators(filePath: string): string {
+  return filePath.replace(/\\/g, '/');
+}
+
+/**
  * Extracts all file paths from DSL route calls in the code
  */
 function extractFilePaths(code: string): Set<string> {
@@ -650,7 +660,7 @@ export const reactRouterPlugin = (options: ReactRouterPluginOptions = {}): Plugi
   return {
     name: 'fusion:react-router',
     config(config: UserConfig) {
-      projectRoot = config.root ?? process.cwd();
+      projectRoot = normalizePathSeparators(config.root ?? process.cwd());
 
       // Debug logging is opt-in to avoid noisy build output by default
       if (debug) {
@@ -659,8 +669,18 @@ export const reactRouterPlugin = (options: ReactRouterPluginOptions = {}): Plugi
     },
     transform(code, id) {
       try {
-        // Skip files outside the project root or in node_modules
-        if (!projectRoot || !id.startsWith(projectRoot) || id.includes('node_modules')) {
+        // Vite initializes the project root through the config hook before transforming modules.
+        if (!projectRoot) {
+          return null;
+        }
+
+        const normalizedId = normalizePathSeparators(id);
+        const projectRootPrefix = projectRoot.endsWith('/') ? projectRoot : `${projectRoot}/`;
+        const isWithinProject =
+          normalizedId === projectRoot || normalizedId.startsWith(projectRootPrefix);
+
+        // Vite module IDs use POSIX separators even when the configured root uses Windows separators.
+        if (!isWithinProject || normalizedId.includes('/node_modules/')) {
           return null;
         }
 
@@ -682,7 +702,10 @@ export const reactRouterPlugin = (options: ReactRouterPluginOptions = {}): Plugi
 
         // Debug logging is opt-in to avoid noisy build output by default
         if (debug) {
-          console.log('[fusion:react-router] Transforming file:', id.replace(projectRoot, ''));
+          console.log(
+            '[fusion:react-router] Transforming file:',
+            normalizedId.replace(projectRoot, ''),
+          );
         }
 
         // Extract all file paths from DSL route calls
