@@ -20,7 +20,7 @@ import type {
 
 import { extractVersion, parseVersionedArgs, versionedResponseSelector } from '../../utils';
 import { ApiVersion } from '../static';
-import { SubscriptionRequestV1SchemaV1 } from '../v1/schemas/subscription-request-v1-schema-v1';
+import { SubscriptionRequestSchemaV1 } from '../v1/schemas/subscription-request-schema-v1';
 
 /** Concrete API versions this operation publishes. */
 type AvailableVersions = ApiVersion.v1;
@@ -46,7 +46,7 @@ const VersionContract = {
     /** Arguments accepted by version 1.0 of this operation. */
     args: z
       .object({
-        ...SubscriptionRequestV1SchemaV1.shape,
+        ...SubscriptionRequestSchemaV1.shape,
       })
       .describe('Arguments for PUT /subscriptions/apps (putAppsSubscription v1.0).'),
     /** Response published by version 1.0. The contract publishes no schema for the `200 OK` body. */
@@ -68,7 +68,7 @@ type PutAppsSubscriptionResponse<TVersion extends PutAppsSubscriptionVersion> = 
 /**
  * Arguments `putAppsSubscription` accepts, resolved from the selected API version.
  *
- * Version 1.0 accepts the request body fields of `SubscriptionRequestV1V1`.
+ * Version 1.0 accepts the request body fields of `SubscriptionRequestV1`.
  *
  * The value is parsed by the version's Zod argument schema before the request is built, so defaults
  * and range checks apply up front.

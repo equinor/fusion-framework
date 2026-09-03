@@ -19,7 +19,15 @@ import { z } from 'zod';
  * type AppPage = ApiPagedCollectionV1<ApiAppListItemV1>;
  * ```
  */
-export const apiPagedCollectionSchemaV1 = <TItem>(itemSchema: z.ZodType<TItem>) =>
+export const apiPagedCollectionSchemaV1 = <TItem>(
+  itemSchema: z.ZodType<TItem>,
+): z.ZodType<{
+  totalCount: string | number;
+  count?: string | number;
+  nextPage?: string | null;
+  prevPage?: string | null;
+  value?: TItem[];
+}> =>
   z
     .object({
       totalCount: z

@@ -6,7 +6,7 @@ import { ApiSubscriptionTypeSchemaV1 } from './api-subscription-type-schema-v1';
  *
  * The body of a request registering a Fusion Apps event subscription.
  */
-export const SubscriptionRequestV1SchemaV1 = z
+export const SubscriptionRequestSchemaV1 = z
   .object({
     /** Identifier of an existing subscription to replace. */
     id: z.string().nullish().describe('Identifier of an existing subscription to replace.'),
@@ -25,7 +25,7 @@ export const SubscriptionRequestV1SchemaV1 = z
 /**
  * The body of a request registering a Fusion Apps event subscription.
  *
- * Apps API 1.0 model inferred from {@link SubscriptionRequestV1SchemaV1}, so
- * `SubscriptionRequestV1V1` and the runtime validator can never describe different shapes.
+ * Apps API 1.0 model inferred from {@link SubscriptionRequestSchemaV1}, so
+ * `SubscriptionRequestV1` and the runtime validator can never describe different shapes.
  */
-export type SubscriptionRequestV1V1 = z.infer<typeof SubscriptionRequestV1SchemaV1>;
+export type SubscriptionRequestV1 = z.infer<typeof SubscriptionRequestSchemaV1>;

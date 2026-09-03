@@ -7,19 +7,19 @@ import { z } from 'zod';
  */
 export const CreateContextTypeRequestSchemaV1 = z
   .object({
-    /** A description explaining the purpose of this context type. Required when is true. */
+    /** A description explaining the purpose of this context type. Required when `isCustom` is true. */
     description: z
       .string()
       .nullish()
       .describe(
-        'A description explaining the purpose of this context type. Required when is true.',
+        'A description explaining the purpose of this context type. Required when `isCustom` is true.',
       ),
-    /** Indicates whether this is a custom (non-standard) context type. Custom context types require a . */
+    /** Indicates whether this is a custom context type. Custom context types require a description. */
     isCustom: z
       .boolean()
       .optional()
       .describe(
-        'Indicates whether this is a custom (non-standard) context type. Custom context types require a .',
+        'Indicates whether this is a custom context type. Custom context types require a description.',
       ),
     /** The unique system name for the context type. Must be 2–50 URL-safe characters. */
     name: z

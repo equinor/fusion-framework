@@ -123,7 +123,7 @@ export type { ProblemDetailsV1 } from './schemas/problem-details-schema-v1';
 export type { SearchV1 } from './schemas/search-schema-v1';
 export type { SkipV1 } from './schemas/skip-schema-v1';
 export type { SortDirectionV1 } from './schemas/sort-direction-schema-v1';
-export type { SubscriptionRequestV1V1 } from './schemas/subscription-request-v1-schema-v1';
+export type { SubscriptionRequestV1 } from './schemas/subscription-request-schema-v1';
 export type { TechnologyProductIdentifierV1 } from './schemas/technology-product-identifier-schema-v1';
 export type { TemplateSourceRequestV1 } from './schemas/template-source-request-schema-v1';
 export type { TemplateV1 } from './schemas/template-schema-v1';
