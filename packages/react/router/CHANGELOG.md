@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-react-router
 
+## 2.4.3
+
+### Patch Changes
+
+- 6a66611: Fix DSL route transformation on Windows when Vite module IDs and the configured project root use different path separators.
+
 ## 2.4.2
 
 ### Patch Changes
