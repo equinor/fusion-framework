@@ -1,5 +1,12 @@
 # Change Log
 
+## 15.3.3
+
+### Patch Changes
+
+- e3555f9: Fix `ffc app dev` so local mock service files are used only when service discovery is explicitly
+  pointed at a mock server with `--mock`.
+
 ## 15.3.2
 
 ### Patch Changes
