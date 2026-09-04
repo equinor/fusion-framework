@@ -47,5 +47,10 @@
   },
   "peerDependencies": {
     "vite": "^7.0.0 || ^8.0.0"
+  },
+  "peerDependenciesMeta": {
+    "vite": {
+      "optional": true
+    }
   }
 }

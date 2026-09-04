@@ -24,12 +24,17 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os:
-          - macos-latest
-          - windows-latest
+        include:
+          - os: ubuntu-latest
+            ignoreSnapshots: false
+          - os: macos-latest
+            ignoreSnapshots: true
+          - os: windows-latest
+            ignoreSnapshots: true
     runs-on: ${{ matrix.os }}
     env:
       PLAYWRIGHT_BROWSERS_PATH: ${{ github.workspace }}/.cache/ms-playwright
+      PLAYWRIGHT_IGNORE_SNAPSHOTS: ${{ matrix.ignoreSnapshots }}
     steps:
       - uses: actions/checkout@v7
         with:
@@ -52,12 +57,12 @@ jobs:
         uses: actions/cache/restore@v6
         with:
           path: ${{ env.PLAYWRIGHT_BROWSERS_PATH }}
-          key: playwright-fusion-v1-${{ runner.os }}-${{ runner.arch }}-${{ steps.playwright-version.outputs.version }}
+          key: playwright-fusion-v2-${{ runner.os }}-${{ runner.arch }}-${{ steps.playwright-version.outputs.version }}
 
       - name: Install Playwright Chromium
         run: pnpm --filter @equinor/fusion-framework-vitest-plugin-react-app exec playwright install chromium
 
-      - name: Run visual tests
+      - name: Run Playwright checks
         shell: bash
         run: pnpm turbo run test:playwright
 

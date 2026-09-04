@@ -3,6 +3,7 @@ import { defineConfig } from '@playwright/test';
 export default defineConfig({
   testDir: './playwright',
   outputDir: './playwright/.results',
+  ignoreSnapshots: process.env.PLAYWRIGHT_IGNORE_SNAPSHOTS === 'true',
   snapshotPathTemplate: '{testDir}/{testFilePath}-snapshots/{arg}{ext}',
   fullyParallel: true,
   expect: {

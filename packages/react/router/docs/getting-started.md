@@ -142,20 +142,22 @@ export default function AppRouter() {
 
 Access it in loaders and components via `fusion.context.queryClient`.
 
-## Step 7 — (Optional) Enable the Vite plugin
+## Step 7 — Enable the Vite plugin
 
-The Vite plugin transforms DSL calls into optimised React Router `RouteObject` code at build time, enabling proper code splitting for lazy routes:
+Fusion Framework CLI applications enable the route DSL plugin automatically. If you configure Vite yourself, install `@equinor/fusion-framework-vite-plugin-react-router` as a development dependency. The plugin transforms DSL calls into optimised React Router `RouteObject` code at build time, enabling proper code splitting for lazy routes:
 
 ```ts
 // vite.config.ts
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import { reactRouterPlugin } from '@equinor/fusion-framework-react-router/vite-plugin';
+import { reactRouterPlugin } from '@equinor/fusion-framework-vite-plugin-react-router';
 
 export default defineConfig({
   plugins: [react(), reactRouterPlugin()],
 });
 ```
+
+The legacy `@equinor/fusion-framework-react-router/vite-plugin` entry point remains available as a compatibility re-export.
 
 ## Next steps
 
