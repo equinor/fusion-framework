@@ -36,10 +36,10 @@
       "path": "../dev-server"
     },
     {
-      "path": "../react/router"
+      "path": "../vite-plugins/raw-imports"
     },
     {
-      "path": "../vite-plugins/raw-imports"
+      "path": "../vite-plugins/react-router"
     },
     {
       "path": "../cli-plugins/mock-server"

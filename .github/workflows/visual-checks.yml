@@ -1,0 +1,78 @@
+name: Visual checks
+
+on:
+  pull_request:
+    types:
+      - ready_for_review
+      - opened
+      - reopened
+      - synchronize
+    paths-ignore:
+      - '.changeset/**'
+      - 'vue-press/**'
+
+concurrency:
+  group: visual-checks-${{ github.event.pull_request.id }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  playwright:
+    name: Playwright (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - macos-latest
+          - windows-latest
+    runs-on: ${{ matrix.os }}
+    env:
+      PLAYWRIGHT_BROWSERS_PATH: ${{ runner.temp }}/ms-playwright
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - name: Setup node and install deps
+        uses: ./.github/actions/node-setup
+        with:
+          cache-node-modules: 'true'
+
+      - name: Get Playwright version
+        id: playwright-version
+        shell: bash
+        run: |
+          version=$(pnpm --filter @equinor/fusion-framework-vitest-plugin-react-app exec playwright --version)
+          echo "version=${version#Version }" >> "$GITHUB_OUTPUT"
+
+      - name: Restore Playwright browsers
+        uses: actions/cache/restore@v6
+        with:
+          path: ${{ env.PLAYWRIGHT_BROWSERS_PATH }}
+          key: playwright-fusion-v1-${{ runner.os }}-${{ runner.arch }}-${{ steps.playwright-version.outputs.version }}
+
+      - name: Install Playwright Chromium
+        run: pnpm --filter @equinor/fusion-framework-vitest-plugin-react-app exec playwright install chromium
+
+      - name: Run visual tests
+        shell: bash
+        run: pnpm turbo run test:playwright
+
+  required-check:
+    name: Visual checks
+    if: always()
+    needs:
+      - playwright
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify visual checks passed
+        env:
+          PLAYWRIGHT_RESULT: ${{ needs.playwright.result }}
+        run: |
+          if [[ "$PLAYWRIGHT_RESULT" != "success" ]]; then
+            echo "Playwright checks did not pass: $PLAYWRIGHT_RESULT"
+            exit 1
+          fi

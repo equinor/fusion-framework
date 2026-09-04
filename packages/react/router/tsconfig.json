@@ -16,6 +16,9 @@
     },
     {
       "path": "../../utils/imports"
+    },
+    {
+      "path": "../../vite-plugins/react-router"
     }
   ],
   "include": ["src/**/*"],

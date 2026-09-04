@@ -145,60 +145,6 @@ jobs:
       - name: Run unit tests
         run: pnpm test
 
-  cookbook-tests:
-    name: Cookbook Playwright tests
-    runs-on: fusion-gh-runner-fusion-framework
-    steps:
-      - uses: actions/checkout@v7
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
-          fetch-depth: 0
-
-      - name: Setup fusion runner
-        continue-on-error: true
-        uses: ./.github/actions/setup-fusion-runner
-
-      - name: Setup node and install deps
-        uses: ./.github/actions/node-setup
-
-      - name: Fetch main for affected detection
-        run: git fetch origin main:main
-
-      - name: Check for affected cookbook tests
-        id: affected
-        run: |
-          taskCount=$(pnpm turbo run test:playwright --affected \
-            --filter @equinor/fusion-framework-cookbook-app-react-context \
-            --filter @equinor/fusion-framework-cookbook-app-react-mock-playwright \
-            --dry=json \
-            | jq '[.tasks[] | select(.task == "test:playwright" and .command != "<NONEXISTENT>")] | length')
-          echo "task-count=$taskCount" >> "$GITHUB_OUTPUT"
-
-      - name: Get Playwright version
-        if: steps.affected.outputs.task-count != '0'
-        id: playwright
-        run: |
-          version=$(pnpm --filter @equinor/fusion-framework-vitest-plugin-react-app exec playwright --version)
-          echo "version=${version#Version }" >> "$GITHUB_OUTPUT"
-
-      - name: Restore Playwright browsers
-        if: steps.affected.outputs.task-count != '0'
-        uses: actions/cache/restore@v6
-        with:
-          path: ~/.cache/ms-playwright
-          key: playwright-fusion-v1-${{ runner.os }}-${{ runner.arch }}-${{ steps.playwright.outputs.version }}
-
-      - name: Install Playwright Chromium
-        if: steps.affected.outputs.task-count != '0'
-        run: pnpm --filter @equinor/fusion-framework-vitest-plugin-react-app exec playwright install --with-deps chromium
-
-      - name: Run cookbook Playwright tests
-        if: steps.affected.outputs.task-count != '0'
-        run: |
-          pnpm turbo run test:playwright --affected \
-            --filter @equinor/fusion-framework-cookbook-app-react-context \
-            --filter @equinor/fusion-framework-cookbook-app-react-mock-playwright
-
   required-check:
     name: Check Code
     if: always()
@@ -206,7 +152,6 @@ jobs:
       - code-quality
       - build
       - unit-tests
-      - cookbook-tests
     runs-on: ubuntu-latest
     steps:
       - name: Verify all PR checks passed

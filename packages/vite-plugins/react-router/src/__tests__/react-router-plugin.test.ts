@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import path from 'node:path';
-import { reactRouterPlugin } from '../vite-plugin/react-router-plugin';
+import { reactRouterPlugin } from '../react-router-plugin';
 
 interface ReactRouterPlugin {
   transform: (code: string, id: string) => string;

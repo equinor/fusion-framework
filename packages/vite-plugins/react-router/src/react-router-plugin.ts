@@ -646,7 +646,7 @@ function insertImports(code: string, importStatements: string[]): string {
  * // vite.config.ts
  * import { defineConfig } from 'vite';
  * import react from '@vitejs/plugin-react';
- * import { reactRouterPlugin } from '@equinor/fusion-framework-react-router/vite-plugin';
+ * import { reactRouterPlugin } from '@equinor/fusion-framework-vite-plugin-react-router';
  *
  * export default defineConfig({
  *   plugins: [react(), reactRouterPlugin({ debug: true })],

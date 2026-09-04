@@ -59,6 +59,7 @@
   "dependencies": {
     "@equinor/fusion-framework-module-navigation": "workspace:^",
     "@equinor/fusion-framework-react-module": "workspace:^",
+    "@equinor/fusion-framework-vite-plugin-react-router": "workspace:^",
     "@equinor/fusion-imports": "workspace:^",
     "react-router": "^7.18.0"
   },

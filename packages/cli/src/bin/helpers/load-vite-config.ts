@@ -8,7 +8,7 @@ import {
   type RuntimeEnv,
   type ResolvedPackage,
 } from '@equinor/fusion-framework-cli/lib';
-import { reactRouterPlugin } from '@equinor/fusion-framework-react-router/vite-plugin';
+import { reactRouterPlugin } from '@equinor/fusion-framework-vite-plugin-react-router';
 import { rawImportsPlugin } from '@equinor/fusion-framework-vite-plugin-raw-imports';
 
 /**

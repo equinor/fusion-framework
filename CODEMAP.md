@@ -13,7 +13,7 @@ search to rediscover it.
 
 | Path | Contains | Published? |
 | --- | --- | --- |
-| `packages/*` | Framework libraries (65 packages) | Yes, via Changesets |
+| `packages/*` | Framework libraries (66 packages) | Yes, via Changesets |
 | `cookbooks/*` | Runnable example apps and portals | Yes (versioned, but examples) |
 | `eds-content/`, `eds/` | EDS design-system content and token tooling | No |
 | `vue-press/` | Documentation site | Partly |
@@ -143,6 +143,7 @@ Format: `package name` → path → role.
 | `@equinor/fusion-framework-vite-plugin-api-service` | `packages/vite-plugins/api-service` | Service-discovery proxy and mocking |
 | `@equinor/fusion-framework-vite-plugin-markdown` | `packages/vite-plugins/markdown` | Markdown `?raw` imports |
 | `@equinor/fusion-framework-vite-plugin-raw-imports` | `packages/vite-plugins/raw-imports` | Generic `?raw` imports |
+| `@equinor/fusion-framework-vite-plugin-react-router` | `packages/vite-plugins/react-router` | React Router file-route DSL compiler |
 | `@equinor/fusion-framework-vite-plugin-routes-dsl` | `packages/vite-plugins/routes-dsl` | `import.meta.resolve()` transform for route DSL |
 
 ### Linting (`packages/linting/*`)
@@ -191,7 +192,7 @@ Use this table instead of searching. "Start here" is the first file to open.
 | Add or change a Fusion service endpoint function | `packages/services/src/roles/endpoints`, schemas in `packages/services/src/roles/v1/schemas` |
 | Check a Fusion service contract for drift | `packages/services/scripts`, snapshot in `packages/services/src/roles/v1/openapi.json` |
 | Change auth behavior | `packages/modules/msal/src`, `packages/modules/azure-identity/src` |
-| Change routing or route DSL | `packages/react/router/src`, `packages/modules/navigation/src` |
+| Change routing or route DSL | `packages/react/router/src`, `packages/vite-plugins/react-router/src`, `packages/modules/navigation/src` |
 | Change module registration/init | `packages/modules/module/src` |
 | Change React provider or hooks wiring | `packages/react/framework/src`, `packages/react/modules/module/src` |
 | Change app loading or manifests | `packages/modules/app/src`, `packages/app/src` |
