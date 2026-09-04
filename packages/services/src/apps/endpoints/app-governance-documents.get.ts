@@ -26,18 +26,18 @@ import { ApiGovernanceDocumentSchemaV1 } from '../v1/schemas/api-governance-docu
 type AvailableVersions = ApiVersion.v1;
 
 /**
- * API version identifiers `listAppGovernanceDocuments` accepts for `GET
- * /apps/{appIdentifier}/governance/documents`.
+ * API version identifiers `getAppGovernanceDocument` accepts for `GET
+ * /apps/{appIdentifier}/governance/documents/{documentType}`.
  *
  * Fusion Apps publishes version 1.0 of this operation, nameable as `'v1'`, `'1.0'`, or
  * `ApiVersion.v1`. All three resolve to the same contract entry, so all three infer the same
- * {@link ListAppGovernanceDocumentsArg} and {@link ListAppGovernanceDocumentsResponse}.
+ * {@link GetAppGovernanceDocumentArg} and {@link GetAppGovernanceDocumentResponse}.
  */
-type ListAppGovernanceDocumentsVersion = FilterAllowedApiVersions<AvailableVersions>;
+type GetAppGovernanceDocumentVersion = FilterAllowedApiVersions<AvailableVersions>;
 
 /**
- * Version contract for `listAppGovernanceDocuments`, implementing `GET
- * /apps/{appIdentifier}/governance/documents`.
+ * Version contract for `getAppGovernanceDocument`, implementing `GET
+ * /apps/{appIdentifier}/governance/documents/{documentType}`.
  *
  * Each concrete {@link ApiVersion} maps to the argument and response schemas that version
  * publishes, so the version a caller passes is the single discriminator for the request shape, the
@@ -50,48 +50,51 @@ const VersionContract = {
       .object({
         /** Unique identifier (app id or appkey). */
         appIdentifier: z.string().describe('Unique identifier (app id or appkey).'),
+        /** Governance document type. */
+        documentType: z.string().describe('Governance document type.'),
       })
       .describe(
-        'Arguments for GET /apps/{appIdentifier}/governance/documents (listAppGovernanceDocuments v1.0).',
+        'Arguments for GET /apps/{appIdentifier}/governance/documents/{documentType} (getAppGovernanceDocument v1.0).',
       ),
     /** Response published by version 1.0. */
-    response: z.array(ApiGovernanceDocumentSchemaV1),
+    response: ApiGovernanceDocumentSchemaV1,
   },
 } as const satisfies ApiVersionContract;
 
 /**
- * Response body `listAppGovernanceDocuments` resolves for the selected API version.
+ * Response body `getAppGovernanceDocument` resolves for the selected API version.
  *
- * Version 1.0 resolves to `ApiGovernanceDocumentV1[]`, inferred from
- * `z.array(ApiGovernanceDocumentSchemaV1)` — the very schema that validates the `200 OK` body at
- * runtime.
+ * Version 1.0 resolves to `ApiGovernanceDocumentV1`, inferred from `ApiGovernanceDocumentSchemaV1`
+ * — the very schema that validates the `200 OK` body at runtime.
  */
-type ListAppGovernanceDocumentsResponse<TVersion extends ListAppGovernanceDocumentsVersion> =
+type GetAppGovernanceDocumentResponse<TVersion extends GetAppGovernanceDocumentVersion> =
   VersionedResponse<typeof VersionContract, ExtractApiVersion<TVersion>>;
 
 /**
- * Arguments `listAppGovernanceDocuments` accepts, resolved from the selected API version.
+ * Arguments `getAppGovernanceDocument` accepts, resolved from the selected API version.
  *
- * Version 1.0 accepts the path identifier `appIdentifier`.
+ * Version 1.0 accepts the path identifiers `appIdentifier`, `documentType`.
  *
  * The value is parsed by the version's Zod argument schema before the request is built, so defaults
  * and range checks apply up front.
  */
-type ListAppGovernanceDocumentsArg<TVersion extends ListAppGovernanceDocumentsVersion> =
-  VersionedArgs<typeof VersionContract, ExtractApiVersion<TVersion>>;
+type GetAppGovernanceDocumentArg<TVersion extends GetAppGovernanceDocumentVersion> = VersionedArgs<
+  typeof VersionContract,
+  ExtractApiVersion<TVersion>
+>;
 
 /**
- * What `listAppGovernanceDocuments` hands back once the request runs, for the selected API version
+ * What `getAppGovernanceDocument` hands back once the request runs, for the selected API version
  * and client method.
  *
- * `'json'` gives `Promise<ListAppGovernanceDocumentsResponse<TVersion>>` and `'json$'` gives
- * `StreamResponse<ListAppGovernanceDocumentsResponse<TVersion>>`, so promise and observable callers
+ * `'json'` gives `Promise<GetAppGovernanceDocumentResponse<TVersion>>` and `'json$'` gives
+ * `StreamResponse<GetAppGovernanceDocumentResponse<TVersion>>`, so promise and observable callers
  * share one response type.
  */
-type ListAppGovernanceDocumentsResult<
-  TVersion extends ListAppGovernanceDocumentsVersion,
+type GetAppGovernanceDocumentResult<
+  TVersion extends GetAppGovernanceDocumentVersion,
   TMethod extends ClientMethodType = 'json',
-> = ClientMethod<ListAppGovernanceDocumentsResponse<TVersion>>[TMethod];
+> = ClientMethod<GetAppGovernanceDocumentResponse<TVersion>>[TMethod];
 
 /** Builds the request init for the resolved version, including its response-schema selector. */
 const generateRequestParameters = <TResult, TVersion extends AvailableVersions>(
@@ -103,7 +106,7 @@ const generateRequestParameters = <TResult, TVersion extends AvailableVersions>(
   switch (version) {
     case ApiVersion.v1: {
       const baseInit: FetchRequestInit<
-        ListAppGovernanceDocumentsResponse<ApiVersion.v1>,
+        GetAppGovernanceDocumentResponse<ApiVersion.v1>,
         JsonRequest
       > = {
         selector: versionedResponseSelector(VersionContract, version),
@@ -126,31 +129,31 @@ const generateApiPath = <TVersion extends AvailableVersions>(
     case ApiVersion.v1: {
       const params = new URLSearchParams();
       params.append('api-version', version);
-      return `/apps/${encodeURIComponent(args.appIdentifier)}/governance/documents?${String(params)}`;
+      return `/apps/${encodeURIComponent(args.appIdentifier)}/governance/documents/${encodeURIComponent(args.documentType)}?${String(params)}`;
     }
   }
   throw Error(`Unknown API version: ${version}`);
 };
 
 /**
- * Gets all governance documents for the specified app.
+ * Gets a specific governance document for the specified app.
  *
- * Fusion Apps API operation: `GET /apps/{appIdentifier}/governance/documents` — "Gets all
- * governance documents for the specified app."
+ * Fusion Apps API operation: `GET /apps/{appIdentifier}/governance/documents/{documentType}` —
+ * "Gets a specific governance document for the specified app."
  *
- * Curried in two stages: `listAppGovernanceDocuments(version, client, method)` binds the API
- * version, the `IHttpClient` that reaches the Apps service, and the execution method — `'json'` for
- * a promise, `'json$'` for an observable stream. The returned function takes
- * {@link ListAppGovernanceDocumentsArg} plus an optional `ClientRequestInit`, and gives back
- * {@link ListAppGovernanceDocumentsResult}.
+ * Curried in two stages: `getAppGovernanceDocument(version, client, method)` binds the API version,
+ * the `IHttpClient` that reaches the Apps service, and the execution method — `'json'` for a
+ * promise, `'json$'` for an observable stream. The returned function takes
+ * {@link GetAppGovernanceDocumentArg} plus an optional `ClientRequestInit`, and gives back
+ * {@link GetAppGovernanceDocumentResult}.
  *
  * The version argument is the single discriminator: `'v1'` — equivalently `'1.0'` or
  * `ApiVersion.v1` — selects the version-1.0 argument schema, validates the response with
- * `z.array(ApiGovernanceDocumentSchemaV1)`, and sends `api-version=1.0` on the request.
+ * `ApiGovernanceDocumentSchemaV1`, and sends `api-version=1.0` on the request.
  *
- * The Apps service answers `200 OK`; the body is typed `ApiGovernanceDocumentV1[]`.
+ * The Apps service answers `200 OK`; the body is typed `ApiGovernanceDocumentV1`.
  *
- * Related: `getAppGovernanceDocument`, `createAppGovernanceDocument`.
+ * Related: `listAppGovernanceDocuments`, `updateAppGovernanceDocument`.
  *
  * @template TVersion - Apps API version identifier: `'v1'`, `'1.0'`, or `ApiVersion.v1`.
  * @template TMethod - Execution method: `'json'` for a promise, `'json$'` for an observable.
@@ -158,8 +161,8 @@ const generateApiPath = <TVersion extends AvailableVersions>(
  * response schema.
  * @param client - HTTP client that executes the request against the Apps service.
  * @param method - Execution method, defaulting to `'json'`.
- * @returns A request function taking {@link ListAppGovernanceDocumentsArg} and an optional
- * `ClientRequestInit`, returning {@link ListAppGovernanceDocumentsResult}.
+ * @returns A request function taking {@link GetAppGovernanceDocumentArg} and an optional
+ * `ClientRequestInit`, returning {@link GetAppGovernanceDocumentResult}.
  * @throws {Error} When `version` names an API version this operation does not publish. The
  * check runs while binding, before the HTTP client is used.
  * @throws {z.ZodError} From the returned function, when the arguments fail this version's
@@ -167,13 +170,16 @@ const generateApiPath = <TVersion extends AvailableVersions>(
  *
  * @example
  * ```ts
- * import { listAppGovernanceDocuments } from '@equinor/fusion-services/apps';
+ * import { getAppGovernanceDocument } from '@equinor/fusion-services/apps';
  *
- * const result = await listAppGovernanceDocuments('v1', httpClient)({ appIdentifier: 'my-app' });
+ * const result = await getAppGovernanceDocument('v1', httpClient)({
+ *   appIdentifier: 'my-app',
+ *   documentType: 'AppOwnership',
+ * });
  * ```
  */
-const listAppGovernanceDocuments = <
-  TVersion extends ListAppGovernanceDocumentsVersion,
+const getAppGovernanceDocument = <
+  TVersion extends GetAppGovernanceDocumentVersion,
   TMethod extends ClientMethodType = 'json',
 >(
   version: TVersion,
@@ -183,14 +189,14 @@ const listAppGovernanceDocuments = <
   type MethodVersion = ExtractApiVersion<TVersion>;
   const apiVersion = extractVersion(ApiVersion, version);
   return (
-    input: ListAppGovernanceDocumentsArg<MethodVersion>,
-    init?: ClientRequestInit<IHttpClient, ListAppGovernanceDocumentsResponse<MethodVersion>>,
-  ): ListAppGovernanceDocumentsResult<MethodVersion, TMethod> => {
+    input: GetAppGovernanceDocumentArg<MethodVersion>,
+    init?: ClientRequestInit<IHttpClient, GetAppGovernanceDocumentResponse<MethodVersion>>,
+  ): GetAppGovernanceDocumentResult<MethodVersion, TMethod> => {
     const args = parseVersionedArgs(VersionContract, apiVersion, input);
     return client[method](
       generateApiPath(apiVersion, args),
       generateRequestParameters(apiVersion, args, init),
-    ) as ListAppGovernanceDocumentsResult<MethodVersion, TMethod>;
+    ) as GetAppGovernanceDocumentResult<MethodVersion, TMethod>;
   };
 };
 
@@ -200,9 +206,9 @@ const listAppGovernanceDocuments = <
 // convention that mirrors the OpenAPI operation it implements.
 // fusion-lint-disable-next-line no-separate-export
 export {
-  type ListAppGovernanceDocumentsArg,
-  type ListAppGovernanceDocumentsResponse,
-  type ListAppGovernanceDocumentsResult,
-  type ListAppGovernanceDocumentsVersion,
-  listAppGovernanceDocuments,
+  type GetAppGovernanceDocumentArg,
+  type GetAppGovernanceDocumentResponse,
+  type GetAppGovernanceDocumentResult,
+  type GetAppGovernanceDocumentVersion,
+  getAppGovernanceDocument,
 };

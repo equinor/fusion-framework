@@ -195,7 +195,7 @@ export {
   type CheckAppGovernanceDocumentAccessResult,
   type CheckAppGovernanceDocumentAccessVersion,
   checkAppGovernanceDocumentAccess,
-} from './endpoints/app-governance-document.options';
+} from './endpoints/apps-governance-documents.options';
 
 export {
   type CheckAppGovernanceDocumentsAccessArg,
@@ -315,7 +315,7 @@ export {
   type DeleteAppGovernanceDocumentResult,
   type DeleteAppGovernanceDocumentVersion,
   deleteAppGovernanceDocument,
-} from './endpoints/app-governance-document.delete';
+} from './endpoints/app-governance-documents.delete';
 
 export {
   type DeleteAppGovernancePropertyArg,
@@ -323,7 +323,7 @@ export {
   type DeleteAppGovernancePropertyResult,
   type DeleteAppGovernancePropertyVersion,
   deleteAppGovernanceProperty,
-} from './endpoints/app-governance-property.delete';
+} from './endpoints/app-governance-properties.delete';
 
 export {
   type DeleteAppTagArg,
@@ -451,7 +451,7 @@ export {
   type GetAppGovernanceDocumentResult,
   type GetAppGovernanceDocumentVersion,
   getAppGovernanceDocument,
-} from './endpoints/app-governance-document.get';
+} from './endpoints/app-governance-documents.get';
 
 export {
   type GetChangelogEntryArg,
@@ -611,7 +611,7 @@ export {
   type ListAppGovernanceDocumentsResult,
   type ListAppGovernanceDocumentsVersion,
   listAppGovernanceDocuments,
-} from './endpoints/app-governance-documents.get';
+} from './endpoints/app-governance-documents-list.get';
 
 export {
   type ListAppTagHistoryArg,
