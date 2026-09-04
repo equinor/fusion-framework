@@ -1235,6 +1235,9 @@ importers:
       '@equinor/fusion-framework-vite-plugin-raw-imports':
         specifier: workspace:*
         version: link:../vite-plugins/raw-imports
+      '@equinor/fusion-framework-vite-plugin-react-router':
+        specifier: workspace:*
+        version: link:../vite-plugins/react-router
       '@equinor/fusion-imports':
         specifier: workspace:*
         version: link:../utils/imports
@@ -1305,9 +1308,6 @@ importers:
       '@equinor/fusion-framework-module-service-discovery':
         specifier: workspace:*
         version: link:../modules/service-discovery
-      '@equinor/fusion-framework-react-router':
-        specifier: workspace:*
-        version: link:../react/router
       '@rollup/plugin-commonjs':
         specifier: ^29.0.0
         version: 29.0.3(rollup@4.63.1)
@@ -3038,6 +3038,9 @@ importers:
       '@equinor/fusion-framework-react-module':
         specifier: workspace:^
         version: link:../modules/module
+      '@equinor/fusion-framework-vite-plugin-react-router':
+        specifier: workspace:^
+        version: link:../../vite-plugins/react-router
       '@equinor/fusion-imports':
         specifier: workspace:^
         version: link:../../utils/imports
@@ -3318,6 +3321,18 @@ importers:
       vitest:
         specifier: ^4.1.10
         version: 4.1.11(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(@vitest/browser-playwright@4.1.11)(@vitest/coverage-v8@4.1.11)(happy-dom@20.12.0)(jsdom@30.0.1)(msw@2.15.0(@types/node@26.4.0)(typescript@7.0.2))(vite@8.2.2(@types/node@24.13.3)(esbuild@0.28.1)(sass-embedded@1.103.1)(sass@1.103.1)(terser@5.49.1)(tsx@4.23.12))
+
+  packages/vite-plugins/react-router:
+    devDependencies:
+      typescript:
+        specifier: ^7.0.2
+        version: 7.0.2
+      vite:
+        specifier: ^8.0.0
+        version: 8.2.2(@types/node@26.4.0)(esbuild@0.28.1)(sass-embedded@1.103.1)(sass@1.103.1)(terser@5.49.1)(tsx@4.23.12)(yaml@2.9.0)
+      vitest:
+        specifier: ^4.1.10
+        version: 4.1.11(@opentelemetry/api@1.9.1)(@types/node@26.4.0)(@vitest/browser-playwright@4.1.11)(@vitest/coverage-v8@4.1.11)(happy-dom@20.12.0)(jsdom@30.0.1)(msw@2.15.0(@types/node@26.4.0)(typescript@7.0.2))(vite@8.2.2(@types/node@26.4.0)(esbuild@0.28.1)(sass-embedded@1.103.1)(sass@1.103.1)(terser@5.49.1)(tsx@4.23.12))
 
   packages/vite-plugins/routes-dsl:
     devDependencies:

@@ -45,7 +45,7 @@ When judging results, verify that:
 
 ## How does the Vite plugin transform Fusion route DSL at build time
 
-- must mention `fusionRouterPlugin` or `reactRouterPlugin` from `@equinor/fusion-framework-react-router/vite-plugin`
+- must mention `reactRouterPlugin` from `@equinor/fusion-framework-vite-plugin-react-router`
 - must explain that the plugin transforms DSL calls (`layout`, `route`, `index`, `prefix`) into standard React Router `RouteObject` arrays
 - must mention that the plugin inspects referenced module files for exports (`default`, `clientLoader`, `action`, `handle`, `ErrorElement`)
 - should mention that the transformation enables code splitting and lazy loading

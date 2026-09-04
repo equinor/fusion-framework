@@ -3,20 +3,41 @@ description: General setup of node
 inputs:
   node-version:
     default: 24
+  cache-node-modules:
+    description: Restore the OS-specific node_modules cache
+    default: 'false'
+outputs:
+  node-modules-cache-hit:
+    description: Whether the exact node_modules cache key was restored
+    value: ${{ steps.node-modules-restore.outputs.cache-hit }}
 
 runs:
   using: composite
   steps:
-
-    - name: Setup pnpm
-      uses: pnpm/action-setup@v6
-      with:
-        version: 11.22.0
-
     - name: Setup Node.js
       uses: actions/setup-node@v7
       with:
         node-version: ${{ inputs.node-version }}
+
+    - name: Setup pnpm
+      shell: bash
+      run: |
+        corepack enable pnpm
+        corepack install --global pnpm@11.22.0
+
+    - name: Restore node_modules
+      if: inputs.cache-node-modules == 'true'
+      id: node-modules-restore
+      uses: actions/cache/restore@v6
+      with:
+        path: |
+          node_modules
+          packages/**/node_modules
+          cookbooks/*/node_modules
+          vue-press/node_modules
+        key: node-modules-fusion-v1-${{ runner.os }}-${{ runner.arch }}-node${{ inputs.node-version }}-${{ hashFiles('pnpm-lock.yaml') }}
+        restore-keys: |
+          node-modules-fusion-v1-${{ runner.os }}-${{ runner.arch }}-node${{ inputs.node-version }}-
 
     - name: Get pnpm store path
       id: pnpm-store

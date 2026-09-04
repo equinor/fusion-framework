@@ -44,8 +44,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      # fusion-gh-runner-fusion-framework's image doesn't ship gh or libatomic
-      # (needed by pnpm's standalone binary); tracked with infra.
+      # fusion-gh-runner-fusion-framework's image doesn't ship gh; tracked with infra.
       - name: Setup fusion runner
         continue-on-error: true
         uses: ./.github/actions/setup-fusion-runner

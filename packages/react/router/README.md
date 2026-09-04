@@ -164,19 +164,21 @@ const schema = await toRouteSchema(pages);
 
 ### Vite plugin
 
-The Vite plugin is optional but strongly recommended when using the file-route DSL. At build time it resolves each file reference in your route tree, detects which named exports are present (`clientLoader`, `action`, `handle`, etc.), and rewrites the DSL calls to standard React Router lazy data routes.
+The Vite plugin is required when using the file-route DSL. Fusion Framework CLI applications enable it automatically. If you configure Vite yourself, install `@equinor/fusion-framework-vite-plugin-react-router` as a development dependency and add the plugin to your Vite configuration.
 
 > [!WARNING]
 > Without the Vite plugin, **the file-route DSL does not work**. The DSL objects (`layout`, `route`, `index`, etc.) carry only a `file` path string — they have no `Component`, `loader`, or `action` wired in. The Vite plugin performs that transformation at build time. Without it, routes will render blank pages. Code-splitting is an additional benefit, not the primary one.
 
 ```ts
 // vite.config.ts
-import { reactRouterPlugin } from '@equinor/fusion-framework-react-router/vite-plugin';
+import { reactRouterPlugin } from '@equinor/fusion-framework-vite-plugin-react-router';
 
 export default defineConfig({
   plugins: [react(), reactRouterPlugin()],
 });
 ```
+
+The legacy `@equinor/fusion-framework-react-router/vite-plugin` entry point remains available as a compatibility re-export.
 
 ## Entry points
 
@@ -186,7 +188,7 @@ export default defineConfig({
 | `/routes` | Route DSL — `layout`, `index`, `route`, `prefix` |
 | `/schema` | Schema generation — `toRouteSchema` |
 | `/context` | Direct context imports — same `routerContext`, `FusionRouterContextProvider`, `useRouterContext` as main; use when you need to import without pulling in `Router` (e.g. tests, custom providers) |
-| `/vite-plugin` | Vite build plugin |
+| `/vite-plugin` | Compatibility re-export of `@equinor/fusion-framework-vite-plugin-react-router` |
 | `/interop` | Interop re-exports for teams mid-migration — see [docs/interop.md](docs/interop.md) |
 
 ## Documentation
@@ -194,4 +196,3 @@ export default defineConfig({
 - [Migration guide — from `react-router` to Fusion router](docs/migration.md)
 - [Interop entry point](docs/interop.md)
 - [End-to-end cookbook](../../../cookbooks/app-react-router/)
-

@@ -139,8 +139,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      # pnpm's standalone binary requires libatomic, which is not included in
-      # the self-hosted runner image.
+      # Install tooling that is not included in the self-hosted runner image.
       - name: Setup fusion runner
         uses: ./.github/actions/setup-fusion-runner
 
