@@ -14,13 +14,3 @@ runs:
           sudo apt-get update
           sudo apt-get install -y gh
         fi
-
-    # pnpm's standalone binary (installed via pnpm/action-setup) is linked
-    # against libatomic, which this runner's image doesn't ship.
-    - name: Ensure libatomic is installed
-      shell: bash
-      run: |
-        if ! ldconfig -p | grep -q libatomic.so.1; then
-          sudo apt-get update
-          sudo apt-get install -y libatomic1
-        fi
