@@ -1,12 +1,12 @@
 # @equinor/fusion-framework-react-app
 
-React bindings for building modular Fusion Framework applications. Provides rendering helpers, configuration callbacks, and React hooks for accessing framework modules (HTTP, auth, context, navigation, bookmarks, settings, and more).
+React bindings for building modular Fusion Framework applications. Provides rendering helpers, configuration callbacks, and React hooks for accessing framework modules (HTTP, auth, context, navigation, bookmarks, roles, settings, and more).
 
 ## Features
 
 - **One-line app bootstrap** via `renderApp` — creates a render function that mounts your component with React 18's `createRoot`
 - **Module hooks** — `useAppModule` / `useAppModules` for type-safe access to any registered module
-- **Sub-path entry-points** for optional capabilities: MSAL auth, HTTP, context, navigation, bookmarks, feature flags, settings, analytics, AG Grid theming, help center, and apploader
+- **Sub-path entry-points** for optional capabilities: MSAL auth, HTTP, context, navigation, bookmarks, roles, feature flags, settings, analytics, AG Grid theming, help center, and apploader
 - **Environment variables** hook — `useAppEnvironmentVariables` for accessing app config at runtime
 - **Lazy loading** — components are wrapped in `React.lazy` + `Suspense` automatically
 
@@ -338,6 +338,43 @@ const Toggle = () => {
 };
 ```
 
+### Roles
+
+> **Note:** Requires `@equinor/fusion-framework-module-roles` in the application or parent
+> framework scope.
+
+```tsx
+import { enableRoles } from '@equinor/fusion-framework-module-roles';
+
+export const configure: AppModuleInitiator = (configurator) => {
+  enableRoles(configurator);
+};
+```
+
+```tsx
+import { useRole } from '@equinor/fusion-framework-react-app/roles';
+
+const ReportsAccess = ({ claimableRoleId }: { claimableRoleId: string }) => {
+  const role = useRole('Reports.Read');
+
+  if (role.isChecking) return <Spinner />;
+  if (role.checkError) return <ErrorMessage error={role.checkError} />;
+  if (role.hasRole) return <Reports />;
+
+  return role.canClaimAccessRole ? (
+    <button
+      disabled={role.isClaiming}
+      onClick={() => role.claimRole({ roleId: claimableRoleId })}
+    >
+      Claim access
+    </button>
+  ) : null;
+};
+```
+
+`useRole` checks the exact access-role name when mounted and checks again after a successful claim.
+Check and claim operations expose separate loading and error states.
+
 ### Bookmarks
 
 ```tsx
@@ -404,6 +441,7 @@ see that package's README for usage.
 | `/context` | `useCurrentContext`, `useContextProvider`, `useFrameworkCurrentContext` |
 | `/navigation` | `useRouter`, `useNavigationModule` |
 | `/feature-flag` | `enableFeatureFlag`, `useFeature` |
+| `/roles` | `useRole` |
 | `/bookmark` | `enableBookmark`, `useCurrentBookmark`, `useBookmark` |
 | `/settings` | `useAppSetting`, `useAppSettings` |
 | `/analytics` | `useTrackFeature` |

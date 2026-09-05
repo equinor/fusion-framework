@@ -16,6 +16,8 @@ import { ModuleProvider as AppModuleProvider } from '@equinor/fusion-framework-r
 export type ComponentRenderArgs<TFusion extends Fusion = Fusion, TEnv = AppEnv> = {
   fusion: TFusion;
   env: TEnv;
+  /** Receives uncaught errors raised while the application renders or initializes its modules. */
+  onError?: (error: unknown) => void;
 };
 
 export type ComponentRenderer<TFusion extends Fusion = Fusion, TEnv = AppEnv> = (

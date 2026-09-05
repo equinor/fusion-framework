@@ -13,7 +13,7 @@ search to rediscover it.
 
 | Path | Contains | Published? |
 | --- | --- | --- |
-| `packages/*` | Framework libraries (66 packages) | Yes, via Changesets |
+| `packages/*` | Framework libraries (68 packages) | Yes, via Changesets |
 | `cookbooks/*` | Runnable example apps and portals | Yes (versioned, but examples) |
 | `eds-content/`, `eds/` | EDS design-system content and token tooling | No |
 | `vue-press/` | Documentation site | Partly |
@@ -58,6 +58,7 @@ Format: `package name` → path → role.
 | `@equinor/fusion-framework-module-msal` | `packages/modules/msal` | MSAL browser auth |
 | `@equinor/fusion-framework-module-msal-node` | `packages/modules/msal-node` | MSAL Node auth with encrypted token storage |
 | `@equinor/fusion-framework-module-navigation` | `packages/modules/navigation` | Navigation on React Router 7 |
+| `@equinor/fusion-framework-module-roles` | `packages/modules/roles` | Active roles, claimable roles, and role claiming |
 | `@equinor/fusion-framework-module-service-discovery` | `packages/modules/service-discovery` | Service discovery |
 | `@equinor/fusion-framework-module-services` | `packages/modules/services` | Typed Fusion service clients |
 | `@equinor/fusion-framework-module-signalr` | `packages/modules/signalr` | SignalR transport |
@@ -104,8 +105,13 @@ Format: `package name` → path → role.
 | `@equinor/fusion-framework-react-router` | `packages/react/router` | Type-safe route DSL for React Router v7 |
 | `@equinor/fusion-framework-react-ag-grid` | `packages/react/ag-grid` | AG Grid React bindings |
 | `@equinor/fusion-framework-react-ag-charts` | `packages/react/ag-charts` | AG Charts React bindings |
+| `@equinor/fusion-framework-react-components-roles` | `packages/react/components/roles` | Required-role recovery UI for React hosts |
 | `@equinor/fusion-framework-react-components-bookmark` | `packages/react/components/bookmark` | Bookmark UI components |
+| `@equinor/fusion-framework-react-components-roles` | `packages/react/components/roles` | Required-role recovery UI for React hosts |
 | `@equinor/fusion-framework-react-components-people-provider` | `packages/react/components/people-resolver` | People resolver components |
+
+> Roles components are organized under `src/components/{application,compact,overview,claim,required-access}`.
+> See `packages/react/components/roles/CONTRIBUTING.md` for feature ownership and access/activation invariants.
 
 ### Plugins (`packages/plugins/*`)i
 
@@ -176,7 +182,7 @@ Format: `package name` → path → role.
 `app-react-bookmark`, `app-react-bookmark-advanced`, `app-react-charts`, `app-react-context`,
 `app-react-context-custom-error`, `app-react-environment-variables`, `app-react-feature-flag`,
 `app-react-mock-playwright`, `app-react-module`, `app-react-msal`, `app-react-observable`,
-`app-react-people`, `app-react-router`, `app-react-router-legacy`, `app-react-settings`,
+`app-react-people`, `app-react-roles`, `app-react-router`, `app-react-router-legacy`, `app-react-settings`,
 `app-react-state`, `app-react-styling`, `app-vanilla`, `poc-portal`, `portal`,
 `portal-analytics`.
 
