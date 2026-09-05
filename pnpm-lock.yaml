@@ -1619,6 +1619,9 @@ importers:
       '@equinor/fusion-framework-module-navigation':
         specifier: workspace:*
         version: link:../modules/navigation
+      '@equinor/fusion-framework-module-roles':
+        specifier: workspace:^
+        version: link:../modules/roles
       '@equinor/fusion-framework-module-services':
         specifier: workspace:*
         version: link:../modules/services
@@ -1631,12 +1634,18 @@ importers:
       '@equinor/fusion-framework-react':
         specifier: workspace:*
         version: link:../react/framework
+      '@equinor/fusion-framework-react-app':
+        specifier: workspace:*
+        version: link:../react/app
       '@equinor/fusion-framework-react-components-bookmark':
         specifier: workspace:*
         version: link:../react/components/bookmark
       '@equinor/fusion-framework-react-components-people-provider':
         specifier: workspace:*
         version: link:../react/components/people-resolver
+      '@equinor/fusion-framework-react-components-roles':
+        specifier: workspace:^
+        version: link:../react/components/roles
       '@equinor/fusion-framework-react-module-bookmark':
         specifier: workspace:*
         version: link:../react/modules/bookmark
@@ -1652,6 +1661,9 @@ importers:
       '@equinor/fusion-react-context-selector':
         specifier: ^2.0.1
         version: 2.0.9(react@19.2.8)(styled-components@6.5.3(css-to-react-native@3.2.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
+      '@equinor/fusion-react-errorboundary':
+        specifier: ^2.0.11
+        version: 2.0.11(@equinor/eds-core-react@2.6.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(styled-components@6.5.3(css-to-react-native@3.2.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)))(@equinor/eds-icons@1.5.1)(@equinor/eds-tokens@2.3.2)(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(styled-components@6.5.3(css-to-react-native@3.2.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
       '@equinor/fusion-react-progress-indicator':
         specifier: ^0.3.0
         version: 0.3.0(react@19.2.8)
