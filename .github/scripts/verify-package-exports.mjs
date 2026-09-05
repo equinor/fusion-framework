@@ -23,6 +23,11 @@ const publishExceptions = new Map([
   ],
   ['@equinor/fusion-framework-lint-lsp', ['bin/fusion-lint-server.mjs', 'dist']],
   ['@equinor/fusion-lint', ['bin/fusion-lint.mjs', 'dist']],
+  // Preserve the consumer README's migration and screenshot links without publishing sources.
+  [
+    '@equinor/fusion-framework-react-components-roles',
+    ['dist', 'docs/migration.md', 'docs/images'],
+  ],
   [
     '@equinor/fusion-services',
     ['dist', 'docs', 'src/apps/v1/openapi.json', 'src/roles/v1/openapi.json'],
