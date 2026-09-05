@@ -1,0 +1,21 @@
+{
+  "extends": "../../tsconfig.react.json",
+  "compilerOptions": {
+    "outDir": "dist/esm",
+    "rootDir": "src",
+    "declarationDir": "./dist/types"
+  },
+  "references": [
+    {
+      "path": "../../../modules/roles"
+    },
+    {
+      "path": "../../modules/module"
+    },
+    {
+      "path": "../../../utils/observable"
+    }
+  ],
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "lib", "src/**/*.test.ts", "src/**/*.test.tsx"]
+}

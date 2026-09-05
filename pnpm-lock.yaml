@@ -2884,6 +2884,64 @@ importers:
         specifier: ^7.0.2
         version: 7.0.2
 
+  packages/react/components/roles:
+    dependencies:
+      '@equinor/fusion-framework-module-roles':
+        specifier: workspace:^
+        version: link:../../../modules/roles
+      '@equinor/fusion-framework-react-module':
+        specifier: workspace:^
+        version: link:../../modules/module
+      '@equinor/fusion-observable':
+        specifier: workspace:^
+        version: link:../../../utils/observable
+      date-fns:
+        specifier: ^4.4.0
+        version: 4.4.0
+      react-dom:
+        specifier: ^18.0.0 || ^19.0.0
+        version: 19.2.8(react@19.2.8)
+      rxjs:
+        specifier: ^7.8.1
+        version: 7.8.2
+    devDependencies:
+      '@equinor/eds-core-react':
+        specifier: ^2.3.7
+        version: 2.6.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(styled-components@6.5.3(css-to-react-native@3.2.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
+      '@equinor/eds-icons':
+        specifier: ^1.3.0
+        version: 1.5.1
+      '@equinor/fusion-framework-vitest-plugin-react-app':
+        specifier: workspace:*
+        version: link:../../../vitest-plugin/react-app
+      '@equinor/fusion-react-errorboundary':
+        specifier: ^2.0.11
+        version: 2.0.11(@equinor/eds-core-react@2.6.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(styled-components@6.5.3(css-to-react-native@3.2.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)))(@equinor/eds-icons@1.5.1)(@equinor/eds-tokens@2.3.2)(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(styled-components@6.5.3(css-to-react-native@3.2.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
+      '@types/react':
+        specifier: ^19.2.7
+        version: 19.2.18
+      '@vitest/browser-playwright':
+        specifier: ^4.1.0
+        version: 4.1.11(msw@2.15.0(@types/node@26.4.0)(typescript@7.0.2))(playwright@1.62.1)(vite@8.2.2(@types/node@26.4.0)(esbuild@0.28.1)(sass-embedded@1.103.1)(sass@1.103.1)(terser@5.49.1)(tsx@4.23.13))(vitest@4.1.11)
+      playwright:
+        specifier: ^1.62.1
+        version: 1.62.1
+      react:
+        specifier: ^19.2.1
+        version: 19.2.8
+      styled-components:
+        specifier: ^6.3.11
+        version: 6.5.3(css-to-react-native@3.2.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      typescript:
+        specifier: ^7.0.2
+        version: 7.0.2
+      vitest:
+        specifier: ^4.1.10
+        version: 4.1.11(@opentelemetry/api@1.9.1)(@types/node@26.4.0)(@vitest/browser-playwright@4.1.11)(@vitest/coverage-v8@4.1.11)(happy-dom@20.12.0)(jsdom@30.0.1)(msw@2.15.0(@types/node@26.4.0)(typescript@7.0.2))(vite@8.2.2(@types/node@26.4.0)(esbuild@0.28.1)(sass-embedded@1.103.1)(sass@1.103.1)(terser@5.49.1)(tsx@4.23.13))
+      vitest-browser-react:
+        specifier: ^2.2.0
+        version: 2.2.0(@types/react-dom@19.2.5(@types/react@19.2.18))(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vitest@4.1.11)
+
   packages/react/framework:
     dependencies:
       '@equinor/fusion-framework':
@@ -4158,6 +4216,16 @@ packages:
     resolution: {integrity: sha512-jiYYl/mAzxcGa+zJg1VjniQ4BLFzohPmgftm1dO7H8r3eXvm66Egc0nUtSR2M4n/nqRLC2yYHB9GYuyEsKQKFQ==}
     peerDependencies:
       react: ^18 || ^19
+
+  '@equinor/fusion-react-errorboundary@2.0.11':
+    resolution: {integrity: sha512-7y9psTalQLmZLTMXNXKnsxcUmpb5OBCK+GZ97qSvpvH4HHydlvsosaJ1AhgGDwgP5woL0EnEiaWI6MdTZSSFTQ==}
+    peerDependencies:
+      '@equinor/eds-core-react': ^2
+      '@equinor/eds-icons': ^1
+      '@equinor/eds-tokens': ^2
+      react: ^18 || ^19
+      react-dom: ^18 || ^19
+      styled-components: ^6.4.4
 
   '@equinor/fusion-react-person@2.0.16':
     resolution: {integrity: sha512-EkmPvbwFRgOT74hEzXdinM38f3YHeVOpRC7zGODuYXvkWta7i6k0BoFZWIHxd4T/oG6pJqhWKWyXDaFCfGwEJw==}
@@ -11320,6 +11388,15 @@ packages:
     peerDependencies:
       react: ^19.2.8
 
+  react-error-boundary@6.1.4:
+    resolution: {integrity: sha512-7FgvbyjCFhu4dtKSZu807cW1MWG2nWAM4bwGqUByAtHVJXtlzoCJX0SSyZRyFrb+aBd7wtJkcOR4DsxXVEuDsA==}
+    peerDependencies:
+      '@types/react': ^18.0.0 || ^19.0.0
+      react: ^18.0.0 || ^19.0.0
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+
   react-is@16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
 
@@ -13698,6 +13775,20 @@ snapshots:
       '@equinor/fusion-react-utils': 3.0.7(react@19.2.8)
       '@equinor/fusion-wc-date': 1.2.3
       react: 19.2.8
+
+  '@equinor/fusion-react-errorboundary@2.0.11(@equinor/eds-core-react@2.6.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(styled-components@6.5.3(css-to-react-native@3.2.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)))(@equinor/eds-icons@1.5.1)(@equinor/eds-tokens@2.3.2)(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(styled-components@6.5.3(css-to-react-native@3.2.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))':
+    dependencies:
+      '@equinor/eds-core-react': 2.6.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(styled-components@6.5.3(css-to-react-native@3.2.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
+      '@equinor/eds-icons': 1.5.1
+      '@equinor/eds-tokens': 2.3.2
+      '@equinor/fusion-react-styles': 2.1.8(react@19.2.8)(styled-components@6.5.3(css-to-react-native@3.2.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
+      '@equinor/fusion-react-utils': 3.0.7(react@19.2.8)
+      react: 19.2.8
+      react-dom: 19.2.8(react@19.2.8)
+      react-error-boundary: 6.1.4(@types/react@19.2.18)(react@19.2.8)
+      styled-components: 6.5.3(css-to-react-native@3.2.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+    transitivePeerDependencies:
+      - '@types/react'
 
   '@equinor/fusion-react-person@2.0.16(react@19.2.8)':
     dependencies:
@@ -21631,6 +21722,12 @@ snapshots:
     dependencies:
       react: 19.2.8
       scheduler: 0.27.0
+
+  react-error-boundary@6.1.4(@types/react@19.2.18)(react@19.2.8):
+    dependencies:
+      react: 19.2.8
+    optionalDependencies:
+      '@types/react': 19.2.18
 
   react-is@16.13.1: {}
 
