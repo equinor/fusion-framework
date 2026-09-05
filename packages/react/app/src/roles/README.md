@@ -1,7 +1,6 @@
-# Roles V2 React hook
+# Roles V2 React integration
 
-Use `useRole` to check whether the signed-in account has an access role, determine whether the
-access role can be claimed, and activate a claimable role assignment.
+Use `useRole` when a component needs to check and claim one access role.
 
 The host or application must enable `@equinor/fusion-framework-module-roles` before rendering a
 component that uses this hook.
@@ -31,3 +30,7 @@ export const ReportsAccess = ({ claimableRoleId }: { claimableRoleId: string }) 
 `useRole` checks the exact, case-sensitive Roles V2 access-role name when mounted. It exposes
 separate loading and error states for checks and claims. After a successful claim, the hook checks
 the role again using the provider's refreshed caches.
+
+For required-role recovery UI, use `RoleBoundary` from
+`@equinor/fusion-framework-react-components-roles`. Its optional `required` prop can guard a subtree
+proactively; without it, the boundary handles `RequiredRolesError` instances thrown by descendants.
