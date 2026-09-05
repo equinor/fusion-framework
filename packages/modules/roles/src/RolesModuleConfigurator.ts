@@ -6,12 +6,7 @@ import {
 import type { IServiceDiscoveryProvider } from '@equinor/fusion-framework-module-service-discovery';
 import { from, lastValueFrom } from 'rxjs';
 
-import {
-  type IRolesClient,
-  type RolesAccountResolver,
-  RolesClient,
-  type RolesClientInitializeOptions,
-} from './RolesClient.js';
+import { type IRolesClient, type RolesAccountResolver, RolesClient } from './RolesClient.js';
 import { RequiredRolesError } from './errors/RequiredRolesError.js';
 import { RolesError } from './errors/RolesError.js';
 import type { RolesModuleConfig } from './types.js';
@@ -194,7 +189,7 @@ export class RolesModuleConfigurator
     if (config.requiredRoles === undefined) {
       throw new RequiredRolesError('Failed to resolve required role configuration.');
     }
-    const accountResolver = this._createAccountIdentifierResolver(args);
+    const accountResolver = await this._createAccountIdentifierResolver(args);
     const client = config.client ?? (await this._createDefaultClient(args, accountResolver));
     return { requiredRoles: config.requiredRoles, accountResolver, client };
   }
@@ -241,23 +236,20 @@ export class RolesModuleConfigurator
   }
 
   /**
-   * Creates a resolver that reads the account selected when each client operation executes.
+   * Resolves authentication during configuration while deferring account selection to each operation.
    *
    * @param args - Module context used to resolve the authentication provider.
-   * @returns Current-account resolver supplied to the Roles client.
+   * @returns Current-account resolver retaining the initialized authentication provider.
+   * @throws {Error} When authentication initialization fails during configuration.
    * @throws {RequiredRolesError} When the returned resolver cannot resolve an active account.
    */
-  protected _createAccountIdentifierResolver(
+  protected async _createAccountIdentifierResolver(
     args: ConfigBuilderCallbackArgs,
-  ): RolesClientInitializeOptions['resolveCurrentAccountIdentifier'] {
+  ): Promise<RolesAccountResolver> {
+    // Await here so auth failures reject configuration, not an unobserved background promise.
+    // Retain the provider for recovery even if another app module later fails initialization.
+    const auth = args.hasModule('auth') ? await args.requireInstance('auth') : undefined;
     return async () => {
-      // Resolve authentication lazily so module setup does not require a selected account.
-      if (!args.hasModule('auth')) {
-        throw new RequiredRolesError(
-          'Roles module requires an active authenticated account to resolve Roles V2 data.',
-        );
-      }
-      const auth = await args.requireInstance('auth');
       // Read account state per operation so switching accounts does not require rebuilding the module.
       if (!isActiveAccountProvider(auth) || !auth.account?.localAccountId) {
         throw new RequiredRolesError(

@@ -63,9 +63,11 @@ describe('RolesModuleConfigurator', () => {
     const auth = {
       account: { localAccountId: 'account-id' },
     };
-    const requireInstance = vi.fn(async (name: string) => {
+    const requireInstanceMock = vi.fn(async (name: string) => {
       return name === 'serviceDiscovery' ? serviceDiscovery : auth;
-    }) as unknown as ConfigBuilderCallbackArgs['requireInstance'];
+    });
+    const requireInstance =
+      requireInstanceMock as unknown as ConfigBuilderCallbackArgs['requireInstance'];
 
     const config = await configurator.createConfigAsync({
       config: {},
@@ -79,6 +81,49 @@ describe('RolesModuleConfigurator', () => {
     expect(parentServiceDiscovery.createClient).not.toHaveBeenCalled();
     expect(config.accountResolver).toEqual(expect.any(Function));
     expect(initialize).not.toHaveBeenCalled();
+    await expect(config.accountResolver()).resolves.toBe('account-id');
+    auth.account.localAccountId = 'next-account-id';
+    await expect(config.accountResolver()).resolves.toBe('next-account-id');
+    expect(requireInstanceMock.mock.calls.filter(([name]) => name === 'auth')).toHaveLength(1);
+  });
+
+  it('propagates authentication initialization failure without invoking the account resolver', async () => {
+    const configurator = new RolesModuleConfigurator();
+    const error = new Error('authentication initialization failed');
+    const requireInstance = vi
+      .fn<ConfigBuilderCallbackArgs['requireInstance']>()
+      .mockRejectedValue(error);
+
+    await expect(
+      configurator.createConfigAsync({
+        ...configBuilderArgs,
+        hasModule: (name: string) => name === 'auth',
+        requireInstance,
+      }),
+    ).rejects.toBe(error);
+    expect(requireInstance).toHaveBeenCalledExactlyOnceWith('auth');
+  });
+
+  it('defers active-account validation and retains auth after configuration', async () => {
+    const configurator = new RolesModuleConfigurator();
+    const auth: { account: { localAccountId: string } | null } = { account: null };
+    // The registry is generic over every module; this fixture implements only the auth surface used here.
+    const requireInstance = vi.fn(
+      async () => auth,
+    ) as unknown as ConfigBuilderCallbackArgs['requireInstance'];
+    const config = await configurator.createConfigAsync({
+      ...configBuilderArgs,
+      hasModule: (name: string) => name === 'auth',
+      requireInstance,
+    });
+
+    await expect(config.accountResolver()).rejects.toThrow(
+      'requires an active authenticated account',
+    );
+    vi.mocked(requireInstance).mockRejectedValue(new Error('module registry no longer available'));
+    auth.account = { localAccountId: 'selected-later' };
+    await expect(config.accountResolver()).resolves.toBe('selected-later');
+    expect(requireInstance).toHaveBeenCalledOnce();
   });
 
   it('creates the default client with parent service discovery when the app has none', async () => {
