@@ -1,5 +1,14 @@
 # Change Log
 
+## 15.3.4
+
+### Patch Changes
+
+- f7fceec: Use the dedicated React Router Vite plugin package during app builds without installing the full router runtime as a CLI dependency.
+- Updated dependencies [f7fceec]
+  - @equinor/fusion-framework-vite-plugin-react-router@0.1.0
+  - @equinor/fusion-framework-dev-portal@11.0.6
+
 ## 15.3.3
 
 ### Patch Changes
