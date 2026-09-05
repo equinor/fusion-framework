@@ -22,3 +22,6 @@ Replacing the module provider resets the React scope, including collections and 
 `RoleBoundary` checks required access-role names before mounting children and recovers missing-role
 errors through the original module provider. Changed requirements or providers trigger another check;
 the gate is not continuous authorization and does not replace backend access enforcement.
+
+Internal: run component tests with standalone Vitest Chromium configuration instead of the
+app-test plugin, keeping the roles package independent of the CLI and dev portal build graph.

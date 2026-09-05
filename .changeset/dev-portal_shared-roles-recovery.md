@@ -10,3 +10,6 @@ boundary. Missing required roles can be claimed before retrying the application 
 replacing the selected app instance; unrelated errors retain the generic or manifest fallback.
 
 Related to #5449.
+
+Internal: remove the unused React app dependency and TypeScript project reference so the
+portal's build graph does not cycle through the app-test plugin and CLI.

@@ -24,4 +24,4 @@ descriptions, and claimable assignments even after application initialization fa
 Await authentication initialization during configuration so failures propagate immediately,
 while checking the currently selected account only when a role operation executes.
 
-Closes #5449
+Related to #5449.
