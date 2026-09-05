@@ -10,10 +10,19 @@
       "path": "../../packages/react/app"
     },
     {
+      "path": "../../packages/react/components/roles"
+    },
+    {
       "path": "../../packages/modules/roles"
     },
     {
       "path": "../../packages/cli"
+    },
+    {
+      "path": "../../packages/cli-plugins/mock-server"
+    },
+    {
+      "path": "../../packages/utils/openapi-mock-server"
     }
   ],
   "include": ["src/**/*"],
