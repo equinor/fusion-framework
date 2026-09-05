@@ -3,6 +3,7 @@ import type { z } from 'zod';
 import type { FetchResponse } from '@equinor/fusion-framework-module-http';
 import {
   type ResponseSelector,
+  blobSelector,
   jsonSelector,
 } from '@equinor/fusion-framework-module-http/selectors';
 
@@ -156,3 +157,38 @@ export const versionedResponseSelector = <
   // While `version` is generic the indexed access stays deferred and widens the
   // schema's output to `unknown`; the contract guarantees the response shape.
   schemaSelector(contract[version].response as z.ZodType<VersionedResponse<TContract, TVersion>>);
+
+/**
+ * Builds a response selector that reads a binary body and validates it with the schema a version
+ * contract publishes for `version`.
+ *
+ * Some operations serve archives and static assets rather than JSON, so their body cannot be
+ * parsed as a document. Reading it as a blob keeps those endpoints on the same version contract
+ * as every other operation: the contract entry still owns the response type, it simply describes
+ * the blob result the HTTP client's `blobSelector` produces.
+ *
+ * @template TContract - The endpoint's version contract.
+ * @template TVersion - Concrete API version to resolve.
+ * @param contract - Version contract to read the response schema from.
+ * @param version - Concrete API version selecting the contract entry.
+ * @returns A selector reading the body as a blob and validating it with this version's schema.
+ * @throws {Error} From the returned selector, when the response is unsuccessful, carries no
+ * content, or cannot be read as a blob.
+ *
+ * @example
+ * ```ts
+ * const selector = versionedBlobSelector(VersionContract, apiVersion);
+ * ```
+ */
+export const versionedBlobSelector = <
+  TContract extends ApiVersionContract,
+  TVersion extends keyof TContract,
+>(
+  contract: TContract,
+  version: TVersion,
+): ResponseSelector<VersionedResponse<TContract, TVersion>> => {
+  // While `version` is generic the indexed access stays deferred and widens the schema's output
+  // to `unknown`; the contract guarantees the blob result the selector validates.
+  const schema = contract[version].response as z.ZodType<VersionedResponse<TContract, TVersion>>;
+  return async (response: FetchResponse<unknown>) => schema.parse(await blobSelector(response));
+};

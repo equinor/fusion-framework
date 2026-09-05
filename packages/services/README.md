@@ -61,10 +61,23 @@ getRole('v1', rolesClient, 'json$')({
 
 | Service | Import | Documentation |
 | --- | --- | --- |
+| Fusion Apps | `@equinor/fusion-services/apps` | [Apps service guide](./docs/apps.md) |
 | Fusion Roles V2 | `@equinor/fusion-services/roles` | [Roles service guide](./docs/roles.md) |
 
 Each service guide describes its domain, common operations, versioned types, runtime validation,
 and published OpenAPI snapshots.
+
+## OpenAPI snapshots
+
+Complete, version-scoped OpenAPI documents are available as JSON package exports:
+
+| Service | Import |
+| --- | --- |
+| Fusion Apps | `@equinor/fusion-services/apps/v1/openapi.json` |
+| Fusion Roles V2 | `@equinor/fusion-services/roles/v1/openapi.json` |
+
+Each snapshot is the contract its service client is generated from, and can drive mocks, test data
+generation, and other OpenAPI tooling without a network request.
 
 ## Package design
 
