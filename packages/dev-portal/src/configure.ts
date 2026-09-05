@@ -16,6 +16,7 @@ import {
 } from '@equinor/fusion-framework-module-feature-flag/plugins';
 import { enableAgGrid } from '@equinor/fusion-framework-module-ag-grid';
 import { enableTelemetry } from '@equinor/fusion-framework-module-telemetry';
+import { enableRoles } from '@equinor/fusion-framework-module-roles';
 import {
   enableContextNavigation,
   legacyAppNavigationFix,
@@ -53,6 +54,7 @@ declare global {
  * - **Analytics** — console adapter gated by the `fusionLogAnalytics` feature flag.
  * - **Bookmarks** — source-system metadata identifying CLI-created bookmarks.
  * - **Feature flags** — local-storage and URL-based flag plugins for dev toggles.
+ * - **Roles** — active and claimable Roles V2 assignments for the person side sheet.
  *
  * On initialization, exposes all modules on `window.Fusion` for debugging.
  *
@@ -78,6 +80,7 @@ export const configure = async (config: FrameworkConfigurator) => {
   });
 
   enableAppModule(config);
+  enableRoles(config);
 
   /**
    * Configure context module with dev-portal URL conventions.
