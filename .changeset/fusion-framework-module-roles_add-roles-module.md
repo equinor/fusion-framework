@@ -12,4 +12,16 @@ refresh after a successful claim. Typed Roles, required-role, and claim errors s
 consumer error handling. A `/mock` entry point seeds in-memory role and claim data while exercising
 the production initializer and provider.
 
+Client operations use cold RxJS observables, including single-page access-role responses.
+The provider exposes Promises for unpaged operations and converts access-role page observables
+into a lazy async iterator: consumers control page
+requests and memory use, can stop early, and can abort in-flight requests. Required-role lookups
+coordinate parallel requests so failures cancel sibling work rather than leaving unhandled rejections.
+
+Add role deactivation and explicit read-cache refresh options. Required-role errors support
+cross-bundle recognition and carry recovery operations; hosts can inspect required-role existence,
+descriptions, and claimable assignments even after application initialization fails.
+Await authentication initialization during configuration so failures propagate immediately,
+while checking the currently selected account only when a role operation executes.
+
 Closes #5449

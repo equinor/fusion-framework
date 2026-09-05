@@ -74,10 +74,14 @@ const activation = await framework.modules.roles.claimRole({
   reason: 'Support incident response',
   hours: 4,
 });
+
+await framework.modules.roles.deactivateRole({
+  roleId: claimableRoleId,
+});
 ```
 
-A successful claim invalidates every Roles read cache so the next request refreshes active roles,
-claimable roles, and claim eligibility.
+A successful claim or deactivation invalidates every Roles read cache so the next request refreshes
+active roles, claimable roles, and claim eligibility.
 
 Before activation, the provider dispatches a cancelable `onRoles.claim` event containing the claim
 input. A listener can call `preventDefault()` to stop the Roles V2 request:
@@ -107,6 +111,11 @@ enableRoles(configurator, (builder) => {
 that resolves one during configuration. It bypasses service discovery for hosts that create their
 own client, test environments, and custom transports.
 
+Client operations return cold RxJS observables; the provider subscribes and exposes
+Promises for unpaged operations and an async iterator for paginated access roles.
+Custom clients must emit one result and complete, or report failure through the
+observable error channel. The built-in client uses the typed service endpoints' `json$` transport.
+
 Module initialization calls `IRolesClient.initialize` for custom and built-in clients.
 `RolesClientInitializeOptions.resolveCurrentAccountIdentifier` returns the account selected when
 the operation executes. Custom clients should retain that resolver and call it per operation rather
@@ -123,6 +132,30 @@ When the client is supplied through `RolesModuleConfigurator.setClient`, `module
 `client.initialize` with the framework resolver before constructing the provider. Custom and mock
 clients can extend `RolesClient`; its transport, account resolver, query resources, and request
 helpers are protected extension points.
+
+### Consume paginated access roles
+
+`framework.modules.roles.getAccessRoles()` returns an async iterator of access-role pages.
+`RolesClient.getAccessRoles({ top, skip }, signal)` emits a single service page as an observable,
+including its continuation metadata. The provider converts those page observables into the
+async iterator and requests the next offset only when the consumer advances it.
+The provider does not accumulate the registry or prefetch pages: consumers control memory use
+and request volume by advancing the iterator and processing each page before requesting the next.
+
+```ts
+for await (const page of framework.modules.roles.getAccessRoles(abortController.signal)) {
+  await processPage(page);
+  if (hasEnoughResults()) {
+    break;
+  }
+}
+```
+
+Breaking iteration prevents further requests; an optional `AbortSignal` also cancels an in-flight
+page. Page failures reject iteration with a `RolesError`. Active roles and consolidated claimable
+roles remain Promise-based arrays because those service endpoints are not paginated.
+`getRequiredRoleStatuses` is a bounded lookup of explicitly requested names, not a registry listing;
+it retains only matching roles and stops paging once every requested name is found.
 
 This module supports role-aware user interfaces. A trusted backend must still enforce
 authorization for protected operations.

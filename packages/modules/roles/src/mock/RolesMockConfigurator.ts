@@ -4,8 +4,14 @@ import type {
   ApiConsolidatedClaimableRoleAssignmentV1,
 } from '@equinor/fusion-services/roles';
 import type { ConfigBuilderCallbackArgs } from '@equinor/fusion-framework-module';
+import { defer, type Observable, of } from 'rxjs';
 
-import type { ClaimRoleInput, IRolesClient, RolesAccountResolver } from '../RolesClient.js';
+import type {
+  ClaimRoleInput,
+  DeactivateRoleInput,
+  IRolesClient,
+  RolesAccountResolver,
+} from '../RolesClient.js';
 import { RolesModuleConfigurator } from '../RolesModuleConfigurator.js';
 
 /**
@@ -79,15 +85,20 @@ export class RolesMockConfigurator extends RolesModuleConfigurator {
     const claimableRoles = [...(this.data.claimableRoles ?? [])];
     return {
       initialize: () => undefined,
-      getActiveRoles: async () => [...activeRoles],
-      getClaimableRoles: async () => [...claimableRoles],
-      claimRole: async (
-        input: ClaimRoleInput,
-      ): Promise<ApiClaimableRoleAssignmentActivationV1> => ({
-        id: input.roleId,
-        reason: input.reason,
-      }),
-      canClaimAccessRole: async () => false,
+      getActiveRoles: () => defer(() => of([...activeRoles])),
+      getClaimableRoles: () => defer(() => of([...claimableRoles])),
+      claimRole: (input: ClaimRoleInput): Observable<ApiClaimableRoleAssignmentActivationV1> =>
+        defer(() => of({ id: input.roleId, reason: input.reason })),
+      deactivateRole: (
+        input: DeactivateRoleInput,
+      ): Observable<ApiClaimableRoleAssignmentActivationV1> =>
+        defer(() => of({ id: input.roleId, activeToDate: new Date().toISOString() })),
+      canClaimAccessRole: () => of(false),
+      // Static mocks have no registry, so emit one final service page.
+      getAccessRoles: () => of({ totalCount: 0, value: [] }),
+      getRequiredRoleStatuses: (roleNames) =>
+        // Static mock data has no global access-role registry, so missing roles are unregistered.
+        of(roleNames.map((name) => ({ name, exists: false, claims: [] }))),
     };
   }
 }

@@ -8,14 +8,23 @@ import type {
   ApiAccountActiveAccessRoleAssignmentV1,
   ApiClaimableRoleAssignmentActivationV1,
   ApiConsolidatedClaimableRoleAssignmentV1,
+  ApiExtendedAccessRoleV1,
 } from '@equinor/fusion-services/roles';
 
 import { ClaimRoleError } from './errors/ClaimRoleError.js';
+import { DeactivateRoleError } from './errors/DeactivateRoleError.js';
 import { RequiredRolesError } from './errors/RequiredRolesError.js';
-import type { ClaimRoleInput, IRolesClient } from './RolesClient.js';
+import type {
+  ClaimRoleInput,
+  DeactivateRoleInput,
+  IRolesClient,
+  RolesReadOptions,
+} from './RolesClient.js';
+import type { RequiredRoleStatus } from './RequiredRoleStatus.js';
 import { RoleClaimEvent } from './RoleClaimEvent.js';
 import { RolesError } from './errors/RolesError.js';
 import { version } from './version.js';
+import { defer, fromEvent, lastValueFrom, takeUntil } from 'rxjs';
 
 /**
  * Stable Roles V2 provider operation names used for telemetry grouping.
@@ -24,7 +33,10 @@ type RolesProviderOperation =
   | 'getActiveRoles'
   | 'getClaimableRoles'
   | 'claimRole'
-  | 'canClaimAccessRole';
+  | 'deactivateRole'
+  | 'canClaimAccessRole'
+  | 'getRequiredRoleStatuses'
+  | 'getAccessRoles';
 
 /**
  * Final provider configuration containing the client resolved during module setup.
@@ -65,7 +77,7 @@ export interface HasRoleOptions {
 }
 
 /**
- * Consumer-facing API for reading and claiming Roles V2 assignments.
+ * Consumer-facing API for reading, claiming, and deactivating Roles V2 assignments.
  *
  * The framework exposes this provider as `framework.modules.roles`. Account identifiers are
  * resolved by the module from authentication and are never supplied to provider operations.
@@ -84,7 +96,7 @@ export interface IRolesProvider {
    * @returns Active access-role assignments for the account resolved by authentication.
    * @throws {RolesError} When the Roles V2 request or response validation fails.
    */
-  getActiveRoles(): Promise<ApiAccountActiveAccessRoleAssignmentV1[]>;
+  getActiveRoles(options?: RolesReadOptions): Promise<ApiAccountActiveAccessRoleAssignmentV1[]>;
 
   /**
    * Gets the roles the authenticated account is eligible to claim.
@@ -92,7 +104,9 @@ export interface IRolesProvider {
    * @returns Consolidated claimable-role assignments for rendering claimable-role choices.
    * @throws {RolesError} When the Roles V2 request or response validation fails.
    */
-  getClaimableRoles(): Promise<ApiConsolidatedClaimableRoleAssignmentV1[]>;
+  getClaimableRoles(
+    options?: RolesReadOptions,
+  ): Promise<ApiConsolidatedClaimableRoleAssignmentV1[]>;
 
   /**
    * Claims a role for the authenticated account.
@@ -105,6 +119,15 @@ export interface IRolesProvider {
    * @throws {ClaimRoleError} When cancellation, event dispatch, or activation fails.
    */
   claimRole(input: ClaimRoleInput): Promise<ApiClaimableRoleAssignmentActivationV1>;
+
+  /**
+   * Ends the current activation for a claimable role assignment.
+   *
+   * @param input - Claimable assignment identifier to deactivate.
+   * @returns Updated activation metadata returned by Roles V2.
+   * @throws {DeactivateRoleError} When the deactivation request fails.
+   */
+  deactivateRole(input: DeactivateRoleInput): Promise<ApiClaimableRoleAssignmentActivationV1>;
 
   /**
    * Checks whether requested access roles are active for the authenticated account.
@@ -131,6 +154,33 @@ export interface IRolesProvider {
    * @throws {RolesError} When request, validation, or claim-eligibility evaluation fails.
    */
   canClaimAccessRole(accessRoleName: string): Promise<boolean>;
+
+  /**
+   * Resolves existence and claimability for access roles blocking application initialization.
+   *
+   * @param roleNames - Exact required access-role names.
+   * @returns Statuses used by a host to explain or recover the failed requirement.
+   * @throws {RolesError} When Roles V2 cannot resolve complete status information.
+   */
+  getRequiredRoleStatuses(roleNames: readonly string[]): Promise<RequiredRoleStatus[]>;
+
+  /**
+   * Iterates registered access roles one service page at a time.
+   *
+   * No pages are prefetched or accumulated. Consumers decide how much to process and can
+   * stop with `break`; use the signal to cancel an in-flight request.
+   *
+   * @param signal - Optional cancellation signal for page requests.
+   * @returns A lazy async iterator yielding access-role pages in service order.
+   * @throws {RolesError} When a page request or continuation validation fails.
+   * @example
+   * ```ts
+   * for await (const page of framework.modules.roles.getAccessRoles()) {
+   *   await processPage(page);
+   * }
+   * ```
+   */
+  getAccessRoles(signal?: AbortSignal): AsyncGenerator<ApiExtendedAccessRoleV1[], void, unknown>;
 
   /**
    * Disposes provider and internal client cache resources.
@@ -199,13 +249,21 @@ export class RolesProvider
   }
 
   /** {@inheritDoc IRolesProvider.getActiveRoles} */
-  public async getActiveRoles(): Promise<ApiAccountActiveAccessRoleAssignmentV1[]> {
-    return this.executeOperation('getActiveRoles', () => this.client.getActiveRoles());
+  public async getActiveRoles(
+    options?: RolesReadOptions,
+  ): Promise<ApiAccountActiveAccessRoleAssignmentV1[]> {
+    return this.executeOperation('getActiveRoles', () =>
+      lastValueFrom(this.client.getActiveRoles(options)),
+    );
   }
 
   /** {@inheritDoc IRolesProvider.getClaimableRoles} */
-  public async getClaimableRoles(): Promise<ApiConsolidatedClaimableRoleAssignmentV1[]> {
-    return this.executeOperation('getClaimableRoles', () => this.client.getClaimableRoles());
+  public async getClaimableRoles(
+    options?: RolesReadOptions,
+  ): Promise<ApiConsolidatedClaimableRoleAssignmentV1[]> {
+    return this.executeOperation('getClaimableRoles', () =>
+      lastValueFrom(this.client.getClaimableRoles(options)),
+    );
   }
 
   /** {@inheritDoc IRolesProvider.claimRole} */
@@ -222,13 +280,26 @@ export class RolesProvider
         if (claimEvent?.canceled) {
           throw new ClaimRoleError('Role claim was canceled by an event listener.');
         }
-        return await this.client.claimRole(input);
+        return await lastValueFrom(this.client.claimRole(input));
       } catch (error) {
         // Preserve an intentional cancellation while classifying all other claim failures.
         if (error instanceof ClaimRoleError) {
           throw error;
         }
         throw new ClaimRoleError('Failed to claim role.', { cause: error });
+      }
+    });
+  }
+
+  /** {@inheritDoc IRolesProvider.deactivateRole} */
+  public async deactivateRole(
+    input: DeactivateRoleInput,
+  ): Promise<ApiClaimableRoleAssignmentActivationV1> {
+    return this.executeOperation('deactivateRole', async () => {
+      try {
+        return await lastValueFrom(this.client.deactivateRole(input));
+      } catch (error) {
+        throw new DeactivateRoleError('Failed to deactivate role.', { cause: error });
       }
     });
   }
@@ -249,7 +320,11 @@ export class RolesProvider
       const hasRole = options.required === true;
       // An asserted any-role check cannot be satisfied without at least one role name.
       if (!hasRole && options.assert) {
-        throw new RequiredRolesError('Roles module bootstrap denied. No roles were provided.', []);
+        throw new RequiredRolesError(
+          'Roles module bootstrap denied. No roles were provided.',
+          [],
+          this,
+        );
       }
       return hasRole;
     }
@@ -279,6 +354,7 @@ export class RolesProvider
       throw new RequiredRolesError(
         `Roles module bootstrap denied. Missing required roles: ${missingRoles.join(', ')}.`,
         missingRoles,
+        this,
       );
     }
     return hasRole;
@@ -292,8 +368,66 @@ export class RolesProvider
       return false;
     }
     return this.executeOperation('canClaimAccessRole', () =>
-      this.client.canClaimAccessRole(normalizedRole),
+      lastValueFrom(this.client.canClaimAccessRole(normalizedRole)),
     );
+  }
+
+  /** {@inheritDoc IRolesProvider.getRequiredRoleStatuses} */
+  public async getRequiredRoleStatuses(
+    roleNames: readonly string[],
+  ): Promise<RequiredRoleStatus[]> {
+    return this.executeOperation('getRequiredRoleStatuses', () =>
+      lastValueFrom(this.client.getRequiredRoleStatuses(roleNames)),
+    );
+  }
+
+  /**
+   * {@inheritDoc IRolesProvider.getAccessRoles}
+   *
+   * @remarks
+   * Each generator advance subscribes to exactly one client page observable. `lastValueFrom`
+   * waits for that finite response before yielding; never convert a stream that eagerly
+   * fetches every page here, because buffering would defeat consumer backpressure.
+   * `takeUntil` tears down even custom clients that ignore the AbortSignal. Completion without
+   * a page rejects conversion rather than appearing to be a successful end of the registry.
+   * A pending `next()` needs the supplied signal to abort; `break` prevents subsequent requests.
+   */
+  public async *getAccessRoles(
+    signal?: AbortSignal,
+  ): AsyncGenerator<ApiExtendedAccessRoleV1[], void, unknown> {
+    const controller = new AbortController();
+    const requestSignal = signal ? AbortSignal.any([signal, controller.signal]) : controller.signal;
+    let skip = 0;
+    try {
+      // Await consumer demand before fetching each page, preserving backpressure.
+      while (true) {
+        const page = await this.executeOperation('getAccessRoles', async () => {
+          // Enforce cancellation at the provider boundary, including custom client observables.
+          // takeUntil releases the subscription without emitting a success-shaped page.
+          const result = await lastValueFrom(
+            defer(() => {
+              requestSignal.throwIfAborted();
+              return this.client.getAccessRoles({ top: 100, skip }, requestSignal);
+            }).pipe(takeUntil(fromEvent(requestSignal, 'abort'))),
+          );
+          // Never repeat an offset when a malformed continuation cannot advance.
+          if (result.nextPage && !result.value?.length) {
+            throw new RolesError('Roles V2 returned an invalid access-role continuation.');
+          }
+          return result;
+        });
+        const roles = page.value ?? [];
+        yield roles;
+        // Resume only on consumer demand; stop without an extra request after the final page.
+        if (!page.nextPage) {
+          return;
+        }
+        skip += roles.length;
+      }
+    } finally {
+      // Consumer break/return must release any transport tied to this iteration.
+      controller.abort();
+    }
   }
 
   /**

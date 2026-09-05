@@ -1,8 +1,8 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { HttpClient } from '@equinor/fusion-framework-module-http/client';
+import { of } from 'rxjs';
 
 import { type IRolesClient, RolesClient } from '../RolesClient.js';
-import { RequiredRolesError } from '../errors/RequiredRolesError.js';
 import { RolesModuleConfigurator } from '../RolesModuleConfigurator.js';
 import { module } from '../module.js';
 
@@ -13,10 +13,13 @@ import { module } from '../module.js';
  */
 const createClient = (): IRolesClient => ({
   initialize: vi.fn(),
-  getActiveRoles: vi.fn(),
+  getActiveRoles: vi.fn(() => of([])),
   getClaimableRoles: vi.fn(),
   claimRole: vi.fn(),
+  deactivateRole: vi.fn(),
   canClaimAccessRole: vi.fn(),
+  getRequiredRoleStatuses: vi.fn(),
+  getAccessRoles: vi.fn(),
 });
 
 describe('roles module', () => {
@@ -47,7 +50,7 @@ describe('roles module', () => {
 
   it('creates an app provider with service discovery inherited from the parent', async () => {
     const httpClient = new HttpClient('https://roles.example.test');
-    const json = vi.spyOn(httpClient, 'json').mockResolvedValue([]);
+    const json = vi.spyOn(httpClient, 'json$').mockReturnValue(of([]));
     const serviceDiscovery = {
       createClient: vi.fn(async () => httpClient),
     };
@@ -70,7 +73,7 @@ describe('roles module', () => {
 
   it('creates the default client during configuration and resolves the current account on use', async () => {
     const httpClient = new HttpClient('https://roles.example.test');
-    const json = vi.spyOn(httpClient, 'json').mockResolvedValue([]);
+    const json = vi.spyOn(httpClient, 'json$').mockReturnValue(of([]));
     const initialize = vi.spyOn(RolesClient.prototype, 'initialize');
     const serviceDiscovery = {
       createClient: vi.fn(async () => httpClient),
@@ -143,10 +146,12 @@ describe('roles module', () => {
 
   it('allows bootstrap when the authenticated account has every required role', async () => {
     const client = createClient();
-    vi.mocked(client.getActiveRoles).mockResolvedValue([
-      { systemName: 'Reports', accessRoleName: 'Reports.Read' },
-      { systemName: 'Reports', accessRoleName: 'Reports.Export' },
-    ]);
+    vi.mocked(client.getActiveRoles).mockReturnValue(
+      of([
+        { systemName: 'Reports', accessRoleName: 'Reports.Read' },
+        { systemName: 'Reports', accessRoleName: 'Reports.Export' },
+      ]),
+    );
     const config = new RolesModuleConfigurator();
     config.setClient(client);
     config.requireRoles(['Reports.Read', 'Reports.Export']);
@@ -162,9 +167,9 @@ describe('roles module', () => {
 
   it('denies bootstrap when a required role is not active', async () => {
     const client = createClient();
-    vi.mocked(client.getActiveRoles).mockResolvedValue([
-      { systemName: 'Reports', accessRoleName: 'Reports.Read' },
-    ]);
+    vi.mocked(client.getActiveRoles).mockReturnValue(
+      of([{ systemName: 'Reports', accessRoleName: 'Reports.Read' }]),
+    );
     const config = new RolesModuleConfigurator();
     config.setClient(client);
     config.requireRoles(['Reports.Read', 'Reports.Export']);
@@ -175,12 +180,12 @@ describe('roles module', () => {
         hasModule: () => false,
         requireInstance: vi.fn(),
       }),
-    ).rejects.toEqual(
-      new RequiredRolesError(
-        'Roles module bootstrap denied. Missing required roles: Reports.Export.',
-        ['Reports.Export'],
-      ),
-    );
+    ).rejects.toMatchObject({
+      name: 'RequiredRolesError',
+      message: 'Roles module bootstrap denied. Missing required roles: Reports.Export.',
+      missingRoles: ['Reports.Export'],
+      provider: expect.anything(),
+    });
   });
 
   it('denies default-client bootstrap when authentication has no active account', async () => {
