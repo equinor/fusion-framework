@@ -46,7 +46,6 @@
     "@equinor/fusion-framework-module-telemetry": "workspace:*",
     "@equinor/fusion-framework-plugin-context-navigation": "workspace:*",
     "@equinor/fusion-framework-react": "workspace:*",
-    "@equinor/fusion-framework-react-app": "workspace:*",
     "@equinor/fusion-framework-react-components-roles": "workspace:^",
     "@equinor/fusion-framework-react-components-bookmark": "workspace:*",
     "@equinor/fusion-framework-react-components-people-provider": "workspace:*",
@@ -95,7 +94,6 @@
     "@equinor/fusion-framework-module-telemetry": "workspace:*",
     "@equinor/fusion-framework-plugin-context-navigation": "workspace:*",
     "@equinor/fusion-framework-react": "workspace:*",
-    "@equinor/fusion-framework-react-app": "workspace:*",
     "@equinor/fusion-framework-react-components-bookmark": "workspace:*",
     "@equinor/fusion-framework-react-components-people-provider": "workspace:*",
     "@equinor/fusion-framework-react-components-roles": "workspace:^",
@@ -144,9 +142,6 @@
       "optional": true
     },
     "@equinor/fusion-framework-react": {
-      "optional": true
-    },
-    "@equinor/fusion-framework-react-app": {
       "optional": true
     },
     "@equinor/fusion-framework-react-components-bookmark": {
