@@ -2,11 +2,12 @@ import { createElement } from 'react';
 import { createRoot } from 'react-dom/client';
 
 import { type ComponentRenderArgs, makeComponent } from '@equinor/fusion-framework-react-app';
+import { RolesProvider } from '@equinor/fusion-framework-react-components-roles';
 
 import App from './App';
 import configure from './config';
 
-const appComponent = createElement(App);
+const appComponent = createElement(RolesProvider, undefined, createElement(App));
 
 /**
  * Creates the configured React application component.
