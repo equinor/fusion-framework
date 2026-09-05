@@ -1,5 +1,6 @@
 import { act } from 'react';
 import { describe, expect, it, vi } from 'vitest';
+import { of, throwError } from 'rxjs';
 
 import type { AppMockConfigureFn } from '@equinor/fusion-framework-app/mock';
 import {
@@ -20,10 +21,13 @@ import { useRole } from '../roles/useRole';
  */
 const createClient = (): IRolesClient => ({
   initialize: vi.fn(),
-  getActiveRoles: vi.fn().mockResolvedValue([]),
-  getClaimableRoles: vi.fn().mockResolvedValue([]),
-  claimRole: vi.fn().mockResolvedValue({ id: 'activation-id' }),
-  canClaimAccessRole: vi.fn().mockResolvedValue(false),
+  getActiveRoles: vi.fn(() => of([])),
+  getClaimableRoles: vi.fn(() => of([])),
+  claimRole: vi.fn(() => of({ id: 'activation-id' })),
+  deactivateRole: vi.fn(() => of({ id: 'activation-id' })),
+  canClaimAccessRole: vi.fn(() => of(false)),
+  getRequiredRoleStatuses: vi.fn(() => of([])),
+  getAccessRoles: vi.fn(),
 });
 
 /**
@@ -43,10 +47,10 @@ const configureRolesClient = (client: IRolesClient): AppMockConfigureFn<[RolesMo
 describe('useRole', () => {
   it('checks active and claimable access when mounted', async () => {
     const client = createClient();
-    vi.mocked(client.getActiveRoles).mockResolvedValue([
-      { systemName: 'Reports', accessRoleName: 'Reports.Read' },
-    ]);
-    vi.mocked(client.canClaimAccessRole).mockResolvedValue(true);
+    vi.mocked(client.getActiveRoles).mockReturnValue(
+      of([{ systemName: 'Reports', accessRoleName: 'Reports.Read' }]),
+    );
+    vi.mocked(client.canClaimAccessRole).mockReturnValue(of(true));
 
     const { result, unmount } = await renderAppHook(() => useRole('Reports.Read'), {
       configure: configureRolesClient(client),
@@ -64,7 +68,7 @@ describe('useRole', () => {
   it('surfaces role check failures without producing access results', async () => {
     const client = createClient();
     const error = new Error('role check failed');
-    vi.mocked(client.getActiveRoles).mockRejectedValue(error);
+    vi.mocked(client.getActiveRoles).mockReturnValue(throwError(() => error));
 
     const { result, unmount } = await renderAppHook(() => useRole('Reports.Read'), {
       configure: configureRolesClient(client),
@@ -82,9 +86,9 @@ describe('useRole', () => {
   it('claims a role and refreshes access state after activation', async () => {
     const client = createClient();
     vi.mocked(client.getActiveRoles)
-      .mockResolvedValueOnce([])
-      .mockResolvedValue([{ systemName: 'Reports', accessRoleName: 'Reports.Read' }]);
-    vi.mocked(client.canClaimAccessRole).mockResolvedValueOnce(true).mockResolvedValue(false);
+      .mockReturnValueOnce(of([]))
+      .mockReturnValue(of([{ systemName: 'Reports', accessRoleName: 'Reports.Read' }]));
+    vi.mocked(client.canClaimAccessRole).mockReturnValueOnce(of(true)).mockReturnValue(of(false));
 
     const { result, unmount } = await renderAppHook(() => useRole('Reports.Read'), {
       configure: configureRolesClient(client),
@@ -115,7 +119,7 @@ describe('useRole', () => {
   it('surfaces and rethrows claim failures', async () => {
     const client = createClient();
     const error = new Error('claim failed');
-    vi.mocked(client.claimRole).mockRejectedValue(error);
+    vi.mocked(client.claimRole).mockReturnValue(throwError(() => error));
 
     const { result, unmount } = await renderAppHook(() => useRole('Reports.Read'), {
       configure: configureRolesClient(client),

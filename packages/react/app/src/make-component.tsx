@@ -24,6 +24,8 @@ export type ComponentRenderArgs<TFusion extends Fusion = Fusion, TEnv = AppEnv> 
   fusion: TFusion;
   /** The application environment (manifest, config, basename, etc.). */
   env: TEnv;
+  /** Receives failures raised while application modules initialize. */
+  onError?: (error: unknown) => void;
 };
 
 /**
@@ -65,12 +67,19 @@ export const makeComponent = <
   TEnv extends AppEnv = AppEnv,
 >(
   Component: React.ReactNode,
-  args: { fusion: TRef; env: TEnv },
+  args: ComponentRenderArgs<TRef, TEnv>,
   configure?: AppModuleInitiator<TModules, TRef, TEnv>,
 ): React.LazyExoticComponent<React.ComponentType> =>
   lazy(async () => {
     const init = configureModules<TModules, TRef, TEnv>(configure);
-    const modules = await init(args);
+    let modules: AppModulesInstance<TModules>;
+    // Hosts cannot catch lazy initialization failures synchronously after mounting the React root.
+    try {
+      modules = await init(args);
+    } catch (error) {
+      args.onError?.(error);
+      throw error;
+    }
 
     const { fusion } = args;
 
