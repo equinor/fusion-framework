@@ -15,6 +15,7 @@ Background refreshes retain open dialogs and audit input. Invalid expiration met
 separately from missing expiration while retaining browser-local date presentation.
 Active assignment keys include complete scope metadata and distinguish duplicate rows, preserving
 cards and compact rows as collections change.
+The activation dialog labels a one-hour duration as “1 hour” and uses “hours” for longer durations.
 
 Hooks share collection loading, mutation state, and refresh. Mutations take claimable assignment IDs
 and reject on mutation failure, while later refresh failures are reported by collection state.

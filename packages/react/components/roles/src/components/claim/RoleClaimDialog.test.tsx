@@ -21,6 +21,23 @@ describe('RoleClaimDialog', () => {
     await expect.element(screen.getByRole('dialog')).not.toBeInTheDocument();
   });
 
+  it('uses singular and plural duration labels as the slider changes', async () => {
+    const screen = await render(
+      <RoleClaimDialog
+        claim={claim}
+        defaultReason=""
+        isClaiming={false}
+        onClose={vi.fn()}
+        onClaim={vi.fn()}
+      />,
+    );
+    await expect.element(screen.getByText('Duration: 2 hours', { exact: true })).toBeVisible();
+    await screen.getByRole('slider').fill('1');
+    await expect.element(screen.getByText('Duration: 1 hour', { exact: true })).toBeVisible();
+    await screen.getByRole('slider').fill('8');
+    await expect.element(screen.getByText('Duration: 8 hours', { exact: true })).toBeVisible();
+  });
+
   it('does not submit whitespace-only reasons and allows cancellation before submitting', async () => {
     const onClaim = vi.fn();
     const onClose = vi.fn();
