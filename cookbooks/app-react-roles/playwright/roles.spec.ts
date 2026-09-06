@@ -33,3 +33,25 @@ test('recovers the application after claiming its required role', async ({ page 
   await expect(page.getByLabel('Re-activate Reports exporter')).toBeVisible();
   await expect(app.getByRole('heading', { name: 'Fusion Roles V2' })).toBeVisible();
 });
+
+test('renders scoped and duplicate active assignments after refresh', async ({ page }) => {
+  const role = { systemName: 'Reports', accessRoleName: 'Reports.Read' };
+  const first = { ...role, scope: { type: 'project', isGlobal: false, values: ['A'] } };
+  const second = { ...role, scope: { type: 'project', isGlobal: false, values: ['B'] } };
+  let assignments = [first, second, first];
+  // Isolate this reconciliation scenario from server mutation state and satisfy the app gate.
+  await page.route('**/active-access-role-assignments*', (route) =>
+    route.fulfill({
+      json: [{ systemName: 'ProView', accessRoleName: 'ProView.Admin.DevOps' }, ...assignments],
+    }),
+  );
+  await page.goto(APP_PATH);
+  // Inspect only the scoped assignments, not the access role used to satisfy the app gate.
+  const rows = page.getByRole('main').getByRole('listitem').filter({ hasText: 'Reports.Read' });
+  await expect(rows).toHaveCount(3);
+
+  assignments = [second];
+  // The cookbook intentionally replaces its lists with loading UI during collection refresh.
+  await page.evaluate(() => window.dispatchEvent(new Event('focus')));
+  await expect(rows).toHaveCount(1);
+});
