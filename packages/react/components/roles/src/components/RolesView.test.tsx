@@ -75,6 +75,26 @@ describe('RolesView', () => {
     await expect.element(screen.getByText('Reports exporter')).toBeVisible();
   });
 
+  it('reconciles scoped active cards without duplicate keys or replacing surviving cards', async () => {
+    const consoleError = vi.spyOn(console, 'error');
+    const role = { systemName: 'Reports', accessRoleName: 'Reports.Read' };
+    const first = { ...role, scope: { type: 'project', isGlobal: false, values: ['A'] } };
+    const second = { ...role, scope: { type: 'project', isGlobal: false, values: ['B'] } };
+    const state = { ...mocks.useRoles(), roles: [first, second, first] };
+    mocks.useRoles.mockReturnValue(state);
+    try {
+      const screen = await render(<RolesView />);
+      const cards = screen.getByText('Reports.Read').elements();
+      expect(cards).toHaveLength(3);
+      mocks.useRoles.mockReturnValue({ ...state, roles: [second] });
+      await screen.rerender(<RolesView />);
+      expect(screen.getByText('Reports.Read').elements()).toEqual([cards[1]]);
+      expect(consoleError).not.toHaveBeenCalled();
+    } finally {
+      consoleError.mockRestore();
+    }
+  });
+
   it('claims an assignment through the Roles provider action', async () => {
     const screen = await render(<RolesView />);
 

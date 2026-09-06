@@ -1,6 +1,7 @@
 import type { ActiveRoles } from '../../state/roles-state';
 import type { ClaimableRoleDetails, PermanentRoleDetails } from '../overview/role-details';
 import { parseRoleDate } from '../../dates/parse-role-date';
+import { createActiveRoleItems } from '../overview/create-active-role-items';
 
 const RECENT_ROLE_LIMIT = 3;
 const RECENT_ROLE_WINDOW_MS = 7 * 24 * 60 * 60 * 1_000;
@@ -65,30 +66,32 @@ export const createCompactRoleGroups = (
     (assignment) => assignment.assignmentType?.toLowerCase() !== 'claimable',
   );
   // Preserve source, scope, and expiry when adapting permanent access to the same information dialog.
-  const permanent = permanentAssignments.map((assignment): PermanentRoleDetails => {
-    const displayName = assignment.accessRoleName ?? 'Unknown access role';
-    return {
-      key: `${assignment.systemName}:${assignment.accessRoleName}:${assignment.assignmentType}:${assignment.activeToDate}`,
-      displayName,
-      name: displayName,
-      description: `Access role in ${assignment.systemName ?? 'an unknown system'}.`,
-      reasons: [
-        assignment.assignmentType
-          ? `Assigned as ${assignment.assignmentType}`
-          : 'Assignment type was not provided',
-      ],
-      validTo: assignment.activeToDate,
-      scope: assignment.scope
-        ? {
-            isGlobal: Boolean(assignment.scope.isGlobal),
-            value: assignment.scope.values?.join(', ') ?? null,
-            scopeTypeIdentifier: assignment.scope.type,
-          }
-        : null,
-      activeTo: assignment.activeToDate,
-      isActive: true,
-    };
-  });
+  const permanent = createActiveRoleItems(permanentAssignments).map(
+    ({ assignment, key }): PermanentRoleDetails => {
+      const displayName = assignment.accessRoleName ?? 'Unknown access role';
+      return {
+        key,
+        displayName,
+        name: displayName,
+        description: `Access role in ${assignment.systemName ?? 'an unknown system'}.`,
+        reasons: [
+          assignment.assignmentType
+            ? `Assigned as ${assignment.assignmentType}`
+            : 'Assignment type was not provided',
+        ],
+        validTo: assignment.activeToDate,
+        scope: assignment.scope
+          ? {
+              isGlobal: Boolean(assignment.scope.isGlobal),
+              value: assignment.scope.values?.join(', ') ?? null,
+              scopeTypeIdentifier: assignment.scope.type,
+            }
+          : null,
+        activeTo: assignment.activeToDate,
+        isActive: true,
+      };
+    },
+  );
 
   // Keep assignments beyond the shortcut limit reachable for activation.
   const available = claimable.filter((role) => !expired.includes(role));
