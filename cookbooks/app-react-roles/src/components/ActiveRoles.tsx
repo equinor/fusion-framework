@@ -30,14 +30,26 @@ interface ActiveRolesProps {
  * @returns The active-role section.
  */
 export const ActiveRoles = ({ roles }: ActiveRolesProps): ReactNode => {
-  // Prepare role labels before markup so the section remains presentational.
-  const items = roles.map((assignment) => (
-    <li
-      key={`${assignment.systemName}:${assignment.accessRoleName}:${assignment.assignmentType}:${assignment.activeToDate}`}
-    >
-      {assignment.systemName ?? 'Unknown system'} / {assignment.accessRoleName ?? 'Unknown role'}
-    </li>
-  ));
+  const occurrences = new Map<string, number>();
+  // Active assignments have no ID: include the complete scope and count only identical rows.
+  // JSON avoids delimiter collisions; unrelated insertions or reordering do not change keys.
+  const items = roles.map((assignment) => {
+    const { scope } = assignment;
+    const identity = JSON.stringify([
+      assignment.systemName,
+      assignment.accessRoleName,
+      assignment.assignmentType,
+      assignment.activeToDate,
+      scope ? [scope.type, scope.isGlobal, scope.values] : null,
+    ]);
+    const occurrence = occurrences.get(identity) ?? 0;
+    occurrences.set(identity, occurrence + 1);
+    return (
+      <li key={`${identity}:${occurrence}`}>
+        {assignment.systemName ?? 'Unknown system'} / {assignment.accessRoleName ?? 'Unknown role'}
+      </li>
+    );
+  });
 
   return (
     <Styled.Section>
