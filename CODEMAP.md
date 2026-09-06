@@ -107,7 +107,6 @@ Format: `package name` → path → role.
 | `@equinor/fusion-framework-react-ag-charts` | `packages/react/ag-charts` | AG Charts React bindings |
 | `@equinor/fusion-framework-react-components-roles` | `packages/react/components/roles` | Required-role recovery UI for React hosts |
 | `@equinor/fusion-framework-react-components-bookmark` | `packages/react/components/bookmark` | Bookmark UI components |
-| `@equinor/fusion-framework-react-components-roles` | `packages/react/components/roles` | Required-role recovery UI for React hosts |
 | `@equinor/fusion-framework-react-components-people-provider` | `packages/react/components/people-resolver` | People resolver components |
 
 > Roles components are organized under `src/components/{application,compact,overview,claim,required-access}`.
