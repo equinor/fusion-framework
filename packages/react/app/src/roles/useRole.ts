@@ -53,13 +53,18 @@ export interface UseRoleResult {
  * if (role.checkError) return <ErrorMessage error={role.checkError} />;
  * if (role.hasRole) return <Reports />;
  *
+ * // Consume the event-handler rejection; claimError below owns the visible failure.
+ * const handleClaim = (): void => {
+ *   void role.claimRole({ roleId: claimableRoleId }).catch(() => undefined);
+ * };
+ *
  * return role.canClaimAccessRole ? (
- *   <button
- *     disabled={role.isClaiming}
- *     onClick={() => role.claimRole({ roleId: claimableRoleId })}
- *   >
- *     Claim access
- *   </button>
+ *   <>
+ *     {role.claimError ? <p role="alert">{String(role.claimError)}</p> : null}
+ *     <button disabled={role.isClaiming} onClick={handleClaim}>
+ *       Claim access
+ *     </button>
+ *   </>
  * ) : null;
  * ```
  */

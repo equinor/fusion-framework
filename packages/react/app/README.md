@@ -361,19 +361,26 @@ const ReportsAccess = ({ claimableRoleId }: { claimableRoleId: string }) => {
   if (role.checkError) return <ErrorMessage error={role.checkError} />;
   if (role.hasRole) return <Reports />;
 
+  /** Consumes the event-handler rejection; claimError below owns the visible failure. */
+  const handleClaim = (): void => {
+    void role.claimRole({ roleId: claimableRoleId }).catch(() => undefined);
+  };
+
   return role.canClaimAccessRole ? (
-    <button
-      disabled={role.isClaiming}
-      onClick={() => role.claimRole({ roleId: claimableRoleId })}
-    >
-      Claim access
-    </button>
+    <>
+      {role.claimError ? <p role="alert">{String(role.claimError)}</p> : null}
+      <button disabled={role.isClaiming} onClick={handleClaim}>
+        Claim access
+      </button>
+    </>
   ) : null;
 };
 ```
 
 `useRole` checks the exact access-role name when mounted and checks again after a successful claim.
 Check and claim operations expose separate loading and error states.
+`claimRole` rejects on failure as well as setting `claimError`; React event handlers must consume
+that rejection and render the mutation error so users can retry.
 
 ### Bookmarks
 

@@ -16,13 +16,20 @@ export const ReportsAccess = ({ claimableRoleId }: { claimableRoleId: string }) 
   if (role.hasRole) return <Reports />;
   if (!role.canClaimAccessRole) return <p>Access is unavailable.</p>;
 
+  /** Consumes the event-handler rejection; claimError below owns the visible failure. */
+  const handleClaim = (): void => {
+    void role
+      .claimRole({ roleId: claimableRoleId, reason: 'Open reports' })
+      .catch(() => undefined);
+  };
+
   return (
-    <button
-      disabled={role.isClaiming}
-      onClick={() => role.claimRole({ roleId: claimableRoleId, reason: 'Open reports' })}
-    >
-      Claim access
-    </button>
+    <>
+      {role.claimError ? <p role="alert">{String(role.claimError)}</p> : null}
+      <button disabled={role.isClaiming} onClick={handleClaim}>
+        Claim access
+      </button>
+    </>
   );
 };
 ```
@@ -30,6 +37,8 @@ export const ReportsAccess = ({ claimableRoleId }: { claimableRoleId: string }) 
 `useRole` checks the exact, case-sensitive Roles V2 access-role name when mounted. It exposes
 separate loading and error states for checks and claims. After a successful claim, the hook checks
 the role again using the provider's refreshed caches.
+`claimRole` rejects on failure as well as setting `claimError`; React event handlers must consume
+that rejection and render the mutation error so users can retry.
 
 For required-role recovery UI, use `RoleBoundary` from
 `@equinor/fusion-framework-react-components-roles`. Its optional `required` prop can guard a subtree
