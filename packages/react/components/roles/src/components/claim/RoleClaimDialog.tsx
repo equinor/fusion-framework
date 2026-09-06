@@ -58,6 +58,7 @@ export const RoleClaimDialog = ({
 }: RoleClaimDialogProps): ReactNode => {
   const form = useRoleClaimForm({ claim, defaultReason, isClaiming, onClaim });
   const { reason, durationHours, isPending, claimError } = form;
+  const durationLabel = `Duration: ${durationHours} ${durationHours === 1 ? 'hour' : 'hours'}`;
 
   // Keep the dialog out of the accessibility tree until the user selects an assignment.
   if (!claim) {
@@ -96,9 +97,7 @@ export const RoleClaimDialog = ({
             disabled={isPending}
             onChange={(_event, value) => form.setDurationHours(value[0])}
           />
-          <Styled.SelectedDuration variant="body_short">
-            Duration: {durationHours} hours
-          </Styled.SelectedDuration>
+          <Styled.SelectedDuration variant="body_short">{durationLabel}</Styled.SelectedDuration>
         </Styled.DurationField>
       </Styled.Content>
       <Dialog.Actions>
