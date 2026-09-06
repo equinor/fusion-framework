@@ -13,6 +13,8 @@ assignments remain in Claimable. Activation failures remain visible with preserv
 including during in-place expiry recovery.
 Background refreshes retain open dialogs and audit input. Invalid expiration metadata is displayed
 separately from missing expiration while retaining browser-local date presentation.
+Active assignment keys include complete scope metadata and distinguish duplicate rows, preserving
+cards and compact rows as collections change.
 
 Hooks share collection loading, mutation state, and refresh. Mutations take claimable assignment IDs
 and reject on mutation failure, while later refresh failures are reported by collection state.

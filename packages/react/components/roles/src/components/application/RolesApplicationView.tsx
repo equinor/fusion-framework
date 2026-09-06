@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import { RoleClaimDialog } from '../claim/RoleClaimDialog';
 import { useRolesOverview } from '../overview/useRolesOverview';
 import { RolesLoadFeedback } from '../overview/RolesLoadFeedback';
+import { createActiveRoleItems } from '../overview/create-active-role-items';
 import { RoleAssignmentCard } from './RoleAssignmentCard';
 
 const Styled = {
@@ -27,9 +28,9 @@ export const RolesApplicationView = (): ReactNode => {
   const { active, claimable, selectedClaim, selectClaim } = overview;
   const [tab, setTab] = useState(0);
   // Application cards retain every active access-role assignment, including claimable activations.
-  const activeItems = active.roles.map((assignment) => (
+  const activeItems = createActiveRoleItems(active.roles).map(({ assignment, key }) => (
     <RoleAssignmentCard
-      key={`${assignment.systemName}:${assignment.accessRoleName}:${assignment.assignmentType}:${assignment.activeToDate}`}
+      key={key}
       title={assignment.accessRoleName ?? 'Unknown access role'}
       description={assignment.systemName ?? 'Unknown system'}
     />

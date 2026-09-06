@@ -117,4 +117,19 @@ describe('createCompactRoleGroups', () => {
     expect(groups.claimed).toEqual([]);
     expect(groups.expired).toEqual([]);
   });
+
+  it('keeps scoped and duplicate permanent assignments uniquely keyed across collection changes', () => {
+    const role = { systemName: 'Reports', accessRoleName: 'Reports.Read' };
+    const first = { ...role, scope: { type: 'project', isGlobal: false, values: ['A'] } };
+    const second = { ...role, scope: { type: 'project', isGlobal: false, values: ['B'] } };
+    const groups = createCompactRoleGroups([first, second, first], [], NOW);
+    // Compare render identities rather than labels, which are intentionally identical.
+    const keys = groups.permanent.map((item) => item.key);
+    expect(new Set(keys).size).toBe(3);
+
+    const reordered = createCompactRoleGroups([second, first, first], [], NOW);
+    // Reordering other scopes must not change either duplicate's occurrence identity.
+    expect(reordered.permanent.map((item) => item.key)).toEqual([keys[1], keys[0], keys[2]]);
+    expect(createCompactRoleGroups([second], [], NOW).permanent[0].key).toBe(keys[1]);
+  });
 });
