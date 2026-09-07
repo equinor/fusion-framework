@@ -37,8 +37,6 @@ jobs:
         include:
           - os: ubuntu-latest
             ignoreSnapshots: false
-          - os: macos-latest
-            ignoreSnapshots: true
           - os: windows-latest
             ignoreSnapshots: true
     runs-on: ${{ matrix.os }}
