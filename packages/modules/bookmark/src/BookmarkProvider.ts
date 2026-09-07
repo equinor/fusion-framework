@@ -76,6 +76,9 @@ export class BookmarkProvider implements IBookmarkProvider {
   /** provided configuration for the bookmark provider */
   #config: BookmarkModuleConfig;
 
+  /** Immutable filter snapshot used for the lifetime of the provider. */
+  #filters: Readonly<NonNullable<BookmarkModuleConfig['filters']>> | undefined;
+
   /** state machine of the bookmark provider */
   #store: BookmarkStore;
 
@@ -163,10 +166,12 @@ export class BookmarkProvider implements IBookmarkProvider {
     return new SemanticVersion(version);
   }
 
-  /** @returns The configured bookmark filters. */
-  public get filters(): BookmarkModuleConfig['filters'] {
-    // TODO(#5136) - freeze the config object?
-    return this.#config.filters;
+  /**
+   * Gets the immutable bookmark filters captured when the provider was created.
+   * @returns The configured bookmark filters, or `undefined` when filtering is not configured.
+   */
+  public get filters(): Readonly<NonNullable<BookmarkModuleConfig['filters']>> | undefined {
+    return this.#filters;
   }
 
   /**
@@ -307,6 +312,7 @@ export class BookmarkProvider implements IBookmarkProvider {
    */
   constructor(config: BookmarkModuleConfig) {
     this.#config = config;
+    this.#filters = config.filters ? Object.freeze({ ...config.filters }) : undefined;
 
     this.#store = createBookmarkStore({
       client: config.client,
@@ -599,12 +605,12 @@ export class BookmarkProvider implements IBookmarkProvider {
         sourceSystem: of(this.sourceSystem),
 
         // Resolve application key if filtering by application is enabled
-        appKey: this.#config.filters?.application
+        appKey: this.#filters?.application
           ? defer(() => this._resolve.application()).pipe(map((x) => x?.appKey))
           : of(undefined),
 
         // Resolve context ID if filtering by context is enabled
-        contextId: this.#config.filters?.context
+        contextId: this.#filters?.context
           ? defer(() => this._resolve.context()).pipe(map((x) => x?.id))
           : of(undefined),
       }).pipe(
