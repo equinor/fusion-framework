@@ -150,7 +150,8 @@ jobs:
           superseded diagnostics, agent activity, tool limitations, and unavailable remote operations
           unless they leave a real unresolved risk. Use ref: #${ISSUE_NUMBER} under Related issues.
           The execution report must be brief, start with ## Work completed, include ## Validation,
-          and summarize only completed work, validation outcomes, and real follow-up risks.
+          stay under 1,200 characters, and summarize only completed work, validation outcomes, and
+          real follow-up risks.
           Issue context JSON: $(cat "$RUNNER_TEMP/issue-context.json")
           EOF
           )"

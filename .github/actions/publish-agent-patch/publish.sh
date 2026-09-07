@@ -13,7 +13,7 @@ test -f "$EXECUTION_REPORT_PATH"
 test -f "$CHECKSUM_PATH"
 test "$(wc -c < "$PATCH_PATH")" -le 2097152
 test "$(wc -c < "$PULL_REQUEST_PATH")" -le 32768
-test "$(wc -c < "$EXECUTION_REPORT_PATH")" -le 8192
+test "$(wc -c < "$EXECUTION_REPORT_PATH")" -le 2048
 [[ "$(wc -l < "$CHECKSUM_PATH" | tr -d '[:space:]')" == 3 ]]
 IFS= read -r patch_checksum < "$CHECKSUM_PATH"
 IFS= read -r pull_request_checksum < <(sed -n '2p' "$CHECKSUM_PATH")
