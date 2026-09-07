@@ -93,4 +93,41 @@ describe('role outcome views', () => {
 
     expect(onClaim).toHaveBeenCalledWith('assignment-id', 'Temporary test access', 2);
   });
+
+  it('renders one recovery option when multiple assignments grant the same claimable role', async () => {
+    const onClaim = vi.fn().mockResolvedValue(undefined);
+    const screen = await render(
+      <RoleClaimableView
+        statuses={[
+          {
+            name: 'Claimable.Role',
+            exists: true,
+            claims: [
+              {
+                assignmentId: 'first-assignment',
+                name: 'claimable-role',
+                displayName: 'Claimable role',
+              },
+              {
+                assignmentId: 'second-assignment',
+                name: 'claimable-role',
+                displayName: 'Claimable role',
+              },
+            ],
+          },
+        ]}
+        defaultReason="Required for testing"
+        onClaim={onClaim}
+      />,
+    );
+
+    await expect
+      .element(screen.getByRole('heading', { name: 'Claimable role', exact: true }))
+      .toBeVisible();
+    expect(screen.getByRole('button', { name: 'Claim' }).all()).toHaveLength(1);
+    await screen.getByRole('button', { name: 'Claim' }).click();
+    await screen.getByRole('button', { name: 'Claim', exact: true }).last().click();
+
+    expect(onClaim).toHaveBeenCalledWith('first-assignment', 'Required for testing', 2);
+  });
 });
