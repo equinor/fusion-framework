@@ -1,0 +1,124 @@
+name: Dependabot AI review
+
+on:
+  pull_request_target:
+    types: [opened, reopened, ready_for_review, synchronize]
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: Dependabot pull request number
+        required: true
+        type: number
+
+concurrency:
+  group: dependabot-ai-review-${{ inputs.pr_number || github.event.pull_request.number }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  id-token: write
+  issues: write
+  pull-requests: read
+
+jobs:
+  research:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (
+        github.event.pull_request.user.login == 'dependabot[bot]' &&
+        !contains(github.event.pull_request.labels.*.name, '🤖 AI researched')
+      )
+    environment: docs
+    runs-on: fusion-gh-runner-fusion-framework
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+
+      - name: Setup Fusion runner
+        continue-on-error: true
+        uses: ./.github/actions/setup-fusion-runner
+
+      - name: Verify Dependabot pull request
+        id: pull-request
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ inputs.pr_number || github.event.pull_request.number }}
+        run: |
+          set -euo pipefail
+          test "$(gh pr view "$PR_NUMBER" --json author --jq '.author.login')" = dependabot
+          echo "number=$PR_NUMBER" >> "$GITHUB_OUTPUT"
+
+      - name: Ensure Azure CLI is installed
+        run: |
+          if ! command -v az >/dev/null 2>&1; then
+            curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+          fi
+
+      - name: Azure login
+        uses: azure/login@v3.0.2
+        with:
+          client-id: ${{ vars.FUSION_AI_SP_CLIENT_ID }}
+          tenant-id: 3aa4a235-b6e2-48d5-9195-7fcf05b459b0
+          allow-no-subscriptions: true
+
+      - name: Configure Fusion AI provider
+        env:
+          FUSION_AI_SCOPE: ${{ vars.FUSION_AI_SP_SCOPE }}
+          FUSION_ENV: ${{ vars.FUSION_ENV }}
+        run: |
+          set -euo pipefail
+
+          discovery_token="$(
+            az account get-access-token \
+              --scope '5a842df8-3238-415d-b168-9f16a6a6031b/.default' \
+              --query accessToken \
+              --output tsv
+          )"
+          endpoint="$(
+            curl --fail-with-body --silent --show-error \
+              --header "Authorization: Bearer ${discovery_token}" \
+              "https://discovery.fusion.equinor.com/service-registry/environments/${FUSION_ENV}/services" \
+              | jq --exit-status --raw-output 'map(select(.key == "ai")) | first | .uri'
+          )"
+          token="$(
+            az account get-access-token \
+              --scope "$FUSION_AI_SCOPE" \
+              --query accessToken \
+              --output tsv
+          )"
+
+          echo "::add-mask::$token"
+          echo "COPILOT_PROVIDER_BASE_URL=${endpoint%/}" >> "$GITHUB_ENV"
+          echo "COPILOT_PROVIDER_BEARER_TOKEN=$token" >> "$GITHUB_ENV"
+
+      - name: Review dependency update
+        env:
+          COPILOT_MODEL: gpt-5.6-luna
+          COPILOT_PROVIDER_AZURE_API_VERSION: 2025-01-01-preview
+          COPILOT_PROVIDER_TYPE: azure
+          COPILOT_PROVIDER_WIRE_API: completions
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ steps.pull-request.outputs.number }}
+        run: |
+          set -euo pipefail
+
+          gh copilot -- \
+            --agent dependabot \
+            --prompt "Review pull request #${PR_NUMBER} in audit-only mode. Use the fusion-dependency-review skill. Research its dependency changes and repository impact. Do not modify files, post comments, approve, close, or merge." \
+            --silent \
+            --stream off \
+            --allow-all-tools \
+            --allow-all-urls \
+            --no-ask-user \
+            --no-auto-update \
+            --secret-env-vars=COPILOT_PROVIDER_BEARER_TOKEN \
+            > "$RUNNER_TEMP/dependabot-review.md"
+
+          cat "$RUNNER_TEMP/dependabot-review.md" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Mark research complete
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ steps.pull-request.outputs.number }}
+        run: gh pr edit "$PR_NUMBER" --add-label '🤖 AI researched'
