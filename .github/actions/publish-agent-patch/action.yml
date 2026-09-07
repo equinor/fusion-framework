@@ -1,5 +1,5 @@
 name: Publish agent patch
-description: Validate an issue-agent patch as data and open a draft pull request
+description: Validate an issue-agent patch as data and open a pull request ready for review
 
 inputs:
   issue-number:

@@ -116,4 +116,5 @@ pull_request_url="$(
     --title "$pull_request_title" \
     --body-file "$body_file"
 )"
+gh pr ready "$pull_request_url" --repo "$GITHUB_REPOSITORY"
 printf 'pull_request_url=%s\n' "$pull_request_url" >> "$GITHUB_OUTPUT"
