@@ -96,7 +96,7 @@ jobs:
       - name: Review dependency update
         env:
           COPILOT_PROVIDER_MODEL_ID: gpt-5.6-luna
-          COPILOT_PROVIDER_WIRE_MODEL: GPT-5.6 Luna
+          COPILOT_PROVIDER_WIRE_MODEL: gpt-5.6-luna
           COPILOT_PROVIDER_AZURE_API_VERSION: 2025-01-01-preview
           COPILOT_PROVIDER_TYPE: azure
           COPILOT_PROVIDER_WIRE_API: responses
