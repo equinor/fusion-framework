@@ -204,7 +204,7 @@ Use this table instead of searching. "Start here" is the first file to open.
 | Add an example for a feature | `cookbooks/app-react-*` |
 | Configure the human Copilot Codespace and prebuild warm-up | `.devcontainer/devcontainer.json`, `.devcontainer/mcp.json` |
 | Configure Copilot CLI with Fusion AI in Actions | `.github/actions/setup-copilot-fusion-ai` |
-| Solve an issue from a workflow | `.github/workflows/issue-solver.yml`, `.github/actions/publish-agent-patch` (requires the protected `issue-solver` environment and matching Azure federation) |
+| Solve an issue from a workflow | `.github/workflows/issue-solver.yml`, `.github/actions/publish-agent-patch` (uses the `docs` environment and its Fusion AI Azure federation) |
 | Change observable/state primitives | `packages/utils/observable/src` |
 | Change caching/fetching | `packages/utils/query/src` |
 

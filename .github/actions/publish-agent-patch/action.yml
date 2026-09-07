@@ -21,10 +21,16 @@ inputs:
     description: Path to SHA-256 checksums for patch and report
     required: true
 
+outputs:
+  pull_request_url:
+    description: URL of the created draft pull request
+    value: ${{ steps.publish.outputs.pull_request_url }}
+
 runs:
   using: composite
   steps:
     - name: Validate and publish draft
+      id: publish
       shell: bash
       env:
         BASE_SHA: ${{ inputs.base-sha }}

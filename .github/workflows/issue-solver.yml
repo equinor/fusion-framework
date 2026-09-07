@@ -33,25 +33,15 @@ jobs:
     timeout-minutes: 2
     permissions: {}
     steps:
-      - name: Verify protected issue-solver environment
+      - name: Verify trusted dispatch context
         env:
           DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+          REF_PROTECTED: ${{ github.ref_protected }}
         run: |
           set -euo pipefail
-          environment_url="https://api.github.com/repos/${GITHUB_REPOSITORY}/environments/issue-solver"
-          environment="$(curl --fail-with-body --silent --show-error "$environment_url")"
-          jq --exit-status '
-            .deployment_branch_policy.custom_branch_policies == true and
-            .deployment_branch_policy.protected_branches == false
-          ' <<< "$environment" >/dev/null
-          policies="$(
-            curl --fail-with-body --silent --show-error \
-              "${environment_url}/deployment-branch-policies"
-          )"
-          jq --exit-status --arg branch "$DEFAULT_BRANCH" '
-            .total_count == 1 and
-            [.branch_policies[] | select(.type == "branch") | .name] == [$branch]
-          ' <<< "$policies" >/dev/null
+          [[ "$GITHUB_REPOSITORY" == 'equinor/fusion-framework' ]]
+          [[ "$GITHUB_REF" == "refs/heads/${DEFAULT_BRANCH}" ]]
+          [[ "$REF_PROTECTED" == true ]]
 
   announce:
     needs: authorize
@@ -60,10 +50,13 @@ jobs:
       github.ref == format('refs/heads/{0}', github.event.repository.default_branch) &&
       github.ref_protected
     runs-on: ubuntu-latest
+    outputs:
+      comment_url: ${{ steps.announce.outputs.comment_url }}
     permissions:
       issues: write
     steps:
       - name: Validate issue and announce the attempt
+        id: announce
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -71,15 +64,18 @@ jobs:
           issue="$(gh api "repos/${REPOSITORY}/issues/${ISSUE_NUMBER}")"
           [[ "$(jq --raw-output .state <<< "$issue")" == open ]]
           [[ "$(jq --raw-output 'has("pull_request")' <<< "$issue")" == false ]]
-          gh issue comment "$ISSUE_NUMBER" \
-            --repo "$REPOSITORY" \
-            --body "Started an automated issue-resolution attempt with \`${{ inputs.model }}\`: https://github.com/${REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+          comment_url="$(
+            gh issue comment "$ISSUE_NUMBER" \
+              --repo "$REPOSITORY" \
+              --body "Started an automated issue-resolution attempt with \`${{ inputs.model }}\`: https://github.com/${REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+          )"
+          printf 'comment_url=%s\n' "$comment_url" >> "$GITHUB_OUTPUT"
 
   generate:
     needs: announce
     runs-on: ubuntu-latest
     timeout-minutes: 45
-    environment: issue-solver
+    environment: docs
     permissions:
       contents: read
       id-token: write
@@ -187,6 +183,8 @@ jobs:
     needs: generate
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    outputs:
+      pull_request_url: ${{ steps.publish.outputs.pull_request_url }}
     permissions:
       actions: read
       contents: write
@@ -203,6 +201,7 @@ jobs:
           path: ${{ runner.temp }}/issue-proposal
 
       - name: Publish validated patch as a draft
+        id: publish
         uses: ./.github/actions/publish-agent-patch
         env:
           GH_TOKEN: ${{ github.token }}
@@ -213,3 +212,80 @@ jobs:
           patch: ${{ runner.temp }}/issue-proposal/issue.patch
           report: ${{ runner.temp }}/issue-proposal/issue-report.md
           checksums: ${{ runner.temp }}/issue-proposal/issue-checksums.txt
+
+  summary:
+    needs: [authorize, announce, generate, publish]
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    permissions:
+      actions: read
+      issues: read
+    steps:
+      - name: Download generated work summary
+        if: needs.generate.result == 'success'
+        uses: actions/download-artifact@v7
+        with:
+          name: issue-proposal-${{ inputs.issue_number }}
+          path: ${{ runner.temp }}/issue-proposal
+
+      - name: Publish issue solver summary
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ANNOUNCE_RESULT: ${{ needs.announce.result }}
+          COMMENT_URL: ${{ needs.announce.outputs.comment_url }}
+          GENERATE_RESULT: ${{ needs.generate.result }}
+          PUBLISH_RESULT: ${{ needs.publish.result }}
+          PULL_REQUEST_URL: ${{ needs.publish.outputs.pull_request_url }}
+        run: |
+          set -euo pipefail
+          issue_url="https://github.com/${REPOSITORY}/issues/${ISSUE_NUMBER}"
+          issue_title="$(
+            gh api "repos/${REPOSITORY}/issues/${ISSUE_NUMBER}" --jq .title 2>/dev/null ||
+              printf '%s' 'Title unavailable'
+          )"
+          escape_html() {
+            sed \
+              -e 's/&/\&amp;/g' \
+              -e 's/</\&lt;/g' \
+              -e 's/>/\&gt;/g' \
+              -e 's/"/\&quot;/g' \
+              -e "s/'/\&#39;/g" \
+              -e 's/|/\&#124;/g'
+          }
+          safe_title="$(printf '%s' "$issue_title" | escape_html)"
+
+          if [[ "$ANNOUNCE_RESULT" == success && -n "$COMMENT_URL" ]]; then
+            comment_status="[Posted](${COMMENT_URL})"
+          else
+            comment_status="Not posted (${ANNOUNCE_RESULT})"
+          fi
+          if [[ "$PUBLISH_RESULT" == success && -n "$PULL_REQUEST_URL" ]]; then
+            pull_request_status="[Created](${PULL_REQUEST_URL})"
+          else
+            pull_request_status="Not created (${PUBLISH_RESULT})"
+          fi
+
+          {
+            echo '# Issue solver execution summary'
+            echo
+            echo '| Field | Value |'
+            echo '| --- | --- |'
+            echo "| Issue ID | [#${ISSUE_NUMBER}](${issue_url}) |"
+            echo "| Started resolving | ${safe_title} |"
+            echo "| Start comment | ${comment_status} |"
+            echo "| Generation | ${GENERATE_RESULT} |"
+            echo "| Draft PR | ${pull_request_status} |"
+            echo
+            echo '## Work summary'
+            echo
+            if [[ "$GENERATE_RESULT" == success ]]; then
+              echo '> The following report is untrusted agent output rendered as plain text.'
+              echo
+              echo '<details><summary>Generated implementation report</summary><pre>'
+              escape_html < "$RUNNER_TEMP/issue-proposal/issue-report.md"
+              echo '</pre></details>'
+            else
+              echo "No work summary was generated because the generation job ${GENERATE_RESULT}."
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"

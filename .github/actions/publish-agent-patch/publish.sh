@@ -102,10 +102,13 @@ git push \
   origin \
   "HEAD:refs/heads/${TASK_BRANCH}"
 
-gh pr create \
-  --repo "$GITHUB_REPOSITORY" \
-  --draft \
-  --base "$default_branch" \
-  --head "$TASK_BRANCH" \
-  --title "fix: implement issue #${ISSUE_NUMBER}" \
-  --body-file "$body_file"
+pull_request_url="$(
+  gh pr create \
+    --repo "$GITHUB_REPOSITORY" \
+    --draft \
+    --base "$default_branch" \
+    --head "$TASK_BRANCH" \
+    --title "fix: implement issue #${ISSUE_NUMBER}" \
+    --body-file "$body_file"
+)"
+printf 'pull_request_url=%s\n' "$pull_request_url" >> "$GITHUB_OUTPUT"
