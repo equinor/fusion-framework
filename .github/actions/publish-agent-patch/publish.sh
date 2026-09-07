@@ -130,6 +130,7 @@ pull_request_url="$(
     --draft \
     --base "$default_branch" \
     --head "$TASK_BRANCH" \
+    --label '🤖 AI generated' \
     --title "$pull_request_title" \
     --body-file "$body_file"
 )"
