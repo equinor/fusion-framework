@@ -53,7 +53,6 @@ fi
 
 default_branch="$(gh api "repos/${GITHUB_REPOSITORY}" --jq .default_branch)"
 [[ "$GITHUB_REF" == "refs/heads/${default_branch}" ]]
-[[ "$(gh api "repos/${GITHUB_REPOSITORY}/commits/${default_branch}" --jq .sha)" == "$BASE_SHA" ]]
 issue="$(gh api "repos/${GITHUB_REPOSITORY}/issues/${ISSUE_NUMBER}")"
 [[ "$(jq --raw-output .state <<< "$issue")" == open ]]
 [[ "$(jq --raw-output 'has("pull_request")' <<< "$issue")" == false ]]
@@ -61,7 +60,18 @@ issue="$(gh api "repos/${GITHUB_REPOSITORY}/issues/${ISSUE_NUMBER}")"
 [[ -z "$(git status --porcelain)" ]]
 
 git -c core.hooksPath=/dev/null apply --check --cached "$PATCH_PATH"
-git -c core.hooksPath=/dev/null apply --cached "$PATCH_PATH"
+git fetch --no-tags origin \
+  "refs/heads/${default_branch}:refs/remotes/origin/${default_branch}"
+default_branch_sha="$(git rev-parse "refs/remotes/origin/${default_branch}")"
+if ! git merge-base --is-ancestor "$BASE_SHA" "$default_branch_sha"; then
+  echo "The generation base is not an ancestor of ${default_branch}." >&2
+  exit 1
+fi
+git switch --detach "$default_branch_sha"
+if ! git -c core.hooksPath=/dev/null apply --3way --cached "$PATCH_PATH"; then
+  echo "The generated patch conflicts with the latest ${default_branch}." >&2
+  exit 1
+fi
 paths=()
 while IFS= read -r -d '' path; do
   paths+=("$path")
