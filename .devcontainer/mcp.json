@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "fusion-mcp": {
+      "type": "http",
+      "url": "https://mcp.api.fusion.equinor.com/mcp",
+      "headers": {
+        "Authorization": "Bearer ${FUSION_MCP_TOKEN}"
+      },
+      "tools": ["*"],
+      "timeout": 30000
+    }
+  }
+}
