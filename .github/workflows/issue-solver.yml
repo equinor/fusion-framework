@@ -80,8 +80,6 @@ jobs:
             echo "- Issue ID: [#${ISSUE_NUMBER}](https://github.com/${REPOSITORY}/issues/${ISSUE_NUMBER})"
             echo "- Started resolving: ${issue_title}"
             echo "- Start comment: [Posted](${comment_url})"
-            echo '- Work summary: Generation started'
-            echo '- Draft PR: Not created yet'
           } >> "$GITHUB_STEP_SUMMARY"
 
   generate:
@@ -143,8 +141,13 @@ jobs:
           Do not push, create or edit pull requests, comment, merge, change repository settings, or access credentials.
           Make the smallest complete change. Apply fusion-code-conventions and changeset policy.
           Run focused validation, then the repository-required validation that is practical within the job timeout.
-          Return only a completed .github/PULL_REQUEST_TEMPLATE.md without HTML comments.
-          Report exactly what validation ran and what was skipped. Include closes: #${ISSUE_NUMBER}.
+          Return only a concise, completed .github/PULL_REQUEST_TEMPLATE.md without HTML comments.
+          Preserve the exact Markdown headings and checklist structure from the template.
+          Focus on motivation, behavior, invariants, consumer impact, and concrete review guidance.
+          In Additional context, report the final outcome of relevant validation commands. Omit
+          superseded diagnostic attempts, agent activity, tool limitations, and unavailable remote
+          operations unless they leave a real unresolved risk.
+          Use ref: #${ISSUE_NUMBER} under Related issues; the publisher adds the closing reference.
           Issue context JSON: $(cat "$RUNNER_TEMP/issue-context.json")
           EOF
           )"
@@ -239,17 +242,7 @@ jobs:
             echo '## Work summary'
             echo
             if [[ -s "$RUNNER_TEMP/issue-report.md" ]]; then
-              echo '> The following report is untrusted agent output rendered as plain text.'
-              echo
-              echo '<details><summary>Generated implementation report</summary><pre>'
-              sed \
-                -e 's/&/\&amp;/g' \
-                -e 's/</\&lt;/g' \
-                -e 's/>/\&gt;/g' \
-                -e 's/@/\&commat;/g' \
-                -e 's/#/\&num;/g' \
-                "$RUNNER_TEMP/issue-report.md"
-              echo '</pre></details>'
+              sed -e 's/@/\&commat;/g' "$RUNNER_TEMP/issue-report.md"
             else
               echo 'No work summary was generated.'
             fi
