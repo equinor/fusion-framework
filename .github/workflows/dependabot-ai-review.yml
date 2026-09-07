@@ -25,7 +25,10 @@ jobs:
       github.event_name == 'workflow_dispatch' ||
       (
         github.event.pull_request.user.login == 'dependabot[bot]' &&
-        !contains(github.event.pull_request.labels.*.name, '🤖 AI researched')
+        (
+          github.event.action == 'synchronize' ||
+          !contains(github.event.pull_request.labels.*.name, '🤖 AI researched')
+        )
       )
     environment: docs
     runs-on: fusion-gh-runner-fusion-framework
@@ -58,7 +61,7 @@ jobs:
         run: |
           set -euo pipefail
 
-          pr="$(gh pr view "$PR_NUMBER" --json author,title)"
+          pr="$(gh pr view "$PR_NUMBER" --json author,headRefOid,title)"
           test "$(jq --raw-output '.author.login' <<< "$pr")" = app/dependabot
           title="$(jq --raw-output '.title' <<< "$pr")"
           if [[ ! "$title" =~ [Bb]ump[[:space:]](.+)[[:space:]]from[[:space:]][^[:space:]]+[[:space:]]to[[:space:]]([^[:space:]]+)$ ]]; then
@@ -69,6 +72,7 @@ jobs:
           echo "number=$PR_NUMBER" >> "$GITHUB_OUTPUT"
           echo "dependency=${BASH_REMATCH[1]}" >> "$GITHUB_OUTPUT"
           echo "version=${BASH_REMATCH[2]}" >> "$GITHUB_OUTPUT"
+          echo "head_sha=$(jq --raw-output '.headRefOid' <<< "$pr")" >> "$GITHUB_OUTPUT"
 
       - name: Ensure Azure CLI is installed
         run: |
@@ -217,6 +221,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           DEPENDENCY: ${{ steps.pull-request.outputs.dependency }}
+          HEAD_SHA: ${{ steps.pull-request.outputs.head_sha }}
           MODEL: gpt-5.6-luna
           PR_NUMBER: ${{ steps.pull-request.outputs.number }}
           REPOSITORY: ${{ github.repository }}
@@ -233,6 +238,7 @@ jobs:
             echo
             echo "> [!NOTE]"
             echo "> **Model:** \`${MODEL}\`  "
+            echo "> **Reviewed commit:** [\`${HEAD_SHA:0:12}\`](https://github.com/${REPOSITORY}/commit/${HEAD_SHA})  "
             echo "> **Workflow:** [View research run](https://github.com/${REPOSITORY}/actions/runs/${RUN_ID})"
             echo
             cat "$RUNNER_TEMP/dependabot-review.md"
