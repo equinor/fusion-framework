@@ -1,6 +1,6 @@
 {
   "name": "Fusion Framework developer",
-  "image": "mcr.microsoft.com/devcontainers/typescript-node:1-24-bookworm",
+  "image": "mcr.microsoft.com/devcontainers/typescript-node:5.1.2-24-bookworm",
   "remoteUser": "node",
   "features": {
     "ghcr.io/devcontainers/features/node:1": {
