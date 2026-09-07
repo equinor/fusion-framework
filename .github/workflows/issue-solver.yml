@@ -303,7 +303,7 @@ jobs:
         with:
           ref: ${{ github.sha }}
 
-      - uses: actions/download-artifact@v7
+      - uses: actions/download-artifact@v8
         with:
           name: issue-proposal-${{ inputs.issue_number }}
           path: ${{ runner.temp }}/issue-proposal
