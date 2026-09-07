@@ -205,7 +205,7 @@ Use this table instead of searching. "Start here" is the first file to open.
 | Configure the human Copilot Codespace and prebuild warm-up | `.devcontainer/devcontainer.json`, `.devcontainer/mcp.json` |
 | Configure Copilot CLI with Fusion AI in Actions | `.github/actions/setup-copilot-fusion-ai` |
 | Solve an issue from a workflow | `.github/workflows/issue-solver.yml`, `.github/actions/publish-agent-patch` (uses the `docs` environment and its Fusion AI Azure federation) |
-| Address AI-generated pull request review feedback | `.github/workflows/address-ai-review-comments.yml` (isolated generation and unprivileged validation), `.github/scripts/capture-review-context.sh`, `.github/actions/publish-review-patch` |
+| Run gated Fusion PR commands | `.github/workflows/fusion-pr-command.yml` routes exact maintainer commands to isolated review remediation or existing dependency automation |
 | Change observable/state primitives | `packages/utils/observable/src` |
 | Change caching/fetching | `packages/utils/query/src` |
 

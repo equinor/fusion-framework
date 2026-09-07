@@ -1,4 +1,4 @@
-name: Address AI pull request review comments
+name: Fusion pull request command
 
 on:
   issue_comment:
@@ -6,10 +6,6 @@ on:
       - created
 
 permissions: {}
-
-concurrency:
-  group: address-ai-review-comments-${{ github.event.issue.number }}
-  cancel-in-progress: false
 
 env:
   PR_NUMBER: ${{ github.event.issue.number }}
@@ -19,7 +15,11 @@ jobs:
   authorize:
     if: >-
       github.event.action == 'created' &&
-      github.event.comment.body == '/fusion address comments' &&
+      (
+        github.event.comment.body == '/fusion address comments' ||
+        github.event.comment.body == '@fusion address comments' ||
+        github.event.comment.body == '@fusion resolve pr'
+      ) &&
       github.event.comment.user.type == 'User' &&
       github.event.issue.pull_request
     runs-on: ubuntu-latest
@@ -29,6 +29,8 @@ jobs:
       issues: read
       pull-requests: read
     outputs:
+      authorized_actor: ${{ steps.authorize.outputs.authorized_actor }}
+      command: ${{ steps.authorize.outputs.command }}
       head_ref: ${{ steps.authorize.outputs.head_ref }}
       head_sha: ${{ steps.authorize.outputs.head_sha }}
     steps:
@@ -46,7 +48,6 @@ jobs:
           set -euo pipefail
           [[ "$GITHUB_EVENT_NAME" == issue_comment ]]
           [[ "$COMMENT_ACTION" == created ]]
-          [[ "$COMMENT_BODY" == '/fusion address comments' ]]
           [[ "$COMMENT_AUTHOR_TYPE" == User ]]
           [[ "$COMMENT_AUTHOR" =~ ^[A-Za-z0-9][A-Za-z0-9-]{0,38}$ ]]
           [[ "$GITHUB_REPOSITORY" == "$REPOSITORY" ]]
@@ -66,19 +67,37 @@ jobs:
           [[ "$(jq --raw-output .base.repo.full_name <<< "$pull_request")" == "$REPOSITORY" ]]
           [[ "$(jq --raw-output .base.ref <<< "$pull_request")" == "$DEFAULT_BRANCH" ]]
           [[ "$(jq --raw-output .head.repo.full_name <<< "$pull_request")" == "$REPOSITORY" ]]
-          [[ "$(jq --raw-output .user.login <<< "$pull_request")" == 'github-actions[bot]' ]]
           head_ref="$(jq --raw-output .head.ref <<< "$pull_request")"
           head_sha="$(jq --raw-output .head.sha <<< "$pull_request")"
-          [[ "$head_ref" =~ ^automation/issue-[A-Za-z0-9][A-Za-z0-9._-]*$ ]]
           [[ "$head_sha" =~ ^[a-f0-9]{40}$ ]]
-          jq --exit-status \
-            '.labels | any(.name == "🤖 AI generated")' <<< "$pull_request" >/dev/null
 
+          case "$COMMENT_BODY" in
+            '/fusion address comments' | '@fusion address comments')
+              command=address-comments
+              [[ "$(jq --raw-output .user.login <<< "$pull_request")" == 'github-actions[bot]' ]]
+              [[ "$head_ref" =~ ^automation/issue-[A-Za-z0-9][A-Za-z0-9._-]*$ ]]
+              jq --exit-status \
+                '.labels | any(.name == "🤖 AI generated")' <<< "$pull_request" >/dev/null
+              ;;
+            '@fusion resolve pr')
+              command=resolve-dependency-pr
+              [[ "$(jq --raw-output .user.login <<< "$pull_request")" == 'dependabot[bot]' ]]
+              [[ "$head_ref" == dependabot/* ]]
+              ;;
+            *)
+              echo 'Unsupported Fusion command.' >&2
+              exit 1
+              ;;
+          esac
+
+          printf 'command=%s\n' "$command" >> "$GITHUB_OUTPUT"
+          printf 'authorized_actor=%s\n' "$COMMENT_AUTHOR" >> "$GITHUB_OUTPUT"
           printf 'head_ref=%s\n' "$head_ref" >> "$GITHUB_OUTPUT"
           printf 'head_sha=%s\n' "$head_sha" >> "$GITHUB_OUTPUT"
 
   generate:
     needs: authorize
+    if: needs.authorize.outputs.command == 'address-comments'
     runs-on: ubuntu-latest
     timeout-minutes: 45
     environment: docs
@@ -526,3 +545,25 @@ jobs:
           gh pr comment "$PR_NUMBER" \
            --repo "$REPOSITORY" \
            --body 'No unresolved review threads were found, so no AI remediation was run.'
+
+  dispatch-dependency-resolution:
+    needs: authorize
+    if: needs.authorize.outputs.command == 'resolve-dependency-pr'
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    permissions:
+      actions: write
+      contents: read
+    steps:
+      - name: Dispatch trusted Dependabot resolution
+        env:
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh workflow run dependabot-ai-review.yml \
+           --repo "$REPOSITORY" \
+           --ref "$DEFAULT_BRANCH" \
+           -f pr_number="$PR_NUMBER" \
+           -f confirmed_head_sha="${{ needs.authorize.outputs.head_sha }}" \
+           -f authorized_actor="${{ needs.authorize.outputs.authorized_actor }}" \
+           -f operation=resolve
