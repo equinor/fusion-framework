@@ -429,7 +429,7 @@ jobs:
               "repos/${REPOSITORY}/issues/comments/${comment_id}" \
               --raw-field body="$(cat "$comment")"
           else
-            gh pr comment "$PR_NUMBER" --body-file "$comment"
+            gh pr comment "$PR_NUMBER" --repo "$REPOSITORY" --body-file "$comment"
           fi
 
       - name: Mark research complete
