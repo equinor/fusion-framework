@@ -46,7 +46,7 @@ jobs:
           PR_NUMBER: ${{ inputs.pr_number || github.event.pull_request.number }}
         run: |
           set -euo pipefail
-          test "$(gh pr view "$PR_NUMBER" --json author --jq '.author.login')" = dependabot
+          test "$(gh pr view "$PR_NUMBER" --json author --jq '.author.login')" = app/dependabot
           echo "number=$PR_NUMBER" >> "$GITHUB_OUTPUT"
 
       - name: Ensure Azure CLI is installed
