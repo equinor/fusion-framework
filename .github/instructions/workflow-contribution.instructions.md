@@ -40,3 +40,13 @@ name: Workflow Contribution Rules
 ## Review-only workflows
 
 If the workflow is reviewing rather than editing, treat missing changesets, missing required validation, or PR-template gaps as explicit findings instead of silently assuming them away.
+
+## Codespaces issue-agent POC
+
+See the [Codespaces issue-agent workflow](../workflows/codespaces-issue-agent.yml).
+
+The [merge cleanup workflow](../workflows/codespaces-issue-agent-cleanup.yml) deletes the
+matching task Codespace after merge to the default branch. It uses the same owner token
+(Codespaces deletion and repository/Actions read access), checks the originating run,
+and never executes PR-head code. Closed-but-unmerged PRs are left to the configured
+retention policy. Merged workspace contents are disposable; preserve needed work in Git.

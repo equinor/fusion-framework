@@ -1,0 +1,40 @@
+name: Clean up merged issue Codespace
+
+on:
+  pull_request_target:
+    types: [closed]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: codespaces-cleanup-${{ github.event.pull_request.number }}
+  cancel-in-progress: false
+
+jobs:
+  cleanup:
+    if: >-
+      github.repository == 'equinor/fusion-framework' &&
+      github.event.pull_request.merged == true &&
+      github.event.pull_request.head.repo.id == github.event.repository.id &&
+      github.event.pull_request.base.ref == github.event.repository.default_branch &&
+      startsWith(github.event.pull_request.head.ref, 'automation/issue-')
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    environment: docs
+    steps:
+      # The privileged event must never check out or execute the PR's head.
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "24"
+      - name: Delete the matched merged-task Codespace
+        env:
+          # Same owner as creation; needs Codespaces deletion and repository/Actions read access.
+          GH_TOKEN: ${{ secrets.CODESPACES_TOKEN }}
+          GH_PROMPT_DISABLED: "1"
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: node .github/scripts/codespaces-issue-agent.mjs cleanup

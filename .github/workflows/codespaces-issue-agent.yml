@@ -1,0 +1,179 @@
+name: Codespaces issue agent (POC)
+
+on:
+  workflow_dispatch:
+    inputs:
+      issue_number:
+        description: Issue to implement in a fresh Codespace (draft PR only)
+        required: true
+        type: string
+      model:
+        description: Fusion AI deployment for the coding agent
+        required: true
+        type: choice
+        default: gpt-5.6-sol
+        options:
+          - gpt-5.6-sol
+          - gpt-5.6-luna
+
+concurrency:
+  group: codespaces-issue-agent
+  cancel-in-progress: false
+
+permissions: {}
+
+env:
+  GH_PROMPT_DISABLED: "1"
+  GIT_TERMINAL_PROMPT: "0"
+  GH_PAGER: cat
+  REPOSITORY: equinor/fusion-framework
+  ISSUE_NUMBER: ${{ inputs.issue_number }}
+  COPILOT_PROVIDER_WIRE_MODEL: ${{ inputs.model }}
+  BASE_BRANCH: ${{ github.event.repository.default_branch }}
+  BASE_SHA: ${{ github.sha }}
+  TASK_BRANCH: automation/issue-${{ inputs.issue_number }}-${{ github.run_id }}-${{ github.run_attempt }}
+
+jobs:
+  generate:
+    if: >-
+      github.repository == 'equinor/fusion-framework' &&
+      github.ref == format('refs/heads/{0}', github.event.repository.default_branch) &&
+      github.ref_protected
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    # Configure required reviewers and default-branch-only deployment rules before use.
+    environment: docs
+    permissions:
+      contents: read
+      issues: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "24"
+      - name: Check inputs and explicit workflow credentials
+        env:
+          GH_TOKEN: ${{ secrets.CODESPACES_TOKEN }}
+          FUSION_MCP_TOKEN: ${{ secrets.FUSION_MCP_TOKEN }}
+        run: |
+          node .github/scripts/codespaces-issue-agent.mjs preflight
+      - name: Create and immediately record Codespace
+        id: codespace
+        timeout-minutes: 3
+        env:
+          GH_TOKEN: ${{ secrets.CODESPACES_TOKEN }}
+        run: |
+          set -euo pipefail
+          # Without --status, create returns the name before readiness polling.
+          name="$(gh codespace create --repo "$REPOSITORY" --branch "$BASE_BRANCH" \
+            --devcontainer-path .devcontainer/devcontainer.json --default-permissions \
+            --machine standardLinux32gb --location WestEurope \
+            --idle-timeout 30m --retention-period 24h \
+            --display-name "issue-${ISSUE_NUMBER}-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}")"
+          [[ "$name" =~ ^[a-zA-Z0-9-]+$ ]]
+          printf 'name=%s\n' "$name" >> "$GITHUB_OUTPUT"
+          printf 'Codespace: https://github.com/codespaces/%s\n' "$name" >> "$GITHUB_STEP_SUMMARY"
+      - name: Announce task start on the issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CODESPACE_NAME: ${{ steps.codespace.outputs.name }}
+        run: |
+          set -euo pipefail
+          body="$(printf 'Started an issue-resolution attempt using `%s`.\n\n- [Codespace](https://github.com/codespaces/%s)\n- [Workflow run](https://github.com/%s/actions/runs/%s)\n\nThe workspace is being prepared; this does not mean the issue is resolved. Codespace access requires the owner account.' \
+            "$COPILOT_PROVIDER_WIRE_MODEL" "$CODESPACE_NAME" "$REPOSITORY" "$GITHUB_RUN_ID")"
+          printf '%s' "$body" | gh api "repos/$REPOSITORY/issues/$ISSUE_NUMBER/comments" \
+            --method POST --field body=@- > /dev/null
+      - name: Wait for readiness and verify approved checkout
+        timeout-minutes: 12
+        env:
+          GH_TOKEN: ${{ secrets.CODESPACES_TOKEN }}
+          CODESPACE_NAME: ${{ steps.codespace.outputs.name }}
+        run: |
+          set -euo pipefail
+          for attempt in $(seq 1 30); do
+            state="$(gh api "/user/codespaces/$CODESPACE_NAME" --jq .state)"
+            case "$state" in
+              Available)
+                if actual="$(timeout 20s gh codespace ssh --codespace "$CODESPACE_NAME" -- \
+                  -T -o BatchMode=yes -o ConnectTimeout=10 \
+                  'cd /workspaces/fusion-framework && git rev-parse HEAD')"; then
+                  [[ "$actual" == "$BASE_SHA" ]] || { echo 'Base changed; dispatch again.'; exit 1; }
+                  exit 0
+                fi ;;
+              Failed|Deleted|Shutdown) echo 'Codespace did not become ready.'; exit 1 ;;
+            esac
+            sleep 15
+          done
+          echo 'Codespace readiness timed out.'
+          exit 1
+      - name: Azure OIDC login (never developer login)
+        uses: azure/login@v3.0.2
+        with:
+          client-id: ${{ vars.FUSION_AI_SP_CLIENT_ID }}
+          tenant-id: 3aa4a235-b6e2-48d5-9195-7fcf05b459b0
+          allow-no-subscriptions: true
+      - name: Generate patch with normal Copilot CLI
+        timeout-minutes: 23
+        env:
+          GH_TOKEN: ${{ secrets.CODESPACES_TOKEN }}
+          FUSION_MCP_TOKEN: ${{ secrets.FUSION_MCP_TOKEN }}
+          CODESPACE_NAME: ${{ steps.codespace.outputs.name }}
+          RESULT_PATH: ${{ runner.temp }}/codespaces-result/result.json
+        run: node .github/scripts/codespaces-issue-agent.mjs generate
+      - name: Stop this Codespace even after failure
+        if: ${{ always() && steps.codespace.outputs.name != '' }}
+        timeout-minutes: 3
+        env:
+          GH_TOKEN: ${{ secrets.CODESPACES_TOKEN }}
+          CODESPACE_NAME: ${{ steps.codespace.outputs.name }}
+        run: |
+          set -euo pipefail
+          for attempt in 1 2 3; do
+            # A timed-out stop may still succeed; always check state and retry transient API failures.
+            timeout 30s gh codespace stop --codespace "$CODESPACE_NAME" || true
+            if state="$(timeout 20s gh api "/user/codespaces/$CODESPACE_NAME" --jq .state)" &&
+              [[ "$state" == Shutdown ]]; then
+              echo 'Codespace confirmed Shutdown.' >> "$GITHUB_STEP_SUMMARY"
+              exit 0
+            fi
+            sleep 10
+          done
+          echo 'Stop not confirmed. Owner must check the recorded Codespace; idle timeout is fallback.'
+          exit 1
+      - uses: actions/upload-artifact@v4
+        with:
+          name: codespaces-result
+          path: ${{ runner.temp }}/codespaces-result/result.json
+          if-no-files-found: error
+          retention-days: 1
+
+  publish:
+    needs: generate
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: docs
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "24"
+      - uses: actions/download-artifact@v4
+        with:
+          name: codespaces-result
+          path: ${{ runner.temp }}/codespaces-result
+      - name: Validate patch as data and create a new draft PR
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RESULT_PATH: ${{ runner.temp }}/codespaces-result/result.json
+        # No installs, hooks, tests, builds, or generated scripts in this write-enabled job.
+        run: node .github/scripts/codespaces-issue-agent.mjs publish
