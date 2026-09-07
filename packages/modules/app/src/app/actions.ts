@@ -29,7 +29,7 @@ const createActions = () => ({
   setManifest: createAction('set_manifest', (manifest: AppManifest, update?: boolean) => ({
     payload: manifest,
     meta: {
-      // TODO(#5129) when updating
+      // This timestamps the action, not the manifest, so updates receive a new creation time.
       created: Date.now(),
       update,
     },
