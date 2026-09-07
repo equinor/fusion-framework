@@ -141,13 +141,16 @@ jobs:
           Do not push, create or edit pull requests, comment, merge, change repository settings, or access credentials.
           Make the smallest complete change. Apply fusion-code-conventions and changeset policy.
           Run focused validation, then the repository-required validation that is practical within the job timeout.
-          Return only a concise, completed .github/PULL_REQUEST_TEMPLATE.md without HTML comments.
-          Preserve the exact Markdown headings and checklist structure from the template.
-          Focus on motivation, behavior, invariants, consumer impact, and concrete review guidance.
-          In Additional context, report the final outcome of relevant validation commands. Omit
-          superseded diagnostic attempts, agent activity, tool limitations, and unavailable remote
-          operations unless they leave a real unresolved risk.
-          Use ref: #${ISSUE_NUMBER} under Related issues; the publisher adds the closing reference.
+          Return only valid JSON without Markdown fences using this exact shape:
+          {"pull_request":{"title":"<conventional commit title>","body":"<completed PR template Markdown>"},"execution_report":"<concise Markdown report>"}
+          The pull request title must use Conventional Commits and be no longer than 120 characters.
+          Preserve the exact PR template headings and checklist structure in pull_request.body.
+          Focus the PR body on motivation, behavior, invariants, consumer impact, and review guidance.
+          In Additional context, report only final outcomes of relevant validation commands. Omit
+          superseded diagnostics, agent activity, tool limitations, and unavailable remote operations
+          unless they leave a real unresolved risk. Use ref: #${ISSUE_NUMBER} under Related issues.
+          The execution report must be brief, start with ## Work completed, include ## Validation,
+          and summarize only completed work, validation outcomes, and real follow-up risks.
           Issue context JSON: $(cat "$RUNNER_TEMP/issue-context.json")
           EOF
           )"
@@ -205,23 +208,42 @@ jobs:
               .data.content
             ] |
             last
-          ' "$RUNNER_TEMP/issue-agent.jsonl" > "$RUNNER_TEMP/issue-report.md"
+          ' "$RUNNER_TEMP/issue-agent.jsonl" > "$RUNNER_TEMP/issue-delivery.json"
 
-          test -s "$RUNNER_TEMP/issue-report.md"
+          jq --exit-status '
+            type == "object" and
+            (.pull_request.title | type == "string" and length > 0) and
+            (.pull_request.body | type == "string" and length > 0) and
+            (.execution_report | type == "string" and length > 0)
+          ' "$RUNNER_TEMP/issue-delivery.json" >/dev/null
+          {
+            printf '# %s\n\n' "$(jq --raw-output .pull_request.title "$RUNNER_TEMP/issue-delivery.json")"
+            jq --raw-output .pull_request.body "$RUNNER_TEMP/issue-delivery.json"
+          } > "$RUNNER_TEMP/issue-pull-request.md"
+          jq --raw-output .execution_report "$RUNNER_TEMP/issue-delivery.json" \
+            > "$RUNNER_TEMP/issue-execution-report.md"
+          test -s "$RUNNER_TEMP/issue-pull-request.md"
+          test -s "$RUNNER_TEMP/issue-execution-report.md"
+
           git add --intent-to-add .
           git diff --binary --no-ext-diff --no-textconv "$BASE_SHA" \
             > "$RUNNER_TEMP/issue.patch"
           test -s "$RUNNER_TEMP/issue.patch"
           if grep -Fq "$COPILOT_PROVIDER_BEARER_TOKEN" \
-            "$RUNNER_TEMP/issue.patch" "$RUNNER_TEMP/issue-report.md" ||
+            "$RUNNER_TEMP/issue.patch" \
+            "$RUNNER_TEMP/issue-pull-request.md" \
+            "$RUNNER_TEMP/issue-execution-report.md" ||
             grep -Eq 'eyJ[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+|gh[pousr]_[A-Za-z0-9]+' \
-              "$RUNNER_TEMP/issue.patch" "$RUNNER_TEMP/issue-report.md"; then
+              "$RUNNER_TEMP/issue.patch" \
+              "$RUNNER_TEMP/issue-pull-request.md" \
+              "$RUNNER_TEMP/issue-execution-report.md"; then
             echo 'Generated artifact contains a credential-shaped value.' >&2
             exit 1
           fi
           (
             cd "$RUNNER_TEMP"
-            sha256sum issue.patch issue-report.md > issue-checksums.txt
+            sha256sum issue.patch issue-pull-request.md issue-execution-report.md \
+              > issue-checksums.txt
           )
 
       - name: Upload proposal
@@ -230,7 +252,8 @@ jobs:
           name: issue-proposal-${{ inputs.issue_number }}
           path: |
             ${{ runner.temp }}/issue.patch
-            ${{ runner.temp }}/issue-report.md
+            ${{ runner.temp }}/issue-pull-request.md
+            ${{ runner.temp }}/issue-execution-report.md
             ${{ runner.temp }}/issue-checksums.txt
           if-no-files-found: error
           retention-days: 1
@@ -241,10 +264,10 @@ jobs:
           {
             echo '## Work summary'
             echo
-            if [[ -s "$RUNNER_TEMP/issue-report.md" ]]; then
-              sed -e 's/@/\&commat;/g' "$RUNNER_TEMP/issue-report.md"
+            if [[ -s "$RUNNER_TEMP/issue-execution-report.md" ]]; then
+              sed -e 's/@/\&commat;/g' "$RUNNER_TEMP/issue-execution-report.md"
             else
-              echo 'No work summary was generated.'
+              echo 'No execution report was generated.'
             fi
           } >> "$GITHUB_STEP_SUMMARY"
 
@@ -255,7 +278,7 @@ jobs:
     permissions:
       actions: read
       contents: write
-      issues: read
+      issues: write
       pull-requests: write
     steps:
       - uses: actions/checkout@v7
@@ -277,12 +300,14 @@ jobs:
           base-sha: ${{ github.sha }}
           task-branch: ${{ env.TASK_BRANCH }}
           patch: ${{ runner.temp }}/issue-proposal/issue.patch
-          report: ${{ runner.temp }}/issue-proposal/issue-report.md
+          pull-request: ${{ runner.temp }}/issue-proposal/issue-pull-request.md
+          execution-report: ${{ runner.temp }}/issue-proposal/issue-execution-report.md
           checksums: ${{ runner.temp }}/issue-proposal/issue-checksums.txt
 
-      - name: Report draft pull request
+      - name: Report draft pull request and notify issue
         if: always()
         env:
+          GH_TOKEN: ${{ github.token }}
           PULL_REQUEST_URL: ${{ steps.publish.outputs.pull_request_url }}
         run: |
           {
@@ -294,3 +319,14 @@ jobs:
               echo '- Not created.'
             fi
           } >> "$GITHUB_STEP_SUMMARY"
+          if [[ -n "$PULL_REQUEST_URL" ]]; then
+            comment_file="$RUNNER_TEMP/issue-completion-comment.md"
+            {
+              sed -e 's/@/\&commat;/g' \
+                "$RUNNER_TEMP/issue-proposal/issue-execution-report.md"
+              printf '\n\n[Review the generated draft pull request 🏗️](%s)\n' "$PULL_REQUEST_URL"
+            } > "$comment_file"
+            gh issue comment "$ISSUE_NUMBER" \
+              --repo "$REPOSITORY" \
+              --body-file "$comment_file"
+          fi

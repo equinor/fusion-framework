@@ -14,11 +14,14 @@ inputs:
   patch:
     description: Path to the generated binary Git patch
     required: true
-  report:
-    description: Path to the generated pull request body
+  pull-request:
+    description: Path to the generated pull request title and body
+    required: true
+  execution-report:
+    description: Path to the generated execution report
     required: true
   checksums:
-    description: Path to SHA-256 checksums for patch and report
+    description: Path to SHA-256 checksums for the patch and generated reports
     required: true
 
 outputs:
@@ -35,8 +38,9 @@ runs:
       env:
         BASE_SHA: ${{ inputs.base-sha }}
         CHECKSUM_PATH: ${{ inputs.checksums }}
+        EXECUTION_REPORT_PATH: ${{ inputs.execution-report }}
         ISSUE_NUMBER: ${{ inputs.issue-number }}
         PATCH_PATH: ${{ inputs.patch }}
-        REPORT_PATH: ${{ inputs.report }}
+        PULL_REQUEST_PATH: ${{ inputs.pull-request }}
         TASK_BRANCH: ${{ inputs.task-branch }}
       run: bash "$GITHUB_ACTION_PATH/publish.sh"
