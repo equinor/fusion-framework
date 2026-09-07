@@ -43,6 +43,10 @@ export interface IAppConfigurator {
   /**
    * Sets the base URI used to proxy-load application script bundles.
    *
+   * Use this when the host exposes app resources through a proxy: the configured URI is
+   * prepended to each bundle path before the module imports it. A callback can resolve the
+   * proxy URI from the module initializer when it is not known statically.
+   *
    * @param base_or_cb - A static URI string or a callback returning one.
    */
   setAssetUri: (base_or_cb: string | ConfigBuilderCallback<string>) => void;
@@ -106,7 +110,9 @@ export class AppConfigurator
   /**
    * Sets the base URI used to proxy-load application script bundles.
    *
-   * TODO(#5132) - explain why, used in import of resources aka proxy url
+   * Use this when the host exposes app resources through a proxy: the configured URI is
+   * prepended to each bundle path before the module imports it. A callback can resolve the
+   * proxy URI from the module initializer when it is not known statically.
    *
    * @param base_or_cb - A static URI string or a callback returning one.
    */
