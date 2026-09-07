@@ -68,41 +68,43 @@ jobs:
           pr="$(gh pr view "$PR_NUMBER" --json author,baseRefName,body,headRefName,headRefOid,title)"
           test "$(jq --raw-output '.author.login' <<< "$pr")" = app/dependabot
 
-          updates="$(
-            jq --compact-output '
-              [
-                (
-                  (.body // "" | split("\n")[]) as $line |
-                  (
-                    try (
-                      $line |
-                      capture(
-                        "^\\| \\[(?<name>[^]]+)\\]\\([^)]*\\) \\| `(?<from>[^`]+)` \\| `(?<to>[^`]+)` \\|$"
-                      )
-                    ) catch empty
-                  ),
-                  (
-                    try (
-                      $line |
-                      capture(
-                        "^Updates `(?<name>[^`]+)` from (?<from>[^ ]+) to (?<to>[^ ]+)$"
-                      )
-                    ) catch empty
-                  )
-                ),
-                (
-                  try (
-                    .title |
-                    capture(
-                      "[Bb]ump (?<name>.+) from (?<from>[^ ]+) to (?<to>[^ ]+)(?: in .+)?$"
-                    )
-                  ) catch empty
-                )
-              ] |
-              unique_by([.name, .from, .to]) |
-              sort_by([.name, .from, .to])
-            ' <<< "$pr"
-          )"
+          PR_JSON="$pr" node > "$RUNNER_TEMP/dependency-updates.json" <<'NODE'
+          const pr = JSON.parse(process.env.PR_JSON);
+          const updates = [];
+          for (const line of (pr.body ?? '').split('\n')) {
+            const table = line.match(
+              /^\| \[([^\]]+)\]\([^)]*\) \| `([^`]+)` \| `([^`]+)` \|$/,
+            );
+            if (table) updates.push({ name: table[1], from: table[2], to: table[3] });
+
+            const sentence = line.match(
+              /^Updates `([^`]+)` from ([^ ]+) to ([^ ]+)$/,
+            );
+            if (sentence) {
+              updates.push({ name: sentence[1], from: sentence[2], to: sentence[3] });
+            }
+          }
+
+          const title = pr.title.match(
+            /[Bb]ump (.+) from ([^ ]+) to ([^ ]+)(?: in .+)?$/,
+          );
+          if (title) updates.push({ name: title[1], from: title[2], to: title[3] });
+
+          const unique = [
+            ...new Map(
+              updates.map((update) => [
+                JSON.stringify([update.name, update.from, update.to]),
+                update,
+              ]),
+            ).values(),
+          ].sort((a, b) =>
+            JSON.stringify([a.name, a.from, a.to]).localeCompare(
+              JSON.stringify([b.name, b.from, b.to]),
+            ),
+          );
+          process.stdout.write(JSON.stringify(unique));
+          NODE
+          updates="$(cat "$RUNNER_TEMP/dependency-updates.json")"
           if [[ "$(jq 'length' <<< "$updates")" = 0 ]]; then
             echo "::error::Could not extract dependency updates from the Dependabot pull request."
             exit 1
@@ -126,7 +128,7 @@ jobs:
           update_summary="$(
             jq --raw-output '
               if length == 1 then
-                "bump `\(.name)` from `\(.from)` to `\(.to)`"
+                "bump `\(.[0].name)` from `\(.[0].from)` to `\(.[0].to)`"
               else
                 "update grouped dependencies: " +
                   (map("`\(.name)` (`\(.from)` to `\(.to)`)") | join(", "))
