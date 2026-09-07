@@ -64,7 +64,6 @@ jobs:
 
       - name: Configure Fusion AI provider
         env:
-          FUSION_AI_SCOPE: ${{ vars.FUSION_AI_SP_SCOPE }}
           FUSION_ENV: ${{ vars.FUSION_ENV }}
         run: |
           set -euo pipefail
@@ -75,15 +74,17 @@ jobs:
               --query accessToken \
               --output tsv
           )"
-          endpoint="$(
+          service="$(
             curl --fail-with-body --silent --show-error \
               --header "Authorization: Bearer ${discovery_token}" \
               "https://discovery.fusion.equinor.com/service-registry/environments/${FUSION_ENV}/services" \
-              | jq --exit-status --raw-output 'map(select(.key == "ai")) | first | .uri'
+              | jq --exit-status 'map(select(.key == "ai")) | first'
           )"
+          endpoint="$(jq --exit-status --raw-output '.uri' <<< "$service")"
+          scope="$(jq --exit-status --raw-output '.scopes[0]' <<< "$service")"
           token="$(
             az account get-access-token \
-              --scope "$FUSION_AI_SCOPE" \
+              --scope "$scope" \
               --query accessToken \
               --output tsv
           )"
