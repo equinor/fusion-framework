@@ -128,10 +128,24 @@ jobs:
 
           copilot --version
           echo '::group::🤖 Fusion AI reasoning and tool activity'
+          review_prompt="$(
+            cat <<EOF
+          Review pull request #${PR_NUMBER} in audit-only mode using the fusion-dependency-review skill.
+
+          Produce decision-ready research for the maintainer:
+          - Distinguish required status checks and repository rules from optional failed checks. An optional automation failure is not a merge blocker.
+          - Trace direct repository usage of the dependency and connect relevant upstream behavior changes to those call sites.
+          - State what the completed CI checks actually validate and identify meaningful runtime or integration coverage gaps.
+          - Check changeset requirements, unresolved review threads, approval requirements, mergeability, and branch freshness.
+          - Give the shortest safe, ordered merge path. Include only real blockers as required actions; label optional hardening separately.
+
+          Return concise GitHub-flavored Markdown without an H1 heading. Start with exactly one verdict heading: '## 🟢 Verdict: MERGE', '## 🟡 Verdict: HOLD', or '## 🔴 Verdict: DECLINE'. Then include a short rationale followed by '### Key findings', '### Repository impact', and '### Merge path'. Use evidence links for factual claims and task-list items for the ordered merge path. Do not modify files, post comments, approve, close, or merge.
+          EOF
+          )"
           set +e
           copilot \
             --agent dependabot \
-            --prompt "Review pull request #${PR_NUMBER} in audit-only mode. Use the fusion-dependency-review skill. Research its dependency changes and repository impact. Return concise GitHub-flavored Markdown without an H1 heading. Start with exactly one verdict heading: '## 🟢 Verdict: MERGE', '## 🟡 Verdict: HOLD', or '## 🔴 Verdict: DECLINE'. Then include a short rationale, a '### Key findings' bullet list, and a '### Required actions' task list. Use links for evidence. Do not modify files, post comments, approve, close, or merge." \
+            --prompt "$review_prompt" \
             --enable-reasoning-summaries \
             --output-format json \
             --stream off \
@@ -189,7 +203,8 @@ jobs:
           grep -Eq '^## (🟢 Verdict: MERGE|🟡 Verdict: HOLD|🔴 Verdict: DECLINE)$' \
             "$RUNNER_TEMP/dependabot-review.md"
           grep -Fq '### Key findings' "$RUNNER_TEMP/dependabot-review.md"
-          grep -Fq '### Required actions' "$RUNNER_TEMP/dependabot-review.md"
+          grep -Fq '### Repository impact' "$RUNNER_TEMP/dependabot-review.md"
+          grep -Fq '### Merge path' "$RUNNER_TEMP/dependabot-review.md"
 
           cat "$RUNNER_TEMP/dependabot-review.md" >> "$GITHUB_STEP_SUMMARY"
 
