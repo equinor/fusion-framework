@@ -33,25 +33,15 @@ jobs:
     timeout-minutes: 2
     permissions: {}
     steps:
-      - name: Verify protected issue-solver environment
+      - name: Verify trusted dispatch context
         env:
           DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+          REF_PROTECTED: ${{ github.ref_protected }}
         run: |
           set -euo pipefail
-          environment_url="https://api.github.com/repos/${GITHUB_REPOSITORY}/environments/issue-solver"
-          environment="$(curl --fail-with-body --silent --show-error "$environment_url")"
-          jq --exit-status '
-            .deployment_branch_policy.custom_branch_policies == true and
-            .deployment_branch_policy.protected_branches == false
-          ' <<< "$environment" >/dev/null
-          policies="$(
-            curl --fail-with-body --silent --show-error \
-              "${environment_url}/deployment-branch-policies"
-          )"
-          jq --exit-status --arg branch "$DEFAULT_BRANCH" '
-            .total_count == 1 and
-            [.branch_policies[] | select(.type == "branch") | .name] == [$branch]
-          ' <<< "$policies" >/dev/null
+          [[ "$GITHUB_REPOSITORY" == 'equinor/fusion-framework' ]]
+          [[ "$GITHUB_REF" == "refs/heads/${DEFAULT_BRANCH}" ]]
+          [[ "$REF_PROTECTED" == true ]]
 
   announce:
     needs: authorize
@@ -64,6 +54,7 @@ jobs:
       issues: write
     steps:
       - name: Validate issue and announce the attempt
+        id: announce
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -71,15 +62,28 @@ jobs:
           issue="$(gh api "repos/${REPOSITORY}/issues/${ISSUE_NUMBER}")"
           [[ "$(jq --raw-output .state <<< "$issue")" == open ]]
           [[ "$(jq --raw-output 'has("pull_request")' <<< "$issue")" == false ]]
-          gh issue comment "$ISSUE_NUMBER" \
-            --repo "$REPOSITORY" \
-            --body "Started an automated issue-resolution attempt with \`${{ inputs.model }}\`: https://github.com/${REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+          comment_url="$(
+            gh issue comment "$ISSUE_NUMBER" \
+              --repo "$REPOSITORY" \
+              --body "Started an automated issue-resolution attempt with \`${{ inputs.model }}\`: https://github.com/${REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+          )"
+          printf 'comment_url=%s\n' "$comment_url" >> "$GITHUB_OUTPUT"
+          issue_title="$(jq --raw-output '.title | @html' <<< "$issue")"
+          {
+            echo '# Issue solver'
+            echo
+            echo "- Issue ID: [#${ISSUE_NUMBER}](https://github.com/${REPOSITORY}/issues/${ISSUE_NUMBER})"
+            echo "- Started resolving: ${issue_title}"
+            echo "- Start comment: [Posted](${comment_url})"
+            echo '- Work summary: Generation started'
+            echo '- Draft PR: Not created yet'
+          } >> "$GITHUB_STEP_SUMMARY"
 
   generate:
     needs: announce
     runs-on: ubuntu-latest
     timeout-minutes: 45
-    environment: issue-solver
+    environment: docs
     permissions:
       contents: read
       id-token: write
@@ -183,6 +187,29 @@ jobs:
           if-no-files-found: error
           retention-days: 1
 
+      - name: Report generated work
+        if: always()
+        run: |
+          {
+            echo '## Work summary'
+            echo
+            if [[ -s "$RUNNER_TEMP/issue-report.md" ]]; then
+              echo '> The following report is untrusted agent output rendered as plain text.'
+              echo
+              echo '<details><summary>Generated implementation report</summary><pre>'
+              sed \
+                -e 's/&/\&amp;/g' \
+                -e 's/</\&lt;/g' \
+                -e 's/>/\&gt;/g' \
+                -e 's/@/\&commat;/g' \
+                -e 's/#/\&num;/g' \
+                "$RUNNER_TEMP/issue-report.md"
+              echo '</pre></details>'
+            else
+              echo 'No work summary was generated.'
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
   publish:
     needs: generate
     runs-on: ubuntu-latest
@@ -203,6 +230,7 @@ jobs:
           path: ${{ runner.temp }}/issue-proposal
 
       - name: Publish validated patch as a draft
+        id: publish
         uses: ./.github/actions/publish-agent-patch
         env:
           GH_TOKEN: ${{ github.token }}
@@ -213,3 +241,18 @@ jobs:
           patch: ${{ runner.temp }}/issue-proposal/issue.patch
           report: ${{ runner.temp }}/issue-proposal/issue-report.md
           checksums: ${{ runner.temp }}/issue-proposal/issue-checksums.txt
+
+      - name: Report draft pull request
+        if: always()
+        env:
+          PULL_REQUEST_URL: ${{ steps.publish.outputs.pull_request_url }}
+        run: |
+          {
+            echo '## Draft pull request'
+            echo
+            if [[ -n "$PULL_REQUEST_URL" ]]; then
+              echo "- Created: [${PULL_REQUEST_URL}](${PULL_REQUEST_URL})"
+            else
+              echo '- Not created.'
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
