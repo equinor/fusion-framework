@@ -108,14 +108,14 @@ jobs:
           gh copilot -- \
             --agent dependabot \
             --prompt "Review pull request #${PR_NUMBER} in audit-only mode. Use the fusion-dependency-review skill. Research its dependency changes and repository impact. Do not modify files, post comments, approve, close, or merge." \
-            --silent \
+            --enable-reasoning-summaries \
+            --share="$RUNNER_TEMP/dependabot-review.md" \
             --stream off \
             --allow-all-tools \
             --allow-all-urls \
             --no-ask-user \
             --no-auto-update \
-            --secret-env-vars=COPILOT_PROVIDER_BEARER_TOKEN \
-            > "$RUNNER_TEMP/dependabot-review.md"
+            --secret-env-vars=COPILOT_PROVIDER_BEARER_TOKEN
 
           cat "$RUNNER_TEMP/dependabot-review.md" >> "$GITHUB_STEP_SUMMARY"
 
