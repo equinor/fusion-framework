@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { Typography } from '@equinor/eds-core-react';
 import styled from 'styled-components';
 
 import { useClaimableRoles, useRoles } from '@equinor/fusion-framework-react-components-roles';
@@ -15,7 +16,7 @@ const Styled = {
     padding: 2rem;
     font-family: sans-serif;
   `,
-  Error: styled.p`
+  Error: styled(Typography)`
     color: #b30d2f;
   `,
 };
@@ -49,7 +50,11 @@ export const App = (): ReactNode => {
 
   // Both role domains must resolve before the cookbook renders either collection.
   if (active.isLoading || claimable.isLoading) {
-    return <Styled.Page>Loading active and claimable roles...</Styled.Page>;
+    return (
+      <Styled.Page>
+        <Typography>Loading active and claimable roles...</Typography>
+      </Styled.Page>
+    );
   }
 
   const loadError = active.error ?? claimable.error;
@@ -71,10 +76,12 @@ export const App = (): ReactNode => {
   return (
     <Styled.Page>
       <header>
-        <h1>Fusion Roles V2</h1>
-        <p>
+        <Typography group="heading" variant="h1">
+          Fusion Roles V2
+        </Typography>
+        <Typography>
           This app requires <code>ProView.Admin.DevOps</code> before initialization completes.
-        </p>
+        </Typography>
       </header>
 
       <ActiveRoles roles={active.roles} />

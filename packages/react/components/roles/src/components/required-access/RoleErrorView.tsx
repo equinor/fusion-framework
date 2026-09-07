@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { Button } from '@equinor/eds-core-react';
+import { Button, Typography } from '@equinor/eds-core-react';
 import styled from 'styled-components';
 import { CheckingRolesView } from './CheckingRolesView';
 import { RoleClaimableView } from './RoleClaimableView';
@@ -51,8 +51,10 @@ export const RoleErrorView = ({ error, onRetry }: RoleErrorViewProps): ReactNode
   if (recovery.statusError) {
     return (
       <Styled.Recovery>
-        <h2>Unable to check required roles</h2>
-        <p role="alert">{recovery.statusError}</p>
+        <Typography group="heading" variant="h2">
+          Unable to check required roles
+        </Typography>
+        <Typography role="alert">{recovery.statusError}</Typography>
         {recovery.canRetryStatuses && (
           <Button onClick={recovery.retryStatuses}>Retry role check</Button>
         )}
@@ -61,7 +63,9 @@ export const RoleErrorView = ({ error, onRetry }: RoleErrorViewProps): ReactNode
   }
   return (
     <div>
-      <h2>Access denied</h2>
+      <Typography group="heading" variant="h2">
+        Access denied
+      </Typography>
       <RoleDoesNotExistView statuses={recovery.statuses} />
       <RoleNotClaimableView statuses={recovery.statuses} />
       <RoleClaimableView

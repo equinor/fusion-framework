@@ -84,9 +84,9 @@ export const RoleClaimableView = ({
 
     return (
       <section key={status.name}>
-        <h3>
+        <Typography group="heading" variant="h3">
           You are currently missing activation of role <code>{status.name}</code>.
-        </h3>
+        </Typography>
         <Styled.ClaimOptions>{claimCards}</Styled.ClaimOptions>
       </section>
     );

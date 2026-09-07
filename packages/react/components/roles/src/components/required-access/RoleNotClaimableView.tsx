@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 
+import { List, Typography } from '@equinor/eds-core-react';
 import type { RequiredRoleStatus } from '@equinor/fusion-framework-module-roles';
 
 /** Resolved requirements that may lack an eligible claimable assignment. */
@@ -22,17 +23,21 @@ export const RoleNotClaimableView = ({ statuses }: RoleNotClaimableViewProps): R
   }
   // Descriptions help users identify which access they need to request from an administrator.
   const roleItems = unavailableRoles.map((status) => (
-    <li key={status.name}>
-      <strong>{status.name}</strong>
-      {status.description ? <p>{status.description}</p> : null}
-    </li>
+    <List.Item key={status.name}>
+      <Typography variant="body_short_bold">{status.name}</Typography>
+      {status.description ? <Typography>{status.description}</Typography> : null}
+    </List.Item>
   ));
 
   return (
     <section>
-      <h3>Role is not claimable</h3>
-      <p>The roles exist, but your account has no claimable assignment that grants them.</p>
-      <ul>{roleItems}</ul>
+      <Typography group="heading" variant="h3">
+        Role is not claimable
+      </Typography>
+      <Typography>
+        The roles exist, but your account has no claimable assignment that grants them.
+      </Typography>
+      <List>{roleItems}</List>
     </section>
   );
 };

@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { Typography } from '@equinor/eds-core-react';
 
 /**
  * Displays progress while required-role availability is resolved.
@@ -7,7 +8,9 @@ import type { ReactNode } from 'react';
  */
 export const CheckingRolesView = (): ReactNode => (
   <div>
-    <h2>Access denied</h2>
-    <p>Checking required role availability...</p>
+    <Typography group="heading" variant="h2">
+      Access denied
+    </Typography>
+    <Typography>Checking required role availability...</Typography>
   </div>
 );
