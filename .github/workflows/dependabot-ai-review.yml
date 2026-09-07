@@ -140,6 +140,8 @@ jobs:
           - State what the completed CI checks actually validate and identify meaningful runtime or integration coverage gaps.
           - Check changeset requirements, unresolved review threads, approval requirements, and mergeability.
           - Measure branch freshness against the current default-branch head with GitHub's compare API and report its behind_by value; do not infer freshness from a release comparison or merge-base range.
+          - Treat a branch being behind the default branch as a blocker only when it conflicts or repository rules require strict up-to-date checks. Otherwise present rebasing as optional, not in the required merge path.
+          - Apply the repository changeset policy exactly. Do not offer a waiver unless the policy explicitly permits one.
           - Give the shortest safe, ordered merge path. Include only real blockers as required actions; label optional hardening separately.
 
           Return concise GitHub-flavored Markdown without an H1 heading. Start with exactly one verdict heading: '## 🟢 Verdict: MERGE', '## 🟡 Verdict: HOLD', or '## 🔴 Verdict: DECLINE'. Then include a short rationale followed by '### Key findings', '### Repository impact', and '### Merge path'. Use evidence links for factual claims and task-list items for the ordered merge path. Do not modify files, post comments, approve, close, or merge.
