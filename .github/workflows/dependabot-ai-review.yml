@@ -17,8 +17,7 @@ concurrency:
 permissions:
   contents: read
   id-token: write
-  issues: write
-  pull-requests: read
+  pull-requests: write
 
 jobs:
   research:
@@ -122,15 +121,44 @@ jobs:
             --agent dependabot \
             --prompt "Review pull request #${PR_NUMBER} in audit-only mode. Use the fusion-dependency-review skill. Research its dependency changes and repository impact. Do not modify files, post comments, approve, close, or merge." \
             --enable-reasoning-summaries \
-            --share="$RUNNER_TEMP/dependabot-review.md" \
+            --output-format json \
             --stream off \
             --allow-all-tools \
             --allow-all-urls \
             --no-ask-user \
             --no-auto-update \
-            --secret-env-vars=COPILOT_PROVIDER_BEARER_TOKEN
+            --secret-env-vars=COPILOT_PROVIDER_BEARER_TOKEN \
+            | tee "$RUNNER_TEMP/dependabot-review.jsonl" \
+            | jq --unbuffered --raw-output '
+                select(type == "object") |
+                if .type == "assistant.message" and
+                  (.data.content | length) > 0 and
+                  (.data.toolRequests | length) > 0
+                then "💭 " + .data.content
+                elif .type == "tool.execution_start"
+                then "🔧 " + .data.toolName + (
+                  .data.arguments.description //
+                  .data.arguments.skill //
+                  "" |
+                  if length > 0 then " — " + . else "" end
+                )
+                else empty
+                end
+              '
 
-          cat "$RUNNER_TEMP/dependabot-review.md" >> "$GITHUB_STEP_SUMMARY"
+          jq --slurp --raw-output '
+            [
+              .[] |
+              select(
+                type == "object" and
+                .type == "assistant.message" and
+                (.data.toolRequests | length) == 0 and
+                (.data.content | length) > 0
+              ) |
+              .data.content
+            ] |
+            last
+          ' "$RUNNER_TEMP/dependabot-review.jsonl" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Mark research complete
         env:
