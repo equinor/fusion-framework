@@ -1,0 +1,36 @@
+name: Publish review feedback patch
+description: Validate an agent patch as data and update an AI-generated pull request
+
+inputs:
+  pull-request-number:
+    description: Open pull request to update
+    required: true
+  generation-head-sha:
+    description: Pull request head commit used for generation
+    required: true
+  head-ref:
+    description: Same-repository automation branch to update
+    required: true
+  patch:
+    description: Path to the generated binary Git patch
+    required: true
+  summary:
+    description: Path to the generated review feedback summary
+    required: true
+  checksums:
+    description: Path to SHA-256 checksums for the patch and summary
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Validate and publish review changes
+      shell: bash
+      env:
+        CHECKSUM_PATH: ${{ inputs.checksums }}
+        GENERATION_HEAD_SHA: ${{ inputs.generation-head-sha }}
+        HEAD_REF: ${{ inputs.head-ref }}
+        PATCH_PATH: ${{ inputs.patch }}
+        PR_NUMBER: ${{ inputs.pull-request-number }}
+        SUMMARY_PATH: ${{ inputs.summary }}
+      run: bash "$GITHUB_ACTION_PATH/publish.sh"
