@@ -22,7 +22,7 @@ on:
         type: number
 
 concurrency:
-  group: visual-checks-${{ inputs.pr_number || github.event.pull_request.number }}
+  group: visual-checks-${{ github.event_name }}-${{ inputs.pr_number || github.event.pull_request.number }}
   cancel-in-progress: true
 
 permissions:
