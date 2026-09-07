@@ -196,7 +196,8 @@ jobs:
                 )
                 else empty
                 end
-              '
+              ' \
+            | tee "$RUNNER_TEMP/issue-agent.log"
           pipeline_status=("${PIPESTATUS[@]}")
           set -e
           for status in "${pipeline_status[@]}"; do
@@ -254,6 +255,15 @@ jobs:
             sha256sum issue.patch issue-pull-request.md issue-execution-report.md \
               > issue-checksums.txt
           )
+
+      - name: Upload Copilot execution log
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: issue-copilot-log-${{ inputs.issue_number }}
+          path: ${{ runner.temp }}/issue-agent.log
+          if-no-files-found: warn
+          retention-days: 7
 
       - name: Upload proposal
         uses: actions/upload-artifact@v7
