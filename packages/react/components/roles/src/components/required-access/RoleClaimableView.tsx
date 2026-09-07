@@ -49,8 +49,17 @@ export const RoleClaimableView = ({
 
   // Keep each required access role associated with only the claimable roles that grant it.
   const roleSections = claimableRoles.map((status) => {
-    // Separate cards make every equivalent claim path explicit to the user.
-    const claimCards = status.claims.map((claim) => (
+    const uniqueClaimsByName = new Map<string, RequiredRoleClaim>();
+    // Multiple assignments can grant the same claimable role, but the recovery choice is the role.
+    for (const claim of status.claims) {
+      // Preserve the first eligible assignment returned for each claimable role.
+      if (!uniqueClaimsByName.has(claim.name)) {
+        uniqueClaimsByName.set(claim.name, claim);
+      }
+    }
+    const uniqueClaims = [...uniqueClaimsByName.values()];
+    // Separate cards keep genuinely different claimable roles explicit to the user.
+    const claimCards = uniqueClaims.map((claim) => (
       <Styled.ClaimCard key={claim.assignmentId}>
         <Card.Header>
           <Card.HeaderTitle>
