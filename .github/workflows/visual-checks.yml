@@ -10,9 +10,19 @@ on:
     paths-ignore:
       - '.changeset/**'
       - 'vue-press/**'
+  workflow_dispatch:
+    inputs:
+      head_sha:
+        description: Commit SHA to validate
+        required: true
+        type: string
+      pr_number:
+        description: Pull request number
+        required: true
+        type: number
 
 concurrency:
-  group: visual-checks-${{ github.event.pull_request.id }}
+  group: visual-checks-${{ inputs.pr_number || github.event.pull_request.number }}
   cancel-in-progress: true
 
 permissions:
@@ -38,7 +48,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
+          ref: ${{ inputs.head_sha || github.event.pull_request.head.sha }}
           fetch-depth: 0
 
       - name: Setup node and install deps

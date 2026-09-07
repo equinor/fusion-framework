@@ -12,19 +12,24 @@ on:
 
 concurrency:
   group: dependabot-ai-review-${{ inputs.pr_number || github.event.pull_request.number }}
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 permissions:
   contents: read
-  id-token: write
-  pull-requests: write
 
 jobs:
   research:
     outputs:
-      auto_merge: ${{ steps.review.outputs.auto_merge }}
+      auto_merge: ${{ (steps.review.outputs.auto_merge == 'true' || steps.freshness.outputs.auto_merge == 'true') && 'true' || 'false' }}
+      base_ref: ${{ steps.pull-request.outputs.base_ref }}
+      dependency: ${{ steps.pull-request.outputs.dependency }}
+      from_version: ${{ steps.pull-request.outputs.from_version }}
       head_sha: ${{ steps.pull-request.outputs.head_sha }}
+      head_ref: ${{ steps.pull-request.outputs.head_ref }}
+      merge_recommended: ${{ (steps.review.outputs.merge_recommended == 'true' || steps.freshness.outputs.merge_recommended == 'true') && 'true' || 'false' }}
       pr_number: ${{ steps.pull-request.outputs.number }}
+      review_needed: ${{ steps.freshness.outputs.review_needed }}
+      version: ${{ steps.pull-request.outputs.version }}
     if: >-
       github.event_name == 'workflow_dispatch' ||
       (
@@ -35,6 +40,11 @@ jobs:
         )
       )
     environment: docs
+    permissions:
+      contents: read
+      id-token: write
+      issues: read
+      pull-requests: read
     runs-on: fusion-gh-runner-fusion-framework
     steps:
       - uses: actions/checkout@v7
@@ -45,7 +55,71 @@ jobs:
         continue-on-error: true
         uses: ./.github/actions/setup-fusion-runner
 
+      - name: Verify Dependabot pull request
+        id: pull-request
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ inputs.pr_number || github.event.pull_request.number }}
+        run: |
+          set -euo pipefail
+
+          pr="$(gh pr view "$PR_NUMBER" --json author,baseRefName,headRefName,headRefOid,title)"
+          test "$(jq --raw-output '.author.login' <<< "$pr")" = app/dependabot
+          title="$(jq --raw-output '.title' <<< "$pr")"
+          if [[ ! "$title" =~ [Bb]ump[[:space:]](.+)[[:space:]]from[[:space:]]([^[:space:]]+)[[:space:]]to[[:space:]]([^[:space:]]+)$ ]]; then
+            echo "::error::Could not extract dependency and target version from: $title"
+            exit 1
+          fi
+
+          echo "number=$PR_NUMBER" >> "$GITHUB_OUTPUT"
+          echo "dependency=${BASH_REMATCH[1]}" >> "$GITHUB_OUTPUT"
+          echo "from_version=${BASH_REMATCH[2]}" >> "$GITHUB_OUTPUT"
+          echo "version=${BASH_REMATCH[3]}" >> "$GITHUB_OUTPUT"
+          echo "base_ref=$(jq --raw-output '.baseRefName' <<< "$pr")" >> "$GITHUB_OUTPUT"
+          echo "head_sha=$(jq --raw-output '.headRefOid' <<< "$pr")" >> "$GITHUB_OUTPUT"
+          echo "head_ref=$(jq --raw-output '.headRefName' <<< "$pr")" >> "$GITHUB_OUTPUT"
+
+      - name: Check research freshness
+        id: freshness
+        env:
+          DEPENDENCY: ${{ steps.pull-request.outputs.dependency }}
+          FROM_VERSION: ${{ steps.pull-request.outputs.from_version }}
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ steps.pull-request.outputs.number }}
+          REPOSITORY: ${{ github.repository }}
+          VERSION: ${{ steps.pull-request.outputs.version }}
+        run: |
+          set -euo pipefail
+
+          marker="<!-- fusion-ai-dependency:${DEPENDENCY}:${FROM_VERSION}:${VERSION} -->"
+          existing="$(
+            gh api --paginate "repos/${REPOSITORY}/issues/${PR_NUMBER}/comments" \
+              --jq ".[] | select(.user.login == \"github-actions[bot]\") | select(.body | contains(\"${marker}\")) | .body" \
+              | head -n 1
+          )"
+
+          if [[ -z "$existing" ]]; then
+            echo "auto_merge=false" >> "$GITHUB_OUTPUT"
+            echo "review_needed=true" >> "$GITHUB_OUTPUT"
+            echo "merge_recommended=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          echo "review_needed=false" >> "$GITHUB_OUTPUT"
+          if grep -Fqx '## 🟢 Verdict: MERGE' <<< "$existing"; then
+            echo "merge_recommended=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "merge_recommended=false" >> "$GITHUB_OUTPUT"
+          fi
+          if grep -Fqx '## 🟢 Verdict: MERGE' <<< "$existing" && \
+            grep -Fqx '**Confidence:** high' <<< "$existing"; then
+            echo "auto_merge=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "auto_merge=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Install Copilot CLI
+        if: steps.freshness.outputs.review_needed == 'true'
         run: |
           set -euo pipefail
 
@@ -57,34 +131,15 @@ jobs:
           tar --extract --gzip --file "$RUNNER_TEMP/copilot.tar.gz" --directory "$RUNNER_TEMP"
           echo "$RUNNER_TEMP" >> "$GITHUB_PATH"
 
-      - name: Verify Dependabot pull request
-        id: pull-request
-        env:
-          GH_TOKEN: ${{ github.token }}
-          PR_NUMBER: ${{ inputs.pr_number || github.event.pull_request.number }}
-        run: |
-          set -euo pipefail
-
-          pr="$(gh pr view "$PR_NUMBER" --json author,headRefOid,title)"
-          test "$(jq --raw-output '.author.login' <<< "$pr")" = app/dependabot
-          title="$(jq --raw-output '.title' <<< "$pr")"
-          if [[ ! "$title" =~ [Bb]ump[[:space:]](.+)[[:space:]]from[[:space:]][^[:space:]]+[[:space:]]to[[:space:]]([^[:space:]]+)$ ]]; then
-            echo "::error::Could not extract dependency and target version from: $title"
-            exit 1
-          fi
-
-          echo "number=$PR_NUMBER" >> "$GITHUB_OUTPUT"
-          echo "dependency=${BASH_REMATCH[1]}" >> "$GITHUB_OUTPUT"
-          echo "version=${BASH_REMATCH[2]}" >> "$GITHUB_OUTPUT"
-          echo "head_sha=$(jq --raw-output '.headRefOid' <<< "$pr")" >> "$GITHUB_OUTPUT"
-
       - name: Ensure Azure CLI is installed
+        if: steps.freshness.outputs.review_needed == 'true'
         run: |
           if ! command -v az >/dev/null 2>&1; then
             curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
           fi
 
       - name: Azure login
+        if: steps.freshness.outputs.review_needed == 'true'
         uses: azure/login@v3.0.2
         with:
           client-id: ${{ vars.FUSION_AI_SP_CLIENT_ID }}
@@ -92,6 +147,7 @@ jobs:
           allow-no-subscriptions: true
 
       - name: Configure Fusion AI provider
+        if: steps.freshness.outputs.review_needed == 'true'
         env:
           FUSION_ENV: fprd
         run: |
@@ -124,6 +180,7 @@ jobs:
 
       - name: Review dependency update
         id: review
+        if: steps.freshness.outputs.review_needed == 'true'
         env:
           COPILOT_PROVIDER_MODEL_ID: gpt-5.4
           COPILOT_PROVIDER_WIRE_MODEL: gpt-5.6-luna
@@ -150,6 +207,7 @@ jobs:
           - Apply the repository changeset policy exactly. Do not offer a waiver unless the policy explicitly permits one.
           - Give the shortest safe, ordered merge path. Include only real blockers as required actions; label optional hardening separately.
           - Base the verdict on dependency risk, not completion of mechanical repository gates. Use MERGE when the update is safe to accept and remaining work is limited to deterministic steps such as adding a required changeset or obtaining approval. Use HOLD for unresolved technical risk, missing evidence, failing validation, or a required code/config decision. Use DECLINE for known incompatibility, security risk, or unacceptable impact.
+          - For a MERGE verdict, state that this workflow will rebase the branch and add required dependency changesets automatically. Do not ask the maintainer to perform those mechanical steps; keep approval or genuine decisions in the merge path.
 
           Return concise GitHub-flavored Markdown without an H1 heading. Start with exactly one verdict heading: '## 🟢 Verdict: MERGE', '## 🟡 Verdict: HOLD', or '## 🔴 Verdict: DECLINE'. Follow it with exactly one confidence line using '**Confidence:** high', '**Confidence:** medium', or '**Confidence:** low', applying the repository's dependency-review confidence criteria. Then include a short rationale followed by '### Key findings', '### Repository impact', and '### Merge path'. Use evidence links for factual claims and task-list items for the ordered merge path. Do not modify files, post comments, approve, close, or merge.
           EOF
@@ -220,31 +278,61 @@ jobs:
           grep -Fq '### Merge path' "$RUNNER_TEMP/dependabot-review.md"
 
           auto_merge=false
+          merge_recommended=false
+          if grep -Fqx '## 🟢 Verdict: MERGE' "$RUNNER_TEMP/dependabot-review.md"; then
+            merge_recommended=true
+          fi
           if grep -Fqx '## 🟢 Verdict: MERGE' "$RUNNER_TEMP/dependabot-review.md" && \
             grep -Fqx "**Confidence:** high" "$RUNNER_TEMP/dependabot-review.md"; then
             auto_merge=true
           fi
           echo "auto_merge=$auto_merge" >> "$GITHUB_OUTPUT"
+          echo "merge_recommended=$merge_recommended" >> "$GITHUB_OUTPUT"
 
           cat "$RUNNER_TEMP/dependabot-review.md" >> "$GITHUB_STEP_SUMMARY"
 
+      - name: Save research verdict
+        if: steps.freshness.outputs.review_needed == 'true'
+        uses: actions/upload-artifact@v7
+        with:
+          name: dependency-research-${{ steps.pull-request.outputs.number }}
+          path: ${{ runner.temp }}/dependabot-review.md
+          retention-days: 1
+
+  publish:
+    name: Publish research
+    needs: research
+    if: needs.research.outputs.review_needed == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
+    steps:
+      - uses: actions/download-artifact@v7
+        with:
+          name: dependency-research-${{ needs.research.outputs.pr_number }}
+          path: ${{ runner.temp }}
+
       - name: Publish research verdict
         env:
+          DEPENDENCY: ${{ needs.research.outputs.dependency }}
+          FROM_VERSION: ${{ needs.research.outputs.from_version }}
           GH_TOKEN: ${{ github.token }}
-          DEPENDENCY: ${{ steps.pull-request.outputs.dependency }}
-          HEAD_SHA: ${{ steps.pull-request.outputs.head_sha }}
+          HEAD_SHA: ${{ needs.research.outputs.head_sha }}
           MODEL: gpt-5.6-luna
-          PR_NUMBER: ${{ steps.pull-request.outputs.number }}
+          PR_NUMBER: ${{ needs.research.outputs.pr_number }}
           REPOSITORY: ${{ github.repository }}
           RUN_ID: ${{ github.run_id }}
-          VERSION: ${{ steps.pull-request.outputs.version }}
+          VERSION: ${{ needs.research.outputs.version }}
         run: |
           set -euo pipefail
 
           marker='<!-- fusion-ai-dependency-research -->'
+          dependency_marker="<!-- fusion-ai-dependency:${DEPENDENCY}:${FROM_VERSION}:${VERSION} -->"
           comment="$RUNNER_TEMP/dependabot-review-comment.md"
           {
             echo "$marker"
+            echo "$dependency_marker"
             echo "# 🤖 Bip Bop - Automated Dependency review of \`${DEPENDENCY}@${VERSION}\`"
             echo
             echo "> [!NOTE]"
@@ -275,13 +363,194 @@ jobs:
       - name: Mark research complete
         env:
           GH_TOKEN: ${{ github.token }}
-          PR_NUMBER: ${{ steps.pull-request.outputs.number }}
+          PR_NUMBER: ${{ needs.research.outputs.pr_number }}
         run: gh pr edit "$PR_NUMBER" --add-label '🤖 AI researched'
+
+  remediate:
+    name: Maintain branch and add changesets
+    needs: [research, publish]
+    if: >-
+      always() &&
+      needs.research.result == 'success' &&
+      (needs.publish.result == 'success' || needs.publish.result == 'skipped')
+    outputs:
+      head_sha: ${{ steps.maintain.outputs.head_sha }}
+      ready: ${{ steps.maintain.outputs.ready }}
+      updated: ${{ steps.maintain.outputs.updated }}
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+      contents: write
+      issues: write
+      pull-requests: read
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          ref: ${{ needs.research.outputs.head_sha }}
+
+      - name: Maintain branch and add required changesets
+        id: maintain
+        env:
+          BASE_REF: ${{ needs.research.outputs.base_ref }}
+          DEPENDENCY: ${{ needs.research.outputs.dependency }}
+          EXPECTED_HEAD_SHA: ${{ needs.research.outputs.head_sha }}
+          FROM_VERSION: ${{ needs.research.outputs.from_version }}
+          GH_TOKEN: ${{ github.token }}
+          HEAD_REF: ${{ needs.research.outputs.head_ref }}
+          MERGE_RECOMMENDED: ${{ needs.research.outputs.merge_recommended }}
+          PR_NUMBER: ${{ needs.research.outputs.pr_number }}
+          REPOSITORY: ${{ github.repository }}
+          VERSION: ${{ needs.research.outputs.version }}
+        run: |
+          set -euo pipefail
+
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git fetch origin "$BASE_REF"
+
+          has_pr_changeset() {
+            local package="$1"
+            local changeset
+            while read -r changeset; do
+              if [[ -f "$changeset" ]] && grep -Fq "\"${package}\":" "$changeset"; then
+                return 0
+              fi
+            done < <(
+              git diff --name-only \
+                "$(git merge-base "origin/${BASE_REF}" HEAD)...HEAD" \
+                -- '.changeset/*.md'
+            )
+            return 1
+          }
+
+          mapfile -t manifests < <(
+            git diff --name-only "$(git merge-base "origin/${BASE_REF}" HEAD)...HEAD" |
+              grep -E '^(packages/.+|cookbooks/[^/]+)/package\.json$' || true
+          )
+          changeset_required=false
+          for manifest in "${manifests[@]}"; do
+            package="$(jq --raw-output '.name' "$manifest")"
+            if [[ "$manifest" == packages/* ]] &&
+              ! jq --exit-status '.publishConfig != null' "$manifest" >/dev/null; then
+              continue
+            fi
+            if ! has_pr_changeset "$package"; then
+              changeset_required=true
+              break
+            fi
+          done
+
+          mergeable="$(
+            gh pr view "$PR_NUMBER" --repo "$REPOSITORY" --json mergeable --jq '.mergeable'
+          )"
+          if [[ "$mergeable" = UNKNOWN ]]; then
+            echo "::error::GitHub has not determined whether the pull request is mergeable."
+            exit 1
+          fi
+          if [[ "$mergeable" = CONFLICTING ]]; then
+            marker="<!-- fusion-ai-dependabot-rebase:${EXPECTED_HEAD_SHA} -->"
+            requested="$(
+              gh api --paginate "repos/${REPOSITORY}/issues/${PR_NUMBER}/comments" \
+                --jq ".[] | select(.body | contains(\"${marker}\")) | .id" \
+                | head -n 1
+            )"
+            if [[ -z "$requested" ]]; then
+              gh pr comment "$PR_NUMBER" \
+                --repo "$REPOSITORY" \
+                --body "${marker}
+          @dependabot rebase"
+            fi
+            echo "head_sha=$EXPECTED_HEAD_SHA" >> "$GITHUB_OUTPUT"
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            echo "updated=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::Dependabot was asked to rebase the conflicting branch."
+            exit 0
+          fi
+          if [[ "$MERGE_RECOMMENDED" != true ]]; then
+            echo "head_sha=$EXPECTED_HEAD_SHA" >> "$GITHUB_OUTPUT"
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            echo "updated=false" >> "$GITHUB_OUTPUT"
+            echo "The research verdict does not recommend merging; no branch changes were made."
+            exit 0
+          fi
+          if [[ "$changeset_required" = true ]]; then
+            if ! git rebase "origin/$BASE_REF"; then
+              git rebase --abort
+              echo "::error::Could not update the branch before adding its required changesets."
+              exit 1
+            fi
+          fi
+
+          mapfile -t manifests < <(
+            git diff --name-only "$(git merge-base "origin/${BASE_REF}" HEAD)...HEAD" |
+              grep -E '^(packages/.+|cookbooks/[^/]+)/package\.json$' || true
+          )
+          for manifest in "${manifests[@]}"; do
+            package="$(jq --raw-output '.name' "$manifest")"
+            if [[ "$manifest" == packages/* ]] &&
+              ! jq --exit-status '.publishConfig != null' "$manifest" >/dev/null; then
+              continue
+            fi
+            if has_pr_changeset "$package"; then
+              continue
+            fi
+
+            slug="$(
+              tr '/@_' '---' <<< "$package" |
+                tr -c 'a-zA-Z0-9-' '-' |
+                cut -c1-18
+            )"
+            package_hash="$(printf '%s' "$package" | sha256sum | cut -c1-8)"
+            changeset=".changeset/dependency-${PR_NUMBER}-${slug}-${package_hash}.md"
+            {
+              echo '---'
+              echo "\"${package}\": patch"
+              echo '---'
+              echo
+              echo "Internal: bump \`${DEPENDENCY}\` from \`${FROM_VERSION}\` to \`${VERSION}\`."
+            } > "$changeset"
+            git add "$changeset"
+          done
+
+          if ! git diff --cached --quiet; then
+            git commit -m "chore(deps): add required changesets"
+          fi
+
+          new_head="$(git rev-parse HEAD)"
+          echo "head_sha=$new_head" >> "$GITHUB_OUTPUT"
+          echo "ready=true" >> "$GITHUB_OUTPUT"
+          if [[ "$new_head" = "$EXPECTED_HEAD_SHA" ]]; then
+            echo "updated=false" >> "$GITHUB_OUTPUT"
+            echo "The branch has no conflicts and all required changesets already exist."
+            exit 0
+          fi
+          echo "updated=true" >> "$GITHUB_OUTPUT"
+
+          git push \
+            --force-with-lease="refs/heads/${HEAD_REF}:${EXPECTED_HEAD_SHA}" \
+            origin "HEAD:${HEAD_REF}"
+
+          gh workflow run pr.yml \
+            --repo "$REPOSITORY" \
+            --ref "$HEAD_REF" \
+            -f head_sha="$new_head" \
+            -f pr_number="$PR_NUMBER"
+          gh workflow run visual-checks.yml \
+            --repo "$REPOSITORY" \
+            --ref "$HEAD_REF" \
+            -f head_sha="$new_head" \
+            -f pr_number="$PR_NUMBER"
+          gh workflow run agent-context.yml \
+            --repo "$REPOSITORY" \
+            --ref "$HEAD_REF" \
+            -f head_sha="$new_head" \
+            -f pr_number="$PR_NUMBER"
 
   auto-merge:
     name: Enable squash auto-merge
-    needs: research
-    if: needs.research.outputs.auto_merge == 'true'
+    needs: [research, remediate]
+    if: needs.research.outputs.auto_merge == 'true' && needs.remediate.outputs.ready == 'true'
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -289,10 +558,11 @@ jobs:
     steps:
       - name: Verify automatic merge eligibility
         env:
-          EXPECTED_HEAD_SHA: ${{ needs.research.outputs.head_sha }}
+          EXPECTED_HEAD_SHA: ${{ needs.remediate.outputs.head_sha }}
           GH_TOKEN: ${{ github.token }}
           PR_NUMBER: ${{ needs.research.outputs.pr_number }}
           REPOSITORY: ${{ github.repository }}
+          UPDATED: ${{ needs.remediate.outputs.updated }}
         run: |
           set -euo pipefail
 
@@ -305,21 +575,31 @@ jobs:
           test "$(jq --raw-output '.state' <<< "$pr")" = OPEN
           test "$(jq --raw-output '.headRefOid' <<< "$pr")" = "$EXPECTED_HEAD_SHA"
 
-          changed_files="$(
-            gh api --paginate "repos/${REPOSITORY}/pulls/${PR_NUMBER}/files" \
-              --jq '.[].filename'
-          )"
-          if grep -Eq '^(packages/|cookbooks/)' <<< "$changed_files"; then
-            echo "::notice::Automatic merge skipped because repository policy requires a changeset."
-            exit 0
-          fi
-
           for attempt in {1..60}; do
             checks="$(
               gh pr view "$PR_NUMBER" \
                 --repo "$REPOSITORY" \
                 --json statusCheckRollup
             )"
+            if [[ "$UPDATED" = true ]]; then
+              registered="$(
+                jq '
+                  [
+                    .statusCheckRollup[] |
+                    select(
+                      .name == "Check Code" or
+                      .name == "Visual checks" or
+                      .name == "Verify agent context is in sync"
+                    )
+                  ] |
+                  length
+                ' <<< "$checks"
+              )"
+              if [[ "$registered" -lt 3 ]]; then
+                sleep 10
+                continue
+              fi
+            fi
             failed="$(
               jq '
                 [

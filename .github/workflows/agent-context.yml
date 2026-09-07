@@ -16,6 +16,15 @@ on:
       - packages/**/package.json
       - cookbooks/*/package.json
   workflow_dispatch:
+    inputs:
+      head_sha:
+        description: Commit SHA to validate
+        required: false
+        type: string
+      pr_number:
+        description: Pull request number
+        required: false
+        type: number
 
 permissions:
   contents: read
@@ -26,6 +35,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.head_sha || github.event.pull_request.head.sha || github.sha }}
 
       - uses: actions/setup-node@v7
         with:

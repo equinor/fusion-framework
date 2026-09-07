@@ -10,9 +10,19 @@ on:
     paths-ignore:
       - '.changeset/**'
       - 'vue-press/**'
+  workflow_dispatch:
+    inputs:
+      head_sha:
+        description: Commit SHA to validate
+        required: true
+        type: string
+      pr_number:
+        description: Pull request number
+        required: true
+        type: number
 
 concurrency:
-  group: pr-${{ github.event.pull_request.id }}
+  group: pr-${{ inputs.pr_number || github.event.pull_request.number }}
   cancel-in-progress: true
 
 permissions:
@@ -22,7 +32,7 @@ permissions:
 
 env:
   REVIEWDOG_GITHUB_API_TOKEN: ${{ github.token }}
-  REVIEWDOG_REPORTER: ${{ (github.event.pull_request.draft && 'github-pr-check') || 'github-pr-review' }}
+  REVIEWDOG_REPORTER: ${{ (github.event_name == 'workflow_dispatch' || github.event.pull_request.draft) && 'github-pr-check' || 'github-pr-review' }}
 
 jobs:
   code-quality:
@@ -31,7 +41,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
+          ref: ${{ inputs.head_sha || github.event.pull_request.head.sha }}
           fetch-depth: 0
 
       - name: Setup node and install deps
@@ -67,7 +77,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
+          ref: ${{ inputs.head_sha || github.event.pull_request.head.sha }}
           fetch-depth: 0
 
       - name: Setup node and install deps
@@ -103,7 +113,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
+          ref: ${{ inputs.head_sha || github.event.pull_request.head.sha }}
           fetch-depth: 1
 
       - name: Setup node and install deps
