@@ -127,6 +127,8 @@ jobs:
           set -euo pipefail
 
           copilot --version
+          echo '::group::🤖 Fusion AI reasoning and tool activity'
+          set +e
           copilot \
             --agent dependabot \
             --prompt "Review pull request #${PR_NUMBER} in audit-only mode. Use the fusion-dependency-review skill. Research its dependency changes and repository impact. Return concise GitHub-flavored Markdown without an H1 heading. Start with exactly one verdict heading: '## 🟢 Verdict: MERGE', '## 🟡 Verdict: HOLD', or '## 🔴 Verdict: DECLINE'. Then include a short rationale, a '### Key findings' bullet list, and a '### Required actions' task list. Use links for evidence. Do not modify files, post comments, approve, close, or merge." \
@@ -149,12 +151,26 @@ jobs:
                 then "🔧 " + .data.toolName + (
                   .data.arguments.description //
                   .data.arguments.skill //
+                  .data.arguments.path //
+                  .data.arguments.url //
+                  .data.arguments.pattern //
+                  .data.arguments.query //
+                  .data.arguments.element //
                   "" |
                   if length > 0 then " — " + . else "" end
                 )
                 else empty
                 end
               '
+          pipeline_status=("${PIPESTATUS[@]}")
+          set -e
+          echo '::endgroup::'
+
+          for status in "${pipeline_status[@]}"; do
+            if [[ "$status" -ne 0 ]]; then
+              exit "$status"
+            fi
+          done
 
           jq --slurp --raw-output '
             [
