@@ -97,8 +97,9 @@ jobs:
         env:
           COPILOT_PROVIDER_MODEL_ID: gpt-5.4
           COPILOT_PROVIDER_WIRE_MODEL: gpt-5.6-luna
+          COPILOT_PROVIDER_AZURE_API_VERSION: 2025-01-01-preview
           COPILOT_PROVIDER_TYPE: azure
-          COPILOT_PROVIDER_WIRE_API: responses
+          COPILOT_PROVIDER_WIRE_API: completions
           GH_TOKEN: ${{ github.token }}
           PR_NUMBER: ${{ steps.pull-request.outputs.number }}
         run: |
