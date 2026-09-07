@@ -87,6 +87,7 @@ jobs:
       id-token: write
       pull-requests: read
     outputs:
+      has_threads: ${{ steps.review_context.outputs.has_threads }}
       proposal_artifact_id: ${{ steps.upload_proposal.outputs.artifact-id }}
     steps:
       - name: Check out trusted automation
@@ -104,8 +105,21 @@ jobs:
           persist-credentials: false
 
       - name: Capture unresolved review threads as untrusted data
+        id: review_context
         run: |
+          set -euo pipefail
           bash .trusted/.github/scripts/capture-review-context.sh
+          unresolved_count="$(
+            jq --raw-output '.unresolved_review_threads | length' \
+              "$RUNNER_TEMP/review-context.json"
+          )"
+          [[ "$unresolved_count" =~ ^[0-9]+$ ]]
+          if (( unresolved_count == 0 )); then
+            echo 'has_threads=false' >> "$GITHUB_OUTPUT"
+            echo 'No unresolved review threads were found.' >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo 'has_threads=true' >> "$GITHUB_OUTPUT"
+          fi
         env:
           EXPECTED_HEAD_REF: ${{ needs.authorize.outputs.head_ref }}
           EXPECTED_HEAD_SHA: ${{ needs.authorize.outputs.head_sha }}
@@ -114,6 +128,7 @@ jobs:
           PR_NUMBER: ${{ env.PR_NUMBER }}
 
       - name: Setup Copilot with Fusion AI
+        if: steps.review_context.outputs.has_threads == 'true'
         id: copilot
         uses: ./.trusted/.github/actions/setup-copilot-fusion-ai
         with:
@@ -121,6 +136,7 @@ jobs:
           wire-model: gpt-5.6-sol
 
       - name: Prepare isolated Copilot workspace
+        if: steps.review_context.outputs.has_threads == 'true'
         env:
           GENERATION_HEAD_SHA: ${{ needs.authorize.outputs.head_sha }}
         run: |
@@ -140,6 +156,7 @@ jobs:
           [[ "$(git -C "$metadata_checkout" rev-parse HEAD)" == "$GENERATION_HEAD_SHA" ]]
 
       - name: Generate local review changes
+        if: steps.review_context.outputs.has_threads == 'true'
         working-directory: source
         env:
           GENERATION_HEAD_SHA: ${{ needs.authorize.outputs.head_sha }}
@@ -349,6 +366,7 @@ jobs:
           done
 
       - name: Upload full Copilot execution JSONL
+        if: steps.review_context.outputs.has_threads == 'true'
         uses: actions/upload-artifact@v7
         env:
           PATH: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
@@ -359,6 +377,7 @@ jobs:
           retention-days: 7
 
       - name: Upload bounded review proposal
+        if: steps.review_context.outputs.has_threads == 'true'
         id: upload_proposal
         uses: actions/upload-artifact@v7
         env:
@@ -376,6 +395,7 @@ jobs:
     needs:
       - authorize
       - generate
+    if: needs.generate.outputs.has_threads == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 45
     permissions:
@@ -437,6 +457,11 @@ jobs:
           corepack enable pnpm
           corepack install --global pnpm@11.22.0
           pnpm install --frozen-lockfile --prefer-offline
+          pnpm turbo build \
+            --filter @equinor/fusion-framework-vitest-plugin-react-app... \
+            --filter @equinor/fusion-framework-react-app...
+          pnpm --filter @equinor/fusion-framework-vitest-plugin-react-app \
+            exec playwright install --with-deps chromium
           pnpm verify:agent-context
           pnpm check:errors
           pnpm test
@@ -447,6 +472,7 @@ jobs:
       - authorize
       - generate
       - validate
+    if: needs.generate.outputs.has_threads == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
@@ -478,3 +504,25 @@ jobs:
           patch: ${{ runner.temp }}/review-proposal/review.patch
           summary: ${{ runner.temp }}/review-proposal/review-summary.md
           checksums: ${{ runner.temp }}/review-proposal/review-checksums.txt
+
+  report-no-feedback:
+    needs:
+      - authorize
+      - generate
+    if: >-
+      needs.authorize.result == 'success' &&
+      needs.generate.result == 'success' &&
+      needs.generate.outputs.has_threads == 'false'
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    permissions:
+      issues: write
+      pull-requests: write
+    steps:
+      - name: Report that no unresolved feedback remains
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh pr comment "$PR_NUMBER" \
+           --repo "$REPOSITORY" \
+           --body 'No unresolved review threads were found, so no AI remediation was run.'
