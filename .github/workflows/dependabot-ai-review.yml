@@ -26,7 +26,7 @@ jobs:
       github.event_name == 'workflow_dispatch' ||
       (
         github.event.pull_request.user.login == 'dependabot[bot]' &&
-        !contains(github.event.pull_request.labels.*.name, '🔍 research')
+        !contains(github.event.pull_request.labels.*.name, '🤖 AI researched')
       )
     environment: docs
     runs-on: fusion-gh-runner-fusion-framework
@@ -121,4 +121,4 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           PR_NUMBER: ${{ steps.pull-request.outputs.number }}
-        run: gh pr edit "$PR_NUMBER" --add-label '🔍 research'
+        run: gh pr edit "$PR_NUMBER" --add-label '🤖 AI researched'
