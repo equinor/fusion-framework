@@ -70,7 +70,7 @@
   "devDependencies": {
     "@equinor/fusion-observable": "workspace:^",
     "typescript": "^7.0.2",
-    "vitest": "^4.1.10"
+    "vitest": "^5.0.0"
   },
   "peerDependencies": {
     "@equinor/fusion-observable": "workspace:*"
