@@ -430,7 +430,7 @@ jobs:
           persist-credentials: false
 
       - name: Download immutable review proposal
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           artifact-ids: ${{ needs.generate.outputs.proposal_artifact_id }}
           path: ${{ runner.temp }}/review-proposal
@@ -507,7 +507,7 @@ jobs:
           fetch-depth: 0
 
       - name: Download bounded review proposal
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           artifact-ids: ${{ needs.generate.outputs.proposal_artifact_id }}
           path: ${{ runner.temp }}/review-proposal
