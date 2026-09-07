@@ -21,6 +21,10 @@ permissions:
 
 jobs:
   research:
+    outputs:
+      auto_merge: ${{ steps.review.outputs.auto_merge }}
+      head_sha: ${{ steps.pull-request.outputs.head_sha }}
+      pr_number: ${{ steps.pull-request.outputs.number }}
     if: >-
       github.event_name == 'workflow_dispatch' ||
       (
@@ -119,6 +123,7 @@ jobs:
           echo "COPILOT_PROVIDER_BEARER_TOKEN=$token" >> "$GITHUB_ENV"
 
       - name: Review dependency update
+        id: review
         env:
           COPILOT_PROVIDER_MODEL_ID: gpt-5.4
           COPILOT_PROVIDER_WIRE_MODEL: gpt-5.6-luna
@@ -132,10 +137,7 @@ jobs:
 
           copilot --version
           echo '::group::🤖 Fusion AI reasoning and tool activity'
-          review_prompt="$(
-            cat <<EOF
-          Review pull request #${PR_NUMBER} in audit-only mode using the fusion-dependency-review skill.
-
+          read -r -d '' review_prompt <<'EOF' || true
           Produce decision-ready research for the maintainer:
           - Distinguish required status checks and repository rules from optional failed checks. An optional automation failure is not a merge blocker.
           - Read a failed check's logs before stating why it failed; do not infer the failure reason from its workflow name or conditions.
@@ -147,14 +149,14 @@ jobs:
           - Treat a branch being behind the default branch as a blocker only when it conflicts or repository rules require strict up-to-date checks. Otherwise present rebasing as optional, not in the required merge path.
           - Apply the repository changeset policy exactly. Do not offer a waiver unless the policy explicitly permits one.
           - Give the shortest safe, ordered merge path. Include only real blockers as required actions; label optional hardening separately.
+          - Base the verdict on dependency risk, not completion of mechanical repository gates. Use MERGE when the update is safe to accept and remaining work is limited to deterministic steps such as adding a required changeset or obtaining approval. Use HOLD for unresolved technical risk, missing evidence, failing validation, or a required code/config decision. Use DECLINE for known incompatibility, security risk, or unacceptable impact.
 
-          Return concise GitHub-flavored Markdown without an H1 heading. Start with exactly one verdict heading: '## 🟢 Verdict: MERGE', '## 🟡 Verdict: HOLD', or '## 🔴 Verdict: DECLINE'. Then include a short rationale followed by '### Key findings', '### Repository impact', and '### Merge path'. Use evidence links for factual claims and task-list items for the ordered merge path. Do not modify files, post comments, approve, close, or merge.
+          Return concise GitHub-flavored Markdown without an H1 heading. Start with exactly one verdict heading: '## 🟢 Verdict: MERGE', '## 🟡 Verdict: HOLD', or '## 🔴 Verdict: DECLINE'. Follow it with exactly one confidence line using '**Confidence:** high', '**Confidence:** medium', or '**Confidence:** low', applying the repository's dependency-review confidence criteria. Then include a short rationale followed by '### Key findings', '### Repository impact', and '### Merge path'. Use evidence links for factual claims and task-list items for the ordered merge path. Do not modify files, post comments, approve, close, or merge.
           EOF
-          )"
           set +e
           copilot \
             --agent dependabot \
-            --prompt "$review_prompt" \
+            --prompt "Review pull request #${PR_NUMBER} in audit-only mode using the fusion-dependency-review skill. ${review_prompt}" \
             --enable-reasoning-summaries \
             --output-format json \
             --stream off \
@@ -211,9 +213,18 @@ jobs:
 
           grep -Eq '^## (🟢 Verdict: MERGE|🟡 Verdict: HOLD|🔴 Verdict: DECLINE)$' \
             "$RUNNER_TEMP/dependabot-review.md"
+          grep -Eq '^\*\*Confidence:\*\* (high|medium|low)$' \
+            "$RUNNER_TEMP/dependabot-review.md"
           grep -Fq '### Key findings' "$RUNNER_TEMP/dependabot-review.md"
           grep -Fq '### Repository impact' "$RUNNER_TEMP/dependabot-review.md"
           grep -Fq '### Merge path' "$RUNNER_TEMP/dependabot-review.md"
+
+          auto_merge=false
+          if grep -Fqx '## 🟢 Verdict: MERGE' "$RUNNER_TEMP/dependabot-review.md" && \
+            grep -Fqx "**Confidence:** high" "$RUNNER_TEMP/dependabot-review.md"; then
+            auto_merge=true
+          fi
+          echo "auto_merge=$auto_merge" >> "$GITHUB_OUTPUT"
 
           cat "$RUNNER_TEMP/dependabot-review.md" >> "$GITHUB_STEP_SUMMARY"
 
@@ -266,3 +277,95 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           PR_NUMBER: ${{ steps.pull-request.outputs.number }}
         run: gh pr edit "$PR_NUMBER" --add-label '🤖 AI researched'
+
+  auto-merge:
+    name: Enable squash auto-merge
+    needs: research
+    if: needs.research.outputs.auto_merge == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Verify automatic merge eligibility
+        env:
+          EXPECTED_HEAD_SHA: ${{ needs.research.outputs.head_sha }}
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ needs.research.outputs.pr_number }}
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+
+          pr="$(
+            gh pr view "$PR_NUMBER" \
+              --repo "$REPOSITORY" \
+              --json author,headRefOid,state
+          )"
+          test "$(jq --raw-output '.author.login' <<< "$pr")" = app/dependabot
+          test "$(jq --raw-output '.state' <<< "$pr")" = OPEN
+          test "$(jq --raw-output '.headRefOid' <<< "$pr")" = "$EXPECTED_HEAD_SHA"
+
+          changed_files="$(
+            gh api --paginate "repos/${REPOSITORY}/pulls/${PR_NUMBER}/files" \
+              --jq '.[].filename'
+          )"
+          if grep -Eq '^(packages/|cookbooks/)' <<< "$changed_files"; then
+            echo "::notice::Automatic merge skipped because repository policy requires a changeset."
+            exit 0
+          fi
+
+          for attempt in {1..60}; do
+            checks="$(
+              gh pr view "$PR_NUMBER" \
+                --repo "$REPOSITORY" \
+                --json statusCheckRollup
+            )"
+            failed="$(
+              jq '
+                [
+                  .statusCheckRollup[] |
+                  select(.workflowName != "Dependabot AI review") |
+                  select(
+                    (.conclusion != null and
+                      (.conclusion | IN("SUCCESS", "NEUTRAL", "SKIPPED") | not)) or
+                    (.state != null and
+                      (.state | IN("SUCCESS", "EXPECTED", "PENDING") | not))
+                  )
+                ] |
+                length
+              ' <<< "$checks"
+            )"
+            test "$failed" = 0
+
+            pending="$(
+              jq '
+                [
+                  .statusCheckRollup[] |
+                  select(.workflowName != "Dependabot AI review") |
+                  select(
+                    (.status != null and .status != "COMPLETED") or
+                    (.state != null and (.state == "EXPECTED" or .state == "PENDING"))
+                  )
+                ] |
+                length
+              ' <<< "$checks"
+            )"
+            if [[ "$pending" = 0 ]]; then
+              break
+            fi
+            if [[ "$attempt" = 60 ]]; then
+              echo "::error::Timed out waiting for pull request checks."
+              exit 1
+            fi
+            sleep 30
+          done
+
+          gh pr checks "$PR_NUMBER" --repo "$REPOSITORY" --required
+
+          current_head="$(
+            gh pr view "$PR_NUMBER" --repo "$REPOSITORY" --json headRefOid --jq '.headRefOid'
+          )"
+          test "$current_head" = "$EXPECTED_HEAD_SHA"
+
+          pr_url="https://github.com/${REPOSITORY}/pull/${PR_NUMBER}"
+          gh pr merge --auto --squash "$pr_url" --match-head-commit "$EXPECTED_HEAD_SHA"
