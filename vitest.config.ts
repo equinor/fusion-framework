@@ -5,7 +5,6 @@ export default defineConfig({
       'packages/**/vitest.config.ts',
       'cookbooks/**/vitest.config.ts',
       'vue-press/vitest.config.ts',
-      '.github/scripts/vitest.config.mjs',
     ],
     reporters: process.env.GITHUB_ACTIONS
       ? ['default', 'github-actions']

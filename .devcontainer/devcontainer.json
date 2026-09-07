@@ -14,6 +14,6 @@
       "version": "1.0.80"
     }
   },
-  "updateContentCommand": "pnpm install --frozen-lockfile && pnpm build:packages",
+  "updateContentCommand": "pnpm install --frozen-lockfile --prefer-offline && pnpm build:packages",
   "waitFor": "updateContentCommand"
 }

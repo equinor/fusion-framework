@@ -202,8 +202,7 @@ Use this table instead of searching. "Start here" is the first file to open.
 | Change build/dev CLI behavior | `packages/cli/src`, `packages/vite-plugins/spa/src` |
 | Add a lint rule | `packages/linting/rules/src`, register in `packages/linting/config/src` |
 | Add an example for a feature | `cookbooks/app-react-*` |
-| Run the manual Codespaces issue-agent POC | `.github/workflows/codespaces-issue-agent.yml` |
-| Clean up an issue Codespace after merge | `.github/workflows/codespaces-issue-agent-cleanup.yml` |
+| Configure the human Copilot Codespace and prebuild warm-up | `.devcontainer/devcontainer.json`, `.devcontainer/mcp.json` |
 | Change observable/state primitives | `packages/utils/observable/src` |
 | Change caching/fetching | `packages/utils/query/src` |
 
