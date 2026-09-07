@@ -9,8 +9,8 @@ targets:
   - copilot
 dependencies:
   apm:
-    - equinor/fusion-skills/apm/fusion-developer#v1.6.1
-    - equinor/fusion-skills/skills/fusion-skill-authoring#v1.6.1
+    - equinor/fusion-skills/apm/fusion-developer#v1.6.3
+    - equinor/fusion-skills/skills/fusion-skill-authoring#v1.6.3
   mcp: []
 includes: auto
 scripts: {}

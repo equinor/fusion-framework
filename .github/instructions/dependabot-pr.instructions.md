@@ -12,7 +12,7 @@ name: Dependabot PR Rules
 - If the PR needs patching, follow `.github/instructions/workflow-contribution.instructions.md`.
 - Treat missing changesets, missing validation, or weak PR-template usage as explicit findings.
 - Changesets are mandatory for dependency changes that affect published packages (see changeset decision below).
-- Validate with `pnpm test && pnpm build && pnpm -w check` before any merge recommendation.
+- Validate with `pnpm test && pnpm build && pnpm -w check` before declaring the PR ready to merge.
 
 ## Skills
 
@@ -73,7 +73,7 @@ Internal: bump `<dependency>` from `<old-version>` to `<new-version>`.
 
 ## Validation commands
 
-Run the full validation suite before recommending merge:
+Run the full validation suite before declaring the PR ready to merge:
 
 ```bash
 pnpm test && pnpm build && pnpm -w check
@@ -93,42 +93,18 @@ pnpm test && pnpm build && pnpm -w check
 - Use **squash merge** for dependency PRs.
 - Keep the commit message concise: `chore(deps): bump <package> from <old> to <new>`.
 
-## Merge confidence criteria
+## Review decision contract
 
-### High confidence — safe to recommend merge
+Follow the installed `fusion-dependency-review` skill for recommendation, confidence, and
+readiness semantics. Repository-specific readiness requires:
 
-All of the following must be true:
+- `pnpm test && pnpm build && pnpm -w check` passes
+- required approving reviews are present
+- required changesets exist
+- the branch is mergeable
 
-- Patch or minor version bump (no major)
-- No breaking changes identified in upstream changelog
-- No security advisories on the target version
-- All validation passes (`pnpm test && pnpm build && pnpm -w check`)
-- No unresolved reviewer comments on the PR
-- Change scope is lockfile-only or minimal manifest change
-- Upstream release is at least 48 hours old
-- Dependency is not a critical runtime dependency with broad consumer surface
-
-### Medium confidence — review recommended
-
-One or more of the following:
-
-- Minor version bump with new features (but no breaking changes)
-- Validation passes with non-blocking warnings
-- Upstream release is very recent (< 48 hours)
-- Dependency has broad consumer surface but change is backward-compatible
-- Changeset was required and created, but the consumer impact scope is unclear
-
-### Low confidence — hold and flag
-
-One or more of the following:
-
-- Major version bump
-- Breaking changes identified upstream
-- Validation failures (build, test, or lint)
-- Security advisory exists on either the current or target version
-- Unresolved reviewer comments or maintainer concerns
-- Rebase conflicts that could not be resolved automatically
-- Dependency is deprecated or has known stability issues
+Pending checks or approval affect readiness only. Relevant validation failures set readiness to
+`needs changes`; optional automation failures are not merge blockers.
 
 ## Safety
 
