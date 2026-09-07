@@ -152,7 +152,8 @@ jobs:
           reviewers understand the change. Do not add a diagram for simple or self-explanatory changes.
           In Additional context, report only final outcomes of relevant validation commands. Omit
           superseded diagnostics, agent activity, tool limitations, and unavailable remote operations
-          unless they leave a real unresolved risk. Use ref: #${ISSUE_NUMBER} under Related issues.
+          unless they leave a real unresolved risk. Under Related issues, use exactly this line:
+          Resolves #${ISSUE_NUMBER}
           The execution report must be brief, start with ## Work summary followed by one paragraph
           of at most 400 characters, include ## Validation, stay under 1,200 characters total, and
           summarize only completed work, validation outcomes, and real follow-up risks.
