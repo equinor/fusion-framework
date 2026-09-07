@@ -6,6 +6,9 @@ inputs:
   cache-node-modules:
     description: Restore the OS-specific node_modules cache
     default: 'false'
+  cache-turbo:
+    description: Restore the latest local Turbo cache
+    default: 'true'
 outputs:
   node-modules-cache-hit:
     description: Whether the exact node_modules cache key was restored
@@ -55,6 +58,19 @@ runs:
         key: pnpm-store-fusion-v1-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
         restore-keys: |
           pnpm-store-fusion-v1-${{ runner.os }}-
+
+    # Only the main-branch prime job saves this cache. Consumers restore it
+    # read-only to avoid immutable-key races and unbounded PR-scoped caches.
+    - name: Restore Turbo cache
+      if: inputs.cache-turbo == 'true'
+      id: turbo-cache-restore
+      uses: actions/cache/restore@v6
+      with:
+        path: .turbo/cache
+        key: turbo-fusion-v1-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}-${{ github.sha }}
+        restore-keys: |
+          turbo-fusion-v1-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}-
+          turbo-fusion-v1-${{ runner.os }}-
 
     - name: Install dependencies
       shell: bash

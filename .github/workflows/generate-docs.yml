@@ -13,9 +13,13 @@ concurrency:
   group: 'generate-documentation'
   cancel-in-progress: true
 
+env:
+  TURBO_CACHE: local:rw
+
 jobs:
   build:
-    runs-on: fusion-gh-runner-fusion-framework
+    # runs-on: fusion-gh-runner-fusion-framework.borked
+    runs-on: ubuntu-latest
     outputs:
       preview-path: ${{ steps.preview-path.outputs.value }}
       is-preview: ${{ steps.mode.outputs.value }}
@@ -23,10 +27,6 @@ jobs:
       - uses: actions/checkout@v7
         with:
           fetch-depth: 0
-
-      - name: Setup fusion runner
-        continue-on-error: true
-        uses: ./.github/actions/setup-fusion-runner
 
       # single source of truth for preview-vs-production, reused by every step below and by deploy
       - name: Determine preview mode

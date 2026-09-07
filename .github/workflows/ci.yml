@@ -7,6 +7,9 @@ on:
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
+env:
+  TURBO_CACHE: local:rw
+
 # Security: Apply principle of least privilege
 # This workflow handles package publishing and documentation generation
 # - release-pkg: Needs write access to create releases and publish packages
@@ -19,7 +22,8 @@ permissions:
 jobs:
   release-pkg:
     name: Version or publish packages
-    runs-on: fusion-gh-runner-fusion-framework
+    # runs-on: fusion-gh-runner-fusion-framework.borked
+    runs-on: ubuntu-latest
     # Job-specific permissions for package publishing
     permissions:
       contents: write      # Required for creating releases and pushing changes
@@ -39,12 +43,6 @@ jobs:
       # Configure git user for commits made by the workflow
       - name: Configure git user (trigger actor) 
         uses: ./.github/actions/config-git-user
-
-      # fusion-gh-runner-fusion-framework's image doesn't ship gh (tracked with
-      # infra); install it until the runner image is patched.
-      - name: Setup fusion runner
-        continue-on-error: true
-        uses: ./.github/actions/setup-fusion-runner
 
       # Install dependencies and setup Node.js environment
       - name: Setup node and install deps
@@ -98,7 +96,8 @@ jobs:
   check-vscode-release:
     name: Check for VS Code extension release tag
     needs: release-pkg
-    runs-on: fusion-gh-runner-fusion-framework
+    # runs-on: fusion-gh-runner-fusion-framework.borked
+    runs-on: ubuntu-latest
     permissions:
       contents: read
     outputs:
@@ -107,10 +106,6 @@ jobs:
       - uses: actions/checkout@v7
         with:
           fetch-depth: 0
-
-      - name: Setup fusion runner
-        continue-on-error: true
-        uses: ./.github/actions/setup-fusion-runner
 
       - name: Check for a new release tag at this commit
         id: check
@@ -129,7 +124,8 @@ jobs:
     name: Publish VS Code extension to Marketplace
     needs: check-vscode-release
     if: needs.check-vscode-release.outputs.should-publish == 'true'
-    runs-on: fusion-gh-runner-fusion-framework
+    # runs-on: fusion-gh-runner-fusion-framework.borked
+    runs-on: ubuntu-latest
     environment: vs-marketplace
     permissions:
       contents: read
@@ -138,10 +134,6 @@ jobs:
       - uses: actions/checkout@v7
         with:
           fetch-depth: 0
-
-      # Install tooling that is not included in the self-hosted runner image.
-      - name: Setup fusion runner
-        uses: ./.github/actions/setup-fusion-runner
 
       - name: Setup node and install deps
         uses: ./.github/actions/node-setup

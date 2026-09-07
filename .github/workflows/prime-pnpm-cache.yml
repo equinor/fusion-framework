@@ -39,6 +39,7 @@ jobs:
         uses: ./.github/actions/node-setup
         with:
           cache-node-modules: 'true'
+          cache-turbo: 'false'
 
       - name: Save node_modules
         if: steps.node-setup.outputs.node-modules-cache-hit != 'true'
@@ -97,14 +98,11 @@ jobs:
           done
 
   prime-cache:
-    name: Save pnpm store cache
-    runs-on: fusion-gh-runner-fusion-framework
+    name: Save pnpm and Turbo caches
+    # runs-on: fusion-gh-runner-fusion-framework.borked
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-
-      - name: Setup fusion runner
-        continue-on-error: true
-        uses: ./.github/actions/setup-fusion-runner
 
       - name: Setup Node.js
         uses: actions/setup-node@v7
@@ -121,6 +119,16 @@ jobs:
         id: pnpm-store
         run: echo "path=$(pnpm store path --silent)" >> "$GITHUB_OUTPUT"
 
+      - name: Restore previous Turbo cache
+        id: turbo-cache-restore
+        uses: actions/cache/restore@v6
+        with:
+          path: .turbo/cache
+          key: turbo-fusion-v1-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}-${{ github.sha }}
+          restore-keys: |
+            turbo-fusion-v1-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}-
+            turbo-fusion-v1-${{ runner.os }}-
+
       - name: Check for an existing exact-match cache
         id: pnpm-store-restore
         uses: actions/cache/restore@v6
@@ -130,6 +138,20 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile --prefer-offline
+
+      # Rebuild only when this commit has not already produced a complete cache.
+      # A restored earlier cache makes unchanged tasks cheap while Turbo adds the
+      # outputs introduced by this commit.
+      - name: Prime Turbo build cache
+        if: steps.turbo-cache-restore.outputs.cache-hit != 'true'
+        run: pnpm build
+
+      - name: Save Turbo build cache
+        if: steps.turbo-cache-restore.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v6
+        with:
+          path: .turbo/cache
+          key: turbo-fusion-v1-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}-${{ github.sha }}
 
       # Cache keys are immutable, so every lockfile change saves a brand-new
       # store on top of the previous one and old package versions never get
@@ -164,5 +186,23 @@ jobs:
             --jq "sort_by(.createdAt) | reverse | .[2:] | .[] | select(.key != \"$currentKey\") | .id")
           for id in $cacheIds; do
             echo "Deleting stale pnpm store cache $id"
+            gh cache delete "$id" --repo "${{ github.repository }}" || true
+          done
+
+      # Commit-scoped keys preserve incremental builds while bounded retention
+      # prevents Turbo artifacts from consuming the repository cache quota.
+      - name: Delete stale Turbo caches
+        if: steps.turbo-cache-restore.outputs.cache-hit != 'true'
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          currentKey="turbo-fusion-v1-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}-${{ github.sha }}"
+          cacheIds=$(gh cache list --repo "${{ github.repository }}" --ref refs/heads/main \
+            --key "turbo-fusion-v1-${{ runner.os }}-" --limit 100 \
+            --json id,key,createdAt \
+            --jq "sort_by(.createdAt) | reverse | .[2:] | .[] | select(.key != \"$currentKey\") | .id")
+          for id in $cacheIds; do
+            echo "Deleting stale Turbo cache $id"
             gh cache delete "$id" --repo "${{ github.repository }}" || true
           done

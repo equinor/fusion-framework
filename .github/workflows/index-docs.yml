@@ -31,11 +31,15 @@ concurrency:
 permissions:
   contents: read
 
+env:
+  TURBO_CACHE: local:rw
+
 jobs:
   index-docs:
     name: Index documentation
     environment: ${{ inputs.environment }}
-    runs-on: fusion-gh-runner-fusion-framework
+    # runs-on: fusion-gh-runner-fusion-framework.borked
+    runs-on: ubuntu-latest
     permissions:
       contents: write
       id-token: write
@@ -43,11 +47,6 @@ jobs:
       - uses: actions/checkout@v7
         with:
           fetch-depth: 0
-
-      # fusion-gh-runner-fusion-framework's image doesn't ship gh; tracked with infra.
-      - name: Setup fusion runner
-        continue-on-error: true
-        uses: ./.github/actions/setup-fusion-runner
 
       - name: Setup node and install deps
         uses: ./.github/actions/node-setup
@@ -104,8 +103,6 @@ jobs:
             echo "reason=Incremental indexing from $last_indexed" >> "$GITHUB_OUTPUT"
           fi
 
-      # fusion-gh-runner-fusion-framework's image doesn't ship the az CLI,
-      # which azure/login@v3 shells out to (tracked with infra).
       - name: Ensure az CLI is installed
         run: |
           if ! command -v az >/dev/null 2>&1; then

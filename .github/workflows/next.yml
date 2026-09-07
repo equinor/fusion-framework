@@ -6,6 +6,10 @@ on:
       - next
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
+
+env:
+  TURBO_CACHE: local:rw
+
 permissions:
   contents: write      # Required for creating changesets branch and pushing changes
   packages: write      # Required for publishing to npm registry
@@ -43,7 +47,8 @@ jobs:
     name: Version or publish pre-release of packages
     needs: check-pre-release
     if: needs.check-pre-release.outputs.should-run == 'true'
-    runs-on: fusion-gh-runner-fusion-framework
+    # runs-on: fusion-gh-runner-fusion-framework.borked
+    runs-on: ubuntu-latest
     outputs:
       published: ${{ steps.changesets.outputs.published }}
       has-changesets: ${{ steps.changesets.outputs.has-changesets }}
@@ -51,12 +56,6 @@ jobs:
       - uses: actions/checkout@v7
         with:
           fetch-depth: 0
-
-      # fusion-gh-runner-fusion-framework's image doesn't ship gh (tracked with
-      # infra); install it until the runner image is patched.
-      - name: Setup fusion runner
-        continue-on-error: true
-        uses: ./.github/actions/setup-fusion-runner
 
       - name: Configure git user (trigger actor)
         uses: ./.github/actions/config-git-user
@@ -105,5 +104,4 @@ jobs:
     if: needs.release-pkg.outputs.published == 'true'
     uses: ./.github/workflows/generate-docs.yml
     secrets: inherit
-
 
