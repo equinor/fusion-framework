@@ -37,11 +37,11 @@ grep -Fq '**Does this PR introduce a breaking change?**' "$PULL_REQUEST_PATH"
 grep -Fq '**Review guidance:**' "$PULL_REQUEST_PATH"
 grep -Fq '### Checklist' "$PULL_REQUEST_PATH"
 closing_references="$(
-  grep -Ei '^(close[sd]?|fix(e[sd])?|resolve[sd]?):?[[:space:]]+#[0-9]+$' \
+  grep -Ei '^(close[sd]?|fix(e[sd])?|resolve[sd]?|refs?):?[[:space:]]+#[0-9]+$' \
     "$PULL_REQUEST_PATH" ||
     true
 )"
-[[ "$closing_references" == "Resolves #${ISSUE_NUMBER}" ]]
+[[ "$closing_references" =~ ^(Resolves|Fixes|Refs)\ \#${ISSUE_NUMBER}$ ]]
 grep -Fq '## Work summary' "$EXECUTION_REPORT_PATH"
 grep -Fq '## Validation' "$EXECUTION_REPORT_PATH"
 if grep -Fq '<!--' "$PULL_REQUEST_PATH" || grep -Fq '<!--' "$EXECUTION_REPORT_PATH"; then
