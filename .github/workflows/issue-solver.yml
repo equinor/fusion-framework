@@ -65,7 +65,12 @@ jobs:
           comment_url="$(
             gh issue comment "$ISSUE_NUMBER" \
               --repo "$REPOSITORY" \
-              --body "Started an automated issue-resolution attempt with \`${{ inputs.model }}\`: https://github.com/${REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+              --body "$(cat <<EOF
+          ## 🤖 Bip bop — issue solver activated
+
+          I’ve started working on this issue with \`${{ inputs.model }}\`. [Follow the automated build 🏗️](https://github.com/${REPOSITORY}/actions/runs/${GITHUB_RUN_ID}).
+          EOF
+              )"
           )"
           printf 'comment_url=%s\n' "$comment_url" >> "$GITHUB_OUTPUT"
           issue_title="$(jq --raw-output '.title | @html' <<< "$issue")"
@@ -144,6 +149,7 @@ jobs:
           EOF
           )"
 
+          set +e
           gh copilot -- \
             --prompt "$prompt" \
             --model gpt-5.4 \
@@ -154,10 +160,49 @@ jobs:
             --no-auto-update \
             --no-remote \
             --no-remote-export \
-            --output-format text \
+            --output-format json \
             --stream off \
             --secret-env-vars=COPILOT_PROVIDER_BEARER_TOKEN,ACTIONS_ID_TOKEN_REQUEST_TOKEN,ACTIONS_ID_TOKEN_REQUEST_URL \
-            > "$RUNNER_TEMP/issue-report.md"
+            | tee "$RUNNER_TEMP/issue-agent.jsonl" \
+            | jq --unbuffered --raw-output '
+                select(type == "object") |
+                if .type == "assistant.message" and
+                  (.data.content | length) > 0 and
+                  (.data.toolRequests | length) > 0
+                then "💭 " + .data.content
+                elif .type == "tool.execution_start"
+                then "🔧 " + .data.toolName + (
+                  .data.arguments.description //
+                  .data.arguments.skill //
+                  .data.arguments.path //
+                  .data.arguments.pattern //
+                  "" |
+                  if length > 0 then " — " + . else "" end
+                )
+                else empty
+                end
+              '
+          pipeline_status=("${PIPESTATUS[@]}")
+          set -e
+          for status in "${pipeline_status[@]}"; do
+            if [[ "$status" -ne 0 ]]; then
+              exit "$status"
+            fi
+          done
+
+          jq --slurp --raw-output '
+            [
+              .[] |
+              select(
+                type == "object" and
+                .type == "assistant.message" and
+                (.data.toolRequests | length) == 0 and
+                (.data.content | length) > 0
+              ) |
+              .data.content
+            ] |
+            last
+          ' "$RUNNER_TEMP/issue-agent.jsonl" > "$RUNNER_TEMP/issue-report.md"
 
           test -s "$RUNNER_TEMP/issue-report.md"
           git add --intent-to-add .
