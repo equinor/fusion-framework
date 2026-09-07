@@ -40,3 +40,13 @@ name: Workflow Contribution Rules
 ## Review-only workflows
 
 If the workflow is reviewing rather than editing, treat missing changesets, missing required validation, or PR-template gaps as explicit findings instead of silently assuming them away.
+
+## Agent-generated pull requests
+
+- Run code generation with read-only repository permissions and short-lived inference credentials.
+- Bind OIDC generation jobs to a dedicated environment whose deployment branch policy allows only the
+  default branch, and bind the Azure federated credential to that environment.
+- Transfer only a bounded patch, checksums, and a template-complete report to the publisher.
+- Treat generated artifacts as untrusted data. The write-enabled publisher must not install dependencies,
+  run tests, invoke generated scripts, or publish privileged repository paths.
+- Open a draft pull request from a new branch. Never overwrite an existing ref or bypass review rules.

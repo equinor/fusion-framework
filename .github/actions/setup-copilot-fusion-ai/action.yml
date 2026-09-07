@@ -1,0 +1,76 @@
+name: Setup Copilot with Fusion AI
+description: Install pinned Copilot CLI and prepare a short-lived Fusion AI provider environment
+
+inputs:
+  client-id:
+    description: Entra application client ID used for Azure OIDC
+    required: true
+  wire-model:
+    description: Fusion AI model deployment
+    required: true
+  fusion-environment:
+    description: Fusion service discovery environment
+    default: fprd
+  tenant-id:
+    description: Entra tenant ID
+    default: 3aa4a235-b6e2-48d5-9195-7fcf05b459b0
+  copilot-version:
+    description: Pinned Copilot CLI release
+    default: 1.0.80
+  copilot-sha256:
+    description: SHA-256 for the pinned Linux x64 archive
+    default: 039933c9247686131c4406abb1d439bdbf68103edc1ff585bd70d5b0dc940f72
+
+outputs:
+  provider-env:
+    description: Mode-0600 environment file; source and delete it immediately before invoking Copilot
+    value: ${{ steps.provider.outputs.env-file }}
+
+runs:
+  using: composite
+  steps:
+    - name: Validate setup inputs
+      shell: bash
+      env:
+        CLIENT_ID: ${{ inputs.client-id }}
+        FUSION_ENVIRONMENT: ${{ inputs.fusion-environment }}
+        TENANT_ID: ${{ inputs.tenant-id }}
+        WIRE_MODEL: ${{ inputs.wire-model }}
+      run: |
+        [[ "$CLIENT_ID" =~ ^[a-fA-F0-9-]{36}$ ]]
+        [[ "$TENANT_ID" =~ ^[a-fA-F0-9-]{36}$ ]]
+        [[ "$FUSION_ENVIRONMENT" =~ ^[a-z][a-z0-9-]{1,15}$ ]]
+        [[ "$WIRE_MODEL" =~ ^gpt-[a-zA-Z0-9.-]+$ ]]
+
+    - name: Install pinned Copilot CLI
+      shell: bash
+      env:
+        COPILOT_SHA256: ${{ inputs.copilot-sha256 }}
+        COPILOT_VERSION: ${{ inputs.copilot-version }}
+      run: bash "$GITHUB_ACTION_PATH/install-copilot.sh"
+
+    - name: Verify Azure CLI
+      shell: bash
+      run: |
+        command -v az >/dev/null 2>&1 || {
+          echo 'Azure CLI must be preinstalled on the runner.' >&2
+          exit 1
+        }
+
+    - name: Azure login
+      uses: azure/login@v3.0.2
+      env:
+        AZURE_CONFIG_DIR: ${{ runner.temp }}/fusion-azure
+      with:
+        client-id: ${{ inputs.client-id }}
+        tenant-id: ${{ inputs.tenant-id }}
+        allow-no-subscriptions: true
+
+    - name: Configure short-lived Fusion AI provider
+      id: provider
+      shell: bash
+      env:
+        AZURE_CONFIG_DIR: ${{ runner.temp }}/fusion-azure
+        FUSION_ENVIRONMENT: ${{ inputs.fusion-environment }}
+        WIRE_MODEL: ${{ inputs.wire-model }}
+      run: bash "$GITHUB_ACTION_PATH/configure-provider.sh"
