@@ -36,7 +36,7 @@ grep -Fq '**What is the intended behavior or invariant?**' "$PULL_REQUEST_PATH"
 grep -Fq '**Does this PR introduce a breaking change?**' "$PULL_REQUEST_PATH"
 grep -Fq '**Review guidance:**' "$PULL_REQUEST_PATH"
 grep -Fq '### Checklist' "$PULL_REQUEST_PATH"
-grep -Fq '## Work completed' "$EXECUTION_REPORT_PATH"
+grep -Fq '## Work summary' "$EXECUTION_REPORT_PATH"
 grep -Fq '## Validation' "$EXECUTION_REPORT_PATH"
 if grep -Fq '<!--' "$PULL_REQUEST_PATH" || grep -Fq '<!--' "$EXECUTION_REPORT_PATH"; then
   echo 'Generated report contains an HTML comment opener.' >&2
