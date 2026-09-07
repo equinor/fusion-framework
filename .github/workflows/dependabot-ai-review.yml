@@ -105,6 +105,7 @@ jobs:
         run: |
           set -euo pipefail
 
+          gh copilot -- --version
           gh copilot -- \
             --agent dependabot \
             --prompt "Review pull request #${PR_NUMBER} in audit-only mode. Use the fusion-dependency-review skill. Research its dependency changes and repository impact. Do not modify files, post comments, approve, close, or merge." \
