@@ -28,6 +28,8 @@ jobs:
       head_ref: ${{ steps.pull-request.outputs.head_ref }}
       merge_recommended: ${{ (steps.review.outputs.merge_recommended == 'true' || steps.freshness.outputs.merge_recommended == 'true') && 'true' || 'false' }}
       pr_number: ${{ steps.pull-request.outputs.number }}
+      signature: ${{ steps.pull-request.outputs.signature }}
+      update_summary: ${{ steps.pull-request.outputs.update_summary }}
       review_needed: ${{ steps.freshness.outputs.review_needed }}
       version: ${{ steps.pull-request.outputs.version }}
     if: >-
@@ -63,35 +65,97 @@ jobs:
         run: |
           set -euo pipefail
 
-          pr="$(gh pr view "$PR_NUMBER" --json author,baseRefName,headRefName,headRefOid,title)"
+          pr="$(gh pr view "$PR_NUMBER" --json author,baseRefName,body,headRefName,headRefOid,title)"
           test "$(jq --raw-output '.author.login' <<< "$pr")" = app/dependabot
-          title="$(jq --raw-output '.title' <<< "$pr")"
-          if [[ ! "$title" =~ [Bb]ump[[:space:]](.+)[[:space:]]from[[:space:]]([^[:space:]]+)[[:space:]]to[[:space:]]([^[:space:]]+)$ ]]; then
-            echo "::error::Could not extract dependency and target version from: $title"
+
+          updates="$(
+            jq --compact-output '
+              [
+                (
+                  (.body // "" | split("\n")[]) as $line |
+                  (
+                    try (
+                      $line |
+                      capture(
+                        "^\\| \\[(?<name>[^]]+)\\]\\([^)]*\\) \\| `(?<from>[^`]+)` \\| `(?<to>[^`]+)` \\|$"
+                      )
+                    ) catch empty
+                  ),
+                  (
+                    try (
+                      $line |
+                      capture(
+                        "^Updates `(?<name>[^`]+)` from (?<from>[^ ]+) to (?<to>[^ ]+)$"
+                      )
+                    ) catch empty
+                  )
+                ),
+                (
+                  try (
+                    .title |
+                    capture(
+                      "[Bb]ump (?<name>.+) from (?<from>[^ ]+) to (?<to>[^ ]+)(?: in .+)?$"
+                    )
+                  ) catch empty
+                )
+              ] |
+              unique_by([.name, .from, .to]) |
+              sort_by([.name, .from, .to])
+            ' <<< "$pr"
+          )"
+          if [[ "$(jq 'length' <<< "$updates")" = 0 ]]; then
+            echo "::error::Could not extract dependency updates from the Dependabot pull request."
             exit 1
           fi
 
+          dependency="$(
+            jq --raw-output '
+              if length == 1 then
+                .[0].name
+              else
+                "\(length) grouped dependencies"
+              end
+            ' <<< "$updates"
+          )"
+          from_version="$(
+            jq --raw-output 'if length == 1 then .[0].from else "multiple" end' <<< "$updates"
+          )"
+          version="$(
+            jq --raw-output 'if length == 1 then .[0].to else "multiple" end' <<< "$updates"
+          )"
+          update_summary="$(
+            jq --raw-output '
+              if length == 1 then
+                "bump `\(.name)` from `\(.from)` to `\(.to)`"
+              else
+                "update grouped dependencies: " +
+                  (map("`\(.name)` (`\(.from)` to `\(.to)`)") | join(", "))
+              end
+            ' <<< "$updates"
+          )"
+          signature="$(printf '%s' "$updates" | sha256sum | cut -d ' ' -f 1)"
+
           echo "number=$PR_NUMBER" >> "$GITHUB_OUTPUT"
-          echo "dependency=${BASH_REMATCH[1]}" >> "$GITHUB_OUTPUT"
-          echo "from_version=${BASH_REMATCH[2]}" >> "$GITHUB_OUTPUT"
-          echo "version=${BASH_REMATCH[3]}" >> "$GITHUB_OUTPUT"
+          echo "dependency=$dependency" >> "$GITHUB_OUTPUT"
+          echo "from_version=$from_version" >> "$GITHUB_OUTPUT"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
           echo "base_ref=$(jq --raw-output '.baseRefName' <<< "$pr")" >> "$GITHUB_OUTPUT"
           echo "head_sha=$(jq --raw-output '.headRefOid' <<< "$pr")" >> "$GITHUB_OUTPUT"
           echo "head_ref=$(jq --raw-output '.headRefName' <<< "$pr")" >> "$GITHUB_OUTPUT"
+          echo "signature=$signature" >> "$GITHUB_OUTPUT"
+          echo "update_summary=$update_summary" >> "$GITHUB_OUTPUT"
 
       - name: Check research freshness
         id: freshness
         env:
-          DEPENDENCY: ${{ steps.pull-request.outputs.dependency }}
-          FROM_VERSION: ${{ steps.pull-request.outputs.from_version }}
           GH_TOKEN: ${{ github.token }}
           PR_NUMBER: ${{ steps.pull-request.outputs.number }}
           REPOSITORY: ${{ github.repository }}
-          VERSION: ${{ steps.pull-request.outputs.version }}
+          SIGNATURE: ${{ steps.pull-request.outputs.signature }}
         run: |
           set -euo pipefail
 
-          marker="<!-- fusion-ai-dependency:${DEPENDENCY}:${FROM_VERSION}:${VERSION} -->"
+          marker="<!-- fusion-ai-dependency:${SIGNATURE} -->"
           existing="$(
             gh api --paginate "repos/${REPOSITORY}/issues/${PR_NUMBER}/comments" \
               --jq ".[] | select(.user.login == \"github-actions[bot]\") | select(.body | contains(\"${marker}\")) | .body" \
@@ -305,6 +369,7 @@ jobs:
     if: needs.research.outputs.review_needed == 'true'
     runs-on: ubuntu-latest
     permissions:
+      actions: read
       issues: write
       pull-requests: write
     steps:
@@ -323,12 +388,13 @@ jobs:
           PR_NUMBER: ${{ needs.research.outputs.pr_number }}
           REPOSITORY: ${{ github.repository }}
           RUN_ID: ${{ github.run_id }}
+          SIGNATURE: ${{ needs.research.outputs.signature }}
           VERSION: ${{ needs.research.outputs.version }}
         run: |
           set -euo pipefail
 
           marker='<!-- fusion-ai-dependency-research -->'
-          dependency_marker="<!-- fusion-ai-dependency:${DEPENDENCY}:${FROM_VERSION}:${VERSION} -->"
+          dependency_marker="<!-- fusion-ai-dependency:${SIGNATURE} -->"
           comment="$RUNNER_TEMP/dependabot-review-comment.md"
           {
             echo "$marker"
@@ -364,7 +430,8 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           PR_NUMBER: ${{ needs.research.outputs.pr_number }}
-        run: gh pr edit "$PR_NUMBER" --add-label '🤖 AI researched'
+          REPOSITORY: ${{ github.repository }}
+        run: gh pr edit "$PR_NUMBER" --repo "$REPOSITORY" --add-label '🤖 AI researched'
 
   remediate:
     name: Maintain branch and add changesets
@@ -401,6 +468,7 @@ jobs:
           MERGE_RECOMMENDED: ${{ needs.research.outputs.merge_recommended }}
           PR_NUMBER: ${{ needs.research.outputs.pr_number }}
           REPOSITORY: ${{ github.repository }}
+          UPDATE_SUMMARY: ${{ needs.research.outputs.update_summary }}
           VERSION: ${{ needs.research.outputs.version }}
         run: |
           set -euo pipefail
@@ -508,7 +576,7 @@ jobs:
               echo "\"${package}\": patch"
               echo '---'
               echo
-              echo "Internal: bump \`${DEPENDENCY}\` from \`${FROM_VERSION}\` to \`${VERSION}\`."
+              echo "Internal: ${UPDATE_SUMMARY}."
             } > "$changeset"
             git add "$changeset"
           done
