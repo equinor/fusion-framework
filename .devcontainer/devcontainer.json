@@ -15,10 +15,5 @@
     }
   },
   "updateContentCommand": "pnpm install --frozen-lockfile",
-  "waitFor": "updateContentCommand",
-  "customizations": {
-    "vscode": {
-      "extensions": ["GitHub.copilot", "GitHub.copilot-chat"]
-    }
-  }
+  "waitFor": "updateContentCommand"
 }
