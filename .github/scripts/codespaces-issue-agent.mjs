@@ -431,13 +431,17 @@ Issue discussion snapshot (JSON): ${JSON.stringify({ issue: current, comments })
     parents: [base],
   });
   api(`${prefix}/git/refs`, { ref: `refs/heads/${task}`, sha: commit.sha });
+  let report = result.report;
+  // Removing a comment can join fragments into another opener; also drop unterminated comments.
+  do {
+    report = report.replace(/<!--[\s\S]*?(?:-->|$)/g, '');
+  } while (report.includes('<!--'));
   const pr = api(`${prefix}/pulls`, {
     title: `fix: implement issue #${issue}`,
     head: task,
     base: branch,
     draft: true,
-    body: result.report
-      .replace(/<!--[\s\S]*?-->/g, '')
+    body: report
       .replace(/\[x\]/gi, '[ ]')
       .replace(
         '**Review guidance:**',

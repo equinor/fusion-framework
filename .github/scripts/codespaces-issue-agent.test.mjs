@@ -489,6 +489,27 @@ describe('workflow cleanup', () => {
 });
 
 describe('deterministic publication', () => {
+  it.each([
+    '<!-- private -->',
+    '<!<!-- inner -->-- hidden -->',
+    '<!-- unfinished',
+    '<!-- outer <!-- inner --> trailing -->',
+  ])('removes comment openers from the published body: %s', async (comment) => {
+    readFileSync.mockImplementation((path) =>
+      path === '/mock/result.json'
+        ? JSON.stringify({ ...result, report: `${report}\n${comment}` })
+        : report,
+    );
+    await runWorkflow('publish');
+    const call = execFileSync.mock.calls.find(
+      ([command, args]) => command === 'gh' && args[1].endsWith('/pulls'),
+    );
+    const body = JSON.parse(call[2].input).body;
+    expect(body).not.toContain('<!--');
+    expect(body).not.toContain('hidden');
+    expect(body).toContain('**Why is this change needed?**');
+  });
+
   it('rejects traversal, hidden configuration, instructions, symlinks and submodules', () => {
     for (const path of [
       '.github/workflows/a.yml',
