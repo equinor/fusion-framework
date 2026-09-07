@@ -1,5 +1,5 @@
 import type { ActiveRoles } from '../../state/roles-state';
-import type { ClaimableRoleDetails, PermanentRoleDetails } from '../overview/role-details';
+import type { ActiveAccessRoleDetails, ClaimableRoleDetails } from '../overview/role-details';
 import { parseRoleDate } from '../../dates/parse-role-date';
 import { createActiveRoleItems } from '../overview/create-active-role-items';
 
@@ -11,7 +11,7 @@ interface CompactRoleGroups {
   readonly available: readonly ClaimableRoleDetails[];
   readonly claimed: readonly ClaimableRoleDetails[];
   readonly expired: readonly ClaimableRoleDetails[];
-  readonly permanent: readonly PermanentRoleDetails[];
+  readonly activeAccess: readonly ActiveAccessRoleDetails[];
 }
 
 /**
@@ -41,7 +41,7 @@ const isRecentExpiredRole = (role: ClaimableRoleDetails, now: number): boolean =
  * @param active - Active access-role assignments.
  * @param claimable - Normalized claimable assignments.
  * @param now - Snapshot timestamp; supplied explicitly for deterministic expiry classification.
- * @returns Bounded expiry shortcuts, remaining claimable roles, and both kinds of active role.
+ * @returns Bounded expiry shortcuts, remaining claimable roles, and effective access roles.
  */
 export const createCompactRoleGroups = (
   active: ActiveRoles,
@@ -61,13 +61,9 @@ export const createCompactRoleGroups = (
     })
     .slice(0, RECENT_ROLE_LIMIT);
 
-  // Claimed activations use their richer consolidated metadata, not duplicate access-role rows.
-  const permanentAssignments = active.filter(
-    (assignment) => assignment.assignmentType?.toLowerCase() !== 'claimable',
-  );
-  // Preserve source, scope, and expiry when adapting permanent access to the same information dialog.
-  const permanent = createActiveRoleItems(permanentAssignments).map(
-    ({ assignment, key }): PermanentRoleDetails => {
+  // Preserve source, scope, and expiry when adapting effective access to the information dialog.
+  const activeAccess = createActiveRoleItems(active).map(
+    ({ assignment, key }): ActiveAccessRoleDetails => {
       const displayName = assignment.accessRoleName ?? 'Unknown access role';
       return {
         key,
@@ -97,5 +93,5 @@ export const createCompactRoleGroups = (
   const available = claimable.filter((role) => !expired.includes(role));
   // Active is informational; these assignments intentionally also remain in Claimable.
   const claimed = claimable.filter((role) => role.isActive);
-  return { available, claimed, expired, permanent };
+  return { available, claimed, expired, activeAccess };
 };

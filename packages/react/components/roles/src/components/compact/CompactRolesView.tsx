@@ -55,12 +55,12 @@ export const CompactRolesView = (): ReactNode => {
   const expiredItems = groups.expired.map((role) => (
     <ClaimableRoleRow key={role.assignmentId} role={role} variant="expired" {...rowControls} />
   ));
-  // Permanent access has no activation switch, but retains the same information affordance.
-  const permanentItems = groups.permanent.map((role) => (
+  // Effective access has no activation switch, but retains the same information affordance.
+  const activeAccessItems = groups.activeAccess.map((role) => (
     <CompactRoleRow
       key={role.key}
       role={role}
-      caption={`Permanent${role.activeTo ? ` · Expires ${formatRoleDate(role.activeTo)}` : ''}`}
+      caption={`Active access${role.activeTo ? ` · Expires ${formatRoleDate(role.activeTo)}` : ''}`}
       onShowInformation={setSelectedDetails}
     />
   ));
@@ -105,10 +105,10 @@ export const CompactRolesView = (): ReactNode => {
             )}
           </Tabs.Panel>
           <Tabs.Panel>
-            {permanentItems.length > 0 || claimedItems.length > 0 ? (
+            {activeAccessItems.length > 0 || claimedItems.length > 0 ? (
               <Styled.RoleList>
                 {claimedItems}
-                {permanentItems}
+                {activeAccessItems}
               </Styled.RoleList>
             ) : (
               <Typography>
