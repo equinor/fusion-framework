@@ -41,6 +41,7 @@ permissions:
 jobs:
   research:
     outputs:
+      auto_merge: ${{ (steps.review.outputs.auto_merge == 'true' || steps.freshness.outputs.auto_merge == 'true') && 'true' || 'false' }}
       base_ref: ${{ steps.pull-request.outputs.base_ref }}
       dependency: ${{ steps.pull-request.outputs.dependency }}
       from_version: ${{ steps.pull-request.outputs.from_version }}
@@ -214,6 +215,7 @@ jobs:
           )"
 
           if [[ -z "$existing" ]]; then
+            echo "auto_merge=false" >> "$GITHUB_OUTPUT"
             echo "review_needed=true" >> "$GITHUB_OUTPUT"
             echo "merge_recommended=false" >> "$GITHUB_OUTPUT"
             exit 0
@@ -224,6 +226,13 @@ jobs:
             echo "merge_recommended=true" >> "$GITHUB_OUTPUT"
           else
             echo "merge_recommended=false" >> "$GITHUB_OUTPUT"
+          fi
+          if grep -Fqx '## 🟢 Verdict: MERGE' <<< "$existing" && \
+            grep -Fqx '**Confidence:** high' <<< "$existing" && \
+            ! grep -Fqx '**Readiness:** needs changes' <<< "$existing"; then
+            echo "auto_merge=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "auto_merge=false" >> "$GITHUB_OUTPUT"
           fi
       - name: Setup Copilot with Fusion AI
         id: copilot
@@ -340,9 +349,16 @@ jobs:
           grep -Fq '### Merge path' "$RUNNER_TEMP/dependabot-review.md"
 
           merge_recommended=false
+          auto_merge=false
           if grep -Fqx '## 🟢 Verdict: MERGE' "$RUNNER_TEMP/dependabot-review.md"; then
             merge_recommended=true
           fi
+          if grep -Fqx '## 🟢 Verdict: MERGE' "$RUNNER_TEMP/dependabot-review.md" && \
+            grep -Fqx '**Confidence:** high' "$RUNNER_TEMP/dependabot-review.md" && \
+            ! grep -Fqx '**Readiness:** needs changes' "$RUNNER_TEMP/dependabot-review.md"; then
+            auto_merge=true
+          fi
+          echo "auto_merge=$auto_merge" >> "$GITHUB_OUTPUT"
           echo "merge_recommended=$merge_recommended" >> "$GITHUB_OUTPUT"
 
           cat "$RUNNER_TEMP/dependabot-review.md" >> "$GITHUB_STEP_SUMMARY"
@@ -620,66 +636,25 @@ jobs:
             --ref "$HEAD_REF" \
             -f head_sha="$new_head" \
             -f pr_number="$PR_NUMBER"
-          gh workflow run dependabot-ai-review.yml \
-            --repo "$REPOSITORY" \
-            --ref "$BASE_REF" \
-            -f pr_number="$PR_NUMBER"
-
-  finalize:
-    name: Finalize review readiness
-    needs: [research, publish, remediate]
+  auto-merge:
+    name: Enable squash auto-merge
+    needs: [research, publish]
     if: >-
-      always() &&
-      needs.research.result == 'success' &&
-      needs.research.outputs.merge_recommended == 'true' &&
-      (needs.publish.result == 'success' || needs.publish.result == 'skipped') &&
-      (
-        needs.remediate.result == 'skipped' ||
-        (
-          needs.remediate.result == 'success' &&
-          needs.remediate.outputs.ready == 'true' &&
-          needs.remediate.outputs.updated != 'true'
-        )
-      )
+      needs.research.outputs.auto_merge == 'true' &&
+      (needs.publish.result == 'success' || needs.publish.result == 'skipped')
     runs-on: ubuntu-latest
     permissions:
-      issues: write
-      pull-requests: read
+      contents: write
+      pull-requests: write
     steps:
-      - name: Finalize dependency review readiness
+      - name: Enable auto-merge for reviewed head
         env:
           EXPECTED_HEAD_SHA: ${{ needs.research.outputs.head_sha }}
           GH_TOKEN: ${{ github.token }}
           PR_NUMBER: ${{ needs.research.outputs.pr_number }}
           REPOSITORY: ${{ github.repository }}
-          SIGNATURE: ${{ needs.research.outputs.signature }}
         run: |
           set -euo pipefail
-
-          update_readiness() {
-            local readiness="$1"
-            local marker="<!-- fusion-ai-dependency:${SIGNATURE} -->"
-            local comment_id
-            local comment_file="$RUNNER_TEMP/dependabot-review-comment.md"
-
-            comment_id="$(
-              gh api --paginate "repos/${REPOSITORY}/issues/${PR_NUMBER}/comments" \
-                --jq ".[] | select(.user.login == \"github-actions[bot]\") | select(.body | contains(\"${marker}\")) | .id" \
-                | head -n 1
-            )"
-            if [[ -z "$comment_id" ]]; then
-              echo "::error::Could not find the dependency review comment for the current PR head."
-              exit 1
-            fi
-
-            gh api "repos/${REPOSITORY}/issues/comments/${comment_id}" --jq '.body' > "$comment_file"
-            sed -i "s/^\*\*Readiness:\*\* .*$/**Readiness:** ${readiness}/" "$comment_file"
-            grep -Fqx "**Readiness:** ${readiness}" "$comment_file"
-            gh api \
-              --method PATCH \
-              "repos/${REPOSITORY}/issues/comments/${comment_id}" \
-              --raw-field body="$(cat "$comment_file")"
-          }
 
           pr="$(
             gh pr view "$PR_NUMBER" \
@@ -690,107 +665,5 @@ jobs:
           test "$(jq --raw-output '.state' <<< "$pr")" = OPEN
           test "$(jq --raw-output '.headRefOid' <<< "$pr")" = "$EXPECTED_HEAD_SHA"
 
-          for attempt in {1..60}; do
-            checks="$(
-              gh pr view "$PR_NUMBER" \
-                --repo "$REPOSITORY" \
-                --json statusCheckRollup
-            )"
-            failed="$(
-              jq '
-                [
-                  .statusCheckRollup[] |
-                  select(.workflowName != "Dependabot AI review") |
-                  select(
-                    .name == "Build affected packages" or
-                    .name == "Check Code" or
-                    .name == "Code quality" or
-                    .name == "Playwright (ubuntu-latest)" or
-                    .name == "Playwright (windows-latest)" or
-                    .name == "Unit tests" or
-                    .name == "Verify agent context is in sync" or
-                    .name == "Visual checks"
-                  ) |
-                  select(
-                    (.conclusion != null and
-                      (.conclusion | IN("SUCCESS", "NEUTRAL", "SKIPPED") | not)) or
-                    (.state != null and
-                      (.state | IN("SUCCESS", "EXPECTED", "PENDING") | not))
-                  )
-                ] |
-                length
-              ' <<< "$checks"
-            )"
-            if [[ "$failed" != 0 ]]; then
-              update_readiness "needs changes"
-              echo "::error::One or more pull request checks failed."
-              exit 1
-            fi
-
-            pending="$(
-              jq '
-                [
-                  .statusCheckRollup[] |
-                  select(.workflowName != "Dependabot AI review") |
-                  select(
-                    .name == "Build affected packages" or
-                    .name == "Check Code" or
-                    .name == "Code quality" or
-                    .name == "Playwright (ubuntu-latest)" or
-                    .name == "Playwright (windows-latest)" or
-                    .name == "Unit tests" or
-                    .name == "Verify agent context is in sync" or
-                    .name == "Visual checks"
-                  ) |
-                  select(
-                    (.status != null and .status != "COMPLETED") or
-                    (.state != null and (.state == "EXPECTED" or .state == "PENDING"))
-                  )
-                ] |
-                length
-              ' <<< "$checks"
-            )"
-            if [[ "$pending" = 0 ]]; then
-              break
-            fi
-            if [[ "$attempt" = 60 ]]; then
-              update_readiness "waiting for checks"
-              echo "::error::Timed out waiting for pull request checks."
-              exit 1
-            fi
-            sleep 30
-          done
-
-          set +e
-          required_checks="$(
-            gh pr checks "$PR_NUMBER" --repo "$REPOSITORY" --required 2>&1
-          )"
-          required_checks_status=$?
-          set -e
-          if [[ "$required_checks_status" != 0 ]] && \
-            ! grep -Fq "no required checks reported" <<< "$required_checks"; then
-            printf '%s\n' "$required_checks"
-            exit "$required_checks_status"
-          fi
-
-          current_head="$(
-            gh pr view "$PR_NUMBER" --repo "$REPOSITORY" --json headRefOid --jq '.headRefOid'
-          )"
-          test "$current_head" = "$EXPECTED_HEAD_SHA"
-
-          review_decision="$(
-            gh pr view "$PR_NUMBER" --repo "$REPOSITORY" --json reviewDecision --jq '.reviewDecision'
-          )"
-          case "$review_decision" in
-            REVIEW_REQUIRED)
-              update_readiness "waiting for approval"
-              ;;
-            CHANGES_REQUESTED)
-              update_readiness "needs changes"
-              echo "::error::A review has requested changes."
-              exit 1
-              ;;
-            *)
-              update_readiness "ready"
-              ;;
-          esac
+          pr_url="https://github.com/${REPOSITORY}/pull/${PR_NUMBER}"
+          gh pr merge --auto --squash "$pr_url" --match-head-commit "$EXPECTED_HEAD_SHA"
