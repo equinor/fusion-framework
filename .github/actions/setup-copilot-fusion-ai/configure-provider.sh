@@ -15,7 +15,7 @@ echo "::add-mask::$discovery_token"
 
 service="$(
   curl --fail-with-body --silent --show-error \
-    --header "Authorization: ******" \
+    --header "Authorization: Bearer ${discovery_token}" \
     "https://discovery.fusion.equinor.com/service-registry/environments/${FUSION_ENVIRONMENT}/services" |
     jq --exit-status 'map(select(.key == "ai")) | first'
 )"
