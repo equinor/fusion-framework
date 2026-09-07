@@ -4,8 +4,6 @@ import { info_circle } from '@equinor/eds-icons';
 import styled from 'styled-components';
 import type { RoleDetails } from '../overview/role-details';
 
-Icon.add({ info_circle });
-
 const Styled = {
   Row: styled.div`
     display: grid;
@@ -58,7 +56,7 @@ export const CompactRoleRow = ({
       aria-label={`Show information about ${role.displayName}`}
       onClick={() => onShowInformation(role)}
     >
-      <Icon name="info_circle" />
+      <Icon data={info_circle} />
     </Styled.InfoButton>
     {children}
   </Styled.Row>

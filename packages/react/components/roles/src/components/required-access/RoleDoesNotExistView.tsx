@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 
+import { List, Typography } from '@equinor/eds-core-react';
 import type { RequiredRoleStatus } from '@equinor/fusion-framework-module-roles';
 
 /** Resolved requirements that may contain unregistered access-role names. */
@@ -21,13 +22,17 @@ export const RoleDoesNotExistView = ({ statuses }: RoleDoesNotExistViewProps): R
     return null;
   }
   // Preserve the exact role names so maintainers can diagnose configuration mistakes.
-  const roleItems = missingRoles.map((status) => <li key={status.name}>{status.name}</li>);
+  const roleItems = missingRoles.map((status) => (
+    <List.Item key={status.name}>{status.name}</List.Item>
+  ));
 
   return (
     <section>
-      <h3>Role does not exist</h3>
-      <p>These exact access-role names are not registered in Roles V2.</p>
-      <ul>{roleItems}</ul>
+      <Typography group="heading" variant="h3">
+        Role does not exist
+      </Typography>
+      <Typography>These exact access-role names are not registered in Roles V2.</Typography>
+      <List>{roleItems}</List>
     </section>
   );
 };
