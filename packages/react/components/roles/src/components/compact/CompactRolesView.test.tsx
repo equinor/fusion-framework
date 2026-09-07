@@ -199,7 +199,7 @@ describe('CompactRolesView', () => {
     await screen.getByRole('tab', { name: 'Active' }).click();
     const activePanel = screen.getByRole('tabpanel', { name: 'Active' });
     await expect.element(screen.getByText(/Claimed · Expires/)).toBeVisible();
-    await expect.element(screen.getByText('Permanent')).toBeVisible();
+    await expect.element(screen.getByText('Active access')).toBeVisible();
     await expect
       .element(activePanel.getByLabelText('Deactivate Reports exporter'))
       .not.toBeInTheDocument();

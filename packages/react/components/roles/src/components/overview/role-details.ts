@@ -20,7 +20,7 @@ export interface ClaimableRoleDetails extends RoleDetails {
   readonly validFrom?: string | null;
 }
 
-/** An active non-claimable assignment with a stable presentation key. */
-export interface PermanentRoleDetails extends RoleDetails {
+/** An effective access-role assignment with a stable presentation key. */
+export interface ActiveAccessRoleDetails extends RoleDetails {
   readonly key: string;
 }
