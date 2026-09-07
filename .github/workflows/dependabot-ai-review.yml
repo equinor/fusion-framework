@@ -461,12 +461,24 @@ jobs:
             fi
           done
 
-          mergeable="$(
-            gh pr view "$PR_NUMBER" --repo "$REPOSITORY" --json mergeable --jq '.mergeable'
-          )"
+          mergeable=UNKNOWN
+          for attempt in {1..5}; do
+            mergeable="$(
+              gh pr view "$PR_NUMBER" --repo "$REPOSITORY" --json mergeable --jq '.mergeable'
+            )"
+            if [[ "$mergeable" != UNKNOWN ]]; then
+              break
+            fi
+            if [[ "$attempt" -lt 5 ]]; then
+              sleep 2
+            fi
+          done
           if [[ "$mergeable" = UNKNOWN ]]; then
-            echo "::error::GitHub has not determined whether the pull request is mergeable."
-            exit 1
+            echo "head_sha=$EXPECTED_HEAD_SHA" >> "$GITHUB_OUTPUT"
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            echo "updated=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::GitHub is still calculating mergeability; branch maintenance was deferred."
+            exit 0
           fi
           if [[ "$mergeable" = CONFLICTING ]]; then
             marker="<!-- fusion-ai-dependabot-rebase:${EXPECTED_HEAD_SHA} -->"
