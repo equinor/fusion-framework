@@ -1,0 +1,36 @@
+name: Publish agent patch
+description: Validate an issue-agent patch as data and open a draft pull request
+
+inputs:
+  issue-number:
+    description: Open issue implemented by the patch
+    required: true
+  base-sha:
+    description: Trusted default-branch commit used for generation
+    required: true
+  task-branch:
+    description: Unique branch to create without overwriting
+    required: true
+  patch:
+    description: Path to the generated binary Git patch
+    required: true
+  report:
+    description: Path to the generated pull request body
+    required: true
+  checksums:
+    description: Path to SHA-256 checksums for patch and report
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Validate and publish draft
+      shell: bash
+      env:
+        BASE_SHA: ${{ inputs.base-sha }}
+        CHECKSUM_PATH: ${{ inputs.checksums }}
+        ISSUE_NUMBER: ${{ inputs.issue-number }}
+        PATCH_PATH: ${{ inputs.patch }}
+        REPORT_PATH: ${{ inputs.report }}
+        TASK_BRANCH: ${{ inputs.task-branch }}
+      run: bash "$GITHUB_ACTION_PATH/publish.sh"

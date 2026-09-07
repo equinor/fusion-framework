@@ -185,81 +185,28 @@ jobs:
             echo "auto_merge=false" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Install Copilot CLI
+      - name: Setup Copilot with Fusion AI
+        id: copilot
         if: steps.freshness.outputs.review_needed == 'true'
-        run: |
-          set -euo pipefail
-
-          curl --fail-with-body --location --silent --show-error \
-            --output "$RUNNER_TEMP/copilot.tar.gz" \
-            https://github.com/github/copilot-cli/releases/download/v1.0.80/copilot-linux-x64.tar.gz
-          echo '039933c9247686131c4406abb1d439bdbf68103edc1ff585bd70d5b0dc940f72  '"$RUNNER_TEMP"'/copilot.tar.gz' \
-            | sha256sum --check
-          tar --extract --gzip --file "$RUNNER_TEMP/copilot.tar.gz" --directory "$RUNNER_TEMP"
-          echo "$RUNNER_TEMP" >> "$GITHUB_PATH"
-
-      - name: Ensure Azure CLI is installed
-        if: steps.freshness.outputs.review_needed == 'true'
-        run: |
-          if ! command -v az >/dev/null 2>&1; then
-            curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
-          fi
-
-      - name: Azure login
-        if: steps.freshness.outputs.review_needed == 'true'
-        uses: azure/login@v3.0.2
+        uses: ./.github/actions/setup-copilot-fusion-ai
         with:
           client-id: ${{ vars.FUSION_AI_SP_CLIENT_ID }}
-          tenant-id: 3aa4a235-b6e2-48d5-9195-7fcf05b459b0
-          allow-no-subscriptions: true
-
-      - name: Configure Fusion AI provider
-        if: steps.freshness.outputs.review_needed == 'true'
-        env:
-          FUSION_ENV: fprd
-        run: |
-          set -euo pipefail
-
-          discovery_token="$(
-            az account get-access-token \
-              --scope '5a842df8-3238-415d-b168-9f16a6a6031b/.default' \
-              --query accessToken \
-              --output tsv
-          )"
-          service="$(
-            curl --fail-with-body --silent --show-error \
-              --header "Authorization: Bearer ${discovery_token}" \
-              "https://discovery.fusion.equinor.com/service-registry/environments/${FUSION_ENV}/services" \
-              | jq --exit-status 'map(select(.key == "ai")) | first'
-          )"
-          endpoint="$(jq --exit-status --raw-output '.uri' <<< "$service")"
-          scope="$(jq --exit-status --raw-output '.scopes[0]' <<< "$service")"
-          token="$(
-            az account get-access-token \
-              --scope "$scope" \
-              --query accessToken \
-              --output tsv
-          )"
-
-          echo "::add-mask::$token"
-          echo "COPILOT_PROVIDER_BASE_URL=${endpoint%/}" >> "$GITHUB_ENV"
-          echo "COPILOT_PROVIDER_BEARER_TOKEN=$token" >> "$GITHUB_ENV"
+          wire-model: gpt-5.6-luna
 
       - name: Review dependency update
         id: review
         if: steps.freshness.outputs.review_needed == 'true'
         env:
-          COPILOT_PROVIDER_MODEL_ID: gpt-5.4
-          COPILOT_PROVIDER_WIRE_MODEL: gpt-5.6-luna
-          COPILOT_PROVIDER_AZURE_API_VERSION: 2025-01-01-preview
-          COPILOT_PROVIDER_TYPE: azure
-          COPILOT_PROVIDER_WIRE_API: completions
           GH_TOKEN: ${{ github.token }}
           PR_NUMBER: ${{ steps.pull-request.outputs.number }}
+          PROVIDER_ENV: ${{ steps.copilot.outputs.provider-env }}
         run: |
           set -euo pipefail
 
-          copilot --version
+          source "$PROVIDER_ENV"
+          rm "$PROVIDER_ENV"
+          unset ACTIONS_ID_TOKEN_REQUEST_TOKEN ACTIONS_ID_TOKEN_REQUEST_URL
+          gh copilot -- --version
           echo '::group::🤖 Fusion AI reasoning and tool activity'
           read -r -d '' review_prompt <<'EOF' || true
           Produce decision-ready research for the maintainer:
@@ -279,7 +226,7 @@ jobs:
           Return concise GitHub-flavored Markdown without an H1 heading. Start with exactly one verdict heading: '## 🟢 Verdict: MERGE', '## 🟡 Verdict: HOLD', or '## 🔴 Verdict: DECLINE'. Follow it with exactly one confidence line using '**Confidence:** high', '**Confidence:** medium', or '**Confidence:** low', applying the repository's dependency-review confidence criteria. Then include a short rationale followed by '### Key findings', '### Repository impact', and '### Merge path'. Use evidence links for factual claims and task-list items for the ordered merge path. Do not modify files, post comments, approve, close, or merge.
           EOF
           set +e
-          copilot \
+          gh copilot -- \
             --agent dependabot \
             --prompt "Review pull request #${PR_NUMBER} in audit-only mode using the fusion-dependency-review skill. ${review_prompt}" \
             --enable-reasoning-summaries \
@@ -289,7 +236,9 @@ jobs:
             --allow-all-urls \
             --no-ask-user \
             --no-auto-update \
-            --secret-env-vars=COPILOT_PROVIDER_BEARER_TOKEN \
+            --no-remote \
+            --no-remote-export \
+            --secret-env-vars=COPILOT_PROVIDER_BEARER_TOKEN,ACTIONS_ID_TOKEN_REQUEST_TOKEN,ACTIONS_ID_TOKEN_REQUEST_URL \
             | tee "$RUNNER_TEMP/dependabot-review.jsonl" \
             | jq --unbuffered --raw-output '
                 select(type == "object") |
