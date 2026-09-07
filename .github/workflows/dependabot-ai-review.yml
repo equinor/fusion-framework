@@ -93,17 +93,10 @@ jobs:
           echo "COPILOT_PROVIDER_BASE_URL=${endpoint%/}" >> "$GITHUB_ENV"
           echo "COPILOT_PROVIDER_BEARER_TOKEN=$token" >> "$GITHUB_ENV"
 
-      - name: List available Fusion AI models
-        run: |
-          set -euo pipefail
-          curl --fail-with-body --silent --show-error \
-            --header "Authorization: Bearer ${COPILOT_PROVIDER_BEARER_TOKEN}" \
-            "${COPILOT_PROVIDER_BASE_URL}/openai/models?api-version=2025-01-01-preview" \
-            | jq --raw-output '.data[] | .id'
-
       - name: Review dependency update
         env:
-          COPILOT_MODEL: gpt-5.6-luna
+          COPILOT_PROVIDER_MODEL_ID: gpt-5.6-luna
+          COPILOT_PROVIDER_WIRE_MODEL: GPT-5.6 Luna
           COPILOT_PROVIDER_AZURE_API_VERSION: 2025-01-01-preview
           COPILOT_PROVIDER_TYPE: azure
           COPILOT_PROVIDER_WIRE_API: responses
