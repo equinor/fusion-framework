@@ -17,8 +17,7 @@ concurrency:
 permissions:
   contents: read
   id-token: write
-  issues: write
-  pull-requests: read
+  pull-requests: write
 
 jobs:
   research:
@@ -39,6 +38,18 @@ jobs:
         continue-on-error: true
         uses: ./.github/actions/setup-fusion-runner
 
+      - name: Install Copilot CLI
+        run: |
+          set -euo pipefail
+
+          curl --fail-with-body --location --silent --show-error \
+            --output "$RUNNER_TEMP/copilot.tar.gz" \
+            https://github.com/github/copilot-cli/releases/download/v1.0.80/copilot-linux-x64.tar.gz
+          echo '039933c9247686131c4406abb1d439bdbf68103edc1ff585bd70d5b0dc940f72  '"$RUNNER_TEMP"'/copilot.tar.gz' \
+            | sha256sum --check
+          tar --extract --gzip --file "$RUNNER_TEMP/copilot.tar.gz" --directory "$RUNNER_TEMP"
+          echo "$RUNNER_TEMP" >> "$GITHUB_PATH"
+
       - name: Verify Dependabot pull request
         id: pull-request
         env:
@@ -46,7 +57,7 @@ jobs:
           PR_NUMBER: ${{ inputs.pr_number || github.event.pull_request.number }}
         run: |
           set -euo pipefail
-          test "$(gh pr view "$PR_NUMBER" --json author --jq '.author.login')" = dependabot
+          test "$(gh pr view "$PR_NUMBER" --json author --jq '.author.login')" = app/dependabot
           echo "number=$PR_NUMBER" >> "$GITHUB_OUTPUT"
 
       - name: Ensure Azure CLI is installed
@@ -64,8 +75,7 @@ jobs:
 
       - name: Configure Fusion AI provider
         env:
-          FUSION_AI_SCOPE: ${{ vars.FUSION_AI_SP_SCOPE }}
-          FUSION_ENV: ${{ vars.FUSION_ENV }}
+          FUSION_ENV: fprd
         run: |
           set -euo pipefail
 
@@ -75,15 +85,17 @@ jobs:
               --query accessToken \
               --output tsv
           )"
-          endpoint="$(
+          service="$(
             curl --fail-with-body --silent --show-error \
               --header "Authorization: Bearer ${discovery_token}" \
               "https://discovery.fusion.equinor.com/service-registry/environments/${FUSION_ENV}/services" \
-              | jq --exit-status --raw-output 'map(select(.key == "ai")) | first | .uri'
+              | jq --exit-status 'map(select(.key == "ai")) | first'
           )"
+          endpoint="$(jq --exit-status --raw-output '.uri' <<< "$service")"
+          scope="$(jq --exit-status --raw-output '.scopes[0]' <<< "$service")"
           token="$(
             az account get-access-token \
-              --scope "$FUSION_AI_SCOPE" \
+              --scope "$scope" \
               --query accessToken \
               --output tsv
           )"
@@ -94,7 +106,8 @@ jobs:
 
       - name: Review dependency update
         env:
-          COPILOT_MODEL: gpt-5.6-luna
+          COPILOT_PROVIDER_MODEL_ID: gpt-5.4
+          COPILOT_PROVIDER_WIRE_MODEL: gpt-5.6-luna
           COPILOT_PROVIDER_AZURE_API_VERSION: 2025-01-01-preview
           COPILOT_PROVIDER_TYPE: azure
           COPILOT_PROVIDER_WIRE_API: completions
@@ -103,19 +116,83 @@ jobs:
         run: |
           set -euo pipefail
 
-          gh copilot -- \
+          copilot --version
+          copilot \
             --agent dependabot \
-            --prompt "Review pull request #${PR_NUMBER} in audit-only mode. Use the fusion-dependency-review skill. Research its dependency changes and repository impact. Do not modify files, post comments, approve, close, or merge." \
-            --silent \
+            --prompt "Review pull request #${PR_NUMBER} in audit-only mode. Use the fusion-dependency-review skill. Research its dependency changes and repository impact. Return a concise, high-level final verdict suitable for a pull request comment. Do not modify files, post comments, approve, close, or merge." \
+            --enable-reasoning-summaries \
+            --output-format json \
             --stream off \
             --allow-all-tools \
             --allow-all-urls \
             --no-ask-user \
             --no-auto-update \
             --secret-env-vars=COPILOT_PROVIDER_BEARER_TOKEN \
-            > "$RUNNER_TEMP/dependabot-review.md"
+            | tee "$RUNNER_TEMP/dependabot-review.jsonl" \
+            | jq --unbuffered --raw-output '
+                select(type == "object") |
+                if .type == "assistant.message" and
+                  (.data.content | length) > 0 and
+                  (.data.toolRequests | length) > 0
+                then "💭 " + .data.content
+                elif .type == "tool.execution_start"
+                then "🔧 " + .data.toolName + (
+                  .data.arguments.description //
+                  .data.arguments.skill //
+                  "" |
+                  if length > 0 then " — " + . else "" end
+                )
+                else empty
+                end
+              '
+
+          jq --slurp --raw-output '
+            [
+              .[] |
+              select(
+                type == "object" and
+                .type == "assistant.message" and
+                (.data.toolRequests | length) == 0 and
+                (.data.content | length) > 0
+              ) |
+              .data.content
+            ] |
+            last
+          ' "$RUNNER_TEMP/dependabot-review.jsonl" > "$RUNNER_TEMP/dependabot-review.md"
 
           cat "$RUNNER_TEMP/dependabot-review.md" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Publish research verdict
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ steps.pull-request.outputs.number }}
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+
+          marker='<!-- fusion-ai-dependency-research -->'
+          comment="$RUNNER_TEMP/dependabot-review-comment.md"
+          {
+            echo "$marker"
+            cat "$RUNNER_TEMP/dependabot-review.md"
+            echo
+            echo "_Generated by Fusion AI using the repository dependency-review skill._"
+          } > "$comment"
+
+          comment_id="$(
+            gh api --paginate "repos/${REPOSITORY}/issues/${PR_NUMBER}/comments" \
+              --jq ".[] | select(.user.login == \"github-actions[bot]\") | select(.body | contains(\"${marker}\")) | .id" \
+              | head -n 1
+          )"
+
+          if [[ -n "$comment_id" ]]; then
+            gh api \
+              --method PATCH \
+              "repos/${REPOSITORY}/issues/comments/${comment_id}" \
+              --raw-field body="$(cat "$comment")"
+          else
+            gh pr comment "$PR_NUMBER" --body-file "$comment"
+          fi
 
       - name: Mark research complete
         env:
