@@ -84,7 +84,7 @@ while true; do
 done
 
 [[ "$(jq --raw-output .state <<< "$pull_request")" == OPEN ]]
-[[ "$(jq --raw-output .author.login <<< "$pull_request")" == 'github-actions[bot]' ]]
+[[ "$(jq --raw-output .author.login <<< "$pull_request")" == github-actions ]]
 [[ "$(jq --raw-output .headRefName <<< "$pull_request")" == "$EXPECTED_HEAD_REF" ]]
 [[ "$(jq --raw-output .headRefOid <<< "$pull_request")" == "$EXPECTED_HEAD_SHA" ]]
 
