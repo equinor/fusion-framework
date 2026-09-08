@@ -1,0 +1,40 @@
+---
+"@equinor/fusion-framework-react-components-roles": minor
+---
+
+Introduce the initial release of `@equinor/fusion-framework-react-components-roles` for Roles V2
+overviews and required-access recovery. Enable the Roles module and mount the React `RolesProvider`
+inside its Fusion module context, then render `RolesView` or consume
+`useActiveAccessRoleAssignments`, `useClaimableRoleAssignments`, and
+`useRoleAssignments`.
+There is no previously published React roles package to upgrade.
+
+`RolesView` offers application cards or compact Claimable, Active, and Expired tabs. Compact expiry
+shortcuts show the three newest eligible assignments from the previous seven days; additional
+assignments remain in Claimable. Activation failures remain visible with preserved audit input,
+including during in-place expiry recovery.
+Background refreshes retain open dialogs and audit input. Invalid expiration metadata is displayed
+separately from missing expiration while retaining browser-local date presentation.
+Active assignment keys include complete scope metadata and distinguish duplicate rows, preserving
+cards and compact rows as collections change.
+The activation dialog labels a one-hour duration as “1 hour” and uses “hours” for longer durations.
+
+Hooks share collection loading, mutation state, and refresh. Mutations take claimable assignment IDs
+and reject on mutation failure, while later refresh failures are reported by collection state.
+Collection reload promises resolve on load errors but reject on store disposal.
+Replacing the module provider resets the React scope, including collections and recovery history.
+
+`AccessRoleBoundary` checks required access-role names before mounting children and recovers missing-role
+errors through the original module provider. Changed requirements or providers trigger another check;
+the gate is not continuous authorization and does not replace backend access enforcement.
+
+Add `useRoleAssignments`, the authoritative source for standing, non-claimable
+assignment state. Active-access `assignmentType` cannot reliably distinguish this standing grant
+from an activated claim, so `RolesView`'s Active tab and compact "Active" tab now render assigned
+access from `useRoleAssignments` rather than inferring it from active-access
+assignments. Roles V2 never calls these assignments permanent, and the UI labels them "Assigned
+roles" rather than "Permanent roles". They carry no `isActive` flag; the compact view computes
+current effectiveness from `validFrom`/`validTo`.
+
+Internal: run component tests with standalone Vitest Chromium configuration instead of the
+app-test plugin, keeping the roles package independent of the CLI and dev portal build graph.

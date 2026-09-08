@@ -38,6 +38,9 @@
       "path": "../modules/navigation"
     },
     {
+      "path": "../modules/roles"
+    },
+    {
       "path": "../modules/bookmark"
     },
     {
@@ -63,6 +66,9 @@
     },
     {
       "path": "../react/components/people-resolver"
+    },
+    {
+      "path": "../react/components/roles"
     },
     {
       "path": "../react/router"

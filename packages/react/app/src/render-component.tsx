@@ -17,10 +17,15 @@ export type RenderTeardown = VoidFunction;
  *
  * @param el - The DOM element to render into.
  * @param Component - The React function component to render.
+ * @param onError - Optional host callback for uncaught React render and lazy-initialization errors.
  * @returns A {@link RenderTeardown} callback that unmounts the component.
  */
-const render = (el: Element, Component: FunctionComponent): RenderTeardown => {
-  const root: Root = createRoot(el);
+const render = (
+  el: Element,
+  Component: FunctionComponent,
+  onError?: (error: unknown) => void,
+): RenderTeardown => {
+  const root: Root = createRoot(el, { onUncaughtError: onError });
   root.render(
     <StrictMode>
       <Suspense fallback={<p>loading app</p>}>
@@ -48,7 +53,7 @@ const render = (el: Element, Component: FunctionComponent): RenderTeardown => {
 export const renderComponent = (renderer: ComponentRenderer) => {
   return (el: HTMLElement, args: ComponentRenderArgs): RenderTeardown => {
     const Component = renderer(args.fusion, args.env);
-    return render(el, Component);
+    return render(el, Component, args.onError);
   };
 };
 
