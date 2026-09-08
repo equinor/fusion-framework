@@ -119,6 +119,7 @@ describe('BookmarkProvider updates', () => {
         application: async () => undefined,
       },
     });
+    await firstValueFrom(provider.getAllBookmarks());
     await firstValueFrom(provider.setCurrentBookmark(current));
 
     const result = await firstValueFrom(

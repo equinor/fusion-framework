@@ -89,28 +89,23 @@ export const createBookmarkReducer = (initialState?: Partial<BookmarkState>) => 
         state.bookmarks[bookmark.id] = bookmark;
       })
       .addCase(bookmarkActions.updateBookmark.success, (state, action) => {
-        const bookmarkId = action.payload.id;
+        const { payload, ...bookmark } = action.payload;
+        const bookmarkId = bookmark.id;
         const hasBookmark = bookmarkId in state.bookmarks;
         const isCurrent = state.currentBookmark?.id === bookmarkId;
 
-        // get the current bookmark
-        const current = hasBookmark
-          ? state.bookmarks[bookmarkId]
-          : isCurrent
-            ? state.currentBookmark
-            : null;
-
-        // merge the current bookmark with the new data
-        const next = { ...current, ...action.payload };
-
-        // if the bookmark is in the current state, update it
+        // Keep the bookmark collection metadata-only.
         if (hasBookmark) {
-          state.bookmarks[bookmarkId] = next;
+          state.bookmarks[bookmarkId] = { ...state.bookmarks[bookmarkId], ...bookmark };
         }
 
-        // if the bookmark is the selected bookmark, update it
+        // Only the selected bookmark may retain payload data.
         if (isCurrent) {
-          state.currentBookmark = next;
+          state.currentBookmark = {
+            ...state.currentBookmark,
+            ...bookmark,
+            ...('payload' in action.payload ? { payload } : {}),
+          };
         }
       })
 
