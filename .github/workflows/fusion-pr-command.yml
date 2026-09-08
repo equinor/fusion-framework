@@ -71,6 +71,7 @@ jobs:
           head_sha="$(jq --raw-output .head.sha <<< "$pull_request")"
           [[ "$head_sha" =~ ^[a-f0-9]{40}$ ]]
 
+          shopt -s nocasematch
           case "$COMMENT_BODY" in
             '/fusion address comments' | '@fusion address comments')
               command=address-comments
