@@ -4,7 +4,7 @@ import { of, throwError } from 'rxjs';
 
 import type { AppMockConfigureFn } from '@equinor/fusion-framework-app/mock';
 import {
-  ClaimRoleError,
+  ActivateClaimableRoleAssignmentError,
   enableRoles,
   type IRolesClient,
   RolesError,
@@ -12,7 +12,7 @@ import {
 } from '@equinor/fusion-framework-module-roles';
 import { renderAppHook } from '@equinor/fusion-framework-vitest-plugin-react-app/test';
 
-import { useRole } from '../roles/useRole';
+import { useAccessRole } from '../roles/useAccessRole';
 
 /**
  * Creates an app-scoped Roles client test double.
@@ -21,12 +21,13 @@ import { useRole } from '../roles/useRole';
  */
 const createClient = (): IRolesClient => ({
   initialize: vi.fn(),
-  getActiveRoles: vi.fn(() => of([])),
-  getClaimableRoles: vi.fn(() => of([])),
-  claimRole: vi.fn(() => of({ id: 'activation-id' })),
-  deactivateRole: vi.fn(() => of({ id: 'activation-id' })),
-  canClaimAccessRole: vi.fn(() => of(false)),
-  getRequiredRoleStatuses: vi.fn(() => of([])),
+  getActiveAccessRoleAssignments: vi.fn(() => of([])),
+  getConsolidatedClaimableRoleAssignments: vi.fn(() => of([])),
+  getConsolidatedRoleAssignments: vi.fn(() => of([])),
+  activateClaimableRoleAssignment: vi.fn(() => of({ id: 'activation-id' })),
+  deactivateClaimableRoleAssignment: vi.fn(() => of({ id: 'activation-id' })),
+  hasClaimableRoleAssignmentForAccessRole: vi.fn(() => of(false)),
+  getRequiredAccessRoleStatuses: vi.fn(() => of([])),
   getAccessRoles: vi.fn(),
 });
 
@@ -44,23 +45,23 @@ const configureRolesClient = (client: IRolesClient): AppMockConfigureFn<[RolesMo
   };
 };
 
-describe('useRole', () => {
+describe('useAccessRole', () => {
   it('checks active and claimable access when mounted', async () => {
     const client = createClient();
-    vi.mocked(client.getActiveRoles).mockReturnValue(
+    vi.mocked(client.getActiveAccessRoleAssignments).mockReturnValue(
       of([{ systemName: 'Reports', accessRoleName: 'Reports.Read' }]),
     );
-    vi.mocked(client.canClaimAccessRole).mockReturnValue(of(true));
+    vi.mocked(client.hasClaimableRoleAssignmentForAccessRole).mockReturnValue(of(true));
 
-    const { result, unmount } = await renderAppHook(() => useRole('Reports.Read'), {
+    const { result, unmount } = await renderAppHook(() => useAccessRole('Reports.Read'), {
       configure: configureRolesClient(client),
     });
 
     await vi.waitFor(() => expect(result.current.isChecking).toBe(false));
-    expect(result.current.hasRole).toBe(true);
-    expect(result.current.canClaimAccessRole).toBe(true);
+    expect(result.current.hasAccessRole).toBe(true);
+    expect(result.current.hasClaimableRoleAssignmentForAccessRole).toBe(true);
     expect(result.current.checkError).toBeUndefined();
-    expect(client.canClaimAccessRole).toHaveBeenCalledWith('Reports.Read');
+    expect(client.hasClaimableRoleAssignmentForAccessRole).toHaveBeenCalledWith('Reports.Read');
 
     await unmount();
   });
@@ -68,15 +69,15 @@ describe('useRole', () => {
   it('surfaces role check failures without producing access results', async () => {
     const client = createClient();
     const error = new Error('role check failed');
-    vi.mocked(client.getActiveRoles).mockReturnValue(throwError(() => error));
+    vi.mocked(client.getActiveAccessRoleAssignments).mockReturnValue(throwError(() => error));
 
-    const { result, unmount } = await renderAppHook(() => useRole('Reports.Read'), {
+    const { result, unmount } = await renderAppHook(() => useAccessRole('Reports.Read'), {
       configure: configureRolesClient(client),
     });
 
     await vi.waitFor(() => expect(result.current.isChecking).toBe(false));
-    expect(result.current.hasRole).toBeUndefined();
-    expect(result.current.canClaimAccessRole).toBeUndefined();
+    expect(result.current.hasAccessRole).toBeUndefined();
+    expect(result.current.hasClaimableRoleAssignmentForAccessRole).toBeUndefined();
     expect(result.current.checkError).toBeInstanceOf(RolesError);
     expect(result.current.checkError).toMatchObject({ cause: error });
 
@@ -85,33 +86,38 @@ describe('useRole', () => {
 
   it('claims a role and refreshes access state after activation', async () => {
     const client = createClient();
-    vi.mocked(client.getActiveRoles)
+    vi.mocked(client.getActiveAccessRoleAssignments)
       .mockReturnValueOnce(of([]))
       .mockReturnValue(of([{ systemName: 'Reports', accessRoleName: 'Reports.Read' }]));
-    vi.mocked(client.canClaimAccessRole).mockReturnValueOnce(of(true)).mockReturnValue(of(false));
+    vi.mocked(client.hasClaimableRoleAssignmentForAccessRole)
+      .mockReturnValueOnce(of(true))
+      .mockReturnValue(of(false));
 
-    const { result, unmount } = await renderAppHook(() => useRole('Reports.Read'), {
+    const { result, unmount } = await renderAppHook(() => useAccessRole('Reports.Read'), {
       configure: configureRolesClient(client),
     });
     await vi.waitFor(() => expect(result.current.isChecking).toBe(false));
 
     await act(async () => {
       await expect(
-        result.current.claimRole({ roleId: 'claimable-role', reason: 'Open reports' }),
+        result.current.activateClaimableRoleAssignment({
+          assignmentId: 'claimable-role',
+          reason: 'Open reports',
+        }),
       ).resolves.toEqual({ id: 'activation-id' });
     });
 
     await vi.waitFor(() => {
       expect(result.current.isChecking).toBe(false);
-      expect(result.current.hasRole).toBe(true);
+      expect(result.current.hasAccessRole).toBe(true);
     });
-    expect(result.current.isClaiming).toBe(false);
-    expect(result.current.claimError).toBeUndefined();
-    expect(client.claimRole).toHaveBeenCalledWith({
-      roleId: 'claimable-role',
+    expect(result.current.isActivating).toBe(false);
+    expect(result.current.activationError).toBeUndefined();
+    expect(client.activateClaimableRoleAssignment).toHaveBeenCalledWith({
+      assignmentId: 'claimable-role',
       reason: 'Open reports',
     });
-    expect(client.getActiveRoles).toHaveBeenCalledTimes(2);
+    expect(client.getActiveAccessRoleAssignments).toHaveBeenCalledTimes(2);
 
     await unmount();
   });
@@ -119,23 +125,25 @@ describe('useRole', () => {
   it('surfaces and rethrows claim failures', async () => {
     const client = createClient();
     const error = new Error('claim failed');
-    vi.mocked(client.claimRole).mockReturnValue(throwError(() => error));
+    vi.mocked(client.activateClaimableRoleAssignment).mockReturnValue(throwError(() => error));
 
-    const { result, unmount } = await renderAppHook(() => useRole('Reports.Read'), {
+    const { result, unmount } = await renderAppHook(() => useAccessRole('Reports.Read'), {
       configure: configureRolesClient(client),
     });
     await vi.waitFor(() => expect(result.current.isChecking).toBe(false));
 
     await act(async () => {
-      await expect(result.current.claimRole({ roleId: 'claimable-role' })).rejects.toMatchObject({
-        name: 'ClaimRoleError',
+      await expect(
+        result.current.activateClaimableRoleAssignment({ assignmentId: 'claimable-role' }),
+      ).rejects.toMatchObject({
+        name: 'ActivateClaimableRoleAssignmentError',
         cause: error,
       });
     });
 
-    expect(result.current.isClaiming).toBe(false);
-    expect(result.current.claimError).toBeInstanceOf(ClaimRoleError);
-    expect(client.getActiveRoles).toHaveBeenCalledOnce();
+    expect(result.current.isActivating).toBe(false);
+    expect(result.current.activationError).toBeInstanceOf(ActivateClaimableRoleAssignmentError);
+    expect(client.getActiveAccessRoleAssignments).toHaveBeenCalledOnce();
 
     await unmount();
   });

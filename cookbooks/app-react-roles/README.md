@@ -7,8 +7,8 @@ uses focused React hooks to display and claim role assignments.
 
 Use this example when an application needs to:
 
-- render active assignments with `useRoles`;
-- render and activate claimable assignments with `useClaimableRoles`;
+- render effective active-access assignments with `useActiveAccessRoleAssignments`;
+- render and activate claimable assignments with `useClaimableRoleAssignments`;
 - claim an assignment and automatically refresh both lists;
 - stop initialization unless `ProView.Admin.DevOps` is active.
 
@@ -22,11 +22,11 @@ authorization for protected operations.
 
 ```ts
 enableRoles(configurator, (builder) => {
-  builder.requireRoles(['ProView.Admin.DevOps']);
+  builder.requireAccessRoles(['ProView.Admin.DevOps']);
 });
 ```
 
-Every configured role is required. Module initialization throws `RequiredRolesError` before the app
+Every configured role is required. Module initialization throws `RequiredAccessRolesError` before the app
 renders when the signed-in account does not satisfy the requirement.
 
 ## Show and claim roles
@@ -34,10 +34,10 @@ renders when the signed-in account does not satisfy the requirement.
 [`src/App.tsx`](./src/App.tsx) reads active and claimable roles through separate hooks:
 
 ```ts
-import { useClaimableRoles, useRoles } from '@equinor/fusion-framework-react-components-roles';
+import { useActiveAccessRoleAssignments, useClaimableRoleAssignments } from '@equinor/fusion-framework-react-components-roles';
 
-const active = useRoles();
-const claimable = useClaimableRoles();
+const active = useActiveAccessRoleAssignments();
+const claimable = useClaimableRoleAssignments();
 ```
 
 [`src/index.ts`](./src/index.ts) installs `RolesProvider` once around the application:
@@ -47,7 +47,7 @@ const appComponent = createElement(RolesProvider, undefined, createElement(App))
 ```
 
 The provider owns one observable action/flow store. Each hook exposes focused loading, error, and
-reload state. `useClaimableRoles` also exposes activation state; successful claims refresh both role
+reload state. `useClaimableRoleAssignments` also exposes activation state; successful claims refresh both role
 collections automatically.
 
 ## Run the cookbook
@@ -78,15 +78,15 @@ Use `enableRolesMock` for component tests that need known provider data without 
 ```ts
 enableRolesMock(configurator, (mock) => {
   mock
-    .setActiveRoles([{ systemName: 'Fusion Apps', accessRoleName: 'Fusion.Apps.FullControl' }])
-    .setClaimableRoles([{ id: 'assignment-id', claimableRole: { name: 'Report exporter' } }])
-    .requireRoles(['Fusion.Apps.FullControl']);
+    .setActiveAccessRoleAssignments([{ systemName: 'Fusion Apps', accessRoleName: 'Fusion.Apps.FullControl' }])
+    .setConsolidatedClaimableRoleAssignments([{ id: 'assignment-id', claimableRole: { name: 'Report exporter' } }])
+    .requireAccessRoles(['Fusion.Apps.FullControl']);
 });
 ```
 
 Consumers still receive the production Roles module provider (`IRolesProvider`). Use `vi.spyOn` on
-provider methods such as `claimRole` when a test needs a specific success, failure, or pending
-response.
+provider methods such as `activateClaimableRoleAssignment` when a test needs a specific success,
+failure, or pending response.
 
 ## Test the real Roles client with generated responses
 

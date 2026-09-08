@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { ClaimableRoleDetails } from '../overview/role-details';
+import type { ClaimableRoleDetails, AssignedRoleDetails } from '../overview/role-details';
 import { createCompactRoleGroups } from './create-compact-role-groups';
 
 const NOW = Date.parse('2026-09-05T12:00:00Z');
@@ -25,6 +25,26 @@ const assignment = (
   ...overrides,
 });
 
+/**
+ * Creates a normalized assigned-role assignment so grouping tests exercise the effective-window
+ * policy rather than service defaults.
+ * @param key - Distinct render key.
+ * @param overrides - Metadata varied by the eligibility scenario.
+ * @returns An assigned assignment with an open-ended effective window by default.
+ */
+const assignedRoleAssignment = (
+  key: string,
+  overrides: Partial<AssignedRoleDetails> = {},
+): AssignedRoleDetails => ({
+  key,
+  name: key,
+  displayName: key,
+  description: 'Test assigned role',
+  reasons: [],
+  isActive: true,
+  ...overrides,
+});
+
 describe('createCompactRoleGroups', () => {
   it('caps newest expiry shortcuts without dropping the remaining eligible assignments', () => {
     const roles = [
@@ -33,7 +53,7 @@ describe('createCompactRoleGroups', () => {
       assignment('second', { activeTo: new Date(NOW - 2 * DAY).toISOString() }),
       assignment('third', { activeTo: new Date(NOW - 3 * DAY).toISOString() }),
     ];
-    const groups = createCompactRoleGroups([], roles, NOW);
+    const groups = createCompactRoleGroups([], roles, [], NOW);
     expect(groups.expired).toEqual([roles[1], roles[2], roles[3]]);
     expect(groups.available).toEqual([roles[0]]);
     expect(roles).toMatchObject([
@@ -70,7 +90,7 @@ describe('createCompactRoleGroups', () => {
     'classifies %s consistently',
     (_scenario, overrides, eligible) => {
       const role = assignment('role', overrides);
-      const groups = createCompactRoleGroups([], [role], NOW);
+      const groups = createCompactRoleGroups([], [role], [], NOW);
       expect(groups.expired).toEqual(eligible ? [role] : []);
       expect(groups.available).toEqual(eligible ? [] : [role]);
     },
@@ -90,6 +110,7 @@ describe('createCompactRoleGroups', () => {
         },
       ],
       [claimed],
+      [],
       NOW,
     );
     expect(groups.claimed).toEqual([claimed]);
@@ -106,7 +127,7 @@ describe('createCompactRoleGroups', () => {
   });
 
   it('preserves active access assignments with absent optional metadata', () => {
-    const groups = createCompactRoleGroups([{}], [], NOW);
+    const groups = createCompactRoleGroups([{}], [], [], NOW);
     expect(groups.activeAccess[0]).toMatchObject({
       name: 'Unknown access role',
       description: 'Access role in an unknown system.',
@@ -122,14 +143,42 @@ describe('createCompactRoleGroups', () => {
     const role = { systemName: 'Reports', accessRoleName: 'Reports.Read' };
     const first = { ...role, scope: { type: 'project', isGlobal: false, values: ['A'] } };
     const second = { ...role, scope: { type: 'project', isGlobal: false, values: ['B'] } };
-    const groups = createCompactRoleGroups([first, second, first], [], NOW);
+    const groups = createCompactRoleGroups([first, second, first], [], [], NOW);
     // Compare render identities rather than labels, which are intentionally identical.
     const keys = groups.activeAccess.map((item) => item.key);
     expect(new Set(keys).size).toBe(3);
 
-    const reordered = createCompactRoleGroups([second, first, first], [], NOW);
+    const reordered = createCompactRoleGroups([second, first, first], [], [], NOW);
     // Reordering other scopes must not change either duplicate's occurrence identity.
     expect(reordered.activeAccess.map((item) => item.key)).toEqual([keys[1], keys[0], keys[2]]);
-    expect(createCompactRoleGroups([second], [], NOW).activeAccess[0].key).toBe(keys[1]);
+    expect(createCompactRoleGroups([second], [], [], NOW).activeAccess[0].key).toBe(keys[1]);
+  });
+
+  it.each([
+    ['no validFrom or validTo', {}, true],
+    ['validFrom in the past', { validFrom: new Date(NOW - DAY).toISOString() }, true],
+    ['validFrom now', { validFrom: new Date(NOW).toISOString() }, true],
+    ['validFrom in the future', { validFrom: new Date(NOW + 1).toISOString() }, false],
+    ['validTo in the future', { validTo: new Date(NOW + 1).toISOString() }, true],
+    ['validTo now', { validTo: new Date(NOW).toISOString() }, false],
+    ['validTo in the past', { validTo: new Date(NOW - DAY).toISOString() }, false],
+    ['malformed validFrom', { validFrom: 'not-a-date' }, false],
+    ['malformed validTo', { validTo: '2026-02-30' }, false],
+  ] satisfies ReadonlyArray<readonly [string, Partial<AssignedRoleDetails>, boolean]>)(
+    'classifies assigned role effectiveness for %s consistently',
+    (_scenario, overrides, effective) => {
+      const role = assignedRoleAssignment('assigned-role', overrides);
+      const groups = createCompactRoleGroups([], [], [role], NOW);
+      expect(groups.assigned).toEqual(effective ? [role] : []);
+    },
+  );
+
+  it('excludes assigned roles outside their effective window while keeping others visible', () => {
+    const effective = assignedRoleAssignment('effective');
+    const notYetEffective = assignedRoleAssignment('future', {
+      validFrom: new Date(NOW + DAY).toISOString(),
+    });
+    const groups = createCompactRoleGroups([], [], [effective, notYetEffective], NOW);
+    expect(groups.assigned).toEqual([effective]);
   });
 });

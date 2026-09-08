@@ -20,14 +20,14 @@ export const RolesLoadFeedback = ({
 }: RolesLoadFeedbackProps): ReactNode => (
   <>
     {isRefreshing ? (
-      <p role="status">Refreshing roles… Displayed roles may be out of date.</p>
+      <p role="status">Refreshing role data… Displayed assignments may be out of date.</p>
     ) : null}
     {error ? (
       <>
         <Banner>
           <Banner.Message>
-            Some roles could not be loaded. Displayed roles may be incomplete or out of date.{' '}
-            {String(error)}
+            Some role data could not be loaded. Displayed assignments may be incomplete or out of
+            date. {String(error)}
           </Banner.Message>
         </Banner>
         <Button

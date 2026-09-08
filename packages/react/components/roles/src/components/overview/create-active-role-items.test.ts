@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import type { ActiveRoles } from '../../state/roles-state';
+import type { ActiveAccessRoleAssignments } from '../../state/roles-state';
 import { createActiveRoleItems } from './create-active-role-items';
 
 describe('createActiveRoleItems', () => {
   it('includes every scope field and preserves duplicate and missing-metadata rows', () => {
-    const roles: ActiveRoles = [
+    const roles: ActiveAccessRoleAssignments = [
       { scope: { type: 'project', isGlobal: false, values: ['A', 'B'] } },
       { scope: { type: 'contract', isGlobal: false, values: ['A', 'B'] } },
       { scope: { type: 'project', isGlobal: true, values: ['A', 'B'] } },

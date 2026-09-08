@@ -7,9 +7,11 @@ import {
   listAccountActiveAccessRoleAssignments,
   listAccountClaimableRoleAssignments,
   listAccountConsolidatedClaimableRoleAssignments,
+  listAccountConsolidatedRoleAssignments,
   type ApiAccountActiveAccessRoleAssignmentV1,
   type ApiClaimableRoleAssignmentActivationV1,
   type ApiConsolidatedClaimableRoleAssignmentV1,
+  type ApiConsolidatedRoleAssignmentV1,
   type ApiExtendedAccessRoleV1,
   type ListAccessRolesArg,
   type ListAccessRolesResponse,
@@ -32,17 +34,20 @@ import {
 } from 'rxjs';
 
 import { RolesError } from './errors/RolesError.js';
-import type { RequiredRoleClaim, RequiredRoleStatus } from './RequiredRoleStatus.js';
+import type {
+  RequiredAccessRoleClaimableAssignment,
+  RequiredAccessRoleStatus,
+} from './RequiredAccessRoleStatus.js';
 
 const ROLES_CACHE_EXPIRY_MS = 60_000;
 
 /**
- * Input required to claim a claimable role assignment.
+ * Input required to activate a claimable role assignment.
  */
-export interface ClaimRoleInput {
+export interface ActivateClaimableRoleAssignmentInput {
   /** Claimable role assignment identifier. */
-  roleId: string;
-  /** Reason recorded for claiming the role. */
+  assignmentId: string;
+  /** Reason recorded for activating the claimable role assignment. */
   reason?: string;
   /** Requested activation duration in hours. */
   hours?: number | string;
@@ -51,9 +56,9 @@ export interface ClaimRoleInput {
 /**
  * Input required to deactivate an active claimable role assignment.
  */
-export interface DeactivateRoleInput {
+export interface DeactivateClaimableRoleAssignmentInput {
   /** Claimable assignment identifier whose current activation should end. */
-  roleId: string;
+  assignmentId: string;
 }
 
 /**
@@ -81,7 +86,7 @@ export interface RolesClientInitializeOptions {
   resolveCurrentAccountIdentifier: RolesAccountResolver;
 }
 
-interface ClaimableAccessRoleQueryArgs {
+interface ClaimableRoleAssignmentForAccessRoleQueryArgs {
   accountIdentifier: string;
   accessRoleName: string;
 }
@@ -101,52 +106,78 @@ export interface IRolesClient {
   initialize(options: RolesClientInitializeOptions): void | Promise<void>;
 
   /**
-   * Gets the account's currently active access roles.
+   * Gets the account's currently active, deduplicated access-role assignments.
+   *
+   * `/active-access-role-assignments` drops provenance: an assignment cannot be attributed to a
+   * standing grant or an activated claim from this collection alone.
    *
    * @returns Active access-role assignments for the scoped account.
    */
-  getActiveRoles(options?: RolesReadOptions): Observable<ApiAccountActiveAccessRoleAssignmentV1[]>;
+  getActiveAccessRoleAssignments(
+    options?: RolesReadOptions,
+  ): Observable<ApiAccountActiveAccessRoleAssignmentV1[]>;
 
   /**
-   * Gets the roles the account is eligible to claim.
+   * Gets the roles the account is eligible to claim, consolidated across contributing sources.
    *
    * @returns Consolidated claimable-role assignments for the scoped account.
    */
-  getClaimableRoles(
+  getConsolidatedClaimableRoleAssignments(
     options?: RolesReadOptions,
   ): Observable<ApiConsolidatedClaimableRoleAssignmentV1[]>;
 
   /**
-   * Claims a role for the scoped account.
+   * Gets the account's consolidated, standing role assignments from `/consolidated-role-assignments`.
    *
-   * @param input - Claimable assignment identifier, reason, and requested duration.
+   * These assignments are not claimable, but Roles V2 never calls them permanent: they may still be
+   * validity-bounded. `assignmentType` reported on
+   * {@link IRolesClient.getActiveAccessRoleAssignments | active} assignments cannot reliably
+   * distinguish this standing grant from an activated claim, so consumers must read this collection
+   * instead of inferring provenance from active assignments.
+   *
+   * @returns Consolidated role assignments for the scoped account.
+   */
+  getConsolidatedRoleAssignments(
+    options?: RolesReadOptions,
+  ): Observable<ApiConsolidatedRoleAssignmentV1[]>;
+
+  /**
+   * Activates a claimable role assignment for the scoped account.
+   *
+   * @param input - Claimable role assignment identifier, reason, and requested duration.
    * @returns Activation metadata returned by Roles V2.
    */
-  claimRole(input: ClaimRoleInput): Observable<ApiClaimableRoleAssignmentActivationV1>;
+  activateClaimableRoleAssignment(
+    input: ActivateClaimableRoleAssignmentInput,
+  ): Observable<ApiClaimableRoleAssignmentActivationV1>;
 
   /**
    * Ends the current activation for a claimable role assignment.
    *
-   * @param input - Claimable assignment identifier to deactivate.
+   * @param input - Claimable role assignment identifier to deactivate.
    * @returns Updated activation metadata returned by Roles V2.
    */
-  deactivateRole(input: DeactivateRoleInput): Observable<ApiClaimableRoleAssignmentActivationV1>;
+  deactivateClaimableRoleAssignment(
+    input: DeactivateClaimableRoleAssignmentInput,
+  ): Observable<ApiClaimableRoleAssignmentActivationV1>;
 
   /**
-   * Checks whether any claimable role grants an access role when activated.
+   * Checks whether any claimable role assignment grants an access role when activated.
    *
    * @param accessRoleName - Exact access-role name to find in expanded mappings.
-   * @returns True when the account can claim a role that grants the access role.
+   * @returns True when the account holds a claimable role assignment granting the access role.
    */
-  canClaimAccessRole(accessRoleName: string): Observable<boolean>;
+  hasClaimableRoleAssignmentForAccessRole(accessRoleName: string): Observable<boolean>;
 
   /**
-   * Resolves whether required access roles exist and whether the account can claim them.
+   * Resolves whether required access roles exist and which claimable role assignments grant them.
    *
-   * @param roleNames - Exact access-role names required by an application.
-   * @returns Statuses in the same order as the unique requested role names.
+   * @param accessRoleNames - Exact access-role names required by an application.
+   * @returns Statuses in the same order as the unique requested access-role names.
    */
-  getRequiredRoleStatuses(roleNames: readonly string[]): Observable<RequiredRoleStatus[]>;
+  getRequiredAccessRoleStatuses(
+    accessRoleNames: readonly string[],
+  ): Observable<RequiredAccessRoleStatus[]>;
 
   /**
    * Fetches one access-role page without following its continuation.
@@ -179,18 +210,33 @@ export interface IRolesClient {
  * to its request and propagates teardown. Query owns read caching; mutations are not shared
  * or retried, so subscribing twice can execute a mutation twice.
  *
- * Required-role lookup joins two finite pipelines: a bounded registry scan and an ordered
- * claim index. Both must emit even for empty data so `forkJoin` can emit a complete result.
+ * Required-access-role lookup joins two finite pipelines: a bounded registry scan and an ordered
+ * claimable-assignment index. Both must emit even for empty data so `forkJoin` can emit a
+ * complete result.
  * Service errors remain errors, never empty success values. The provider alone converts
  * observables into Promises or consumer-driven async iteration.
  */
 export class RolesClient implements IRolesClient {
   /** Account-isolated cache for active access-role assignments. */
-  protected readonly activeRolesQuery: Query<ApiAccountActiveAccessRoleAssignmentV1[], string>;
+  protected readonly activeAccessRoleAssignmentsQuery: Query<
+    ApiAccountActiveAccessRoleAssignmentV1[],
+    string
+  >;
   /** Account-isolated cache for consolidated claimable-role assignments. */
-  protected readonly claimableRolesQuery: Query<ApiConsolidatedClaimableRoleAssignmentV1[], string>;
-  /** Account and access-role isolated cache for claim eligibility. */
-  protected readonly claimableAccessRoleQuery: Query<boolean, ClaimableAccessRoleQueryArgs>;
+  protected readonly consolidatedClaimableRoleAssignmentsQuery: Query<
+    ApiConsolidatedClaimableRoleAssignmentV1[],
+    string
+  >;
+  /** Account-isolated cache for consolidated role assignments. */
+  protected readonly consolidatedRoleAssignmentsQuery: Query<
+    ApiConsolidatedRoleAssignmentV1[],
+    string
+  >;
+  /** Account and access-role isolated cache for claimable-role-assignment eligibility. */
+  protected readonly claimableRoleAssignmentForAccessRoleQuery: Query<
+    boolean,
+    ClaimableRoleAssignmentForAccessRoleQueryArgs
+  >;
 
   /**
    * Creates a Roles V2 client with an account resolver for direct and configured usage.
@@ -204,7 +250,7 @@ export class RolesClient implements IRolesClient {
     /** Resolver called before every account-scoped operation. */
     protected accountResolver: RolesAccountResolver,
   ) {
-    this.activeRolesQuery = new Query({
+    this.activeAccessRoleAssignmentsQuery = new Query({
       client: {
         fn: (accountIdentifier) =>
           listAccountActiveAccessRoleAssignments(
@@ -219,7 +265,7 @@ export class RolesClient implements IRolesClient {
       key: (accountIdentifier) => accountIdentifier,
       expire: ROLES_CACHE_EXPIRY_MS,
     });
-    this.claimableRolesQuery = new Query({
+    this.consolidatedClaimableRoleAssignmentsQuery = new Query({
       client: {
         fn: (accountIdentifier) =>
           listAccountConsolidatedClaimableRoleAssignments(
@@ -230,15 +276,30 @@ export class RolesClient implements IRolesClient {
             accountIdentifier,
           }),
       },
-      // Account-scoped keys preserve independent claimable-role caches across account changes.
+      // Account-scoped keys preserve independent claimable-role-assignment caches across account changes.
       key: (accountIdentifier) => accountIdentifier,
       expire: ROLES_CACHE_EXPIRY_MS,
     });
-    this.claimableAccessRoleQuery = new Query({
+    this.consolidatedRoleAssignmentsQuery = new Query({
       client: {
-        fn: (args) => this._fetchCanClaimAccessRole(args),
+        fn: (accountIdentifier) =>
+          listAccountConsolidatedRoleAssignments(
+            'v1',
+            this.httpClient,
+            'json$',
+          )({
+            accountIdentifier,
+          }),
       },
-      // Both values define claim eligibility and must participate in cache identity.
+      // Account-scoped keys preserve independent consolidated-role-assignment caches across account changes.
+      key: (accountIdentifier) => accountIdentifier,
+      expire: ROLES_CACHE_EXPIRY_MS,
+    });
+    this.claimableRoleAssignmentForAccessRoleQuery = new Query({
+      client: {
+        fn: (args) => this._fetchHasClaimableRoleAssignmentForAccessRole(args),
+      },
+      // Both values define eligibility and must participate in cache identity.
       key: ({ accountIdentifier, accessRoleName }) =>
         JSON.stringify([accountIdentifier, accessRoleName]),
       expire: ROLES_CACHE_EXPIRY_MS,
@@ -250,8 +311,8 @@ export class RolesClient implements IRolesClient {
     this.accountResolver = options.resolveCurrentAccountIdentifier;
   }
 
-  /** {@inheritDoc IRolesClient.getActiveRoles} */
-  public getActiveRoles(
+  /** {@inheritDoc IRolesClient.getActiveAccessRoleAssignments} */
+  public getActiveAccessRoleAssignments(
     options: RolesReadOptions = {},
   ): Observable<ApiAccountActiveAccessRoleAssignmentV1[]> {
     // Resolve the selected account and invalidate caches only when the read is subscribed.
@@ -260,16 +321,18 @@ export class RolesClient implements IRolesClient {
       switchMap((accountIdentifier) => {
         // User-visible refreshes must bypass the minute-long query cache.
         if (options.refresh) {
-          this.activeRolesQuery.invalidate();
+          this.activeAccessRoleAssignmentsQuery.invalidate();
         }
         // Unwrap Query's result envelope without introducing a second cache or subscription.
-        return Query.extractQueryValue(this.activeRolesQuery.query(accountIdentifier));
+        return Query.extractQueryValue(
+          this.activeAccessRoleAssignmentsQuery.query(accountIdentifier),
+        );
       }),
     );
   }
 
-  /** {@inheritDoc IRolesClient.getClaimableRoles} */
-  public getClaimableRoles(
+  /** {@inheritDoc IRolesClient.getConsolidatedClaimableRoleAssignments} */
+  public getConsolidatedClaimableRoleAssignments(
     options: RolesReadOptions = {},
   ): Observable<ApiConsolidatedClaimableRoleAssignmentV1[]> {
     // Resolve the selected account and invalidate caches only when the read is subscribed.
@@ -278,16 +341,40 @@ export class RolesClient implements IRolesClient {
       switchMap((accountIdentifier) => {
         // User-visible refreshes must bypass the minute-long query cache.
         if (options.refresh) {
-          this.claimableRolesQuery.invalidate();
+          this.consolidatedClaimableRoleAssignmentsQuery.invalidate();
         }
         // Keep cache lifecycle and concurrent-read coordination inside Query.
-        return Query.extractQueryValue(this.claimableRolesQuery.query(accountIdentifier));
+        return Query.extractQueryValue(
+          this.consolidatedClaimableRoleAssignmentsQuery.query(accountIdentifier),
+        );
       }),
     );
   }
 
-  /** {@inheritDoc IRolesClient.claimRole} */
-  public claimRole(input: ClaimRoleInput): Observable<ApiClaimableRoleAssignmentActivationV1> {
+  /** {@inheritDoc IRolesClient.getConsolidatedRoleAssignments} */
+  public getConsolidatedRoleAssignments(
+    options: RolesReadOptions = {},
+  ): Observable<ApiConsolidatedRoleAssignmentV1[]> {
+    // Resolve the selected account and invalidate caches only when the read is subscribed.
+    return defer(() => this._getCurrentAccountIdentifier()).pipe(
+      // One account resolution selects one account-isolated collection read.
+      switchMap((accountIdentifier) => {
+        // User-visible refreshes must bypass the minute-long query cache.
+        if (options.refresh) {
+          this.consolidatedRoleAssignmentsQuery.invalidate();
+        }
+        // Keep cache lifecycle and concurrent-read coordination inside Query.
+        return Query.extractQueryValue(
+          this.consolidatedRoleAssignmentsQuery.query(accountIdentifier),
+        );
+      }),
+    );
+  }
+
+  /** {@inheritDoc IRolesClient.activateClaimableRoleAssignment} */
+  public activateClaimableRoleAssignment(
+    input: ActivateClaimableRoleAssignmentInput,
+  ): Observable<ApiClaimableRoleAssignmentActivationV1> {
     // Activation is lazy, and failed requests must leave existing read caches intact.
     return defer(() => this._getCurrentAccountIdentifier()).pipe(
       // Resolve once before mutating; do not retry or resubscribe to this non-idempotent operation.
@@ -298,7 +385,7 @@ export class RolesClient implements IRolesClient {
           'json$',
         )({
           accountIdentifier,
-          claimableRoleAssignmentId: input.roleId,
+          claimableRoleAssignmentId: input.assignmentId,
           reason: input.reason,
           hours: input.hours,
         }),
@@ -308,9 +395,9 @@ export class RolesClient implements IRolesClient {
     );
   }
 
-  /** {@inheritDoc IRolesClient.deactivateRole} */
-  public deactivateRole(
-    input: DeactivateRoleInput,
+  /** {@inheritDoc IRolesClient.deactivateClaimableRoleAssignment} */
+  public deactivateClaimableRoleAssignment(
+    input: DeactivateClaimableRoleAssignmentInput,
   ): Observable<ApiClaimableRoleAssignmentActivationV1> {
     // Deactivation is lazy, and only a successful mutation invalidates role reads.
     return defer(() => this._getCurrentAccountIdentifier()).pipe(
@@ -322,7 +409,7 @@ export class RolesClient implements IRolesClient {
           'json$',
         )({
           accountIdentifier,
-          claimableRoleAssignmentId: input.roleId,
+          claimableRoleAssignmentId: input.assignmentId,
         }),
       ),
       // Preserve the response unchanged while making subsequent reads observe the mutation.
@@ -330,24 +417,29 @@ export class RolesClient implements IRolesClient {
     );
   }
 
-  /** {@inheritDoc IRolesClient.canClaimAccessRole} */
-  public canClaimAccessRole(accessRoleName: string): Observable<boolean> {
+  /** {@inheritDoc IRolesClient.hasClaimableRoleAssignmentForAccessRole} */
+  public hasClaimableRoleAssignmentForAccessRole(accessRoleName: string): Observable<boolean> {
     // Each subscription uses the current account's isolated eligibility cache.
     return defer(() => this._getCurrentAccountIdentifier()).pipe(
       // The account/name cache key prevents eligibility results leaking between requests.
       switchMap((accountIdentifier) =>
         Query.extractQueryValue(
-          this.claimableAccessRoleQuery.query({ accountIdentifier, accessRoleName }),
+          this.claimableRoleAssignmentForAccessRoleQuery.query({
+            accountIdentifier,
+            accessRoleName,
+          }),
         ),
       ),
     );
   }
 
-  /** {@inheritDoc IRolesClient.getRequiredRoleStatuses} */
-  public getRequiredRoleStatuses(roleNames: readonly string[]): Observable<RequiredRoleStatus[]> {
-    const uniqueRoleNames = [...new Set(roleNames)];
+  /** {@inheritDoc IRolesClient.getRequiredAccessRoleStatuses} */
+  public getRequiredAccessRoleStatuses(
+    accessRoleNames: readonly string[],
+  ): Observable<RequiredAccessRoleStatus[]> {
+    const uniqueAccessRoleNames = [...new Set(accessRoleNames)];
     // No collections are needed when no access roles are required.
-    if (uniqueRoleNames.length === 0) {
+    if (uniqueAccessRoleNames.length === 0) {
       return of([]);
     }
     // Resolve the account lazily, then subscribe to both finite lookups under one error boundary.
@@ -355,47 +447,47 @@ export class RolesClient implements IRolesClient {
       switchMap((accountIdentifier) =>
         // Both branches must emit once and complete; an error unsubscribes the sibling immediately.
         forkJoin({
-          registeredRolesByName: this._fetchRegisteredRoles(uniqueRoleNames),
-          claimsByAccessRole: this._fetchRequiredRoleClaims(
+          registeredAccessRolesByName: this._fetchRegisteredAccessRoles(uniqueAccessRoleNames),
+          claimableAssignmentsByAccessRole: this._fetchRequiredAccessRoleClaimableAssignments(
             accountIdentifier,
-            new Set(uniqueRoleNames),
+            new Set(uniqueAccessRoleNames),
           ),
         }),
       ),
-      // Combine only complete indexes: partial registry/claim results cannot describe recovery safely.
-      map(({ registeredRolesByName, claimsByAccessRole }) => {
+      // Combine only complete indexes: partial registry or eligibility results cannot describe recovery safely.
+      map(({ registeredAccessRolesByName, claimableAssignmentsByAccessRole }) => {
         // Preserve configuration order so recovery UI matches the application requirement.
-        return uniqueRoleNames.map((name) => ({
+        return uniqueAccessRoleNames.map((name) => ({
           name,
-          description: registeredRolesByName.get(name)?.description,
-          exists: registeredRolesByName.has(name),
-          claims: claimsByAccessRole.get(name) ?? [],
+          description: registeredAccessRolesByName.get(name)?.description,
+          exists: registeredAccessRolesByName.has(name),
+          claimableAssignments: claimableAssignmentsByAccessRole.get(name) ?? [],
         }));
       }),
     );
   }
 
   /**
-   * Resolves claimable assignments into a bounded index of claims for the requested access roles.
+   * Resolves claimable role assignments into a bounded index keyed by required access-role name.
    *
    * @param accountIdentifier - Authenticated account whose assignments are inspected.
-   * @param roleNames - Required access-role names to retain.
-   * @returns One claim index per subscription, preserving assignment and mapping order.
+   * @param accessRoleNames - Required access-role names to retain.
+   * @returns One claimable-assignment index per subscription, preserving assignment and mapping order.
    * @throws {RolesError} When the service returns an unfollowable continuation.
    *
    * @remarks
-   * Page -> assignments -> mappings -> named claims -> one index. `concatMap` preserves API
-   * order while flattening finite arrays. The seeded `reduce` emits an empty map when every
-   * record is filtered out; returning `EMPTY` instead would prevent the outer `forkJoin`
-   * from producing statuses. All mutable accumulation is allocated inside `defer`.
+   * Page -> assignments -> mappings -> named claimable assignments -> one index. `concatMap`
+   * preserves API order while flattening finite arrays. The seeded `reduce` emits an empty map
+   * when every record is filtered out; returning `EMPTY` instead would prevent the outer
+   * `forkJoin` from producing statuses. All mutable accumulation is allocated inside `defer`.
    */
-  protected _fetchRequiredRoleClaims(
+  protected _fetchRequiredAccessRoleClaimableAssignments(
     accountIdentifier: string,
-    roleNames: ReadonlySet<string>,
-  ): Observable<Map<string, RequiredRoleClaim[]>> {
-    // Defer the reducer seed so repeated subscriptions never share mutable claim state.
+    accessRoleNames: ReadonlySet<string>,
+  ): Observable<Map<string, RequiredAccessRoleClaimableAssignment[]>> {
+    // Defer the reducer seed so repeated subscriptions never share mutable index state.
     return defer(() =>
-      // Flatten assignments and mappings before indexing only activatable, requested claims.
+      // Flatten assignments and mappings before indexing only activatable, requested assignments.
       listAccountClaimableRoleAssignments(
         'v1',
         this.httpClient,
@@ -415,7 +507,7 @@ export class RolesClient implements IRolesClient {
         }),
         // Flatten the response array without changing assignment order.
         concatMap((page) => page.value ?? []),
-        // Narrow the identifier as well as filtering: claims without IDs cannot be activated.
+        // Narrow the identifier as well as filtering: assignments without IDs cannot be activated.
         filter(
           (assignment): assignment is typeof assignment & { id: string } =>
             typeof assignment.id === 'string' && assignment.id.length > 0,
@@ -426,7 +518,7 @@ export class RolesClient implements IRolesClient {
           from(assignment.claimableRole?.accessRoleMappings ?? []).pipe(
             map((mapping) => ({
               assignmentId: assignment.id,
-              role: assignment.claimableRole,
+              claimableRole: assignment.claimableRole,
               accessRoleName: mapping.accessRole?.name,
             })),
           ),
@@ -434,25 +526,26 @@ export class RolesClient implements IRolesClient {
         // Bound retained data to requested names; unrelated mappings must not grow the index.
         filter(
           (mapping): mapping is typeof mapping & { accessRoleName: string } =>
-            typeof mapping.accessRoleName === 'string' && roleNames.has(mapping.accessRoleName),
+            typeof mapping.accessRoleName === 'string' &&
+            accessRoleNames.has(mapping.accessRoleName),
         ),
         // Apply display fallbacks once, after both the assignment ID and access-role name are valid.
-        map(({ assignmentId, role, accessRoleName }) => ({
+        map(({ assignmentId, claimableRole, accessRoleName }) => ({
           accessRoleName,
-          claim: {
+          claimableAssignment: {
             assignmentId,
-            name: role?.name ?? role?.displayName ?? accessRoleName,
-            displayName: role?.displayName ?? role?.name ?? accessRoleName,
-            description: role?.description,
+            name: claimableRole?.name ?? claimableRole?.displayName ?? accessRoleName,
+            displayName: claimableRole?.displayName ?? claimableRole?.name ?? accessRoleName,
+            description: claimableRole?.description,
           },
         })),
-        // Emit only the final index, including an empty map when there are no usable claims.
-        reduce((claimsByRole, { accessRoleName, claim }) => {
-          const claims = claimsByRole.get(accessRoleName) ?? [];
-          claims.push(claim);
-          claimsByRole.set(accessRoleName, claims);
-          return claimsByRole;
-        }, new Map<string, RequiredRoleClaim[]>()),
+        // Emit only the final index, including an empty map when no usable assignment remains.
+        reduce((claimableAssignmentsByAccessRole, { accessRoleName, claimableAssignment }) => {
+          const claimableAssignments = claimableAssignmentsByAccessRole.get(accessRoleName) ?? [];
+          claimableAssignments.push(claimableAssignment);
+          claimableAssignmentsByAccessRole.set(accessRoleName, claimableAssignments);
+          return claimableAssignmentsByAccessRole;
+        }, new Map<string, RequiredAccessRoleClaimableAssignment[]>()),
       ),
     );
   }
@@ -460,53 +553,53 @@ export class RolesClient implements IRolesClient {
   /**
    * Pages the access-role registry until all requested names are found or the collection ends.
    *
-   * @param roleNames - Unique access-role names to retain.
-   * @returns A single map of registered roles, with pagination state isolated per subscription.
+   * @param accessRoleNames - Unique access-role names to retain.
+   * @returns A single map of registered access roles, with pagination state isolated per subscription.
    * @throws {RolesError} When a continuation cannot advance through the collection.
    *
    * @remarks
    * `expand` requests the next page only after the current response establishes its offset.
    * Returning `EMPTY` ends expansion, not the whole result: `last` still observes the final
-   * page and emits the completed index. Only explicitly requested roles are retained.
+   * page and emits the completed index. Only explicitly requested access roles are retained.
    * Unlike the provider's public registry iterator, this lookup intentionally scans until
    * it can answer a finite set of requirements. Unsubscription stops further expansion.
    */
-  protected _fetchRegisteredRoles(
-    roleNames: readonly string[],
+  protected _fetchRegisteredAccessRoles(
+    accessRoleNames: readonly string[],
   ): Observable<Map<string, ApiExtendedAccessRoleV1>> {
     // Offsets and retained records belong to one subscription, never to the reusable observable.
     return defer(() => {
-      const registeredRoles = new Map<string, ApiExtendedAccessRoleV1>();
+      const registeredAccessRoles = new Map<string, ApiExtendedAccessRoleV1>();
       let skip = 0;
       // Only this bounded lookup follows pages automatically; registry listing remains pull-based.
       return this.getAccessRoles({ top: 100, skip }).pipe(
         // Each response determines whether another page is necessary; no separate subscriptions.
         expand((page) => {
-          const roles = page.value ?? [];
-          // Retain only requested roles while preserving their API descriptions.
-          for (const role of roles) {
+          const accessRoles = page.value ?? [];
+          // Retain only requested access roles while preserving their API descriptions.
+          for (const accessRole of accessRoles) {
             // Records without names cannot satisfy an exact application requirement.
-            if (role.name && roleNames.includes(role.name)) {
-              registeredRoles.set(role.name, role);
+            if (accessRole.name && accessRoleNames.includes(accessRole.name)) {
+              registeredAccessRoles.set(accessRole.name, accessRole);
             }
           }
           // An empty continuation would request the same offset indefinitely.
-          if (page.nextPage && roles.length === 0) {
+          if (page.nextPage && accessRoles.length === 0) {
             throw new RolesError(
               'Roles V2 returned an invalid continuation while resolving required access roles.',
             );
           }
           // Stop once the requested names are resolved, without collecting the full registry.
-          if (!page.nextPage || registeredRoles.size === roleNames.length) {
+          if (!page.nextPage || registeredAccessRoles.size === accessRoleNames.length) {
             return EMPTY;
           }
-          skip += roles.length;
+          skip += accessRoles.length;
           return this.getAccessRoles({ top: 100, skip });
         }),
         // Do not expose intermediate indexes while later pages could still satisfy requirements.
         last(),
-        // The last response is only a completion barrier; callers need the bounded role index.
-        map(() => registeredRoles),
+        // The last response is only a completion barrier; callers need the bounded access-role index.
+        map(() => registeredAccessRoles),
       );
     });
   }
@@ -528,18 +621,25 @@ export class RolesClient implements IRolesClient {
     });
   }
 
-  /** Invalidates all account-scoped reads after a successful role mutation. */
+  /**
+   * Invalidates account-scoped reads after a successful claimable-role-assignment mutation.
+   *
+   * Consolidated role assignments are outside activation and deactivation, so
+   * `consolidatedRoleAssignmentsQuery` is deliberately not invalidated here; forcing it would
+   * defeat its cache for state those mutations cannot change.
+   */
   protected _invalidateReadCaches(): void {
-    this.activeRolesQuery.invalidate();
-    this.claimableRolesQuery.invalidate();
-    this.claimableAccessRoleQuery.invalidate();
+    this.activeAccessRoleAssignmentsQuery.invalidate();
+    this.consolidatedClaimableRoleAssignmentsQuery.invalidate();
+    this.claimableRoleAssignmentForAccessRoleQuery.invalidate();
   }
 
   /** {@inheritDoc IRolesClient.dispose} */
   public dispose(): void {
-    this.activeRolesQuery.complete();
-    this.claimableRolesQuery.complete();
-    this.claimableAccessRoleQuery.complete();
+    this.activeAccessRoleAssignmentsQuery.complete();
+    this.consolidatedClaimableRoleAssignmentsQuery.complete();
+    this.consolidatedRoleAssignmentsQuery.complete();
+    this.claimableRoleAssignmentForAccessRoleQuery.complete();
   }
 
   /**
@@ -561,13 +661,13 @@ export class RolesClient implements IRolesClient {
    * Loads expanded claimable-role mappings to evaluate one access role.
    *
    * @param args - Current account identifier and exact access-role name to evaluate.
-   * @returns True when the account can claim a role that grants the access role.
+   * @returns True when a claimable role assignment grants the access role when activated.
    * @throws {Error} When the service returns an unfollowable continuation.
    */
-  protected _fetchCanClaimAccessRole({
+  protected _fetchHasClaimableRoleAssignmentForAccessRole({
     accountIdentifier,
     accessRoleName,
-  }: ClaimableAccessRoleQueryArgs): Observable<boolean> {
+  }: ClaimableRoleAssignmentForAccessRoleQueryArgs): Observable<boolean> {
     // Defer transport so synchronous request validation also reaches the error channel.
     return defer(() =>
       listAccountClaimableRoleAssignments(
@@ -581,21 +681,21 @@ export class RolesClient implements IRolesClient {
     ).pipe(
       // Produce one definitive boolean, or fail rather than treating incomplete data as denial.
       map((assignments) => {
-        // Stop after the first claimable role that can grant the requested access role.
-        const canClaim = (assignments.value ?? []).some((assignment) =>
+        // Stop after the first claimable role assignment that can grant the requested access role.
+        const hasClaimableRoleAssignment = (assignments.value ?? []).some((assignment) =>
           // Expanded mappings are the authoritative relationship between these roles.
           assignment.claimableRole?.accessRoleMappings?.some(
             (mapping) => mapping.accessRole?.name === accessRoleName,
           ),
         );
         // A positive match is conclusive even when the service advertises another page.
-        if (canClaim) {
+        if (hasClaimableRoleAssignment) {
           return true;
         }
         // The endpoint exposes no skip/top inputs, so a continuation cannot be followed safely.
         if (assignments.nextPage) {
           throw new RolesError(
-            'Roles V2 returned incomplete claimable role assignments while checking claim eligibility.',
+            'Roles V2 returned incomplete claimable role assignments while checking activation eligibility.',
           );
         }
         return false;

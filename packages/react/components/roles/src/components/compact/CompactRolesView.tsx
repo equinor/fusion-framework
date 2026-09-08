@@ -21,29 +21,48 @@ const Styled = {
   RoleList: styled.div`
     display: grid;
   `,
+  RoleSection: styled.section`
+    display: grid;
+    gap: 0.5rem;
+  `,
 };
 
 /**
- * Displays active and claimable Roles V2 assignments in a compact flyout layout.
+ * Displays role assignments, claimable role assignments, and effective access in a compact flyout.
  * Claimable switches collect audit details; information buttons reveal metadata without expanding rows.
  * @returns A compact role overview backed by the nearest `RolesProvider`.
  */
 export const CompactRolesView = (): ReactNode => {
   const overview = useRolesOverview();
-  const { active, claimable, claimableRoles, selectedClaim, selectClaim } = overview;
+  const {
+    activeAccessRoleAssignments,
+    consolidatedClaimableRoleAssignments,
+    claimableRoles,
+    assignedRoles,
+    selectedClaimableRoleAssignment,
+    selectClaimableRoleAssignment,
+  } = overview;
   const [tab, setTab] = useState(0);
   const [selectedDetails, setSelectedDetails] = useState<RoleDetails>();
   // One timestamp governs the whole partition; tab and dialog changes must not reshuffle shortcuts.
   const groups = useMemo(
-    () => createCompactRoleGroups(active.roles, claimableRoles, Date.now()),
-    [active.roles, claimableRoles],
+    () =>
+      createCompactRoleGroups(
+        activeAccessRoleAssignments.assignments,
+        claimableRoles,
+        assignedRoles,
+        Date.now(),
+      ),
+    [activeAccessRoleAssignments.assignments, claimableRoles, assignedRoles],
   );
   const rowControls = {
-    isPending: claimable.isClaiming || claimable.isDeactivating,
-    selectedAssignmentId: selectedClaim?.assignmentId,
+    isPending:
+      consolidatedClaimableRoleAssignments.isActivating ||
+      consolidatedClaimableRoleAssignments.isDeactivating,
+    selectedAssignmentId: selectedClaimableRoleAssignment?.assignmentId,
     onShowInformation: setSelectedDetails,
-    onSelectClaim: selectClaim,
-    onDeactivate: overview.deactivateRole,
+    onSelectClaimableRoleAssignment: selectClaimableRoleAssignment,
+    onDeactivate: overview.deactivateClaimableRoleAssignment,
   };
   // Keep each tab's policy in its variant; row presentation and audit interaction stay shared.
   const claimableItems = groups.available.map((role) => (
@@ -64,10 +83,20 @@ export const CompactRolesView = (): ReactNode => {
       onShowInformation={setSelectedDetails}
     />
   ));
+  // A standing role assignment has no activation switch and is authoritative independent of
+  // active access-role assignment data.
+  const assignedItems = groups.assigned.map((role) => (
+    <CompactRoleRow
+      key={role.key}
+      role={role}
+      caption={`Role assignment${role.validTo ? ` · Valid until ${formatRoleDate(role.validTo)}` : ''}`}
+      onShowInformation={setSelectedDetails}
+    />
+  ));
 
   // Only first-load progress may replace the view; background reads must retain audit forms.
   if (overview.isLoading) {
-    return <CircularProgress aria-label="Loading roles" />;
+    return <CircularProgress aria-label="Loading role assignments" />;
   }
   return (
     <Styled.Content>
@@ -76,14 +105,18 @@ export const CompactRolesView = (): ReactNode => {
         error={overview.loadError}
         onRetry={overview.reload}
       />
-      {claimable.claimError ? (
+      {consolidatedClaimableRoleAssignments.activationError ? (
         <Banner>
-          <Banner.Message>{String(claimable.claimError)}</Banner.Message>
+          <Banner.Message>
+            {String(consolidatedClaimableRoleAssignments.activationError)}
+          </Banner.Message>
         </Banner>
       ) : null}
-      {claimable.deactivateError ? (
+      {consolidatedClaimableRoleAssignments.deactivationError ? (
         <Banner>
-          <Banner.Message>{String(claimable.deactivateError)}</Banner.Message>
+          <Banner.Message>
+            {String(consolidatedClaimableRoleAssignments.deactivationError)}
+          </Banner.Message>
         </Banner>
       ) : null}
       <Tabs activeTab={tab} onChange={(index) => setTab(Number(index))}>
@@ -98,23 +131,39 @@ export const CompactRolesView = (): ReactNode => {
               <Styled.RoleList>{claimableItems}</Styled.RoleList>
             ) : (
               <Typography>
-                {claimable.error
-                  ? 'Claimable roles could not be loaded.'
-                  : 'You have no available roles'}
+                {consolidatedClaimableRoleAssignments.error
+                  ? 'Your claimable role assignments could not be loaded.'
+                  : 'You have no roles to claim'}
               </Typography>
             )}
           </Tabs.Panel>
           <Tabs.Panel>
-            {activeAccessItems.length > 0 || claimedItems.length > 0 ? (
+            {activeAccessItems.length > 0 || claimedItems.length > 0 || assignedItems.length > 0 ? (
               <Styled.RoleList>
-                {claimedItems}
-                {activeAccessItems}
+                {claimedItems.length > 0 ? (
+                  <Styled.RoleSection>
+                    <Typography variant="h5">Claimed roles</Typography>
+                    {claimedItems}
+                  </Styled.RoleSection>
+                ) : null}
+                {assignedItems.length > 0 ? (
+                  <Styled.RoleSection>
+                    <Typography variant="h5">Assigned roles</Typography>
+                    {assignedItems}
+                  </Styled.RoleSection>
+                ) : null}
+                {activeAccessItems.length > 0 ? (
+                  <Styled.RoleSection>
+                    <Typography variant="h5">Effective access</Typography>
+                    {activeAccessItems}
+                  </Styled.RoleSection>
+                ) : null}
               </Styled.RoleList>
             ) : (
               <Typography>
                 {overview.loadError
-                  ? 'Active roles could not be fully loaded.'
-                  : 'You have no active roles'}
+                  ? 'Your role assignments and effective access could not be fully loaded.'
+                  : 'You have no assigned, claimed, or effective access'}
               </Typography>
             )}
           </Tabs.Panel>
@@ -123,20 +172,20 @@ export const CompactRolesView = (): ReactNode => {
               <Styled.RoleList>{expiredItems}</Styled.RoleList>
             ) : (
               <Typography>
-                {claimable.error
-                  ? 'Expired roles could not be loaded.'
-                  : 'You have no recently expired roles'}
+                {consolidatedClaimableRoleAssignments.error
+                  ? 'Your claimable role assignments could not be loaded.'
+                  : 'You have no recently expired claimed roles'}
               </Typography>
             )}
           </Tabs.Panel>
         </Tabs.Panels>
       </Tabs>
       <RoleClaimDialog
-        claim={selectedClaim}
+        claimableRoleAssignment={selectedClaimableRoleAssignment}
         defaultReason=""
-        isClaiming={claimable.isClaiming}
-        onClose={() => selectClaim(undefined)}
-        onClaim={overview.claimRole}
+        isActivating={consolidatedClaimableRoleAssignments.isActivating}
+        onClose={() => selectClaimableRoleAssignment(undefined)}
+        onActivate={overview.activateClaimableRoleAssignment}
       />
       {selectedDetails ? (
         <RoleDetailsDialog role={selectedDetails} onClose={() => setSelectedDetails(undefined)} />

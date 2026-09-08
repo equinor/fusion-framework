@@ -8,7 +8,7 @@ import type { AppModuleInitiator } from '@equinor/fusion-framework-react-app';
  */
 export const configure: AppModuleInitiator<[RolesModule]> = (configurator): void => {
   enableRoles(configurator, (builder) => {
-    builder.requireRoles(['ProView.Admin.DevOps']);
+    builder.requireAccessRoles(['ProView.Admin.DevOps']);
   });
 };
 

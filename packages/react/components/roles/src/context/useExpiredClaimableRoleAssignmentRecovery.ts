@@ -1,8 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import type { RequiredRoleClaim } from '@equinor/fusion-framework-module-roles';
 
+import type { ClaimableRoleAssignmentSelection } from '../components/overview/role-details';
 import { parseRoleDate } from '../dates/parse-role-date';
-import type { ClaimableRoles, RolesCollectionState } from '../state/roles-state';
+import type {
+  ConsolidatedClaimableRoleAssignments,
+  RoleAssignmentCollectionState,
+} from '../state/roles-state';
 
 /** One activation period already presented or intentionally ended by the user. */
 interface SuppressedActivation {
@@ -10,24 +13,24 @@ interface SuppressedActivation {
 }
 
 /** Recovery queue and stable actions scoped to one module provider. */
-interface ExpiredRoleRecovery {
-  readonly claim: RequiredRoleClaim | undefined;
+interface ExpiredClaimableRoleAssignmentRecovery {
+  readonly claimableRoleAssignment: ClaimableRoleAssignmentSelection | undefined;
   readonly dismiss: () => void;
   readonly complete: (assignmentId: string) => void;
   readonly suppress: (assignmentId: string) => () => void;
 }
 
 /**
- * Queues newly expired assignments without interrupting the current audit form.
- * @param collection - Latest claimable collection belonging to this provider.
+ * Queues newly expired claimable role assignments without interrupting the current audit form.
+ * @param collection - Latest consolidated claimable-role-assignment collection for this provider.
  * @returns Sequential recovery prompts and period-scoped suppression controls.
  */
-export const useExpiredRoleRecovery = (
-  collection: RolesCollectionState<ClaimableRoles>,
-): ExpiredRoleRecovery => {
-  const previous = useRef<ClaimableRoles | undefined>(undefined);
+export const useExpiredClaimableRoleAssignmentRecovery = (
+  collection: RoleAssignmentCollectionState<ConsolidatedClaimableRoleAssignments>,
+): ExpiredClaimableRoleAssignmentRecovery => {
+  const previous = useRef<ConsolidatedClaimableRoleAssignments | undefined>(undefined);
   const suppressed = useRef(new Map<string, SuppressedActivation>());
-  const [queue, setQueue] = useState<readonly RequiredRoleClaim[]>([]);
+  const [queue, setQueue] = useState<readonly ClaimableRoleAssignmentSelection[]>([]);
 
   useEffect(() => {
     // Failed and in-flight reads must not consume expiry transitions from a partial snapshot.
@@ -35,9 +38,9 @@ export const useExpiredRoleRecovery = (
       return;
     }
     const now = Date.now();
-    const claims: RequiredRoleClaim[] = [];
+    const expiredAssignments: ClaimableRoleAssignmentSelection[] = [];
     // Collect every expiry before advancing the snapshot so simultaneous transitions are not lost.
-    for (const assignment of collection.roles) {
+    for (const assignment of collection.assignments) {
       const id = assignment.id;
       // Roles V2 mutation endpoints need an assignment ID, not a role name.
       if (!id) {
@@ -45,7 +48,7 @@ export const useExpiredRoleRecovery = (
         continue;
       }
       // Match by assignment rather than role name because scopes may grant the same named role.
-      const old = previous.current?.find((role) => role.id === id);
+      const old = previous.current?.find((previousAssignment) => previousAssignment.id === id);
       const activeTo = parseRoleDate(assignment.activeTo);
       const isActive =
         assignment.isActive === true &&
@@ -71,20 +74,20 @@ export const useExpiredRoleRecovery = (
       }
       // Mark every queued period, not only the first, so later refreshes cannot duplicate prompts.
       suppressed.current.set(id, { activeTo: assignment.activeTo });
-      const role = assignment.claimableRole;
-      const displayName = role?.displayName ?? role?.name ?? 'Unknown role';
-      claims.push({
+      const claimableRole = assignment.claimableRole;
+      const displayName = claimableRole?.displayName ?? claimableRole?.name ?? 'Unknown role';
+      expiredAssignments.push({
         assignmentId: id,
-        name: role?.name ?? displayName,
+        name: claimableRole?.name ?? displayName,
         displayName,
-        description: role?.description ?? 'No description is available.',
+        description: claimableRole?.description ?? 'No description is available.',
       });
     }
-    previous.current = collection.roles;
+    previous.current = collection.assignments;
     // Preserve the open form and append new expiries without causing no-op queue updates.
-    if (claims.length > 0) {
+    if (expiredAssignments.length > 0) {
       // Retain existing queue order so background refresh never replaces the current audit form.
-      setQueue((current) => [...current, ...claims]);
+      setQueue((current) => [...current, ...expiredAssignments]);
     }
   }, [collection]);
 
@@ -95,7 +98,7 @@ export const useExpiredRoleRecovery = (
   const complete = useCallback((assignmentId: string): void => {
     setQueue((current) => {
       // Remove just this assignment so successful recovery cannot dismiss a sibling expiry.
-      return current.filter((claim) => claim.assignmentId !== assignmentId);
+      return current.filter((selection) => selection.assignmentId !== assignmentId);
     });
   }, []);
 
@@ -112,7 +115,9 @@ export const useExpiredRoleRecovery = (
   const suppress = useCallback((assignmentId: string): (() => void) => {
     const old = suppressed.current.get(assignmentId);
     // Capture the current period before mutation; the next read may already show it as inactive.
-    const previousActivation = previous.current?.find((role) => role.id === assignmentId);
+    const previousActivation = previous.current?.find(
+      (previousAssignment) => previousAssignment.id === assignmentId,
+    );
     const activation = {
       activeTo: previousActivation?.activeTo,
     };
@@ -131,5 +136,5 @@ export const useExpiredRoleRecovery = (
     };
   }, []);
 
-  return { claim: queue[0], dismiss, complete, suppress };
+  return { claimableRoleAssignment: queue[0], dismiss, complete, suppress };
 };

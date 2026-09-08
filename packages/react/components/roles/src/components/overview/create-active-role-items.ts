@@ -1,8 +1,11 @@
-import type { ActiveRoles } from '../../state/roles-state';
+import type { ActiveAccessRoleAssignments } from '../../state/roles-state';
 
-/** Active assignment paired with a render key because the service does not expose an assignment ID. */
+/**
+ * Active access-role assignment paired with a render key because the service does not expose an
+ * assignment ID.
+ */
 interface ActiveRoleItem {
-  readonly assignment: ActiveRoles[number];
+  readonly assignment: ActiveAccessRoleAssignments[number];
   readonly key: string;
 }
 
@@ -13,7 +16,9 @@ interface ActiveRoleItem {
  * @param assignments - Active assignments in display order.
  * @returns Assignments paired with deterministic keys for application and compact views.
  */
-export const createActiveRoleItems = (assignments: ActiveRoles): ActiveRoleItem[] => {
+export const createActiveRoleItems = (
+  assignments: ActiveAccessRoleAssignments,
+): ActiveRoleItem[] => {
   const occurrences = new Map<string, number>();
   // A fixed JSON tuple avoids delimiter collisions and scope object property-order differences.
   return assignments.map((assignment) => {

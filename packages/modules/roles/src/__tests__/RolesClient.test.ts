@@ -62,7 +62,7 @@ describe('RolesClient', () => {
     let account = 'first-account';
     const resolver = vi.fn(() => account);
     const client = createRolesClient(httpClient, resolver);
-    const roles = client.getActiveRoles();
+    const roles = client.getActiveAccessRoleAssignments();
 
     expect(resolver).not.toHaveBeenCalled();
     expect(json).not.toHaveBeenCalled();
@@ -81,9 +81,9 @@ describe('RolesClient', () => {
       .mockReturnValueOnce(of({ value: [] }));
     const client = createRolesClient(httpClient, () => 'account-id');
 
-    await expect(lastValueFrom(client.getRequiredRoleStatuses(['Reports.Read']))).resolves.toEqual([
-      { name: 'Reports.Read', exists: true, claims: [] },
-    ]);
+    await expect(
+      lastValueFrom(client.getRequiredAccessRoleStatuses(['Reports.Read'])),
+    ).resolves.toEqual([{ name: 'Reports.Read', exists: true, claimableAssignments: [] }]);
     expect(json).toHaveBeenCalledTimes(2);
   });
 
@@ -111,13 +111,15 @@ describe('RolesClient', () => {
     expect(json).toHaveBeenCalledOnce();
   });
 
-  it('gets active roles for the scoped account', async () => {
+  it('gets active access-role assignments for the scoped account', async () => {
     const { httpClient, json } = createHttpClient();
     const activeRoles = [{ systemName: 'Fusion', accessRoleName: 'Reader' }];
     json.mockReturnValue(of(activeRoles));
     const client = createRolesClient(httpClient, () => 'account/id');
 
-    await expect(lastValueFrom(client.getActiveRoles())).resolves.toEqual(activeRoles);
+    await expect(lastValueFrom(client.getActiveAccessRoleAssignments())).resolves.toEqual(
+      activeRoles,
+    );
 
     expect(json).toHaveBeenCalledWith(
       '/accounts/account%2Fid/active-access-role-assignments?api-version=1.0',
@@ -125,16 +127,43 @@ describe('RolesClient', () => {
     );
   });
 
-  it('gets consolidated claimable roles for the scoped account', async () => {
+  it('gets consolidated claimable-role assignments for the scoped account', async () => {
     const { httpClient, json } = createHttpClient();
     const claimableRoles = [{ id: 'claimable-role' }];
     json.mockReturnValue(of(claimableRoles));
     const client = createRolesClient(httpClient, () => 'account-id');
 
-    await expect(lastValueFrom(client.getClaimableRoles())).resolves.toEqual(claimableRoles);
+    await expect(lastValueFrom(client.getConsolidatedClaimableRoleAssignments())).resolves.toEqual(
+      claimableRoles,
+    );
     expect(json).toHaveBeenCalledWith(
       '/accounts/account-id/consolidated-claimable-role-assignments?api-version=1.0',
       expect.objectContaining({ selector: expect.any(Function) }),
+    );
+  });
+
+  it('gets consolidated role assignments for the scoped account', async () => {
+    const { httpClient, json } = createHttpClient();
+    const consolidatedRoles = [{ id: 'assigned-role', role: { name: 'Reports.Admin' } }];
+    json.mockReturnValue(of(consolidatedRoles));
+    const client = createRolesClient(httpClient, () => 'account-id');
+
+    await expect(lastValueFrom(client.getConsolidatedRoleAssignments())).resolves.toEqual(
+      consolidatedRoles,
+    );
+    expect(json).toHaveBeenCalledWith(
+      '/accounts/account-id/consolidated-role-assignments?api-version=1.0',
+      expect.objectContaining({ selector: expect.any(Function) }),
+    );
+  });
+
+  it('propagates consolidated-role-assignment request failures from Roles V2', async () => {
+    const { httpClient, json } = createHttpClient();
+    json.mockReturnValue(throwError(() => new Error('request failed')));
+    const client = createRolesClient(httpClient, () => 'account-id');
+
+    await expect(lastValueFrom(client.getConsolidatedRoleAssignments())).rejects.toThrow(
+      'request failed',
     );
   });
 
@@ -146,8 +175,8 @@ describe('RolesClient', () => {
 
     await expect(
       lastValueFrom(
-        client.claimRole({
-          roleId: 'role/id',
+        client.activateClaimableRoleAssignment({
+          assignmentId: 'role/id',
           reason: 'Incident response',
           hours: 2,
         }),
@@ -172,9 +201,9 @@ describe('RolesClient', () => {
     json.mockReturnValue(of(deactivation));
     const client = createRolesClient(httpClient, () => 'account-id');
 
-    await expect(lastValueFrom(client.deactivateRole({ roleId: 'role/id' }))).resolves.toEqual(
-      deactivation,
-    );
+    await expect(
+      lastValueFrom(client.deactivateClaimableRoleAssignment({ assignmentId: 'role/id' })),
+    ).resolves.toEqual(deactivation);
     expect(json).toHaveBeenCalledWith(
       '/accounts/account-id/claimable-role-assignments/role%2Fid/deactivate?api-version=1.0',
       expect.objectContaining({
@@ -190,7 +219,9 @@ describe('RolesClient', () => {
     json.mockReturnValue(throwError(() => new Error('request failed')));
     const client = createRolesClient(httpClient, () => 'account-id');
 
-    await expect(lastValueFrom(client.getActiveRoles())).rejects.toThrow('request failed');
+    await expect(lastValueFrom(client.getActiveAccessRoleAssignments())).rejects.toThrow(
+      'request failed',
+    );
   });
 
   it('checks expanded access-role mappings for claim eligibility', async () => {
@@ -209,8 +240,12 @@ describe('RolesClient', () => {
     );
     const client = createRolesClient(httpClient, () => 'account-id');
 
-    await expect(lastValueFrom(client.canClaimAccessRole('Reports.Read'))).resolves.toBe(true);
-    await expect(lastValueFrom(client.canClaimAccessRole('Reports.Write'))).resolves.toBe(false);
+    await expect(
+      lastValueFrom(client.hasClaimableRoleAssignmentForAccessRole('Reports.Read')),
+    ).resolves.toBe(true);
+    await expect(
+      lastValueFrom(client.hasClaimableRoleAssignmentForAccessRole('Reports.Write')),
+    ).resolves.toBe(false);
     expect(json.mock.calls[0][0]).toBe(
       '/accounts/account-id/claimable-role-assignments?api-version=1.0&%24expand=accessRoleMappings',
     );
@@ -260,25 +295,25 @@ describe('RolesClient', () => {
 
     await expect(
       lastValueFrom(
-        client.getRequiredRoleStatuses([
+        client.getRequiredAccessRoleStatuses([
           'Missing.Role',
           'Fusion.Apps.FullControl',
           'Reports.Export',
         ]),
       ),
     ).resolves.toEqual([
-      { name: 'Missing.Role', exists: false, claims: [] },
+      { name: 'Missing.Role', exists: false, claimableAssignments: [] },
       {
         name: 'Fusion.Apps.FullControl',
         description: 'Manage every Fusion application.',
         exists: true,
-        claims: [],
+        claimableAssignments: [],
       },
       {
         name: 'Reports.Export',
         description: 'Export reports.',
         exists: true,
-        claims: [
+        claimableAssignments: [
           {
             assignmentId: 'claimable-assignment',
             name: 'reports-exporter',
@@ -338,12 +373,12 @@ describe('RolesClient', () => {
       .mockReturnValueOnce(roles)
       .mockReturnValueOnce(assignments);
     const client = createRolesClient(httpClient, () => 'account-id');
-    const lookup = client.getRequiredRoleStatuses(['Reports.Export', 'Reports.Read']);
+    const lookup = client.getRequiredAccessRoleStatuses(['Reports.Export', 'Reports.Read']);
     const expected = [
       {
         name: 'Reports.Export',
         exists: true,
-        claims: [
+        claimableAssignments: [
           {
             assignmentId: 'shared-assignment',
             name: 'Report access',
@@ -354,7 +389,7 @@ describe('RolesClient', () => {
       {
         name: 'Reports.Read',
         exists: true,
-        claims: [
+        claimableAssignments: [
           {
             assignmentId: 'shared-assignment',
             name: 'Report access',
@@ -381,9 +416,9 @@ describe('RolesClient', () => {
       .mockReturnValueOnce(of({ value: [], nextPage: 'unsupported' }));
     const client = createRolesClient(httpClient, () => 'account-id');
 
-    await expect(lastValueFrom(client.getRequiredRoleStatuses(['Reports.Read']))).rejects.toThrow(
-      'Roles V2 returned incomplete data while resolving required access roles.',
-    );
+    await expect(
+      lastValueFrom(client.getRequiredAccessRoleStatuses(['Reports.Read'])),
+    ).rejects.toThrow('Roles V2 returned incomplete data while resolving required access roles.');
     expect(registry.observed).toBe(false);
   });
 
@@ -405,9 +440,9 @@ describe('RolesClient', () => {
       .mockReturnValueOnce(throwError(() => error));
     const client = createRolesClient(httpClient, () => 'account-id');
 
-    await expect(lastValueFrom(client.getRequiredRoleStatuses(['Reports.Read']))).rejects.toBe(
-      error,
-    );
+    await expect(
+      lastValueFrom(client.getRequiredAccessRoleStatuses(['Reports.Read'])),
+    ).rejects.toBe(error);
     expect(teardown).toHaveBeenCalledOnce();
     accessRoles.next({ value: [], nextPage: 'next' });
     expect(json).toHaveBeenCalledTimes(2);
@@ -424,7 +459,7 @@ describe('RolesClient', () => {
     json.mockReturnValueOnce(accessRoles).mockReturnValueOnce(defer(() => claimableRoles));
     const client = createRolesClient(httpClient, () => 'account-id');
 
-    const result = lastValueFrom(client.getRequiredRoleStatuses(['Reports.Read']));
+    const result = lastValueFrom(client.getRequiredAccessRoleStatuses(['Reports.Read']));
     const assertion = expect(result).rejects.toBe(error);
     await vi.waitFor(() => expect(json).toHaveBeenCalledTimes(2));
     accessRoles.error(error);
@@ -451,11 +486,16 @@ describe('RolesClient', () => {
 
     await expect(
       lastValueFrom(
-        client.getRequiredRoleStatuses(['Reports.Read', 'Missing.Role', 'Reports.Read']),
+        client.getRequiredAccessRoleStatuses(['Reports.Read', 'Missing.Role', 'Reports.Read']),
       ),
     ).resolves.toEqual([
-      { name: 'Reports.Read', description: 'Read reports.', exists: true, claims: [] },
-      { name: 'Missing.Role', exists: false, claims: [] },
+      {
+        name: 'Reports.Read',
+        description: 'Read reports.',
+        exists: true,
+        claimableAssignments: [],
+      },
+      { name: 'Missing.Role', exists: false, claimableAssignments: [] },
     ]);
     expect(json).toHaveBeenNthCalledWith(
       3,
@@ -468,7 +508,7 @@ describe('RolesClient', () => {
     const { httpClient, json } = createHttpClient();
     const client = createRolesClient(httpClient, () => 'account-id');
 
-    await expect(lastValueFrom(client.getRequiredRoleStatuses([]))).resolves.toEqual([]);
+    await expect(lastValueFrom(client.getRequiredAccessRoleStatuses([]))).resolves.toEqual([]);
     expect(json).not.toHaveBeenCalled();
   });
 
@@ -483,8 +523,10 @@ describe('RolesClient', () => {
     );
     const client = createRolesClient(httpClient, () => 'account-id');
 
-    await expect(lastValueFrom(client.canClaimAccessRole('Reports.Read'))).rejects.toThrow(
-      'Roles V2 returned incomplete claimable role assignments while checking claim eligibility.',
+    await expect(
+      lastValueFrom(client.hasClaimableRoleAssignmentForAccessRole('Reports.Read')),
+    ).rejects.toThrow(
+      'Roles V2 returned incomplete claimable role assignments while checking activation eligibility.',
     );
   });
 
@@ -514,25 +556,55 @@ describe('RolesClient', () => {
     const client = createRolesClient(httpClient, () => 'account-id');
 
     await Promise.all([
-      lastValueFrom(client.getActiveRoles()),
-      lastValueFrom(client.getActiveRoles()),
+      lastValueFrom(client.getActiveAccessRoleAssignments()),
+      lastValueFrom(client.getActiveAccessRoleAssignments()),
     ]);
     await Promise.all([
-      lastValueFrom(client.getClaimableRoles()),
-      lastValueFrom(client.getClaimableRoles()),
+      lastValueFrom(client.getConsolidatedClaimableRoleAssignments()),
+      lastValueFrom(client.getConsolidatedClaimableRoleAssignments()),
     ]);
     await Promise.all([
-      lastValueFrom(client.canClaimAccessRole('Reports.Read')),
-      lastValueFrom(client.canClaimAccessRole('Reports.Read')),
+      lastValueFrom(client.hasClaimableRoleAssignmentForAccessRole('Reports.Read')),
+      lastValueFrom(client.hasClaimableRoleAssignmentForAccessRole('Reports.Read')),
     ]);
     expect(json).toHaveBeenCalledTimes(3);
 
-    await lastValueFrom(client.claimRole({ roleId: 'claimable-role' }));
-    await lastValueFrom(client.getActiveRoles());
-    await lastValueFrom(client.getClaimableRoles());
-    await lastValueFrom(client.canClaimAccessRole('Reports.Read'));
+    await lastValueFrom(client.activateClaimableRoleAssignment({ assignmentId: 'claimable-role' }));
+    await lastValueFrom(client.getActiveAccessRoleAssignments());
+    await lastValueFrom(client.getConsolidatedClaimableRoleAssignments());
+    await lastValueFrom(client.hasClaimableRoleAssignmentForAccessRole('Reports.Read'));
 
     expect(json).toHaveBeenCalledTimes(7);
+  });
+
+  it('does not invalidate the consolidated-role-assignment cache after a successful claim', async () => {
+    const { httpClient, json } = createHttpClient();
+    const consolidatedRoles = [{ id: 'assigned-role', role: { name: 'Reports.Admin' } }];
+    const activation = { id: 'activation-id' };
+    json.mockReturnValueOnce(of(consolidatedRoles)).mockReturnValueOnce(of(activation));
+    const client = createRolesClient(httpClient, () => 'account-id');
+
+    await lastValueFrom(client.getConsolidatedRoleAssignments());
+    await lastValueFrom(client.activateClaimableRoleAssignment({ assignmentId: 'claimable-role' }));
+    await lastValueFrom(client.getConsolidatedRoleAssignments());
+
+    // Only the initial consolidated-role-assignment read and the claim activation reach the
+    // transport; the second read is served from the cache the claim did not invalidate.
+    expect(json).toHaveBeenCalledTimes(2);
+  });
+
+  it('bypasses the consolidated-role-assignment cache on an explicit refresh', async () => {
+    const { httpClient, json } = createHttpClient();
+    const consolidatedRoles = [{ id: 'assigned-role', role: { name: 'Reports.Admin' } }];
+    json.mockReturnValue(of(consolidatedRoles));
+    const client = createRolesClient(httpClient, () => 'account-id');
+
+    await lastValueFrom(client.getConsolidatedRoleAssignments());
+    await lastValueFrom(client.getConsolidatedRoleAssignments());
+    expect(json).toHaveBeenCalledTimes(1);
+
+    await lastValueFrom(client.getConsolidatedRoleAssignments({ refresh: true }));
+    expect(json).toHaveBeenCalledTimes(2);
   });
 
   it('refreshes cached reads after one minute', async () => {
@@ -543,12 +615,12 @@ describe('RolesClient', () => {
     const dateNow = vi.spyOn(Date, 'now').mockImplementation(() => now);
     const client = createRolesClient(httpClient, () => 'account-id');
 
-    await lastValueFrom(client.getActiveRoles());
-    await lastValueFrom(client.getActiveRoles());
+    await lastValueFrom(client.getActiveAccessRoleAssignments());
+    await lastValueFrom(client.getActiveAccessRoleAssignments());
     expect(json).toHaveBeenCalledOnce();
 
     now += 60 * 1000 + 1;
-    await lastValueFrom(client.getActiveRoles());
+    await lastValueFrom(client.getActiveAccessRoleAssignments());
     expect(json).toHaveBeenCalledTimes(2);
 
     dateNow.mockRestore();
@@ -575,16 +647,16 @@ describe('RolesClient', () => {
       .mockReturnValueOnce(throwError(() => new Error('claim failed')));
     const client = createRolesClient(httpClient, () => 'account-id');
 
-    await lastValueFrom(client.getActiveRoles());
-    await lastValueFrom(client.getClaimableRoles());
-    await lastValueFrom(client.canClaimAccessRole('Reports.Read'));
-    await expect(lastValueFrom(client.claimRole({ roleId: 'claimable-role' }))).rejects.toThrow(
-      'claim failed',
-    );
+    await lastValueFrom(client.getActiveAccessRoleAssignments());
+    await lastValueFrom(client.getConsolidatedClaimableRoleAssignments());
+    await lastValueFrom(client.hasClaimableRoleAssignmentForAccessRole('Reports.Read'));
+    await expect(
+      lastValueFrom(client.activateClaimableRoleAssignment({ assignmentId: 'claimable-role' })),
+    ).rejects.toThrow('claim failed');
 
-    await lastValueFrom(client.getActiveRoles());
-    await lastValueFrom(client.getClaimableRoles());
-    await lastValueFrom(client.canClaimAccessRole('Reports.Read'));
+    await lastValueFrom(client.getActiveAccessRoleAssignments());
+    await lastValueFrom(client.getConsolidatedClaimableRoleAssignments());
+    await lastValueFrom(client.hasClaimableRoleAssignmentForAccessRole('Reports.Read'));
     expect(json).toHaveBeenCalledTimes(4);
   });
 
@@ -593,7 +665,7 @@ describe('RolesClient', () => {
     json.mockReturnValue(of([]));
     const client = new RolesClient(httpClient, () => 'constructor-account');
 
-    await lastValueFrom(client.getActiveRoles());
+    await lastValueFrom(client.getActiveAccessRoleAssignments());
 
     expect(json.mock.calls[0][0]).toContain('/accounts/constructor-account/');
   });
@@ -604,7 +676,7 @@ describe('RolesClient', () => {
     const client = new RolesClient(httpClient, () => 'constructor-account');
     client.initialize({ resolveCurrentAccountIdentifier: () => 'initialized-account' });
 
-    await lastValueFrom(client.getActiveRoles());
+    await lastValueFrom(client.getActiveAccessRoleAssignments());
 
     expect(json.mock.calls[0][0]).toContain('/accounts/initialized-account/');
   });
@@ -623,11 +695,11 @@ describe('RolesClient', () => {
     json.mockReturnValue(of([]));
     const client = createRolesClient(httpClient, () => currentAccountIdentifier);
 
-    await lastValueFrom(client.getActiveRoles());
+    await lastValueFrom(client.getActiveAccessRoleAssignments());
     currentAccountIdentifier = 'account-b';
-    await lastValueFrom(client.getActiveRoles());
+    await lastValueFrom(client.getActiveAccessRoleAssignments());
     currentAccountIdentifier = 'account-a';
-    await lastValueFrom(client.getActiveRoles());
+    await lastValueFrom(client.getActiveAccessRoleAssignments());
 
     expect(json).toHaveBeenCalledTimes(2);
     expect(json.mock.calls[0][0]).toContain('/accounts/account-a/');

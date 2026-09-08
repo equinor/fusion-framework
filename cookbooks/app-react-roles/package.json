@@ -11,7 +11,8 @@
     "dev:mock": "concurrently -k \"pnpm mock:server\" \"pnpm mock:app\"",
     "mock:app": "fusion-framework-cli app dev --mock http://localhost:4012",
     "mock:server": "fusion-framework-cli mock-server --preset=fusion ./mocks --port 4012 --seed 42",
-    "test": "playwright test"
+    "test": "playwright test",
+    "test:playwright": "playwright test"
   },
   "devDependencies": {
     "@equinor/eds-core-react": "^2.3.7",

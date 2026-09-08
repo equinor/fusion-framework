@@ -24,4 +24,17 @@ descriptions, and claimable assignments even after application initialization fa
 Await authentication initialization during configuration so failures propagate immediately,
 while checking the currently selected account only when a role operation executes.
 
+Add `getConsolidatedRoleAssignments`, the authoritative source for standing, non-claimable
+assignment state read from `/consolidated-role-assignments`. Active-access `assignmentType` cannot
+reliably distinguish this standing grant from an activated claim, so `getConsolidatedRoleAssignments`
+reads that consolidated endpoint directly instead. Roles V2 never calls these assignments permanent
+— they may still be validity-bounded. This read is cached alongside active-access and claimable reads
+but is deliberately excluded from cache invalidation after a claim or deactivation, since those
+assignments are outside the scope of those mutations.
+
+Rename the read methods to `getActiveAccessRoleAssignments`, `getConsolidatedClaimableRoleAssignments`,
+and `getConsolidatedRoleAssignments`, and the mutation methods to `activateClaimableRoleAssignment`
+and `deactivateClaimableRoleAssignment`, matching their Roles V2 endpoints and inputs. Mutation
+inputs now use `assignmentId` instead of `roleId`.
+
 Related to #5449.

@@ -2,13 +2,14 @@ import type {
   ApiAccountActiveAccessRoleAssignmentV1,
   ApiClaimableRoleAssignmentActivationV1,
   ApiConsolidatedClaimableRoleAssignmentV1,
+  ApiConsolidatedRoleAssignmentV1,
 } from '@equinor/fusion-services/roles';
 import type { ConfigBuilderCallbackArgs } from '@equinor/fusion-framework-module';
 import { defer, type Observable, of } from 'rxjs';
 
 import type {
-  ClaimRoleInput,
-  DeactivateRoleInput,
+  ActivateClaimableRoleAssignmentInput,
+  DeactivateClaimableRoleAssignmentInput,
   IRolesClient,
   RolesAccountResolver,
 } from '../RolesClient.js';
@@ -19,13 +20,15 @@ import { RolesModuleConfigurator } from '../RolesModuleConfigurator.js';
  */
 export interface RolesMockData {
   /** Active access-role assignments returned by the provider. */
-  activeRoles?: readonly ApiAccountActiveAccessRoleAssignmentV1[];
+  activeAccessRoleAssignments?: readonly ApiAccountActiveAccessRoleAssignmentV1[];
   /** Consolidated claimable-role assignments returned by the provider. */
-  claimableRoles?: readonly ApiConsolidatedClaimableRoleAssignmentV1[];
+  consolidatedClaimableRoleAssignments?: readonly ApiConsolidatedClaimableRoleAssignmentV1[];
+  /** Consolidated role assignments returned by the provider. */
+  consolidatedRoleAssignments?: readonly ApiConsolidatedRoleAssignmentV1[];
 }
 
 /**
- * Roles configurator backed by static role data for framework and application tests.
+ * Roles configurator backed by static role-assignment data for framework and application tests.
  *
  * @remarks
  * The mock changes only the module's client dependency. Tests still receive and interact with the
@@ -36,33 +39,50 @@ export class RolesMockConfigurator extends RolesModuleConfigurator {
   private data: RolesMockData = {};
 
   /**
-   * Replaces active roles while preserving configured claimable roles.
+   * Replaces active access-role assignments while preserving other configured data.
    *
-   * @param activeRoles - Active access-role assignments exposed through the provider.
+   * @param activeAccessRoleAssignments - Active access-role assignments exposed through the provider.
    * @returns This configurator for chaining.
    */
-  public setActiveRoles(activeRoles: readonly ApiAccountActiveAccessRoleAssignmentV1[]): this {
-    this.data = { ...this.data, activeRoles };
+  public setActiveAccessRoleAssignments(
+    activeAccessRoleAssignments: readonly ApiAccountActiveAccessRoleAssignmentV1[],
+  ): this {
+    this.data = { ...this.data, activeAccessRoleAssignments };
     return this;
   }
 
   /**
-   * Replaces claimable roles while preserving configured active roles.
+   * Replaces consolidated claimable-role assignments while preserving other configured data.
    *
-   * @param claimableRoles - Consolidated claimable-role assignments exposed through the provider.
+   * @param consolidatedClaimableRoleAssignments - Consolidated claimable-role assignments exposed
+   * through the provider.
    * @returns This configurator for chaining.
    */
-  public setClaimableRoles(
-    claimableRoles: readonly ApiConsolidatedClaimableRoleAssignmentV1[],
+  public setConsolidatedClaimableRoleAssignments(
+    consolidatedClaimableRoleAssignments: readonly ApiConsolidatedClaimableRoleAssignmentV1[],
   ): this {
-    this.data = { ...this.data, claimableRoles };
+    this.data = { ...this.data, consolidatedClaimableRoleAssignments };
+    return this;
+  }
+
+  /**
+   * Replaces consolidated role assignments while preserving other configured data.
+   *
+   * @param consolidatedRoleAssignments - Consolidated role assignments exposed through the provider.
+   * @returns This configurator for chaining.
+   */
+  public setConsolidatedRoleAssignments(
+    consolidatedRoleAssignments: readonly ApiConsolidatedRoleAssignmentV1[],
+  ): this {
+    this.data = { ...this.data, consolidatedRoleAssignments };
     return this;
   }
 
   /**
    * Replaces the static data returned by the mock's default client.
    *
-   * @param data - Active and claimable role assignments exposed through the provider.
+   * @param data - Active-access, consolidated-claimable, and consolidated role assignments exposed
+   * through the provider.
    * @returns This configurator for chaining.
    */
   public setData(data: RolesMockData): this {
@@ -81,24 +101,31 @@ export class RolesMockConfigurator extends RolesModuleConfigurator {
     _args: ConfigBuilderCallbackArgs,
     _accountResolver: RolesAccountResolver,
   ): Promise<IRolesClient> {
-    const activeRoles = [...(this.data.activeRoles ?? [])];
-    const claimableRoles = [...(this.data.claimableRoles ?? [])];
+    const activeAccessRoleAssignments = [...(this.data.activeAccessRoleAssignments ?? [])];
+    const consolidatedClaimableRoleAssignments = [
+      ...(this.data.consolidatedClaimableRoleAssignments ?? []),
+    ];
+    const consolidatedRoleAssignments = [...(this.data.consolidatedRoleAssignments ?? [])];
     return {
       initialize: () => undefined,
-      getActiveRoles: () => defer(() => of([...activeRoles])),
-      getClaimableRoles: () => defer(() => of([...claimableRoles])),
-      claimRole: (input: ClaimRoleInput): Observable<ApiClaimableRoleAssignmentActivationV1> =>
-        defer(() => of({ id: input.roleId, reason: input.reason })),
-      deactivateRole: (
-        input: DeactivateRoleInput,
+      getActiveAccessRoleAssignments: () => defer(() => of([...activeAccessRoleAssignments])),
+      getConsolidatedClaimableRoleAssignments: () =>
+        defer(() => of([...consolidatedClaimableRoleAssignments])),
+      getConsolidatedRoleAssignments: () => defer(() => of([...consolidatedRoleAssignments])),
+      activateClaimableRoleAssignment: (
+        input: ActivateClaimableRoleAssignmentInput,
       ): Observable<ApiClaimableRoleAssignmentActivationV1> =>
-        defer(() => of({ id: input.roleId, activeToDate: new Date().toISOString() })),
-      canClaimAccessRole: () => of(false),
+        defer(() => of({ id: input.assignmentId, reason: input.reason })),
+      deactivateClaimableRoleAssignment: (
+        input: DeactivateClaimableRoleAssignmentInput,
+      ): Observable<ApiClaimableRoleAssignmentActivationV1> =>
+        defer(() => of({ id: input.assignmentId, activeToDate: new Date().toISOString() })),
+      hasClaimableRoleAssignmentForAccessRole: () => of(false),
       // Static mocks have no registry, so emit one final service page.
       getAccessRoles: () => of({ totalCount: 0, value: [] }),
-      getRequiredRoleStatuses: (roleNames) =>
-        // Static mock data has no global access-role registry, so missing roles are unregistered.
-        of(roleNames.map((name) => ({ name, exists: false, claims: [] }))),
+      getRequiredAccessRoleStatuses: (accessRoleNames) =>
+        // Static mock data has no global access-role registry, so required access roles are unregistered.
+        of(accessRoleNames.map((name) => ({ name, exists: false, claimableAssignments: [] }))),
     };
   }
 }

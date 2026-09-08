@@ -13,7 +13,7 @@ See the [README](../README.md) for setup, peers, hook contracts, and screenshots
 | Active and claimable collections, mutation state, visible-page refresh | React `RolesProvider` |
 | Narrow Claimable, Active, and Expired tabs, audit dialog and role details | `<RolesView compact />` |
 | Portal navigation, flyout chrome, and placement | Portal |
-| Recovery of application initialization failures | Host `RoleBoundary` around the application loader |
+| Recovery of application initialization failures | Host `AccessRoleBoundary` around the application loader |
 | Authorization of protected operations | Trusted backend |
 
 The module `RolesProvider` class and React `RolesProvider` component have the same name but different
@@ -105,22 +105,22 @@ see the [safe hook examples](../README.md#show-active-roles).
 
 ## Place recovery around the host loader
 
-An application may declare bootstrap requirements using `builder.requireRoles(['Reports.Read'])`.
+An application may declare bootstrap requirements using `builder.requireAccessRoles(['Reports.Read'])`.
 If a requirement fails before the application mounts, its own React provider cannot recover it.
-Place `RoleBoundary` in the **host** React tree around the application loader:
+Place `AccessRoleBoundary` in the **host** React tree around the application loader:
 
 ```tsx
 import type { ReactElement, ReactNode } from 'react';
-import { RoleBoundary } from '@equinor/fusion-framework-react-components-roles';
+import { AccessRoleBoundary } from '@equinor/fusion-framework-react-components-roles';
 
 /** Owns role failures surfaced by the host's application loader. */
 export const ApplicationRecovery = ({ children }: { children: ReactNode }): ReactElement => (
-  <RoleBoundary>{children}</RoleBoundary>
+  <AccessRoleBoundary>{children}</AccessRoleBoundary>
 );
 ```
 
 Render the loader as `children` and ensure it surfaces initialization errors to this boundary.
-Recovery follows the provider attached to the original `RequiredRolesError`, including through an
+Recovery follows the provider attached to the original `RequiredAccessRolesError`, including through an
 error cause chain; it does not substitute the portal overview's provider for the application's provider.
 Metadata failures offer a local retry without restarting the application. Activation failures retain
 audit input in the dialog and do not retry the loader. Successful activation resets the boundary so
@@ -131,7 +131,8 @@ refreshes can queue newly expired assignments, one dialog at a time, without rel
 remounting the application. Dismissal applies to the observed activation period. Intentional
 deactivation through the hook suppresses that period's expiry prompt.
 
-`RoleBoundary required={...}` is a pre-mount UI check, not a continuous authorization mechanism.
+`AccessRoleBoundary requiredAccessRoles={...}` is a pre-mount UI check, not a continuous
+authorization mechanism.
 Changed requirements or a changed module provider trigger a new check before children mount.
 Polling does not invalidate an already successful check. Enforce all protected operations on the backend.
 

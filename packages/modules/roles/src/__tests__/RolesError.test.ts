@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
-import { ClaimRoleError } from '../errors/ClaimRoleError.js';
-import { RequiredRolesError } from '../errors/RequiredRolesError.js';
+import { ActivateClaimableRoleAssignmentError } from '../errors/ActivateClaimableRoleAssignmentError.js';
+import { RequiredAccessRolesError } from '../errors/RequiredAccessRolesError.js';
 import { RolesError } from '../errors/RolesError.js';
 
 describe('RolesError', () => {
@@ -11,8 +11,10 @@ describe('RolesError', () => {
 
   it('identifies general and specialized Roles errors', () => {
     expect(RolesError.is(new RolesError('general failure'))).toBe(true);
-    expect(RolesError.is(new RequiredRolesError('missing role', ['Reports.Read']))).toBe(true);
-    expect(RolesError.is(new ClaimRoleError('claim failure'))).toBe(true);
+    expect(RolesError.is(new RequiredAccessRolesError('missing role', ['Reports.Read']))).toBe(
+      true,
+    );
+    expect(RolesError.is(new ActivateClaimableRoleAssignmentError('claim failure'))).toBe(true);
   });
 
   it('identifies Roles errors created by another runtime scope', () => {
@@ -32,12 +34,12 @@ describe('RolesError', () => {
 
   it('preserves causes and specialized error data', () => {
     const cause = new Error('service failed');
-    const claimError = new ClaimRoleError('claim failure', { cause });
-    const requiredError = new RequiredRolesError('missing role', ['Reports.Read']);
+    const activationError = new ActivateClaimableRoleAssignmentError('claim failure', { cause });
+    const requiredError = new RequiredAccessRolesError('missing role', ['Reports.Read']);
 
-    expect(claimError.cause).toBe(cause);
-    expect(claimError.name).toBe('ClaimRoleError');
-    expect(requiredError.missingRoles).toEqual(['Reports.Read']);
-    expect(requiredError.name).toBe('RequiredRolesError');
+    expect(activationError.cause).toBe(cause);
+    expect(activationError.name).toBe('ActivateClaimableRoleAssignmentError');
+    expect(requiredError.missingAccessRoles).toEqual(['Reports.Read']);
+    expect(requiredError.name).toBe('RequiredAccessRolesError');
   });
 });

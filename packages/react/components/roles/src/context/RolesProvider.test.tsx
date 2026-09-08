@@ -3,15 +3,16 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { useEffect, type ReactNode } from 'react';
 
 import { RolesProvider } from './RolesProvider';
-import { useClaimableRoles } from '../hooks/useClaimableRoles';
-import { useRoles } from '../hooks/useRoles';
+import { useActiveAccessRoleAssignments } from '../hooks/useActiveAccessRoleAssignments';
+import { useClaimableRoleAssignments } from '../hooks/useClaimableRoleAssignments';
 
 const mocks = vi.hoisted(() => ({
-  getActiveRoles: vi.fn(),
-  getClaimableRoles: vi.fn(),
-  claimRole: vi.fn(),
-  deactivateRole: vi.fn(),
-  hasRole: vi.fn(),
+  getActiveAccessRoleAssignments: vi.fn(),
+  getConsolidatedClaimableRoleAssignments: vi.fn(),
+  getConsolidatedRoleAssignments: vi.fn(),
+  activateClaimableRoleAssignment: vi.fn(),
+  deactivateClaimableRoleAssignment: vi.fn(),
+  hasAccessRole: vi.fn(),
 }));
 
 vi.mock('@equinor/fusion-framework-react-module', () => ({
@@ -24,10 +25,10 @@ vi.mock('@equinor/fusion-framework-react-module', () => ({
  * @returns A minimal consumer of the public roles hooks.
  */
 const RolesConsumer = (): ReactNode => {
-  const active = useRoles();
-  const claimable = useClaimableRoles();
+  const active = useActiveAccessRoleAssignments();
+  const claimable = useClaimableRoleAssignments();
   const error =
-    active.error ?? claimable.error ?? claimable.claimError ?? claimable.deactivateError;
+    active.error ?? claimable.error ?? claimable.activationError ?? claimable.deactivationError;
 
   // Both domain requests must settle before assertions inspect their results.
   if (active.isLoading || claimable.isLoading) {
@@ -37,10 +38,12 @@ const RolesConsumer = (): ReactNode => {
   if (error) {
     return <p role="alert">{String(error)}</p>;
   }
-  // Flatten active-role names into the compact assertion output.
-  const activeRoleNames = active.roles.map((role) => role.accessRoleName).join(', ');
+  // Flatten active access-role names into the compact assertion output.
+  const activeRoleNames = active.assignments.map((role) => role.accessRoleName).join(', ');
   // Flatten claimable-role names into the compact assertion output.
-  const claimableRoleNames = claimable.roles.map((role) => role.claimableRole?.name).join(', ');
+  const claimableRoleNames = claimable.assignments
+    .map((assignment) => assignment.claimableRole?.name)
+    .join(', ');
   return (
     <>
       <p>Active: {activeRoleNames}</p>
@@ -48,7 +51,9 @@ const RolesConsumer = (): ReactNode => {
       <button
         type="button"
         onClick={() =>
-          void claimable.claimRole({ roleId: 'claimable-role' }).catch(() => undefined)
+          void claimable
+            .activateClaimableRoleAssignment({ assignmentId: 'claimable-role' })
+            .catch(() => undefined)
         }
       >
         Claim
@@ -56,7 +61,9 @@ const RolesConsumer = (): ReactNode => {
       <button
         type="button"
         onClick={() =>
-          void claimable.deactivateRole({ roleId: 'claimable-role' }).catch(() => undefined)
+          void claimable
+            .deactivateClaimableRoleAssignment({ assignmentId: 'claimable-role' })
+            .catch(() => undefined)
         }
       >
         Deactivate
@@ -67,16 +74,18 @@ const RolesConsumer = (): ReactNode => {
 
 describe('RolesProvider', () => {
   beforeEach(() => {
-    mocks.getActiveRoles.mockReset();
-    mocks.getClaimableRoles.mockReset();
-    mocks.claimRole.mockReset();
-    mocks.deactivateRole.mockReset();
-    mocks.hasRole.mockReset();
-    mocks.getActiveRoles.mockResolvedValue([]);
-    mocks.getClaimableRoles.mockResolvedValue([]);
-    mocks.claimRole.mockResolvedValue({ id: 'activation-id' });
-    mocks.deactivateRole.mockResolvedValue({ id: 'deactivation-id' });
-    mocks.hasRole.mockResolvedValue(true);
+    mocks.getActiveAccessRoleAssignments.mockReset();
+    mocks.getConsolidatedClaimableRoleAssignments.mockReset();
+    mocks.getConsolidatedRoleAssignments.mockReset();
+    mocks.activateClaimableRoleAssignment.mockReset();
+    mocks.deactivateClaimableRoleAssignment.mockReset();
+    mocks.hasAccessRole.mockReset();
+    mocks.getActiveAccessRoleAssignments.mockResolvedValue([]);
+    mocks.getConsolidatedClaimableRoleAssignments.mockResolvedValue([]);
+    mocks.getConsolidatedRoleAssignments.mockResolvedValue([]);
+    mocks.activateClaimableRoleAssignment.mockResolvedValue({ id: 'activation-id' });
+    mocks.deactivateClaimableRoleAssignment.mockResolvedValue({ id: 'deactivation-id' });
+    mocks.hasAccessRole.mockResolvedValue(true);
   });
 
   afterEach(() => {
@@ -84,10 +93,10 @@ describe('RolesProvider', () => {
   });
 
   it('shares both role domains and refreshes them after activation', async () => {
-    mocks.getActiveRoles
+    mocks.getActiveAccessRoleAssignments
       .mockResolvedValueOnce([])
       .mockResolvedValue([{ accessRoleName: 'Reports.Read' }]);
-    mocks.getClaimableRoles
+    mocks.getConsolidatedClaimableRoleAssignments
       .mockResolvedValueOnce([{ id: 'claimable-role', claimableRole: { name: 'reports-reader' } }])
       .mockResolvedValue([]);
 
@@ -101,12 +110,12 @@ describe('RolesProvider', () => {
     await screen.getByRole('button', { name: 'Claim' }).click();
     await expect.element(screen.getByText('Active: Reports.Read')).toBeVisible();
     await expect.element(screen.getByText('Claimable:', { exact: true })).toBeVisible();
-    expect(mocks.getActiveRoles).toHaveBeenCalledTimes(2);
-    expect(mocks.getClaimableRoles).toHaveBeenCalledTimes(2);
+    expect(mocks.getActiveAccessRoleAssignments).toHaveBeenCalledTimes(2);
+    expect(mocks.getConsolidatedClaimableRoleAssignments).toHaveBeenCalledTimes(2);
   });
 
   it('exposes collection failures through the matching domain hook', async () => {
-    mocks.getActiveRoles.mockRejectedValue(new Error('active roles failed'));
+    mocks.getActiveAccessRoleAssignments.mockRejectedValue(new Error('active roles failed'));
 
     const screen = await render(
       <RolesProvider>
@@ -128,28 +137,30 @@ describe('RolesProvider', () => {
     await screen.getByRole('button', { name: 'Deactivate' }).click();
 
     await vi.waitFor(() =>
-      expect(mocks.deactivateRole).toHaveBeenCalledWith({ roleId: 'claimable-role' }),
+      expect(mocks.deactivateClaimableRoleAssignment).toHaveBeenCalledWith({
+        assignmentId: 'claimable-role',
+      }),
     );
-    expect(mocks.getActiveRoles).toHaveBeenCalledTimes(2);
-    expect(mocks.getClaimableRoles).toHaveBeenCalledTimes(2);
+    expect(mocks.getActiveAccessRoleAssignments).toHaveBeenCalledTimes(2);
+    expect(mocks.getConsolidatedClaimableRoleAssignments).toHaveBeenCalledTimes(2);
   });
 
   it('gates children by the required roles', async () => {
     const screen = await render(
-      <RolesProvider required={['Reports.Read']}>
+      <RolesProvider requiredAccessRoles={['Reports.Read']}>
         <RolesConsumer />
       </RolesProvider>,
     );
 
     await expect.element(screen.getByText('Active:', { exact: true })).toBeVisible();
-    expect(mocks.hasRole).toHaveBeenCalledWith(['Reports.Read'], {
+    expect(mocks.hasAccessRole).toHaveBeenCalledWith(['Reports.Read'], {
       required: true,
       assert: true,
     });
   });
 
   it('exposes activation failures through claimable-role state', async () => {
-    mocks.claimRole.mockRejectedValue(new Error('activation failed'));
+    mocks.activateClaimableRoleAssignment.mockRejectedValue(new Error('activation failed'));
     const screen = await render(
       <RolesProvider>
         <RolesConsumer />
@@ -171,15 +182,19 @@ describe('RolesProvider', () => {
 
     window.dispatchEvent(new Event('focus'));
 
-    await vi.waitFor(() => expect(mocks.getActiveRoles).toHaveBeenCalledTimes(2));
-    expect(mocks.getActiveRoles).toHaveBeenLastCalledWith({ refresh: true });
-    expect(mocks.getClaimableRoles).toHaveBeenLastCalledWith({ refresh: true });
+    await vi.waitFor(() => expect(mocks.getActiveAccessRoleAssignments).toHaveBeenCalledTimes(2));
+    expect(mocks.getActiveAccessRoleAssignments).toHaveBeenLastCalledWith({ refresh: true });
+    expect(mocks.getConsolidatedClaimableRoleAssignments).toHaveBeenLastCalledWith({
+      refresh: true,
+    });
   });
 
   it('retains expiry recovery after failed activation and closes only after a successful retry', async () => {
     const first = Promise.withResolvers<void>();
     const retry = Promise.withResolvers<{ id: string }>();
-    mocks.claimRole.mockReturnValueOnce(first.promise).mockReturnValueOnce(retry.promise);
+    mocks.activateClaimableRoleAssignment
+      .mockReturnValueOnce(first.promise)
+      .mockReturnValueOnce(retry.promise);
     const onMount = vi.fn();
     /** Keeps host state observable while the provider handles expiry recovery. */
     const Application = (): ReactNode => {
@@ -196,13 +211,15 @@ describe('RolesProvider', () => {
       isActive: true,
       activeTo: new Date(Date.now() + 60_000).toISOString(),
     };
-    mocks.getClaimableRoles.mockResolvedValueOnce([activeAssignment]).mockResolvedValue([
-      {
-        ...activeAssignment,
-        isActive: false,
-        activeTo: new Date(Date.now() - 1_000).toISOString(),
-      },
-    ]);
+    mocks.getConsolidatedClaimableRoleAssignments
+      .mockResolvedValueOnce([activeAssignment])
+      .mockResolvedValue([
+        {
+          ...activeAssignment,
+          isActive: false,
+          activeTo: new Date(Date.now() - 1_000).toISOString(),
+        },
+      ]);
     const screen = await render(
       <RolesProvider>
         <RolesConsumer />
@@ -222,9 +239,9 @@ describe('RolesProvider', () => {
     await expect
       .element(dialog.getByRole('alert'))
       .toHaveTextContent(
-        'The role could not be activated. Try again or contact your administrator.',
+        'The claimable role assignment could not be activated. Try again or contact your administrator.',
       );
-    expect(mocks.getClaimableRoles).toHaveBeenCalledTimes(2);
+    expect(mocks.getConsolidatedClaimableRoleAssignments).toHaveBeenCalledTimes(2);
     await expect.element(dialog.getByLabelText('Reason')).toHaveValue('Continue active work');
 
     await dialog.getByRole('button', { name: 'Claim' }).click();
@@ -232,18 +249,20 @@ describe('RolesProvider', () => {
     await expect.element(dialog.getByRole('button', { name: 'Claiming...' })).toBeDisabled();
     // Recovery completes only after activation and both refreshed collections have settled.
     const refreshedRoles = Promise.withResolvers<(typeof activeAssignment)[]>();
-    mocks.getClaimableRoles.mockReturnValue(refreshedRoles.promise);
+    mocks.getConsolidatedClaimableRoleAssignments.mockReturnValue(refreshedRoles.promise);
     retry.resolve({ id: 'activation-id' });
-    await vi.waitFor(() => expect(mocks.getClaimableRoles).toHaveBeenCalledTimes(3));
+    await vi.waitFor(() =>
+      expect(mocks.getConsolidatedClaimableRoleAssignments).toHaveBeenCalledTimes(3),
+    );
     await expect.element(dialog.getByRole('button', { name: 'Claiming...' })).toBeDisabled();
     refreshedRoles.resolve([activeAssignment]);
     await expect.element(dialog).not.toBeInTheDocument();
     await expect.element(screen.getByLabelText('Unsaved report')).toHaveValue('Unsaved changes');
     expect(onMount).toHaveBeenCalledOnce();
-    expect(mocks.getClaimableRoles).toHaveBeenCalledTimes(3);
+    expect(mocks.getConsolidatedClaimableRoleAssignments).toHaveBeenCalledTimes(3);
     await vi.waitFor(() =>
-      expect(mocks.claimRole).toHaveBeenCalledWith({
-        roleId: 'expiring-role',
+      expect(mocks.activateClaimableRoleAssignment).toHaveBeenCalledWith({
+        assignmentId: 'expiring-role',
         reason: 'Continue active work',
         hours: 2,
       }),

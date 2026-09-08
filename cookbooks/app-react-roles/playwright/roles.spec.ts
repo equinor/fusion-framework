@@ -18,17 +18,26 @@ test('recovers the application after claiming its required role', async ({ page 
 
   await expect(app).toHaveScreenshot('roles-app.png');
 
-  await app.getByRole('button', { name: 'Claim' }).click();
+  const reportExporter = app.getByRole('listitem').filter({ hasText: 'Reports exporter' });
+  await reportExporter.getByRole('button', { name: 'Claim' }).click();
   await expect(app).toContainText('Reports / Reports.Export');
-  await expect(app).toContainText('No claimable roles.');
-  await expect(app.getByRole('button', { name: 'Claim' })).toHaveCount(0);
+  await expect(reportExporter).toHaveCount(0);
 
   await page.getByRole('button', { name: 'Nikita Crist' }).click();
   await page.getByRole('button', { name: 'My Roles' }).click();
-  await page.getByRole('progressbar', { name: 'Loading roles' }).waitFor({ state: 'hidden' });
+  await page
+    .getByRole('progressbar', { name: 'Loading role assignments' })
+    .waitFor({ state: 'hidden' });
   await page.getByRole('tab', { name: 'Claimable' }).click();
-  await page.getByLabel('Deactivate Reports exporter').click();
-  await page.getByRole('progressbar', { name: 'Loading roles' }).waitFor({ state: 'hidden' });
+  await Promise.all([
+    page.waitForResponse(
+      (response) =>
+        response.request().method() === 'POST' &&
+        response.url().includes('/deactivate') &&
+        response.ok(),
+    ),
+    page.getByLabel('Deactivate Reports exporter').click(),
+  ]);
   await page.getByRole('tab', { name: 'Expired' }).click();
   await expect(page.getByLabel('Re-activate Reports exporter')).toBeVisible();
   await expect(app.getByRole('heading', { name: 'Fusion Roles V2' })).toBeVisible();

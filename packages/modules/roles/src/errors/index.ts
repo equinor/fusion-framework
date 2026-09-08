@@ -4,7 +4,7 @@
  * @packageDocumentation
  */
 
-export { ClaimRoleError } from './ClaimRoleError.js';
-export { DeactivateRoleError } from './DeactivateRoleError.js';
-export { RequiredRolesError } from './RequiredRolesError.js';
+export { ActivateClaimableRoleAssignmentError } from './ActivateClaimableRoleAssignmentError.js';
+export { DeactivateClaimableRoleAssignmentError } from './DeactivateClaimableRoleAssignmentError.js';
+export { RequiredAccessRolesError } from './RequiredAccessRolesError.js';
 export { RolesError } from './RolesError.js';

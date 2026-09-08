@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import styled from 'styled-components';
 
-import type { ClaimableRoles as ClaimableRoleAssignments } from '@equinor/fusion-framework-react-components-roles';
+import type { ConsolidatedClaimableRoleAssignments as ClaimableRoleAssignments } from '@equinor/fusion-framework-react-components-roles';
 
 const Styled = {
   Section: styled.section`
@@ -28,37 +28,33 @@ const Styled = {
   `,
 };
 
-interface ClaimableRolesProps {
-  readonly roles: ClaimableRoleAssignments;
-  readonly isClaiming: boolean;
+interface ConsolidatedClaimableRoleAssignmentsProps {
+  readonly assignments: ClaimableRoleAssignments;
+  readonly isActivating: boolean;
   readonly error: unknown;
-  readonly onClaim: (roleId: string) => Promise<void>;
+  readonly onActivate: (assignmentId: string) => Promise<void>;
 }
 
 /**
  * Displays claimable role assignments and their activation actions.
  *
- * @param props.roles - Claimable assignments returned by `useClaimableRoles`.
- * @param props.isClaiming - Whether an activation request is running.
+ * @param props.assignments - Assignments returned by `useClaimableRoleAssignments`.
+ * @param props.isActivating - Whether an activation request is running.
  * @param props.error - Error from the latest activation request.
- * @param props.onClaim - Activates the selected assignment.
+ * @param props.onActivate - Activates the selected assignment.
  * @returns The claimable-role section.
  */
-export const ClaimableRoles = ({
-  roles,
-  isClaiming,
+export const ConsolidatedClaimableRoleAssignments = ({
+  assignments,
+  isActivating,
   error,
-  onClaim,
-}: ClaimableRolesProps): ReactNode => {
-  const now = Date.now();
-  // Recently expired assignments belong to the portal's compact reactivation experience.
-  const availableRoles = roles.filter(
-    (assignment) =>
-      !assignment.isActive && (!assignment.activeTo || Date.parse(assignment.activeTo) > now),
-  );
+  onActivate,
+}: ConsolidatedClaimableRoleAssignmentsProps): ReactNode => {
+  // A completed activation does not remove the underlying claimable entitlement.
+  const availableRoles = assignments.filter((assignment) => !assignment.isActive);
   // Each visible row retains the assignment id needed by the activation request.
   const items = availableRoles.map((assignment) => {
-    const roleId = assignment.id;
+    const assignmentId = assignment.id;
     const label =
       assignment.claimableRole?.displayName ??
       assignment.claimableRole?.name ??
@@ -66,15 +62,15 @@ export const ClaimableRoles = ({
       'Unknown claimable role';
     return (
       <Styled.Row
-        key={`${roleId}:${assignment.claimableRole?.id}:${assignment.validFrom}:${assignment.validTo}`}
+        key={`${assignmentId}:${assignment.claimableRole?.id}:${assignment.validFrom}:${assignment.validTo}`}
       >
         <span>{label}</span>
         <button
           type="button"
-          disabled={!roleId || isClaiming}
-          onClick={() => roleId && void onClaim(roleId).catch(() => undefined)}
+          disabled={!assignmentId || isActivating}
+          onClick={() => assignmentId && void onActivate(assignmentId).catch(() => undefined)}
         >
-          {isClaiming ? 'Claiming...' : 'Claim'}
+          {isActivating ? 'Claiming...' : 'Claim'}
         </button>
       </Styled.Row>
     );

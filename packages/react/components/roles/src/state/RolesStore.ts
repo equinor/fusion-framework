@@ -3,18 +3,23 @@ import { filter, throwIfEmpty } from 'rxjs/operators';
 
 import { FlowSubject } from '@equinor/fusion-observable';
 import type {
-  ClaimRoleInput,
-  DeactivateRoleInput,
+  ActivateClaimableRoleAssignmentInput,
+  DeactivateClaimableRoleAssignmentInput,
   IRolesProvider,
 } from '@equinor/fusion-framework-module-roles';
 
 import { rolesActions, type RolesAction } from './roles-actions';
 import { createRolesReducer } from './create-roles-reducer';
 import { createRolesFlow } from './create-roles-flow';
-import type { RoleClaimResult, RoleDeactivateResult, RolesState } from './roles-state';
+import type {
+  ClaimableRoleAssignmentActivationResult,
+  ClaimableRoleAssignmentDeactivationResult,
+  RolesState,
+} from './roles-state';
 
 /**
- * Observable application state and actions for Roles V2 collections and activation.
+ * Observable application state and actions for Roles V2 assignment collections and
+ * claimable-role-assignment mutations.
  */
 export class RolesStore extends FlowSubject<RolesState, RolesAction> {
   #operationId = 0;
@@ -71,13 +76,13 @@ export class RolesStore extends FlowSubject<RolesState, RolesAction> {
   }
 
   /**
-   * Reloads active role assignments.
+   * Reloads active access-role assignments.
    *
    * @param refresh - Whether to invalidate the provider cache before loading.
    * @returns Completion of this request; collection errors are exposed in state.
    * @throws When the store is disposed before the request completes.
    */
-  public async loadActiveRoles(refresh = false): Promise<void> {
+  public async loadActiveAccessRoleAssignments(refresh = false): Promise<void> {
     this.#assertAvailable();
     const operationId = ++this.#operationId;
     // Resolve when this operation completes, even if a newer reload supersedes its state update.
@@ -85,25 +90,25 @@ export class RolesStore extends FlowSubject<RolesState, RolesAction> {
       this.action$.pipe(
         filter(
           (action) =>
-            (rolesActions.loadActive.success.match(action) ||
-              rolesActions.loadActive.failure.match(action)) &&
+            (rolesActions.loadActiveAccessRoleAssignments.success.match(action) ||
+              rolesActions.loadActiveAccessRoleAssignments.failure.match(action)) &&
             action.meta.operationId === operationId,
         ),
         throwIfEmpty(() => new Error('Roles store has been disposed.')),
       ),
     );
-    this.next(rolesActions.loadActive(operationId, refresh));
+    this.next(rolesActions.loadActiveAccessRoleAssignments(operationId, refresh));
     await completed;
   }
 
   /**
-   * Reloads claimable role assignments.
+   * Reloads consolidated claimable role assignments.
    *
    * @param refresh - Whether to invalidate the provider cache before loading.
    * @returns Completion of this request; collection errors are exposed in state.
    * @throws When the store is disposed before the request completes.
    */
-  public async loadClaimableRoles(refresh = false): Promise<void> {
+  public async loadConsolidatedClaimableRoleAssignments(refresh = false): Promise<void> {
     this.#assertAvailable();
     const operationId = ++this.#operationId;
     // Resolve when this operation completes, even if a newer reload supersedes its state update.
@@ -111,25 +116,53 @@ export class RolesStore extends FlowSubject<RolesState, RolesAction> {
       this.action$.pipe(
         filter(
           (action) =>
-            (rolesActions.loadClaimable.success.match(action) ||
-              rolesActions.loadClaimable.failure.match(action)) &&
+            (rolesActions.loadConsolidatedClaimableRoleAssignments.success.match(action) ||
+              rolesActions.loadConsolidatedClaimableRoleAssignments.failure.match(action)) &&
             action.meta.operationId === operationId,
         ),
         throwIfEmpty(() => new Error('Roles store has been disposed.')),
       ),
     );
-    this.next(rolesActions.loadClaimable(operationId, refresh));
+    this.next(rolesActions.loadConsolidatedClaimableRoleAssignments(operationId, refresh));
     await completed;
   }
 
   /**
-   * Activates one role assignment and waits for both role domains to refresh.
+   * Reloads consolidated role assignments.
    *
-   * @param input - Role assignment, activation duration, and audit reason.
+   * @param refresh - Whether to invalidate the provider cache before loading.
+   * @returns Completion of this request; collection errors are exposed in state.
+   * @throws When the store is disposed before the request completes.
+   */
+  public async loadConsolidatedRoleAssignments(refresh = false): Promise<void> {
+    this.#assertAvailable();
+    const operationId = ++this.#operationId;
+    // Resolve when this operation completes, even if a newer reload supersedes its state update.
+    const completed = firstValueFrom(
+      this.action$.pipe(
+        filter(
+          (action) =>
+            (rolesActions.loadConsolidatedRoleAssignments.success.match(action) ||
+              rolesActions.loadConsolidatedRoleAssignments.failure.match(action)) &&
+            action.meta.operationId === operationId,
+        ),
+        throwIfEmpty(() => new Error('Roles store has been disposed.')),
+      ),
+    );
+    this.next(rolesActions.loadConsolidatedRoleAssignments(operationId, refresh));
+    await completed;
+  }
+
+  /**
+   * Activates one claimable role assignment and waits for both mutated collections to refresh.
+   *
+   * @param input - Claimable role assignment, activation duration, and audit reason.
    * @returns The activation result even when a subsequent collection refresh fails.
    * @throws The provider error when activation fails, or an error when the store is disposed.
    */
-  public async claimRole(input: ClaimRoleInput): Promise<RoleClaimResult> {
+  public async activateClaimableRoleAssignment(
+    input: ActivateClaimableRoleAssignmentInput,
+  ): Promise<ClaimableRoleAssignmentActivationResult> {
     this.#assertAvailable();
     const operationId = ++this.#operationId;
     // Correlate the imperative promise with the matching asynchronous action outcome.
@@ -137,41 +170,43 @@ export class RolesStore extends FlowSubject<RolesState, RolesAction> {
       this.action$.pipe(
         filter(
           (action) =>
-            (rolesActions.claimRole.success.match(action) ||
-              rolesActions.claimRole.failure.match(action)) &&
+            (rolesActions.activateClaimableRoleAssignment.success.match(action) ||
+              rolesActions.activateClaimableRoleAssignment.failure.match(action)) &&
             action.meta.operationId === operationId,
         ),
         throwIfEmpty(() => new Error('Roles store has been disposed.')),
       ),
     );
     this.next(
-      rolesActions.claimRole({
+      rolesActions.activateClaimableRoleAssignment({
         input,
         operationId,
-        activeOperationId: ++this.#operationId,
+        activeAccessOperationId: ++this.#operationId,
         claimableOperationId: ++this.#operationId,
       }),
     );
     const action = await completed;
     // Preserve provider failures for imperative callers as well as observable state consumers.
-    if (rolesActions.claimRole.failure.match(action)) {
+    if (rolesActions.activateClaimableRoleAssignment.failure.match(action)) {
       throw action.payload;
     }
     // The correlated terminal action can only be success or failure.
-    if (rolesActions.claimRole.success.match(action)) {
+    if (rolesActions.activateClaimableRoleAssignment.success.match(action)) {
       return action.payload;
     }
-    throw new Error('Role activation completed without a result.');
+    throw new Error('Claimable role assignment activation completed without a result.');
   }
 
   /**
-   * Deactivates one claimed assignment and waits for both role domains to refresh.
+   * Deactivates one activated claimable role assignment and waits for both mutated collections to refresh.
    *
-   * @param input - Claimable assignment to deactivate.
+   * @param input - Claimable role assignment to deactivate.
    * @returns The deactivation result even when a subsequent collection refresh fails.
    * @throws The provider error when deactivation fails, or an error when the store is disposed.
    */
-  public async deactivateRole(input: DeactivateRoleInput): Promise<RoleDeactivateResult> {
+  public async deactivateClaimableRoleAssignment(
+    input: DeactivateClaimableRoleAssignmentInput,
+  ): Promise<ClaimableRoleAssignmentDeactivationResult> {
     this.#assertAvailable();
     const operationId = ++this.#operationId;
     // Correlate the imperative promise with the matching asynchronous action outcome.
@@ -179,30 +214,30 @@ export class RolesStore extends FlowSubject<RolesState, RolesAction> {
       this.action$.pipe(
         filter(
           (action) =>
-            (rolesActions.deactivateRole.success.match(action) ||
-              rolesActions.deactivateRole.failure.match(action)) &&
+            (rolesActions.deactivateClaimableRoleAssignment.success.match(action) ||
+              rolesActions.deactivateClaimableRoleAssignment.failure.match(action)) &&
             action.meta.operationId === operationId,
         ),
         throwIfEmpty(() => new Error('Roles store has been disposed.')),
       ),
     );
     this.next(
-      rolesActions.deactivateRole({
+      rolesActions.deactivateClaimableRoleAssignment({
         input,
         operationId,
-        activeOperationId: ++this.#operationId,
+        activeAccessOperationId: ++this.#operationId,
         claimableOperationId: ++this.#operationId,
       }),
     );
     const action = await completed;
     // Preserve provider failures for imperative callers and observable consumers.
-    if (rolesActions.deactivateRole.failure.match(action)) {
+    if (rolesActions.deactivateClaimableRoleAssignment.failure.match(action)) {
       throw action.payload;
     }
     // The correlated terminal action can only be success or failure.
-    if (rolesActions.deactivateRole.success.match(action)) {
+    if (rolesActions.deactivateClaimableRoleAssignment.success.match(action)) {
       return action.payload;
     }
-    throw new Error('Role deactivation completed without a result.');
+    throw new Error('Claimable role assignment deactivation completed without a result.');
   }
 }

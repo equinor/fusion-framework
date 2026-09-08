@@ -41,38 +41,43 @@ interface RoleClaimDialogProps extends RoleClaimFormOptions {
 }
 
 /**
- * Collects the audit reason and activation duration before claiming a role.
+ * Collects the audit reason and activation duration before activating a claimable role assignment.
  *
- * Owns submission failures for all claim entry points, including in-place expiry recovery.
+ * Owns submission failures for all activation entry points, including in-place expiry recovery.
  * Callbacks must reject on failure; only their successful path may close or retry the host.
  *
- * @param props - Selected claim, pending state, and dialog callbacks.
- * @returns An EDS dialog when a claimable role has been selected.
+ * @param props - Selected claimable role assignment, pending state, and dialog callbacks.
+ * @returns An EDS dialog when a claimable role assignment has been selected.
  */
 export const RoleClaimDialog = ({
-  claim,
+  claimableRoleAssignment,
   defaultReason,
-  isClaiming,
+  isActivating,
   onClose,
-  onClaim,
+  onActivate,
 }: RoleClaimDialogProps): ReactNode => {
-  const form = useRoleClaimForm({ claim, defaultReason, isClaiming, onClaim });
-  const { reason, durationHours, isPending, claimError } = form;
+  const form = useRoleClaimForm({
+    claimableRoleAssignment,
+    defaultReason,
+    isActivating,
+    onActivate,
+  });
+  const { reason, durationHours, isPending, activationError } = form;
   const durationLabel = `Duration: ${durationHours} ${durationHours === 1 ? 'hour' : 'hours'}`;
 
   // Keep the dialog out of the accessibility tree until the user selects an assignment.
-  if (!claim) {
+  if (!claimableRoleAssignment) {
     return null;
   }
 
   return (
     <Styled.Dialog open>
-      <Dialog.Header>Claim {claim.displayName}</Dialog.Header>
+      <Dialog.Header>Claim {claimableRoleAssignment.displayName}</Dialog.Header>
       <Styled.Content>
         <Typography>
           Choose how long the role should remain active and provide a reason for the activation.
         </Typography>
-        {claimError ? <p role="alert">{claimError}</p> : null}
+        {activationError ? <p role="alert">{activationError}</p> : null}
         <Textarea
           label="Reason"
           helperText="This reason is recorded in the role activation audit log."
@@ -107,7 +112,7 @@ export const RoleClaimDialog = ({
         <Button
           variant="contained"
           disabled={!form.canSubmit}
-          onClick={() => void form.submitClaim()}
+          onClick={() => void form.submitActivation()}
         >
           {isPending ? 'Claiming...' : 'Claim'}
         </Button>

@@ -13,12 +13,13 @@ import { module } from '../module.js';
  */
 const createClient = (): IRolesClient => ({
   initialize: vi.fn(),
-  getActiveRoles: vi.fn(() => of([])),
-  getClaimableRoles: vi.fn(),
-  claimRole: vi.fn(),
-  deactivateRole: vi.fn(),
-  canClaimAccessRole: vi.fn(),
-  getRequiredRoleStatuses: vi.fn(),
+  getActiveAccessRoleAssignments: vi.fn(() => of([])),
+  getConsolidatedClaimableRoleAssignments: vi.fn(),
+  getConsolidatedRoleAssignments: vi.fn(),
+  activateClaimableRoleAssignment: vi.fn(),
+  deactivateClaimableRoleAssignment: vi.fn(),
+  hasClaimableRoleAssignmentForAccessRole: vi.fn(),
+  getRequiredAccessRoleStatuses: vi.fn(),
   getAccessRoles: vi.fn(),
 });
 
@@ -39,13 +40,13 @@ describe('roles module', () => {
       requireInstance: vi.fn(),
     });
 
-    await provider.getActiveRoles();
+    await provider.getActiveAccessRoleAssignments();
     expect(clientBuilder).toHaveBeenCalledOnce();
     expect(client.initialize).toHaveBeenCalledWith({
       resolveCurrentAccountIdentifier: expect.any(Function),
     });
     expect(client.initialize).toHaveBeenCalledOnce();
-    expect(client.getActiveRoles).toHaveBeenCalledOnce();
+    expect(client.getActiveAccessRoleAssignments).toHaveBeenCalledOnce();
   });
 
   it('creates an app provider with service discovery inherited from the parent', async () => {
@@ -66,7 +67,7 @@ describe('roles module', () => {
       requireInstance,
     });
 
-    await expect(provider.getActiveRoles()).resolves.toEqual([]);
+    await expect(provider.getActiveAccessRoleAssignments()).resolves.toEqual([]);
     expect(serviceDiscovery.createClient).toHaveBeenCalledWith('rolesv2');
     expect(json.mock.calls[0][0]).toContain('/accounts/account-id/');
   });
@@ -109,9 +110,9 @@ describe('roles module', () => {
         name === 'serviceDiscovery' || name === 'auth' || name === 'event' || name === 'telemetry',
       requireInstance,
     });
-    await expect(provider.getActiveRoles()).resolves.toEqual([]);
+    await expect(provider.getActiveAccessRoleAssignments()).resolves.toEqual([]);
     auth.account = { localAccountId: 'account-b' };
-    await expect(provider.getClaimableRoles()).resolves.toEqual([]);
+    await expect(provider.getConsolidatedClaimableRoleAssignments()).resolves.toEqual([]);
     expect(serviceDiscovery.createClient).toHaveBeenCalledWith('rolesv2');
     expect(initialize).toHaveBeenCalledWith({
       resolveCurrentAccountIdentifier: expect.any(Function),
@@ -120,7 +121,7 @@ describe('roles module', () => {
     expect(json.mock.calls[0][0]).toContain('/accounts/account-id/');
     expect(json.mock.calls[1][0]).toContain('/accounts/account-b/');
     expect(telemetry.trackEvent).toHaveBeenCalledWith(
-      expect.objectContaining({ name: 'RolesProvider.getActiveRoles' }),
+      expect.objectContaining({ name: 'RolesProvider.getActiveAccessRoleAssignments' }),
     );
   });
 
@@ -141,12 +142,12 @@ describe('roles module', () => {
       message: 'Failed to initialize Roles client.',
       cause: expect.objectContaining({ message: 'client initialization failed' }),
     });
-    expect(client.getActiveRoles).not.toHaveBeenCalled();
+    expect(client.getActiveAccessRoleAssignments).not.toHaveBeenCalled();
   });
 
   it('allows bootstrap when the authenticated account has every required role', async () => {
     const client = createClient();
-    vi.mocked(client.getActiveRoles).mockReturnValue(
+    vi.mocked(client.getActiveAccessRoleAssignments).mockReturnValue(
       of([
         { systemName: 'Reports', accessRoleName: 'Reports.Read' },
         { systemName: 'Reports', accessRoleName: 'Reports.Export' },
@@ -154,7 +155,7 @@ describe('roles module', () => {
     );
     const config = new RolesModuleConfigurator();
     config.setClient(client);
-    config.requireRoles(['Reports.Read', 'Reports.Export']);
+    config.requireAccessRoles(['Reports.Read', 'Reports.Export']);
 
     await expect(
       module.initialize({
@@ -167,12 +168,12 @@ describe('roles module', () => {
 
   it('denies bootstrap when a required role is not active', async () => {
     const client = createClient();
-    vi.mocked(client.getActiveRoles).mockReturnValue(
+    vi.mocked(client.getActiveAccessRoleAssignments).mockReturnValue(
       of([{ systemName: 'Reports', accessRoleName: 'Reports.Read' }]),
     );
     const config = new RolesModuleConfigurator();
     config.setClient(client);
-    config.requireRoles(['Reports.Read', 'Reports.Export']);
+    config.requireAccessRoles(['Reports.Read', 'Reports.Export']);
 
     await expect(
       module.initialize({
@@ -181,16 +182,16 @@ describe('roles module', () => {
         requireInstance: vi.fn(),
       }),
     ).rejects.toMatchObject({
-      name: 'RequiredRolesError',
-      message: 'Roles module bootstrap denied. Missing required roles: Reports.Export.',
-      missingRoles: ['Reports.Export'],
+      name: 'RequiredAccessRolesError',
+      message: 'Roles module bootstrap denied. Missing required access roles: Reports.Export.',
+      missingAccessRoles: ['Reports.Export'],
       provider: expect.anything(),
     });
   });
 
   it('denies default-client bootstrap when authentication has no active account', async () => {
     const config = new RolesModuleConfigurator();
-    config.requireRoles(['Reports.Read']);
+    config.requireAccessRoles(['Reports.Read']);
     const httpClient = new HttpClient('https://roles.example.test');
     const serviceDiscovery = {
       createClient: vi.fn(async () => httpClient),

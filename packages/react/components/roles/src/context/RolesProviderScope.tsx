@@ -8,20 +8,23 @@ import {
 } from 'react';
 
 import type {
-  ClaimRoleInput,
-  DeactivateRoleInput,
+  ActivateClaimableRoleAssignmentInput,
+  DeactivateClaimableRoleAssignmentInput,
   IRolesProvider,
 } from '@equinor/fusion-framework-module-roles';
 
-import { RoleBoundary } from '../components/required-access/RoleBoundary';
+import { AccessRoleBoundary } from '../components/required-access/AccessRoleBoundary';
 import { RoleClaimDialog } from '../components/claim/RoleClaimDialog';
 import { RolesStore } from '../state/RolesStore';
-import type { RoleClaimResult, RoleDeactivateResult } from '../state/roles-state';
+import type {
+  ClaimableRoleAssignmentActivationResult,
+  ClaimableRoleAssignmentDeactivationResult,
+} from '../state/roles-state';
 import { RolesContext, type RolesContextValue } from './roles-context';
 import type { RolesProviderProps } from './RolesProvider';
-import { useExpiredRoleRecovery } from './useExpiredRoleRecovery';
+import { useExpiredClaimableRoleAssignmentRecovery } from './useExpiredClaimableRoleAssignmentRecovery';
 
-const ROLE_REFRESH_INTERVAL_MS = 60_000;
+const ROLE_ASSIGNMENT_REFRESH_INTERVAL_MS = 60_000;
 
 /** The validated module provider defining this state lifetime. */
 interface RolesProviderScopeProps extends RolesProviderProps {
@@ -30,12 +33,12 @@ interface RolesProviderScopeProps extends RolesProviderProps {
 
 /**
  * Owns collections and recovery history for exactly one module provider identity.
- * @param props - Validated provider, required roles, and consuming subtree.
+ * @param props - Validated provider, required access roles, and consuming subtree.
  * @returns Provider-scoped collection state and in-place expiry recovery.
  */
 export const RolesProviderScope = ({
   provider,
-  required,
+  requiredAccessRoles,
   children,
 }: RolesProviderScopeProps): ReactNode => {
   const store = useMemo(() => new RolesStore(provider), [provider]);
@@ -59,14 +62,20 @@ export const RolesProviderScope = ({
    */
   const getSnapshot = useCallback(() => store.value, [store]);
   const state = useSyncExternalStore(subscribe, getSnapshot, getSnapshot);
-  const recovery = useExpiredRoleRecovery(state.claimable);
+  const recovery = useExpiredClaimableRoleAssignmentRecovery(
+    state.consolidatedClaimableRoleAssignments,
+  );
   const refreshInProgress = useRef(false);
   const lifecycle = useRef(0);
 
   useEffect(() => {
     const generation = ++lifecycle.current;
     // Collection failures are exposed by hook state. Disposal rejects only abandoned callers.
-    void Promise.allSettled([store.loadActiveRoles(), store.loadClaimableRoles()]);
+    void Promise.allSettled([
+      store.loadActiveAccessRoleAssignments(),
+      store.loadConsolidatedClaimableRoleAssignments(),
+      store.loadConsolidatedRoleAssignments(),
+    ]);
     return () => {
       // StrictMode immediately replays effects with the same store. Defer terminal disposal until
       // that replay can reclaim it; a genuine unmount/provider switch has no matching setup.
@@ -81,16 +90,20 @@ export const RolesProviderScope = ({
 
   /**
    * Coalesces passive refresh triggers without surfacing abandoned scope rejections.
-   * @returns Settlement of both reads, or immediate completion when a refresh is already running.
+   * @returns Settlement of all collection reads, or immediate completion when one is already running.
    */
-  const refreshRoles = useCallback(async (): Promise<void> => {
+  const refreshRoleAssignments = useCallback(async (): Promise<void> => {
     // Focus and interval events can overlap, so only one network refresh should run at a time.
     if (refreshInProgress.current) {
       return;
     }
     refreshInProgress.current = true;
     try {
-      await Promise.allSettled([store.loadActiveRoles(true), store.loadClaimableRoles(true)]);
+      await Promise.allSettled([
+        store.loadActiveAccessRoleAssignments(true),
+        store.loadConsolidatedClaimableRoleAssignments(true),
+        store.loadConsolidatedRoleAssignments(true),
+      ]);
     } finally {
       refreshInProgress.current = false;
     }
@@ -101,11 +114,11 @@ export const RolesProviderScope = ({
     const refreshWhenVisible = (): void => {
       // Hidden applications cannot need an immediate role-state update.
       if (document.visibilityState === 'visible') {
-        void refreshRoles();
+        void refreshRoleAssignments();
       }
     };
 
-    const interval = window.setInterval(refreshWhenVisible, ROLE_REFRESH_INTERVAL_MS);
+    const interval = window.setInterval(refreshWhenVisible, ROLE_ASSIGNMENT_REFRESH_INTERVAL_MS);
     window.addEventListener('focus', refreshWhenVisible);
     document.addEventListener('visibilitychange', refreshWhenVisible);
     return () => {
@@ -113,25 +126,42 @@ export const RolesProviderScope = ({
       window.removeEventListener('focus', refreshWhenVisible);
       document.removeEventListener('visibilitychange', refreshWhenVisible);
     };
-  }, [refreshRoles]);
+  }, [refreshRoleAssignments]);
 
   /**
-   * Settles the active read independently of subsequent context state updates.
-   * @returns Completion of the active collection request.
+   * Settles the active access-role assignment read independently of subsequent context updates.
+   * @returns Completion of the active access-role assignment request.
    */
-  const reloadActive = useCallback(() => store.loadActiveRoles(true), [store]);
+  const reloadActiveAccessRoleAssignments = useCallback(
+    () => store.loadActiveAccessRoleAssignments(true),
+    [store],
+  );
   /**
    * Settles the claimable read independently of subsequent context state updates.
-   * @returns Completion of the claimable collection request.
+   * @returns Completion of the consolidated claimable-role-assignment request.
    */
-  const reloadClaimable = useCallback(() => store.loadClaimableRoles(true), [store]);
+  const reloadConsolidatedClaimableRoleAssignments = useCallback(
+    () => store.loadConsolidatedClaimableRoleAssignments(true),
+    [store],
+  );
+  /**
+   * Settles the consolidated read independently of subsequent context state updates.
+   * @returns Completion of the consolidated role-assignment request.
+   */
+  const reloadConsolidatedRoleAssignments = useCallback(
+    () => store.loadConsolidatedRoleAssignments(true),
+    [store],
+  );
   /**
    * Preserves the activation action identity across loading and mutation state updates.
    * @param input - Addressable assignment and audit details.
    * @returns Mutation result after its collection refreshes settle.
    */
-  const claimRole = useCallback(
-    (input: ClaimRoleInput): Promise<RoleClaimResult> => store.claimRole(input),
+  const activateClaimableRoleAssignment = useCallback(
+    (
+      input: ActivateClaimableRoleAssignmentInput,
+    ): Promise<ClaimableRoleAssignmentActivationResult> =>
+      store.activateClaimableRoleAssignment(input),
     [store],
   );
   const { suppress, complete } = recovery;
@@ -141,11 +171,13 @@ export const RolesProviderScope = ({
    * @returns Mutation result after its collection refreshes settle.
    * @throws Mutation rejection or disposal, preserving the store's imperative contract.
    */
-  const deactivateRole = useCallback(
-    async (input: DeactivateRoleInput): Promise<RoleDeactivateResult> => {
-      const rollback = suppress(input.roleId);
+  const deactivateClaimableRoleAssignment = useCallback(
+    async (
+      input: DeactivateClaimableRoleAssignmentInput,
+    ): Promise<ClaimableRoleAssignmentDeactivationResult> => {
+      const rollback = suppress(input.assignmentId);
       try {
-        return await store.deactivateRole(input);
+        return await store.deactivateClaimableRoleAssignment(input);
       } catch (error) {
         rollback();
         throw error;
@@ -156,57 +188,71 @@ export const RolesProviderScope = ({
 
   const value = useMemo<RolesContextValue>(
     () => ({
-      active: {
-        roles: state.active.roles,
-        isLoading: state.active.status === 'loading',
-        error: state.active.error,
-        reload: reloadActive,
+      activeAccessRoleAssignments: {
+        assignments: state.activeAccessRoleAssignments.assignments,
+        isLoading: state.activeAccessRoleAssignments.status === 'loading',
+        error: state.activeAccessRoleAssignments.error,
+        reload: reloadActiveAccessRoleAssignments,
       },
-      claimable: {
-        roles: state.claimable.roles,
-        isLoading: state.claimable.status === 'loading',
-        error: state.claimable.error,
-        reload: reloadClaimable,
-        claimRole,
-        deactivateRole,
-        isClaiming: state.claim.pending > 0,
-        claimError: state.claim.error,
-        isDeactivating: state.deactivate.pending > 0,
-        deactivateError: state.deactivate.error,
+      consolidatedClaimableRoleAssignments: {
+        assignments: state.consolidatedClaimableRoleAssignments.assignments,
+        isLoading: state.consolidatedClaimableRoleAssignments.status === 'loading',
+        error: state.consolidatedClaimableRoleAssignments.error,
+        reload: reloadConsolidatedClaimableRoleAssignments,
+        activateClaimableRoleAssignment,
+        deactivateClaimableRoleAssignment,
+        isActivating: state.activation.pending > 0,
+        activationError: state.activation.error,
+        isDeactivating: state.deactivation.pending > 0,
+        deactivationError: state.deactivation.error,
+      },
+      consolidatedRoleAssignments: {
+        assignments: state.consolidatedRoleAssignments.assignments,
+        isLoading: state.consolidatedRoleAssignments.status === 'loading',
+        error: state.consolidatedRoleAssignments.error,
+        reload: reloadConsolidatedRoleAssignments,
       },
     }),
-    [state, reloadActive, reloadClaimable, claimRole, deactivateRole],
+    [
+      state,
+      reloadActiveAccessRoleAssignments,
+      reloadConsolidatedClaimableRoleAssignments,
+      reloadConsolidatedRoleAssignments,
+      activateClaimableRoleAssignment,
+      deactivateClaimableRoleAssignment,
+    ],
   );
 
   /**
-   * Reclaims an expired role without remounting or reloading the consuming application.
-   * @param roleId - Expired assignment identifier.
+   * Reactivates an expired claimable role assignment without remounting or reloading the
+   * consuming application.
+   * @param assignmentId - Expired claimable role assignment identifier.
    * @param reason - User-confirmed audit reason.
    * @param hours - Requested activation duration.
    * @returns Settlement of activation and advancement of the recovery queue.
    * @throws Mutation rejection or disposal for the dialog to display.
    */
-  const reclaimExpiredRole = async (
-    roleId: string,
+  const activateExpiredClaimableRoleAssignment = async (
+    assignmentId: string,
     reason: string,
     hours: number,
   ): Promise<void> => {
-    await store.claimRole({ roleId, reason, hours });
-    complete(roleId);
+    await store.activateClaimableRoleAssignment({ assignmentId, reason, hours });
+    complete(assignmentId);
   };
 
   return (
-    <RoleBoundary required={required}>
+    <AccessRoleBoundary requiredAccessRoles={requiredAccessRoles}>
       <RolesContext.Provider value={value}>
         {children}
         <RoleClaimDialog
-          claim={recovery.claim}
+          claimableRoleAssignment={recovery.claimableRoleAssignment}
           defaultReason="Continue active work"
-          isClaiming={state.claim.pending > 0}
+          isActivating={state.activation.pending > 0}
           onClose={recovery.dismiss}
-          onClaim={reclaimExpiredRole}
+          onActivate={activateExpiredClaimableRoleAssignment}
         />
       </RolesContext.Provider>
-    </RoleBoundary>
+    </AccessRoleBoundary>
   );
 };

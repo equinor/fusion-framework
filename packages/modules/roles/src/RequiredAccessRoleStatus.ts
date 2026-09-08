@@ -1,7 +1,7 @@
 /**
  * Claimable assignment that can activate one required access role.
  */
-export interface RequiredRoleClaim {
+export interface RequiredAccessRoleClaimableAssignment {
   readonly assignmentId: string;
   readonly name: string;
   readonly displayName: string;
@@ -11,9 +11,9 @@ export interface RequiredRoleClaim {
 /**
  * Roles V2 availability resolved for one access role required by an application.
  */
-export interface RequiredRoleStatus {
+export interface RequiredAccessRoleStatus {
   readonly name: string;
   readonly description?: string;
   readonly exists: boolean;
-  readonly claims: readonly RequiredRoleClaim[];
+  readonly claimableAssignments: readonly RequiredAccessRoleClaimableAssignment[];
 }

@@ -1,7 +1,12 @@
-import type { ActiveRoles } from '../../state/roles-state';
-import type { ActiveAccessRoleDetails, ClaimableRoleDetails } from '../overview/role-details';
+import type { ActiveAccessRoleAssignments } from '../../state/roles-state';
+import type {
+  ActiveAccessRoleDetails,
+  AssignedRoleDetails,
+  ClaimableRoleDetails,
+} from '../overview/role-details';
 import { parseRoleDate } from '../../dates/parse-role-date';
 import { createActiveRoleItems } from '../overview/create-active-role-items';
+import { filterEffectiveAssignedRoles } from '../overview/filter-effective-assigned-roles';
 
 const RECENT_ROLE_LIMIT = 3;
 const RECENT_ROLE_WINDOW_MS = 7 * 24 * 60 * 60 * 1_000;
@@ -12,6 +17,7 @@ interface CompactRoleGroups {
   readonly claimed: readonly ClaimableRoleDetails[];
   readonly expired: readonly ClaimableRoleDetails[];
   readonly activeAccess: readonly ActiveAccessRoleDetails[];
+  readonly assigned: readonly AssignedRoleDetails[];
 }
 
 /**
@@ -38,18 +44,21 @@ const isRecentExpiredRole = (role: ClaimableRoleDetails, now: number): boolean =
 
 /**
  * Derives compact tabs from one snapshot without losing assignments beyond the shortcut limit.
- * @param active - Active access-role assignments.
- * @param claimable - Normalized claimable assignments.
+ * @param activeAccessRoleAssignments - Active access-role assignments.
+ * @param claimableRoles - Normalized claimable role assignments.
+ * @param assignedRoles - Normalized consolidated role assignments.
  * @param now - Snapshot timestamp; supplied explicitly for deterministic expiry classification.
- * @returns Bounded expiry shortcuts, remaining claimable roles, and effective access roles.
+ * @returns Bounded expiry shortcuts, remaining claimable roles, effective access roles, and
+ * currently effective assigned roles.
  */
 export const createCompactRoleGroups = (
-  active: ActiveRoles,
-  claimable: readonly ClaimableRoleDetails[],
+  activeAccessRoleAssignments: ActiveAccessRoleAssignments,
+  claimableRoles: readonly ClaimableRoleDetails[],
+  assignedRoles: readonly AssignedRoleDetails[],
   now: number,
 ): CompactRoleGroups => {
   // Partition only the bounded shortcut set out of Claimable; older eligible assignments remain reachable.
-  const expired = claimable
+  const expired = claimableRoles
     .filter((role) => isRecentExpiredRole(role, now))
     .sort((left, right) => {
       const leftDate = parseRoleDate(left.activeTo);
@@ -62,7 +71,7 @@ export const createCompactRoleGroups = (
     .slice(0, RECENT_ROLE_LIMIT);
 
   // Preserve source, scope, and expiry when adapting effective access to the information dialog.
-  const activeAccess = createActiveRoleItems(active).map(
+  const activeAccess = createActiveRoleItems(activeAccessRoleAssignments).map(
     ({ assignment, key }): ActiveAccessRoleDetails => {
       const displayName = assignment.accessRoleName ?? 'Unknown access role';
       return {
@@ -90,8 +99,10 @@ export const createCompactRoleGroups = (
   );
 
   // Keep assignments beyond the shortcut limit reachable for activation.
-  const available = claimable.filter((role) => !expired.includes(role));
+  const available = claimableRoles.filter((role) => !expired.includes(role));
   // Active is informational; these assignments intentionally also remain in Claimable.
-  const claimed = claimable.filter((role) => role.isActive);
-  return { available, claimed, expired, activeAccess };
+  const claimed = claimableRoles.filter((role) => role.isActive);
+  // Standing role assignments outside their effective window are not currently granted access.
+  const effectiveAssigned = filterEffectiveAssignedRoles(assignedRoles, now);
+  return { available, claimed, expired, activeAccess, assigned: effectiveAssigned };
 };

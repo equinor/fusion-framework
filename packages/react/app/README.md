@@ -352,24 +352,26 @@ export const configure: AppModuleInitiator = (configurator) => {
 ```
 
 ```tsx
-import { useRole } from '@equinor/fusion-framework-react-app/roles';
+import { useAccessRole } from '@equinor/fusion-framework-react-app/roles';
 
 const ReportsAccess = ({ claimableRoleId }: { claimableRoleId: string }) => {
-  const role = useRole('Reports.Read');
+  const role = useAccessRole('Reports.Read');
 
   if (role.isChecking) return <Spinner />;
   if (role.checkError) return <ErrorMessage error={role.checkError} />;
-  if (role.hasRole) return <Reports />;
+  if (role.hasAccessRole) return <Reports />;
 
-  /** Consumes the event-handler rejection; claimError below owns the visible failure. */
-  const handleClaim = (): void => {
-    void role.claimRole({ roleId: claimableRoleId }).catch(() => undefined);
+  /** Consumes the event-handler rejection; activationError below owns the visible failure. */
+  const handleActivate = (): void => {
+    void role
+      .activateClaimableRoleAssignment({ assignmentId: claimableRoleId })
+      .catch(() => undefined);
   };
 
-  return role.canClaimAccessRole ? (
+  return role.hasClaimableRoleAssignmentForAccessRole ? (
     <>
-      {role.claimError ? <p role="alert">{String(role.claimError)}</p> : null}
-      <button disabled={role.isClaiming} onClick={handleClaim}>
+      {role.activationError ? <p role="alert">{String(role.activationError)}</p> : null}
+      <button disabled={role.isActivating} onClick={handleActivate}>
         Claim access
       </button>
     </>
@@ -377,9 +379,9 @@ const ReportsAccess = ({ claimableRoleId }: { claimableRoleId: string }) => {
 };
 ```
 
-`useRole` checks the exact access-role name when mounted and checks again after a successful claim.
+`useAccessRole` checks the exact access-role name when mounted and checks again after a successful claim.
 Check and claim operations expose separate loading and error states.
-`claimRole` rejects on failure as well as setting `claimError`; React event handlers must consume
+`activateClaimableRoleAssignment` rejects on failure as well as setting `activationError`; React event handlers must consume
 that rejection and render the mutation error so users can retry.
 
 ### Bookmarks
@@ -448,7 +450,7 @@ see that package's README for usage.
 | `/context` | `useCurrentContext`, `useContextProvider`, `useFrameworkCurrentContext` |
 | `/navigation` | `useRouter`, `useNavigationModule` |
 | `/feature-flag` | `enableFeatureFlag`, `useFeature` |
-| `/roles` | `useRole` |
+| `/roles` | `useAccessRole` |
 | `/bookmark` | `enableBookmark`, `useCurrentBookmark`, `useBookmark` |
 | `/settings` | `useAppSetting`, `useAppSettings` |
 | `/analytics` | `useTrackFeature` |

@@ -2,21 +2,25 @@ import { cleanup, render } from 'vitest-browser-react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { RolesProvider } from './RolesProvider';
 import { RolesView } from '../components/RolesView';
-import type { ActiveRoles, ClaimableRoles } from '../state/roles-state';
+import type {
+  ActiveAccessRoleAssignments,
+  ConsolidatedClaimableRoleAssignments,
+} from '../state/roles-state';
 
 const provider = vi.hoisted(() => ({
-  getActiveRoles: vi.fn(),
-  getClaimableRoles: vi.fn(),
-  claimRole: vi.fn(),
-  deactivateRole: vi.fn(),
-  hasRole: vi.fn(),
+  getActiveAccessRoleAssignments: vi.fn(),
+  getConsolidatedClaimableRoleAssignments: vi.fn(),
+  getConsolidatedRoleAssignments: vi.fn(),
+  activateClaimableRoleAssignment: vi.fn(),
+  deactivateClaimableRoleAssignment: vi.fn(),
+  hasAccessRole: vi.fn(),
 }));
 
 vi.mock('@equinor/fusion-framework-react-module', () => ({
   useModule: () => provider,
 }));
 
-const assignments: ClaimableRoles = [
+const assignments: ConsolidatedClaimableRoleAssignments = [
   {
     id: 'reports-assignment',
     claimableRole: { name: 'reports-exporter', displayName: 'Reports exporter' },
@@ -26,11 +30,14 @@ const assignments: ClaimableRoles = [
 
 describe('RolesProvider with real role views', () => {
   beforeEach(() => {
-    provider.getActiveRoles.mockReset().mockResolvedValue([]);
-    provider.getClaimableRoles.mockReset().mockResolvedValue(assignments);
-    provider.claimRole.mockReset().mockResolvedValue({ id: 'activation' });
-    provider.deactivateRole.mockReset().mockResolvedValue({ id: 'deactivation' });
-    provider.hasRole.mockReset().mockResolvedValue(true);
+    provider.getActiveAccessRoleAssignments.mockReset().mockResolvedValue([]);
+    provider.getConsolidatedClaimableRoleAssignments.mockReset().mockResolvedValue(assignments);
+    provider.getConsolidatedRoleAssignments.mockReset().mockResolvedValue([]);
+    provider.activateClaimableRoleAssignment.mockReset().mockResolvedValue({ id: 'activation' });
+    provider.deactivateClaimableRoleAssignment
+      .mockReset()
+      .mockResolvedValue({ id: 'deactivation' });
+    provider.hasAccessRole.mockReset().mockResolvedValue(true);
   });
 
   afterEach(() => {
@@ -58,50 +65,54 @@ describe('RolesProvider with real role views', () => {
       await dialog.getByLabelText('Reason').fill('Keep this audit reason');
       await dialog.getByRole('slider').fill('5');
 
-      const activeRead = Promise.withResolvers<ActiveRoles>();
-      const claimableRead = Promise.withResolvers<ClaimableRoles>();
-      provider.getActiveRoles.mockReturnValueOnce(activeRead.promise);
-      provider.getClaimableRoles.mockReturnValueOnce(claimableRead.promise);
+      const activeRead = Promise.withResolvers<ActiveAccessRoleAssignments>();
+      const claimableRead = Promise.withResolvers<ConsolidatedClaimableRoleAssignments>();
+      provider.getActiveAccessRoleAssignments.mockReturnValueOnce(activeRead.promise);
+      provider.getConsolidatedClaimableRoleAssignments.mockReturnValueOnce(claimableRead.promise);
       window.dispatchEvent(new Event('focus'));
-      await expect.element(screen.getByText(/Refreshing roles…/)).toBeVisible();
+      await expect.element(screen.getByText(/Refreshing role data…/)).toBeVisible();
       await expect.element(dialog.getByLabelText('Reason')).toHaveValue('Keep this audit reason');
       await expect.element(dialog.getByText('Duration: 5 hours')).toBeVisible();
       activeRead.reject(new Error('Active collection unavailable'));
       claimableRead.resolve(assignments);
       await expect
-        .element(screen.getByText(/Some roles could not be loaded/))
+        .element(screen.getByText(/Some role data could not be loaded/))
         .toHaveTextContent('Active collection unavailable');
       await expect.element(dialog).toBeVisible();
 
-      provider.claimRole.mockRejectedValueOnce(new Error('Activation rejected'));
+      provider.activateClaimableRoleAssignment.mockRejectedValueOnce(
+        new Error('Activation rejected'),
+      );
       await dialog.getByRole('button', { name: 'Claim', exact: true }).click();
       await expect.element(dialog.getByRole('alert')).toBeVisible();
       // Fire the actual registered polling callback without advancing unrelated EDS timers.
       const refreshInterval = interval.mock.calls.find(([, delay]) => delay === 60_000)?.[0];
       expect(refreshInterval).toBeTypeOf('function');
-      const intervalRead = Promise.withResolvers<ClaimableRoles>();
-      provider.getClaimableRoles.mockReturnValueOnce(intervalRead.promise);
+      const intervalRead = Promise.withResolvers<ConsolidatedClaimableRoleAssignments>();
+      provider.getConsolidatedClaimableRoleAssignments.mockReturnValueOnce(intervalRead.promise);
       // Guard the browser's string-handler overload before invoking the actual polling callback.
       if (typeof refreshInterval === 'function') {
         refreshInterval();
       }
-      await expect.element(screen.getByText(/Refreshing roles…/)).toBeVisible();
+      await expect.element(screen.getByText(/Refreshing role data…/)).toBeVisible();
       await expect.element(dialog.getByRole('alert')).toBeVisible();
       await expect.element(dialog.getByLabelText('Reason')).toHaveValue('Keep this audit reason');
       intervalRead.resolve(assignments);
-      await expect.element(screen.getByText(/Refreshing roles…/)).not.toBeInTheDocument();
+      await expect.element(screen.getByText(/Refreshing role data…/)).not.toBeInTheDocument();
       await expect.element(dialog.getByText('Duration: 5 hours')).toBeVisible();
 
       // A successful retry closes the form even if its follow-up collection refresh fails.
-      provider.getActiveRoles.mockRejectedValueOnce(new Error('Refresh unavailable'));
+      provider.getActiveAccessRoleAssignments.mockRejectedValueOnce(
+        new Error('Refresh unavailable'),
+      );
       await dialog.getByRole('button', { name: 'Claim', exact: true }).click();
       await expect.element(dialog).not.toBeInTheDocument();
       await expect
-        .element(screen.getByText(/Some roles could not be loaded/))
+        .element(screen.getByText(/Some role data could not be loaded/))
         .toHaveTextContent('Refresh unavailable');
-      expect(provider.claimRole).toHaveBeenCalledTimes(2);
-      expect(provider.claimRole).toHaveBeenLastCalledWith({
-        roleId: 'reports-assignment',
+      expect(provider.activateClaimableRoleAssignment).toHaveBeenCalledTimes(2);
+      expect(provider.activateClaimableRoleAssignment).toHaveBeenLastCalledWith({
+        assignmentId: 'reports-assignment',
         reason: 'Keep this audit reason',
         hours: 5,
       });
@@ -115,8 +126,8 @@ describe('RolesProvider with real role views', () => {
       </RolesProvider>,
     );
     await screen.getByRole('button', { name: 'Show information about Reports exporter' }).click();
-    const refresh = Promise.withResolvers<ClaimableRoles>();
-    provider.getClaimableRoles.mockReturnValueOnce(refresh.promise);
+    const refresh = Promise.withResolvers<ConsolidatedClaimableRoleAssignments>();
+    provider.getConsolidatedClaimableRoleAssignments.mockReturnValueOnce(refresh.promise);
     window.dispatchEvent(new Event('focus'));
     await expect.element(screen.getByRole('status')).toBeVisible();
     await expect.element(screen.getByRole('dialog')).toBeVisible();
@@ -126,8 +137,12 @@ describe('RolesProvider with real role views', () => {
   });
 
   it('owns deactivation rejection at the switch and displays the hook error for retry', async () => {
-    provider.getClaimableRoles.mockResolvedValue([{ ...assignments[0], isActive: true }]);
-    provider.deactivateRole.mockRejectedValueOnce(new Error('Cannot deactivate right now'));
+    provider.getConsolidatedClaimableRoleAssignments.mockResolvedValue([
+      { ...assignments[0], isActive: true },
+    ]);
+    provider.deactivateClaimableRoleAssignment.mockRejectedValueOnce(
+      new Error('Cannot deactivate right now'),
+    );
     const screen = await render(
       <RolesProvider>
         <RolesView compact />
@@ -136,10 +151,10 @@ describe('RolesProvider with real role views', () => {
     await screen.getByLabelText('Deactivate Reports exporter').click();
     await expect.element(screen.getByText('Error: Cannot deactivate right now')).toBeVisible();
     await expect.element(screen.getByLabelText('Deactivate Reports exporter')).toBeChecked();
-    provider.getClaimableRoles.mockResolvedValue(assignments);
+    provider.getConsolidatedClaimableRoleAssignments.mockResolvedValue(assignments);
     await screen.getByLabelText('Deactivate Reports exporter').click();
     await expect.element(screen.getByLabelText('Activate Reports exporter')).not.toBeChecked();
     await expect.element(screen.getByRole('dialog')).not.toBeInTheDocument();
-    expect(provider.deactivateRole).toHaveBeenCalledTimes(2);
+    expect(provider.deactivateClaimableRoleAssignment).toHaveBeenCalledTimes(2);
   });
 });

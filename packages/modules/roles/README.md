@@ -19,19 +19,19 @@ Enable HTTP, authentication, and service discovery before enabling the roles mod
 import { enableRoles } from '@equinor/fusion-framework-module-roles';
 
 enableRoles(configurator, (builder) => {
-  builder.requireRoles(['Reports.Read', 'Reports.Export']);
+  builder.requireAccessRoles(['Reports.Read', 'Reports.Export']);
 });
 ```
 
-`RolesModuleConfigurator.requireRoles` checks the configured access-role names before module
+`RolesModuleConfigurator.requireAccessRoles` checks the configured access-role names before module
 initialization completes. Every configured role must be active for the signed-in account. Role
 names use exact, case-sensitive matching against the Roles V2 `accessRoleName`.
 
-Initialization throws `RequiredRolesError` containing all missing role names when the account
-does not satisfy the requirements. Omit `requireRoles`, or call `enableRoles(configurator)`
+Initialization throws `RequiredAccessRolesError` containing all missing role names when the account
+does not satisfy the requirements. Omit `requireAccessRoles`, or call `enableRoles(configurator)`
 without a configuration callback, when initialization should not enforce an access-role guard.
 
-Multiple `requireRoles` calls accumulate requirements. The method also accepts a builder callback
+Multiple `requireAccessRoles` calls accumulate requirements. The method also accepts a builder callback
 when the required roles depend on configuration context.
 
 Applications and portal modules can call `enableRoles` without configuring their own service
@@ -39,56 +39,72 @@ discovery. `RolesModuleConfigurator` creates a local default client through inhe
 `ref.serviceDiscovery`, and module initialization creates a local `RolesProvider`.
 
 After provider construction, module initialization verifies the configured requirements with
-`RolesProvider.hasRole(requiredRoles, { assert: true, required: true })` before returning it.
+`RolesProvider.hasAccessRole(requiredAccessRoles, { assert: true, required: true })` before returning it.
 
-## Show active and claimable roles
+## Show active, claimable, and consolidated role assignments
 
 The provider resolves the signed-in Fusion account through the auth module:
 
 ```ts
-const [activeRoles, claimableRoles] = await Promise.all([
-  framework.modules.roles.getActiveRoles(),
-  framework.modules.roles.getClaimableRoles(),
+const [activeRoles, claimableRoles, consolidatedRoles] = await Promise.all([
+  framework.modules.roles.getActiveAccessRoleAssignments(),
+  framework.modules.roles.getConsolidatedClaimableRoleAssignments(),
+  framework.modules.roles.getConsolidatedRoleAssignments(),
 ]);
 
-const canReadReports = await framework.modules.roles.hasRole(['Reports.Read'], {
+const canReadReports = await framework.modules.roles.hasAccessRole(['Reports.Read'], {
   required: true,
 });
-const canClaimReportReader = await framework.modules.roles.canClaimAccessRole('Reports.Read');
+const canClaimReportReader = await framework.modules.roles.hasClaimableRoleAssignmentForAccessRole('Reports.Read');
 ```
 
-`canClaimAccessRole` expands `accessRoleMappings` on the account's claimable assignments and checks
+`hasClaimableRoleAssignmentForAccessRole` expands `accessRoleMappings` on the account's claimable assignments and checks
 whether activating any claimable role would grant the requested access-role name.
+
+`getActiveAccessRoleAssignments` reads `/active-access-role-assignments`: currently effective,
+deduplicated access-role assignments with provenance dropped. Its `assignmentType` cannot reliably
+distinguish a standing grant from an activated claim. Use `getConsolidatedRoleAssignments` as the
+authoritative source for standing, non-claimable assignment state: it reads the
+`/consolidated-role-assignments` endpoint directly rather than inferring provenance from active
+assignments. These assignments are not claimable, but Roles V2 never calls them permanent — they may
+still be validity-bounded. Consolidated claimable assignments from
+`getConsolidatedClaimableRoleAssignments` remain authoritative for claimed state. Unlike active and
+claimable assignments, consolidated role assignments carry no `isActive` flag; callers that need
+current effectiveness must compute it from `validFrom`/`validTo`.
 
 Request and response validation errors from `@equinor/fusion-services` and HTTP request errors
 are preserved as the `cause` of a `RolesError`.
 
-The built-in client caches active roles, claimable roles, and claim-eligibility results for one
-minute through `@equinor/fusion-query`. Concurrent matching reads share the same request.
+The built-in client caches active-access, claimable, and consolidated role-assignment reads, plus
+claim-eligibility results, for one minute through `@equinor/fusion-query`. Concurrent matching reads
+share the same request. A successful claim or deactivation invalidates the active-access, claimable,
+and claim-eligibility caches, but deliberately leaves the consolidated-role-assignment cache
+untouched: those assignments are outside the scope of claim and deactivate mutations.
 
 ## Claim a role
 
 ```ts
-const activation = await framework.modules.roles.claimRole({
-  roleId: claimableRoleId,
+const activation = await framework.modules.roles.activateClaimableRoleAssignment({
+  assignmentId: claimableRoleId,
   reason: 'Support incident response',
   hours: 4,
 });
 
-await framework.modules.roles.deactivateRole({
-  roleId: claimableRoleId,
+await framework.modules.roles.deactivateClaimableRoleAssignment({
+  assignmentId: claimableRoleId,
 });
 ```
 
-A successful claim or deactivation invalidates every Roles read cache so the next request refreshes
-active roles, claimable roles, and claim eligibility.
+A successful claim or deactivation invalidates the active-access, claimable, and claim-eligibility
+caches so the next request refreshes them. The consolidated-role-assignment cache is deliberately
+excluded, since those assignments are unaffected by claim and deactivate mutations.
 
-Before activation, the provider dispatches a cancelable `onRoles.claim` event containing the claim
+Before activation, the provider dispatches a cancelable `onRoles.activateClaimableRoleAssignment` event containing the claim
 input. A listener can call `preventDefault()` to stop the Roles V2 request:
 
 ```ts
-framework.modules.event.addEventListener('onRoles.claim', (event) => {
-  if (!mayActivateRole(event.detail.roleId)) {
+framework.modules.event.addEventListener('onRoles.activateClaimableRoleAssignment', (event) => {
+  if (!mayActivateRole(event.detail.assignmentId)) {
     event.preventDefault();
   }
 });
@@ -152,9 +168,10 @@ for await (const page of framework.modules.roles.getAccessRoles(abortController.
 ```
 
 Breaking iteration prevents further requests; an optional `AbortSignal` also cancels an in-flight
-page. Page failures reject iteration with a `RolesError`. Active roles and consolidated claimable
-roles remain Promise-based arrays because those service endpoints are not paginated.
-`getRequiredRoleStatuses` is a bounded lookup of explicitly requested names, not a registry listing;
+page. Page failures reject iteration with a `RolesError`. Active access-role assignments,
+consolidated claimable-role assignments, and consolidated role assignments remain Promise-based
+arrays because those service endpoints are not paginated.
+`getRequiredAccessRoleStatuses` is a bounded lookup of explicitly requested names, not a registry listing;
 it retains only matching roles and stops paging once every requested name is found.
 
 This module supports role-aware user interfaces. A trusted backend must still enforce
@@ -169,7 +186,7 @@ value without parsing its message:
 import { RolesError } from '@equinor/fusion-framework-module-roles/errors';
 
 try {
-  await framework.modules.roles.claimRole({ roleId: claimableRoleId });
+  await framework.modules.roles.activateClaimableRoleAssignment({ assignmentId: claimableRoleId });
 } catch (error) {
   if (RolesError.is(error)) {
     reportRolesFailure(error);
@@ -177,8 +194,9 @@ try {
 }
 ```
 
-- `RequiredRolesError` reports missing bootstrap roles and missing active account requirements.
-- `ClaimRoleError` reports claim cancellation, event dispatch, and Roles V2 activation failures.
+- `RequiredAccessRolesError` reports missing bootstrap roles and missing active account requirements.
+- `ActivateClaimableRoleAssignmentError` reports claim cancellation, event dispatch, and Roles V2 activation failures.
+- `DeactivateClaimableRoleAssignmentError` reports Roles V2 deactivation failures.
 - `RolesError` reports other provider, configuration, client, and request failures.
 
 Wrapped service and transport errors remain available through `error.cause`.
@@ -198,9 +216,12 @@ import { enableRolesMock } from '@equinor/fusion-framework-module-roles/mock';
 
 enableRolesMock(configurator, (mock) => {
   mock
-    .setActiveRoles([{ systemName: 'Reports', accessRoleName: 'Reports.Read' }])
-    .setClaimableRoles([{ id: 'assignment-id', claimableRole: { id: 'role-id' } }])
-    .requireRoles(['Reports.Read']);
+    .setActiveAccessRoleAssignments([{ systemName: 'Reports', accessRoleName: 'Reports.Read' }])
+    .setConsolidatedClaimableRoleAssignments([
+      { id: 'assignment-id', claimableRole: { id: 'role-id' } },
+    ])
+    .setConsolidatedRoleAssignments([{ id: 'assigned-assignment-id', role: { id: 'role-id' } }])
+    .requireAccessRoles(['Reports.Read']);
 });
 ```
 
@@ -208,12 +229,12 @@ Consumers still receive the production `RolesProvider`. Override a provider oper
 test runner when a test needs behavior beyond static reads:
 
 ```ts
-vi.spyOn(framework.modules.roles, 'claimRole').mockResolvedValue({
+vi.spyOn(framework.modules.roles, 'activateClaimableRoleAssignment').mockResolvedValue({
   id: 'activation-id',
 });
 ```
 
-`RolesMockConfigurator` retains `requireRoles` and `setClient`. Supply a custom client through
+`RolesMockConfigurator` retains `requireAccessRoles` and `setClient`. Supply a custom client through
 `setClient` only when the test needs full control of the client lifecycle.
 
 ### Real client with generated HTTP responses
