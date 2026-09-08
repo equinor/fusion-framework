@@ -213,12 +213,17 @@ jobs:
           set -euo pipefail
           metadata_checkout="$RUNNER_TEMP/authorized-head"
           source_checkout="$GITHUB_WORKSPACE/source"
+          setup_action="$RUNNER_TEMP/setup-copilot-fusion-ai-action.yml"
           [[ "$(git -C .authorized-head rev-parse HEAD)" == "$GENERATION_HEAD_SHA" ]]
           mkdir "$source_checkout"
           git -C .authorized-head archive --format=tar "$GENERATION_HEAD_SHA" |
             tar --extract --file=- --directory="$source_checkout"
           mv .authorized-head "$metadata_checkout"
+          # The runner reloads local composite metadata when executing nested post actions.
+          mv .trusted/.github/actions/setup-copilot-fusion-ai/action.yml "$setup_action"
           rm -rf .trusted
+          mkdir -p .trusted/.github/actions/setup-copilot-fusion-ai
+          mv "$setup_action" .trusted/.github/actions/setup-copilot-fusion-ai/action.yml
           if find "$source_checkout" \( -name .git -o -type l \) -print -quit | grep -q .; then
             echo 'The isolated Copilot workspace contains a .git path or symbolic link.' >&2
             exit 1
