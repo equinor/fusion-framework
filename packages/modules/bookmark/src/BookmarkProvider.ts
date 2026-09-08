@@ -65,6 +65,38 @@ import type {
 const defaultTimeout = 2 * 60 * 1000;
 
 /**
+ * Converts a bookmark flow error into the structural details exposed to consumers.
+ * @param error - The bookmark flow error to compare.
+ * @returns The error details relevant to observable change detection.
+ */
+const toComparableBookmarkError = (error: BookmarkFlowError): object => ({
+  name: error.name,
+  message: error.message,
+  action: error.action,
+  cause:
+    error.cause instanceof Error
+      ? { name: error.cause.name, message: error.cause.message }
+      : error.cause,
+});
+
+/**
+ * Compares bookmark flow errors by their observable error details and originating actions.
+ * @param previous - The previously emitted bookmark errors.
+ * @param current - The current bookmark errors selected from state.
+ * @returns `true` when both collections contain structurally equivalent errors.
+ */
+const areBookmarkErrorsEqual = (
+  previous: Array<BookmarkFlowError>,
+  current: Array<BookmarkFlowError>,
+): boolean => {
+  // Normalize non-enumerable Error fields before deep comparison.
+  const previousErrors = previous.map(toComparableBookmarkError);
+  // Apply the same representation to both emissions so only structural changes pass through.
+  const currentErrors = current.map(toComparableBookmarkError);
+  return deepEqual(previousErrors, currentErrors);
+};
+
+/**
  * The `BookmarkProvider` class is responsible for managing bookmarks in the application.
  * It provides methods for creating, updating, and removing bookmarks, as well as managing the current bookmark and the list of bookmarks.
  *
@@ -225,12 +257,11 @@ export class BookmarkProvider implements IBookmarkProvider {
   }
 
   /**
-   * Gets an observable that emits the current list of bookmark errors.
+   * Gets an observable that emits when the bookmark errors change structurally.
    * @returns An observable of the current list of bookmark errors.
    */
   public get errors$(): Observable<Array<BookmarkFlowError>> {
-    // TODO(#5137) - add deep diff
-    return this.#store.select(errorsSelector, deepEqual);
+    return this.#store.select(errorsSelector, areBookmarkErrorsEqual);
   }
 
   /**
