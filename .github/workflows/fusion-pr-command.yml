@@ -4,24 +4,43 @@ on:
   issue_comment:
     types:
       - created
+  pull_request_review:
+    types:
+      - submitted
 
 permissions: {}
 
 env:
-  PR_NUMBER: ${{ github.event.issue.number }}
+  PR_NUMBER: ${{ github.event.issue.number || github.event.pull_request.number }}
   REPOSITORY: equinor/fusion-framework
+
+concurrency:
+  group: fusion-pr-command-${{ github.event.issue.number || github.event.pull_request.number }}
+  cancel-in-progress: true
 
 jobs:
   authorize:
     if: >-
-      github.event.action == 'created' &&
       (
-        github.event.comment.body == '/fusion address comments' ||
-        github.event.comment.body == '@fusion address comments' ||
-        github.event.comment.body == '@fusion resolve pr'
-      ) &&
-      github.event.comment.user.type == 'User' &&
-      github.event.issue.pull_request
+        github.event_name == 'issue_comment' &&
+        github.event.action == 'created' &&
+        (
+          github.event.comment.body == '/fusion address comments' ||
+          github.event.comment.body == '@fusion address comments' ||
+          github.event.comment.body == '@fusion resolve pr'
+        ) &&
+        github.event.comment.user.type == 'User' &&
+        github.event.issue.pull_request
+      ) ||
+      (
+        github.event_name == 'pull_request_review' &&
+        github.event.action == 'submitted' &&
+        (
+          github.event.review.state == 'changes_requested' ||
+          github.event.review.state == 'commented'
+        ) &&
+        github.event.review.user.type == 'User'
+      )
     runs-on: ubuntu-latest
     timeout-minutes: 3
     permissions:
@@ -37,27 +56,58 @@ jobs:
       - name: Authorize exact maintainer command
         id: authorize
         env:
-          COMMENT_ACTION: ${{ github.event.action }}
-          COMMENT_AUTHOR: ${{ github.event.comment.user.login }}
-          COMMENT_AUTHOR_TYPE: ${{ github.event.comment.user.type }}
+          ACTOR: ${{ github.event.comment.user.login || github.event.review.user.login }}
+          ACTOR_TYPE: ${{ github.event.comment.user.type || github.event.review.user.type }}
           COMMENT_BODY: ${{ github.event.comment.body }}
           DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+          EVENT_ACTION: ${{ github.event.action }}
           GH_TOKEN: ${{ github.token }}
           REF_PROTECTED: ${{ github.ref_protected }}
+          REVIEW_COMMIT_SHA: ${{ github.event.review.commit_id }}
+          REVIEW_STATE: ${{ github.event.review.state }}
+          TRUSTED_WORKFLOW_SHA: ${{ github.workflow_sha }}
         run: |
           set -euo pipefail
-          [[ "$GITHUB_EVENT_NAME" == issue_comment ]]
-          [[ "$COMMENT_ACTION" == created ]]
-          [[ "$COMMENT_AUTHOR_TYPE" == User ]]
-          [[ "$COMMENT_AUTHOR" =~ ^[A-Za-z0-9][A-Za-z0-9-]{0,38}$ ]]
+          [[ "$ACTOR_TYPE" == User ]]
+          [[ "$ACTOR" =~ ^[A-Za-z0-9][A-Za-z0-9-]{0,38}$ ]]
           [[ "$GITHUB_REPOSITORY" == "$REPOSITORY" ]]
-          [[ "$GITHUB_REF" == "refs/heads/${DEFAULT_BRANCH}" ]]
-          [[ "$REF_PROTECTED" == true ]]
           [[ "$PR_NUMBER" =~ ^[1-9][0-9]{0,9}$ ]]
+          [[ "$TRUSTED_WORKFLOW_SHA" =~ ^[a-f0-9]{40}$ ]]
+
+          shopt -s nocasematch
+          case "$GITHUB_EVENT_NAME" in
+            issue_comment)
+              [[ "$EVENT_ACTION" == created ]]
+              [[ "$GITHUB_REF" == "refs/heads/${DEFAULT_BRANCH}" ]]
+              [[ "$REF_PROTECTED" == true ]]
+              case "$COMMENT_BODY" in
+                '/fusion address comments' | '@fusion address comments')
+                  command=address-comments
+                  ;;
+                '@fusion resolve pr')
+                  command=resolve-dependency-pr
+                  ;;
+                *)
+                  echo 'Unsupported Fusion command.' >&2
+                  exit 1
+                  ;;
+              esac
+              ;;
+            pull_request_review)
+              [[ "$EVENT_ACTION" == submitted ]]
+              [[ "$REVIEW_STATE" == changes_requested || "$REVIEW_STATE" == commented ]]
+              [[ "$REVIEW_COMMIT_SHA" =~ ^[a-f0-9]{40}$ ]]
+              command=address-comments
+              ;;
+            *)
+              echo 'Unsupported Fusion event.' >&2
+              exit 1
+              ;;
+          esac
 
           permission="$(
             gh api \
-              "repos/${REPOSITORY}/collaborators/${COMMENT_AUTHOR}/permission" \
+              "repos/${REPOSITORY}/collaborators/${ACTOR}/permission" \
               --jq .permission
           )"
           [[ "$permission" == write || "$permission" == maintain || "$permission" == admin ]]
@@ -71,28 +121,28 @@ jobs:
           head_sha="$(jq --raw-output .head.sha <<< "$pull_request")"
           [[ "$head_sha" =~ ^[a-f0-9]{40}$ ]]
 
-          shopt -s nocasematch
-          case "$COMMENT_BODY" in
-            '/fusion address comments' | '@fusion address comments')
-              command=address-comments
+          case "$command" in
+            address-comments)
               [[ "$(jq --raw-output .user.login <<< "$pull_request")" == 'github-actions[bot]' ]]
               [[ "$head_ref" =~ ^automation/issue-[A-Za-z0-9][A-Za-z0-9._-]*$ ]]
               jq --exit-status \
                 '.labels | any(.name == "🤖 AI generated")' <<< "$pull_request" >/dev/null
+              if [[ "$GITHUB_EVENT_NAME" == pull_request_review ]]; then
+                [[ "$REVIEW_COMMIT_SHA" == "$head_sha" ]]
+              fi
               ;;
-            '@fusion resolve pr')
-              command=resolve-dependency-pr
+            resolve-dependency-pr)
               [[ "$(jq --raw-output .user.login <<< "$pull_request")" == 'dependabot[bot]' ]]
               [[ "$head_ref" == dependabot/* ]]
               ;;
             *)
-              echo 'Unsupported Fusion command.' >&2
+              echo 'Unsupported authorized command.' >&2
               exit 1
               ;;
           esac
 
           printf 'command=%s\n' "$command" >> "$GITHUB_OUTPUT"
-          printf 'authorized_actor=%s\n' "$COMMENT_AUTHOR" >> "$GITHUB_OUTPUT"
+          printf 'authorized_actor=%s\n' "$ACTOR" >> "$GITHUB_OUTPUT"
           printf 'head_ref=%s\n' "$head_ref" >> "$GITHUB_OUTPUT"
           printf 'head_sha=%s\n' "$head_sha" >> "$GITHUB_OUTPUT"
 
@@ -113,7 +163,7 @@ jobs:
       - name: Check out trusted automation
         uses: actions/checkout@v7
         with:
-          ref: ${{ github.sha }}
+          ref: ${{ github.workflow_sha }}
           path: .trusted
           persist-credentials: false
 
@@ -504,7 +554,7 @@ jobs:
       - name: Check out trusted publisher
         uses: actions/checkout@v7
         with:
-          ref: ${{ github.sha }}
+          ref: ${{ github.workflow_sha }}
           fetch-depth: 0
 
       - name: Download bounded review proposal
