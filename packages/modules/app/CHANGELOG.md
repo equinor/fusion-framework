@@ -1,5 +1,16 @@
 # Change Log
 
+## 8.1.2
+
+### Patch Changes
+
+- 929b52c: Document how `AppConfigurator.setAssetUri` configures proxy-loading of application resources.
+  
+  Closes #5132
+- 9a9f107: Clarify and verify that each manifest action records its own creation time, including update actions.
+  
+  Fixes #5129
+
 ## 8.1.1
 
 ### Patch Changes
