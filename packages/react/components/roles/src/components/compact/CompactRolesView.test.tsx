@@ -4,42 +4,61 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { RolesView } from '../RolesView';
 
 const mocks = vi.hoisted(() => ({
-  reloadActive: vi.fn(),
-  reloadClaimable: vi.fn(),
-  claimRole: vi.fn(),
-  deactivateRole: vi.fn(),
-  useRoles: vi.fn(),
-  useClaimableRoles: vi.fn(),
+  reloadActiveAccessRoleAssignments: vi.fn(),
+  reloadConsolidatedClaimableRoleAssignments: vi.fn(),
+  reloadConsolidatedRoleAssignments: vi.fn(),
+  activateClaimableRoleAssignment: vi.fn(),
+  deactivateClaimableRoleAssignment: vi.fn(),
+  useActiveAccessRoleAssignments: vi.fn(),
+  useClaimableRoleAssignments: vi.fn(),
+  useRoleAssignments: vi.fn(),
 }));
 
-vi.mock('../../hooks/useRoles', () => ({
-  useRoles: mocks.useRoles,
+vi.mock('../../hooks/useActiveAccessRoleAssignments', () => ({
+  useActiveAccessRoleAssignments: mocks.useActiveAccessRoleAssignments,
 }));
 
-vi.mock('../../hooks/useClaimableRoles', () => ({
-  useClaimableRoles: mocks.useClaimableRoles,
+vi.mock('../../hooks/useClaimableRoleAssignments', () => ({
+  useClaimableRoleAssignments: mocks.useClaimableRoleAssignments,
+}));
+
+vi.mock('../../hooks/useRoleAssignments', () => ({
+  useRoleAssignments: mocks.useRoleAssignments,
 }));
 
 describe('CompactRolesView', () => {
   beforeEach(() => {
-    mocks.reloadActive.mockReset();
-    mocks.reloadClaimable.mockReset();
-    mocks.claimRole.mockReset();
-    mocks.deactivateRole.mockReset();
-    mocks.useRoles.mockReset();
-    mocks.useClaimableRoles.mockReset();
-    mocks.reloadActive.mockResolvedValue(undefined);
-    mocks.reloadClaimable.mockResolvedValue(undefined);
-    mocks.claimRole.mockResolvedValue({ activeToDate: '2026-09-05T16:00:00Z' });
-    mocks.deactivateRole.mockResolvedValue({ activeToDate: '2026-09-05T13:00:00Z' });
-    mocks.useRoles.mockReturnValue({
-      roles: [],
+    mocks.reloadActiveAccessRoleAssignments.mockReset();
+    mocks.reloadConsolidatedClaimableRoleAssignments.mockReset();
+    mocks.reloadConsolidatedRoleAssignments.mockReset();
+    mocks.activateClaimableRoleAssignment.mockReset();
+    mocks.deactivateClaimableRoleAssignment.mockReset();
+    mocks.useActiveAccessRoleAssignments.mockReset();
+    mocks.useClaimableRoleAssignments.mockReset();
+    mocks.useRoleAssignments.mockReset();
+    mocks.reloadActiveAccessRoleAssignments.mockResolvedValue(undefined);
+    mocks.reloadConsolidatedClaimableRoleAssignments.mockResolvedValue(undefined);
+    mocks.reloadConsolidatedRoleAssignments.mockResolvedValue(undefined);
+    mocks.activateClaimableRoleAssignment.mockResolvedValue({
+      activeToDate: '2026-09-05T16:00:00Z',
+    });
+    mocks.deactivateClaimableRoleAssignment.mockResolvedValue({
+      activeToDate: '2026-09-05T13:00:00Z',
+    });
+    mocks.useActiveAccessRoleAssignments.mockReturnValue({
+      assignments: [],
       isLoading: false,
       error: undefined,
-      reload: mocks.reloadActive,
+      reload: mocks.reloadActiveAccessRoleAssignments,
     });
-    mocks.useClaimableRoles.mockReturnValue({
-      roles: [
+    mocks.useRoleAssignments.mockReturnValue({
+      assignments: [],
+      isLoading: false,
+      error: undefined,
+      reload: mocks.reloadConsolidatedRoleAssignments,
+    });
+    mocks.useClaimableRoleAssignments.mockReturnValue({
+      assignments: [
         {
           id: 'claimable-role',
           claimableRole: {
@@ -70,13 +89,13 @@ describe('CompactRolesView', () => {
       ],
       isLoading: false,
       error: undefined,
-      reload: mocks.reloadClaimable,
-      claimRole: mocks.claimRole,
-      deactivateRole: mocks.deactivateRole,
-      isClaiming: false,
-      claimError: undefined,
+      reload: mocks.reloadConsolidatedClaimableRoleAssignments,
+      activateClaimableRoleAssignment: mocks.activateClaimableRoleAssignment,
+      deactivateClaimableRoleAssignment: mocks.deactivateClaimableRoleAssignment,
+      isActivating: false,
+      activationError: undefined,
       isDeactivating: false,
-      deactivateError: undefined,
+      deactivationError: undefined,
     });
   });
 
@@ -106,8 +125,8 @@ describe('CompactRolesView', () => {
     await screen.getByRole('button', { name: 'Claim', exact: true }).click();
 
     await vi.waitFor(() =>
-      expect(mocks.claimRole).toHaveBeenCalledWith({
-        roleId: 'claimable-role',
+      expect(mocks.activateClaimableRoleAssignment).toHaveBeenCalledWith({
+        assignmentId: 'claimable-role',
         reason: 'Required to export reports',
         hours: 2,
       }),
@@ -135,7 +154,10 @@ describe('CompactRolesView', () => {
       activeTo: new Date(now - age * 60_000).toISOString(),
       validTo: new Date(now + 60_000).toISOString(),
     }));
-    mocks.useClaimableRoles.mockReturnValue({ ...mocks.useClaimableRoles(), roles });
+    mocks.useClaimableRoleAssignments.mockReturnValue({
+      ...mocks.useClaimableRoleAssignments(),
+      assignments: roles,
+    });
     const screen = await render(<RolesView compact />);
 
     const claimablePanel = screen.getByRole('tabpanel', { name: 'Claimable' });
@@ -146,8 +168,8 @@ describe('CompactRolesView', () => {
     await claimablePanel.getByLabelText('Activate Expired role 4').click();
     await screen.getByLabelText('Reason').fill('Continue reporting');
     await screen.getByRole('dialog').getByRole('button', { name: 'Claim', exact: true }).click();
-    expect(mocks.claimRole).toHaveBeenCalledWith({
-      roleId: 'expired-4',
+    expect(mocks.activateClaimableRoleAssignment).toHaveBeenCalledWith({
+      assignmentId: 'expired-4',
       reason: 'Continue reporting',
       hours: 2,
     });
@@ -166,8 +188,8 @@ describe('CompactRolesView', () => {
   });
 
   it('shows claimed role details and deactivates it from the active tab', async () => {
-    mocks.useRoles.mockReturnValue({
-      roles: [
+    mocks.useActiveAccessRoleAssignments.mockReturnValue({
+      assignments: [
         {
           systemName: 'Fusion Apps',
           accessRoleName: 'Fusion.Apps.FullControl',
@@ -176,11 +198,11 @@ describe('CompactRolesView', () => {
       ],
       isLoading: false,
       error: undefined,
-      reload: mocks.reloadActive,
+      reload: mocks.reloadActiveAccessRoleAssignments,
     });
-    mocks.useClaimableRoles.mockReturnValue({
-      ...mocks.useClaimableRoles(),
-      roles: [
+    mocks.useClaimableRoleAssignments.mockReturnValue({
+      ...mocks.useClaimableRoleAssignments(),
+      assignments: [
         {
           id: 'claimed-role',
           claimableRole: {
@@ -209,6 +231,45 @@ describe('CompactRolesView', () => {
     await screen.getByRole('tab', { name: 'Claimable' }).click();
     await screen.getByLabelText('Deactivate Reports exporter').click();
 
-    expect(mocks.deactivateRole).toHaveBeenCalledWith({ roleId: 'claimed-role' });
+    expect(mocks.deactivateClaimableRoleAssignment).toHaveBeenCalledWith({
+      assignmentId: 'claimed-role',
+    });
+  });
+
+  it('shows an assigned role in the active tab without a deactivate control', async () => {
+    const validTo = new Date(Date.now() + 365 * 24 * 60 * 60 * 1_000).toISOString();
+    mocks.useRoleAssignments.mockReturnValue({
+      assignments: [
+        {
+          id: 'assigned-assignment',
+          role: {
+            name: 'reports-admin',
+            displayName: 'Reports admin',
+            description: 'Administers reporting infrastructure.',
+          },
+          reasons: ['Granted through the Reports team charter'],
+          validTo,
+        },
+      ],
+      isLoading: false,
+      error: undefined,
+      reload: mocks.reloadConsolidatedRoleAssignments,
+    });
+    const screen = await render(<RolesView compact />);
+
+    await screen.getByRole('tab', { name: 'Active' }).click();
+    const activePanel = screen.getByRole('tabpanel', { name: 'Active' });
+    await expect
+      .element(activePanel.getByRole('heading', { name: 'Assigned roles' }))
+      .toBeVisible();
+    await expect.element(activePanel.getByText('Reports admin')).toBeVisible();
+    await expect.element(screen.getByText(/Role assignment · Valid until/)).toBeVisible();
+    await expect
+      .element(activePanel.getByLabelText('Deactivate Reports admin'))
+      .not.toBeInTheDocument();
+    await screen.getByRole('button', { name: 'Show information about Reports admin' }).click();
+    await expect
+      .element(screen.getByText('Granted through the Reports team charter'))
+      .toBeVisible();
   });
 });

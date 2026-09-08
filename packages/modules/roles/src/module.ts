@@ -1,4 +1,5 @@
 import type {
+  AnyModule,
   IModuleConfigurator,
   IModulesConfigurator,
   Module,
@@ -53,7 +54,7 @@ export const module: RolesModule = {
         : new RolesError('Failed to initialize Roles client.', { cause: error });
     }
     const provider = new RolesProvider(config, { event, telemetry });
-    await provider.hasRole(config.requiredRoles, { assert: true, required: true });
+    await provider.hasAccessRole(config.requiredAccessRoles, { assert: true, required: true });
     return provider;
   },
 };
@@ -83,9 +84,11 @@ export const configureRoles = (
  *
  * @param configurator - Module configurator receiving the roles registration.
  * @param configure - Optional callback for requirements or a custom client.
+ * @template TModules - Module descriptors managed by the configurator.
+ * @template TRef - Reference type forwarded to module configuration callbacks.
  */
-export const enableRoles = (
-  configurator: IModulesConfigurator,
+export const enableRoles = <TModules extends Array<AnyModule>, TRef>(
+  configurator: IModulesConfigurator<TModules, TRef>,
   configure?: RolesModuleBuilderCallback,
 ): void => {
   configurator.addConfig(configure ? configureRoles(configure) : { module });

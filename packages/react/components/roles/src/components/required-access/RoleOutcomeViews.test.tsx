@@ -14,15 +14,17 @@ describe('role outcome views', () => {
   it('renders the checking outcome', async () => {
     const screen = await render(<CheckingRolesView />);
 
-    await expect.element(screen.getByText('Checking required role availability...')).toBeVisible();
+    await expect
+      .element(screen.getByText('Checking required access-role availability...'))
+      .toBeVisible();
   });
 
   it('renders only roles that do not exist', async () => {
     const screen = await render(
       <RoleDoesNotExistView
         statuses={[
-          { name: 'Missing.Role', exists: false, claims: [] },
-          { name: 'Existing.Role', exists: true, claims: [] },
+          { name: 'Missing.Role', exists: false, claimableAssignments: [] },
+          { name: 'Existing.Role', exists: true, claimableAssignments: [] },
         ]}
       />,
     );
@@ -35,8 +37,8 @@ describe('role outcome views', () => {
     const screen = await render(
       <RoleNotClaimableView
         statuses={[
-          { name: 'Unavailable.Role', exists: true, claims: [] },
-          { name: 'Missing.Role', exists: false, claims: [] },
+          { name: 'Unavailable.Role', exists: true, claimableAssignments: [] },
+          { name: 'Missing.Role', exists: false, claimableAssignments: [] },
         ]}
       />,
     );
@@ -46,7 +48,7 @@ describe('role outcome views', () => {
   });
 
   it('renders claimable roles and dispatches their assignment identifier', async () => {
-    const onClaim = vi.fn().mockResolvedValue(undefined);
+    const onActivate = vi.fn().mockResolvedValue(undefined);
     const screen = await render(
       <RoleClaimableView
         statuses={[
@@ -54,7 +56,7 @@ describe('role outcome views', () => {
             name: 'Claimable.Role',
             description: 'Allows access to the claimable feature.',
             exists: true,
-            claims: [
+            claimableAssignments: [
               {
                 assignmentId: 'assignment-id',
                 name: 'claimable-role',
@@ -65,7 +67,7 @@ describe('role outcome views', () => {
           },
         ]}
         defaultReason="Required for testing"
-        onClaim={onClaim}
+        onActivate={onActivate}
       />,
     );
 
@@ -91,18 +93,18 @@ describe('role outcome views', () => {
     await expect.element(screen.getByText('Duration: 2 hours')).toBeVisible();
     await screen.getByRole('button', { name: 'Claim', exact: true }).last().click();
 
-    expect(onClaim).toHaveBeenCalledWith('assignment-id', 'Temporary test access', 2);
+    expect(onActivate).toHaveBeenCalledWith('assignment-id', 'Temporary test access', 2);
   });
 
   it('renders one recovery option when multiple assignments grant the same claimable role', async () => {
-    const onClaim = vi.fn().mockResolvedValue(undefined);
+    const onActivate = vi.fn().mockResolvedValue(undefined);
     const screen = await render(
       <RoleClaimableView
         statuses={[
           {
             name: 'Claimable.Role',
             exists: true,
-            claims: [
+            claimableAssignments: [
               {
                 assignmentId: 'first-assignment',
                 name: 'claimable-role',
@@ -117,7 +119,7 @@ describe('role outcome views', () => {
           },
         ]}
         defaultReason="Required for testing"
-        onClaim={onClaim}
+        onActivate={onActivate}
       />,
     );
 
@@ -128,6 +130,6 @@ describe('role outcome views', () => {
     await screen.getByRole('button', { name: 'Claim' }).click();
     await screen.getByRole('button', { name: 'Claim', exact: true }).last().click();
 
-    expect(onClaim).toHaveBeenCalledWith('first-assignment', 'Required for testing', 2);
+    expect(onActivate).toHaveBeenCalledWith('first-assignment', 'Required for testing', 2);
   });
 });

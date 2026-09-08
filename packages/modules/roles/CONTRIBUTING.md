@@ -28,16 +28,25 @@ not the transport client. Client-side role checks never replace backend authoriz
   `defer` owns per-subscription state and captures synchronous failures. No internal subscriptions,
   silent error-to-empty fallbacks, or automatic mutation retries. Two mutation subscriptions can
   execute two requests; transport cancellation cannot undo a server-accepted mutation.
-- **Caching:** active and consolidated claimable reads are keyed by account; eligibility adds the
-  access-role name. Query owns the minute-long cache and concurrent-read coordination. Explicit
-  refresh invalidates before reading; successful claims/deactivations invalidate all three caches.
-  Failed mutations leave cached data intact.
+- **Caching:** active-access, consolidated claimable, and consolidated role-assignment reads are
+  keyed by account; eligibility adds the access-role name. Query owns the minute-long cache and
+  concurrent-read coordination. Explicit refresh invalidates before reading; successful
+  claims/deactivations invalidate the active-access, claimable, and eligibility caches only — the
+  consolidated-role-assignment cache is deliberately excluded, since those assignments are outside
+  the scope of claim/deactivate mutations. Failed mutations leave cached data intact.
 - **Public pagination:** client `getAccessRoles({ top, skip }, signal)` emits one service page with
   continuation metadata. Provider `getAccessRoles(signal)` yields arrays through an async generator,
   requesting the next page only when advanced. No prefetching or full-registry buffering. `break`
   prevents subsequent requests; abort cancels a pending request. Reject non-advancing continuations.
-- **Unpaged collections:** active roles and consolidated claimable roles remain Promise-based arrays
-  at the provider boundary. Do not invent pagination for endpoints that return unpaged arrays.
+- **Unpaged collections:** active access-role assignments, consolidated claimable-role
+  assignments, and consolidated role assignments remain Promise-based arrays at the provider
+  boundary. Do not invent pagination for endpoints that return unpaged arrays.
+- **Consolidated-role-assignment authority:** active-access `assignmentType` cannot reliably
+  distinguish a standing grant from an activated claim. `getConsolidatedRoleAssignments` is the
+  sole authoritative source for standing, non-claimable assignment state, reading
+  `/consolidated-role-assignments` directly. Roles V2 never calls these assignments permanent —
+  they may still be validity-bounded. They carry no `isActive` flag; effectiveness is a
+  consumer-side computation from `validFrom`/`validTo`, not a client/provider concern.
 - **Required-role lookup:** scan only until all requested names are found or the registry ends;
   retain matching roles, not the entire registry. Preserve unique request order, service assignment
   order, and display-name fallbacks. Missing assignment IDs cannot produce activatable claims.
@@ -81,7 +90,7 @@ When the client/provider contract changes, include the existing React hook integ
 ```sh
 pnpm exec vitest run --project '*module-roles*' --project '*react-app*' \
   packages/modules/roles/src/__tests__ \
-  packages/react/app/src/__tests__/useRole.test.tsx
+  packages/react/app/src/__tests__/useAccessRole.test.tsx
 ```
 
 Cover lazy execution, account switching, cache isolation/invalidation, failed auth initialization,

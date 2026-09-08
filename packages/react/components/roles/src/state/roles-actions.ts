@@ -1,64 +1,80 @@
 import { createAction, createAsyncAction, type ActionTypes } from '@equinor/fusion-observable';
 
 import type {
-  ActiveRoles,
-  ClaimableRoles,
-  ClaimRoleOperation,
-  DeactivateRoleOperation,
-  RoleClaimResult,
-  RoleDeactivateResult,
+  ActivateClaimableRoleAssignmentOperation,
+  ActiveAccessRoleAssignments,
+  ClaimableRoleAssignmentActivationResult,
+  ClaimableRoleAssignmentDeactivationResult,
+  ConsolidatedClaimableRoleAssignments,
+  ConsolidatedRoleAssignments,
+  DeactivateClaimableRoleAssignmentOperation,
 } from './roles-state';
 
 export const rolesActions = {
-  loadActive: createAsyncAction(
-    'roles/active/load',
+  loadActiveAccessRoleAssignments: createAsyncAction(
+    'roles/activeAccessRoleAssignments/load',
     (operationId: number, refresh: boolean) => ({
       payload: undefined,
       meta: { operationId, refresh },
     }),
-    (roles: ActiveRoles, operationId: number) => ({ payload: roles, meta: { operationId } }),
-    (error: unknown, operationId: number) => ({ payload: error, meta: { operationId } }),
-  ),
-  loadClaimable: createAsyncAction(
-    'roles/claimable/load',
-    (operationId: number, refresh: boolean) => ({
-      payload: undefined,
-      meta: { operationId, refresh },
-    }),
-    (roles: ClaimableRoles, operationId: number) => ({
-      payload: roles,
+    (assignments: ActiveAccessRoleAssignments, operationId: number) => ({
+      payload: assignments,
       meta: { operationId },
     }),
     (error: unknown, operationId: number) => ({ payload: error, meta: { operationId } }),
   ),
-  claimRole: createAsyncAction(
-    'roles/claim',
-    (operation: ClaimRoleOperation) => ({ payload: operation }),
-    (result: RoleClaimResult, operationId: number) => ({
+  loadConsolidatedClaimableRoleAssignments: createAsyncAction(
+    'roles/consolidatedClaimableRoleAssignments/load',
+    (operationId: number, refresh: boolean) => ({
+      payload: undefined,
+      meta: { operationId, refresh },
+    }),
+    (assignments: ConsolidatedClaimableRoleAssignments, operationId: number) => ({
+      payload: assignments,
+      meta: { operationId },
+    }),
+    (error: unknown, operationId: number) => ({ payload: error, meta: { operationId } }),
+  ),
+  loadConsolidatedRoleAssignments: createAsyncAction(
+    'roles/consolidatedRoleAssignments/load',
+    (operationId: number, refresh: boolean) => ({
+      payload: undefined,
+      meta: { operationId, refresh },
+    }),
+    (assignments: ConsolidatedRoleAssignments, operationId: number) => ({
+      payload: assignments,
+      meta: { operationId },
+    }),
+    (error: unknown, operationId: number) => ({ payload: error, meta: { operationId } }),
+  ),
+  activateClaimableRoleAssignment: createAsyncAction(
+    'roles/claimableRoleAssignment/activate',
+    (operation: ActivateClaimableRoleAssignmentOperation) => ({ payload: operation }),
+    (result: ClaimableRoleAssignmentActivationResult, operationId: number) => ({
       payload: result,
       meta: { operationId },
     }),
     (error: unknown, operationId: number) => ({ payload: error, meta: { operationId } }),
   ),
-  refreshAfterClaim: createAction(
-    'roles/claim/refresh',
-    (activeOperationId: number, claimableOperationId: number) => ({
-      payload: { activeOperationId, claimableOperationId },
+  refreshAfterActivation: createAction(
+    'roles/claimableRoleAssignment/activate/refresh',
+    (activeAccessOperationId: number, claimableOperationId: number) => ({
+      payload: { activeAccessOperationId, claimableOperationId },
     }),
   ),
-  deactivateRole: createAsyncAction(
-    'roles/deactivate',
-    (operation: DeactivateRoleOperation) => ({ payload: operation }),
-    (result: RoleDeactivateResult, operationId: number) => ({
+  deactivateClaimableRoleAssignment: createAsyncAction(
+    'roles/claimableRoleAssignment/deactivate',
+    (operation: DeactivateClaimableRoleAssignmentOperation) => ({ payload: operation }),
+    (result: ClaimableRoleAssignmentDeactivationResult, operationId: number) => ({
       payload: result,
       meta: { operationId },
     }),
     (error: unknown, operationId: number) => ({ payload: error, meta: { operationId } }),
   ),
-  refreshAfterDeactivate: createAction(
-    'roles/deactivate/refresh',
-    (activeOperationId: number, claimableOperationId: number) => ({
-      payload: { activeOperationId, claimableOperationId },
+  refreshAfterDeactivation: createAction(
+    'roles/claimableRoleAssignment/deactivate/refresh',
+    (activeAccessOperationId: number, claimableOperationId: number) => ({
+      payload: { activeAccessOperationId, claimableOperationId },
     }),
   ),
 };

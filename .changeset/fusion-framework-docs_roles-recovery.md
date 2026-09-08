@@ -16,7 +16,7 @@ overflow, audit-input preservation, provider replacement, and browser-local date
 
 Explain how application hosts combine generic and role-aware error boundaries to recover when
 required access blocks initialization.
-Update the `useRole` examples to consume rejected activation promises in React event handlers and
-render `claimError`, keeping failed claims visible and retryable without unhandled rejections.
+Update the `useAccessRole` examples to consume rejected activation promises in React event handlers and
+render `activationError`, keeping failed claims visible and retryable without unhandled rejections.
 
 Related to #5449.

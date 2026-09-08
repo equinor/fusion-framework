@@ -1,43 +1,59 @@
 import { createContext } from 'react';
 
-import type { ClaimRoleInput, DeactivateRoleInput } from '@equinor/fusion-framework-module-roles';
+import type {
+  ActivateClaimableRoleAssignmentInput,
+  DeactivateClaimableRoleAssignmentInput,
+} from '@equinor/fusion-framework-module-roles';
 
 export type {
-  ActiveRoles,
-  ClaimableRoles,
-  RoleClaimResult,
-  RoleDeactivateResult,
+  ActiveAccessRoleAssignments,
+  ClaimableRoleAssignmentActivationResult,
+  ClaimableRoleAssignmentDeactivationResult,
+  ConsolidatedClaimableRoleAssignments,
+  ConsolidatedRoleAssignments,
 } from '../state/roles-state';
 import type {
-  ActiveRoles,
-  ClaimableRoles,
-  RoleClaimResult,
-  RoleDeactivateResult,
+  ActiveAccessRoleAssignments,
+  ClaimableRoleAssignmentActivationResult,
+  ClaimableRoleAssignmentDeactivationResult,
+  ConsolidatedClaimableRoleAssignments,
+  ConsolidatedRoleAssignments,
 } from '../state/roles-state';
 
 /** Provider-scoped collection snapshots and stable actions shared by the public role hooks. */
 export interface RolesContextValue {
-  readonly active: {
-    readonly roles: ActiveRoles;
+  readonly activeAccessRoleAssignments: {
+    readonly assignments: ActiveAccessRoleAssignments;
     readonly isLoading: boolean;
     readonly error: unknown;
     readonly reload: () => Promise<void>;
   };
-  readonly claimable: {
-    readonly roles: ClaimableRoles;
+  readonly consolidatedClaimableRoleAssignments: {
+    readonly assignments: ConsolidatedClaimableRoleAssignments;
     readonly isLoading: boolean;
     readonly error: unknown;
     readonly reload: () => Promise<void>;
-    readonly claimRole: (input: ClaimRoleInput) => Promise<RoleClaimResult>;
-    readonly deactivateRole: (input: DeactivateRoleInput) => Promise<RoleDeactivateResult>;
-    readonly isClaiming: boolean;
-    readonly claimError: unknown;
+    readonly activateClaimableRoleAssignment: (
+      input: ActivateClaimableRoleAssignmentInput,
+    ) => Promise<ClaimableRoleAssignmentActivationResult>;
+    readonly deactivateClaimableRoleAssignment: (
+      input: DeactivateClaimableRoleAssignmentInput,
+    ) => Promise<ClaimableRoleAssignmentDeactivationResult>;
+    readonly isActivating: boolean;
+    readonly activationError: unknown;
     readonly isDeactivating: boolean;
-    readonly deactivateError: unknown;
+    readonly deactivationError: unknown;
+  };
+  readonly consolidatedRoleAssignments: {
+    readonly assignments: ConsolidatedRoleAssignments;
+    readonly isLoading: boolean;
+    readonly error: unknown;
+    readonly reload: () => Promise<void>;
   };
 }
 
 /**
- * Shares role collection and activation state beneath a {@link RolesProvider}.
+ * Shares role-assignment collections and claimable-role-assignment mutation state beneath a
+ * {@link RolesProvider}.
  */
 export const RolesContext = createContext<RolesContextValue | undefined>(undefined);

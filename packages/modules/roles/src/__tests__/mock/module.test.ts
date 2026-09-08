@@ -43,53 +43,69 @@ describe('rolesMockModule', () => {
   it('initializes without service discovery or authentication', async () => {
     const provider = await initializeMockWith();
 
-    await expect(provider.getActiveRoles()).resolves.toEqual([]);
-    await expect(provider.getClaimableRoles()).resolves.toEqual([]);
+    await expect(provider.getActiveAccessRoleAssignments()).resolves.toEqual([]);
+    await expect(provider.getConsolidatedClaimableRoleAssignments()).resolves.toEqual([]);
+    await expect(provider.getConsolidatedRoleAssignments()).resolves.toEqual([]);
   });
 
   it('exposes static role data through the production provider', async () => {
     const activeRole = { systemName: 'Reports', accessRoleName: 'Reports.Read' };
     const claimableRole = { id: 'assignment-id', claimableRole: { id: 'role-id' } };
+    const consolidatedRole = { id: 'assigned-id', role: { name: 'Reports.Admin' } };
     const provider = await initializeMockWith(undefined, (mock) => {
       mock
-        .setActiveRoles([activeRole])
-        .setClaimableRoles([claimableRole])
-        .requireRoles(['Reports.Read']);
+        .setActiveAccessRoleAssignments([activeRole])
+        .setConsolidatedClaimableRoleAssignments([claimableRole])
+        .setConsolidatedRoleAssignments([consolidatedRole])
+        .requireAccessRoles(['Reports.Read']);
     });
 
-    await expect(provider.hasRole(['Reports.Read'], { required: true })).resolves.toBe(true);
-    await expect(provider.getClaimableRoles()).resolves.toEqual([claimableRole]);
+    await expect(provider.hasAccessRole(['Reports.Read'], { required: true })).resolves.toBe(true);
+    await expect(provider.getConsolidatedClaimableRoleAssignments()).resolves.toEqual([
+      claimableRole,
+    ]);
+    await expect(provider.getConsolidatedRoleAssignments()).resolves.toEqual([consolidatedRole]);
   });
 
-  it('lets setData replace both static role lists', async () => {
+  it('lets setData replace all static role lists', async () => {
     const activeRole = { accessRoleName: 'Reports.Read' };
     const claimableRole = { id: 'assignment-id' };
+    const consolidatedRole = { id: 'assigned-id' };
     const provider = await initializeMockWith(undefined, (mock) => {
-      mock
-        .setActiveRoles([{ accessRoleName: 'discarded' }])
-        .setData({ activeRoles: [activeRole], claimableRoles: [claimableRole] });
+      mock.setActiveAccessRoleAssignments([{ accessRoleName: 'discarded' }]).setData({
+        activeAccessRoleAssignments: [activeRole],
+        consolidatedClaimableRoleAssignments: [claimableRole],
+        consolidatedRoleAssignments: [consolidatedRole],
+      });
     });
 
-    await expect(provider.getActiveRoles()).resolves.toEqual([activeRole]);
-    await expect(provider.getClaimableRoles()).resolves.toEqual([claimableRole]);
+    await expect(provider.getActiveAccessRoleAssignments()).resolves.toEqual([activeRole]);
+    await expect(provider.getConsolidatedClaimableRoleAssignments()).resolves.toEqual([
+      claimableRole,
+    ]);
+    await expect(provider.getConsolidatedRoleAssignments()).resolves.toEqual([consolidatedRole]);
   });
 
   it('lets tests override consumer behavior on the production provider', async () => {
     const provider = await initializeMockWith();
     const activation = { id: 'activation-id' };
-    vi.spyOn(provider, 'canClaimAccessRole').mockResolvedValue(true);
-    vi.spyOn(provider, 'claimRole').mockResolvedValue(activation);
+    vi.spyOn(provider, 'hasClaimableRoleAssignmentForAccessRole').mockResolvedValue(true);
+    vi.spyOn(provider, 'activateClaimableRoleAssignment').mockResolvedValue(activation);
 
-    await expect(provider.canClaimAccessRole('Reports.Export')).resolves.toBe(true);
-    await expect(provider.claimRole({ roleId: 'assignment-id' })).resolves.toEqual(activation);
+    await expect(provider.hasClaimableRoleAssignmentForAccessRole('Reports.Export')).resolves.toBe(
+      true,
+    );
+    await expect(
+      provider.activateClaimableRoleAssignment({ assignmentId: 'assignment-id' }),
+    ).resolves.toEqual(activation);
   });
 
   it('rejects initialization when static active roles do not satisfy requirements', async () => {
     await expect(
-      initializeMockWith({}, (mock) => mock.requireRoles(['Reports.Read'])),
+      initializeMockWith({}, (mock) => mock.requireAccessRoles(['Reports.Read'])),
     ).rejects.toMatchObject({
-      name: 'RequiredRolesError',
-      missingRoles: ['Reports.Read'],
+      name: 'RequiredAccessRolesError',
+      missingAccessRoles: ['Reports.Read'],
     });
   });
 });

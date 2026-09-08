@@ -7,7 +7,7 @@
  * @example
  * ```ts
  * try {
- *   await framework.modules.roles.getActiveRoles();
+ *   await framework.modules.roles.getActiveAccessRoleAssignments();
  * } catch (error) {
  *   if (RolesError.is(error)) {
  *     reportRolesFailure(error.message);

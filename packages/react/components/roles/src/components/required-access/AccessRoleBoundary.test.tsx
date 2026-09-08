@@ -2,16 +2,16 @@ import { cleanup, render } from 'vitest-browser-react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { useEffect, useLayoutEffect, useState, type ReactNode } from 'react';
 
-import { RequiredRolesError } from '@equinor/fusion-framework-module-roles';
+import { RequiredAccessRolesError } from '@equinor/fusion-framework-module-roles';
 
-import { RoleBoundary } from './RoleBoundary';
+import { AccessRoleBoundary } from './AccessRoleBoundary';
 
 const mocks = vi.hoisted(() => ({
-  hasRole: vi.fn(),
-  getRequiredRoleStatuses: vi.fn(),
-  claimRole: vi.fn(),
+  hasAccessRole: vi.fn(),
+  getRequiredAccessRoleStatuses: vi.fn(),
+  activateClaimableRoleAssignment: vi.fn(),
   roles: {
-    hasRole: vi.fn(),
+    hasAccessRole: vi.fn(),
   },
 }));
 
@@ -34,12 +34,12 @@ const ProtectedCounter = ({ onMount }: { onMount: VoidFunction }): ReactNode => 
   );
 };
 
-describe('RoleBoundary', () => {
+describe('AccessRoleBoundary', () => {
   beforeEach(() => {
-    mocks.hasRole.mockReset();
-    mocks.roles.hasRole = mocks.hasRole;
-    mocks.getRequiredRoleStatuses.mockReset();
-    mocks.claimRole.mockReset();
+    mocks.hasAccessRole.mockReset();
+    mocks.roles.hasAccessRole = mocks.hasAccessRole;
+    mocks.getRequiredAccessRoleStatuses.mockReset();
+    mocks.activateClaimableRoleAssignment.mockReset();
   });
 
   afterEach(() => {
@@ -47,151 +47,153 @@ describe('RoleBoundary', () => {
   });
 
   it('renders children after every required role is active', async () => {
-    mocks.hasRole.mockResolvedValue(true);
+    mocks.hasAccessRole.mockResolvedValue(true);
     const screen = await render(
-      <RoleBoundary required={['Reports.Read', 'Reports.Export']}>
+      <AccessRoleBoundary requiredAccessRoles={['Reports.Read', 'Reports.Export']}>
         <p>Protected reports</p>
-      </RoleBoundary>,
+      </AccessRoleBoundary>,
     );
 
     await expect.element(screen.getByText('Protected reports')).toBeVisible();
-    expect(mocks.hasRole).toHaveBeenCalledWith(['Reports.Read', 'Reports.Export'], {
+    expect(mocks.hasAccessRole).toHaveBeenCalledWith(['Reports.Read', 'Reports.Export'], {
       required: true,
       assert: true,
     });
   });
 
   it('preserves child state and mounts across equivalent inline requirement arrays', async () => {
-    mocks.hasRole.mockResolvedValue(true);
+    mocks.hasAccessRole.mockResolvedValue(true);
     const onMount = vi.fn();
     const screen = await render(
-      <RoleBoundary required={['Reports.Read', 'Reports.Export']}>
+      <AccessRoleBoundary requiredAccessRoles={['Reports.Read', 'Reports.Export']}>
         <ProtectedCounter onMount={onMount} />
-      </RoleBoundary>,
+      </AccessRoleBoundary>,
     );
     await screen.getByRole('button', { name: 'Count 0' }).click();
     await screen.rerender(
-      <RoleBoundary required={['Reports.Read', 'Reports.Export']}>
+      <AccessRoleBoundary requiredAccessRoles={['Reports.Read', 'Reports.Export']}>
         <ProtectedCounter onMount={onMount} />
-      </RoleBoundary>,
+      </AccessRoleBoundary>,
     );
     await expect.element(screen.getByRole('button', { name: 'Count 1' })).toBeVisible();
     await screen.rerender(
-      <RoleBoundary required={[' Reports.Export ', 'Reports.Read', 'Reports.Read', '']}>
+      <AccessRoleBoundary
+        requiredAccessRoles={[' Reports.Export ', 'Reports.Read', 'Reports.Read', '']}
+      >
         <ProtectedCounter onMount={onMount} />
-      </RoleBoundary>,
+      </AccessRoleBoundary>,
     );
     await expect.element(screen.getByRole('button', { name: 'Count 1' })).toBeVisible();
     expect(onMount).toHaveBeenCalledOnce();
-    expect(mocks.hasRole).toHaveBeenCalledOnce();
+    expect(mocks.hasAccessRole).toHaveBeenCalledOnce();
   });
 
   it('treats empty and blank-only requirement arrays as the same ungated subtree', async () => {
     const onMount = vi.fn();
     const screen = await render(
-      <RoleBoundary required={[]}>
+      <AccessRoleBoundary requiredAccessRoles={[]}>
         <ProtectedCounter onMount={onMount} />
-      </RoleBoundary>,
+      </AccessRoleBoundary>,
     );
     await screen.getByRole('button', { name: 'Count 0' }).click();
     await screen.rerender(
-      <RoleBoundary required={[' ', '']}>
+      <AccessRoleBoundary requiredAccessRoles={[' ', '']}>
         <ProtectedCounter onMount={onMount} />
-      </RoleBoundary>,
+      </AccessRoleBoundary>,
     );
     await expect.element(screen.getByRole('button', { name: 'Count 1' })).toBeVisible();
     expect(onMount).toHaveBeenCalledOnce();
-    expect(mocks.hasRole).not.toHaveBeenCalled();
+    expect(mocks.hasAccessRole).not.toHaveBeenCalled();
   });
 
   it('routes a synchronous provider failure into recovery without mounting children', async () => {
-    mocks.getRequiredRoleStatuses.mockResolvedValue([
-      { name: 'Reports.Read', exists: false, claims: [] },
+    mocks.getRequiredAccessRoleStatuses.mockResolvedValue([
+      { name: 'Reports.Read', exists: false, claimableAssignments: [] },
     ]);
-    mocks.hasRole.mockImplementation(() => {
-      throw new RequiredRolesError('Denied', ['Reports.Read'], {
-        getRequiredRoleStatuses: mocks.getRequiredRoleStatuses,
-        claimRole: mocks.claimRole,
+    mocks.hasAccessRole.mockImplementation(() => {
+      throw new RequiredAccessRolesError('Denied', ['Reports.Read'], {
+        getRequiredAccessRoleStatuses: mocks.getRequiredAccessRoleStatuses,
+        activateClaimableRoleAssignment: mocks.activateClaimableRoleAssignment,
       });
     });
     const onMount = vi.fn();
     const screen = await render(
-      <RoleBoundary required={['Reports.Read']}>
+      <AccessRoleBoundary requiredAccessRoles={['Reports.Read']}>
         <ProtectedCounter onMount={onMount} />
-      </RoleBoundary>,
+      </AccessRoleBoundary>,
     );
     await expect
-      .element(screen.getByRole('heading', { name: 'Role does not exist' }))
+      .element(screen.getByRole('heading', { name: 'Access role does not exist' }))
       .toBeVisible();
     expect(onMount).not.toHaveBeenCalled();
   });
 
   it('rechecks a denied boundary when the module provider is replaced', async () => {
-    mocks.getRequiredRoleStatuses.mockResolvedValue([
-      { name: 'Reports.Read', exists: false, claims: [] },
+    mocks.getRequiredAccessRoleStatuses.mockResolvedValue([
+      { name: 'Reports.Read', exists: false, claimableAssignments: [] },
     ]);
-    mocks.hasRole.mockRejectedValue(
-      new RequiredRolesError('Denied', ['Reports.Read'], {
-        getRequiredRoleStatuses: mocks.getRequiredRoleStatuses,
-        claimRole: mocks.claimRole,
+    mocks.hasAccessRole.mockRejectedValue(
+      new RequiredAccessRolesError('Denied', ['Reports.Read'], {
+        getRequiredAccessRoleStatuses: mocks.getRequiredAccessRoleStatuses,
+        activateClaimableRoleAssignment: mocks.activateClaimableRoleAssignment,
       }),
     );
     const screen = await render(
-      <RoleBoundary required={['Reports.Read']}>
+      <AccessRoleBoundary requiredAccessRoles={['Reports.Read']}>
         <p>Protected reports</p>
-      </RoleBoundary>,
+      </AccessRoleBoundary>,
     );
     await expect
-      .element(screen.getByRole('heading', { name: 'Role does not exist' }))
+      .element(screen.getByRole('heading', { name: 'Access role does not exist' }))
       .toBeVisible();
     const replacementCheck = Promise.withResolvers<boolean>();
-    mocks.roles = { hasRole: vi.fn().mockReturnValue(replacementCheck.promise) };
+    mocks.roles = { hasAccessRole: vi.fn().mockReturnValue(replacementCheck.promise) };
     await screen.rerender(
-      <RoleBoundary required={['Reports.Read']}>
+      <AccessRoleBoundary requiredAccessRoles={['Reports.Read']}>
         <p>Protected reports</p>
-      </RoleBoundary>,
+      </AccessRoleBoundary>,
     );
     await expect.element(screen.getByText('Protected reports')).not.toBeInTheDocument();
     replacementCheck.resolve(true);
     await expect.element(screen.getByText('Protected reports')).toBeVisible();
-    expect(mocks.roles.hasRole).toHaveBeenCalledOnce();
-    expect(mocks.claimRole).not.toHaveBeenCalled();
+    expect(mocks.roles.hasAccessRole).toHaveBeenCalledOnce();
+    expect(mocks.activateClaimableRoleAssignment).not.toHaveBeenCalled();
   });
 
   it('keeps an in-flight check when an equivalent inline array replaces its input', async () => {
     const checked = Promise.withResolvers<boolean>();
-    mocks.hasRole.mockReturnValue(checked.promise);
+    mocks.hasAccessRole.mockReturnValue(checked.promise);
     const screen = await render(
-      <RoleBoundary required={['Reports.Read']}>
+      <AccessRoleBoundary requiredAccessRoles={['Reports.Read']}>
         <p>Protected reports</p>
-      </RoleBoundary>,
+      </AccessRoleBoundary>,
     );
     await screen.rerender(
-      <RoleBoundary required={['Reports.Read']}>
+      <AccessRoleBoundary requiredAccessRoles={['Reports.Read']}>
         <p>Protected reports</p>
-      </RoleBoundary>,
+      </AccessRoleBoundary>,
     );
     checked.resolve(true);
     await expect.element(screen.getByText('Protected reports')).toBeVisible();
-    expect(mocks.hasRole).toHaveBeenCalledOnce();
+    expect(mocks.hasAccessRole).toHaveBeenCalledOnce();
   });
 
   it.each(['requirements', 'provider'] as const)(
     'never commits protected effects when the changed %s is denied',
     async (change) => {
-      mocks.hasRole.mockResolvedValue(true);
+      mocks.hasAccessRole.mockResolvedValue(true);
       const screen = await render(
-        <RoleBoundary required={['Reports.Read']}>
+        <AccessRoleBoundary requiredAccessRoles={['Reports.Read']}>
           <p>Protected reports</p>
-        </RoleBoundary>,
+        </AccessRoleBoundary>,
       );
       await expect.element(screen.getByText('Protected reports')).toBeVisible();
       const checked = Promise.withResolvers<boolean>();
       // The access result belongs to the provider object, not merely its method or role names.
       if (change === 'provider') {
-        mocks.roles = { hasRole: vi.fn().mockReturnValue(checked.promise) };
+        mocks.roles = { hasAccessRole: vi.fn().mockReturnValue(checked.promise) };
       } else {
-        mocks.hasRole.mockReturnValue(checked.promise);
+        mocks.hasAccessRole.mockReturnValue(checked.promise);
       }
       const onMount = vi.fn();
       const onLayout = vi.fn();
@@ -202,21 +204,23 @@ describe('RoleBoundary', () => {
         return <p>Unchecked content</p>;
       };
       await screen.rerender(
-        <RoleBoundary required={[change === 'provider' ? 'Reports.Read' : 'Reports.Export']}>
+        <AccessRoleBoundary
+          requiredAccessRoles={[change === 'provider' ? 'Reports.Read' : 'Reports.Export']}
+        >
           <DeniedChild />
-        </RoleBoundary>,
+        </AccessRoleBoundary>,
       );
-      mocks.getRequiredRoleStatuses.mockResolvedValue([
-        { name: 'Reports.Export', exists: true, claims: [] },
+      mocks.getRequiredAccessRoleStatuses.mockResolvedValue([
+        { name: 'Reports.Export', exists: true, claimableAssignments: [] },
       ]);
       checked.reject(
-        new RequiredRolesError('Denied', ['Reports.Export'], {
-          getRequiredRoleStatuses: mocks.getRequiredRoleStatuses,
-          claimRole: mocks.claimRole,
+        new RequiredAccessRolesError('Denied', ['Reports.Export'], {
+          getRequiredAccessRoleStatuses: mocks.getRequiredAccessRoleStatuses,
+          activateClaimableRoleAssignment: mocks.activateClaimableRoleAssignment,
         }),
       );
       await expect
-        .element(screen.getByRole('heading', { name: 'Role is not claimable' }))
+        .element(screen.getByRole('heading', { name: 'Access role is not claimable' }))
         .toBeVisible();
       expect(onLayout).not.toHaveBeenCalled();
       expect(onMount).not.toHaveBeenCalled();
@@ -228,21 +232,21 @@ describe('RoleBoundary', () => {
     'does not mount unchecked children when the %s changes after success',
     async (change) => {
       const required = ['Reports.Read'];
-      mocks.hasRole.mockResolvedValue(true);
+      mocks.hasAccessRole.mockResolvedValue(true);
       const screen = await render(
-        <RoleBoundary required={required}>
+        <AccessRoleBoundary requiredAccessRoles={required}>
           <p>Protected reports</p>
-        </RoleBoundary>,
+        </AccessRoleBoundary>,
       );
       await expect.element(screen.getByText('Protected reports')).toBeVisible();
 
       const checked = Promise.withResolvers<boolean>();
-      const hasRole = vi.fn().mockReturnValue(checked.promise);
+      const hasAccessRole = vi.fn().mockReturnValue(checked.promise);
       // A different provider object must invalidate access even with unchanged role names.
       if (change === 'provider') {
-        mocks.roles = { hasRole };
+        mocks.roles = { hasAccessRole };
       } else {
-        mocks.hasRole.mockReturnValue(checked.promise);
+        mocks.hasAccessRole.mockReturnValue(checked.promise);
       }
       const onMount = vi.fn();
       /** Records protected side effects, including any unauthorized transient mount. */
@@ -251,9 +255,11 @@ describe('RoleBoundary', () => {
         return <p>New protected content</p>;
       };
       await screen.rerender(
-        <RoleBoundary required={change === 'requirements' ? ['Reports.Export'] : required}>
+        <AccessRoleBoundary
+          requiredAccessRoles={change === 'requirements' ? ['Reports.Export'] : required}
+        >
           <ProtectedChild />
-        </RoleBoundary>,
+        </AccessRoleBoundary>,
       );
 
       expect(onMount).not.toHaveBeenCalled();
@@ -267,16 +273,16 @@ describe('RoleBoundary', () => {
   it('ignores an obsolete check that settles after the requirements change', async () => {
     const previous = Promise.withResolvers<boolean>();
     const current = Promise.withResolvers<boolean>();
-    mocks.hasRole.mockReturnValueOnce(previous.promise).mockReturnValueOnce(current.promise);
+    mocks.hasAccessRole.mockReturnValueOnce(previous.promise).mockReturnValueOnce(current.promise);
     const screen = await render(
-      <RoleBoundary required={['Reports.Read']}>
+      <AccessRoleBoundary requiredAccessRoles={['Reports.Read']}>
         <p>Protected reports</p>
-      </RoleBoundary>,
+      </AccessRoleBoundary>,
     );
     await screen.rerender(
-      <RoleBoundary required={['Reports.Export']}>
+      <AccessRoleBoundary requiredAccessRoles={['Reports.Export']}>
         <p>Protected reports</p>
-      </RoleBoundary>,
+      </AccessRoleBoundary>,
     );
 
     previous.resolve(true);
@@ -288,29 +294,29 @@ describe('RoleBoundary', () => {
 
   it('renders role recovery when required access is missing', async () => {
     const provider = {
-      getRequiredRoleStatuses: mocks.getRequiredRoleStatuses,
-      claimRole: mocks.claimRole,
+      getRequiredAccessRoleStatuses: mocks.getRequiredAccessRoleStatuses,
+      activateClaimableRoleAssignment: mocks.activateClaimableRoleAssignment,
     };
-    mocks.hasRole.mockRejectedValue(
-      new RequiredRolesError('Missing required role.', ['Reports.Read'], provider),
+    mocks.hasAccessRole.mockRejectedValue(
+      new RequiredAccessRolesError('Missing required role.', ['Reports.Read'], provider),
     );
-    mocks.getRequiredRoleStatuses.mockResolvedValue([
+    mocks.getRequiredAccessRoleStatuses.mockResolvedValue([
       {
         name: 'Reports.Read',
         description: 'Read reports.',
         exists: true,
-        claims: [],
+        claimableAssignments: [],
       },
     ]);
 
     const screen = await render(
-      <RoleBoundary required={['Reports.Read']}>
+      <AccessRoleBoundary requiredAccessRoles={['Reports.Read']}>
         <p>Protected reports</p>
-      </RoleBoundary>,
+      </AccessRoleBoundary>,
     );
 
     await expect
-      .element(screen.getByRole('heading', { name: 'Role is not claimable' }))
+      .element(screen.getByRole('heading', { name: 'Access role is not claimable' }))
       .toBeVisible();
     await expect.element(screen.getByText('Read reports.')).toBeVisible();
     await expect.element(screen.getByText('Protected reports')).not.toBeInTheDocument();
@@ -318,30 +324,30 @@ describe('RoleBoundary', () => {
 
   it('catches a required-role error from children when no proactive requirement is configured', async () => {
     const provider = {
-      getRequiredRoleStatuses: mocks.getRequiredRoleStatuses,
-      claimRole: mocks.claimRole,
+      getRequiredAccessRoleStatuses: mocks.getRequiredAccessRoleStatuses,
+      activateClaimableRoleAssignment: mocks.activateClaimableRoleAssignment,
     };
-    mocks.getRequiredRoleStatuses.mockResolvedValue([
+    mocks.getRequiredAccessRoleStatuses.mockResolvedValue([
       {
         name: 'Reports.Read',
         description: 'Read reports.',
         exists: true,
-        claims: [],
+        claimableAssignments: [],
       },
     ]);
     const ThrowRequiredRoleError = (): ReactNode => {
-      throw new RequiredRolesError('Missing required role.', ['Reports.Read'], provider);
+      throw new RequiredAccessRolesError('Missing required role.', ['Reports.Read'], provider);
     };
 
     const screen = await render(
-      <RoleBoundary>
+      <AccessRoleBoundary>
         <ThrowRequiredRoleError />
-      </RoleBoundary>,
+      </AccessRoleBoundary>,
     );
 
     await expect
-      .element(screen.getByRole('heading', { name: 'Role is not claimable' }))
+      .element(screen.getByRole('heading', { name: 'Access role is not claimable' }))
       .toBeVisible();
-    expect(mocks.hasRole).not.toHaveBeenCalled();
+    expect(mocks.hasAccessRole).not.toHaveBeenCalled();
   });
 });

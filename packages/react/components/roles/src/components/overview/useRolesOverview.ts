@@ -1,20 +1,39 @@
 import { useMemo, useState } from 'react';
-import type { RequiredRoleClaim } from '@equinor/fusion-framework-module-roles';
 
-import { useClaimableRoles, type UseClaimableRolesResult } from '../../hooks/useClaimableRoles';
-import { useRoles, type UseRolesResult } from '../../hooks/useRoles';
+import {
+  useActiveAccessRoleAssignments,
+  type UseActiveAccessRoleAssignmentsResult,
+} from '../../hooks/useActiveAccessRoleAssignments';
+import {
+  useClaimableRoleAssignments,
+  type UseClaimableRoleAssignmentsResult,
+} from '../../hooks/useClaimableRoleAssignments';
+import { useRoleAssignments, type UseRoleAssignmentsResult } from '../../hooks/useRoleAssignments';
 import { createClaimableRoles } from './create-claimable-roles';
-import type { ClaimableRoleDetails } from './role-details';
+import { createAssignedRoles } from './create-assigned-roles';
+import type {
+  AssignedRoleDetails,
+  ClaimableRoleAssignmentSelection,
+  ClaimableRoleDetails,
+} from './role-details';
 
 /** Shared collection and activation controller for the two role browsing layouts. */
 interface RolesOverview {
-  readonly active: UseRolesResult;
-  readonly claimable: UseClaimableRolesResult;
+  readonly activeAccessRoleAssignments: UseActiveAccessRoleAssignmentsResult;
+  readonly consolidatedClaimableRoleAssignments: UseClaimableRoleAssignmentsResult;
+  readonly consolidatedRoleAssignments: UseRoleAssignmentsResult;
   readonly claimableRoles: readonly ClaimableRoleDetails[];
-  readonly selectedClaim?: RequiredRoleClaim;
-  readonly selectClaim: (claim: RequiredRoleClaim | undefined) => void;
-  readonly claimRole: (roleId: string, reason: string, hours: number) => Promise<void>;
-  readonly deactivateRole: (assignmentId: string) => Promise<void>;
+  readonly assignedRoles: readonly AssignedRoleDetails[];
+  readonly selectedClaimableRoleAssignment?: ClaimableRoleAssignmentSelection;
+  readonly selectClaimableRoleAssignment: (
+    selection: ClaimableRoleAssignmentSelection | undefined,
+  ) => void;
+  readonly activateClaimableRoleAssignment: (
+    assignmentId: string,
+    reason: string,
+    hours: number,
+  ) => Promise<void>;
+  readonly deactivateClaimableRoleAssignment: (assignmentId: string) => Promise<void>;
   readonly reload: () => Promise<void>;
   readonly isLoading: boolean;
   readonly isRefreshing: boolean;
@@ -22,16 +41,29 @@ interface RolesOverview {
 }
 
 /**
- * Coordinates shared role collections and dialog selection without owning a presentation layout.
- * @returns Provider state, normalized claimable roles, and audited mutation callbacks.
+ * Coordinates shared role-assignment collections and dialog selection without owning a
+ * presentation layout.
+ * @returns Provider state, normalized role cards, and audited mutation callbacks.
  */
 export const useRolesOverview = (): RolesOverview => {
-  const active = useRoles();
-  const claimable = useClaimableRoles();
-  const [selectedClaim, selectClaim] = useState<RequiredRoleClaim>();
+  const activeAccessRoleAssignments = useActiveAccessRoleAssignments();
+  const consolidatedClaimableRoleAssignments = useClaimableRoleAssignments();
+  const consolidatedRoleAssignments = useRoleAssignments();
+  const [selectedClaimableRoleAssignment, selectClaimableRoleAssignment] =
+    useState<ClaimableRoleAssignmentSelection>();
   const [hasSettled, setHasSettled] = useState(false);
-  const claimableRoles = useMemo(() => createClaimableRoles(claimable.roles), [claimable.roles]);
-  const isLoading = active.isLoading || claimable.isLoading;
+  const claimableRoles = useMemo(
+    () => createClaimableRoles(consolidatedClaimableRoleAssignments.assignments),
+    [consolidatedClaimableRoleAssignments.assignments],
+  );
+  const assignedRoles = useMemo(
+    () => createAssignedRoles(consolidatedRoleAssignments.assignments),
+    [consolidatedRoleAssignments.assignments],
+  );
+  const isLoading =
+    activeAccessRoleAssignments.isLoading ||
+    consolidatedClaimableRoleAssignments.isLoading ||
+    consolidatedRoleAssignments.isLoading;
   // Once first reads settle, even an empty account is a usable view. Never unmount audit forms
   // for subsequent refreshes; collection errors instead explain that the retained snapshot is stale.
   if (!hasSettled && !isLoading) {
@@ -40,45 +72,62 @@ export const useRolesOverview = (): RolesOverview => {
 
   /**
    * Closes selection after activation succeeds and its collection refreshes settle.
-   * @param roleId - Selected assignment identifier.
+   * @param assignmentId - Selected claimable role assignment identifier.
    * @param reason - User-provided audit reason.
    * @param hours - Requested activation duration.
    * @returns Completion of the provider-backed activation.
    * @throws Provider failures for the claim dialog to display.
    */
-  const claimRole = async (roleId: string, reason: string, hours: number): Promise<void> => {
-    await claimable.claimRole({ roleId, reason, hours });
-    selectClaim(undefined);
+  const activateClaimableRoleAssignment = async (
+    assignmentId: string,
+    reason: string,
+    hours: number,
+  ): Promise<void> => {
+    await consolidatedClaimableRoleAssignments.activateClaimableRoleAssignment({
+      assignmentId,
+      reason,
+      hours,
+    });
+    selectClaimableRoleAssignment(undefined);
   };
 
   /**
    * Ends an activation without changing the account's claimable entitlement.
-   * @param assignmentId - Assignment to deactivate.
+   * @param assignmentId - Claimable role assignment to deactivate.
    * @returns Completion of the provider-backed deactivation.
    */
-  const deactivateRole = async (assignmentId: string): Promise<void> => {
-    await claimable.deactivateRole({ roleId: assignmentId });
+  const deactivateClaimableRoleAssignment = async (assignmentId: string): Promise<void> => {
+    await consolidatedClaimableRoleAssignments.deactivateClaimableRoleAssignment({ assignmentId });
   };
 
   /**
-   * Reloads both collections so neither tab keeps an outdated account snapshot.
-   * @returns Completion of both collection requests.
+   * Reloads every collection so no tab keeps an outdated account snapshot.
+   * @returns Completion of all collection requests.
    */
   const reload = async (): Promise<void> => {
-    await Promise.all([active.reload(), claimable.reload()]);
+    await Promise.all([
+      activeAccessRoleAssignments.reload(),
+      consolidatedClaimableRoleAssignments.reload(),
+      consolidatedRoleAssignments.reload(),
+    ]);
   };
 
   return {
-    active,
-    claimable,
+    activeAccessRoleAssignments,
+    consolidatedClaimableRoleAssignments,
+    consolidatedRoleAssignments,
     claimableRoles,
-    selectedClaim,
-    selectClaim,
-    claimRole,
-    deactivateRole,
+    assignedRoles,
+    selectedClaimableRoleAssignment,
+    selectClaimableRoleAssignment,
+    activateClaimableRoleAssignment,
+    deactivateClaimableRoleAssignment,
     reload,
     isLoading: isLoading && !hasSettled,
     isRefreshing: isLoading && hasSettled,
-    loadError: active.error ?? claimable.error,
+    loadError:
+      activeAccessRoleAssignments.error ??
+      consolidatedClaimableRoleAssignments.error ??
+      consolidatedRoleAssignments.error,
   };
 };

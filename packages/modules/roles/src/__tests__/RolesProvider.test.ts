@@ -2,8 +2,8 @@ import { TelemetryLevel, TelemetryScope } from '@equinor/fusion-framework-module
 import { describe, expect, it, vi } from 'vitest';
 import { of, throwError } from 'rxjs';
 
-import { ClaimRoleError } from '../errors/ClaimRoleError.js';
-import { RoleClaimEvent } from '../RoleClaimEvent.js';
+import { ActivateClaimableRoleAssignmentError } from '../errors/ActivateClaimableRoleAssignmentError.js';
+import { ClaimableRoleAssignmentActivationEvent } from '../ClaimableRoleAssignmentActivationEvent.js';
 import type { IRolesClient } from '../RolesClient.js';
 import { RolesError } from '../errors/RolesError.js';
 import { RolesProvider } from '../RolesProvider.js';
@@ -18,12 +18,13 @@ import { Subject } from 'rxjs';
  */
 const createClient = (): IRolesClient => ({
   initialize: vi.fn(),
-  getActiveRoles: vi.fn(),
-  getClaimableRoles: vi.fn(),
-  claimRole: vi.fn(),
-  deactivateRole: vi.fn(),
-  canClaimAccessRole: vi.fn(),
-  getRequiredRoleStatuses: vi.fn(),
+  getActiveAccessRoleAssignments: vi.fn(),
+  getConsolidatedClaimableRoleAssignments: vi.fn(),
+  getConsolidatedRoleAssignments: vi.fn(),
+  activateClaimableRoleAssignment: vi.fn(),
+  deactivateClaimableRoleAssignment: vi.fn(),
+  hasClaimableRoleAssignmentForAccessRole: vi.fn(),
+  getRequiredAccessRoleStatuses: vi.fn(),
   getAccessRoles: vi.fn(),
 });
 
@@ -150,15 +151,17 @@ describe('RolesProvider', () => {
     const client = createClient();
     const activeRoles = [{ systemName: 'Reports', accessRoleName: 'Reports.Read' }];
     const claimableRoles = [{ id: 'claimable-role' }];
+    const consolidatedRoles = [{ id: 'assigned-role', role: { name: 'Reports.Admin' } }];
     const activation = { id: 'activation-id' };
-    vi.mocked(client.getActiveRoles).mockReturnValue(of(activeRoles));
-    vi.mocked(client.getClaimableRoles).mockReturnValue(of(claimableRoles));
-    vi.mocked(client.claimRole).mockReturnValue(of(activation));
-    vi.mocked(client.deactivateRole).mockReturnValue(of(activation));
-    vi.mocked(client.getRequiredRoleStatuses).mockReturnValue(
-      of([{ name: 'Reports.Read', exists: true, claims: [] }]),
+    vi.mocked(client.getActiveAccessRoleAssignments).mockReturnValue(of(activeRoles));
+    vi.mocked(client.getConsolidatedClaimableRoleAssignments).mockReturnValue(of(claimableRoles));
+    vi.mocked(client.getConsolidatedRoleAssignments).mockReturnValue(of(consolidatedRoles));
+    vi.mocked(client.activateClaimableRoleAssignment).mockReturnValue(of(activation));
+    vi.mocked(client.deactivateClaimableRoleAssignment).mockReturnValue(of(activation));
+    vi.mocked(client.getRequiredAccessRoleStatuses).mockReturnValue(
+      of([{ name: 'Reports.Read', exists: true, claimableAssignments: [] }]),
     );
-    const dispatchEvent = vi.fn(async (event: RoleClaimEvent) => event);
+    const dispatchEvent = vi.fn(async (event: ClaimableRoleAssignmentActivationEvent) => event);
     const telemetry = {
       trackEvent: vi.fn(),
       trackException: vi.fn(),
@@ -171,22 +174,27 @@ describe('RolesProvider', () => {
       },
     );
 
-    await expect(provider.getActiveRoles()).resolves.toEqual(activeRoles);
-    await expect(provider.getClaimableRoles()).resolves.toEqual(claimableRoles);
-    await expect(provider.claimRole({ roleId: 'claimable-role' })).resolves.toEqual(activation);
-    await expect(provider.deactivateRole({ roleId: 'claimable-role' })).resolves.toEqual(
-      activation,
+    await expect(provider.getActiveAccessRoleAssignments()).resolves.toEqual(activeRoles);
+    await expect(provider.getConsolidatedClaimableRoleAssignments()).resolves.toEqual(
+      claimableRoles,
     );
-    await expect(provider.getRequiredRoleStatuses(['Reports.Read'])).resolves.toEqual([
-      { name: 'Reports.Read', exists: true, claims: [] },
+    await expect(provider.getConsolidatedRoleAssignments()).resolves.toEqual(consolidatedRoles);
+    await expect(
+      provider.activateClaimableRoleAssignment({ assignmentId: 'claimable-role' }),
+    ).resolves.toEqual(activation);
+    await expect(
+      provider.deactivateClaimableRoleAssignment({ assignmentId: 'claimable-role' }),
+    ).resolves.toEqual(activation);
+    await expect(provider.getRequiredAccessRoleStatuses(['Reports.Read'])).resolves.toEqual([
+      { name: 'Reports.Read', exists: true, claimableAssignments: [] },
     ]);
 
-    expect(dispatchEvent.mock.calls[0][0]).toBeInstanceOf(RoleClaimEvent);
+    expect(dispatchEvent.mock.calls[0][0]).toBeInstanceOf(ClaimableRoleAssignmentActivationEvent);
     expect(dispatchEvent.mock.calls[0][0].cancelable).toBe(true);
-    expect(dispatchEvent.mock.calls[0][0].detail).toEqual({ roleId: 'claimable-role' });
+    expect(dispatchEvent.mock.calls[0][0].detail).toEqual({ assignmentId: 'claimable-role' });
     expect(dispatchEvent).toHaveBeenCalledOnce();
     expect(telemetry.trackEvent).toHaveBeenCalledWith({
-      name: 'RolesProvider.claimRole',
+      name: 'RolesProvider.activateClaimableRoleAssignment',
       level: TelemetryLevel.Debug,
       scope: ['roles', TelemetryScope.Framework],
       properties: { outcome: 'success' },
@@ -196,55 +204,59 @@ describe('RolesProvider', () => {
 
   it('does not activate a role when the claim event is canceled', async () => {
     const client = createClient();
-    const dispatchEvent = vi.fn(async (event: RoleClaimEvent) => {
+    const dispatchEvent = vi.fn(async (event: ClaimableRoleAssignmentActivationEvent) => {
       // Simulate a listener vetoing the claim before the activation request.
-      if (event instanceof RoleClaimEvent) {
+      if (event instanceof ClaimableRoleAssignmentActivationEvent) {
         event.preventDefault();
       }
       return event;
     });
     const provider = new RolesProvider({ client }, { event: { dispatchEvent } });
 
-    const claim = provider.claimRole({ roleId: 'claimable-role' });
+    const claim = provider.activateClaimableRoleAssignment({ assignmentId: 'claimable-role' });
 
-    await expect(claim).rejects.toThrow('Role claim was canceled by an event listener.');
-    await expect(claim).rejects.toBeInstanceOf(ClaimRoleError);
-    expect(client.claimRole).not.toHaveBeenCalled();
+    await expect(claim).rejects.toThrow(
+      'Claimable role assignment activation was canceled by an event listener.',
+    );
+    await expect(claim).rejects.toBeInstanceOf(ActivateClaimableRoleAssignmentError);
+    expect(client.activateClaimableRoleAssignment).not.toHaveBeenCalled();
     expect(dispatchEvent).toHaveBeenCalledOnce();
   });
 
   it('checks active access-role names for the authenticated account', async () => {
     const client = createClient();
-    vi.mocked(client.getActiveRoles).mockReturnValue(
+    vi.mocked(client.getActiveAccessRoleAssignments).mockReturnValue(
       of([{ systemName: 'Reports', accessRoleName: 'Reports.Read' }]),
     );
     const provider = new RolesProvider({ client });
 
-    await expect(provider.hasRole(['Reports.Read'], {})).resolves.toBe(true);
+    await expect(provider.hasAccessRole(['Reports.Read'], {})).resolves.toBe(true);
     await expect(
-      provider.hasRole(['Reports.Read', 'Reports.Write'], { required: true }),
+      provider.hasAccessRole(['Reports.Read', 'Reports.Write'], { required: true }),
     ).resolves.toBe(false);
     await expect(
-      provider.hasRole(['Reports.Write', 'Reports.Read'], { required: false }),
+      provider.hasAccessRole(['Reports.Write', 'Reports.Read'], { required: false }),
     ).resolves.toBe(true);
-    await expect(provider.hasRole(['  '], {})).resolves.toBe(false);
-    expect(client.getActiveRoles).toHaveBeenCalledTimes(3);
+    await expect(provider.hasAccessRole(['  '], {})).resolves.toBe(false);
+    expect(client.getActiveAccessRoleAssignments).toHaveBeenCalledTimes(3);
   });
 
   it('checks claim eligibility through the account-scoped client', async () => {
     const client = createClient();
-    vi.mocked(client.canClaimAccessRole).mockReturnValue(of(true));
+    vi.mocked(client.hasClaimableRoleAssignmentForAccessRole).mockReturnValue(of(true));
     const provider = new RolesProvider({ client });
 
-    await expect(provider.canClaimAccessRole(' Reports.Read ')).resolves.toBe(true);
-    await expect(provider.canClaimAccessRole('  ')).resolves.toBe(false);
-    expect(client.canClaimAccessRole).toHaveBeenCalledOnce();
-    expect(client.canClaimAccessRole).toHaveBeenCalledWith('Reports.Read');
+    await expect(provider.hasClaimableRoleAssignmentForAccessRole(' Reports.Read ')).resolves.toBe(
+      true,
+    );
+    await expect(provider.hasClaimableRoleAssignmentForAccessRole('  ')).resolves.toBe(false);
+    expect(client.hasClaimableRoleAssignmentForAccessRole).toHaveBeenCalledOnce();
+    expect(client.hasClaimableRoleAssignmentForAccessRole).toHaveBeenCalledWith('Reports.Read');
   });
 
   it('accepts configured requirements when every access role is active', async () => {
     const client = createClient();
-    vi.mocked(client.getActiveRoles).mockReturnValue(
+    vi.mocked(client.getActiveAccessRoleAssignments).mockReturnValue(
       of([
         { systemName: 'Reports', accessRoleName: 'Reports.Read' },
         { systemName: 'Reports', accessRoleName: 'Reports.Export' },
@@ -253,7 +265,7 @@ describe('RolesProvider', () => {
     const provider = new RolesProvider({ client });
 
     await expect(
-      provider.hasRole(['Reports.Read', 'Reports.Export'], { assert: true, required: true }),
+      provider.hasAccessRole(['Reports.Read', 'Reports.Export'], { assert: true, required: true }),
     ).resolves.toBe(true);
   });
 
@@ -261,28 +273,30 @@ describe('RolesProvider', () => {
     const client = createClient();
     const provider = new RolesProvider({ client });
 
-    await expect(provider.hasRole([], { assert: true, required: true })).resolves.toBe(true);
-    await expect(provider.hasRole([], { assert: false, required: false })).resolves.toBe(false);
-    expect(client.getActiveRoles).not.toHaveBeenCalled();
+    await expect(provider.hasAccessRole([], { assert: true, required: true })).resolves.toBe(true);
+    await expect(provider.hasAccessRole([], { assert: false, required: false })).resolves.toBe(
+      false,
+    );
+    expect(client.getActiveAccessRoleAssignments).not.toHaveBeenCalled();
   });
 
   it('reports every configured access role that is not active', async () => {
     const client = createClient();
-    vi.mocked(client.getActiveRoles).mockReturnValue(
+    vi.mocked(client.getActiveAccessRoleAssignments).mockReturnValue(
       of([{ systemName: 'Reports', accessRoleName: 'Reports.Read' }]),
     );
     const provider = new RolesProvider({ client });
 
-    const result = provider.hasRole(['Reports.Read', 'Reports.Export', 'Reports.Admin'], {
+    const result = provider.hasAccessRole(['Reports.Read', 'Reports.Export', 'Reports.Admin'], {
       assert: true,
       required: true,
     });
 
     await expect(result).rejects.toMatchObject({
-      name: 'RequiredRolesError',
+      name: 'RequiredAccessRolesError',
       message:
-        'Roles module bootstrap denied. Missing required roles: Reports.Export, Reports.Admin.',
-      missingRoles: ['Reports.Export', 'Reports.Admin'],
+        'Roles module bootstrap denied. Missing required access roles: Reports.Export, Reports.Admin.',
+      missingAccessRoles: ['Reports.Export', 'Reports.Admin'],
       provider,
     });
   });
@@ -290,19 +304,43 @@ describe('RolesProvider', () => {
   it('reports and propagates client failures', async () => {
     const client = createClient();
     const error = new Error('request failed');
-    vi.mocked(client.getActiveRoles).mockReturnValue(throwError(() => error));
+    vi.mocked(client.getActiveAccessRoleAssignments).mockReturnValue(throwError(() => error));
     const telemetry = {
       trackEvent: vi.fn(),
       trackException: vi.fn(),
     };
     const provider = new RolesProvider({ client }, { telemetry });
 
-    await expect(provider.getActiveRoles()).rejects.toMatchObject({
+    await expect(provider.getActiveAccessRoleAssignments()).rejects.toMatchObject({
       name: 'RolesError',
       cause: error,
     });
     expect(telemetry.trackException).toHaveBeenCalledWith({
-      name: 'RolesProvider.getActiveRoles',
+      name: 'RolesProvider.getActiveAccessRoleAssignments',
+      exception: expect.any(RolesError),
+      level: TelemetryLevel.Error,
+      scope: ['roles', TelemetryScope.Framework],
+      properties: { outcome: 'failure' },
+    });
+    expect(telemetry.trackEvent).not.toHaveBeenCalled();
+  });
+
+  it('reports and propagates consolidated-role-assignment client failures', async () => {
+    const client = createClient();
+    const error = new Error('request failed');
+    vi.mocked(client.getConsolidatedRoleAssignments).mockReturnValue(throwError(() => error));
+    const telemetry = {
+      trackEvent: vi.fn(),
+      trackException: vi.fn(),
+    };
+    const provider = new RolesProvider({ client }, { telemetry });
+
+    await expect(provider.getConsolidatedRoleAssignments()).rejects.toMatchObject({
+      name: 'RolesError',
+      cause: error,
+    });
+    expect(telemetry.trackException).toHaveBeenCalledWith({
+      name: 'RolesProvider.getConsolidatedRoleAssignments',
       exception: expect.any(RolesError),
       level: TelemetryLevel.Error,
       scope: ['roles', TelemetryScope.Framework],
@@ -314,12 +352,14 @@ describe('RolesProvider', () => {
   it('classifies client activation failures as claim errors', async () => {
     const client = createClient();
     const cause = new Error('activation failed');
-    vi.mocked(client.claimRole).mockReturnValue(throwError(() => cause));
+    vi.mocked(client.activateClaimableRoleAssignment).mockReturnValue(throwError(() => cause));
     const provider = new RolesProvider({ client });
 
-    await expect(provider.claimRole({ roleId: 'claimable-role' })).rejects.toMatchObject({
-      name: 'ClaimRoleError',
-      message: 'Failed to claim role.',
+    await expect(
+      provider.activateClaimableRoleAssignment({ assignmentId: 'claimable-role' }),
+    ).rejects.toMatchObject({
+      name: 'ActivateClaimableRoleAssignmentError',
+      message: 'Failed to activate claimable role assignment.',
       cause,
     });
   });

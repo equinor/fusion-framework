@@ -10,8 +10,8 @@ const mocks = vi.hoisted(() => {
   const currentApp = { appKey: 'reports-app', tag: undefined, initialize };
   return {
     renderApp: vi.fn(),
-    getRequiredRoleStatuses: vi.fn(),
-    claimRole: vi.fn(),
+    getRequiredAccessRoleStatuses: vi.fn(),
+    activateClaimableRoleAssignment: vi.fn(),
     setCurrentApp,
     initialize,
     framework: {
@@ -42,8 +42,8 @@ describe('AppLoader', () => {
     mocks.renderApp.mockReset();
     mocks.setCurrentApp.mockReset();
     mocks.initialize.mockReset();
-    mocks.getRequiredRoleStatuses.mockReset();
-    mocks.claimRole.mockReset();
+    mocks.getRequiredAccessRoleStatuses.mockReset();
+    mocks.activateClaimableRoleAssignment.mockReset();
     mocks.initialize.mockReturnValue(
       of({
         manifest: { appKey: 'reports-app', build: {} },
@@ -58,11 +58,11 @@ describe('AppLoader', () => {
   });
 
   it('renders the application again when the error boundary requests a retry', async () => {
-    mocks.getRequiredRoleStatuses.mockResolvedValue([
+    mocks.getRequiredAccessRoleStatuses.mockResolvedValue([
       {
         name: 'Reports.Read',
         exists: true,
-        claims: [
+        claimableAssignments: [
           {
             assignmentId: 'assignment-id',
             name: 'reports-reader',
@@ -71,19 +71,21 @@ describe('AppLoader', () => {
         ],
       },
     ]);
-    mocks.claimRole.mockResolvedValue({ activeToDate: '2026-09-05T12:00:00Z' });
+    mocks.activateClaimableRoleAssignment.mockResolvedValue({
+      activeToDate: '2026-09-05T12:00:00Z',
+    });
     mocks.renderApp.mockImplementation((element, args) => {
       // The first render reports a recoverable failure; retry renders the resolved app.
       if (mocks.renderApp.mock.calls.length === 1) {
         // Mimic a structurally compatible error from a separately bundled application.
         args.onError(
           Object.assign(new Error('Missing required role.'), {
-            name: 'RequiredRolesError',
+            name: 'RequiredAccessRolesError',
             type: 'RolesError',
-            missingRoles: ['Reports.Read'],
+            missingAccessRoles: ['Reports.Read'],
             provider: {
-              getRequiredRoleStatuses: mocks.getRequiredRoleStatuses,
-              claimRole: mocks.claimRole,
+              getRequiredAccessRoleStatuses: mocks.getRequiredAccessRoleStatuses,
+              activateClaimableRoleAssignment: mocks.activateClaimableRoleAssignment,
             },
           }),
         );
@@ -99,9 +101,9 @@ describe('AppLoader', () => {
     await screen.getByRole('button', { name: 'Claim', exact: true }).last().click();
 
     await expect.element(screen.getByText('Application rendered')).toBeVisible();
-    expect(mocks.claimRole).toHaveBeenCalledOnce();
-    expect(mocks.claimRole).toHaveBeenCalledWith({
-      roleId: 'assignment-id',
+    expect(mocks.activateClaimableRoleAssignment).toHaveBeenCalledOnce();
+    expect(mocks.activateClaimableRoleAssignment).toHaveBeenCalledWith({
+      assignmentId: 'assignment-id',
       reason: 'Required to access this application',
       hours: 2,
     });

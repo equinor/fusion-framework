@@ -7,14 +7,14 @@ const daysAgo = (days: number): string =>
  * Representative Roles V2 data shared by the cookbook app snapshot and local HTTP mock service.
  */
 export const rolesMockData = {
-  activeRoles: [
+  activeAccessRoleAssignments: [
     {
       systemName: 'Fusion Apps',
       accessRoleName: 'Fusion.Apps.FullControl',
       assignmentType: 'Direct',
     },
   ],
-  claimableRoles: [
+  consolidatedClaimableRoleAssignments: [
     {
       id: '11111111-1111-4111-8111-111111111111',
       claimableRole: {

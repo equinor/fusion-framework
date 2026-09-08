@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import styled from 'styled-components';
 
-import type { ActiveRoles as ActiveRoleAssignments } from '@equinor/fusion-framework-react-components-roles';
+import type { ActiveAccessRoleAssignments as ActiveRoleAssignments } from '@equinor/fusion-framework-react-components-roles';
 
 const Styled = {
   Section: styled.section`
@@ -19,21 +19,23 @@ const Styled = {
   `,
 };
 
-interface ActiveRolesProps {
-  readonly roles: ActiveRoleAssignments;
+interface ActiveAccessRoleAssignmentsProps {
+  readonly assignments: ActiveRoleAssignments;
 }
 
 /**
  * Displays active access-role assignments for the current account.
  *
- * @param props.roles - Active assignments returned by `useRoles`.
- * @returns The active-role section.
+ * @param props.assignments - Active assignments returned by `useActiveAccessRoleAssignments`.
+ * @returns The effective-access section.
  */
-export const ActiveRoles = ({ roles }: ActiveRolesProps): ReactNode => {
+export const ActiveAccessRoleAssignments = ({
+  assignments,
+}: ActiveAccessRoleAssignmentsProps): ReactNode => {
   const occurrences = new Map<string, number>();
   // Active assignments have no ID: include the complete scope and count only identical rows.
   // JSON avoids delimiter collisions; unrelated insertions or reordering do not change keys.
-  const items = roles.map((assignment) => {
+  const items = assignments.map((assignment) => {
     const { scope } = assignment;
     const identity = JSON.stringify([
       assignment.systemName,
@@ -53,8 +55,8 @@ export const ActiveRoles = ({ roles }: ActiveRolesProps): ReactNode => {
 
   return (
     <Styled.Section>
-      <h2>Active roles</h2>
-      {items.length > 0 ? <Styled.List>{items}</Styled.List> : <p>No active roles.</p>}
+      <h2>Effective access</h2>
+      {items.length > 0 ? <Styled.List>{items}</Styled.List> : <p>No effective access.</p>}
     </Styled.Section>
   );
 };

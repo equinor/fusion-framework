@@ -5,7 +5,7 @@ import { CheckingRolesView } from './CheckingRolesView';
 import { RoleClaimableView } from './RoleClaimableView';
 import { RoleDoesNotExistView } from './RoleDoesNotExistView';
 import { RoleNotClaimableView } from './RoleNotClaimableView';
-import { useRoleRecovery } from './useRoleRecovery';
+import { useRequiredAccessRoleRecovery } from './useRequiredAccessRoleRecovery';
 
 const Styled = {
   Recovery: styled.div`
@@ -24,23 +24,24 @@ export interface RoleErrorViewProps {
 }
 
 /**
- * Renders recovery controls for application failures caused by missing required roles.
+ * Renders recovery controls for application failures caused by missing required access roles.
  *
- * Distinguishes unregistered roles, roles the account cannot claim, and claimable roles.
- * Successful activation retries the failed application render; rejected activation stays in the dialog.
- * Metadata failures offer a local read retry without restarting the host or asserting missing access.
+ * Distinguishes unregistered access roles, access roles with no claimable role assignment, and
+ * access roles the account can claim. Successful activation retries the failed application render;
+ * rejected activation stays in the dialog. Metadata failures offer a local read retry without
+ * restarting the host or asserting missing access.
  *
  * @param props - Application error and retry callback.
- * @returns Required-role recovery controls, or nothing for an unrelated error.
+ * @returns Required-access-role recovery controls, or nothing for an unrelated error.
  * @example
  * ```tsx
  * <RoleErrorView error={error} onRetry={retryApplication} />
  * ```
  */
 export const RoleErrorView = ({ error, onRetry }: RoleErrorViewProps): ReactNode => {
-  const recovery = useRoleRecovery(error, onRetry);
-  // The host chooses its generic fallback when this is not a required-role failure.
-  if (!recovery.isRoleError) {
+  const recovery = useRequiredAccessRoleRecovery(error, onRetry);
+  // The host chooses its generic fallback when this is not a required-access-role failure.
+  if (!recovery.isRequiredAccessRolesError) {
     return null;
   }
   // Keep the access decision explicit while role metadata is resolved.
@@ -52,11 +53,11 @@ export const RoleErrorView = ({ error, onRetry }: RoleErrorViewProps): ReactNode
     return (
       <Styled.Recovery>
         <Typography group="heading" variant="h2">
-          Unable to check required roles
+          Unable to check required access roles
         </Typography>
         <Typography role="alert">{recovery.statusError}</Typography>
         {recovery.canRetryStatuses && (
-          <Button onClick={recovery.retryStatuses}>Retry role check</Button>
+          <Button onClick={recovery.retryStatuses}>Retry access check</Button>
         )}
       </Styled.Recovery>
     );
@@ -71,8 +72,8 @@ export const RoleErrorView = ({ error, onRetry }: RoleErrorViewProps): ReactNode
       <RoleClaimableView
         statuses={recovery.statuses}
         defaultReason="Required to access this application"
-        claimingAssignmentId={recovery.claimingAssignmentId}
-        onClaim={recovery.claimRole}
+        activatingAssignmentId={recovery.activatingAssignmentId}
+        onActivate={recovery.activateClaimableRoleAssignment}
       />
     </div>
   );

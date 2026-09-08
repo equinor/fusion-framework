@@ -35,6 +35,7 @@ describe('createClaimableRoles', () => {
     const roles = createClaimableRoles([
       {},
       { id: null },
+      { id: '' },
       { id: 'minimal' },
       { id: 'named', claimableRole: { name: 'Reports.Read' } },
     ]);

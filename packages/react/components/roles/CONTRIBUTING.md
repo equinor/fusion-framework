@@ -35,11 +35,11 @@ the new provider. The keyed subtree owns its store, expiry queue, previous snaps
 map. Identity is the lifetime boundary; do not claim that a mutable account change on the same module
 provider automatically creates a new React scope.
 
-[RolesProviderScope](./src/context/RolesProviderScope.tsx) starts both collection reads in an effect.
-StrictMode can immediately replay that effect using the same store, so terminal disposal is deferred
-to a microtask and guarded by a lifecycle generation. A replay reclaims the store; a genuine unmount
-or provider replacement disposes it. Discarding a rendered-but-uncommitted scope must not start reads
-or register browser listeners.
+[RolesProviderScope](./src/context/RolesProviderScope.tsx) starts all three collection reads in an
+effect. StrictMode can immediately replay that effect using the same store, so terminal disposal is
+deferred to a microtask and guarded by a lifecycle generation. A replay reclaims the store; a genuine
+unmount or provider replacement disposes it. Discarding a rendered-but-uncommitted scope must not
+start reads or register browser listeners.
 
 [RolesStore](./src/state/RolesStore.ts) is terminal after `dispose()`. Disposal unsubscribes the
 registered flow before completing the base observable lifecycle. `complete()` and `unsubscribe()`
@@ -49,16 +49,17 @@ Unsubscribing does not abort a provider promise or guarantee that a submitted se
 
 ## Refresh and error contracts
 
-- Active and claimable collections start in `loading` with empty arrays, then settle independently.
+- Active, claimable, and assigned collections start in `loading` with empty arrays, then settle
+  independently.
 - Starting a read clears that collection's error but retains its assignments. Failure retains the last
   snapshot; a failed read is not an empty result and must not be presented as revoked access.
 - Hook `reload()` forces refresh of only its collection. It resolves on that request's success **or
   failure**; callers inspect hook `error`. It rejects on disposal, including callbacks retained after unmount.
-- Initial reads allow module caching. Automatic refreshes force both collections every 60 seconds,
-  on focus, and on visibility changes when the document is visible. A ref coalesces overlapping
-  automatic triggers; it does not serialize explicit reloads or mutation calls.
+- Initial reads allow module caching. Automatic refreshes force all three collections every 60
+  seconds, on focus, and on visibility changes when the document is visible. A ref coalesces
+  overlapping automatic triggers; it does not serialize explicit reloads or mutation calls.
 - Browser listeners and the interval are scope-owned and removed on cleanup.
-- A mutation failure rejects its caller and populates the matching `claimError` or `deactivateError`.
+- A mutation failure rejects its caller and populates the matching `activationError` or `deactivationError`.
   A successful mutation starts both collection refreshes and settles only after both attempts finish.
   Read failures populate collection errors without converting a committed mutation into a failure.
 - Mutation pending counters include post-mutation refreshes. Concurrent operations settle independently;
@@ -93,16 +94,16 @@ An injected provider must preserve that read-after-mutation contract.
 
 ## Access and recovery invariants
 
-- `RequiredRoleGate` associates a successful check with **both** its requirements and provider
+- `AccessRoleGate` associates a successful check with **both** its requirements and provider
   during render. An effect-only reset is too late: unchecked child effects could already mount.
 - Equivalent normalized requirement arrays do not restart checks. Required values are access-role names,
   while mutations use claimable assignment IDs; do not substitute role-definition IDs or display labels.
 - This is a pre-mount UI gate, not continuous access enforcement. Collection polling does not invalidate
   a successful gate. Backend authorization is required even when the UI displays active access.
-- `RoleBoundary` handles role failures, including a `RequiredRolesError` found through a cause chain,
+- `AccessRoleBoundary` handles role failures, including a `RequiredAccessRolesError` found through a cause chain,
   and rethrows unrelated errors. Without requirements it is recovery-only, not a hook context provider.
 - Bootstrap recovery belongs around the host loader, since the application's own provider has not
-  mounted yet. `useRoleRecovery` uses the provider attached to the original error, never the portal
+  mounted yet. `useRequiredAccessRoleRecovery` uses the provider attached to the original error, never the portal
   overview's provider. Guard metadata and activation completions against replaced error/request identity.
 - Metadata read failure remains a visible service error with local retry. It must not become a
   nonexistent-role or not-claimable verdict, and metadata retry must not restart the host.
@@ -116,6 +117,14 @@ An injected provider must preserve that read-after-mutation contract.
   `validFrom <= now` and `validTo > now` when supplied. Missing bounds are unconstrained metadata;
   malformed supplied bounds exclude a shortcut rather than silently granting unlimited eligibility.
   A valid activation expiry is always required. Keep selection separate from date label formatting.
+- Consolidated-role-assignment authority: active-access `assignmentType` cannot reliably distinguish
+  a standing grant from an activated claim, so `useRoleAssignments` (backed by
+  `getConsolidatedRoleAssignments`) is the sole authoritative source for that standing, non-claimable
+  assignment state. Roles V2 never calls these assignments permanent. `/consolidated-role-assignments`
+  carries no `isActive` flag, so `filter-effective-assigned-roles.ts` computes effectiveness from
+  `validFrom`/`validTo`. Layouts provide their own shared `now` snapshot so every assignment in one
+  render uses the same boundary. Assigned reads are never refreshed by activation/deactivation
+  mutations.
 - [parseRoleDate](./src/dates/parse-role-date.ts) uses `date-fns` ISO parsing for labels, grouping,
   and expiry recovery. Missing, malformed, and valid dates remain distinct; comparisons use only valid
   timestamps. Preserve UTC interpretation for date-only values and local interpretation for offsetless
@@ -130,7 +139,7 @@ An injected provider must preserve that read-after-mutation contract.
 
 ### In-place expiry ownership
 
-[useExpiredRoleRecovery](./src/context/useExpiredRoleRecovery.ts) observes **successful claimable
+[useExpiredClaimableRoleAssignmentRecovery](./src/context/useExpiredClaimableRoleAssignmentRecovery.ts) observes **successful claimable
 snapshots only**. Loading and error snapshots do not consume transitions. It queues assignments that
 transition from active to inactive, or remain marked active with a parsable expiry already elapsed.
 It is refresh-driven, not a per-assignment timer or a second service-eligibility check.
@@ -156,7 +165,7 @@ pnpm verify:package-exports
 pnpm --filter @equinor/fusion-framework-react-components-roles pack --pack-destination /tmp/roles-package-check
 ```
 
-Tests stay beside their feature. UI tests cover behavior through `RolesView`, `RoleBoundary`, and
+Tests stay beside their feature. UI tests cover behavior through `RolesView`, `AccessRoleBoundary`, and
 provider-driven recovery; pure derivation tests cover expiry boundaries and absent metadata.
 
 When changing these contracts, cover:

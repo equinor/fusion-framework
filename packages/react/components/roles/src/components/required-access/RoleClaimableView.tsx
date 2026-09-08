@@ -1,7 +1,10 @@
 import { useState, type ReactNode } from 'react';
 
 import { Button, Card, Typography } from '@equinor/eds-core-react';
-import type { RequiredRoleClaim, RequiredRoleStatus } from '@equinor/fusion-framework-module-roles';
+import type {
+  RequiredAccessRoleClaimableAssignment,
+  RequiredAccessRoleStatus,
+} from '@equinor/fusion-framework-module-roles';
 import styled from 'styled-components';
 
 import { RoleClaimDialog } from '../claim/RoleClaimDialog';
@@ -19,71 +22,74 @@ const Styled = {
 `,
 };
 
-/** Eligible required-role outcomes and the app-scoped recovery mutation. */
+/** Eligible required-access-role outcomes and the app-scoped recovery mutation. */
 interface RoleClaimableViewProps {
-  readonly statuses: readonly RequiredRoleStatus[];
+  readonly statuses: readonly RequiredAccessRoleStatus[];
   readonly defaultReason: string;
-  readonly claimingAssignmentId?: string;
-  readonly onClaim: (assignmentId: string, reason: string, hours: number) => Promise<void>;
+  readonly activatingAssignmentId?: string;
+  readonly onActivate: (assignmentId: string, reason: string, hours: number) => Promise<void>;
 }
 
 /**
- * Displays required roles that the signed-in account can claim.
+ * Displays required access roles the signed-in account can obtain by claiming a role assignment.
  *
- * @param props - Resolved statuses, current claim state, and claim callback.
- * @returns The claimable-role outcome, or nothing when no required role is claimable.
+ * @param props - Resolved statuses, current activation state, and activation callback.
+ * @returns The claimable outcome, or nothing when no required access role is claimable.
  */
 export const RoleClaimableView = ({
   statuses,
   defaultReason,
-  claimingAssignmentId,
-  onClaim,
+  activatingAssignmentId,
+  onActivate,
 }: RoleClaimableViewProps): ReactNode => {
-  const [selectedClaim, setSelectedClaim] = useState<RequiredRoleClaim>();
+  const [selectedClaimableRoleAssignment, setSelectedClaimableRoleAssignment] =
+    useState<RequiredAccessRoleClaimableAssignment>();
   // Own the claimable classification so the parent can compose every outcome from one result set.
-  const claimableRoles = statuses.filter((status) => status.claims.length > 0);
+  const claimableStatuses = statuses.filter((status) => status.claimableAssignments.length > 0);
   // A mixed result set should only render sections for outcomes that are present.
-  if (claimableRoles.length === 0) {
+  if (claimableStatuses.length === 0) {
     return null;
   }
 
   // Keep each required access role associated with only the claimable roles that grant it.
-  const roleSections = claimableRoles.map((status) => {
-    const uniqueClaimsByName = new Map<string, RequiredRoleClaim>();
-    // Multiple assignments can grant the same claimable role, but the recovery choice is the role.
-    for (const claim of status.claims) {
+  const roleSections = claimableStatuses.map((status) => {
+    const uniqueAssignmentsByName = new Map<string, RequiredAccessRoleClaimableAssignment>();
+    // Several assignments can grant the same claimable role, but the recovery choice is the role.
+    for (const claimableAssignment of status.claimableAssignments) {
       // Preserve the first eligible assignment returned for each claimable role.
-      if (!uniqueClaimsByName.has(claim.name)) {
-        uniqueClaimsByName.set(claim.name, claim);
+      if (!uniqueAssignmentsByName.has(claimableAssignment.name)) {
+        uniqueAssignmentsByName.set(claimableAssignment.name, claimableAssignment);
       }
     }
-    const uniqueClaims = [...uniqueClaimsByName.values()];
+    const uniqueAssignments = [...uniqueAssignmentsByName.values()];
     // Separate cards keep genuinely different claimable roles explicit to the user.
-    const claimCards = uniqueClaims.map((claim) => (
-      <Styled.ClaimCard key={claim.assignmentId}>
+    const claimCards = uniqueAssignments.map((claimableAssignment) => (
+      <Styled.ClaimCard key={claimableAssignment.assignmentId}>
         <Card.Header>
           <Card.HeaderTitle>
-            <Typography variant="h4">{claim.displayName}</Typography>
+            <Typography variant="h4">{claimableAssignment.displayName}</Typography>
           </Card.HeaderTitle>
         </Card.Header>
         <Card.Content>
-          {claim.name !== claim.displayName && (
+          {claimableAssignment.name !== claimableAssignment.displayName && (
             <Typography>
-              Role name: <code>{claim.name}</code>
+              Role name: <code>{claimableAssignment.name}</code>
             </Typography>
           )}
           <Typography>
-            {claim.description ?? 'No description is available for this claimable role.'}
+            {claimableAssignment.description ??
+              'No description is available for this claimable role.'}
           </Typography>
           <Typography>
-            You are eligible to claim this role. Click below to claim {claim.displayName}.
+            You are eligible to claim this role. Click below to claim{' '}
+            {claimableAssignment.displayName}.
           </Typography>
         </Card.Content>
         <Card.Actions alignRight>
           <Button
             variant="contained"
-            disabled={claimingAssignmentId !== undefined}
-            onClick={() => setSelectedClaim(claim)}
+            disabled={activatingAssignmentId !== undefined}
+            onClick={() => setSelectedClaimableRoleAssignment(claimableAssignment)}
           >
             Claim
           </Button>
@@ -105,11 +111,11 @@ export const RoleClaimableView = ({
     <>
       {roleSections}
       <RoleClaimDialog
-        claim={selectedClaim}
+        claimableRoleAssignment={selectedClaimableRoleAssignment}
         defaultReason={defaultReason}
-        isClaiming={claimingAssignmentId === selectedClaim?.assignmentId}
-        onClose={() => setSelectedClaim(undefined)}
-        onClaim={onClaim}
+        isActivating={activatingAssignmentId === selectedClaimableRoleAssignment?.assignmentId}
+        onClose={() => setSelectedClaimableRoleAssignment(undefined)}
+        onActivate={onActivate}
       />
     </>
   );

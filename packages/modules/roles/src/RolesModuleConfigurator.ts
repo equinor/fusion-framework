@@ -7,7 +7,7 @@ import type { IServiceDiscoveryProvider } from '@equinor/fusion-framework-module
 import { from, lastValueFrom } from 'rxjs';
 
 import { type IRolesClient, type RolesAccountResolver, RolesClient } from './RolesClient.js';
-import { RequiredRolesError } from './errors/RequiredRolesError.js';
+import { RequiredAccessRolesError } from './errors/RequiredAccessRolesError.js';
 import { RolesError } from './errors/RolesError.js';
 import type { RolesModuleConfig } from './types.js';
 
@@ -72,11 +72,11 @@ export interface IRolesModuleConfigurator {
   /**
    * Requires every named access role to be active for the signed-in account at bootstrap.
    *
-   * @param rolesOrBuilderFn - Access-role names or callback that resolves them during configuration.
-   * @throws {Error} When a directly supplied role name is empty.
+   * @param accessRolesOrBuilderFn - Access-role names or callback that resolves them during configuration.
+   * @throws {Error} When a directly supplied access-role name is empty.
    */
-  requireRoles(
-    rolesOrBuilderFn: readonly string[] | ConfigBuilderCallback<readonly string[]>,
+  requireAccessRoles(
+    accessRolesOrBuilderFn: readonly string[] | ConfigBuilderCallback<readonly string[]>,
   ): void;
 }
 
@@ -88,16 +88,16 @@ export class RolesModuleConfigurator
   implements IRolesModuleConfigurator
 {
   private clientConfigured = false;
-  private readonly requiredRoleSources: Array<
+  private readonly requiredAccessRoleSources: Array<
     readonly string[] | ConfigBuilderCallback<readonly string[]>
   > = [];
 
   /**
-   * Creates a Roles V2 configuration builder with empty role requirements.
+   * Creates a Roles V2 configuration builder with empty access-role requirements.
    */
   constructor() {
     super();
-    this._set('requiredRoles', (args) => this.resolveRequiredRoles(args));
+    this._set('requiredAccessRoles', (args) => this.resolveRequiredAccessRoles(args));
   }
 
   /** {@inheritDoc IRolesModuleConfigurator.setClient} */
@@ -111,15 +111,15 @@ export class RolesModuleConfigurator
     }
   }
 
-  /** {@inheritDoc IRolesModuleConfigurator.requireRoles} */
-  public requireRoles(
-    rolesOrBuilderFn: readonly string[] | ConfigBuilderCallback<readonly string[]>,
+  /** {@inheritDoc IRolesModuleConfigurator.requireAccessRoles} */
+  public requireAccessRoles(
+    accessRolesOrBuilderFn: readonly string[] | ConfigBuilderCallback<readonly string[]>,
   ): void {
     // Validate direct values immediately while deferring builder callbacks until configuration.
-    if (typeof rolesOrBuilderFn === 'function') {
-      this.requiredRoleSources.push(rolesOrBuilderFn);
+    if (typeof accessRolesOrBuilderFn === 'function') {
+      this.requiredAccessRoleSources.push(accessRolesOrBuilderFn);
     } else {
-      this.requiredRoleSources.push(this.normalizeRoles(rolesOrBuilderFn));
+      this.requiredAccessRoleSources.push(this.normalizeAccessRoles(accessRolesOrBuilderFn));
     }
   }
 
@@ -128,45 +128,49 @@ export class RolesModuleConfigurator
    *
    * @param args - Module initialization context supplied to builder callbacks.
    * @returns Normalized access-role names required at bootstrap.
-   * @throws {Error} When a builder returns no role array or contains an empty role name.
+   * @throws {Error} When a builder returns no array or contains an empty access-role name.
    */
-  private async resolveRequiredRoles(args: ConfigBuilderCallbackArgs): Promise<readonly string[]> {
-    const requiredRoles = new Set<string>();
+  private async resolveRequiredAccessRoles(
+    args: ConfigBuilderCallbackArgs,
+  ): Promise<readonly string[]> {
+    const requiredAccessRoles = new Set<string>();
     // Preserve accumulation across direct values and builder callbacks.
-    for (const source of this.requiredRoleSources) {
+    for (const source of this.requiredAccessRoleSources) {
       const resolved =
         typeof source === 'function' ? await lastValueFrom(from(source(args))) : source;
-      // A builder must provide role names so bootstrap cannot silently lose configured requirements.
+      // A builder must provide access-role names so bootstrap cannot silently lose configured requirements.
       if (!resolved) {
-        throw new RequiredRolesError('Required roles builder must return an array of role names.');
+        throw new RequiredAccessRolesError(
+          'Required access roles builder must return an array of access-role names.',
+        );
       }
       // Merge each normalized source while retaining first-seen ordering.
-      for (const role of this.normalizeRoles(resolved)) {
-        requiredRoles.add(role);
+      for (const accessRoleName of this.normalizeAccessRoles(resolved)) {
+        requiredAccessRoles.add(accessRoleName);
       }
     }
-    return [...requiredRoles];
+    return [...requiredAccessRoles];
   }
 
   /**
    * Normalizes and validates configured access-role names.
    *
-   * @param roles - Access-role names to normalize.
+   * @param accessRoleNames - Access-role names to normalize.
    * @returns Trimmed access-role names.
-   * @throws {Error} When a role name is empty.
+   * @throws {Error} When an access-role name is empty.
    */
-  private normalizeRoles(roles: readonly string[]): readonly string[] {
-    const normalizedRoles: string[] = [];
-    // Normalize once so bootstrap comparisons are deterministic and empty role names fail early.
-    for (const role of roles) {
-      const normalized = role.trim();
-      // An empty role can never match a Roles V2 access-role assignment.
+  private normalizeAccessRoles(accessRoleNames: readonly string[]): readonly string[] {
+    const normalizedAccessRoles: string[] = [];
+    // Normalize once so bootstrap comparisons are deterministic and empty names fail early.
+    for (const accessRoleName of accessRoleNames) {
+      const normalized = accessRoleName.trim();
+      // An empty name can never match a Roles V2 access-role assignment.
       if (!normalized) {
-        throw new RequiredRolesError('Required role names must be non-empty strings.');
+        throw new RequiredAccessRolesError('Required access-role names must be non-empty strings.');
       }
-      normalizedRoles.push(normalized);
+      normalizedAccessRoles.push(normalized);
     }
-    return normalizedRoles;
+    return normalizedAccessRoles;
   }
 
   /**
@@ -175,7 +179,7 @@ export class RolesModuleConfigurator
    * @param config - Partial configuration assembled by the base builder.
    * @param args - Module initialization context supplied to configuration callbacks.
    * @returns Finalized Roles module configuration with a client ready for module initialization.
-   * @throws {Error} When deferred client or required role configuration could not be resolved.
+   * @throws {Error} When deferred client or required access-role configuration could not be resolved.
    */
   protected async _processConfig(
     config: Partial<RolesModuleConfig>,
@@ -185,13 +189,13 @@ export class RolesModuleConfigurator
     if (this.clientConfigured && config.client === undefined) {
       throw new RolesError('Failed to resolve configured Roles client.');
     }
-    // Required roles always have a default builder, so an omitted value means that builder failed.
-    if (config.requiredRoles === undefined) {
-      throw new RequiredRolesError('Failed to resolve required role configuration.');
+    // Required access roles always have a default builder, so an omitted value means that builder failed.
+    if (config.requiredAccessRoles === undefined) {
+      throw new RequiredAccessRolesError('Failed to resolve required access-role configuration.');
     }
     const accountResolver = await this._createAccountIdentifierResolver(args);
     const client = config.client ?? (await this._createDefaultClient(args, accountResolver));
-    return { requiredRoles: config.requiredRoles, accountResolver, client };
+    return { requiredAccessRoles: config.requiredAccessRoles, accountResolver, client };
   }
 
   /**
@@ -241,7 +245,7 @@ export class RolesModuleConfigurator
    * @param args - Module context used to resolve the authentication provider.
    * @returns Current-account resolver retaining the initialized authentication provider.
    * @throws {Error} When authentication initialization fails during configuration.
-   * @throws {RequiredRolesError} When the returned resolver cannot resolve an active account.
+   * @throws {RequiredAccessRolesError} When the returned resolver cannot resolve an active account.
    */
   protected async _createAccountIdentifierResolver(
     args: ConfigBuilderCallbackArgs,
@@ -252,7 +256,7 @@ export class RolesModuleConfigurator
     return async () => {
       // Read account state per operation so switching accounts does not require rebuilding the module.
       if (!isActiveAccountProvider(auth) || !auth.account?.localAccountId) {
-        throw new RequiredRolesError(
+        throw new RequiredAccessRolesError(
           'Roles module requires an active authenticated account to resolve Roles V2 data.',
         );
       }

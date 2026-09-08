@@ -4,7 +4,7 @@ import { Subscription } from 'rxjs';
 import { last } from 'rxjs/operators';
 
 import { useFramework } from '@equinor/fusion-framework-react';
-import { RoleBoundary } from '@equinor/fusion-framework-react-components-roles';
+import { AccessRoleBoundary } from '@equinor/fusion-framework-react-components-roles';
 import {
   ErrorBoundary,
   type FallbackProps,
@@ -169,9 +169,9 @@ const AppLoaderFallback = ({ error }: FallbackProps): ReactNode => {
  */
 export const AppLoader = ({ appKey }: { readonly appKey: string }): ReactNode => (
   <ErrorBoundary key={appKey} fallbackRender={AppLoaderFallback}>
-    <RoleBoundary>
+    <AccessRoleBoundary>
       <AppLoaderContent appKey={appKey} />
-    </RoleBoundary>
+    </AccessRoleBoundary>
   </ErrorBoundary>
 );
 

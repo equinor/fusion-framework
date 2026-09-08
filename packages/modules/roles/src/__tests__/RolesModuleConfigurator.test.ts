@@ -25,28 +25,28 @@ describe('RolesModuleConfigurator', () => {
   it('normalizes and deduplicates required role names', async () => {
     const configurator = new RolesModuleConfigurator();
 
-    configurator.requireRoles([' Reports.Read ', 'Reports.Read', 'Reports.Export']);
+    configurator.requireAccessRoles([' Reports.Read ', 'Reports.Read', 'Reports.Export']);
 
     await expect(configurator.createConfigAsync(configBuilderArgs)).resolves.toMatchObject({
-      requiredRoles: ['Reports.Read', 'Reports.Export'],
+      requiredAccessRoles: ['Reports.Read', 'Reports.Export'],
     });
   });
 
   it('rejects empty required role names', () => {
     const configurator = new RolesModuleConfigurator();
 
-    expect(() => configurator.requireRoles(['Reports.Read', '  '])).toThrow(
-      'Required role names must be non-empty strings.',
+    expect(() => configurator.requireAccessRoles(['Reports.Read', '  '])).toThrow(
+      'Required access-role names must be non-empty strings.',
     );
   });
 
   it('resolves and combines role requirement builders', async () => {
     const configurator = new RolesModuleConfigurator();
-    configurator.requireRoles(['Reports.Read']);
-    configurator.requireRoles(async () => [' Reports.Export ', 'Reports.Read']);
+    configurator.requireAccessRoles(['Reports.Read']);
+    configurator.requireAccessRoles(async () => [' Reports.Export ', 'Reports.Read']);
 
     await expect(configurator.createConfigAsync(configBuilderArgs)).resolves.toMatchObject({
-      requiredRoles: ['Reports.Read', 'Reports.Export'],
+      requiredAccessRoles: ['Reports.Read', 'Reports.Export'],
     });
   });
 
@@ -150,10 +150,10 @@ describe('RolesModuleConfigurator', () => {
   ])('rejects when a role requirement builder returns %s', async (_, roleBuilder) => {
     const configurator = new RolesModuleConfigurator();
     vi.spyOn(console, 'error').mockImplementation(() => undefined);
-    configurator.requireRoles(roleBuilder);
+    configurator.requireAccessRoles(roleBuilder);
 
     await expect(configurator.createConfigAsync(configBuilderArgs)).rejects.toThrow(
-      'Failed to resolve required role configuration.',
+      'Failed to resolve required access-role configuration.',
     );
   });
 

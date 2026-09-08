@@ -6,6 +6,7 @@ import { RoleClaimDialog } from '../claim/RoleClaimDialog';
 import { useRolesOverview } from '../overview/useRolesOverview';
 import { RolesLoadFeedback } from '../overview/RolesLoadFeedback';
 import { createActiveRoleItems } from '../overview/create-active-role-items';
+import { filterEffectiveAssignedRoles } from '../overview/filter-effective-assigned-roles';
 import { RoleAssignmentCard } from './RoleAssignmentCard';
 
 const Styled = {
@@ -17,6 +18,10 @@ const Styled = {
     display: grid;
     gap: 0.75rem;
   `,
+  RoleSection: styled.section`
+    display: grid;
+    gap: 0.75rem;
+  `,
 };
 
 /**
@@ -25,15 +30,27 @@ const Styled = {
  */
 export const RolesApplicationView = (): ReactNode => {
   const overview = useRolesOverview();
-  const { active, claimable, selectedClaim, selectClaim } = overview;
+  const {
+    activeAccessRoleAssignments,
+    consolidatedClaimableRoleAssignments,
+    assignedRoles,
+    selectedClaimableRoleAssignment,
+    selectClaimableRoleAssignment,
+  } = overview;
   const [tab, setTab] = useState(0);
-  // Application cards retain every active access-role assignment, including claimable activations.
-  const activeItems = createActiveRoleItems(active.roles).map(({ assignment, key }) => (
-    <RoleAssignmentCard
-      key={key}
-      title={assignment.accessRoleName ?? 'Unknown access role'}
-      description={assignment.systemName ?? 'Unknown system'}
-    />
+  // Application cards retain every active access-role assignment, including activated claims.
+  const activeItems = createActiveRoleItems(activeAccessRoleAssignments.assignments).map(
+    ({ assignment, key }) => (
+      <RoleAssignmentCard
+        key={key}
+        title={assignment.accessRoleName ?? 'Unknown access role'}
+        description={assignment.systemName ?? 'Unknown system'}
+      />
+    ),
+  );
+  // Assigned roles are shown separately because active access does not identify assignment provenance.
+  const assignedItems = filterEffectiveAssignedRoles(assignedRoles, Date.now()).map((role) => (
+    <RoleAssignmentCard key={role.key} title={role.displayName} description={role.description} />
   ));
   // Normalization removes unaddressable assignments before offering activation controls.
   const claimableItems = overview.claimableRoles.map((role) => (
@@ -44,8 +61,8 @@ export const RolesApplicationView = (): ReactNode => {
     >
       <Button
         variant="contained"
-        disabled={claimable.isClaiming || role.isActive}
-        onClick={() => selectClaim(role)}
+        disabled={consolidatedClaimableRoleAssignments.isActivating || role.isActive}
+        onClick={() => selectClaimableRoleAssignment(role)}
       >
         {role.isActive ? 'Active' : 'Claim'}
       </Button>
@@ -54,7 +71,7 @@ export const RolesApplicationView = (): ReactNode => {
 
   // Only first-load progress may replace the view; background reads must retain audit forms.
   if (overview.isLoading) {
-    return <CircularProgress aria-label="Loading roles" />;
+    return <CircularProgress aria-label="Loading role assignments" />;
   }
   return (
     <Styled.Content>
@@ -63,9 +80,11 @@ export const RolesApplicationView = (): ReactNode => {
         error={overview.loadError}
         onRetry={overview.reload}
       />
-      {claimable.claimError ? (
+      {consolidatedClaimableRoleAssignments.activationError ? (
         <Banner>
-          <Banner.Message>{String(claimable.claimError)}</Banner.Message>
+          <Banner.Message>
+            {String(consolidatedClaimableRoleAssignments.activationError)}
+          </Banner.Message>
         </Banner>
       ) : null}
       <Tabs activeTab={tab} onChange={(index) => setTab(Number(index))}>
@@ -75,11 +94,26 @@ export const RolesApplicationView = (): ReactNode => {
         </Tabs.List>
         <Tabs.Panels>
           <Tabs.Panel>
-            {activeItems.length > 0 ? (
-              <Styled.RoleList>{activeItems}</Styled.RoleList>
+            {activeItems.length > 0 || assignedItems.length > 0 ? (
+              <Styled.RoleList>
+                {assignedItems.length > 0 ? (
+                  <Styled.RoleSection>
+                    <Typography variant="h5">Assigned roles</Typography>
+                    {assignedItems}
+                  </Styled.RoleSection>
+                ) : null}
+                {activeItems.length > 0 ? (
+                  <Styled.RoleSection>
+                    <Typography variant="h5">Effective access</Typography>
+                    {activeItems}
+                  </Styled.RoleSection>
+                ) : null}
+              </Styled.RoleList>
             ) : (
               <Typography>
-                {active.error ? 'Active roles could not be loaded.' : 'You have no active roles'}
+                {overview.loadError
+                  ? 'Your role assignments and effective access could not be loaded.'
+                  : 'You have no assigned roles or effective access'}
               </Typography>
             )}
           </Tabs.Panel>
@@ -88,20 +122,20 @@ export const RolesApplicationView = (): ReactNode => {
               <Styled.RoleList>{claimableItems}</Styled.RoleList>
             ) : (
               <Typography>
-                {claimable.error
-                  ? 'Claimable roles could not be loaded.'
-                  : 'You have no available roles'}
+                {consolidatedClaimableRoleAssignments.error
+                  ? 'Your claimable role assignments could not be loaded.'
+                  : 'You have no roles to claim'}
               </Typography>
             )}
           </Tabs.Panel>
         </Tabs.Panels>
       </Tabs>
       <RoleClaimDialog
-        claim={selectedClaim}
+        claimableRoleAssignment={selectedClaimableRoleAssignment}
         defaultReason=""
-        isClaiming={claimable.isClaiming}
-        onClose={() => selectClaim(undefined)}
-        onClaim={overview.claimRole}
+        isActivating={consolidatedClaimableRoleAssignments.isActivating}
+        onClose={() => selectClaimableRoleAssignment(undefined)}
+        onActivate={overview.activateClaimableRoleAssignment}
       />
     </Styled.Content>
   );

@@ -9,5 +9,5 @@ export interface RolesModuleConfig {
   /** Resolves the account selected when each client operation executes. */
   accountResolver: RolesAccountResolver;
   /** Access-role names that must be active before the module can bootstrap. */
-  requiredRoles: readonly string[];
+  requiredAccessRoles: readonly string[];
 }

@@ -1,7 +1,10 @@
 import type { ChangeEvent, ReactNode } from 'react';
 import { Switch } from '@equinor/eds-core-react';
-import type { RequiredRoleClaim } from '@equinor/fusion-framework-module-roles';
-import type { ClaimableRoleDetails, RoleDetails } from '../overview/role-details';
+import type {
+  ClaimableRoleAssignmentSelection,
+  ClaimableRoleDetails,
+  RoleDetails,
+} from '../overview/role-details';
 import { CompactRoleRow } from './CompactRoleRow';
 import { formatRoleDate } from './format-role-date';
 
@@ -12,12 +15,12 @@ interface ClaimableRoleRowProps {
   readonly isPending: boolean;
   readonly selectedAssignmentId?: string;
   readonly onShowInformation: (details: RoleDetails) => void;
-  readonly onSelectClaim: (claim: RequiredRoleClaim) => void;
+  readonly onSelectClaimableRoleAssignment: (selection: ClaimableRoleAssignmentSelection) => void;
   readonly onDeactivate: (assignmentId: string) => Promise<void>;
 }
 
 /**
- * Presents a claimable assignment with audited activation controls outside the informational Active tab.
+ * Presents a claimable role assignment with audited activation controls outside the informational Active tab.
  * @param props - Assignment, tab presentation, selection, and mutation callbacks.
  * @returns A compact role row with an optional activation switch.
  */
@@ -27,7 +30,7 @@ export const ClaimableRoleRow = ({
   isPending,
   selectedAssignmentId,
   onShowInformation,
-  onSelectClaim,
+  onSelectClaimableRoleAssignment,
   onDeactivate,
 }: ClaimableRoleRowProps): ReactNode => {
   const status =
@@ -46,7 +49,7 @@ export const ClaimableRoleRow = ({
   const handleToggle = (event: ChangeEvent<HTMLInputElement>): void => {
     // Turning on an inactive entitlement must collect audit details before making a request.
     if (event.target.checked && !role.isActive) {
-      onSelectClaim({
+      onSelectClaimableRoleAssignment({
         assignmentId: role.assignmentId,
         name: role.name,
         displayName: role.displayName,
@@ -57,7 +60,7 @@ export const ClaimableRoleRow = ({
     // Deactivation ends the activation, not the underlying claimable entitlement.
     if (!event.target.checked && role.isActive) {
       void onDeactivate(role.assignmentId).catch(() => {
-        // The provider exposes deactivateError in the overview banner. Consume the event promise
+        // The provider exposes deactivationError in the overview banner. Consume the event promise
         // here so the visible failure does not also become an unhandled browser rejection.
       });
     }

@@ -4,23 +4,29 @@ import { rolesActions, type RolesAction } from './roles-actions';
 import type { RolesState } from './roles-state';
 
 const initialState: RolesState = {
-  active: {
-    roles: [],
+  activeAccessRoleAssignments: {
+    assignments: [],
     status: 'loading',
     error: undefined,
     operationId: 0,
   },
-  claimable: {
-    roles: [],
+  consolidatedClaimableRoleAssignments: {
+    assignments: [],
     status: 'loading',
     error: undefined,
     operationId: 0,
   },
-  claim: {
+  consolidatedRoleAssignments: {
+    assignments: [],
+    status: 'loading',
+    error: undefined,
+    operationId: 0,
+  },
+  activation: {
     pending: 0,
     error: undefined,
   },
-  deactivate: {
+  deactivation: {
     pending: 0,
     error: undefined,
   },
@@ -32,112 +38,145 @@ const initialState: RolesState = {
  */
 export const createRolesReducer = (): ReturnType<typeof createReducer<RolesState, RolesAction>> =>
   createReducer<RolesState, RolesAction>(initialState, (builder) => {
-    // A new active-role read owns subsequent outcomes; retain the last snapshot during refresh.
-    builder.addCase(rolesActions.loadActive, (state, action) => {
-      state.active.status = 'loading';
-      state.active.error = undefined;
-      state.active.operationId = action.meta.operationId;
+    // A new active access-role assignment read owns subsequent outcomes; retain the last snapshot during refresh.
+    builder.addCase(rolesActions.loadActiveAccessRoleAssignments, (state, action) => {
+      state.activeAccessRoleAssignments.status = 'loading';
+      state.activeAccessRoleAssignments.error = undefined;
+      state.activeAccessRoleAssignments.operationId = action.meta.operationId;
     });
 
-    // Accept the active-role snapshot only for the latest-started read, so late results cannot roll it back.
-    builder.addCase(rolesActions.loadActive.success, (state, action) => {
+    // Accept the active access-role assignment snapshot only for the latest-started read, so late results cannot roll it back.
+    builder.addCase(rolesActions.loadActiveAccessRoleAssignments.success, (state, action) => {
       // A superseded read still settles its caller, but no longer owns this collection.
-      if (state.active.operationId === action.meta.operationId) {
-        state.active.roles = castDraft(action.payload);
-        state.active.status = 'success';
+      if (state.activeAccessRoleAssignments.operationId === action.meta.operationId) {
+        state.activeAccessRoleAssignments.assignments = castDraft(action.payload);
+        state.activeAccessRoleAssignments.status = 'success';
       }
     });
 
-    // Expose the current active-role read failure without discarding usable data or surfacing stale errors.
-    builder.addCase(rolesActions.loadActive.failure, (state, action) => {
+    // Expose the current active access-role assignment read failure without discarding usable data or surfacing stale errors.
+    builder.addCase(rolesActions.loadActiveAccessRoleAssignments.failure, (state, action) => {
       // Ignore obsolete failures so a slower request cannot mask the current read's outcome.
-      if (state.active.operationId === action.meta.operationId) {
-        state.active.error = action.payload;
-        state.active.status = 'error';
+      if (state.activeAccessRoleAssignments.operationId === action.meta.operationId) {
+        state.activeAccessRoleAssignments.error = action.payload;
+        state.activeAccessRoleAssignments.status = 'error';
       }
     });
 
-    // A new claimability read clears its previous error, but keeps assignments visible while refreshing.
-    builder.addCase(rolesActions.loadClaimable, (state, action) => {
-      state.claimable.status = 'loading';
-      state.claimable.error = undefined;
-      state.claimable.operationId = action.meta.operationId;
+    // A new claimable-role-assignment read clears its previous error, but keeps assignments visible while refreshing.
+    builder.addCase(rolesActions.loadConsolidatedClaimableRoleAssignments, (state, action) => {
+      state.consolidatedClaimableRoleAssignments.status = 'loading';
+      state.consolidatedClaimableRoleAssignments.error = undefined;
+      state.consolidatedClaimableRoleAssignments.operationId = action.meta.operationId;
     });
 
-    // Accept claimable assignments only for the latest-started read, preserving newer eligibility information.
-    builder.addCase(rolesActions.loadClaimable.success, (state, action) => {
+    // Accept claimable role assignments only for the latest-started read, preserving newer eligibility information.
+    builder.addCase(
+      rolesActions.loadConsolidatedClaimableRoleAssignments.success,
+      (state, action) => {
+        // A superseded read still settles its caller, but no longer owns this collection.
+        if (state.consolidatedClaimableRoleAssignments.operationId === action.meta.operationId) {
+          state.consolidatedClaimableRoleAssignments.assignments = castDraft(action.payload);
+          state.consolidatedClaimableRoleAssignments.status = 'success';
+        }
+      },
+    );
+
+    // Expose the current claimable-role-assignment failure while retaining assignments; obsolete failures must not replace newer status.
+    builder.addCase(
+      rolesActions.loadConsolidatedClaimableRoleAssignments.failure,
+      (state, action) => {
+        // Ignore obsolete failures so a slower request cannot mask the current read's outcome.
+        if (state.consolidatedClaimableRoleAssignments.operationId === action.meta.operationId) {
+          state.consolidatedClaimableRoleAssignments.error = action.payload;
+          state.consolidatedClaimableRoleAssignments.status = 'error';
+        }
+      },
+    );
+
+    // A new consolidated role-assignment read clears its previous error, but keeps assignments visible while refreshing.
+    // Consolidated role assignments are outside activation and deactivation, so this collection has no
+    // mutation-refresh cases: it is loaded independently and never reloaded as a side effect of an activation.
+    builder.addCase(rolesActions.loadConsolidatedRoleAssignments, (state, action) => {
+      state.consolidatedRoleAssignments.status = 'loading';
+      state.consolidatedRoleAssignments.error = undefined;
+      state.consolidatedRoleAssignments.operationId = action.meta.operationId;
+    });
+
+    // Accept consolidated role assignments only for the latest-started read, so late results cannot roll it back.
+    builder.addCase(rolesActions.loadConsolidatedRoleAssignments.success, (state, action) => {
       // A superseded read still settles its caller, but no longer owns this collection.
-      if (state.claimable.operationId === action.meta.operationId) {
-        state.claimable.roles = castDraft(action.payload);
-        state.claimable.status = 'success';
+      if (state.consolidatedRoleAssignments.operationId === action.meta.operationId) {
+        state.consolidatedRoleAssignments.assignments = castDraft(action.payload);
+        state.consolidatedRoleAssignments.status = 'success';
       }
     });
 
-    // Expose the current claimability failure while retaining assignments; obsolete failures must not replace newer status.
-    builder.addCase(rolesActions.loadClaimable.failure, (state, action) => {
+    // Expose the current consolidated role-assignment failure while retaining assignments; obsolete failures must not replace newer status.
+    builder.addCase(rolesActions.loadConsolidatedRoleAssignments.failure, (state, action) => {
       // Ignore obsolete failures so a slower request cannot mask the current read's outcome.
-      if (state.claimable.operationId === action.meta.operationId) {
-        state.claimable.error = action.payload;
-        state.claimable.status = 'error';
+      if (state.consolidatedRoleAssignments.operationId === action.meta.operationId) {
+        state.consolidatedRoleAssignments.error = action.payload;
+        state.consolidatedRoleAssignments.status = 'error';
       }
     });
 
     // Track every activation independently so one completion cannot clear another activation's busy state.
     // A new attempt dismisses the previous activation error, not collection refresh errors.
-    builder.addCase(rolesActions.claimRole, (state) => {
-      state.claim.pending += 1;
-      state.claim.error = undefined;
+    builder.addCase(rolesActions.activateClaimableRoleAssignment, (state) => {
+      state.activation.pending += 1;
+      state.activation.error = undefined;
     });
 
-    // Activation has committed: refresh both access and eligibility under their own request identities.
+    // Activation has committed: refresh active access and claimable assignments under their own request identities.
     // Retain both snapshots until reads settle rather than optimistically guessing the service's assignment changes.
-    builder.addCase(rolesActions.refreshAfterClaim, (state, action) => {
-      state.active.status = 'loading';
-      state.active.error = undefined;
-      state.active.operationId = action.payload.activeOperationId;
-      state.claimable.status = 'loading';
-      state.claimable.error = undefined;
-      state.claimable.operationId = action.payload.claimableOperationId;
+    builder.addCase(rolesActions.refreshAfterActivation, (state, action) => {
+      state.activeAccessRoleAssignments.status = 'loading';
+      state.activeAccessRoleAssignments.error = undefined;
+      state.activeAccessRoleAssignments.operationId = action.payload.activeAccessOperationId;
+      state.consolidatedClaimableRoleAssignments.status = 'loading';
+      state.consolidatedClaimableRoleAssignments.error = undefined;
+      state.consolidatedClaimableRoleAssignments.operationId = action.payload.claimableOperationId;
     });
 
     // Activation and both follow-up reads have settled; release only this activation's pending slot.
     // Collection failures stay separate, and another concurrent activation's error must remain visible.
-    builder.addCase(rolesActions.claimRole.success, (state) => {
-      state.claim.pending -= 1;
+    builder.addCase(rolesActions.activateClaimableRoleAssignment.success, (state) => {
+      state.activation.pending -= 1;
     });
 
     // Activation failed: expose its error and release its pending slot without disturbing other mutations or snapshots.
-    builder.addCase(rolesActions.claimRole.failure, (state, action) => {
-      state.claim.pending -= 1;
-      state.claim.error = action.payload;
+    builder.addCase(rolesActions.activateClaimableRoleAssignment.failure, (state, action) => {
+      state.activation.pending -= 1;
+      state.activation.error = action.payload;
     });
 
     // Track overlapping deactivations independently and clear the previous mutation error for the new attempt.
-    builder.addCase(rolesActions.deactivateRole, (state) => {
-      state.deactivate.pending += 1;
-      state.deactivate.error = undefined;
+    builder.addCase(rolesActions.deactivateClaimableRoleAssignment, (state) => {
+      state.deactivation.pending += 1;
+      state.deactivation.error = undefined;
     });
 
-    // Deactivation has committed: reconcile access and claimability with the service instead of removing rows optimistically.
+    // Deactivation has committed: reconcile active access and claimable assignments with the service instead of removing rows optimistically.
     // Give each follow-up read its own identity while keeping the existing snapshots available.
-    builder.addCase(rolesActions.refreshAfterDeactivate, (state, action) => {
-      state.active.status = 'loading';
-      state.active.error = undefined;
-      state.active.operationId = action.payload.activeOperationId;
-      state.claimable.status = 'loading';
-      state.claimable.error = undefined;
-      state.claimable.operationId = action.payload.claimableOperationId;
+    builder.addCase(rolesActions.refreshAfterDeactivation, (state, action) => {
+      state.activeAccessRoleAssignments.status = 'loading';
+      state.activeAccessRoleAssignments.error = undefined;
+      state.activeAccessRoleAssignments.operationId = action.payload.activeAccessOperationId;
+      state.consolidatedClaimableRoleAssignments.status = 'loading';
+      state.consolidatedClaimableRoleAssignments.error = undefined;
+      state.consolidatedClaimableRoleAssignments.operationId = action.payload.claimableOperationId;
     });
 
     // Deactivation and both follow-up reads have settled; release only this operation's pending slot.
     // Preserve collection errors and any failure from a concurrent deactivation.
-    builder.addCase(rolesActions.deactivateRole.success, (state) => {
-      state.deactivate.pending -= 1;
+    builder.addCase(rolesActions.deactivateClaimableRoleAssignment.success, (state) => {
+      state.deactivation.pending -= 1;
     });
 
     // Deactivation failed: retain the displayed assignments and expose the failure without clearing other pending work.
-    builder.addCase(rolesActions.deactivateRole.failure, (state, action) => {
-      state.deactivate.pending -= 1;
-      state.deactivate.error = action.payload;
+    builder.addCase(rolesActions.deactivateClaimableRoleAssignment.failure, (state, action) => {
+      state.deactivation.pending -= 1;
+      state.deactivation.error = action.payload;
     });
   });

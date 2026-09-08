@@ -1,22 +1,24 @@
 import type { ReactNode } from 'react';
 
 import { List, Typography } from '@equinor/eds-core-react';
-import type { RequiredRoleStatus } from '@equinor/fusion-framework-module-roles';
+import type { RequiredAccessRoleStatus } from '@equinor/fusion-framework-module-roles';
 
-/** Resolved requirements that may lack an eligible claimable assignment. */
+/** Resolved requirements that may lack an eligible claimable role assignment. */
 interface RoleNotClaimableViewProps {
-  readonly statuses: readonly RequiredRoleStatus[];
+  readonly statuses: readonly RequiredAccessRoleStatus[];
 }
 
 /**
- * Displays existing required roles that the signed-in account cannot claim.
+ * Displays registered required access roles that the signed-in account cannot claim.
  *
- * @param props - Resolved required-role statuses.
- * @returns The non-claimable outcome, or nothing when every existing role is claimable.
+ * @param props - Resolved required-access-role statuses.
+ * @returns The non-claimable outcome, or nothing when every registered access role is claimable.
  */
 export const RoleNotClaimableView = ({ statuses }: RoleNotClaimableViewProps): ReactNode => {
   // Own the unavailable classification so the parent can compose every outcome from one result set.
-  const unavailableRoles = statuses.filter((status) => status.exists && status.claims.length === 0);
+  const unavailableRoles = statuses.filter(
+    (status) => status.exists && status.claimableAssignments.length === 0,
+  );
   // A mixed result set should only render sections for outcomes that are present.
   if (unavailableRoles.length === 0) {
     return null;
@@ -32,10 +34,11 @@ export const RoleNotClaimableView = ({ statuses }: RoleNotClaimableViewProps): R
   return (
     <section>
       <Typography group="heading" variant="h3">
-        Role is not claimable
+        Access role is not claimable
       </Typography>
       <Typography>
-        The roles exist, but your account has no claimable assignment that grants them.
+        These access roles exist, but your account has no claimable role assignment that grants
+        them.
       </Typography>
       <List>{roleItems}</List>
     </section>

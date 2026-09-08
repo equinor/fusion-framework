@@ -2,7 +2,7 @@
 "@equinor/fusion-framework-react-app": minor
 ---
 
-Add the `/roles` entry point with `useRole` for checking active and claimable access roles and
+Add the `/roles` entry point with `useAccessRole` for checking active and claimable access roles and
 claiming a role assignment from React applications.
 
 Add an optional `onError` render argument so application hosts can handle initialization failures

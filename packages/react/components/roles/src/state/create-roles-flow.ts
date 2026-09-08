@@ -6,25 +6,34 @@ import type { IRolesProvider } from '@equinor/fusion-framework-module-roles';
 
 import { rolesActions, type RolesAction } from './roles-actions';
 import type { RolesState } from './roles-state';
-import { refreshRolesAfterMutation } from './refresh-roles-after-mutation';
+import { refreshRoleAssignmentsAfterMutation } from './refresh-role-assignments-after-mutation';
 
 /**
- * Keeps active-role failures inside their individual request.
- * @param provider - Provider supplying active roles.
+ * Keeps active access-role assignment failures inside their individual request.
+ * @param provider - Provider supplying active access-role assignments.
  * @returns An independently settling collection flow.
  */
-const loadActiveRolesFlow =
+const loadActiveAccessRoleAssignmentsFlow =
   (provider: IRolesProvider): Flow<RolesAction, RolesState> =>
   (action$) => {
     // Every request completes independently while the reducer rejects stale results.
     return action$.pipe(
-      filter(rolesActions.loadActive.match),
+      filter(rolesActions.loadActiveAccessRoleAssignments.match),
       mergeMap((action) => {
         // Convert provider results into state transitions without terminating the action stream.
-        return defer(() => provider.getActiveRoles({ refresh: action.meta.refresh })).pipe(
-          map((roles) => rolesActions.loadActive.success(roles, action.meta.operationId)),
+        return defer(() =>
+          provider.getActiveAccessRoleAssignments({ refresh: action.meta.refresh }),
+        ).pipe(
+          map((assignments) =>
+            rolesActions.loadActiveAccessRoleAssignments.success(
+              assignments,
+              action.meta.operationId,
+            ),
+          ),
           catchError((error: unknown) =>
-            of(rolesActions.loadActive.failure(error, action.meta.operationId)),
+            of(
+              rolesActions.loadActiveAccessRoleAssignments.failure(error, action.meta.operationId),
+            ),
           ),
         );
       }),
@@ -32,22 +41,66 @@ const loadActiveRolesFlow =
   };
 
 /**
- * Keeps claimable-role failures inside their individual request.
- * @param provider - Provider supplying claimable roles.
+ * Keeps consolidated claimable-role-assignment failures inside their individual request.
+ * @param provider - Provider supplying consolidated claimable role assignments.
  * @returns An independently settling collection flow.
  */
-const loadClaimableRolesFlow =
+const loadConsolidatedClaimableRoleAssignmentsFlow =
   (provider: IRolesProvider): Flow<RolesAction, RolesState> =>
   (action$) => {
     // Every request completes independently while the reducer rejects stale results.
     return action$.pipe(
-      filter(rolesActions.loadClaimable.match),
+      filter(rolesActions.loadConsolidatedClaimableRoleAssignments.match),
       mergeMap((action) => {
         // Convert provider results into state transitions without terminating the action stream.
-        return defer(() => provider.getClaimableRoles({ refresh: action.meta.refresh })).pipe(
-          map((roles) => rolesActions.loadClaimable.success(roles, action.meta.operationId)),
+        return defer(() =>
+          provider.getConsolidatedClaimableRoleAssignments({ refresh: action.meta.refresh }),
+        ).pipe(
+          map((assignments) =>
+            rolesActions.loadConsolidatedClaimableRoleAssignments.success(
+              assignments,
+              action.meta.operationId,
+            ),
+          ),
           catchError((error: unknown) =>
-            of(rolesActions.loadClaimable.failure(error, action.meta.operationId)),
+            of(
+              rolesActions.loadConsolidatedClaimableRoleAssignments.failure(
+                error,
+                action.meta.operationId,
+              ),
+            ),
+          ),
+        );
+      }),
+    );
+  };
+
+/**
+ * Keeps consolidated role-assignment failures inside their individual request.
+ * @param provider - Provider supplying consolidated role assignments.
+ * @returns An independently settling collection flow.
+ */
+const loadConsolidatedRoleAssignmentsFlow =
+  (provider: IRolesProvider): Flow<RolesAction, RolesState> =>
+  (action$) => {
+    // Every request completes independently while the reducer rejects stale results.
+    return action$.pipe(
+      filter(rolesActions.loadConsolidatedRoleAssignments.match),
+      mergeMap((action) => {
+        // Convert provider results into state transitions without terminating the action stream.
+        return defer(() =>
+          provider.getConsolidatedRoleAssignments({ refresh: action.meta.refresh }),
+        ).pipe(
+          map((assignments) =>
+            rolesActions.loadConsolidatedRoleAssignments.success(
+              assignments,
+              action.meta.operationId,
+            ),
+          ),
+          catchError((error: unknown) =>
+            of(
+              rolesActions.loadConsolidatedRoleAssignments.failure(error, action.meta.operationId),
+            ),
           ),
         );
       }),
@@ -59,25 +112,34 @@ const loadClaimableRolesFlow =
  * @param provider - Provider performing activation.
  * @returns A mutation flow that separates activation and collection failures.
  */
-const claimRoleFlow =
+const activateClaimableRoleAssignmentFlow =
   (provider: IRolesProvider): Flow<RolesAction, RolesState> =>
   (action$) => {
-    // Keep concurrent claims correlated by operation ID and complete each caller independently.
+    // Keep concurrent activations correlated by operation ID and complete each caller independently.
     return action$.pipe(
-      filter(rolesActions.claimRole.match),
+      filter(rolesActions.activateClaimableRoleAssignment.match),
       mergeMap((action) => {
-        const { input, operationId, activeOperationId, claimableOperationId } = action.payload;
-        // Activation success starts one coordinated refresh of both role domains.
-        return defer(() => provider.claimRole(input)).pipe(
+        const { input, operationId, activeAccessOperationId, claimableOperationId } =
+          action.payload;
+        // Activation success starts one coordinated refresh of both assignment collections.
+        return defer(() => provider.activateClaimableRoleAssignment(input)).pipe(
           mergeMap((result) => {
             // Refresh failures belong to collections, never to the committed activation.
             return concat(
-              of(rolesActions.refreshAfterClaim(activeOperationId, claimableOperationId)),
-              refreshRolesAfterMutation(provider, activeOperationId, claimableOperationId),
-              of(rolesActions.claimRole.success(result, operationId)),
+              of(
+                rolesActions.refreshAfterActivation(activeAccessOperationId, claimableOperationId),
+              ),
+              refreshRoleAssignmentsAfterMutation(
+                provider,
+                activeAccessOperationId,
+                claimableOperationId,
+              ),
+              of(rolesActions.activateClaimableRoleAssignment.success(result, operationId)),
             );
           }),
-          catchError((error: unknown) => of(rolesActions.claimRole.failure(error, operationId))),
+          catchError((error: unknown) =>
+            of(rolesActions.activateClaimableRoleAssignment.failure(error, operationId)),
+          ),
         );
       }),
     );
@@ -88,26 +150,36 @@ const claimRoleFlow =
  * @param provider - Provider performing deactivation.
  * @returns A mutation flow that separates deactivation and collection failures.
  */
-const deactivateRoleFlow =
+const deactivateClaimableRoleAssignmentFlow =
   (provider: IRolesProvider): Flow<RolesAction, RolesState> =>
   (action$) => {
-    // Keep concurrent deactivations correlated and refresh both domains after each mutation.
+    // Keep concurrent deactivations correlated and refresh both collections after each mutation.
     return action$.pipe(
-      filter(rolesActions.deactivateRole.match),
+      filter(rolesActions.deactivateClaimableRoleAssignment.match),
       mergeMap((action) => {
-        const { input, operationId, activeOperationId, claimableOperationId } = action.payload;
-        // Deactivation success starts one coordinated refresh of active and claimable assignments.
-        return defer(() => provider.deactivateRole(input)).pipe(
+        const { input, operationId, activeAccessOperationId, claimableOperationId } =
+          action.payload;
+        // Deactivation success starts one coordinated refresh of active access and claimable assignments.
+        return defer(() => provider.deactivateClaimableRoleAssignment(input)).pipe(
           mergeMap((result) => {
             // Refresh failures belong to collections, never to the committed deactivation.
             return concat(
-              of(rolesActions.refreshAfterDeactivate(activeOperationId, claimableOperationId)),
-              refreshRolesAfterMutation(provider, activeOperationId, claimableOperationId),
-              of(rolesActions.deactivateRole.success(result, operationId)),
+              of(
+                rolesActions.refreshAfterDeactivation(
+                  activeAccessOperationId,
+                  claimableOperationId,
+                ),
+              ),
+              refreshRoleAssignmentsAfterMutation(
+                provider,
+                activeAccessOperationId,
+                claimableOperationId,
+              ),
+              of(rolesActions.deactivateClaimableRoleAssignment.success(result, operationId)),
             );
           }),
           catchError((error: unknown) =>
-            of(rolesActions.deactivateRole.failure(error, operationId)),
+            of(rolesActions.deactivateClaimableRoleAssignment.failure(error, operationId)),
           ),
         );
       }),
@@ -118,18 +190,21 @@ const deactivateRoleFlow =
  * Creates the combined Roles V2 side-effect flow.
  *
  * @param provider - App-scoped Roles module provider used for API operations.
- * @returns A flow handling collection loads and role activation.
+ * @returns A flow handling collection loads plus claimable-role-assignment activation and deactivation.
  */
 export const createRolesFlow = (provider: IRolesProvider): Flow<RolesAction, RolesState> => {
-  const activeRolesFlow = loadActiveRolesFlow(provider);
-  const claimableRolesFlow = loadClaimableRolesFlow(provider);
-  const activateRoleFlow = claimRoleFlow(provider);
-  const deactivateFlow = deactivateRoleFlow(provider);
+  const activeAccessRoleAssignmentsFlow = loadActiveAccessRoleAssignmentsFlow(provider);
+  const consolidatedClaimableRoleAssignmentsFlow =
+    loadConsolidatedClaimableRoleAssignmentsFlow(provider);
+  const consolidatedRoleAssignmentsFlow = loadConsolidatedRoleAssignmentsFlow(provider);
+  const activationFlow = activateClaimableRoleAssignmentFlow(provider);
+  const deactivationFlow = deactivateClaimableRoleAssignmentFlow(provider);
   return (action$, state$) =>
     merge(
-      activeRolesFlow(action$, state$),
-      claimableRolesFlow(action$, state$),
-      activateRoleFlow(action$, state$),
-      deactivateFlow(action$, state$),
+      activeAccessRoleAssignmentsFlow(action$, state$),
+      consolidatedClaimableRoleAssignmentsFlow(action$, state$),
+      consolidatedRoleAssignmentsFlow(action$, state$),
+      activationFlow(action$, state$),
+      deactivationFlow(action$, state$),
     );
 };

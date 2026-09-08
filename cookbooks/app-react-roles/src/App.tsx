@@ -2,10 +2,13 @@ import type { ReactNode } from 'react';
 import { Typography } from '@equinor/eds-core-react';
 import styled from 'styled-components';
 
-import { useClaimableRoles, useRoles } from '@equinor/fusion-framework-react-components-roles';
+import {
+  useActiveAccessRoleAssignments,
+  useClaimableRoleAssignments,
+} from '@equinor/fusion-framework-react-components-roles';
 
-import { ActiveRoles } from './components/ActiveRoles';
-import { ClaimableRoles } from './components/ClaimableRoles';
+import { ActiveAccessRoleAssignments } from './components/ActiveAccessRoleAssignments';
+import { ConsolidatedClaimableRoleAssignments } from './components/ConsolidatedClaimableRoleAssignments';
 
 const Styled = {
   Page: styled.main`
@@ -32,24 +35,25 @@ const Styled = {
  * ```
  */
 export const App = (): ReactNode => {
-  const active = useRoles();
-  const claimable = useClaimableRoles();
+  const active = useActiveAccessRoleAssignments();
+  const claimable = useClaimableRoleAssignments();
 
   /**
    * Claims an assignment and refreshes the independently rendered active roles.
    *
-   * @param roleId - Claimable assignment identifier.
+   * @param assignmentId - Claimable assignment identifier.
    * @returns A promise that resolves after both role domains are current.
    */
-  const handleClaim = async (roleId: string): Promise<void> => {
-    await claimable.claimRole({
-      roleId,
+  const handleActivate = async (assignmentId: string): Promise<void> => {
+    await claimable.activateClaimableRoleAssignment({
+      assignmentId,
       reason: 'Claimed from the Fusion Framework Roles cookbook',
     });
   };
 
-  // Both role domains must resolve before the cookbook renders either collection.
-  if (active.isLoading || claimable.isLoading) {
+  const hasAssignments = active.assignments.length > 0 || claimable.assignments.length > 0;
+  // Replace the view only on first load; background refreshes retain the last usable snapshot.
+  if ((active.isLoading || claimable.isLoading) && !hasAssignments) {
     return (
       <Styled.Page>
         <Typography>Loading active and claimable roles...</Typography>
@@ -58,21 +62,6 @@ export const App = (): ReactNode => {
   }
 
   const loadError = active.error ?? claimable.error;
-  // A collection failure replaces stale content with one retry for both role domains.
-  if (loadError) {
-    return (
-      <Styled.Page>
-        <Styled.Error>Failed to load role lists: {String(loadError)}</Styled.Error>
-        <button
-          type="button"
-          onClick={() => void Promise.all([active.reload(), claimable.reload()])}
-        >
-          Retry
-        </button>
-      </Styled.Page>
-    );
-  }
-
   return (
     <Styled.Page>
       <header>
@@ -84,12 +73,26 @@ export const App = (): ReactNode => {
         </Typography>
       </header>
 
-      <ActiveRoles roles={active.roles} />
-      <ClaimableRoles
-        roles={claimable.roles}
-        isClaiming={claimable.isClaiming}
-        error={claimable.claimError}
-        onClaim={handleClaim}
+      {loadError ? (
+        <>
+          <Styled.Error>
+            Some role data could not be refreshed. Displayed assignments may be stale:{' '}
+            {String(loadError)}
+          </Styled.Error>
+          <button
+            type="button"
+            onClick={() => void Promise.all([active.reload(), claimable.reload()])}
+          >
+            Retry
+          </button>
+        </>
+      ) : null}
+      <ActiveAccessRoleAssignments assignments={active.assignments} />
+      <ConsolidatedClaimableRoleAssignments
+        assignments={claimable.assignments}
+        isActivating={claimable.isActivating}
+        error={claimable.activationError}
+        onActivate={handleActivate}
       />
     </Styled.Page>
   );

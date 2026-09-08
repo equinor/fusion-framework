@@ -4,6 +4,13 @@
  * @packageDocumentation
  */
 
-export type { ClaimRoleInput, RolesModule } from '@equinor/fusion-framework-module-roles';
+export type {
+  ActivateClaimableRoleAssignmentInput,
+  RolesModule,
+} from '@equinor/fusion-framework-module-roles';
 
-export { useRole, type RoleClaimResult, type UseRoleResult } from './useRole';
+export {
+  useAccessRole,
+  type ClaimableRoleAssignmentActivationResult,
+  type UseAccessRoleResult,
+} from './useAccessRole';

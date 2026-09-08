@@ -8,20 +8,21 @@ import type {
   ApiAccountActiveAccessRoleAssignmentV1,
   ApiClaimableRoleAssignmentActivationV1,
   ApiConsolidatedClaimableRoleAssignmentV1,
+  ApiConsolidatedRoleAssignmentV1,
   ApiExtendedAccessRoleV1,
 } from '@equinor/fusion-services/roles';
 
-import { ClaimRoleError } from './errors/ClaimRoleError.js';
-import { DeactivateRoleError } from './errors/DeactivateRoleError.js';
-import { RequiredRolesError } from './errors/RequiredRolesError.js';
+import { ActivateClaimableRoleAssignmentError } from './errors/ActivateClaimableRoleAssignmentError.js';
+import { DeactivateClaimableRoleAssignmentError } from './errors/DeactivateClaimableRoleAssignmentError.js';
+import { RequiredAccessRolesError } from './errors/RequiredAccessRolesError.js';
 import type {
-  ClaimRoleInput,
-  DeactivateRoleInput,
+  ActivateClaimableRoleAssignmentInput,
+  DeactivateClaimableRoleAssignmentInput,
   IRolesClient,
   RolesReadOptions,
 } from './RolesClient.js';
-import type { RequiredRoleStatus } from './RequiredRoleStatus.js';
-import { RoleClaimEvent } from './RoleClaimEvent.js';
+import type { RequiredAccessRoleStatus } from './RequiredAccessRoleStatus.js';
+import { ClaimableRoleAssignmentActivationEvent } from './ClaimableRoleAssignmentActivationEvent.js';
 import { RolesError } from './errors/RolesError.js';
 import { version } from './version.js';
 import { defer, fromEvent, lastValueFrom, takeUntil } from 'rxjs';
@@ -30,12 +31,13 @@ import { defer, fromEvent, lastValueFrom, takeUntil } from 'rxjs';
  * Stable Roles V2 provider operation names used for telemetry grouping.
  */
 type RolesProviderOperation =
-  | 'getActiveRoles'
-  | 'getClaimableRoles'
-  | 'claimRole'
-  | 'deactivateRole'
-  | 'canClaimAccessRole'
-  | 'getRequiredRoleStatuses'
+  | 'getActiveAccessRoleAssignments'
+  | 'getConsolidatedClaimableRoleAssignments'
+  | 'getConsolidatedRoleAssignments'
+  | 'activateClaimableRoleAssignment'
+  | 'deactivateClaimableRoleAssignment'
+  | 'hasClaimableRoleAssignmentForAccessRole'
+  | 'getRequiredAccessRoleStatuses'
   | 'getAccessRoles';
 
 /**
@@ -50,12 +52,14 @@ interface RolesProviderConfig {
  */
 interface RolesEventDispatcher {
   /**
-   * Dispatches a role claim lifecycle event.
+   * Dispatches a claimable-role-assignment activation lifecycle event.
    *
-   * @param event - Pre-claim event to dispatch.
+   * @param event - Pre-activation event to dispatch.
    * @returns The dispatched event after listeners complete.
    */
-  dispatchEvent(event: RoleClaimEvent): Promise<RoleClaimEvent>;
+  dispatchEvent(
+    event: ClaimableRoleAssignmentActivationEvent,
+  ): Promise<ClaimableRoleAssignmentActivationEvent>;
 }
 
 /**
@@ -67,17 +71,18 @@ interface RolesProviderDependencies {
 }
 
 /**
- * Controls how {@link IRolesProvider.hasRole} evaluates requested access roles.
+ * Controls how {@link IRolesProvider.hasAccessRole} evaluates requested access roles.
  */
-export interface HasRoleOptions {
-  /** Throws {@link RequiredRolesError} instead of returning `false` when the check fails. */
+export interface HasAccessRoleOptions {
+  /** Throws {@link RequiredAccessRolesError} instead of returning `false` when the check fails. */
   assert?: boolean;
   /** Requires every requested role when true; otherwise any requested role satisfies the check. */
   required?: boolean;
 }
 
 /**
- * Consumer-facing API for reading, claiming, and deactivating Roles V2 assignments.
+ * Consumer-facing API for reading role assignments and activating or deactivating claimable
+ * role assignments in Roles V2.
  *
  * The framework exposes this provider as `framework.modules.roles`. Account identifiers are
  * resolved by the module from authentication and are never supplied to provider operations.
@@ -88,46 +93,73 @@ export interface HasRoleOptions {
  */
 export interface IRolesProvider {
   /**
-   * Gets the authenticated account's currently active access roles.
+   * Gets the authenticated account's currently active, deduplicated access-role assignments.
    *
-   * Use this operation to render active assignments or inspect assignment metadata. Use
-   * {@link IRolesProvider.hasRole | hasRole} when only a boolean access-role check is needed.
+   * `/active-access-role-assignments` drops provenance: an assignment cannot be attributed to a
+   * standing grant or an activated claim from this operation alone. Use this operation to render
+   * active assignments or inspect assignment metadata. Use
+   * {@link IRolesProvider.hasAccessRole | hasAccessRole} when only a boolean access-role check is needed.
    *
    * @returns Active access-role assignments for the account resolved by authentication.
    * @throws {RolesError} When the Roles V2 request or response validation fails.
    */
-  getActiveRoles(options?: RolesReadOptions): Promise<ApiAccountActiveAccessRoleAssignmentV1[]>;
+  getActiveAccessRoleAssignments(
+    options?: RolesReadOptions,
+  ): Promise<ApiAccountActiveAccessRoleAssignmentV1[]>;
 
   /**
-   * Gets the roles the authenticated account is eligible to claim.
+   * Gets the roles the authenticated account is eligible to claim, consolidated across
+   * contributing sources.
    *
    * @returns Consolidated claimable-role assignments for rendering claimable-role choices.
    * @throws {RolesError} When the Roles V2 request or response validation fails.
    */
-  getClaimableRoles(
+  getConsolidatedClaimableRoleAssignments(
     options?: RolesReadOptions,
   ): Promise<ApiConsolidatedClaimableRoleAssignmentV1[]>;
 
   /**
-   * Claims a role for the authenticated account.
+   * Gets the authenticated account's consolidated, standing role assignments from
+   * `/consolidated-role-assignments`.
    *
-   * When the event module is enabled, a cancelable `onRoles.claim` event is dispatched before
-   * the activation request. A listener can call `preventDefault()` to deny the claim.
+   * These assignments are not claimable, but Roles V2 never calls them permanent: they may still
+   * be validity-bounded. `assignmentType` reported on
+   * {@link IRolesProvider.getActiveAccessRoleAssignments | active} assignments cannot reliably
+   * distinguish this standing grant from an activated claim, so consumers must read this
+   * operation instead of inferring provenance from active assignments.
    *
-   * @param input - Claimable assignment identifier, reason, and requested duration.
-   * @returns Activation metadata returned by Roles V2.
-   * @throws {ClaimRoleError} When cancellation, event dispatch, or activation fails.
+   * @returns Consolidated role assignments for the authenticated account.
+   * @throws {RolesError} When the Roles V2 request or response validation fails.
    */
-  claimRole(input: ClaimRoleInput): Promise<ApiClaimableRoleAssignmentActivationV1>;
+  getConsolidatedRoleAssignments(
+    options?: RolesReadOptions,
+  ): Promise<ApiConsolidatedRoleAssignmentV1[]>;
+
+  /**
+   * Activates a claimable role assignment for the authenticated account.
+   *
+   * When the event module is enabled, a cancelable `onRoles.activateClaimableRoleAssignment` event
+   * is dispatched before the activation request. A listener can call `preventDefault()` to deny
+   * the activation.
+   *
+   * @param input - Claimable role assignment identifier, reason, and requested duration.
+   * @returns Activation metadata returned by Roles V2.
+   * @throws {ActivateClaimableRoleAssignmentError} When cancellation, event dispatch, or activation fails.
+   */
+  activateClaimableRoleAssignment(
+    input: ActivateClaimableRoleAssignmentInput,
+  ): Promise<ApiClaimableRoleAssignmentActivationV1>;
 
   /**
    * Ends the current activation for a claimable role assignment.
    *
-   * @param input - Claimable assignment identifier to deactivate.
+   * @param input - Claimable role assignment identifier to deactivate.
    * @returns Updated activation metadata returned by Roles V2.
-   * @throws {DeactivateRoleError} When the deactivation request fails.
+   * @throws {DeactivateClaimableRoleAssignmentError} When the deactivation request fails.
    */
-  deactivateRole(input: DeactivateRoleInput): Promise<ApiClaimableRoleAssignmentActivationV1>;
+  deactivateClaimableRoleAssignment(
+    input: DeactivateClaimableRoleAssignmentInput,
+  ): Promise<ApiClaimableRoleAssignmentActivationV1>;
 
   /**
    * Checks whether requested access roles are active for the authenticated account.
@@ -135,34 +167,41 @@ export interface IRolesProvider {
    * Matching is exact and case-sensitive. Empty arrays return the all-role identity when
    * `required` is true and `false` otherwise, without making a request.
    *
-   * @param roles - Exact Roles V2 access-role names to match.
-   * @param options - Whether to assert the result and require all requested roles.
+   * @param accessRoleNames - Exact Roles V2 access-role names to match.
+   * @param options - Whether to assert the result and require all requested access roles.
    * @returns True when the configured any-role or all-role condition is satisfied.
-   * @throws {RequiredRolesError} When assertion is enabled and the role condition is not satisfied.
+   * @throws {RequiredAccessRolesError} When assertion is enabled and the access-role condition is not satisfied.
    * @throws {RolesError} When the Roles V2 request or response validation fails.
    */
-  hasRole(roles: readonly string[], options: HasRoleOptions): Promise<boolean>;
+  hasAccessRole(
+    accessRoleNames: readonly string[],
+    options: HasAccessRoleOptions,
+  ): Promise<boolean>;
 
   /**
-   * Checks whether the authenticated account can claim a role that grants an access role.
+   * Checks whether the authenticated account holds a claimable role assignment that grants an
+   * access role when activated.
    *
    * The check follows expanded `accessRoleMappings`; the input identifies an access role, not a
-   * claimable-role assignment. Empty names return `false` without a request.
+   * claimable role assignment. Empty names return `false` without a request.
    *
    * @param accessRoleName - Exact Roles V2 access-role name to match in claimable mappings.
-   * @returns True when a claimable role grants the requested access role.
-   * @throws {RolesError} When request, validation, or claim-eligibility evaluation fails.
+   * @returns True when a claimable role assignment grants the requested access role.
+   * @throws {RolesError} When request, validation, or eligibility evaluation fails.
    */
-  canClaimAccessRole(accessRoleName: string): Promise<boolean>;
+  hasClaimableRoleAssignmentForAccessRole(accessRoleName: string): Promise<boolean>;
 
   /**
-   * Resolves existence and claimability for access roles blocking application initialization.
+   * Resolves existence and claimable-assignment availability for access roles blocking
+   * application initialization.
    *
-   * @param roleNames - Exact required access-role names.
+   * @param accessRoleNames - Exact required access-role names.
    * @returns Statuses used by a host to explain or recover the failed requirement.
    * @throws {RolesError} When Roles V2 cannot resolve complete status information.
    */
-  getRequiredRoleStatuses(roleNames: readonly string[]): Promise<RequiredRoleStatus[]>;
+  getRequiredAccessRoleStatuses(
+    accessRoleNames: readonly string[],
+  ): Promise<RequiredAccessRoleStatus[]>;
 
   /**
    * Iterates registered access roles one service page at a time.
@@ -194,14 +233,17 @@ export interface IRolesProvider {
  * Default {@link IRolesProvider} implementation exposed by the Fusion Framework Roles module.
  *
  * `RolesProvider` is the main API applications consume through `framework.modules.roles`. It
- * delegates transport work to an initialized client that resolves the current account while handling claim
- * cancellation events, telemetry, and client resource disposal.
+ * delegates transport work to an initialized client that resolves the current account while
+ * handling activation cancellation events, telemetry, and client resource disposal.
  *
  * @remarks
- * The built-in client caches active roles, claimable roles, and claim-eligibility reads for one
- * minute and invalidates them after successful activation. Configured clients control their own
- * caching behavior. When telemetry is enabled, operation outcomes are recorded without account or
- * role identifiers.
+ * The built-in client caches active access-role assignment, consolidated claimable-role-assignment,
+ * and consolidated role-assignment reads, plus claimable-assignment eligibility reads, for one
+ * minute. A successful activation invalidates the active access-role assignment, consolidated
+ * claimable-role-assignment, and eligibility caches. Consolidated role-assignment reads are not
+ * invalidated by activation or deactivation, since those assignments are outside those mutations.
+ * Configured clients control their own caching behavior. When telemetry is enabled, operation
+ * outcomes are recorded without account or access-role identifiers.
  *
  * This client-side provider helps render and gate user-interface behavior. It does not replace
  * authorization checks in trusted backend services.
@@ -210,18 +252,18 @@ export interface IRolesProvider {
  * ```ts
  * const { roles } = framework.modules;
  *
- * const [activeRoles, claimableRoles] = await Promise.all([
- *   roles.getActiveRoles(),
- *   roles.getClaimableRoles(),
+ * const [activeAccessRoleAssignments, claimableRoleAssignments] = await Promise.all([
+ *   roles.getActiveAccessRoleAssignments(),
+ *   roles.getConsolidatedClaimableRoleAssignments(),
  * ]);
  *
- * if (await roles.hasRole(['Reports.Read'], { required: true })) {
+ * if (await roles.hasAccessRole(['Reports.Read'], { required: true })) {
  *   renderReports();
  * }
  *
- * if (await roles.canClaimAccessRole('Reports.Export')) {
- *   await roles.claimRole({
- *     roleId: claimableRoleId,
+ * if (await roles.hasClaimableRoleAssignmentForAccessRole('Reports.Export')) {
+ *   await roles.activateClaimableRoleAssignment({
+ *     assignmentId: claimableRoleAssignmentId,
  *     reason: 'Export monthly report',
  *     hours: 2,
  *   });
@@ -248,136 +290,158 @@ export class RolesProvider
     this._addTeardown(() => this.client.dispose?.());
   }
 
-  /** {@inheritDoc IRolesProvider.getActiveRoles} */
-  public async getActiveRoles(
+  /** {@inheritDoc IRolesProvider.getActiveAccessRoleAssignments} */
+  public async getActiveAccessRoleAssignments(
     options?: RolesReadOptions,
   ): Promise<ApiAccountActiveAccessRoleAssignmentV1[]> {
-    return this.executeOperation('getActiveRoles', () =>
-      lastValueFrom(this.client.getActiveRoles(options)),
+    return this.executeOperation('getActiveAccessRoleAssignments', () =>
+      lastValueFrom(this.client.getActiveAccessRoleAssignments(options)),
     );
   }
 
-  /** {@inheritDoc IRolesProvider.getClaimableRoles} */
-  public async getClaimableRoles(
+  /** {@inheritDoc IRolesProvider.getConsolidatedClaimableRoleAssignments} */
+  public async getConsolidatedClaimableRoleAssignments(
     options?: RolesReadOptions,
   ): Promise<ApiConsolidatedClaimableRoleAssignmentV1[]> {
-    return this.executeOperation('getClaimableRoles', () =>
-      lastValueFrom(this.client.getClaimableRoles(options)),
+    return this.executeOperation('getConsolidatedClaimableRoleAssignments', () =>
+      lastValueFrom(this.client.getConsolidatedClaimableRoleAssignments(options)),
     );
   }
 
-  /** {@inheritDoc IRolesProvider.claimRole} */
-  public async claimRole(input: ClaimRoleInput): Promise<ApiClaimableRoleAssignmentActivationV1> {
-    return this.executeOperation('claimRole', async () => {
+  /** {@inheritDoc IRolesProvider.getConsolidatedRoleAssignments} */
+  public async getConsolidatedRoleAssignments(
+    options?: RolesReadOptions,
+  ): Promise<ApiConsolidatedRoleAssignmentV1[]> {
+    return this.executeOperation('getConsolidatedRoleAssignments', () =>
+      lastValueFrom(this.client.getConsolidatedRoleAssignments(options)),
+    );
+  }
+
+  /** {@inheritDoc IRolesProvider.activateClaimableRoleAssignment} */
+  public async activateClaimableRoleAssignment(
+    input: ActivateClaimableRoleAssignmentInput,
+  ): Promise<ApiClaimableRoleAssignmentActivationV1> {
+    return this.executeOperation('activateClaimableRoleAssignment', async () => {
       try {
-        const claimEvent = await this.dependencies.event?.dispatchEvent(
-          new RoleClaimEvent({
+        const activationEvent = await this.dependencies.event?.dispatchEvent(
+          new ClaimableRoleAssignmentActivationEvent({
             source: this,
             detail: input,
           }),
         );
         // Cancellation prevents the irreversible activation request from reaching Roles V2.
-        if (claimEvent?.canceled) {
-          throw new ClaimRoleError('Role claim was canceled by an event listener.');
+        if (activationEvent?.canceled) {
+          throw new ActivateClaimableRoleAssignmentError(
+            'Claimable role assignment activation was canceled by an event listener.',
+          );
         }
-        return await lastValueFrom(this.client.claimRole(input));
+        return await lastValueFrom(this.client.activateClaimableRoleAssignment(input));
       } catch (error) {
-        // Preserve an intentional cancellation while classifying all other claim failures.
-        if (error instanceof ClaimRoleError) {
+        // Preserve an intentional cancellation while classifying all other activation failures.
+        if (error instanceof ActivateClaimableRoleAssignmentError) {
           throw error;
         }
-        throw new ClaimRoleError('Failed to claim role.', { cause: error });
+        throw new ActivateClaimableRoleAssignmentError(
+          'Failed to activate claimable role assignment.',
+          { cause: error },
+        );
       }
     });
   }
 
-  /** {@inheritDoc IRolesProvider.deactivateRole} */
-  public async deactivateRole(
-    input: DeactivateRoleInput,
+  /** {@inheritDoc IRolesProvider.deactivateClaimableRoleAssignment} */
+  public async deactivateClaimableRoleAssignment(
+    input: DeactivateClaimableRoleAssignmentInput,
   ): Promise<ApiClaimableRoleAssignmentActivationV1> {
-    return this.executeOperation('deactivateRole', async () => {
+    return this.executeOperation('deactivateClaimableRoleAssignment', async () => {
       try {
-        return await lastValueFrom(this.client.deactivateRole(input));
+        return await lastValueFrom(this.client.deactivateClaimableRoleAssignment(input));
       } catch (error) {
-        throw new DeactivateRoleError('Failed to deactivate role.', { cause: error });
+        throw new DeactivateClaimableRoleAssignmentError(
+          'Failed to deactivate claimable role assignment.',
+          { cause: error },
+        );
       }
     });
   }
 
-  /** {@inheritDoc IRolesProvider.hasRole} */
-  public async hasRole(roles: readonly string[], options: HasRoleOptions): Promise<boolean> {
-    const normalizedRoles = new Set<string>();
+  /** {@inheritDoc IRolesProvider.hasAccessRole} */
+  public async hasAccessRole(
+    accessRoleNames: readonly string[],
+    options: HasAccessRoleOptions,
+  ): Promise<boolean> {
+    const normalizedAccessRoles = new Set<string>();
     // Normalize and deduplicate once so matching and assertion details use stable identifiers.
-    for (const role of roles) {
-      const normalizedRole = role.trim();
+    for (const accessRoleName of accessRoleNames) {
+      const normalizedAccessRole = accessRoleName.trim();
       // Empty names cannot identify an access role.
-      if (normalizedRole) {
-        normalizedRoles.add(normalizedRole);
+      if (normalizedAccessRole) {
+        normalizedAccessRoles.add(normalizedAccessRole);
       }
     }
     // Preserve expected any/all identities without loading account state for an empty request.
-    if (normalizedRoles.size === 0) {
-      const hasRole = options.required === true;
-      // An asserted any-role check cannot be satisfied without at least one role name.
-      if (!hasRole && options.assert) {
-        throw new RequiredRolesError(
-          'Roles module bootstrap denied. No roles were provided.',
+    if (normalizedAccessRoles.size === 0) {
+      const hasAccessRole = options.required === true;
+      // An asserted any-role check cannot be satisfied without at least one access-role name.
+      if (!hasAccessRole && options.assert) {
+        throw new RequiredAccessRolesError(
+          'Roles module bootstrap denied. No access roles were provided.',
           [],
           this,
         );
       }
-      return hasRole;
+      return hasAccessRole;
     }
-    const activeRoles = await this.getActiveRoles();
-    const activeRoleNames = new Set<string>();
-    // Only explicit access-role names can satisfy a requested role.
-    for (const assignment of activeRoles) {
-      // Incomplete service records cannot satisfy exact role-name checks.
+    const activeAccessRoleAssignments = await this.getActiveAccessRoleAssignments();
+    const activeAccessRoleNames = new Set<string>();
+    // Only explicit access-role names can satisfy a requested access role.
+    for (const assignment of activeAccessRoleAssignments) {
+      // Incomplete service records cannot satisfy exact access-role-name checks.
       if (assignment.accessRoleName) {
-        activeRoleNames.add(assignment.accessRoleName);
+        activeAccessRoleNames.add(assignment.accessRoleName);
       }
     }
-    const missingRoles: string[] = [];
-    // Collect every missing role so assertion failures report the complete unmet condition.
-    for (const role of normalizedRoles) {
+    const missingAccessRoles: string[] = [];
+    // Collect every missing access role so assertion failures report the complete unmet condition.
+    for (const accessRoleName of normalizedAccessRoles) {
       // Exact, case-sensitive identifiers are intentionally not normalized beyond whitespace.
-      if (!activeRoleNames.has(role)) {
-        missingRoles.push(role);
+      if (!activeAccessRoleNames.has(accessRoleName)) {
+        missingAccessRoles.push(accessRoleName);
       }
     }
     // Roles V2 access-role names are identifiers, so matching remains exact and case-sensitive.
-    const hasRole = options.required
-      ? missingRoles.length === 0
-      : missingRoles.length < normalizedRoles.size;
+    const hasAccessRole = options.required
+      ? missingAccessRoles.length === 0
+      : missingAccessRoles.length < normalizedAccessRoles.size;
     // Assertion mode converts a failed predicate into the domain error used during bootstrap.
-    if (!hasRole && options.assert) {
-      throw new RequiredRolesError(
-        `Roles module bootstrap denied. Missing required roles: ${missingRoles.join(', ')}.`,
-        missingRoles,
+    if (!hasAccessRole && options.assert) {
+      throw new RequiredAccessRolesError(
+        `Roles module bootstrap denied. Missing required access roles: ${missingAccessRoles.join(', ')}.`,
+        missingAccessRoles,
         this,
       );
     }
-    return hasRole;
+    return hasAccessRole;
   }
 
-  /** {@inheritDoc IRolesProvider.canClaimAccessRole} */
-  public async canClaimAccessRole(accessRoleName: string): Promise<boolean> {
-    const normalizedRole = accessRoleName.trim();
+  /** {@inheritDoc IRolesProvider.hasClaimableRoleAssignmentForAccessRole} */
+  public async hasClaimableRoleAssignmentForAccessRole(accessRoleName: string): Promise<boolean> {
+    const normalizedAccessRole = accessRoleName.trim();
     // Empty access-role names cannot match a mapping and should not trigger a request.
-    if (!normalizedRole) {
+    if (!normalizedAccessRole) {
       return false;
     }
-    return this.executeOperation('canClaimAccessRole', () =>
-      lastValueFrom(this.client.canClaimAccessRole(normalizedRole)),
+    return this.executeOperation('hasClaimableRoleAssignmentForAccessRole', () =>
+      lastValueFrom(this.client.hasClaimableRoleAssignmentForAccessRole(normalizedAccessRole)),
     );
   }
 
-  /** {@inheritDoc IRolesProvider.getRequiredRoleStatuses} */
-  public async getRequiredRoleStatuses(
-    roleNames: readonly string[],
-  ): Promise<RequiredRoleStatus[]> {
-    return this.executeOperation('getRequiredRoleStatuses', () =>
-      lastValueFrom(this.client.getRequiredRoleStatuses(roleNames)),
+  /** {@inheritDoc IRolesProvider.getRequiredAccessRoleStatuses} */
+  public async getRequiredAccessRoleStatuses(
+    accessRoleNames: readonly string[],
+  ): Promise<RequiredAccessRoleStatus[]> {
+    return this.executeOperation('getRequiredAccessRoleStatuses', () =>
+      lastValueFrom(this.client.getRequiredAccessRoleStatuses(accessRoleNames)),
     );
   }
 
@@ -416,13 +480,13 @@ export class RolesProvider
           }
           return result;
         });
-        const roles = page.value ?? [];
-        yield roles;
+        const accessRoles = page.value ?? [];
+        yield accessRoles;
         // Resume only on consumer demand; stop without an extra request after the final page.
         if (!page.nextPage) {
           return;
         }
-        skip += roles.length;
+        skip += accessRoles.length;
       }
     } finally {
       // Consumer break/return must release any transport tied to this iteration.
@@ -431,7 +495,7 @@ export class RolesProvider
   }
 
   /**
-   * Executes a provider operation and reports its outcome without account or role identifiers.
+   * Executes a provider operation and reports its outcome without account or access-role identifiers.
    *
    * @template TResult - Operation result returned unchanged to the caller.
    * @param operation - Stable operation name used for telemetry.

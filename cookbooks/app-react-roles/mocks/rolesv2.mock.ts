@@ -3,9 +3,9 @@ import { defineService } from '@equinor/fusion-openapi-mock-server/discovery';
 import { rolesMockData } from '../src/roles-mock-data';
 
 const reportExporterAssignment = {
-  ...rolesMockData.claimableRoles[0],
+  ...rolesMockData.consolidatedClaimableRoleAssignments[0],
   claimableRole: {
-    ...rolesMockData.claimableRoles[0].claimableRole,
+    ...rolesMockData.consolidatedClaimableRoleAssignments[0].claimableRole,
     accessRoleMappings: [
       {
         accessRole: {
@@ -19,7 +19,7 @@ const reportExporterAssignment = {
   },
 };
 
-const expiredAssignments = rolesMockData.claimableRoles.slice(1);
+const expiredAssignments = rolesMockData.consolidatedClaimableRoleAssignments.slice(1);
 
 const requiredRoleAssignment = {
   id: '44444444-4444-4444-8444-444444444444',
@@ -48,6 +48,7 @@ const ACCOUNT_IDENTIFIER = 'fusion-mock-user';
 const ACCESS_ROLES_PATH = '/access-roles';
 const ACTIVE_ROLES_PATH = `/accounts/${ACCOUNT_IDENTIFIER}/active-access-role-assignments`;
 const CLAIMABLE_ROLES_PATH = `/accounts/${ACCOUNT_IDENTIFIER}/consolidated-claimable-role-assignments`;
+const ROLE_ASSIGNMENTS_PATH = `/accounts/${ACCOUNT_IDENTIFIER}/consolidated-role-assignments`;
 const CLAIMABLE_ACCESS_ROLES_PATH = `/accounts/${ACCOUNT_IDENTIFIER}/claimable-role-assignments`;
 const ACTIVATE_REPORT_EXPORTER_PATH = `${CLAIMABLE_ACCESS_ROLES_PATH}/${reportExporterAssignment.id}/activate`;
 const ACTIVATE_REQUIRED_ROLE_PATH = `${CLAIMABLE_ACCESS_ROLES_PATH}/${requiredRoleAssignment.id}/activate`;
@@ -85,9 +86,9 @@ export default defineService({
       });
     });
     router.get(ACTIVE_ROLES_PATH, (_request, response) => {
-      // Add activated mock roles to the permanent baseline without mutating shared fixtures.
+      // Add activated access-role assignments to the standing baseline without mutating fixtures.
       response.json([
-        ...rolesMockData.activeRoles,
+        ...rolesMockData.activeAccessRoleAssignments,
         ...(isRequiredRoleActive
           ? [
               {
@@ -128,7 +129,7 @@ export default defineService({
           activeTo: requiredRoleActiveTo,
         },
         {
-          ...rolesMockData.claimableRoles[0],
+          ...rolesMockData.consolidatedClaimableRoleAssignments[0],
           isActive: isReportExporterActive,
           activeTo: reportExporterActiveTo,
         },
@@ -138,6 +139,9 @@ export default defineService({
           activeTo: expiredRoleActiveTo.get(assignment.id),
         })),
       ]);
+    });
+    router.get(ROLE_ASSIGNMENTS_PATH, (_request, response) => {
+      response.json([]);
     });
     router.get(CLAIMABLE_ACCESS_ROLES_PATH, (_request, response) => {
       // Preserve expanded mappings only for assignments that remain available to activate.

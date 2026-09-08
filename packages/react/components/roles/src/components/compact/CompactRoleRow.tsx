@@ -26,7 +26,7 @@ const Styled = {
   `,
 };
 
-/** Presentation shared by permanent, active, available, and expired compact assignments. */
+/** Presentation shared by assigned, active, available, and expired compact assignments. */
 interface CompactRoleRowProps {
   readonly role: RoleDetails;
   readonly caption: string;
