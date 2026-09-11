@@ -134,7 +134,7 @@ importers:
     dependencies:
       '@equinor/eds-core-react':
         specifier: ^2.3.7
-        version: 2.6.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(styled-components@6.5.3(css-to-react-native@3.2.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
+        version: 2.6.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(styled-components@6.5.3(css-to-react-native@3.2.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
       '@equinor/fusion-framework-cli':
         specifier: workspace:^
         version: link:../../packages/cli
@@ -349,7 +349,7 @@ importers:
     devDependencies:
       '@equinor/eds-core-react':
         specifier: ^2.3.7
-        version: 2.6.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(styled-components@6.5.3(css-to-react-native@3.2.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
+        version: 2.6.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(styled-components@6.5.3(css-to-react-native@3.2.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
       '@equinor/eds-icons':
         specifier: ^1.3.0
         version: 1.5.1
@@ -531,7 +531,7 @@ importers:
     dependencies:
       '@equinor/eds-core-react':
         specifier: ^2.3.7
-        version: 2.6.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(styled-components@6.5.3(css-to-react-native@3.2.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
+        version: 2.6.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(styled-components@6.5.3(css-to-react-native@3.2.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
       '@equinor/fusion-framework-cli':
         specifier: workspace:^
         version: link:../../packages/cli
@@ -721,7 +721,7 @@ importers:
     dependencies:
       '@equinor/eds-core-react':
         specifier: ^2.3.7
-        version: 2.6.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(styled-components@6.5.3(css-to-react-native@3.2.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
+        version: 2.6.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(styled-components@6.5.3(css-to-react-native@3.2.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
       '@equinor/eds-icons':
         specifier: ^1.3.0
         version: 1.5.1
@@ -780,7 +780,7 @@ importers:
     devDependencies:
       '@equinor/eds-core-react':
         specifier: ^2.3.7
-        version: 2.6.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(styled-components@6.5.3(css-to-react-native@3.2.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
+        version: 2.6.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(styled-components@6.5.3(css-to-react-native@3.2.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
       '@equinor/eds-icons':
         specifier: ^1.3.0
         version: 1.5.1
@@ -822,7 +822,7 @@ importers:
         version: link:../../packages/utils/openapi-mock
       '@equinor/fusion-react-side-sheet':
         specifier: ^2.0.0
-        version: 2.0.8(@equinor/eds-core-react@2.6.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(styled-components@6.5.3(css-to-react-native@3.2.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)))(@equinor/eds-icons@1.5.1)(@equinor/eds-tokens@2.3.2)(react-dom@19.2.8(react@19.2.8))(react-is@18.3.1)(react@19.2.8)(styled-components@6.5.3(css-to-react-native@3.2.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
+        version: 2.0.8(@equinor/eds-core-react@2.6.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(styled-components@6.5.3(css-to-react-native@3.2.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)))(@equinor/eds-icons@1.5.1)(@equinor/eds-tokens@2.3.2)(react-dom@19.2.8(react@19.2.8))(react-is@18.3.1)(react@19.2.8)(styled-components@6.5.3(css-to-react-native@3.2.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
       '@faker-js/faker':
         specifier: ^10.1.0
         version: 10.6.0
@@ -915,7 +915,7 @@ importers:
     dependencies:
       '@equinor/eds-core-react':
         specifier: ^2.3.7
-        version: 2.6.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(styled-components@6.5.3(css-to-react-native@3.2.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
+        version: 2.6.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(styled-components@6.5.3(css-to-react-native@3.2.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
       '@equinor/eds-icons':
         specifier: ^1.3.0
         version: 1.5.1
@@ -1091,7 +1091,7 @@ importers:
     dependencies:
       '@equinor/eds-core-react':
         specifier: ^2.3.7
-        version: 2.6.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(styled-components@6.5.3(css-to-react-native@3.2.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
+        version: 2.6.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(styled-components@6.5.3(css-to-react-native@3.2.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
       '@equinor/eds-icons':
         specifier: ^1.3.0
         version: 1.5.1
@@ -1148,7 +1148,7 @@ importers:
         version: 1.0.7(react@19.2.8)
       '@equinor/fusion-react-side-sheet':
         specifier: ^2.0.0
-        version: 2.0.8(@equinor/eds-core-react@2.6.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(styled-components@6.5.3(css-to-react-native@3.2.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)))(@equinor/eds-icons@1.5.1)(@equinor/eds-tokens@2.3.2)(react-dom@19.2.8(react@19.2.8))(react-is@18.3.1)(react@19.2.8)(styled-components@6.5.3(css-to-react-native@3.2.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
+        version: 2.0.8(@equinor/eds-core-react@2.6.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(styled-components@6.5.3(css-to-react-native@3.2.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)))(@equinor/eds-icons@1.5.1)(@equinor/eds-tokens@2.3.2)(react-dom@19.2.8(react@19.2.8))(react-is@18.3.1)(react@19.2.8)(styled-components@6.5.3(css-to-react-native@3.2.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
       react:
         specifier: ^19.2.1
         version: 19.2.8
@@ -1549,7 +1549,7 @@ importers:
     devDependencies:
       '@equinor/eds-core-react':
         specifier: ^2.3.7
-        version: 2.6.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(styled-components@6.5.3(css-to-react-native@3.2.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
+        version: 2.6.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(styled-components@6.5.3(css-to-react-native@3.2.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
       '@equinor/eds-icons':
         specifier: ^1.3.0
         version: 1.5.1
@@ -1627,7 +1627,7 @@ importers:
         version: 0.3.0(react@19.2.8)
       '@equinor/fusion-react-side-sheet':
         specifier: ^2.0.0
-        version: 2.0.8(@equinor/eds-core-react@2.6.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(styled-components@6.5.3(css-to-react-native@3.2.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)))(@equinor/eds-icons@1.5.1)(@equinor/eds-tokens@2.3.2)(react-dom@19.2.8(react@19.2.8))(react-is@18.3.1)(react@19.2.8)(styled-components@6.5.3(css-to-react-native@3.2.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
+        version: 2.0.8(@equinor/eds-core-react@2.6.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(styled-components@6.5.3(css-to-react-native@3.2.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)))(@equinor/eds-icons@1.5.1)(@equinor/eds-tokens@2.3.2)(react-dom@19.2.8(react@19.2.8))(react-is@18.3.1)(react@19.2.8)(styled-components@6.5.3(css-to-react-native@3.2.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
       '@equinor/fusion-react-styles':
         specifier: ^2.1.0
         version: 2.1.8(react@19.2.8)(styled-components@6.5.3(css-to-react-native@3.2.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
@@ -2739,7 +2739,7 @@ importers:
     devDependencies:
       '@equinor/eds-core-react':
         specifier: ^2.3.7
-        version: 2.6.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(styled-components@6.5.3(css-to-react-native@3.2.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
+        version: 2.6.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(styled-components@6.5.3(css-to-react-native@3.2.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
       '@equinor/eds-icons':
         specifier: ^1.3.0
         version: 1.5.1
@@ -4055,8 +4055,8 @@ packages:
   '@emotion/memoize@0.9.0':
     resolution: {integrity: sha512-30FAj7/EoJ5mwVPOWhAyCX+FPfMDrVecJAM+Iw9NRoSl4BBAQeqj4cApHHUXOVvIPgLVDsCFoz/hGD+5QQD1GQ==}
 
-  '@equinor/eds-core-react@2.6.2':
-    resolution: {integrity: sha512-zDxnM8bnRNTSVsOcxzXDmz3nMBBZ510TIOq+jqiZxFAdNHKg47WWYf63tXUsDfQrGKlfZ9e3PxkYaifarqvcPw==}
+  '@equinor/eds-core-react@2.6.3':
+    resolution: {integrity: sha512-kLRsrbx0yDGYsS9qbKCV6rO+EoLxPTpJQYNV5qVpJVjEFOYy80M6025h8XXKmyyH/cveUL5bG7XaXnh5CS8PLA==}
     peerDependencies:
       react: ^18 || ^19
       react-dom: ^18 || ^19
@@ -4064,6 +4064,9 @@ packages:
 
   '@equinor/eds-icons@1.5.1':
     resolution: {integrity: sha512-5/pi0vsXHKVDIFG+BOufOqtAS8wD5J0qTqcucUvnIvo4vpUHWJbMpP80fyAQ9S8ZAu+9auBEq4NY1ZBcqjZq8w==}
+
+  '@equinor/eds-icons@1.6.0':
+    resolution: {integrity: sha512-kem0+yd7T/YQFLwC4tLxPq9LWLjQjODduGJLFQR1JXzm9e7oudozXgK7Fcmf7/ZXymEYBtAJyBkYR0d71GLPXw==}
 
   '@equinor/eds-tokens@0.9.2':
     resolution: {integrity: sha512-pDIFei0vsfN3GN12NKWqxskAkYBQd6+Dzjga2liuY81LfnlJs5g9NblamU9WY5w5YdVE5Z8FNjsMKDLs2JIWcw==}
@@ -11233,8 +11236,8 @@ packages:
       react: ^16.13.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
       react-dom: ^16.13.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
-  react-aria@3.52.0:
-    resolution: {integrity: sha512-eGU8GOqT6Stn4Se/X3esz0Wum6TqSwQJBbK3jSLJIbFAS7XkvpICCVwmqZQG1/siXuCgB9DBRq9CttI+K9HPTA==}
+  react-aria@3.52.1:
+    resolution: {integrity: sha512-fdZZruC9/x/joCg0mhKGs5aHpwrXLCSZ4GOJmhhYyiE0ffyEsk9MLFt9LCOCF9tn8ErTD+UDQP4oDUSlZkmpCg==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
       react-dom: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
@@ -13579,10 +13582,10 @@ snapshots:
 
   '@emotion/memoize@0.9.0': {}
 
-  '@equinor/eds-core-react@2.6.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(styled-components@6.5.3(css-to-react-native@3.2.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))':
+  '@equinor/eds-core-react@2.6.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(styled-components@6.5.3(css-to-react-native@3.2.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))':
     dependencies:
       '@babel/runtime': 7.29.7
-      '@equinor/eds-icons': 1.5.1
+      '@equinor/eds-icons': 1.6.0
       '@equinor/eds-tokens': 2.3.2
       '@equinor/eds-utils': 2.2.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(styled-components@6.5.3(css-to-react-native@3.2.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
       '@floating-ui/react': 0.27.20(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -13594,11 +13597,13 @@ snapshots:
       '@tanstack/react-virtual': 3.14.10(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       downshift: 9.4.0(react@19.2.8)
       react: 19.2.8
-      react-aria: 3.52.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      react-aria: 3.52.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       react-dom: 19.2.8(react@19.2.8)
       styled-components: 6.5.3(css-to-react-native@3.2.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
 
   '@equinor/eds-icons@1.5.1': {}
+
+  '@equinor/eds-icons@1.6.0': {}
 
   '@equinor/eds-tokens@0.9.2': {}
 
@@ -13650,9 +13655,9 @@ snapshots:
       '@equinor/fusion-wc-searchable-dropdown': 4.1.3
       react: 19.2.8
 
-  '@equinor/fusion-react-side-sheet@2.0.8(@equinor/eds-core-react@2.6.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(styled-components@6.5.3(css-to-react-native@3.2.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)))(@equinor/eds-icons@1.5.1)(@equinor/eds-tokens@2.3.2)(react-dom@19.2.8(react@19.2.8))(react-is@18.3.1)(react@19.2.8)(styled-components@6.5.3(css-to-react-native@3.2.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))':
+  '@equinor/fusion-react-side-sheet@2.0.8(@equinor/eds-core-react@2.6.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(styled-components@6.5.3(css-to-react-native@3.2.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)))(@equinor/eds-icons@1.5.1)(@equinor/eds-tokens@2.3.2)(react-dom@19.2.8(react@19.2.8))(react-is@18.3.1)(react@19.2.8)(styled-components@6.5.3(css-to-react-native@3.2.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))':
     dependencies:
-      '@equinor/eds-core-react': 2.6.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(styled-components@6.5.3(css-to-react-native@3.2.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
+      '@equinor/eds-core-react': 2.6.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(styled-components@6.5.3(css-to-react-native@3.2.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
       '@equinor/eds-icons': 1.5.1
       '@equinor/eds-tokens': 2.3.2
       re-resizable: 6.11.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -16290,7 +16295,7 @@ snapshots:
     dependencies:
       '@swc/helpers': 0.5.23
       react: 19.2.8
-      react-aria: 3.52.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      react-aria: 3.52.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       react-dom: 19.2.8(react@19.2.8)
       react-stately: 3.50.0(react@19.2.8)
 
@@ -21538,7 +21543,7 @@ snapshots:
       react: 19.2.8
       react-dom: 19.2.8(react@19.2.8)
 
-  react-aria@3.52.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8):
+  react-aria@3.52.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8):
     dependencies:
       '@internationalized/date': 3.12.4
       '@internationalized/number': 3.6.8
