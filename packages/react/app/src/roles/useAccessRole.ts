@@ -58,7 +58,11 @@ export interface UseAccessRoleResult {
  *
  * // Consume the event-handler rejection; activationError below owns the visible failure.
  * const handleActivate = (): void => {
- *   void role.activateClaimableRoleAssignment({ assignmentId: claimableRoleId }).catch(() => undefined);
+ *   void role.activateClaimableRoleAssignment({
+ *     assignmentId: claimableRoleId,
+ *     reason: 'Open reports',
+ *     hours: 2,
+ *   }).catch(() => undefined);
  * };
  *
  * return role.hasClaimableRoleAssignmentForAccessRole ? (

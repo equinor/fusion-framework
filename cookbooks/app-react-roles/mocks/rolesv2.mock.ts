@@ -40,7 +40,7 @@ const requiredRoleAssignment = {
     ],
   },
   reasons: ['Granted for the Roles V2 cookbook'],
-  type: 'Direct',
+  type: 'Global',
   isActive: false,
 };
 
@@ -94,7 +94,7 @@ export default defineService({
               {
                 systemName: 'ProView',
                 accessRoleName: 'ProView.Admin.DevOps',
-                assignmentType: 'Claimable',
+                assignmentType: 'Global',
                 activeToDate: requiredRoleActiveTo,
               },
             ]
@@ -104,7 +104,7 @@ export default defineService({
               {
                 systemName: 'Reports',
                 accessRoleName: 'Reports.Export',
-                assignmentType: 'Claimable',
+                assignmentType: 'Scoped',
                 activeToDate: reportExporterActiveTo,
               },
             ]
@@ -115,7 +115,7 @@ export default defineService({
           .map((assignment) => ({
             systemName: 'Fusion',
             accessRoleName: assignment.claimableRole.name,
-            assignmentType: 'Claimable',
+            assignmentType: assignment.scope.isGlobal ? 'Global' : 'Scoped',
             activeToDate: expiredRoleActiveTo.get(assignment.id),
           })),
       ]);

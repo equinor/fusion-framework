@@ -11,7 +11,7 @@ export const rolesMockData = {
     {
       systemName: 'Fusion Apps',
       accessRoleName: 'Fusion.Apps.FullControl',
-      assignmentType: 'Direct',
+      assignmentType: 'Global',
     },
   ],
   consolidatedClaimableRoleAssignments: [
@@ -23,7 +23,7 @@ export const rolesMockData = {
         displayName: 'Reports exporter',
       },
       reasons: ['Assigned through membership in the Fusion Reports team'],
-      type: 'Direct',
+      type: 'Scoped',
       isActive: false,
       validTo: new Date(Date.now() + 90 * 24 * 60 * 60 * 1_000).toISOString(),
       scope: {
@@ -41,7 +41,7 @@ export const rolesMockData = {
         description: 'Manage data governance workflows.',
       },
       reasons: ['Assigned through membership in the Data Governance team'],
-      type: 'Direct',
+      type: 'Scoped',
       isActive: false,
       activeTo: daysAgo(1),
       validTo: new Date(Date.now() + 60 * 24 * 60 * 60 * 1_000).toISOString(),
@@ -60,7 +60,7 @@ export const rolesMockData = {
         description: 'Administer project settings and membership.',
       },
       reasons: ['Assigned as an administrator for Project Aurora'],
-      type: 'Direct',
+      type: 'Scoped',
       isActive: false,
       activeTo: daysAgo(3),
       validTo: new Date(Date.now() + 30 * 24 * 60 * 60 * 1_000).toISOString(),
@@ -79,7 +79,7 @@ export const rolesMockData = {
         description: 'Review project audit records.',
       },
       reasons: ['Assigned through the Compliance Readers group'],
-      type: 'Direct',
+      type: 'Global',
       isActive: false,
       activeTo: daysAgo(6),
       scope: {

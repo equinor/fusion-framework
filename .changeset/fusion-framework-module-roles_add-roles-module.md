@@ -37,4 +37,10 @@ and `getConsolidatedRoleAssignments`, and the mutation methods to `activateClaim
 and `deactivateClaimableRoleAssignment`, matching their Roles V2 endpoints and inputs. Mutation
 inputs now use `assignmentId` instead of `roleId`.
 
+Align name-only access and recovery checks with Roles V2 backend authorization semantics. Only
+global active assignments satisfy `hasAccessRole`, and recovery exposes only global claimable
+assignments that are inactive and inside their validity window. Claimability checks follow every
+assignment page. Activation now requires the backend's validated reason and 1–24 hour integer
+duration.
+
 Related to #5449.

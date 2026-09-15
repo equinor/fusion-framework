@@ -48,6 +48,7 @@ export const App = (): ReactNode => {
     await claimable.activateClaimableRoleAssignment({
       assignmentId,
       reason: 'Claimed from the Fusion Framework Roles cookbook',
+      hours: 2,
     });
   };
 

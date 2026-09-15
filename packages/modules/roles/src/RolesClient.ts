@@ -9,15 +9,19 @@ import {
   listAccountConsolidatedClaimableRoleAssignments,
   listAccountConsolidatedRoleAssignments,
   type ApiAccountActiveAccessRoleAssignmentV1,
+  type ApiAccountClaimableRoleAssignmentV1,
   type ApiClaimableRoleAssignmentActivationV1,
   type ApiConsolidatedClaimableRoleAssignmentV1,
   type ApiConsolidatedRoleAssignmentV1,
   type ApiExtendedAccessRoleV1,
+  type ActivateClaimableRoleAssignmentArg,
   type ListAccessRolesArg,
   type ListAccessRolesResponse,
+  type ListAccountClaimableRoleAssignmentsResponse,
 } from '@equinor/fusion-services/roles';
 import {
   concatMap,
+  defaultIfEmpty,
   defer,
   EMPTY,
   expand,
@@ -30,6 +34,7 @@ import {
   of,
   reduce,
   switchMap,
+  take,
   tap,
 } from 'rxjs';
 
@@ -47,10 +52,10 @@ const ROLES_CACHE_EXPIRY_MS = 60_000;
 export interface ActivateClaimableRoleAssignmentInput {
   /** Claimable role assignment identifier. */
   assignmentId: string;
-  /** Reason recorded for activating the claimable role assignment. */
-  reason?: string;
-  /** Requested activation duration in hours. */
-  hours?: number | string;
+  /** Non-empty audit reason recorded for activation, up to 500 characters. */
+  reason: ActivateClaimableRoleAssignmentArg<'v1'>['reason'];
+  /** Requested activation duration as an integer from 1 through 24 hours. */
+  hours: ActivateClaimableRoleAssignmentArg<'v1'>['hours'];
 }
 
 /**
@@ -92,6 +97,33 @@ interface ClaimableRoleAssignmentForAccessRoleQueryArgs {
 }
 
 /**
+ * Determines whether a global claimable role assignment can be activated at the supplied time.
+ *
+ * @param assignment - Account claimable role assignment returned by Roles V2.
+ * @param now - Current epoch timestamp used for validity-window evaluation.
+ * @returns True when the assignment is global, inactive, and inside its validity window.
+ */
+const isClaimableRoleAssignmentActivatableNow = (
+  assignment: ApiAccountClaimableRoleAssignmentV1,
+  now: number,
+): boolean => {
+  // Name-only access checks match the backend's global authorization requirement.
+  if (assignment.type !== 'Global' || assignment.isActive === true) {
+    return false;
+  }
+  const validFrom = assignment.validFrom ? Date.parse(assignment.validFrom) : undefined;
+  const validTo = assignment.validTo ? Date.parse(assignment.validTo) : undefined;
+  // Invalid service timestamps cannot establish that activation is currently allowed.
+  if (
+    (validFrom !== undefined && (!Number.isFinite(validFrom) || validFrom > now)) ||
+    (validTo !== undefined && (!Number.isFinite(validTo) || validTo <= now))
+  ) {
+    return false;
+  }
+  return true;
+};
+
+/**
  * Typed client contract for executing functions from `@equinor/fusion-services/roles`.
  *
  * Operations return cold, single-result observables that complete or error.
@@ -118,9 +150,13 @@ export interface IRolesClient {
   ): Observable<ApiAccountActiveAccessRoleAssignmentV1[]>;
 
   /**
-   * Gets the roles the account is eligible to claim, consolidated across contributing sources.
+   * Gets the account's assigned claimable roles, consolidated across contributing sources.
    *
-   * @returns Consolidated claimable-role assignments for the scoped account.
+   * The collection can include future, expired, or currently active assignments. Use
+   * {@link IRolesClient.hasClaimableRoleAssignmentForAccessRole} when current activation
+   * eligibility is required.
+   *
+   * @returns Consolidated assigned claimable-role assignments for the scoped account.
    */
   getConsolidatedClaimableRoleAssignments(
     options?: RolesReadOptions,
@@ -162,15 +198,17 @@ export interface IRolesClient {
   ): Observable<ApiClaimableRoleAssignmentActivationV1>;
 
   /**
-   * Checks whether any claimable role assignment grants an access role when activated.
+   * Checks whether any global claimable role assignment can currently be activated to grant an
+   * access role.
    *
    * @param accessRoleName - Exact access-role name to find in expanded mappings.
-   * @returns True when the account holds a claimable role assignment granting the access role.
+   * @returns True when the account holds a valid, inactive, global assignment granting the role.
    */
   hasClaimableRoleAssignmentForAccessRole(accessRoleName: string): Observable<boolean>;
 
   /**
-   * Resolves whether required access roles exist and which claimable role assignments grant them.
+   * Resolves whether required access roles exist and which global claimable role assignments can
+   * currently be activated to grant them.
    *
    * @param accessRoleNames - Exact access-role names required by an application.
    * @returns Statuses in the same order as the unique requested access-role names.
@@ -486,27 +524,14 @@ export class RolesClient implements IRolesClient {
     accessRoleNames: ReadonlySet<string>,
   ): Observable<Map<string, RequiredAccessRoleClaimableAssignment[]>> {
     // Defer the reducer seed so repeated subscriptions never share mutable index state.
-    return defer(() =>
+    return defer(() => {
+      const now = Date.now();
       // Flatten assignments and mappings before indexing only activatable, requested assignments.
-      listAccountClaimableRoleAssignments(
-        'v1',
-        this.httpClient,
-        'json$',
-      )({
-        accountIdentifier,
-        expand: 'accessRoleMappings',
-      }).pipe(
-        // Validate completeness before emitting any assignment into the index.
-        tap((page) => {
-          // This endpoint has no paging inputs, so incomplete results must fail the whole lookup.
-          if (page.nextPage) {
-            throw new RolesError(
-              'Roles V2 returned incomplete data while resolving required access roles.',
-            );
-          }
-        }),
+      return this._getAccountClaimableRoleAssignmentPages(accountIdentifier).pipe(
         // Flatten the response array without changing assignment order.
         concatMap((page) => page.value ?? []),
+        // Recovery can only offer assignments that can satisfy a global role check now.
+        filter((assignment) => isClaimableRoleAssignmentActivatableNow(assignment, now)),
         // Narrow the identifier as well as filtering: assignments without IDs cannot be activated.
         filter(
           (assignment): assignment is typeof assignment & { id: string } =>
@@ -546,8 +571,52 @@ export class RolesClient implements IRolesClient {
           claimableAssignmentsByAccessRole.set(accessRoleName, claimableAssignments);
           return claimableAssignmentsByAccessRole;
         }, new Map<string, RequiredAccessRoleClaimableAssignment[]>()),
-      ),
-    );
+      );
+    });
+  }
+
+  /**
+   * Reads every account claimable-role-assignment page in service order.
+   *
+   * @param accountIdentifier - Authenticated account whose assignments are inspected.
+   * @returns A finite page stream that follows `$skip` continuations until the collection ends.
+   * @throws {RolesError} When a continuation cannot advance through the collection.
+   */
+  protected _getAccountClaimableRoleAssignmentPages(
+    accountIdentifier: string,
+  ): Observable<ListAccountClaimableRoleAssignmentsResponse<'v1'>> {
+    // Keep pagination state per subscription so cached queries cannot share offsets.
+    return defer(() => {
+      let skip = 0;
+      const getPage = (): Observable<ListAccountClaimableRoleAssignmentsResponse<'v1'>> =>
+        listAccountClaimableRoleAssignments(
+          'v1',
+          this.httpClient,
+          'json$',
+        )({
+          accountIdentifier,
+          top: 100,
+          skip,
+          expand: 'accessRoleMappings',
+        });
+
+      return getPage().pipe(
+        expand((page) => {
+          const assignments = page.value ?? [];
+          if (!page.nextPage) {
+            return EMPTY;
+          }
+          // Advancing by zero would repeatedly request the same page.
+          if (assignments.length === 0) {
+            throw new RolesError(
+              'Roles V2 returned an invalid claimable-role-assignment continuation.',
+            );
+          }
+          skip += assignments.length;
+          return getPage();
+        }),
+      );
+    });
   }
 
   /**
@@ -661,45 +730,32 @@ export class RolesClient implements IRolesClient {
    * Loads expanded claimable-role mappings to evaluate one access role.
    *
    * @param args - Current account identifier and exact access-role name to evaluate.
-   * @returns True when a claimable role assignment grants the access role when activated.
+   * @returns True when a valid, inactive, global assignment grants the access role.
    * @throws {Error} When the service returns an unfollowable continuation.
    */
   protected _fetchHasClaimableRoleAssignmentForAccessRole({
     accountIdentifier,
     accessRoleName,
   }: ClaimableRoleAssignmentForAccessRoleQueryArgs): Observable<boolean> {
-    // Defer transport so synchronous request validation also reaches the error channel.
-    return defer(() =>
-      listAccountClaimableRoleAssignments(
-        'v1',
-        this.httpClient,
-        'json$',
-      )({
-        accountIdentifier,
-        expand: 'accessRoleMappings',
-      }),
-    ).pipe(
-      // Produce one definitive boolean, or fail rather than treating incomplete data as denial.
-      map((assignments) => {
-        // Stop after the first claimable role assignment that can grant the requested access role.
-        const hasClaimableRoleAssignment = (assignments.value ?? []).some((assignment) =>
-          // Expanded mappings are the authoritative relationship between these roles.
-          assignment.claimableRole?.accessRoleMappings?.some(
-            (mapping) => mapping.accessRole?.name === accessRoleName,
+    // Capture one timestamp so assignments on different pages use the same eligibility boundary.
+    return defer(() => {
+      const now = Date.now();
+      return this._getAccountClaimableRoleAssignmentPages(accountIdentifier).pipe(
+        map((page) =>
+          (page.value ?? []).some(
+            (assignment) =>
+              isClaimableRoleAssignmentActivatableNow(assignment, now) &&
+              // Expanded mappings are the authoritative relationship between these roles.
+              assignment.claimableRole?.accessRoleMappings?.some(
+                (mapping) => mapping.accessRole?.name === accessRoleName,
+              ),
           ),
-        );
-        // A positive match is conclusive even when the service advertises another page.
-        if (hasClaimableRoleAssignment) {
-          return true;
-        }
-        // The endpoint exposes no skip/top inputs, so a continuation cannot be followed safely.
-        if (assignments.nextPage) {
-          throw new RolesError(
-            'Roles V2 returned incomplete claimable role assignments while checking activation eligibility.',
-          );
-        }
-        return false;
-      }),
-    );
+        ),
+        // A positive match is conclusive, so later pages are not requested.
+        filter((hasClaimableRoleAssignment) => hasClaimableRoleAssignment),
+        take(1),
+        defaultIfEmpty(false),
+      );
+    });
   }
 }

@@ -1,5 +1,5 @@
 /**
- * Claimable assignment that can activate one required access role.
+ * Currently activatable global assignment that can satisfy one required access role.
  */
 export interface RequiredAccessRoleClaimableAssignment {
   readonly assignmentId: string;
@@ -9,7 +9,7 @@ export interface RequiredAccessRoleClaimableAssignment {
 }
 
 /**
- * Roles V2 availability resolved for one access role required by an application.
+ * Roles V2 global access and current activation availability for one role required by an application.
  */
 export interface RequiredAccessRoleStatus {
   readonly name: string;

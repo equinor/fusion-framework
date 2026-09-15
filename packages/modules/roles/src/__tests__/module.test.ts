@@ -152,8 +152,16 @@ describe('roles module', () => {
     const client = createClient();
     vi.mocked(client.getActiveAccessRoleAssignments).mockReturnValue(
       of([
-        { systemName: 'Reports', accessRoleName: 'Reports.Read' },
-        { systemName: 'Reports', accessRoleName: 'Reports.Export' },
+        {
+          systemName: 'Reports',
+          accessRoleName: 'Reports.Read',
+          assignmentType: 'Global',
+        },
+        {
+          systemName: 'Reports',
+          accessRoleName: 'Reports.Export',
+          assignmentType: 'Global',
+        },
       ]),
     );
     const config = new RolesModuleConfigurator();
@@ -172,7 +180,13 @@ describe('roles module', () => {
   it('denies bootstrap when a required role is not active', async () => {
     const client = createClient();
     vi.mocked(client.getActiveAccessRoleAssignments).mockReturnValue(
-      of([{ systemName: 'Reports', accessRoleName: 'Reports.Read' }]),
+      of([
+        {
+          systemName: 'Reports',
+          accessRoleName: 'Reports.Read',
+          assignmentType: 'Global',
+        },
+      ]),
     );
     const config = new RolesModuleConfigurator();
     config.setClient(client);

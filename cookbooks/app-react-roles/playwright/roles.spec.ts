@@ -46,14 +46,25 @@ test('recovers the application after claiming its required role', async ({ page 
 });
 
 test('renders scoped and duplicate active assignments after refresh', async ({ page }) => {
-  const role = { systemName: 'Reports', accessRoleName: 'Reports.Read' };
+  const role = {
+    systemName: 'Reports',
+    accessRoleName: 'Reports.Read',
+    assignmentType: 'Scoped',
+  };
   const first = { ...role, scope: { type: 'project', isGlobal: false, values: ['A'] } };
   const second = { ...role, scope: { type: 'project', isGlobal: false, values: ['B'] } };
   let assignments = [first, second, first];
   // Isolate this reconciliation scenario from server mutation state and satisfy the app gate.
   await page.route('**/active-access-role-assignments*', (route) =>
     route.fulfill({
-      json: [{ systemName: 'ProView', accessRoleName: 'ProView.Admin.DevOps' }, ...assignments],
+      json: [
+        {
+          systemName: 'ProView',
+          accessRoleName: 'ProView.Admin.DevOps',
+          assignmentType: 'Global',
+        },
+        ...assignments,
+      ],
     }),
   );
   await page.goto(APP_PATH);

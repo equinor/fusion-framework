@@ -52,7 +52,13 @@ describe('useAccessRole', () => {
   it('checks active and claimable access when mounted', async () => {
     const client = createClient();
     vi.mocked(client.getActiveAccessRoleAssignments).mockReturnValue(
-      of([{ systemName: 'Reports', accessRoleName: 'Reports.Read' }]),
+      of([
+        {
+          systemName: 'Reports',
+          accessRoleName: 'Reports.Read',
+          assignmentType: 'Global',
+        },
+      ]),
     );
     vi.mocked(client.hasClaimableRoleAssignmentForAccessRole).mockReturnValue(of(true));
 
@@ -91,7 +97,15 @@ describe('useAccessRole', () => {
     const client = createClient();
     vi.mocked(client.getActiveAccessRoleAssignments)
       .mockReturnValueOnce(of([]))
-      .mockReturnValue(of([{ systemName: 'Reports', accessRoleName: 'Reports.Read' }]));
+      .mockReturnValue(
+        of([
+          {
+            systemName: 'Reports',
+            accessRoleName: 'Reports.Read',
+            assignmentType: 'Global',
+          },
+        ]),
+      );
     vi.mocked(client.hasClaimableRoleAssignmentForAccessRole)
       .mockReturnValueOnce(of(true))
       .mockReturnValue(of(false));
@@ -106,6 +120,7 @@ describe('useAccessRole', () => {
         result.current.activateClaimableRoleAssignment({
           assignmentId: 'claimable-role',
           reason: 'Open reports',
+          hours: 2,
         }),
       ).resolves.toEqual({ id: 'activation-id' });
     });
@@ -119,6 +134,7 @@ describe('useAccessRole', () => {
     expect(client.activateClaimableRoleAssignment).toHaveBeenCalledWith({
       assignmentId: 'claimable-role',
       reason: 'Open reports',
+      hours: 2,
     });
     expect(client.getActiveAccessRoleAssignments).toHaveBeenCalledTimes(2);
 
@@ -137,7 +153,11 @@ describe('useAccessRole', () => {
 
     await act(async () => {
       await expect(
-        result.current.activateClaimableRoleAssignment({ assignmentId: 'claimable-role' }),
+        result.current.activateClaimableRoleAssignment({
+          assignmentId: 'claimable-role',
+          reason: 'Test activation',
+          hours: 2,
+        }),
       ).rejects.toMatchObject({
         name: 'ActivateClaimableRoleAssignmentError',
         cause: error,
@@ -169,9 +189,13 @@ describe('useAccessRole', () => {
     act(() => {
       firstPromise = result.current.activateClaimableRoleAssignment({
         assignmentId: 'first-assignment',
+        reason: 'First test activation',
+        hours: 2,
       });
       secondPromise = result.current.activateClaimableRoleAssignment({
         assignmentId: 'second-assignment',
+        reason: 'Second test activation',
+        hours: 2,
       });
     });
     expect(result.current.isActivating).toBe(true);
@@ -212,6 +236,8 @@ describe('useAccessRole', () => {
     act(() => {
       activationPromise = result.current.activateClaimableRoleAssignment({
         assignmentId: 'reports-assignment',
+        reason: 'Test activation',
+        hours: 2,
       });
     });
     expect(result.current.isActivating).toBe(true);

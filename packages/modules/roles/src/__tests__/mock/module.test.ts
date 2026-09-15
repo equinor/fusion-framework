@@ -49,7 +49,11 @@ describe('rolesMockModule', () => {
   });
 
   it('exposes static role data through the production provider', async () => {
-    const activeRole = { systemName: 'Reports', accessRoleName: 'Reports.Read' };
+    const activeRole = {
+      systemName: 'Reports',
+      accessRoleName: 'Reports.Read',
+      assignmentType: 'Global',
+    };
     const claimableRole = { id: 'assignment-id', claimableRole: { id: 'role-id' } };
     const consolidatedRole = { id: 'assigned-id', role: { name: 'Reports.Admin' } };
     const provider = await initializeMockWith(undefined, (mock) => {
@@ -96,7 +100,11 @@ describe('rolesMockModule', () => {
       true,
     );
     await expect(
-      provider.activateClaimableRoleAssignment({ assignmentId: 'assignment-id' }),
+      provider.activateClaimableRoleAssignment({
+        assignmentId: 'assignment-id',
+        reason: 'Test activation',
+        hours: 2,
+      }),
     ).resolves.toEqual(activation);
   });
 

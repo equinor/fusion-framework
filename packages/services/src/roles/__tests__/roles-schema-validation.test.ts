@@ -4,6 +4,7 @@ import {
   createRoleBindingConfiguration,
   createRole,
   deleteRole,
+  listAccountClaimableRoleAssignments,
   getRole,
   getRoleBindingConfiguration,
   listAccountConsolidatedRoleAssignments,
@@ -11,6 +12,7 @@ import {
   putRolesSubscription,
   updateRole,
 } from '..';
+import { ActivateAssignedClaimableRoleRequestSchemaV1 } from '../v1/schemas/activate-assigned-claimable-role-request-schema-v1';
 import { ApiRoleSchemaV1 } from '../v1/schemas/api-role-schema-v1';
 import { AddClaimableRoleAccessRoleRequestSchemaV1 } from '../v1/schemas/add-claimable-role-access-role-request-schema-v1';
 import { AddRoleAccessRoleRequestSchemaV1 } from '../v1/schemas/add-role-access-role-request-schema-v1';
@@ -92,6 +94,40 @@ describe('Roles V2 schema enforcement', () => {
   });
 
   describe('argument schemas', () => {
+    it('enforces the backend activation reason and duration constraints', () => {
+      expect(
+        ActivateAssignedClaimableRoleRequestSchemaV1.safeParse({
+          reason: 'Incident response',
+          hours: 2,
+        }).success,
+      ).toBe(true);
+      expect(ActivateAssignedClaimableRoleRequestSchemaV1.safeParse({}).success).toBe(false);
+      expect(
+        ActivateAssignedClaimableRoleRequestSchemaV1.safeParse({ reason: '', hours: 2 }).success,
+      ).toBe(false);
+      expect(
+        ActivateAssignedClaimableRoleRequestSchemaV1.safeParse({ reason: '   ', hours: 2 }).success,
+      ).toBe(false);
+      expect(
+        ActivateAssignedClaimableRoleRequestSchemaV1.safeParse({
+          reason: 'x'.repeat(501),
+          hours: 2,
+        }).success,
+      ).toBe(false);
+      expect(
+        ActivateAssignedClaimableRoleRequestSchemaV1.safeParse({
+          reason: 'Incident response',
+          hours: 1.5,
+        }).success,
+      ).toBe(false);
+      expect(
+        ActivateAssignedClaimableRoleRequestSchemaV1.safeParse({
+          reason: 'Incident response',
+          hours: 25,
+        }).success,
+      ).toBe(false);
+    });
+
     it('rejects empty mapping and assignment lists for batch mutation requests', () => {
       expect(AddRoleAccessRoleRequestSchemaV1.safeParse({}).success).toBe(false);
       expect(AddRoleAccessRoleRequestSchemaV1.safeParse({ accessRoleMappings: [] }).success).toBe(
@@ -129,6 +165,25 @@ describe('Roles V2 schema enforcement', () => {
 
       expect(params.get('$top')).toBe('10');
       expect(params.get('$skip')).toBe('5');
+      expect(params.get('$expand')).toBe('accessRoleMappings');
+    });
+
+    it('forwards account claimable-role assignment paging options', () => {
+      listAccountClaimableRoleAssignments(
+        'v1',
+        testClient.client,
+      )({
+        accountIdentifier: 'account-id',
+        top: 100,
+        skip: 200,
+        expand: 'accessRoleMappings',
+      });
+
+      const [path] = testClient.json.mock.calls.at(-1) as [string];
+      const params = new URL(path, 'https://localhost').searchParams;
+
+      expect(params.get('$top')).toBe('100');
+      expect(params.get('$skip')).toBe('200');
       expect(params.get('$expand')).toBe('accessRoleMappings');
     });
   });

@@ -108,10 +108,14 @@ export interface IRolesProvider {
   ): Promise<ApiAccountActiveAccessRoleAssignmentV1[]>;
 
   /**
-   * Gets the roles the authenticated account is eligible to claim, consolidated across
-   * contributing sources.
+   * Gets the authenticated account's assigned claimable roles, consolidated across contributing
+   * sources.
    *
-   * @returns Consolidated claimable-role assignments for rendering claimable-role choices.
+   * The collection can include future, expired, or currently active assignments. Use
+   * {@link IRolesProvider.hasClaimableRoleAssignmentForAccessRole} when current activation
+   * eligibility is required.
+   *
+   * @returns Consolidated assigned claimable-role assignments for the authenticated account.
    * @throws {RolesError} When the Roles V2 request or response validation fails.
    */
   getConsolidatedClaimableRoleAssignments(
@@ -162,10 +166,11 @@ export interface IRolesProvider {
   ): Promise<ApiClaimableRoleAssignmentActivationV1>;
 
   /**
-   * Checks whether requested access roles are active for the authenticated account.
+   * Checks whether requested global access roles are active for the authenticated account.
    *
-   * Matching is exact and case-sensitive. Empty arrays return the all-role identity when
-   * `required` is true and `false` otherwise, without making a request.
+   * This name-only check matches Roles V2's generic authorization requirement and therefore
+   * ignores scoped assignments. Matching is exact and case-sensitive. Empty arrays return the
+   * all-role identity when `required` is true and `false` otherwise, without making a request.
    *
    * @param accessRoleNames - Exact Roles V2 access-role names to match.
    * @param options - Whether to assert the result and require all requested access roles.
@@ -179,20 +184,21 @@ export interface IRolesProvider {
   ): Promise<boolean>;
 
   /**
-   * Checks whether the authenticated account holds a claimable role assignment that grants an
-   * access role when activated.
+   * Checks whether the authenticated account holds a global claimable role assignment that can
+   * currently be activated to grant an access role.
    *
-   * The check follows expanded `accessRoleMappings`; the input identifies an access role, not a
-   * claimable role assignment. Empty names return `false` without a request.
+   * The check excludes future, expired, already-active, and scoped assignments before following
+   * expanded `accessRoleMappings`; the input identifies an access role, not a claimable role
+   * assignment. Empty names return `false` without a request.
    *
    * @param accessRoleName - Exact Roles V2 access-role name to match in claimable mappings.
-   * @returns True when a claimable role assignment grants the requested access role.
+   * @returns True when a currently activatable global assignment grants the requested access role.
    * @throws {RolesError} When request, validation, or eligibility evaluation fails.
    */
   hasClaimableRoleAssignmentForAccessRole(accessRoleName: string): Promise<boolean>;
 
   /**
-   * Resolves existence and claimable-assignment availability for access roles blocking
+   * Resolves existence and currently activatable global assignments for access roles blocking
    * application initialization.
    *
    * @param accessRoleNames - Exact required access-role names.
@@ -396,8 +402,8 @@ export class RolesProvider
     const activeAccessRoleNames = new Set<string>();
     // Only explicit access-role names can satisfy a requested access role.
     for (const assignment of activeAccessRoleAssignments) {
-      // Incomplete service records cannot satisfy exact access-role-name checks.
-      if (assignment.accessRoleName) {
+      // The backend's generic name-only authorization requirement accepts global grants only.
+      if (assignment.accessRoleName && assignment.assignmentType === 'Global') {
         activeAccessRoleNames.add(assignment.accessRoleName);
       }
     }

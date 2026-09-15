@@ -28,7 +28,9 @@ initialization completes. Every configured role must be active for the signed-in
 names use exact, case-sensitive matching against the Roles V2 `accessRoleName`.
 
 Initialization throws `RequiredAccessRolesError` containing all missing role names when the account
-does not satisfy the requirements. Omit `requireAccessRoles`, or call `enableRoles(configurator)`
+does not satisfy the requirements. This name-only check follows the Roles V2 generic authorization
+requirement and accepts global active assignments only; scoped assignments require a separate,
+scope-aware authorization flow. Omit `requireAccessRoles`, or call `enableRoles(configurator)`
 without a configuration callback, when initialization should not enforce an access-role guard.
 
 Multiple `requireAccessRoles` calls accumulate requirements. The method also accepts a builder callback
@@ -58,8 +60,9 @@ const canReadReports = await framework.modules.roles.hasAccessRole(['Reports.Rea
 const canClaimReportReader = await framework.modules.roles.hasClaimableRoleAssignmentForAccessRole('Reports.Read');
 ```
 
-`hasClaimableRoleAssignmentForAccessRole` expands `accessRoleMappings` on the account's claimable assignments and checks
-whether activating any claimable role would grant the requested access-role name.
+`hasClaimableRoleAssignmentForAccessRole` follows every page of the account's claimable assignments
+and expands `accessRoleMappings`. It returns `true` only for a global assignment that is currently
+inside its validity window, is not already active, and grants the requested access-role name.
 
 `getActiveAccessRoleAssignments` reads `/active-access-role-assignments`: currently effective,
 deduplicated access-role assignments with provenance dropped. Its `assignmentType` cannot reliably
@@ -67,10 +70,11 @@ distinguish a standing grant from an activated claim. Use `getConsolidatedRoleAs
 authoritative source for standing, non-claimable assignment state: it reads the
 `/consolidated-role-assignments` endpoint directly rather than inferring provenance from active
 assignments. These assignments are not claimable, but Roles V2 never calls them permanent — they may
-still be validity-bounded. Consolidated claimable assignments from
-`getConsolidatedClaimableRoleAssignments` remain authoritative for claimed state. Unlike active and
-claimable assignments, consolidated role assignments carry no `isActive` flag; callers that need
-current effectiveness must compute it from `validFrom`/`validTo`.
+still be validity-bounded. `getConsolidatedClaimableRoleAssignments` returns assigned claimable
+roles, including assignments that can be future, expired, or already active; it is authoritative
+for assignment and claimed state, not a filtered list of roles currently eligible for activation.
+Unlike active and claimable assignments, consolidated role assignments carry no `isActive` flag;
+callers that need current effectiveness must compute it from `validFrom`/`validTo`.
 
 Request and response validation errors from `@equinor/fusion-services` and HTTP request errors
 are preserved as the `cause` of a `RolesError`.
@@ -94,6 +98,9 @@ await framework.modules.roles.deactivateClaimableRoleAssignment({
   assignmentId: claimableRoleId,
 });
 ```
+
+Roles V2 requires a non-empty activation `reason` of at most 500 characters and an integer `hours`
+value from 1 through 24. The typed client validates these constraints before sending the request.
 
 A successful claim or deactivation invalidates the active-access, claimable, and claim-eligibility
 caches so the next request refreshes them. The consolidated-role-assignment cache is deliberately

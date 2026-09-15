@@ -52,7 +52,11 @@ const RolesConsumer = (): ReactNode => {
         type="button"
         onClick={() =>
           void claimable
-            .activateClaimableRoleAssignment({ assignmentId: 'claimable-role' })
+            .activateClaimableRoleAssignment({
+              assignmentId: 'claimable-role',
+              reason: 'Test activation',
+              hours: 2,
+            })
             .catch(() => undefined)
         }
       >

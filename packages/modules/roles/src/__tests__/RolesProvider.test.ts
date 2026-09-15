@@ -180,7 +180,11 @@ describe('RolesProvider', () => {
     );
     await expect(provider.getConsolidatedRoleAssignments()).resolves.toEqual(consolidatedRoles);
     await expect(
-      provider.activateClaimableRoleAssignment({ assignmentId: 'claimable-role' }),
+      provider.activateClaimableRoleAssignment({
+        assignmentId: 'claimable-role',
+        reason: 'Test activation',
+        hours: 2,
+      }),
     ).resolves.toEqual(activation);
     await expect(
       provider.deactivateClaimableRoleAssignment({ assignmentId: 'claimable-role' }),
@@ -191,7 +195,11 @@ describe('RolesProvider', () => {
 
     expect(dispatchEvent.mock.calls[0][0]).toBeInstanceOf(ClaimableRoleAssignmentActivationEvent);
     expect(dispatchEvent.mock.calls[0][0].cancelable).toBe(true);
-    expect(dispatchEvent.mock.calls[0][0].detail).toEqual({ assignmentId: 'claimable-role' });
+    expect(dispatchEvent.mock.calls[0][0].detail).toEqual({
+      assignmentId: 'claimable-role',
+      reason: 'Test activation',
+      hours: 2,
+    });
     expect(dispatchEvent).toHaveBeenCalledOnce();
     expect(telemetry.trackEvent).toHaveBeenCalledWith({
       name: 'RolesProvider.activateClaimableRoleAssignment',
@@ -213,7 +221,11 @@ describe('RolesProvider', () => {
     });
     const provider = new RolesProvider({ client }, { event: { dispatchEvent } });
 
-    const claim = provider.activateClaimableRoleAssignment({ assignmentId: 'claimable-role' });
+    const claim = provider.activateClaimableRoleAssignment({
+      assignmentId: 'claimable-role',
+      reason: 'Test activation',
+      hours: 2,
+    });
 
     await expect(claim).rejects.toThrow(
       'Claimable role assignment activation was canceled by an event listener.',
@@ -226,7 +238,13 @@ describe('RolesProvider', () => {
   it('checks active access-role names for the authenticated account', async () => {
     const client = createClient();
     vi.mocked(client.getActiveAccessRoleAssignments).mockReturnValue(
-      of([{ systemName: 'Reports', accessRoleName: 'Reports.Read' }]),
+      of([
+        {
+          systemName: 'Reports',
+          accessRoleName: 'Reports.Read',
+          assignmentType: 'Global',
+        },
+      ]),
     );
     const provider = new RolesProvider({ client });
 
@@ -258,8 +276,16 @@ describe('RolesProvider', () => {
     const client = createClient();
     vi.mocked(client.getActiveAccessRoleAssignments).mockReturnValue(
       of([
-        { systemName: 'Reports', accessRoleName: 'Reports.Read' },
-        { systemName: 'Reports', accessRoleName: 'Reports.Export' },
+        {
+          systemName: 'Reports',
+          accessRoleName: 'Reports.Read',
+          assignmentType: 'Global',
+        },
+        {
+          systemName: 'Reports',
+          accessRoleName: 'Reports.Export',
+          assignmentType: 'Global',
+        },
       ]),
     );
     const provider = new RolesProvider({ client });
@@ -267,6 +293,23 @@ describe('RolesProvider', () => {
     await expect(
       provider.hasAccessRole(['Reports.Read', 'Reports.Export'], { assert: true, required: true }),
     ).resolves.toBe(true);
+  });
+
+  it('does not satisfy a name-only access check with a scoped assignment', async () => {
+    const client = createClient();
+    vi.mocked(client.getActiveAccessRoleAssignments).mockReturnValue(
+      of([
+        {
+          systemName: 'Reports',
+          accessRoleName: 'Reports.Read',
+          assignmentType: 'Scoped',
+          scope: { type: 'project', isGlobal: false, values: ['project-a'] },
+        },
+      ]),
+    );
+    const provider = new RolesProvider({ client });
+
+    await expect(provider.hasAccessRole(['Reports.Read'], { required: true })).resolves.toBe(false);
   });
 
   it('does not load active roles when no requirements are configured', async () => {
@@ -283,7 +326,13 @@ describe('RolesProvider', () => {
   it('reports every configured access role that is not active', async () => {
     const client = createClient();
     vi.mocked(client.getActiveAccessRoleAssignments).mockReturnValue(
-      of([{ systemName: 'Reports', accessRoleName: 'Reports.Read' }]),
+      of([
+        {
+          systemName: 'Reports',
+          accessRoleName: 'Reports.Read',
+          assignmentType: 'Global',
+        },
+      ]),
     );
     const provider = new RolesProvider({ client });
 
@@ -356,7 +405,11 @@ describe('RolesProvider', () => {
     const provider = new RolesProvider({ client });
 
     await expect(
-      provider.activateClaimableRoleAssignment({ assignmentId: 'claimable-role' }),
+      provider.activateClaimableRoleAssignment({
+        assignmentId: 'claimable-role',
+        reason: 'Test activation',
+        hours: 2,
+      }),
     ).rejects.toMatchObject({
       name: 'ActivateClaimableRoleAssignmentError',
       message: 'Failed to activate claimable role assignment.',

@@ -119,6 +119,8 @@ describe('RolesProvider lifecycle', () => {
     await first.consolidatedClaimableRoleAssignments.reload();
     await first.consolidatedClaimableRoleAssignments.activateClaimableRoleAssignment({
       assignmentId: 'assignment',
+      reason: 'Test activation',
+      hours: 2,
     });
     await first.consolidatedClaimableRoleAssignments.deactivateClaimableRoleAssignment({
       assignmentId: 'assignment',
@@ -160,6 +162,8 @@ describe('RolesProvider lifecycle', () => {
     }
     const result = latest.consolidatedClaimableRoleAssignments.activateClaimableRoleAssignment({
       assignmentId: 'assignment',
+      reason: 'Test activation',
+      hours: 2,
     });
     const rejected = expect(result).rejects.toThrow(/dispos/i);
     await screen.unmount();

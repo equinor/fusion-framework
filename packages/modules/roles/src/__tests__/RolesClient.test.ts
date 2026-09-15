@@ -231,6 +231,8 @@ describe('RolesClient', () => {
         totalCount: 1,
         value: [
           {
+            type: 'Global',
+            isActive: false,
             claimableRole: {
               accessRoleMappings: [{ accessRole: { name: 'Reports.Read' } }],
             },
@@ -247,8 +249,84 @@ describe('RolesClient', () => {
       lastValueFrom(client.hasClaimableRoleAssignmentForAccessRole('Reports.Write')),
     ).resolves.toBe(false);
     expect(json.mock.calls[0][0]).toBe(
-      '/accounts/account-id/claimable-role-assignments?api-version=1.0&%24expand=accessRoleMappings',
+      '/accounts/account-id/claimable-role-assignments?api-version=1.0&%24top=100&%24skip=0&%24expand=accessRoleMappings',
     );
+  });
+
+  it('excludes future, expired, active, and scoped assignments from claim eligibility', async () => {
+    const { httpClient, json } = createHttpClient();
+    const mapping = {
+      claimableRole: {
+        accessRoleMappings: [{ accessRole: { name: 'Reports.Read' } }],
+      },
+    };
+    json.mockReturnValue(
+      of({
+        totalCount: 5,
+        value: [
+          {
+            ...mapping,
+            type: 'Global',
+            isActive: false,
+            validFrom: '2026-09-16T00:00:00Z',
+          },
+          {
+            ...mapping,
+            type: 'Global',
+            isActive: false,
+            validTo: '2026-09-14T00:00:00Z',
+          },
+          { ...mapping, type: 'Global', isActive: true },
+          { ...mapping, type: 'Scoped', isActive: false },
+          {
+            ...mapping,
+            type: 'Global',
+            isActive: false,
+            validFrom: 'not-a-date',
+          },
+        ],
+      }),
+    );
+    const now = vi.spyOn(Date, 'now').mockReturnValue(Date.parse('2026-09-15T12:00:00Z'));
+    const client = createRolesClient(httpClient, () => 'account-id');
+
+    await expect(
+      lastValueFrom(client.hasClaimableRoleAssignmentForAccessRole('Reports.Read')),
+    ).resolves.toBe(false);
+
+    now.mockRestore();
+  });
+
+  it('follows claimable assignment pages until an eligible mapping is found', async () => {
+    const { httpClient, json } = createHttpClient();
+    json
+      .mockReturnValueOnce(
+        of({
+          totalCount: 2,
+          nextPage: 'next',
+          value: [{ type: 'Global', isActive: false, claimableRole: {} }],
+        }),
+      )
+      .mockReturnValueOnce(
+        of({
+          totalCount: 2,
+          value: [
+            {
+              type: 'Global',
+              isActive: false,
+              claimableRole: {
+                accessRoleMappings: [{ accessRole: { name: 'Reports.Read' } }],
+              },
+            },
+          ],
+        }),
+      );
+    const client = createRolesClient(httpClient, () => 'account-id');
+
+    await expect(
+      lastValueFrom(client.hasClaimableRoleAssignmentForAccessRole('Reports.Read')),
+    ).resolves.toBe(true);
+    expect(json.mock.calls[1][0]).toContain('%24top=100&%24skip=1');
   });
 
   it('resolves required role existence and claimable assignments through typed endpoints', async () => {
@@ -272,6 +350,8 @@ describe('RolesClient', () => {
           value: [
             {
               id: 'claimable-assignment',
+              type: 'Global',
+              isActive: false,
               claimableRole: {
                 name: 'reports-exporter',
                 displayName: 'Reports exporter',
@@ -281,6 +361,8 @@ describe('RolesClient', () => {
             },
             {
               id: 'elevated-assignment',
+              type: 'Global',
+              isActive: false,
               claimableRole: {
                 name: 'reports-administrator',
                 displayName: 'Reports administrator',
@@ -302,7 +384,12 @@ describe('RolesClient', () => {
         ]),
       ),
     ).resolves.toEqual([
-      { name: 'Missing.Role', exists: false, claimableAssignments: [] },
+      {
+        name: 'Missing.Role',
+        description: undefined,
+        exists: false,
+        claimableAssignments: [],
+      },
       {
         name: 'Fusion.Apps.FullControl',
         description: 'Manage every Fusion application.',
@@ -336,7 +423,7 @@ describe('RolesClient', () => {
     );
     expect(json).toHaveBeenNthCalledWith(
       2,
-      '/accounts/account-id/claimable-role-assignments?api-version=1.0&%24expand=accessRoleMappings',
+      '/accounts/account-id/claimable-role-assignments?api-version=1.0&%24top=100&%24skip=0&%24expand=accessRoleMappings',
       expect.objectContaining({ selector: expect.any(Function) }),
     );
   });
@@ -346,11 +433,17 @@ describe('RolesClient', () => {
     const roles = of({ value: [{ name: 'Reports.Read' }, { name: 'Reports.Export' }] });
     const assignments = of({
       value: [
-        { claimableRole: { accessRoleMappings: [{ accessRole: { name: 'Reports.Read' } }] } },
+        {
+          type: 'Global',
+          isActive: false,
+          claimableRole: { accessRoleMappings: [{ accessRole: { name: 'Reports.Read' } }] },
+        },
         { id: '' },
         { id: 'no-mappings' },
         {
           id: 'shared-assignment',
+          type: 'Global',
+          isActive: false,
           claimableRole: {
             displayName: 'Report access',
             accessRoleMappings: [
@@ -363,6 +456,34 @@ describe('RolesClient', () => {
         },
         {
           id: 'fallback-assignment',
+          type: 'Global',
+          isActive: false,
+          claimableRole: { accessRoleMappings: [{ accessRole: { name: 'Reports.Read' } }] },
+        },
+        {
+          id: 'future-assignment',
+          type: 'Global',
+          isActive: false,
+          validFrom: '2099-01-01T00:00:00Z',
+          claimableRole: { accessRoleMappings: [{ accessRole: { name: 'Reports.Read' } }] },
+        },
+        {
+          id: 'expired-assignment',
+          type: 'Global',
+          isActive: false,
+          validTo: '2000-01-01T00:00:00Z',
+          claimableRole: { accessRoleMappings: [{ accessRole: { name: 'Reports.Read' } }] },
+        },
+        {
+          id: 'active-assignment',
+          type: 'Global',
+          isActive: true,
+          claimableRole: { accessRoleMappings: [{ accessRole: { name: 'Reports.Read' } }] },
+        },
+        {
+          id: 'scoped-assignment',
+          type: 'Scoped',
+          isActive: false,
           claimableRole: { accessRoleMappings: [{ accessRole: { name: 'Reports.Read' } }] },
         },
       ],
@@ -377,6 +498,7 @@ describe('RolesClient', () => {
     const expected = [
       {
         name: 'Reports.Export',
+        description: undefined,
         exists: true,
         claimableAssignments: [
           {
@@ -388,6 +510,7 @@ describe('RolesClient', () => {
       },
       {
         name: 'Reports.Read',
+        description: undefined,
         exists: true,
         claimableAssignments: [
           {
@@ -408,7 +531,7 @@ describe('RolesClient', () => {
     await expect(lastValueFrom(lookup)).resolves.toEqual(expected);
   });
 
-  it('rejects incomplete claimable data and unsubscribes pending registry reads', async () => {
+  it('rejects an empty claimable page with a continuation and unsubscribes registry reads', async () => {
     const { httpClient, json } = createHttpClient();
     const registry = new Subject<unknown>();
     json
@@ -418,8 +541,57 @@ describe('RolesClient', () => {
 
     await expect(
       lastValueFrom(client.getRequiredAccessRoleStatuses(['Reports.Read'])),
-    ).rejects.toThrow('Roles V2 returned incomplete data while resolving required access roles.');
+    ).rejects.toThrow('Roles V2 returned an invalid claimable-role-assignment continuation.');
     expect(registry.observed).toBe(false);
+  });
+
+  it('collects required-role recovery assignments across claimable pages', async () => {
+    const { httpClient, json } = createHttpClient();
+    json
+      .mockReturnValueOnce(of({ totalCount: 1, value: [{ name: 'Reports.Read' }] }))
+      .mockReturnValueOnce(
+        of({
+          totalCount: 2,
+          nextPage: 'next',
+          value: [{ id: 'unrelated', type: 'Global', isActive: false, claimableRole: {} }],
+        }),
+      )
+      .mockReturnValueOnce(
+        of({
+          totalCount: 2,
+          value: [
+            {
+              id: 'reports-reader',
+              type: 'Global',
+              isActive: false,
+              claimableRole: {
+                name: 'reports-reader',
+                accessRoleMappings: [{ accessRole: { name: 'Reports.Read' } }],
+              },
+            },
+          ],
+        }),
+      );
+    const client = createRolesClient(httpClient, () => 'account-id');
+
+    await expect(
+      lastValueFrom(client.getRequiredAccessRoleStatuses(['Reports.Read'])),
+    ).resolves.toEqual([
+      {
+        name: 'Reports.Read',
+        description: undefined,
+        exists: true,
+        claimableAssignments: [
+          {
+            assignmentId: 'reports-reader',
+            name: 'reports-reader',
+            displayName: 'reports-reader',
+            description: undefined,
+          },
+        ],
+      },
+    ]);
+    expect(json.mock.calls[2][0]).toContain('%24top=100&%24skip=1');
   });
 
   it('rejects a failed claimable lookup without waiting for access-role pagination', async () => {
@@ -512,7 +684,7 @@ describe('RolesClient', () => {
     expect(json).not.toHaveBeenCalled();
   });
 
-  it('throws rather than returning false for an incomplete claim eligibility response', async () => {
+  it('throws rather than looping on an empty claim eligibility continuation', async () => {
     const { httpClient, json } = createHttpClient();
     json.mockReturnValue(
       of({
@@ -525,9 +697,7 @@ describe('RolesClient', () => {
 
     await expect(
       lastValueFrom(client.hasClaimableRoleAssignmentForAccessRole('Reports.Read')),
-    ).rejects.toThrow(
-      'Roles V2 returned incomplete claimable role assignments while checking activation eligibility.',
-    );
+    ).rejects.toThrow('Roles V2 returned an invalid claimable-role-assignment continuation.');
   });
 
   it('caches reads and invalidates them after a successful claim', async () => {
@@ -538,6 +708,8 @@ describe('RolesClient', () => {
       totalCount: 1,
       value: [
         {
+          type: 'Global',
+          isActive: false,
           claimableRole: {
             accessRoleMappings: [{ accessRole: { name: 'Reports.Read' } }],
           },
@@ -569,7 +741,13 @@ describe('RolesClient', () => {
     ]);
     expect(json).toHaveBeenCalledTimes(3);
 
-    await lastValueFrom(client.activateClaimableRoleAssignment({ assignmentId: 'claimable-role' }));
+    await lastValueFrom(
+      client.activateClaimableRoleAssignment({
+        assignmentId: 'claimable-role',
+        reason: 'Test activation',
+        hours: 2,
+      }),
+    );
     await lastValueFrom(client.getActiveAccessRoleAssignments());
     await lastValueFrom(client.getConsolidatedClaimableRoleAssignments());
     await lastValueFrom(client.hasClaimableRoleAssignmentForAccessRole('Reports.Read'));
@@ -585,7 +763,13 @@ describe('RolesClient', () => {
     const client = createRolesClient(httpClient, () => 'account-id');
 
     await lastValueFrom(client.getConsolidatedRoleAssignments());
-    await lastValueFrom(client.activateClaimableRoleAssignment({ assignmentId: 'claimable-role' }));
+    await lastValueFrom(
+      client.activateClaimableRoleAssignment({
+        assignmentId: 'claimable-role',
+        reason: 'Test activation',
+        hours: 2,
+      }),
+    );
     await lastValueFrom(client.getConsolidatedRoleAssignments());
 
     // Only the initial consolidated-role-assignment read and the claim activation reach the
@@ -634,6 +818,8 @@ describe('RolesClient', () => {
       totalCount: 1,
       value: [
         {
+          type: 'Global',
+          isActive: false,
           claimableRole: {
             accessRoleMappings: [{ accessRole: { name: 'Reports.Read' } }],
           },
@@ -651,7 +837,13 @@ describe('RolesClient', () => {
     await lastValueFrom(client.getConsolidatedClaimableRoleAssignments());
     await lastValueFrom(client.hasClaimableRoleAssignmentForAccessRole('Reports.Read'));
     await expect(
-      lastValueFrom(client.activateClaimableRoleAssignment({ assignmentId: 'claimable-role' })),
+      lastValueFrom(
+        client.activateClaimableRoleAssignment({
+          assignmentId: 'claimable-role',
+          reason: 'Test activation',
+          hours: 2,
+        }),
+      ),
     ).rejects.toThrow('claim failed');
 
     await lastValueFrom(client.getActiveAccessRoleAssignments());

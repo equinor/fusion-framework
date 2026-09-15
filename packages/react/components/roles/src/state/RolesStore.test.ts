@@ -236,7 +236,13 @@ describe('RolesStore mutations', () => {
       .mockResolvedValueOnce([{ accessRoleName: 'after claim' }]);
     const claimDone = vi.fn();
     const deactivateDone = vi.fn();
-    const claim = store.activateClaimableRoleAssignment({ assignmentId: 'claim' }).then(claimDone);
+    const claim = store
+      .activateClaimableRoleAssignment({
+        assignmentId: 'claim',
+        reason: 'Test activation',
+        hours: 2,
+      })
+      .then(claimDone);
     const deactivate = store
       .deactivateClaimableRoleAssignment({ assignmentId: 'deactivate' })
       .then(deactivateDone);
@@ -284,7 +290,11 @@ describe('RolesStore disposal', () => {
         store.loadActiveAccessRoleAssignments(),
         store.loadConsolidatedClaimableRoleAssignments(),
         store.loadConsolidatedRoleAssignments(),
-        store.activateClaimableRoleAssignment({ assignmentId: 'claim' }),
+        store.activateClaimableRoleAssignment({
+          assignmentId: 'claim',
+          reason: 'Test activation',
+          hours: 2,
+        }),
         store.deactivateClaimableRoleAssignment({ assignmentId: 'deactivate' }),
       ]);
 
@@ -304,7 +314,11 @@ describe('RolesStore disposal', () => {
       await expect(store.loadConsolidatedClaimableRoleAssignments()).rejects.toThrow('disposed');
       await expect(store.loadConsolidatedRoleAssignments()).rejects.toThrow('disposed');
       await expect(
-        store.activateClaimableRoleAssignment({ assignmentId: 'claim' }),
+        store.activateClaimableRoleAssignment({
+          assignmentId: 'claim',
+          reason: 'Test activation',
+          hours: 2,
+        }),
       ).rejects.toThrow('disposed');
       await expect(
         store.deactivateClaimableRoleAssignment({ assignmentId: 'deactivate' }),
@@ -339,7 +353,11 @@ describe('RolesStore disposal', () => {
     const { store, provider } = setup();
     const refresh = new Subject<ActiveAccessRoleAssignments>();
     provider.getActiveAccessRoleAssignments.mockReturnValueOnce(firstValueFrom(refresh));
-    const pending = store.activateClaimableRoleAssignment({ assignmentId: 'assignment' });
+    const pending = store.activateClaimableRoleAssignment({
+      assignmentId: 'assignment',
+      reason: 'Test activation',
+      hours: 2,
+    });
     const rejected = expect(pending).rejects.toThrow('disposed');
     await vi.waitFor(() => expect(provider.getActiveAccessRoleAssignments).toHaveBeenCalledOnce());
     const snapshot = store.value;

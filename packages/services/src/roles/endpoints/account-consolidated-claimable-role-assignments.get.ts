@@ -150,6 +150,9 @@ const generateApiPath = <TVersion extends AvailableVersions>(
  * Lists one account's claimable role assignments consolidated, merging duplicates that share
  * role, type, and scope into a single entry.
  *
+ * This is an assignment view, not a current-eligibility filter: future, expired, and already
+ * active assignments can be present.
+ *
  * Roles V2 operation:
  * `GET /accounts/{accountIdentifier}/consolidated-claimable-role-assignments` — "Get
  * consolidated claimable role assignments for an account. Duplicate assignments for the same
