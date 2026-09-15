@@ -178,13 +178,13 @@ describe('roles module', () => {
     config.setClient(client);
     config.requireAccessRoles(['Reports.Read', 'Reports.Export']);
 
-    const error = await module
-      .initialize({
+    const error = await Promise.resolve(
+      module.initialize({
         config,
         hasModule: () => false,
         requireInstance: vi.fn(),
-      })
-      .catch((error: unknown) => error);
+      }),
+    ).catch((error: unknown) => error);
 
     expect(error).toMatchObject({
       name: 'RequiredAccessRolesError',
