@@ -75,6 +75,9 @@ export const useAccessRole = (accessRoleName: string): UseAccessRoleResult => {
   const roles = useAppModule<RolesModule>('roles');
   const mountedRef = useRef(false);
   const checkRequestRef = useRef(0);
+  const activationScopeRef = useRef(0);
+  const activationRequestRef = useRef(0);
+  const pendingActivationCountRef = useRef(0);
   const [hasAccessRole, setHasAccessRole] = useState<boolean>();
   const [hasClaimableRoleAssignmentForAccessRole, setHasClaimableRoleAssignmentForAccessRole] =
     useState<boolean>();
@@ -123,6 +126,12 @@ export const useAccessRole = (accessRoleName: string): UseAccessRoleResult => {
   }, [accessRoleName, roles]);
 
   useEffect(() => {
+    // A new role or provider owns independent mutation state; old completions become stale.
+    activationScopeRef.current += 1;
+    activationRequestRef.current += 1;
+    pendingActivationCountRef.current = 0;
+    setIsActivating(false);
+    setActivationError(undefined);
     // A changed role name must not render access resolved for the previous role while checking.
     setHasAccessRole(undefined);
     setHasClaimableRoleAssignmentForAccessRole(undefined);
@@ -134,6 +143,9 @@ export const useAccessRole = (accessRoleName: string): UseAccessRoleResult => {
     async (
       input: ActivateClaimableRoleAssignmentInput,
     ): Promise<ClaimableRoleAssignmentActivationResult> => {
+      const scopeId = activationScopeRef.current;
+      const requestId = ++activationRequestRef.current;
+      pendingActivationCountRef.current += 1;
       // Activation state is independent from checks so UIs can render each operation explicitly.
       if (mountedRef.current) {
         setIsActivating(true);
@@ -142,18 +154,28 @@ export const useAccessRole = (accessRoleName: string): UseAccessRoleResult => {
       try {
         const result = await roles.activateClaimableRoleAssignment(input);
         // Successful activation invalidates provider caches; refresh the rendered access state.
-        void checkAccessRole().catch(() => undefined);
+        if (mountedRef.current && activationScopeRef.current === scopeId) {
+          void checkAccessRole().catch(() => undefined);
+        }
         return result;
       } catch (error) {
         // Callers receive the original failure while React consumers can also render activationError.
-        if (mountedRef.current) {
+        if (
+          mountedRef.current &&
+          activationScopeRef.current === scopeId &&
+          activationRequestRef.current === requestId
+        ) {
           setActivationError(error);
         }
         throw error;
       } finally {
-        // Avoid scheduling state updates after the component using the hook has unmounted.
-        if (mountedRef.current) {
-          setIsActivating(false);
+        // Only same-scope completions contribute to the current role's pending mutation state.
+        if (activationScopeRef.current === scopeId) {
+          pendingActivationCountRef.current = Math.max(0, pendingActivationCountRef.current - 1);
+          // Preserve the busy state while another activation in this role scope is still pending.
+          if (mountedRef.current) {
+            setIsActivating(pendingActivationCountRef.current > 0);
+          }
         }
       }
     },

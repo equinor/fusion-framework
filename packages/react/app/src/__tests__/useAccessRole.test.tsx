@@ -1,6 +1,6 @@
 import { act } from 'react';
 import { describe, expect, it, vi } from 'vitest';
-import { of, throwError } from 'rxjs';
+import { of, Subject, throwError } from 'rxjs';
 
 import type { AppMockConfigureFn } from '@equinor/fusion-framework-app/mock';
 import {
@@ -12,7 +12,10 @@ import {
 } from '@equinor/fusion-framework-module-roles';
 import { renderAppHook } from '@equinor/fusion-framework-vitest-plugin-react-app/test';
 
-import { useAccessRole } from '../roles/useAccessRole';
+import {
+  type ClaimableRoleAssignmentActivationResult,
+  useAccessRole,
+} from '../roles/useAccessRole';
 
 /**
  * Creates an app-scoped Roles client test double.
@@ -144,6 +147,89 @@ describe('useAccessRole', () => {
     expect(result.current.isActivating).toBe(false);
     expect(result.current.activationError).toBeInstanceOf(ActivateClaimableRoleAssignmentError);
     expect(client.getActiveAccessRoleAssignments).toHaveBeenCalledOnce();
+
+    await unmount();
+  });
+
+  it('stays activating until every overlapping activation settles', async () => {
+    const client = createClient();
+    const firstActivation = new Subject<{ id: string }>();
+    const secondActivation = new Subject<{ id: string }>();
+    vi.mocked(client.activateClaimableRoleAssignment)
+      .mockReturnValueOnce(firstActivation)
+      .mockReturnValueOnce(secondActivation);
+
+    const { result, unmount } = await renderAppHook(() => useAccessRole('Reports.Read'), {
+      configure: configureRolesClient(client),
+    });
+    await vi.waitFor(() => expect(result.current.isChecking).toBe(false));
+
+    let firstPromise!: Promise<ClaimableRoleAssignmentActivationResult>;
+    let secondPromise!: Promise<ClaimableRoleAssignmentActivationResult>;
+    act(() => {
+      firstPromise = result.current.activateClaimableRoleAssignment({
+        assignmentId: 'first-assignment',
+      });
+      secondPromise = result.current.activateClaimableRoleAssignment({
+        assignmentId: 'second-assignment',
+      });
+    });
+    expect(result.current.isActivating).toBe(true);
+    await vi.waitFor(() => expect(client.activateClaimableRoleAssignment).toHaveBeenCalledTimes(2));
+
+    await act(async () => {
+      firstActivation.next({ id: 'first-activation' });
+      firstActivation.complete();
+      await expect(firstPromise).resolves.toEqual({ id: 'first-activation' });
+    });
+    expect(result.current.isActivating).toBe(true);
+
+    await act(async () => {
+      secondActivation.next({ id: 'second-activation' });
+      secondActivation.complete();
+      await expect(secondPromise).resolves.toEqual({ id: 'second-activation' });
+    });
+    expect(result.current.isActivating).toBe(false);
+
+    await unmount();
+  });
+
+  it('ignores activation completion after the requested access role changes', async () => {
+    const client = createClient();
+    const activation = new Subject<{ id: string }>();
+    vi.mocked(client.activateClaimableRoleAssignment).mockReturnValue(activation);
+
+    const { result, rerender, unmount } = await renderAppHook(
+      (accessRoleName) => useAccessRole(accessRoleName),
+      {
+        initialProps: 'Reports.Read',
+        configure: configureRolesClient(client),
+      },
+    );
+    await vi.waitFor(() => expect(result.current.isChecking).toBe(false));
+
+    let activationPromise!: Promise<ClaimableRoleAssignmentActivationResult>;
+    act(() => {
+      activationPromise = result.current.activateClaimableRoleAssignment({
+        assignmentId: 'reports-assignment',
+      });
+    });
+    expect(result.current.isActivating).toBe(true);
+    await vi.waitFor(() => expect(client.activateClaimableRoleAssignment).toHaveBeenCalledOnce());
+
+    await rerender('Reports.Export');
+    await vi.waitFor(() => expect(result.current.isChecking).toBe(false));
+    expect(result.current.isActivating).toBe(false);
+    const checkCountAfterRoleChange = vi.mocked(client.getActiveAccessRoleAssignments).mock.calls
+      .length;
+
+    await act(async () => {
+      activation.next({ id: 'reports-activation' });
+      activation.complete();
+      await expect(activationPromise).resolves.toEqual({ id: 'reports-activation' });
+    });
+    expect(client.getActiveAccessRoleAssignments).toHaveBeenCalledTimes(checkCountAfterRoleChange);
+    expect(result.current.isActivating).toBe(false);
 
     await unmount();
   });
