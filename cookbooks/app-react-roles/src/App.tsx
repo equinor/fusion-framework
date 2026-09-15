@@ -81,7 +81,10 @@ export const App = (): ReactNode => {
           </Styled.Error>
           <button
             type="button"
-            onClick={() => void Promise.all([active.reload(), claimable.reload()])}
+            onClick={() => {
+              // Collection errors are rendered above; disposal only abandons the unmounted caller.
+              void Promise.all([active.reload(), claimable.reload()]).catch(() => undefined);
+            }}
           >
             Retry
           </button>

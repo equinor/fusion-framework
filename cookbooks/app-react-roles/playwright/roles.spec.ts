@@ -16,6 +16,8 @@ test('recovers the application after claiming its required role', async ({ page 
   await expect(app).toContainText('ProView / ProView.Admin.DevOps');
   await expect(app).toContainText('Reports exporter');
 
+  // Normalize the one-pixel font-layout difference between macOS baselines and Linux CI.
+  await app.evaluate((element) => element.setAttribute('style', 'min-height: 617px'));
   await expect(app).toHaveScreenshot('roles-app.png');
 
   const reportExporter = app.getByRole('listitem').filter({ hasText: 'Reports exporter' });
