@@ -1,9 +1,10 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { HttpClient } from '@equinor/fusion-framework-module-http/client';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 
 import { type IRolesClient, RolesClient } from '../RolesClient.js';
 import { RolesModuleConfigurator } from '../RolesModuleConfigurator.js';
+import { RequiredAccessRolesError } from '../errors/RequiredAccessRolesError.js';
 import { module } from '../module.js';
 
 /**
@@ -19,8 +20,9 @@ const createClient = (): IRolesClient => ({
   activateClaimableRoleAssignment: vi.fn(),
   deactivateClaimableRoleAssignment: vi.fn(),
   hasClaimableRoleAssignmentForAccessRole: vi.fn(),
-  getRequiredAccessRoleStatuses: vi.fn(),
+  getRequiredAccessRoleStatuses: vi.fn(() => of([])),
   getAccessRoles: vi.fn(),
+  dispose: vi.fn(),
 });
 
 describe('roles module', () => {
@@ -143,6 +145,7 @@ describe('roles module', () => {
       cause: expect.objectContaining({ message: 'client initialization failed' }),
     });
     expect(client.getActiveAccessRoleAssignments).not.toHaveBeenCalled();
+    expect(client.dispose).toHaveBeenCalledOnce();
   });
 
   it('allows bootstrap when the authenticated account has every required role', async () => {
@@ -175,6 +178,38 @@ describe('roles module', () => {
     config.setClient(client);
     config.requireAccessRoles(['Reports.Read', 'Reports.Export']);
 
+    const error = await module
+      .initialize({
+        config,
+        hasModule: () => false,
+        requireInstance: vi.fn(),
+      })
+      .catch((error: unknown) => error);
+
+    expect(error).toMatchObject({
+      name: 'RequiredAccessRolesError',
+      message: 'Roles module bootstrap denied. Missing required access roles: Reports.Export.',
+      missingAccessRoles: ['Reports.Export'],
+      provider: expect.anything(),
+    });
+    if (!RequiredAccessRolesError.is(error) || !error.provider) {
+      throw new Error('Expected a recoverable required-access-role error.');
+    }
+    await expect(
+      error.provider.getRequiredAccessRoleStatuses(error.missingAccessRoles),
+    ).resolves.toEqual([]);
+    expect(client.dispose).not.toHaveBeenCalled();
+  });
+
+  it('disposes the provider when an unexpected bootstrap access check fails', async () => {
+    const client = createClient();
+    vi.mocked(client.getActiveAccessRoleAssignments).mockReturnValue(
+      throwError(() => new Error('access check failed')),
+    );
+    const config = new RolesModuleConfigurator();
+    config.setClient(client);
+    config.requireAccessRoles(['Reports.Read']);
+
     await expect(
       module.initialize({
         config,
@@ -182,11 +217,28 @@ describe('roles module', () => {
         requireInstance: vi.fn(),
       }),
     ).rejects.toMatchObject({
-      name: 'RequiredAccessRolesError',
-      message: 'Roles module bootstrap denied. Missing required access roles: Reports.Export.',
-      missingAccessRoles: ['Reports.Export'],
-      provider: expect.anything(),
+      name: 'RolesError',
+      cause: expect.objectContaining({ message: 'access check failed' }),
     });
+    expect(client.dispose).toHaveBeenCalledOnce();
+  });
+
+  it('disposes the initialized provider during framework teardown', async () => {
+    const client = createClient();
+    const config = new RolesModuleConfigurator();
+    config.setClient(client);
+    const provider = await module.initialize({
+      config,
+      hasModule: () => false,
+      requireInstance: vi.fn(),
+    });
+
+    await module.dispose?.({
+      instance: provider,
+      modules: { roles: provider } as never,
+    });
+
+    expect(client.dispose).toHaveBeenCalledOnce();
   });
 
   it('denies default-client bootstrap when authentication has no active account', async () => {

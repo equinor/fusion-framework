@@ -14,6 +14,7 @@ import {
   RolesModuleConfigurator,
 } from './RolesModuleConfigurator.js';
 import { type IRolesProvider, RolesProvider } from './RolesProvider.js';
+import { RequiredAccessRolesError } from './errors/RequiredAccessRolesError.js';
 import { RolesError } from './errors/RolesError.js';
 
 /**
@@ -49,14 +50,25 @@ export const module: RolesModule = {
         resolveCurrentAccountIdentifier: config.accountResolver,
       });
     } catch (error) {
+      config.client.dispose?.();
       throw RolesError.is(error)
         ? error
         : new RolesError('Failed to initialize Roles client.', { cause: error });
     }
     const provider = new RolesProvider(config, { event, telemetry });
-    await provider.hasAccessRole(config.requiredAccessRoles, { assert: true, required: true });
-    return provider;
+    try {
+      await provider.hasAccessRole(config.requiredAccessRoles, { assert: true, required: true });
+      return provider;
+    } catch (error) {
+      // Required-access recovery intentionally continues through the provider carried by the error.
+      if (RequiredAccessRolesError.is(error)) {
+        throw error;
+      }
+      provider.dispose();
+      throw error;
+    }
   },
+  dispose: ({ instance }) => instance.dispose(),
 };
 
 /**
