@@ -1,5 +1,13 @@
 # @equinor/fusion-framework-react-router
 
+## 2.4.4
+
+### Patch Changes
+
+- f7fceec: Preserve the `/vite-plugin` entry point as a compatibility re-export from the dedicated React Router Vite plugin package.
+- Updated dependencies [f7fceec]
+  - @equinor/fusion-framework-vite-plugin-react-router@0.1.0
+
 ## 2.4.3
 
 ### Patch Changes

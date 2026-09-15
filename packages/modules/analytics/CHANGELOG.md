@@ -1,5 +1,13 @@
 # @equinor/fusion-framework-module-analytics
 
+## 3.1.2
+
+### Patch Changes
+
+- Updated dependencies [929b52c]
+- Updated dependencies [9a9f107]
+  - @equinor/fusion-framework-module-app@8.1.2
+
 ## 3.1.1
 
 ### Patch Changes

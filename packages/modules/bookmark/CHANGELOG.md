@@ -1,5 +1,13 @@
 # Change Log
 
+## 4.1.2
+
+### Patch Changes
+
+- 0017759: Prevent external mutation of bookmark filter settings by exposing an immutable configuration snapshot.
+  
+  Fixes #5136
+
 ## 4.1.1
 
 ### Patch Changes

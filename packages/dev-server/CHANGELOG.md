@@ -1,5 +1,12 @@
 # @equinor/fusion-framework-dev-server
 
+## 2.1.3
+
+### Patch Changes
+
+- Updated dependencies [1937bfc]
+  - @equinor/fusion-log@2.0.5
+
 ## 2.1.2
 
 ### Patch Changes
