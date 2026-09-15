@@ -49,6 +49,6 @@
   },
   "peerDependencies": {
     "chalk": ">=5",
-    "rxjs": ">7"
+    "rxjs": ">=7"
   }
 }
