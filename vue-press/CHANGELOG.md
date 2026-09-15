@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-docs
 
+## 0.4.23
+
+### Patch Changes
+
+- f7fceec: Recommend the standalone React Router Vite plugin package for custom Vite configurations and clarify that Fusion Framework CLI applications enable it automatically.
+
 ## 0.4.22
 
 ### Patch Changes

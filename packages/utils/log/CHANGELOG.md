@@ -1,5 +1,11 @@
 # @equinor/fusion-log
 
+## 2.0.5
+
+### Patch Changes
+
+- 1937bfc: Allow consumers to use any RxJS 7 release.
+
 ## 2.0.4
 
 ### Patch Changes
