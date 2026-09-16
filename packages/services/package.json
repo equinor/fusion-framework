@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-services",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Tree-shakeable, function-based clients for Fusion platform services",
   "keywords": [
     "equinor",

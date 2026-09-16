@@ -18,8 +18,9 @@ import { runPostConfigureHooks } from './run-post-configure-hooks.js';
 export async function runConfigurePhase<TRef>(
   ctx: ConfigurePhaseContext<TRef>,
   ref?: TRef,
-): Promise<// biome-ignore lint/suspicious/noExplicitAny: internal type-erased dispatch — the configure phase coordinates opaque module configs without knowing their concrete shapes
-any> {
+): Promise<
+  // biome-ignore lint/suspicious/noExplicitAny: internal type-erased dispatch — the configure phase coordinates opaque module configs without knowing their concrete shapes
+  any> {
   // Step 1: Create raw config objects for all registered modules
   const config = await createModuleConfigs<TRef>(ctx, ref);
 

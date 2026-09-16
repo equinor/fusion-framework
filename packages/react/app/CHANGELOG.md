@@ -1,5 +1,28 @@
 # Change Log
 
+## 14.2.0
+
+### Minor Changes
+
+- e54d1ef: Add the `/roles` entry point with `useAccessRole` for checking active and claimable access roles and
+  claiming a role assignment from React applications.
+  
+  Add an optional `onError` render argument so application hosts can handle initialization failures
+  and present required-role recovery. `makeComponent` reports module-initialization failures through
+  the callback while preserving the rejection for React error handling. On React 19, `renderComponent`
+  also forwards uncaught root errors; this root-level forwarding is not available on React 18.
+  
+  Related to #5449.
+
+### Patch Changes
+
+- Updated dependencies [e54d1ef]
+- Updated dependencies [e54d1ef]
+  - @equinor/fusion-framework-module-app@8.2.0
+  - @equinor/fusion-framework-module-roles@0.2.0
+  - @equinor/fusion-framework-app@13.1.4
+  - @equinor/fusion-framework@8.1.3
+
 ## 14.1.3
 
 ### Patch Changes

@@ -1,5 +1,32 @@
 # @equinor/fusion-framework-docs
 
+## 0.4.24
+
+### Patch Changes
+
+- a3a2417: Add Roles V2 module and React cookbook pages to the documentation site, including setup,
+  access-role checks, assignment reads, claim activation, cache refresh, testing, and navigation.
+  Align the React app, React Roles components, and development portal guides with the required
+  activation input and their current Roles integration.
+- e54d1ef: Document the Roles V2 module, React components, and host recovery integration. Explain activation,
+  deactivation, mutation-driven cache invalidation, cold observable clients, and consumer-controlled
+  async pagination of the access-role registry, including early exit and cancellation.
+  
+  Cover setup, peers, React context placement, hooks, and API contracts. Distinguish assignment IDs
+  from access-role names, React and module providers, mutation failures from subsequent refresh
+  errors, and UI gates from backend authorization.
+  
+  Move portal flyout adoption into a dedicated migration guide covering host-loader recovery,
+  refresh-driven expiry prompts, and safe custom mutation/reload handling. Clarify compact Expired
+  overflow, audit-input preservation, provider replacement, and browser-local date display.
+  
+  Explain how application hosts combine generic and role-aware error boundaries to recover when
+  required access blocks initialization.
+  Update the `useAccessRole` examples to consume rejected activation promises in React event handlers and
+  render `activationError`, keeping failed claims visible and retryable without unhandled rejections.
+  
+  Related to #5449.
+
 ## 0.4.23
 
 ### Patch Changes
