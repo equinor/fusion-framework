@@ -30,7 +30,13 @@ export const handleUpdateBookmark =
         // wait for the final emission before mapping to a success/failure action
         return from(api.updateBookmark(bookmarkId, updates)).pipe(
           last(),
-          map((bookmark) => actions.updateBookmark.success(bookmark, action.meta)),
+          map((bookmark) => {
+            const submittedPayload =
+              'payload' in updates ? { payload: updates.payload ?? undefined } : {};
+            const updatedBookmark = { ...bookmark, ...submittedPayload };
+
+            return actions.updateBookmark.success(updatedBookmark, action.meta);
+          }),
           catchError((error) =>
             of(
               actions.updateBookmark.failure(
