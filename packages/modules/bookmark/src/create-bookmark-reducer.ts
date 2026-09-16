@@ -7,12 +7,13 @@ import {
   isSuccessAction,
   type ActionBaseType,
 } from '@equinor/fusion-observable';
+import isEqual from 'fast-deep-equal';
+import { enableMapSet } from 'immer';
 
 import { bookmarkActions, type BookmarkActions } from './bookmark-actions';
 import type { BookmarkState } from './create-bookmark-store';
 import type { BookmarkFlowError } from './BookmarkFlowError';
 import type { BookmarkWithoutData } from './types';
-import { enableMapSet } from 'immer';
 
 enableMapSet();
 
@@ -35,8 +36,6 @@ const defaultInitialState: BookmarkState = {
 /**
  * Creates a reducer for managing the state of bookmarks.
  *
- * @todo TODO(#5135) - add fast-deep-equal to compare bookmarks
- *
  * @param initialState - The initial state of the bookmarks.
  * @returns A reducer function for managing the bookmarks state.
  */
@@ -46,47 +45,66 @@ export const createBookmarkReducer = (initialState?: Partial<BookmarkState>) => 
   return createReducer<BookmarkState, BookmarkActions>(initial, (builder) => {
     builder
       .addCase(bookmarkActions.fetchBookmark.success, (state, action) => {
-        // only update the bookmark if it already exists in the store
-        if (action.payload.id in state.bookmarks) {
+        const current = state.bookmarks[action.payload.id];
+        // Preserve the state reference when a refresh returns an unchanged bookmark.
+        if (current && !isEqual(current, action.payload)) {
           state.bookmarks[action.payload.id] = action.payload;
         }
       })
       .addCase(bookmarkActions.fetchBookmarkData.success, (state, action) => {
         const { bookmarkId, data } = action.payload;
-        // only apply the fetched data if it belongs to the current bookmark
-        if (state.currentBookmark?.id === bookmarkId) {
+        // Preserve the state reference when the current bookmark already has the fetched payload.
+        if (
+          state.currentBookmark?.id === bookmarkId &&
+          !isEqual(state.currentBookmark.payload, data)
+        ) {
           state.currentBookmark.payload = data;
         }
       })
       .addCase(bookmarkActions.fetchBookmarks.success, (state, action) => {
-        // normalize the bookmarks array into a record
-        // build a lookup record keyed by bookmark id
-        state.bookmarks = action.payload.reduce(
+        // Build a lookup record keyed by bookmark ID for selector access.
+        const bookmarks = action.payload.reduce(
           (acc, bookmark) => {
             acc[bookmark.id] = bookmark;
             return acc;
           },
           {} as Record<string, BookmarkWithoutData>,
         );
+        // Preserve the state reference when a refresh returns the same bookmark collection.
+        if (!isEqual(state.bookmarks, bookmarks)) {
+          state.bookmarks = bookmarks;
+        }
       })
       .addCase(bookmarkActions.setBookmark, (state, action) => {
         const bookmarkId = action.payload.id;
-        // only update the bookmark if it already exists in the store
-        if (bookmarkId in state.bookmarks) {
+        // Preserve the state reference when the stored bookmark already has the same value.
+        if (
+          bookmarkId in state.bookmarks &&
+          !isEqual(state.bookmarks[bookmarkId], action.payload)
+        ) {
           state.bookmarks[bookmarkId] = action.payload;
         }
-        // keep the current bookmark in sync if it's the one being set
-        if (state.currentBookmark?.id === bookmarkId) {
+        // Keep the current bookmark in sync without emitting an equivalent state.
+        if (
+          state.currentBookmark?.id === bookmarkId &&
+          !isEqual(state.currentBookmark, action.payload)
+        ) {
           state.currentBookmark = action.payload;
         }
       })
       .addCase(bookmarkActions.setCurrentBookmark, (state, action) => {
-        state.currentBookmark = action.payload;
+        // Preserve the state reference when selecting an equivalent bookmark instance.
+        if (!isEqual(state.currentBookmark, action.payload)) {
+          state.currentBookmark = action.payload;
+        }
       })
       .addCase(bookmarkActions.createBookmark.success, (state, action) => {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { payload, ...bookmark } = action.payload;
-        state.bookmarks[bookmark.id] = bookmark;
+        // Preserve the state reference when a repeated response contains the same bookmark.
+        if (!isEqual(state.bookmarks[bookmark.id], bookmark)) {
+          state.bookmarks[bookmark.id] = bookmark;
+        }
       })
       .addCase(bookmarkActions.updateBookmark.success, (state, action) => {
         const bookmarkId = action.payload.id;
@@ -103,13 +121,13 @@ export const createBookmarkReducer = (initialState?: Partial<BookmarkState>) => 
         // merge the current bookmark with the new data
         const next = { ...current, ...action.payload };
 
-        // if the bookmark is in the current state, update it
-        if (hasBookmark) {
+        // Update the stored bookmark only when the merged value changed.
+        if (hasBookmark && !isEqual(state.bookmarks[bookmarkId], next)) {
           state.bookmarks[bookmarkId] = next;
         }
 
-        // if the bookmark is the selected bookmark, update it
-        if (isCurrent) {
+        // Update the selected bookmark only when the merged value changed.
+        if (isCurrent && !isEqual(state.currentBookmark, next)) {
           state.currentBookmark = next;
         }
       })
