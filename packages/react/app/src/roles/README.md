@@ -19,7 +19,11 @@ export const ReportsAccess = ({ claimableRoleId }: { claimableRoleId: string }) 
   /** Consumes the event-handler rejection; activationError below owns the visible failure. */
   const handleActivate = (): void => {
     void role
-      .activateClaimableRoleAssignment({ assignmentId: claimableRoleId, reason: 'Open reports' })
+      .activateClaimableRoleAssignment({
+        assignmentId: claimableRoleId,
+        reason: 'Open reports',
+        hours: 2,
+      })
       .catch(() => undefined);
   };
 
@@ -37,6 +41,8 @@ export const ReportsAccess = ({ claimableRoleId }: { claimableRoleId: string }) 
 `useAccessRole` checks the exact, case-sensitive Roles V2 access-role name when mounted. It exposes
 separate loading and error states for checks and claims. After a successful claim, the hook checks
 the role again using the provider's refreshed caches.
+Activation requires a claimable assignment ID, a non-empty audit reason, and an integer duration
+from 1 through 24 hours.
 `activateClaimableRoleAssignment` rejects on failure as well as setting `activationError`; React event handlers must consume
 that rejection and render the mutation error so users can retry.
 

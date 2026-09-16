@@ -212,7 +212,7 @@ export const AssignedRoleList = (): ReactElement => {
 `useClaimableRoleAssignments` returns claimable assignments from the consolidated endpoint,
 collection state,
 mutation state, and the `activateClaimableRoleAssignment` and `deactivateClaimableRoleAssignment` actions. `activateClaimableRoleAssignment` accepts a claimable
-assignment ID plus an optional audit reason and duration. Prefer `RolesView` for an audited
+assignment ID, a non-empty audit reason, and an integer duration from 1 through 24 hours. Prefer `RolesView` for an audited
 activation dialog; the custom example below uses a fixed reason and duration to demonstrate the
 hook contract:
 
@@ -385,12 +385,12 @@ See [host-root recovery placement](./docs/migration.md#place-recovery-around-the
 | `ClaimableRoleAssignmentActivationResult`, `ClaimableRoleAssignmentDeactivationResult` | Activation metadata inferred from the module's mutation results, not refreshed role collections. |
 
 `activateClaimableRoleAssignment(input: ActivateClaimableRoleAssignmentInput): Promise<ClaimableRoleAssignmentActivationResult>` takes
-`{ assignmentId: string, reason?: string, hours?: number | string }`.
+`{ assignmentId: string, reason: string, hours: number }`.
 `deactivateClaimableRoleAssignment(input: DeactivateClaimableRoleAssignmentInput): Promise<ClaimableRoleAssignmentDeactivationResult>` takes
 `{ assignmentId: string }`.
 Import those input types from `@equinor/fusion-framework-module-roles`.
 The built-in dialog requires a nonblank audit reason and offers whole-hour durations from 1 to 8,
-defaulting to 2; those UI choices do not narrow the hook input type or replace service validation.
+defaulting to 2; those UI choices are narrower than the module's 1-through-24-hour service contract.
 
 Internally, components, context, hooks, and observable state are separated by responsibility. Only
 the root exports are public API; internal feature paths are not supported imports.

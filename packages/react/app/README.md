@@ -364,7 +364,11 @@ const ReportsAccess = ({ claimableRoleId }: { claimableRoleId: string }) => {
   /** Consumes the event-handler rejection; activationError below owns the visible failure. */
   const handleActivate = (): void => {
     void role
-      .activateClaimableRoleAssignment({ assignmentId: claimableRoleId })
+      .activateClaimableRoleAssignment({
+        assignmentId: claimableRoleId,
+        reason: 'Open reports',
+        hours: 2,
+      })
       .catch(() => undefined);
   };
 
