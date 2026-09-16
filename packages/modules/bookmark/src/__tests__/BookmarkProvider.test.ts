@@ -1,6 +1,8 @@
-import { describe, expect, it } from 'vitest';
+import { throwError } from 'rxjs';
+import { describe, expect, it, vi } from 'vitest';
 
 import { BookmarkProvider } from '../BookmarkProvider';
+import type { BookmarkFlowError } from '../BookmarkFlowError';
 import { BookmarkMockClient } from '../mock';
 
 describe('BookmarkProvider filters', () => {
@@ -36,6 +38,39 @@ describe('BookmarkProvider filters', () => {
 
     expect(provider.filters).toBeUndefined();
 
+    provider.dispose();
+  });
+});
+
+describe('BookmarkProvider errors', () => {
+  it('emits only when bookmark errors change structurally', async () => {
+    const client = new BookmarkMockClient();
+    vi.spyOn(client, 'getAllBookmarks')
+      .mockImplementationOnce(() => throwError(() => new Error('Unable to fetch bookmarks')))
+      .mockImplementationOnce(() => throwError(() => new Error('Unable to fetch bookmarks')))
+      .mockImplementationOnce(() => throwError(() => new Error('Service unavailable')));
+    const provider = new BookmarkProvider({
+      client,
+      resolve: {
+        context: async () => undefined,
+        application: async () => undefined,
+      },
+    });
+    const emissions: BookmarkFlowError[][] = [];
+    const subscription = provider.errors$.subscribe((errors) => emissions.push(errors));
+
+    await expect(provider.getAllBookmarksAsync()).rejects.toThrow('Failed to fetch bookmarks');
+    await new Promise((resolve) => setTimeout(resolve, 250));
+    await expect(provider.getAllBookmarksAsync()).rejects.toThrow('Failed to fetch bookmarks');
+    await new Promise((resolve) => setTimeout(resolve, 250));
+    await expect(provider.getAllBookmarksAsync()).rejects.toThrow('Failed to fetch bookmarks');
+
+    expect(emissions).toHaveLength(3);
+    expect(emissions[0]).toEqual([]);
+    expect(emissions[1]?.[0]?.cause).toEqual(new Error('Unable to fetch bookmarks'));
+    expect(emissions[2]?.[0]?.cause).toEqual(new Error('Service unavailable'));
+
+    subscription.unsubscribe();
     provider.dispose();
   });
 });
