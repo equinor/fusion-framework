@@ -40,6 +40,7 @@ Our React cookbooks demonstrate how to build applications using the Fusion Frame
 - **[Custom Modules](react-app-module.md)** - Creating and integrating custom modules
 - **[Mock Server with Playwright](react-app-mock-playwright.md)** - End-to-end tests against `ffc mock-server`
 - **[People Service](react-app-people.md)** - People search and person component integration
+- **[Roles](react-app-roles.md)** - Required access checks, role assignment views, and claimable-role activation
 - **[Router](react-app-router.md)** - Client-side routing and navigation
 - **[Legacy Router](react-app-router-legacy.md)** - Manual `RouteObject[]` routing and route error boundaries
 - **[Settings](react-app-settings.md)** - Application settings management

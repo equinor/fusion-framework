@@ -13,7 +13,9 @@ When the event and telemetry modules are enabled, the provider also reports oper
 
 ## Enable Roles V2 and require roles during initialization
 
-Enable HTTP, authentication, and service discovery before enabling the roles module:
+Enable authentication before the roles module. The default client also needs service discovery,
+either in the same module scope or inherited from the parent framework; configure a custom client
+when service discovery is unavailable:
 
 ```ts
 import { enableRoles } from '@equinor/fusion-framework-module-roles';
@@ -58,11 +60,18 @@ const canReadReports = await framework.modules.roles.hasAccessRole(['Reports.Rea
   required: true,
 });
 const canClaimReportReader = await framework.modules.roles.hasClaimableRoleAssignmentForAccessRole('Reports.Read');
+const requiredRoleStatuses = await framework.modules.roles.getRequiredAccessRoleStatuses([
+  'Reports.Read',
+  'Reports.Export',
+]);
 ```
 
 `hasClaimableRoleAssignmentForAccessRole` follows every page of the account's claimable assignments
 and expands `accessRoleMappings`. It returns `true` only for a global assignment that is currently
 inside its validity window, is not already active, and grants the requested access-role name.
+`getRequiredAccessRoleStatuses` reports whether each requested access role exists and which global
+claimable assignments can currently grant it. Hosts can use these statuses to explain or recover
+from failed initialization requirements.
 
 `getActiveAccessRoleAssignments` reads `/active-access-role-assignments`: currently effective,
 deduplicated access-role assignments with provenance dropped. Its `assignmentType` cannot reliably
@@ -84,6 +93,12 @@ claim-eligibility results, for one minute through `@equinor/fusion-query`. Concu
 share the same request. A successful claim or deactivation invalidates the active-access, claimable,
 and claim-eligibility caches, but deliberately leaves the consolidated-role-assignment cache
 untouched: those assignments are outside the scope of claim and deactivate mutations.
+Pass `{ refresh: true }` to any of the three collection reads to invalidate that collection's cache
+before loading it again:
+
+```ts
+const activeRoles = await framework.modules.roles.getActiveAccessRoleAssignments({ refresh: true });
+```
 
 ## Claim a role
 
@@ -193,7 +208,11 @@ value without parsing its message:
 import { RolesError } from '@equinor/fusion-framework-module-roles/errors';
 
 try {
-  await framework.modules.roles.activateClaimableRoleAssignment({ assignmentId: claimableRoleId });
+  await framework.modules.roles.activateClaimableRoleAssignment({
+    assignmentId: claimableRoleId,
+    reason: 'Support incident response',
+    hours: 4,
+  });
 } catch (error) {
   if (RolesError.is(error)) {
     reportRolesFailure(error);
