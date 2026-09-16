@@ -216,6 +216,10 @@ export default sidebar({
               link: 'react-app-people.md',
             },
             {
+              text: 'Roles',
+              link: 'react-app-roles.md',
+            },
+            {
               text: 'Router',
               link: 'react-app-router.md',
             },
@@ -651,6 +655,10 @@ export default sidebar({
           link: 'event/',
         },
       ],
+    },
+    {
+      text: 'Roles',
+      link: 'roles/',
     },
     {
       text: 'Service Discovery',

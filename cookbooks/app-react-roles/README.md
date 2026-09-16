@@ -17,7 +17,8 @@ authorization for protected operations.
 
 ## Configure Roles V2
 
-[`src/config.ts`](./src/config.ts) enables the app-scoped Roles module and requires the registered
+[`src/config.ts`](https://github.com/equinor/fusion-framework/blob/main/cookbooks/app-react-roles/src/config.ts)
+enables the app-scoped Roles module and requires the registered
 `ProView.Admin.DevOps` access role:
 
 ```ts
@@ -31,7 +32,8 @@ renders when the signed-in account does not satisfy the requirement.
 
 ## Show and claim roles
 
-[`src/App.tsx`](./src/App.tsx) reads active and claimable roles through separate hooks:
+[`src/App.tsx`](https://github.com/equinor/fusion-framework/blob/main/cookbooks/app-react-roles/src/App.tsx)
+reads active and claimable roles through separate hooks:
 
 ```ts
 import { useActiveAccessRoleAssignments, useClaimableRoleAssignments } from '@equinor/fusion-framework-react-components-roles';
@@ -40,7 +42,8 @@ const active = useActiveAccessRoleAssignments();
 const claimable = useClaimableRoleAssignments();
 ```
 
-[`src/index.ts`](./src/index.ts) installs `RolesProvider` once around the application:
+[`src/index.ts`](https://github.com/equinor/fusion-framework/blob/main/cookbooks/app-react-roles/src/index.ts)
+installs `RolesProvider` once around the application:
 
 ```ts
 const appComponent = createElement(RolesProvider, undefined, createElement(App));
@@ -65,7 +68,8 @@ pnpm --filter @equinor/fusion-framework-cookbook-app-react-roles dev:mock
 ```
 
 This starts the app and the Fusion OpenAPI mock server together. The local
-[`mocks/rolesv2.mock.ts`](./mocks/rolesv2.mock.ts) service merges onto the bundled `rolesv2`
+[`mocks/rolesv2.mock.ts`](https://github.com/equinor/fusion-framework/blob/main/cookbooks/app-react-roles/mocks/rolesv2.mock.ts)
+service merges onto the bundled `rolesv2`
 contract. It first exposes a synthetic claimable role that grants `ProView.Admin.DevOps`, allowing
 the host recovery flow to be repeated. After activation, the app loads and exposes a second
 claimable Reports exporter assignment. The app still uses the production `RolesClient`; only

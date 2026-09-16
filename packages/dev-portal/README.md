@@ -12,7 +12,8 @@ Use this package when you need a portal host for local app development. For the 
 
 - **Portal shell**: A React application that renders the top bar, context selector, and an app mounting area.
 - **Application loader**: Dynamically initializes and mounts a Fusion app by its `appKey`, handling manifest resolution, script loading, and teardown.
-- **Framework modules**: The portal pre-configures telemetry, navigation, bookmarks, feature flags, analytics, AG Grid, and service integrations so loaded apps inherit a realistic environment.
+- **Framework modules**: The portal pre-configures telemetry, navigation, bookmarks, feature flags, analytics, AG Grid, Roles V2, and service integrations so loaded apps inherit a realistic environment.
+- **Roles V2 integration**: The person side sheet uses the shared compact Roles view, and the application loader can recover when an app requires access roles during initialization.
 - **Context navigation plugin**: The portal enables `enableContextNavigation` from `@equinor/fusion-framework-plugin-context-navigation` so context changes and app switches keep the URL in sync automatically.
 
 ## Installation
@@ -98,9 +99,16 @@ The portal is composed of these internal parts:
 - **Context configuration** — `enableContext` wires the context module's path generator and path extractor to the shared context-navigation URL utilities.
 - **`Router`** — Sets up routes with `react-router` via the navigation module; routes `/apps/:appKey/*` to the app loader.
 - **`AppLoader`** — Resolves, initializes, and mounts a Fusion app by key; handles loading states and errors.
+- **Roles recovery** — Wraps the application loader in `AccessRoleBoundary` so a user can activate an eligible claimable role and retry an app blocked by `builder.requireAccessRoles`.
 - **`Header`** — Top bar with the Fusion logo, context selector, bookmark toggle, and person settings.
+- **Person side sheet** — Renders `<RolesView compact />` inside the React `RolesProvider` for active, claimable, and recently expired role assignments.
 - **`ContextSelector`** — Wired to the current app's context module for searching and selecting context items.
 - **`enableContextNavigation`** — Registers the portal-level context navigation plugin that reconciles the active context with the browser URL.
+
+The portal enables `@equinor/fusion-framework-module-roles` against its authenticated account and
+service discovery configuration. See the [Roles module guide](../modules/roles/README.md) for the
+provider contract and the [React Roles components guide](../react/components/roles/README.md) for
+the compact view and required-access recovery behavior.
 
 ## Constraints
 
