@@ -619,18 +619,30 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
    * ```
    */
   async handleRedirect(): Promise<AuthenticationResult | null> {
-    // Process any pending redirect from authentication flow
-    const result = await this.client.handleRedirectPromise();
-    // Only track/log when a redirect result is actually returned
-    if (result) {
-      // Track successful redirect completion for monitoring
-      this._trackEvent('handleRedirect.success', TelemetryLevel.Information, {
+    try {
+      // Process any pending redirect from authentication flow
+      const result = await this.client.handleRedirectPromise();
+      // Only track/log when a redirect result is actually returned
+      if (result) {
+        // Track successful redirect completion for monitoring
+        this._trackEvent('handleRedirect.success', TelemetryLevel.Information, {
+          properties: {
+            username: result.account?.username,
+          },
+        });
+      }
+      return result;
+    } catch (error) {
+      this._trackException('handleRedirect.failed', TelemetryLevel.Warning, {
+        exception: error instanceof Error ? error : new Error(String(error)),
         properties: {
-          username: result.account?.username,
+          message: error instanceof Error ? error.message : String(error),
+          reason:
+            'Redirect response could not be processed; continuing with standard authentication',
         },
       });
+      return null;
     }
-    return result;
   }
 
   /**
