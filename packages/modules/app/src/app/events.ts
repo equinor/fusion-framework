@@ -23,8 +23,7 @@ export type AppEventEventInit<TDetail extends Record<string, unknown> | unknown 
     /** additional event details and key of target event */
     TDetail & { appKey: string },
     /** source of the event */
-    App
-  >;
+    App>;
 
 /**
  * Framework event carrying application-scoped detail and an {@link App} source.

@@ -1,5 +1,31 @@
 # @equinor/fusion-framework-dev-portal
 
+## 11.0.8
+
+### Patch Changes
+
+- e54d1ef: Use the shared Roles V2 overview in the person side sheet for viewing active and claimable
+  assignments, activating or deactivating roles, and reclaiming recently expired access.
+  
+  Route application initialization failures and reported render errors through the host error
+  boundary. Missing required roles can be claimed before retrying the application without
+  replacing the selected app instance; unrelated errors retain the generic or manifest fallback.
+  
+  Related to #5449.
+  
+  Internal: remove the unused React app dependency and TypeScript project reference so the
+  portal's build graph does not cycle through the app-test plugin and CLI.
+- Updated dependencies [e54d1ef]
+- Updated dependencies [e54d1ef]
+- Updated dependencies [e54d1ef]
+  - @equinor/fusion-framework-module-app@8.2.0
+  - @equinor/fusion-framework-module-roles@0.2.0
+  - @equinor/fusion-framework-react-components-roles@0.1.0
+  - @equinor/fusion-framework-app@13.1.4
+  - @equinor/fusion-framework-module-analytics@3.1.3
+  - @equinor/fusion-framework@8.1.3
+  - @equinor/fusion-framework-dev-server@2.1.4
+
 ## 11.0.7
 
 ### Patch Changes

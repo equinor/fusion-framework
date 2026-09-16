@@ -1,5 +1,14 @@
 # Change Log
 
+## 8.2.0
+
+### Minor Changes
+
+- e54d1ef: Add an optional `onError` callback to application component render arguments, providing a shared
+  error-reporting contract for application renderers and hosts.
+  
+  Related to #5449.
+
 ## 8.1.2
 
 ### Patch Changes

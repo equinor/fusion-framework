@@ -1,5 +1,11 @@
 # Change Log
 
+## 11.0.3
+
+### Patch Changes
+
+- 68a4439: Recover from failed MSAL redirect callbacks by continuing the standard login flow. Fixes equinor/fusion-core-tasks#1584.
+
 ## 11.0.2
 
 ### Patch Changes

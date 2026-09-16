@@ -1,5 +1,12 @@
 # @equinor/fusion-services
 
+## 0.3.1
+
+### Patch Changes
+
+- e54d1ef: Validate Roles V2 activation reasons and durations against the backend contract, and expose
+  `top`/`skip` paging options for account claimable-role assignments.
+
 ## 0.3.0
 
 ### Minor Changes
