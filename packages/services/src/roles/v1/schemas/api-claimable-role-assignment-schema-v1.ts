@@ -26,8 +26,8 @@ export const ApiClaimableRoleAssignmentSchemaV1 = z
       .describe('Identifier in the originating system, if any.'),
     /** Reason for the assignment. */
     reason: z.string().optional().describe('Reason for the assignment.'),
-    /** Assignment type (e.g. "Direct" or "Inherited"). */
-    type: z.string().optional().describe('Assignment type (e.g. "Direct" or "Inherited").'),
+    /** Assignment scope type (`Global` or `Scoped`). */
+    type: z.string().optional().describe('Assignment scope type (`Global` or `Scoped`).'),
     /** Date from which the assignment is valid, if any. */
     validFrom: z.string().nullish().describe('Date from which the assignment is valid, if any.'),
     /** Date until which the assignment is valid, if any. */

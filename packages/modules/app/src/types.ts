@@ -241,6 +241,8 @@ export type AppModules<TModules extends Array<AnyModule> | unknown = unknown> = 
 export type ComponentRenderArgs<TFusion extends Fusion = Fusion, TEnv = AppEnv> = {
   fusion: TFusion;
   env: TEnv;
+  /** Receives uncaught errors raised while the application renders or initializes its modules. */
+  onError?: (error: unknown) => void;
 };
 
 /**

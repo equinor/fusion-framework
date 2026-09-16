@@ -22,6 +22,8 @@ import { extractVersion, parseVersionedArgs, versionedResponseSelector } from '.
 import { ApiVersion } from '../static';
 import { ApiAccountClaimableRoleAssignmentSchemaV1 } from '../v1/schemas/api-account-claimable-role-assignment-schema-v1';
 import { ExpandSchemaV1 } from '../v1/schemas/expand-schema-v1';
+import { SkipSchemaV1 } from '../v1/schemas/skip-schema-v1';
+import { TopSchemaV1 } from '../v1/schemas/top-schema-v1';
 import { apiPagedCollectionSchemaV1 } from '../v1/schemas/api-paged-collection-schema-v1';
 
 /** Concrete API versions this operation publishes. */
@@ -55,6 +57,10 @@ const VersionContract = {
         accountIdentifier: z
           .string()
           .describe('Fusion account identifier or supported alternate account identifier.'),
+        /** Maximum number of records to return. Roles V2 accepts values from 0 through 100. */
+        top: TopSchemaV1,
+        /** Number of records to skip before returning results. */
+        skip: SkipSchemaV1,
         /** Related resources to include in the response. */
         expand: ExpandSchemaV1,
       })
@@ -82,7 +88,7 @@ type ListAccountClaimableRoleAssignmentsResponse<
  * version.
  *
  * Version 1.0 accepts the path identifier `accountIdentifier`, and the optional query options
- * `expand`.
+ * `top`, `skip`, and `expand`.
  *
  * The value is parsed by the version's Zod argument schema before the request path is built, so
  * defaults and range checks apply up front.
@@ -137,6 +143,8 @@ const generateApiPath = <TVersion extends AvailableVersions>(
     case ApiVersion.v1: {
       const params = new URLSearchParams();
       params.append('api-version', version);
+      args.top !== undefined && params.append('$top', String(args.top));
+      args.skip !== undefined && params.append('$skip', String(args.skip));
       args.expand !== undefined && params.append('$expand', args.expand);
       return `/accounts/${encodeURIComponent(args.accountIdentifier)}/claimable-role-assignments?${String(params)}`;
     }
@@ -162,7 +170,8 @@ const generateApiPath = <TVersion extends AvailableVersions>(
  * `apiPagedCollectionSchemaV1(ApiAccountClaimableRoleAssignmentSchemaV1)`, and sends
  * `api-version=1.0` on the request.
  *
- * Query options: `expand` is sent as `$expand` to inline related resources.
+ * Query options: `top` and `skip` are sent as `$top` and `$skip` for paging, while `expand`
+ * is sent as `$expand` to inline related resources.
  *
  * Roles V2 answers `200 OK`; the body is typed
  * `ApiPagedCollectionV1<ApiAccountClaimableRoleAssignmentV1>`.

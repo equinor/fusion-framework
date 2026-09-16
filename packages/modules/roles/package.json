@@ -1,0 +1,76 @@
+{
+  "name": "@equinor/fusion-framework-module-roles",
+  "version": "0.1.0",
+  "description": "Fusion Framework module for the Fusion Roles V2 service",
+  "type": "module",
+  "sideEffects": false,
+  "main": "dist/esm/index.js",
+  "types": "dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "types": "./dist/types/index.d.ts"
+    },
+    "./errors": {
+      "import": "./dist/esm/errors/index.js",
+      "types": "./dist/types/errors/index.d.ts"
+    },
+    "./mock": {
+      "import": "./dist/esm/mock/index.js",
+      "types": "./dist/types/mock/index.d.ts"
+    },
+    "./package.json": "./package.json",
+    "./README.md": "./README.md"
+  },
+  "typesVersions": {
+    "*": {
+      ".": [
+        "dist/types/index.d.ts"
+      ],
+      "errors": [
+        "dist/types/errors/index.d.ts"
+      ],
+      "mock": [
+        "dist/types/mock/index.d.ts"
+      ]
+    }
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "prepack": "pnpm build",
+    "test": "vitest run"
+  },
+  "keywords": [
+    "fusion",
+    "roles",
+    "authorization"
+  ],
+  "author": "",
+  "license": "ISC",
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/equinor/fusion-framework.git",
+    "directory": "packages/modules/roles"
+  },
+  "dependencies": {
+    "@equinor/fusion-framework-module": "workspace:^",
+    "@equinor/fusion-framework-module-event": "workspace:^",
+    "@equinor/fusion-framework-module-http": "workspace:^",
+    "@equinor/fusion-framework-module-msal": "workspace:^",
+    "@equinor/fusion-framework-module-service-discovery": "workspace:^",
+    "@equinor/fusion-framework-module-telemetry": "workspace:^",
+    "@equinor/fusion-services": "workspace:^",
+    "@equinor/fusion-query": "workspace:^",
+    "rxjs": "^7.8.1"
+  },
+  "devDependencies": {
+    "typescript": "^7.0.2",
+    "vitest": "^4.1.10"
+  }
+}

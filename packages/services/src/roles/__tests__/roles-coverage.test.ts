@@ -41,7 +41,7 @@ const PATH_PARAM_VALUES: Record<string, string> = {
  * exercises body construction instead of posting empty objects.
  */
 const BODY_FIELD_VALUES: Record<string, Record<string, unknown>> = {
-  activateClaimableRoleAssignment: { reason: 'incident response' },
+  activateClaimableRoleAssignment: { reason: 'incident response', hours: 2 },
   addClaimableRoleAccessRoles: { accessRoleMappings: [{ accessRoleIdentifier: 'writer' }] },
   addRoleAccessRoles: { accessRoleMappings: [{ accessRoleIdentifier: 'writer' }] },
   assignClaimableRole: { accountIdentifier: 'user@example.com' },

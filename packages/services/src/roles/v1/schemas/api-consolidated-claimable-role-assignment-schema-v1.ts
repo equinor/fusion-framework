@@ -20,8 +20,8 @@ export const ApiConsolidatedClaimableRoleAssignmentSchemaV1 = z
       .array(z.string())
       .optional()
       .describe('All reasons contributing to this consolidated assignment.'),
-    /** Assignment type (e.g. "Direct" or "Inherited"). */
-    type: z.string().optional().describe('Assignment type (e.g. "Direct" or "Inherited").'),
+    /** Assignment scope type (`Global` or `Scoped`). */
+    type: z.string().optional().describe('Assignment scope type (`Global` or `Scoped`).'),
     /** Effective start date of the consolidated assignment, if any. Omitted when null. */
     validFrom: z
       .string()

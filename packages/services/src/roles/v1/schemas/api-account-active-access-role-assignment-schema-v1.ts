@@ -8,11 +8,8 @@ export const ApiAccountActiveAccessRoleAssignmentSchemaV1 = z
     systemName: z.string().optional().describe('Name of the system the access role belongs to.'),
     /** Name of the access role. */
     accessRoleName: z.string().optional().describe('Name of the access role.'),
-    /** Assignment type (e.g. "Direct" or "Inherited"). */
-    assignmentType: z
-      .string()
-      .optional()
-      .describe('Assignment type (e.g. "Direct" or "Inherited").'),
+    /** Assignment scope type (`Global` or `Scoped`). */
+    assignmentType: z.string().optional().describe('Assignment scope type (`Global` or `Scoped`).'),
     /** Scope restricting where the assignment applies, unless it is global. */
     scope: ApiScopeValuesSchemaV1.nullish().describe(
       'Scope restricting where the assignment applies, unless it is global.',
