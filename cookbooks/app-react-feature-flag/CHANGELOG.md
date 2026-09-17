@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-cookbook-app-react-feature-flag
 
+## 2.0.8
+
+### Patch Changes
+
+- f0e9cc0: Internal: use the workspace Playwright catalog so all packages resolve a single compatible version.
+
 ## 2.0.7
 
 ### Patch Changes

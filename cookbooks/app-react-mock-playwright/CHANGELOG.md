@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-cookbook-app-react-mock-playwright
 
+## 0.0.3
+
+### Patch Changes
+
+- f0e9cc0: Internal: use the workspace Playwright catalog so all packages resolve a single compatible version.
+
 ## 0.0.2
 
 ### Patch Changes
