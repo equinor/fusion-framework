@@ -16,6 +16,7 @@ import { ConsoleAdapter } from '@equinor/fusion-framework-module-telemetry/conso
 
 import { createPortalEntryPoint } from './create-portal-entry-point.js';
 import { isEnabledEnvValue } from './is-enabled-env-value.js';
+import { isMsalResponseIframe } from './is-msal-response-iframe.js';
 import { registerServiceWorker } from './register-service-worker.js';
 
 import { version } from '../version.js';
@@ -122,6 +123,13 @@ enableTelemetry(configurator, {
     await configurator.initialize<
       [ServiceDiscoveryModule, HttpModule, MsalModule, TelemetryModule]
     >();
+
+  // MSAL reloads this bootstrap inside a hidden iframe to process a redirect response; stop
+  // here so no unauthenticated scoped request reaches service discovery while the parent frame
+  // is still completing authentication.
+  if (isMsalResponseIframe()) {
+    return;
+  }
 
   const telemetry = ref.telemetry;
 
