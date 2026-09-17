@@ -39,8 +39,22 @@ configurator.addConfig(
 );
 
 (async () => {
-  const el = document.getElementById('app');
   const ref = await configurator.initialize();
+
+  const isEmbedded = window !== window.parent;
+  const hash = window.location.hash.replace(/^#/, '');
+  // MSAL response fragments carry one of these params on redirect
+  const hasMsalResponseParam = ['code', 'error', 'state'].some((param) =>
+    new URLSearchParams(hash).has(param),
+  );
+  // MSAL reloads this bootstrap inside a hidden iframe to process a redirect response; stop
+  // here so no unauthenticated scoped request reaches service discovery while the parent frame
+  // is still completing authentication.
+  if (isEmbedded && hasMsalResponseParam) {
+    return;
+  }
+
+  const el = document.getElementById('app');
   const { render } = await importWithoutVite('../src/index.tsx');
   // @ts-expect-error
   render(el, ref);
