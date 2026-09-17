@@ -23,7 +23,7 @@
     "@equinor/fusion-framework-react-app": "workspace:^",
     "@equinor/fusion-framework-react-router": "workspace:^",
     "@equinor/fusion-openapi-mock-server": "workspace:^",
-    "@playwright/test": "^1.62.1",
+    "@playwright/test": "catalog:",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
     "concurrently": "^10.0.5",
