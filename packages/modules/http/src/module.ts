@@ -15,6 +15,8 @@ import type {
 
 import type { MsalModule } from '@equinor/fusion-framework-module-msal';
 
+import { MissingAccessTokenException } from './errors/index.js';
+
 /**
  * Defines the type for the HTTP module, which includes:
  * - The module name: 'http'
@@ -43,8 +45,8 @@ export type HttpMsalModule = Module<
  * Default HTTP module definition for Fusion Framework applications.
  *
  * The module uses `HttpClientMsal` as the default client implementation and,
- * when the auth module is available, installs a request handler that can acquire
- * bearer tokens for scoped requests.
+ * when the auth module is available, installs a request handler that acquires
+ * bearer tokens for scoped requests and fails closed if none can be resolved.
  */
 export const module: HttpMsalModule = {
   name: 'http',
@@ -64,12 +66,15 @@ export const module: HttpMsalModule = {
    *
    * This function is responsible for setting up the default HTTP request handler
    * to acquire an access token from MSAL and attach it to the request headers
-   * when the request includes scopes.
+   * when the request includes scopes. When scopes are declared but no token can be
+   * acquired, the request fails closed with a {@link MissingAccessTokenException}
+   * instead of being sent anonymously.
    *
    * @param config - The module configuration.
    * @param hasModule - A function to check if a module is available.
    * @param requireInstance - A function to get an instance of a module.
    * @returns A promise that resolves to the HTTP client provider.
+   * @throws {MissingAccessTokenException} When a request declares scopes but MSAL does not resolve an access token.
    */
   initialize: async ({
     config,
@@ -88,12 +93,15 @@ export const module: HttpMsalModule = {
           const accessToken = await authProvider.acquireAccessToken({
             request: { scopes },
           });
-          // without a token there's nothing to attach, fall through to the default request
-          if (accessToken) {
-            const headers = new Headers(request.headers);
-            headers.set('Authorization', `Bearer ${accessToken}`);
-            return { ...request, headers };
+          // fail closed: a scoped request must never be sent anonymously
+          if (!accessToken) {
+            throw new MissingAccessTokenException(
+              `Failed to acquire an access token for scopes [${scopes.join(', ')}]`,
+            );
           }
+          const headers = new Headers(request.headers);
+          headers.set('Authorization', `Bearer ${accessToken}`);
+          return { ...request, headers };
         }
       });
     }
