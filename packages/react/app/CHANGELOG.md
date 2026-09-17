@@ -1,5 +1,13 @@
 # Change Log
 
+## 14.2.1
+
+### Patch Changes
+
+- f0e9cc0: Internal: use the workspace Playwright catalog so all packages resolve a single compatible version.
+- @equinor/fusion-framework-app@13.1.5
+  - @equinor/fusion-framework@8.1.4
+
 ## 14.2.0
 
 ### Minor Changes

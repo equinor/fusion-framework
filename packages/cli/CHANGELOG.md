@@ -1,5 +1,13 @@
 # Change Log
 
+## 15.3.6
+
+### Patch Changes
+
+- Updated dependencies [f0e9cc0]
+  - @equinor/fusion-framework-dev-portal@11.0.9
+  - @equinor/fusion-framework-dev-server@2.1.5
+
 ## 15.3.5
 
 ### Patch Changes
