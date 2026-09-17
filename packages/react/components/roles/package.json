@@ -43,7 +43,7 @@
     "@equinor/fusion-react-errorboundary": "^2.0.11",
     "@types/react": "^19.2.7",
     "@vitest/browser-playwright": "^4.1.0",
-    "playwright": "^1.62.1",
+    "playwright": "catalog:",
     "react": "^19.2.1",
     "styled-components": "^6.3.11",
     "typescript": "^7.0.2",

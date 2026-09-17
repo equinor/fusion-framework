@@ -3,6 +3,10 @@ packages:
   - cookbooks/*
   - vue-press
 
+catalog:
+  '@playwright/test': ^1.63.0
+  playwright: ^1.63.0
+
 # @changesets/cli and @changesets/write were published <24h ago (still inside pnpm 11's
 # default minimumReleaseAge window) but are already-vetted devDependency-only build tooling
 # from the changesets v2->v3 migration (PR #5337) — exempt them so installs aren't blocked.
