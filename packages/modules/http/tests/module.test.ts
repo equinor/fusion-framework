@@ -70,3 +70,37 @@ describe('http module MSAL request handler', () => {
     expect(fetchSpy).not.toHaveBeenCalled();
   });
 });
+
+describe('http module MSAL request handler without a registered auth module', () => {
+  /** Builds `module.initialize` arguments for a configuration with no 'auth' module registered. */
+  function createInitArgsWithoutAuth() {
+    return {
+      config: new HttpClientConfigurator<HttpClientMsal>(HttpClientMsal),
+      hasModule: () => false,
+      requireInstance: async () => {
+        throw new Error('requireInstance should not be called when no auth module is registered');
+      },
+    };
+  }
+
+  it('fails closed on a scoped request instead of sending it anonymously', async () => {
+    const provider = await module.initialize(createInitArgsWithoutAuth());
+    const client = provider.createClient({ baseUri: 'http://localhost' });
+    const fetchSpy = vi.spyOn(globalThis, 'fetch');
+
+    await expect(client.fetch('/api', { scopes: ['scope.read'] })).rejects.toThrow(
+      MissingAccessTokenException,
+    );
+    expect(fetchSpy).not.toHaveBeenCalled();
+  });
+
+  it('still sends an unscoped request unmodified', async () => {
+    const provider = await module.initialize(createInitArgsWithoutAuth());
+
+    const request: MsalRequest = { uri: 'http://localhost/api', path: '/api' };
+    const result = await provider.defaultHttpRequestHandler.get('MSAL')(request);
+
+    expect(result).toBeUndefined();
+  });
+});
+

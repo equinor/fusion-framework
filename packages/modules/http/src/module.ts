@@ -66,15 +66,15 @@ export const module: HttpMsalModule = {
    *
    * This function is responsible for setting up the default HTTP request handler
    * to acquire an access token from MSAL and attach it to the request headers
-   * when the request includes scopes. When scopes are declared but no token can be
-   * acquired, the request fails closed with a {@link MissingAccessTokenException}
-   * instead of being sent anonymously.
+   * when the request includes scopes. A scoped request that cannot get an access
+   * token — because acquisition failed, or because no auth module is registered at
+   * all — later fails closed with a {@link MissingAccessTokenException} when that
+   * request runs, instead of being sent anonymously.
    *
    * @param config - The module configuration.
    * @param hasModule - A function to check if a module is available.
    * @param requireInstance - A function to get an instance of a module.
    * @returns A promise that resolves to the HTTP client provider.
-   * @throws {MissingAccessTokenException} When a request declares scopes but MSAL does not resolve an access token.
    */
   initialize: async ({
     config,
@@ -82,7 +82,8 @@ export const module: HttpMsalModule = {
     requireInstance,
   }): Promise<HttpClientProvider<HttpClientMsal>> => {
     const httpProvider = new HttpClientProvider(config);
-    // wire up an MSAL bearer-token handler only when the auth module is registered
+    // wire up a bearer-token handler when the auth module is registered; otherwise still fail
+    // closed on scoped requests instead of letting them reach fetch without a token
     if (hasModule('auth')) {
       const authProvider = await requireInstance('auth');
       httpProvider.defaultHttpRequestHandler.set('MSAL', async (request) => {
@@ -102,6 +103,16 @@ export const module: HttpMsalModule = {
           const headers = new Headers(request.headers);
           headers.set('Authorization', `Bearer ${accessToken}`);
           return { ...request, headers };
+        }
+      });
+    } else {
+      httpProvider.defaultHttpRequestHandler.set('MSAL', async (request) => {
+        const { scopes = [] } = request;
+        // no auth module to acquire a token from; refuse the request rather than sending it anonymously
+        if (scopes.length) {
+          throw new MissingAccessTokenException(
+            `Cannot acquire an access token for scopes [${scopes.join(', ')}] because the auth module is not registered`,
+          );
         }
       });
     }
