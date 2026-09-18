@@ -1668,7 +1668,7 @@ importers:
         specifier: workspace:*
         version: link:../react/components/people-resolver
       '@equinor/fusion-framework-react-components-roles':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../react/components/roles
       '@equinor/fusion-framework-react-module-bookmark':
         specifier: workspace:*
