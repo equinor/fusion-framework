@@ -1,12 +1,21 @@
-import { useCallback, useEffect, useId, useMemo, type ReactElement } from 'react';
+import { useCallback, useId, type ReactElement } from 'react';
 import {
   ContextProvider,
   ContextSearch,
   type ContextSearchProps,
   type ContextSelectEvent,
-  ContextClearEvent,
+  type ContextResultItem,
 } from '@equinor/fusion-react-context-selector';
 import { useContextResolver } from './useContextResolver';
+
+// ContextSearch ignores an undefined preview; use an explicit empty item instead of a global clear event.
+const emptyContextItem: ContextResultItem = {
+  id: 'no-context',
+  title: 'Select Context',
+  subTitle: 'Context',
+  graphic: 'list',
+  isDisabled: true,
+};
 
 /**
  * Context selector component wired to the current application's context module.
@@ -14,6 +23,9 @@ import { useContextResolver } from './useContextResolver';
  * Renders a search input with dropdown results from the Fusion context service.
  * When the user selects a context item, it is set as the current context on the
  * application's context provider. Clearing the selector resets the current context.
+ * Programmatic context changes, including `setCurrentContextByIdAsync` in route
+ * loaders, update the preview through the same prop as the empty state, avoiding
+ * document-wide clear events that can overwrite newer previews.
  *
  * @see {@link https://equinor.github.io/fusion-react-components/?path=/docs/data-contextselector--component | ContextSelector Storybook}
  * @param props - Passthrough props for the underlying `ContextSearch` component.
@@ -49,16 +61,7 @@ export const ContextSelector = (props: ContextSearchProps): ReactElement | null 
     [provider],
   );
 
-  /**
-   * Clears context when ctx has been cleared outside the selector.
-   */
-  const clearEvent = useMemo(() => new ContextClearEvent({ date: Date.now() }), []);
-  useEffect(() => {
-    // Notify listeners only when the context was cleared outside this selector
-    if (!selectedContextItem) {
-      document.dispatchEvent(clearEvent);
-    }
-  }, [clearEvent, selectedContextItem]);
+  const previewItem = selectedContextItem ?? emptyContextItem;
 
   // Nothing to render until a context resolver has been resolved
   if (!resolver) return null;
@@ -74,7 +77,7 @@ export const ContextSelector = (props: ContextSearchProps): ReactElement | null 
           variant={props.variant ?? 'header'}
           onSelect={(e: ContextSelectEvent) => onContextSelect(e)}
           selectTextOnFocus={true}
-          previewItem={selectedContextItem}
+          previewItem={previewItem}
           onClearContext={onContextSelect}
         />
       </ContextProvider>

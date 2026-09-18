@@ -6,10 +6,13 @@ import { name, version } from './package.json' with { type: 'json' };
 
 export default defineProject({
   plugins: [react()],
+  resolve: { dedupe: ['react', 'react-dom'] },
   optimizeDeps: {
     include: [
       '@equinor/eds-tokens',
       '@equinor/eds-utils',
+      '@equinor/fusion-react-context-selector',
+      '@equinor/fusion-wc-chip',
       '@equinor/fusion-wc-person',
       'chalk',
       'react/jsx-dev-runtime',
