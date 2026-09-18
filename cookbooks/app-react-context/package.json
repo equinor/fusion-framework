@@ -38,7 +38,7 @@
     "@equinor/fusion-framework-vitest-plugin-react-app": "workspace:^",
     "@equinor/fusion-openapi-mock-server": "workspace:^",
     "@playwright/test": "catalog:",
-    "@vitest/browser-playwright": "^4.1.0",
+    "@vitest/browser-playwright": "^5.0.1",
     "concurrently": "^10.0.5",
     "odata-query": "^8.0.4",
     "playwright": "catalog:",
