@@ -177,6 +177,24 @@ describe('reactRouterPlugin', () => {
     expect(transformResult).toContain('default as MocksFsRoutesUsersId,');
   });
 
+  it('should generate distinct identifiers for layout.tsx files under different directories', () => {
+    const inputCode = [
+      `import { layout } from '@equinor/fusion-framework-react-router/routes';`,
+      `export const routes = layout('./mocks/layout-routes/layout.tsx', [`,
+      `  layout('./mocks/layout-routes/admin/layout.tsx'),`,
+      `]);`,
+    ].join('\n');
+
+    const transformResult = plugin.transform(inputCode, testFileId);
+
+    expect(transformResult).toBeDefined();
+    expect(transformResult).not.toBeNull();
+    expect(transformResult).toContain('default as MocksLayoutRoutesLayout');
+    expect(transformResult).toContain('handle as handleMocksLayoutRoutesLayout');
+    expect(transformResult).toContain('default as MocksLayoutRoutesAdminLayout');
+    expect(transformResult).toContain('handle as handleMocksLayoutRoutesAdminLayout');
+  });
+
   it('should transform Vite module IDs when the Windows project root uses backslashes', () => {
     plugin.config({ root: String.raw`C:\workspace\app` });
     const inputCode = [
