@@ -600,9 +600,11 @@ export class RolesClient implements IRolesClient {
           expand: 'accessRoleMappings',
         });
 
+      // Continue from each response so pagination remains sequential and cancellable.
       return getPage().pipe(
         expand((page) => {
           const assignments = page.value ?? [];
+          // A missing continuation marks the current response as the final page.
           if (!page.nextPage) {
             return EMPTY;
           }
@@ -740,16 +742,18 @@ export class RolesClient implements IRolesClient {
     // Capture one timestamp so assignments on different pages use the same eligibility boundary.
     return defer(() => {
       const now = Date.now();
+      // Reduce the paged response stream to the first conclusive access-role match.
       return this._getAccountClaimableRoleAssignmentPages(accountIdentifier).pipe(
         map((page) =>
-          (page.value ?? []).some(
+          (page.value ?? [])
+            // Accept the page when one currently activatable assignment grants the requested role.
+            .some(
             (assignment) =>
               isClaimableRoleAssignmentActivatableNow(assignment, now) &&
-              // Expanded mappings are the authoritative relationship between these roles.
-              assignment.claimableRole?.accessRoleMappings?.some(
-                (mapping) => mapping.accessRole?.name === accessRoleName,
-              ),
-          ),
+              assignment.claimableRole?.accessRoleMappings
+                // Expanded mappings are the authoritative relationship between these roles.
+                ?.some((mapping) => mapping.accessRole?.name === accessRoleName),
+            ),
         ),
         // A positive match is conclusive, so later pages are not requested.
         filter((hasClaimableRoleAssignment) => hasClaimableRoleAssignment),
