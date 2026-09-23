@@ -56,8 +56,8 @@
   },
   "dependencies": {
     "ag-charts-community": "^14.0.1",
-    "ag-charts-enterprise": "~14.1.0",
-    "ag-charts-react": "~14.1.0"
+    "ag-charts-enterprise": "~14.2.0",
+    "ag-charts-react": "~14.2.0"
   },
   "devDependencies": {
     "@equinor/fusion-framework-react-module": "workspace:^",
