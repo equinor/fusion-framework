@@ -1,5 +1,15 @@
 # @equinor/fusion-framework-vitest-plugin-react-app
 
+## 1.0.6
+
+### Patch Changes
+
+- f0e9cc0: Internal: use the workspace Playwright catalog so all packages resolve a single compatible version.
+- @equinor/fusion-framework-cli@15.3.6
+  - @equinor/fusion-framework-module-telemetry@7.1.2
+  - @equinor/fusion-framework-app@13.1.5
+  - @equinor/fusion-framework@8.1.4
+
 ## 1.0.5
 
 ### Patch Changes

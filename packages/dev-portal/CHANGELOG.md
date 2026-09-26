@@ -1,5 +1,19 @@
 # @equinor/fusion-framework-dev-portal
 
+## 11.0.9
+
+### Patch Changes
+
+- f0e9cc0: Internal: use the workspace Playwright catalog so all packages resolve a single compatible version.
+- 298287e: Reset the context selector when the active context changes so clearing and programmatically restoring the same context updates the visible selection.
+- Updated dependencies [f0e9cc0]
+  - @equinor/fusion-observable@9.2.3
+  - @equinor/fusion-framework-module-analytics@3.1.4
+  - @equinor/fusion-framework-module-telemetry@7.1.2
+  - @equinor/fusion-framework-app@13.1.5
+  - @equinor/fusion-framework@8.1.4
+  - @equinor/fusion-framework-dev-server@2.1.5
+
 ## 11.0.8
 
 ### Patch Changes

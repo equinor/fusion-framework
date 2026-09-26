@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-module-roles
 
+## 0.2.1
+
+### Patch Changes
+
+- e026972: Internal: clarify pagination and claimable-role matching intent for source lint compliance; no public API changes.
+
 ## 0.2.0
 
 ### Minor Changes
