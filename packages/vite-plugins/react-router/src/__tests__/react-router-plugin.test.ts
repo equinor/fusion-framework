@@ -195,6 +195,39 @@ describe('reactRouterPlugin', () => {
     expect(transformResult).toContain('handle as handleMocksLayoutRoutesAdminLayout');
   });
 
+  it('should reserve all export aliases before allocating names for colliding route modules', () => {
+    const inputCode = [
+      `import { route } from '@equinor/fusion-framework-react-router/routes';`,
+      `export const routes = [`,
+      `  route('foo', './mocks/alias-collisions/foo.tsx'),`,
+      `  route('error', './mocks/alias-collisions/ErrorElementFoo.tsx'),`,
+      `];`,
+    ].join('\n');
+
+    const transformResult = plugin.transform(inputCode, testFileId);
+
+    expect(transformResult).toContain('default as Foo,');
+    expect(transformResult).toContain('ErrorElement as ErrorElementFoo');
+    expect(transformResult).toContain('default as ErrorElementFoo2');
+  });
+
+  it('should reserve unique basenames before expanded names for path collisions', () => {
+    const inputCode = [
+      `import { route } from '@equinor/fusion-framework-react-router/routes';`,
+      `export const routes = [`,
+      `  route('first', './mocks/path-collisions/a-b/layout.tsx'),`,
+      `  route('second', './mocks/path-collisions/a/b/layout.tsx'),`,
+      `  route('unique', './mocks/path-collisions/ABLayout.tsx'),`,
+      `];`,
+    ].join('\n');
+
+    const transformResult = plugin.transform(inputCode, testFileId);
+
+    expect(transformResult).toContain('default as MocksPathCollisionsABLayout');
+    expect(transformResult).toContain('default as MocksPathCollisionsABLayout2');
+    expect(transformResult).toContain('default as ABLayout');
+  });
+
   it('should transform Vite module IDs when the Windows project root uses backslashes', () => {
     plugin.config({ root: String.raw`C:\workspace\app` });
     const inputCode = [

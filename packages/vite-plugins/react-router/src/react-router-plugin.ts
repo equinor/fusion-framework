@@ -290,12 +290,44 @@ function generateComponentName(filePath: string, includeAncestors = false): stri
 }
 
 /**
+ * Lists the local aliases emitted for a route module.
+ *
+ * @param componentName - The allocated component identifier.
+ * @param availableExports - Recognised exports from the route module.
+ * @returns Every generated local alias for the route module.
+ */
+function getGeneratedNames(componentName: string, availableExports: Set<string>): string[] {
+  const names = availableExports.has('default') ? [componentName] : [];
+  const exportPrefixes: Record<string, string> = {
+    clientLoader: 'clientLoader',
+    action: 'action',
+    handle: 'handle',
+    ErrorElement: 'ErrorElement',
+    HydrateFallback: 'HydrateFallback',
+    shouldRevalidate: 'shouldRevalidate',
+  };
+
+  // Include every emitted alias so component and route-module exports share one namespace.
+  for (const [exportName, prefix] of Object.entries(exportPrefixes)) {
+    if (availableExports.has(exportName)) {
+      names.push(`${prefix}${componentName}`);
+    }
+  }
+
+  return names;
+}
+
+/**
  * Generates stable, unique identifiers for all route modules in one DSL file.
  *
  * @param filePaths - Route module paths referenced by the DSL.
+ * @param availableExportsByPath - Recognised exports keyed by route module path.
  * @returns Component identifiers keyed by route module path.
  */
-function generateUniqueComponentNames(filePaths: Set<string>): Map<string, string> {
+function generateUniqueComponentNames(
+  filePaths: Set<string>,
+  availableExportsByPath: Map<string, Set<string>>,
+): Map<string, string> {
   const baseNames = new Map<string, string>();
   const nameCounts = new Map<string, number>();
 
@@ -309,22 +341,37 @@ function generateUniqueComponentNames(filePaths: Set<string>): Map<string, strin
   const componentNames = new Map<string, string>();
   const usedNames = new Set<string>();
 
-  // Reserve each identifier once, adding a stable suffix for normalized path collisions.
-  filePaths.forEach((filePath) => {
-    const baseName = baseNames.get(filePath) ?? generateComponentName(filePath);
-    const preferredName =
-      (nameCounts.get(baseName) ?? 0) > 1 ? generateComponentName(filePath, true) : baseName;
+  const allocateName = (filePath: string, preferredName: string): void => {
+    const availableExports = availableExportsByPath.get(filePath) ?? new Set<string>();
     let componentName = preferredName;
     let suffix = 2;
 
-    // Path normalization can still collapse distinct paths to the same PascalCase name.
-    while (usedNames.has(componentName)) {
+    // Path and export-prefix normalization can still collapse distinct generated aliases.
+    while (getGeneratedNames(componentName, availableExports).some((name) => usedNames.has(name))) {
       componentName = `${preferredName}${suffix}`;
       suffix++;
     }
 
-    usedNames.add(componentName);
+    getGeneratedNames(componentName, availableExports).forEach((name) => {
+      usedNames.add(name);
+    });
     componentNames.set(filePath, componentName);
+  };
+
+  // Reserve non-colliding basenames first so expanded names cannot consume them.
+  filePaths.forEach((filePath) => {
+    const baseName = baseNames.get(filePath) ?? generateComponentName(filePath);
+    if ((nameCounts.get(baseName) ?? 0) === 1) {
+      allocateName(filePath, baseName);
+    }
+  });
+
+  // Allocate expanded names after all non-colliding basenames are reserved.
+  filePaths.forEach((filePath) => {
+    const baseName = baseNames.get(filePath) ?? generateComponentName(filePath);
+    if ((nameCounts.get(baseName) ?? 0) > 1) {
+      allocateName(filePath, generateComponentName(filePath, true));
+    }
   });
 
   return componentNames;
@@ -762,12 +809,17 @@ export const reactRouterPlugin = (options: ReactRouterPluginOptions = {}): Plugi
 
         // Generate unique variable names for each file's exports
         const fileToImports = new Map<string, RouteImports>();
-        const componentNames = generateUniqueComponentNames(filePaths);
+        const availableExportsByPath = new Map<string, Set<string>>();
 
         // Resolve the recognised exports for every route file referenced in this module
         filePaths.forEach((filePath) => {
+          availableExportsByPath.set(filePath, getAvailableExports(filePath, id, debug));
+        });
+        const componentNames = generateUniqueComponentNames(filePaths, availableExportsByPath);
+
+        filePaths.forEach((filePath) => {
           const componentName = componentNames.get(filePath) ?? generateComponentName(filePath);
-          const availableExports = getAvailableExports(filePath, id, debug);
+          const availableExports = availableExportsByPath.get(filePath) ?? new Set<string>();
 
           fileToImports.set(filePath, {
             component: componentName,
