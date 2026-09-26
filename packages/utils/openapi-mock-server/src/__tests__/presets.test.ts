@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it } from 'vitest';
 
+import { defineService } from '../discovery/define-service.js';
 import { createMockServer, type MockServerHandle } from '../server/index.js';
 import { presets } from '../presets/index.js';
 import { fusionPreset } from '../presets/fusion/index.js';
@@ -44,16 +45,40 @@ describe('presets', () => {
       server = undefined;
     });
 
-    it('fakes a Context with a schema-shaped id and title', async () => {
+    it('fakes a Context with the requested id and a schema-shaped title', async () => {
       server = createMockServer().use('fusion');
       const { url } = await server.start();
+      const contextId = '00000000-0000-0000-0000-000000000000';
 
-      const response = await fetch(`${url}/context/contexts/00000000-0000-0000-0000-000000000000`);
+      const response = await fetch(`${url}/context/contexts/${contextId}`);
 
       expect(response.status).toBe(200);
       const context = (await response.json()) as { id: string; title: string };
-      expect(context.id).toMatch(/^[0-9a-f-]{36}$/i);
+      expect(context.id).toBe(contextId);
       expect(typeof context.title).toBe('string');
+    });
+
+    it('lets an application route override the Context preset response', async () => {
+      const context = { id: 'application-context', title: 'Application context' };
+      server = createMockServer()
+        .use('fusion')
+        .use([
+          defineService({
+            key: 'context',
+            serviceDiscovery: 'merge',
+            routes: {
+              '/contexts/{id}': {
+                get: { mock: context },
+              },
+            },
+          }),
+        ]);
+      const { url } = await server.start();
+
+      const response = await fetch(`${url}/context/contexts/requested-context`);
+
+      expect(response.status).toBe(200);
+      await expect(response.json()).resolves.toEqual(context);
     });
 
     it('fakes a list of Bookmarks with faked names and descriptions', async () => {

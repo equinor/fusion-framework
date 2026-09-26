@@ -1,6 +1,8 @@
 import { createService, type ServiceBuilder } from '../../discovery/create-service.js';
 import peopleFakers from './people.fakers.js';
 
+import type { OpenApiMockOverrideContext, OpenApiMockResponse } from '@equinor/fusion-openapi-mock';
+
 import appState from './app-state.openapi.json' with { type: 'json' };
 import apps from './apps.openapi.json' with { type: 'json' };
 import bookmarks from './bookmarks.openapi.json' with { type: 'json' };
@@ -9,6 +11,39 @@ import notification from './notification.openapi.json' with { type: 'json' };
 import people from './people.openapi.json' with { type: 'json' };
 import portalConfig from './portal-config.openapi.json' with { type: 'json' };
 import rolesv2 from './rolesv2.openapi.json' with { type: 'json' };
+
+/**
+ * Preserves the requested Context identity while retaining the schema-generated response fields.
+ *
+ * @param params - Path parameters resolved from the Context request.
+ * @param mockResponseForOperation - Generates the schema-shaped baseline Context response.
+ * @returns The generated Context response with its ID replaced by the requested path ID.
+ * @throws If the route has no context ID or the generated response is not an object.
+ */
+async function preserveRequestedContextId({
+  params,
+  mockResponseForOperation,
+}: OpenApiMockOverrideContext): Promise<OpenApiMockResponse> {
+  const requestedId = params.id;
+  // A matched /contexts/{id} operation must always provide the identity used by application routing.
+  if (!requestedId) {
+    throw new Error('The Fusion Context mock requires an "id" path parameter.');
+  }
+
+  const baseline = await mockResponseForOperation();
+  // The Context schema must generate an object before its identity can be preserved.
+  if (baseline.mock === null || typeof baseline.mock !== 'object' || Array.isArray(baseline.mock)) {
+    throw new Error('The Fusion Context mock generated a non-object response.');
+  }
+
+  return {
+    ...baseline,
+    mock: {
+      ...baseline.mock,
+      id: requestedId,
+    },
+  };
+}
 
 /**
  * Fusion's bundled baseline services, keyed by service key — pass this straight to
@@ -51,8 +86,15 @@ export interface FusionPresetServices {
  * ```
  */
 export function fusionPreset(): FusionPresetServices {
+  const contextService = createService('context', context);
+  contextService.paths = {
+    '/contexts/{id}': {
+      get: preserveRequestedContextId,
+    },
+  };
+
   return {
-    context: createService('context', context),
+    context: contextService,
     bookmarks: createService('bookmarks', bookmarks),
     people: createService('people', people).withFields(peopleFakers),
     notification: createService('notification', notification),
