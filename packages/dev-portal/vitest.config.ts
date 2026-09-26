@@ -10,6 +10,7 @@ export default defineProject({
     include: [
       '@equinor/eds-tokens',
       '@equinor/eds-utils',
+      '@equinor/fusion-react-context-selector',
       '@equinor/fusion-wc-person',
       'chalk',
       'react/jsx-dev-runtime',
