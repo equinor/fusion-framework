@@ -207,9 +207,7 @@ export const useContextResolver = (): {
       () =>
         (provider?.currentContext$ || EMPTY)
           // Preserve every provider emission even when React coalesces equal context identities
-          .pipe(
-            map((context, revision) => ({ context, revision })),
-          ),
+          .pipe(map((context, revision) => ({ context, revision }))),
       [provider],
     ),
   );
