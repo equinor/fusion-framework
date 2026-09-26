@@ -1,5 +1,16 @@
 # Change Log
 
+## 15.3.6
+
+### Patch Changes
+
+- Updated dependencies [f0e9cc0]
+- Updated dependencies [298287e]
+- Updated dependencies [ce443ae]
+  - @equinor/fusion-framework-dev-portal@11.0.9
+  - @equinor/fusion-framework-vite-plugin-react-router@0.1.1
+  - @equinor/fusion-framework-dev-server@2.1.5
+
 ## 15.3.5
 
 ### Patch Changes

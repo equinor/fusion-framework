@@ -1,6 +1,6 @@
 {
   "name": "portal",
-  "version": "0.1.91",
+  "version": "0.1.92",
   "description": "",
   "main": "dist/index.js",
   "private": true,

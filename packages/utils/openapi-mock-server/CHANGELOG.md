@@ -1,5 +1,13 @@
 # @equinor/fusion-openapi-mock-server
 
+## 0.2.1
+
+### Patch Changes
+
+- cc65bd5: Preserve the requested context ID in responses from the bundled Fusion Context preset.
+  
+  Fixes #5606.
+
 ## 0.2.0
 
 ### Minor Changes

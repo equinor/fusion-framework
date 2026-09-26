@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework-module-roles",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Fusion Framework module for the Fusion Roles V2 service",
   "type": "module",
   "sideEffects": false,

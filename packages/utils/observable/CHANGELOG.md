@@ -1,5 +1,11 @@
 # Change Log
 
+## 9.2.3
+
+### Patch Changes
+
+- f0e9cc0: Internal: use the workspace Playwright catalog so all packages resolve a single compatible version.
+
 ## 9.2.2
 
 ### Patch Changes

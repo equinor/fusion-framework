@@ -1,5 +1,12 @@
 # Change Log
 
+## 16.0.9
+
+### Patch Changes
+
+- Updated dependencies [f0e9cc0]
+  - @equinor/fusion-observable@9.2.3
+
 ## 16.0.8
 
 ### Patch Changes

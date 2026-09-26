@@ -748,11 +748,11 @@ export class RolesClient implements IRolesClient {
           (page.value ?? [])
             // Accept the page when one currently activatable assignment grants the requested role.
             .some(
-            (assignment) =>
-              isClaimableRoleAssignmentActivatableNow(assignment, now) &&
-              assignment.claimableRole?.accessRoleMappings
-                // Expanded mappings are the authoritative relationship between these roles.
-                ?.some((mapping) => mapping.accessRole?.name === accessRoleName),
+              (assignment) =>
+                isClaimableRoleAssignmentActivatableNow(assignment, now) &&
+                assignment.claimableRole?.accessRoleMappings
+                  // Expanded mappings are the authoritative relationship between these roles.
+                  ?.some((mapping) => mapping.accessRole?.name === accessRoleName),
             ),
         ),
         // A positive match is conclusive, so later pages are not requested.

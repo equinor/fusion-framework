@@ -1,5 +1,12 @@
 # Change Log
 
+## 5.0.6
+
+### Patch Changes
+
+- f0e9cc0: Internal: use the workspace Playwright catalog so all packages resolve a single compatible version.
+- ce443ae: Demonstrate nested route layouts with separate root and products `layout.tsx` modules.
+
 ## 5.0.5
 
 ### Patch Changes
