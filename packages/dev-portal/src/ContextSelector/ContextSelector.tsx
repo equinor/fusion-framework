@@ -1,10 +1,9 @@
-import { useCallback, useEffect, useId, useMemo, type ReactElement } from 'react';
+import { useCallback, useId, type ReactElement } from 'react';
 import {
   ContextProvider,
   ContextSearch,
   type ContextSearchProps,
   type ContextSelectEvent,
-  ContextClearEvent,
 } from '@equinor/fusion-react-context-selector';
 import { useContextResolver } from './useContextResolver';
 
@@ -25,6 +24,7 @@ export const ContextSelector = (props: ContextSearchProps): ReactElement | null 
     resolver,
     provider,
     currentContext: [selectedContextItem],
+    currentContextRevision,
   } = useContextResolver();
 
   /** callback handler for context selector, when context is changed or cleared */
@@ -49,17 +49,6 @@ export const ContextSelector = (props: ContextSearchProps): ReactElement | null 
     [provider],
   );
 
-  /**
-   * Clears context when ctx has been cleared outside the selector.
-   */
-  const clearEvent = useMemo(() => new ContextClearEvent({ date: Date.now() }), []);
-  useEffect(() => {
-    // Notify listeners only when the context was cleared outside this selector
-    if (!selectedContextItem) {
-      document.dispatchEvent(clearEvent);
-    }
-  }, [clearEvent, selectedContextItem]);
-
   // Nothing to render until a context resolver has been resolved
   if (!resolver) return null;
 
@@ -67,6 +56,7 @@ export const ContextSelector = (props: ContextSearchProps): ReactElement | null 
     <div style={{ flex: 1, maxWidth: '480px' }}>
       <ContextProvider resolver={resolver}>
         <ContextSearch
+          key={`${selectedContextItem?.id ?? 'no-context'}:${currentContextRevision}`}
           id={contextSelectorId}
           placeholder={props.placeholder ?? 'Search for context'}
           initialText={props.initialText ?? 'Start typing to search'}
