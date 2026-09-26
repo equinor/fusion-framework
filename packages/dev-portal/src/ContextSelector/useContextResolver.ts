@@ -188,6 +188,7 @@ export const useContextResolver = (): {
   resolver: ContextResolver | null;
   provider: IContextProvider | null;
   currentContext: ContextResult;
+  currentContextRevision: number;
 } => {
   /* Framework modules */
   const framework = useFramework<[AppModule, NavigationModule]>();
@@ -200,14 +201,24 @@ export const useContextResolver = (): {
   /* context provider state */
   const [provider, setProvider] = useState<IContextProvider | null>(null);
 
-  /* Current context observable */
-  const { value: currentContext } = useObservableState(
-    useMemo(() => provider?.currentContext$ || EMPTY, [provider]),
+  /* Current context observable with an emission revision for stateful UI consumers */
+  const { value: currentContextState } = useObservableState(
+    useMemo(
+      () =>
+        (provider?.currentContext$ || EMPTY)
+          // Preserve every provider emission even when React coalesces equal context identities
+          .pipe(
+            map((context, revision) => ({ context, revision })),
+          ),
+      [provider],
+    ),
   );
+  const currentContextRevision = currentContextState?.revision ?? 0;
 
   const preselected: ContextResult = useMemo(() => {
+    const currentContext = currentContextState?.context;
     return currentContext ? mapper([currentContext]) : [];
-  }, [currentContext]);
+  }, [currentContextState]);
 
   /** callback function when current app instance changes */
   const onContextProviderChange = useCallback((modules: AppModulesInstance) => {
@@ -331,7 +342,7 @@ export const useContextResolver = (): {
       },
     [provider, preselected, processError],
   );
-  return { resolver, provider, currentContext: preselected };
+  return { resolver, provider, currentContext: preselected, currentContextRevision };
 };
 
 export default useContextResolver;

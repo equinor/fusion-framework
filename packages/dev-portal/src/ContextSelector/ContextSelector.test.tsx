@@ -6,6 +6,7 @@ import { ContextSelector } from './ContextSelector';
 
 const mocks = vi.hoisted(() => ({
   currentContext: [{ id: 'context-a', title: 'Context A', subTitle: 'Project' }] as ContextResult,
+  currentContextRevision: 0,
   clearCurrentContext: vi.fn(),
 }));
 
@@ -19,6 +20,7 @@ vi.mock('./useContextResolver', () => ({
       clearCurrentContext: mocks.clearCurrentContext,
     },
     currentContext: mocks.currentContext,
+    currentContextRevision: mocks.currentContextRevision,
   }),
 }));
 
@@ -26,6 +28,7 @@ describe('ContextSelector', () => {
   afterEach(() => {
     cleanup();
     mocks.currentContext = [{ id: 'context-a', title: 'Context A', subTitle: 'Project' }];
+    mocks.currentContextRevision = 0;
     mocks.clearCurrentContext.mockReset();
   });
 
@@ -37,8 +40,10 @@ describe('ContextSelector', () => {
     expect(document.querySelector('fwc-searchable-dropdown')).not.toBeNull();
 
     mocks.currentContext = [];
+    mocks.currentContextRevision += 1;
     await screen.rerender(<ContextSelector />);
     mocks.currentContext = selectedContext;
+    mocks.currentContextRevision += 1;
     await screen.rerender(<ContextSelector />);
 
     await expect.element(screen.getByText('Context A')).toBeVisible();
@@ -50,8 +55,18 @@ describe('ContextSelector', () => {
 
     await screen.getByRole('button').click();
     expect(mocks.clearCurrentContext).toHaveBeenCalledOnce();
+    mocks.currentContextRevision += 2;
     await screen.rerender(<ContextSelector />);
 
     await expect.element(screen.getByText('Context A')).toBeVisible();
+  });
+
+  it('keeps the search view open across unrelated rerenders', async () => {
+    const screen = await render(<ContextSelector />);
+
+    await screen.getByText('Context A').click();
+    await screen.rerender(<ContextSelector />);
+
+    expect(document.querySelector('fwc-searchable-dropdown')).not.toBeNull();
   });
 });

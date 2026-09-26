@@ -24,10 +24,8 @@ export const ContextSelector = (props: ContextSearchProps): ReactElement | null 
     resolver,
     provider,
     currentContext: [selectedContextItem],
+    currentContextRevision,
   } = useContextResolver();
-
-  // The selector compares preview items by identity, so clone to resync after coalesced clear/restore updates.
-  const previewItem = selectedContextItem ? { ...selectedContextItem } : undefined;
 
   /** callback handler for context selector, when context is changed or cleared */
   const onContextSelect = useCallback(
@@ -58,7 +56,7 @@ export const ContextSelector = (props: ContextSearchProps): ReactElement | null 
     <div style={{ flex: 1, maxWidth: '480px' }}>
       <ContextProvider resolver={resolver}>
         <ContextSearch
-          key={selectedContextItem?.id ?? 'no-context'}
+          key={`${selectedContextItem?.id ?? 'no-context'}:${currentContextRevision}`}
           id={contextSelectorId}
           placeholder={props.placeholder ?? 'Search for context'}
           initialText={props.initialText ?? 'Start typing to search'}
@@ -66,7 +64,7 @@ export const ContextSelector = (props: ContextSearchProps): ReactElement | null 
           variant={props.variant ?? 'header'}
           onSelect={(e: ContextSelectEvent) => onContextSelect(e)}
           selectTextOnFocus={true}
-          previewItem={previewItem}
+          previewItem={selectedContextItem}
           onClearContext={onContextSelect}
         />
       </ContextProvider>
