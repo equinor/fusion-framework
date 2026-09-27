@@ -19,6 +19,23 @@ const getMsalMock = (
   return templateEnv.msal?.mock;
 };
 
+/**
+ * Reads the standalone mock-server origin passed to the SPA bootstrap.
+ *
+ * @param config - Configuration returned by {@link createDevServerConfig}.
+ * @returns The generated mock-server URL.
+ */
+const getMsalMockServerUrl = (
+  config: ReturnType<typeof createDevServerConfig>,
+): string | undefined => {
+  const templateEnv = config.spa?.templateEnv;
+  // This factory always emits an object; fail clearly if that contract changes.
+  if (!templateEnv || typeof templateEnv === 'function') {
+    throw new Error('Expected createDevServerConfig to generate an object template environment');
+  }
+  return templateEnv.msal?.mockServerUrl;
+};
+
 describe('createDevServerConfig', () => {
   it('uses the CI service discovery endpoint and real authentication by default', () => {
     const config = createDevServerConfig({});
@@ -27,6 +44,7 @@ describe('createDevServerConfig', () => {
       'https://discovery.fusion.equinor.com/service-registry/environments/ci/services/',
     );
     expect(getMsalMock(config)).toBeUndefined();
+    expect(getMsalMockServerUrl(config)).toBeUndefined();
   });
 
   it.each(['http://localhost:4010', 'http://localhost:4010/'])(
@@ -36,6 +54,7 @@ describe('createDevServerConfig', () => {
 
       expect(config.api.serviceDiscoveryUrl).toBe('http://localhost:4010/@fusion-mock/discovery');
       expect(getMsalMock(config)).toBe('true');
+      expect(getMsalMockServerUrl(config)).toBe(mock);
     },
   );
 });

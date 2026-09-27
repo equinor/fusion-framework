@@ -73,7 +73,7 @@ const createDevServerTemplate = (
     redirectUri: '/authentication/login-callback',
     requiresAuth: 'true',
     // `--mock` also swaps auth for the in-process MSAL mock, so the mocked API is usable without a real Entra ID sign-in
-    ...(mock ? { mock: 'true' } : {}),
+    ...(mock ? { mock: 'true', mockServerUrl: mock } : {}),
   },
   serviceWorker: {
     // default proxies
