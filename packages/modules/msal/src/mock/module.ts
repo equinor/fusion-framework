@@ -39,7 +39,7 @@ export type AuthConfigMockFn<TRef = unknown> = (
  * @example
  * ```typescript
  * enableMsalMock(configurator, (builder) => {
- *   builder.setAccount({ name: 'Ada Lovelace' });
+ *   builder.setAcquireToken(({ scopes }) => issueToken(scopes));
  * });
  * ```
  */

@@ -35,113 +35,41 @@ A user named `Test User` is signed in. Tokens are real JWTs, minted in-process w
 
 When no client configuration is declared, a stand-in one is used, so an application boots under test without credentials it does not have.
 
-## Choosing the signed-in user
+## Custom token acquisition
 
-`MsalMockClient` takes the same `MsalClientConfig` the real `MsalClient` takes — a client configuration has no notion of who is signed in, so the user is declared separately and signed in on the client as it is built:
-
-```typescript
-import { enableMsalMock } from '@equinor/fusion-framework-module-msal/mock';
-
-enableMsalMock(configurator, (builder) => {
-  builder.setAccount({ name: 'Ada Lovelace', username: 'ada@equinor.com' });
-});
-```
-
-Pass `null` when nobody is signed in:
+Inject the token acquisition used by the current test runtime:
 
 ```typescript
 enableMsalMock(configurator, (builder) => {
-  builder.setAccount(null);
+  builder.setAcquireToken(async ({ scopes }) => {
+    const response = await fetch('http://localhost:4010/@fusion-mock/auth/token', {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ scopes }),
+    });
+    const result = await response.json();
+    return result.status === 'issued' ? result.token : null;
+  });
 });
 ```
 
-`setAccount` also takes an ordinary config-builder callback, resolved while the configuration is assembled and handed the same arguments every other builder callback receives:
+The MSAL mock knows nothing about HTTP, Vite, Playwright, or the mock server. The runtime adapter
+receives the requested scopes, current account, and client ID. Its returned token is authoritative:
+the client derives its active account from that same token before returning the authentication
+result, so the bearer token, result account, client account, and provider account cannot describe
+different users.
 
-```typescript
-enableMsalMock(configurator, (builder) => {
-  builder.setAccount(async ({ hasModule }) => ({
-    name: hasModule('app') ? 'App User' : 'Portal User',
-  }));
-});
-```
-
-The user is in place **before** `MsalProvider.initialize()` runs, so the provider's own start-up path acts on it. Combined with `setRequiresAuth(true)`, a test observes the real automatic login rather than a state assigned after the fact.
-
-`setClient` replaces the client, but not the rule: the declared user is signed in on whichever client the module authenticates through, so a mock client supplied that way receives it too.
-
-## Returning an exact token
-
-Most tests only care who is signed in and let the mock fabricate a token from that user's fields. When a backend mock validates the token itself — specific claims, an audience, or a signature — it needs to see the exact token it expects instead:
-
-```typescript
-enableMsalMock(configurator, (builder) => {
-  builder.setToken(token);
-});
-```
-
-`setToken` also signs in the user the token's claims describe, via `createMockUserFromToken` — so `acquireAccessToken` returns this token, and the account APIs agree with it. Pass `true` as the second argument to keep a separately declared account instead:
-
-```typescript
-enableMsalMock(configurator, (builder) => {
-  builder.setAccount({ name: 'Ada Lovelace' }).setToken(token, true);
-});
-```
-
-| Option | Default | Purpose |
-| --- | --- | --- |
-| `name` | `Test User` | Display name |
-| `username` | `test.user@equinor.com` | UPN / email |
-| `userId` | `fusion-mock-user` | Object ID |
-| `tenantId` | the client's configured tenant | Tenant |
-| `scopes` | `fusion-mock-scope` | Granted when a request specifies none |
-| `account` | derived | A preconfigured `AccountInfo` to use outright |
-| `signedOut` | `false` | Start without a signed-in user |
-
-The client tokens are issued for comes from the client configuration (`setClientConfig`), not from the user.
-
-### Why the user is signed in at construction
-
-The account is put in the client's cache as the client is built — before the provider exists. That reproduces the production shape of a returning user with a live session: the provider finds an account already there and takes the branch it takes in the browser.
-
-Assigning the account **after** `MsalProvider.initialize()` — from an `onInitialized` hook, say — looks equivalent but is not. `initialize()` exchanges an auth code, calls `handleRedirect()` and, when `requiresAuth` is set, performs an automatic login. A late assignment silently overwrites all of that, so a test asserting on the sign-in journey would be observing its own assignment rather than the framework.
-
-## Changing the user between tests
-
-When a suite shares one framework instance but needs a different user per test, set the active account directly:
-
-```typescript
-beforeEach(() => {
-  fusion.modules.auth.client.setActiveAccount(account);
-});
-```
-
-The mock keeps a real account cache, so this behaves the way MSAL does: `getActiveAccount`, `getAllAccounts` and `getAccount(filter)` all agree afterwards. Unlike real MSAL, an account that was never issued by a sign-in is accepted and added to the cache, which is what makes the one-liner above possible.
-
-Signing out (`logout`, `logoutPopup`, `logoutRedirect`) removes the account from the cache rather than merely deactivating it, as MSAL does.
+Returning `null` restores the built-in `fusion-mock-user` fallback. The React app Vitest plugin
+installs a deterministic default acquisition function, while the SPA bootstrap installs the
+mock-server HTTP adapter.
 
 ## Running inside a host application
 
 When the module is hoisted onto a host application's provider — an app inside a portal — no client is built. The app authenticates through the host's client, exactly as in production.
 
-A user declared with `setAccount` is still honoured: it is signed in on the **host's** client, because that is the client the app authenticates through. The alternative would be for `setAccount` to silently do nothing precisely when an app is being tested inside a portal.
-
-The session is shared, so this changes who the host sees signed in too — as it does in production. If the host does not authenticate through a mock client, `setAccount` throws rather than failing quietly.
-
-## Testing signed-out behaviour
-
-Both `null` and `signedOut: true` start without a session. Silent flows then resolve empty so the provider follows its unauthenticated path, while an explicit login still succeeds — which lets a test drive the sign-in journey rather than only its end state.
-
-They differ in what the login resolves to. `null` forgets the identity, so a login produces the default user:
-
-```typescript
-builder.setAccount(null);
-```
-
-`signedOut: true` keeps it, so a login produces the user the test named — which is what to reach for when the assertion is about *who* signed in:
-
-```typescript
-builder.setAccount({ name: 'Ada Lovelace', signedOut: true });
-```
+The session is shared, so tokens acquired by the hosted module update the same client and account
+observed by the host.
 
 ## Mocking an individual call
 

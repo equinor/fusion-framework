@@ -48,26 +48,15 @@ export const MsalConfigSchema = z.object({
  *
  * @remarks
  * Empty by design: production MSAL configuration is exactly the schema. This
- * exists so a variant — the test double in `./mock`, for instance — can declare
- * its own branch of the configuration through declaration merging:
+ * exists so a module variant can declare its own configuration through
+ * declaration merging.
  *
- * ```typescript
- * declare module '@equinor/fusion-framework-module-msal' {
- *   interface MsalConfigExtension {
- *     mock?: { account?: MsalMockUser };
- *   }
- * }
- * ```
- *
- * That is what keeps `BaseConfigBuilder._set` honest about the added key. Its
+ * That is what keeps `BaseConfigBuilder._set` honest about an added key. Its
  * target is a dot-path union derived from {@link MsalConfig}, so a key the type
- * does not know about can only be set by casting past the builder — and a
- * generic configurator cannot help, because a dot-path union over an unresolved
- * type parameter defers, taking every existing literal path down with it.
+ * does not know about can only be set by casting past the builder.
  *
- * The key exists to carry a declaration across the builder, not to reach the
- * provider: the schema strips it during validation, so it is readable from the
- * raw configuration and absent from the validated one.
+ * Variant keys exist only while configuration is built. The schema strips them
+ * during validation, so they do not reach the provider.
  */
 // biome-ignore lint/suspicious/noEmptyInterface: the extension point is the point
 export interface MsalConfigExtension {}

@@ -13,18 +13,18 @@
  * // default mock user
  * enableMsalMock(configurator);
  *
- * // or a specific one
+ * // or a runtime token source
  * enableMsalMock(configurator, (builder) => {
- *   builder.setAccount({ name: 'Ada Lovelace', signedOut: true });
+ *   builder.setAcquireToken(({ scopes }) => issueToken(scopes));
  * });
  * ```
  *
  * @packageDocumentation
  */
-export { MsalMockClient, type MsalMockUser } from './MsalMockClient';
+export { MsalMockClient } from './MsalMockClient';
+export type { MsalMockTokenAcquirer, MsalMockTokenRequest } from './types';
 export { createMsalMockClient } from './create-msal-mock-client';
 export { MsalMockConfigurator } from './MsalMockConfigurator';
 export { enableMsalMock, msalMockModule, type AuthConfigMockFn } from './module';
 export { createMockToken, type MockTokenClaims } from './create-mock-token';
-export { createMockUserFromToken } from './create-mock-user-from-token';
 export { decodeJwtSegment } from './decode-jwt-segment';
