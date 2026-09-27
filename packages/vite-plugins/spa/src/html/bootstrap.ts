@@ -14,6 +14,7 @@ import {
 } from '@equinor/fusion-framework-module-telemetry';
 import { ConsoleAdapter } from '@equinor/fusion-framework-module-telemetry/console-adapter';
 
+import { acquireMockServerToken } from './acquire-mock-server-token.js';
 import { createPortalEntryPoint } from './create-portal-entry-point.js';
 import { isEnabledEnvValue } from './is-enabled-env-value.js';
 import { registerServiceWorker } from './register-service-worker.js';
@@ -59,13 +60,13 @@ enableServiceDiscovery(configurator, async (builder) => {
 if (isEnabledEnvValue(import.meta.env.FUSION_SPA_MSAL_MOCK)) {
   const { enableMsalMock } = await import('@equinor/fusion-framework-module-msal/mock');
 
-  const mockToken = import.meta.env.FUSION_SPA_MSAL_MOCK_TOKEN;
+  const mockServerUrl = import.meta.env.FUSION_SPA_MSAL_MOCK_SERVER_URL;
 
   enableMsalMock(configurator, (builder) => {
-    // Preserve the mock client's default identity when no backend-specific token is configured.
-    if (!mockToken) return;
-
-    builder.setToken(mockToken);
+    // The SPA owns the HTTP adapter; MSAL owns applying the returned token and account.
+    if (mockServerUrl) {
+      builder.setAcquireToken(({ scopes }) => acquireMockServerToken(mockServerUrl, scopes));
+    }
   });
 } else {
   enableMSAL(configurator, (builder) => {

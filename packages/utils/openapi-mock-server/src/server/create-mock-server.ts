@@ -13,6 +13,27 @@ import type {
 } from './types.js';
 
 import type { AddressInfo } from 'node:net';
+import { MockAuthSessionStore } from './MockAuthSessionStore.js';
+
+/**
+ * Validates and de-duplicates exact origins used for credentialed browser requests.
+ *
+ * @param origins - Configured absolute origins without paths or trailing slashes.
+ * @returns Canonically serialized allowed origins.
+ * @throws When a value is not already an exact absolute origin.
+ */
+function normalizeAllowedOrigins(origins: readonly string[]): string[] {
+  // Validate every configured value before the server starts accepting requests.
+  const normalized = origins.map((origin) => {
+    const parsed = new URL(origin);
+    // Exact serialized origins prevent path-bearing or ambiguous allowlist entries.
+    if (parsed.origin !== origin) {
+      throw new Error(`Mock server allowed origin must be an exact origin: ${origin}`);
+    }
+    return parsed.origin;
+  });
+  return [...new Set(normalized)];
+}
 
 /**
  * Creates a mock server: add sources with `use()`, then `start()` it once —
@@ -28,6 +49,10 @@ import type { AddressInfo } from 'node:net';
  *   response has, so the default `processServices` proxy needs no overrides.
  * - `GET /@fusion-mock/health` — `200 OK` once the server is ready.
  * - `POST /@fusion-mock/reset` — same as calling `reset()`.
+ * - `PUT|GET|DELETE /@fusion-mock/auth/user` — selects, inspects, or clears
+ *   one browser session's mock user.
+ * - `POST /@fusion-mock/auth/token` — mints an unsigned token for the selected
+ *   session user and the scopes requested by Fusion MSAL.
  * - `POST /@fusion-mock/:service/:operationId` — same as calling `override()`;
  *   body is `{ status?: number, mock: unknown }`.
  * - A request to `<key>.localhost` is resolved directly against that
@@ -56,13 +81,15 @@ import type { AddressInfo } from 'node:net';
  * ```
  */
 export function createMockServer(options: CreateMockServerOptions = {}): MockServerHandle {
-  const { seed } = options;
+  const { seed, allowedOrigins = [] } = options;
+  const normalizedAllowedOrigins = normalizeAllowedOrigins(allowedOrigins);
   const layers: MockSource[] = [];
   let services: Map<string, ServiceState> | undefined;
   let resolving: Promise<Map<string, ServiceState>> | undefined;
   let httpServer: ReturnType<typeof createServer> | undefined;
   let starting = false;
   let url: string | undefined;
+  const authSessions = new MockAuthSessionStore();
 
   /** Resolves every registered source exactly once, memoizing the in-flight promise so concurrent callers share it. */
   function ensureResolved(): Promise<Map<string, ServiceState>> {
@@ -96,7 +123,17 @@ export function createMockServer(options: CreateMockServerOptions = {}): MockSer
 
   const requestListener = (req: IncomingMessage, res: ServerResponse): void => {
     ensureResolved()
-      .then((activeServices) => handleRequest(handle, activeServices, req, res, seed))
+      .then((activeServices) =>
+        handleRequest(
+          handle,
+          activeServices,
+          req,
+          res,
+          seed,
+          authSessions,
+          normalizedAllowedOrigins,
+        ),
+      )
       .catch((error: unknown) => {
         sendJson(res, 500, { error: error instanceof Error ? error.message : String(error) });
       });
@@ -128,7 +165,7 @@ export function createMockServer(options: CreateMockServerOptions = {}): MockSer
         await ensureResolved();
         const server = createServer(requestListener);
         httpServer = server;
-        const host = options.host ?? 'localhost';
+        const host = options.host ?? '127.0.0.1';
         await new Promise<void>((resolve, reject) => {
           /** Removes the temporary error listener after the server starts successfully. */
           const handleListening = (): void => {
@@ -177,6 +214,7 @@ export function createMockServer(options: CreateMockServerOptions = {}): MockSer
 
     reset() {
       const activeServices = requireServices();
+      authSessions.clear();
       // Rebuild every service from its original document, discarding registered overrides.
       for (const [key, state] of activeServices) {
         activeServices.set(key, {

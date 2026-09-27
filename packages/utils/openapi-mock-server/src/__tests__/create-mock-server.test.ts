@@ -108,7 +108,100 @@ describe('createMockServer', () => {
     expect(preflight.headers.get('access-control-allow-headers')).toBe(
       'authorization, content-type',
     );
-    expect(response.headers.get('access-control-allow-origin')).toBe('*');
+    expect(response.headers.get('access-control-allow-origin')).toBe('http://localhost:3000');
+    expect(response.headers.get('access-control-allow-credentials')).toBe('true');
+  });
+
+  it.each([
+    'https://attacker.example',
+    'null',
+    'http://localhost.attacker.example',
+    'http://localhost:3000/',
+    'http://localhost:3000/path',
+  ])('rejects control-plane requests from untrusted origin %s', async (origin) => {
+    server = createMockServer().use(fixturesDir);
+    const { url } = await server.start();
+
+    const preflight = await fetch(`${url}/@fusion-mock/auth/token`, {
+      method: 'OPTIONS',
+      headers: {
+        origin,
+        'access-control-request-method': 'POST',
+        'access-control-request-headers': 'content-type',
+      },
+    });
+    const response = await fetch(`${url}/@fusion-mock/auth/user`, {
+      method: 'PUT',
+      headers: { origin, 'content-type': 'application/json' },
+      body: JSON.stringify({ userId: 'attacker' }),
+    });
+
+    await expect(preflight.clone().json()).resolves.toEqual({
+      error: 'Origin is not allowed for mock-server control requests',
+    });
+    expect(preflight.status).toBe(403);
+    expect(preflight.headers.get('access-control-allow-origin')).toBeNull();
+    expect(preflight.headers.get('access-control-allow-credentials')).toBeNull();
+    expect(response.status).toBe(403);
+    expect(response.headers.get('access-control-allow-origin')).toBeNull();
+    expect(response.headers.get('access-control-allow-credentials')).toBeNull();
+  });
+
+  it.each([
+    'http://localhost:3000',
+    'http://localhost:5173',
+    'https://localhost:8443',
+    'http://127.0.0.1:4173',
+    'http://[::1]:3000',
+  ])('allows loopback origin %s to read its session token', async (origin) => {
+    server = createMockServer().use(fixturesDir);
+    const { url } = await server.start();
+    const configured = await fetch(`${url}/@fusion-mock/auth/user`, {
+      method: 'PUT',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ userId: 'trusted-user' }),
+    });
+    const cookie = configured.headers.getSetCookie()[0]?.split(';')[0];
+
+    const response = await fetch(`${url}/@fusion-mock/auth/token`, {
+      method: 'POST',
+      headers: { origin, cookie, 'content-type': 'application/json' },
+      body: JSON.stringify({ scopes: ['api://trusted/.default'] }),
+    });
+
+    expect(response.status).toBe(200);
+    expect(response.headers.get('access-control-allow-origin')).toBe(origin);
+    expect(response.headers.get('access-control-allow-credentials')).toBe('true');
+    await expect(response.json()).resolves.toMatchObject({ status: 'issued' });
+  });
+
+  it('allows an explicitly configured non-loopback origin to read its session token', async () => {
+    const origin = 'https://trusted.example';
+    server = createMockServer({ allowedOrigins: [origin] }).use(fixturesDir);
+    const { url } = await server.start();
+    const configured = await fetch(`${url}/@fusion-mock/auth/user`, {
+      method: 'PUT',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ userId: 'trusted-user' }),
+    });
+    const cookie = configured.headers.getSetCookie()[0]?.split(';')[0];
+
+    const response = await fetch(`${url}/@fusion-mock/auth/token`, {
+      method: 'POST',
+      headers: { origin, cookie, 'content-type': 'application/json' },
+      body: JSON.stringify({ scopes: ['api://trusted/.default'] }),
+    });
+
+    expect(response.status).toBe(200);
+    expect(response.headers.get('access-control-allow-origin')).toBe(origin);
+    expect(response.headers.get('access-control-allow-credentials')).toBe('true');
+    await expect(response.json()).resolves.toMatchObject({ status: 'issued' });
+  });
+
+  it('rejects non-canonical allowed origins before startup', () => {
+    expect(() => createMockServer({ allowedOrigins: ['http://localhost:3000/path'] })).toThrow(
+      'must be an exact origin',
+    );
   });
 
   it('routes an ordinary OPTIONS request to its OpenAPI operation', async () => {
@@ -203,6 +296,127 @@ describe('createMockServer', () => {
 
     const resetResponse = await fetch(`${url}/pet-store/pets/1`);
     expect(resetResponse.status).toBe(200);
+  });
+
+  it('isolates users by browser session and issues tokens for requested scopes', async () => {
+    server = createMockServer().use(fixturesDir);
+    const { url } = await server.start();
+
+    const normalPut = await fetch(`${url}/@fusion-mock/auth/user`, {
+      method: 'PUT',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ userId: 'normal-user' }),
+    });
+    const administratorPut = await fetch(`${url}/@fusion-mock/auth/user`, {
+      method: 'PUT',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        userId: 'administrator',
+        claims: { roles: ['Demand.Admin'] },
+      }),
+    });
+    const normalCookie = normalPut.headers.getSetCookie()[0]?.split(';')[0];
+    const administratorCookie = administratorPut.headers.getSetCookie()[0]?.split(';')[0];
+
+    const [normalResolution, administratorResolution] = await Promise.all([
+      fetch(`${url}/@fusion-mock/auth/token`, {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+          cookie: normalCookie,
+        },
+        body: JSON.stringify({ scopes: ['api://application/.default'] }),
+      }),
+      fetch(`${url}/@fusion-mock/auth/token`, {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+          cookie: administratorCookie,
+        },
+        body: JSON.stringify({ scopes: ['api://application/.default'] }),
+      }),
+    ]);
+
+    const normalBody = (await normalResolution.json()) as { status: string; token: string };
+    const administratorBody = (await administratorResolution.json()) as {
+      status: string;
+      token: string;
+    };
+    const normalClaims = JSON.parse(
+      Buffer.from(normalBody.token.split('.')[1], 'base64url').toString('utf8'),
+    ) as Record<string, unknown>;
+    const administratorClaims = JSON.parse(
+      Buffer.from(administratorBody.token.split('.')[1], 'base64url').toString('utf8'),
+    ) as Record<string, unknown>;
+
+    expect(normalBody.status).toBe('issued');
+    expect(normalClaims).toMatchObject({
+      oid: 'normal-user',
+      aud: 'api://application',
+      scp: 'api://application/.default',
+    });
+    expect(administratorBody.status).toBe('issued');
+    expect(administratorClaims).toMatchObject({
+      oid: 'administrator',
+      roles: ['Demand.Admin'],
+    });
+  });
+
+  it('switches and resets a session bearer token without exposing token diagnostics', async () => {
+    server = createMockServer().use(fixturesDir);
+    const { url } = await server.start();
+    const configured = await fetch(`${url}/@fusion-mock/auth/user`, {
+      method: 'PUT',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ userId: 'normal-user' }),
+    });
+    const cookie = configured.headers.getSetCookie()[0]?.split(';')[0];
+
+    await fetch(`${url}/@fusion-mock/auth/user`, {
+      method: 'PUT',
+      headers: { 'content-type': 'application/json', cookie },
+      body: JSON.stringify({ userId: 'administrator', name: 'Administrator' }),
+    });
+    const metadata = await fetch(`${url}/@fusion-mock/auth/user`, {
+      headers: { cookie },
+    });
+    expect(await metadata.json()).toEqual({
+      configured: true,
+      user: {
+        userId: 'administrator',
+        name: 'Administrator',
+      },
+    });
+
+    await fetch(`${url}/@fusion-mock/auth/user`, {
+      method: 'DELETE',
+      headers: { cookie },
+    });
+    const reset = await fetch(`${url}/@fusion-mock/auth/token`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', cookie },
+      body: JSON.stringify({ scopes: ['scope'] }),
+    });
+    await expect(reset.json()).resolves.toEqual({ status: 'missing' });
+  });
+
+  it('rejects invalid user selection and empty token scopes', async () => {
+    server = createMockServer().use(fixturesDir);
+    const { url } = await server.start();
+
+    const invalidUser = await fetch(`${url}/@fusion-mock/auth/user`, {
+      method: 'PUT',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ token: 'real-credential' }),
+    });
+    const invalidScopes = await fetch(`${url}/@fusion-mock/auth/token`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ scopes: [] }),
+    });
+
+    expect(invalidUser.status).toBe(400);
+    expect(invalidScopes.status).toBe(400);
   });
 
   it.each([99, 600])('rejects an override with invalid HTTP status %i', async (status) => {

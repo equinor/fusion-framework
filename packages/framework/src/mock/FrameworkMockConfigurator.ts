@@ -61,9 +61,13 @@ import { FrameworkConfigurator } from '../FrameworkConfigurator.js';
  *
  * @example
  * ```typescript
+ * import { createMockToken, FrameworkMockConfigurator } from '@equinor/fusion-framework/mock';
+ *
  * const configurator = new FrameworkMockConfigurator();
  *
- * configurator.msal.setAccount({ name: 'Ada Lovelace' });
+ * configurator.msal.setAcquireToken(({ clientId, scopes }) =>
+ *   createMockToken({ aud: clientId, scp: scopes.join(' ') }),
+ * );
  * configurator.serviceDiscovery.setBaseUri('http://localhost:6669');
  *
  * const fusion = await init(configurator);

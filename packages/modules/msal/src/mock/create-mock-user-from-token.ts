@@ -1,29 +1,20 @@
-import type { MsalMockUser } from './MsalMockClient';
 import { decodeJwtSegment } from './decode-jwt-segment';
 import type { MockTokenClaims } from './create-mock-token';
+import type { MsalMockUser } from './types';
 
 /**
- * Derives a {@link MsalMockUser} from a JWT's payload claims, so a token minted
- * outside this module (e.g. by a backend's own mock) can drive who the mock
- * signs in as.
+ * Derives internal mock identity fields from a JWT payload.
  *
  * @remarks
  * Maps the standard Entra ID claims Fusion applications read — `name`,
  * `preferred_username`, `oid`, `tid`, `scp` — onto the matching
- * {@link MsalMockUser} fields. Identity only: it does not affect which token
- * the client returns — use {@link MsalMockConfigurator.setToken} for that.
+ * {@link MsalMockUser} fields used to synchronize the account with the acquired token.
  *
  * @param token - A JWT (e.g. from {@link createMockToken}, or issued by an
  * external mock) with a base64url-encoded payload segment.
  * @returns A mock user built from the token's claims.
  * @throws When the token has no payload segment (`header.payload.signature`).
  *
- * @example
- * ```typescript
- * enableMsalMock(configurator, (builder) => {
- *   builder.setAccount(createMockUserFromToken(token));
- * });
- * ```
  */
 export const createMockUserFromToken = (token: string): MsalMockUser => {
   const [, payload] = token.split('.');

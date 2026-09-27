@@ -46,7 +46,7 @@ system assigns a free port.
 
 | Import | Purpose |
 | --- | --- |
-| `@equinor/fusion-openapi-mock-server` | `createMockServer` and its server option/handle types. |
+| `@equinor/fusion-openapi-mock-server` | `createMockServer`, `createMockAuth`, and their server/session types. |
 | `@equinor/fusion-openapi-mock-server/discovery` | Define executable `<name>.mock.ts` modules with `defineService`, or use lower-level `discoverServices`, `createService`, and `createRouter` APIs. |
 | `@equinor/fusion-openapi-mock-server/presets` | Registry of bundled preset loaders. |
 | `@equinor/fusion-openapi-mock-server/presets/fusion` | `fusionPreset` and its individual service definitions. |
@@ -60,5 +60,5 @@ expressed in JSON or YAML.
 
 - [Getting started](docs/getting-started.md) — directory convention, the bundled `fusion`
   preset, override mechanisms, layering, and running the server via the CLI or programmatically
-- [Testing with Playwright](docs/testing-with-playwright.md) — per-test overrides, reset, and
-  the full route reference
+- [Testing with Playwright](docs/testing-with-playwright.md) — per-session user selection,
+  switching, scope-aware token issuance, operation overrides, reset, and the full route reference

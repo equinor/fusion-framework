@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { AppConfig } from '@equinor/fusion-framework-module-app';
+import { createMockToken } from '@equinor/fusion-framework-module-msal/mock';
 import { enableTelemetry } from '@equinor/fusion-framework-module-telemetry';
 
 import { AppConfigurator } from '../../AppConfigurator.js';
@@ -67,13 +68,20 @@ describe('AppMockConfigurator', () => {
 
   it('exposes the same msal configurator the auth module is built from', async () => {
     const configurator = new AppMockConfigurator(mockEnv);
-
-    configurator.msal.setAccount({ name: 'Ada Lovelace' });
+    configurator.msal.setAcquireToken(({ clientId, scopes }) =>
+      createMockToken({
+        aud: clientId,
+        scp: scopes.join(' '),
+        name: 'Ada Lovelace',
+        oid: 'ada-lovelace',
+      }),
+    );
 
     // msal's config schema requires a telemetry module, normally wired by configureModules
     enableTelemetry(configurator);
     const modules = await configurator.initialize();
 
+    await modules.auth.acquireAccessToken({ request: { scopes: ['User.Read'] } });
     expect(modules.auth.account?.name).toBe('Ada Lovelace');
   });
 

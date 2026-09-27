@@ -56,6 +56,14 @@ Installing the package makes the command available through the Fusion CLI. If th
 installed, `ffc mock-server` prints an installation hint. Explicit `mockServerPlugin()`
 registration remains useful when `fusion-cli.config.ts` supplies command defaults.
 
+Credentialed mock-auth requests from canonical loopback origins (`localhost`, `127.0.0.1`, and
+`[::1]`) are allowed on every port. Use repeatable `--allow-origin` options only for non-loopback
+app or portal origins. Ordinary mock API responses remain available through non-credentialed CORS.
+
+> [!WARNING]
+> This treats all local web servers as one development trust boundary. The mock server must issue
+> unsigned test tokens only and must never be connected to real credentials or production services.
+
 ## Connect an application
 
 Keep the mock server running, then choose one app-development mode in another terminal:
@@ -93,6 +101,7 @@ export default defineDevServerConfig(() => ({
     host: 'localhost',
     port: 4010,
     seed: 42,
+    allowedOrigins: ['https://preview.example.test'],
   },
 }));
 ```
@@ -110,7 +119,13 @@ import { defineFusionCli } from '@equinor/fusion-framework-cli';
 import mockServerPlugin from '@equinor/fusion-framework-cli-plugin-mock-server';
 
 export default defineFusionCli(() => ({
-  plugins: [mockServerPlugin({ preset: ['fusion'], port: 4010 })],
+  plugins: [
+    mockServerPlugin({
+      preset: ['fusion'],
+      port: 4010,
+      allowedOrigins: ['https://preview.example.test'],
+    }),
+  ],
 }));
 ```
 
@@ -127,6 +142,7 @@ ffc mock-server [dirs...] [options]
 | `--port <port>` | Listening port. Uses config, then plugin defaults, then `4010`. |
 | `--host <host>` | Bind hostname. Uses config, then plugin defaults, then `localhost`. |
 | `--seed <seed>` | Deterministic seed for generated OpenAPI responses. Without a seed, generated values are random. |
+| `--allow-origin <origin>` | Additional exact non-loopback browser origin allowed to call credentialed mock-auth endpoints. Repeat for multiple app origins. |
 
 The process shuts down on `SIGINT` and `SIGTERM`. Let Playwright `webServer`, `concurrently`, or a
 developer terminal own it instead of starting an unowned background process.

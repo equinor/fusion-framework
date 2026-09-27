@@ -126,11 +126,10 @@ export type FusionTemplateEnv = {
      */
     mock?: string | boolean;
     /**
-     * A mock JWT (e.g. from `createMockToken`) whose payload claims (`name`,
-     * `preferred_username`, `oid`, `tid`, `scp`) become the signed-in mock
-     * user. Only read when {@link mock} is set; ignored otherwise.
+     * Origin of the standalone Fusion mock server that owns session-scoped
+     * mock identities and issues their bearer tokens.
      */
-    mockToken?: string;
+    mockServerUrl?: string;
   };
 
   /** Service worker resource interception configuration. */

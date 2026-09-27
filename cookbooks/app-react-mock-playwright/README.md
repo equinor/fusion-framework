@@ -38,6 +38,10 @@ server, and tears the servers down after the test run.
 - [`playwright.config.ts`](playwright.config.ts) starts `ffc mock-server` and runs `ffc app build`
   followed by `ffc app serve --mock` as Playwright `webServer` entries, then runs the
   specs under [`playwright/`](playwright) against the built app.
+- [`playwright/mock-auth-personas.spec.ts`](playwright/mock-auth-personas.spec.ts) uses
+  `createMockAuth` to select normal-user and administrator personas in isolated browser contexts.
+  The mock server issues a token for the scope requested by Fusion HTTP, and `my-api` echoes its
+  `oid` claim so the test verifies the selected identity reached the backend.
 
 ## Running it
 
@@ -67,6 +71,8 @@ It does not start `ffc mock-server`; unreachable local service URIs remain unrea
 - **`ffc mock-server`** serves any directory of `<name>.mock.ts` service modules over HTTP,
   independent of Vite or the dev server — see the plugin's own
   [README](../../packages/cli-plugins/mock-server/README.md) for the full command reference.
+- Loopback browser origins can use credentialed mock auth on any port. Use **`--allow-origin`**
+  only when tests serve apps or portals from a non-loopback origin.
 - **`ffc app dev --mock` and `ffc app serve --mock`** use the mock server's discovery endpoint and
   generate proxy routes automatically, so the app needs no custom `dev-server.config.ts`. These
   modes ignore normal discovery and use only mock-server presets plus local `defineService`
@@ -87,3 +93,8 @@ It does not start `ffc mock-server`; unreachable local service URIs remain unrea
 - **Playwright's `webServer`** array starts and stops each process for the whole test run — do
   not start `ffc mock-server` yourself in the background; it is designed to run in the
   foreground and shut down on `SIGINT`/`SIGTERM`.
+- **`createMockAuth`** selects a user per browser context rather than accepting a bearer token.
+  Configure scopes on the app endpoint; the mock server mints an unsigned OBO-style token whenever
+  Fusion MSAL requests those scopes. Calling `setUser` again and reloading switches persona;
+  calling `reset` and reloading restores the default mock identity. See
+  [`mock-auth-personas.spec.ts`](playwright/mock-auth-personas.spec.ts) for the complete flow.

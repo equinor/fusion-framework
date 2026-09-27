@@ -66,7 +66,9 @@ Or start it from your own code — this mirrors Mock Service Worker's
 ```ts
 import { createMockServer } from '@equinor/fusion-openapi-mock-server';
 
-const server = createMockServer({ seed: 42 }).use('./mocks');
+const server = createMockServer({
+  seed: 42,
+}).use('./mocks');
 const { url } = await server.start({ host: 'localhost', port: 4010 });
 // url -> 'http://localhost:4010'
 

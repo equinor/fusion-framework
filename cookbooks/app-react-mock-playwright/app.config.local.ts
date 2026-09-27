@@ -12,6 +12,7 @@ export default defineAppConfig(() => ({
   endpoints: {
     'my-api': {
       url: 'http://my-api.localhost:4010',
+      scopes: ['api://project-demand/.default'],
     },
   },
 }));

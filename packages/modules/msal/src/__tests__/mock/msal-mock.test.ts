@@ -1,12 +1,9 @@
 import { describe, expect, it, vi } from 'vitest';
-import {
-  ModulesConfigurator,
-  type ConfigBuilderCallbackArgs,
-} from '@equinor/fusion-framework-module';
+import { ModulesConfigurator } from '@equinor/fusion-framework-module';
 import telemetryModule from '@equinor/fusion-framework-module-telemetry';
 import type { AccountInfo, AuthenticationResult } from '@azure/msal-browser';
 
-import { MsalConfigurator, type MsalConfig } from '../../MsalConfigurator';
+import { MsalConfigurator } from '../../MsalConfigurator';
 import { MsalProvider } from '../../MsalProvider';
 import type { IMsalProvider } from '../../MsalProvider.interface';
 import { enableMSAL, module as realModule } from '../../module';
@@ -17,7 +14,6 @@ import {
   enableMsalMock,
   msalMockModule,
   MsalMockConfigurator,
-  type MsalMockUser,
 } from '../../mock';
 
 /**
@@ -41,14 +37,8 @@ const initializeMockWith = async (
   return (instances as unknown as { auth: MsalProvider }).auth;
 };
 
-/**
- * Initializes the mock module for a given account.
- *
- * @param options - The user the mock client represents.
- * @returns The provider the module produced.
- */
-const initializeMock = (user?: MsalMockUser): Promise<MsalProvider> =>
-  initializeMockWith(user && ((builder) => builder.setAccount(user)));
+/** Initializes the mock module with its default account. */
+const initializeMock = (): Promise<MsalProvider> => initializeMockWith();
 
 /** The client configuration a test would declare, identical for real and mock. */
 const clientConfig = (clientId = 'fusion-mock-client', tenantId = 'fusion-mock-tenant') => ({
@@ -80,10 +70,10 @@ describe('enableMsalMock', () => {
     expect(provider).toBeInstanceOf(MsalProvider);
   });
 
-  it('signs in a user without any client configuration', async () => {
-    const provider = await initializeMock({ name: 'Ada Lovelace' });
+  it('signs in the default user without any client configuration', async () => {
+    const provider = await initializeMock();
 
-    expect(provider.account?.name).toBe('Ada Lovelace');
+    expect(provider.account?.name).toBe('Test User');
   });
 
   it('replaces an auth module that is already registered', async () => {
@@ -97,108 +87,6 @@ describe('enableMsalMock', () => {
     expect((instances as unknown as { auth: MsalProvider }).auth.account?.name).toBe('Test User');
   });
 
-  it('declares the account without constructing a client', () => {
-    const configurator = new MsalMockConfigurator();
-
-    configurator.setAccount({ username: 'ada@equinor.com' });
-
-    // Nothing is built until the module assembles its config
-    expect(configurator.getClient()).toBeUndefined();
-    expect(configurator.getClientConfig()).toBeUndefined();
-  });
-
-  it('resolves an account callback with the ordinary builder arguments', async () => {
-    // An ordinary config-builder callback, so a test can reach the modules in
-    // scope rather than being handed a bespoke signature
-    const provider = await initializeMockWith((builder) =>
-      builder.setAccount(async ({ hasModule }) => ({
-        name: hasModule('telemetry') ? 'Ada Lovelace' : 'Nobody',
-      })),
-    );
-
-    expect(provider.account?.name).toBe('Ada Lovelace');
-  });
-
-  it('signs the user in before the provider initializes', async () => {
-    // The provider's own start-up path must see the declared state, or a test
-    // could not observe what the framework does with it
-    const provider = await initializeMockWith((builder) => {
-      builder.setAccount({ signedOut: true });
-      builder.setRequiresAuth(true);
-    });
-
-    // `requiresAuth` made the real provider log in during initialize
-    expect(provider.account?.username).toBe('test.user@equinor.com');
-  });
-
-  it('signs the declared user in on a client that was set explicitly', async () => {
-    // The rule is uniform: the user goes on whichever client the module
-    // authenticates through, wherever that client came from
-    const own = new MsalMockClient(clientConfig());
-    own.setUser({ name: 'Grace Hopper' });
-
-    const provider = await initializeMockWith((builder) => {
-      builder.setClient(own);
-      builder.setAccount({ name: 'Ada Lovelace' });
-    });
-
-    expect(provider.client).toBe(own);
-    expect(provider.account?.name).toBe('Ada Lovelace');
-  });
-
-  it('leaves a client that was set explicitly alone when no user is declared', async () => {
-    const own = new MsalMockClient(clientConfig());
-    own.setUser({ name: 'Grace Hopper' });
-
-    const provider = await initializeMockWith((builder) => builder.setClient(own));
-
-    expect(provider.account?.name).toBe('Grace Hopper');
-  });
-
-  it('refuses to declare a user on a client that cannot represent one', async () => {
-    // Failing quietly is the whole failure mode this exists to prevent
-    const configurator = new ModulesConfigurator([telemetryModule]);
-    enableMsalMock(configurator, (builder) => {
-      builder.setClient({} as unknown as MsalMockClient);
-      builder.setAccount({ name: 'Ada Lovelace' });
-    });
-
-    await expect(configurator.initialize()).rejects.toThrow(
-      /does not authenticate through a mock client/,
-    );
-  });
-
-  it('carries the user on the configuration, resolved by the builder', async () => {
-    // The user travels the ordinary pipeline as `mock.account` rather than
-    // living on the builder, so any code with the raw configuration can read it
-    const configurator = new MsalMockConfigurator();
-    configurator.setAccount(async () => ({ name: 'Ada Lovelace' }));
-
-    let rawConfig: MsalConfig | undefined;
-    vi.spyOn(configurator, '_processConfig').mockImplementation(async (config) => {
-      rawConfig = config;
-      return config as MsalConfig;
-    });
-
-    await configurator.createConfigAsync({
-      requireInstance: async () => undefined,
-      hasModule: () => false,
-      config: {},
-    } as unknown as ConfigBuilderCallbackArgs);
-
-    expect(rawConfig?.mock?.account).toEqual({ name: 'Ada Lovelace' });
-  });
-
-  it('applies the account as it ends up, not as it started', async () => {
-    const provider = await initializeMockWith((builder) => {
-      builder.setAccount({ name: 'Ada Lovelace' });
-      builder.setAccount({ name: 'Grace Hopper' });
-    });
-
-    expect(provider.client).toBeInstanceOf(MsalMockClient);
-    expect(provider.account?.name).toBe('Grace Hopper');
-  });
-
   it('builds its client from setClientConfig, exactly as the real module does', async () => {
     const provider = await initializeMockWith((builder) =>
       builder.setClientConfig(clientConfig('my-app', 'my-tenant')),
@@ -207,39 +95,6 @@ describe('enableMsalMock', () => {
     expect(provider.client).toBeInstanceOf(MsalMockClient);
     expect(provider.client.clientId).toBe('my-app');
     expect(provider.client.tenantId).toBe('my-tenant');
-  });
-
-  it('exposes the client built for a signed-out account', async () => {
-    const provider = await initializeMockWith((builder) => builder.setAccount({ signedOut: true }));
-    const client = provider.client;
-
-    expect(client.hasValidClaims).toBe(false);
-
-    client.setActiveAccount({
-      homeAccountId: 'id.tenant',
-      localAccountId: 'id',
-      environment: 'login.microsoftonline.com',
-      tenantId: 'tenant',
-      username: 'user@equinor.com',
-      name: 'User',
-    });
-
-    expect(client.hasValidClaims).toBe(true);
-  });
-
-  it('starts with no account when signed out', async () => {
-    const provider = await initializeMock({ signedOut: true });
-
-    expect(provider.account).toBeNull();
-  });
-
-  it('runs the real sign-in flow through the provider', async () => {
-    const provider = await initializeMock({ signedOut: true });
-    expect(provider.account).toBeNull();
-
-    await provider.login({ request: { scopes: ['User.Read'] } });
-
-    expect(provider.account?.username).toBe('test.user@equinor.com');
   });
 
   it('runs the real sign-out flow through the provider', async () => {
@@ -279,7 +134,7 @@ describe('enableMsalMock when hoisted onto a host', () => {
   const initializeHosted = async (
     configure?: (builder: MsalMockConfigurator) => void,
   ): Promise<{ host: MsalProvider; hosted: IMsalProvider }> => {
-    const host = await initializeMockWith((builder) => builder.setAccount({ name: 'Host User' }));
+    const host = await initializeMock();
 
     const configurator = new ModulesConfigurator([telemetryModule]);
     enableMsalMock(configurator, configure);
@@ -292,48 +147,21 @@ describe('enableMsalMock when hoisted onto a host', () => {
     const { host, hosted } = await initializeHosted();
 
     expect(hosted).not.toBe(host);
-    expect(hosted.account?.name).toBe('Host User');
-  });
-
-  it('signs the declared user in on the host client, since none is built here', async () => {
-    // The client belongs to the host, built in a scope this builder never sees.
-    // Reaching it is the only way a declaration made here can take effect at
-    // all — otherwise `setAccount` silently does nothing exactly when an
-    // application is being tested inside a portal
-    const { host, hosted } = await initializeHosted((builder) =>
-      builder.setAccount({ name: 'Ada Lovelace' }),
-    );
-
-    expect(hosted.account?.name).toBe('Ada Lovelace');
-    // The session is shared, as it is in production
-    expect(host.account?.name).toBe('Ada Lovelace');
+    expect(hosted.account?.name).toBe('Test User');
   });
 
   it('leaves the host user alone when the app declares none', async () => {
     const { host, hosted } = await initializeHosted();
 
-    expect(hosted.account?.name).toBe('Host User');
-    expect(host.account?.name).toBe('Host User');
-  });
-
-  it('refuses to declare a user the host cannot honour', async () => {
-    // Failing quietly here is the bug this path exists to prevent
-    const host = await initializeMockWith();
-    const realHost = { ...host, client: {} } as unknown as IMsalProvider;
-
-    const configurator = new ModulesConfigurator([telemetryModule]);
-    enableMsalMock(configurator, (builder) => builder.setAccount({ name: 'Ada Lovelace' }));
-
-    await expect(configurator.initialize({ auth: realHost })).rejects.toThrow(
-      /does not authenticate through a mock client/,
-    );
+    expect(hosted.account?.name).toBe('Test User');
+    expect(host.account?.name).toBe('Test User');
   });
 
   it('declares no client configuration at all, so nothing stands in for the host', async () => {
     // The stand-in configuration exists only to build a client from; a hoisted
     // module builds none, so it must not look configured either
     let hosted: MsalMockConfigurator | undefined;
-    const host = await initializeMockWith((builder) => builder.setAccount({ name: 'Host User' }));
+    const host = await initializeMock();
 
     const configurator = new ModulesConfigurator([telemetryModule]);
     enableMsalMock(configurator, (builder) => {
@@ -350,14 +178,12 @@ describe('createMsalMockClient with the real module', () => {
   it('needs no mock module — the client is enough', async () => {
     const configurator = new ModulesConfigurator([telemetryModule]);
     enableMSAL(configurator, (builder) => {
-      builder.setClient(createMsalMockClient(clientConfig(), { name: 'Ada Lovelace' }));
+      builder.setClient(createMsalMockClient(clientConfig()));
     });
 
     const instances = await configurator.initialize();
 
-    expect((instances as unknown as { auth: MsalProvider }).auth.account?.name).toBe(
-      'Ada Lovelace',
-    );
+    expect((instances as unknown as { auth: MsalProvider }).auth.account?.name).toBe('Test User');
   });
 });
 
@@ -390,7 +216,7 @@ describe('MsalMockClient', () => {
 
   it('fails silent sign-in without an account, as MSAL does', async () => {
     const client = new MsalMockClient(clientConfig());
-    client.setUser({ signedOut: true });
+    client.setActiveAccount(null);
 
     await expect(client.ssoSilent({ scopes: ['X'] })).rejects.toThrow(/no cached account/);
   });
@@ -427,114 +253,125 @@ describe('MsalMockClient', () => {
     expect(result?.accessToken).toBe('mock-token');
   });
 
-  it('returns a token set directly on the client verbatim', async () => {
-    const client = new MsalMockClient(clientConfig());
-    const token = createMockToken({ name: 'Direct Token' });
-
-    client.setToken(token);
-    const result = await client.acquireToken({ request: { scopes: ['X'] } });
-
-    expect(result?.accessToken).toBe(token);
-    expect(result?.idToken).toBe(token);
-  });
-
-  it('resumes generating tokens once setToken(null) clears the override', async () => {
-    const client = new MsalMockClient(clientConfig());
-    const token = createMockToken({ name: 'Direct Token' });
-    client.setToken(token);
-
-    client.setToken(null);
-    const result = await client.acquireToken({ request: { scopes: ['X'] } });
-
-    expect(result?.accessToken).not.toBe(token);
-  });
-});
-
-describe('MsalMockConfigurator.setToken', () => {
-  it('returns the exact token instead of one generated from the account', async () => {
-    const token = createMockToken({ name: 'Token User' });
-    const provider = await initializeMockWith((builder) => builder.setToken(token));
-
-    const result = await provider.client.acquireToken({ request: { scopes: ['X'] } });
-
-    expect(result?.accessToken).toBe(token);
-    expect(result?.idToken).toBe(token);
-  });
-
-  it('signs in the account named by the token claims by default', async () => {
-    const token = createMockToken({
-      name: 'Token User',
-      preferred_username: 'token.user@equinor.com',
+  it('acquires an injected token and replaces the active account from its claims', async () => {
+    const administrator = createMockToken({
+      oid: 'administrator',
+      name: 'Administrator',
+      preferred_username: 'administrator@example.test',
     });
-    const provider = await initializeMockWith((builder) => builder.setToken(token));
+    const acquireToken = vi.fn(async () => administrator);
+    const provider = await initializeMockWith((builder) => builder.setAcquireToken(acquireToken));
+    const client = provider.client;
 
-    expect(provider.account?.name).toBe('Token User');
-    expect(provider.account?.username).toBe('token.user@equinor.com');
-  });
-
-  it('keeps a separately declared account when skipResolve is true', async () => {
-    // skipResolve overrides only the returned token, leaving setAccount's declaration alone
-    const token = createMockToken({ name: 'Token User' });
-    const provider = await initializeMockWith((builder) => {
-      builder.setAccount({ name: 'Ada Lovelace' });
-      builder.setToken(token, true);
+    const result = await client.acquireToken({
+      request: { scopes: ['api://application/.default'] },
     });
 
-    expect(provider.account?.name).toBe('Ada Lovelace');
-    const result = await provider.client.acquireToken({ request: { scopes: ['X'] } });
-    expect(result?.accessToken).toBe(token);
-  });
-
-  it('resumes generating tokens once setToken(null) is called on the client', async () => {
-    const token = createMockToken({ name: 'Token User' });
-    const provider = await initializeMockWith((builder) => builder.setToken(token));
-
-    (provider.client as MsalMockClient).setToken(null);
-    const result = await provider.client.acquireToken({ request: { scopes: ['X'] } });
-
-    expect(result?.accessToken).not.toBe(token);
-  });
-});
-
-describe('setAccount(null)', () => {
-  it('starts with nobody signed in', async () => {
-    const provider = await initializeMockWith((builder) => builder.setAccount(null));
-
-    expect(provider.account).toBeNull();
-    expect(provider.client.hasValidClaims).toBe(false);
-  });
-
-  it('is a declaration, not the absence of one', async () => {
-    // Saying "nobody" has to beat the default signed-in user, so it cannot be
-    // treated the same as saying nothing at all
-    const provider = await initializeMockWith((builder) => {
-      builder.setAccount({ name: 'Ada Lovelace' });
-      builder.setAccount(null);
+    expect(result?.accessToken).toBe(administrator);
+    expect(result?.account?.localAccountId).toBe('administrator');
+    expect(client.getActiveAccount()?.localAccountId).toBe('administrator');
+    expect(acquireToken).toHaveBeenCalledWith({
+      scopes: ['api://application/.default'],
+      account: expect.objectContaining({ localAccountId: 'fusion-mock-user' }),
+      clientId: 'fusion-mock-client',
     });
 
-    expect(provider.account).toBeNull();
+    client.setActiveAccount({
+      ...(client.getActiveAccount() as AccountInfo),
+      homeAccountId: 'manual-user.fusion-mock-tenant',
+      localAccountId: 'manual-user',
+    });
+    const repeated = await client.acquireToken({
+      request: { scopes: ['api://application/.default'] },
+    });
+    expect(repeated?.account?.localAccountId).toBe('administrator');
+    expect(client.getActiveAccount()?.localAccountId).toBe('administrator');
   });
 
-  it('forgets the identity, unlike signedOut which keeps it', async () => {
-    const forgotten = await initializeMockWith((builder) => {
-      builder.setAccount({ name: 'Ada Lovelace' });
-      builder.setAccount(null);
-    });
-    const remembered = await initializeMockWith((builder) =>
-      builder.setAccount({ name: 'Ada Lovelace', signedOut: true }),
+  it('propagates injected token acquisition failures', async () => {
+    const provider = await initializeMockWith((builder) =>
+      builder.setAcquireToken(async () => {
+        throw new Error('mock token service unavailable');
+      }),
     );
+    const client = provider.client;
 
-    await forgotten.client.login({ request: { scopes: [] } });
-    await remembered.client.login({ request: { scopes: [] } });
-
-    expect(forgotten.account?.name).toBe('Test User');
-    expect(remembered.account?.name).toBe('Ada Lovelace');
+    await expect(
+      client.acquireToken({
+        request: { scopes: ['api://different/.default'] },
+      }),
+    ).rejects.toThrow(/mock token service unavailable/);
+    expect(client.getActiveAccount()?.localAccountId).toBe('fusion-mock-user');
   });
 
-  it('resolves null from a callback too', async () => {
-    const provider = await initializeMockWith((builder) => builder.setAccount(async () => null));
+  it('switches acquired identities and restores the in-process fallback after reset', async () => {
+    const normalUser = createMockToken({
+      oid: 'normal-user',
+      name: 'Normal User',
+      preferred_username: 'normal@example.test',
+    });
+    const administrator = createMockToken({ oid: 'administrator' });
+    let resolution: { status: 'issued'; token: string } | { status: 'missing' } = {
+      status: 'issued',
+      token: normalUser,
+    };
+    const provider = await initializeMockWith((builder) =>
+      builder.setAcquireToken(async () =>
+        resolution.status === 'issued' ? resolution.token : null,
+      ),
+    );
+    const client = provider.client;
 
-    expect(provider.account).toBeNull();
+    await client.acquireToken({ request: { scopes: ['api://application/.default'] } });
+    expect(client.getActiveAccount()?.localAccountId).toBe('normal-user');
+
+    resolution = { status: 'issued', token: administrator };
+    await client.acquireToken({ request: { scopes: ['api://application/.default'] } });
+    expect(client.getAllAccounts()).toHaveLength(1);
+    expect(client.getActiveAccount()?.localAccountId).toBe('administrator');
+    expect(client.getActiveAccount()?.name).toBe('Test User');
+    expect(client.getActiveAccount()?.username).toBe('test.user@equinor.com');
+
+    resolution = { status: 'missing' };
+    const reset = await client.acquireToken({
+      request: { scopes: ['api://application/.default'] },
+    });
+    expect(reset?.accessToken).not.toBe(administrator);
+    expect(client.getAllAccounts()).toHaveLength(1);
+    expect(client.getActiveAccount()?.localAccountId).toBe('fusion-mock-user');
+  });
+});
+
+describe('MsalMockConfigurator.setAcquireToken', () => {
+  it('keeps provider account and token aligned with the acquisition result', async () => {
+    const token = createMockToken({ oid: 'server-user' });
+    let resolution: { status: 'issued'; token: string } | { status: 'missing' } = {
+      status: 'issued',
+      token,
+    };
+    const acquireToken = vi.fn(async () =>
+      resolution.status === 'issued' ? resolution.token : null,
+    );
+    const provider = await initializeMockWith((builder) => builder.setAcquireToken(acquireToken));
+
+    const result = await provider.client.acquireToken({
+      request: { scopes: ['api://application/.default'] },
+    });
+
+    expect(result?.accessToken).toBe(token);
+    expect(result?.account?.localAccountId).toBe('server-user');
+    expect(provider.client.getActiveAccount()?.localAccountId).toBe('server-user');
+    expect(provider.account?.localAccountId).toBe('server-user');
+
+    resolution = { status: 'missing' };
+    const reset = await provider.client.acquireToken({
+      request: { scopes: ['api://application/.default'] },
+    });
+
+    expect(reset?.accessToken).not.toBe(token);
+    expect(reset?.account?.localAccountId).toBe('fusion-mock-user');
+    expect(provider.account?.localAccountId).toBe('fusion-mock-user');
+    expect(acquireToken).toHaveBeenCalledTimes(2);
   });
 });
 
@@ -591,23 +428,5 @@ describe('MsalMockClient account cache', () => {
 
     expect(client.getActiveAccount()?.name).toBe('Grace Hopper');
     expect(client.getAccount({ username: 'grace.hopper@equinor.com' })).toBe(account);
-  });
-
-  it('replaces the session when a new user is declared', () => {
-    const client = new MsalMockClient(clientConfig());
-
-    client.setUser({ name: 'Ada Lovelace', userId: 'ada' });
-
-    expect(client.getAllAccounts()).toHaveLength(1);
-    expect(client.getActiveAccount()?.name).toBe('Ada Lovelace');
-  });
-
-  it('leaves no account behind when signed out', () => {
-    const client = new MsalMockClient(clientConfig());
-
-    client.setUser({ signedOut: true });
-
-    expect(client.getAllAccounts()).toEqual([]);
-    expect(client.hasValidClaims).toBe(false);
   });
 });

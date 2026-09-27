@@ -46,8 +46,12 @@ export type FrameworkMockConfigureFn<TModules extends Array<AnyModule> = []> = (
  *
  * @example Configure the built-in mocks
  * ```typescript
+ * import { createMockToken, mockFramework } from '@equinor/fusion-framework/mock';
+ *
  * const fusion = await mockFramework((configurator) => {
- *   configurator.msal.setAccount({ name: 'Ada Lovelace' });
+ *   configurator.msal.setAcquireToken(({ clientId, scopes }) =>
+ *     createMockToken({ aud: clientId, scp: scopes.join(' ') }),
+ *   );
  *   configurator.serviceDiscovery.setBaseUri('http://localhost:6669');
  * });
  * ```

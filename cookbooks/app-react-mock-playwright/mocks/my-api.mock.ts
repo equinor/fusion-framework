@@ -1,6 +1,34 @@
+import { Buffer } from 'node:buffer';
+
 import schema from './my-api.openapi.json' with { type: 'json' };
 
 import { defineService } from '@equinor/fusion-openapi-mock-server/discovery';
+
+/**
+ * Resolves the deterministic persona carried by a mock bearer token.
+ *
+ * @param authorization - HTTP Authorization header.
+ * @returns The token's object ID, or `anonymous` without a valid mock bearer token.
+ * @throws When a bearer token does not contain a string `oid` claim.
+ */
+const resolvePersona = (authorization: string | undefined): string => {
+  const [, token] = authorization?.split(' ') ?? [];
+  const payload = token?.split('.')[1];
+  // The cookbook reports missing authorization explicitly so its Playwright assertion is meaningful.
+  if (!payload) return 'anonymous';
+
+  const claims: unknown = JSON.parse(Buffer.from(payload, 'base64url').toString('utf8'));
+  // A malformed mock token must fail visibly rather than masquerading as an anonymous request.
+  if (
+    typeof claims !== 'object' ||
+    claims === null ||
+    !('oid' in claims) ||
+    typeof claims.oid !== 'string'
+  ) {
+    throw new Error('Mock bearer token is missing a string oid claim');
+  }
+  return claims.oid;
+};
 
 /**
  * Models an app-owned API that is intentionally not registered in Fusion service discovery.
@@ -19,5 +47,13 @@ export default defineService({
     Greeting: {
       message: () => 'Hello from the mock server!',
     },
+  },
+  middleware: (router) => {
+    // Echo the bearer persona so the browser test proves Fusion HTTP received the selected token.
+    router.get('/identity', (request, response) => {
+      response.json({
+        userId: resolvePersona(request.headers.authorization),
+      });
+    });
   },
 });

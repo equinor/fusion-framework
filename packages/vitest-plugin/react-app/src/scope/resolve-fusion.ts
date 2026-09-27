@@ -1,6 +1,7 @@
 import type { AppEnv } from '@equinor/fusion-framework-app';
 import type { Fusion } from '@equinor/fusion-framework';
 import {
+  createMockToken,
   mockFramework,
   type FrameworkMockConfigureFn,
   type FrameworkMockConfigurator,
@@ -65,6 +66,18 @@ export async function resolveFusion<TEnv extends AppEnv = AppEnv>(options?: {
   return (
     fusion ??
     mockFramework<[AppModule, NavigationModule]>(async (configurator) => {
+      configurator.msal.setAcquireToken(({ scopes, account, clientId }) =>
+        account
+          ? createMockToken({
+              name: account.name,
+              preferred_username: account.username,
+              oid: account.localAccountId,
+              tid: account.tenantId,
+              aud: clientId,
+              scp: scopes.join(' '),
+            })
+          : null,
+      );
       enableAppManifestMock(configurator, env ?? (defaultAppEnv as TEnv));
       enableNavigation(configurator, {
         configure: (config) => config.setHistory(createHistory('memory')),

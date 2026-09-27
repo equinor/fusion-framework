@@ -39,7 +39,11 @@ jobs:
           github.event.review.state == 'changes_requested' ||
           github.event.review.state == 'commented'
         ) &&
-        github.event.review.user.type == 'User'
+        github.event.review.user.type == 'User' &&
+        github.event.pull_request.user.login == 'github-actions[bot]' &&
+        github.event.pull_request.head.repo.full_name == github.repository &&
+        startsWith(github.event.pull_request.head.ref, 'automation/issue-') &&
+        contains(github.event.pull_request.labels.*.name, '🤖 AI generated')
       )
     runs-on: ubuntu-latest
     timeout-minutes: 3

@@ -18,13 +18,15 @@ export interface ServiceDiscoveryEntry {
 export interface CreateMockServerOptions {
   /** Seeds every service's faked responses, so the same document/fields/seed always fake the same values. */
   seed?: number;
+  /** Additional exact browser origins allowed to make credentialed mock-auth requests; loopback origins are allowed by default. */
+  allowedOrigins?: readonly string[];
 }
 
 /** Options for {@link MockServerHandle.start}. */
 export interface StartOptions {
   /** Port to listen on; `0` (the default) lets the OS assign a free one. */
   port?: number;
-  /** Hostname to bind to (default: `localhost`). */
+  /** Hostname to bind to (default: `127.0.0.1`, avoiding platform-dependent localhost address families). */
   host?: string;
 }
 

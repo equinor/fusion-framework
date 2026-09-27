@@ -1,5 +1,8 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
+import { createMockToken } from '@equinor/fusion-framework-module-msal/mock';
+
+import { useAccessToken } from '../msal/useAccessToken';
 import { useCurrentAccount } from '../msal/useCurrentAccount';
 import { renderAppHook } from '@equinor/fusion-framework-vitest-plugin-react-app/test';
 
@@ -13,20 +16,30 @@ describe('useCurrentAccount', () => {
     });
   });
 
-  it('returns the account configured through the msal mock builder', async () => {
-    const { result } = await renderAppHook(() => useCurrentAccount(), {
-      configure: (configurator) =>
-        configurator.msal.setAccount({ name: 'Ada Lovelace', username: 'ada@equinor.com' }),
+  it('returns the account derived from an acquired mock token', async () => {
+    const { result } = await renderAppHook(
+      () => ({
+        account: useCurrentAccount(),
+        token: useAccessToken({ scopes: ['User.Read'] }),
+      }),
+      {
+        configure: (configurator) =>
+          configurator.msal.setAcquireToken(({ clientId, scopes }) =>
+            createMockToken({
+              aud: clientId,
+              scp: scopes.join(' '),
+              name: 'Ada Lovelace',
+              preferred_username: 'ada@equinor.com',
+              oid: 'ada-lovelace',
+            }),
+          ),
+      },
+    );
+
+    await vi.waitFor(() => expect(result.current.token.pending).toBe(false));
+    expect(result.current.account).toMatchObject({
+      name: 'Ada Lovelace',
+      username: 'ada@equinor.com',
     });
-
-    expect(result.current).toMatchObject({ name: 'Ada Lovelace', username: 'ada@equinor.com' });
-  });
-
-  it('returns undefined when no account is signed in', async () => {
-    const { result } = await renderAppHook(() => useCurrentAccount(), {
-      configure: (configurator) => configurator.msal.setAccount(null),
-    });
-
-    expect(result.current).toBeUndefined();
   });
 });

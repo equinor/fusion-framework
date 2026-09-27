@@ -46,10 +46,18 @@ Use `mockFramework` when code consumes the parent framework directly or when the
 to seed several built-in framework modules together:
 
 ```ts
-import { mockFramework } from '@equinor/fusion-framework/mock';
+import { createMockToken, mockFramework } from '@equinor/fusion-framework/mock';
 
 const fusion = await mockFramework((configurator) => {
-  configurator.msal.setAccount({ name: 'Ada Lovelace' });
+  configurator.msal.setAcquireToken(({ clientId, scopes }) =>
+    createMockToken({
+      aud: clientId,
+      scp: scopes.join(' '),
+      name: 'Ada Lovelace',
+      preferred_username: 'ada@equinor.com',
+      oid: 'ada-lovelace',
+    }),
+  );
   configurator.context.setCurrentContext({
     id: 'project-a',
     title: 'Project A',

@@ -29,41 +29,15 @@ import type {
 import type { MsalClientConfig, MsalClient } from '../MsalClient';
 
 import { createMockToken } from './create-mock-token';
-/**
- * The user a mock MSAL client signs in.
- *
- * @remarks
- * Deliberately separate from {@link MsalClientConfig}: a client is configured
- * with *what it talks to*, never with *who is signed in*. The real client learns
- * the user from Entra ID, so the mock is told after it is constructed — see
- * {@link MsalMockClient.setUser | setUser}.
- */
-export interface MsalMockUser {
-  /** Display name of the signed-in user. Defaults to `Test User`. */
-  name?: string;
-  /** UPN / email of the signed-in user. Defaults to `test.user@equinor.com`. */
-  username?: string;
-  /** Object ID of the signed-in user. Defaults to `fusion-mock-user`. */
-  userId?: string;
-  /** Tenant the user belongs to. Defaults to the client's configured tenant. */
-  tenantId?: string;
-  /** Scopes granted when a request does not specify its own. */
-  scopes?: string[];
-  /** Preconfigured account to use for signed-in state. */
-  account?: AccountInfo;
-  /**
-   * Start without a signed-in user, while keeping this identity.
-   *
-   * @remarks
-   * Silent flows then resolve empty so the provider follows its unauthenticated
-   * path, while an explicit login still succeeds *as this user*. That lets a
-   * test drive the sign-in journey and assert on who it ends up as, rather than
-   * only on its end state.
-   *
-   * Pass `null` instead of a user when the identity does not matter.
-   */
-  signedOut?: boolean;
-}
+import { createMockUserFromToken } from './create-mock-user-from-token';
+import { mockClientOperations } from './mock-client-operations';
+import type { MsalMockTokenAcquirer, MsalMockUser } from './types';
+
+type ResolvedMockUser = Required<
+  Pick<MsalMockUser, 'name' | 'username' | 'userId' | 'tenantId' | 'scopes'>
+> & {
+  clientId: string;
+};
 
 /**
  * A stand-in for the MSAL client that resolves tokens in-process.
@@ -83,12 +57,12 @@ export interface MsalMockUser {
  * They are **not** cryptographically valid and are rejected by any real service.
  */
 export class MsalMockClient implements IMsalClient {
-  #user: Required<Pick<MsalMockUser, 'name' | 'username' | 'userId' | 'tenantId' | 'scopes'>> & {
-    clientId: string;
-  };
+  #user: ResolvedMockUser;
   #cache = new Map<string, AccountInfo>();
   #activeAccountId: string | null = null;
-  #token: string | null = null;
+  #acquireMockToken?: MsalMockTokenAcquirer;
+  #fallbackUser: ResolvedMockUser;
+  #fallbackAccount: AccountInfo | null = null;
 
   /**
    * The account currently signed in, or `null`.
@@ -403,8 +377,7 @@ export class MsalMockClient implements IMsalClient {
    * Takes the same argument as {@link MsalClient}. A user named `Test User` is
    * already in the account cache, so a provider built on this client boots the
    * way one does for a returning user with a live session — no sign-in runs, and
-   * the provider's start-up path sees the state it would see in production. Use
-   * {@link MsalMockClient.setUser | setUser} to say who that user is.
+   * the provider's start-up path sees the state it would see in production.
    *
    * @param config - The same client configuration the real client is built from.
    */
@@ -419,7 +392,11 @@ export class MsalMockClient implements IMsalClient {
       scopes: ['fusion-mock-scope'],
       clientId: config.auth.clientId,
     };
+    this.#fallbackUser = { ...this.#user, scopes: [...this.#user.scopes] };
 
+    mockClientOperations.register(this, {
+      setAcquireToken: (acquireToken) => this.#setAcquireToken(acquireToken),
+    });
     this.#signIn(this.#createAccount());
   }
 
@@ -502,67 +479,42 @@ export class MsalMockClient implements IMsalClient {
   }
 
   /**
-   * Declares who is signed in, replacing whoever was.
+   * Applies identity claims derived from an acquired token.
    *
-   * @remarks
-   * This is the counterpart to a real sign-in: the client is configured with
-   * what it talks to, and learns the user separately. `MsalMockConfigurator`
-   * applies it as the configuration is assembled, so the account is in the cache
-   * before `MsalProvider.initialize` runs — the provider then behaves as it does
-   * for a returning user with a live session.
-   *
-   * Values left out keep whatever they were. Passing `null` signs out and
-   * forgets the identity, so the provider follows its unauthenticated path;
-   * `{ signedOut: true }` does the same but keeps the identity, so a later login
-   * resolves as that user.
-   *
-   * @param user - The user to sign in, or `null` when nobody is.
+   * @param user - Identity fields decoded from the token.
    */
-  public setUser(user: MsalMockUser | null): void {
-    // Declaring a user replaces the session rather than adding to it, so a test
-    // that names a second user does not silently end up with two cached accounts
+  #applyMockUser(user: MsalMockUser): void {
     this.#cache.clear();
     this.#activeAccountId = null;
 
-    // A null user explicitly clears the session and identity supplied to the mock.
-    if (!user) {
-      return;
-    }
-
-    const { account, signedOut, ...rest } = user;
-
-    // Merge overrides while retaining defaults for fields omitted by the test.
+    // Missing claims must come from the immutable fallback, never the previously acquired persona.
     this.#user = {
-      ...this.#user,
-      ...rest,
-      name: rest.name ?? account?.name ?? this.#user.name,
-      username: rest.username ?? account?.username ?? this.#user.username,
-      userId: rest.userId ?? account?.localAccountId ?? this.#user.userId,
-      tenantId: rest.tenantId ?? account?.tenantId ?? this.#user.tenantId,
-      scopes: rest.scopes ?? this.#user.scopes,
+      ...this.#fallbackUser,
+      ...user,
+      name: user.name ?? this.#fallbackUser.name,
+      username: user.username ?? this.#fallbackUser.username,
+      userId: user.userId ?? this.#fallbackUser.userId,
+      tenantId: user.tenantId ?? this.#fallbackUser.tenantId,
+      scopes: [...(user.scopes ?? this.#fallbackUser.scopes)],
     };
 
-    // Keep identity data without caching an account when the test starts signed out.
-    if (signedOut) {
-      return;
-    }
-
-    this.#signIn(account ?? this.#createAccount());
+    this.#signIn(this.#createAccount());
   }
 
   /**
-   * Overrides the token returned by future results, independent of who is signed in.
+   * Injects token acquisition for the active test runtime.
    *
    * @remarks
-   * Use this when a backend mock validates its own tokens (specific claims, an
-   * audience, or a signature) — supplying the exact token here means that
-   * backend sees the token it issued, rather than a mock-shaped substitute this
-   * client would otherwise fabricate from the signed-in user's fields.
+   * An acquired token is authoritative for both bearer and account state. The
+   * current in-process identity is captured as the fallback restored when the
+   * function returns `null`.
    *
-   * @param token - The token to return verbatim, or `null` to resume generating one.
+   * @param acquireToken - Function that obtains a token for requested scopes.
    */
-  public setToken(token: string | null): void {
-    this.#token = token;
+  #setAcquireToken(acquireToken: MsalMockTokenAcquirer): void {
+    this.#acquireMockToken = acquireToken;
+    this.#fallbackUser = { ...this.#user, scopes: [...this.#user.scopes] };
+    this.#fallbackAccount = this.#account ? { ...this.#account } : null;
   }
 
   /**
@@ -585,11 +537,33 @@ export class MsalMockClient implements IMsalClient {
    * @param scopes - Requested scopes, or the user's configured defaults.
    * @returns An MSAL-shaped mock authentication result.
    */
-  #createResult(scopes?: string[]): AuthenticationResult {
+  async #createResult(scopes?: string[]): Promise<AuthenticationResult> {
     const granted = scopes?.length ? scopes : this.#user.scopes;
-    // a caller-supplied token is sent verbatim so a backend mock validating it sees what it expects
+    const acquiredToken = await this.#acquireMockToken?.({
+      scopes: granted,
+      account: this.#account,
+      clientId: this.#user.clientId,
+    });
+
+    // An acquired token atomically defines both the bearer value and active account.
+    if (typeof acquiredToken === 'string') {
+      this.#applyMockUser(createMockUserFromToken(acquiredToken));
+    }
+
+    // A null result restores the exact in-process fallback state.
+    if (acquiredToken === null) {
+      this.#user = { ...this.#fallbackUser, scopes: [...this.#fallbackUser.scopes] };
+      this.#cache.clear();
+      this.#activeAccountId = null;
+      // Re-establish the original account when the client started signed in.
+      if (this.#fallbackAccount) {
+        this.#signIn({ ...this.#fallbackAccount });
+      }
+    }
+
+    // An injected token is returned verbatim; otherwise generate one from the active account.
     const token =
-      this.#token ??
+      acquiredToken ??
       createMockToken({
         name: this.#user.name,
         preferred_username: this.#user.username,

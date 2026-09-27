@@ -36,7 +36,6 @@ export {
   createMsalMockClient,
   createMockToken,
   type AuthConfigMockFn,
-  type MsalMockUser,
   type MockTokenClaims,
 } from '@equinor/fusion-framework-module-msal/mock';
 

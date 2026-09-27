@@ -10,6 +10,9 @@
       "path": "../../packages/app"
     },
     {
+      "path": "../../packages/modules/msal"
+    },
+    {
       "path": "../../packages/react/app"
     },
     {

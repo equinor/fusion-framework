@@ -165,19 +165,35 @@ test('resolves an access token', async () => {
 });
 ```
 
-### Sign in a named user
+### Acquire a token for a named user
 
-Pass `configure` to reach the msal mock's builder before the hook renders:
+Configure the MSAL mock's token source when a test needs identity claims other than the
+default `Test User`. The acquired token becomes both the access token and active account:
 
 ```tsx
+import { createMockToken } from '@equinor/fusion-framework-module-msal/mock';
+import { useAccessToken } from '@equinor/fusion-framework-react-app/msal';
 import { renderAppHook } from '@equinor/fusion-framework-vitest-plugin-react-app';
-import { useCurrentAccount } from '@equinor/fusion-framework-react-app/msal';
 
-test('reads the configured account', async () => {
-  const { result } = await renderAppHook(() => useCurrentAccount(), {
-    configure: (configurator) => configurator.msal.setAccount({ name: 'Ada Lovelace' }),
-  });
-  expect(result.current).toMatchObject({ name: 'Ada Lovelace' });
+test('acquires a token for a named user', async () => {
+  const { result, fusion } = await renderAppHook(
+    () => useAccessToken({ scopes: ['User.Read'] }),
+    {
+      configure: (configurator) =>
+        configurator.msal.setAcquireToken(({ clientId, scopes }) =>
+          createMockToken({
+            aud: clientId,
+            scp: scopes.join(' '),
+            name: 'Ada Lovelace',
+            preferred_username: 'ada@equinor.com',
+            oid: 'ada-lovelace',
+          }),
+        ),
+    },
+  );
+
+  await vi.waitFor(() => expect(result.current.pending).toBe(false));
+  expect(fusion.framework.modules.auth.account?.name).toBe('Ada Lovelace');
 });
 ```
 

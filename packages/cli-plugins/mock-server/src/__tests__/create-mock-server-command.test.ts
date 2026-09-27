@@ -46,6 +46,7 @@ describe('createMockServerCommand', () => {
       port: 4010,
       host: '127.0.0.1',
       seed: 42,
+      allowedOrigins: ['http://localhost:3000'],
     });
 
     const command = createMockServerCommand({
@@ -53,11 +54,15 @@ describe('createMockServerCommand', () => {
       port: 4020,
       host: 'localhost',
       seed: 7,
+      allowedOrigins: ['http://localhost:3020'],
     });
     await command.parseAsync(['node', 'test']);
 
     expect(mocks.discoverServices).toHaveBeenCalledWith('config-mocks');
-    expect(mocks.createMockServer).toHaveBeenCalledWith({ seed: 42 });
+    expect(mocks.createMockServer).toHaveBeenCalledWith({
+      seed: 42,
+      allowedOrigins: ['http://localhost:3000'],
+    });
     expect(mocks.start).toHaveBeenCalledWith({ port: 4010, host: '127.0.0.1' });
   });
 
@@ -67,6 +72,7 @@ describe('createMockServerCommand', () => {
       port: 4010,
       host: '127.0.0.1',
       seed: 42,
+      allowedOrigins: ['http://localhost:3000'],
     });
 
     const command = createMockServerCommand();
@@ -77,10 +83,15 @@ describe('createMockServerCommand', () => {
       '--port=5000',
       '--host=0.0.0.0',
       '--seed=99',
+      '--allow-origin=http://localhost:5001',
+      '--allow-origin=http://localhost:5002',
     ]);
 
     expect(mocks.discoverServices).toHaveBeenCalledWith('cli-mocks');
-    expect(mocks.createMockServer).toHaveBeenCalledWith({ seed: 99 });
+    expect(mocks.createMockServer).toHaveBeenCalledWith({
+      seed: 99,
+      allowedOrigins: ['http://localhost:5001', 'http://localhost:5002'],
+    });
     expect(mocks.start).toHaveBeenCalledWith({ port: 5000, host: '0.0.0.0' });
   });
 
@@ -92,11 +103,15 @@ describe('createMockServerCommand', () => {
       port: 4020,
       host: '127.0.0.1',
       seed: 7,
+      allowedOrigins: ['http://localhost:4021'],
     });
     await command.parseAsync(['node', 'test']);
 
     expect(mocks.discoverServices).toHaveBeenCalledWith('plugin-mocks');
-    expect(mocks.createMockServer).toHaveBeenCalledWith({ seed: 7 });
+    expect(mocks.createMockServer).toHaveBeenCalledWith({
+      seed: 7,
+      allowedOrigins: ['http://localhost:4021'],
+    });
     expect(mocks.start).toHaveBeenCalledWith({ port: 4020, host: '127.0.0.1' });
   });
 
@@ -107,7 +122,10 @@ describe('createMockServerCommand', () => {
     await command.parseAsync(['node', 'test']);
 
     expect(mocks.discoverServices).toHaveBeenCalledWith('mocks');
-    expect(mocks.createMockServer).toHaveBeenCalledWith({ seed: undefined });
+    expect(mocks.createMockServer).toHaveBeenCalledWith({
+      seed: undefined,
+      allowedOrigins: undefined,
+    });
     expect(mocks.start).toHaveBeenCalledWith({ port: 4010, host: 'localhost' });
   });
 });
