@@ -1,5 +1,13 @@
 # Change Log
 
+## 2.0.4
+
+### Patch Changes
+
+- c1924f9: Internal: migrate the cookbook test identity setup to token-based MSAL mock configuration.
+  
+  Relates to equinor/fusion-core-tasks#2096
+
 ## 2.0.3
 
 ### Patch Changes

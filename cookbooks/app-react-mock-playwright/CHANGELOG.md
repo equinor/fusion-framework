@@ -1,5 +1,13 @@
 # @equinor/fusion-framework-cookbook-app-react-mock-playwright
 
+## 0.0.4
+
+### Patch Changes
+
+- c1924f9: Demonstrate isolated normal-user and administrator Playwright personas with runtime switching, reset, and localhost credentialed-CORS support.
+  
+  Relates to equinor/fusion-core-tasks#2096
+
 ## 0.0.3
 
 ### Patch Changes

@@ -1,5 +1,21 @@
 # Change Log
 
+## 9.0.0
+
+### Major Changes
+
+- c1924f9: Align the framework mock entry point with the MSAL mock's token-only identity API.
+  
+  **Breaking:** the framework `/mock` entry point no longer exports `MsalMockUser`, and its MSAL configurator no longer exposes direct account, token, or user mutation. Tests should use `configurator.msal.setAcquireToken` with `createMockToken`; the acquired token claims determine the active account.
+  
+  Relates to equinor/fusion-core-tasks#2096
+
+### Patch Changes
+
+- Updated dependencies [c1924f9]
+  - @equinor/fusion-framework-module-msal@12.0.0
+  - @equinor/fusion-framework-module-http@8.1.2
+
 ## 8.1.4
 
 ### Patch Changes

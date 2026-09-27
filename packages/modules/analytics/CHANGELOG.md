@@ -1,5 +1,12 @@
 # @equinor/fusion-framework-module-analytics
 
+## 3.1.5
+
+### Patch Changes
+
+- @equinor/fusion-framework-module-app@8.2.0
+  - @equinor/fusion-framework-module-http@8.1.2
+
 ## 3.1.4
 
 ### Patch Changes

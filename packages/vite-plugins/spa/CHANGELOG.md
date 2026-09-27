@@ -1,5 +1,19 @@
 # @equinor/fusion-framework-vite-plugin-spa
 
+## 5.0.0
+
+### Major Changes
+
+- c1924f9: Resolve mock MSAL tokens from the standalone mock server through injected acquisition and remove the deprecated `msal.mockToken` template option.
+  
+  Relates to equinor/fusion-core-tasks#2096
+
+### Patch Changes
+
+- Updated dependencies [c1924f9]
+  - @equinor/fusion-framework-module-msal@12.0.0
+  - @equinor/fusion-framework-module-http@8.1.2
+
 ## 4.1.4
 
 ### Patch Changes

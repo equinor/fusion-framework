@@ -1,5 +1,18 @@
 # Change Log
 
+## 15.4.0
+
+### Minor Changes
+
+- c1924f9: Connect `ffc app dev --mock` to the mock server's session-scoped user token issuer.
+  
+  Relates to equinor/fusion-core-tasks#2096
+
+### Patch Changes
+
+- @equinor/fusion-framework-dev-portal@11.0.10
+  - @equinor/fusion-framework-dev-server@2.1.6
+
 ## 15.3.6
 
 ### Patch Changes

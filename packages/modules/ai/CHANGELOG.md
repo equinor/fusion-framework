@@ -1,5 +1,12 @@
 # @equinor/fusion-framework-module-ai
 
+## 7.0.2
+
+### Patch Changes
+
+- Updated dependencies [c1924f9]
+  - @equinor/fusion-framework-module-msal@12.0.0
+
 ## 7.0.1
 
 ### Patch Changes
