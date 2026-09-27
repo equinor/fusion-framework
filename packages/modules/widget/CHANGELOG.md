@@ -1,5 +1,11 @@
 # Change Log
 
+## 16.0.10
+
+### Patch Changes
+
+- @equinor/fusion-framework-module-http@8.1.2
+
 ## 16.0.9
 
 ### Patch Changes

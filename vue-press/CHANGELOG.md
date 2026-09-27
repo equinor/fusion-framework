@@ -1,5 +1,13 @@
 # @equinor/fusion-framework-docs
 
+## 0.4.25
+
+### Patch Changes
+
+- c1924f9: Document token-derived mock identities and session-scoped Playwright user switching, reset behavior, and deterministic scope handling.
+  
+  Relates to equinor/fusion-core-tasks#2096
+
 ## 0.4.24
 
 ### Patch Changes

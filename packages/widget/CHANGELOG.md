@@ -1,5 +1,14 @@
 # Change Log
 
+## 2.0.6
+
+### Patch Changes
+
+- Updated dependencies [c1924f9]
+- Updated dependencies [c1924f9]
+  - @equinor/fusion-framework@9.0.0
+  - @equinor/fusion-framework-module-msal@12.0.0
+
 ## 2.0.5
 
 ### Patch Changes

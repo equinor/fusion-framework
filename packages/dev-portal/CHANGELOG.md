@@ -1,5 +1,17 @@
 # @equinor/fusion-framework-dev-portal
 
+## 11.0.10
+
+### Patch Changes
+
+- Updated dependencies [c1924f9]
+  - @equinor/fusion-framework@9.0.0
+  - @equinor/fusion-framework-app@13.1.6
+  - @equinor/fusion-framework-module-app@8.2.0
+  - @equinor/fusion-framework-react@9.0.2
+  - @equinor/fusion-framework-dev-server@2.1.6
+  - @equinor/fusion-framework-module-analytics@3.1.5
+
 ## 11.0.9
 
 ### Patch Changes

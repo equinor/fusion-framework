@@ -1,5 +1,18 @@
 # @equinor/fusion-framework-cli-plugin-mock-server
 
+## 0.2.0
+
+### Minor Changes
+
+- c1924f9: Add repeatable `--allow-origin` and `mockServer.allowedOrigins` configuration for credentialed mock-auth browser requests from non-loopback origins. Canonical localhost and loopback-IP origins are allowed on every port without configuration.
+  
+  Relates to equinor/fusion-core-tasks#2096
+
+### Patch Changes
+
+- Updated dependencies [c1924f9]
+  - @equinor/fusion-openapi-mock-server@0.3.0
+
 ## 0.1.2
 
 ### Patch Changes

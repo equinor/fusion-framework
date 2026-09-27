@@ -1,5 +1,12 @@
 # @equinor/fusion-framework-module-roles
 
+## 0.2.2
+
+### Patch Changes
+
+- Updated dependencies [c1924f9]
+  - @equinor/fusion-framework-module-msal@12.0.0
+
 ## 0.2.1
 
 ### Patch Changes
