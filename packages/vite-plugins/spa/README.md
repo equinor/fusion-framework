@@ -177,7 +177,6 @@ fusionSpaPlugin({
       redirectUri: 'https://my-app.com/auth-callback',
       requiresAuth: 'true',
       mock: 'true', // (Optional) Use mock authentication for CI/Playwright
-      mockToken: '<token>', // (Optional) JWT that identifies the mock user
     },
 
     // Service Worker configuration for API proxying and authentication
@@ -241,7 +240,6 @@ Configures Azure AD authentication via the Microsoft Authentication Library (MSA
 - `redirectUri` — URL to redirect to after authentication
 - `requiresAuth` _(optional, string)_ — When `'true'`, automatically prompts for login on first load
 - `mock` _(optional, string)_ — When `'true'`, uses mock authentication instead of Entra ID
-- `mockToken` _(optional, string)_ — JWT used as-is to identify and authenticate the mock user
 
 ### Service Worker
 
@@ -521,6 +519,13 @@ The token itself is also sent as-is as the access/id token — it is not regener
 backend mock that validates its own tokens (specific claims, audience, or signature) sees
 exactly the token it issued.
 
+When `ffc app dev --mock <mock-server-url>` is used, Playwright can instead select users at
+runtime through `createMockAuth` from `@equinor/fusion-openapi-mock-server`. The
+standalone mock server stores the user per browser context and issues an unsigned OBO-style token
+for each scope set requested by Fusion MSAL. This supports switching and parallel personas without
+restarting the app or dev server; see the mock server's
+[Playwright guide](../../utils/openapi-mock-server/docs/testing-with-playwright.md).
+
 Mocking authentication does not mock the rest of the API surface — service discovery and
 any backend calls the portal makes still hit real URLs unless you also override them. Use
 the dev server's `api.routes`/`api.processServices` options (see the
@@ -718,5 +723,3 @@ See [API Service Plugin docs](https://github.com/equinor/fusion-framework/tree/m
 ## Contributing
 
 Contributions, bug reports, and feature requests are welcome! See [CONTRIBUTING.md](../../../CONTRIBUTING.md) for guidelines.
-
-

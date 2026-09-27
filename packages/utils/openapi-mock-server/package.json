@@ -22,6 +22,10 @@
       "import": "./dist/esm/index.js",
       "types": "./dist/types/index.d.ts"
     },
+    "./mock-auth": {
+      "import": "./dist/esm/mock-auth.js",
+      "types": "./dist/types/mock-auth.d.ts"
+    },
     "./server": {
       "import": "./dist/esm/server/index.js",
       "types": "./dist/types/server/index.d.ts"
@@ -43,6 +47,9 @@
     "*": {
       ".": [
         "dist/types/index.d.ts"
+      ],
+      "mock-auth": [
+        "dist/types/mock-auth.d.ts"
       ],
       "server": [
         "dist/types/server/index.d.ts"

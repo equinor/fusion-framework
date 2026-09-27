@@ -3533,6 +3533,9 @@ importers:
       '@equinor/fusion-framework-module-telemetry':
         specifier: workspace:*
         version: link:../../modules/telemetry
+      '@equinor/fusion-openapi-mock-server':
+        specifier: workspace:^
+        version: link:../../utils/openapi-mock-server
     devDependencies:
       '@rollup/plugin-commonjs':
         specifier: ^29.0.0

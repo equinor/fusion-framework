@@ -50,7 +50,8 @@
     "@equinor/fusion-framework-module-http": "workspace:*",
     "@equinor/fusion-framework-module-msal": "workspace:*",
     "@equinor/fusion-framework-module-service-discovery": "workspace:*",
-    "@equinor/fusion-framework-module-telemetry": "workspace:*"
+    "@equinor/fusion-framework-module-telemetry": "workspace:*",
+    "@equinor/fusion-openapi-mock-server": "workspace:^"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^29.0.0",
