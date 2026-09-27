@@ -52,7 +52,7 @@ pnpm --filter @equinor/fusion-framework-cookbook-app-react-mock-playwright test
 To run the pieces individually while developing:
 
 ```sh
-pnpm mock:server   # ffc mock-server ./mocks --port 4010 --allow-origin http://localhost:3000
+pnpm mock:server   # ffc mock-server ./mocks --port 4010
 pnpm mock:dev      # ffc app dev --mock http://localhost:4010, in another terminal
 ffc app build
 ffc app serve --mock http://localhost:4010  # in another terminal
@@ -71,8 +71,8 @@ It does not start `ffc mock-server`; unreachable local service URIs remain unrea
 - **`ffc mock-server`** serves any directory of `<name>.mock.ts` service modules over HTTP,
   independent of Vite or the dev server — see the plugin's own
   [README](../../packages/cli-plugins/mock-server/README.md) for the full command reference.
-- **`--allow-origin`** grants credentialed mock-auth access only to an exact browser origin.
-  Repeat it when tests serve apps or portals from multiple origins.
+- Loopback browser origins can use credentialed mock auth on any port. Use **`--allow-origin`**
+  only when tests serve apps or portals from a non-loopback origin.
 - **`ffc app dev --mock` and `ffc app serve --mock`** use the mock server's discovery endpoint and
   generate proxy routes automatically, so the app needs no custom `dev-server.config.ts`. These
   modes ignore normal discovery and use only mock-server presets plus local `defineService`

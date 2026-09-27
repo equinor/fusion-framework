@@ -15,7 +15,7 @@ interface MockServerCommandOptions {
   host?: string;
   /** Seeds every service's faked responses, if given. */
   seed?: number;
-  /** Exact browser origins allowed to call credentialed mock-auth endpoints. */
+  /** Additional non-loopback browser origins allowed to call credentialed mock-auth endpoints. */
   allowOrigin: string[];
 }
 
@@ -31,7 +31,7 @@ export interface MockServerCommandDefaults {
   host?: string;
   /** Seed to apply when `--seed` isn't given. Defaults to unseeded (random) faked responses. */
   seed?: number;
-  /** Exact browser origins allowed to call credentialed mock-auth endpoints. */
+  /** Additional non-loopback browser origins allowed to call credentialed mock-auth endpoints. */
   allowedOrigins?: string[];
 }
 
@@ -101,7 +101,7 @@ export function createMockServerCommand(defaults: MockServerCommandDefaults = {}
     .addOption(
       createOption(
         '--allow-origin <origin>',
-        'exact browser origin allowed to call credentialed mock-auth endpoints (repeatable)',
+        'additional non-loopback browser origin allowed to call credentialed mock-auth endpoints (repeatable)',
       )
         .default(defaultAllowedOrigins)
         .argParser((value: string, previous: string[]) => [...previous, value]),

@@ -21,6 +21,51 @@ function isCorsPreflightRequest(method: string, request: IncomingMessage): boole
 }
 
 /**
+ * Checks whether an origin is a canonical HTTP(S) loopback origin.
+ *
+ * @param origin - Serialized browser origin.
+ * @returns Whether the origin targets localhost or a loopback IP on any port.
+ */
+function isLoopbackOrigin(origin: string): boolean {
+  try {
+    const parsed = new URL(origin);
+    // Browser origins are canonical and only HTTP(S) origins can host the local SPA.
+    if (parsed.origin !== origin || (parsed.protocol !== 'http:' && parsed.protocol !== 'https:')) {
+      return false;
+    }
+    return (
+      parsed.hostname === 'localhost' ||
+      parsed.hostname === '127.0.0.1' ||
+      parsed.hostname === '[::1]'
+    );
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Resolves an origin trusted to use the credentialed mock-auth control plane.
+ *
+ * @param requestOrigin - Origin supplied by the browser.
+ * @param allowedOrigins - Additional exact origins configured by the server owner.
+ * @returns The canonical trusted origin, or `undefined`.
+ */
+function resolveAllowedOrigin(
+  requestOrigin: string | undefined,
+  allowedOrigins: readonly string[],
+): string | undefined {
+  // Server-to-server callers omit Origin and do not need credentialed CORS response headers.
+  if (!requestOrigin) return undefined;
+  // Exact matching prevents configured origins from widening the browser trust boundary.
+  const configuredOrigin = allowedOrigins.find((origin) => origin === requestOrigin);
+  // Loopback origins are trusted by default because this server issues mock-only tokens for local development.
+  if (configuredOrigin || isLoopbackOrigin(requestOrigin)) {
+    return configuredOrigin ?? new URL(requestOrigin).origin;
+  }
+  return undefined;
+}
+
+/**
  * Routes one incoming request to the control plane or a service's mock.
  *
  * @param handle - The `reset`/`override` implementation control-plane routes delegate to.
@@ -29,7 +74,7 @@ function isCorsPreflightRequest(method: string, request: IncomingMessage): boole
  * @param res - The response to write the result to.
  * @param seed - The mock server's own seed (see `CreateMockServerOptions`), threaded into a matched `middleware` route's `RouteContext`.
  * @param authSessions - Session store used by mock-auth control routes.
- * @param allowedOrigins - Exact origins trusted to make credentialed mock-auth requests.
+ * @param allowedOrigins - Additional exact origins trusted to make credentialed mock-auth requests.
  * @throws When a control-plane auth request is received without a session store.
  */
 export async function handleRequest(
@@ -47,8 +92,8 @@ export async function handleRequest(
   const segments = url.pathname.split('/').filter(Boolean);
   // Direct-only services run on a different localhost origin than the browser app.
   const requestOrigin = req.headers.origin;
-  // Only a configured exact origin may receive credentialed browser responses.
-  const allowedOrigin = allowedOrigins.find((origin) => origin === requestOrigin);
+  // Loopback browser apps are trusted by default; other origins require exact configuration.
+  const allowedOrigin = resolveAllowedOrigin(requestOrigin, allowedOrigins);
   // Reject cross-origin control-plane access before it can read or mutate session state.
   if (requestOrigin && segments[0] === '@fusion-mock' && !allowedOrigin) {
     sendJson(res, 403, { error: 'Origin is not allowed for mock-server control requests' });
@@ -56,7 +101,7 @@ export async function handleRequest(
   }
   // Reflect only an allowlisted value; ordinary mock APIs remain available without credentials.
   res.setHeader('access-control-allow-origin', allowedOrigin ?? '*');
-  // Credentialed browser requests require an explicitly allowlisted origin.
+  // Credentialed browser requests require a trusted loopback or explicitly allowlisted origin.
   if (allowedOrigin) {
     res.setHeader('access-control-allow-credentials', 'true');
     res.setHeader('vary', 'Origin');

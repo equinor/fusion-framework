@@ -10,7 +10,7 @@ export interface DevServerMockOptions {
   host?: string;
   /** Seed used for reproducible generated OpenAPI responses. */
   seed?: number;
-  /** Exact browser origins allowed to call credentialed mock-auth endpoints. */
+  /** Additional non-loopback browser origins allowed to call credentialed mock-auth endpoints. */
   allowedOrigins?: string[];
 }
 

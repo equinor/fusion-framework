@@ -10,7 +10,7 @@
     "dev": "ffc app dev",
     "dev:mock": "concurrently -k 'pnpm mock:server' 'pnpm mock:dev'",
     "mock:dev": "ffc app dev --mock http://localhost:4010",
-    "mock:server": "ffc mock-server ./mocks --port 4010 --allow-origin http://localhost:3000",
+    "mock:server": "ffc mock-server ./mocks --port 4010",
     "test": "pnpm test:playwright",
     "test:playwright": "playwright test"
   },

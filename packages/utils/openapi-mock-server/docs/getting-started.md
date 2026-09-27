@@ -68,7 +68,6 @@ import { createMockServer } from '@equinor/fusion-openapi-mock-server';
 
 const server = createMockServer({
   seed: 42,
-  allowedOrigins: ['http://localhost:3000'],
 }).use('./mocks');
 const { url } = await server.start({ host: 'localhost', port: 4010 });
 // url -> 'http://localhost:4010'
