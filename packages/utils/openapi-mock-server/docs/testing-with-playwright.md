@@ -69,15 +69,63 @@ test('administrator can maintain a demand', async ({ context, page }) => {
 ```
 
 `setUser` stores only mock identity metadata under an opaque, HTTP-only cookie. It never accepts
-an access token or real credential. When Fusion requests scopes, the mock server mints a
-deterministic unsigned JWT containing the selected `oid`, optional custom claims, and the exact
-requested scopes in `scp`; the first requested resource becomes `aud`. Two Playwright browser
-contexts have separate cookie jars and can therefore run different users concurrently.
+an access token or real credential. Two Playwright browser contexts have separate cookie jars and
+can therefore run different users concurrently.
 
-Switch users by calling `setUser` again and reloading or remounting application state. Call
-`mockAuth.reset(context.request)` to remove the selected user; subsequent token acquisition uses
-the MSAL mock's default `fusion-mock-user`. Neither operation restarts the mock server, dev server,
-or container.
+### Switch users and reset a session
+
+Call `setUser` again on the same browser context, then reload or remount application state so
+Fusion requests a fresh token. Call `reset` to remove the session persona and restore the MSAL
+mock's built-in `fusion-mock-user`:
+
+```ts
+test('switches users without restarting servers', async ({ context, page }) => {
+  await mockAuth.setUser(context.request, { userId: 'normal-user' });
+  await page.goto('/apps/pss-project-demand');
+  await expect(page.getByTestId('identity')).toContainText('normal-user');
+
+  await mockAuth.setUser(context.request, {
+    userId: 'administrator',
+    claims: { roles: ['Demand.Admin'] },
+  });
+  await page.reload();
+  await expect(page.getByTestId('identity')).toContainText('administrator');
+
+  await mockAuth.reset(context.request);
+  await page.reload();
+  await expect(page.getByTestId('identity')).toContainText('fusion-mock-user');
+});
+```
+
+Neither switching nor resetting restarts the mock server, dev server, or container.
+
+### Configure and verify token scopes
+
+The application defines scopes on its HTTP endpoint; tests do not pass scopes to `setUser`:
+
+```ts
+import { defineAppConfig } from '@equinor/fusion-framework-cli/app';
+
+export default defineAppConfig(() => ({
+  endpoints: {
+    'project-demand': {
+      url: 'http://project-demand.localhost:4010',
+      scopes: ['api://project-demand/.default'],
+    },
+  },
+}));
+```
+
+For every non-empty scope request, the mock server sorts and de-duplicates the scopes, writes the
+normalized set to the token's `scp` claim, and derives `aud` from the first normalized scope after
+removing a trailing `/.default`. A persona has no scope allowlist: the same selected user receives
+a new deterministic token for every valid scope set requested by Fusion. Empty or non-string scope
+sets return `400`, so invalid acquisition cannot silently fall back to another identity.
+
+The token endpoint exists only on the separately started standalone mock server. The SPA calls it
+only when launched with `ffc app dev --mock <mock-server-url>` or
+`ffc app serve --mock <mock-server-url>`; production and ordinary development modes neither expose
+nor call this mock-auth integration.
 
 ## Routes
 

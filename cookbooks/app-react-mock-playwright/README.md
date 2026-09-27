@@ -92,5 +92,7 @@ It does not start `ffc mock-server`; unreachable local service URIs remain unrea
   not start `ffc mock-server` yourself in the background; it is designed to run in the
   foreground and shut down on `SIGINT`/`SIGTERM`.
 - **`createMockAuth`** selects a user per browser context rather than accepting a bearer token.
-  The mock server mints an unsigned OBO-style token when Fusion MSAL requests resource scopes.
-  Calling `setUser` again switches persona; calling `reset` restores the default mock identity.
+  Configure scopes on the app endpoint; the mock server mints an unsigned OBO-style token whenever
+  Fusion MSAL requests those scopes. Calling `setUser` again and reloading switches persona;
+  calling `reset` and reloading restores the default mock identity. See
+  [`mock-auth-personas.spec.ts`](playwright/mock-auth-personas.spec.ts) for the complete flow.

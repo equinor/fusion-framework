@@ -60,5 +60,5 @@ expressed in JSON or YAML.
 
 - [Getting started](docs/getting-started.md) — directory convention, the bundled `fusion`
   preset, override mechanisms, layering, and running the server via the CLI or programmatically
-- [Testing with Playwright](docs/testing-with-playwright.md) — per-test overrides, reset, and
-  the full route reference
+- [Testing with Playwright](docs/testing-with-playwright.md) — per-session user selection,
+  switching, scope-aware token issuance, operation overrides, reset, and the full route reference
