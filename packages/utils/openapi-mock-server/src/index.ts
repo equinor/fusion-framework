@@ -23,3 +23,10 @@ export {
   type ServiceDiscoveryEntry,
   type StartOptions,
 } from './server/index.js';
+
+export {
+  createMockAuth,
+  type MockAuthRequestClient,
+  type MockAuthState,
+  type MockAuthUser,
+} from './mock-auth.js';

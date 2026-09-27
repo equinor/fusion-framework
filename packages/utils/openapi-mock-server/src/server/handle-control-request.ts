@@ -3,6 +3,8 @@ import type { IncomingMessage, ServerResponse } from 'node:http';
 import { readJsonBody } from './read-json-body.js';
 import { resolveServiceDiscovery } from './resolve-service-discovery.js';
 import { sendJson } from './send-json.js';
+import { handleMockAuthRequest } from './handle-mock-auth-request.js';
+import type { MockAuthSessionStore } from './mock-auth-session-store.js';
 import type { MockOverride, MockServerHandle, ServiceState } from './types.js';
 
 /**
@@ -57,8 +59,15 @@ export async function handleControlRequest(
   segments: string[],
   req: IncomingMessage,
   res: ServerResponse,
+  authSessions: MockAuthSessionStore,
 ): Promise<void> {
   const [first, second] = segments;
+
+  // The standalone mock server owns browser-session users and token issuance.
+  if (first === 'auth' && (second === 'user' || second === 'token')) {
+    await handleMockAuthRequest(authSessions, method, second, req, res);
+    return;
+  }
 
   // GET /@fusion-mock/health
   if (first === 'health' && method === 'GET') {

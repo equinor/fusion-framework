@@ -43,6 +43,42 @@ See [`cookbooks/app-react-mock-playwright`](../../../../cookbooks/app-react-mock
 for a full app wired up this way, including its `playwright.config.ts`'s `webServer` entry for
 `ffc mock-server`.
 
+## Emulate users without restarting the app
+
+When the app runs through `ffc app dev --mock http://localhost:4010`, the standalone mock server
+also acts as a test-only token issuer. A Playwright browser context selects a deterministic user;
+the Fusion MSAL mock then requests an unsigned OBO-style token for the scopes required by each
+Fusion HTTP client.
+
+```ts
+import { createMockAuth } from '@equinor/fusion-openapi-mock-server';
+
+const mockAuth = createMockAuth('http://localhost:4010');
+
+test('administrator can maintain a demand', async ({ context, page }) => {
+  await mockAuth.setUser(context.request, {
+    userId: 'administrator',
+    name: 'Project Demand Administrator',
+    username: 'administrator@example.test',
+    claims: { roles: ['Demand.Admin'] },
+  });
+
+  await page.goto('/apps/pss-project-demand');
+  // Assert administrator behavior.
+});
+```
+
+`setUser` stores only mock identity metadata under an opaque, HTTP-only cookie. It never accepts
+an access token or real credential. When Fusion requests scopes, the mock server mints a
+deterministic unsigned JWT containing the selected `oid`, optional custom claims, and the exact
+requested scopes in `scp`; the first requested resource becomes `aud`. Two Playwright browser
+contexts have separate cookie jars and can therefore run different users concurrently.
+
+Switch users by calling `setUser` again and reloading or remounting application state. Call
+`mockAuth.reset(context.request)` to remove the selected user; subsequent token acquisition uses
+the MSAL mock's default `fusion-mock-user`. Neither operation restarts the mock server, dev server,
+or container.
+
 ## Routes
 
 Every override goes through the `/@fusion-mock/` control plane; everything else is proxied to the
@@ -53,6 +89,10 @@ matching service's own mock:
 | `/@fusion-mock/discovery` | `GET` | Service-discovery response for each discovery-visible service: its `key` and `http://<key>.localhost:<port>` origin. Direct-only definitions using `serviceDiscovery: false` remain routable but are omitted. |
 | `/@fusion-mock/health` | `GET` | `200 OK` once the server is ready. |
 | `/@fusion-mock/reset` | `POST` | Discards runtime operation overrides and rebuilds each source-defined baseline, including declarative `defineService` routes. |
+| `/@fusion-mock/auth/user` | `PUT` | Selects a mock user for the caller's opaque browser session. Body is `{ userId, name?, username?, tenantId?, claims? }`. |
+| `/@fusion-mock/auth/user` | `GET` | Returns non-sensitive selected-user metadata; arbitrary claims are omitted. |
+| `/@fusion-mock/auth/user` | `DELETE` | Clears the selected user so Fusion MSAL returns to its startup mock identity. |
+| `/@fusion-mock/auth/token` | `POST` | Internal OBO-style exchange used by Fusion MSAL. Body is `{ scopes: string[] }`; returns an unsigned token for the selected session user or `missing`. |
 | `/@fusion-mock/:service/:operationId` | `POST` | Registers a one-off override for that operation; body is `{ status?: number, mock: unknown }`. |
 | `http://<service>.localhost:<port>/*` | any | Resolved against that service's middleware first, then its OpenAPI mock, using its discovered origin. |
 | `/:service/*` | any | Same service-relative behavior, for embedding without relying on `*.localhost` DNS resolution. |

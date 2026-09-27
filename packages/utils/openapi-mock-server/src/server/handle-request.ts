@@ -3,6 +3,7 @@ import type { IncomingMessage, ServerResponse } from 'node:http';
 import { handleControlRequest } from './handle-control-request.js';
 import { handleServiceRequest } from './handle-service-request.js';
 import type { MockServerHandle, ServiceState } from './types.js';
+import type { MockAuthSessionStore } from './mock-auth-session-store.js';
 
 /**
  * Checks whether a request is negotiating CORS access rather than invoking an OPTIONS operation.
@@ -33,11 +34,18 @@ export async function handleRequest(
   req: IncomingMessage,
   res: ServerResponse,
   seed?: number,
+  authSessions?: MockAuthSessionStore,
 ): Promise<void> {
   const url = new URL(req.url ?? '/', 'http://localhost');
   const method = (req.method ?? 'GET').toUpperCase();
   // Direct-only services run on a different localhost origin than the browser app.
-  res.setHeader('access-control-allow-origin', '*');
+  const requestOrigin = req.headers.origin;
+  res.setHeader('access-control-allow-origin', requestOrigin ?? '*');
+  // Credentialed browser requests require an explicit origin rather than a wildcard.
+  if (requestOrigin) {
+    res.setHeader('access-control-allow-credentials', 'true');
+    res.setHeader('vary', 'Origin');
+  }
   res.setHeader('access-control-allow-methods', 'GET, HEAD, POST, PUT, PATCH, DELETE, OPTIONS');
   const requestedHeaders = req.headers['access-control-request-headers'];
   res.setHeader('access-control-allow-headers', requestedHeaders ?? 'authorization, content-type');
@@ -52,7 +60,11 @@ export async function handleRequest(
 
   // Control-plane routes live under a reserved prefix, never a real service key.
   if (segments[0] === '@fusion-mock') {
-    await handleControlRequest(handle, services, method, segments.slice(1), req, res);
+    // Mock-auth routes require the server-owned store created alongside this listener.
+    if (!authSessions) {
+      throw new Error('Mock auth session store is unavailable');
+    }
+    await handleControlRequest(handle, services, method, segments.slice(1), req, res, authSessions);
     return;
   }
 

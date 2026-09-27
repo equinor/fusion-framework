@@ -24,7 +24,7 @@ export interface CreateMockServerOptions {
 export interface StartOptions {
   /** Port to listen on; `0` (the default) lets the OS assign a free one. */
   port?: number;
-  /** Hostname to bind to (default: `localhost`). */
+  /** Hostname to bind to (default: `127.0.0.1`, avoiding platform-dependent localhost address families). */
   host?: string;
 }
 

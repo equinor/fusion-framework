@@ -13,6 +13,7 @@ import type {
 } from './types.js';
 
 import type { AddressInfo } from 'node:net';
+import { MockAuthSessionStore } from './mock-auth-session-store.js';
 
 /**
  * Creates a mock server: add sources with `use()`, then `start()` it once —
@@ -28,6 +29,10 @@ import type { AddressInfo } from 'node:net';
  *   response has, so the default `processServices` proxy needs no overrides.
  * - `GET /@fusion-mock/health` — `200 OK` once the server is ready.
  * - `POST /@fusion-mock/reset` — same as calling `reset()`.
+ * - `PUT|GET|DELETE /@fusion-mock/auth/user` — selects, inspects, or clears
+ *   one browser session's mock user.
+ * - `POST /@fusion-mock/auth/token` — mints an unsigned token for the selected
+ *   session user and the scopes requested by Fusion MSAL.
  * - `POST /@fusion-mock/:service/:operationId` — same as calling `override()`;
  *   body is `{ status?: number, mock: unknown }`.
  * - A request to `<key>.localhost` is resolved directly against that
@@ -63,6 +68,7 @@ export function createMockServer(options: CreateMockServerOptions = {}): MockSer
   let httpServer: ReturnType<typeof createServer> | undefined;
   let starting = false;
   let url: string | undefined;
+  const authSessions = new MockAuthSessionStore();
 
   /** Resolves every registered source exactly once, memoizing the in-flight promise so concurrent callers share it. */
   function ensureResolved(): Promise<Map<string, ServiceState>> {
@@ -96,7 +102,7 @@ export function createMockServer(options: CreateMockServerOptions = {}): MockSer
 
   const requestListener = (req: IncomingMessage, res: ServerResponse): void => {
     ensureResolved()
-      .then((activeServices) => handleRequest(handle, activeServices, req, res, seed))
+      .then((activeServices) => handleRequest(handle, activeServices, req, res, seed, authSessions))
       .catch((error: unknown) => {
         sendJson(res, 500, { error: error instanceof Error ? error.message : String(error) });
       });
@@ -128,7 +134,7 @@ export function createMockServer(options: CreateMockServerOptions = {}): MockSer
         await ensureResolved();
         const server = createServer(requestListener);
         httpServer = server;
-        const host = options.host ?? 'localhost';
+        const host = options.host ?? '127.0.0.1';
         await new Promise<void>((resolve, reject) => {
           /** Removes the temporary error listener after the server starts successfully. */
           const handleListening = (): void => {
@@ -177,6 +183,7 @@ export function createMockServer(options: CreateMockServerOptions = {}): MockSer
 
     reset() {
       const activeServices = requireServices();
+      authSessions.clear();
       // Rebuild every service from its original document, discarding registered overrides.
       for (const [key, state] of activeServices) {
         activeServices.set(key, {
