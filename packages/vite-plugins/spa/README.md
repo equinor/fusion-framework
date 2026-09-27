@@ -394,8 +394,8 @@ FUSION_SPA_MSAL_REDIRECT_URI=https://my-app.com/auth-callback
 FUSION_SPA_MSAL_REQUIRES_AUTH=true
 # Set to skip Entra ID and sign in a mock user instead — for CI/Playwright runs
 FUSION_SPA_MSAL_MOCK=true
-# Optional: a mock JWT whose claims (name, preferred_username, oid, tid, scp) name the signed-in user
-FUSION_SPA_MSAL_MOCK_TOKEN=eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0....
+# Optional: standalone mock-server origin used for session-scoped token acquisition
+FUSION_SPA_MSAL_MOCK_SERVER_URL=http://localhost:4010
 
 # Telemetry
 FUSION_SPA_TELEMETRY_CONSOLE_LEVEL=2
@@ -421,109 +421,22 @@ server headlessly in GitHub Actions or a Playwright suite.
 FUSION_SPA_MSAL_MOCK=true
 ```
 
-By default the mock signs in a generic `Test User`. To control who that user is, set
-`FUSION_SPA_MSAL_MOCK_TOKEN` to a JWT — generate one with `createMockToken` from
-`@equinor/fusion-framework-module-msal/mock`, or use one issued by your backend's own mock —
-and its `name`, `preferred_username`, `oid`, `tid`, and `scp` claims name the signed-in user:
-
-```ts
-import { createMockToken } from '@equinor/fusion-framework-module-msal/mock';
-
-const token = createMockToken({
-  name: 'Ada Lovelace',
-  preferred_username: 'ada.lovelace@equinor.com',
-  oid: 'ada-object-id',
-  scp: 'user_impersonation',
-});
-```
+By default the mock signs in a generic `Test User`. To select and switch users at runtime, start
+the standalone mock server with the browser origin explicitly allowed, then point the app at it:
 
 ```sh
-FUSION_SPA_MSAL_MOCK_TOKEN=<token>
+ffc mock-server ./mocks --port 4010 --allow-origin http://localhost:3000
+ffc app dev --mock http://localhost:4010
 ```
 
-### Generate a mock user and update `.env`
+The `--mock` option enables mock authentication and supplies the mock-server URL to the SPA. A
+direct Vite setup can provide the same values through `FUSION_SPA_MSAL_MOCK=true` and
+`FUSION_SPA_MSAL_MOCK_SERVER_URL=http://localhost:4010`.
 
-> [!WARNING]
-> The script below writes `FUSION_SPA_MSAL_MOCK=true` to the project-root `.env`. This is
-> persistent configuration: the application remains locked to mock authentication across restarts
-> until the variable is removed or set to `false`. `ffc app dev --mock` and
-> `ffc app serve --mock` already enable mock authentication for that command, so do not persist
-> `FUSION_SPA_MSAL_MOCK=true` merely to use those CLI flags. Never deploy an environment file that
-> enables mock authentication.
-
-Run the following from the application root. The application needs
-`@equinor/fusion-framework-module-msal` as a direct development dependency so the Node.js script
-can import `createMockToken` when pnpm uses strict dependency resolution:
-
-```sh
-pnpm add --save-dev @equinor/fusion-framework-module-msal
-```
-
-Create `scripts/set-mock-user.mjs`. The script creates the project-root `.env` when it does not
-exist. When `.env` already exists, it preserves comments and unrelated variables while replacing
-the existing mock-auth values or appending them when absent:
-
-```js
-#!/usr/bin/env node
-
-import { readFile, writeFile } from 'node:fs/promises';
-import { createMockToken } from '@equinor/fusion-framework-module-msal/mock';
-
-const envFile = new URL('../.env', import.meta.url);
-const token = createMockToken({
-  name: 'Ada Lovelace',
-  preferred_username: 'ada.lovelace@equinor.com',
-  oid: 'ada-object-id',
-  scp: 'user_impersonation',
-});
-
-let contents = await readFile(envFile, 'utf8').catch((error) => {
-  if (error.code === 'ENOENT') return '';
-  throw error;
-});
-
-const updates = {
-  FUSION_SPA_MSAL_MOCK: 'true',
-  FUSION_SPA_MSAL_MOCK_TOKEN: token,
-};
-
-for (const [key, value] of Object.entries(updates)) {
-  const line = `${key}=${value}`;
-  const existing = new RegExp(`^${key}=.*$`, 'm');
-  if (existing.test(contents)) {
-    contents = contents.replace(existing, line);
-  } else {
-    const separator = contents.length > 0 && !contents.endsWith('\n') ? '\n' : '';
-    contents = `${contents}${separator}${line}\n`;
-  }
-}
-
-await writeFile(envFile, contents);
-console.log('Updated .env with the mock user token.');
-```
-
-Make the script executable and run it:
-
-```sh
-chmod +x scripts/set-mock-user.mjs
-./scripts/set-mock-user.mjs
-```
-
-Restart the Vite or Fusion Framework development server after updating `.env`. To return to real
-Entra ID authentication, remove both `FUSION_SPA_MSAL_MOCK` and `FUSION_SPA_MSAL_MOCK_TOKEN` from
-`.env` (or set `FUSION_SPA_MSAL_MOCK=false`), then restart the server again. The generated JWT is
-deterministic and unsigned; use it only with the in-process MSAL mock and mocked backend services,
-never as a credential for a real service.
-
-The token itself is also sent as-is as the access/id token — it is not regenerated — so a
-backend mock that validates its own tokens (specific claims, audience, or signature) sees
-exactly the token it issued.
-
-When `ffc app dev --mock <mock-server-url>` is used, Playwright can instead select users at
-runtime through `createMockAuth` from `@equinor/fusion-openapi-mock-server`. The
-standalone mock server stores the user per browser context and issues an unsigned OBO-style token
-for each scope set requested by Fusion MSAL. This supports switching and parallel personas without
-restarting the app or dev server; see the mock server's
+Playwright and other cookie-aware HTTP clients can select users through `createMockAuth` from
+`@equinor/fusion-openapi-mock-server`. The standalone mock server stores the user per browser
+context and issues an unsigned OBO-style token for each scope set requested by Fusion MSAL. This
+supports switching and parallel personas without restarting the app or dev server; see the
 [Playwright guide](../../utils/openapi-mock-server/docs/testing-with-playwright.md).
 
 Mocking authentication does not mock the rest of the API surface — service discovery and

@@ -48,8 +48,18 @@ enableMsalMock(configurator, (builder) => {
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({ scopes }),
     });
-    const result = await response.json();
-    return result.status === 'issued' ? result.token : null;
+    if (!response.ok) {
+      throw new Error(`Mock auth token acquisition failed with status ${response.status}`);
+    }
+
+    const result: unknown = await response.json();
+    if (typeof result === 'object' && result !== null && 'status' in result) {
+      if (result.status === 'missing') return null;
+      if (result.status === 'issued' && 'token' in result && typeof result.token === 'string') {
+        return result.token;
+      }
+    }
+    throw new Error('Mock auth token acquisition returned an unsupported status');
   });
 });
 ```

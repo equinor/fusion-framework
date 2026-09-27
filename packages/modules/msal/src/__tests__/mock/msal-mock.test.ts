@@ -305,8 +305,12 @@ describe('MsalMockClient', () => {
   });
 
   it('switches acquired identities and restores the in-process fallback after reset', async () => {
-    const normalUser = createMockToken({ oid: 'normal-user', name: 'Normal User' });
-    const administrator = createMockToken({ oid: 'administrator', name: 'Administrator' });
+    const normalUser = createMockToken({
+      oid: 'normal-user',
+      name: 'Normal User',
+      preferred_username: 'normal@example.test',
+    });
+    const administrator = createMockToken({ oid: 'administrator' });
     let resolution: { status: 'issued'; token: string } | { status: 'missing' } = {
       status: 'issued',
       token: normalUser,
@@ -325,6 +329,8 @@ describe('MsalMockClient', () => {
     await client.acquireToken({ request: { scopes: ['api://application/.default'] } });
     expect(client.getAllAccounts()).toHaveLength(1);
     expect(client.getActiveAccount()?.localAccountId).toBe('administrator');
+    expect(client.getActiveAccount()?.name).toBe('Test User');
+    expect(client.getActiveAccount()?.username).toBe('test.user@equinor.com');
 
     resolution = { status: 'missing' };
     const reset = await client.acquireToken({

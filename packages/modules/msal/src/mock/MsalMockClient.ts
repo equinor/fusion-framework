@@ -487,15 +487,15 @@ export class MsalMockClient implements IMsalClient {
     this.#cache.clear();
     this.#activeAccountId = null;
 
-    // Retain defaults for optional claims omitted by a test token.
+    // Missing claims must come from the immutable fallback, never the previously acquired persona.
     this.#user = {
-      ...this.#user,
+      ...this.#fallbackUser,
       ...user,
-      name: user.name ?? this.#user.name,
-      username: user.username ?? this.#user.username,
-      userId: user.userId ?? this.#user.userId,
-      tenantId: user.tenantId ?? this.#user.tenantId,
-      scopes: user.scopes ?? this.#user.scopes,
+      name: user.name ?? this.#fallbackUser.name,
+      username: user.username ?? this.#fallbackUser.username,
+      userId: user.userId ?? this.#fallbackUser.userId,
+      tenantId: user.tenantId ?? this.#fallbackUser.tenantId,
+      scopes: [...(user.scopes ?? this.#fallbackUser.scopes)],
     };
 
     this.#signIn(this.#createAccount());
