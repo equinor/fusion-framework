@@ -29,4 +29,4 @@ export {
   type MockAuthRequestClient,
   type MockAuthState,
   type MockAuthUser,
-} from './mock-auth.js';
+} from './create-mock-auth.js';

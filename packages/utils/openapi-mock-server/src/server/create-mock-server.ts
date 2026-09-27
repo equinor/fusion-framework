@@ -13,7 +13,7 @@ import type {
 } from './types.js';
 
 import type { AddressInfo } from 'node:net';
-import { MockAuthSessionStore } from './mock-auth-session-store.js';
+import { MockAuthSessionStore } from './MockAuthSessionStore.js';
 
 /**
  * Creates a mock server: add sources with `use()`, then `start()` it once —

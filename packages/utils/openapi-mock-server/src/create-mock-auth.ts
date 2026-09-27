@@ -47,6 +47,7 @@ export interface MockAuthState {
  *
  * @param mockServerUrl - Mock server origin, for example `http://localhost:4010`.
  * @returns Helpers that configure, inspect, and reset one request client's session.
+ * @throws When the mock server rejects a control-plane request.
  *
  * @example Playwright
  * ```typescript

@@ -6,7 +6,7 @@ import type { MsalClientConfig } from '../MsalClient';
 import { MsalConfigurator, type MsalConfig } from '../MsalConfigurator';
 
 import { MsalMockClient } from './MsalMockClient';
-import { configureMockTokenAcquisition } from './internals';
+import { mockClientOperations } from './mock-client-operations';
 import type { MsalMockTokenAcquirer } from './types';
 
 /**
@@ -135,7 +135,7 @@ export class MsalMockConfigurator extends MsalConfigurator {
 
     // Apply after client construction so acquisition owns all non-default identity state.
     if (this.#acquireToken) {
-      configureMockTokenAcquisition(
+      mockClientOperations.configure(
         this.#getClient(config, init, 'configure token acquisition'),
         this.#acquireToken,
       );

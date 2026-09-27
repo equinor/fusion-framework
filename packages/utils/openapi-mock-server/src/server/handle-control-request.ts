@@ -4,7 +4,7 @@ import { readJsonBody } from './read-json-body.js';
 import { resolveServiceDiscovery } from './resolve-service-discovery.js';
 import { sendJson } from './send-json.js';
 import { handleMockAuthRequest } from './handle-mock-auth-request.js';
-import type { MockAuthSessionStore } from './mock-auth-session-store.js';
+import type { MockAuthSessionStore } from './MockAuthSessionStore.js';
 import type { MockOverride, MockServerHandle, ServiceState } from './types.js';
 
 /**
@@ -51,6 +51,7 @@ function isMockOverride(value: unknown): value is MockOverride {
  * @param segments - The request path (with the `@fusion-mock` prefix already stripped), split into segments.
  * @param req - The incoming request.
  * @param res - The response to write the result to.
+ * @param authSessions - Session store used by mock-auth control routes.
  */
 export async function handleControlRequest(
   handle: Pick<MockServerHandle, 'reset' | 'override'>,

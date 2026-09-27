@@ -30,7 +30,7 @@ import type { MsalClientConfig, MsalClient } from '../MsalClient';
 
 import { createMockToken } from './create-mock-token';
 import { createMockUserFromToken } from './create-mock-user-from-token';
-import { registerMockClientOperations } from './internals';
+import { mockClientOperations } from './mock-client-operations';
 import type { MsalMockTokenAcquirer, MsalMockUser } from './types';
 
 type ResolvedMockUser = Required<
@@ -394,7 +394,7 @@ export class MsalMockClient implements IMsalClient {
     };
     this.#fallbackUser = { ...this.#user, scopes: [...this.#user.scopes] };
 
-    registerMockClientOperations(this, {
+    mockClientOperations.register(this, {
       setAcquireToken: (acquireToken) => this.#setAcquireToken(acquireToken),
     });
     this.#signIn(this.#createAccount());
@@ -555,6 +555,7 @@ export class MsalMockClient implements IMsalClient {
       this.#user = { ...this.#fallbackUser, scopes: [...this.#fallbackUser.scopes] };
       this.#cache.clear();
       this.#activeAccountId = null;
+      // Re-establish the original account when the client started signed in.
       if (this.#fallbackAccount) {
         this.#signIn({ ...this.#fallbackAccount });
       }

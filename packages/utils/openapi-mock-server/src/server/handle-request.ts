@@ -3,7 +3,7 @@ import type { IncomingMessage, ServerResponse } from 'node:http';
 import { handleControlRequest } from './handle-control-request.js';
 import { handleServiceRequest } from './handle-service-request.js';
 import type { MockServerHandle, ServiceState } from './types.js';
-import type { MockAuthSessionStore } from './mock-auth-session-store.js';
+import type { MockAuthSessionStore } from './MockAuthSessionStore.js';
 
 /**
  * Checks whether a request is negotiating CORS access rather than invoking an OPTIONS operation.
@@ -27,6 +27,8 @@ function isCorsPreflightRequest(method: string, request: IncomingMessage): boole
  * @param req - The incoming request.
  * @param res - The response to write the result to.
  * @param seed - The mock server's own seed (see `CreateMockServerOptions`), threaded into a matched `middleware` route's `RouteContext`.
+ * @param authSessions - Session store used by mock-auth control routes.
+ * @throws When a control-plane auth request is received without a session store.
  */
 export async function handleRequest(
   handle: Pick<MockServerHandle, 'reset' | 'override'>,

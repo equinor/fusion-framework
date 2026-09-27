@@ -18,7 +18,7 @@ export interface MockAuthUser {
 }
 
 /**
- * In-memory session store for mock bearer-token overrides.
+ * In-memory browser-session store for mock bearer-token overrides.
  *
  * @remarks
  * Browser contexts are isolated by an opaque HTTP-only cookie. State lasts only

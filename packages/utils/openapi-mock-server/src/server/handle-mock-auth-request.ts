@@ -2,7 +2,7 @@ import type { IncomingMessage, ServerResponse } from 'node:http';
 
 import { readJsonBody } from './read-json-body.js';
 import { sendJson } from './send-json.js';
-import type { MockAuthSessionStore, MockAuthUser } from './mock-auth-session-store.js';
+import type { MockAuthSessionStore, MockAuthUser } from './MockAuthSessionStore.js';
 
 interface MockAuthBody {
   userId?: unknown;
@@ -23,6 +23,7 @@ function parseUser(value: unknown): MockAuthUser | undefined {
   // User selection accepts only a JSON object with a deterministic object ID.
   if (value === null || typeof value !== 'object' || Array.isArray(value)) return undefined;
   const { userId, name, username, tenantId, claims } = value as MockAuthBody;
+  // Reject partial user records before claims are persisted in the session store.
   if (
     typeof userId !== 'string' ||
     userId.length === 0 ||
@@ -34,6 +35,7 @@ function parseUser(value: unknown): MockAuthUser | undefined {
   ) {
     return undefined;
   }
+  // Preserve only validated optional fields when normalizing the selected user.
   return {
     userId,
     ...(typeof name === 'string' ? { name } : {}),
@@ -53,12 +55,12 @@ function parseRequestedScopes(value: unknown): string[] | undefined {
   // Resolution accepts only a JSON object with a string-array scope set.
   if (value === null || typeof value !== 'object' || Array.isArray(value)) return undefined;
   const { scopes } = value as MockAuthBody;
+  // Every requested scope must be a non-empty string before token issuance.
+  const hasValidScopes =
+    Array.isArray(scopes) &&
+    scopes.every((scope): scope is string => typeof scope === 'string' && scope.length > 0);
   // An empty request cannot deterministically select a scoped override.
-  if (
-    !Array.isArray(scopes) ||
-    scopes.length === 0 ||
-    !scopes.every((scope): scope is string => typeof scope === 'string' && scope.length > 0)
-  ) {
+  if (!hasValidScopes || scopes.length === 0) {
     return undefined;
   }
   return [...new Set(scopes)].sort();
@@ -110,7 +112,7 @@ function createUserToken(user: MockAuthUser, scopes: string[]): string {
  *
  * @param store - In-memory browser-session token store.
  * @param method - Normalized HTTP method.
- * @param action - Optional route segment after `auth/token`.
+ * @param resource - Route segment identifying the auth resource.
  * @param request - Incoming request.
  * @param response - Response to complete.
  */
@@ -123,6 +125,7 @@ export async function handleMockAuthRequest(
 ): Promise<void> {
   const sessionId = store.resolveSessionId(request, response);
 
+  // Reading a user returns only non-sensitive session metadata.
   if (resource === 'user' && method === 'GET') {
     const user = store.get(sessionId);
     sendJson(response, 200, {
@@ -139,12 +142,14 @@ export async function handleMockAuthRequest(
     return;
   }
 
+  // Deleting a user restores the session to the default MSAL identity.
   if (resource === 'user' && method === 'DELETE') {
     store.delete(sessionId);
     sendJson(response, 200, { configured: false });
     return;
   }
 
+  // User selection validates metadata before replacing the session persona.
   if (resource === 'user' && method === 'PUT') {
     const user = parseUser(await readJsonBody(request));
     // Credentials are never accepted; tests select only deterministic user metadata.
@@ -159,6 +164,7 @@ export async function handleMockAuthRequest(
     return;
   }
 
+  // Token acquisition resolves the current persona for the requested resource scopes.
   if (resource === 'token' && method === 'POST') {
     const scopes = parseRequestedScopes(await readJsonBody(request));
     // OBO-style acquisition always requires the target resource scopes.
