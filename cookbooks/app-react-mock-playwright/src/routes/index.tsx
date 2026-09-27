@@ -6,6 +6,10 @@ interface GreetingResponse {
   message: string;
 }
 
+interface IdentityResponse {
+  userId: string;
+}
+
 export const handle = {
   route: {
     description: 'Demonstrates an app-owned API configured without service discovery.',
@@ -26,13 +30,23 @@ export const handle = {
 export default function DirectOnlyServicePage(): ReactElement {
   const client = useHttpClient('my-api');
   const [greeting, setGreeting] = useState<string>('Loading...');
+  const [identity, setIdentity] = useState<string>('Loading...');
 
   useEffect(() => {
     const controller = new AbortController();
-    client
-      .json<GreetingResponse>('/greeting', { signal: controller.signal })
-      .then(({ message }) => setGreeting(message))
-      .catch(() => setGreeting('Failed to load greeting'));
+    // Fetch ordinary data and the echoed bearer identity through the same scoped Fusion HTTP client.
+    Promise.all([
+      client.json<GreetingResponse>('/greeting', { signal: controller.signal }),
+      client.json<IdentityResponse>('/identity', { signal: controller.signal }),
+    ])
+      .then(([greetingResponse, identityResponse]) => {
+        setGreeting(greetingResponse.message);
+        setIdentity(identityResponse.userId);
+      })
+      .catch(() => {
+        setGreeting('Failed to load greeting');
+        setIdentity('Failed to load identity');
+      });
     return () => controller.abort();
   }, [client]);
 
@@ -44,6 +58,7 @@ export default function DirectOnlyServicePage(): ReactElement {
         out of service discovery.
       </p>
       <p data-testid="greeting">Response: {greeting}</p>
+      <p data-testid="identity">Authenticated as: {identity}</p>
     </section>
   );
 }

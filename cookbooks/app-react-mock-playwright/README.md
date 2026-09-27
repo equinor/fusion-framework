@@ -38,6 +38,10 @@ server, and tears the servers down after the test run.
 - [`playwright.config.ts`](playwright.config.ts) starts `ffc mock-server` and runs `ffc app build`
   followed by `ffc app serve --mock` as Playwright `webServer` entries, then runs the
   specs under [`playwright/`](playwright) against the built app.
+- [`playwright/mock-auth-personas.spec.ts`](playwright/mock-auth-personas.spec.ts) uses
+  `createMockAuth` to select normal-user and administrator personas in isolated browser contexts.
+  The mock server issues a token for the scope requested by Fusion HTTP, and `my-api` echoes its
+  `oid` claim so the test verifies the selected identity reached the backend.
 
 ## Running it
 
@@ -87,3 +91,6 @@ It does not start `ffc mock-server`; unreachable local service URIs remain unrea
 - **Playwright's `webServer`** array starts and stops each process for the whole test run — do
   not start `ffc mock-server` yourself in the background; it is designed to run in the
   foreground and shut down on `SIGINT`/`SIGTERM`.
+- **`createMockAuth`** selects a user per browser context rather than accepting a bearer token.
+  The mock server mints an unsigned OBO-style token when Fusion MSAL requests resource scopes.
+  Calling `setUser` again switches persona; calling `reset` restores the default mock identity.
