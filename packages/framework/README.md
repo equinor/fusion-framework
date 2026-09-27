@@ -99,10 +99,18 @@ The framework ships with the following modules enabled by default:
 Import from `@equinor/fusion-framework/mock` to initialize the framework in a test without credentials, without network access and without configuration.
 
 ```typescript
-import { mockFramework } from '@equinor/fusion-framework/mock';
+import { createMockToken, mockFramework } from '@equinor/fusion-framework/mock';
 
 const fusion = await mockFramework((configurator) => {
-  configurator.msal.setAccount({ name: 'Ada Lovelace' });
+  configurator.msal.setAcquireToken(({ clientId, scopes }) =>
+    createMockToken({
+      aud: clientId,
+      scp: scopes.join(' '),
+      name: 'Ada Lovelace',
+      preferred_username: 'ada@equinor.com',
+      oid: 'ada-lovelace',
+    }),
+  );
   configurator.serviceDiscovery.setBaseUri('http://localhost:6669');
 });
 
@@ -127,4 +135,3 @@ The entry point has **no test-runner dependency**, and ships no mocking API of i
 ## Further reading
 
 📚 [Full documentation](https://equinor.github.io/fusion-framework/)
-

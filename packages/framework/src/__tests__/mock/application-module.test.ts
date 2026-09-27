@@ -65,7 +65,6 @@ describe('application modules', () => {
 
   it('composes with the built-in mocks and is typed without a cast', async () => {
     const fusion = await mockFramework<[InvoiceModule]>((configurator) => {
-      configurator.msal.setAccount({ name: 'Ada Lovelace' });
       enableInvoicesMock(configurator, { total: 42 });
     });
 
@@ -73,7 +72,7 @@ describe('application modules', () => {
     const invoice = await fusion.modules.invoices.getInvoice('inv-1');
 
     expect(invoice).toEqual({ id: 'inv-1', total: 42 });
-    expect(fusion.modules.auth.account?.name).toBe('Ada Lovelace');
+    expect(fusion.modules.auth.account?.name).toBe('Test User');
   });
 
   it('is registered exactly as it is in production', async () => {

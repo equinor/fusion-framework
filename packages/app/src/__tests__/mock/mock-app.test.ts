@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import type { Fusion } from '@equinor/fusion-framework';
 import { mockFramework } from '@equinor/fusion-framework/mock';
 import { AppConfig, type AppModule } from '@equinor/fusion-framework-module-app';
+import { createMockToken } from '@equinor/fusion-framework-module-msal/mock';
 
 import { AppMockConfigurator } from '../../mock/AppMockConfigurator.js';
 import { mockAppModules } from '../../mock/mock-app-modules.js';
@@ -59,8 +60,16 @@ describe('mockApp', () => {
     expect.assertions(1);
 
     const fusion = await mockFramework((configurator) => {
-      configurator.msal.setAccount({ name: 'Ada Lovelace' });
+      configurator.msal.setAcquireToken(({ clientId, scopes }) =>
+        createMockToken({
+          aud: clientId,
+          scp: scopes.join(' '),
+          name: 'Ada Lovelace',
+          oid: 'ada-lovelace',
+        }),
+      );
     });
+    await fusion.modules.auth.acquireAccessToken({ request: { scopes: ['User.Read'] } });
 
     await mockAppModules(
       (_configurator, { fusion: parent }) => {
@@ -74,9 +83,17 @@ describe('mockApp', () => {
   it('awaits an async configure callback before initialize resolves', async () => {
     const modules = await mockAppModules(async (configurator) => {
       await Promise.resolve();
-      configurator.msal.setAccount({ name: 'Ada Lovelace' });
+      configurator.msal.setAcquireToken(({ clientId, scopes }) =>
+        createMockToken({
+          aud: clientId,
+          scp: scopes.join(' '),
+          name: 'Ada Lovelace',
+          oid: 'ada-lovelace',
+        }),
+      );
     }, env);
 
+    await modules.auth.acquireAccessToken({ request: { scopes: ['User.Read'] } });
     expect(modules.auth.account?.name).toBe('Ada Lovelace');
   });
 

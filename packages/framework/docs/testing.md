@@ -31,18 +31,26 @@ Modules whose boundary is mocked expose their mock configurator directly, so a t
 
 ```typescript
 const fusion = await mockFramework((configurator) => {
-  configurator.msal.setAccount({ name: 'Ada Lovelace' });
   configurator.serviceDiscovery.setBaseUri('http://localhost:6669');
 });
 ```
 
 These are the real module configurators, so the real builder API, the real validation and the real provider are used.
 
-## Choosing the signed-in user
+## Configuring token acquisition
 
 ```typescript
+import { createMockToken, mockFramework } from '@equinor/fusion-framework/mock';
+
 const fusion = await mockFramework((configurator) => {
-  configurator.msal.setAccount({ name: 'Ada Lovelace', username: 'ada@equinor.com' });
+  configurator.msal.setAcquireToken(({ scopes, clientId }) =>
+    createMockToken({
+      aud: clientId,
+      scp: scopes.join(' '),
+      name: 'Ada Lovelace',
+      preferred_username: 'ada@equinor.com',
+    }),
+  );
 });
 
 const token = await fusion.modules.auth.acquireAccessToken({
@@ -50,32 +58,7 @@ const token = await fusion.modules.auth.acquireAccessToken({
 });
 ```
 
-The token is a structurally valid JWT carrying the claims an application reads. It is unsigned by default and must never be accepted by anything but a test.
-
-`setAccount` records configuration only — the user is signed in on the client before the provider initializes. It takes an object, `null` when nobody is signed in, or an ordinary config-builder callback resolving either:
-
-```typescript
-configurator.msal.setAccount(null);
-configurator.msal.setAccount(async ({ hasModule }) => ({
-  name: hasModule('app') ? 'App User' : 'Portal User',
-}));
-```
-
-Because the user is in place before `MsalProvider.initialize()` runs, the provider's real start-up path acts on it — pair `signedOut` with `setRequiresAuth(true)` to watch the automatic login happen.
-
-The account replaces any previously declared account, and is signed in on whichever client the module authenticates through — the one it builds, one supplied through `setClient`, or the host's when the module is hoisted onto a host application's provider. When that client cannot represent a declared user, it throws rather than failing quietly.
-
-## Testing signed-out behaviour
-
-```typescript
-const fusion = await mockFramework((configurator) => {
-  configurator.msal.setAccount({ signedOut: true });
-});
-
-fusion.modules.auth.account; // null
-```
-
-Silent flows then resolve empty so the provider follows its unauthenticated path, while an explicit `login()` still succeeds — so a test can drive the sign-in journey, not only its end state.
+The acquired token is a structurally valid JWT carrying the claims an application reads. It is unsigned by default and must never be accepted by anything but a test. The MSAL mock derives its active account from those same claims, so the token and account cannot represent different users.
 
 ## Composing the service registry
 
@@ -172,7 +155,6 @@ import { init } from '@equinor/fusion-framework';
 import { FrameworkMockConfigurator } from '@equinor/fusion-framework/mock';
 
 const configurator = new FrameworkMockConfigurator();
-configurator.msal.setAccount({ name: 'Ada Lovelace' });
 
 const fusion = await init(configurator);
 ```

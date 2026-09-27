@@ -6,9 +6,9 @@
 | `FrameworkMockConfigurator<TModules>` | `/mock` | `FrameworkConfigurator` whose outward boundaries are mocked, exposing `msal`, `serviceDiscovery`, `http` and `context` |
 | `enableMsalMock(configurator, configure?)` | `-module-msal/mock` | Register the auth module with an in-process MSAL client |
 | `msalMockModule` | `-module-msal/mock` | The auth module with a mock client, for manual registration |
-| `MsalMockConfigurator` | `-module-msal/mock` | `MsalConfigurator` backed by a mock client (`setAccount`, `setClient`, …) |
+| `MsalMockConfigurator` | `-module-msal/mock` | `MsalConfigurator` backed by a mock client (`setAcquireToken`, `setClient`, …) |
 | `MsalMockClient(config)` | `-module-msal/mock` | Build the in-process MSAL client on its own, from the same `MsalClientConfig` as `MsalClient` |
-| `createMsalMockClient(config, user?)` | `-module-msal/mock` | Convenience alias for `new MsalMockClient(config)`, optionally signing a user in |
+| `createMsalMockClient(config)` | `-module-msal/mock` | Convenience alias for `new MsalMockClient(config)` |
 | `createMockToken(claims?)` | `-module-msal/mock` | Mint a deterministic JWT |
 | `mockServiceDiscovery(configurator, options?, configure?)` | `-module-service-discovery/mock` | Replace service discovery with an in-memory registry |
 | `enableServiceDiscoveryMock(configurator, configure?)` | `-module-service-discovery/mock` | Register the discovery module with an in-memory registry |

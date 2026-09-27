@@ -26,11 +26,12 @@ the app test fixture.
 
 ## Authentication
 
-App tests start with a deterministic signed-in `Test User`. Set a named account or `null`
-through `configurator.msal.setAccount(...)` before rendering. The real MSAL provider still
-runs its initialization, account, token, and logout behavior against the in-process client.
+App tests start with a deterministic signed-in `Test User`. Configure token acquisition
+through `configurator.msal.setAcquireToken(...)` when a test needs different claims. The real
+MSAL provider derives the active account from the acquired token, so the token and account
+always represent the same identity.
 
-See [MSAL testing](../../../modules/msal/docs/testing.md) for signed-out startup, login flows,
+See [MSAL testing](../../../modules/msal/docs/testing.md) for custom acquisition,
 deterministic JWTs, and individual client spies.
 
 ## App manifest and configuration
@@ -84,6 +85,7 @@ Compose the app's real configuration with the module mocks required by the scena
 ```tsx
 import { enableContextMock } from '@equinor/fusion-framework-module-context/mock';
 import { enableFeatureFlagMock } from '@equinor/fusion-framework-module-feature-flag/mock';
+import { createMockToken } from '@equinor/fusion-framework-module-msal/mock';
 import { test as baseTest } from '@equinor/fusion-framework-vitest-plugin-react-app/test';
 
 const project = {
@@ -95,7 +97,15 @@ const project = {
 
 export const test = baseTest.extend('configureApp', ({ configureApp }) => (configurator, args) => {
   configureApp?.(configurator, args);
-  configurator.msal.setAccount({ name: 'Ada Lovelace' });
+  configurator.msal.setAcquireToken(({ clientId, scopes }) =>
+    createMockToken({
+      aud: clientId,
+      scp: scopes.join(' '),
+      name: 'Ada Lovelace',
+      preferred_username: 'ada@equinor.com',
+      oid: 'ada-lovelace',
+    }),
+  );
   enableContextMock(configurator, (mock) => mock.setCurrentContext(project));
   enableFeatureFlagMock(configurator, (mock) => {
     mock.addFeature({ key: 'new-search', enabled: true });

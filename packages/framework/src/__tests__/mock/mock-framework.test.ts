@@ -1,7 +1,11 @@
 import { describe, expect, it, vi } from 'vitest';
 
 import type { Module } from '@equinor/fusion-framework-module';
-import { enableMsalMock } from '@equinor/fusion-framework-module-msal/mock';
+import {
+  createMockToken,
+  enableMsalMock,
+  type MsalMockTokenAcquirer,
+} from '@equinor/fusion-framework-module-msal/mock';
 import { enableServiceDiscoveryMock } from '@equinor/fusion-framework-module-service-discovery/mock';
 import { TelemetryLevel } from '@equinor/fusion-framework-module-telemetry';
 
@@ -27,6 +31,20 @@ const widgetsModule: WidgetsModule = {
   name: 'widgets',
   configure: () => new WidgetsConfigurator(),
   initialize: ({ config }) => ({ name: config.name }),
+};
+
+const acquireTokenFor = (
+  name: string,
+  username = `${name.toLowerCase().replace(' ', '.')}@equinor.com`,
+): MsalMockTokenAcquirer => {
+  return ({ clientId, scopes }) =>
+    createMockToken({
+      aud: clientId,
+      scp: scopes.join(' '),
+      name,
+      preferred_username: username,
+      oid: username,
+    });
 };
 
 describe('mockFramework', () => {
@@ -67,9 +85,10 @@ describe('mockFramework', () => {
   it('awaits an asynchronous callback before initializing', async () => {
     const fusion = await mockFramework(async (configurator) => {
       await Promise.resolve();
-      configurator.msal.setAccount({ name: 'Ada Lovelace' });
+      configurator.msal.setAcquireToken(acquireTokenFor('Ada Lovelace'));
     });
 
+    await fusion.modules.auth.acquireAccessToken({ request: { scopes: ['User.Read'] } });
     expect(fusion.modules.auth.account?.name).toBe('Ada Lovelace');
   });
 });
@@ -77,8 +96,10 @@ describe('mockFramework', () => {
 describe('FrameworkMockConfigurator', () => {
   it('exposes the same msal configurator the auth module is built from', async () => {
     const fusion = await mockFramework((configurator) => {
-      configurator.msal.setAccount({ name: 'Ada Lovelace', username: 'ada@equinor.com' });
+      configurator.msal.setAcquireToken(acquireTokenFor('Ada Lovelace', 'ada@equinor.com'));
     });
+
+    await fusion.modules.auth.acquireAccessToken({ request: { scopes: ['User.Read'] } });
 
     expect(fusion.modules.auth.account).toMatchObject({
       name: 'Ada Lovelace',
@@ -86,33 +107,38 @@ describe('FrameworkMockConfigurator', () => {
     });
   });
 
-  it('lets the last declared account win', async () => {
+  it('uses the last declared token acquirer', async () => {
     const fusion = await mockFramework((configurator) => {
-      configurator.msal.setAccount({ name: 'Ada Lovelace' });
-      configurator.msal.setAccount({ name: 'Grace Hopper' });
+      configurator.msal.setAcquireToken(acquireTokenFor('Ada Lovelace'));
+      configurator.msal.setAcquireToken(acquireTokenFor('Grace Hopper'));
     });
+
+    await fusion.modules.auth.acquireAccessToken({ request: { scopes: ['User.Read'] } });
 
     expect(fusion.modules.auth.account?.name).toBe('Grace Hopper');
   });
 
-  it('resolves an account callback when the config is built', async () => {
+  it('awaits asynchronous token acquisition', async () => {
     const fusion = await mockFramework((configurator) => {
-      configurator.msal.setAccount(async () => ({ name: 'Ada Lovelace' }));
+      configurator.msal.setAcquireToken(async (request) =>
+        acquireTokenFor('Ada Lovelace')(request),
+      );
     });
+
+    await fusion.modules.auth.acquireAccessToken({ request: { scopes: ['User.Read'] } });
 
     expect(fusion.modules.auth.account?.name).toBe('Ada Lovelace');
   });
 
-  it('builds the auth client when the module builds its config, not when the account is set', async () => {
+  it('builds the auth client when the framework initializes', async () => {
     const configurator = new FrameworkMockConfigurator();
+    configurator.msal.setAcquireToken(acquireTokenFor('Ada Lovelace'));
 
-    configurator.msal.setAccount({ name: 'Ada Lovelace' });
-
-    // The account is configuration; nothing is constructed from it yet
     expect(configurator.msal.getClient()).toBeUndefined();
 
     const fusion = await init(configurator);
 
+    await fusion.modules.auth.acquireAccessToken({ request: { scopes: ['User.Read'] } });
     expect(fusion.modules.auth.account?.name).toBe('Ada Lovelace');
   });
 
@@ -138,10 +164,13 @@ describe('FrameworkMockConfigurator', () => {
 
   it('accepts an enableX helper directly, because it is a real configurator', async () => {
     const fusion = await mockFramework((configurator) => {
-      enableMsalMock(configurator, (builder) => builder.setAccount({ name: 'Grace Hopper' }));
+      enableMsalMock(configurator, (builder) =>
+        builder.setAcquireToken(acquireTokenFor('Grace Hopper')),
+      );
       enableServiceDiscoveryMock(configurator, (builder) => builder.addService({ key: 'my-api' }));
     });
 
+    await fusion.modules.auth.acquireAccessToken({ request: { scopes: ['User.Read'] } });
     expect(fusion.modules.auth.account?.name).toBe('Grace Hopper');
     await expect(fusion.modules.serviceDiscovery.resolveService('my-api')).resolves.toBeDefined();
   });
@@ -149,10 +178,11 @@ describe('FrameworkMockConfigurator', () => {
   it('registers a module through addModule', async () => {
     const fusion = await mockFramework((configurator) => {
       configurator.addModule((c) =>
-        enableMsalMock(c, (builder) => builder.setAccount({ name: 'Grace Hopper' })),
+        enableMsalMock(c, (builder) => builder.setAcquireToken(acquireTokenFor('Grace Hopper'))),
       );
     });
 
+    await fusion.modules.auth.acquireAccessToken({ request: { scopes: ['User.Read'] } });
     expect(fusion.modules.auth.account?.name).toBe('Grace Hopper');
   });
 

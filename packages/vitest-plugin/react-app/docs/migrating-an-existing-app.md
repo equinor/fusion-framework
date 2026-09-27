@@ -73,10 +73,13 @@ explicitly when the test needs them:
 +
 +export const test = baseTest.extend('configureApp', ({ configureApp }) => (configurator, args) => {
 +  configureApp?.(configurator, args);
-+  configurator.msal.setAccount(null); // was: useCurrentUser returning undefined
 +  enableFeatureFlagMock(configurator, (mock) => mock.addFeature({ key: 'new-search', enabled: true }));
 +});
 ```
+
+The fixture starts with `Test User` signed in. Remove hand-rolled `undefined` account defaults;
+tests for a signed-out journey should drive the application's real sign-out flow rather than
+declaring startup account state.
 
 Each Fusion module owns its own mock entry point: `enableMsalMock`/`configurator.msal`,
 `enableFeatureFlagMock`, `enableContextMock`, `enableBookmarkMock`, and more. See

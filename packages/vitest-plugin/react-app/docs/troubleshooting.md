@@ -15,7 +15,6 @@ resolve the app, or behaves differently in Vitest Browser Mode.
 | A request reaches a live backend or fails with a network error | No HTTP middleware answered it | Add a matching `configurator.http.addMiddleware`; unmatched requests eventually reach the real network |
 | A lazy route import reloads the browser during a test | Source warmup no longer covers the lazy module | Keep `server.warmup.clientFiles` aligned with application source and route locations |
 | No tests are found | Tests are outside the default `src/**/*.{test,spec}.{ts,tsx}` pattern | Override `test.include` in `defineProject` |
-| The app starts signed in unexpectedly | The MSAL mock defaults to `Test User` | Set `configurator.msal.setAccount(null)` before rendering |
 | State configured in one test is missing in another | Framework and app fixtures are test-scoped | Seed the required state per test or publish reusable fixture declarations with `test.extend` |
 | `vi.spyOn` fails on an imported module in Browser Mode | Native ESM module namespace objects are sealed | Use `vi.mock('./module.js', { spy: true })` as documented by Vitest Browser Mode |
 | A `<Router>` route with a catch-all or parameterized `path` never renders; every query on it times out | The navigation module's current location does not match that path yet | Push the target location through the navigation module (`app.modules.navigation.push(path)`) before rendering, not after |

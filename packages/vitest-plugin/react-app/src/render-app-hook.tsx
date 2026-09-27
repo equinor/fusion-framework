@@ -93,11 +93,20 @@ export interface RenderAppHookResult<
  * await vi.waitFor(() => expect(result.current.pending).toBe(false));
  * ```
  *
- * @example Sign in a named user
+ * @example Acquire a token for a named user
  * ```tsx
- * const { result } = await renderAppHook(() => useCurrentAccount(), {
- *   configure: (configurator) => configurator.msal.setAccount({ name: 'Ada Lovelace' }),
+ * const { result } = await renderAppHook(() => useAccessToken({ scopes: ['User.Read'] }), {
+ *   configure: (configurator) =>
+ *     configurator.msal.setAcquireToken(({ clientId, scopes }) =>
+ *       createMockToken({
+ *         aud: clientId,
+ *         scp: scopes.join(' '),
+ *         name: 'Ada Lovelace',
+ *         oid: 'ada-lovelace',
+ *       }),
+ *     ),
  * });
+ * await vi.waitFor(() => expect(result.current.pending).toBe(false));
  * ```
  *
  * @example Reuse a pre-built parent Fusion instance

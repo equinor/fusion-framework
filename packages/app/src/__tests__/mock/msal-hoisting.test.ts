@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { mockFramework } from '@equinor/fusion-framework/mock';
 import type { AuthenticationResult } from '@equinor/fusion-framework-module-msal';
+import { createMockToken } from '@equinor/fusion-framework-module-msal/mock';
 
 import { mockAppModules } from '../../mock/mock-app-modules.js';
 
@@ -44,8 +45,16 @@ describe('msal hoisting', () => {
 
   it('reflects the parent’s signed-in account rather than signing in its own', async () => {
     const fusion = await mockFramework((configurator) => {
-      configurator.msal.setAccount({ name: 'Ada Lovelace' });
+      configurator.msal.setAcquireToken(({ clientId, scopes }) =>
+        createMockToken({
+          aud: clientId,
+          scp: scopes.join(' '),
+          name: 'Ada Lovelace',
+          oid: 'ada-lovelace',
+        }),
+      );
     });
+    await fusion.modules.auth.acquireAccessToken({ request: { scopes: ['User.Read'] } });
 
     const modules = await mockAppModules(undefined, env, fusion);
 

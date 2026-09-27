@@ -3,7 +3,12 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { decodeJwtSegment } from '@equinor/fusion-framework-module-msal/mock';
 
 import { init } from '../../init.js';
-import { createMockService, FrameworkMockConfigurator, mockFramework } from '../../mock/index.js';
+import {
+  createMockService,
+  createMockToken,
+  FrameworkMockConfigurator,
+  mockFramework,
+} from '../../mock/index.js';
 
 /**
  * Pins the snippets in `docs/testing.md` and the package README to real
@@ -79,20 +84,32 @@ describe('documented usage', () => {
     expect(claims.scp).toBe('my-app/.default');
   });
 
-  it('signs nobody in when the account is signed out', async () => {
+  it('derives the active account from the configured token acquisition', async () => {
     const fusion = await mockFramework((configurator) => {
-      configurator.msal.setAccount({ signedOut: true });
+      configurator.msal.setAcquireToken(({ clientId, scopes }) =>
+        createMockToken({
+          aud: clientId,
+          scp: scopes.join(' '),
+          name: 'Ada Lovelace',
+          preferred_username: 'ada@equinor.com',
+          oid: 'ada-lovelace',
+        }),
+      );
     });
 
-    expect(fusion.modules.auth.account).toBeFalsy();
+    await fusion.modules.auth.acquireAccessToken({ request: { scopes: ['User.Read'] } });
+
+    expect(fusion.modules.auth.account).toMatchObject({
+      name: 'Ada Lovelace',
+      username: 'ada@equinor.com',
+    });
   });
 
   it('can be constructed directly and initialized with init', async () => {
     const configurator = new FrameworkMockConfigurator();
-    configurator.msal.setAccount({ name: 'Ada Lovelace' });
 
     const fusion = await init(configurator);
 
-    expect(fusion.modules.auth.account?.name).toBe('Ada Lovelace');
+    expect(fusion.modules.auth.account?.name).toBe('Test User');
   });
 });

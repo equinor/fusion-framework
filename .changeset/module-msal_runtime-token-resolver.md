@@ -18,13 +18,11 @@ import { createMockToken } from '@equinor/fusion-framework-module-msal/mock';
 
 configurator.msal.setAcquireToken(({ clientId, scopes }) =>
   createMockToken({
-    clientId,
-    scopes,
-    claims: {
-      name: 'Ada Lovelace',
-      preferred_username: 'ada@equinor.com',
-      oid: 'ada-lovelace',
-    },
+    aud: clientId,
+    scp: scopes.join(' '),
+    name: 'Ada Lovelace',
+    preferred_username: 'ada@equinor.com',
+    oid: 'ada-lovelace',
   }),
 );
 ```
