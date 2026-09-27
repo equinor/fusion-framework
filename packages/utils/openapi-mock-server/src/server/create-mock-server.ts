@@ -16,6 +16,26 @@ import type { AddressInfo } from 'node:net';
 import { MockAuthSessionStore } from './MockAuthSessionStore.js';
 
 /**
+ * Validates and de-duplicates exact origins used for credentialed browser requests.
+ *
+ * @param origins - Configured absolute origins without paths or trailing slashes.
+ * @returns Canonically serialized allowed origins.
+ * @throws When a value is not already an exact absolute origin.
+ */
+function normalizeAllowedOrigins(origins: readonly string[]): string[] {
+  // Validate every configured value before the server starts accepting requests.
+  const normalized = origins.map((origin) => {
+    const parsed = new URL(origin);
+    // Exact serialized origins prevent path-bearing or ambiguous allowlist entries.
+    if (parsed.origin !== origin) {
+      throw new Error(`Mock server allowed origin must be an exact origin: ${origin}`);
+    }
+    return parsed.origin;
+  });
+  return [...new Set(normalized)];
+}
+
+/**
  * Creates a mock server: add sources with `use()`, then `start()` it once —
  * so a test runner like Playwright can point a service-discovery URL at one
  * address and drive per-test overrides directly, either over HTTP or, in a
@@ -61,7 +81,8 @@ import { MockAuthSessionStore } from './MockAuthSessionStore.js';
  * ```
  */
 export function createMockServer(options: CreateMockServerOptions = {}): MockServerHandle {
-  const { seed } = options;
+  const { seed, allowedOrigins = [] } = options;
+  const normalizedAllowedOrigins = normalizeAllowedOrigins(allowedOrigins);
   const layers: MockSource[] = [];
   let services: Map<string, ServiceState> | undefined;
   let resolving: Promise<Map<string, ServiceState>> | undefined;
@@ -102,7 +123,17 @@ export function createMockServer(options: CreateMockServerOptions = {}): MockSer
 
   const requestListener = (req: IncomingMessage, res: ServerResponse): void => {
     ensureResolved()
-      .then((activeServices) => handleRequest(handle, activeServices, req, res, seed, authSessions))
+      .then((activeServices) =>
+        handleRequest(
+          handle,
+          activeServices,
+          req,
+          res,
+          seed,
+          authSessions,
+          normalizedAllowedOrigins,
+        ),
+      )
       .catch((error: unknown) => {
         sendJson(res, 500, { error: error instanceof Error ? error.message : String(error) });
       });

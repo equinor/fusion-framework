@@ -15,6 +15,8 @@ interface MockServerCommandOptions {
   host?: string;
   /** Seeds every service's faked responses, if given. */
   seed?: number;
+  /** Exact browser origins allowed to call credentialed mock-auth endpoints. */
+  allowOrigin: string[];
 }
 
 /** Overrides for `ffc mock-server`'s own built-in defaults, set by whoever registers the plugin. */
@@ -29,6 +31,8 @@ export interface MockServerCommandDefaults {
   host?: string;
   /** Seed to apply when `--seed` isn't given. Defaults to unseeded (random) faked responses. */
   seed?: number;
+  /** Exact browser origins allowed to call credentialed mock-auth endpoints. */
+  allowedOrigins?: string[];
 }
 
 /**
@@ -66,6 +70,7 @@ export interface MockServerCommandDefaults {
 export function createMockServerCommand(defaults: MockServerCommandDefaults = {}): Command {
   // sentinel default for --preset, so the first explicit flag replaces it instead of appending to it
   const defaultPresets: string[] = defaults.preset ?? ['fusion'];
+  const defaultAllowedOrigins: string[] = [];
 
   return createCommand('mock-server')
     .description('Serve OpenAPI-fake responses over HTTP, from bundled presets and/or mock modules')
@@ -93,6 +98,14 @@ export function createMockServerCommand(defaults: MockServerCommandDefaults = {}
         `seeds every service's faked responses, for reproducible output (default: ${defaults.seed ?? 'unseeded/random'})`,
       ).argParser(Number),
     )
+    .addOption(
+      createOption(
+        '--allow-origin <origin>',
+        'exact browser origin allowed to call credentialed mock-auth endpoints (repeatable)',
+      )
+        .default(defaultAllowedOrigins)
+        .argParser((value: string, previous: string[]) => [...previous, value]),
+    )
     .action(async (dirs: string[], options: MockServerCommandOptions) => {
       const config = await loadMockServerConfig(process.cwd());
       const sourceDirs = dirs.length ? dirs : [config.path ?? defaults.path ?? 'mocks'];
@@ -103,6 +116,10 @@ export function createMockServerCommand(defaults: MockServerCommandDefaults = {}
       );
       const server = createMockServer({
         seed: options.seed ?? config.seed ?? defaults.seed,
+        allowedOrigins:
+          options.allowOrigin === defaultAllowedOrigins
+            ? (config.allowedOrigins ?? defaults.allowedOrigins)
+            : options.allowOrigin,
       });
       // presets always apply before directories, regardless of flag position on the command line
       for (const preset of options.preset) server.use(preset);

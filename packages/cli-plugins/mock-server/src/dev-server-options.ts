@@ -10,6 +10,8 @@ export interface DevServerMockOptions {
   host?: string;
   /** Seed used for reproducible generated OpenAPI responses. */
   seed?: number;
+  /** Exact browser origins allowed to call credentialed mock-auth endpoints. */
+  allowedOrigins?: string[];
 }
 
 declare module '@equinor/fusion-framework-dev-server' {

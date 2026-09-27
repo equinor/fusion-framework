@@ -18,6 +18,8 @@ export interface ServiceDiscoveryEntry {
 export interface CreateMockServerOptions {
   /** Seeds every service's faked responses, so the same document/fields/seed always fake the same values. */
   seed?: number;
+  /** Exact browser origins allowed to make credentialed mock-auth requests. */
+  allowedOrigins?: readonly string[];
 }
 
 /** Options for {@link MockServerHandle.start}. */

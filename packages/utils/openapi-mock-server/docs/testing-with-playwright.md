@@ -45,10 +45,17 @@ for a full app wired up this way, including its `playwright.config.ts`'s `webSer
 
 ## Emulate users without restarting the app
 
-When the app runs through `ffc app dev --mock http://localhost:4010`, the standalone mock server
-also acts as a test-only token issuer. A Playwright browser context selects a deterministic user;
-the Fusion MSAL mock then requests an unsigned OBO-style token for the scopes required by each
-Fusion HTTP client.
+Start the standalone mock server with the app's exact browser origin allowlisted, then run the app
+through `ffc app dev --mock http://localhost:4010`:
+
+```sh
+ffc mock-server ./mocks --port 4010 --allow-origin http://localhost:3000
+ffc app dev --mock http://localhost:4010
+```
+
+The standalone mock server then acts as a test-only token issuer. A Playwright browser context
+selects a deterministic user; the Fusion MSAL mock requests an unsigned OBO-style token for the
+scopes required by each Fusion HTTP client.
 
 ```ts
 import { createMockAuth } from '@equinor/fusion-openapi-mock-server';
@@ -125,7 +132,8 @@ sets return `400`, so invalid acquisition cannot silently fall back to another i
 The token endpoint exists only on the separately started standalone mock server. The SPA calls it
 only when launched with `ffc app dev --mock <mock-server-url>` or
 `ffc app serve --mock <mock-server-url>`; production and ordinary development modes neither expose
-nor call this mock-auth integration.
+nor call this mock-auth integration. Credentialed browser calls are accepted only when their exact
+origin was configured through `--allow-origin` or `createMockServer({ allowedOrigins })`.
 
 ## Routes
 

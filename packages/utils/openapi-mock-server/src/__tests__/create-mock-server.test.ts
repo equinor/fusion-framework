@@ -88,7 +88,7 @@ describe('createMockServer', () => {
   });
 
   it('allows browser requests to a service on its own <key>.localhost origin', async () => {
-    server = createMockServer().use(fixturesDir);
+    server = createMockServer({ allowedOrigins: ['http://localhost:3000'] }).use(fixturesDir);
     const { url } = await server.start();
 
     const preflight = await fetch(`${url}/pet-store/pets/1`, {
@@ -110,6 +110,67 @@ describe('createMockServer', () => {
     );
     expect(response.headers.get('access-control-allow-origin')).toBe('http://localhost:3000');
     expect(response.headers.get('access-control-allow-credentials')).toBe('true');
+  });
+
+  it.each(['https://attacker.example', 'null', 'http://localhost.attacker.example'])(
+    'rejects control-plane requests from untrusted origin %s',
+    async (origin) => {
+      server = createMockServer({ allowedOrigins: ['http://localhost:3000'] }).use(fixturesDir);
+      const { url } = await server.start();
+
+      const preflight = await fetch(`${url}/@fusion-mock/auth/token`, {
+        method: 'OPTIONS',
+        headers: {
+          origin,
+          'access-control-request-method': 'POST',
+          'access-control-request-headers': 'content-type',
+        },
+      });
+      const response = await fetch(`${url}/@fusion-mock/auth/user`, {
+        method: 'PUT',
+        headers: { origin, 'content-type': 'application/json' },
+        body: JSON.stringify({ userId: 'attacker' }),
+      });
+
+      await expect(preflight.clone().json()).resolves.toEqual({
+        error: 'Origin is not allowed for mock-server control requests',
+      });
+      expect(preflight.status).toBe(403);
+      expect(preflight.headers.get('access-control-allow-origin')).toBeNull();
+      expect(preflight.headers.get('access-control-allow-credentials')).toBeNull();
+      expect(response.status).toBe(403);
+      expect(response.headers.get('access-control-allow-origin')).toBeNull();
+      expect(response.headers.get('access-control-allow-credentials')).toBeNull();
+    },
+  );
+
+  it('allows a configured origin to read its session token', async () => {
+    const origin = 'http://localhost:3000';
+    server = createMockServer({ allowedOrigins: [origin] }).use(fixturesDir);
+    const { url } = await server.start();
+    const configured = await fetch(`${url}/@fusion-mock/auth/user`, {
+      method: 'PUT',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ userId: 'trusted-user' }),
+    });
+    const cookie = configured.headers.getSetCookie()[0]?.split(';')[0];
+
+    const response = await fetch(`${url}/@fusion-mock/auth/token`, {
+      method: 'POST',
+      headers: { origin, cookie, 'content-type': 'application/json' },
+      body: JSON.stringify({ scopes: ['api://trusted/.default'] }),
+    });
+
+    expect(response.status).toBe(200);
+    expect(response.headers.get('access-control-allow-origin')).toBe(origin);
+    expect(response.headers.get('access-control-allow-credentials')).toBe('true');
+    await expect(response.json()).resolves.toMatchObject({ status: 'issued' });
+  });
+
+  it('rejects non-canonical allowed origins before startup', () => {
+    expect(() => createMockServer({ allowedOrigins: ['http://localhost:3000/path'] })).toThrow(
+      'must be an exact origin',
+    );
   });
 
   it('routes an ordinary OPTIONS request to its OpenAPI operation', async () => {

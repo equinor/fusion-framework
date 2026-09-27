@@ -49,12 +49,16 @@ services, pre-production services, and direct-only app endpoints.
 Start the server manually:
 
 ```sh
-ffc mock-server
+ffc mock-server --allow-origin http://localhost:3000
 ```
 
 Installing the package makes the command available through the Fusion CLI. If the plugin is not
 installed, `ffc mock-server` prints an installation hint. Explicit `mockServerPlugin()`
 registration remains useful when `fusion-cli.config.ts` supplies command defaults.
+
+`--allow-origin` is required when a browser needs credentialed access to the session-scoped
+mock-auth API. Repeat the option for each exact app or portal origin. Ordinary mock API responses
+remain available through non-credentialed CORS.
 
 ## Connect an application
 
@@ -93,6 +97,7 @@ export default defineDevServerConfig(() => ({
     host: 'localhost',
     port: 4010,
     seed: 42,
+    allowedOrigins: ['http://localhost:3000'],
   },
 }));
 ```
@@ -110,7 +115,13 @@ import { defineFusionCli } from '@equinor/fusion-framework-cli';
 import mockServerPlugin from '@equinor/fusion-framework-cli-plugin-mock-server';
 
 export default defineFusionCli(() => ({
-  plugins: [mockServerPlugin({ preset: ['fusion'], port: 4010 })],
+  plugins: [
+    mockServerPlugin({
+      preset: ['fusion'],
+      port: 4010,
+      allowedOrigins: ['http://localhost:3000'],
+    }),
+  ],
 }));
 ```
 
@@ -127,6 +138,7 @@ ffc mock-server [dirs...] [options]
 | `--port <port>` | Listening port. Uses config, then plugin defaults, then `4010`. |
 | `--host <host>` | Bind hostname. Uses config, then plugin defaults, then `localhost`. |
 | `--seed <seed>` | Deterministic seed for generated OpenAPI responses. Without a seed, generated values are random. |
+| `--allow-origin <origin>` | Exact browser origin allowed to call credentialed mock-auth endpoints. Repeat for multiple app origins. |
 
 The process shuts down on `SIGINT` and `SIGTERM`. Let Playwright `webServer`, `concurrently`, or a
 developer terminal own it instead of starting an unowned background process.

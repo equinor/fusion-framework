@@ -3,7 +3,7 @@ import { createMockServer } from '../server/index.js';
 import { parseCliOptions } from './parse-cli-options.js';
 
 /**
- * CLI entry point: `fusion-mock [--preset=<name>] [dir...] [--port <n>]`.
+ * CLI entry point: `fusion-mock [--preset=<name>] [dir...] [--port <n>] [--allow-origin <origin>]`.
  *
  * @remarks
  * Accepts one or more bundled preset names (`--preset=fusion`) and/or
@@ -19,9 +19,9 @@ import { parseCliOptions } from './parse-cli-options.js';
  * ```
  */
 async function main(): Promise<void> {
-  const { port, seed, sources } = parseCliOptions(process.argv.slice(2));
+  const { port, seed, allowedOrigins, sources } = parseCliOptions(process.argv.slice(2));
 
-  const server = createMockServer({ seed });
+  const server = createMockServer({ seed, allowedOrigins });
   // later sources override earlier ones' services by key, so registration order matters
   for (const source of sources) {
     server.use(source);

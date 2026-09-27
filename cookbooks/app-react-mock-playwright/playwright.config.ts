@@ -11,7 +11,7 @@ export default defineConfig({
   expect: { timeout: 15_000 },
   webServer: [
     {
-      command: 'ffc mock-server ./mocks --port 4010',
+      command: 'ffc mock-server ./mocks --port 4010 --allow-origin http://localhost:3000',
       url: 'http://localhost:4010/@fusion-mock/discovery',
       reuseExistingServer: !process.env.CI,
     },

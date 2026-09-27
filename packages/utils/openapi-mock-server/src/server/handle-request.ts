@@ -2,6 +2,7 @@ import type { IncomingMessage, ServerResponse } from 'node:http';
 
 import { handleControlRequest } from './handle-control-request.js';
 import { handleServiceRequest } from './handle-service-request.js';
+import { sendJson } from './send-json.js';
 import type { MockServerHandle, ServiceState } from './types.js';
 import type { MockAuthSessionStore } from './MockAuthSessionStore.js';
 
@@ -28,6 +29,7 @@ function isCorsPreflightRequest(method: string, request: IncomingMessage): boole
  * @param res - The response to write the result to.
  * @param seed - The mock server's own seed (see `CreateMockServerOptions`), threaded into a matched `middleware` route's `RouteContext`.
  * @param authSessions - Session store used by mock-auth control routes.
+ * @param allowedOrigins - Exact origins trusted to make credentialed mock-auth requests.
  * @throws When a control-plane auth request is received without a session store.
  */
 export async function handleRequest(
@@ -37,14 +39,25 @@ export async function handleRequest(
   res: ServerResponse,
   seed?: number,
   authSessions?: MockAuthSessionStore,
+  allowedOrigins: readonly string[] = [],
 ): Promise<void> {
   const url = new URL(req.url ?? '/', 'http://localhost');
   const method = (req.method ?? 'GET').toUpperCase();
+  // Empty segments (from leading/trailing/double slashes) don't identify a route.
+  const segments = url.pathname.split('/').filter(Boolean);
   // Direct-only services run on a different localhost origin than the browser app.
   const requestOrigin = req.headers.origin;
-  res.setHeader('access-control-allow-origin', requestOrigin ?? '*');
-  // Credentialed browser requests require an explicit origin rather than a wildcard.
-  if (requestOrigin) {
+  // Only a configured exact origin may receive credentialed browser responses.
+  const allowedOrigin = allowedOrigins.find((origin) => origin === requestOrigin);
+  // Reject cross-origin control-plane access before it can read or mutate session state.
+  if (requestOrigin && segments[0] === '@fusion-mock' && !allowedOrigin) {
+    sendJson(res, 403, { error: 'Origin is not allowed for mock-server control requests' });
+    return;
+  }
+  // Reflect only an allowlisted value; ordinary mock APIs remain available without credentials.
+  res.setHeader('access-control-allow-origin', allowedOrigin ?? '*');
+  // Credentialed browser requests require an explicitly allowlisted origin.
+  if (allowedOrigin) {
     res.setHeader('access-control-allow-credentials', 'true');
     res.setHeader('vary', 'Origin');
   }
@@ -57,9 +70,6 @@ export async function handleRequest(
     res.end();
     return;
   }
-  // Empty segments (from leading/trailing/double slashes) don't identify a route.
-  const segments = url.pathname.split('/').filter(Boolean);
-
   // Control-plane routes live under a reserved prefix, never a real service key.
   if (segments[0] === '@fusion-mock') {
     // Mock-auth routes require the server-owned store created alongside this listener.

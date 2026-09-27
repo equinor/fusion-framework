@@ -25,7 +25,11 @@ pnpm add -D @equinor/fusion-openapi-mock-server
 ```ts
 import { createMockServer } from '@equinor/fusion-openapi-mock-server';
 
-const server = createMockServer().use('fusion').use('./mocks');
+const server = createMockServer({
+  allowedOrigins: ['http://localhost:3000'],
+})
+  .use('fusion')
+  .use('./mocks');
 const { url } = await server.start({ port: 4010 });
 // url -> 'http://localhost:4010'
 
