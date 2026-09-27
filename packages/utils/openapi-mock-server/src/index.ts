@@ -25,9 +25,7 @@ export {
 } from './server/index.js';
 
 export {
-  acquireMockAuthToken,
   createMockAuth,
-  type MockAuthFetch,
   type MockAuthRequestClient,
   type MockAuthState,
   type MockAuthUser,

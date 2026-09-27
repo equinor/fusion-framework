@@ -4,9 +4,6 @@ interface MockAuthResponse {
   json(): Promise<unknown>;
 }
 
-/** Fetch-compatible function used to acquire a token for the active browser session. */
-export type MockAuthFetch = (input: string | URL, init?: RequestInit) => Promise<Response>;
-
 /**
  * Cookie-aware request client used to control one mock-auth session.
  *
@@ -43,43 +40,6 @@ export interface MockAuthState {
   configured: boolean;
   /** Non-sensitive selected user metadata. */
   user?: Omit<MockAuthUser, 'claims'>;
-}
-
-/**
- * Acquires a token for the active mock-server session.
- *
- * @param mockServerUrl - Mock server origin, for example `http://localhost:4010`.
- * @param scopes - OAuth scopes requested by the application.
- * @param request - Fetch-compatible request function. Defaults to the current runtime's `fetch`.
- * @returns The issued token, or `null` when the session has no selected user.
- */
-export async function acquireMockAuthToken(
-  mockServerUrl: string,
-  scopes: string[],
-  request: MockAuthFetch = globalThis.fetch,
-): Promise<string | null> {
-  const response = await request(new URL('/@fusion-mock/auth/token', mockServerUrl), {
-    method: 'POST',
-    credentials: 'include',
-    headers: { 'content-type': 'application/json' },
-    body: JSON.stringify({ scopes }),
-  });
-  if (!response.ok) {
-    throw new Error(`Mock auth token acquisition failed with status ${response.status}`);
-  }
-
-  const resolution: unknown = await response.json();
-  if (typeof resolution === 'object' && resolution !== null && 'status' in resolution) {
-    if (resolution.status === 'missing') return null;
-    if (
-      resolution.status === 'issued' &&
-      'token' in resolution &&
-      typeof resolution.token === 'string'
-    ) {
-      return resolution.token;
-    }
-  }
-  throw new Error('Mock auth token acquisition returned an unsupported status');
 }
 
 /**
