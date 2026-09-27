@@ -10,7 +10,7 @@
     "dev": "fusion-framework-cli app dev",
     "dev:mock": "concurrently -k \"pnpm mock:server\" \"pnpm mock:app\"",
     "mock:app": "fusion-framework-cli app dev --mock http://localhost:4012",
-    "mock:server": "fusion-framework-cli mock-server --preset=fusion ./mocks --port 4012 --seed 42",
+    "mock:server": "fusion-framework-cli mock-server --preset=fusion ./mocks --port 4012 --seed 42 --allow-origin http://localhost:3000",
     "test": "playwright test",
     "test:playwright": "playwright test"
   },

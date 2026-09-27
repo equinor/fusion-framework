@@ -14,7 +14,8 @@ export default defineConfig({
   },
   webServer: [
     {
-      command: 'ffc mock-server --preset=fusion ./mocks --port 4012 --seed 42',
+      command:
+        'ffc mock-server --preset=fusion ./mocks --port 4012 --seed 42 --allow-origin http://localhost:3020',
       url: 'http://localhost:4012/@fusion-mock/discovery',
       reuseExistingServer: !process.env.CI,
     },
