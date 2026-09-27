@@ -692,6 +692,9 @@ importers:
       '@equinor/fusion-framework-cli':
         specifier: workspace:^
         version: link:../../packages/cli
+      '@equinor/fusion-framework-module-msal':
+        specifier: workspace:^
+        version: link:../../packages/modules/msal
       '@equinor/fusion-framework-react-app':
         specifier: workspace:^
         version: link:../../packages/react/app

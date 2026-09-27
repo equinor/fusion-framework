@@ -1,19 +1,28 @@
 import { describe, expect, vi } from 'vitest';
 import type { AppMockConfigureFn } from '@equinor/fusion-framework-app/mock';
+import { createMockToken } from '@equinor/fusion-framework-module-msal/mock';
 import { test } from '@equinor/fusion-framework-vitest-plugin-react-app/test';
 
 import { App } from './App';
 
 /**
- * Sets a named mock account instead of the msal mock's default "Test User" —
- * signed in before the msal provider initializes, so the provider's own
- * start-up path observes it. The cookbook registers no `configureApp` of its own,
- * so this is the test's entire configuration, not a composition with one.
+ * Supplies a token whose claims define the mock account before the MSAL provider initializes.
+ *
+ * @param account - Identity claims used to create the token returned by the test runtime.
+ * @returns App mock configuration that replaces the built-in "Test User" identity.
  */
-const withMockAccount =
-  (account: { name: string; username?: string }): AppMockConfigureFn =>
+const withMockTokenIdentity =
+  (account: { userId: string; name: string; username?: string }): AppMockConfigureFn =>
   (configurator) => {
-    configurator.msal.setAccount(account);
+    configurator.msal.setAcquireToken(({ clientId, scopes }) =>
+      createMockToken({
+        aud: clientId,
+        scp: scopes.join(' '),
+        oid: account.userId,
+        name: account.name,
+        preferred_username: account.username,
+      }),
+    );
   };
 
 // --- tests ---
@@ -32,18 +41,23 @@ test('renders the default signed-in mock user once the app configuration has ini
   await unmount();
 });
 
-describe('with a configured account', () => {
+describe('with a configured token identity', () => {
   test.override('configureApp', { injected: true }, () =>
-    withMockAccount({ name: 'Ada Lovelace', username: 'ada@equinor.com' }),
+    withMockTokenIdentity({
+      userId: 'ada-lovelace',
+      name: 'Ada Lovelace',
+      username: 'ada@equinor.com',
+    }),
   );
 
-  test('displays the account instead of the msal mock default', async ({ render }) => {
+  test('returns the configured identity with the acquired token', async ({ render }) => {
     const { getByRole, unmount } = await render(<App />);
 
-    const currentUserPre = getByRole('heading', { name: /current user/i }).element()
-      .nextElementSibling as HTMLElement;
-    await vi.waitFor(() => expect(currentUserPre.textContent).toContain('Ada Lovelace'));
-    expect(currentUserPre.textContent).not.toContain('Test User');
+    const tokenSection = getByRole('heading', { name: /token/i }).element()
+      .parentElement as HTMLElement;
+    const [, tokenResponseCode] = tokenSection.querySelectorAll('code');
+    await vi.waitFor(() => expect(tokenResponseCode.textContent).toContain('Ada Lovelace'));
+    expect(tokenResponseCode.textContent).toContain('ada-lovelace');
 
     await unmount();
   });
