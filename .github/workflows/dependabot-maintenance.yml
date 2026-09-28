@@ -1,6 +1,11 @@
 name: Dependabot maintenance stream
 
 on:
+  push:
+    branches:
+      - maintenance/dependencies
+  schedule:
+    - cron: '0 6 * * 1'
   workflow_dispatch:
     inputs:
       operation:
@@ -94,8 +99,8 @@ jobs:
             -F force=true
 
   promote:
-    name: Validate and promote maintenance stream
-    if: inputs.operation == 'promote'
+    name: Maintain promotion pull request
+    if: inputs.operation == 'promote' || github.event_name == 'push' || github.event_name == 'schedule'
     runs-on: ubuntu-latest
     permissions:
       actions: write
@@ -108,12 +113,15 @@ jobs:
           fetch-depth: 0
 
       - name: Setup node and install deps
+        if: github.event_name != 'push'
         uses: ./.github/actions/node-setup
 
       - name: Install Playwright Chromium
+        if: github.event_name != 'push'
         run: pnpm --filter @equinor/fusion-framework-vitest-plugin-react-app exec playwright install --with-deps chromium
 
       - name: Validate maintenance stream
+        if: github.event_name != 'push'
         run: pnpm build && pnpm test && pnpm -w check
 
       - name: Create or update draft promotion pull request
@@ -136,7 +144,7 @@ jobs:
           cat > "$report" <<'EOF'
           **Why is this change needed?**
 
-          Promote the validated Dependabot maintenance stream through the normal protected-branch review gate.
+          Promote the Dependabot maintenance stream through the normal protected-branch review gate.
 
           **What is the current behavior?**
 
@@ -148,7 +156,7 @@ jobs:
 
           **What is the intended behavior or invariant?**
 
-          Only updates already accepted into the maintenance stream are included, and the combined stream passes the full dependency validation suite before promotion.
+          Only updates already accepted into the maintenance stream are included. The combined stream must pass the full dependency validation suite before it is ready for review.
 
           **Does this PR introduce a breaking change?**
 
@@ -159,11 +167,11 @@ jobs:
           - Breaking changes: No known breaking changes
           - Version bump: Determined by the included changesets
           - Consumer impact: Dependency updates described by the included changesets
-          - Downstream impact: Package builds and tests have been validated together
+          - Downstream impact: Package builds and tests are validated together by the scheduled or manually dispatched promotion run
 
           **Review guidance:**
 
-          Review the accumulated dependency updates, changesets, and full validation result. Pay particular attention to any manually accepted update in the stream.
+          Review the accumulated dependency updates, changesets, and the latest aggregate validation result. Pay particular attention to any manually accepted update in the stream.
 
           **Additional context**
 
@@ -174,13 +182,24 @@ jobs:
             git log \
               --format="- %s (\`%h\`)" \
               "origin/${default_branch}..HEAD"
-            cat <<'EOF'
+            if [[ "${{ github.event_name }}" == push ]]; then
+              cat <<'EOF'
 
-          Validation completed before this pull request was created or updated:
+          This description was refreshed after a maintenance-stream update. Aggregate validation runs on the weekly schedule or when the `promote` operation is dispatched manually.
 
-          - `pnpm test`
+          EOF
+            else
+              cat <<'EOF'
+
+          Aggregate validation completed before this pull request was created or updated:
+
           - `pnpm build`
+          - `pnpm test`
           - `pnpm -w check`
+
+          EOF
+            fi
+            cat <<'EOF'
 
           ### Checklist
 
@@ -189,10 +208,7 @@ jobs:
           - [x] Confirm complex decisions explain why they exist when applicable
           - [x] Confirm React logic is resolved before markup when applicable
           - [x] Confirm documentation is updated when applicable
-          - [x] Confirm changes to target branch validation
-            - Included files validated
-            - No new linting warnings
-            - Existing promotion pull request reused when present
+          - [x] Confirm the promotion pull request reflects the current maintenance stream
           - [x] Confirm adherence to the code of conduct
           EOF
           } >> "$report"
@@ -226,13 +242,15 @@ jobs:
           fi
 
           head_sha="$(git rev-parse HEAD)"
-          for workflow in pr.yml visual-checks.yml agent-context.yml; do
-            gh workflow run "$workflow" \
-              --repo "$REPOSITORY" \
-              --ref "$MAINTENANCE_BRANCH" \
-              -f head_sha="$head_sha" \
-              -f pr_number="$pr_number"
-          done
+          if [[ "${{ github.event_name }}" != push ]]; then
+            for workflow in pr.yml visual-checks.yml agent-context.yml; do
+              gh workflow run "$workflow" \
+                --repo "$REPOSITORY" \
+                --ref "$MAINTENANCE_BRANCH" \
+                -f head_sha="$head_sha" \
+                -f pr_number="$pr_number"
+            done
+          fi
 
           echo "Promotion pull request: https://github.com/${REPOSITORY}/pull/${pr_number}" \
             >> "$GITHUB_STEP_SUMMARY"
