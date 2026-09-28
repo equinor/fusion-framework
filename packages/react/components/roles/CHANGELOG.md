@@ -1,5 +1,19 @@
 # @equinor/fusion-framework-react-components-roles
 
+## 0.1.2
+
+### Patch Changes
+
+- 43bc1f0: Add an end-to-end Roles V2 adoption guide covering production configuration, active-only and claim-capable React flows, component tests, persona-aware HTTP mocks, Playwright identity, recovery failures, and trusted backend authorization boundaries.
+  
+  Refs https://github.com/equinor/fusion-core-tasks/issues/2102
+- 679b588: Preserve confirmed access denial and required role names when optional role recovery metadata is unavailable, with an independent retry for recovery details.
+  
+  Fixes: https://github.com/equinor/fusion-core-tasks/issues/2103
+- Updated dependencies [43bc1f0]
+- Updated dependencies [e1fab9c]
+  - @equinor/fusion-framework-module-roles@0.3.0
+
 ## 0.1.1
 
 ### Patch Changes

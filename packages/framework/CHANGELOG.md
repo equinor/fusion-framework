@@ -1,5 +1,13 @@
 # Change Log
 
+## 9.0.1
+
+### Patch Changes
+
+- 43bc1f0: Add an end-to-end Roles V2 adoption guide covering production configuration, active-only and claim-capable React flows, component tests, persona-aware HTTP mocks, Playwright identity, recovery failures, and trusted backend authorization boundaries.
+  
+  Refs https://github.com/equinor/fusion-core-tasks/issues/2102
+
 ## 9.0.0
 
 ### Major Changes

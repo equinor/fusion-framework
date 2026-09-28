@@ -1,5 +1,17 @@
 # @equinor/fusion-framework-docs
 
+## 0.4.26
+
+### Patch Changes
+
+- e1fab9c: Document active-only role checks for React consumers and observable module integrations.
+- 43bc1f0: Add an end-to-end Roles V2 adoption guide covering production configuration, active-only and claim-capable React flows, component tests, persona-aware HTTP mocks, Playwright identity, recovery failures, and trusted backend authorization boundaries.
+  
+  Refs https://github.com/equinor/fusion-core-tasks/issues/2102
+- e6b881a: Document typed persona-aware Roles V2 mock configuration, session isolation, and explicit identity, account, and configuration errors.
+  
+  Refs: https://github.com/equinor/fusion-core-tasks/issues/2100
+
 ## 0.4.25
 
 ### Patch Changes

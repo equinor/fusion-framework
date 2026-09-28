@@ -1,5 +1,24 @@
 # Change Log
 
+## 14.3.0
+
+### Minor Changes
+
+- e1fab9c: Add `useHasAccessRole` for active-only any-role and all-role UI checks without loading or exposing claimable-role activation state.
+  
+  Implements equinor/fusion-core-tasks#2101.
+
+### Patch Changes
+
+- 43bc1f0: Add an end-to-end Roles V2 adoption guide covering production configuration, active-only and claim-capable React flows, component tests, persona-aware HTTP mocks, Playwright identity, recovery failures, and trusted backend authorization boundaries.
+  
+  Refs https://github.com/equinor/fusion-core-tasks/issues/2102
+- Updated dependencies [43bc1f0]
+- Updated dependencies [e1fab9c]
+  - @equinor/fusion-framework@9.0.1
+  - @equinor/fusion-framework-module-roles@0.3.0
+  - @equinor/fusion-framework-app@13.1.7
+
 ## 14.2.2
 
 ### Patch Changes

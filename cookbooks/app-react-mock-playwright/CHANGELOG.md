@@ -1,5 +1,13 @@
 # @equinor/fusion-framework-cookbook-app-react-mock-playwright
 
+## 0.0.5
+
+### Patch Changes
+
+- 43bc1f0: Document session-isolated authorization personas with generic role policy examples for browser tests.
+  
+  Refs https://github.com/equinor/fusion-core-tasks/issues/2102
+
 ## 0.0.4
 
 ### Patch Changes
