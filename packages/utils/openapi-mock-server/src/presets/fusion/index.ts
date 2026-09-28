@@ -12,6 +12,14 @@ import people from './people.openapi.json' with { type: 'json' };
 import portalConfig from './portal-config.openapi.json' with { type: 'json' };
 import rolesv2 from './rolesv2.openapi.json' with { type: 'json' };
 
+export {
+  defineRolesV2Mock,
+  type DefineRolesV2MockOptions,
+  type RolesV2MockAccount,
+  type RolesV2MockActivation,
+  type RolesV2MockActivationError,
+} from './define-roles-v2-mock.js';
+
 /**
  * Preserves the requested Context identity while retaining the schema-generated response fields.
  *

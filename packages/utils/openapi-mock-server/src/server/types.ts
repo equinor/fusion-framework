@@ -12,6 +12,8 @@ export interface ServiceDiscoveryEntry {
   key: string;
   /** Absolute service base URL. */
   uri: string;
+  /** OAuth scopes the Fusion Framework HTTP client uses to authenticate service requests. */
+  scopes?: string[];
 }
 
 /** Options for {@link createMockServer}. */

@@ -55,8 +55,16 @@ export function parseMockRequestIdentity(authorization: string | undefined): Moc
   }
 
   const userId = claims.oid;
-  // The session-scoped mock-auth contract always normalizes the selected user into oid.
-  if (typeof userId !== 'string' || userId.length === 0) return { status: 'malformed' };
+  const sessionId = claims.sid;
+  // The session-scoped mock-auth contract normalizes both selected user and browser session.
+  if (
+    typeof userId !== 'string' ||
+    userId.length === 0 ||
+    typeof sessionId !== 'string' ||
+    sessionId.length === 0
+  ) {
+    return { status: 'malformed' };
+  }
 
-  return { status: 'authenticated', userId, claims };
+  return { status: 'authenticated', userId, sessionId, claims };
 }

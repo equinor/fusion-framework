@@ -1,6 +1,16 @@
+import { createMockAuth } from '@equinor/fusion-openapi-mock-server';
 import { expect, test } from '@playwright/test';
 
 const APP_PATH = '/apps/fusion-framework-cookbook-app-react-roles';
+const MOCK_SERVER_URL = 'http://localhost:4012';
+const mockAuth = createMockAuth(MOCK_SERVER_URL);
+
+test.beforeEach(async ({ context }) => {
+  await mockAuth.setUser(context.request, {
+    userId: 'recovery-persona',
+    name: 'Nikita Crist',
+  });
+});
 
 test('recovers the application after claiming its required role', async ({ page }) => {
   await page.goto(APP_PATH);
@@ -20,7 +30,10 @@ test('recovers the application after claiming its required role', async ({ page 
   await app.evaluate((element) => element.setAttribute('style', 'min-height: 617px'));
   await expect(app).toHaveScreenshot('roles-app.png');
 
-  const reportExporter = app.getByRole('listitem').filter({ hasText: 'Reports exporter' });
+  const reportExporter = app
+    .getByRole('listitem')
+    // Select the claimable assignment independently of list ordering.
+    .filter({ hasText: 'Reports exporter' });
   await reportExporter.getByRole('button', { name: 'Claim' }).click();
   await expect(app).toContainText('Reports / Reports.Export');
   await expect(reportExporter).toHaveCount(0);
@@ -76,4 +89,46 @@ test('renders scoped and duplicate active assignments after refresh', async ({ p
   // The cookbook intentionally replaces its lists with loading UI during collection refresh.
   await page.evaluate(() => window.dispatchEvent(new Event('focus')));
   await expect(rows).toHaveCount(1);
+});
+
+test('isolates concurrent role personas and switches identity without restarting services', async ({
+  browser,
+}) => {
+  const operationsContext = await browser.newContext();
+  const reportingContext = await browser.newContext();
+  const operationsPage = await operationsContext.newPage();
+  const reportingPage = await reportingContext.newPage();
+
+  await Promise.all([
+    mockAuth.setUser(operationsContext.request, {
+      userId: 'operations-persona',
+      name: 'Operations Persona',
+    }),
+    mockAuth.setUser(reportingContext.request, {
+      userId: 'reporting-persona',
+      name: 'Reporting Persona',
+    }),
+  ]);
+  await Promise.all([operationsPage.goto(APP_PATH), reportingPage.goto(APP_PATH)]);
+
+  await expect(operationsPage.getByRole('main')).toContainText(
+    'Fusion Apps / Fusion.Apps.FullControl',
+  );
+  await expect(operationsPage.getByRole('main')).not.toContainText('Reports / Reports.Export');
+  await expect(reportingPage.getByRole('main')).toContainText('Reports / Reports.Export');
+  await expect(reportingPage.getByRole('main')).not.toContainText(
+    'Fusion Apps / Fusion.Apps.FullControl',
+  );
+
+  await mockAuth.setUser(operationsContext.request, {
+    userId: 'reporting-persona',
+    name: 'Reporting Persona',
+  });
+  await operationsPage.reload();
+  await expect(operationsPage.getByRole('main')).toContainText('Reports / Reports.Export');
+  await expect(operationsPage.getByRole('main')).not.toContainText(
+    'Fusion Apps / Fusion.Apps.FullControl',
+  );
+
+  await Promise.all([operationsContext.close(), reportingContext.close()]);
 });

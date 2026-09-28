@@ -16,6 +16,8 @@ const MOCK_MODULE_PATTERN = /\.mock\.(?:ts|mjs|js)$/;
 export interface ServiceMockDefinition {
   /** The mock server's routing key for this service, and its service-discovery `key`. */
   key: string;
+  /** OAuth scopes advertised to Fusion Framework clients for authenticated service requests. */
+  scopes?: string[];
   /** Controls how this mock participates in service discovery. Legacy definitions default to replacement behavior. */
   serviceDiscovery?: ServiceDiscoveryMode;
   /** The parsed OpenAPI document. May be omitted by `serviceDiscovery: 'merge'` to retain an earlier definition's schema. */
@@ -26,6 +28,8 @@ export interface ServiceMockDefinition {
   paths?: Record<string, Record<string, RouteOverride>>;
   /** A router checked ahead of this service's declarative and generated mock responses. */
   router?: Router;
+  /** Clears mutable state owned by this service when the mock server resets. */
+  reset?: () => void;
 }
 
 /**

@@ -26,6 +26,8 @@ export function resolveServiceDiscovery(
     entries.push({
       key: definition.key,
       uri: `http://${definition.key}.localhost:${port}`,
+      // Preserve the service's authentication contract without adding auth to anonymous mocks.
+      ...(definition.scopes ? { scopes: [...definition.scopes] } : {}),
     });
   }
 

@@ -10,6 +10,15 @@
   },
   "references": [
     {
+      "path": "../../services"
+    },
+    {
+      "path": "../../modules/http"
+    },
+    {
+      "path": "../../modules/roles"
+    },
+    {
       "path": "../openapi-mock"
     },
     {

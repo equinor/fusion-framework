@@ -1,124 +1,1296 @@
 {
-  "openapi": "3.0.3",
+  "openapi": "3.1.1",
   "info": {
-    "title": "Fusion Roles V2 API (mock)",
-    "version": "1.0.0",
-    "description": "Backs the dev portal's PersonSideSheet roles feature (see packages/dev-portal/src/PersonSideSheet/sheets/roles/RolesApi.ts)."
+    "title": "Fusion Roles V2 API (framework mock preset)",
+    "version": "1.0",
+    "description": "Generated from @equinor/fusion-services/roles/v1/openapi.json for the operations consumed by @equinor/fusion-framework-module-roles."
   },
   "paths": {
-    "/accounts/{accountId}/consolidated-claimable-role-assignments": {
+    "/access-roles": {
       "get": {
-        "operationId": "getConsolidatedClaimableRoleAssignments",
         "parameters": [
-          { "name": "accountId", "in": "path", "required": true, "schema": { "type": "string" } }
+          {
+            "description": "Filter collection to only return items where expression evaluates to true.\n\n_Operations:_ eq, neq, not, gt, lt, lteq, ge, gteq, le, =, ==, !=, >, >=, <, <=, in, startswith, endswith, contains\n\n_Logical operators:_ and, &&, or, ||\n\n_Grouping:_ ()\n\n__Supported properties:__\n\n* scopeType.Id\n\n_Examples:_\n```someProperty eq 'someValue'```\n```someProperty in ('someValue', 'anotherValue')```",
+            "in": "query",
+            "name": "$filter",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Specifies a non-negative integer n that limits the number of items returned from a collection.",
+            "in": "query",
+            "name": "$top",
+            "schema": {
+              "format": "int32",
+              "maximum": 100,
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Specifies a non-negative integer n that excludes the first n items from the returned collection.",
+            "in": "query",
+            "name": "$skip",
+            "schema": {
+              "format": "int32",
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "api-version",
+            "schema": {
+              "default": "1.0",
+              "type": "string"
+            }
+          }
         ],
         "responses": {
           "200": {
-            "description": "Claimable role assignments for the account.",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": { "$ref": "#/components/schemas/ClaimableRoleAssignment" }
+                  "$ref": "#/components/schemas/ApiPagedCollectionOfApiExtendedAccessRole"
                 }
               }
-            }
-          }
-        }
-      }
-    },
-    "/accounts/{accountId}/consolidated-role-assignments": {
-      "get": {
-        "operationId": "getConsolidatedRoleAssignments",
-        "parameters": [
-          { "name": "accountId", "in": "path", "required": true, "schema": { "type": "string" } }
-        ],
-        "responses": {
-          "200": {
-            "description": "Permanent role assignments for the account.",
+            },
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": { "$ref": "#/components/schemas/PermanentRoleAssignment" }
+                  "$ref": "#/components/schemas/ProblemDetails"
                 }
               }
-            }
+            },
+            "description": "Not Found"
           }
-        }
+        },
+        "summary": "Get all access roles.",
+        "tags": ["Global"],
+        "operationId": "listAccessRoles"
       }
     },
-    "/accounts/{accountId}/claimable-role-assignments/{roleId}/activate": {
-      "post": {
-        "operationId": "activateClaimableRoleAssignment",
+    "/accounts/{accountIdentifier}/active-access-role-assignments": {
+      "get": {
         "parameters": [
-          { "name": "accountId", "in": "path", "required": true, "schema": { "type": "string" } },
-          { "name": "roleId", "in": "path", "required": true, "schema": { "type": "string" } }
+          {
+            "description": "The account identifier (Azure unique ID or email)",
+            "in": "path",
+            "name": "accountIdentifier",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Filter collection to only return items where expression evaluates to true.\n\n_Operations:_ eq, neq, not, gt, lt, lteq, ge, gteq, le, =, ==, !=, >, >=, <, <=, in, startswith, endswith, contains\n\n_Logical operators:_ and, &&, or, ||\n\n_Grouping:_ ()\n\n__Supported properties:__\n\n* systemName\n\n_Examples:_\n```someProperty eq 'someValue'```\n```someProperty in ('someValue', 'anotherValue')```",
+            "in": "query",
+            "name": "$filter",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "api-version",
+            "schema": {
+              "default": "1.0",
+              "type": "string"
+            }
+          }
         ],
         "responses": {
           "200": {
-            "description": "The role was activated.",
             "content": {
-              "application/json": { "schema": { "$ref": "#/components/schemas/ActivationResult" } }
-            }
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/ApiAccountActiveAccessRoleAssignment"
+                  },
+                  "type": "array"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FusionForbiddenResponse"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Not Found"
           }
-        }
+        },
+        "summary": "Get active access role assignments for an account.",
+        "tags": ["Accounts"],
+        "operationId": "listAccountActiveAccessRoleAssignments"
       }
     },
-    "/accounts/{accountId}/claimable-role-assignments/{roleId}/deactivate": {
-      "post": {
-        "operationId": "deactivateClaimableRoleAssignment",
+    "/accounts/{accountIdentifier}/claimable-role-assignments": {
+      "get": {
         "parameters": [
-          { "name": "accountId", "in": "path", "required": true, "schema": { "type": "string" } },
-          { "name": "roleId", "in": "path", "required": true, "schema": { "type": "string" } }
+          {
+            "description": "The account identifier (Azure unique ID or email)",
+            "in": "path",
+            "name": "accountIdentifier",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Comma separated list of properties to include.\n\n__Supported properties:__\n\n* accessRoleMappings\n\n_Example:_\n`someProperty, anotherProperty`",
+            "in": "query",
+            "name": "$expand",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "api-version",
+            "schema": {
+              "default": "1.0",
+              "type": "string"
+            }
+          }
         ],
-        "responses": { "204": { "description": "The role was deactivated." } }
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiPagedCollectionOfApiAccountClaimableRoleAssignment"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FusionForbiddenResponse"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Not Found"
+          }
+        },
+        "summary": "Get all claimable role assignments for an account.",
+        "tags": ["Accounts"],
+        "operationId": "listAccountClaimableRoleAssignments"
+      }
+    },
+    "/accounts/{accountIdentifier}/consolidated-claimable-role-assignments": {
+      "get": {
+        "parameters": [
+          {
+            "description": "The account identifier (Azure unique ID or email)",
+            "in": "path",
+            "name": "accountIdentifier",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Comma separated list of properties to include.\n\n__Supported properties:__\n\n* assignments\n\n_Example:_\n`someProperty, anotherProperty`",
+            "in": "query",
+            "name": "$expand",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "api-version",
+            "schema": {
+              "default": "1.0",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/ApiConsolidatedClaimableRoleAssignment"
+                  },
+                  "type": "array"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FusionForbiddenResponse"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Not Found"
+          }
+        },
+        "summary": "Get consolidated claimable role assignments for an account. Duplicate assignments for the same role, type and scope are merged into a single entry.",
+        "tags": ["Accounts"],
+        "operationId": "listAccountConsolidatedClaimableRoleAssignments"
+      }
+    },
+    "/accounts/{accountIdentifier}/consolidated-role-assignments": {
+      "get": {
+        "parameters": [
+          {
+            "description": "The account identifier (Azure unique ID or email)",
+            "in": "path",
+            "name": "accountIdentifier",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Comma separated list of properties to include.\n\n__Supported properties:__\n\n* assignments\n\n_Example:_\n`someProperty, anotherProperty`",
+            "in": "query",
+            "name": "$expand",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "api-version",
+            "schema": {
+              "default": "1.0",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/ApiConsolidatedRoleAssignment"
+                  },
+                  "type": "array"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FusionForbiddenResponse"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Not Found"
+          }
+        },
+        "summary": "Get consolidated role assignments for an account. Duplicate assignments for the same role, type and scope are merged into a single entry.",
+        "tags": ["Accounts"],
+        "operationId": "listAccountConsolidatedRoleAssignments"
+      }
+    },
+    "/accounts/{accountIdentifier}/claimable-role-assignments/{claimableRoleAssignmentId}/activate": {
+      "post": {
+        "parameters": [
+          {
+            "description": "The account identifier (Azure unique ID or email)",
+            "in": "path",
+            "name": "accountIdentifier",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The claimable role assignment ID",
+            "in": "path",
+            "name": "claimableRoleAssignmentId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "api-version",
+            "schema": {
+              "default": "1.0",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ActivateAssignedClaimableRoleRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiClaimableRoleAssignmentActivation"
+                }
+              }
+            },
+            "description": "Created"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FusionForbiddenResponse"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Not Found"
+          }
+        },
+        "summary": "Activate a claimable role assignment for an account.",
+        "tags": ["Accounts"],
+        "operationId": "activateClaimableRoleAssignment"
+      }
+    },
+    "/accounts/{accountIdentifier}/claimable-role-assignments/{claimableRoleAssignmentId}/deactivate": {
+      "post": {
+        "parameters": [
+          {
+            "description": "The account identifier (Azure unique ID or email)",
+            "in": "path",
+            "name": "accountIdentifier",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The claimable role assignment ID",
+            "in": "path",
+            "name": "claimableRoleAssignmentId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "api-version",
+            "schema": {
+              "default": "1.0",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiClaimableRoleAssignmentActivation"
+                }
+              }
+            },
+            "description": "Created"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FusionForbiddenResponse"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Not Found"
+          }
+        },
+        "summary": "Deactivate a claimable role assignment for an account by setting the expiration date to now.",
+        "tags": ["Accounts"],
+        "operationId": "deactivateClaimableRoleAssignment"
       }
     }
   },
   "components": {
     "schemas": {
-      "RoleDefinition": {
-        "type": "object",
+      "ApiPagedCollectionOfApiExtendedAccessRole": {
         "properties": {
-          "name": { "type": "string", "faker": "hacker.noun" },
-          "displayName": { "type": "string", "faker": "person.jobTitle" },
-          "description": { "type": "string", "faker": "lorem.sentence" }
-        }
+          "count": {
+            "format": "int32",
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": ["integer", "string"]
+          },
+          "nextPage": {
+            "type": ["null", "string"]
+          },
+          "prevPage": {
+            "type": ["null", "string"]
+          },
+          "totalCount": {
+            "format": "int32",
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": ["integer", "string"]
+          },
+          "value": {
+            "items": {
+              "$ref": "#/components/schemas/ApiExtendedAccessRole"
+            },
+            "type": "array"
+          }
+        },
+        "required": ["totalCount"],
+        "type": "object"
       },
-      "RoleScope": {
-        "type": "object",
+      "ProblemDetails": {
         "properties": {
-          "isGlobal": { "type": "boolean" },
-          "value": { "type": "string", "nullable": true, "faker": "commerce.department" }
-        }
+          "detail": {
+            "type": ["null", "string"]
+          },
+          "instance": {
+            "type": ["null", "string"]
+          },
+          "status": {
+            "format": "int32",
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": ["null", "integer", "string"]
+          },
+          "title": {
+            "type": ["null", "string"]
+          },
+          "type": {
+            "type": ["null", "string"]
+          }
+        },
+        "type": "object"
       },
-      "ClaimableRoleAssignment": {
-        "type": "object",
+      "ApiAccountActiveAccessRoleAssignment": {
+        "description": "Represents a currently active access role assignment for an account.",
         "properties": {
-          "id": { "type": "string", "format": "uuid" },
-          "claimableRole": { "$ref": "#/components/schemas/RoleDefinition" },
-          "isActive": { "type": "boolean" },
-          "activeTo": { "type": "string", "format": "date-time", "nullable": true },
-          "validFrom": { "type": "string", "format": "date-time", "nullable": true },
-          "validTo": { "type": "string", "format": "date-time", "nullable": true }
-        }
+          "accessRoleName": {
+            "description": "Name of the access role.",
+            "type": "string"
+          },
+          "activeToDate": {
+            "description": "Date and time the activation expires, if any.",
+            "format": "date-time",
+            "type": ["null", "string"]
+          },
+          "assignmentType": {
+            "description": "Assignment type (e.g. \"Direct\" or \"Inherited\").",
+            "type": "string"
+          },
+          "scope": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/ApiScopeValues"
+              }
+            ]
+          },
+          "systemName": {
+            "description": "Name of the system the access role belongs to.",
+            "type": "string"
+          }
+        },
+        "type": "object"
       },
-      "PermanentRoleAssignment": {
-        "type": "object",
+      "FusionForbiddenResponse": {
         "properties": {
-          "id": { "type": "string", "format": "uuid" },
-          "role": { "$ref": "#/components/schemas/RoleDefinition" },
-          "scope": { "$ref": "#/components/schemas/RoleScope", "nullable": true },
-          "validFrom": { "type": "string", "format": "date-time", "nullable": true },
-          "validTo": { "type": "string", "format": "date-time", "nullable": true }
-        }
+          "error": {
+            "$ref": "#/components/schemas/ForbiddenItem"
+          }
+        },
+        "required": ["error"],
+        "type": "object"
       },
-      "ActivationResult": {
-        "type": "object",
+      "ApiPagedCollectionOfApiAccountClaimableRoleAssignment": {
         "properties": {
-          "activeToDate": { "type": "string", "format": "date-time" }
-        }
+          "count": {
+            "format": "int32",
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": ["integer", "string"]
+          },
+          "nextPage": {
+            "type": ["null", "string"]
+          },
+          "prevPage": {
+            "type": ["null", "string"]
+          },
+          "totalCount": {
+            "format": "int32",
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": ["integer", "string"]
+          },
+          "value": {
+            "items": {
+              "$ref": "#/components/schemas/ApiAccountClaimableRoleAssignment"
+            },
+            "type": "array"
+          }
+        },
+        "required": ["totalCount"],
+        "type": "object"
+      },
+      "ApiConsolidatedClaimableRoleAssignment": {
+        "description": "Represents a consolidated view of all claimable role assignments for an account and claimable role combination.",
+        "properties": {
+          "activeTo": {
+            "description": "Date and time until which the claimed role is active, if any.",
+            "format": "date-time",
+            "type": ["null", "string"]
+          },
+          "assignedTo": {
+            "$ref": "#/components/schemas/ApiAccount"
+          },
+          "assignments": {
+            "description": "Individual assignment entries contributing to this consolidated record, when expanded.",
+            "items": {
+              "$ref": "#/components/schemas/ApiConsolidatedAssignmentEntry"
+            },
+            "type": ["null", "array"]
+          },
+          "claimableRole": {
+            "$ref": "#/components/schemas/ApiConsolidatedClaimableRoleRef"
+          },
+          "id": {
+            "description": "Unique identifier of the consolidated assignment.",
+            "format": "uuid",
+            "type": "string"
+          },
+          "isActive": {
+            "description": "Whether the claimable role is currently active (claimed).",
+            "type": "boolean"
+          },
+          "reasons": {
+            "description": "All reasons contributing to this consolidated assignment.",
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "scope": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/ApiClaimableRoleScope"
+              }
+            ]
+          },
+          "type": {
+            "description": "Assignment type (e.g. \"Direct\" or \"Inherited\").",
+            "type": "string"
+          },
+          "validFrom": {
+            "description": "Effective start date of the consolidated assignment, if any. Omitted when null.",
+            "format": "date-time",
+            "type": ["null", "string"]
+          },
+          "validTo": {
+            "description": "Effective end date of the consolidated assignment, if any.",
+            "format": "date-time",
+            "type": ["null", "string"]
+          }
+        },
+        "type": "object"
+      },
+      "ApiConsolidatedRoleAssignment": {
+        "description": "Represents a consolidated view of all role assignments for an account and role combination.",
+        "properties": {
+          "assignedTo": {
+            "$ref": "#/components/schemas/ApiAccount"
+          },
+          "assignments": {
+            "description": "Individual assignment entries contributing to this consolidated record, when expanded.",
+            "items": {
+              "$ref": "#/components/schemas/ApiConsolidatedAssignmentEntry"
+            },
+            "type": ["null", "array"]
+          },
+          "id": {
+            "description": "Unique identifier of the consolidated assignment.",
+            "format": "uuid",
+            "type": "string"
+          },
+          "reasons": {
+            "description": "All reasons contributing to this consolidated assignment.",
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "role": {
+            "$ref": "#/components/schemas/ApiSimpleRole"
+          },
+          "scope": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/ApiRoleScope"
+              }
+            ]
+          },
+          "type": {
+            "description": "Assignment type (e.g. \"Direct\" or \"Inherited\").",
+            "type": "string"
+          },
+          "validFrom": {
+            "description": "Effective start date of the consolidated assignment, if any.",
+            "format": "date-time",
+            "type": ["null", "string"]
+          },
+          "validTo": {
+            "description": "Effective end date of the consolidated assignment, if any.",
+            "format": "date-time",
+            "type": ["null", "string"]
+          }
+        },
+        "type": "object"
+      },
+      "ActivateAssignedClaimableRoleRequest": {
+        "description": "Request body for activating (claiming) an assigned claimable role.",
+        "properties": {
+          "hours": {
+            "description": "Duration in hours for which the activation should be valid.",
+            "format": "int32",
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": ["integer", "string"]
+          },
+          "reason": {
+            "description": "Reason for activating the claimable role.",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "ApiClaimableRoleAssignmentActivation": {
+        "description": "Represents an activation record for a claimable role assignment.",
+        "properties": {
+          "activatedBy": {
+            "$ref": "#/components/schemas/ApiAccount"
+          },
+          "activationDate": {
+            "description": "Date and time the claimable role was activated.",
+            "format": "date-time",
+            "type": "string"
+          },
+          "activeToDate": {
+            "description": "Date and time the activation expires.",
+            "format": "date-time",
+            "type": "string"
+          },
+          "id": {
+            "description": "Unique identifier of the activation record.",
+            "format": "uuid",
+            "type": "string"
+          },
+          "reason": {
+            "description": "Reason provided when claiming the role.",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "ValidationProblemDetails": {
+        "properties": {
+          "detail": {
+            "type": ["null", "string"]
+          },
+          "errors": {
+            "additionalProperties": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "type": "object"
+          },
+          "instance": {
+            "type": ["null", "string"]
+          },
+          "status": {
+            "format": "int32",
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": ["null", "integer", "string"]
+          },
+          "title": {
+            "type": ["null", "string"]
+          },
+          "type": {
+            "type": ["null", "string"]
+          }
+        },
+        "type": "object"
+      },
+      "ApiExtendedAccessRole": {
+        "description": "Represents an access role with extended details including system information.",
+        "properties": {
+          "description": {
+            "description": "Description of the access role.",
+            "type": "string"
+          },
+          "id": {
+            "description": "Unique identifier of the access role.",
+            "format": "uuid",
+            "type": "string"
+          },
+          "name": {
+            "description": "Name of the access role.",
+            "type": "string"
+          },
+          "scopeType": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/ApiScopeType"
+              }
+            ]
+          },
+          "system": {
+            "$ref": "#/components/schemas/ApiSimpleSystem"
+          }
+        },
+        "type": "object"
+      },
+      "ApiScopeValues": {
+        "description": "Resolved scope values for this assignment, if any.",
+        "properties": {
+          "isGlobal": {
+            "description": "Whether the assignment is global (not restricted to a specific entity).",
+            "type": "boolean"
+          },
+          "type": {
+            "description": "Scope type identifier (e.g. \"project\", \"contract\"), if any.",
+            "type": ["null", "string"]
+          },
+          "values": {
+            "description": "Resolved scope values (e.g. project IDs or contract IDs), if any.",
+            "items": {
+              "type": "string"
+            },
+            "type": ["null", "array"]
+          }
+        },
+        "required": ["values"],
+        "type": "object"
+      },
+      "ForbiddenItem": {
+        "properties": {
+          "accessRequirements": {
+            "items": {
+              "$ref": "#/components/schemas/AccessRequirement"
+            },
+            "type": "array"
+          },
+          "code": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": ["code", "message", "accessRequirements"],
+        "type": "object"
+      },
+      "ApiAccountClaimableRoleAssignment": {
+        "description": "Represents a claimable role assignment as seen from an account context, including audit fields.",
+        "properties": {
+          "activeTo": {
+            "description": "Date and time until which the claimed role is active, if any.",
+            "format": "date-time",
+            "type": ["null", "string"]
+          },
+          "assignedTo": {
+            "$ref": "#/components/schemas/ApiAccount"
+          },
+          "claimableRole": {
+            "$ref": "#/components/schemas/ApiSimpleClaimableRole"
+          },
+          "createdBy": {
+            "$ref": "#/components/schemas/ApiAccount"
+          },
+          "createdDate": {
+            "description": "Date and time this assignment was created.",
+            "format": "date-time",
+            "type": "string"
+          },
+          "externalIdentifier": {
+            "description": "Identifier in the originating system, if any.",
+            "type": ["null", "string"]
+          },
+          "id": {
+            "description": "Unique identifier of the assignment.",
+            "format": "uuid",
+            "type": "string"
+          },
+          "isActive": {
+            "description": "Whether the claimable role is currently active (claimed).",
+            "type": "boolean"
+          },
+          "reason": {
+            "description": "Reason for the assignment.",
+            "type": "string"
+          },
+          "scope": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/ApiClaimableRoleScope"
+              }
+            ]
+          },
+          "source": {
+            "description": "The origin system that created this assignment, if any.",
+            "type": ["null", "string"]
+          },
+          "tags": {
+            "description": "Labels attached to the assignment.",
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "type": {
+            "description": "Assignment type (e.g. \"Direct\" or \"Inherited\").",
+            "type": "string"
+          },
+          "validFrom": {
+            "description": "Date from which the assignment is valid, if any.",
+            "format": "date-time",
+            "type": ["null", "string"]
+          },
+          "validTo": {
+            "description": "Date until which the assignment is valid, if any.",
+            "format": "date-time",
+            "type": ["null", "string"]
+          }
+        },
+        "type": "object"
+      },
+      "ApiAccount": {
+        "description": "The owner account.",
+        "properties": {
+          "accountClassification": {
+            "description": "Account classification, if available.",
+            "type": ["null", "string"]
+          },
+          "accountType": {
+            "description": "Account type (e.g. Employee, Consultant, ExternalHire).",
+            "type": "string"
+          },
+          "azureUniqueId": {
+            "description": "Azure Active Directory unique object ID, if known.",
+            "format": "uuid",
+            "type": ["null", "string"]
+          },
+          "displayName": {
+            "description": "Display name.",
+            "type": "string"
+          },
+          "mail": {
+            "description": "Email address, if available.",
+            "type": ["null", "string"]
+          },
+          "upn": {
+            "description": "User principal name (UPN), if available.",
+            "type": ["null", "string"]
+          }
+        },
+        "type": "object"
+      },
+      "ApiConsolidatedAssignmentEntry": {
+        "description": "Represents a single contributing assignment entry in a consolidated role assignment view.",
+        "properties": {
+          "externalIdentifier": {
+            "description": "Identifier in the originating system, if any. Omitted when null.",
+            "type": ["null", "string"]
+          },
+          "id": {
+            "description": "Unique identifier of this assignment entry.",
+            "format": "uuid",
+            "type": "string"
+          },
+          "reason": {
+            "description": "Reason for this assignment entry.",
+            "type": "string"
+          },
+          "source": {
+            "description": "The origin system that created this entry, if any. Omitted when null.",
+            "type": ["null", "string"]
+          },
+          "validFrom": {
+            "description": "Date from which this entry is valid, if any.",
+            "format": "date-time",
+            "type": ["null", "string"]
+          },
+          "validTo": {
+            "description": "Date until which this entry is valid, if any.",
+            "format": "date-time",
+            "type": ["null", "string"]
+          }
+        },
+        "type": "object"
+      },
+      "ApiConsolidatedClaimableRoleRef": {
+        "description": "The claimable role assigned.",
+        "properties": {
+          "description": {
+            "description": "Description of the claimable role.",
+            "type": "string"
+          },
+          "displayName": {
+            "description": "Human-readable display name of the claimable role.",
+            "type": "string"
+          },
+          "id": {
+            "description": "Unique identifier of the claimable role.",
+            "format": "uuid",
+            "type": "string"
+          },
+          "name": {
+            "description": "Name of the claimable role.",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "ApiClaimableRoleScope": {
+        "description": "Scope restricting the assignment, if any. Omitted when null.",
+        "properties": {
+          "isGlobal": {
+            "description": "Whether this is a global (non-scoped) assignment.",
+            "type": "boolean"
+          },
+          "scopeTypeIdentifier": {
+            "description": "Scope type identifier (e.g. \"project\", \"contract\"), if any.",
+            "type": ["null", "string"]
+          },
+          "value": {
+            "description": "Scope value, if any.",
+            "type": ["null", "string"]
+          }
+        },
+        "required": ["isGlobal", "value"],
+        "type": "object"
+      },
+      "ApiSimpleRole": {
+        "description": "The role that is assigned.",
+        "properties": {
+          "description": {
+            "description": "Description of the role.",
+            "type": "string"
+          },
+          "displayName": {
+            "description": "Human-readable display name of the role.",
+            "type": "string"
+          },
+          "id": {
+            "description": "Unique identifier of the role.",
+            "format": "uuid",
+            "type": "string"
+          },
+          "name": {
+            "description": "Name of the role.",
+            "type": "string"
+          },
+          "system": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/ApiSimpleSystem"
+              }
+            ]
+          }
+        },
+        "type": "object"
+      },
+      "ApiRoleScope": {
+        "description": "Scope restricting the assignment, if any. Omitted when null.",
+        "properties": {
+          "isGlobal": {
+            "description": "Whether this is a global (non-scoped) assignment.",
+            "type": "boolean"
+          },
+          "scopeTypeIdentifier": {
+            "description": "Scope type identifier (e.g. \"project\", \"contract\"), if any.",
+            "type": ["null", "string"]
+          },
+          "value": {
+            "description": "Scope value, if any.",
+            "type": ["null", "string"]
+          }
+        },
+        "required": ["isGlobal", "value"],
+        "type": "object"
+      },
+      "ApiScopeType": {
+        "description": "Represents a scope type that categorises assignments (e.g. project, contract, system).",
+        "properties": {
+          "description": {
+            "description": "Description of the scope type, if any.",
+            "type": ["null", "string"]
+          },
+          "id": {
+            "description": "Unique identifier of the scope type.",
+            "format": "uuid",
+            "type": "string"
+          },
+          "name": {
+            "description": "Name of the scope type.",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "ApiSimpleSystem": {
+        "description": "The system this role belongs to, if any.",
+        "properties": {
+          "id": {
+            "description": "Unique identifier of the system.",
+            "format": "uuid",
+            "type": "string"
+          },
+          "name": {
+            "description": "Name of the system.",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "AccessRequirement": {
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "outcome": {
+            "type": ["null", "string"]
+          },
+          "wasEvaluated": {
+            "type": "boolean"
+          }
+        },
+        "required": ["code", "description", "outcome", "wasEvaluated"],
+        "type": "object"
+      },
+      "ApiSimpleClaimableRole": {
+        "description": "The claimable role that is assigned.",
+        "properties": {
+          "accessRoleMappings": {
+            "description": "Access role mappings granted when this claimable role is activated, if expanded.",
+            "items": {
+              "$ref": "#/components/schemas/ApiClaimableAccessRoleMapping"
+            },
+            "type": ["null", "array"]
+          },
+          "description": {
+            "description": "Description of the claimable role.",
+            "type": "string"
+          },
+          "displayName": {
+            "description": "Human-readable display name of the claimable role.",
+            "type": "string"
+          },
+          "id": {
+            "description": "Unique identifier of the claimable role.",
+            "format": "uuid",
+            "type": "string"
+          },
+          "name": {
+            "description": "Name of the claimable role.",
+            "type": "string"
+          },
+          "system": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/ApiSimpleSystem"
+              }
+            ]
+          }
+        },
+        "type": "object"
+      },
+      "ApiClaimableAccessRoleMapping": {
+        "description": "Maps an access role to a claimable role, with the reason for inclusion.",
+        "properties": {
+          "accessRole": {
+            "$ref": "#/components/schemas/ApiAccessRole"
+          },
+          "reason": {
+            "description": "Reason this access role is granted through the claimable role.",
+            "type": ["null", "string"]
+          }
+        },
+        "type": "object"
+      },
+      "ApiAccessRole": {
+        "description": "Represents an access role.",
+        "properties": {
+          "description": {
+            "description": "Description of the access role.",
+            "type": "string"
+          },
+          "id": {
+            "description": "Unique identifier of the access role.",
+            "format": "uuid",
+            "type": "string"
+          },
+          "name": {
+            "description": "Name of the access role.",
+            "type": "string"
+          },
+          "scopeType": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/ApiScopeType"
+              }
+            ]
+          }
+        },
+        "type": "object"
       }
     }
   }
