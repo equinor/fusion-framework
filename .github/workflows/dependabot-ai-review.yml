@@ -211,8 +211,7 @@ jobs:
           marker="<!-- fusion-ai-dependency:${SIGNATURE} -->"
           existing="$(
             gh api --paginate "repos/${REPOSITORY}/issues/${PR_NUMBER}/comments" \
-              --jq ".[] | select(.user.login == \"github-actions[bot]\") | select(.body | contains(\"${marker}\")) | .body" \
-              | head -n 1
+              --jq "[.[] | select(.user.login == \"github-actions[bot]\") | select(.body | contains(\"${marker}\")) | .body] | first // \"\""
           )"
 
           if [[ -z "$existing" ]]; then
@@ -544,8 +543,7 @@ jobs:
           marker="<!-- fusion-ai-dependency:${SIGNATURE} -->"
           verdict="$(
             gh api --paginate "repos/${REPOSITORY}/issues/${PR_NUMBER}/comments" \
-              --jq ".[] | select(.user.login == \"github-actions[bot]\") | select(.body | contains(\"${marker}\")) | .body" \
-              | head -n 1
+              --jq "[.[] | select(.user.login == \"github-actions[bot]\") | select(.body | contains(\"${marker}\")) | .body] | first // \"\""
           )"
           if ! grep -Fqx '## 🟢 Verdict: MERGE' <<< "$verdict"; then
             echo "head_sha=$EXPECTED_HEAD_SHA" >> "$GITHUB_OUTPUT"
