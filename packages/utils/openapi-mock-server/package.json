@@ -76,6 +76,7 @@
   "scripts": {
     "build": "tsc -b",
     "prepack": "pnpm build",
+    "preset:roles:update": "node scripts/update-roles-preset.mjs",
     "test": "vitest",
     "test:run": "vitest --run"
   },
@@ -90,6 +91,9 @@
     "yaml": "^2.9.0"
   },
   "devDependencies": {
+    "@equinor/fusion-framework-module-http": "workspace:^",
+    "@equinor/fusion-framework-module-roles": "workspace:^",
+    "rxjs": "^7.8.1",
     "typescript": "^7.0.2",
     "vitest": "^4.1.10"
   }
