@@ -111,7 +111,7 @@ jobs:
         uses: ./.github/actions/node-setup
 
       - name: Validate maintenance stream
-        run: pnpm test && pnpm build && pnpm -w check
+        run: pnpm build && pnpm test && pnpm -w check
 
       - name: Create or update draft promotion pull request
         env:
