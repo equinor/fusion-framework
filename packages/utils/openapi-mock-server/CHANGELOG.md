@@ -1,5 +1,25 @@
 # @equinor/fusion-openapi-mock-server
 
+## 0.4.0
+
+### Minor Changes
+
+- 4b3a9a0: Add parameterized middleware routes with decoded path parameters, parsed service-relative URLs and queries, and explicit mock-only identity states sourced from session-scoped mock-auth bearer tokens.
+  
+  Refs: https://github.com/equinor/fusion-core-tasks/issues/2098
+- e6b881a: Add `defineRolesV2Mock` for typed, persona-aware Roles V2 HTTP mocks with paged checks, activation/deactivation, recovery behavior, identity switching, and browser-session/account isolation.
+  
+  Refs: https://github.com/equinor/fusion-core-tasks/issues/2100
+
+### Patch Changes
+
+- 43bc1f0: Add an end-to-end Roles V2 adoption guide covering production configuration, active-only and claim-capable React flows, component tests, persona-aware HTTP mocks, Playwright identity, recovery failures, and trusted backend authorization boundaries.
+  
+  Refs https://github.com/equinor/fusion-core-tasks/issues/2102
+- e6b881a: Align the bundled Roles V2 preset with the read and activation operations used by `@equinor/fusion-framework-module-roles`, and add a repeatable snapshot update command backed by the published Roles service contract.
+  
+  Fixes https://github.com/equinor/fusion-core-tasks/issues/2099
+
 ## 0.3.0
 
 ### Minor Changes

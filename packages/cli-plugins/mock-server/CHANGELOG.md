@@ -1,5 +1,15 @@
 # @equinor/fusion-framework-cli-plugin-mock-server
 
+## 0.2.1
+
+### Patch Changes
+
+- Updated dependencies [43bc1f0]
+- Updated dependencies [4b3a9a0]
+- Updated dependencies [e6b881a]
+- Updated dependencies [e6b881a]
+  - @equinor/fusion-openapi-mock-server@0.4.0
+
 ## 0.2.0
 
 ### Minor Changes

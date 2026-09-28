@@ -1,5 +1,17 @@
 # @equinor/fusion-framework-vitest-plugin-react-app
 
+## 1.0.8
+
+### Patch Changes
+
+- 43bc1f0: Add an end-to-end Roles V2 adoption guide covering production configuration, active-only and claim-capable React flows, component tests, persona-aware HTTP mocks, Playwright identity, recovery failures, and trusted backend authorization boundaries.
+  
+  Refs https://github.com/equinor/fusion-core-tasks/issues/2102
+- Updated dependencies [43bc1f0]
+  - @equinor/fusion-framework@9.0.1
+  - @equinor/fusion-framework-app@13.1.7
+  - @equinor/fusion-framework-cli@15.4.1
+
 ## 1.0.7
 
 ### Patch Changes

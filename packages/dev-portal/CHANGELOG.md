@@ -1,5 +1,15 @@
 # @equinor/fusion-framework-dev-portal
 
+## 11.0.11
+
+### Patch Changes
+
+- Updated dependencies [43bc1f0]
+- Updated dependencies [e1fab9c]
+  - @equinor/fusion-framework@9.0.1
+  - @equinor/fusion-framework-module-roles@0.3.0
+  - @equinor/fusion-framework-app@13.1.7
+
 ## 11.0.10
 
 ### Patch Changes

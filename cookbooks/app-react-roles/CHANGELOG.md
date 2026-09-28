@@ -1,5 +1,16 @@
 # @equinor/fusion-framework-cookbook-app-react-roles
 
+## 0.1.2
+
+### Patch Changes
+
+- 43bc1f0: Link the Roles cookbook to the complete, application-agnostic Roles V2 adoption and testing workflow.
+  
+  Refs https://github.com/equinor/fusion-core-tasks/issues/2102
+- e6b881a: Use `defineRolesV2Mock` for cookbook role policy and verify concurrent personas plus identity switching in Playwright.
+  
+  Refs: https://github.com/equinor/fusion-core-tasks/issues/2100
+
 ## 0.1.1
 
 ### Patch Changes
