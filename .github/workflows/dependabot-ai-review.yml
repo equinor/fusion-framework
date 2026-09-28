@@ -472,8 +472,7 @@ jobs:
       github.event_name == 'pull_request_target' &&
       github.actor == 'dependabot[bot]' &&
       needs.research.outputs.base_ref == 'maintenance/dependencies' &&
-      needs.research.outputs.high_confidence == 'true' &&
-      needs.research.outputs.merge_recommended == 'true' &&
+      needs.research.outputs.auto_merge == 'true' &&
       (needs.publish.result == 'success' || needs.publish.result == 'skipped')
     runs-on: ubuntu-latest
     permissions:
@@ -503,7 +502,7 @@ jobs:
       always() &&
       github.event_name == 'workflow_dispatch' &&
       (inputs.operation == 'maintain' || inputs.operation == 'resolve') &&
-      (inputs.operation == 'resolve' || needs.research.outputs.high_confidence == 'true') &&
+      (inputs.operation == 'resolve' || needs.research.outputs.auto_merge == 'true') &&
       needs.research.result == 'success' &&
       (needs.publish.result == 'success' || needs.publish.result == 'skipped')
     outputs:
@@ -700,8 +699,7 @@ jobs:
       github.event_name == 'workflow_dispatch' &&
       (inputs.operation == 'maintain' || inputs.operation == 'resolve') &&
       needs.research.outputs.base_ref == 'maintenance/dependencies' &&
-      needs.research.outputs.high_confidence == 'true' &&
-      needs.research.outputs.merge_recommended == 'true' &&
+      needs.research.outputs.auto_merge == 'true' &&
       needs.remediate.outputs.ready == 'true' &&
       (needs.publish.result == 'success' || needs.publish.result == 'skipped')
     runs-on: ubuntu-latest
