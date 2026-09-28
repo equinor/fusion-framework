@@ -3,7 +3,7 @@ name: Refresh Dependabot branches
 on:
   push:
     branches:
-      - main
+      - maintenance/dependencies
   workflow_dispatch:
 
 concurrency:
@@ -21,6 +21,7 @@ jobs:
     steps:
       - name: Dispatch branch maintenance
         env:
+          BASE_REF: maintenance/dependencies
           GH_TOKEN: ${{ github.token }}
           REPOSITORY: ${{ github.repository }}
         run: |
@@ -30,10 +31,11 @@ jobs:
             --repo "$REPOSITORY" \
             --state open \
             --limit 100 \
-            --json author,headRefOid,labels,number \
+            --json author,baseRefName,headRefOid,labels,number \
             --jq '
               .[] |
               select(.author.login == "app/dependabot") |
+              select(.baseRefName == env.BASE_REF) |
               select(any(.labels[]; .name == "🤖 AI researched")) |
               [.number, .headRefOid] |
               @tsv

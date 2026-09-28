@@ -2,6 +2,7 @@ version: 2
 updates:
   - package-ecosystem: "npm"
     directory: "/"
+    target-branch: "maintenance/dependencies"
     schedule:
       interval: "daily"
     open-pull-requests-limit: 50

@@ -19,6 +19,7 @@ search to rediscover it.
 | `vue-press/` | Documentation site | Partly |
 | `eval/index/` | Domain eval files for MCP retrieval quality | No |
 | `contributing/` | Human-facing contributor docs | No |
+| `docs/adr/` | Repository architecture decision records | No |
 | `.github/instructions/` | Rule files consumed by AI agents (`applyTo` globs) | No |
 | `.agents/skills/` | Repository-local agent skills | No |
 | `patches/` | `pnpm` patch files | No |
