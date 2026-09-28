@@ -18,6 +18,11 @@ export {
   RolesModuleConfigurator,
 } from './RolesModuleConfigurator.js';
 export {
+  type AccessRoleCheck,
+  type AccessRoleCheckState,
+  createAccessRoleCheck,
+} from './access-role-check/index.js';
+export {
   ClaimableRoleAssignmentActivationEvent,
   type ClaimableRoleAssignmentActivationEventInit,
 } from './ClaimableRoleAssignmentActivationEvent.js';

@@ -255,8 +255,12 @@ describe('RolesProvider', () => {
     await expect(
       provider.hasAccessRole(['Reports.Write', 'Reports.Read'], { required: false }),
     ).resolves.toBe(true);
+    await expect(
+      provider.hasAccessRole(['Reports.Read'], { required: true, refresh: true }),
+    ).resolves.toBe(true);
     await expect(provider.hasAccessRole(['  '], {})).resolves.toBe(false);
-    expect(client.getActiveAccessRoleAssignments).toHaveBeenCalledTimes(3);
+    expect(client.getActiveAccessRoleAssignments).toHaveBeenCalledTimes(4);
+    expect(client.getActiveAccessRoleAssignments).toHaveBeenLastCalledWith({ refresh: true });
   });
 
   it('checks claim eligibility through the account-scoped client', async () => {

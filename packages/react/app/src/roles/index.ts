@@ -14,3 +14,9 @@ export {
   type ClaimableRoleAssignmentActivationResult,
   type UseAccessRoleResult,
 } from './useAccessRole';
+
+export {
+  useHasAccessRole,
+  type UseHasAccessRoleOptions,
+  type UseHasAccessRoleResult,
+} from './useHasAccessRole';

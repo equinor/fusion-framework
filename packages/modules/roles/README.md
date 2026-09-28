@@ -66,6 +66,32 @@ const requiredRoleStatuses = await framework.modules.roles.getRequiredAccessRole
 ]);
 ```
 
+Use `createAccessRoleCheck` when non-React consumers need reusable loading, error, and refresh state
+for one immutable active-role predicate:
+
+```ts
+import { createAccessRoleCheck } from '@equinor/fusion-framework-module-roles';
+
+const reportsAccess = createAccessRoleCheck(
+  framework.modules.roles,
+  ['Reports.Read', 'Reports.Export'],
+  { required: false },
+);
+
+const subscription = reportsAccess.state$.subscribe((state) => {
+  console.log(state.hasAccessRole, state.isLoading, state.error);
+});
+
+await reportsAccess.load();
+await reportsAccess.refresh();
+subscription.unsubscribe();
+reportsAccess.dispose();
+```
+
+`load` permits the provider's active-assignment cache. `refresh` invalidates that cache before
+calling `hasAccessRole` again. Overlapping operations settle independently, while only the newest
+operation updates `state$`.
+
 `hasClaimableRoleAssignmentForAccessRole` follows every page of the account's claimable assignments
 and expands `accessRoleMappings`. It returns `true` only for a global assignment that is currently
 inside its validity window, is not already active, and grants the requested access-role name.
@@ -99,6 +125,9 @@ before loading it again:
 ```ts
 const activeRoles = await framework.modules.roles.getActiveAccessRoleAssignments({ refresh: true });
 ```
+
+`hasAccessRole` accepts the same `refresh` option when a direct boolean recheck must bypass cached
+active assignments.
 
 ## Claim a role
 
