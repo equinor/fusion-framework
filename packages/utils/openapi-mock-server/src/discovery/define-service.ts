@@ -18,6 +18,8 @@ interface DefineServiceBaseOptions {
   components?: Record<string, Record<string, FieldFakerValue>>;
   /** Registers imperative routes that run before declarative and generated responses. */
   middleware?: (router: Router) => void;
+  /** Clears mutable middleware state when the owning mock server resets. */
+  reset?: () => void;
 }
 
 /** Options for merging behavior onto an earlier service definition. */
@@ -69,6 +71,7 @@ export function defineService(options: DefineServiceOptions): ServiceMockDefinit
     fields: flattenSchemaOverrides(options.components),
     paths: options.routes,
     router,
+    reset: options.reset,
   };
 }
 

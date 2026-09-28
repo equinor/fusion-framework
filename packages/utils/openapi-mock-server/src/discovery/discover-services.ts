@@ -26,6 +26,8 @@ export interface ServiceMockDefinition {
   paths?: Record<string, Record<string, RouteOverride>>;
   /** A router checked ahead of this service's declarative and generated mock responses. */
   router?: Router;
+  /** Clears mutable state owned by this service when the mock server resets. */
+  reset?: () => void;
 }
 
 /**

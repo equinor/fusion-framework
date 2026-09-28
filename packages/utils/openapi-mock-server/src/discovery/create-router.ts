@@ -38,8 +38,8 @@ export type MockRequestIdentity =
       status: 'authenticated';
       /** Stable user identifier normalized from the mock token's `oid` claim. */
       userId: string;
-      /** Opaque browser-session identifier minted into the supported mock-auth token. */
-      sessionId: string;
+      /** Opaque browser-session identifier when identity came from session-scoped mock auth. */
+      sessionId?: string;
       /** Decoded claims from the supported mock-auth token. */
       claims: Readonly<Record<string, unknown>>;
     }

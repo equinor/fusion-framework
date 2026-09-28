@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it } from 'vitest';
 
 import { createMockServer, type MockServerHandle } from '../index.js';
+import type { MockRequestIdentity } from '../discovery/index.js';
 import { defineRolesV2Mock } from '../presets/fusion/define-roles-v2-mock.js';
 
 interface MockSession {
@@ -165,6 +166,11 @@ describe('defineRolesV2Mock', () => {
       nextPage: expect.stringContaining('$skip=1'),
       value: [{ name: 'Application.View' }],
     });
+    const zeroPage = await requestRoles(url, firstAccountASession, '/access-roles?$top=0&$skip=0');
+    expect(zeroPage.status).toBe(400);
+    await expect(zeroPage.json()).resolves.toEqual({
+      error: 'Expected $top to be a positive integer and $skip to be non-negative.',
+    });
 
     const claimablePage = await requestRoles(
       url,
@@ -307,6 +313,134 @@ describe('defineRolesV2Mock', () => {
     expect(missing.status).toBe(401);
   });
 
+  it('resets activated role state through the HTTP control plane', async () => {
+    const roles = defineRolesV2Mock({
+      accounts: {
+        persona: {
+          activeAccessRoleAssignments: [
+            { systemName: 'Application', accessRoleName: 'Application.View' },
+          ],
+          claimableRoleAssignments: [
+            {
+              id: ASSIGNMENT_ID,
+              type: 'Global',
+              isActive: false,
+              claimableRole: {
+                id: 'claimable-reset',
+                name: 'Temporary contributor',
+                system: { id: 'system-a', name: 'Application' },
+                accessRoleMappings: [
+                  {
+                    accessRole: {
+                      id: 'edit-role',
+                      name: 'Application.Edit',
+                    },
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      },
+    });
+    server = createMockServer().use('fusion').use([roles]);
+    const { url } = await server.start();
+    const session = await selectPersona(url, 'persona');
+
+    const activation = await requestRoles(
+      url,
+      session,
+      `/accounts/persona/claimable-role-assignments/${ASSIGNMENT_ID}/activate`,
+      {
+        method: 'POST',
+        body: JSON.stringify({ reason: 'Exercise reset', hours: 1 }),
+      },
+    );
+    expect(activation.status).toBe(201);
+
+    const reset = await fetch(`${url}/@fusion-mock/reset`, { method: 'POST' });
+    expect(reset.status).toBe(200);
+
+    const activeAfterReset = await requestRoles(
+      url,
+      session,
+      '/accounts/persona/active-access-role-assignments',
+    );
+    await expect(activeAfterReset.json()).resolves.toEqual([
+      { systemName: 'Application', accessRoleName: 'Application.View' },
+    ]);
+    const claimableAfterReset = await requestRoles(
+      url,
+      session,
+      '/accounts/persona/claimable-role-assignments',
+    );
+    await expect(claimableAfterReset.json()).resolves.toMatchObject({
+      value: [{ id: ASSIGNMENT_ID, isActive: false }],
+    });
+  });
+
+  it('removes explicitly modeled effective roles from initially active claims', async () => {
+    const effectiveRole = {
+      systemName: 'Application',
+      accessRoleName: 'Application.Edit',
+      assignmentType: 'Global',
+      activeToDate: '2026-01-02T05:04:05.000Z',
+    };
+    const roles = defineRolesV2Mock({
+      now: () => new Date('2026-01-02T03:04:05.000Z'),
+      accounts: {
+        persona: {
+          activeAccessRoleAssignments: [
+            { systemName: 'Application', accessRoleName: 'Application.View' },
+          ],
+          claimableRoleAssignments: [
+            {
+              id: ASSIGNMENT_ID,
+              type: 'Global',
+              isActive: true,
+              activeTo: effectiveRole.activeToDate,
+              claimableRole: { id: 'claimable-active', name: 'Active contributor' },
+            },
+          ],
+          activations: {
+            [ASSIGNMENT_ID]: {
+              activeAccessRoleAssignments: [effectiveRole],
+            },
+          },
+        },
+      },
+    });
+    server = createMockServer().use('fusion').use([roles]);
+    const { url } = await server.start();
+    const session = await selectPersona(url, 'persona');
+
+    const initiallyActive = await requestRoles(
+      url,
+      session,
+      '/accounts/persona/active-access-role-assignments',
+    );
+    await expect(initiallyActive.json()).resolves.toEqual([
+      { systemName: 'Application', accessRoleName: 'Application.View' },
+      effectiveRole,
+    ]);
+
+    const deactivation = await requestRoles(
+      url,
+      session,
+      `/accounts/persona/claimable-role-assignments/${ASSIGNMENT_ID}/deactivate`,
+      { method: 'POST' },
+    );
+    expect(deactivation.status).toBe(201);
+    const activeAfterDeactivation = await requestRoles(
+      url,
+      session,
+      '/accounts/persona/active-access-role-assignments',
+    );
+    await expect(activeAfterDeactivation.json()).resolves.toEqual([
+      { systemName: 'Application', accessRoleName: 'Application.View' },
+    ]);
+  });
+
   it('rejects malformed account and activation policy before server startup', () => {
     expect(() => defineRolesV2Mock({ accounts: {} })).toThrow(
       'requires at least one configured account',
@@ -323,5 +457,28 @@ describe('defineRolesV2Mock', () => {
         },
       }),
     ).toThrow('configures unknown claimable assignment "missing"');
+    expect(() =>
+      defineRolesV2Mock({
+        accounts: {
+          persona: {
+            claimableRoleAssignments: [{ id: ASSIGNMENT_ID, isActive: true }],
+          },
+        },
+      }),
+    ).toThrow('active claimable assignment');
+  });
+
+  it('preserves the pre-session public authenticated identity shape', () => {
+    const identity: MockRequestIdentity = {
+      status: 'authenticated',
+      userId: 'legacy-middleware-user',
+      claims: {},
+    };
+
+    expect(identity).toEqual({
+      status: 'authenticated',
+      userId: 'legacy-middleware-user',
+      claims: {},
+    });
   });
 });

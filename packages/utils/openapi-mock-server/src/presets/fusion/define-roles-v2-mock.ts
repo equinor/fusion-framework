@@ -154,6 +154,13 @@ function validateOptions(options: DefineRolesV2MockOptions): void {
         );
       }
       assignmentIds.add(assignment.id);
+      const activation = account.activations?.[assignment.id];
+      // Initially active claims need explicit provenance so deactivation removes only their roles.
+      if (assignment.isActive === true && !activation?.activeAccessRoleAssignments?.length) {
+        throw new Error(
+          `defineRolesV2Mock active claimable assignment "${assignment.id}" for account "${accountIdentifier}" requires activations["${assignment.id}"].activeAccessRoleAssignments.`,
+        );
+      }
     }
 
     // Activation overrides must target declared assignments and valid HTTP error statuses.
@@ -187,15 +194,27 @@ function validateOptions(options: DefineRolesV2MockOptions): void {
  */
 function createAccountState(account: RolesV2MockAccount): AccountRuntimeState {
   const claimableRoleAssignments = clone([...(account.claimableRoleAssignments ?? [])]);
+  const activeAccessRoleAssignments = clone([...(account.activeAccessRoleAssignments ?? [])]);
+  const activatedAccessRoles = new Map<string, ApiAccountActiveAccessRoleAssignmentV1[]>();
+  // Initially active claims append explicit effective roles and retain exact removal provenance.
+  for (const assignment of claimableRoleAssignments) {
+    // Startup validation guarantees active assignments have an ID and explicit effective roles.
+    if (assignment.isActive !== true || !assignment.id) continue;
+    const effectiveRoles = clone([
+      ...(account.activations?.[assignment.id]?.activeAccessRoleAssignments ?? []),
+    ]);
+    activeAccessRoleAssignments.push(...effectiveRoles);
+    activatedAccessRoles.set(assignment.id, effectiveRoles);
+  }
   return {
-    activeAccessRoleAssignments: clone([...(account.activeAccessRoleAssignments ?? [])]),
+    activeAccessRoleAssignments,
     claimableRoleAssignments,
     consolidatedClaimableRoleAssignments: clone([
       ...(account.consolidatedClaimableRoleAssignments ??
         deriveConsolidatedAssignments(claimableRoleAssignments)),
     ]),
     consolidatedRoleAssignments: clone([...(account.consolidatedRoleAssignments ?? [])]),
-    activatedAccessRoles: new Map(),
+    activatedAccessRoles,
   };
 }
 
@@ -237,10 +256,12 @@ function createPage<TValue>(
 ): ApiPagedCollectionV1<TValue> | undefined {
   const top = parsePagingParameter(context, '$top', 100);
   const skip = parsePagingParameter(context, '$skip', 0);
-  // Invalid query input is explicit instead of silently changing requested pagination.
-  if (top === undefined || skip === undefined) {
+  // A zero page size cannot produce a continuation that advances through the collection.
+  if (top === undefined || top === 0 || skip === undefined) {
     response.statusCode = 400;
-    response.json({ error: 'Expected $top and $skip to be non-negative integers.' });
+    response.json({
+      error: 'Expected $top to be a positive integer and $skip to be non-negative.',
+    });
     return undefined;
   }
 
@@ -302,11 +323,19 @@ function authorizeAccount(
     return undefined;
   }
 
-  let session = sessions.get(context.identity.sessionId);
+  const sessionId = context.identity.sessionId;
+  // Roles state isolation requires the session extension, while public middleware identity does not.
+  if (!sessionId) {
+    response.statusCode = 401;
+    response.json({ error: 'A session-scoped mock-auth identity is required.' });
+    return undefined;
+  }
+
+  let session = sessions.get(sessionId);
   // Each browser context receives an independent mutation map.
   if (!session) {
     session = new Map();
-    sessions.set(context.identity.sessionId, session);
+    sessions.set(sessionId, session);
   }
   let state = session.get(accountIdentifier);
   // Identity switches inside one browser session preserve separate state per account.
@@ -318,7 +347,7 @@ function authorizeAccount(
     accountIdentifier,
     account,
     state,
-    sessionId: context.identity.sessionId,
+    sessionId,
   };
 }
 
@@ -473,6 +502,7 @@ export function defineRolesV2Mock(options: DefineRolesV2MockOptions): ServiceMoc
   return defineService({
     key: 'rolesv2',
     serviceDiscovery: 'merge',
+    reset: () => sessions.clear(),
     middleware: (router) => {
       router.get('/access-roles', (_request, response, context) => {
         // Required-role recovery first verifies that configured access roles exist.

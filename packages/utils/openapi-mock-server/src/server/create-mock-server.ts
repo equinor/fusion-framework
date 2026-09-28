@@ -217,6 +217,8 @@ export function createMockServer(options: CreateMockServerOptions = {}): MockSer
       authSessions.clear();
       // Rebuild every service from its original document, discarding registered overrides.
       for (const [key, state] of activeServices) {
+        // Stateful middleware must return to its authored baseline alongside generated responses.
+        state.definition.reset?.();
         activeServices.set(key, {
           definition: state.definition,
           mock: buildMock(state.definition, seed),
