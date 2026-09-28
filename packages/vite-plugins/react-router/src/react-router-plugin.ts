@@ -309,6 +309,7 @@ function getGeneratedNames(componentName: string, availableExports: Set<string>)
 
   // Include every emitted alias so component and route-module exports share one namespace.
   for (const [exportName, prefix] of Object.entries(exportPrefixes)) {
+    // Only reserve aliases for exports the route module actually exposes.
     if (availableExports.has(exportName)) {
       names.push(`${prefix}${componentName}`);
     }
@@ -347,11 +348,16 @@ function generateUniqueComponentNames(
     let suffix = 2;
 
     // Path and export-prefix normalization can still collapse distinct generated aliases.
-    while (getGeneratedNames(componentName, availableExports).some((name) => usedNames.has(name))) {
+    while (
+      getGeneratedNames(componentName, availableExports)
+        // Reject a candidate when any alias it emits is already reserved.
+        .some((name) => usedNames.has(name))
+    ) {
       componentName = `${preferredName}${suffix}`;
       suffix++;
     }
 
+    // Reserve every alias emitted by the chosen name before allocating the next route.
     getGeneratedNames(componentName, availableExports).forEach((name) => {
       usedNames.add(name);
     });
@@ -361,6 +367,7 @@ function generateUniqueComponentNames(
   // Reserve non-colliding basenames first so expanded names cannot consume them.
   filePaths.forEach((filePath) => {
     const baseName = baseNames.get(filePath) ?? generateComponentName(filePath);
+    // Single-use basenames keep the shortest stable identifier.
     if ((nameCounts.get(baseName) ?? 0) === 1) {
       allocateName(filePath, baseName);
     }
@@ -369,6 +376,7 @@ function generateUniqueComponentNames(
   // Allocate expanded names after all non-colliding basenames are reserved.
   filePaths.forEach((filePath) => {
     const baseName = baseNames.get(filePath) ?? generateComponentName(filePath);
+    // Colliding basenames include ancestor segments before suffix allocation.
     if ((nameCounts.get(baseName) ?? 0) > 1) {
       allocateName(filePath, generateComponentName(filePath, true));
     }
@@ -817,6 +825,7 @@ export const reactRouterPlugin = (options: ReactRouterPluginOptions = {}): Plugi
         });
         const componentNames = generateUniqueComponentNames(filePaths, availableExportsByPath);
 
+        // Build imports only after every route export participates in collision allocation.
         filePaths.forEach((filePath) => {
           const componentName = componentNames.get(filePath) ?? generateComponentName(filePath);
           const availableExports = availableExportsByPath.get(filePath) ?? new Set<string>();
