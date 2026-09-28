@@ -468,6 +468,55 @@ describe('defineRolesV2Mock', () => {
     ).toThrow('active claimable assignment');
   });
 
+  it('requires explicit consolidated fixtures for duplicate role, type, and scope policy', () => {
+    const duplicateAssignments = [
+      {
+        id: 'assignment-a',
+        type: 'Scoped',
+        claimableRole: { id: 'shared-role', name: 'Shared role' },
+        scope: { isGlobal: false, value: 'project-a', scopeTypeIdentifier: 'project' },
+      },
+      {
+        id: 'assignment-b',
+        type: 'Scoped',
+        claimableRole: { id: 'shared-role', name: 'Shared role' },
+        scope: { isGlobal: false, value: 'project-a', scopeTypeIdentifier: 'project' },
+      },
+    ];
+
+    expect(() =>
+      defineRolesV2Mock({
+        accounts: {
+          persona: { claimableRoleAssignments: duplicateAssignments },
+        },
+      }),
+    ).toThrow('provide consolidatedClaimableRoleAssignments explicitly');
+
+    expect(() =>
+      defineRolesV2Mock({
+        accounts: {
+          persona: {
+            claimableRoleAssignments: duplicateAssignments,
+            consolidatedClaimableRoleAssignments: [
+              {
+                id: 'shared-role-project-a',
+                claimableRole: { id: 'shared-role', name: 'Shared role' },
+                type: 'Scoped',
+                scope: {
+                  isGlobal: false,
+                  value: 'project-a',
+                  scopeTypeIdentifier: 'project',
+                },
+                // The explicit fixture owns how duplicate source assignments are merged.
+                assignments: duplicateAssignments.map((assignment) => ({ id: assignment.id })),
+              },
+            ],
+          },
+        },
+      }),
+    ).not.toThrow();
+  });
+
   it('preserves the pre-session public authenticated identity shape', () => {
     const identity: MockRequestIdentity = {
       status: 'authenticated',

@@ -71,7 +71,8 @@ export function defineService(options: DefineServiceOptions): ServiceMockDefinit
     fields: flattenSchemaOverrides(options.components),
     paths: options.routes,
     router,
-    reset: options.reset,
+    // Omitting an absent hook lets a stateless merge layer inherit earlier reset behavior.
+    ...(options.reset ? { reset: options.reset } : {}),
   };
 }
 

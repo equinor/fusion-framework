@@ -59,6 +59,21 @@ const reportExporterAssignment = {
 };
 
 const expiredAssignments = rolesMockData.consolidatedClaimableRoleAssignments.slice(1);
+// Expired overview shortcuts lack expanded mappings, so their effective grants remain explicit.
+const expiredAssignmentActivations = Object.fromEntries(
+  expiredAssignments.map((assignment) => [
+    assignment.id,
+    {
+      activeAccessRoleAssignments: [
+        {
+          systemName: 'Fusion',
+          accessRoleName: assignment.claimableRole.name,
+          assignmentType: assignment.scope.isGlobal ? 'Global' : 'Scoped',
+        },
+      ],
+    },
+  ]),
+) satisfies NonNullable<RolesV2MockAccount['activations']>;
 
 const standingAccess = {
   systemName: 'Fusion Apps',
@@ -85,6 +100,7 @@ function createRecoveryAccount(): RolesV2MockAccount {
       reportExporterAssignment,
       ...expiredAssignments,
     ],
+    activations: expiredAssignmentActivations,
   };
 }
 

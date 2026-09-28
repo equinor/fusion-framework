@@ -95,6 +95,23 @@ function clone<TValue>(value: TValue): TValue {
 }
 
 /**
+ * Builds the Roles V2 consolidation identity for one claimable assignment.
+ *
+ * @param assignment - Full claimable assignment to identify.
+ * @returns Stable key covering role, assignment type, and scope.
+ */
+function getConsolidatedAssignmentKey(assignment: ApiAccountClaimableRoleAssignmentV1): string {
+  const scope = assignment.scope;
+  return JSON.stringify([
+    assignment.claimableRole?.id ?? assignment.claimableRole?.name ?? assignment.id,
+    assignment.type ?? null,
+    scope?.isGlobal ?? null,
+    scope?.value ?? null,
+    scope?.scopeTypeIdentifier ?? null,
+  ]);
+}
+
+/**
  * Converts claimable assignments into the consolidated shape used by overview APIs.
  *
  * @param assignments - Full account claimable assignments.
@@ -139,6 +156,9 @@ function validateOptions(options: DefineRolesV2MockOptions): void {
     }
 
     const assignmentIds = new Set<string>();
+    const consolidationKeys = account.consolidatedClaimableRoleAssignments
+      ? undefined
+      : new Set<string>();
     // Mutable activation state requires a stable, unique assignment identity.
     for (const assignment of account.claimableRoleAssignments ?? []) {
       // Missing IDs cannot be addressed by the activation/deactivation endpoint.
@@ -154,6 +174,17 @@ function validateOptions(options: DefineRolesV2MockOptions): void {
         );
       }
       assignmentIds.add(assignment.id);
+      // Duplicate consolidation identities need application-owned merged reasons and entries.
+      if (consolidationKeys) {
+        const consolidationKey = getConsolidatedAssignmentKey(assignment);
+        // Repeated keys cannot be projected one-to-one without violating the endpoint contract.
+        if (consolidationKeys.has(consolidationKey)) {
+          throw new Error(
+            `defineRolesV2Mock account "${accountIdentifier}" has claimable assignments that share a role, type, and scope; provide consolidatedClaimableRoleAssignments explicitly.`,
+          );
+        }
+        consolidationKeys.add(consolidationKey);
+      }
       const activation = account.activations?.[assignment.id];
       // Initially active claims need explicit provenance so deactivation removes only their roles.
       if (assignment.isActive === true && !activation?.activeAccessRoleAssignments?.length) {

@@ -429,6 +429,9 @@ describe('createMockServer', () => {
         },
       }),
     ]);
+    const cookieOnlyResource = await fetch(`${url}/resources/resources/anonymous`, {
+      headers: { cookie: firstCookie },
+    });
 
     await expect(firstResource.json()).resolves.toEqual({
       resourceId: 'shared',
@@ -448,6 +451,8 @@ describe('createMockServer', () => {
       sessionId: expect.any(String),
       roles: ['reader'],
     });
+    expect(cookieOnlyResource.status).toBe(401);
+    await expect(cookieOnlyResource.json()).resolves.toEqual({ status: 'missing' });
   });
 
   it('lets a later use() layer override an earlier one by service key', async () => {

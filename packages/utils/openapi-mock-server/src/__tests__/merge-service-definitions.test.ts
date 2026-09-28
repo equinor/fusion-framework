@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
+import { defineService } from '../discovery/define-service.js';
 import type { ServiceMockDefinition } from '../discovery/discover-services.js';
 import { mergeServiceDefinitions } from '../discovery/merge-service-definitions.js';
 
@@ -28,5 +29,16 @@ describe('mergeServiceDefinitions', () => {
     expect(() =>
       mergeServiceDefinitions([service('people', 'replace')], [service('people', 'new')]),
     ).toThrow('marked as new but an earlier definition already exists');
+  });
+
+  it('preserves an inherited reset hook when a merge layer is stateless', () => {
+    const reset = (): void => undefined;
+    const existing = { ...service('people', 'replace'), reset };
+    const statelessMerge = defineService({
+      key: 'people',
+      serviceDiscovery: 'merge',
+    });
+
+    expect(mergeServiceDefinitions([existing], [statelessMerge])[0]?.reset).toBe(reset);
   });
 });

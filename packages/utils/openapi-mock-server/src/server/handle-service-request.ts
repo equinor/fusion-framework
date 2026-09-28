@@ -20,6 +20,8 @@ function resolveServiceIdentity(
   const bearerIdentity = parseMockRequestIdentity(request.headers.authorization);
   // Direct HTTP callers and proxies that preserve the supported token stay bearer-authenticated.
   if (bearerIdentity.status === 'authenticated') return bearerIdentity;
+  // A browser session cannot turn an anonymous request into an authenticated service request.
+  if (bearerIdentity.status === 'missing') return bearerIdentity;
 
   const session = authSessions?.getRequestSession(request);
   // Dev-server proxies can preserve the browser cookie even when they replace the bearer token.
