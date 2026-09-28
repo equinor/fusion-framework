@@ -8,39 +8,13 @@ updates:
     open-pull-requests-limit: 50
     versioning-strategy: increase-if-necessary
     groups:
-      ag-charts:
+      routine-patch-and-minor:
         applies-to: version-updates
         patterns:
-          - "ag-charts-community"
-          - "ag-charts-react"
-          - "ag-charts-enterprise"
-      ag-grid:
-        applies-to: version-updates
-        patterns:
-          - "ag-grid-enterprise"
-          - "ag-grid-community"
-          - "ag-grid-react"
-      opentelemetry:
-        applies-to: version-updates
-        patterns:
-          - "@opentelemetry/*"
-      langchain:
-        applies-to: version-updates
-        patterns:
-          - "@langchain/*"
-          - "langchain"
-      react-router:
-        applies-to: version-updates
-        patterns:
-          - "react-router"
-          - "react-router-dom"
-          - "@react-router/*"
-      vuepress:
-        applies-to: version-updates
-        patterns:
-          - "@vuepress/*"
-          - "vue"
-          - "vuepress*"
+          - "*"
+        update-types:
+          - "patch"
+          - "minor"
   - package-ecosystem: "github-actions"
     # Workflow files stored in the
     # default location of `.github/workflows`

@@ -31,6 +31,10 @@ of another workspace.
 Routine npm version-update pull requests target `maintenance/dependencies` instead of `main`.
 The maintenance branch requires validation but does not require human approval.
 
+Dependabot groups every npm patch and minor update into one
+`routine-patch-and-minor` pull request. Major updates remain individual so their compatibility
+decisions, migration needs, and release impact stay visible to maintainers.
+
 The existing dependency review automation researches each Dependabot update. It may automatically
 maintain and squash-merge a pull request into `maintenance/dependencies` only when all of these
 conditions hold:
@@ -82,13 +86,15 @@ must not wait for periodic maintenance-stream promotion.
 - Routine dependency merges do not individually trigger `main` release and cache workflows.
 - Maintainers review the accumulated result through one promotion pull request.
 - Full validation covers interactions between updates already accepted into the stream.
+- Routine patch and minor updates are reviewed as one bounded maintenance unit instead of a large
+  queue of sibling pull requests.
 - Risky updates remain individually visible and actionable.
 
 ### Negative
 
 - The maintenance branch and its rules require repository-level administration.
-- Pull requests still become stale when another update changes the shared lockfile, although this
-  churn is isolated to the maintenance stream.
+- The grouped patch/minor pull request has a larger validation and debugging surface than a single
+  dependency update.
 - A failing aggregate promotion may require identifying which accepted update interacts badly
   with another update.
 - Squash promotion requires a guarded branch reset before the next maintenance cycle.
@@ -105,10 +111,10 @@ cache priming, and lockfile refreshes.
 This classification is unreliable in a large workspace because development dependencies can
 affect package builds and deployed artifacts.
 
-### Create one broad Dependabot group
+### Group every npm update, including majors
 
-This reduces pull request count but creates a large failure domain and does not by itself prevent
-every accepted group from triggering `main` workflows.
+This reduces pull request count further, but puts major migrations in the same failure domain as
+routine patch and minor updates. The chosen grouping keeps major upgrades independently visible.
 
 ### Model Dependabot pull requests as a linear `gh stack`
 
