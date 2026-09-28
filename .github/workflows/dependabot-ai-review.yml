@@ -47,6 +47,7 @@ jobs:
       from_version: ${{ steps.pull-request.outputs.from_version }}
       head_sha: ${{ steps.pull-request.outputs.head_sha }}
       head_ref: ${{ steps.pull-request.outputs.head_ref }}
+      high_confidence: ${{ (steps.review.outputs.high_confidence == 'true' || steps.freshness.outputs.high_confidence == 'true') && 'true' || 'false' }}
       merge_recommended: ${{ (steps.review.outputs.merge_recommended == 'true' || steps.freshness.outputs.merge_recommended == 'true') && 'true' || 'false' }}
       pr_number: ${{ steps.pull-request.outputs.number }}
       signature: ${{ steps.pull-request.outputs.signature }}
@@ -216,6 +217,7 @@ jobs:
 
           if [[ -z "$existing" ]]; then
             echo "auto_merge=false" >> "$GITHUB_OUTPUT"
+            echo "high_confidence=false" >> "$GITHUB_OUTPUT"
             echo "review_needed=true" >> "$GITHUB_OUTPUT"
             echo "merge_recommended=false" >> "$GITHUB_OUTPUT"
             exit 0
@@ -226,6 +228,11 @@ jobs:
             echo "merge_recommended=true" >> "$GITHUB_OUTPUT"
           else
             echo "merge_recommended=false" >> "$GITHUB_OUTPUT"
+          fi
+          if grep -Fqx '**Confidence:** high' <<< "$existing"; then
+            echo "high_confidence=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "high_confidence=false" >> "$GITHUB_OUTPUT"
           fi
           if grep -Fqx '## 🟢 Verdict: MERGE' <<< "$existing" && \
             grep -Fqx '**Confidence:** high' <<< "$existing" && \
@@ -362,8 +369,12 @@ jobs:
 
           merge_recommended=false
           auto_merge=false
+          high_confidence=false
           if grep -Fqx '## 🟢 Verdict: MERGE' "$RUNNER_TEMP/dependabot-review.md"; then
             merge_recommended=true
+          fi
+          if grep -Fqx '**Confidence:** high' "$RUNNER_TEMP/dependabot-review.md"; then
+            high_confidence=true
           fi
           if grep -Fqx '## 🟢 Verdict: MERGE' "$RUNNER_TEMP/dependabot-review.md" && \
             grep -Fqx '**Confidence:** high' "$RUNNER_TEMP/dependabot-review.md" && \
@@ -371,6 +382,7 @@ jobs:
             auto_merge=true
           fi
           echo "auto_merge=$auto_merge" >> "$GITHUB_OUTPUT"
+          echo "high_confidence=$high_confidence" >> "$GITHUB_OUTPUT"
           echo "merge_recommended=$merge_recommended" >> "$GITHUB_OUTPUT"
 
           cat "$RUNNER_TEMP/dependabot-review.md" >> "$GITHUB_STEP_SUMMARY"
@@ -453,6 +465,37 @@ jobs:
           REPOSITORY: ${{ github.repository }}
         run: gh pr edit "$PR_NUMBER" --repo "$REPOSITORY" --add-label '🤖 AI researched'
 
+  queue-maintenance:
+    name: Queue high-confidence maintenance
+    needs: [research, publish]
+    if: >-
+      github.event_name == 'pull_request_target' &&
+      github.actor == 'dependabot[bot]' &&
+      needs.research.outputs.base_ref == 'maintenance/dependencies' &&
+      needs.research.outputs.high_confidence == 'true' &&
+      needs.research.outputs.merge_recommended == 'true' &&
+      (needs.publish.result == 'success' || needs.publish.result == 'skipped')
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+      contents: read
+    steps:
+      - name: Dispatch reviewed branch maintenance
+        env:
+          GH_TOKEN: ${{ github.token }}
+          HEAD_SHA: ${{ needs.research.outputs.head_sha }}
+          PR_NUMBER: ${{ needs.research.outputs.pr_number }}
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+
+          gh workflow run dependabot-ai-review.yml \
+            --repo "$REPOSITORY" \
+            --ref main \
+            -f pr_number="$PR_NUMBER" \
+            -f confirmed_head_sha="$HEAD_SHA" \
+            -f operation=maintain
+
   remediate:
     name: Maintain branch and add changesets
     needs: [research, publish]
@@ -460,6 +503,7 @@ jobs:
       always() &&
       github.event_name == 'workflow_dispatch' &&
       (inputs.operation == 'maintain' || inputs.operation == 'resolve') &&
+      (inputs.operation == 'resolve' || needs.research.outputs.high_confidence == 'true') &&
       needs.research.result == 'success' &&
       (needs.publish.result == 'success' || needs.publish.result == 'skipped')
     outputs:
@@ -650,9 +694,15 @@ jobs:
             -f pr_number="$PR_NUMBER"
   auto-merge:
     name: Enable squash auto-merge
-    needs: [research, publish]
+    needs: [research, publish, remediate]
     if: >-
-      needs.research.outputs.auto_merge == 'true' &&
+      always() &&
+      github.event_name == 'workflow_dispatch' &&
+      (inputs.operation == 'maintain' || inputs.operation == 'resolve') &&
+      needs.research.outputs.base_ref == 'maintenance/dependencies' &&
+      needs.research.outputs.high_confidence == 'true' &&
+      needs.research.outputs.merge_recommended == 'true' &&
+      needs.remediate.outputs.ready == 'true' &&
       (needs.publish.result == 'success' || needs.publish.result == 'skipped')
     runs-on: ubuntu-latest
     permissions:
@@ -661,7 +711,7 @@ jobs:
     steps:
       - name: Enable auto-merge for reviewed head
         env:
-          EXPECTED_HEAD_SHA: ${{ needs.research.outputs.head_sha }}
+          EXPECTED_HEAD_SHA: ${{ needs.remediate.outputs.head_sha }}
           GH_TOKEN: ${{ github.token }}
           PR_NUMBER: ${{ needs.research.outputs.pr_number }}
           REPOSITORY: ${{ github.repository }}
