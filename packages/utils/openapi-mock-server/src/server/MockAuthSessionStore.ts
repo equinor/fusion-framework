@@ -17,6 +17,14 @@ export interface MockAuthUser {
   claims?: Record<string, unknown>;
 }
 
+/** Selected user and opaque identifier resolved from one existing mock-auth browser session. */
+export interface MockAuthRequestSession {
+  /** Opaque browser-session identifier stored in the mock-auth cookie. */
+  sessionId: string;
+  /** User selected for the browser session. */
+  user: MockAuthUser;
+}
+
 /**
  * In-memory browser-session store for mock bearer-token overrides.
  *
@@ -55,6 +63,22 @@ export class MockAuthSessionStore {
    */
   public get(sessionId: string): MockAuthUser | undefined {
     return this.#sessions.get(sessionId);
+  }
+
+  /**
+   * Resolves the selected user for an existing browser-session cookie without creating state.
+   *
+   * @param request - Incoming service or control-plane request.
+   * @returns Existing session identity, or `undefined` when no selected mock user is available.
+   */
+  public getRequestSession(request: IncomingMessage): MockAuthRequestSession | undefined {
+    const sessionId = this.#readCookie(request);
+    // Requests without the opaque cookie do not participate in session identity fallback.
+    if (!sessionId) return undefined;
+    const user = this.#sessions.get(sessionId);
+    // Reset and unknown sessions intentionally have no selected identity.
+    if (!user) return undefined;
+    return { sessionId, user };
   }
 
   /**
