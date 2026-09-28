@@ -163,7 +163,7 @@ jobs:
           )"
           head_sha="$(jq --raw-output '.headRefOid' <<< "$pr")"
           signature="$(
-            printf '%s' "$updates" |
+            printf '%s\n%s' "$updates" "$head_sha" |
               sha256sum |
               cut -d ' ' -f 1
           )"
