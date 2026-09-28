@@ -106,6 +106,27 @@ function toMockResponse(res: ServerResponse): MockResponse {
   return mockResponse;
 }
 
+/**
+ * Matches one registered route while treating malformed percent encoding as an unmatched request.
+ *
+ * @param route - Compiled route candidate.
+ * @param pathname - Service-relative request pathname.
+ * @returns The decoded match result, or `false` when the route or encoding does not match.
+ * @throws Unexpected matcher failures that do not represent malformed URL encoding.
+ */
+function matchRegisteredRoute(
+  route: RegisteredRoute,
+  pathname: string,
+): ReturnType<RegisteredRoute['matchPath']> {
+  try {
+    return route.matchPath(pathname);
+  } catch (error) {
+    // Invalid percent encoding is malformed input, so this candidate must behave as unmatched.
+    if (error instanceof URIError) return false;
+    throw error;
+  }
+}
+
 /** Creates an empty {@link Router}.
  *
  * @returns A new, empty {@link Router}.
@@ -116,7 +137,8 @@ export function createRouter(): Router {
 
   function register(method: string, path: string, handler: RouteHandler): void {
     exactRoutes.set(`${method} ${path}`, handler);
-    registeredRoutes.push({ method, handler, matchPath: match(path) });
+    // Disabling optional trailing delimiters preserves the router's previous exact-path semantics.
+    registeredRoutes.push({ method, handler, matchPath: match(path, { trailing: false }) });
   }
 
   return {
@@ -139,7 +161,7 @@ export function createRouter(): Router {
         for (const route of registeredRoutes) {
           // Routes registered for another method cannot match this request.
           if (route.method !== method) continue;
-          const result = route.matchPath(url.pathname);
+          const result = matchRegisteredRoute(route, url.pathname);
           // Keep searching until the first parameterized route matches.
           if (!result) continue;
           matchedHandler = route.handler;

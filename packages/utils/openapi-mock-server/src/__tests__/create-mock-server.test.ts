@@ -3,6 +3,7 @@ import { fileURLToPath } from 'node:url';
 
 import { afterEach, describe, expect, it } from 'vitest';
 
+import { createRouter } from '../discovery/create-router.js';
 import { createService } from '../discovery/create-service.js';
 import { createMockServer, type MockServerHandle } from '../server/index.js';
 
@@ -291,6 +292,7 @@ describe('createMockServer', () => {
     const { url } = await server.start();
 
     const exact = await fetch(`${url}/scoped/accounts/me/assignments`);
+    const malformedParameter = await fetch(`${url}/scoped/accounts/%ZZ/assignments`);
     const parameterized = await fetch(
       `${url}/scoped/accounts/account%2Fwith%20spaces/assignments?filter=active&filter=owned`,
       { headers: { authorization: 'Bearer not-a-jwt' } },
@@ -304,8 +306,8 @@ describe('createMockServer', () => {
     const unsupported = await fetch(`${url}/scoped/accounts/unsupported/assignments`, {
       headers: { authorization: `Bearer ${unsupportedToken}` },
     });
-
     await expect(exact.json()).resolves.toEqual({ source: 'exact' });
+    expect(malformedParameter.status).toBe(404);
     await expect(parameterized.json()).resolves.toEqual({
       source: 'parameterized',
       accountIdentifier: 'account/with spaces',
@@ -320,6 +322,42 @@ describe('createMockServer', () => {
     await expect(unsupported.json()).resolves.toMatchObject({
       identity: { status: 'unsupported' },
     });
+  });
+
+  it('preserves exact-path behavior for trailing delimiters in direct router usage', async () => {
+    const router = createRouter();
+    router.get('/ping', (_req, res) => res.json({ matched: true }));
+    const routeServer = createServer((request, response) => {
+      router
+        .handle(request, response)
+        .then((handled) => {
+          // Direct router consumers decide the fallback when no exact route matches.
+          if (!handled) {
+            response.statusCode = 404;
+            response.end();
+          }
+        })
+        .catch((error: unknown) => {
+          response.statusCode = 500;
+          response.end(String(error));
+        });
+    });
+    await new Promise<void>((resolve) => routeServer.listen(0, '127.0.0.1', resolve));
+    const address = routeServer.address();
+    // A listening TCP server always exposes a structured address for the test request.
+    if (!address || typeof address === 'string') {
+      throw new Error('Expected the router test server to expose a TCP address');
+    }
+
+    try {
+      const response = await fetch(`http://127.0.0.1:${address.port}/ping/`);
+
+      expect(response.status).toBe(404);
+    } finally {
+      await new Promise<void>((resolve, reject) => {
+        routeServer.close((error) => (error ? reject(error) : resolve()));
+      });
+    }
   });
 
   it('resolves concurrent middleware requests from session-scoped mock identities', async () => {
