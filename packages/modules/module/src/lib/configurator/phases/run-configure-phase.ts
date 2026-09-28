@@ -20,7 +20,8 @@ export async function runConfigurePhase<TRef>(
   ref?: TRef,
 ): Promise<
   // biome-ignore lint/suspicious/noExplicitAny: internal type-erased dispatch — the configure phase coordinates opaque module configs without knowing their concrete shapes
-  any> {
+  any
+> {
   // Step 1: Create raw config objects for all registered modules
   const config = await createModuleConfigs<TRef>(ctx, ref);
 
