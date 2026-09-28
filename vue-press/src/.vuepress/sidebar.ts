@@ -12,6 +12,10 @@ export default sidebar({
           link: 'app/docs/msal.md',
         },
         {
+          text: 'Roles V2 Adoption',
+          link: 'app/docs/roles-v2-adoption-guide.md',
+        },
+        {
           text: 'Routing',
           link: 'app/docs/routing.md',
         },

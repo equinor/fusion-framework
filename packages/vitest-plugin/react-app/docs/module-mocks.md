@@ -17,6 +17,7 @@ module scopes.
 | Context fixture generation | `@equinor/fusion-framework-module-context/mock/fixtures` | `createContextItemFactory`, `createContextItems` |
 | Feature flags | `@equinor/fusion-framework-module-feature-flag/mock` | `enableFeatureFlagMock`, `FeatureFlagMockConfigurator` |
 | HTTP routes and OpenAPI responses | `@equinor/fusion-framework-module-http/mock` | `createRouterMiddleware`, `createOpenApiMockMiddleware` |
+| Roles V2 | `@equinor/fusion-framework-module-roles/mock` | `enableRolesMock`, `RolesMockConfigurator` |
 | Service discovery | `@equinor/fusion-framework-module-service-discovery/mock` | `enableServiceDiscoveryMock`, `ServiceDiscoveryMockConfigurator` |
 | Telemetry | `@equinor/fusion-framework-module-telemetry/mock` | `enableTelemetryMock`, `MockTelemetryAdapter` |
 
@@ -51,6 +52,21 @@ are part of the test.
 
 See [Context testing](../../../modules/context/README.md#testing) for defaults, related-context
 behavior, and deterministic fixture generators.
+
+## Roles V2
+
+Use `enableRolesMock` for known active, claimable, and consolidated role-assignment data without
+HTTP, authentication, or service discovery. It runs the production module initializer and provider
+against a static internal client, so a test still receives the real `RolesProvider` and can
+`vi.spyOn` an individual operation for behavior the static data cannot express.
+
+Compose it onto the app's real configuration the same way as other module mocks — call
+`configureApp?.(configurator, args)` before adding the Roles mock so unrelated modules keep their
+production setup. See the
+[Roles V2 end-to-end adoption guide](../../../framework/docs/roles-v2-adoption-guide.md#4-compose-component-tests-with-enablerolesmock)
+for the full composition example, and
+[static provider data](../../../modules/roles/README.md#static-provider-data) for the
+`RolesMockConfigurator` API.
 
 ## Service discovery and HTTP
 

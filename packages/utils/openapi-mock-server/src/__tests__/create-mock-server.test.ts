@@ -501,7 +501,7 @@ describe('createMockServer', () => {
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({
         userId: 'administrator',
-        claims: { roles: ['Demand.Admin'] },
+        claims: { roles: ['Example.Admin'] },
       }),
     });
     const normalCookie = normalPut.headers.getSetCookie()[0]?.split(';')[0];
@@ -547,7 +547,7 @@ describe('createMockServer', () => {
     expect(administratorBody.status).toBe('issued');
     expect(administratorClaims).toMatchObject({
       oid: 'administrator',
-      roles: ['Demand.Admin'],
+      roles: ['Example.Admin'],
     });
   });
 

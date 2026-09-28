@@ -67,15 +67,15 @@ import { createMockAuth } from '@equinor/fusion-openapi-mock-server';
 
 const mockAuth = createMockAuth('http://localhost:4010');
 
-test('administrator can maintain a demand', async ({ context, page }) => {
+test('administrator can access an administrative view', async ({ context, page }) => {
   await mockAuth.setUser(context.request, {
     userId: 'administrator',
-    name: 'Project Demand Administrator',
+    name: 'Example Administrator',
     username: 'administrator@example.test',
-    claims: { roles: ['Demand.Admin'] },
+    claims: { roles: ['Example.Admin'] },
   });
 
-  await page.goto('/apps/pss-project-demand');
+  await page.goto('/apps/example-app');
   // Assert administrator behavior.
 });
 ```
@@ -93,12 +93,12 @@ mock's built-in `fusion-mock-user`:
 ```ts
 test('switches users without restarting servers', async ({ context, page }) => {
   await mockAuth.setUser(context.request, { userId: 'normal-user' });
-  await page.goto('/apps/pss-project-demand');
+  await page.goto('/apps/example-app');
   await expect(page.getByTestId('identity')).toContainText('normal-user');
 
   await mockAuth.setUser(context.request, {
     userId: 'administrator',
-    claims: { roles: ['Demand.Admin'] },
+    claims: { roles: ['Example.Admin'] },
   });
   await page.reload();
   await expect(page.getByTestId('identity')).toContainText('administrator');
@@ -111,6 +111,9 @@ test('switches users without restarting servers', async ({ context, page }) => {
 
 Neither switching nor resetting restarts the mock server, dev server, or container.
 
+See [Select a persona in Playwright](../../../framework/docs/roles-v2-adoption-guide.md#6-select-a-persona-in-playwright)
+for a Roles V2 walkthrough that matches personas declared through `defineRolesV2Mock`.
+
 ### Configure and verify token scopes
 
 The application defines scopes on its HTTP endpoint; tests do not pass scopes to `setUser`:
@@ -120,9 +123,9 @@ import { defineAppConfig } from '@equinor/fusion-framework-cli/app';
 
 export default defineAppConfig(() => ({
   endpoints: {
-    'project-demand': {
-      url: 'http://project-demand.localhost:4010',
-      scopes: ['api://project-demand/.default'],
+    'example-service': {
+      url: 'http://example-service.localhost:4010',
+      scopes: ['api://example-service/.default'],
     },
   },
 }));

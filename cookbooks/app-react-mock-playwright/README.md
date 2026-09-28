@@ -98,3 +98,8 @@ It does not start `ffc mock-server`; unreachable local service URIs remain unrea
   Fusion MSAL requests those scopes. Calling `setUser` again and reloading switches persona;
   calling `reset` and reloading restores the default mock identity. See
   [`mock-auth-personas.spec.ts`](playwright/mock-auth-personas.spec.ts) for the complete flow.
+  Persona claims here are placeholder identity data (`userId`, optional `claims.roles`); an
+  authorization-aware app instead reads its access roles through the Roles V2 module — see the
+  [Roles V2 end-to-end adoption guide](../../packages/framework/docs/roles-v2-adoption-guide.md)
+  for that persona-to-policy flow and the [Roles V2 cookbook](../app-react-roles/README.md) for a
+  runnable example.

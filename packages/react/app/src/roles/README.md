@@ -4,7 +4,9 @@ Use `useHasAccessRole` for active-only UI gates. Use `useAccessRole` when a comp
 to discover and activate a claimable role assignment.
 
 The host or application must enable `@equinor/fusion-framework-module-roles` before rendering a
-component that uses either hook.
+component that uses either hook. See the
+[Roles V2 end-to-end adoption guide](../../../../framework/docs/roles-v2-adoption-guide.md) for the
+full production-to-test workflow.
 
 ## Check active access roles
 

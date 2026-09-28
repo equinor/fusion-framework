@@ -15,7 +15,7 @@ test('isolates authorization personas between browser contexts', async ({ browse
     mockAuth.setUser(normalContext.request, { userId: 'normal-user' }),
     mockAuth.setUser(administratorContext.request, {
       userId: 'administrator',
-      claims: { roles: ['Demand.Admin'] },
+      claims: { roles: ['Example.Admin'] },
     }),
   ]);
 

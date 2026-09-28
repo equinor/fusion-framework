@@ -11,6 +11,10 @@ initialization, the client receives a current-account resolver and then reads th
 authentication account for every operation. Account identifiers remain internal to the module.
 When the event and telemetry modules are enabled, the provider also reports operation outcomes.
 
+See the [Roles V2 end-to-end adoption guide](../../framework/docs/roles-v2-adoption-guide.md) for
+the full path from module enablement through component tests, HTTP mocks, and Playwright
+personas.
+
 ## Enable Roles V2 and require roles during initialization
 
 Enable authentication before the roles module. The default client also needs service discovery,

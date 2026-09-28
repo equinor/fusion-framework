@@ -15,6 +15,9 @@ Use this example when an application needs to:
 Roles checks in the browser support user-interface decisions. A trusted backend must still enforce
 authorization for protected operations.
 
+For the full production-to-test workflow this cookbook demonstrates end to end, see the
+[Roles V2 end-to-end adoption guide](../../packages/framework/docs/roles-v2-adoption-guide.md).
+
 ## Configure Roles V2
 
 [`src/config.ts`](https://github.com/equinor/fusion-framework/blob/main/cookbooks/app-react-roles/src/config.ts)
