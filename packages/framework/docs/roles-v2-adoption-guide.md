@@ -104,9 +104,11 @@ real production setup:
 import { enableRolesMock } from '@equinor/fusion-framework-module-roles/mock';
 import { test as baseTest } from '@equinor/fusion-framework-vitest-plugin-react-app/test';
 
-export const test = baseTest.extend('configureApp', ({ configureApp }) => (configurator, args) => {
-  // Preserve the app's real module configuration before layering the Roles mock on top.
-  configureApp?.(configurator, args);
+export const test = baseTest.extend('configureApp', ({ configureApp }) => async (configurator, args) => {
+  // Preserve the app's real module configuration before layering the Roles mock on top. `configureApp`
+  // may itself be async, so this wrapper must be async and await it — otherwise a later production
+  // Roles registration can still win the race and silently restore the real client over the mock.
+  await configureApp?.(configurator, args);
 
   enableRolesMock(configurator, (mock) => {
     mock
@@ -198,12 +200,21 @@ failure with the mock server's generic runtime override instead, so the failure 
 operation:
 
 ```ts
-await request.post('http://localhost:4010/@fusion-mock/rolesv2/listAccountActiveAccessRoleAssignments', {
-  data: { status: 503, mock: { error: 'Roles V2 is temporarily unavailable.' } },
+test('shows recovery UI when Roles V2 is unavailable', async ({ page, request }) => {
+  await request.post('http://localhost:4010/@fusion-mock/rolesv2/listAccountActiveAccessRoleAssignments', {
+    data: { status: 503, mock: { error: 'Roles V2 is temporarily unavailable.' } },
+  });
+
+  await page.goto('/some-role-gated-page');
+  // …assert the recovery UI from "Recovery behavior when enrichment fails" below.
+
+  await request.post('http://localhost:4010/@fusion-mock/reset');
 });
 ```
 
-Reset the override afterward with `POST /@fusion-mock/reset`. A service error during startup
+Reset the override afterward with `POST /@fusion-mock/reset`, ideally in `test.afterEach` as shown
+in [Testing with Playwright](../../utils/openapi-mock-server/docs/testing-with-playwright.md) so a
+failed assertion cannot leak the override into the next test. A service error during startup
 enrichment must still preserve the confirmed access denial and the required role names — see
 [recovery behavior when enrichment fails](../../react/components/roles/README.md#require-roles-before-rendering).
 
@@ -260,7 +271,7 @@ special framework code path:
 | Scenario | Model it as | Layer that shows it |
 | --- | --- | --- |
 | Granted (full access) | Account with every required active assignment | `useHasAccessRole` returns `true`; `AccessRoleBoundary` renders children immediately |
-| Read-only / partial access | Account with some, but not all, required active assignments | `useHasAccessRole({ required: true })` returns `false`; app renders a reduced experience |
+| Read-only / partial access | Account with some, but not all, required active assignments | `useHasAccessRole(['Reports.Read', 'Reports.Export'], { required: true })` returns `false`; app renders a reduced experience |
 | Claimable | Account with no active assignment but an eligible `claimableRoleAssignments` entry | `AccessRoleBoundary` recovery flow offers activation; `useAccessRole` exposes `hasClaimableRoleAssignmentForAccessRole` |
 | Denied | Account with no active or claimable assignment for the required role | `AccessRoleBoundary` shows the role-does-not-exist or not-claimable view |
 | Roles-service-error | Runtime operation override returning a 4xx/5xx status | Recovery UI shows unavailable enrichment detail while preserving the original denial |
