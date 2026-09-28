@@ -1,6 +1,8 @@
 import { readJsonBody } from '../server/read-json-body.js';
+import { parseMockRequestIdentity } from '../parse-mock-request-identity.js';
 
 import type { IncomingMessage, ServerResponse } from 'node:http';
+import { match, type MatchFunction, type ParamData } from 'path-to-regexp';
 
 /** A {@link ServerResponse}, extended with `res.json()`/`res.text()` — set `res.statusCode` first to send anything other than `200`. */
 export interface MockResponse extends ServerResponse {
@@ -11,23 +13,59 @@ export interface MockResponse extends ServerResponse {
 }
 
 /**
- * The third argument a {@link RouteHandler} receives: the request body, parsed as JSON
- * (`undefined` for an empty body), plus the mock server's own seed, if any — so a
- * handler can seed its own faker calls and still reproduce the same values on `reset()`.
+ * The third argument a {@link RouteHandler} receives: service-relative routing data,
+ * parsed request input, explicit mock-auth state, and the mock server seed.
  */
 export interface RouteContext {
   /** The request body, parsed as JSON. `undefined` for an empty body. */
   body: unknown;
   /** The mock server's own seed (see `CreateMockServerOptions`), if one was set. */
   seed?: number;
+  /** Decoded parameters captured from a parameterized service-relative route. */
+  params: Readonly<ParamData>;
+  /** Parsed service-relative request URL. */
+  url: URL;
+  /** Parsed query parameters from {@link RouteContext.url}. */
+  query: URLSearchParams;
+  /** Explicit mock-only authentication state derived from the request bearer token. */
+  identity: MockRequestIdentity;
 }
+
+/** Normalized test-only authentication state available to middleware route handlers. */
+export type MockRequestIdentity =
+  | {
+      /** A supported mock-auth token supplied normalized identity claims. */
+      status: 'authenticated';
+      /** Stable user identifier normalized from the mock token's `oid` claim. */
+      userId: string;
+      /** Decoded claims from the supported mock-auth token. */
+      claims: Readonly<Record<string, unknown>>;
+    }
+  | {
+      /** No Authorization header was supplied. */
+      status: 'missing';
+    }
+  | {
+      /** The Authorization header or bearer token could not be parsed. */
+      status: 'malformed';
+    }
+  | {
+      /** A bearer token was parsed but was not issued by this mock server. */
+      status: 'unsupported';
+    };
 
 /** A route handler for a {@link Router}, checked ahead of a service's generated mock responses. */
 export type RouteHandler = (req: IncomingMessage, res: MockResponse, ctx: RouteContext) => unknown;
 
+interface RegisteredRoute {
+  handler: RouteHandler;
+  matchPath: MatchFunction<ParamData>;
+  method: string;
+}
+
 /**
  * A minimal Express-style router for `ServiceBuilder.middleware(router => ...)` — exact
- * path + method matching only, checked ahead of a service's own generated mock responses.
+ * and parameterized path + method matching, checked ahead of generated mock responses.
  */
 export interface Router {
   get(path: string, handler: RouteHandler): void;
@@ -40,9 +78,18 @@ export interface Router {
    * Attempts to handle `req`; returns `true` if a registered route matched (and `res` was
    * written to).
    *
+   * @param req - Incoming Node.js request, left unchanged by service-relative matching.
+   * @param res - Node.js response completed by a matched route.
    * @param seed - The mock server's own seed (see `CreateMockServerOptions`), threaded into the handler's {@link RouteContext}.
+   * @param serviceUrl - Optional parsed service-relative URL supplied by the standalone server.
+   * @returns Whether an exact or parameterized route handled the request.
    */
-  handle(req: IncomingMessage, res: ServerResponse, seed?: number): Promise<boolean>;
+  handle(
+    req: IncomingMessage,
+    res: ServerResponse,
+    seed?: number,
+    serviceUrl?: URL,
+  ): Promise<boolean>;
 }
 
 /** Extends `res` with `json()`/`text()`, both respecting whatever `res.statusCode` is at the time they're called. */
@@ -64,10 +111,12 @@ function toMockResponse(res: ServerResponse): MockResponse {
  * @returns A new, empty {@link Router}.
  */
 export function createRouter(): Router {
-  const routes = new Map<string, RouteHandler>();
+  const exactRoutes = new Map<string, RouteHandler>();
+  const registeredRoutes: RegisteredRoute[] = [];
 
   function register(method: string, path: string, handler: RouteHandler): void {
-    routes.set(`${method} ${path}`, handler);
+    exactRoutes.set(`${method} ${path}`, handler);
+    registeredRoutes.push({ method, handler, matchPath: match(path) });
   }
 
   return {
@@ -77,12 +126,39 @@ export function createRouter(): Router {
     patch: (path, handler) => register('PATCH', path, handler),
     delete: (path, handler) => register('DELETE', path, handler),
     options: (path, handler) => register('OPTIONS', path, handler),
-    async handle(req, res, seed) {
-      const pathname = new URL(req.url ?? '/', 'http://localhost').pathname;
-      const handler = routes.get(`${req.method} ${pathname}`);
+    async handle(req, res, seed, serviceUrl) {
+      const url = serviceUrl ?? new URL(req.url ?? '/', 'http://localhost');
+      const method = req.method ?? 'GET';
+      const handler = exactRoutes.get(`${method} ${url.pathname}`);
       // No route registered for this method+path: let the caller fall through to its own mock.
-      if (!handler) return false;
-      await handler(req, toMockResponse(res), { body: await readJsonBody(req), seed });
+      let params: Readonly<ParamData> = {};
+      let matchedHandler = handler;
+      // Exact routes always win; parameterized routes otherwise retain deterministic registration order.
+      if (!matchedHandler) {
+        // Registration order is the tie-breaker when multiple parameterized routes could match.
+        for (const route of registeredRoutes) {
+          // Routes registered for another method cannot match this request.
+          if (route.method !== method) continue;
+          const result = route.matchPath(url.pathname);
+          // Keep searching until the first parameterized route matches.
+          if (!result) continue;
+          matchedHandler = route.handler;
+          params = result.params;
+          // The first match is authoritative so later generic patterns cannot shadow it.
+          break;
+        }
+      }
+      // No route registered for this method+path: let the caller fall through to its own mock.
+      if (!matchedHandler) return false;
+
+      await matchedHandler(req, toMockResponse(res), {
+        body: await readJsonBody(req),
+        seed,
+        params,
+        url,
+        query: url.searchParams,
+        identity: parseMockRequestIdentity(req.headers.authorization),
+      });
       return true;
     },
   };

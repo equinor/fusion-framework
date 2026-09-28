@@ -266,6 +266,134 @@ describe('createMockServer', () => {
     expect(optionsResponse.status).toBe(204);
   });
 
+  it('matches decoded route parameters after exact routes and exposes parsed request context', async () => {
+    const document = {
+      openapi: '3.0.0',
+      info: { title: 'Parameterized middleware', version: '1' },
+      paths: {},
+    };
+    const service = createService('scoped', document).middleware((router) => {
+      router.get('/accounts/:accountIdentifier/assignments', (req, res, context) => {
+        res.json({
+          source: 'parameterized',
+          accountIdentifier: context.params.accountIdentifier,
+          pathname: context.url.pathname,
+          filters: context.query.getAll('filter'),
+          requestUrl: req.url,
+          identity: context.identity,
+        });
+      });
+      router.get('/accounts/me/assignments', (_req, res) => {
+        res.json({ source: 'exact' });
+      });
+    });
+    server = createMockServer().use([service]);
+    const { url } = await server.start();
+
+    const exact = await fetch(`${url}/scoped/accounts/me/assignments`);
+    const parameterized = await fetch(
+      `${url}/scoped/accounts/account%2Fwith%20spaces/assignments?filter=active&filter=owned`,
+      { headers: { authorization: 'Bearer not-a-jwt' } },
+    );
+    const missing = await fetch(`${url}/scoped/accounts/anonymous/assignments`);
+    const unsupportedToken = [
+      Buffer.from(JSON.stringify({ alg: 'RS256', typ: 'JWT' })).toString('base64url'),
+      Buffer.from(JSON.stringify({ oid: 'real-user' })).toString('base64url'),
+      'real-signature',
+    ].join('.');
+    const unsupported = await fetch(`${url}/scoped/accounts/unsupported/assignments`, {
+      headers: { authorization: `Bearer ${unsupportedToken}` },
+    });
+
+    await expect(exact.json()).resolves.toEqual({ source: 'exact' });
+    await expect(parameterized.json()).resolves.toEqual({
+      source: 'parameterized',
+      accountIdentifier: 'account/with spaces',
+      pathname: '/accounts/account%2Fwith%20spaces/assignments',
+      filters: ['active', 'owned'],
+      requestUrl: '/scoped/accounts/account%2Fwith%20spaces/assignments?filter=active&filter=owned',
+      identity: { status: 'malformed' },
+    });
+    await expect(missing.json()).resolves.toMatchObject({
+      identity: { status: 'missing' },
+    });
+    await expect(unsupported.json()).resolves.toMatchObject({
+      identity: { status: 'unsupported' },
+    });
+  });
+
+  it('resolves concurrent middleware requests from session-scoped mock identities', async () => {
+    const document = {
+      openapi: '3.0.0',
+      info: { title: 'Authenticated middleware', version: '1' },
+      paths: {},
+    };
+    const service = createService('resources', document).middleware((router) => {
+      router.get('/resources/:resourceId', (_req, res, { identity, params }) => {
+        // Only supported mock-auth tokens expose normalized identity claims.
+        if (identity.status !== 'authenticated') {
+          res.statusCode = 401;
+          res.json(identity);
+          return;
+        }
+        res.json({
+          resourceId: params.resourceId,
+          userId: identity.userId,
+          roles: identity.claims.roles,
+        });
+      });
+    });
+    server = createMockServer().use([service]);
+    const { url } = await server.start();
+
+    const firstSession = await fetch(`${url}/@fusion-mock/auth/user`, {
+      method: 'PUT',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ userId: 'first-user', claims: { roles: ['reader'] } }),
+    });
+    const secondSession = await fetch(`${url}/@fusion-mock/auth/user`, {
+      method: 'PUT',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ userId: 'second-user', claims: { roles: ['owner'] } }),
+    });
+    const firstCookie = firstSession.headers.getSetCookie()[0]?.split(';')[0];
+    const secondCookie = secondSession.headers.getSetCookie()[0]?.split(';')[0];
+    const [firstTokenResponse, secondTokenResponse] = await Promise.all([
+      fetch(`${url}/@fusion-mock/auth/token`, {
+        method: 'POST',
+        headers: { cookie: firstCookie, 'content-type': 'application/json' },
+        body: JSON.stringify({ scopes: ['api://resources/.default'] }),
+      }),
+      fetch(`${url}/@fusion-mock/auth/token`, {
+        method: 'POST',
+        headers: { cookie: secondCookie, 'content-type': 'application/json' },
+        body: JSON.stringify({ scopes: ['api://resources/.default'] }),
+      }),
+    ]);
+    const firstToken = (await firstTokenResponse.json()) as { token: string };
+    const secondToken = (await secondTokenResponse.json()) as { token: string };
+
+    const [firstResource, secondResource] = await Promise.all([
+      fetch(`${url}/resources/resources/shared`, {
+        headers: { authorization: `Bearer ${firstToken.token}` },
+      }),
+      fetch(`${url}/resources/resources/shared`, {
+        headers: { authorization: `Bearer ${secondToken.token}` },
+      }),
+    ]);
+
+    await expect(firstResource.json()).resolves.toEqual({
+      resourceId: 'shared',
+      userId: 'first-user',
+      roles: ['reader'],
+    });
+    await expect(secondResource.json()).resolves.toEqual({
+      resourceId: 'shared',
+      userId: 'second-user',
+      roles: ['owner'],
+    });
+  });
+
   it('lets a later use() layer override an earlier one by service key', async () => {
     const overridesDir = fileURLToPath(new URL('./fixtures/overrides', import.meta.url));
     server = createMockServer().use(fixturesDir).use(overridesDir);
