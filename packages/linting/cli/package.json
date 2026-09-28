@@ -46,7 +46,7 @@
     "commander": "^15.0.0",
     "globby": "^16.2.1",
     "ora": "^9.0.0",
-    "simple-git": "^3.32.3"
+    "simple-git": "^4.0.1"
   },
   "devDependencies": {
     "typescript": "^7.0.2"
