@@ -225,6 +225,85 @@ describe('useHasAccessRole', () => {
     await unmount();
   });
 
+  it('uses current inputs when a refresh retained before rerender is invoked', async () => {
+    const client = createClient();
+    const initialAssignments = new Subject<
+      Array<{ systemName: string; accessRoleName: string; assignmentType: 'Global' }>
+    >();
+    const changedInputAssignments = new Subject<
+      Array<{ systemName: string; accessRoleName: string; assignmentType: 'Global' }>
+    >();
+    const retainedRefreshAssignments = new Subject<
+      Array<{ systemName: string; accessRoleName: string; assignmentType: 'Global' }>
+    >();
+    vi.mocked(client.getActiveAccessRoleAssignments)
+      .mockReturnValueOnce(initialAssignments)
+      .mockReturnValueOnce(changedInputAssignments)
+      .mockReturnValueOnce(retainedRefreshAssignments);
+
+    const { result, rerender, unmount } = await renderAppHook(
+      ({ accessRoleNames, required }) => useHasAccessRole(accessRoleNames, { required }),
+      {
+        initialProps: {
+          accessRoleNames: ['Reports.Read'],
+          required: false,
+        },
+        configure: configureRolesClient(client),
+      },
+    );
+    await vi.waitFor(() => expect(client.getActiveAccessRoleAssignments).toHaveBeenCalledOnce());
+    const retainedRefresh = result.current.refresh;
+
+    await rerender({
+      accessRoleNames: ['Reports.Export', 'Reports.Admin'],
+      required: true,
+    });
+    await vi.waitFor(() => expect(client.getActiveAccessRoleAssignments).toHaveBeenCalledTimes(2));
+
+    let refreshPromise!: Promise<void>;
+    act(() => {
+      refreshPromise = retainedRefresh();
+    });
+    await vi.waitFor(() => expect(client.getActiveAccessRoleAssignments).toHaveBeenCalledTimes(3));
+
+    await act(async () => {
+      retainedRefreshAssignments.next([
+        {
+          systemName: 'Reports',
+          accessRoleName: 'Reports.Export',
+          assignmentType: 'Global',
+        },
+      ]);
+      retainedRefreshAssignments.complete();
+      await refreshPromise;
+    });
+
+    expect(result.current.isLoading).toBe(false);
+    expect(result.current.hasAccessRole).toBe(false);
+
+    await act(async () => {
+      changedInputAssignments.next([
+        {
+          systemName: 'Reports',
+          accessRoleName: 'Reports.Export',
+          assignmentType: 'Global',
+        },
+        {
+          systemName: 'Reports',
+          accessRoleName: 'Reports.Admin',
+          assignmentType: 'Global',
+        },
+      ]);
+      changedInputAssignments.complete();
+      initialAssignments.complete();
+    });
+
+    expect(result.current.isLoading).toBe(false);
+    expect(result.current.hasAccessRole).toBe(false);
+
+    await unmount();
+  });
+
   it('does not recheck when a new array has the same role names', async () => {
     const client = createClient();
 

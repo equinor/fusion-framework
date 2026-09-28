@@ -33,6 +33,13 @@ interface HasAccessRoleState {
   error: unknown;
 }
 
+interface HasAccessRoleRequest {
+  provider: IRolesProvider;
+  accessRoleNames: readonly string[];
+  required: boolean;
+  inputKey: string;
+}
+
 /**
  * Checks whether any or all requested Roles V2 access roles are currently active.
  *
@@ -66,8 +73,18 @@ export const useHasAccessRole = (
   const required = options.required === true;
   // Array identity is unstable for inline hook arguments; content controls the request lifecycle.
   const inputKey = JSON.stringify([accessRoleNames, required]);
-  const accessRoleNamesRef = useRef(accessRoleNames);
-  accessRoleNamesRef.current = accessRoleNames;
+  const currentRequestRef = useRef<HasAccessRoleRequest>({
+    provider: roles,
+    accessRoleNames,
+    required,
+    inputKey,
+  });
+  currentRequestRef.current = {
+    provider: roles,
+    accessRoleNames,
+    required,
+    inputKey,
+  };
   const mountedRef = useRef(false);
   const requestRef = useRef(0);
   const [state, setState] = useState<HasAccessRoleState>({
@@ -93,15 +110,15 @@ export const useHasAccessRole = (
    * @throws {RolesError} When the Roles V2 active-assignment request fails.
    */
   const refresh = useCallback(async (): Promise<void> => {
+    const request = currentRequestRef.current;
     const requestId = ++requestRef.current;
-    const requestedAccessRoleNames = [...accessRoleNamesRef.current];
     // Preserve a resolved value only when refreshing the same provider and inputs.
     if (mountedRef.current) {
       setState((current) => ({
-        provider: roles,
-        inputKey,
+        provider: request.provider,
+        inputKey: request.inputKey,
         hasAccessRole:
-          current.provider === roles && current.inputKey === inputKey
+          current.provider === request.provider && current.inputKey === request.inputKey
             ? current.hasAccessRole
             : undefined,
         isLoading: true,
@@ -109,12 +126,14 @@ export const useHasAccessRole = (
       }));
     }
     try {
-      const hasAccessRole = await roles.hasAccessRole(requestedAccessRoleNames, { required });
+      const hasAccessRole = await request.provider.hasAccessRole([...request.accessRoleNames], {
+        required: request.required,
+      });
       // Superseded checks must not publish access for an earlier account, provider, or role input.
       if (mountedRef.current && requestRef.current === requestId) {
         setState({
-          provider: roles,
-          inputKey,
+          provider: request.provider,
+          inputKey: request.inputKey,
           hasAccessRole,
           isLoading: false,
           error: undefined,
@@ -124,10 +143,10 @@ export const useHasAccessRole = (
       // Expose the latest failure without allowing an obsolete request to replace current state.
       if (mountedRef.current && requestRef.current === requestId) {
         setState((current) => ({
-          provider: roles,
-          inputKey,
+          provider: request.provider,
+          inputKey: request.inputKey,
           hasAccessRole:
-            current.provider === roles && current.inputKey === inputKey
+            current.provider === request.provider && current.inputKey === request.inputKey
               ? current.hasAccessRole
               : undefined,
           isLoading: false,
@@ -136,12 +155,13 @@ export const useHasAccessRole = (
       }
       throw error;
     }
-  }, [inputKey, required, roles]);
+  }, []);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: provider and input key trigger the stable refresh with its current descriptor.
   useEffect(() => {
     // Effects cannot return promises; the hook exposes automatic failures through `error`.
     void refresh().catch(() => undefined);
-  }, [refresh]);
+  }, [inputKey, refresh, roles]);
 
   const stateMatchesCurrentInput = state.provider === roles && state.inputKey === inputKey;
 
