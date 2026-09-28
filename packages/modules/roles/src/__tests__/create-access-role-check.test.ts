@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 
 import type { IRolesProvider } from '../RolesProvider.js';
-import { createAccessRoleCheck } from '../create-access-role-check.js';
+import { createAccessRoleCheck } from '../access-role-check/create-access-role-check.js';
 
 /**
  * Creates a manually controlled promise.

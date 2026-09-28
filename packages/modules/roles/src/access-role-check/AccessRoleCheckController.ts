@@ -1,36 +1,7 @@
-import type { Observable } from 'rxjs';
-
 import { FlowSubject } from '@equinor/fusion-observable';
 
-import type { HasAccessRoleOptions, IRolesProvider } from './RolesProvider.js';
-
-/** Current state of an active access-role check. */
-export interface AccessRoleCheckState {
-  /** Whether the configured any-role or all-role condition is satisfied. */
-  readonly hasAccessRole: boolean | undefined;
-  /** Whether the initial load or an explicit refresh is running. */
-  readonly isLoading: boolean;
-  /** Error from the latest active access-role check. */
-  readonly error: unknown;
-}
-
-/** Module-owned active access-role check state and actions. */
-export interface AccessRoleCheck {
-  /** Observable active-access state. */
-  readonly state$: Observable<AccessRoleCheckState>;
-  /** Current active-access state. */
-  readonly state: AccessRoleCheckState;
-  /** Performs the initial cache-aware access check. */
-  readonly load: () => Promise<void>;
-  /** Invalidates cached active assignments before checking access again. */
-  readonly refresh: () => Promise<void>;
-  /** Subscribes an external-store change listener. */
-  readonly subscribe: (onStoreChange: VoidFunction) => VoidFunction;
-  /** Returns the current state snapshot. */
-  readonly getSnapshot: () => AccessRoleCheckState;
-  /** Completes the state stream and prevents further checks. */
-  readonly dispose: VoidFunction;
-}
+import type { IRolesProvider } from '../RolesProvider.js';
+import type { AccessRoleCheck, AccessRoleCheckState } from './access-role-check.js';
 
 type AccessRoleCheckAction =
   | { type: 'load' }
@@ -68,7 +39,7 @@ const reduceAccessRoleCheck = (
 /**
  * Owns one immutable access-role predicate and its asynchronous request ordering.
  */
-class AccessRoleCheckController implements AccessRoleCheck {
+export class AccessRoleCheckController implements AccessRoleCheck {
   readonly #state = new FlowSubject<AccessRoleCheckState, AccessRoleCheckAction>(
     reduceAccessRoleCheck,
     initialState,
@@ -161,22 +132,3 @@ class AccessRoleCheckController implements AccessRoleCheck {
     }
   }
 }
-
-/**
- * Creates observable state for one immutable active access-role predicate.
- *
- * The resource invokes only {@link IRolesProvider.hasAccessRole}. Call {@link AccessRoleCheck.load}
- * after subscribing, use {@link AccessRoleCheck.refresh} for a cache-bypassing recheck, and call
- * {@link AccessRoleCheck.dispose} when the resource is no longer needed.
- *
- * @param provider - Roles provider used for active access checks.
- * @param accessRoleNames - Exact, case-sensitive Roles V2 access-role names.
- * @param options - Selects all-role or any-role matching.
- * @returns Module-owned observable access state with load and refresh actions.
- */
-export const createAccessRoleCheck = (
-  provider: Pick<IRolesProvider, 'hasAccessRole'>,
-  accessRoleNames: readonly string[],
-  options: Pick<HasAccessRoleOptions, 'required'> = {},
-): AccessRoleCheck =>
-  new AccessRoleCheckController(provider, accessRoleNames, options.required === true);

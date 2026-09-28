@@ -21,7 +21,7 @@ export {
   type AccessRoleCheck,
   type AccessRoleCheckState,
   createAccessRoleCheck,
-} from './create-access-role-check.js';
+} from './access-role-check/index.js';
 export {
   ClaimableRoleAssignmentActivationEvent,
   type ClaimableRoleAssignmentActivationEventInit,
