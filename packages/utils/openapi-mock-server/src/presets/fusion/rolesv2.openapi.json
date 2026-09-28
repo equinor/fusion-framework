@@ -73,9 +73,7 @@
           }
         },
         "summary": "Get all access roles.",
-        "tags": [
-          "Global"
-        ],
+        "tags": ["Global"],
         "operationId": "listAccessRoles"
       }
     },
@@ -147,9 +145,7 @@
           }
         },
         "summary": "Get active access role assignments for an account.",
-        "tags": [
-          "Accounts"
-        ],
+        "tags": ["Accounts"],
         "operationId": "listAccountActiveAccessRoleAssignments"
       }
     },
@@ -218,9 +214,7 @@
           }
         },
         "summary": "Get all claimable role assignments for an account.",
-        "tags": [
-          "Accounts"
-        ],
+        "tags": ["Accounts"],
         "operationId": "listAccountClaimableRoleAssignments"
       }
     },
@@ -292,9 +286,7 @@
           }
         },
         "summary": "Get consolidated claimable role assignments for an account. Duplicate assignments for the same role, type and scope are merged into a single entry.",
-        "tags": [
-          "Accounts"
-        ],
+        "tags": ["Accounts"],
         "operationId": "listAccountConsolidatedClaimableRoleAssignments"
       }
     },
@@ -366,9 +358,7 @@
           }
         },
         "summary": "Get consolidated role assignments for an account. Duplicate assignments for the same role, type and scope are merged into a single entry.",
-        "tags": [
-          "Accounts"
-        ],
+        "tags": ["Accounts"],
         "operationId": "listAccountConsolidatedRoleAssignments"
       }
     },
@@ -459,9 +449,7 @@
           }
         },
         "summary": "Activate a claimable role assignment for an account.",
-        "tags": [
-          "Accounts"
-        ],
+        "tags": ["Accounts"],
         "operationId": "activateClaimableRoleAssignment"
       }
     },
@@ -542,9 +530,7 @@
           }
         },
         "summary": "Deactivate a claimable role assignment for an account by setting the expiration date to now.",
-        "tags": [
-          "Accounts"
-        ],
+        "tags": ["Accounts"],
         "operationId": "deactivateClaimableRoleAssignment"
       }
     }
@@ -556,30 +542,18 @@
           "count": {
             "format": "int32",
             "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "type": [
-              "integer",
-              "string"
-            ]
+            "type": ["integer", "string"]
           },
           "nextPage": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "prevPage": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "totalCount": {
             "format": "int32",
             "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "type": [
-              "integer",
-              "string"
-            ]
+            "type": ["integer", "string"]
           },
           "value": {
             "items": {
@@ -588,45 +562,27 @@
             "type": "array"
           }
         },
-        "required": [
-          "totalCount"
-        ],
+        "required": ["totalCount"],
         "type": "object"
       },
       "ProblemDetails": {
         "properties": {
           "detail": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "instance": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "status": {
             "format": "int32",
             "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "type": [
-              "null",
-              "integer",
-              "string"
-            ]
+            "type": ["null", "integer", "string"]
           },
           "title": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "type": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           }
         },
         "type": "object"
@@ -641,10 +597,7 @@
           "activeToDate": {
             "description": "Date and time the activation expires, if any.",
             "format": "date-time",
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "assignmentType": {
             "description": "Assignment type (e.g. \"Direct\" or \"Inherited\").",
@@ -673,9 +626,7 @@
             "$ref": "#/components/schemas/ForbiddenItem"
           }
         },
-        "required": [
-          "error"
-        ],
+        "required": ["error"],
         "type": "object"
       },
       "ApiPagedCollectionOfApiAccountClaimableRoleAssignment": {
@@ -683,30 +634,18 @@
           "count": {
             "format": "int32",
             "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "type": [
-              "integer",
-              "string"
-            ]
+            "type": ["integer", "string"]
           },
           "nextPage": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "prevPage": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "totalCount": {
             "format": "int32",
             "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "type": [
-              "integer",
-              "string"
-            ]
+            "type": ["integer", "string"]
           },
           "value": {
             "items": {
@@ -715,9 +654,7 @@
             "type": "array"
           }
         },
-        "required": [
-          "totalCount"
-        ],
+        "required": ["totalCount"],
         "type": "object"
       },
       "ApiConsolidatedClaimableRoleAssignment": {
@@ -726,10 +663,7 @@
           "activeTo": {
             "description": "Date and time until which the claimed role is active, if any.",
             "format": "date-time",
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "assignedTo": {
             "$ref": "#/components/schemas/ApiAccount"
@@ -739,10 +673,7 @@
             "items": {
               "$ref": "#/components/schemas/ApiConsolidatedAssignmentEntry"
             },
-            "type": [
-              "null",
-              "array"
-            ]
+            "type": ["null", "array"]
           },
           "claimableRole": {
             "$ref": "#/components/schemas/ApiConsolidatedClaimableRoleRef"
@@ -780,18 +711,12 @@
           "validFrom": {
             "description": "Effective start date of the consolidated assignment, if any. Omitted when null.",
             "format": "date-time",
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "validTo": {
             "description": "Effective end date of the consolidated assignment, if any.",
             "format": "date-time",
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           }
         },
         "type": "object"
@@ -807,10 +732,7 @@
             "items": {
               "$ref": "#/components/schemas/ApiConsolidatedAssignmentEntry"
             },
-            "type": [
-              "null",
-              "array"
-            ]
+            "type": ["null", "array"]
           },
           "id": {
             "description": "Unique identifier of the consolidated assignment.",
@@ -844,18 +766,12 @@
           "validFrom": {
             "description": "Effective start date of the consolidated assignment, if any.",
             "format": "date-time",
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "validTo": {
             "description": "Effective end date of the consolidated assignment, if any.",
             "format": "date-time",
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           }
         },
         "type": "object"
@@ -867,10 +783,7 @@
             "description": "Duration in hours for which the activation should be valid.",
             "format": "int32",
             "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "type": [
-              "integer",
-              "string"
-            ]
+            "type": ["integer", "string"]
           },
           "reason": {
             "description": "Reason for activating the claimable role.",
@@ -910,10 +823,7 @@
       "ValidationProblemDetails": {
         "properties": {
           "detail": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "errors": {
             "additionalProperties": {
@@ -925,31 +835,18 @@
             "type": "object"
           },
           "instance": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "status": {
             "format": "int32",
             "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "type": [
-              "null",
-              "integer",
-              "string"
-            ]
+            "type": ["null", "integer", "string"]
           },
           "title": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "type": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           }
         },
         "type": "object"
@@ -995,25 +892,17 @@
           },
           "type": {
             "description": "Scope type identifier (e.g. \"project\", \"contract\"), if any.",
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "values": {
             "description": "Resolved scope values (e.g. project IDs or contract IDs), if any.",
             "items": {
               "type": "string"
             },
-            "type": [
-              "null",
-              "array"
-            ]
+            "type": ["null", "array"]
           }
         },
-        "required": [
-          "values"
-        ],
+        "required": ["values"],
         "type": "object"
       },
       "ForbiddenItem": {
@@ -1031,11 +920,7 @@
             "type": "string"
           }
         },
-        "required": [
-          "code",
-          "message",
-          "accessRequirements"
-        ],
+        "required": ["code", "message", "accessRequirements"],
         "type": "object"
       },
       "ApiAccountClaimableRoleAssignment": {
@@ -1044,10 +929,7 @@
           "activeTo": {
             "description": "Date and time until which the claimed role is active, if any.",
             "format": "date-time",
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "assignedTo": {
             "$ref": "#/components/schemas/ApiAccount"
@@ -1065,10 +947,7 @@
           },
           "externalIdentifier": {
             "description": "Identifier in the originating system, if any.",
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "id": {
             "description": "Unique identifier of the assignment.",
@@ -1095,10 +974,7 @@
           },
           "source": {
             "description": "The origin system that created this assignment, if any.",
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "tags": {
             "description": "Labels attached to the assignment.",
@@ -1114,18 +990,12 @@
           "validFrom": {
             "description": "Date from which the assignment is valid, if any.",
             "format": "date-time",
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "validTo": {
             "description": "Date until which the assignment is valid, if any.",
             "format": "date-time",
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           }
         },
         "type": "object"
@@ -1135,10 +1005,7 @@
         "properties": {
           "accountClassification": {
             "description": "Account classification, if available.",
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "accountType": {
             "description": "Account type (e.g. Employee, Consultant, ExternalHire).",
@@ -1147,10 +1014,7 @@
           "azureUniqueId": {
             "description": "Azure Active Directory unique object ID, if known.",
             "format": "uuid",
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "displayName": {
             "description": "Display name.",
@@ -1158,17 +1022,11 @@
           },
           "mail": {
             "description": "Email address, if available.",
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "upn": {
             "description": "User principal name (UPN), if available.",
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           }
         },
         "type": "object"
@@ -1178,10 +1036,7 @@
         "properties": {
           "externalIdentifier": {
             "description": "Identifier in the originating system, if any. Omitted when null.",
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "id": {
             "description": "Unique identifier of this assignment entry.",
@@ -1194,26 +1049,17 @@
           },
           "source": {
             "description": "The origin system that created this entry, if any. Omitted when null.",
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "validFrom": {
             "description": "Date from which this entry is valid, if any.",
             "format": "date-time",
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "validTo": {
             "description": "Date until which this entry is valid, if any.",
             "format": "date-time",
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           }
         },
         "type": "object"
@@ -1250,23 +1096,14 @@
           },
           "scopeTypeIdentifier": {
             "description": "Scope type identifier (e.g. \"project\", \"contract\"), if any.",
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "value": {
             "description": "Scope value, if any.",
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           }
         },
-        "required": [
-          "isGlobal",
-          "value"
-        ],
+        "required": ["isGlobal", "value"],
         "type": "object"
       },
       "ApiSimpleRole": {
@@ -1311,23 +1148,14 @@
           },
           "scopeTypeIdentifier": {
             "description": "Scope type identifier (e.g. \"project\", \"contract\"), if any.",
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "value": {
             "description": "Scope value, if any.",
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           }
         },
-        "required": [
-          "isGlobal",
-          "value"
-        ],
+        "required": ["isGlobal", "value"],
         "type": "object"
       },
       "ApiScopeType": {
@@ -1335,10 +1163,7 @@
         "properties": {
           "description": {
             "description": "Description of the scope type, if any.",
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "id": {
             "description": "Unique identifier of the scope type.",
@@ -1376,21 +1201,13 @@
             "type": "string"
           },
           "outcome": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "wasEvaluated": {
             "type": "boolean"
           }
         },
-        "required": [
-          "code",
-          "description",
-          "outcome",
-          "wasEvaluated"
-        ],
+        "required": ["code", "description", "outcome", "wasEvaluated"],
         "type": "object"
       },
       "ApiSimpleClaimableRole": {
@@ -1401,10 +1218,7 @@
             "items": {
               "$ref": "#/components/schemas/ApiClaimableAccessRoleMapping"
             },
-            "type": [
-              "null",
-              "array"
-            ]
+            "type": ["null", "array"]
           },
           "description": {
             "description": "Description of the claimable role.",
@@ -1444,10 +1258,7 @@
           },
           "reason": {
             "description": "Reason this access role is granted through the claimable role.",
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           }
         },
         "type": "object"

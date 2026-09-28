@@ -76,7 +76,7 @@
   "scripts": {
     "build": "tsc -b",
     "prepack": "pnpm build",
-    "preset:roles:update": "node scripts/update-roles-preset.mjs",
+    "preset:roles:update": "node scripts/update-roles-preset.mjs && biome format --write src/presets/fusion/rolesv2.openapi.json",
     "test": "vitest",
     "test:run": "vitest --run"
   },
