@@ -105,8 +105,9 @@ An injected provider must preserve that read-after-mutation contract.
 - Bootstrap recovery belongs around the host loader, since the application's own provider has not
   mounted yet. `useRequiredAccessRoleRecovery` uses the provider attached to the original error, never the portal
   overview's provider. Guard metadata and activation completions against replaced error/request identity.
-- Metadata read failure remains a visible service error with local retry. It must not become a
-  nonexistent-role or not-claimable verdict, and metadata retry must not restart the host.
+- Metadata read failure preserves the confirmed denial and original required access-role names while
+  presenting recovery details as unavailable with local retry. It must not become a nonexistent-role
+  or not-claimable verdict, expose activation without validated metadata, or restart the host.
 - Only successful activation for the current recovery request invokes the boundary retry callback.
   This path calls the error's module provider directly; it does not promise the overview store's
   coordinated collection refresh.

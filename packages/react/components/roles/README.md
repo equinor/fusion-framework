@@ -352,9 +352,11 @@ The `requiredAccessRoles` prop is optional. Without it (or with an empty array),
 `AccessRoleBoundary` renders children immediately and handles a descendant
 `RequiredAccessRolesError`, including one nested in an error cause.
 It does not provide hook context. Unrelated errors are rethrown to the nearest outer error boundary.
-Missing recovery metadata remains a visible read error with local retry, not a verdict that a role
-does not exist. Recovery uses the module provider attached to the original error and retries the
-boundary only after activation succeeds.
+Missing recovery metadata preserves the confirmed access denial and the required access-role names.
+The unavailable registry and claimability details remain a visible read error with local retry, not
+a verdict that a role does not exist or is not claimable. Role activation stays unavailable until
+metadata succeeds. Recovery uses the module provider attached to the original error; retrying
+metadata does not restart the application, while successful activation retries the boundary.
 
 ## Enforce roles during application initialization
 

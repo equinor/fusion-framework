@@ -87,7 +87,7 @@ describe('RoleErrorView', () => {
       .toBeVisible();
   });
 
-  it('shows a user-friendly message when role availability cannot be checked', async () => {
+  it('preserves the confirmed denial and required role names when enrichment fails', async () => {
     mocks.getRequiredAccessRoleStatuses.mockRejectedValue(
       new RequiredAccessRolesError('Roles module bootstrap denied.', ['Reports.Read']),
     );
@@ -103,12 +103,17 @@ describe('RoleErrorView', () => {
         ),
       )
       .toBeVisible();
+    await expect.element(screen.getByRole('heading', { name: 'Access denied' })).toBeVisible();
+    await expect
+      .element(screen.getByRole('heading', { name: 'Recovery details unavailable' }))
+      .toBeVisible();
+    await expect.element(screen.getByText('Reports.Read')).toBeVisible();
     await expect
       .element(screen.getByText('Roles module bootstrap denied.', { exact: true }))
       .not.toBeInTheDocument();
-    await expect.element(screen.getByText('Access denied')).not.toBeInTheDocument();
     await expect.element(screen.getByText('Access role does not exist')).not.toBeInTheDocument();
     await expect.element(screen.getByText('Access role is not claimable')).not.toBeInTheDocument();
+    await expect.element(screen.getByRole('button', { name: 'Claim' })).not.toBeInTheDocument();
   });
 
   it('retries failed metadata locally and restarts the host only after successful activation', async () => {
@@ -121,12 +126,12 @@ describe('RoleErrorView', () => {
     const screen = await render(
       <RoleErrorView error={createRequiredAccessRolesError(['Reports.Read'])} onRetry={onRetry} />,
     );
-    await screen.getByRole('button', { name: 'Retry access check' }).click();
+    await screen.getByRole('button', { name: 'Retry recovery details' }).click();
     expect(mocks.getRequiredAccessRoleStatuses).toHaveBeenCalledTimes(2);
     expect(mocks.getRequiredAccessRoleStatuses).toHaveBeenLastCalledWith(['Reports.Read']);
     await expect.element(screen.getByRole('alert')).not.toBeInTheDocument();
     await expect
-      .element(screen.getByRole('button', { name: 'Retry access check' }))
+      .element(screen.getByRole('button', { name: 'Retry recovery details' }))
       .not.toBeInTheDocument();
     expect(onRetry).not.toHaveBeenCalled();
     expect(mocks.activateClaimableRoleAssignment).not.toHaveBeenCalled();
@@ -151,8 +156,9 @@ describe('RoleErrorView', () => {
     const screen = await render(
       <RoleErrorView error={createRequiredAccessRolesError(['Reports.Read'])} onRetry={onRetry} />,
     );
-    await screen.getByRole('button', { name: 'Retry access check' }).click();
+    await screen.getByRole('button', { name: 'Retry recovery details' }).click();
     await expect.element(screen.getByRole('alert')).toBeVisible();
+    await expect.element(screen.getByText('Reports.Read')).toBeVisible();
     await expect.element(screen.getByText('Access role does not exist')).not.toBeInTheDocument();
     await expect.element(screen.getByText('Access role is not claimable')).not.toBeInTheDocument();
     expect(mocks.getRequiredAccessRoleStatuses).toHaveBeenCalledTimes(2);
@@ -170,7 +176,7 @@ describe('RoleErrorView', () => {
       <RoleErrorView error={createRequiredAccessRolesError(['Reports.Read'])} onRetry={onRetry} />,
     );
     await expect.element(screen.getByRole('alert')).toBeVisible();
-    await screen.getByRole('button', { name: 'Retry access check' }).click();
+    await screen.getByRole('button', { name: 'Retry recovery details' }).click();
     await expect
       .element(screen.getByRole('heading', { name: 'Access role does not exist' }))
       .toBeVisible();
@@ -190,10 +196,30 @@ describe('RoleErrorView', () => {
       .toHaveTextContent(
         'The application Roles module cannot recover this access-role requirement.',
       );
+    await expect.element(screen.getByRole('heading', { name: 'Access denied' })).toBeVisible();
+    await expect.element(screen.getByText('Reports.Read')).toBeVisible();
     await expect
-      .element(screen.getByRole('button', { name: 'Retry access check' }))
+      .element(screen.getByRole('heading', { name: 'Recovery details unavailable' }))
+      .toBeVisible();
+    await expect
+      .element(screen.getByRole('button', { name: 'Retry recovery details' }))
       .not.toBeInTheDocument();
+    await expect.element(screen.getByRole('button', { name: 'Claim' })).not.toBeInTheDocument();
     expect(mocks.getRequiredAccessRoleStatuses).not.toHaveBeenCalled();
+  });
+
+  it('does not assert unnamed missing roles for a legacy error with no role names', async () => {
+    const screen = await render(
+      <RoleErrorView error={new RequiredAccessRolesError('Legacy error')} onRetry={vi.fn()} />,
+    );
+    await expect.element(screen.getByRole('heading', { name: 'Access denied' })).toBeVisible();
+    await expect
+      .element(screen.getByText('Your account is missing these required active access roles:'))
+      .not.toBeInTheDocument();
+    await expect.element(screen.getByRole('list')).not.toBeInTheDocument();
+    await expect
+      .element(screen.getByRole('heading', { name: 'Recovery details unavailable' }))
+      .toBeVisible();
   });
 
   it('ignores an obsolete metadata failure after changing the required-role error', async () => {
