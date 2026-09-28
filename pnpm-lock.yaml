@@ -2320,7 +2320,7 @@ importers:
     dependencies:
       '@azure/msal-browser':
         specifier: ^5.0.2
-        version: 5.20.0
+        version: 5.23.0
     devDependencies:
       '@equinor/fusion-framework-module':
         specifier: workspace:^
@@ -3833,12 +3833,12 @@ packages:
     resolution: {integrity: sha512-DHe9iRcyByGJuLPkl0K31a1JjOdRY2zX38Q07mQpSbR8zOj1EIgsWfTXhSQVyyijUxlcofVy/br7qWJbrMwVXQ==}
     engines: {node: '>=0.8.0'}
 
-  '@azure/msal-browser@5.20.0':
-    resolution: {integrity: sha512-mtOKr708E/E/+qhI50QufmhR8GS5C84IeFGEaH/guMOaPXT9B/obEt8TVzX5U8j5OEUgukn0PrRmwVKaigr2wA==}
-    engines: {node: '>=0.8.0'}
-
   '@azure/msal-browser@5.22.0':
     resolution: {integrity: sha512-5kgu9xeEKgGc2JeidxAtU15NJTqiH/CMCRRQAJ4Rac56kB7KVg91vbNmn+z3RO1vNomPN69UvjKG9h1Pghx6dQ==}
+    engines: {node: '>=0.8.0'}
+
+  '@azure/msal-browser@5.23.0':
+    resolution: {integrity: sha512-IRCwkRCK47hBXK+7bu67UZWY7HS0Jx1dZgi4C1HVbjlBum8Jy8fb2l87xFr6HxdQJWy951zRUHtwwDITHFAtaA==}
     engines: {node: '>=0.8.0'}
 
   '@azure/msal-common@16.13.0':
@@ -13259,11 +13259,11 @@ snapshots:
     dependencies:
       '@azure/msal-common': 16.13.0
 
-  '@azure/msal-browser@5.20.0':
-    dependencies:
-      '@azure/msal-common': 16.14.0
-
   '@azure/msal-browser@5.22.0':
+    dependencies:
+      '@azure/msal-common': 16.14.1
+
+  '@azure/msal-browser@5.23.0':
     dependencies:
       '@azure/msal-common': 16.14.1
 
@@ -20198,7 +20198,7 @@ snapshots:
       decimal.js: 10.6.0
       html-encoding-sniffer: 7.0.0
       is-potential-custom-element-name: 1.0.1
-      lru-cache: 11.5.2
+      lru-cache: 11.5.3
       parse5: 8.0.1
       saxes: 6.0.0
       tough-cookie: 6.0.2
