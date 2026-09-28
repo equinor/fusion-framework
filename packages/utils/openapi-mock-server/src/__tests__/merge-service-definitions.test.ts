@@ -41,4 +41,17 @@ describe('mergeServiceDefinitions', () => {
 
     expect(mergeServiceDefinitions([existing], [statelessMerge])[0]?.reset).toBe(reset);
   });
+
+  it('preserves inherited discovery scopes when a merge layer does not replace them', () => {
+    const existing = {
+      ...service('people', 'replace'),
+      scopes: ['people/.default'],
+    };
+    const merge = defineService({
+      key: 'people',
+      serviceDiscovery: 'merge',
+    });
+
+    expect(mergeServiceDefinitions([existing], [merge])[0]?.scopes).toEqual(['people/.default']);
+  });
 });

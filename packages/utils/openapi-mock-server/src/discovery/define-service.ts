@@ -12,6 +12,8 @@ export type ServiceDiscoveryMode = false | 'merge' | 'new' | 'replace';
 interface DefineServiceBaseOptions {
   /** Routing key used by `<key>.localhost` and service discovery. */
   key: string;
+  /** OAuth scopes advertised to Fusion Framework clients for authenticated service requests. */
+  scopes?: string[];
   /** Declarative response overrides keyed by OpenAPI path and HTTP method. */
   routes?: Record<string, Record<string, RouteOverride>>;
   /** Field faker overrides keyed by schema component and property. */
@@ -64,6 +66,7 @@ export function defineService(options: DefineServiceOptions): ServiceMockDefinit
     options.middleware(router);
   }
 
+  // Normalize optional discovery and lifecycle metadata without erasing inherited merge behavior.
   return {
     key: options.key,
     serviceDiscovery: options.serviceDiscovery,
@@ -71,6 +74,8 @@ export function defineService(options: DefineServiceOptions): ServiceMockDefinit
     fields: flattenSchemaOverrides(options.components),
     paths: options.routes,
     router,
+    // Omitting absent scopes lets a merge layer inherit the earlier discovery contract.
+    ...(options.scopes ? { scopes: [...options.scopes] } : {}),
     // Omitting an absent hook lets a stateless merge layer inherit earlier reset behavior.
     ...(options.reset ? { reset: options.reset } : {}),
   };

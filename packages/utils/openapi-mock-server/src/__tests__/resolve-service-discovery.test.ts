@@ -41,4 +41,20 @@ describe('resolveServiceDiscovery', () => {
       { key: 'local', uri: 'http://local.localhost:4010' },
     ]);
   });
+
+  it('advertises configured OAuth scopes without adding them to anonymous services', () => {
+    const authenticated = {
+      ...service('rolesv2', 'merge'),
+      scopes: ['rolesv2/.default'],
+    };
+
+    expect(resolveServiceDiscovery([authenticated, service('people', 'merge')], '4010')).toEqual([
+      {
+        key: 'rolesv2',
+        uri: 'http://rolesv2.localhost:4010',
+        scopes: ['rolesv2/.default'],
+      },
+      { key: 'people', uri: 'http://people.localhost:4010' },
+    ]);
+  });
 });

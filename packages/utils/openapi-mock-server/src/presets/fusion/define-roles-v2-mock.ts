@@ -533,6 +533,7 @@ export function defineRolesV2Mock(options: DefineRolesV2MockOptions): ServiceMoc
   return defineService({
     key: 'rolesv2',
     serviceDiscovery: 'merge',
+    scopes: ['rolesv2/.default'],
     reset: () => sessions.clear(),
     middleware: (router) => {
       router.get('/access-roles', (_request, response, context) => {
