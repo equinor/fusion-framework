@@ -54,13 +54,18 @@ export const RoleErrorView = ({ error, onRetry }: RoleErrorViewProps): ReactNode
     const missingAccessRoleItems = recovery.missingAccessRoles.map((role) => (
       <List.Item key={role}>{role}</List.Item>
     ));
+    const hasMissingAccessRoleNames = missingAccessRoleItems.length > 0;
     return (
       <Styled.Recovery>
         <Typography group="heading" variant="h2">
           Access denied
         </Typography>
-        <Typography>Your account is missing these required active access roles:</Typography>
-        <List>{missingAccessRoleItems}</List>
+        {hasMissingAccessRoleNames && (
+          <>
+            <Typography>Your account is missing these required active access roles:</Typography>
+            <List>{missingAccessRoleItems}</List>
+          </>
+        )}
         <Typography group="heading" variant="h3">
           Recovery details unavailable
         </Typography>

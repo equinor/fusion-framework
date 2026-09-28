@@ -208,6 +208,20 @@ describe('RoleErrorView', () => {
     expect(mocks.getRequiredAccessRoleStatuses).not.toHaveBeenCalled();
   });
 
+  it('does not assert unnamed missing roles for a legacy error with no role names', async () => {
+    const screen = await render(
+      <RoleErrorView error={new RequiredAccessRolesError('Legacy error')} onRetry={vi.fn()} />,
+    );
+    await expect.element(screen.getByRole('heading', { name: 'Access denied' })).toBeVisible();
+    await expect
+      .element(screen.getByText('Your account is missing these required active access roles:'))
+      .not.toBeInTheDocument();
+    await expect.element(screen.getByRole('list')).not.toBeInTheDocument();
+    await expect
+      .element(screen.getByRole('heading', { name: 'Recovery details unavailable' }))
+      .toBeVisible();
+  });
+
   it('ignores an obsolete metadata failure after changing the required-role error', async () => {
     const previous = Promise.withResolvers<RequiredAccessRoleStatus[]>();
     mocks.getRequiredAccessRoleStatuses
