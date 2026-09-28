@@ -110,6 +110,9 @@ jobs:
       - name: Setup node and install deps
         uses: ./.github/actions/node-setup
 
+      - name: Install Playwright Chromium
+        run: pnpm --filter @equinor/fusion-framework-vitest-plugin-react-app exec playwright install --with-deps chromium
+
       - name: Validate maintenance stream
         run: pnpm build && pnpm test && pnpm -w check
 
