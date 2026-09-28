@@ -326,6 +326,7 @@ describe('createMockServer', () => {
 
   it('preserves exact-path behavior for trailing delimiters in direct router usage', async () => {
     const router = createRouter();
+    let routeError: unknown;
     router.get('/ping', (_req, res) => res.json({ matched: true }));
     const routeServer = createServer((request, response) => {
       router
@@ -338,8 +339,9 @@ describe('createMockServer', () => {
           }
         })
         .catch((error: unknown) => {
+          routeError = error;
           response.statusCode = 500;
-          response.end(String(error));
+          response.end('Internal server error');
         });
     });
     await new Promise<void>((resolve) => routeServer.listen(0, '127.0.0.1', resolve));
@@ -352,6 +354,7 @@ describe('createMockServer', () => {
     try {
       const response = await fetch(`http://127.0.0.1:${address.port}/ping/`);
 
+      expect(routeError).toBeUndefined();
       expect(response.status).toBe(404);
     } finally {
       await new Promise<void>((resolve, reject) => {
