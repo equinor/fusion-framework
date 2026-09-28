@@ -13,6 +13,8 @@ Fusion Roles V2. Use it to:
 
 This is a new package awaiting its initial release, not an upgrade to a previously published React
 roles package. For portal integrations, see [Migrate a portal roles flyout](./docs/migration.md).
+For the full production-to-test workflow across every Roles V2 package, see the
+[Roles V2 end-to-end adoption guide](../../../framework/docs/roles-v2-adoption-guide.md).
 
 ## Setup and peer dependencies
 

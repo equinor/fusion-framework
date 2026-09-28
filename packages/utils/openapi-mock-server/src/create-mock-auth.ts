@@ -54,7 +54,7 @@ export interface MockAuthState {
  * const mockAuth = createMockAuth('http://localhost:4010');
  * await mockAuth.setUser(context.request, {
  *   userId: 'administrator',
- *   claims: { roles: ['Demand.Admin'] },
+ *   claims: { roles: ['Example.Admin'] },
  * });
  * ```
  */

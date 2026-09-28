@@ -177,6 +177,9 @@ pnpm exec vitest run --root packages/utils/openapi-mock-server
 The compatibility test executes the public `RolesClient` against the bundled preset, so a missing
 route, outdated path parameter, or incompatible response envelope fails before publication.
 
+See the [Roles V2 end-to-end adoption guide](../../../framework/docs/roles-v2-adoption-guide.md)
+for how this mock fits alongside `enableRolesMock` and session-scoped Playwright personas.
+
 ## Layering directories
 
 Call `use()` once per source, in ascending precedence. Later sources are resolved according to each
