@@ -135,9 +135,18 @@ export async function handleRequest(
     : undefined;
   // The request's host names a registered service directly: resolve against it without a path prefix.
   if (hostKey && services.has(hostKey)) {
-    await handleServiceRequest(services, method, [hostKey, ...segments], query, req, res, seed);
+    await handleServiceRequest(
+      services,
+      method,
+      [hostKey, ...segments],
+      query,
+      req,
+      res,
+      seed,
+      authSessions,
+    );
     return;
   }
 
-  await handleServiceRequest(services, method, segments, query, req, res, seed);
+  await handleServiceRequest(services, method, segments, query, req, res, seed, authSessions);
 }

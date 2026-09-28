@@ -69,11 +69,13 @@ pnpm --filter @equinor/fusion-framework-cookbook-app-react-roles dev:mock
 
 This starts the app and the Fusion OpenAPI mock server together. The local
 [`mocks/rolesv2.mock.ts`](https://github.com/equinor/fusion-framework/blob/main/cookbooks/app-react-roles/mocks/rolesv2.mock.ts)
-service merges onto the bundled `rolesv2`
-contract. It first exposes a synthetic claimable role that grants `ProView.Admin.DevOps`, allowing
-the host recovery flow to be repeated. After activation, the app loads and exposes a second
-claimable Reports exporter assignment. The app still uses the production `RolesClient`; only
-service discovery and HTTP responses are local.
+service uses `defineRolesV2Mock` to merge typed application policy onto the bundled `rolesv2`
+contract. Its account map supplies recovery, operations, and reporting personas as ordinary data;
+the framework-owned helper supplies paging, identity-aware routes, and session-isolated
+activation/deactivation. The recovery persona first exposes a synthetic claimable role that grants
+`ProView.Admin.DevOps`. After activation, the app loads and exposes a second claimable Reports
+exporter assignment. The app still uses the production `RolesClient`; only service discovery and
+HTTP responses are local.
 
 ## Test with static Roles data
 
@@ -107,7 +109,9 @@ This keeps production Roles configuration and request validation in the test pat
 rendered role data repeatable.
 
 The Playwright test starts both servers, claims the required role through the host recovery view,
-verifies that the app loads without a refresh, and compares the resolved app with its visual snapshot:
+verifies that the app loads without a refresh, compares the resolved app with its visual snapshot,
+and proves that two concurrent browser contexts plus an in-place identity switch resolve independent
+account policy:
 
 ```bash
 pnpm --filter @equinor/fusion-framework-cookbook-app-react-roles test
