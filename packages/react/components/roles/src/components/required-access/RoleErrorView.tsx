@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { Button, Typography } from '@equinor/eds-core-react';
+import { Button, List, Typography } from '@equinor/eds-core-react';
 import styled from 'styled-components';
 import { CheckingRolesView } from './CheckingRolesView';
 import { RoleClaimableView } from './RoleClaimableView';
@@ -50,14 +50,23 @@ export const RoleErrorView = ({ error, onRetry }: RoleErrorViewProps): ReactNode
   }
   // A failed lookup is not evidence of missing or non-claimable access.
   if (recovery.statusError) {
+    // Preserve the names from the confirmed denial without inferring anything from missing metadata.
+    const missingAccessRoleItems = recovery.missingAccessRoles.map((role) => (
+      <List.Item key={role}>{role}</List.Item>
+    ));
     return (
       <Styled.Recovery>
         <Typography group="heading" variant="h2">
-          Unable to check required access roles
+          Access denied
+        </Typography>
+        <Typography>Your account is missing these required active access roles:</Typography>
+        <List>{missingAccessRoleItems}</List>
+        <Typography group="heading" variant="h3">
+          Recovery details unavailable
         </Typography>
         <Typography role="alert">{recovery.statusError}</Typography>
         {recovery.canRetryStatuses && (
-          <Button onClick={recovery.retryStatuses}>Retry access check</Button>
+          <Button onClick={recovery.retryStatuses}>Retry recovery details</Button>
         )}
       </Styled.Recovery>
     );

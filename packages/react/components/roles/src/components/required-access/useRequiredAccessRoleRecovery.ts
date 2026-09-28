@@ -8,6 +8,7 @@ import { findRequiredAccessRolesError } from './find-required-access-roles-error
 interface RequiredAccessRoleRecovery {
   readonly isRequiredAccessRolesError: boolean;
   readonly isLoading: boolean;
+  readonly missingAccessRoles: readonly string[];
   readonly statuses: readonly RequiredAccessRoleStatus[];
   readonly statusError?: string;
   /** Whether a failed metadata read can be retried through the original provider. */
@@ -139,6 +140,7 @@ export const useRequiredAccessRoleRecovery = (
   return {
     isRequiredAccessRolesError: Boolean(requiredAccessRolesError),
     isLoading: Boolean(requiredAccessRolesError && !currentResult && !statusError),
+    missingAccessRoles: requiredAccessRolesError?.missingAccessRoles ?? [],
     statuses: currentResult?.statuses ?? [],
     statusError,
     canRetryStatuses,
