@@ -78,6 +78,8 @@ export interface HasAccessRoleOptions {
   assert?: boolean;
   /** Requires every requested role when true; otherwise any requested role satisfies the check. */
   required?: boolean;
+  /** Invalidates cached active access-role assignments before evaluating the check. */
+  refresh?: boolean;
 }
 
 /**
@@ -398,7 +400,9 @@ export class RolesProvider
       }
       return hasAccessRole;
     }
-    const activeAccessRoleAssignments = await this.getActiveAccessRoleAssignments();
+    const activeAccessRoleAssignments = await this.getActiveAccessRoleAssignments({
+      refresh: options.refresh,
+    });
     const activeAccessRoleNames = new Set<string>();
     // Only explicit access-role names can satisfy a requested access role.
     for (const assignment of activeAccessRoleAssignments) {

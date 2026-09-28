@@ -225,7 +225,7 @@ describe('useHasAccessRole', () => {
     await unmount();
   });
 
-  it('uses current inputs when a refresh retained before rerender is invoked', async () => {
+  it('does not let a retained refresh for old inputs affect the current check', async () => {
     const client = createClient();
     const initialAssignments = new Subject<
       Array<{ systemName: string; accessRoleName: string; assignmentType: 'Global' }>
@@ -278,8 +278,8 @@ describe('useHasAccessRole', () => {
       await refreshPromise;
     });
 
-    expect(result.current.isLoading).toBe(false);
-    expect(result.current.hasAccessRole).toBe(false);
+    expect(result.current.isLoading).toBe(true);
+    expect(result.current.hasAccessRole).toBeUndefined();
 
     await act(async () => {
       changedInputAssignments.next([
@@ -299,7 +299,7 @@ describe('useHasAccessRole', () => {
     });
 
     expect(result.current.isLoading).toBe(false);
-    expect(result.current.hasAccessRole).toBe(false);
+    expect(result.current.hasAccessRole).toBe(true);
 
     await unmount();
   });

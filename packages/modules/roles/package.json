@@ -66,6 +66,7 @@
     "@equinor/fusion-framework-module-service-discovery": "workspace:^",
     "@equinor/fusion-framework-module-telemetry": "workspace:^",
     "@equinor/fusion-services": "workspace:^",
+    "@equinor/fusion-observable": "workspace:^",
     "@equinor/fusion-query": "workspace:^",
     "rxjs": "^7.8.1"
   },
