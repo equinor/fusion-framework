@@ -472,7 +472,6 @@ jobs:
       github.event_name == 'pull_request_target' &&
       github.actor == 'dependabot[bot]' &&
       needs.research.outputs.base_ref == 'maintenance/dependencies' &&
-      needs.research.outputs.auto_merge == 'true' &&
       (needs.publish.result == 'success' || needs.publish.result == 'skipped')
     runs-on: ubuntu-latest
     permissions:
@@ -502,7 +501,6 @@ jobs:
       always() &&
       github.event_name == 'workflow_dispatch' &&
       (inputs.operation == 'maintain' || inputs.operation == 'resolve') &&
-      (inputs.operation == 'resolve' || needs.research.outputs.auto_merge == 'true') &&
       needs.research.result == 'success' &&
       (needs.publish.result == 'success' || needs.publish.result == 'skipped')
     outputs:
@@ -530,9 +528,10 @@ jobs:
           FROM_VERSION: ${{ needs.research.outputs.from_version }}
           GH_TOKEN: ${{ github.token }}
           HEAD_REF: ${{ needs.research.outputs.head_ref }}
-          MERGE_RECOMMENDED: ${{ needs.research.outputs.merge_recommended }}
+          OPERATION: ${{ inputs.operation }}
           PR_NUMBER: ${{ needs.research.outputs.pr_number }}
           REPOSITORY: ${{ github.repository }}
+          SIGNATURE: ${{ needs.research.outputs.signature }}
           UPDATE_SUMMARY: ${{ needs.research.outputs.update_summary }}
           VERSION: ${{ needs.research.outputs.version }}
         run: |
@@ -541,6 +540,30 @@ jobs:
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           git fetch origin "$BASE_REF"
+
+          marker="<!-- fusion-ai-dependency:${SIGNATURE} -->"
+          verdict="$(
+            gh api --paginate "repos/${REPOSITORY}/issues/${PR_NUMBER}/comments" \
+              --jq ".[] | select(.user.login == \"github-actions[bot]\") | select(.body | contains(\"${marker}\")) | .body" \
+              | head -n 1
+          )"
+          if ! grep -Fqx '## 🟢 Verdict: MERGE' <<< "$verdict"; then
+            echo "head_sha=$EXPECTED_HEAD_SHA" >> "$GITHUB_OUTPUT"
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            echo "updated=false" >> "$GITHUB_OUTPUT"
+            echo "The current research verdict does not recommend merging."
+            exit 0
+          fi
+          if [[ "$OPERATION" == maintain ]] && {
+            ! grep -Fqx '**Confidence:** high' <<< "$verdict" ||
+              grep -Fqx '**Readiness:** needs changes' <<< "$verdict"
+          }; then
+            echo "head_sha=$EXPECTED_HEAD_SHA" >> "$GITHUB_OUTPUT"
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            echo "updated=false" >> "$GITHUB_OUTPUT"
+            echo "Automatic maintenance requires high confidence without a needs-changes readiness."
+            exit 0
+          fi
 
           has_pr_changeset() {
             local package="$1"
@@ -610,13 +633,6 @@ jobs:
             echo "ready=false" >> "$GITHUB_OUTPUT"
             echo "updated=false" >> "$GITHUB_OUTPUT"
             echo "::notice::Dependabot was asked to rebase the conflicting branch."
-            exit 0
-          fi
-          if [[ "$MERGE_RECOMMENDED" != true ]]; then
-            echo "head_sha=$EXPECTED_HEAD_SHA" >> "$GITHUB_OUTPUT"
-            echo "ready=false" >> "$GITHUB_OUTPUT"
-            echo "updated=false" >> "$GITHUB_OUTPUT"
-            echo "The research verdict does not recommend merging; no branch changes were made."
             exit 0
           fi
           if [[ "$changeset_required" = true ]]; then
@@ -699,7 +715,6 @@ jobs:
       github.event_name == 'workflow_dispatch' &&
       (inputs.operation == 'maintain' || inputs.operation == 'resolve') &&
       needs.research.outputs.base_ref == 'maintenance/dependencies' &&
-      needs.research.outputs.auto_merge == 'true' &&
       needs.remediate.outputs.ready == 'true' &&
       (needs.publish.result == 'success' || needs.publish.result == 'skipped')
     runs-on: ubuntu-latest
