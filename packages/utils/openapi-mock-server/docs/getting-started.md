@@ -125,16 +125,29 @@ Use the narrowest mechanism that expresses the behavior you need:
 | `defineService.routes` | Static or function-backed operation responses. | Becomes the reset baseline and can still be replaced by operation ID. |
 | `defineService.middleware` | Custom routes or request-aware behavior outside the OpenAPI operation model. | Runs before generated mocks, so runtime operation overrides do not replace it. |
 
-Programmatic middleware receives a service-relative URL for both `/<service>/*` and
-`<service>.localhost/*` requests. The context includes the parsed JSON body and the server-level
-seed:
+Programmatic middleware receives a service-relative parsed `url` and `query` for both
+`/<service>/*` and `<service>.localhost/*` requests. The original Node.js request remains
+unchanged, while the context also includes decoded route `params`, parsed JSON `body`, the
+server-level `seed`, and explicit mock-auth `identity` state:
 
 ```ts
 import { createService } from '@equinor/fusion-openapi-mock-server/discovery';
 
 const people = createService('people', peopleDocument).middleware((router) => {
-  router.post('/people-picker/resolve', (_req, res, { body, seed }) => {
-    res.json({ body, seed });
+  router.get('/accounts/:accountIdentifier/people', (_req, res, context) => {
+    const filter = context.query.get('filter');
+
+    if (context.identity.status !== 'authenticated') {
+      res.statusCode = 401;
+      res.json({ authentication: context.identity.status });
+      return;
+    }
+
+    res.json({
+      accountIdentifier: context.params.accountIdentifier,
+      filter,
+      userId: context.identity.userId,
+    });
   });
 });
 
@@ -142,7 +155,14 @@ const server = createMockServer({ seed: 42 }).use([people]);
 ```
 
 The middleware router supports `get`, `post`, `put`, `patch`, `delete`, and `options` request
-methods with exact service-relative path matching.
+methods. Paths use `path-to-regexp` syntax, including named parameters such as
+`:accountIdentifier`. Parameters are URL-decoded. Exact method/path registrations always take
+precedence over parameterized routes; when multiple parameterized routes match, the first
+registration wins.
+
+`RouteContext.identity` is a discriminated union with `authenticated`, `missing`, `malformed`,
+and `unsupported` states. An authenticated identity exposes the normalized `userId` and `claims`
+from a bearer token issued by this mock server's session-scoped mock-auth API.
 
 ## Point your app at it
 

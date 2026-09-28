@@ -3,6 +3,7 @@ import type { IncomingMessage, ServerResponse } from 'node:http';
 import { readJsonBody } from './read-json-body.js';
 import { sendJson } from './send-json.js';
 import type { MockAuthSessionStore, MockAuthUser } from './MockAuthSessionStore.js';
+import { mockAuthTokenSignature } from '../mock-auth-token-signature.js';
 
 interface MockAuthBody {
   userId?: unknown;
@@ -103,7 +104,7 @@ function createUserToken(user: MockAuthUser, scopes: string[]): string {
   return [
     encodeJwtSegment({ alg: 'none', typ: 'JWT' }),
     encodeJwtSegment(payload),
-    'fusion-mock-signature',
+    mockAuthTokenSignature,
   ].join('.');
 }
 

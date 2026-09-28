@@ -17,4 +17,5 @@ export {
   type Router,
   type RouteHandler,
   type RouteContext,
+  type MockRequestIdentity,
 } from './create-router.js';
