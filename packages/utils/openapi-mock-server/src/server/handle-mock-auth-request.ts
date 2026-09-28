@@ -82,9 +82,10 @@ function encodeJwtSegment(value: unknown): string {
  *
  * @param user - Browser-session user.
  * @param scopes - Scopes requested by the Fusion MSAL provider.
+ * @param sessionId - Opaque browser-session identifier used for downstream state isolation.
  * @returns Deterministic unsigned mock JWT.
  */
-function createUserToken(user: MockAuthUser, scopes: string[]): string {
+function createUserToken(user: MockAuthUser, scopes: string[], sessionId: string): string {
   const tenantId = user.tenantId ?? 'fusion-mock-tenant';
   const audience = scopes[0]?.replace(/\/\.default$/, '') ?? 'fusion-mock-client';
   const issuedAt = 1_700_000_000;
@@ -94,6 +95,7 @@ function createUserToken(user: MockAuthUser, scopes: string[]): string {
     aud: audience,
     tid: tenantId,
     oid: user.userId,
+    sid: sessionId,
     name: user.name ?? user.userId,
     preferred_username: user.username ?? `${user.userId}@example.test`,
     iat: issuedAt,
@@ -181,7 +183,10 @@ export async function handleMockAuthRequest(
       return;
     }
 
-    sendJson(response, 200, { status: 'issued', token: createUserToken(user, scopes) });
+    sendJson(response, 200, {
+      status: 'issued',
+      token: createUserToken(user, scopes, sessionId),
+    });
     return;
   }
 

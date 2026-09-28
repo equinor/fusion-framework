@@ -3380,6 +3380,9 @@ importers:
       '@equinor/fusion-openapi-mock':
         specifier: workspace:^
         version: link:../openapi-mock
+      '@equinor/fusion-services':
+        specifier: workspace:^
+        version: link:../../services
       '@faker-js/faker':
         specifier: ^10.1.0
         version: 10.6.0

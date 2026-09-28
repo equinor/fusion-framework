@@ -98,6 +98,75 @@ The `rolesv2` preset is derived from the versioned
 claimable-role activation operations used by `@equinor/fusion-framework-module-roles`; application
 policy and persona-specific responses remain application-owned overrides.
 
+### Define persona-aware Roles V2 policy
+
+Use `defineRolesV2Mock` when a local application or Playwright suite needs real Roles V2 HTTP
+behavior rather than generated records. The helper returns a `rolesv2` service with
+`serviceDiscovery: 'merge'`, so a `<name>.mock.ts` module can layer typed application policy onto
+the bundled Fusion contract without writing routes:
+
+```ts
+import { defineRolesV2Mock } from '@equinor/fusion-openapi-mock-server/presets/fusion';
+
+export default defineRolesV2Mock({
+  accessRoles: [
+    {
+      id: 'access-role-id',
+      name: 'Example.View',
+      system: { id: 'system-id', name: 'Example' },
+    },
+  ],
+  accounts: {
+    'persona-a': {
+      activeAccessRoleAssignments: [
+        {
+          systemName: 'Example',
+          accessRoleName: 'Example.View',
+          assignmentType: 'Global',
+        },
+      ],
+    },
+    'persona-b': {
+      activeAccessRoleAssignments: [],
+      claimableRoleAssignments: [],
+    },
+  },
+});
+```
+
+Account keys are arbitrary application data and must match the `userId` selected through
+`createMockAuth`. The helper implements:
+
+- the paged access-role registry and account claimable-assignment collection;
+- active, consolidated claimable, and consolidated standing assignment reads;
+- activation/deactivation with schema-valid activation responses;
+- expanded claimable-role mappings used by active checks and required-role recovery;
+- isolated mutable activation state for each browser session and account, including identity
+  switches in one browser context.
+
+`claimableRoleAssignments` accepts the Roles V2 model from `@equinor/fusion-services/roles`.
+Expanded `claimableRole.accessRoleMappings` let the helper derive effective active assignments
+after activation. Use an assignment's `activations.activeAccessRoleAssignments` entry when the
+application needs an explicit effective assignment shape, or `activations.error` to model a
+deterministic HTTP failure. An assignment configured with `isActive: true` must provide
+`activations[assignmentId].activeAccessRoleAssignments`; this explicit provenance lets
+deactivation remove only access roles granted by that claim.
+
+`POST /@fusion-mock/reset` clears persona activation state together with mock-auth sessions and
+ordinary operation overrides. A subsequent request starts again from the account policy declared
+in `defineRolesV2Mock`.
+
+Behavior is explicit at the HTTP boundary:
+
+- missing, malformed, or non-mock bearer tokens return `401`;
+- a path account that differs from the selected persona returns `403`;
+- an authenticated persona absent from `accounts` returns `404` rather than an empty no-role
+  response;
+- unknown assignment IDs return `404`, `$top=0` and malformed activation input return `400`, and
+  invalid/repeated activation state returns `409`;
+- empty accounts, duplicate/missing claimable assignment IDs, orphan activation policy, and
+  non-error activation statuses throw while the mock module is loaded.
+
 Repository maintainers update the curated preset after refreshing the Roles client snapshot:
 
 ```bash
@@ -176,8 +245,12 @@ precedence over parameterized routes; when multiple parameterized routes match, 
 registration wins.
 
 `RouteContext.identity` is a discriminated union with `authenticated`, `missing`, `malformed`,
-and `unsupported` states. An authenticated identity exposes the normalized `userId` and `claims`
-from a bearer token issued by this mock server's session-scoped mock-auth API.
+and `unsupported` states. An authenticated identity exposes the normalized `userId`, `claims`, and
+an optional opaque `sessionId` when it came from this mock server's session-scoped mock-auth API.
+The optional field preserves compatibility for callers that construct `MockRequestIdentity`
+themselves. When a local dev-server proxy replaces the bearer value, the router resolves the same
+identity from the existing mock-auth browser-session cookie instead of creating a second identity
+store.
 
 ## Point your app at it
 

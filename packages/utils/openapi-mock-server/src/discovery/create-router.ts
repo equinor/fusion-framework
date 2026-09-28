@@ -14,7 +14,7 @@ export interface MockResponse extends ServerResponse {
 
 /**
  * The third argument a {@link RouteHandler} receives: service-relative routing data,
- * parsed request input, explicit mock-auth state, and the mock server seed.
+ * parsed request input, session-aware mock-auth state, and the mock server seed.
  */
 export interface RouteContext {
   /** The request body, parsed as JSON. `undefined` for an empty body. */
@@ -27,7 +27,7 @@ export interface RouteContext {
   url: URL;
   /** Parsed query parameters from {@link RouteContext.url}. */
   query: URLSearchParams;
-  /** Explicit mock-only authentication state derived from the request bearer token. */
+  /** Explicit mock-only authentication state derived from a supported token or browser session. */
   identity: MockRequestIdentity;
 }
 
@@ -38,6 +38,8 @@ export type MockRequestIdentity =
       status: 'authenticated';
       /** Stable user identifier normalized from the mock token's `oid` claim. */
       userId: string;
+      /** Opaque browser-session identifier when identity came from session-scoped mock auth. */
+      sessionId?: string;
       /** Decoded claims from the supported mock-auth token. */
       claims: Readonly<Record<string, unknown>>;
     }
@@ -82,6 +84,7 @@ export interface Router {
    * @param res - Node.js response completed by a matched route.
    * @param seed - The mock server's own seed (see `CreateMockServerOptions`), threaded into the handler's {@link RouteContext}.
    * @param serviceUrl - Optional parsed service-relative URL supplied by the standalone server.
+   * @param identity - Optional server-resolved mock-auth identity for proxied browser requests.
    * @returns Whether an exact or parameterized route handled the request.
    */
   handle(
@@ -89,6 +92,7 @@ export interface Router {
     res: ServerResponse,
     seed?: number,
     serviceUrl?: URL,
+    identity?: MockRequestIdentity,
   ): Promise<boolean>;
 }
 
@@ -126,7 +130,7 @@ export function createRouter(): Router {
     patch: (path, handler) => register('PATCH', path, handler),
     delete: (path, handler) => register('DELETE', path, handler),
     options: (path, handler) => register('OPTIONS', path, handler),
-    async handle(req, res, seed, serviceUrl) {
+    async handle(req, res, seed, serviceUrl, identity) {
       const url = serviceUrl ?? new URL(req.url ?? '/', 'http://localhost');
       const method = req.method ?? 'GET';
       const handler = exactRoutes.get(`${method} ${url.pathname}`);
@@ -157,7 +161,7 @@ export function createRouter(): Router {
         params,
         url,
         query: url.searchParams,
-        identity: parseMockRequestIdentity(req.headers.authorization),
+        identity: identity ?? parseMockRequestIdentity(req.headers.authorization),
       });
       return true;
     },

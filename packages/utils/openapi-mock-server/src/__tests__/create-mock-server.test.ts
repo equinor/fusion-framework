@@ -339,6 +339,7 @@ describe('createMockServer', () => {
         res.json({
           resourceId: params.resourceId,
           userId: identity.userId,
+          sessionId: identity.sessionId,
           roles: identity.claims.roles,
         });
       });
@@ -373,24 +374,38 @@ describe('createMockServer', () => {
     const firstToken = (await firstTokenResponse.json()) as { token: string };
     const secondToken = (await secondTokenResponse.json()) as { token: string };
 
-    const [firstResource, secondResource] = await Promise.all([
+    const [firstResource, secondResource, cookieAuthenticatedResource] = await Promise.all([
       fetch(`${url}/resources/resources/shared`, {
         headers: { authorization: `Bearer ${firstToken.token}` },
       }),
       fetch(`${url}/resources/resources/shared`, {
         headers: { authorization: `Bearer ${secondToken.token}` },
       }),
+      fetch(`${url}/resources/resources/proxied`, {
+        headers: {
+          authorization: 'Bearer proxy-replacement-token',
+          cookie: firstCookie,
+        },
+      }),
     ]);
 
     await expect(firstResource.json()).resolves.toEqual({
       resourceId: 'shared',
       userId: 'first-user',
+      sessionId: expect.any(String),
       roles: ['reader'],
     });
     await expect(secondResource.json()).resolves.toEqual({
       resourceId: 'shared',
       userId: 'second-user',
+      sessionId: expect.any(String),
       roles: ['owner'],
+    });
+    await expect(cookieAuthenticatedResource.json()).resolves.toEqual({
+      resourceId: 'proxied',
+      userId: 'first-user',
+      sessionId: expect.any(String),
+      roles: ['reader'],
     });
   });
 
