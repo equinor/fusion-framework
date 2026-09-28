@@ -93,6 +93,21 @@ schema-backed operations for common application flows:
 const server = createMockServer().use('fusion').use('./mocks');
 ```
 
+The `rolesv2` preset is derived from the versioned
+`@equinor/fusion-services/roles/v1/openapi.json` contract. It covers the account reads and
+claimable-role activation operations used by `@equinor/fusion-framework-module-roles`; application
+policy and persona-specific responses remain application-owned overrides.
+
+Repository maintainers update the curated preset after refreshing the Roles client snapshot:
+
+```bash
+pnpm --filter @equinor/fusion-openapi-mock-server preset:roles:update
+pnpm exec vitest run --root packages/utils/openapi-mock-server
+```
+
+The compatibility test executes the public `RolesClient` against the bundled preset, so a missing
+route, outdated path parameter, or incompatible response envelope fails before publication.
+
 ## Layering directories
 
 Call `use()` once per source, in ascending precedence. Later sources are resolved according to each

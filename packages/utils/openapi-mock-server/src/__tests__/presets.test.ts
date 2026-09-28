@@ -1,3 +1,6 @@
+import { HttpClient } from '@equinor/fusion-framework-module-http/client';
+import { RolesClient } from '@equinor/fusion-framework-module-roles';
+import { firstValueFrom } from 'rxjs';
 import { afterEach, describe, expect, it } from 'vitest';
 
 import { defineService } from '../discovery/define-service.js';
@@ -195,6 +198,60 @@ describe('presets', () => {
       expect(response.status).toBe(200);
       const portal = (await response.json()) as { name: string };
       expect(typeof portal.name).toBe('string');
+    });
+
+    it('supports the public Roles client read operations and empty access states', async () => {
+      server = createMockServer().use('fusion');
+      const { url } = await server.start();
+      server.override('rolesv2', 'listAccountActiveAccessRoleAssignments', {
+        mock: [{ systemName: 'Example', accessRoleName: 'Example.Read' }],
+      });
+      server.override('rolesv2', 'listAccountClaimableRoleAssignments', {
+        mock: { totalCount: 0, value: [] },
+      });
+      server.override('rolesv2', 'listAccountConsolidatedClaimableRoleAssignments', {
+        mock: [],
+      });
+      server.override('rolesv2', 'listAccountConsolidatedRoleAssignments', {
+        mock: [],
+      });
+      server.override('rolesv2', 'listAccessRoles', {
+        mock: {
+          totalCount: 1,
+          value: [{ name: 'Example.Read', description: 'Read example data' }],
+        },
+      });
+      const roles = new RolesClient(new HttpClient(`${url}/rolesv2`), () => 'account/identifier');
+
+      await expect(firstValueFrom(roles.getActiveAccessRoleAssignments())).resolves.toEqual([
+        { systemName: 'Example', accessRoleName: 'Example.Read' },
+      ]);
+      await expect(
+        firstValueFrom(roles.getConsolidatedClaimableRoleAssignments()),
+      ).resolves.toEqual([]);
+      await expect(firstValueFrom(roles.getConsolidatedRoleAssignments())).resolves.toEqual([]);
+      await expect(
+        firstValueFrom(roles.hasClaimableRoleAssignmentForAccessRole('Example.Read')),
+      ).resolves.toBe(false);
+      await expect(
+        firstValueFrom(roles.getRequiredAccessRoleStatuses(['Example.Read'])),
+      ).resolves.toEqual([
+        {
+          name: 'Example.Read',
+          description: 'Read example data',
+          exists: true,
+          claimableAssignments: [],
+        },
+      ]);
+
+      server.override('rolesv2', 'listAccountActiveAccessRoleAssignments', { mock: [] });
+      const rolesWithoutActiveAccess = new RolesClient(
+        new HttpClient(`${url}/rolesv2`),
+        () => 'account/without-access',
+      );
+      await expect(
+        firstValueFrom(rolesWithoutActiveAccess.getActiveAccessRoleAssignments()),
+      ).resolves.toEqual([]);
     });
   });
 });
