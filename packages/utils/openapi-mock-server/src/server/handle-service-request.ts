@@ -31,18 +31,12 @@ export async function handleServiceRequest(
     return;
   }
   const path = `/${rest.join('/')}`;
-  const originalUrl = req.url;
   const search = new URL(req.url ?? '/', 'http://localhost').search;
-  // Middleware models the service's own routes, so hide the shared server's /<service> prefix.
-  req.url = `${path}${search}`;
+  const serviceUrl = new URL(`${path}${search}`, 'http://localhost');
   // A registered middleware route takes precedence over the generated mock for this request.
-  try {
-    // Let middleware resolve the normalized service-relative request before generated mocks.
-    if (await service.definition.router?.handle(req, res, seed)) {
-      return;
-    }
-  } finally {
-    req.url = originalUrl;
+  // Pass service-relative routing data separately so middleware cannot observe a temporarily mutated request.
+  if (await service.definition.router?.handle(req, res, seed, serviceUrl)) {
+    return;
   }
   const resolved = await service.mock.resolve({ method, path, query });
   // The service has no operation matching this method/path.

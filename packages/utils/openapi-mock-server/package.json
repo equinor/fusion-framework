@@ -87,6 +87,7 @@
     "@equinor/fusion-imports": "workspace:^",
     "@equinor/fusion-openapi-mock": "workspace:^",
     "@faker-js/faker": "^10.1.0",
+    "path-to-regexp": "^8.4.0",
     "yaml": "^2.9.0"
   },
   "devDependencies": {

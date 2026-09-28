@@ -141,6 +141,18 @@ nor call this mock-auth integration. Credentialed browser calls are accepted onl
 origin is a canonical loopback origin (`localhost`, `127.0.0.1`, or `[::1]`) or was configured
 through `--allow-origin` or `createMockServer({ allowedOrigins })`.
 
+### Mock-only identity security boundary
+
+Middleware route identity parsing is test-only convenience, not authentication or token
+validation. It recognizes only the unsigned bearer-token shape issued by
+`/@fusion-mock/auth/token`, exposes its normalized claims through `RouteContext.identity`, and
+never verifies a production issuer, audience, signature, lifetime, or authorization policy.
+
+Never send real access tokens, refresh tokens, passwords, client secrets, or other credentials to
+the mock server. The mock-auth API accepts deterministic user metadata only, keeps selected
+personas in the existing in-memory session store, and must not be extended to persist credentials.
+Use trusted backend authorization for production access decisions.
+
 ## Routes
 
 Every override goes through the `/@fusion-mock/` control plane; everything else is proxied to the
