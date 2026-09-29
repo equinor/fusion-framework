@@ -1,4 +1,5 @@
 import { readFile } from 'node:fs/promises';
+import { resolve } from 'node:path';
 
 /** Union of types that `JSON.parse` can produce. */
 type JSONContent = Record<string, unknown> | string | number | boolean | null | unknown[];
@@ -28,7 +29,7 @@ export const importJSON = async <T extends JSONContent>(
   encoding: BufferEncoding = 'utf-8',
 ): Promise<T> => {
   try {
-    const content = await readFile(filePath, encoding);
+    const content = await readFile(resolve(filePath), encoding);
     return JSON.parse(content);
   } catch (error) {
     throw new Error(`Failed to parse JSON from file: '${filePath}'`, { cause: error });
