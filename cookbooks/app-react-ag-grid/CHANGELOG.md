@@ -1,5 +1,12 @@
 # Change Log
 
+## 2.0.17
+
+### Patch Changes
+
+- Updated dependencies [d906127]
+  - @equinor/fusion-framework-react-ag-grid@37.1.2
+
 ## 2.0.16
 
 ### Patch Changes

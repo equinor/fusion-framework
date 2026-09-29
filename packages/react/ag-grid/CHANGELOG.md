@@ -1,5 +1,13 @@
 # @equinor/fusion-framework-react-ag-grid
 
+## 37.1.2
+
+### Patch Changes
+
+- d906127: Internal: bump AG Grid dependencies from 36.1.0 to 36.2.0.
+- Updated dependencies [d906127]
+  - @equinor/fusion-framework-module-ag-grid@37.1.2
+
 ## 37.1.1
 
 ### Patch Changes

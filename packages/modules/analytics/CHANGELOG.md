@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-module-analytics
 
+## 3.1.6
+
+### Patch Changes
+
+- d906127: Internal: bump `@opentelemetry/resources` from 2.10.0 to 2.11.0.
+
 ## 3.1.5
 
 ### Patch Changes
