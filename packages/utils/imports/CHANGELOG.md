@@ -1,5 +1,11 @@
 # @equinor/fusion-imports
 
+## 2.0.5
+
+### Patch Changes
+
+- d906127: Resolve relative JSON file paths from the current working directory consistently with script and configuration imports.
+
 ## 2.0.4
 
 ### Patch Changes
