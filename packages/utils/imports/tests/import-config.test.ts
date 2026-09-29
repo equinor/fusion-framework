@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { vol } from 'memfs';
 
 import { importConfig } from '../src/import-config';
+import { testFilePath } from './test-file-path';
 
 const generateFileContent = (...content: string[]) => {
   return content.join('\n');
@@ -17,14 +18,14 @@ const mockConfig = {
 
 describe('import-config', () => {
   it('should load config from a json file', async () => {
-    vol.writeFileSync('config.json', JSON.stringify(mockConfig));
+    vol.writeFileSync(testFilePath('config.json'), JSON.stringify(mockConfig));
     const result = await importConfig('config');
     expect(result.config).toMatchObject(mockConfig);
   });
 
   it('should load config from a javascript file', async () => {
     vol.writeFileSync(
-      'config.js',
+      testFilePath('config.js'),
       generateFileContent(
         `export const foo = ${JSON.stringify(mockConfig, null, 2)};`,
         'export default foo;',
@@ -36,11 +37,11 @@ describe('import-config', () => {
 
   it('should prefer typescript over javascript', async () => {
     vol.writeFileSync(
-      'config.js',
+      testFilePath('config.js'),
       generateFileContent(`export const foo = 'should not be used';`, 'export default foo;'),
     );
     vol.writeFileSync(
-      'config.ts',
+      testFilePath('config.ts'),
       generateFileContent(
         `export const foo = ${JSON.stringify(mockConfig, null, 2)};`,
         'export default foo;',
@@ -49,13 +50,13 @@ describe('import-config', () => {
     const result = await importConfig('config');
     expect(result.config).toMatchObject(mockConfig);
     expect(result.extension).toBe('.ts');
-    expect(vol.existsSync('config.js')).toBe(true);
+    expect(vol.existsSync(testFilePath('config.js'))).toBe(true);
   });
 
   it('should load config with a custom resolver', async () => {
     type Module = { foo: (value: number) => number };
     vol.writeFileSync(
-      'config.ts',
+      testFilePath('config.ts'),
       generateFileContent('export const foo = (value: number) => value + 1;'),
     );
     const result = await importConfig('config', {
@@ -69,7 +70,7 @@ describe('import-config', () => {
   it('should load a config with a custom async resolver', async () => {
     type Module = { foo: (value: number) => Promise<number> };
     vol.writeFileSync(
-      'config.ts',
+      testFilePath('config.ts'),
       generateFileContent('export const foo = async (value: number) => value + 1;'),
     );
     const result = await importConfig('config', {
