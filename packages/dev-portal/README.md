@@ -113,7 +113,9 @@ the compact view and required-access recovery behavior.
 ## Constraints
 
 - This portal is for **local development only** and is not intended for production deployment.
+- The development shell temporarily forces the light EDS palette and native browser controls,
+  including body-mounted overlays, using `data-color-scheme="light"` and a root
+  `color-scheme: only light` style when the portal mounts. Earlier bootstrap/authentication UI
+  remains the host's responsibility. Ref: [equinor/fusion-core-tasks#2120](https://github.com/equinor/fusion-core-tasks/issues/2120).
 - Visuals may differ from the production Fusion portal.
 - The portal assumes MSAL and service discovery are configured in the parent framework instance.
-
-
