@@ -71,6 +71,20 @@ describe('mergeServiceDefinitions', () => {
     expect(mergeServiceDefinitions([existing], [statelessMerge])[0]?.reset).toBe(reset);
   });
 
+  it('runs both reset hooks, earliest first, when both layers keep state', () => {
+    const calls: string[] = [];
+    const existing = { ...service('people', 'replace'), reset: () => calls.push('existing') };
+    const merge = defineService({
+      key: 'people',
+      serviceDiscovery: 'merge',
+      reset: () => calls.push('merge'),
+    });
+
+    mergeServiceDefinitions([existing], [merge])[0]?.reset?.();
+
+    expect(calls).toEqual(['existing', 'merge']);
+  });
+
   it('preserves inherited discovery scopes when a merge layer does not replace them', () => {
     const existing = {
       ...service('people', 'replace'),

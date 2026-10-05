@@ -65,8 +65,9 @@ export interface MockServerCommandDefaults {
  * Serves local help articles and FAQs as a `help` service when a help docs
  * folder is set (`--help-docs`, `mockServer.helpDocs`) or auto-detected
  * (`./docs`, or `docs/<appKey>` in a parent folder), layered after presets and
- * before directories. A local `help.mock.ts` that defines the service outright
- * replaces the help docs; one with `serviceDiscovery: 'merge'` extends them.
+ * before directories. A local `help.mock.ts` with `serviceDiscovery: 'merge'`
+ * extends the help docs; a complete local definition replaces them, and when it
+ * is the first local `help` module the docs layer is not added at all.
  * `--no-help-docs` opts out.
  *
  * Keeps the server running in the foreground until `SIGINT`/`SIGTERM`, so it
@@ -142,17 +143,25 @@ export function createMockServerCommand(defaults: MockServerCommandDefaults = {}
           // Resolve every configured layer before startup so discovery requirements are known.
           .map((dir) => discoverServices(dir)),
       );
-      // A local `help` module that is not a merge layer owns the service outright.
-      const ownsHelpService = definitionGroups
+      // Discovery modes of local `help` modules, in the same precedence order the server merges them.
+      const localHelpModes = definitionGroups
         .flat()
-        // `merge` layers extend the help docs service, so only complete definitions take over.
-        .some((definition) => definition.key === 'help' && definition.serviceDiscovery !== 'merge');
-      // Serving both would collide (`'new'`) or be silently replaced, so the local module wins.
-      const servedHelpDocs = ownsHelpService ? undefined : helpDocs;
-      // Configured help docs that are not served would otherwise look broken, so say why.
-      if (ownsHelpService && helpDocs && helpDocs.source !== 'detected') {
+        // Only modules for the help service affect how the docs layer participates.
+        .filter((definition) => definition.key === 'help')
+        // Legacy definitions without a mode are complete replacements.
+        .map((definition) => definition.serviceDiscovery ?? 'replace');
+      // The docs layer is the baseline when no local module precedes it with a complete definition:
+      // a leading merge needs it, while a leading `'new'` or replacement owns the key outright.
+      const helpDocsLayer =
+        localHelpModes.length === 0 || localHelpModes[0] === 'merge' ? helpDocs : undefined;
+      // A complete local module after merges still replaces the docs in the final service.
+      const servedHelpDocs = localHelpModes.every((mode) => mode === 'merge')
+        ? helpDocsLayer
+        : undefined;
+      // Configured help docs that end up unserved would otherwise look broken, so say why.
+      if (helpDocs && !servedHelpDocs && helpDocs.source !== 'detected') {
         console.warn(
-          `not serving help docs from ${relative(root, helpDocs.dir) || '.'}: a local mock module already defines the help service`,
+          `not serving help docs from ${relative(root, helpDocs.dir) || '.'}: a local mock module defines the help service`,
         );
       }
       const server = createMockServer({
@@ -165,7 +174,7 @@ export function createMockServerCommand(defaults: MockServerCommandDefaults = {}
       // presets always apply before directories, regardless of flag position on the command line
       for (const preset of options.preset) server.use(preset);
       // Help docs sit between presets and directories, so a project's own help.mock.ts still wins.
-      if (servedHelpDocs) server.use([defineHelpArticlesMock({ dir: servedHelpDocs.dir })]);
+      if (helpDocsLayer) server.use([defineHelpArticlesMock({ dir: helpDocsLayer.dir })]);
       // Resolved directory groups are the highest-precedence layers, applied after every preset.
       for (const definitions of definitionGroups) server.use(definitions);
 

@@ -15,7 +15,9 @@ vi.mock('@equinor/fusion-openapi-mock-server', () => ({
   createMockServer: mocks.createMockServer,
 }));
 
-vi.mock('@equinor/fusion-openapi-mock-server/discovery', () => ({
+// Keep the real merge so layering assertions match startup; only directory discovery is faked.
+vi.mock('@equinor/fusion-openapi-mock-server/discovery', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@equinor/fusion-openapi-mock-server/discovery')>()),
   discoverServices: mocks.discoverServices,
 }));
 
@@ -31,7 +33,15 @@ vi.mock('../load-mock-server-config.js', () => ({
   loadMockServerConfig: mocks.loadMockServerConfig,
 }));
 
+import {
+  mergeServiceDefinitions,
+  type ServiceMockDefinition,
+} from '@equinor/fusion-openapi-mock-server/discovery';
+
 import { createMockServerCommand } from '../create-mock-server-command.js';
+
+/** Minimal OpenAPI document for complete definitions passed through the real merge. */
+const SCHEMA = { openapi: '3.0.0', info: { title: 'Help', version: '1.0.0' }, paths: {} };
 
 describe('createMockServerCommand', () => {
   beforeEach(() => {
@@ -239,6 +249,40 @@ describe('createMockServerCommand', () => {
 
       expect(mocks.defineHelpArticlesMock).not.toHaveBeenCalled();
       expect(warn).toHaveBeenCalledWith(expect.stringContaining('not serving help docs from docs'));
+    });
+
+    it('keeps the docs baseline for a merge layer that a later replacement overrides', async () => {
+      mocks.loadMockServerConfig.mockResolvedValue({ helpDocs: 'docs' });
+      mocks.discoverServices
+        .mockResolvedValueOnce([{ key: 'help', serviceDiscovery: 'merge' }])
+        .mockResolvedValueOnce([{ key: 'help', serviceDiscovery: 'replace' }]);
+      mocks.resolveHelpDocs.mockResolvedValue({
+        dir: `${process.cwd()}/docs`,
+        articleCount: 1,
+        faqCount: 0,
+        source: 'config',
+      });
+      const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+      const log = vi.spyOn(console, 'log').mockImplementation(() => undefined);
+
+      const command = createMockServerCommand();
+      await command.parseAsync(['node', 'test', 'merge-mocks', 'replace-mocks']);
+
+      // Feed the registered layers through the real merge, as the server does at startup.
+      const layers = mocks.use.mock.calls
+        .map(([source]) => source)
+        // Presets are registered by name; only definition groups take part in the merge.
+        .filter((source): source is ServiceMockDefinition[] => Array.isArray(source))
+        // Complete definitions need a schema, which the mocked factories omit.
+        .map((group) => group.map((definition) => ({ document: SCHEMA, ...definition })));
+      const help = mergeServiceDefinitions(...layers).find(
+        (definition) => definition.key === 'help',
+      );
+
+      expect(mocks.defineHelpArticlesMock).toHaveBeenCalledWith({ dir: `${process.cwd()}/docs` });
+      expect(help?.serviceDiscovery).toBe('replace');
+      expect(warn).toHaveBeenCalledWith(expect.stringContaining('not serving help docs from docs'));
+      expect(log).not.toHaveBeenCalledWith(expect.stringContaining('help article(s)'));
     });
 
     it('keeps help docs under a local merge layer for the help service', async () => {

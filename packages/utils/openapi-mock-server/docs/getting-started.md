@@ -199,7 +199,7 @@ underneath an app-specific one, without either side needing to know about the ot
 A module with `serviceDiscovery: 'merge'` may omit `schema`; its `components`, `routes`, and
 `middleware` merge onto the nearest earlier same-key service. Merged middleware routes are
 checked first, and the earlier service's middleware still handles every route the merge layer
-does not register. Startup fails when no earlier
+does not register. A server reset runs the `reset` hooks of both layers. Startup fails when no earlier
 local or preset definition exists. The standalone mock server never fetches upstream service
 discovery.
 

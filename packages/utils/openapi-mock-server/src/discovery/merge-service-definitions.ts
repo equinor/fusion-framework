@@ -22,7 +22,8 @@ function mergePaths(
  * ascending precedence. A later `serviceDiscovery: 'merge'` definition merges
  * onto the earlier definition for its key; other later definitions replace it.
  * A merge layer's middleware routes are checked before the earlier layer's,
- * which still handle every route the merge layer does not register.
+ * which still handle every route the merge layer does not register, and a
+ * reset runs both layers' reset hooks.
  *
  * @remarks
  * This is what lets a shared baseline (e.g. {@link fusionPreset}) sit
@@ -77,6 +78,16 @@ export function mergeServiceDefinitions(
         definition.router && existing.router
           ? composeRouters(definition.router, existing.router)
           : (definition.router ?? existing.router);
+      const existingReset = existing.reset;
+      const definitionReset = definition.reset;
+      // Inherited routes keep their own state, so a reset must clear both layers, earliest first.
+      const reset =
+        existingReset && definitionReset
+          ? (): void => {
+              existingReset();
+              definitionReset();
+            }
+          : (definitionReset ?? existingReset);
       // Preserve inherited behavior while merging maps and allowing an explicitly supplied schema to win.
       byKey.set(definition.key, {
         ...existing,
@@ -85,6 +96,7 @@ export function mergeServiceDefinitions(
         fields: { ...existing.fields, ...definition.fields },
         paths: mergePaths(existing.paths, definition.paths),
         router,
+        ...(reset ? { reset } : {}),
       });
     }
   }
