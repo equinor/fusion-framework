@@ -1,6 +1,7 @@
 import type { RouterHandle } from '@equinor/fusion-framework-react-router';
 import { useHttpClient } from '@equinor/fusion-framework-react-app/http';
 import { useEffect, useState, type ReactElement } from 'react';
+import { HelpInfoButton } from '../components/HelpInfoButton';
 
 interface GreetingResponse {
   message: string;
@@ -52,7 +53,10 @@ export default function DirectOnlyServicePage(): ReactElement {
 
   return (
     <section>
-      <h2>Direct-only app service</h2>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+        <h2>Direct-only app service</h2>
+        <HelpInfoButton articleSlug="direct-only-service" label="Direct-only app service" />
+      </div>
       <p>
         This app owns the service URL. The mock supplies its OpenAPI behavior but deliberately stays
         out of service discovery.

@@ -7,11 +7,12 @@ import { index, layout, route } from '@equinor/fusion-framework-react-router/rou
 
 import configure from './config';
 
-/** Route tree with one page for each mock-service ownership and discovery scenario. */
+/** Route tree with one page for each mock-service ownership and discovery scenario, plus local help articles. */
 const routes = layout('./routes/layout.tsx', [
   index('./routes/index.tsx'),
   route('people', './routes/people/index.tsx'),
   route('aurora', './routes/aurora/index.tsx'),
+  route('help', './routes/help/index.tsx'),
 ]);
 
 /** create a render component */

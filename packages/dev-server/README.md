@@ -75,7 +75,9 @@ The plugin adds typed `mockServer` settings to `DevServerOptions` only when its 
 keeping this base package independent of optional mocking tools.
 
 See [Develop with mock services](docs/mocking.md) for normal development overlays, isolated
-`--mock` mode, direct-only services, and executable `<name>.mock.ts` modules.
+`--mock` mode, direct-only services, and executable `<name>.mock.ts` modules. To verify an app's
+help button opens the right article, see
+[Test help articles locally](../utils/openapi-mock-server/docs/testing-help-articles.md).
 
 ## Learn in order
 

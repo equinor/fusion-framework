@@ -1,6 +1,7 @@
 import type { RouterHandle } from '@equinor/fusion-framework-react-router';
 import { useHttpClient } from '@equinor/fusion-framework-react-app/http';
 import { useEffect, useState, type ReactElement } from 'react';
+import { HelpInfoButton } from '../../components/HelpInfoButton';
 
 interface PersonResponse {
   name: string;
@@ -40,7 +41,10 @@ export default function ExistingServicePage(): ReactElement {
 
   return (
     <section>
-      <h2>Existing discovery service</h2>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+        <h2>Existing discovery service</h2>
+        <HelpInfoButton articleSlug="existing-service-override" label="Existing service override" />
+      </div>
       <p>
         The People API already exists in service discovery. The local mock merges deterministic
         route behavior into that existing definition instead of replacing its schema.

@@ -1,0 +1,530 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Fusion Help API (local articles and FAQs mock)",
+    "version": "1.0",
+    "description": "Article and FAQ read operations and search of the Fusion Help API, served from local markdown files by defineHelpArticlesMock."
+  },
+  "paths": {
+    "/articles": {
+      "get": {
+        "operationId": "listArticles",
+        "responses": {
+          "200": {
+            "description": "Every local help article.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ArticleCollection"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/articles/{articleIdentifier}": {
+      "get": {
+        "operationId": "getArticle",
+        "parameters": [
+          {
+            "name": "articleIdentifier",
+            "in": "path",
+            "required": true,
+            "description": "Article slug or id.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested article.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Article"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No article matches the identifier.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/apps/{appKey}/articles": {
+      "get": {
+        "operationId": "listAppArticles",
+        "parameters": [
+          {
+            "name": "appKey",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Local help articles linked to the app.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ArticleCollection"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/apps/{appKey}/articles/{articleIdentifier}": {
+      "get": {
+        "operationId": "getAppArticle",
+        "parameters": [
+          {
+            "name": "appKey",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "articleIdentifier",
+            "in": "path",
+            "required": true,
+            "description": "Article slug or id.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested article.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Article"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No article linked to the app matches the identifier.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/search": {
+      "post": {
+        "operationId": "search",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SearchRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Articles matching the query, best first.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/faqs": {
+      "get": {
+        "operationId": "listFaqs",
+        "responses": {
+          "200": {
+            "description": "Every local FAQ.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FaqCollection"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/faqs/{faqIdentifier}": {
+      "get": {
+        "operationId": "getFaq",
+        "parameters": [
+          {
+            "name": "faqIdentifier",
+            "in": "path",
+            "required": true,
+            "description": "FAQ slug or id.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested FAQ.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Faq"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No FAQ matches the identifier.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/apps/{appKey}/faqs": {
+      "get": {
+        "operationId": "listAppFaqs",
+        "parameters": [
+          {
+            "name": "appKey",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Local FAQs linked to the app.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FaqCollection"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/apps/{appKey}/faqs/{faqIdentifier}": {
+      "get": {
+        "operationId": "getAppFaq",
+        "parameters": [
+          {
+            "name": "appKey",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "faqIdentifier",
+            "in": "path",
+            "required": true,
+            "description": "FAQ slug or id.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested FAQ.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Faq"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No FAQ matches the identifier.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Article": {
+        "type": "object",
+        "required": [
+          "id",
+          "slug",
+          "title",
+          "summary",
+          "sortOrder",
+          "linkedAppKeys",
+          "tags",
+          "lastModified"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "appKey": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "summary": {
+            "type": "string"
+          },
+          "sortOrder": {
+            "type": "number"
+          },
+          "content": {
+            "type": "string"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "linkedAppKeys": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "category": {
+            "type": "string"
+          },
+          "lastModified": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "ArticleCollection": {
+        "type": "object",
+        "required": ["totalCount", "value"],
+        "properties": {
+          "totalCount": {
+            "type": "integer"
+          },
+          "count": {
+            "type": "integer"
+          },
+          "value": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Article"
+            }
+          }
+        }
+      },
+      "ApiError": {
+        "type": "object",
+        "required": ["error"],
+        "properties": {
+          "error": {
+            "type": "object",
+            "required": ["code", "message"],
+            "properties": {
+              "code": {
+                "type": "string"
+              },
+              "message": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "SearchRequest": {
+        "type": "object",
+        "properties": {
+          "search": {
+            "type": "string",
+            "description": "Free-text query; every term must match."
+          },
+          "count": {
+            "type": "boolean"
+          },
+          "filter": {
+            "type": "string",
+            "description": "Accepted and ignored by the local mock."
+          }
+        }
+      },
+      "SearchResponse": {
+        "type": "object",
+        "required": ["value"],
+        "properties": {
+          "@odata.count": {
+            "type": "integer"
+          },
+          "value": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Article"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "enum": ["Article"]
+                        },
+                        "@search.score": {
+                          "type": "number"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Faq"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "enum": ["FAQ"]
+                        },
+                        "@search.score": {
+                          "type": "number"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      },
+      "Faq": {
+        "type": "object",
+        "required": [
+          "id",
+          "slug",
+          "question",
+          "answer",
+          "sortOrder",
+          "linkedAppKeys",
+          "tags",
+          "lastModified"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "appKey": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "question": {
+            "type": "string"
+          },
+          "answer": {
+            "type": "string"
+          },
+          "sortOrder": {
+            "type": "number"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "linkedAppKeys": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "linkedArticleIdentifier": {
+            "type": "string"
+          },
+          "lastModified": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "FaqCollection": {
+        "type": "object",
+        "required": ["totalCount", "value"],
+        "properties": {
+          "totalCount": {
+            "type": "integer"
+          },
+          "count": {
+            "type": "integer"
+          },
+          "value": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Faq"
+            }
+          }
+        }
+      }
+    }
+  }
+}

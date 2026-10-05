@@ -1,6 +1,7 @@
 import type { RouterHandle } from '@equinor/fusion-framework-react-router';
 import { useHttpClient } from '@equinor/fusion-framework-react-app/http';
 import { useEffect, useState, type ReactElement } from 'react';
+import { HelpInfoButton } from '../../components/HelpInfoButton';
 
 interface AuroraForecastResponse {
   location: string;
@@ -46,7 +47,10 @@ export default function PreProductionServicePage(): ReactElement {
 
   return (
     <section>
-      <h2>Pre-production discovery service</h2>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+        <h2>Pre-production discovery service</h2>
+        <HelpInfoButton articleSlug="pre-production-service" label="Pre-production service" />
+      </div>
       <p>
         Aurora API is not registered yet. The local mock temporarily adds it and rejects collisions
         so a real registration cannot be shadowed accidentally.

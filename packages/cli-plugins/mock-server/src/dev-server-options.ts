@@ -12,6 +12,13 @@ export interface DevServerMockOptions {
   seed?: number;
   /** Additional non-loopback browser origins allowed to call credentialed mock-auth endpoints. */
   allowedOrigins?: string[];
+  /**
+   * Help docs folder served as a local `help` service, so the dev portal can show the articles an
+   * app opens with `useHelpCenter().openArticle(slug)`. Relative to the project root; may hold the
+   * article markdown files directly or in an `articles` subfolder. When omitted, `./docs` and
+   * `docs/<appKey>` in parent folders are auto-detected. Set `false` to turn help docs off.
+   */
+  helpDocs?: string | false;
 }
 
 declare module '@equinor/fusion-framework-dev-server' {

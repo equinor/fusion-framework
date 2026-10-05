@@ -63,6 +63,7 @@ export async function loadMockServerConfig(root: string): Promise<ResolvedMockSe
       host: config.mockServer?.host,
       seed: config.mockServer?.seed,
       allowedOrigins: config.mockServer?.allowedOrigins,
+      helpDocs: config.mockServer?.helpDocs,
     };
   } catch (error) {
     // An absent config is a supported convention-only setup; import and evaluation failures are not.

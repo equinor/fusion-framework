@@ -62,3 +62,6 @@ expressed in JSON or YAML.
   preset, override mechanisms, layering, and running the server via the CLI or programmatically
 - [Testing with Playwright](docs/testing-with-playwright.md) — per-session user selection,
   switching, scope-aware token issuance, operation overrides, reset, and the full route reference
+- [Test help articles locally](docs/testing-help-articles.md) — serve local help docs as a mock
+  `help` service with `defineHelpArticlesMock`, so the dev portal opens the articles an app
+  requests with `useHelpCenter()`

@@ -19,6 +19,13 @@ export {
   type RolesV2MockActivation,
   type RolesV2MockActivationError,
 } from './define-roles-v2-mock.js';
+export {
+  defineHelpArticlesMock,
+  type DefineHelpArticlesMockOptions,
+} from './define-help-articles-mock.js';
+export { readHelpArticles, type HelpArticle } from './read-help-articles.js';
+export { readHelpFaqs, type HelpFaq } from './read-help-faqs.js';
+export { searchHelpDocs, type HelpDocSearchHit } from './search-help-docs.js';
 
 /**
  * Preserves the requested Context identity while retaining the schema-generated response fields.

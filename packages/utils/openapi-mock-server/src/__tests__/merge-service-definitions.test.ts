@@ -1,8 +1,37 @@
+import type { IncomingMessage, ServerResponse } from 'node:http';
+import { Readable } from 'node:stream';
+
 import { describe, expect, it } from 'vitest';
 
 import { defineService } from '../discovery/define-service.js';
 import type { ServiceMockDefinition } from '../discovery/discover-services.js';
 import { mergeServiceDefinitions } from '../discovery/merge-service-definitions.js';
+
+/**
+ * Sends a GET request through a merged definition's router.
+ *
+ * @param definition - Merged service definition.
+ * @param path - Service-relative path.
+ * @returns The JSON body a matched route sent, or `undefined` when no route matched.
+ */
+async function route(
+  definition: ServiceMockDefinition | undefined,
+  path: string,
+): Promise<unknown> {
+  let body: string | undefined;
+  const req = Readable.from([]) as unknown as IncomingMessage;
+  Object.assign(req, { method: 'GET', url: path, headers: {} });
+  const res = {
+    statusCode: 200,
+    writeHead: () => res,
+    end: (chunk: string) => {
+      body = chunk;
+    },
+  } as unknown as ServerResponse;
+  const handled = await definition?.router?.handle(req, res);
+  // An unmatched request writes nothing, which the caller asserts as undefined.
+  return handled && body !== undefined ? JSON.parse(body) : undefined;
+}
 
 const schema = {
   openapi: '3.0.0',
@@ -42,6 +71,20 @@ describe('mergeServiceDefinitions', () => {
     expect(mergeServiceDefinitions([existing], [statelessMerge])[0]?.reset).toBe(reset);
   });
 
+  it('runs both reset hooks, earliest first, when both layers keep state', () => {
+    const calls: string[] = [];
+    const existing = { ...service('people', 'replace'), reset: () => calls.push('existing') };
+    const merge = defineService({
+      key: 'people',
+      serviceDiscovery: 'merge',
+      reset: () => calls.push('merge'),
+    });
+
+    mergeServiceDefinitions([existing], [merge])[0]?.reset?.();
+
+    expect(calls).toEqual(['existing', 'merge']);
+  });
+
   it('preserves inherited discovery scopes when a merge layer does not replace them', () => {
     const existing = {
       ...service('people', 'replace'),
@@ -53,5 +96,43 @@ describe('mergeServiceDefinitions', () => {
     });
 
     expect(mergeServiceDefinitions([existing], [merge])[0]?.scopes).toEqual(['people/.default']);
+  });
+
+  it('keeps the earlier middleware routes when a merge layer adds its own', async () => {
+    const existing = defineService({
+      key: 'people',
+      serviceDiscovery: 'replace',
+      schema,
+      middleware: (router) => {
+        router.get('/base', (_req, res) => res.json({ from: 'base' }));
+        router.get('/shared', (_req, res) => res.json({ from: 'base' }));
+      },
+    });
+    const merge = defineService({
+      key: 'people',
+      serviceDiscovery: 'merge',
+      middleware: (router) => {
+        router.get('/added', (_req, res) => res.json({ from: 'merge' }));
+        router.get('/shared', (_req, res) => res.json({ from: 'merge' }));
+      },
+    });
+    const [merged] = mergeServiceDefinitions([existing], [merge]);
+
+    expect(await route(merged, '/base')).toEqual({ from: 'base' });
+    expect(await route(merged, '/added')).toEqual({ from: 'merge' });
+    expect(await route(merged, '/shared')).toEqual({ from: 'merge' });
+    expect(await route(merged, '/missing')).toBeUndefined();
+  });
+
+  it('keeps the earlier router when a merge layer has no middleware', () => {
+    const existing = defineService({
+      key: 'people',
+      serviceDiscovery: 'replace',
+      schema,
+      middleware: (router) => router.get('/base', (_req, res) => res.json({})),
+    });
+    const merge = defineService({ key: 'people', serviceDiscovery: 'merge' });
+
+    expect(mergeServiceDefinitions([existing], [merge])[0]?.router).toBe(existing.router);
   });
 });

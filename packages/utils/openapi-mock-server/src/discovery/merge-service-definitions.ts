@@ -1,3 +1,4 @@
+import { composeRouters } from './compose-routers.js';
 import type { ServiceMockDefinition } from './discover-services.js';
 
 /** Merges `paths` overrides per path *and* method, so a later group only replaces the methods it declares. */
@@ -20,6 +21,9 @@ function mergePaths(
  * Merges several groups of {@link ServiceMockDefinition}s into one, in
  * ascending precedence. A later `serviceDiscovery: 'merge'` definition merges
  * onto the earlier definition for its key; other later definitions replace it.
+ * A merge layer's middleware routes are checked before the earlier layer's,
+ * which still handle every route the merge layer does not register, and a
+ * reset runs both layers' reset hooks.
  *
  * @remarks
  * This is what lets a shared baseline (e.g. {@link fusionPreset}) sit
@@ -69,14 +73,30 @@ export function mergeServiceDefinitions(
           `Mock service override "${definition.key}" has no earlier definition to merge with.`,
         );
       }
-      // Preserve inherited behavior while merging maps and allowing an explicitly supplied schema/router to win.
+      // A merge layer's middleware adds routes on top of the earlier ones instead of dropping them.
+      const router =
+        definition.router && existing.router
+          ? composeRouters(definition.router, existing.router)
+          : (definition.router ?? existing.router);
+      const existingReset = existing.reset;
+      const definitionReset = definition.reset;
+      // Inherited routes keep their own state, so a reset must clear both layers, earliest first.
+      const reset =
+        existingReset && definitionReset
+          ? (): void => {
+              existingReset();
+              definitionReset();
+            }
+          : (definitionReset ?? existingReset);
+      // Preserve inherited behavior while merging maps and allowing an explicitly supplied schema to win.
       byKey.set(definition.key, {
         ...existing,
         ...definition,
         document: definition.document ?? existing.document,
         fields: { ...existing.fields, ...definition.fields },
         paths: mergePaths(existing.paths, definition.paths),
-        router: definition.router ?? existing.router,
+        router,
+        ...(reset ? { reset } : {}),
       });
     }
   }
