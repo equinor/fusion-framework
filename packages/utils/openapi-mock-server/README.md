@@ -65,3 +65,6 @@ expressed in JSON or YAML.
 - [Test help articles locally](docs/testing-help-articles.md) — serve local help docs as a mock
   `help` service with `defineHelpArticlesMock`, so the dev portal opens the articles an app
   requests with `useHelpCenter()`
+- [Test analytics locally](docs/testing-analytics.md) — receive, record, and seed the analytics an
+  app tracks with `useTrackFeature()`, check them in Playwright with `createMockAnalytics`, and
+  answer the app-feature events query with `defineAnalyticsMock` and `defineAppFeatureEventsMock`

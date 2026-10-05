@@ -41,6 +41,7 @@ When a collector emits an event it is delivered to **every** registered adapter.
 | [Collectors](docs/collectors.md) | Built-in collectors (context/app selection, app loaded) and creating a custom `IAnalyticsCollector` |
 | [Tracking Events Manually](docs/tracking-events.md) | `provider.trackAnalytic` / `trackAnalytic$` for ad-hoc event tracking |
 | [Testing](docs/testing.md) | `MockAnalyticsAdapter`, recording and awaiting tracked events, and using a bespoke `ModulesConfigurator` in tests |
+| [Test analytics locally](../../utils/openapi-mock-server/docs/testing-analytics.md) | End-to-end: the dev portal sends analytics to `ffc mock-server`, which records them, answers the app-feature events query, and lets Playwright check them with `createMockAnalytics` |
 
 ## Quick Start
 

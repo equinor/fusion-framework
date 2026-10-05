@@ -164,7 +164,8 @@ reads them the same way Fusion's analytics pipeline does. It also answers the Ap
 - `analytics: false` or `--no-analytics` turns it off. A local `monitor.mock.ts` that is not a
   merge layer replaces the analytics mock.
 
-The startup log shows where analytics are recorded and how many seeded events were loaded.
+The startup log shows where analytics are recorded and how many seeded events were loaded. See
+[Test analytics locally](../../utils/openapi-mock-server/docs/testing-analytics.md).
 
 ## Command reference
 
@@ -195,6 +196,7 @@ developer terminal own it instead of starting an unowned background process.
 - [OpenAPI mock-server getting started](../../utils/openapi-mock-server/docs/getting-started.md)
 - [Testing with Playwright](../../utils/openapi-mock-server/docs/testing-with-playwright.md)
 - [Test help articles locally](../../utils/openapi-mock-server/docs/testing-help-articles.md)
+- [Test analytics locally](../../utils/openapi-mock-server/docs/testing-analytics.md)
 - [Mock API and Playwright cookbook](../../../cookbooks/app-react-mock-playwright/README.md)
 
 ## License

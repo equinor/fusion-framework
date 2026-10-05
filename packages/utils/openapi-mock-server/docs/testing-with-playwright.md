@@ -170,6 +170,8 @@ matching service's own mock:
 | `/@fusion-mock/auth/user` | `GET` | Returns non-sensitive selected-user metadata; arbitrary claims are omitted. |
 | `/@fusion-mock/auth/user` | `DELETE` | Clears the selected user so Fusion MSAL returns to its startup mock identity. |
 | `/@fusion-mock/auth/token` | `POST` | Internal OBO-style exchange used by Fusion MSAL. Body is `{ scopes: string[] }`; returns an unsigned token for the selected session user or `missing`. |
+| `/@fusion-mock/analytics` | `GET` | Received analytics events of the caller's mock-auth session; filters `eventName`, `appKey`, `feature`, `session`, `includeSeeded=true`. See [Test analytics locally](testing-analytics.md). |
+| `/@fusion-mock/analytics` | `DELETE` | Removes the caller's received analytics events, keeping seeded history. |
 | `/@fusion-mock/:service/:operationId` | `POST` | Registers a one-off override for that operation; body is `{ status?: number, mock: unknown }`. |
 | `http://<service>.localhost:<port>/*` | any | Resolved against that service's middleware first, then its OpenAPI mock, using its discovered origin. |
 | `/:service/*` | any | Same service-relative behavior, for embedding without relying on `*.localhost` DNS resolution. |

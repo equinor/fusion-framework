@@ -146,3 +146,11 @@ const configure = (configurator) => {
 ```
 
 See the [analytics module documentation](https://equinor.github.io/fusion-framework/modules/analytics/) for adapter and collector setup.
+
+### Test tracked features
+
+Run the app with `ffc app dev --mock` against `ffc mock-server`: the dev portal then sends every
+`trackFeature` call to the mock server, which records it and answers the app-feature events query.
+In Playwright, `createMockAnalytics().waitFor(context.request, { feature: 'page-viewed' })` returns
+the tracked event, with your data as `data_body_data` JSON text. See
+[Test analytics locally](../../../../utils/openapi-mock-server/docs/testing-analytics.md).
