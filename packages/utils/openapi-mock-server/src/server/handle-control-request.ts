@@ -6,6 +6,7 @@ import { sendJson } from './send-json.js';
 import { handleMockAuthRequest } from './handle-mock-auth-request.js';
 import type { MockAuthSessionStore } from './MockAuthSessionStore.js';
 import type { MockOverride, MockServerHandle, ServiceState } from './types.js';
+import type { MockControlHandler } from '../discovery/mock-control.js';
 
 /**
  * Checks whether a value is a standard HTTP status code.
@@ -37,6 +38,31 @@ function isMockOverride(value: unknown): value is MockOverride {
   return isHttpStatusCode(value.status);
 }
 
+/** Control-plane names owned by the server itself, which services cannot register. */
+const RESERVED_CONTROL_NAMES = new Set(['auth', 'health', 'discovery', 'reset']);
+
+/**
+ * Finds the control handler a service registered under a control-plane name.
+ *
+ * @param services - Every active service, by key.
+ * @param name - The first path segment after `/@fusion-mock/`.
+ * @returns The handler, or `undefined` when no service registered the name.
+ */
+function findControlHandler(
+  services: Map<string, ServiceState>,
+  name: string | undefined,
+): MockControlHandler | undefined {
+  // Empty and server-owned names never reach a service, whatever the method.
+  if (!name || RESERVED_CONTROL_NAMES.has(name)) return undefined;
+  // The first service, in key order, that registered the name owns it.
+  for (const { definition } of services.values()) {
+    const handler = definition.control?.[name];
+    // Only an own handler counts, so names like `constructor` never resolve to prototype members.
+    if (handler && Object.hasOwn(definition.control ?? {}, name)) return handler;
+  }
+  return undefined;
+}
+
 /**
  * Handles a request under the reserved `/@fusion-mock/*` control-plane prefix.
  *
@@ -44,6 +70,8 @@ function isMockOverride(value: unknown): value is MockOverride {
  * `health` and `discovery` are read-only; `reset` and `<service>/<operationId>`
  * delegate to the same {@link MockServerHandle.reset}/`override` logic a Node
  * caller would use directly, so both paths stay in sync by construction.
+ * `<name>` without a second segment goes to a service's own `control[name]`
+ * handler, when one is registered.
  *
  * @param handle - The `reset`/`override` implementation to delegate to.
  * @param services - Every currently active (possibly overridden) service, by key.
@@ -92,6 +120,18 @@ export async function handleControlRequest(
   if (first === 'reset' && method === 'POST') {
     handle.reset();
     sendJson(res, 200, { status: 'reset' });
+    return;
+  }
+
+  const control = second === undefined ? findControlHandler(services, first) : undefined;
+  // `/@fusion-mock/<name>` routes to a service's own control handler, such as recorded analytics.
+  if (control) {
+    const { status, body } = await control({
+      method,
+      query: new URL(req.url ?? '/', 'http://localhost').searchParams,
+      sessionId: authSessions.getRequestSession(req)?.sessionId,
+    });
+    sendJson(res, status, body ?? {});
     return;
   }
 

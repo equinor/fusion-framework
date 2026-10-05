@@ -5,6 +5,7 @@ import { importConfig } from '@equinor/fusion-imports';
 
 import type { FieldFakerMap, OpenApiDocumentLike } from '@equinor/fusion-openapi-mock';
 import type { Router } from './create-router.js';
+import type { MockControlHandler } from './mock-control.js';
 import type { RouteOverride } from './route-override.js';
 import type { ServiceDiscoveryMode } from './define-service.js';
 
@@ -30,6 +31,12 @@ export interface ServiceMockDefinition {
   router?: Router;
   /** Clears mutable state owned by this service when the mock server resets. */
   reset?: () => void;
+  /**
+   * Control-plane routes this service adds, keyed by name and served at `/@fusion-mock/<name>`,
+   * so tests can inspect or clear state the service keeps. Names the control plane already uses
+   * (`auth`, `health`, `discovery`, `reset`) are never routed here.
+   */
+  control?: Record<string, MockControlHandler>;
 }
 
 /**

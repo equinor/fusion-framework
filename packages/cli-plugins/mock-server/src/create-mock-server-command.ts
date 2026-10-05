@@ -1,12 +1,19 @@
-import { relative } from 'node:path';
+import { dirname, relative } from 'node:path';
 
 import { createCommand, createOption, type Command } from 'commander';
 
 import { createMockServer } from '@equinor/fusion-openapi-mock-server';
 import { discoverServices } from '@equinor/fusion-openapi-mock-server/discovery';
-import { defineHelpArticlesMock } from '@equinor/fusion-openapi-mock-server/presets/fusion';
+import {
+  defineAnalyticsMock,
+  defineAppFeatureEventsMock,
+  defineHelpArticlesMock,
+} from '@equinor/fusion-openapi-mock-server/presets/fusion';
 
+import type { MockServerAnalyticsOptions } from './dev-server-options.js';
+import { ensureGitIgnoredDir } from './ensure-git-ignored-dir.js';
 import { loadMockServerConfig } from './load-mock-server-config.js';
+import { resolveAnalytics } from './resolve-analytics.js';
 import { resolveHelpDocs } from './resolve-help-docs.js';
 
 /** Option values for `ffc mock-server`. */
@@ -23,6 +30,12 @@ interface MockServerCommandOptions {
   allowOrigin: string[];
   /** `--help-docs <dir>` sets the help docs folder; `--no-help-docs` turns help docs off. */
   helpDocs?: string | false;
+  /** `false` when `--no-analytics` is passed. */
+  analytics: boolean;
+  /** `--analytics-record <file>` sets the recording; `--no-analytics-record` keeps analytics in memory. */
+  analyticsRecord?: string | false;
+  /** Recordings loaded at start, from repeated `--analytics-seed <path>`. */
+  analyticsSeed: string[];
 }
 
 /** Overrides for `ffc mock-server`'s own built-in defaults, set by whoever registers the plugin. */
@@ -41,6 +54,8 @@ export interface MockServerCommandDefaults {
   allowedOrigins?: string[];
   /** Help docs folder to serve when neither `--help-docs` nor `mockServer.helpDocs` is set; `false` disables auto-detection. */
   helpDocs?: string | false;
+  /** Analytics settings used when neither flags nor `mockServer.analytics` set them; `false` turns analytics off. */
+  analytics?: MockServerAnalyticsOptions | false;
 }
 
 /**
@@ -70,6 +85,13 @@ export interface MockServerCommandDefaults {
  * is the first local `help` module the docs layer is not added at all.
  * `--no-help-docs` opts out.
  *
+ * Receives the analytics the app sends as a mock `monitor` service and answers
+ * the Apps service's `POST /apps/feature-events/query` from them, appending
+ * every batch to `.fusion-mock/analytics.jsonl` (`--analytics-record`) and
+ * loading earlier recordings with `--analytics-seed`. Layered after help docs
+ * and before directories, so a project's own `monitor.mock.ts` still wins.
+ * `--no-analytics` opts out.
+ *
  * Keeps the server running in the foreground until `SIGINT`/`SIGTERM`, so it
  * dies with whatever started it (e.g. Playwright's `webServer`) rather than
  * lingering as an orphaned process.
@@ -87,6 +109,7 @@ export function createMockServerCommand(defaults: MockServerCommandDefaults = {}
   // sentinel default for --preset, so the first explicit flag replaces it instead of appending to it
   const defaultPresets: string[] = defaults.preset ?? ['fusion'];
   const defaultAllowedOrigins: string[] = [];
+  const defaultAnalyticsSeed: string[] = [];
 
   return createCommand('mock-server')
     .description('Serve OpenAPI-fake responses over HTTP, from bundled presets and/or mock modules')
@@ -129,6 +152,27 @@ export function createMockServerCommand(defaults: MockServerCommandDefaults = {}
       ),
     )
     .addOption(createOption('--no-help-docs', 'do not serve local help articles'))
+    .addOption(
+      createOption(
+        '--no-analytics',
+        'do not receive analytics or answer the app-feature events query',
+      ),
+    )
+    .addOption(
+      createOption(
+        '--analytics-record <file>',
+        'JSON Lines file received analytics are appended to (default: config or .fusion-mock/analytics.jsonl)',
+      ),
+    )
+    .addOption(createOption('--no-analytics-record', 'keep received analytics in memory only'))
+    .addOption(
+      createOption(
+        '--analytics-seed <path>',
+        'analytics recording, landing-zone file, or folder loaded at start (repeatable; default: config)',
+      )
+        .default(defaultAnalyticsSeed)
+        .argParser((value: string, previous: string[]) => [...previous, value]),
+    )
     .action(async (dirs: string[], options: MockServerCommandOptions) => {
       const root = process.cwd();
       const config = await loadMockServerConfig(root);
@@ -137,6 +181,13 @@ export function createMockServerCommand(defaults: MockServerCommandDefaults = {}
         option: options.helpDocs,
         config: config.helpDocs,
         defaults: defaults.helpDocs,
+      });
+      const analytics = resolveAnalytics(root, {
+        enabled: options.analytics,
+        record: options.analyticsRecord,
+        seed: options.analyticsSeed,
+        config: config.analytics,
+        defaults: defaults.analytics,
       });
       const definitionGroups = await Promise.all(
         sourceDirs
@@ -164,6 +215,30 @@ export function createMockServerCommand(defaults: MockServerCommandDefaults = {}
           `not serving help docs from ${relative(root, helpDocs.dir) || '.'}: a local mock module defines the help service`,
         );
       }
+      // A complete local monitor module replaces the analytics mock, so its store would never fill.
+      const monitorReplaced = definitionGroups
+        .flat()
+        // Merge modules extend the analytics mock; any other monitor module replaces it.
+        .some(
+          (definition) => definition.key === 'monitor' && definition.serviceDiscovery !== 'merge',
+        );
+      const analyticsLayer = monitorReplaced ? undefined : analytics;
+      // Configured analytics that end up unserved would otherwise look broken, so say why.
+      if (analytics && !analyticsLayer) {
+        console.warn('not receiving analytics: a local mock module defines the monitor service');
+      }
+      // The default recording folder is kept out of Git so recordings are not committed by accident.
+      if (analyticsLayer?.record && analyticsLayer.defaultRecord) {
+        await ensureGitIgnoredDir(dirname(analyticsLayer.record));
+      }
+      const monitor = analyticsLayer
+        ? defineAnalyticsMock({ record: analyticsLayer.record, seed: analyticsLayer.seed })
+        : undefined;
+      // Seeds load before startup so a missing file fails fast and the count can be shown.
+      await monitor?.store.ready();
+      // The query merges onto the preset's apps service, which only the fusion preset provides.
+      const servesQuery = !!monitor && options.preset.includes('fusion');
+
       const server = createMockServer({
         seed: options.seed ?? config.seed ?? defaults.seed,
         allowedOrigins:
@@ -175,6 +250,12 @@ export function createMockServerCommand(defaults: MockServerCommandDefaults = {}
       for (const preset of options.preset) server.use(preset);
       // Help docs sit between presets and directories, so a project's own help.mock.ts still wins.
       if (helpDocsLayer) server.use([defineHelpArticlesMock({ dir: helpDocsLayer.dir })]);
+      // Analytics sit after help docs and before directories, so a project's own mocks still win.
+      if (monitor) {
+        server.use(
+          servesQuery ? [monitor, defineAppFeatureEventsMock({ store: monitor.store })] : [monitor],
+        );
+      }
       // Resolved directory groups are the highest-precedence layers, applied after every preset.
       for (const definitions of definitionGroups) server.use(definitions);
 
@@ -188,6 +269,23 @@ export function createMockServerCommand(defaults: MockServerCommandDefaults = {}
         console.log(
           `serving ${servedHelpDocs.articleCount} help article(s) and ${servedHelpDocs.faqCount} FAQ(s) from ${relative(root, servedHelpDocs.dir) || '.'} (${servedHelpDocs.source})`,
         );
+      }
+
+      // One line shows where analytics go and what history was loaded, since recording is on by default.
+      if (monitor) {
+        const recording = monitor.store.recordFile
+          ? `recording to ${relative(root, monitor.store.recordFile)}`
+          : 'kept in memory';
+        const seeded = monitor.store.getRecords().length;
+        // Seed paths are shown relative to the project, like the other startup lines.
+        const seedPaths = (analyticsLayer?.seed ?? []).map((path) => relative(root, path) || '.');
+        const seedInfo = seedPaths.length
+          ? `, ${seeded} seeded event(s) from ${seedPaths.join(', ')}`
+          : '';
+        const query = servesQuery
+          ? ''
+          : ' (no app-feature events query: the fusion preset is not loaded)';
+        console.log(`receiving analytics, ${recording}${seedInfo}${query}`);
       }
 
       const shutdown = (): void => {

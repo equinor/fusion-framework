@@ -4,6 +4,7 @@ import { defineService } from '../../discovery/define-service.js';
 import type { MockResponse } from '../../discovery/create-router.js';
 import type { ServiceMockDefinition } from '../../discovery/discover-services.js';
 import { AnalyticsStore, type AnalyticsStoreOptions } from './analytics/AnalyticsStore.js';
+import { handleAnalyticsControl } from './analytics/handle-analytics-control.js';
 import { isJsonObject } from './analytics/is-json-object.js';
 import { resolveAnalyticsSender } from './analytics/resolve-analytics-sender.js';
 
@@ -43,7 +44,8 @@ export interface AnalyticsMockDefinition extends ServiceMockDefinition {
  * - `401` without a signed-in user, and `415` when the body is not declared as `application/json`.
  *
  * Accepted entries get the sender's `user.id`, are appended to the optional recording file, and
- * are kept per mock-auth browser session in {@link AnalyticsMockDefinition.store}. A browser
+ * are kept per mock-auth browser session in {@link AnalyticsMockDefinition.store}. Tests read and
+ * clear them through `/@fusion-mock/analytics` (see `createMockAnalytics`). A browser
  * using the framework MSAL mock's startup identity (no mock-auth user selected) is accepted too,
  * as the `local-development` session. Resetting the mock server removes received events and
  * keeps seeded ones.
@@ -74,6 +76,7 @@ export function defineAnalyticsMock(
     scopes: [`${key}/.default`],
     schema,
     reset: () => store.reset(),
+    control: { analytics: (request) => handleAnalyticsControl(store, request) },
     middleware: (router) => {
       router.post('/v1/logs', async (req, res, { body, identity }) => {
         const sender = resolveAnalyticsSender(req, identity);

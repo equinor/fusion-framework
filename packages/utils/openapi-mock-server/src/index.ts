@@ -30,3 +30,10 @@ export {
   type MockAuthState,
   type MockAuthUser,
 } from './create-mock-auth.js';
+
+export {
+  createMockAnalytics,
+  type MockAnalyticsFilter,
+  type MockAnalyticsRequestClient,
+  type WaitForMockAnalyticsOptions,
+} from './create-mock-analytics.js';

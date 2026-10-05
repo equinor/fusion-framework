@@ -165,10 +165,42 @@ export class AnalyticsStore {
   }
 
   /**
+   * Returns the event-table rows of received analytics only, without seeded history — what a test
+   * checks after acting in the app.
+   *
+   * @param sessionId - Only include events received in this browser session. When omitted, events
+   *   from every session are included.
+   * @returns The received rows, in arrival order.
+   */
+  getReceivedRows(sessionId?: string): AnalyticsEventRow[] {
+    const events =
+      sessionId === undefined
+        ? [...this.#received.values()].flat()
+        : (this.#received.get(sessionId) ?? []);
+    // Records without an event name have no row and are left out.
+    return events.flatMap((event) => (event.row ? [event.row] : []));
+  }
+
+  /**
+   * Removes received events, keeping the seeded history. The recording file is not changed.
+   *
+   * @param sessionId - Only remove events received in this browser session. When omitted, events
+   *   from every session are removed.
+   */
+  clear(sessionId?: string): void {
+    // Without a session every received event goes, as on a mock server reset.
+    if (sessionId === undefined) {
+      this.#received.clear();
+      return;
+    }
+    this.#received.delete(sessionId);
+  }
+
+  /**
    * Removes every received event and keeps the seeded history. The recording file is not changed.
    */
   reset(): void {
-    this.#received.clear();
+    this.clear();
   }
 
   /**
