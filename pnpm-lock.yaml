@@ -3411,6 +3411,9 @@ importers:
         specifier: ^2.9.0
         version: 2.9.1
     devDependencies:
+      '@equinor/fusion-framework-module-analytics':
+        specifier: workspace:^
+        version: link:../../modules/analytics
       '@equinor/fusion-framework-module-http':
         specifier: workspace:^
         version: link:../../modules/http

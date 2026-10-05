@@ -26,6 +26,25 @@ export {
 export { readHelpArticles, type HelpArticle } from './read-help-articles.js';
 export { readHelpFaqs, type HelpFaq } from './read-help-faqs.js';
 export { searchHelpDocs, type HelpDocSearchHit } from './search-help-docs.js';
+export {
+  parseOtlpLogsRequest,
+  parseOtlpResourceLog,
+  projectAnalyticsEvent,
+  toAnalyticsTableName,
+  type AnalyticsContextColumns,
+  type AnalyticsEventRow,
+  type AnalyticsEventRowBase,
+  type AnalyticsJsonValue,
+  type AnalyticsRecord,
+  type AppFeatureEventRow,
+  type AppLoadedEventRow,
+  type AppSelectedEventRow,
+  type ContextSelectedEventRow,
+  type OtlpParseIssue,
+  type ParsedOtlpLogs,
+  type ParseOtlpLogsOptions,
+  type UnprojectedAnalyticsEventRow,
+} from './analytics/index.js';
 
 /**
  * Preserves the requested Context identity while retaining the schema-generated response fields.

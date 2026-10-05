@@ -49,7 +49,7 @@ system assigns a free port.
 | `@equinor/fusion-openapi-mock-server` | `createMockServer`, `createMockAuth`, and their server/session types. |
 | `@equinor/fusion-openapi-mock-server/discovery` | Define executable `<name>.mock.ts` modules with `defineService`, or use lower-level `discoverServices`, `createService`, and `createRouter` APIs. |
 | `@equinor/fusion-openapi-mock-server/presets` | Registry of bundled preset loaders. |
-| `@equinor/fusion-openapi-mock-server/presets/fusion` | `fusionPreset`, `defineRolesV2Mock`, and Fusion service definitions. |
+| `@equinor/fusion-openapi-mock-server/presets/fusion` | `fusionPreset`, `defineRolesV2Mock`, Fusion service definitions, and `parseOtlpLogsRequest` / `parseOtlpResourceLog` / `projectAnalyticsEvent` for reading analytics the way Fusion's analytics pipeline does. |
 
 The mock server exposes generated service responses, source-defined field/path overrides,
 programmable middleware, and runtime operation overrides. Start with directory discovery; use the
