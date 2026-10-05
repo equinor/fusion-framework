@@ -5,6 +5,7 @@ import { join } from 'node:path';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { createMockServer, type MockServerHandle } from '../index.js';
+import { defineService } from '../discovery/define-service.js';
 import { defineHelpArticlesMock } from '../presets/fusion/define-help-articles-mock.js';
 import { readHelpArticles } from '../presets/fusion/read-help-articles.js';
 import { readHelpFaqs } from '../presets/fusion/read-help-faqs.js';
@@ -356,6 +357,33 @@ describe('defineHelpArticlesMock', () => {
       ['FAQ', 'faq-roles'],
       ['Article', 'guide'],
     ]);
+  });
+
+  it('keeps serving local docs under a merge layer that adds middleware', async () => {
+    await writeFile(join(docsDir, 'a.md'), article('slug: guide\ntitle: Guide'));
+    server = createMockServer()
+      .use([defineHelpArticlesMock({ dir: docsDir })])
+      .use([
+        defineService({
+          key: 'help',
+          serviceDiscovery: 'merge',
+          middleware: (router) => {
+            router.get('/custom', (_req, res) => res.json({ custom: true }));
+            router.get('/articles/pinned', (_req, res) => res.json({ slug: 'pinned' }));
+          },
+        }),
+      ]);
+    const { url } = await server.start();
+
+    const guide = (await (await fetch(`${url}/help/articles/guide`)).json()) as { title: string };
+    const missing = await fetch(`${url}/help/articles/nope`);
+    const custom = await (await fetch(`${url}/help/custom`)).json();
+    const pinned = await (await fetch(`${url}/help/articles/pinned`)).json();
+
+    expect(guide.title).toBe('Guide');
+    expect(missing.status).toBe(404);
+    expect(custom).toEqual({ custom: true });
+    expect(pinned).toEqual({ slug: 'pinned' });
   });
 
   it('serves under a custom service key', async () => {

@@ -197,7 +197,9 @@ This also makes it easy to compose multiple teams' mocks, or layer a shared plat
 underneath an app-specific one, without either side needing to know about the other.
 
 A module with `serviceDiscovery: 'merge'` may omit `schema`; its `components`, `routes`, and
-`middleware` merge onto the nearest earlier same-key service. Startup fails when no earlier
+`middleware` merge onto the nearest earlier same-key service. Merged middleware routes are
+checked first, and the earlier service's middleware still handles every route the merge layer
+does not register. Startup fails when no earlier
 local or preset definition exists. The standalone mock server never fetches upstream service
 discovery.
 

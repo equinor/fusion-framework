@@ -83,16 +83,9 @@ const HelpContent = ({
   if (request.page === 'article' && request.articleId !== undefined) {
     return <HelpArticleView articleId={request.articleId} state={articleState} />;
   }
-  // Search runs locally against the help docs; a new openSearch(term) resets the box via `key`.
+  // Search starts from the app's openSearch(term); a new help event remounts it via the session key.
   if (request.page === 'search') {
-    return (
-      <HelpSearch
-        key={request.search ?? ''}
-        initialQuery={request.search}
-        appKey={appKey}
-        onNavigate={onNavigate}
-      />
-    );
+    return <HelpSearch initialQuery={request.search} appKey={appKey} onNavigate={onNavigate} />;
   }
   // FAQs come from the help docs' faqs folder; a search hit's faqId starts that FAQ expanded.
   if (request.page === 'faqs') {
@@ -183,7 +176,10 @@ export const HelpSideSheet = (): ReactElement => {
               onNavigate={navigate}
             />
             <Styled.Main aria-label="Help content">
+              {/* Each app help event is a new session: reset and refetch the page, even for an
+                  identical request. Sidebar navigation keeps the session, so it keeps page state. */}
               <HelpContent
+                key={session}
                 request={request}
                 appName={currentApp?.manifest?.displayName}
                 appKey={currentApp?.appKey}

@@ -20,6 +20,7 @@ interface Article {
 const mocks = vi.hoisted(() => ({
   listeners: new Map<string, Set<(event: { detail: unknown }) => void>>(),
   createClient: vi.fn(),
+  resolveServices: vi.fn(),
   json: vi.fn(),
   currentApp: { appKey: 'my-app', manifest: { displayName: 'My App' } } as
     | { appKey: string; manifest?: { displayName?: string } }
@@ -37,7 +38,10 @@ vi.mock('@equinor/fusion-framework-react', () => {
           return () => handlers.delete(handler);
         },
       },
-      serviceDiscovery: { createClient: mocks.createClient },
+      serviceDiscovery: {
+        createClient: mocks.createClient,
+        resolveServices: mocks.resolveServices,
+      },
     },
   };
   return { useFramework: () => framework };
@@ -157,6 +161,7 @@ describe('HelpSideSheet', () => {
     // A desktop-sized viewport keeps the sidebar expanded, as in a normal dev portal session.
     await page.viewport(1280, 900);
     mocks.currentApp = { appKey: 'my-app', manifest: { displayName: 'My App' } };
+    mocks.resolveServices.mockResolvedValue([{ key: 'people' }, { key: 'help' }]);
     mocks.createClient.mockResolvedValue({ json: mocks.json });
     mocks.json.mockImplementation(serveHelp);
   });
@@ -315,6 +320,27 @@ describe('HelpSideSheet', () => {
       .toHaveTextContent('Manage demands');
   });
 
+  it('resets the query and searches again when the app repeats openSearch(term)', async () => {
+    const screen = await render(<HelpSideSheet />);
+    openHelp({ page: 'search', search: 'edit' });
+    const searchbox = screen.getByRole('searchbox', { name: 'Search help' });
+    await expect.element(screen.getByTestId('help-search-result').first()).toBeVisible();
+    await searchbox.fill('install');
+    await expect.element(searchbox).toHaveValue('install');
+
+    openHelp({ page: 'search', search: 'edit' });
+
+    await expect.element(searchbox).toHaveValue('edit');
+    await expect
+      .element(screen.getByTestId('help-search-result').first())
+      .toHaveTextContent('Manage demands');
+    // Only search requests matter: each app event runs the requested search again.
+    const editSearches = mocks.json.mock.calls.filter(
+      ([path, init]) => path === '/search' && init?.body?.search === 'edit',
+    );
+    expect(editSearches).toHaveLength(2);
+  });
+
   it('keeps real Help index hits owned by the app and drops release notes and other apps', async () => {
     mocks.json.mockImplementation(async (path: string) => {
       // Real hits name the owner in appKey and may link other apps only.
@@ -369,15 +395,24 @@ describe('HelpSideSheet', () => {
   });
 
   it('explains that help is unavailable when no help service is discovered', async () => {
-    mocks.createClient.mockRejectedValue(
-      new Error('Could not load configuration of service [help]'),
-    );
+    mocks.resolveServices.mockResolvedValue([{ key: 'people' }]);
     const screen = await render(<HelpSideSheet />);
 
     openHelp({ page: 'article', articleId: 'getting-started' });
 
     await expect.element(screen.getByTestId('help-unavailable')).toBeVisible();
     await expect.element(screen.getByTestId('help-nav-error')).toBeVisible();
+    expect(mocks.createClient).not.toHaveBeenCalled();
+  });
+
+  it('reports a failing discovery request as an error, not as missing help', async () => {
+    mocks.resolveServices.mockRejectedValue(new Error('Service discovery returned 503'));
+    const screen = await render(<HelpSideSheet />);
+
+    openHelp({ page: 'article', articleId: 'getting-started' });
+
+    await expect.element(screen.getByTestId('help-error')).toHaveTextContent('503');
+    await expect.element(screen.getByTestId('help-unavailable')).not.toBeInTheDocument();
   });
 
   it('shows the service error message from the response body', async () => {

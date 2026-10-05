@@ -10,6 +10,8 @@ export interface HelpServiceRequestInit {
 
 /** The part of the service discovery provider the help panel needs, so no extra dependency is required. */
 export interface HelpServiceDiscovery {
+  /** Lists discovered services; rejects when the discovery request itself fails. */
+  resolveServices(): Promise<readonly { readonly key: string }[]>;
   /** Creates an HTTP client for a discovered service; rejects when the key is not discovered. */
   createClient(name: string): Promise<{
     json<T>(path: string, init?: HelpServiceRequestInit): Promise<T>;
@@ -70,6 +72,9 @@ const toMessage = (error: unknown): string =>
  * Sends a request to the `help` service in service discovery — the local mock served by
  * `ffc mock-server` from a help docs folder, or the real Help service — and classifies the result.
  *
+ * `unavailable` is reserved for a discovery response that has no `help` entry. A failing discovery
+ * request (network, authentication, or server error) is reported as `error`.
+ *
  * @template T - Parsed response body.
  * @param serviceDiscovery - The portal's service discovery provider.
  * @param path - Help service-relative path, including any query.
@@ -89,10 +94,21 @@ export async function requestHelpService<T>(
 ): Promise<HelpServiceResult<T>> {
   let client: Awaited<ReturnType<HelpServiceDiscovery['createClient']>>;
   try {
+    // createClient rejects both for a missing key and for discovery failures, so check the key first.
+    const services = await serviceDiscovery.resolveServices();
+    // Look for the help entry by key; the discovery list holds every platform service.
+    const hasHelp = services.some((service) => service.key === HELP_SERVICE_KEY);
+    // Only a successful discovery response without `help` means help content is not configured.
+    if (!hasHelp) {
+      return {
+        status: 'unavailable',
+        message: `No "${HELP_SERVICE_KEY}" service in service discovery.`,
+      };
+    }
     client = await serviceDiscovery.createClient(HELP_SERVICE_KEY);
   } catch (error) {
-    // No `help` entry in service discovery: help content is not configured for this run.
-    return { status: 'unavailable', message: toMessage(error) };
+    // Network, authentication, and server failures are errors, not missing configuration.
+    return { status: 'error', message: toMessage(error) };
   }
   try {
     return { status: 'loaded', data: await client.json<T>(path, init) };
