@@ -133,7 +133,12 @@ function matchRegisteredRoute(
 
 /** Creates an empty {@link Router}.
  *
+ * @remarks
+ * A matched route whose request body is not valid JSON is answered with `400` and an
+ * `InvalidJson` error, without calling the route handler.
+ *
  * @returns A new, empty {@link Router}.
+ * @throws From `handle`, when reading a request body fails for a reason other than invalid JSON.
  */
 export function createRouter(): Router {
   const exactRoutes = new Map<string, RouteHandler>();
@@ -177,8 +182,25 @@ export function createRouter(): Router {
       // No route registered for this method+path: let the caller fall through to its own mock.
       if (!matchedHandler) return false;
 
+      let body: unknown;
+      try {
+        body = await readJsonBody(req);
+      } catch (error) {
+        // Malformed client input is a bad request, not a mock server failure.
+        if (!(error instanceof SyntaxError)) throw error;
+        const response = toMockResponse(res);
+        response.statusCode = 400;
+        response.json({
+          error: {
+            code: 'InvalidJson',
+            message: `Request body is not valid JSON: ${error.message}`,
+          },
+        });
+        return true;
+      }
+
       await matchedHandler(req, toMockResponse(res), {
-        body: await readJsonBody(req),
+        body,
         seed,
         params,
         url,

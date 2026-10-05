@@ -27,6 +27,16 @@ export { readHelpArticles, type HelpArticle } from './read-help-articles.js';
 export { readHelpFaqs, type HelpFaq } from './read-help-faqs.js';
 export { searchHelpDocs, type HelpDocSearchHit } from './search-help-docs.js';
 export {
+  defineAnalyticsMock,
+  type AnalyticsMockDefinition,
+  type DefineAnalyticsMockOptions,
+} from './define-analytics-mock.js';
+export {
+  AnalyticsStore,
+  readAnalyticsRecordings,
+  type AnalyticsSender,
+  type AnalyticsStoreOptions,
+  type ReadAnalyticsRecordingsOptions,
   parseOtlpLogsRequest,
   parseOtlpResourceLog,
   projectAnalyticsEvent,

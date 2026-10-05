@@ -1,0 +1,62 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Fusion Monitor API (analytics ingestion mock)",
+    "version": "1.0",
+    "description": "OpenTelemetry log ingestion of the Fusion Monitor service, which receives analytics from the framework analytics adapter. Served by defineAnalyticsMock."
+  },
+  "paths": {
+    "/v1/logs": {
+      "post": {
+        "operationId": "ingestLogs",
+        "summary": "Standard OTLP/HTTP log ingestion endpoint; preserves the full OTLP schema.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/OtlpLogsRequest" }
+            }
+          }
+        },
+        "responses": {
+          "202": { "description": "The log batch was accepted for processing." },
+          "400": {
+            "description": "The body is not valid JSON, is nested too deeply, or has no log entries.",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/FusionApiError" }
+              }
+            }
+          },
+          "401": { "description": "The request has no signed-in user." },
+          "415": { "description": "The body is not JSON." }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "OtlpLogsRequest": {
+        "type": "object",
+        "properties": {
+          "resourceLogs": {
+            "type": "array",
+            "items": { "type": "object", "additionalProperties": true }
+          }
+        }
+      },
+      "FusionApiError": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": { "type": "string" },
+              "message": { "type": "string" }
+            }
+          }
+        }
+      }
+    }
+  }
+}
