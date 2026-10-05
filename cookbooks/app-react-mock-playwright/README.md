@@ -35,6 +35,15 @@ server, and tears the servers down after the test run.
   scenario its own page. The direct-only scenario is the root index; named pages live in their own
   directories. Each page calls `useHttpClient()` directly so its explanation and the framework
   integration agents should reproduce live together in one retrieval-friendly file.
+- [`docs/articles/`](docs/articles) holds one help article per page, and
+  [`docs/faqs/`](docs/faqs) holds FAQs that link to those articles. `ffc mock-server`
+  auto-detects the folder and serves it as the `help` service. Each page heading has a
+  [`HelpInfoButton`](src/components/HelpInfoButton.tsx) — an info icon that calls
+  `useHelpCenter().openArticle(slug)` — so the dev portal opens the article explaining that page.
+  [`src/routes/help/index.tsx`](src/routes/help/index.tsx) also opens a missing article and the
+  FAQs page. [`playwright/help-articles.spec.ts`](playwright/help-articles.spec.ts) clicks every
+  info icon and asserts the dev portal's article, not-found, and not-supported states. Renaming an
+  article's `slug` fails its test.
 - [`playwright.config.ts`](playwright.config.ts) starts `ffc mock-server` and runs `ffc app build`
   followed by `ffc app serve --mock` as Playwright `webServer` entries, then runs the
   specs under [`playwright/`](playwright) against the built app.
@@ -90,6 +99,9 @@ It does not start `ffc mock-server`; unreachable local service URIs remain unrea
   (see
   [`playwright/playwright-override.spec.ts`](playwright/playwright-override.spec.ts)), while
   `middleware` always wins over the generated mock and runtime override.
+- **Local help articles**: help docs use the same frontmatter markdown files `fhelp` syncs to
+  production. Edit an article while `pnpm mock:server` runs and open help again to see the change.
+  See [Test help articles locally](../../packages/utils/openapi-mock-server/docs/testing-help-articles.md).
 - **Playwright's `webServer`** array starts and stops each process for the whole test run — do
   not start `ffc mock-server` yourself in the background; it is designed to run in the
   foreground and shut down on `SIGINT`/`SIGTERM`.

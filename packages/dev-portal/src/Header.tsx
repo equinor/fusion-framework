@@ -21,6 +21,8 @@ import { PersonSideSheet } from './PersonSideSheet';
 
 import { BookmarkSideSheet } from './BookmarkSideSheet';
 
+import { HelpSideSheet } from './HelpSideSheet';
+
 import { HeaderActions } from './HeaderActions';
 
 const Styled = {
@@ -37,7 +39,8 @@ const Styled = {
  * Portal top bar header containing the Fusion logo, context selector, and action buttons.
  *
  * Composes the bookmark provider with the current app and user so bookmark
- * and person side sheets can operate in context. Provides the sticky top bar
+ * and person side sheets can operate in context, and hosts the help side
+ * sheet that opens when an app calls `useHelpCenter()`. Provides the sticky top bar
  * layout used across all portal pages.
  */
 export const Header = () => {
@@ -89,6 +92,7 @@ export const Header = () => {
         isOpen={isPersonSheetOpen}
         onClose={() => setIsPersonSheetOpen(!isPersonSheetOpen)}
       />
+      <HelpSideSheet />
     </BookmarkProvider>
   );
 };

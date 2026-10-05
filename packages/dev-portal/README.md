@@ -13,6 +13,7 @@ Use this package when you need a portal host for local app development. For the 
 - **Portal shell**: A React application that renders the top bar, context selector, and an app mounting area.
 - **Application loader**: Dynamically initializes and mounts a Fusion app by its `appKey`, handling manifest resolution, script loading, and teardown.
 - **Framework modules**: The portal pre-configures telemetry, navigation, bookmarks, feature flags, analytics, AG Grid, Roles V2, and service integrations so loaded apps inherit a realistic environment.
+- **Help side sheet**: Opens when an app calls `useHelpCenter()`. A production-shaped sidebar lists the current app's articles from the `help` service (typically local help docs served by `ffc mock-server`), with an article index for `openHelp()`, an FAQ page for `openFaqs()`, and a simple search over articles and FAQs for `openSearch()`. Release notes and other production-only pages show a "not supported in the dev portal" message. See [Test help articles locally](../utils/openapi-mock-server/docs/testing-help-articles.md).
 - **Roles V2 integration**: The person side sheet uses the shared compact Roles view, and the application loader can recover when an app requires access roles during initialization.
 - **Context navigation plugin**: The portal enables `enableContextNavigation` from `@equinor/fusion-framework-plugin-context-navigation` so context changes and app switches keep the URL in sync automatically.
 
@@ -100,7 +101,8 @@ The portal is composed of these internal parts:
 - **`Router`** — Sets up routes with `react-router` via the navigation module; routes `/apps/:appKey/*` to the app loader.
 - **`AppLoader`** — Resolves, initializes, and mounts a Fusion app by key; handles loading states and errors.
 - **Roles recovery** — Wraps the application loader in `AccessRoleBoundary` so a user can activate an eligible claimable role and retry an app blocked by `builder.requireAccessRoles`.
-- **`Header`** — Top bar with the Fusion logo, context selector, bookmark toggle, and person settings.
+- **`Header`** — Top bar with the Fusion logo, context selector, bookmark toggle, person settings, and the help side sheet.
+- **Help side sheet** — Listens for `@Portal::FusionHelp::open`, lists `GET /apps/{appKey}/articles` in a collapsible sidebar, renders `GET /articles/{slug}` as markdown, lists `GET /apps/{appKey}/faqs` as expandable questions, and searches with `POST /search`. A labelled navigation landmark, `aria-current`, and stable `data-testid`s (`help-nav-article`, `help-article-title`, `help-search-result`, `help-not-found`, `help-unsupported`) support Playwright and synthetic agents.
 - **Person side sheet** — Renders `<RolesView compact />` inside the React `RolesProvider` for active, claimable, and recently expired role assignments.
 - **`ContextSelector`** — Wired to the current app's context module for searching and selecting context items.
 - **`enableContextNavigation`** — Registers the portal-level context navigation plugin that reconciles the active context with the browser URL.

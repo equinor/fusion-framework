@@ -227,3 +227,10 @@ Use Playwright's `webServer` array to own both foreground processes and stop the
 The mock server exposes HTTP endpoints for per-test operation overrides and reset.
 
 See the [plugin reference](../../cli-plugins/mock-server/README.md), [OpenAPI mock-server guide](../../utils/openapi-mock-server/docs/getting-started.md), and [Playwright cookbook](../../../cookbooks/app-react-mock-playwright/README.md).
+
+## Test help articles
+
+`ffc mock-server` also serves your app's help docs as a local `help` service, and the dev portal
+opens the article an app requests with `useHelpCenter().openArticle(slug)`. Help docs in `./docs`
+or `docs/<appKey>` are detected automatically; set `mockServer.helpDocs` to choose another folder.
+See [Test help articles locally](../../utils/openapi-mock-server/docs/testing-help-articles.md).

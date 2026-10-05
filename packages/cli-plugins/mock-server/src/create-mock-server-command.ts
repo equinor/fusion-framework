@@ -1,9 +1,13 @@
+import { relative } from 'node:path';
+
 import { createCommand, createOption, type Command } from 'commander';
 
 import { createMockServer } from '@equinor/fusion-openapi-mock-server';
 import { discoverServices } from '@equinor/fusion-openapi-mock-server/discovery';
+import { defineHelpArticlesMock } from '@equinor/fusion-openapi-mock-server/presets/fusion';
 
 import { loadMockServerConfig } from './load-mock-server-config.js';
+import { resolveHelpDocs } from './resolve-help-docs.js';
 
 /** Option values for `ffc mock-server`. */
 interface MockServerCommandOptions {
@@ -17,6 +21,8 @@ interface MockServerCommandOptions {
   seed?: number;
   /** Additional non-loopback browser origins allowed to call credentialed mock-auth endpoints. */
   allowOrigin: string[];
+  /** `--help-docs <dir>` sets the help docs folder; `--no-help-docs` turns help docs off. */
+  helpDocs?: string | false;
 }
 
 /** Overrides for `ffc mock-server`'s own built-in defaults, set by whoever registers the plugin. */
@@ -33,6 +39,8 @@ export interface MockServerCommandDefaults {
   seed?: number;
   /** Additional non-loopback browser origins allowed to call credentialed mock-auth endpoints. */
   allowedOrigins?: string[];
+  /** Help docs folder to serve when neither `--help-docs` nor `mockServer.helpDocs` is set; `false` disables auto-detection. */
+  helpDocs?: string | false;
 }
 
 /**
@@ -53,6 +61,13 @@ export interface MockServerCommandDefaults {
  * appending to it; repeat the flag (`--preset=fusion --preset=other`) to
  * combine it with something else. Pass {@link defaults} to change any of
  * these built-in defaults (e.g. a fixed port for a specific app).
+ *
+ * Serves local help articles and FAQs as a `help` service when a help docs
+ * folder is set (`--help-docs`, `mockServer.helpDocs`) or auto-detected
+ * (`./docs`, or `docs/<appKey>` in a parent folder), layered after presets and
+ * before directories. A local `help.mock.ts` that defines the service outright
+ * replaces the help docs; one with `serviceDiscovery: 'merge'` extends them.
+ * `--no-help-docs` opts out.
  *
  * Keeps the server running in the foreground until `SIGINT`/`SIGTERM`, so it
  * dies with whatever started it (e.g. Playwright's `webServer`) rather than
@@ -106,14 +121,40 @@ export function createMockServerCommand(defaults: MockServerCommandDefaults = {}
         .default(defaultAllowedOrigins)
         .argParser((value: string, previous: string[]) => [...previous, value]),
     )
+    .addOption(
+      createOption(
+        '--help-docs <dir>',
+        'help docs folder served as the local help service (default: config, or auto-detected ./docs or docs/<appKey>)',
+      ),
+    )
+    .addOption(createOption('--no-help-docs', 'do not serve local help articles'))
     .action(async (dirs: string[], options: MockServerCommandOptions) => {
-      const config = await loadMockServerConfig(process.cwd());
+      const root = process.cwd();
+      const config = await loadMockServerConfig(root);
       const sourceDirs = dirs.length ? dirs : [config.path ?? defaults.path ?? 'mocks'];
+      const helpDocs = await resolveHelpDocs(root, {
+        option: options.helpDocs,
+        config: config.helpDocs,
+        defaults: defaults.helpDocs,
+      });
       const definitionGroups = await Promise.all(
         sourceDirs
           // Resolve every configured layer before startup so discovery requirements are known.
           .map((dir) => discoverServices(dir)),
       );
+      // A local `help` module that is not a merge layer owns the service outright.
+      const ownsHelpService = definitionGroups
+        .flat()
+        // `merge` layers extend the help docs service, so only complete definitions take over.
+        .some((definition) => definition.key === 'help' && definition.serviceDiscovery !== 'merge');
+      // Serving both would collide (`'new'`) or be silently replaced, so the local module wins.
+      const servedHelpDocs = ownsHelpService ? undefined : helpDocs;
+      // Configured help docs that are not served would otherwise look broken, so say why.
+      if (ownsHelpService && helpDocs && helpDocs.source !== 'detected') {
+        console.warn(
+          `not serving help docs from ${relative(root, helpDocs.dir) || '.'}: a local mock module already defines the help service`,
+        );
+      }
       const server = createMockServer({
         seed: options.seed ?? config.seed ?? defaults.seed,
         allowedOrigins:
@@ -123,6 +164,8 @@ export function createMockServerCommand(defaults: MockServerCommandDefaults = {}
       });
       // presets always apply before directories, regardless of flag position on the command line
       for (const preset of options.preset) server.use(preset);
+      // Help docs sit between presets and directories, so a project's own help.mock.ts still wins.
+      if (servedHelpDocs) server.use([defineHelpArticlesMock({ dir: servedHelpDocs.dir })]);
       // Resolved directory groups are the highest-precedence layers, applied after every preset.
       for (const definitions of definitionGroups) server.use(definitions);
 
@@ -131,6 +174,12 @@ export function createMockServerCommand(defaults: MockServerCommandDefaults = {}
         host: options.host ?? config.host ?? defaults.host ?? 'localhost',
       });
       console.log(`mock server listening at ${url}`);
+      // One line keeps the help docs source visible, since auto-detection can pick a parent folder.
+      if (servedHelpDocs) {
+        console.log(
+          `serving ${servedHelpDocs.articleCount} help article(s) and ${servedHelpDocs.faqCount} FAQ(s) from ${relative(root, servedHelpDocs.dir) || '.'} (${servedHelpDocs.source})`,
+        );
+      }
 
       const shutdown = (): void => {
         void server.close().finally(() => process.exit(0));

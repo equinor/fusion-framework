@@ -102,11 +102,13 @@ export default defineDevServerConfig(() => ({
     port: 4010,
     seed: 42,
     allowedOrigins: ['https://preview.example.test'],
+    helpDocs: '../docs/my-app',
   },
 }));
 ```
 
-Command-line arguments override config defaults. `path` is relative to the project root.
+Command-line arguments override config defaults. `path` and `helpDocs` are relative to the
+project root.
 
 > [!TIP]
 > Put shared team defaults in `dev-server.config.ts`; reserve command-line flags for temporary
@@ -129,6 +131,20 @@ export default defineFusionCli(() => ({
 }));
 ```
 
+## Serve local help articles
+
+`ffc mock-server` serves help article and FAQ markdown files (the same frontmatter files `fhelp`
+syncs to the Fusion Help service) as a local `help` service. The dev portal then opens the article an app
+requests with `useHelpCenter().openArticle(slug)`, so help wiring can be tested in Playwright.
+
+Without configuration, the command auto-detects `./docs` (or `./docs/articles`) and
+`docs/<appKey>` in parent folders up to the repository root, and logs the folder it serves. When
+no articles are found, nothing changes. Set `mockServer.helpDocs` or `--help-docs <dir>` to choose
+a folder, or `helpDocs: false` / `--no-help-docs` to turn it off.
+
+See [Test help articles locally](../../utils/openapi-mock-server/docs/testing-help-articles.md)
+for article frontmatter, test ids, and troubleshooting.
+
 ## Command reference
 
 ```text
@@ -143,6 +159,8 @@ ffc mock-server [dirs...] [options]
 | `--host <host>` | Bind hostname. Uses config, then plugin defaults, then `localhost`. |
 | `--seed <seed>` | Deterministic seed for generated OpenAPI responses. Without a seed, generated values are random. |
 | `--allow-origin <origin>` | Additional exact non-loopback browser origin allowed to call credentialed mock-auth endpoints. Repeat for multiple app origins. |
+| `--help-docs <dir>` | Help docs folder served as the local `help` service. Overrides `mockServer.helpDocs` and auto-detection. |
+| `--no-help-docs` | Do not serve local help articles, even when a help docs folder is configured or detected. |
 
 The process shuts down on `SIGINT` and `SIGTERM`. Let Playwright `webServer`, `concurrently`, or a
 developer terminal own it instead of starting an unowned background process.
@@ -151,6 +169,7 @@ developer terminal own it instead of starting an unowned background process.
 
 - [OpenAPI mock-server getting started](../../utils/openapi-mock-server/docs/getting-started.md)
 - [Testing with Playwright](../../utils/openapi-mock-server/docs/testing-with-playwright.md)
+- [Test help articles locally](../../utils/openapi-mock-server/docs/testing-help-articles.md)
 - [Mock API and Playwright cookbook](../../../cookbooks/app-react-mock-playwright/README.md)
 
 ## License
