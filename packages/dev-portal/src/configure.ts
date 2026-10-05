@@ -1,8 +1,6 @@
 import { enableAppModule, type AppModule } from '@equinor/fusion-framework-module-app';
 import { enableBookmark } from '@equinor/fusion-framework-react-module-bookmark';
 import type { FrameworkConfigurator } from '@equinor/fusion-framework';
-import { enableAnalytics } from '@equinor/fusion-framework-module-analytics';
-import { ConsoleAnalyticsAdapter } from '@equinor/fusion-framework-module-analytics/adapters';
 import { enableContext } from '@equinor/fusion-framework-module-context';
 import {
   enableNavigation,
@@ -25,6 +23,7 @@ import {
   buildContextUrlForStrategy,
   resolveContextIdFromUrl,
 } from '@equinor/fusion-framework-plugin-context-navigation/utils';
+import { configureAnalytics, resolveMockServerUrl } from './analytics';
 import { version } from './version';
 
 declare global {
@@ -51,7 +50,9 @@ declare global {
  * - **Navigation** — router integration with telemetry.
  * - **Services** — standard Fusion service integrations.
  * - **AG Grid** — enterprise license key from `window.FUSION_AG_GRID_KEY`.
- * - **Analytics** — console adapter gated by the `fusionLogAnalytics` feature flag.
+ * - **Analytics** — the Fusion portal's collectors and a console adapter gated by the
+ *   `fusionLogAnalytics` feature flag; with `--mock`, analytics are also sent to the mock Monitor
+ *   service so apps can check them in end-to-end tests.
  * - **Bookmarks** — source-system metadata identifying CLI-created bookmarks.
  * - **Feature flags** — local-storage and URL-based flag plugins for dev toggles.
  * - **Roles** — active and claimable Roles V2 assignments for the person side sheet.
@@ -118,18 +119,7 @@ export const configure = async (config: FrameworkConfigurator) => {
     builder.setLicenseKey(window.FUSION_AG_GRID_KEY);
   });
 
-  enableAnalytics(config, (builder) => {
-    builder.setAdapter('console', async (args) => {
-      // Only resolve the feature-flag-gated adapter when the featureFlag module is enabled
-      if (args.hasModule('featureFlag')) {
-        const featureFlagProvider = await args.requireInstance('featureFlag');
-        // Only log analytics to the console when the feature flag is explicitly enabled
-        if (featureFlagProvider.getFeature('fusionLogAnalytics')?.enabled) {
-          return new ConsoleAnalyticsAdapter();
-        }
-      }
-    });
-  });
+  configureAnalytics(config, { mockServerUrl: resolveMockServerUrl() });
 
   // Configure bookmark functionality with CLI as the source system
   enableBookmark(config, (builder) => {
