@@ -620,6 +620,9 @@ importers:
       '@equinor/fusion-openapi-mock-server':
         specifier: workspace:^
         version: link:../../packages/utils/openapi-mock-server
+      '@equinor/fusion-services':
+        specifier: workspace:^
+        version: link:../../packages/services
       '@playwright/test':
         specifier: 'catalog:'
         version: 1.63.0

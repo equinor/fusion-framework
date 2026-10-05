@@ -2,8 +2,11 @@ import { Link, Outlet } from '@equinor/fusion-framework-react-router';
 
 import type { ReactElement } from 'react';
 
+import { usePageViewTracking } from '../analytics';
+
 /**
- * Provides navigation between the mock-service lifecycle scenarios and the local help articles page.
+ * Provides navigation between the mock-service lifecycle scenarios, the local help articles page,
+ * and the usage analytics page, and tracks a `page-viewed` feature for every page.
  *
  * @returns The page shell element.
  *
@@ -11,6 +14,8 @@ import type { ReactElement } from 'react';
  * The Fusion router renders this layout around the direct-only, merged, new-service, and help pages.
  */
 export default function Layout(): ReactElement {
+  usePageViewTracking();
+
   return (
     <div
       style={{
@@ -31,6 +36,7 @@ export default function Layout(): ReactElement {
           <Link to="/people">Existing service override</Link>
           <Link to="/aurora">Pre-production service</Link>
           <Link to="/help">Help articles</Link>
+          <Link to="/analytics">Usage analytics</Link>
         </nav>
       </header>
       <main style={{ width: 'min(44rem, 100%)' }}>
