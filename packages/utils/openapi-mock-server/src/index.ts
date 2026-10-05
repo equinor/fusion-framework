@@ -36,4 +36,4 @@ export {
   type MockAnalyticsFilter,
   type MockAnalyticsRequestClient,
   type WaitForMockAnalyticsOptions,
-} from './create-mock-analytics.js';
+} from './presets/fusion/analytics/client/index.js';

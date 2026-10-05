@@ -1,38 +1,22 @@
-export {
-  AnalyticsStore,
-  type AnalyticsSender,
-  type AnalyticsStoreOptions,
-} from './AnalyticsStore.js';
-export { executeAppFeatureEventsQuery } from './execute-app-feature-events-query.js';
-export { flattenOtlpKeyValues } from './flatten-otlp-key-values.js';
-export { flattenOtlpValue } from './flatten-otlp-value.js';
-export { formatAnalyticsTimestamp } from './format-analytics-timestamp.js';
-export { getJsonObject } from './get-json-object.js';
-export { parseOtlpLogsRequest } from './parse-otlp-logs-request.js';
-export { parseOtlpResourceLog } from './parse-otlp-resource-log.js';
-export { projectAnalyticsEvent } from './project-analytics-event.js';
-export {
-  readAnalyticsRecordings,
-  type ReadAnalyticsRecordingsOptions,
-} from './read-analytics-recordings.js';
-export { readStartupMockUserId } from './read-startup-mock-user-id.js';
-export { resolveAnalyticsSender } from './resolve-analytics-sender.js';
-export { toAnalyticsMicros } from './to-analytics-micros.js';
-export { toAnalyticsTableName } from './to-analytics-table-name.js';
-export { toOtlpAttributeMap } from './to-otlp-attribute-map.js';
-export { toPythonJson } from './to-python-json.js';
-export type {
-  AnalyticsContextColumns,
-  AnalyticsEventRow,
-  AnalyticsEventRowBase,
-  AnalyticsJsonValue,
-  AnalyticsRecord,
-  AppFeatureEventRow,
-  AppLoadedEventRow,
-  AppSelectedEventRow,
-  ContextSelectedEventRow,
-  OtlpParseIssue,
-  ParsedOtlpLogs,
-  ParseOtlpLogsOptions,
-  UnprojectedAnalyticsEventRow,
-} from './types.js';
+/**
+ * Fusion analytics in the mock server: receive what an app sends, read it the way Fusion's
+ * analytics pipeline does, keep and record it, answer the app-feature events query, and let tests
+ * check it.
+ *
+ * @remarks
+ * Folders, by responsibility:
+ * - `pipeline/` — OTLP → analytics records → event-table rows (`otlp/` unwrapping, `format/` rules).
+ * - `store/` — received and seeded events, JSON Lines recordings.
+ * - `query/` — the GraphQL `event_app_features` query.
+ * - `identity/` — which user and session sent a request.
+ * - `control/` — the `/@fusion-mock/analytics` control route.
+ * - `services/` — the mock Monitor and Apps service definitions.
+ * - `client/` — the `createMockAnalytics` test client, exported from the package root.
+ *
+ * @module
+ */
+export * from './pipeline/index.js';
+export * from './query/index.js';
+export * from './services/index.js';
+export * from './store/index.js';
+export type * from './types.js';

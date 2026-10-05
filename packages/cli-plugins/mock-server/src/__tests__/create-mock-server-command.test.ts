@@ -32,12 +32,9 @@ vi.mock('@equinor/fusion-openapi-mock-server/presets/fusion', () => ({
   defineAppFeatureEventsMock: mocks.defineAppFeatureEventsMock,
 }));
 
-vi.mock('../resolve-analytics.js', () => ({
-  resolveAnalytics: mocks.resolveAnalytics,
-}));
-
-vi.mock('../ensure-git-ignored-dir.js', () => ({
+vi.mock('../analytics/index.js', () => ({
   ensureGitIgnoredDir: mocks.ensureGitIgnoredDir,
+  resolveAnalytics: mocks.resolveAnalytics,
 }));
 
 vi.mock('../resolve-help-docs.js', () => ({

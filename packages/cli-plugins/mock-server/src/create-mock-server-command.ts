@@ -11,9 +11,8 @@ import {
 } from '@equinor/fusion-openapi-mock-server/presets/fusion';
 
 import type { MockServerAnalyticsOptions } from './dev-server-options.js';
-import { ensureGitIgnoredDir } from './ensure-git-ignored-dir.js';
 import { loadMockServerConfig } from './load-mock-server-config.js';
-import { resolveAnalytics } from './resolve-analytics.js';
+import { ensureGitIgnoredDir, resolveAnalytics } from './analytics/index.js';
 import { resolveHelpDocs } from './resolve-help-docs.js';
 
 /** Option values for `ffc mock-server`. */

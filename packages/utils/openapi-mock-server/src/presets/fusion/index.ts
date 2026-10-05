@@ -26,38 +26,35 @@ export {
 export { readHelpArticles, type HelpArticle } from './read-help-articles.js';
 export { readHelpFaqs, type HelpFaq } from './read-help-faqs.js';
 export { searchHelpDocs, type HelpDocSearchHit } from './search-help-docs.js';
-export {
-  defineAnalyticsMock,
-  type AnalyticsMockDefinition,
-  type DefineAnalyticsMockOptions,
-} from './define-analytics-mock.js';
-export {
-  defineAppFeatureEventsMock,
-  type DefineAppFeatureEventsMockOptions,
-} from './define-app-feature-events-mock.js';
+// Analytics: receive, read, record, query, and seed what a Fusion app tracks (see ./analytics).
 export {
   AnalyticsStore,
+  defineAnalyticsMock,
+  defineAppFeatureEventsMock,
   executeAppFeatureEventsQuery,
-  readAnalyticsRecordings,
-  type AnalyticsSender,
-  type AnalyticsStoreOptions,
-  type ReadAnalyticsRecordingsOptions,
   parseOtlpLogsRequest,
   parseOtlpResourceLog,
   projectAnalyticsEvent,
+  readAnalyticsRecordings,
   toAnalyticsTableName,
   type AnalyticsContextColumns,
   type AnalyticsEventRow,
   type AnalyticsEventRowBase,
   type AnalyticsJsonValue,
+  type AnalyticsMockDefinition,
   type AnalyticsRecord,
+  type AnalyticsSender,
+  type AnalyticsStoreOptions,
   type AppFeatureEventRow,
   type AppLoadedEventRow,
   type AppSelectedEventRow,
   type ContextSelectedEventRow,
+  type DefineAnalyticsMockOptions,
+  type DefineAppFeatureEventsMockOptions,
   type OtlpParseIssue,
   type ParsedOtlpLogs,
   type ParseOtlpLogsOptions,
+  type ReadAnalyticsRecordingsOptions,
   type UnprojectedAnalyticsEventRow,
 } from './analytics/index.js';
 
