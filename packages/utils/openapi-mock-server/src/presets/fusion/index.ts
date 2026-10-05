@@ -32,7 +32,12 @@ export {
   type DefineAnalyticsMockOptions,
 } from './define-analytics-mock.js';
 export {
+  defineAppFeatureEventsMock,
+  type DefineAppFeatureEventsMockOptions,
+} from './define-app-feature-events-mock.js';
+export {
   AnalyticsStore,
+  executeAppFeatureEventsQuery,
   readAnalyticsRecordings,
   type AnalyticsSender,
   type AnalyticsStoreOptions,

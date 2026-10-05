@@ -3,6 +3,7 @@ export {
   type AnalyticsSender,
   type AnalyticsStoreOptions,
 } from './AnalyticsStore.js';
+export { executeAppFeatureEventsQuery } from './execute-app-feature-events-query.js';
 export { flattenOtlpKeyValues } from './flatten-otlp-key-values.js';
 export { flattenOtlpValue } from './flatten-otlp-value.js';
 export { formatAnalyticsTimestamp } from './format-analytics-timestamp.js';
@@ -15,6 +16,8 @@ export {
   type ReadAnalyticsRecordingsOptions,
 } from './read-analytics-recordings.js';
 export { readStartupMockUserId } from './read-startup-mock-user-id.js';
+export { resolveAnalyticsSender } from './resolve-analytics-sender.js';
+export { toAnalyticsMicros } from './to-analytics-micros.js';
 export { toAnalyticsTableName } from './to-analytics-table-name.js';
 export { toOtlpAttributeMap } from './to-otlp-attribute-map.js';
 export { toPythonJson } from './to-python-json.js';

@@ -3404,6 +3404,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.1.0
         version: 10.6.0
+      graphql:
+        specifier: ^16.14.2
+        version: 16.14.2
       path-to-regexp:
         specifier: ^8.4.0
         version: 8.4.2

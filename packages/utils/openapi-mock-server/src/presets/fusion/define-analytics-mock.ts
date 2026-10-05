@@ -1,23 +1,16 @@
 import type { IncomingMessage } from 'node:http';
 
 import { defineService } from '../../discovery/define-service.js';
-import type { MockRequestIdentity, MockResponse } from '../../discovery/create-router.js';
+import type { MockResponse } from '../../discovery/create-router.js';
 import type { ServiceMockDefinition } from '../../discovery/discover-services.js';
-import {
-  AnalyticsStore,
-  type AnalyticsSender,
-  type AnalyticsStoreOptions,
-} from './analytics/AnalyticsStore.js';
+import { AnalyticsStore, type AnalyticsStoreOptions } from './analytics/AnalyticsStore.js';
 import { isJsonObject } from './analytics/is-json-object.js';
-import { readStartupMockUserId } from './analytics/read-startup-mock-user-id.js';
+import { resolveAnalyticsSender } from './analytics/resolve-analytics-sender.js';
 
 import schema from './monitor.openapi.json' with { type: 'json' };
 
 /** Deepest JSON nesting the Monitor service reads (`JsonSerializerOptions.MaxDepth = 64`). */
 const MAX_JSON_DEPTH = 64;
-
-/** Session that collects analytics sent with the framework MSAL mock's startup identity. */
-const LOCAL_DEVELOPMENT_SESSION = 'local-development';
 
 /** Options for {@link defineAnalyticsMock}. */
 export interface DefineAnalyticsMockOptions extends AnalyticsStoreOptions {
@@ -83,7 +76,7 @@ export function defineAnalyticsMock(
     reset: () => store.reset(),
     middleware: (router) => {
       router.post('/v1/logs', async (req, res, { body, identity }) => {
-        const sender = resolveSender(req, identity);
+        const sender = resolveAnalyticsSender(req, identity);
         // The Monitor service requires a signed-in user before reading anything.
         if (!sender) {
           res.statusCode = 401;
@@ -122,30 +115,6 @@ export function defineAnalyticsMock(
   });
 
   return { ...definition, store };
-}
-
-/**
- * Resolves who sent a request: the mock-auth user and browser session, or the framework MSAL
- * mock's startup user in the shared local-development session.
- *
- * @param req - Incoming request.
- * @param identity - Mock-auth identity resolved by the mock server.
- * @returns The sender, or `undefined` when the request has no signed-in user.
- */
-function resolveSender(
-  req: IncomingMessage,
-  identity: MockRequestIdentity,
-): AnalyticsSender | undefined {
-  // Tokens and sessions issued by the mock server identify the user and keep sessions apart.
-  if (identity.status === 'authenticated') {
-    return { userId: identity.userId, sessionId: identity.sessionId ?? identity.userId };
-  }
-  // Only the MSAL mock's startup token is adapted; other foreign tokens stay unauthenticated.
-  if (identity.status === 'unsupported') {
-    const userId = readStartupMockUserId(req.headers.authorization);
-    return userId ? { userId, sessionId: LOCAL_DEVELOPMENT_SESSION } : undefined;
-  }
-  return undefined;
 }
 
 /**
