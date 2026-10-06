@@ -32,6 +32,8 @@ export function toPythonJson(value: AnalyticsJsonValue): string {
     );
     return `{${members.join(', ')}}`;
   }
+  // 64-bit integers are written with every digit, as Python writes its ints.
+  if (typeof value === 'bigint') return value.toString();
   return JSON.stringify(value);
 }
 

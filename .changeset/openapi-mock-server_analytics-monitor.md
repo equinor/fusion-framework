@@ -23,6 +23,6 @@ export default defineAnalyticsMock({
 });
 ```
 
-Middleware routes now answer `400` with an `InvalidJson` error when the request body is not valid JSON, instead of failing with `500`.
+Middleware routes now answer `400` with an `InvalidJson` error when a body declared as JSON (or sent without a `content-type`) is not valid JSON, instead of failing with `500`. A body declared with another `content-type` that is not JSON reaches the route as `body: undefined`, so the route can answer it, for example with `415`.
 
 Refs: equinor/fusion-core-tasks#2179

@@ -88,6 +88,11 @@ export function mergeServiceDefinitions(
               definitionReset();
             }
           : (definitionReset ?? existingReset);
+      // Control routes merge by name like fields and paths, so a layer adding one keeps the rest.
+      const control =
+        existing.control || definition.control
+          ? { ...existing.control, ...definition.control }
+          : undefined;
       // Preserve inherited behavior while merging maps and allowing an explicitly supplied schema to win.
       byKey.set(definition.key, {
         ...existing,
@@ -97,6 +102,7 @@ export function mergeServiceDefinitions(
         paths: mergePaths(existing.paths, definition.paths),
         router,
         ...(reset ? { reset } : {}),
+        ...(control ? { control } : {}),
       });
     }
   }

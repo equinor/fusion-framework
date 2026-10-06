@@ -232,6 +232,28 @@ describe('analytics control and createMockAnalytics', () => {
 });
 
 describe('service control routes', () => {
+  it('keeps /@fusion-mock/analytics when a local monitor merge layer adds its own control route', async () => {
+    const monitor = defineAnalyticsMock({ warn: () => undefined });
+    const server = createMockServer()
+      .use([monitor])
+      .use([
+        defineService({
+          key: 'monitor',
+          serviceDiscovery: 'merge',
+          control: { 'monitor-info': () => ({ status: 200, body: { local: true } }) },
+        }),
+      ]);
+    const { url } = await server.start();
+    try {
+      expect((await fetch(`${url}/@fusion-mock/analytics`)).status).toBe(200);
+      expect(await (await fetch(`${url}/@fusion-mock/monitor-info`)).json()).toEqual({
+        local: true,
+      });
+    } finally {
+      await server.close();
+    }
+  });
+
   let server: MockServerHandle | undefined;
 
   afterEach(async () => {

@@ -210,11 +210,14 @@ describe('defineAnalyticsMock', () => {
     expect(response.status).toBe(401);
   });
 
-  it('answers 415 for a body that is not declared as JSON', async () => {
+  it.each([
+    ['a JSON body', JSON.stringify({ resourceLogs: [resourceLog('x')] })],
+    ['a body that is not JSON', 'hello'],
+  ])('answers 415 for %s not declared as JSON', async (_case, body) => {
     const { url } = await start();
     const session = await signIn(url, 'tester');
 
-    const response = await postLogs(url, JSON.stringify({ resourceLogs: [resourceLog('x')] }), {
+    const response = await postLogs(url, body, {
       authorization: `Bearer ${session.token}`,
       'content-type': 'text/plain',
     });

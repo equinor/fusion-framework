@@ -265,7 +265,7 @@ The same entry point exports the reading functions for Vitest or scripts:
 
 | Route | Behavior |
 | --- | --- |
-| `POST /monitor/v1/logs` (discovery key `monitor`) | `202` when accepted; `400` for invalid JSON, nesting deeper than 64 levels, or no log entries; `401` without a signed-in user; `415` when a JSON body is not declared as `application/json`. |
+| `POST /monitor/v1/logs` (discovery key `monitor`) | `202` when accepted; `400` for invalid JSON, nesting deeper than 64 levels, or no log entries; `401` without a signed-in user; `415` when the body is not declared as `application/json`. |
 | `POST /apps/apps/feature-events/query` (discovery key `apps`) | GraphQL over the caller's session events plus seeded history; `401` without a signed-in user; `403` when `isAppAdmin` rejects the user. |
 | `GET /@fusion-mock/analytics` | `{ events }` for the caller's session, or every session without a session cookie. Query parameters: `eventName`, `appKey`, `feature`, `session`, `includeSeeded=true`. |
 | `DELETE /@fusion-mock/analytics` | Removes the caller's received events (or `?session=`), keeping seeded history. |

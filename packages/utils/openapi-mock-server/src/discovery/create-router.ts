@@ -17,7 +17,10 @@ export interface MockResponse extends ServerResponse {
  * parsed request input, session-aware mock-auth state, and the mock server seed.
  */
 export interface RouteContext {
-  /** The request body, parsed as JSON. `undefined` for an empty body. */
+  /**
+   * The request body, parsed as JSON. `undefined` for an empty body, and for a body declared with
+   * a non-JSON `content-type` that is not valid JSON — the route decides how to answer it.
+   */
   body: unknown;
   /** The mock server's own seed (see `CreateMockServerOptions`), if one was set. */
   seed?: number;
@@ -131,11 +134,27 @@ function matchRegisteredRoute(
   }
 }
 
+/**
+ * Checks whether a request declares a `content-type` other than JSON (`application/json` or a
+ * `+json` suffix). A request without a `content-type` is not counted as declaring one.
+ *
+ * @param req - Incoming request.
+ * @returns Whether the request declares a non-JSON media type.
+ */
+function declaresNonJsonContent(req: IncomingMessage): boolean {
+  const type = req.headers['content-type']?.split(';')[0]?.trim().toLowerCase();
+  // An absent type is treated as JSON, so clients that omit the header keep JSON parsing.
+  if (!type) return false;
+  return type !== 'application/json' && !type.endsWith('+json');
+}
+
 /** Creates an empty {@link Router}.
  *
  * @remarks
- * A matched route whose request body is not valid JSON is answered with `400` and an
- * `InvalidJson` error, without calling the route handler.
+ * A matched route whose body is declared as JSON (or not declared) but is not valid JSON is
+ * answered with `400` and an `InvalidJson` error, without calling the route handler. A body
+ * declared with another `content-type` that is not JSON reaches the handler as `body: undefined`,
+ * so the route can answer it itself, for example with `415`.
  *
  * @returns A new, empty {@link Router}.
  * @throws From `handle`, when reading a request body fails for a reason other than invalid JSON.
@@ -188,15 +207,20 @@ export function createRouter(): Router {
       } catch (error) {
         // Malformed client input is a bad request, not a mock server failure.
         if (!(error instanceof SyntaxError)) throw error;
-        const response = toMockResponse(res);
-        response.statusCode = 400;
-        response.json({
-          error: {
-            code: 'InvalidJson',
-            message: `Request body is not valid JSON: ${error.message}`,
-          },
-        });
-        return true;
+        // Only a body claimed (or assumed) to be JSON is invalid JSON; others are left to the route.
+        if (!declaresNonJsonContent(req)) {
+          const response = toMockResponse(res);
+          response.statusCode = 400;
+          response.json({
+            error: {
+              code: 'InvalidJson',
+              message: `Request body is not valid JSON: ${error.message}`,
+            },
+          });
+          return true;
+        }
+        // The route sees no body and can reject the media type itself, for example with 415.
+        body = undefined;
       }
 
       await matchedHandler(req, toMockResponse(res), {

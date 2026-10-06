@@ -167,6 +167,35 @@ describe('parseOtlpResourceLog', () => {
     expect(records[4].data_body).toBe('{"feature": "list", "data": ["a", 2, {"b": false}]}');
   });
 
+  it('keeps every digit of 64-bit integers, as the pipeline does', () => {
+    const big = '9007199254740993';
+    const { records } = parseOtlpResourceLog(
+      resourceLog([
+        appFeature('2026-10-05T10:00:00Z', 'counted', {
+          kvlistValue: {
+            values: [
+              { key: 'id', value: { intValue: big } },
+              {
+                key: 'ids',
+                value: { arrayValue: { values: [{ intValue: `-${big}` }, { intValue: '7' }] } },
+              },
+            ],
+          },
+        }),
+        appFeature('2026-10-05T10:00:01Z', 'scalar', { intValue: ` +${big} ` }),
+      ]),
+      options,
+    );
+
+    expect(records[0].data_body).toBe(
+      `{"feature": "counted", "data": {"id": ${big}, "ids": [-${big}, 7]}}`,
+    );
+    expect(projectAnalyticsEvent(records[0])).toMatchObject({
+      data_body_data: `{"id":${big},"ids":[-${big},7]}`,
+    });
+    expect(projectAnalyticsEvent(records[1])).toMatchObject({ data_body_data: big });
+  });
+
   it('stores a body that is not a key-value list as null, as production does', () => {
     const { records } = parseOtlpResourceLog(
       resourceLog([
@@ -387,6 +416,12 @@ describe('getJsonObject', () => {
     ['{"a": [1]}', ['a', 'b'], null],
     ['{"a": {"b": "x"}}', ['a', 'b'], 'x'],
     ['{"a": 1.5}', ['a'], '1.5'],
+    ['{"a": 9007199254740993}', ['a'], '9007199254740993'],
+    [
+      '{"a": {"b": [9007199254740993, 1.5e300, "x"]}}',
+      ['a'],
+      '{"b":[9007199254740993,1.5e+300,"x"]}',
+    ],
   ] as const)('reads %j at %j', (json, path, expected) => {
     expect(getJsonObject(json, path)).toBe(expected);
   });
@@ -396,6 +431,12 @@ describe('toPythonJson', () => {
   it('uses Python json.dumps separators and keeps non-ASCII text', () => {
     expect(toPythonJson({ a: [1, 'ø', { b: null }], 'c"d': true })).toBe(
       '{"a": [1, "ø", {"b": null}], "c\\"d": true}',
+    );
+  });
+
+  it('writes 64-bit integers with every digit', () => {
+    expect(toPythonJson({ id: 9007199254740993n, ids: [-1n] })).toBe(
+      '{"id": 9007199254740993, "ids": [-1]}',
     );
   });
 });

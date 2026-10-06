@@ -323,6 +323,10 @@ describe('executeAppFeatureEventsQuery', () => {
       '(filter: { timestamp: { gte: "yesterday" } })',
       'DateTime cannot parse the given value: yesterday',
     ],
+    [
+      '(filter: { timestamp: { gte: "2026-13-01" } })',
+      'DateTime cannot parse the given value: 2026-13-01',
+    ],
   ])('reports an error for %s', async (args, message) => {
     const result = await executeAppFeatureEventsQuery(rows, {
       query: `{ event_app_features${args} { items { event_id } } }`,
@@ -351,6 +355,17 @@ describe('toAnalyticsMicros', () => {
     ['2026-01-07T11:39:30.225000', Date.UTC(2026, 0, 7, 11, 39, 30) * 1000 + 225_000],
     ['2026-10-05T02:00:00+02:00', Date.UTC(2026, 9, 5) * 1000],
     ['2026-02-30', undefined],
+    ['2028-02-29', Date.UTC(2028, 1, 29) * 1000],
+    ['2026-13-01', undefined],
+    ['2026-00-01', undefined],
+    ['2026-10-05T24:00:00Z', undefined],
+    ['2026-10-05T10:60:00Z', undefined],
+    ['2026-10-05T10:00:60Z', undefined],
+    ['2026-10-05T10:00:00+99:99', undefined],
+    ['2026-10-05T10:00:00+14:01', undefined],
+    ['2026-10-05T10:00:00+10:60', undefined],
+    ['2026-10-05T10:00:00-14:00', Date.UTC(2026, 9, 6) * 1000],
+    ['0099-01-01', -59042995200000000],
     ['soon', undefined],
   ])('reads %s', (value, micros) => {
     expect(toAnalyticsMicros(value)).toBe(micros);

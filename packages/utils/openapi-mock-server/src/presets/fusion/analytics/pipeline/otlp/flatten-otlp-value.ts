@@ -35,7 +35,11 @@ export function flattenOtlpValue(value: unknown): AnalyticsJsonValue {
     // Python's int() accepts whole numbers as they are.
     if (typeof intValue === 'number' && Number.isFinite(intValue)) return Math.trunc(intValue);
     // Python's int() also accepts integer text; any other text is kept unconverted.
-    if (typeof intValue === 'string' && /^\s*[+-]?\d+\s*$/.test(intValue)) return Number(intValue);
+    if (typeof intValue === 'string' && /^\s*[+-]?\d+\s*$/.test(intValue)) {
+      const parsed = Number(intValue);
+      // Values beyond 2^53 stay exact as bigint, like Python's arbitrary-precision int.
+      return Number.isSafeInteger(parsed) ? parsed : BigInt(intValue.trim());
+    }
     return String(intValue);
   }
   // Doubles are converted like Python's float(); unconvertible values are kept as text.

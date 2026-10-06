@@ -1,10 +1,15 @@
 /**
  * A plain JSON value: what an OpenTelemetry `AnyValue` becomes once the analytics pipeline has
  * unwrapped its type tags (`stringValue`, `kvlistValue`, …).
+ *
+ * @remarks
+ * 64-bit integers beyond `Number.MAX_SAFE_INTEGER` are kept as `bigint`, because the pipeline's
+ * Python `int()` keeps every digit and a JavaScript `number` would round them.
  */
 export type AnalyticsJsonValue =
   | string
   | number
+  | bigint
   | boolean
   | null
   | AnalyticsJsonValue[]

@@ -23,6 +23,6 @@ test('tracks page views', async ({ context, page }) => {
 });
 ```
 
-The helper uses the new `GET` and `DELETE /@fusion-mock/analytics` control routes. Service definitions can add their own control routes at `/@fusion-mock/<name>` with `defineService({ control })`.
+The helper uses the new `GET` and `DELETE /@fusion-mock/analytics` control routes. Service definitions can add their own control routes at `/@fusion-mock/<name>` with `defineService({ control })`; they merge by name across `serviceDiscovery: 'merge'` layers, so a local merge layer keeps inherited routes such as `analytics`.
 
 Refs: equinor/fusion-core-tasks#2181
