@@ -226,6 +226,9 @@ Use this table instead of searching. "Start here" is the first file to open.
   changes usually belong in the non-React module, not the React wrapper.
 - Cross-package imports always use the scoped package name, never relative paths.
 - Workspace dependencies use `workspace:^` in `package.json` only.
+- Every package is `"type": "module"` (no CommonJS), and relative imports carry an explicit
+  `.js` extension (`./client.js`, `./lib/index.js`) so published ESM loads under native Node.
+  `pnpm verify:esm` enforces both.
 
 ---
 
@@ -244,6 +247,8 @@ Use this table instead of searching. "Start here" is the first file to open.
 | Typecheck a package | `pnpm --filter <pkg> exec tsc -b --force` |
 | Add changeset | `pnpm changeset` |
 | Verify this code map | `pnpm verify:agent-context` |
+| Verify ESM contract (type + import extensions) | `pnpm verify:esm` |
+| Verify built exports load in native Node | `pnpm verify:esm:runtime` (after build) |
 | Rebuild retrieval index | `pnpm index:packages`, `pnpm index:cookbooks` |
 
 ---
