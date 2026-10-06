@@ -1,4 +1,4 @@
-import type { QueryClientOptions } from './client/QueryClient';
+import type { QueryClientOptions } from './client/QueryClient.js';
 
 /**
  * Base interface for all query-related events.

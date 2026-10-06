@@ -2,6 +2,7 @@
   "name": "@equinor/fusion-framework-react-components-bookmark",
   "version": "2.0.5",
   "description": "",
+  "type": "module",
   "main": "dist/esm/index.js",
   "exports": {
     ".": {

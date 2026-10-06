@@ -1,7 +1,7 @@
 import type { FeatureFlagModule } from '@equinor/fusion-framework-module-feature-flag';
 
-import { useFrameworkModule } from '../useFrameworkModule';
-import { useFeature } from './useFeature';
+import { useFrameworkModule } from '../useFrameworkModule.js';
+import { useFeature } from './useFeature.js';
 
 /**
  * React hook that retrieves a single feature flag from the **framework-level**

@@ -1,9 +1,9 @@
 import { Observable, of } from 'rxjs';
 import { concatMap, map, withLatestFrom } from 'rxjs/operators';
-import type { HistoryFlowCreator } from './navigate';
-import { actions, type Actions } from './actions';
+import type { HistoryFlowCreator } from './navigate.js';
+import { actions, type Actions } from './actions.js';
 import { filterAction } from '@equinor/fusion-observable/operators';
-import { Action, type HistoryStack, type LocationState } from '../types';
+import { Action, type HistoryStack, type LocationState } from '../types.js';
 
 /** Flow creator that gates navigation actions through registered blockers. */
 export const checkBlockers: HistoryFlowCreator =

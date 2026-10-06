@@ -1,6 +1,6 @@
 import type { FeatureFlagModule } from '@equinor/fusion-framework-module-feature-flag';
-import { useCurrentAppModule } from '../app';
-import { useFeatures, type UseFeaturesResult } from './useFeatures';
+import { useCurrentAppModule } from '../app/index.js';
+import { useFeatures, type UseFeaturesResult } from './useFeatures.js';
 
 /**
  * React hook that returns feature flags registered on the current application.

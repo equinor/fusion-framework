@@ -1,1 +1,1 @@
-export * from './EditBookmarkModal';
+export * from './EditBookmarkModal.js';

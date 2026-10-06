@@ -2,9 +2,9 @@ import { useEffect, useState } from 'react';
 
 import { useFramework } from '@equinor/fusion-framework-react';
 
-import type { HelpRequest } from './parse-help-request';
-import { requestHelpService, type HelpServiceResult } from './request-help-service';
-import type { HelpFaq, HelpFaqCollection } from './types';
+import type { HelpRequest } from './parse-help-request.js';
+import { requestHelpService, type HelpServiceResult } from './request-help-service.js';
+import type { HelpFaq, HelpFaqCollection } from './types.js';
 
 /** Lifecycle of the FAQ list, returned by {@link useHelpFaqs}. */
 export type HelpFaqsState =

@@ -1,12 +1,12 @@
 import { z } from 'zod';
-import { PatchPropertyOfAppCategoryIdentifierSchemaV1 } from './patch-property-of-app-category-identifier-schema-v1';
-import { PatchPropertyOfListOfAccountIdentifierSchemaV1 } from './patch-property-of-list-of-account-identifier-schema-v1';
-import { PatchPropertyOfListOfAppContextRequestSchemaV1 } from './patch-property-of-list-of-app-context-request-schema-v1';
-import { PatchPropertyOfListOfStringSchemaV1 } from './patch-property-of-list-of-string-schema-v1';
-import { PatchPropertyOfPatchAppServiceNowConfigurationRequestSchemaV1 } from './patch-property-of-patch-app-service-now-configuration-request-schema-v1';
-import { PatchPropertyOfPatchAppVisualizationRequestSchemaV1 } from './patch-property-of-patch-app-visualization-request-schema-v1';
-import { PatchPropertyOfStringSchemaV1 } from './patch-property-of-string-schema-v1';
-import { PatchPropertyOfTemplateSourceRequestSchemaV1 } from './patch-property-of-template-source-request-schema-v1';
+import { PatchPropertyOfAppCategoryIdentifierSchemaV1 } from './patch-property-of-app-category-identifier-schema-v1.js';
+import { PatchPropertyOfListOfAccountIdentifierSchemaV1 } from './patch-property-of-list-of-account-identifier-schema-v1.js';
+import { PatchPropertyOfListOfAppContextRequestSchemaV1 } from './patch-property-of-list-of-app-context-request-schema-v1.js';
+import { PatchPropertyOfListOfStringSchemaV1 } from './patch-property-of-list-of-string-schema-v1.js';
+import { PatchPropertyOfPatchAppServiceNowConfigurationRequestSchemaV1 } from './patch-property-of-patch-app-service-now-configuration-request-schema-v1.js';
+import { PatchPropertyOfPatchAppVisualizationRequestSchemaV1 } from './patch-property-of-patch-app-visualization-request-schema-v1.js';
+import { PatchPropertyOfStringSchemaV1 } from './patch-property-of-string-schema-v1.js';
+import { PatchPropertyOfTemplateSourceRequestSchemaV1 } from './patch-property-of-template-source-request-schema-v1.js';
 
 /**
  * Zod schema for the `PatchAppRequest` model published by the Fusion Apps API 1.0.

@@ -1,8 +1,8 @@
 import type { AnyModule, IModulesConfigurator } from '@equinor/fusion-framework-module';
 
-import { module, type BookmarkModule } from '../bookmark-module';
+import { module, type BookmarkModule } from '../bookmark-module.js';
 
-import { BookmarkMockConfigurator } from './BookmarkMockConfigurator';
+import { BookmarkMockConfigurator } from './BookmarkMockConfigurator.js';
 
 /**
  * The bookmark module with a mock, in-memory client instead of a live

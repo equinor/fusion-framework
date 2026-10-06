@@ -4,7 +4,7 @@ import {
   createSseSelector,
   type ServerSentEvent,
   type SseSelectorOptions,
-} from '../selectors/create-sse-selector';
+} from '../selectors/create-sse-selector.js';
 
 /**
  * An operator function for handling Server-Sent Events (SSE) in an RxJS pipeline.

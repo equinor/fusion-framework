@@ -111,11 +111,11 @@
  * ```
  */
 
-export { ApiVersion } from './static';
+export { ApiVersion } from './static.js';
 
-export type * from './types';
+export type * from './types.js';
 
-export type * from './v1/types';
+export type * from './v1/types.js';
 
 export {
   type CheckAppAccessArg,
@@ -123,7 +123,7 @@ export {
   type CheckAppAccessResult,
   type CheckAppAccessVersion,
   checkAppAccess,
-} from './endpoints/app.options';
+} from './endpoints/app.options.js';
 
 export {
   type CheckAppBuildChangelogAccessArg,
@@ -131,7 +131,7 @@ export {
   type CheckAppBuildChangelogAccessResult,
   type CheckAppBuildChangelogAccessVersion,
   checkAppBuildChangelogAccess,
-} from './endpoints/app-build-changelog.options';
+} from './endpoints/app-build-changelog.options.js';
 
 export {
   type CheckAppCategoriesAccessArg,
@@ -139,7 +139,7 @@ export {
   type CheckAppCategoriesAccessResult,
   type CheckAppCategoriesAccessVersion,
   checkAppCategoriesAccess,
-} from './endpoints/app-categories.options';
+} from './endpoints/app-categories.options.js';
 
 export {
   type CheckAppCategoryAccessArg,
@@ -147,7 +147,7 @@ export {
   type CheckAppCategoryAccessResult,
   type CheckAppCategoryAccessVersion,
   checkAppCategoryAccess,
-} from './endpoints/app-category.options';
+} from './endpoints/app-category.options.js';
 
 export {
   type CheckAppCategoryChangelogAccessArg,
@@ -155,7 +155,7 @@ export {
   type CheckAppCategoryChangelogAccessResult,
   type CheckAppCategoryChangelogAccessVersion,
   checkAppCategoryChangelogAccess,
-} from './endpoints/app-category-changelog.options';
+} from './endpoints/app-category-changelog.options.js';
 
 export {
   type CheckAppChangelogAccessArg,
@@ -163,7 +163,7 @@ export {
   type CheckAppChangelogAccessResult,
   type CheckAppChangelogAccessVersion,
   checkAppChangelogAccess,
-} from './endpoints/app-changelog.options';
+} from './endpoints/app-changelog.options.js';
 
 export {
   type CheckAppExistsArg,
@@ -171,7 +171,7 @@ export {
   type CheckAppExistsResult,
   type CheckAppExistsVersion,
   checkAppExists,
-} from './endpoints/app.head';
+} from './endpoints/app.head.js';
 
 export {
   type CheckAppGovernanceAccessArg,
@@ -179,7 +179,7 @@ export {
   type CheckAppGovernanceAccessResult,
   type CheckAppGovernanceAccessVersion,
   checkAppGovernanceAccess,
-} from './endpoints/app-governance.options';
+} from './endpoints/app-governance.options.js';
 
 export {
   type CheckAppGovernanceConfirmationAccessArg,
@@ -187,7 +187,7 @@ export {
   type CheckAppGovernanceConfirmationAccessResult,
   type CheckAppGovernanceConfirmationAccessVersion,
   checkAppGovernanceConfirmationAccess,
-} from './endpoints/app-governance-confirmation.options';
+} from './endpoints/app-governance-confirmation.options.js';
 
 export {
   type CheckAppGovernanceDocumentAccessArg,
@@ -195,7 +195,7 @@ export {
   type CheckAppGovernanceDocumentAccessResult,
   type CheckAppGovernanceDocumentAccessVersion,
   checkAppGovernanceDocumentAccess,
-} from './endpoints/apps-governance-documents.options';
+} from './endpoints/apps-governance-documents.options.js';
 
 export {
   type CheckAppGovernanceDocumentsAccessArg,
@@ -203,7 +203,7 @@ export {
   type CheckAppGovernanceDocumentsAccessResult,
   type CheckAppGovernanceDocumentsAccessVersion,
   checkAppGovernanceDocumentsAccess,
-} from './endpoints/app-governance-documents.options';
+} from './endpoints/app-governance-documents.options.js';
 
 export {
   type CheckAppsAccessArg,
@@ -211,7 +211,7 @@ export {
   type CheckAppsAccessResult,
   type CheckAppsAccessVersion,
   checkAppsAccess,
-} from './endpoints/apps.options';
+} from './endpoints/apps.options.js';
 
 export {
   type CheckContextTypesAccessArg,
@@ -219,7 +219,7 @@ export {
   type CheckContextTypesAccessResult,
   type CheckContextTypesAccessVersion,
   checkContextTypesAccess,
-} from './endpoints/context-types.options';
+} from './endpoints/context-types.options.js';
 
 export {
   type CheckWidgetAccessArg,
@@ -227,7 +227,7 @@ export {
   type CheckWidgetAccessResult,
   type CheckWidgetAccessVersion,
   checkWidgetAccess,
-} from './endpoints/widget.options';
+} from './endpoints/widget.options.js';
 
 export {
   type CheckWidgetsAccessArg,
@@ -235,7 +235,7 @@ export {
   type CheckWidgetsAccessResult,
   type CheckWidgetsAccessVersion,
   checkWidgetsAccess,
-} from './endpoints/widgets.options';
+} from './endpoints/widgets.options.js';
 
 export {
   type ConfirmAppGovernanceArg,
@@ -243,7 +243,7 @@ export {
   type ConfirmAppGovernanceResult,
   type ConfirmAppGovernanceVersion,
   confirmAppGovernance,
-} from './endpoints/app-governance-confirmation.put';
+} from './endpoints/app-governance-confirmation.put.js';
 
 export {
   type CreateAppArg,
@@ -251,7 +251,7 @@ export {
   type CreateAppResult,
   type CreateAppVersion,
   createApp,
-} from './endpoints/apps.post';
+} from './endpoints/apps.post.js';
 
 export {
   type CreateAppCategoryArg,
@@ -259,7 +259,7 @@ export {
   type CreateAppCategoryResult,
   type CreateAppCategoryVersion,
   createAppCategory,
-} from './endpoints/app-categories.post';
+} from './endpoints/app-categories.post.js';
 
 export {
   type CreateAppGovernanceDocumentArg,
@@ -267,7 +267,7 @@ export {
   type CreateAppGovernanceDocumentResult,
   type CreateAppGovernanceDocumentVersion,
   createAppGovernanceDocument,
-} from './endpoints/app-governance-documents.post';
+} from './endpoints/app-governance-documents.post.js';
 
 export {
   type CreateContextTypeArg,
@@ -275,7 +275,7 @@ export {
   type CreateContextTypeResult,
   type CreateContextTypeVersion,
   createContextType,
-} from './endpoints/context-types.post';
+} from './endpoints/context-types.post.js';
 
 export {
   type CreateTechnologyProductArg,
@@ -283,7 +283,7 @@ export {
   type CreateTechnologyProductResult,
   type CreateTechnologyProductVersion,
   createTechnologyProduct,
-} from './endpoints/technology-products.post';
+} from './endpoints/technology-products.post.js';
 
 export {
   type CreateWidgetArg,
@@ -291,7 +291,7 @@ export {
   type CreateWidgetResult,
   type CreateWidgetVersion,
   createWidget,
-} from './endpoints/widgets.post';
+} from './endpoints/widgets.post.js';
 
 export {
   type DeleteAppArg,
@@ -299,7 +299,7 @@ export {
   type DeleteAppResult,
   type DeleteAppVersion,
   deleteApp,
-} from './endpoints/app.delete';
+} from './endpoints/app.delete.js';
 
 export {
   type DeleteAppBuildArg,
@@ -307,7 +307,7 @@ export {
   type DeleteAppBuildResult,
   type DeleteAppBuildVersion,
   deleteAppBuild,
-} from './endpoints/app-build.delete';
+} from './endpoints/app-build.delete.js';
 
 export {
   type DeleteAppGovernanceDocumentArg,
@@ -315,7 +315,7 @@ export {
   type DeleteAppGovernanceDocumentResult,
   type DeleteAppGovernanceDocumentVersion,
   deleteAppGovernanceDocument,
-} from './endpoints/app-governance-documents.delete';
+} from './endpoints/app-governance-documents.delete.js';
 
 export {
   type DeleteAppGovernancePropertyArg,
@@ -323,7 +323,7 @@ export {
   type DeleteAppGovernancePropertyResult,
   type DeleteAppGovernancePropertyVersion,
   deleteAppGovernanceProperty,
-} from './endpoints/app-governance-properties.delete';
+} from './endpoints/app-governance-properties.delete.js';
 
 export {
   type DeleteAppTagArg,
@@ -331,7 +331,7 @@ export {
   type DeleteAppTagResult,
   type DeleteAppTagVersion,
   deleteAppTag,
-} from './endpoints/app-tag.delete';
+} from './endpoints/app-tag.delete.js';
 
 export {
   type DeleteMyAppTagArg,
@@ -339,7 +339,7 @@ export {
   type DeleteMyAppTagResult,
   type DeleteMyAppTagVersion,
   deleteMyAppTag,
-} from './endpoints/my-app-tag.delete';
+} from './endpoints/my-app-tag.delete.js';
 
 export {
   type DeletePersonAppTagArg,
@@ -347,7 +347,7 @@ export {
   type DeletePersonAppTagResult,
   type DeletePersonAppTagVersion,
   deletePersonAppTag,
-} from './endpoints/person-app-tag.delete';
+} from './endpoints/person-app-tag.delete.js';
 
 export {
   type DeleteTechnologyProductArg,
@@ -355,7 +355,7 @@ export {
   type DeleteTechnologyProductResult,
   type DeleteTechnologyProductVersion,
   deleteTechnologyProduct,
-} from './endpoints/technology-product.delete';
+} from './endpoints/technology-product.delete.js';
 
 export {
   type DeleteWidgetTagArg,
@@ -363,7 +363,7 @@ export {
   type DeleteWidgetTagResult,
   type DeleteWidgetTagVersion,
   deleteWidgetTag,
-} from './endpoints/widget-tag.delete';
+} from './endpoints/widget-tag.delete.js';
 
 export {
   type GetAppArg,
@@ -371,7 +371,7 @@ export {
   type GetAppResult,
   type GetAppVersion,
   getApp,
-} from './endpoints/app.get';
+} from './endpoints/app.get.js';
 
 export {
   type GetAppAtVersionArg,
@@ -379,7 +379,7 @@ export {
   type GetAppAtVersionResult,
   type GetAppAtVersionVersion,
   getAppAtVersion,
-} from './endpoints/app-at-version.get';
+} from './endpoints/app-at-version.get.js';
 
 export {
   type GetAppBuildArg,
@@ -387,7 +387,7 @@ export {
   type GetAppBuildResult,
   type GetAppBuildVersion,
   getAppBuild,
-} from './endpoints/app-build.get';
+} from './endpoints/app-build.get.js';
 
 export {
   type GetAppBuildConfigArg,
@@ -395,7 +395,7 @@ export {
   type GetAppBuildConfigResult,
   type GetAppBuildConfigVersion,
   getAppBuildConfig,
-} from './endpoints/app-build-config.get';
+} from './endpoints/app-build-config.get.js';
 
 export {
   type GetAppBundleArchiveArg,
@@ -403,7 +403,7 @@ export {
   type GetAppBundleArchiveResult,
   type GetAppBundleArchiveVersion,
   getAppBundleArchive,
-} from './endpoints/app-bundle-archive.get';
+} from './endpoints/app-bundle-archive.get.js';
 
 export {
   type GetAppBundleArchiveAtVersionArg,
@@ -411,7 +411,7 @@ export {
   type GetAppBundleArchiveAtVersionResult,
   type GetAppBundleArchiveAtVersionVersion,
   getAppBundleArchiveAtVersion,
-} from './endpoints/app-bundle-archive-at-version.get';
+} from './endpoints/app-bundle-archive-at-version.get.js';
 
 export {
   type GetAppBundleResourceArg,
@@ -419,7 +419,7 @@ export {
   type GetAppBundleResourceResult,
   type GetAppBundleResourceVersion,
   getAppBundleResource,
-} from './endpoints/app-bundle-resource.get';
+} from './endpoints/app-bundle-resource.get.js';
 
 export {
   type GetAppBundleResourceAtVersionArg,
@@ -427,7 +427,7 @@ export {
   type GetAppBundleResourceAtVersionResult,
   type GetAppBundleResourceAtVersionVersion,
   getAppBundleResourceAtVersion,
-} from './endpoints/app-bundle-resource-at-version.get';
+} from './endpoints/app-bundle-resource-at-version.get.js';
 
 export {
   type GetAppCategoryArg,
@@ -435,7 +435,7 @@ export {
   type GetAppCategoryResult,
   type GetAppCategoryVersion,
   getAppCategory,
-} from './endpoints/app-category.get';
+} from './endpoints/app-category.get.js';
 
 export {
   type GetAppGovernanceArg,
@@ -443,7 +443,7 @@ export {
   type GetAppGovernanceResult,
   type GetAppGovernanceVersion,
   getAppGovernance,
-} from './endpoints/app-governance.get';
+} from './endpoints/app-governance.get.js';
 
 export {
   type GetAppGovernanceDocumentArg,
@@ -451,7 +451,7 @@ export {
   type GetAppGovernanceDocumentResult,
   type GetAppGovernanceDocumentVersion,
   getAppGovernanceDocument,
-} from './endpoints/app-governance-documents.get';
+} from './endpoints/app-governance-documents.get.js';
 
 export {
   type GetChangelogEntryArg,
@@ -459,7 +459,7 @@ export {
   type GetChangelogEntryResult,
   type GetChangelogEntryVersion,
   getChangelogEntry,
-} from './endpoints/changelog-entry.get';
+} from './endpoints/changelog-entry.get.js';
 
 export {
   type GetContextTypeArg,
@@ -467,7 +467,7 @@ export {
   type GetContextTypeResult,
   type GetContextTypeVersion,
   getContextType,
-} from './endpoints/context-type.get';
+} from './endpoints/context-type.get.js';
 
 export {
   type GetMyAppArg,
@@ -475,7 +475,7 @@ export {
   type GetMyAppResult,
   type GetMyAppVersion,
   getMyApp,
-} from './endpoints/my-app.get';
+} from './endpoints/my-app.get.js';
 
 export {
   type GetMyAppSettingsArg,
@@ -483,7 +483,7 @@ export {
   type GetMyAppSettingsResult,
   type GetMyAppSettingsVersion,
   getMyAppSettings,
-} from './endpoints/my-app-settings.get';
+} from './endpoints/my-app-settings.get.js';
 
 export {
   type GetMyPinnedAppArg,
@@ -491,7 +491,7 @@ export {
   type GetMyPinnedAppResult,
   type GetMyPinnedAppVersion,
   getMyPinnedApp,
-} from './endpoints/my-pinned-app.get';
+} from './endpoints/my-pinned-app.get.js';
 
 export {
   type GetPersonAppArg,
@@ -499,7 +499,7 @@ export {
   type GetPersonAppResult,
   type GetPersonAppVersion,
   getPersonApp,
-} from './endpoints/person-app.get';
+} from './endpoints/person-app.get.js';
 
 export {
   type GetPersonAppSettingsArg,
@@ -507,7 +507,7 @@ export {
   type GetPersonAppSettingsResult,
   type GetPersonAppSettingsVersion,
   getPersonAppSettings,
-} from './endpoints/person-app-settings.get';
+} from './endpoints/person-app-settings.get.js';
 
 export {
   type GetPersonPinnedAppArg,
@@ -515,7 +515,7 @@ export {
   type GetPersonPinnedAppResult,
   type GetPersonPinnedAppVersion,
   getPersonPinnedApp,
-} from './endpoints/person-pinned-app.get';
+} from './endpoints/person-pinned-app.get.js';
 
 export {
   type GetTechnologyProductArg,
@@ -523,7 +523,7 @@ export {
   type GetTechnologyProductResult,
   type GetTechnologyProductVersion,
   getTechnologyProduct,
-} from './endpoints/technology-product.get';
+} from './endpoints/technology-product.get.js';
 
 export {
   type GetWidgetArg,
@@ -531,7 +531,7 @@ export {
   type GetWidgetResult,
   type GetWidgetVersion,
   getWidget,
-} from './endpoints/widget.get';
+} from './endpoints/widget.get.js';
 
 export {
   type GetWidgetBuildArg,
@@ -539,7 +539,7 @@ export {
   type GetWidgetBuildResult,
   type GetWidgetBuildVersion,
   getWidgetBuild,
-} from './endpoints/widget-build.get';
+} from './endpoints/widget-build.get.js';
 
 export {
   type GetWidgetBuildConfigArg,
@@ -547,7 +547,7 @@ export {
   type GetWidgetBuildConfigResult,
   type GetWidgetBuildConfigVersion,
   getWidgetBuildConfig,
-} from './endpoints/widget-build-config.get';
+} from './endpoints/widget-build-config.get.js';
 
 export {
   type GetWidgetBundleResourceArg,
@@ -555,7 +555,7 @@ export {
   type GetWidgetBundleResourceResult,
   type GetWidgetBundleResourceVersion,
   getWidgetBundleResource,
-} from './endpoints/widget-bundle-resource.get';
+} from './endpoints/widget-bundle-resource.get.js';
 
 export {
   type ListAppBuildChangelogArg,
@@ -563,7 +563,7 @@ export {
   type ListAppBuildChangelogResult,
   type ListAppBuildChangelogVersion,
   listAppBuildChangelog,
-} from './endpoints/app-build-changelog.get';
+} from './endpoints/app-build-changelog.get.js';
 
 export {
   type ListAppBuildsArg,
@@ -571,7 +571,7 @@ export {
   type ListAppBuildsResult,
   type ListAppBuildsVersion,
   listAppBuilds,
-} from './endpoints/app-builds.get';
+} from './endpoints/app-builds.get.js';
 
 export {
   type ListAppCategoriesArg,
@@ -579,7 +579,7 @@ export {
   type ListAppCategoriesResult,
   type ListAppCategoriesVersion,
   listAppCategories,
-} from './endpoints/app-categories.get';
+} from './endpoints/app-categories.get.js';
 
 export {
   type ListAppCategoryChangelogArg,
@@ -587,7 +587,7 @@ export {
   type ListAppCategoryChangelogResult,
   type ListAppCategoryChangelogVersion,
   listAppCategoryChangelog,
-} from './endpoints/app-category-changelog.get';
+} from './endpoints/app-category-changelog.get.js';
 
 export {
   type ListAppChangelogArg,
@@ -595,7 +595,7 @@ export {
   type ListAppChangelogResult,
   type ListAppChangelogVersion,
   listAppChangelog,
-} from './endpoints/app-changelog.get';
+} from './endpoints/app-changelog.get.js';
 
 export {
   type ListAppComplianceArg,
@@ -603,7 +603,7 @@ export {
   type ListAppComplianceResult,
   type ListAppComplianceVersion,
   listAppCompliance,
-} from './endpoints/app-compliance.get';
+} from './endpoints/app-compliance.get.js';
 
 export {
   type ListAppGovernanceDocumentsArg,
@@ -611,7 +611,7 @@ export {
   type ListAppGovernanceDocumentsResult,
   type ListAppGovernanceDocumentsVersion,
   listAppGovernanceDocuments,
-} from './endpoints/app-governance-documents-list.get';
+} from './endpoints/app-governance-documents-list.get.js';
 
 export {
   type ListAppTagHistoryArg,
@@ -619,7 +619,7 @@ export {
   type ListAppTagHistoryResult,
   type ListAppTagHistoryVersion,
   listAppTagHistory,
-} from './endpoints/app-tag-history.get';
+} from './endpoints/app-tag-history.get.js';
 
 export {
   type ListAppTaggedPersonsArg,
@@ -627,7 +627,7 @@ export {
   type ListAppTaggedPersonsResult,
   type ListAppTaggedPersonsVersion,
   listAppTaggedPersons,
-} from './endpoints/app-tagged-persons.get';
+} from './endpoints/app-tagged-persons.get.js';
 
 export {
   type ListAppTagsArg,
@@ -635,7 +635,7 @@ export {
   type ListAppTagsResult,
   type ListAppTagsVersion,
   listAppTags,
-} from './endpoints/app-tags.get';
+} from './endpoints/app-tags.get.js';
 
 export {
   type ListAppsArg,
@@ -643,7 +643,7 @@ export {
   type ListAppsResult,
   type ListAppsVersion,
   listApps,
-} from './endpoints/apps.get';
+} from './endpoints/apps.get.js';
 
 export {
   type ListBusinessOwnerRolesArg,
@@ -651,7 +651,7 @@ export {
   type ListBusinessOwnerRolesResult,
   type ListBusinessOwnerRolesVersion,
   listBusinessOwnerRoles,
-} from './endpoints/business-owner-roles.get';
+} from './endpoints/business-owner-roles.get.js';
 
 export {
   type ListCachedAppsArg,
@@ -659,7 +659,7 @@ export {
   type ListCachedAppsResult,
   type ListCachedAppsVersion,
   listCachedApps,
-} from './endpoints/admin-cached-apps.get';
+} from './endpoints/admin-cached-apps.get.js';
 
 export {
   type ListChangelogArg,
@@ -667,7 +667,7 @@ export {
   type ListChangelogResult,
   type ListChangelogVersion,
   listChangelog,
-} from './endpoints/changelog.get';
+} from './endpoints/changelog.get.js';
 
 export {
   type ListContextTypesArg,
@@ -675,7 +675,7 @@ export {
   type ListContextTypesResult,
   type ListContextTypesVersion,
   listContextTypes,
-} from './endpoints/context-types.get';
+} from './endpoints/context-types.get.js';
 
 export {
   type ListDataClassificationsArg,
@@ -683,7 +683,7 @@ export {
   type ListDataClassificationsResult,
   type ListDataClassificationsVersion,
   listDataClassifications,
-} from './endpoints/data-classifications.get';
+} from './endpoints/data-classifications.get.js';
 
 export {
   type ListDocumentTypesArg,
@@ -691,7 +691,7 @@ export {
   type ListDocumentTypesResult,
   type ListDocumentTypesVersion,
   listDocumentTypes,
-} from './endpoints/document-types.get';
+} from './endpoints/document-types.get.js';
 
 export {
   type ListMyAppsArg,
@@ -699,7 +699,7 @@ export {
   type ListMyAppsResult,
   type ListMyAppsVersion,
   listMyApps,
-} from './endpoints/my-apps.get';
+} from './endpoints/my-apps.get.js';
 
 export {
   type ListMyPinnedAppsArg,
@@ -707,7 +707,7 @@ export {
   type ListMyPinnedAppsResult,
   type ListMyPinnedAppsVersion,
   listMyPinnedApps,
-} from './endpoints/my-pinned-apps.get';
+} from './endpoints/my-pinned-apps.get.js';
 
 export {
   type ListPersonAppsArg,
@@ -715,7 +715,7 @@ export {
   type ListPersonAppsResult,
   type ListPersonAppsVersion,
   listPersonApps,
-} from './endpoints/person-apps.get';
+} from './endpoints/person-apps.get.js';
 
 export {
   type ListPersonPinnedAppsArg,
@@ -723,7 +723,7 @@ export {
   type ListPersonPinnedAppsResult,
   type ListPersonPinnedAppsVersion,
   listPersonPinnedApps,
-} from './endpoints/person-pinned-apps.get';
+} from './endpoints/person-pinned-apps.get.js';
 
 export {
   type ListTaggedAppBuildsArg,
@@ -731,7 +731,7 @@ export {
   type ListTaggedAppBuildsResult,
   type ListTaggedAppBuildsVersion,
   listTaggedAppBuilds,
-} from './endpoints/tagged-app-builds.get';
+} from './endpoints/tagged-app-builds.get.js';
 
 export {
   type ListTechnologyProductsArg,
@@ -739,7 +739,7 @@ export {
   type ListTechnologyProductsResult,
   type ListTechnologyProductsVersion,
   listTechnologyProducts,
-} from './endpoints/technology-products.get';
+} from './endpoints/technology-products.get.js';
 
 export {
   type ListWidgetBuildsArg,
@@ -747,7 +747,7 @@ export {
   type ListWidgetBuildsResult,
   type ListWidgetBuildsVersion,
   listWidgetBuilds,
-} from './endpoints/widget-builds.get';
+} from './endpoints/widget-builds.get.js';
 
 export {
   type ListWidgetTagsArg,
@@ -755,7 +755,7 @@ export {
   type ListWidgetTagsResult,
   type ListWidgetTagsVersion,
   listWidgetTags,
-} from './endpoints/widget-tags.get';
+} from './endpoints/widget-tags.get.js';
 
 export {
   type ListWidgetsArg,
@@ -763,7 +763,7 @@ export {
   type ListWidgetsResult,
   type ListWidgetsVersion,
   listWidgets,
-} from './endpoints/widgets.get';
+} from './endpoints/widgets.get.js';
 
 export {
   type PinMyAppArg,
@@ -771,7 +771,7 @@ export {
   type PinMyAppResult,
   type PinMyAppVersion,
   pinMyApp,
-} from './endpoints/my-pinned-apps.post';
+} from './endpoints/my-pinned-apps.post.js';
 
 export {
   type PinPersonAppArg,
@@ -779,7 +779,7 @@ export {
   type PinPersonAppResult,
   type PinPersonAppVersion,
   pinPersonApp,
-} from './endpoints/person-pinned-apps.post';
+} from './endpoints/person-pinned-apps.post.js';
 
 export {
   type PutAppsSubscriptionArg,
@@ -787,7 +787,7 @@ export {
   type PutAppsSubscriptionResult,
   type PutAppsSubscriptionVersion,
   putAppsSubscription,
-} from './endpoints/apps-subscription.put';
+} from './endpoints/apps-subscription.put.js';
 
 export {
   type QueryAppFeatureEventsArg,
@@ -795,7 +795,7 @@ export {
   type QueryAppFeatureEventsResult,
   type QueryAppFeatureEventsVersion,
   queryAppFeatureEvents,
-} from './endpoints/app-feature-events-query.post';
+} from './endpoints/app-feature-events-query.post.js';
 
 export {
   type RegisterAppTagArg,
@@ -803,7 +803,7 @@ export {
   type RegisterAppTagResult,
   type RegisterAppTagVersion,
   registerAppTag,
-} from './endpoints/app-tag.put';
+} from './endpoints/app-tag.put.js';
 
 export {
   type RegisterWidgetTagArg,
@@ -811,7 +811,7 @@ export {
   type RegisterWidgetTagResult,
   type RegisterWidgetTagVersion,
   registerWidgetTag,
-} from './endpoints/widget-tag.put';
+} from './endpoints/widget-tag.put.js';
 
 export {
   type ResetAllPersonAppsCacheArg,
@@ -819,7 +819,7 @@ export {
   type ResetAllPersonAppsCacheResult,
   type ResetAllPersonAppsCacheVersion,
   resetAllPersonAppsCache,
-} from './endpoints/admin-persons-apps-cache-reset.post';
+} from './endpoints/admin-persons-apps-cache-reset.post.js';
 
 export {
   type ResetAppCategoriesCacheArg,
@@ -827,7 +827,7 @@ export {
   type ResetAppCategoriesCacheResult,
   type ResetAppCategoriesCacheVersion,
   resetAppCategoriesCache,
-} from './endpoints/admin-app-categories-cache-reset.post';
+} from './endpoints/admin-app-categories-cache-reset.post.js';
 
 export {
   type ResetAppsCacheArg,
@@ -835,7 +835,7 @@ export {
   type ResetAppsCacheResult,
   type ResetAppsCacheVersion,
   resetAppsCache,
-} from './endpoints/admin-apps-cache-reset.post';
+} from './endpoints/admin-apps-cache-reset.post.js';
 
 export {
   type ResetPersonAppsCacheArg,
@@ -843,7 +843,7 @@ export {
   type ResetPersonAppsCacheResult,
   type ResetPersonAppsCacheVersion,
   resetPersonAppsCache,
-} from './endpoints/admin-person-apps-cache-reset.post';
+} from './endpoints/admin-person-apps-cache-reset.post.js';
 
 export {
   type RestoreAppArg,
@@ -851,7 +851,7 @@ export {
   type RestoreAppResult,
   type RestoreAppVersion,
   restoreApp,
-} from './endpoints/app-restore.post';
+} from './endpoints/app-restore.post.js';
 
 export {
   type SetMyAppTagArg,
@@ -859,7 +859,7 @@ export {
   type SetMyAppTagResult,
   type SetMyAppTagVersion,
   setMyAppTag,
-} from './endpoints/my-app-tag.put';
+} from './endpoints/my-app-tag.put.js';
 
 export {
   type SetPersonAppTagArg,
@@ -867,7 +867,7 @@ export {
   type SetPersonAppTagResult,
   type SetPersonAppTagVersion,
   setPersonAppTag,
-} from './endpoints/person-app-tag.put';
+} from './endpoints/person-app-tag.put.js';
 
 export {
   type UnpinMyAppArg,
@@ -875,7 +875,7 @@ export {
   type UnpinMyAppResult,
   type UnpinMyAppVersion,
   unpinMyApp,
-} from './endpoints/my-pinned-app.delete';
+} from './endpoints/my-pinned-app.delete.js';
 
 export {
   type UnpinPersonAppArg,
@@ -883,7 +883,7 @@ export {
   type UnpinPersonAppResult,
   type UnpinPersonAppVersion,
   unpinPersonApp,
-} from './endpoints/person-pinned-app.delete';
+} from './endpoints/person-pinned-app.delete.js';
 
 export {
   type UpdateAppArg,
@@ -891,7 +891,7 @@ export {
   type UpdateAppResult,
   type UpdateAppVersion,
   updateApp,
-} from './endpoints/app.patch';
+} from './endpoints/app.patch.js';
 
 export {
   type UpdateAppCategoryArg,
@@ -899,7 +899,7 @@ export {
   type UpdateAppCategoryResult,
   type UpdateAppCategoryVersion,
   updateAppCategory,
-} from './endpoints/app-category.patch';
+} from './endpoints/app-category.patch.js';
 
 export {
   type UpdateAppGovernanceArg,
@@ -907,7 +907,7 @@ export {
   type UpdateAppGovernanceResult,
   type UpdateAppGovernanceVersion,
   updateAppGovernance,
-} from './endpoints/app-governance.patch';
+} from './endpoints/app-governance.patch.js';
 
 export {
   type UpdateAppGovernanceDocumentArg,
@@ -915,7 +915,7 @@ export {
   type UpdateAppGovernanceDocumentResult,
   type UpdateAppGovernanceDocumentVersion,
   updateAppGovernanceDocument,
-} from './endpoints/app-governance-document.patch';
+} from './endpoints/app-governance-document.patch.js';
 
 export {
   type UpdateContextTypeArg,
@@ -923,7 +923,7 @@ export {
   type UpdateContextTypeResult,
   type UpdateContextTypeVersion,
   updateContextType,
-} from './endpoints/context-type.patch';
+} from './endpoints/context-type.patch.js';
 
 export {
   type UpdateTechnologyProductArg,
@@ -931,7 +931,7 @@ export {
   type UpdateTechnologyProductResult,
   type UpdateTechnologyProductVersion,
   updateTechnologyProduct,
-} from './endpoints/technology-product.patch';
+} from './endpoints/technology-product.patch.js';
 
 export {
   type UploadAppBundleArg,
@@ -939,7 +939,7 @@ export {
   type UploadAppBundleResult,
   type UploadAppBundleVersion,
   uploadAppBundle,
-} from './endpoints/app-bundle.post';
+} from './endpoints/app-bundle.post.js';
 
 export {
   type UploadWidgetBundleArg,
@@ -947,7 +947,7 @@ export {
   type UploadWidgetBundleResult,
   type UploadWidgetBundleVersion,
   uploadWidgetBundle,
-} from './endpoints/widget-bundle.post';
+} from './endpoints/widget-bundle.post.js';
 
 export {
   type UpsertAppBuildConfigArg,
@@ -955,7 +955,7 @@ export {
   type UpsertAppBuildConfigResult,
   type UpsertAppBuildConfigVersion,
   upsertAppBuildConfig,
-} from './endpoints/app-build-config.put';
+} from './endpoints/app-build-config.put.js';
 
 export {
   type UpsertMyAppSettingsArg,
@@ -963,7 +963,7 @@ export {
   type UpsertMyAppSettingsResult,
   type UpsertMyAppSettingsVersion,
   upsertMyAppSettings,
-} from './endpoints/my-app-settings.put';
+} from './endpoints/my-app-settings.put.js';
 
 export {
   type UpsertPersonAppSettingsArg,
@@ -971,7 +971,7 @@ export {
   type UpsertPersonAppSettingsResult,
   type UpsertPersonAppSettingsVersion,
   upsertPersonAppSettings,
-} from './endpoints/person-app-settings.put';
+} from './endpoints/person-app-settings.put.js';
 
 export {
   type UpsertWidgetBuildConfigArg,
@@ -979,4 +979,4 @@ export {
   type UpsertWidgetBuildConfigResult,
   type UpsertWidgetBuildConfigVersion,
   upsertWidgetBuildConfig,
-} from './endpoints/widget-build-config.put';
+} from './endpoints/widget-build-config.put.js';

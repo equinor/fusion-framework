@@ -9,9 +9,9 @@ import { enableMapSet } from 'immer';
 
 enableMapSet();
 
-import { type Actions, actions } from './actions';
+import { type Actions, actions } from './actions.js';
 
-import type { AppBundleState, AppBundleStateInitial } from './types';
+import type { AppBundleState, AppBundleStateInitial } from './types.js';
 
 /**
  * Creates the Immer-powered reducer for the {@link App} state machine.

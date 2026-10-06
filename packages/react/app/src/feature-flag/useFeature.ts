@@ -10,7 +10,7 @@ import type {
 } from '@equinor/fusion-framework-module-feature-flag';
 import { findFeature } from '@equinor/fusion-framework-module-feature-flag/selectors';
 
-import { useAppModule } from '../useAppModule';
+import { useAppModule } from '../useAppModule.js';
 
 /**
  * React hook for reading and toggling a single feature flag.

@@ -1,7 +1,7 @@
 import { Subject, type Subscription } from 'rxjs';
 import { finalize, map } from 'rxjs/operators';
-import type { QueryOptions, QueryTaskCompleted } from './types';
-import type { QueryClientJob } from './client/QueryClientJob';
+import type { QueryOptions, QueryTaskCompleted } from './types.js';
+import type { QueryClientJob } from './client/QueryClientJob.js';
 import { v4 as generateGUID } from 'uuid';
 
 /**

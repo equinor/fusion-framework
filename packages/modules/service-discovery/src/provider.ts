@@ -8,11 +8,11 @@ import type {
   IHttpClient,
 } from '@equinor/fusion-framework-module-http';
 
-import { version } from './version';
+import { version } from './version.js';
 
-import type { Service } from './types';
-import type { ServiceDiscoveryConfig } from './configurator';
-import type { IServiceDiscoveryClient } from './client';
+import type { Service } from './types.js';
+import type { ServiceDiscoveryConfig } from './configurator.js';
+import type { IServiceDiscoveryClient } from './client.js';
 
 /**
  * Public API surface of the Service Discovery provider.

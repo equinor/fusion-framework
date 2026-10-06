@@ -16,12 +16,12 @@ import type {
   VersionedArgs,
   VersionedParsedArgs,
   VersionedResponse,
-} from '../types';
+} from '../types.js';
 
-import { extractVersion, parseVersionedArgs, versionedResponseSelector } from '../../utils';
-import { ApiVersion } from '../static';
-import { ApiAppTagSchemaV1 } from '../v1/schemas/api-app-tag-schema-v1';
-import { apiPagedCollectionSchemaV1 } from '../v1/schemas/api-paged-collection-schema-v1';
+import { extractVersion, parseVersionedArgs, versionedResponseSelector } from '../../utils.js';
+import { ApiVersion } from '../static.js';
+import { ApiAppTagSchemaV1 } from '../v1/schemas/api-app-tag-schema-v1.js';
+import { apiPagedCollectionSchemaV1 } from '../v1/schemas/api-paged-collection-schema-v1.js';
 
 /** Concrete API versions this operation publishes. */
 type AvailableVersions = ApiVersion.v1;

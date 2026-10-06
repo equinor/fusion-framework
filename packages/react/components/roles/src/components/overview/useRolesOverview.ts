@@ -3,19 +3,22 @@ import { useMemo, useState } from 'react';
 import {
   useActiveAccessRoleAssignments,
   type UseActiveAccessRoleAssignmentsResult,
-} from '../../hooks/useActiveAccessRoleAssignments';
+} from '../../hooks/useActiveAccessRoleAssignments.js';
 import {
   useClaimableRoleAssignments,
   type UseClaimableRoleAssignmentsResult,
-} from '../../hooks/useClaimableRoleAssignments';
-import { useRoleAssignments, type UseRoleAssignmentsResult } from '../../hooks/useRoleAssignments';
-import { createClaimableRoles } from './create-claimable-roles';
-import { createAssignedRoles } from './create-assigned-roles';
+} from '../../hooks/useClaimableRoleAssignments.js';
+import {
+  useRoleAssignments,
+  type UseRoleAssignmentsResult,
+} from '../../hooks/useRoleAssignments.js';
+import { createClaimableRoles } from './create-claimable-roles.js';
+import { createAssignedRoles } from './create-assigned-roles.js';
 import type {
   AssignedRoleDetails,
   ClaimableRoleAssignmentSelection,
   ClaimableRoleDetails,
-} from './role-details';
+} from './role-details.js';
 
 /** Shared collection and activation controller for the two role browsing layouts. */
 interface RolesOverview {

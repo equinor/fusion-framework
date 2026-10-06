@@ -1,6 +1,6 @@
-import { ApiVersion } from '../static';
-import type { ApiPerson_v2 } from '../api-models.v2';
-import type { ClientMethod } from '../../types';
+import { ApiVersion } from '../static.js';
+import type { ApiPerson_v2 } from '../api-models.v2.js';
+import type { ClientMethod } from '../../types.js';
 
 /** API versions that support the people query endpoint. */
 export type SupportedApiVersion = Extract<keyof typeof ApiVersion, 'v2'>;

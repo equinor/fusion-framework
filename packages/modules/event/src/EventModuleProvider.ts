@@ -3,8 +3,11 @@ import { type Observable, Subject } from 'rxjs';
 import { BaseModuleProvider } from '@equinor/fusion-framework-module/provider';
 import { version } from './version.js';
 
-import type { EventModuleConfig } from './EventModuleConfigurator';
-import { FrameworkEventDispatcher, type FrameworkEventHandler } from './FrameworkEventDispatcher';
+import type { EventModuleConfig } from './EventModuleConfigurator.js';
+import {
+  FrameworkEventDispatcher,
+  type FrameworkEventHandler,
+} from './FrameworkEventDispatcher.js';
 
 import {
   type IFrameworkEvent,
@@ -12,7 +15,7 @@ import {
   type FrameworkEventInit,
   type FrameworkEventInitType,
   type FrameworkEventMap,
-} from './FrameworkEvent';
+} from './FrameworkEvent.js';
 
 /**
  * Public contract for the event module provider.

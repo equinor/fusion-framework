@@ -6,7 +6,7 @@
  *
  * @packageDocumentation
  */
-export { useAppSetting } from './useAppSetting';
-export { useAppSettings } from './useAppSettings';
+export { useAppSetting } from './useAppSetting.js';
+export { useAppSettings } from './useAppSettings.js';
 
 export type { AppSettings } from '@equinor/fusion-framework-module-app';

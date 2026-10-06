@@ -2,7 +2,7 @@ import type { Fusion } from '@equinor/fusion-framework';
 import type { AnyModule } from '@equinor/fusion-framework-module';
 
 import { useContext } from 'react';
-import { context } from './context';
+import { context } from './context.js';
 /**
  * React hook that returns the current Fusion Framework instance from context.
  *

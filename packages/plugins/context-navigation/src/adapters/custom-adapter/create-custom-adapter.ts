@@ -1,10 +1,10 @@
 import type { ContextItem } from '@equinor/fusion-framework-module-context';
-import type { ContextNavigationAdapter, ContextNavigationAdapterFactory } from '../types';
-import { hasCustomContextGenerators } from '../../utils/has-custom-context-generators';
-import { stripContextQueryParam } from '../../utils/url/strip-context-query-param';
-import { normalizeStringResult } from './normalize-string-result';
-import { toAppRelative } from './to-app-relative';
-import { toFullPath } from './to-full-path';
+import type { ContextNavigationAdapter, ContextNavigationAdapterFactory } from '../types.js';
+import { hasCustomContextGenerators } from '../../utils/has-custom-context-generators.js';
+import { stripContextQueryParam } from '../../utils/url/strip-context-query-param.js';
+import { normalizeStringResult } from './normalize-string-result.js';
+import { toAppRelative } from './to-app-relative.js';
+import { toFullPath } from './to-full-path.js';
 
 /**
  * Custom adapter factory — delegates URL encoding/decoding to app-provided hooks.

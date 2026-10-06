@@ -5,7 +5,7 @@ PersonListItem;
 
 import { Divider } from '@equinor/eds-core-react';
 
-import { LandingSheetContent, FeatureSheetContent, RolesSheetContent } from './sheets';
+import { LandingSheetContent, FeatureSheetContent, RolesSheetContent } from './sheets/index.js';
 
 /** Props for the {@link PersonSideSheet} component. */
 type PersonSideSheetProps = {

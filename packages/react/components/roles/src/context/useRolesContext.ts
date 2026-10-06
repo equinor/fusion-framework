@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 
-import { RolesContext, type RolesContextValue } from './roles-context';
+import { RolesContext, type RolesContextValue } from './roles-context.js';
 
 /**
  * Reads shared Roles V2 state from the nearest roles context provider.

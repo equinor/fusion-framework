@@ -1,9 +1,9 @@
-import { applyNavigation } from '../apply-navigation';
-import { resolveAdapter } from '../helpers';
+import { applyNavigation } from '../apply-navigation.js';
+import { resolveAdapter } from '../helpers/index.js';
 
-import type { ContextNavigationSkippedDetail } from '../types';
-import type { GuardTickPayload } from './guard-tick-payload';
-import type { GuardTickDeps } from './guard-tick-deps';
+import type { ContextNavigationSkippedDetail } from '../types.js';
+import type { GuardTickPayload } from './guard-tick-payload.js';
+import type { GuardTickDeps } from './guard-tick-deps.js';
 
 /**
  * Handle a URL guard tick in **replace mode** (`navigationOptions.replace: true`, the default).

@@ -1,4 +1,4 @@
-import type { MockService } from './create-mock-service';
+import type { MockService } from './create-mock-service.js';
 
 /**
  * Services a Fusion application resolves during a normal start-up.

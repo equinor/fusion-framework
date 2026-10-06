@@ -4,9 +4,9 @@ import type {
   ClaimableRoleAssignmentSelection,
   ClaimableRoleDetails,
   RoleDetails,
-} from '../overview/role-details';
-import { CompactRoleRow } from './CompactRoleRow';
-import { formatRoleDate } from './format-role-date';
+} from '../overview/role-details.js';
+import { CompactRoleRow } from './CompactRoleRow.js';
+import { formatRoleDate } from './format-role-date.js';
 
 /** Claimable assignment presentation and provider-backed interaction callbacks. */
 interface ClaimableRoleRowProps {

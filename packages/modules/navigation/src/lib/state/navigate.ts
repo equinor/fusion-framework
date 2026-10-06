@@ -2,9 +2,9 @@ import type { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import type { Flow } from '@equinor/fusion-observable';
 import { filterAction } from '@equinor/fusion-observable/operators';
-import { actions, type Actions } from './actions';
-import { resolvePath } from '../utils';
-import { type Location, type LocationState, type HistoryStack, Action } from '../types';
+import { actions, type Actions } from './actions.js';
+import { resolvePath } from '../utils/index.js';
+import { type Location, type LocationState, type HistoryStack, Action } from '../types.js';
 
 /** History flow for processing navigation actions. */
 export type HistoryFlow = Flow<Actions, LocationState>;

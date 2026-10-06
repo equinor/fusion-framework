@@ -12,11 +12,11 @@
  * @packageDocumentation
  */
 
-export { AgGridConfigurator } from './AgGridConfigurator';
-export { AgGridProvider, type IAgGridProvider } from './AgGridProvider';
+export { AgGridConfigurator } from './AgGridConfigurator.js';
+export { AgGridProvider, type IAgGridProvider } from './AgGridProvider.js';
 export {
   enableAgGrid,
   type AgGridModule,
   type AgGridBuilderCallback,
   module as default,
-} from './module';
+} from './module.js';

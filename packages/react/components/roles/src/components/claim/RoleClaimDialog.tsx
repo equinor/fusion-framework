@@ -1,8 +1,8 @@
 import type { ChangeEvent, ReactNode } from 'react';
 
 import { Button, Dialog, Slider, Textarea, Typography } from '@equinor/eds-core-react';
-import styled from 'styled-components';
-import { useRoleClaimForm, type RoleClaimFormOptions } from './useRoleClaimForm';
+import { styled } from 'styled-components';
+import { useRoleClaimForm, type RoleClaimFormOptions } from './useRoleClaimForm.js';
 
 const Styled = {
   Dialog: styled(Dialog)`

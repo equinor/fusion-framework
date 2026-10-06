@@ -22,19 +22,19 @@
  * @packageDocumentation
  */
 
-export type { INavigationConfigurator } from './NavigationConfigurator.interface';
-export { NavigationConfigurator } from './NavigationConfigurator';
+export type { INavigationConfigurator } from './NavigationConfigurator.interface.js';
+export { NavigationConfigurator } from './NavigationConfigurator.js';
 
-export { NavigationModule, module, moduleKey } from './module';
-export { enableNavigation } from './enable-navigation';
+export { NavigationModule, module, moduleKey } from './module.js';
+export { enableNavigation } from './enable-navigation.js';
 
-export type { INavigationProvider } from './NavigationProvider.interface';
-export { NavigationProvider } from './NavigationProvider';
+export type { INavigationProvider } from './NavigationProvider.interface.js';
+export { NavigationProvider } from './NavigationProvider.js';
 
-export { createHistory } from './lib/create-history';
+export { createHistory } from './lib/create-history.js';
 
-export { NavigateEvent, type NavigateEventDetail } from './NavigateEvent';
-export { NavigatedEvent, type NavigatedEventDetail } from './NavigatedEvent';
+export { NavigateEvent, type NavigateEventDetail } from './NavigateEvent.js';
+export { NavigatedEvent, type NavigatedEventDetail } from './NavigatedEvent.js';
 
 export type {
   Path,
@@ -43,9 +43,9 @@ export type {
   History,
   NavigationBlocker,
   NavigationListener,
-} from './lib/types';
+} from './lib/types.js';
 
 /**
  * @deprecated Use {@link History} instead.
  */
-export type { History as INavigator } from './lib';
+export type { History as INavigator } from './lib/index.js';

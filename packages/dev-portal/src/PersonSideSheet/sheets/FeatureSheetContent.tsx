@@ -1,12 +1,12 @@
 import { useState } from 'react';
-import { FeatureTogglerApp } from './FeatureTogglerApp';
-import { FeatureTogglerPortal } from './FeatureTogglerPortal';
+import { FeatureTogglerApp } from './FeatureTogglerApp.js';
+import { FeatureTogglerPortal } from './FeatureTogglerPortal.js';
 
 import { Divider, Icon, Button, Tabs } from '@equinor/eds-core-react';
 import { arrow_back, category } from '@equinor/eds-icons';
 Icon.add({ arrow_back, category });
 
-import type { SheetContentProps } from './types';
+import type { SheetContentProps } from './types.js';
 
 /**
  * Feature flags sub-sheet for the person settings side sheet.

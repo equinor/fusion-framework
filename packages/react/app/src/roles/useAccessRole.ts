@@ -6,7 +6,7 @@ import type {
   RolesModule,
 } from '@equinor/fusion-framework-module-roles';
 
-import { useAppModule } from '../useAppModule';
+import { useAppModule } from '../useAppModule.js';
 
 /** Result returned after a claimable role assignment activation succeeds. */
 export type ClaimableRoleAssignmentActivationResult = Awaited<

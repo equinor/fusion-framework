@@ -8,7 +8,7 @@ import type {
   WidgetRenderArgs,
 } from '@equinor/fusion-framework-module-widget';
 
-import type { IWidgetConfigurator } from './WidgetConfigurator';
+import type { IWidgetConfigurator } from './WidgetConfigurator.js';
 
 /**
  * Re-exports from `@equinor/fusion-framework-module-widget` for convenience.

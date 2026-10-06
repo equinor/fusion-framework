@@ -25,13 +25,13 @@ import type {
   IMsalClient,
   LoginOptions,
   LoginResult,
-} from '../MsalClient.interface';
-import type { MsalClientConfig, MsalClient } from '../MsalClient';
+} from '../MsalClient.interface.js';
+import type { MsalClientConfig, MsalClient } from '../MsalClient.js';
 
-import { createMockToken } from './create-mock-token';
-import { createMockUserFromToken } from './create-mock-user-from-token';
-import { mockClientOperations } from './mock-client-operations';
-import type { MsalMockTokenAcquirer, MsalMockUser } from './types';
+import { createMockToken } from './create-mock-token.js';
+import { createMockUserFromToken } from './create-mock-user-from-token.js';
+import { mockClientOperations } from './mock-client-operations.js';
+import type { MsalMockTokenAcquirer, MsalMockUser } from './types.js';
 
 type ResolvedMockUser = Required<
   Pick<MsalMockUser, 'name' | 'username' | 'userId' | 'tenantId' | 'scopes'>

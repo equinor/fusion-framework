@@ -16,12 +16,12 @@ import type {
   VersionedArgs,
   VersionedParsedArgs,
   VersionedResponse,
-} from '../types';
+} from '../types.js';
 
-import { extractVersion, parseVersionedArgs, versionedResponseSelector } from '../../utils';
-import { ApiVersion } from '../static';
-import { ApiRoleBindingConfigurationSchemaV1 } from '../v1/schemas/api-role-binding-configuration-schema-v1';
-import { IncludeDeletedSchemaV1 } from '../v1/schemas/include-deleted-schema-v1';
+import { extractVersion, parseVersionedArgs, versionedResponseSelector } from '../../utils.js';
+import { ApiVersion } from '../static.js';
+import { ApiRoleBindingConfigurationSchemaV1 } from '../v1/schemas/api-role-binding-configuration-schema-v1.js';
+import { IncludeDeletedSchemaV1 } from '../v1/schemas/include-deleted-schema-v1.js';
 
 /** Concrete API versions this operation publishes. */
 type AvailableVersions = ApiVersion.v1;

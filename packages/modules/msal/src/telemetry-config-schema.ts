@@ -1,6 +1,6 @@
 import z from 'zod';
 import type { ITelemetryProvider } from '@equinor/fusion-framework-module-telemetry';
-import { version } from './version';
+import { version } from './version.js';
 
 /**
  * Zod schema for telemetry configuration validation.

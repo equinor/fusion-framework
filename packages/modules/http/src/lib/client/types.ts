@@ -1,5 +1,5 @@
 import type { ObservableInput, Observable } from 'rxjs';
-import type { IHttpRequestHandler, IHttpResponseHandler } from '../operators/types';
+import type { IHttpRequestHandler, IHttpResponseHandler } from '../operators/types.js';
 
 /**
  * Represents a stream of response data.

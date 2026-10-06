@@ -1,7 +1,7 @@
-import { UnsupportedApiVersion } from '../../../UnsupportedApiVersion';
-import { ApiVersion } from '../..';
+import { UnsupportedApiVersion } from '../../../UnsupportedApiVersion.js';
+import { ApiVersion } from '../../index.js';
 
-import type { GetNotificationArgs } from './types';
+import type { GetNotificationArgs } from './types.js';
 
 /**
  * Method for generating endpoint for getting notification by id

@@ -3,19 +3,19 @@ import { mergeMap } from 'rxjs/operators';
 
 import type { Flow } from '@equinor/fusion-observable';
 
-import type { BookmarkActions } from '../bookmark-actions';
-import type { BookmarkState } from '../create-bookmark-store';
-import type { IBookmarkClient } from '../BookmarkClient.interface';
+import type { BookmarkActions } from '../bookmark-actions.js';
+import type { BookmarkState } from '../create-bookmark-store.js';
+import type { IBookmarkClient } from '../BookmarkClient.interface.js';
 
-import { handleFetchBookmark } from './handle-fetch-bookmark';
-import { handleFetchBookmarkData } from './handle-fetch-bookmark-data';
-import { handleFetchAllBookmark } from './handle-fetch-all-bookmark';
-import { handleCreateBookmark } from './handle-create-bookmark';
-import { handleUpdateBookmark } from './handle-update-bookmark';
-import { handleDeleteBookmark } from './handle-delete-bookmark';
-import { handleRemoveBookmark } from './handle-remove-bookmark';
-import { handleRemoveBookmarkFromFavorites } from './handle-remove-bookmark-from-favorites';
-import { handleAddBookmarkAsFavorite } from './handle-add-bookmark-as-favorite';
+import { handleFetchBookmark } from './handle-fetch-bookmark.js';
+import { handleFetchBookmarkData } from './handle-fetch-bookmark-data.js';
+import { handleFetchAllBookmark } from './handle-fetch-all-bookmark.js';
+import { handleCreateBookmark } from './handle-create-bookmark.js';
+import { handleUpdateBookmark } from './handle-update-bookmark.js';
+import { handleDeleteBookmark } from './handle-delete-bookmark.js';
+import { handleRemoveBookmark } from './handle-remove-bookmark.js';
+import { handleRemoveBookmarkFromFavorites } from './handle-remove-bookmark-from-favorites.js';
+import { handleAddBookmarkAsFavorite } from './handle-add-bookmark-as-favorite.js';
 
 /**
  * Defines a set of flows that handle various bookmark-related actions, such as fetching, creating, updating, and deleting bookmarks.

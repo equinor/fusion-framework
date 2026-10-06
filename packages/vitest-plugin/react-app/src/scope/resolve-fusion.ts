@@ -12,7 +12,7 @@ import { enableFeatureFlagMock } from '@equinor/fusion-framework-module-feature-
 import { enableNavigation, createHistory } from '@equinor/fusion-framework-module-navigation';
 import type { NavigationModule } from '@equinor/fusion-framework-module-navigation';
 
-import { defaultAppEnv } from './default-app-env';
+import { defaultAppEnv } from './default-app-env.js';
 
 type AppModuleMockInstaller = (
   configurator: FrameworkMockConfigurator<[AppModule, NavigationModule]>,

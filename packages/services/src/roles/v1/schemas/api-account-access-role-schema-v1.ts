@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { ApiAccessRoleSchemaV1 } from './api-access-role-schema-v1';
-import { ApiSimpleSystemSchemaV1 } from './api-simple-system-schema-v1';
+import { ApiAccessRoleSchemaV1 } from './api-access-role-schema-v1.js';
+import { ApiSimpleSystemSchemaV1 } from './api-simple-system-schema-v1.js';
 
 /** Zod schema for the access role nested in an account access-role assignment. */
 export const ApiAccountAccessRoleSchemaV1 = ApiAccessRoleSchemaV1.and(

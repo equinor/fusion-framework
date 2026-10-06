@@ -23,10 +23,10 @@ export type {
   LoginResult,
   AcquireTokenOptions,
   AuthBehavior,
-} from '../MsalClient.interface';
+} from '../MsalClient.interface.js';
 
-export type { IMsalProvider } from '../MsalProvider.interface';
-export type { IProxyProvider } from '../MsalProxyProvider.interface';
+export type { IMsalProvider } from '../MsalProvider.interface.js';
+export type { IProxyProvider } from '../MsalProxyProvider.interface.js';
 
 // ============================================================================
 // Basic Types

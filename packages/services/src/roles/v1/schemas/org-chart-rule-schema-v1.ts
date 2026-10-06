@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { OrgChartAssignmentSchemaV1 } from './org-chart-assignment-schema-v1';
-import { OrgChartMatchCriteriaSchemaV1 } from './org-chart-match-criteria-schema-v1';
+import { OrgChartAssignmentSchemaV1 } from './org-chart-assignment-schema-v1.js';
+import { OrgChartMatchCriteriaSchemaV1 } from './org-chart-match-criteria-schema-v1.js';
 
 /** Zod schema for a single org-chart rule. */
 export const OrgChartRuleSchemaV1 = z

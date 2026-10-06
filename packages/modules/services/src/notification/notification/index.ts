@@ -1,5 +1,5 @@
-export { getNotificationById } from './get/client';
-export { createNotification } from './post/client';
-export { updateSeenByUser } from './patch/client';
-export { getNotifications } from './getAll/client';
-export { deleteNotification } from './delete/client';
+export { getNotificationById } from './get/client.js';
+export { createNotification } from './post/client.js';
+export { updateSeenByUser } from './patch/client.js';
+export { getNotifications } from './getAll/client.js';
+export { deleteNotification } from './delete/client.js';

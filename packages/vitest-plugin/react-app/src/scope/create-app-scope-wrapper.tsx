@@ -4,7 +4,7 @@ import { FrameworkProvider } from '@equinor/fusion-framework-react';
 import { ModuleProvider } from '@equinor/fusion-framework-react-module';
 import type { AnyModule } from '@equinor/fusion-framework-module';
 
-import type { AppScope } from './resolve-app-scope';
+import type { AppScope } from './resolve-app-scope.js';
 
 /**
  * The provider nesting `createComponent` uses in production, for wrapping a component or

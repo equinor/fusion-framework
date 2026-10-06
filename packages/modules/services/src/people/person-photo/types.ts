@@ -1,6 +1,6 @@
 import type { BlobResult } from '@equinor/fusion-framework-module-http/client';
-import { ApiVersion } from '../static';
-import type { ClientDataMethod } from '../../types';
+import { ApiVersion } from '../static.js';
+import type { ClientDataMethod } from '../../types.js';
 
 /** API versions that support the person photo endpoint. */
 export type SupportedApiVersion = Extract<keyof typeof ApiVersion, 'v2'>;

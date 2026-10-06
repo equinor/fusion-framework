@@ -4,7 +4,7 @@ import { Button, Icon, Typography } from '@equinor/eds-core-react';
 import { chevron_down, chevron_right } from '@equinor/eds-icons';
 
 import { tokens } from '@equinor/eds-tokens';
-import styled from 'styled-components';
+import { styled } from 'styled-components';
 
 const Styled = {
   Button: styled(Button)`

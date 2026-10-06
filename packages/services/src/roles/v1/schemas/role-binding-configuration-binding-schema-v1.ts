@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { EntraGroupBindingSchemaV1 } from './entra-group-binding-schema-v1';
-import { OrgChartBindingSchemaV1 } from './org-chart-binding-schema-v1';
+import { EntraGroupBindingSchemaV1 } from './entra-group-binding-schema-v1.js';
+import { OrgChartBindingSchemaV1 } from './org-chart-binding-schema-v1.js';
 
 /**
  * Zod schema for the binding payload of a role binding configuration.

@@ -1,6 +1,6 @@
 import { switchMap } from 'rxjs/operators';
 
-import type { QueryQueueFn } from '../types';
+import type { QueryQueueFn } from '../types.js';
 
 /**
  * Takes a function that transforms each item in a queue and returns an Observable.

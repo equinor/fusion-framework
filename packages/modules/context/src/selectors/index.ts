@@ -7,6 +7,6 @@
  *
  * @packageDocumentation
  */
-export { getContextSelector } from './get-context-selector';
-export { queryContextSelector } from './query-context-selector';
-export { relatedContextSelector } from './related-context-selector';
+export { getContextSelector } from './get-context-selector.js';
+export { queryContextSelector } from './query-context-selector.js';
+export { relatedContextSelector } from './related-context-selector.js';

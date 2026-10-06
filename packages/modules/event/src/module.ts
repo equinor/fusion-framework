@@ -1,7 +1,7 @@
 import type { Module, ModuleInstance, ModulesInstanceType } from '@equinor/fusion-framework-module';
-import type { FrameworkEvent, FrameworkEventInit } from './FrameworkEvent';
-import { EventModuleConfigurator } from './EventModuleConfigurator';
-import { EventModuleProvider, type IEventModuleProvider } from './EventModuleProvider';
+import type { FrameworkEvent, FrameworkEventInit } from './FrameworkEvent.js';
+import { EventModuleConfigurator } from './EventModuleConfigurator.js';
+import { EventModuleProvider, type IEventModuleProvider } from './EventModuleProvider.js';
 
 /** Module key used to identify the event module in the Fusion module system. */
 export const moduleKey = 'event';

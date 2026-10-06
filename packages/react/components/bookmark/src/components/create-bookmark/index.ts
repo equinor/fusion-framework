@@ -1,1 +1,1 @@
-export { CreateBookmarkModal } from './CreateBookmarkModal';
+export { CreateBookmarkModal } from './CreateBookmarkModal.js';

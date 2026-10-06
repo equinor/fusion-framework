@@ -9,14 +9,17 @@
  *
  * @packageDocumentation
  */
-export * from './types';
+export * from './types.js';
 
-export { type IFeatureFlagConfigurator, FeatureFlagConfigurator } from './FeatureFlagConfigurator';
-export { type IFeatureFlagProvider, FeatureFlagProvider } from './FeatureFlagProvider';
+export {
+  type IFeatureFlagConfigurator,
+  FeatureFlagConfigurator,
+} from './FeatureFlagConfigurator.js';
+export { type IFeatureFlagProvider, FeatureFlagProvider } from './FeatureFlagProvider.js';
 export {
   default,
   module as featureFlagModule,
   enableFeatureFlagging,
   type FeatureFlagModule,
   type FeatureFlagBuilderCallback,
-} from './feature-flag-module';
+} from './feature-flag-module.js';

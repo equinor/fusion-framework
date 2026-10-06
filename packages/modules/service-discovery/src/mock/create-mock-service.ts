@@ -1,4 +1,4 @@
-import type { Service } from '../types';
+import type { Service } from '../types.js';
 
 /**
  * A service registration expressed the way a test wants to state it.

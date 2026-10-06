@@ -1,4 +1,4 @@
-import { normalizeUri } from './normalize-uri';
+import { normalizeUri } from './normalize-uri.js';
 
 /**
  * Compares two URIs after normalizing them to their canonical form.

@@ -7,7 +7,7 @@ import type {
   IFrameworkEvent,
 } from '@equinor/fusion-framework-module-event';
 
-import { useEventProvider } from './useEventProvider';
+import { useEventProvider } from './useEventProvider.js';
 
 /**
  * hook for subscribing to framework events

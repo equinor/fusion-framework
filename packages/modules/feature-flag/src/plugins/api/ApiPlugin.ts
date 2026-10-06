@@ -1,4 +1,4 @@
-import type { ApiFeatureFlagPlugin, IApiPluginClient } from './types';
+import type { ApiFeatureFlagPlugin, IApiPluginClient } from './types.js';
 
 /**
  * Feature-flag plugin that fetches initial flags from a remote HTTP API.

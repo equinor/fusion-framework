@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { PatchPropertyOfStringSchemaV1 } from './patch-property-of-string-schema-v1';
+import { PatchPropertyOfStringSchemaV1 } from './patch-property-of-string-schema-v1.js';
 
 /**
  * Zod schema for the `PatchGovernanceDocumentRequest` model published by the Fusion Apps API 1.0.

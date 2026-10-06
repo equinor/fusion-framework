@@ -1,4 +1,4 @@
-import { StorageAdapter } from './StorageAdapter';
+import { StorageAdapter } from './StorageAdapter.js';
 
 /**
  * Storage adapter backed by `window.sessionStorage`.

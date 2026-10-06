@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { ApiPinnedAppCategorySchemaV1 } from './api-pinned-app-category-schema-v1';
+import { ApiPinnedAppCategorySchemaV1 } from './api-pinned-app-category-schema-v1.js';
 
 /**
  * Zod schema for the `ApiPinnedApp` model published by the Fusion Apps API 1.0.

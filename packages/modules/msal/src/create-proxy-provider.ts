@@ -1,8 +1,8 @@
-import type { IMsalProvider } from './MsalProvider.interface';
-import { MsalModuleVersion } from './static';
-import { resolveVersion } from './versioning/resolve-version';
-import { createProxyProvider as createProxyProvider_v2 } from './v2/create-proxy-provider';
-import { createProxyProvider as createProxyProvider_v4 } from './v4/create-proxy-provider';
+import type { IMsalProvider } from './MsalProvider.interface.js';
+import { MsalModuleVersion } from './static.js';
+import { resolveVersion } from './versioning/resolve-version.js';
+import { createProxyProvider as createProxyProvider_v2 } from './v2/create-proxy-provider.js';
+import { createProxyProvider as createProxyProvider_v4 } from './v4/create-proxy-provider.js';
 
 /**
  * Creates a proxy provider for version compatibility.

@@ -2,7 +2,7 @@ import type { IEventModuleProvider } from '@equinor/fusion-framework-module-even
 import type { INavigationProvider } from '@equinor/fusion-framework-module-navigation';
 
 // Import event type augmentations so the event name is recognized
-import '../events';
+import '../events.js';
 
 const LEGACY_NAVIGATION_VERSION = 7;
 

@@ -4,7 +4,7 @@ import { Button, Divider, Icon } from '@equinor/eds-core-react';
 import { arrow_back, verified_user } from '@equinor/eds-icons';
 import { RolesProvider, RolesView } from '@equinor/fusion-framework-react-components-roles';
 
-import type { SheetContentProps } from '../types';
+import type { SheetContentProps } from '../types.js';
 
 Icon.add({ arrow_back, verified_user });
 

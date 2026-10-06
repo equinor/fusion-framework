@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 
 import { useFramework } from '@equinor/fusion-framework-react';
 
-import { requestHelpService, type HelpServiceResult } from './request-help-service';
-import type { HelpArticle, HelpArticleCollection } from './types';
+import { requestHelpService, type HelpServiceResult } from './request-help-service.js';
+import type { HelpArticle, HelpArticleCollection } from './types.js';
 
 /** Lifecycle of the sidebar article list, returned by {@link useHelpArticles}. */
 export type HelpArticlesState =

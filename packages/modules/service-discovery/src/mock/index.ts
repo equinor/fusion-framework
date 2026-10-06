@@ -17,13 +17,13 @@
 export {
   ServiceDiscoveryMockClient,
   type ServiceDiscoveryMockClientOptions,
-} from './ServiceDiscoveryMockClient';
-export { ServiceDiscoveryMockConfigurator } from './ServiceDiscoveryMockConfigurator';
-export { createMockService, type MockService } from './create-mock-service';
-export { defaultServiceDiscoveryMockServices } from './default-service-discovery-mock-services';
-export { mockServiceDiscovery } from './mock-service-discovery';
+} from './ServiceDiscoveryMockClient.js';
+export { ServiceDiscoveryMockConfigurator } from './ServiceDiscoveryMockConfigurator.js';
+export { createMockService, type MockService } from './create-mock-service.js';
+export { defaultServiceDiscoveryMockServices } from './default-service-discovery-mock-services.js';
+export { mockServiceDiscovery } from './mock-service-discovery.js';
 export {
   enableServiceDiscoveryMock,
   serviceDiscoveryMockModule,
   type ServiceDiscoveryConfigMockFn,
-} from './module';
+} from './module.js';

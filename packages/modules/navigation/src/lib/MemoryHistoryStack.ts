@@ -1,5 +1,5 @@
-import type { HistoryStack, Location, LocationState, To } from './types';
-import { pathToString, resolvePath } from './utils';
+import type { HistoryStack, Location, LocationState, To } from './types.js';
+import { pathToString, resolvePath } from './utils/index.js';
 
 /**
  * Memory-based history stack implementation.

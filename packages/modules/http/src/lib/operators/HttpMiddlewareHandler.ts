@@ -1,7 +1,7 @@
 import { firstValueFrom, from, of } from 'rxjs';
 import type { Observable, ObservableInput } from 'rxjs';
 
-import type { HttpMiddleware, HttpMiddlewareNext, IHttpMiddlewareHandler } from './types';
+import type { HttpMiddleware, HttpMiddlewareNext, IHttpMiddlewareHandler } from './types.js';
 
 /**
  * Normalizes a step's result to a `Promise`, so a middleware calling `next(...)` never has to

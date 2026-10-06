@@ -1,6 +1,6 @@
 import { createReducer } from '@equinor/fusion-observable';
-import type { LocationState, NavigationUpdate } from '../types';
-import { actions, type Actions } from './actions';
+import type { LocationState, NavigationUpdate } from '../types.js';
+import { actions, type Actions } from './actions.js';
 import { isSuccessAction } from '@equinor/fusion-observable/actions';
 
 /**

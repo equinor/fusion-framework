@@ -1,15 +1,15 @@
 import type { ClientRequestInit, IHttpClient } from '@equinor/fusion-framework-module-http/client';
 
-import type { ApiVersion } from '..';
+import type { ApiVersion } from '../index.js';
 
-import { generateParameters } from './generate-parameters';
+import { generateParameters } from './generate-parameters.js';
 
 import type {
   RelatedContextArgs,
   RelatedContextResponse,
   RelatedContextResult,
   ClientMethod,
-} from './types';
+} from './types.js';
 
 /**
  * Creates a curried function that fetches contexts related to a given context.

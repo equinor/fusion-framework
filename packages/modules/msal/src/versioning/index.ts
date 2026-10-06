@@ -20,10 +20,10 @@
  */
 
 // Core versioning functionality
-export { resolveVersion } from './resolve-version';
+export { resolveVersion } from './resolve-version.js';
 
 // Error handling
-export { VersionError } from './VersionError';
+export { VersionError } from './VersionError.js';
 
 // Types
-export type { ResolvedVersion } from './types';
+export type { ResolvedVersion } from './types.js';

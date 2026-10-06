@@ -1,5 +1,5 @@
 import type { Path } from '@equinor/fusion-framework-module-navigation';
-import type { IFeatureFlag } from '../../types';
+import type { IFeatureFlag } from '../../types.js';
 
 /**
  * Assertion function used by the URL plugin to determine whether a feature

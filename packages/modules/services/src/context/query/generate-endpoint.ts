@@ -1,14 +1,14 @@
 import buildOdataQuery from 'odata-query';
 
-import { UnsupportedApiVersion } from '../../UnsupportedApiVersion';
+import { UnsupportedApiVersion } from '../../UnsupportedApiVersion.js';
 
-import { ApiVersion } from '..';
+import { ApiVersion } from '../index.js';
 
 import type {
   QueryContextArgs,
   QueryContextOdataFilter,
   QueryContextOdataParameters,
-} from './types';
+} from './types.js';
 
 /**
  * Builds an OData filter object from the given filter object.

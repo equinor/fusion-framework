@@ -2,10 +2,10 @@ import type { ObservableInput, Subscription } from 'rxjs';
 
 import type { ConfigBuilderCallbackArgs } from '@equinor/fusion-framework-module';
 
-import type { IFeatureFlagProvider } from './FeatureFlagProvider';
-import type { IFeatureFlag } from './FeatureFlag';
+import type { IFeatureFlagProvider } from './FeatureFlagProvider.js';
+import type { IFeatureFlag } from './FeatureFlag.js';
 
-export type { IFeatureFlag } from './FeatureFlag';
+export type { IFeatureFlag } from './FeatureFlag.js';
 
 /**
  * Defines the lifecycle hooks a feature-flag plugin can implement.

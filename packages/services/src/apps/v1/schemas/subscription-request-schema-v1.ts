@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { ApiSubscriptionTypeSchemaV1 } from './api-subscription-type-schema-v1';
+import { ApiSubscriptionTypeSchemaV1 } from './api-subscription-type-schema-v1.js';
 
 /**
  * Zod schema for the `SubscriptionRequestV1` model published by the Fusion Apps API 1.0.

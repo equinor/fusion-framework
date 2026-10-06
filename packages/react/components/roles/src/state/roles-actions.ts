@@ -8,7 +8,7 @@ import type {
   ConsolidatedClaimableRoleAssignments,
   ConsolidatedRoleAssignments,
   DeactivateClaimableRoleAssignmentOperation,
-} from './roles-state';
+} from './roles-state.js';
 
 export const rolesActions = {
   loadActiveAccessRoleAssignments: createAsyncAction(

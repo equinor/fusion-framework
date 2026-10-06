@@ -10,7 +10,7 @@ import type {
   WidgetManifest,
   WidgetModulesInstance,
   WidgetScriptModule,
-} from '../types';
+} from '../types.js';
 
 /**
  * Factory that creates all widget state-machine actions.

@@ -1,5 +1,5 @@
-export { appFirstSource } from './app-first-source';
-export { contextFirstSource } from './context-first-source';
+export { appFirstSource } from './app-first-source.js';
+export { contextFirstSource } from './context-first-source.js';
 
 export {
   contextStateChanged,
@@ -8,4 +8,4 @@ export {
   type ReconcilerSourceEntry,
   type ReconcilerSourceDeps,
   type ReconcilerSourceFactory,
-} from './types';
+} from './types.js';

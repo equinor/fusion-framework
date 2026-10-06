@@ -1,8 +1,8 @@
 import { merge, type Observable } from 'rxjs';
-import type { HistoryFlow, HistoryFlowCreator } from './navigate';
-import { checkBlockers } from './check-blockers';
-import type { Actions } from './actions';
-import type { HistoryStack, LocationState } from '../types';
+import type { HistoryFlow, HistoryFlowCreator } from './navigate.js';
+import { checkBlockers } from './check-blockers.js';
+import type { Actions } from './actions.js';
+import type { HistoryStack, LocationState } from '../types.js';
 
 /**
  * Creates a combined history flow from multiple flow creators.

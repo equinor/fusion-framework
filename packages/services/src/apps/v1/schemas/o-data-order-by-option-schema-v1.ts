@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { SortDirectionSchemaV1 } from './sort-direction-schema-v1';
+import { SortDirectionSchemaV1 } from './sort-direction-schema-v1.js';
 
 /**
  * Zod schema for the `ODataOrderByOption` model published by the Fusion Apps API 1.0.

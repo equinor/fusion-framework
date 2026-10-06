@@ -7,9 +7,9 @@ import type {
   ContextItem,
   QueryContextParameters,
   RelatedContextParameters,
-} from './types';
-import type { GetContextParameters } from './client/ContextClient';
-import type { IContextProvider } from './ContextProvider';
+} from './types.js';
+import type { GetContextParameters } from './client/ContextClient.js';
+import type { IContextProvider } from './ContextProvider.js';
 
 /**
  * Resolved configuration for the context module.

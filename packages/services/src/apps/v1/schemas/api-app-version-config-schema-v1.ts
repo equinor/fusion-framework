@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { ApiEndpointConfigSchemaV1 } from './api-endpoint-config-schema-v1';
+import { ApiEndpointConfigSchemaV1 } from './api-endpoint-config-schema-v1.js';
 
 /**
  * Zod schema for the `ApiAppVersionConfig` model published by the Fusion Apps API 1.0.

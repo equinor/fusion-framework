@@ -14,4 +14,4 @@ export {
   createTheme,
 } from '@equinor/fusion-framework-module-ag-grid/themes';
 export type { Theme } from '@equinor/fusion-framework-module-ag-grid/themes';
-export { useTheme } from './useTheme';
+export { useTheme } from './useTheme.js';

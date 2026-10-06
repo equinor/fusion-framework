@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { RequestClaimableRoleScopeSchemaV1 } from './request-claimable-role-scope-schema-v1';
+import { RequestClaimableRoleScopeSchemaV1 } from './request-claimable-role-scope-schema-v1.js';
 
 /** Zod schema for the body of an assign-claimable-role request. */
 export const AssignClaimableRoleRequestSchemaV1 = z

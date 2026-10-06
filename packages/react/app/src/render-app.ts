@@ -1,7 +1,7 @@
-import { createComponent } from './create-component';
-import { renderComponent, type RenderTeardown } from './render-component';
+import { createComponent } from './create-component.js';
+import { renderComponent, type RenderTeardown } from './render-component.js';
 
-import type { ComponentRenderArgs } from './create-component';
+import type { ComponentRenderArgs } from './create-component.js';
 
 /**
  * Creates a render function for a Fusion React application.

@@ -1,7 +1,7 @@
 import { BaseConfigBuilder, type ConfigBuilderCallback } from '@equinor/fusion-framework-module';
 import type { ConfigBuilderCallbackArgs } from '@equinor/fusion-framework-module';
-import { createDefaultClient } from './utils';
-import type { IClient } from './types';
+import { createDefaultClient } from './utils.js';
+import type { IClient } from './types.js';
 
 /**
  * Resolved configuration produced by {@link WidgetModuleConfigurator}.

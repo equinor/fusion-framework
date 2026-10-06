@@ -1,6 +1,6 @@
 import { BaseConfigBuilder } from '@equinor/fusion-framework-module';
 
-import type { FrameworkEvent } from './FrameworkEvent';
+import type { FrameworkEvent } from './FrameworkEvent.js';
 
 /**
  * Resolved configuration for the event module.

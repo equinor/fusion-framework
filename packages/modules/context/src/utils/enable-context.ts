@@ -2,9 +2,9 @@ import type { IModulesConfigurator } from '@equinor/fusion-framework-module';
 import type {
   ContextConfigBuilderCallback,
   IContextModuleConfigurator,
-} from '../ContextModuleConfigurator.interface';
+} from '../ContextModuleConfigurator.interface.js';
 
-import { module } from '../module';
+import { module } from '../module.js';
 
 /**
  * Enables context configuration for a given modules configurator.

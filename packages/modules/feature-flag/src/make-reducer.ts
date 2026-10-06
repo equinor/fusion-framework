@@ -1,7 +1,7 @@
 import { createReducer } from '@equinor/fusion-observable';
 
-import { actions } from './actions';
-import type { State } from './create-state';
+import { actions } from './actions.js';
+import type { State } from './create-state.js';
 
 /**
  * Creates the Immer-based reducer that handles feature-flag state mutations.

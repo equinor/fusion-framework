@@ -1,4 +1,4 @@
-import { useToken } from './useToken';
+import { useToken } from './useToken.js';
 
 /**
  * React hook that acquires an OAuth 2.0 access token string via MSAL.

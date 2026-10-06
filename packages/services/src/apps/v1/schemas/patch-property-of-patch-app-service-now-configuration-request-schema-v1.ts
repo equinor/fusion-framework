@@ -1,5 +1,5 @@
 import type { z } from 'zod';
-import { PatchAppServiceNowConfigurationRequestSchemaV1 } from './patch-app-service-now-configuration-request-schema-v1';
+import { PatchAppServiceNowConfigurationRequestSchemaV1 } from './patch-app-service-now-configuration-request-schema-v1.js';
 
 /**
  * Zod schema for the `PatchPropertyOfPatchAppServiceNowConfigurationRequest` model published by the

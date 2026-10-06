@@ -1,9 +1,9 @@
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
-import type { Actions, HistoryState } from './state';
+import type { Actions, HistoryState } from './state/index.js';
 
-import { Action } from './types';
+import { Action } from './types.js';
 import type {
   NavigateOptions,
   NavigationListener,
@@ -12,7 +12,7 @@ import type {
   To,
   History,
   NavigationBlocker,
-} from './types';
+} from './types.js';
 
 /**
  * Abstract base class for history implementations.

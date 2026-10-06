@@ -1,8 +1,8 @@
-import type { IMsalClient } from '../MsalClient.interface';
-import type { IAuthClient } from './IAuthClient.interface';
-import { mapAccountInfo } from './map-account-info';
-import { mapAuthenticationResult } from './map-authentication-result';
-import type { AccountInfo } from './types';
+import type { IMsalClient } from '../MsalClient.interface.js';
+import type { IAuthClient } from './IAuthClient.interface.js';
+import { mapAccountInfo } from './map-account-info.js';
+import { mapAuthenticationResult } from './map-authentication-result.js';
+import type { AccountInfo } from './types.js';
 
 /**
  * Creates a v2-compatible proxy wrapper around an MSAL v4 client.

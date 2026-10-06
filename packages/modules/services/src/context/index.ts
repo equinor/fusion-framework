@@ -12,11 +12,11 @@
  * ```
  */
 
-export { ContextApiClient, default } from './client';
+export { ContextApiClient, default } from './client.js';
 
-export { ApiVersion } from './static';
+export { ApiVersion } from './static.js';
 
-export { ApiContextEntity } from './api-models';
+export { ApiContextEntity } from './api-models.js';
 
-export * from './api-models';
-export * from './types';
+export * from './api-models.js';
+export * from './types.js';

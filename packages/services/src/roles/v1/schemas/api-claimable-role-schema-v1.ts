@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { ApiAccountSchemaV1 } from './api-account-schema-v1';
-import { ApiSimpleClaimableRoleSchemaV1 } from './api-simple-claimable-role-schema-v1';
+import { ApiAccountSchemaV1 } from './api-account-schema-v1.js';
+import { ApiSimpleClaimableRoleSchemaV1 } from './api-simple-claimable-role-schema-v1.js';
 
 /** Zod schema for a complete claimable role returned by the Fusion Roles V2 API. */
 export const ApiClaimableRoleSchemaV1 = ApiSimpleClaimableRoleSchemaV1.and(

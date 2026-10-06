@@ -1,1 +1,1 @@
-export * from './FusionContextSearchError';
+export * from './FusionContextSearchError.js';

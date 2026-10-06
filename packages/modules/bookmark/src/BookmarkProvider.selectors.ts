@@ -1,6 +1,6 @@
-import type { BookmarkFlowError } from './BookmarkFlowError';
-import type { BookmarkState } from './create-bookmark-store';
-import type { Bookmark, BookmarkData } from './types';
+import type { BookmarkFlowError } from './BookmarkFlowError.js';
+import type { BookmarkState } from './create-bookmark-store.js';
+import type { Bookmark, BookmarkData } from './types.js';
 
 /**
  * Selects all bookmarks from the store state as an array.

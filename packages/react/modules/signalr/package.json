@@ -2,6 +2,7 @@
   "name": "@equinor/fusion-framework-react-module-signalr",
   "version": "4.0.5",
   "description": "",
+  "type": "module",
   "sideEffects": false,
   "main": "dist/esm/index.js",
   "types": "dist/types/index.d.ts",

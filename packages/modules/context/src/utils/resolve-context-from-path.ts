@@ -2,11 +2,11 @@ import { EMPTY, type Observable } from 'rxjs';
 
 import type { ModuleType } from '@equinor/fusion-framework-module';
 
-import type { ContextModule } from '../module';
-import type { ContextItem } from '../types';
-import { extractContextIdFromPath } from './extract-context-id-from-path';
+import type { ContextModule } from '../module.js';
+import type { ContextItem } from '../types.js';
+import { extractContextIdFromPath } from './extract-context-id-from-path.js';
 
-export { extractContextIdFromPath } from './extract-context-id-from-path';
+export { extractContextIdFromPath } from './extract-context-id-from-path.js';
 
 /**
  * Arguments for resolving a context from a path.

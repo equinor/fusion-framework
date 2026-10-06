@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { OwnerInfoSchemaV1 } from './owner-info-schema-v1';
+import { OwnerInfoSchemaV1 } from './owner-info-schema-v1.js';
 
 /** Zod schema for the body of an update-system request. */
 export const UpdateSystemRequestSchemaV1 = z

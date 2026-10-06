@@ -1,3 +1,3 @@
-export { FeatureSheetContent } from './FeatureSheetContent';
-export { LandingSheetContent } from './LandingSheetContent';
-export { RolesSheetContent } from './roles';
+export { FeatureSheetContent } from './FeatureSheetContent.js';
+export { LandingSheetContent } from './LandingSheetContent.js';
+export { RolesSheetContent } from './roles/index.js';

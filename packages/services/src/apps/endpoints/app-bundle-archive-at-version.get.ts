@@ -16,11 +16,11 @@ import type {
   VersionedArgs,
   VersionedParsedArgs,
   VersionedResponse,
-} from '../types';
+} from '../types.js';
 
-import { extractVersion, parseVersionedArgs, versionedBlobSelector } from '../../utils';
-import { ApiVersion } from '../static';
-import { ApiBundleContentSchemaV1 } from '../v1/schemas/api-bundle-content-schema-v1';
+import { extractVersion, parseVersionedArgs, versionedBlobSelector } from '../../utils.js';
+import { ApiVersion } from '../static.js';
+import { ApiBundleContentSchemaV1 } from '../v1/schemas/api-bundle-content-schema-v1.js';
 
 /** Concrete API versions this operation publishes. */
 type AvailableVersions = ApiVersion.v1;

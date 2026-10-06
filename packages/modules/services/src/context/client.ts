@@ -1,28 +1,28 @@
 import type { IHttpClient } from '@equinor/fusion-framework-module-http';
 
-import type { ClientMethod } from './types';
-import { ApiVersion } from './static';
+import type { ClientMethod } from './types.js';
+import { ApiVersion } from './static.js';
 
 import {
   getContext,
   type GetContextFn,
   type GetContextResponse,
   type GetContextResult,
-} from './get';
+} from './get/index.js';
 
 import {
   queryContext,
   type QueryContextFn,
   type QueryContextResponse,
   type QueryContextResult,
-} from './query';
+} from './query/index.js';
 
 import {
   type RelatedContextFn,
   type RelatedContextResponse,
   type RelatedContextResult,
   relatedContexts,
-} from './related';
+} from './related/index.js';
 
 /**
  * Typed API client for the Fusion context service.

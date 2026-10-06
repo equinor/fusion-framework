@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import { Card, Typography } from '@equinor/eds-core-react';
-import styled from 'styled-components';
+import { styled } from 'styled-components';
 
 const Styled = {
   Card: styled(Card)`

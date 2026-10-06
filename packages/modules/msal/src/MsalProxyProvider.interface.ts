@@ -1,8 +1,8 @@
 import type { SemVer } from 'semver';
-import type { MsalModuleVersion } from './static';
+import type { MsalModuleVersion } from './static.js';
 
-import type { IMsalProvider } from './MsalProvider.interface';
-import type { IMsalProvider as IMsalProvider_v2 } from './v2/MsalProvider.interface';
+import type { IMsalProvider } from './MsalProvider.interface.js';
+import type { IMsalProvider as IMsalProvider_v2 } from './v2/MsalProvider.interface.js';
 
 /**
  * Type mapping between MSAL module versions and their corresponding provider interfaces.

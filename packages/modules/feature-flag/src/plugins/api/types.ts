@@ -1,7 +1,7 @@
 import type { ObservableInput } from 'rxjs';
-import type { IFeatureFlag } from '../../FeatureFlag';
+import type { IFeatureFlag } from '../../FeatureFlag.js';
 
-export type { FeatureFlagPlugin as ApiFeatureFlagPlugin } from '../../types';
+export type { FeatureFlagPlugin as ApiFeatureFlagPlugin } from '../../types.js';
 
 /**
  * HTTP client interface consumed by {@link ApiPlugin} to fetch feature flags

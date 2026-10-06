@@ -5,7 +5,7 @@ import { useFramework } from '@equinor/fusion-framework-react';
 import type { AnyModule } from '@equinor/fusion-framework-module';
 import type { AppEnv, AppModuleInitiator } from '@equinor/fusion-framework-app';
 
-import { createComponent } from './create-component';
+import { createComponent } from './create-component.js';
 import type { AppModule } from '@equinor/fusion-framework-module-app';
 
 /**

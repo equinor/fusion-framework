@@ -1,7 +1,7 @@
 import type { FrameworkOptions } from '@equinor/fusion-framework-module-app';
-import { CONTEXT_QUERY_PARAM_KEY } from '../../constants';
-import { parseAppRoute } from './parse-app-route';
-import { buildAppRoute } from './build-app-route';
+import { CONTEXT_QUERY_PARAM_KEY } from '../../constants/index.js';
+import { parseAppRoute } from './parse-app-route.js';
+import { buildAppRoute } from './build-app-route.js';
 
 /**
  * Builds the correct context URL for the given routing strategy.

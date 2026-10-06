@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { PatchPropertyOfShortSchemaV1 } from './patch-property-of-short-schema-v1';
-import { PatchPropertyOfStringSchemaV1 } from './patch-property-of-string-schema-v1';
+import { PatchPropertyOfShortSchemaV1 } from './patch-property-of-short-schema-v1.js';
+import { PatchPropertyOfStringSchemaV1 } from './patch-property-of-string-schema-v1.js';
 
 /**
  * Zod schema for the `PatchCategoryRequest` model published by the Fusion Apps API 1.0.

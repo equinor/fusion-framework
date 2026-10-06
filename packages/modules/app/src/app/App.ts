@@ -5,26 +5,26 @@ import type {
   AppConfig,
   AppSettings,
   ConfigEnvironment,
-} from '../types';
+} from '../types.js';
 import { type FlowSubject, Observable } from '@equinor/fusion-observable';
 
-import type { AppModuleProvider } from '../AppModuleProvider';
+import type { AppModuleProvider } from '../AppModuleProvider.js';
 import { combineLatest, of, Subscription, firstValueFrom, lastValueFrom } from 'rxjs';
 import { defaultIfEmpty, last, map, switchMap } from 'rxjs/operators';
 
 import type { EventModule } from '@equinor/fusion-framework-module-event';
 import type { AnyModule, ModuleType } from '@equinor/fusion-framework-module';
-import { createState } from './create-state';
-import { actions, type Actions } from './actions';
-import type { AppBundleState, AppBundleStateInitial } from './types';
+import { createState } from './create-state.js';
+import { actions, type Actions } from './actions.js';
+import type { AppBundleState, AppBundleStateInitial } from './types.js';
 
 import isEqual from 'fast-deep-equal';
 
-import { filterEmpty } from './filter-empty';
+import { filterEmpty } from './filter-empty.js';
 
-import './events';
+import './events.js';
 
-export { filterEmpty } from './filter-empty';
+export { filterEmpty } from './filter-empty.js';
 
 /**
  * Public interface for a single loaded Fusion application.

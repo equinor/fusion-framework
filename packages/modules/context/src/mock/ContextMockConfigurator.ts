@@ -4,10 +4,10 @@ import type { ModuleInitializerArgs } from '@equinor/fusion-framework-module';
 import type { NavigationModule } from '@equinor/fusion-framework-module-navigation';
 import type { ServicesModule } from '@equinor/fusion-framework-module-services';
 
-import { ContextModuleConfigurator } from '../ContextModuleConfigurator';
-import type { ContextModuleConfig } from '../ContextModuleConfig';
-import type { IContextModuleConfigurator } from '../ContextModuleConfigurator.interface';
-import type { ContextItem } from '../types';
+import { ContextModuleConfigurator } from '../ContextModuleConfigurator.js';
+import type { ContextModuleConfig } from '../ContextModuleConfig.js';
+import type { IContextModuleConfigurator } from '../ContextModuleConfigurator.interface.js';
+import type { ContextItem } from '../types.js';
 
 /**
  * Resolves a context item by id, or `undefined` if none matches.

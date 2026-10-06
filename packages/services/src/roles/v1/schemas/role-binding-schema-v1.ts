@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { ScopeBindingSchemaV1 } from './scope-binding-schema-v1';
+import { ScopeBindingSchemaV1 } from './scope-binding-schema-v1.js';
 
 /** Zod schema for a role assigned when an Entra group binding is reconciled. */
 export const RoleBindingSchemaV1 = z

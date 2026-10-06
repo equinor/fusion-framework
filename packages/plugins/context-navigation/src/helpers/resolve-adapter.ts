@@ -2,7 +2,7 @@ import type {
   AdapterResolutionContext,
   ContextNavigationAdapter,
   ContextNavigationAdapterInput,
-} from '../adapters/types';
+} from '../adapters/types.js';
 
 /**
  * Iterate registered adapters and return the first one that can handle

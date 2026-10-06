@@ -1,7 +1,7 @@
-import { ProcessOperators } from './ProcessOperators';
-import { requestOperatorHeader } from './request-operator-header';
+import { ProcessOperators } from './ProcessOperators.js';
+import { requestOperatorHeader } from './request-operator-header.js';
 
-import type { FetchRequest } from '../client';
+import type { FetchRequest } from '../client/index.js';
 
 /**
  * Extends the `ProcessOperators` class to handle HTTP requests.

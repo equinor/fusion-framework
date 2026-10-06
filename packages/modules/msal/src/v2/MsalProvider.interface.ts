@@ -1,7 +1,7 @@
 import type { SemVer } from 'semver';
-import type { MsalModuleVersion } from '../static';
-import type { AccountInfo, AuthenticationResult } from './types';
-import type { IAuthClient } from './IAuthClient.interface';
+import type { MsalModuleVersion } from '../static.js';
+import type { AccountInfo, AuthenticationResult } from './types.js';
+import type { IAuthClient } from './IAuthClient.interface.js';
 
 /**
  * Interface for MSAL v2 compatible authentication provider.

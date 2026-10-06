@@ -6,5 +6,5 @@
  *
  * @packageDocumentation
  */
-export { useNavigationModule } from './useNavigationModule';
-export { useRouter } from './useRouter';
+export { useNavigationModule } from './useNavigationModule.js';
+export { useRouter } from './useRouter.js';

@@ -1,8 +1,8 @@
 import type { IHttpClient, ClientRequestInit } from '@equinor/fusion-framework-module-http/client';
 
-import { ApiVersion, type ApiContextEntity, type ClientMethod } from '..';
+import { ApiVersion, type ApiContextEntity, type ClientMethod } from '../index.js';
 
-export { ApiClientArguments, ClientMethod } from '..';
+export { ApiClientArguments, ClientMethod } from '../index.js';
 
 /**
  * OData filter parameters for context queries.

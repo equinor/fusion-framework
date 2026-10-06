@@ -1,7 +1,7 @@
 import { castDraft } from 'immer';
 import { createReducer } from '@equinor/fusion-observable';
-import type { CacheSortFn, QueryCacheRecord, QueryCacheStateData } from './types';
-import type { ActionBuilder, Actions } from './actions';
+import type { CacheSortFn, QueryCacheRecord, QueryCacheStateData } from './types.js';
+import type { ActionBuilder, Actions } from './actions.js';
 
 /**
  * Sort function for ordering cache records based on their update time.

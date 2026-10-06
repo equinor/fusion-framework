@@ -1,5 +1,5 @@
 import type { z } from 'zod';
-import { DataClassificationRequestSchemaV1 } from './data-classification-request-schema-v1';
+import { DataClassificationRequestSchemaV1 } from './data-classification-request-schema-v1.js';
 
 /**
  * Zod schema for the `PatchPropertyOfDataClassificationRequest` model published by the Fusion Apps

@@ -1,4 +1,4 @@
-import type { AssertFeatureFlag } from './types';
+import type { AssertFeatureFlag } from './types.js';
 
 /**
  * Asserts if a feature flag is enabled feature flag.

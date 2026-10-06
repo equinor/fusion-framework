@@ -12,8 +12,8 @@
  * ```
  */
 
-export { PeopleApiClient, default } from './client';
+export { PeopleApiClient, default } from './client.js';
 
-export { ApiVersion } from './static';
+export { ApiVersion } from './static.js';
 
-export * from './api-models';
+export * from './api-models.js';

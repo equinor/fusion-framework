@@ -3,7 +3,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useFramework } from '@equinor/fusion-framework-react';
 import type { AppModule } from '@equinor/fusion-framework-module-app';
 
-import type { ApploaderProps } from './Apploader';
+import type { ApploaderProps } from './Apploader.js';
 import type { AppInitializeResult } from '@equinor/fusion-framework-module-app/app';
 
 /**

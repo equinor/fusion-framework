@@ -18,14 +18,14 @@ export {
   SignalRHubConfig,
   SignalRModuleConfigBuilder,
   SignalRModuleConfigBuilderCallback,
-} from './SignalRModuleConfigBuilder';
+} from './SignalRModuleConfigBuilder.js';
 
-export { SignalRConfigurator } from './SignalRConfigurator';
+export { SignalRConfigurator } from './SignalRConfigurator.js';
 
-export { ISignalRProvider, SignalRModuleProvider } from './SignalRModuleProvider';
+export { ISignalRProvider, SignalRModuleProvider } from './SignalRModuleProvider.js';
 
-export { Topic } from './lib/Topic';
+export { Topic } from './lib/Topic.js';
 
-export { enableSignalR } from './lib/utils/enable-signalr';
+export { enableSignalR } from './lib/utils/enable-signalr.js';
 
-export { default, module, moduleKey, SignalRModule, SignalRModuleKey } from './SignalRModule';
+export { default, module, moduleKey, SignalRModule, SignalRModuleKey } from './SignalRModule.js';

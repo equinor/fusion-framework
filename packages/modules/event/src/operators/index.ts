@@ -4,4 +4,4 @@
  * @module @equinor/fusion-framework-module-event/operators
  */
 
-export { filterEvent } from './filter-event';
+export { filterEvent } from './filter-event.js';

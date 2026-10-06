@@ -1,5 +1,5 @@
-import { UUID_PATTERN, CONTEXT_QUERY_PARAM_KEY } from '../../constants';
-import { parseAppRoute } from './parse-app-route';
+import { UUID_PATTERN, CONTEXT_QUERY_PARAM_KEY } from '../../constants/index.js';
+import { parseAppRoute } from './parse-app-route.js';
 
 /**
  * Extracts a context id from a URL — checks query param first, falls back to path segment.

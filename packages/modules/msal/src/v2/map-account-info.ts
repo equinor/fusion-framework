@@ -1,5 +1,5 @@
 import type { AccountInfo } from '@azure/msal-browser';
-import type { AccountInfo as AccountInfo_v2 } from './types';
+import type { AccountInfo as AccountInfo_v2 } from './types.js';
 
 /**
  * Maps a current (v4/v5) `AccountInfo` object to the v2-compatible `AccountInfo` format.

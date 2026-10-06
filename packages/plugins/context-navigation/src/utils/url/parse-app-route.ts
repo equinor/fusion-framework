@@ -1,4 +1,4 @@
-import { normalizePath } from '../../helpers';
+import { normalizePath } from '../../helpers/index.js';
 /**
  * URLPattern for the standard Fusion portal app route:
  *

@@ -1,12 +1,12 @@
-import type { ContextNavigationConfig, ContextNavigationNavigatedDetail } from './types';
-import type { ContextNavigationAdapterInput } from './adapters/types';
-import type { ReconcilerSourceFactory } from './sources/types';
+import type { ContextNavigationConfig, ContextNavigationNavigatedDetail } from './types.js';
+import type { ContextNavigationAdapterInput } from './adapters/types.js';
+import type { ReconcilerSourceFactory } from './sources/types.js';
 
-import { createPathAdapter } from './adapters/create-path-adapter';
-import { createQueryAdapter } from './adapters/create-query-adapter';
-import { createCustomAdapter } from './adapters/custom-adapter/create-custom-adapter';
-import { resolveContextFromUrl } from './utils/resolve-context-from-url';
-import { appFirstSource } from './sources/app-first-source';
+import { createPathAdapter } from './adapters/create-path-adapter.js';
+import { createQueryAdapter } from './adapters/create-query-adapter.js';
+import { createCustomAdapter } from './adapters/custom-adapter/create-custom-adapter.js';
+import { resolveContextFromUrl } from './utils/resolve-context-from-url.js';
+import { appFirstSource } from './sources/app-first-source.js';
 
 /**
  * Resolves the default origin used for URL construction.

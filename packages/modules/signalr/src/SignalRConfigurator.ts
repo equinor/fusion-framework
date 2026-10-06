@@ -8,7 +8,7 @@ import {
   type SignalRConfig,
   type SignalRHubConfig,
   type SignalRModuleConfigBuilderCallback,
-} from './SignalRModuleConfigBuilder';
+} from './SignalRModuleConfigBuilder.js';
 
 /**
  * Default {@link ISignalRConfigurator} implementation.

@@ -1,6 +1,6 @@
-export { AppManifestError } from './errors/AppManifestError';
-export { AppConfigError } from './errors/AppConfigError';
-export { AppBuildError } from './errors/AppBuildError';
-export { AppSettingsError } from './errors/AppSettingsError';
-export { AppScriptModuleError } from './errors/AppScriptModuleError';
-export type { AppErrorType } from './errors/app-error-type';
+export { AppManifestError } from './errors/AppManifestError.js';
+export { AppConfigError } from './errors/AppConfigError.js';
+export { AppBuildError } from './errors/AppBuildError.js';
+export { AppSettingsError } from './errors/AppSettingsError.js';
+export { AppScriptModuleError } from './errors/AppScriptModuleError.js';
+export type { AppErrorType } from './errors/app-error-type.js';

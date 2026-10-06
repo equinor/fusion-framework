@@ -2,8 +2,8 @@ import { useContext } from 'react';
 
 import type { IEventModuleProvider } from '@equinor/fusion-framework-module-event';
 
-import { eventContext } from './event-context';
-import { useModulesEventProvider } from './useModulesEventProvider';
+import { eventContext } from './event-context.js';
+import { useModulesEventProvider } from './useModulesEventProvider.js';
 
 /**
  * Hook for using {@link IEventModuleProvider} from context

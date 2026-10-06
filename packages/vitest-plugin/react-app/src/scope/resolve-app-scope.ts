@@ -4,8 +4,8 @@ import type { AppEnv, AppModulesInstance } from '@equinor/fusion-framework-app';
 import type { Fusion } from '@equinor/fusion-framework';
 import type { AnyModule } from '@equinor/fusion-framework-module';
 
-import { resolveFusion } from './resolve-fusion';
-import { defaultAppEnv } from './default-app-env';
+import { resolveFusion } from './resolve-fusion.js';
+import { defaultAppEnv } from './default-app-env.js';
 
 /**
  * The parent Fusion instance and resolved application module scope shared by every
