@@ -534,7 +534,7 @@ jobs:
           done < <(compgen -e)
           export PATH="$trusted_path"
           corepack enable pnpm
-          corepack install --global pnpm@11.22.0
+          corepack install --global pnpm@12.4.2
           pnpm install --frozen-lockfile --prefer-offline
           pnpm turbo build \
             --filter @equinor/fusion-framework-vitest-plugin-react-app... \
