@@ -1,5 +1,13 @@
 # Change Log
 
+## 14.3.1
+
+### Patch Changes
+
+- efdf820: Link the analytics documentation to the new "Test analytics locally" guide, which explains how to check tracked features end-to-end with `ffc mock-server` and Playwright.
+  
+  Refs: https://github.com/equinor/fusion-core-tasks/issues/2184
+
 ## 14.3.0
 
 ### Minor Changes

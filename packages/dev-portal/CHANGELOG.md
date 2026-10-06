@@ -1,5 +1,36 @@
 # @equinor/fusion-framework-dev-portal
 
+## 11.1.0
+
+### Minor Changes
+
+- 9258fb1: Add a help side sheet that opens when an app calls `useHelpCenter()`, shaped like production Fusion Help so people, Playwright tests, and synthetic agents can browse help content locally. It reads from the `help` service, for example local help docs served by `ffc mock-server`.
+  
+  - A collapsible sidebar lists the current app's articles (`GET /apps/{appKey}/articles`) between the production pages (Search, FAQs, Release Notes, App Governance, …). The shown page is marked with `aria-current="page"`.
+  - Articles render their title, last updated date, summary, and markdown content (`GET /articles/{slug}`).
+  - Every help event from the app resets and refetches the shown page, even for an identical request; browsing in the sidebar keeps page state.
+  - `openHelp()` shows an index of all articles. Frequently Asked Questions (and `openFaqs()`) lists the app's FAQs (`GET /apps/{appKey}/faqs`) as expandable questions with markdown answers and a link to each FAQ's article.
+  - Search (and `openSearch(term)`) searches articles and FAQs with `POST /search`. An FAQ hit opens the FAQ page with that answer expanded.
+  - Unknown slugs show a not-found message, a discovery response without a `help` service shows a help-unavailable message, failed discovery requests and other failures show an error with the service's own message, and production-only pages show "not supported in the dev portal".
+  - A labelled navigation landmark, a search box, and stable `data-testid`s (`help-nav-article`, `help-article-title`, `help-search-result`, `help-not-found`, `help-unsupported`, …) support accessibility-tree navigation.
+  
+  Refs: https://github.com/equinor/fusion-core-tasks/issues/2151
+- efdf820: Send analytics to the local mock server in mock mode, as the Fusion portal does in production.
+  
+  - The dev portal now registers the Fusion portal's `app-loaded`, `app-selected`, and `context-selected` collectors.
+  - With `--mock`, it also sends analytics, including apps' `useTrackFeature` events, to the `monitor` service of the local mock server (`portal.id` is `dev-portal`). Apps can then check their analytics in Playwright, or read them through the app-feature events query.
+  - Without `--mock`, no analytics leave the browser, because the discovered `monitor` would be the real service. The `fusionLogAnalytics` feature flag still logs events to the console.
+  - When the mock server serves no analytics (`--no-analytics`), the portal logs a warning and starts without sending them.
+  
+  Refs: https://github.com/equinor/fusion-core-tasks/issues/2182
+
+### Patch Changes
+
+- Updated dependencies [efdf820]
+- Updated dependencies [9258fb1]
+  - @equinor/fusion-framework-dev-server@2.1.7
+  - @equinor/fusion-framework-module-analytics@3.1.7
+
 ## 11.0.12
 
 ### Patch Changes

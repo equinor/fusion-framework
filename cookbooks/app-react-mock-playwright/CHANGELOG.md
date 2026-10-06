@@ -1,5 +1,21 @@
 # @equinor/fusion-framework-cookbook-app-react-mock-playwright
 
+## 0.0.6
+
+### Patch Changes
+
+- efdf820: Demonstrate testing usage analytics against `ffc mock-server`.
+  
+  - Every page tracks a `page-viewed` feature with its route. A new Usage analytics page tracks a demo feature and lists the app's own events through the Apps service's `POST /apps/feature-events/query`.
+  - The mock server loads earlier history from `mocks/analytics.seed.jsonl`.
+  - `playwright/analytics.spec.ts` uses `createMockAnalytics` to wait for tracked features, check their data, read them back through the query, and keep parallel browser contexts apart.
+  - A help article explains the page.
+  
+  Refs: https://github.com/equinor/fusion-core-tasks/issues/2183
+- 9258fb1: Add a local help scenario: one help article per page in `docs/articles`, FAQs in `docs/faqs` that link to those articles, a `HelpInfoButton` info icon next to every page heading that opens that page's article with `useHelpCenter().openArticle(slug)`, a page that also opens a missing article and the FAQs page, buttons for `openHelp()` and `openSearch(term)`, and Playwright tests that click every info icon, browse every article from the sidebar, expand FAQs, search articles and FAQs, and check the dev portal's not-found and not-supported states.
+  
+  Refs: https://github.com/equinor/fusion-core-tasks/issues/2154
+
 ## 0.0.5
 
 ### Patch Changes
