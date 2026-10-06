@@ -2,6 +2,7 @@
   "name": "@equinor/fusion-framework-module-widget",
   "version": "16.0.10",
   "description": "",
+  "type": "module",
   "main": "dist/esm/index.js",
   "types": "dist/types/index.d.ts",
   "exports": {
@@ -10,8 +11,8 @@
       "types": "./dist/types/index.d.ts"
     },
     "./errors.js": {
-      "import": "./dist/esm/errors.js",
-      "types": "./dist/types/errors.d.ts"
+      "import": "./dist/esm/errors/index.js",
+      "types": "./dist/types/errors/index.d.ts"
     }
   },
   "typesVersions": {
@@ -20,7 +21,7 @@
         "dist/types/index.d.ts"
       ],
       "errors.js": [
-        "dist/types/errors.d.ts"
+        "dist/types/errors/index.d.ts"
       ]
     }
   },

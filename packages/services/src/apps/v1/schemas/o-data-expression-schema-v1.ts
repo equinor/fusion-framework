@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { ExpressionTypeSchemaV1 } from './expression-type-schema-v1';
+import { ExpressionTypeSchemaV1 } from './expression-type-schema-v1.js';
 
 /**
  * Zod schema for the `ODataExpression` model published by the Fusion Apps API 1.0.

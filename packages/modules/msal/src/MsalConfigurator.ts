@@ -6,18 +6,18 @@ import { TelemetryLevel } from '@equinor/fusion-framework-module-telemetry';
 import { CacheLookupPolicy, LogLevel } from '@azure/msal-browser';
 
 import type { ITelemetryProvider } from '@equinor/fusion-framework-module-telemetry';
-import type { IMsalProvider } from './MsalProvider.interface';
-import { MsalClient, type MsalClientConfig, type IMsalClient } from './MsalClient';
-import { createClientLogCallback } from './create-client-log-callback';
-import { version } from './version';
-import { MsalConfigSchema, type MsalConfig } from './msal-config-schema';
+import type { IMsalProvider } from './MsalProvider.interface.js';
+import { MsalClient, type MsalClientConfig, type IMsalClient } from './MsalClient.js';
+import { createClientLogCallback } from './create-client-log-callback.js';
+import { version } from './version.js';
+import { MsalConfigSchema, type MsalConfig } from './msal-config-schema.js';
 
 export {
   MsalConfigSchema,
   type MsalConfig,
   type MsalConfigExtension,
-} from './msal-config-schema';
-export { TelemetryConfigSchema, type TelemetryConfig } from './telemetry-config-schema';
+} from './msal-config-schema.js';
+export { TelemetryConfigSchema, type TelemetryConfig } from './telemetry-config-schema.js';
 
 /**
  * Configuration builder for MSAL v4 authentication module.

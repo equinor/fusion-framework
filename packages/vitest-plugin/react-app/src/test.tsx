@@ -1,4 +1,4 @@
-import { testApp as baseTestApp } from './test-app';
+import { testApp as baseTestApp } from './test-app.js';
 
 // resolved at test-time by `appTestVitePlugin` (@equinor/fusion-framework-vitest-plugin-react-app);
 // see virtual-modules.d.ts for the ambient module declarations

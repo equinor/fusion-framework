@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 
 import type { AuthenticationResult } from '@equinor/fusion-framework-module-msal';
 
-import useAppModule from '../useAppModule';
+import useAppModule from '../useAppModule.js';
 
 /**
  * React hook that acquires a full MSAL {@link AuthenticationResult} for the

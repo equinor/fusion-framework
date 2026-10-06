@@ -37,8 +37,8 @@ export {
    * @deprecated Use {@link FrameworkConfigurator} instead.
    */
   FrameworkConfigurator as FusionConfigurator,
-} from './FrameworkConfigurator';
+} from './FrameworkConfigurator.js';
 
-export type { FusionModules, FusionModulesInstance, Fusion, FusionRenderFn } from './types';
+export type { FusionModules, FusionModulesInstance, Fusion, FusionRenderFn } from './types.js';
 
-export { default, init } from './init';
+export { default, init } from './init.js';

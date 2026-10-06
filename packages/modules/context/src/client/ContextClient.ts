@@ -5,7 +5,7 @@ import equal from 'fast-deep-equal';
 
 import { Query, type QueryCtorOptions } from '@equinor/fusion-query';
 
-import type { ContextItem } from '../types';
+import type { ContextItem } from '../types.js';
 
 export type GetContextParameters = { id: string };
 

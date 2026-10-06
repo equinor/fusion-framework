@@ -23,8 +23,8 @@ import {
   buildContextUrlForStrategy,
   resolveContextIdFromUrl,
 } from '@equinor/fusion-framework-plugin-context-navigation/utils';
-import { configureAnalytics, resolveMockServerUrl } from './analytics';
-import { version } from './version';
+import { configureAnalytics, resolveMockServerUrl } from './analytics/index.js';
+import { version } from './version.js';
 
 declare global {
   interface Window {

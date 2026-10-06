@@ -16,7 +16,7 @@ import { castDraft, createDraft, finishDraft } from 'immer';
 
 import { v4 as generateGUID } from 'uuid';
 
-import deepEqual from 'fast-deep-equal/es6';
+import deepEqual from 'fast-deep-equal/es6/index.js';
 
 import {
   FrameworkEvent,
@@ -33,33 +33,33 @@ import type {
   BookmarkWithoutData,
   Bookmarks,
   BookmarkModuleConfig,
-} from './types';
+} from './types.js';
 
-import type { BookmarkNew, BookmarkUpdate, IBookmarkClient } from './BookmarkClient.interface';
-import { type BookmarkActions, bookmarkActions } from './bookmark-actions';
+import type { BookmarkNew, BookmarkUpdate, IBookmarkClient } from './BookmarkClient.interface.js';
+import { type BookmarkActions, bookmarkActions } from './bookmark-actions.js';
 import {
   type BookmarkState,
   createBookmarkStore,
   type BookmarkStore,
-} from './create-bookmark-store';
+} from './create-bookmark-store.js';
 import {
   activeBookmarkSelector,
   bookmarkSelector,
   bookmarksSelector,
   errorsSelector,
-} from './BookmarkProvider.selectors';
+} from './BookmarkProvider.selectors.js';
 
-import { type BookmarkFlowError, BookmarkProviderError } from './BookmarkFlowError';
+import { type BookmarkFlowError, BookmarkProviderError } from './BookmarkFlowError.js';
 
-import type { BookmarkProviderEventMap } from './BookmarkProvider.events';
-import { version } from './version';
+import type { BookmarkProviderEventMap } from './BookmarkProvider.events.js';
+import { version } from './version.js';
 
 import type {
   BookmarkCreateArgs,
   BookmarkPayloadGenerator,
   BookmarkUpdateOptions,
   IBookmarkProvider,
-} from './BookmarkProvider.interface';
+} from './BookmarkProvider.interface.js';
 
 // Default timeout for bookmark operations (2 minutes)
 const defaultTimeout = 2 * 60 * 1000;

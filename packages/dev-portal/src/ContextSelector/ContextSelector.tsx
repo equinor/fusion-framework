@@ -5,7 +5,7 @@ import {
   type ContextSearchProps,
   type ContextSelectEvent,
 } from '@equinor/fusion-react-context-selector';
-import { useContextResolver } from './useContextResolver';
+import { useContextResolver } from './useContextResolver.js';
 
 /**
  * Context selector component wired to the current application's context module.

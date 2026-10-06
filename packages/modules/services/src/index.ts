@@ -13,9 +13,9 @@
  * ```
  */
 
-export * from './types';
-export type { ServicesModule, ServicesModuleKey } from './module';
+export * from './types.js';
+export type { ServicesModule, ServicesModuleKey } from './module.js';
 
-export { ApiConfigurator, IApiConfigurator } from './configurator';
-export { ApiProvider, IApiProvider } from './provider';
-export { default, module, enableServices, configureServices } from './module';
+export { ApiConfigurator, IApiConfigurator } from './configurator.js';
+export { ApiProvider, IApiProvider } from './provider.js';
+export { default, module, enableServices, configureServices } from './module.js';

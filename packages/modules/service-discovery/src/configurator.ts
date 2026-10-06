@@ -8,7 +8,7 @@ import {
 
 import type { IHttpClient } from '@equinor/fusion-framework-module-http';
 
-import { type IServiceDiscoveryClient, ServiceDiscoveryClient } from './client';
+import { type IServiceDiscoveryClient, ServiceDiscoveryClient } from './client.js';
 
 /**
  * Resolved configuration produced by {@link ServiceDiscoveryConfigurator}.

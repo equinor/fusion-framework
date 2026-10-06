@@ -3,17 +3,17 @@ import { Subject } from 'rxjs';
 
 import { FlowSubject } from '@equinor/fusion-observable';
 
-import { actions } from './actions';
+import { actions } from './actions.js';
 
-import createReducer from './create-reducer';
+import createReducer from './create-reducer.js';
 
-import type { QueryCacheMutation, QueryCacheRecord, QueryCacheStateData } from './types';
-import type { ActionMap, Actions } from './actions';
+import type { QueryCacheMutation, QueryCacheRecord, QueryCacheStateData } from './types.js';
+import type { ActionMap, Actions } from './actions.js';
 import {
   QueryCacheEvent,
   type QueryCacheEventData,
   type QueryCacheEvents,
-} from './QueryCacheEvent';
+} from './QueryCacheEvent.js';
 
 /**
  * Defines the options used for trimming the query cache.

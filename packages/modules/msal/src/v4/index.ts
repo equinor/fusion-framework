@@ -9,5 +9,5 @@
  * @module v4
  */
 
-export { createProxyProvider } from './create-proxy-provider';
-export type * from './types';
+export { createProxyProvider } from './create-proxy-provider.js';
+export type * from './types.js';

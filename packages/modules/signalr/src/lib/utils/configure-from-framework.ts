@@ -1,7 +1,7 @@
 import type { MsalModule } from '@equinor/fusion-framework-module-msal';
 import type { ServiceDiscoveryModule } from '@equinor/fusion-framework-module-service-discovery';
 
-import type { SignalRModuleConfigBuilder } from '../../SignalRModuleConfigBuilder';
+import type { SignalRModuleConfigBuilder } from '../../SignalRModuleConfigBuilder.js';
 
 /**
  * Configure a SignalR hub connection using Fusion Framework service-discovery

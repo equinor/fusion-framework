@@ -1,10 +1,10 @@
 import type { Observable } from 'rxjs';
 import { map, withLatestFrom } from 'rxjs/operators';
-import type { HistoryFlowCreator } from './navigate';
-import { actions, type Actions } from './actions';
+import type { HistoryFlowCreator } from './navigate.js';
+import { actions, type Actions } from './actions.js';
 import { filterAction } from '@equinor/fusion-observable/operators';
-import type { LocationState } from '../types';
-import { Action } from '../types';
+import type { LocationState } from '../types.js';
+import { Action } from '../types.js';
 
 /** Flow creator for handling go back and forward actions. */
 export const go: HistoryFlowCreator =

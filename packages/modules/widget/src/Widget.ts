@@ -6,17 +6,17 @@ import type {
   WidgetScriptModule,
   WidgetState,
   WidgetStateInitial,
-} from './types';
-import { type Actions, actions } from './state/actions';
+} from './types.js';
+import { type Actions, actions } from './state/actions.js';
 import type { FlowSubject } from '@equinor/fusion-observable';
 
-import { createState } from './state/create-state';
+import { createState } from './state/create-state.js';
 import type { EventModule } from '@equinor/fusion-framework-module-event';
 import { Observable, Subscription, combineLatest, firstValueFrom, lastValueFrom, of } from 'rxjs';
-import type WidgetModuleProvider from './WidgetModuleProvider';
-import type { WidgetModuleConfig } from './WidgetModuleConfigurator';
+import type WidgetModuleProvider from './WidgetModuleProvider.js';
+import type { WidgetModuleConfig } from './WidgetModuleConfigurator.js';
 
-import './events';
+import './events.js';
 
 /**
  * Manages the full lifecycle of a single Fusion widget.

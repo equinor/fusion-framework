@@ -1,11 +1,11 @@
 import { FlowSubject, type ActionBaseType } from '@equinor/fusion-observable';
 
-import type { BookmarkActions } from './bookmark-actions';
-import type { BookmarkFlowError } from './BookmarkFlowError';
-import { createBookmarkReducer } from './create-bookmark-reducer';
-import { bookmarkApiFlows } from './bookmark-flows';
-import type { IBookmarkClient } from './BookmarkClient.interface';
-import type { Bookmark, BookmarkWithoutData } from './types';
+import type { BookmarkActions } from './bookmark-actions.js';
+import type { BookmarkFlowError } from './BookmarkFlowError.js';
+import { createBookmarkReducer } from './create-bookmark-reducer.js';
+import { bookmarkApiFlows } from './bookmark-flows/index.js';
+import type { IBookmarkClient } from './BookmarkClient.interface.js';
+import type { Bookmark, BookmarkWithoutData } from './types.js';
 
 /**
  * Internal state shape managed by the bookmark store.

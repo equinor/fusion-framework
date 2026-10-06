@@ -1,12 +1,12 @@
-import type { ActiveAccessRoleAssignments } from '../../state/roles-state';
+import type { ActiveAccessRoleAssignments } from '../../state/roles-state.js';
 import type {
   ActiveAccessRoleDetails,
   AssignedRoleDetails,
   ClaimableRoleDetails,
-} from '../overview/role-details';
-import { parseRoleDate } from '../../dates/parse-role-date';
-import { createActiveRoleItems } from '../overview/create-active-role-items';
-import { filterEffectiveAssignedRoles } from '../overview/filter-effective-assigned-roles';
+} from '../overview/role-details.js';
+import { parseRoleDate } from '../../dates/parse-role-date.js';
+import { createActiveRoleItems } from '../overview/create-active-role-items.js';
+import { filterEffectiveAssignedRoles } from '../overview/filter-effective-assigned-roles.js';
 
 const RECENT_ROLE_LIMIT = 3;
 const RECENT_ROLE_WINDOW_MS = 7 * 24 * 60 * 60 * 1_000;

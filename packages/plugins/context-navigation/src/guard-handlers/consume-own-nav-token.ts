@@ -1,5 +1,5 @@
-import { normalizePathFromURL } from '../helpers';
-import type { OwnNavigationTokens } from '../apply-navigation';
+import { normalizePathFromURL } from '../helpers/index.js';
+import type { OwnNavigationTokens } from '../apply-navigation.js';
 
 /**
  * Consume an own-navigation token if the current URL matches one previously

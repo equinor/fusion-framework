@@ -1,4 +1,4 @@
-import { ApiVersion } from './static';
+import { ApiVersion } from './static.js';
 
 /** Notification entity returned by the v1 notification API. */
 type ApiNotificationEntity_v1 = {

@@ -1,6 +1,6 @@
-import type { IFeatureFlag } from '../../FeatureFlag';
-import type { FeatureFlagPlugin, FeatureFlagPluginConfigCallback } from '../../types';
-import { createStorage, type StorageType } from '../../utils/storage';
+import type { IFeatureFlag } from '../../FeatureFlag.js';
+import type { FeatureFlagPlugin, FeatureFlagPluginConfigCallback } from '../../types.js';
+import { createStorage, type StorageType } from '../../utils/storage/index.js';
 
 /**
  * Creates a plugin that persists feature-flag toggle state in browser storage

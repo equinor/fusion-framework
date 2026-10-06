@@ -1,4 +1,4 @@
-export { defaultAppEnv } from './default-app-env';
-export { resolveFusion } from './resolve-fusion';
-export { resolveAppScope, type AppScope } from './resolve-app-scope';
-export { createAppScopeWrapper } from './create-app-scope-wrapper';
+export { defaultAppEnv } from './default-app-env.js';
+export { resolveFusion } from './resolve-fusion.js';
+export { resolveAppScope, type AppScope } from './resolve-app-scope.js';
+export { createAppScopeWrapper } from './create-app-scope-wrapper.js';

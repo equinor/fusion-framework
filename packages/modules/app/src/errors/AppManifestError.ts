@@ -1,4 +1,4 @@
-import type { AppErrorType } from './app-error-type';
+import type { AppErrorType } from './app-error-type.js';
 
 /**
  * Represents an error that occurs when loading an application manifest.

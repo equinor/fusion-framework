@@ -1,7 +1,7 @@
 import { FrameworkEvent, type FrameworkEventInit } from '@equinor/fusion-framework-module-event';
 
-import type { INavigationProvider } from './NavigationProvider.interface';
-import type { NavigationUpdate, Path } from './lib/types';
+import type { INavigationProvider } from './NavigationProvider.interface.js';
+import type { NavigationUpdate, Path } from './lib/types.js';
 
 /** Event detail for navigation events (before navigation). */
 export interface NavigateEventDetail {
@@ -42,6 +42,6 @@ declare module '@equinor/fusion-framework-module-event' {
     /** Event emitted before navigation occurs, can be canceled to prevent navigation */
     onNavigate: NavigateEvent;
     /** Event emitted after navigation occurs */
-    onNavigated: import('./NavigatedEvent').NavigatedEvent;
+    onNavigated: import('./NavigatedEvent.js').NavigatedEvent;
   }
 }

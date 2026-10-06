@@ -3,12 +3,16 @@ import { filter, map, takeUntil, withLatestFrom } from 'rxjs/operators';
 
 import type { INavigationProvider, Path } from '@equinor/fusion-framework-module-navigation';
 
-import type { IFeatureFlagProvider } from '../../FeatureFlagProvider';
+import type { IFeatureFlagProvider } from '../../FeatureFlagProvider.js';
 
-import { assertFeatureFlag } from './assert-feature-flag';
+import { assertFeatureFlag } from './assert-feature-flag.js';
 
-import type { FeatureFlagPlugin, FeatureFlagPluginConfigCallback, IFeatureFlag } from '../../types';
-import type { AssertFeatureFlag } from './types';
+import type {
+  FeatureFlagPlugin,
+  FeatureFlagPluginConfigCallback,
+  IFeatureFlag,
+} from '../../types.js';
+import type { AssertFeatureFlag } from './types.js';
 
 /**
  * Creates a plugin that toggles feature flags based on URL query parameters.

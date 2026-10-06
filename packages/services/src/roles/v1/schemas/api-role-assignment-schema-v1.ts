@@ -1,7 +1,7 @@
 import { z } from 'zod';
-import { ApiAccountSchemaV1 } from './api-account-schema-v1';
-import { ApiRoleScopeSchemaV1 } from './api-role-scope-schema-v1';
-import { ApiSimpleRoleSchemaV1 } from './api-simple-role-schema-v1';
+import { ApiAccountSchemaV1 } from './api-account-schema-v1.js';
+import { ApiRoleScopeSchemaV1 } from './api-role-scope-schema-v1.js';
+import { ApiSimpleRoleSchemaV1 } from './api-simple-role-schema-v1.js';
 
 /** Zod schema for an assignment of a role to a Fusion account. */
 export const ApiRoleAssignmentSchemaV1 = z

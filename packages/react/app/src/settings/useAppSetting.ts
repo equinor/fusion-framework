@@ -3,7 +3,7 @@ import { BehaviorSubject, map } from 'rxjs';
 
 import { useCurrentApp } from '@equinor/fusion-framework-react/app';
 
-import { useAppSettingsStatus, type AppSettingsStatusHooks } from './useAppSettingsStatus';
+import { useAppSettingsStatus, type AppSettingsStatusHooks } from './useAppSettingsStatus.js';
 
 import type { AppSettings } from '@equinor/fusion-framework-module-app';
 import { useObservableState } from '@equinor/fusion-observable/react';

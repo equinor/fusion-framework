@@ -1,5 +1,5 @@
-import { useRolesContext } from '../context/useRolesContext';
-import type { ConsolidatedRoleAssignments } from '../state/roles-state';
+import { useRolesContext } from '../context/useRolesContext.js';
+import type { ConsolidatedRoleAssignments } from '../state/roles-state.js';
 
 /**
  * Reactive consolidated role-assignment state for the current Fusion app account.

@@ -1,11 +1,11 @@
 import type { ContextItem } from '@equinor/fusion-framework-module-context';
-import type { ContextNavigationAdapter, AdapterResolutionContext } from './types';
-import { hasCustomContextGenerators } from '../utils/has-custom-context-generators';
-import { stripContextQueryParam } from '../utils/url/strip-context-query-param';
-import { parseAppRoute } from '../utils/url/parse-app-route';
-import { UUID_PATTERN } from '../constants';
-import { buildAppRoute } from '../utils/url/build-app-route';
-import { resolveRouteTail } from '../utils/url/resolve-route-tail';
+import type { ContextNavigationAdapter, AdapterResolutionContext } from './types.js';
+import { hasCustomContextGenerators } from '../utils/has-custom-context-generators.js';
+import { stripContextQueryParam } from '../utils/url/strip-context-query-param.js';
+import { parseAppRoute } from '../utils/url/parse-app-route.js';
+import { UUID_PATTERN } from '../constants/index.js';
+import { buildAppRoute } from '../utils/url/build-app-route.js';
+import { resolveRouteTail } from '../utils/url/resolve-route-tail.js';
 
 /**
  * Path adapter — encodes context identity as the first path segment after

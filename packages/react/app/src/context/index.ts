@@ -8,7 +8,7 @@
  */
 export * from '@equinor/fusion-framework-react-module-context';
 
-export { useContextProvider } from './useContextProvider';
-export { useCurrentContext } from './useCurrentContext';
+export { useContextProvider } from './useContextProvider.js';
+export { useCurrentContext } from './useCurrentContext.js';
 
-export { useFrameworkCurrentContext } from '../framework/useFrameworkCurrentContext';
+export { useFrameworkCurrentContext } from '../framework/useFrameworkCurrentContext.js';

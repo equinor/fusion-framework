@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import type { ClaimableRoleAssignmentSelection } from '../overview/role-details';
+import type { ClaimableRoleAssignmentSelection } from '../overview/role-details.js';
 
 /** Audit-form inputs shared by ordinary activation and required-access-role recovery. */
 export interface RoleClaimFormOptions {

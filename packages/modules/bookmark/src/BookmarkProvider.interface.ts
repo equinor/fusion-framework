@@ -1,9 +1,9 @@
 // biome-ignore-all lint/suspicious/noExplicitAny: `BookmarkData = any` generic defaults must remain bivariant — `unknown` breaks assignability of concrete `Bookmark<T>`/`BookmarkPayloadGenerator<TData>` instances to the default-typed generic
 import type { Observable, ObservableInput } from 'rxjs';
-import type { Bookmark, BookmarkData, BookmarkWithoutData } from './types';
-import type { BookmarkNew, BookmarkUpdate } from './BookmarkClient.interface';
-import type { BookmarkProviderEventMap } from './BookmarkProvider.events';
-import type { BookmarkState } from './create-bookmark-store';
+import type { Bookmark, BookmarkData, BookmarkWithoutData } from './types.js';
+import type { BookmarkNew, BookmarkUpdate } from './BookmarkClient.interface.js';
+import type { BookmarkProviderEventMap } from './BookmarkProvider.events.js';
+import type { BookmarkState } from './create-bookmark-store.js';
 
 /**
  * Arguments for creating a bookmark via {@link IBookmarkProvider.createBookmark}.

@@ -1,7 +1,7 @@
 import { firstValueFrom, map } from 'rxjs';
 
 import type { PersonDetails, PersonInfo, PersonResolver } from '@equinor/fusion-wc-person';
-import type { IPersonController } from './PersonController';
+import type { IPersonController } from './PersonController.js';
 
 export const createResolver = (controller: IPersonController): PersonResolver => ({
   getDetails(args) {

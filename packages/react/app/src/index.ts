@@ -28,19 +28,19 @@ export type { Fusion } from '@equinor/fusion-framework-react';
 
 export { AppManifest } from '@equinor/fusion-framework-module-app';
 
-export { useAppModule } from './useAppModule';
-export { useAppModules } from './useAppModules';
-export { useAppEnvironmentVariables } from './useAppEnvironmentVariables';
+export { useAppModule } from './useAppModule.js';
+export { useAppModules } from './useAppModules.js';
+export { useAppEnvironmentVariables } from './useAppEnvironmentVariables.js';
 
-export { makeComponent, ComponentRenderArgs } from './make-component';
+export { makeComponent, ComponentRenderArgs } from './make-component.js';
 
-export { createLegacyApp } from './create-legacy-app';
+export { createLegacyApp } from './create-legacy-app.js';
 
-export { createComponent } from './create-component';
-export { renderApp } from './render-app';
-export { renderComponent } from './render-component';
+export { createComponent } from './create-component.js';
+export { renderApp } from './render-app.js';
+export { renderComponent } from './render-component.js';
 
-export type { ComponentRenderer } from './create-component';
-export type { RenderTeardown } from './render-component';
+export type { ComponentRenderer } from './create-component.js';
+export type { RenderTeardown } from './render-component.js';
 
-export { default } from './render-app';
+export { default } from './render-app.js';

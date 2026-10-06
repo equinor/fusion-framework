@@ -1,12 +1,12 @@
 import { FlowSubject } from '@equinor/fusion-observable';
 
-import { createReducer } from './create-reducer';
+import { createReducer } from './create-reducer.js';
 
-import { handleFetchManifest, handleImportWidget, handleFetchConfig } from './flows';
+import { handleFetchManifest, handleImportWidget, handleFetchConfig } from './flows.js';
 
-import type { Actions } from './actions';
-import type { WidgetState, WidgetStateInitial } from '../types';
-import type WidgetModuleProvider from '../WidgetModuleProvider';
+import type { Actions } from './actions.js';
+import type { WidgetState, WidgetStateInitial } from '../types.js';
+import type WidgetModuleProvider from '../WidgetModuleProvider.js';
 
 /**
  * Creates and wires the RxJS-based `FlowSubject` state machine for a single

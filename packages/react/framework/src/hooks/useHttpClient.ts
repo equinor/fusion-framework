@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import type { Fusion } from '@equinor/fusion-framework';
-import { useFramework } from '../useFramework';
+import { useFramework } from '../useFramework.js';
 
 /** Resolved HTTP client instance returned by the framework HTTP module. */
 type HttpClient = ReturnType<Fusion['modules']['http']['createClient']>;

@@ -1,7 +1,7 @@
 import type { ILogger, LogLevel } from '@equinor/fusion-log';
 import type { IEventModuleProvider } from '@equinor/fusion-framework-module-event';
-import type { IBookmarkProvider } from './BookmarkProvider.interface';
-import type { IBookmarkClient } from './BookmarkClient.interface';
+import type { IBookmarkProvider } from './BookmarkProvider.interface.js';
+import type { IBookmarkClient } from './BookmarkClient.interface.js';
 
 /**
  * Represents the source system for a bookmark.

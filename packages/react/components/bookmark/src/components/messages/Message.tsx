@@ -1,7 +1,7 @@
 import { Icon, Typography } from '@equinor/eds-core-react';
 import { tokens } from '@equinor/eds-tokens';
 import type { PropsWithChildren } from 'react';
-import styled from 'styled-components';
+import { styled } from 'styled-components';
 
 import { error_outlined, file_description } from '@equinor/eds-icons';
 

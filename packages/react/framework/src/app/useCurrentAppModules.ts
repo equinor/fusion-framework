@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import useCurrentApp from './useCurrentApp';
+import useCurrentApp from './useCurrentApp.js';
 
 import type { AppModulesInstance } from '@equinor/fusion-framework-module-app';
 import { type Observable, of } from 'rxjs';

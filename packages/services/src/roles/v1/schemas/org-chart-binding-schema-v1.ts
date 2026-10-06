@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { OrgChartContextSchemaV1 } from './org-chart-context-schema-v1';
-import { OrgChartProfileSchemaV1 } from './org-chart-profile-schema-v1';
+import { OrgChartContextSchemaV1 } from './org-chart-context-schema-v1.js';
+import { OrgChartProfileSchemaV1 } from './org-chart-profile-schema-v1.js';
 
 /** Zod schema for an org-chart binding configuration payload. */
 export const OrgChartBindingSchemaV1 = z

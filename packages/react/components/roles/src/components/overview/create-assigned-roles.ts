@@ -1,5 +1,5 @@
-import type { ConsolidatedRoleAssignments } from '../../state/roles-state';
-import type { AssignedRoleDetails } from './role-details';
+import type { ConsolidatedRoleAssignments } from '../../state/roles-state.js';
+import type { AssignedRoleDetails } from './role-details.js';
 
 /**
  * Normalizes consolidated role assignments for application cards and compact rows.

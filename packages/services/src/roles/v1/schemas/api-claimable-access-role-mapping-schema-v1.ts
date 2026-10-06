@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { ApiAccessRoleSchemaV1 } from './api-access-role-schema-v1';
+import { ApiAccessRoleSchemaV1 } from './api-access-role-schema-v1.js';
 
 /** Zod schema for an access role granted by a claimable role. */
 export const ApiClaimableAccessRoleMappingSchemaV1 = z

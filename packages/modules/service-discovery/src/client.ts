@@ -1,7 +1,7 @@
 import type { IHttpClient } from '@equinor/fusion-framework-module-http';
 import { Query } from '@equinor/fusion-query';
 
-import type { Service } from './types';
+import type { Service } from './types.js';
 
 import {
   firstValueFrom,
@@ -12,7 +12,7 @@ import {
   type ObservableInput,
 } from 'rxjs';
 import { jsonSelector } from '@equinor/fusion-framework-module-http/selectors';
-import { ApiServices } from './api-services';
+import { ApiServices } from './api-services.js';
 
 /**
  * Contract for a client that resolves service endpoints from a service

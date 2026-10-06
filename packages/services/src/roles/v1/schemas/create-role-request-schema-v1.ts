@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { AccessRoleMappingSchemaV1 } from './access-role-mapping-schema-v1';
+import { AccessRoleMappingSchemaV1 } from './access-role-mapping-schema-v1.js';
 
 /** Zod schema for the body of a create-role request. */
 export const CreateRoleRequestSchemaV1 = z

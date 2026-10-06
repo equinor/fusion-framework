@@ -1,4 +1,4 @@
-import { parseRoleDate } from '../../dates/parse-role-date';
+import { parseRoleDate } from '../../dates/parse-role-date.js';
 
 /**
  * Formats assignment expiry metadata consistently in rows and the information dialog.

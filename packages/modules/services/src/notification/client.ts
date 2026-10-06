@@ -1,26 +1,29 @@
 import type { IHttpClient } from '@equinor/fusion-framework-module-http';
-import type { ClientMethod } from '../types';
-import type { GetNotificationFn, GetNotificationResult } from './notification/get';
+import type { ClientMethod } from '../types.js';
+import type { GetNotificationFn, GetNotificationResult } from './notification/get/index.js';
 import {
   createNotification,
   deleteNotification,
   getNotificationById,
   getNotifications,
   updateSeenByUser,
-} from './notification';
-import { ApiVersion } from './static';
-import type { PatchNotificationFn, PatchNotificationResult } from './notification/patch';
-import type { GetNotificationsFn, GetNotificationsResult } from './notification/getAll';
-import type { PostNotificationResult, PostNotificationFn } from './notification/post';
-import type { DeleteNotificationFn, DeleteNotificationResult } from './notification/delete';
+} from './notification/index.js';
+import { ApiVersion } from './static.js';
+import type { PatchNotificationFn, PatchNotificationResult } from './notification/patch/index.js';
+import type { GetNotificationsFn, GetNotificationsResult } from './notification/getAll/index.js';
+import type { PostNotificationResult, PostNotificationFn } from './notification/post/index.js';
+import type {
+  DeleteNotificationFn,
+  DeleteNotificationResult,
+} from './notification/delete/index.js';
 import updateUserNotificationSettings, {
   type PutUserNotificationSettingsFn,
   type PutUserNotificationSettingsResult,
-} from './settings/put';
+} from './settings/put/index.js';
 import getUserNotificationSettings, {
   type GetUserNotificationSettingsFn,
   type GetUserNotificationsSettingsResult,
-} from './settings/get';
+} from './settings/get/index.js';
 
 /**
  * Typed API client for the Fusion notification service.

@@ -1,8 +1,8 @@
 import type { IModulesConfigurator } from '@equinor/fusion-framework-module';
 
-import { module, type MsalModule } from '../module';
+import { module, type MsalModule } from '../module.js';
 
-import { MsalMockConfigurator } from './MsalMockConfigurator';
+import { MsalMockConfigurator } from './MsalMockConfigurator.js';
 
 /**
  * The MSAL module with a mock client instead of a live connection to Entra ID.

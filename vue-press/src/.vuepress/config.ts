@@ -7,7 +7,9 @@ const __dirname = getDirname(import.meta.url);
 
 const __repoRoot = path.resolve(__dirname, '../../../');
 
-const { description, name, version } = require('../../../package.json');
+import rootPackage from '../../../package.json' with { type: 'json' };
+
+const { description, name, version } = rootPackage;
 
 import theme from './theme.js';
 import { packageNamespaceLinksPlugin } from './plugins/package-namespace-links-plugin.js';

@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 
 import { useFramework } from '@equinor/fusion-framework-react';
 
-import { requestHelpService, type HelpServiceResult } from './request-help-service';
-import type { HelpArticle, HelpFaq } from './types';
+import { requestHelpService, type HelpServiceResult } from './request-help-service.js';
+import type { HelpArticle, HelpFaq } from './types.js';
 
 /** Waits this long after the last keystroke before searching, so typing does not flood the service. */
 const SEARCH_DEBOUNCE_MS = 250;

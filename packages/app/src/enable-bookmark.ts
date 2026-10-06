@@ -2,7 +2,7 @@ import type {
   BookmarkModule,
   BookmarkPayloadGenerator,
 } from '@equinor/fusion-framework-module-bookmark';
-import type { IAppConfigurator } from './AppConfigurator';
+import type { IAppConfigurator } from './AppConfigurator.js';
 
 /**
  * Enable the bookmark module for a Fusion application.

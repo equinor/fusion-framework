@@ -5,7 +5,7 @@ import type {
   ApiProfileAccountLink,
   ApiProfileAccountType,
   ApiProjectMaster,
-} from './api-models';
+} from './api-models.js';
 
 /**
  * Map of expandable properties available on a v4 person entity.

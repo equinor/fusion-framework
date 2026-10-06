@@ -6,5 +6,5 @@
  *
  * @module
  */
-export { useCurrentUser } from './useCurrentUser';
-export { useHttpClient } from './useHttpClient';
+export { useCurrentUser } from './useCurrentUser.js';
+export { useHttpClient } from './useHttpClient.js';

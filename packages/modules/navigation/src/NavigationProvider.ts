@@ -8,18 +8,18 @@ import {
   type BaseModuleProviderCtorArgs,
 } from '@equinor/fusion-framework-module/provider';
 
-import type { INavigationProvider } from './NavigationProvider.interface';
-import type { INavigationConfigurator } from './NavigationConfigurator.interface';
-import type { History, NavigateOptions, NavigationUpdate, Path, To } from './lib/types';
+import type { INavigationProvider } from './NavigationProvider.interface.js';
+import type { INavigationConfigurator } from './NavigationConfigurator.interface.js';
+import type { History, NavigateOptions, NavigationUpdate, Path, To } from './lib/types.js';
 import {
   TelemetryLevel,
   TelemetryScope,
   type ITelemetryProvider,
 } from '@equinor/fusion-framework-module-telemetry';
 import type { IEventModuleProvider } from '@equinor/fusion-framework-module-event';
-import { NavigatedEvent } from './NavigatedEvent';
-import { pathToString } from './lib/utils';
-import type { BaseHistory } from './lib';
+import { NavigatedEvent } from './NavigatedEvent.js';
+import { pathToString } from './lib/utils/index.js';
+import type { BaseHistory } from './lib/index.js';
 
 /**
  * Normalizes a pathname by:

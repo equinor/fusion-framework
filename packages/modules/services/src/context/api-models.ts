@@ -1,4 +1,4 @@
-import { ApiVersion } from './static';
+import { ApiVersion } from './static.js';
 
 /** Context entity returned by the v1 context API. */
 type ApiContextEntity_v1 = {

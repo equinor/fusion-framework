@@ -1,4 +1,4 @@
-import { ProcessOperators } from './ProcessOperators';
+import { ProcessOperators } from './ProcessOperators.js';
 
 /**
  * The `HttpResponseHandler` class extends the `ProcessOperators` class and is responsible for handling HTTP responses.

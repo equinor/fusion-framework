@@ -1,10 +1,10 @@
-import type { IMsalProvider } from '../MsalProvider.interface';
-import type { IMsalProvider as IMsalProvider_v2 } from './MsalProvider.interface';
-import type { AccountInfo as AccountInfo_v2 } from './types';
-import type { AcquireTokenOptions } from '../MsalClient.interface';
-import { createProxyClient } from './create-proxy-client';
-import { mapAccountInfo } from './map-account-info';
-import { MsalModuleVersion } from '../static';
+import type { IMsalProvider } from '../MsalProvider.interface.js';
+import type { IMsalProvider as IMsalProvider_v2 } from './MsalProvider.interface.js';
+import type { AccountInfo as AccountInfo_v2 } from './types.js';
+import type { AcquireTokenOptions } from '../MsalClient.interface.js';
+import { createProxyClient } from './create-proxy-client.js';
+import { mapAccountInfo } from './map-account-info.js';
+import { MsalModuleVersion } from '../static.js';
 
 /**
  * Checks if a request is in MSAL v4 format.

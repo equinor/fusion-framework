@@ -1,7 +1,7 @@
 import { FrameworkEvent, type FrameworkEventInit } from '@equinor/fusion-framework-module-event';
 
-import type { INavigationProvider } from './NavigationProvider.interface';
-import type { Action, NavigationUpdate } from './lib/types';
+import type { INavigationProvider } from './NavigationProvider.interface.js';
+import type { Action, NavigationUpdate } from './lib/types.js';
 
 /** Event detail for navigated events (after navigation). */
 export interface NavigatedEventDetail {

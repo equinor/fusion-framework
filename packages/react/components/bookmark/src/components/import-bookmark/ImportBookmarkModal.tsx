@@ -1,8 +1,8 @@
 import { Button, Dialog } from '@equinor/eds-core-react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
-import styled from 'styled-components';
-import { useBookmarkComponentContext } from '../BookmarkProvider';
+import { styled } from 'styled-components';
+import { useBookmarkComponentContext } from '../BookmarkProvider.js';
 import { filter, from, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { useObservableState } from '@equinor/fusion-observable/react';

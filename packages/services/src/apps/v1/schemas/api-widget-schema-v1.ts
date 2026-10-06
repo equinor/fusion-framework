@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { ApiWidgetAdminSchemaV1 } from './api-widget-admin-schema-v1';
-import { ApiWidgetVersionSchemaV1 } from './api-widget-version-schema-v1';
+import { ApiWidgetAdminSchemaV1 } from './api-widget-admin-schema-v1.js';
+import { ApiWidgetVersionSchemaV1 } from './api-widget-version-schema-v1.js';
 
 /**
  * Zod schema for the `ApiWidget` model published by the Fusion Apps API 1.0.

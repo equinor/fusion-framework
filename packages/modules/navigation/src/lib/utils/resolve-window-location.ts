@@ -1,5 +1,5 @@
-import type { Location } from '../types';
-import { resolvePath } from './resolve-path';
+import type { Location } from '../types.js';
+import { resolvePath } from './resolve-path.js';
 
 const resolveState = (target?: { state: unknown }): { state: unknown; key: string } => {
   const { value, key = 'unknown' } =

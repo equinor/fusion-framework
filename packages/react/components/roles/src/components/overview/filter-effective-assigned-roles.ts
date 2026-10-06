@@ -1,5 +1,5 @@
-import { parseRoleDate } from '../../dates/parse-role-date';
-import type { AssignedRoleDetails } from './role-details';
+import { parseRoleDate } from '../../dates/parse-role-date.js';
+import type { AssignedRoleDetails } from './role-details.js';
 
 /**
  * Selects assigned role assignments that are currently within their effective window.

@@ -1,11 +1,11 @@
-export { jsonSelector } from './json-selector';
-export { blobSelector } from './blob-selector';
-export { createSseSelector } from './create-sse-selector';
+export { jsonSelector } from './json-selector.js';
+export { blobSelector } from './blob-selector.js';
+export { createSseSelector } from './create-sse-selector.js';
 
-export type { ResponseSelector } from '../client/types';
+export type { ResponseSelector } from '../client/types.js';
 export type {
   DataParser,
   ServerSentEvent,
   SseSelector,
   SseSelectorOptions,
-} from './create-sse-selector';
+} from './create-sse-selector.js';

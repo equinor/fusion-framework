@@ -9,7 +9,7 @@ import event from '@equinor/fusion-framework-module-event';
 import http, { configureHttpClient, configureHttp } from '@equinor/fusion-framework-module-http';
 import auth, { configureMsal } from '@equinor/fusion-framework-module-msal';
 
-import type { WidgetModules } from './types';
+import type { WidgetModules } from './types.js';
 
 /**
  * Configuration interface for setting up widget modules.

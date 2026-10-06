@@ -1,1 +1,1 @@
-export { ContextSelector } from './ContextSelector';
+export { ContextSelector } from './ContextSelector.js';

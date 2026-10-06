@@ -1,8 +1,8 @@
 import type { Module } from '@equinor/fusion-framework-module';
-import type { ISignalRConfigurator } from './SignalRModuleConfigBuilder';
-import { SignalRConfigurator } from './SignalRConfigurator';
+import type { ISignalRConfigurator } from './SignalRModuleConfigBuilder.js';
+import { SignalRConfigurator } from './SignalRConfigurator.js';
 
-import { type ISignalRProvider, SignalRModuleProvider } from './SignalRModuleProvider';
+import { type ISignalRProvider, SignalRModuleProvider } from './SignalRModuleProvider.js';
 
 /** String literal key used to register the SignalR module in the Fusion Framework module system. */
 export type SignalRModuleKey = 'signalR';

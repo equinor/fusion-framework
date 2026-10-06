@@ -1,1 +1,1 @@
-export { ClientMethodType, ClientMethod, ApiClientArguments } from '..';
+export { ClientMethodType, ClientMethod, ApiClientArguments } from '../index.js';

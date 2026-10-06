@@ -2,7 +2,7 @@ import type { AppManifest } from '@equinor/fusion-framework-module-app';
 import { useObservableState } from '@equinor/fusion-observable/react';
 import { useMemo } from 'react';
 
-import { useAppProvider } from './useAppProvider';
+import { useAppProvider } from './useAppProvider.js';
 
 type UseAppsArgs = {
   /** @deprecated - no longer available */

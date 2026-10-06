@@ -7,25 +7,25 @@
 export {
   AccessRoleBoundary,
   type AccessRoleBoundaryProps,
-} from './components/required-access/AccessRoleBoundary';
-export { RolesView, type RolesViewProps } from './components/RolesView';
-export { RolesProvider, type RolesProviderProps } from './context/RolesProvider';
+} from './components/required-access/AccessRoleBoundary.js';
+export { RolesView, type RolesViewProps } from './components/RolesView.js';
+export { RolesProvider, type RolesProviderProps } from './context/RolesProvider.js';
 export type {
   ActiveAccessRoleAssignments,
   ClaimableRoleAssignmentActivationResult,
   ClaimableRoleAssignmentDeactivationResult,
   ConsolidatedClaimableRoleAssignments,
   ConsolidatedRoleAssignments,
-} from './context/roles-context';
+} from './context/roles-context.js';
 export {
   useActiveAccessRoleAssignments,
   type UseActiveAccessRoleAssignmentsResult,
-} from './hooks/useActiveAccessRoleAssignments';
+} from './hooks/useActiveAccessRoleAssignments.js';
 export {
   useClaimableRoleAssignments,
   type UseClaimableRoleAssignmentsResult,
-} from './hooks/useClaimableRoleAssignments';
+} from './hooks/useClaimableRoleAssignments.js';
 export {
   useRoleAssignments,
   type UseRoleAssignmentsResult,
-} from './hooks/useRoleAssignments';
+} from './hooks/useRoleAssignments.js';

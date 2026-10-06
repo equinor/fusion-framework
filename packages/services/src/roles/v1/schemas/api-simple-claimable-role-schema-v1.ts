@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { ApiClaimableAccessRoleMappingSchemaV1 } from './api-claimable-access-role-mapping-schema-v1';
-import { ApiSimpleSystemSchemaV1 } from './api-simple-system-schema-v1';
+import { ApiClaimableAccessRoleMappingSchemaV1 } from './api-claimable-access-role-mapping-schema-v1.js';
+import { ApiSimpleSystemSchemaV1 } from './api-simple-system-schema-v1.js';
 
 /** Zod schema for the minimal claimable role returned in assignment responses. */
 export const ApiSimpleClaimableRoleSchemaV1 = z

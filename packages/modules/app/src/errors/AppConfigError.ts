@@ -1,4 +1,4 @@
-import type { AppErrorType } from './app-error-type';
+import type { AppErrorType } from './app-error-type.js';
 
 /**
  * Represents an error that occurs in the application configuration.

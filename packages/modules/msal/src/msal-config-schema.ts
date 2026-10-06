@@ -2,10 +2,10 @@ import z from 'zod';
 import semver from 'semver';
 import { CacheLookupPolicy } from '@azure/msal-browser';
 
-import type { IMsalClient } from './MsalClient.interface';
-import type { IMsalProvider } from './MsalProvider.interface';
-import { TelemetryConfigSchema } from './telemetry-config-schema';
-export type { TelemetryConfig } from './telemetry-config-schema';
+import type { IMsalClient } from './MsalClient.interface.js';
+import type { IMsalProvider } from './MsalProvider.interface.js';
+import { TelemetryConfigSchema } from './telemetry-config-schema.js';
+export type { TelemetryConfig } from './telemetry-config-schema.js';
 
 /**
  * Zod schema for MSAL module configuration validation.

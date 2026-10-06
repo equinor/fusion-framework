@@ -1,14 +1,14 @@
 import type { ClientRequestInit, IHttpClient } from '@equinor/fusion-framework-module-http/client';
-import type { ClientMethod } from '../../../types';
-import type { ApiVersion } from '../../static';
+import type { ClientMethod } from '../../../types.js';
+import type { ApiVersion } from '../../static.js';
 
-import { generateParameters } from './generate-parameters';
+import { generateParameters } from './generate-parameters.js';
 
 import type {
   DeleteNotificationArgs,
   DeleteNotificationResponse,
   DeleteNotificationResult,
-} from './types';
+} from './types.js';
 
 /**
  * Method for deleting notification item from notifications service

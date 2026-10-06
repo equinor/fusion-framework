@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { PatchPropertyOfAccountIdentifierSchemaV1 } from './patch-property-of-account-identifier-schema-v1';
-import { PatchPropertyOfStringSchemaV1 } from './patch-property-of-string-schema-v1';
+import { PatchPropertyOfAccountIdentifierSchemaV1 } from './patch-property-of-account-identifier-schema-v1.js';
+import { PatchPropertyOfStringSchemaV1 } from './patch-property-of-string-schema-v1.js';
 
 /**
  * Zod schema for the `PatchTechnologyProductRequest` model published by the Fusion Apps API 1.0.

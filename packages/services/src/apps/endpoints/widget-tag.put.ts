@@ -16,12 +16,12 @@ import type {
   VersionedArgs,
   VersionedParsedArgs,
   VersionedResponse,
-} from '../types';
+} from '../types.js';
 
-import { extractVersion, parseVersionedArgs, versionedResponseSelector } from '../../utils';
-import { ApiVersion } from '../static';
-import { ApiWidgetTagSchemaV1 } from '../v1/schemas/api-widget-tag-schema-v1';
-import { CreateWidgetTagRequestSchemaV1 } from '../v1/schemas/create-widget-tag-request-schema-v1';
+import { extractVersion, parseVersionedArgs, versionedResponseSelector } from '../../utils.js';
+import { ApiVersion } from '../static.js';
+import { ApiWidgetTagSchemaV1 } from '../v1/schemas/api-widget-tag-schema-v1.js';
+import { CreateWidgetTagRequestSchemaV1 } from '../v1/schemas/create-widget-tag-request-schema-v1.js';
 
 /** Concrete API versions this operation publishes. */
 type AvailableVersions = ApiVersion.v1;

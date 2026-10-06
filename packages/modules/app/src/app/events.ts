@@ -1,6 +1,6 @@
 import type { FrameworkEvent, FrameworkEventInit } from '@equinor/fusion-framework-module-event';
 
-import type { App } from './App';
+import type { App } from './App.js';
 
 import type {
   AppConfig,
@@ -8,7 +8,7 @@ import type {
   AppModulesInstance,
   AppScriptModule,
   AppSettings,
-} from '../types';
+} from '../types.js';
 
 /**
  * Base event initialization type for application lifecycle events.

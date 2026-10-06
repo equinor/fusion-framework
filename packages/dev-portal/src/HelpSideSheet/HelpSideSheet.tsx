@@ -5,16 +5,16 @@ import { useCurrentApp } from '@equinor/fusion-framework-react/app';
 import { SideSheet } from '@equinor/fusion-react-side-sheet';
 import { styled } from 'styled-components';
 
-import { HELP_PAGES } from './help-pages';
-import { HelpArticleView } from './HelpArticleView';
-import { HelpFaqs } from './HelpFaqs';
-import { HelpHome } from './HelpHome';
-import { HelpSearch } from './HelpSearch';
-import { HelpNavigation } from './HelpNavigation';
-import type { HelpRequest } from './parse-help-request';
-import { useHelpArticle } from './useHelpArticle';
-import { useHelpArticles } from './useHelpArticles';
-import { useHelpRequest } from './useHelpRequest';
+import { HELP_PAGES } from './help-pages.js';
+import { HelpArticleView } from './HelpArticleView.js';
+import { HelpFaqs } from './HelpFaqs.js';
+import { HelpHome } from './HelpHome.js';
+import { HelpSearch } from './HelpSearch.js';
+import { HelpNavigation } from './HelpNavigation.js';
+import type { HelpRequest } from './parse-help-request.js';
+import { useHelpArticle } from './useHelpArticle.js';
+import { useHelpArticles } from './useHelpArticles.js';
+import { useHelpRequest } from './useHelpRequest.js';
 
 /** Initial panel width; wide enough for the sidebar next to readable article text. */
 const PANEL_WIDTH = 820;

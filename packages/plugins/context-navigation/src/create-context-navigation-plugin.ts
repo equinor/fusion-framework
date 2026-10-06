@@ -5,19 +5,19 @@ import type { IContextProvider } from '@equinor/fusion-framework-module-context'
 import type { IEventModuleProvider } from '@equinor/fusion-framework-module-event';
 import type { INavigationProvider } from '@equinor/fusion-framework-module-navigation';
 
-import type { ContextNavigationConfig } from './types';
-import { getCurrentURL, resolveAdapter } from './helpers';
-import type { OwnNavigationTokens } from './apply-navigation';
-import { activeAppNavigationEvents } from './operators/active-app-navigation-events';
+import type { ContextNavigationConfig } from './types.js';
+import { getCurrentURL, resolveAdapter } from './helpers/index.js';
+import type { OwnNavigationTokens } from './apply-navigation.js';
+import { activeAppNavigationEvents } from './operators/active-app-navigation-events.js';
 import {
   consumeOwnNavToken,
   handlePushModeGuard,
   handleReplaceModeGuard,
   isInAppScope,
   type GuardTickDeps,
-} from './guard-handlers';
-import { reconcile } from './reconcile';
-import { version } from './version';
+} from './guard-handlers/index.js';
+import { reconcile } from './reconcile.js';
+import { version } from './version.js';
 
 /**
  * Arguments required to initialize the context-navigation plugin.

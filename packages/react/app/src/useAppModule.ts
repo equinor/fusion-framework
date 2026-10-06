@@ -6,7 +6,7 @@ import type {
   ModuleTypes,
 } from '@equinor/fusion-framework-module';
 
-import { useAppModules } from './useAppModules';
+import { useAppModules } from './useAppModules.js';
 
 /**
  * React hook that retrieves a single module instance from the application scope.

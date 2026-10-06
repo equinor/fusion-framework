@@ -1,6 +1,6 @@
 import type { ContextItem } from '@equinor/fusion-framework-module-context';
-import type { ContextNavigationAdapter, AdapterResolutionContext } from './types';
-import { CONTEXT_QUERY_PARAM_KEY } from '../constants';
+import type { ContextNavigationAdapter, AdapterResolutionContext } from './types.js';
+import { CONTEXT_QUERY_PARAM_KEY } from '../constants/index.js';
 
 /**
  * Query adapter — encodes context identity as a URL query parameter.

@@ -5,11 +5,16 @@ import type {
   ContextNavigationAdapterResolvedDetail,
   ContextNavigationConfig,
   ContextNavigationSkippedDetail,
-} from './types';
-import type { ContextNavigationEventSource } from './create-context-navigation-plugin';
-import type { ReconcilerSourceEntry } from './sources/types';
-import { getCurrentURL, normalizePathFromURL, resolveAdapter, stripQueryParams } from './helpers';
-import { applyNavigation, type ApplyNavigationDeps } from './apply-navigation';
+} from './types.js';
+import type { ContextNavigationEventSource } from './create-context-navigation-plugin.js';
+import type { ReconcilerSourceEntry } from './sources/types.js';
+import {
+  getCurrentURL,
+  normalizePathFromURL,
+  resolveAdapter,
+  stripQueryParams,
+} from './helpers/index.js';
+import { applyNavigation, type ApplyNavigationDeps } from './apply-navigation.js';
 
 /** Dependencies required by {@link reconcile}. */
 export interface ReconcileDeps extends ApplyNavigationDeps {

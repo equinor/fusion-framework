@@ -12,7 +12,7 @@
  * ```
  */
 
-export { BookmarksApiClient, default } from './client';
-export { ApiVersion } from './api-version';
-export * from './bookmark.schemas';
-export type * from './types';
+export { BookmarksApiClient, default } from './client.js';
+export { ApiVersion } from './api-version.js';
+export * from './bookmark.schemas.js';
+export type * from './types.js';

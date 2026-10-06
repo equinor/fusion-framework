@@ -1,10 +1,10 @@
 import { createState, type ReducerWithInitialState } from '@equinor/fusion-observable';
-import { actions, type Actions } from './actions';
-import { flowCreators } from './flow-creators';
-import { createFlow } from './create-flow';
-import type { HistoryFlowCreator } from './navigate';
-import type { HistoryStack, LocationState } from '../types';
-import type { HistoryState } from './history.state';
+import { actions, type Actions } from './actions.js';
+import { flowCreators } from './flow-creators.js';
+import { createFlow } from './create-flow.js';
+import type { HistoryFlowCreator } from './navigate.js';
+import type { HistoryStack, LocationState } from '../types.js';
+import type { HistoryState } from './history.state.js';
 
 /**
  * Creates a history store with the specified stack and reducer.

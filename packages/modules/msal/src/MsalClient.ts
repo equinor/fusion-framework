@@ -15,7 +15,7 @@ import type {
   LogoutOptions,
   LoginResult,
   AcquireTokenOptions,
-} from './MsalClient.interface';
+} from './MsalClient.interface.js';
 
 export type { IMsalClient };
 

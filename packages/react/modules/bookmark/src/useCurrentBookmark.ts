@@ -6,7 +6,7 @@ import type {
   IBookmarkProvider,
 } from '@equinor/fusion-framework-module-bookmark';
 import { useObservableState } from '@equinor/fusion-observable/react';
-import { useBookmarkProvider } from './useBookmarkProvider';
+import { useBookmarkProvider } from './useBookmarkProvider.js';
 import { EMPTY, from } from 'rxjs';
 
 export type useCurrentBookmarkOptions<TData extends BookmarkData> = {

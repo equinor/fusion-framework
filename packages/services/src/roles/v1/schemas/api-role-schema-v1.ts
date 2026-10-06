@@ -1,7 +1,7 @@
 import { z } from 'zod';
-import { ApiAccessRoleMappingSchemaV1 } from './api-access-role-mapping-schema-v1';
-import { ApiAccountSchemaV1 } from './api-account-schema-v1';
-import { ApiSimpleRoleSchemaV1 } from './api-simple-role-schema-v1';
+import { ApiAccessRoleMappingSchemaV1 } from './api-access-role-mapping-schema-v1.js';
+import { ApiAccountSchemaV1 } from './api-account-schema-v1.js';
+import { ApiSimpleRoleSchemaV1 } from './api-simple-role-schema-v1.js';
 
 /** Zod schema for a complete role returned by the Fusion Roles V2 API. */
 export const ApiRoleSchemaV1 = ApiSimpleRoleSchemaV1.and(

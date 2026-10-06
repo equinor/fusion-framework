@@ -1,4 +1,4 @@
-import { useFramework } from '../useFramework';
+import { useFramework } from '../useFramework.js';
 
 import {
   type SignalRModule,

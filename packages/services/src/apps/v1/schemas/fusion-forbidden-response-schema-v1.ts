@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { ForbiddenItemSchemaV1 } from './forbidden-item-schema-v1';
+import { ForbiddenItemSchemaV1 } from './forbidden-item-schema-v1.js';
 
 /**
  * Zod schema for the `FusionForbiddenResponse` model published by the Fusion Apps API 1.0.

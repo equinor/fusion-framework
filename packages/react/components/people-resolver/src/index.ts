@@ -1,1 +1,1 @@
-export { PeopleResolverProvider, default } from './PeopleResolverProvider';
+export { PeopleResolverProvider, default } from './PeopleResolverProvider.js';

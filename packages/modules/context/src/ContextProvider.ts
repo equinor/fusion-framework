@@ -10,13 +10,13 @@ import {
   tap,
 } from 'rxjs/operators';
 
-import type { ContextModuleConfig } from './ContextModuleConfig';
+import type { ContextModuleConfig } from './ContextModuleConfig.js';
 
 import { BaseModuleProvider } from '@equinor/fusion-framework-module/provider';
 import { version } from './version.js';
 
-import { ContextClient } from './client/ContextClient';
-import type { ContextItem, QueryContextParameters, RelatedContextParameters } from './types';
+import { ContextClient } from './client/ContextClient.js';
+import type { ContextItem, QueryContextParameters, RelatedContextParameters } from './types.js';
 import type { ModuleType } from '@equinor/fusion-framework-module';
 import type {
   EventModule,

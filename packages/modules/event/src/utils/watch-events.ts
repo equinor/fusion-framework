@@ -1,6 +1,6 @@
-import type { IEventModuleProvider } from '../EventModuleProvider';
-import type { IFrameworkEvent } from '../FrameworkEvent';
-import { applyEventMatcher, type EventMatcher } from './apply-event-matcher';
+import type { IEventModuleProvider } from '../EventModuleProvider.js';
+import type { IFrameworkEvent } from '../FrameworkEvent.js';
+import { applyEventMatcher, type EventMatcher } from './apply-event-matcher.js';
 
 /**
  * A handle returned by {@link watchEvents} that exposes collected events and a

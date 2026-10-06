@@ -1,9 +1,9 @@
 import { useEffect, useState, type ReactNode } from 'react';
 import type { RolesModule } from '@equinor/fusion-framework-module-roles';
 import { useModule } from '@equinor/fusion-framework-react-module';
-import { CheckingRolesView } from './CheckingRolesView';
-import { getRequiredAccessRolesKey } from './get-required-access-roles-key';
-import { toAccessRoleError } from './to-access-role-error';
+import { CheckingRolesView } from './CheckingRolesView.js';
+import { getRequiredAccessRolesKey } from './get-required-access-roles-key.js';
+import { toAccessRoleError } from './to-access-role-error.js';
 
 /** Access-role requirements and the subtree whose mounting must be gated. */
 interface AccessRoleGateProps {

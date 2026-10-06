@@ -9,7 +9,7 @@ import type {
   CurrentApp,
 } from '@equinor/fusion-framework-module-app';
 
-import { useFramework } from '../useFramework';
+import { useFramework } from '../useFramework.js';
 
 /**
  * React hook that observes and returns the currently active application.

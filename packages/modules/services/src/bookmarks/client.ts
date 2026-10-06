@@ -1,5 +1,5 @@
 import type { ClientRequestInit, IHttpClient } from '@equinor/fusion-framework-module-http/client';
-import type { ClientMethod } from '../types';
+import type { ClientMethod } from '../types.js';
 
 import {
   type GetBookmarksArgs,
@@ -7,7 +7,7 @@ import {
   type GetBookmarksResult,
   type GetBookmarksVersion,
   getBookmarks,
-} from './endpoints/user-bookmarks.get';
+} from './endpoints/user-bookmarks.get.js';
 
 import {
   type GetBookmarkArg,
@@ -15,7 +15,7 @@ import {
   type GetBookmarkResult,
   type GetBookmarkVersion,
   getBookmark,
-} from './endpoints/bookmark.get';
+} from './endpoints/bookmark.get.js';
 
 import {
   type CreateBookmarkArg,
@@ -23,14 +23,14 @@ import {
   type CreateBookmarkVersion,
   type CreateBookmarksResult,
   createBookmark,
-} from './endpoints/bookmark.post';
+} from './endpoints/bookmark.post.js';
 import {
   type PatchBookmarkArg,
   type PatchBookmarkResponse,
   type PatchBookmarkVersion,
   type PatchBookmarksResult,
   patchBookmark,
-} from './endpoints/bookmark.patch';
+} from './endpoints/bookmark.patch.js';
 
 import {
   type BookmarkApplyArgs,
@@ -38,34 +38,34 @@ import {
   type BookmarkApplyResult,
   type BookmarkApplyVersion,
   getBookmarkApply,
-} from './endpoints/bookmark-apply.get';
+} from './endpoints/bookmark-apply.get.js';
 import {
   type AddBookmarkFavouriteArgs,
   type AddBookmarkFavouriteResponse,
   type AddBookmarkFavouriteResult,
   type AddBookmarkFavouriteVersion,
   addBookmarkAsFavourite,
-} from './endpoints/user-bookmark-favourite.post';
+} from './endpoints/user-bookmark-favourite.post.js';
 import {
   type DeleteBookmarkArg,
   type DeleteBookmarkResponse,
   type DeleteBookmarkVersion,
   deleteBookmark,
-} from './endpoints/bookmark.delete';
+} from './endpoints/bookmark.delete.js';
 import {
   type IsFavoriteBookmarkArgs,
   type IsFavoriteBookmarkResponse,
   type IsFavoriteBookmarkResult,
   type IsFavoriteBookmarkVersion,
   isFavoriteBookmark,
-} from './endpoints/user-bookmark-favourite.head';
+} from './endpoints/user-bookmark-favourite.head.js';
 import {
   type RemoveBookmarkFavouriteArgs,
   type RemoveBookmarkFavouriteResponse,
   type RemoveBookmarkFavouriteResult,
   type RemoveBookmarkFavouriteVersion,
   removeFavoriteBookmark,
-} from './endpoints/user-bookmark-favourite.delete';
+} from './endpoints/user-bookmark-favourite.delete.js';
 
 /**
  * Provides a client interface for interacting with the bookmarks API.

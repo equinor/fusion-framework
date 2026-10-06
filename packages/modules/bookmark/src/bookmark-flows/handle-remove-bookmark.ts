@@ -3,8 +3,8 @@ import { map, concatMap, filter } from 'rxjs/operators';
 
 import { type Flow, getBaseType } from '@equinor/fusion-observable';
 
-import { bookmarkActions as actions, type BookmarkActions } from '../bookmark-actions';
-import type { IBookmarkClient } from '../BookmarkClient.interface';
+import { bookmarkActions as actions, type BookmarkActions } from '../bookmark-actions.js';
+import type { IBookmarkClient } from '../BookmarkClient.interface.js';
 
 /**
  * Creates a flow for handling bookmark removal.

@@ -1,6 +1,6 @@
-import type { ApiPerson_v2 } from './api-models.v2';
-import type { ApiPerson_v4 } from './api-models.v4';
-import { ApiVersion } from './static';
+import type { ApiPerson_v2 } from './api-models.v2.js';
+import type { ApiPerson_v4 } from './api-models.v4.js';
+import { ApiVersion } from './static.js';
 
 /** Project master reference attached to a person's contract. */
 export type ApiProjectMaster = {

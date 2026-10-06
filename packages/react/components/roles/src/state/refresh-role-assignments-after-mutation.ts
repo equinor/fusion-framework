@@ -3,7 +3,7 @@ import { catchError, map } from 'rxjs/operators';
 
 import type { IRolesProvider } from '@equinor/fusion-framework-module-roles';
 
-import { rolesActions, type RolesAction } from './roles-actions';
+import { rolesActions, type RolesAction } from './roles-actions.js';
 
 /**
  * Refreshes both mutated collections without turning a committed mutation into a failed operation.

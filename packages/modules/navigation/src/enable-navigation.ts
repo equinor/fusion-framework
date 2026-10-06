@@ -1,5 +1,5 @@
 import type { IModulesConfigurator, ModuleConfigType } from '@equinor/fusion-framework-module';
-import { module, type NavigationModule } from './module';
+import { module, type NavigationModule } from './module.js';
 
 /**
  * Helper function to enable the navigation module.

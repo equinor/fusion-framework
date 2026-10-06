@@ -2,11 +2,11 @@ import { of } from 'rxjs';
 
 import type { ConfigBuilderCallbackArgs } from '@equinor/fusion-framework-module';
 
-import { BookmarkModuleConfigurator } from '../BookmarkModuleConfigurator';
-import type { IBookmarkProvider } from '../BookmarkProvider.interface';
-import type { Bookmark, BookmarkModuleConfig } from '../types';
+import { BookmarkModuleConfigurator } from '../BookmarkModuleConfigurator.js';
+import type { IBookmarkProvider } from '../BookmarkProvider.interface.js';
+import type { Bookmark, BookmarkModuleConfig } from '../types.js';
 
-import { BookmarkMockClient } from './BookmarkMockClient';
+import { BookmarkMockClient } from './BookmarkMockClient.js';
 
 /**
  * Fallback application resolver used when the mock is configured standalone,

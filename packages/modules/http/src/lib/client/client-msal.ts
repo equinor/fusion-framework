@@ -1,6 +1,6 @@
 import type { Observable } from 'rxjs';
-import type { FetchRequestInit, FetchRequest, FetchResponse } from '.';
-import { HttpClient } from './client';
+import type { FetchRequestInit, FetchRequest, FetchResponse } from './index.js';
+import { HttpClient } from './client.js';
 
 /**
  * Extends the `FetchRequest` type with an optional `scopes` property, which is an array of strings representing the scopes to be used for the request.

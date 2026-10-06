@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { EndpointConfigRequestSchemaV1 } from './endpoint-config-request-schema-v1';
+import { EndpointConfigRequestSchemaV1 } from './endpoint-config-request-schema-v1.js';
 
 /**
  * Zod schema for the `CreateAppBuildConfigRequest` model published by the Fusion Apps API 1.0.

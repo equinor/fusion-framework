@@ -1,7 +1,7 @@
-import { StorageAdapter, type IStorageAdapter } from './StorageAdapter';
+import { StorageAdapter, type IStorageAdapter } from './StorageAdapter.js';
 
-import { LocalStorageAdapter } from './LocalStorageAdapter';
-import { SessionStorageAdapter } from './SessionStorageAdapter';
+import { LocalStorageAdapter } from './LocalStorageAdapter.js';
+import { SessionStorageAdapter } from './SessionStorageAdapter.js';
 
 export { type IStorageAdapter, StorageAdapter, LocalStorageAdapter, SessionStorageAdapter };
 

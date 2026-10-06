@@ -4,11 +4,11 @@ import { ErrorBoundary, type FallbackProps } from '@equinor/fusion-react-errorbo
 import type { RolesModule } from '@equinor/fusion-framework-module-roles';
 import { useModule } from '@equinor/fusion-framework-react-module';
 
-import { findRequiredAccessRolesError } from './find-required-access-roles-error';
-import { getRequiredAccessRolesKey } from './get-required-access-roles-key';
-import { AccessRoleGate } from './AccessRoleGate';
-import { RoleErrorView } from './RoleErrorView';
-import { toAccessRoleError } from './to-access-role-error';
+import { findRequiredAccessRolesError } from './find-required-access-roles-error.js';
+import { getRequiredAccessRolesKey } from './get-required-access-roles-key.js';
+import { AccessRoleGate } from './AccessRoleGate.js';
+import { RoleErrorView } from './RoleErrorView.js';
+import { toAccessRoleError } from './to-access-role-error.js';
 
 /**
  * Props for guarding a React subtree with required Roles V2 access-role names.

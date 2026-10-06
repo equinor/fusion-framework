@@ -1,8 +1,8 @@
 import type { IModulesConfigurator } from '@equinor/fusion-framework-module';
 
-import { module, type ContextModule } from '../module';
+import { module, type ContextModule } from '../module.js';
 
-import { ContextMockConfigurator } from './ContextMockConfigurator';
+import { ContextMockConfigurator } from './ContextMockConfigurator.js';
 
 /**
  * The context module with an in-memory mock configurator instead of a real

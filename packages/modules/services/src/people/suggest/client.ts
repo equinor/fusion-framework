@@ -1,9 +1,9 @@
 import type { ClientRequestInit, IHttpClient } from '@equinor/fusion-framework-module-http/client';
 
-import { generateParameters } from './generate-parameters';
+import { generateParameters } from './generate-parameters.js';
 
-import type { ClientMethod } from '../../types';
-import type { ApiResponse, ApiResult } from './types';
+import type { ClientMethod } from '../../types.js';
+import type { ApiResponse, ApiResult } from './types.js';
 
 /**
  * Client factory for calling the people suggest endpoint.

@@ -1,4 +1,4 @@
-import { CONTEXT_QUERY_PARAM_KEY } from '../../constants';
+import { CONTEXT_QUERY_PARAM_KEY } from '../../constants/index.js';
 
 /**
  * Removes the `$contextId` query parameter from a URL in-place.

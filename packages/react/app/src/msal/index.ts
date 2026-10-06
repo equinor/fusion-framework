@@ -11,6 +11,6 @@
  *
  * @packageDocumentation
  */
-export { useCurrentAccount } from './useCurrentAccount';
-export { useAccessToken } from './useAccessToken';
-export { useToken } from './useToken';
+export { useCurrentAccount } from './useCurrentAccount.js';
+export { useAccessToken } from './useAccessToken.js';
+export { useToken } from './useToken.js';

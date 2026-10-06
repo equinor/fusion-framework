@@ -1,11 +1,11 @@
-import { ServiceDiscoveryConfigurator } from '../configurator';
+import { ServiceDiscoveryConfigurator } from '../configurator.js';
 
-import type { MockService } from './create-mock-service';
-import { defaultServiceDiscoveryMockServices } from './default-service-discovery-mock-services';
+import type { MockService } from './create-mock-service.js';
+import { defaultServiceDiscoveryMockServices } from './default-service-discovery-mock-services.js';
 import {
   ServiceDiscoveryMockClient,
   type ServiceDiscoveryMockClientOptions,
-} from './ServiceDiscoveryMockClient';
+} from './ServiceDiscoveryMockClient.js';
 
 /**
  * The real service discovery configurator, backed by an in-memory registry.

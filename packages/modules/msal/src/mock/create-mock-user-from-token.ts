@@ -1,6 +1,6 @@
-import { decodeJwtSegment } from './decode-jwt-segment';
-import type { MockTokenClaims } from './create-mock-token';
-import type { MsalMockUser } from './types';
+import { decodeJwtSegment } from './decode-jwt-segment.js';
+import type { MockTokenClaims } from './create-mock-token.js';
+import type { MsalMockUser } from './types.js';
 
 /**
  * Derives internal mock identity fields from a JWT payload.

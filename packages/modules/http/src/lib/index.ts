@@ -1,3 +1,3 @@
-export * from './client';
-export * from './operators';
-export * from './selectors';
+export * from './client/index.js';
+export * from './operators/index.js';
+export * from './selectors/index.js';

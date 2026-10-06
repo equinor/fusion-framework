@@ -20,6 +20,6 @@
  *
  * @packageDocumentation
  */
-export { BookmarkMockClient } from './BookmarkMockClient';
-export { BookmarkMockConfigurator } from './BookmarkMockConfigurator';
-export { enableBookmarkMock, bookmarkMockModule, type BookmarkMockConfigFn } from './module';
+export { BookmarkMockClient } from './BookmarkMockClient.js';
+export { BookmarkMockConfigurator } from './BookmarkMockConfigurator.js';
+export { enableBookmarkMock, bookmarkMockModule, type BookmarkMockConfigFn } from './module.js';

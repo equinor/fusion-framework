@@ -1,4 +1,4 @@
-export { concatQueue } from './concat-queue';
-export { mergeQueue } from './merge-queue';
-export { switchQueue } from './switch-queue';
-export { queryValue } from './query-value';
+export { concatQueue } from './concat-queue.js';
+export { mergeQueue } from './merge-queue.js';
+export { switchQueue } from './switch-queue.js';
+export { queryValue } from './query-value.js';

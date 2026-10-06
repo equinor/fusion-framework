@@ -2,6 +2,7 @@
   "name": "@equinor/fusion-framework-module-feature-flag",
   "version": "2.1.1",
   "description": "",
+  "type": "module",
   "main": "dist/esm/index.js",
   "types": "./dist/types/index.d.ts",
   "exports": {

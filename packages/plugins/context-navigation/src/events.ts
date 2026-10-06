@@ -5,9 +5,9 @@ import type {
   ContextNavigationNavigatedDetail,
   ContextNavigationAdapterResolvedDetail,
   ContextNavigationSkippedDetail,
-} from './types';
+} from './types.js';
 
-import type { ContextNavigationEventSource } from './create-context-navigation-plugin';
+import type { ContextNavigationEventSource } from './create-context-navigation-plugin.js';
 
 declare module '@equinor/fusion-framework-module-event' {
   interface FrameworkEventMap {

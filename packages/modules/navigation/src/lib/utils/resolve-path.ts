@@ -1,5 +1,5 @@
-import type { Path, To } from '../types';
-import { pathToUrl } from './path-to-url';
+import type { Path, To } from '../types.js';
+import { pathToUrl } from './path-to-url.js';
 
 /**
  * Resolves a 'to' value into a Path object.

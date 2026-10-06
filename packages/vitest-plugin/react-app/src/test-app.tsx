@@ -10,7 +10,7 @@ import type { AppModule } from '@equinor/fusion-framework-module-app';
 import type { NavigationModule } from '@equinor/fusion-framework-module-navigation';
 import type { FrameworkMockConfigureFn } from '@equinor/fusion-framework/mock';
 
-import { defaultAppEnv, resolveFusion, createAppScopeWrapper } from './scope';
+import { defaultAppEnv, resolveFusion, createAppScopeWrapper } from './scope/index.js';
 
 /**
  * `vitest`'s `test`, extended with an application module scope fixture.

@@ -2,8 +2,8 @@ import { useCallback, useEffect, useState } from 'react';
 
 import { useFramework } from '@equinor/fusion-framework-react';
 
-import { HELP_OPEN_EVENT } from './help-open-event';
-import { parseHelpRequest, type HelpRequest } from './parse-help-request';
+import { HELP_OPEN_EVENT } from './help-open-event.js';
+import { parseHelpRequest, type HelpRequest } from './parse-help-request.js';
 
 /** Current help request, panel session, and navigation, returned by {@link useHelpRequest}. */
 export interface HelpRequestState {

@@ -1,4 +1,4 @@
-import type { ResponseSelector } from '../client/types';
+import type { ResponseSelector } from '../client/types.js';
 import { HttpJsonResponseError } from '../../errors/index.js';
 
 /**

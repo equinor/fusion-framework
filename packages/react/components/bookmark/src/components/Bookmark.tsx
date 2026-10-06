@@ -1,16 +1,16 @@
 import { EMPTY, map } from 'rxjs';
-import { useBookmarkGrouping } from '../hooks';
-import { BookmarkFilter } from './filter/BookmarkFilter';
-import { SectionList } from './sectionList/SectionList';
+import { useBookmarkGrouping } from '../hooks/index.js';
+import { BookmarkFilter } from './filter/BookmarkFilter.js';
+import { SectionList } from './sectionList/SectionList.js';
 import { useMemo } from 'react';
 
 import { Icon } from '@equinor/eds-core-react';
 import { chevron_down, chevron_right, share, more_vertical, add } from '@equinor/eds-icons';
 
-import styled from 'styled-components';
-import { Message } from './messages/Message';
-import { Loading } from './loading/Loading';
-import { useBookmarkComponentContext } from './BookmarkProvider';
+import { styled } from 'styled-components';
+import { Message } from './messages/Message.js';
+import { Loading } from './loading/Loading.js';
+import { useBookmarkComponentContext } from './BookmarkProvider.js';
 import { useObservableState } from '@equinor/fusion-observable/react';
 
 Icon.add({

@@ -1,5 +1,5 @@
-import type { IMsalProvider } from '../MsalProvider.interface';
-import { MsalModuleVersion } from '../static';
+import type { IMsalProvider } from '../MsalProvider.interface.js';
+import { MsalModuleVersion } from '../static.js';
 
 /**
  * Creates a v4-compatible proxy provider.

@@ -5,11 +5,11 @@ import { ThemeProvider, theme } from '@equinor/fusion-react-styles';
 
 import { PeopleResolverProvider } from '@equinor/fusion-framework-react-components-people-provider';
 
-import { EquinorLoader } from './EquinorLoader';
-import { configure } from './configure';
-import { Router } from './Router';
+import { EquinorLoader } from './EquinorLoader.js';
+import { configure } from './configure.js';
+import { Router } from './Router.js';
 
-import fallbackSvg from './resources/svg';
+import fallbackSvg from './resources/svg.js';
 
 /** Fallback avatar image used when a person photo cannot be loaded. */
 const fallbackImage = new Blob([fallbackSvg], { type: 'image/svg+xml' });

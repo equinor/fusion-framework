@@ -1,5 +1,5 @@
 import type { AccountInfo } from '@equinor/fusion-framework-module-msal';
-import { useFramework } from '../useFramework';
+import { useFramework } from '../useFramework.js';
 
 /**
  * React hook that returns the currently authenticated user's account info.

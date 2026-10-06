@@ -1,11 +1,11 @@
 import { fromEvent } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { BaseHistory } from './BaseHistory';
-import { BrowserHistoryStack } from './BrowserHistoryStack';
-import { BrowserHistoryHashStack } from './BrowserHistoryHashStack';
-import { resolveWindowLocation } from './utils';
-import { Action, type HistoryStack, type NavigationBlocker } from './types';
-import { createStore, createHistoryReducer, actions } from './state';
+import { BaseHistory } from './BaseHistory.js';
+import { BrowserHistoryStack } from './BrowserHistoryStack.js';
+import { BrowserHistoryHashStack } from './BrowserHistoryHashStack.js';
+import { resolveWindowLocation } from './utils/index.js';
+import { Action, type HistoryStack, type NavigationBlocker } from './types.js';
+import { createStore, createHistoryReducer, actions } from './state/index.js';
 
 /**
  * Handler for beforeunload events.

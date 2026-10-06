@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { ApiSimpleSystemSchemaV1 } from './api-simple-system-schema-v1';
+import { ApiSimpleSystemSchemaV1 } from './api-simple-system-schema-v1.js';
 
 /** Zod schema for the minimal role reference nested in assignment responses. */
 export const ApiSimpleRoleSchemaV1 = z

@@ -15,10 +15,10 @@ import { useObservableState } from '@equinor/fusion-observable/react';
 
 import { AppManifestError } from '@equinor/fusion-framework-module-app/errors.js';
 
-import { ErrorViewer } from './ErrorViewer';
+import { ErrorViewer } from './ErrorViewer.js';
 import type { AppModule } from '@equinor/fusion-framework-module-app';
-import EquinorLoader from './EquinorLoader';
-import { getAppTagFromUrl } from './get-app-tag-from-url';
+import EquinorLoader from './EquinorLoader.js';
+import { getAppTagFromUrl } from './get-app-tag-from-url.js';
 
 /**
  * Loads, initializes, and mounts a Fusion application by its key.

@@ -8,10 +8,10 @@ import {
   type ActionBaseType,
 } from '@equinor/fusion-observable';
 
-import { bookmarkActions, type BookmarkActions } from './bookmark-actions';
-import type { BookmarkState } from './create-bookmark-store';
-import type { BookmarkFlowError } from './BookmarkFlowError';
-import type { BookmarkWithoutData } from './types';
+import { bookmarkActions, type BookmarkActions } from './bookmark-actions.js';
+import type { BookmarkState } from './create-bookmark-store.js';
+import type { BookmarkFlowError } from './BookmarkFlowError.js';
+import type { BookmarkWithoutData } from './types.js';
 import { enableMapSet } from 'immer';
 
 enableMapSet();

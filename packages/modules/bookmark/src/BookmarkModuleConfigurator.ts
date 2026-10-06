@@ -11,11 +11,11 @@ import type { IApiProvider, ServicesModule } from '@equinor/fusion-framework-mod
 import type { AppModuleProvider } from '@equinor/fusion-framework-module-app';
 import type { ILogger, LogLevel } from '@equinor/fusion-log';
 
-import { BookmarkClient } from './BookmarkClient';
-import type { BookmarkModule } from './bookmark-module';
-import { bookmarkConfigSchema, parseBookmarkConfig } from './bookmark-config.schema';
-import type { BookmarkModuleConfig } from './types';
-import type { BookmarkProvider } from './BookmarkProvider';
+import { BookmarkClient } from './BookmarkClient.js';
+import type { BookmarkModule } from './bookmark-module.js';
+import { bookmarkConfigSchema, parseBookmarkConfig } from './bookmark-config.schema.js';
+import type { BookmarkModuleConfig } from './types.js';
+import type { BookmarkProvider } from './BookmarkProvider.js';
 
 const initialBookmarkConfig = bookmarkConfigSchema
   .pick({

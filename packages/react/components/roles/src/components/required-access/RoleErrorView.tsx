@@ -1,11 +1,11 @@
 import type { ReactNode } from 'react';
 import { Button, List, Typography } from '@equinor/eds-core-react';
-import styled from 'styled-components';
-import { CheckingRolesView } from './CheckingRolesView';
-import { RoleClaimableView } from './RoleClaimableView';
-import { RoleDoesNotExistView } from './RoleDoesNotExistView';
-import { RoleNotClaimableView } from './RoleNotClaimableView';
-import { useRequiredAccessRoleRecovery } from './useRequiredAccessRoleRecovery';
+import { styled } from 'styled-components';
+import { CheckingRolesView } from './CheckingRolesView.js';
+import { RoleClaimableView } from './RoleClaimableView.js';
+import { RoleDoesNotExistView } from './RoleDoesNotExistView.js';
+import { RoleNotClaimableView } from './RoleNotClaimableView.js';
+import { useRequiredAccessRoleRecovery } from './useRequiredAccessRoleRecovery.js';
 
 const Styled = {
   Recovery: styled.div`

@@ -1,5 +1,5 @@
 import type { z } from 'zod';
-import { TemplateSourceRequestSchemaV1 } from './template-source-request-schema-v1';
+import { TemplateSourceRequestSchemaV1 } from './template-source-request-schema-v1.js';
 
 /**
  * Zod schema for the `PatchPropertyOfTemplateSourceRequest` model published by the Fusion Apps API

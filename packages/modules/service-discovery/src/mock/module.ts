@@ -1,8 +1,8 @@
 import type { IModulesConfigurator } from '@equinor/fusion-framework-module';
 
-import { module as serviceDiscoveryModule, type ServiceDiscoveryModule } from '../module';
+import { module as serviceDiscoveryModule, type ServiceDiscoveryModule } from '../module.js';
 
-import { ServiceDiscoveryMockConfigurator } from './ServiceDiscoveryMockConfigurator';
+import { ServiceDiscoveryMockConfigurator } from './ServiceDiscoveryMockConfigurator.js';
 
 /**
  * The service discovery module with an in-memory registry instead of a live

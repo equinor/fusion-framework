@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { OrgChartScopeSchemaV1 } from './org-chart-scope-schema-v1';
+import { OrgChartScopeSchemaV1 } from './org-chart-scope-schema-v1.js';
 
 /** Zod schema for a role or claimable role produced by a matching org-chart rule. */
 export const OrgChartAssignEntrySchemaV1 = z

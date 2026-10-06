@@ -1,7 +1,7 @@
 import type { IHttpClient, ClientRequestInit } from '@equinor/fusion-framework-module-http/client';
-import type { ClientMethod } from '../../../types';
-import type { ApiNotificationEntity } from '../../api-models';
-import { ApiVersion } from '../../static';
+import type { ClientMethod } from '../../../types.js';
+import type { ApiNotificationEntity } from '../../api-models.js';
+import { ApiVersion } from '../../static.js';
 
 type PatchNotificationArgs_v1 = {
   id: string;

@@ -8,7 +8,7 @@ import {
 
 import type { ActionTypes } from '@equinor/fusion-observable';
 
-import type { QueryClientResult, RetryOptions } from './types';
+import type { QueryClientResult, RetryOptions } from './types.js';
 
 const createActions = <TType, TArgs>() => ({
   /**

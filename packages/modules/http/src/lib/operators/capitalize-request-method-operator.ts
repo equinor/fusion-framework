@@ -1,5 +1,5 @@
-import { requestMethodCasing } from './fetch-request.schemas';
-import type { ProcessOperator } from './types';
+import { requestMethodCasing } from './fetch-request.schemas.js';
+import type { ProcessOperator } from './types.js';
 
 /**
  * Ensures that the HTTP method of the given request is in uppercase.

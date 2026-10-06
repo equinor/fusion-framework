@@ -1,7 +1,7 @@
 import { Search } from '@equinor/eds-core-react';
-import type { GroupingKeys } from '../../hooks/useBookmarkGrouping';
+import type { GroupingKeys } from '../../hooks/useBookmarkGrouping.js';
 
-import styled from 'styled-components';
+import { styled } from 'styled-components';
 
 type BookmarkFilterProps = {
   readonly searchText: string;

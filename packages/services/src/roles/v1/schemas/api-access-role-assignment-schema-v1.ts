@@ -1,9 +1,9 @@
 import { z } from 'zod';
-import { ApiAccessRoleSchemaV1 } from './api-access-role-schema-v1';
-import { ApiAccountSchemaV1 } from './api-account-schema-v1';
-import { ApiScopeSchemaV1 } from './api-scope-schema-v1';
-import { ApiSimpleClaimableRoleAssignmentSchemaV1 } from './api-simple-claimable-role-assignment-schema-v1';
-import { ApiSimpleRoleAssignmentSchemaV1 } from './api-simple-role-assignment-schema-v1';
+import { ApiAccessRoleSchemaV1 } from './api-access-role-schema-v1.js';
+import { ApiAccountSchemaV1 } from './api-account-schema-v1.js';
+import { ApiScopeSchemaV1 } from './api-scope-schema-v1.js';
+import { ApiSimpleClaimableRoleAssignmentSchemaV1 } from './api-simple-claimable-role-assignment-schema-v1.js';
+import { ApiSimpleRoleAssignmentSchemaV1 } from './api-simple-role-assignment-schema-v1.js';
 
 /** Zod schema for an access-role assignment returned from a system-centric query. */
 export const ApiAccessRoleAssignmentSchemaV1 = z

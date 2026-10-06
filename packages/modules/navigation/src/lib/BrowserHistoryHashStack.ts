@@ -1,6 +1,6 @@
-import { BrowserHistoryStack } from './BrowserHistoryStack';
-import type { Location, To } from './types';
-import { resolveHashLocation, resolvePath, pathToString } from './utils';
+import { BrowserHistoryStack } from './BrowserHistoryStack.js';
+import type { Location, To } from './types.js';
+import { resolveHashLocation, resolvePath, pathToString } from './utils/index.js';
 
 /**
  * Browser history hash stack implementation using hash-based routing.

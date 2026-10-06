@@ -6,5 +6,5 @@
  *
  * @packageDocumentation
  */
-export { Apploader, type ApploaderProps } from './Apploader';
-export { useApploader } from './useApploader';
+export { Apploader, type ApploaderProps } from './Apploader.js';
+export { useApploader } from './useApploader.js';

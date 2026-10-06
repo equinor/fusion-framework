@@ -3,7 +3,7 @@ import { useEffect, useMemo, useSyncExternalStore } from 'react';
 import type { HasAccessRoleOptions, RolesModule } from '@equinor/fusion-framework-module-roles';
 import { createAccessRoleCheck } from '@equinor/fusion-framework-module-roles';
 
-import { useAppModule } from '../useAppModule';
+import { useAppModule } from '../useAppModule.js';
 
 /** Options for selecting any-role or all-role active access checks. */
 export type UseHasAccessRoleOptions = Pick<HasAccessRoleOptions, 'required'>;

@@ -13,16 +13,16 @@ import type {
   IRolesProvider,
 } from '@equinor/fusion-framework-module-roles';
 
-import { AccessRoleBoundary } from '../components/required-access/AccessRoleBoundary';
-import { RoleClaimDialog } from '../components/claim/RoleClaimDialog';
-import { RolesStore } from '../state/RolesStore';
+import { AccessRoleBoundary } from '../components/required-access/AccessRoleBoundary.js';
+import { RoleClaimDialog } from '../components/claim/RoleClaimDialog.js';
+import { RolesStore } from '../state/RolesStore.js';
 import type {
   ClaimableRoleAssignmentActivationResult,
   ClaimableRoleAssignmentDeactivationResult,
-} from '../state/roles-state';
-import { RolesContext, type RolesContextValue } from './roles-context';
-import type { RolesProviderProps } from './RolesProvider';
-import { useExpiredClaimableRoleAssignmentRecovery } from './useExpiredClaimableRoleAssignmentRecovery';
+} from '../state/roles-state.js';
+import { RolesContext, type RolesContextValue } from './roles-context.js';
+import type { RolesProviderProps } from './RolesProvider.js';
+import { useExpiredClaimableRoleAssignmentRecovery } from './useExpiredClaimableRoleAssignmentRecovery.js';
 
 const ROLE_ASSIGNMENT_REFRESH_INTERVAL_MS = 60_000;
 

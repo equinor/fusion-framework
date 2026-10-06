@@ -16,10 +16,10 @@ import http, {
 
 import auth from '@equinor/fusion-framework-module-msal';
 
-import type { AppEnv, AppModules } from './types';
-import { AppModulesConfiguredEvent } from './AppModulesConfiguredEvent';
-import { AppConfiguratorError } from './AppConfiguratorError';
-import { deepClone, deepFreeze, type DeepImmutable } from './utils';
+import type { AppEnv, AppModules } from './types.js';
+import { AppModulesConfiguredEvent } from './AppModulesConfiguredEvent.js';
+import { AppConfiguratorError } from './AppConfiguratorError.js';
+import { deepClone, deepFreeze, type DeepImmutable } from './utils.js';
 
 /**
  * Type definition for AppConfigurator constructor

@@ -1,4 +1,4 @@
-import type { ApiClientFactory } from './types';
+import type { ApiClientFactory } from './types.js';
 
 /**
  * Configuration interface for the services module.

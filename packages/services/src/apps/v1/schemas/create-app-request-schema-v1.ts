@@ -1,9 +1,9 @@
 import { z } from 'zod';
-import { AccountIdentifierSchemaV1 } from './account-identifier-schema-v1';
-import { AppCategoryIdentifierSchemaV1 } from './app-category-identifier-schema-v1';
-import { AppContextRequestSchemaV1 } from './app-context-request-schema-v1';
-import { AppVisualizationSchemaV1 } from './app-visualization-schema-v1';
-import { TemplateSourceRequestSchemaV1 } from './template-source-request-schema-v1';
+import { AccountIdentifierSchemaV1 } from './account-identifier-schema-v1.js';
+import { AppCategoryIdentifierSchemaV1 } from './app-category-identifier-schema-v1.js';
+import { AppContextRequestSchemaV1 } from './app-context-request-schema-v1.js';
+import { AppVisualizationSchemaV1 } from './app-visualization-schema-v1.js';
+import { TemplateSourceRequestSchemaV1 } from './template-source-request-schema-v1.js';
 
 /**
  * Zod schema for the `CreateAppRequest` model published by the Fusion Apps API 1.0.

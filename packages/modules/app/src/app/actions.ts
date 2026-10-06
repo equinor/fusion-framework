@@ -10,7 +10,7 @@ import type {
   AppModulesInstance,
   AppScriptModule,
   AppSettings,
-} from '../types';
+} from '../types.js';
 
 /**
  * Factory function that creates all action creators used by the {@link App}

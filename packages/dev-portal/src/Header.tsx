@@ -1,8 +1,8 @@
 import { useCallback, useId, useState } from 'react';
-import { ContextSelector } from './ContextSelector';
-import { FusionLogo } from './FusionLogo';
+import { ContextSelector } from './ContextSelector/index.js';
+import { FusionLogo } from './FusionLogo.js';
 
-import styled from 'styled-components';
+import { styled } from 'styled-components';
 import { add, menu, tag } from '@equinor/eds-icons';
 import { Icon, TopBar } from '@equinor/eds-core-react';
 Icon.add({ menu, add, tag });
@@ -17,13 +17,13 @@ import { BookmarkProvider } from '@equinor/fusion-framework-react-components-boo
 import PersonAvatarElement from '@equinor/fusion-wc-person/avatar';
 PersonAvatarElement; // Register the custom element - prevent tree-shaking
 
-import { PersonSideSheet } from './PersonSideSheet';
+import { PersonSideSheet } from './PersonSideSheet/index.js';
 
-import { BookmarkSideSheet } from './BookmarkSideSheet';
+import { BookmarkSideSheet } from './BookmarkSideSheet.js';
 
-import { HelpSideSheet } from './HelpSideSheet';
+import { HelpSideSheet } from './HelpSideSheet/index.js';
 
-import { HeaderActions } from './HeaderActions';
+import { HeaderActions } from './HeaderActions.js';
 
 const Styled = {
   Title: styled.div`

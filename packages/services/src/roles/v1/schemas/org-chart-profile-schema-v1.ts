@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { OrgChartRuleSchemaV1 } from './org-chart-rule-schema-v1';
+import { OrgChartRuleSchemaV1 } from './org-chart-rule-schema-v1.js';
 
 /** Zod schema for a named collection of org-chart rules. */
 export const OrgChartProfileSchemaV1 = z

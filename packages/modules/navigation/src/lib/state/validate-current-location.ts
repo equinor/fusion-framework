@@ -1,9 +1,9 @@
 import type { Observable } from 'rxjs';
 import { map, withLatestFrom } from 'rxjs/operators';
-import type { HistoryFlowCreator } from './navigate';
-import { actions, type Actions } from './actions';
+import type { HistoryFlowCreator } from './navigate.js';
+import { actions, type Actions } from './actions.js';
 import { filterAction } from '@equinor/fusion-observable/operators';
-import { Action, type LocationState, type HistoryStack } from '../types';
+import { Action, type LocationState, type HistoryStack } from '../types.js';
 
 /** Flow creator that validates the current stack location against reducer state. */
 export const validateCurrentLocation: HistoryFlowCreator =

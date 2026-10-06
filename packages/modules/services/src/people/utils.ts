@@ -1,5 +1,5 @@
-import type { ApiPerson } from './api-models';
-import { ApiVersion } from './static';
+import type { ApiPerson } from './api-models.js';
+import { ApiVersion } from './static.js';
 
 // type SupportedApiVersion = Extract<keyof typeof ApiVersion, 'v2' | 'v4'>;
 

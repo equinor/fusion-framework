@@ -1,7 +1,7 @@
 import type { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import type { Query } from '../Query';
+import type { Query } from '../Query.js';
 
 /**
  * Transforms a query result Observable into a plain value Observable by extracting the `value` property.
