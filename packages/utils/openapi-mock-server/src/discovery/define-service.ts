@@ -3,6 +3,7 @@ import type { FieldFakerValue, OpenApiDocumentLike } from '@equinor/fusion-opena
 import { createRouter, type Router } from './create-router.js';
 import type { ServiceMockDefinition } from './discover-services.js';
 import { flattenSchemaOverrides } from './flatten-schema-overrides.js';
+import type { MockControlHandler } from './mock-control.js';
 import type { RouteOverride } from './route-override.js';
 
 /** Controls how a local mock participates in the mock server's service-discovery response. */
@@ -22,6 +23,8 @@ interface DefineServiceBaseOptions {
   middleware?: (router: Router) => void;
   /** Clears mutable middleware state when the owning mock server resets. */
   reset?: () => void;
+  /** Control-plane routes served at `/@fusion-mock/<name>`, for tests to inspect or clear service state. */
+  control?: Record<string, MockControlHandler>;
 }
 
 /** Options for merging behavior onto an earlier service definition. */
@@ -78,6 +81,8 @@ export function defineService(options: DefineServiceOptions): ServiceMockDefinit
     ...(options.scopes ? { scopes: [...options.scopes] } : {}),
     // Omitting an absent hook lets a stateless merge layer inherit earlier reset behavior.
     ...(options.reset ? { reset: options.reset } : {}),
+    // Omitting absent control routes lets a merge layer inherit the earlier service's routes.
+    ...(options.control ? { control: { ...options.control } } : {}),
   };
 }
 

@@ -207,6 +207,7 @@ Use this table instead of searching. "Start here" is the first file to open.
 | Change app loading or manifests | `packages/modules/app/src`, `packages/app/src` |
 | Change build/dev CLI behavior | `packages/cli/src`, `packages/vite-plugins/spa/src` |
 | Add a lint rule | `packages/linting/rules/src`, register in `packages/linting/config/src` |
+| Mock Fusion services, help, or analytics for local runs and Playwright | `packages/utils/openapi-mock-server/src/presets/fusion` (analytics in `presets/fusion/analytics`), `ffc mock-server` wiring in `packages/cli-plugins/mock-server/src` |
 | Add an example for a feature | `cookbooks/app-react-*` |
 | Configure the human Copilot Codespace and prebuild warm-up | `.devcontainer/devcontainer.json`, `.devcontainer/mcp.json` |
 | Configure Copilot CLI with Fusion AI in Actions | `.github/actions/setup-copilot-fusion-ai` |

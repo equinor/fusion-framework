@@ -103,12 +103,13 @@ export default defineDevServerConfig(() => ({
     seed: 42,
     allowedOrigins: ['https://preview.example.test'],
     helpDocs: '../docs/my-app',
+    analytics: { seed: ['recordings/analytics.jsonl'] },
   },
 }));
 ```
 
-Command-line arguments override config defaults. `path` and `helpDocs` are relative to the
-project root.
+Command-line arguments override config defaults. `path`, `helpDocs`, and analytics paths are
+relative to the project root.
 
 > [!TIP]
 > Put shared team defaults in `dev-server.config.ts`; reserve command-line flags for temporary
@@ -145,6 +146,27 @@ a folder, or `helpDocs: false` / `--no-help-docs` to turn it off.
 See [Test help articles locally](../../utils/openapi-mock-server/docs/testing-help-articles.md)
 for article frontmatter, test ids, and troubleshooting.
 
+## Receive and check analytics
+
+`ffc mock-server` receives the analytics a Fusion app sends, as a mock `monitor` service, and
+reads them the same way Fusion's analytics pipeline does. It also answers the Apps service's
+`POST /apps/feature-events/query` with those events, so analytics pages show your own local usage.
+
+- Every batch is appended to `.fusion-mock/analytics.jsonl`, one entry per line. The folder gets a
+  `.gitignore` so recordings are not committed by accident. Choose another file with
+  `analytics.record` or `--analytics-record <file>`, or keep events in memory only with
+  `record: false` or `--no-analytics-record`.
+- Load earlier recordings, gzipped `logs_*.json.gz` landing-zone files, or folders of them at
+  start with `analytics.seed` or `--analytics-seed <path>`. A recording from one run can be the
+  seed for the next.
+- Tests read, wait for, and clear events with `createMockAnalytics()` from
+  `@equinor/fusion-openapi-mock-server`.
+- `analytics: false` or `--no-analytics` turns it off. A local `monitor.mock.ts` that is not a
+  merge layer replaces the analytics mock.
+
+The startup log shows where analytics are recorded and how many seeded events were loaded. See
+[Test analytics locally](../../utils/openapi-mock-server/docs/testing-analytics.md).
+
 ## Command reference
 
 ```text
@@ -161,6 +183,10 @@ ffc mock-server [dirs...] [options]
 | `--allow-origin <origin>` | Additional exact non-loopback browser origin allowed to call credentialed mock-auth endpoints. Repeat for multiple app origins. |
 | `--help-docs <dir>` | Help docs folder served as the local `help` service. Overrides `mockServer.helpDocs` and auto-detection. |
 | `--no-help-docs` | Do not serve local help articles, even when a help docs folder is configured or detected. |
+| `--analytics-record <file>` | JSON Lines file received analytics are appended to. Overrides `mockServer.analytics.record`; defaults to `.fusion-mock/analytics.jsonl`. |
+| `--no-analytics-record` | Keep received analytics in memory only. |
+| `--analytics-seed <path>` | Recording, landing-zone file, or folder loaded at start. Repeatable; overrides `mockServer.analytics.seed`. |
+| `--no-analytics` | Do not receive analytics or answer the app-feature events query. |
 
 The process shuts down on `SIGINT` and `SIGTERM`. Let Playwright `webServer`, `concurrently`, or a
 developer terminal own it instead of starting an unowned background process.
@@ -170,6 +196,7 @@ developer terminal own it instead of starting an unowned background process.
 - [OpenAPI mock-server getting started](../../utils/openapi-mock-server/docs/getting-started.md)
 - [Testing with Playwright](../../utils/openapi-mock-server/docs/testing-with-playwright.md)
 - [Test help articles locally](../../utils/openapi-mock-server/docs/testing-help-articles.md)
+- [Test analytics locally](../../utils/openapi-mock-server/docs/testing-analytics.md)
 - [Mock API and Playwright cookbook](../../../cookbooks/app-react-mock-playwright/README.md)
 
 ## License

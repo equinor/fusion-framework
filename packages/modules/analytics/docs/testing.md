@@ -1,6 +1,6 @@
 # Testing
 
-Use `MockAnalyticsAdapter` from `@equinor/fusion-framework-module-analytics/mock` to assert on tracked analytics events without exporting them to a real backend. Register it like any other adapter via `setAdapter`, then query or await recorded events from your test:
+Use `MockAnalyticsAdapter` from `@equinor/fusion-framework-module-analytics/mock` to assert on tracked analytics events without exporting them to a real backend. It fits unit and component tests (Vitest); for end-to-end tests in a browser, where the dev portal sends real requests, use `ffc mock-server` and `createMockAnalytics` instead — see [Test analytics locally](../../../utils/openapi-mock-server/docs/testing-analytics.md). Register it like any other adapter via `setAdapter`, then query or await recorded events from your test:
 
 ```ts
 import { enableAnalytics } from '@equinor/fusion-framework-module-analytics';

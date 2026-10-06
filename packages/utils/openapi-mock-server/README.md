@@ -46,10 +46,10 @@ system assigns a free port.
 
 | Import | Purpose |
 | --- | --- |
-| `@equinor/fusion-openapi-mock-server` | `createMockServer`, `createMockAuth`, and their server/session types. |
+| `@equinor/fusion-openapi-mock-server` | `createMockServer`, `createMockAuth`, `createMockAnalytics` (read, wait for, and reset recorded analytics in tests), and their server/session types. |
 | `@equinor/fusion-openapi-mock-server/discovery` | Define executable `<name>.mock.ts` modules with `defineService`, or use lower-level `discoverServices`, `createService`, and `createRouter` APIs. |
 | `@equinor/fusion-openapi-mock-server/presets` | Registry of bundled preset loaders. |
-| `@equinor/fusion-openapi-mock-server/presets/fusion` | `fusionPreset`, `defineRolesV2Mock`, and Fusion service definitions. |
+| `@equinor/fusion-openapi-mock-server/presets/fusion` | `fusionPreset`, `defineRolesV2Mock`, Fusion service definitions, `defineAnalyticsMock` (a mock Monitor service that receives, records, and seeds analytics), `defineAppFeatureEventsMock` (the Apps service's `POST /apps/feature-events/query` over those events), and `parseOtlpLogsRequest` / `parseOtlpResourceLog` / `projectAnalyticsEvent` for reading analytics the way Fusion's analytics pipeline does. |
 
 The mock server exposes generated service responses, source-defined field/path overrides,
 programmable middleware, and runtime operation overrides. Start with directory discovery; use the
@@ -65,3 +65,6 @@ expressed in JSON or YAML.
 - [Test help articles locally](docs/testing-help-articles.md) — serve local help docs as a mock
   `help` service with `defineHelpArticlesMock`, so the dev portal opens the articles an app
   requests with `useHelpCenter()`
+- [Test analytics locally](docs/testing-analytics.md) — receive, record, and seed the analytics an
+  app tracks with `useTrackFeature()`, check them in Playwright with `createMockAnalytics`, and
+  answer the app-feature events query with `defineAnalyticsMock` and `defineAppFeatureEventsMock`

@@ -44,6 +44,18 @@ server, and tears the servers down after the test run.
   FAQs page. [`playwright/help-articles.spec.ts`](playwright/help-articles.spec.ts) clicks every
   info icon and asserts the dev portal's article, not-found, and not-supported states. Renaming an
   article's `slug` fails its test.
+- [`src/analytics/`](src/analytics) tracks a `page-viewed` feature with the route on every page
+  ([`usePageViewTracking`](src/analytics/usePageViewTracking.ts)) and reads the app's own usage
+  back through the Apps service's `POST /apps/feature-events/query`
+  ([`useAppFeatureEvents`](src/analytics/useAppFeatureEvents.ts)).
+  [`src/routes/analytics/index.tsx`](src/routes/analytics/index.tsx) tracks a demo feature and
+  lists the events. With `--mock`, the dev portal sends the events to `ffc mock-server`, which reads
+  them like Fusion's analytics pipeline, records them to `.fusion-mock/analytics.jsonl`, and answers
+  the query with them plus the history in
+  [`mocks/analytics.seed.jsonl`](mocks/analytics.seed.jsonl) (`--analytics-seed`).
+  [`playwright/analytics.spec.ts`](playwright/analytics.spec.ts) waits for tracked features with
+  `createMockAnalytics`, checks their data, reads them through the query, and keeps parallel
+  browser contexts apart.
 - [`playwright.config.ts`](playwright.config.ts) starts `ffc mock-server` and runs `ffc app build`
   followed by `ffc app serve --mock` as Playwright `webServer` entries, then runs the
   specs under [`playwright/`](playwright) against the built app.
@@ -61,7 +73,7 @@ pnpm --filter @equinor/fusion-framework-cookbook-app-react-mock-playwright test
 To run the pieces individually while developing:
 
 ```sh
-pnpm mock:server   # ffc mock-server ./mocks --port 4010
+pnpm mock:server   # ffc mock-server ./mocks --port 4010 --analytics-seed mocks/analytics.seed.jsonl
 pnpm mock:dev      # ffc app dev --mock http://localhost:4010, in another terminal
 ffc app build
 ffc app serve --mock http://localhost:4010  # in another terminal
@@ -102,6 +114,11 @@ It does not start `ffc mock-server`; unreachable local service URIs remain unrea
 - **Local help articles**: help docs use the same frontmatter markdown files `fhelp` syncs to
   production. Edit an article while `pnpm mock:server` runs and open help again to see the change.
   See [Test help articles locally](../../packages/utils/openapi-mock-server/docs/testing-help-articles.md).
+- **Usage analytics**: give each test its own mock-auth user, so its analytics session is isolated,
+  and use `createMockAnalytics().waitFor()` rather than reading once, because the framework sends
+  analytics in batches. Tracked data arrives as `data_body_data` JSON text, exactly as the Apps
+  service returns it. A recording from one run can be loaded with `--analytics-seed` in the next.
+  See [Test analytics locally](../../packages/utils/openapi-mock-server/docs/testing-analytics.md).
 - **Playwright's `webServer`** array starts and stops each process for the whole test run — do
   not start `ffc mock-server` yourself in the background; it is designed to run in the
   foreground and shut down on `SIGINT`/`SIGTERM`.

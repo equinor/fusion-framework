@@ -13,6 +13,9 @@ import type { AppModuleInitiator } from '@equinor/fusion-framework-react-app';
  * `aurora-api` is a pre-production service added to local discovery by
  * `mocks/aurora-api.mock.ts` until it is registered before release.
  *
+ * `apps` is the bundled preset's Apps service; the analytics page reads this app's usage through
+ * its `POST /apps/feature-events/query`, which `ffc mock-server` answers from received analytics.
+ *
  * `enableNavigation` registers the navigation module the `Router` (see `src/index.ts`) needs
  * for browser history and basename resolution.
  *
@@ -23,6 +26,7 @@ export const configure: AppModuleInitiator = (configurator, { env }) => {
 
   configurator.useFrameworkServiceClient('people');
   configurator.useFrameworkServiceClient('aurora-api');
+  configurator.useFrameworkServiceClient('apps');
 };
 
 export default configure;

@@ -14,6 +14,7 @@ Use this package when you need a portal host for local app development. For the 
 - **Application loader**: Dynamically initializes and mounts a Fusion app by its `appKey`, handling manifest resolution, script loading, and teardown.
 - **Framework modules**: The portal pre-configures telemetry, navigation, bookmarks, feature flags, analytics, AG Grid, Roles V2, and service integrations so loaded apps inherit a realistic environment.
 - **Help side sheet**: Opens when an app calls `useHelpCenter()`. A production-shaped sidebar lists the current app's articles from the `help` service (typically local help docs served by `ffc mock-server`), with an article index for `openHelp()`, an FAQ page for `openFaqs()`, and a simple search over articles and FAQs for `openSearch()`. Release notes and other production-only pages show a "not supported in the dev portal" message. See [Test help articles locally](../utils/openapi-mock-server/docs/testing-help-articles.md).
+- **Analytics in mock mode**: Registers the Fusion portal's `app-loaded`, `app-selected`, and `context-selected` collectors. With `--mock`, it also sends analytics — including an app's `useTrackFeature` events — to the `monitor` service of the local mock server, the same way the Fusion portal sends them in production (`portal.id` is `dev-portal`). Without `--mock`, no analytics leave the browser; the `fusionLogAnalytics` feature flag still logs them to the console.
 - **Roles V2 integration**: The person side sheet uses the shared compact Roles view, and the application loader can recover when an app requires access roles during initialization.
 - **Context navigation plugin**: The portal enables `enableContextNavigation` from `@equinor/fusion-framework-plugin-context-navigation` so context changes and app switches keep the URL in sync automatically.
 
@@ -97,6 +98,7 @@ The portal is composed of these internal parts:
 
 - **`render`** — Entry point; creates a React root with theme, framework, and people-resolver providers.
 - **`configure`** — Configures all framework modules (telemetry, navigation, context navigation, bookmarks, feature flags, analytics, AG Grid, services).
+- **`analytics/`** — `configureAnalytics` registers the portal's collectors and adapters, and sends analytics to the mock Monitor service only when `resolveMockServerUrl()` finds the mock server origin the dev server sets on `window.FUSION_MOCK_SERVER_URL` for `--mock`.
 - **Context configuration** — `enableContext` wires the context module's path generator and path extractor to the shared context-navigation URL utilities.
 - **`Router`** — Sets up routes with `react-router` via the navigation module; routes `/apps/:appKey/*` to the app loader.
 - **`AppLoader`** — Resolves, initializes, and mounts a Fusion app by key; handles loading states and errors.

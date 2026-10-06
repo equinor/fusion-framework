@@ -77,7 +77,9 @@ keeping this base package independent of optional mocking tools.
 See [Develop with mock services](docs/mocking.md) for normal development overlays, isolated
 `--mock` mode, direct-only services, and executable `<name>.mock.ts` modules. To verify an app's
 help button opens the right article, see
-[Test help articles locally](../utils/openapi-mock-server/docs/testing-help-articles.md).
+[Test help articles locally](../utils/openapi-mock-server/docs/testing-help-articles.md). To check
+the analytics an app tracks, see
+[Test analytics locally](../utils/openapi-mock-server/docs/testing-analytics.md).
 
 ## Learn in order
 

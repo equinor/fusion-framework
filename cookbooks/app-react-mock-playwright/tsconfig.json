@@ -23,6 +23,9 @@
     },
     {
       "path": "../../packages/utils/openapi-mock-server"
+    },
+    {
+      "path": "../../packages/services"
     }
   ],
   "include": [

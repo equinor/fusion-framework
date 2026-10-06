@@ -72,7 +72,11 @@ describe('mockServerPlugin', () => {
 
     mockServerCommand?.parseOptions([]);
 
-    expect(mockServerCommand?.opts()).toEqual({ preset: ['other'], allowOrigin: [] });
+    expect(mockServerCommand?.opts()).toEqual({
+      preset: ['other'],
+      allowOrigin: [],
+      analyticsSeed: [],
+    });
   });
 
   it('lets an explicit flag override a caller-provided default', () => {

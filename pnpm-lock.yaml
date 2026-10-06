@@ -620,6 +620,9 @@ importers:
       '@equinor/fusion-openapi-mock-server':
         specifier: workspace:^
         version: link:../../packages/utils/openapi-mock-server
+      '@equinor/fusion-services':
+        specifier: workspace:^
+        version: link:../../packages/services
       '@playwright/test':
         specifier: 'catalog:'
         version: 1.63.0
@@ -3404,6 +3407,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.1.0
         version: 10.6.0
+      graphql:
+        specifier: ^16.14.2
+        version: 16.14.2
       path-to-regexp:
         specifier: ^8.4.0
         version: 8.4.2
@@ -3411,6 +3417,9 @@ importers:
         specifier: ^2.9.0
         version: 2.9.1
     devDependencies:
+      '@equinor/fusion-framework-module-analytics':
+        specifier: workspace:^
+        version: link:../../modules/analytics
       '@equinor/fusion-framework-module-http':
         specifier: workspace:^
         version: link:../../modules/http

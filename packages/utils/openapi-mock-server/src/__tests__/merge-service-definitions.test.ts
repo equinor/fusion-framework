@@ -135,4 +135,43 @@ describe('mergeServiceDefinitions', () => {
 
     expect(mergeServiceDefinitions([existing], [merge])[0]?.router).toBe(existing.router);
   });
+
+  it('merges control routes by name, so a merge layer keeps inherited ones', async () => {
+    const existing = defineService({
+      key: 'monitor',
+      serviceDiscovery: 'replace',
+      schema,
+      control: {
+        analytics: () => ({ status: 200, body: { from: 'existing' } }),
+        shared: () => ({ status: 200, body: { from: 'existing' } }),
+      },
+    });
+    const merge = defineService({
+      key: 'monitor',
+      serviceDiscovery: 'merge',
+      control: {
+        extra: () => ({ status: 200, body: { from: 'merge' } }),
+        shared: () => ({ status: 200, body: { from: 'merge' } }),
+      },
+    });
+    const request = { method: 'GET', query: new URLSearchParams() };
+
+    const control = mergeServiceDefinitions([existing], [merge])[0]?.control ?? {};
+
+    expect(Object.keys(control).sort()).toEqual(['analytics', 'extra', 'shared']);
+    expect(await control.analytics?.(request)).toEqual({ status: 200, body: { from: 'existing' } });
+    expect(await control.shared?.(request)).toEqual({ status: 200, body: { from: 'merge' } });
+  });
+
+  it('keeps inherited control routes when a merge layer adds none', () => {
+    const existing = defineService({
+      key: 'monitor',
+      serviceDiscovery: 'replace',
+      schema,
+      control: { analytics: () => ({ status: 200 }) },
+    });
+    const merge = defineService({ key: 'monitor', serviceDiscovery: 'merge' });
+
+    expect(mergeServiceDefinitions([existing], [merge])[0]?.control).toEqual(existing.control);
+  });
 });

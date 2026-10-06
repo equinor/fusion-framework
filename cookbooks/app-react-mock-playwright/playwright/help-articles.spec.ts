@@ -13,6 +13,7 @@ const PAGE_HELP = [
   },
   { path: '/aurora', button: 'Help: Pre-production service', title: 'Pre-production service' },
   { path: '/help', button: 'Help: Getting started', title: 'Getting started with mocked services' },
+  { path: '/analytics', button: 'Help: Usage analytics', title: 'Usage analytics' },
 ];
 
 // `ffc mock-server` auto-detects `docs/articles` and serves it as the `help` service; the dev
@@ -116,6 +117,7 @@ test('browses every help article from the help center sidebar', async ({ page })
     'Direct-only app service',
     'Existing service override',
     'Pre-production service',
+    'Usage analytics',
   ]);
 
   // Visit each sidebar entry the way a person or synthetic agent would browse help.

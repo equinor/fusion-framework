@@ -29,6 +29,10 @@ export const html = `
       <script>
         // Set AG Grid license key globally if provided
         window.FUSION_AG_GRID_KEY = '%FUSION_SPA_AG_GRID_KEY%';
+
+        // Expose the mock server origin when served with --mock, so the portal can tell it is
+        // running against local mocks; the placeholder stays unreplaced (not a URL) otherwise.
+        window.FUSION_MOCK_SERVER_URL = '%FUSION_SPA_MSAL_MOCK_SERVER_URL%';
         
         // suppress console error for custom elements already defined. 
         // WebComponents should be added by the portal, but not removed from application

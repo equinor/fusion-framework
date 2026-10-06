@@ -10,7 +10,7 @@
     "dev": "ffc app dev",
     "dev:mock": "concurrently -k 'pnpm mock:server' 'pnpm mock:dev'",
     "mock:dev": "ffc app dev --mock http://localhost:4010",
-    "mock:server": "ffc mock-server ./mocks --port 4010",
+    "mock:server": "ffc mock-server ./mocks --port 4010 --analytics-seed mocks/analytics.seed.jsonl",
     "test": "pnpm test:playwright",
     "test:playwright": "playwright test"
   },
@@ -25,6 +25,7 @@
     "@equinor/fusion-framework-react-app": "workspace:^",
     "@equinor/fusion-framework-react-router": "workspace:^",
     "@equinor/fusion-openapi-mock-server": "workspace:^",
+    "@equinor/fusion-services": "workspace:^",
     "@playwright/test": "catalog:",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",

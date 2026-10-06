@@ -4,6 +4,11 @@ const mocks = vi.hoisted(() => ({
   close: vi.fn().mockResolvedValue(undefined),
   createMockServer: vi.fn(),
   defineHelpArticlesMock: vi.fn((options: { dir: string }) => ({ key: 'help', ...options })),
+  defineAnalyticsMock: vi.fn(),
+  defineAppFeatureEventsMock: vi.fn(() => ({ key: 'apps', serviceDiscovery: 'merge' })),
+  ensureGitIgnoredDir: vi.fn(),
+  resolveAnalytics: vi.fn(),
+  storeReady: vi.fn(),
   resolveHelpDocs: vi.fn(),
   discoverServices: vi.fn(),
   loadMockServerConfig: vi.fn(),
@@ -23,6 +28,13 @@ vi.mock('@equinor/fusion-openapi-mock-server/discovery', async (importOriginal) 
 
 vi.mock('@equinor/fusion-openapi-mock-server/presets/fusion', () => ({
   defineHelpArticlesMock: mocks.defineHelpArticlesMock,
+  defineAnalyticsMock: mocks.defineAnalyticsMock,
+  defineAppFeatureEventsMock: mocks.defineAppFeatureEventsMock,
+}));
+
+vi.mock('../analytics/index.js', () => ({
+  ensureGitIgnoredDir: mocks.ensureGitIgnoredDir,
+  resolveAnalytics: mocks.resolveAnalytics,
 }));
 
 vi.mock('../resolve-help-docs.js', () => ({
@@ -55,6 +67,17 @@ describe('createMockServerCommand', () => {
     mocks.discoverServices.mockResolvedValue([]);
     mocks.resolveHelpDocs.mockResolvedValue(undefined);
     mocks.start.mockResolvedValue({ url: 'http://localhost:4010' });
+    // Analytics are off unless a test turns them on, so layering assertions stay focused.
+    mocks.resolveAnalytics.mockReturnValue(undefined);
+    mocks.storeReady.mockResolvedValue(undefined);
+    mocks.defineAnalyticsMock.mockImplementation((options: { record?: string }) => ({
+      key: 'monitor',
+      store: {
+        ready: mocks.storeReady,
+        recordFile: options.record,
+        getRecords: () => [{}, {}],
+      },
+    }));
   });
 
   afterEach(() => {
@@ -315,6 +338,131 @@ describe('createMockServerCommand', () => {
       const command = createMockServerCommand();
 
       await expect(command.parseAsync(['node', 'test'])).rejects.toThrow(/does not exist/);
+      expect(mocks.start).not.toHaveBeenCalled();
+    });
+  });
+  describe('analytics', () => {
+    const resolved = {
+      record: '/app/.fusion-mock/analytics.jsonl',
+      defaultRecord: true,
+      seed: ['/app/recordings'],
+    };
+
+    it('passes the flags, config, and plugin default to the resolver', async () => {
+      mocks.loadMockServerConfig.mockResolvedValue({ analytics: { record: 'config.jsonl' } });
+
+      const command = createMockServerCommand({ analytics: false });
+      await command.parseAsync([
+        'node',
+        'test',
+        '--analytics-record',
+        'flag.jsonl',
+        '--analytics-seed',
+        'a',
+        '--analytics-seed',
+        'b',
+      ]);
+
+      expect(mocks.resolveAnalytics).toHaveBeenCalledWith(process.cwd(), {
+        enabled: true,
+        record: 'flag.jsonl',
+        seed: ['a', 'b'],
+        config: { record: 'config.jsonl' },
+        defaults: false,
+      });
+    });
+
+    it('maps --no-analytics and --no-analytics-record to opt-outs', async () => {
+      mocks.loadMockServerConfig.mockResolvedValue({});
+
+      const command = createMockServerCommand();
+      await command.parseAsync(['node', 'test', '--no-analytics', '--no-analytics-record']);
+
+      expect(mocks.resolveAnalytics).toHaveBeenCalledWith(
+        process.cwd(),
+        expect.objectContaining({ enabled: false, record: false, seed: [] }),
+      );
+      expect(mocks.defineAnalyticsMock).not.toHaveBeenCalled();
+    });
+
+    it('layers the analytics mocks after presets and before mock directories', async () => {
+      mocks.loadMockServerConfig.mockResolvedValue({});
+      mocks.discoverServices.mockResolvedValue([{ key: 'my-api' }]);
+      mocks.resolveAnalytics.mockReturnValue(resolved);
+      const log = vi.spyOn(console, 'log').mockImplementation(() => undefined);
+
+      const command = createMockServerCommand();
+      await command.parseAsync(['node', 'test']);
+
+      const monitor = mocks.defineAnalyticsMock.mock.results[0]?.value;
+      expect(mocks.defineAnalyticsMock).toHaveBeenCalledWith({
+        record: resolved.record,
+        seed: resolved.seed,
+      });
+      expect(mocks.defineAppFeatureEventsMock).toHaveBeenCalledWith({ store: monitor.store });
+      expect(mocks.use.mock.calls).toEqual([
+        ['fusion'],
+        [[monitor, { key: 'apps', serviceDiscovery: 'merge' }]],
+        [[{ key: 'my-api' }]],
+      ]);
+      expect(mocks.storeReady).toHaveBeenCalledBefore(mocks.start);
+      expect(mocks.ensureGitIgnoredDir).toHaveBeenCalledWith('/app/.fusion-mock');
+      expect(log).toHaveBeenCalledWith(
+        expect.stringMatching(
+          /^receiving analytics, recording to .*analytics\.jsonl, 2 seeded event\(s\) from .*recordings$/,
+        ),
+      );
+    });
+
+    it('does not touch Git ignores for a chosen recording file', async () => {
+      mocks.loadMockServerConfig.mockResolvedValue({});
+      mocks.resolveAnalytics.mockReturnValue({ ...resolved, defaultRecord: false });
+      vi.spyOn(console, 'log').mockImplementation(() => undefined);
+
+      const command = createMockServerCommand();
+      await command.parseAsync(['node', 'test']);
+
+      expect(mocks.ensureGitIgnoredDir).not.toHaveBeenCalled();
+    });
+
+    it('skips the app-feature events query without the fusion preset', async () => {
+      mocks.loadMockServerConfig.mockResolvedValue({});
+      mocks.resolveAnalytics.mockReturnValue({ ...resolved, record: undefined, seed: [] });
+      const log = vi.spyOn(console, 'log').mockImplementation(() => undefined);
+
+      const command = createMockServerCommand();
+      await command.parseAsync(['node', 'test', '--preset', 'other']);
+
+      expect(mocks.defineAppFeatureEventsMock).not.toHaveBeenCalled();
+      expect(log).toHaveBeenCalledWith(
+        expect.stringContaining('receiving analytics, kept in memory'),
+      );
+      expect(log).toHaveBeenCalledWith(expect.stringContaining('no app-feature events query'));
+    });
+
+    it('skips analytics with a warning when a local mock defines the monitor service', async () => {
+      mocks.loadMockServerConfig.mockResolvedValue({});
+      mocks.discoverServices.mockResolvedValue([{ key: 'monitor', serviceDiscovery: 'replace' }]);
+      mocks.resolveAnalytics.mockReturnValue(resolved);
+      const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+
+      const command = createMockServerCommand();
+      await command.parseAsync(['node', 'test']);
+
+      expect(mocks.defineAnalyticsMock).not.toHaveBeenCalled();
+      expect(warn).toHaveBeenCalledWith(
+        'not receiving analytics: a local mock module defines the monitor service',
+      );
+    });
+
+    it('fails startup when a seed recording cannot be loaded', async () => {
+      mocks.loadMockServerConfig.mockResolvedValue({});
+      mocks.resolveAnalytics.mockReturnValue(resolved);
+      mocks.storeReady.mockRejectedValue(new Error('ENOENT: recordings'));
+
+      const command = createMockServerCommand();
+
+      await expect(command.parseAsync(['node', 'test'])).rejects.toThrow(/ENOENT/);
       expect(mocks.start).not.toHaveBeenCalled();
     });
   });

@@ -8,6 +8,7 @@ import {
 export type { MockServerCommandDefaults };
 export type {
   DevServerMockOptions,
+  MockServerAnalyticsOptions,
   MockServerDevServerOptions,
 } from './dev-server-options.js';
 

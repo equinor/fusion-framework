@@ -234,3 +234,12 @@ See the [plugin reference](../../cli-plugins/mock-server/README.md), [OpenAPI mo
 opens the article an app requests with `useHelpCenter().openArticle(slug)`. Help docs in `./docs`
 or `docs/<appKey>` are detected automatically; set `mockServer.helpDocs` to choose another folder.
 See [Test help articles locally](../../utils/openapi-mock-server/docs/testing-help-articles.md).
+
+## Test analytics
+
+`ffc mock-server` also receives the analytics an app tracks with `useTrackFeature()`. With
+`--mock`, the dev portal sends them to the mock `monitor` service, which reads them the way Fusion's
+analytics pipeline does, records them to `.fusion-mock/analytics.jsonl`, and answers the Apps
+service's app-feature events query with them. Check them in Playwright with `createMockAnalytics`,
+and load earlier recordings with `mockServer.analytics.seed`.
+See [Test analytics locally](../../utils/openapi-mock-server/docs/testing-analytics.md).

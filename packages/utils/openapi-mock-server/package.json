@@ -88,10 +88,12 @@
     "@equinor/fusion-openapi-mock": "workspace:^",
     "@equinor/fusion-services": "workspace:^",
     "@faker-js/faker": "^10.1.0",
+    "graphql": "^16.14.2",
     "path-to-regexp": "^8.4.0",
     "yaml": "^2.9.0"
   },
   "devDependencies": {
+    "@equinor/fusion-framework-module-analytics": "workspace:^",
     "@equinor/fusion-framework-module-http": "workspace:^",
     "@equinor/fusion-framework-module-roles": "workspace:^",
     "rxjs": "^7.8.1",
