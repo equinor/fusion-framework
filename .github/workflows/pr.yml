@@ -73,6 +73,9 @@ jobs:
       - name: Verify package exports
         run: pnpm verify:package-exports
 
+      - name: Verify native Node ESM (package type and import extensions)
+        run: pnpm verify:esm
+
   build:
     name: Build affected packages
     # runs-on: fusion-gh-runner-fusion-framework.borked
@@ -109,6 +112,9 @@ jobs:
       - name: Check if build failed
         if: steps.build.outcome == 'failure'
         run: exit 1
+
+      - name: Verify built packages load under native Node ESM
+        run: pnpm verify:esm:runtime
 
   unit-tests:
     name: Unit tests
