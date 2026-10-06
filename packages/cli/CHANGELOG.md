@@ -1,5 +1,25 @@
 # Change Log
 
+## 15.5.0
+
+### Minor Changes
+
+- 9258fb1: The dev portal served by `ffc app dev` and `ffc app serve` now opens a help side sheet when an app calls `useHelpCenter()`. The sheet shows articles from local help docs served by `ffc mock-server`, with a browsable sidebar and a simple search. Use it to verify help wiring and content locally and in Playwright before release.
+  
+  Refs: https://github.com/equinor/fusion-core-tasks/issues/2149
+- efdf820: With `--mock`, the dev portal served by `ffc app dev` and `ffc app serve` now sends the analytics your app tracks to the local mock server, as the Fusion portal does in production. Run `ffc mock-server` to receive, record, and query them, and check them in Playwright with `createMockAnalytics()`. Without `--mock`, no analytics leave the browser.
+  
+  Refs: https://github.com/equinor/fusion-core-tasks/issues/2182
+
+### Patch Changes
+
+- Updated dependencies [efdf820]
+- Updated dependencies [9258fb1]
+- Updated dependencies [efdf820]
+- Updated dependencies [9258fb1]
+  - @equinor/fusion-framework-dev-server@2.1.7
+  - @equinor/fusion-framework-dev-portal@11.1.0
+
 ## 15.4.2
 
 ### Patch Changes

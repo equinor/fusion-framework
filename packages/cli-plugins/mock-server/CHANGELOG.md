@@ -1,5 +1,46 @@
 # @equinor/fusion-framework-cli-plugin-mock-server
 
+## 0.3.0
+
+### Minor Changes
+
+- efdf820: `ffc mock-server` now receives and records the analytics your app sends.
+  
+  By default the command serves a mock `monitor` service that receives analytics and reads them the way Fusion's analytics pipeline does. It also answers the Apps service's `POST /apps/feature-events/query` with them, so analytics pages show your own local usage. Every batch is appended to `.fusion-mock/analytics.jsonl`; the folder gets a `.gitignore` so recordings are not committed by accident.
+  
+  New options, also available as `mockServer.analytics` in `dev-server.config.ts` and as `analytics` in `mockServerPlugin()`:
+  
+  - `--analytics-record <file>` or `--no-analytics-record`: choose the recording file, or keep events in memory only.
+  - `--analytics-seed <path>` (repeatable): load earlier recordings, `logs_*.json.gz` landing-zone files, or folders of them at start.
+  - `--no-analytics`: turn analytics off.
+  
+  The startup log shows where analytics are recorded and how many seeded events were loaded. A seed path that cannot be read stops startup.
+  
+  Refs: equinor/fusion-core-tasks#2181
+- 9258fb1: `ffc mock-server` now serves local help articles and FAQs as a `help` service, so the dev portal can open the article an app requests with `useHelpCenter().openArticle(slug)`. The help docs folder is set with `--help-docs <dir>` or `mockServer.helpDocs` in `dev-server.config.ts` (relative to the project root), and otherwise auto-detected from `./docs` or `docs/<appKey>` in parent folders up to the repository root. The server logs how many articles and FAQs it serves and from where. Auto-detection is best effort: a detected folder that cannot be read is skipped with a warning. Projects without help articles or FAQs are unchanged, and a local `help.mock.ts` that defines the `help` service takes precedence (a `serviceDiscovery: 'merge'` module layers onto the help docs instead). `helpDocs: false` or `--no-help-docs` turns the feature off.
+  
+  ```typescript
+  export default defineDevServerConfig(() => ({
+    mockServer: { helpDocs: '../docs/my-app' },
+  }));
+  ```
+  
+  Refs: https://github.com/equinor/fusion-core-tasks/issues/2153
+
+### Patch Changes
+
+- efdf820: Link the analytics documentation to the new "Test analytics locally" guide, which explains how to check tracked features end-to-end with `ffc mock-server` and Playwright.
+  
+  Refs: https://github.com/equinor/fusion-core-tasks/issues/2184
+- Updated dependencies [efdf820]
+- Updated dependencies [efdf820]
+- Updated dependencies [efdf820]
+- Updated dependencies [efdf820]
+- Updated dependencies [efdf820]
+- Updated dependencies [9258fb1]
+- Updated dependencies [9258fb1]
+  - @equinor/fusion-openapi-mock-server@0.5.0
+
 ## 0.2.1
 
 ### Patch Changes
