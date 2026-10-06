@@ -10,7 +10,7 @@
     "yarn": "please-use-pnpm",
     "pnpm": ">=10"
   },
-  "packageManager": "pnpm@11.22.0",
+  "packageManager": "pnpm@12.4.2",
   "scripts": {
     "install": "pnpm -r exec genversion --es6 --semi src/version.ts",
     "install:clean": "pnpm clean && pnpm install",
