@@ -1,5 +1,12 @@
 # @equinor/fusion-framework-dev-portal
 
+## 11.1.1
+
+### Patch Changes
+
+- Updated dependencies [3bc308d]
+  - @equinor/fusion-framework-react-components-roles@0.2.0
+
 ## 11.1.0
 
 ### Minor Changes
