@@ -360,6 +360,29 @@ a verdict that a role does not exist or is not claimable. Role activation stays 
 metadata succeeds. Recovery uses the module provider attached to the original error; retrying
 metadata does not restart the application, while successful activation retries the boundary.
 
+### Custom fallback
+
+Replace the built-in recovery UI with `fallbackRender` or `FallbackComponent`. Both receive
+`{ error, resetErrorBoundary }`; calling `resetErrorBoundary` checks access again and renders the
+children when it succeeds. `fallbackRender` takes precedence when both are provided. The custom
+fallback is only used for required-access-role failures; unrelated errors still reach the outer
+error boundary. `RolesProvider` accepts and forwards the same props.
+
+```tsx
+<AccessRoleBoundary
+  requiredAccessRoles={['Reports.Export']}
+  fallbackRender={({ resetErrorBoundary }) => (
+    <button type="button" onClick={resetErrorBoundary}>
+      Request access, then retry
+    </button>
+  )}
+>
+  <ExportReports />
+</AccessRoleBoundary>
+```
+
+Because the built-in recovery is replaced, the claim flow is not shown; the fallback owns recovery.
+
 ## Enforce roles during application initialization
 
 Use `builder.requireAccessRoles` when the entire application must stop during Roles module initialization:
@@ -379,9 +402,9 @@ See [host-root recovery placement](./docs/migration.md#place-recovery-around-the
 
 | Export | Purpose |
 | --- | --- |
-| `RolesProvider`, `RolesProviderProps` | Required `children`, optional `requiredAccessRoles?: readonly string[]`; owns UI state for one module provider. |
+| `RolesProvider`, `RolesProviderProps` | Required `children`, optional `requiredAccessRoles?: readonly string[]`, `fallbackRender`, `FallbackComponent`; owns UI state for one module provider. |
 | `RolesView`, `RolesViewProps` | Optional `compact?: boolean`, default `false`; requires React `RolesProvider`. |
-| `AccessRoleBoundary`, `AccessRoleBoundaryProps` | Required `children`, optional access-role names in `requiredAccessRoles`; pre-mount gate and missing-role recovery. |
+| `AccessRoleBoundary`, `AccessRoleBoundaryProps`, `AccessRoleBoundaryFallbackProps` | Required `children`, optional access-role names in `requiredAccessRoles`, optional `fallbackRender` / `FallbackComponent` receiving `{ error, resetErrorBoundary }`; pre-mount gate and missing-role recovery. |
 | `useActiveAccessRoleAssignments`, `UseActiveAccessRoleAssignmentsResult` | `{ assignments, isLoading, error, reload }` for effective active access-role assignments. |
 | `useClaimableRoleAssignments`, `UseClaimableRoleAssignmentsResult` | Collection fields for claimable role assignments returned by the consolidated endpoint, plus `activateClaimableRoleAssignment`, `deactivateClaimableRoleAssignment`, `isActivating`, `activationError`, `isDeactivating`, `deactivationError`. |
 | `useRoleAssignments`, `UseRoleAssignmentsResult` | `{ assignments, isLoading, error, reload }` for role assignments returned by the consolidated endpoint; authoritative for standing, non-claimable assignment state. |
