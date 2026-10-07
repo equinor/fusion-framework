@@ -228,7 +228,8 @@ Use this table instead of searching. "Start here" is the first file to open.
 - Workspace dependencies use `workspace:^` in `package.json` only.
 - Every package is `"type": "module"` (no CommonJS), and relative imports carry an explicit
   `.js` extension (`./client.js`, `./lib/index.js`) so published ESM loads under native Node.
-  `pnpm verify:esm` enforces both.
+  Biome's `useImportExtensions` flags a missing extension in the editor; `pnpm verify:esm`
+  enforces both rules in CI.
 
 ---
 
