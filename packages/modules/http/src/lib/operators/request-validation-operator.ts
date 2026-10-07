@@ -1,7 +1,7 @@
 import type { z } from 'zod';
-import type { ProcessOperator } from './types';
-import type { FetchRequest } from '../client/types';
-import { fetchRequestSchema } from './fetch-request.schemas';
+import type { ProcessOperator } from './types.js';
+import type { FetchRequest } from '../client/types.js';
+import { fetchRequestSchema } from './fetch-request.schemas.js';
 
 /**
  * Validates the given request using the `requestInitSchema`.

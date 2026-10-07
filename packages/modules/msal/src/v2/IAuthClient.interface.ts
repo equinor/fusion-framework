@@ -2,7 +2,7 @@ import type {
   AccountInfo as AccountInfoBase,
   AuthenticationResult,
   IPublicClientApplication,
-} from './types';
+} from './types.js';
 
 /**
  * Simplified ID token claims used by the v2 compatibility layer.

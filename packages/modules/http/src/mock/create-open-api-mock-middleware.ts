@@ -1,6 +1,9 @@
-import type { HttpMiddleware } from '../lib/operators/types';
+import type { HttpMiddleware } from '../lib/operators/types.js';
 
-import { resolveOpenApiMockResponse, type OpenApiMockLike } from './resolve-open-api-mock-response';
+import {
+  resolveOpenApiMockResponse,
+  type OpenApiMockLike,
+} from './resolve-open-api-mock-response.js';
 
 /**
  * Adapts an `OpenApiMock` into an {@link HttpMiddleware}, so

@@ -1,8 +1,8 @@
 import type { ReactNode } from 'react';
 import { Button, Icon, Typography } from '@equinor/eds-core-react';
 import { info_circle } from '@equinor/eds-icons';
-import styled from 'styled-components';
-import type { RoleDetails } from '../overview/role-details';
+import { styled } from 'styled-components';
+import type { RoleDetails } from '../overview/role-details.js';
 
 const Styled = {
   Row: styled.div`

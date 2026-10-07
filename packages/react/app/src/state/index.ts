@@ -8,5 +8,5 @@ export {
 
 export { enableState as enableAppState } from '@equinor/fusion-framework-app/enable-state';
 
-export { useAppState } from './useAppState';
-export { useStateSyncEvents } from './useStateSyncEvents';
+export { useAppState } from './useAppState.js';
+export { useStateSyncEvents } from './useStateSyncEvents.js';

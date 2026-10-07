@@ -2,6 +2,7 @@
   "name": "@equinor/fusion-framework-module-bookmark",
   "version": "4.1.2",
   "description": "",
+  "type": "module",
   "main": "./dist/esm/index.js",
   "types": "./dist/types/index.d.ts",
   "exports": {
@@ -10,10 +11,6 @@
       "types": "./dist/types/index.d.ts"
     },
     "./package.json": "./package.json",
-    "./utils": {
-      "import": "./dist/esm/utils/index.js",
-      "types": "./dist/types/utils/index.d.ts"
-    },
     "./mock": {
       "import": "./dist/esm/mock/index.js",
       "types": "./dist/types/mock/index.d.ts"
@@ -24,15 +21,13 @@
       ".": [
         "dist/types/index.d.ts"
       ],
-      "utils": [
-        "dist/types/utils/index.d.ts"
-      ],
       "mock": [
         "dist/types/mock/index.d.ts"
       ]
     }
   },
   "scripts": {
+    "prebuild": "node ../../../.github/scripts/generate-versions.mjs",
     "build": "tsc -b",
     "test": "vitest run",
     "prepack": "pnpm build"

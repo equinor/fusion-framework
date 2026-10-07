@@ -4,10 +4,10 @@ import { Button, Icon, Typography } from '@equinor/eds-core-react';
 import { chevron_down, chevron_up } from '@equinor/eds-icons';
 import { styled } from 'styled-components';
 
-import { HelpMarkdown } from './HelpMarkdown';
-import type { HelpRequest } from './parse-help-request';
-import type { HelpFaq } from './types';
-import { useHelpFaqs } from './useHelpFaqs';
+import { HelpMarkdown } from './HelpMarkdown.js';
+import type { HelpRequest } from './parse-help-request.js';
+import type { HelpFaq } from './types.js';
+import { useHelpFaqs } from './useHelpFaqs.js';
 
 const Styled = {
   Section: styled.section`

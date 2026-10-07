@@ -1,4 +1,4 @@
-import type { History } from './lib/types';
+import type { History } from './lib/types.js';
 import type { ITelemetryProvider } from '@equinor/fusion-framework-module-telemetry';
 import type { IEventModuleProvider } from '@equinor/fusion-framework-module-event';
 

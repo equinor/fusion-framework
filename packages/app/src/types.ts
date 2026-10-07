@@ -9,7 +9,7 @@ import type {
   ComponentRenderArgs,
 } from '@equinor/fusion-framework-module-app';
 
-import type { IAppConfigurator } from './AppConfigurator';
+import type { IAppConfigurator } from './AppConfigurator.js';
 import type { ConfigEnvironment } from '@equinor/fusion-framework-module-app';
 
 /**

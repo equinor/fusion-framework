@@ -6,4 +6,4 @@
  *
  * @packageDocumentation
  */
-export { useTrackFeature } from './useTrackFeature';
+export { useTrackFeature } from './useTrackFeature.js';

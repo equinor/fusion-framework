@@ -20,6 +20,7 @@
     "directory": "packages/vite-plugins/react-router"
   },
   "scripts": {
+    "prebuild": "node ../../../.github/scripts/generate-versions.mjs",
     "build": "tsc -b",
     "test": "vitest",
     "prepack": "pnpm build"

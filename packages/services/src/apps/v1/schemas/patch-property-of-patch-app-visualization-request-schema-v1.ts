@@ -1,5 +1,5 @@
 import type { z } from 'zod';
-import { PatchAppVisualizationRequestSchemaV1 } from './patch-app-visualization-request-schema-v1';
+import { PatchAppVisualizationRequestSchemaV1 } from './patch-app-visualization-request-schema-v1.js';
 
 /**
  * Zod schema for the `PatchPropertyOfPatchAppVisualizationRequest` model published by the Fusion

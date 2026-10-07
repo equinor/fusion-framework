@@ -14,9 +14,9 @@ import {
 import {
   type IContextModuleConfigurator,
   ContextModuleConfigurator,
-} from './ContextModuleConfigurator';
-import { type IContextProvider, ContextProvider } from './ContextProvider';
-import type { ContextItem } from './types';
+} from './ContextModuleConfigurator.js';
+import { type IContextProvider, ContextProvider } from './ContextProvider.js';
+import type { ContextItem } from './types.js';
 
 /**
  * Literal type identifying the context module within the Fusion Framework module system.

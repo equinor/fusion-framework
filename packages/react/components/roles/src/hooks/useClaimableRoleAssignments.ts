@@ -3,12 +3,12 @@ import type {
   DeactivateClaimableRoleAssignmentInput,
 } from '@equinor/fusion-framework-module-roles';
 
-import { useRolesContext } from '../context/useRolesContext';
+import { useRolesContext } from '../context/useRolesContext.js';
 import type {
   ClaimableRoleAssignmentActivationResult,
   ClaimableRoleAssignmentDeactivationResult,
   ConsolidatedClaimableRoleAssignments,
-} from '../state/roles-state';
+} from '../state/roles-state.js';
 
 /**
  * Reactive consolidated claimable-role-assignment state and actions for the current Fusion app

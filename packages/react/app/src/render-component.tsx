@@ -1,7 +1,7 @@
 import { Suspense, StrictMode } from 'react';
 import type { FunctionComponent } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
-import type { ComponentRenderArgs, ComponentRenderer } from './create-component';
+import type { ComponentRenderArgs, ComponentRenderer } from './create-component.js';
 
 /**
  * Callback returned after mounting an application; invoke it to unmount and clean

@@ -1,3 +1,3 @@
 // export { createApiPlugin } from './api';
-export { createLocalStoragePlugin } from './local';
-export { createUrlPlugin } from './url';
+export { createLocalStoragePlugin } from './local/index.js';
+export { createUrlPlugin } from './url/index.js';

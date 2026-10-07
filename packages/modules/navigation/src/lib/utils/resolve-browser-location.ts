@@ -1,1 +1,1 @@
-export { resolveWindowLocation } from './resolve-window-location';
+export { resolveWindowLocation } from './resolve-window-location.js';

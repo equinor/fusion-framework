@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { UpdateProjectCategoryRequestSchemaV1 } from './update-project-category-request-schema-v1';
+import { UpdateProjectCategoryRequestSchemaV1 } from './update-project-category-request-schema-v1.js';
 
 /**
  * Zod schema for the `PatchPropertyOfListOfUpdateProjectCategoryRequest` model published by the

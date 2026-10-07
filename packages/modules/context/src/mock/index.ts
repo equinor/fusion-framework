@@ -29,5 +29,5 @@
 export {
   ContextMockConfigurator,
   type ContextResolverFn,
-} from './ContextMockConfigurator';
-export { enableContextMock, contextMockModule, type ContextMockConfigFn } from './module';
+} from './ContextMockConfigurator.js';
+export { enableContextMock, contextMockModule, type ContextMockConfigFn } from './module.js';

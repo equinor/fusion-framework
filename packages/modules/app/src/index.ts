@@ -22,19 +22,19 @@ export {
   AppConfigurator,
   IAppConfigurator,
   type AppModuleConfig as IAppModuleConfig,
-} from './AppConfigurator';
+} from './AppConfigurator.js';
 
-export { AppClient, type IAppClient } from './AppClient';
+export { AppClient, type IAppClient } from './AppClient.js';
 
-export { AppConfig } from './AppConfig';
+export { AppConfig } from './AppConfig.js';
 
-export { AppModuleProvider } from './AppModuleProvider';
+export { AppModuleProvider } from './AppModuleProvider.js';
 
-export { IApp } from './app/App';
+export { IApp } from './app/App.js';
 
-export * from './events';
-export * from './types';
+export * from './events.js';
+export * from './types.js';
 
-export { enableAppModule } from './enable-app-module';
+export { enableAppModule } from './enable-app-module.js';
 
-export { default, AppModule, module, moduleKey } from './module';
+export { default, AppModule, module, moduleKey } from './module.js';

@@ -12,6 +12,6 @@ export {
   FeatureFlagModule,
 } from '@equinor/fusion-framework-module-feature-flag';
 
-export { enableFeatureFlag } from './enable-feature-flag';
+export { enableFeatureFlag } from './enable-feature-flag.js';
 
-export { useFeature } from './useFeature';
+export { useFeature } from './useFeature.js';

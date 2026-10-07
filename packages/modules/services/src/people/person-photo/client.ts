@@ -1,9 +1,9 @@
 import type { ClientRequestInit, IHttpClient } from '@equinor/fusion-framework-module-http/client';
 
-import { generateParameters } from './generate-parameters';
+import { generateParameters } from './generate-parameters.js';
 
-import type { ClientDataMethod } from '../../types';
-import type { ApiResponse, ApiRequestArgs, SupportedApiVersion } from './types';
+import type { ClientDataMethod } from '../../types.js';
+import type { ApiResponse, ApiRequestArgs, SupportedApiVersion } from './types.js';
 
 /**
  * Creates a curried function that fetches a person's profile photo.

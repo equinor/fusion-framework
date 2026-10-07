@@ -1,7 +1,7 @@
 import type { IContextProvider } from '@equinor/fusion-framework-module-context';
 
-import type { ContextNavigationConfig } from '../types';
-import type { ApplyNavigationDeps, OwnNavigationTokens } from '../apply-navigation';
+import type { ContextNavigationConfig } from '../types.js';
+import type { ApplyNavigationDeps, OwnNavigationTokens } from '../apply-navigation.js';
 
 /**
  * Dependencies required by the URL guard handler functions.

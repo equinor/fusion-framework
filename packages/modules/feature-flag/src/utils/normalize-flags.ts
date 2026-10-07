@@ -1,4 +1,4 @@
-import type { IFeatureFlag } from '../FeatureFlag';
+import type { IFeatureFlag } from '../FeatureFlag.js';
 
 /**
  * Converts an array of feature flags into a key-indexed record.

@@ -1,11 +1,11 @@
 import semver, { type SemVer } from 'semver';
 
-import { MsalModuleVersion } from '../static';
+import { MsalModuleVersion } from '../static.js';
 
-import { VersionError } from './VersionError';
-import type { ResolvedVersion } from './types';
+import { VersionError } from './VersionError.js';
+import type { ResolvedVersion } from './types.js';
 
-import { version as latestVersionString } from '../version';
+import { version as latestVersionString } from '../version.js';
 
 /**
  * Maps a version string or object to the corresponding MSAL module enum version.

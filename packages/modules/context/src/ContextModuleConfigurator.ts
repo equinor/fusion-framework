@@ -9,22 +9,26 @@ import {
 } from '@equinor/fusion-framework-module';
 import type { ServicesModule, IApiProvider } from '@equinor/fusion-framework-module-services';
 import type { NavigationModule } from '@equinor/fusion-framework-module-navigation';
-import { getContextSelector, queryContextSelector, relatedContextSelector } from './selectors';
+import {
+  getContextSelector,
+  queryContextSelector,
+  relatedContextSelector,
+} from './selectors/index.js';
 import type { QueryCtorOptions, QueryFn } from '@equinor/fusion-query';
-import type { ContextItem, QueryContextParameters, RelatedContextParameters } from './types';
-import type { GetContextParameters } from './client/ContextClient';
-import resolveInitialContext from './utils/resolve-initial-context';
-import type { ContextModuleConfig } from './ContextModuleConfig';
+import type { ContextItem, QueryContextParameters, RelatedContextParameters } from './types.js';
+import type { GetContextParameters } from './client/ContextClient.js';
+import resolveInitialContext from './utils/resolve-initial-context.js';
+import type { ContextModuleConfig } from './ContextModuleConfig.js';
 import type {
   ContextConfigBuilderCallback,
   IContextModuleConfigurator,
-} from './ContextModuleConfigurator.interface';
+} from './ContextModuleConfigurator.interface.js';
 
-export type { ContextModuleConfig } from './ContextModuleConfig';
+export type { ContextModuleConfig } from './ContextModuleConfig.js';
 export type {
   ContextConfigBuilderCallback,
   IContextModuleConfigurator,
-} from './ContextModuleConfigurator.interface';
+} from './ContextModuleConfigurator.interface.js';
 
 /**
  * Default implementation of {@link IContextModuleConfigurator}.

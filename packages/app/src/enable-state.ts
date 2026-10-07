@@ -1,6 +1,6 @@
 import { enableStateModule } from '@equinor/fusion-framework-module-state';
 import type { IStateModuleConfigurator } from '@equinor/fusion-framework-module-state';
-import type { IAppConfigurator } from './AppConfigurator';
+import type { IAppConfigurator } from './AppConfigurator.js';
 import type { AnyModule } from '@equinor/fusion-framework-module';
 import type { FusionModulesInstance } from '@equinor/fusion-framework';
 

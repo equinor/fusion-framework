@@ -114,11 +114,11 @@
  * ```
  */
 
-export { ApiVersion } from './static';
+export { ApiVersion } from './static.js';
 
-export type * from './types';
+export type * from './types.js';
 
-export type * from './v1/types';
+export type * from './v1/types.js';
 
 export {
   type ActivateClaimableRoleAssignmentArg,
@@ -126,7 +126,7 @@ export {
   type ActivateClaimableRoleAssignmentResult,
   type ActivateClaimableRoleAssignmentVersion,
   activateClaimableRoleAssignment,
-} from './endpoints/account-claimable-role-assignment-activation.post';
+} from './endpoints/account-claimable-role-assignment-activation.post.js';
 
 export {
   type AddClaimableRoleAccessRolesArg,
@@ -134,7 +134,7 @@ export {
   type AddClaimableRoleAccessRolesResult,
   type AddClaimableRoleAccessRolesVersion,
   addClaimableRoleAccessRoles,
-} from './endpoints/claimable-role-access-roles.post';
+} from './endpoints/claimable-role-access-roles.post.js';
 
 export {
   type AddRoleAccessRolesArg,
@@ -142,7 +142,7 @@ export {
   type AddRoleAccessRolesResult,
   type AddRoleAccessRolesVersion,
   addRoleAccessRoles,
-} from './endpoints/role-access-roles.post';
+} from './endpoints/role-access-roles.post.js';
 
 export {
   type AssignClaimableRoleArg,
@@ -150,7 +150,7 @@ export {
   type AssignClaimableRoleResult,
   type AssignClaimableRoleVersion,
   assignClaimableRole,
-} from './endpoints/claimable-role-assignments.post';
+} from './endpoints/claimable-role-assignments.post.js';
 
 export {
   type AssignRoleArg,
@@ -158,7 +158,7 @@ export {
   type AssignRoleResult,
   type AssignRoleVersion,
   assignRole,
-} from './endpoints/role-assignments.post';
+} from './endpoints/role-assignments.post.js';
 
 export {
   type AssignSystemAccessRoleArg,
@@ -166,7 +166,7 @@ export {
   type AssignSystemAccessRoleResult,
   type AssignSystemAccessRoleVersion,
   assignSystemAccessRole,
-} from './endpoints/system-access-role-assignments.post';
+} from './endpoints/system-access-role-assignments.post.js';
 
 export {
   type CreateClaimableRoleArg,
@@ -174,7 +174,7 @@ export {
   type CreateClaimableRoleResult,
   type CreateClaimableRoleVersion,
   createClaimableRole,
-} from './endpoints/claimable-roles.post';
+} from './endpoints/claimable-roles.post.js';
 
 export {
   type CreateRoleArg,
@@ -182,7 +182,7 @@ export {
   type CreateRoleResult,
   type CreateRoleVersion,
   createRole,
-} from './endpoints/roles.post';
+} from './endpoints/roles.post.js';
 
 export {
   type CreateRoleBindingConfigurationArg,
@@ -190,7 +190,7 @@ export {
   type CreateRoleBindingConfigurationResult,
   type CreateRoleBindingConfigurationVersion,
   createRoleBindingConfiguration,
-} from './endpoints/role-binding-configurations.post';
+} from './endpoints/role-binding-configurations.post.js';
 
 export {
   type CreateRoleBindingConfigurationHistoryRecordArg,
@@ -198,7 +198,7 @@ export {
   type CreateRoleBindingConfigurationHistoryRecordResult,
   type CreateRoleBindingConfigurationHistoryRecordVersion,
   createRoleBindingConfigurationHistoryRecord,
-} from './endpoints/role-binding-configuration-history.post';
+} from './endpoints/role-binding-configuration-history.post.js';
 
 export {
   type CreateRoleBindingConfigurationNotificationRecordArg,
@@ -206,7 +206,7 @@ export {
   type CreateRoleBindingConfigurationNotificationRecordResult,
   type CreateRoleBindingConfigurationNotificationRecordVersion,
   createRoleBindingConfigurationNotificationRecord,
-} from './endpoints/role-binding-configuration-notifications.post';
+} from './endpoints/role-binding-configuration-notifications.post.js';
 
 export {
   type CreateScopeTypeArg,
@@ -214,7 +214,7 @@ export {
   type CreateScopeTypeResult,
   type CreateScopeTypeVersion,
   createScopeType,
-} from './endpoints/scope-types.post';
+} from './endpoints/scope-types.post.js';
 
 export {
   type CreateSystemArg,
@@ -222,7 +222,7 @@ export {
   type CreateSystemResult,
   type CreateSystemVersion,
   createSystem,
-} from './endpoints/systems.post';
+} from './endpoints/systems.post.js';
 
 export {
   type CreateSystemAccessRoleArg,
@@ -230,7 +230,7 @@ export {
   type CreateSystemAccessRoleResult,
   type CreateSystemAccessRoleVersion,
   createSystemAccessRole,
-} from './endpoints/system-access-roles.post';
+} from './endpoints/system-access-roles.post.js';
 
 export {
   type DeactivateClaimableRoleAssignmentArg,
@@ -238,7 +238,7 @@ export {
   type DeactivateClaimableRoleAssignmentResult,
   type DeactivateClaimableRoleAssignmentVersion,
   deactivateClaimableRoleAssignment,
-} from './endpoints/account-claimable-role-assignment-deactivation.post';
+} from './endpoints/account-claimable-role-assignment-deactivation.post.js';
 
 export {
   type DeleteClaimableRoleArg,
@@ -246,7 +246,7 @@ export {
   type DeleteClaimableRoleResult,
   type DeleteClaimableRoleVersion,
   deleteClaimableRole,
-} from './endpoints/claimable-role.delete';
+} from './endpoints/claimable-role.delete.js';
 
 export {
   type DeleteClaimableRoleAccessRoleArg,
@@ -254,7 +254,7 @@ export {
   type DeleteClaimableRoleAccessRoleResult,
   type DeleteClaimableRoleAccessRoleVersion,
   deleteClaimableRoleAccessRole,
-} from './endpoints/claimable-role-access-role.delete';
+} from './endpoints/claimable-role-access-role.delete.js';
 
 export {
   type DeleteClaimableRoleAssignmentArg,
@@ -262,7 +262,7 @@ export {
   type DeleteClaimableRoleAssignmentResult,
   type DeleteClaimableRoleAssignmentVersion,
   deleteClaimableRoleAssignment,
-} from './endpoints/claimable-role-assignment.delete';
+} from './endpoints/claimable-role-assignment.delete.js';
 
 export {
   type DeleteClaimableRoleAssignmentsByExternalIdentifierArg,
@@ -270,7 +270,7 @@ export {
   type DeleteClaimableRoleAssignmentsByExternalIdentifierResult,
   type DeleteClaimableRoleAssignmentsByExternalIdentifierVersion,
   deleteClaimableRoleAssignmentsByExternalIdentifier,
-} from './endpoints/claimable-role-assignments-by-external-identifier.delete';
+} from './endpoints/claimable-role-assignments-by-external-identifier.delete.js';
 
 export {
   type DeleteRoleArg,
@@ -278,7 +278,7 @@ export {
   type DeleteRoleResult,
   type DeleteRoleVersion,
   deleteRole,
-} from './endpoints/role.delete';
+} from './endpoints/role.delete.js';
 
 export {
   type DeleteRoleAccessRoleArg,
@@ -286,7 +286,7 @@ export {
   type DeleteRoleAccessRoleResult,
   type DeleteRoleAccessRoleVersion,
   deleteRoleAccessRole,
-} from './endpoints/role-access-role.delete';
+} from './endpoints/role-access-role.delete.js';
 
 export {
   type DeleteRoleAssignmentArg,
@@ -294,7 +294,7 @@ export {
   type DeleteRoleAssignmentResult,
   type DeleteRoleAssignmentVersion,
   deleteRoleAssignment,
-} from './endpoints/role-assignment.delete';
+} from './endpoints/role-assignment.delete.js';
 
 export {
   type DeleteRoleAssignmentsArg,
@@ -302,7 +302,7 @@ export {
   type DeleteRoleAssignmentsResult,
   type DeleteRoleAssignmentsVersion,
   deleteRoleAssignments,
-} from './endpoints/role-assignments-delete.post';
+} from './endpoints/role-assignments-delete.post.js';
 
 export {
   type DeleteRoleAssignmentsByExternalIdentifierArg,
@@ -310,7 +310,7 @@ export {
   type DeleteRoleAssignmentsByExternalIdentifierResult,
   type DeleteRoleAssignmentsByExternalIdentifierVersion,
   deleteRoleAssignmentsByExternalIdentifier,
-} from './endpoints/role-assignments-by-external-identifier.delete';
+} from './endpoints/role-assignments-by-external-identifier.delete.js';
 
 export {
   type DeleteRoleBindingConfigurationArg,
@@ -318,7 +318,7 @@ export {
   type DeleteRoleBindingConfigurationResult,
   type DeleteRoleBindingConfigurationVersion,
   deleteRoleBindingConfiguration,
-} from './endpoints/role-binding-configuration.delete';
+} from './endpoints/role-binding-configuration.delete.js';
 
 export {
   type DeleteScopeTypeArg,
@@ -326,7 +326,7 @@ export {
   type DeleteScopeTypeResult,
   type DeleteScopeTypeVersion,
   deleteScopeType,
-} from './endpoints/scope-type.delete';
+} from './endpoints/scope-type.delete.js';
 
 export {
   type DeleteSystemArg,
@@ -334,7 +334,7 @@ export {
   type DeleteSystemResult,
   type DeleteSystemVersion,
   deleteSystem,
-} from './endpoints/system.delete';
+} from './endpoints/system.delete.js';
 
 export {
   type DeleteSystemAccessRoleArg,
@@ -342,7 +342,7 @@ export {
   type DeleteSystemAccessRoleResult,
   type DeleteSystemAccessRoleVersion,
   deleteSystemAccessRole,
-} from './endpoints/system-access-role.delete';
+} from './endpoints/system-access-role.delete.js';
 
 export {
   type DeleteSystemAccessRoleAssignmentArg,
@@ -350,7 +350,7 @@ export {
   type DeleteSystemAccessRoleAssignmentResult,
   type DeleteSystemAccessRoleAssignmentVersion,
   deleteSystemAccessRoleAssignment,
-} from './endpoints/system-access-role-assignment.delete';
+} from './endpoints/system-access-role-assignment.delete.js';
 
 export {
   type GetClaimableRoleArg,
@@ -358,7 +358,7 @@ export {
   type GetClaimableRoleResult,
   type GetClaimableRoleVersion,
   getClaimableRole,
-} from './endpoints/claimable-role.get';
+} from './endpoints/claimable-role.get.js';
 
 export {
   type GetClaimableRoleAssignmentArg,
@@ -366,7 +366,7 @@ export {
   type GetClaimableRoleAssignmentResult,
   type GetClaimableRoleAssignmentVersion,
   getClaimableRoleAssignment,
-} from './endpoints/claimable-role-assignment.get';
+} from './endpoints/claimable-role-assignment.get.js';
 
 export {
   type GetClaimableRoleAssignmentActivationArg,
@@ -374,7 +374,7 @@ export {
   type GetClaimableRoleAssignmentActivationResult,
   type GetClaimableRoleAssignmentActivationVersion,
   getClaimableRoleAssignmentActivation,
-} from './endpoints/account-claimable-role-assignment-activation.get';
+} from './endpoints/account-claimable-role-assignment-activation.get.js';
 
 export {
   type GetPublicSchemaArg,
@@ -382,7 +382,7 @@ export {
   type GetPublicSchemaResult,
   type GetPublicSchemaVersion,
   getPublicSchema,
-} from './endpoints/public-schema.get';
+} from './endpoints/public-schema.get.js';
 
 export {
   type GetRoleArg,
@@ -390,7 +390,7 @@ export {
   type GetRoleResult,
   type GetRoleVersion,
   getRole,
-} from './endpoints/role.get';
+} from './endpoints/role.get.js';
 
 export {
   type GetRoleAssignmentArg,
@@ -398,7 +398,7 @@ export {
   type GetRoleAssignmentResult,
   type GetRoleAssignmentVersion,
   getRoleAssignment,
-} from './endpoints/role-assignment.get';
+} from './endpoints/role-assignment.get.js';
 
 export {
   type GetRoleBindingConfigurationArg,
@@ -406,7 +406,7 @@ export {
   type GetRoleBindingConfigurationResult,
   type GetRoleBindingConfigurationVersion,
   getRoleBindingConfiguration,
-} from './endpoints/role-binding-configuration.get';
+} from './endpoints/role-binding-configuration.get.js';
 
 export {
   type GetRoleBindingConfigurationStatusArg,
@@ -414,7 +414,7 @@ export {
   type GetRoleBindingConfigurationStatusResult,
   type GetRoleBindingConfigurationStatusVersion,
   getRoleBindingConfigurationStatus,
-} from './endpoints/role-binding-configuration-status.get';
+} from './endpoints/role-binding-configuration-status.get.js';
 
 export {
   type GetScopeTypeArg,
@@ -422,7 +422,7 @@ export {
   type GetScopeTypeResult,
   type GetScopeTypeVersion,
   getScopeType,
-} from './endpoints/scope-type.get';
+} from './endpoints/scope-type.get.js';
 
 export {
   type GetSystemArg,
@@ -430,7 +430,7 @@ export {
   type GetSystemResult,
   type GetSystemVersion,
   getSystem,
-} from './endpoints/system.get';
+} from './endpoints/system.get.js';
 
 export {
   type GetSystemAccessRoleArg,
@@ -438,7 +438,7 @@ export {
   type GetSystemAccessRoleResult,
   type GetSystemAccessRoleVersion,
   getSystemAccessRole,
-} from './endpoints/system-access-role.get';
+} from './endpoints/system-access-role.get.js';
 
 export {
   type GetSystemAccessRoleAssignmentArg,
@@ -446,7 +446,7 @@ export {
   type GetSystemAccessRoleAssignmentResult,
   type GetSystemAccessRoleAssignmentVersion,
   getSystemAccessRoleAssignment,
-} from './endpoints/system-access-role-assignment.get';
+} from './endpoints/system-access-role-assignment.get.js';
 
 export {
   type ListAccessRolesArg,
@@ -454,7 +454,7 @@ export {
   type ListAccessRolesResult,
   type ListAccessRolesVersion,
   listAccessRoles,
-} from './endpoints/access-roles.get';
+} from './endpoints/access-roles.get.js';
 
 export {
   type ListAccountAccessRoleAssignmentsArg,
@@ -462,7 +462,7 @@ export {
   type ListAccountAccessRoleAssignmentsResult,
   type ListAccountAccessRoleAssignmentsVersion,
   listAccountAccessRoleAssignments,
-} from './endpoints/account-access-role-assignments.get';
+} from './endpoints/account-access-role-assignments.get.js';
 
 export {
   type ListAccountActiveAccessRoleAssignmentsArg,
@@ -470,7 +470,7 @@ export {
   type ListAccountActiveAccessRoleAssignmentsResult,
   type ListAccountActiveAccessRoleAssignmentsVersion,
   listAccountActiveAccessRoleAssignments,
-} from './endpoints/account-active-access-role-assignments.get';
+} from './endpoints/account-active-access-role-assignments.get.js';
 
 export {
   type ListAccountClaimableRoleAssignmentsArg,
@@ -478,7 +478,7 @@ export {
   type ListAccountClaimableRoleAssignmentsResult,
   type ListAccountClaimableRoleAssignmentsVersion,
   listAccountClaimableRoleAssignments,
-} from './endpoints/account-claimable-role-assignments.get';
+} from './endpoints/account-claimable-role-assignments.get.js';
 
 export {
   type ListAccountConsolidatedClaimableRoleAssignmentsArg,
@@ -486,7 +486,7 @@ export {
   type ListAccountConsolidatedClaimableRoleAssignmentsResult,
   type ListAccountConsolidatedClaimableRoleAssignmentsVersion,
   listAccountConsolidatedClaimableRoleAssignments,
-} from './endpoints/account-consolidated-claimable-role-assignments.get';
+} from './endpoints/account-consolidated-claimable-role-assignments.get.js';
 
 export {
   type ListAccountConsolidatedRoleAssignmentsArg,
@@ -494,7 +494,7 @@ export {
   type ListAccountConsolidatedRoleAssignmentsResult,
   type ListAccountConsolidatedRoleAssignmentsVersion,
   listAccountConsolidatedRoleAssignments,
-} from './endpoints/account-consolidated-role-assignments.get';
+} from './endpoints/account-consolidated-role-assignments.get.js';
 
 export {
   type ListAccountRoleAssignmentsArg,
@@ -502,7 +502,7 @@ export {
   type ListAccountRoleAssignmentsResult,
   type ListAccountRoleAssignmentsVersion,
   listAccountRoleAssignments,
-} from './endpoints/account-role-assignments.get';
+} from './endpoints/account-role-assignments.get.js';
 
 export {
   type ListActivationsForClaimableRoleAssignmentArg,
@@ -510,7 +510,7 @@ export {
   type ListActivationsForClaimableRoleAssignmentResult,
   type ListActivationsForClaimableRoleAssignmentVersion,
   listActivationsForClaimableRoleAssignment,
-} from './endpoints/claimable-role-assignment-activations-by-assignment.get';
+} from './endpoints/claimable-role-assignment-activations-by-assignment.get.js';
 
 export {
   type ListClaimableRoleAssignmentActivationsArg,
@@ -518,7 +518,7 @@ export {
   type ListClaimableRoleAssignmentActivationsResult,
   type ListClaimableRoleAssignmentActivationsVersion,
   listClaimableRoleAssignmentActivations,
-} from './endpoints/claimable-role-assignment-activations.get';
+} from './endpoints/claimable-role-assignment-activations.get.js';
 
 export {
   type ListClaimableRoleAssignmentsArg,
@@ -526,7 +526,7 @@ export {
   type ListClaimableRoleAssignmentsResult,
   type ListClaimableRoleAssignmentsVersion,
   listClaimableRoleAssignments,
-} from './endpoints/claimable-role-assignments.get';
+} from './endpoints/claimable-role-assignments.get.js';
 
 export {
   type ListClaimableRolesArg,
@@ -534,7 +534,7 @@ export {
   type ListClaimableRolesResult,
   type ListClaimableRolesVersion,
   listClaimableRoles,
-} from './endpoints/claimable-roles.get';
+} from './endpoints/claimable-roles.get.js';
 
 export {
   type ListRoleAssignmentsArg,
@@ -542,7 +542,7 @@ export {
   type ListRoleAssignmentsResult,
   type ListRoleAssignmentsVersion,
   listRoleAssignments,
-} from './endpoints/role-assignments.get';
+} from './endpoints/role-assignments.get.js';
 
 export {
   type ListRoleBindingConfigurationHistoryArg,
@@ -550,7 +550,7 @@ export {
   type ListRoleBindingConfigurationHistoryResult,
   type ListRoleBindingConfigurationHistoryVersion,
   listRoleBindingConfigurationHistory,
-} from './endpoints/role-binding-configuration-history.get';
+} from './endpoints/role-binding-configuration-history.get.js';
 
 export {
   type ListRoleBindingConfigurationNotificationsArg,
@@ -558,7 +558,7 @@ export {
   type ListRoleBindingConfigurationNotificationsResult,
   type ListRoleBindingConfigurationNotificationsVersion,
   listRoleBindingConfigurationNotifications,
-} from './endpoints/role-binding-configuration-notifications.get';
+} from './endpoints/role-binding-configuration-notifications.get.js';
 
 export {
   type ListRoleBindingConfigurationsArg,
@@ -566,7 +566,7 @@ export {
   type ListRoleBindingConfigurationsResult,
   type ListRoleBindingConfigurationsVersion,
   listRoleBindingConfigurations,
-} from './endpoints/role-binding-configurations.get';
+} from './endpoints/role-binding-configurations.get.js';
 
 export {
   type ListRolesArg,
@@ -574,7 +574,7 @@ export {
   type ListRolesResult,
   type ListRolesVersion,
   listRoles,
-} from './endpoints/roles.get';
+} from './endpoints/roles.get.js';
 
 export {
   type ListScopeTypesArg,
@@ -582,7 +582,7 @@ export {
   type ListScopeTypesResult,
   type ListScopeTypesVersion,
   listScopeTypes,
-} from './endpoints/scope-types.get';
+} from './endpoints/scope-types.get.js';
 
 export {
   type ListSystemAccessRoleAssignmentsArg,
@@ -590,7 +590,7 @@ export {
   type ListSystemAccessRoleAssignmentsResult,
   type ListSystemAccessRoleAssignmentsVersion,
   listSystemAccessRoleAssignments,
-} from './endpoints/system-access-role-assignments.get';
+} from './endpoints/system-access-role-assignments.get.js';
 
 export {
   type ListSystemAccessRolesArg,
@@ -598,7 +598,7 @@ export {
   type ListSystemAccessRolesResult,
   type ListSystemAccessRolesVersion,
   listSystemAccessRoles,
-} from './endpoints/system-access-roles.get';
+} from './endpoints/system-access-roles.get.js';
 
 export {
   type ListSystemsArg,
@@ -606,7 +606,7 @@ export {
   type ListSystemsResult,
   type ListSystemsVersion,
   listSystems,
-} from './endpoints/systems.get';
+} from './endpoints/systems.get.js';
 
 export {
   type PurgeExpiredRoleBindingConfigurationHistoryArg,
@@ -614,7 +614,7 @@ export {
   type PurgeExpiredRoleBindingConfigurationHistoryResult,
   type PurgeExpiredRoleBindingConfigurationHistoryVersion,
   purgeExpiredRoleBindingConfigurationHistory,
-} from './endpoints/role-binding-configuration-expired-history.delete';
+} from './endpoints/role-binding-configuration-expired-history.delete.js';
 
 export {
   type PutRolesSubscriptionArg,
@@ -622,7 +622,7 @@ export {
   type PutRolesSubscriptionResult,
   type PutRolesSubscriptionVersion,
   putRolesSubscription,
-} from './endpoints/roles-subscription.put';
+} from './endpoints/roles-subscription.put.js';
 
 export {
   type UpdateClaimableRoleArg,
@@ -630,7 +630,7 @@ export {
   type UpdateClaimableRoleResult,
   type UpdateClaimableRoleVersion,
   updateClaimableRole,
-} from './endpoints/claimable-role.patch';
+} from './endpoints/claimable-role.patch.js';
 
 export {
   type UpdateClaimableRoleAssignmentArg,
@@ -638,7 +638,7 @@ export {
   type UpdateClaimableRoleAssignmentResult,
   type UpdateClaimableRoleAssignmentVersion,
   updateClaimableRoleAssignment,
-} from './endpoints/claimable-role-assignment.patch';
+} from './endpoints/claimable-role-assignment.patch.js';
 
 export {
   type UpdateRoleArg,
@@ -646,7 +646,7 @@ export {
   type UpdateRoleResult,
   type UpdateRoleVersion,
   updateRole,
-} from './endpoints/role.patch';
+} from './endpoints/role.patch.js';
 
 export {
   type UpdateRoleAssignmentArg,
@@ -654,7 +654,7 @@ export {
   type UpdateRoleAssignmentResult,
   type UpdateRoleAssignmentVersion,
   updateRoleAssignment,
-} from './endpoints/role-assignment.patch';
+} from './endpoints/role-assignment.patch.js';
 
 export {
   type UpdateRoleBindingConfigurationArg,
@@ -662,7 +662,7 @@ export {
   type UpdateRoleBindingConfigurationResult,
   type UpdateRoleBindingConfigurationVersion,
   updateRoleBindingConfiguration,
-} from './endpoints/role-binding-configuration.patch';
+} from './endpoints/role-binding-configuration.patch.js';
 
 export {
   type UpdateRoleBindingConfigurationStatusArg,
@@ -670,7 +670,7 @@ export {
   type UpdateRoleBindingConfigurationStatusResult,
   type UpdateRoleBindingConfigurationStatusVersion,
   updateRoleBindingConfigurationStatus,
-} from './endpoints/role-binding-configuration-status.patch';
+} from './endpoints/role-binding-configuration-status.patch.js';
 
 export {
   type UpdateScopeTypeArg,
@@ -678,7 +678,7 @@ export {
   type UpdateScopeTypeResult,
   type UpdateScopeTypeVersion,
   updateScopeType,
-} from './endpoints/scope-type.patch';
+} from './endpoints/scope-type.patch.js';
 
 export {
   type UpdateSystemArg,
@@ -686,7 +686,7 @@ export {
   type UpdateSystemResult,
   type UpdateSystemVersion,
   updateSystem,
-} from './endpoints/system.patch';
+} from './endpoints/system.patch.js';
 
 export {
   type UpdateSystemAccessRoleArg,
@@ -694,7 +694,7 @@ export {
   type UpdateSystemAccessRoleResult,
   type UpdateSystemAccessRoleVersion,
   updateSystemAccessRole,
-} from './endpoints/system-access-role.patch';
+} from './endpoints/system-access-role.patch.js';
 
 export {
   type UpdateSystemAccessRoleAssignmentArg,
@@ -702,4 +702,4 @@ export {
   type UpdateSystemAccessRoleAssignmentResult,
   type UpdateSystemAccessRoleAssignmentVersion,
   updateSystemAccessRoleAssignment,
-} from './endpoints/system-access-role-assignment.patch';
+} from './endpoints/system-access-role-assignment.patch.js';

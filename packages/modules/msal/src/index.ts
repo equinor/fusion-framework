@@ -31,18 +31,18 @@ export {
   enableMSAL,
   type MsalModule,
   type AuthConfigFn,
-} from './module';
+} from './module.js';
 
-export type { IMsalProvider } from './MsalProvider.interface';
-export type { IMsalClient } from './MsalClient.interface';
-export { MsalClient, type MsalClientConfig } from './MsalClient';
+export type { IMsalProvider } from './MsalProvider.interface.js';
+export type { IMsalClient } from './MsalClient.interface.js';
+export { MsalClient, type MsalClientConfig } from './MsalClient.js';
 
 /**
  * Required to implement {@link IMsalProvider}, whose `msalVersion` member is
  * typed as this enum.
  */
-export { MsalModuleVersion } from './static';
+export { MsalModuleVersion } from './static.js';
 
-export type { AccountInfo, AuthenticationResult } from './types';
+export type { AccountInfo, AuthenticationResult } from './types.js';
 
-export { default } from './module';
+export { default } from './module.js';

@@ -1,7 +1,7 @@
-import type { To } from '../types';
-import { encodeTrailingWhitespace } from './encode-trailing-whitespace';
-import { hasProtocol } from './has-protocol';
-import { pathToString } from './path-to-string';
+import type { To } from '../types.js';
+import { encodeTrailingWhitespace } from './encode-trailing-whitespace.js';
+import { hasProtocol } from './has-protocol.js';
+import { pathToString } from './path-to-string.js';
 
 /**
  * Converts a path to a URL object.

@@ -1,16 +1,16 @@
 import { useMemo, useState, type ReactNode } from 'react';
 import { Banner, CircularProgress, Tabs, Typography } from '@equinor/eds-core-react';
-import styled from 'styled-components';
+import { styled } from 'styled-components';
 
-import { RoleClaimDialog } from '../claim/RoleClaimDialog';
-import type { RoleDetails } from '../overview/role-details';
-import { useRolesOverview } from '../overview/useRolesOverview';
-import { RolesLoadFeedback } from '../overview/RolesLoadFeedback';
-import { ClaimableRoleRow } from './ClaimableRoleRow';
-import { CompactRoleRow } from './CompactRoleRow';
-import { createCompactRoleGroups } from './create-compact-role-groups';
-import { formatRoleDate } from './format-role-date';
-import { RoleDetailsDialog } from './RoleDetailsDialog';
+import { RoleClaimDialog } from '../claim/RoleClaimDialog.js';
+import type { RoleDetails } from '../overview/role-details.js';
+import { useRolesOverview } from '../overview/useRolesOverview.js';
+import { RolesLoadFeedback } from '../overview/RolesLoadFeedback.js';
+import { ClaimableRoleRow } from './ClaimableRoleRow.js';
+import { CompactRoleRow } from './CompactRoleRow.js';
+import { createCompactRoleGroups } from './create-compact-role-groups.js';
+import { formatRoleDate } from './format-role-date.js';
+import { RoleDetailsDialog } from './RoleDetailsDialog.js';
 
 const Styled = {
   Content: styled.div`

@@ -3,15 +3,15 @@ import type { ContextItem, ContextModule } from '@equinor/fusion-framework-modul
 import type { IEventModuleProvider } from '@equinor/fusion-framework-module-event';
 import type { INavigationProvider } from '@equinor/fusion-framework-module-navigation';
 
-import type { ContextNavigationAdapter } from './adapters/types';
+import type { ContextNavigationAdapter } from './adapters/types.js';
 import type {
   ContextNavigationConfig,
   ContextNavigationNavigateDetail,
   ContextNavigationNavigatedDetail,
   ContextNavigationSkippedDetail,
-} from './types';
-import type { ContextNavigationEventSource } from './create-context-navigation-plugin';
-import { normalizePathFromURL } from './helpers';
+} from './types.js';
+import type { ContextNavigationEventSource } from './create-context-navigation-plugin.js';
+import { normalizePathFromURL } from './helpers/index.js';
 
 /**
  * Set of normalized paths that the plugin itself has navigated to.

@@ -1,6 +1,6 @@
 import type { FlowState } from '@equinor/fusion-observable';
-import type { actions } from './actions';
-import type { HistoryStack, LocationState } from '../types';
+import type { actions } from './actions.js';
+import type { HistoryStack, LocationState } from '../types.js';
 
 /**
  * History state containing flow state and stack.

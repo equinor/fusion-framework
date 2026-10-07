@@ -23,11 +23,26 @@
     "useEditorconfig": true,
     "indentStyle": "space"
   },
-  "assist": { "actions": { "source": { "organizeImports": "off" } } },
+  "assist": {
+    "actions": {
+      "source": {
+        "organizeImports": "off"
+      }
+    }
+  },
   "linter": {
     "enabled": true,
     "rules": {
-      "preset": "recommended"
+      "preset": "recommended",
+      "correctness": {
+        "useImportExtensions": {
+          "level": "error",
+          "fix": "safe",
+          "options": {
+            "forceJsExtensions": true
+          }
+        }
+      }
     },
     "includes": [
       "**",
@@ -49,6 +64,35 @@
   "overrides": [
     {
       "includes": ["**/packages/react/**"]
+    },
+    {
+      "includes": [
+        "**/__tests__/**",
+        "**/__mocks__/**",
+        "**/tests/**",
+        "**/*.test.ts",
+        "**/*.test.tsx",
+        "**/*.spec.ts",
+        "**/*.spec.tsx",
+        "**/*.stories.tsx",
+        "**/*.config.ts",
+        "**/*.config.mts",
+        "**/*.config.js",
+        "**/*.config.mjs",
+        "**/scripts/**",
+        "**/bin/**",
+        "**/dev-server.ts",
+        "**/cookbooks/**",
+        "**/eds/**",
+        "**/vue-press/**"
+      ],
+      "linter": {
+        "rules": {
+          "correctness": {
+            "useImportExtensions": "off"
+          }
+        }
+      }
     }
   ]
 }

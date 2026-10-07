@@ -6,8 +6,8 @@ import type {
   BookmarksFilter,
   BookmarkUpdate,
   IBookmarkClient,
-} from '../BookmarkClient.interface';
-import type { Bookmark, BookmarkData, BookmarkUser, BookmarkWithoutData } from '../types';
+} from '../BookmarkClient.interface.js';
+import type { Bookmark, BookmarkData, BookmarkUser, BookmarkWithoutData } from '../types.js';
 
 /** Attributed to every bookmark the mock client creates or updates. */
 const mockUser: BookmarkUser = { id: 'mock-user', name: 'Mock User' };

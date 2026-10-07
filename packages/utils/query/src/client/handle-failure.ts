@@ -12,9 +12,9 @@ import {
   type Observable,
 } from 'rxjs';
 
-import { actions, type Actions } from './actions';
-import type { QueryClientState, RetryOptions } from './types';
-import { QueryClientError } from './QueryClientError';
+import { actions, type Actions } from './actions.js';
+import type { QueryClientState, RetryOptions } from './types.js';
+import { QueryClientError } from './QueryClientError.js';
 
 /**
  * Handles execution failure by scheduling retries according to the provided retry options.

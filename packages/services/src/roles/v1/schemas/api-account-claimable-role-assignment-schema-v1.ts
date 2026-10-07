@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { ApiAccountSchemaV1 } from './api-account-schema-v1';
-import { ApiClaimableRoleAssignmentSchemaV1 } from './api-claimable-role-assignment-schema-v1';
+import { ApiAccountSchemaV1 } from './api-account-schema-v1.js';
+import { ApiClaimableRoleAssignmentSchemaV1 } from './api-claimable-role-assignment-schema-v1.js';
 
 /** Zod schema for a claimable-role assignment returned from an account-centric query. */
 export const ApiAccountClaimableRoleAssignmentSchemaV1 = ApiClaimableRoleAssignmentSchemaV1.and(

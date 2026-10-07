@@ -6,9 +6,9 @@
  *
  * @packageDocumentation
  */
-export * from './types';
-export * as operators from './operators';
+export * from './types.js';
+export * as operators from './operators/index.js';
 
-export { default, Query, QueryCtorOptions } from './Query';
+export { default, Query, QueryCtorOptions } from './Query.js';
 
-export { IQueryEvent, QueryEventMap, QueryEvent } from './QueryEvent';
+export { IQueryEvent, QueryEventMap, QueryEvent } from './QueryEvent.js';

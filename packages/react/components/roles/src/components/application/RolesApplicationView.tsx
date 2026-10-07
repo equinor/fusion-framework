@@ -1,13 +1,13 @@
 import { useState, type ReactNode } from 'react';
 import { Banner, Button, CircularProgress, Tabs, Typography } from '@equinor/eds-core-react';
-import styled from 'styled-components';
+import { styled } from 'styled-components';
 
-import { RoleClaimDialog } from '../claim/RoleClaimDialog';
-import { useRolesOverview } from '../overview/useRolesOverview';
-import { RolesLoadFeedback } from '../overview/RolesLoadFeedback';
-import { createActiveRoleItems } from '../overview/create-active-role-items';
-import { filterEffectiveAssignedRoles } from '../overview/filter-effective-assigned-roles';
-import { RoleAssignmentCard } from './RoleAssignmentCard';
+import { RoleClaimDialog } from '../claim/RoleClaimDialog.js';
+import { useRolesOverview } from '../overview/useRolesOverview.js';
+import { RolesLoadFeedback } from '../overview/RolesLoadFeedback.js';
+import { createActiveRoleItems } from '../overview/create-active-role-items.js';
+import { filterEffectiveAssignedRoles } from '../overview/filter-effective-assigned-roles.js';
+import { RoleAssignmentCard } from './RoleAssignmentCard.js';
 
 const Styled = {
   Content: styled.div`

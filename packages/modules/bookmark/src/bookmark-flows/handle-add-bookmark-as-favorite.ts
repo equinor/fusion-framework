@@ -3,9 +3,9 @@ import { concatMap, map, catchError, filter, last } from 'rxjs/operators';
 
 import type { Flow, Observable } from '@equinor/fusion-observable';
 
-import { bookmarkActions as actions, type BookmarkActions } from '../bookmark-actions';
-import type { IBookmarkClient } from '../BookmarkClient.interface';
-import { BookmarkFlowError } from '../BookmarkFlowError';
+import { bookmarkActions as actions, type BookmarkActions } from '../bookmark-actions.js';
+import type { IBookmarkClient } from '../BookmarkClient.interface.js';
+import { BookmarkFlowError } from '../BookmarkFlowError.js';
 
 /**
  * Handles the flow of adding a bookmark as a favorite.

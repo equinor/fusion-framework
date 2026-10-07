@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { RequestScopeSchemaV1 } from './request-scope-schema-v1';
+import { RequestScopeSchemaV1 } from './request-scope-schema-v1.js';
 
 /** Zod schema for the body of an assign-access-role request. */
 export const AssignAccessRoleRequestSchemaV1 = z

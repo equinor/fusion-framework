@@ -1,7 +1,7 @@
-import { MemoryHistory, type MemoryHistoryOptions } from './MemoryHistory';
-import { BrowserHistory, type BrowserHistoryOptions } from './BrowserHistory';
-import { BrowserHistoryStack } from './BrowserHistoryStack';
-import { BrowserHistoryHashStack } from './BrowserHistoryHashStack';
+import { MemoryHistory, type MemoryHistoryOptions } from './MemoryHistory.js';
+import { BrowserHistory, type BrowserHistoryOptions } from './BrowserHistory.js';
+import { BrowserHistoryStack } from './BrowserHistoryStack.js';
+import { BrowserHistoryHashStack } from './BrowserHistoryHashStack.js';
 
 type HistoryCtorMap = {
   memory: (options?: MemoryHistoryOptions) => MemoryHistory;

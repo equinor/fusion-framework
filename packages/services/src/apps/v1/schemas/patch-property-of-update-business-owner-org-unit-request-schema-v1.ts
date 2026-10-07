@@ -1,5 +1,5 @@
 import type { z } from 'zod';
-import { UpdateBusinessOwnerOrgUnitRequestSchemaV1 } from './update-business-owner-org-unit-request-schema-v1';
+import { UpdateBusinessOwnerOrgUnitRequestSchemaV1 } from './update-business-owner-org-unit-request-schema-v1.js';
 
 /**
  * Zod schema for the `PatchPropertyOfUpdateBusinessOwnerOrgUnitRequest` model published by the

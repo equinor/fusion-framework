@@ -5,7 +5,7 @@ import type {
   ModuleTypes,
   ModuleType,
 } from '@equinor/fusion-framework-module';
-import useCurrentAppModules from './useCurrentAppModules';
+import useCurrentAppModules from './useCurrentAppModules.js';
 
 /**
  * React hook that retrieves a specific module from the current application.

@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { ApiAccountSchemaV1 } from './api-account-schema-v1';
-import { ApiRoleAssignmentSchemaV1 } from './api-role-assignment-schema-v1';
+import { ApiAccountSchemaV1 } from './api-account-schema-v1.js';
+import { ApiRoleAssignmentSchemaV1 } from './api-role-assignment-schema-v1.js';
 
 /** Zod schema for a role assignment returned from an account-centric query. */
 export const ApiAccountRoleAssignmentSchemaV1 = ApiRoleAssignmentSchemaV1.and(

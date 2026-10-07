@@ -1,8 +1,8 @@
 import { LicenseManager } from 'ag-grid-enterprise';
 import { ModuleRegistry, provideGlobalGridOptions, type Theme } from 'ag-grid-community';
 
-import type { AgGridConfig } from './AgGridConfigurator.interface';
-import { applyThemeShim } from './apply-theme-shim';
+import type { AgGridConfig } from './AgGridConfigurator.interface.js';
+import { applyThemeShim } from './apply-theme-shim.js';
 
 /**
  * Public contract for the resolved AG Grid module provider.

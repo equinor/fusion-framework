@@ -1,8 +1,8 @@
 import { filter, type Observable } from 'rxjs';
 
-import type { IEventModuleProvider } from '../EventModuleProvider';
-import type { FrameworkEventMap, IFrameworkEvent } from '../FrameworkEvent';
-import { filterEvent } from '../operators/filter-event';
+import type { IEventModuleProvider } from '../EventModuleProvider.js';
+import type { FrameworkEventMap, IFrameworkEvent } from '../FrameworkEvent.js';
+import { filterEvent } from '../operators/filter-event.js';
 
 /**
  * A matcher that selects which events `waitForEvent` or `watchEvents` act on.

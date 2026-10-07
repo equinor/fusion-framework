@@ -5,6 +5,6 @@
  * - {@link IApp} – Public interface for an application instance.
  * - {@link AppInitializeResult} – Shape emitted by `App.initialize()`.
  */
-export { App, IApp, type AppInitializeResult } from './App';
+export { App, IApp, type AppInitializeResult } from './App.js';
 
-export { default } from './App';
+export { default } from './App.js';

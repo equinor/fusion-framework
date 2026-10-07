@@ -1,5 +1,5 @@
 import type { ObservableInput } from 'rxjs';
-import type { Bookmark, BookmarkData, BookmarkWithoutData } from './types';
+import type { Bookmark, BookmarkData, BookmarkWithoutData } from './types.js';
 
 /**
  * Defines the shape of a filter for querying bookmarks.

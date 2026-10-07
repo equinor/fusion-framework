@@ -1,5 +1,5 @@
-import { UUID_PATTERN } from '../../constants';
-import type { AppRouteMatch } from './parse-app-route';
+import { UUID_PATTERN } from '../../constants/index.js';
+import type { AppRouteMatch } from './parse-app-route.js';
 
 /**
  * Reconstructs the full sub-route tail from a parsed app route.

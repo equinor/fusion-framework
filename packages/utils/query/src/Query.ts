@@ -20,9 +20,9 @@ import {
 
 import { v4 as generateGUID, v5 as generateUniqueKey } from 'uuid';
 
-import { QueryClient, type QueryClientCtorOptions } from './client';
+import { QueryClient, type QueryClientCtorOptions } from './client/index.js';
 
-import { QueryCache, type QueryCacheMutation, type QueryCacheRecord } from './cache';
+import { QueryCache, type QueryCacheMutation, type QueryCacheRecord } from './cache/index.js';
 
 import type {
   CacheOptions,
@@ -32,13 +32,13 @@ import type {
   QueryQueueResult,
   QueryTaskCached,
   QueryTaskCompleted,
-} from './types';
-import type { QueryCacheCtorArgs } from './cache/QueryCache';
-import { concatQueue, mergeQueue, queryValue, switchQueue } from './operators';
+} from './types.js';
+import type { QueryCacheCtorArgs } from './cache/QueryCache.js';
+import { concatQueue, mergeQueue, queryValue, switchQueue } from './operators/index.js';
 
 import { filterAction } from '@equinor/fusion-observable/operators';
-import { QueryTask } from './QueryTask';
-import { QueryEvent, type IQueryEvent, type QueryEvents } from './QueryEvent';
+import { QueryTask } from './QueryTask.js';
+import { QueryEvent, type IQueryEvent, type QueryEvents } from './QueryEvent.js';
 
 /**
  * Defines the constructor options for a QueryClient object.

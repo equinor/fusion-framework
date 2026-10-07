@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { RoleBindingConfigurationBindingSchemaV1 } from './role-binding-configuration-binding-schema-v1';
+import { RoleBindingConfigurationBindingSchemaV1 } from './role-binding-configuration-binding-schema-v1.js';
 
 /** Zod schema for the body of a create-role-binding-configuration request. */
 export const CreateRoleBindingConfigurationRequestSchemaV1 = z

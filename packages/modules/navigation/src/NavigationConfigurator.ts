@@ -9,12 +9,12 @@ import {
 } from '@equinor/fusion-framework-module';
 import type { ITelemetryProvider } from '@equinor/fusion-framework-module-telemetry';
 import type { IEventModuleProvider } from '@equinor/fusion-framework-module-event';
-import type { INavigationConfigurator } from './NavigationConfigurator.interface';
+import type { INavigationConfigurator } from './NavigationConfigurator.interface.js';
 
-import type { History } from './lib/types';
-import { createHistory } from './lib/create-history';
-import { ProxyHistory } from './lib/ProxyHistory';
-import type { NavigationModule } from './module';
+import type { History } from './lib/types.js';
+import { createHistory } from './lib/create-history.js';
+import { ProxyHistory } from './lib/ProxyHistory.js';
+import type { NavigationModule } from './module.js';
 
 /**
  * Zod schema for navigation module configuration validation.

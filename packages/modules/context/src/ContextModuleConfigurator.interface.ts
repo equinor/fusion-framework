@@ -1,9 +1,9 @@
 import type { Modules, ModuleType } from '@equinor/fusion-framework-module';
 import type { QueryCtorOptions, QueryFn } from '@equinor/fusion-query';
 
-import type { ContextModuleConfig } from './ContextModuleConfig';
-import type { ContextItem, QueryContextParameters, RelatedContextParameters } from './types';
-import type { GetContextParameters } from './client/ContextClient';
+import type { ContextModuleConfig } from './ContextModuleConfig.js';
+import type { ContextItem, QueryContextParameters, RelatedContextParameters } from './types.js';
+import type { GetContextParameters } from './client/ContextClient.js';
 
 /**
  * Callback passed to {@link IContextModuleConfigurator.addConfigBuilder}.

@@ -16,11 +16,11 @@ import type {
   VersionedArgs,
   VersionedParsedArgs,
   VersionedResponse,
-} from '../types';
+} from '../types.js';
 
-import { emptyResponseSelector, extractVersion, parseVersionedArgs } from '../../utils';
-import { ApiVersion } from '../static';
-import { CreateWidgetRequestSchemaV1 } from '../v1/schemas/create-widget-request-schema-v1';
+import { emptyResponseSelector, extractVersion, parseVersionedArgs } from '../../utils.js';
+import { ApiVersion } from '../static.js';
+import { CreateWidgetRequestSchemaV1 } from '../v1/schemas/create-widget-request-schema-v1.js';
 
 /** Concrete API versions this operation publishes. */
 type AvailableVersions = ApiVersion.v1;

@@ -4,13 +4,13 @@ import { filter, map, share, withLatestFrom } from 'rxjs/operators';
 import { FlowSubject } from '@equinor/fusion-observable';
 import { filterAction } from '@equinor/fusion-observable/operators';
 
-import actions, { type ActionMap, type Actions } from './actions';
+import actions, { type ActionMap, type Actions } from './actions.js';
 
-import { handleRequests } from './handle-requests';
-import { handleExecution } from './handle-execution';
-import { handleFailure } from './handle-failure';
-import { QueryClientError } from './QueryClientError';
-import createReducer from './create-reducer';
+import { handleRequests } from './handle-requests.js';
+import { handleExecution } from './handle-execution.js';
+import { handleFailure } from './handle-failure.js';
+import { QueryClientError } from './QueryClientError.js';
+import createReducer from './create-reducer.js';
 
 import type {
   QueryClientState,
@@ -18,13 +18,13 @@ import type {
   QueryFn,
   QueryClientResult,
   QueryClientRequest,
-} from './types';
-import { QueryClientJob } from './QueryClientJob';
+} from './types.js';
+import { QueryClientJob } from './QueryClientJob.js';
 import {
   QueryClientEvent,
   type QueryClientEventData,
   type QueryClientEvents,
-} from './QueryClientEvent';
+} from './QueryClientEvent.js';
 
 /**
  * Options for configuring the behavior of the `QueryClient`.

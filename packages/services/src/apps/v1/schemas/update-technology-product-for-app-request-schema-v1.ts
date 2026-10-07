@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { TechnologyProductIdentifierSchemaV1 } from './technology-product-identifier-schema-v1';
+import { TechnologyProductIdentifierSchemaV1 } from './technology-product-identifier-schema-v1.js';
 
 /**
  * Zod schema for the `UpdateTechnologyProductForAppRequest` model published by the Fusion Apps API

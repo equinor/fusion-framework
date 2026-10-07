@@ -1,6 +1,6 @@
-import type { RoleDetails } from '../overview/role-details';
-import { formatRoleDate } from './format-role-date';
-import { parseRoleDate } from '../../dates/parse-role-date';
+import type { RoleDetails } from '../overview/role-details.js';
+import { formatRoleDate } from './format-role-date.js';
+import { parseRoleDate } from '../../dates/parse-role-date.js';
 
 /** Prepared metadata labels for the compact information dialog. */
 interface RoleDetailsLabels {

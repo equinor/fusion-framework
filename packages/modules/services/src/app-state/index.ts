@@ -13,8 +13,8 @@
  * ```
  */
 
-export { AppStateApiClient, default } from './client';
+export { AppStateApiClient, default } from './client.js';
 
-export { ApiVersion } from './static';
+export { ApiVersion } from './static.js';
 
-export * from './types';
+export * from './types.js';

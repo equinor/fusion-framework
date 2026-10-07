@@ -3,14 +3,14 @@ import type { EventModule } from '@equinor/fusion-framework-module-event';
 import type { HttpModule } from '@equinor/fusion-framework-module-http';
 import type { MsalModule } from '@equinor/fusion-framework-module-msal';
 import type { ServiceDiscoveryModule } from '@equinor/fusion-framework-module-service-discovery';
-import type { AppConfig } from './AppConfig';
-import type IApp from './app';
+import type { AppConfig } from './AppConfig.js';
+import type IApp from './app/index.js';
 
 /**
  * Re-export of {@link ConfigEnvironment} from AppConfig.
  */
 export type ConfigEnvironment = Record<string, unknown>;
-export type { AppConfig } from './AppConfig';
+export type { AppConfig } from './AppConfig.js';
 
 // biome-ignore lint/suspicious/noExplicitAny: TODO(#5123) - needs proper type definition
 type Fusion = any;

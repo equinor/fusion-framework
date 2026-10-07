@@ -1,5 +1,5 @@
 import type { FusionModules, FusionModulesInstance } from '@equinor/fusion-framework';
-import { useFramework } from './useFramework';
+import { useFramework } from './useFramework.js';
 import type {
   AnyModule,
   ModuleKey,

@@ -1,12 +1,12 @@
 import { z } from 'zod';
-import { PatchPropertyOfBooleanSchemaV1 } from './patch-property-of-boolean-schema-v1';
-import { PatchPropertyOfDataClassificationRequestSchemaV1 } from './patch-property-of-data-classification-request-schema-v1';
-import { PatchPropertyOfListOfUpdateBusinessOwnerRequestSchemaV1 } from './patch-property-of-list-of-update-business-owner-request-schema-v1';
-import { PatchPropertyOfListOfUpdateProjectCategoryRequestSchemaV1 } from './patch-property-of-list-of-update-project-category-request-schema-v1';
-import { PatchPropertyOfListOfUpdateProjectPhaseRequestSchemaV1 } from './patch-property-of-list-of-update-project-phase-request-schema-v1';
-import { PatchPropertyOfPropertiesCollectionSchemaV1 } from './patch-property-of-properties-collection-schema-v1';
-import { PatchPropertyOfUpdateBusinessOwnerOrgUnitRequestSchemaV1 } from './patch-property-of-update-business-owner-org-unit-request-schema-v1';
-import { PatchPropertyOfUpdateTechnologyProductForAppRequestSchemaV1 } from './patch-property-of-update-technology-product-for-app-request-schema-v1';
+import { PatchPropertyOfBooleanSchemaV1 } from './patch-property-of-boolean-schema-v1.js';
+import { PatchPropertyOfDataClassificationRequestSchemaV1 } from './patch-property-of-data-classification-request-schema-v1.js';
+import { PatchPropertyOfListOfUpdateBusinessOwnerRequestSchemaV1 } from './patch-property-of-list-of-update-business-owner-request-schema-v1.js';
+import { PatchPropertyOfListOfUpdateProjectCategoryRequestSchemaV1 } from './patch-property-of-list-of-update-project-category-request-schema-v1.js';
+import { PatchPropertyOfListOfUpdateProjectPhaseRequestSchemaV1 } from './patch-property-of-list-of-update-project-phase-request-schema-v1.js';
+import { PatchPropertyOfPropertiesCollectionSchemaV1 } from './patch-property-of-properties-collection-schema-v1.js';
+import { PatchPropertyOfUpdateBusinessOwnerOrgUnitRequestSchemaV1 } from './patch-property-of-update-business-owner-org-unit-request-schema-v1.js';
+import { PatchPropertyOfUpdateTechnologyProductForAppRequestSchemaV1 } from './patch-property-of-update-technology-product-for-app-request-schema-v1.js';
 
 /**
  * Zod schema for the `PatchGovernanceAppRequest` model published by the Fusion Apps API 1.0.

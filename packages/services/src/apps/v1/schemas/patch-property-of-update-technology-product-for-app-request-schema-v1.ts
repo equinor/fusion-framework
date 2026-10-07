@@ -1,5 +1,5 @@
 import type { z } from 'zod';
-import { UpdateTechnologyProductForAppRequestSchemaV1 } from './update-technology-product-for-app-request-schema-v1';
+import { UpdateTechnologyProductForAppRequestSchemaV1 } from './update-technology-product-for-app-request-schema-v1.js';
 
 /**
  * Zod schema for the `PatchPropertyOfUpdateTechnologyProductForAppRequest` model published by the

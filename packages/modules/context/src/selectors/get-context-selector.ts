@@ -1,7 +1,7 @@
 import type { GetContextResponse } from '@equinor/fusion-framework-module-services/context/get';
 
-import { parseContextItem } from '../utils/parse-context-item';
-import type { ContextItem } from '../types';
+import { parseContextItem } from '../utils/parse-context-item.js';
+import type { ContextItem } from '../types.js';
 
 /**
  * Parse the response from the GetContext API into a context item.

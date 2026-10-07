@@ -20,9 +20,9 @@
 export {
   createContextItemFactory,
   type MockContextItemFactory,
-} from './create-context-item-factory';
+} from './create-context-item-factory.js';
 export {
   createContextItems,
   type ContextTypeSeed,
   type ContextItemOverrides,
-} from './create-context-items';
+} from './create-context-items.js';

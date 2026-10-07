@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { ApiAccountSchemaV1 } from './api-account-schema-v1';
+import { ApiAccountSchemaV1 } from './api-account-schema-v1.js';
 
 /**
  * Zod schema for the `ApiTechnologyProduct` model published by the Fusion Apps API 1.0.

@@ -7,11 +7,11 @@ import type {
   JsonRequest,
 } from '@equinor/fusion-framework-module-http/client';
 
-import type { ClientMethod, ExtractApiVersion, FilterAllowedApiVersions } from '../types';
+import type { ClientMethod, ExtractApiVersion, FilterAllowedApiVersions } from '../types.js';
 
-import { extractVersion } from '../../utils';
-import { ApiVersion } from '../api-version';
-import { headSelector } from '../selectors';
+import { extractVersion } from '../../utils.js';
+import { ApiVersion } from '../api-version.js';
+import { headSelector } from '../selectors.js';
 
 /** API version which this operation uses. */
 type AvailableVersions = ApiVersion.v1;

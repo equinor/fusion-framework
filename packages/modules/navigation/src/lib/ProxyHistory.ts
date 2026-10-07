@@ -1,7 +1,7 @@
 import { Subscription } from 'rxjs';
 import type { Observable } from 'rxjs';
 
-import type { BaseHistory } from './BaseHistory';
+import type { BaseHistory } from './BaseHistory.js';
 import type {
   History,
   NavigateOptions,
@@ -10,8 +10,8 @@ import type {
   NavigationUpdate,
   Path,
   To,
-} from './types';
-import type { Actions } from './state/actions';
+} from './types.js';
+import type { Actions } from './state/actions.js';
 
 /**
  * A lightweight proxy that delegates every {@link History} operation to an

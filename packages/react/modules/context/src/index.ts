@@ -17,7 +17,7 @@ export {
 } from '@equinor/fusion-framework-module-context';
 export { FusionContextSearchError } from '@equinor/fusion-framework-module-context/errors.js';
 
-export { useCurrentContext } from './useCurrentContext';
-export { useModuleCurrentContext } from './useModuleCurrentContext';
-export { useQueryContext } from './useQueryContext';
-export { useModuleQueryContext } from './useModuleQueryContext';
+export { useCurrentContext } from './useCurrentContext.js';
+export { useModuleCurrentContext } from './useModuleCurrentContext.js';
+export { useQueryContext } from './useQueryContext.js';
+export { useModuleQueryContext } from './useModuleQueryContext.js';

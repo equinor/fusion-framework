@@ -62,10 +62,6 @@
       "types": "./dist/types/settings/index.d.ts",
       "import": "./dist/esm/settings/index.js"
     },
-    "./widget": {
-      "types": "./dist/types/widget/index.d.ts",
-      "import": "./dist/esm/widget/index.js"
-    },
     "./routing": {
       "types": "./dist/types/routing/index.d.ts",
       "import": "./dist/esm/routing/index.js"
@@ -136,9 +132,6 @@
       "settings": [
         "dist/types/settings/index.d.ts"
       ],
-      "widget": [
-        "dist/types/widget/index.d.ts"
-      ],
       "routing": [
         "dist/types/routing/index.d.ts"
       ],
@@ -163,6 +156,7 @@
     }
   },
   "scripts": {
+    "prebuild": "node ../../../.github/scripts/generate-versions.mjs",
     "build": "tsc -b",
     "prepack": "pnpm build",
     "test": "vitest --run"

@@ -1,5 +1,5 @@
-import { pathToString, resolvePath, resolveWindowLocation } from './utils';
-import type { HistoryStack, Location, To } from './types';
+import { pathToString, resolvePath, resolveWindowLocation } from './utils/index.js';
+import type { HistoryStack, Location, To } from './types.js';
 
 /**
  * Browser history stack implementation using the native History API.

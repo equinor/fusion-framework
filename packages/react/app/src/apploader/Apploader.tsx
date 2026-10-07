@@ -1,5 +1,5 @@
 import { useEffect, useRef, type ReactElement } from 'react';
-import { useApploader } from './useApploader';
+import { useApploader } from './useApploader.js';
 
 export type ApploaderProps = {
   appKey: string;

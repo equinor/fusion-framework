@@ -1,7 +1,7 @@
-import { UnsupportedApiVersion } from '../../UnsupportedApiVersion';
-import { ApiVersion } from '../static';
+import { UnsupportedApiVersion } from '../../UnsupportedApiVersion.js';
+import { ApiVersion } from '../static.js';
 
-import type { ApiRequestArgs, SupportedApiVersion } from './types';
+import type { ApiRequestArgs, SupportedApiVersion } from './types.js';
 
 /**
  * Method for generating endpoint for getting context by id

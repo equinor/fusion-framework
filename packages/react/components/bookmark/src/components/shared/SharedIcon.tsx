@@ -2,7 +2,7 @@ import { Icon } from '@equinor/eds-core-react';
 import { tokens } from '@equinor/eds-tokens';
 import { useFramework } from '@equinor/fusion-framework-react';
 
-import styled from 'styled-components';
+import { styled } from 'styled-components';
 
 const Styled = {
   Row: styled.div`

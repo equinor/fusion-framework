@@ -1,1 +1,1 @@
-export { RolesSheetContent } from './RolesSheetContent';
+export { RolesSheetContent } from './RolesSheetContent.js';

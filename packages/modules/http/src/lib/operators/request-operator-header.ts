@@ -1,5 +1,5 @@
-import type { FetchRequest } from '../client';
-import type { ProcessOperator } from './types';
+import type { FetchRequest } from '../client/index.js';
+import type { ProcessOperator } from './types.js';
 
 /**
  * Creates a process operator that adds a header to the request.

@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { ApiAccountSchemaV1 } from './api-account-schema-v1';
-import { ApiSimpleClaimableRoleAssignmentSchemaV1 } from './api-simple-claimable-role-assignment-schema-v1';
+import { ApiAccountSchemaV1 } from './api-account-schema-v1.js';
+import { ApiSimpleClaimableRoleAssignmentSchemaV1 } from './api-simple-claimable-role-assignment-schema-v1.js';
 
 /** Zod schema for an activation record enriched with its claimable role assignment. */
 export const ApiExtendedClaimableRoleAssignmentActivationSchemaV1 = z

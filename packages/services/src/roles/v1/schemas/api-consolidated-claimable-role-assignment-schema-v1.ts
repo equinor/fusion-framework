@@ -1,8 +1,8 @@
 import { z } from 'zod';
-import { ApiAccountSchemaV1 } from './api-account-schema-v1';
-import { ApiClaimableRoleScopeSchemaV1 } from './api-claimable-role-scope-schema-v1';
-import { ApiConsolidatedAssignmentEntrySchemaV1 } from './api-consolidated-assignment-entry-schema-v1';
-import { ApiConsolidatedClaimableRoleRefSchemaV1 } from './api-consolidated-claimable-role-ref-schema-v1';
+import { ApiAccountSchemaV1 } from './api-account-schema-v1.js';
+import { ApiClaimableRoleScopeSchemaV1 } from './api-claimable-role-scope-schema-v1.js';
+import { ApiConsolidatedAssignmentEntrySchemaV1 } from './api-consolidated-assignment-entry-schema-v1.js';
+import { ApiConsolidatedClaimableRoleRefSchemaV1 } from './api-consolidated-claimable-role-ref-schema-v1.js';
 
 /** Zod schema for a consolidated claimable-role assignment. */
 export const ApiConsolidatedClaimableRoleAssignmentSchemaV1 = z

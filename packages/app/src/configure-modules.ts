@@ -8,10 +8,10 @@
 import type { Fusion } from '@equinor/fusion-framework';
 import type { AnyModule } from '@equinor/fusion-framework-module';
 
-import { AppConfigurator } from './AppConfigurator';
+import { AppConfigurator } from './AppConfigurator.js';
 
-import type { AppModulesInstance, AppModuleInitiator, AppEnv } from './types';
-import { initializeAppModules } from './initialize-app-modules';
+import type { AppModulesInstance, AppModuleInitiator, AppEnv } from './types.js';
+import { initializeAppModules } from './initialize-app-modules.js';
 
 /**
  * Create an application module initializer for a Fusion application.

@@ -1,4 +1,4 @@
-import { normalizePath } from './normalize-path';
+import { normalizePath } from './normalize-path.js';
 /**
  * Normalize a URL to its path + search representation for comparison.
  *

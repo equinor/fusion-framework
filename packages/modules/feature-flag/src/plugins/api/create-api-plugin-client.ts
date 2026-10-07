@@ -1,5 +1,5 @@
 import type { IHttpClient } from '@equinor/fusion-framework-module-http';
-import type { ApiResponseSelector, IApiPluginClient } from './types';
+import type { ApiResponseSelector, IApiPluginClient } from './types.js';
 
 /**
  * Creates an {@link IApiPluginClient} that fetches feature flags using the

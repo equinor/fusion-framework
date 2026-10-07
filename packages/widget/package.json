@@ -2,6 +2,7 @@
   "name": "@equinor/fusion-framework-widget",
   "version": "2.0.6",
   "description": "",
+  "type": "module",
   "main": "dist/esm/index.js",
   "exports": {
     ".": {
@@ -11,6 +12,7 @@
   },
   "types": "./dist/types/index.d.ts",
   "scripts": {
+    "prebuild": "node ../../.github/scripts/generate-versions.mjs",
     "build": "tsc -b",
     "prepack": "pnpm build"
   },

@@ -1,6 +1,6 @@
 import type { ActionWithSuffix } from '@equinor/fusion-observable';
 
-import type { BookmarkActions } from './bookmark-actions';
+import type { BookmarkActions } from './bookmark-actions.js';
 
 /**
  * Error thrown inside bookmark store flows (side-effect pipelines) when an
@@ -35,4 +35,4 @@ export class BookmarkFlowError extends Error {
  * Distinct from {@link BookmarkFlowError}, which is scoped to internal
  * store flow pipelines.
  */
-export { BookmarkProviderError } from './BookmarkProviderError';
+export { BookmarkProviderError } from './BookmarkProviderError.js';

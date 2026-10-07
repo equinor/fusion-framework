@@ -1,5 +1,5 @@
 import type { Observable, ObservableInput } from 'rxjs';
-import type { FetchRequest } from '../client';
+import type { FetchRequest } from '../client/index.js';
 
 /**
  * A process operator that takes a request of type `T` and returns a transformed request of type `R`, or `void`, or a Promise that resolves to `R` or `void`.

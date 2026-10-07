@@ -9,7 +9,7 @@
  *
  * @packageDocumentation
  */
-export { enableContext } from './enable-context';
-export { resolveInitialContext } from './resolve-initial-context';
-export { extractContextIdFromPath, resolveContextFromPath } from './resolve-context-from-path';
-export { parseContextItem } from './parse-context-item';
+export { enableContext } from './enable-context.js';
+export { resolveInitialContext } from './resolve-initial-context.js';
+export { extractContextIdFromPath, resolveContextFromPath } from './resolve-context-from-path.js';
+export { parseContextItem } from './parse-context-item.js';

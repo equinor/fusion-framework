@@ -1,6 +1,6 @@
-import type { IMsalClient } from '../MsalClient.interface';
-import type { MsalClientConfig } from '../MsalClient';
-import { MsalMockClient } from './MsalMockClient';
+import type { IMsalClient } from '../MsalClient.interface.js';
+import type { MsalClientConfig } from '../MsalClient.js';
+import { MsalMockClient } from './MsalMockClient.js';
 
 /**
  * Convenience helper that creates a mock client instance.

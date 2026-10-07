@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { ApiAccessRoleSchemaV1 } from './api-access-role-schema-v1';
-import { ApiSimpleSystemSchemaV1 } from './api-simple-system-schema-v1';
+import { ApiAccessRoleSchemaV1 } from './api-access-role-schema-v1.js';
+import { ApiSimpleSystemSchemaV1 } from './api-simple-system-schema-v1.js';
 
 /** Zod schema for an access role returned by the global access-role endpoint with its owning system. */
 export const ApiExtendedAccessRoleSchemaV1 = ApiAccessRoleSchemaV1.and(

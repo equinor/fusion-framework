@@ -8,7 +8,7 @@ import {
   renderAppComponent,
   type RenderAppComponentOptions,
   type RenderAppComponentResult,
-} from './render-app-component';
+} from './render-app-component.js';
 
 // resolved at test-time by `appTestVitePlugin` (@equinor/fusion-framework-vitest-plugin-react-app);
 // see virtual-modules.d.ts for the ambient module declarations

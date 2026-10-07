@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { AccessRequirementSchemaV1 } from './access-requirement-schema-v1';
+import { AccessRequirementSchemaV1 } from './access-requirement-schema-v1.js';
 
 /**
  * Zod schema for the `ForbiddenItem` model published by the Fusion Apps API 1.0.

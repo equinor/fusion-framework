@@ -1,5 +1,5 @@
 import * as z from 'zod';
-import type { Bookmark, BookmarkData } from './types';
+import type { Bookmark, BookmarkData } from './types.js';
 
 /** Zod schema for validating {@link BookmarkUser} objects. */
 export const bookmarkUserSchema = z.object({

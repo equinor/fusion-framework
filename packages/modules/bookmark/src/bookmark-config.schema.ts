@@ -4,11 +4,11 @@ import { LogLevel, type ILogger } from '@equinor/fusion-log';
 
 import type { IEventModuleProvider } from '@equinor/fusion-framework-module-event';
 
-import type { IBookmarkProvider } from './BookmarkProvider.interface';
-import type { IBookmarkClient } from './BookmarkClient.interface';
+import type { IBookmarkProvider } from './BookmarkProvider.interface.js';
+import type { IBookmarkClient } from './BookmarkClient.interface.js';
 
-import { bookmarkSourceSystemSchema } from './bookmark.schemas';
-import type { BookmarkModuleConfig } from './types';
+import { bookmarkSourceSystemSchema } from './bookmark.schemas.js';
+import type { BookmarkModuleConfig } from './types.js';
 
 /**
  * Zod schema that validates the full {@link BookmarkModuleConfig} object.

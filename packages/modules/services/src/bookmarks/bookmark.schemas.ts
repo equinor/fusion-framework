@@ -1,4 +1,4 @@
-import { ApiVersion } from './api-version';
+import { ApiVersion } from './api-version.js';
 
 import { z } from 'zod';
 

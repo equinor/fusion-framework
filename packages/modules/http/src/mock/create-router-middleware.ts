@@ -1,4 +1,4 @@
-import type { HttpMiddleware } from '../lib/operators/types';
+import type { HttpMiddleware } from '../lib/operators/types.js';
 
 /**
  * A route match handed to a {@link MockRouteHandler} once its pattern has matched a request.

@@ -10,8 +10,8 @@
       "types": "./dist/types/index.d.ts"
     },
     "./schemas": {
-      "import": "./dist/esm/schemas/index.js",
-      "types": "./dist/types/schemas/index.d.ts"
+      "import": "./dist/esm/schemas.js",
+      "types": "./dist/types/schemas.d.ts"
     },
     "./utils": {
       "import": "./dist/esm/utils/index.js",
@@ -36,6 +36,7 @@
   },
   "types": "dist/types/index.d.ts",
   "scripts": {
+    "prebuild": "node ../../../.github/scripts/generate-versions.mjs",
     "build": "tsc -b",
     "prepack": "pnpm build",
     "test": "vitest"

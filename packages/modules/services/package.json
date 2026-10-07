@@ -2,6 +2,7 @@
   "name": "@equinor/fusion-framework-module-services",
   "version": "8.1.2",
   "description": "",
+  "type": "module",
   "sideEffects": false,
   "main": "dist/esm/index.js",
   "types": "dist/types/index.d.ts",
@@ -71,8 +72,8 @@
       "types": "./dist/types/app-state/index.d.ts"
     },
     "./errors": {
-      "import": "./dist/esm/errors.js",
-      "types": "./dist/types/errors.d.ts"
+      "import": "./dist/esm/errors/index.js",
+      "types": "./dist/types/errors/index.d.ts"
     },
     "./package.json": "./package.json"
   },
@@ -127,11 +128,12 @@
         "./dist/types/app-state/index.d.ts"
       ],
       "errors": [
-        "./dist/types/errors.d.ts"
+        "./dist/types/errors/index.d.ts"
       ]
     }
   },
   "scripts": {
+    "prebuild": "node ../../../.github/scripts/generate-versions.mjs",
     "build": "tsc -b",
     "prepack": "pnpm build",
     "test": "vitest"

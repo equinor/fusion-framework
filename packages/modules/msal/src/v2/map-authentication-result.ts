@@ -1,6 +1,6 @@
 import type { AuthenticationResult } from '@azure/msal-browser';
-import type { AuthenticationResult as AuthenticationResult_v2 } from './types';
-import { mapAccountInfo } from './map-account-info';
+import type { AuthenticationResult as AuthenticationResult_v2 } from './types.js';
+import { mapAccountInfo } from './map-account-info.js';
 
 /**
  * Maps a current (v4/v5) `AuthenticationResult` to the v2-compatible format.

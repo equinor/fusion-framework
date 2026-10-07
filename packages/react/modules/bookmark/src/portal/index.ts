@@ -1,2 +1,2 @@
-export { useBookmarkNavigate } from './useBookmarkNavigate';
-export { useHasBookmark } from './useHasBookmark';
+export { useBookmarkNavigate } from './useBookmarkNavigate.js';
+export { useHasBookmark } from './useHasBookmark.js';

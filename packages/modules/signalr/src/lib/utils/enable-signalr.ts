@@ -1,7 +1,7 @@
 import type { IModulesConfigurator } from '@equinor/fusion-framework-module';
-import type { SignalRModuleConfigBuilderCallback } from '../../SignalRModuleConfigBuilder';
-import { module } from '../../SignalRModule';
-import { configureFromFramework } from './configure-from-framework';
+import type { SignalRModuleConfigBuilderCallback } from '../../SignalRModuleConfigBuilder.js';
+import { module } from '../../SignalRModule.js';
+import { configureFromFramework } from './configure-from-framework.js';
 
 /**
  * Call-signature overloads for {@link enableSignalR}.

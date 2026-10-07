@@ -1,4 +1,4 @@
-import { useAppModule } from '../useAppModule';
+import { useAppModule } from '../useAppModule.js';
 import type { AgGridModule } from '@equinor/fusion-framework-module-ag-grid';
 import type { Theme } from '@equinor/fusion-framework-module-ag-grid/themes';
 

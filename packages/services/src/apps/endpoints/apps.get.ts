@@ -16,15 +16,15 @@ import type {
   VersionedArgs,
   VersionedParsedArgs,
   VersionedResponse,
-} from '../types';
+} from '../types.js';
 
-import { extractVersion, parseVersionedArgs, versionedResponseSelector } from '../../utils';
-import { ApiVersion } from '../static';
-import { ApiAppListItemSchemaV1 } from '../v1/schemas/api-app-list-item-schema-v1';
-import { apiPagedCollectionSchemaV1 } from '../v1/schemas/api-paged-collection-schema-v1';
-import { ExpandSchemaV1 } from '../v1/schemas/expand-schema-v1';
-import { FilterSchemaV1 } from '../v1/schemas/filter-schema-v1';
-import { SearchSchemaV1 } from '../v1/schemas/search-schema-v1';
+import { extractVersion, parseVersionedArgs, versionedResponseSelector } from '../../utils.js';
+import { ApiVersion } from '../static.js';
+import { ApiAppListItemSchemaV1 } from '../v1/schemas/api-app-list-item-schema-v1.js';
+import { apiPagedCollectionSchemaV1 } from '../v1/schemas/api-paged-collection-schema-v1.js';
+import { ExpandSchemaV1 } from '../v1/schemas/expand-schema-v1.js';
+import { FilterSchemaV1 } from '../v1/schemas/filter-schema-v1.js';
+import { SearchSchemaV1 } from '../v1/schemas/search-schema-v1.js';
 
 /** Concrete API versions this operation publishes. */
 type AvailableVersions = ApiVersion.v1;

@@ -8,5 +8,5 @@
  *
  * @packageDocumentation
  */
-export { Bookmark } from './components/Bookmark';
-export { BookmarkProvider, useBookmarkComponentContext } from './components/BookmarkProvider';
+export { Bookmark } from './components/Bookmark.js';
+export { BookmarkProvider, useBookmarkComponentContext } from './components/BookmarkProvider.js';

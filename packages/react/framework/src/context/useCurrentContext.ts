@@ -1,5 +1,5 @@
 import { useCurrentContext as _useCurrentContext } from '@equinor/fusion-framework-react-module-context';
-import { useFramework } from '../useFramework';
+import { useFramework } from '../useFramework.js';
 
 /**
  * React hook that returns the currently selected Fusion context.

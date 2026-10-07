@@ -6,7 +6,7 @@ import type { AppEnv, AppModulesInstance } from '@equinor/fusion-framework-app';
 import type { Fusion } from '@equinor/fusion-framework';
 import type { AnyModule } from '@equinor/fusion-framework-module';
 
-import { resolveAppScope, createAppScopeWrapper } from './scope';
+import { resolveAppScope, createAppScopeWrapper } from './scope/index.js';
 
 /**
  * Options for {@link renderAppHook}.

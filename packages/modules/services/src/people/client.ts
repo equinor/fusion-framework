@@ -1,7 +1,7 @@
 import type { IHttpClient, ClientRequestInit } from '@equinor/fusion-framework-module-http/client';
 
-import type { ClientDataMethod, ClientMethod } from '../types';
-import { ApiVersion } from './static';
+import type { ClientDataMethod, ClientMethod } from '../types.js';
+import { ApiVersion } from './static.js';
 
 import {
   client as personDetailClient,
@@ -9,7 +9,7 @@ import {
   type ApiResult as PersonDetailResult,
   type SupportedApiVersion as PersonDetailSupportedApiVersion,
   type ApiRequestArgs as PersonDetailApiRequestArgs,
-} from './person-details';
+} from './person-details/index.js';
 
 import {
   client as personQueryClient,
@@ -17,7 +17,7 @@ import {
   type ApiResult as PersonQueryResult,
   type SupportedApiVersion as PersonQuerySupportedApiVersion,
   type ApiRequestArgs as PersonQueryApiRequestArgs,
-} from './query';
+} from './query/index.js';
 
 import {
   client as personPhotoClient,
@@ -25,19 +25,19 @@ import {
   type ApiResult as PersonPhotoResult,
   type SupportedApiVersion as PersonPhotoSupportedApiVersion,
   type ApiRequestArgs as PersonPhotoApiRequestArgs,
-} from './person-photo';
+} from './person-photo/index.js';
 
 import {
   client as personSuggestClient,
   type ApiResponse as PersonSuggestApiResponse,
   type ApiResult as PersonSuggestResult,
-} from './suggest';
+} from './suggest/index.js';
 
 import {
   client as personResolveClient,
   type ApiResponse as PersonResolveApiResponse,
   type ApiResult as PersonResolveResult,
-} from './resolve';
+} from './resolve/index.js';
 
 /**
  * Typed API client for the Fusion people service.

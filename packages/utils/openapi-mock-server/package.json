@@ -74,6 +74,7 @@
     "directory": "packages/utils/openapi-mock-server"
   },
   "scripts": {
+    "prebuild": "node ../../../.github/scripts/generate-versions.mjs",
     "build": "tsc -b",
     "prepack": "pnpm build",
     "preset:roles:update": "node scripts/update-roles-preset.mjs && biome format --write src/presets/fusion/rolesv2.openapi.json",

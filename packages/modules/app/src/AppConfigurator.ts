@@ -6,7 +6,7 @@ import {
 import type { HttpModule, IHttpClient } from '@equinor/fusion-framework-module-http';
 import type { ServiceDiscoveryModule } from '@equinor/fusion-framework-module-service-discovery';
 
-import AppClient, { type IAppClient } from './AppClient';
+import AppClient, { type IAppClient } from './AppClient.js';
 
 /**
  * Resolved configuration for the app module.

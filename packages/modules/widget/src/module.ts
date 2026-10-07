@@ -1,8 +1,8 @@
 import type { Module } from '@equinor/fusion-framework-module';
-import type { ModuleDeps } from './types';
+import type { ModuleDeps } from './types.js';
 
-import { WidgetModuleConfigurator } from './WidgetModuleConfigurator';
-import { type IWidgetModuleProvider, WidgetModuleProvider } from './WidgetModuleProvider';
+import { WidgetModuleConfigurator } from './WidgetModuleConfigurator.js';
+import { type IWidgetModuleProvider, WidgetModuleProvider } from './WidgetModuleProvider.js';
 
 /** Module registration key used in the Fusion Framework module map. */
 export const moduleKey = 'widget';

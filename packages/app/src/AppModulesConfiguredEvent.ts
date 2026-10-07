@@ -1,7 +1,7 @@
 import type { ModulesConfigType, AnyModule } from '@equinor/fusion-framework-module';
 import type { AppModules } from '@equinor/fusion-framework-module-app';
 import { FrameworkEvent, type FrameworkEventInit } from '@equinor/fusion-framework-module-event';
-import type { AppModulesInitializedEvent } from './AppModulesInitializedEvent';
+import type { AppModulesInitializedEvent } from './AppModulesInitializedEvent.js';
 
 /**
  * Represents the initialization data for an event indicating that application modules have been configured.

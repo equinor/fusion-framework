@@ -6,8 +6,8 @@ import type {
   AppScriptModule,
   ConfigEnvironment,
   AppSettings,
-} from '../types';
-import type { Actions } from './actions';
+} from '../types.js';
+import type { Actions } from './actions.js';
 
 /**
  * Represents the state of an application bundle.

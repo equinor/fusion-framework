@@ -1,8 +1,8 @@
 import type { Flow } from '@equinor/fusion-observable';
 import { filter, map } from 'rxjs';
 
-import { actions, type Actions } from './actions';
-import type { QueryClientState } from './types';
+import { actions, type Actions } from './actions.js';
+import type { QueryClientState } from './types.js';
 
 /**
  * Handles incoming request actions by transforming them into execute actions.

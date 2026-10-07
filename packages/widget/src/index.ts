@@ -9,8 +9,8 @@
  * @packageDocumentation
  */
 
-export { WidgetConfigurator, IWidgetConfigurator } from './WidgetConfigurator';
+export { WidgetConfigurator, IWidgetConfigurator } from './WidgetConfigurator.js';
 
-export * from './types';
+export * from './types.js';
 
-export { configureWidgetModules, default } from './configure-widget-modules';
+export { configureWidgetModules, default } from './configure-widget-modules.js';

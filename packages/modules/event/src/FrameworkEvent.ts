@@ -1,6 +1,6 @@
 // biome-ignore-all lint/suspicious/noUnsafeDeclarationMerging: FrameworkEvent classes are intentionally merged with a constructible interface
 import type { ModuleInstance } from '@equinor/fusion-framework-module';
-import type { IEventModuleProvider } from './EventModuleProvider';
+import type { IEventModuleProvider } from './EventModuleProvider.js';
 
 /**
  * Registry of known framework event names mapped to their event types.

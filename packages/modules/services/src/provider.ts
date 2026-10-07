@@ -1,17 +1,17 @@
 import type { IHttpClient } from '@equinor/fusion-framework-module-http';
 import { BaseModuleProvider } from '@equinor/fusion-framework-module/provider';
-import type { ClientMethod } from './types';
+import type { ClientMethod } from './types.js';
 
-import type { ApiClientFactory } from './types';
+import type { ApiClientFactory } from './types.js';
 import { version } from './version.js';
-import { ContextApiClient } from './context';
-import BookmarksApiClient from './bookmarks/client';
-import { NotificationApiClient } from './notification';
-import { PeopleApiClient } from './people/client';
-import { AppStateApiClient } from './app-state/client';
-import { ApiProviderError } from './ApiProviderError';
+import { ContextApiClient } from './context/index.js';
+import BookmarksApiClient from './bookmarks/client.js';
+import { NotificationApiClient } from './notification/index.js';
+import { PeopleApiClient } from './people/client.js';
+import { AppStateApiClient } from './app-state/client.js';
+import { ApiProviderError } from './ApiProviderError.js';
 
-export { ApiProviderError } from './ApiProviderError';
+export { ApiProviderError } from './ApiProviderError.js';
 /**
  * Public interface for the services module provider.
  *

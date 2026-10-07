@@ -1,7 +1,7 @@
 import type { IModulesConfigurator } from '@equinor/fusion-framework-module';
 
-import { enableServiceDiscoveryMock, type ServiceDiscoveryConfigMockFn } from './module';
-import type { ServiceDiscoveryMockClientOptions } from './ServiceDiscoveryMockClient';
+import { enableServiceDiscoveryMock, type ServiceDiscoveryConfigMockFn } from './module.js';
+import type { ServiceDiscoveryMockClientOptions } from './ServiceDiscoveryMockClient.js';
 
 /**
  * Replaces service discovery with an in-memory registry.

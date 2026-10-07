@@ -16,19 +16,23 @@
  * sub-path export.
  */
 
-export { AppConfigurator, IAppConfigurator, AppConfiguratorConstructor } from './AppConfigurator';
+export {
+  AppConfigurator,
+  IAppConfigurator,
+  AppConfiguratorConstructor,
+} from './AppConfigurator.js';
 
-export * from './types';
+export * from './types.js';
 
-export { configureModules, default } from './configure-modules';
+export { configureModules, default } from './configure-modules.js';
 
-export { AppConfiguratorError } from './AppConfiguratorError';
+export { AppConfiguratorError } from './AppConfiguratorError.js';
 
-export { AppModulesConfiguredEvent } from './AppModulesConfiguredEvent';
+export { AppModulesConfiguredEvent } from './AppModulesConfiguredEvent.js';
 
-export { AppModulesInitializedEvent } from './AppModulesInitializedEvent';
+export { AppModulesInitializedEvent } from './AppModulesInitializedEvent.js';
 
 /**
  * @deprecated Use {@link configureModules} instead. This alias will be removed in a future major version.
  */
-export { configureModules as initAppModules } from './configure-modules';
+export { configureModules as initAppModules } from './configure-modules.js';

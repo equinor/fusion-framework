@@ -1,4 +1,4 @@
-import type { ResponseSelector, BlobResult } from '../client/types';
+import type { ResponseSelector, BlobResult } from '../client/types.js';
 
 /**
  * Extracts a blob and filename from a successful HTTP response.

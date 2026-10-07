@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
-import { RolesApplicationView } from './application/RolesApplicationView';
-import { CompactRolesView } from './compact/CompactRolesView';
+import { RolesApplicationView } from './application/RolesApplicationView.js';
+import { CompactRolesView } from './compact/CompactRolesView.js';
 
 /** Layout selection for the signed-in account's role overview. */
 export interface RolesViewProps {

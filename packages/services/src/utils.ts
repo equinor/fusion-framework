@@ -12,7 +12,7 @@ import type {
   ExtractApiVersion,
   VersionedParsedArgs,
   VersionedResponse,
-} from './types';
+} from './types.js';
 
 /**
  * Resolves an API version string from a named key or a raw version value.

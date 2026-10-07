@@ -3,15 +3,15 @@ import {
   requestValidationOperator,
   HttpMiddlewareHandler,
   HttpRequestHandler,
-} from './lib/operators';
+} from './lib/operators/index.js';
 
-import type { FetchRequest, IHttpClient } from './lib/client';
+import type { FetchRequest, IHttpClient } from './lib/client/index.js';
 import type {
   HttpMiddleware,
   IHttpMiddlewareHandler,
   IHttpRequestHandler,
   IHttpResponseHandler,
-} from './lib/operators';
+} from './lib/operators/index.js';
 
 /**
  * Represents the options for constructing an `IHttpClient` instance.

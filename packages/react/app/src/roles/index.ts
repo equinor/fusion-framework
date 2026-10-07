@@ -13,10 +13,10 @@ export {
   useAccessRole,
   type ClaimableRoleAssignmentActivationResult,
   type UseAccessRoleResult,
-} from './useAccessRole';
+} from './useAccessRole.js';
 
 export {
   useHasAccessRole,
   type UseHasAccessRoleOptions,
   type UseHasAccessRoleResult,
-} from './useHasAccessRole';
+} from './useHasAccessRole.js';

@@ -1,6 +1,6 @@
 import { FlowSubject } from '@equinor/fusion-observable';
 
-import { createReducer } from './create-reducer';
+import { createReducer } from './create-reducer.js';
 
 import {
   handleFetchManifest,
@@ -8,11 +8,11 @@ import {
   handleFetchSettings,
   handleUpdateSettings,
   handleImportApplication,
-} from './flows';
+} from './flows/index.js';
 
-import type { Actions } from './actions';
-import type { AppBundleState, AppBundleStateInitial } from './types';
-import type { AppModuleProvider } from '../AppModuleProvider';
+import type { Actions } from './actions.js';
+import type { AppBundleState, AppBundleStateInitial } from './types.js';
+import type { AppModuleProvider } from '../AppModuleProvider.js';
 
 /**
  * Creates and configures the reactive state machine ({@link FlowSubject}) for

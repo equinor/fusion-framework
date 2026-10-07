@@ -13,9 +13,9 @@
  * ```
  */
 
-export { NotificationApiClient, default } from './client';
+export { NotificationApiClient, default } from './client.js';
 
-export { ApiVersion } from './static';
+export { ApiVersion } from './static.js';
 
-export * from './api-models';
-export * from './types';
+export * from './api-models.js';
+export * from './types.js';

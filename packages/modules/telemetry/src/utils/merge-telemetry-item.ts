@@ -1,4 +1,4 @@
-import deepmerge from 'deepmerge/index.js';
+import deepmerge from 'deepmerge';
 
 import type { TelemetryItem } from '@equinor/fusion-framework-module-telemetry';
 

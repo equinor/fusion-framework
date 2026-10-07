@@ -3,8 +3,8 @@ import type { AppModulesInstance } from '@equinor/fusion-framework-module-app';
 import type { ContextModule } from '@equinor/fusion-framework-module-context';
 import type { INavigationProvider } from '@equinor/fusion-framework-module-navigation';
 
-import type { ContextNavigationAdapterInput } from './adapters/types';
-import type { ReconcilerSourceFactory } from './sources/types';
+import type { ContextNavigationAdapterInput } from './adapters/types.js';
+import type { ReconcilerSourceFactory } from './sources/types.js';
 
 // Re-export domain types so existing consumers and index.ts don't break.
 export type {
@@ -12,7 +12,7 @@ export type {
   ContextNavigationAdapter,
   ContextNavigationAdapterFactory,
   ContextNavigationAdapterInput,
-} from './adapters/types';
+} from './adapters/types.js';
 
 export type {
   ContextState,
@@ -20,7 +20,7 @@ export type {
   ReconcilerSourceEntry,
   ReconcilerSourceDeps,
   ReconcilerSourceFactory,
-} from './sources/types';
+} from './sources/types.js';
 
 // ─── Events ─────────────────────────────────────────────────────────
 

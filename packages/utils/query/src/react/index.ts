@@ -1,1 +1,1 @@
-export { useDebounceQuery } from './useDebounceQuery';
+export { useDebounceQuery } from './useDebounceQuery.js';

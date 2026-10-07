@@ -1,13 +1,13 @@
 import { from, of, concat } from 'rxjs';
 import { catchError, filter, last, map, share, switchMap } from 'rxjs/operators';
 
-import { actions } from './actions';
+import { actions } from './actions.js';
 
 import type { Flow } from '@equinor/fusion-observable';
 
-import type { Actions } from './actions';
-import type { WidgetState } from '../types';
-import type WidgetModuleProvider from '../WidgetModuleProvider';
+import type { Actions } from './actions.js';
+import type { WidgetState } from '../types.js';
+import type WidgetModuleProvider from '../WidgetModuleProvider.js';
 
 /**
  * RxJS flow that reacts to `fetchManifest` actions by querying the

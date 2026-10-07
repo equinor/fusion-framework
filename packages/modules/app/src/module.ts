@@ -1,8 +1,8 @@
 import type { Module } from '@equinor/fusion-framework-module';
-import type { ModuleDeps } from './types';
+import type { ModuleDeps } from './types.js';
 
-import { AppConfigurator } from './AppConfigurator';
-import { AppModuleProvider } from './AppModuleProvider';
+import { AppConfigurator } from './AppConfigurator.js';
+import { AppModuleProvider } from './AppModuleProvider.js';
 
 /** Module key used to register and look up the app module in the framework. */
 export const moduleKey = 'app';

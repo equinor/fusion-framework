@@ -3,8 +3,8 @@ import {
   type ResponseSelector,
 } from '@equinor/fusion-framework-module-http/selectors';
 
-import { AppConfig } from './AppConfig';
-import { ApiAppConfigSchema } from './schemas';
+import { AppConfig } from './AppConfig.js';
+import { ApiAppConfigSchema } from './schemas.js';
 
 /**
  * Asynchronously selects and parses the application configuration from the given response.

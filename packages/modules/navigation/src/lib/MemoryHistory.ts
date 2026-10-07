@@ -1,8 +1,8 @@
-import { type To, type LocationState, type NavigationUpdate, Action } from './types';
-import { pathToString, resolvePath } from './utils';
-import { MemoryHistoryStack } from './MemoryHistoryStack';
-import { BaseHistory } from './BaseHistory';
-import { createHistoryReducer, createStore } from './state';
+import { type To, type LocationState, type NavigationUpdate, Action } from './types.js';
+import { pathToString, resolvePath } from './utils/index.js';
+import { MemoryHistoryStack } from './MemoryHistoryStack.js';
+import { BaseHistory } from './BaseHistory.js';
+import { createHistoryReducer, createStore } from './state/index.js';
 
 /**
  * Default initial location for memory history.

@@ -1,7 +1,7 @@
 import { castDraft, createReducer } from '@equinor/fusion-observable';
 
-import { rolesActions, type RolesAction } from './roles-actions';
-import type { RolesState } from './roles-state';
+import { rolesActions, type RolesAction } from './roles-actions.js';
+import type { RolesState } from './roles-state.js';
 
 const initialState: RolesState = {
   activeAccessRoleAssignments: {

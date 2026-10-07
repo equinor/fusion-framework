@@ -10,7 +10,7 @@ import {
 } from '@equinor/fusion-framework-module-http';
 import { jsonSelector } from '@equinor/fusion-framework-module-http/selectors';
 
-import { ApiApplicationBuildSchema, ApiApplicationSchema } from './schemas';
+import { ApiApplicationBuildSchema, ApiApplicationSchema } from './schemas.js';
 
 import type {
   AppBuildManifest,
@@ -18,9 +18,9 @@ import type {
   AppManifest,
   AppSettings,
   ConfigEnvironment,
-} from './types';
-import { AppBuildError, AppConfigError, AppManifestError, AppSettingsError } from './errors';
-import { AppConfigSelector } from './AppConfigSelector';
+} from './types.js';
+import { AppBuildError, AppConfigError, AppManifestError, AppSettingsError } from './errors.js';
+import { AppConfigSelector } from './AppConfigSelector.js';
 
 /**
  * Contract for an app service client that fetches application manifests,

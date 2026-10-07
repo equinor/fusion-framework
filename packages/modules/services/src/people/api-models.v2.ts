@@ -3,7 +3,7 @@ import type {
   ApiInvitationStatus,
   ApiProfileAccountLink,
   ApiProfileAccountType,
-} from './api-models';
+} from './api-models.js';
 
 /** Person entity returned by the v2 people API. */
 export type ApiPerson_v2 = {

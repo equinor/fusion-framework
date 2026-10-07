@@ -2,6 +2,7 @@
   "name": "@equinor/fusion-framework-module-signalr",
   "version": "14.0.2",
   "description": "",
+  "type": "module",
   "sideEffects": false,
   "main": "dist/esm/index.js",
   "types": "dist/types/index.d.ts",
@@ -12,6 +13,7 @@
     }
   },
   "scripts": {
+    "prebuild": "node ../../../.github/scripts/generate-versions.mjs",
     "build": "tsc -b",
     "prepack": "pnpm build"
   },

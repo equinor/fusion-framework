@@ -1,8 +1,8 @@
 import type { Flow } from '@equinor/fusion-observable';
 import { catchError, filter, from, map, mergeMap, of, takeUntil, tap, withLatestFrom } from 'rxjs';
 
-import { actions, type Actions } from './actions';
-import type { QueryClientState, QueryFn } from './types';
+import { actions, type Actions } from './actions.js';
+import type { QueryClientState, QueryFn } from './types.js';
 
 /**
  * Handles the execution of a query.
