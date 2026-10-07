@@ -27,6 +27,7 @@
     "directory": "packages/vite-plugins/spa"
   },
   "scripts": {
+    "prebuild": "node ../../../.github/scripts/generate-versions.mjs",
     "build": "tsc -b",
     "postbuild": "rollup -c rollup.config.js",
     "test": "vitest",

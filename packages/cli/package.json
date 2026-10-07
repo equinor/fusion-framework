@@ -94,7 +94,7 @@
     "directory": "packages/cli"
   },
   "scripts": {
-    "prebuild": "tsc -b",
+    "prebuild": "node ../../.github/scripts/generate-versions.mjs && tsc -b",
     "build": "rollup -c rollup.config.js",
     "build:clean": "rm -rf dist && rm -rf bin/build && rm -f tsconfig.tsbuildinfo && pnpm build",
     "prepack": "pnpm build",
