@@ -6,6 +6,7 @@
 
 export {
   AccessRoleBoundary,
+  type AccessRoleBoundaryFallbackProps,
   type AccessRoleBoundaryProps,
 } from './components/required-access/AccessRoleBoundary';
 export { RolesView, type RolesViewProps } from './components/RolesView';

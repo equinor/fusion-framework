@@ -39,6 +39,8 @@ interface RolesProviderScopeProps extends RolesProviderProps {
 export const RolesProviderScope = ({
   provider,
   requiredAccessRoles,
+  fallbackRender,
+  FallbackComponent,
   children,
 }: RolesProviderScopeProps): ReactNode => {
   const store = useMemo(() => new RolesStore(provider), [provider]);
@@ -242,7 +244,11 @@ export const RolesProviderScope = ({
   };
 
   return (
-    <AccessRoleBoundary requiredAccessRoles={requiredAccessRoles}>
+    <AccessRoleBoundary
+      requiredAccessRoles={requiredAccessRoles}
+      fallbackRender={fallbackRender}
+      FallbackComponent={FallbackComponent}
+    >
       <RolesContext.Provider value={value}>
         {children}
         <RoleClaimDialog

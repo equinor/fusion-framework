@@ -2,6 +2,8 @@ import { cleanup, render } from 'vitest-browser-react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { useEffect, type ReactNode } from 'react';
 
+import { RequiredAccessRolesError } from '@equinor/fusion-framework-module-roles';
+
 import { RolesProvider } from './RolesProvider';
 import { useActiveAccessRoleAssignments } from '../hooks/useActiveAccessRoleAssignments';
 import { useClaimableRoleAssignments } from '../hooks/useClaimableRoleAssignments';
@@ -161,6 +163,22 @@ describe('RolesProvider', () => {
       required: true,
       assert: true,
     });
+  });
+
+  it('forwards a custom access-role fallback to the boundary', async () => {
+    mocks.hasAccessRole.mockRejectedValue(
+      new RequiredAccessRolesError('Denied', ['Reports.Read'], mocks as never),
+    );
+    const screen = await render(
+      <RolesProvider
+        requiredAccessRoles={['Reports.Read']}
+        fallbackRender={() => <p>Custom provider fallback</p>}
+      >
+        <RolesConsumer />
+      </RolesProvider>,
+    );
+
+    await expect.element(screen.getByText('Custom provider fallback')).toBeVisible();
   });
 
   it('exposes activation failures through claimable-role state', async () => {

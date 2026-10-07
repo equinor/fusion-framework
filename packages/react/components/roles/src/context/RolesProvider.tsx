@@ -1,10 +1,11 @@
 import { useState, type ReactNode } from 'react';
 import type { RolesModule } from '@equinor/fusion-framework-module-roles';
 import { useModule } from '@equinor/fusion-framework-react-module';
+import type { AccessRoleBoundaryFallbackOptions } from '../components/required-access/AccessRoleBoundary';
 import { RolesProviderScope } from './RolesProviderScope';
 
 /** Props for sharing Roles V2 assignment collections and activation state. */
-export interface RolesProviderProps {
+export interface RolesProviderProps extends AccessRoleBoundaryFallbackOptions {
   /** Access-role names that must all be active before children render. */
   readonly requiredAccessRoles?: readonly string[];
   /** Application subtree that consumes roles hooks. */
@@ -15,7 +16,7 @@ export interface RolesProviderProps {
  * Provides active access-role, consolidated claimable-role, and consolidated role assignment state
  * to application components.
  * Replacing the module provider resets collections, recovery history, and the consuming subtree.
- * @param props - Optional required access roles and the application subtree.
+ * @param props - Optional required access roles, optional custom access-role fallback, and the application subtree.
  * @returns State scoped to the configured Roles module provider.
  * @throws When the Roles module is missing or lacks the collection and mutation contract.
  * @example
@@ -25,7 +26,12 @@ export interface RolesProviderProps {
  * </RolesProvider>
  * ```
  */
-export const RolesProvider = ({ requiredAccessRoles, children }: RolesProviderProps): ReactNode => {
+export const RolesProvider = ({
+  requiredAccessRoles,
+  fallbackRender,
+  FallbackComponent,
+  children,
+}: RolesProviderProps): ReactNode => {
   const provider = useModule<RolesModule>('roles');
   const [scope, setScope] = useState({ provider, generation: 0 });
 
@@ -55,6 +61,8 @@ export const RolesProvider = ({ requiredAccessRoles, children }: RolesProviderPr
       key={scope.generation}
       provider={provider}
       requiredAccessRoles={requiredAccessRoles}
+      fallbackRender={fallbackRender}
+      FallbackComponent={FallbackComponent}
     >
       {children}
     </RolesProviderScope>

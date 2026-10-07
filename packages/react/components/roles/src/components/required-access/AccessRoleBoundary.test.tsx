@@ -1,6 +1,6 @@
 import { cleanup, render } from 'vitest-browser-react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { useEffect, useLayoutEffect, useState, type ReactNode } from 'react';
+import { Component, useEffect, useLayoutEffect, useState, type ReactNode } from 'react';
 
 import { RequiredAccessRolesError } from '@equinor/fusion-framework-module-roles';
 
@@ -349,5 +349,107 @@ describe('AccessRoleBoundary', () => {
       .element(screen.getByRole('heading', { name: 'Access role is not claimable' }))
       .toBeVisible();
     expect(mocks.hasAccessRole).not.toHaveBeenCalled();
+  });
+
+  describe('custom fallback', () => {
+    const deniedError = (): RequiredAccessRolesError =>
+      new RequiredAccessRolesError('Missing required role.', ['Reports.Read'], {
+        getRequiredAccessRoleStatuses: mocks.getRequiredAccessRoleStatuses,
+        activateClaimableRoleAssignment: mocks.activateClaimableRoleAssignment,
+      } as never);
+
+    it('renders fallbackRender instead of the built-in recovery', async () => {
+      const error = deniedError();
+      mocks.hasAccessRole.mockRejectedValue(error);
+      const fallbackRender = vi.fn(() => <p>Custom fallback</p>);
+
+      const screen = await render(
+        <AccessRoleBoundary requiredAccessRoles={['Reports.Read']} fallbackRender={fallbackRender}>
+          <p>Protected reports</p>
+        </AccessRoleBoundary>,
+      );
+
+      await expect.element(screen.getByText('Custom fallback')).toBeVisible();
+      await expect.element(screen.getByText('Protected reports')).not.toBeInTheDocument();
+      expect(fallbackRender).toHaveBeenCalledWith(
+        expect.objectContaining({ error, resetErrorBoundary: expect.any(Function) }),
+      );
+      expect(mocks.getRequiredAccessRoleStatuses).not.toHaveBeenCalled();
+    });
+
+    it('renders FallbackComponent and prefers fallbackRender when both are provided', async () => {
+      mocks.hasAccessRole.mockRejectedValue(deniedError());
+      const Fallback = ({ error }: { error: Error }): ReactNode => (
+        <p>Component: {error.message}</p>
+      );
+
+      const screen = await render(
+        <AccessRoleBoundary requiredAccessRoles={['Reports.Read']} FallbackComponent={Fallback}>
+          <p>Protected reports</p>
+        </AccessRoleBoundary>,
+      );
+      await expect.element(screen.getByText('Component: Missing required role.')).toBeVisible();
+
+      await screen.rerender(
+        <AccessRoleBoundary
+          requiredAccessRoles={['Reports.Read']}
+          FallbackComponent={Fallback}
+          fallbackRender={() => <p>Render wins</p>}
+        >
+          <p>Protected reports</p>
+        </AccessRoleBoundary>,
+      );
+      await expect.element(screen.getByText('Render wins')).toBeVisible();
+    });
+
+    it('rechecks access and renders children after resetErrorBoundary', async () => {
+      mocks.hasAccessRole.mockRejectedValueOnce(deniedError()).mockResolvedValue(true);
+
+      const screen = await render(
+        <AccessRoleBoundary
+          requiredAccessRoles={['Reports.Read']}
+          fallbackRender={({ resetErrorBoundary }) => (
+            <button type="button" onClick={resetErrorBoundary}>
+              Try again
+            </button>
+          )}
+        >
+          <p>Protected reports</p>
+        </AccessRoleBoundary>,
+      );
+      await screen.getByRole('button', { name: 'Try again' }).click();
+
+      await expect.element(screen.getByText('Protected reports')).toBeVisible();
+      expect(mocks.hasAccessRole).toHaveBeenCalledTimes(2);
+    });
+
+    it('does not use the fallback for unrelated errors', async () => {
+      const fallbackRender = vi.fn(() => <p>Custom fallback</p>);
+      const ThrowUnrelated = (): ReactNode => {
+        throw new Error('Unrelated failure');
+      };
+      const onError = vi.fn();
+      class OuterBoundary extends Component<{ children: ReactNode }, { failed: boolean }> {
+        state = { failed: false };
+        static getDerivedStateFromError(): { failed: boolean } {
+          return { failed: true };
+        }
+        componentDidCatch = onError;
+        render(): ReactNode {
+          return this.state.failed ? <p>Outer boundary</p> : this.props.children;
+        }
+      }
+
+      const screen = await render(
+        <OuterBoundary>
+          <AccessRoleBoundary fallbackRender={fallbackRender}>
+            <ThrowUnrelated />
+          </AccessRoleBoundary>
+        </OuterBoundary>,
+      );
+
+      await expect.element(screen.getByText('Outer boundary')).toBeVisible();
+      expect(fallbackRender).not.toHaveBeenCalled();
+    });
   });
 });
