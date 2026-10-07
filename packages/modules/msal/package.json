@@ -33,6 +33,7 @@
     }
   },
   "scripts": {
+    "prebuild": "node ../../../.github/scripts/generate-versions.mjs",
     "build": "tsc -b",
     "test": "vitest run",
     "prepack": "pnpm build"

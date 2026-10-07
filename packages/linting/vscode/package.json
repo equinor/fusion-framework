@@ -67,6 +67,7 @@
     "directory": "packages/linting/vscode"
   },
   "scripts": {
+    "prebuild": "node ../../../.github/scripts/generate-versions.mjs",
     "build": "tsc --noEmit && pnpm bundle && pnpm copy-server",
     "bundle": "esbuild src/index.ts --bundle --external:vscode --platform=node --format=esm --banner:js=\"import{createRequire as __cjsRequire}from'node:module';const require=__cjsRequire(import.meta.url);\" --outfile=dist/index.js",
     "copy-server": "node scripts/copy-server.mjs",
