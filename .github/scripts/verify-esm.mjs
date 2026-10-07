@@ -1,6 +1,8 @@
-// Guard the published ESM contract: every package is `"type": "module"` and every
-// relative import carries an explicit file extension, so Node's ESM resolver (and tools
-// that externalize to it, such as Vitest) can load the packages without a bundler.
+// Guard the published ESM contract: every workspace package is `"type": "module"`, and every
+// relative import in `packages/*` carries an explicit file extension, so Node's ESM resolver
+// (and tools that externalize to it, such as Vitest) can load the packages without a bundler.
+// Cookbooks and the docs site are private apps that Vite always bundles, so they only need the
+// `"type"` declaration.
 //
 // Usage:
 //   node .github/scripts/verify-esm.mjs            static checks on package manifests and sources
@@ -19,11 +21,26 @@ const execFileAsync = promisify(execFile);
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 const runtime = process.argv.includes('--runtime');
 
-/** Workspace package manifests, excluding installed dependencies and build output. */
-const manifestPaths = globSync('packages/**/package.json', {
-  cwd: repoRoot,
-  exclude: (path) => path.includes('node_modules') || path.includes('/dist/'),
-});
+/**
+ * Workspace package manifests, mirroring the globs in pnpm-workspace.yaml and excluding
+ * installed dependencies and build output.
+ */
+const manifestPaths = globSync(
+  ['packages/**/package.json', 'cookbooks/*/package.json', 'vue-press/package.json'],
+  {
+    cwd: repoRoot,
+    exclude: (path) => path.includes('node_modules') || path.includes('/dist/'),
+  },
+);
+
+/**
+ * Whether a manifest belongs to a library under `packages/`, whose built output consumers load
+ * through Node. Only these need explicit import extensions and runtime import checks.
+ *
+ * @param {string} manifestPath - Manifest path relative to the repository root.
+ * @returns {boolean} True for library packages.
+ */
+const isLibraryManifest = (manifestPath) => manifestPath.startsWith('packages/');
 
 /**
  * Matches relative module specifiers in `from`, side-effect `import`, and dynamic `import()`
@@ -157,6 +174,8 @@ for (const manifestPath of manifestPaths) {
         `${manifestPath}: expected "type": "module", received ${JSON.stringify(manifest.type)}`,
       );
     }
+    // Bundled apps (cookbooks, docs) never reach Node's resolver, so extensions are not required.
+    if (!isLibraryManifest(manifestPath)) continue;
     for (const finding of findExtensionlessImports(packageDir)) {
       problems.push(
         `${relative(repoRoot, packageDir)}/${finding}: relative import needs an explicit extension`,
@@ -165,7 +184,12 @@ for (const manifestPath of manifestPaths) {
     continue;
   }
 
-  if (manifest.private || !existsSync(resolve(packageDir, 'dist'))) continue;
+  if (
+    !isLibraryManifest(manifestPath) ||
+    manifest.private ||
+    !existsSync(resolve(packageDir, 'dist'))
+  )
+    continue;
   for (const specifier of exportSpecifiers(manifest)) {
     runtimeTasks.push(() => importInNode(packageDir, specifier));
   }

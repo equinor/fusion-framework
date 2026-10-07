@@ -15,7 +15,7 @@ The global non-negotiables (no `any`, explicit return types, scoped imports, `pn
 - **Errors**: Throw clear, contextual error messages; never silently swallow failures.
 - **Comments**: Add inline intent comments for iterator blocks, decision gates, RxJS operator chains, assumptions, and workarounds. Explain why the block exists, not what the syntax does.
 - **Node built-ins**: Always use the `node:` protocol (`node:fs`, `node:path`).
-- **ESM imports**: Relative imports need an explicit `.js` extension (`./client.js`, `./lib/index.js` for a folder). Packages are `"type": "module"`; no CommonJS. Biome (`useImportExtensions`) flags a missing extension in the editor, and `pnpm verify:esm` enforces it in CI.
+- **ESM imports**: Relative imports in `packages/*` need an explicit `.js` extension (`./client.js`, `./lib/index.js` for a folder); bundled cookbooks and the docs site are exempt. Every package is `"type": "module"`; no CommonJS. Biome (`useImportExtensions`) flags a missing extension in the editor, and `pnpm verify:esm` enforces it in CI.
 - **Cross-platform paths**: Normalize paths at filesystem/tooling boundaries, emit module specifiers with `/`, and test path logic with Windows-shaped input.
 - **Filenames**: One value export per file, named to match. See below.
 
