@@ -518,7 +518,7 @@ export class ContextProvider
    *
    * When the parent context changes, this method will:
    * - Optionally skip the first emitted value from the parent (if `opt.skipFirst` is true).
-   * - Only update the current context if the context ID has changed.
+   * - Update when the context ID changes or the same-ID context fails validation.
    * - Dispatch an `onParentContextChanged` event before updating, allowing for cancellation.
    * - Set the current context with validation and resolution, handling errors gracefully.
    *
@@ -544,8 +544,8 @@ export class ContextProvider
           console.debug('ContextProvider::connectParentContext', 'skipping first item', next);
           return false;
         }
-        // only set context if it has changed
-        return this.currentContext?.id !== next?.id;
+        // Revalidate same-ID contexts so a stale item can resolve to the child's supported type
+        return this.currentContext?.id !== next?.id || (!!next && !this.validateContext(next));
       }),
       switchMap(async (next) => {
         // if parent context is null, just return
@@ -743,8 +743,11 @@ export class ContextProvider
     opt?: { validate?: boolean; resolve?: boolean },
   ): Observable<T> {
     return new Observable((subscriber) => {
-      // if context is the same as current, just emit and complete
-      if (context === this.currentContext) {
+      // Keep valid unchanged contexts, but let invalid same-object contexts reach resolution.
+      if (
+        context === this.currentContext &&
+        (!context || !opt?.validate || this.validateContext(context))
+      ) {
         subscriber.next(context);
         return subscriber.complete();
       }
