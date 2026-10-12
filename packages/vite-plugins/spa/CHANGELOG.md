@@ -1,5 +1,30 @@
 # @equinor/fusion-framework-vite-plugin-spa
 
+## 5.2.0
+
+### Minor Changes
+
+- 78aa819: Configure the telemetry module's public `OtlpAdapter` from the dev-server environment bridge. Add standard browser fetch, XMLHttpRequest, and document-load instrumentation with W3C trace-context propagation and OTLP span export. App records carry app-key and source attributes; active-span logs correlate with browser and backend spans.
+  
+  The bootstrap activates only when an endpoint is configured. Existing app telemetry and registered tracer providers remain authoritative; the serve-only dev-server bridge does not activate production builds.
+  
+  Ref: equinor/fusion-core-tasks#2241.
+
+### Patch Changes
+
+- 0d1e372: Internal: generate `src/version.ts` in each package's `prebuild` so direct builds and `prepack` no longer depend on the root install script having run. No change to the published output.
+- Updated dependencies [0d1e372]
+- Updated dependencies [0d1e372]
+- Updated dependencies [0d1e372]
+- Updated dependencies [0d1e372]
+- Updated dependencies [78aa819]
+- Updated dependencies [0d1e372]
+  - @equinor/fusion-framework-module-msal@12.0.1
+  - @equinor/fusion-framework-module-service-discovery@10.1.2
+  - @equinor/fusion-framework-module-telemetry@7.2.0
+  - @equinor/fusion-framework-module-http@8.1.3
+  - @equinor/fusion-framework-module@6.1.5
+
 ## 5.1.0
 
 ### Minor Changes

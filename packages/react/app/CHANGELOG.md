@@ -1,5 +1,29 @@
 # Change Log
 
+## 14.3.2
+
+### Patch Changes
+
+- 0d1e372: Fix the package's ESM output for native Node resolution.
+  
+  `@equinor/fusion-framework-react-app` declares `"type": "module"`, so tools that resolve it through Node (for example Vitest with externalized dependencies) used Node's ESM resolver and failed with `ERR_MODULE_NOT_FOUND` on extensionless relative imports such as `./useAppModule`. All relative imports now carry an explicit `.js` extension, and together with the framework packages it depends on, every sub-path now resolves under native Node ESM.
+  
+  Also remove the `@equinor/fusion-framework-react-app/widget` sub-path export. Its source was removed together with the React widget package, so the sub-path has failed to resolve since then.
+  
+  Ref: https://github.com/equinor/fusion/issues/959
+- Updated dependencies [0d1e372]
+- Updated dependencies [0d1e372]
+- Updated dependencies [0d1e372]
+  - @equinor/fusion-framework@9.0.2
+  - @equinor/fusion-framework-app@13.1.8
+  - @equinor/fusion-framework-module-app@8.2.1
+  - @equinor/fusion-framework-module-navigation@7.0.11
+  - @equinor/fusion-framework-react@9.0.3
+  - @equinor/fusion-framework-module-http@8.1.3
+  - @equinor/fusion-framework-react-module-http@12.0.2
+  - @equinor/fusion-framework-module@6.1.5
+  - @equinor/fusion-framework-react-module@4.0.5
+
 ## 14.3.1
 
 ### Patch Changes

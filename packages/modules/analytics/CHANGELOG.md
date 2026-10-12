@@ -1,5 +1,20 @@
 # @equinor/fusion-framework-module-analytics
 
+## 3.1.8
+
+### Patch Changes
+
+- 0d1e372: Internal: generate `src/version.ts` in each package's `prebuild` so direct builds and `prepack` no longer depend on the root install script having run. No change to the published output.
+- Updated dependencies [0d1e372]
+- Updated dependencies [0d1e372]
+- Updated dependencies [0d1e372]
+  - @equinor/fusion-framework-module-app@8.2.1
+  - @equinor/fusion-framework-module-context@9.0.2
+  - @equinor/fusion-framework-module-event@6.1.2
+  - @equinor/fusion-framework-module-http@8.1.3
+  - @equinor/fusion-framework-module@6.1.5
+  - @equinor/fusion-observable@9.2.4
+
 ## 3.1.7
 
 ### Patch Changes

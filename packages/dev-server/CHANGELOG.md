@@ -1,5 +1,24 @@
 # @equinor/fusion-framework-dev-server
 
+## 2.2.0
+
+### Minor Changes
+
+- 78aa819: Enable development-only OTLP/HTTP logs and browser request spans by setting `FUSION_DEV_SERVER_OTLP_ENDPOINT` to a collector URL when starting the dev server, without changing app code. Same-origin collection routes forward both signals, with app-key and source attributes. W3C trace context connects browser requests to instrumented backends, and active-span logs share their trace IDs.
+  
+  Existing app telemetry adapters and registered tracer providers take precedence. Production builds are unaffected, and collector outages are reported once without breaking the app.
+  
+  Ref: equinor/fusion-core-tasks#2241.
+
+### Patch Changes
+
+- 0d1e372: Internal: generate `src/version.ts` in each package's `prebuild` so direct builds and `prepack` no longer depend on the root install script having run. No change to the published output.
+- Updated dependencies [0d1e372]
+- Updated dependencies [78aa819]
+  - @equinor/fusion-framework-vite-plugin-api-service@2.0.8
+  - @equinor/fusion-framework-vite-plugin-spa@5.2.0
+  - @equinor/fusion-log@2.0.6
+
 ## 2.1.7
 
 ### Patch Changes

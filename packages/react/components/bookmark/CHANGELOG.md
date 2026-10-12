@@ -1,5 +1,18 @@
 # Change Log
 
+## 2.0.6
+
+### Patch Changes
+
+- 0d1e372: Publish spec-compliant ESM that loads under native Node, not only through a bundler.
+  
+  Every package now declares `"type": "module"`, and every relative import in the emitted `dist/esm` carries an explicit `.js` extension. Previously, tools that hand dependencies to Node's ESM resolver — such as Vitest with externalized dependencies — failed with `ERR_MODULE_NOT_FOUND` on imports like `./FrameworkConfigurator`. Consumers can remove the `server.deps.inline: [/@equinor\/fusion-framework/]` Vitest workaround once on these versions.
+  
+  Bundled builds are unaffected; Vite, webpack, and Rollup resolve the explicit extensions as before.
+  
+  Ref: https://github.com/equinor/fusion/issues/959
+- 0d1e372: Import `styled` as a named export from `styled-components`. The default import resolves to the CommonJS module object under native Node ESM, which left `styled.div` undefined; the named export works for bundlers and Node alike.
+
 ## 2.0.5
 
 ### Patch Changes

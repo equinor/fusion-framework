@@ -1,5 +1,25 @@
 # poc-portal
 
+## 1.1.113
+
+### Patch Changes
+
+- 0d1e372: Declare `"type": "module"` to match the framework packages.
+- Updated dependencies [0d1e372]
+- Updated dependencies [0d1e372]
+- Updated dependencies [0d1e372]
+- Updated dependencies [0d1e372]
+- Updated dependencies [0d1e372]
+  - @equinor/fusion-framework@9.0.2
+  - @equinor/fusion-framework-module-app@8.2.1
+  - @equinor/fusion-framework-module-msal@12.0.1
+  - @equinor/fusion-framework-module-service-discovery@10.1.2
+  - @equinor/fusion-framework-react@9.0.3
+  - @equinor/fusion-framework-module-http@8.1.3
+  - @equinor/fusion-framework-react-app@14.3.2
+  - @equinor/fusion-framework-cli@15.5.2
+  - @equinor/fusion-framework-module@6.1.5
+
 ## 1.1.112
 
 ### Patch Changes

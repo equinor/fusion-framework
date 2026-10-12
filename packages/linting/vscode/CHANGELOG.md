@@ -1,5 +1,11 @@
 # fusion-ts-lint-vscode
 
+## 0.3.0
+
+### Minor Changes
+
+- 0d1e372: Ship the extension as an ES module. The bundle is now emitted as ESM, which requires VS Code 1.129 or later (`engines.vscode` raised from `^1.85.0`).
+
 ## 0.2.4
 
 ### Patch Changes

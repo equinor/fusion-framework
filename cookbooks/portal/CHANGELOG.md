@@ -1,5 +1,13 @@
 # portal
 
+## 0.1.98
+
+### Patch Changes
+
+- 0d1e372: Declare `"type": "module"` to match the framework packages.
+- Updated dependencies [0d1e372]
+  - @equinor/fusion-framework-cli@15.5.2
+
 ## 0.1.97
 
 ### Patch Changes

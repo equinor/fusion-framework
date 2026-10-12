@@ -1,5 +1,18 @@
 # Change Log
 
+## 12.0.1
+
+### Patch Changes
+
+- 0d1e372: Publish spec-compliant ESM that loads under native Node, not only through a bundler.
+  
+  Every package now declares `"type": "module"`, and every relative import in the emitted `dist/esm` carries an explicit `.js` extension. Previously, tools that hand dependencies to Node's ESM resolver — such as Vitest with externalized dependencies — failed with `ERR_MODULE_NOT_FOUND` on imports like `./FrameworkConfigurator`. Consumers can remove the `server.deps.inline: [/@equinor\/fusion-framework/]` Vitest workaround once on these versions.
+  
+  Bundled builds are unaffected; Vite, webpack, and Rollup resolve the explicit extensions as before.
+  
+  Ref: https://github.com/equinor/fusion/issues/959
+- 0d1e372: Remove the `@equinor/fusion-framework-module-msal/v2` sub-path export. Its entry file was removed in the MSAL v4 upgrade, so the sub-path has failed to resolve since then; nothing that previously worked is removed.
+
 ## 12.0.0
 
 ### Major Changes

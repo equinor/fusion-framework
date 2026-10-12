@@ -1,5 +1,21 @@
 # Change Log
 
+## 15.5.2
+
+### Patch Changes
+
+- 0d1e372: Internal: generate `src/version.ts` in each package's `prebuild` so direct builds and `prepack` no longer depend on the root install script having run. No change to the published output.
+- Updated dependencies [78aa819]
+- Updated dependencies [0d1e372]
+- Updated dependencies [0d1e372]
+- Updated dependencies [0d1e372]
+  - @equinor/fusion-framework-dev-server@2.2.0
+  - @equinor/fusion-framework-dev-portal@11.1.2
+  - @equinor/fusion-framework-module-azure-identity@0.3.3
+  - @equinor/fusion-framework-vite-plugin-raw-imports@2.0.4
+  - @equinor/fusion-framework-vite-plugin-react-router@0.1.2
+  - @equinor/fusion-imports@2.0.6
+
 ## 15.5.1
 
 ### Patch Changes

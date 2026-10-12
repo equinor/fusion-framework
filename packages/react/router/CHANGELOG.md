@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-react-router
 
+## 2.4.5
+
+### Patch Changes
+
+- 0d1e372: Internal: generate `src/version.ts` in each package's `prebuild` so direct builds and `prepack` no longer depend on the root install script having run. No change to the published output.
+
 ## 2.4.4
 
 ### Patch Changes

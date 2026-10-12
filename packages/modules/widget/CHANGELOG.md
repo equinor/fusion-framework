@@ -1,5 +1,27 @@
 # Change Log
 
+## 16.0.11
+
+### Patch Changes
+
+- 0d1e372: Publish spec-compliant ESM that loads under native Node, not only through a bundler.
+  
+  Every package now declares `"type": "module"`, and every relative import in the emitted `dist/esm` carries an explicit `.js` extension. Previously, tools that hand dependencies to Node's ESM resolver — such as Vitest with externalized dependencies — failed with `ERR_MODULE_NOT_FOUND` on imports like `./FrameworkConfigurator`. Consumers can remove the `server.deps.inline: [/@equinor\/fusion-framework/]` Vitest workaround once on these versions.
+  
+  Bundled builds are unaffected; Vite, webpack, and Rollup resolve the explicit extensions as before.
+  
+  Ref: https://github.com/equinor/fusion/issues/959
+- 0d1e372: Restore the `@equinor/fusion-framework-module-widget/errors.js` sub-path. It again exports `WidgetManifestLoadError`, `WidgetConfigLoadError`, and `WidgetScriptModuleError`; the entry file was lost when the error classes were split into separate files.
+- Updated dependencies [0d1e372]
+- Updated dependencies [0d1e372]
+- Updated dependencies [0d1e372]
+  - @equinor/fusion-framework-module-event@6.1.2
+  - @equinor/fusion-framework-module-service-discovery@10.1.2
+  - @equinor/fusion-query@7.0.6
+  - @equinor/fusion-framework-module-http@8.1.3
+  - @equinor/fusion-framework-module@6.1.5
+  - @equinor/fusion-observable@9.2.4
+
 ## 16.0.10
 
 ### Patch Changes

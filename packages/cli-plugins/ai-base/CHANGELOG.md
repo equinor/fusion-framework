@@ -1,5 +1,15 @@
 # @equinor/fusion-framework-cli-plugin-ai-base
 
+## 4.0.13
+
+### Patch Changes
+
+- 0d1e372: Internal: generate `src/version.ts` in each package's `prebuild` so direct builds and `prepack` no longer depend on the root install script having run. No change to the published output.
+- Updated dependencies [0d1e372]
+  - @equinor/fusion-framework-module@6.1.5
+  - @equinor/fusion-framework-module-ai@7.0.3
+  - @equinor/fusion-imports@2.0.6
+
 ## 4.0.12
 
 ### Patch Changes
