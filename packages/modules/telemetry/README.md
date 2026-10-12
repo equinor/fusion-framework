@@ -131,8 +131,12 @@ enableTelemetry(configurator, {
 
 `url` is the full logs signal URL. `serviceName` defaults to `fusion.telemetry`; `fallback`
 defaults to `false`. Initialization makes no collector request. Export failures are reported
-once and remain best effort. Provider disposal invokes `shutdown()` to flush and release the
-exporter; standalone consumers should call it themselves.
+once and remain best effort. The telemetry module's disposal hook awaits
+`TelemetryProvider.dispose()`, which stops subscriptions and waits for every adapter's
+`shutdown()` to flush and release the exporter. Repeated provider disposal joins the same
+shutdown promise. Failures are reported through the framework's module-disposal error event
+after all adapters have been attempted. Standalone provider consumers should
+`await provider.dispose()`; standalone adapter consumers should `await adapter.shutdown()`.
 
 `OtlpAdapter` buffers records with `BatchLogRecordProcessor`: up to 128 records per export,
 a 2,048-record queue, and a one-second scheduled export delay. Startup bursts share a request

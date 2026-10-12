@@ -58,6 +58,7 @@ export class TelemetryProvider
   #items: Subject<TelemetryItem> = new Subject();
 
   #initialized = false;
+  #disposal?: Promise<void>;
 
   #adapters: Record<string, ITelemetryAdapter> = {};
   #handledByChild = new WeakSet<TelemetryItem>();
@@ -171,6 +172,53 @@ export class TelemetryProvider
   }
 
   /**
+   * Stops telemetry subscriptions and waits for every adapter to flush and shut down.
+   *
+   * Repeated calls share the same completion promise so exporters are shut down only once.
+   * The telemetry module awaits this promise during framework module disposal.
+   *
+   * @returns Resolves after all adapter shutdowns settle.
+   * @throws {AggregateError} When any adapter fails to shut down; all adapters are still attempted.
+   * @example
+   * ```ts
+   * await provider.dispose();
+   * ```
+   */
+  public override dispose(): Promise<void> {
+    // Direct disposal and module disposal must join the same pending shutdown.
+    if (this.#disposal) {
+      return this.#disposal;
+    }
+    super.dispose();
+    // Defer adapter callbacks until the shared promise is assigned, including reentrant disposal.
+    this.#disposal = Promise.resolve().then(async () => {
+      // Shut down all exporters even when one rejects or throws synchronously.
+      const results = await Promise.allSettled(
+        Object.entries(this.#adapters).map(async ([identifier, adapter]) => {
+          try {
+            await adapter.shutdown?.();
+          } catch (cause) {
+            throw new Error(`Failed to shut down telemetry adapter "${identifier}"`, { cause });
+          }
+        }),
+      );
+      const errors: unknown[] = [];
+      // Retain each failure for the module lifecycle's structured disposal error event.
+      for (const result of results) {
+        // Successful shutdowns must not obscure another exporter's failure.
+        if (result.status === 'rejected') {
+          errors.push(result.reason);
+        }
+      }
+      // Reject only after all exporters have had a chance to release their resources.
+      if (errors.length) {
+        throw new AggregateError(errors, 'Failed to shut down telemetry adapters');
+      }
+    });
+    return this.#disposal;
+  }
+
+  /**
    * Initializes all telemetry adapters that support async initialization.
    * Uses Promise.allSettled to ensure all adapters attempt initialization,
    * with individual error reporting for any failures.
@@ -181,16 +229,6 @@ export class TelemetryProvider
   protected async _initializeAdapters(): Promise<void> {
     // Initialize all adapters, do it in parallel
     const adapterEntries = Object.entries(this.#adapters);
-    // Exporters own pending work and resources that must not survive provider disposal.
-    for (const [identifier, adapter] of adapterEntries) {
-      this._addTeardown(() => {
-        adapter.shutdown?.().catch((cause: unknown) => {
-          this._dispatchError(
-            new Error(`Failed to shut down telemetry adapter "${identifier}"`, { cause }),
-          );
-        });
-      });
-    }
     // Kick off every adapter's initialize() concurrently
     const initializationPromises = adapterEntries.map(([_identifier, adapter]) =>
       adapter.initialize(),

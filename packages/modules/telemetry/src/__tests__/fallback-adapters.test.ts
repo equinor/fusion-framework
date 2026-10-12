@@ -7,7 +7,9 @@ describe('fallback telemetry adapters', () => {
     const adapter = { initialize: vi.fn(), processItem: vi.fn(), shutdown };
     const provider = new TelemetryProvider({ adapters: { exporter: adapter } });
     await provider.initialize();
-    provider.dispose();
+    const disposal = provider.dispose();
+    expect(provider.dispose()).toBe(disposal);
+    await disposal;
     expect(shutdown).toHaveBeenCalledTimes(1);
   });
 
@@ -37,8 +39,8 @@ describe('fallback telemetry adapters', () => {
     );
     parent.trackEvent({ name: 'framework log' });
     await vi.waitFor(() => expect(fallback.processItem).toHaveBeenCalledTimes(explicit ? 1 : 2));
-    app.dispose();
-    parent.dispose();
+    await app.dispose();
+    await parent.dispose();
   });
 
   it('preserves precedence across more than one parent', async () => {
@@ -53,8 +55,8 @@ describe('fallback telemetry adapters', () => {
     app.trackEvent({ name: 'nested app log' });
     expect(appAdapter.processItem).toHaveBeenCalledTimes(1);
     expect(fallback.processItem).not.toHaveBeenCalled();
-    app.dispose();
-    middle.dispose();
-    root.dispose();
+    await app.dispose();
+    await middle.dispose();
+    await root.dispose();
   });
 });
