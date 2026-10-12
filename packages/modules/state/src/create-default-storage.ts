@@ -2,17 +2,14 @@ import type {
   ConfigBuilderCallbackArgs,
   ModulesInstanceType,
 } from '@equinor/fusion-framework-module';
-import type {
-  HttpMsalModule,
-  IHttpClient,
-  IHttpClientProvider,
-} from '@equinor/fusion-framework-module-http';
+import type { HttpMsalModule, IHttpClientProvider } from '@equinor/fusion-framework-module-http';
 import type { HttpClientMsal } from '@equinor/fusion-framework-module-http/client';
 import type {
   ServiceDiscoveryModule,
   IServiceDiscoveryProvider,
 } from '@equinor/fusion-framework-module-service-discovery';
 
+import { createHttpClientFetch } from './create-http-client-fetch.js';
 import { PouchDbStorage, PouchDbSyncStorage } from './storage/index.js';
 import type { IStorage, PouchDbSyncPullOptions } from './storage/index.js';
 
@@ -27,36 +24,6 @@ const APP_STATE_SERVICE_KEY = 'app-state';
  * to parse - see {@link createHttpClientFetch}. Never actually requested.
  */
 const POUCHDB_PLACEHOLDER_ORIGIN = 'https://app-state.invalid';
-
-/**
- * Builds a PouchDB-compatible `fetch` that routes replication requests through the Fusion
- * {@link IHttpClient}, so token acquisition, request/response instrumentation, and any other
- * cross-cutting `IHttpClient` behavior apply to PouchDB's traffic the same way they do for the
- * rest of the app, instead of PouchDB talking to the backend on its own.
- *
- * @remarks
- * PouchDB parses replication URLs with a legacy regex, not the WHATWG `URL` API, which
- * misreads a literal `@` (as used by the dev-server's `/@fusion-api/...` proxy prefix) as
- * a userinfo delimiter and corrupts the parsed host. The remote database is therefore
- * always constructed under {@link POUCHDB_PLACEHOLDER_ORIGIN} (see `createDefaultStorage`),
- * so the only thing that needs forwarding here is the path PouchDB computed relative to it -
- * `client.fetch` resolves that path against its own `uri` the same way `IHttpClient` always does.
- *
- * @param client - The `IHttpClient` used to resolve, authenticate, and execute requests
- * against the app-state service.
- * @returns A `fetch` implementation for `PouchDB.Configuration.RemoteDatabaseConfiguration`.
- */
-function createHttpClientFetch(
-  client: IHttpClient,
-): PouchDB.Configuration.RemoteDatabaseConfiguration['fetch'] {
-  return async (url, opts) => {
-    // `pathname` already starts with `/` - do not add another slash before it.
-    const { pathname, search } = new URL(typeof url === 'string' ? url : url.url);
-    const path = `sync${pathname}${search}`;
-
-    return client.fetch(path, { ...opts, cache: 'no-store' });
-  };
-}
 
 /**
  * Resolves the {@link ServiceDiscoveryModule}'s provider, checking the local module scope
