@@ -1,5 +1,15 @@
 # @equinor/fusion-framework-module-roles
 
+## 0.3.1
+
+### Patch Changes
+
+- 0d1e372: Internal: generate `src/version.ts` in each package's `prebuild` so direct builds and `prepack` no longer depend on the root install script having run. No change to the published output.
+- Updated dependencies [0d1e372]
+- Updated dependencies [0d1e372]
+- Updated dependencies [78aa819]
+  - @equinor/fusion-framework-module-telemetry@7.2.0
+
 ## 0.3.0
 
 ### Minor Changes

@@ -1,5 +1,14 @@
 # @equinor/fusion-framework-docs
 
+## 0.4.27
+
+### Patch Changes
+
+- 78aa819: Document the public telemetry `OtlpAdapter`, environment-only dev-server log and span export, endpoint format, app identity attributes, precedence, and best-effort delivery. Explain frontend/backend W3C trace correlation, backend instrumentation requirements, and browser context/CORS limitations.
+  
+  Ref: equinor/fusion-core-tasks#2241.
+- 0d1e372: Internal: declare `"type": "module"` and load the root `package.json` with a JSON import instead of `require()` in the VuePress config.
+
 ## 0.4.26
 
 ### Patch Changes

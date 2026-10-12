@@ -1,5 +1,14 @@
 # @equinor/fusion-framework-cli-plugin-mock-server
 
+## 0.3.1
+
+### Patch Changes
+
+- 0d1e372: Internal: generate `src/version.ts` in each package's `prebuild` so direct builds and `prepack` no longer depend on the root install script having run. No change to the published output.
+- Updated dependencies [78aa819]
+- Updated dependencies [0d1e372]
+  - @equinor/fusion-framework-dev-server@2.2.0
+
 ## 0.3.0
 
 ### Minor Changes

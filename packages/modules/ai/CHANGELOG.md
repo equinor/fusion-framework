@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-module-ai
 
+## 7.0.3
+
+### Patch Changes
+
+- 0d1e372: Internal: generate `src/version.ts` in each package's `prebuild` so direct builds and `prepack` no longer depend on the root install script having run. No change to the published output.
+
 ## 7.0.2
 
 ### Patch Changes

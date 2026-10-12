@@ -1,5 +1,28 @@
 # portal-analytics
 
+## 0.4.67
+
+### Patch Changes
+
+- Updated dependencies [0d1e372]
+- Updated dependencies [0d1e372]
+- Updated dependencies [0d1e372]
+- Updated dependencies [0d1e372]
+  - @equinor/fusion-framework@9.0.2
+  - @equinor/fusion-framework-app@13.1.8
+  - @equinor/fusion-framework-module-app@8.2.1
+  - @equinor/fusion-framework-module-bookmark@4.1.3
+  - @equinor/fusion-framework-module-context@9.0.2
+  - @equinor/fusion-framework-module-navigation@7.0.11
+  - @equinor/fusion-framework-module-service-discovery@10.1.2
+  - @equinor/fusion-framework-react@9.0.3
+  - @equinor/fusion-query@7.0.6
+  - @equinor/fusion-framework-react-app@14.3.2
+  - @equinor/fusion-framework-cli@15.5.2
+  - @equinor/fusion-framework-module-analytics@3.1.8
+  - @equinor/fusion-framework-react-router@2.4.5
+  - @equinor/fusion-observable@9.2.4
+
 ## 0.4.66
 
 ### Patch Changes

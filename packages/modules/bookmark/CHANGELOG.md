@@ -1,5 +1,20 @@
 # Change Log
 
+## 4.1.3
+
+### Patch Changes
+
+- 0d1e372: Publish spec-compliant ESM that loads under native Node, not only through a bundler.
+  
+  Every package now declares `"type": "module"`, and every relative import in the emitted `dist/esm` carries an explicit `.js` extension. Previously, tools that hand dependencies to Node's ESM resolver — such as Vitest with externalized dependencies — failed with `ERR_MODULE_NOT_FOUND` on imports like `./FrameworkConfigurator`. Consumers can remove the `server.deps.inline: [/@equinor\/fusion-framework/]` Vitest workaround once on these versions.
+  
+  Bundled builds are unaffected; Vite, webpack, and Rollup resolve the explicit extensions as before.
+  
+  Ref: https://github.com/equinor/fusion/issues/959
+- 0d1e372: Fix native Node ESM loading of the package and its `/mock` sub-path: the `fast-deep-equal/es6` directory import now targets `fast-deep-equal/es6/index.js`, which Node can resolve.
+  
+  Also remove the `@equinor/fusion-framework-module-bookmark/utils` sub-path export, which has pointed at a missing file since the bookmark rewrite.
+
 ## 4.1.2
 
 ### Patch Changes

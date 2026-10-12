@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework-module-event",
-  "version": "6.1.1",
+  "version": "6.1.2",
   "description": "Fusion module for events",
   "type": "module",
   "main": "./dist/esm/index.js",

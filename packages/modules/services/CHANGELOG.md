@@ -1,5 +1,18 @@
 # Change Log
 
+## 8.1.3
+
+### Patch Changes
+
+- 0d1e372: Publish spec-compliant ESM that loads under native Node, not only through a bundler.
+  
+  Every package now declares `"type": "module"`, and every relative import in the emitted `dist/esm` carries an explicit `.js` extension. Previously, tools that hand dependencies to Node's ESM resolver — such as Vitest with externalized dependencies — failed with `ERR_MODULE_NOT_FOUND` on imports like `./FrameworkConfigurator`. Consumers can remove the `server.deps.inline: [/@equinor\/fusion-framework/]` Vitest workaround once on these versions.
+  
+  Bundled builds are unaffected; Vite, webpack, and Rollup resolve the explicit extensions as before.
+  
+  Ref: https://github.com/equinor/fusion/issues/959
+- 0d1e372: Restore the `@equinor/fusion-framework-module-services/errors` sub-path. It again exports `UnsupportedApiVersion`; the entry file was lost when the error classes were split into separate files.
+
 ## 8.1.2
 
 ### Patch Changes

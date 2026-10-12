@@ -1,5 +1,39 @@
 # Change Log
 
+## 7.2.0
+
+### Minor Changes
+
+- 78aa819: Add a public `OtlpAdapter` at `@equinor/fusion-framework-module-telemetry/otlp-adapter`, backed by the standard OpenTelemetry OTLP/HTTP log exporter. Records include app identity, source, and active trace context. Export failures are reported once without blocking the app, and provider disposal flushes and shuts down supported adapters.
+  
+  Records are batched with a one-second export delay to avoid concurrent-export failures during startup. Standalone consumers can call `forceFlush()` to export buffered records immediately.
+  
+  Module disposal awaits provider disposal and every adapter's shutdown, so buffered exports finish before the lifecycle completes. Repeated disposal shares one promise; shutdown failures are reported through the module lifecycle after all adapters are attempted. Standalone providers should be disposed with `await provider.dispose()`.
+  
+  OpenTelemetry packages are optional peer dependencies, required only for direct use of the OTLP adapter. Existing telemetry consumers do not need to install them.
+  
+  Add optional fallback adapters for hierarchical telemetry. Parent fallback adapters skip records already handled by an explicitly configured child adapter, preserving existing parent adapters and relay behavior. This allows development exporters to defer to application-owned telemetry without double exporting.
+  
+  Ref: equinor/fusion-core-tasks#2241.
+
+### Patch Changes
+
+- 0d1e372: Publish spec-compliant ESM that loads under native Node, not only through a bundler.
+  
+  Every package now declares `"type": "module"`, and every relative import in the emitted `dist/esm` carries an explicit `.js` extension. Previously, tools that hand dependencies to Node's ESM resolver — such as Vitest with externalized dependencies — failed with `ERR_MODULE_NOT_FOUND` on imports like `./FrameworkConfigurator`. Consumers can remove the `server.deps.inline: [/@equinor\/fusion-framework/]` Vitest workaround once on these versions.
+  
+  Bundled builds are unaffected; Vite, webpack, and Rollup resolve the explicit extensions as before.
+  
+  Ref: https://github.com/equinor/fusion/issues/959
+- 0d1e372: Fix the `@equinor/fusion-framework-module-telemetry/schemas` sub-path export, which pointed at `dist/esm/schemas/index.js` instead of the emitted `dist/esm/schemas.js` and therefore never resolved.
+  
+  Also import `deepmerge` through its package entry instead of `deepmerge/index.js`. The deep path loaded deepmerge's unbundled source, which requires `is-mergeable-object` — a package consumers do not install — so loading the telemetry module (and anything built on `@equinor/fusion-framework`) under native Node ESM failed with `Cannot find module 'is-mergeable-object'`.
+- Updated dependencies [0d1e372]
+- Updated dependencies [0d1e372]
+  - @equinor/fusion-framework-module-event@6.1.2
+  - @equinor/fusion-framework-module@6.1.5
+  - @equinor/fusion-observable@9.2.4
+
 ## 7.1.2
 
 ### Patch Changes

@@ -1,5 +1,45 @@
 # @equinor/fusion-framework-dev-portal
 
+## 11.1.2
+
+### Patch Changes
+
+- 0d1e372: Publish spec-compliant ESM that loads under native Node, not only through a bundler.
+  
+  Every package now declares `"type": "module"`, and every relative import in the emitted `dist/esm` carries an explicit `.js` extension. Previously, tools that hand dependencies to Node's ESM resolver — such as Vitest with externalized dependencies — failed with `ERR_MODULE_NOT_FOUND` on imports like `./FrameworkConfigurator`. Consumers can remove the `server.deps.inline: [/@equinor\/fusion-framework/]` Vitest workaround once on these versions.
+  
+  Bundled builds are unaffected; Vite, webpack, and Rollup resolve the explicit extensions as before.
+  
+  Ref: https://github.com/equinor/fusion/issues/959
+- 0d1e372: Import `styled` as a named export from `styled-components`. The default import resolves to the CommonJS module object under native Node ESM, which left `styled.div` undefined; the named export works for bundlers and Node alike.
+- Updated dependencies [78aa819]
+- Updated dependencies [0d1e372]
+- Updated dependencies [0d1e372]
+- Updated dependencies [0d1e372]
+- Updated dependencies [0d1e372]
+- Updated dependencies [78aa819]
+- Updated dependencies [0d1e372]
+- Updated dependencies [0d1e372]
+  - @equinor/fusion-framework-dev-server@2.2.0
+  - @equinor/fusion-framework@9.0.2
+  - @equinor/fusion-framework-app@13.1.8
+  - @equinor/fusion-framework-module-ag-grid@37.1.3
+  - @equinor/fusion-framework-module-app@8.2.1
+  - @equinor/fusion-framework-module-bookmark@4.1.3
+  - @equinor/fusion-framework-module-context@9.0.2
+  - @equinor/fusion-framework-module-feature-flag@2.1.2
+  - @equinor/fusion-framework-module-navigation@7.0.11
+  - @equinor/fusion-framework-module-services@8.1.3
+  - @equinor/fusion-framework-module-telemetry@7.2.0
+  - @equinor/fusion-framework-plugin-context-navigation@1.0.4
+  - @equinor/fusion-framework-react@9.0.3
+  - @equinor/fusion-framework-react-components-bookmark@2.0.6
+  - @equinor/fusion-framework-react-components-people-provider@2.0.7
+  - @equinor/fusion-framework-react-module-bookmark@7.0.2
+  - @equinor/fusion-query@7.0.6
+  - @equinor/fusion-framework-module-analytics@3.1.8
+  - @equinor/fusion-observable@9.2.4
+
 ## 11.1.1
 
 ### Patch Changes

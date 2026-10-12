@@ -1,5 +1,11 @@
 # @equinor/fusion-imports
 
+## 2.0.6
+
+### Patch Changes
+
+- 0d1e372: Internal: generate `src/version.ts` in each package's `prebuild` so direct builds and `prepack` no longer depend on the root install script having run. No change to the published output.
+
 ## 2.0.5
 
 ### Patch Changes

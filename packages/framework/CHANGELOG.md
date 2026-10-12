@@ -1,5 +1,32 @@
 # Change Log
 
+## 9.0.2
+
+### Patch Changes
+
+- 0d1e372: Publish spec-compliant ESM that loads under native Node, not only through a bundler.
+  
+  Every package now declares `"type": "module"`, and every relative import in the emitted `dist/esm` carries an explicit `.js` extension. Previously, tools that hand dependencies to Node's ESM resolver — such as Vitest with externalized dependencies — failed with `ERR_MODULE_NOT_FOUND` on imports like `./FrameworkConfigurator`. Consumers can remove the `server.deps.inline: [/@equinor\/fusion-framework/]` Vitest workaround once on these versions.
+  
+  Bundled builds are unaffected; Vite, webpack, and Rollup resolve the explicit extensions as before.
+  
+  Ref: https://github.com/equinor/fusion/issues/959
+- Updated dependencies [0d1e372]
+- Updated dependencies [0d1e372]
+- Updated dependencies [0d1e372]
+- Updated dependencies [0d1e372]
+- Updated dependencies [0d1e372]
+- Updated dependencies [78aa819]
+- Updated dependencies [0d1e372]
+  - @equinor/fusion-framework-module-context@9.0.2
+  - @equinor/fusion-framework-module-event@6.1.2
+  - @equinor/fusion-framework-module-msal@12.0.1
+  - @equinor/fusion-framework-module-service-discovery@10.1.2
+  - @equinor/fusion-framework-module-services@8.1.3
+  - @equinor/fusion-framework-module-telemetry@7.2.0
+  - @equinor/fusion-framework-module-http@8.1.3
+  - @equinor/fusion-framework-module@6.1.5
+
 ## 9.0.1
 
 ### Patch Changes
