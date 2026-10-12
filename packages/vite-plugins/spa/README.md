@@ -345,6 +345,15 @@ FUSION_SPA_TELEMETRY_CONSOLE_LEVEL=2  # Warning and above
 
 For advanced telemetry (e.g. Application Insights), provide a [custom bootstrap file](#providing-custom-bootstrap).
 
+When used by `@equinor/fusion-framework-dev-server`, the default bootstrap also supports
+OTLP logs through the telemetry module's public `OtlpAdapter`, plus standard OpenTelemetry
+browser request tracing and W3C propagation. Set
+`FUSION_DEV_SERVER_OTLP_ENDPOINT` in the app's dev-server process; no app code change is required.
+The dev server owns the environment bridge and same-origin collection route. The bootstrap
+checks only whether an endpoint is configured; the serve-only dev-server bridge controls
+activation. Explicitly configured app adapters and existing global tracer providers take
+precedence. See [dev-server telemetry configuration](../../dev-server/docs/configuration.md#send-telemetry-to-an-otlp-endpoint).
+
 ## Configuring through `.env` Files
 
 The plugin reads environment variables from `.env` files (via Vite's `loadEnv`) and **merges them on top of** values from `generateTemplateEnv`. This lets you keep secrets and per-environment values out of source code.

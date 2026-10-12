@@ -32,6 +32,10 @@
     "./console-adapter": {
       "import": "./dist/esm/adapters/console/index.js",
       "types": "./dist/types/adapters/console/index.d.ts"
+    },
+    "./otlp-adapter": {
+      "import": "./dist/esm/adapters/otlp/index.js",
+      "types": "./dist/types/adapters/otlp/index.d.ts"
     }
   },
   "types": "dist/types/index.d.ts",
@@ -68,6 +72,10 @@
     "@equinor/fusion-framework-module-event": "workspace:*",
     "@equinor/fusion-observable": "workspace:^",
     "@microsoft/applicationinsights-web": "^3.0.2",
+    "@opentelemetry/api-logs": "^0.222.0",
+    "@opentelemetry/exporter-logs-otlp-http": "^0.222.0",
+    "@opentelemetry/resources": "2.11.0",
+    "@opentelemetry/sdk-logs": "^0.222.0",
     "typescript": "^7.0.2",
     "vitest": "^4.1.10"
   },
@@ -75,13 +83,29 @@
     "@equinor/fusion-framework-module": "workspace:*",
     "@equinor/fusion-framework-module-event": "workspace:*",
     "@equinor/fusion-observable": "workspace:*",
-    "@microsoft/applicationinsights-web": "^3.0.0"
+    "@microsoft/applicationinsights-web": "^3.0.0",
+    "@opentelemetry/api-logs": "^0.222.0",
+    "@opentelemetry/exporter-logs-otlp-http": "^0.222.0",
+    "@opentelemetry/resources": "^2.11.0",
+    "@opentelemetry/sdk-logs": "^0.222.0"
   },
   "peerDependenciesMeta": {
     "@equinor/fusion-framework-module-event": {
       "optional": true
     },
     "@microsoft/applicationinsights-web": {
+      "optional": true
+    },
+    "@opentelemetry/api-logs": {
+      "optional": true
+    },
+    "@opentelemetry/exporter-logs-otlp-http": {
+      "optional": true
+    },
+    "@opentelemetry/resources": {
+      "optional": true
+    },
+    "@opentelemetry/sdk-logs": {
       "optional": true
     }
   }

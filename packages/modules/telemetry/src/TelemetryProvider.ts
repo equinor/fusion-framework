@@ -60,6 +60,7 @@ export class TelemetryProvider
   #initialized = false;
 
   #adapters: Record<string, ITelemetryAdapter> = {};
+  #handledByChild = new WeakSet<TelemetryItem>();
   #filters?: {
     adapter?: (item: TelemetryItem) => boolean;
     relay?: (item: TelemetryItem) => boolean;
@@ -180,6 +181,16 @@ export class TelemetryProvider
   protected async _initializeAdapters(): Promise<void> {
     // Initialize all adapters, do it in parallel
     const adapterEntries = Object.entries(this.#adapters);
+    // Exporters own pending work and resources that must not survive provider disposal.
+    for (const [identifier, adapter] of adapterEntries) {
+      this._addTeardown(() => {
+        adapter.shutdown?.().catch((cause: unknown) => {
+          this._dispatchError(
+            new Error(`Failed to shut down telemetry adapter "${identifier}"`, { cause }),
+          );
+        });
+      });
+    }
     // Kick off every adapter's initialize() concurrently
     const initializationPromises = adapterEntries.map(([_identifier, adapter]) =>
       adapter.initialize(),
@@ -226,6 +237,11 @@ export class TelemetryProvider
 
       // Iterate through all registered adapters
       for (const [identifier, adapter] of Object.entries(this.#adapters)) {
+        // Explicit child exporters take precedence over inherited development exporters.
+        if (adapter.fallback && this.#handledByChild.has(item)) {
+          // Keep application-owned records out of parent fallback exporters.
+          continue;
+        }
         try {
           // Let the adapter process the telemetry item
           Promise.resolve(adapter.processItem(item));
@@ -259,7 +275,16 @@ export class TelemetryProvider
       if (relayFilter && !relayFilter(item)) {
         return;
       }
-      target.track(item);
+      // Older/custom providers retain the original track-only relay contract.
+      if (target.trackRelayed) {
+        // Carry exporter ownership across intermediate providers without changing record metadata.
+        const hasAdapters =
+          this.#handledByChild.has(item) ||
+          Object.values(this.#adapters).some((adapter) => !adapter.fallback);
+        target.trackRelayed(item, hasAdapters);
+      } else {
+        target.track(item);
+      }
     });
   }
 
@@ -321,15 +346,29 @@ export class TelemetryProvider
   }
 
   /**
+   * Tracks an already validated child record, suppressing fallback exporters when appropriate.
+   *
+   * @param item - Record emitted by a child telemetry provider.
+   * @param hasAdapters - Whether an explicit child adapter has already handled this record.
+   */
+  public trackRelayed(item: TelemetryItem, hasAdapters: boolean): void {
+    this._track(item, hasAdapters);
+  }
+
+  /**
    * Tracks a telemetry item by merging the default scope with the item's scope (if provided),
    * ensuring that all telemetry items have the correct scope context. The merged item is then
    * emitted to downstream handlers.
    *
    * @param item - The telemetry item to be tracked, conforming to the input schema of `TelemetryItemSchema`.
+   * @param handledByChild - Whether fallback adapters should skip this relayed item.
    *
    * @protected
    */
-  protected async _track(item: z.input<typeof TelemetryItemSchema>): Promise<void> {
+  protected async _track(
+    item: z.input<typeof TelemetryItemSchema>,
+    handledByChild = false,
+  ): Promise<void> {
     const mergedItem = mergeTelemetryItem(item, {
       scope: this.#defaultScope,
     });
@@ -340,10 +379,18 @@ export class TelemetryProvider
         modules: this.#modules,
         item: mergedItem,
       }).subscribe((nextItem) => {
+        // Async metadata resolution creates new objects; retain ownership on the emitted record.
+        if (handledByChild) {
+          this.#handledByChild.add(nextItem);
+        }
         // Emit the item after applying metadata
         this.#items.next(nextItem);
       });
     } else {
+      // Providers without metadata still need the same fallback precedence.
+      if (handledByChild) {
+        this.#handledByChild.add(mergedItem);
+      }
       // If no metadata extractor is provided or item is TelemetryMetadataError, emit directly
       this.#items.next(mergedItem);
     }

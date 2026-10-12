@@ -82,6 +82,23 @@ if (isEnabledEnvValue(import.meta.env.FUSION_SPA_MSAL_MOCK)) {
   });
 }
 
+// Initialize tracing before app startup so network requests and logs share active trace context.
+if (import.meta.env.FUSION_SPA_TELEMETRY_OTLP_TRACES_ENDPOINT) {
+  const { enableDevServerTracing } = await import('./enable-dev-server-tracing.js');
+  enableDevServerTracing(
+    new URL(import.meta.env.FUSION_SPA_TELEMETRY_OTLP_TRACES_ENDPOINT, window.location.origin).href,
+  );
+}
+
+// The dev-server environment bridge owns activation; the SPA only consumes its endpoint.
+const devServerOtlpAdapter = import.meta.env.FUSION_SPA_TELEMETRY_OTLP_ENDPOINT
+  ? new (await import('@equinor/fusion-framework-module-telemetry/otlp-adapter')).OtlpAdapter({
+      url: new URL(import.meta.env.FUSION_SPA_TELEMETRY_OTLP_ENDPOINT, window.location.origin).href,
+      fallback: true,
+      serviceName: 'fusion.dev-server',
+    })
+  : undefined;
+
 enableTelemetry(configurator, {
   attachConfiguratorEvents: true,
   configure: (builder) => {
@@ -94,6 +111,10 @@ enableTelemetry(configurator, {
     });
 
     builder.setAdapter('console', consoleAdapter);
+    // Only the dev-server environment bridge opts the shell into OTLP export.
+    if (devServerOtlpAdapter) {
+      builder.setAdapter('dev-server-otlp', devServerOtlpAdapter);
+    }
 
     builder.setMetadata(({ modules }) => {
       const metadata = {

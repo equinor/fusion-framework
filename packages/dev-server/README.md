@@ -57,6 +57,30 @@ two URLs often point to the same endpoint, but they serve different consumers.
 
 Continue with [Getting started](docs/getting-started.md) for the complete mental model.
 
+## Send app telemetry to a local OTLP collector
+
+From your application repository, set the environment variable when starting the dev server:
+
+```sh
+FUSION_DEV_SERVER_OTLP_ENDPOINT=http://localhost:4318 pnpm exec ffc app dev
+```
+
+No app code or `DevServerOptions` changes are needed. The telemetry module's `OtlpAdapter` uses
+the standard OpenTelemetry OTLP/HTTP log exporter through a same-origin dev-server route. App records
+include `fusion.app.key` and `source: app`; shell records use `source: framework`.
+
+Browser fetch/XHR spans are also exported. W3C `traceparent` and `tracestate` headers connect
+requests to instrumented backends, and logs emitted under an active span carry its trace/span IDs.
+The same collector URL configures `/v1/logs` and `/v1/traces`.
+
+An app's explicitly configured telemetry adapters take precedence, so its records are not also
+exported by the dev-server fallback. An unset variable leaves telemetry unchanged, and production
+builds never enable this integration. Collector failures are reported once in the dev-server
+terminal without breaking the app.
+
+See [OTLP environment configuration](docs/configuration.md#send-telemetry-to-an-otlp-endpoint)
+for the endpoint contract and boundaries.
+
 ## Mock APIs locally
 
 Install the optional mock-server plugin when a backend is unavailable, unstable, or needs

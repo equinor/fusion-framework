@@ -10,6 +10,7 @@ import fusionSpaPlugin from '@equinor/fusion-framework-vite-plugin-spa';
 import { ConsoleLogger, LogLevel } from '@equinor/fusion-log';
 
 import { processServices as defaultProcessServices } from './process-services.js';
+import { createTelemetryPlugin } from './create-telemetry-plugin.js';
 
 import type { DevServerOptions, TemplateEnv, TemplateEnvFn } from './types.js';
 
@@ -50,6 +51,9 @@ const createDefaultLogger = (lvl: LogLevel = LogLevel.Info, title = 'dev-server'
  * - `spa.templateEnv` accepts either a static object or a factory function returning the environment.
  * - `api.processServices` defaults to the built-in {@link processServices} when omitted.
  * - The default log level is `Info`; set `log.level` to `4` for debug output.
+ * - Set `FUSION_DEV_SERVER_OTLP_ENDPOINT` to an OTLP/HTTP collector URL to export browser
+ *   logs and request spans during serve only. W3C headers correlate instrumented backends;
+ *   explicit app adapters take precedence. Collector failures are reported once.
  *
  * @example
  * ```typescript
@@ -116,6 +120,7 @@ export const createDevServerConfig = <TEnv extends Partial<TemplateEnv>>(
         },
       ),
       fusionSpaPlugin({ generateTemplateEnv, logger: spaLogger }),
+      createTelemetryPlugin(logger.createSubLogger('telemetry')),
     ],
   });
   return mergeConfig(baseConfig, overrides ?? {});

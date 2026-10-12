@@ -98,6 +98,63 @@ enableTelemetry(configurator, {
 
 ## API Reference
 
+### OTLP/HTTP adapter
+
+`OtlpAdapter` exports Fusion events, exceptions, metrics (as log records), and custom telemetry
+using the standard OpenTelemetry HTTP log exporter. It attaches app-key and source attributes
+and uses the active OpenTelemetry trace context for log correlation. It does not register a
+global logger or tracer provider.
+
+OpenTelemetry packages are **optional peer dependencies**: ordinary telemetry and the console
+or Application Insights adapters do not require them. Install them only when importing
+`@equinor/fusion-framework-module-telemetry/otlp-adapter` directly:
+
+```sh
+pnpm add @opentelemetry/api-logs@^0.222.0 @opentelemetry/exporter-logs-otlp-http@^0.222.0 @opentelemetry/resources@^2.11.0 @opentelemetry/sdk-logs@^0.222.0
+```
+
+The dev-server SPA bundle includes the OTLP implementation, so environment-only dev-server
+usage does not require adding these peers to app repositories.
+
+```typescript
+import { OtlpAdapter } from '@equinor/fusion-framework-module-telemetry/otlp-adapter';
+
+enableTelemetry(configurator, {
+  configure: (builder) => {
+    builder.setAdapter('otlp', new OtlpAdapter({
+      url: 'http://localhost:4318/v1/logs',
+      serviceName: 'my-app',
+    }));
+  },
+});
+```
+
+`url` is the full logs signal URL. `serviceName` defaults to `fusion.telemetry`; `fallback`
+defaults to `false`. Initialization makes no collector request. Export failures are reported
+once and remain best effort. Provider disposal invokes `shutdown()` to flush and release the
+exporter; standalone consumers should call it themselves.
+
+`OtlpAdapter` buffers records with `BatchLogRecordProcessor`: up to 128 records per export,
+a 2,048-record queue, and a one-second scheduled export delay. Startup bursts share a request
+instead of exhausting the exporter's concurrency limit. Call `await adapter.forceFlush()` at
+explicit lifecycle boundaries or in tests to export pending records immediately. Telemetry is
+best effort: a full queue or an abrupt browser close can lose records.
+
+For environment-only development configuration, use
+[`FUSION_DEV_SERVER_OTLP_ENDPOINT`](../../dev-server/docs/configuration.md#send-telemetry-to-an-otlp-endpoint)
+instead of changing app code. The dev server configures this same public adapter as a fallback.
+
+### Fallback adapters and app precedence
+
+An `ITelemetryAdapter` can set `readonly fallback = true`. A parent provider skips that adapter
+for records relayed from a child that already has an explicitly configured non-fallback adapter.
+Other parent adapters, telemetry events, metadata merging, and relay filters continue to work.
+The decision propagates through nested providers, including asynchronous metadata resolution.
+
+This supports environment-enabled development exporters without configuring an app twice.
+Apps that only configure metadata, scopes, or filters still use the parent fallback. Adapters
+without the optional `fallback` property retain their existing behavior.
+
 ### Core exports (`@equinor/fusion-framework-module-telemetry`)
 
 | Export | Kind | Description |
@@ -681,4 +738,3 @@ Common issues and their solutions:
    - Check for excessive telemetry events being generated
    - Consider implementing sampling or more selective filtering
    - Review adapter processing times
-

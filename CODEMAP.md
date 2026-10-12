@@ -64,7 +64,7 @@ Format: `package name` → path → role.
 | `@equinor/fusion-framework-module-services` | `packages/modules/services` | Typed Fusion service clients |
 | `@equinor/fusion-framework-module-signalr` | `packages/modules/signalr` | SignalR transport |
 | `@equinor/fusion-framework-module-state` | `packages/modules/state` | Replicated/persisted app state (PouchDB-backed sync) |
-| `@equinor/fusion-framework-module-telemetry` | `packages/modules/telemetry` | Microsoft telemetry |
+| `@equinor/fusion-framework-module-telemetry` | `packages/modules/telemetry` | Pluggable telemetry, Application Insights and OTLP logs |
 | `@equinor/fusion-framework-module-widget` | `packages/modules/widget` | Widget loading |
 
 ### Services (`packages/services`)
@@ -180,7 +180,8 @@ Format: `package name` → path → role.
 
 `app-react`, `app-react-ag-grid`, `app-react-ai`, `app-react-apploader`, `app-react-assets`,
 `app-react-bookmark`, `app-react-bookmark-advanced`, `app-react-charts`, `app-react-context`,
-`app-react-context-custom-error`, `app-react-environment-variables`, `app-react-feature-flag`,
+`app-react-context-custom-error`, `app-react-dev-server-telemetry`,
+`app-react-environment-variables`, `app-react-feature-flag`,
 `app-react-mock-playwright`, `app-react-module`, `app-react-msal`, `app-react-observable`,
 `app-react-people`, `app-react-roles`, `app-react-router`, `app-react-router-legacy`, `app-react-settings`,
 `app-react-state`, `app-react-styling`, `app-vanilla`, `poc-portal`, `portal`,

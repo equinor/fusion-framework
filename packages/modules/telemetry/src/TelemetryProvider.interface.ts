@@ -83,6 +83,14 @@ export interface ITelemetryProvider {
   track<T extends TelemetryItem>(item: T): void;
 
   /**
+   * Receives a validated child record while preserving explicit exporter precedence.
+   *
+   * @param item - Record emitted by the child provider.
+   * @param hasAdapters - Whether the child already handles the record with non-fallback adapters.
+   */
+  trackRelayed?(item: TelemetryItem, hasAdapters: boolean): void;
+
+  /**
    * Track a telemetry event with a specific type.
    *
    * @param item - The telemetry item to be tracked, excluding the 'type' property. The type will default to `TelemetryType.Event`.
