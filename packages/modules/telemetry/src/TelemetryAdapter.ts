@@ -12,8 +12,12 @@ import type { TelemetryItem } from './types.js';
  * @returns A promise that resolves when initialization is complete.
  */
 export interface ITelemetryAdapter {
+  /** Skip relayed records already handled by a child's explicitly configured adapters. */
+  readonly fallback?: boolean;
   processItem(item: TelemetryItem): void;
   initialize(): Promise<void>;
+  /** Flushes pending telemetry and releases adapter resources when supported. */
+  shutdown?(): Promise<void>;
 }
 
 /**

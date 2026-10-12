@@ -55,6 +55,15 @@ export const module = {
     });
     return provider;
   },
+  /**
+   * Joins exporter shutdown before the framework completes module disposal.
+   * @param args - Module disposal context.
+   * @param args.instance - Telemetry provider whose subscriptions and exporters must be released.
+   * @returns Resolves after the provider finishes disposal.
+   */
+  dispose: async ({ instance }: { instance: ITelemetryProvider }): Promise<void> => {
+    await instance.dispose?.();
+  },
 } satisfies TelemetryModule;
 
 export default module;

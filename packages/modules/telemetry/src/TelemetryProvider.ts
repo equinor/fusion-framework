@@ -58,8 +58,10 @@ export class TelemetryProvider
   #items: Subject<TelemetryItem> = new Subject();
 
   #initialized = false;
+  #disposal?: Promise<void>;
 
   #adapters: Record<string, ITelemetryAdapter> = {};
+  #handledByChild = new WeakSet<TelemetryItem>();
   #filters?: {
     adapter?: (item: TelemetryItem) => boolean;
     relay?: (item: TelemetryItem) => boolean;
@@ -170,6 +172,53 @@ export class TelemetryProvider
   }
 
   /**
+   * Stops telemetry subscriptions and waits for every adapter to flush and shut down.
+   *
+   * Repeated calls share the same completion promise so exporters are shut down only once.
+   * The telemetry module awaits this promise during framework module disposal.
+   *
+   * @returns Resolves after all adapter shutdowns settle.
+   * @throws {AggregateError} When any adapter fails to shut down; all adapters are still attempted.
+   * @example
+   * ```ts
+   * await provider.dispose();
+   * ```
+   */
+  public override dispose(): Promise<void> {
+    // Direct disposal and module disposal must join the same pending shutdown.
+    if (this.#disposal) {
+      return this.#disposal;
+    }
+    super.dispose();
+    // Defer adapter callbacks until the shared promise is assigned, including reentrant disposal.
+    this.#disposal = Promise.resolve().then(async () => {
+      // Shut down all exporters even when one rejects or throws synchronously.
+      const results = await Promise.allSettled(
+        Object.entries(this.#adapters).map(async ([identifier, adapter]) => {
+          try {
+            await adapter.shutdown?.();
+          } catch (cause) {
+            throw new Error(`Failed to shut down telemetry adapter "${identifier}"`, { cause });
+          }
+        }),
+      );
+      const errors: unknown[] = [];
+      // Retain each failure for the module lifecycle's structured disposal error event.
+      for (const result of results) {
+        // Successful shutdowns must not obscure another exporter's failure.
+        if (result.status === 'rejected') {
+          errors.push(result.reason);
+        }
+      }
+      // Reject only after all exporters have had a chance to release their resources.
+      if (errors.length) {
+        throw new AggregateError(errors, 'Failed to shut down telemetry adapters');
+      }
+    });
+    return this.#disposal;
+  }
+
+  /**
    * Initializes all telemetry adapters that support async initialization.
    * Uses Promise.allSettled to ensure all adapters attempt initialization,
    * with individual error reporting for any failures.
@@ -226,6 +275,11 @@ export class TelemetryProvider
 
       // Iterate through all registered adapters
       for (const [identifier, adapter] of Object.entries(this.#adapters)) {
+        // Explicit child exporters take precedence over inherited development exporters.
+        if (adapter.fallback && this.#handledByChild.has(item)) {
+          // Keep application-owned records out of parent fallback exporters.
+          continue;
+        }
         try {
           // Let the adapter process the telemetry item
           Promise.resolve(adapter.processItem(item));
@@ -259,7 +313,16 @@ export class TelemetryProvider
       if (relayFilter && !relayFilter(item)) {
         return;
       }
-      target.track(item);
+      // Older/custom providers retain the original track-only relay contract.
+      if (target.trackRelayed) {
+        // Carry exporter ownership across intermediate providers without changing record metadata.
+        const hasAdapters =
+          this.#handledByChild.has(item) ||
+          Object.values(this.#adapters).some((adapter) => !adapter.fallback);
+        target.trackRelayed(item, hasAdapters);
+      } else {
+        target.track(item);
+      }
     });
   }
 
@@ -321,15 +384,29 @@ export class TelemetryProvider
   }
 
   /**
+   * Tracks an already validated child record, suppressing fallback exporters when appropriate.
+   *
+   * @param item - Record emitted by a child telemetry provider.
+   * @param hasAdapters - Whether an explicit child adapter has already handled this record.
+   */
+  public trackRelayed(item: TelemetryItem, hasAdapters: boolean): void {
+    this._track(item, hasAdapters);
+  }
+
+  /**
    * Tracks a telemetry item by merging the default scope with the item's scope (if provided),
    * ensuring that all telemetry items have the correct scope context. The merged item is then
    * emitted to downstream handlers.
    *
    * @param item - The telemetry item to be tracked, conforming to the input schema of `TelemetryItemSchema`.
+   * @param handledByChild - Whether fallback adapters should skip this relayed item.
    *
    * @protected
    */
-  protected async _track(item: z.input<typeof TelemetryItemSchema>): Promise<void> {
+  protected async _track(
+    item: z.input<typeof TelemetryItemSchema>,
+    handledByChild = false,
+  ): Promise<void> {
     const mergedItem = mergeTelemetryItem(item, {
       scope: this.#defaultScope,
     });
@@ -340,10 +417,18 @@ export class TelemetryProvider
         modules: this.#modules,
         item: mergedItem,
       }).subscribe((nextItem) => {
+        // Async metadata resolution creates new objects; retain ownership on the emitted record.
+        if (handledByChild) {
+          this.#handledByChild.add(nextItem);
+        }
         // Emit the item after applying metadata
         this.#items.next(nextItem);
       });
     } else {
+      // Providers without metadata still need the same fallback precedence.
+      if (handledByChild) {
+        this.#handledByChild.add(mergedItem);
+      }
       // If no metadata extractor is provided or item is TelemetryMetadataError, emit directly
       this.#items.next(mergedItem);
     }

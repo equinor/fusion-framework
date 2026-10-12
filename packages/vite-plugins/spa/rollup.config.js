@@ -15,6 +15,6 @@ export default [
       sourcemap: true,
       strict: false,
     },
-    plugins: [resolve({ preferBuiltins: true }), commonjs()],
+    plugins: [resolve({ browser: true, preferBuiltins: false }), commonjs()],
   },
 ];

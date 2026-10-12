@@ -37,6 +37,16 @@ import type { ITelemetryAdapter } from './TelemetryAdapter.js';
 export interface ITelemetryProvider {
   items: Observable<TelemetryItem>;
   /**
+   * Releases provider resources and awaits pending exports when supported.
+   *
+   * Optional to preserve compatibility with custom providers without owned resources.
+   * The telemetry module awaits this hook during framework disposal.
+   *
+   * @returns Completion of provider disposal, or void for synchronous providers.
+   */
+  dispose?(): void | Promise<void>;
+
+  /**
    * Track a telemetry event.
    *
    * @param item - The telemetry item to be tracked. This typically includes event name, type, level, scope, and any associated data.
@@ -81,6 +91,14 @@ export interface ITelemetryProvider {
    * });
    */
   track<T extends TelemetryItem>(item: T): void;
+
+  /**
+   * Receives a validated child record while preserving explicit exporter precedence.
+   *
+   * @param item - Record emitted by the child provider.
+   * @param hasAdapters - Whether the child already handles the record with non-fallback adapters.
+   */
+  trackRelayed?(item: TelemetryItem, hasAdapters: boolean): void;
 
   /**
    * Track a telemetry event with a specific type.
