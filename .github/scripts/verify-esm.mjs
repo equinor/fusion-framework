@@ -58,13 +58,19 @@ const fatalRuntimeError =
 
 /**
  * Export entries that fail only because a third-party dependency publishes invalid ESM.
- * Each entry names the upstream package so the exception can be removed once it is fixed.
- * Failures here are reported as warnings instead of errors.
+ * Each entry names the upstream package so the exception can be removed once it is fixed,
+ * and matches only that specific failure: any other error from the same entry stays fatal.
+ * Matching failures are reported as warnings instead of errors.
  */
 const upstreamFailures = new Map([
   [
     '@equinor/fusion-framework-react-components-people-provider',
-    '@equinor/fusion-wc-person@3.5.6 uses directory imports in its published ESM (lib/index.js)',
+    {
+      reason:
+        '@equinor/fusion-wc-person@3.5.6 uses directory imports in its published ESM (lib/index.js)',
+      match:
+        /ERR_UNSUPPORTED_DIR_IMPORT[^\n]*imported from [^\n]*\/@equinor\/fusion-wc-person\/lib\//,
+    },
   ],
 ]);
 
@@ -119,7 +125,8 @@ function exportSpecifiers(manifest) {
  *
  * @param {string} packageDir - Directory to resolve from (enables package self-reference).
  * @param {string} specifier - Bare specifier to import.
- * @returns {Promise<{ specifier: string, error?: string, fatal: boolean }>} Import outcome.
+ * @returns {Promise<{ specifier: string, error?: string, output?: string, fatal: boolean }>}
+ *   Import outcome, with the full Node output for matching known upstream failures.
  */
 async function importInNode(packageDir, specifier) {
   try {
@@ -129,11 +136,16 @@ async function importInNode(packageDir, specifier) {
       { cwd: packageDir, timeout: 60_000 },
     );
     // Node reports typeless-package reparsing as a warning, not an error; treat it as a failure.
-    return { specifier, error: stderr.trim() || undefined, fatal: fatalRuntimeError.test(stderr) };
+    return {
+      specifier,
+      error: stderr.trim() || undefined,
+      output: stderr,
+      fatal: fatalRuntimeError.test(stderr),
+    };
   } catch (error) {
     const output = `${error.stderr ?? ''}${error.message}`;
     const firstLine = output.split('\n').find((line) => /Error|ERR_/.test(line)) ?? output;
-    return { specifier, error: firstLine.trim(), fatal: fatalRuntimeError.test(output) };
+    return { specifier, error: firstLine.trim(), output, fatal: fatalRuntimeError.test(output) };
   }
 }
 
@@ -199,12 +211,12 @@ if (runtime) {
   const outcomes = await runPooled(runtimeTasks, availableParallelism());
   // Resolution failures break consumers; other errors (for example browser globals) are
   // expected for front-end packages imported under Node and are reported only.
-  for (const { specifier, error, fatal } of outcomes) {
+  for (const { specifier, error, output, fatal } of outcomes) {
     if (!error) continue;
     const upstream = upstreamFailures.get(specifier);
-    // Known upstream breakage stays visible as a warning so it is not forgotten.
-    if (fatal && upstream) {
-      warnings.push(`${specifier}: upstream ${upstream}`);
+    // Only the documented upstream failure is downgraded; anything else in the entry stays fatal.
+    if (fatal && upstream?.match.test(output ?? '')) {
+      warnings.push(`${specifier}: upstream ${upstream.reason}`);
       continue;
     }
     (fatal ? problems : warnings).push(`${specifier}: ${error.split('\n')[0]}`);
