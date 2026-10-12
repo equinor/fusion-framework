@@ -5,9 +5,9 @@ import type {
   RequiredAccessRoleClaimableAssignment,
   RequiredAccessRoleStatus,
 } from '@equinor/fusion-framework-module-roles';
-import styled from 'styled-components';
+import { styled } from 'styled-components';
 
-import { RoleClaimDialog } from '../claim/RoleClaimDialog';
+import { RoleClaimDialog } from '../claim/RoleClaimDialog.js';
 
 const Styled = {
   ClaimOptions: styled.div`

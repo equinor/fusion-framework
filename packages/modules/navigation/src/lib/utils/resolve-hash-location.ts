@@ -1,6 +1,6 @@
-import type { Location } from '../types';
-import { resolvePath } from './resolve-path';
-import { resolveWindowLocation } from './resolve-window-location';
+import type { Location } from '../types.js';
+import { resolvePath } from './resolve-path.js';
+import { resolveWindowLocation } from './resolve-window-location.js';
 
 const resolveState = (target?: { state: unknown }): { state: unknown; key: string } => {
   const { value, key = 'unknown' } =

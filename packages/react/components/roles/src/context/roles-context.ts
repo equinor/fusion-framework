@@ -11,14 +11,14 @@ export type {
   ClaimableRoleAssignmentDeactivationResult,
   ConsolidatedClaimableRoleAssignments,
   ConsolidatedRoleAssignments,
-} from '../state/roles-state';
+} from '../state/roles-state.js';
 import type {
   ActiveAccessRoleAssignments,
   ClaimableRoleAssignmentActivationResult,
   ClaimableRoleAssignmentDeactivationResult,
   ConsolidatedClaimableRoleAssignments,
   ConsolidatedRoleAssignments,
-} from '../state/roles-state';
+} from '../state/roles-state.js';
 
 /** Provider-scoped collection snapshots and stable actions shared by the public role hooks. */
 export interface RolesContextValue {

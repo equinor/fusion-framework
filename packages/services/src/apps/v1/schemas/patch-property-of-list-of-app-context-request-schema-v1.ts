@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { AppContextRequestSchemaV1 } from './app-context-request-schema-v1';
+import { AppContextRequestSchemaV1 } from './app-context-request-schema-v1.js';
 
 /**
  * Zod schema for the `PatchPropertyOfListOfAppContextRequest` model published by the Fusion Apps

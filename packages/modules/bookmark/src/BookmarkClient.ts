@@ -23,10 +23,16 @@ import type {
   BookmarksFilter,
   BookmarkNew,
   BookmarkUpdate,
-} from './BookmarkClient.interface';
+} from './BookmarkClient.interface.js';
 
-import type { Bookmark, BookmarkData, BookmarkWithoutData, Bookmarks, BookmarkUser } from './types';
-import { bookmarkWithDataSchema } from './bookmark.schemas';
+import type {
+  Bookmark,
+  BookmarkData,
+  BookmarkWithoutData,
+  Bookmarks,
+  BookmarkUser,
+} from './types.js';
+import { bookmarkWithDataSchema } from './bookmark.schemas.js';
 import type { z } from 'zod';
 
 // Define the schema for the API response entity representing a bookmark

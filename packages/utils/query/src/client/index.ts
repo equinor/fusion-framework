@@ -1,9 +1,9 @@
-export { Actions as QueryClientActions } from './actions';
+export { Actions as QueryClientActions } from './actions.js';
 
-export { QueryClientError } from './QueryClientError';
+export { QueryClientError } from './QueryClientError.js';
 
-export { default, QueryClient, QueryClientOptions, QueryClientCtorOptions } from './QueryClient';
+export { default, QueryClient, QueryClientOptions, QueryClientCtorOptions } from './QueryClient.js';
 
-export { QueryClientEvent } from './QueryClientEvent';
+export { QueryClientEvent } from './QueryClientEvent.js';
 
-export * from './types';
+export * from './types.js';

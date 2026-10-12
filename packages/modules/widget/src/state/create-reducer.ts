@@ -9,8 +9,8 @@ import { enableMapSet } from 'immer';
 
 enableMapSet();
 
-import { type Actions, actions } from './actions';
-import type { WidgetStateInitial, WidgetState } from '../types';
+import { type Actions, actions } from './actions.js';
+import type { WidgetStateInitial, WidgetState } from '../types.js';
 
 /**
  * Creates an Immer-powered reducer for the widget state machine.

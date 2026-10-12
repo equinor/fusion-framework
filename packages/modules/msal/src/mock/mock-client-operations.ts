@@ -1,5 +1,5 @@
-import type { MsalMockClient } from './MsalMockClient';
-import type { MsalMockTokenAcquirer } from './types';
+import type { MsalMockClient } from './MsalMockClient.js';
+import type { MsalMockTokenAcquirer } from './types.js';
 
 interface MockClientOperations {
   setAcquireToken(acquireToken: MsalMockTokenAcquirer): void;

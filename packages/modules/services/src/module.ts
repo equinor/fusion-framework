@@ -9,10 +9,10 @@ import type {
   ServiceDiscoveryProvider,
 } from '@equinor/fusion-framework-module-service-discovery';
 
-import { type IApiConfigurator, ApiConfigurator } from './configurator';
-import { type IApiProvider, ApiProvider } from './provider';
+import { type IApiConfigurator, ApiConfigurator } from './configurator.js';
+import { type IApiProvider, ApiProvider } from './provider.js';
 
-import type { ApiClientFactory } from './types';
+import type { ApiClientFactory } from './types.js';
 
 /** String literal type for the services module registration key. */
 export type ServicesModuleKey = 'services';

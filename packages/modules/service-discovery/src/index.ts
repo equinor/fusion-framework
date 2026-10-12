@@ -18,14 +18,14 @@
  * @module
  */
 
-export * from './types';
-export { ServiceDiscoveryConfigurator } from './configurator';
-export type { ServiceDiscoveryConfig } from './configurator';
-export { IServiceDiscoveryProvider, ServiceDiscoveryProvider } from './provider';
+export * from './types.js';
+export { ServiceDiscoveryConfigurator } from './configurator.js';
+export type { ServiceDiscoveryConfig } from './configurator.js';
+export { IServiceDiscoveryProvider, ServiceDiscoveryProvider } from './provider.js';
 export {
   default,
   ServiceDiscoveryModule,
   configureServiceDiscovery,
   enableServiceDiscovery,
-} from './module';
-export type { IServiceDiscoveryClient } from './client';
+} from './module.js';
+export type { IServiceDiscoveryClient } from './client.js';

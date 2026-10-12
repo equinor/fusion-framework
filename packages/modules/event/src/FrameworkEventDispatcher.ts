@@ -1,4 +1,4 @@
-import type { IFrameworkEvent } from './FrameworkEvent';
+import type { IFrameworkEvent } from './FrameworkEvent.js';
 
 /**
  * Callback invoked when a framework event is dispatched or bubbled.

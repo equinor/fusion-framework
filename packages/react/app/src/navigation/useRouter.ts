@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { useNavigationModule } from './useNavigationModule';
+import { useNavigationModule } from './useNavigationModule.js';
 import type { INavigationProvider } from '@equinor/fusion-framework-module-navigation';
 
 /**

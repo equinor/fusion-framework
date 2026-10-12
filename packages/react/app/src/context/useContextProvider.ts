@@ -1,5 +1,5 @@
 import type { ContextModule } from '@equinor/fusion-framework-react-module-context';
-import { useAppModule } from '../useAppModule';
+import { useAppModule } from '../useAppModule.js';
 
 /**
  * React hook that resolves the application-scoped context module provider.

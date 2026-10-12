@@ -1,5 +1,5 @@
-import type { ApiResolved } from '../api-models';
-import type { ClientMethod } from '../../types';
+import type { ApiResolved } from '../api-models.js';
+import type { ClientMethod } from '../../types.js';
 
 /** Response type for the people resolve endpoint. */
 export type ApiResponse = ApiResolved;

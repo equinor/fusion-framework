@@ -1,6 +1,6 @@
-import { ApiVersion } from '../static';
-import type { ApiPerson_v4, ApiPersonExpandProps_v4 } from '../api-models.v4';
-import type { ClientMethod } from '../../types';
+import { ApiVersion } from '../static.js';
+import type { ApiPerson_v4, ApiPersonExpandProps_v4 } from '../api-models.v4.js';
+import type { ClientMethod } from '../../types.js';
 
 /** API versions that support the person-details endpoint. */
 export type SupportedApiVersion = Extract<keyof typeof ApiVersion, 'v4'>;

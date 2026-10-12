@@ -21,10 +21,10 @@
  *
  * @packageDocumentation
  */
-export { MsalMockClient } from './MsalMockClient';
-export type { MsalMockTokenAcquirer, MsalMockTokenRequest } from './types';
-export { createMsalMockClient } from './create-msal-mock-client';
-export { MsalMockConfigurator } from './MsalMockConfigurator';
-export { enableMsalMock, msalMockModule, type AuthConfigMockFn } from './module';
-export { createMockToken, type MockTokenClaims } from './create-mock-token';
-export { decodeJwtSegment } from './decode-jwt-segment';
+export { MsalMockClient } from './MsalMockClient.js';
+export type { MsalMockTokenAcquirer, MsalMockTokenRequest } from './types.js';
+export { createMsalMockClient } from './create-msal-mock-client.js';
+export { MsalMockConfigurator } from './MsalMockConfigurator.js';
+export { enableMsalMock, msalMockModule, type AuthConfigMockFn } from './module.js';
+export { createMockToken, type MockTokenClaims } from './create-mock-token.js';
+export { decodeJwtSegment } from './decode-jwt-segment.js';

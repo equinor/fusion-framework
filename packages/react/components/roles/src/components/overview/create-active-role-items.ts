@@ -1,4 +1,4 @@
-import type { ActiveAccessRoleAssignments } from '../../state/roles-state';
+import type { ActiveAccessRoleAssignments } from '../../state/roles-state.js';
 
 /**
  * Active access-role assignment paired with a render key because the service does not expose an

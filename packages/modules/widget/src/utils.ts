@@ -1,4 +1,4 @@
-import type { GetWidgetParameters, IClient, WidgetEndpointBuilder } from './types';
+import type { GetWidgetParameters, IClient, WidgetEndpointBuilder } from './types.js';
 import type { IHttpClient } from '@equinor/fusion-framework-module-http';
 
 /**

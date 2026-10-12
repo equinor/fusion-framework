@@ -4,13 +4,13 @@ import type {
   ModulesInstanceType,
 } from '@equinor/fusion-framework-module';
 
-import { AgGridConfigurator } from './AgGridConfigurator';
-import { defaultModules } from './default-modules';
-import { type IAgGridProvider, AgGridProvider } from './AgGridProvider';
+import { AgGridConfigurator } from './AgGridConfigurator.js';
+import { defaultModules } from './default-modules.js';
+import { type IAgGridProvider, AgGridProvider } from './AgGridProvider.js';
 
-import type { IAgGridConfigurator } from './AgGridConfigurator.interface';
+import type { IAgGridConfigurator } from './AgGridConfigurator.interface.js';
 
-import { createThemeFromTheme, fusionTheme } from './themes';
+import { createThemeFromTheme, fusionTheme } from './themes.js';
 
 /**
  * Fusion module type definition for AG Grid.

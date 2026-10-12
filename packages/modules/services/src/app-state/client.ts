@@ -1,60 +1,60 @@
 import type { ClientRequestInit, IHttpClient } from '@equinor/fusion-framework-module-http/client';
-import type { ClientMethod } from '../types';
+import type { ClientMethod } from '../types.js';
 
 import {
   type ListMyAppsVersion,
   type ListMyAppsResponse,
   type ListMyAppsResult,
   listMyApps,
-} from './endpoints/me-apps.get';
+} from './endpoints/me-apps.get.js';
 import {
   type GetMyAppStateVersion,
   type GetMyAppStateArg,
   type GetMyAppStateResponse,
   type GetMyAppStateResult,
   getMyAppState,
-} from './endpoints/me-app.get';
+} from './endpoints/me-app.get.js';
 import {
   type WipeMyAppStateVersion,
   type WipeMyAppStateArg,
   type WipeMyAppStateResponse,
   type WipeMyAppStateResult,
   wipeMyAppState,
-} from './endpoints/me-app.delete';
+} from './endpoints/me-app.delete.js';
 import {
   type WipeAllMyStateVersion,
   type WipeAllMyStateResponse,
   type WipeAllMyStateResult,
   wipeAllMyState,
-} from './endpoints/me.delete';
+} from './endpoints/me.delete.js';
 import {
   type ListAppUsersVersion,
   type ListAppUsersArg,
   type ListAppUsersResponse,
   type ListAppUsersResult,
   listAppUsers,
-} from './endpoints/admin-app-users.get';
+} from './endpoints/admin-app-users.get.js';
 import {
   type GetUserAppStateVersion,
   type GetUserAppStateArg,
   type GetUserAppStateResponse,
   type GetUserAppStateResult,
   getUserAppState,
-} from './endpoints/admin-app-user.get';
+} from './endpoints/admin-app-user.get.js';
 import {
   type WipeUserAppStateVersion,
   type WipeUserAppStateArg,
   type WipeUserAppStateResponse,
   type WipeUserAppStateResult,
   wipeUserAppState,
-} from './endpoints/admin-app-user.delete';
+} from './endpoints/admin-app-user.delete.js';
 import {
   type WipeAllAppUsersStateVersion,
   type WipeAllAppUsersStateArg,
   type WipeAllAppUsersStateResponse,
   type WipeAllAppUsersStateResult,
   wipeAllAppUsersState,
-} from './endpoints/admin-app.delete';
+} from './endpoints/admin-app.delete.js';
 
 /**
  * Provides a client interface for interacting with the App State API.

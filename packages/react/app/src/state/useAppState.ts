@@ -12,7 +12,7 @@ import { map, skip } from 'rxjs/operators';
 
 import type { AllowedValue, StateModule } from '@equinor/fusion-framework-module-state';
 
-import useAppModule from '../useAppModule';
+import useAppModule from '../useAppModule.js';
 
 /**
  * Configuration options for the `useAppState` hook.

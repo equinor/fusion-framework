@@ -5,8 +5,8 @@ import {
   type MetadataExtractor,
 } from '@equinor/fusion-framework-module-telemetry';
 
-import type { AppConfigurator } from './AppConfigurator';
-import type { AppModulesInstance, AppEnv } from './types';
+import type { AppConfigurator } from './AppConfigurator.js';
+import type { AppModulesInstance, AppEnv } from './types.js';
 
 /**
  * Runs the telemetry wiring, the caller's configuration callback and module

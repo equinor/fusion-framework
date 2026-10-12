@@ -1,1 +1,1 @@
-export { HelpSideSheet } from './HelpSideSheet';
+export { HelpSideSheet } from './HelpSideSheet.js';

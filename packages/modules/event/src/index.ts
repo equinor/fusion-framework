@@ -10,7 +10,7 @@
  *
  * @packageDocumentation
  */
-export { FrameworkEvent } from './FrameworkEvent';
+export { FrameworkEvent } from './FrameworkEvent.js';
 export type {
   IFrameworkEvent,
   FrameworkEventDetail,
@@ -19,18 +19,18 @@ export type {
   FrameworkEventMap,
   FrameworkEventHandler,
   FrameworkEventInitType,
-} from './FrameworkEvent';
+} from './FrameworkEvent.js';
 
-import type { EventModuleConfig } from './EventModuleConfigurator';
+import type { EventModuleConfig } from './EventModuleConfigurator.js';
 
-export { EventModuleConfig, EventModuleConfigurator } from './EventModuleConfigurator';
+export { EventModuleConfig, EventModuleConfigurator } from './EventModuleConfigurator.js';
 
 /** @deprecated Since 6.1.0. Use {@link EventModuleConfig} instead. */
 export type IEventModuleConfigurator = EventModuleConfig;
 
-export { IEventModuleProvider, EventModuleProvider } from './EventModuleProvider';
-export { EventModule, moduleKey as eventModuleKey } from './module';
+export { IEventModuleProvider, EventModuleProvider } from './EventModuleProvider.js';
+export { EventModule, moduleKey as eventModuleKey } from './module.js';
 
-export { filterEvent } from './operators/filter-event';
+export { filterEvent } from './operators/filter-event.js';
 
-export { default } from './module';
+export { default } from './module.js';

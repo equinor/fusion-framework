@@ -6,7 +6,7 @@ import {
   jsonSelector,
 } from '@equinor/fusion-framework-module-http/selectors';
 
-import type { ExtractApiVersion } from './types';
+import type { ExtractApiVersion } from './types.js';
 
 /**
  * Resolves an API version string from a named key or raw version value.\n *\n * Looks up `version` as a key in `apiVersions` first; if not found,\n * searches the object values for a direct match. Throws when neither\n * lookup succeeds.\n *\n * @template TApiVersions - Record mapping version names to version strings.\n * @template TAllowedApiVersion - Allowed version constraint.\n * @template TVersion - The version string provided by the caller.\n * @param apiVersions - Map of version names to version strings.\n * @param version - Version key or raw version string to resolve.\n * @returns The resolved API version string.\n * @throws {Error} When the version is not found in `apiVersions`.\n *\n * @example\n * ```ts\n * enum ApiVersions { v1 = '1.0', v2 = '2.0' }\n * extractVersion(ApiVersions, 'v1'); // '1.0'\n * extractVersion(ApiVersions, '1.0'); // '1.0'\n * ```\n */

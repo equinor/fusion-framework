@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useDebounce, type UseDebounceOptions } from '@equinor/fusion-observable/react';
-import Query, { type QueryCtorOptions } from '../Query';
+import Query, { type QueryCtorOptions } from '../Query.js';
 
 /**
  * React hook that creates a debounced query, delaying execution until input stabilizes.

@@ -8,8 +8,8 @@
  */
 export { enableBookmark } from '@equinor/fusion-framework-app/enable-bookmark';
 
-export { useCurrentBookmark } from './useCurrentBookmark';
-export { useBookmark } from './useBookmark';
+export { useCurrentBookmark } from './useCurrentBookmark.js';
+export { useBookmark } from './useBookmark.js';
 
 export type {
   Bookmark,

@@ -1,5 +1,5 @@
 import { type ActionTypes, createAction } from '@equinor/fusion-observable';
-import type { IFeatureFlag } from './FeatureFlag';
+import type { IFeatureFlag } from './FeatureFlag.js';
 
 /**
  * Action creators for mutating the feature-flag state.

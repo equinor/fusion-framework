@@ -1,5 +1,5 @@
-import { useRolesContext } from '../context/useRolesContext';
-import type { ActiveAccessRoleAssignments } from '../state/roles-state';
+import { useRolesContext } from '../context/useRolesContext.js';
+import type { ActiveAccessRoleAssignments } from '../state/roles-state.js';
 
 /**
  * Reactive active access-role assignment state for the current Fusion app account.

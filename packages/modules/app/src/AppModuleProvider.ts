@@ -19,14 +19,14 @@ import type {
   AppSettings,
   ConfigEnvironment,
   CurrentApp,
-} from './types';
+} from './types.js';
 
-import { App, filterEmpty, type IApp } from './app/App';
-import type { AppModuleConfig } from './AppConfigurator';
-import type { AppBundleStateInitial } from './app/types';
-import type { IAppClient } from './AppClient';
+import { App, filterEmpty, type IApp } from './app/App.js';
+import type { AppModuleConfig } from './AppConfigurator.js';
+import type { AppBundleStateInitial } from './app/types.js';
+import type { IAppClient } from './AppClient.js';
 import { SemanticVersion } from '@equinor/fusion-framework-module';
-import { version } from './version';
+import { version } from './version.js';
 
 /**
  * Runtime provider for the app module.

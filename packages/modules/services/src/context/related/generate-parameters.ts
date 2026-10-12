@@ -1,10 +1,10 @@
 import type { ClientRequestInit, IHttpClient } from '@equinor/fusion-framework-module-http/client';
 
-import type { ApiVersion } from '..';
+import type { ApiVersion } from '../index.js';
 
-import { generateEndpoint } from './generate-endpoint';
+import { generateEndpoint } from './generate-endpoint.js';
 
-import type { RelatedContextArgs, ApiClientArguments } from './types';
+import type { RelatedContextArgs, ApiClientArguments } from './types.js';
 
 /** Function for generating parameter for querying context service  */
 export const generateParameters = <

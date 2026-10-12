@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { ApiScopeTypeSchemaV1 } from './api-scope-type-schema-v1';
+import { ApiScopeTypeSchemaV1 } from './api-scope-type-schema-v1.js';
 
 /** Zod schema for an access role returned for a specific system. */
 export const ApiAccessRoleSchemaV1 = z

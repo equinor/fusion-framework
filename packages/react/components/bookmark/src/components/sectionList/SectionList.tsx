@@ -1,17 +1,17 @@
 import { Icon } from '@equinor/eds-core-react';
-import type { useBookmarkGrouping } from '../../hooks';
-import { type MenuOption, Row } from '../row/Row';
-import { Section } from '../section/Section';
-import { SharedIcon } from '../shared/SharedIcon';
+import type { useBookmarkGrouping } from '../../hooks/index.js';
+import { type MenuOption, Row } from '../row/Row.js';
+import { Section } from '../section/Section.js';
+import { SharedIcon } from '../shared/SharedIcon.js';
 // TODO(#5094): export from `@equinor/fusion-framework-react-module-bookmark`
 import type { BookmarkWithoutData } from '@equinor/fusion-framework-module-bookmark';
 import { useCurrentUser } from '@equinor/fusion-framework-react/hooks';
 import { useCallback, useState } from 'react';
 import { delete_to_trash, share, edit, close, update } from '@equinor/eds-icons';
-import { filterEmptyGroups } from '../../utils/filter-empty-groups';
-import { sortByName } from '../../utils/sort-by-name';
-import { toHumanReadable } from '../../utils/to-human-readable';
-import { useBookmarkComponentContext } from '../BookmarkProvider';
+import { filterEmptyGroups } from '../../utils/filter-empty-groups.js';
+import { sortByName } from '../../utils/sort-by-name.js';
+import { toHumanReadable } from '../../utils/to-human-readable.js';
+import { useBookmarkComponentContext } from '../BookmarkProvider.js';
 import { from } from 'rxjs';
 
 Icon.add({

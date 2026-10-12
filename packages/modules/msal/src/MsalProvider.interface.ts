@@ -5,11 +5,11 @@ import type {
   LoginOptions,
   LoginResult,
   LogoutOptions,
-} from './MsalClient.interface';
+} from './MsalClient.interface.js';
 
-import type { IProxyProvider } from './MsalProxyProvider.interface';
+import type { IProxyProvider } from './MsalProxyProvider.interface.js';
 
-import type { AccountInfo, AuthenticationResult } from './types';
+import type { AccountInfo, AuthenticationResult } from './types.js';
 
 /**
  * Legacy token acquisition options maintaining backward compatibility.

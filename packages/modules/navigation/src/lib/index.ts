@@ -9,15 +9,15 @@
  */
 
 // History implementations
-export { BaseHistory } from './BaseHistory';
-export { BrowserHistory } from './BrowserHistory';
-export { MemoryHistory } from './MemoryHistory';
-export { ProxyHistory } from './ProxyHistory';
+export { BaseHistory } from './BaseHistory.js';
+export { BrowserHistory } from './BrowserHistory.js';
+export { MemoryHistory } from './MemoryHistory.js';
+export { ProxyHistory } from './ProxyHistory.js';
 
 // History stacks
-export { BrowserHistoryStack } from './BrowserHistoryStack';
-export { BrowserHistoryHashStack as HashHistoryStack } from './BrowserHistoryHashStack';
-export { MemoryHistoryStack } from './MemoryHistoryStack';
+export { BrowserHistoryStack } from './BrowserHistoryStack.js';
+export { BrowserHistoryHashStack as HashHistoryStack } from './BrowserHistoryHashStack.js';
+export { MemoryHistoryStack } from './MemoryHistoryStack.js';
 
 // Types
 export type {
@@ -30,4 +30,4 @@ export type {
   NavigationUpdate,
   Path,
   To,
-} from './types';
+} from './types.js';

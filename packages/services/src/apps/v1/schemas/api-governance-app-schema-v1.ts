@@ -1,12 +1,12 @@
 import { z } from 'zod';
-import { ApiBusinessOwnerOrgUnitSchemaV1 } from './api-business-owner-org-unit-schema-v1';
-import { ApiBusinessOwnerSchemaV1 } from './api-business-owner-schema-v1';
-import { ApiDataClassificationSchemaV1 } from './api-data-classification-schema-v1';
-import { ApiGovernanceConfirmationSchemaV1 } from './api-governance-confirmation-schema-v1';
-import { ApiGovernanceDocumentSchemaV1 } from './api-governance-document-schema-v1';
-import { ApiProjectCategorySchemaV1 } from './api-project-category-schema-v1';
-import { ApiProjectPhaseSchemaV1 } from './api-project-phase-schema-v1';
-import { ApiTechnologyProductSchemaV1 } from './api-technology-product-schema-v1';
+import { ApiBusinessOwnerOrgUnitSchemaV1 } from './api-business-owner-org-unit-schema-v1.js';
+import { ApiBusinessOwnerSchemaV1 } from './api-business-owner-schema-v1.js';
+import { ApiDataClassificationSchemaV1 } from './api-data-classification-schema-v1.js';
+import { ApiGovernanceConfirmationSchemaV1 } from './api-governance-confirmation-schema-v1.js';
+import { ApiGovernanceDocumentSchemaV1 } from './api-governance-document-schema-v1.js';
+import { ApiProjectCategorySchemaV1 } from './api-project-category-schema-v1.js';
+import { ApiProjectPhaseSchemaV1 } from './api-project-phase-schema-v1.js';
+import { ApiTechnologyProductSchemaV1 } from './api-technology-product-schema-v1.js';
 
 /**
  * Zod schema for the `ApiGovernanceApp` model published by the Fusion Apps API 1.0.

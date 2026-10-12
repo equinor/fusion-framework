@@ -1,4 +1,4 @@
-import { DEFAULT_ENV_PREFIX } from './static';
+import { DEFAULT_ENV_PREFIX } from './static.js';
 
 /**
  * Convert a nested JavaScript object into a flat record of environment variable entries.

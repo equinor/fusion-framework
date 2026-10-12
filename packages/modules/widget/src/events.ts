@@ -1,13 +1,13 @@
 import type { FrameworkEvent, FrameworkEventInit } from '@equinor/fusion-framework-module-event';
 
-import type { Widget } from './Widget';
+import type { Widget } from './Widget.js';
 
 import type {
   WidgetConfig,
   WidgetManifest,
   WidgetModulesInstance,
   WidgetScriptModule,
-} from './types';
+} from './types.js';
 
 /**
  * Base event-init shape for all widget lifecycle events.

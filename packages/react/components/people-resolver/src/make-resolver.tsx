@@ -1,7 +1,7 @@
 import { lazy } from 'react';
-import { PeopleResolverComponent } from './PeopleResolverComponent';
-import { PersonController, type PersonControllerOptions } from './PersonController';
-import { createResolver } from './create-resolver';
+import { PeopleResolverComponent } from './PeopleResolverComponent.js';
+import { PersonController, type PersonControllerOptions } from './PersonController.js';
+import { createResolver } from './create-resolver.js';
 import type { IApiProvider } from '@equinor/fusion-framework-module-services';
 
 export const makeResolver = (services: IApiProvider, options?: PersonControllerOptions) => {

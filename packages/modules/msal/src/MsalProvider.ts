@@ -9,9 +9,9 @@ import { TelemetryLevel } from '@equinor/fusion-framework-module-telemetry';
 
 import { BaseModuleProvider } from '@equinor/fusion-framework-module/provider';
 
-import type { MsalConfig } from './MsalConfigurator';
-import type { AcquireTokenOptionsLegacy, IMsalProvider } from './MsalProvider.interface';
-import { createProxyProvider } from './create-proxy-provider';
+import type { MsalConfig } from './MsalConfigurator.js';
+import type { AcquireTokenOptionsLegacy, IMsalProvider } from './MsalProvider.interface.js';
+import { createProxyProvider } from './create-proxy-provider.js';
 import type {
   AcquireTokenOptions,
   AcquireTokenResult,
@@ -19,12 +19,12 @@ import type {
   LoginOptions,
   LoginResult,
   LogoutOptions,
-} from './MsalClient.interface';
+} from './MsalClient.interface.js';
 
-import type { AccountInfo, AuthenticationResult } from './types';
-import { resolveVersion } from './versioning/resolve-version';
-import { version } from './version';
-import type { MsalModuleVersion } from './static';
+import type { AccountInfo, AuthenticationResult } from './types.js';
+import { resolveVersion } from './versioning/resolve-version.js';
+import { version } from './version.js';
+import type { MsalModuleVersion } from './static.js';
 
 export type { IMsalProvider };
 

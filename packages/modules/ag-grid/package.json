@@ -2,6 +2,7 @@
   "name": "@equinor/fusion-framework-module-ag-grid",
   "version": "37.1.2",
   "description": "Fusion module for using AG Grid",
+  "type": "module",
   "main": "dist/esm/index.js",
   "types": "dist/types/index.d.ts",
   "exports": {
@@ -34,6 +35,7 @@
     }
   },
   "scripts": {
+    "prebuild": "node ../../../.github/scripts/generate-versions.mjs",
     "build": "tsc -b",
     "prepack": "pnpm build"
   },

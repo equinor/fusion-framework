@@ -1,7 +1,7 @@
 import type { IModulesConfigurator } from '@equinor/fusion-framework-module';
 
-import { module } from './module';
-import type { WidgetModuleConfigBuilderCallback } from './WidgetModuleConfigurator';
+import { module } from './module.js';
+import type { WidgetModuleConfigBuilderCallback } from './WidgetModuleConfigurator.js';
 
 /**
  * Registers the widget module on a Fusion Framework configurator.

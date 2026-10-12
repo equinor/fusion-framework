@@ -1,4 +1,4 @@
-import useAppModule from '../useAppModule';
+import useAppModule from '../useAppModule.js';
 import type { INavigationProvider } from '@equinor/fusion-framework-module-navigation';
 
 /**

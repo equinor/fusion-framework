@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { ApiOwnerSchemaV1 } from './api-owner-schema-v1';
-import { ApiSimpleSystemSchemaV1 } from './api-simple-system-schema-v1';
+import { ApiOwnerSchemaV1 } from './api-owner-schema-v1.js';
+import { ApiSimpleSystemSchemaV1 } from './api-simple-system-schema-v1.js';
 
 /** Zod schema for a system returned by the Fusion Roles V2 API. */
 export const ApiSystemSchemaV1 = ApiSimpleSystemSchemaV1.and(

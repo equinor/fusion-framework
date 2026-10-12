@@ -1,7 +1,7 @@
 import { z } from 'zod';
-import { ODataExpandItemSchemaV1 } from './o-data-expand-item-schema-v1';
-import { ODataExpressionSchemaV1 } from './o-data-expression-schema-v1';
-import { ODataOrderByOptionSchemaV1 } from './o-data-order-by-option-schema-v1';
+import { ODataExpandItemSchemaV1 } from './o-data-expand-item-schema-v1.js';
+import { ODataExpressionSchemaV1 } from './o-data-expression-schema-v1.js';
+import { ODataOrderByOptionSchemaV1 } from './o-data-order-by-option-schema-v1.js';
 
 /**
  * Zod schema for the `ODataQueryParams` model published by the Fusion Apps API 1.0.

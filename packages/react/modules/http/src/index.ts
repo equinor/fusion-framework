@@ -18,4 +18,4 @@ export {
   HttpJsonResponseError,
 } from '@equinor/fusion-framework-module-http/errors';
 
-export { useHttpClient } from './useHttpClient';
+export { useHttpClient } from './useHttpClient.js';

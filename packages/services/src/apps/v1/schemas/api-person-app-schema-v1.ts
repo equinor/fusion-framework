@@ -1,11 +1,11 @@
 import { z } from 'zod';
-import { ApiAppAdminSchemaV1 } from './api-app-admin-schema-v1';
-import { ApiAppCategorySchemaV1 } from './api-app-category-schema-v1';
-import { ApiAppContextSchemaV1 } from './api-app-context-schema-v1';
-import { ApiAppOwnerSchemaV1 } from './api-app-owner-schema-v1';
-import { ApiAppVersionSchemaV1 } from './api-app-version-schema-v1';
-import { ApiAppVisualizationSchemaV1 } from './api-app-visualization-schema-v1';
-import { ApiDataClassificationSchemaV1 } from './api-data-classification-schema-v1';
+import { ApiAppAdminSchemaV1 } from './api-app-admin-schema-v1.js';
+import { ApiAppCategorySchemaV1 } from './api-app-category-schema-v1.js';
+import { ApiAppContextSchemaV1 } from './api-app-context-schema-v1.js';
+import { ApiAppOwnerSchemaV1 } from './api-app-owner-schema-v1.js';
+import { ApiAppVersionSchemaV1 } from './api-app-version-schema-v1.js';
+import { ApiAppVisualizationSchemaV1 } from './api-app-visualization-schema-v1.js';
+import { ApiDataClassificationSchemaV1 } from './api-data-classification-schema-v1.js';
 
 /**
  * Zod schema for the `ApiPersonApp` model published by the Fusion Apps API 1.0.

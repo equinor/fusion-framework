@@ -7,12 +7,12 @@ import type { EventModule } from '@equinor/fusion-framework-module-event';
 import type { ServicesModule } from '@equinor/fusion-framework-module-services';
 import type { AppModule } from '@equinor/fusion-framework-module-app';
 import type { ContextModule } from '@equinor/fusion-framework-module-context';
-import { BookmarkProvider } from './BookmarkProvider';
-import { BookmarkModuleConfigurator } from './BookmarkModuleConfigurator';
+import { BookmarkProvider } from './BookmarkProvider.js';
+import { BookmarkModuleConfigurator } from './BookmarkModuleConfigurator.js';
 import { ConsoleLogger, type ILogger } from '@equinor/fusion-log';
 import { lastValueFrom } from 'rxjs';
-import { version } from './version';
-import type { IBookmarkProvider } from './BookmarkProvider.interface';
+import { version } from './version.js';
+import type { IBookmarkProvider } from './BookmarkProvider.interface.js';
 
 /** String literal key used to register the bookmark module in the framework. */
 export type BookmarkModuleKey = 'bookmark';

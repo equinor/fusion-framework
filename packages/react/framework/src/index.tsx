@@ -14,10 +14,10 @@
 export type { Fusion } from '@equinor/fusion-framework';
 export { FusionConfigurator } from '@equinor/fusion-framework';
 
-export { createFrameworkProvider } from './create-framework-provider';
-export { FrameworkProvider } from './framework-provider';
+export { createFrameworkProvider } from './create-framework-provider.js';
+export { FrameworkProvider } from './framework-provider.js';
 
-export { useFramework } from './useFramework';
-export { useFrameworkModule } from './useFrameworkModule';
+export { useFramework } from './useFramework.js';
+export { useFrameworkModule } from './useFrameworkModule.js';
 
-export { default, Framework } from './Framework';
+export { default, Framework } from './Framework.js';

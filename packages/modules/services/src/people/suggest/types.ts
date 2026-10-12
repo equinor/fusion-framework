@@ -1,5 +1,5 @@
-import type { ApiSuggestions } from '../api-models';
-import type { ClientMethod } from '../../types';
+import type { ApiSuggestions } from '../api-models.js';
+import type { ClientMethod } from '../../types.js';
 
 /** Response type for the people suggest endpoint. */
 export type ApiResponse = ApiSuggestions;

@@ -1,6 +1,6 @@
 import type { IModulesConfigurator } from '@equinor/fusion-framework-module';
-import { module } from './module';
-import type { AppConfigurator } from './AppConfigurator';
+import { module } from './module.js';
+import type { AppConfigurator } from './AppConfigurator.js';
 
 /**
  * Registers the app module with a framework configurator.

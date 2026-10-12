@@ -1,8 +1,8 @@
-import type { IServiceDiscoveryClient } from '../client';
-import type { Service } from '../types';
+import type { IServiceDiscoveryClient } from '../client.js';
+import type { Service } from '../types.js';
 
-import { createMockService, type MockService } from './create-mock-service';
-import { defaultServiceDiscoveryMockServices } from './default-service-discovery-mock-services';
+import { createMockService, type MockService } from './create-mock-service.js';
+import { defaultServiceDiscoveryMockServices } from './default-service-discovery-mock-services.js';
 
 /**
  * The registry a mock service discovery client serves from.

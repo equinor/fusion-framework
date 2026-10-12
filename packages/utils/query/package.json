@@ -2,6 +2,7 @@
   "name": "@equinor/fusion-query",
   "version": "7.0.5",
   "description": "Reactive data fetching and caching library with observable streams and comprehensive event system",
+  "type": "module",
   "keywords": [
     "observable",
     "react",
@@ -65,6 +66,7 @@
     "directory": "packages/utils/query"
   },
   "scripts": {
+    "prebuild": "node ../../../.github/scripts/generate-versions.mjs",
     "build": "tsc -b",
     "prepack": "pnpm build",
     "test": "vitest"

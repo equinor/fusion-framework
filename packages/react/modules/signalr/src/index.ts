@@ -9,8 +9,8 @@
  *
  * @packageDocumentation
  */
-export { useSignalRProvider as useProviderTopic } from './useSignalRProvider';
-export { useTopic } from './useTopic';
+export { useSignalRProvider as useProviderTopic } from './useSignalRProvider.js';
+export { useTopic } from './useTopic.js';
 
 export { Topic, enableSignalR } from '@equinor/fusion-framework-module-signalr';
 

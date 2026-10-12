@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import { styled } from 'styled-components';
 
 /**
  * Shared styled components used by feature toggle lists in the person side sheet.

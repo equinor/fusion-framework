@@ -1,7 +1,7 @@
 import type { RelatedContextResponse } from '@equinor/fusion-framework-module-services/context/related';
 
-import { parseContextItem } from '../utils/parse-context-item';
-import type { ContextItem } from '../types';
+import { parseContextItem } from '../utils/parse-context-item.js';
+import type { ContextItem } from '../types.js';
 
 /**
  * Parse the response from the RelatedContext API into an array of context items.

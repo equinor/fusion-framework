@@ -9,10 +9,10 @@ import type { AppModule } from '@equinor/fusion-framework-module-app';
 import type { BookmarkUpdate } from '@equinor/fusion-framework-module-bookmark';
 
 import { Button, Checkbox, Dialog, Input, Label, Textarea } from '@equinor/eds-core-react';
-import styled from 'styled-components';
+import { styled } from 'styled-components';
 
-import { useBookmarkComponentContext } from '../BookmarkProvider';
-import { AppNameField } from './AppNameField';
+import { useBookmarkComponentContext } from '../BookmarkProvider.js';
+import { AppNameField } from './AppNameField.js';
 
 const Styled = {
   Dialog: styled(Dialog)`

@@ -35,6 +35,7 @@
     "directory": "packages/linting/lsp"
   },
   "scripts": {
+    "prebuild": "node ../../../.github/scripts/generate-versions.mjs",
     "build": "tsc -b && pnpm bundle",
     "bundle": "esbuild src/server.ts --bundle --platform=node --format=esm --banner:js=\"import{createRequire as __cjsRequire}from'module';const require=__cjsRequire(import.meta.url);\" --outfile=dist/esm/server.mjs",
     "prepack": "pnpm build"

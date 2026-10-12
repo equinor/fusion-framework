@@ -26,6 +26,7 @@
     }
   },
   "scripts": {
+    "prebuild": "node ../../../.github/scripts/generate-versions.mjs",
     "build": "tsc -b",
     "build:types": "tsc -b",
     "prepack": "pnpm build",

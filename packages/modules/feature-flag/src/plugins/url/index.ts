@@ -1,2 +1,2 @@
-export { default, createUrlPlugin } from './create-url-plugin';
-export * from './types';
+export { default, createUrlPlugin } from './create-url-plugin.js';
+export * from './types.js';

@@ -2,9 +2,9 @@ import { Divider, Icon, Button } from '@equinor/eds-core-react';
 import { bandage, category, work_outline, security, verified_user } from '@equinor/eds-icons';
 Icon.add({ bandage, category, work_outline, security, verified_user });
 
-import type { SheetContentProps } from './types';
+import type { SheetContentProps } from './types.js';
 
-import styled from 'styled-components';
+import { styled } from 'styled-components';
 
 const BtnList = styled.ul`
     list-style: none;

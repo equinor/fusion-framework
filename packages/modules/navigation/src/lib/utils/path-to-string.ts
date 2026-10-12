@@ -1,5 +1,5 @@
-import type { Path } from '../types';
-import { encodeTrailingWhitespace } from './encode-trailing-whitespace';
+import type { Path } from '../types.js';
+import { encodeTrailingWhitespace } from './encode-trailing-whitespace.js';
 
 /**
  * Converts a Partial<Path> object to a path string.

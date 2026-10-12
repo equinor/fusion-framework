@@ -1,8 +1,8 @@
 import { castDraft, createReducer as makeReducer } from '@equinor/fusion-observable';
 
-import { type Actions, actions } from './actions';
+import { type Actions, actions } from './actions.js';
 
-import type { QueryClientRequest, QueryClientState } from './types';
+import type { QueryClientRequest, QueryClientState } from './types.js';
 
 /**
  * Creates a reducer function for managing the state of query client operations.

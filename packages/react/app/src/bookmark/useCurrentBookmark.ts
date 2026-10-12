@@ -8,7 +8,7 @@ import {
 } from '@equinor/fusion-framework-react-module-bookmark';
 
 import { useFrameworkModule } from '@equinor/fusion-framework-react';
-import useAppModules from '../useAppModules';
+import useAppModules from '../useAppModules.js';
 import { useCurrentApp } from '@equinor/fusion-framework-react/app';
 
 /**

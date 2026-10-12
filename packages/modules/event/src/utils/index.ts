@@ -4,6 +4,6 @@
  * @module @equinor/fusion-framework-module-event/utils
  */
 
-export type { EventMatcher } from './apply-event-matcher';
-export { waitForEvent, type WaitForEventOptions } from './wait-for-event';
-export { watchEvents, type WatchEventsHandle } from './watch-events';
+export type { EventMatcher } from './apply-event-matcher.js';
+export { waitForEvent, type WaitForEventOptions } from './wait-for-event.js';
+export { watchEvents, type WatchEventsHandle } from './watch-events.js';

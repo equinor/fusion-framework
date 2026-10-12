@@ -1,9 +1,9 @@
 import { Snackbar } from '@equinor/eds-core-react';
 import type { FrameworkEvent, FrameworkEventInit } from '@equinor/fusion-framework-module-event';
 import { type PropsWithChildren, createContext, useCallback, useContext, useState } from 'react';
-import { CreateBookmarkModal } from './create-bookmark';
-import { EditBookmarkModal } from './edit-bookmark';
-import { ImportBookmarkModal } from './import-bookmark';
+import { CreateBookmarkModal } from './create-bookmark/index.js';
+import { EditBookmarkModal } from './edit-bookmark/index.js';
+import { ImportBookmarkModal } from './import-bookmark/index.js';
 import type { IBookmarkProvider } from '@equinor/fusion-framework-module-bookmark';
 
 type BookmarkApp = {

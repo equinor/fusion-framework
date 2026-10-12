@@ -1,7 +1,7 @@
 import type { FusionModulesInstance } from '@equinor/fusion-framework';
 import type { AppModule } from '@equinor/fusion-framework-module-app';
 
-import { useFramework } from '../useFramework';
+import { useFramework } from '../useFramework.js';
 
 /**
  * React hook that returns the App module provider from the framework.

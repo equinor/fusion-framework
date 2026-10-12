@@ -3,7 +3,7 @@ import { switchMap, EMPTY, of, combineLatestWith, distinctUntilChanged } from 'r
 import type { AppModulesInstance } from '@equinor/fusion-framework-module-app';
 import type { ContextModule } from '@equinor/fusion-framework-module-context';
 
-import { contextStateChanged, type ReconcilerSourceFactory } from './types';
+import { contextStateChanged, type ReconcilerSourceFactory } from './types.js';
 
 /**
  * App-first source factory — app switches lead, context follows.

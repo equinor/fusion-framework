@@ -1,10 +1,10 @@
 import type { ClientRequestInit, IHttpClient } from '@equinor/fusion-framework-module-http/client';
 
-import type { ApiVersion } from '..';
+import type { ApiVersion } from '../index.js';
 
-import { generateEndpoint } from './generate-endpoint';
+import { generateEndpoint } from './generate-endpoint.js';
 
-import type { ApiClientArguments, GetContextArgs } from './types';
+import type { ApiClientArguments, GetContextArgs } from './types.js';
 
 /** function for creating http client arguments  */
 export const generateParameters = <

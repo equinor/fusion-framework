@@ -7,11 +7,11 @@
 import type {
   FilterAllowedApiVersions as FilterAllowApiVersionsBase,
   ExtractApiVersion as ExtractApiVersionBase,
-} from '../types';
+} from '../types.js';
 
-import type { ApiVersion } from './static';
+import type { ApiVersion } from './static.js';
 
-export { ClientMethodType, ClientMethod, ApiClientArguments } from '../types';
+export { ClientMethodType, ClientMethod, ApiClientArguments } from '../types.js';
 
 /**
  * Union of allowed version keys and values for the App State API.

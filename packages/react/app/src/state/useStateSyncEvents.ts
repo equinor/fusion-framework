@@ -5,7 +5,7 @@ import { filter } from 'rxjs/operators';
 import type { EventModule } from '@equinor/fusion-framework-module-event';
 import { StateSyncEvent, type StateSyncEventType } from '@equinor/fusion-framework-module-state';
 
-import useAppModule from '../useAppModule';
+import useAppModule from '../useAppModule.js';
 
 /**
  * Subscribes to the app's `state` module sync events (`onStateSync.status`,

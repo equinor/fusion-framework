@@ -1,4 +1,4 @@
-export { HttpClient } from './client';
-export { HttpClientMsal } from './client-msal';
+export { HttpClient } from './client.js';
+export { HttpClientMsal } from './client-msal.js';
 
-export * from './types';
+export * from './types.js';

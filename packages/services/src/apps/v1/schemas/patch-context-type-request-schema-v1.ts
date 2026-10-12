@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { PatchPropertyOfBooleanSchemaV1 } from './patch-property-of-boolean-schema-v1';
-import { PatchPropertyOfStringSchemaV1 } from './patch-property-of-string-schema-v1';
+import { PatchPropertyOfBooleanSchemaV1 } from './patch-property-of-boolean-schema-v1.js';
+import { PatchPropertyOfStringSchemaV1 } from './patch-property-of-string-schema-v1.js';
 
 /**
  * Zod schema for the `PatchContextTypeRequest` model published by the Fusion Apps API 1.0.

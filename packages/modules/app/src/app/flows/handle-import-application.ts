@@ -1,12 +1,12 @@
 import { from, of } from 'rxjs';
 import { catchError, filter, map, switchMap } from 'rxjs/operators';
 
-import { actions } from '../actions';
+import { actions } from '../actions.js';
 
 import type { Flow } from '@equinor/fusion-observable';
-import type { AppModuleProvider } from '../../AppModuleProvider';
-import type { Actions } from '../actions';
-import type { AppBundleState } from '../types';
+import type { AppModuleProvider } from '../../AppModuleProvider.js';
+import type { Actions } from '../actions.js';
+import type { AppBundleState } from '../types.js';
 
 /**
  * Handles the import application flow.

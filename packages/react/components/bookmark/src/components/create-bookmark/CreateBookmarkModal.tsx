@@ -1,10 +1,10 @@
 import { type ChangeEvent, useCallback, useEffect, useId, useState } from 'react';
 
 import type { BookmarkCreateArgs } from '@equinor/fusion-framework-module-bookmark';
-import { useBookmarkComponentContext } from '../BookmarkProvider';
+import { useBookmarkComponentContext } from '../BookmarkProvider.js';
 
 import { Button, Checkbox, Dialog, Input, Label, Textarea } from '@equinor/eds-core-react';
-import styled from 'styled-components';
+import { styled } from 'styled-components';
 import { from } from 'rxjs';
 
 const StyledContent = styled(Dialog.Content)`

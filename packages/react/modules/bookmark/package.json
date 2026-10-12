@@ -2,6 +2,7 @@
   "name": "@equinor/fusion-framework-react-module-bookmark",
   "version": "7.0.1",
   "description": "",
+  "type": "module",
   "main": "dist/esm/index.js",
   "types": "./dist/types/index.d.ts",
   "exports": {
@@ -25,6 +26,7 @@
     }
   },
   "scripts": {
+    "prebuild": "node ../../../../.github/scripts/generate-versions.mjs",
     "build": "tsc -b",
     "prepack": "pnpm build"
   },

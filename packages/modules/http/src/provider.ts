@@ -1,14 +1,14 @@
-import type { HttpClient } from './lib/client';
+import type { HttpClient } from './lib/client/index.js';
 import type {
   HttpClientOptions,
   HttpClientRequestInitType,
   IHttpClientConfigurator,
-} from './configurator';
+} from './configurator.js';
 
-import type { IHttpMiddlewareHandler, IHttpRequestHandler } from './lib/operators';
-import type { IHttpClient } from './lib/client';
+import type { IHttpMiddlewareHandler, IHttpRequestHandler } from './lib/operators/index.js';
+import type { IHttpClient } from './lib/client/index.js';
 import { BaseModuleProvider } from '@equinor/fusion-framework-module/provider';
-import { version } from './version';
+import { version } from './version.js';
 import { ClientNotFoundException } from './errors/index.js';
 
 /**

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { UpdateProjectPhaseRequestSchemaV1 } from './update-project-phase-request-schema-v1';
+import { UpdateProjectPhaseRequestSchemaV1 } from './update-project-phase-request-schema-v1.js';
 
 /**
  * Zod schema for the `PatchPropertyOfListOfUpdateProjectPhaseRequest` model published by the Fusion

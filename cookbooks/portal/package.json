@@ -2,6 +2,7 @@
   "name": "portal",
   "version": "0.1.97",
   "description": "",
+  "type": "module",
   "main": "dist/index.js",
   "private": true,
   "scripts": {

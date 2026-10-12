@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import type { ClaimableRoleAssignmentSelection } from '../components/overview/role-details';
-import { parseRoleDate } from '../dates/parse-role-date';
+import type { ClaimableRoleAssignmentSelection } from '../components/overview/role-details.js';
+import { parseRoleDate } from '../dates/parse-role-date.js';
 import type {
   ConsolidatedClaimableRoleAssignments,
   RoleAssignmentCollectionState,
-} from '../state/roles-state';
+} from '../state/roles-state.js';
 
 /** One activation period already presented or intentionally ended by the user. */
 interface SuppressedActivation {

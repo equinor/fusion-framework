@@ -4,5 +4,5 @@
  *
  * @module
  */
-export { configureAnalytics, type ConfigureAnalyticsOptions } from './configure-analytics';
-export { resolveMockServerUrl } from './resolve-mock-server-url';
+export { configureAnalytics, type ConfigureAnalyticsOptions } from './configure-analytics.js';
+export { resolveMockServerUrl } from './resolve-mock-server-url.js';

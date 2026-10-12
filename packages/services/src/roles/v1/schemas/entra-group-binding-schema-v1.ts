@@ -1,7 +1,7 @@
 import { z } from 'zod';
-import { ClaimableRoleBindingSchemaV1 } from './claimable-role-binding-schema-v1';
-import { EntraGroupSchemaV1 } from './entra-group-schema-v1';
-import { RoleBindingSchemaV1 } from './role-binding-schema-v1';
+import { ClaimableRoleBindingSchemaV1 } from './claimable-role-binding-schema-v1.js';
+import { EntraGroupSchemaV1 } from './entra-group-schema-v1.js';
+import { RoleBindingSchemaV1 } from './role-binding-schema-v1.js';
 
 /** Zod schema for an Entra group binding configuration payload. */
 export const EntraGroupBindingSchemaV1 = z

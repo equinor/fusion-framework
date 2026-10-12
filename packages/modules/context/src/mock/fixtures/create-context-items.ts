@@ -1,7 +1,7 @@
 import { Faker, en } from '@faker-js/faker';
 
-import type { ContextItem } from '../../types';
-import { stringToSeed } from './string-to-seed';
+import type { ContextItem } from '../../types.js';
+import { stringToSeed } from './string-to-seed.js';
 
 /** Overridable {@link ContextItem} fields. `id` and `type` are always assigned by the type seed itself. */
 export type ContextItemOverrides = Partial<Omit<ContextItem, 'id' | 'type'>>;

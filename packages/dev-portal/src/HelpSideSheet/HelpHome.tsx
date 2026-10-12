@@ -3,8 +3,8 @@ import type { ReactElement } from 'react';
 import { Typography } from '@equinor/eds-core-react';
 import { styled } from 'styled-components';
 
-import type { HelpRequest } from './parse-help-request';
-import type { HelpArticlesState } from './useHelpArticles';
+import type { HelpRequest } from './parse-help-request.js';
+import type { HelpArticlesState } from './useHelpArticles.js';
 
 const Styled = {
   Section: styled.section`

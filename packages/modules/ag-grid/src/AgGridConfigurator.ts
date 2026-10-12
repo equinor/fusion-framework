@@ -1,8 +1,8 @@
 import { BaseConfigBuilder } from '@equinor/fusion-framework-module';
 
 import type { Theme, Module } from 'ag-grid-community';
-import type { AgGridConfig, IAgGridConfigurator } from './AgGridConfigurator.interface';
-import { createTheme } from './themes';
+import type { AgGridConfig, IAgGridConfigurator } from './AgGridConfigurator.interface.js';
+import { createTheme } from './themes.js';
 
 /**
  * Configuration builder for the AG Grid Fusion module.

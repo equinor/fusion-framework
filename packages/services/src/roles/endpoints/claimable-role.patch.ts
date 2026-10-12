@@ -16,12 +16,12 @@ import type {
   VersionedArgs,
   VersionedParsedArgs,
   VersionedResponse,
-} from '../types';
+} from '../types.js';
 
-import { extractVersion, parseVersionedArgs, versionedResponseSelector } from '../../utils';
-import { ApiVersion } from '../static';
-import { ApiClaimableRoleSchemaV1 } from '../v1/schemas/api-claimable-role-schema-v1';
-import { UpdateClaimableRoleRequestSchemaV1 } from '../v1/schemas/update-claimable-role-request-schema-v1';
+import { extractVersion, parseVersionedArgs, versionedResponseSelector } from '../../utils.js';
+import { ApiVersion } from '../static.js';
+import { ApiClaimableRoleSchemaV1 } from '../v1/schemas/api-claimable-role-schema-v1.js';
+import { UpdateClaimableRoleRequestSchemaV1 } from '../v1/schemas/update-claimable-role-request-schema-v1.js';
 
 /** Concrete API versions this operation publishes. */
 type AvailableVersions = ApiVersion.v1;

@@ -4,9 +4,9 @@ import { Button, Icon, Typography } from '@equinor/eds-core-react';
 import { first_page, last_page } from '@equinor/eds-icons';
 import { styled } from 'styled-components';
 
-import { HELP_PAGES, type HelpPageLink } from './help-pages';
-import type { HelpRequest } from './parse-help-request';
-import type { HelpArticlesState } from './useHelpArticles';
+import { HELP_PAGES, type HelpPageLink } from './help-pages.js';
+import type { HelpRequest } from './parse-help-request.js';
+import type { HelpArticlesState } from './useHelpArticles.js';
 
 const Styled = {
   Nav: styled.nav`

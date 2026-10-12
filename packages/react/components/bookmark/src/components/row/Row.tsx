@@ -2,10 +2,10 @@ import { Icon, Typography } from '@equinor/eds-core-react';
 import { tokens } from '@equinor/eds-tokens';
 import { useOutsideClick } from '@equinor/eds-utils';
 import { type MutableRefObject, type ReactNode, useCallback, useRef } from 'react';
-import { MoreMenu } from './MoreMenu';
+import { MoreMenu } from './MoreMenu.js';
 
-import styled from 'styled-components';
-import { useBookmarkComponentContext } from '../BookmarkProvider';
+import { styled } from 'styled-components';
+import { useBookmarkComponentContext } from '../BookmarkProvider.js';
 import { from } from 'rxjs';
 
 export type MenuOption = {

@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type { RequiredAccessRoleStatus } from '@equinor/fusion-framework-module-roles';
-import { findRequiredAccessRolesError } from './find-required-access-roles-error';
+import { findRequiredAccessRolesError } from './find-required-access-roles-error.js';
 
 /**
  * Required-access-role resolution and the app-scoped activation callback for the recovery view.

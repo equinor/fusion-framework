@@ -1,10 +1,15 @@
 import type { ClientRequestInit, IHttpClient } from '@equinor/fusion-framework-module-http/client';
 
-import type { ApiVersion } from '..';
+import type { ApiVersion } from '../index.js';
 
-import { generateParameters } from './generate-parameters';
+import { generateParameters } from './generate-parameters.js';
 
-import type { ClientMethod, GetContextArgs, GetContextResponse, GetContextResult } from './types';
+import type {
+  ClientMethod,
+  GetContextArgs,
+  GetContextResponse,
+  GetContextResult,
+} from './types.js';
 
 /**
  * Creates a curried function that fetches a single context entity by ID.

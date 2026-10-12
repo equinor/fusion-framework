@@ -1,6 +1,6 @@
 import type { IContextProvider } from '@equinor/fusion-framework-module-context';
 import type { INavigationProvider } from '@equinor/fusion-framework-module-navigation';
-import type { ContextNavigationAdapterInput } from '../adapters/types';
+import type { ContextNavigationAdapterInput } from '../adapters/types.js';
 
 /**
  * Creates a resolver that decodes a context ID from the current URL using

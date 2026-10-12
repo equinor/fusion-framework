@@ -1,5 +1,5 @@
 import type { SemVer } from 'semver';
-import type { MsalModuleVersion } from '../static';
+import type { MsalModuleVersion } from '../static.js';
 
 /**
  * Result of version resolution containing parsed versions and compatibility information.

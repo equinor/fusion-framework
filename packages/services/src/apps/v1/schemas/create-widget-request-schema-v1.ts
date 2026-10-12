@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { AccountIdentifierSchemaV1 } from './account-identifier-schema-v1';
+import { AccountIdentifierSchemaV1 } from './account-identifier-schema-v1.js';
 
 /**
  * Zod schema for the `CreateWidgetRequest` model published by the Fusion Apps API 1.0.

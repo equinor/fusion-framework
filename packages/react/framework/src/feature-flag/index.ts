@@ -8,10 +8,10 @@
  *
  * @module
  */
-export { useFeature } from './useFeature';
-export { useFeatures } from './useFeatures';
-export { useCurrentAppFeatures } from './useCurrentAppFeatures';
-export { useFrameworkFeature } from './useFrameworkFeature';
-export { useFrameworkFeatures } from './useFrameworkFeatures';
+export { useFeature } from './useFeature.js';
+export { useFeatures } from './useFeatures.js';
+export { useCurrentAppFeatures } from './useCurrentAppFeatures.js';
+export { useFrameworkFeature } from './useFrameworkFeature.js';
+export { useFrameworkFeatures } from './useFrameworkFeatures.js';
 
 export { IFeatureFlag, IFeatureFlagProvider } from '@equinor/fusion-framework-module-feature-flag';

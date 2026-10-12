@@ -1,6 +1,6 @@
-import type { IEventModuleProvider } from '../EventModuleProvider';
-import type { FrameworkEventMap, IFrameworkEvent } from '../FrameworkEvent';
-import { applyEventMatcher, type EventMatcher } from './apply-event-matcher';
+import type { IEventModuleProvider } from '../EventModuleProvider.js';
+import type { FrameworkEventMap, IFrameworkEvent } from '../FrameworkEvent.js';
+import { applyEventMatcher, type EventMatcher } from './apply-event-matcher.js';
 
 /** Options accepted by {@link waitForEvent}. */
 export interface WaitForEventOptions {

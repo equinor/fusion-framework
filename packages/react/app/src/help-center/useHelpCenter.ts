@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import useAppModule from '../useAppModule';
+import useAppModule from '../useAppModule.js';
 
 import { EVENT_NAME } from './event-name.js';
 

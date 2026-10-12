@@ -1,13 +1,13 @@
 import type { ConfigBuilderCallbackArgs } from '@equinor/fusion-framework-module';
 
-import type { IMsalClient } from '../MsalClient.interface';
-import type { IMsalProvider } from '../MsalProvider.interface';
-import type { MsalClientConfig } from '../MsalClient';
-import { MsalConfigurator, type MsalConfig } from '../MsalConfigurator';
+import type { IMsalClient } from '../MsalClient.interface.js';
+import type { IMsalProvider } from '../MsalProvider.interface.js';
+import type { MsalClientConfig } from '../MsalClient.js';
+import { MsalConfigurator, type MsalConfig } from '../MsalConfigurator.js';
 
-import { MsalMockClient } from './MsalMockClient';
-import { mockClientOperations } from './mock-client-operations';
-import type { MsalMockTokenAcquirer } from './types';
+import { MsalMockClient } from './MsalMockClient.js';
+import { mockClientOperations } from './mock-client-operations.js';
+import type { MsalMockTokenAcquirer } from './types.js';
 
 /**
  * The client configuration used when a test declares none.

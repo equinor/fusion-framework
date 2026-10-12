@@ -3,8 +3,8 @@ import type { ReactElement } from 'react';
 import { CircularProgress, Typography } from '@equinor/eds-core-react';
 import { styled } from 'styled-components';
 
-import { HelpMarkdown } from './HelpMarkdown';
-import type { HelpArticleState } from './useHelpArticle';
+import { HelpMarkdown } from './HelpMarkdown.js';
+import type { HelpArticleState } from './useHelpArticle.js';
 
 const Styled = {
   Message: styled.section`

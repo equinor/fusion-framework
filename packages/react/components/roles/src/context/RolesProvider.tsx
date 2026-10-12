@@ -1,8 +1,8 @@
 import { useState, type ReactNode } from 'react';
 import type { RolesModule } from '@equinor/fusion-framework-module-roles';
 import { useModule } from '@equinor/fusion-framework-react-module';
-import type { AccessRoleBoundaryFallbackOptions } from '../components/required-access/AccessRoleBoundary';
-import { RolesProviderScope } from './RolesProviderScope';
+import type { AccessRoleBoundaryFallbackOptions } from '../components/required-access/AccessRoleBoundary.js';
+import { RolesProviderScope } from './RolesProviderScope.js';
 
 /** Props for sharing Roles V2 assignment collections and activation state. */
 export interface RolesProviderProps extends AccessRoleBoundaryFallbackOptions {

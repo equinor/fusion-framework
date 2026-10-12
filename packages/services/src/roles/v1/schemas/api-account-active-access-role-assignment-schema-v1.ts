@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { ApiScopeValuesSchemaV1 } from './api-scope-values-schema-v1';
+import { ApiScopeValuesSchemaV1 } from './api-scope-values-schema-v1.js';
 
 /** Zod schema for a currently active access-role assignment returned for an account. */
 export const ApiAccountActiveAccessRoleAssignmentSchemaV1 = z

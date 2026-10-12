@@ -1,5 +1,5 @@
 import type { FrameworkConfigurator } from '@equinor/fusion-framework';
-import { createFrameworkProvider } from './create-framework-provider';
+import { createFrameworkProvider } from './create-framework-provider.js';
 import { type PropsWithChildren, type ReactNode, Suspense, useMemo } from 'react';
 import { useModules } from '@equinor/fusion-framework-react-module';
 import type { ModulesInstance } from '@equinor/fusion-framework-module';

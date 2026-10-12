@@ -2,15 +2,19 @@ import { finalize, firstValueFrom, of, Subject } from 'rxjs';
 import { switchMap, take, takeUntil, tap } from 'rxjs/operators';
 import { fromFetch } from 'rxjs/fetch';
 
-import { HttpMiddlewareHandler, HttpRequestHandler, HttpResponseHandler } from '../operators';
-import { blobSelector, jsonSelector } from '../selectors';
+import {
+  HttpMiddlewareHandler,
+  HttpRequestHandler,
+  HttpResponseHandler,
+} from '../operators/index.js';
+import { blobSelector, jsonSelector } from '../selectors/index.js';
 
 import type { Observable, ObservableInput } from 'rxjs';
 import type {
   IHttpMiddlewareHandler,
   IHttpRequestHandler,
   IHttpResponseHandler,
-} from '../operators';
+} from '../operators/index.js';
 import type {
   BlobResult,
   FetchRequest,
@@ -19,14 +23,14 @@ import type {
   IHttpClient,
   JsonRequest,
   StreamResponse,
-} from './types';
+} from './types.js';
 
 import { HttpResponseError } from '../../errors/index.js';
 import {
   createSseSelector,
   type ServerSentEvent,
   type SseSelectorOptions,
-} from '../selectors/create-sse-selector';
+} from '../selectors/create-sse-selector.js';
 
 /**
  * Configuration options for creating an `HttpClient` instance.

@@ -6,11 +6,11 @@ import type { EventModule } from '@equinor/fusion-framework-module-event';
 
 import { Query } from '@equinor/fusion-query';
 
-import type { GetWidgetParameters, WidgetConfig, WidgetManifest } from './types';
+import type { GetWidgetParameters, WidgetConfig, WidgetManifest } from './types.js';
 
-import type { WidgetModuleConfig } from './WidgetModuleConfigurator';
-import { WidgetManifestLoadError, WidgetConfigLoadError } from './WidgetManifestLoadError';
-import { Widget } from './Widget';
+import type { WidgetModuleConfig } from './WidgetModuleConfigurator.js';
+import { WidgetManifestLoadError, WidgetConfigLoadError } from './WidgetManifestLoadError.js';
+import { Widget } from './Widget.js';
 
 /**
  * Public interface for the widget module provider.

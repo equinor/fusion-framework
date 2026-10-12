@@ -1,7 +1,7 @@
 import type { FrameworkEventInit, IFrameworkEvent } from '@equinor/fusion-framework-module-event';
-import type { Bookmark } from './types';
-import type { BookmarkPayloadGenerator, IBookmarkProvider } from './BookmarkProvider.interface';
-import type { BookmarkNew, BookmarkUpdate } from './BookmarkClient.interface';
+import type { Bookmark } from './types.js';
+import type { BookmarkPayloadGenerator, IBookmarkProvider } from './BookmarkProvider.interface.js';
+import type { BookmarkNew, BookmarkUpdate } from './BookmarkClient.interface.js';
 
 export interface BookmarkProviderEventMap {
   /**

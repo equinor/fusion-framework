@@ -5,10 +5,10 @@ import {
   SemanticVersion,
 } from '@equinor/fusion-framework-module';
 
-import { MsalConfigurator } from './MsalConfigurator';
-import { MsalProvider, type IMsalProvider } from './MsalProvider';
+import { MsalConfigurator } from './MsalConfigurator.js';
+import { MsalProvider, type IMsalProvider } from './MsalProvider.js';
 
-import { version } from './version';
+import { version } from './version.js';
 
 /**
  * MSAL authentication module configuration.

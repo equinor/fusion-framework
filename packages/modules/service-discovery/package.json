@@ -2,6 +2,7 @@
   "name": "@equinor/fusion-framework-module-service-discovery",
   "version": "10.1.1",
   "description": "",
+  "type": "module",
   "main": "dist/esm/index.js",
   "exports": {
     ".": {
@@ -25,6 +26,7 @@
   },
   "types": "dist/types/index.d.ts",
   "scripts": {
+    "prebuild": "node ../../../.github/scripts/generate-versions.mjs",
     "build": "tsc -b",
     "prepack": "pnpm build",
     "test": "vitest"

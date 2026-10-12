@@ -2,12 +2,13 @@
   "name": "fusion-ts-lint-vscode",
   "displayName": "Fusion TS Lint",
   "description": "Real-time Fusion Framework lint diagnostics — no separate server install required",
+  "type": "module",
   "version": "0.2.4",
   "private": true,
   "publisher": "equinor-fusion",
   "license": "MIT",
   "engines": {
-    "vscode": "^1.85.0"
+    "vscode": "^1.129.0"
   },
   "icon": "images/icon.png",
   "categories": [
@@ -66,8 +67,9 @@
     "directory": "packages/linting/vscode"
   },
   "scripts": {
+    "prebuild": "node ../../../.github/scripts/generate-versions.mjs",
     "build": "tsc --noEmit && pnpm bundle && pnpm copy-server",
-    "bundle": "esbuild src/index.ts --bundle --external:vscode --platform=node --format=cjs --outfile=dist/index.js",
+    "bundle": "esbuild src/index.ts --bundle --external:vscode --platform=node --format=esm --banner:js=\"import{createRequire as __cjsRequire}from'node:module';const require=__cjsRequire(import.meta.url);\" --outfile=dist/index.js",
     "copy-server": "node scripts/copy-server.mjs",
     "icon": "pnpm dlx @resvg/resvg-js-cli images/icon.svg images/icon.png",
     "prepack": "pnpm build",

@@ -8,14 +8,14 @@ import type {
   IRolesProvider,
 } from '@equinor/fusion-framework-module-roles';
 
-import { rolesActions, type RolesAction } from './roles-actions';
-import { createRolesReducer } from './create-roles-reducer';
-import { createRolesFlow } from './create-roles-flow';
+import { rolesActions, type RolesAction } from './roles-actions.js';
+import { createRolesReducer } from './create-roles-reducer.js';
+import { createRolesFlow } from './create-roles-flow.js';
 import type {
   ClaimableRoleAssignmentActivationResult,
   ClaimableRoleAssignmentDeactivationResult,
   RolesState,
-} from './roles-state';
+} from './roles-state.js';
 
 /**
  * Observable application state and actions for Roles V2 assignment collections and

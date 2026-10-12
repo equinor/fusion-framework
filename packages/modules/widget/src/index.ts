@@ -8,14 +8,14 @@
  * @packageDocumentation
  */
 
-export { WidgetModuleConfigurator, type WidgetModuleConfig } from './WidgetModuleConfigurator';
+export { WidgetModuleConfigurator, type WidgetModuleConfig } from './WidgetModuleConfigurator.js';
 
-export { WidgetModuleProvider } from './WidgetModuleProvider';
+export { WidgetModuleProvider } from './WidgetModuleProvider.js';
 
-export type { IWidgetModuleProvider } from './WidgetModuleProvider';
+export type { IWidgetModuleProvider } from './WidgetModuleProvider.js';
 
-export * from './types';
+export * from './types.js';
 
-export { enableWidgetModule } from './enable-widget-module';
+export { enableWidgetModule } from './enable-widget-module.js';
 
-export { default, type WidgetModule, module, moduleKey } from './module';
+export { default, type WidgetModule, module, moduleKey } from './module.js';

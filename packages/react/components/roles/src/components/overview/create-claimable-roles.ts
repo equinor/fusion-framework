@@ -1,5 +1,5 @@
-import type { ConsolidatedClaimableRoleAssignments } from '../../state/roles-state';
-import type { ClaimableRoleDetails } from './role-details';
+import type { ConsolidatedClaimableRoleAssignments } from '../../state/roles-state.js';
+import type { ClaimableRoleDetails } from './role-details.js';
 
 /**
  * Normalizes claimable role assignments for both application cards and compact rows.

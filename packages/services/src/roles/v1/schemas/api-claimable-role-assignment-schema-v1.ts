@@ -1,7 +1,7 @@
 import { z } from 'zod';
-import { ApiAccountSchemaV1 } from './api-account-schema-v1';
-import { ApiClaimableRoleScopeSchemaV1 } from './api-claimable-role-scope-schema-v1';
-import { ApiSimpleClaimableRoleSchemaV1 } from './api-simple-claimable-role-schema-v1';
+import { ApiAccountSchemaV1 } from './api-account-schema-v1.js';
+import { ApiClaimableRoleScopeSchemaV1 } from './api-claimable-role-scope-schema-v1.js';
+import { ApiSimpleClaimableRoleSchemaV1 } from './api-simple-claimable-role-schema-v1.js';
 
 /** Zod schema for an assignment of a claimable role to a Fusion account. */
 export const ApiClaimableRoleAssignmentSchemaV1 = z

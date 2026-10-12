@@ -11,19 +11,19 @@
  * @packageDocumentation
  */
 
-export { ContextModuleConfigurator } from './ContextModuleConfigurator';
-export type { IContextModuleConfigurator } from './ContextModuleConfigurator.interface';
-export type { ContextModuleConfig } from './ContextModuleConfig';
+export { ContextModuleConfigurator } from './ContextModuleConfigurator.js';
+export type { IContextModuleConfigurator } from './ContextModuleConfigurator.interface.js';
+export type { ContextModuleConfig } from './ContextModuleConfig.js';
 
-export { IContextProvider, ContextProvider } from './ContextProvider';
+export { IContextProvider, ContextProvider } from './ContextProvider.js';
 
 export {
   default,
   ContextModule,
   module as contextModule,
   moduleKey as contextModuleKey,
-} from './module';
+} from './module.js';
 
-export { enableContext } from './utils/enable-context';
+export { enableContext } from './utils/enable-context.js';
 
-export * from './types';
+export * from './types.js';

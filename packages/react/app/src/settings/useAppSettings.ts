@@ -6,7 +6,7 @@ import type { AppSettings } from '@equinor/fusion-framework-module-app';
 import { useCurrentApp } from '@equinor/fusion-framework-react/app';
 import { useObservableState } from '@equinor/fusion-observable/react';
 
-import { useAppSettingsStatus, type AppSettingsStatusHooks } from './useAppSettingsStatus';
+import { useAppSettingsStatus, type AppSettingsStatusHooks } from './useAppSettingsStatus.js';
 
 type UpdateSettingsFunction<T, O = T> = (currentSettings: T | undefined) => O;
 

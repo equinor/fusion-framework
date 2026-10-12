@@ -1,5 +1,5 @@
 import type { z } from 'zod';
-import { AppCategoryIdentifierSchemaV1 } from './app-category-identifier-schema-v1';
+import { AppCategoryIdentifierSchemaV1 } from './app-category-identifier-schema-v1.js';
 
 /**
  * Zod schema for the `PatchPropertyOfAppCategoryIdentifier` model published by the Fusion Apps API

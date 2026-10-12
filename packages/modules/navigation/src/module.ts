@@ -1,9 +1,9 @@
 import { type Module, SemanticVersion } from '@equinor/fusion-framework-module';
-import { NavigationConfigurator } from './NavigationConfigurator';
-import type { INavigationProvider } from './NavigationProvider.interface';
-import { NavigationProvider } from './NavigationProvider';
+import { NavigationConfigurator } from './NavigationConfigurator.js';
+import type { INavigationProvider } from './NavigationProvider.interface.js';
+import { NavigationProvider } from './NavigationProvider.js';
 
-import { version } from './version';
+import { version } from './version.js';
 
 /**
  * Module key identifier for the navigation module.

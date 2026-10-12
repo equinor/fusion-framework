@@ -1,7 +1,7 @@
 import { Faker, en } from '@faker-js/faker';
 
-import type { ContextItem } from '../../types';
-import { stringToSeed } from './string-to-seed';
+import type { ContextItem } from '../../types.js';
+import { stringToSeed } from './string-to-seed.js';
 
 /**
  * Creates one {@link ContextItem} fixture per call, for a single factory instance.

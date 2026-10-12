@@ -4,11 +4,11 @@ import { ErrorBoundary, type FallbackProps } from '@equinor/fusion-react-errorbo
 import type { RolesModule } from '@equinor/fusion-framework-module-roles';
 import { useModule } from '@equinor/fusion-framework-react-module';
 
-import { findRequiredAccessRolesError } from './find-required-access-roles-error';
-import { getRequiredAccessRolesKey } from './get-required-access-roles-key';
-import { AccessRoleGate } from './AccessRoleGate';
-import { RoleErrorView } from './RoleErrorView';
-import { toAccessRoleError } from './to-access-role-error';
+import { findRequiredAccessRolesError } from './find-required-access-roles-error.js';
+import { getRequiredAccessRolesKey } from './get-required-access-roles-key.js';
+import { AccessRoleGate } from './AccessRoleGate.js';
+import { RoleErrorView } from './RoleErrorView.js';
+import { toAccessRoleError } from './to-access-role-error.js';
 
 /** Inputs a custom fallback receives when a required-access-role failure is caught. */
 export interface AccessRoleBoundaryFallbackProps {
@@ -90,9 +90,11 @@ export const AccessRoleBoundary = ({
     if (!findRequiredAccessRolesError(accessRoleError)) {
       throw accessRoleError;
     }
+    // A caller-supplied render function takes precedence over a fallback component.
     if (fallbackRender) {
       return fallbackRender({ error: accessRoleError, resetErrorBoundary });
     }
+    // A caller-supplied component replaces the default recovery view.
     if (FallbackComponent) {
       return <FallbackComponent error={accessRoleError} resetErrorBoundary={resetErrorBoundary} />;
     }

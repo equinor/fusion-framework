@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { ApiSubscriptionTypeSchemaV1 } from './api-subscription-type-schema-v1';
+import { ApiSubscriptionTypeSchemaV1 } from './api-subscription-type-schema-v1.js';
 
 /** Zod schema for the body of a Roles V2 subscription request. */
 export const SubscriptionRequestSchemaV1 = z

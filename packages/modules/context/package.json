@@ -2,6 +2,7 @@
   "name": "@equinor/fusion-framework-module-context",
   "version": "9.0.1",
   "description": "",
+  "type": "module",
   "main": "./dist/esm/index.js",
   "exports": {
     ".": {
@@ -47,6 +48,7 @@
     }
   },
   "scripts": {
+    "prebuild": "node ../../../.github/scripts/generate-versions.mjs",
     "build": "tsc -b",
     "test": "vitest run",
     "prepack": "pnpm build"

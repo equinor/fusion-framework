@@ -4,9 +4,9 @@ import { catchError, filter, map, mergeMap } from 'rxjs/operators';
 import type { Flow } from '@equinor/fusion-observable';
 import type { IRolesProvider } from '@equinor/fusion-framework-module-roles';
 
-import { rolesActions, type RolesAction } from './roles-actions';
-import type { RolesState } from './roles-state';
-import { refreshRoleAssignmentsAfterMutation } from './refresh-role-assignments-after-mutation';
+import { rolesActions, type RolesAction } from './roles-actions.js';
+import type { RolesState } from './roles-state.js';
+import { refreshRoleAssignmentsAfterMutation } from './refresh-role-assignments-after-mutation.js';
 
 /**
  * Keeps active access-role assignment failures inside their individual request.
