@@ -90,9 +90,11 @@ export const AccessRoleBoundary = ({
     if (!findRequiredAccessRolesError(accessRoleError)) {
       throw accessRoleError;
     }
+    // A caller-supplied render function takes precedence over a fallback component.
     if (fallbackRender) {
       return fallbackRender({ error: accessRoleError, resetErrorBoundary });
     }
+    // A caller-supplied component replaces the default recovery view.
     if (FallbackComponent) {
       return <FallbackComponent error={accessRoleError} resetErrorBoundary={resetErrorBoundary} />;
     }
