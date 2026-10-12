@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import { ModulesConfigurator } from '@equinor/fusion-framework-module';
 
@@ -101,6 +101,26 @@ describe('enableContextMock', () => {
     const resolved = await provider.resolveContextAsync(contract);
 
     expect(resolved.id).toBe(project.id);
+  });
+
+  it('resolves an already-selected parent item when connecting to a constrained child context', async () => {
+    const [orgChart] = createContextItems([{ type: 'OrgChart' }]);
+    const [projectMaster] = createContextItems([{ type: 'ProjectMaster' }]);
+    const parent = await initializeMockWith((mock) => mock.setCurrentContext(orgChart));
+    const child = await initializeMockWith((mock) => {
+      mock.addConfigBuilder((builder) => {
+        builder.setContextType(['ProjectMaster']);
+      });
+      mock.setContexts([orgChart, projectMaster]);
+      mock.setRelatedContexts(orgChart.id, [projectMaster]);
+    });
+
+    await child.setCurrentContextAsync(orgChart);
+    child.connectParentContext(parent);
+
+    await vi.waitFor(() => {
+      expect(child.currentContext?.id).toBe(projectMaster.id);
+    });
   });
 
   it('overrides the default type-filtered related contexts for one specific item', async () => {
