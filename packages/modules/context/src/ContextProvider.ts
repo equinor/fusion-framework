@@ -544,8 +544,13 @@ export class ContextProvider
           console.debug('ContextProvider::connectParentContext', 'skipping first item', next);
           return false;
         }
-        // Revalidate same-ID contexts so a stale item can resolve to the child's supported type
-        return this.currentContext?.id !== next?.id || (!!next && !this.validateContext(next));
+        // Revalidate same-ID contexts when either item violates the child's type constraint.
+        return (
+          this.currentContext?.id !== next?.id ||
+          (!!next &&
+            (!this.validateContext(next) ||
+              (!!this.currentContext && !this.validateContext(this.currentContext))))
+        );
       }),
       switchMap(async (next) => {
         // if parent context is null, just return
