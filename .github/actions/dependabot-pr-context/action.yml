@@ -1,0 +1,62 @@
+name: Dependabot PR context
+description: Verify a pull request is authored by Dependabot, extract its dependency updates, and authorize the requested workflow operation
+
+inputs:
+  pr-number:
+    description: Dependabot pull request number
+    required: true
+  operation:
+    description: research, maintain, or resolve
+    default: research
+  confirmed-head-sha:
+    description: Head commit a maintainer or workflow confirmed for maintain and resolve operations
+    default: ''
+  authorized-actor:
+    description: Maintainer who authorized a resolve operation
+    default: ''
+  github-token:
+    description: Token used to read the pull request and collaborator permissions
+    default: ${{ github.token }}
+
+outputs:
+  number:
+    description: Pull request number
+    value: ${{ steps.context.outputs.number }}
+  dependency:
+    description: Updated dependency name, or a grouped-dependencies label
+    value: ${{ steps.context.outputs.dependency }}
+  from-version:
+    description: Previous version, or `multiple` for grouped updates
+    value: ${{ steps.context.outputs.from_version }}
+  version:
+    description: New version, or `multiple` for grouped updates
+    value: ${{ steps.context.outputs.version }}
+  base-ref:
+    description: Pull request base branch
+    value: ${{ steps.context.outputs.base_ref }}
+  head-sha:
+    description: Pull request head commit
+    value: ${{ steps.context.outputs.head_sha }}
+  head-ref:
+    description: Pull request head branch
+    value: ${{ steps.context.outputs.head_ref }}
+  signature:
+    description: Hash of the dependency updates and head commit; identifies a review of this exact state
+    value: ${{ steps.context.outputs.signature }}
+  update-summary:
+    description: One-line changeset summary of the dependency updates
+    value: ${{ steps.context.outputs.update_summary }}
+
+runs:
+  using: composite
+  steps:
+    - name: Verify Dependabot pull request
+      id: context
+      shell: bash
+      env:
+        AUTHORIZED_ACTOR: ${{ inputs.authorized-actor }}
+        CONFIRMED_HEAD_SHA: ${{ inputs.confirmed-head-sha }}
+        GH_TOKEN: ${{ inputs.github-token }}
+        OPERATION: ${{ inputs.operation }}
+        PR_NUMBER: ${{ inputs.pr-number }}
+      run: bash "$GITHUB_ACTION_PATH/context.sh"

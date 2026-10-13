@@ -5,14 +5,10 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { test } from 'node:test';
 
-const workflow = readFileSync(
-  new URL('../workflows/dependabot-maintenance.yml', import.meta.url),
-  'utf8',
-);
-const branchScript = workflow
-  .split('        run: |\n')[1]
-  .split('\n  promote:')[0]
-  .replace(/^ {10}/gm, '');
+const branchScript = new URL(
+  '../actions/dependabot-maintenance-stream/manage-branch.sh',
+  import.meta.url,
+).pathname;
 
 function runBranchOperation(operation, fixture = {}) {
   const directory = mkdtempSync(join(tmpdir(), 'maintenance-branch-test-'));
@@ -49,7 +45,7 @@ if (args[0] === 'pr') {
     for (const tool of ['gh', 'git']) {
       writeFileSync(join(directory, tool), mock, { mode: 0o755 });
     }
-    const result = spawnSync('bash', ['-c', branchScript], {
+    const result = spawnSync('bash', [branchScript], {
       encoding: 'utf8',
       env: {
         ...process.env,

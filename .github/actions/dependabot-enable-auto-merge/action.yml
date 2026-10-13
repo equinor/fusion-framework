@@ -1,0 +1,78 @@
+name: Dependabot enable auto-merge
+description: Enable squash auto-merge for a pull request, pinned to the exact head commit that was reviewed or validated
+
+inputs:
+  pr-number:
+    description: Pull request number
+    required: true
+  expected-head-sha:
+    description: Head commit that was reviewed or validated; auto-merge is pinned to it
+    required: true
+  expected-author:
+    description: Required pull request author login, for example app/dependabot; empty skips the check
+    default: ''
+  mark-ready:
+    description: Mark a draft pull request ready for review before enabling auto-merge
+    default: 'false'
+  skip-on-head-mismatch:
+    description: Skip with a notice instead of failing when the head moved after validation
+    default: 'false'
+  github-token:
+    description: Token with contents and pull-requests write access
+    default: ${{ github.token }}
+
+outputs:
+  enabled:
+    description: Whether auto-merge was enabled
+    value: ${{ steps.enable.outputs.enabled }}
+
+runs:
+  using: composite
+  steps:
+    - name: Enable auto-merge for the confirmed head
+      id: enable
+      shell: bash
+      env:
+        EXPECTED_AUTHOR: ${{ inputs.expected-author }}
+        EXPECTED_HEAD_SHA: ${{ inputs.expected-head-sha }}
+        GH_TOKEN: ${{ inputs.github-token }}
+        MARK_READY: ${{ inputs.mark-ready }}
+        PR_NUMBER: ${{ inputs.pr-number }}
+        REPOSITORY: ${{ github.repository }}
+        SKIP_ON_HEAD_MISMATCH: ${{ inputs.skip-on-head-mismatch }}
+      run: |
+        set -euo pipefail
+
+        pr="$(
+          gh pr view "$PR_NUMBER" \
+            --repo "$REPOSITORY" \
+            --json author,headRefOid,state
+        )"
+
+        if [[ -n "$EXPECTED_AUTHOR" ]]; then
+          test "$(jq --raw-output '.author.login' <<< "$pr")" = "$EXPECTED_AUTHOR"
+        fi
+        test "$(jq --raw-output '.state' <<< "$pr")" = OPEN
+
+        current_head="$(jq --raw-output '.headRefOid' <<< "$pr")"
+        if [[ "$current_head" != "$EXPECTED_HEAD_SHA" ]]; then
+          if [[ "$SKIP_ON_HEAD_MISMATCH" == true ]]; then
+            echo "::notice::The pull request moved past the validated commit; skipping auto-merge."
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo "::error::The pull request head changed after validation."
+          exit 1
+        fi
+
+        if [[ "$MARK_READY" == true ]]; then
+          gh pr ready "$PR_NUMBER" --repo "$REPOSITORY"
+        fi
+
+        # Branch rules still require reviews and required checks before GitHub merges.
+        gh pr merge "$PR_NUMBER" \
+          --repo "$REPOSITORY" \
+          --auto \
+          --squash \
+          --match-head-commit "$EXPECTED_HEAD_SHA"
+        echo "enabled=true" >> "$GITHUB_OUTPUT"

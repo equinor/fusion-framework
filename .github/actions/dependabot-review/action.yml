@@ -1,0 +1,43 @@
+name: Dependabot AI review
+description: Run an audit-only Copilot review of a Dependabot pull request and validate its structured verdict
+
+inputs:
+  provider-env:
+    description: Environment file from setup-copilot-fusion-ai; it is sourced and deleted before Copilot runs
+    required: true
+  pr-number:
+    description: Dependabot pull request number
+    required: true
+  agent:
+    description: Custom Copilot agent that performs the review
+    default: dependabot
+  github-token:
+    description: Token exposed to the audit-only review for reading pull request metadata
+    default: ${{ github.token }}
+
+outputs:
+  markdown-file:
+    description: Path to the rendered review markdown, including the machine-readable verdict marker
+    value: ${{ steps.review.outputs.markdown_file }}
+  merge-recommended:
+    description: true when the verdict is merge
+    value: ${{ steps.review.outputs.merge_recommended }}
+  high-confidence:
+    description: true when confidence is high
+    value: ${{ steps.review.outputs.high_confidence }}
+  auto-merge:
+    description: true when the verdict is merge with high confidence and readiness is not needs changes
+    value: ${{ steps.review.outputs.auto_merge }}
+
+runs:
+  using: composite
+  steps:
+    - name: Review dependency update
+      id: review
+      shell: bash
+      env:
+        GH_TOKEN: ${{ inputs.github-token }}
+        PR_NUMBER: ${{ inputs.pr-number }}
+        PROVIDER_ENV: ${{ inputs.provider-env }}
+        REVIEW_AGENT: ${{ inputs.agent }}
+      run: bash "$GITHUB_ACTION_PATH/review.sh"
