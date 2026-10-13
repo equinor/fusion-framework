@@ -32,7 +32,7 @@ outputs:
     description: true when confidence is high
     value: ${{ steps.verdict.outputs.high_confidence }}
   auto-merge:
-    description: true when the verdict is merge with high confidence and readiness is not needs changes
+    description: true when the verdict is merge with high confidence
     value: ${{ steps.verdict.outputs.auto_merge }}
 
 runs:
@@ -77,5 +77,5 @@ runs:
           echo "readiness=$(jq --raw-output '.readiness' <<< "$verdict_json")"
           echo "merge_recommended=$(jq --raw-output '.verdict == "merge"' <<< "$verdict_json")"
           echo "high_confidence=$(jq --raw-output '.confidence == "high"' <<< "$verdict_json")"
-          echo "auto_merge=$(jq --raw-output '.verdict == "merge" and .confidence == "high" and .readiness != "needs changes"' <<< "$verdict_json")"
+          echo "auto_merge=$(jq --raw-output '.verdict == "merge" and .confidence == "high"' <<< "$verdict_json")"
         } >> "$GITHUB_OUTPUT"

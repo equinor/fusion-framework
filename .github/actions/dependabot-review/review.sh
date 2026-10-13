@@ -117,7 +117,7 @@ jq --raw-output '
   echo "markdown_file=$review_md"
   echo "merge_recommended=$(jq --raw-output '.verdict == "merge"' "$review_json")"
   echo "high_confidence=$(jq --raw-output '.confidence == "high"' "$review_json")"
-  echo "auto_merge=$(jq --raw-output '.verdict == "merge" and .confidence == "high" and .readiness != "needs changes"' "$review_json")"
+  echo "auto_merge=$(jq --raw-output '.verdict == "merge" and .confidence == "high"' "$review_json")"
 } >> "$GITHUB_OUTPUT"
 
 cat "$review_md" >> "$GITHUB_STEP_SUMMARY"

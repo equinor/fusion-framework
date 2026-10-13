@@ -19,12 +19,13 @@ if [[ "$VERDICT" != merge ]]; then
   echo "The current research verdict does not recommend merging."
   exit 0
 fi
-if [[ "$OPERATION" == maintain ]] && \
-  [[ "$CONFIDENCE" != high || "$READINESS" == 'needs changes' ]]; then
+# Readiness is not a gate: a missing changeset or an outdated branch reads as "needs changes",
+# and this action exists to fix exactly those. Required checks still gate the merge itself.
+if [[ "$OPERATION" == maintain && "$CONFIDENCE" != high ]]; then
   echo "head_sha=$EXPECTED_HEAD_SHA" >> "$GITHUB_OUTPUT"
   echo "ready=false" >> "$GITHUB_OUTPUT"
   echo "updated=false" >> "$GITHUB_OUTPUT"
-  echo "Automatic maintenance requires high confidence without a needs-changes readiness."
+  echo "Automatic maintenance requires high confidence."
   exit 0
 fi
 
