@@ -1,0 +1,54 @@
+import { describe, expect, it } from 'vitest';
+
+import type { AdapterResolutionContext } from '../types.js';
+import { createPathAdapter } from '../create-path-adapter.js';
+import { resolveAdapter } from '../../helpers/resolve-adapter.js';
+import { createQueryAdapter } from '../create-query-adapter.js';
+import { createCustomAdapter } from './create-custom-adapter.js';
+
+describe('createCustomAdapter', () => {
+  // Adapter matching only needs the custom path hooks; the rest of the provider is irrelevant here.
+  const appContext: AdapterResolutionContext['appContext'] = {
+    extractContextIdFromPath: () => null,
+    generatePathFromContext: () => null,
+  } as unknown as AdapterResolutionContext['appContext'];
+
+  it('defers to query routing when custom path hooks are present', () => {
+    const currentURL = new URL(
+      'https://example.com/apps/my-app/projects/project-slug/edit?$contextId=context-uuid',
+    );
+    const adapter = resolveAdapter(
+      {
+        appContext,
+        appKey: 'my-app',
+        routingStrategy: 'query',
+        currentURL,
+      },
+      [createCustomAdapter(), createQueryAdapter(), createPathAdapter()],
+    );
+
+    expect(adapter?.id).toBe('query');
+    expect(adapter?.decode(currentURL)).toBe('context-uuid');
+  });
+
+  it('continues using custom path hooks for path routing', () => {
+    const adapter = createCustomAdapter()({
+      appContext,
+      appKey: 'my-app',
+      routingStrategy: 'path',
+      currentURL: new URL('https://example.com/apps/my-app/projects/project-slug'),
+    });
+
+    expect(adapter?.id).toBe('custom');
+  });
+
+  it('continues using custom path hooks when no strategy is declared', () => {
+    const adapter = createCustomAdapter()({
+      appContext,
+      appKey: 'my-app',
+      currentURL: new URL('https://example.com/apps/my-app/projects/project-slug'),
+    });
+
+    expect(adapter?.id).toBe('custom');
+  });
+});
