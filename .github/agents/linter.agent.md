@@ -1,7 +1,7 @@
 ---
 name: linter
 description: Fixes fusion-lint diagnostics in a Fusion Framework package — TSDoc completeness, intent comments, filename-convention, and single-export-per-file violations. USE FOR: "run fusion-lint on package X", "fix lint warnings in <package>", "clean up fusion-lint diagnostics". DO NOT USE FOR: Biome-only formatting issues, dependency PRs, or feature work unrelated to lint diagnostics.
-model: "GPT-5.6 Luna"
+model: "GPT-6 Luna"
 tools: [read, edit, search, execute, todo]
 ---
 

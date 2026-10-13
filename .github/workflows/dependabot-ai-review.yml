@@ -103,7 +103,7 @@ jobs:
         uses: ./.github/actions/setup-copilot-fusion-ai
         with:
           client-id: ${{ vars.FUSION_AI_SP_CLIENT_ID }}
-          wire-model: gpt-5.6-luna
+          wire-model: gpt-6-luna
 
       - name: Review dependency update
         id: review
@@ -148,7 +148,7 @@ jobs:
         with:
           dependency: ${{ needs.research.outputs.dependency }}
           head-sha: ${{ needs.research.outputs.head_sha }}
-          model: gpt-5.6-luna
+          model: gpt-6-luna
           pr-number: ${{ needs.research.outputs.pr_number }}
           review-file: ${{ runner.temp }}/dependabot-review.md
           signature: ${{ needs.research.outputs.signature }}
