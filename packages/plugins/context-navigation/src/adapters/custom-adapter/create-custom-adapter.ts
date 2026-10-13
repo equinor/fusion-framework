@@ -18,7 +18,8 @@ import { toFullPath } from './to-full-path.js';
  *
  * **Selection:** The factory returns a bound adapter only when the app has
  * both generator hooks registered (checked via {@link hasCustomContextGenerators}).
- * Otherwise it returns `null`, letting lower-priority adapters (query, path) match.
+ * Explicit query routing bypasses these hooks so the declared strategy remains authoritative.
+ * Otherwise it returns `null` when hooks are absent, letting lower-priority adapters match.
  *
  * **Coordinate system:** All app hooks receive/return app-relative paths.
  * The adapter handles stripping and prepending the `/apps/{appKey}` prefix
@@ -33,7 +34,12 @@ import { toFullPath } from './to-full-path.js';
  *          or `null` to fall through to the next adapter in the resolution chain.
  */
 export function createCustomAdapter(): ContextNavigationAdapterFactory {
-  return ({ appContext, appKey }): ContextNavigationAdapter | null => {
+  return ({ appContext, appKey, routingStrategy }): ContextNavigationAdapter | null => {
+    // Explicit query routing must not interpret app route slugs as context ids.
+    if (routingStrategy === 'query') {
+      return null;
+    }
+
     // This app hasn't registered custom context hooks — let a lower-priority adapter handle it
     if (!hasCustomContextGenerators(appContext)) {
       return null;
