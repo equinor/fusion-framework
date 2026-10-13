@@ -1,0 +1,81 @@
+name: Dependabot read verdict
+description: Read the machine-readable AI review verdict published on a Dependabot pull request for its current dependency signature
+
+inputs:
+  pr-number:
+    description: Dependabot pull request number
+    required: true
+  signature:
+    description: Dependency signature from dependabot-pr-context; selects the review of this exact head and update set
+    required: true
+  github-token:
+    description: Token used to read pull request comments
+    default: ${{ github.token }}
+
+outputs:
+  found:
+    description: Whether a published verdict exists for the signature; false means the update needs a new review
+    value: ${{ steps.verdict.outputs.found }}
+  verdict:
+    description: merge, hold, or decline; empty when no verdict exists
+    value: ${{ steps.verdict.outputs.verdict }}
+  confidence:
+    description: high, medium, or low; empty when no verdict exists
+    value: ${{ steps.verdict.outputs.confidence }}
+  readiness:
+    description: Mechanical readiness at review time; empty when no verdict exists
+    value: ${{ steps.verdict.outputs.readiness }}
+  merge-recommended:
+    description: true when the verdict is merge
+    value: ${{ steps.verdict.outputs.merge_recommended }}
+  high-confidence:
+    description: true when confidence is high
+    value: ${{ steps.verdict.outputs.high_confidence }}
+  auto-merge:
+    description: true when the verdict is merge with high confidence and readiness is not needs changes
+    value: ${{ steps.verdict.outputs.auto_merge }}
+
+runs:
+  using: composite
+  steps:
+    - name: Read published verdict
+      id: verdict
+      shell: bash
+      env:
+        GH_TOKEN: ${{ inputs.github-token }}
+        PR_NUMBER: ${{ inputs.pr-number }}
+        REPOSITORY: ${{ github.repository }}
+        SIGNATURE: ${{ inputs.signature }}
+      run: |
+        set -euo pipefail
+
+        marker="<!-- fusion-ai-dependency:${SIGNATURE} -->"
+        existing="$(
+          gh api --paginate "repos/${REPOSITORY}/issues/${PR_NUMBER}/comments" \
+            --jq "[.[] | select(.user.login == \"github-actions[bot]\") | select(.body | contains(\"${marker}\")) | .body] | first // \"\""
+        )"
+
+        # Comments from before verdict markers existed carry no machine-readable verdict, so they count as not found.
+        verdict_json="$(sed -n 's/^<!-- fusion-ai-verdict:\(.*\) -->$/\1/p' <<< "$existing" | head -n 1)"
+        if [[ -z "$verdict_json" ]] || ! jq --exit-status 'type == "object"' <<< "$verdict_json" > /dev/null; then
+          {
+            echo "found=false"
+            echo "verdict="
+            echo "confidence="
+            echo "readiness="
+            echo "merge_recommended=false"
+            echo "high_confidence=false"
+            echo "auto_merge=false"
+          } >> "$GITHUB_OUTPUT"
+          exit 0
+        fi
+
+        {
+          echo "found=true"
+          echo "verdict=$(jq --raw-output '.verdict' <<< "$verdict_json")"
+          echo "confidence=$(jq --raw-output '.confidence' <<< "$verdict_json")"
+          echo "readiness=$(jq --raw-output '.readiness' <<< "$verdict_json")"
+          echo "merge_recommended=$(jq --raw-output '.verdict == "merge"' <<< "$verdict_json")"
+          echo "high_confidence=$(jq --raw-output '.confidence == "high"' <<< "$verdict_json")"
+          echo "auto_merge=$(jq --raw-output '.verdict == "merge" and .confidence == "high" and .readiness != "needs changes"' <<< "$verdict_json")"
+        } >> "$GITHUB_OUTPUT"

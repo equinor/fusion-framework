@@ -6,8 +6,6 @@ on:
       - main
       - maintenance/dependencies
   delete:
-  schedule:
-    - cron: '0 6 * * 1'
   workflow_dispatch:
     inputs:
       operation:
@@ -47,236 +45,75 @@ jobs:
           fetch-depth: 0
 
       - name: Ensure, initialize, or reset maintenance branch
-        env:
-          GH_TOKEN: ${{ github.token }}
-          OPERATION: ${{ inputs.operation == 'initialize' && 'initialize' || inputs.operation == 'reset' && 'reset' || 'ensure' }}
-          REPOSITORY: ${{ github.repository }}
-        run: |
-          set -euo pipefail
+        uses: ./.github/actions/dependabot-maintenance-stream
+        with:
+          branch: ${{ env.MAINTENANCE_BRANCH }}
+          operation: ${{ inputs.operation == 'initialize' && 'initialize' || inputs.operation == 'reset' && 'reset' || 'ensure' }}
 
-          default_branch="$(
-            gh api "repos/${REPOSITORY}" --jq '.default_branch'
-          )"
-          default_sha="$(
-            gh api "repos/${REPOSITORY}/git/ref/heads/${default_branch}" --jq '.object.sha'
-          )"
-
-          # Only a confirmed missing ref is safe to recreate; API failures must not imply absence.
-          branch_response="$RUNNER_TEMP/maintenance-branch-response"
-          branch_exists=true
-          if gh api "repos/${REPOSITORY}/git/ref/heads/${MAINTENANCE_BRANCH}" \
-            --include > "$branch_response"; then
-            branch_exists=true
-          elif [[ "$(awk '/^HTTP/ {print $2}' "$branch_response")" == 404 ]]; then
-            branch_exists=false
-          else
-            echo "::error::Unable to check ${MAINTENANCE_BRANCH}."
-            cat "$branch_response" >&2
-            exit 1
-          fi
-
-          if [[ "$branch_exists" == false ]]; then
-            gh api \
-              --method POST \
-              "repos/${REPOSITORY}/git/refs" \
-              --field ref="refs/heads/${MAINTENANCE_BRANCH}" \
-              --field sha="$default_sha"
-            exit 0
-          fi
-
-          if [[ "$OPERATION" == initialize ]]; then
-            echo "::error::${MAINTENANCE_BRANCH} already exists; use reset after promotion."
-            exit 1
-          fi
-
-          # Recovery must never discard dependency updates already accumulated in the stream.
-          if [[ "$OPERATION" == ensure ]]; then
-            echo "${MAINTENANCE_BRANCH} already exists; leaving it unchanged."
-            exit 0
-          fi
-
-          open_prs="$(
-            gh pr list \
-              --repo "$REPOSITORY" \
-              --state open \
-              --base "$MAINTENANCE_BRANCH" \
-              --json number \
-              --jq 'length'
-          )"
-          if [[ "$open_prs" != 0 ]]; then
-            echo "::error::Cannot reset while ${open_prs} pull request(s) target ${MAINTENANCE_BRANCH}."
-            exit 1
-          fi
-
-          git fetch origin "$default_branch" "$MAINTENANCE_BRANCH"
-          if ! git diff --quiet "origin/${default_branch}" "origin/${MAINTENANCE_BRANCH}"; then
-            echo "::error::Cannot reset because the maintenance branch contains unpromoted changes."
-            exit 1
-          fi
-
-          gh api \
-            --method PATCH \
-            "repos/${REPOSITORY}/git/refs/heads/${MAINTENANCE_BRANCH}" \
-            --field sha="$default_sha" \
-            -F force=true
-
-  promote:
-    name: Maintain promotion pull request
+  validate:
+    name: Validate maintenance stream
     needs: manage-branch
-    if: >-
-      inputs.operation == 'promote' ||
-      (github.event_name == 'push' && github.ref == 'refs/heads/maintenance/dependencies') ||
-      github.event_name == 'schedule'
+    if: inputs.operation == 'promote'
+    outputs:
+      head_sha: ${{ steps.head.outputs.sha }}
     runs-on: ubuntu-latest
+    # Installs and runs dependency code, so it holds no write permissions.
     permissions:
-      actions: write
       contents: read
-      pull-requests: write
     steps:
       - uses: actions/checkout@v7
         with:
           ref: ${{ env.MAINTENANCE_BRANCH }}
           fetch-depth: 0
 
+      - name: Record validated commit
+        id: head
+        run: echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
       - name: Setup node and install deps
-        if: github.event_name != 'push'
         uses: ./.github/actions/node-setup
 
       - name: Install Playwright Chromium
-        if: github.event_name != 'push'
         run: pnpm --filter @equinor/fusion-framework-vitest-plugin-react-app exec playwright install --with-deps chromium
 
       - name: Validate maintenance stream
-        if: github.event_name != 'push'
         run: pnpm build && pnpm test && pnpm -w check
 
+  promote:
+    name: Maintain promotion pull request
+    needs: [manage-branch, validate]
+    if: >-
+      always() &&
+      needs.manage-branch.result == 'success' &&
+      (needs.validate.result == 'success' || needs.validate.result == 'skipped') &&
+      (
+        inputs.operation == 'promote' ||
+        (github.event_name == 'push' && github.ref == 'refs/heads/maintenance/dependencies')
+      )
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+      contents: write
+      pull-requests: write
+    steps:
+      # Only trusted default-branch code runs here; the maintenance branch is read through git, never executed.
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          fetch-depth: 0
+
       - name: Create or update draft promotion pull request
-        env:
-          GH_TOKEN: ${{ github.token }}
-          REPOSITORY: ${{ github.repository }}
-        run: |
-          set -euo pipefail
+        id: promotion
+        uses: ./.github/actions/dependabot-promotion-pr
+        with:
+          branch: ${{ env.MAINTENANCE_BRANCH }}
+          validated: ${{ needs.validate.result == 'success' }}
 
-          default_branch="$(
-            gh api "repos/${REPOSITORY}" --jq '.default_branch'
-          )"
-          git fetch origin "$default_branch"
-          if git diff --quiet "origin/${default_branch}" HEAD; then
-            echo "::error::The maintenance stream has no changes to promote."
-            exit 1
-          fi
-
-          report="$RUNNER_TEMP/dependabot-promotion.md"
-          cat > "$report" <<'EOF'
-          **Why is this change needed?**
-
-          Promote the Dependabot maintenance stream through the normal protected-branch review gate.
-
-          **What is the current behavior?**
-
-          Routine dependency updates accumulate on `maintenance/dependencies` without triggering `main` release and cache workflows.
-
-          **What is the new behavior?**
-
-          The accumulated dependency updates are promoted to `main` as one reviewed change.
-
-          **What is the intended behavior or invariant?**
-
-          Only updates already accepted into the maintenance stream are included. The combined stream must pass the full dependency validation suite before it is ready for review.
-
-          **Does this PR introduce a breaking change?**
-
-          No known breaking change. Individual dependency research remains linked from the included commits and pull requests.
-
-          **Impact assessment:**
-
-          - Breaking changes: No known breaking changes
-          - Version bump: Determined by the included changesets
-          - Consumer impact: Dependency updates described by the included changesets
-          - Downstream impact: Package builds and tests are validated together by the scheduled or manually dispatched promotion run
-
-          **Review guidance:**
-
-          Review the accumulated dependency updates, changesets, and the latest aggregate validation result. Pay particular attention to any manually accepted update in the stream.
-
-          **Additional context**
-
-          Included maintenance commits:
-
-          EOF
-          {
-            git log \
-              --format="- %s (\`%h\`)" \
-              "origin/${default_branch}..HEAD"
-            if [[ "${{ github.event_name }}" == push ]]; then
-              cat <<'EOF'
-
-          This description was refreshed after a maintenance-stream update. Aggregate validation runs on the weekly schedule or when the `promote` operation is dispatched manually.
-
-          EOF
-            else
-              cat <<'EOF'
-
-          Aggregate validation completed before this pull request was created or updated:
-
-          - `pnpm build`
-          - `pnpm test`
-          - `pnpm -w check`
-
-          EOF
-            fi
-            cat <<'EOF'
-
-          ### Checklist
-
-          - [x] Confirm completion of the self-review checklist
-          - [x] Confirm TSDoc captures intent when applicable
-          - [x] Confirm complex decisions explain why they exist when applicable
-          - [x] Confirm React logic is resolved before markup when applicable
-          - [x] Confirm documentation is updated when applicable
-          - [x] Confirm the promotion pull request reflects the current maintenance stream
-          - [x] Confirm adherence to the code of conduct
-          EOF
-          } >> "$report"
-
-          pr_number="$(
-            gh pr list \
-              --repo "$REPOSITORY" \
-              --state open \
-              --base "$default_branch" \
-              --head "$MAINTENANCE_BRANCH" \
-              --json number \
-              --jq '.[0].number // empty'
-          )"
-          if [[ -z "$pr_number" ]]; then
-            pr_url="$(
-              gh pr create \
-                --repo "$REPOSITORY" \
-                --base "$default_branch" \
-                --head "$MAINTENANCE_BRANCH" \
-                --draft \
-                --title 'chore(deps): promote dependency maintenance stream' \
-                --body-file "$report"
-            )"
-            pr_number="${pr_url##*/}"
-          else
-            gh pr edit "$pr_number" \
-              --repo "$REPOSITORY" \
-              --title 'chore(deps): promote dependency maintenance stream' \
-              --body-file "$report"
-            gh pr ready "$pr_number" --repo "$REPOSITORY" --undo || true
-          fi
-
-          head_sha="$(git rev-parse HEAD)"
-          if [[ "${{ github.event_name }}" != push ]]; then
-            for workflow in pr.yml visual-checks.yml agent-context.yml; do
-              gh workflow run "$workflow" \
-                --repo "$REPOSITORY" \
-                --ref "$MAINTENANCE_BRANCH" \
-                -f head_sha="$head_sha" \
-                -f pr_number="$pr_number"
-            done
-          fi
-
-          echo "Promotion pull request: https://github.com/${REPOSITORY}/pull/${pr_number}" \
-            >> "$GITHUB_STEP_SUMMARY"
+      - name: Mark ready and enable squash auto-merge for the validated head
+        if: needs.validate.result == 'success'
+        uses: ./.github/actions/dependabot-enable-auto-merge
+        with:
+          expected-head-sha: ${{ needs.validate.outputs.head_sha }}
+          mark-ready: true
+          pr-number: ${{ steps.promotion.outputs.pr-number }}
+          skip-on-head-mismatch: true

@@ -212,9 +212,10 @@ Use this table instead of searching. "Start here" is the first file to open.
 | Add an example for a feature | `cookbooks/app-react-*` |
 | Configure the human Copilot Codespace and prebuild warm-up | `.devcontainer/devcontainer.json`, `.devcontainer/mcp.json` |
 | Configure Copilot CLI with Fusion AI in Actions | `.github/actions/setup-copilot-fusion-ai` |
+| Review, maintain, and auto-merge Dependabot PRs | `.github/workflows/dependabot-ai-review.yml` and `.github/actions/dependabot-*` (pr-context, read-verdict, review, publish-verdict, maintain-branch, enable-auto-merge) |
 | Solve an issue from a workflow | `.github/workflows/issue-solver.yml`, `.github/actions/publish-agent-patch` (uses the `docs` environment and its Fusion AI Azure federation) |
 | Run gated Fusion PR commands | `.github/workflows/fusion-pr-command.yml` routes exact maintainer commands to isolated review remediation or existing dependency automation |
-| Recover or promote the Dependabot maintenance branch | `.github/workflows/dependabot-maintenance.yml`, behavior tests in `.github/scripts/dependabot-maintenance.test.mjs`, policy in `docs/adr/0001-dependabot-maintenance-stream.md` |
+| Recover or promote the Dependabot maintenance branch | `.github/workflows/dependabot-maintenance.yml`, `.github/actions/dependabot-maintenance-stream`, `.github/actions/dependabot-promotion-pr`, behavior tests in `.github/scripts/dependabot-maintenance.test.mjs`, policy in `docs/adr/0001-dependabot-maintenance-stream.md` |
 | Change observable/state primitives | `packages/utils/observable/src` |
 | Change caching/fetching | `packages/utils/query/src` |
 

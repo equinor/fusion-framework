@@ -1,0 +1,71 @@
+name: Dependabot maintain branch
+description: Add required changesets to a reviewed Dependabot branch, keep it mergeable, and push the result
+
+inputs:
+  pr-number:
+    description: Dependabot pull request number
+    required: true
+  signature:
+    description: Dependency signature the published verdict applies to
+    required: true
+  operation:
+    description: maintain requires a high-confidence verdict; resolve is maintainer-authorized
+    required: true
+  base-ref:
+    description: Pull request base branch
+    required: true
+  head-ref:
+    description: Pull request head branch
+    required: true
+  expected-head-sha:
+    description: Head commit that was reviewed; the push fails if the branch moved
+    required: true
+  update-summary:
+    description: Changeset summary of the dependency updates
+    required: true
+  working-directory:
+    description: Relative path of the checked-out pull request branch
+    default: .
+  github-token:
+    description: Token with contents write access, used for the push and workflow dispatches
+    default: ${{ github.token }}
+
+outputs:
+  head-sha:
+    description: Head commit after maintenance
+    value: ${{ steps.maintain.outputs.head_sha }}
+  ready:
+    description: Whether the branch is ready for auto-merge
+    value: ${{ steps.maintain.outputs.ready }}
+  updated:
+    description: Whether maintenance pushed a new commit
+    value: ${{ steps.maintain.outputs.updated }}
+
+runs:
+  using: composite
+  steps:
+    - name: Read published verdict
+      id: verdict
+      uses: ./.github/actions/dependabot-read-verdict
+      with:
+        github-token: ${{ inputs.github-token }}
+        pr-number: ${{ inputs.pr-number }}
+        signature: ${{ inputs.signature }}
+
+    - name: Maintain branch and add required changesets
+      id: maintain
+      shell: bash
+      env:
+        BASE_REF: ${{ inputs.base-ref }}
+        CONFIDENCE: ${{ steps.verdict.outputs.confidence }}
+        EXPECTED_HEAD_SHA: ${{ inputs.expected-head-sha }}
+        GH_TOKEN: ${{ inputs.github-token }}
+        HEAD_REF: ${{ inputs.head-ref }}
+        OPERATION: ${{ inputs.operation }}
+        PR_NUMBER: ${{ inputs.pr-number }}
+        READINESS: ${{ steps.verdict.outputs.readiness }}
+        REPOSITORY: ${{ github.repository }}
+        UPDATE_SUMMARY: ${{ inputs.update-summary }}
+        VERDICT: ${{ steps.verdict.outputs.verdict }}
+        WORKING_DIRECTORY: ${{ inputs.working-directory }}
+      run: bash "$GITHUB_ACTION_PATH/maintain.sh"

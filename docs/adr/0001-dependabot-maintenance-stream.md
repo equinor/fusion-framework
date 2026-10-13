@@ -46,9 +46,13 @@ conditions hold:
 Major, conflicting, failing, or lower-confidence updates remain open for maintainer handling.
 They do not prevent unrelated high-confidence updates from entering the maintenance stream.
 
-Maintainers periodically dispatch the maintenance workflow to validate the combined stream and
-create or update a draft promotion pull request from `maintenance/dependencies` to `main`. The
-promotion uses the normal `main` review rules and is never automatically merged.
+Each Dependabot update merged into the maintenance stream dispatches the maintenance workflow's
+`promote` operation. It validates the combined stream and creates or updates the promotion pull
+request from `maintenance/dependencies` to `main`. A new maintenance commit returns the promotion
+to draft and drops auto-merge. Once validation passes for the current head, the promotion is marked
+ready and squash auto-merge is enabled for that exact commit. The normal `main` review rules still
+apply, including the required approving review and required checks, so GitHub merges the promotion
+only after a maintainer approves it.
 
 After a squash promotion, maintainers reset the maintenance branch to the promoted `main` through
 the guarded maintenance workflow. Reset is rejected while pull requests still target the
@@ -56,7 +60,7 @@ maintenance branch or while its content differs from `main`.
 
 The maintenance branch is a permanent Dependabot target, not a disposable promotion branch.
 The maintenance workflow ensures it exists on pushes to `main` or the maintenance branch, after
-its deletion, and before scheduled or manually dispatched promotion. A missing branch is
+its deletion, and before manually dispatched promotion. A missing branch is
 recreated from the current `main`; an existing branch is left unchanged unless a maintainer
 explicitly requests the guarded reset. Both `ensure` and `reset` recover a missing branch.
 
@@ -141,8 +145,9 @@ This offers more control but duplicates Dependabot behavior and increases long-t
 2. Configure the branch rules before Dependabot starts targeting it.
 3. Allow high-confidence updates to merge through the automated maintenance sequence.
 4. Handle exceptional updates manually when convenient.
-5. Dispatch `promote` to run full validation and create or update the draft promotion.
-6. Review and merge the promotion into `main`.
+5. Each merged update dispatches `promote` to run full validation and update the promotion;
+   dispatch it manually to retry.
+6. Approve the promotion; auto-merge squashes it into `main` once required checks pass.
 7. Close or retarget remaining maintenance pull requests as appropriate.
 8. Dispatch `reset` to begin the next cycle from the promoted `main`.
 

@@ -1,0 +1,34 @@
+name: Dependabot promotion PR
+description: Create or update the draft pull request that promotes the Dependabot maintenance stream to the default branch
+
+inputs:
+  branch:
+    description: Maintenance branch to promote; it is read from origin, so any checkout with that remote works
+    default: maintenance/dependencies
+  validated:
+    description: Whether aggregate validation passed for the checked-out commit; unvalidated updates only refresh the draft and its description
+    default: 'false'
+  github-token:
+    description: Token with pull-requests write and actions write access
+    default: ${{ github.token }}
+
+outputs:
+  head-sha:
+    description: Promoted commit
+    value: ${{ steps.promotion.outputs.head_sha }}
+  pr-number:
+    description: Promotion pull request number
+    value: ${{ steps.promotion.outputs.pr_number }}
+
+runs:
+  using: composite
+  steps:
+    - name: Create or update draft promotion pull request
+      id: promotion
+      shell: bash
+      env:
+        GH_TOKEN: ${{ inputs.github-token }}
+        MAINTENANCE_BRANCH: ${{ inputs.branch }}
+        REPOSITORY: ${{ github.repository }}
+        VALIDATED: ${{ inputs.validated }}
+      run: bash "$GITHUB_ACTION_PATH/promote-pr.sh"

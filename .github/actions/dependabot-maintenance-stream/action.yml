@@ -1,0 +1,25 @@
+name: Dependabot maintenance stream
+description: Ensure, initialize, or reset the long-lived branch that accumulates reviewed Dependabot updates
+
+inputs:
+  operation:
+    description: ensure creates the branch only when missing; initialize requires it to be missing; reset moves it back to the default branch when nothing is left to promote
+    default: ensure
+  branch:
+    description: Maintenance branch name
+    default: maintenance/dependencies
+  github-token:
+    description: Token with contents write and pull-requests read access
+    default: ${{ github.token }}
+
+runs:
+  using: composite
+  steps:
+    - name: Ensure, initialize, or reset maintenance branch
+      shell: bash
+      env:
+        GH_TOKEN: ${{ inputs.github-token }}
+        MAINTENANCE_BRANCH: ${{ inputs.branch }}
+        OPERATION: ${{ inputs.operation }}
+        REPOSITORY: ${{ github.repository }}
+      run: bash "$GITHUB_ACTION_PATH/manage-branch.sh"
