@@ -123,6 +123,25 @@ describe('enableContextMock', () => {
     });
   });
 
+  it('replaces an invalid child context when a valid parent context has the same ID', async () => {
+    const [orgChart] = createContextItems([{ type: 'OrgChart' }]);
+    const [projectMaster] = createContextItems([{ type: 'ProjectMaster' }]);
+    const parentProject = { ...projectMaster, id: orgChart.id };
+    const parent = await initializeMockWith((mock) => mock.setCurrentContext(parentProject));
+    const child = await initializeMockWith((mock) => {
+      mock.addConfigBuilder((builder) => {
+        builder.setContextType(['ProjectMaster']);
+      });
+    });
+
+    await child.setCurrentContextAsync(orgChart, { validate: false, resolve: false });
+    child.connectParentContext(parent);
+
+    await vi.waitFor(() => {
+      expect(child.currentContext?.type.id).toBe('ProjectMaster');
+    });
+  });
+
   it('overrides the default type-filtered related contexts for one specific item', async () => {
     const createContract = createContextItemFactory('contract');
     const contractA = createContract({
