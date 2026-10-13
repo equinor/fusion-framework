@@ -54,6 +54,12 @@ After a squash promotion, maintainers reset the maintenance branch to the promot
 the guarded maintenance workflow. Reset is rejected while pull requests still target the
 maintenance branch or while its content differs from `main`.
 
+The maintenance branch is a permanent Dependabot target, not a disposable promotion branch.
+The maintenance workflow ensures it exists on pushes to `main` or the maintenance branch, after
+its deletion, and before scheduled or manually dispatched promotion. A missing branch is
+recreated from the current `main`; an existing branch is left unchanged unless a maintainer
+explicitly requests the guarded reset. Both `ensure` and `reset` recover a missing branch.
+
 ## Branch rules
 
 Repository administrators must configure `maintenance/dependencies` with rules that:
@@ -67,6 +73,12 @@ Repository administrators must configure `maintenance/dependencies` with rules t
 
 `main` remains the default branch and retains its existing protection and human approval
 requirements.
+
+Deletion protection is the primary availability guarantee: asynchronous workflow recovery cannot
+guarantee that Dependabot never sees a missing branch. Administrators with an always-on bypass
+can still delete the branch, so they must not delete it after promotion. The reset workflow also
+needs an explicitly authorized ruleset bypass for its force update; `contents: write` alone does
+not bypass pull-request or non-fast-forward rules. Do not remove those protections to enable reset.
 
 ## Security updates
 
@@ -133,6 +145,14 @@ This offers more control but duplicates Dependabot behavior and increases long-t
 6. Review and merge the promotion into `main`.
 7. Close or retarget remaining maintenance pull requests as appropriate.
 8. Dispatch `reset` to begin the next cycle from the promoted `main`.
+
+If the branch is unexpectedly deleted, automatic recovery recreates it from `main`. Dispatch
+`ensure` for immediate recovery without changing an existing branch. Until the recovery workflow
+is deployed to `main`, dispatch `initialize` instead of `reset` to restore a missing branch.
+
+Validate branch-management behavior locally with
+`node --test .github/scripts/dependabot-maintenance.test.mjs` and validate workflow wiring with
+`actionlint .github/workflows/dependabot-maintenance.yml`.
 
 ## Rollback
 

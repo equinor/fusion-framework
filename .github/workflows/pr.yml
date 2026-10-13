@@ -153,6 +153,9 @@ jobs:
       - name: Run unit tests
         run: pnpm test
 
+      - name: Test maintenance branch lifecycle
+        run: node --test .github/scripts/dependabot-maintenance.test.mjs
+
   required-check:
     name: Check Code
     if: always()

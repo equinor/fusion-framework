@@ -3,16 +3,19 @@ name: Dependabot maintenance stream
 on:
   push:
     branches:
+      - main
       - maintenance/dependencies
+  delete:
   schedule:
     - cron: '0 6 * * 1'
   workflow_dispatch:
     inputs:
       operation:
-        description: Initialize, promote, or reset the dependency maintenance stream
+        description: Ensure, initialize, promote, or reset the dependency maintenance stream
         required: true
         type: choice
         options:
+          - ensure
           - initialize
           - promote
           - reset
@@ -29,8 +32,10 @@ env:
 
 jobs:
   manage-branch:
-    name: ${{ inputs.operation }} maintenance branch
-    if: inputs.operation == 'initialize' || inputs.operation == 'reset'
+    name: Ensure or reset maintenance branch
+    if: >-
+      github.event_name != 'delete' ||
+      (github.event.ref_type == 'branch' && github.event.ref == 'maintenance/dependencies')
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -38,12 +43,13 @@ jobs:
     steps:
       - uses: actions/checkout@v7
         with:
+          ref: main
           fetch-depth: 0
 
-      - name: Initialize or reset maintenance branch
+      - name: Ensure, initialize, or reset maintenance branch
         env:
           GH_TOKEN: ${{ github.token }}
-          OPERATION: ${{ inputs.operation }}
+          OPERATION: ${{ inputs.operation == 'initialize' && 'initialize' || inputs.operation == 'reset' && 'reset' || 'ensure' }}
           REPOSITORY: ${{ github.repository }}
         run: |
           set -euo pipefail
@@ -55,13 +61,21 @@ jobs:
             gh api "repos/${REPOSITORY}/git/ref/heads/${default_branch}" --jq '.object.sha'
           )"
 
-          if [[ "$OPERATION" == initialize ]]; then
-            if gh api "repos/${REPOSITORY}/git/ref/heads/${MAINTENANCE_BRANCH}" \
-              --silent >/dev/null 2>&1; then
-              echo "::error::${MAINTENANCE_BRANCH} already exists; use reset after promotion."
-              exit 1
-            fi
+          # Only a confirmed missing ref is safe to recreate; API failures must not imply absence.
+          branch_response="$RUNNER_TEMP/maintenance-branch-response"
+          branch_exists=true
+          if gh api "repos/${REPOSITORY}/git/ref/heads/${MAINTENANCE_BRANCH}" \
+            --include > "$branch_response"; then
+            branch_exists=true
+          elif [[ "$(awk '/^HTTP/ {print $2}' "$branch_response")" == 404 ]]; then
+            branch_exists=false
+          else
+            echo "::error::Unable to check ${MAINTENANCE_BRANCH}."
+            cat "$branch_response" >&2
+            exit 1
+          fi
 
+          if [[ "$branch_exists" == false ]]; then
             gh api \
               --method POST \
               "repos/${REPOSITORY}/git/refs" \
@@ -70,8 +84,16 @@ jobs:
             exit 0
           fi
 
-          gh api "repos/${REPOSITORY}/git/ref/heads/${MAINTENANCE_BRANCH}" \
-            --silent >/dev/null
+          if [[ "$OPERATION" == initialize ]]; then
+            echo "::error::${MAINTENANCE_BRANCH} already exists; use reset after promotion."
+            exit 1
+          fi
+
+          # Recovery must never discard dependency updates already accumulated in the stream.
+          if [[ "$OPERATION" == ensure ]]; then
+            echo "${MAINTENANCE_BRANCH} already exists; leaving it unchanged."
+            exit 0
+          fi
 
           open_prs="$(
             gh pr list \
@@ -100,7 +122,11 @@ jobs:
 
   promote:
     name: Maintain promotion pull request
-    if: inputs.operation == 'promote' || github.event_name == 'push' || github.event_name == 'schedule'
+    needs: manage-branch
+    if: >-
+      inputs.operation == 'promote' ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/maintenance/dependencies') ||
+      github.event_name == 'schedule'
     runs-on: ubuntu-latest
     permissions:
       actions: write
