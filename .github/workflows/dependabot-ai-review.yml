@@ -242,6 +242,7 @@ jobs:
           fetch-depth: 0
           path: pr-branch
           ref: ${{ needs.research.outputs.head_sha }}
+          token: ${{ secrets.DEPENDABOT_AUTOMATION_TOKEN || github.token }}
 
       - name: Maintain branch and add required changesets
         id: maintain
@@ -249,6 +250,7 @@ jobs:
         with:
           base-ref: ${{ needs.research.outputs.base_ref }}
           expected-head-sha: ${{ needs.research.outputs.head_sha }}
+          github-token: ${{ secrets.DEPENDABOT_AUTOMATION_TOKEN || github.token }}
           head-ref: ${{ needs.research.outputs.head_ref }}
           operation: ${{ inputs.operation }}
           pr-number: ${{ needs.research.outputs.pr_number }}
@@ -282,4 +284,5 @@ jobs:
         with:
           expected-author: app/dependabot
           expected-head-sha: ${{ needs.remediate.outputs.head_sha }}
+          github-token: ${{ secrets.DEPENDABOT_AUTOMATION_TOKEN || github.token }}
           pr-number: ${{ needs.research.outputs.pr_number }}
