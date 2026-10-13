@@ -75,11 +75,11 @@ async function resolveHttpClientProvider(
  * @remarks
  * The Fusion App State backend's published OpenAPI spec only documents its management
  * endpoints — the CouchDB replication path itself is a raw protocol passthrough and is
- * assumed to be `${service.uri}/sync/${name}`. The per-user database is provisioned by
- * the backend, not the client, so `skip_setup: true` is required (see
- * {@link createHttpClientFetch}) - otherwise PouchDB's existence-check PUT hits the
- * passthrough and fails with `400`. Call `setStorage` directly to override this
- * assumption, or to opt out of PouchDB entirely.
+ * assumed to be `${service.uri}/sync/${name}`. PouchDB's standard setup runs against it: a
+ * missing per-user database answers `404`, and PouchDB's follow-up `PUT` makes the backend
+ * provision it, so a first-time user's pull succeeds instead of failing until their first
+ * write. Requires an App State backend that accepts that `PUT` (older ones answered `400`).
+ * Call `setStorage` directly to override this assumption, or to opt out of PouchDB entirely.
  *
  * @param name - The caller-supplied identity (e.g. app key) used to scope local keys
  * and the remote sync path. Required so unrelated callers never share state.
@@ -123,9 +123,7 @@ export async function createDefaultStorage(
         // must stay `@`-free - service.uri (e.g. dev-server's `/@fusion-api/...`) is
         // applied by `createHttpClientFetch`, never parsed by PouchDB itself.
         name_or_instance: `${POUCHDB_PLACEHOLDER_ORIGIN}/${name}`,
-        // the per-user database already exists behind the proxy; skip PouchDB's
-        // GET/PUT existence-check dance, which the passthrough answers with 400.
-        options: { fetch: createHttpClientFetch(httpClient), skip_setup: true },
+        options: { fetch: createHttpClientFetch(httpClient) },
       },
       // base options shared by push and the one-shot pulls below - `live`/`retry` apply
       // as-is to the (always-live) push, `_pullOnce` overrides `live: false, retry: false`.

@@ -16,15 +16,13 @@ const createClient = (impl: () => Promise<Response> = async () => new Response('
 };
 
 describe('createHttpClientFetch', () => {
-  it('answers the CouchDB server-root lookup locally with an empty 200 instead of forwarding it', async () => {
+  it('forwards the CouchDB server-root lookup to `sync/` so the backend supplies the server uuid', async () => {
     const { client, fetch } = createClient();
     const pouchFetch = createHttpClientFetch(client);
 
-    const response = await pouchFetch('https://app-state.invalid/', {});
+    await pouchFetch('https://app-state.invalid/', {});
 
-    expect(fetch).not.toHaveBeenCalled();
-    expect(response.status).toBe(200);
-    expect(await response.json()).toEqual({});
+    expect(fetch).toHaveBeenCalledWith('sync/', { cache: 'no-store' });
   });
 
   it('forwards app-scoped paths under `sync/` with the query string and `no-store` cache', async () => {
@@ -61,15 +59,28 @@ describe('createHttpClientFetch', () => {
     );
   });
 
-  it('keeps the PouchDB remote id (replication checkpoint input) on the database-URL fallback', async () => {
-    const { client, fetch } = createClient();
-    const remote = new PouchDB(PLACEHOLDER_DB, {
-      fetch: createHttpClientFetch(client),
-      skip_setup: true,
-    });
+  it('builds the PouchDB remote id (replication checkpoint input) from the backend server uuid', async () => {
+    const { client } = createClient(
+      async () => new Response('{"couchdb":"Welcome","uuid":"0a1b2c3d4e5f60718293a4b5c6d7e8f9"}'),
+    );
+    const remote = new PouchDB(PLACEHOLDER_DB, { fetch: createHttpClientFetch(client) });
 
-    // Must match PouchDB's fallback for a failed/uuid-less root lookup, or existing checkpoints reset.
-    expect(await remote.id()).toBe(`${PLACEHOLDER_DB}/`);
-    expect(fetch).not.toHaveBeenCalled();
+    expect(await remote.id()).toBe('0a1b2c3d4e5f60718293a4b5c6d7e8f9reviews');
+  });
+
+  it('lets PouchDB create a missing remote database before the first read', async () => {
+    const { client, fetch } = createClient(async () => new Response('{}'));
+    fetch
+      .mockResolvedValueOnce(new Response('{"error":"not_found"}', { status: 404 }))
+      .mockResolvedValueOnce(new Response('{"ok":true}', { status: 201 }));
+    const remote = new PouchDB(PLACEHOLDER_DB, { fetch: createHttpClientFetch(client) });
+
+    await remote.info();
+
+    expect(fetch.mock.calls.map(([path, init]) => `${init?.method ?? 'GET'} ${path}`)).toEqual([
+      'GET sync/reviews/',
+      'PUT sync/reviews/',
+      'GET sync/reviews/',
+    ]);
   });
 });
