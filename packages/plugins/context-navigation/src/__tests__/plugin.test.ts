@@ -8,6 +8,9 @@ import type {
   ContextNavigationConfig,
   ReconcilerSourceEntry,
 } from '../types';
+import { createPathAdapter } from '../adapters/create-path-adapter';
+import { createQueryAdapter } from '../adapters/create-query-adapter';
+import { createCustomAdapter } from '../adapters/custom-adapter/create-custom-adapter';
 import {
   createContextNavigationPlugin,
   type ContextNavigationPluginArgs,
@@ -492,6 +495,74 @@ describe('createContextNavigationPlugin', () => {
 
       teardown();
     });
+
+    it.each([
+      { queryContextId: 'active-ctx', expectedContextId: undefined },
+      { queryContextId: 'url-ctx', expectedContextId: 'url-ctx' },
+    ])(
+      'uses query routing instead of resolving a route slug ($queryContextId)',
+      async ({ queryContextId, expectedContextId }) => {
+        const navigationState$ = new Subject<unknown>();
+        const activeContext = makeContext('active-ctx');
+        // The guard reads the current context and custom path hooks from this test double.
+        const appModules = {
+          context: {
+            currentContext: activeContext,
+            extractContextIdFromPath: (path: string) => path.match(/\/projects\/([^/]+)/)?.[1],
+            generatePathFromContext: (_context: ContextItem, path: string) => path,
+          },
+        } as unknown as AppModulesInstance<[ContextModule]>;
+        const currentApp$ = new BehaviorSubject({
+          appKey: 'my-app',
+          instance$: new BehaviorSubject(appModules),
+          manifest$: new BehaviorSubject({ build: { options: { contextRouting: 'query' } } }),
+        });
+        // The guard only reads the active app's current$ stream.
+        const app = { current$: currentApp$ } as unknown as ContextNavigationPluginArgs['app'];
+        // The guard only reads pathname, search, navigate, and state$ here.
+        const navigation = {
+          path: {
+            pathname: '/apps/my-app/projects/project-slug/edit',
+            search: `?$contextId=${queryContextId}`,
+          },
+          navigate: vi.fn(),
+          state$: navigationState$,
+        } as unknown as ContextNavigationPluginArgs['navigation'];
+        // The guard invokes this test double only when the query context changes.
+        const context = {
+          setCurrentContextByIdAsync: vi.fn(async () => undefined),
+        } as unknown as ContextNavigationPluginArgs['context'];
+        // Plugin setup dispatches navigation events through this test double.
+        const event = {
+          dispatchEvent: vi.fn(async () => ({ canceled: false })),
+        } as unknown as ContextNavigationPluginArgs['event'];
+        const config: ContextNavigationConfig = {
+          portalName: 'TestPortal',
+          origin: 'https://example.com',
+          adapters: [createCustomAdapter(), createQueryAdapter(), createPathAdapter()],
+          enableUrlGuard: true,
+          debug: false,
+          requireValidContext: false,
+          sourceFactory: () => EMPTY,
+          navigationOptions: { replace: false },
+        };
+
+        const teardown = createContextNavigationPlugin({ app, navigation, context, event, config });
+        navigationState$.next({});
+
+        await vi.waitFor(() => {
+          expect(context.setCurrentContextByIdAsync).toHaveBeenCalledTimes(
+            expectedContextId ? 1 : 0,
+          );
+        });
+        // A changed query ID resolves; an unchanged ID does not.
+        if (expectedContextId) {
+          expect(context.setCurrentContextByIdAsync).toHaveBeenCalledWith(expectedContextId);
+        }
+
+        teardown();
+      },
+    );
 
     it('re-asserts active context when URL context resolution fails in push mode', async () => {
       const adapter = makeAdapter();
