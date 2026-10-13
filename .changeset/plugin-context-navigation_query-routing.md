@@ -2,4 +2,6 @@
 "@equinor/fusion-framework-plugin-context-navigation": patch
 ---
 
-Honor explicit query context routing when an app also provides custom path hooks. Fixes #5608.
+Respect explicit query context routing when custom path hooks are registered, and only replace a uniquely matching context path segment in the custom fallback.
+
+Refs: https://github.com/equinor/fusion-core-tasks/issues/2264; https://github.com/equinor/fusion-framework/issues/5608

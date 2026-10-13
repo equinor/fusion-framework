@@ -7,6 +7,30 @@ import { toAppRelative } from './to-app-relative.js';
 import { toFullPath } from './to-full-path.js';
 
 /**
+ * Replaces a context ID only when it identifies one exact path segment.
+ * @param path - The app-relative pathname to update.
+ * @param existingContextId - The context ID extracted from the current path.
+ * @param nextContextId - The context ID to write into the path.
+ * @returns The updated path, or `undefined` when a safe segment cannot be identified.
+ */
+function replaceUniquePathSegment(
+  path: string,
+  existingContextId: string,
+  nextContextId: string,
+): string | undefined {
+  const segments = path.split('/');
+  const segmentIndex = segments.indexOf(existingContextId);
+
+  // Repeated or partial matches are ambiguous, so do not rewrite unrelated route text.
+  if (segmentIndex === -1 || segments.lastIndexOf(existingContextId) !== segmentIndex) {
+    return undefined;
+  }
+
+  segments[segmentIndex] = nextContextId;
+  return segments.join('/');
+}
+
+/**
  * Custom adapter factory — delegates URL encoding/decoding to app-provided hooks.
  *
  * **Intent:** Some apps define their own URL shape for context (e.g.
@@ -71,11 +95,11 @@ export function createCustomAdapter(): ContextNavigationAdapterFactory {
        *
        * - **Null context:** navigates to the app root (clears context from URL).
        * - **Existing context in URL:** replaces it with the new context id,
-       *   preferring the app generator's output, falling back to string replacement.
+       *   preferring the app generator's output, falling back to a unique path-segment replacement.
        * - **No existing context:** delegates entirely to the app generator.
        *
-       * Returns `null` when the generator cannot produce a path (signals the
-       * reconciler to skip navigation).
+       * Returns `null` when the generator cannot produce a path and no unique
+       * context path segment is available for the fallback replacement.
        */
       encode({
         context,
@@ -102,17 +126,16 @@ export function createCustomAdapter(): ContextNavigationAdapterFactory {
         // Context already lives in the URL — prefer the generator's output, but substitute the
         // id directly as a last resort to avoid a no-op navigation
         if (existingContextId) {
-          // Context already embedded in the URL — let the generator rewrite it, or fall back to
-          // a simple string replacement of the old id with the new one
+          // Context already embedded in the URL — use the generator or replace its unique segment.
           generatedPath =
             normalizeStringResult(generate(context, appRelativePath)) ??
-            appRelativePath.replace(existingContextId, context.id);
+            replaceUniquePathSegment(appRelativePath, existingContextId, context.id);
         } else {
           // No context in the current URL — ask the generator where to place the new context id
           generatedPath = normalizeStringResult(generate(context, appRelativePath));
         }
 
-        // Generator returned nothing — can't produce a valid URL; skip navigation
+        // No generator path or unambiguous fallback means there is no safe URL to navigate to.
         if (!generatedPath) {
           return null;
         }
