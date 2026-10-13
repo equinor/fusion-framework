@@ -31,12 +31,11 @@ jobs:
             --repo "$REPOSITORY" \
             --state open \
             --limit 100 \
-            --json author,baseRefName,headRefOid,labels,number \
+            --json author,baseRefName,headRefOid,number \
             --jq '
               .[] |
               select(.author.login == "app/dependabot") |
               select(.baseRefName == env.BASE_REF) |
-              select(any(.labels[]; .name == "🤖 AI researched")) |
               [.number, .headRefOid] |
               @tsv
             ' |
