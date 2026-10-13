@@ -988,12 +988,16 @@ export class BookmarkProvider implements IBookmarkProvider {
     const request$ = action$.pipe(
       filter(bookmarkActions.updateBookmark.success.match),
       map(
-        // TODO(#5139): add payload if current bookmark is the same as the updated bookmark
-        ({ payload }): Bookmark<T> =>
-          ({
-            ...bookmarkSelector(this.#store.value, payload.id),
-            payload: payload.payload,
-          }) as Bookmark<T>,
+        // Only the active bookmark retains payload data in provider state, so restore the submitted
+        // payload when an update response contains metadata alone.
+        ({ payload }): Bookmark<T> => {
+          const currentBookmark = activeBookmarkSelector<T>(this.#store.value);
+          // Combine stored metadata with payload only for the matching active bookmark.
+          return {
+            ...bookmarkSelector<T>(this.#store.value, payload.id),
+            ...(currentBookmark?.id === payload.id ? { payload: currentBookmark.payload } : {}),
+          } as Bookmark<T>;
+        },
       ),
       tap((bookmark) => {
         this._log?.info(`Bookmark updated: ${bookmark.id}, ref: ${ref}`);
