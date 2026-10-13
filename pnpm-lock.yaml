@@ -1226,7 +1226,7 @@ importers:
         version: 7.0.2
       uuid:
         specifier: ^14.0.0
-        version: 14.0.2
+        version: 14.0.3
 
   cookbooks/app-react-styling:
     devDependencies:
@@ -1420,7 +1420,7 @@ importers:
         version: 6.5.3(css-to-react-native@3.2.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       uuid:
         specifier: ^14.0.0
-        version: 14.0.2
+        version: 14.0.3
       zod:
         specifier: 4.6.5
         version: 4.6.5
@@ -2246,7 +2246,7 @@ importers:
         version: 7.8.2
       uuid:
         specifier: ^14.0.0
-        version: 14.0.2
+        version: 14.0.3
       zod:
         specifier: 4.6.5
         version: 4.6.5
@@ -2280,7 +2280,7 @@ importers:
         version: 7.8.2
       uuid:
         specifier: ^14.0.0
-        version: 14.0.2
+        version: 14.0.3
       zod:
         specifier: 4.6.5
         version: 4.6.5
@@ -2358,7 +2358,7 @@ importers:
         version: 7.8.2
       uuid:
         specifier: ^14.0.0
-        version: 14.0.2
+        version: 14.0.3
     devDependencies:
       '@equinor/fusion-framework-module-app':
         specifier: workspace:^
@@ -2460,7 +2460,7 @@ importers:
         version: 7.8.2
       uuid:
         specifier: ^14.0.0
-        version: 14.0.2
+        version: 14.0.3
     devDependencies:
       '@equinor/fusion-framework-module-event':
         specifier: workspace:^
@@ -2574,7 +2574,7 @@ importers:
         version: 1.23.4
       uuid:
         specifier: ^14.0.0
-        version: 14.0.2
+        version: 14.0.3
       zod:
         specifier: 4.6.5
         version: 4.6.5
@@ -2744,7 +2744,7 @@ importers:
         version: 7.8.2
       uuid:
         specifier: ^14.0.1
-        version: 14.0.2
+        version: 14.0.3
       zod:
         specifier: 4.6.5
         version: 4.6.5
@@ -3541,7 +3541,7 @@ importers:
         version: 7.8.2
       uuid:
         specifier: ^14.0.0
-        version: 14.0.2
+        version: 14.0.3
     devDependencies:
       '@types/react':
         specifier: ^19.2.7
@@ -3649,7 +3649,7 @@ importers:
         version: 7.8.2
       uuid:
         specifier: ^14.0.0
-        version: 14.0.2
+        version: 14.0.3
     devDependencies:
       '@types/react':
         specifier: ^19.2.7
@@ -5879,12 +5879,6 @@ packages:
     peerDependencies:
       '@langchain/core': ^1.1.48
       zod: 4.6.5
-
-  '@langchain/openai@1.5.10':
-    resolution: {integrity: sha512-4cxdgolkkXwnAiGEkNrue+ba7jUKjfBwleLCX5DrRVcRGrCc4w5EceblYZOIaHMY6+nhwMqIOtSzBWgcBCLfmw==}
-    engines: {node: '>=22'}
-    peerDependencies:
-      '@langchain/core': ^1.2.9
 
   '@langchain/openai@1.5.13':
     resolution: {integrity: sha512-SA1QWNgM/p8xhdwU82CJ7OofhHEExpAaIwJ7j9ELIyVW795Mn0jDRQO/5yChawLcPhuLkeL+jMesi0FnXbImSg==}
@@ -13066,12 +13060,8 @@ packages:
     resolution: {integrity: sha512-vIYxrBCC/N/K+Js3qSN88go7kIfNPssr/hHCesKCQNAjmgvYS2oqr69kIufEG+O4+PfezOH4EbIeHCfFov8ZgQ==}
     hasBin: true
 
-  uuid@14.0.1:
-    resolution: {integrity: sha512-6ZxzVpzDXDa3bJWaHilVayA+BH/1zmxCJoVgvmqJnid/gPoKHxUrS/aC/T6LGQtNHT+XHG9fXPJB4d+IrU30Ew==}
-    hasBin: true
-
-  uuid@14.0.2:
-    resolution: {integrity: sha512-xZe/16rV4aa+HGSOCiY2YeLT1OybRLrrkL/Rqaq7p7GMVXjFh+6wN4oMYgjFmnSnhY8t6Xpdl2l9qmnHYuMHwQ==}
+  uuid@14.0.3:
+    resolution: {integrity: sha512-Sc5u1VVln93y1Xnz4R+CunOZc7R9LUcTmhj7Rc7Eg3HVcf7rVn2FOoa812fe0W8p3jD7xeoGSYbfqCGGH2B6xw==}
     hasBin: true
 
   valibot@1.4.2:
@@ -14757,7 +14747,7 @@ snapshots:
       '@lit-labs/task': 3.1.0
       '@types/uuid': 11.0.0
       lit: 3.3.2
-      uuid: 14.0.2
+      uuid: 14.0.3
 
   '@equinor/fusion-wc-searchable-dropdown@4.1.4':
     dependencies:
@@ -14770,7 +14760,7 @@ snapshots:
       '@lit-labs/task': 3.1.0
       '@types/uuid': 11.0.0
       lit: 3.3.3
-      uuid: 14.0.2
+      uuid: 14.0.3
 
   '@equinor/fusion-wc-skeleton@2.2.3':
     dependencies:
@@ -15482,7 +15472,7 @@ snapshots:
       '@ibm-cloud/watsonx-ai': 1.7.16(supports-color@10.2.2)
       '@langchain/classic': 1.0.40(@langchain/core@1.2.12(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.11.0(@opentelemetry/api@1.9.1))(openai@7.20.0(undici@7.29.0)(zod@4.6.5)))(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.11.0(@opentelemetry/api@1.9.1))(cheerio@1.2.0)(openai@7.20.0(undici@7.29.0)(zod@4.6.5))
       '@langchain/core': 1.2.12(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.11.0(@opentelemetry/api@1.9.1))(openai@7.20.0(undici@7.29.0)(ws@7.5.11)(zod@4.6.5))(ws@7.5.11)
-      '@langchain/openai': 1.5.10(@langchain/core@1.2.12(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.11.0(@opentelemetry/api@1.9.1))(openai@7.20.0(undici@7.29.0)(zod@4.6.5)))(undici@7.29.0)
+      '@langchain/openai': 1.5.13(@langchain/core@1.2.12(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.11.0(@opentelemetry/api@1.9.1))(openai@7.20.0(undici@7.29.0)(zod@4.6.5)))(undici@7.29.0)
       binary-extensions: 2.3.0
       flat: 5.0.2
       ibm-cloud-sdk-core: 5.6.0(supports-color@10.2.2)
@@ -15490,7 +15480,7 @@ snapshots:
       langsmith: 0.8.3(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.11.0(@opentelemetry/api@1.9.1))(openai@7.20.0(undici@7.29.0)(ws@7.5.11)(zod@4.6.5))(ws@7.5.11)
       math-expression-evaluator: 2.0.7
       openai: 7.20.0(undici@7.29.0)(ws@7.5.11)(zod@4.6.5)
-      uuid: 14.0.1
+      uuid: 14.0.3
       zod: 4.6.5
     optionalDependencies:
       '@azure/search-documents': 13.0.0(supports-color@10.2.2)
@@ -15552,19 +15542,6 @@ snapshots:
     transitivePeerDependencies:
       - react
       - react-dom
-
-  '@langchain/openai@1.5.10(@langchain/core@1.2.12(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.11.0(@opentelemetry/api@1.9.1))(openai@7.20.0(undici@7.29.0)(zod@4.6.5)))(undici@7.29.0)':
-    dependencies:
-      '@langchain/core': 1.2.12(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.11.0(@opentelemetry/api@1.9.1))(openai@7.20.0(undici@7.29.0)(ws@7.5.11)(zod@4.6.5))(ws@7.5.11)
-      js-tiktoken: 1.0.21
-      openai: 7.20.0(undici@7.29.0)(ws@7.5.11)(zod@4.6.5)
-      zod: 4.6.5
-    transitivePeerDependencies:
-      - '@aws-sdk/credential-provider-node'
-      - '@smithy/hash-node'
-      - '@smithy/signature-v4'
-      - undici
-      - ws
 
   '@langchain/openai@1.5.13(@langchain/core@1.2.12(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.11.0(@opentelemetry/api@1.9.1))(openai@7.20.0(undici@7.29.0)(zod@4.6.5)))(undici@7.29.0)':
     dependencies:
@@ -23713,9 +23690,7 @@ snapshots:
 
   uuid@11.1.1: {}
 
-  uuid@14.0.1: {}
-
-  uuid@14.0.2: {}
+  uuid@14.0.3: {}
 
   valibot@1.4.2(typescript@7.0.2):
     optionalDependencies:
