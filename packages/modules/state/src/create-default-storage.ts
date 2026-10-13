@@ -2,17 +2,14 @@ import type {
   ConfigBuilderCallbackArgs,
   ModulesInstanceType,
 } from '@equinor/fusion-framework-module';
-import type {
-  HttpMsalModule,
-  IHttpClient,
-  IHttpClientProvider,
-} from '@equinor/fusion-framework-module-http';
+import type { HttpMsalModule, IHttpClientProvider } from '@equinor/fusion-framework-module-http';
 import type { HttpClientMsal } from '@equinor/fusion-framework-module-http/client';
 import type {
   ServiceDiscoveryModule,
   IServiceDiscoveryProvider,
 } from '@equinor/fusion-framework-module-service-discovery';
 
+import { createHttpClientFetch } from './create-http-client-fetch.js';
 import { PouchDbStorage, PouchDbSyncStorage } from './storage/index.js';
 import type { IStorage, PouchDbSyncPullOptions } from './storage/index.js';
 
@@ -27,36 +24,6 @@ const APP_STATE_SERVICE_KEY = 'app-state';
  * to parse - see {@link createHttpClientFetch}. Never actually requested.
  */
 const POUCHDB_PLACEHOLDER_ORIGIN = 'https://app-state.invalid';
-
-/**
- * Builds a PouchDB-compatible `fetch` that routes replication requests through the Fusion
- * {@link IHttpClient}, so token acquisition, request/response instrumentation, and any other
- * cross-cutting `IHttpClient` behavior apply to PouchDB's traffic the same way they do for the
- * rest of the app, instead of PouchDB talking to the backend on its own.
- *
- * @remarks
- * PouchDB parses replication URLs with a legacy regex, not the WHATWG `URL` API, which
- * misreads a literal `@` (as used by the dev-server's `/@fusion-api/...` proxy prefix) as
- * a userinfo delimiter and corrupts the parsed host. The remote database is therefore
- * always constructed under {@link POUCHDB_PLACEHOLDER_ORIGIN} (see `createDefaultStorage`),
- * so the only thing that needs forwarding here is the path PouchDB computed relative to it -
- * `client.fetch` resolves that path against its own `uri` the same way `IHttpClient` always does.
- *
- * @param client - The `IHttpClient` used to resolve, authenticate, and execute requests
- * against the app-state service.
- * @returns A `fetch` implementation for `PouchDB.Configuration.RemoteDatabaseConfiguration`.
- */
-function createHttpClientFetch(
-  client: IHttpClient,
-): PouchDB.Configuration.RemoteDatabaseConfiguration['fetch'] {
-  return async (url, opts) => {
-    // `pathname` already starts with `/` - do not add another slash before it.
-    const { pathname, search } = new URL(typeof url === 'string' ? url : url.url);
-    const path = `sync${pathname}${search}`;
-
-    return client.fetch(path, { ...opts, cache: 'no-store' });
-  };
-}
 
 /**
  * Resolves the {@link ServiceDiscoveryModule}'s provider, checking the local module scope
@@ -108,11 +75,11 @@ async function resolveHttpClientProvider(
  * @remarks
  * The Fusion App State backend's published OpenAPI spec only documents its management
  * endpoints — the CouchDB replication path itself is a raw protocol passthrough and is
- * assumed to be `${service.uri}/sync/${name}`. The per-user database is provisioned by
- * the backend, not the client, so `skip_setup: true` is required (see
- * {@link createHttpClientFetch}) - otherwise PouchDB's existence-check PUT hits the
- * passthrough and fails with `400`. Call `setStorage` directly to override this
- * assumption, or to opt out of PouchDB entirely.
+ * assumed to be `${service.uri}/sync/${name}`. PouchDB's standard setup runs against it: a
+ * missing per-user database answers `404`, and PouchDB's follow-up `PUT` makes the backend
+ * provision it, so a first-time user's pull succeeds instead of failing until their first
+ * write. Requires an App State backend that accepts that `PUT` (older ones answered `400`).
+ * Call `setStorage` directly to override this assumption, or to opt out of PouchDB entirely.
  *
  * @param name - The caller-supplied identity (e.g. app key) used to scope local keys
  * and the remote sync path. Required so unrelated callers never share state.
@@ -156,9 +123,7 @@ export async function createDefaultStorage(
         // must stay `@`-free - service.uri (e.g. dev-server's `/@fusion-api/...`) is
         // applied by `createHttpClientFetch`, never parsed by PouchDB itself.
         name_or_instance: `${POUCHDB_PLACEHOLDER_ORIGIN}/${name}`,
-        // the per-user database already exists behind the proxy; skip PouchDB's
-        // GET/PUT existence-check dance, which the passthrough answers with 400.
-        options: { fetch: createHttpClientFetch(httpClient), skip_setup: true },
+        options: { fetch: createHttpClientFetch(httpClient) },
       },
       // base options shared by push and the one-shot pulls below - `live`/`retry` apply
       // as-is to the (always-live) push, `_pullOnce` overrides `live: false, retry: false`.
