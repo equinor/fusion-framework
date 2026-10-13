@@ -107,6 +107,7 @@ jobs:
         uses: ./.github/actions/dependabot-promotion-pr
         with:
           branch: ${{ env.MAINTENANCE_BRANCH }}
+          github-token: ${{ secrets.DEPENDABOT_AUTOMATION_TOKEN || github.token }}
           validated: ${{ needs.validate.result == 'success' }}
 
       - name: Mark ready and enable squash auto-merge for the validated head
@@ -114,6 +115,7 @@ jobs:
         uses: ./.github/actions/dependabot-enable-auto-merge
         with:
           expected-head-sha: ${{ needs.validate.outputs.head_sha }}
+          github-token: ${{ secrets.DEPENDABOT_AUTOMATION_TOKEN || github.token }}
           mark-ready: true
           pr-number: ${{ steps.promotion.outputs.pr-number }}
           skip-on-head-mismatch: true

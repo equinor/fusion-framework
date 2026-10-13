@@ -84,6 +84,19 @@ can still delete the branch, so they must not delete it after promotion. The res
 needs an explicitly authorized ruleset bypass for its force update; `contents: write` alone does
 not bypass pull-request or non-fast-forward rules. Do not remove those protections to enable reset.
 
+## Automation identity
+
+Pushes and merges made with the built-in `GITHUB_TOKEN` do not start new workflow runs for the
+events they cause, and bot pushes to pull request branches create runs that wait for maintainer
+approval, which blocks auto-merge. Without a separate identity, merges into the maintenance branch
+would not trigger promotion, and each changeset commit would need a manual "Approve and run".
+
+The workflows therefore use the optional repository secret `DEPENDABOT_AUTOMATION_TOKEN` for the
+changeset push, for enabling auto-merge, and for maintaining the promotion pull request. Use a
+fine-grained token with `Contents`, `Pull requests`, and `Actions` read and write access, owned by
+an account with write access. When the secret is absent, the workflows fall back to
+`GITHUB_TOKEN`, and the limitations above apply.
+
 ## Security updates
 
 Dependabot treats security updates differently when version updates target a non-default branch.
