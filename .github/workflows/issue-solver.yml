@@ -11,10 +11,10 @@ on:
         description: Fusion AI deployment for coding
         required: true
         type: choice
-        default: gpt-5.6-sol
+        default: gpt-6.1-sol
         options:
-          - gpt-5.6-sol
-          - gpt-5.6-luna
+          - gpt-6.1-sol
+          - gpt-6-luna
 
 permissions: {}
 
