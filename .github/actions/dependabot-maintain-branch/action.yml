@@ -63,7 +63,6 @@ runs:
         HEAD_REF: ${{ inputs.head-ref }}
         OPERATION: ${{ inputs.operation }}
         PR_NUMBER: ${{ inputs.pr-number }}
-        READINESS: ${{ steps.verdict.outputs.readiness }}
         REPOSITORY: ${{ github.repository }}
         UPDATE_SUMMARY: ${{ inputs.update-summary }}
         VERDICT: ${{ steps.verdict.outputs.verdict }}

@@ -26,7 +26,7 @@ outputs:
     description: true when confidence is high
     value: ${{ steps.review.outputs.high_confidence }}
   auto-merge:
-    description: true when the verdict is merge with high confidence and readiness is not needs changes
+    description: true when the verdict is merge with high confidence
     value: ${{ steps.review.outputs.auto_merge }}
 
 runs:
