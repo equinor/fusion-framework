@@ -241,7 +241,7 @@ importers:
         version: 26.2.0
       chalk:
         specifier: ^6.0.0
-        version: 6.0.0
+        version: 6.0.1
       happy-dom:
         specifier: ^20.8.4
         version: 20.14.6
@@ -1503,7 +1503,7 @@ importers:
         version: 9.0.10
       chalk:
         specifier: ^6.0.0
-        version: 6.0.0
+        version: 6.0.1
       commander:
         specifier: ^15.0.0
         version: 15.0.0
@@ -1762,7 +1762,7 @@ importers:
         version: 0.39.0
       chalk:
         specifier: ^6.0.0
-        version: 6.0.0
+        version: 6.0.1
       commander:
         specifier: ^15.0.0
         version: 15.0.0
@@ -2033,7 +2033,7 @@ importers:
         version: link:../core
       chalk:
         specifier: ^6.0.0
-        version: 6.0.0
+        version: 6.0.1
       commander:
         specifier: ^15.0.0
         version: 15.0.0
@@ -3519,7 +3519,7 @@ importers:
     dependencies:
       chalk:
         specifier: ^6.0.0
-        version: 6.0.0
+        version: 6.0.1
       rxjs:
         specifier: ^7.8.1
         version: 7.8.2
@@ -4979,15 +4979,6 @@ packages:
     engines: {node: '>=18'}
     cpu: [x64]
     os: [win32]
-
-  '@exodus/bytes@1.15.1':
-    resolution: {integrity: sha512-S6mL0yNB/Abt9Ei4tq8gDhcczc4S3+vQ4ra7vxnAf+YHC02srtqxKKZghx2Dq6p0e66THKwR6r8N6P95wEty7Q==}
-    engines: {node: ^20.19.0 || ^22.12.0 || >=24.0.0}
-    peerDependencies:
-      '@noble/hashes': ^1.8.0 || ^2.0.0
-    peerDependenciesMeta:
-      '@noble/hashes':
-        optional: true
 
   '@exodus/bytes@1.16.0':
     resolution: {integrity: sha512-IcpW84uEn3N7ETtNZMlxKhfl6Pec8rUNGOTBtWbK1FKhJxIFAptZyVrvVRVBimAJxJCgc3PxepxkdWWG4DVzfA==}
@@ -9635,8 +9626,8 @@ packages:
     resolution: {integrity: sha512-7NzBL0rN6fMUW+f7A6Io4h40qQlG+xGmtMxfbnH/K7TAtt8JQWVQK+6g0UXKMeVJoyV5EkkNsErQ8pVD3bLHbA==}
     engines: {node: ^12.17.0 || ^14.13 || >=16.0.0}
 
-  chalk@6.0.0:
-    resolution: {integrity: sha512-2uNTXIuTTxk7ciZgAU1BQcgnchcG0xXnrs6jzkQfj9SsRa9M2s5zE8WT96hS6KmG4MzWHSrvH43DF1m4XRkrFg==}
+  chalk@6.0.1:
+    resolution: {integrity: sha512-/Ce6KNm3vIbWdMlNna6RVIZ/ICQxnJxCicet5LBKK9ZffBkqzDw0xh9EiKSljdRtiIQ1S1z4YgcscUUGzNCWrA==}
     engines: {node: '>=22'}
 
   character-entities-html4@2.1.0:
@@ -12870,10 +12861,6 @@ packages:
   tr46@0.0.3:
     resolution: {integrity: sha512-N3WMsuqV66lT30CrXNbEjx4GEwlow3v6rr4mCcv6prnfwhS01rkgyFdjPNBYd9br7LpXV1+Emh01fHnq2Gdgrw==}
 
-  tr46@6.0.0:
-    resolution: {integrity: sha512-bLVMLPtstlZ4iMQHpFHTR7GAGj2jxi8Dg0s2h2MafAE4uSWF98FC/3MomU51iQAMf8/qDUbKWf5GxuvvVcXEhw==}
-    engines: {node: '>=20'}
-
   tr46@7.0.0:
     resolution: {integrity: sha512-BcDSDW+SIGWVOns1Zm6Yg91q9AEj7eaID0QDY9oIqJD1A8dscNwMcl9Sms2DeuWCNov1X0/oXanHGYQBSLwZsg==}
     engines: {node: ^22.14.0 || >=24.0.0}
@@ -13562,10 +13549,6 @@ packages:
   whatwg-mimetype@5.0.0:
     resolution: {integrity: sha512-sXcNcHOC51uPGF0P/D4NVtrkjSU2fNsm9iog4ZvZJsL3rjoDAzXZhkm2MWt1y+PUdggKAYVoMAIYcs78wJ51Cw==}
     engines: {node: '>=20'}
-
-  whatwg-url@17.1.2:
-    resolution: {integrity: sha512-TEZA+Zqxin7Jjsm2cjRohCmen5awh+hT6Zi3VZdqZlNRk7zvOI/9WpBFg/DWlA56bWnzwm6DuB8NS0EsxQH9uQ==}
-    engines: {node: ^22.14.0 || >=24.0.0}
 
   whatwg-url@17.2.0:
     resolution: {integrity: sha512-IhLIHNcBrzIixC5XXsbr4DxdjajyA5vQ5RwGZMtrUp+GbtE5Nrsge9QKau7jXrC0aTXLYGV0xiW7Tb4YS2aomw==}
@@ -15012,8 +14995,6 @@ snapshots:
 
   '@esbuild/win32-x64@0.28.2':
     optional: true
-
-  '@exodus/bytes@1.15.1': {}
 
   '@exodus/bytes@1.16.0': {}
 
@@ -19804,7 +19785,7 @@ snapshots:
 
   chalk@5.6.2: {}
 
-  chalk@6.0.0: {}
+  chalk@6.0.1: {}
 
   character-entities-html4@2.1.0: {}
 
@@ -20180,7 +20161,7 @@ snapshots:
   data-urls@8.0.0:
     dependencies:
       whatwg-mimetype: 5.0.0
-      whatwg-url: 17.1.2
+      whatwg-url: 17.2.0
     transitivePeerDependencies:
       - '@noble/hashes'
 
@@ -20844,7 +20825,7 @@ snapshots:
 
   html-encoding-sniffer@7.0.0:
     dependencies:
-      '@exodus/bytes': 1.15.1
+      '@exodus/bytes': 1.16.0
     transitivePeerDependencies:
       - '@noble/hashes'
 
@@ -23590,10 +23571,6 @@ snapshots:
 
   tr46@0.0.3: {}
 
-  tr46@6.0.0:
-    dependencies:
-      punycode: 2.3.1
-
   tr46@7.0.0:
     dependencies:
       punycode: 2.3.1
@@ -24371,14 +24348,6 @@ snapshots:
   whatwg-mimetype@4.0.0: {}
 
   whatwg-mimetype@5.0.0: {}
-
-  whatwg-url@17.1.2:
-    dependencies:
-      '@exodus/bytes': 1.15.1
-      tr46: 6.0.0
-      webidl-conversions: 8.0.1
-    transitivePeerDependencies:
-      - '@noble/hashes'
 
   whatwg-url@17.2.0:
     dependencies:
