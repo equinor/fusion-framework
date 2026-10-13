@@ -342,6 +342,7 @@ jobs:
             fi
           done
 
+          review_md="$RUNNER_TEMP/dependabot-review.md"
           jq --slurp --raw-output '
             [
               .[] |
@@ -353,18 +354,40 @@ jobs:
               ) |
               .data.content
             ] |
-            last
-          ' "$RUNNER_TEMP/dependabot-review.jsonl" > "$RUNNER_TEMP/dependabot-review.md"
+            (last // empty)
+          ' "$RUNNER_TEMP/dependabot-review.jsonl" > "$review_md"
 
-          grep -Eq '^## (🟢 Verdict: MERGE|🟡 Verdict: HOLD|🔴 Verdict: DECLINE)$' \
-            "$RUNNER_TEMP/dependabot-review.md"
-          grep -Eq '^\*\*Confidence:\*\* (high|medium|low)$' \
-            "$RUNNER_TEMP/dependabot-review.md"
-          grep -Eq '^\*\*Readiness:\*\* (ready|waiting for checks|waiting for approval|needs changes)$' \
-            "$RUNNER_TEMP/dependabot-review.md"
-          grep -Fq '### Key findings' "$RUNNER_TEMP/dependabot-review.md"
-          grep -Fq '### Repository impact' "$RUNNER_TEMP/dependabot-review.md"
-          grep -Fq '### Merge path' "$RUNNER_TEMP/dependabot-review.md"
+          # Normalize line endings and trailing whitespace so the strict line matches below
+          # do not fail on invisible differences.
+          sed -i -e 's/\r$//' -e 's/[[:space:]]*$//' "$review_md"
+
+          # Fail with the offending output visible; a bare grep failure leaves no trace in the log.
+          require_line() {
+            local description="$1"
+            shift
+            if ! grep "$@" "$review_md" > /dev/null; then
+              echo "::error::Copilot review output is missing ${description}."
+              echo '::group::Copilot review output'
+              cat "$review_md"
+              echo '::endgroup::'
+              exit 1
+            fi
+          }
+
+          if [[ ! -s "$review_md" ]]; then
+            echo '::error::Copilot produced no final review message.'
+            echo '::group::Copilot event types'
+            jq --raw-output 'select(type == "object") | .type' "$RUNNER_TEMP/dependabot-review.jsonl" | sort | uniq -c
+            echo '::endgroup::'
+            exit 1
+          fi
+
+          require_line 'a verdict heading' -E '^## (🟢 Verdict: MERGE|🟡 Verdict: HOLD|🔴 Verdict: DECLINE)$'
+          require_line 'a confidence line' -E '^\*\*Confidence:\*\* (high|medium|low)$'
+          require_line 'a readiness line' -E '^\*\*Readiness:\*\* (ready|waiting for checks|waiting for approval|needs changes)$'
+          require_line "the '### Key findings' section" -F '### Key findings'
+          require_line "the '### Repository impact' section" -F '### Repository impact'
+          require_line "the '### Merge path' section" -F '### Merge path'
 
           merge_recommended=false
           auto_merge=false
