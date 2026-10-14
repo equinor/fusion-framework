@@ -1581,8 +1581,8 @@ importers:
         specifier: ^1.0.0
         version: 1.0.0(rollup@4.64.5)
       '@types/adm-zip':
-        specifier: ^0.5.0
-        version: 0.5.8
+        specifier: ^0.6.0
+        version: 0.6.0
       '@types/normalize-package-data':
         specifier: ^2.4.4
         version: 2.4.4
@@ -8290,8 +8290,9 @@ packages:
     cpu: [arm64]
     os: [win32]
 
-  '@types/adm-zip@0.5.8':
-    resolution: {integrity: sha512-RVVH7QvZYbN+ihqZ4kX/dMiowf6o+Jk1fNwiSdx0NahBJLU787zkULhGhJM8mf/obmLGmgdMM0bXsQTmyfbR7Q==}
+  '@types/adm-zip@0.6.0':
+    resolution: {integrity: sha512-4BJwT30zsKqyYk+PgJS+LQzVrLh0bHragg9etHGg679uuBbNDbSaLsJy+DaJQZM8AvESHB+t3ruVzbrn6BUsMQ==}
+    deprecated: This is a stub types definition. adm-zip provides its own type definitions, so you do not need this installed.
 
   '@types/chai@5.2.3':
     resolution: {integrity: sha512-Mw558oeA9fFbv65/y4mHtXDs9bPnFMZAL/jxdPFUpOHHIXX91mcgEHbS5Lahr+pwZFR8A7GQleRWeI6cGFC2UA==}
@@ -17879,9 +17880,9 @@ snapshots:
   '@turbo/windows-arm64@2.11.7':
     optional: true
 
-  '@types/adm-zip@0.5.8':
+  '@types/adm-zip@0.6.0':
     dependencies:
-      '@types/node': 24.13.3
+      adm-zip: 0.6.1
 
   '@types/chai@5.2.3':
     dependencies:
