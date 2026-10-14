@@ -170,6 +170,16 @@ catalogs:
     playwright:
       specifier: ^1.63.0
       version: 1.63.0
+  vitest:
+    '@vitest/browser-playwright':
+      specifier: ^5.0.3
+      version: 5.0.4
+    vitest:
+      specifier: ^5.0.3
+      version: 5.0.4
+    vitest-browser-react:
+      specifier: ^2.3.0
+      version: 2.3.0
 
 overrides:
   form-data@>=4.0.0 <4.0.6: 4.0.6
@@ -255,8 +265,8 @@ importers:
         specifier: ^7.0.2
         version: 7.0.2
       vitest:
-        specifier: ^5.0.3
-        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.2.0)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.2.0)(typescript@7.0.2))(vite@8.3.4(@types/node@26.2.0)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
+        specifier: catalog:vitest
+        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.2.0)(@vitest/browser-playwright@5.0.4)(@vitest/ui@5.0.4)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.2.0)(typescript@7.0.2))(vite@8.3.4(@types/node@26.2.0)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
 
   cookbooks/app-react:
     devDependencies:
@@ -276,8 +286,8 @@ importers:
         specifier: ^19.2.3
         version: 19.2.5(@types/react@19.2.18)
       '@vitest/browser-playwright':
-        specifier: ^4.1.0
-        version: 4.1.11(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(playwright@1.63.0)(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))(vitest@5.0.4)
+        specifier: catalog:vitest
+        version: 5.0.4(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(playwright@1.63.0)(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))(vitest@5.0.4)
       playwright:
         specifier: 'catalog:'
         version: 1.63.0
@@ -291,10 +301,10 @@ importers:
         specifier: ^7.0.2
         version: 7.0.2
       vitest:
-        specifier: ^5.0.3
-        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@4.1.11)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
+        specifier: catalog:vitest
+        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@5.0.4)(@vitest/ui@5.0.4)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
       vitest-browser-react:
-        specifier: ^2.2.0
+        specifier: catalog:vitest
         version: 2.3.0(@types/react-dom@19.2.5(@types/react@19.2.18))(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vitest@5.0.4)
 
   cookbooks/app-react-ag-grid:
@@ -609,8 +619,8 @@ importers:
         specifier: 'catalog:'
         version: 1.63.0
       '@vitest/browser-playwright':
-        specifier: ^4.1.0
-        version: 4.1.11(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(playwright@1.63.0)(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))(vitest@5.0.4)
+        specifier: catalog:vitest
+        version: 5.0.4(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(playwright@1.63.0)(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))(vitest@5.0.4)
       concurrently:
         specifier: ^10.0.5
         version: 10.0.6
@@ -627,10 +637,10 @@ importers:
         specifier: ^7.0.2
         version: 7.0.2
       vitest:
-        specifier: ^5.0.3
-        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@4.1.11)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
+        specifier: catalog:vitest
+        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@5.0.4)(@vitest/ui@5.0.4)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
       vitest-browser-react:
-        specifier: ^2.2.0
+        specifier: catalog:vitest
         version: 2.3.0(@types/react-dom@19.2.5(@types/react@19.2.18))(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vitest@5.0.4)
 
   cookbooks/app-react-context-custom-error:
@@ -767,16 +777,16 @@ importers:
         specifier: workspace:^
         version: link:../../packages/vitest-plugin/react-app
       '@vitest/browser-playwright':
-        specifier: ^4.1.0
-        version: 4.1.11(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(playwright@1.63.0)(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))(vitest@5.0.4)
+        specifier: catalog:vitest
+        version: 5.0.4(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(playwright@1.63.0)(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))(vitest@5.0.4)
       playwright:
         specifier: 'catalog:'
         version: 1.63.0
       vitest:
-        specifier: ^5.0.3
-        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@4.1.11)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
+        specifier: catalog:vitest
+        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@5.0.4)(@vitest/ui@5.0.4)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
       vitest-browser-react:
-        specifier: ^2.2.0
+        specifier: catalog:vitest
         version: 2.3.0(@types/react-dom@19.2.5(@types/react@19.2.18))(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vitest@5.0.4)
 
   cookbooks/app-react-mock-playwright:
@@ -860,8 +870,8 @@ importers:
         specifier: ^19.2.3
         version: 19.2.5(@types/react@19.2.18)
       '@vitest/browser-playwright':
-        specifier: ^4.1.0
-        version: 4.1.11(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(playwright@1.63.0)(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))(vitest@5.0.4)
+        specifier: catalog:vitest
+        version: 5.0.4(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(playwright@1.63.0)(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))(vitest@5.0.4)
       playwright:
         specifier: 'catalog:'
         version: 1.63.0
@@ -875,10 +885,10 @@ importers:
         specifier: ^7.0.2
         version: 7.0.2
       vitest:
-        specifier: ^5.0.3
-        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@4.1.11)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
+        specifier: catalog:vitest
+        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@5.0.4)(@vitest/ui@5.0.4)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
       vitest-browser-react:
-        specifier: ^2.2.0
+        specifier: catalog:vitest
         version: 2.3.0(@types/react-dom@19.2.5(@types/react@19.2.18))(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vitest@5.0.4)
 
   cookbooks/app-react-msal:
@@ -905,8 +915,8 @@ importers:
         specifier: ^19.2.3
         version: 19.2.5(@types/react@19.2.18)
       '@vitest/browser-playwright':
-        specifier: ^4.1.0
-        version: 4.1.11(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(playwright@1.63.0)(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))(vitest@5.0.4)
+        specifier: catalog:vitest
+        version: 5.0.4(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(playwright@1.63.0)(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))(vitest@5.0.4)
       playwright:
         specifier: 'catalog:'
         version: 1.63.0
@@ -920,10 +930,10 @@ importers:
         specifier: ^7.0.2
         version: 7.0.2
       vitest:
-        specifier: ^5.0.3
-        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@4.1.11)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
+        specifier: catalog:vitest
+        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@5.0.4)(@vitest/ui@5.0.4)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
       vitest-browser-react:
-        specifier: ^2.2.0
+        specifier: catalog:vitest
         version: 2.3.0(@types/react-dom@19.2.5(@types/react@19.2.18))(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vitest@5.0.4)
 
   cookbooks/app-react-people:
@@ -1093,8 +1103,8 @@ importers:
         specifier: ^19.2.3
         version: 19.2.5(@types/react@19.2.18)
       '@vitest/browser-playwright':
-        specifier: ^4.1.0
-        version: 4.1.11(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(playwright@1.63.0)(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))(vitest@5.0.4)
+        specifier: catalog:vitest
+        version: 5.0.4(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(playwright@1.63.0)(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))(vitest@5.0.4)
       playwright:
         specifier: 'catalog:'
         version: 1.63.0
@@ -1108,10 +1118,10 @@ importers:
         specifier: ^7.0.2
         version: 7.0.2
       vitest:
-        specifier: ^5.0.3
-        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@4.1.11)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
+        specifier: catalog:vitest
+        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@5.0.4)(@vitest/ui@5.0.4)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
       vitest-browser-react:
-        specifier: ^2.2.0
+        specifier: catalog:vitest
         version: 2.3.0(@types/react-dom@19.2.5(@types/react@19.2.18))(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vitest@5.0.4)
 
   cookbooks/app-react-router-legacy:
@@ -1478,8 +1488,8 @@ importers:
         specifier: ^7.0.2
         version: 7.0.2
       vitest:
-        specifier: ^5.0.3
-        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@4.1.11)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
+        specifier: catalog:vitest
+        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@5.0.4)(@vitest/ui@5.0.4)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
 
   packages/cli:
     dependencies:
@@ -1623,8 +1633,8 @@ importers:
         specifier: ^7.0.2
         version: 7.0.2
       vitest:
-        specifier: ^5.0.3
-        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@4.1.11)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
+        specifier: catalog:vitest
+        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@5.0.4)(@vitest/ui@5.0.4)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
 
   packages/cli-plugins/ai-base:
     dependencies:
@@ -1651,8 +1661,8 @@ importers:
         specifier: ^7.0.2
         version: 7.0.2
       vitest:
-        specifier: ^5.0.3
-        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@4.1.11)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
+        specifier: catalog:vitest
+        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@5.0.4)(@vitest/ui@5.0.4)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
 
   packages/cli-plugins/ai-chat:
     dependencies:
@@ -1682,8 +1692,8 @@ importers:
         specifier: ^7.0.2
         version: 7.0.2
       vitest:
-        specifier: ^5.0.3
-        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@4.1.11)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
+        specifier: catalog:vitest
+        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@5.0.4)(@vitest/ui@5.0.4)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
 
   packages/cli-plugins/ai-index:
     dependencies:
@@ -1752,8 +1762,8 @@ importers:
         specifier: ^7.0.2
         version: 7.0.2
       vitest:
-        specifier: ^5.0.3
-        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@4.1.11)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
+        specifier: catalog:vitest
+        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@5.0.4)(@vitest/ui@5.0.4)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
 
   packages/cli-plugins/copilot:
     dependencies:
@@ -1802,8 +1812,8 @@ importers:
         specifier: ^7.0.2
         version: 7.0.2
       vitest:
-        specifier: ^5.0.3
-        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@4.1.11)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
+        specifier: catalog:vitest
+        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@5.0.4)(@vitest/ui@5.0.4)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
 
   packages/dev-portal:
     devDependencies:
@@ -1906,6 +1916,9 @@ importers:
       '@equinor/fusion-wc-person':
         specifier: ^3.5.5
         version: 3.5.6
+      '@opentelemetry/api':
+        specifier: ^1.9.0
+        version: 1.9.1
       '@types/react':
         specifier: ^19.2.7
         version: 19.2.18
@@ -1919,8 +1932,8 @@ importers:
         specifier: ^6.0.1
         version: 6.1.2(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
       '@vitest/browser-playwright':
-        specifier: ^4.1.0
-        version: 4.1.11(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(playwright@1.63.0)(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))(vitest@5.0.4)
+        specifier: catalog:vitest
+        version: 5.0.4(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(playwright@1.63.0)(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))(vitest@5.0.4)
       dotenv:
         specifier: ^18.0.4
         version: 18.0.7
@@ -1958,10 +1971,10 @@ importers:
         specifier: ^8.0.0
         version: 8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15)(yaml@2.9.1)
       vitest:
-        specifier: ^5.0.3
-        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@4.1.11)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
+        specifier: catalog:vitest
+        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@5.0.4)(@vitest/ui@5.0.4)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
       vitest-browser-react:
-        specifier: ^2.2.0
+        specifier: catalog:vitest
         version: 2.3.0(@types/react-dom@19.2.5(@types/react@19.2.18))(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vitest@5.0.4)
 
   packages/dev-server:
@@ -1986,8 +1999,8 @@ importers:
         specifier: ^8.0.0
         version: 8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15)(yaml@2.9.1)
       vitest:
-        specifier: ^5.0.3
-        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@4.1.11)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
+        specifier: catalog:vitest
+        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@5.0.4)(@vitest/ui@5.0.4)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
 
   packages/framework:
     dependencies:
@@ -2023,8 +2036,8 @@ importers:
         specifier: ^7.0.2
         version: 7.0.2
       vitest:
-        specifier: ^5.0.3
-        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@4.1.11)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
+        specifier: catalog:vitest
+        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@5.0.4)(@vitest/ui@5.0.4)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
 
   packages/linting/cli:
     dependencies:
@@ -2079,8 +2092,8 @@ importers:
         specifier: ^7.0.2
         version: 7.0.2
       vitest:
-        specifier: ^5.0.3
-        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@4.1.11)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
+        specifier: catalog:vitest
+        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@5.0.4)(@vitest/ui@5.0.4)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
 
   packages/linting/lsp:
     dependencies:
@@ -2120,8 +2133,8 @@ importers:
         specifier: ^7.0.2
         version: 7.0.2
       vitest:
-        specifier: ^5.0.3
-        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@4.1.11)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
+        specifier: catalog:vitest
+        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@5.0.4)(@vitest/ui@5.0.4)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
 
   packages/linting/vscode:
     dependencies:
@@ -2203,8 +2216,8 @@ importers:
         specifier: ^7.0.2
         version: 7.0.2
       vitest:
-        specifier: ^5.0.3
-        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@4.1.11)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
+        specifier: catalog:vitest
+        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@5.0.4)(@vitest/ui@5.0.4)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
 
   packages/modules/analytics:
     dependencies:
@@ -2261,8 +2274,8 @@ importers:
         specifier: ^7.0.2
         version: 7.0.2
       vitest:
-        specifier: ^5.0.3
-        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@4.1.11)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
+        specifier: catalog:vitest
+        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@5.0.4)(@vitest/ui@5.0.4)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
 
   packages/modules/app:
     dependencies:
@@ -2310,8 +2323,8 @@ importers:
         specifier: ^7.0.2
         version: 7.0.2
       vitest:
-        specifier: ^5.0.3
-        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@4.1.11)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
+        specifier: catalog:vitest
+        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@5.0.4)(@vitest/ui@5.0.4)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
 
   packages/modules/azure-identity:
     dependencies:
@@ -2326,8 +2339,8 @@ importers:
         specifier: ^7.0.2
         version: 7.0.2
       vitest:
-        specifier: ^5.0.3
-        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@4.1.11)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
+        specifier: catalog:vitest
+        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@5.0.4)(@vitest/ui@5.0.4)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
     optionalDependencies:
       '@azure/identity-cache-persistence':
         specifier: ^1.3.0
@@ -2382,8 +2395,8 @@ importers:
         specifier: ^7.0.2
         version: 7.0.2
       vitest:
-        specifier: ^5.0.3
-        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@4.1.11)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
+        specifier: catalog:vitest
+        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@5.0.4)(@vitest/ui@5.0.4)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
       zod:
         specifier: 4.6.5
         version: 4.6.5
@@ -2444,8 +2457,8 @@ importers:
         specifier: ^7.0.2
         version: 7.0.2
       vitest:
-        specifier: ^5.0.3
-        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@4.1.11)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
+        specifier: catalog:vitest
+        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@5.0.4)(@vitest/ui@5.0.4)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
 
   packages/modules/feature-flag:
     dependencies:
@@ -2478,8 +2491,8 @@ importers:
         specifier: ^7.0.2
         version: 7.0.2
       vitest:
-        specifier: ^5.0.3
-        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@4.1.11)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
+        specifier: catalog:vitest
+        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@5.0.4)(@vitest/ui@5.0.4)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
 
   packages/modules/http:
     dependencies:
@@ -2500,8 +2513,8 @@ importers:
         specifier: ^7.0.2
         version: 7.0.2
       vitest:
-        specifier: ^5.0.3
-        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@4.1.11)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
+        specifier: catalog:vitest
+        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@5.0.4)(@vitest/ui@5.0.4)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
 
   packages/modules/module:
     dependencies:
@@ -2519,8 +2532,8 @@ importers:
         specifier: ^7.0.2
         version: 7.0.2
       vitest:
-        specifier: ^5.0.3
-        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@4.1.11)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
+        specifier: catalog:vitest
+        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@5.0.4)(@vitest/ui@5.0.4)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
 
   packages/modules/msal:
     dependencies:
@@ -2563,8 +2576,8 @@ importers:
         specifier: ^7.0.2
         version: 7.0.2
       vitest:
-        specifier: ^5.0.3
-        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@4.1.11)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
+        specifier: catalog:vitest
+        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@5.0.4)(@vitest/ui@5.0.4)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
     optionalDependencies:
       '@azure/msal-node-extensions':
         specifier: ^5.0.2
@@ -2604,8 +2617,8 @@ importers:
         specifier: ^7.0.2
         version: 7.0.2
       vitest:
-        specifier: ^5.0.3
-        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@4.1.11)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
+        specifier: catalog:vitest
+        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@5.0.4)(@vitest/ui@5.0.4)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
 
   packages/modules/roles:
     dependencies:
@@ -2644,8 +2657,8 @@ importers:
         specifier: ^7.0.2
         version: 7.0.2
       vitest:
-        specifier: ^5.0.3
-        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@4.1.11)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
+        specifier: catalog:vitest
+        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@5.0.4)(@vitest/ui@5.0.4)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
 
   packages/modules/service-discovery:
     dependencies:
@@ -2697,8 +2710,8 @@ importers:
         specifier: ^7.0.2
         version: 7.0.2
       vitest:
-        specifier: ^5.0.3
-        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@3.0.3(@types/node@26.6.2)(graphql@17.0.2)(typescript@7.0.2)(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15)))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
+        specifier: catalog:vitest
+        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@5.0.4)(@vitest/ui@5.0.4)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@3.0.3(@types/node@26.6.2)(graphql@17.0.2)(typescript@7.0.2)(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15)))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
 
   packages/modules/signalr:
     dependencies:
@@ -2783,8 +2796,8 @@ importers:
         specifier: ^7.0.2
         version: 7.0.2
       vitest:
-        specifier: ^5.0.3
-        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@4.1.11)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
+        specifier: catalog:vitest
+        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@5.0.4)(@vitest/ui@5.0.4)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
 
   packages/modules/telemetry:
     dependencies:
@@ -2826,8 +2839,8 @@ importers:
         specifier: ^7.0.2
         version: 7.0.2
       vitest:
-        specifier: ^5.0.3
-        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@4.1.11)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
+        specifier: catalog:vitest
+        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@5.0.4)(@vitest/ui@5.0.4)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
 
   packages/modules/widget:
     dependencies:
@@ -2884,8 +2897,8 @@ importers:
         specifier: ^7.0.2
         version: 7.0.2
       vitest:
-        specifier: ^5.0.3
-        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@4.1.11)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
+        specifier: catalog:vitest
+        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@5.0.4)(@vitest/ui@5.0.4)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
 
   packages/react/ag-charts:
     dependencies:
@@ -3028,8 +3041,8 @@ importers:
         specifier: ^19.2.3
         version: 19.2.5(@types/react@19.2.18)
       '@vitest/browser-playwright':
-        specifier: ^4.1.0
-        version: 4.1.11(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(playwright@1.63.0)(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))(vitest@5.0.4)
+        specifier: catalog:vitest
+        version: 5.0.4(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(playwright@1.63.0)(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))(vitest@5.0.4)
       playwright:
         specifier: 'catalog:'
         version: 1.63.0
@@ -3046,10 +3059,10 @@ importers:
         specifier: ^7.0.2
         version: 7.0.2
       vitest:
-        specifier: ^5.0.3
-        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@4.1.11)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
+        specifier: catalog:vitest
+        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@5.0.4)(@vitest/ui@5.0.4)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
       vitest-browser-react:
-        specifier: ^2.2.0
+        specifier: catalog:vitest
         version: 2.3.0(@types/react-dom@19.2.5(@types/react@19.2.18))(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vitest@5.0.4)
 
   packages/react/components/bookmark:
@@ -3101,8 +3114,8 @@ importers:
         specifier: ^7.0.2
         version: 7.0.2
       vitest:
-        specifier: ^5.0.3
-        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@4.1.11)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
+        specifier: catalog:vitest
+        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@5.0.4)(@vitest/ui@5.0.4)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
 
   packages/react/components/people-resolver:
     dependencies:
@@ -3178,8 +3191,8 @@ importers:
         specifier: ^19.2.7
         version: 19.2.18
       '@vitest/browser-playwright':
-        specifier: ^4.1.0
-        version: 4.1.11(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(playwright@1.63.0)(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))(vitest@5.0.4)
+        specifier: catalog:vitest
+        version: 5.0.4(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(playwright@1.63.0)(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))(vitest@5.0.4)
       playwright:
         specifier: 'catalog:'
         version: 1.63.0
@@ -3193,10 +3206,10 @@ importers:
         specifier: ^7.0.2
         version: 7.0.2
       vitest:
-        specifier: ^5.0.3
-        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@4.1.11)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
+        specifier: catalog:vitest
+        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@5.0.4)(@vitest/ui@5.0.4)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
       vitest-browser-react:
-        specifier: ^2.2.0
+        specifier: catalog:vitest
         version: 2.3.0(@types/react-dom@19.2.5(@types/react@19.2.18))(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vitest@5.0.4)
 
   packages/react/framework:
@@ -3458,8 +3471,8 @@ importers:
         specifier: ^8.0.0
         version: 8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15)(yaml@2.9.1)
       vitest:
-        specifier: ^5.0.3
-        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@4.1.11)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
+        specifier: catalog:vitest
+        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@5.0.4)(@vitest/ui@5.0.4)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
 
   packages/services:
     dependencies:
@@ -3474,8 +3487,8 @@ importers:
         specifier: ^7.0.2
         version: 7.0.2
       vitest:
-        specifier: ^5.0.3
-        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@4.1.11)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
+        specifier: catalog:vitest
+        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@5.0.4)(@vitest/ui@5.0.4)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
 
   packages/utils/imports:
     dependencies:
@@ -3499,8 +3512,8 @@ importers:
         specifier: ^4.5.4
         version: 4.6.0
       vitest:
-        specifier: ^5.0.3
-        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.2)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
+        specifier: catalog:vitest
+        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@5.0.4)(@vitest/ui@5.0.4)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.2)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
 
   packages/utils/load-env:
     dependencies:
@@ -3515,8 +3528,8 @@ importers:
         specifier: ^7.0.2
         version: 7.0.2
       vitest:
-        specifier: ^5.0.3
-        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@4.1.11)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
+        specifier: catalog:vitest
+        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@5.0.4)(@vitest/ui@5.0.4)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
 
   packages/utils/log:
     dependencies:
@@ -3531,8 +3544,8 @@ importers:
         specifier: ^7.0.2
         version: 7.0.2
       vitest:
-        specifier: ^5.0.3
-        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@4.1.11)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
+        specifier: catalog:vitest
+        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@5.0.4)(@vitest/ui@5.0.4)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
 
   packages/utils/observable:
     dependencies:
@@ -3550,8 +3563,8 @@ importers:
         specifier: ^19.2.7
         version: 19.2.18
       '@vitest/browser-playwright':
-        specifier: ^4.1.0
-        version: 4.1.11(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(playwright@1.63.0)(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))(vitest@5.0.4)
+        specifier: catalog:vitest
+        version: 5.0.4(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(playwright@1.63.0)(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))(vitest@5.0.4)
       playwright:
         specifier: 'catalog:'
         version: 1.63.0
@@ -3565,10 +3578,10 @@ importers:
         specifier: ^7.0.2
         version: 7.0.2
       vitest:
-        specifier: ^5.0.3
-        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@4.1.11)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
+        specifier: catalog:vitest
+        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@5.0.4)(@vitest/ui@5.0.4)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
       vitest-browser-react:
-        specifier: ^2.2.0
+        specifier: catalog:vitest
         version: 2.3.0(@types/react-dom@19.2.5(@types/react@19.2.18))(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vitest@5.0.4)
 
   packages/utils/openapi-mock:
@@ -3590,8 +3603,8 @@ importers:
         specifier: ^7.0.2
         version: 7.0.2
       vitest:
-        specifier: ^5.0.3
-        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15)(yaml@2.9.1))
+        specifier: catalog:vitest
+        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@5.0.4)(@vitest/ui@5.0.4)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15)(yaml@2.9.1))
 
   packages/utils/openapi-mock-server:
     dependencies:
@@ -3633,8 +3646,8 @@ importers:
         specifier: ^7.0.2
         version: 7.0.2
       vitest:
-        specifier: ^5.0.3
-        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15)(yaml@2.9.1))
+        specifier: catalog:vitest
+        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@5.0.4)(@vitest/ui@5.0.4)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15)(yaml@2.9.1))
 
   packages/utils/query:
     dependencies:
@@ -3664,8 +3677,8 @@ importers:
         specifier: ^7.0.2
         version: 7.0.2
       vitest:
-        specifier: ^5.0.3
-        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@4.1.11)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
+        specifier: catalog:vitest
+        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@5.0.4)(@vitest/ui@5.0.4)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
 
   packages/vite-plugins/api-service:
     dependencies:
@@ -3692,8 +3705,8 @@ importers:
         specifier: ^8.0.0
         version: 8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15)(yaml@2.9.1)
       vitest:
-        specifier: ^5.0.3
-        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@4.1.11)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
+        specifier: catalog:vitest
+        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@5.0.4)(@vitest/ui@5.0.4)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
 
   packages/vite-plugins/markdown:
     devDependencies:
@@ -3725,8 +3738,8 @@ importers:
         specifier: ^8.0.0
         version: 8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15)(yaml@2.9.1)
       vitest:
-        specifier: ^5.0.3
-        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@4.1.11)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
+        specifier: catalog:vitest
+        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@5.0.4)(@vitest/ui@5.0.4)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
 
   packages/vite-plugins/react-router:
     devDependencies:
@@ -3737,8 +3750,8 @@ importers:
         specifier: ^8.0.0
         version: 8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15)(yaml@2.9.1)
       vitest:
-        specifier: ^5.0.3
-        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@4.1.11)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
+        specifier: catalog:vitest
+        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@5.0.4)(@vitest/ui@5.0.4)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
 
   packages/vite-plugins/routes-dsl:
     devDependencies:
@@ -3871,8 +3884,8 @@ importers:
         specifier: ^19.2.3
         version: 19.2.5(@types/react@19.2.18)
       '@vitest/browser-playwright':
-        specifier: ^4.1.0
-        version: 4.1.11(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(playwright@1.63.0)(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))(vitest@5.0.4)
+        specifier: catalog:vitest
+        version: 5.0.4(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(playwright@1.63.0)(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))(vitest@5.0.4)
       playwright:
         specifier: 'catalog:'
         version: 1.63.0
@@ -3892,10 +3905,10 @@ importers:
         specifier: ^8.0.0
         version: 8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15)(yaml@2.9.1)
       vitest:
-        specifier: ^5.0.3
-        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@4.1.11)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
+        specifier: catalog:vitest
+        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@5.0.4)(@vitest/ui@5.0.4)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
       vitest-browser-react:
-        specifier: ^2.2.0
+        specifier: catalog:vitest
         version: 2.3.0(@types/react-dom@19.2.5(@types/react@19.2.18))(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vitest@5.0.4)
 
   packages/widget:
@@ -3941,8 +3954,8 @@ importers:
         specifier: ^7.0.2
         version: 7.0.2
       vitest:
-        specifier: ^5.0.3
-        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@4.1.11)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
+        specifier: catalog:vitest
+        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@5.0.4)(@vitest/ui@5.0.4)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
       vue:
         specifier: ^3.5.25
         version: 3.5.43(typescript@7.0.2)
@@ -4320,8 +4333,8 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@blazediff/core@1.9.1':
-    resolution: {integrity: sha512-ehg3jIkYKulZh+8om/O25vkvSsXXwC+skXmyA87FFx6A/45eqOkZsBltMw/TVteb0mloiGT8oGRTcjRAz66zaA==}
+  '@blazediff/core@1.10.0':
+    resolution: {integrity: sha512-AOQff0zgR7cGsZL+4E7hVkmujoPUpm0J9xzWGWZj5wCjd3gmxESXAPfKyuzs93VdpQNFhHlBhfOjrcZ+XTERtQ==}
 
   '@borewit/text-codec@0.2.2':
     resolution: {integrity: sha512-DDaRehssg1aNrH4+2hnj1B7vnUGEjU6OIlyRdkMd0aUdIUvKXrJfXsy8LVtXAy7DRvYVluWbMspsRhz2lcW0mQ==}
@@ -8756,27 +8769,16 @@ packages:
       vite: ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0
       vue: ^3.2.25
 
-  '@vitest/browser-playwright@4.1.11':
-    resolution: {integrity: sha512-riLBxPqwnJ0lWs2DN2WeUfYeKLoAjbP2Xx8cLQdSddzMi20sksIa6K2mPz79DyMZKKVKH2ksOC2yJvtNcZg8cg==}
+  '@vitest/browser-playwright@5.0.4':
+    resolution: {integrity: sha512-RYbUmphqONHDcpjMHLNQRy47XbQHHnZokBgtjM8MSPGSiqwBcqwYufdSYEceOwk6zZjKUr3ps5HgjbiXo7sOTg==}
     peerDependencies:
       playwright: '*'
-      vitest: 4.1.11
+      vitest: 5.0.4
 
-  '@vitest/browser@4.1.11':
-    resolution: {integrity: sha512-bwMovvAeuTFOK5kIFevw4VEf+1gVEICv4SYK4k3knJOxl6b1zEWud8mYKD73e1B0odAn174h1MofURy2TPWf3w==}
+  '@vitest/browser@5.0.4':
+    resolution: {integrity: sha512-pRRkI2am/lmhGiaeHkVVLQb7SZyCOe5ytjVNQ0zLNZjA1xb+7aNTRqaaPeMJzWM958/5IrxJ50yTUpKSsigHMw==}
     peerDependencies:
-      vitest: 4.1.11
-
-  '@vitest/mocker@4.1.11':
-    resolution: {integrity: sha512-2XJVD55d1o5AZous5CCGKS74g/riOj9odEt2bQpCVZeblHyHdnMeFl4jl0XjU21stf4mbjUkew2eXQZt65g5CQ==}
-    peerDependencies:
-      msw: ^2.4.9
-      vite: ^6.0.0 || ^7.0.0 || ^8.0.0
-    peerDependenciesMeta:
-      msw:
-        optional: true
-      vite:
-        optional: true
+      vitest: 5.0.4
 
   '@vitest/mocker@5.0.4':
     resolution: {integrity: sha512-tqAlrYWce4iUxhr3ncNohejtCTOcHeE8XWrSNZY3OhPoDn01yeGv+gnaBy64ATp7o6pb03eIbBAjzmibpc9vIQ==}
@@ -8789,17 +8791,19 @@ packages:
       vite:
         optional: true
 
-  '@vitest/pretty-format@4.1.11':
-    resolution: {integrity: sha512-yiZzPbGTS9Sr/JpFl8zHrcIkAofNbFV6k21vIgQN/cY/oxZeXhJv5sc/MBJ5jFKWmWs+oJHw0UXLZjmf931+Vw==}
-
-  '@vitest/spy@4.1.11':
-    resolution: {integrity: sha512-apNa/prQy2qCeywhnixOHPRCgGNhvg7T4Dapfl1GahLp/R+uhBm5cPyFoNVyqsNd2h1nJxL6BqqdIjiABL60YA==}
+  '@vitest/pretty-format@5.0.4':
+    resolution: {integrity: sha512-kh/bp0oLr6w18kt4MFn5/zS+Hpc5k3bsf6S2m2Qksj7sKHrnc7Tu90UVYyiXnRvkYruN6kSCHQ3RR+SBE6FinA==}
 
   '@vitest/spy@5.0.4':
     resolution: {integrity: sha512-MZKk/gSkm2q+ICobMxCpH1mA+cCAWm8WV7UhxlqGjq/sJ3AGc1BqFOs5CRVXxH78wQtme9q/NAAgBquj4AcyMw==}
 
-  '@vitest/utils@4.1.11':
-    resolution: {integrity: sha512-zTCVGpyFsGWBhllOyKlTw/vnr6D9qxsfSDyfbyZmTyjHw5N/VuvzHpHoQjm2ZJzn4RJgx5w4r7V0er69CmLgPQ==}
+  '@vitest/ui@5.0.4':
+    resolution: {integrity: sha512-L40ToOGwFgeZ+JVPMKHb7T0b671mqcmCpMUh9P68xq9YZ+TXM72rkDf9ljuv02e5Y1zj8ww0CnWIUnqs3FEWKQ==}
+    peerDependencies:
+      vitest: 5.0.4
+
+  '@vitest/utils@5.0.4':
+    resolution: {integrity: sha512-hgpnyMuMqCz2PARmk3v62FxUr8jHIkY13ygvUeh8s+dmQxfnvkB/sgtoZFzG4lMitnEdnrg/lCvDbtVzuAsGWQ==}
 
   '@vscode/vsce-sign-alpine-arm64@2.0.6':
     resolution: {integrity: sha512-wKkJBsvKF+f0GfsUuGT0tSW0kZL87QggEiqNqK6/8hvqsXvpx8OsTEc3mnE1kejkh5r+qUyQ7PtF8jZYN0mo8Q==}
@@ -10330,6 +10334,9 @@ packages:
   flat@5.0.2:
     resolution: {integrity: sha512-b6suED+5/3rTpUBdG1gupIl8MPFCAMA0QXwmljLhvCUKcUvdE4gWky9zpuGCcXHOsz4J9wPGNWq6OKpmIzz3hQ==}
     hasBin: true
+
+  flatted@3.4.4:
+    resolution: {integrity: sha512-5+ybhBZANEJxaH3X5evAFatUxLfEHSr7n6kYJ+1Qd0mUqr4eu9gIf6GDbWHf8RJijHrjjO8G+la14SlL2SeS1Q==}
 
   follow-redirects@1.16.0:
     resolution: {integrity: sha512-y5rN/uOsadFT/JfYwhxRS5R7Qce+g3zG97+JrtFZlC9klX/W5hD7iiLzScI4nZqUS7DNUdhPgw4xI8W2LuXlUw==}
@@ -12764,8 +12771,8 @@ packages:
     resolution: {integrity: sha512-wXR/dYpcqKmfWpEdZjiKJOwCNFndD0DMnrW/cYjVGttEkBfVgcLFHoNrlj47mjOVic9yyNu65alsgF4NQyTa2g==}
     engines: {node: '>=12.0.0'}
 
-  tinyrainbow@3.1.1:
-    resolution: {integrity: sha512-yau8yJdTt989Mm0Bd/236QnzEiPf2xLLTqUZRUJOo/3CB078LSwzei343DgtJVmfJKJE3TMINY1u42SQsP6mXw==}
+  tinyrainbow@3.2.0:
+    resolution: {integrity: sha512-LgO3D9yZJjApUiuUfl9iFAwrtaX4+lok3wJIqttGoKCHlWUqHqbQpnxCf82L8FjgKsh4iGo78hqJwgL8F6To2A==}
     engines: {node: '>=14.0.0'}
 
   tldts-core@7.4.10:
@@ -13544,6 +13551,18 @@ packages:
       utf-8-validate:
         optional: true
 
+  ws@8.22.0:
+    resolution: {integrity: sha512-Ydggc987+RO0AnWtZ/7Wq9FtNvcrL1b/RO0ud9mWjUPgDrsAAwQSF51sm2hm1XofbU/4jkpGEsLFsZZxU+1DOg==}
+    engines: {node: '>=10.0.0'}
+    peerDependencies:
+      bufferutil: ^4.0.1
+      utf-8-validate: '>=5.0.2'
+    peerDependenciesMeta:
+      bufferutil:
+        optional: true
+      utf-8-validate:
+        optional: true
+
   wsl-utils@0.1.0:
     resolution: {integrity: sha512-h3Fbisa2nKGPxCpm89Hk33lBLsnaGBvctQopaBSOW/uIs6FTe1ATyAnKFJrzVs9vpGdsTe73WF3V4lIsk4Gacw==}
     engines: {node: '>=18'}
@@ -14156,7 +14175,7 @@ snapshots:
   '@biomejs/cli-win32-x64@2.5.15':
     optional: true
 
-  '@blazediff/core@1.9.1': {}
+  '@blazediff/core@1.10.0': {}
 
   '@borewit/text-codec@0.2.2': {}
 
@@ -18357,44 +18376,102 @@ snapshots:
       vite: 8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15)(yaml@2.9.1)
       vue: 3.5.43(typescript@7.0.2)
 
-  '@vitest/browser-playwright@4.1.11(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(playwright@1.63.0)(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))(vitest@5.0.4)':
+  '@vitest/browser-playwright@5.0.4(msw@2.15.0(@types/node@26.2.0)(typescript@7.0.2))(playwright@1.63.0)(vite@8.3.4(@types/node@26.2.0)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))(vitest@5.0.4)':
     dependencies:
-      '@vitest/browser': 4.1.11(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))(vitest@5.0.4)
-      '@vitest/mocker': 4.1.11(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
+      '@vitest/browser': 5.0.4(msw@2.15.0(@types/node@26.2.0)(typescript@7.0.2))(vite@8.3.4(@types/node@26.2.0)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))(vitest@5.0.4)
+      '@vitest/mocker': 5.0.4(msw@2.15.0(@types/node@26.2.0)(typescript@7.0.2))(vite@8.3.4(@types/node@26.2.0)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
       playwright: 1.63.0
-      tinyrainbow: 3.1.1
-      vitest: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@4.1.11)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
+      tinyrainbow: 3.2.0
+      vitest: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.2.0)(@vitest/browser-playwright@5.0.4)(@vitest/ui@5.0.4)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.2.0)(typescript@7.0.2))(vite@8.3.4(@types/node@26.2.0)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
+    transitivePeerDependencies:
+      - bufferutil
+      - msw
+      - utf-8-validate
+      - vite
+    optional: true
+
+  '@vitest/browser-playwright@5.0.4(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(playwright@1.63.0)(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))(vitest@5.0.4)':
+    dependencies:
+      '@vitest/browser': 5.0.4(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))(vitest@5.0.4)
+      '@vitest/mocker': 5.0.4(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
+      playwright: 1.63.0
+      tinyrainbow: 3.2.0
+      vitest: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@5.0.4)(@vitest/ui@5.0.4)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
     transitivePeerDependencies:
       - bufferutil
       - msw
       - utf-8-validate
       - vite
 
-  '@vitest/browser@4.1.11(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))(vitest@5.0.4)':
+  '@vitest/browser-playwright@5.0.4(msw@3.0.3(@types/node@26.6.2)(graphql@17.0.2)(typescript@7.0.2)(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15)))(playwright@1.63.0)(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))(vitest@5.0.4)':
     dependencies:
-      '@blazediff/core': 1.9.1
-      '@vitest/mocker': 4.1.11(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
-      '@vitest/utils': 4.1.11
-      magic-string: 0.30.21
+      '@vitest/browser': 5.0.4(msw@3.0.3(@types/node@26.6.2)(graphql@17.0.2)(typescript@7.0.2)(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15)))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))(vitest@5.0.4)
+      '@vitest/mocker': 5.0.4(msw@3.0.3(@types/node@26.6.2)(graphql@17.0.2)(typescript@7.0.2)(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15)))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
+      playwright: 1.63.0
+      tinyrainbow: 3.2.0
+      vitest: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@5.0.4)(@vitest/ui@5.0.4)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@3.0.3(@types/node@26.6.2)(graphql@17.0.2)(typescript@7.0.2)(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15)))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
+    transitivePeerDependencies:
+      - bufferutil
+      - msw
+      - utf-8-validate
+      - vite
+    optional: true
+
+  '@vitest/browser@5.0.4(msw@2.15.0(@types/node@26.2.0)(typescript@7.0.2))(vite@8.3.4(@types/node@26.2.0)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))(vitest@5.0.4)':
+    dependencies:
+      '@blazediff/core': 1.10.0
+      '@vitest/mocker': 5.0.4(msw@2.15.0(@types/node@26.2.0)(typescript@7.0.2))(vite@8.3.4(@types/node@26.2.0)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
+      '@vitest/ui': 5.0.4(vitest@5.0.4)
+      '@vitest/utils': 5.0.4
+      magic-string: 1.4.3
       pngjs: 7.0.0
       sirv: 3.0.2
-      tinyrainbow: 3.1.1
-      vitest: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@4.1.11)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
-      ws: 8.21.3
+      tinyrainbow: 3.2.0
+      vitest: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.2.0)(@vitest/browser-playwright@5.0.4)(@vitest/ui@5.0.4)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.2.0)(typescript@7.0.2))(vite@8.3.4(@types/node@26.2.0)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
+      ws: 8.22.0
+    transitivePeerDependencies:
+      - bufferutil
+      - msw
+      - utf-8-validate
+      - vite
+    optional: true
+
+  '@vitest/browser@5.0.4(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))(vitest@5.0.4)':
+    dependencies:
+      '@blazediff/core': 1.10.0
+      '@vitest/mocker': 5.0.4(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
+      '@vitest/ui': 5.0.4(vitest@5.0.4)
+      '@vitest/utils': 5.0.4
+      magic-string: 1.4.3
+      pngjs: 7.0.0
+      sirv: 3.0.2
+      tinyrainbow: 3.2.0
+      vitest: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@5.0.4)(@vitest/ui@5.0.4)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
+      ws: 8.22.0
     transitivePeerDependencies:
       - bufferutil
       - msw
       - utf-8-validate
       - vite
 
-  '@vitest/mocker@4.1.11(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))':
+  '@vitest/browser@5.0.4(msw@3.0.3(@types/node@26.6.2)(graphql@17.0.2)(typescript@7.0.2)(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15)))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))(vitest@5.0.4)':
     dependencies:
-      '@vitest/spy': 4.1.11
-      estree-walker: 3.0.3
-      magic-string: 0.30.21
-    optionalDependencies:
-      msw: 2.15.0(@types/node@26.6.2)(typescript@7.0.2)
-      vite: 8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15)(yaml@2.9.1)
+      '@blazediff/core': 1.10.0
+      '@vitest/mocker': 5.0.4(msw@3.0.3(@types/node@26.6.2)(graphql@17.0.2)(typescript@7.0.2)(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15)))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
+      '@vitest/ui': 5.0.4(vitest@5.0.4)
+      '@vitest/utils': 5.0.4
+      magic-string: 1.4.3
+      pngjs: 7.0.0
+      sirv: 3.0.2
+      tinyrainbow: 3.2.0
+      vitest: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@5.0.4)(@vitest/ui@5.0.4)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@3.0.3(@types/node@26.6.2)(graphql@17.0.2)(typescript@7.0.2)(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15)))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
+      ws: 8.22.0
+    transitivePeerDependencies:
+      - bufferutil
+      - msw
+      - utf-8-validate
+      - vite
+    optional: true
 
   '@vitest/mocker@5.0.4(msw@2.15.0(@types/node@26.2.0)(typescript@7.0.2))(vite@8.3.4(@types/node@26.2.0)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))':
     dependencies:
@@ -18446,19 +18523,27 @@ snapshots:
       msw: 3.0.3(@types/node@26.6.2)(graphql@17.0.2)(typescript@7.0.2)(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
       vite: 8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15)(yaml@2.9.1)
 
-  '@vitest/pretty-format@4.1.11':
+  '@vitest/pretty-format@5.0.4':
     dependencies:
-      tinyrainbow: 3.1.1
-
-  '@vitest/spy@4.1.11': {}
+      tinyrainbow: 3.2.0
 
   '@vitest/spy@5.0.4': {}
 
-  '@vitest/utils@4.1.11':
+  '@vitest/ui@5.0.4(vitest@5.0.4)':
     dependencies:
-      '@vitest/pretty-format': 4.1.11
+      '@vitest/utils': 5.0.4
+      fflate: 0.8.3
+      flatted: 3.4.4
+      pathe: 2.0.3
+      sirv: 3.0.2
+      tinyrainbow: 3.2.0
+      vitest: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.2.0)(@vitest/browser-playwright@5.0.4)(@vitest/ui@5.0.4)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.2.0)(typescript@7.0.2))(vite@8.3.4(@types/node@26.2.0)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
+
+  '@vitest/utils@5.0.4':
+    dependencies:
+      '@vitest/pretty-format': 5.0.4
       convert-source-map: 2.0.0
-      tinyrainbow: 3.1.1
+      tinyrainbow: 3.2.0
 
   '@vscode/vsce-sign-alpine-arm64@2.0.6':
     optional: true
@@ -20418,6 +20503,8 @@ snapshots:
       unicorn-magic: 0.3.0
 
   flat@5.0.2: {}
+
+  flatted@3.4.4: {}
 
   follow-redirects@1.16.0(debug@4.3.4(supports-color@10.2.2)):
     optionalDependencies:
@@ -23348,7 +23435,7 @@ snapshots:
       fdir: 6.5.0(picomatch@4.0.7)
       picomatch: 4.0.7
 
-  tinyrainbow@3.1.1: {}
+  tinyrainbow@3.2.0: {}
 
   tldts-core@7.4.10: {}
 
@@ -23781,12 +23868,12 @@ snapshots:
     dependencies:
       react: 19.2.8
       react-dom: 19.2.8(react@19.2.8)
-      vitest: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@4.1.11)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
+      vitest: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@5.0.4)(@vitest/ui@5.0.4)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
     optionalDependencies:
       '@types/react': 19.2.18
       '@types/react-dom': 19.2.5(@types/react@19.2.18)
 
-  vitest@5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.2.0)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.2.0)(typescript@7.0.2))(vite@8.3.4(@types/node@26.2.0)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15)):
+  vitest@5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.2.0)(@vitest/browser-playwright@5.0.4)(@vitest/ui@5.0.4)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.2.0)(typescript@7.0.2))(vite@8.3.4(@types/node@26.2.0)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15)):
     dependencies:
       '@types/chai': 5.2.3
       '@vitest/mocker': 5.0.4(msw@2.15.0(@types/node@26.2.0)(typescript@7.0.2))(vite@8.3.4(@types/node@26.2.0)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
@@ -23805,37 +23892,14 @@ snapshots:
     optionalDependencies:
       '@opentelemetry/api': 1.9.1
       '@types/node': 26.2.0
+      '@vitest/browser-playwright': 5.0.4(msw@2.15.0(@types/node@26.2.0)(typescript@7.0.2))(playwright@1.63.0)(vite@8.3.4(@types/node@26.2.0)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))(vitest@5.0.4)
+      '@vitest/ui': 5.0.4(vitest@5.0.4)
       happy-dom: 20.14.6
       jsdom: 30.1.2
     transitivePeerDependencies:
       - msw
 
-  vitest@5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@4.1.11)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15)):
-    dependencies:
-      '@types/chai': 5.2.3
-      '@vitest/mocker': 5.0.4(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
-      chai: 6.3.0
-      es-module-lexer: 2.3.2
-      expect-type: 1.4.0
-      magic-string: 1.4.3
-      obug: 3.0.0
-      picomatch: 4.0.7
-      std-env: 4.3.0
-      tinybench: 6.2.2
-      tinyexec: 1.3.1
-      tinyglobby: 0.2.17
-      vite: 8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15)(yaml@2.9.1)
-      why-is-node-running: 3.2.1
-    optionalDependencies:
-      '@opentelemetry/api': 1.9.1
-      '@types/node': 26.6.2
-      '@vitest/browser-playwright': 4.1.11(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(playwright@1.63.0)(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))(vitest@5.0.4)
-      happy-dom: 20.14.6
-      jsdom: 30.1.2
-    transitivePeerDependencies:
-      - msw
-
-  vitest@5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15)(yaml@2.9.1)):
+  vitest@5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@5.0.4)(@vitest/ui@5.0.4)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15)(yaml@2.9.1)):
     dependencies:
       '@types/chai': 5.2.3
       '@vitest/mocker': 5.0.4(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15)(yaml@2.9.1))
@@ -23854,12 +23918,40 @@ snapshots:
     optionalDependencies:
       '@opentelemetry/api': 1.9.1
       '@types/node': 26.6.2
+      '@vitest/browser-playwright': 5.0.4(msw@2.15.0(@types/node@26.2.0)(typescript@7.0.2))(playwright@1.63.0)(vite@8.3.4(@types/node@26.2.0)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))(vitest@5.0.4)
+      '@vitest/ui': 5.0.4(vitest@5.0.4)
       happy-dom: 20.14.6
       jsdom: 30.1.2
     transitivePeerDependencies:
       - msw
 
-  vitest@5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.2)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15)):
+  vitest@5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@5.0.4)(@vitest/ui@5.0.4)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15)):
+    dependencies:
+      '@types/chai': 5.2.3
+      '@vitest/mocker': 5.0.4(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
+      chai: 6.3.0
+      es-module-lexer: 2.3.2
+      expect-type: 1.4.0
+      magic-string: 1.4.3
+      obug: 3.0.0
+      picomatch: 4.0.7
+      std-env: 4.3.0
+      tinybench: 6.2.2
+      tinyexec: 1.3.1
+      tinyglobby: 0.2.17
+      vite: 8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15)(yaml@2.9.1)
+      why-is-node-running: 3.2.1
+    optionalDependencies:
+      '@opentelemetry/api': 1.9.1
+      '@types/node': 26.6.2
+      '@vitest/browser-playwright': 5.0.4(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(playwright@1.63.0)(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))(vitest@5.0.4)
+      '@vitest/ui': 5.0.4(vitest@5.0.4)
+      happy-dom: 20.14.6
+      jsdom: 30.1.2
+    transitivePeerDependencies:
+      - msw
+
+  vitest@5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@5.0.4)(@vitest/ui@5.0.4)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.2)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15)):
     dependencies:
       '@types/chai': 5.2.3
       '@vitest/mocker': 5.0.4(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.2)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
@@ -23878,12 +23970,14 @@ snapshots:
     optionalDependencies:
       '@opentelemetry/api': 1.9.1
       '@types/node': 26.6.2
+      '@vitest/browser-playwright': 5.0.4(msw@2.15.0(@types/node@26.2.0)(typescript@7.0.2))(playwright@1.63.0)(vite@8.3.4(@types/node@26.2.0)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))(vitest@5.0.4)
+      '@vitest/ui': 5.0.4(vitest@5.0.4)
       happy-dom: 20.14.6
       jsdom: 30.1.2
     transitivePeerDependencies:
       - msw
 
-  vitest@5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@3.0.3(@types/node@26.6.2)(graphql@17.0.2)(typescript@7.0.2)(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15)))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15)):
+  vitest@5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@5.0.4)(@vitest/ui@5.0.4)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@3.0.3(@types/node@26.6.2)(graphql@17.0.2)(typescript@7.0.2)(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15)))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15)):
     dependencies:
       '@types/chai': 5.2.3
       '@vitest/mocker': 5.0.4(msw@3.0.3(@types/node@26.6.2)(graphql@17.0.2)(typescript@7.0.2)(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15)))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
@@ -23902,6 +23996,8 @@ snapshots:
     optionalDependencies:
       '@opentelemetry/api': 1.9.1
       '@types/node': 26.6.2
+      '@vitest/browser-playwright': 5.0.4(msw@3.0.3(@types/node@26.6.2)(graphql@17.0.2)(typescript@7.0.2)(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15)))(playwright@1.63.0)(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))(vitest@5.0.4)
+      '@vitest/ui': 5.0.4(vitest@5.0.4)
       happy-dom: 20.14.6
       jsdom: 30.1.2
     transitivePeerDependencies:
@@ -24257,6 +24353,8 @@ snapshots:
   ws@7.5.11: {}
 
   ws@8.21.3: {}
+
+  ws@8.22.0: {}
 
   wsl-utils@0.1.0:
     dependencies:

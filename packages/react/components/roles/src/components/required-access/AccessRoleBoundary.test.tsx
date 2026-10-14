@@ -266,7 +266,8 @@ describe('AccessRoleBoundary', () => {
       await expect.element(screen.getByText('New protected content')).not.toBeInTheDocument();
       checked.resolve(true);
       await expect.element(screen.getByText('New protected content')).toBeVisible();
-      expect(onMount).toHaveBeenCalledOnce();
+      // Passive effects can flush after the browser paints the newly visible child.
+      await expect.poll(() => onMount).toHaveBeenCalledOnce();
     },
   );
 

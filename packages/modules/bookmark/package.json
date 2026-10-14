@@ -63,7 +63,7 @@
     "@equinor/fusion-framework-module-http": "workspace:^",
     "@equinor/fusion-framework-module-services": "workspace:^",
     "typescript": "^7.0.2",
-    "vitest": "^5.0.3",
+    "vitest": "catalog:vitest",
     "zod": "^4.4.3"
   }
 }

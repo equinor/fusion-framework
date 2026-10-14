@@ -77,7 +77,7 @@ describe('RolesProvider with real role views', () => {
       claimableRead.resolve(assignments);
       await expect
         .element(screen.getByText(/Some role data could not be loaded/))
-        .toHaveTextContent('Active collection unavailable');
+        .toMatchTextContent('Active collection unavailable');
       await expect.element(dialog).toBeVisible();
 
       provider.activateClaimableRoleAssignment.mockRejectedValueOnce(
@@ -109,7 +109,7 @@ describe('RolesProvider with real role views', () => {
       await expect.element(dialog).not.toBeInTheDocument();
       await expect
         .element(screen.getByText(/Some role data could not be loaded/))
-        .toHaveTextContent('Refresh unavailable');
+        .toMatchTextContent('Refresh unavailable');
       expect(provider.activateClaimableRoleAssignment).toHaveBeenCalledTimes(2);
       expect(provider.activateClaimableRoleAssignment).toHaveBeenLastCalledWith({
         assignmentId: 'reports-assignment',

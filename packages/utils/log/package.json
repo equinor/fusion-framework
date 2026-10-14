@@ -46,7 +46,7 @@
   },
   "devDependencies": {
     "typescript": "^7.0.2",
-    "vitest": "^5.0.3"
+    "vitest": "catalog:vitest"
   },
   "peerDependencies": {
     "chalk": ">=5",

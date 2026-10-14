@@ -38,13 +38,13 @@
     "@equinor/fusion-framework-vitest-plugin-react-app": "workspace:^",
     "@equinor/fusion-openapi-mock-server": "workspace:^",
     "@playwright/test": "catalog:",
-    "@vitest/browser-playwright": "^4.1.0",
+    "@vitest/browser-playwright": "catalog:vitest",
     "concurrently": "^10.0.5",
     "odata-query": "^8.0.4",
     "playwright": "catalog:",
     "rxjs": "^7.8.1",
     "typescript": "^7.0.2",
-    "vitest": "^5.0.3",
-    "vitest-browser-react": "^2.2.0"
+    "vitest": "catalog:vitest",
+    "vitest-browser-react": "catalog:vitest"
   }
 }

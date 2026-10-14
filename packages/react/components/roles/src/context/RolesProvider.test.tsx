@@ -129,7 +129,7 @@ describe('RolesProvider', () => {
       </RolesProvider>,
     );
 
-    await expect.element(screen.getByRole('alert')).toHaveTextContent('active roles failed');
+    await expect.element(screen.getByRole('alert')).toMatchTextContent('active roles failed');
   });
 
   it('refreshes both role domains after deactivation', async () => {
@@ -191,7 +191,7 @@ describe('RolesProvider', () => {
 
     await expect.element(screen.getByRole('button', { name: 'Claim' })).toBeVisible();
     await screen.getByRole('button', { name: 'Claim' }).click();
-    await expect.element(screen.getByRole('alert')).toHaveTextContent('activation failed');
+    await expect.element(screen.getByRole('alert')).toMatchTextContent('activation failed');
   });
 
   it('refreshes visible role state when the window regains focus', async () => {
@@ -260,7 +260,7 @@ describe('RolesProvider', () => {
     first.reject(new Error('Activation service unavailable'));
     await expect
       .element(dialog.getByRole('alert'))
-      .toHaveTextContent(
+      .toMatchTextContent(
         'The claimable role assignment could not be activated. Try again or contact your administrator.',
       );
     expect(mocks.getConsolidatedClaimableRoleAssignments).toHaveBeenCalledTimes(2);

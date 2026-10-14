@@ -1,0 +1,52 @@
+---
+"@equinor/fusion-framework-app": patch
+"@equinor/fusion-framework-cli-plugin-ai-base": patch
+"@equinor/fusion-framework-cli-plugin-ai-chat": patch
+"@equinor/fusion-framework-cli-plugin-ai-index": patch
+"@equinor/fusion-framework-cli-plugin-mock-server": patch
+"@equinor/fusion-framework-cli": patch
+"@equinor/fusion-framework-dev-portal": patch
+"@equinor/fusion-framework-dev-server": patch
+"@equinor/fusion-framework": patch
+"@equinor/fusion-framework-lint-core": patch
+"@equinor/fusion-framework-lint-rules": patch
+"@equinor/fusion-framework-module-ai": patch
+"@equinor/fusion-framework-module-analytics": patch
+"@equinor/fusion-framework-module-app": patch
+"@equinor/fusion-framework-module-azure-identity": patch
+"@equinor/fusion-framework-module-bookmark": patch
+"@equinor/fusion-framework-module-event": patch
+"@equinor/fusion-framework-module-feature-flag": patch
+"@equinor/fusion-framework-module-http": patch
+"@equinor/fusion-framework-module": patch
+"@equinor/fusion-framework-module-msal-node": patch
+"@equinor/fusion-framework-module-navigation": patch
+"@equinor/fusion-framework-module-roles": patch
+"@equinor/fusion-framework-module-services": patch
+"@equinor/fusion-framework-module-state": patch
+"@equinor/fusion-framework-module-telemetry": patch
+"@equinor/fusion-framework-plugin-context-navigation": patch
+"@equinor/fusion-framework-react-app": patch
+"@equinor/fusion-framework-react-components-bookmark": patch
+"@equinor/fusion-framework-react-components-roles": patch
+"@equinor/fusion-framework-react-router": patch
+"@equinor/fusion-services": patch
+"@equinor/fusion-imports": patch
+"@equinor/fusion-load-env": patch
+"@equinor/fusion-log": patch
+"@equinor/fusion-observable": patch
+"@equinor/fusion-openapi-mock-server": patch
+"@equinor/fusion-openapi-mock": patch
+"@equinor/fusion-query": patch
+"@equinor/fusion-framework-vite-plugin-api-service": patch
+"@equinor/fusion-framework-vite-plugin-raw-imports": patch
+"@equinor/fusion-framework-vite-plugin-react-router": patch
+"@equinor/fusion-framework-cookbook-app-react-context": patch
+"@equinor/fusion-framework-cookbook-app-react-feature-flag": patch
+"@equinor/fusion-framework-cookbook-app-react-module": patch
+"@equinor/fusion-framework-cookbook-app-react-msal": patch
+"@equinor/fusion-framework-cookbook-app-react-router": patch
+"@equinor/fusion-framework-cookbook-app-react": patch
+---
+
+Internal: upgrade the test toolchain to Vitest 5 through the shared `vitest` pnpm catalog, keeping `vitest`, `@vitest/browser-playwright`, and `vitest-browser-react` aligned for browser-mode tests. Browser tests now use Vitest 5's explicit partial-text assertions and locator matching where needed.
