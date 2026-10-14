@@ -39,7 +39,7 @@ umask 077
   printf 'export COPILOT_PROVIDER_TYPE=%q\n' openai
   printf 'export COPILOT_PROVIDER_BASE_URL=%q\n' "${endpoint%/}/openai/v1"
   printf 'export COPILOT_PROVIDER_BEARER_TOKEN=%q\n' "$token"
-  printf 'export COPILOT_PROVIDER_MODEL_ID=%q\n' gpt-5.4
+  printf 'export COPILOT_PROVIDER_MODEL_ID=%q\n' "$WIRE_MODEL"
   printf 'export COPILOT_PROVIDER_WIRE_MODEL=%q\n' "$WIRE_MODEL"
   printf 'export COPILOT_PROVIDER_WIRE_API=%q\n' responses
 } > "$env_file"
