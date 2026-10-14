@@ -1465,6 +1465,9 @@ importers:
       '@equinor/fusion-framework-module-bookmark':
         specifier: workspace:^
         version: link:../modules/bookmark
+      '@equinor/fusion-framework-module-roles':
+        specifier: workspace:^
+        version: link:../modules/roles
       '@equinor/fusion-framework-module-state':
         specifier: workspace:^
         version: link:../modules/state

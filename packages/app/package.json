@@ -81,6 +81,7 @@
   },
   "devDependencies": {
     "@equinor/fusion-framework-module-bookmark": "workspace:^",
+    "@equinor/fusion-framework-module-roles": "workspace:^",
     "@equinor/fusion-framework-module-state": "workspace:^",
     "@types/lodash.clonedeep": "^4.5.9",
     "typescript": "^7.0.2",
