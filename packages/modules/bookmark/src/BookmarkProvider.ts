@@ -49,7 +49,7 @@ import {
   errorsSelector,
 } from './BookmarkProvider.selectors.js';
 
-import { type BookmarkFlowError, BookmarkProviderError } from './BookmarkFlowError.js';
+import { BookmarkFlowError, BookmarkProviderError } from './BookmarkFlowError.js';
 
 import type { BookmarkProviderEventMap } from './BookmarkProvider.events.js';
 import { version } from './version.js';
@@ -225,12 +225,21 @@ export class BookmarkProvider implements IBookmarkProvider {
   }
 
   /**
-   * Gets an observable that emits the current list of bookmark errors.
+   * Gets an observable that emits when bookmark errors change structurally.
    * @returns An observable of the current list of bookmark errors.
    */
   public get errors$(): Observable<Array<BookmarkFlowError>> {
-    // TODO(#5137) - add deep diff
-    return this.#store.select(errorsSelector, deepEqual);
+    return this.#store.select(
+      errorsSelector,
+      (previous, current) =>
+        previous.length === current.length &&
+        current
+          // Preserve collection ordering while delegating error semantics to the error class.
+          .every((error, index) => {
+            const previousError = previous[index];
+            return previousError !== undefined && BookmarkFlowError.compare(previousError, error);
+          }),
+    );
   }
 
   /**
