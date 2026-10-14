@@ -49,7 +49,7 @@ import {
   errorsSelector,
 } from './BookmarkProvider.selectors.js';
 
-import { type BookmarkFlowError, BookmarkProviderError } from './BookmarkFlowError.js';
+import { BookmarkFlowError, BookmarkProviderError } from './BookmarkFlowError.js';
 
 import type { BookmarkProviderEventMap } from './BookmarkProvider.events.js';
 import { version } from './version.js';
@@ -63,38 +63,6 @@ import type {
 
 // Default timeout for bookmark operations (2 minutes)
 const defaultTimeout = 2 * 60 * 1000;
-
-/**
- * Converts a bookmark flow error into the structural details exposed to consumers.
- * @param error - The bookmark flow error to compare.
- * @returns The error details relevant to observable change detection.
- */
-const toComparableBookmarkError = (error: BookmarkFlowError): object => ({
-  name: error.name,
-  message: error.message,
-  action: error.action,
-  cause:
-    error.cause instanceof Error
-      ? { name: error.cause.name, message: error.cause.message }
-      : error.cause,
-});
-
-/**
- * Compares bookmark flow errors by their observable error details and originating actions.
- * @param previous - The previously emitted bookmark errors.
- * @param current - The current bookmark errors selected from state.
- * @returns `true` when both collections contain structurally equivalent errors.
- */
-const areBookmarkErrorsEqual = (
-  previous: Array<BookmarkFlowError>,
-  current: Array<BookmarkFlowError>,
-): boolean => {
-  // Normalize non-enumerable Error fields before deep comparison.
-  const previousErrors = previous.map(toComparableBookmarkError);
-  // Apply the same representation to both emissions so only structural changes pass through.
-  const currentErrors = current.map(toComparableBookmarkError);
-  return deepEqual(previousErrors, currentErrors);
-};
 
 /**
  * The `BookmarkProvider` class is responsible for managing bookmarks in the application.
@@ -257,11 +225,21 @@ export class BookmarkProvider implements IBookmarkProvider {
   }
 
   /**
-   * Gets an observable that emits when the bookmark errors change structurally.
+   * Gets an observable that emits when bookmark errors change structurally.
    * @returns An observable of the current list of bookmark errors.
    */
   public get errors$(): Observable<Array<BookmarkFlowError>> {
-    return this.#store.select(errorsSelector, areBookmarkErrorsEqual);
+    return this.#store.select(
+      errorsSelector,
+      (previous, current) =>
+        previous.length === current.length &&
+        current
+          // Preserve collection ordering while delegating error semantics to the error class.
+          .every((error, index) => {
+            const previousError = previous[index];
+            return previousError !== undefined && BookmarkFlowError.compare(previousError, error);
+          }),
+    );
   }
 
   /**

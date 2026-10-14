@@ -2,6 +2,6 @@
 "@equinor/fusion-framework-module-bookmark": patch
 ---
 
-Prevent the bookmark error observable from emitting when its errors remain structurally equal.
+Suppress equivalent bookmark error emissions while preserving changes to nested causes and custom error properties. Error stack traces do not affect equality.
 
 Fixes #5137
