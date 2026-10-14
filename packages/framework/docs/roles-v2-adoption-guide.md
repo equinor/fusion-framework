@@ -39,8 +39,12 @@ extra install is needed when the app already depends on it.
 
 ## 2. Enable Roles V2 and require startup roles
 
-Enable authentication before the Roles module, then declare the access roles the application
-cannot start without:
+Ordinary portal-hosted apps inherit portal authentication automatically: the React app bootstrap
+uses `configureModules`, whose `AppConfigurator` registers MSAL and reuses the parent auth provider
+through its version-compatible proxy. Do not add `enableMSAL` merely to use Roles, and do not
+create a second MSAL client or login flow.
+
+Declare the access roles the application cannot start without:
 
 ```ts
 import { enableRoles } from '@equinor/fusion-framework-module-roles';
@@ -49,6 +53,13 @@ enableRoles(configurator, (builder) => {
   builder.requireAccessRoles(['Reports.Read', 'Reports.Export']);
 });
 ```
+
+For intentional custom app authentication, `enableMSAL` with `builder.setProvider(customAuthProvider)`
+takes precedence over the portal provider. A signed-out custom provider does not fall back to the
+portal account. Standalone portals and bare `ModulesConfigurator` bootstraps must register auth
+themselves; automatic registration is an app-bootstrap feature, not a Roles or telemetry feature.
+See [authentication inheritance and custom app authentication](../../modules/roles/README.md#authentication-inheritance-and-custom-app-authentication)
+for account switching, sign-out, and the boundary between real-client and static-mock evidence.
 
 Every configured role is required (all-role semantics); module initialization throws
 `RequiredAccessRolesError` with every missing role name when the signed-in account does not

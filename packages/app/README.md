@@ -80,6 +80,26 @@ const modules = await initialize({ fusion, env });
 
 ## Key Concepts
 
+### Portal authentication is inherited by default
+
+`configureModules` creates an `AppConfigurator` that registers `auth` alongside `event` and `http`
+before the app's configuration callback runs. It initializes these modules with `fusion.modules`
+as the parent reference. MSAL then reuses the portal auth provider through its version-compatible
+`createProxyProvider` path, sharing the existing client and live account without another login.
+The React app bootstrap uses this same path.
+
+Ordinary hosted apps do not need `enableMSAL` to use Roles V2. Register `enableRoles` normally;
+the real Roles client reads the inherited account before each account-scoped operation, so parent
+account changes and sign-out are reflected in subsequent requests. An unavailable account produces
+`RequiredAccessRolesError`, not a new login flow.
+
+For deliberate custom authentication, use `enableMSAL` with `builder.setProvider(customAuthProvider)`.
+The explicitly supplied provider remains authoritative, even when signed out. A bare
+`enableMSAL` call is redundant here, and client settings alone do not override a parent provider.
+This default registration is independent of telemetry and does not apply to bare
+`ModulesConfigurator` bootstraps. See the
+[Roles authentication boundary](../modules/roles/README.md#authentication-inheritance-and-custom-app-authentication).
+
 | Concept | Description |
 |---|---|
 | `configureModules` | Factory function that creates an async initializer for application modules. |
@@ -180,4 +200,3 @@ and customizing the mocked parent's service discovery.
 
 - [Fusion Framework documentation](https://equinor.github.io/fusion-framework/)
 - [`@equinor/fusion-framework-react-app`](../react/app/) — React wrapper with hooks and providers
-

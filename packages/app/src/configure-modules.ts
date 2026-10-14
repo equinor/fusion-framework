@@ -25,6 +25,13 @@ import { initializeAppModules } from './initialize-app-modules.js';
  * 3. Invoke the optional user-supplied configuration callback.
  * 4. Initialize all registered modules and dispatch an `onAppModulesLoaded` event.
  *
+ * @remarks
+ * `AppConfigurator` registers auth before the callback runs. Ordinary portal-hosted apps,
+ * including apps using Roles V2, do not need to call `enableMSAL`: initialization passes
+ * `fusion.modules` as the parent reference and MSAL reuses the portal provider through its
+ * version-compatible proxy. An explicit `setProvider` configuration takes precedence.
+ * Telemetry does not supply this auth registration.
+ *
  * @template TModules - Additional application-specific modules to register.
  * @template TRef - The Fusion instance type, used as a configuration reference.
  * @template TEnv - The application environment descriptor (manifest, config, basename).

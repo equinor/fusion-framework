@@ -17,9 +17,15 @@ personas.
 
 ## Enable Roles V2 and require roles during initialization
 
-Enable authentication before the roles module. The default client also needs service discovery,
-either in the same module scope or inherited from the parent framework; configure a custom client
-when service discovery is unavailable:
+In ordinary portal-hosted apps, enable Roles without calling `enableMSAL`. The
+`@equinor/fusion-framework-react-app` bootstrap uses `configureModules` from
+`@equinor/fusion-framework-app`, whose `AppConfigurator` already registers the `auth` module.
+Initialization passes the portal modules as the parent reference; MSAL reuses the portal provider
+through `createProxyProvider` for version compatibility, without constructing another MSAL client
+or starting another login flow.
+
+The default Roles client also needs service discovery, either in the same module scope or
+inherited from the parent framework; configure a custom client when service discovery is unavailable:
 
 ```ts
 import { enableRoles } from '@equinor/fusion-framework-module-roles';
@@ -28,6 +34,41 @@ enableRoles(configurator, (builder) => {
   builder.requireAccessRoles(['Reports.Read', 'Reports.Export']);
 });
 ```
+
+### Authentication inheritance and custom app authentication
+
+Roles resolves the app's registered `auth` provider once during configuration and reads its
+current `account.localAccountId` before each account-scoped operation, including cached reads.
+Parent account switching and sign-out therefore affect subsequent operations without rebuilding
+the app. A missing account or empty account identifier throws `RequiredAccessRolesError` before
+making an account-scoped Roles request; Roles never initiates login itself.
+
+Only configure app authentication explicitly when deliberately supplying a custom provider:
+
+```ts
+import { enableMSAL } from '@equinor/fusion-framework-module-msal';
+
+enableMSAL(configurator, (builder) => {
+  builder.setProvider(customAuthProvider);
+});
+enableRoles(configurator);
+```
+
+`setProvider` takes precedence over inherited portal authentication. If that custom provider has
+no active account, Roles fails rather than falling back to the portal's account. A bare
+`enableMSAL(configurator)` call is redundant in an ordinary hosted app; client settings alone
+do not override an existing parent provider.
+
+This automatic auth registration belongs to `AppConfigurator`, not to Roles or telemetry.
+A standalone portal must configure its own authentication. A custom bootstrap using a bare
+`ModulesConfigurator` must register and configure auth explicitly (or register MSAL to reuse a
+compatible parent). Roles does not recursively search arbitrary parent registries for auth.
+
+`enableRolesMock` uses a static client that does not require an account. A mock page loading
+successfully cannot establish whether real Roles authentication inheritance works; test with
+`enableRoles` and the real service client when investigating auth.
+
+### Required startup roles
 
 `RolesModuleConfigurator.requireAccessRoles` checks the configured access-role names before module
 initialization completes. Every configured role must be active for the signed-in account. Role

@@ -118,6 +118,10 @@ export interface IAppConfigurator<
  * the `event`, `http`, and `msal` (auth) modules by default and reads any HTTP
  * endpoints declared in the application's environment config.
  *
+ * Hosted apps inherit parent authentication through MSAL's version-compatible proxy during
+ * initialization; no app-side `enableMSAL` call is needed. An explicitly configured auth
+ * provider takes precedence over the parent, including when that provider is signed out.
+ *
  * @template TModules - Additional application-specific modules beyond the defaults.
  * @template TRef - The resolved Fusion modules instance used as an initialization reference.
  * @template TEnv - The application environment descriptor (manifest, config, basename).
