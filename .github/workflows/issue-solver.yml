@@ -167,7 +167,6 @@ jobs:
           set +e
           gh copilot -- \
             --prompt "$prompt" \
-            --model gpt-5.4 \
             --allow-all-tools \
             --deny-tool='shell(git push)' \
             --deny-tool='shell(gh:*)' \

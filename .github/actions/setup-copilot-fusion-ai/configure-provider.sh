@@ -35,13 +35,13 @@ echo "::add-mask::$token"
 env_file="$RUNNER_TEMP/copilot-provider-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}.env"
 umask 077
 {
-  printf 'export COPILOT_PROVIDER_TYPE=%q\n' azure
-  printf 'export COPILOT_PROVIDER_BASE_URL=%q\n' "${endpoint%/}"
+  # The 6.x deployments reject function tools with reasoning on chat completions, so use the Responses API.
+  printf 'export COPILOT_PROVIDER_TYPE=%q\n' openai
+  printf 'export COPILOT_PROVIDER_BASE_URL=%q\n' "${endpoint%/}/openai/v1"
   printf 'export COPILOT_PROVIDER_BEARER_TOKEN=%q\n' "$token"
-  printf 'export COPILOT_PROVIDER_MODEL_ID=%q\n' gpt-5.4
+  printf 'export COPILOT_PROVIDER_MODEL_ID=%q\n' "$WIRE_MODEL"
   printf 'export COPILOT_PROVIDER_WIRE_MODEL=%q\n' "$WIRE_MODEL"
-  printf 'export COPILOT_PROVIDER_AZURE_API_VERSION=%q\n' 2025-01-01-preview
-  printf 'export COPILOT_PROVIDER_WIRE_API=%q\n' completions
+  printf 'export COPILOT_PROVIDER_WIRE_API=%q\n' responses
 } > "$env_file"
 chmod 600 "$env_file"
 
