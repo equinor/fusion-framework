@@ -80,16 +80,26 @@ finish the cleanup. Configurations that belong to other repositories are never t
 
 ## Add a new package
 
-npm cannot trust a package name that does not exist yet. `preflight` fails the release before
-anything is published if a new public package has not been added.
+npm cannot trust a package name that does not exist yet. `preflight` fails the whole release
+before anything is published while any public package is missing from npm. One unreserved
+package therefore blocks every other release.
 
-1. Merge the package with its changeset as usual.
-2. Before merging the release PR that first publishes it, run
+1. In the package PR, set `publishConfig.access` to `public` and add `repository` with `url`
+   `git+https://github.com/equinor/fusion-framework.git` and `directory` set to the package path.
+   Add a changeset. In the PR, `pnpm npm-trust preflight` reports the package as `not on npm yet`.
+   That is expected until step 3.
+2. Merge the package PR as usual. The release workflow opens or updates the release PR.
+3. Before merging that release PR, a maintainer with npm 2FA runs
    `pnpm npm-trust add @equinor/<name>`. This publishes `0.0.0-trusted-publishing.0` under the
-   `trusted-publishing-bootstrap` dist-tag and then trusts `release.yml`.
-3. Merge the release PR within 2 days. Alternatively, dispatch a snapshot from `main` to
-   validate the configuration.
-4. Run `pnpm npm-trust verify --package @equinor/<name>` after the release.
+   `trusted-publishing-bootstrap` dist-tag and then trusts `release.yml`. Preview it with
+   `--dry-run`.
+4. Merge the release PR within 2 days, or the new trust configuration expires. Alternatively,
+   validate it sooner by dispatching a snapshot from `main`.
+5. Run `pnpm npm-trust verify --package @equinor/<name>` after the release. The package must
+   report `verified`.
+
+Agents follow the same workflow through
+[`custom-npm-publishing`](../.agents/skills/custom-npm-publishing/SKILL.md).
 
 ## Troubleshooting
 
@@ -101,6 +111,8 @@ anything is published if a new public package has not been added.
 | Publish fails with `422` mentioning provenance | `repository` in `package.json` does not match `equinor/fusion-framework`. |
 | Snapshot job waits for or rejects the deployment | Snapshots only run from `main` or `next` (`npm` environment policy). |
 | `npm trust` prints `EOTP` | Complete 2FA in the prompt the script opens, and enable the 5-minute skip. |
+| Release stops partway with `error sending request` or `ECONNRESET` | Transient network error. Re-run the failed job. `pnpm publish -r` skips versions already on npm, so only the remaining packages are published. |
+| `verify` reports `no-tag` right after a successful run | The registry can take a few minutes to show new versions. Wait, then run `verify` again. |
 
 ## Hardening after verification
 

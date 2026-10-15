@@ -12,6 +12,7 @@ applyTo: "packages/**/*.{ts,tsx,json}"
 - **Packages**: Every package needs `package.json`, `src/index.ts`, `tsconfig.json`, and a `README.md`.
 - **Dependencies**: Use `"workspace:^"` for internal dependencies in `package.json`.
 - **New packages**: Place under the correct category (`app`, `framework`, `modules`, `react`, `utils`, `vite-plugins`, etc.) and follow naming conventions.
+- **New public packages**: Declare `repository` (with `directory`) and `publishConfig.access`. A maintainer must reserve the name with `pnpm npm-trust add <name>` before the first release, or publishing fails. See `.agents/skills/custom-npm-publishing/SKILL.md`.
 - **Modules**: Implement module interfaces, export configuration and types, and add tests (plus React hooks if applicable).
 
 ## Package Organization
@@ -66,6 +67,23 @@ reference passes a full local build and fails the release.
 4. Add TypeScript configuration
 5. Create comprehensive `README.md`
 6. Update workspace configuration if needed
+7. For a public package (not `"private": true`), add `"publishConfig": { "access": "public" }`
+   and `"repository": { "type": "git", "url": "git+https://github.com/equinor/fusion-framework.git", "directory": "packages/{category}/{package-name}" }`.
+   npm provenance rejects a publish without a matching `repository`.
+8. Add a changeset, and update the package list and count in `CODEMAP.md`.
+
+### Publishing a new package for the first time
+
+npm trusted publishing can only trust a package name that already exists on npm. The release
+workflow runs `pnpm npm-trust preflight` and refuses to publish anything while a public package
+is missing from npm. Before the first release PR that contains a new public package is merged:
+
+1. A maintainer with npm 2FA runs `pnpm npm-trust add <name>`. This publishes a placeholder
+   and trusts `.github/workflows/release.yml`.
+2. The release publishes within 2 days. After that, an unused trust configuration expires.
+3. `pnpm npm-trust verify --package <name>` reports `verified` after the release.
+
+Runbook: `contributing/npm-publishing.md`. Agent workflow: `.agents/skills/custom-npm-publishing/SKILL.md`.
 
 ### Module Structure
 Modules follow specific patterns:

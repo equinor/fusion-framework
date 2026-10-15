@@ -63,6 +63,12 @@ and expensive to find later:
   named exports and is a breaking change, not a refactor.
 - A file split that rewires importers but leaves the original file in place. Dead files still
   compile and still lint.
+- A new public package without a `repository` field pointing at `equinor/fusion-framework`.
+  The release preflight rejects it, and npm provenance would too. Remind the author that a
+  maintainer must run `pnpm npm-trust add <name>` before the first release.
+- npm publishing outside `.github/workflows/release.yml`, a renamed `release.yml` or `npm`
+  environment, or a reintroduced npm token. npm trusts only that workflow and environment, so
+  publishing breaks for every package (see `contributing/npm-publishing.md`).
 
 ## What not to comment on
 
