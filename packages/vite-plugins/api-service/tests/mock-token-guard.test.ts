@@ -65,6 +65,18 @@ describe('api-service plugin mock token guard', () => {
     expect(upstream.isDone()).toBe(true);
   });
 
+  it('blocks a mock token from reaching a public IPv6 literal', async () => {
+    const upstream = nock('https://[2606:4700:4700::1111]').get('/services').reply(200, []);
+    const serverUrl = await startServer('https://[2606:4700:4700::1111]');
+
+    const response = await fetch(new URL(`${DEFAULT_VALUES.SERVICES_PATH}/services`, serverUrl), {
+      headers: { authorization: bearer('none') },
+    });
+
+    expect(response.status).toBe(401);
+    expect(upstream.isDone()).toBe(false);
+  });
+
   it('forwards a mock token to a local mock server', async () => {
     const upstream = nock('http://localhost:4010').get('/services').reply(200, []);
     const serverUrl = await startServer('http://localhost:4010');

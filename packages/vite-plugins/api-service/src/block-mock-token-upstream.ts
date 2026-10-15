@@ -44,7 +44,8 @@ const isLocalTarget = (target: string): boolean => {
   return (
     hostname === 'localhost' ||
     hostname === '::1' ||
-    !hostname.includes('.') ||
+    // Single-label hosts are Compose services; IPv6 literals have no dots but may be public
+    (!hostname.includes('.') && !hostname.includes(':')) ||
     /\.(localhost|local|internal)$/.test(hostname) ||
     /^(127|10)\./.test(hostname) ||
     /^192\.168\./.test(hostname) ||
