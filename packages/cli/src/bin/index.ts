@@ -32,6 +32,7 @@ export { tagPortal } from './tag-portal.js';
 export { pack } from './pack.js';
 
 export { ConsoleLogger } from './utils/ConsoleLogger.js';
+export { defaultHeaders } from './utils/default-headers.js';
 
 export {
   type FusionFramework,
