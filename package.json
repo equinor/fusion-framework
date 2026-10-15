@@ -51,6 +51,7 @@
     "verify:package-exports": "node .github/scripts/verify-package-exports.mjs",
     "verify:esm": "node .github/scripts/verify-esm.mjs",
     "verify:esm:runtime": "node .github/scripts/verify-esm.mjs --runtime",
+    "npm-trust": "node .github/scripts/npm-trusted-publishing.mjs",
     "format": "biome format",
     "format:staged": "biome format --staged",
     "test": "vitest --run",

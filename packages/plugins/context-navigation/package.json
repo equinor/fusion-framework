@@ -2,6 +2,11 @@
   "name": "@equinor/fusion-framework-plugin-context-navigation",
   "version": "1.0.4",
   "description": "Adapter-based context-to-URL reconciler for Fusion Framework portals",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/equinor/fusion-framework.git",
+    "directory": "packages/plugins/context-navigation"
+  },
   "type": "module",
   "module": "./dist/esm/index.js",
   "types": "./dist/types/index.d.ts",
