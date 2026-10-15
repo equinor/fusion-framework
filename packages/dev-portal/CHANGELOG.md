@@ -1,5 +1,22 @@
 # @equinor/fusion-framework-dev-portal
 
+## 11.1.3
+
+### Patch Changes
+
+- Updated dependencies [579ad43]
+- Updated dependencies [a23ec8a]
+- Updated dependencies [a23ec8a]
+- Updated dependencies [a23ec8a]
+- Updated dependencies [762dbc8]
+  - @equinor/fusion-framework-app@13.1.9
+  - @equinor/fusion-framework-module-telemetry@7.2.1
+  - @equinor/fusion-framework-module-analytics@3.1.9
+  - @equinor/fusion-framework-module-services@8.1.4
+  - @equinor/fusion-framework-module-bookmark@4.1.4
+  - @equinor/fusion-framework@9.0.3
+  - @equinor/fusion-framework-dev-server@2.2.1
+
 ## 11.1.2
 
 ### Patch Changes

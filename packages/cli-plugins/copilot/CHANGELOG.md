@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-cli-plugin-copilot
 
+## 2.0.12
+
+### Patch Changes
+
+- a23ec8a: Internal: bump `agent-browser` from `0.38.1` to `0.39.0`.
+
 ## 2.0.11
 
 ### Patch Changes

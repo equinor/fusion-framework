@@ -1,5 +1,11 @@
 # Change Log
 
+## 8.1.4
+
+### Patch Changes
+
+- a23ec8a: Internal: bump `msw` from `2.15.0` to `3.0.3`.
+
 ## 8.1.3
 
 ### Patch Changes

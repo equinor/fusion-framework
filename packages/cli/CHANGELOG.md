@@ -1,5 +1,13 @@
 # Change Log
 
+## 15.5.3
+
+### Patch Changes
+
+- a23ec8a: Internal: bump `@types/adm-zip` from `0.5.8` to `0.6.0`.
+- @equinor/fusion-framework-dev-portal@11.1.3
+  - @equinor/fusion-framework-dev-server@2.2.1
+
 ## 15.5.2
 
 ### Patch Changes

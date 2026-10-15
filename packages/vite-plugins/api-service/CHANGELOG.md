@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-vite-plugin-api-service
 
+## 2.0.9
+
+### Patch Changes
+
+- a23ec8a: Internal: bump `nock` from `14.0.17` to `15.0.1`.
+
 ## 2.0.8
 
 ### Patch Changes
