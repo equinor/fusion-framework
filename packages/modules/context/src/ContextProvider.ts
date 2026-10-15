@@ -748,16 +748,16 @@ export class ContextProvider
     opt?: { validate?: boolean; resolve?: boolean },
   ): Observable<T> {
     return new Observable((subscriber) => {
+      const isInvalid =
+        context !== null && opt?.validate === true && !this.validateContext(context);
+
       // Keep valid unchanged contexts, but let invalid same-object contexts reach resolution.
-      if (
-        context === this.currentContext &&
-        (!context || !opt?.validate || this.validateContext(context))
-      ) {
+      if (context === this.currentContext && !isInvalid) {
         subscriber.next(context);
         return subscriber.complete();
       }
       // check if context is provided and should be validated
-      if (context && opt?.validate && !this.validateContext(context)) {
+      if (isInvalid) {
         // check if the resolve context is provided
         if (!opt.resolve) {
           // notify event observers that context validation failed since resolve is not provided
