@@ -17,8 +17,12 @@ export interface ReactRouterPluginOptions {
 // Regex Patterns
 // ============================================================================
 
-const ROUTE_IMPORT_PATTERN =
-  /import\s*{\s*[^}]*\b(route|index|layout|prefix)\b[^}]*}\s*from\s*['"]@equinor\/fusion-framework-react-router(?:\/routes)?['"]/g;
+// Matches only the `} from '<router>'` tail; the specifier list is located by a linear scan
+// because a wildcard `import\s*{[^}]*...}` regex backtracks polynomially (CodeQL js/polynomial-redos).
+const DSL_IMPORT_SOURCE_PATTERN =
+  /}\s*from\s*['"]@equinor\/fusion-framework-react-router(?:\/routes)?['"]/g;
+
+const DSL_FUNCTION_NAME_PATTERN = /\b(?:route|index|layout|prefix)\b/;
 
 const ROUTE_CALL_PATTERN = /\b(route|index|layout|prefix)\s*\(/g;
 
@@ -26,12 +30,14 @@ const IMPORT_META_RESOLVE_PATTERN = /import\.meta\.resolve\s*\(\s*['"]([^'"]+)['
 
 const SINGLE_ARG_PATTERN = /\b(index|layout)\s*\(\s*['"]([^'"]+)['"]\s*\)/g;
 
+// `[^)]+` / `[^,]+` already accept whitespace, so they must not sit next to `\s*`:
+// overlapping quantifiers backtrack polynomially on long runs of spaces.
 const LAYOUT_WITH_RESOLVE_PATTERN =
-  /\blayout\s*\(\s*import\.meta\.resolve\s*\(\s*['"]([^'"]+)['"]\s*\)\s*,\s*[^)]+\s*\)/g;
+  /\blayout\s*\(\s*import\.meta\.resolve\s*\(\s*['"]([^'"]+)['"]\s*\)\s*,[^)]+\)/g;
 
-const LAYOUT_WITH_CHILDREN_PATTERN = /\blayout\s*\(\s*['"]([^'"]+)['"]\s*,\s*[^)]+\s*\)/g;
+const LAYOUT_WITH_CHILDREN_PATTERN = /\blayout\s*\(\s*['"]([^'"]+)['"]\s*,[^)]+\)/g;
 
-const ROUTE_PATTERN = /\broute\s*\(\s*[^,]+,\s*['"]([^'"]+)['"]\s*\)/g;
+const ROUTE_PATTERN = /\broute\s*\([^,]+,\s*['"]([^'"]+)['"]\s*\)/g;
 
 const INDEX_PATTERN = /\bindex\s*\(\s*['"]([^'"]+)['"]\s*\)/g;
 
@@ -42,9 +48,6 @@ const LAYOUT_NESTED_PATTERN = /\blayout\s*\(\s*['"]([^'"]+)['"]\s*,\s*/g;
 const ROUTE_WITH_PATH_PATTERN = /\broute\s*\(\s*([^,]+)\s*,\s*['"]([^'"]+)['"]\s*\)/g;
 
 const PREFIX_PATTERN = /\bprefix\s*\(\s*([^,]+)\s*,\s*\[/g;
-
-const DSL_IMPORT_REMOVE_PATTERN =
-  /import\s*{\s*[^}]*\b(route|index|layout|prefix)\b[^}]*}\s*from\s*['"]@equinor\/fusion-framework-react-router(?:\/routes)?['"];?\s*/g;
 
 const EXPORT_PATTERN = /export\s+const\s+\w+\s*=\s*/g;
 
@@ -93,6 +96,92 @@ function isRelativePath(filePath: string): boolean {
  */
 function normalizePathSeparators(filePath: string): string {
   return filePath.replace(/\\/g, '/');
+}
+
+interface SourceRange {
+  start: number;
+  end: number;
+}
+
+/**
+ * Finds `import { route, ... } from '@equinor/fusion-framework-react-router'` statements
+ * (including the `/routes` entry) that import at least one route DSL helper.
+ *
+ * Detection drives both the decision to transform a module and the removal of the DSL
+ * import afterwards. The specifier list is located with a bounded backward scan instead of
+ * a wildcard regex so that untrusted module source cannot trigger super-linear backtracking.
+ *
+ * @param code - Module source to scan.
+ * @returns Ranges covering each DSL import statement, its optional `;`, and trailing whitespace,
+ *   in source order.
+ */
+function findDslImportRanges(code: string): SourceRange[] {
+  const ranges: SourceRange[] = [];
+  // Backward scans never cross the previous candidate, which keeps the whole pass linear.
+  let scanFloor = 0;
+
+  // Each candidate is a `} from '<router>'` tail; walk back to its `{` and the `import` keyword.
+  for (const match of code.matchAll(DSL_IMPORT_SOURCE_PATTERN)) {
+    const closeBrace = match.index;
+    let end = closeBrace + match[0].length;
+    const floor = scanFloor;
+    scanFloor = end;
+
+    let openBrace = closeBrace - 1;
+    // Stop at a nested `}` too: the specifier list cannot contain one.
+    while (openBrace >= floor && code[openBrace] !== '{' && code[openBrace] !== '}') {
+      openBrace--;
+    }
+    // Not a braced import list (e.g. an object literal or default import) — not a DSL import.
+    if (openBrace < floor || code[openBrace] !== '{') {
+      continue;
+    }
+
+    let keywordEnd = openBrace;
+    // Allow any whitespace between `import` and `{`, matching `import\s*{`.
+    while (keywordEnd > floor && /\s/.test(code[keywordEnd - 1])) {
+      keywordEnd--;
+    }
+    const start = keywordEnd - 'import'.length;
+    // Only static `import { ... }` statements are DSL imports; `export { ... } from` is left alone.
+    if (start < floor || !code.startsWith('import', start)) {
+      continue;
+    }
+
+    // The router package also exports hooks; only imports that pull in DSL helpers are rewritten.
+    if (!DSL_FUNCTION_NAME_PATTERN.test(code.slice(openBrace + 1, closeBrace))) {
+      continue;
+    }
+
+    if (code[end] === ';') {
+      end++;
+    }
+    // Consume trailing whitespace so removing the import does not leave a blank line behind.
+    while (end < code.length && /\s/.test(code[end])) {
+      end++;
+    }
+    scanFloor = end;
+    ranges.push({ start, end });
+  }
+
+  return ranges;
+}
+
+/**
+ * Removes route DSL imports, which are compiled away once DSL calls become route objects.
+ *
+ * @param code - Module source after DSL calls have been transformed.
+ * @returns The source without DSL import statements.
+ */
+function removeDslImports(code: string): string {
+  let result = '';
+  let cursor = 0;
+  // Ranges are ordered and non-overlapping, so the kept slices can be concatenated directly.
+  for (const { start, end } of findDslImportRanges(code)) {
+    result += code.slice(cursor, start);
+    cursor = end;
+  }
+  return result + code.slice(cursor);
 }
 
 /**
@@ -784,7 +873,7 @@ export const reactRouterPlugin = (options: ReactRouterPluginOptions = {}): Plugi
         }
 
         // Check if the file contains DSL route imports
-        if (!code.match(ROUTE_IMPORT_PATTERN)) {
+        if (findDslImportRanges(code).length === 0) {
           return null;
         }
 
@@ -907,7 +996,7 @@ export const reactRouterPlugin = (options: ReactRouterPluginOptions = {}): Plugi
         transformedCode = transformPrefix(transformedCode);
 
         // Remove DSL imports
-        transformedCode = transformedCode.replace(DSL_IMPORT_REMOVE_PATTERN, '');
+        transformedCode = removeDslImports(transformedCode);
 
         // Wrap single route object exports in arrays
         transformedCode = wrapSingleRouteExports(transformedCode);
