@@ -35,6 +35,8 @@ export type AzureOpenAIModelConfig = ModelOpenAiConfig & {
   azureOpenAIApiKey?: string;
   azureOpenAIApiVersion?: string;
   azureADTokenProvider?: () => Promise<string>;
+  /** Headers sent with every request to the AI service (e.g. tool identification). */
+  defaultHeaders?: Record<string, string>;
 };
 
 /**
@@ -99,7 +101,11 @@ export class AzureOpenAIModel<
    */
   constructor(config: AzureOpenAIModelConfig) {
     super();
-    this.#client = new AzureChatOpenAI(config);
+    const { defaultHeaders, ...options } = config;
+    this.#client = new AzureChatOpenAI({
+      ...options,
+      ...(defaultHeaders && { configuration: { defaultHeaders } }),
+    });
   }
 
   /**

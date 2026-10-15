@@ -1,9 +1,9 @@
-import type { IServiceDiscoveryProvider } from '@equinor/fusion-framework-module-service-discovery';
 import { AzureOpenAiEmbed } from '../azure/AzureOpenAiEmbed.js';
 import type { IEmbed } from '../types.js';
 import { STRATEGY_TYPE } from './static.js';
 import type { EmbedStrategy } from './types.js';
-import { acquireFusionToken, type AuthProvider } from './acquire-fusion-token.js';
+import { acquireFusionToken } from './acquire-fusion-token.js';
+import type { FusionAiStrategyModules } from './fusion-ai-strategy.js';
 
 /** Strategy name for the default Fusion embed strategy. */
 export const FUSION_EMBED_STRATEGY_NAME = 'fusion-ai-embed-strategy' as const;
@@ -36,10 +36,9 @@ const DEFAULT_EMBED_MODEL = 'text-embedding-3-large' as const;
  */
 // Deliberately co-located with `FUSION_EMBED_STRATEGY_NAME` above
 // fusion-lint-disable-next-line single-export-per-file
-export const createFusionAiEmbedStrategy = async (modules: {
-  auth: AuthProvider;
-  serviceDiscovery: IServiceDiscoveryProvider;
-}): Promise<EmbedStrategy> => {
+export const createFusionAiEmbedStrategy = async (
+  modules: FusionAiStrategyModules,
+): Promise<EmbedStrategy> => {
   // Resolve the AI service once — the resulting endpoint and credentials are
   // shared across all clients created by this strategy instance.
   const service = await modules.serviceDiscovery.resolveService('ai');
@@ -57,6 +56,7 @@ export const createFusionAiEmbedStrategy = async (modules: {
         azureOpenAIBasePath: basePath,
         azureOpenAIApiDeploymentName: model,
         azureOpenAIApiVersion: DEFAULT_API_VERSION,
+        defaultHeaders: modules.defaultHeaders,
         azureADTokenProvider: async () => {
           const { token } = await acquireFusionToken(modules.auth, service);
           return token;
