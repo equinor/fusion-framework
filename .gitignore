@@ -60,6 +60,7 @@ typings/
 # Vitest browser mode failure screenshots
 __screenshots__/
 .vitest-attachments/
+.vitest/
 
 # Playwright run artifacts (traces, screenshots, videos, .last-run.json)
 test-results/

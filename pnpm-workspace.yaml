@@ -7,6 +7,14 @@ catalog:
   '@playwright/test': ^1.63.0
   playwright: ^1.63.0
 
+# Vitest, its browser provider, and React renderer must move together; mixing majors breaks
+# browser-mode project startup.
+catalogs:
+  vitest:
+    '@vitest/browser-playwright': ^5.0.3
+    vitest: ^5.0.3
+    vitest-browser-react: ^2.3.0
+
 # @changesets/cli and @changesets/write were published <24h ago (still inside pnpm 11's
 # default minimumReleaseAge window) but are already-vetted devDependency-only build tooling
 # from the changesets v2->v3 migration (PR #5337) — exempt them so installs aren't blocked.

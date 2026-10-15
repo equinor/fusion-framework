@@ -179,10 +179,10 @@ describe('HelpSideSheet', () => {
 
     await expect
       .element(screen.getByTestId('help-article-title'))
-      .toHaveTextContent('Getting started');
+      .toMatchTextContent('Getting started');
     await expect
       .element(screen.getByTestId('help-article-updated'))
-      .toHaveTextContent('Last updated');
+      .toMatchTextContent('Last updated');
     await expect
       .element(screen.getByTestId('help-article-content').getByRole('heading', { name: 'Install' }))
       .toBeVisible();
@@ -199,8 +199,8 @@ describe('HelpSideSheet', () => {
     openHelp({ page: 'article', articleId: 'manage' });
 
     const items = screen.getByTestId('help-nav-article');
-    await expect.element(items.first()).toHaveTextContent('Getting started');
-    await expect.element(items.nth(1)).toHaveTextContent('Manage demands');
+    await expect.element(items.first()).toMatchTextContent('Getting started');
+    await expect.element(items.nth(1)).toMatchTextContent('Manage demands');
     await expect.element(items.nth(1)).toHaveAttribute('aria-current', 'page');
     expect(mocks.json).toHaveBeenCalledWith('/apps/my-app/articles', expect.anything());
   });
@@ -210,7 +210,7 @@ describe('HelpSideSheet', () => {
     openHelp({ page: 'article', articleId: 'getting-started' });
     await expect
       .element(screen.getByTestId('help-article-title'))
-      .toHaveTextContent('Getting started');
+      .toMatchTextContent('Getting started');
 
     await screen
       .getByRole('navigation', { name: 'Help navigation' })
@@ -219,7 +219,7 @@ describe('HelpSideSheet', () => {
 
     await expect
       .element(screen.getByTestId('help-article-title'))
-      .toHaveTextContent('Manage demands');
+      .toMatchTextContent('Manage demands');
     // Only list requests matter: browsing must reuse the sidebar list fetched on open.
     const listCalls = mocks.json.mock.calls.filter(([path]) => path === '/apps/my-app/articles');
     expect(listCalls).toHaveLength(1);
@@ -230,14 +230,14 @@ describe('HelpSideSheet', () => {
 
     openHelp({ page: 'home' });
 
-    await expect.element(screen.getByTestId('help-home')).toHaveTextContent('Help for My App');
+    await expect.element(screen.getByTestId('help-home')).toMatchTextContent('Help for My App');
     await screen
       .getByTestId('help-home')
       .getByRole('button', { name: /Manage demands/ })
       .click();
     await expect
       .element(screen.getByTestId('help-article-title'))
-      .toHaveTextContent('Manage demands');
+      .toMatchTextContent('Manage demands');
   });
 
   it('lists all articles when no app is loaded', async () => {
@@ -256,7 +256,9 @@ describe('HelpSideSheet', () => {
 
     await screen.getByTestId('help-nav-release-notes').click();
 
-    await expect.element(screen.getByTestId('help-unsupported')).toHaveTextContent('Release Notes');
+    await expect
+      .element(screen.getByTestId('help-unsupported'))
+      .toMatchTextContent('Release Notes');
     await expect
       .element(screen.getByTestId('help-nav-release-notes'))
       .toHaveAttribute('aria-current', 'page');
@@ -293,7 +295,7 @@ describe('HelpSideSheet', () => {
     await screen.getByRole('searchbox', { name: 'Search help' }).fill('install');
 
     const results = screen.getByTestId('help-search-result');
-    await expect.element(results.first()).toHaveTextContent('Getting started');
+    await expect.element(results.first()).toMatchTextContent('Getting started');
     // Other apps' articles are dropped so search matches what the sidebar lists.
     await expect.element(screen.getByText('Other app install')).not.toBeInTheDocument();
     expect(mocks.json).toHaveBeenCalledWith(
@@ -304,7 +306,7 @@ describe('HelpSideSheet', () => {
     await results.first().click();
     await expect
       .element(screen.getByTestId('help-article-title'))
-      .toHaveTextContent('Getting started');
+      .toMatchTextContent('Getting started');
   });
 
   it('prefills the search from openSearch(term)', async () => {
@@ -317,7 +319,7 @@ describe('HelpSideSheet', () => {
       .toHaveValue('edit');
     await expect
       .element(screen.getByTestId('help-search-result').first())
-      .toHaveTextContent('Manage demands');
+      .toMatchTextContent('Manage demands');
   });
 
   it('resets the query and searches again when the app repeats openSearch(term)', async () => {
@@ -333,7 +335,7 @@ describe('HelpSideSheet', () => {
     await expect.element(searchbox).toHaveValue('edit');
     await expect
       .element(screen.getByTestId('help-search-result').first())
-      .toHaveTextContent('Manage demands');
+      .toMatchTextContent('Manage demands');
     // Only search requests matter: each app event runs the requested search again.
     const editSearches = mocks.json.mock.calls.filter(
       ([path, init]) => path === '/search' && init?.body?.search === 'edit',
@@ -373,8 +375,8 @@ describe('HelpSideSheet', () => {
     openHelp({ page: 'search', search: 'article' });
 
     const results = screen.getByTestId('help-search-result');
-    await expect.element(results.first()).toHaveTextContent('Own article');
-    await expect.element(results.nth(1)).toHaveTextContent('Linked article');
+    await expect.element(results.first()).toMatchTextContent('Own article');
+    await expect.element(results.nth(1)).toMatchTextContent('Linked article');
     expect(results.all()).toHaveLength(2);
   });
 
@@ -383,7 +385,7 @@ describe('HelpSideSheet', () => {
 
     openHelp({ page: 'search', search: 'zebra' });
 
-    await expect.element(screen.getByTestId('help-search-empty')).toHaveTextContent('zebra');
+    await expect.element(screen.getByTestId('help-search-empty')).toMatchTextContent('zebra');
   });
 
   it('shows a not-found message naming the article for a 404', async () => {
@@ -391,7 +393,9 @@ describe('HelpSideSheet', () => {
 
     openHelp({ page: 'article', articleId: 'missing-article' });
 
-    await expect.element(screen.getByTestId('help-not-found')).toHaveTextContent('missing-article');
+    await expect
+      .element(screen.getByTestId('help-not-found'))
+      .toMatchTextContent('missing-article');
   });
 
   it('explains that help is unavailable when no help service is discovered', async () => {
@@ -411,7 +415,7 @@ describe('HelpSideSheet', () => {
 
     openHelp({ page: 'article', articleId: 'getting-started' });
 
-    await expect.element(screen.getByTestId('help-error')).toHaveTextContent('503');
+    await expect.element(screen.getByTestId('help-error')).toMatchTextContent('503');
     await expect.element(screen.getByTestId('help-unavailable')).not.toBeInTheDocument();
   });
 
@@ -430,7 +434,7 @@ describe('HelpSideSheet', () => {
 
     openHelp({ page: 'article', articleId: 'getting-started' });
 
-    await expect.element(screen.getByTestId('help-error')).toHaveTextContent('broken.md');
+    await expect.element(screen.getByTestId('help-error')).toMatchTextContent('broken.md');
   });
 
   it('shows other failures as an error', async () => {
@@ -443,7 +447,7 @@ describe('HelpSideSheet', () => {
 
     openHelp({ page: 'article', articleId: 'getting-started' });
 
-    await expect.element(screen.getByTestId('help-error')).toHaveTextContent('500');
+    await expect.element(screen.getByTestId('help-error')).toMatchTextContent('500');
     await expect.element(screen.getByTestId('help-nav-empty')).toBeVisible();
   });
 
@@ -454,7 +458,7 @@ describe('HelpSideSheet', () => {
 
     await expect
       .element(screen.getByTestId('help-unsupported'))
-      .toHaveTextContent('App Governance');
+      .toMatchTextContent('App Governance');
   });
 
   it('lists the app FAQs in sortOrder and expands an answer', async () => {
@@ -463,7 +467,7 @@ describe('HelpSideSheet', () => {
     openHelp({ page: 'faqs' });
 
     const questions = screen.getByTestId('help-faq-question');
-    await expect.element(questions.first()).toHaveTextContent('Where do I start?');
+    await expect.element(questions.first()).toMatchTextContent('Where do I start?');
     await expect.element(questions.nth(1)).toHaveAttribute('aria-expanded', 'false');
     expect(mocks.json).toHaveBeenCalledWith('/apps/my-app/faqs?$expand=answer', expect.anything());
 
@@ -471,7 +475,7 @@ describe('HelpSideSheet', () => {
 
     await expect
       .element(screen.getByRole('region', { name: 'Can I edit a submitted demand?' }))
-      .toHaveTextContent('No, withdraw it first.');
+      .toMatchTextContent('No, withdraw it first.');
     await expect.element(questions.nth(1)).toHaveAttribute('aria-expanded', 'true');
   });
 
@@ -484,7 +488,7 @@ describe('HelpSideSheet', () => {
 
     await expect
       .element(screen.getByTestId('help-article-title'))
-      .toHaveTextContent('Getting started');
+      .toMatchTextContent('Getting started');
   });
 
   it('opens an FAQ search hit on the FAQ page with that answer expanded', async () => {
@@ -520,7 +524,7 @@ describe('HelpSideSheet', () => {
     openHelp({ page: 'article', articleId: 'getting-started' });
     await expect
       .element(screen.getByTestId('help-article-title'))
-      .toHaveTextContent('Getting started');
+      .toMatchTextContent('Getting started');
 
     mocks.json.mockImplementation(async (path: string) =>
       path.endsWith('/articles')
@@ -529,7 +533,7 @@ describe('HelpSideSheet', () => {
     );
     openHelp({ page: 'article', articleId: 'getting-started' });
 
-    await expect.element(screen.getByTestId('help-article-title')).toHaveTextContent('Edited');
+    await expect.element(screen.getByTestId('help-article-title')).toMatchTextContent('Edited');
   });
 
   it('closes the panel on Escape', async () => {

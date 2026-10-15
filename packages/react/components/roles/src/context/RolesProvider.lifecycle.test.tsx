@@ -91,7 +91,7 @@ describe('RolesProvider lifecycle', () => {
         </RolesProvider>
       </ErrorBoundary>,
     );
-    await expect.element(screen.getByRole('alert')).toHaveTextContent('Call enableRoles');
+    await expect.element(screen.getByRole('alert')).toMatchTextContent('Call enableRoles');
     await expect.element(screen.getByText('Unchecked child')).not.toBeInTheDocument();
     expect(provider.getActiveAccessRoleAssignments).not.toHaveBeenCalled();
   });

@@ -46,7 +46,7 @@
   "devDependencies": {
     "typescript": "^7.0.2",
     "vite": "^8.0.0",
-    "vitest": "^4.1.10"
+    "vitest": "catalog:vitest"
   },
   "peerDependencies": {
     "vite": "^7.0.0 || ^8.0.0"

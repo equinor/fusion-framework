@@ -30,9 +30,9 @@
   "devDependencies": {
     "@equinor/fusion-framework": "workspace:^",
     "@equinor/fusion-framework-vitest-plugin-react-app": "workspace:^",
-    "@vitest/browser-playwright": "^4.1.0",
+    "@vitest/browser-playwright": "catalog:vitest",
     "playwright": "catalog:",
-    "vitest": "^4.1.10",
-    "vitest-browser-react": "^2.2.0"
+    "vitest": "catalog:vitest",
+    "vitest-browser-react": "catalog:vitest"
   }
 }

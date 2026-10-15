@@ -183,7 +183,9 @@ describe('RolesView', () => {
         reload: mocks.reloadActiveAccessRoleAssignments,
       });
       const screen = await render(<RolesView compact={compact} />);
-      await expect.element(screen.getByText('Error: Active roles unavailable')).toBeVisible();
+      await expect
+        .element(screen.getByText('Error: Active roles unavailable', { exact: false }))
+        .toBeVisible();
       await screen.getByRole('button', { name: 'Retry' }).click();
       expect(mocks.reloadActiveAccessRoleAssignments).toHaveBeenCalledOnce();
       expect(mocks.reloadConsolidatedClaimableRoleAssignments).toHaveBeenCalledOnce();

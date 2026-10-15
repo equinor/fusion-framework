@@ -53,7 +53,7 @@
     "jsdom": "^30.0.1",
     "rxjs": "^7.8.1",
     "typescript": "^7.0.2",
-    "vitest": "^4.1.10"
+    "vitest": "catalog:vitest"
   },
   "peerDependencies": {
     "@equinor/fusion-framework-module": "workspace:^",

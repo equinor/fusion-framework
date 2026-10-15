@@ -32,7 +32,7 @@ Browser Mode by providing its own renderer. See
 ## Step 1: install Browser Mode dependencies
 
 ```sh
-pnpm add -D vitest playwright @vitest/browser-playwright vitest-browser-react \
+pnpm add -D vitest@^5 playwright @vitest/browser-playwright@^5 vitest-browser-react@^2.3.0 \
   @equinor/fusion-framework-vitest-plugin-react-app
 pnpm exec playwright install chromium
 ```

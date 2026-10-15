@@ -9,7 +9,7 @@ testWithRouter('renders a sidebar link for each top-level page', async ({ render
   await expect.element(getByText('Home')).toBeInTheDocument();
   await expect.element(getByText('Products')).toBeInTheDocument();
   await expect.element(getByText('Users')).toBeInTheDocument();
-  await expect.element(getByText('People')).toBeInTheDocument();
+  await expect.element(getByText('People API')).toBeInTheDocument();
 
   await unmount();
 });

@@ -10,7 +10,7 @@ test('renders the cookbook greeting once the app configuration has initialized',
 
   await expect
     .element(getByRole('heading', { name: /hello fusion/i }))
-    .toHaveTextContent('Hello Fusion');
+    .toMatchTextContent('Hello Fusion');
 
   await unmount();
 });
