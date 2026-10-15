@@ -107,10 +107,14 @@ if [[ -z "$pr_number" ]]; then
   )"
   pr_number="${pr_url##*/}"
 else
-  gh pr edit "$pr_number" \
-    --repo "$REPOSITORY" \
-    --title 'chore(deps): promote dependency maintenance stream' \
-    --body-file "$report"
+  # `gh pr edit` always resolves requested reviewers, which a fine-grained token cannot do
+  # for CODEOWNERS team requests; the REST endpoint updates title and body without that lookup.
+  gh api \
+    --method PATCH \
+    "repos/${REPOSITORY}/pulls/${pr_number}" \
+    --raw-field title='chore(deps): promote dependency maintenance stream' \
+    --raw-field body="$(cat "$report")" \
+    --silent
   # New commits invalidate earlier validation, so drop auto-merge and return to draft.
   gh pr merge "$pr_number" --repo "$REPOSITORY" --disable-auto || true
   gh pr ready "$pr_number" --repo "$REPOSITORY" --undo || true
