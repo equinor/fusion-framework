@@ -85,6 +85,19 @@ export const createDevServer = async (
     );
   }
 
+  // In mock mode every token is a mock token, so discovery must stay on the mock server even if
+  // dev-server.config overrides it
+  const discoveryMock = options.mock ?? options.mockDiscovery ?? mockDiscovery;
+  // Fail at startup instead of sending mock tokens to real service discovery
+  if (
+    discoveryMock &&
+    new URL(config.api.serviceDiscoveryUrl).origin !== new URL(discoveryMock).origin
+  ) {
+    throw new Error(
+      `Mock mode is enabled (${discoveryMock}), but service discovery points at ${config.api.serviceDiscoveryUrl}. Remove the api.serviceDiscoveryUrl override from dev-server.config, or run without mock auth.`,
+    );
+  }
+
   const mergedOverrides = configWatcherPlugin
     ? {
         ...overrides,
