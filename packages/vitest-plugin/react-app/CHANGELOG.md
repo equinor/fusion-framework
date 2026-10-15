@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-vitest-plugin-react-app
 
+## 1.0.16
+
+### Patch Changes
+
+- @equinor/fusion-framework-cli@15.6.1
+
 ## 1.0.15
 
 ### Patch Changes
