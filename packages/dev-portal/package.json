@@ -21,6 +21,11 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/equinor/fusion-framework.git",
+    "directory": "packages/dev-portal"
+  },
   "files": [
     "dist"
   ],

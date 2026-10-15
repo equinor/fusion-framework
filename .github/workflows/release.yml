@@ -1,0 +1,324 @@
+name: release
+
+# Single npm publishing entry point for every public @equinor package in this
+# repository. npm trusted publishing (OIDC) binds each package to this workflow
+# file name and the `npm` environment, so stable, pre-release (`next`), and
+# snapshot publishing must stay in this file. Renaming it, or publishing from
+# another workflow, breaks npm publishing until trust is re-bootstrapped.
+# See contributing/npm-publishing.md and docs/adr/0002-npm-trusted-publishing.md.
+
+on:
+  push:
+    branches:
+      - main
+      - next
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Snapshot dist-tag. Publishes every public package as <version>-<tag>-<commit>.
+        default: snapshot
+        required: true
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name == 'workflow_dispatch' && format('snapshot-{0}', inputs.tag) || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'workflow_dispatch' }}
+
+env:
+  TURBO_CACHE: local:rw
+
+# Every job declares its own permissions; only publishing jobs receive id-token.
+permissions: {}
+
+jobs:
+  select-mode:
+    name: Select release mode
+    if: github.event_name == 'push'
+    # runs-on: fusion-gh-runner-fusion-framework.borked
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      channel: ${{ steps.channel.outputs.channel }}
+      dist-tag: ${{ steps.channel.outputs.dist-tag }}
+      mode: ${{ steps.select-mode.outputs.mode || 'none' }}
+    steps:
+      - uses: actions/checkout@v7
+
+      # `main` publishes stable releases; `next` publishes pre-releases only
+      # while changesets pre-release mode is active.
+      - name: Resolve release channel
+        id: channel
+        shell: bash
+        run: |
+          if [ "$GITHUB_REF_NAME" = "main" ]; then
+            echo "channel=stable" >> "$GITHUB_OUTPUT"
+            echo "dist-tag=latest" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          if [ ! -f .changeset/pre.json ]; then
+            echo "channel=skip" >> "$GITHUB_OUTPUT"
+            echo "::notice::Pre-release skipped: .changeset/pre.json not found, run 'pnpm changeset pre enter <tag>' to enable pre-release mode."
+            exit 0
+          fi
+          TAG=$(jq -r '.tag' .changeset/pre.json)
+          if [ "$TAG" = "latest" ]; then
+            echo "::error::Pre-release mode cannot use the 'latest' dist-tag; it is reserved for stable releases."
+            exit 1
+          fi
+          # The tag is interpolated into the publish command, so restrict its shape.
+          if ! [[ "$TAG" =~ ^[a-z][a-z0-9-]*$ ]]; then
+            echo "::error::Unsupported pre-release tag '$TAG' in .changeset/pre.json."
+            exit 1
+          fi
+          echo "channel=next" >> "$GITHUB_OUTPUT"
+          echo "dist-tag=$TAG" >> "$GITHUB_OUTPUT"
+
+      - name: Setup node and install deps
+        if: steps.channel.outputs.channel != 'skip'
+        uses: ./.github/actions/node-setup
+
+      # version: changesets are pending, so open/update the release PR.
+      # publish: versions in the workspace are not on npm yet.
+      # none: nothing to do.
+      - name: Select changesets mode
+        id: select-mode
+        if: steps.channel.outputs.channel != 'skip'
+        uses: changesets/action/select-mode@v2
+
+  version:
+    name: Create or update release pull request
+    needs: select-mode
+    if: needs.select-mode.outputs.mode == 'version'
+    # runs-on: fusion-gh-runner-fusion-framework.borked
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write      # Required to push the release branch
+      pull-requests: write # Required to create or update the release PR
+    outputs:
+      pr-number: ${{ steps.version.outputs.pr-number }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Configure git user (trigger actor)
+        uses: ./.github/actions/config-git-user
+
+      - name: Setup node and install deps
+        uses: ./.github/actions/node-setup
+
+      - name: Create or update release pull request
+        id: version
+        uses: changesets/action/version@v2
+        with:
+          script: pnpm changeset:version
+          pr-title: ${{ needs.select-mode.outputs.channel == 'next' && '🤖 Bip Bop - Fusion Framework Pre-Release' || '🤖 Bip Bop - Fusion Framework Release' }}
+          # Keep the release PR in draft after every update so it is merged deliberately.
+          pr-draft: always
+
+  publish:
+    name: Publish packages to npm
+    needs: select-mode
+    if: needs.select-mode.outputs.mode == 'publish'
+    # Trusted publishing does not support self-hosted runners.
+    runs-on: ubuntu-latest
+    # npm trusts this environment; its deployment branches are limited to main and next.
+    environment: npm
+    permissions:
+      contents: write  # Required to push release tags and create GitHub releases
+      id-token: write  # Required for npm trusted publishing (OIDC)
+    outputs:
+      published: ${{ steps.publish.outputs.published }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Configure git user (trigger actor)
+        uses: ./.github/actions/config-git-user
+
+      - name: Setup node and install deps
+        uses: ./.github/actions/node-setup
+
+      # Fails before anything is published when a package is new to npm or has
+      # repository metadata that OIDC provenance would reject. Trust state itself
+      # needs a maintainer login, so missing/expired trust is caught by
+      # `pnpm npm-trust audit`, not here.
+      - name: Verify npm trusted publishing prerequisites
+        run: pnpm npm-trust preflight
+
+      - name: Verify package exports
+        run: pnpm verify:package-exports
+
+      - name: Verify native Node ESM (package type and import extensions)
+        run: pnpm verify:esm
+
+      # No npm token is configured: pnpm exchanges the GitHub OIDC token for a
+      # short-lived npm publish token and attaches provenance automatically.
+      - name: Publish to npm
+        id: publish
+        uses: changesets/action/publish@v2
+        with:
+          script: ${{ needs.select-mode.outputs.channel == 'stable' && 'pnpm changeset:publish' || format('pnpm publish -r --no-git-checks --report-summary --tag {0}', needs.select-mode.outputs.dist-tag) }}
+          create-github-releases: ${{ needs.select-mode.outputs.channel == 'stable' }}
+          push-git-tags: ${{ needs.select-mode.outputs.channel == 'stable' }}
+
+  snapshot:
+    name: Publish snapshot
+    if: github.event_name == 'workflow_dispatch'
+    # Trusted publishing does not support self-hosted runners.
+    runs-on: ubuntu-latest
+    # Snapshots share the npm trust binding, so they can only run from main or next.
+    environment: npm
+    permissions:
+      contents: read
+      id-token: write  # Required for npm trusted publishing (OIDC)
+    steps:
+      - name: Validate snapshot tag
+        shell: bash
+        env:
+          TAG: ${{ inputs.tag }}
+        run: |
+          if ! [[ "$TAG" =~ ^[a-z][a-z0-9-]*$ ]]; then
+            echo "::error::Snapshot tag must match ^[a-z][a-z0-9-]*$, got '$TAG'."
+            exit 1
+          fi
+          if [ "$TAG" = "latest" ] || [ "$TAG" = "next" ]; then
+            echo "::error::'$TAG' is reserved for stable and pre-release publishing."
+            exit 1
+          fi
+
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Configure git user (trigger actor)
+        uses: ./.github/actions/config-git-user
+
+      - name: Setup node and install deps
+        uses: ./.github/actions/node-setup
+
+      - name: Verify npm trusted publishing prerequisites
+        run: pnpm npm-trust preflight
+
+      # Changesets rejects `version --snapshot` in pre mode, which `next` is in
+      # during a pre-release cycle. This job cannot push, so exiting pre mode
+      # only affects this disposable checkout.
+      - name: Exit pre-release mode for the snapshot
+        run: |
+          if [ -f .changeset/pre.json ] && [ "$(jq -r '.mode' .changeset/pre.json)" = "pre" ]; then
+            pnpm changeset pre exit
+          fi
+
+      - name: Create and publish snapshot
+        uses: ./.github/actions/changeset-snapshot
+        with:
+          tag: ${{ inputs.tag }}
+
+  # The extension's package.json is "private" (it ships via the Marketplace,
+  # not npm). `privatePackages.tag: true` (.changeset/config.json) makes
+  # `changeset git-tag` create a git tag for it anyway on release. Rather than
+  # relying on the publish action's `published-packages` output, we check
+  # directly whether that tag now points at *this* commit, i.e. whether this
+  # push is the exact release commit that bumped the extension.
+  #
+  # This runs as its own job (instead of a step inside publish-vscode-extension)
+  # so that job can be gated with a job-level `if` — a per-step `if` still
+  # leaves the job green when every step is skipped, masking the fact that
+  # nothing was published.
+  check-vscode-release:
+    name: Check for VS Code extension release tag
+    needs: [select-mode, publish]
+    if: needs.select-mode.outputs.channel == 'stable'
+    # runs-on: fusion-gh-runner-fusion-framework.borked
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      should-publish: ${{ steps.check.outputs.should-publish }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Check for a new release tag at this commit
+        id: check
+        run: |
+          VERSION=$(jq -r '.version' packages/linting/vscode/package.json)
+          TAG="fusion-ts-lint-vscode@${VERSION}"
+          TAG_SHA=$(git rev-list -n 1 "$TAG" 2>/dev/null || echo "")
+          if [ "$TAG_SHA" = "$GITHUB_SHA" ]; then
+            echo "should-publish=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "should-publish=false" >> "$GITHUB_OUTPUT"
+          fi
+
+  # Publish the Fusion TS Lint VS Code extension to the Marketplace.
+  publish-vscode-extension:
+    name: Publish VS Code extension to Marketplace
+    needs: check-vscode-release
+    if: needs.check-vscode-release.outputs.should-publish == 'true'
+    # runs-on: fusion-gh-runner-fusion-framework.borked
+    runs-on: ubuntu-latest
+    environment: vs-marketplace
+    permissions:
+      contents: read
+      id-token: write  # Required for OIDC login to Azure (Marketplace publish)
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Setup node and install deps
+        uses: ./.github/actions/node-setup
+
+      # allowBuilds disables this by default (pnpm-workspace.yaml) since it's
+      # only needed here; vsce needs the native signing binary to publish.
+      # keytar isn't needed: --azure-credential uses OIDC, not the PAT/keytar
+      # credential store that `vsce login` would use.
+      - name: Build vsce-sign signing binary
+        run: pnpm rebuild @vscode/vsce-sign
+
+      # Build the extension and its workspace dependencies (lsp, rules, core)
+      # in the correct order — vsce does not run the "prepack" build hook.
+      # The trailing "..." is required so turbo includes fusion-ts-lint-vscode's
+      # dependencies in the run, not just the extension package itself.
+      - name: Build extension
+        run: pnpm turbo build --filter=fusion-ts-lint-vscode...
+
+      - name: Azure login (Marketplace publisher identity)
+        uses: azure/login@a641126d1b8aa4d1fa005f4f92df94a3a4c4c906
+        with:
+          client-id: ${{ vars.AZURE_CLIENT_ID }}
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          allow-no-subscriptions: true
+
+      - name: Publish to VS Code Marketplace
+        working-directory: packages/linting/vscode
+        run: pnpm exec vsce publish --no-dependencies --azure-credential
+
+  # Production docs for stable releases; generate-docs.yml publishes a
+  # branch-scoped preview for pre-releases.
+  documentation:
+    name: Update documentation
+    permissions:
+      contents: read   # Required to read repository contents
+      pages: write     # Required to deploy to GitHub Pages
+      id-token: write  # Required for OIDC token generation
+    needs: publish
+    if: needs.publish.outputs.published == 'true'
+    uses: ./.github/workflows/generate-docs.yml
+    secrets: inherit
+
+  # Index documentation on stable package releases
+  index-docs:
+    name: Index documentation
+    permissions:
+      contents: write
+      id-token: write
+    needs: [select-mode, publish]
+    if: needs.select-mode.outputs.channel == 'stable' && needs.publish.outputs.published == 'true'
+    uses: ./.github/workflows/index-docs.yml
+    with:
+      environment: docs
+    secrets: inherit

@@ -5,7 +5,7 @@ name: Release Recovery Prompt
 
 # Recover a partial release
 
-Use when the `ci` workflow tagged packages but some never reached npm, or when
+Use when the `release` workflow tagged packages but some never reached npm, or when
 `changeset:publish` failed partway through.
 
 ## 1. Establish what was tagged versus what was published
@@ -24,7 +24,7 @@ That set — not the workflow log — is the real damage.
 ## 2. Find the first failure in the workflow log
 
 ```bash
-gh run list --workflow ci.yml --limit 5
+gh run list --workflow release.yml --limit 5
 gh run view <run-id> --log-failed
 ```
 
@@ -36,7 +36,8 @@ it was skipped, not independently broken.
 | Symptom in the log | Likely cause |
 | --- | --- |
 | `TS2307: Cannot find module '@equinor/…'` during `prepack` | Missing `references` in that package's `tsconfig.json` |
-| `ENEEDAUTH` / `401` | `NPM_AUTH_TOKEN` expired |
+| `ENEEDAUTH` / `401` / `404` on PUT | npm trusted publishing is missing or expired for that package — see `contributing/npm-publishing.md` (`pnpm npm-trust audit`) |
+| `preflight` reports `not on npm yet` | New package was never bootstrapped — `pnpm npm-trust add <package>` |
 | `You cannot publish over the previously published versions` | Tag already consumed; needs a version bump, not a retry |
 
 `prepack` runs `tsc -b` **in isolation per package**, so a full local build will not
