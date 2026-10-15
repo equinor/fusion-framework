@@ -209,7 +209,7 @@ async function registryGet(context, path, accept = 'application/json') {
   return response.json();
 }
 
-const encodeName = (name) => name.replace('/', '%2f');
+const encodeName = (name) => name.replaceAll('/', '%2f');
 
 /**
  * Fetch the dist-tags of a package, or null when it does not exist on npm.

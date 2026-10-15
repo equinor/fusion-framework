@@ -50,14 +50,14 @@ function fakeFetch(packages) {
   };
 }
 
-/** npm CLI double; `handler(args, mode)` returns { status, stdout?, output? }. */
+/** npm CLI double; `handler(args, mode, options)` must return { status, stdout?, output? }. */
 function fakeNpm(handler) {
   const calls = [];
   const run =
     (mode) =>
     (args, options = {}) => {
       calls.push({ mode, args, cwd: options.cwd });
-      const result = handler(args, mode, options) ?? { status: 0 };
+      const result = handler(args, mode, options);
       return { stdout: '', ...result, output: result.output ?? result.stdout ?? '' };
     };
   return { calls, capture: run('capture'), interactive: run('interactive') };
