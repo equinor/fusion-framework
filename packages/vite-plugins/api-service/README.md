@@ -178,6 +178,12 @@ apiServicePlugin({ proxyHandler });
 - Entries are keyed by URL and a hash of the `Authorization` header, so a new token never receives a response cached for another. Only `GET` requests are cached.
 - Cached responses carry an `x-fusion-discovery-cache: hit` header.
 
+#### Mock token guard
+
+Mock authentication issues unsigned tokens (`alg: none`), which real services always reject. The plugin never forwards a request carrying such a token to a public host — neither through the service discovery proxy nor through proxy routes. It answers `401` locally with `x-fusion-dev-server-blocked: mock-token` instead.
+
+Local targets are still allowed, so mock servers and local APIs keep working: `localhost`, `*.localhost`, single-label hosts such as Docker Compose services (`http://api:8080`), `*.local`, `*.internal`, and private IPv4 ranges.
+
 ### Add server-owned routes
 
 Define middleware routes for endpoints owned by the development host, such as health checks and

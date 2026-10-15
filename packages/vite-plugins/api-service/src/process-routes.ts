@@ -11,6 +11,7 @@ import { createRouteMatcher } from './create-route-matcher.js';
 import { validateRoute } from './validate-route.js';
 import { InvalidRouteError } from './InvalidRouteError.js';
 import { createResponseInterceptor } from './create-response-interceptor.js';
+import { blockMockTokenUpstream } from './block-mock-token-upstream.js';
 
 /**
  * Options for {@link processRoutes} and the internal `processesRoute` helper.
@@ -82,6 +83,11 @@ function processesRoute(
   }
 
   const { configure, rewrite, transformResponse, ...proxyOptions } = route.proxy;
+
+  // Never let a mock token reach a real service through a proxy route
+  if (blockMockTokenUpstream(req, res, proxyOptions.target, logger)) {
+    return;
+  }
 
   // A rewrite function transforms the request url before proxying
   if (rewrite) {

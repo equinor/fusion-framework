@@ -9,6 +9,7 @@ import type {
 } from './types.js';
 import { DEFAULT_VALUES } from './default-values.js';
 import { createResponseInterceptor } from './create-response-interceptor.js';
+import { blockMockTokenUpstream } from './block-mock-token-upstream.js';
 import type { Connect } from 'vite';
 import type { ServerResponse } from 'node:http';
 import { createHash } from 'node:crypto';
@@ -172,6 +173,10 @@ export function createProxyHandler<
     res: ServerResponse,
     next: Connect.NextFunction,
   ): void => {
+    // Never let a mock token reach a real discovery service, cached or not
+    if (blockMockTokenUpstream(req, res, target, logger)) {
+      return;
+    }
     const key = cacheKey(req);
     const entry = key ? cache.get(key) : undefined;
     // Miss or expired: continue to Vite's proxy, which refreshes the cache from upstream
