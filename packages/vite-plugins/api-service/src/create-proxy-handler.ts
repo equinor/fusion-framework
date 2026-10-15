@@ -142,6 +142,28 @@ export function createProxyHandler<
   // Raw upstream payload on success, status code on failure
   const cache = new Map<string, { expiresAt: number; data?: TResponse; status?: number }>();
 
+  /**
+   * Stores a cache entry and drops expired ones, so entries for keys that are never requested
+   * again (for example an expired token) are reclaimed and the map only holds live entries.
+   *
+   * @param key - Cache key from {@link cacheKey}.
+   * @param entry - Payload or failure status with its expiry time.
+   */
+  const remember = (
+    key: string,
+    entry: { expiresAt: number; data?: TResponse; status?: number },
+  ): void => {
+    const now = Date.now();
+    // Prune on write; reads already ignore expired entries
+    for (const [existingKey, existing] of cache) {
+      // Only expired entries are removed; live ones must keep serving
+      if (existing.expiresAt <= now) {
+        cache.delete(existingKey);
+      }
+    }
+    cache.set(key, entry);
+  };
+
   // Initialize routes - this will be updated on each response
   let apiRoutes: ApiRoute[] | undefined;
 
@@ -214,7 +236,7 @@ export function createProxyHandler<
           const status = proxyRes.statusCode ?? 500;
           // Remember failures so reload loops do not hit upstream again for a while
           if (key && status >= 400) {
-            cache.set(key, { status, expiresAt: Date.now() + FAILURE_TTL_MS });
+            remember(key, { status, expiresAt: Date.now() + FAILURE_TTL_MS });
             logger?.warn(
               `service discovery responded ${status}; replaying it for ${FAILURE_TTL_MS}ms`,
             );
@@ -224,7 +246,7 @@ export function createProxyHandler<
             (data: TResponse) => {
               // Store the raw payload; the transformation depends on each request
               if (key) {
-                cache.set(key, { data, expiresAt: Date.now() + SUCCESS_TTL_MS });
+                remember(key, { data, expiresAt: Date.now() + SUCCESS_TTL_MS });
               }
               return transform(data, req);
             },
