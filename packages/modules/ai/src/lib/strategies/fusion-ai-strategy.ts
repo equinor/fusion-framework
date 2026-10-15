@@ -15,6 +15,11 @@ export interface FusionAiStrategyModules {
   auth: AuthProvider;
   /** Service discovery provider used to resolve the AI service endpoint. */
   serviceDiscovery: IServiceDiscoveryProvider;
+  /**
+   * Headers sent with every request to the AI service, e.g. to identify the calling tool.
+   * Set through {@link IAIConfigurator.setDefaultHeaders}.
+   */
+  defaultHeaders?: Record<string, string>;
 }
 
 /**
@@ -42,6 +47,9 @@ export type FusionAiStrategyFactory<T extends Strategy = Strategy> = (
  *
  * @template T - The concrete {@link Strategy} subtype produced by the factory.
  * @param factory - Strategy factory that receives the resolved module instances.
+ * @param getDefaultHeaders - Optional lookup for headers to send with every AI service request.
+ *   Evaluated when the strategy is resolved, so headers configured after the strategy was
+ *   registered are still picked up.
  * @returns A {@link ConfigBuilderCallback} that resolves modules and delegates
  *   to the factory.
  * @throws {Error} When the `auth` module cannot be resolved from the current
@@ -56,6 +64,7 @@ export type FusionAiStrategyFactory<T extends Strategy = Strategy> = (
  */
 export const fusionAiStrategy = <T extends Strategy = Strategy>(
   factory: FusionAiStrategyFactory<T>,
+  getDefaultHeaders?: () => Record<string, string> | undefined,
 ): ConfigBuilderCallback<T> => {
   return async (args: ConfigBuilderCallbackArgs): Promise<T> => {
     // Cast ref to the expected shape so auth/serviceDiscovery can be accessed safely.
@@ -87,6 +96,6 @@ export const fusionAiStrategy = <T extends Strategy = Strategy>(
       );
     }
 
-    return factory({ auth, serviceDiscovery });
+    return factory({ auth, serviceDiscovery, defaultHeaders: getDefaultHeaders?.() });
   };
 };

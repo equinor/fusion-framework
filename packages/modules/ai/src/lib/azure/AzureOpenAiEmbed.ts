@@ -39,6 +39,8 @@ export type AzureOpenAiEmbedConfig = EmbedOpenAiConfig & {
   azureOpenAIApiKey?: string;
   azureOpenAIApiVersion?: string;
   azureADTokenProvider?: () => Promise<string>;
+  /** Headers sent with every request to the AI service (e.g. tool identification). */
+  defaultHeaders?: Record<string, string>;
 };
 
 /**
@@ -70,8 +72,11 @@ export class AzureOpenAiEmbed extends BaseService<string[], number[][]> implemen
    */
   constructor(config: AzureOpenAiEmbedConfig) {
     super();
+    const { defaultHeaders, ...options } = config;
+    // `defaultHeaders` is not a LangChain option; it is mapped onto the OpenAI client configuration
     this.client = new AzureOpenAIEmbeddings({
-      ...config,
+      ...options,
+      ...(defaultHeaders && { configuration: { defaultHeaders } }),
       batchSize: config.batchSize ?? 500,
     });
   }

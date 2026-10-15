@@ -18,5 +18,6 @@ export {
 } from './create-dev-server-config.js';
 export { createDevServer } from './create-dev-server.js';
 export { defaultHeaders } from './default-headers.js';
+export { identifyRequest } from './identify-request.js';
 export { formatAuthError } from './format-auth-error.js';
 export { formatTokenAcquisitionError } from './format-token-acquisition-error.js';

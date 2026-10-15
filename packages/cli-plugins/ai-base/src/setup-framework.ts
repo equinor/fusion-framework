@@ -1,7 +1,7 @@
 import { enableAI } from '@equinor/fusion-framework-module-ai';
 import type { AIModule } from '@equinor/fusion-framework-module-ai';
 
-import { initializeFramework, FusionEnv } from '@equinor/fusion-framework-cli/bin';
+import { initializeFramework, FusionEnv, defaultHeaders } from '@equinor/fusion-framework-cli/bin';
 import type { FusionFrameworkSettings, FusionFramework } from '@equinor/fusion-framework-cli/bin';
 import type { AiOptions } from './options/index.js';
 
@@ -44,7 +44,9 @@ export const setupFramework = async (options: AiOptions): Promise<FusionFramewor
     if (debug) console.debug('[debug] Initializing framework with AI module…');
 
     const framework = await initializeFramework<[AIModule]>({ env, auth }, (configurator) => {
-      enableAI(configurator);
+      // Model, embedding and search calls bypass the framework HTTP module,
+      // so the CLI identification headers have to be handed to the AI module directly.
+      enableAI(configurator, (ai) => ai.setDefaultHeaders({ ...defaultHeaders }));
     });
 
     // resolveService makes an authenticated HTTP call — will throw

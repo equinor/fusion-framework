@@ -5,6 +5,7 @@ import { enableServiceDiscovery } from '@equinor/fusion-framework-module-service
 import isContinuousIntegration from 'is-ci';
 
 import { FusionEnv, type Modules } from './fusion-env.js';
+import { identifyRequest } from './utils/identify-request.js';
 
 // Default scope for Fusion service discovery
 const FUSION_SERVICE_SCOPE = ['5a842df8-3238-415d-b168-9f16a6a6031b/.default'];
@@ -96,6 +97,9 @@ export const configureFramework = (
         ).toString();
       // Use provided scopes or default Fusion service scope
       const defaultScopes = config.serviceDiscovery?.scope ?? FUSION_SERVICE_SCOPE;
+      // Identify every outgoing request as coming from the CLI, so operators can tell Fusion
+      // tooling traffic apart from other callers (diagnostics only, not for access control)
+      builder.defaultHttpRequestHandler.set('fusion-cli-identification', identifyRequest);
       // Register the service discovery client with the HTTP module
       builder.configureClient('service_discovery', {
         baseUri,

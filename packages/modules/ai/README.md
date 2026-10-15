@@ -107,6 +107,22 @@ enableAI(config, (ai) => {
 const model = modules.ai.useModel('gpt-4', { strategy: 'my-fine-tuned-model' });
 ```
 
+## Send default headers
+
+Model, embedding and search index calls go straight to the Fusion AI service rather than through the
+framework HTTP module. Call `setDefaultHeaders` to attach headers to every request from the default
+strategies, for example to identify your tool:
+
+```typescript
+enableAI(config, (ai) => {
+  ai.setDefaultHeaders({ 'X-Fusion-CLI-Name': 'my-tool', 'X-Fusion-CLI-Version': '1.0.0' });
+});
+```
+
+Do not put tokens or secrets in these headers. Custom strategies added with `addStrategy` are not
+affected. The Fusion Framework CLI uses this to send its
+[identification headers](../../cli/README.md#request-identification-headers).
+
 ## Azure implementations
 
 The `@equinor/fusion-framework-module-ai/azure` entry point re-exports concrete Azure service classes:

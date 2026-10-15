@@ -1,5 +1,6 @@
 import { type Command, createCommand, createOption } from 'commander';
 
+import { defaultHeaders } from '@equinor/fusion-framework-cli/bin';
 import { loadFusionAIConfig, setupFramework } from '@equinor/fusion-framework-cli-plugin-ai-base';
 import {
   withOptions as withAiOptions,
@@ -204,6 +205,7 @@ const _command = createCommand('create')
     const response = await fetch(url, {
       method: 'PUT',
       headers: {
+        ...defaultHeaders,
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },

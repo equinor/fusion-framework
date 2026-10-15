@@ -1,14 +1,12 @@
-import type {
-  IServiceDiscoveryProvider,
-  Service,
-} from '@equinor/fusion-framework-module-service-discovery';
-import { AzureKeyCredential } from '@azure/search-documents';
+import type { Service } from '@equinor/fusion-framework-module-service-discovery';
+import { AzureKeyCredential, type SearchClientOptions } from '@azure/search-documents';
 import { FusionSearchClient } from '../azure/FusionSearchClient.js';
 import { AzureVectorStore } from '../azure/AzureVectorStore.js';
 import type { IEmbed, IVectorStore } from '../types.js';
 import { STRATEGY_TYPE } from './static.js';
 import type { IndexStrategy } from './types.js';
-import { acquireFusionToken, type AuthProvider } from './acquire-fusion-token.js';
+import { acquireFusionToken } from './acquire-fusion-token.js';
+import type { FusionAiStrategyModules } from './fusion-ai-strategy.js';
 
 /** Strategy name for the default Fusion index strategy. */
 export const FUSION_INDEX_STRATEGY_NAME = 'fusion-ai-index-strategy' as const;
@@ -34,9 +32,30 @@ const LOCAL_DEV_RE = /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?/i;
 function createSearchClient(
   aiService: Service,
   indexName: string,
-  modules: { auth: AuthProvider },
+  modules: FusionAiStrategyModules,
 ): FusionSearchClient {
   const baseUri = aiService.uri.replace(/\/+$/, '');
+  const { defaultHeaders } = modules;
+
+  // Stamp every search request with the configured headers (e.g. tool identification);
+  // the Azure SDK has no static default-headers option, so a pipeline policy is used.
+  const headersPolicy: NonNullable<SearchClientOptions['additionalPolicies']> = defaultHeaders
+    ? [
+        {
+          policy: {
+            name: 'FusionDefaultHeaders',
+            sendRequest(request, next) {
+              // Apply each configured header to the outgoing search request
+              for (const [name, value] of Object.entries(defaultHeaders)) {
+                request.headers.set(name, value);
+              }
+              return next(request);
+            },
+          },
+          position: 'perCall',
+        },
+      ]
+    : [];
 
   // The Azure SDK's `bearerTokenAuthenticationPolicy` has a hardcoded check
   // that rejects bearer tokens over non-HTTPS URLs. When the dev-server
@@ -47,6 +66,7 @@ function createSearchClient(
     return new FusionSearchClient(baseUri, indexName, new AzureKeyCredential('dev-proxy'), {
       allowInsecureConnection: true,
       additionalPolicies: [
+        ...headersPolicy,
         {
           // Manually attach the MSAL bearer token on every request.
           // The SDK's built-in bearer policy is bypassed because we
@@ -66,9 +86,12 @@ function createSearchClient(
   }
 
   // Production path: use standard TokenCredential over HTTPS.
-  return new FusionSearchClient(baseUri, indexName, {
-    getToken: () => acquireFusionToken(modules.auth, aiService),
-  });
+  return new FusionSearchClient(
+    baseUri,
+    indexName,
+    { getToken: () => acquireFusionToken(modules.auth, aiService) },
+    { additionalPolicies: headersPolicy },
+  );
 }
 
 /**
@@ -94,10 +117,9 @@ function createSearchClient(
  */
 // Deliberately co-located with `FUSION_INDEX_STRATEGY_NAME` above
 // fusion-lint-disable-next-line single-export-per-file
-export const createFusionAiIndexStrategy = async (modules: {
-  auth: AuthProvider;
-  serviceDiscovery: IServiceDiscoveryProvider;
-}): Promise<IndexStrategy> => {
+export const createFusionAiIndexStrategy = async (
+  modules: FusionAiStrategyModules,
+): Promise<IndexStrategy> => {
   // Resolve the AI service once — the resulting endpoint and credentials are
   // shared across all stores created by this strategy instance.
   const aiService = await modules.serviceDiscovery.resolveService('ai');

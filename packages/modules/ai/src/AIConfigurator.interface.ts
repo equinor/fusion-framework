@@ -45,4 +45,17 @@ export interface IAIConfigurator {
    * @returns `this` for fluent chaining.
    */
   addStrategy(strategy: Strategy | ConfigBuilderCallback<Strategy>): this;
+
+  /**
+   * Set headers that the default Fusion strategies send with every request to the AI service
+   * (model, embedding and search index calls).
+   *
+   * Use this to identify the calling tool, for example the Fusion Framework CLI sets
+   * `X-Fusion-CLI-Name` and `X-Fusion-CLI-Version`. Never include secrets or tokens.
+   * Custom strategies added through {@link addStrategy} are not affected.
+   *
+   * @param headers - Header name/value pairs, replacing any previously set headers.
+   * @returns `this` for fluent chaining.
+   */
+  setDefaultHeaders(headers: Record<string, string>): this;
 }

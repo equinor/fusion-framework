@@ -41,6 +41,7 @@ export type AiConfig = AIModuleConfig;
  */
 export class AiConfigurator extends BaseConfigBuilder<AIModuleConfig> implements IAIConfigurator {
   #strategies: ConfigBuilderCallback<Strategy>[] = [];
+  #defaultHeaders?: Record<string, string>;
 
   /**
    * Creates a new `AiConfigurator` and registers the three default Fusion
@@ -63,10 +64,28 @@ export class AiConfigurator extends BaseConfigBuilder<AIModuleConfig> implements
         ),
     );
 
-    // Register the three default Fusion-backed strategies.
-    this.addStrategy(fusionAiStrategy(createFusionAiModelStrategy));
-    this.addStrategy(fusionAiStrategy(createFusionAiEmbedStrategy));
-    this.addStrategy(fusionAiStrategy(createFusionAiIndexStrategy));
+    // Register the three default Fusion-backed strategies. Headers are read lazily so that
+    // setDefaultHeaders() can be called after construction.
+    const getDefaultHeaders = () => this.#defaultHeaders;
+    this.addStrategy(fusionAiStrategy(createFusionAiModelStrategy, getDefaultHeaders));
+    this.addStrategy(fusionAiStrategy(createFusionAiEmbedStrategy, getDefaultHeaders));
+    this.addStrategy(fusionAiStrategy(createFusionAiIndexStrategy, getDefaultHeaders));
+  }
+
+  /**
+   * Set headers sent with every request by the default Fusion model, embed and index strategies.
+   *
+   * @param headers - Header name/value pairs, replacing any previously set headers.
+   * @returns `this` for fluent chaining.
+   *
+   * @example
+   * ```typescript
+   * enableAI(config, (ai) => ai.setDefaultHeaders({ 'X-Fusion-CLI-Name': 'my-tool' }));
+   * ```
+   */
+  setDefaultHeaders(headers: Record<string, string>): this {
+    this.#defaultHeaders = { ...headers };
+    return this;
   }
 
   /**
