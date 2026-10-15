@@ -1,5 +1,16 @@
 # @equinor/fusion-framework-dev-portal
 
+## 11.1.6
+
+### Patch Changes
+
+- 9dfe760: Internal: declare the `repository` field so npm trusted publishing (OIDC) can attach
+  provenance linking each release to `equinor/fusion-framework`.
+  
+  Ref: equinor/fusion-core-tasks#319.
+- Updated dependencies [9dfe760]
+  - @equinor/fusion-framework-plugin-context-navigation@1.0.5
+
 ## 11.1.5
 
 ### Patch Changes
