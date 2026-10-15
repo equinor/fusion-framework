@@ -11,6 +11,7 @@ import { ConsoleLogger, LogLevel } from '@equinor/fusion-log';
 
 import { processServices as defaultProcessServices } from './process-services.js';
 import { createTelemetryPlugin } from './create-telemetry-plugin.js';
+import { version } from './version.js';
 
 import type { DevServerOptions, TemplateEnv, TemplateEnvFn } from './types.js';
 
@@ -117,6 +118,12 @@ export const createDevServerConfig = <TEnv extends Partial<TemplateEnv>>(
         },
         {
           logger: apiServiceLogger,
+          // Lets upstream services tell local dev-server traffic apart from deployed clients
+          headers: {
+            'X-Fusion-Dev-Server-Name': '@equinor/fusion-framework-dev-server',
+            'X-Fusion-Dev-Server-Version': version,
+            ...api.headers,
+          },
         },
       ),
       fusionSpaPlugin({ generateTemplateEnv, logger: spaLogger }),

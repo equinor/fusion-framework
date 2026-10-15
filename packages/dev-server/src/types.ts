@@ -94,6 +94,14 @@ export interface DevServerOptions<
      * @remarks used for overriding proxy responses and mocking services.
      */
     routes?: ApiRoute[];
+
+    /**
+     * Extra headers added to every request the dev server proxies upstream (service discovery
+     * and API routes), next to the built-in `X-Fusion-Dev-Server-Name` and
+     * `X-Fusion-Dev-Server-Version` headers. Use them to identify dev-server traffic in
+     * upstream telemetry, for example `X-Fusion-Mock`.
+     */
+    headers?: Record<string, string>;
   };
   /** Server-side (CLI) logging configuration. */
   log?: {
