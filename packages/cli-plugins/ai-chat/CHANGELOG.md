@@ -1,5 +1,14 @@
 # @equinor/fusion-framework-cli-plugin-ai-chat
 
+## 3.0.14
+
+### Patch Changes
+
+- Updated dependencies [df4548d]
+- Updated dependencies [df4548d]
+  - @equinor/fusion-framework-cli-plugin-ai-base@4.0.14
+  - @equinor/fusion-framework-module-ai@7.1.0
+
 ## 3.0.13
 
 ### Patch Changes

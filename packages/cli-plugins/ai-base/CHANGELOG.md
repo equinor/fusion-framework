@@ -1,5 +1,15 @@
 # @equinor/fusion-framework-cli-plugin-ai-base
 
+## 4.0.14
+
+### Patch Changes
+
+- df4548d: Send the Fusion Framework CLI identification headers (`X-Fusion-CLI-Name`, `X-Fusion-CLI-Version`, `User-Agent`) on AI model, embedding and search index requests.
+  
+  Related: https://github.com/equinor/fusion-core-tasks/issues/2207
+- Updated dependencies [df4548d]
+  - @equinor/fusion-framework-module-ai@7.1.0
+
 ## 4.0.13
 
 ### Patch Changes
