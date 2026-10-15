@@ -11,6 +11,7 @@ import { createRouteMatcher } from './create-route-matcher.js';
 import { validateRoute } from './validate-route.js';
 import { InvalidRouteError } from './InvalidRouteError.js';
 import { createResponseInterceptor } from './create-response-interceptor.js';
+import { blockMockTokenUpstream } from './block-mock-token-upstream.js';
 
 /**
  * Options for {@link processRoutes} and the internal `processesRoute` helper.
@@ -22,6 +23,8 @@ import { createResponseInterceptor } from './create-response-interceptor.js';
 export type ProcessRouteOptions = {
   logger?: PluginLogger;
   onProxyRes?: ProxyListener;
+  /** Headers added to every proxied request; a route's own `proxy.headers` take precedence. */
+  headers?: Record<string, string>;
 };
 
 /**
@@ -81,10 +84,18 @@ function processesRoute(
 
   const { configure, rewrite, transformResponse, ...proxyOptions } = route.proxy;
 
+  // Never let a mock token reach a real service through a proxy route
+  if (blockMockTokenUpstream(req, res, proxyOptions.target, logger)) {
+    return;
+  }
+
   // A rewrite function transforms the request url before proxying
   if (rewrite) {
     req.url = rewrite(req.url ?? '');
   }
+
+  // Shared headers identify the proxy upstream; route-specific headers may override them
+  const headers = { ...options?.headers, ...proxyOptions.headers };
 
   const proxyServer = httpProxy.createProxyServer({
     selfHandleResponse: !!transformResponse,
@@ -92,6 +103,7 @@ function processesRoute(
     secure: process.env.NODE_ENV === 'production',
     changeOrigin: true,
     ...proxyOptions,
+    headers,
   });
 
   proxyServer.on('error', (err) => {

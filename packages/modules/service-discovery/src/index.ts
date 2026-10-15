@@ -29,3 +29,4 @@ export {
   enableServiceDiscovery,
 } from './module.js';
 export type { IServiceDiscoveryClient } from './client.js';
+export { ServiceDiscoveryUnavailableError } from './ServiceDiscoveryUnavailableError.js';

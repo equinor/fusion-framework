@@ -125,6 +125,9 @@ the analytics an app tracks, see
 
 - Vite 7 or 8 is required as a peer dependency.
 - `api.serviceDiscoveryUrl` is required by the low-level API.
+- Every request the dev server proxies upstream (service discovery and API routes) carries
+  `X-Fusion-Dev-Server-Name` and `X-Fusion-Dev-Server-Version`, so upstream telemetry can tell
+  local development traffic apart. Add more with `api.headers`; `ffc` adds `X-Fusion-Mock: true|false`.
 - The package configures development; it does not build or publish applications.
 - Mock-server installation and process lifecycle are optional and external to this package.
 

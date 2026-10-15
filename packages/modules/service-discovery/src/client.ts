@@ -2,6 +2,7 @@ import type { IHttpClient } from '@equinor/fusion-framework-module-http';
 import { Query } from '@equinor/fusion-query';
 
 import type { Service } from './types.js';
+import { ServiceDiscoveryUnavailableError } from './ServiceDiscoveryUnavailableError.js';
 
 import {
   firstValueFrom,
@@ -66,6 +67,23 @@ type ServiceDiscoveryClientCtorArgs = {
 /** Cache key used by the internal {@link Query} instance. */
 const queryKey = 'services';
 
+/** Pause after the first failed request; doubles per consecutive failure. */
+const failureBackoffInitialMs = 1_000;
+
+/** Upper bound for the pause between failed requests. */
+const failureBackoffMaxMs = 30_000;
+
+/** Maximum age of the last successful service list that may be returned when a refresh fails. */
+const staleIfErrorMs = 24 * 60 * 60 * 1_000;
+
+/** State of the current failure streak, cleared on the next successful request. */
+type FailureState = {
+  error: unknown;
+  attempt: number;
+  failedAt: number;
+  retryAt: number;
+};
+
 /**
  * Transforms a fetch {@link Response} into an observable that emits a
  * validated array of {@link Service} objects.
@@ -106,9 +124,21 @@ const serviceResponseSelector = (
  * Results are cached for 5 minutes. When `allow_cache` is `true`,
  * {@link resolveServices} returns the first cached value immediately;
  * otherwise it waits for the latest API response.
+ *
+ * Failures are hardened so a broken caller cannot flood the service discovery API:
+ * - After a failed request the client pauses outgoing requests with exponential
+ *   backoff (1s, 2s, 4s … capped at 30s). The pause resets on the first
+ *   successful response.
+ * - When a refresh fails, or a call arrives during the pause, the last successful
+ *   service list is returned if it is younger than 24 hours.
+ * - Without a usable fallback, the request that failed rethrows the original error,
+ *   and calls made during the pause throw {@link ServiceDiscoveryUnavailableError}.
  */
 export class ServiceDiscoveryClient implements IServiceDiscoveryClient {
   #query: Query<Service[], void>;
+
+  #failure?: FailureState;
+  #lastKnownGood?: { services: Service[]; receivedAt: number };
 
   /** Sub-path appended to the HTTP client's base URI when fetching services. */
   public readonly endpoint?: string;
@@ -140,11 +170,83 @@ export class ServiceDiscoveryClient implements IServiceDiscoveryClient {
   }
 
   /** {@inheritDoc IServiceDiscoveryClient.resolveServices} */
-  public resolveServices(allow_cache?: boolean): Promise<Service[]> {
-    // firstValueFrom returns the cached snapshot; lastValueFrom waits for
-    // the freshest value from the query
-    const fn = allow_cache ? firstValueFrom : lastValueFrom;
-    return fn(Query.extractQueryValue(this.#query.query()));
+  public async resolveServices(allow_cache?: boolean): Promise<Service[]> {
+    // Fail fast while cooling down so retry/reload/render loops never reach the network
+    if (this.#failure && Date.now() < this.#failure.retryAt) {
+      return this.#resolveFallback(
+        new ServiceDiscoveryUnavailableError({
+          cause: this.#failure.error,
+          retryAt: this.#failure.retryAt,
+          attempt: this.#failure.attempt,
+        }),
+      );
+    }
+
+    const startedAt = Date.now();
+    try {
+      // firstValueFrom returns the cached snapshot; lastValueFrom waits for
+      // the freshest value from the query
+      const fn = allow_cache ? firstValueFrom : lastValueFrom;
+      const record = await fn(this.#query.query());
+      // Only a fresh response proves discovery works; a cached (possibly expired) snapshot must
+      // not reset the failure streak or renew the age of the fallback list
+      if (record.status === 'complete') {
+        this.#failure = undefined;
+        this.#lastKnownGood = { services: record.value, receivedAt: Date.now() };
+      }
+      return record.value;
+    } catch (error) {
+      this.#registerFailure(error, startedAt);
+      return this.#resolveFallback(error);
+    }
+  }
+
+  /**
+   * Records a failed request and schedules the next allowed request time.
+   *
+   * Concurrent callers share one in-flight request through {@link Query}, so they all
+   * reject with the same failure; only the first one to settle may extend the streak,
+   * otherwise a single failed request would be counted once per waiting caller.
+   *
+   * @param error - The error from the failed request.
+   * @param startedAt - Epoch milliseconds when the caller started waiting for the request.
+   */
+  #registerFailure(error: unknown, startedAt: number): void {
+    // A concurrent caller already recorded this same failed request
+    if (this.#failure && this.#failure.failedAt >= startedAt) {
+      return;
+    }
+    const attempt = (this.#failure?.attempt ?? 0) + 1;
+    const delay = Math.min(failureBackoffMaxMs, failureBackoffInitialMs * 2 ** (attempt - 1));
+    // Up to 20% jitter keeps many clients that failed together from retrying in lockstep
+    const jittered = Math.round(delay * (0.8 + Math.random() * 0.2));
+    const failedAt = Date.now();
+    this.#failure = { error, attempt, failedAt, retryAt: failedAt + jittered };
+
+    // Warn once per streak rather than once per call to keep consoles readable
+    if (attempt === 1) {
+      console.warn(
+        `[service-discovery] request failed; pausing requests with backoff (max ${failureBackoffMaxMs}ms)`,
+        error,
+      );
+    }
+  }
+
+  /**
+   * Returns the last successful service list when it is still fresh enough,
+   * otherwise rethrows the given error.
+   *
+   * @param error - Error to throw when no usable fallback exists.
+   * @returns The last known good service list.
+   * @throws The provided `error` when no service list younger than 24 hours exists.
+   */
+  #resolveFallback(error: unknown): Service[] {
+    const lastKnownGood = this.#lastKnownGood;
+    // Prefer a recent service list over an error so callers have nothing to retry
+    if (lastKnownGood && Date.now() - lastKnownGood.receivedAt <= staleIfErrorMs) {
+      return lastKnownGood.services;
+    }
+    throw error;
   }
 
   /** {@inheritDoc IServiceDiscoveryClient.resolveService} */

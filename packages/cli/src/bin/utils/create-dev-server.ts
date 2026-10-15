@@ -11,6 +11,7 @@ import {
 import type { ConsoleLogger } from './ConsoleLogger.js';
 import { normalizeDevServerConfig } from './normalize-dev-server-config.js';
 import { createDevServerConfig, type CreateDevServerOptions } from './create-dev-server-config.js';
+import { resolveMockAuthEndpoint } from './resolve-mock-auth-endpoint.js';
 
 /**
  * Creates a Vite plugin that watches the dev-server.config.ts file and restarts the server when it changes.
@@ -49,7 +50,21 @@ export const createDevServer = async (
   },
 ) => {
   const { overrides, log } = args ?? {};
-  const baseConfig = createDevServerConfig(options);
+  // Mock auth enabled through the environment needs mock discovery too; `--mock` already covers both
+  const mockDiscovery = options.mock
+    ? undefined
+    : resolveMockAuthEndpoint(
+        env,
+        typeof overrides?.envDir === 'string' ? overrides.envDir : undefined,
+      );
+  // Only log when the environment, not --mock, switched discovery to the mock server
+  if (mockDiscovery) {
+    log?.info(`FUSION_SPA_MSAL_MOCK is enabled, using mock service discovery at ${mockDiscovery}`);
+  }
+  const baseConfig = createDevServerConfig({
+    ...options,
+    mockDiscovery: options.mockDiscovery ?? mockDiscovery,
+  });
   log?.debug('\nBase dev server config:', normalizeDevServerConfig(baseConfig));
   log?.debug('\nCreating dev server with overrides:', overrides);
   let config: DevServerOptions = baseConfig;
@@ -67,6 +82,19 @@ export const createDevServer = async (
     log?.warn(
       '\nFailed to load dev server config:',
       error instanceof Error ? error.message : String(error),
+    );
+  }
+
+  // In mock mode every token is a mock token, so discovery must stay on the mock server even if
+  // dev-server.config overrides it
+  const discoveryMock = options.mock ?? options.mockDiscovery ?? mockDiscovery;
+  // Fail at startup instead of sending mock tokens to real service discovery
+  if (
+    discoveryMock &&
+    new URL(config.api.serviceDiscoveryUrl).origin !== new URL(discoveryMock).origin
+  ) {
+    throw new Error(
+      `Mock mode is enabled (${discoveryMock}), but service discovery points at ${config.api.serviceDiscoveryUrl}. Remove the api.serviceDiscoveryUrl override from dev-server.config, or run without mock auth.`,
     );
   }
 

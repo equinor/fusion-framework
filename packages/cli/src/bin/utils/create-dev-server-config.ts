@@ -45,6 +45,12 @@ export type CreateDevServerOptions = {
   };
   /** Origin of a local mock server (e.g. `http://localhost:4010`) to use for service discovery. */
   mock?: string;
+  /**
+   * Origin of a mock server used for service discovery only, when mock auth was enabled without
+   * `mock` (for example through `FUSION_SPA_MSAL_MOCK`). Keeps mock tokens away from real
+   * service discovery. Ignored when `mock` is set.
+   */
+  mockDiscovery?: string;
   // server?: DevServerOptions['server'];
 };
 
@@ -222,15 +228,19 @@ const applyPortalRouting = (
  * @returns The complete dev server options object.
  */
 export const createDevServerConfig = (options: CreateDevServerOptions) => {
+  const discoveryMock = options.mock ?? options.mockDiscovery;
   const config: DevServerOptions = {
     spa: {
       templateEnv: createDevServerTemplate(options.template, options.mock),
     },
     api: {
-      // when `--mock` is set, point service discovery at the local mock server instead of the CI environment
-      serviceDiscoveryUrl: options.mock
-        ? new URL('/@fusion-mock/discovery', options.mock).href
+      // Mock auth issues unsigned tokens that real discovery rejects, so any mock auth source
+      // (`--mock` or `FUSION_SPA_MSAL_MOCK`) must also send discovery to the mock server
+      serviceDiscoveryUrl: discoveryMock
+        ? new URL('/@fusion-mock/discovery', discoveryMock).href
         : 'https://discovery.fusion.equinor.com/service-registry/environments/ci/services/',
+      // Tells upstream services whether this dev server runs with mock authentication
+      headers: { 'X-Fusion-Mock': String(Boolean(discoveryMock)) },
       processServices: (dataResponse, route) => {
         const { data, routes } = processServices(dataResponse, route);
         return {
