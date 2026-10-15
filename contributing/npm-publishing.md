@@ -95,7 +95,7 @@ anything is published if a new public package has not been added.
 | --- | --- |
 | `preflight` reports `not on npm yet` | The package is new. Run `pnpm npm-trust add <name>`. |
 | `preflight` reports `repository must point at` | Add `repository.url` `git+https://github.com/equinor/fusion-framework.git` and `repository.directory` to the package's `package.json`. |
-| Publish fails with `ENEEDAUTH`, `401`, or `404` | Trust is missing or expired. Run `pnpm npm-trust audit`, then `bootstrap --package <name>`, and publish within 2 days. |
+| Publish fails with `ENEEDAUTH`, `401`, or `404` | Trust is missing or expired. Run `pnpm npm-trust audit`. If it reports `untrusted`, run `bootstrap --package <name>`. If it reports `trusted`, the configuration probably expired: revoke it (`npm trust list <name>`, then `npm trust revoke <name> --id <id>`) before running `bootstrap --package <name>`. Then publish within 2 days. |
 | Publish fails with `422` mentioning provenance | `repository` in `package.json` does not match `equinor/fusion-framework`. |
 | Snapshot job waits for or rejects the deployment | Snapshots only run from `main` or `next` (`npm` environment policy). |
 | `npm trust` prints `EOTP` | Complete 2FA in the prompt the script opens, and enable the 5-minute skip. |
