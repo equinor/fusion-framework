@@ -240,4 +240,48 @@ describe('reactRouterPlugin', () => {
     expect(transformResult).not.toBeNull();
     expect(transformResult).toContain(`path: 'home'`);
   });
+
+  it('should transform and remove multi-line DSL imports', () => {
+    const inputCode = [
+      `import  {`,
+      `  route,`,
+      `  useRouterContext`,
+      `}  from "@equinor/fusion-framework-react-router" ;`,
+      `export const routes = route('home', './mocks/pages/HomePage.tsx');`,
+    ].join('\n');
+
+    const transformResult = plugin.transform(inputCode, testFileId);
+
+    expect(transformResult).toContain(`path: 'home'`);
+    expect(transformResult).not.toContain('route,');
+    expect(transformResult).not.toMatch(/import\s*{\s*route/);
+  });
+
+  it('should skip modules that only import non-DSL router helpers', () => {
+    const inputCode = [
+      `import { useRouterContext } from '@equinor/fusion-framework-react-router';`,
+      `export const routes = route('home', './mocks/pages/HomePage.tsx');`,
+    ].join('\n');
+
+    expect(plugin.transform(inputCode, testFileId)).toBeNull();
+  });
+
+  it('should scan adversarial whitespace in linear time', () => {
+    const dslImport = `import { route, layout } from '@equinor/fusion-framework-react-router/routes';\n`;
+    const spaces = ' '.repeat(50_000);
+    const inputs = [
+      `import{{${spaces}`,
+      `${dslImport}route(${spaces}`,
+      `${dslImport}layout('./a', ${spaces}`,
+      `${dslImport}layout(import.meta.resolve('./a'), ${spaces}`,
+    ];
+
+    const startedAt = performance.now();
+    for (const inputCode of inputs) {
+      plugin.transform(inputCode, testFileId);
+    }
+
+    // The previous patterns took tens of seconds on a few kilobytes of whitespace.
+    expect(performance.now() - startedAt).toBeLessThan(1_000);
+  });
 });
