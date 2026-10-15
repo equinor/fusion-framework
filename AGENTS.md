@@ -60,6 +60,7 @@ Load the file whose `applyTo` matches your target. Do not load the rest.
 | A Dependabot PR | `.github/instructions/dependabot-pr.instructions.md` (**mandatory, in full**) |
 | `.agents/skills/**` | `.github/instructions/skills.instructions.md` |
 | A workflow-driven commit or PR | `.github/instructions/workflow-contribution.instructions.md` |
+| A new public package, npm publishing, or a failed release | `.agents/skills/custom-npm-publishing/SKILL.md` (runbook: `contributing/npm-publishing.md`) |
 | A `fusion-lint` diagnostic you cannot satisfy | `contributing/fusion-lint.md` |
 
 Each instruction file opens with a TL;DR for agents. Read that; read the rest only if the
