@@ -187,10 +187,14 @@ export class ServiceDiscoveryClient implements IServiceDiscoveryClient {
       // firstValueFrom returns the cached snapshot; lastValueFrom waits for
       // the freshest value from the query
       const fn = allow_cache ? firstValueFrom : lastValueFrom;
-      const services = await fn(Query.extractQueryValue(this.#query.query()));
-      this.#failure = undefined;
-      this.#lastKnownGood = { services, receivedAt: Date.now() };
-      return services;
+      const record = await fn(this.#query.query());
+      // Only a fresh response proves discovery works; a cached (possibly expired) snapshot must
+      // not reset the failure streak or renew the age of the fallback list
+      if (record.status === 'complete') {
+        this.#failure = undefined;
+        this.#lastKnownGood = { services: record.value, receivedAt: Date.now() };
+      }
+      return record.value;
     } catch (error) {
       this.#registerFailure(error, startedAt);
       return this.#resolveFallback(error);

@@ -170,6 +170,19 @@ describe('ServiceDiscoveryClient resilience', () => {
     await expect(client.resolveServices()).rejects.toMatchObject({ response: { status: 401 } });
   });
 
+  it('does not renew the fallback age when serving a cached snapshot', async () => {
+    const { http } = createHttp(okResponse, unauthorizedResponse);
+    const client = createClient(http);
+
+    await client.resolveServices();
+    // a cached read near the 24 hour limit is not a fresh response
+    advance(24 * 60 * 60 * 1_000 - 60_000);
+    await expect(client.resolveServices(true)).resolves.toEqual(services);
+
+    advance(120_000);
+    await expect(client.resolveServices()).rejects.toMatchObject({ response: { status: 401 } });
+  });
+
   it('counts concurrent callers sharing one failed request as a single failure', async () => {
     const { http, fetch$ } = createHttp(unauthorizedResponse);
     const client = createClient(http);
