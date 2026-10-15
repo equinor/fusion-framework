@@ -129,6 +129,7 @@ flowchart TD
 | `route`   | `string`            | `'/@fusion-api'`     | Base path where plugin middleware is mounted. |
 | `process` | `ProcessRouteOptions` | —                  | Extra route processing options (e.g. `onProxyRes` listener). |
 | `logger`  | `PluginLogger`      | —                    | Logger for debug/info/warn/error messages. Pass `console` for quick debugging. |
+| `headers` | `Record<string, string>` | —               | Headers added to every proxied upstream request (service discovery and proxy routes), e.g. to identify dev-server traffic. A route's own `proxy.headers` take precedence. |
 
 ### Service Discovery with `createProxyHandler`
 
@@ -167,6 +168,15 @@ const proxyHandler = createProxyHandler(
 
 apiServicePlugin({ proxyHandler });
 ```
+
+#### Response caching
+
+`createProxyHandler` caches service discovery responses in memory so a browser tab stuck in a reload loop (Vite full reload, auth redirect, crashing app) cannot flood the upstream discovery API:
+
+- Successful responses are reused for **60 seconds**. The raw upstream payload is cached and passed through your processor on every request, so request-dependent output (for example URIs built from the `referer`) stays correct.
+- Failed responses (status `>= 400`) are answered with the same status code for **10 seconds** without calling upstream.
+- Entries are keyed by URL and a hash of the `Authorization` header, so a new token never receives a response cached for another. Only `GET` requests are cached.
+- Cached responses carry an `x-fusion-discovery-cache: hit` header.
 
 ### Add server-owned routes
 
@@ -275,7 +285,7 @@ See the [path-to-regexp documentation](https://www.npmjs.com/package/path-to-reg
 
 ## Response Interceptor with `createResponseInterceptor`
 
-`createResponseInterceptor` intercepts JSON proxy responses and transforms them before they reach the client. Non-JSON responses and error responses (status >= 400) pass through untouched.
+`createResponseInterceptor` intercepts JSON proxy responses and transforms them before they reach the client. Non-JSON responses and error responses (status >= 400) pass through untouched, with their original status code and headers.
 
 ```ts
 import { createResponseInterceptor } from '@equinor/fusion-framework-vite-plugin-api-service';
@@ -333,7 +343,7 @@ const typedInterceptor = createResponseInterceptor<OriginalResponse, Transformed
 | --- | --- |
 | `PluginArguments` | Arguments for the plugin factory (`routes`, `proxyHandler`). |
 | `PluginOptions` | Optional plugin configuration (`route`, `process`, `logger`). |
-| `ApiProxyHandler` | Interface for proxy handlers returned by `createProxyHandler`. |
+| `ApiProxyHandler` | Interface for proxy handlers returned by `createProxyHandler`; the optional `middleware` member answers requests ahead of the Vite proxy. |
 | `ApiDataProcessor` | Callback type for processing service discovery responses. |
 | `ApiRoute` | Union of `MiddlewareRoute` and `ProxyRoute`. |
 | `MiddlewareRoute` | Route definition with a custom middleware handler. |

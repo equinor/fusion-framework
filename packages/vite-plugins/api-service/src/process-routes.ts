@@ -22,6 +22,8 @@ import { createResponseInterceptor } from './create-response-interceptor.js';
 export type ProcessRouteOptions = {
   logger?: PluginLogger;
   onProxyRes?: ProxyListener;
+  /** Headers added to every proxied request; a route's own `proxy.headers` take precedence. */
+  headers?: Record<string, string>;
 };
 
 /**
@@ -86,12 +88,16 @@ function processesRoute(
     req.url = rewrite(req.url ?? '');
   }
 
+  // Shared headers identify the proxy upstream; route-specific headers may override them
+  const headers = { ...options?.headers, ...proxyOptions.headers };
+
   const proxyServer = httpProxy.createProxyServer({
     selfHandleResponse: !!transformResponse,
     prependPath: true,
     secure: process.env.NODE_ENV === 'production',
     changeOrigin: true,
     ...proxyOptions,
+    headers,
   });
 
   proxyServer.on('error', (err) => {

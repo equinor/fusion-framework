@@ -43,15 +43,21 @@ export type PluginOptions = {
    */
   route?: string;
   /**
-   * Additional options forwarded to {@link processRoutes} (excluding `logger`,
-   * which is set via the top-level `logger` option).
+   * Additional options forwarded to {@link processRoutes} (excluding `logger` and
+   * `headers`, which are set via the top-level options).
    */
-  process?: Omit<ProcessRouteOptions, 'logger'>;
+  process?: Omit<ProcessRouteOptions, 'logger' | 'headers'>;
   /**
    * Logger used for debug, info, warning, and error messages emitted by the
    * plugin. Pass `console` for quick debugging.
    */
   logger?: PluginLogger;
+  /**
+   * Headers added to every request the plugin proxies upstream — the service
+   * discovery proxy and all proxy routes. Use them to identify dev-server traffic
+   * in upstream telemetry. A route's own `proxy.headers` take precedence.
+   */
+  headers?: Record<string, string>;
 };
 
 /**
@@ -97,7 +103,7 @@ export type PluginOptions = {
 export function plugin(args: PluginArguments, options?: PluginOptions): Plugin {
   const { routes, proxyHandler } = args;
 
-  const { logger } = options ?? {};
+  const { logger, headers } = options ?? {};
 
   // Plugin requires either routes or/and proxyHandler
   if (!args.routes && !args.proxyHandler) {
@@ -115,6 +121,11 @@ export function plugin(args: PluginArguments, options?: PluginOptions): Plugin {
       if (proxyHandler) {
         config.server ??= {};
         const proxyOptions = proxyHandler.createProxyOptions(config, env);
+        // Only merge when shared headers were configured
+        if (headers) {
+          // Shared headers identify the proxy upstream; handler-specific headers may override them
+          proxyOptions.headers = { ...headers, ...proxyOptions.headers };
+        }
         // Preserve any existing proxy entries while adding/overriding this plugin's route
         config.server.proxy = Object.assign({}, config.server.proxy, {
           [proxyHandler.route]: proxyOptions,
@@ -123,12 +134,18 @@ export function plugin(args: PluginArguments, options?: PluginOptions): Plugin {
       }
     },
     configureServer(server) {
+      // Answer cached service discovery requests before Vite's proxy forwards them upstream;
+      // middlewares added here run ahead of Vite's internal proxy middleware
+      if (proxyHandler?.middleware) {
+        server.middlewares.use(proxyHandler.route, proxyHandler.middleware);
+      }
+
       // first handle provided routes
       if (routes) {
         server.middlewares.use(
           proxyBase,
           async (req: IncomingRequest, res: ServerResponse, next: NextFunction) => {
-            processRoutes(routes, [req, res, next], { ...options?.process, logger });
+            processRoutes(routes, [req, res, next], { ...options?.process, logger, headers });
           },
         );
         logger?.debug(`Added custom routes [${routes.length}] at ${proxyBase}`);
@@ -142,7 +159,11 @@ export function plugin(args: PluginArguments, options?: PluginOptions): Plugin {
             logger?.debug(
               `Processing proxy routes [${proxyHandler.routes.length}] at ${proxyBase}`,
             );
-            processRoutes(proxyHandler.routes, [req, res, next], { ...options?.process, logger });
+            processRoutes(proxyHandler.routes, [req, res, next], {
+              ...options?.process,
+              logger,
+              headers,
+            });
           },
         );
       }

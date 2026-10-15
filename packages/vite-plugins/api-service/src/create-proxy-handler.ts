@@ -10,6 +10,28 @@ import type {
 import { DEFAULT_VALUES } from './default-values.js';
 import { createResponseInterceptor } from './create-response-interceptor.js';
 import type { Connect } from 'vite';
+import type { ServerResponse } from 'node:http';
+import { createHash } from 'node:crypto';
+
+/** How long a successful service discovery response is reused. */
+const SUCCESS_TTL_MS = 60_000;
+
+/** How long a failed service discovery status is replayed without calling upstream. */
+const FAILURE_TTL_MS = 10_000;
+
+/**
+ * Builds the cache key for a service discovery request, or `undefined` for non-`GET` requests.
+ * The `Authorization` hash keeps a cached failure for one token from reaching another.
+ *
+ * @param req - Incoming request, in the cache middleware or the proxy response handler.
+ * @returns The cache key, or `undefined` when the request must not be cached.
+ */
+const cacheKey = (req: Connect.IncomingMessage): string | undefined =>
+  req.method === 'GET'
+    ? `${req.originalUrl ?? req.url}#${createHash('sha256')
+        .update(req.headers.authorization ?? '')
+        .digest('hex')}`
+    : undefined;
 
 /**
  * Callback that processes a service discovery response and produces
@@ -54,6 +76,12 @@ export type ApiDataProcessor<
  * handler re-generates its route table, so route changes are picked up
  * automatically.
  *
+ * Service discovery responses are cached in memory so that browser reload loops do not
+ * flood the upstream discovery API: successful responses are reused for 60 seconds and
+ * failed status codes are replayed for 10 seconds. Cached payloads are still passed
+ * through `generateRoutes` per request, so request-dependent output (for example URIs
+ * derived from the `referer`) stays correct.
+ *
  * @template TResponse - Shape of the raw JSON response from the discovery endpoint.
  * @template TResult - Shape of the transformed JSON sent back to the client.
  *
@@ -68,8 +96,8 @@ export type ApiDataProcessor<
  * @param args.proxyOptions - Extra `http-proxy` options merged into the
  *   generated proxy configuration.
  * @param args.logger - Logger for proxy diagnostics.
- * @returns An {@link ApiProxyHandler} with `route`, `routes`, and
- *   `createProxyOptions` members.
+ * @returns An {@link ApiProxyHandler} with `route`, `routes`, `createProxyOptions`,
+ *   and a cache `middleware`.
  *
  * @example
  * ```ts
@@ -110,8 +138,57 @@ export function createProxyHandler<
     logger,
   } = args ?? {};
 
+  // Raw upstream payload on success, status code on failure
+  const cache = new Map<string, { expiresAt: number; data?: TResponse; status?: number }>();
+
   // Initialize routes - this will be updated on each response
   let apiRoutes: ApiRoute[] | undefined;
+
+  /**
+   * Transforms a raw discovery payload for the current request and refreshes the route table.
+   *
+   * @param data - Raw service discovery payload (fresh from upstream or from the cache).
+   * @param req - Request whose context (for example `referer`) drives the transformation.
+   * @returns The transformed payload to send to the client.
+   */
+  const transform = (data: TResponse, req: Connect.IncomingMessage): TResult => {
+    const { data: transformedData, routes } = generateRoutes(data, {
+      route: apiRoute,
+      request: req,
+    });
+    apiRoutes = routes;
+    return transformedData;
+  };
+
+  /**
+   * Serves service discovery requests from the cache, falling through to the proxy on a miss.
+   *
+   * @param req - Incoming request mounted at the discovery route.
+   * @param res - Server response.
+   * @param next - Continues to Vite's proxy on a cache miss.
+   */
+  const middleware = (
+    req: IncomingRequest,
+    res: ServerResponse,
+    next: Connect.NextFunction,
+  ): void => {
+    const key = cacheKey(req);
+    const entry = key ? cache.get(key) : undefined;
+    // Miss or expired: continue to Vite's proxy, which refreshes the cache from upstream
+    if (!entry || entry.expiresAt <= Date.now()) {
+      next();
+      return;
+    }
+    // Successful payloads are re-transformed so request-dependent URIs match this caller
+    if (entry.data !== undefined) {
+      res.writeHead(200, { 'content-type': 'application/json', 'x-fusion-discovery-cache': 'hit' });
+      res.end(JSON.stringify(transform(entry.data, req)));
+      return;
+    }
+    res.writeHead(entry.status ?? 502, { 'x-fusion-discovery-cache': 'hit' });
+    res.end();
+  };
+
   return {
     get route() {
       return route;
@@ -119,6 +196,7 @@ export function createProxyHandler<
     get routes() {
       return apiRoutes || [];
     },
+    middleware,
     createProxyOptions: (...args) => {
       // Resolve the provided options
       const providedOptions =
@@ -127,15 +205,23 @@ export function createProxyHandler<
       // Configure the proxy server
       const configure = (proxyServer: ProxyServer) => {
         proxyServer.on('proxyRes', (proxyRes, req, res) => {
+          const key = cacheKey(req);
+          const status = proxyRes.statusCode ?? 500;
+          // Remember failures so reload loops do not hit upstream again for a while
+          if (key && status >= 400) {
+            cache.set(key, { status, expiresAt: Date.now() + FAILURE_TTL_MS });
+            logger?.warn(
+              `service discovery responded ${status}; replaying it for ${FAILURE_TTL_MS}ms`,
+            );
+          }
           // initialize the interceptor since the `generateRoutes` requires the request
           const interceptor = createResponseInterceptor(
             (data: TResponse) => {
-              const { data: transformedData, routes } = generateRoutes(data, {
-                route: apiRoute,
-                request: req,
-              });
-              apiRoutes = routes;
-              return transformedData;
+              // Store the raw payload; the transformation depends on each request
+              if (key) {
+                cache.set(key, { data, expiresAt: Date.now() + SUCCESS_TTL_MS });
+              }
+              return transform(data, req);
             },
             {
               logger,

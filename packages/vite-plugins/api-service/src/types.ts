@@ -119,6 +119,13 @@ export interface ApiProxyHandler {
    * @param env - Vite environment.
    */
   createProxyOptions: (config: UserConfig, env: ConfigEnv) => ProxyOptions;
+
+  /**
+   * Optional middleware mounted at {@link ApiProxyHandler.route} ahead of the Vite proxy.
+   * It may answer a request itself (for example from a response cache) or call `next`
+   * to let the request continue to the proxy.
+   */
+  readonly middleware?: ServerListener;
 }
 
 /**
