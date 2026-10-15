@@ -70,8 +70,10 @@ only when you can dispatch a snapshot right afterwards.
 If a package reports `conflict`, the registry rejected a second configuration. Rerun with
 `--replace` to swap this repository's old configuration for the new one. With `--replace`,
 the script always adds before it revokes, where npm allows it. If a swap leaves a package
-without trust, the batch stops and prints the command to rerun. Configurations that belong to
-other repositories are never touched.
+without trust, the batch stops and prints the command to rerun. If the new configuration was
+added but an old one could not be revoked, the package reports `partial` and the run fails.
+The new configuration still needs its validating publish. Rerun `bootstrap --replace` to
+finish the cleanup. Configurations that belong to other repositories are never touched.
 
 `preflight` cannot see trust state, because that requires a maintainer login. Run
 `pnpm npm-trust audit` before merging a release PR if trust may have expired.

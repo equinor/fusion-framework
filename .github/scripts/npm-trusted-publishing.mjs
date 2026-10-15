@@ -293,7 +293,7 @@ async function requireNpmLogin(context) {
 /**
  * Configure the release.yml trust relationship for one existing package.
  *
- * @returns {Promise<{ status: 'already' | 'added' | 'would-add' | 'conflict' | 'error', detail?: string }>}
+ * @returns {Promise<{ status: 'already' | 'added' | 'partial' | 'would-add' | 'conflict' | 'untrusted' | 'error', detail?: string, fatal?: boolean }>}
  */
 async function trustPackage(context, pkg, { dryRun, replace }) {
   const current = await listTrust(context, pkg.name);
@@ -352,8 +352,12 @@ async function trustPackage(context, pkg, { dryRun, replace }) {
   const added = await addTrust();
   if (added.status === 0) {
     const revokeError = replace ? await revokeStale() : null;
+    // The new trust still needs validating, but the old identity stays authorized: fail the run.
     return revokeError
-      ? { status: 'added', detail: `stale config kept: ${revokeError}` }
+      ? {
+          status: 'partial',
+          detail: `added ${TRUST_TARGET.file} but stale config kept: ${revokeError}`,
+        }
       : { status: 'added' };
   }
   if (isNotFound(added.output)) {
@@ -383,6 +387,9 @@ async function trustPackage(context, pkg, { dryRun, replace }) {
     detail: `revoked ${stale.map(describe).join(', ')} but adding ${TRUST_TARGET.file} failed: ${replaced.output.trim()}. Rerun: pnpm npm-trust bootstrap --package ${pkg.name}`,
   };
 }
+
+// `partial` created trust that must be validated, even though the run fails.
+const CREATED_TRUST = new Set(['added', 'partial']);
 
 function printResults(context, results) {
   for (const { name, status, detail } of results) {
@@ -503,7 +510,7 @@ export async function bootstrap(
   }
   context.log('');
   printResults(context, results);
-  if (results.some(({ status }) => status === 'added')) {
+  if (results.some(({ status }) => CREATED_TRUST.has(status))) {
     await warnIfWorkflowMissing(context);
     printValidationReminder(context);
   }
@@ -605,7 +612,7 @@ export async function add(
     if (outcome.fatal) break;
   }
   printResults(context, results);
-  if (results.some(({ status }) => status === 'added')) {
+  if (results.some(({ status }) => CREATED_TRUST.has(status))) {
     await warnIfWorkflowMissing(context);
     printValidationReminder(context);
   }

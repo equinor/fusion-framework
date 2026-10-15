@@ -302,6 +302,29 @@ describe('bootstrap', () => {
     );
   });
 
+  test('fails when trust is added but a stale configuration cannot be revoked', async () => {
+    const stale = { id: 'old', type: 'github', repository: REPO, file: 'ci.yml' };
+    const { ctx, logs } = context({
+      packages: [pkg('@equinor/b')],
+      registry: { '@equinor/b': published() },
+      npm: defaultNpm({ '@equinor/b': [stale] }, (args) =>
+        args[1] === 'revoke' ? { status: 1, output: 'npm error code E500' } : undefined,
+      ),
+    });
+
+    assert.equal(await bootstrap(ctx, { replace: true }), 1);
+    const output = logs.join('\n');
+    assert.match(
+      output,
+      /\[partial\]\s+@equinor\/b — added release\.yml but stale config kept: revoke .*E500/,
+    );
+    assert.match(
+      output,
+      /expires? trust configurations/,
+      'still reminds to validate the new configuration',
+    );
+  });
+
   test('reports a single-configuration conflict and swaps it only with --replace', async () => {
     const stale = { id: 'old', type: 'github', repository: REPO, file: 'ci.yml' };
     const conflictNpm = (responses) =>
