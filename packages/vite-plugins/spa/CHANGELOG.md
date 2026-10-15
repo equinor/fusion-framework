@@ -1,5 +1,13 @@
 # @equinor/fusion-framework-vite-plugin-spa
 
+## 5.2.2
+
+### Patch Changes
+
+- f858a7d: Correct the `FUSION_SPA_MSAL_MOCK` guidance: run CI and Playwright suites with `ffc app dev --mock`, and point service discovery at the mock server in direct Vite setups, because mock tokens are rejected by real Fusion services.
+- Updated dependencies [f858a7d]
+  - @equinor/fusion-framework-module-service-discovery@10.2.0
+
 ## 5.2.1
 
 ### Patch Changes

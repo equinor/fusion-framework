@@ -1,5 +1,14 @@
 # @equinor/fusion-framework-docs
 
+## 0.4.29
+
+### Patch Changes
+
+- 71108a9: Document the development portal's temporary root light-only policy and its
+  bootstrap/authentication boundary.
+  
+  Ref: equinor/fusion-core-tasks#2120.
+
 ## 0.4.28
 
 ### Patch Changes
