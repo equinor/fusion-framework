@@ -123,13 +123,19 @@ function processesRoute(
     const { headers, statusMessage, statusCode = 500 } = proxyRes;
     const message = `Received response for ${req.method} ${req.originalUrl} -> ${statusCode} ${statusMessage}`;
 
-    res.writeHead(statusCode, {
-      ...headers,
-      'x-proxy-rewrite-target': proxyOptions.target,
-    });
+    // A transformResponse interceptor writes the status and headers itself; flushing them here
+    // would make it fail with ERR_HTTP_HEADERS_SENT. Only tag the response in that case.
+    if (transformResponse) {
+      res.setHeader('x-proxy-rewrite-target', String(proxyOptions.target));
+    } else {
+      res.writeHead(statusCode, {
+        ...headers,
+        'x-proxy-rewrite-target': proxyOptions.target,
+      });
+    }
 
     // Log errors verbosely (with request/response detail) for non-2xx/3xx responses
-    if (statusCode ?? 0 >= 400) {
+    if (statusCode >= 400) {
       logger?.error(message);
       logger?.debug({
         request: {

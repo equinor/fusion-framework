@@ -73,15 +73,23 @@ export function createResponseInterceptor<
 
     const { headers, statusCode = 500 } = proxyRes;
 
+    // The caller owns the response (`selfHandleResponse`), so nothing has copied the upstream
+    // status and headers yet; pass-through branches must do it before piping the body.
+    const forwardUntouched = (): void => {
+      // Headers may already be flushed by an earlier listener; piping the body is still safe
+      if (!res.headersSent) {
+        res.writeHead(statusCode, headers);
+      }
+      proxyRes.pipe(res);
+    };
+
     // Check if the response status code indicates an error
     // If the status code is 2xx, we can proceed with the transformation
     // If the status code is 4xx or 5xx, we should skip the transformation
     // and return the original response to the client
     if (statusCode >= 400) {
-      // selfHandleResponse stops http-proxy from copying status and headers, so forward them explicitly
-      res.writeHead(statusCode, headers);
       // Forward the error response to the client untouched
-      proxyRes.pipe(res);
+      forwardUntouched();
       return;
     }
 
@@ -90,9 +98,8 @@ export function createResponseInterceptor<
     // and return the original response to the client
     if (!headers['content-type']?.includes('application/json')) {
       logger?.debug('response is not JSON, skipping transformation');
-      res.writeHead(statusCode, headers);
       // Non-JSON responses are passed through unmodified
-      proxyRes.pipe(res);
+      forwardUntouched();
       return;
     }
 
