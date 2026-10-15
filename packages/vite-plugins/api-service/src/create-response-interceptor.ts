@@ -80,6 +80,7 @@ export function createResponseInterceptor<
       if (!res.headersSent) {
         res.writeHead(statusCode, headers);
       }
+      // Stream the untouched upstream body to the client
       proxyRes.pipe(res);
     };
 

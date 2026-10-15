@@ -4,6 +4,7 @@ import type { ConfigBuilderCallbackArgs } from '@equinor/fusion-framework-module
 import { fusionAiStrategy } from './fusion-ai-strategy.js';
 import type { Strategy } from './types.js';
 
+// Only the module-lookup methods the wrapper calls are needed, so a partial stub is cast
 const createArgs = (): ConfigBuilderCallbackArgs =>
   ({
     hasModule: () => true,
@@ -42,6 +43,7 @@ describe('fusionAiStrategy', () => {
   });
 
   it('rejects when a required module is missing', async () => {
+    // A stub that reports no modules, cast to the full callback args type
     const args = {
       hasModule: () => false,
       requireInstance: vi.fn(),

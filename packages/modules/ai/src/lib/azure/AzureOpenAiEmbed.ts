@@ -73,6 +73,7 @@ export class AzureOpenAiEmbed extends BaseService<string[], number[][]> implemen
   constructor(config: AzureOpenAiEmbedConfig) {
     super();
     const { defaultHeaders, ...options } = config;
+    // `defaultHeaders` is not a LangChain option; it is mapped onto the OpenAI client configuration
     this.client = new AzureOpenAIEmbeddings({
       ...options,
       ...(defaultHeaders && { configuration: { defaultHeaders } }),

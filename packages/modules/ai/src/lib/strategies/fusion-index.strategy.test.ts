@@ -9,19 +9,22 @@ vi.mock('../azure/AzureVectorStore.js', () => ({ AzureVectorStore: vi.fn() }));
 import { createFusionAiIndexStrategy } from './fusion-index.strategy.js';
 import type { IEmbed } from '../types.js';
 
-const createModules = (uri: string, defaultHeaders?: Record<string, string>) => ({
-  auth: { acquireAccessToken: vi.fn() },
-  serviceDiscovery: {
+const createModules = (uri: string, defaultHeaders?: Record<string, string>) => {
+  // Only resolveService is used by the strategy, so a partial provider is cast
+  const serviceDiscovery = {
     resolveService: async () => ({ uri }),
-  } as unknown as IServiceDiscoveryProvider,
-  defaultHeaders,
-});
+  } as unknown as IServiceDiscoveryProvider;
+
+  return { auth: { acquireAccessToken: vi.fn() }, serviceDiscovery, defaultHeaders };
+};
 
 /** Runs the policies registered on the last created search client against a fake request. */
 const runPolicies = async (): Promise<Headers> => {
   const options = searchClientCtor.mock.calls.at(-1)?.[3];
   const request = { headers: new Headers() };
+  // Only the header policy is of interest; the token policy needs real auth and is skipped
   for (const { policy } of options.additionalPolicies) {
+    // Match by name so other policies on the client are ignored
     if (policy.name === 'FusionDefaultHeaders') {
       await policy.sendRequest(request, async () => ({}));
     }

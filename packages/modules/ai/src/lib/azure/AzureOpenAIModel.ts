@@ -102,6 +102,7 @@ export class AzureOpenAIModel<
   constructor(config: AzureOpenAIModelConfig) {
     super();
     const { defaultHeaders, ...options } = config;
+    // `defaultHeaders` is not a LangChain option; it is mapped onto the OpenAI client configuration
     this.#client = new AzureChatOpenAI({
       ...options,
       ...(defaultHeaders && { configuration: { defaultHeaders } }),

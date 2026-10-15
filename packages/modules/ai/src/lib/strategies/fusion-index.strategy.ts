@@ -45,6 +45,7 @@ function createSearchClient(
           policy: {
             name: 'FusionDefaultHeaders',
             sendRequest(request, next) {
+              // Apply each configured header to the outgoing search request
               for (const [name, value] of Object.entries(defaultHeaders)) {
                 request.headers.set(name, value);
               }

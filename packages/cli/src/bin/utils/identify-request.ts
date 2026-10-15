@@ -22,6 +22,7 @@ export const identifyRequest = <TRequest extends { headers?: HeadersInit }>(
   request: TRequest,
 ): TRequest => {
   const headers = new Headers(request.headers);
+  // Walk every identification header so each one is applied independently
   for (const [name, value] of Object.entries(defaultHeaders)) {
     // Never overwrite a value the caller set explicitly
     if (!headers.has(name)) {
