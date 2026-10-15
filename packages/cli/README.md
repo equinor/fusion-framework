@@ -199,6 +199,34 @@ export default defineFusionCli(() => ({
 }));
 ```
 
+## Request identification headers
+
+Every request the CLI itself sends to Fusion services identifies the tool and its version, so
+service operators can tell Fusion Framework traffic apart from other callers when investigating
+unexpected requests (for example in Fusion Discovery logs).
+
+| Header                 | Value                                    |
+| ---------------------- | ---------------------------------------- |
+| `X-Fusion-CLI-Name`    | `fusion-framework-cli`                   |
+| `X-Fusion-CLI-Version` | The installed CLI version, e.g. `15.5.3` |
+| `User-Agent`           | `fusion-framework-cli/<version>`         |
+
+This covers service discovery lookups and every other client created by `configureFramework`,
+publish, upload, check and tag calls, and the AI model, embedding and search index calls. It uses
+the same `X-Fusion-CLI-*` convention as the other Fusion CLIs, so one filter on `x-fusion-cli-name`
+finds all of them.
+
+Requests forwarded by the dev server (`ffc app dev`, `ffc app serve`, `ffc portal dev`) are not CLI
+calls. They identify the dev server instead with `X-Fusion-Dev-Server-Name` and
+`X-Fusion-Dev-Server-Version`, plus `X-Fusion-Mock: true|false`; see the
+[dev server README](../dev-server/README.md#requirements-and-boundaries).
+
+- **Diagnostics only.** The values can be faked, so never use them for access control. They never
+  contain tokens, secrets, or personal information.
+- **Caller headers win.** A header already set on a request is never overwritten.
+- **Programmatic use.** `defaultHeaders` is exported from `@equinor/fusion-framework-cli/bin`, and
+  `configureFramework` registers it on the framework HTTP client for you.
+
 ## Documentation
 
 - [Developing Apps](docs/application.md) — build, configure, and deploy applications
