@@ -264,6 +264,44 @@ describe('bootstrap', () => {
     );
   });
 
+  test('with --replace, revokes stale configurations even when the target is already trusted', async () => {
+    const stale = { id: 'old', type: 'github', repository: REPO, file: 'ci.yml' };
+    const foreign = { id: 'other', type: 'github', repository: 'equinor/other', file: 'ci.yml' };
+    const setup = (npm) =>
+      context({ packages: [pkg('@equinor/b')], registry: { '@equinor/b': published() }, npm });
+
+    const plain = setup(defaultNpm({ '@equinor/b': [trusted, stale, foreign] }));
+    assert.equal(await bootstrap(plain.ctx), 0);
+    assert.equal(mutations(plain.npm).length, 0, 'without --replace nothing changes');
+
+    const preview = setup(defaultNpm({ '@equinor/b': [trusted, stale, foreign] }));
+    assert.equal(await bootstrap(preview.ctx, { replace: true, dryRun: true }), 0);
+    assert.equal(mutations(preview.npm).length, 0);
+    assert.match(
+      preview.logs.join('\n'),
+      /\[already\]\s+@equinor\/b — would revoke github:equinor\/fusion-framework\/ci\.yml/,
+    );
+
+    const cleaned = setup(defaultNpm({ '@equinor/b': [trusted, stale, foreign] }));
+    assert.equal(await bootstrap(cleaned.ctx, { replace: true }), 0);
+    assert.deepEqual(
+      mutations(cleaned.npm).map(({ args }) => args),
+      [['trust', 'revoke', '@equinor/b', '--id', 'old']],
+      'only the stale same-repository entry is revoked',
+    );
+
+    const failing = setup(
+      defaultNpm({ '@equinor/b': [trusted, stale] }, (args) =>
+        args[1] === 'revoke' ? { status: 1, output: 'npm error code E500' } : undefined,
+      ),
+    );
+    assert.equal(await bootstrap(failing.ctx, { replace: true }), 1);
+    assert.match(
+      failing.logs.join('\n'),
+      /\[error\]\s+@equinor\/b — stale config kept: revoke .*E500/,
+    );
+  });
+
   test('reports a single-configuration conflict and swaps it only with --replace', async () => {
     const stale = { id: 'old', type: 'github', repository: REPO, file: 'ci.yml' };
     const conflictNpm = (responses) =>

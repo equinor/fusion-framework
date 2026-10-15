@@ -201,6 +201,15 @@ jobs:
       - name: Verify npm trusted publishing prerequisites
         run: pnpm npm-trust preflight
 
+      # Changesets rejects `version --snapshot` in pre mode, which `next` is in
+      # during a pre-release cycle. This job cannot push, so exiting pre mode
+      # only affects this disposable checkout.
+      - name: Exit pre-release mode for the snapshot
+        run: |
+          if [ -f .changeset/pre.json ] && [ "$(jq -r '.mode' .changeset/pre.json)" = "pre" ]; then
+            pnpm changeset pre exit
+          fi
+
       - name: Create and publish snapshot
         uses: ./.github/actions/changeset-snapshot
         with:

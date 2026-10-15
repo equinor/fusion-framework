@@ -298,14 +298,36 @@ async function requireNpmLogin(context) {
 async function trustPackage(context, pkg, { dryRun, replace }) {
   const current = await listTrust(context, pkg.name);
   if (current.error) return { status: 'error', detail: current.error };
-  if (current.entries.some((entry) => matchesTarget(entry))) return { status: 'already' };
 
   // Only ever replace configurations owned by this repository.
   const stale = current.entries.filter(
-    (entry) => entry.repository?.toLowerCase() === TRUST_TARGET.repository.toLowerCase(),
+    (entry) =>
+      !matchesTarget(entry) &&
+      entry.repository?.toLowerCase() === TRUST_TARGET.repository.toLowerCase(),
   );
   const describe = (entry) =>
     `${entry.type}:${entry.repository}/${entry.file}${entry.environment ? `@${entry.environment}` : ''}`;
+  const revokeStale = async () => {
+    for (const entry of stale) {
+      await context.sleep(MUTATION_DELAY_MS);
+      const revoked = await runNpm(context, ['trust', 'revoke', pkg.name, '--id', entry.id]);
+      if (revoked.status !== 0) return `revoke ${describe(entry)}: ${revoked.output.trim()}`;
+    }
+    return null;
+  };
+
+  if (current.entries.some((entry) => matchesTarget(entry))) {
+    // Already trusted; --replace still removes this repository's obsolete
+    // configurations, e.g. when a previous run added trust but failed to revoke.
+    if (!replace || stale.length === 0) return { status: 'already' };
+    const staleList = stale.map(describe).join(', ');
+    if (dryRun) return { status: 'already', detail: `would revoke ${staleList}` };
+    const revokeError = await revokeStale();
+    return revokeError
+      ? { status: 'error', detail: `stale config kept: ${revokeError}` }
+      : { status: 'already', detail: `revoked ${staleList}` };
+  }
+
   if (dryRun) {
     const others = current.entries.map(describe).join(', ');
     return { status: 'would-add', detail: others ? `existing: ${others}` : undefined };
@@ -325,15 +347,6 @@ async function trustPackage(context, pkg, { dryRun, replace }) {
       '--allow-publish',
       '--yes',
     ]);
-  const revokeStale = async () => {
-    for (const entry of stale) {
-      await context.sleep(MUTATION_DELAY_MS);
-      const revoked = await runNpm(context, ['trust', 'revoke', pkg.name, '--id', entry.id]);
-      if (revoked.status !== 0) return `revoke ${describe(entry)}: ${revoked.output.trim()}`;
-    }
-    return null;
-  };
-
   // Add first so a failure never leaves the package without its previous trust.
   await context.sleep(MUTATION_DELAY_MS);
   const added = await addTrust();
