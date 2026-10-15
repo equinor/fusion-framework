@@ -75,7 +75,7 @@ describe('createCustomAdapter', () => {
     expect(setCurrentContextByIdAsync).toHaveBeenCalledWith('deep-link-context');
   });
 
-  it('replaces a unique exact context path segment and preserves URL query behavior', () => {
+  it('replaces the existing context id and preserves URL query behavior', () => {
     const currentURL = new URL(
       'https://example.com/apps/my-app/projects/old-context/edit?tab=activity#details',
     );
@@ -101,9 +101,17 @@ describe('createCustomAdapter', () => {
   });
 
   it.each([
-    { path: '/projects/old-context/edit/old-context', extractedId: 'old-context' },
-    { path: '/projects/prefix-old-context-suffix/edit', extractedId: 'old-context' },
-  ])('skips fallback replacement for ambiguous path matches ($path)', ({ path, extractedId }) => {
+    {
+      path: '/projects/old-context/edit/old-context',
+      extractedId: 'old-context',
+      expectedPath: '/projects/new-context/edit/old-context',
+    },
+    {
+      path: '/projects/prefix-old-context-suffix/edit',
+      extractedId: 'old-context',
+      expectedPath: '/projects/prefix-new-context-suffix/edit',
+    },
+  ])('preserves fallback string replacement for $path', ({ path, extractedId, expectedPath }) => {
     const currentURL = new URL(`https://example.com/apps/my-app${path}`);
     // The adapter only reads these two hooks from the minimal test provider.
     const appContext = {
@@ -117,7 +125,7 @@ describe('createCustomAdapter', () => {
     });
 
     expect(
-      adapter?.encode({ context: { id: 'new-context' } as ContextItem, currentURL }),
-    ).toBeNull();
+      adapter?.encode({ context: { id: 'new-context' } as ContextItem, currentURL })?.pathname,
+    ).toBe(`/apps/my-app${expectedPath}`);
   });
 });
