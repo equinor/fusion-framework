@@ -102,3 +102,23 @@ When used inside a sub-module (e.g. an Application), the Service Discovery modul
 ### Caching
 
 The built-in `ServiceDiscoveryClient` caches results for **5 minutes** via `@equinor/fusion-query`. The `allow_cache` parameter on `resolveService` / `resolveServices` controls whether to return the first cached snapshot (`true`) or wait for the latest response (`false`, the default).
+
+### Failure handling
+
+Failed requests are never cached by `@equinor/fusion-query`, so without protection every retry, page reload, or re-render would call the service discovery API again. The built-in client hardens this:
+
+- **Failure backoff** — after a failed request, outgoing requests pause for 1s, then 2s, 4s … up to 30s. Concurrent callers sharing one failed request count as a single failure. The pause resets on the next successful response.
+- **Stale fallback** — when a refresh fails, or a call arrives during the pause, the last successful service list is returned if it is younger than 24 hours, so applications keep working through short outages.
+- **Fail fast** — without a usable fallback, the request that failed rethrows its original error (for example `HttpJsonResponseError` with status `401`), and calls during the pause throw `ServiceDiscoveryUnavailableError` without touching the network. Its `cause` holds the original error and `retryAt` the time requests resume.
+
+```typescript
+import { ServiceDiscoveryUnavailableError } from '@equinor/fusion-framework-module-service-discovery';
+
+try {
+  await serviceDiscovery.resolveService('people');
+} catch (error) {
+  if (error instanceof ServiceDiscoveryUnavailableError) {
+    // service discovery is down; error.cause is the original failure
+  }
+}
+```
