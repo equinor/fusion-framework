@@ -11,6 +11,7 @@ import {
 import type { ConsoleLogger } from './ConsoleLogger.js';
 import { normalizeDevServerConfig } from './normalize-dev-server-config.js';
 import { createDevServerConfig, type CreateDevServerOptions } from './create-dev-server-config.js';
+import { resolveMockAuthEndpoint } from './resolve-mock-auth-endpoint.js';
 
 /**
  * Creates a Vite plugin that watches the dev-server.config.ts file and restarts the server when it changes.
@@ -49,7 +50,21 @@ export const createDevServer = async (
   },
 ) => {
   const { overrides, log } = args ?? {};
-  const baseConfig = createDevServerConfig(options);
+  // Mock auth enabled through the environment needs mock discovery too; `--mock` already covers both
+  const mockDiscovery = options.mock
+    ? undefined
+    : resolveMockAuthEndpoint(
+        env,
+        typeof overrides?.envDir === 'string' ? overrides.envDir : undefined,
+      );
+  // Only log when the environment, not --mock, switched discovery to the mock server
+  if (mockDiscovery) {
+    log?.info(`FUSION_SPA_MSAL_MOCK is enabled, using mock service discovery at ${mockDiscovery}`);
+  }
+  const baseConfig = createDevServerConfig({
+    ...options,
+    mockDiscovery: options.mockDiscovery ?? mockDiscovery,
+  });
   log?.debug('\nBase dev server config:', normalizeDevServerConfig(baseConfig));
   log?.debug('\nCreating dev server with overrides:', overrides);
   let config: DevServerOptions = baseConfig;

@@ -57,4 +57,26 @@ describe('createDevServerConfig', () => {
       expect(getMsalMockServerUrl(config)).toBe(mock);
     },
   );
+
+  it('sends discovery to the mock server when only mock discovery is requested', () => {
+    const config = createDevServerConfig({ mockDiscovery: 'http://localhost:5010' });
+
+    expect(config.api.serviceDiscoveryUrl).toBe('http://localhost:5010/@fusion-mock/discovery');
+    expect(config.api.headers).toEqual({ 'X-Fusion-Mock': 'true' });
+    // auth stays as configured by the environment; only discovery is redirected
+    expect(getMsalMock(config)).toBeUndefined();
+  });
+
+  it('marks proxied requests as non-mock by default', () => {
+    expect(createDevServerConfig({}).api.headers).toEqual({ 'X-Fusion-Mock': 'false' });
+  });
+
+  it('prefers --mock over mock discovery from the environment', () => {
+    const config = createDevServerConfig({
+      mock: 'http://localhost:4010',
+      mockDiscovery: 'http://localhost:5010',
+    });
+
+    expect(config.api.serviceDiscoveryUrl).toBe('http://localhost:4010/@fusion-mock/discovery');
+  });
 });

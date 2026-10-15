@@ -401,7 +401,7 @@ FUSION_SPA_MSAL_TENANT_ID=my-tenant-id
 FUSION_SPA_MSAL_CLIENT_ID=my-client-id
 FUSION_SPA_MSAL_REDIRECT_URI=https://my-app.com/auth-callback
 FUSION_SPA_MSAL_REQUIRES_AUTH=true
-# Set to skip Entra ID and sign in a mock user instead — for CI/Playwright runs
+# Set to skip Entra ID and sign in a mock user instead — use together with a mock server (see below)
 FUSION_SPA_MSAL_MOCK=true
 # Optional: standalone mock-server origin used for session-scoped token acquisition
 FUSION_SPA_MSAL_MOCK_SERVER_URL=http://localhost:4010
@@ -421,14 +421,29 @@ FUSION_SPA_SERVICE_WORKER_RESOURCES=[{"url":"/app-proxy","rewrite":"/@fusion-api
 
 ## Running Against a Mock Client (CI / Playwright)
 
+Run CI and Playwright suites against the standalone mock server, so both authentication and
+service discovery stay local:
+
+```sh
+ffc mock-server ./mocks --port 4010
+ffc app dev --mock http://localhost:4010
+```
+
 Setting `FUSION_SPA_MSAL_MOCK=true` swaps the real MSAL client for
 `@equinor/fusion-framework-module-msal/mock`, which signs in a default mock user with no
-Entra ID redirects, popups, or network calls. This is the recommended way to run the dev
-server headlessly in GitHub Actions or a Playwright suite.
+Entra ID redirects or popups. Mock tokens are unsigned, so real Fusion services reject them.
+`ffc app dev` and `ffc app serve` therefore also send service discovery to the mock server
+whenever mock auth is on — `FUSION_SPA_MSAL_MOCK_SERVER_URL`, or `http://localhost:4010` when
+only `FUSION_SPA_MSAL_MOCK` is set.
 
 ```sh
 FUSION_SPA_MSAL_MOCK=true
 ```
+
+> [!IMPORTANT]
+> A direct Vite setup must point `FUSION_SPA_SERVICE_DISCOVERY_URL` (or the dev server's
+> service discovery URL) at the mock server too. Otherwise every page load sends a mock token
+> to real service discovery and fails with `401`.
 
 By default the mock signs in a generic `Test User`. To select and switch users at runtime, start
 the standalone mock server with the browser origin explicitly allowed, then point the app at it:
