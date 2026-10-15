@@ -1,5 +1,6 @@
 import { type Command, createCommand, createOption } from 'commander';
 
+import { defaultHeaders } from '@equinor/fusion-framework-cli/bin';
 import { loadFusionAIConfig, setupFramework } from '@equinor/fusion-framework-cli-plugin-ai-base';
 import {
   withOptions as withAiOptions,
@@ -97,6 +98,7 @@ const _command = createCommand('delete')
     const response = await fetch(url, {
       method: 'DELETE',
       headers: {
+        ...defaultHeaders,
         Authorization: `Bearer ${token}`,
       },
     });
