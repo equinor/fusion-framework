@@ -23,7 +23,10 @@ on:
 
 concurrency:
   group: visual-checks-${{ github.event_name }}-${{ inputs.pr_number || github.event.pull_request.number }}
-  cancel-in-progress: true
+  # Bot pushes (e.g. the release PR) start as `action_required` runs; approving them re-runs the same
+  # commit around the time the PR is marked ready. Only fresh runs cancel, so those same-commit runs
+  # queue instead of cancelling each other and leaving a failed required check on the PR.
+  cancel-in-progress: ${{ github.event.action != 'ready_for_review' && github.run_attempt == '1' }}
 
 permissions:
   contents: read
