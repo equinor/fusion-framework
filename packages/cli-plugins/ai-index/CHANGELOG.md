@@ -1,5 +1,17 @@
 # @equinor/fusion-framework-cli-plugin-ai-index
 
+## 3.0.15
+
+### Patch Changes
+
+- df4548d: Send the Fusion Framework CLI identification headers (`X-Fusion-CLI-Name`, `X-Fusion-CLI-Version`, `User-Agent`) when creating and deleting search indexes.
+  
+  Related: https://github.com/equinor/fusion-core-tasks/issues/2207
+- Updated dependencies [df4548d]
+- Updated dependencies [df4548d]
+  - @equinor/fusion-framework-cli-plugin-ai-base@4.0.14
+  - @equinor/fusion-framework-module-ai@7.1.0
+
 ## 3.0.14
 
 ### Patch Changes
