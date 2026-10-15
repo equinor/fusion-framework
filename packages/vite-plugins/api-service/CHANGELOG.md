@@ -1,5 +1,28 @@
 # @equinor/fusion-framework-vite-plugin-api-service
 
+## 2.1.0
+
+### Minor Changes
+
+- f858a7d: Cache service discovery responses in `createProxyHandler` so browser reload loops cannot flood the upstream discovery API from the dev server.
+  
+  - Successful responses are reused for 60 seconds; the raw payload is re-processed per request, so `referer`-based service URIs stay correct.
+  - Failed responses (status `>= 400`) are answered with the same status code for 10 seconds without calling upstream.
+  - Entries are keyed by URL and a hash of the `Authorization` header, and only `GET` requests are cached. Cached responses carry `x-fusion-discovery-cache: hit`.
+  
+  `ApiProxyHandler` gains an optional `middleware` member that the plugin mounts ahead of the Vite proxy.
+  
+  Also fixes `createResponseInterceptor` forwarding error (status `>= 400`) and non-JSON responses without their upstream status code and headers — a `401` from service discovery previously reached the browser as `200`.
+- f858a7d: Add a `headers` plugin option that adds headers to every proxied upstream request — the service discovery proxy and all proxy routes. A route's own `proxy.headers` take precedence.
+  
+  ```ts
+  apiServicePlugin({ proxyHandler }, { headers: { 'X-Fusion-Dev-Server-Version': '2.3.0' } });
+  ```
+
+### Patch Changes
+
+- f858a7d: Never forward mock tokens to real services. Requests carrying an unsigned token (`alg: none`, as issued by mock authentication) to a public host are answered with `401` locally — on the service discovery proxy and on proxy routes — and never leave the machine. Local targets (`localhost`, `*.localhost`, Docker Compose service names, `*.local`, `*.internal`, private IPv4) are unaffected.
+
 ## 2.0.9
 
 ### Patch Changes

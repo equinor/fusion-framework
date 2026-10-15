@@ -1,5 +1,20 @@
 # @equinor/fusion-framework-dev-portal
 
+## 11.1.4
+
+### Patch Changes
+
+- 71108a9: Temporarily keep the development portal's EDS palette and native controls in light mode,
+  including body-mounted overlays, when OS/browser color preferences start dark or change
+  while the portal is open. The policy applies when the portal mounts; earlier host
+  bootstrap and authentication are unchanged.
+  
+  Ref: equinor/fusion-core-tasks#2120.
+- Updated dependencies [f858a7d]
+  - @equinor/fusion-framework-dev-server@2.3.0
+  - @equinor/fusion-framework@9.0.4
+  - @equinor/fusion-framework-app@13.1.10
+
 ## 11.1.3
 
 ### Patch Changes

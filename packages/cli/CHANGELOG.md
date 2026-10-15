@@ -1,5 +1,21 @@
 # Change Log
 
+## 15.5.4
+
+### Patch Changes
+
+- f858a7d: Send service discovery to the mock server whenever mock authentication is enabled.
+  
+  Previously `FUSION_SPA_MSAL_MOCK=true` (from the environment or a `.env` file) only switched the SPA to unsigned mock tokens, while `ffc app dev` and `ffc app serve` kept forwarding service discovery to the real CI environment. Every page load — for example in a Playwright suite — sent a mock token to `discovery.fusion.equinor.com` and failed with `401`.
+  
+  Mock auth now implies mock discovery, exactly like `--mock`: the dev server uses `FUSION_SPA_MSAL_MOCK_SERVER_URL`, or `http://localhost:4010` when only `FUSION_SPA_MSAL_MOCK` is set. `--mock` still takes precedence. Start the mock server with `ffc mock-server` before running the app.
+- f858a7d: Refuse to start the dev server in mock mode when service discovery does not point at the mock server. A `dev-server.config` that overrides `api.serviceDiscoveryUrl` while `--mock` (or `FUSION_SPA_MSAL_MOCK`) is active now fails at startup with a clear error instead of sending mock tokens to real service discovery.
+- f858a7d: `ffc app dev`, `ffc app serve`, and `ffc portal dev` add `X-Fusion-Mock: true|false` to every request the dev server proxies upstream, so upstream telemetry shows whether the caller ran with mock authentication.
+- Updated dependencies [71108a9]
+- Updated dependencies [f858a7d]
+  - @equinor/fusion-framework-dev-portal@11.1.4
+  - @equinor/fusion-framework-dev-server@2.3.0
+
 ## 15.5.3
 
 ### Patch Changes
