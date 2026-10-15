@@ -5,7 +5,7 @@ import { identifyRequest } from './identify-request.js';
 
 describe('identifyRequest', () => {
   it('adds the CLI identification headers to a request without headers', () => {
-    const request = identifyRequest({ uri: '/services' });
+    const request = identifyRequest({ uri: '/services', headers: undefined });
     const headers = new Headers(request.headers);
 
     expect(headers.get('X-Fusion-CLI-Name')).toBe(defaultHeaders['X-Fusion-CLI-Name']);
