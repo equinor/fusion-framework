@@ -1,5 +1,14 @@
 # Change Log
 
+## 9.0.3
+
+### Patch Changes
+
+- Updated dependencies [a23ec8a]
+- Updated dependencies [a23ec8a]
+  - @equinor/fusion-framework-module-telemetry@7.2.1
+  - @equinor/fusion-framework-module-services@8.1.4
+
 ## 9.0.2
 
 ### Patch Changes

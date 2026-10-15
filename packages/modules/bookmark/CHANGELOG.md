@@ -1,5 +1,13 @@
 # Change Log
 
+## 4.1.4
+
+### Patch Changes
+
+- 762dbc8: Suppress equivalent bookmark error emissions while preserving changes to nested causes and custom error properties. Error stack traces do not affect equality.
+  
+  Fixes #5137
+
 ## 4.1.3
 
 ### Patch Changes
