@@ -77,6 +77,177 @@ describe('readStaticModule', () => {
     expect(module.getProperty(handle, 'missing')).toBeUndefined();
   });
 
+  it.each([
+    'const icon = schema.icon;',
+    'const icon = schema["icon"];',
+    'const key = "icon"; const icon = schema[key];',
+    'const icon = schema?.icon;',
+    'const alias = schema; const icon = alias.icon;',
+    'const holder = { schema }; const icon = holder.schema.icon;',
+    'const holder = { schema }; const { schema: alias } = holder; const icon = alias.icon;',
+    'const { icon } = schema;',
+    'const { description, ...ui } = schema;',
+    'const ui = { ...schema };',
+  ])('rejects accessor reads that can mutate selected metadata: %s', async (read) => {
+    const module = await readFixture(`
+      const schema = {
+        description: 'Before',
+        get icon() { this.description = 'After'; return 'icon'; },
+      };
+      ${read}
+      export const handle = { route: schema };
+    `);
+
+    expect(() => {
+      const route = module.getProperty(requireExport(module, 'handle'), 'route');
+      if (!route) throw new Error('Missing fixture route metadata');
+      module.getProperty(route, 'description');
+    }).toThrow('mutable');
+  });
+
+  it.each([
+    '',
+    'const description = schema.description;',
+    'const { description } = schema;',
+    'const { description = { get icon() { return "unused"; } } } = schema;',
+    'const holder = { schema }; const description = holder.schema.description;',
+    'function render(schema) { const icon = schema.icon; }',
+    'const ui = { get icon() { return "icon"; } }; const icon = ui.icon;',
+  ])('preserves uninvoked UI getters and unrelated property reads: %s', async (read) => {
+    const module = await readFixture(`
+      const schema = {
+        description: 'Home',
+        get icon() { throw new Error('Getter must not execute'); },
+      };
+      ${read}
+      export const handle = { route: schema };
+    `);
+    const route = module.getProperty(requireExport(module, 'handle'), 'route');
+    if (!route) throw new Error('Missing fixture route metadata');
+    const description = module.getProperty(route, 'description');
+    if (!description) throw new Error('Missing fixture description');
+    expect(module.evaluate(description)).toBe('Home');
+  });
+
+  it.each([
+    'const title = handle.route.description;',
+    'const copy = { ...handle.route };',
+    'const { description } = handle.route;',
+    'const { route: metadata } = handle; const title = metadata.description;',
+    'const { route: metadata } = handle; const copy = { ...metadata };',
+    'const copy = { ...handle.route }; const title = copy.description;',
+    'const items = [handle.route]; const title = items[0].description;',
+    'const [...items] = [handle.route]; const title = items[0].description;',
+    'const [skip, ...items] = [null, handle.route]; const title = items[0].description;',
+  ])('matches reads to the actual receiver instead of unrelated getters: %s', async (read) => {
+    const module = await readFixture(`
+      export const handle = {
+        route: { description: 'Home' },
+        get description() { throw new Error('Unused getter must not execute'); },
+      };
+      ${read}
+    `);
+    const route = module.getProperty(requireExport(module, 'handle'), 'route');
+    if (!route) throw new Error('Missing fixture route metadata');
+    const description = module.getProperty(route, 'description');
+    if (!description) throw new Error('Missing fixture description');
+    expect(module.evaluate(description)).toBe('Home');
+  });
+
+  it.each([
+    'const icon = ({ schema, get icon() { this.schema.description = "After"; return "icon"; } }).icon;',
+    '({ schema, get icon() { this.schema.description = "After"; return "icon"; } }).icon;',
+    '[{ schema, get icon() { this.schema.description = "After"; return "icon"; } }][0].icon;',
+  ])('rejects mutating getters on anonymous receivers: %s', async (read) => {
+    const module = await readFixture(`
+      const schema = { description: 'Before' };
+      ${read}
+      export const handle = { route: schema };
+    `);
+
+    expect(() => {
+      const route = module.getProperty(requireExport(module, 'handle'), 'route');
+      if (!route) throw new Error('Missing fixture route metadata');
+      module.getProperty(route, 'description');
+    }).toThrow('mutable');
+  });
+
+  it.each(
+    [
+      'get icon() { this.description = "After"; return "icon"; }, set icon(value) {},',
+      'set icon(value) {}, get icon() { this.description = "After"; return "icon"; },',
+      'get icon() { this.description = "After"; return "icon"; }, set icon(value) {}, set icon(value) {},',
+      'get ["icon"]() { this.description = "After"; return "icon"; }, set icon(value) {},',
+      'get [key]() { this.description = "After"; return "icon"; }, set icon(value) {},',
+      'get icon() { this.description = "After"; return "icon"; }, set [key](value) {},',
+      'get icon() { this.description = "After"; return "icon"; }, [otherKey]: "data", set icon(value) {},',
+    ].flatMap((members) =>
+      [
+        'const icon = schema.icon;',
+        'const { description, ...ui } = schema;',
+        'const ui = { ...schema };',
+      ].map((read) => ({ members, read })),
+    ),
+  )('rejects invoked getter/setter pairs: $members / $read', async ({ members, read }) => {
+    const module = await readFixture(`
+      const key = 'icon';
+      const otherKey = 'other';
+      const schema = { description: 'Before', ${members} };
+      ${read}
+      export const handle = { route: schema };
+    `);
+    expect(() => {
+      const route = module.getProperty(requireExport(module, 'handle'), 'route');
+      if (!route) throw new Error('Missing fixture route metadata');
+      module.getProperty(route, 'description');
+    }).toThrow('mutable');
+  });
+
+  it.each([
+    "icon: 'plain',",
+    "set icon(value) {}, icon: 'plain',",
+    "icon: 'plain', set icon(value) {},",
+    "...{ icon: 'plain' }, set icon(value) {},",
+    "set icon(value) {}, ...{ icon: 'plain' },",
+  ])('preserves data overrides of accessor descriptors: %s', async (members) => {
+    const module = await readFixture(`
+      const metadata = { description: 'Home' };
+      const schema = {
+        metadata,
+        get icon() { throw new Error('Overwritten getter must not execute'); },
+        ${members}
+      };
+      const icon = schema.icon;
+      const copy = { ...schema };
+      const { description: title, ...rest } = schema;
+      export const handle = { route: metadata };
+    `);
+    const route = module.getProperty(requireExport(module, 'handle'), 'route');
+    if (!route) throw new Error('Missing fixture route metadata');
+    const description = module.getProperty(route, 'description');
+    if (!description) throw new Error('Missing fixture description');
+    expect(module.evaluate(description)).toBe('Home');
+  });
+
+  it('does not turn a computed setter into a getter on unrelated data properties', async () => {
+    const module = await readFixture(`
+      const key = 'icon';
+      const metadata = { description: 'Home' };
+      const schema = {
+        metadata,
+        get icon() { throw new Error('Unused getter must not execute'); },
+        set [key](value) {},
+      };
+      const title = schema.metadata.description;
+      export const handle = { route: metadata };
+    `);
+    const route = module.getProperty(requireExport(module, 'handle'), 'route');
+    if (!route) throw new Error('Missing fixture route metadata');
+    const description = module.getProperty(route, 'description');
+    if (!description) throw new Error('Missing fixture description');
+    expect(module.evaluate(description)).toBe('Home');
+  });
+
   it('invokes only a recognized named DSL import, including aliases', async () => {
     const builder = vi.fn((...args: unknown[]): unknown => args);
     const module = await readFixture(
@@ -210,5 +381,34 @@ describe('readStaticModule', () => {
       description: 'Home',
       alias: 'Home',
     });
+  });
+
+  it.each([
+    "const description = 'Home';",
+    'const description = `Home`;',
+    "const title = 'Home'; const description = title;",
+  ])('allows primitive copies in unrelated accessor receivers: %s', async (declaration) => {
+    const module = await readFixture(`
+      ${declaration}
+      const ui = { description, get icon() { return 'icon'; } };
+      const icon = ui.icon;
+      export const handle = { route: { description } };
+    `);
+    const route = module.getProperty(requireExport(module, 'handle'), 'route');
+    if (!route) throw new Error('Missing fixture route metadata');
+    expect(module.evaluate(route)).toEqual({ description: 'Home' });
+  });
+
+  it('still rejects primitive bindings reassigned inside an invoked getter', async () => {
+    const module = await readFixture(`
+      let description = 'Before';
+      const ui = {
+        description,
+        get icon() { description = 'After'; return 'icon'; },
+      };
+      const icon = ui.icon;
+      export default { description };
+    `);
+    expect(() => module.evaluate(requireExport(module, 'default'))).toThrow('mutable');
   });
 });
