@@ -3,7 +3,8 @@ import { pathToFileURL } from 'node:url';
 import { setTimeout } from 'node:timers/promises';
 
 /**
- * Waits for a successful main-branch prime and its exact commit's Linux cache.
+ * Waits for the Linux producer job and its exact main-commit cache, independently
+ * of unrelated jobs in the priming workflow.
  * Older cache entries are deliberately never accepted.
  */
 export async function waitForTurboCache({
@@ -17,6 +18,7 @@ export async function waitForTurboCache({
   const deadline = now() + 600_000;
   const workflowUrl = `https://github.com/${repository}/actions/workflows/prime-pnpm-cache.yml`;
   let runUrl = workflowUrl;
+  let cacheDeadline;
   const timeoutError = () =>
     new Error(`Timed out waiting 10 minutes for the Turbo cache for ${sha}: ${runUrl}`);
   const request = async (path) => {
@@ -42,10 +44,19 @@ export async function waitForTurboCache({
     const run = runs[0];
     if (run) {
       runUrl = run.html_url;
-      if (run.status === 'completed' && run.conclusion !== 'success') {
-        throw new Error(`Cache priming for ${sha} ${run.conclusion}: ${runUrl}`);
+      let producer;
+      for (let page = 1; ; page++) {
+        const { jobs } = await request(`/actions/runs/${run.id}/jobs?per_page=100&page=${page}`);
+        producer = jobs.find(({ name }) => name === 'Save pnpm and Turbo caches');
+        if (producer || jobs.length < 100) break;
       }
-      if (run.status === 'completed') {
+      if (producer?.status === 'completed' && producer.conclusion !== 'success') {
+        throw new Error(`Turbo cache producer for ${sha} ${producer.conclusion}: ${runUrl}`);
+      }
+      if (producer?.status === 'completed') {
+        // A finished producer cannot recreate an evicted cache; allow only a short
+        // visibility grace period instead of spending the full priming deadline.
+        cacheDeadline ??= now() + 60_000;
         for (let page = 1; ; page++) {
           const { actions_caches: caches } = await request(
             `/actions/caches?ref=refs/heads/main&key=turbo-fusion-v1-Linux-&per_page=100&page=${page}`,
@@ -62,10 +73,28 @@ export async function waitForTurboCache({
           }
           if (caches.length < 100) break;
         }
+        if (now() >= cacheDeadline) {
+          throw new Error(
+            `Turbo cache for ${sha} is missing after its producer succeeded (possibly evicted). Rerun the priming workflow: ${runUrl}`,
+          );
+        }
+        log(`Waiting for the exact Turbo cache for ${sha} to become visible: ${runUrl}`);
+      } else {
+        if (run.status === 'completed') {
+          throw new Error(
+            `Cache priming for ${sha} ${run.conclusion} without a successful Turbo cache producer. Rerun the priming workflow: ${runUrl}`,
+          );
+        }
+        log(
+          `Waiting for the Turbo cache producer for ${sha} (${producer?.status ?? 'not yet visible'}): ${runUrl}`,
+        );
       }
+    } else {
+      log(`Waiting for a cache priming run for ${sha}: ${runUrl}`);
     }
-    log(`Waiting for the exact Turbo cache for ${sha}: ${runUrl}`);
-    await sleep(Math.min(15_000, Math.max(0, deadline - now())));
+    await sleep(
+      Math.min(15_000, Math.max(0, Math.min(deadline, cacheDeadline ?? deadline) - now())),
+    );
   }
   throw timeoutError();
 }

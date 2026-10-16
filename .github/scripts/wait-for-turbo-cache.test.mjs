@@ -6,12 +6,14 @@ import { resolveCacheSha, waitForTurboCache } from './wait-for-turbo-cache.mjs';
 const sha = 'a'.repeat(40);
 const key = `turbo-fusion-v1-Linux-lockfile-${sha}`;
 const runUrl = 'https://github.com/test/repo/actions/runs/42';
-const success = { status: 'completed', conclusion: 'success', html_url: runUrl };
+const success = { id: 42, status: 'completed', conclusion: 'success', html_url: runUrl };
+const producer = { name: 'Save pnpm and Turbo caches', status: 'completed', conclusion: 'success' };
 const cache = { key, ref: 'refs/heads/main' };
 
-function fixture({ runs = [success], caches = [cache], apiError } = {}) {
+function fixture({ runs = [success], jobs, caches = [cache], apiError } = {}) {
   let time = 0;
   let polls = 0;
+  let currentRun;
   const calls = [];
   const sleeps = [];
   return {
@@ -31,7 +33,18 @@ function fixture({ runs = [success], caches = [cache], apiError } = {}) {
         if (apiError) throw apiError;
         if (path.startsWith('/actions/workflows/')) {
           const run = runs[Math.min(polls++, runs.length - 1)];
+          currentRun = run;
           return { workflow_runs: run ? [run] : [] };
+        }
+        if (path.startsWith('/actions/runs/')) {
+          return {
+            jobs:
+              typeof jobs === 'function'
+                ? jobs(path)
+                : (jobs ?? [
+                    { ...producer, status: currentRun.status, conclusion: currentRun.conclusion },
+                  ]),
+          };
         }
         return { actions_caches: typeof caches === 'function' ? caches(path) : caches };
       },
@@ -43,7 +56,8 @@ test('returns the exact main cache only after its prime succeeds', async () => {
   const { options, calls, sleeps } = fixture();
   assert.equal(await waitForTurboCache(options), key);
   assert.match(calls[0], new RegExp(`branch=main&head_sha=${sha}`));
-  assert.match(calls[1], /ref=refs\/heads\/main&key=turbo-fusion-v1-Linux-/);
+  assert.match(calls[1], /\/actions\/runs\/42\/jobs/);
+  assert.match(calls[2], /ref=refs\/heads\/main&key=turbo-fusion-v1-Linux-/);
   assert.deepEqual(sleeps, []);
 });
 
@@ -74,7 +88,7 @@ for (const conclusion of ['failure', 'cancelled', 'timed_out', 'skipped']) {
       assert.ok(error.message.includes(runUrl));
       return true;
     });
-    assert.equal(calls.length, 1);
+    assert.equal(calls.length, 2);
   });
 }
 
@@ -86,8 +100,60 @@ test('rejects older commits, other operating systems, and PR-scoped caches', asy
       { key, ref: 'refs/pull/1/merge' },
     ],
   });
-  await assert.rejects(waitForTurboCache(options), /Timed out waiting 10 minutes/);
-  assert.equal(sleeps.reduce((sum, duration) => sum + duration, 0), 600_000);
+  await assert.rejects(waitForTurboCache(options), /missing.*possibly evicted.*Rerun/);
+  assert.equal(
+    sleeps.reduce((sum, duration) => sum + duration, 0),
+    60_000,
+  );
+});
+
+for (const status of ['in_progress', 'completed']) {
+  test(`uses a successful producer's cache while unrelated workflow jobs are ${status}`, async () => {
+    const { options, sleeps } = fixture({
+      runs: [{ ...success, status, conclusion: status === 'completed' ? 'failure' : null }],
+      jobs: [
+        { name: 'Save Playwright cache (macos-latest)', status, conclusion: 'failure' },
+        producer,
+      ],
+    });
+    assert.equal(await waitForTurboCache(options), key);
+    assert.deepEqual(sleeps, []);
+  });
+}
+
+test('fails immediately when the producer fails while unrelated jobs are running', async () => {
+  const { options, sleeps } = fixture({
+    runs: [{ ...success, status: 'in_progress', conclusion: null }],
+    jobs: [{ ...producer, conclusion: 'failure' }],
+  });
+  await assert.rejects(waitForTurboCache(options), /Turbo cache producer.*failure/);
+  assert.deepEqual(sleeps, []);
+});
+
+test('fails immediately when a completed workflow has no producer', async () => {
+  const { options, sleeps } = fixture({ jobs: [] });
+  await assert.rejects(waitForTurboCache(options), /without a successful Turbo cache producer/);
+  assert.deepEqual(sleeps, []);
+});
+
+test('waits for the producer job to become visible', async () => {
+  let queries = 0;
+  const { options, sleeps } = fixture({
+    runs: [{ ...success, status: 'in_progress' }],
+    jobs: () => (++queries === 1 ? [] : [producer]),
+  });
+  assert.equal(await waitForTurboCache(options), key);
+  assert.deepEqual(sleeps, [15_000]);
+});
+
+test('paginates jobs to find the Turbo producer', async () => {
+  const { options } = fixture({
+    jobs: (path) =>
+      path.endsWith('page=1')
+        ? Array.from({ length: 100 }, () => ({ name: 'Other job' }))
+        : [producer],
+  });
+  assert.equal(await waitForTurboCache(options), key);
 });
 
 test('times out after exactly 10 minutes for a missing prime and links to the workflow', async () => {
@@ -97,7 +163,10 @@ test('times out after exactly 10 minutes for a missing prime and links to the wo
     /Timed out waiting 10 minutes.*actions\/workflows\/prime-pnpm-cache.yml/,
   );
   assert.equal(sleeps.length, 40);
-  assert.equal(sleeps.reduce((sum, duration) => sum + duration, 0), 600_000);
+  assert.equal(
+    sleeps.reduce((sum, duration) => sum + duration, 0),
+    600_000,
+  );
 });
 
 test('times out for an unfinished prime with its run link', async () => {
@@ -191,7 +260,10 @@ test('resolves dispatched PR checks and pins main once for stacked PRs', async (
 });
 
 test('rejects dispatches without a PR number', async () => {
-  await assert.rejects(resolveCacheSha({}, async () => {}), /pr_number/);
+  await assert.rejects(
+    resolveCacheSha({}, async () => {}),
+    /pr_number/,
+  );
 });
 
 test('all PR jobs require an exact restore and Windows cannot use the Linux cache', () => {
