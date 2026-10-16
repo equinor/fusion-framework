@@ -10,7 +10,7 @@ inputs:
     description: Restore the latest local Turbo cache
     default: 'true'
   wait-for-turbo-cache:
-    description: Require a successful main/base-commit prime within 10 minutes and restore only its exact Linux cache
+    description: Require a successful main/base-commit Turbo producer within 10 minutes and restore only its exact Linux cache
     default: 'false'
 outputs:
   node-modules-cache-hit:

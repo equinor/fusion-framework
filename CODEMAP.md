@@ -242,11 +242,14 @@ Use this table instead of searching. "Start here" is the first file to open.
 
 ## Commands
 
-PR checks on Linux wait up to 10 minutes for a successful `Prime CI caches` run
+PR checks on Linux wait up to 10 minutes for the successful `Save pnpm and Turbo caches`
+job in `Prime CI caches`, without waiting for unrelated Playwright jobs,
 and restore only the exact `main` base-commit Turbo cache. Stacked PRs pin current
 `main` instead, since feature branches do not publish shared caches. Dispatched
 checks resolve the base through their `pr_number` input. Failed, cancelled, missing,
 or evicted primes/caches fail the check rather than restoring older output.
+After the producer succeeds, a missing cache gets at most 60 seconds to become visible
+before failing with rerun guidance.
 The error links to the priming run (or workflow if no run exists).
 If a newer push cancelled the selected commit's prime, rerun that priming run
 before retrying the PR checks; the gate never silently switches to another commit.
