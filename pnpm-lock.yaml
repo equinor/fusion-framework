@@ -1841,7 +1841,7 @@ importers:
         version: 2.3.2
       '@equinor/eds-utils':
         specifier: ^2.2.1
-        version: 2.2.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(styled-components@6.5.3(css-to-react-native@3.2.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))
+        version: 2.2.2(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(styled-components@6.5.3(css-to-react-native@3.2.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))
       '@equinor/fusion-framework':
         specifier: workspace:*
         version: link:../framework
@@ -3104,7 +3104,7 @@ importers:
         version: 2.3.2
       '@equinor/eds-utils':
         specifier: ^2.0.0
-        version: 2.2.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(styled-components@6.5.3(css-to-react-native@3.2.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))
+        version: 2.2.2(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(styled-components@6.5.3(css-to-react-native@3.2.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))
       '@equinor/fusion-framework-module-app':
         specifier: workspace:^
         version: link:../../../modules/app
@@ -4533,8 +4533,8 @@ packages:
   '@equinor/eds-tokens@2.3.2':
     resolution: {integrity: sha512-XdLnBF0TwjhGAEWRmz2mO4eagiZ7x3uoMzpvr3XE3tUyOA7Oh2UBbDGx4wfmd3DTDPut+gVnyed5w/HcRsR6CQ==}
 
-  '@equinor/eds-utils@2.2.1':
-    resolution: {integrity: sha512-rYBZMPrnXvpd8f/ZkShg9mh3iJzvuvTKso9WRc72Z1kAEH+BrineNdrxRle69iYxnyytIE4b5bLGGvVVIaigYA==}
+  '@equinor/eds-utils@2.2.2':
+    resolution: {integrity: sha512-2itmUtdpx/IlR83o3KmvSukYKAuf//87RdxEGO+gcbJ5l8bEDee8UPKO2CiMnv+b7o2ttvhQHFLh6//x2qOP2A==}
     peerDependencies:
       react: ^18 || ^19
       react-dom: ^18 || ^19
@@ -14406,7 +14406,7 @@ snapshots:
       '@babel/runtime': 7.29.7
       '@equinor/eds-icons': 1.6.0
       '@equinor/eds-tokens': 2.3.2
-      '@equinor/eds-utils': 2.2.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(styled-components@6.5.3(css-to-react-native@3.2.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))
+      '@equinor/eds-utils': 2.2.2(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(styled-components@6.5.3(css-to-react-native@3.2.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))
       '@floating-ui/react': 0.27.20(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@internationalized/date': 3.12.4
       '@react-aria/utils': 3.34.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
@@ -14426,7 +14426,7 @@ snapshots:
 
   '@equinor/eds-tokens@2.3.2': {}
 
-  '@equinor/eds-utils@2.2.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(styled-components@6.5.3(css-to-react-native@3.2.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))':
+  '@equinor/eds-utils@2.2.2(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(styled-components@6.5.3(css-to-react-native@3.2.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))':
     dependencies:
       '@babel/runtime': 7.29.7
       '@equinor/eds-tokens': 2.3.2
