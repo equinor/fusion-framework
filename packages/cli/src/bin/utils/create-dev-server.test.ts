@@ -126,4 +126,39 @@ describe('createDevServer mock mode', () => {
     await expect(createDevServer(testEnv, {})).rejects.toThrow(/api\.routes\.1/);
     expect(mockCreateDevServer).not.toHaveBeenCalled();
   });
+
+  it('starts with defaults when no dev-server.config exists', async () => {
+    const root = await mkdtemp(join(tmpdir(), 'dev-server-startup-config-'));
+    tempDirs.push(root);
+    const testEnv = { ...env, root };
+    devServerConfigOverride.load = (base) => loadDevServerConfigActual(testEnv, base);
+
+    await expect(createDevServer(testEnv, {})).resolves.toBeDefined();
+    expect(mockCreateDevServer).toHaveBeenCalledOnce();
+  });
+
+  it('refuses to start when dev-server.config cannot be parsed', async () => {
+    // This test double implements only the logger methods exercised by createDevServer.
+    const logger = { debug: vi.fn(), error: vi.fn() } as unknown as ConsoleLogger;
+    const root = await mkdtemp(join(tmpdir(), 'dev-server-startup-config-'));
+    tempDirs.push(root);
+    await writeFile(join(root, 'dev-server.config.json'), '{ "api": ');
+    const testEnv = { ...env, root };
+    devServerConfigOverride.load = (base) => loadDevServerConfigActual(testEnv, base);
+
+    await expect(createDevServer(testEnv, {}, { log: logger })).rejects.toThrow(
+      /Failed to parse JSON/,
+    );
+    expect(logger.error).toHaveBeenCalledWith(
+      expect.stringContaining('Failed to load dev server config'),
+    );
+    expect(mockCreateDevServer).not.toHaveBeenCalled();
+  });
+
+  it('refuses to start when a config factory throws', async () => {
+    devServerConfigOverride.error = new Error('factory failed');
+
+    await expect(createDevServer(env, {})).rejects.toThrow(/factory failed/);
+    expect(mockCreateDevServer).not.toHaveBeenCalled();
+  });
 });
