@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { buildSync } from 'esbuild';
+import { parseSync, transformSync } from 'rolldown/utils';
 import type { Plugin, UserConfig } from 'vite';
 
 /**
@@ -302,22 +302,24 @@ function getAvailableExports(filePath: string, currentFileId: string, debug: boo
     }
 
     const fileContent = fs.readFileSync(actualPath, 'utf-8');
-    const { metafile } = buildSync({
-      stdin: {
-        contents: fileContent,
-        sourcefile: actualPath,
-        loader: /\.[jt]sx$/.test(path.extname(actualPath)) ? 'tsx' : 'ts',
-      },
-      bundle: false,
-      write: false,
-      format: 'esm',
-      metafile: true,
-      logLevel: 'silent',
-    });
-    // Compiler metadata lists actual runtime exports, excluding comments, strings and erased types.
-    for (const output of Object.values(metafile.outputs)) {
-      // Non-bundled parsing preserves public aliases without loading re-exported modules.
-      for (const name of output.exports) availableExports.add(name);
+    const transformed = transformSync(actualPath, fileContent, { tsconfig: false });
+    // Transform diagnostics must fail inspection rather than erase handlers from malformed source.
+    if (transformed.errors.length) {
+      throw new AggregateError(transformed.errors, 'Failed to transform route source.');
+    }
+    const parsed = parseSync(actualPath, transformed.code);
+    // A recovered syntax tree must never be treated as a successfully inspected module.
+    if (parsed.errors.length) {
+      throw new AggregateError(parsed.errors, 'Failed to parse transformed route source.');
+    }
+    // Module records preserve public aliases without resolving or executing imported modules.
+    for (const declaration of parsed.module.staticExports) {
+      // Default exports have a distinct record kind rather than a literal export name.
+      for (const entry of declaration.entries) {
+        const name = entry.exportName.kind === 'Default' ? 'default' : entry.exportName.name;
+        // Only runtime exports with a known public name can become handler imports.
+        if (!entry.isType && name !== null) availableExports.add(name);
+      }
     }
   } catch (error) {
     throw new Error(

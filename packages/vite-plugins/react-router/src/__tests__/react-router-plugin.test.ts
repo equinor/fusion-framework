@@ -215,6 +215,8 @@ describe('reactRouterPlugin', () => {
     'const guards = []; export { /* braces { } */ guards as middleware };',
     'throw new Error("Do not execute"); const guards = []; export { guards as middleware };',
     'type Guard = () => void; const guards: Guard[] = []; export { guards as middleware }; export default () => <div />;',
+    'namespace Guards { export const values = []; } export const middleware = Guards.values;',
+    'export * as middleware from "./guards";',
   ])('wires named middleware export clauses: %s', (source) => {
     vi.spyOn(fs, 'readFileSync').mockReturnValue(source);
     const inputCode = [
@@ -242,6 +244,9 @@ describe('reactRouterPlugin', () => {
     'const example = /export { middleware }/;',
     '// export const middleware = [];',
     'const example = "export function middleware() {}";',
+    'interface middleware {} export { middleware };',
+    'type middleware = []; export { middleware };',
+    'export declare const middleware: unknown[];',
   ])('does not invent middleware exports from other names or types: %s', (source) => {
     vi.spyOn(fs, 'readFileSync').mockReturnValue(source);
     const inputCode = [

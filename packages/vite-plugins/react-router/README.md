@@ -31,11 +31,15 @@ The plugin finds route DSL calls such as `layout`, `index`, `route`, and
 `prefix`, inspects the referenced route modules for supported exports, and
 generates the corresponding route objects and static imports.
 
-Route-module exports are parsed as TypeScript/JSX without executing pages or
-following their imports. Local export aliases and quoted-source re-exports use
+Route-module exports are inspected with Rolldown/Oxc, aligning with Vite 8.
+TypeScript/JSX is transformed locally without executing pages, loading tsconfig
+files or following imports. Local export aliases and quoted-source re-exports use
 their public names; comments, strings and type-only exports are ignored.
 An existing route module that cannot be read or parsed fails the build explicitly
 rather than silently dropping middleware or other handlers.
+
+Rolldown is pinned to the tested version because its transform utility API is
+currently marked experimental upstream.
 
 ## Options
 

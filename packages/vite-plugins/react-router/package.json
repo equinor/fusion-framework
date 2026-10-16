@@ -42,7 +42,7 @@
     "access": "public"
   },
   "dependencies": {
-    "esbuild": "^0.28.1"
+    "rolldown": "1.2.13"
   },
   "devDependencies": {
     "typescript": "^7.0.2",
