@@ -106,6 +106,24 @@ const App = () => {
 };
 ```
 
+### Role-gated routes
+
+Enable the Roles module in your app, then declare the route's requirements:
+
+```ts
+import { requireRoles } from '@equinor/fusion-framework-react-app/roles';
+
+export const middleware = [requireRoles(['Reports.Read'])];
+```
+
+All listed roles are required by default. Pass `{ mode: 'any' }` as the second
+argument to accept any one role. No app-owned guard implementation or custom
+context types are needed. Denial and provider errors stop the middleware chain;
+cancelled operations cannot continue.
+
+See [Role-gated middleware](../router/docs/require-roles.md) for layouts, errors
+and cancellation. The router and core Roles module do not gain new dependencies.
+
 ## State Management
 
 [<img src="https://img.shields.io/github/package-json/v/equinor/fusion-framework?filename=packages%2Fmodules%2Fstate%2Fpackage.json&label=@equinor/fusion-framework-module-state&style=for-the-badge" />](https://github.com/equinor/fusion-framework/tree/main/packages/modules/state)

@@ -72,7 +72,7 @@ The second argument, `next`, runs the rest of the chain and the route handlers. 
 ## Rejecting, redirecting and errors
 
 - Throw an error before `next()` to stop the chain. No downstream loader or action runs, and the error goes to the nearest error boundary (`ErrorElement`/`errorElement`).
-- Role checks can be implemented as app-owned middleware using your authorization provider. The router has no Roles dependency or built-in role policy; see [Role gates with application middleware](require-roles.md).
+- To check Fusion Roles V2 access, use the optional helper from `@equinor/fusion-framework-react-app/roles`. The router has no Roles dependency; see [Role-gated middleware](require-roles.md).
 - Throw or return `redirect(...)` to redirect.
 - An error thrown after `next()` goes to the error boundary of the route that declared the middleware, or to the nearest one above it.
 - When the execution is cancelled, for example by a newer navigation, `signal` is aborted and React Router discards the result. Pass `signal` on to async work so it stops early.
