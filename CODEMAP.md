@@ -215,7 +215,7 @@ Use this table instead of searching. "Start here" is the first file to open.
 | Review, maintain, and auto-merge Dependabot PRs | `.github/workflows/dependabot-ai-review.yml` and `.github/actions/dependabot-*` (pr-context, read-verdict, review, publish-verdict, maintain-branch, enable-auto-merge) |
 | Solve an issue from a workflow | `.github/workflows/issue-solver.yml`, `.github/actions/publish-agent-patch` (uses the `docs` environment and its Fusion AI Azure federation) |
 | Publish to npm, add a new public package, or fix npm trusted publishing | `.github/workflows/release.yml` (sole npm publisher, `npm` environment), `pnpm npm-trust` in `.github/scripts/npm-trusted-publishing.mjs` with tests in `.github/scripts/npm-trusted-publishing.test.mjs`, runbook in `contributing/npm-publishing.md`, agent workflow in `.agents/skills/custom-npm-publishing/SKILL.md`, policy in `docs/adr/0002-npm-trusted-publishing.md` |
-| Recover or promote the Dependabot maintenance branch | `.github/workflows/dependabot-maintenance.yml`, `.github/actions/dependabot-maintenance-stream`, `.github/actions/dependabot-promotion-pr`, behavior tests in `.github/scripts/dependabot-maintenance.test.mjs`, policy in `docs/adr/0001-dependabot-maintenance-stream.md` |
+| Recover, sync, or promote the Dependabot maintenance branch | `.github/workflows/dependabot-maintenance.yml` (rebases the maintenance branch on pushes to `main`), `.github/actions/dependabot-maintenance-stream`, `.github/actions/dependabot-promotion-pr`, behavior tests in `.github/scripts/dependabot-maintenance.test.mjs`, policy in `docs/adr/0001-dependabot-maintenance-stream.md` |
 | Change observable/state primitives | `packages/utils/observable/src` |
 | Change caching/fetching | `packages/utils/query/src` |
 
@@ -241,6 +241,19 @@ Use this table instead of searching. "Start here" is the first file to open.
 ---
 
 ## Commands
+
+PR checks on Linux wait up to 10 minutes for a successful `Prime CI caches` run
+and restore only the exact `main` base-commit Turbo cache. Stacked PRs pin current
+`main` instead, since feature branches do not publish shared caches. Dispatched
+checks resolve the base through their `pr_number` input. Failed, cancelled, missing,
+or evicted primes/caches fail the check rather than restoring older output.
+The error links to the priming run (or workflow if no run exists).
+If a newer push cancelled the selected commit's prime, rerun that priming run
+before retrying the PR checks; the gate never silently switches to another commit.
+Windows visual checks build fresh because there is no Windows Turbo-cache producer.
+The readiness gate and its regression tests live in
+[wait-for-turbo-cache.mjs](.github/scripts/wait-for-turbo-cache.mjs) and
+[wait-for-turbo-cache.test.mjs](.github/scripts/wait-for-turbo-cache.test.mjs).
 
 | Goal | Command |
 | --- | --- |

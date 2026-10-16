@@ -29,11 +29,13 @@ concurrency:
   cancel-in-progress: ${{ github.event.action != 'ready_for_review' && github.run_attempt == '1' }}
 
 permissions:
+  actions: read
   contents: read
 
 jobs:
   playwright:
     name: Playwright (${{ matrix.os }})
+    if: github.event_name == 'workflow_dispatch' || !github.event.pull_request.draft
     strategy:
       fail-fast: false
       matrix:
@@ -56,6 +58,9 @@ jobs:
         uses: ./.github/actions/node-setup
         with:
           cache-node-modules: 'true'
+          # The shared Turbo producer runs only on Linux; Windows builds fresh.
+          cache-turbo: ${{ runner.os == 'Linux' && 'true' || 'false' }}
+          wait-for-turbo-cache: 'true'
 
       - name: Get Playwright version
         id: playwright-version
@@ -91,7 +96,7 @@ jobs:
 
   required-check:
     name: Visual checks
-    if: always()
+    if: always() && (github.event_name == 'workflow_dispatch' || !github.event.pull_request.draft)
     needs:
       - playwright
     runs-on: ubuntu-latest

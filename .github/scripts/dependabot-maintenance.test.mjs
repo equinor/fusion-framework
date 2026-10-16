@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
-import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { test } from 'node:test';
@@ -13,6 +13,7 @@ const branchScript = new URL(
 function runBranchOperation(operation, fixture = {}) {
   const directory = mkdtempSync(join(tmpdir(), 'maintenance-branch-test-'));
   const callsPath = join(directory, 'calls.jsonl');
+  writeFileSync(callsPath, '');
   const mock = `#!${process.execPath}
 import { appendFileSync } from 'node:fs';
 const args = process.argv.slice(2);
@@ -58,7 +59,11 @@ if (args[0] === 'pr') {
         CALLS_PATH: callsPath,
       },
     });
-    const calls = readFileSync(callsPath, 'utf8').trim().split('\n').map(JSON.parse);
+    const calls = readFileSync(callsPath, 'utf8')
+      .trim()
+      .split('\n')
+      .filter(Boolean)
+      .map(JSON.parse);
     const writes = calls.filter(({ tool, args }) => tool === 'gh' && args.includes('--method'));
     return { ...result, calls, writes };
   } finally {
@@ -66,7 +71,7 @@ if (args[0] === 'pr') {
   }
 }
 
-for (const operation of ['ensure', 'initialize', 'reset']) {
+for (const operation of ['ensure', 'initialize', 'sync', 'reset']) {
   test(`${operation} recreates a missing branch from current main`, () => {
     const result = runBranchOperation(operation, { status: 404 });
     assert.equal(result.status, 0, result.stderr);
@@ -160,4 +165,222 @@ test('branch creation failure is not reported as success', () => {
 test('ruleset rejection of a reset is not reported as success', () => {
   const result = runBranchOperation('reset', { writeFailure: true });
   assert.equal(result.status, 1);
+});
+
+test('unknown operations cannot reset the maintenance branch', () => {
+  const result = runBranchOperation('invalid');
+  assert.equal(result.status, 1);
+  assert.match(result.stdout, /Unknown maintenance operation/);
+  assert.deepEqual(result.writes, []);
+});
+
+function withSyncRepository(run) {
+  const directory = mkdtempSync(join(tmpdir(), 'maintenance-sync-test-'));
+  const remote = join(directory, 'remote.git');
+  const checkout = join(directory, 'checkout');
+  const bin = join(directory, 'bin');
+  const output = join(directory, 'output');
+  const realGit = spawnSync('which', ['git'], { encoding: 'utf8' }).stdout.trim();
+  const env = {
+    ...process.env,
+    GIT_CONFIG_NOSYSTEM: '1',
+    GIT_CONFIG_GLOBAL: '/dev/null',
+    GIT_AUTHOR_NAME: 'Maintenance test',
+    GIT_AUTHOR_EMAIL: 'maintenance@example.test',
+    GIT_COMMITTER_NAME: 'Maintenance test',
+    GIT_COMMITTER_EMAIL: 'maintenance@example.test',
+  };
+  function git(...args) {
+    const result = spawnSync(realGit, args, { cwd: checkout, env, encoding: 'utf8' });
+    assert.equal(result.status, 0, result.stderr);
+    return result.stdout.trim();
+  }
+  try {
+    mkdirSync(checkout);
+    mkdirSync(bin);
+    git('init', '--bare', remote);
+    git('init', '--initial-branch=main');
+    git('remote', 'add', 'origin', remote);
+    writeFileSync(join(checkout, 'shared.txt'), 'baseline\n');
+    git('add', '.');
+    git('commit', '-m', 'baseline');
+    git('push', 'origin', 'main');
+    git('switch', '-c', 'maintenance/dependencies');
+    writeFileSync(join(checkout, 'dependency.txt'), 'accepted update\n');
+    git('add', '.');
+    git('commit', '-m', 'dependency update');
+    git('push', 'origin', 'maintenance/dependencies');
+
+    writeFileSync(
+      join(bin, 'gh'),
+      `#!${process.execPath}
+const endpoint = process.argv[3];
+if (endpoint === 'repos/test/repo') console.log('main');
+else if (endpoint.endsWith('/main')) console.log('unused-main-sha');
+else if (endpoint.endsWith('/maintenance/dependencies')) console.log('HTTP/2.0 200');
+else process.exit(1);
+`,
+      { mode: 0o755 },
+    );
+    writeFileSync(
+      join(bin, 'git'),
+      `#!${process.execPath}
+import { spawnSync } from 'node:child_process';
+const args = process.argv.slice(2);
+if (args.includes('push')) {
+  if (process.env.REJECT_PUSH === 'true') {
+    console.error('remote: branch rules rejected the push');
+    process.exit(1);
+  }
+  if (process.env.CONCURRENT_SHA) {
+    const advance = spawnSync(process.env.REAL_GIT, [
+      '--git-dir', process.env.REMOTE,
+      'update-ref', 'refs/heads/maintenance/dependencies', process.env.CONCURRENT_SHA,
+    ], { stdio: 'inherit' });
+    if (advance.status !== 0) process.exit(advance.status ?? 1);
+  }
+}
+const result = spawnSync(process.env.REAL_GIT, args, { stdio: 'inherit' });
+process.exit(result.status ?? 1);
+`,
+      { mode: 0o755 },
+    );
+    function sync(extraEnv = {}) {
+      writeFileSync(output, '');
+      const result = spawnSync('bash', [branchScript], {
+        cwd: checkout,
+        encoding: 'utf8',
+        env: {
+          ...env,
+          PATH: `${bin}:${process.env.PATH}`,
+          REAL_GIT: realGit,
+          REMOTE: remote,
+          RUNNER_TEMP: directory,
+          GITHUB_OUTPUT: output,
+          REPOSITORY: 'test/repo',
+          MAINTENANCE_BRANCH: 'maintenance/dependencies',
+          OPERATION: 'sync',
+          ...extraEnv,
+        },
+      });
+      return { ...result, output: readFileSync(output, 'utf8') };
+    }
+    run({ checkout, git, sync });
+  } finally {
+    rmSync(directory, { recursive: true, force: true });
+  }
+}
+
+test('sync rebases real commits, preserves both changes, and disables repository hooks', () => {
+  withSyncRepository(({ checkout, git, sync }) => {
+    const previousHead = git('rev-parse', 'maintenance/dependencies');
+    git('switch', 'main');
+    writeFileSync(join(checkout, 'main.txt'), 'new main work\n');
+    git('add', '.');
+    git('commit', '-m', 'advance main');
+    git('push', 'origin', 'main');
+    for (const hook of ['post-checkout', 'pre-rebase', 'pre-push']) {
+      writeFileSync(join(checkout, '.git', 'hooks', hook), '#!/bin/sh\nexit 1\n', {
+        mode: 0o755,
+      });
+    }
+
+    const result = sync();
+    assert.equal(result.status, 0, result.stderr);
+    assert.match(result.output, /updated=true\nhas-changes=true/);
+    assert.notEqual(git('rev-parse', 'origin/maintenance/dependencies'), previousHead);
+    git('merge-base', '--is-ancestor', 'main', 'origin/maintenance/dependencies');
+    assert.equal(git('show', 'origin/maintenance/dependencies:dependency.txt'), 'accepted update');
+    assert.equal(git('show', 'origin/maintenance/dependencies:main.txt'), 'new main work');
+    assert.equal(
+      git('log', '--format=%s', 'main..origin/maintenance/dependencies'),
+      'dependency update',
+    );
+  });
+});
+
+test('sync does nothing when the maintenance branch already includes main', () => {
+  withSyncRepository(({ git, sync }) => {
+    const previousHead = git('rev-parse', 'origin/maintenance/dependencies');
+    const result = sync({ REJECT_PUSH: 'true' });
+    assert.equal(result.status, 0, result.stderr);
+    assert.match(result.stdout, /already includes main/);
+    assert.equal(result.output, 'updated=false\nhas-changes=false\n');
+    assert.equal(git('rev-parse', 'origin/maintenance/dependencies'), previousHead);
+  });
+});
+
+test('sync fails on conflicting commits without changing the remote branch', () => {
+  withSyncRepository(({ checkout, git, sync }) => {
+    writeFileSync(join(checkout, 'shared.txt'), 'maintenance edit\n');
+    git('add', '.');
+    git('commit', '-m', 'maintenance conflict');
+    git('push', 'origin', 'maintenance/dependencies');
+    const previousHead = git('rev-parse', 'origin/maintenance/dependencies');
+    git('switch', 'main');
+    writeFileSync(join(checkout, 'shared.txt'), 'main edit\n');
+    git('add', '.');
+    git('commit', '-m', 'main conflict');
+    git('push', 'origin', 'main');
+    const result = sync();
+    assert.equal(result.status, 1);
+    assert.match(result.stdout, /resolve conflicts manually/);
+    assert.equal(result.output, 'updated=false\nhas-changes=false\n');
+    assert.equal(
+      git('ls-remote', 'origin', 'refs/heads/maintenance/dependencies').split('\t')[0],
+      previousHead,
+    );
+  });
+});
+
+test('sync cannot overwrite a concurrent maintenance update', () => {
+  withSyncRepository(({ checkout, git, sync }) => {
+    git('commit', '--allow-empty', '-m', 'concurrent dependency update');
+    const concurrentHead = git('rev-parse', 'HEAD');
+    // Make the object available remotely without moving the maintenance ref until push.
+    git('push', 'origin', 'HEAD:refs/heads/concurrent-update');
+    git('switch', 'main');
+    writeFileSync(join(checkout, 'main.txt'), 'new main work\n');
+    git('add', '.');
+    git('commit', '-m', 'advance main');
+    git('push', 'origin', 'main');
+    const result = sync({ CONCURRENT_SHA: concurrentHead });
+    assert.notEqual(result.status, 0);
+    assert.match(result.stderr, /stale info/);
+    assert.equal(result.output, 'updated=false\nhas-changes=false\n');
+    assert.equal(
+      git('ls-remote', 'origin', 'refs/heads/maintenance/dependencies').split('\t')[0],
+      concurrentHead,
+    );
+  });
+});
+
+test('sync reports a rejected push as failure', () => {
+  withSyncRepository(({ git, sync }) => {
+    const previousHead = git('rev-parse', 'origin/maintenance/dependencies');
+    git('switch', 'main');
+    git('commit', '--allow-empty', '-m', 'advance main');
+    git('push', 'origin', 'main');
+    const result = sync({ REJECT_PUSH: 'true' });
+    assert.notEqual(result.status, 0);
+    assert.match(result.stderr, /branch rules rejected/);
+    assert.equal(result.output, 'updated=false\nhas-changes=false\n');
+    assert.equal(
+      git('ls-remote', 'origin', 'refs/heads/maintenance/dependencies').split('\t')[0],
+      previousHead,
+    );
+  });
+});
+
+test('sync does not request promotion when the update is already on main', () => {
+  withSyncRepository(({ git, sync }) => {
+    git('switch', 'main');
+    git('merge', '--squash', 'maintenance/dependencies');
+    git('commit', '-m', 'promoted dependencies');
+    git('push', 'origin', 'main');
+    const result = sync();
+    assert.equal(result.status, 0, result.stderr);
+    assert.match(result.output, /updated=true\nhas-changes=false/);
+    assert.equal(git('rev-parse', 'origin/maintenance/dependencies'), git('rev-parse', 'main'));
+  });
 });

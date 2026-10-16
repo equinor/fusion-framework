@@ -1,6 +1,19 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+case "$OPERATION" in
+  ensure|initialize|sync|reset) ;;
+  *)
+    echo "::error::Unknown maintenance operation: ${OPERATION}."
+    exit 1
+    ;;
+esac
+
+if [[ -n "${GITHUB_OUTPUT:-}" ]]; then
+  echo "updated=false" >> "$GITHUB_OUTPUT"
+  echo "has-changes=false" >> "$GITHUB_OUTPUT"
+fi
+
 default_branch="$(
   gh api "repos/${REPOSITORY}" --jq '.default_branch'
 )"
@@ -39,6 +52,54 @@ fi
 # Recovery must never discard dependency updates already accumulated in the stream.
 if [[ "$OPERATION" == ensure ]]; then
   echo "${MAINTENANCE_BRANCH} already exists; leaving it unchanged."
+  exit 0
+fi
+
+if [[ "$OPERATION" == sync ]]; then
+  git fetch origin \
+    "+refs/heads/${default_branch}:refs/remotes/origin/${default_branch}" \
+    "+refs/heads/${MAINTENANCE_BRANCH}:refs/remotes/origin/${MAINTENANCE_BRANCH}"
+  base_ref="origin/${default_branch}"
+  expected_sha="$(git rev-parse "origin/${MAINTENANCE_BRANCH}")"
+  if git merge-base --is-ancestor "$base_ref" "$expected_sha"; then
+    echo "${MAINTENANCE_BRANCH} already includes ${default_branch}."
+    exit 0
+  else
+    status=$?
+    if [[ "$status" != 1 ]]; then
+      echo "::error::Unable to compare maintenance branch ancestry."
+      exit "$status"
+    fi
+  fi
+
+  git config user.name github-actions[bot]
+  git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+  git -c core.hooksPath=/dev/null switch --detach "$expected_sha"
+  # The write-enabled job must not execute hooks or dependency code from the stream.
+  if ! git -c core.hooksPath=/dev/null rebase --no-autostash "$base_ref"; then
+    echo "::error::Cannot rebase ${MAINTENANCE_BRANCH} onto ${default_branch}; resolve conflicts manually. The remote branch was not changed."
+    exit 1
+  fi
+
+  has_changes=false
+  if git diff --quiet "$base_ref" HEAD; then
+    has_changes=false
+  else
+    status=$?
+    if [[ "$status" != 1 ]]; then
+      echo "::error::Unable to compare the rebased maintenance stream."
+      exit "$status"
+    fi
+    has_changes=true
+  fi
+
+  git -c core.hooksPath=/dev/null push \
+    --force-with-lease="refs/heads/${MAINTENANCE_BRANCH}:${expected_sha}" \
+    origin "HEAD:refs/heads/${MAINTENANCE_BRANCH}"
+  {
+    echo "updated=true"
+    echo "has-changes=${has_changes}"
+  } >> "$GITHUB_OUTPUT"
   exit 0
 fi
 

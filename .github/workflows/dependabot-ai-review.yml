@@ -40,6 +40,11 @@ permissions:
 
 jobs:
   research:
+    # Reviews share one model quota across PRs; retain pending jobs instead of replacing them.
+    concurrency:
+      group: dependabot-ai-review-inference
+      cancel-in-progress: false
+      queue: max
     outputs:
       auto_merge: ${{ (steps.review.outputs.auto-merge == 'true' || steps.verdict.outputs.auto-merge == 'true') && 'true' || 'false' }}
       base_ref: ${{ steps.pull-request.outputs.base-ref }}
