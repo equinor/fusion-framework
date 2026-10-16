@@ -74,6 +74,7 @@ The second argument, `next`, runs the rest of the chain and the route handlers. 
 - Throw an error before `next()` to stop the chain. No downstream loader or action runs, and the error goes to the nearest error boundary (`ErrorElement`/`errorElement`).
 - Throw or return `redirect(...)` to redirect.
 - An error thrown after `next()` goes to the error boundary of the route that declared the middleware, or to the nearest one above it.
+- To require Fusion Roles V2 access roles, use the built-in `requireRoles` middleware. See [Requiring access roles](require-roles.md).
 - When the execution is cancelled, for example by a newer navigation, `signal` is aborted and React Router discards the result. Pass `signal` on to async work so it stops early.
 
 ## Passing values to loaders and actions

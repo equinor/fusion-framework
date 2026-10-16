@@ -14,6 +14,7 @@ The package ships three things that work together:
 - **Typed `fusion` context everywhere** — loaders, actions, components, and error elements receive `fusion.modules` and `fusion.context` without threading props or React contexts.
 - **File-style route DSL** — `layout`, `index`, `route`, `prefix` helpers replace hand-built `RouteObject` trees.
 - **Route schema generation** — `handle.route` metadata can be turned into a flat, machine-readable schema for manifests, portals, and documentation.
+- **Role-gated routes** — `requireRoles([...])` route middleware checks Fusion Roles V2 access roles before loaders, actions and components run, and exposes inspectable metadata. See [docs/require-roles.md](docs/require-roles.md).
 - **Module augmentation** — extend `RouterContext` and `RouterHandle` to type your own context and handle fields.
 - **Vite plugin** — statically transforms DSL calls into optimised React Router data routes at build time.
 
@@ -190,10 +191,13 @@ The legacy `@equinor/fusion-framework-react-router/vite-plugin` entry point rema
 | `/schema` | Schema generation — `toRouteSchema` |
 | `/context` | Direct context imports — same `routerContext`, `FusionRouterContextProvider`, `useRouterContext` as main; use when you need to import without pulling in `Router` (e.g. tests, custom providers) |
 | `/vite-plugin` | Compatibility re-export of `@equinor/fusion-framework-vite-plugin-react-router` |
+| `/middleware-metadata` | React-free role-requirement normalization and metadata for build tools — see [docs/require-roles.md](docs/require-roles.md#static-recognition-for-build-tools) |
 | `/interop` | Interop re-exports for teams mid-migration — see [docs/interop.md](docs/interop.md) |
 
 ## Documentation
 
 - [Migration guide — from `react-router` to Fusion router](docs/migration.md)
 - [Interop entry point](docs/interop.md)
+- [Route middleware](docs/middleware.md)
+- [Requiring access roles](docs/require-roles.md)
 - [End-to-end cookbook](../../../cookbooks/app-react-router/)

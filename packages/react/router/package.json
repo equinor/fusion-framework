@@ -29,6 +29,10 @@
     "./interop": {
       "import": "./dist/esm/interop.js",
       "types": "./dist/types/interop.d.ts"
+    },
+    "./middleware-metadata": {
+      "import": "./dist/esm/middleware-metadata/index.js",
+      "types": "./dist/types/middleware-metadata/index.d.ts"
     }
   },
   "scripts": {
@@ -59,6 +63,7 @@
   },
   "dependencies": {
     "@equinor/fusion-framework-module-navigation": "workspace:^",
+    "@equinor/fusion-framework-module-roles": "workspace:^",
     "@equinor/fusion-framework-react-module": "workspace:^",
     "@equinor/fusion-framework-vite-plugin-react-router": "workspace:^",
     "@equinor/fusion-imports": "workspace:^",
@@ -71,6 +76,7 @@
     "happy-dom": "^20.8.4",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
+    "rxjs": "^7.8.1",
     "typescript": "^7.0.2",
     "vite": "^8.0.0",
     "vitest": "catalog:vitest"

@@ -12,6 +12,9 @@
       "path": "../../modules/navigation"
     },
     {
+      "path": "../../modules/roles"
+    },
+    {
       "path": "../modules/module"
     },
     {
