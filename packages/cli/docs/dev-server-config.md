@@ -139,6 +139,8 @@ the default proxies.
 
 `api.routes` is the exception: middleware and proxy routes merge by their `match` value. A route
 override with the same match replaces the default route; routes with different matches are retained.
+String and string-array matchers compare by value. Function matchers compare by reference, so pass
+the same function to replace a route; distinct functions are always kept as separate routes.
 
 Example route merging:
 ```typescript

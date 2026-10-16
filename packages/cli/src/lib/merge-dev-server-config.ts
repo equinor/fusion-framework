@@ -4,33 +4,30 @@ import type { DevServerOptions } from '@equinor/fusion-framework-dev-server';
 import type { RecursivePartial } from './utils/types.js';
 
 /**
- * Merges two arrays of objects by a specified key, ensuring that objects with the same key value
- * are merged, with the `source` array taking precedence over the `target` array for duplicate keys.
+ * Merges two route arrays by `match`, with `source` routes replacing `target` routes that share a key.
  *
- * @template TType - The type of objects contained in the arrays, extending `Record<string, unknown>`.
- * @param key - The property key used to identify and merge objects from both arrays.
- * @param target - The target array of objects to merge.
- * @param source - The source array of objects to merge, whose values take precedence on key conflicts.
- * @returns A new array containing merged objects, with uniqueness determined by the specified key.
+ * String and string-array matchers key by their text so an override replaces the default route
+ * for the same path. Function matchers key by identity: their source text is identical for
+ * closures created by the same factory, so stringifying them would collapse distinct routes.
+ *
+ * @template TType - The route type, which must expose the `match` key.
+ * @param key - The property key used to identify and merge entries from both arrays.
+ * @param target - The default routes.
+ * @param source - The override routes, whose entries take precedence on key conflicts.
+ * @returns The merged routes, keeping each key's first position and appending new keys in order.
  */
 const keyedArrayMerger = <TType extends Record<string, unknown>>(
   key: keyof TType,
   target: Array<TType>,
   source: Array<TType>,
 ): Array<TType> => {
-  // Index source records by key for O(1) lookup during the merge below
-  const sourceRecords = source.reduce(
-    (acc, item) => Object.assign(acc, { [String(item[key])]: item }),
-    {} as TType,
-  );
-  // Index target records by key so source entries can override matching keys
-  const targetRecords = target.reduce(
-    (acc, item) => Object.assign(acc, { [String(item[key])]: item }),
-    {} as TType,
-  );
-  // Overlay source records onto target records so source entries win on matching keys
-  const mergedRecords = { ...targetRecords, ...sourceRecords };
-  return Object.values(mergedRecords) as Array<TType>;
+  const merged = new Map<unknown, TType>();
+  // Map.set keeps an existing key's position, so overrides replace defaults in place.
+  for (const item of [...target, ...source]) {
+    const value = item[key];
+    merged.set(typeof value === 'function' ? value : String(value), item);
+  }
+  return [...merged.values()];
 };
 
 /**

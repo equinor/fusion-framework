@@ -60,6 +60,40 @@ describe('mergeDevServerConfig', () => {
     expect(result.api.routes?.[0]?.middleware).toBe(replacementMiddleware);
   });
 
+  it('keeps distinct proxy routes whose function matchers share source text', () => {
+    /** Creates matchers whose source text is identical but whose captured prefix differs. */
+    const prefixMatcher = (prefix: string) => (path: string) => path.startsWith(prefix);
+    const usersMatcher = prefixMatcher('/users');
+    const ordersMatcher = prefixMatcher('/orders');
+    const result = mergeDevServerConfig(base, {
+      api: {
+        routes: [
+          { match: usersMatcher, proxy: { target: 'https://users.example.com' } },
+          { match: ordersMatcher, proxy: { target: 'https://orders.example.com' } },
+        ],
+      },
+    } as RecursivePartial<DevServerOptions>);
+
+    expect(result.api.routes?.map(({ match }) => match)).toEqual([
+      '/default-route',
+      usersMatcher,
+      ordersMatcher,
+    ]);
+  });
+
+  it('replaces a route that reuses the same function matcher', () => {
+    /** Shared matcher reference used by both the default and the override route. */
+    const matcher = (path: string) => path.startsWith('/shared');
+    const replacementMiddleware = () => undefined;
+    const result = mergeDevServerConfig(
+      { ...base, api: { ...base.api, routes: [{ match: matcher, middleware: () => undefined }] } },
+      { api: { routes: [{ match: matcher, middleware: replacementMiddleware }] } },
+    );
+
+    expect(result.api.routes).toHaveLength(1);
+    expect(result.api.routes?.[0]?.middleware).toBe(replacementMiddleware);
+  });
+
   it('keeps base values for undefined overrides', () => {
     const result = mergeDevServerConfig(base, {
       api: { serviceDiscoveryUrl: undefined },
