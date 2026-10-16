@@ -7,9 +7,16 @@ catalog:
   '@playwright/test': ^1.63.0
   playwright: ^1.63.0
 
-# Vitest, its browser provider, and React renderer must move together; mixing majors breaks
-# browser-mode project startup.
 catalogs:
+  # React DOM requires the exact same React runtime version; pin the pair so
+  # independent range resolution cannot split it across workspace consumers.
+  react:
+    react: 19.3.1
+    react-dom: 19.3.1
+    '@types/react': 19.3.0
+    '@types/react-dom': 19.3.0
+  # Vitest, its browser provider, and React renderer must move together; mixing majors breaks
+  # browser-mode project startup.
   vitest:
     '@vitest/browser-playwright': ^5.0.3
     vitest: ^5.0.3

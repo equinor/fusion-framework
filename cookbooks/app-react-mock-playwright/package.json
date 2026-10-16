@@ -27,11 +27,11 @@
     "@equinor/fusion-openapi-mock-server": "workspace:^",
     "@equinor/fusion-services": "workspace:^",
     "@playwright/test": "catalog:",
-    "@types/react": "^19.2.7",
-    "@types/react-dom": "^19.2.3",
+    "@types/react": "catalog:react",
+    "@types/react-dom": "catalog:react",
     "concurrently": "^10.0.5",
-    "react": "^19.2.1",
-    "react-dom": "^19.2.1",
+    "react": "catalog:react",
+    "react-dom": "catalog:react",
     "styled-components": "^6.5.3",
     "typescript": "^7.0.2"
   }

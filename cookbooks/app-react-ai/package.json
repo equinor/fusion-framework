@@ -16,11 +16,11 @@
     "@equinor/fusion-framework-react-app": "workspace:^",
     "@equinor/fusion-framework-react-module": "workspace:^",
     "@langchain/core": "^1.0.1",
-    "@types/react": "^19.2.7",
-    "@types/react-dom": "^19.2.3",
+    "@types/react": "catalog:react",
+    "@types/react-dom": "catalog:react",
     "@types/react-syntax-highlighter": "^15.5.13",
-    "react": "^19.2.1",
-    "react-dom": "^19.2.1",
+    "react": "catalog:react",
+    "react-dom": "catalog:react",
     "react-syntax-highlighter": "^16.1.1",
     "zod": "^4.4.3"
   }

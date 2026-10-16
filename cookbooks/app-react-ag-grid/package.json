@@ -17,10 +17,10 @@
     "@equinor/fusion-framework-react-ag-charts": "workspace:*",
     "@equinor/fusion-framework-react-ag-grid": "workspace:*",
     "@equinor/fusion-framework-react-app": "workspace:^",
-    "@types/react": "^19.2.7",
-    "@types/react-dom": "^19.2.3",
-    "react": "^19.2.1",
-    "react-dom": "^19.2.1",
+    "@types/react": "catalog:react",
+    "@types/react-dom": "catalog:react",
+    "react": "catalog:react",
+    "react-dom": "catalog:react",
     "styled-components": "^6.3.11",
     "typescript": "^7.0.2"
   }

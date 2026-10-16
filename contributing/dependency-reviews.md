@@ -44,6 +44,27 @@ Internal: bump `<dependency>` from `<old>` to `<new>`.
 
 ## Validation
 
+### React runtime updates
+
+Direct dependencies on `react`, `react-dom`, `@types/react`, and `@types/react-dom`
+use `catalog:react`. Their shared versions live in the named `react` catalog in
+[`pnpm-workspace.yaml`](../pnpm-workspace.yaml). React and React DOM require
+**exactly matching installed runtime versions**, so both runtime entries are
+pinned to the same exact version rather than independently resolved ranges.
+The type packages have their own version cadence and need not equal the runtime version.
+Consumer-facing peer dependency ranges remain unchanged.
+
+Dependabot groups the four catalog dependencies in one update. For manual
+updates, change the catalog entries together and regenerate the lockfile with
+`pnpm install`; do not introduce per-package runtime versions. pnpm resolves
+catalog references to concrete version specifiers when packing published libraries.
+
+Do not suppress browser tests or classify a deterministic version mismatch as a
+flaky first render. Existing split Dependabot branches need a maintainer-approved
+refresh or replacement; the catalog migration does not repair them retroactively.
+
+### Full validation
+
 Run the full suite before recommending merge:
 
 ```bash
