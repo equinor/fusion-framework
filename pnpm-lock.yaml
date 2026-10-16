@@ -2319,6 +2319,9 @@ importers:
       '@equinor/fusion-framework-module-msal':
         specifier: workspace:^
         version: link:../msal
+      '@equinor/fusion-framework-module-navigation':
+        specifier: workspace:^
+        version: link:../navigation
       '@equinor/fusion-framework-module-service-discovery':
         specifier: workspace:^
         version: link:../service-discovery

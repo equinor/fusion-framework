@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { useFramework } from '@equinor/fusion-framework-react';
 import type { AppModule } from '@equinor/fusion-framework-module-app';
+import type { NavigationModule } from '@equinor/fusion-framework-module-navigation';
 
 import type { ApploaderProps } from './Apploader.js';
 import type { AppInitializeResult } from '@equinor/fusion-framework-module-app/app';
@@ -43,7 +44,7 @@ export const useApploader = ({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | undefined>();
   const appRef = useRef<HTMLDivElement | null>(null);
-  const fusion = useFramework<[AppModule]>();
+  const fusion = useFramework<[AppModule, NavigationModule]>();
 
   /**
    * The current fusion app.
@@ -71,13 +72,27 @@ export const useApploader = ({
         /* Use basename of current fusionApp */
         const basename = `/apps/${fusionApp?.appKey}`;
 
+        // The parent framework owns the URL, so the child app is told to navigate through the
+        // parent's history under this basename. Apps that do not use `enableAppNavigation`
+        // keep reading `env.basename` and are unaffected.
+        const hostHistory = fusion.modules.navigation?.history;
+
         try {
           const render = script.renderApp ?? script.default;
           // Prefer the modern renderApp export, falling back to the default export
           if (render) {
             return render(appRef.current, {
               fusion,
-              env: { basename, config, manifest, props: {} },
+              env: {
+                basename,
+                config,
+                manifest,
+                props: {},
+                // Without a parent navigation module there is no host history to supply
+                navigation: hostHistory
+                  ? { kind: 'host', history: hostHistory, basename }
+                  : undefined,
+              },
             });
           }
           throw Error('Application is not supported, no render function provided');

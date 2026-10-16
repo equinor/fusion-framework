@@ -9,3 +9,5 @@ Add typed initiator navigation strategies.
 `resolvePath` no longer consults `window.location` when parsing relative paths.
 
 Tracking: equinor/fusion-core-tasks#2354.
+
+A `host` initiator history is never disposed by the app, including when the app explicitly sets that same history with `setHistory(history, { proxy: false })`.

@@ -116,6 +116,38 @@ describe('navigation initiator: host', () => {
     expect(history.location.pathname).toBe('/apps/my-app/after');
   });
 
+  it('never disposes the host history when it is set explicitly with proxy: false', async () => {
+    const history = createHistory('memory');
+    history.push('/apps/my-app');
+    await flush();
+    const disposeSpy = vi.spyOn(history, Symbol.dispose);
+
+    const configurator = new ModulesConfigurator<[NavigationModule]>([]);
+    enableNavigation(configurator, {
+      initiator: { kind: 'host', history, basename: '/apps/my-app' },
+      configure: (config) => config.setHistory(history, { proxy: false }),
+    });
+    const instance = (await configurator.initialize()) as Instance;
+    instance.dispose();
+    await Promise.resolve();
+
+    expect(disposeSpy).not.toHaveBeenCalled();
+  });
+
+  it('rejects a different unproxied history under a host initiator and leaves the host history alone', async () => {
+    const host = createHistory('memory');
+    const other = createHistory('memory');
+    const hostDispose = vi.spyOn(host, Symbol.dispose);
+    const configurator = new ModulesConfigurator<[NavigationModule]>([]);
+    enableNavigation(configurator, {
+      initiator: { kind: 'host', history: host, basename: '/apps/my-app' },
+      configure: (config) => config.setHistory(other, { proxy: false }),
+    });
+    await expect(configurator.initialize()).rejects.toThrow(NavigationInitiatorConflictError);
+    expect(hostDispose).not.toHaveBeenCalled();
+    other[Symbol.dispose]();
+  });
+
   it('keeps compatible explicit settings (normalized basename, same history)', async () => {
     const history = createHistory('memory');
     history.push('/apps/my-app');

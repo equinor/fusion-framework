@@ -23,6 +23,9 @@
     },
     {
       "path": "../service-discovery"
+    },
+    {
+      "path": "../navigation"
     }
   ],
   "include": ["src/**/*"],

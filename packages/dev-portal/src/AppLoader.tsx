@@ -17,6 +17,7 @@ import { AppManifestError } from '@equinor/fusion-framework-module-app/errors.js
 
 import { ErrorViewer } from './ErrorViewer.js';
 import type { AppModule } from '@equinor/fusion-framework-module-app';
+import type { NavigationModule } from '@equinor/fusion-framework-module-navigation';
 import EquinorLoader from './EquinorLoader.js';
 import { getAppTagFromUrl } from './get-app-tag-from-url.js';
 
@@ -32,7 +33,7 @@ import { getAppTagFromUrl } from './get-app-tag-from-url.js';
  */
 const AppLoaderContent = (props: { readonly appKey: string }): ReactNode => {
   const { appKey } = props;
-  const fusion = useFramework<[AppModule]>();
+  const fusion = useFramework<[AppModule, NavigationModule]>();
   const { showBoundary } = useErrorBoundary();
 
   /** reference of application section/container */
@@ -80,6 +81,8 @@ const AppLoaderContent = (props: { readonly appKey: string }): ReactNode => {
             /** generate basename for application */
             const [basename] = window.location.pathname.match(/\/?apps\/[a-z|-]+(\/)?/g) ?? [''];
 
+            const hostHistory = fusion.modules.navigation?.history;
+
             /** create a 'private' element for the application */
             const el = document.createElement('div');
             // Guard against rendering before the mounting ref has attached
@@ -96,7 +99,16 @@ const AppLoaderContent = (props: { readonly appKey: string }): ReactNode => {
             subscription.add(
               render(el, {
                 fusion,
-                env: { basename, config, manifest },
+                env: {
+                  basename,
+                  config,
+                  manifest,
+                  // The portal owns the browser URL; an empty basename means no app route matched
+                  navigation:
+                    hostHistory && basename
+                      ? { kind: 'host', history: hostHistory, basename }
+                      : undefined,
+                },
                 // React module initialization happens after render returns, so route failures back
                 // into the host boundary instead of leaving the application on its Suspense fallback.
                 onError: (renderError) => {

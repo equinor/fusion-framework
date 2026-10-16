@@ -2,6 +2,7 @@ import type { AnyModule, CombinedModules, ModulesInstance } from '@equinor/fusio
 import type { EventModule } from '@equinor/fusion-framework-module-event';
 import type { HttpModule } from '@equinor/fusion-framework-module-http';
 import type { MsalModule } from '@equinor/fusion-framework-module-msal';
+import type { NavigationInitiator } from '@equinor/fusion-framework-module-navigation';
 import type { ServiceDiscoveryModule } from '@equinor/fusion-framework-module-service-discovery';
 import type { AppConfig } from './AppConfig.js';
 import type IApp from './app/index.js';
@@ -24,6 +25,11 @@ type Fusion = any;
  */
 export type AppEnv<TEnv extends ConfigEnvironment = ConfigEnvironment, TProps = unknown> = {
   basename?: string;
+  /**
+   * Navigation strategy supplied by the app loader (host or memory).
+   * Adopted by `enableAppNavigation`; a bare `basename` is not treated as a strict host constraint.
+   */
+  navigation?: NavigationInitiator;
   manifest?: AppManifest;
   config?: AppConfig<TEnv>;
   props?: TProps;

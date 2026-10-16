@@ -335,6 +335,11 @@ export class NavigationConfigurator extends BaseConfigBuilder<INavigationConfigu
           });
         }
       }
+      // `setHistory(host, { proxy: false })` is a valid explicit setting, but the provider disposes
+      // whatever history it receives; re-wrap so the host history can never be disposed by the app.
+      if (history === initiator.history) {
+        history = new ProxyHistory(initiator.history);
+      }
     } else if (initiator?.kind === 'memory' && !history) {
       // Compose the app-relative initial location with the final basename (explicit or initiator).
       history = createHistory('memory', {
