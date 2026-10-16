@@ -4,11 +4,20 @@ import { defineProject } from 'vitest/config';
 
 import { name, version } from './package.json' with { type: 'json' };
 
+const routingPlugin = reactRouterPlugin();
+const transform = routingPlugin.transform;
+// The runtime transform must never rewrite registry source strings inside sitemap tests.
+if (typeof transform !== 'function') throw new Error('Expected a route transform function.');
+routingPlugin.transform = {
+  filter: { id: /\/__tests__\/mocks\/middleware\/routes\.ts$/ },
+  handler: transform,
+};
+
 export default defineProject({
   // Compiles DSL fixtures that import from the public package name, so route-module exports are
-  // exercised through the same transform that applications use. Fixtures importing the DSL
-  // through relative paths (for example the schema tests) are not touched by the plugin.
-  plugins: [reactRouterPlugin()],
+  // exercised through the same transform that applications use. Only the runtime registry
+  // fixture is transformed; source-only sitemap tests retain their literal DSL declarations.
+  plugins: [routingPlugin],
   resolve: {
     alias: [
       {

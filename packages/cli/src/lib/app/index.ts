@@ -9,12 +9,14 @@
 export {
   defineAppManifest,
   type AppManifestFn,
+  type AppManifestInput,
   type AppManifest,
 } from './define-app-manifest.js';
 export type { RouteSchemaEntry } from '@equinor/fusion-framework-module-app';
 export { createAppManifestFromPackage } from './create-app-manifest-from-package.js';
 export { mergeAppManifests } from './merge-app-manifests.js';
 export { loadAppManifest, type AppManifestExport } from './load-app-manifest.js';
+export { resolveAppManifestInput } from './resolve-app-manifest-input.js';
 export { mergeAppConfig } from './merge-app-config.js';
 
 export { defineAppConfig, type AppConfigFn, type AppConfig } from './define-app-config.js';

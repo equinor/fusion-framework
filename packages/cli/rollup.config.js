@@ -6,7 +6,11 @@ import replace from '@rollup/plugin-replace';
 
 import pkg from './package.json' with { type: 'json' };
 
-const externals = [...Object.keys(pkg.dependencies), 'keytar'];
+const externals = [
+  ...Object.keys(pkg.dependencies),
+  'keytar',
+  '@equinor/fusion-framework-react-router/build',
+];
 const plugins = [
   json(),
   resolve({ preferBuiltins: true }),

@@ -6,7 +6,7 @@ The package ships three things that work together:
 
 - **`Router` component** — drop-in replacement for `RouterProvider`. Reads `history` and `basename` from the Fusion navigation module and injects `fusion.modules` and `fusion.context` into every route.
 - **File-route DSL** — `layout`, `index`, `route`, and `prefix` helpers that build a `RouteObject` tree from file paths instead of raw objects. The Vite plugin transforms them into lazy-loaded data routes at build time.
-- **Route schema generation** — `toRouteSchema` converts `handle.route` metadata into a flat, machine-readable manifest. Useful for portal navigation trees and app documentation.
+- **Manifest sitemaps** — resolve an explicit registry without executing pages; see [explicit registries and manifest sitemaps](docs/route-sitemap.md). The existing `toRouteSchema` API remains available.
 
 ## Features
 
