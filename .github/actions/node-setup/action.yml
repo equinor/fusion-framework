@@ -9,6 +9,9 @@ inputs:
   cache-turbo:
     description: Restore the latest local Turbo cache
     default: 'true'
+  wait-for-turbo-cache:
+    description: Require a successful main/base-commit prime within 10 minutes and restore only its exact Linux cache
+    default: 'false'
 outputs:
   node-modules-cache-hit:
     description: Whether the exact node_modules cache key was restored
@@ -59,10 +62,27 @@ runs:
         restore-keys: |
           pnpm-store-fusion-v1-${{ runner.os }}-
 
-    # Only the main-branch prime job saves this cache. Consumers restore it
+    - name: Wait for the exact PR Turbo cache
+      if: inputs.cache-turbo == 'true' && inputs.wait-for-turbo-cache == 'true'
+      id: turbo-cache-ready
+      shell: bash
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: node .github/scripts/wait-for-turbo-cache.mjs
+
+    - name: Restore exact PR Turbo cache
+      if: inputs.cache-turbo == 'true' && inputs.wait-for-turbo-cache == 'true'
+      id: turbo-cache-exact
+      uses: actions/cache/restore@v6
+      with:
+        path: .turbo/cache
+        key: ${{ steps.turbo-cache-ready.outputs.key }}
+        fail-on-cache-miss: true
+
+    # Only the main-branch prime job saves this cache. Non-PR consumers restore it
     # read-only to avoid immutable-key races and unbounded PR-scoped caches.
     - name: Restore Turbo cache
-      if: inputs.cache-turbo == 'true'
+      if: inputs.cache-turbo == 'true' && inputs.wait-for-turbo-cache != 'true'
       id: turbo-cache-restore
       uses: actions/cache/restore@v6
       with:
