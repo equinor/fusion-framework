@@ -96,7 +96,7 @@ Format: `package name` → path → role.
 | Package | Path | Role |
 | --- | --- | --- |
 | `@equinor/fusion-framework-react` | `packages/react/framework` | React framework provider and root hooks |
-| `@equinor/fusion-framework-react-app` | `packages/react/app` | React application host; optional role-gate middleware via `/roles` |
+| `@equinor/fusion-framework-react-app` | `packages/react/app` | React application host; typed middleware via `/routing`, optional role gates via `/roles` |
 | `@equinor/fusion-framework-react-module` | `packages/react/modules/module` | Hooks for consuming modules |
 | `@equinor/fusion-framework-react-module-bookmark` | `packages/react/modules/bookmark` | Bookmark hooks |
 | `@equinor/fusion-framework-react-module-context` | `packages/react/modules/context` | Context hooks |

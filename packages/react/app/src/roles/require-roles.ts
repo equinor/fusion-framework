@@ -3,6 +3,7 @@ import {
   RequiredAccessRolesError,
   RolesError,
 } from '@equinor/fusion-framework-module-roles/errors';
+import { createMiddleware } from '../routing/create-middleware.js';
 
 /** Options for the opt-in Roles middleware helper. */
 export interface RequireRolesOptions {
@@ -92,7 +93,7 @@ export function requireRoles(
     throw new TypeError('requireRoles mode must be all or any.');
   }
 
-  return async ({ fusion, signal }, next) => {
+  const middleware: RolesMiddleware = async ({ fusion, signal }, next) => {
     signal.throwIfAborted();
     const provider: unknown = Reflect.get(fusion.modules, 'roles');
     // Missing configuration must fail closed rather than skip authorization.
@@ -111,4 +112,5 @@ export function requireRoles(
     }
     return next();
   };
+  return createMiddleware(middleware);
 }

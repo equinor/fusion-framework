@@ -106,6 +106,26 @@ const App = () => {
 };
 ```
 
+### Typed route middleware
+
+Use `createMiddleware` to infer the router's request, signal, Fusion context and
+continuation types:
+
+```ts
+import { createMiddleware } from '@equinor/fusion-framework-react-app/routing';
+
+export const middleware = [
+  createMiddleware(async ({ signal }, next) => {
+    signal.throwIfAborted();
+    return next();
+  }),
+];
+```
+
+The factory returns the same function without wrapping execution. Specify
+`createMiddleware<Params, FusionContext, Result>(...)` for specialized route
+parameters, application context or downstream results.
+
 ### Role-gated routes
 
 Enable the Roles module in your app, then declare the route's requirements:
@@ -120,6 +140,9 @@ All listed roles are required by default. Pass `{ mode: 'any' }` as the second
 argument to accept any one role. No app-owned guard implementation or custom
 context types are needed. Denial and provider errors stop the middleware chain;
 cancelled operations cannot continue.
+
+The guard uses the same `createMiddleware` contract internally. Roles-only
+consumers do not gain a router runtime or declaration dependency.
 
 See [Role-gated middleware](../router/docs/require-roles.md) for layouts, errors
 and cancellation. The router and core Roles module do not gain new dependencies.
