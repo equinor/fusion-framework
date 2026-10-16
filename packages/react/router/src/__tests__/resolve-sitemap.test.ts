@@ -103,6 +103,28 @@ describe('resolveSitemap', () => {
     expect(await resolveSitemap({ root })).toEqual([]);
   });
 
+  it('preserves parent/index duplicates, nested arrays and authored child order', async () => {
+    await file(
+      'src/routes.ts',
+      `${dsl} export default [[
+        route('projects/:slug', './page.tsx', [
+          index('./page.tsx'),
+          route('settings', './settings.tsx'),
+        ]),
+      ]];`,
+    );
+    await file(
+      'src/page.tsx',
+      `${page} export const handle = { route: { description: 'Project' } };`,
+    );
+    await file('src/settings.tsx', page);
+    expect(await resolveSitemap({ root })).toEqual([
+      ['projects/:slug', 'Project'],
+      ['projects/:slug', 'Project'],
+      ['projects/:slug/settings', ''],
+    ]);
+  });
+
   it.each([
     ['computed registry', `${dsl} export default makeRoutes();`, 'CallExpression'],
     ['missing export', `${dsl} const tree = [];`, 'expected a default export'],
