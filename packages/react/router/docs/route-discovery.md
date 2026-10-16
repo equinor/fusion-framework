@@ -73,14 +73,27 @@ export default layout('./layout.tsx', [
 
 ### What a registry may import
 
-The registry is evaluated to read its DSL nodes, so its imports are checked **before** anything runs. A registry module may import only:
+A registry is ordinary trusted build-time code, like `vite.config.ts`. It is bundled in memory and evaluated to read its DSL nodes. Evaluation is **not a sandbox**: registry code and the helpers it imports run with full Node.js access. Registries may import:
 
-- the route DSL (`@equinor/fusion-framework-react-router/routes` or the package root), and
-- other registry modules, meaning project modules that import the route DSL themselves or only re-export other registry modules.
+- the route DSL (`@equinor/fusion-framework-react-router/routes` or the package root);
+- other registry modules (helpers that call `index()`, `layout()` or `route()` and reference their own `./Page.tsx`);
+- ordinary project helpers, such as path constants in `./paths.ts`, even when they do not import the DSL. tsconfig `paths` aliases that point inside the project are followed;
+- Node.js built-ins such as `node:path`. `import.meta.url`, `import.meta.dirname` and `import.meta.filename` keep the values of the original source module;
+- installed packages (ESM or CommonJS). They are loaded from `node_modules` at evaluation time.
 
-Everything else is rejected with `unsupported-registry-import`, naming the importing and imported files, and nothing is evaluated. That covers page modules (including modules that both declare routes and export `clientLoader`, `action` and similar), plain helper modules, npm packages and Node.js built-ins. Inline constants in the registry instead, or reference modules by path. Type-only imports are erased and always allowed.
+Project helpers are listed in `graph.dependencies` and re-read on every call. Installed packages are not listed.
 
-Accepted registries are bundled in memory and evaluated in a short-lived worker thread that is terminated after each resolution (or after 10 seconds). Nothing is cached between calls and no files are written, so every call sees the current registry and helper registry sources, and repeated resolution does not grow the process.
+**Route modules are never executed.** Before anything runs, every bundled project module is scanned. A module is treated as a route module, and the import is rejected with `unsupported-registry-import` naming the importing and imported files, when:
+
+- it exports a route-only capability (`clientLoader`, `action`, `handle`, `ErrorElement`, `HydrateFallback`, `shouldRevalidate`, `middleware`), directly or through `export * from`;
+- it is not a registry module and has a default export in a `.tsx`/`.jsx` file, or an `export default function`/`class`;
+- a registry module references it by a quoted relative path (for example `route('about', './About.ts')`) while also importing it.
+
+The same diagnostic is reported when the entry registry is itself a route module. After evaluation, every route reference is compared with the bundled modules again. A computed reference to a module that registry code imported is rejected. In that case the imported module did run, because it looked like an ordinary helper (for example a `.ts` file with an expression default and no route-only exports). Keep route modules out of registry imports and reference them by path only.
+
+Relative or alias imports that resolve outside the project root are rejected with `route-file-outside-root`, because they could not be watched. Workspace packages reached through `node_modules` are allowed. Imports that esbuild cannot load without a loader (for example CSS or images) and Vite-only aliases cause `route-registry-load-failed`.
+
+Each resolution evaluates the registry in a fresh worker thread. The worker is terminated when evaluation finishes, throws, calls `process.exit`, never settles, or runs for more than 10 seconds. Nothing is cached between calls and no files are written, so every call sees current sources and repeated resolution does not grow the process.
 
 ## The route graph
 
@@ -115,7 +128,11 @@ Each `ResolvedRoute` has:
 
 Capabilities are detected by scanning module source text, without executing it: `component` (`default`), `clientLoader`, `action`, `handle`, `errorElement` (`ErrorElement`), `hydrateFallback` (`HydrateFallback`), `shouldRevalidate` and `middleware`. `detectRouteModuleCapabilities(source)` exposes the same detection.
 
-The scan recognizes function, class and `const`/`let`/`var` declarations (every declarator, including destructuring), `export { ... }` lists and named re-exports. It ignores comments, strings, template literals, type-only exports and `declare` exports. It is a lightweight lexer, not a TypeScript parser, and is not guaranteed to match the Vite plugin's export detection in every case. `export * from` re-exports contribute nothing, because the target is not read.
+The scan recognizes function, class and `const`/`let`/`var` declarations (every declarator, including destructuring), `export { ... }` lists, named and namespace (`export * as handle from`) re-exports. Before matching, it blanks comments, strings, template literals (including nested `${}`) and regular expression literals, so `/export default/` or `'export const middleware'` never count. Type-only and `declare` exports are ignored.
+
+`export * from './x'` re-exports are followed when resolving routes: relative targets are read (recursively, with cycle protection), contribute their named capabilities but never `default`, and are added to `graph.dependencies`. A star re-export of a package or of a file that cannot be found is reported as `unresolved-route-capabilities`, because it could hide a guard such as `middleware`. `detectRouteModuleCapabilities(source)` scans a single source text and does not follow re-exports.
+
+The scan is a lightweight lexer, not a TypeScript parser, and is not guaranteed to match the Vite plugin's export detection in every case. Regular expression detection uses the preceding token, so rare shapes such as `if (x) /re/.test(y)` can be misread.
 
 ## Diagnostics
 
@@ -129,7 +146,8 @@ The scan recognizes function, class and `const`/`let`/`var` declarations (every 
 | `missing-route-capability` | A route module exports no component, `clientLoader` or `action` |
 | `unresolved-route-file` | A registry references a module that does not exist, or uses a bare specifier |
 | `route-file-unreadable` | A route module or folder exists but cannot be read (for example, permission denied) |
-| `unsupported-registry-import` | A registry imports something other than the route DSL or another registry module |
+| `unsupported-registry-import` | Registry code imports a route module, or references a module it also imported |
+| `unresolved-route-capabilities` | A route module uses `export * from` a package or a missing file, so its capabilities are unknown |
 | `route-file-outside-root` | A route directory, registry or module is outside the project root |
 | `missing-routes-file` / `ambiguous-route-registry` | The configured registry is missing, or both `routes.ts` and `routes.tsx` exist |
 | `invalid-route-registry` / `route-registry-load-failed` | The registry export is not DSL nodes, or the registry cannot be evaluated |

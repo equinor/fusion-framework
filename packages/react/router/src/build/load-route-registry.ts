@@ -1,15 +1,18 @@
-import { readFile } from 'node:fs/promises';
+import { readFile, realpath } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { build, type BuildFailure, type Metafile } from 'esbuild';
 
+import { blankModuleSource } from './blank-module-source.js';
 import { compareCodeUnits } from './compare-code-units.js';
 import { createRouteDslPlugin } from './create-route-dsl-plugin.js';
+import { evaluateRouteRegistry } from './evaluate-route-registry.js';
+import { isInsideDirectory } from './is-inside-directory.js';
+import { readRouteModuleCapabilities } from './read-route-module-capabilities.js';
+import { resolveRelativeModule } from './resolve-relative-module.js';
 import { ROUTE_DSL_NAMESPACE } from './route-dsl-namespace.js';
 import { ROUTE_DSL_SPECIFIER_PATTERN } from './route-dsl-specifier-pattern.js';
-import { detectRouteModuleCapabilities } from './detect-route-module-capabilities.js';
-import { evaluateRouteRegistry } from './evaluate-route-registry.js';
 import { toProjectPath } from './to-project-path.js';
 import type { RouteDiagnostic, RouteModuleCapability } from './types.js';
 
@@ -22,7 +25,7 @@ const DSL_ENTRY = fileURLToPath(new URL('../routes/index', import.meta.url));
 /** Folder containing the DSL implementation, which is trusted and never analyzed. */
 const DSL_DIRECTORY = path.dirname(DSL_ENTRY);
 
-/** Capabilities only route modules have; a registry graph module with one is a page module. */
+/** Exports only route modules have; any of them marks a graph module as a page module. */
 const ROUTE_ONLY_CAPABILITIES: ReadonlySet<RouteModuleCapability> = new Set([
   'clientLoader',
   'action',
@@ -32,6 +35,19 @@ const ROUTE_ONLY_CAPABILITIES: ReadonlySet<RouteModuleCapability> = new Set([
   'shouldRevalidate',
   'middleware',
 ]);
+
+/** Module extensions whose default export is a JSX component by convention. */
+const JSX_EXTENSION_PATTERN = /\.[jt]sx$/;
+
+/** `export default function` / `export default class`, the declaration forms of a component. */
+const DEFAULT_DECLARATION_PATTERN =
+  /\bexport\s+default\s+(?:async\s+)?(?:function|(?:abstract\s+)?class)\b/;
+
+/** Quoted relative paths, candidates for route module references written as literals. */
+const RELATIVE_LITERAL_PATTERN = /(['"`])(\.{1,2}\/[^'"`\n$]+)\1/g;
+
+/** Text just before an import or re-export specifier, which is not a route reference. */
+const IMPORT_SPECIFIER_PREFIX_PATTERN = /(?:\bfrom|\bimport)\s*\(?\s*$/;
 
 /** Outcome of bundling and evaluating a route registry. */
 export interface RouteRegistryLoad {
@@ -51,25 +67,12 @@ interface RegistryGraphModule {
   declaresRoutes: boolean;
   /** Absolute paths of imported project modules. */
   imports: string[];
-  /** Original specifiers of imports left external (packages and Node built-ins). */
-  externalImports: string[];
-}
-
-/**
- * Checks whether `file` is `directory` or inside it.
- *
- * @param directory - Absolute directory.
- * @param file - Absolute path.
- * @returns `true` when `file` is within `directory`.
- */
-function isInside(directory: string, file: string): boolean {
-  const relative = path.relative(directory, file);
-  return relative === '' || (!relative.startsWith('..') && !path.isAbsolute(relative));
 }
 
 /**
  * Reads the project modules of a bundled registry graph from the esbuild metafile.
  * The DSL shim and implementation are excluded; they are part of this package.
+ * Packages and built-ins are external, so they never appear as graph modules.
  *
  * @param root - Absolute project root used as esbuild working directory.
  * @param metafile - Metafile of the registry bundle.
@@ -83,27 +86,18 @@ function readRegistryGraph(root: string, metafile: Metafile): Map<string, Regist
     if (key.startsWith(`${ROUTE_DSL_NAMESPACE}:`)) continue;
     const file = path.resolve(root, key);
     // The DSL implementation is trusted package code
-    if (isInside(DSL_DIRECTORY, file)) continue;
-    const module: RegistryGraphModule = {
-      file,
-      declaresRoutes: false,
-      imports: [],
-      externalImports: [],
-    };
-    // Classify each import as the DSL, a package or another project module
+    if (isInsideDirectory(DSL_DIRECTORY, file)) continue;
+    const module: RegistryGraphModule = { file, declaresRoutes: false, imports: [] };
+    // Classify each import as the DSL or another bundled module; externals are packages
     for (const imported of input.imports) {
-      // Shim paths are prefixed with their namespace in the metafile
-      if (imported.path.startsWith(`${ROUTE_DSL_NAMESPACE}:`)) {
-        module.declaresRoutes = true;
-      } else if (
-        imported.external &&
-        ROUTE_DSL_SPECIFIER_PATTERN.test(imported.original ?? imported.path)
+      const specifier = imported.original ?? imported.path;
+      // Shim imports, and unused DSL imports that were erased but still listed, declare routes
+      if (
+        imported.path.startsWith(`${ROUTE_DSL_NAMESPACE}:`) ||
+        (imported.external && ROUTE_DSL_SPECIFIER_PATTERN.test(specifier))
       ) {
-        // Unused DSL imports are erased without resolution but still listed as external
         module.declaresRoutes = true;
-      } else if (imported.external) {
-        module.externalImports.push(imported.original ?? imported.path);
-      } else {
+      } else if (!imported.external) {
         module.imports.push(path.resolve(root, imported.path));
       }
     }
@@ -113,52 +107,79 @@ function readRegistryGraph(root: string, metafile: Metafile): Map<string, Regist
 }
 
 /**
- * Decides which registry graph modules may be evaluated.
+ * Lists the graph modules a module references by a quoted relative path outside an
+ * import clause, such as `index('./Page.tsx')` or `import.meta.resolve('./Page.tsx')`.
  *
- * The entry registry is always allowed. Another module is allowed when it imports
- * the route DSL, or when it only re-exports allowed modules (an index of registries).
- * Everything else, notably page modules, loaders and arbitrary helpers, would run
- * as a side effect of evaluation and is rejected.
- *
- * @param entry - Absolute entry registry path.
+ * @param file - Absolute module path.
+ * @param source - Module source.
  * @param modules - Registry graph modules.
- * @returns Absolute paths of allowed modules.
+ * @returns Absolute paths of referenced graph modules.
+ * @throws {Error} When a referenced candidate exists but cannot be inspected.
  */
-function findRegistryModules(
-  entry: string,
+async function findReferencedGraphModules(
+  file: string,
+  source: string,
   modules: ReadonlyMap<string, RegistryGraphModule>,
-): Set<string> {
-  const allowed = new Set<string>([entry]);
-  // Route-declaring modules are registry modules by definition
-  for (const module of modules.values()) {
-    // Importing the DSL marks a module as a registry module
-    if (module.declaresRoutes) allowed.add(module.file);
+): Promise<string[]> {
+  const referenced: string[] = [];
+  // Every relative literal may be a DSL module reference
+  for (const match of source.matchAll(RELATIVE_LITERAL_PATTERN)) {
+    // Import specifiers are how helpers are loaded, not route references
+    if (IMPORT_SPECIFIER_PREFIX_PATTERN.test(source.slice(0, match.index))) continue;
+    const target = await resolveRelativeModule(file, match[2]);
+    // Only a reference to a module that is also bundled would execute a route module
+    if (target && modules.has(target)) referenced.push(target);
   }
-  let changed = true;
-  // Grow the set until stable, so chains of registry indexes are accepted
-  while (changed) {
-    changed = false;
-    // A module whose imports are all registry modules is itself a registry index
-    for (const module of modules.values()) {
-      // Every project import must already be accepted
-      const importsAllowed = module.imports.every((file) => allowed.has(file));
-      const isIndex =
-        !allowed.has(module.file) &&
-        module.imports.length > 0 &&
-        module.externalImports.length === 0 &&
-        importsAllowed;
-      // Accepting one index may unlock modules that import it
-      if (isIndex) {
-        allowed.add(module.file);
-        changed = true;
-      }
-    }
-  }
-  return allowed;
+  return referenced;
 }
 
 /**
- * Lists project-relative paths for diagnostics, keeping absolute paths that are outside the root.
+ * Expands a registry reference into the file names a bundler could resolve it to.
+ *
+ * @param file - Absolute reference path, possibly without extension.
+ * @returns The path as written followed by extension-suffixed candidates.
+ */
+const withReferenceSuffixes = (file: string): string[] =>
+  // Probe the reference as written and with each extension a bundler would add
+  ['', '.tsx', '.ts', '.jsx', '.js'].map((suffix) => `${file}${suffix}`);
+
+/**
+ * Explains why a graph module is a route (page) module, which must never be evaluated.
+ *
+ * A module is a route module when it exports route-only capabilities (`clientLoader`,
+ * `action`, `handle`, `ErrorElement`, `HydrateFallback`, `shouldRevalidate`,
+ * `middleware`, including through star re-exports), or when it does not declare
+ * routes and default-exports a component: any default export of a `.tsx`/`.jsx`
+ * module, or `export default function|class` elsewhere. Helpers such as
+ * `export const HOME = 'home'` or `export default { home: 'home' }` in `.ts` files are
+ * ordinary modules.
+ *
+ * @param module - Graph module.
+ * @returns The reason, or `null` for modules that may be evaluated.
+ * @throws {Error} When the module cannot be read.
+ */
+async function describeRouteModule(module: RegistryGraphModule): Promise<string | null> {
+  const scan = await readRouteModuleCapabilities(module.file);
+  // Only exports the DSL attaches to routes mark a page; plain exports stay helpers
+  const routeOnly = scan.capabilities.filter((capability) =>
+    ROUTE_ONLY_CAPABILITIES.has(capability),
+  );
+  // Loader, action and guard exports only make sense in route modules
+  if (routeOnly.length > 0) return `exports route module capabilities (${routeOnly.join(', ')})`;
+  // Registries may default-export their routes; only non-registry defaults can be components
+  if (module.declaresRoutes || !scan.capabilities.includes('component')) return null;
+  // A default export in a JSX module, or a default function or class, is a component
+  if (
+    JSX_EXTENSION_PATTERN.test(module.file) ||
+    DEFAULT_DECLARATION_PATTERN.test(blankModuleSource(await readFile(module.file, 'utf8')))
+  ) {
+    return 'default-exports a component';
+  }
+  return null;
+}
+
+/**
+ * Lists display paths, project-relative where possible.
  *
  * @param root - Absolute project root.
  * @param files - Absolute paths.
@@ -171,14 +192,23 @@ function toDiagnosticFiles(root: string, files: readonly string[]): string[] {
 }
 
 /**
- * Checks the registry graph before evaluation so that evaluating it can only run
- * route declarations, never page modules, loaders, helpers or package code.
+ * Checks the registry graph before evaluation, so evaluating it never runs route
+ * (page) modules. Ordinary helper modules, Node built-ins and installed packages are
+ * allowed: they are trusted build-time code, like the Vite configuration that loads
+ * the registry. This is a pre-evaluation check, not a sandbox.
+ *
+ * Rejected, with the importing and imported files named:
+ * - graph modules that are route modules (see {@link describeRouteModule});
+ * - graph modules that a registry module both imports and references by a literal
+ *   relative path, since the reference makes them route modules;
+ * - project imports that resolve outside the project root, which cannot be watched.
  *
  * @param root - Absolute project root.
  * @param entry - Absolute entry registry path.
  * @param registry - Project-relative registry path for messages.
  * @param modules - Registry graph modules.
- * @returns Diagnostics for every rejected import.
+ * @returns Diagnostics for every rejected module.
+ * @throws {Error} When a graph module cannot be read.
  */
 async function checkRegistryGraph(
   root: string,
@@ -187,40 +217,41 @@ async function checkRegistryGraph(
   modules: ReadonlyMap<string, RegistryGraphModule>,
 ): Promise<RouteDiagnostic[]> {
   const diagnostics: RouteDiagnostic[] = [];
-  const allowed = findRegistryModules(entry, modules);
-  const pageModules = new Map<string, boolean>();
-
-  /**
-   * Decides, once per module, whether an otherwise allowed module is a page module.
-   * A page with loaders or other route exports must never be imported, even if it uses the DSL.
-   *
-   * @param file - Absolute module path.
-   * @returns `true` when the module exports route-only capabilities.
-   * @throws {Error} When the module cannot be read.
-   */
-  const isPageModule = async (file: string): Promise<boolean> => {
-    const known = pageModules.get(file);
-    // Modules imported from several registries are read once
-    if (known !== undefined) return known;
-    const capabilities = detectRouteModuleCapabilities(await readFile(file, 'utf8'));
-    // Any route-only export reveals a page module
-    const result = capabilities.some((capability) => ROUTE_ONLY_CAPABILITIES.has(capability));
-    pageModules.set(file, result);
-    return result;
-  };
-  // Check each module's imports; the importer is named so authors know where to change code
+  const reasons = new Map<string, string>();
+  // Classify every bundled project module once
+  for (const module of modules.values()) {
+    // Modules outside the root are reported per import below
+    if (!toProjectPath(root, module.file)) continue;
+    const reason = await describeRouteModule(module);
+    // Ordinary modules need no further checks here
+    if (reason) reasons.set(module.file, reason);
+  }
+  // Literal DSL references to bundled modules mark them as route modules too
+  for (const module of modules.values()) {
+    // Only route-declaring modules write DSL references
+    if (!module.declaresRoutes) continue;
+    const source = await readFile(module.file, 'utf8');
+    // A referenced route module that is also bundled would run during evaluation
+    for (const target of await findReferencedGraphModules(module.file, source, modules)) {
+      const referrer = toProjectPath(root, module.file) ?? module.file;
+      // The first reason is enough to reject the module
+      if (!reasons.has(target))
+        reasons.set(target, `is referenced as a route module by ${referrer}`);
+    }
+  }
+  // Report each rejected module where it is imported, so authors know which import to change
   for (const module of modules.values()) {
     const importer = toProjectPath(root, module.file) ?? module.file;
-    // Package and built-in code would run in the evaluation, outside the registry contract
-    for (const specifier of module.externalImports) {
+    // The entry registry itself can be a route module too
+    if (module.file === entry && reasons.has(entry)) {
       diagnostics.push({
         severity: 'error',
         code: 'unsupported-registry-import',
-        message: `${registry}: ${importer} imports "${specifier}", but route registry modules may only import the route DSL (@equinor/fusion-framework-react-router/routes) and other route registry modules. Move the value into the registry or reference modules by path.`,
-        files: toDiagnosticFiles(root, [entry, module.file]),
+        message: `${registry}: the route registry ${reasons.get(entry)}, so evaluating it would run route module code. Keep route exports in route modules and reference them by path.`,
+        files: [registry],
       });
     }
-    // Project imports must be registry modules inside the project
+    // Each project import is checked against the project root and the route module rules
     for (const file of module.imports) {
       const imported = toProjectPath(root, file);
       // Modules outside the project cannot be watched or identified
@@ -228,23 +259,58 @@ async function checkRegistryGraph(
         diagnostics.push({
           severity: 'error',
           code: 'route-file-outside-root',
-          message: `${registry}: ${importer} imports ${file}, which is outside the project root; route registry modules must live inside the project.`,
+          message: `${registry}: ${importer} imports ${file}, which is outside the project root. Registry helpers must live inside the project so changes to them are watched; import shared code through a package instead.`,
           files: toDiagnosticFiles(root, [entry, module.file]),
         });
         // Nothing else is checked for a module that cannot be identified
         continue;
       }
-      // Registry modules that are not page modules are safe to evaluate
-      if (allowed.has(file) && !(await isPageModule(file))) continue;
+      const reason = reasons.get(file);
+      // Ordinary helpers and other registries may be evaluated
+      if (!reason) continue;
       diagnostics.push({
         severity: 'error',
         code: 'unsupported-registry-import',
-        message: `${registry}: ${importer} imports ${imported}, which is not a route registry module, so evaluating the registry would execute it. Reference route modules by path instead, for example route('items', './items.tsx'); registry modules may only import the route DSL and other modules that declare routes with it.`,
+        message: `${registry}: ${importer} imports ${imported}, which ${reason}, so evaluating the registry would run route module code. Do not import route modules into registry code; reference them by path, for example route('items', './items.tsx'), and move shared values into a helper module without route exports.`,
         files: toDiagnosticFiles(root, [entry, module.file, file]),
       });
     }
   }
   return diagnostics;
+}
+
+/**
+ * Narrows an unknown value to a plain object record.
+ *
+ * @param value - Value to check.
+ * @returns `true` for non-null objects.
+ */
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null;
+}
+
+/**
+ * Collects the module references of an evaluated registry definition.
+ *
+ * @param definition - Projected registry definition.
+ * @returns Absolute paths or `file:` URLs referenced by DSL nodes.
+ */
+function collectReferences(definition: unknown): string[] {
+  const references: string[] = [];
+  const pending: unknown[] = [definition];
+  // Iterative walk; the projection is acyclic plain data
+  while (pending.length > 0) {
+    const node = pending.pop();
+    // Arrays hold sibling nodes
+    if (Array.isArray(node)) {
+      pending.push(...node);
+    } else if (isRecord(node)) {
+      // File-backed nodes reference a route module
+      if (typeof node.file === 'string') references.push(node.file);
+      pending.push(node.children);
+    }
+  }
+  return references;
 }
 
 /**
@@ -301,13 +367,17 @@ function toBuildDiagnostic(
  * 1. The registry graph is bundled with esbuild (bundling never runs project code).
  *    DSL imports are redirected to a call-site shim, so relative module references
  *    resolve against the module that declares them, as in the Vite plugin.
- * 2. The graph is checked before evaluation: only the registry and route-declaring
- *    modules may be imported. Page modules, helpers and packages are rejected with
- *    `unsupported-registry-import`, so their code never runs.
+ *    Installed packages and Node built-ins stay external.
+ * 2. The graph is checked before evaluation (see {@link checkRegistryGraph}): route
+ *    (page) modules in the graph are rejected with `unsupported-registry-import`, so
+ *    their code never runs. Ordinary helpers, packages and built-ins are allowed.
  * 3. The bundle is evaluated in a fresh, terminated-after-use worker thread; only a
  *    plain-data projection of the DSL nodes is returned.
+ * 4. If a module reference computed at evaluation time points at a bundled module
+ *    that the pre-evaluation check could not recognize as a route module, the
+ *    registry is rejected rather than accepted.
  *
- * Every call re-reads the sources, so edits to the registry or imported registry
+ * Every call re-reads the sources, so edits to the registry or imported helper
  * modules are always reflected. All registry graph modules are reported as
  * dependencies, even when the registry is rejected, so watchers can re-resolve.
  *
@@ -332,10 +402,9 @@ export async function loadRouteRegistry(
       metafile: true,
       format: 'esm',
       platform: 'node',
-      packages: 'external',
       outfile: path.join(root, 'fusion-route-registry.mjs'),
       logLevel: 'silent',
-      plugins: [createRouteDslPlugin(DSL_ENTRY)],
+      plugins: [createRouteDslPlugin(DSL_ENTRY, [...new Set([root, await realpath(root)])])],
     });
     code = result.outputFiles[0]?.text ?? '';
     modules = readRegistryGraph(root, result.metafile);
@@ -377,8 +446,9 @@ export async function loadRouteRegistry(
   // A rejected graph is never evaluated, so no page or package code runs
   if (diagnostics.length > 0) return { diagnostics, dependencies };
 
+  let definition: unknown;
   try {
-    return { definition: await evaluateRouteRegistry(code), diagnostics, dependencies };
+    definition = await evaluateRouteRegistry(code);
   } catch (error) {
     diagnostics.push({
       severity: 'error',
@@ -390,4 +460,28 @@ export async function loadRouteRegistry(
     });
     return { diagnostics, dependencies };
   }
+  // References may carry symlink-resolved paths, so compare project-relative paths
+  const realRoot = await realpath(root);
+  const bundled = new Set(dependencies);
+  // Normalise every evaluated reference to a comparable project path
+  const evaluatedRouteModules = collectReferences(definition)
+    .map((reference) => (reference.startsWith('file:') ? fileURLToPath(reference) : reference))
+    // Extensionless references match the bundled file they resolve to
+    .flatMap(withReferenceSuffixes)
+    // Either root spelling may appear depending on how the bundler resolved the file
+    .map((file) => toProjectPath(root, file) ?? toProjectPath(realRoot, file))
+    // Only references to bundled modules were evaluated
+    .filter((file): file is string => file !== null && file !== registry && bundled.has(file));
+  // Computed references can name a bundled module that looked like an ordinary helper
+  for (const module of new Set(evaluatedRouteModules)) {
+    diagnostics.push({
+      severity: 'error',
+      code: 'unsupported-registry-import',
+      message: `${registry}: ${module} is used as a route module but is also imported by registry code, so it was evaluated while resolving routes. Reference route modules by path only and do not import them into registry code.`,
+      files: [...new Set([registry, module])].sort(compareCodeUnits),
+    });
+  }
+  // A registry that evaluated a route module is not a trustworthy route source
+  if (diagnostics.length > 0) return { diagnostics, dependencies };
+  return { definition, diagnostics, dependencies };
 }

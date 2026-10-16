@@ -112,6 +112,7 @@ export type RouteDiagnosticCode =
   | 'route-file-outside-root'
   | 'route-file-unreadable'
   | 'route-registry-load-failed'
+  | 'unresolved-route-capabilities'
   | 'unresolved-route-file'
   | 'unsupported-registry-import'
   | 'unsupported-route-segment';

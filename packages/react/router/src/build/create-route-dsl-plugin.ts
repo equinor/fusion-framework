@@ -4,8 +4,21 @@ import { pathToFileURL } from 'node:url';
 
 import type { Loader, Plugin } from 'esbuild';
 
+import { isInsideDirectory } from './is-inside-directory.js';
 import { ROUTE_DSL_NAMESPACE } from './route-dsl-namespace.js';
 import { ROUTE_DSL_SPECIFIER_PATTERN } from './route-dsl-specifier-pattern.js';
+
+/** Candidate bare specifiers (packages, built-ins and aliases); esbuild filters use Go regex syntax. */
+const BARE_SPECIFIER_FILTER = /^[^./]/;
+
+/** Windows drive paths and URLs, which start like bare specifiers but are not. */
+const NOT_BARE_PATTERN = /^(?:[A-Za-z]:[\\/]|[a-z][a-z\d+.-]*:\/\/)/;
+
+/** Marks a nested resolve so the bare-specifier hook does not handle its own lookup. */
+const NESTED_RESOLVE = Symbol('fusion-route-dsl-nested-resolve');
+
+/** `import.meta.url`, `import.meta.dirname` and `import.meta.filename`, which describe their own module. */
+const IMPORT_META_LOCATION_PATTERN = /\bimport\.meta\.(url|dirname|filename)\b/g;
 
 /** Relative `import.meta.resolve('./x')` calls, which must resolve against their own module. */
 const IMPORT_META_RESOLVE_PATTERN = /import\.meta\.resolve\(\s*(['"])(\.{1,2}\/[^'"]+)\1\s*\)/g;
@@ -57,11 +70,33 @@ function createShimSource(directory: string, dslEntry: string): string {
  * - Relative `import.meta.resolve()` calls in project modules are replaced with
  *   `file:` URLs resolved against their own module, since the bundle is evaluated
  *   from a `data:` URL.
+ * - Bare imports are resolved by esbuild. Node built-ins stay external, installed
+ *   packages become external `file:` URLs (the bundle runs from a `data:` URL), and
+ *   aliases that resolve to project source are bundled so they are checked like
+ *   relative imports.
+ * - `import.meta.url`, `dirname` and `filename` in project modules are replaced with
+ *   the values of the original module.
  *
  * @param dslEntry - Absolute path of the route DSL entry module (with or without extension).
+ * @param projectRoots - Project root, plus its real path when it differs, used to tell
+ *   project source from packages.
  * @returns The esbuild plugin.
  */
-export function createRouteDslPlugin(dslEntry: string): Plugin {
+export function createRouteDslPlugin(dslEntry: string, projectRoots: readonly string[]): Plugin {
+  /**
+   * Whether a resolved file is project source (for example reached through a
+   * tsconfig path alias) rather than installed package code.
+   *
+   * @param file - Absolute resolved path.
+   * @returns `true` for files inside the project and outside `node_modules`.
+   */
+  const isProjectSource = (file: string): boolean => {
+    // Installed package code is never bundled as project source
+    if (file.split(/[\\/]/).includes('node_modules')) return false;
+    // Any accepted root spelling (lexical or symlink-resolved) makes it project source
+    return projectRoots.some((root) => isInsideDirectory(root, file));
+  };
+
   return {
     name: 'fusion-route-dsl',
     setup(build) {
@@ -70,6 +105,32 @@ export function createRouteDslPlugin(dslEntry: string): Plugin {
         path: args.resolveDir,
         namespace: ROUTE_DSL_NAMESPACE,
       }));
+
+      // The bundle runs from a data: URL, which cannot resolve bare specifiers itself
+      build.onResolve({ filter: BARE_SPECIFIER_FILTER }, async (args) => {
+        // The nested lookup below must reach esbuild's own resolver
+        if (
+          args.pluginData === NESTED_RESOLVE ||
+          args.namespace !== 'file' ||
+          NOT_BARE_PATTERN.test(args.path)
+        ) {
+          return undefined;
+        }
+        const result = await build.resolve(args.path, {
+          kind: args.kind,
+          importer: args.importer,
+          resolveDir: args.resolveDir,
+          pluginData: NESTED_RESOLVE,
+        });
+        // Unresolvable imports surface as located build errors
+        if (result.errors.length > 0) return { errors: result.errors };
+        // Node built-ins stay as written; Node resolves them from any module
+        if (result.external) return { path: result.path, external: true };
+        // Aliased project files are bundled, so the pre-evaluation check covers them
+        if (isProjectSource(result.path)) return { path: result.path };
+        // Installed packages run from their real location, as when the app imports them
+        return { path: pathToFileURL(result.path).href, external: true };
+      });
 
       build.onLoad({ filter: /.*/, namespace: ROUTE_DSL_NAMESPACE }, (args) => ({
         contents: createShimSource(args.path, dslEntry),
@@ -82,15 +143,25 @@ export function createRouteDslPlugin(dslEntry: string): Plugin {
         // Package code is external and never loaded here; unknown extensions use esbuild defaults
         if (!loader || args.path.split(path.sep).includes('node_modules')) return undefined;
         const contents = await readFile(args.path, 'utf8');
-        // Most modules do not resolve paths themselves, so esbuild can load them unchanged
-        if (!contents.includes('import.meta.resolve')) return undefined;
+        // Most modules do not inspect their own location, so esbuild can load them unchanged
+        if (!contents.includes('import.meta.')) return undefined;
         const base = path.dirname(args.path);
+        const location: Readonly<Record<string, string>> = {
+          url: pathToFileURL(args.path).href,
+          dirname: base,
+          filename: args.path,
+        };
         return {
-          contents: contents.replace(
-            IMPORT_META_RESOLVE_PATTERN,
-            (_match, quote: string, specifier: string) =>
-              `${quote}${pathToFileURL(path.resolve(base, specifier)).href}${quote}`,
-          ),
+          contents: contents
+            .replace(
+              IMPORT_META_RESOLVE_PATTERN,
+              (_match, quote: string, specifier: string) =>
+                `${quote}${pathToFileURL(path.resolve(base, specifier)).href}${quote}`,
+            )
+            // Bundled modules would otherwise all report the data: URL of the bundle
+            .replace(IMPORT_META_LOCATION_PATTERN, (_match, key: string) =>
+              JSON.stringify(location[key]),
+            ),
           loader,
         };
       });

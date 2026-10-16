@@ -8,9 +8,13 @@ const DEFAULT_TIMEOUT_MS = 10_000;
  * structured-clone-safe projection of the exported DSL nodes: only `kind`, `path`,
  * `file`, `children` and string-valued `handle.route` metadata survive. Functions,
  * class instances and cycles never cross the thread boundary.
+ *
+ * The body is an ES module loaded from a `data:` URL instead of `eval` source, so
+ * its module type does not depend on the host's `execArgv` (for example
+ * `--input-type=module`, which workers inherit).
  */
 const WORKER_SOURCE = `
-const { parentPort, workerData } = require('node:worker_threads');
+import { parentPort, workerData } from 'node:worker_threads';
 const isRecord = (value) => typeof value === 'object' && value !== null;
 const toStrings = (value) => {
   if (!isRecord(value)) return undefined;
@@ -53,6 +57,9 @@ import(workerData.url).then(
 );
 `;
 
+/** Worker entry as an ES module `data:` URL. */
+const WORKER_URL = new URL(`data:text/javascript,${encodeURIComponent(WORKER_SOURCE)}`);
+
 /**
  * Narrows an unknown value to a plain object record.
  *
@@ -85,7 +92,7 @@ export async function evaluateRouteRegistry(
   timeoutMs: number = DEFAULT_TIMEOUT_MS,
 ): Promise<unknown> {
   const url = `data:text/javascript;base64,${Buffer.from(code).toString('base64')}`;
-  const worker = new Worker(WORKER_SOURCE, { eval: true, workerData: { url } });
+  const worker = new Worker(WORKER_URL, { workerData: { url } });
   let timer: NodeJS.Timeout | undefined;
   try {
     return await new Promise<unknown>((resolve, reject) => {

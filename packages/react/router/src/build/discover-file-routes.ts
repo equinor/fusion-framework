@@ -1,10 +1,14 @@
 import type { Dirent } from 'node:fs';
-import { readdir, readFile, realpath, stat } from 'node:fs/promises';
+import { readdir, realpath, stat } from 'node:fs/promises';
 import path from 'node:path';
 
 import { compareCodeUnits } from './compare-code-units.js';
-import { detectRouteModuleCapabilities } from './detect-route-module-capabilities.js';
+import { describeUnresolvedReexport } from './describe-unresolved-reexport.js';
 import { findCaseCollisions } from './find-case-collisions.js';
+import {
+  type RouteModuleCapabilityScan,
+  readRouteModuleCapabilities,
+} from './read-route-module-capabilities.js';
 import { isMissingFileError } from './is-missing-file-error.js';
 import { toProjectPath } from './to-project-path.js';
 import type { ResolvedRoute, ResolvedRouteGraph, RouteDiagnostic } from './types.js';
@@ -209,12 +213,23 @@ export async function discoverFileRoutes(
   ): Promise<ResolvedRoute | undefined> => {
     const module = projectPath(entry.absolute);
     dependencies.push(module);
-    let source: string;
+    let scan: RouteModuleCapabilityScan;
     try {
-      source = await readFile(entry.absolute, 'utf8');
+      scan = await readRouteModuleCapabilities(entry.absolute);
     } catch (error) {
       reportUnreadable(module, error);
       return undefined;
+    }
+    // Re-export targets define capabilities too, so their edits must re-resolve the graph
+    for (const file of scan.reexportFiles) dependencies.push(projectPath(file));
+    // Unknown re-exports could hide guards such as middleware, so they are errors
+    for (const { importer, specifier } of scan.unresolved) {
+      diagnostics.push({
+        severity: 'error',
+        code: 'unresolved-route-capabilities',
+        message: describeUnresolvedReexport(module, projectPath(importer), specifier),
+        files: [...new Set([module, projectPath(importer)])].sort(compareCodeUnits),
+      });
     }
     const route: ResolvedRoute = {
       id: `file:${module}`,
@@ -222,7 +237,7 @@ export async function discoverFileRoutes(
       kind,
       path: routePath,
       module,
-      capabilities: detectRouteModuleCapabilities(source),
+      capabilities: scan.capabilities,
       metadata: {},
     };
     routes.push(route);

@@ -1,11 +1,12 @@
-import { readFile, realpath, stat } from 'node:fs/promises';
+import { realpath, stat } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import type { RouterSchema } from '../types.js';
-import { detectRouteModuleCapabilities } from './detect-route-module-capabilities.js';
+import { describeUnresolvedReexport } from './describe-unresolved-reexport.js';
 import type { RouteCollection } from './discover-file-routes.js';
 import { isMissingFileError } from './is-missing-file-error.js';
+import { readRouteModuleCapabilities } from './read-route-module-capabilities.js';
 import { toProjectPath } from './to-project-path.js';
 import type { ResolvedRoute, ResolvedRouteKind, RouteDiagnostic } from './types.js';
 
@@ -166,6 +167,18 @@ export async function collectRegistryRoutes(
   };
 
   /**
+   * Converts an absolute path to a project-relative one, accepting symlink-resolved
+   * paths (for example /private/var on macOS) that bundlers report.
+   *
+   * @param file - Absolute path.
+   * @returns Project-relative path, or `file` when it is outside the project.
+   */
+  const displayPath = async (file: string): Promise<string> => {
+    realRoot ??= realpath(root);
+    return toProjectPath(root, file) ?? toProjectPath(await realRoot, file) ?? file;
+  };
+
+  /**
    * Resolves a DSL module reference to a project-relative path and reads its capabilities once.
    *
    * @param reference - Module reference as written in the registry.
@@ -224,10 +237,21 @@ export async function collectRegistryRoutes(
     if (!capabilitiesByModule.has(module)) {
       dependencies.add(module);
       try {
-        capabilitiesByModule.set(
-          module,
-          detectRouteModuleCapabilities(await readFile(file, 'utf8')),
-        );
+        const scan = await readRouteModuleCapabilities(file);
+        capabilitiesByModule.set(module, scan.capabilities);
+        // Re-export targets define capabilities too, so their edits must re-resolve the graph
+        for (const target of scan.reexportFiles) {
+          dependencies.add(await displayPath(target));
+        }
+        // Unknown re-exports could hide guards such as middleware, so they are errors
+        for (const { importer, specifier } of scan.unresolved) {
+          const source = await displayPath(importer);
+          report(
+            'unresolved-route-capabilities',
+            describeUnresolvedReexport(module, source, specifier),
+            [module, source],
+          );
+        }
       } catch (error) {
         unreadableModules.add(module);
         report(

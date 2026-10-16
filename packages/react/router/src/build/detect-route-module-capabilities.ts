@@ -1,3 +1,4 @@
+import { blankModuleSource } from './blank-module-source.js';
 import type { RouteModuleCapability } from './types.js';
 
 /** Maps each recognized route module export to its capability, in canonical capability order. */
@@ -33,98 +34,10 @@ const CLOSING_BRACKETS = ')]}';
 
 const DEFAULT_EXPORT_PATTERN = /\bexport\s+default\b/;
 
+/** `export * as name from '...'` exports one namespace binding called `name`. */
+const NAMESPACE_EXPORT_PATTERN = /\bexport\s*\*\s*as\s+([A-Za-z_$][\w$]*)/g;
+
 const EXPORT_LIST_PATTERN = /\bexport\s*(type\s*)?\{([^}]*)\}/g;
-
-/**
- * Blanks a template literal, including `${...}` expressions and templates nested in
- * them. Expressions cannot contain export declarations, so blanking them is safe.
- *
- * @param source - Module source text.
- * @param out - Mutable characters of the blanked source.
- * @param start - Offset of the opening backtick.
- * @returns Offset after the closing backtick.
- */
-function blankTemplate(source: string, out: string[], start: number): number {
-  let index = start + 1;
-  let depth = 0;
-  // Scan until the backtick that closes this template at expression depth zero
-  while (index < source.length) {
-    const char = source[index];
-    // Nested templates inside expressions are blanked recursively
-    if (depth > 0 && char === '`') {
-      index = blankTemplate(source, out, index);
-      // The nested template already advanced past its closing backtick
-      continue;
-    }
-    // The closing backtick ends the template
-    if (depth === 0 && char === '`') return index + 1;
-    // Escapes consume the next character so an escaped backtick does not close the template
-    if (char === '\\') {
-      out[index++] = ' ';
-    } else if (char === '$' && source[index + 1] === '{' && depth === 0) {
-      depth = 1;
-      out[index++] = ' ';
-    } else if (depth > 0 && char === '{') {
-      depth++;
-    } else if (depth > 0 && char === '}') {
-      depth--;
-    }
-    // Line breaks survive so offsets and lines stay aligned
-    if (index < source.length && source[index] !== '\n') out[index] = ' ';
-    index++;
-  }
-  return index;
-}
-
-/**
- * Replaces comments and string/template literal contents with spaces so export
- * detection cannot match text that is not code. Offsets are preserved.
- *
- * @param source - Module source text.
- * @returns Source text with comments and literal contents blanked.
- */
-function blankCommentsAndStrings(source: string): string {
-  const out = source.split('');
-  let index = 0;
-  // A single forward scan keeps detection linear in the size of the module
-  while (index < source.length) {
-    const char = source[index];
-    const next = source[index + 1];
-    // Dispatch on the token that starts at the current position
-    if (char === '/' && next === '/') {
-      // Line comment runs until the end of the line
-      while (index < source.length && source[index] !== '\n') {
-        out[index++] = ' ';
-      }
-    } else if (char === '/' && next === '*') {
-      const end = source.indexOf('*/', index + 2);
-      const stop = end === -1 ? source.length : end + 2;
-      // Keep newlines so line-based reasoning in callers remains intact
-      for (; index < stop; index++) {
-        // Newlines survive blanking
-        if (source[index] !== '\n') out[index] = ' ';
-      }
-    } else if (char === '`') {
-      index = blankTemplate(source, out, index);
-    } else if (char === '"' || char === "'") {
-      index++;
-      // Blank the literal body, honouring escapes so an escaped quote does not end it early
-      while (index < source.length && source[index] !== char) {
-        // A backslash consumes the following character as part of the escape
-        if (source[index] === '\\') {
-          out[index++] = ' ';
-        }
-        // Blank the literal character but keep line breaks of template literals
-        if (index < source.length && source[index] !== '\n') out[index] = ' ';
-        index++;
-      }
-      index++;
-    } else {
-      index++;
-    }
-  }
-  return out.join('');
-}
 
 /**
  * Skips whitespace.
@@ -340,9 +253,10 @@ function collectExportListNames(code: string): Set<string> {
  * type-only and `declare` exports are not capabilities.
  *
  * The scan is a lightweight lexer, not a TypeScript parser, and is independent of the
- * Vite plugin's export detection. Known limitations: `export * from` re-exports
- * cannot be expanded without reading the target, so they contribute nothing, and
- * regular expression literals are not blanked.
+ * Vite plugin's export detection. Comments, strings, template literals and regular
+ * expression literals are blanked first. Star re-exports (`export * from '...'`)
+ * are not expanded here because the target is another file; resolvers expand them
+ * with file context and report targets they cannot read.
  *
  * @param source - Route module source text.
  * @returns Detected capabilities in canonical order.
@@ -354,11 +268,15 @@ function collectExportListNames(code: string): Set<string> {
  * ```
  */
 export function detectRouteModuleCapabilities(source: string): RouteModuleCapability[] {
-  const code = blankCommentsAndStrings(source);
+  const code = blankModuleSource(source);
   const exported = collectExportListNames(code);
   // `export default ...` declares the route component
   if (DEFAULT_EXPORT_PATTERN.test(code)) {
     exported.add('default');
+  }
+  // Namespace re-exports bind exactly the alias name
+  for (const match of code.matchAll(NAMESPACE_EXPORT_PATTERN)) {
+    exported.add(match[1]);
   }
   // Inline function and class declarations such as `export function clientLoader()`
   for (const match of code.matchAll(DECLARATION_EXPORT_PATTERN)) {

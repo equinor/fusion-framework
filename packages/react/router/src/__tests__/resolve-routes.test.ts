@@ -587,28 +587,172 @@ describe('resolveRoutes: registry call sites and isolation', () => {
     ]);
   });
 
-  it('rejects package, built-in and plain helper imports in registries', async () => {
+  it('evaluates ordinary helper modules that do not import the DSL and watches them', async () => {
     const root = await project({
       'src/routes/Page.tsx': page,
-      'src/routes/paths.ts': "export const home = 'home';\n",
+      'src/routes/admin/Page.tsx': page,
+      'src/routes/paths.ts': [
+        "export const HOME = 'home';",
+        "export const ADMIN = 'admin';",
+        "export default { docs: 'docs' };",
+        '',
+      ].join('\n'),
       'src/routes/routes.ts': registry(`
-        import { join } from 'node:path';
-        import { home } from './paths';
-        export default [route(join(home), './Page.tsx')];
+        import paths, { ADMIN, HOME } from './paths';
+        export default [
+          route(HOME, './Page.tsx'),
+          prefix(ADMIN, [index('./admin/Page.tsx')]),
+          route(paths.docs, './Page.tsx'),
+        ];
+      `),
+    });
+    const graph = await resolveRoutes({ root });
+
+    expect(graph.diagnostics).toEqual([]);
+    expect(graph.routes.map((route) => route.path)).toEqual(['/admin', '/docs', '/home']);
+    expect(graph.dependencies).toContain('src/routes/paths.ts');
+
+    // Editing the helper must be visible on the next resolution
+    await writeRouteProjectFiles(root, {
+      'src/routes/paths.ts': [
+        "export const HOME = 'start';",
+        "export const ADMIN = 'admin';",
+        "export default { docs: 'docs' };",
+        '',
+      ].join('\n'),
+    });
+    const edited = await resolveRoutes({ root });
+    expect(edited.routes.map((route) => route.path)).toEqual(['/admin', '/docs', '/start']);
+  });
+
+  it('supports node:path resolution and import.meta locations in registry and helper modules', async () => {
+    const root = await project({
+      'src/pages/Home.tsx': page,
+      'src/pages/About.tsx': page,
+      'src/pages/Help.tsx': page,
+      'src/routes/lib/locate.ts': [
+        "import path from 'node:path';",
+        "export const pageFile = (name: string): string => path.join(import.meta.dirname, '..', '..', 'pages', name);",
+        '',
+      ].join('\n'),
+      'src/routes/routes.ts': registry(`
+        import path from 'node:path';
+        import { fileURLToPath } from 'node:url';
+        import { pageFile } from './lib/locate';
+        const here = path.dirname(fileURLToPath(import.meta.url));
+        export default [
+          index(path.join(here, '..', 'pages', 'Home.tsx')),
+          route('about', path.resolve(import.meta.dirname, '../pages/About.tsx')),
+          route('help', pageFile('Help.tsx')),
+        ];
+      `),
+    });
+    const graph = await resolveRoutes({ root });
+
+    expect(graph.diagnostics).toEqual([]);
+    expect(graph.routes.map((route) => [route.path, route.module])).toEqual([
+      ['/', 'src/pages/Home.tsx'],
+      ['/about', 'src/pages/About.tsx'],
+      ['/help', 'src/pages/Help.tsx'],
+    ]);
+    expect(graph.dependencies).toEqual(
+      expect.arrayContaining(['src/routes/lib/locate.ts', 'src/routes/routes.ts']),
+    );
+  });
+
+  it('runs installed ESM and CommonJS packages from their real location', async () => {
+    const root = await project({
+      'node_modules/route-segments/package.json': JSON.stringify({
+        name: 'route-segments',
+        type: 'module',
+        exports: './index.js',
+      }),
+      'node_modules/route-segments/index.js':
+        'export const slug = (value) => value.toLowerCase();\n',
+      'node_modules/legacy-segments/package.json': JSON.stringify({ name: 'legacy-segments' }),
+      'node_modules/legacy-segments/index.js': "module.exports = { prefix: 'Legacy' };\n",
+      'src/routes/Page.tsx': page,
+      'src/routes/routes.ts': registry(`
+        import { slug } from 'route-segments';
+        import legacy from 'legacy-segments';
+        export default [route(slug('About'), './Page.tsx'), route(slug(legacy.prefix), './Page.tsx')];
+      `),
+    });
+    const graph = await resolveRoutes({ root });
+
+    expect(graph.diagnostics).toEqual([]);
+    expect(graph.routes.map((route) => route.path)).toEqual(['/about', '/legacy']);
+    // Installed packages are not project sources, so they are not watched
+    expect(graph.dependencies).toEqual(['src/routes/Page.tsx', 'src/routes/routes.ts']);
+  });
+
+  it('rejects helpers that import route modules, naming the import chain', async () => {
+    const root = await project({
+      'src/routes/Page.tsx': sideEffectPage('ran.txt'),
+      'src/routes/lib.ts': "import Page from './Page.tsx';\nexport const title = Page.name;\n",
+      'src/routes/routes.ts': registry(`
+        import { title } from './lib';
+        export default [route(title, './Page.tsx')];
       `),
     });
     const graph = await resolveRoutes({ root });
 
     expect(graph.routes).toEqual([]);
-    const messages = graph.diagnostics.map(
-      (diagnostic) => `${diagnostic.code} ${diagnostic.message}`,
+    expect(problems(graph)).toEqual([
+      [
+        'unsupported-registry-import',
+        ['src/routes/Page.tsx', 'src/routes/lib.ts', 'src/routes/routes.ts'],
+      ],
+    ]);
+    expect(graph.diagnostics[0]?.message).toContain(
+      'src/routes/lib.ts imports src/routes/Page.tsx, which exports route module capabilities (clientLoader)',
     );
-    expect(messages).toEqual(
-      expect.arrayContaining([
-        expect.stringMatching(/^unsupported-registry-import .*node:path/),
-        expect.stringMatching(/^unsupported-registry-import .*src\/routes\/paths\.ts/),
-      ]),
+    expect(graph.dependencies).toContain('src/routes/lib.ts');
+    expect(existsSync(path.join(root, 'src/routes/ran.txt'))).toBe(false);
+  });
+
+  it('rejects imported modules the registry also references by path, before evaluation', async () => {
+    const root = await project({
+      // A .ts module with an expression default export looks like a helper on its own
+      'src/routes/About.ts': [
+        "import { writeFileSync } from 'node:fs';",
+        "writeFileSync(new URL('./ran.txt', import.meta.url), 'evaluated');",
+        'const About = () => null;',
+        'export default About;',
+        '',
+      ].join('\n'),
+      'src/routes/routes.ts': registry(`
+        import About from './About';
+        export const component = About;
+        export default [route('about', './About.ts')];
+      `),
+    });
+    const graph = await resolveRoutes({ root });
+
+    expect(problems(graph)).toEqual([
+      ['unsupported-registry-import', ['src/routes/About.ts', 'src/routes/routes.ts']],
+    ]);
+    expect(graph.diagnostics[0]?.message).toContain(
+      'is referenced as a route module by src/routes/routes.ts',
     );
+    expect(existsSync(path.join(root, 'src/routes/ran.txt'))).toBe(false);
+  });
+
+  it('rejects computed references to imported modules instead of accepting the graph', async () => {
+    const root = await project({
+      'src/routes/About.ts': 'const About = () => null;\nexport default About;\n',
+      'src/routes/routes.ts': registry(`
+        import About from './About';
+        export const component = About;
+        export default [route('about', ['.', 'About.ts'].join('/'))];
+      `),
+    });
+    const graph = await resolveRoutes({ root });
+
+    expect(graph.routes).toEqual([]);
+    expect(problems(graph)).toEqual([
+      ['unsupported-registry-import', ['src/routes/About.ts', 'src/routes/routes.ts']],
+    ]);
   });
 
   it('reports registries that throw during evaluation', async () => {
@@ -620,6 +764,51 @@ describe('resolveRoutes: registry call sites and isolation', () => {
 
     expect(problems(graph)).toEqual([['route-registry-load-failed', ['src/routes/routes.ts']]]);
     expect(graph.diagnostics[0]?.message).toContain('registry exploded');
+  });
+});
+
+describe('resolveRoutes: star re-exports in route modules', () => {
+  it('expands relative star re-exports and watches their targets', async () => {
+    const root = await project({
+      'src/routes/admin.tsx': `${page}export * from './_guards';\n`,
+      'src/routes/_guards.ts': "export * from './_more.js';\nexport const middleware = [];\n",
+      'src/routes/_more.ts': 'export const clientLoader = () => null;\nexport default 1;\n',
+    });
+    const graph = await resolveRoutes({ root });
+
+    expect(graph.diagnostics).toEqual([]);
+    expect(graph.routes[0]?.capabilities).toEqual(['component', 'clientLoader', 'middleware']);
+    expect(graph.dependencies).toEqual([
+      'src/routes/_guards.ts',
+      'src/routes/_more.ts',
+      'src/routes/admin.tsx',
+    ]);
+  });
+
+  it('reports star re-exports whose capabilities cannot be read', async () => {
+    const root = await project({
+      'src/routes/admin.tsx': `${page}export * from '@acme/guards';\n`,
+      'src/routes/reports.tsx': `${page}export * from './_missing';\n`,
+      'src/pages/settings.tsx': `${page}export * from './_shared';\n`,
+      'src/pages/_shared.ts': "export * from 'shared-guards';\n",
+      'src/registry.ts': registry(`export default [route('settings', './pages/settings.tsx')];`),
+    });
+    const discovered = await resolveRoutes({ root });
+    expect(problems(discovered)).toEqual([
+      ['unresolved-route-capabilities', ['src/routes/admin.tsx']],
+      ['unresolved-route-capabilities', ['src/routes/reports.tsx']],
+    ]);
+    expect(discovered.diagnostics[0]?.message).toContain(
+      `re-exports everything from "@acme/guards"`,
+    );
+
+    const registered = await resolveRoutes({ root, routesFile: 'src/registry.ts' });
+    expect(problems(registered)).toEqual([
+      [
+        'unresolved-route-capabilities',
+        ['src/pages/_shared.ts', 'src/pages/settings.tsx', 'src/registry.ts'],
+      ],
+    ]);
   });
 });
 

@@ -67,7 +67,7 @@ describe('detectRouteModuleCapabilities', () => {
     expect(detectRouteModuleCapabilities(source)).toEqual(['middleware']);
   });
 
-  it('detects named re-exports but cannot expand export-star re-exports', () => {
+  it('detects named and namespace re-exports, leaving star re-exports to the resolver', () => {
     const source = [
       "export { default, clientLoader as clientLoader } from './page';",
       "export { load as action, type Handle } from './load';",
@@ -75,7 +75,45 @@ describe('detectRouteModuleCapabilities', () => {
       "export * as handle from './handle';",
     ].join('\n');
 
-    expect(detectRouteModuleCapabilities(source)).toEqual(['component', 'clientLoader', 'action']);
+    expect(detectRouteModuleCapabilities(source)).toEqual([
+      'component',
+      'clientLoader',
+      'action',
+      'handle',
+    ]);
+  });
+
+  it('ignores export-like text in regular expression literals', () => {
+    const source = [
+      'const pattern = /export default/;',
+      'const other = /export const middleware = 1/g;',
+      'const klass = /[/]export default function X() {}/u;',
+      'if (pattern.test(value)) call(/export const action = 1/);',
+      'export const helper = 1;',
+    ].join('\n');
+
+    expect(detectRouteModuleCapabilities(source)).toEqual([]);
+  });
+
+  it('keeps division distinct from regular expression literals', () => {
+    const source = [
+      'const half = total / 2; const ratio = (a + b) / c / d;',
+      'export const action = async () => items[0] / 2;',
+      'export default function Page() { return null; }',
+    ].join('\n');
+
+    expect(detectRouteModuleCapabilities(source)).toEqual(['component', 'action']);
+  });
+
+  it('limits an apostrophe in JSX text to its own line', () => {
+    const source = [
+      'export default function Page() {',
+      "  return <p>Don't have access</p>;",
+      '}',
+      'export const clientLoader = () => null;',
+    ].join('\n');
+
+    expect(detectRouteModuleCapabilities(source)).toEqual(['component', 'clientLoader']);
   });
 
   it('ignores type-only and ambient declarations', () => {
