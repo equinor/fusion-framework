@@ -61,8 +61,15 @@ maintenance branch or while its content differs from `main`.
 The maintenance branch is a permanent Dependabot target, not a disposable promotion branch.
 The maintenance workflow ensures it exists on pushes to `main` or the maintenance branch, after
 its deletion, and before manually dispatched promotion. A missing branch is
-recreated from the current `main`; an existing branch is left unchanged unless a maintainer
-explicitly requests the guarded reset. Both `ensure` and `reset` recover a missing branch.
+recreated from the current `main`. Pushes to `main` automatically rebase an existing maintenance
+branch onto the latest `main`; maintainers can also dispatch `sync` to retry. The sync uses an
+explicit SHA-pinned force-with-lease so a concurrent dependency merge cannot be overwritten.
+Conflicts fail the workflow without changing the remote branch and require manual resolution;
+the write-enabled job does not install dependencies, execute hooks, or resolve conflicts automatically.
+After a successful sync with changes left to promote, the same run validates the combined stream
+and refreshes the promotion, including dispatching its required checks. An empty stream is not
+promoted. `ensure` still leaves existing branches unchanged; `ensure`, `sync`, and `reset` all
+recover a missing branch.
 
 ## Branch rules
 
@@ -72,7 +79,7 @@ Repository administrators must configure `maintenance/dependencies` with rules t
 - do not require human pull request approval;
 - require squash merges;
 - prevent deletion;
-- prevent force pushes except for the guarded maintenance reset workflow;
+- prevent force pushes except for the guarded maintenance sync and reset workflow;
 - permit GitHub Actions to enable auto-merge.
 
 `main` remains the default branch and retains its existing protection and human approval
@@ -81,8 +88,9 @@ requirements.
 Deletion protection is the primary availability guarantee: asynchronous workflow recovery cannot
 guarantee that Dependabot never sees a missing branch. Administrators with an always-on bypass
 can still delete the branch, so they must not delete it after promotion. The reset workflow also
-needs an explicitly authorized ruleset bypass for its force update; `contents: write` alone does
-not bypass pull-request or non-fast-forward rules. Do not remove those protections to enable reset.
+needs an explicitly authorized ruleset bypass for its force update, as does the automatic sync;
+`contents: write` alone does not bypass pull-request or non-fast-forward rules. Scope that bypass
+to the maintenance automation identity and branch, not `main`. Do not remove those protections.
 
 ## Automation identity
 
@@ -92,7 +100,7 @@ approval, which blocks auto-merge. Without a separate identity, merges into the 
 would not trigger promotion, and each changeset commit would need a manual "Approve and run".
 
 The workflows therefore use the optional repository secret `DEPENDABOT_AUTOMATION_TOKEN` for the
-changeset push, for enabling auto-merge, and for maintaining the promotion pull request. Use a
+changeset and maintenance-sync pushes, for enabling auto-merge, and for maintaining the promotion pull request. Use a
 fine-grained token with `Contents`, `Pull requests`, and `Actions` read and write access, owned by
 an account with write access. When the secret is absent, the workflows fall back to
 `GITHUB_TOKEN`, and the limitations above apply.
@@ -171,6 +179,8 @@ is deployed to `main`, dispatch `initialize` instead of `reset` to restore a mis
 Validate branch-management behavior locally with
 `node --test .github/scripts/dependabot-maintenance.test.mjs` and validate workflow wiring with
 `actionlint .github/workflows/dependabot-maintenance.yml`.
+Pushes to `main` now select `sync` automatically. Dispatch `sync` manually to retry after fixing
+conflicts or automation permissions; no force push occurs when `main` is already an ancestor.
 
 ## Rollback
 
