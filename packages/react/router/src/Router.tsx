@@ -21,6 +21,7 @@ import type {
   FusionRouterContext,
   LoaderFunction,
   RouteNode,
+  RouteContextProvider,
   RouteObject,
   RouterComponent,
   RouterContext,
@@ -47,27 +48,36 @@ type RRMiddleware = NonNullable<ReactRouterRouteObject['middleware']>[number];
 // rule without suppression comments.
 // ---------------------------------------------------------------------------
 
+/**
+ * Reads the Fusion router context that `Router` stores in every execution's context provider.
+ *
+ * @param context - Per-execution React Router context provider.
+ * @returns The Fusion modules and custom context for this execution.
+ * @throws Error when the provider was not created by the Fusion `Router`, so route handlers and
+ *   guards never run without Fusion modules.
+ */
+function readFusionContext(context: RouteContextProvider): FusionRouterContext {
+  const fusion = context.get(routerContext);
+  // `Router.getContext` always sets the value; a missing value means the route runs outside it.
+  if (!fusion) {
+    throw new Error(
+      'Fusion router context is not available to route handlers. Render routes through the Fusion <Router> component.',
+    );
+  }
+  return fusion;
+}
+
 /** Wraps a route loader to inject the Fusion context as `fusion` in its args. */
-function wrapLoader(original: RRLoader): RRLoader {
+function wrapLoader(original: LoaderFunction): RRLoader {
   return function __FusionRouterLoader(args) {
-    const fusion = (args.context as RouterContextProvider).get(routerContext);
-    // The original loader is typed with the framework-augmented args shape; cast to invoke it with the extended arg bag.
-    return (original as unknown as LoaderFunction)({
-      ...args,
-      fusion,
-    } as Parameters<LoaderFunction>[0]);
+    return original({ ...args, fusion: readFusionContext(args.context) });
   };
 }
 
 /** Wraps a route action to inject the Fusion context as `fusion` in its args. */
-function wrapAction(original: RRAction): RRAction {
+function wrapAction(original: ActionFunction): RRAction {
   return function __FusionRouterAction(args) {
-    const fusion = (args.context as RouterContextProvider).get(routerContext);
-    // The original action is typed with the framework-augmented args shape; cast to invoke it with the extended arg bag.
-    return (original as unknown as ActionFunction)({
-      ...args,
-      fusion,
-    } as Parameters<ActionFunction>[0]);
+    return original({ ...args, fusion: readFusionContext(args.context) });
   };
 }
 
@@ -113,13 +123,8 @@ function wrapOnce<TOriginal extends object, TWrapped extends object>(
  */
 function wrapMiddleware(original: MiddlewareFunction): RRMiddleware {
   return function __FusionRouterMiddleware(args, next) {
-    const fusion = args.context.get(routerContext);
-    // A guard without Fusion modules cannot decide anything; fail before downstream handlers run.
-    if (!fusion) {
-      throw new Error(
-        'Fusion router context is not available to route middleware. Render routes through the Fusion <Router> component.',
-      );
-    }
+    // A guard without Fusion modules cannot decide anything; reading throws before handlers run.
+    const fusion = readFusionContext(args.context);
     return original({ ...args, signal: args.request.signal, fusion }, next);
   };
 }
@@ -262,11 +267,11 @@ export function Router({
 
         // Wrap the loader so fusion module context is available inside it
         if (typeof mapped.loader === 'function') {
-          mapped.loader = wrapOnce<RRLoader, RRLoader>(mapped.loader, wrapLoader);
+          mapped.loader = wrapOnce<LoaderFunction, RRLoader>(mapped.loader, wrapLoader);
         }
         // Wrap the action so fusion module context is available inside it
         if (typeof mapped.action === 'function') {
-          mapped.action = wrapOnce<RRAction, RRAction>(mapped.action, wrapAction);
+          mapped.action = wrapOnce<ActionFunction, RRAction>(mapped.action, wrapAction);
         }
         // Only routes that declare middleware get an adapted chain.
         if (route.middleware) {

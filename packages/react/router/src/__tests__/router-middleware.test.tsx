@@ -18,6 +18,7 @@ import type { MiddlewareFunction, MiddlewareFunctionArgs } from '../middleware.j
 import type { ErrorElementProps, RouteObject } from '../types.js';
 import { routes as dslRoutes } from './mocks/middleware/routes.js';
 import { middlewareLog as dslLog } from './mocks/middleware/middleware-log.js';
+import { createContextPipelineRoutes } from './mocks/middleware/context-pipeline.js';
 
 // Fusion module lookup is mocked so the Router can be rendered without a full Fusion app.
 const modules = vi.hoisted(() => ({ current: {} as Record<string, unknown> }));
@@ -324,7 +325,8 @@ describe('Router route middleware (React Router v8 client Data Mode)', () => {
     );
 
     expect(container.textContent).toBe('login');
-    expect(history.location.pathname).toBe('/login');
+    // The Fusion history is updated from the router's committed state, which can land a tick later.
+    await vi.waitFor(() => expect(history.location.pathname).toBe('/login'));
     expect(protectedLoader).not.toHaveBeenCalled();
   });
 
@@ -495,7 +497,8 @@ describe('Router route middleware (React Router v8 client Data Mode)', () => {
     expect(slowLoader).not.toHaveBeenCalled();
     expect(SlowPage).not.toHaveBeenCalled();
     expect(container.textContent).toBe('fast');
-    expect(history.location.pathname).toBe('/fast');
+    // The Fusion history is updated from the router's committed state, which can land a tick later.
+    await vi.waitFor(() => expect(history.location.pathname).toBe('/fast'));
   });
 
   it('isolates typed router context values between executions', async () => {
@@ -528,6 +531,51 @@ describe('Router route middleware (React Router v8 client Data Mode)', () => {
       () => expect(container.querySelector('#user')?.textContent).toBe('anonymous'),
       click('a'),
     );
+  });
+
+  describe('typed context from middleware to Fusion loaders and actions', () => {
+    // The middleware, loader and action are compile-checked in middleware-context.test-d.ts.
+    const ProjectPage = () => {
+      const fetcher = useFetcher();
+      return (
+        <>
+          <p id="loader">{String(useLoaderData())}</p>
+          <button
+            id="save"
+            type="button"
+            onClick={() => fetcher.submit({ value: 'draft' }, { method: 'post' })}
+          >
+            save
+          </button>
+          <p id="action">{String(fetcher.data ?? 'idle')}</p>
+        </>
+      );
+    };
+    const DeniedBoundary = ({ error }: ErrorElementProps) => (
+      <p id="denied">{error instanceof Error ? error.message : String(error)}</p>
+    );
+    const routes = createContextPipelineRoutes(ProjectPage, DeniedBoundary);
+
+    it('reads the middleware value in the typed loader and action of each execution', async () => {
+      await render(routes, '/projects/p1?viewer=alice', { tenant: 'equinor' });
+      expect(container.querySelector('#loader')?.textContent).toBe('alice:p1:true');
+
+      await settle(
+        () => expect(container.querySelector('#action')?.textContent).toBe('alice saved draft'),
+        click('#save'),
+      );
+    });
+
+    it('lets the typed action reject using the middleware value', async () => {
+      await render(routes, '/projects/p1');
+      expect(container.querySelector('#loader')?.textContent).toBe('anonymous:p1:true');
+
+      await settle(
+        () =>
+          expect(container.querySelector('#denied')?.textContent).toBe('anonymous may not write'),
+        click('#save'),
+      );
+    });
   });
 
   describe('lazy route boundaries', () => {

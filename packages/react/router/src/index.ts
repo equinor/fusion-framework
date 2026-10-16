@@ -17,6 +17,7 @@ export type {
   LoaderFunction,
   LoaderFunctionArgs,
   RouteComponentProps,
+  RouteContextProvider,
   RouteNode,
   RouteObject,
   RouteObjectLazy,

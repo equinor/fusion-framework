@@ -1,4 +1,7 @@
-import type { RouteObject as ReactRouterRouteObject } from 'react-router';
+import type {
+  RouteObject as ReactRouterRouteObject,
+  RouterContextProvider as ReactRouterContextProvider,
+} from 'react-router';
 import type { Modules, ModulesInstanceType } from '@equinor/fusion-framework-react-module';
 import type { MiddlewareFunction } from './middleware.js';
 
@@ -55,7 +58,21 @@ export interface FusionRouterContext<
 }
 
 /**
+ * Per-execution React Router context provider passed to middleware, loaders and actions.
+ *
+ * This is React Router v8's own `Readonly<RouterContextProvider>`, the same type upstream uses
+ * for Data Mode `context`, so values written by middleware with `context.set(key, value)` are read
+ * with `context.get(key)` in loaders and actions of the same execution. Create keys with
+ * `createContext<T>()`.
+ */
+export type RouteContextProvider = Readonly<ReactRouterContextProvider>;
+
+/**
  * Arguments passed to data loading functions (loaders and actions).
+ *
+ * Mirrors React Router v8's Data Mode handler arguments (`request`, `url`, `pattern`, `params`,
+ * `context`) and adds `fusion`. Because every upstream property is present, loaders and actions
+ * typed with React Router's own argument types remain assignable to Fusion routes.
  *
  * @template TParams - The type of route parameters
  * @template TContext - The type of Fusion router context
@@ -66,6 +83,15 @@ export type DataFunctionArgs<
 > = {
   /** A {@link https://developer.mozilla.org/en-US/docs/Web/API/Request Fetch Request instance} which you can use to read headers (like cookies, and {@link https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams URLSearchParams} from the request. */
   request: Request;
+  /** URL of the location being navigated to or fetched. */
+  url: URL;
+  /** Matched route pattern, for example `/projects/:projectId`. */
+  pattern: string;
+  /**
+   * Per-execution context provider. Middleware of the same execution can `set` typed values
+   * that the handler reads with `get`; values are never shared between executions.
+   */
+  context: RouteContextProvider;
   /**
    * {@link https://reactrouter.com/start/framework/routing#dynamic-segments Dynamic route params} for the current route.
    * @example
@@ -269,8 +295,20 @@ export interface RouterHandle {
  */
 export type RouteObject = Omit<
   ReactRouterRouteObject,
-  'handle' | 'children' | 'errorElement' | 'middleware' | 'lazy'
+  'handle' | 'children' | 'errorElement' | 'middleware' | 'lazy' | 'loader' | 'action'
 > & {
+  /**
+   * Route loader. The Fusion router calls it with React Router's arguments plus `fusion`.
+   * Loaders typed with React Router's own `LoaderFunction` remain assignable. The boolean form
+   * is React Router's and is passed through unchanged.
+   */
+  loader?: LoaderFunction | Extract<ReactRouterRouteObject['loader'], boolean>;
+  /**
+   * Route action. The Fusion router calls it with React Router's arguments plus `fusion`.
+   * Actions typed with React Router's own `ActionFunction` remain assignable. The boolean form
+   * is React Router's and is passed through unchanged.
+   */
+  action?: ActionFunction | Extract<ReactRouterRouteObject['action'], boolean>;
   /** Route metadata handle containing schema and custom properties */
   handle?: RouterHandle;
   /**

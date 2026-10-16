@@ -10,7 +10,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { Router } from '../Router.js';
 import { useRouterContext } from '../useRouterContext.js';
-import type { ErrorElementProps, LoaderFunction, RouteObject } from '../types.js';
+import type { ErrorElementProps, RouteObject } from '../types.js';
 
 type TestHistory = MemoryHistory | BrowserHistory;
 
@@ -22,12 +22,6 @@ vi.mock('@equinor/fusion-framework-react-module', () => ({
 
 // React requires this flag for `act` to work outside of a test renderer.
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
-
-/**
- * Route loaders are typed by React Router, which does not know about the injected `fusion` argument.
- * This is the single, deliberate bridge between the two argument shapes (same as `wrapLoader`).
- */
-const fusionLoader = (loader: LoaderFunction) => loader as unknown as RouteObject['loader'];
 
 describe.each([
   ['memory', () => new MemoryHistory(), true],
@@ -76,10 +70,9 @@ describe.each([
   it('injects fusion context into loaders and renders loader data', async () => {
     const queryClient = { id: 'qc' };
     const Page = () => <p>{JSON.stringify(useLoaderData())}</p>;
-    await render(
-      [{ path: '/', loader: fusionLoader(({ fusion }) => fusion.context), Component: Page }],
-      { queryClient },
-    );
+    await render([{ path: '/', loader: ({ fusion }) => fusion.context, Component: Page }], {
+      queryClient,
+    });
     expect(container.textContent).toBe(JSON.stringify({ queryClient }));
   });
 

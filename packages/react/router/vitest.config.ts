@@ -23,5 +23,11 @@ export default defineProject({
     exclude: ['src/__tests__/mocks/**'],
     name: `${name}@${version}`,
     environment: 'happy-dom',
+    // Type-level tests compile route context fixtures against the package source.
+    typecheck: {
+      enabled: true,
+      include: ['src/__tests__/**/*.test-d.ts'],
+      tsconfig: './tsconfig.test.json',
+    },
   },
 });

@@ -55,7 +55,7 @@ Routes that the DSL produces and routes declared as plain objects take the same 
 | `url`     | The request URL.                                                                           |
 | `pattern` | The matched route pattern, for example `/projects/:projectId`.                             |
 | `params`  | Matched URL parameters, typed by `TParams`.                                                |
-| `context` | The per-execution `RouterContextProvider`.                                                 |
+| `context` | The per-execution `RouteContextProvider`, shared with loaders and actions. |
 | `signal`  | Abort signal for the execution, the same object as `request.signal`.                       |
 | `fusion`  | `{ modules, context }`, the Fusion modules and the `context` prop passed to `<Router>`.    |
 
@@ -78,21 +78,67 @@ The second argument, `next`, runs the rest of the chain and the route handlers. 
 
 ## Passing values to loaders and actions
 
-Use `createContext` and `context.set` to hand a value from middleware to the loaders and actions of the same execution. Values are not shared between executions.
+Middleware, loaders and actions of one execution share a single `context`. Its type is `RouteContextProvider`, which is React Router v8's `Readonly<RouterContextProvider>`. Create a typed key with `createContext<T>()`, write it with `context.set(key, value)` in middleware, and read it with `context.get(key)` in a loader or action. `get` returns `T` and `set` only accepts a `T`, so no casts are needed. Every navigation, fetcher call, action and revalidation gets a new provider, so values never leak between executions.
 
 ```ts
-import { createContext, type MiddlewareFunction } from '@equinor/fusion-framework-react-router';
+// viewer-context.ts: share the key between modules
+import { createContext } from '@equinor/fusion-framework-react-router';
 
-export const userContext = createContext<string>('anonymous');
+export type Viewer = { name: string; canWrite: boolean };
 
-export const middleware: MiddlewareFunction[] = [
-  async ({ context, fusion }, next) => {
-    // `username` is an app-defined value passed through `<Router context={...}>`.
-    context.set(userContext, fusion.context.username ?? 'anonymous');
-    return next();
-  },
-];
+// No default value: `get` throws if middleware did not set it, instead of silently guessing.
+export const viewerContext = createContext<Viewer>();
 ```
+
+```tsx
+// pages/ProjectPage.tsx
+import type {
+  ActionFunctionArgs,
+  LoaderFunctionArgs,
+  MiddlewareFunction,
+  RouteComponentProps,
+} from '@equinor/fusion-framework-react-router';
+import { viewerContext } from '../viewer-context';
+
+type Params = { projectId?: string };
+
+const resolveViewer: MiddlewareFunction<Params> = async ({ context, fusion, signal }, next) => {
+  // `loadViewer` is app code, for example a call through an HTTP client from `fusion.modules`.
+  const viewer = await loadViewer(fusion, signal);
+  context.set(viewerContext, viewer);
+  return next();
+};
+
+export const middleware = [resolveViewer];
+
+export async function clientLoader({ context, params }: LoaderFunctionArgs<Params>) {
+  const viewer = context.get(viewerContext); // Viewer
+  return { project: params.projectId, viewer: viewer.name };
+}
+
+export async function action({ context, request }: ActionFunctionArgs<Params>) {
+  const viewer = context.get(viewerContext); // Viewer
+  if (!viewer.canWrite) {
+    throw new Error(`${viewer.name} may not write`);
+  }
+  const form = await request.formData();
+  return { saved: form.get('value') };
+}
+
+export default function ProjectPage({ loaderData }: RouteComponentProps<{ viewer: string }>) {
+  return <p>{loaderData.viewer}</p>;
+}
+```
+
+The same functions work on plain route objects: `{ path: '/projects/:projectId', middleware, loader: clientLoader, action }`.
+
+### Handler argument compatibility
+
+`LoaderFunctionArgs`, `ActionFunctionArgs` and `MiddlewareFunctionArgs` all carry React Router's `request`, `url`, `pattern`, `params` and `context`, plus Fusion's `fusion`. Middleware also gets `signal`. The generic parameters `<TParams, TContext>` are unchanged.
+
+- Existing Fusion loaders and actions keep compiling. They receive extra properties, which they can ignore.
+- `RouteObject.loader` and `RouteObject.action` are typed with Fusion's `LoaderFunction` and `ActionFunction`. Loaders typed with React Router's own `LoaderFunction`/`ActionFunction` remain assignable.
+- Code that builds handler arguments by hand, for example a unit test that calls a loader directly, must now pass `url`, `pattern` and `context`. A `new RouterContextProvider()` works for `context`.
 
 ## Lazy routes
 

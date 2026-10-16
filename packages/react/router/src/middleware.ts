@@ -1,6 +1,11 @@
 import type { MiddlewareFunction as ReactRouterMiddlewareFunction } from 'react-router';
 
-import type { FusionRouterContext, MaybePromise, UrlParameters } from './types.js';
+import type {
+  FusionRouterContext,
+  MaybePromise,
+  RouteContextProvider,
+  UrlParameters,
+} from './types.js';
 
 /**
  * Upstream React Router v8 Data Mode middleware arguments (`request`, `url`, `pattern`,
@@ -45,9 +50,14 @@ export type MiddlewareNextFunction<TResult = unknown> = Parameters<
 export interface MiddlewareFunctionArgs<
   TParams extends UrlParameters = UrlParameters,
   TContext extends FusionRouterContext = FusionRouterContext,
-> extends Omit<UpstreamMiddlewareArgs, 'params'> {
+> extends Omit<UpstreamMiddlewareArgs, 'params' | 'context'> {
   /** Dynamic route parameters of the matched location. */
   params: TParams;
+  /**
+   * Per-execution context provider, the same type loaders and actions receive as `context`.
+   * Values set here are read by downstream middleware, loaders and actions of this execution.
+   */
+  context: RouteContextProvider;
   /** Cancellation signal of this execution, identical to `request.signal`. */
   signal: AbortSignal;
   /** Fusion Framework modules and the custom context passed to `<Router>`. */
