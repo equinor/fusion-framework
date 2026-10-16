@@ -1,8 +1,5 @@
-import type {
-  FusionRouterContext,
-  MiddlewareFunction,
-  MiddlewareFunctionArgs,
-} from '@equinor/fusion-framework-react-router';
+import type { MiddlewareFunction } from './middleware.js';
+import type { FusionRouterContext, UrlParameters } from './types.js';
 
 /**
  * Defines middleware with the Fusion router's argument and continuation types.
@@ -20,7 +17,7 @@ import type {
  *
  * @example
  * ```ts
- * import { createMiddleware } from '@equinor/fusion-framework-react-app/routing';
+ * import { createMiddleware } from '@equinor/fusion-framework-react-router';
  *
  * export const middleware = [
  *   createMiddleware(async ({ signal }, next) => {
@@ -31,7 +28,7 @@ import type {
  * ```
  */
 export function createMiddleware<
-  TParams extends MiddlewareFunctionArgs['params'] = MiddlewareFunctionArgs['params'],
+  TParams extends UrlParameters = UrlParameters,
   TContext extends FusionRouterContext = FusionRouterContext,
   TResult = unknown,
   TMiddleware extends MiddlewareFunction<TParams, TContext, TResult> = MiddlewareFunction<

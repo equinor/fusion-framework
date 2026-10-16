@@ -3,7 +3,7 @@ import {
   RequiredAccessRolesError,
   RolesError,
 } from '@equinor/fusion-framework-module-roles/errors';
-import { createMiddleware } from '../routing/create-middleware.js';
+import type { MiddlewareFunction } from '@equinor/fusion-framework-react-router';
 
 /** Options for the opt-in Roles middleware helper. */
 export interface RequireRolesOptions {
@@ -112,5 +112,6 @@ export function requireRoles(
     }
     return next();
   };
-  return createMiddleware(middleware);
+  // Check the router contract without requiring its optional runtime for Roles-only consumers.
+  return middleware satisfies MiddlewareFunction;
 }

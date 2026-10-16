@@ -103,7 +103,7 @@ Format: `package name` → path → role.
 | `@equinor/fusion-framework-react-module-event` | `packages/react/modules/event` | Event hooks |
 | `@equinor/fusion-framework-react-module-http` | `packages/react/modules/http` | HTTP hooks |
 | `@equinor/fusion-framework-react-module-signalr` | `packages/react/modules/signalr` | SignalR hooks |
-| `@equinor/fusion-framework-react-router` | `packages/react/router` | Type-safe route DSL for React Router v7 |
+| `@equinor/fusion-framework-react-router` | `packages/react/router` | Type-safe route DSL and middleware definitions for React Router v8 |
 | `@equinor/fusion-framework-react-ag-grid` | `packages/react/ag-grid` | AG Grid React bindings |
 | `@equinor/fusion-framework-react-ag-charts` | `packages/react/ag-charts` | AG Charts React bindings |
 | `@equinor/fusion-framework-react-components-roles` | `packages/react/components/roles` | Required-role recovery UI for React hosts |

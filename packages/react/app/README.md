@@ -122,7 +122,8 @@ export const middleware = [
 ];
 ```
 
-The factory returns the same function without wrapping execution. Specify
+The router-owned factory is re-exported through the app routing entry point and
+returns the same function without wrapping execution. Specify
 `createMiddleware<Params, FusionContext, Result>(...)` for specialized route
 parameters, application context or downstream results.
 
@@ -141,7 +142,7 @@ argument to accept any one role. No app-owned guard implementation or custom
 context types are needed. Denial and provider errors stop the middleware chain;
 cancelled operations cannot continue.
 
-The guard uses the same `createMiddleware` contract internally. Roles-only
+The guard checks the same router middleware contract at compile time. Roles-only
 consumers do not gain a router runtime or declaration dependency.
 
 See [Role-gated middleware](../router/docs/require-roles.md) for layouts, errors

@@ -18,7 +18,6 @@
  * @packageDocumentation
  */
 export * from '@equinor/fusion-framework-react-router';
-export { createMiddleware } from './create-middleware.js';
 // Explicit re-exports from /routes so the DSL `Route` class takes precedence
 // over the deprecated react-router `Route` component from the main entry.
 export {

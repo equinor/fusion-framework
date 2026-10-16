@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { createMiddleware } from '../routing/create-middleware.js';
+import { createMiddleware } from '../index.js';
 
 describe('createMiddleware', () => {
   it('preserves the callback identity and synchronous result', () => {

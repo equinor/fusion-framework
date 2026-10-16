@@ -6,6 +6,24 @@ Route middleware runs before a route's loaders and actions. Use it for guards, r
 
 ## Declaring middleware
 
+Use the router-owned `createMiddleware` factory for inferred middleware argument
+and continuation types:
+
+```ts
+import { createMiddleware } from '@equinor/fusion-framework-react-router';
+
+export const middleware = [
+  createMiddleware(async ({ signal }, next) => {
+    signal.throwIfAborted();
+    return next();
+  }),
+];
+```
+
+The factory preserves the original callback and its execution. Supply
+`createMiddleware<Params, FusionContext, Result>(...)` for specialized types.
+It is also re-exported by `@equinor/fusion-framework-react-app/routing`.
+
 Export `middleware` from a route module. The DSL signatures do not change. The Vite plugin (`@equinor/fusion-framework-vite-plugin-react-router`) picks up the export next to `clientLoader`, `action`, `handle`, `ErrorElement` and the other route exports.
 
 ```tsx
