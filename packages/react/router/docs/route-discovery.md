@@ -1,6 +1,6 @@
 # Route discovery and the canonical route graph
 
-`resolveRoutes` turns an application's routes into one canonical route graph that build tooling can share: generated startup, the Vite integration, preview and routing manifest generation. It reads either file-route modules under `src/routes` or an explicit route registry, and it never mounts React, needs a DOM, starts Vite or runs route components, loaders or actions.
+`resolveRoutes` turns an application's routes into one canonical route graph that build tooling can share: generated startup, the Vite integration and preview. It reads either file-route modules under `src/routes` or an explicit route registry, without mounting React, requiring a DOM or starting Vite. Explicit registries are trusted build-time code; their evaluation has the limitations described below.
 
 The resolver is exported from the build-tool entry point `@equinor/fusion-framework-react-router/build`. It is Node.js-only; do not import it from application code.
 
@@ -69,7 +69,7 @@ export default layout('./layout.tsx', [
 
 - The registry exports route DSL nodes as its `default` export, or as a named `routes` export.
 - Relative module references (`./Page.tsx`, `../pages/list`) resolve against the module that calls `index()`, `layout()` or `route()`, as the Vite plugin does. A registry can therefore be split into helper registries that each reference their own `./Page.tsx`. Absolute paths, `file:` URLs and `import.meta.resolve(...)` results are accepted too.
-- Page modules are referenced by path and read as text. They are never imported or executed, so the graph, capabilities and metadata come without running components, loaders or actions.
+- Modules reached only through DSL path references are read as text, not imported. Do not eagerly import page modules into a registry or its helpers.
 
 ### What a registry may import
 
@@ -83,13 +83,19 @@ A registry is ordinary trusted build-time code, like `vite.config.ts`. It is bun
 
 Project helpers are listed in `graph.dependencies` and re-read on every call. Installed packages are not listed.
 
-**Route modules are never executed.** Before anything runs, every bundled project module is scanned. A module is treated as a route module, and the import is rejected with `unsupported-registry-import` naming the importing and imported files, when:
+**Route-module preflight.** Before evaluation, every bundled project module is scanned. A recognized route module is rejected with `unsupported-registry-import` naming the importing and imported files, when:
 
 - it exports a route-only capability (`clientLoader`, `action`, `handle`, `ErrorElement`, `HydrateFallback`, `shouldRevalidate`, `middleware`), directly or through `export * from`;
 - it is not a registry module and has a default export in a `.tsx`/`.jsx` file, or an `export default function`/`class`;
 - a registry module references it by a quoted relative path (for example `route('about', './About.ts')`) while also importing it.
 
 The same diagnostic is reported when the entry registry is itself a route module. After evaluation, every route reference is compared with the bundled modules again. A computed reference to a module that registry code imported is rejected. In that case the imported module did run, because it looked like an ordinary helper (for example a `.ts` file with an expression default and no route-only exports). Keep route modules out of registry imports and reference them by path only.
+
+**Publication gate:** registry evaluation is not a static metadata-extraction
+guarantee. Manifest publication must statically extract metadata and role
+declarations, rejecting unsupported dynamic cases before any evaluation that
+could load application route code. The graph alone does not satisfy that
+publication contract; the manifest producer must enforce it separately.
 
 Relative or alias imports that resolve outside the project root are rejected with `route-file-outside-root`, because they could not be watched. Workspace packages reached through `node_modules` are allowed. Imports that esbuild cannot load without a loader (for example CSS or images) and Vite-only aliases cause `route-registry-load-failed`.
 

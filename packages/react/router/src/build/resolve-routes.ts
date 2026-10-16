@@ -103,11 +103,12 @@ function toFailedGraph(source: RouteGraphSource, diagnostic: RouteDiagnostic): R
  * `*.test` / `*.spec` files, hidden names and `_`-prefixed names (including
  * `__tests__` and `__mocks__`) are ignored.
  *
- * Resolution is build-only: it reads module source to detect capabilities, never
- * mounts React, requires a DOM, starts Vite or runs route components, loaders or
- * actions. A registry is bundled, checked to import only the route DSL and other
- * route registry modules, and evaluated in a short-lived worker thread; relative
- * module references resolve against the module that declares them. Problems are
+ * Resolution is build-only: it reads module source to detect capabilities without
+ * mounting React, requiring a DOM or starting Vite. A registry and its helpers are
+ * trusted build-time code, checked for recognizable eager page imports and evaluated
+ * in a short-lived worker thread. Computed references may reveal an imported page
+ * only after evaluation, so this is not a static metadata-publication guarantee.
+ * Relative module references resolve against the module that declares them. Problems are
  * returned as diagnostics naming the source files; call {@link assertRouteGraph}
  * to fail on errors.
  *

@@ -192,8 +192,9 @@ function toDiagnosticFiles(root: string, files: readonly string[]): string[] {
 }
 
 /**
- * Checks the registry graph before evaluation, so evaluating it never runs route
- * (page) modules. Ordinary helper modules, Node built-ins and installed packages are
+ * Checks the registry graph for recognizable route (page) imports before evaluation.
+ * Computed references to ambiguous helpers may only be identified after evaluation.
+ * Ordinary helper modules, Node built-ins and installed packages are
  * allowed: they are trusted build-time code, like the Vite configuration that loads
  * the registry. This is a pre-evaluation check, not a sandbox.
  *
@@ -369,8 +370,8 @@ function toBuildDiagnostic(
  *    resolve against the module that declares them, as in the Vite plugin.
  *    Installed packages and Node built-ins stay external.
  * 2. The graph is checked before evaluation (see {@link checkRegistryGraph}): route
- *    (page) modules in the graph are rejected with `unsupported-registry-import`, so
- *    their code never runs. Ordinary helpers, packages and built-ins are allowed.
+ *    (page) modules recognized in the graph are rejected with `unsupported-registry-import`
+ *    before execution. Ordinary helpers, packages and built-ins are allowed.
  * 3. The bundle is evaluated in a fresh, terminated-after-use worker thread; only a
  *    plain-data projection of the DSL nodes is returned.
  * 4. If a module reference computed at evaluation time points at a bundled module
