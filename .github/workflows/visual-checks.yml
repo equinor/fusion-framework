@@ -82,6 +82,18 @@ jobs:
         shell: bash
         run: pnpm turbo run test:playwright
 
+      - name: Upload Playwright diagnostics
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: playwright-diagnostics-${{ matrix.os }}-${{ github.run_attempt }}
+          path: |
+            cookbooks/*/playwright/.results/
+            cookbooks/*/playwright-report/
+          include-hidden-files: true
+          if-no-files-found: ignore
+          retention-days: 7
+
   required-check:
     name: Visual checks
     if: always() && (github.event_name == 'workflow_dispatch' || !github.event.pull_request.draft)

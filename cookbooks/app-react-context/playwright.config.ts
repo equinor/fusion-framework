@@ -5,7 +5,10 @@ export default defineConfig({
   outputDir: './playwright/.results',
   ignoreSnapshots: process.env.PLAYWRIGHT_IGNORE_SNAPSHOTS === 'true',
   snapshotPathTemplate: '{testDir}/{testFilePath}-snapshots/{arg}{ext}',
-  fullyParallel: true,
+  // Avoid competing cold portal/app loads against the shared preview server.
+  workers: 1,
+  timeout: 45_000,
+  reporter: [['list'], ['html', { open: 'never' }]],
   expect: {
     timeout: 15_000,
     toHaveScreenshot: {
@@ -22,7 +25,8 @@ export default defineConfig({
     },
     {
       command: 'ffc app build && ffc app serve --port 3010 --mock http://localhost:4011',
-      port: 3010,
+      // The SPA HTML fallback requires Accept: text/html; probe its bootstrap module instead.
+      url: 'http://localhost:3010/@fusion-spa-bootstrap.js',
       timeout: 120_000,
       reuseExistingServer: !process.env.CI,
     },
@@ -31,5 +35,7 @@ export default defineConfig({
     baseURL: 'http://localhost:3010',
     colorScheme: 'light',
     viewport: { width: 1280, height: 720 },
+    trace: 'retain-on-failure',
+    screenshot: 'only-on-failure',
   },
 });
