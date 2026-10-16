@@ -73,6 +73,12 @@ Internal: bump `<dependency>` from `<old-version>` to `<new-version>`.
 
 ## Validation commands
 
+Keep `react` and `react-dom` runtime updates together in the Dependabot `react`
+group. Direct runtime and type dependencies use `catalog:react`, defined in
+`pnpm-workspace.yaml`; update its `react` and `react-dom` entries to the same
+exact version. Preserve consumer-facing peer ranges. Type packages in the
+catalog do not need the same version as the runtime.
+
 Run the full validation suite before declaring the PR ready to merge:
 
 ```bash

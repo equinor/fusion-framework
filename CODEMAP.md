@@ -234,6 +234,9 @@ Use this table instead of searching. "Start here" is the first file to open.
   native Node; cookbooks and the docs site are bundled by Vite and are exempt.
   Biome's `useImportExtensions` flags a missing extension in the editor; `pnpm verify:esm`
   enforces both rules in CI.
+- Direct React runtime and type dependencies use `catalog:react`, defined in
+  `pnpm-workspace.yaml`. Keep the `react` and `react-dom` catalog entries pinned
+  to the same exact runtime version; consumer-facing peer ranges stay independent.
 
 ---
 

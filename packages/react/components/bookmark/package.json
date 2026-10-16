@@ -45,8 +45,8 @@
     "@equinor/fusion-framework-module-app": "workspace:^",
     "@equinor/fusion-framework-module-bookmark": "workspace:^",
     "@equinor/fusion-framework-module-event": "workspace:^",
-    "@types/react": "^19.2.7",
-    "react": "^19.2.1",
+    "@types/react": "catalog:react",
+    "react": "catalog:react",
     "styled-components": "^6.3.11",
     "typescript": "^7.0.2",
     "vitest": "catalog:vitest"

@@ -8,6 +8,13 @@ updates:
     open-pull-requests-limit: 50
     versioning-strategy: increase-if-necessary
     groups:
+      react:
+        applies-to: version-updates
+        patterns:
+          - "react"
+          - "react-dom"
+          - "@types/react"
+          - "@types/react-dom"
       ag-charts:
         applies-to: version-updates
         patterns:

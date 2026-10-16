@@ -69,12 +69,12 @@
     "@equinor/fusion-imports": "workspace:*"
   },
   "devDependencies": {
-    "@types/react": "^19.2.7",
-    "@types/react-dom": "^19.2.3",
+    "@types/react": "catalog:react",
+    "@types/react-dom": "catalog:react",
     "@vitest/browser-playwright": "catalog:vitest",
     "playwright": "catalog:",
-    "react": "^19.2.1",
-    "react-dom": "^19.2.1",
+    "react": "catalog:react",
+    "react-dom": "catalog:react",
     "rxjs": "^7.8.1",
     "typescript": "^7.0.2",
     "vite": "^8.0.0",

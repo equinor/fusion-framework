@@ -76,11 +76,11 @@
     "uuid": "^14.0.0"
   },
   "devDependencies": {
-    "@types/react": "^19.2.7",
+    "@types/react": "catalog:react",
     "@vitest/browser-playwright": "catalog:vitest",
     "playwright": "catalog:",
-    "react": "^19.2.1",
-    "react-dom": "^19.2.1",
+    "react": "catalog:react",
+    "react-dom": "catalog:react",
     "typescript": "^7.0.2",
     "vitest": "catalog:vitest",
     "vitest-browser-react": "catalog:vitest"

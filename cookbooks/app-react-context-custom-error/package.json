@@ -17,10 +17,10 @@
     "@equinor/fusion-framework-react-app": "workspace:^",
     "@equinor/fusion-framework-react-module-context": "workspace:^",
     "@equinor/fusion-observable": "workspace:^",
-    "@types/react": "^19.2.7",
-    "@types/react-dom": "^19.2.3",
-    "react": "^19.2.1",
-    "react-dom": "^19.2.1"
+    "@types/react": "catalog:react",
+    "@types/react-dom": "catalog:react",
+    "react": "catalog:react",
+    "react-dom": "catalog:react"
   },
   "devDependencies": {
     "odata-query": "^8.0.4",
