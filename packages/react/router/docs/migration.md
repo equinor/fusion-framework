@@ -8,6 +8,10 @@ If you are starting a new app, use the [getting started guide](getting-started.m
 
 **React Router v8 requires React 19.2.7 or later.** This is a major version requirement:
 
+The v8-based Fusion router is being prepared on the routing feature branch. Apply
+these steps after its release is announced; upgrading today's stable package alone
+does not guarantee the v8 baseline.
+
 ```bash
 pnpm up react@^19.2.7 react-dom@^19.2.7
 pnpm up @equinor/fusion-framework-react-router
@@ -20,7 +24,10 @@ pnpm up @equinor/fusion-framework-react-router
 - ESM-compatible build and test setup
 
 > [!NOTE]
-> Remove `react-router` and `react-router-dom` from your direct dependencies if present. React Router is bundled by the Fusion package.
+> Remove `react-router-dom` after updating its imports. Remove a direct `react-router`
+> dependency only after replacing all direct imports with supported Fusion exports.
+> If your app still imports an API from `react-router` or `react-router/dom`, retain a
+> compatible direct dependency; do not rely on a transitive dependency being importable.
 
 ## Why migrate to the Fusion router?
 
@@ -98,18 +105,24 @@ export async function loader({ params }: LoaderFunctionArgs) {
 }
 ```
 
-**After:**
+**After** (a page module referenced by the Fusion DSL):
 
 ```ts
 import type { LoaderFunctionArgs } from '@equinor/fusion-framework-react-router';
 
-export async function loader({ params, fusion }: LoaderFunctionArgs<{ id: string }>) {
+export async function clientLoader({ params, fusion }: LoaderFunctionArgs<{ id: string }>) {
   const client = fusion.modules.http.createHttpClient('products');
   return client.json(`/products/${params.id}`);
 }
 ```
 
 The `fusion.modules` object exposes configured Fusion modules. The `fusion.context` object contains any custom context passed to `<Router context={...} />`.
+
+The existing Fusion Vite plugin maps a page module's `clientLoader` export to the
+route object's `loader` property, and its `action` export to `action`. Hand-written
+route objects continue to use `loader` and `action`. These are existing Fusion
+conventions, not names introduced by React Router v8; do not rename an action
+export to `clientAction`.
 
 ### Step 4 — Update component props
 
@@ -140,7 +153,7 @@ Hooks like `useLoaderData` still work and are re-exported from the Fusion packag
 
 ### Step 5 — Update imports
 
-All standard React Router hooks and components are re-exported from the Fusion package:
+Common React Router hooks and components are re-exported from the Fusion package:
 
 ```ts
 // Before
@@ -152,70 +165,60 @@ import { useNavigate, useParams, Link } from '@equinor/fusion-framework-react-ro
 
 Available re-exports: `useNavigate`, `useParams`, `useLocation`, `useLoaderData`, `useActionData`, `useMatches`, `useNavigation`, `Link`, `NavLink`, `Outlet`, `Form`, `useSubmit`, `redirect`, `isRouteErrorResponse`, and others.
 
-### Step 6 — Remove direct dependencies
+### Step 6 — Remove unused direct dependencies
+
+After replacing every direct import, remove dependencies your app no longer uses:
 
 ```bash
 pnpm remove react-router react-router-dom
 ```
 
-React Router is already bundled by the Fusion package.
+The Fusion package installs its own React Router dependency. If any imports still
+come from `react-router` or `react-router/dom`, keep a compatible direct dependency
+on `react-router` instead of removing it.
 
 ## Migrating existing Fusion v7 apps
 
-If you are already using the Fusion router on React Router v7, the same steps apply. The Fusion router API is stable across v7 and v8. See below for what changed in React Router itself.
+If you already use Fusion with React Router v7, upgrade the runtime dependencies
+and check direct upstream imports. Keep your existing route registry, page exports,
+navigation configuration and startup code; adopting the DSL or new routing features
+is a separate choice.
 
 ## What changed in React Router v8
 
 ### `react-router-dom` merged into `react-router`
 
-React Router v8 removes the `react-router-dom` package. All browser routing exports are now in `react-router`. For Fusion apps, import from `@equinor/fusion-framework-react-router` instead.
+React Router v8 removes the `react-router-dom` package. Use supported Fusion
+re-exports, or the appropriate `react-router` / `react-router/dom` entry point with
+a compatible direct dependency.
 
 ### Route object properties
 
-Both old and new property names work in v8, but the new names are recommended:
-
-| Old (v7) | New (v8) | Note |
-|---|---|---|
-| `element` | `Component` | Both work; `Component` is now preferred |
-| `errorElement` | `ErrorBoundary` | Both work in Fusion Router |
-
-Example with v8 naming:
-
-```ts
-{
-  path: '/products/:id',
-  Component: ProductPage,
-  ErrorBoundary: ErrorBoundary,
-}
-```
-
-Fusion Router supports both forms. See the [tests](https://github.com/equinor/fusion-framework/blob/main/packages/react/router/src/__tests__/router-v8.test.tsx) for both patterns in use.
+`element` / `Component` and `errorElement` / `ErrorBoundary` are existing route
+property alternatives, not v8 renames. Do not mechanically rename working route
+definitions as part of this upgrade.
 
 ### Error boundaries
 
-Errors in loaders and components trigger error boundaries immediately. Both `errorElement` and `ErrorBoundary` properties work:
+Both Fusion `errorElement` and `ErrorBoundary` component forms remain supported.
+The Fusion wrapper still supplies `error` and `fusion` props. The v8 compatibility
+change removes the internal `hasErrorBoundary` property; applications should not
+need to change their working error component for that reason.
 
-```tsx
-// errorElement form (still supported)
-{
-  path: '/',
-  Component: HomePage,
-  errorElement: ({ error }) => <p>Error: {error.message}</p>,
-}
+### Middleware and v7 future flags
 
-// ErrorBoundary form (new)
-{
-  path: '/',
-  Component: HomePage,
-  ErrorBoundary: ({ error }) => <p>Error: {error.message}</p>,
-}
-```
+Upstream v8 makes its former v7 future behavior the default. Fusion uses client
+Data Mode, not React Router Framework Mode. `v7_startTransition` was not a
+middleware-enabling flag, and loaders/actions are not middleware.
 
-Fusion Router passes `error` and `fusion` as props to error boundaries.
+Fusion's route-module middleware integration is delivered separately from this
+dependency baseline. Upgrading React Router alone is not a replacement for that
+integration, and Framework Mode `clientMiddleware` examples are not the Fusion
+route-module API.
 
 ### ESM-only
 
-React Router v8 is ESM-only. Node.js 22.22.0+ is required at runtime.
+React Router v8 is ESM-only and requires Node.js 22.22.0+ for Node-based tooling.
 
 **If your build outputs CommonJS or uses CommonJS-only loaders:**
 
@@ -251,7 +254,7 @@ See [the interop guide](interop.md) for details.
 **In loaders and actions:**
 
 ```ts
-export async function loader({ params, fusion }: LoaderFunctionArgs) {
+export async function clientLoader({ params, fusion }: LoaderFunctionArgs) {
   const http = fusion.modules.http;
   const context = fusion.context;
   // ...
