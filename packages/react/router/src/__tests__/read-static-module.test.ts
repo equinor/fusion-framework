@@ -324,4 +324,33 @@ describe('readStaticModule', () => {
       alias: 'Home',
     });
   });
+
+  it.each([
+    "const description = 'Home';",
+    'const description = `Home`;',
+    "const title = 'Home'; const description = title;",
+  ])('allows primitive copies in unrelated accessor receivers: %s', async (declaration) => {
+    const module = await readFixture(`
+      ${declaration}
+      const ui = { description, get icon() { return 'icon'; } };
+      const icon = ui.icon;
+      export const handle = { route: { description } };
+    `);
+    const route = module.getProperty(requireExport(module, 'handle'), 'route');
+    if (!route) throw new Error('Missing fixture route metadata');
+    expect(module.evaluate(route)).toEqual({ description: 'Home' });
+  });
+
+  it('still rejects primitive bindings reassigned inside an invoked getter', async () => {
+    const module = await readFixture(`
+      let description = 'Before';
+      const ui = {
+        description,
+        get icon() { description = 'After'; return 'icon'; },
+      };
+      const icon = ui.icon;
+      export default { description };
+    `);
+    expect(() => module.evaluate(requireExport(module, 'default'))).toThrow('mutable');
+  });
 });

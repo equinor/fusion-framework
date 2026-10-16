@@ -207,6 +207,19 @@ describe('resolveSitemap', () => {
     await expect(resolveSitemap({ root })).rejects.toThrow('mutable');
   });
 
+  it('accepts primitive metadata copied into an unrelated accessor receiver', async () => {
+    await file('src/routes.ts', `${dsl} export default index('./page.tsx');`);
+    await file(
+      'src/page.tsx',
+      `${page}
+       const description = 'Home';
+       const ui = { description, get icon() { return 'icon'; } };
+       const icon = ui.icon;
+       export const handle = { route: { description } };`,
+    );
+    expect(await resolveSitemap({ root })).toEqual([['/', 'Home']]);
+  });
+
   it.each(['const title = handle.route.description;', 'const copy = { ...handle.route };'])(
     'accepts literal metadata when an unrelated getter is never invoked: %s',
     async (read) => {

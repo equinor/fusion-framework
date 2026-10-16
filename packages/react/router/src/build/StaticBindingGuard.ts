@@ -150,8 +150,7 @@ export class StaticBindingGuard {
       if (
         this.hasDirectEval ||
         current.written ||
-        (!primitive && current.exposed) ||
-        this.accessors.hasAccessorRead(current.containers)
+        (!primitive && (current.exposed || this.accessors.hasAccessorRead(current.containers)))
       ) {
         throw new Error(
           `${this.file}: mutable binding '${current.name}' cannot be used in a source-only sitemap. ` +
