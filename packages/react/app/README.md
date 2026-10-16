@@ -106,6 +106,8 @@ const App = () => {
 };
 ```
 
+See the [app routing guide](docs/routing.md) for typed middleware and role-gated routes.
+
 ## State Management
 
 [<img src="https://img.shields.io/github/package-json/v/equinor/fusion-framework?filename=packages%2Fmodules%2Fstate%2Fpackage.json&label=@equinor/fusion-framework-module-state&style=for-the-badge" />](https://github.com/equinor/fusion-framework/tree/main/packages/modules/state)

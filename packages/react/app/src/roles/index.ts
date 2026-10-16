@@ -9,6 +9,8 @@ export type {
   RolesModule,
 } from '@equinor/fusion-framework-module-roles';
 
+export { requireRoles, type RequireRolesOptions } from './require-roles.js';
+
 export {
   useAccessRole,
   type ClaimableRoleAssignmentActivationResult,
