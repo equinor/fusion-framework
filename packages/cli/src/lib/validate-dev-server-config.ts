@@ -1,6 +1,6 @@
 import type { DevServerOptions } from '@equinor/fusion-framework-dev-server';
 
-import { DevServerOptionsSchema } from './dev-server-config-schema.js';
+import { DevServerOptionsSchema } from './dev-server-options-schema.js';
 import { InvalidDevServerConfigError } from './InvalidDevServerConfigError.js';
 
 /**
@@ -20,6 +20,7 @@ export const validateDevServerConfig = (config: unknown): DevServerOptions => {
   // Preserve Zod's field paths so CLI users can locate the invalid setting directly.
   if (!result.success) {
     throw new InvalidDevServerConfigError(
+      // Convert structured issues into field-prefixed messages for the CLI error output.
       result.error.issues.map(
         (issue) => `${issue.path.length > 0 ? issue.path.join('.') : '<root>'}: ${issue.message}`,
       ),

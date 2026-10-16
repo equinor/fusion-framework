@@ -49,6 +49,7 @@ const createEnv = (root: string): RuntimeEnv => ({
 });
 
 afterEach(async () => {
+  // Remove each isolated config fixture after its test completes.
   await Promise.all(tempDirs.splice(0).map((root) => rm(root, { recursive: true, force: true })));
 });
 
@@ -71,6 +72,7 @@ describe('loadDevServerConfig', () => {
     expect(templateEnv.msal?.requiresAuth).toBe('false');
     expect(templateEnv.msal?.clientId).toBeDefined();
     expect(templateEnv.serviceDiscovery?.url).toBe('/default-discovery');
+    // Compare resource paths only so credentials and scopes are excluded from assertions.
     expect(templateEnv.serviceWorker?.resources.map(({ url }) => url)).toContain(
       '/default-resource',
     );
@@ -93,6 +95,7 @@ describe('loadDevServerConfig', () => {
 
     expect(typeof loaded.config.api.processServices).toBe('function');
     expect(typeof loaded.config.spa?.templateEnv).toBe('function');
+    // The route match verifies that factory-returned routes survive resolution.
     expect(loaded.config.api.routes?.map(({ match }) => match)).toContain('/factory-route');
   });
 
@@ -120,6 +123,7 @@ describe('loadDevServerConfig', () => {
 
     await expect(result).rejects.toThrow(/api\.serviceDiscoveryUrl/);
     await expect(result).rejects.toBeInstanceOf(InvalidDevServerConfigError);
+    await expect(result).rejects.toThrow(/API service discovery URL must be a non-empty string/);
   });
 
   it('rejects null configuration roots with a root-path diagnostic', async () => {
