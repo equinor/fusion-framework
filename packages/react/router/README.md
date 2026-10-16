@@ -1,6 +1,6 @@
 # @equinor/fusion-framework-react-router
 
-Opinionated React Router v7 integration for Fusion Framework applications. Rather than wiring up navigation history, basename, and request context by hand, this package does it for you and surfaces everything as a typed `fusion` object inside every loader, action, and component.
+Opinionated React Router v8 integration for Fusion Framework applications. Rather than wiring up navigation history, basename, and request context by hand, this package does it for you and surfaces everything as a typed `fusion` object inside every loader, action, and component.
 
 The package ships three things that work together:
 
@@ -25,8 +25,9 @@ pnpm add @equinor/fusion-framework-react-router
 
 **Prerequisites**
 
-- React 18+ (`react` is a required peer dependency)
-- `react-dom` 18+ (optional peer dependency, required for browser rendering)
+- React 19.2.7 or later (`react` is a required peer dependency; React 18 is no longer supported)
+- `react-dom` 19.2.7 or later (required peer dependency)
+- Node.js 22.22.0 or later for builds and tests (required by React Router v8, which is ESM-only)
 
 All other Fusion Framework packages (`@equinor/fusion-framework-module-navigation`, `@equinor/fusion-framework-react-module`) are bundled dependencies — they install automatically.
 
