@@ -55,6 +55,68 @@ describe('detectRouteModuleCapabilities', () => {
 
     expect(detectRouteModuleCapabilities(source)).toEqual([]);
   });
+
+  it('ignores export-like text in nested template expressions and escaped quotes', () => {
+    const source = [
+      "const a = 'it\\'s export const action = 1';",
+      // biome-ignore lint/suspicious/noTemplateCurlyInString: the string is module source under test
+      'const b = `${`export const clientLoader = ${1}`} export const handle = 1`;',
+      'const c = "/* not a comment */"; export const middleware = [];',
+    ].join('\n');
+
+    expect(detectRouteModuleCapabilities(source)).toEqual(['middleware']);
+  });
+
+  it('detects named re-exports but cannot expand export-star re-exports', () => {
+    const source = [
+      "export { default, clientLoader as clientLoader } from './page';",
+      "export { load as action, type Handle } from './load';",
+      "export * from './everything';",
+      "export * as handle from './handle';",
+    ].join('\n');
+
+    expect(detectRouteModuleCapabilities(source)).toEqual(['component', 'clientLoader', 'action']);
+  });
+
+  it('ignores type-only and ambient declarations', () => {
+    const source = [
+      'export type clientLoader = () => null;',
+      'export interface action {}',
+      'export declare const handle: unknown;',
+      'export declare function ErrorElement(): null;',
+      'export type { middleware };',
+    ].join('\n');
+
+    expect(detectRouteModuleCapabilities(source)).toEqual([]);
+  });
+
+  it('detects every declarator of multi-declarator and destructuring exports', () => {
+    const source = [
+      'export const helper = 1, clientLoader = () => ({ a: [1, 2] }), action = call(1, 2);',
+      'export const { handle, nested: { deep: ErrorElement }, renamed: shouldRevalidate } = config;',
+      'export const [HydrateFallback, ...rest] = pair;',
+      'export let middleware: Array<Record<string, () => void>> = [], other = 2;',
+    ].join('\n');
+
+    expect(detectRouteModuleCapabilities(source)).toEqual([
+      'clientLoader',
+      'action',
+      'handle',
+      'errorElement',
+      'hydrateFallback',
+      'shouldRevalidate',
+      'middleware',
+    ]);
+  });
+
+  it('does not report object keys or default values as exports', () => {
+    const source = [
+      'export const { clientLoader: load = action, ...handle } = config;',
+      'export const settings = { action: 1, clientLoader: () => null };',
+    ].join('\n');
+
+    expect(detectRouteModuleCapabilities(source)).toEqual(['handle']);
+  });
 });
 
 describe('build entry point', () => {

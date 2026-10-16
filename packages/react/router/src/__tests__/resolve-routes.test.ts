@@ -1,8 +1,10 @@
 // @vitest-environment node
-import { rename, rm } from 'node:fs/promises';
+import { chmod, readdir, rename, rm, symlink } from 'node:fs/promises';
 import path from 'node:path';
 
 import { afterEach, describe, expect, it } from 'vitest';
+
+import { existsSync } from 'node:fs';
 
 import {
   assertRouteGraph,
@@ -21,7 +23,8 @@ import {
   page,
   type RouteProjectFiles,
   removeRouteProject,
-  routeDslModule,
+  routeDslSpecifier,
+  sideEffectPage,
   writeRouteProjectFiles,
 } from './fixtures/route-projects.js';
 
@@ -40,13 +43,13 @@ const project = async (files: RouteProjectFiles): Promise<string> => {
 };
 
 /**
- * Builds registry source importing the real route DSL helpers.
+ * Builds registry source importing the public route DSL entry.
  *
  * @param body - Registry body.
  * @returns Registry module source.
  */
 const registry = (body: string): string =>
-  `import { index, layout, prefix, route } from ${JSON.stringify(routeDslModule)};\n${body}\n`;
+  `import { index, layout, prefix, route } from ${JSON.stringify(routeDslSpecifier)};\n${body}\n`;
 
 /**
  * Projects a graph onto the fields most assertions care about.
@@ -404,12 +407,12 @@ describe('resolveRoutes: explicit route registry', () => {
       ['duplicate-route-path', ['src/pages/a.tsx', 'src/pages/b.tsx']],
       ['invalid-dynamic-segment', ['src/pages/helper.ts', 'src/routes/routes.ts']],
       ['missing-route-capability', ['src/pages/helper.ts']],
+      ['unresolved-route-file', ['src/pages/missing.tsx', 'src/routes/routes.ts']],
       ['invalid-route-registry', ['src/routes/routes.ts']],
-      ['unresolved-route-file', ['src/routes/routes.ts']],
     ]);
     const unresolved = graph.diagnostics.find((d) => d.code === 'unresolved-route-file');
     expect(unresolved?.message).toContain(
-      'src/routes/routes.ts: route module "../pages/missing.tsx"',
+      'src/routes/routes.ts: route module "src/pages/missing.tsx" does not exist.',
     );
   });
 
@@ -452,6 +455,260 @@ describe('resolveRoutes: explicit route registry', () => {
       root: await project({ 'src/routes/routes.ts': 'export default [;\n' }),
     });
     expect(problems(failing)).toEqual([['route-registry-load-failed', ['src/routes/routes.ts']]]);
+  });
+});
+
+describe('resolveRoutes: registry call sites and isolation', () => {
+  it('resolves relative references at the declaring registry module', async () => {
+    const root = await project({
+      'src/routes/Page.tsx': page,
+      'src/routes/admin/Page.tsx': `${page}export const clientLoader = () => null;\n`,
+      'src/routes/admin/users/Page.tsx': `${page}export const action = async () => null;\n`,
+      'src/routes/admin/admin.routes.ts': registry(`
+        import { userRoutes } from './users/users.routes';
+        export const adminRoutes = prefix('admin', [index('./Page.tsx'), ...userRoutes]);
+      `),
+      'src/routes/admin/users/users.routes.ts': registry(
+        `export const userRoutes = [route('users', './Page.tsx')];`,
+      ),
+      'src/routes/routes.ts': registry(`
+        import { adminRoutes } from './admin/admin.routes';
+        export default [index('./Page.tsx'), adminRoutes];
+      `),
+    });
+    const graph = await resolveRoutes({ root });
+
+    expect(graph.diagnostics).toEqual([]);
+    expect(graph.routes.map((route) => [route.path, route.id, route.capabilities])).toEqual([
+      ['/', 'file:src/routes/Page.tsx', ['component']],
+      ['/admin', 'file:src/routes/admin/Page.tsx', ['component', 'clientLoader']],
+      ['/admin/users', 'file:src/routes/admin/users/Page.tsx', ['component', 'action']],
+    ]);
+    expect(graph.dependencies).toEqual(
+      expect.arrayContaining([
+        'src/routes/routes.ts',
+        'src/routes/admin/admin.routes.ts',
+        'src/routes/admin/users/users.routes.ts',
+      ]),
+    );
+
+    // Editing an imported helper registry must be visible on the next resolution
+    await writeRouteProjectFiles(root, {
+      'src/routes/admin/users/users.routes.ts': registry(
+        `export const userRoutes = [route('people', './Page.tsx')];`,
+      ),
+    });
+    const edited = await resolveRoutes({ root });
+    expect(edited.routes.map((route) => route.path)).toEqual(['/', '/admin', '/admin/people']);
+  });
+
+  it('evaluates every resolution in a fresh, released context without writing files', async () => {
+    const root = await project({
+      'src/routes/Page.tsx': page,
+      'src/routes/routes.ts': registry(`
+        const state = globalThis as { evaluations?: number };
+        state.evaluations = (state.evaluations ?? 0) + 1;
+        export default [route(String(state.evaluations), './Page.tsx')];
+      `),
+    });
+    const listing = async (): Promise<string[]> =>
+      (await readdir(root, { recursive: true })).map(String).sort();
+    const before = await listing();
+    const resources = process.getActiveResourcesInfo().length;
+
+    // Repeated resolution must neither share module state nor accumulate resources
+    for (let run = 0; run < 15; run++) {
+      const graph = await resolveRoutes({ root });
+      expect(graph.routes.map((route) => route.path)).toEqual(['/1']);
+    }
+
+    expect(await listing()).toEqual(before);
+    expect(process.getActiveResourcesInfo().length).toBeLessThanOrEqual(resources);
+    expect((globalThis as { evaluations?: number }).evaluations).toBeUndefined();
+  });
+
+  it('never evaluates discovered or registry-referenced page modules', async () => {
+    const discovered = await project({ 'src/routes/index.tsx': sideEffectPage('ran.txt') });
+    const discoveredGraph = await resolveRoutes({ root: discovered });
+    expect(discoveredGraph.diagnostics).toEqual([]);
+    expect(discoveredGraph.routes[0]?.capabilities).toEqual(['component', 'clientLoader']);
+    expect(existsSync(path.join(discovered, 'src/routes/ran.txt'))).toBe(false);
+
+    const referenced = await project({
+      'src/routes/Page.tsx': sideEffectPage('ran.txt'),
+      'src/routes/routes.ts': registry(`export default [index('./Page.tsx')];`),
+    });
+    const referencedGraph = await resolveRoutes({ root: referenced });
+    expect(referencedGraph.diagnostics).toEqual([]);
+    expect(referencedGraph.routes[0]?.capabilities).toEqual(['component', 'clientLoader']);
+    expect(existsSync(path.join(referenced, 'src/routes/ran.txt'))).toBe(false);
+  });
+
+  it('rejects registries that import page modules before evaluating anything', async () => {
+    const root = await project({
+      'src/routes/Page.tsx': sideEffectPage('ran.txt'),
+      'src/routes/routes.ts': registry(`
+        import Page from './Page.tsx';
+        export default [index('./Page.tsx')];
+        export const component = Page;
+      `),
+    });
+    const graph = await resolveRoutes({ root });
+
+    expect(graph.routes).toEqual([]);
+    expect(graph.diagnostics.map((diagnostic) => diagnostic.code)).toContain(
+      'unsupported-registry-import',
+    );
+    expect(
+      graph.diagnostics.find((d) => d.files.includes('src/routes/Page.tsx'))?.message,
+    ).toContain('src/routes/routes.ts');
+    expect(graph.dependencies).toEqual(['src/routes/Page.tsx', 'src/routes/routes.ts']);
+    expect(existsSync(path.join(root, 'src/routes/ran.txt'))).toBe(false);
+  });
+
+  it('rejects page modules that also declare routes', async () => {
+    const root = await project({
+      'src/routes/Page.tsx': [
+        registry('export const nested = [index("./Other.tsx")];'),
+        "throw new Error('page module must not be evaluated');",
+        'export default function Page() { return null; }',
+        'export const clientLoader = () => null;',
+      ].join('\n'),
+      'src/routes/Other.tsx': page,
+      'src/routes/routes.ts': registry(`
+        import { nested } from './Page.tsx';
+        export default [index('./Page.tsx'), prefix('x', nested)];
+      `),
+    });
+    const graph = await resolveRoutes({ root });
+
+    expect(problems(graph)).toEqual([
+      ['unsupported-registry-import', ['src/routes/Page.tsx', 'src/routes/routes.ts']],
+    ]);
+  });
+
+  it('rejects package, built-in and plain helper imports in registries', async () => {
+    const root = await project({
+      'src/routes/Page.tsx': page,
+      'src/routes/paths.ts': "export const home = 'home';\n",
+      'src/routes/routes.ts': registry(`
+        import { join } from 'node:path';
+        import { home } from './paths';
+        export default [route(join(home), './Page.tsx')];
+      `),
+    });
+    const graph = await resolveRoutes({ root });
+
+    expect(graph.routes).toEqual([]);
+    const messages = graph.diagnostics.map(
+      (diagnostic) => `${diagnostic.code} ${diagnostic.message}`,
+    );
+    expect(messages).toEqual(
+      expect.arrayContaining([
+        expect.stringMatching(/^unsupported-registry-import .*node:path/),
+        expect.stringMatching(/^unsupported-registry-import .*src\/routes\/paths\.ts/),
+      ]),
+    );
+  });
+
+  it('reports registries that throw during evaluation', async () => {
+    const graph = await resolveRoutes({
+      root: await project({
+        'src/routes/routes.ts': registry(`throw new Error('registry exploded');`),
+      }),
+    });
+
+    expect(problems(graph)).toEqual([['route-registry-load-failed', ['src/routes/routes.ts']]]);
+    expect(graph.diagnostics[0]?.message).toContain('registry exploded');
+  });
+});
+
+describe('resolveRoutes: registry IDs for reused modules', () => {
+  it('gives reused modules unique, deterministic IDs per graph location', async () => {
+    const files = {
+      'src/pages/shell.tsx': layoutModule,
+      'src/pages/other-shell.tsx': layoutModule,
+      'src/pages/list.tsx': page,
+      'src/routes/routes.ts': registry(`
+        export default [
+          prefix('a', [layout('../pages/shell.tsx', [index('../pages/list.tsx')])]),
+          prefix('b', [layout('../pages/shell.tsx', [route('items', '../pages/list.tsx')])]),
+          layout('../pages/other-shell.tsx', [route('dup', '../pages/list.tsx')]),
+          layout('../pages/shell.tsx', [route('dup', '../pages/list.tsx')]),
+        ];
+      `),
+    };
+    const first = await resolveRoutes({ root: await project(files) });
+    const second = await resolveRoutes({ root: await project(files) });
+
+    expect(shape(first)).toEqual(shape(second));
+    expect(shape(first)).toEqual([
+      'layout / file:src/pages/other-shell.tsx <- null',
+      'route /dup file:src/pages/list.tsx#route:/dup <- file:src/pages/other-shell.tsx',
+      'layout / file:src/pages/shell.tsx#layout:/ <- null',
+      'route /dup file:src/pages/list.tsx#route:/dup~2 <- file:src/pages/shell.tsx#layout:/',
+      'layout /a file:src/pages/shell.tsx#layout:/a <- null',
+      'index /a file:src/pages/list.tsx#index:/a <- file:src/pages/shell.tsx#layout:/a',
+      'layout /b file:src/pages/shell.tsx#layout:/b <- null',
+      'route /b/items file:src/pages/list.tsx#route:/b/items <- file:src/pages/shell.tsx#layout:/b',
+    ]);
+    expect(new Set(first.routes.map((route) => route.id)).size).toBe(first.routes.length);
+    expect(problems(first)).toEqual([['duplicate-route-path', ['src/pages/list.tsx']]]);
+  });
+});
+
+describe('resolveRoutes: file system failures', () => {
+  const unprivileged = process.platform !== 'win32' && process.getuid?.() !== 0;
+
+  it.runIf(unprivileged)(
+    'reports unreadable route modules and folders instead of skipping them',
+    async () => {
+      const root = await project({
+        'src/routes/index.tsx': page,
+        'src/routes/secret.tsx': page,
+        'src/routes/locked/index.tsx': page,
+      });
+      const lockedFile = path.join(root, 'src/routes/secret.tsx');
+      const lockedDir = path.join(root, 'src/routes/locked');
+      await chmod(lockedFile, 0o000);
+      await chmod(lockedDir, 0o000);
+      try {
+        const graph = await resolveRoutes({ root });
+        expect(problems(graph)).toEqual([
+          ['route-file-unreadable', ['src/routes/locked']],
+          ['route-file-unreadable', ['src/routes/secret.tsx']],
+        ]);
+      } finally {
+        await chmod(lockedFile, 0o644);
+        await chmod(lockedDir, 0o755);
+      }
+    },
+  );
+
+  it.runIf(unprivileged)('reports unreadable registry-referenced modules', async () => {
+    const root = await project({
+      'src/pages/locked/page.tsx': page,
+      'src/routes/routes.ts': registry(`export default [index('../pages/locked/page.tsx')];`),
+    });
+    const lockedDir = path.join(root, 'src/pages/locked');
+    await chmod(lockedDir, 0o000);
+    try {
+      const graph = await resolveRoutes({ root });
+      expect(problems(graph)).toEqual([
+        ['route-file-unreadable', ['src/pages/locked/page.tsx', 'src/routes/routes.ts']],
+      ]);
+    } finally {
+      await chmod(lockedDir, 0o755);
+    }
+  });
+
+  it.runIf(process.platform !== 'win32')('skips dangling symlinks', async () => {
+    const root = await project({ 'src/routes/index.tsx': page });
+    await symlink(path.join(root, 'missing.tsx'), path.join(root, 'src/routes/gone.tsx'));
+    const graph = await resolveRoutes({ root });
+
+    expect(graph.diagnostics).toEqual([]);
+    expect(graph.routes.map((route) => route.id)).toEqual(['file:src/routes/index.tsx']);
   });
 });
 

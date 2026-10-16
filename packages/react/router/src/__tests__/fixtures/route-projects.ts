@@ -1,13 +1,29 @@
 import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 
 /** Project files keyed by project-relative path. */
 export type RouteProjectFiles = Record<string, string>;
 
-/** Absolute path of the route DSL source, so registry fixtures exercise the real DSL helpers. */
-export const routeDslModule = fileURLToPath(new URL('../../routes/index.ts', import.meta.url));
+/** Public DSL specifier; resolution redirects it to the real DSL helpers without node_modules. */
+export const routeDslSpecifier = '@equinor/fusion-framework-react-router/routes';
+
+/**
+ * Builds a page module with a top-level side effect: when evaluated it writes a marker
+ * file next to itself and throws. A missing marker proves the module never ran.
+ *
+ * @param marker - Marker file name, relative to the page module.
+ * @returns Page module source.
+ */
+export const sideEffectPage = (marker: string): string =>
+  [
+    "import { writeFileSync } from 'node:fs';",
+    `writeFileSync(new URL(${JSON.stringify(`./${marker}`)}, import.meta.url), 'evaluated');`,
+    "throw new Error('route module must not be evaluated during route resolution');",
+    'export default function Page() { return null; }',
+    'export const clientLoader = () => null;',
+    '',
+  ].join('\n');
 
 /** A page module exporting a default component. */
 export const page = 'export default function Page() { return null; }\n';

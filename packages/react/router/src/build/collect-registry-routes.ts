@@ -5,6 +5,7 @@ import { fileURLToPath } from 'node:url';
 import type { RouterSchema } from '../types.js';
 import { detectRouteModuleCapabilities } from './detect-route-module-capabilities.js';
 import type { RouteCollection } from './discover-file-routes.js';
+import { isMissingFileError } from './is-missing-file-error.js';
 import { toProjectPath } from './to-project-path.js';
 import type { ResolvedRoute, ResolvedRouteKind, RouteDiagnostic } from './types.js';
 
@@ -55,11 +56,41 @@ function toMetadata(handle: unknown): RouterSchema {
   const metadata: RouterSchema = {};
   // Copy only well-typed fields so arbitrary handle data never leaks into the graph
   if (typeof schema.description === 'string') metadata.description = schema.description;
-  // Shallow copies keep the graph independent of the evaluated registry objects
-  if (isRecord(schema.params)) metadata.params = { ...(schema.params as Record<string, string>) };
+  const params = toStringRecord(schema.params);
+  // Parameter descriptions are only kept when present
+  if (params) metadata.params = params;
+  const search = toStringRecord(schema.search);
   // Search parameter descriptions follow the same shape as path parameters
-  if (isRecord(schema.search)) metadata.search = { ...(schema.search as Record<string, string>) };
+  if (search) metadata.search = search;
   return metadata;
+}
+
+/**
+ * Copies the string-valued entries of a record, validating each value instead of casting.
+ *
+ * @param value - Candidate record.
+ * @returns A new record with string values only, or `undefined` when `value` is not a record.
+ */
+function toStringRecord(value: unknown): Record<string, string> | undefined {
+  // Non-objects carry no parameter descriptions
+  if (!isRecord(value)) return undefined;
+  const result: Record<string, string> = {};
+  // Non-string descriptions are dropped rather than coerced
+  for (const [key, entry] of Object.entries(value)) {
+    // Only string descriptions are valid RouterSchema values
+    if (typeof entry === 'string') result[key] = entry;
+  }
+  return result;
+}
+
+/**
+ * Formats a thrown value for a diagnostic message.
+ *
+ * @param error - Thrown value.
+ * @returns The error message.
+ */
+function describeError(error: unknown): string {
+  return error instanceof Error ? error.message : String(error);
 }
 
 /**
@@ -67,6 +98,7 @@ function toMetadata(handle: unknown): RouterSchema {
  *
  * @param candidate - Absolute path without guaranteed extension.
  * @returns The existing absolute file path, or `null`.
+ * @throws {Error} When a candidate exists but cannot be inspected.
  */
 async function findModuleFile(candidate: string): Promise<string | null> {
   // Exact references win, then extensions in preference order
@@ -75,8 +107,9 @@ async function findModuleFile(candidate: string): Promise<string | null> {
     try {
       // Only regular files are route modules; a folder with the same name is not
       if ((await stat(file)).isFile()) return file;
-    } catch {
-      // Missing candidate: try the next extension
+    } catch (error) {
+      // Permission and I/O failures must surface; only a missing candidate tries the next extension
+      if (!isMissingFileError(error)) throw error;
     }
   }
   return null;
@@ -87,14 +120,15 @@ async function findModuleFile(candidate: string): Promise<string | null> {
  *
  * DSL nodes are recognized structurally by `kind`, so registries bundled with their
  * own copy of the DSL classes are accepted. `prefix` nodes only contribute URL
- * segments. Module references may be relative to the registry file, absolute paths
- * or `file:` URLs (for example from `import.meta.resolve`).
+ * segments. Module references must be absolute paths or `file:` URLs: relative
+ * references are already resolved at their DSL call site while the registry is
+ * bundled (see {@link loadRouteRegistry}), and `import.meta.resolve` yields URLs.
  *
  * Route IDs are `file:<module>` when a module occurs once. When a module is reused,
  * every occurrence is suffixed with its graph location (`#<kind>:<path>`).
  *
  * @param root - Absolute project root.
- * @param registryFile - Absolute registry module path, used to resolve relative references and in diagnostics.
+ * @param registryFile - Absolute registry module path, used in diagnostics.
  * @param definition - Registry export: one route node or an array of route nodes.
  * @returns Registry routes, diagnostics and the files that were read.
  */
@@ -104,11 +138,12 @@ export async function collectRegistryRoutes(
   definition: unknown,
 ): Promise<RouteCollection> {
   const registry = toProjectPath(root, registryFile) ?? registryFile;
-  const registryDir = path.dirname(registryFile);
   const drafts: RouteDraft[] = [];
   const diagnostics: RouteDiagnostic[] = [];
   const dependencies = new Set<string>([registry]);
   const capabilitiesByModule = new Map<string, ResolvedRoute['capabilities']>();
+  const unreadableModules = new Set<string>();
+  let realRoot: Promise<string> | undefined;
 
   /**
    * Records a registry diagnostic that names the registry and any related module.
@@ -137,30 +172,71 @@ export async function collectRegistryRoutes(
    * @returns The project-relative module path, or `null` when it cannot be used.
    */
   const resolveModule = async (reference: string): Promise<string | null> => {
-    const candidate = reference.startsWith('file:')
-      ? fileURLToPath(reference)
-      : path.resolve(registryDir, reference);
-    const file = await findModuleFile(candidate);
-    // A missing module cannot provide capabilities or an ID
-    if (!file) {
-      report('unresolved-route-file', `route module "${reference}" does not exist.`);
+    const candidate = reference.startsWith('file:') ? fileURLToPath(reference) : reference;
+    // Bare specifiers have no call-site base and would resolve differently per tool
+    if (!path.isAbsolute(candidate)) {
+      report(
+        'unresolved-route-file',
+        `route module "${reference}" must be relative to the module that declares it ("./" or "../"), absolute, or a file: URL.`,
+      );
       return null;
     }
     // Bundlers may report symlink-resolved paths (for example /private/var on macOS)
-    const module =
-      toProjectPath(root, file) ?? toProjectPath(await realpath(root), await realpath(file));
+    realRoot ??= realpath(root);
+    const candidateFiles = [
+      toProjectPath(root, candidate) ?? toProjectPath(await realRoot, candidate) ?? candidate,
+    ];
+    let file: string | null;
+    let module: string | null = null;
+    try {
+      file = await findModuleFile(candidate);
+      module = file
+        ? (toProjectPath(root, file) ?? toProjectPath(await realRoot, await realpath(file)))
+        : null;
+    } catch (error) {
+      report(
+        'route-file-unreadable',
+        `route module "${candidateFiles[0]}" could not be inspected: ${describeError(error)}`,
+        candidateFiles,
+      );
+      return null;
+    }
+    // A missing module cannot provide capabilities or an ID
+    if (!file) {
+      report(
+        'unresolved-route-file',
+        `route module "${candidateFiles[0]}" does not exist.`,
+        candidateFiles,
+      );
+      return null;
+    }
     // IDs must be project-relative, so modules outside the project cannot be identified
     if (!module) {
       report(
         'route-file-outside-root',
-        `route module "${reference}" is outside the project root; move it into the project.`,
+        `route module "${candidateFiles[0]}" is outside the project root; move it into the project.`,
       );
       return null;
     }
+    // An unreadable module was reported at its first occurrence
+    if (unreadableModules.has(module)) return null;
     // Read each module once, even when the registry reuses it
     if (!capabilitiesByModule.has(module)) {
-      capabilitiesByModule.set(module, detectRouteModuleCapabilities(await readFile(file, 'utf8')));
       dependencies.add(module);
+      try {
+        capabilitiesByModule.set(
+          module,
+          detectRouteModuleCapabilities(await readFile(file, 'utf8')),
+        );
+      } catch (error) {
+        unreadableModules.add(module);
+        report(
+          'route-file-unreadable',
+          `route module ${module} could not be read: ${describeError(error)}`,
+          [module],
+        );
+        return null;
+      }
     }
     return module;
   };
@@ -246,7 +322,10 @@ export async function collectRegistryRoutes(
       const module = await resolveModule(node.file);
       // resolveModule already reported why the module is unusable
       if (!module) continue;
-      const routePath = kind === 'route' ? joinRoutePath(basePath, node.path as string) : basePath;
+      const routePath =
+        kind === 'route' && typeof node.path === 'string'
+          ? joinRoutePath(basePath, node.path)
+          : basePath;
       validatePath(routePath, module);
       const draft: RouteDraft = {
         kind,

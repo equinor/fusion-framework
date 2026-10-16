@@ -5,6 +5,7 @@ import path from 'node:path';
 import { compareCodeUnits } from './compare-code-units.js';
 import { detectRouteModuleCapabilities } from './detect-route-module-capabilities.js';
 import { findCaseCollisions } from './find-case-collisions.js';
+import { isMissingFileError } from './is-missing-file-error.js';
 import { toProjectPath } from './to-project-path.js';
 import type { ResolvedRoute, ResolvedRouteGraph, RouteDiagnostic } from './types.js';
 
@@ -128,6 +129,7 @@ function toUrlPath(segments: readonly string[]): string {
  *
  * @param directory - Absolute directory path.
  * @returns Sorted route-relevant entries.
+ * @throws {Error} When the directory or a linked entry exists but cannot be read.
  */
 async function readRouteDirectory(directory: string): Promise<RouteDirectoryEntry[]> {
   const dirents: Dirent[] = await readdir(directory, { withFileTypes: true });
@@ -141,9 +143,16 @@ async function readRouteDirectory(directory: string): Promise<RouteDirectoryEntr
     let isFile = dirent.isFile();
     // Resolve symbolic links to decide whether the target is a folder or a module
     if (dirent.isSymbolicLink()) {
-      const target = await stat(absolute);
-      isDirectory = target.isDirectory();
-      isFile = target.isFile();
+      try {
+        const target = await stat(absolute);
+        isDirectory = target.isDirectory();
+        isFile = target.isFile();
+      } catch (error) {
+        // A dangling link points at nothing, like a deleted file; other failures must surface
+        if (!isMissingFileError(error)) throw error;
+        // Skip the dangling link
+        continue;
+      }
     }
     // Folders always add a segment; files only when they look like route modules
     if (isDirectory) {
@@ -190,16 +199,23 @@ export async function discoverFileRoutes(
    * @param kind - Route kind derived from the file name.
    * @param routePath - Full URL path.
    * @param parentId - Enclosing layout ID.
-   * @returns The new route entry.
+   * @returns The new route entry, or `undefined` when the module could not be read.
    */
   const addRoute = async (
     entry: RouteDirectoryEntry,
     kind: ResolvedRoute['kind'],
     routePath: string,
     parentId: string | null,
-  ): Promise<ResolvedRoute> => {
+  ): Promise<ResolvedRoute | undefined> => {
     const module = projectPath(entry.absolute);
-    const source = await readFile(entry.absolute, 'utf8');
+    dependencies.push(module);
+    let source: string;
+    try {
+      source = await readFile(entry.absolute, 'utf8');
+    } catch (error) {
+      reportUnreadable(module, error);
+      return undefined;
+    }
     const route: ResolvedRoute = {
       id: `file:${module}`,
       parentId,
@@ -209,9 +225,25 @@ export async function discoverFileRoutes(
       capabilities: detectRouteModuleCapabilities(source),
       metadata: {},
     };
-    dependencies.push(module);
     routes.push(route);
     return route;
+  };
+
+  /**
+   * Reports a route module or folder that exists but could not be read.
+   *
+   * @param file - Project-relative path.
+   * @param error - Thrown file-system error.
+   */
+  const reportUnreadable = (file: string, error: unknown): void => {
+    diagnostics.push({
+      severity: 'error',
+      code: 'route-file-unreadable',
+      message: `Route source ${file} could not be read: ${
+        error instanceof Error ? error.message : String(error)
+      }`,
+      files: [file],
+    });
   };
 
   /**
@@ -248,11 +280,18 @@ export async function discoverFileRoutes(
     segments: readonly string[],
     parentId: string | null,
   ): Promise<void> => {
-    const real = await realpath(current);
-    // Symbolic links may form cycles; each physical folder is discovered at most once
-    if (visited.has(real)) return;
-    visited.add(real);
-    const entries = await readRouteDirectory(current);
+    let entries: RouteDirectoryEntry[];
+    try {
+      const real = await realpath(current);
+      // Symbolic links may form cycles; each physical folder is discovered at most once
+      if (visited.has(real)) return;
+      visited.add(real);
+      entries = await readRouteDirectory(current);
+    } catch (error) {
+      // An unreadable folder hides its routes, so the graph must not look complete
+      reportUnreadable(projectPath(current), error);
+      return;
+    }
 
     // Case-only differences resolve differently per file system, so they are always errors
     const stems = entries.map((entry) => entry.stem);

@@ -110,8 +110,10 @@ export type RouteDiagnosticCode =
   | 'missing-route-capability'
   | 'missing-routes-file'
   | 'route-file-outside-root'
+  | 'route-file-unreadable'
   | 'route-registry-load-failed'
   | 'unresolved-route-file'
+  | 'unsupported-registry-import'
   | 'unsupported-route-segment';
 
 /**

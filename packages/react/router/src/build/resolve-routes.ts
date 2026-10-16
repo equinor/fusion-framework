@@ -2,9 +2,10 @@ import { stat } from 'node:fs/promises';
 import path from 'node:path';
 
 import { collectRegistryRoutes } from './collect-registry-routes.js';
+import { isMissingFileError } from './is-missing-file-error.js';
 import { compareCodeUnits } from './compare-code-units.js';
 import { discoverFileRoutes, type RouteCollection } from './discover-file-routes.js';
-import { loadRouteRegistryModule } from './load-route-registry-module.js';
+import { loadRouteRegistry } from './load-route-registry.js';
 import { sortRoutes } from './sort-routes.js';
 import { toProjectPath } from './to-project-path.js';
 import type {
@@ -26,6 +27,7 @@ const REGISTRY_FILE_NAMES = ['routes.ts', 'routes.tsx'];
  *
  * @param target - Absolute path.
  * @returns `'file'`, `'directory'` or `null` when nothing usable exists.
+ * @throws {Error} When the path exists but cannot be inspected.
  */
 async function entryKind(target: string): Promise<'file' | 'directory' | null> {
   try {
@@ -33,8 +35,10 @@ async function entryKind(target: string): Promise<'file' | 'directory' | null> {
     // Other entry types (sockets, devices) are treated as absent
     if (info.isFile()) return 'file';
     return info.isDirectory() ? 'directory' : null;
-  } catch {
-    return null;
+  } catch (error) {
+    // Only a missing path means "absent"; unreadable paths must not silently change the route source
+    if (isMissingFileError(error)) return null;
+    throw error;
   }
 }
 
@@ -101,12 +105,18 @@ function toFailedGraph(source: RouteGraphSource, diagnostic: RouteDiagnostic): R
  *
  * Resolution is build-only: it reads module source to detect capabilities, never
  * mounts React, requires a DOM, starts Vite or runs route components, loaders or
- * actions. Problems are returned as diagnostics naming the source files; call
- * {@link assertRouteGraph} to fail on errors.
+ * actions. A registry is bundled, checked to import only the route DSL and other
+ * route registry modules, and evaluated in a short-lived worker thread; relative
+ * module references resolve against the module that declares them. Problems are
+ * returned as diagnostics naming the source files; call {@link assertRouteGraph}
+ * to fail on errors.
  *
  * @param options - Project root and optional route directory or registry file.
  * @returns The canonical route graph with diagnostics and file dependencies.
  * @throws {TypeError} When `options.root` is not an absolute path.
+ * @throws {Error} When the route directory or a registry candidate exists but cannot be
+ *   inspected (for example `EACCES`); the Node.js error names the path. Unreadable route
+ *   modules and folders inside the route source are reported as diagnostics instead.
  *
  * @example
  * ```ts
@@ -209,7 +219,8 @@ export async function resolveRoutes(options: ResolveRoutesOptions): Promise<Reso
 }
 
 /**
- * Evaluates a registry and converts its DSL nodes, turning load failures into diagnostics.
+ * Loads a registry and converts its DSL nodes into the graph. Loading problems are
+ * reported as diagnostics and the registry graph modules stay graph dependencies.
  *
  * @param root - Absolute project root.
  * @param registryPath - Absolute registry path.
@@ -222,25 +233,20 @@ async function resolveRegistry(
   registry: string,
 ): Promise<ResolvedRouteGraph> {
   const source: RouteGraphSource = { kind: 'registry', file: registry };
-  let definition: unknown;
-  try {
-    definition = await loadRouteRegistryModule(root, registryPath);
-  } catch (error) {
-    const cause = error instanceof Error && error.cause instanceof Error ? error.cause : error;
+  const load = await loadRouteRegistry(root, registryPath, registry);
+  // Rejected or failed registries produce no routes, only their diagnostics
+  if (!('definition' in load)) {
     return toGraph(source, {
       routes: [],
-      diagnostics: [
-        {
-          severity: 'error',
-          code: 'route-registry-load-failed',
-          message: `Route registry ${registry} could not be evaluated: ${
-            cause instanceof Error ? cause.message : String(cause)
-          }`,
-          files: [registry],
-        },
-      ],
-      dependencies: [registry],
+      diagnostics: load.diagnostics,
+      dependencies: load.dependencies,
     });
   }
-  return toGraph(source, await collectRegistryRoutes(root, registryPath, definition));
+  const collection = await collectRegistryRoutes(root, registryPath, load.definition);
+  // Bundling and collection each contribute diagnostics and watched files
+  return toGraph(source, {
+    routes: collection.routes,
+    diagnostics: [...load.diagnostics, ...collection.diagnostics],
+    dependencies: [...load.dependencies, ...collection.dependencies],
+  });
 }
