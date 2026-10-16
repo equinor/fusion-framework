@@ -12,6 +12,7 @@
     "src/**/*.test-d.ts",
     "src/__tests__/require-roles-metadata.test.ts",
     "src/__tests__/require-roles.test.tsx",
+    "src/__tests__/require-roles-recovery.test.tsx",
     "src/__tests__/router-middleware.test.tsx",
     "src/__tests__/router-v8.test.tsx"
   ],

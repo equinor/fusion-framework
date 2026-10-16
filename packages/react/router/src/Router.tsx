@@ -14,6 +14,7 @@ import {
   useLoaderData,
   useRouteError,
   type RouteObject as ReactRouterRouteObject,
+  type RouterContext as ReactRouterContext,
 } from 'react-router';
 import type {
   ActionFunction,
@@ -28,6 +29,8 @@ import type {
 } from './types.js';
 import type { MiddlewareFunction } from './middleware.js';
 import { routerContext } from './router-context.js';
+import { routeOperationContext } from './route-operation-context.js';
+import { RouteRecoveryScope } from './RouteRecoveryScope.js';
 import { FusionRouterContextProvider } from './fusion-router-context-provider.js';
 import { useRouterContext } from './useRouterContext.js';
 import React from 'react';
@@ -244,19 +247,27 @@ export function Router({
   const fusionContextRef = useRef(fusionRouterContext);
   fusionContextRef.current = fusionRouterContext;
 
-  const router = useMemo(() => {
+  const { router, scope } = useMemo(() => {
     // Narrow the generic modules instance to the shape known to include the navigation module.
     const { navigation } = modules as unknown as ModulesInstanceType<{
       navigation: NavigationModule;
     }>;
 
-    return UNSAFE_createRouter({
+    // Assigned right after creation; React Router first calls `getContext` on initialize.
+    let scope: RouteRecoveryScope | undefined;
+    const instance = UNSAFE_createRouter({
       routes: normalizeRoutes(routes),
       history: navigation.history,
       basename: navigation.basename,
       getContext: () => {
-        // Read from ref so the context provider always returns the current value
-        return new RouterContextProvider(new Map([[routerContext, fusionContextRef.current]]));
+        // Read from ref so the context provider always returns the current value. The operation
+        // entry lets role-gate recovery replay exactly the operation of this execution.
+        return new RouterContextProvider(
+          new Map<ReactRouterContext<unknown>, unknown>([
+            [routerContext, fusionContextRef.current],
+            [routeOperationContext, scope?.claim() ?? null],
+          ]),
+        );
       },
       // @ts-expect-error — mapRouteProperties is an UNSAFE react-router internal API
       mapRouteProperties: (route: RouteObject) => {
@@ -309,6 +320,9 @@ export function Router({
         return mapped;
       },
     });
+    // Wrap before render: data hooks read `navigate` and `fetch` from the router instance.
+    scope = new RouteRecoveryScope(instance);
+    return { router: instance, scope };
     // Intentionally excluding fusionRouterContext — it is read via ref so
     // context updates do not destroy and recreate the entire router.
   }, [routes, modules]);
@@ -321,12 +335,17 @@ export function Router({
     // Initialize and dispose the router inside an effect to avoid side effects
     // during render. This prevents leaked subscriptions in React StrictMode.
     router.initialize();
+    scope.setActive(true);
     setInitializedRouter(router);
 
     // Dispose previous router instance when the router is recreated or unmounted
-    // to clean up history listeners and pending navigations.
-    return router.dispose.bind(router);
-  }, [router]);
+    // to clean up history listeners and pending navigations. Deactivating the scope first
+    // makes pending role-gate recoveries of this instance refuse to replay.
+    return () => {
+      scope.setActive(false);
+      router.dispose();
+    };
+  }, [router, scope]);
 
   // Defer rendering children until the router instance has finished initializing
   if (initializedRouter !== router) {

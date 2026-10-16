@@ -9,6 +9,10 @@ export {
   type AccessRoleBoundaryFallbackProps,
   type AccessRoleBoundaryProps,
 } from './components/required-access/AccessRoleBoundary.js';
+export {
+  RoleErrorView,
+  type RoleErrorViewProps,
+} from './components/required-access/RoleErrorView.js';
 export { RolesView, type RolesViewProps } from './components/RolesView.js';
 export { RolesProvider, type RolesProviderProps } from './context/RolesProvider.js';
 export type {

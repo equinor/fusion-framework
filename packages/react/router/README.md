@@ -14,7 +14,7 @@ The package ships three things that work together:
 - **Typed `fusion` context everywhere** — loaders, actions, components, and error elements receive `fusion.modules` and `fusion.context` without threading props or React contexts.
 - **File-style route DSL** — `layout`, `index`, `route`, `prefix` helpers replace hand-built `RouteObject` trees.
 - **Route schema generation** — `handle.route` metadata can be turned into a flat, machine-readable schema for manifests, portals, and documentation.
-- **Role-gated routes** — `requireRoles([...])` route middleware checks Fusion Roles V2 access roles before loaders, actions and components run, and exposes inspectable metadata. See [docs/require-roles.md](docs/require-roles.md).
+- **Role-gated routes** — `requireRoles([...])` route middleware checks Fusion Roles V2 access roles before loaders, actions and components run, and exposes inspectable metadata. `useRequireRolesRecovery` retries the denied operation after the user activates a role. See [docs/require-roles.md](docs/require-roles.md).
 - **Module augmentation** — extend `RouterContext` and `RouterHandle` to type your own context and handle fields.
 - **Vite plugin** — statically transforms DSL calls into optimised React Router data routes at build time.
 

@@ -11,6 +11,22 @@ export type {
 export { requireRoles } from './require-roles.js';
 export { RequireRolesError, type RequireRolesErrorReason } from './RequireRolesError.js';
 export {
+  RequireRolesRecovery,
+  type RequireRolesRecoveryInit,
+  type RequireRolesRecoveryOperation,
+  type RequireRolesRecoveryResult,
+} from './RequireRolesRecovery.js';
+export {
+  useRequireRolesRecovery,
+  type RequireRolesRecoveryState,
+  type RequireRolesRecoveryStatus,
+} from './useRequireRolesRecovery.js';
+export type {
+  RouteOperation,
+  RouteOperationTarget,
+  RouteRecoveryScope,
+} from './RouteRecoveryScope.js';
+export {
   getRouteMiddlewareMetadata,
   type CustomMiddlewareMetadata,
   type RequireRolesMode,

@@ -2,8 +2,7 @@
 
 `requireRoles` is route middleware that checks Fusion Roles V2 access roles before a route's loaders, actions and components run. It builds on [route middleware](middleware.md).
 
-> [!NOTE]
-> This page covers the role check. Activating a claimable role from the denied route and retrying the denied operation is added separately; until then, a denied route renders your error element.
+When access is denied, the user can activate a claimable role from the route's error element and retry exactly the operation that was denied. See [Recovering access](#recovering-access).
 
 ## Declaring a requirement
 
@@ -90,6 +89,56 @@ export function ErrorElement({ error }: ErrorElementProps) {
 
 > [!IMPORTANT]
 > Route checks protect the UI only. Backend APIs must still authorize every request.
+
+## Recovering access
+
+`useRequireRolesRecovery(error)` connects a `denied` error to the existing Roles recovery UI, `RoleErrorView` from `@equinor/fusion-framework-react-components-roles`. That view lists the missing roles and lets the user activate a claimable role assignment. It calls `onRetry` only after an activation succeeded.
+
+```tsx
+import { useRouteError } from 'react-router';
+import { RoleErrorView } from '@equinor/fusion-framework-react-components-roles';
+import { useRequireRolesRecovery } from '@equinor/fusion-framework-react-router';
+
+export function ErrorElement() {
+  const error = useRouteError();
+  const recovery = useRequireRolesRecovery(error);
+  if (recovery && error instanceof Error) {
+    return <RoleErrorView error={error} onRetry={recovery.retry} />;
+  }
+  return <p>Something went wrong.</p>;
+}
+```
+
+The hook returns `undefined` for every error that activation cannot fix: `check-failed`, `not-configured`, other errors, and denials raised outside a Fusion `Router`.
+
+### What `retry` does
+
+1. Checks the requirement again with `hasAccessRole(roles, { required, refresh: true })`, so the activation is observed even if the provider cached an older answer.
+2. Stops if access is still denied (`still-denied`) or the check fails (`check-failed`). A later retry is allowed.
+3. Stops if the denial is no longer relevant (`stale`): the router was disposed, another navigation is in progress, or the router no longer shows this error.
+4. Re-runs the denied operation once (`retried`), as described below.
+
+| `operation` | Denied operation | What `retry` runs |
+|---|---|---|
+| `navigation` | Initial load, link or `GET` navigation, history traversal, revalidation | Reloads the current location with a replace navigation. Middleware, loaders and components run again, including component-only routes and parent gates. |
+| `submission` | `<Form>` or `useSubmit` action | Submits the same request once more to the same URL, as a replace navigation. |
+| `fetcher-submission` | `fetcher.submit` or `<fetcher.Form>` action | Submits the same request once more through the same fetcher key and route, then reloads the current location. |
+| `fetcher-load` | `fetcher.load` | Does not replay the load. It reloads the current location to restore the fetcher's owner (`restored`), which can load again. |
+
+`status` is `idle` before a retry, `checking` while it runs, then one of `retried`, `restored`, `still-denied`, `check-failed`, `stale` or `cancelled`.
+
+### Safety
+
+- Every retry still passes through every gate again. A child activation cannot bypass a parent requirement that is still missing.
+- A recovery replays at most once. Double clicks share one attempt, and a later call returns the earlier result without submitting again.
+- Unmounting the error element, or showing a different error, cancels its pending retry. The result of a late check is discarded and nothing is replayed.
+- Recoveries belong to the `Router` instance and the denial that created them. They never act on another router or route.
+- If the replayed operation is denied again, the router shows a new denial with its own recovery.
+
+### Limitations
+
+- A denial unmounts the fetcher's owner, and the remounted owner gets a new fetcher key. React Router keeps fetcher results per key, so the data of a replayed fetcher action is not delivered to the new owner, and a `fetcher.load` is not replayed. Only the router's private fetcher APIs could re-attach the result.
+- A provider that returns `false` instead of throwing gives a denial with no `RequiredAccessRolesError` cause, so `RoleErrorView` renders nothing for it. The hook still offers `retry` for your own UI.
 
 ## Inspectable metadata
 

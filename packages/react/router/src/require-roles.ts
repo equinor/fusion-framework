@@ -6,6 +6,8 @@ import { normalizeRolesRequirement } from './middleware-metadata/normalize-roles
 import { routeMiddlewareMetadataKey } from './middleware-metadata/route-middleware-metadata-key.js';
 import type { RequireRolesOptions } from './middleware-metadata/types.js';
 import { RequireRolesError } from './RequireRolesError.js';
+import { RequireRolesRecovery } from './RequireRolesRecovery.js';
+import { routeOperationContext } from './route-operation-context.js';
 
 /** The provider methods the guard relies on; anything else is not a usable Roles module. */
 type RolesAccessChecker = Pick<IRolesProvider, 'hasAccessRole'>;
@@ -78,12 +80,36 @@ export const requireRoles = (
   // Validate at declaration so invalid requirements fail when the route module loads.
   const requirement = normalizeRolesRequirement(roles, options);
 
-  const middleware: MiddlewareFunction = async ({ fusion, signal }, next) => {
+  const middleware: MiddlewareFunction = async ({ fusion, signal, context, request }, next) => {
     const provider = readRolesProvider(fusion.modules);
     // A missing Roles module must surface as a configuration error, never as granted or denied.
     if (!provider) {
       throw new RequireRolesError('not-configured', requirement);
     }
+
+    /**
+     * Creates the denial error and registers its recovery when a Fusion `Router` started the run.
+     *
+     * @param missingAccessRoles - Roles reported missing.
+     * @param cause - Provider assertion error, kept for access-recovery UI.
+     * @returns The denial error to throw.
+     */
+    const deny = (missingAccessRoles: readonly string[], cause?: unknown): RequireRolesError => {
+      const error = new RequireRolesError(
+        'denied',
+        requirement,
+        missingAccessRoles,
+        cause === undefined ? undefined : { cause },
+      );
+      const target = context.get(routeOperationContext);
+      // Without the Fusion router scope there is no operation to replay safely.
+      if (target) {
+        RequireRolesRecovery.attach(
+          new RequireRolesRecovery({ error, requirement, provider, target, request }),
+        );
+      }
+      return error;
+    };
 
     let granted: boolean;
     try {
@@ -97,9 +123,7 @@ export const requireRoles = (
       signal.throwIfAborted();
       // Only the provider's assertion error is a denial; every other failure leaves access unknown.
       if (RequiredAccessRolesError.is(error)) {
-        throw new RequireRolesError('denied', requirement, error.missingAccessRoles, {
-          cause: error,
-        });
+        throw deny(error.missingAccessRoles, error);
       }
       throw new RequireRolesError('check-failed', requirement, [], { cause: error });
     }
@@ -107,7 +131,7 @@ export const requireRoles = (
     signal.throwIfAborted();
     // Asserting providers throw on failure; a plain `false` is still a denial, never a pass.
     if (granted !== true) {
-      throw new RequireRolesError('denied', requirement, requirement.roles);
+      throw deny(requirement.roles);
     }
     return next();
   };
