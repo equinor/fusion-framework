@@ -19,6 +19,7 @@ import { BaseRoute } from './BaseRoute.js';
  * | `ErrorElement` | `React.ComponentType<ErrorElementProps>` | Component rendered when this route or a descendant throws. Receives `error` and `fusion` props. |
  * | `HydrateFallback` | `React.ComponentType` | Component rendered during client-side hydration before `clientLoader` resolves. |
  * | `shouldRevalidate` | `ShouldRevalidateFunction` | Controls whether the route re-runs its loader after a navigation or action. Return `false` to suppress revalidation. |
+ * | `middleware` | `MiddlewareFunction[]` | Client Data Mode middleware. Runs outer route first, in array order, before any matched loader or action, on navigations, fetchers, actions and revalidation. Receives `fusion` context. |
  *
  * Any export not in the table above is ignored by the plugin.
  *
@@ -55,7 +56,8 @@ export abstract class BaseFileRoute extends BaseRoute implements RouteFileNode {
   /**
    * @param kind - The kind of route node (`'route'`, `'index'`, `'layout'`, etc.).
    * @param file - Path to the module that exports the route component and any supported named exports
-   *   (`clientLoader`, `action`, `handle`, `ErrorElement`, `HydrateFallback`). See the class-level
+   *   (`clientLoader`, `action`, `handle`, `ErrorElement`, `HydrateFallback`, `shouldRevalidate`,
+   *   `middleware`). See the class-level
    *   docs for the full export table.
    * @param handle - Optional route handle metadata. Defaults to `{ route: {} }`.
    */

@@ -149,6 +149,55 @@ describe('reactRouterPlugin', () => {
     expect(normalizeCode(transformResult)).toBe(normalizeCode(expected));
   });
 
+  it('should wire route-module middleware exports next to existing route exports', () => {
+    const inputCode = [
+      `import { layout, route } from '@equinor/fusion-framework-react-router/routes';`,
+      `export const routes = layout('./mocks/pages/GuardedLayout.tsx', [`,
+      `  route('guarded', './mocks/pages/GuardedPage.tsx'),`,
+      `]);`,
+    ].join('\n');
+
+    const transformResult = plugin.transform(inputCode, testFileId);
+
+    const expected = [
+      `import React from 'react';`,
+      `import { useLoaderData, useActionData, useRouteError, useRouterContext, routerContext } from '@equinor/fusion-framework-react-router';`,
+      `import { default as GuardedLayout, middleware as middlewareGuardedLayout } from './mocks/pages/GuardedLayout.tsx';`,
+      `import {`,
+      `    default as GuardedPage,`,
+      `    clientLoader as clientLoaderGuardedPage,`,
+      `    action as actionGuardedPage,`,
+      `    handle as handleGuardedPage,`,
+      `    middleware as middlewareGuardedPage`,
+      `} from './mocks/pages/GuardedPage.tsx';`,
+      `export const routes = [{`,
+      `  Component: GuardedLayout,`,
+      `  middleware: middlewareGuardedLayout,`,
+      `  children: [{`,
+      `    path: 'guarded',`,
+      `    Component: GuardedPage,`,
+      `    loader: clientLoaderGuardedPage,`,
+      `    action: actionGuardedPage,`,
+      `    handle: handleGuardedPage,`,
+      `    middleware: middlewareGuardedPage`,
+      `  },`,
+      `  ]`,
+      `}];`,
+    ].join('\n');
+
+    // Middleware is imported as a plain module export; no function body or policy is inlined.
+    expect(normalizeCode(transformResult)).toBe(normalizeCode(expected));
+  });
+
+  it('should not add middleware to route modules without a middleware export', () => {
+    const inputCode = [
+      `import { route } from '@equinor/fusion-framework-react-router/routes';`,
+      `export const routes = route(':id', './mocks/pages/UserDetailPage.tsx');`,
+    ].join('\n');
+
+    expect(plugin.transform(inputCode, testFileId)).not.toContain('middleware');
+  });
+
   it('should generate distinct identifiers for directory-based (fs-routing) index.tsx files under different parent directories', () => {
     const inputCode = [
       `import { prefix, index, route } from '@equinor/fusion-framework-react-router/routes';`,
