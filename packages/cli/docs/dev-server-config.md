@@ -156,11 +156,17 @@ routes: [{ match: '/api/users', middleware: yourHandler }]
 The CLI validates the resolved dev-server configuration after loading JSON or JavaScript/TypeScript
 configuration and merging it with defaults. Object exports and configuration factory functions are
 supported; callback-valued settings such as `spa.templateEnv`, `api.processServices`, and route
-middleware remain valid.
+middleware remain valid. Custom `spa.templateEnv` keys, including keys inside nested template
+objects such as `msal`, are preserved and exposed to the SPA as `FUSION_SPA_*` variables. Unknown
+keys in `spa`, `api`, `log`, and `api.routes` entries are rejected so typos are reported.
 
 Invalid settings fail startup with a diagnostic that names the field path, for example
-`api.serviceDiscoveryUrl: expected string`. The CLI logs the diagnostic and does not start with
-defaults as a fallback.
+`api.serviceDiscoveryUrl: API service discovery URL must be a non-empty string.` The CLI logs the
+diagnostic and does not start with defaults as a fallback.
+
+A project without `dev-server.config` starts with the defaults. A config file that exists but
+cannot be loaded, for example invalid JSON, a syntax error, or a factory that throws, is logged
+and stops startup.
 
 ## Quick Start Examples
 
