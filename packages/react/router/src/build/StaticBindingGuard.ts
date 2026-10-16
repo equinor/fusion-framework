@@ -1,11 +1,13 @@
 import type { AnyNode, Expression, Identifier, Pattern, Program, VariableDeclarator } from 'acorn';
+import { StaticPropertyResolver, type StaticBindingInitializer } from './StaticPropertyResolver.js';
 
 /** Source binding identity; aliases in other lexical scopes remain distinct. */
 interface Binding {
   name: string;
-  initializers: Expression[];
+  initializers: StaticBindingInitializer[];
   aliases: Set<Binding>;
   primitiveSource?: Binding;
+  containers: Set<Expression>;
   written: boolean;
   exposed: boolean;
 }
@@ -104,6 +106,8 @@ export class StaticBindingGuard {
   private readonly scopes = new Map<AnyNode, Map<string, Binding>>();
   private readonly declarations = new Map<VariableDeclarator, Binding[]>();
   private readonly declarationNames = new Set<Identifier>();
+  private readonly references = new Map<Identifier, Binding>();
+  private readonly accessors: StaticPropertyResolver;
   private hasDirectEval = false;
 
   /**
@@ -118,12 +122,16 @@ export class StaticBindingGuard {
   ) {
     walkSyntax(program, (node, ancestors) => this.indexDeclarations(node, ancestors));
     walkSyntax(program, (node, ancestors) => this.indexUses(node, ancestors));
+    this.accessors = new StaticPropertyResolver(
+      (reference) => this.references.get(reference)?.initializers ?? [],
+    );
+    walkSyntax(program, (node) => this.accessors.inspect(node));
   }
 
   /**
    * Requires a requested module binding and its aliases to remain declarative.
    * @param name - Module-local binding reached during static evaluation.
-   * @throws When writes, unknown calls or escaping aliases can change its value.
+   * @throws When writes, accessor reads, unknown calls or escaping aliases can change its value.
    */
   assertUnchanged(name: string): void {
     const binding = this.scopes.get(this.program)?.get(name);
@@ -139,7 +147,11 @@ export class StaticBindingGuard {
       visited.add(current);
       const primitive = this.isPrimitive(current, new Set());
       // A read of a primitive cannot mutate it, but reassignment still changes metadata.
-      if (this.hasDirectEval || current.written || (!primitive && current.exposed)) {
+      if (
+        this.hasDirectEval ||
+        current.written ||
+        (!primitive && (current.exposed || this.accessors.hasAccessorRead(current.containers)))
+      ) {
         throw new Error(
           `${this.file}: mutable binding '${current.name}' cannot be used in a source-only sitemap. ` +
             'Use literal declarations without writes or untrusted uses, or provide manifest routes directly.',
@@ -147,6 +159,32 @@ export class StaticBindingGuard {
       }
       // Primitive copies do not share mutable state with their source.
       if (!primitive) pending.push(...current.aliases);
+    }
+  }
+
+  /**
+   * Indexes literal container identities without entering executable function bodies.
+   * @param expression - Binding initializer or nested literal value.
+   * @param containers - Containers related to the binding.
+   */
+  private indexContainers(expression: Expression, containers: Set<Expression>): void {
+    // Literal descendants can be mutated through member aliases and accessor receivers.
+    if (expression.type === 'ObjectExpression') {
+      containers.add(expression);
+      // Methods and accessor bodies remain opaque.
+      for (const property of expression.properties) {
+        // Referenced spread containers are linked by their lexical uses.
+        if (property.type === 'Property' && property.kind === 'init' && !property.method) {
+          this.indexContainers(property.value, containers);
+        }
+      }
+    } else if (expression.type === 'ArrayExpression') {
+      containers.add(expression);
+      // Array containers can carry objects whose getters are accessed through an alias.
+      for (const element of expression.elements) {
+        // Holes have no values and spreads are tracked through their source bindings.
+        if (element && element.type !== 'SpreadElement') this.indexContainers(element, containers);
+      }
     }
   }
 
@@ -167,13 +205,15 @@ export class StaticBindingGuard {
         name: node.name,
         initializers: [],
         aliases: new Set<Binding>(),
+        containers: new Set<Expression>(),
         written: false,
         exposed: false,
       };
       // Repeated initialized declarations are writes, not a last-initializer fallback.
       if (initializer) {
         binding.written ||= binding.initializers.length > 0;
-        binding.initializers.push(initializer);
+        binding.initializers.push({ expression: initializer, pattern, target: node });
+        this.indexContainers(initializer, binding.containers);
       }
       names.set(node.name, binding);
       this.scopes.set(scope, names);
@@ -321,10 +361,14 @@ export class StaticBindingGuard {
     const binding = this.resolve(node.name, ancestors);
     // Runtime globals and imports without initializers are not statically evaluated bindings.
     if (!binding) return;
+    this.references.set(node, binding);
     let child: AnyNode = node;
     let directTarget = true;
     // Enclosing operations reveal both direct writes and escapes through nested expressions.
     for (const parent of ancestors.toReversed()) {
+      // Anonymous literal receivers may carry this binding without a named container alias.
+      if (parent.type === 'ObjectExpression' || parent.type === 'ArrayExpression')
+        binding.containers.add(parent);
       // Member receivers, computed keys and default values are reads, not target bindings.
       if (
         parent.type === 'MemberExpression' ||
@@ -398,7 +442,10 @@ export class StaticBindingGuard {
     // Repeated declarations and cycles cannot establish a stable primitive value.
     if (visited.has(binding) || binding.initializers.length !== 1) return false;
     visited.add(binding);
-    const expression = binding.initializers[0];
+    const initializer = binding.initializers[0];
+    const expression = initializer.expression;
+    // Destructuring requires receiver resolution and cannot establish a direct primitive copy here.
+    if (initializer.pattern.type !== 'Identifier') return false;
     return (
       (expression.type === 'Literal' && !expression.regex) ||
       (expression.type === 'TemplateLiteral' && expression.expressions.length === 0) ||

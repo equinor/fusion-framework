@@ -189,11 +189,73 @@ describe('resolveSitemap', () => {
      export const handle = { route: { params } };`,
     `export const handle = { route: { description: 'Before' } };
      const { route: schema } = handle; schema.description = 'After';`,
+    `const schema = {
+       description: 'Before',
+       get icon() { this.description = 'After'; return 'icon'; },
+     };
+     const icon = schema.icon;
+     export const handle = { route: schema };`,
+    `const schema = { description: 'Before' };
+     const icon = ({
+       schema,
+       get icon() { this.schema.description = 'After'; return 'icon'; },
+     }).icon;
+     export const handle = { route: schema };`,
   ])('rejects mutable page metadata instead of publishing stale descriptions', async (metadata) => {
     await file('src/routes.ts', `${dsl} export default index('./page.tsx');`);
     await file('src/page.tsx', `${page} ${metadata}`);
     await expect(resolveSitemap({ root })).rejects.toThrow('mutable');
   });
+
+  it.each([
+    'const icon = schema.icon;',
+    'const { description, ...ui } = schema;',
+    'const ui = { ...schema };',
+  ])('rejects getter/setter pairs invoked by reads or copies: %s', async (read) => {
+    await file('src/routes.ts', `${dsl} export default index('./page.tsx');`);
+    await file(
+      'src/page.tsx',
+      `${page}
+       const schema = {
+         description: 'Before',
+         get icon() { this.description = 'After'; return 'icon'; },
+         set icon(value) {},
+       };
+       ${read}
+       export const handle = { route: schema };`,
+    );
+    await expect(resolveSitemap({ root })).rejects.toThrow('mutable');
+  });
+
+  it('accepts primitive metadata copied into an unrelated accessor receiver', async () => {
+    await file('src/routes.ts', `${dsl} export default index('./page.tsx');`);
+    await file(
+      'src/page.tsx',
+      `${page}
+       const description = 'Home';
+       const ui = { description, get icon() { return 'icon'; } };
+       const icon = ui.icon;
+       export const handle = { route: { description } };`,
+    );
+    expect(await resolveSitemap({ root })).toEqual([['/', 'Home']]);
+  });
+
+  it.each(['const title = handle.route.description;', 'const copy = { ...handle.route };'])(
+    'accepts literal metadata when an unrelated getter is never invoked: %s',
+    async (read) => {
+      await file('src/routes.ts', `${dsl} export default index('./page.tsx');`);
+      await file(
+        'src/page.tsx',
+        `${page}
+       export const handle = {
+         route: { description: 'Home' },
+         get description() { throw new Error('Unused getter must not execute'); },
+       };
+       ${read}`,
+      );
+      expect(await resolveSitemap({ root })).toEqual([['/', 'Home']]);
+    },
+  );
 
   it.each([
     ['computed registry', `${dsl} export default makeRoutes();`, 'CallExpression'],
