@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { buildSync } from 'esbuild';
 import type { Plugin, UserConfig } from 'vite';
 
 /**
@@ -52,16 +53,6 @@ const PREFIX_PATTERN = /\bprefix\s*\(\s*([^,]+)\s*,\s*\[/g;
 const EXPORT_PATTERN = /export\s+const\s+\w+\s*=\s*/g;
 
 const IMPORT_STATEMENT_PATTERN = /^import\s+.*?;$/gm;
-
-// Export detection patterns
-const EXPORT_DEFAULT_PATTERN = /export\s+default|export\s*{\s*default\s*}/;
-
-const EXPORT_NAMED_PATTERN = (name: string) =>
-  new RegExp(`\\bexport\\s+(const|function|class|async\\s+function)\\s+${name}\\b`);
-
-const EXPORT_LIST_PATTERN = /\bexport\s*{([^{}]*)}/g;
-
-const EXPORT_SPECIFIER_PATTERN = /^\s*([\w$]+)(?:\s+as\s+(?:([\w$]+)|'([^']+)'|"([^"]+)"))?\s*$/;
 
 // ============================================================================
 // Type Definitions
@@ -285,6 +276,12 @@ function resolveFilePath(filePath: string, baseDir: string): string | null {
  * | `middleware` | `middleware` |
  *
  * Any other named export in the file is silently ignored.
+ *
+ * @param filePath - Referenced route module path.
+ * @param currentFileId - Registry module used to resolve the route path.
+ * @param debug - Whether missing-file diagnostics are enabled.
+ * @returns Runtime export names parsed without executing the route or its imports.
+ * @throws When an existing route module cannot be read or parsed.
  */
 function getAvailableExports(filePath: string, currentFileId: string, debug: boolean): Set<string> {
   const availableExports = new Set<string>();
@@ -305,45 +302,28 @@ function getAvailableExports(filePath: string, currentFileId: string, debug: boo
     }
 
     const fileContent = fs.readFileSync(actualPath, 'utf-8');
-
-    // Check for default export
-    if (fileContent.match(EXPORT_DEFAULT_PATTERN)) {
-      availableExports.add('default');
-    }
-
-    // Local export clauses and re-exports expose the public name, not the source binding's name.
-    for (const clause of fileContent.matchAll(EXPORT_LIST_PATTERN)) {
-      const specifiers = clause[1].replace(/\/\*[\s\S]*?\*\/|\/\/[^\r\n]*/g, ' ');
-      // Parse each specifier separately so aliases and type-only specifiers cannot invent exports.
-      for (const specifier of specifiers.split(',')) {
-        const match = specifier.match(EXPORT_SPECIFIER_PATTERN);
-        // Unrecognized and type-only specifiers do not declare runtime exports.
-        if (match) availableExports.add(match[2] ?? match[3] ?? match[4] ?? match[1]);
-      }
-    }
-
-    // Check for directly declared named exports.
-    const exportNames = [
-      'clientLoader',
-      'action',
-      'handle',
-      'ErrorElement',
-      'HydrateFallback',
-      'shouldRevalidate',
-      'middleware',
-    ];
-    // Direct declarations complement the public names already indexed from export clauses.
-    for (const name of exportNames) {
-      // Only recognized route exports are used by the generated imports below.
-      if (fileContent.match(EXPORT_NAMED_PATTERN(name))) {
-        availableExports.add(name);
-      }
+    const { metafile } = buildSync({
+      stdin: {
+        contents: fileContent,
+        sourcefile: actualPath,
+        loader: /\.[jt]sx$/.test(path.extname(actualPath)) ? 'tsx' : 'ts',
+      },
+      bundle: false,
+      write: false,
+      format: 'esm',
+      metafile: true,
+      logLevel: 'silent',
+    });
+    // Compiler metadata lists actual runtime exports, excluding comments, strings and erased types.
+    for (const output of Object.values(metafile.outputs)) {
+      // Non-bundled parsing preserves public aliases without loading re-exported modules.
+      for (const name of output.exports) availableExports.add(name);
     }
   } catch (error) {
-    // Swallow file-read errors so a single unreadable route file doesn't fail the whole build
-    if (debug) {
-      console.warn(`[fusion:react-router] Error reading file ${filePath}:`, error);
-    }
+    throw new Error(
+      `[fusion:react-router] Failed to inspect route exports in ${filePath} (from ${currentFileId}).`,
+      { cause: error },
+    );
   }
 
   return availableExports;
@@ -1034,7 +1014,7 @@ export const reactRouterPlugin = (options: ReactRouterPluginOptions = {}): Plugi
         return transformedCode;
       } catch (error) {
         console.error('[fusion:react-router] Error during transformation:', error);
-        return code;
+        throw error;
       }
     },
   };

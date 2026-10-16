@@ -2,4 +2,4 @@
 "@equinor/fusion-framework-vite-plugin-react-router": patch
 ---
 
-Recognize local named route-module exports and aliases, including `export { guards as middleware }`, so middleware is not silently omitted. Resolve re-exports by their public names and ignore type-only exports.
+Parse TypeScript/JSX route-module exports without executing pages or following imports, including local aliases and quoted-source re-exports. Ignore comments, strings and type-only exports so middleware is neither invented nor silently omitted. Fail explicitly when an existing route module cannot be inspected.

@@ -41,6 +41,9 @@
   "publishConfig": {
     "access": "public"
   },
+  "dependencies": {
+    "esbuild": "^0.28.1"
+  },
   "devDependencies": {
     "typescript": "^7.0.2",
     "vite": "^8.0.0",
