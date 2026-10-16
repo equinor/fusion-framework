@@ -1,121 +1,133 @@
-# Requiring access roles
+# Role gates with application middleware
 
-`requireRoles` is route middleware that checks Fusion Roles V2 access roles before a route's loaders, actions and components run. It builds on [route middleware](middleware.md).
+Use [route middleware](middleware.md) to check access before protected loaders,
+actions and pages run. The router provides the middleware lifecycle, not a role
+policy: it does not depend on `@equinor/fusion-framework-module-roles` or export
+`requireRoles`.
 
-> [!NOTE]
-> This page covers the role check. Activating a claimable role from the denied route and retrying the denied operation is added separately; until then, a denied route renders your error element.
+An application that uses Fusion Roles V2 can own a small `requireRoles` helper.
+Other applications can use a different authorization provider without changing
+the router.
 
-## Declaring a requirement
+## Enable Roles in the application
 
-Export the helper from the route module's `middleware` array.
+Add `@equinor/fusion-framework-module-roles` to the **application's** dependencies
+and call its `enableRoles(configurator)` during app configuration. The initialized
+provider is then available as `fusion.modules.roles`.
+
+The context type below extends the standard Fusion modules with this
+application's Roles provider. Add other application-specific providers as needed.
+
+## Create an app-owned helper
+
+```ts
+// src/middleware/require-roles.ts
+import type { IRolesProvider } from '@equinor/fusion-framework-module-roles';
+import type {
+  FusionRouterContext,
+  MiddlewareFunction,
+} from '@equinor/fusion-framework-react-router';
+
+interface AppContext extends FusionRouterContext {
+  modules: FusionRouterContext['modules'] & { roles: IRolesProvider };
+}
+type AppMiddleware = MiddlewareFunction<Record<string, string | undefined>, AppContext>;
+
+/**
+ * Requires this application's access roles before running the rest of the route chain.
+ * @param roles - Exact, case-sensitive Roles V2 access-role names.
+ * @param options - Require all roles by default, or any one role with mode `any`.
+ * @returns Application middleware; provider errors propagate to the route error boundary.
+ * @throws {TypeError} When a requirement is empty, blank or has an unsupported mode.
+ */
+export function requireRoles(
+  roles: readonly string[],
+  { mode = 'all' }: { mode?: 'all' | 'any' } = {},
+): AppMiddleware {
+  const names = [...new Set(roles.map((role) => role.trim()))];
+  if (names.length === 0 || names.some((name) => name.length === 0)) {
+    throw new TypeError('A role gate requires nonblank access-role names.');
+  }
+  if (mode !== 'all' && mode !== 'any') {
+    throw new TypeError('A role gate mode must be all or any.');
+  }
+
+  return async ({ fusion, signal }, next) => {
+    signal.throwIfAborted();
+    const provider = fusion.modules.roles;
+    if (!provider) {
+      throw new Error('Enable the Roles module before using this application role gate.');
+    }
+
+    const granted = await provider.hasAccessRole(names, {
+      required: mode === 'all',
+      assert: true,
+    });
+    // A check can finish after navigation or submission cancellation.
+    signal.throwIfAborted();
+    if (granted !== true) {
+      throw new Error('The required access roles are not active.');
+    }
+    return next();
+  };
+}
+```
+
+The provider owns authorization and caching. `required: true` checks all listed
+roles; `required: false` checks any one. With `assert: true`, missing access throws
+the provider's `RequiredAccessRolesError`. Service failures remain service
+failures: do not catch them and continue the chain.
+
+Name-only checks use the provider's global assignments. They are not a
+resource-specific authorization check.
+
+## Gate a page or layout
+
+Import the helper from your application, **not** from the router package:
 
 ```ts
 // src/pages/ReportsPage.tsx
-import { requireRoles } from '@equinor/fusion-framework-react-router';
+import { requireRoles } from '../middleware/require-roles.js';
 
-// Every listed role is required (the default mode is 'all').
 export const middleware = [requireRoles(['Reports.Read'])];
 ```
 
 ```ts
-// At least one listed role is required.
-export const middleware = [requireRoles(['Reports.Read', 'Reports.Admin'], { mode: 'any' })];
+// A different page: either access role is sufficient.
+import { requireRoles } from '../middleware/require-roles.js';
+
+export const middleware = [
+  requireRoles(['Reports.Read', 'Reports.Admin'], { mode: 'any' }),
+];
 ```
 
-Role gates can be combined with your own middleware in the same array. They run in array order.
+Put the gate on a layout to protect its children. Parent and child middleware
+must both pass; a child cannot weaken a parent gate. Middleware also runs for
+revalidation, fetcher loads, submissions and component-only routes. A thrown
+error stops downstream work and reaches the nearest route error boundary.
+Returning without calling `next()` is **not** a denial; throw to reject access.
 
-### Role names
+## Handle denial separately from service failure
 
-- Names are exact Roles V2 access-role names and are case-sensitive. `reports.read` does not match `Reports.Read`.
-- Surrounding whitespace is trimmed and duplicates are removed. Declaration order is kept.
-- `requireRoles` throws a `TypeError` when the route module loads if:
-  - the list is empty or is not an array
-  - a name is blank or is not a string
-  - `mode` is not `'all'` or `'any'`, or `options` is not an object
+In your route's `ErrorElement`, use
+`RequiredAccessRolesError.is(error)` from
+`@equinor/fusion-framework-module-roles/errors` to distinguish denied access.
+Its `missingAccessRoles` describes the missing roles. Render an access message or
+your app's role-activation UI for that case; preserve an explicit error state for
+network, configuration and other failures.
 
-## Requirements
+Role activation and retry belong to the application or an optional Roles
+integration, not the router. After activation, recheck access and retry only a
+still-relevant operation. Do not automatically replay a submission after its
+owner has closed, or assume a fetcher result will reach a remounted owner.
+The middleware runtime does not provide role-specific recovery or replay APIs.
 
-- Enable the Roles module in the app configuration with `enableRoles(configurator)` from `@equinor/fusion-framework-module-roles`. The middleware reads `fusion.modules.roles`.
-- The decision is made by the provider's `hasAccessRole`. Only global assignments satisfy a name-only requirement, as on the backend.
+## Routing metadata and security boundaries
 
-## When the check runs
+This application helper is custom middleware. Build tools must not execute it,
+infer access requirements from its function name, or treat published role
+descriptions as authorization. Static manifest metadata needs its own explicit
+contract; this example does not introduce automatic role extraction.
 
-- The check runs on every middleware execution:
-  - initial load and later navigations
-  - revalidations
-  - fetcher loads
-  - form and fetcher submissions
-  It also runs for component-only routes without loaders.
-- The check uses the provider's normal caching.
-- While the check is pending, the route is not committed. No protected loader, action or component runs.
-- If the operation is cancelled, for example by a newer navigation, the result is discarded and the chain does not continue.
-
-## Nested routes
-
-Every matched route's middleware must pass, so requirements on parent and child routes combine with AND. A child route cannot weaken a parent requirement. For example, a child with `{ mode: 'any' }` still needs every role its parent requires.
-
-```ts
-// layout module
-export const middleware = [requireRoles(['App.Access'])];
-
-// child page module: needs App.Access AND (Reports.Read OR Reports.Admin)
-export const middleware = [requireRoles(['Reports.Read', 'Reports.Admin'], { mode: 'any' })];
-```
-
-## Outcomes and errors
-
-When the requirement is not met, the middleware throws `RequireRolesError`. It renders in the nearest error element. `reason` tells you which case applies.
-
-| `reason` | Meaning | `cause` |
-|---|---|---|
-| `denied` | The provider answered and the requirement is not met. `missingAccessRoles` lists the roles the provider reported missing. | The provider's `RequiredAccessRolesError`, which carries the Roles provider for access-recovery UI. |
-| `check-failed` | The provider could not answer, for example because of a network, service or response error. Access is unknown and the route is not loaded. This is not a denial. | The provider error (a `RolesError`). |
-| `not-configured` | The Roles module is not enabled. This is a configuration error. | — |
-
-The middleware never treats a failure as access, and it never denies silently.
-
-```tsx
-import { RequireRolesError, type ErrorElementProps } from '@equinor/fusion-framework-react-router';
-
-export function ErrorElement({ error }: ErrorElementProps) {
-  if (RequireRolesError.is(error) && error.reason === 'denied') {
-    return <p>You need access: {error.missingAccessRoles.join(', ')}</p>;
-  }
-  if (RequireRolesError.is(error) && error.reason === 'check-failed') {
-    return <p>Could not check your access. Try again later.</p>;
-  }
-  throw error;
-}
-```
-
-> [!IMPORTANT]
-> Route checks protect the UI only. Backend APIs must still authorize every request.
-
-## Inspectable metadata
-
-`requireRoles` attaches its normalized requirement to the middleware function. Do not repeat it in `handle.route`.
-
-```ts
-import { getRouteMiddlewareMetadata } from '@equinor/fusion-framework-react-router';
-
-getRouteMiddlewareMetadata(requireRoles([' Reports.Read ', 'Reports.Read']));
-// { kind: 'roles', mode: 'all', roles: ['Reports.Read'] }
-
-getRouteMiddlewareMetadata(myCustomMiddleware);
-// { kind: 'custom' }
-```
-
-- Other middleware is reported as `{ kind: 'custom' }`. It is opaque and must not be read as an authorization requirement.
-- The metadata is stored under a registered symbol. The property is read-only and non-enumerable, so it never shows up in serialized route objects.
-
-### Static recognition for build tools
-
-Build tools must not run page modules or serialize functions. The React-free entry point `@equinor/fusion-framework-react-router/middleware-metadata` exports what a build consumer such as the route manifest producer needs:
-
-- `requireRolesStaticContract` describes what to recognise. In a route module's `middleware` export array, look for a call to the named import `requireRoles` from `@equinor/fusion-framework-react-router` (an alias is allowed). The call must have:
-  - an array literal of string literals as the first argument
-  - optionally an object literal `{ mode: 'all' | 'any' }` as the second argument
-- `normalizeRolesRequirement(roles, options)` applies the same validation and normalization as the runtime helper. Use it on the extracted literals so published metadata matches runtime behaviour.
-- The types `RouteMiddlewareMetadata`, `RolesMiddlewareMetadata` and `CustomMiddlewareMetadata` describe the result.
-
-Report any other entry as `{ kind: 'custom' }`. This includes calls with non-literal arguments and calls to a `requireRoles` imported from somewhere else.
+Client role gates protect navigation and UI only. Every backend endpoint must
+still authorize its requests.

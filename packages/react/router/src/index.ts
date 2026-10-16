@@ -8,16 +8,6 @@ export type {
   MiddlewareFunctionArgs,
   MiddlewareNextFunction,
 } from './middleware.js';
-export { requireRoles } from './require-roles.js';
-export { RequireRolesError, type RequireRolesErrorReason } from './RequireRolesError.js';
-export {
-  getRouteMiddlewareMetadata,
-  type CustomMiddlewareMetadata,
-  type RequireRolesMode,
-  type RequireRolesOptions,
-  type RolesMiddlewareMetadata,
-  type RouteMiddlewareMetadata,
-} from './middleware-metadata/index.js';
 export type {
   ActionFunction,
   ActionFunctionArgs,

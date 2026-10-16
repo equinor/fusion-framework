@@ -3433,9 +3433,6 @@ importers:
       '@equinor/fusion-framework-module-navigation':
         specifier: workspace:^
         version: link:../../modules/navigation
-      '@equinor/fusion-framework-module-roles':
-        specifier: workspace:^
-        version: link:../../modules/roles
       '@equinor/fusion-framework-react-module':
         specifier: workspace:^
         version: link:../modules/module
@@ -3467,9 +3464,6 @@ importers:
       react-dom:
         specifier: ^19.2.7
         version: 19.3.1(react@19.3.1)
-      rxjs:
-        specifier: ^7.8.1
-        version: 7.8.2
       typescript:
         specifier: ^7.0.2
         version: 7.0.2
