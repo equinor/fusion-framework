@@ -1,6 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { Query } from '../src/Query';
-import type { QueryClientError } from '../src/client';
+import { Query } from '../src/Query.js';
 
 describe('Query queue operators', () => {
   // Clean up after each test case by using real timers
@@ -37,65 +36,33 @@ describe('Query queue operators', () => {
     expect(results[2].value).toEqual(expected[1]); // Check the value of the third result
   });
   it('should switch to new request when queue operator is `switch`', async () => {
-    // Mock function that simulates async operation with a shorter delay
+    vi.useFakeTimers();
     const fn = vi.fn(
-      (value: string) => new Promise((resolve) => setTimeout(() => resolve(value), 100)),
+      (value: string) => new Promise<string>((resolve) => setTimeout(() => resolve(value), 100)),
     );
-    // Create a new Query instance with the 'switch' operator
     const query = new Query({
       queueOperator: 'switch',
-      client: { fn }, // Client with the mock function
-      key: (value) => value, // Key function that returns the input value
+      client: { fn },
+      key: (value) => value,
     });
+    const next = vi.fn();
+    const error = vi.fn();
+    const complete = vi.fn();
+    query.query('foo').subscribe({ next, error, complete });
 
-    const tasks: Array<Promise<string | Error>> = [];
+    // Start the first client without relying on wall-clock scheduling under CI load.
+    await vi.advanceTimersByTimeAsync(10);
+    expect(fn).toHaveBeenCalledTimes(1);
 
-    // First task that gets aborted due to the 'switch' behavior
-    tasks.push(
-      new Promise((resolve, reject) => {
-        setTimeout(() => {
-          query.query('foo').subscribe({
-            next: () => {
-              reject('job should not emit value'); // Should not emit due to switch
-            },
-            error: (err) => {
-              // Expectations for the aborted request
-              expect(fn).toHaveBeenCalledTimes(1); // Function should have been called once at this point
-              expect(err).toBeInstanceOf(Error); // Error instance check
-              expect((err as QueryClientError).type).toEqual('abort'); // Error type check
-              resolve('job aborted'); // Resolve with a specific message
-            },
-            complete: () => {
-              reject('job should not complete'); // Job should not complete due to abort
-            },
-          });
-        }, 0);
-      }),
-    );
+    const task = query.queryAsync('bar');
+    await vi.runAllTimersAsync();
 
-    // Second task that completes successfully
-    tasks.push(
-      new Promise((resolve, reject) => {
-        setTimeout(() => {
-          query.query('bar').subscribe({
-            next: (e) => {
-              // Expect the result to match the object with value 'bar' and status 'complete'
-              expect(e).toMatchObject({ value: 'bar', status: 'complete' });
-            },
-            error: () => {
-              reject('job failed'); // Reject on error
-            },
-            complete: () => {
-              resolve('job completed'); // Resolve with a specific message on completion
-            },
-          });
-        }, 10); // Set a slight delay to ensure this request comes after the first one
-      }),
-    );
-
-    const task = await Promise.all(tasks); // Await all tasks
-    expect(task).toEqual(['job aborted', 'job completed']); // Expect the correct resolution messages
-    expect(fn).toHaveBeenCalledTimes(2); // Finally, expect the mock function to be called twice in total
+    await expect(task).resolves.toMatchObject({ value: 'bar', status: 'complete' });
+    expect(next).not.toHaveBeenCalled();
+    expect(complete).not.toHaveBeenCalled();
+    expect(error).toHaveBeenCalledExactlyOnceWith(expect.any(Error));
+    expect(error).toHaveBeenCalledWith(expect.objectContaining({ type: 'abort' }));
+    expect(fn).toHaveBeenCalledTimes(2);
   });
   it('should execute consecutive when queue operator is `concat`', async () => {
     // Mock function with conditional delay to ensure sequential execution

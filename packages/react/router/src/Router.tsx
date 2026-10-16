@@ -122,7 +122,7 @@ function normalizeRoutes(
 }
 
 /**
- * Router component that integrates React Router v7 with Fusion Framework.
+ * Router component that integrates React Router v8 with Fusion Framework.
  *
  * This component sets up a React Router instance that:
  * - Connects to Fusion Framework's navigation module for history and basename
@@ -214,16 +214,15 @@ export function Router({
           // errorElement is typed as ComponentType in fusion's RouteObject (not ReactNode),
           // so we wrap it into a ReactElement for react-router to consume.
           mapped.errorElement = React.createElement(wrapErrorComponent(route.errorElement));
-          mapped.hasErrorBoundary = true;
         } else if (mapped.ErrorBoundary) {
           // Mirror react-router's default mapRouteProperties: convert ErrorBoundary (ComponentType)
-          // into errorElement (ReactElement) and set hasErrorBoundary so the router registers it.
+          // into errorElement (ReactElement). React Router v8 removed `hasErrorBoundary` and
+          // detects boundaries from the presence of `errorElement`/`ErrorBoundary`.
           // errorElement and ErrorBoundary are mutually exclusive per React Router docs.
           mapped.errorElement = React.createElement(
             wrapErrorComponent(mapped.ErrorBoundary as ErrorElement),
           );
           (mapped as ReactRouterRouteObject).ErrorBoundary = undefined;
-          mapped.hasErrorBoundary = true;
         }
         // Wrap the Component so fusion module context is available inside it
         if (mapped.Component) {
