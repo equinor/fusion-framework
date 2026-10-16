@@ -20,36 +20,39 @@ const routeMatchSchema = z
   .describe('Path pattern or matcher function used to select requests for this route.');
 
 const routeSchema = z
-  .union([
-    z
-      .object({
-        match: routeMatchSchema,
-        middleware: z
-          .custom<NonNullable<ConfiguredRoute['middleware']>>(
-            (value) => typeof value === 'function',
-            { error: 'Route middleware must be a function.' },
-          )
-          .describe('Connect middleware called when the route matches.'),
-        proxy: z.undefined().optional(),
-      })
-      .strict()
-      .describe('A route handled by custom Connect middleware.'),
-    z
-      .object({
-        match: routeMatchSchema,
-        middleware: z.undefined().optional(),
-        proxy: z
-          .object({
-            target: z
-              .string({ error: 'Proxy target must be a non-empty URL.' })
-              .min(1, { error: 'Proxy target must be a non-empty URL.' })
-              .describe('Upstream URL that receives requests matched by this route.'),
-          })
-          .passthrough()
-          .describe('Vite proxy options for the matching route.'),
-      })
-      .strict(),
-  ])
+  .union(
+    [
+      z
+        .object({
+          match: routeMatchSchema,
+          middleware: z
+            .custom<NonNullable<ConfiguredRoute['middleware']>>(
+              (value) => typeof value === 'function',
+              { error: 'Route middleware must be a function.' },
+            )
+            .describe('Connect middleware called when the route matches.'),
+          proxy: z.undefined().optional(),
+        })
+        .strict()
+        .describe('A route handled by custom Connect middleware.'),
+      z
+        .object({
+          match: routeMatchSchema,
+          middleware: z.undefined().optional(),
+          proxy: z
+            .object({
+              target: z
+                .string({ error: 'Proxy target must be a non-empty URL.' })
+                .min(1, { error: 'Proxy target must be a non-empty URL.' })
+                .describe('Upstream URL that receives requests matched by this route.'),
+            })
+            .passthrough()
+            .describe('Vite proxy options for the matching route.'),
+        })
+        .strict(),
+    ],
+    { error: 'Route must be an object with match and either middleware or proxy.' },
+  )
   .describe('A middleware or upstream proxy route.');
 
 const templateEnvironmentObjectSchema = z
@@ -178,14 +181,17 @@ export const DevServerOptionsSchema = z
     spa: z
       .object({
         templateEnv: z
-          .union([
-            templateEnvironmentObjectSchema,
-            z
-              .custom<TemplateEnvironment>((value) => typeof value === 'function', {
-                error: 'SPA templateEnv must be an object or a function.',
-              })
-              .describe('Factory that creates SPA template environment values.'),
-          ])
+          .union(
+            [
+              templateEnvironmentObjectSchema,
+              z
+                .custom<TemplateEnvironment>((value) => typeof value === 'function', {
+                  error: 'SPA templateEnv must be an object or a function.',
+                })
+                .describe('Factory that creates SPA template environment values.'),
+            ],
+            { error: 'SPA templateEnv must be an object or a function.' },
+          )
           .describe('Static SPA template environment values or a per-request factory.'),
       })
       .strict()

@@ -53,4 +53,46 @@ describe('validateDevServerConfig', () => {
       /spa\.templateEnv\.msal\.clientId: MSAL client ID must be a string\./,
     );
   });
+
+  it('keeps the union message when no branch is more specific than the others', () => {
+    // A number fails both string and boolean branches at the same path.
+    const config = {
+      ...validConfig,
+      spa: {
+        templateEnv: {
+          msal: {
+            clientId: 'client-id',
+            tenantId: 'tenant-id',
+            redirectUri: '/',
+            requiresAuth: 'true',
+            mock: 42,
+          },
+        },
+      },
+    } as unknown as DevServerOptions;
+
+    expect(() => validateDevServerConfig(config)).toThrow(
+      /spa\.templateEnv\.msal\.mock: MSAL mock setting must be a string or boolean\./,
+    );
+  });
+
+  it('lists every accepted shape for templateEnv values that match neither branch', () => {
+    const config = { ...validConfig, spa: { templateEnv: 42 } } as unknown as DevServerOptions;
+
+    expect(() => validateDevServerConfig(config)).toThrow(
+      /spa\.templateEnv: SPA templateEnv must be an object or a function\./,
+    );
+  });
+
+  it('reports the route union message for routes without middleware or proxy', () => {
+    // Both route branches fail equally deep, so neither handler should be singled out.
+    const config = {
+      ...validConfig,
+      api: { ...validConfig.api, routes: [{ match: '/api' }] },
+    } as unknown as DevServerOptions;
+
+    expect(() => validateDevServerConfig(config)).toThrow(
+      /api\.routes\.0: Route must be an object with match and either middleware or proxy\./,
+    );
+  });
 });
