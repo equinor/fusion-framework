@@ -18,6 +18,10 @@
       "types": "./dist/types/enable-bookmark.d.ts",
       "import": "./dist/esm/enable-bookmark.js"
     },
+    "./enable-navigation": {
+      "types": "./dist/types/enable-app-navigation.d.ts",
+      "import": "./dist/esm/enable-app-navigation.js"
+    },
     "./mock": {
       "types": "./dist/types/mock/index.d.ts",
       "import": "./dist/esm/mock/index.js"
@@ -33,6 +37,9 @@
       ],
       "enable-bookmark": [
         "dist/types/enable-bookmark.d.ts"
+      ],
+      "enable-navigation": [
+        "dist/types/enable-app-navigation.d.ts"
       ],
       "mock": [
         "dist/types/mock/index.d.ts"
@@ -75,6 +82,7 @@
     "@equinor/fusion-framework-module-event": "workspace:*",
     "@equinor/fusion-framework-module-http": "workspace:*",
     "@equinor/fusion-framework-module-msal": "workspace:*",
+    "@equinor/fusion-framework-module-navigation": "workspace:*",
     "@equinor/fusion-framework-module-telemetry": "workspace:*",
     "lodash.clonedeep": "^4.5.0",
     "rxjs": "^7.8.1"

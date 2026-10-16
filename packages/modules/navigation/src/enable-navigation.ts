@@ -1,5 +1,6 @@
 import type { IModulesConfigurator, ModuleConfigType } from '@equinor/fusion-framework-module';
 import { module, type NavigationModule } from './module.js';
+import type { NavigationInitiator } from './NavigationInitiator.js';
 
 /**
  * Helper function to enable the navigation module.
@@ -14,7 +15,11 @@ import { module, type NavigationModule } from './module.js';
  *
  * @param configurator - The modules configurator to add navigation to
  * @param basenameOrOptions - Optional basename string or configuration object
- * @param basenameOrOptions.configure - Configuration callback for advanced setup
+ * @param basenameOrOptions.configure - Configuration callback for advanced setup. Settings
+ *   made here are explicit app configuration and take precedence over the initiator.
+ * @param basenameOrOptions.initiator - Navigation strategy supplied by the app/widget
+ *   initiator (`host` or `memory`). Applied below explicit configuration; an explicit
+ *   setting that violates a required host constraint fails startup.
  * @typeParam TRef - Reference type for module composition
  *
  * @example
@@ -29,6 +34,9 @@ import { module, type NavigationModule } from './module.js';
  *     config.setHistory(createHistory('browser'));
  *   }
  * });
+ *
+ * // Adopt the strategy supplied by the portal or widget
+ * enableNavigation(configurator, { initiator: env.navigation });
  * ```
  *
  * @see {@link NavigationModule} - The navigation module type
@@ -41,7 +49,8 @@ export const enableNavigation = <TRef = unknown>(
   basenameOrOptions?:
     | string
     | {
-        configure: (config: ModuleConfigType<NavigationModule>, ref: TRef) => void;
+        configure?: (config: ModuleConfigType<NavigationModule>, ref: TRef) => void;
+        initiator?: NavigationInitiator;
       },
 ): void => {
   configurator.addConfig({
@@ -50,8 +59,10 @@ export const enableNavigation = <TRef = unknown>(
       // A string shortcut sets the basename directly; otherwise defer to the caller's configure callback.
       if (typeof basenameOrOptions === 'string') {
         config.setBasename(basenameOrOptions);
-      } else if (typeof basenameOrOptions === 'object' && 'configure' in basenameOrOptions) {
-        basenameOrOptions.configure(config, ref);
+      } else if (typeof basenameOrOptions === 'object') {
+        // Initiator first: it is the fallback, so explicit settings made by `configure` outrank it.
+        config.setInitiator(basenameOrOptions.initiator);
+        basenameOrOptions.configure?.(config, ref);
       }
     },
   });

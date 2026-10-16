@@ -27,6 +27,14 @@ export { NavigationConfigurator } from './NavigationConfigurator.js';
 
 export { NavigationModule, module, moduleKey } from './module.js';
 export { enableNavigation } from './enable-navigation.js';
+export type {
+  HostNavigationInitiator,
+  MemoryNavigationInitiator,
+  NavigationConflictSetting,
+  NavigationInitiator,
+} from './NavigationInitiator.js';
+export { NavigationInitiatorConflictError } from './NavigationInitiatorConflictError.js';
+export { assertNavigationInitiator } from './assert-navigation-initiator.js';
 
 export type { INavigationProvider } from './NavigationProvider.interface.js';
 export { NavigationProvider } from './NavigationProvider.js';

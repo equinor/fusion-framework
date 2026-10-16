@@ -31,6 +31,20 @@ export const configure = (configurator) => {
 
 Without a basename, routes will not be prefixed and will conflict with the portal's URL structure.
 
+## enableAppNavigation
+
+Adopts the navigation strategy supplied by the app initiator (`env.navigation`) so startup does not need `enableNavigation` or basename copying:
+
+```ts
+import { enableAppNavigation } from '@equinor/fusion-framework-react-app/navigation';
+
+export const configure: AppModuleInitiator = (configurator, { env }) => {
+  enableAppNavigation(configurator, env);
+};
+```
+
+Precedence is explicit configuration (third argument) > `env.navigation` (`host` or `memory`) > standalone browser defaults. A host history is never disposed on unmount; an owned memory history is. An explicit setting that conflicts with the required host basename or history fails startup with both settings identified. See the [navigation module](../../modules/navigation/README.md#initiator-strategies-portal-and-widget).
+
 ## useRouter
 
 Creates a router instance from route definitions. The returned router is compatible with `<Router>` from `@equinor/fusion-framework-react-router`.

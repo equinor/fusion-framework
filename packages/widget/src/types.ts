@@ -8,6 +8,8 @@ import type {
   WidgetRenderArgs,
 } from '@equinor/fusion-framework-module-widget';
 
+import type { MemoryNavigationInitiator } from '@equinor/fusion-framework-module-navigation';
+
 import type { IWidgetConfigurator } from './WidgetConfigurator.js';
 
 /**
@@ -45,6 +47,11 @@ export type WidgetEnv<TProps = unknown> = {
   manifest: WidgetManifest;
   /** Reserved for future backend-provided configuration. Currently unused. */
   config?: null;
+  /**
+   * Optional memory navigation options for this widget instance (initial location,
+   * basename). A new isolated memory history is always created per instance.
+   */
+  navigation?: Omit<MemoryNavigationInitiator, 'kind'>;
   /** Optional consumer-provided properties forwarded by the widget host. */
   props?: TProps;
 };

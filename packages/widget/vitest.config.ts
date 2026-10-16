@@ -1,0 +1,11 @@
+import { defineProject } from 'vitest/config';
+
+import { name, version } from './package.json' with { type: 'json' };
+
+export default defineProject({
+  test: {
+    include: ['src/__tests__/**/*.test.ts'],
+    environment: 'jsdom',
+    name: `${name}@${version}`,
+  },
+});

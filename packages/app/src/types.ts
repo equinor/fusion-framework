@@ -9,6 +9,8 @@ import type {
   ComponentRenderArgs,
 } from '@equinor/fusion-framework-module-app';
 
+import type { NavigationInitiator } from '@equinor/fusion-framework-module-navigation';
+
 import type { IAppConfigurator } from './AppConfigurator.js';
 import type { ConfigEnvironment } from '@equinor/fusion-framework-module-app';
 
@@ -39,6 +41,13 @@ export type {
 export type AppEnv<TConfig extends ConfigEnvironment = ConfigEnvironment, TProps = unknown> = {
   /** Base routing path of the application (e.g. `/apps/my-app`). */
   basename?: string;
+  /**
+   * Navigation strategy supplied by whoever initiates the app (portal or widget host).
+   *
+   * Adopted by `enableAppNavigation`; explicit app navigation configuration
+   * takes precedence, and incompatible host constraints fail startup.
+   */
+  navigation?: NavigationInitiator;
   /** Application manifest describing the app key, version, and build metadata. */
   manifest: AppManifest;
   /** Environment-specific configuration with optional endpoint definitions. */

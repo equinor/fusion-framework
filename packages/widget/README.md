@@ -56,7 +56,8 @@ The Fusion portal calls the returned async function at render time, passing the 
 | `configureWidgetModules` | function | Create a widget module initializer from a configuration callback. |
 | `WidgetConfigurator` | class | Default `IWidgetConfigurator` implementation with pre-registered core modules. |
 | `IWidgetConfigurator` | interface | Configuration contract exposing `configureHttp`, `configureHttpClient`, `configureMsal`, and `useFrameworkServiceClient`. |
-| `WidgetEnv` | type | Widget environment shape (manifest, config, props). |
+| `enableWidgetNavigation` | function | Enable the navigation module with an isolated per-instance memory history (optional `env.navigation` initial location and basename). Never reads or modifies `window.location`. |
+| `WidgetEnv` | type | Widget environment shape (manifest, config, navigation, props). |
 | `WidgetModuleInitiator` | type | Callback signature for the configuration function. |
 | `WidgetModuleInit` | type | Full initializer function signature (callback → async init). |
 | `WidgetManifest` | re-export | Widget identity, version, and asset metadata (from `@equinor/fusion-framework-module-widget`). |

@@ -92,6 +92,32 @@ const router = navigation.createRouter(routes);
 
 > Always use `navigation.createRouter()` instead of `createBrowserRouter()` directly—creating a router outside the provider breaks basename handling and state synchronisation.
 
+### Initiator strategies (portal and widget)
+
+The initiator of an app supplies a navigation strategy independently of route code:
+
+```ts
+import { enableNavigation } from '@equinor/fusion-framework-module-navigation';
+
+// Portal: the host owns the URL and history, and serves the app under `basename`.
+enableNavigation(configurator, {
+  initiator: { kind: 'host', history: hostHistory, basename: '/apps/my-app' },
+});
+
+// Widget: a new, isolated memory history per app instance.
+enableNavigation(configurator, {
+  initiator: { kind: 'memory', initialLocation: '/start', basename: '/widget' },
+});
+```
+
+**Precedence:** explicit app configuration (`setBasename`, `setHistory` in `configure`) > initiator > standalone browser defaults.
+
+- `host`: the navigation module wraps the host history and never disposes it. A compatible explicit `basename` (same after slash normalization) or the same history instance is kept. An explicit basename or a different history violates the required host constraint, so startup fails with a `NavigationInitiatorConflictError` that names both settings. Nothing is overridden silently.
+- `memory`: a new `MemoryHistory` is created per module instance, owned by the module, and disposed with it. `window.location` is neither read nor modified. `initialLocation` is relative to `basename` (a location already inside `basename` is used as given) and defaults to the app root. Explicit configuration still wins over the memory strategy.
+- The navigation module stays the only history owner; routers created with `createRouter` (and `Router` from `@equinor/fusion-framework-react-router`) consume it.
+
+For apps use `enableAppNavigation` from `@equinor/fusion-framework-app/enable-navigation` (re-exported by `@equinor/fusion-framework-react-app/navigation`); for widgets use `enableWidgetNavigation` from `@equinor/fusion-framework-widget`. Neither requires `enableNavigation` or copying `env.basename`.
+
 ### History types
 
 | Factory argument | Class | Description |

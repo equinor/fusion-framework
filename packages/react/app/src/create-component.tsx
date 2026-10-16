@@ -12,6 +12,7 @@ import type { AnyModule } from '@equinor/fusion-framework-module';
 import type { FrameworkEvent, FrameworkEventInit } from '@equinor/fusion-framework-module-event';
 
 import { ModuleProvider as AppModuleProvider } from '@equinor/fusion-framework-react-module';
+import { componentTeardowns } from './component-teardowns.js';
 
 export type ComponentRenderArgs<TFusion extends Fusion = Fusion, TEnv = AppEnv> = {
   fusion: TFusion;
@@ -80,24 +81,46 @@ export const createComponent =
     Component: React.ElementType,
     configure?: AppModuleInitiator<TModules, TRef, TEnv>,
   ): ComponentRenderer<TRef, TEnv> =>
-  (fusion, env) =>
-    lazy(async () => {
+  (fusion, env) => {
+    // Set when the host unmounts before (or after) initialization finishes.
+    let disposed = false;
+    let modules: AppModulesInstance | undefined;
+
+    const releaseModules = (): void => {
+      // Guard so a repeated teardown does not dispose twice
+      if (!modules) return;
+      const instance = modules;
+      modules = undefined;
+      // Module disposal is asynchronous at runtime; surface failures instead of dropping them
+      Promise.resolve(instance.dispose()).catch((error: unknown) => {
+        console.error('Failed to dispose application modules', error);
+      });
+    };
+
+    const LazyComponent = lazy(async (): Promise<{ default: React.ComponentType }> => {
       const init = configureModules<TModules, TRef, TEnv>(configure);
       // configureModules returns a generic modules instance; narrow it to the
       // app-specific shape expected by consumers of this component.
-      const modules = (await init({
+      modules = (await init({
         fusion,
         env,
       })) as unknown as AppModulesInstance;
 
-      modules.event.dispatchEvent('onReactAppLoaded', {
-        detail: { modules, fusion, env: env },
+      // Unmounted while initializing: release what was just created and render nothing.
+      if (disposed) {
+        releaseModules();
+        return { default: () => null };
+      }
+
+      const appModules = modules;
+      appModules.event.dispatchEvent('onReactAppLoaded', {
+        detail: { modules: appModules, fusion, env: env },
         source: Component,
       });
       return {
         default: () => (
           <FrameworkProvider value={fusion}>
-            <AppModuleProvider value={modules}>
+            <AppModuleProvider value={appModules}>
               {/* TODO(#5083): tighten generics so Component no longer needs @ts-ignore */}
               {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment*/}
               {/* @ts-ignore */}
@@ -107,6 +130,13 @@ export const createComponent =
         ),
       };
     });
+
+    componentTeardowns.set(LazyComponent, () => {
+      disposed = true;
+      releaseModules();
+    });
+    return LazyComponent;
+  };
 
 declare module '@equinor/fusion-framework-module-event' {
   interface FrameworkEventMap {

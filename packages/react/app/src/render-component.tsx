@@ -2,6 +2,7 @@ import { Suspense, StrictMode } from 'react';
 import type { FunctionComponent } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import type { ComponentRenderArgs, ComponentRenderer } from './create-component.js';
+import { disposeComponent } from './dispose-component.js';
 
 /**
  * Callback returned after mounting an application; invoke it to unmount and clean
@@ -35,6 +36,8 @@ const render = (
   );
   return () => {
     root.unmount();
+    // Release app modules (including owned navigation history); host-owned history is never disposed.
+    disposeComponent(Component);
   };
 };
 

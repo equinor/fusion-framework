@@ -18,64 +18,8 @@ import {
 } from '@equinor/fusion-framework-module-telemetry';
 import type { IEventModuleProvider } from '@equinor/fusion-framework-module-event';
 import { NavigatedEvent } from './NavigatedEvent.js';
-import { pathToString } from './lib/utils/index.js';
+import { normalizeBasename, normalizePathname, pathToString } from './lib/utils/index.js';
 import type { BaseHistory } from './lib/index.js';
-
-/**
- * Normalizes a pathname by:
- * - Collapsing multiple consecutive slashes into a single slash
- *
- * @example
- * normalizePathname("/app//users///profile/") // returns "/app/users/profile/"
- * normalizePathname("///multiple///slashes///") // returns "/multiple/slashes/"
- *
- * @param path - The pathname to normalize
- * @returns The normalized pathname without consecutive slashes
- */
-const normalizePathname = (path: string): string => {
-  // Use iterative approach instead of regex to avoid potential ReDoS with untrusted input
-  let result = '';
-  let lastWasSlash = false;
-
-  // Walk each character once to collapse runs of slashes in a single pass
-  for (let i = 0; i < path.length; i++) {
-    const char = path[i];
-    // Only slashes need de-duplication; every other character passes through
-    if (char === '/') {
-      // Keep the first slash of a run, drop the rest
-      if (!lastWasSlash) {
-        result += char;
-        lastWasSlash = true;
-      }
-      // Skip consecutive slashes
-    } else {
-      result += char;
-      lastWasSlash = false;
-    }
-  }
-
-  return result;
-};
-
-/**
- * Removes trailing slashes from a path string.
- *
- * @param path - The path to trim
- * @returns The path without trailing slashes
- *
- * @example
- * stripTrailingSlashes("/apps/my-app/") // returns "/apps/my-app"
- * stripTrailingSlashes("/apps/my-app///") // returns "/apps/my-app"
- */
-const stripTrailingSlashes = (path: string): string => {
-  // Use iterative approach to avoid ReDoS vulnerability
-  let endIndex = path.length;
-  // Shrink endIndex past every trailing slash
-  while (endIndex > 0 && path[endIndex - 1] === '/') {
-    endIndex--;
-  }
-  return path.substring(0, endIndex);
-};
 
 /**
  * Navigation provider implementation.
@@ -179,7 +123,7 @@ export class NavigationProvider
     // basename string, so a basename of "/apps/my-app/" would fail to match
     // the URL "/apps/my-app" and render nothing (blank page).
     // Treat '/' as "no basename" (empty string) since all paths start with '/'.
-    const normalizedBasename = basename ? stripTrailingSlashes(normalizePathname(basename)) : '';
+    const normalizedBasename = basename ? normalizeBasename(basename) : '';
     this.#basename = normalizedBasename || undefined;
     this.#event = eventProvider;
     this.#telemetry = telemetry;

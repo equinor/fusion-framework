@@ -14,3 +14,5 @@ export { WidgetConfigurator, IWidgetConfigurator } from './WidgetConfigurator.js
 export * from './types.js';
 
 export { configureWidgetModules, default } from './configure-widget-modules.js';
+
+export { enableWidgetNavigation } from './enable-widget-navigation.js';
