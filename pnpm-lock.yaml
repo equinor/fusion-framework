@@ -1502,6 +1502,9 @@ importers:
       '@equinor/fusion-framework-module-azure-identity':
         specifier: workspace:*
         version: link:../modules/azure-identity
+      '@equinor/fusion-framework-react-router':
+        specifier: workspace:^
+        version: link:../react/router
       '@equinor/fusion-framework-vite-plugin-raw-imports':
         specifier: workspace:*
         version: link:../vite-plugins/raw-imports
@@ -3442,13 +3445,19 @@ importers:
       '@equinor/fusion-imports':
         specifier: workspace:^
         version: link:../../utils/imports
+      acorn:
+        specifier: ^8.18.0
+        version: 8.18.0
+      esbuild:
+        specifier: ^0.28.1
+        version: 0.28.2
       react-router:
         specifier: ^8.4.0
         version: 8.4.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
     devDependencies:
       '@react-router/dev':
         specifier: ^8.4.0
-        version: 8.4.0(react-router@8.4.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(supports-color@10.2.2)(typescript@7.0.2)(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
+        version: 8.4.0(react-router@8.4.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(supports-color@10.2.2)(typescript@7.0.2)(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.2)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
       '@types/react':
         specifier: ^19.2.7
         version: 19.3.0
@@ -3469,10 +3478,10 @@ importers:
         version: 7.0.2
       vite:
         specifier: ^8.0.0
-        version: 8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15)(yaml@2.9.1)
+        version: 8.3.4(@types/node@26.6.2)(esbuild@0.28.2)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15)
       vitest:
         specifier: catalog:vitest
-        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@5.0.4)(@vitest/ui@5.0.4)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
+        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@5.0.4)(@vitest/ui@5.0.4)(happy-dom@20.14.6)(jsdom@30.1.2)(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.2)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
 
   packages/services:
     dependencies:
@@ -17139,7 +17148,7 @@ snapshots:
       react-dom: 19.3.1(react@19.3.1)
       react-stately: 3.50.0(react@19.3.1)
 
-  '@react-router/dev@8.4.0(react-router@8.4.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(supports-color@10.2.2)(typescript@7.0.2)(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))':
+  '@react-router/dev@8.4.0(react-router@8.4.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(supports-color@10.2.2)(typescript@7.0.2)(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.2)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))':
     dependencies:
       '@babel/core': 7.29.7(supports-color@10.2.2)
       '@babel/generator': 7.29.8
@@ -17165,7 +17174,7 @@ snapshots:
       semver: 7.8.5
       tinyglobby: 0.2.17
       valibot: 1.4.2(typescript@7.0.2)
-      vite: 8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15)(yaml@2.9.1)
+      vite: 8.3.4(@types/node@26.6.2)(esbuild@0.28.2)(sass-embedded@1.105.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15)
     optionalDependencies:
       typescript: 7.0.2
     transitivePeerDependencies:

@@ -91,6 +91,33 @@ describe('resolveAppTestEnv', () => {
     ).rejects.toThrow();
   });
 
+  it('resolves an inline manifest registry pointer to serialized sitemap entries', async () => {
+    await writeFile(
+      join(dir, 'routes.ts'),
+      `import { index } from '@equinor/fusion-framework-react-router/routes';
+       export default index('./page.tsx');`,
+    );
+    await writeFile(
+      join(dir, 'page.tsx'),
+      `throw new Error('Page must not execute');
+       export const handle = { route: { description: 'Home' } };`,
+    );
+    const { manifest } = await resolveAppTestEnv({
+      entrypoint: dir,
+      manifest: async () => ({ routes: 'routes.ts' }),
+    });
+    expect(manifest.routes).toEqual([['/', 'Home']]);
+  });
+
+  it('propagates missing registry errors from an inline manifest function', async () => {
+    await expect(
+      resolveAppTestEnv({
+        entrypoint: dir,
+        manifest: () => ({ routes: 'missing-routes.ts' }),
+      }),
+    ).rejects.toThrow('missing-routes.ts');
+  });
+
   it('propagates an error for an explicitly requested config file that does not exist', async () => {
     await expect(
       resolveAppTestEnv({ entrypoint: dir, config: 'does-not-exist.config.ts' }),

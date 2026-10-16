@@ -10,6 +10,17 @@ import type { RecursivePartial } from '../utils/types.js';
 export type { AppManifest } from '@equinor/fusion-framework-module-app';
 
 /**
+ * Manifest authoring input. A registry path is resolved to serialized sitemap
+ * entries before the manifest is returned or published.
+ */
+export type AppManifestInput<T extends AppManifest = AppManifest> = Omit<
+  RecursivePartial<T>,
+  'routes'
+> & {
+  routes?: RecursivePartial<T>['routes'] | string;
+};
+
+/**
  * Function type for loading or modifying an application manifest.
  *
  * @template T - A type extending AppManifest.
@@ -22,12 +33,12 @@ export type { AppManifest } from '@equinor/fusion-framework-module-app';
  * Inline notes:
  * - This type accepts partial manifests that will be merged with the base manifest.
  * - Returning void allows for side-effect-only functions, but returning the manifest is preferred for clarity.
- * - Routes can be RouteNode | RouteNode[] (from router package) or RouteSchemaEntry[] (serialized format).
+ * - Routes can be serialized entries or a project-relative explicit DSL registry path.
  */
 export type AppManifestFn<T extends AppManifest = AppManifest> = (
   env: RuntimeEnv, // The runtime environment, e.g., 'development', 'production', etc.
   args: { base: T }, // The base manifest to be extended or modified.
-) => RecursivePartial<T> | undefined | Promise<RecursivePartial<T> | undefined>; // Supports both sync and async manifest generation.
+) => AppManifestInput<T> | undefined | Promise<AppManifestInput<T> | undefined>;
 
 /**
  * Utility to define an application manifest in a type-safe and organized manner.
@@ -42,4 +53,4 @@ export type AppManifestFn<T extends AppManifest = AppManifest> = (
  * - It does not invoke the function immediately; it simply returns it for later use.
  * - Helps with static analysis and RAG-based documentation extraction.
  */
-export const defineAppManifest = (fn: AppManifestFn) => fn;
+export const defineAppManifest = (fn: AppManifestFn): AppManifestFn => fn;
