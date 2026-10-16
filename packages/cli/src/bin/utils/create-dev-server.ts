@@ -7,6 +7,7 @@ import {
   type DevServerOptions,
   type UserConfig,
 } from '@equinor/fusion-framework-dev-server';
+import { InvalidDevServerConfigError } from '../../lib/InvalidDevServerConfigError.js';
 import { validateDevServerConfig } from '../../lib/validate-dev-server-config.js';
 
 import type { ConsoleLogger } from './ConsoleLogger.js';
@@ -82,11 +83,7 @@ export const createDevServer = async (
     configWatcherPlugin = createDevServerConfigWatcherPlugin(path, log);
   } catch (error) {
     // Validation failures must escape rather than starting with a success-shaped default.
-    if (
-      error instanceof Error &&
-      'code' in error &&
-      error.code === 'ERR_INVALID_DEV_SERVER_CONFIG'
-    ) {
+    if (InvalidDevServerConfigError.is(error)) {
       log?.error(error.message);
       throw error;
     }
