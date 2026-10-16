@@ -6,6 +6,24 @@ Route middleware runs before a route's loaders and actions. Use it for guards, r
 
 ## Declaring middleware
 
+Use the router-owned `createMiddleware` factory for inferred middleware argument
+and continuation types:
+
+```ts
+import { createMiddleware } from '@equinor/fusion-framework-react-router';
+
+export const middleware = [
+  createMiddleware(async ({ signal }, next) => {
+    signal.throwIfAborted();
+    return next();
+  }),
+];
+```
+
+The factory preserves the original callback and its execution. Supply
+`createMiddleware<Params, FusionContext, Result>(...)` for specialized types.
+It is also re-exported by `@equinor/fusion-framework-react-app/routing`.
+
 Export `middleware` from a route module. The DSL signatures do not change. The Vite plugin (`@equinor/fusion-framework-vite-plugin-react-router`) picks up the export next to `clientLoader`, `action`, `handle`, `ErrorElement` and the other route exports.
 
 ```tsx
@@ -72,6 +90,7 @@ The second argument, `next`, runs the rest of the chain and the route handlers. 
 ## Rejecting, redirecting and errors
 
 - Throw an error before `next()` to stop the chain. No downstream loader or action runs, and the error goes to the nearest error boundary (`ErrorElement`/`errorElement`).
+- To check Fusion Roles V2 access, use the optional helper from `@equinor/fusion-framework-react-app/roles`. The router has no Roles dependency; see [Role-gated middleware](require-roles.md).
 - Throw or return `redirect(...)` to redirect.
 - An error thrown after `next()` goes to the error boundary of the route that declared the middleware, or to the nearest one above it.
 - When the execution is cancelled, for example by a newer navigation, `signal` is aborted and React Router discards the result. Pass `signal` on to async work so it stops early.

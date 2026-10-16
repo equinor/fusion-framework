@@ -96,14 +96,14 @@ Format: `package name` → path → role.
 | Package | Path | Role |
 | --- | --- | --- |
 | `@equinor/fusion-framework-react` | `packages/react/framework` | React framework provider and root hooks |
-| `@equinor/fusion-framework-react-app` | `packages/react/app` | React application host |
+| `@equinor/fusion-framework-react-app` | `packages/react/app` | React application host; typed middleware via `/routing`, optional role gates via `/roles` |
 | `@equinor/fusion-framework-react-module` | `packages/react/modules/module` | Hooks for consuming modules |
 | `@equinor/fusion-framework-react-module-bookmark` | `packages/react/modules/bookmark` | Bookmark hooks |
 | `@equinor/fusion-framework-react-module-context` | `packages/react/modules/context` | Context hooks |
 | `@equinor/fusion-framework-react-module-event` | `packages/react/modules/event` | Event hooks |
 | `@equinor/fusion-framework-react-module-http` | `packages/react/modules/http` | HTTP hooks |
 | `@equinor/fusion-framework-react-module-signalr` | `packages/react/modules/signalr` | SignalR hooks |
-| `@equinor/fusion-framework-react-router` | `packages/react/router` | Type-safe route DSL for React Router v7 |
+| `@equinor/fusion-framework-react-router` | `packages/react/router` | Type-safe route DSL and middleware definitions for React Router v8 |
 | `@equinor/fusion-framework-react-ag-grid` | `packages/react/ag-grid` | AG Grid React bindings |
 | `@equinor/fusion-framework-react-ag-charts` | `packages/react/ag-charts` | AG Charts React bindings |
 | `@equinor/fusion-framework-react-components-roles` | `packages/react/components/roles` | Required-role recovery UI for React hosts |

@@ -1,4 +1,5 @@
 export { Router } from './Router.js';
+export { createMiddleware } from './create-middleware.js';
 export { routerContext } from './router-context.js';
 export { FusionRouterContextProvider } from './fusion-router-context-provider.js';
 export { useRouterContext } from './useRouterContext.js';

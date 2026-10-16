@@ -196,4 +196,6 @@ The legacy `@equinor/fusion-framework-react-router/vite-plugin` entry point rema
 
 - [Migration guide — from `react-router` to Fusion router](docs/migration.md)
 - [Interop entry point](docs/interop.md)
+- [Route middleware](docs/middleware.md)
+- [Role gates with the optional Roles middleware helper](docs/require-roles.md)
 - [End-to-end cookbook](../../../cookbooks/app-react-router/)
