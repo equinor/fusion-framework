@@ -95,4 +95,41 @@ describe('validateDevServerConfig', () => {
       /api\.routes\.0: Route must be an object with match and either middleware or proxy\./,
     );
   });
+
+  it('accepts custom template environment keys allowed by the generic options type', () => {
+    // Custom keys become FUSION_SPA_* variables, so apps may extend any template object.
+    const config = {
+      ...validConfig,
+      spa: {
+        templateEnv: {
+          featureFlag: 'on',
+          msal: {
+            clientId: 'client-id',
+            tenantId: 'tenant-id',
+            redirectUri: '/',
+            requiresAuth: 'true',
+            authority: 'https://login.example.com',
+          },
+        },
+      },
+    } as unknown as DevServerOptions;
+
+    const templateEnv = validateDevServerConfig(config).spa?.templateEnv as Record<
+      string,
+      Record<string, unknown> | string
+    >;
+    expect(templateEnv.featureFlag).toBe('on');
+    expect(templateEnv.msal).toMatchObject({ authority: 'https://login.example.com' });
+  });
+
+  it('rejects unknown api keys so typos are reported', () => {
+    const config = {
+      ...validConfig,
+      api: { ...validConfig.api, serviceDiscoveryURL: '/typo' },
+    } as unknown as DevServerOptions;
+
+    expect(() => validateDevServerConfig(config)).toThrow(
+      /api: Unrecognized key: "serviceDiscoveryURL"/,
+    );
+  });
 });

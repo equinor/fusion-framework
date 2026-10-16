@@ -46,7 +46,7 @@ const routeSchema = z
                 .min(1, { error: 'Proxy target must be a non-empty URL.' })
                 .describe('Upstream URL that receives requests matched by this route.'),
             })
-            .passthrough()
+            .loose()
             .describe('Vite proxy options for the matching route.'),
         })
         .strict(),
@@ -55,6 +55,8 @@ const routeSchema = z
   )
   .describe('A middleware or upstream proxy route.');
 
+// Template objects accept unknown keys: `DevServerOptions` is generic over the template
+// environment, and the SPA plugin exposes every key as a `FUSION_SPA_*` variable.
 const templateEnvironmentObjectSchema = z
   .object({
     title: z
@@ -72,7 +74,7 @@ const templateEnvironmentObjectSchema = z
           .optional()
           .describe('Minimum severity of browser telemetry written to the console.'),
       })
-      .strict()
+      .loose()
       .optional()
       .describe('Browser telemetry settings injected into the SPA.'),
     portal: z
@@ -90,7 +92,7 @@ const templateEnvironmentObjectSchema = z
           .optional()
           .describe('Whether portal assets load through the local proxy.'),
       })
-      .strict()
+      .loose()
       .optional()
       .describe('Portal identity and asset-loading settings.'),
     serviceDiscovery: z
@@ -105,7 +107,7 @@ const templateEnvironmentObjectSchema = z
           })
           .describe('OAuth scopes requested when calling service discovery.'),
       })
-      .strict()
+      .loose()
       .optional()
       .describe('Service discovery endpoint and authentication settings.'),
     msal: z
@@ -133,7 +135,7 @@ const templateEnvironmentObjectSchema = z
           .optional()
           .describe('Origin of the mock server used for authentication.'),
       })
-      .strict()
+      .loose()
       .optional()
       .describe('Microsoft Authentication Library settings for the SPA.'),
     serviceWorker: z
@@ -157,17 +159,17 @@ const templateEnvironmentObjectSchema = z
                   .optional()
                   .describe('Path prefix substituted for the matched resource URL.'),
               })
-              .strict()
+              .loose()
               .describe('A service-worker URL interception and authentication rule.'),
             { error: 'Service-worker resources must be an array of resource rules.' },
           )
           .describe('Resource rules managed by the SPA service worker.'),
       })
-      .strict()
+      .loose()
       .optional()
       .describe('Service-worker request interception settings.'),
   })
-  .strict()
+  .loose()
   .describe('Object-valued Fusion SPA template environment settings.');
 
 /**
@@ -175,6 +177,8 @@ const templateEnvironmentObjectSchema = z
  *
  * Callback-valued fields remain valid configuration; object-valued template settings and
  * serializable options are checked after defaults and user overrides have been merged.
+ * Custom template environment keys and plugin-contributed root keys are preserved, while unknown
+ * `spa`, `api`, `log`, and route keys are rejected to surface typos.
  */
 export const DevServerOptionsSchema = z
   .object({
@@ -251,5 +255,5 @@ export const DevServerOptionsSchema = z
       .optional()
       .describe('CLI logging settings.'),
   })
-  .passthrough()
+  .loose()
   .describe('Resolved CLI dev-server options, including SPA template and API proxy settings.');
