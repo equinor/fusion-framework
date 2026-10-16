@@ -1,12 +1,51 @@
 import { FileNotFoundError } from '@equinor/fusion-imports';
+import { access } from 'node:fs/promises';
+import { resolve } from 'node:path';
+import { resolveSitemap } from '@equinor/fusion-framework-react-router/build';
 
 import { loadAppManifest, createAppManifestFromPackage } from '@equinor/fusion-framework-cli/app';
+import type { AppManifest } from '@equinor/fusion-framework-cli/app';
 
 import type { RuntimeEnv, ResolvedPackage } from '@equinor/fusion-framework-cli/lib';
 
 import type { ConsoleLogger } from '../utils/index.js';
 import chalk from 'chalk';
 import { formatPath } from '../utils/format-path.js';
+
+/**
+ * Adds the conventional DSL sitemap only when the manifest has no explicit routes.
+ *
+ * Older apps remain buildable without DSL routing. A missing default registry is
+ * a warning; explicit paths, unreadable files and invalid registries remain errors.
+ *
+ * @param manifest - Loaded or package-generated manifest.
+ * @param env - Application root and build environment.
+ * @param log - CLI logger, falling back to the console for library callers.
+ * @returns The manifest with a generated sitemap when a default registry exists.
+ */
+async function resolveDefaultRoutes(
+  manifest: AppManifest,
+  env: RuntimeEnv,
+  log?: ConsoleLogger | null,
+): Promise<AppManifest> {
+  // Serialized entries, an empty array and null are deliberate author choices.
+  if (manifest.routes !== undefined) return manifest;
+  const root = env.root ?? process.cwd();
+  try {
+    await access(resolve(root, 'src/routes.ts'));
+  } catch (error) {
+    // Only absence of the conventional file is an optional-routing condition.
+    if (!(error instanceof Error && 'code' in error && error.code === 'ENOENT')) throw error;
+    (log ?? console).warn(
+      'Missing DSL routing: no routes configured in the app manifest and src/routes.ts was not found. ' +
+        'Continuing without a generated sitemap. Read more: ' +
+        'https://equinor.github.io/fusion-framework/modules/react/router/route-sitemap.html',
+    );
+    return manifest;
+  }
+  // The discovered registry uses the same source-only resolver as explicit pointers.
+  return { ...manifest, routes: await resolveSitemap({ root }) };
+}
 
 /**
  * Resolves the application manifest for a given package and environment.
@@ -27,7 +66,7 @@ export const resolveAppManifest = async (
     manifestPath?: string;
     snapshot?: boolean | string;
   },
-) => {
+): Promise<AppManifest> => {
   // Generate a base manifest from the package.json as a fallback/default.
   const baseManifest = createAppManifestFromPackage(env, pkg.packageJson, {
     snapshot: options?.snapshot,
@@ -57,7 +96,7 @@ export const resolveAppManifest = async (
 
     // Successfully loaded manifest from file.
     options?.log?.succeed('generated manifest from', formatPath(path, { relative: true }));
-    return manifest;
+    return await resolveDefaultRoutes(manifest, env, options?.log);
   } catch (err) {
     // Handle missing manifest file scenario.
     if (err instanceof FileNotFoundError) {
@@ -75,7 +114,7 @@ export const resolveAppManifest = async (
       options?.log?.succeed(
         chalk.dim('no local manifest config applied, using default generated from package'),
       );
-      return baseManifest;
+      return resolveDefaultRoutes(baseManifest, env, options?.log);
     }
     // Unexpected error occurred during manifest resolution.
     options?.log?.fail(

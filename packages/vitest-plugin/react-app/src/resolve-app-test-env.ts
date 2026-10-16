@@ -5,7 +5,7 @@ import {
   createAppManifestFromPackage,
   loadAppManifest,
   loadAppConfig,
-  mergeAppManifests,
+  resolveAppManifestInput,
   ApiAppConfigSchema,
   type AppManifestFn,
   type AppConfigFn,
@@ -104,7 +104,7 @@ const resolveManifest = async (
   // an inline function is applied directly, the same way a loaded `app.manifest.ts`'s default export would be
   if (typeof manifest === 'function') {
     const result = await manifest(env, { base });
-    return mergeAppManifests(base, result ?? {});
+    return resolveAppManifestInput(result ?? {}, base, env.root);
   }
   try {
     return (await loadAppManifest(env, { base, file: manifest })).manifest;

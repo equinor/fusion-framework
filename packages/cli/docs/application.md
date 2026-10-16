@@ -184,6 +184,16 @@ export default defineAppManifest(async (env, { base }) => ({
 > [!NOTE]
 > The CLI will only include the first matching manifest file based on the environment (e.g., `app.manifest.dev.ts`). It will not merge multiple files. If you need to combine settings from different files, you must handle the merging logic yourself within your manifest or config code. You can use the provided `mergeAppManifest` utility from the CLI package to help merge manifest objects when needed.
 
+When `routes` is omitted, the CLI looks for `src/routes.ts` and generates the
+existing serialized `routes` sitemap without importing or executing page modules.
+If it is missing, the CLI warns with a documentation link and continues without
+a generated sitemap. To use another registry, return `routes: 'src/custom-routes.ts'`
+from `defineAppManifest`; JSON manifests accept the same pointer. Explicit pointers
+and serialized route entries take precedence over the default registry.
+Use `routes: []` or `routes: null` to opt out of lookup and its warning. See
+[explicit registries and manifest sitemaps](../../react/router/docs/route-sitemap.md)
+for the supported registry shape and source-only metadata constraints.
+
 ### Application Config
 
 > [!TIP]

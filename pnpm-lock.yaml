@@ -1502,6 +1502,9 @@ importers:
       '@equinor/fusion-framework-module-azure-identity':
         specifier: workspace:*
         version: link:../modules/azure-identity
+      '@equinor/fusion-framework-react-router':
+        specifier: workspace:^
+        version: link:../react/router
       '@equinor/fusion-framework-vite-plugin-raw-imports':
         specifier: workspace:*
         version: link:../vite-plugins/raw-imports
@@ -3442,6 +3445,9 @@ importers:
       '@equinor/fusion-imports':
         specifier: workspace:^
         version: link:../../utils/imports
+      acorn:
+        specifier: ^8.18.0
+        version: 8.18.0
       esbuild:
         specifier: ^0.28.1
         version: 0.28.2

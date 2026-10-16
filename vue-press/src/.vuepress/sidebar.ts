@@ -652,6 +652,10 @@ export default sidebar({
               text: 'Interop Entry Point',
               link: 'interop.md',
             },
+            {
+              text: 'Manifest Sitemap',
+              link: 'route-sitemap.md',
+            },
           ],
         },
         {
