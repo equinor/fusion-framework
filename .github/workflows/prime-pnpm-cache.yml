@@ -124,10 +124,10 @@ jobs:
         uses: actions/cache/restore@v6
         with:
           path: .turbo/cache
-          key: turbo-fusion-v1-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}-${{ github.sha }}
+          key: turbo-fusion-v2-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}-${{ github.sha }}
           restore-keys: |
-            turbo-fusion-v1-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}-
-            turbo-fusion-v1-${{ runner.os }}-
+            turbo-fusion-v2-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}-
+            turbo-fusion-v2-${{ runner.os }}-
 
       - name: Check for an existing exact-match cache
         id: pnpm-store-restore
@@ -151,7 +151,7 @@ jobs:
         uses: actions/cache/save@v6
         with:
           path: .turbo/cache
-          key: turbo-fusion-v1-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}-${{ github.sha }}
+          key: turbo-fusion-v2-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}-${{ github.sha }}
 
       # Cache keys are immutable, so every lockfile change saves a brand-new
       # store on top of the previous one and old package versions never get
@@ -197,9 +197,9 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          currentKey="turbo-fusion-v1-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}-${{ github.sha }}"
+          currentKey="turbo-fusion-v2-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}-${{ github.sha }}"
           cacheIds=$(gh cache list --repo "${{ github.repository }}" --ref refs/heads/main \
-            --key "turbo-fusion-v1-${{ runner.os }}-" --limit 100 \
+            --key "turbo-fusion-v2-${{ runner.os }}-" --limit 100 \
             --json id,key,createdAt \
             --jq "sort_by(.createdAt) | reverse | .[2:] | .[] | select(.key != \"$currentKey\") | .id")
           for id in $cacheIds; do

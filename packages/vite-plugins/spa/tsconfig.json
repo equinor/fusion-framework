@@ -25,9 +25,6 @@
     },
     {
       "path": "../../modules/telemetry"
-    },
-    {
-      "path": "../../modules/services"
     }
   ],
   "include": ["src/**/*"],
