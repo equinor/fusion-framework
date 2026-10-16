@@ -25,16 +25,19 @@ import type {
   RouterComponent,
   RouterContext,
 } from './types.js';
+import type { MiddlewareFunction } from './middleware.js';
 import { routerContext } from './router-context.js';
 import { FusionRouterContextProvider } from './fusion-router-context-provider.js';
 import { useRouterContext } from './useRouterContext.js';
 import React from 'react';
 
 // React Router's loader/action/component types as used internally.
-type RRLoader = NonNullable<ReactRouterRouteObject['loader']>;
-type RRAction = NonNullable<ReactRouterRouteObject['action']>;
+// v8 also accepts booleans for `loader`/`action`; only functions are wrapped.
+type RRLoader = Exclude<NonNullable<ReactRouterRouteObject['loader']>, boolean>;
+type RRAction = Exclude<NonNullable<ReactRouterRouteObject['action']>, boolean>;
 type RRErrorBoundary = NonNullable<ReactRouterRouteObject['ErrorBoundary']>;
 type RRComponent = NonNullable<ReactRouterRouteObject['Component']>;
+type RRMiddleware = NonNullable<ReactRouterRouteObject['middleware']>[number];
 
 // ---------------------------------------------------------------------------
 // Route property wrappers
@@ -65,6 +68,59 @@ function wrapAction(original: RRAction): RRAction {
       ...args,
       fusion,
     } as Parameters<ActionFunction>[0]);
+  };
+}
+
+/**
+ * Functions produced by the Fusion route wrappers.
+ *
+ * React Router re-runs `mapRouteProperties` on the whole route each time a lazy route property
+ * resolves, so wrappers must recognise their own output to avoid wrapping a route twice.
+ */
+const fusionWrappers = new WeakSet<object>();
+
+/**
+ * Wraps a route value once, returning values that were already wrapped unchanged.
+ *
+ * @template TOriginal - Value type declared on the Fusion route.
+ * @template TWrapped - Value type handed to React Router.
+ * @param value - Route property value, possibly already produced by a Fusion wrapper.
+ * @param wrap - Wrapper that adapts the original value to React Router.
+ * @returns The wrapped value, registered so later mappings leave it untouched.
+ */
+function wrapOnce<TOriginal extends object, TWrapped extends object>(
+  value: TOriginal | TWrapped,
+  wrap: (original: TOriginal) => TWrapped,
+): TWrapped {
+  // Lazy property resolution re-maps already wrapped properties; only wrapper output is registered,
+  // so membership proves `value` is a TWrapped and anything else is still the declared original.
+  if (fusionWrappers.has(value)) return value as TWrapped;
+  const wrapped = wrap(value as TOriginal);
+  fusionWrappers.add(wrapped);
+  return wrapped;
+}
+
+/**
+ * Adapts a Fusion route middleware to React Router's Data Mode middleware signature.
+ *
+ * The adapter only injects `signal` and the per-execution Fusion context as `fusion`;
+ * ordering, `next()` handling, redirects, error boundaries and cancellation remain the
+ * responsibility of React Router's middleware pipeline.
+ *
+ * @param original - Fusion middleware declared by a route module or route object.
+ * @returns A React Router middleware function that calls `original` with Fusion arguments.
+ * @throws Error when the router context is missing, so a guard never runs without Fusion modules.
+ */
+function wrapMiddleware(original: MiddlewareFunction): RRMiddleware {
+  return function __FusionRouterMiddleware(args, next) {
+    const fusion = args.context.get(routerContext);
+    // A guard without Fusion modules cannot decide anything; fail before downstream handlers run.
+    if (!fusion) {
+      throw new Error(
+        'Fusion router context is not available to route middleware. Render routes through the Fusion <Router> component.',
+      );
+    }
+    return original({ ...args, signal: args.request.signal, fusion }, next);
   };
 }
 
@@ -205,12 +261,25 @@ export function Router({
         const mapped = { ...route } as ReactRouterRouteObject;
 
         // Wrap the loader so fusion module context is available inside it
-        if (mapped.loader) mapped.loader = wrapLoader(mapped.loader as RRLoader);
+        if (typeof mapped.loader === 'function') {
+          mapped.loader = wrapOnce<RRLoader, RRLoader>(mapped.loader, wrapLoader);
+        }
         // Wrap the action so fusion module context is available inside it
-        if (mapped.action) mapped.action = wrapAction(mapped.action as RRAction);
+        if (typeof mapped.action === 'function') {
+          mapped.action = wrapOnce<RRAction, RRAction>(mapped.action, wrapAction);
+        }
+        // Only routes that declare middleware get an adapted chain.
+        if (route.middleware) {
+          // Adapt each middleware so it receives `fusion`; array order is kept because React
+          // Router runs a route's middleware in declaration order.
+          mapped.middleware = route.middleware.map((middleware) =>
+            wrapOnce<MiddlewareFunction, RRMiddleware>(middleware, wrapMiddleware),
+          );
+        }
 
-        // Prefer an explicit errorElement over ErrorBoundary when both are somehow present
-        if (route.errorElement) {
+        // Prefer an explicit errorElement over ErrorBoundary when both are somehow present.
+        // A React element means this route was already mapped before a lazy property resolved.
+        if (route.errorElement && !React.isValidElement(route.errorElement)) {
           // errorElement is typed as ComponentType in fusion's RouteObject (not ReactNode),
           // so we wrap it into a ReactElement for react-router to consume.
           mapped.errorElement = React.createElement(wrapErrorComponent(route.errorElement));
@@ -226,7 +295,10 @@ export function Router({
         }
         // Wrap the Component so fusion module context is available inside it
         if (mapped.Component) {
-          mapped.Component = wrapComponent(mapped.Component as RouterComponent);
+          mapped.Component = wrapOnce<RouterComponent, RRComponent>(
+            mapped.Component as RouterComponent,
+            wrapComponent,
+          );
         }
 
         return mapped;
