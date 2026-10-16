@@ -7,6 +7,7 @@ import {
   type DevServerOptions,
   type UserConfig,
 } from '@equinor/fusion-framework-dev-server';
+import { validateDevServerConfig } from '../../lib/validate-dev-server-config.js';
 
 import type { ConsoleLogger } from './ConsoleLogger.js';
 import { normalizeDevServerConfig } from './normalize-dev-server-config.js';
@@ -70,6 +71,7 @@ export const createDevServer = async (
   let config: DevServerOptions = baseConfig;
   let configWatcherPlugin: Plugin | undefined;
   try {
+    config = validateDevServerConfig(config);
     const loaded = await loadDevServerConfig(env, baseConfig);
     config = loaded.config;
     const { path } = loaded;
@@ -79,6 +81,15 @@ export const createDevServer = async (
     // Add plugin to watch the config file and restart on changes
     configWatcherPlugin = createDevServerConfigWatcherPlugin(path, log);
   } catch (error) {
+    // Validation failures must escape rather than starting with a success-shaped default.
+    if (
+      error instanceof Error &&
+      'code' in error &&
+      error.code === 'ERR_INVALID_DEV_SERVER_CONFIG'
+    ) {
+      log?.error(error.message);
+      throw error;
+    }
     log?.warn(
       '\nFailed to load dev server config:',
       error instanceof Error ? error.message : String(error),
