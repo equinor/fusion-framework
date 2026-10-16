@@ -45,7 +45,10 @@ const readRolesProvider = (modules: object): RolesAccessChecker | undefined => {
  *
  * - granted: the chain continues;
  * - not granted: throws {@link RequireRolesError} with reason `denied`, keeping the provider's
- *   `RequiredAccessRolesError` as `cause` for access-recovery UI;
+ *   `RequiredAccessRolesError` as `cause` for access-recovery UI. Inside a Fusion `Router`,
+ *   navigation denials can be recovered with `useRequireRolesRecovery`; fetcher denials are held
+ *   (not thrown) while a `useRequireRolesFetcherRecoveries` host is mounted and continue with
+ *   `next()` only after a fresh granted check;
  * - provider failure: throws reason `check-failed` (never treated as granted or denied);
  * - Roles module missing: throws reason `not-configured`.
  *
@@ -87,28 +90,52 @@ export const requireRoles = (
       throw new RequireRolesError('not-configured', requirement);
     }
 
+    const target = context.get(routeOperationContext);
+
     /**
-     * Creates the denial error and registers its recovery when a Fusion `Router` started the run.
+     * Handles a denial: holds a fetcher execution while a recovery host can show it, otherwise
+     * throws the denial, with route-level recovery for navigations and navigation submissions.
      *
      * @param missingAccessRoles - Roles reported missing.
      * @param cause - Provider assertion error, kept for access-recovery UI.
-     * @returns The denial error to throw.
+     * @returns Resolves only when a held fetcher execution was resumed after recovery.
+     * @throws {RequireRolesError} The denial, when not held or when the hold is dismissed.
      */
-    const deny = (missingAccessRoles: readonly string[], cause?: unknown): RequireRolesError => {
+    const deny = async (missingAccessRoles: readonly string[], cause?: unknown): Promise<void> => {
       const error = new RequireRolesError(
         'denied',
         requirement,
         missingAccessRoles,
         cause === undefined ? undefined : { cause },
       );
-      const target = context.get(routeOperationContext);
-      // Without the Fusion router scope there is no operation to replay safely.
-      if (target) {
-        RequireRolesRecovery.attach(
-          new RequireRolesRecovery({ error, requirement, provider, target, request }),
-        );
+      // Without the Fusion router scope there is no operation to recover; fail as a plain denial.
+      if (!target) {
+        throw error;
       }
-      return error;
+      const { operation, scope } = target;
+      // Fetcher errors unmount the fetcher's owner, so a replay could never reach it; hold the
+      // execution instead and resume it in place after recovery.
+      if (operation.type === 'fetch') {
+        const hold = scope.holdFetcher({
+          error,
+          requirement,
+          provider,
+          operation: request.method === 'GET' ? 'fetcher-load' : 'fetcher-submission',
+          key: operation.key,
+          routeId: operation.routeId,
+          signal,
+        });
+        // No host can show a hold: fail explicitly, without a recovery that could not deliver.
+        if (!hold) {
+          throw error;
+        }
+        await hold.settled;
+        return;
+      }
+      RequireRolesRecovery.attach(
+        new RequireRolesRecovery({ error, requirement, provider, target, request }),
+      );
+      throw error;
     };
 
     let granted: boolean;
@@ -122,16 +149,21 @@ export const requireRoles = (
       // A cancelled operation is discarded by the router; do not report it as an access outcome.
       signal.throwIfAborted();
       // Only the provider's assertion error is a denial; every other failure leaves access unknown.
-      if (RequiredAccessRolesError.is(error)) {
-        throw deny(error.missingAccessRoles, error);
+      if (!RequiredAccessRolesError.is(error)) {
+        throw new RequireRolesError('check-failed', requirement, [], { cause: error });
       }
-      throw new RequireRolesError('check-failed', requirement, [], { cause: error });
+      await deny(error.missingAccessRoles, error);
+      // Reached only when a held fetcher execution was resumed after a fresh granted check.
+      signal.throwIfAborted();
+      return next();
     }
     // The check may outlive the operation; never continue a cancelled chain.
     signal.throwIfAborted();
     // Asserting providers throw on failure; a plain `false` is still a denial, never a pass.
     if (granted !== true) {
-      throw deny(requirement.roles);
+      await deny(requirement.roles);
+      // Reached only when a held fetcher execution was resumed after a fresh granted check.
+      signal.throwIfAborted();
     }
     return next();
   };

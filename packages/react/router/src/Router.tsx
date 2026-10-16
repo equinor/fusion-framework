@@ -31,6 +31,7 @@ import type { MiddlewareFunction } from './middleware.js';
 import { routerContext } from './router-context.js';
 import { routeOperationContext } from './route-operation-context.js';
 import { RouteRecoveryScope } from './RouteRecoveryScope.js';
+import { routeRecoveryScopeReactContext } from './route-recovery-scope-react-context.js';
 import { FusionRouterContextProvider } from './fusion-router-context-provider.js';
 import { useRouterContext } from './useRouterContext.js';
 import React from 'react';
@@ -340,7 +341,8 @@ export function Router({
 
     // Dispose previous router instance when the router is recreated or unmounted
     // to clean up history listeners and pending navigations. Deactivating the scope first
-    // makes pending role-gate recoveries of this instance refuse to replay.
+    // makes pending role-gate recoveries of this instance refuse to replay and dismisses held
+    // fetcher executions before their requests are aborted.
     return () => {
       scope.setActive(false);
       router.dispose();
@@ -354,7 +356,10 @@ export function Router({
 
   return (
     <FusionRouterContextProvider value={fusionRouterContext}>
-      <RouterProvider router={router} useTransitions={useTransitions} />
+      {/* Lets fetcher-recovery hosts register with this router instance only. */}
+      <routeRecoveryScopeReactContext.Provider value={scope}>
+        <RouterProvider router={router} useTransitions={useTransitions} />
+      </routeRecoveryScopeReactContext.Provider>
     </FusionRouterContextProvider>
   );
 }

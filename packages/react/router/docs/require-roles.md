@@ -122,10 +122,52 @@ The hook returns `undefined` for every error that activation cannot fix: `check-
 |---|---|---|
 | `navigation` | Initial load, link or `GET` navigation, history traversal, revalidation | Reloads the current location with a replace navigation. Middleware, loaders and components run again, including component-only routes and parent gates. |
 | `submission` | `<Form>` or `useSubmit` action | Submits the same request once more to the same URL, as a replace navigation. |
-| `fetcher-submission` | `fetcher.submit` or `<fetcher.Form>` action | Submits the same request once more through the same fetcher key and route, then reloads the current location. |
-| `fetcher-load` | `fetcher.load` | Does not replay the load. It reloads the current location to restore the fetcher's owner (`restored`), which can load again. |
 
-`status` is `idle` before a retry, `checking` while it runs, then one of `retried`, `restored`, `still-denied`, `check-failed`, `stale` or `cancelled`.
+`status` is `idle` before a retry, `checking` while it runs, then one of `retried`, `still-denied`, `check-failed`, `stale` or `cancelled`.
+
+### Recovering fetcher loads and submissions
+
+React Router shows a fetcher error at the error boundary of the fetcher's owner. That unmounts the owner, and a remounted `useFetcher()` gets a new key, so replaying the fetcher afterwards could never deliver its data. Fetcher denials are therefore not thrown while a recovery host is mounted. Instead, the denied execution is **held**:
+
+- The owner stays mounted. Its fetcher key and `state` (`loading` or `submitting`) are unchanged.
+- After activation, `hold.retry()` checks again with `refresh: true`. If access is granted, the original middleware execution continues with `next()`.
+- The loader or action runs exactly once, in the same execution. React Router delivers `fetcher.data` to every consumer of that key and revalidates as usual. This works for default (unkeyed) fetchers and for `useFetcher({ key })`, without changing app code.
+
+Mount the host with `useRequireRolesFetcherRecoveries()` in a layout that outlives the routes it covers, and render the existing recovery UI for every pending hold:
+
+```tsx
+import { RoleErrorView } from '@equinor/fusion-framework-react-components-roles';
+import { useRequireRolesFetcherRecoveries } from '@equinor/fusion-framework-react-router';
+
+export function FetcherAccessRecovery() {
+  const holds = useRequireRolesFetcherRecoveries();
+  return holds.map((hold) => (
+    <RoleErrorView key={hold.id} error={hold.error} onRetry={() => void hold.retry()} />
+  ));
+}
+```
+
+Each hold exposes:
+
+- `operation`: `fetcher-load` or `fetcher-submission`.
+- `key`: the fetcher key.
+- `status`: `waiting`, `checking`, `still-denied` or `check-failed`.
+- `retry()`: resolves to `resumed`, `still-denied`, `check-failed` or `stale`.
+- `dismiss()`.
+
+How a hold ends:
+
+| Event | Result |
+|---|---|
+| `retry()` with access granted | The original execution resumes once. Concurrent calls share one check, and later calls return `stale`. |
+| `retry()` still denied, or check failed | The execution stays held and nothing runs. The user can try again. |
+| `dismiss()` | The denial is thrown into the fetcher. The owner's error boundary shows it, without a recovery. |
+| Same fetcher submits or loads again | React Router aborts the held request. Only the new execution can be held and resumed. |
+| Navigation leaves the owner's route | The owner unmounted in that commit. The hold ends without running, and React Router discards its outcome. Fetcher loads are already aborted by the navigation. |
+| Last host unmounts | Pending holds are dismissed, so no fetcher stays pending where nobody can see it. |
+| `Router` unmounts or is recreated | Holds are dismissed, and their requests are aborted. |
+
+Without a mounted host, a denied fetcher execution fails at the owner's error boundary. `useRequireRolesRecovery` returns `undefined` for it, so no recovery is offered that could not deliver the result.
 
 ### Safety
 
@@ -134,10 +176,12 @@ The hook returns `undefined` for every error that activation cannot fix: `check-
 - Unmounting the error element, or showing a different error, cancels its pending retry. The result of a late check is discarded and nothing is replayed.
 - Recoveries belong to the `Router` instance and the denial that created them. They never act on another router or route.
 - If the replayed operation is denied again, the router shows a new denial with its own recovery.
+- A fetcher hold resumes the original execution instead of replaying it, so a fetcher action is never submitted twice. A hold whose owner route was left ends without running.
 
 ### Limitations
 
-- A denial unmounts the fetcher's owner, and the remounted owner gets a new fetcher key. React Router keeps fetcher results per key, so the data of a replayed fetcher action is not delivered to the new owner, and a `fetcher.load` is not replayed. Only the router's private fetcher APIs could re-attach the result.
+- React Router has no public signal for a fetcher owner that unmounts while its route stays matched, for example a dialog closed by app state. If such an owner's execution is held and the user then recovers access, the execution resumes the same way an in-flight fetcher does upstream: the loader or action runs, but React Router discards the result because the owner is gone. Dismiss the hold, or keep fetcher owners mounted until their submission settles, when that matters.
+- Fetcher revalidations that run inside a navigation share the navigation's execution. A denial there is recovered as a `navigation`.
 - A provider that returns `false` instead of throwing gives a denial with no `RequiredAccessRolesError` cause, so `RoleErrorView` renders nothing for it. The hook still offers `retry` for your own UI.
 
 ## Inspectable metadata
@@ -161,10 +205,16 @@ getRouteMiddlewareMetadata(myCustomMiddleware);
 
 Build tools must not run page modules or serialize functions. The React-free entry point `@equinor/fusion-framework-react-router/middleware-metadata` exports what a build consumer such as the route manifest producer needs:
 
-- `requireRolesStaticContract` describes what to recognise. In a route module's `middleware` export array, look for a call to the named import `requireRoles` from `@equinor/fusion-framework-react-router` (an alias is allowed). The call must have:
-  - an array literal of string literals as the first argument
-  - optionally an object literal `{ mode: 'all' | 'any' }` as the second argument
-- `normalizeRolesRequirement(roles, options)` applies the same validation and normalization as the runtime helper. Use it on the extracted literals so published metadata matches runtime behaviour.
+- `requireRolesStaticContract` describes what to recognise. In a route module's `middleware` export array, look for a call to the named import `requireRoles` from `@equinor/fusion-framework-react-router` (an alias is allowed). Its arguments must resolve statically:
+  - The first argument is an array of strings.
+  - The optional second argument is an object `{ mode: 'all' | 'any' }`.
+  - Each value can be written as a literal or as a reference to a `const` declared in the same module whose value is itself statically resolvable, for example `const reportRoles = ['Reports.Read'] as const`.
+- `normalizeRolesRequirement(roles, options)` applies the same validation and normalization as the runtime helper. Use it on the resolved values so published metadata matches runtime behaviour.
 - The types `RouteMiddlewareMetadata`, `RolesMiddlewareMetadata` and `CustomMiddlewareMetadata` describe the result.
 
-Report any other entry as `{ kind: 'custom' }`. This includes calls with non-literal arguments and calls to a `requireRoles` imported from somewhere else.
+A recognised `requireRoles` call is a known gate, so it must never be published as anything weaker. When its arguments cannot be resolved, or `normalizeRolesRequirement` rejects them, publication must fail with a diagnostic. The diagnostic names the route module file and the field, for example `middleware[0]` argument `roles` or option `mode`. A dynamic value is any value computed at runtime, such as a function call, an imported value, a spread or a template literal with expressions. Such a gate is never silently omitted, and never downgraded to `{ kind: 'custom' }`.
+
+Only middleware that is not a recognised `requireRoles` call, such as your own middleware functions, is reported as `{ kind: 'custom' }`. It is opaque and is never read as an authorization requirement.
+
+> [!NOTE]
+> The route manifest producer that applies this contract is delivered separately (equinor/fusion-core-tasks#2346).

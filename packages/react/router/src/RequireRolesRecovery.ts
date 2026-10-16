@@ -1,5 +1,5 @@
 import type { IRolesProvider } from '@equinor/fusion-framework-module-roles';
-import type { DataRouter, RouterFetchOptions, RouterNavigateOptions } from 'react-router';
+import type { DataRouter, RouterNavigateOptions } from 'react-router';
 
 import type { RolesMiddlewareMetadata } from './middleware-metadata/types.js';
 import type { RouteOperationTarget } from './RouteRecoveryScope.js';
@@ -11,26 +11,19 @@ import type { RouteOperationTarget } from './RouteRecoveryScope.js';
  *   Retried by reloading the current location with a replace navigation, which runs middleware,
  *   loaders and components again.
  * - `submission`: a `<Form>`/`useSubmit` navigation whose action was denied. Retried by
- *   submitting the same request once more (replace navigation).
- * - `fetcher-submission`: a `fetcher.submit`/`<fetcher.Form>` action that was denied. Retried by
- *   submitting the same request through the same fetcher key and route once more, then reloading
- *   the current location. The denial unmounted the fetcher's owner, whose remount uses a new
- *   fetcher key, so the replayed action's data is not delivered to the new owner.
- * - `fetcher-load`: a `fetcher.load` that was denied. The load is not replayed, because its result
- *   would land on the unmounted owner's key; recovery reloads the current location to restore the
- *   owner, which can load again.
+ *   submitting the same request once more (replace navigation), so `useActionData` receives the
+ *   result.
+ *
+ * Fetcher executions are not recovered here: they are held in place by
+ * `useRequireRolesFetcherRecoveries` (see `RequireRolesFetcherRecovery`), and fail without a
+ * recovery when no host is mounted.
  */
-export type RequireRolesRecoveryOperation =
-  | 'navigation'
-  | 'submission'
-  | 'fetcher-submission'
-  | 'fetcher-load';
+export type RequireRolesRecoveryOperation = 'navigation' | 'submission';
 
 /**
  * Final outcome of {@link RequireRolesRecovery.retry}.
  *
  * - `retried`: access confirmed and the interrupted operation ran again.
- * - `restored`: access confirmed and the location was reloaded (`fetcher-load` only).
  * - `still-denied`: a fresh check still denies access; nothing was retried.
  * - `check-failed`: the fresh check failed; access is unknown and nothing was retried.
  * - `stale`: the denial is no longer shown or its router is gone; nothing was retried.
@@ -38,7 +31,6 @@ export type RequireRolesRecoveryOperation =
  */
 export type RequireRolesRecoveryResult =
   | 'retried'
-  | 'restored'
   | 'still-denied'
   | 'check-failed'
   | 'stale'
@@ -80,9 +72,6 @@ const stripBasename = (pathname: string, basename: string): string => {
   return pathname.slice(base.length) || '/';
 };
 
-/** Execution targets that a `requireRoles` gate denied. */
-const deniedTargets = new WeakSet<RouteOperationTarget>();
-
 /**
  * Reloads the router's current location with a replace navigation.
  *
@@ -112,7 +101,7 @@ const planRetry = (
   request: Request,
 ): {
   readonly operation: RequireRolesRecoveryOperation;
-  readonly run: () => Promise<RequireRolesRecoveryResult>;
+  readonly run: () => Promise<'retried'>;
 } => {
   const { scope, operation } = target;
   const { router } = scope;
@@ -130,41 +119,6 @@ const planRetry = (
         // The failed submission already committed its location; do not add a history entry.
         await router.navigate(href, { ...options, replace: true } as RouterNavigateOptions);
         return 'retried';
-      },
-    };
-  }
-
-  // Fetcher actions replay through the same key and route so React Router revalidates as usual.
-  if (isSubmission && operation.type === 'fetch' && operation.options) {
-    const { key, routeId, href, options } = operation;
-    return {
-      operation: 'fetcher-submission',
-      run: async () => {
-        const replay = scope.start(() =>
-          router.fetch(key, routeId, href, options as RouterFetchOptions),
-        );
-        await replay.done;
-        // A repeated denial is shown by the router as a new error with its own recovery; report it
-        // and keep the reload from replacing it.
-        if (replay.target && deniedTargets.has(replay.target)) {
-          return 'still-denied';
-        }
-        // Only reset the error UI when the user has not started another navigation meanwhile.
-        if (router.state.navigation.state === 'idle') {
-          await reload(router);
-        }
-        return 'retried';
-      },
-    };
-  }
-
-  // A denied fetcher load unmounted its owner; React Router discards loads for unmounted keys.
-  if (!isSubmission && operation.type === 'fetch') {
-    return {
-      operation: 'fetcher-load',
-      run: async () => {
-        await reload(router);
-        return 'restored';
       },
     };
   }
@@ -197,7 +151,6 @@ export class RequireRolesRecovery {
    */
   public static attach(recovery: RequireRolesRecovery): void {
     registry.set(recovery.#error, recovery);
-    deniedTargets.add(recovery.#target);
   }
 
   /**
@@ -222,7 +175,7 @@ export class RequireRolesRecovery {
   readonly #error: object;
   readonly #provider: RolesAccessChecker;
   readonly #target: RouteOperationTarget;
-  readonly #run: () => Promise<RequireRolesRecoveryResult>;
+  readonly #run: () => Promise<'retried'>;
   #attempt: Promise<RequireRolesRecoveryResult> | undefined;
   #final: RequireRolesRecoveryResult | undefined;
 
@@ -325,10 +278,7 @@ export class RequireRolesRecovery {
     }
     // Mark the replay before it starts so concurrent or later calls can never run it twice.
     this.#final = 'retried';
-    const result = await this.#run();
-    // A replay denied again did not run the operation, so a later activation may retry it.
-    this.#final = result === 'still-denied' ? undefined : result;
-    return result;
+    return this.#run();
   }
 }
 

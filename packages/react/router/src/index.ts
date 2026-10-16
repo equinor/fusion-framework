@@ -21,6 +21,14 @@ export {
   type RequireRolesRecoveryState,
   type RequireRolesRecoveryStatus,
 } from './useRequireRolesRecovery.js';
+export {
+  RequireRolesFetcherRecovery,
+  type RequireRolesFetcherRecoveryInit,
+  type RequireRolesFetcherRecoveryOperation,
+  type RequireRolesFetcherRecoveryResult,
+  type RequireRolesFetcherRecoveryStatus,
+} from './RequireRolesFetcherRecovery.js';
+export { useRequireRolesFetcherRecoveries } from './useRequireRolesFetcherRecoveries.js';
 export type {
   RouteOperation,
   RouteOperationTarget,

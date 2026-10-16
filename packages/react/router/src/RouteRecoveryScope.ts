@@ -1,5 +1,10 @@
 import type { DataRouter, RouterFetchOptions, RouterNavigateOptions } from 'react-router';
 
+import {
+  RequireRolesFetcherRecovery,
+  type RequireRolesFetcherRecoveryInit,
+} from './RequireRolesFetcherRecovery.js';
+
 /**
  * Router operation that started a middleware execution, as recorded by {@link RouteRecoveryScope}.
  *
@@ -50,8 +55,10 @@ export class RouteRecoveryScope {
   public readonly router: DataRouter;
 
   #pending: RouteOperation | undefined;
-  #lastClaim: RouteOperationTarget | undefined;
   #active = false;
+  #hosts = 0;
+  #holds: readonly RequireRolesFetcherRecovery[] = [];
+  readonly #listeners = new Set<() => void>();
 
   /**
    * Creates the scope and wraps the router's `navigate` and `fetch` methods.
@@ -97,6 +104,135 @@ export class RouteRecoveryScope {
    */
   public setActive(active: boolean): void {
     this.#active = active;
+    // A disposed router can never resume a hold; end them before their requests are aborted.
+    if (!active) {
+      this.#dismissHolds(() => true);
+    }
+  }
+
+  /**
+   * Whether a fetcher-recovery host (`useRequireRolesFetcherRecoveries`) is mounted for this
+   * router. Without one, a denied fetcher execution fails at once instead of being held.
+   *
+   * @returns True while at least one host is mounted and the router is active.
+   */
+  public get canHoldFetchers(): boolean {
+    return this.#active && this.#hosts > 0;
+  }
+
+  /**
+   * Holds a denied fetcher execution until the user recovers access or dismisses the denial.
+   *
+   * @param init - Denial and fetcher execution identity.
+   * @returns The hold, or `undefined` when no host can show it (the caller must fail explicitly).
+   */
+  public holdFetcher(
+    init: RequireRolesFetcherRecoveryInit,
+  ): RequireRolesFetcherRecovery | undefined {
+    // A hold nobody can see would leave the fetcher pending forever; fail instead.
+    if (!this.canHoldFetchers) {
+      return undefined;
+    }
+    const hold = new RequireRolesFetcherRecovery(init);
+    // An execution aborted before it was held has nothing to recover.
+    if (!hold.pending) {
+      return hold;
+    }
+    const unsubscribe = hold.subscribe(() => {
+      // Ended holds leave the host list; status changes only refresh it.
+      if (!hold.pending) {
+        unsubscribe();
+        // Replace the list so `useSyncExternalStore` hosts see a new snapshot.
+        this.#holds = this.#holds.filter((entry) => entry !== hold);
+      } else {
+        this.#holds = [...this.#holds];
+      }
+      this.#notify();
+    });
+    this.#holds = [...this.#holds, hold];
+    this.#notify();
+    return hold;
+  }
+
+  /**
+   * Registers a mounted fetcher-recovery host.
+   *
+   * @returns Unregisters the host; the last host leaving dismisses every pending hold.
+   */
+  public addFetcherHost(): () => void {
+    this.#hosts += 1;
+    let removed = false;
+    return () => {
+      // Each registration is released once.
+      if (removed) {
+        return;
+      }
+      removed = true;
+      this.#hosts -= 1;
+      // Defer so a host that remounts in the same commit (for example React StrictMode) keeps the
+      // holds; holds nobody can show any more must not leave fetchers pending.
+      queueMicrotask(() => {
+        // A host registered again meanwhile still shows the holds.
+        if (this.#hosts === 0) {
+          this.#dismissHolds(() => true);
+        }
+      });
+    };
+  }
+
+  /**
+   * Subscribes to changes of {@link getFetcherHolds}.
+   *
+   * @param listener - Called after every change.
+   * @returns Unsubscribe function.
+   */
+  public subscribeFetcherHolds = (listener: () => void): (() => void) => {
+    this.#listeners.add(listener);
+    return () => {
+      this.#listeners.delete(listener);
+    };
+  };
+
+  /**
+   * Pending fetcher holds of this router, in the order they were denied.
+   *
+   * @returns An immutable list that is replaced whenever a hold is added, changes or ends.
+   */
+  public getFetcherHolds = (): readonly RequireRolesFetcherRecovery[] => this.#holds;
+
+  /**
+   * Dismisses holds whose owner route is no longer rendered.
+   *
+   * Called by hosts after a committed location change. The fetcher owners of those routes have
+   * unmounted in the same commit, so React Router discards the dismissed execution's outcome
+   * instead of showing it, and the held action is never submitted for an owner that is gone.
+   *
+   * @param routeIds - Ids of the currently matched routes.
+   */
+  public dismissFetcherHoldsOutside(routeIds: readonly string[]): void {
+    this.#dismissHolds((hold) => !routeIds.includes(hold.routeId));
+  }
+
+  /**
+   * Dismisses matching pending holds.
+   *
+   * @param predicate - Selects holds to dismiss.
+   */
+  #dismissHolds(predicate: (hold: RequireRolesFetcherRecovery) => boolean): void {
+    // Select first into a copy: each dismissal replaces `#holds` while the loop runs.
+    const matching = this.#holds.filter(predicate);
+    // Dismissal is idempotent, so a hold that ended meanwhile is skipped safely.
+    for (const hold of matching) {
+      hold.dismiss();
+    }
+  }
+
+  /** Calls every hold listener. */
+  #notify(): void {
+    // Copy so listeners may unsubscribe while being notified.
+    for (const listener of [...this.#listeners]) {
+      listener();
+    }
   }
 
   /**
@@ -108,26 +244,7 @@ export class RouteRecoveryScope {
     const operation = this.#pending ?? routerOperation;
     // One navigation or fetcher call creates one context; later contexts belong to the router.
     this.#pending = undefined;
-    const target: RouteOperationTarget = { scope: this, operation };
-    this.#lastClaim = target;
-    return target;
-  }
-
-  /**
-   * Starts a router operation and returns the execution target it claimed synchronously.
-   *
-   * @param run - Router call to start.
-   * @returns The operation promise and the target of its execution, if one was created.
-   */
-  public start(run: () => Promise<void>): {
-    readonly done: Promise<void>;
-    readonly target: RouteOperationTarget | undefined;
-  } {
-    this.#lastClaim = undefined;
-    const done = run();
-    const target = this.#lastClaim;
-    this.#lastClaim = undefined;
-    return { done, target };
+    return { scope: this, operation };
   }
 
   /**

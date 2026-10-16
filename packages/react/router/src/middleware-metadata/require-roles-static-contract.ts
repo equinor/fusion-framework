@@ -5,12 +5,18 @@
  * page modules by recognising, in a route module's `middleware` export array, a call expression
  * whose callee is the named import `exportName` from `moduleSpecifier` (aliases allowed), with:
  *
- * 1. an array literal of string literals as the first argument, and
- * 2. optionally an object literal `{ mode: 'all' | 'any' }` as the second argument.
+ * 1. a first argument resolving to an array of strings, and
+ * 2. optionally a second argument resolving to an object `{ mode: 'all' | 'any' }`.
  *
- * The literal arguments must then be passed through `normalizeRolesRequirement` so published
- * metadata matches runtime behaviour. Any other middleware entry, including `requireRoles`
- * called with non-literal arguments or imported from another module, is `{ kind: 'custom' }`.
+ * Arguments resolve statically when written as literals or as references to `const` bindings
+ * declared in the same module with statically resolvable values. The resolved values must then be
+ * passed through `normalizeRolesRequirement` so published metadata matches runtime behaviour.
+ *
+ * A recognised call is a known gate: when its arguments cannot be resolved statically (runtime
+ * calls, imported values, spreads, template literals with expressions) or fail normalization,
+ * publication must fail with a diagnostic naming the route module file and field. It must never be
+ * omitted or reported as `{ kind: 'custom' }`. Only middleware that is not a recognised
+ * `requireRoles` call is `{ kind: 'custom' }`.
  */
 export const requireRolesStaticContract = Object.freeze({
   /** Package specifier applications import the helper from. */

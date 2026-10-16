@@ -1,4 +1,4 @@
-import { act, type Context } from 'react';
+import { act, type Context, useEffect, useState } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { Link, Outlet, useActionData, useFetcher, useLoaderData, useSubmit } from 'react-router';
 import { MemoryHistory } from '@equinor/fusion-framework-module-navigation/lib';
@@ -8,6 +8,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { Router } from '../Router.js';
 import { RequireRolesError } from '../RequireRolesError.js';
+import type { RequireRolesFetcherRecovery } from '../RequireRolesFetcherRecovery.js';
+import { useRequireRolesFetcherRecoveries } from '../useRequireRolesFetcherRecoveries.js';
 import { RequireRolesRecovery } from '../RequireRolesRecovery.js';
 import { requireRoles } from '../require-roles.js';
 import type { ErrorElementProps, RouteObject } from '../types.js';
@@ -120,6 +122,8 @@ interface Instance {
   recovery?: RequireRolesRecoveryState;
   /** Error rendered by the latest error element of this instance. */
   error?: unknown;
+  /** Pending fetcher holds rendered by the latest fetcher host of this instance. */
+  holds?: readonly RequireRolesFetcherRecovery[];
 }
 
 describe('requireRoles recovery', () => {
@@ -188,7 +192,10 @@ describe('requireRoles recovery', () => {
    * @returns The mounted instance.
    */
   const mount = async (
-    build: (ErrorElement: ReturnType<typeof recoveryBoundary>) => RouteObject[],
+    build: (
+      ErrorElement: ReturnType<typeof recoveryBoundary>,
+      instance: () => Instance,
+    ) => RouteObject[],
     path = '/',
   ): Promise<Instance> => {
     const container = document.createElement('div');
@@ -210,7 +217,10 @@ describe('requireRoles recovery', () => {
     });
     const instance: Instance = { container, root: createRoot(container), history };
     instances.push(instance);
-    const routes = build(recoveryBoundary(() => instance));
+    const routes = build(
+      recoveryBoundary(() => instance),
+      () => instance,
+    );
     const value = { navigation: { history, basename: '' }, roles: provider };
     await settle(
       () => expect(container.textContent).not.toBe(''),
@@ -415,163 +425,354 @@ describe('requireRoles recovery', () => {
     expect(log.filter((entry) => entry.startsWith('action'))).toEqual(['action:x']);
   });
 
-  it('replays a denied fetcher submission through the same fetcher key and route', async () => {
-    const instance = await mount(
-      (ErrorElement) => [
-        {
-          path: '/',
-          errorElement: ErrorElement,
-          Component: () => <Outlet />,
-          children: [
-            {
-              index: true,
-              loader: () => {
-                log.push('home:loader');
-                return 'home';
-              },
-              Component: () => {
-                const fetcher = useFetcher();
-                return (
-                  <button
-                    type="button"
-                    onClick={() =>
-                      fetcher.submit({ value: 'f' }, { method: 'post', action: '/api' })
-                    }
-                  >
-                    fetcher:{String(fetcher.data ?? '')}
-                  </button>
-                );
-              },
-            },
-            {
-              path: 'api',
-              middleware: [requireRoles(['Reports.Read'])],
-              action: async ({ request }) => {
-                const body = await request.formData();
-                log.push(`action:${String(body.get('value'))}`);
-                return 'saved';
-              },
-            },
-          ],
+  /** Text of the element with the given test id, or `null` when it is not rendered. */
+  const text = (instance: Instance, id: string): string | null =>
+    instance.container.querySelector(`[data-testid="${id}"]`)?.textContent ?? null;
+
+  /** Clicks the element with the given test id. */
+  const click = (instance: Instance, id: string): void =>
+    instance.container.querySelector<HTMLElement>(`[data-testid="${id}"]`)?.click();
+
+  /**
+   * Fetcher-recovery host as an app layout renders it next to the existing Roles recovery UI.
+   *
+   * @param props - Instance receiving the pending holds.
+   * @returns Summary of the pending holds.
+   */
+  const FetcherHost = ({ instance }: { readonly instance: () => Instance }) => {
+    const holds = useRequireRolesFetcherRecoveries();
+    instance().holds = holds;
+    return (
+      <span data-testid="holds">
+        {holds.map((hold) => `${hold.operation}:${hold.status}`).join(',')}
+      </span>
+    );
+  };
+
+  /**
+   * Second consumer of an explicitly keyed fetcher.
+   *
+   * @param props - Shared fetcher key.
+   * @returns Fetcher state and data.
+   */
+  const Peer = ({ fetcherKey }: { readonly fetcherKey: string }) => {
+    const fetcher = useFetcher({ key: fetcherKey });
+    return (
+      <span data-testid="peer">
+        {fetcher.state}:{String(fetcher.data ?? '')}
+      </span>
+    );
+  };
+
+  /**
+   * Routes with a fetcher owner on the index route and a protected `/api` resource route.
+   *
+   * @param options - Explicit fetcher key, and whether the layout mounts a fetcher host.
+   * @returns Route builder for {@link mount}.
+   */
+  const fetcherRoutes =
+    ({ key, host = true }: { readonly key?: string; readonly host?: boolean } = {}) =>
+    (
+      ErrorElement: ReturnType<typeof recoveryBoundary>,
+      instance: () => Instance,
+    ): RouteObject[] => [
+      {
+        path: '/',
+        errorElement: ErrorElement,
+        Component: () => {
+          const [showHost, setShowHost] = useState(host);
+          return (
+            <>
+              {showHost ? <FetcherHost instance={instance} /> : null}
+              <button type="button" data-testid="hide-host" onClick={() => setShowHost(false)}>
+                hide
+              </button>
+              <Link to="/other" data-testid="other">
+                other
+              </Link>
+              <Outlet />
+            </>
+          );
         },
-      ],
-      '/',
-    );
-    await settle(
-      () =>
-        expect(instance.container.textContent).toContain('error:denied:fetcher-submission:idle'),
-      () => instance.container.querySelector('button')?.click(),
-    );
-    expect(log.filter((entry) => entry.startsWith('action'))).toEqual([]);
-
-    await activateAndRetry(instance);
-    // The action ran once; React Router's post-action revalidation restores the owner route.
-    await settle(() => expect(instance.container.textContent).toContain('fetcher:'));
-    expect(log.filter((entry) => entry.startsWith('action'))).toEqual(['action:f']);
-    expect(instance.container.textContent).not.toContain('error:');
-  });
-
-  it('shows a fetcher submission denied again during replay as a new recoverable denial', async () => {
-    const instance = await mount(
-      (ErrorElement) => [
-        {
-          path: '/',
-          errorElement: ErrorElement,
-          Component: () => <Outlet />,
-          children: [
-            {
-              index: true,
-              Component: () => {
-                const fetcher = useFetcher();
-                return (
-                  <button
-                    type="button"
-                    onClick={() =>
-                      fetcher.submit({ value: 'f' }, { method: 'post', action: '/api' })
-                    }
-                  >
-                    fetcher
+        children: [
+          {
+            index: true,
+            loader: () => {
+              log.push('home:loader');
+              return 'home';
+            },
+            Component: () => {
+              const fetcher = useFetcher(key === undefined ? undefined : { key });
+              useEffect(() => {
+                log.push('owner:mount');
+              }, []);
+              const submit = (value: string) =>
+                fetcher.submit({ value }, { method: 'post', action: '/api' });
+              return (
+                <>
+                  <span data-testid="owner">
+                    {fetcher.state}:{String(fetcher.data ?? '')}
+                  </span>
+                  <button type="button" data-testid="load" onClick={() => fetcher.load('/api')}>
+                    load
                   </button>
-                );
-              },
-            },
-            {
-              path: 'api',
-              middleware: [requireRoles(['Reports.Read'])],
-              action: () => {
-                log.push('action');
-                return 'saved';
-              },
-            },
-          ],
-        },
-      ],
-      '/',
-    );
-    await settle(
-      () => expect(instance.container.textContent).toContain('fetcher-submission:idle'),
-      () => instance.container.querySelector('button')?.click(),
-    );
-
-    const firstDenial = instance.error;
-    const firstRecovery = RequireRolesRecovery.from(firstDenial);
-
-    // The fresh check passes, but access is gone again when the replayed gate runs.
-    vi.spyOn(provider, 'hasAccessRole').mockResolvedValueOnce(true);
-    await act(async () => instance.recovery?.retry());
-    // The repeated denial is shown as a new, recoverable denial; it is never swallowed.
-    await settle(() => expect(instance.error).not.toBe(firstDenial));
-    expect(instance.container.textContent).toContain('error:denied:fetcher-submission:idle');
-    expect(log).toEqual([]);
-    expect(await firstRecovery?.retry()).toBe('stale');
-
-    // The denied replay did not run the action, so a later activation may still retry it once.
-    await activateAndRetry(instance);
-    await settle(() => expect(instance.container.textContent).toBe('fetcher'));
-    expect(log).toEqual(['action']);
-  });
-
-  it('restores the owner of a denied fetcher load without replaying the orphaned load', async () => {
-    const instance = await mount(
-      (ErrorElement) => [
-        {
-          path: '/',
-          errorElement: ErrorElement,
-          Component: () => <Outlet />,
-          children: [
-            {
-              index: true,
-              Component: () => {
-                const fetcher = useFetcher();
-                return (
-                  <button type="button" onClick={() => fetcher.load('/api')}>
-                    fetcher:{String(fetcher.data ?? '')}
+                  <button type="button" data-testid="submit" onClick={() => submit('f')}>
+                    submit
                   </button>
-                );
-              },
+                  <button type="button" data-testid="submit-g" onClick={() => submit('g')}>
+                    submit-g
+                  </button>
+                  {key === undefined ? null : <Peer fetcherKey={key} />}
+                </>
+              );
             },
-            {
-              path: 'api',
-              middleware: [requireRoles(['Reports.Read'])],
-              loader: () => {
-                log.push('api:loader');
-                return 'api-data';
-              },
+          },
+          { path: 'other', Component: () => <p data-testid="other-page">other-page</p> },
+          {
+            path: 'api',
+            middleware: [requireRoles(['Reports.Read'])],
+            loader: () => {
+              log.push('api:loader');
+              return 'api-data';
             },
-          ],
-        },
-      ],
-      '/',
-    );
-    await settle(
-      () => expect(instance.container.textContent).toContain('error:denied:fetcher-load:idle'),
-      () => instance.container.querySelector('button')?.click(),
-    );
+            action: async ({ request }) => {
+              const value = String((await request.formData()).get('value'));
+              log.push(`action:${value}`);
+              return `saved:${value}`;
+            },
+          },
+        ],
+      },
+    ];
 
-    await activateAndRetry(instance);
-    await settle(() => expect(instance.container.textContent).toBe('fetcher:'));
-    // React Router discards loads for the unmounted fetcher key, so the load is not replayed.
-    expect(log).toEqual([]);
+  /** Activates the claimable assignment through the real provider, then retries the first hold. */
+  const activateAndResume = async (instance: Instance) => {
+    await act(async () => {
+      await provider.activateClaimableRoleAssignment(activationInput('assignment-reports'));
+      void instance.holds?.[0]?.retry();
+    });
+  };
+
+  /** Log entries starting with the prefix. */
+  const entries = (prefix: string): string[] => log.filter((entry) => entry.startsWith(prefix));
+
+  describe('fetcher executions', () => {
+    it('holds a denied unkeyed fetcher load and delivers its data to the same consumer', async () => {
+      const instance = await mount(fetcherRoutes());
+      await settle(
+        () => expect(text(instance, 'holds')).toBe('fetcher-load:waiting'),
+        () => click(instance, 'load'),
+      );
+      // The owner stays mounted and loading; no error boundary replaced it.
+      expect(text(instance, 'owner')).toBe('loading:');
+      expect(instance.container.textContent).not.toContain('error:');
+
+      // Without activation the fresh check still denies; the execution stays held.
+      await settle(
+        () => expect(text(instance, 'holds')).toBe('fetcher-load:still-denied'),
+        () => instance.holds?.[0]?.retry(),
+      );
+      expect(entries('api:')).toEqual([]);
+      expect(client.getActiveAccessRoleAssignments).toHaveBeenLastCalledWith({ refresh: true });
+
+      await activateAndResume(instance);
+      await settle(() => expect(text(instance, 'owner')).toBe('idle:api-data'));
+      expect(text(instance, 'holds')).toBe('');
+      expect(entries('api:')).toEqual(['api:loader']);
+      // The data reached the original consumer: it never remounted.
+      expect(entries('owner:')).toEqual(['owner:mount']);
+    });
+
+    it('resumes a denied unkeyed fetcher submission once and delivers the action result', async () => {
+      const instance = await mount(fetcherRoutes());
+      await settle(
+        () => expect(text(instance, 'holds')).toBe('fetcher-submission:waiting'),
+        () => click(instance, 'submit'),
+      );
+      expect(text(instance, 'owner')).toBe('submitting:');
+      const homeLoadsBefore = entries('home:').length;
+      const [hold] = instance.holds ?? [];
+
+      await act(async () => {
+        await provider.activateClaimableRoleAssignment(activationInput('assignment-reports'));
+        // A double click on the recovery button shares one attempt.
+        void hold?.retry();
+        void hold?.retry();
+      });
+      await settle(() => expect(text(instance, 'owner')).toBe('idle:saved:f'));
+      expect(entries('action:')).toEqual(['action:f']);
+      // React Router's normal post-action revalidation ran for the resumed submission.
+      expect(entries('home:')).toHaveLength(homeLoadsBefore + 1);
+      expect(entries('owner:')).toEqual(['owner:mount']);
+
+      // The hold is spent: a late retry never submits again.
+      expect(await hold?.retry()).toBe('stale');
+      expect(entries('action:')).toEqual(['action:f']);
+    });
+
+    it('delivers recovered results to every consumer of an explicitly keyed fetcher', async () => {
+      const instance = await mount(fetcherRoutes({ key: 'report' }));
+      await settle(
+        () => expect(text(instance, 'holds')).toBe('fetcher-submission:waiting'),
+        () => click(instance, 'submit'),
+      );
+      expect(text(instance, 'peer')).toBe('submitting:');
+      expect(instance.holds?.[0]?.key).toBe('report');
+
+      await activateAndResume(instance);
+      await settle(() => expect(text(instance, 'peer')).toBe('idle:saved:f'));
+      expect(text(instance, 'owner')).toBe('idle:saved:f');
+      expect(entries('action:')).toEqual(['action:f']);
+
+      // Access now holds: a keyed load passes straight through without a hold.
+      await settle(
+        () => expect(text(instance, 'peer')).toBe('idle:api-data'),
+        () => click(instance, 'load'),
+      );
+      expect(entries('owner:')).toEqual(['owner:mount']);
+    });
+
+    it('keeps the execution held when the fresh check fails, then resumes after recovery', async () => {
+      const instance = await mount(fetcherRoutes());
+      await settle(
+        () => expect(text(instance, 'holds')).toBe('fetcher-submission:waiting'),
+        () => click(instance, 'submit'),
+      );
+      service.failure = new Error('network down');
+      await settle(
+        () => expect(text(instance, 'holds')).toBe('fetcher-submission:check-failed'),
+        () => instance.holds?.[0]?.retry(),
+      );
+      expect(text(instance, 'owner')).toBe('submitting:');
+      expect(entries('action:')).toEqual([]);
+
+      service.failure = undefined;
+      await activateAndResume(instance);
+      await settle(() => expect(text(instance, 'owner')).toBe('idle:saved:f'));
+      expect(entries('action:')).toEqual(['action:f']);
+    });
+
+    it('shows the denial explicitly when the user dismisses the hold', async () => {
+      const instance = await mount(fetcherRoutes());
+      await settle(
+        () => expect(text(instance, 'holds')).toBe('fetcher-submission:waiting'),
+        () => click(instance, 'submit'),
+      );
+      const [hold] = instance.holds ?? [];
+      await settle(
+        () => expect(instance.container.textContent).toContain('error:denied:none'),
+        () => hold?.dismiss(),
+      );
+      expect(RequireRolesError.is(instance.error)).toBe(true);
+      service.granted.push('Reports.Read');
+      expect(await hold?.retry()).toBe('stale');
+      expect(entries('action:')).toEqual([]);
+    });
+
+    it('cancels a hold superseded by a resubmission of the same fetcher', async () => {
+      const instance = await mount(fetcherRoutes());
+      await settle(
+        () => expect(text(instance, 'holds')).toBe('fetcher-submission:waiting'),
+        () => click(instance, 'submit'),
+      );
+      const [first] = instance.holds ?? [];
+      // React Router aborts the first execution; only the second one stays held.
+      await settle(
+        () => expect(instance.holds?.[0]).not.toBe(first),
+        () => click(instance, 'submit-g'),
+      );
+      expect(text(instance, 'holds')).toBe('fetcher-submission:waiting');
+      expect(first?.pending).toBe(false);
+
+      await activateAndResume(instance);
+      await settle(() => expect(text(instance, 'owner')).toBe('idle:saved:g'));
+      expect(entries('action:')).toEqual(['action:g']);
+      expect(await first?.retry()).toBe('stale');
+      expect(entries('action:')).toEqual(['action:g']);
+    });
+
+    it('ends held loads and submissions without running them when their owner route is left', async () => {
+      const instance = await mount(fetcherRoutes());
+      await settle(
+        () => expect(text(instance, 'holds')).toBe('fetcher-submission:waiting'),
+        () => click(instance, 'submit'),
+      );
+      const [submission] = instance.holds ?? [];
+      await settle(
+        () => expect(text(instance, 'other-page')).toBe('other-page'),
+        () => click(instance, 'other'),
+      );
+      await settle(() => expect(text(instance, 'holds')).toBe(''));
+      // The owner is gone, so the denial is discarded, never shown on the new page.
+      expect(instance.container.textContent).not.toContain('error:');
+      service.granted.push('Reports.Read');
+      expect(await submission?.retry()).toBe('stale');
+      expect(entries('action:')).toEqual([]);
+    });
+
+    it('ends held executions when the last host unmounts or the router is disposed', async () => {
+      const instance = await mount(fetcherRoutes());
+      await settle(
+        () => expect(text(instance, 'holds')).toBe('fetcher-load:waiting'),
+        () => click(instance, 'load'),
+      );
+      const [load] = instance.holds ?? [];
+      // Nobody can show the hold any more: it fails explicitly at the owner's boundary.
+      await settle(
+        () => expect(instance.container.textContent).toContain('error:denied:none'),
+        () => click(instance, 'hide-host'),
+      );
+      expect(load?.pending).toBe(false);
+
+      const second = await mount(fetcherRoutes());
+      await settle(
+        () => expect(text(second, 'holds')).toBe('fetcher-submission:waiting'),
+        () => click(second, 'submit'),
+      );
+      const [submission] = second.holds ?? [];
+      await act(async () => second.root.unmount());
+      expect(submission?.pending).toBe(false);
+      service.granted.push('Reports.Read');
+      expect(await submission?.retry()).toBe('stale');
+      expect(entries('action:')).toEqual([]);
+      expect(entries('api:')).toEqual([]);
+    });
+
+    it('fails denied fetcher executions explicitly when no host is mounted', async () => {
+      const instance = await mount(fetcherRoutes({ host: false }));
+      await settle(
+        () => expect(instance.container.textContent).toContain('error:denied:none'),
+        () => click(instance, 'load'),
+      );
+      // No recovery is offered that could not deliver the result to the owner.
+      expect(RequireRolesRecovery.from(instance.error)).toBeUndefined();
+      expect(entries('api:')).toEqual([]);
+    });
+
+    it('isolates fetcher holds between router instances', async () => {
+      const first = await mount(fetcherRoutes());
+      const second = await mount(fetcherRoutes());
+      await settle(
+        () => expect(text(first, 'holds')).toBe('fetcher-submission:waiting'),
+        () => click(first, 'submit'),
+      );
+      await settle(
+        () => expect(text(second, 'holds')).toBe('fetcher-submission:waiting'),
+        () => click(second, 'submit-g'),
+      );
+      expect(first.holds).toHaveLength(1);
+      expect(second.holds).toHaveLength(1);
+
+      await activateAndResume(first);
+      await settle(() => expect(text(first, 'owner')).toBe('idle:saved:f'));
+      // The second router's execution stays held until its own recovery runs.
+      expect(text(second, 'holds')).toBe('fetcher-submission:waiting');
+      expect(entries('action:')).toEqual(['action:f']);
+
+      await act(async () => second.holds?.[0]?.retry());
+      await settle(() => expect(text(second, 'owner')).toBe('idle:saved:g'));
+      expect(entries('action:')).toEqual(['action:f', 'action:g']);
+    });
   });
 
   it('reports check-failed without retrying and allows a later retry', async () => {
