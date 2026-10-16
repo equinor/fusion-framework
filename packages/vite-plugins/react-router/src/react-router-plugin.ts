@@ -59,8 +59,9 @@ const EXPORT_DEFAULT_PATTERN = /export\s+default|export\s*{\s*default\s*}/;
 const EXPORT_NAMED_PATTERN = (name: string) =>
   new RegExp(`\\bexport\\s+(const|function|class|async\\s+function)\\s+${name}\\b`);
 
-const EXPORT_REEXPORT_PATTERN = (name: string) =>
-  new RegExp(`export\\s*{\\s*[^}]*${name}[^}]*}\\s*from`);
+const EXPORT_LIST_PATTERN = /\bexport\s*{([^{}]*)}/g;
+
+const EXPORT_SPECIFIER_PATTERN = /^\s*([\w$]+)(?:\s+as\s+(?:([\w$]+)|'([^']+)'|"([^"]+)"))?\s*$/;
 
 // ============================================================================
 // Type Definitions
@@ -310,7 +311,18 @@ function getAvailableExports(filePath: string, currentFileId: string, debug: boo
       availableExports.add('default');
     }
 
-    // Check for named exports and re-exports
+    // Local export clauses and re-exports expose the public name, not the source binding's name.
+    for (const clause of fileContent.matchAll(EXPORT_LIST_PATTERN)) {
+      const specifiers = clause[1].replace(/\/\*[\s\S]*?\*\/|\/\/[^\r\n]*/g, ' ');
+      // Parse each specifier separately so aliases and type-only specifiers cannot invent exports.
+      for (const specifier of specifiers.split(',')) {
+        const match = specifier.match(EXPORT_SPECIFIER_PATTERN);
+        // Unrecognized and type-only specifiers do not declare runtime exports.
+        if (match) availableExports.add(match[2] ?? match[3] ?? match[4] ?? match[1]);
+      }
+    }
+
+    // Check for directly declared named exports.
     const exportNames = [
       'clientLoader',
       'action',
@@ -320,13 +332,10 @@ function getAvailableExports(filePath: string, currentFileId: string, debug: boo
       'shouldRevalidate',
       'middleware',
     ];
-    // Check each recognised export name individually, as both direct and re-export syntax are supported
+    // Direct declarations complement the public names already indexed from export clauses.
     for (const name of exportNames) {
-      // Recognise the export whether it's declared directly or re-exported from another module
-      if (
-        fileContent.match(EXPORT_NAMED_PATTERN(name)) ||
-        fileContent.match(EXPORT_REEXPORT_PATTERN(name))
-      ) {
+      // Only recognized route exports are used by the generated imports below.
+      if (fileContent.match(EXPORT_NAMED_PATTERN(name))) {
         availableExports.add(name);
       }
     }

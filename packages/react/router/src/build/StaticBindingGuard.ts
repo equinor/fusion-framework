@@ -6,6 +6,8 @@ interface Binding {
   initializers: Expression[];
   aliases: Set<Binding>;
   primitiveSource?: Binding;
+  getters: Set<string | undefined>;
+  reads: Set<string | undefined>;
   written: boolean;
   exposed: boolean;
 }
@@ -123,7 +125,7 @@ export class StaticBindingGuard {
   /**
    * Requires a requested module binding and its aliases to remain declarative.
    * @param name - Module-local binding reached during static evaluation.
-   * @throws When writes, unknown calls or escaping aliases can change its value.
+   * @throws When writes, accessor reads, unknown calls or escaping aliases can change its value.
    */
   assertUnchanged(name: string): void {
     const binding = this.scopes.get(this.program)?.get(name);
@@ -131,12 +133,18 @@ export class StaticBindingGuard {
     if (!binding) return;
     const pending = [binding];
     const visited = new Set<Binding>();
+    const getters = new Set<string | undefined>();
+    const reads = new Set<string | undefined>();
     // Follow outward aliases and containers, not unrelated fields of the requested object.
     while (pending.length) {
       const current = pending.pop();
       // Alias cycles need inspecting only once.
       if (!current || visited.has(current)) continue;
       visited.add(current);
+      // Aliases and containers can invoke an accessor on the same selected object.
+      for (const name of current.getters) getters.add(name);
+      // Only source reads count; selecting literal metadata never executes an accessor.
+      for (const name of current.reads) reads.add(name);
       const primitive = this.isPrimitive(current, new Set());
       // A read of a primitive cannot mutate it, but reassignment still changes metadata.
       if (this.hasDirectEval || current.written || (!primitive && current.exposed)) {
@@ -147,6 +155,62 @@ export class StaticBindingGuard {
       }
       // Primitive copies do not share mutable state with their source.
       if (!primitive) pending.push(...current.aliases);
+    }
+    // Unknown keys and object spreads may read any getter; known data properties remain safe.
+    const invokesGetter =
+      getters.size > 0 &&
+      reads.size > 0 &&
+      (getters.has(undefined) ||
+        reads.has(undefined) ||
+        [...reads].some((property) => getters.has(property)));
+    // Getter bodies can mutate through `this` without referencing the selected binding.
+    if (invokesGetter) {
+      throw new Error(
+        `${this.file}: mutable binding '${name}' cannot be used in a source-only sitemap. ` +
+          'Property reads may invoke getters; use literal metadata without accessor reads, or provide manifest routes directly.',
+      );
+    }
+  }
+
+  /**
+   * Identifies literal property keys without evaluating computed expressions.
+   * @param key - Object property or member key.
+   * @param computed - Whether the key uses bracket syntax.
+   * @returns A known key, or undefined when any property could be accessed.
+   */
+  private getPropertyName(key: AnyNode, computed: boolean): string | undefined {
+    // Dot syntax and literal bracket keys have statically known names.
+    if (!computed && key.type === 'Identifier') return key.name;
+    // Numeric and quoted keys use JavaScript's string property names.
+    if (key.type === 'Literal') return String(key.value);
+    return undefined;
+  }
+
+  /**
+   * Indexes accessors in literal containers without entering executable function bodies.
+   * @param expression - Binding initializer or nested literal value.
+   * @param getters - Getter names accumulated for the binding.
+   */
+  private indexGetters(expression: Expression, getters: Set<string | undefined>): void {
+    // Nested literal fields can expose the same accessor through a container or member alias.
+    if (expression.type === 'ObjectExpression') {
+      // Methods and accessor bodies stay opaque; only object construction is relevant.
+      for (const property of expression.properties) {
+        // Spreads are tracked at their source binding's use instead.
+        if (property.type !== 'Property') continue;
+        // A getter read can execute arbitrary mutations even when its return value is ignored.
+        if (property.kind === 'get') {
+          getters.add(this.getPropertyName(property.key, property.computed));
+        } else if (property.kind === 'init' && !property.method) {
+          this.indexGetters(property.value, getters);
+        }
+      }
+    } else if (expression.type === 'ArrayExpression') {
+      // Array containers can carry objects whose getters are accessed through an alias.
+      for (const element of expression.elements) {
+        // Holes have no values and spreads are tracked through their source bindings.
+        if (element && element.type !== 'SpreadElement') this.indexGetters(element, getters);
+      }
     }
   }
 
@@ -167,6 +231,8 @@ export class StaticBindingGuard {
         name: node.name,
         initializers: [],
         aliases: new Set<Binding>(),
+        getters: new Set<string | undefined>(),
+        reads: new Set<string | undefined>(),
         written: false,
         exposed: false,
       };
@@ -174,6 +240,7 @@ export class StaticBindingGuard {
       if (initializer) {
         binding.written ||= binding.initializers.length > 0;
         binding.initializers.push(initializer);
+        this.indexGetters(initializer, binding.getters);
       }
       names.set(node.name, binding);
       this.scopes.set(scope, names);
@@ -325,6 +392,12 @@ export class StaticBindingGuard {
     let directTarget = true;
     // Enclosing operations reveal both direct writes and escapes through nested expressions.
     for (const parent of ancestors.toReversed()) {
+      // Reading a receiver property may invoke an accessor even without a call expression.
+      if (parent.type === 'MemberExpression' && parent.object === child) {
+        binding.reads.add(this.getPropertyName(parent.property, parent.computed));
+      }
+      // Object spread reads enumerable getters; array spread can invoke an iterator accessor.
+      if (parent.type === 'SpreadElement') binding.reads.add(undefined);
       // Member receivers, computed keys and default values are reads, not target bindings.
       if (
         parent.type === 'MemberExpression' ||
@@ -334,6 +407,21 @@ export class StaticBindingGuard {
         directTarget = false;
       // Local literal containers and aliases may expose the same object under another name.
       if (parent.type === 'VariableDeclarator' && parent.init === child) {
+        // Destructuring performs implicit property reads, including all remaining keys for rest.
+        walkSyntax(parent.id, (pattern, ancestry) => {
+          // Defaults may contain unrelated expressions, not destructuring reads of this binding.
+          const fromPattern = ancestry.every(
+            (ancestor) => ancestor.type.endsWith('Pattern') || ancestor.type === 'Property',
+          );
+          // Ignore getters declared in fallback values rather than read from the source binding.
+          if (!fromPattern) return;
+          // Named properties do not invoke unrelated getters.
+          if (pattern.type === 'Property')
+            binding.reads.add(this.getPropertyName(pattern.key, pattern.computed));
+          // Rest and array patterns can read keys that are not named in source.
+          if (pattern.type === 'RestElement' || pattern.type === 'ArrayPattern')
+            binding.reads.add(undefined);
+        });
         const aliases = this.declarations.get(parent) ?? [];
         // Alias propagation remains lexical, including nested-scope declarations.
         for (const alias of aliases) {

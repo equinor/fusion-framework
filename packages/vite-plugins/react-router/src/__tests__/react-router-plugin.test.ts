@@ -1,4 +1,5 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import fs from 'node:fs';
 import path from 'node:path';
 import { reactRouterPlugin } from '../react-router-plugin';
 
@@ -34,6 +35,10 @@ describe('reactRouterPlugin', () => {
     plugin = reactRouterPlugin({ debug: false }) as unknown as ReactRouterPlugin;
     // Set root to the package root (parent of src)
     plugin.config({ root: path.resolve(__dirname, '../..') });
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
   });
 
   it('should transform a simple route() call to RouteObject', () => {
@@ -193,6 +198,42 @@ describe('reactRouterPlugin', () => {
     const inputCode = [
       `import { route } from '@equinor/fusion-framework-react-router/routes';`,
       `export const routes = route(':id', './mocks/pages/UserDetailPage.tsx');`,
+    ].join('\n');
+
+    expect(plugin.transform(inputCode, testFileId)).not.toContain('middleware');
+  });
+
+  it.each([
+    'const middleware = []; export { middleware };',
+    'const guards = []; export { guards as middleware };',
+    'const guards = []; const handle = {}; export { handle, guards as middleware };',
+    'const guards = []; export { /* route guards */ guards as middleware };',
+    'const guards = []; export { guards as "middleware" };',
+    'export { guards as middleware } from "./guards";',
+  ])('wires named middleware export clauses: %s', (source) => {
+    vi.spyOn(fs, 'readFileSync').mockReturnValue(source);
+    const inputCode = [
+      `import { route } from '@equinor/fusion-framework-react-router/routes';`,
+      `export const routes = route('guarded', './mocks/pages/GuardedPage.tsx');`,
+    ].join('\n');
+
+    const result = plugin.transform(inputCode, testFileId);
+
+    expect(result).toContain('middleware as middlewareGuardedPage');
+    expect(result).toContain('middleware: middlewareGuardedPage');
+  });
+
+  it.each([
+    'const middleware = []; export { middleware as guards };',
+    'export { middleware as guards } from "./guards";',
+    'export type { middleware } from "./types";',
+    'export { type middleware } from "./types";',
+    'export { othermiddleware } from "./guards";',
+  ])('does not invent middleware exports from other names or types: %s', (source) => {
+    vi.spyOn(fs, 'readFileSync').mockReturnValue(source);
+    const inputCode = [
+      `import { route } from '@equinor/fusion-framework-react-router/routes';`,
+      `export const routes = route('guarded', './mocks/pages/GuardedPage.tsx');`,
     ].join('\n');
 
     expect(plugin.transform(inputCode, testFileId)).not.toContain('middleware');

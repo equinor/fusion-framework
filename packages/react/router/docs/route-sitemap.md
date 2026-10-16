@@ -70,6 +70,9 @@ Bindings contributing to the registry or selected metadata must not be reassigne
 mutated or passed to untrusted runtime code, including through aliases and containing
 objects. These uses are conservatively rejected without executing them: for example,
 build an array in its declaration rather than appending routes with `routes.push()`.
+Property reads, destructuring and spreads that could invoke getters on these
+bindings are also rejected: a getter can mutate metadata even when its result is
+ignored. An unselected UI getter that is never read remains unevaluated.
 Unrelated UI state and unselected UI-only metadata remain outside this check.
 Imported helper values, computed route trees, metadata functions, namespace imports,
 re-exports and `import.meta.resolve()` are not supported by source-only generation.

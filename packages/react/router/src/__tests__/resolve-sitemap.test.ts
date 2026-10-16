@@ -189,6 +189,12 @@ describe('resolveSitemap', () => {
      export const handle = { route: { params } };`,
     `export const handle = { route: { description: 'Before' } };
      const { route: schema } = handle; schema.description = 'After';`,
+    `const schema = {
+       description: 'Before',
+       get icon() { this.description = 'After'; return 'icon'; },
+     };
+     const icon = schema.icon;
+     export const handle = { route: schema };`,
   ])('rejects mutable page metadata instead of publishing stale descriptions', async (metadata) => {
     await file('src/routes.ts', `${dsl} export default index('./page.tsx');`);
     await file('src/page.tsx', `${page} ${metadata}`);

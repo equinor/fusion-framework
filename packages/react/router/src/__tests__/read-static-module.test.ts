@@ -77,6 +77,58 @@ describe('readStaticModule', () => {
     expect(module.getProperty(handle, 'missing')).toBeUndefined();
   });
 
+  it.each([
+    'const icon = schema.icon;',
+    'const icon = schema["icon"];',
+    'const key = "icon"; const icon = schema[key];',
+    'const icon = schema?.icon;',
+    'const alias = schema; const icon = alias.icon;',
+    'const holder = { schema }; const icon = holder.schema.icon;',
+    'const holder = { schema }; const { schema: alias } = holder; const icon = alias.icon;',
+    'const { icon } = schema;',
+    'const { description, ...ui } = schema;',
+    'const ui = { ...schema };',
+  ])('rejects accessor reads that can mutate selected metadata: %s', async (read) => {
+    const module = await readFixture(`
+      const schema = {
+        description: 'Before',
+        get icon() { this.description = 'After'; return 'icon'; },
+      };
+      ${read}
+      export const handle = { route: schema };
+    `);
+
+    expect(() => {
+      const route = module.getProperty(requireExport(module, 'handle'), 'route');
+      if (!route) throw new Error('Missing fixture route metadata');
+      module.getProperty(route, 'description');
+    }).toThrow('mutable');
+  });
+
+  it.each([
+    '',
+    'const description = schema.description;',
+    'const { description } = schema;',
+    'const { description = { get icon() { return "unused"; } } } = schema;',
+    'const holder = { schema }; const description = holder.schema.description;',
+    'function render(schema) { const icon = schema.icon; }',
+    'const ui = { get icon() { return "icon"; } }; const icon = ui.icon;',
+  ])('preserves uninvoked UI getters and unrelated property reads: %s', async (read) => {
+    const module = await readFixture(`
+      const schema = {
+        description: 'Home',
+        get icon() { throw new Error('Getter must not execute'); },
+      };
+      ${read}
+      export const handle = { route: schema };
+    `);
+    const route = module.getProperty(requireExport(module, 'handle'), 'route');
+    if (!route) throw new Error('Missing fixture route metadata');
+    const description = module.getProperty(route, 'description');
+    if (!description) throw new Error('Missing fixture description');
+    expect(module.evaluate(description)).toBe('Home');
+  });
+
   it('invokes only a recognized named DSL import, including aliases', async () => {
     const builder = vi.fn((...args: unknown[]): unknown => args);
     const module = await readFixture(

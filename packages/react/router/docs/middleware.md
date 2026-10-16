@@ -26,6 +26,10 @@ It is also re-exported by `@equinor/fusion-framework-react-app/routing`.
 
 Export `middleware` from a route module. The DSL signatures do not change. The Vite plugin (`@equinor/fusion-framework-vite-plugin-react-router`) picks up the export next to `clientLoader`, `action`, `handle`, `ErrorElement` and the other route exports.
 
+Direct declarations, local named exports and re-exports are supported. Aliases
+use the exported name: `export { guards as middleware }` wires `guards` as route
+middleware, while `export { middleware as guards }` does not.
+
 ```tsx
 // pages/ReportsPage.tsx
 import { redirect, type MiddlewareFunction } from '@equinor/fusion-framework-react-router';
