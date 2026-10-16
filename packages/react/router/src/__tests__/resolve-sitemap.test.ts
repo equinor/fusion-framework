@@ -195,11 +195,34 @@ describe('resolveSitemap', () => {
      };
      const icon = schema.icon;
      export const handle = { route: schema };`,
+    `const schema = { description: 'Before' };
+     const icon = ({
+       schema,
+       get icon() { this.schema.description = 'After'; return 'icon'; },
+     }).icon;
+     export const handle = { route: schema };`,
   ])('rejects mutable page metadata instead of publishing stale descriptions', async (metadata) => {
     await file('src/routes.ts', `${dsl} export default index('./page.tsx');`);
     await file('src/page.tsx', `${page} ${metadata}`);
     await expect(resolveSitemap({ root })).rejects.toThrow('mutable');
   });
+
+  it.each(['const title = handle.route.description;', 'const copy = { ...handle.route };'])(
+    'accepts literal metadata when an unrelated getter is never invoked: %s',
+    async (read) => {
+      await file('src/routes.ts', `${dsl} export default index('./page.tsx');`);
+      await file(
+        'src/page.tsx',
+        `${page}
+       export const handle = {
+         route: { description: 'Home' },
+         get description() { throw new Error('Unused getter must not execute'); },
+       };
+       ${read}`,
+      );
+      expect(await resolveSitemap({ root })).toEqual([['/', 'Home']]);
+    },
+  );
 
   it.each([
     ['computed registry', `${dsl} export default makeRoutes();`, 'CallExpression'],
