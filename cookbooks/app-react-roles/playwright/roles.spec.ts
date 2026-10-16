@@ -1,9 +1,21 @@
 import { createMockAuth } from '@equinor/fusion-openapi-mock-server';
-import { expect, test } from '@playwright/test';
+import { expect, test, type Page } from '@playwright/test';
 
 const APP_PATH = '/apps/fusion-framework-cookbook-app-react-roles';
 const MOCK_SERVER_URL = 'http://localhost:4012';
 const mockAuth = createMockAuth(MOCK_SERVER_URL);
+
+/**
+ * Waits for app initialization to finish, including the intentional required-role gate.
+ * @param page - The page whose portal and app are starting.
+ */
+async function waitForAppReady(page: Page): Promise<void> {
+  await expect(
+    page
+      .getByRole('heading', { name: 'Fusion Roles V2', exact: true })
+      .or(page.getByRole('heading', { name: 'Access denied', exact: true })),
+  ).toBeVisible({ timeout: 45_000 });
+}
 
 test.beforeEach(async ({ context }) => {
   await mockAuth.setUser(context.request, {
@@ -14,6 +26,7 @@ test.beforeEach(async ({ context }) => {
 
 test('recovers the application after claiming its required role', async ({ page }) => {
   await page.goto(APP_PATH);
+  await waitForAppReady(page);
 
   await expect(page.getByRole('heading', { name: 'Access denied' })).toBeVisible();
   await expect(page.locator('body')).toContainText('Fusion developer team member');
@@ -81,6 +94,7 @@ test('renders scoped and duplicate active assignments after refresh', async ({ p
     }),
   );
   await page.goto(APP_PATH);
+  await waitForAppReady(page);
   // Inspect only the scoped assignments, not the access role used to satisfy the app gate.
   const rows = page.getByRole('main').getByRole('listitem').filter({ hasText: 'Reports.Read' });
   await expect(rows).toHaveCount(3);
@@ -110,6 +124,7 @@ test('isolates concurrent role personas and switches identity without restarting
     }),
   ]);
   await Promise.all([operationsPage.goto(APP_PATH), reportingPage.goto(APP_PATH)]);
+  await Promise.all([waitForAppReady(operationsPage), waitForAppReady(reportingPage)]);
 
   await expect(operationsPage.getByRole('main')).toContainText(
     'Fusion Apps / Fusion.Apps.FullControl',
@@ -125,6 +140,7 @@ test('isolates concurrent role personas and switches identity without restarting
     name: 'Reporting Persona',
   });
   await operationsPage.reload();
+  await waitForAppReady(operationsPage);
   await expect(operationsPage.getByRole('main')).toContainText('Reports / Reports.Export');
   await expect(operationsPage.getByRole('main')).not.toContainText(
     'Fusion Apps / Fusion.Apps.FullControl',
