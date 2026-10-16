@@ -3,6 +3,7 @@ import { extname } from 'node:path';
 import { parse, type Expression } from 'acorn';
 import { transform } from 'esbuild';
 import { StaticExpressionEvaluator } from './StaticExpressionEvaluator.js';
+import { StaticBindingGuard } from './StaticBindingGuard.js';
 import type { StaticBuilder, StaticCalls, StaticModule } from './static-module.types.js';
 
 /**
@@ -77,7 +78,8 @@ export async function readStaticModule(
     }
   }
 
-  const evaluator = new StaticExpressionEvaluator(file, bindings, builders);
+  const guard = new StaticBindingGuard(program, file, new Set(builders.keys()));
+  const evaluator = new StaticExpressionEvaluator(file, bindings, builders, guard);
   return {
     getExport: (name) => exportedExpressions.get(name),
     getProperty: (expression, name) => evaluator.getProperty(expression, name),

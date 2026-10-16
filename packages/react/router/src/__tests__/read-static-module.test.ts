@@ -155,4 +155,60 @@ describe('readStaticModule', () => {
   it('surfaces a missing source file with its filename', async () => {
     await expect(readStaticModule(join(root, 'missing.ts'))).rejects.toThrow('missing.ts');
   });
+
+  it.each([
+    'const routes = []; routes.push(1); export default routes;',
+    'const routes = []; const alias = routes; alias.push(1); export default routes;',
+    'const routes = []; const alias = routes; const next = alias; next[0] = 1; export default routes;',
+    'const routes = []; const holder = { routes }; holder.routes.push(1); export default routes;',
+    'const routes = []; const holder = { routes }; const { routes: alias } = holder; alias.push(1); export default routes;',
+    'const routes = []; function mutate() { const alias = routes; alias.push(1); } mutate(); export default routes;',
+    'const routes = []; function mutate(alias = routes) { alias.push(1); } mutate(); export default routes;',
+    'const routes = []; let alias; alias = routes; export default routes;',
+    'let routes = []; if (enabled) routes = [1]; export default routes;',
+    'const routes = []; mutate(routes); export default routes;',
+    'const routes = []; new Mutator(routes); export default routes;',
+    'const routes = []; const leak = () => routes; mutate(leak()); export default routes;',
+    'const routes = []; function leak() { return routes; } export default routes;',
+    'const routes = []; eval("routes.push(1)"); export default routes;',
+    'var routes = []; var routes = [1]; export default routes;',
+    'var routes = []; for (var routes of [[1]]) {} export default routes;',
+    'const routes = [{}]; for (const entry of routes) { entry.id = 1; } export default routes;',
+    'const routes = []; await routes; export default routes;',
+    "const schema = { description: 'Before' }; schema.description = 'After'; export default schema;",
+    "const schema = { description: 'Before' }; Object.assign(schema, { description: 'After' }); export default schema;",
+    "const schema = { params: { id: 'Before' } }; const { params } = schema; params.id = 'After'; export default schema;",
+    "const schema = { params: { id: 'Before' } }; const alias = schema.params; delete alias.id; export default schema;",
+    'let description = 1; description++; export default { description };',
+    "let description = 'Before'; [description] = ['After']; export default { description };",
+    "let description = 'Before'; for (description of ['After']) {} export default { description };",
+  ])('rejects mutable definitions: %s', async (source) => {
+    const module = await readFixture(source);
+    expect(() => module.evaluate(requireExport(module, 'default'))).toThrow('mutable');
+  });
+
+  it.each([
+    'const routes = []; const other = []; other.push(1); export default routes;',
+    'const routes = []; const alias = routes; export { alias as default };',
+    'const routes = []; function mutate(routes) { routes.push(1); } mutate([]); export default routes;',
+    'const routes = []; function mutate() { routes.push(1); var routes = []; } export default routes;',
+    'const routes = []; { const routes = []; routes.push(1); } export default routes;',
+    'const routes = []; try {} catch (routes) { routes.push(1); } export default routes;',
+  ])('preserves unrelated mutation, harmless aliases and lexical shadowing: %s', async (source) => {
+    const module = await readFixture(source);
+    expect(module.evaluate(requireExport(module, 'default'))).toEqual([]);
+  });
+
+  it('allows primitive metadata to be read by UI helpers without evaluating them', async () => {
+    const module = await readFixture(`
+      const description = 'Home';
+      const alias = description;
+      const title = formatTitle(alias);
+      export default { description, alias };
+    `);
+    expect(module.evaluate(requireExport(module, 'default'))).toEqual({
+      description: 'Home',
+      alias: 'Home',
+    });
+  });
 });

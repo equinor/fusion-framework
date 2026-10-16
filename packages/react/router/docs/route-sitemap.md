@@ -66,6 +66,11 @@ Layouts and prefixes contribute hierarchy, not separate sitemap entries.
 Neither registry nor page code executes during sitemap generation. TypeScript and
 JSX are parsed; unrelated UI-only `handle` properties are not evaluated. Registry
 exports must be a declarative tree of DSL calls, arrays and local constants.
+Bindings contributing to the registry or selected metadata must not be reassigned,
+mutated or passed to untrusted runtime code, including through aliases and containing
+objects. These uses are conservatively rejected without executing them: for example,
+build an array in its declaration rather than appending routes with `routes.push()`.
+Unrelated UI state and unselected UI-only metadata remain outside this check.
 Imported helper values, computed route trees, metadata functions, namespace imports,
 re-exports and `import.meta.resolve()` are not supported by source-only generation.
 Missing files and unsupported expressions fail explicitly rather than producing a

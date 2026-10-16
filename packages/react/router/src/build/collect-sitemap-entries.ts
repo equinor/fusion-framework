@@ -61,10 +61,10 @@ async function visitRouteNodes(
   if (typeof segment !== 'string') {
     throw new Error(`${context.registryFile}: route paths must be strings.`);
   }
-  // Preserve the manifest's application-relative format, including the root route.
-  const url = [parentPath, segment]
-    .filter(Boolean)
-    .join('/')
+  // Relative children inherit their parent; absolute children already contain it.
+  const relativePath = [parentPath, segment].filter(Boolean).join('/');
+  // Normalize the selected full path to the existing manifest format.
+  const url = (segment.startsWith('/') ? segment : relativePath)
     .replace(/\/+/g, '/')
     .replace(/^\/|\/$/g, '');
   // Prefix nodes contribute URL hierarchy without referencing a page module.

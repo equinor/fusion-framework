@@ -103,10 +103,13 @@ describe('resolveSitemap', () => {
       'src/page.tsx',
       `import { home } from '@equinor/eds-icons';
        ${page}
+       const uiState = [];
+       uiState.push('runtime-only');
        export const handle = {
          route: {
            icon: home,
            title: loadTitle(),
+           uiState,
            description: 'Home',
            search: { tab: 'Selected tab' },
          },
@@ -143,6 +146,53 @@ describe('resolveSitemap', () => {
       ['projects/:slug', 'Project'],
       ['projects/:slug/settings', ''],
     ]);
+  });
+
+  it('treats nested absolute paths as complete URLs and resolves their relative descendants', async () => {
+    await file(
+      'src/routes.ts',
+      `${dsl} export default route('projects', './page.tsx', [
+        layout('./layout.tsx', [
+          route('/projects/:id', './page.tsx', [
+            index('./page.tsx'),
+            route('settings', './page.tsx'),
+          ]),
+        ]),
+      ]);`,
+    );
+    await file('src/page.tsx', page);
+    await file('src/layout.tsx', page);
+    expect(await resolveSitemap({ root })).toEqual([
+      ['projects', ''],
+      ['projects/:id', ''],
+      ['projects/:id', ''],
+      ['projects/:id/settings', ''],
+    ]);
+  });
+
+  it('rejects registry mutations instead of silently publishing an empty sitemap', async () => {
+    await file(
+      'src/routes.ts',
+      `${dsl}
+       const routes = [];
+       routes.push(index('./page.tsx'));
+       export default routes;`,
+    );
+    await file('src/page.tsx', page);
+    await expect(resolveSitemap({ root })).rejects.toThrow('mutable');
+  });
+
+  it.each([
+    `const schema = { description: 'Before' }; schema.description = 'After';
+     export const handle = { route: schema };`,
+    `const params = { id: 'Before' }; const alias = params; mutate(alias);
+     export const handle = { route: { params } };`,
+    `export const handle = { route: { description: 'Before' } };
+     const { route: schema } = handle; schema.description = 'After';`,
+  ])('rejects mutable page metadata instead of publishing stale descriptions', async (metadata) => {
+    await file('src/routes.ts', `${dsl} export default index('./page.tsx');`);
+    await file('src/page.tsx', `${page} ${metadata}`);
+    await expect(resolveSitemap({ root })).rejects.toThrow('mutable');
   });
 
   it.each([

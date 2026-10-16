@@ -1,5 +1,6 @@
 import type { Expression, Node, ObjectExpression, Property } from 'acorn';
 import type { StaticBuilder } from './static-module.types.js';
+import type { StaticBindingGuard } from './StaticBindingGuard.js';
 
 /**
  * Resolves the declarative expression subset accepted by manifest sitemaps.
@@ -14,11 +15,13 @@ export class StaticExpressionEvaluator {
    * @param file - Source filename included in authoring errors.
    * @param bindings - Local variable initializers indexed from the source module.
    * @param builders - Trusted DSL builders indexed by their local import names.
+   * @param guard - Rejects writes and unsafe uses of requested source bindings.
    */
   constructor(
     private readonly file: string,
     private readonly bindings: ReadonlyMap<string, Expression>,
     private readonly builders: ReadonlyMap<string, StaticBuilder>,
+    private readonly guard: StaticBindingGuard,
   ) {}
 
   /**
@@ -107,6 +110,7 @@ export class StaticExpressionEvaluator {
     const visitedNames = new Set<string>();
     // Local aliases are safe to follow; missing bindings may be imports or globals.
     while (expression.type === 'Identifier') {
+      this.guard.assertUnchanged(expression.name);
       // Reject alias cycles before they can hang manifest generation.
       if (visitedNames.has(expression.name)) this.rejectExpression(expression);
       visitedNames.add(expression.name);
