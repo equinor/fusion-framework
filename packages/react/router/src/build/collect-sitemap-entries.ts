@@ -22,7 +22,16 @@ async function readRouteSchema(file: string): Promise<RouterSchema> {
   const module = await readStaticModule(file);
   const handle = module.getExport('handle');
   const metadata = handle && module.getProperty(handle, 'route');
-  return metadata ? validateRouteSchema(module.evaluate(metadata), file) : {};
+  // Pages without route metadata still belong in the sitemap.
+  if (!metadata) return {};
+  const schema: Record<string, unknown> = {};
+  // UI-only route fields may reference imported icons or runtime callbacks.
+  for (const name of ['description', 'params', 'search']) {
+    const property = module.getProperty(metadata, name);
+    // Omitted fields must stay absent so inline schema precedence is unchanged.
+    if (property) schema[name] = module.evaluate(property);
+  }
+  return validateRouteSchema(schema, file);
 }
 
 /**

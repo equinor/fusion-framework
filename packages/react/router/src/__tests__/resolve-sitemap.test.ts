@@ -97,6 +97,26 @@ describe('resolveSitemap', () => {
     ]);
   });
 
+  it('ignores imported icons and runtime UI values inside handle.route', async () => {
+    await file('src/routes.ts', `${dsl} export default index('./page.tsx');`);
+    await file(
+      'src/page.tsx',
+      `import { home } from '@equinor/eds-icons';
+       ${page}
+       export const handle = {
+         route: {
+           icon: home,
+           title: loadTitle(),
+           description: 'Home',
+           search: { tab: 'Selected tab' },
+         },
+       };`,
+    );
+    expect(await resolveSitemap({ root })).toEqual([
+      ['/', 'Home', { search: { tab: 'Selected tab' } }],
+    ]);
+  });
+
   it('does not discover unrelated files or require a browser', async () => {
     await file('src/routes.ts', `${dsl} export default [];`);
     await file('src/routes/broken.tsx', 'this is not valid TypeScript');
