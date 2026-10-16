@@ -1,10 +1,19 @@
+import { mkdtemp, rm, writeFile } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import type { DevServerOptions } from '@equinor/fusion-framework-dev-server';
+import {
+  createDevServer as mockCreateDevServer,
+  type DevServerOptions,
+} from '@equinor/fusion-framework-dev-server';
 
 const devServerConfigOverride = vi.hoisted(() => ({
   current: undefined as ((base: DevServerOptions) => DevServerOptions) | undefined,
   error: undefined as Error | undefined,
+  load: undefined as
+    | ((base: DevServerOptions) => Promise<{ config: DevServerOptions; path: string }>)
+    | undefined,
 }));
 
 vi.mock('@equinor/fusion-framework-cli/lib', () => ({
@@ -12,6 +21,10 @@ vi.mock('@equinor/fusion-framework-cli/lib', () => ({
     // Simulate an invalid loaded config so startup fallback behavior is observable.
     if (devServerConfigOverride.error) {
       throw devServerConfigOverride.error;
+    }
+    // Delegate to the real loader only in integration cases that exercise startup validation.
+    if (devServerConfigOverride.load) {
+      return devServerConfigOverride.load(base);
     }
     return {
       config: devServerConfigOverride.current?.(base) ?? base,
@@ -27,18 +40,27 @@ vi.mock('@equinor/fusion-framework-dev-server', () => ({
 
 import { createDevServer } from './create-dev-server.js';
 import { InvalidDevServerConfigError } from '../../lib/InvalidDevServerConfigError.js';
+import { loadDevServerConfig as loadDevServerConfigActual } from '../../lib/load-dev-server-config.js';
 import type { ConsoleLogger } from './ConsoleLogger.js';
 
 describe('createDevServer mock mode', () => {
   const env = { mode: 'development', command: 'serve' as const, root: '/app' };
+  const tempDirs: string[] = [];
 
   beforeEach(() => {
     devServerConfigOverride.current = undefined;
     devServerConfigOverride.error = undefined;
+    devServerConfigOverride.load = undefined;
+    vi.clearAllMocks();
   });
 
   afterEach(() => {
     vi.unstubAllEnvs();
+  });
+
+  afterEach(async () => {
+    // Remove each isolated config fixture after its startup test completes.
+    await Promise.all(tempDirs.splice(0).map((root) => rm(root, { recursive: true, force: true })));
   });
 
   it('starts when mock discovery points at the mock server', async () => {
@@ -83,5 +105,25 @@ describe('createDevServer mock mode', () => {
       /api\.serviceDiscoveryUrl/,
     );
     expect(logger.error).toHaveBeenCalledWith(expect.stringContaining('api.serviceDiscoveryUrl'));
+  });
+
+  it('rejects malformed routes during startup instead of falling back to defaults', async () => {
+    const root = await mkdtemp(join(tmpdir(), 'dev-server-startup-config-'));
+    tempDirs.push(root);
+    await writeFile(
+      join(root, 'dev-server.config.json'),
+      JSON.stringify({ api: { routes: [null] } }),
+    );
+    const testEnv = { ...env, root };
+    const baseWithRoute: DevServerOptions = {
+      api: {
+        serviceDiscoveryUrl: '/default-discovery',
+        routes: [{ match: '/default-route', middleware: () => undefined }],
+      },
+    };
+    devServerConfigOverride.load = () => loadDevServerConfigActual(testEnv, baseWithRoute);
+
+    await expect(createDevServer(testEnv, {})).rejects.toThrow(/api\.routes\.1/);
+    expect(mockCreateDevServer).not.toHaveBeenCalled();
   });
 });

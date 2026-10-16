@@ -99,6 +99,24 @@ describe('loadDevServerConfig', () => {
     expect(loaded.config.api.routes?.map(({ match }) => match)).toContain('/factory-route');
   });
 
+  it('preserves shared defaults when a config factory returns its base', async () => {
+    const root = await createRoot();
+    await writeFile(
+      join(root, 'dev-server.config.mjs'),
+      'export default (_env, { base }) => base;',
+    );
+
+    const loaded = await loadDevServerConfig(createEnv(root), base);
+    const templateEnv = loaded.config.spa?.templateEnv;
+
+    // Factory results can reuse default resource objects and should retain identity for deduplication.
+    if (!templateEnv || typeof templateEnv === 'function') {
+      throw new Error('Expected the merged template environment to be an object');
+    }
+    expect(templateEnv.serviceWorker?.resources).toHaveLength(1);
+    expect(templateEnv.serviceWorker?.resources[0]?.url).toBe('/default-resource');
+  });
+
   it('supports static script configuration objects', async () => {
     const root = await createRoot();
     await writeFile(
@@ -110,6 +128,18 @@ describe('loadDevServerConfig', () => {
 
     expect(loaded.config.api.headers).toEqual({ 'X-Config-Source': 'module' });
     expect(loaded.config.api.serviceDiscoveryUrl).toBe('/default-discovery');
+  });
+
+  it('preserves plugin-contributed root settings', async () => {
+    const root = await createRoot();
+    await writeFile(
+      join(root, 'dev-server.config.json'),
+      JSON.stringify({ mockServer: { enabled: true } }),
+    );
+
+    const loaded = await loadDevServerConfig(createEnv(root), base);
+
+    expect(loaded.config).toHaveProperty('mockServer.enabled', true);
   });
 
   it('reports invalid field paths instead of returning the base configuration', async () => {
@@ -143,5 +173,31 @@ describe('loadDevServerConfig', () => {
     await expect(loadDevServerConfig(createEnv(root), base)).rejects.toThrow(
       /api\.serviceDiscoveryUrl/,
     );
+  });
+
+  it('rejects null route entries after merging with default routes', async () => {
+    const root = await createRoot();
+    await writeFile(
+      join(root, 'dev-server.config.json'),
+      JSON.stringify({ api: { routes: [null] } }),
+    );
+    const baseWithRoute: DevServerOptions = {
+      ...base,
+      api: {
+        ...base.api,
+        routes: [{ match: '/default-route', middleware: () => undefined }],
+      },
+    };
+
+    await expect(loadDevServerConfig(createEnv(root), baseWithRoute)).rejects.toThrow(
+      /api\.routes\.1/,
+    );
+  });
+
+  it('rejects null results from config factories at the root path', async () => {
+    const root = await createRoot();
+    await writeFile(join(root, 'dev-server.config.mjs'), 'export default () => null;');
+
+    await expect(loadDevServerConfig(createEnv(root), base)).rejects.toThrow('<root>');
   });
 });

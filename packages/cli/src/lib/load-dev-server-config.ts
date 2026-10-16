@@ -42,7 +42,8 @@ export const loadDevServerConfig = async (
           // If the default export is a function, call it with env and a cloned base config
           if (typeof configExport === 'function') {
             const baseClone = { ...base }; // Clone base to avoid mutation
-            return (await configExport(env, { base: baseClone })) ?? {};
+            const result = await configExport(env, { base: baseClone });
+            return result === undefined ? {} : result;
           }
           return configExport as RecursivePartial<DevServerOptions>;
         },

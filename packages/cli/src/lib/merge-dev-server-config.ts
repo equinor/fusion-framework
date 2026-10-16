@@ -60,7 +60,19 @@ export const mergeDevServerConfig = (
         'match' in entry &&
         ('middleware' in entry || 'proxy' in entry)
       ) {
-        return keyedArrayMerger('match', target, source);
+        const routeEntries = target.concat(source);
+        // Keyed merging reads each route's match, so verify both arrays first.
+        const allEntriesAreRoutes = routeEntries.every(
+          (item) =>
+            typeof item === 'object' &&
+            item !== null &&
+            'match' in item &&
+            ('middleware' in item || 'proxy' in item),
+        );
+        // Preserve malformed entries for schema validation instead of dereferencing them here.
+        if (allEntriesAreRoutes) {
+          return keyedArrayMerger('match', target, source);
+        }
       }
       // Deduplicate the combined target and source entries
       return [...new Set([...target, ...source])];
@@ -78,7 +90,18 @@ const omitUndefined = (value: unknown): unknown => {
   // Keep array positions while cleaning nested records.
   if (Array.isArray(value)) {
     // Recurse into array entries without changing their ordering.
-    return value.map(omitUndefined);
+    let unchanged = true;
+    // Keep shared references when recursive cleanup finds no undefined values.
+    const cleaned = value.map((entry) => {
+      const cleanedEntry = omitUndefined(entry);
+      // Track nested changes so the original array can be reused when nothing was removed.
+      if (cleanedEntry !== entry) {
+        unchanged = false;
+      }
+      return cleanedEntry;
+    });
+    // Keep unchanged array references so shared entries remain deduplicable.
+    return unchanged ? value : cleaned;
   }
   // Preserve primitives, nulls, and class instances exactly as supplied.
   if (
@@ -88,14 +111,32 @@ const omitUndefined = (value: unknown): unknown => {
   ) {
     return value;
   }
-  return Object.fromEntries(
+  let unchanged = true;
+  const entries = Object.entries(value)
     // Remove omitted properties so callers retain configured defaults.
-    Object.entries(value)
-      // Exclude only absent overrides, leaving explicit nulls intact.
-      .filter(([, entry]) => entry !== undefined)
-      // Clean nested values using the same undefined-preservation rule.
-      .map(([key, entry]) => [key, omitUndefined(entry)]),
-  );
+    // Exclude only absent overrides, leaving explicit nulls intact.
+    .filter(([, entry]) => {
+      // Removing an undefined override requires a new containing object.
+      if (entry === undefined) {
+        unchanged = false;
+        return false;
+      }
+      return true;
+    })
+    // Clean nested values using the same undefined-preservation rule.
+    .map(([key, entry]) => {
+      const cleanedEntry = omitUndefined(entry);
+      // Rebuild the containing object only when a nested value changed.
+      if (cleanedEntry !== entry) {
+        unchanged = false;
+      }
+      return [key, cleanedEntry] as const;
+    });
+  // Keep unchanged object references so shared array entries remain deduplicable.
+  if (unchanged) {
+    return value;
+  }
+  return Object.fromEntries(entries);
 };
 
 // Export as default for convenience in imports

@@ -46,15 +46,17 @@ describe('mergeDevServerConfig', () => {
     if (!templateEnv || typeof templateEnv === 'function') {
       throw new Error('Expected the merged template environment to be an object');
     }
-    expect(templateEnv.serviceWorker?.resources.map(({ url }) => url)).toEqual([
-      '/default-resource',
-      '/custom-resource',
-    ]);
+    expect(
+      templateEnv.serviceWorker?.resources
+        // Compare resource paths without including scope values in this assertion.
+        .map(({ url }) => url),
+    ).toEqual(['/default-resource', '/custom-resource']);
     expect(templateEnv.serviceDiscovery?.scopes).toEqual(['existing-scope', 'custom-scope']);
-    expect(result.api.routes?.map(({ match }) => match)).toEqual([
-      '/default-route',
-      '/custom-route',
-    ]);
+    expect(
+      result.api.routes
+        // Compare route keys to verify matching overrides keep their original order.
+        ?.map(({ match }) => match),
+    ).toEqual(['/default-route', '/custom-route']);
     expect(result.api.routes?.[0]?.middleware).toBe(replacementMiddleware);
   });
 
@@ -67,6 +69,7 @@ describe('mergeDevServerConfig', () => {
   });
 
   it('preserves explicit null overrides', () => {
+    // Inject null to exercise runtime validation for values excluded by the TypeScript contract.
     const overrides = {
       api: { serviceDiscoveryUrl: null },
     } as unknown as RecursivePartial<DevServerOptions>;
@@ -74,5 +77,36 @@ describe('mergeDevServerConfig', () => {
     const result = mergeDevServerConfig(base, overrides);
 
     expect(result.api.serviceDiscoveryUrl).toBeNull();
+  });
+
+  it('preserves shared resource references for Set-based deduplication', () => {
+    const resource = { url: '/shared-resource' };
+    const config: DevServerOptions = {
+      api: { serviceDiscoveryUrl: '/default-discovery' },
+      spa: { templateEnv: { serviceWorker: { resources: [resource] } } },
+    };
+
+    const result = mergeDevServerConfig(config, {
+      spa: { templateEnv: { serviceWorker: { resources: [resource] } } },
+    });
+    const templateEnv = result.spa?.templateEnv;
+
+    // Object-valued template configuration keeps its shared resource identity.
+    if (!templateEnv || typeof templateEnv === 'function') {
+      throw new Error('Expected the merged template environment to be an object');
+    }
+    expect(templateEnv.serviceWorker?.resources).toHaveLength(1);
+    expect(templateEnv.serviceWorker?.resources[0]).toBe(resource);
+  });
+
+  it('keeps malformed route entries for schema validation', () => {
+    // Inject null so merging can be checked before runtime schema validation.
+    const overrides = {
+      api: { routes: [null] },
+    } as unknown as RecursivePartial<DevServerOptions>;
+
+    const result = mergeDevServerConfig(base, overrides);
+
+    expect(result.api.routes).toEqual([...(base.api.routes ?? []), null]);
   });
 });

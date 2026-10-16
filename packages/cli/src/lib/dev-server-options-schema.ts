@@ -11,7 +11,10 @@ const routeMatchSchema = z
       typeof value === 'string' ||
       typeof value === 'function' ||
       // String array entries support multiple route path patterns.
-      (Array.isArray(value) && value.every((item) => typeof item === 'string')),
+      (Array.isArray(value) &&
+        value
+          // Require every path pattern to be a string before accepting the matcher.
+          .every((item) => typeof item === 'string')),
     { error: 'Route match must be a string, string array, or matcher function.' },
   )
   .describe('Path pattern or matcher function used to select requests for this route.');
@@ -227,10 +230,9 @@ export const DevServerOptionsSchema = z
               value !== null &&
               'level' in value &&
               typeof value.level === 'number' &&
-              // Require the full logger API before accepting a custom logger value.
-              ['debug', 'info', 'warn', 'error', 'createSubLogger'].every(
-                (method) => typeof Reflect.get(value, method) === 'function',
-              ),
+              ['debug', 'info', 'warn', 'error', 'createSubLogger']
+                // Reject partial loggers before they fail during server startup.
+                .every((method) => typeof Reflect.get(value, method) === 'function'),
             {
               error:
                 'Custom logger must implement level, debug, info, warn, error, and createSubLogger.',
@@ -243,5 +245,5 @@ export const DevServerOptionsSchema = z
       .optional()
       .describe('CLI logging settings.'),
   })
-  .strict()
+  .passthrough()
   .describe('Resolved CLI dev-server options, including SPA template and API proxy settings.');
