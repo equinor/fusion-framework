@@ -9,12 +9,13 @@ on:
   workflow_dispatch:
     inputs:
       operation:
-        description: Ensure, initialize, promote, or reset the dependency maintenance stream
+        description: Ensure, initialize, sync, promote, or reset the dependency maintenance stream
         required: true
         type: choice
         options:
           - ensure
           - initialize
+          - sync
           - promote
           - reset
 
@@ -30,11 +31,14 @@ env:
 
 jobs:
   manage-branch:
-    name: Ensure or reset maintenance branch
+    name: Ensure, sync, or reset maintenance branch
     if: >-
       github.event_name != 'delete' ||
       (github.event.ref_type == 'branch' && github.event.ref == 'maintenance/dependencies')
     runs-on: ubuntu-latest
+    outputs:
+      updated: ${{ steps.branch.outputs.updated }}
+      has-changes: ${{ steps.branch.outputs.has-changes }}
     permissions:
       contents: write
       pull-requests: read
@@ -43,17 +47,22 @@ jobs:
         with:
           ref: main
           fetch-depth: 0
+          token: ${{ secrets.DEPENDABOT_AUTOMATION_TOKEN || github.token }}
 
-      - name: Ensure, initialize, or reset maintenance branch
+      - name: Ensure, initialize, sync, or reset maintenance branch
+        id: branch
         uses: ./.github/actions/dependabot-maintenance-stream
         with:
           branch: ${{ env.MAINTENANCE_BRANCH }}
-          operation: ${{ inputs.operation == 'initialize' && 'initialize' || inputs.operation == 'reset' && 'reset' || 'ensure' }}
+          operation: ${{ inputs.operation == 'initialize' && 'initialize' || inputs.operation == 'reset' && 'reset' || (inputs.operation == 'sync' || (github.event_name == 'push' && github.ref == 'refs/heads/main')) && 'sync' || 'ensure' }}
+          github-token: ${{ secrets.DEPENDABOT_AUTOMATION_TOKEN || github.token }}
 
   validate:
     name: Validate maintenance stream
     needs: manage-branch
-    if: inputs.operation == 'promote'
+    if: >-
+      inputs.operation == 'promote' ||
+      (needs.manage-branch.outputs.updated == 'true' && needs.manage-branch.outputs.has-changes == 'true')
     outputs:
       head_sha: ${{ steps.head.outputs.sha }}
     runs-on: ubuntu-latest
@@ -88,6 +97,7 @@ jobs:
       (needs.validate.result == 'success' || needs.validate.result == 'skipped') &&
       (
         inputs.operation == 'promote' ||
+        (needs.manage-branch.outputs.updated == 'true' && needs.manage-branch.outputs.has-changes == 'true') ||
         (github.event_name == 'push' && github.ref == 'refs/heads/maintenance/dependencies')
       )
     runs-on: ubuntu-latest
