@@ -33,6 +33,16 @@ git push origin feature/my-feature
 # NEVER: git push origin main --force-with-lease
 ```
 
+## Pull Request Checks
+
+Open pull requests as drafts while work is in progress. Automatic code, unit-test, visual,
+and agent-context checks wait until the pull request is marked **Ready for review**, then
+run on subsequent updates while it remains ready. This also applies to the
+`maintenance/dependencies` promotion pull request.
+
+Explicit manual workflow runs and dependency maintenance automation remain available
+while a pull request is in draft.
+
 ## Rebase Essentials
 
 Rebase moves your commits to a new base. See [git-rebase docs](https://git-scm.com/docs/git-rebase) for details.

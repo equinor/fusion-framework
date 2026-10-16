@@ -34,6 +34,7 @@ permissions:
 jobs:
   playwright:
     name: Playwright (${{ matrix.os }})
+    if: github.event_name == 'workflow_dispatch' || !github.event.pull_request.draft
     strategy:
       fail-fast: false
       matrix:
@@ -79,7 +80,7 @@ jobs:
 
   required-check:
     name: Visual checks
-    if: always()
+    if: always() && (github.event_name == 'workflow_dispatch' || !github.event.pull_request.draft)
     needs:
       - playwright
     runs-on: ubuntu-latest

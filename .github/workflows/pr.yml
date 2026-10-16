@@ -41,6 +41,7 @@ env:
 jobs:
   code-quality:
     name: Code quality
+    if: github.event_name == 'workflow_dispatch' || !github.event.pull_request.draft
     # runs-on: fusion-gh-runner-fusion-framework.borked
     runs-on: ubuntu-latest
     steps:
@@ -81,6 +82,7 @@ jobs:
 
   build:
     name: Build affected packages
+    if: github.event_name == 'workflow_dispatch' || !github.event.pull_request.draft
     # runs-on: fusion-gh-runner-fusion-framework.borked
     runs-on: ubuntu-latest
     steps:
@@ -121,6 +123,7 @@ jobs:
 
   unit-tests:
     name: Unit tests
+    if: github.event_name == 'workflow_dispatch' || !github.event.pull_request.draft
     # runs-on: fusion-gh-runner-fusion-framework.borked
     runs-on: ubuntu-latest
     steps:
@@ -164,7 +167,7 @@ jobs:
 
   required-check:
     name: Check Code
-    if: always()
+    if: always() && (github.event_name == 'workflow_dispatch' || !github.event.pull_request.draft)
     needs:
       - code-quality
       - build
