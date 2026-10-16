@@ -71,6 +71,12 @@ Any package under `packages/` with `publishConfig` requires a changeset when its
 Internal: bump `<dependency>` from `<old-version>` to `<new-version>`.
 ```
 
+## AI review scheduling
+
+AI research uses one repository-wide concurrency slot. Preserve the research job's
+fixed concurrency group, `queue: max`, and `cancel-in-progress: false` so reviews
+for different PRs wait without replacing each other. Per-PR workflow gates remain separate.
+
 ## Validation commands
 
 Keep `react` and `react-dom` runtime updates together in the Dependabot `react`
