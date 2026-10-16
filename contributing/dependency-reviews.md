@@ -21,6 +21,26 @@ Both workflows follow the rules in `.github/instructions/dependabot-pr.instructi
 4. **Verdict** — Produce a recommendation with confidence level and follow-up items.
 5. **Maintainer confirmation** — Never merge without explicit approval.
 
+## AI review scheduling
+
+Dependabot AI research uses one repository-wide concurrency slot, shared by
+automatic reviews and manually dispatched research, maintenance, and resolution runs.
+Only one `research` job can run at a time, including its model calls. Publishing
+and branch maintenance remain outside that slot and retain the existing per-PR gates.
+
+The job uses `queue: max` with `cancel-in-progress: false`, so bursts across PRs
+wait rather than replacing pending research jobs. GitHub allows up to 100 pending
+jobs in the group; additional jobs are canceled when that queue is full.
+The existing workflow-level concurrency still coalesces pending runs for the same
+PR and operation category.
+
+This limits simultaneous reviews, not tokens per minute. A single review or other
+workflows sharing the model quota can still receive a 429 response; serialization
+does not replace bounded retry handling or provider quota management.
+
+See [GitHub's concurrency documentation](https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/control-workflow-concurrency)
+for queue behavior and capacity.
+
 ## Changeset requirements
 
 A changeset is mandatory when the dependency update touches a published package. See the [changeset guide](changeset.md) and the changeset decision section in `.github/instructions/dependabot-pr.instructions.md` for details.
