@@ -74,6 +74,7 @@ interface RouteImports {
   errorElement?: string;
   hydrateFallback?: string;
   shouldRevalidate?: string;
+  middleware?: string;
   availableExports: Set<string>;
 }
 
@@ -280,6 +281,7 @@ function resolveFilePath(filePath: string, baseDir: string): string | null {
  * | `ErrorElement` | `errorElement` |
  * | `HydrateFallback` | `HydrateFallback` |
  * | `shouldRevalidate` | `shouldRevalidate` |
+ * | `middleware` | `middleware` |
  *
  * Any other named export in the file is silently ignored.
  */
@@ -316,6 +318,7 @@ function getAvailableExports(filePath: string, currentFileId: string, debug: boo
       'ErrorElement',
       'HydrateFallback',
       'shouldRevalidate',
+      'middleware',
     ];
     // Check each recognised export name individually, as both direct and re-export syntax are supported
     for (const name of exportNames) {
@@ -394,6 +397,7 @@ function getGeneratedNames(componentName: string, availableExports: Set<string>)
     ErrorElement: 'ErrorElement',
     HydrateFallback: 'HydrateFallback',
     shouldRevalidate: 'shouldRevalidate',
+    middleware: 'middleware',
   };
 
   // Include every emitted alias so component and route-module exports share one namespace.
@@ -515,6 +519,12 @@ function buildRouteProperties(imports: RouteImports): string {
     properties.push(`shouldRevalidate: ${imports.shouldRevalidate}`);
   }
 
+  // Route-module middleware is passed through as-is; the Fusion Router adapts and runs it
+  // on React Router's middleware lifecycle, so no function bodies or policies are inspected here.
+  if (imports.middleware) {
+    properties.push(`middleware: ${imports.middleware}`);
+  }
+
   return properties.join(',\n        ');
 }
 
@@ -566,6 +576,10 @@ function generateImportStatements(
     // Only import the destructured export alias when the route file actually has it
     if (imports.shouldRevalidate) {
       importParts.push(`shouldRevalidate as ${imports.shouldRevalidate}`);
+    }
+    // Only import the destructured export alias when the route file actually has it
+    if (imports.middleware) {
+      importParts.push(`middleware as ${imports.middleware}`);
     }
 
     // Skip files that ended up with nothing to import (no recognised exports)
@@ -823,7 +837,8 @@ function insertImports(code: string, importStatements: string[]): string {
  *
  * The plugin scans source files for imports of `layout`, `index`, `route`, and `prefix`
  * from `@equinor/fusion-framework-react-router/routes`, inspects the referenced page modules
- * to discover available exports (`default`, `clientLoader`, `action`, `handle`, `ErrorElement`),
+ * to discover available exports (`default`, `clientLoader`, `action`, `handle`, `ErrorElement`,
+ * `HydrateFallback`, `shouldRevalidate`, `middleware`),
  * and rewrites the DSL calls into plain `RouteObject` definitions at build time.
  *
  * @param options - Optional configuration for the plugin.
@@ -934,6 +949,9 @@ export const reactRouterPlugin = (options: ReactRouterPluginOptions = {}): Plugi
               : undefined,
             shouldRevalidate: availableExports.has('shouldRevalidate')
               ? `shouldRevalidate${componentName}`
+              : undefined,
+            middleware: availableExports.has('middleware')
+              ? `middleware${componentName}`
               : undefined,
             availableExports,
           });
