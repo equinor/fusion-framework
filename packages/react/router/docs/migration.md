@@ -2,6 +2,10 @@
 
 This guide covers upgrading from plain `react-router` or Fusion router v7 to the Fusion router on React Router v8.
 
+Existing Fusion apps keep their authored routes, navigation configuration and app
+entry point. There is no automatic route discovery, generated startup or automatic
+router mounting in this feature.
+
 If you are starting a new app, use the [getting started guide](getting-started.md) instead.
 
 ## Upgrade requirements
@@ -14,8 +18,12 @@ does not guarantee the v8 baseline.
 
 ```bash
 pnpm up react@^19.2.7 react-dom@^19.2.7
-pnpm up @equinor/fusion-framework-react-router
+pnpm up --latest @equinor/fusion-framework-react-router
 ```
+
+`--latest` crosses the existing dependency range so an app pinned to the previous
+Fusion router major actually receives the announced v8-based release. Use an
+explicit announced version instead if your upgrade policy pins versions.
 
 **Key requirements:**
 - `react` ^19.2.7 (required peer dependency; React 18 is no longer supported)
@@ -33,10 +41,10 @@ pnpm up @equinor/fusion-framework-react-router
 
 The Fusion router wraps React Router v8 and adds:
 
-- Automatic wiring of `history` and `basename` from the Fusion navigation module — no manual setup.
+- Consumption of `history` and `basename` from the Fusion navigation module you explicitly configure.
 - Typed `fusion` context injected into every loader, action, and component — no prop drilling or extra React contexts.
 - A file-style route DSL (`layout`, `index`, `route`, `prefix`) that replaces hand-built `RouteObject` trees.
-- Route schema generation for portals, manifests, and documentation tooling.
+- Manifest sitemap generation from explicit route registries, without executing page modules.
 
 ## Migrating from plain React Router
 
@@ -72,7 +80,10 @@ export default function App() {
 }
 ```
 
-`<Router>` picks up `history` and `basename` from the Fusion navigation module automatically. The navigation module must be **enabled in your app's configurator**. See the [getting started guide](getting-started.md) for full setup.
+`<Router>` reads `history` and `basename` from the Fusion navigation module. You must
+**enable and configure that module in your app's configurator**, then explicitly
+render `<Router routes={routes}>`. Upgrading does not configure navigation or change
+your app's startup code. See the [getting started guide](getting-started.md) for full setup.
 
 ### Step 2 — Use the Fusion route DSL (recommended)
 
@@ -92,6 +103,10 @@ export default layout('./Layout.tsx', [
 ```
 
 The Vite plugin transforms these into standard `RouteObject` code at build time. You can also pass plain `RouteObject[]` to `<Router>` — both work.
+
+The DSL declarations define the URLs; filenames only identify the modules they
+reference. Import the registry in your app component and pass it to `<Router>`.
+Neither the CLI nor the DSL creates that component or mounts the router for you.
 
 ### Step 3 — Update loader and action signatures
 
@@ -184,6 +199,47 @@ and check direct upstream imports. Keep your existing route registry, page expor
 navigation configuration and startup code; adopting the DSL or new routing features
 is a separate choice.
 
+### Manifest sitemaps when upgrading the CLI
+
+When also upgrading to a Fusion CLI version with DSL sitemap support, manifest
+generation has an additional compatibility check:
+
+- A manifest `routes: 'src/custom-routes.ts'` pointer selects an explicit registry.
+- If manifest `routes` is omitted, the CLI tries `src/routes.ts`. A missing default
+  file produces a warning and continues without a generated sitemap.
+- An existing but unsupported registry, unreadable file or missing explicitly referenced file
+  fails manifest generation. A computed runtime registry is not necessarily a
+  supported source-only sitemap definition.
+- Existing serialized `routes` entries are preserved. Use `routes: []` or
+  `routes: null` to opt out of default lookup and its warning.
+
+For example, keep an existing computed runtime registry unchanged and disable
+conventional sitemap lookup in the manifest:
+
+```ts
+// app.manifest.ts
+import { defineAppManifest } from '@equinor/fusion-framework-cli/app';
+
+export default defineAppManifest(() => ({
+  routes: null,
+}));
+```
+
+This only opts out of manifest sitemap generation; it does not disable runtime
+routing. Add the setting to your existing manifest configuration without removing
+its other fields.
+
+Source-only registries use named DSL imports, literal declarations and local
+constants. Imported helper values, computed trees, mutations such as
+`routes.push(...)`, and unsafe uses through aliases are rejected rather than
+producing a partial sitemap. Selected `handle.route` descriptions must also be
+static; unrelated UI-only metadata is not evaluated.
+
+The output remains the manifest's existing serialized `routes` field, not a new
+`sitemap` property or runtime route configuration. See
+[Explicit route registries and manifest sitemaps](route-sitemap.md) for supported
+definitions, metadata and explicit pointers.
+
 ## What changed in React Router v8
 
 ### `react-router-dom` merged into `react-router`
@@ -211,10 +267,22 @@ Upstream v8 makes its former v7 future behavior the default. Fusion uses client
 Data Mode, not React Router Framework Mode. `v7_startTransition` was not a
 middleware-enabling flag, and loaders/actions are not middleware.
 
-Fusion's route-module middleware integration is delivered separately from this
-dependency baseline. Upgrading React Router alone is not a replacement for that
-integration, and Framework Mode `clientMiddleware` examples are not the Fusion
-route-module API.
+Middleware is optional; upgrading an existing app does not require adding guards
+or changing its DSL signatures. With the v8-based Fusion router and matching Vite
+plugin, export `middleware` from a route module or use the `middleware` property
+on a plain route object. The router-owned `createMiddleware` factory provides
+inferred argument and continuation types.
+
+See [Route middleware](middleware.md) for the client Data Mode API, execution
+order, cancellation and error handling. Framework Mode `clientMiddleware`
+examples are not the Fusion route-module API, and upgrading React Router alone
+does not add the Fusion integration.
+
+For optional Fusion Roles checks, use `requireRoles` from
+`@equinor/fusion-framework-react-app/roles`, not the router package. See
+[Role-gated middleware](require-roles.md) and the
+[React App routing guide](/guide/app/docs/routing). Client-side role gates do not
+replace backend authorization.
 
 ### ESM-only
 
