@@ -7,7 +7,7 @@ export default defineConfig({
   snapshotPathTemplate: '{testDir}/{testFilePath}-snapshots/{arg}{ext}',
   // Avoid competing cold portal/app loads against the shared preview server.
   workers: 1,
-  timeout: 60_000,
+  timeout: 45_000,
   reporter: [['list'], ['html', { open: 'never' }]],
   expect: {
     timeout: 15_000,

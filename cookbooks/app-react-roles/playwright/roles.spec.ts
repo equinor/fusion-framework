@@ -14,7 +14,7 @@ async function waitForAppReady(page: Page): Promise<void> {
     page
       .getByRole('heading', { name: 'Fusion Roles V2', exact: true })
       .or(page.getByRole('heading', { name: 'Access denied', exact: true })),
-  ).toBeVisible({ timeout: 45_000 });
+  ).toBeVisible({ timeout: 20_000 });
 }
 
 test.beforeEach(async ({ context }) => {

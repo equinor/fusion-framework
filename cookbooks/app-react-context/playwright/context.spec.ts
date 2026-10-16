@@ -10,7 +10,7 @@ const CONTEXT_SERVICE_URL = 'http://localhost:4011/context';
  */
 async function openApp(page: Page): Promise<void> {
   await page.goto(APP_PATH);
-  await expect(page.getByTestId('context-inspection')).toBeVisible({ timeout: 45_000 });
+  await expect(page.getByTestId('context-inspection')).toBeVisible({ timeout: 20_000 });
 }
 
 test('generates stable context entities from their requested UUID', async ({ request }) => {
