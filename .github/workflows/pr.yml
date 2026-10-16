@@ -29,6 +29,7 @@ concurrency:
   cancel-in-progress: ${{ github.event.action != 'ready_for_review' && github.run_attempt == '1' }}
 
 permissions:
+  actions: read
   checks: write
   contents: read
   pull-requests: write
@@ -52,6 +53,8 @@ jobs:
 
       - name: Setup node and install deps
         uses: ./.github/actions/node-setup
+        with:
+          wait-for-turbo-cache: 'true'
 
       - uses: reviewdog/action-setup@v1
 
@@ -93,6 +96,8 @@ jobs:
 
       - name: Setup node and install deps
         uses: ./.github/actions/node-setup
+        with:
+          wait-for-turbo-cache: 'true'
 
       - uses: reviewdog/action-setup@v1
 
@@ -134,6 +139,8 @@ jobs:
 
       - name: Setup node and install deps
         uses: ./.github/actions/node-setup
+        with:
+          wait-for-turbo-cache: 'true'
 
       - name: Build test dependencies
         run: |
@@ -164,6 +171,9 @@ jobs:
 
       - name: Test npm trusted publishing tooling
         run: node --test .github/scripts/npm-trusted-publishing.test.mjs
+
+      - name: Test Turbo cache readiness
+        run: node --test .github/scripts/wait-for-turbo-cache.test.mjs
 
   required-check:
     name: Check Code
