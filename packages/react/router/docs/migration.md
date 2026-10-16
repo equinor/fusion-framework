@@ -1,17 +1,54 @@
-# Migrating from `react-router` to `@equinor/fusion-framework-react-router`
+# Migrating to React Router v8 and `@equinor/fusion-framework-react-router`
 
-This guide covers migrating an app that uses `react-router` directly to the Fusion Framework router integration.
+This guide covers upgrading from plain `react-router` or Fusion router v7 to the Fusion router on React Router v8.
 
-## Why migrate?
+Existing Fusion apps keep their authored routes, navigation configuration and app
+entry point. There is no automatic route discovery, generated startup or automatic
+router mounting in this feature.
 
-The Fusion router wraps React Router v7 and adds:
+If you are starting a new app, use the [getting started guide](getting-started.md) instead.
 
-- Automatic wiring of `history` and `basename` from the Fusion navigation module — no manual setup.
+## Upgrade requirements
+
+**React Router v8 requires React 19.2.7 or later.** This is a major version requirement:
+
+The v8-based Fusion router is being prepared on the routing feature branch. Apply
+these steps after its release is announced; upgrading today's stable package alone
+does not guarantee the v8 baseline.
+
+```bash
+pnpm up react@^19.2.7 react-dom@^19.2.7
+pnpm up --latest @equinor/fusion-framework-react-router
+```
+
+`--latest` crosses the existing dependency range so an app pinned to the previous
+Fusion router major actually receives the announced v8-based release. Use an
+explicit announced version instead if your upgrade policy pins versions.
+
+**Key requirements:**
+- `react` ^19.2.7 (required peer dependency; React 18 is no longer supported)
+- `react-dom` ^19.2.7 (required peer dependency)
+- Node.js 22.22.0+ (React Router v8 is ESM-only)
+- ESM-compatible build and test setup
+
+> [!NOTE]
+> Remove `react-router-dom` after updating its imports. Remove a direct `react-router`
+> dependency only after replacing all direct imports with supported Fusion exports.
+> If your app still imports an API from `react-router` or `react-router/dom`, retain a
+> compatible direct dependency; do not rely on a transitive dependency being importable.
+
+## Why migrate to the Fusion router?
+
+The Fusion router wraps React Router v8 and adds:
+
+- Consumption of `history` and `basename` from the Fusion navigation module you explicitly configure.
 - Typed `fusion` context injected into every loader, action, and component — no prop drilling or extra React contexts.
 - A file-style route DSL (`layout`, `index`, `route`, `prefix`) that replaces hand-built `RouteObject` trees.
-- Route schema generation for portals, manifests, and documentation tooling.
+- Manifest sitemap generation from explicit route registries, without executing page modules.
 
-## Step 1 — Replace the router setup
+## Migrating from plain React Router
+
+### Step 1 — Replace router setup
 
 **Before** (plain React Router):
 
@@ -43,17 +80,20 @@ export default function App() {
 }
 ```
 
-`<Router>` picks up `history` and `basename` from the Fusion navigation module automatically. You do not create or manage a router instance.
+`<Router>` reads `history` and `basename` from the Fusion navigation module. You must
+**enable and configure that module in your app's configurator**, then explicitly
+render `<Router routes={routes}>`. Upgrading does not configure navigation or change
+your app's startup code. See the [getting started guide](getting-started.md) for full setup.
 
-## Step 2 — Replace the route DSL (recommended)
+### Step 2 — Use the Fusion route DSL (recommended)
 
-Instead of `RouteObject[]`, use the Fusion DSL for a cleaner, file-based structure:
+Instead of hand-built `RouteObject[]`, use the Fusion DSL:
 
 ```ts
-// src/pages/index.ts
+// src/routes.ts
 import { layout, index, route, prefix } from '@equinor/fusion-framework-react-router/routes';
 
-export const pages = layout('./MainLayout.tsx', [
+export default layout('./Layout.tsx', [
   index('./HomePage.tsx'),
   prefix('products', [
     index('./ProductsPage.tsx'),
@@ -62,11 +102,15 @@ export const pages = layout('./MainLayout.tsx', [
 ]);
 ```
 
-The Vite plugin transforms these DSL calls into standard `RouteObject` code at build time. See the [Vite plugin section](/modules/react/router/#vite-plugin) in the router module docs.
+The Vite plugin transforms these into standard `RouteObject` code at build time. You can also pass plain `RouteObject[]` to `<Router>` — both work.
 
-## Step 3 — Replace loader and action signatures
+The DSL declarations define the URLs; filenames only identify the modules they
+reference. Import the registry in your app component and pass it to `<Router>`.
+Neither the CLI nor the DSL creates that component or mounts the router for you.
 
-Fusion injects a `fusion` argument into every loader and action. Update your function signatures:
+### Step 3 — Update loader and action signatures
+
+Fusion injects `fusion` into every loader and action:
 
 **Before:**
 
@@ -76,7 +120,7 @@ export async function loader({ params }: LoaderFunctionArgs) {
 }
 ```
 
-**After:**
+**After** (a page module referenced by the Fusion DSL):
 
 ```ts
 import type { LoaderFunctionArgs } from '@equinor/fusion-framework-react-router';
@@ -87,13 +131,19 @@ export async function clientLoader({ params, fusion }: LoaderFunctionArgs<{ id: 
 }
 ```
 
-The `fusion.modules` object exposes all configured Fusion modules. The `fusion.context` object exposes any custom context passed to `<Router context={...} />`.
+The `fusion.modules` object exposes configured Fusion modules. The `fusion.context` object contains any custom context passed to `<Router context={...} />`.
 
-## Step 4 — Replace component props
+The existing Fusion Vite plugin maps a page module's `clientLoader` export to the
+route object's `loader` property, and its `action` export to `action`. Hand-written
+route objects continue to use `loader` and `action`. These are existing Fusion
+conventions, not names introduced by React Router v8; do not rename an action
+export to `clientAction`.
 
-Route components receive `loaderData`, `actionData`, and `fusion` as props instead of calling hooks:
+### Step 4 — Update component props
 
-**Before:**
+Route components receive `loaderData`, `actionData`, and `fusion` as props:
+
+**Before** (using hooks):
 
 ```tsx
 import { useLoaderData } from 'react-router';
@@ -104,7 +154,7 @@ export default function ProductPage() {
 }
 ```
 
-**After:**
+**After** (using props):
 
 ```tsx
 import type { RouteComponentProps } from '@equinor/fusion-framework-react-router';
@@ -114,36 +164,201 @@ export default function ProductPage({ loaderData }: RouteComponentProps<{ name: 
 }
 ```
 
-## Step 5 — Replace hook imports
+Hooks like `useLoaderData` still work and are re-exported from the Fusion package — use whichever pattern you prefer.
 
-All standard React Router hooks are re-exported from the Fusion router package. Replace the import source:
+### Step 5 — Update imports
+
+Common React Router hooks and components are re-exported from the Fusion package:
 
 ```ts
 // Before
-import { useNavigate, useParams, useLocation } from 'react-router';
+import { useNavigate, useParams, Link } from 'react-router-dom';
 
 // After
-import { useNavigate, useParams, useLocation } from '@equinor/fusion-framework-react-router';
+import { useNavigate, useParams, Link } from '@equinor/fusion-framework-react-router';
 ```
 
-## Step 6 — Remove `react-router` from your dependencies
+Available re-exports: `useNavigate`, `useParams`, `useLocation`, `useLoaderData`, `useActionData`, `useMatches`, `useNavigation`, `Link`, `NavLink`, `Outlet`, `Form`, `useSubmit`, `redirect`, `isRouteErrorResponse`, and others.
 
-Once all imports are updated, remove `react-router` from your `package.json`. It is bundled as a direct dependency of `@equinor/fusion-framework-react-router` and will always be present — adding it separately risks bundling two copies of the router.
+### Step 6 — Remove unused direct dependencies
+
+After replacing every direct import, remove dependencies your app no longer uses:
 
 ```bash
-pnpm remove react-router
+pnpm remove react-router react-router-dom
+```
+
+The Fusion package installs its own React Router dependency. If any imports still
+come from `react-router` or `react-router/dom`, keep a compatible direct dependency
+on `react-router` instead of removing it.
+
+## Migrating existing Fusion v7 apps
+
+If you already use Fusion with React Router v7, upgrade the runtime dependencies
+and check direct upstream imports. Keep your existing route registry, page exports,
+navigation configuration and startup code; adopting the DSL or new routing features
+is a separate choice.
+
+### Manifest sitemaps when upgrading the CLI
+
+When also upgrading to a Fusion CLI version with DSL sitemap support, manifest
+generation has an additional compatibility check:
+
+- A manifest `routes: 'src/custom-routes.ts'` pointer selects an explicit registry.
+- If manifest `routes` is omitted, the CLI tries `src/routes.ts`. A missing default
+  file produces a warning and continues without a generated sitemap.
+- An existing but unsupported registry, unreadable file or missing explicitly referenced file
+  fails manifest generation. A computed runtime registry is not necessarily a
+  supported source-only sitemap definition.
+- Existing serialized `routes` entries are preserved. Use `routes: []` or
+  `routes: null` to opt out of default lookup and its warning.
+
+For example, keep an existing computed runtime registry unchanged and disable
+conventional sitemap lookup in the manifest:
+
+```ts
+// app.manifest.ts
+import { defineAppManifest } from '@equinor/fusion-framework-cli/app';
+
+export default defineAppManifest(() => ({
+  routes: null,
+}));
+```
+
+This only opts out of manifest sitemap generation; it does not disable runtime
+routing. Add the setting to your existing manifest configuration without removing
+its other fields.
+
+Source-only registries use named DSL imports, literal declarations and local
+constants. Imported helper values, computed trees, mutations such as
+`routes.push(...)`, and unsafe uses through aliases are rejected rather than
+producing a partial sitemap. Selected `handle.route` descriptions must also be
+static; unrelated UI-only metadata is not evaluated.
+
+The output remains the manifest's existing serialized `routes` field, not a new
+`sitemap` property or runtime route configuration. See
+[Explicit route registries and manifest sitemaps](route-sitemap.md) for supported
+definitions, metadata and explicit pointers.
+
+## What changed in React Router v8
+
+### `react-router-dom` merged into `react-router`
+
+React Router v8 removes the `react-router-dom` package. Use supported Fusion
+re-exports, or the appropriate `react-router` / `react-router/dom` entry point with
+a compatible direct dependency.
+
+### Route object properties
+
+`element` / `Component` and `errorElement` / `ErrorBoundary` are existing route
+property alternatives, not v8 renames. Do not mechanically rename working route
+definitions as part of this upgrade.
+
+### Error boundaries
+
+Both Fusion `errorElement` and `ErrorBoundary` component forms remain supported.
+The Fusion wrapper still supplies `error` and `fusion` props. The v8 compatibility
+change removes the internal `hasErrorBoundary` property; applications should not
+need to change their working error component for that reason.
+
+### Middleware and v7 future flags
+
+Upstream v8 makes its former v7 future behavior the default. Fusion uses client
+Data Mode, not React Router Framework Mode. `v7_startTransition` was not a
+middleware-enabling flag, and loaders/actions are not middleware.
+
+Middleware is optional; upgrading an existing app does not require adding guards
+or changing its DSL signatures. With the v8-based Fusion router and matching Vite
+plugin, export `middleware` from a route module or use the `middleware` property
+on a plain route object. The router-owned `createMiddleware` factory provides
+inferred argument and continuation types.
+
+See [Route middleware](middleware.md) for the client Data Mode API, execution
+order, cancellation and error handling. Framework Mode `clientMiddleware`
+examples are not the Fusion route-module API, and upgrading React Router alone
+does not add the Fusion integration.
+
+For optional Fusion Roles checks, use `requireRoles` from
+`@equinor/fusion-framework-react-app/roles`, not the router package. See
+[Role-gated middleware](require-roles.md) and the
+[React App routing guide](/guide/app/docs/routing). Client-side role gates do not
+replace backend authorization.
+
+### ESM-only
+
+React Router v8 is ESM-only and requires Node.js 22.22.0+ for Node-based tooling.
+
+**If your build outputs CommonJS or uses CommonJS-only loaders:**
+
+Update your build configuration:
+- **Vite**: default ESM output ✓
+- **esbuild**: set `format: 'esm'`
+- **tsc**: set `module: 'esnext'` in `tsconfig.json`
+- **Vitest**: default ESM support ✓
+
+**Errors:**
+```
+ERR_REQUIRE_ESM: require() of ES Module not supported
+```
+
+This means your build or test setup is trying to load the router as CommonJS. Update your build configuration to support ESM.
+
+## Incremental migration
+
+The `/interop` entry point provides test utilities and v6-style JSX routing for gradual migration:
+
+```tsx
+import { MemoryRouter, createMemoryRouter, RouterProvider } from '@equinor/fusion-framework-react-router/interop';
+import { Routes, Route } from '@equinor/fusion-framework-react-router/interop';
+```
+
+> [!WARNING]
+> The `/interop` entry point is deprecated and will be removed in a future major version. Use only during migration.
+
+See [the interop guide](interop.md) for details.
+
+## Accessing Fusion context
+
+**In loaders and actions:**
+
+```ts
+export async function clientLoader({ params, fusion }: LoaderFunctionArgs) {
+  const http = fusion.modules.http;
+  const context = fusion.context;
+  // ...
+}
+```
+
+**In components via props:**
+
+```tsx
+export default function Page({ fusion }: RouteComponentProps) {
+  const http = fusion.modules.http;
+  // ...
+}
+```
+
+**In components via hook:**
+
+```tsx
+import { useRouterContext } from '@equinor/fusion-framework-react-router';
+
+export default function Page() {
+  const { modules, context } = useRouterContext();
+  // ...
+}
 ```
 
 ## Common questions
 
 ### Can I still use `useLoaderData` and `useParams` hooks?
 
-Yes. They are re-exported from `@equinor/fusion-framework-react-router` and work exactly as in React Router. The prop-based API is optional and preferred for type safety.
+Yes. They are re-exported and work as in React Router. Props-based components are recommended for type safety, but hooks still work.
 
-### Can I mix `RouteObject[]` and the DSL?
+### Can I mix `RouteObject[]` and the Fusion DSL?
 
-Yes. `<Router>` accepts both. You can migrate route by route.
+Yes. `<Router>` accepts both. Migrate route by route.
 
 ### What about `<Outlet />`, `<Link />`, `<NavLink />`?
 
-All re-exported from `@equinor/fusion-framework-react-router`. No import changes needed beyond the source package.
+All re-exported from `@equinor/fusion-framework-react-router`. No import changes needed.
