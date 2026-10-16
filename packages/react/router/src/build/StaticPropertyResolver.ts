@@ -205,10 +205,22 @@ export class StaticPropertyResolver {
               result.push(...this.copy(source, new Set(), active).properties);
             }
           } else {
+            const name = this.propertyName(property.key, property.computed);
+            let getter = property.kind === 'get';
+            // A setter changes only its half of an existing accessor descriptor.
+            if (property.kind === 'set' && name !== undefined) {
+              // Unknown keys may overlap; only a definite matching declaration shadows earlier ones.
+              for (const previous of result.toReversed()) {
+                getter ||=
+                  (previous.name === undefined || previous.name === name) && previous.getter;
+                // A matching data declaration clears any getter before that declaration.
+                if (previous.name === name) break;
+              }
+            }
             result.push({
-              name: this.propertyName(property.key, property.computed),
+              name,
               receiver: expression,
-              getter: property.kind === 'get',
+              getter,
               value: property.kind === 'init' ? property.value : undefined,
             });
           }

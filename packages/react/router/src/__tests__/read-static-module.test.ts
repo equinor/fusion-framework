@@ -172,16 +172,74 @@ describe('readStaticModule', () => {
     }).toThrow('mutable');
   });
 
-  it('preserves data properties that override getters before a read or spread', async () => {
+  it.each(
+    [
+      'get icon() { this.description = "After"; return "icon"; }, set icon(value) {},',
+      'set icon(value) {}, get icon() { this.description = "After"; return "icon"; },',
+      'get icon() { this.description = "After"; return "icon"; }, set icon(value) {}, set icon(value) {},',
+      'get ["icon"]() { this.description = "After"; return "icon"; }, set icon(value) {},',
+      'get [key]() { this.description = "After"; return "icon"; }, set icon(value) {},',
+      'get icon() { this.description = "After"; return "icon"; }, set [key](value) {},',
+      'get icon() { this.description = "After"; return "icon"; }, [otherKey]: "data", set icon(value) {},',
+    ].flatMap((members) =>
+      [
+        'const icon = schema.icon;',
+        'const { description, ...ui } = schema;',
+        'const ui = { ...schema };',
+      ].map((read) => ({ members, read })),
+    ),
+  )('rejects invoked getter/setter pairs: $members / $read', async ({ members, read }) => {
     const module = await readFixture(`
+      const key = 'icon';
+      const otherKey = 'other';
+      const schema = { description: 'Before', ${members} };
+      ${read}
+      export const handle = { route: schema };
+    `);
+    expect(() => {
+      const route = module.getProperty(requireExport(module, 'handle'), 'route');
+      if (!route) throw new Error('Missing fixture route metadata');
+      module.getProperty(route, 'description');
+    }).toThrow('mutable');
+  });
+
+  it.each([
+    "icon: 'plain',",
+    "set icon(value) {}, icon: 'plain',",
+    "icon: 'plain', set icon(value) {},",
+    "...{ icon: 'plain' }, set icon(value) {},",
+    "set icon(value) {}, ...{ icon: 'plain' },",
+  ])('preserves data overrides of accessor descriptors: %s', async (members) => {
+    const module = await readFixture(`
+      const metadata = { description: 'Home' };
       const schema = {
-        description: 'Home',
+        metadata,
         get icon() { throw new Error('Overwritten getter must not execute'); },
-        icon: 'plain',
+        ${members}
       };
       const icon = schema.icon;
       const copy = { ...schema };
-      export const handle = { route: schema };
+      const { description: title, ...rest } = schema;
+      export const handle = { route: metadata };
+    `);
+    const route = module.getProperty(requireExport(module, 'handle'), 'route');
+    if (!route) throw new Error('Missing fixture route metadata');
+    const description = module.getProperty(route, 'description');
+    if (!description) throw new Error('Missing fixture description');
+    expect(module.evaluate(description)).toBe('Home');
+  });
+
+  it('does not turn a computed setter into a getter on unrelated data properties', async () => {
+    const module = await readFixture(`
+      const key = 'icon';
+      const metadata = { description: 'Home' };
+      const schema = {
+        metadata,
+        get icon() { throw new Error('Unused getter must not execute'); },
+        set [key](value) {},
+      };
+      const title = schema.metadata.description;
+      export const handle = { route: metadata };
     `);
     const route = module.getProperty(requireExport(module, 'handle'), 'route');
     if (!route) throw new Error('Missing fixture route metadata');

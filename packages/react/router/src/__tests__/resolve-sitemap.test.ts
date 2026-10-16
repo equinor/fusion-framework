@@ -207,6 +207,26 @@ describe('resolveSitemap', () => {
     await expect(resolveSitemap({ root })).rejects.toThrow('mutable');
   });
 
+  it.each([
+    'const icon = schema.icon;',
+    'const { description, ...ui } = schema;',
+    'const ui = { ...schema };',
+  ])('rejects getter/setter pairs invoked by reads or copies: %s', async (read) => {
+    await file('src/routes.ts', `${dsl} export default index('./page.tsx');`);
+    await file(
+      'src/page.tsx',
+      `${page}
+       const schema = {
+         description: 'Before',
+         get icon() { this.description = 'After'; return 'icon'; },
+         set icon(value) {},
+       };
+       ${read}
+       export const handle = { route: schema };`,
+    );
+    await expect(resolveSitemap({ root })).rejects.toThrow('mutable');
+  });
+
   it('accepts primitive metadata copied into an unrelated accessor receiver', async () => {
     await file('src/routes.ts', `${dsl} export default index('./page.tsx');`);
     await file(
